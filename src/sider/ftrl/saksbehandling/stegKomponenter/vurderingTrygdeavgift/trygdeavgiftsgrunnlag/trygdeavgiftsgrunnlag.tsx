@@ -12,7 +12,7 @@ import * as Skjema from "../../../../../../felleskomponenter/skjema";
 import PeriodeTabell from "./periodetabell";
 import SpesiellGruppeHjelpetekst from "./spesiellGruppeHjelpeTekst";
 import { OppdaterAvgiftsberegning } from "../../../../../../services/modules/trygdeavgift";
-import { BOOLSK, BOOLSK_STRING } from "../../../../../../constants";
+import { BOOLSK_STRING } from "../../../../../../constants";
 import { VurderingTrygdeavgiftVirksomhetTyper } from "../../../../../../kodeverk/koder";
 
 interface TrygdeavgiftsgrunnlagProps {
@@ -218,7 +218,7 @@ const Trygdeavgiftsgrunnlag = ({
                     className="column"
                     label="Ja"
                     feltNavn={`${feltNavnBase}.erSkattepliktig`}
-                    value={BOOLSK.SANN}
+                    value
                     disabled={!redigerbart}
                     id={`${feltNavnBase}.erSkattepliktig`}
                   />
@@ -226,7 +226,7 @@ const Trygdeavgiftsgrunnlag = ({
                     className="column"
                     label="Nei"
                     feltNavn={`${feltNavnBase}.erSkattepliktig`}
-                    value={BOOLSK.USANN}
+                    value={false}
                     disabled={!redigerbart}
                     id={`${feltNavnBase}.erIkkeSkattepliktig`}
                   />

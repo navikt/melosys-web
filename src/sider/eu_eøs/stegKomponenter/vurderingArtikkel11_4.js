@@ -11,7 +11,6 @@ import * as KV from "../../../kodeverk";
 import { arrayTilKonjunksjon } from "../../../utils/streng";
 
 import "./vurderingArtikkel11_4.css";
-import { BOOLSK } from "../../../constants";
 import { konverterVilkarTilStegData, lagVilkaar, slettVilkar } from "../../../felleskomponenter/stegvelger";
 
 class VurderingArtikkel11_4 extends Component {
@@ -132,17 +131,17 @@ class VurderingArtikkel11_4 extends Component {
                   <Nav.Radio
                     name="nis"
                     disabled={!redigerbart}
-                    checked={nis.oppfylt === BOOLSK.USANN}
+                    checked={nis.oppfylt === false}
                     onChange={this.nisEndret}
-                    value={BOOLSK.USANN}
+                    value={false}
                     label="Nei"
                   />
                   <Nav.Radio
                     name="nis"
                     disabled={!redigerbart}
-                    checked={nis.oppfylt === BOOLSK.SANN}
+                    checked={nis.oppfylt === true}
                     onChange={this.nisEndret}
-                    value={BOOLSK.SANN}
+                    value
                     label="Ja"
                   />
                 </Nav.Fieldset>
