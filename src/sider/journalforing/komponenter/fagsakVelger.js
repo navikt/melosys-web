@@ -15,7 +15,9 @@ const behandlingstyper = (sakstype) => {
   switch (sakstype) {
     case MKV.Koder.sakstyper.EU_EOS:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
-        ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
+        ({ kode }) =>
+          kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
+          kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
       );
     case MKV.Koder.sakstyper.TRYGDEAVTALE:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
