@@ -7,14 +7,13 @@ import * as Nav from "../../../../navFrontend";
 import { Organisasjon } from "../../../../services/api";
 
 import Kontaktopplysninger, { KontaktOpplysning } from "../kontaktopplysninger";
-import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 import SokFullmektigOrg from "./sokFullmektigOrg";
 
 import "./fullmektigRedigerer.css";
-import { HentBostedsadresseForPersonQuery } from "../familieforhold/familiemedlemmer/annenForelderModal/hentBostedsadresseForPerson.generated";
 import StrukturertAdresse from "../../../adresser/strukturertAdresse";
 import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";
+import { Personopplysninger } from "../../../../graphql";
 
 interface FullmektigRedigererProps {
   onRolleChange: (rolle: string, org?: string, personIdent?: string) => Promise<any>;
@@ -27,8 +26,8 @@ interface FullmektigRedigererProps {
   kontaktopplysninger: KontaktOpplysning;
   onKontaktopplysningerInputBlur: FocusEventHandler<HTMLInputElement>;
   onKontaktopplysningerSlettClick: MouseEventHandler<HTMLButtonElement>;
-  person: HentBostedsadresseForPersonQuery["hentPersonopplysninger"] | null;
   fullmektig: Api.Fagsaker.aktoer.Aktoer;
+  person: Personopplysninger | null;
 }
 
 function FullmektigRedigerer(props: FullmektigRedigererProps) {
@@ -64,7 +63,7 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
       <Nav.Column xs="6">
         <SokFullmektigOrg
           onIdentFunnet={onIdentFunnet}
-          defaultIdent={fullmektig.orgnr || fullmektig.personIdent || ""}
+          defaultOrgnrIdent={fullmektig.orgnr || fullmektig.personIdent || ""}
         />
         {person && (
           <div>

@@ -8,9 +8,9 @@ import * as Nav from "../../../../../../navFrontend";
 
 import MKV from "../../../../../../melosyskodeverk";
 import AnnenForelderModal from "./annenForelderModal";
-import { HentBostedsadresseForPersonDocument } from "./hentBostedsadresseForPerson.generated";
 import { Bostedsadresse } from "../../../../../../graphql";
 import { StrukturertAdresse } from "../../../../../adresser";
+import { HentBostedsadresseForPersonDocument } from "../../../../../../graphql/adresse/hentBostedsadresseForPerson.generated";
 
 const { NO } = MKV.Koder.landkoder;
 

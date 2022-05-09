@@ -9,10 +9,9 @@ import FullmektigRedigerer from "./fullmektigRedigerer";
 import FullmektigRedigeringUtfort from "./fullmektigRedigeringUtfort";
 import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../editerbartElement";
 import { useKontaktOpplysninger } from "../kontaktopplysninger";
-import {
-  HentBostedsadresseForPersonQuery,
-  useHentBostedsadresseForPersonLazyQuery,
-} from "../familieforhold/familiemedlemmer/annenForelderModal/hentBostedsadresseForPerson.generated";
+
+import { hentBostedsadresseForPerson } from "../../../../graphql/adresse";
+import { Personopplysninger } from "../../../../graphql";
 
 interface EnkeltFullmektigProps {
   className?: string;
@@ -20,7 +19,7 @@ interface EnkeltFullmektigProps {
   redigerbart: boolean;
   slett: (e: MouseEvent) => Promise<any> | void;
   onRolleChange: (rolle: string, org?: string, personIdent?: string) => Promise<any>;
-  onIdentFunnet: (orgnr: string, personIdent: string) => Promise<any>;
+  onOrgnrEllerIdentFunnet: (orgnr: string, personIdent: string) => Promise<any>;
   saksnummer: string;
 }
 
@@ -30,14 +29,14 @@ const EnkeltFullmektig = ({
   redigerbart,
   slett,
   onRolleChange,
-  onIdentFunnet,
+  onOrgnrEllerIdentFunnet,
   saksnummer,
 }: EnkeltFullmektigProps) => {
   const [org, settOrg] = useState<Partial<Api.Organisasjon>>({});
-  const [person, settPerson] = useState<HentBostedsadresseForPersonQuery["hentPersonopplysninger"] | null>(null);
+  const [person, settPerson] = useState<Personopplysninger | null>(null);
   const [orgForsoktHentet, setOrgForsoktHentet] = useState(false);
+  const [personForsoktHentet, setPersonForsoktHentet] = useState(false);
   const [slettFeilmelding, setSlettFeilmelding] = useState("");
-  const [hentBostedsadresseForPerson] = useHentBostedsadresseForPersonLazyQuery();
 
   const [kontaktopplysninger, setKontaktopplysninger, slettKontaktOpplysninger, lagreKontaktOpplysninger] =
     useKontaktOpplysninger(saksnummer, fullmektig.orgnr || "");
@@ -55,13 +54,13 @@ const EnkeltFullmektig = ({
 
   const hentPersonFraApi = async (personIdent: string) => {
     try {
-      const { data } = await hentBostedsadresseForPerson({ variables: { ident: personIdent } });
-      settPerson(data?.hentPersonopplysninger || null);
+      const personopplysninger = await hentBostedsadresseForPerson(personIdent);
+      settPerson(personopplysninger || null);
     } catch (e) {
       settPerson(null);
     }
 
-    setOrgForsoktHentet(true);
+    setPersonForsoktHentet(true);
   };
 
   useEffect(() => {
@@ -78,6 +77,7 @@ const EnkeltFullmektig = ({
   };
 
   if (fullmektig.orgnr ? !orgForsoktHentet : false) return null;
+  if (fullmektig.personIdent ? !personForsoktHentet : false) return null;
 
   const navn = person?.navn ? Utils.person.tilSammensattNavnFraObjekt(person?.navn) : "";
   const tittel = `Fullmektig: ${org.navn || navn || ""}`;
@@ -106,7 +106,7 @@ const EnkeltFullmektig = ({
             representererKode={fullmektig.representererKode}
             org={org}
             redigerbart={redigerbart}
-            onIdentFunnet={onIdentFunnet}
+            onIdentFunnet={onOrgnrEllerIdentFunnet}
             onRolleChange={onRolleChange}
             kontaktopplysninger={kontaktopplysninger}
             onKontaktOpplysningerChange={setKontaktopplysninger}

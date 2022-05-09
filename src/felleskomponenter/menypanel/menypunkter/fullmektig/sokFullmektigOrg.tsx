@@ -5,21 +5,20 @@ import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
 
 import { isApiError } from "../../../../services";
-import { useHentBostedsadresseForPersonLazyQuery } from "../familieforhold/familiemedlemmer/annenForelderModal/hentBostedsadresseForPerson.generated";
+import { hentBostedsadresseForPerson } from "../../../../graphql/adresse";
 
 interface SokFullmektigOrgProps {
   onIdentFunnet: (orgnr: string, personIdent: string) => Promise<any>;
-  defaultIdent: string | null;
+  defaultOrgnrIdent: string | null;
 }
 
 function SokFullmektigOrg(props: SokFullmektigOrgProps) {
-  const { onIdentFunnet, defaultIdent } = props;
+  const { onIdentFunnet, defaultOrgnrIdent } = props;
 
-  const [ident, setIdent] = useState(defaultIdent || "");
+  const [ident, setIdent] = useState(defaultOrgnrIdent || "");
   const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
   const [korrekteLengdeOrgnrOppgittMinstEnGang, setKorrekteLengdeOrgnrOppgittMinstEnGang] = useState(false);
   const [korrekteLengdeFnrDnrOppgittMinstEnGang, setKorrekteLengdeFnrDnrOppgittMinstEnGang] = useState(false);
-  const [hentBostedsadresseForPerson] = useHentBostedsadresseForPersonLazyQuery();
 
   const identFunnetHandler = async (funnetOrgnr: string, funnetPersonIdent: string) => {
     try {
@@ -29,10 +28,6 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
     }
   };
 
-  const erFnrEllerDnrLengde = (sokIdent: string) => {
-    return !Utils.person.erFnrLengde(sokIdent) || !Utils.person.erDnrLengde(sokIdent);
-  };
-
   const sok = async (sokIdent: string) => {
     if (!Utils.organisasjon.erOrgnrLengde(sokIdent)) {
       if (korrekteLengdeOrgnrOppgittMinstEnGang) {
@@ -40,7 +35,7 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
       }
     }
 
-    if (!erFnrEllerDnrLengde(sokIdent)) {
+    if (!Utils.person.erFnrLengde(sokIdent)) {
       if (korrekteLengdeFnrDnrOppgittMinstEnGang) {
         setFeilmelding("F-nr/D-nr er 11 siffer");
       }
@@ -51,7 +46,7 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
       setKorrekteLengdeFnrDnrOppgittMinstEnGang(false);
     }
 
-    if (erFnrEllerDnrLengde(sokIdent)) {
+    if (Utils.person.erFnrLengde(sokIdent)) {
       setKorrekteLengdeFnrDnrOppgittMinstEnGang(true);
       setKorrekteLengdeOrgnrOppgittMinstEnGang(false);
     }
@@ -68,7 +63,7 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
       }
     } else if (Utils.person.erGyldigFnr(sokIdent) || Utils.person.erGyldigDnr(sokIdent)) {
       try {
-        await hentBostedsadresseForPerson({ variables: { ident: sokIdent } });
+        await hentBostedsadresseForPerson(sokIdent);
         identFunnetHandler("", sokIdent);
       } catch (e) {
         if (isApiError(e)) {

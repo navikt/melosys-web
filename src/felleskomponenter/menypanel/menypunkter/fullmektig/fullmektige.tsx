@@ -161,7 +161,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
             fullmektig={fullmektig}
             slett={slettFullmektig}
             onRolleChange={onRollechange}
-            onIdentFunnet={(orgnr, personIdent) =>
+            onOrgnrEllerIdentFunnet={(orgnr, personIdent) =>
               lagreNyFullmektigOgOppdaterLokalt(
                 orgnr,
                 personIdent,

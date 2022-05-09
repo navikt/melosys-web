@@ -3,7 +3,7 @@ import React, { ComponentProps } from "react";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
 
-import { useHentBostedsadresseForPersonQuery } from "./hentBostedsadresseForPerson.generated";
+import { useHentBostedsadresseForPersonQuery } from "../../../../../../graphql/adresse/hentBostedsadresseForPerson.generated";
 import { StrukturertAdresse } from "../../../../../adresser";
 
 import "./annenForelderModal.css";

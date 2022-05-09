@@ -13,8 +13,8 @@ import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 import { KontaktOpplysning } from "../kontaktopplysninger";
 
 import "./fullmektigRedigeringUtfort.css";
-import { HentBostedsadresseForPersonQuery } from "../familieforhold/familiemedlemmer/annenForelderModal/hentBostedsadresseForPerson.generated";
 import StrukturertAdresse from "../../../adresser/strukturertAdresse";
+import { Personopplysninger } from "../../../../graphql";
 
 const hentRepresentererTekst = (representererKode: string) => {
   switch (representererKode) {
@@ -33,7 +33,7 @@ interface FullmektigRedigeringUtfortProps {
   org: Partial<Api.Organisasjon>;
   representererKode: string | null;
   kontaktopplysninger: KontaktOpplysning;
-  person: HentBostedsadresseForPersonQuery["hentPersonopplysninger"] | null;
+  person: Personopplysninger | null;
   fullmektig: Api.Fagsaker.aktoer.Aktoer;
 }
 
@@ -94,7 +94,7 @@ const FullmektigRedigeringUtfort = ({
       </>
     );
 
-  const orgEllerFnrContent = org.orgnr ? (
+  const orgEllerFnrContent = fullmektig.orgnr ? (
     <Nav.Column xs="4">
       <Nav.Typo.Normaltekst style={{ marginTop: "0.5em" }}>Organisasjonsnummer:</Nav.Typo.Normaltekst>
       <Nav.Typo.Element>{org.orgnr}</Nav.Typo.Element>
