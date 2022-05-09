@@ -4,7 +4,6 @@ import PT from "prop-types";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
-import { BOOLSK } from "../../../constants";
 
 import "./sendForvaltningsMelding.css";
 
@@ -28,13 +27,13 @@ const SendForvaltningsMelding = ({ avsenderType, settFeltInnhold }) => {
         <Skjema.Radio
           feltNavn="ikkeSendForvaltingsmelding"
           label="Ja, melding skal sendes automatisk"
-          value={BOOLSK.USANN}
+          value={false}
           className="sendForvaltningsmelding__radio"
         />
         <Skjema.Radio
           feltNavn="ikkeSendForvaltingsmelding"
           label="Nei, jeg vil sende melding senere eller behandle saken innen kort tid"
-          value={BOOLSK.SANN}
+          value
           className="sendForvaltningsmelding__radio"
         />
         {avsenderErFullmelktig && (

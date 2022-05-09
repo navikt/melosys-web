@@ -4,7 +4,6 @@ import { formValueSelector } from "redux-form";
 import PT from "prop-types";
 
 import MKV from "../../../melosyskodeverk";
-import { BOOLSK } from "../../../constants";
 import * as MPT from "../../../proptypes";
 import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
@@ -34,11 +33,9 @@ export const KnyttTilSak = (props) => {
           style={clsElementskrift}
         />
         <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
-          {visOpprettNyBehandling && (
-            <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.SANN} label="Opprett ny behandling" />
-          )}
+          {visOpprettNyBehandling && <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />}
           {visUtenOppretteBehandling && (
-            <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.USANN} label="Uten å opprette behandling" />
+            <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
           )}
         </Skjema.RadioGruppe>
         {opprettBehandling() && (
