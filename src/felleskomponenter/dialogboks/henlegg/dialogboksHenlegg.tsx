@@ -1,9 +1,12 @@
 import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
 
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
+import * as Api from "../../../services/api";
 
 import MKV from "../../../melosyskodeverk";
 import PdfLenkeListe from "../../pdfLenkeListe";
@@ -13,16 +16,26 @@ import bem from "../../../bemUtils";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { useValiderHarBrukerRegistrertAdresse } from "./hentKontaktadresse";
+import { vedtakOperations } from "../../../ducks/vedtak";
+import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
+import { Feilmeldinger } from "../../feilmeldinger";
 
 import "./dialogboksHenlegg.css";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   redigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
+  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+});
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  kontrollerVedtak: (
+    behandlingID: number,
+    skalRegisteropplysningerOppdateres: boolean,
+    body: Api.Saksflyt.Vedtak.FattVedtakReqDto
+  ) => dispatch(vedtakOperations.kontroller(behandlingID, skalRegisteropplysningerOppdateres, body)),
 });
 
-const connector = connect(mapStateToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -33,27 +46,36 @@ type DialogboksHenleggSakProps = PropsFromRedux & {
 };
 
 export const DialogboksHenleggSak = ({
-  henleggHandle,
-  avbryt,
   behandlingID,
   redigerbart,
+  feilmeldinger,
+  kontrollerVedtak,
+  henleggHandle,
+  avbryt,
   ariaHideApp = false,
 }: DialogboksHenleggSakProps) => {
   const [begrunnelseKode, setBegrunnelseKode] = useState<string>("");
-  const [feilmelding, setFeilmelding] = useState<string | null>(null);
   const [feilmeldingSelect, setFeilmeldingSelect] = useState<string | null>(null);
   const [feilmeldingFritekst, setFeilmeldingFritekst] = useState<string | null>(null);
   const [fritekst, setFritekst] = useState<string>("");
 
-  const feilmeldingFraRegistrertAdresseValidering = useValiderHarBrukerRegistrertAdresse(behandlingID);
-
   useEffect(() => {
-    setFeilmelding(feilmeldingFraRegistrertAdresseValidering);
-  }, [feilmeldingFraRegistrertAdresseValidering]);
+    (async () => {
+      await kontrollerVedtak(behandlingID, false, {
+        behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.HENLEGGELSE,
+        vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        fritekst,
+        fritekstSed: null,
+        mottakerinstitusjoner: [],
+        nyVurderingBakgrunn: null,
+      });
+    })();
+  }, []);
 
   const erBegrunnelseValgt = begrunnelseKode !== "";
   const erFritekstValgt = begrunnelseKode === MKV.Koder.begrunnelser.henleggelsesgrunner.ANNET;
   const erFritekstTom = fritekst.replace("<p></p>", "").trim() === "";
+  const harIngenFeilmeldinger = !(feilmeldinger && feilmeldinger.length > 0);
 
   const validerBegrunnelse = () => {
     if (!erBegrunnelseValgt) {
@@ -127,11 +149,7 @@ export const DialogboksHenleggSak = ({
         <Nav.Typo.Systemtittel className={dialogboksHenleggClassName.element("overskrift")}>
           Henlegg saken
         </Nav.Typo.Systemtittel>
-        {feilmelding && (
-          <Nav.AlertStripeFeil className={dialogboksHenleggClassName.element("feilmelding")}>
-            {feilmelding}
-          </Nav.AlertStripeFeil>
-        )}
+        <Feilmeldinger feilmeldinger={feilmeldinger} />
         <Mui.KodeTermSelect
           feil={feilmeldingSelect}
           onChange={velgBegrunnelseHandle}
@@ -150,13 +168,13 @@ export const DialogboksHenleggSak = ({
             label="Fritekst"
           />
         )}
-        {redigerbart && !feilmelding && (
+        {redigerbart && harIngenFeilmeldinger && (
           <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={handleForhandsvisBrev} />
         )}
         <Knapperad
           bekreft={handleHenlegg}
           bekreftTekst="HENLEGG SAKEN"
-          bekreftRedigerbart={erBegrunnelseValgt && !feilmelding}
+          bekreftRedigerbart={erBegrunnelseValgt && harIngenFeilmeldinger}
           avbryt={avbryt}
           avbrytTekst="AVBRYT"
           redigerbart={redigerbart}
