@@ -47,26 +47,29 @@ const fullmektigOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) =>
   return avsenderType === KV.AvsenderTyper.FULLMEKTIG && !erAvsenderPreutfylt;
 };
 
+const erBruker = (journalforingGjelder) => journalforingGjelder === BRUKER;
+const erVirksomhet = (journalforingGjelder) => journalforingGjelder === VIRKSOMHET;
+
 const journalforing = object().shape({
   journalforingGjelder: string().required(MAA_FYLLES_UT),
   brukerID: string()
     .when("journalforingGjelder", {
-      is: (journalforingGjelder) => journalforingGjelder === BRUKER,
+      is: erBruker,
       then: string().erFnrEllerDnr(SKRIV_INN_GYLDIG_FNR_ELLER_DNR).required(SKRIV_INN_GYLDIG_FNR_ELLER_DNR).nullable(),
     })
     .when(["journalforingGjelder", "brukerNavn"], {
-      is: (journalforingGjelder, navn) => journalforingGjelder === BRUKER && Utils._isEmpty(navn),
+      is: (journalforingGjelder, navn) => erBruker(journalforingGjelder) && Utils._isEmpty(navn),
       then: string().harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR).nullable(),
     })
     .nullable(),
   brukerNavn: string().nullable(),
   virksomhetOrgnr: string()
     .when("journalforingGjelder", {
-      is: (journalforingGjelder) => journalforingGjelder === VIRKSOMHET,
+      is: erVirksomhet,
       then: string().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).required(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .when(["journalforingGjelder", "virksomhetNavn"], {
-      is: (journalforingGjelder, navn) => journalforingGjelder === VIRKSOMHET && Utils._isEmpty(navn),
+      is: (journalforingGjelder, navn) => erVirksomhet(journalforingGjelder) && Utils._isEmpty(navn),
       then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR).nullable(),
     })
     .nullable(),
@@ -97,7 +100,7 @@ const journalforing = object().shape({
         }),
     })
     .when("journalforingGjelder", {
-      is: VIRKSOMHET,
+      is: erVirksomhet,
       then: string().required().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .nullable(),
