@@ -32,8 +32,7 @@ type AvsenderVelgerProps = PropsFromRedux & {
   kopierBrukerTilAvsender: () => void;
   tomAvsender: () => void;
   formValues: FormValuesProps;
-  settFeltInnhold: (felt: string, innhold: string) => void;
-  visAvsenderSpinner: boolean;
+  settFeltInnhold: (felt: string, innhold: string | null) => void;
   hentOgVisRepresentant: (ident: string) => void;
   journalforingAvsenderID: string;
   journalforingAvsenderNavn: string;
@@ -53,7 +52,6 @@ const AvsenderVelger = ({
         kopierBrukerTilAvsender();
         break;
       }
-      case KV.AvsenderTyper.ANNET:
       case KV.AvsenderTyper.FULLMEKTIG:
       case KV.AvsenderTyper.ARBEIDSGIVER:
       case MKV.Koder.avsendertyper.ORGANISASJON:
@@ -70,8 +68,8 @@ const AvsenderVelger = ({
     if (formValues.avsenderType) avsenderTypeEndret(formValues.avsenderType);
   }, [formValues.avsenderType]);
 
-  const fullmektigLandEndret = (landkode = "") => {
-    const avsenderNavn = landkode ? `Trygdemyndighet i ${KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}` : "";
+  const fullmektigLandEndret = (landkode: string) => {
+    const avsenderNavn = landkode ? `Trygdemyndighet i ${KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}` : null;
 
     settFeltInnhold("avsenderID", landkode);
     settFeltInnhold("avsenderNavn", avsenderNavn);

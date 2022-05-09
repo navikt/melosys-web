@@ -22,9 +22,7 @@ import FeilmeldingDialog from "./komponenter/feilmeldingDialog";
 
 import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
 import { formSelectors } from "../../ducks/form";
-import { OrganisasjonOperations } from "../../ducks/organisasjoner";
-import { hentSammensattNavn } from "../../graphql/navn";
-import { sokOperations, sokSelectors } from "../../ducks/sok";
+import { sokSelectors } from "../../ducks/sok";
 
 import "./journalforing.css";
 
@@ -83,6 +81,7 @@ class Journalforing extends Component {
     } = this.props;
     const {
       brukerID,
+      virksomhetOrgnr,
       avsenderID,
       arbeidsgiverID,
       opprettnysak_behandlingstema: behandlingstemaKode,
@@ -105,6 +104,7 @@ class Journalforing extends Component {
       avsenderID,
       avsenderNavn,
       brukerID,
+      virksomhetOrgnr,
       hoveddokument: {
         dokumentID,
         tittel,
@@ -136,7 +136,6 @@ class Journalforing extends Component {
   organisasjonAliaser = [
     KV.AvsenderTyper.FULLMEKTIG,
     KV.AvsenderTyper.ARBEIDSGIVER,
-    KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG,
     MKV.Koder.avsendertyper.ORGANISASJON,
   ];
 
@@ -282,78 +281,6 @@ class Journalforing extends Component {
     }
   };
 
-  sokOrgnrFnrDnr = async (ident) => {
-    if (Utils.organisasjon.erOrgnrGyldig(ident)) {
-      const response = await this.props.sokOrgnr(ident);
-      return response?.data?.navn;
-    }
-    if (Utils.person.erGyldigFnrEllerDnr(ident?.replace(" ", ""))) {
-      const sammensattNavn = await hentSammensattNavn(ident.replace(" ", ""));
-      if (!Utils._isEmpty(sammensattNavn)) {
-        return sammensattNavn;
-      }
-    }
-    return false;
-  };
-
-  /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
-   * Derfor, sjekk dette før vi evt henter navn.
-   * @param brukerID {string} Verdien vi ønsker å sjekke på.
-   */
-  hentOgVisBruker = async (brukerID) => {
-    if (!Utils.person.erGyldigFnr(brukerID) && !Utils.person.erGyldigDnr(brukerID)) {
-      return;
-    }
-
-    const { settFeltInnhold, hentFagsakListe } = this.props;
-    settFeltInnhold("brukerNavn", "");
-    const sammensattNavn = await hentSammensattNavn(brukerID);
-    if (Utils._isEmpty(sammensattNavn)) {
-      return false;
-    }
-    settFeltInnhold("brukerNavn", sammensattNavn);
-    await hentFagsakListe(brukerID);
-    return { brukerID, sammensattNavn };
-  };
-
-  /** Vi ønsker kun å gjøre et søk på avsenderID dersom antall tegn matcher enten 9 (orgnr) eller er et gyldig FNR || DNR.
-   * Avsender kan være både person og organisasjon.
-   * @param value {string} Verdien vi ønsker å sjekke på.
-   */
-  hentOgVisAvsender = async (value) => {
-    const { settFeltInnhold } = this.props;
-
-    if (!value) {
-      return;
-    }
-
-    settFeltInnhold("avsenderNavn", "");
-    if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value?.replace(" ", ""))) {
-      const navn = await this.sokOrgnrFnrDnr(value);
-      if (!navn) {
-        return false;
-      }
-      settFeltInnhold("avsenderNavn", navn);
-    }
-  };
-
-  hentOgVisRepresentant = async (value) => {
-    const { settFeltInnhold } = this.props;
-
-    if (!value) {
-      return;
-    }
-
-    settFeltInnhold("representantNavn", "");
-    if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value)) {
-      const navn = await this.sokOrgnrFnrDnr(value);
-      if (!navn) {
-        return false;
-      }
-      settFeltInnhold("representantNavn", navn);
-    }
-  };
-
   touchAll = (formName, alleFeil = {}) => {
     this.props.touch(formName, ...Object.keys(alleFeil));
   };
@@ -362,7 +289,7 @@ class Journalforing extends Component {
     const { settFeltInnhold } = this.props;
     settFeltInnhold("journalforingPeriodeFraOgMed", "");
     settFeltInnhold("journalforingPeriodeTilOgMed", "");
-    settFeltInnhold("representantID", "");
+    settFeltInnhold("representantID", null);
     settFeltInnhold("journalforingSoknadsland", []);
     settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
   };
@@ -435,14 +362,14 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing: { vedlegg = [], hoveddokument = {}, behandlingsInformasjon, avsenderID, avsenderNavn = "" },
+      journalforing: { vedlegg = [], hoveddokument = {}, behandlingsInformasjon, avsenderID, avsenderNavn },
       fagsakListe,
       settFeltInnhold,
     } = this.props;
 
     const { visFeilmeldingDialog, feilmeldinger } = this.state;
 
-    const { knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant } = this;
+    const { knyttTilEksisterendeSak, opprettFagsak } = this;
     const { journalpostID } = this.props.match.params;
     const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = "Hoveddokument" } = hoveddokument;
     const { behandlingstema, sakstype } = behandlingsInformasjon || {};
@@ -481,12 +408,9 @@ class Journalforing extends Component {
                           hoveddokumentID={hoveddokumentID}
                           hoveddokumentTittel={hoveddokumentTittel}
                           vedlegg={vedlegg}
-                          hentOgVisAvsender={hentOgVisAvsender}
-                          hentOgVisBruker={hentOgVisBruker}
                           fagsakListe={fagsakListe}
                           knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                           opprettFagsak={opprettFagsak}
-                          hentOgVisRepresentant={hentOgVisRepresentant}
                           submitJournalforing={this.submitJournalforing}
                           avbrytJournalforing={this.avbrytJournalforing}
                           kanSubmittes={this.kanSubmittes()}
@@ -539,14 +463,12 @@ Journalforing.propTypes = {
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   hentJournalOppgave: PT.func.isRequired,
-  hentFagsakListe: PT.func.isRequired,
   settFeltInnhold: PT.func.isRequired,
   settFeilFelt: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
   journalforing: MPT.Journalforing,
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
   fagsakListe: PT.array,
-  sokOrgnr: PT.func.isRequired,
   errors: PT.object.isRequired,
   touch: PT.func.isRequired,
   vedleggsdokumenter: PT.arrayOf(
@@ -579,12 +501,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   hentJournalOppgave: (journalpostID) => dispatch(journalforingOperations.hent(journalpostID)),
-  hentFagsakListe: (fnr) => dispatch(sokOperations.sok(fnr)),
   settFeltInnhold: (feltNavn, verdi) => dispatch(autofill(KV.Form.JOURNALFORING, feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => setSubmitFailed(KV.Form.JOURNALFORING, ...feltNavn),
   settJournalforingHensikt: (journalforingHensikt) =>
     dispatch(change(KV.Form.JOURNALFORING, "journalforingHensikt", journalforingHensikt)),
-  sokOrgnr: (orgnr) => dispatch(OrganisasjonOperations.hent(orgnr)),
   touch: (formName, ...fields) => dispatch(touch(formName, ...fields)),
   resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
 });

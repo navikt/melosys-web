@@ -18,7 +18,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type AvsenderArbeidsgiverProps = PropsFromRedux & {
-  settFeltInnhold: (felt: string, innhold: string) => void;
+  settFeltInnhold: (felt: string, innhold: string | null) => void;
   hentOgVisRepresentant: (ident: string) => void;
   children?: ReactNode;
 };
@@ -32,9 +32,9 @@ export const AvsenderArbeidsgiver = ({
   const IDFeltTastOppHandler = async (event: ChangeEvent<HTMLFormElement>) => {
     const { value } = event.target;
     if (Utils.organisasjon.erOrgnrGyldig(value)) {
-      await hentOgVisRepresentant(value);
+      hentOgVisRepresentant(value);
     } else {
-      await settFeltInnhold("representantNavn", "");
+      settFeltInnhold("representantNavn", null);
     }
   };
 

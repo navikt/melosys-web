@@ -22,15 +22,15 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import JournalforingSchema from "./journalforingSchema";
 import "./journalforingform.css";
 
+export const BRUKER = "Bruker";
+export const VIRKSOMHET = "Virsomhet";
+
 export const JournalforingForm = (props) => {
   const {
     journalpostID,
     hoveddokumentID,
     vedlegg,
-    hentOgVisAvsender,
-    hentOgVisBruker,
     fagsakListe,
-    hentOgVisRepresentant,
     formValues,
     formErrors,
     submitFailed,
@@ -46,20 +46,14 @@ export const JournalforingForm = (props) => {
       [
         MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
-      ].includes(formValues.opprettnysak_behandlingstema));
+      ].includes(formValues.opprettnysak_behandlingstema)) &&
+    formValues.journalforingGjelder === BRUKER;
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
-      <Informasjon
-        journalpostID={journalpostID}
-        dokumentID={hoveddokumentID}
-        vedlegg={vedlegg}
-        hentOgVisAvsender={hentOgVisAvsender}
-        hentOgVisBruker={hentOgVisBruker}
-        hentOgVisRepresentant={hentOgVisRepresentant}
-      />
+      <Informasjon journalpostID={journalpostID} dokumentID={hoveddokumentID} vedlegg={vedlegg} />
       <Mui.Undertittel
-        tekst="Knytt til brukers eksisterende sak eller opprett ny sak"
+        tekst="Knytt til eksisterende sak eller opprett ny sak"
         ikon={Ikoner.CheckList}
         className="undertittel oversteUndertittel"
       />
@@ -89,10 +83,7 @@ JournalforingForm.propTypes = {
   journalpostID: PT.string.isRequired,
   hoveddokumentID: PT.string,
   vedlegg: PT.array.isRequired,
-  hentOgVisAvsender: PT.func.isRequired,
-  hentOgVisBruker: PT.func.isRequired,
   fagsakListe: PT.array.isRequired,
-  hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
   formErrors: PT.object,
   submitFailed: PT.bool.isRequired,
@@ -115,48 +106,42 @@ const toVedleggMedProps = (vedlegg) =>
     acc[`tittel_${index}`] = d.tittel;
     return acc;
   }, {});
-const mapStateToProps = (state) => {
-  const avsenderType = journalforingSelectors.AvsenderTypeSelector(state);
-
-  return {
-    erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
-    formValues: getFormValues(KV.Form.JOURNALFORING)(state),
-    formErrors: formSelectors.JournalforingFormSelector(state).syncErrors || {},
-    submitFailed: formSelectors.JournalforingFormSelector(state).submitFailed,
-    initialValues: {
-      avsenderType:
-        journalforingSelectors.ErAvsenderPreutfyltSelector(state) && avsenderType === MKV.Koder.avsendertyper.PERSON
-          ? MKV.Koder.avsendertyper.PERSON
-          : avsenderType,
-      behandlingstype: null,
-      saksnummer: "",
-      brukerID: journalforingSelectors.BrukerIDSelector(state),
-      erBrukerAvsender: journalforingSelectors.ErBrukerAvsenderSelector(state),
-      avsenderID: journalforingSelectors.AvsenderIDSelector(state),
-      avsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
-      arbeidsgiverID: null,
-      representantID: "",
-      representantRepresenterer: "",
-      mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
-      hoveddokument: {
-        tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || "Uten tittel",
-        logiskeVedlegg: journalforingSelectors.JournalforingLogiskeVedleggSelector(state),
-      },
-      vedlegg: {
-        pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
-      },
-      journalforingSoknadsland: [],
-      journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-      sakstype: MKV.Koder.sakstyper.EU_EOS,
-      opprettBehandling: false,
-      opprettnysak_behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-      ingenVurdering: false,
-      ikkeSendForvaltingsmelding: false,
-      skalTilordnes: false,
-      submittable: false,
+const mapStateToProps = (state) => ({
+  erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
+  formValues: getFormValues(KV.Form.JOURNALFORING)(state),
+  formErrors: formSelectors.JournalforingFormSelector(state).syncErrors || {},
+  submitFailed: formSelectors.JournalforingFormSelector(state).submitFailed,
+  initialValues: {
+    avsenderType: journalforingSelectors.AvsenderTypeSelector(state),
+    behandlingstype: null,
+    saksnummer: "",
+    journalforingGjelder: BRUKER,
+    brukerID: journalforingSelectors.BrukerIDSelector(state),
+    erBrukerAvsender: journalforingSelectors.ErBrukerAvsenderSelector(state),
+    avsenderID: journalforingSelectors.AvsenderIDSelector(state),
+    avsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
+    arbeidsgiverID: null,
+    representantID: null,
+    representantRepresenterer: null,
+    mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
+    hoveddokument: {
+      tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || "Uten tittel",
+      logiskeVedlegg: journalforingSelectors.JournalforingLogiskeVedleggSelector(state),
     },
-  };
-};
+    vedlegg: {
+      pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
+    },
+    journalforingSoknadsland: [],
+    journalforingSoknadslandUkjenteEllerAlleEosLand: false,
+    sakstype: MKV.Koder.sakstyper.EU_EOS,
+    opprettBehandling: false,
+    opprettnysak_behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+    ingenVurdering: false,
+    ikkeSendForvaltingsmelding: false,
+    skalTilordnes: false,
+    submittable: false,
+  },
+});
 
 const mapDispatchToProps = (dispatch) => ({
   settJournalforingHensikt: (journalforingHensikt) =>
@@ -172,7 +157,6 @@ const form = {
   validate: (values, props) => {
     const options = {
       context: {
-        brukerNavn: props.formValues ? props.formValues.brukerNavn : undefined,
         erAvsenderPreutfylt: props.erAvsenderPreutfylt,
       },
     };

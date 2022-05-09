@@ -1,4 +1,4 @@
-const erOrgnrLengde = (verdi) => RegExp(/^\d{9,9}$/).test(verdi);
+const erOrgnrLengde = (verdi) => RegExp(/^\d{9}$/).test(verdi);
 
 /** Beregning av orgnr bygger på mod11.
  * @link https://no.wikipedia.org/wiki/MOD11

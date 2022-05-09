@@ -13,7 +13,7 @@ describe("brukernavnskjema", () => {
 
     props = {
       form: "Journalforing_SED",
-      settFormBruker: jest.fn(),
+      settFormBrukerNavn: jest.fn(),
       resetFelter: jest.fn(),
     };
   });

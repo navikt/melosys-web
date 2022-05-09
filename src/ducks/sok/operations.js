@@ -13,10 +13,12 @@ import * as Types from "./types";
 
 export function sok(sokefrase) {
   const sokefraseErIdnr = Utils.person.erGyldigFnr(sokefrase);
+  const sokefraseErOrgnr = Utils.organisasjon.erOrgnrGyldig(sokefrase);
 
   const body = {
     ident: sokefraseErIdnr ? sokefrase : null,
-    saksnummer: sokefraseErIdnr ? null : sokefrase,
+    saksnummer: sokefraseErIdnr || sokefraseErOrgnr ? null : sokefrase,
+    orgnr: sokefraseErOrgnr ? sokefrase : null,
   };
 
   return doThenDispatch(() => Api.Fagsaker.sok.send(body), {

@@ -3,16 +3,24 @@ import { connect } from "react-redux";
 import { change } from "redux-form";
 import PT from "prop-types";
 
+import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
-import * as Konstanter from "../../../constants";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
 import * as Mui from "../../../felleskomponenter/ui";
+import { VIRKSOMHET } from "./journalforingform";
+
 import AvsenderVelger from "./avsender";
 import LenkeListeVelger from "./lenkelistevelger";
+import JournalforingGjelder from "./journalforingGjelder";
+import { FeatureToggle } from "../../../featuretoggle";
+import { hentSammensattNavn } from "../../../graphql/navn";
+
+import { sokOperations } from "../../../ducks/sok";
+import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 
 import "./informasjon.css";
@@ -34,7 +42,6 @@ const dokumenttitler = [
  */
 class Informasjon extends Component {
   state = {
-    spinner: {},
     hoveddokumentTittel: "",
     vedleggPdfTittler: [],
   };
@@ -60,24 +67,122 @@ class Informasjon extends Component {
     this.setState({ [stateNavn]: verdi });
   };
 
+  sokOrgnrFnrDnr = async (value) => {
+    if (Utils.organisasjon.erOrgnrGyldig(value)) {
+      const response = await this.props.sokOrgnr(value);
+      return response?.data?.navn;
+    }
+    if (Utils.person.erGyldigFnrEllerDnr(value?.replace(" ", ""))) {
+      return hentSammensattNavn(value.replace(" ", ""));
+    }
+    return null;
+  };
+
+  hentOgVisBruker = async (brukerID) => {
+    const { kopierBrukerTilAvsender, tomAvsender } = this;
+    const { settFeltInnhold, hentFagsakListe, journalforingSkjemaVerdier } = this.props;
+    const brukerErAvsender = journalforingSkjemaVerdier.avsenderType === MKV.Koder.avsendertyper.PERSON;
+
+    settFeltInnhold("brukerNavn", null);
+    if (brukerErAvsender) {
+      tomAvsender();
+    }
+
+    if (!Utils.person.erGyldigFnr(brukerID) && !Utils.person.erGyldigDnr(brukerID)) {
+      return;
+    }
+
+    const sammensattNavn = await hentSammensattNavn(brukerID);
+    if (Utils._isEmpty(sammensattNavn)) {
+      return;
+    }
+    settFeltInnhold("brukerNavn", sammensattNavn);
+    await hentFagsakListe(brukerID);
+    if (brukerErAvsender) {
+      kopierBrukerTilAvsender(brukerID, sammensattNavn);
+    }
+  };
+
+  hentOgVisVirksomhet = async (virksomhetOrgnr) => {
+    const { kopierVirksomhetTilAvsender, tomAvsender } = this;
+    const { sokOrgnr, settFeltInnhold, hentFagsakListe, journalforingSkjemaVerdier } = this.props;
+    const journalfoeringGjelderVirksomhet = journalforingSkjemaVerdier.journalforingGjelder === VIRKSOMHET;
+
+    settFeltInnhold("virksomhetNavn", null);
+    if (journalfoeringGjelderVirksomhet) {
+      tomAvsender();
+    }
+
+    if (!Utils.organisasjon.erOrgnrGyldig(virksomhetOrgnr)) {
+      return;
+    }
+
+    const response = await sokOrgnr(virksomhetOrgnr);
+    const navn = response?.data?.navn;
+    if (Utils._isEmpty(navn)) {
+      return;
+    }
+    settFeltInnhold("virksomhetNavn", navn);
+    await hentFagsakListe(virksomhetOrgnr);
+    kopierVirksomhetTilAvsender(virksomhetOrgnr, navn);
+  };
+
+  hentOgVisAvsender = async (value) => {
+    const { settFeltInnhold } = this.props;
+    settFeltInnhold("avsenderNavn", null);
+
+    if (!value) {
+      return;
+    }
+
+    if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value?.replace(" ", ""))) {
+      const navn = await this.sokOrgnrFnrDnr(value);
+      if (Utils._isEmpty(navn)) {
+        return;
+      }
+      settFeltInnhold("avsenderNavn", navn);
+    }
+  };
+
+  hentOgVisRepresentant = async (value) => {
+    const { settFeltInnhold } = this.props;
+
+    settFeltInnhold("representantNavn", null);
+
+    if (!value) {
+      return;
+    }
+
+    if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value)) {
+      const navn = await this.sokOrgnrFnrDnr(value);
+      if (Utils._isEmpty(navn)) {
+        return;
+      }
+      settFeltInnhold("representantNavn", navn);
+    }
+  };
+
   oppdaterFelter = async (props, tvingOppdatering) => {
-    const { brukerID: gammelBrukerID, avsenderID: gammelAvsenderID } = props.journalforingSkjemaVerdier;
-    const { brukerID = "", avsenderID = "" } = this.props.journalforingSkjemaVerdier;
-    const { hentOgVisBruker, hentOgVisAvsender } = this.props;
+    const {
+      brukerID: gammelBrukerID,
+      avsenderID: gammelAvsenderID,
+      virksomhetOrgnr: gammelVirksomhetOrgnr,
+    } = props.journalforingSkjemaVerdier;
+    const { brukerID, avsenderID, virksomhetOrgnr } = this.props.journalforingSkjemaVerdier;
+    const { hentOgVisBruker, hentOgVisVirksomhet, hentOgVisAvsender } = this;
 
     if (gammelBrukerID !== brukerID || tvingOppdatering) {
       await hentOgVisBruker(brukerID);
+    }
+
+    if (gammelVirksomhetOrgnr !== virksomhetOrgnr || tvingOppdatering) {
+      await hentOgVisVirksomhet(virksomhetOrgnr);
     }
 
     if (gammelAvsenderID !== avsenderID || tvingOppdatering) {
       await hentOgVisAvsender(avsenderID);
     }
   };
-
-  erGyldigAvsenderID = (verdi) =>
-    verdi.length === Konstanter.ANTALL_TALL_I_ORGNR ||
-    verdi.length === Konstanter.ANTALL_TALL_I_DNR ||
-    verdi.length === Konstanter.ANTALL_TALL_I_FNR;
 
   kopierBrukerTilAvsender = (
     brukerID = this.props.journalforingSkjemaVerdier.brukerID,
@@ -88,68 +193,22 @@ class Informasjon extends Component {
     settFeltInnhold("avsenderNavn", brukerNavn);
   };
 
+  kopierVirksomhetTilAvsender = (
+    virksomhetOrgnr = this.props.journalforingSkjemaVerdier.virksomhetOrgnr,
+    virksomhetNavn = this.props.journalforingSkjemaVerdier.virksomhetNavn
+  ) => {
+    const { settFeltInnhold } = this.props;
+    settFeltInnhold("avsenderType", MKV.Koder.avsendertyper.ORGANISASJON);
+    settFeltInnhold("avsenderID", virksomhetOrgnr);
+    settFeltInnhold("avsenderNavn", virksomhetNavn);
+  };
+
   tomAvsender = () => {
     const { settFeltInnhold } = this.props;
-    settFeltInnhold("avsenderID", "");
-    settFeltInnhold("avsenderNavn", "");
+    settFeltInnhold("avsenderID", null);
+    settFeltInnhold("avsenderNavn", null);
   };
 
-  sjekkBruker = async (verdi) => {
-    const { tomAvsender, kopierBrukerTilAvsender } = this;
-    const { settFeltInnhold, hentOgVisBruker } = this.props;
-    const { erBrukerAvsender } = this.props.journalforingSkjemaVerdier;
-
-    if (Utils.person.erGyldigFnr(verdi)) {
-      await this.spinner("brukerNavn");
-      const response = await hentOgVisBruker(verdi);
-      if (!response) return;
-      const { brukerID, sammensattNavn } = response;
-      if (erBrukerAvsender) {
-        kopierBrukerTilAvsender(brukerID, sammensattNavn);
-      }
-    } else {
-      settFeltInnhold("brukerNavn", "");
-      if (erBrukerAvsender) {
-        tomAvsender();
-      }
-    }
-  };
-
-  sjekkAvsender = async (verdi) => {
-    const { erGyldigAvsenderID } = this;
-    const { settFeltInnhold, hentOgVisAvsender } = this.props;
-
-    if (erGyldigAvsenderID(verdi)) {
-      await this.spinner("avsenderNavn");
-      await hentOgVisAvsender(verdi);
-    } else {
-      await settFeltInnhold("avsenderNavn", "");
-    }
-  };
-  IDFeltTastOppHandler = async (event) => {
-    const { id: opprinneligFeltID, value } = event.target;
-
-    if (opprinneligFeltID === "brukerID") {
-      await this.sjekkBruker(value);
-    }
-    if (opprinneligFeltID === "avsenderID") {
-      await this.sjekkAvsender(value);
-    }
-  };
-
-  toggleSpinn = (navn, spin) => ({ spinner: { ...this.state.spinner, [navn]: spin } });
-  /** Toggle spinneren av og på. Når spinner skjules, sett en timeout på 500ms.
-   * Dette sikrer at spinneren ikke bare flasher dersom kallet til API går raskt. Dataene vises.
-   * umiddelbart fra payload, men spinneren har en levetid på minimum 500 ms som gir brukeren
-   * tid til å tolke grensesnittet, dvs spinneren.
-   * @param navn {String} Navnet på spinneren
-   * @param ms {Number} antall millisekunder
-   */
-  spinner = async (navn, ms = 1000) => {
-    this.setState(this.toggleSpinn(navn, true));
-    await Utils.delay(ms);
-    this.setState(this.toggleSpinn(navn, false));
-  };
   updateVedleggTittel = async (index, verdi) => {
     const tittler = [...this.state.vedleggPdfTittler];
     tittler[index] = verdi;
@@ -157,38 +216,77 @@ class Informasjon extends Component {
   };
 
   render() {
-    const { journalpostID, dokumentID, vedlegg, settFeltInnhold, hentOgVisRepresentant, journalforingSkjemaVerdier } =
-      this.props;
+    const { journalpostID, dokumentID, vedlegg, settFeltInnhold, journalforingSkjemaVerdier } = this.props;
     const {
       hoveddokument: { tittel: hoveddokumentTittel },
       vedlegg: skjemaVedlegg,
+      brukerNavn,
+      virksomhetNavn,
+      journalforingGjelder,
     } = journalforingSkjemaVerdier;
-    const {
-      spinner: { brukerNavn: visBrukerSpinner },
-      spinner: { avsenderNavn: visAvsenderSpinner },
-    } = this.state;
+    const { hentOgVisRepresentant } = this;
 
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
+
+    const InformasjonOmBrukerEllerVirksomhet =
+      journalforingGjelder === VIRKSOMHET ? (
+        <>
+          <Mui.Undertittel tekst="Informasjon om virksomhet" ikon={Ikoner.AccountCircle} className="undertittel" />
+          <Skjema.Input feltNavn="virksomhetOrgnr" label="Organisasjonsnummer:" />
+          {!Utils._isEmpty(virksomhetNavn) && (
+            <span>
+              <Nav.Typo.Element style={{ display: "inline-block", marginRight: "0.5rem" }}>Navn:</Nav.Typo.Element>
+              <Nav.Typo.Normaltekst style={{ display: "inline-block" }}>{virksomhetNavn}</Nav.Typo.Normaltekst>
+            </span>
+          )}
+        </>
+      ) : (
+        <>
+          <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
+          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" />
+          {!Utils._isEmpty(brukerNavn) && (
+            <span>
+              <Nav.Typo.Element style={{ display: "inline-block", marginRight: "0.5rem" }}>Navn:</Nav.Typo.Element>
+              <Nav.Typo.Normaltekst style={{ display: "inline-block" }}>{brukerNavn}</Nav.Typo.Normaltekst>
+            </span>
+          )}
+        </>
+      );
+
     return (
       <div className="informasjon">
-        <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
-        <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
-        <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled className="brukers-navn" />
-        {visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" />}
+        <FeatureToggle togglename="melosys.behandle_alle_saker">
+          {(toggle) =>
+            toggle === "enabled" ? (
+              <>
+                <JournalforingGjelder />
+                {InformasjonOmBrukerEllerVirksomhet}
+              </>
+            ) : (
+              <>
+                <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
+                <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" />
+                <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled className="brukers-navn" />
+              </>
+            )
+          }
+        </FeatureToggle>
 
         <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
-        <AvsenderVelger
-          className="avsenderVelger"
-          kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
-          tomAvsender={this.tomAvsender}
-          settFeltInnhold={settFeltInnhold}
-          visAvsenderSpinner={visAvsenderSpinner}
-          hentOgVisRepresentant={hentOgVisRepresentant}
-        />
+        {journalforingGjelder === VIRKSOMHET ? (
+          <Nav.Typo.Normaltekst>Virksomhet er avsender</Nav.Typo.Normaltekst>
+        ) : (
+          <AvsenderVelger
+            className="avsenderVelger"
+            kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
+            tomAvsender={this.tomAvsender}
+            settFeltInnhold={settFeltInnhold}
+            hentOgVisRepresentant={hentOgVisRepresentant}
+          />
+        )}
+
         <Mui.Undertittel tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
-
         <Skjema.Datovelger label="Mottatt dato" feltNavn="mottattDato" bredde="S" />
-
         <Nav.Fieldset legend="Hoveddokument:">
           <LenkeListeVelger
             feltNavn="hoveddokument.tittel"
@@ -230,13 +328,12 @@ class Informasjon extends Component {
 
 Informasjon.propTypes = {
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
-  hentOgVisBruker: PT.func.isRequired,
-  hentOgVisAvsender: PT.func.isRequired,
-  hentOgVisRepresentant: PT.func.isRequired,
   journalpostID: PT.string,
   dokumentID: PT.string,
   vedlegg: PT.arrayOf(PT.shape({ dokumentID: PT.string, tittel: PT.string })),
   settFeltInnhold: PT.func.isRequired,
+  hentFagsakListe: PT.func.isRequired,
+  sokOrgnr: PT.func.isRequired,
 };
 
 Informasjon.defaultProps = {
@@ -252,6 +349,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   settFeltInnhold: (feltNavn, verdi) => dispatch(change("journalforing", feltNavn, verdi)),
+  hentFagsakListe: (fnrEllerOrgnr) => dispatch(sokOperations.sok(fnrEllerOrgnr)),
+  sokOrgnr: (orgnr) => dispatch(OrganisasjonOperations.hent(orgnr)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Informasjon);
