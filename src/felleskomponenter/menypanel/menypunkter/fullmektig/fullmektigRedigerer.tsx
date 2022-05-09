@@ -82,8 +82,7 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
         )}
         {org.orgnr && (
           <>
-            <OrganisasjonsAdresse organisasjon={org} className="adresse" visNavn={false} visTittel={false} />
-            <Nav.Fieldset legend="Hvem er dette fullmektig for?" className="radioknapper">
+            <Nav.Fieldset legend="Hvem representerer fullmektig?" className="radioknapper">
               <Nav.Radio
                 onChange={rolleChangeHandler}
                 checked={representererKode === MKV.Koder.representerer.ARBEIDSGIVER}

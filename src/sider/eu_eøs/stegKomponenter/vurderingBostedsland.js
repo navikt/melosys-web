@@ -12,12 +12,11 @@ import * as MPT from "../../../proptypes";
 import EnkeltLandPure from "../../../felleskomponenter/skjema/landvelger/enkeltLandPure";
 import * as Mui from "../../../felleskomponenter/ui";
 
-import { BOOLSK } from "../../../constants";
 import {
   avklartefaktaType,
-  lagAvklartfakta,
   konverterAvklartfaktaTilStegData,
   lagAvklartefaktaBegrunnelse,
+  lagAvklartfakta,
 } from "../../../felleskomponenter/stegvelger";
 import { hentFaktaVerdi } from "../../../domeneUtils";
 
@@ -58,10 +57,9 @@ const VurderingBostedsland = (props) => {
   useEffect(() => {
     const { bostedslandFakta } = tilstand;
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, bostedslandFakta));
-    const cleanup = () => {
+    return () => {
       slettData();
     };
-    return cleanup;
   }, []);
 
   const { bostedslandFakta, harAvklaring, erBegrunnelserPaakrevd } = tilstand;
@@ -78,10 +76,10 @@ const VurderingBostedsland = (props) => {
 
   const radioEndringHandler = (event) => {
     if (event.target.value === "true") {
-      setNorgeErValgt(BOOLSK.SANN);
+      setNorgeErValgt(true);
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, MKV.Koder.landkoder.NO, null));
     } else {
-      setNorgeErValgt(BOOLSK.USANN);
+      setNorgeErValgt(false);
       slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
     }
   };
@@ -106,17 +104,17 @@ const VurderingBostedsland = (props) => {
               <Nav.Radio
                 name="bostedsland"
                 label="Norge"
-                value={BOOLSK.SANN}
+                value
                 onChange={radioEndringHandler}
-                checked={erNorgeValgt === BOOLSK.SANN}
+                checked={erNorgeValgt === true}
                 disabled={!redigerbart}
               />
               <Nav.Radio
                 name="bostedsland"
                 label="Annet"
-                value={BOOLSK.USANN}
+                value={false}
                 onChange={radioEndringHandler}
-                checked={erNorgeValgt === BOOLSK.USANN}
+                checked={erNorgeValgt === false}
                 disabled={!redigerbart}
               />
               {erNorgeValgt === false && (

@@ -11,8 +11,7 @@ import * as Konstanter from "../../../constants";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
 import * as Mui from "../../../felleskomponenter/ui";
-
-import AvsenderVelger from "./avsendervelger";
+import AvsenderVelger from "./avsender";
 import LenkeListeVelger from "./lenkelistevelger";
 import { formSelectors } from "../../../ducks/form";
 

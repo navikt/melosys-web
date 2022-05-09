@@ -128,7 +128,7 @@ const FullmektigRedigeringUtfort = ({
         </Nav.Column>
         {orgEllerFnrContent}
         <Nav.Column xs="5">
-          <Nav.Typo.Element style={{ marginTop: "0.5em" }}>Hvem er dette fullmektig for?</Nav.Typo.Element>
+          <Nav.Typo.Element style={{ marginTop: "0.5em" }}>Hvem representerer fullmektig?</Nav.Typo.Element>
           {representererKode && (
             <span>
               <Ikoner.GreenCheckmark className="checkmark" />

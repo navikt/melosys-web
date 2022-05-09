@@ -4,7 +4,6 @@ import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
 import * as Mui from "../../../../felleskomponenter/ui";
 
-import { BOOLSK } from "../../../../constants";
 import { konverterVilkarTilStegData, lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 
 const EnkeltVilkaar = (props) => {
@@ -31,16 +30,16 @@ const EnkeltVilkaar = (props) => {
             <Nav.Radio
               name={vilkaarKode}
               label={labelOppfylt}
-              value={BOOLSK.SANN}
-              checked={vilkaar.oppfylt === BOOLSK.SANN}
+              value
+              checked={vilkaar.oppfylt === true}
               onChange={radioEndringHandler}
               disabled={!redigerbart}
             />
             <Nav.Radio
               name={vilkaarKode}
               label={labelIkkeOppfylt}
-              value={BOOLSK.USANN}
-              checked={vilkaar.oppfylt === BOOLSK.USANN}
+              value={false}
+              checked={vilkaar.oppfylt === false}
               onChange={radioEndringHandler}
               disabled={!redigerbart}
             />
