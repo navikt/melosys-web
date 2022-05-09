@@ -51,8 +51,8 @@ const journalforing = object().shape({
   journalforingGjelder: string().required(MAA_FYLLES_UT),
   brukerID: string()
     .when("journalforingGjelder", {
-      is: BRUKER,
-      then: string().erFnrEllerDnr(SKRIV_INN_GYLDIG_FNR_ELLER_DNR).nullable(),
+      is: (journalforingGjelder) => journalforingGjelder === BRUKER,
+      then: string().erFnrEllerDnr(SKRIV_INN_GYLDIG_FNR_ELLER_DNR).required(SKRIV_INN_GYLDIG_FNR_ELLER_DNR).nullable(),
     })
     .when(["journalforingGjelder", "brukerNavn"], {
       is: (journalforingGjelder, navn) => journalforingGjelder === BRUKER && Utils._isEmpty(navn),
@@ -62,8 +62,8 @@ const journalforing = object().shape({
   brukerNavn: string().nullable(),
   virksomhetOrgnr: string()
     .when("journalforingGjelder", {
-      is: VIRKSOMHET,
-      then: string().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
+      is: (journalforingGjelder) => journalforingGjelder === VIRKSOMHET,
+      then: string().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).required(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .when(["journalforingGjelder", "virksomhetNavn"], {
       is: (journalforingGjelder, navn) => journalforingGjelder === VIRKSOMHET && Utils._isEmpty(navn),
