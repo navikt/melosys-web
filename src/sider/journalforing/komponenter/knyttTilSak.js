@@ -21,7 +21,6 @@ export const KnyttTilSak = (props) => {
   const clsElementskrift = { "border-bottom": "none" };
 
   const visOpprettNyBehandling = !sakInneholderSEDBehandling;
-  const visUtenOppretteBehandling = sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
 
   if (sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
     return (
@@ -34,9 +33,6 @@ export const KnyttTilSak = (props) => {
         />
         <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
           {visOpprettNyBehandling && <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />}
-          {visUtenOppretteBehandling && (
-            <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
-          )}
         </Skjema.RadioGruppe>
         {opprettBehandling() && (
           <Skjema.Select
