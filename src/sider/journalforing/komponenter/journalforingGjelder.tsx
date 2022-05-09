@@ -13,7 +13,6 @@ import Komponent from "./komponent";
 import { formSelectors } from "../../../ducks/form";
 import { journalforingSelectors } from "../../../ducks/journalforing";
 import { BRUKER, VIRKSOMHET } from "./journalforingform";
-import { BOOLSK } from "../../../constants";
 
 import "./journalforingGjelder.css";
 
@@ -34,12 +33,12 @@ const JournalforingGjelder = ({ journalforingGjelder, oppdaterFelt, defaultBruke
   const handleClick = (event: SyntheticEvent<EventTarget>, value: string) => {
     oppdaterFelt("journalforingGjelder", value);
     if (value === BRUKER) {
-      oppdaterFelt("ikkeSendForvaltingsmelding", BOOLSK.USANN);
+      oppdaterFelt("ikkeSendForvaltingsmelding", false);
       oppdaterFelt("brukerID", defaultBrukerID);
       oppdaterFelt("virksomhetOrgnr", null);
       oppdaterFelt("virksomhetNavn", null);
     } else {
-      oppdaterFelt("ikkeSendForvaltingsmelding", BOOLSK.SANN);
+      oppdaterFelt("ikkeSendForvaltingsmelding", true);
       oppdaterFelt("brukerID", null);
       oppdaterFelt("brukerNavn", null);
     }
