@@ -65,17 +65,15 @@ const FullmektigRedigeringUtfort = ({
         {!Utils._isEmpty(kontaktopplysningerOrg) ? (
           <>
             <Nav.Row>
-              {!Utils._isEmpty(kontaktopplysningerOrg) && (
-                <>
-                  <Nav.Column xs="3">
-                    <OrganisasjonsAdresse organisasjon={kontaktopplysningerOrg} visTittel={false} />
-                  </Nav.Column>
-                  <Nav.Column xs="5">
-                    <Nav.Typo.Normaltekst>Organisasjonsnummer</Nav.Typo.Normaltekst>
-                    <Nav.Typo.Element>{kontaktopplysningerOrg.orgnr}</Nav.Typo.Element>
-                  </Nav.Column>
-                </>
-              )}
+              <>
+                <Nav.Column xs="3">
+                  <OrganisasjonsAdresse organisasjon={kontaktopplysningerOrg} visTittel={false} />
+                </Nav.Column>
+                <Nav.Column xs="5">
+                  <Nav.Typo.Normaltekst>Organisasjonsnummer</Nav.Typo.Normaltekst>
+                  <Nav.Typo.Element>{kontaktopplysningerOrg.orgnr}</Nav.Typo.Element>
+                </Nav.Column>
+              </>
             </Nav.Row>
             <Nav.Row className="brevinfo">
               <Nav.Column xs="12">

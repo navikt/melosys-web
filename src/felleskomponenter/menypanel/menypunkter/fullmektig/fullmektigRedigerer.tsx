@@ -7,7 +7,7 @@ import * as Nav from "../../../../navFrontend";
 import { Organisasjon } from "../../../../services/api";
 
 import Kontaktopplysninger, { KontaktOpplysning } from "../kontaktopplysninger";
-import SokFullmektigOrg from "./sokFullmektigOrg";
+import SokFullmektigOrgOrIdent from "./sokFullmektigOrgOrIdent";
 
 import "./fullmektigRedigerer.css";
 import StrukturertAdresse from "../../../adresser/strukturertAdresse";
@@ -61,12 +61,12 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
   return (
     <Nav.Row className="fullmektig__redigerer">
       <Nav.Column xs="6">
-        <SokFullmektigOrg
+        <SokFullmektigOrgOrIdent
           onIdentFunnet={onIdentFunnet}
           defaultOrgnrIdent={fullmektig.orgnr || fullmektig.personIdent || ""}
         />
         {person && (
-          <div>
+          <>
             {Utils.person.tilSammensattNavnFraObjekt(person.navn)}
             {!Utils._isEmpty(person.bostedsadresser) && (
               <StrukturertAdresse
@@ -77,7 +77,7 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
                 }}
               />
             )}
-          </div>
+          </>
         )}
         {org.orgnr && (
           <>

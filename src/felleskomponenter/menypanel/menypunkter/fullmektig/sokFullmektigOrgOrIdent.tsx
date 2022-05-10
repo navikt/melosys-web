@@ -12,7 +12,7 @@ interface SokFullmektigOrgProps {
   defaultOrgnrIdent: string | null;
 }
 
-function SokFullmektigOrg(props: SokFullmektigOrgProps) {
+function SokFullmektigOrgOrIdent(props: SokFullmektigOrgProps) {
   const { onIdentFunnet, defaultOrgnrIdent } = props;
 
   const [ident, setIdent] = useState(defaultOrgnrIdent || "");
@@ -27,7 +27,7 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
   };
 
   const sok = async (sokIdent: string) => {
-    if (Utils.organisasjon.erOrgnrLengde(sokIdent) && Utils.organisasjon.erOrgnrGyldig(sokIdent)) {
+    if (Utils.organisasjon.erOrgnrGyldig(sokIdent)) {
       try {
         await Api.Organisasjoner.hentOrganisasjon(sokIdent);
         identFunnetHandler(sokIdent, "");
@@ -37,7 +37,7 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
           else setFeilmelding("Ukjent feil ved søk på org.nr.");
         }
       }
-    } else if (Utils.person.erGyldigFnr(sokIdent) || Utils.person.erGyldigDnr(sokIdent)) {
+    } else if (Utils.person.erGyldigFnrEllerDnr(sokIdent)) {
       try {
         await hentBostedsadresseForPerson(sokIdent);
         identFunnetHandler("", sokIdent);
@@ -73,4 +73,4 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
   );
 }
 
-export default SokFullmektigOrg;
+export default SokFullmektigOrgOrIdent;
