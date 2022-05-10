@@ -10,7 +10,7 @@ import MKV from "../../../../../../melosyskodeverk";
 import AnnenForelderModal from "./annenForelderModal";
 import { Bostedsadresse } from "../../../../../../graphql";
 import { StrukturertAdresse } from "../../../../../adresser";
-import { HentBostedsadresseForPersonDocument } from "../../../../../../graphql/adresse/hentBostedsadresseForPerson.generated";
+import { HentBostedsadresseForPersonDocument } from "../../../../../../graphql/adresse";
 
 const { NO } = MKV.Koder.landkoder;
 

@@ -17,8 +17,6 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
 
   const [ident, setIdent] = useState(defaultOrgnrIdent || "");
   const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
-  const [korrekteLengdeOrgnrOppgittMinstEnGang, setKorrekteLengdeOrgnrOppgittMinstEnGang] = useState(false);
-  const [korrekteLengdeFnrDnrOppgittMinstEnGang, setKorrekteLengdeFnrDnrOppgittMinstEnGang] = useState(false);
 
   const identFunnetHandler = async (funnetOrgnr: string, funnetPersonIdent: string) => {
     try {
@@ -29,28 +27,6 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
   };
 
   const sok = async (sokIdent: string) => {
-    if (!Utils.organisasjon.erOrgnrLengde(sokIdent)) {
-      if (korrekteLengdeOrgnrOppgittMinstEnGang) {
-        setFeilmelding("Org.nr. er 9 siffer");
-      }
-    }
-
-    if (!Utils.person.erFnrLengde(sokIdent)) {
-      if (korrekteLengdeFnrDnrOppgittMinstEnGang) {
-        setFeilmelding("F-nr/D-nr er 11 siffer");
-      }
-    }
-
-    if (Utils.organisasjon.erOrgnrLengde(sokIdent)) {
-      setKorrekteLengdeOrgnrOppgittMinstEnGang(true);
-      setKorrekteLengdeFnrDnrOppgittMinstEnGang(false);
-    }
-
-    if (Utils.person.erFnrLengde(sokIdent)) {
-      setKorrekteLengdeFnrDnrOppgittMinstEnGang(true);
-      setKorrekteLengdeOrgnrOppgittMinstEnGang(false);
-    }
-
     if (Utils.organisasjon.erOrgnrLengde(sokIdent) && Utils.organisasjon.erOrgnrGyldig(sokIdent)) {
       try {
         await Api.Organisasjoner.hentOrganisasjon(sokIdent);
@@ -71,10 +47,8 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
           else setFeilmelding("Ukjent feil ved søk på fnr eller dnr");
         }
       }
-    } else if (korrekteLengdeOrgnrOppgittMinstEnGang) {
-      setFeilmelding("Ugyldig org.nr.");
     } else {
-      setFeilmelding("Ugyldig f-nr eller d-nr");
+      setFeilmelding("Ugyldig orgnr, f-nr eller d-nr");
     }
   };
 
