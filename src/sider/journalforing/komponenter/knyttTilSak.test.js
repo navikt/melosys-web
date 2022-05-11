@@ -33,7 +33,7 @@ describe("KnyttTilSak", () => {
 
     const radios = knyttTilSak.find(Skjema.Radio);
 
-    expect(radios).toHaveLength(2);
+    expect(radios).toHaveLength(1);
     expect(radios.first().props().label).toBe("Opprett ny behandling");
   });
 
@@ -44,8 +44,7 @@ describe("KnyttTilSak", () => {
 
     const radios = knyttTilSak.find(Skjema.Radio);
 
-    expect(radios).toHaveLength(1);
-    expect(radios.first().props().label).not.toBe("Opprett ny behandling");
+    expect(radios).toHaveLength(0);
   });
 
   it(`Ikke vis knapp for uten å opprette behandling dersom saktype er TRYGDEAVTALE`, () => {
