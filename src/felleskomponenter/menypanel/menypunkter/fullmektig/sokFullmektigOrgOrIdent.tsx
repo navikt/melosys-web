@@ -62,7 +62,7 @@ function SokFullmektigOrgOrIdent(props: SokFullmektigOrgProps) {
     <Nav.Row>
       <Nav.Column xs="9">
         <Nav.Input
-          label="Organisasjonsnummer. eller fødselsnr./d-nr:"
+          label="Organisasjonsnr. eller fødselsnr./d-nr.: "
           placeholder="Skriv inn..."
           onChange={vedEndretInput}
           value={ident}
