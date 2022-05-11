@@ -68,10 +68,11 @@ const Saksbehandling = ({
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const saksnummer = match?.params?.snr;
 
-  const debouncedSetBehandlingIDHarEndretSeg = useCallback(
-    Utils._debounce(() => setBehandlingIDHarEndretSeg(false), 250),
-    []
-  );
+  const handleNyVurdering = (skalHenteBehandling, nyVurderingBehandlingID) => {
+    if (skalHenteBehandling) hentBehandling(nyVurderingBehandlingID);
+    setBehandlingIDHarEndretSeg(false);
+  };
+  const debouncedHandleNyVurdering = useCallback(Utils._debounce(handleNyVurdering, 500), []);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -80,7 +81,7 @@ const Saksbehandling = ({
       if (behandlingID !== -1) setBehandlingIDHarEndretSeg(true);
       setBehandlingID(Utils._toInteger(behandlingIDFraParam));
     } else if (behandlingIDHarEndretSeg) {
-      debouncedSetBehandlingIDHarEndretSeg();
+      debouncedHandleNyVurdering(!redigerbart, behandlingIDFraParam);
     }
   };
 
@@ -121,9 +122,9 @@ const Saksbehandling = ({
     hentLandkoder();
 
     return () => {
+      resetFagsakState();
       resetBehandlingerState();
       resetBehandlingsgrunnlagState();
-      resetFagsakState();
       skjulMenypanel();
     };
   }, []);
