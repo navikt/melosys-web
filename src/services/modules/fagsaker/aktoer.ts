@@ -10,6 +10,7 @@ export interface Aktoer {
   rolleKode: string;
   utenlandskPersonID: string | null;
   representererKode: string | null;
+  personIdent: string | null;
 }
 
 export const hent = (saksnr: string, rolleKode: string, representererKode?: string): Promise<Aktoer[]> => {
