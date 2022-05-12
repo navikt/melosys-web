@@ -147,9 +147,10 @@ const SendBrev = ({
       fritekst: hentFormVerdi("FRITEKST"),
       kopiMottakere: hentKopiMottakere() || [],
       kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
-      saksvedlegg: valgteVedlegg.map((vedlegg) => {
-        return { dokumentID: vedlegg.dokumentID, journalpostID: vedlegg.journalpostID };
-      }),
+      saksvedlegg: valgteVedlegg.map((vedlegg) => ({
+        dokumentID: vedlegg.dokumentID,
+        journalpostID: vedlegg.journalpostID,
+      })),
     };
   };
 
