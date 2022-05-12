@@ -58,9 +58,10 @@ const Saksopplysninger = ({
   }
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const erAvslaattSoknad =
     behandlingsresultat.behandlingsresultatTypeKode ===
-    MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+      MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL && !erNyVurdering;
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
   const behandlingsgrunnlagErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
