@@ -38,7 +38,7 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
  * seg inn på den.
  */
 const BehandlingOppgave = ({ sak }) => {
-  const { sammensattNavn, sakstype, saksnummer, behandling, aktivTil, periode, land, fnr } = sak;
+  const { navn, sakstype, saksnummer, behandling, aktivTil, periode, land, id } = sak;
 
   const {
     behandlingID,
@@ -52,7 +52,7 @@ const BehandlingOppgave = ({ sak }) => {
   } = behandling;
 
   const { fom, tom } = periode;
-  const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
+  const tittel = `${KV.objektTilTerm(sakstype)} - ${navn} - ${id}`;
   const link = Routing.lagUrl(saksnummer, behandlingID, behandlingstema.kode);
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 
