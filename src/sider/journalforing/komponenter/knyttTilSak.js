@@ -33,6 +33,9 @@ export const KnyttTilSak = (props) => {
         />
         <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
           {visOpprettNyBehandling && <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />}
+          {sakInneholderSEDBehandling && (
+            <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
+          )}
         </Skjema.RadioGruppe>
         {opprettBehandling() && (
           <Skjema.Select
