@@ -42,6 +42,7 @@ import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 const Saksbehandling = ({
   annenBehandlingOppfriskes,
   arbeidsland,
+  behandlingstype,
   behandlingOppfriskes,
   behandlingsgrunnlag,
   behandlingsgrunnlagPeriodeFom,
@@ -163,9 +164,10 @@ const Saksbehandling = ({
   if (folketrygdenToggle === "fetching" || folketrygdenToggle === "disabled") return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const erAvslaattSoknad =
     behandlingsresultat.behandlingsresultatTypeKode ===
-    MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+      MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL && !erNyVurdering;
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
   const behandlingsgrunnlagErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
@@ -237,6 +239,7 @@ const Saksbehandling = ({
 Saksbehandling.propTypes = {
   annenBehandlingOppfriskes: PT.bool.isRequired,
   arbeidsland: PT.arrayOf(PT.string).isRequired,
+  behandlingstype: PT.string.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
@@ -291,6 +294,7 @@ Saksbehandling.defaultProps = {
 
 const mapStateToProps = (state) => ({
   arbeidsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).fom
