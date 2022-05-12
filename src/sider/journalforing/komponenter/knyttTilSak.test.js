@@ -59,4 +59,28 @@ describe("KnyttTilSak", () => {
     expect(radios).toHaveLength(1);
     expect(radios.first().props().label).not.toBe("Uten å opprette behandling");
   });
+
+  it(`Ikke vis knapp for uten å opprette behandling dersom saktype er EØS`, () => {
+    props.sak.behandlingOversikter[0].behandlingstype = { kode: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD };
+    props.sak.sakstype.kode = MKV.Koder.sakstyper.EU_EOS;
+
+    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+
+    const radios = knyttTilSak.find(Skjema.Radio);
+
+    expect(radios).toHaveLength(1);
+    expect(radios.first().props().label).not.toBe("Uten å opprette behandling");
+  });
+
+  it(`Vis knapp for uten å opprette behandling dersom saktype er EØS og behandlingstype er SED`, () => {
+    props.sak.behandlingOversikter[0].behandlingstype = { kode: MKV.Koder.behandlinger.behandlingstyper.SED };
+    props.sak.sakstype.kode = MKV.Koder.sakstyper.EU_EOS;
+
+    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+
+    const radios = knyttTilSak.find(Skjema.Radio);
+
+    expect(radios).toHaveLength(1);
+    expect(radios.first().props().label).toBe("Uten å opprette behandling");
+  });
 });
