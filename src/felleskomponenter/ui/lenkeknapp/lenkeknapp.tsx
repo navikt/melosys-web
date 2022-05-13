@@ -12,7 +12,7 @@ interface LenkeknappProps {
 
 const Lenkeknapp = ({ onClick, children, className, ikon, ...rest }: LenkeknappProps) => {
   const Ikon = ikon;
-  const cls = classNames(Ikon ? "lenkeknapp__undecorated" : "lenkeknapp", className);
+  const cls = classNames(Ikon ? "lenkeknapp__ikon" : "lenkeknapp", className);
 
   return (
     <button {...rest} onClick={onClick} className={cls} type="button">
