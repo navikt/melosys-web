@@ -3,11 +3,11 @@ import React, { ComponentProps } from "react";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
 
-import { useHentBostedsadresseForPersonQuery } from "./hentBostedsadresseForPerson.generated";
 import { StrukturertAdresse } from "../../../../../adresser";
 
 import "./annenForelderModal.css";
 import bem from "../../../../../../bemUtils";
+import { useHentBostedsadresseForPersonQuery } from "../../../../../../graphql/adresse";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 

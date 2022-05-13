@@ -1,21 +1,25 @@
-import React, { useState, useEffect, MouseEvent } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 import classNames from "classnames";
 
 import * as Api from "../../../../services/api";
 import * as Nav from "../../../../navFrontend";
 
+import * as Utils from "../../../../utils";
 import FullmektigRedigerer from "./fullmektigRedigerer";
 import FullmektigRedigeringUtfort from "./fullmektigRedigeringUtfort";
 import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../editerbartElement";
 import { useKontaktOpplysninger } from "../kontaktopplysninger";
+
+import { hentBostedsadresseForPerson } from "../../../../graphql/adresse";
+import { Personopplysninger } from "../../../../graphql";
 
 interface EnkeltFullmektigProps {
   className?: string;
   fullmektig: Api.Fagsaker.aktoer.Aktoer;
   redigerbart: boolean;
   slett: (e: MouseEvent) => Promise<any> | void;
-  onRolleChange: (rolle: string, org?: string) => Promise<any>;
-  onOrgFunnet: (orgnr: string) => Promise<any>;
+  onRolleChange: (rolle: string, org?: string, personIdent?: string) => Promise<any>;
+  onOrgnrEllerIdentFunnet: (orgnr: string, personIdent: string) => Promise<any>;
   saksnummer: string;
 }
 
@@ -25,11 +29,13 @@ const EnkeltFullmektig = ({
   redigerbart,
   slett,
   onRolleChange,
-  onOrgFunnet,
+  onOrgnrEllerIdentFunnet,
   saksnummer,
 }: EnkeltFullmektigProps) => {
   const [org, settOrg] = useState<Partial<Api.Organisasjon>>({});
+  const [person, settPerson] = useState<Personopplysninger | null>(null);
   const [orgForsoktHentet, setOrgForsoktHentet] = useState(false);
+  const [personForsoktHentet, setPersonForsoktHentet] = useState(false);
   const [slettFeilmelding, setSlettFeilmelding] = useState("");
 
   const [kontaktopplysninger, setKontaktopplysninger, slettKontaktOpplysninger, lagreKontaktOpplysninger] =
@@ -46,9 +52,21 @@ const EnkeltFullmektig = ({
     setOrgForsoktHentet(true);
   };
 
+  const hentPersonFraApi = async (personIdent: string) => {
+    try {
+      const personopplysninger = await hentBostedsadresseForPerson(personIdent);
+      settPerson(personopplysninger || null);
+    } catch (e) {
+      settPerson(null);
+    }
+
+    setPersonForsoktHentet(true);
+  };
+
   useEffect(() => {
     if (fullmektig.orgnr) hentOrgFraApi(fullmektig.orgnr);
-  }, [fullmektig.orgnr]);
+    if (fullmektig.personIdent) hentPersonFraApi(fullmektig.personIdent);
+  }, [fullmektig.orgnr, fullmektig.personIdent]);
 
   const slettHandler = async (event: MouseEvent) => {
     try {
@@ -59,8 +77,10 @@ const EnkeltFullmektig = ({
   };
 
   if (fullmektig.orgnr ? !orgForsoktHentet : false) return null;
+  if (fullmektig.personIdent ? !personForsoktHentet : false) return null;
 
-  const tittel = `Fullmektig: ${org.navn || ""}`;
+  const navn = person?.navn ? Utils.person.tilSammensattNavnFraObjekt(person?.navn) : "";
+  const tittel = `Fullmektig: ${org.navn || navn || ""}`;
 
   const cls = classNames(className);
 
@@ -70,12 +90,15 @@ const EnkeltFullmektig = ({
       <EditerbartElement
         className={cls}
         redigerbart={redigerbart}
-        harData={Boolean(fullmektig.representererKode && fullmektig.orgnr)}
+        harData={
+          Boolean(fullmektig.representererKode && fullmektig.orgnr) ||
+          Boolean(fullmektig.representererKode && fullmektig.personIdent)
+        }
         tittel={tittel}
         tittelUnderstrek
         understrek
         onBinClick={slettHandler}
-        visLagreKnapp={Boolean(fullmektig.orgnr)}
+        visLagreKnapp={Boolean(fullmektig.orgnr) || Boolean(fullmektig.personIdent)}
         symbolsynlighet={visAlltidBinSymbolsynlighet}
         redigererRender={() => (
           <FullmektigRedigerer
@@ -83,12 +106,14 @@ const EnkeltFullmektig = ({
             representererKode={fullmektig.representererKode}
             org={org}
             redigerbart={redigerbart}
-            onOrgFunnet={onOrgFunnet}
+            onIdentFunnet={onOrgnrEllerIdentFunnet}
             onRolleChange={onRolleChange}
             kontaktopplysninger={kontaktopplysninger}
             onKontaktOpplysningerChange={setKontaktopplysninger}
             onKontaktopplysningerInputBlur={lagreKontaktOpplysninger}
             onKontaktopplysningerSlettClick={slettKontaktOpplysninger}
+            person={person}
+            fullmektig={fullmektig}
           />
         )}
         redigeringUtfortRender={() => (
@@ -96,6 +121,8 @@ const EnkeltFullmektig = ({
             representererKode={fullmektig.representererKode}
             kontaktopplysninger={kontaktopplysninger}
             org={org}
+            person={person}
+            fullmektig={fullmektig}
           />
         )}
       />
