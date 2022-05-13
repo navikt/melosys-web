@@ -54,7 +54,8 @@ const Oppsummering = (props: OppsummeringProps) => {
   if (!oppsummering || !fagsak?.sakstype) return <div />;
 
   const { saksnummer, sakstype, registrertDato } = fagsak;
-  const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist, behandlingstema } = oppsummering;
+  const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist, behandlingstema, behandlingGjelder } =
+    oppsummering;
   const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
   const behandlingsgrunnlagperiode = `${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`;
 
@@ -67,6 +68,7 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   const erSed = behandlingstype && KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.SED;
   const erTrygdeavtale = sakstype && KV.objektTilKode(sakstype) === MKV.Koder.sakstyper.TRYGDEAVTALE;
+  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   const tabellEnKolonne = (data: string[][]) => {
     const rows: JSX.Element[] = [];
@@ -110,15 +112,22 @@ const Oppsummering = (props: OppsummeringProps) => {
   };
 
   const renderTabell = () => {
-    const col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", behandlingsgrunnlagperiode]];
-    if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
-    col1.push(["Land", erSed ? landStorBokstav(lovvalgsland) : landTilSetning(arbeidsland)]);
+    let col1;
+    let col2;
+    if (behandlingGjelderVirksomhet) {
+      col1 = [["Beh. opprettet", formatterDatoTilNorsk(registrertDato)]];
+      col2 = [["Sist oppdatert", formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`]];
+    } else {
+      col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", behandlingsgrunnlagperiode]];
+      if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
+      col1.push(["Land", erSed ? landStorBokstav(lovvalgsland) : landTilSetning(arbeidsland)]);
 
-    const col2 = [
-      ["Søknad mottatt", mottattDato || "-"],
-      ["Beh. opprettet", formatterDatoTilNorsk(registrertDato)],
-      ["Sist oppdatert", formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`],
-    ];
+      col2 = [
+        ["Søknad mottatt", mottattDato || "-"],
+        ["Beh. opprettet", formatterDatoTilNorsk(registrertDato)],
+        ["Sist oppdatert", formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`],
+      ];
+    }
 
     return isLitenSkjerm ? tabellEnKolonne(col1.concat(col2)) : tabellToKolonner(col1, col2);
   };
