@@ -45,12 +45,17 @@ export const Sok = ({ sokResultat, children, sok }: SokProps) => {
 
   if (!sokResultat) return null;
 
-  const sokeFraseErFnrDnr = Utils.person.erGyldigFnr(sokefrase);
-  const ingenTreff = (
-    <Nav.Panel>
-      Fant ingen saker knyttet til {sokeFraseErFnrDnr ? "f.nr./d-nr." : "saksnummer"} {sokefrase}.
-    </Nav.Panel>
-  );
+  const enhet = (value: string | null): string => {
+    if (Utils.person.erGyldigFnr(value)) {
+      return `f.nr./d-nr. ${value}`;
+    }
+    if (Utils.organisasjon.erOrgnrGyldig(value)) {
+      return `org.nr. ${value}`;
+    }
+    return `saksnummer ${value}`;
+  };
+
+  const ingenTreff = <Nav.Panel>Fant ingen saker knyttet til {enhet(sokefrase)}.</Nav.Panel>;
 
   return (
     <div className="sok">
@@ -60,7 +65,7 @@ export const Sok = ({ sokResultat, children, sok }: SokProps) => {
           <section className="sokresultat">
             <h1>Saksoversikt</h1>
             <h2>
-              Resultater for {sokeFraseErFnrDnr ? "f.nr./d-nr." : "saksnummer"} {sokefrase}
+              Resultater for {enhet(sokefrase)}
               {sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
             </h2>
             {sokResultat.length > 0 && (

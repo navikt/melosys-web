@@ -45,7 +45,7 @@ const Fagsak = ({ sak }) => {
           </Nav.Column>
           <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
-              <dt>Opprettet:</dt>
+              <dt>Sak opprettet:</dt>
               <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
               <dt>Land:</dt>
               <dd>

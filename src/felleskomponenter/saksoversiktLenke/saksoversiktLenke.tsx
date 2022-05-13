@@ -2,29 +2,41 @@ import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
+import MKV from "../../melosyskodeverk";
+import * as Api from "../../services/api";
 import * as Ikon from "../../resources/images";
 import * as Nav from "../../navFrontend";
 import * as Routing from "../../routing";
 
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import useHentPersonopplysninger from "../informasjonlinje/useHentpersonopplysninger";
+
 import "./saksoversiktLenke.css";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
 });
 
 const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const SaksoversiktLenke = ({ behandlingID }: PropsFromRedux) => {
-  const personopplysninger = useHentPersonopplysninger(behandlingID, false);
+const SaksoversiktLenke = ({ behandlingID, behandlingGjelder }: PropsFromRedux) => {
+  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const personopplysninger = useHentPersonopplysninger(behandlingID, behandlingGjelderVirksomhet);
 
-  const hentSaksoversikt = (fnr: string | undefined) => {
-    if (!fnr) throw new Error("Personopplysninger mangler fnr");
+  const hentSaksoversikt = async () => {
+    if (behandlingGjelderVirksomhet) {
+      const { orgnr } = await Api.Organisasjoner.hentOrganisasjonTilVirksomhet(behandlingID);
+      if (!orgnr) throw new Error("Organisasjonsopplysninger mangler orgnr");
+      sessionStorage.setItem("sokefrase", orgnr);
+    } else {
+      const fnr = personopplysninger?.fnr;
+      if (!fnr) throw new Error("Personopplysninger mangler fnr");
+      sessionStorage.setItem("sokefrase", fnr);
+    }
 
-    sessionStorage.setItem("sokefrase", fnr);
     Routing.nyFane("sok");
   };
 
@@ -32,7 +44,7 @@ const SaksoversiktLenke = ({ behandlingID }: PropsFromRedux) => {
     <div className="saksoversiktLenke">
       <Nav.Panel>
         Vis saksoversikt:
-        <Nav.Lenker href="#" onClick={() => hentSaksoversikt(personopplysninger?.fnr)}>
+        <Nav.Lenker href="#" onClick={() => hentSaksoversikt()}>
           <Ikon.ExternalLink className="ikon" />
           Åpnes i nytt vindu
         </Nav.Lenker>
