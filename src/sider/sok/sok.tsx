@@ -66,7 +66,7 @@ export const Sok = ({ sokResultat, children, sok }: SokProps) => {
             <h1>Saksoversikt</h1>
             <h2>
               Resultater for {enhet(sokefrase)}
-              {sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
+              {sokResultat.length > 0 ? ` - ${sokResultat[0].navn}` : undefined}
             </h2>
             {sokResultat.length > 0 && (
               <SorterbarListe
