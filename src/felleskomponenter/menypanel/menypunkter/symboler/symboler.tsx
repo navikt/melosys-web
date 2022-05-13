@@ -3,13 +3,13 @@ import React, { ComponentProps } from "react";
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 
-type KnappeLenkeProps = ComponentProps<typeof Mui.Knappelenke>;
-type SymbolProps = Omit<KnappeLenkeProps, "title" | "ikon">;
+type LenkeknappProps = ComponentProps<typeof Mui.Lenkeknapp>;
+type SymbolProps = Omit<LenkeknappProps, "ikon">;
 
 export const Rediger = (props: SymbolProps) => (
-  <Mui.Knappelenke {...props} onClick={props.onClick} title="Rediger" ikon={Ikoner.Pencil} />
+  <Mui.Lenkeknapp {...props} onClick={props.onClick} aria-label="Rediger" ikon={Ikoner.Pencil} />
 );
 
 export const Slett = (props: SymbolProps) => (
-  <Mui.Knappelenke {...props} onClick={props.onClick} title="Slett" ikon={Ikoner.Bin} />
+  <Mui.Lenkeknapp {...props} onClick={props.onClick} aria-label="Slett" ikon={Ikoner.Bin} />
 );

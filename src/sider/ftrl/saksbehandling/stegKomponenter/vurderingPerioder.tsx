@@ -381,9 +381,9 @@ const VurderingPerioder = ({
 
       {visLeggTilNyPeriode && (
         <div className="leggTilKnapp" title="Legg til ny periode">
-          <Mui.Knappelenke onClick={handleLeggTil} ikon={Ikoner.Add}>
+          <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add}>
             Legg til ny periode
-          </Mui.Knappelenke>
+          </Mui.Lenkeknapp>
         </div>
       )}
 
