@@ -1,11 +1,22 @@
 @import (reference) "~nav-frontend-lenker-style/src/lenker-mixins";
 
-.lenkeknapp {
+.lenkeknapp,
+.lenkeknapp__undecorated {
   .lenke-mixin();
   .lenkemedikon-mixin();
   text-align: left;
-
-  // resetter default styling fra <button>
   border: none;
   padding: 0;
+
+  svg {
+    position: unset;
+    height: 1.4rem;
+    width: 1.4rem;
+    overflow: visible;
+    padding-right: 0.4rem;
+  }
+}
+
+.lenkeknapp__undecorated {
+  text-decoration: none;
 }

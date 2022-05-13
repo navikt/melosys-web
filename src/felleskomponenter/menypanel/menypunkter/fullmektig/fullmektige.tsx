@@ -160,9 +160,9 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
         );
       })}
       {visLeggTilKnapp && (
-        <Mui.Knappelenke onClick={apneLeggTilFullmektigDialog} ikon={Ikoner.Add} className="legg__til__knapp">
+        <Mui.Lenkeknapp onClick={apneLeggTilFullmektigDialog} ikon={Ikoner.Add} className="legg__til__knapp">
           Legg til ny fullmektig
-        </Mui.Knappelenke>
+        </Mui.Lenkeknapp>
       )}
     </div>
   );

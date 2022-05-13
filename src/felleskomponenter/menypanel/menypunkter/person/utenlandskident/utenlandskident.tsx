@@ -45,9 +45,9 @@ const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
           {redigerbart && (
             <Nav.Row>
               <Nav.Column xs="12">
-                <Mui.Knappelenke onClick={leggTilTomtFelt} ikon={Ikoner.Add}>
+                <Mui.Lenkeknapp onClick={leggTilTomtFelt} ikon={Ikoner.Add}>
                   Legg til ny rad
-                </Mui.Knappelenke>
+                </Mui.Lenkeknapp>
               </Nav.Column>
             </Nav.Row>
           )}
@@ -56,7 +56,7 @@ const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
       redigeringUtfortRender={() => <UtfyltUtenlandskIdent utenlandskeIdenter={felter} />}
       ingenDataRender={(apneRedigering) =>
         redigerbart ? (
-          <Mui.Knappelenke
+          <Mui.Lenkeknapp
             onClick={() => {
               apneRedigering();
               leggTilTomtFelt();
@@ -64,7 +64,7 @@ const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
             ikon={Ikoner.Add}
           >
             Legg til ID-nummer
-          </Mui.Knappelenke>
+          </Mui.Lenkeknapp>
         ) : null
       }
     />

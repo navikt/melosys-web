@@ -231,9 +231,9 @@ export const InnerArbeidsforholdNorgeListe = ({
       ))}
       {redigerbart && (
         <div className="leggTilKnapp">
-          <Mui.Knappelenke onClick={leggTilDefault} ikon={Ikoner.Add}>
+          <Mui.Lenkeknapp onClick={leggTilDefault} ikon={Ikoner.Add}>
             {leggTilTekst}
-          </Mui.Knappelenke>
+          </Mui.Lenkeknapp>
         </div>
       )}
     </div>
