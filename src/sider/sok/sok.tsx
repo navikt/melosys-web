@@ -9,7 +9,7 @@ import * as Utils from "../../utils";
 
 import withErrorHandling from "../../felleskomponenter/withErrorHandling";
 import Fagsak from "../../felleskomponenter/oppgaveliste/fagsak";
-import SorterbarListe from "../../felleskomponenter/sorterbarListe/sorterbarListe";
+import SorterbarListe from "../../felleskomponenter/sorterbarListe";
 import { sokSelectors, sokOperations } from "../../ducks/sok";
 
 import "./sok.css";

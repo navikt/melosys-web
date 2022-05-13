@@ -4,7 +4,7 @@ import { shallow } from "enzyme";
 import * as Utils from "../../utils";
 
 import { Sok, SokProps } from "./sok";
-import SorterbarListe from "../../felleskomponenter/sorterbarListe/sorterbarListe";
+import SorterbarListe from "../../felleskomponenter/sorterbarListe";
 
 describe("Sok", () => {
   let props: SokProps;

@@ -10,7 +10,7 @@ import Behandling from "./behandling";
 import PanelHeader from "../panelHeader/panelHeader";
 import EnkeltDato from "../datoOmrade/enkeltDato";
 import { DatoOmradeDescription } from "../datoOmrade/datoOmrade";
-import sorterElementerEtterDato from "../sorterbarListe/sorterElementerEtterDato";
+import { sorterElementerEtterDato } from "../sorterbarListe";
 import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";

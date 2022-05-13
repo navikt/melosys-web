@@ -3,7 +3,6 @@ import PT from "prop-types";
 
 import * as Utils from "../../utils";
 import * as Nav from "../../navFrontend";
-
 import sorterElementerEtterDato from "./sorterElementerEtterDato";
 
 import "./sorterbarListe.css";
