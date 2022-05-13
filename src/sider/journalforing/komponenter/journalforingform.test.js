@@ -2,7 +2,7 @@ import React from "react";
 
 import MKV from "../../../melosyskodeverk";
 
-import { JournalforingForm } from "./journalforingform";
+import { JournalforingForm, BRUKER, VIRKSOMHET } from "./journalforingform";
 import SendForvaltningsMelding from "./sendForvaltningsMelding";
 
 const {
@@ -13,6 +13,7 @@ const {
   ARBEID_FLERE_LAND,
   ARBEID_NORGE_BOSATT_ANNET_LAND,
   ARBEID_I_UTLANDET,
+  YRKESAKTIV,
 } = MKV.Koder.behandlinger.behandlingstema;
 
 describe("JournalforingForm", () => {
@@ -25,15 +26,19 @@ describe("JournalforingForm", () => {
       vedlegg: [],
       hentOgVisAvsender: jest.fn(),
       hentOgVisBruker: jest.fn(),
+      hentOgVisVirksomhet: jest.fn(),
       fagsakListe: [],
       hentOgVisRepresentant: jest.fn(),
       behandlingstemaer: [],
       formValues: {
         saksnummer: "-1",
         avsenderType: "",
+        journalforingGjelder: BRUKER,
       },
+      formErrors: {},
       settFeltInnhold: jest.fn(),
       settJournalforingHensikt: jest.fn(),
+      submitFailed: false,
       avbrytJournalforing: jest.fn(),
       kanSubmittes: true,
       handleSubmit: jest.fn(),
@@ -49,11 +54,20 @@ describe("JournalforingForm", () => {
     ARBEID_FLERE_LAND,
     ARBEID_NORGE_BOSATT_ANNET_LAND,
     ARBEID_I_UTLANDET,
+    YRKESAKTIV,
   ]).it("sending av forvaltningsmelding vises for behandlingstema %p", (behandlingstema) => {
     props.formValues.opprettnysak_behandlingstema = behandlingstema;
     const journalforingform = shallow(<JournalforingForm {...props} />);
     const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
 
     expect(sendForvaltningsMelding).toHaveLength(1);
+  });
+
+  test("sending av forvaltningsmelding vises ikke når man journalfører på virksomhet", () => {
+    props.formValues.journalforingGjelder = VIRKSOMHET;
+    const journalforingform = shallow(<JournalforingForm {...props} />);
+    const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
+
+    expect(sendForvaltningsMelding).toHaveLength(0);
   });
 });

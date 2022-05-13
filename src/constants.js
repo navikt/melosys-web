@@ -7,11 +7,6 @@ export const JOURNALFORING_HENSIKT = {
   OPPRETT: "OPPRETT",
 };
 
-export const BOOLSK = {
-  SANN: true,
-  USANN: false,
-};
-
 export const BOOLSK_STRING = {
   SANN: "TRUE",
   USANN: "FALSE",

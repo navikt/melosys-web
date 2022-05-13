@@ -180,7 +180,9 @@ const VurderingVedtak = ({
     begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
     ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
     barnFritekst: familieFormValues?.barn?.fritekst || null,
-    vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+    vedtakstype: erNyVurdering
+      ? MKV.Koder.vedtakstyper.ENDRINGSVEDTAK
+      : vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
     kopiMottakere: getKopiMottakere(),
     nyVurderingBakgrunn: getNyVurderingBakgrunn(),
   });

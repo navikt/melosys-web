@@ -9,9 +9,7 @@ import MKV from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Api from "../../../services/api";
 import { oppgaverOperations } from "../../../ducks/oppgaver";
-import { useAsyncCallbackState } from "../../../hooks";
 import "./behandling.css";
 
 const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
@@ -42,8 +40,6 @@ export const Behandling = ({
   change,
   initialValues,
 }: InjectedFormProps<KV.Form.BehandlingsFormData, BehandlingProps> & BehandlingProps) => {
-  const [statistikk] = useAsyncCallbackState(Api.Statistikk.hent, { aapneBehandlinger: {} }, []);
-
   useEffect(() => {
     if (formValues?.sakstype) {
       change(
@@ -97,14 +93,11 @@ export const Behandling = ({
               {MKV.KTObjects.behandlinger.behandlingstema
                 .filter(behandlingstemaErPlukkbart)
                 .sort(compareTerm)
-                .map(({ kode, term }: KTObject) => {
-                  const antallAapneBehandlinger = statistikk.aapneBehandlinger[kode] || 0;
-                  return (
-                    <option key={kode} value={kode}>
-                      {term}&nbsp;&nbsp;({antallAapneBehandlinger})
-                    </option>
-                  );
-                })}
+                .map(({ kode, term }: KTObject) => (
+                  <option key={kode} value={kode}>
+                    {term}
+                  </option>
+                ))}
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>

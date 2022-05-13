@@ -58,9 +58,10 @@ const Saksopplysninger = ({
   }
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const erAvslaattSoknad =
     behandlingsresultat.behandlingsresultatTypeKode ===
-    MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+      MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL && !erNyVurdering;
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
   const behandlingsgrunnlagErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
@@ -104,7 +105,6 @@ Saksopplysninger.propTypes = {
   behandlingstype: PT.string.isRequired,
   redigerbart: PT.bool,
   behandlingID: PT.number.isRequired,
-  alleRelevantePersoner: PT.arrayOf(MPT.Behandlinger.Saksopplysninger.Person),
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   fagsakStatusKode: PT.string.isRequired,
@@ -129,7 +129,6 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   redigerbart: null,
-  alleRelevantePersoner: [],
   behandlingsgrunnlag: {},
   vurdering: {},
   syncErrors: {},

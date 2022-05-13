@@ -11,11 +11,11 @@ const journalforingSED = object().shape({
     .erIkkeBlank(SKRIV_INN_FNR_ELLER_DNR)
     .erNummer(SKRIV_INN_KUN_NUMMER)
     .erFnrEllerDnr(SKRIV_INN_GYLDIG_FNR_ELLER_DNR)
-    .when("bruker", {
+    .when("brukerNavn", {
       is: undefined,
       then: string().harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
     }),
-  bruker: mixed(),
+  brukerNavn: mixed(),
 });
 
 export default journalforingSED;

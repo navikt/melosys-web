@@ -15,7 +15,7 @@ describe("Tester organisasjon.js:", () => {
       expect(Organisasjon.erOrgnrLengde(mockData)).toEqual(forventetResultat);
     });
 
-    test("returnerer true dersom orgnr er enn 9 tall", () => {
+    test("returnerer true dersom orgnr er 9 tall", () => {
       const mockData = "123456789";
       const forventetResultat = true;
       expect(Organisasjon.erOrgnrLengde(mockData)).toEqual(forventetResultat);
@@ -28,9 +28,13 @@ describe("Tester organisasjon.js:", () => {
       const forventetResulat = false;
       expect(Organisasjon.erOrgnrGyldig(mockData)).toEqual(forventetResulat);
     });
-  });
 
-  describe("erOrgnrGyldig", () => {
+    test("returnerer false dersom orgnr ikke er 9 tall", () => {
+      const mockData = "1234567891";
+      const forventetResulat = false;
+      expect(Organisasjon.erOrgnrGyldig(mockData)).toEqual(forventetResulat);
+    });
+
     test("returnerer true dersom orgnr ikke er gyldig", () => {
       const mockData1 = "810072512"; //Eiken og Torsken
       const mockData2 = "910099035"; //Skarsvåg og Vanse

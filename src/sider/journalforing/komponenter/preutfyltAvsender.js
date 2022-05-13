@@ -3,7 +3,7 @@ import PT from "prop-types";
 
 import * as Nav from "../../../navFrontend";
 
-import "./avsendervelger.css";
+import "./avsender/avsender.css";
 
 const PreutfyltAvsender = ({ className, avsenderID, avsenderNavn }) => (
   <div className={className}>

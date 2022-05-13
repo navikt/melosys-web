@@ -24,6 +24,7 @@ const aktoerTemplate: Api.Fagsaker.aktoer.Aktoer = {
   representererKode: null,
   rolleKode: "",
   utenlandskPersonID: null,
+  personIdent: null,
 };
 
 const mapStateToProps = (state: RootState) => ({
@@ -66,7 +67,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     );
   };
 
-  const lagreFullmektig = (representererKode: string | null, orgnr: string, databaseID?: number) =>
+  const lagreFullmektig = (representererKode: string | null, orgnr: string, personIdent: string, databaseID?: number) =>
     Api.Fagsaker.aktoer.send(saksnummer, {
       databaseID: databaseID || null,
       aktoerID: null,
@@ -75,6 +76,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       institusjonsID: null,
       rolleKode: MKV.Koder.aktoersroller.REPRESENTANT,
       representererKode: representererKode || null,
+      personIdent,
     });
 
   const byttUtTemplateMedLagretFullmektig = (
@@ -86,9 +88,13 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       return { ...fullmektig };
     });
 
-  const lagreNyFullmektigOgOppdaterLokalt = async (orgnr: string, representererKode: string | null) => {
+  const lagreNyFullmektigOgOppdaterLokalt = async (
+    orgnr: string,
+    personIdent: string,
+    representererKode: string | null
+  ) => {
     try {
-      const lagretFullmektig = await lagreFullmektig(representererKode, orgnr);
+      const lagretFullmektig = await lagreFullmektig(representererKode, orgnr, personIdent);
 
       setFullmektige((prevFullmektige) => byttUtTemplateMedLagretFullmektig(prevFullmektige, lagretFullmektig));
       setDisableLeggTilFullmektig(false);
@@ -133,9 +139,10 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
           }
         };
 
-        const onRollechange = async (representererKode: string, orgnr?: string) => {
+        const onRollechange = async (representererKode: string, orgnr?: string, personIdent?: string) => {
           try {
-            if (orgnr) await lagreFullmektig(representererKode, orgnr, fullmektig.databaseID);
+            if (orgnr) await lagreFullmektig(representererKode, orgnr, "", fullmektig.databaseID);
+            if (personIdent) await lagreFullmektig(representererKode, "", personIdent, fullmektig.databaseID);
             settRepresentant(index, representererKode);
           } catch (e) {
             if (isApiError(e)) {
@@ -154,15 +161,21 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
             fullmektig={fullmektig}
             slett={slettFullmektig}
             onRolleChange={onRollechange}
-            onOrgFunnet={(orgnr) => lagreNyFullmektigOgOppdaterLokalt(orgnr, fullmektig.representererKode)}
+            onOrgnrEllerIdentFunnet={(orgnr, personIdent) =>
+              lagreNyFullmektigOgOppdaterLokalt(
+                orgnr,
+                personIdent,
+                personIdent ? MKV.Koder.representerer.BRUKER : fullmektig.representererKode
+              )
+            }
             saksnummer={saksnummer}
           />
         );
       })}
       {visLeggTilKnapp && (
-        <Mui.Knappelenke onClick={apneLeggTilFullmektigDialog} ikon={Ikoner.Add} className="legg__til__knapp">
+        <Mui.Lenkeknapp onClick={apneLeggTilFullmektigDialog} ikon={Ikoner.Add} className="legg__til__knapp">
           Legg til ny fullmektig
-        </Mui.Knappelenke>
+        </Mui.Lenkeknapp>
       )}
     </div>
   );
