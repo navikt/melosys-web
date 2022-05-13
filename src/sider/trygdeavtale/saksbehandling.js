@@ -8,7 +8,7 @@ import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
-import SideDialog from "../../felleskomponenter/sideDialog/sideDialog";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog/sideDialog";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import Oppsummering from "../../felleskomponenter/oppsummering/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
@@ -31,6 +31,7 @@ import "./saksbehandling.css";
 const Saksbehandling = ({
   annenBehandlingOppfriskes,
   arbeidsland,
+  behandlingGjelder,
   behandlingOppfriskes,
   behandlingsgrunnlag,
   behandlingsgrunnlagMottaksdato,
@@ -142,6 +143,9 @@ const Saksbehandling = ({
     Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
   );
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart && !behandlingIDHarEndretSeg;
+
+  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+
   return (
     <>
       <Informasjonlinje />
@@ -180,6 +184,7 @@ const Saksbehandling = ({
                   redigerbart={redigerbart}
                   behandlingID={behandlingID}
                   dokumenter={dokumenter}
+                  faner={behandlingGjelderVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -193,6 +198,7 @@ const Saksbehandling = ({
 Saksbehandling.propTypes = {
   annenBehandlingOppfriskes: PT.bool.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
+  behandlingGjelder: PT.string.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
@@ -236,6 +242,7 @@ Saksbehandling.defaultProps = {
 
 const mapStateToProps = (state) => ({
   arbeidsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state),
+  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).fom

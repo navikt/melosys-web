@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import classnames from "classnames";
-import PT from "prop-types";
 import { DokumentOversikt, FysiskDokument } from "Domene";
 
 import * as Nav from "../../navFrontend";
@@ -66,7 +65,7 @@ const SideDialog = ({
   redigerbart,
   dokumentOversikt,
   dokumenter,
-  faner = [],
+  faner = defaultFaner,
 }: SideDialogProps) => {
   const [aktivFane, setAktivFane] = useState<FaneNavn>(faner[0].navn);
 
@@ -100,23 +99,18 @@ const SideDialog = ({
   );
 };
 
-SideDialog.propTypes = {
-  faner: PT.arrayOf(PT.object),
-  saksnummer: PT.string.isRequired,
-  behandlingID: PT.number.isRequired,
-  redigerbart: PT.bool.isRequired,
-  dokumentOversikt: PT.arrayOf(PT.object).isRequired,
-  dokumenter: PT.arrayOf(PT.object).isRequired,
-};
+export const defaultFaner: Fane[] = [
+  { navn: "dokumenter", tittel: "Dokumenter" },
+  { navn: "notat", tittel: "Notat" },
+  { navn: "brevbestilling", tittel: "Send brev" },
+  { navn: "sedbestilling", tittel: "Opprett ny BUC" },
+  { navn: "besvarsed", tittel: "SED-utveksling" },
+];
 
-SideDialog.defaultProps = {
-  faner: [
-    { navn: "dokumenter", tittel: "Dokumenter" },
-    { navn: "notat", tittel: "Notat" },
-    { navn: "brevbestilling", tittel: "Send brev" },
-    { navn: "sedbestilling", tittel: "Opprett ny BUC" },
-    { navn: "besvarsed", tittel: "SED-utveksling" },
-  ],
-};
+export const fanerUtenBucOgSed: Fane[] = [
+  { navn: "dokumenter", tittel: "Dokumenter" },
+  { navn: "notat", tittel: "Notat" },
+  { navn: "brevbestilling", tittel: "Send brev" },
+];
 
 export default SideDialog;

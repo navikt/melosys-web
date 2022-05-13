@@ -9,7 +9,7 @@ import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog/sideDialog";
 import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
@@ -49,6 +49,7 @@ const Vurderutpeking = ({
   match,
   location,
   behandlingstema,
+  behandlingGjelder,
   redigerbart,
   fagsak,
   oppsummering,
@@ -104,6 +105,8 @@ const Vurderutpeking = ({
     ? KV.kodeTilObjekt(lovvalgslandFraForm, MKV.KTObjects.landkoder)
     : undefined;
 
+  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+
   return (
     <>
       <Informasjonlinje />
@@ -112,7 +115,7 @@ const Vurderutpeking = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {behandlingsgrunnlagErKlart && (
+                {behandlingsgrunnlagErKlart && !behandlingGjelderVirksomhet && (
                   <Stegvelger
                     behandlingID={behandlingID}
                     stegMap={stegMap}
@@ -129,7 +132,9 @@ const Vurderutpeking = ({
                     forsteSteg={forsteSteg}
                   />
                 )}
-                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+                {!behandlingGjelderVirksomhet && (
+                  <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+                )}
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
@@ -149,6 +154,7 @@ const Vurderutpeking = ({
                   redigerbart={redigerbart}
                   dokumentOversikt={dokumentOversikt}
                   dokumenter={dokumenter}
+                  faner={behandlingGjelderVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -164,6 +170,7 @@ Vurderutpeking.propTypes = {
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   behandlingstema: PT.string.isRequired,
+  behandlingGjelder: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
@@ -198,6 +205,7 @@ Vurderutpeking.defaultProps = {
 
 const mapStateToProps = (state) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),

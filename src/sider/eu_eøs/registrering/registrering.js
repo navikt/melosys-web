@@ -8,7 +8,7 @@ import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog/sideDialog";
 import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
@@ -20,6 +20,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./registrering.css";
+import MKV from "../../../melosyskodeverk";
 
 export const Registrering = (props) => {
   const {
@@ -33,6 +34,7 @@ export const Registrering = (props) => {
     hentFagsaker,
     hentLovvalgsperioder,
     vurderingBegrunnelser,
+    behandlingGjelder,
     sed,
     redigerbart,
     Saksopplysninger,
@@ -77,6 +79,8 @@ export const Registrering = (props) => {
   if (Utils._isNil(redigerbart)) return null;
   if (!saksopplysningerErHentet) return null;
 
+  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+
   return (
     <>
       <Informasjonlinje />
@@ -85,15 +89,17 @@ export const Registrering = (props) => {
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                <Saksopplysninger
-                  redigerbart={redigerbart}
-                  behandlingID={behandlingID}
-                  saksnummer={saksnummer}
-                  sed={sed}
-                  vurderingBegrunnelser={vurderingBegrunnelser}
-                  tilForsiden={tilForsiden}
-                  startOgVisOppfriskModal={startOgVisOppfriskModal}
-                />
+                {!behandlingGjelderVirksomhet && (
+                  <Saksopplysninger
+                    redigerbart={redigerbart}
+                    behandlingID={behandlingID}
+                    saksnummer={saksnummer}
+                    sed={sed}
+                    vurderingBegrunnelser={vurderingBegrunnelser}
+                    tilForsiden={tilForsiden}
+                    startOgVisOppfriskModal={startOgVisOppfriskModal}
+                  />
+                )}
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
@@ -110,6 +116,7 @@ export const Registrering = (props) => {
                   redigerbart={redigerbart}
                   dokumentOversikt={dokumentOversikt}
                   dokumenter={dokumenter}
+                  faner={behandlingGjelderVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -141,6 +148,7 @@ Registrering.propTypes = {
   lovvalgsland: MPT.Kodeverk.isRequired,
   visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
+  behandlingGjelder: PT.string.isRequired,
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
@@ -157,6 +165,7 @@ Registrering.defaultProps = {
 };
 const mapStateToProps = (state) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),

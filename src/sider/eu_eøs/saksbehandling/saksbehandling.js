@@ -3,13 +3,14 @@ import { connect } from "react-redux";
 import PT from "prop-types";
 import { withRouter } from "react-router-dom";
 
+import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
+import SideDialog, { fanerUtenBucOgSed, defaultFaner } from "../../../felleskomponenter/sideDialog/sideDialog";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
 import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
@@ -30,9 +31,9 @@ import { datalastingOperations } from "../../../ducks/datalasting";
 import { dokumenterOperations, dokumenterSelectors } from "../../../ducks/dokumenter";
 import { anmodningsperiodesvarOperations } from "../../../ducks/anmodningsperiodesvar";
 import { landkoderOperations } from "../../../ducks/landkoder";
+import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 import "./saksbehandling.css";
-import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 class Saksbehandling extends Component {
   state = {
@@ -164,6 +165,7 @@ class Saksbehandling extends Component {
       lovvalgsperiodeTom,
       visOppfriskModal,
       arbeidsland,
+      behandlingGjelder,
       behandlingsgrunnlagPeriodeFom,
       behandlingsgrunnlagPeriodeTom,
       behandlingsgrunnlagMottaksdato,
@@ -180,7 +182,7 @@ class Saksbehandling extends Component {
     if (Utils._isNil(redigerbart)) return null;
     if (!saksopplysningerLastet) return null;
 
-    const viserSaksbehandling = false;
+    const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
 
     return (
       <>
@@ -190,7 +192,7 @@ class Saksbehandling extends Component {
             <Nav.Container fluid>
               <Nav.Row>
                 <Nav.Column xs="7">
-                  {viserSaksbehandling && (
+                  {!behandlingGjelderVirksomhet && (
                     <Saksopplysninger
                       behandlingID={behandlingID}
                       visOppfriskModal={visOppfriskModal}
@@ -223,6 +225,7 @@ class Saksbehandling extends Component {
                     redigerbart={redigerbart}
                     dokumentOversikt={dokumentOversikt}
                     dokumenter={dokumenter}
+                    faner={behandlingGjelderVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                   />
                 </Nav.Column>
               </Nav.Row>
@@ -236,6 +239,7 @@ class Saksbehandling extends Component {
 
 Saksbehandling.propTypes = {
   behandlingID: PT.number.isRequired,
+  behandlingGjelder: PT.string.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   fagsak: MPT.Fagsak,
@@ -321,6 +325,7 @@ const mapStateToProps = (state) => ({
   behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
   anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
   anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
