@@ -1,29 +1,12 @@
 import React from "react";
-import { RootState } from "AppTypes";
-import { connect, ConnectedProps } from "react-redux";
 
-import { behandlingerSelectors } from "../../ducks/behandlinger";
-
+import * as StringUtils from "../../utils/streng";
 import * as Ikon from "../../resources/images";
 
 import useHentPersonopplysninger from "./useHentpersonopplysninger";
-import Behandlingsmeny from "./behandlingsmeny";
 import KopierbarTekst from "../kopierbarTekst";
-
-import "./personlinje.css";
-import * as StringUtils from "../../utils/streng";
+import { Separator } from "./informasjonlinje";
 import { KjoennType } from "../../graphql";
-
-const mapStateToProps = (state: RootState) => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-});
-
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type PersonlinjeProps = PropsFromRedux & {
-  visBehandlingsmeny?: boolean;
-};
 
 const Navn = ({ kjoenn, navn }: { kjoenn: KjoennType; navn: string }) => (
   <div className="personlinje__navn">
@@ -42,27 +25,21 @@ const Doed = ({ erDoed }: { erDoed: boolean }) =>
   ) : null;
 
 const Statsborgerskap = ({ statsborgerskap }: { statsborgerskap: string[] }) => (
-  <div className="personlinje__statsborgerskap">
-    {StringUtils.separerListeMedBindestrek([...new Set(statsborgerskap)])}
-  </div>
+  <div>{StringUtils.separerListeMedBindestrek([...new Set(statsborgerskap)])}</div>
 );
 
-const Sivilstand = ({ sivilstand }: { sivilstand: string }) => (
-  <div className="personlinje__sivilstand">{sivilstand}</div>
-);
+const Sivilstand = ({ sivilstand }: { sivilstand: string }) => <div>{sivilstand}</div>;
 
-const Separator = () => <div className="personlinje__separator">/</div>;
-
-const Personlinje = ({ behandlingID, visBehandlingsmeny = true }: PersonlinjeProps) => {
+const Personlinje = ({ behandlingID }: { behandlingID: number }) => {
   const skipHentPersonopplysninger = behandlingID < 0;
   const personopplysninger = useHentPersonopplysninger(behandlingID, skipHentPersonopplysninger);
 
   if (!personopplysninger) return null;
 
   return (
-    <div className="personlinje">
+    <>
       {personopplysninger ? (
-        <div className="personlinje__personinfo">
+        <div className="personlinje">
           <Navn navn={personopplysninger.navn} kjoenn={personopplysninger.kjoenn} />
           <Doed erDoed={personopplysninger.erDoed} />
           <Separator />
@@ -73,11 +50,10 @@ const Personlinje = ({ behandlingID, visBehandlingsmeny = true }: PersonlinjePro
           <Sivilstand sivilstand={personopplysninger.sivilstand} />
         </div>
       ) : (
-        <div className="personlinje__personinfo">Klarte ikke hente personopplysninger</div>
+        <div className="personlinje">Klarte ikke hente personopplysninger</div>
       )}
-      {visBehandlingsmeny && <Behandlingsmeny />}
-    </div>
+    </>
   );
 };
 
-export default connector(Personlinje);
+export default Personlinje;

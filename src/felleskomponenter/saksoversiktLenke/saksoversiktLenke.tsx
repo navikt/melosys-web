@@ -7,7 +7,7 @@ import * as Nav from "../../navFrontend";
 import * as Routing from "../../routing";
 
 import { behandlingerSelectors } from "../../ducks/behandlinger";
-import useHentPersonopplysninger from "../personlinje/useHentpersonopplysninger";
+import useHentPersonopplysninger from "../informasjonlinje/useHentpersonopplysninger";
 import "./saksoversiktLenke.css";
 
 const mapStateToProps = (state: RootState) => ({

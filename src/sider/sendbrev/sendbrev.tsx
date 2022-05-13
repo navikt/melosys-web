@@ -11,7 +11,7 @@ import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
-import Personlinje from "../../felleskomponenter/personlinje";
+import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SendBrev } from "../../felleskomponenter/sideDialog";
 import { behandlingerOperations } from "../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
@@ -55,7 +55,7 @@ const Sendbrev = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine }
 
   return (
     <>
-      <Personlinje visBehandlingsmeny={false} />
+      <Informasjonlinje visBehandlingsmeny={false} />
       <div id="main-container" className="main-container">
         <Nav.Container fluid className="sendbrev">
           <Nav.Panel>

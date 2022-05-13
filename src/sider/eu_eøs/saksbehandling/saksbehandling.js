@@ -8,7 +8,7 @@ import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 
-import Personlinje from "../../../felleskomponenter/personlinje";
+import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
 import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
@@ -180,26 +180,30 @@ class Saksbehandling extends Component {
     if (Utils._isNil(redigerbart)) return null;
     if (!saksopplysningerLastet) return null;
 
+    const viserSaksbehandling = false;
+
     return (
       <>
-        <Personlinje />
+        <Informasjonlinje />
         <div id="main-container" className="main-container">
           <div className="saksbehandling">
             <Nav.Container fluid>
               <Nav.Row>
                 <Nav.Column xs="7">
-                  <Saksopplysninger
-                    behandlingID={behandlingID}
-                    visOppfriskModal={visOppfriskModal}
-                    lagreVilkarHandler={this.props.lagreVilkar}
-                    lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
-                    lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
-                    lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
-                    oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
-                    lagreAllData={this.props.lagreAllData}
-                    tilForsiden={tilForsiden}
-                    startOgVisOppfriskModal={startOgVisOppfriskModal}
-                  />
+                  {viserSaksbehandling && (
+                    <Saksopplysninger
+                      behandlingID={behandlingID}
+                      visOppfriskModal={visOppfriskModal}
+                      lagreVilkarHandler={this.props.lagreVilkar}
+                      lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
+                      lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
+                      lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
+                      oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
+                      lagreAllData={this.props.lagreAllData}
+                      tilForsiden={tilForsiden}
+                      startOgVisOppfriskModal={startOgVisOppfriskModal}
+                    />
+                  )}
                 </Nav.Column>
                 <Nav.Column xs="5">
                   <Oppsummering

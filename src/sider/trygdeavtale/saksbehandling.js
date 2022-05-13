@@ -7,7 +7,7 @@ import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
-import Personlinje from "../../felleskomponenter/personlinje";
+import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import SideDialog from "../../felleskomponenter/sideDialog/sideDialog";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import Oppsummering from "../../felleskomponenter/oppsummering/oppsummering";
@@ -144,7 +144,7 @@ const Saksbehandling = ({
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart && !behandlingIDHarEndretSeg;
   return (
     <>
-      <Personlinje />
+      <Informasjonlinje />
       <div id="main-container" className="main-container">
         <div className="saksbehandling">
           <Nav.Container fluid>

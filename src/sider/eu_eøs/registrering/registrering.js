@@ -7,7 +7,7 @@ import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 
-import Personlinje from "../../../felleskomponenter/personlinje";
+import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
@@ -79,7 +79,7 @@ export const Registrering = (props) => {
 
   return (
     <>
-      <Personlinje />
+      <Informasjonlinje />
       <div id="main-container" className="main-container">
         <div className="registrering">
           <Nav.Container fluid>

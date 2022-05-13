@@ -43,6 +43,10 @@ export const SisteOpplysningerHentetDatoSelector = createSelector(
   (state) => OppsummeringSelector(state),
   (oppsummering) => oppsummering.sisteOpplysningerHentetDato || null
 );
+export const BehandlingGjelderSelector = createSelector(
+  (state) => OppsummeringSelector(state),
+  (oppsummering) => oppsummering.behandlingGjelder || ""
+);
 
 export const SaksopplysningerSelector = createSelector(
   (state) => BehandlingerSelector(state).saksopplysninger || {},

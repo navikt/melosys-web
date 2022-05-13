@@ -8,19 +8,19 @@ import classNames from "classnames";
 import * as Ikon from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
+import { mapBehandlingstemaToBehandlingskategori } from "../../../kodeverk/utils";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
 import AvsluttSak from "./avsluttsak";
 import Handling from "./handling";
 
 import { oppgaverOperations } from "../../../ducks/oppgaver";
 import { navigeringOperations } from "../../../ducks/navigering";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { modalerOperations } from "../../../ducks/modaler";
+import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 
 import "./behandlingsmeny.css";
-import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { mapBehandlingstemaToBehandlingskategori } from "../../../kodeverk/utils";
-import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
