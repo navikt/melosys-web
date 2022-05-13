@@ -31,6 +31,7 @@ import "./saksbehandling.css";
 const Saksbehandling = ({
   annenBehandlingOppfriskes,
   arbeidsland,
+  behandlingstype,
   behandlingGjelder,
   behandlingOppfriskes,
   behandlingsgrunnlag,
@@ -135,9 +136,10 @@ const Saksbehandling = ({
   if (!saksopplysningerLastet) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const erAvslaattSoknad =
     behandlingsresultat.behandlingsresultatTypeKode ===
-    MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+      MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL && !erNyVurdering;
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
   const behandlingsgrunnlagErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
@@ -199,6 +201,7 @@ Saksbehandling.propTypes = {
   annenBehandlingOppfriskes: PT.bool.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingGjelder: PT.string.isRequired,
+  behandlingstype: PT.string.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
@@ -243,6 +246,7 @@ Saksbehandling.defaultProps = {
 const mapStateToProps = (state) => ({
   arbeidsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state),
   behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).fom
