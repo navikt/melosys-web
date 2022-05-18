@@ -10,8 +10,7 @@ interface LenkeknappProps {
   ikon?: ElementType;
 }
 
-const Lenkeknapp = ({ onClick, children, className, ikon, ...rest }: LenkeknappProps) => {
-  const Ikon = ikon;
+const Lenkeknapp = ({ onClick, children, className, ikon: Ikon, ...rest }: LenkeknappProps) => {
   const cls = classNames(Ikon ? "lenkeknapp__ikon" : "lenkeknapp", className);
 
   return (
