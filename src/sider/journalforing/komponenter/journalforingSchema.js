@@ -5,7 +5,6 @@ import * as Utils from "../../../utils";
 import * as Konstanter from "../../../constants";
 import * as KV from "../../../kodeverk";
 import { BRUKER, VIRKSOMHET } from "./journalforingform";
-import { useFeatureToggle } from "../../../featuretoggle";
 
 const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer." };
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig fnr eller dnr." };
@@ -26,8 +25,6 @@ const VELG_ETT_LAND = { melding: "Velg ett land." };
 const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
 const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
-
-const fullmektigPersonToggle = useFeatureToggle("melosys.journalforing.fullmektig-person");
 
 const kreverPeriode = (journalforingHensikt, behandlingstema) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
@@ -115,9 +112,7 @@ const journalforing = object().shape({
     Utils._isEmpty(value)
       ? string().nullable()
       : string()
-          .erFnrEllerDnrEllerOrgnrTolererEttMellomrom(
-            fullmektigPersonToggle ? SKRIV_INN_GYLDIG_ORGNR_FNR_DNR : SKRIV_INN_GYLDIG_ORGNR
-          )
+          .erFnrEllerDnrEllerOrgnrTolererEttMellomrom(SKRIV_INN_GYLDIG_ORGNR_FNR_DNR)
           .when("representantNavn", {
             is: Utils._isEmpty,
             then: string()
