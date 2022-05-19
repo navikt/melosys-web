@@ -18,7 +18,7 @@ import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 import { SendBrevFormValues } from "./types";
 
-const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
+const { BRUKER, ARBEIDSGIVER, VIRKSOMHET } = KV.Koder.MottakerRolle;
 
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
@@ -63,8 +63,8 @@ const BrevMottaker = ({
     return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
   };
   const mottakerErBruker = finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === BRUKER;
-  const mottakerErArbeidsgiver =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER &&
+  const mottakerErArbeidsgiverEllerVirksomhet =
+    [ARBEIDSGIVER, VIRKSOMHET].includes(finnMottakerFraValgtMal(formValues?.mottaker)?.rolle || "") &&
     !finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
   const mottakerOrgNrSettesAvSaksbehandler =
     finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER &&
@@ -157,7 +157,7 @@ const BrevMottaker = ({
         </Nav.Row>
       )}
 
-      {mottakerErArbeidsgiver && (
+      {mottakerErArbeidsgiverEllerVirksomhet && (
         <Nav.Row>
           {mottakerFeil ? (
             <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>
