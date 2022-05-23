@@ -91,9 +91,9 @@ function FlereRedigeringsKnapperListe<T>({
       })}
       {redigerbart && (
         <div className="legg__til__knapp">
-          <Mui.Knappelenke onClick={leggTil} ikon={Ikoner.Add}>
+          <Mui.Lenkeknapp onClick={leggTil} ikon={Ikoner.Add}>
             {leggTilTekst}
-          </Mui.Knappelenke>
+          </Mui.Lenkeknapp>
         </div>
       )}
     </div>

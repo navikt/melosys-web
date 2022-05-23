@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from "react";
+import React from "react";
 
 import * as Ikoner from "../../../../../resources/images";
 import * as Mui from "../../../../ui";
@@ -6,14 +6,14 @@ import * as Mui from "../../../../ui";
 import "./sletterad.css";
 
 interface SletteradProps {
-  onClick: MouseEventHandler<HTMLAnchorElement>;
+  onClick: () => void;
 }
 
 const Sletterad = ({ onClick }: SletteradProps) => (
   <div className="sletterad">
-    <Mui.Knappelenke onClick={onClick} title="Slett" ikon={Ikoner.Bin} className="slett__knapp">
+    <Mui.Lenkeknapp onClick={onClick} ikon={Ikoner.Bin} className="slett__knapp">
       Slett arbeidssted
-    </Mui.Knappelenke>
+    </Mui.Lenkeknapp>
   </div>
 );
 

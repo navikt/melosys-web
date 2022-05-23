@@ -93,7 +93,7 @@ function EnRedigeringsKnappListe<T>({
             <IngenDataKomponent />
           </div>
           {redigerbart && (
-            <Mui.Knappelenke
+            <Mui.Lenkeknapp
               onClick={() => {
                 apneRedigering();
                 leggTil();
@@ -101,7 +101,7 @@ function EnRedigeringsKnappListe<T>({
               ikon={Ikoner.Add}
             >
               {leggTilTekst}
-            </Mui.Knappelenke>
+            </Mui.Lenkeknapp>
           )}
         </>
       )
@@ -152,9 +152,9 @@ function EnRedigeringsKnappListe<T>({
           })}
           {redigerbart && kanLeggeTilFlereElementer && (
             <div>
-              <Mui.Knappelenke onClick={leggTil} ikon={Ikoner.Add}>
+              <Mui.Lenkeknapp onClick={leggTil} ikon={Ikoner.Add}>
                 {leggTilTekst}
-              </Mui.Knappelenke>
+              </Mui.Lenkeknapp>
             </div>
           )}
         </div>
