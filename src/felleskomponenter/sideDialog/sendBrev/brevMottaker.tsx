@@ -110,10 +110,10 @@ const BrevMottaker = ({
         hentMuligeMottakere(formValues.type, undefined);
       }
     }
-    if (mottaker.rolle === ARBEIDSGIVER && mottaker.orgnrSettesAvSaksbehandler) {
+    if ([ARBEIDSGIVER, VIRKSOMHET].includes(mottaker.rolle) && mottaker.orgnrSettesAvSaksbehandler) {
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid, type: formValues.type });
     }
-    if (mottaker.rolle === ARBEIDSGIVER && !mottaker.orgnrSettesAvSaksbehandler) {
+    if ([ARBEIDSGIVER, VIRKSOMHET].includes(mottaker.rolle) && !mottaker.orgnrSettesAvSaksbehandler) {
       if (formValues?.arbeidsgiver) {
         setAdresse({
           mottakerAdresse:
@@ -165,15 +165,17 @@ const BrevMottaker = ({
             <Nav.Column xs="12">
               <Nav.Typo.Normaltekst style={{ marginBottom: "0.5rem" }} tag="div">
                 Velg:
-                <Nav.Hjelpetekst
-                  className="hjelpetekst"
-                  tittel={arbeidsgiverHjelptekst}
-                  type={Nav.PopoverOrientering.Venstre}
-                >
-                  {arbeidsgiverHjelptekst.split("\n").map((paragraf) => (
-                    <p key={Utils._uuid()}>{paragraf}</p>
-                  ))}
-                </Nav.Hjelpetekst>
+                {finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER && (
+                  <Nav.Hjelpetekst
+                    className="hjelpetekst"
+                    tittel={arbeidsgiverHjelptekst}
+                    type={Nav.PopoverOrientering.Venstre}
+                  >
+                    {arbeidsgiverHjelptekst.split("\n").map((paragraf) => (
+                      <p key={Utils._uuid()}>{paragraf}</p>
+                    ))}
+                  </Nav.Hjelpetekst>
+                )}
               </Nav.Typo.Normaltekst>
               {finnMottakerFraValgtMal(formValues.mottaker)?.adresser?.map(
                 (virksomhet: DokumenterV2.MottakerAdresse) => (

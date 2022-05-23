@@ -7,26 +7,26 @@ import { change, getFormValues, reduxForm, reset } from "redux-form";
 import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
 import { ColumnWidth } from "nav-frontend-grid";
 
-import { URL_BASENAME } from "../../../constants";
-import { DokumenterV2 } from "../../../services/api";
+import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
-import BrevMottaker from "./brevMottaker";
+
 import { behandlingerOperations } from "../../../ducks/behandlinger";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { formSelectors } from "../../../ducks/form";
+import { URL_BASENAME } from "../../../constants";
+import { SendBrevFormValues } from "./types";
+import BrevMottaker from "./brevMottaker";
+import BrevMottakereTabell from "./brevMottakereTabell";
+import BrevFelt from "./brevFelt";
 import ValgAlternativer from "./valgAlternativer";
 import FeltBeskrivelse from "./feltBeskrivelse";
-import { formSelectors } from "../../../ducks/form";
 
-import sendBrevSchema from "../sendBrevSchema";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
-import BrevFelt from "./brevFelt";
-import BrevMottakereTabell from "./brevMottakereTabell";
-import { SendBrevFormValues } from "./types";
-import { Felt } from "../../../services/modules/dokumenter-v2";
 
 const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.SendBrevValidSelector(state),
@@ -71,15 +71,14 @@ const SendBrev = ({
   mottakerTabellWidth = "12",
   felterWidth = "12",
 }: Props & PropsFromRedux) => {
-  const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<DokumenterV2.TilgjengeligeMalerResDto>();
-
+  const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
+  const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
-  const [muligeMottakere, setMuligeMottakere] = useState<DokumenterV2.HentMuligeMottakereResDto>();
   const [mottakerFeil, setMottakerFeil] = useState<string>();
 
   useEffect(() => {
-    DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
+    Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
       response.forEach((mal) =>
         mal.muligeMottakere.forEach((muligMottaker) => {
           muligMottaker.uuid = Utils._uuid();
@@ -103,7 +102,7 @@ const SendBrev = ({
     return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
   };
 
-  const finnValgAlternativ = (felt: Felt) => {
+  const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find(
       (alternativ) => alternativ.beskrivelse === formValues?.felt?.[felt.kode]?.valg
     );
@@ -128,11 +127,11 @@ const SendBrev = ({
 
   const hentKopiMottakere = () => {
     return formValues.kopimottaker
-      ? muligeMottakere?.kopiMottakere.map(DokumenterV2.konverterMuligMottakerTilKopiMottaker)
+      ? muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker)
       : [];
   };
 
-  const hentBrevRequest = (mottakerRolle: string): DokumenterV2.OpprettBrevReqDto => {
+  const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => {
     return {
       produserbardokument: formValues.type || "",
       mottaker: mottakerRolle,
@@ -148,7 +147,7 @@ const SendBrev = ({
   const sendBrev = () => {
     const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
     if (!mottaker) return;
-    let requestBody: DokumenterV2.OpprettBrevReqDto = hentBrevRequest(mottaker.rolle);
+    let requestBody: Api.DokumenterV2.OpprettBrevReqDto = hentBrevRequest(mottaker.rolle);
     if (mottaker.rolle === "ARBEIDSGIVER") {
       requestBody = {
         ...requestBody,
@@ -156,7 +155,7 @@ const SendBrev = ({
         kontaktpersonNavn: mottaker.orgnrSettesAvSaksbehandler ? formValues.kontaktperson : null,
       };
     }
-    DokumenterV2.opprettBrev(behandlingID, requestBody)
+    Api.DokumenterV2.opprettBrev(behandlingID, requestBody)
       .then(() => {
         setBrevSendt(true);
         oppdaterBehandling();
