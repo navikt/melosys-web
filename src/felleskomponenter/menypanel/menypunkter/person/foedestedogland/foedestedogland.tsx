@@ -45,9 +45,9 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       redigeringUtfortRender={() => <Utfyltfoedestedogland foedestedOgLand={value} />}
       ingenDataRender={(apneRedigering) =>
         redigerbart ? (
-          <Mui.Knappelenke onClick={apneRedigering} ikon={Ikoner.Add}>
+          <Mui.Lenkeknapp onClick={apneRedigering} ikon={Ikoner.Add}>
             Legg til fødested og -land
-          </Mui.Knappelenke>
+          </Mui.Lenkeknapp>
         ) : null
       }
     />

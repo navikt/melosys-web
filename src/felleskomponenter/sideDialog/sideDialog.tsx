@@ -36,7 +36,14 @@ export const FaneViser = ({
     case "dokumenter":
       return <SideDialogDokumenter dokumentOversikt={dokumentOversikt} />;
     case "brevbestilling":
-      return <SideDialogSendBrev behandlingID={behandlingID} redigerbart={redigerbart} visApneINyttVindu />;
+      return (
+        <SideDialogSendBrev
+          behandlingID={behandlingID}
+          redigerbart={redigerbart}
+          visApneINyttVindu
+          dokumenter={dokumenter}
+        />
+      );
     case "sedbestilling":
       return <SideDialogOpprettNyBuc behandlingID={behandlingID} dokumenter={dokumenter} />;
     case "besvarsed":

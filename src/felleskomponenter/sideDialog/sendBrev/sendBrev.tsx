@@ -1,32 +1,35 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
 import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
+import { FysiskDokument } from "Domene";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import { URL_BASENAME } from "../../../constants";
-import { DokumenterV2 } from "../../../services/api";
+
+import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
-import BrevMottaker from "./brevMottaker";
+
 import { behandlingerOperations } from "../../../ducks/behandlinger";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { formSelectors } from "../../../ducks/form";
 import ValgAlternativer from "./valgAlternativer";
 import FeltBeskrivelse from "./feltBeskrivelse";
-import { formSelectors } from "../../../ducks/form";
+import BrevFelt from "./brevFelt";
+import BrevMottaker from "./brevMottaker";
+import { SendBrevFormValues } from "./types";
+import BrevVedlegg from "./brevVedlegg";
+import BrevMottakereTabell from "./brevMottakereTabell";
 
+import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "../sendBrevSchema";
 import "./sendBrev.css";
-import BrevFelt from "./brevFelt";
-import BrevMottakereTabell from "./brevMottakereTabell";
-import { SendBrevFormValues } from "./types";
-import { Felt } from "../../../services/modules/dokumenter-v2";
 
 const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.SendBrevValidSelector(state),
@@ -55,6 +58,7 @@ interface Props {
   mottakerTabellWidth?: ColumnWidth;
   felterWidth?: ColumnWidth;
   formValues: SendBrevFormValues;
+  dokumenter: FysiskDokument[];
 }
 
 const SendBrev = ({
@@ -66,20 +70,22 @@ const SendBrev = ({
   redigerbart,
   resetForm,
   visApneINyttVindu,
+  dokumenter,
   brevTypeSelectWidth = "12",
   mottakerSelectWidth = "12",
   mottakerTabellWidth = "12",
   felterWidth = "12",
 }: Props & PropsFromRedux) => {
-  const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<DokumenterV2.TilgjengeligeMalerResDto>();
+  const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
 
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
-  const [muligeMottakere, setMuligeMottakere] = useState<DokumenterV2.HentMuligeMottakereResDto>();
+  const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [mottakerFeil, setMottakerFeil] = useState<string>();
+  const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
 
   useEffect(() => {
-    DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
+    Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
       response.forEach((mal) =>
         mal.muligeMottakere.forEach((muligMottaker) => {
           muligMottaker.uuid = Utils._uuid();
@@ -103,7 +109,7 @@ const SendBrev = ({
     return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
   };
 
-  const finnValgAlternativ = (felt: Felt) => {
+  const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find(
       (alternativ) => alternativ.beskrivelse === formValues?.felt?.[felt.kode]?.valg
     );
@@ -128,11 +134,11 @@ const SendBrev = ({
 
   const hentKopiMottakere = () => {
     return formValues.kopimottaker
-      ? muligeMottakere?.kopiMottakere.map(DokumenterV2.konverterMuligMottakerTilKopiMottaker)
+      ? muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker)
       : [];
   };
 
-  const hentBrevRequest = (mottakerRolle: string): DokumenterV2.OpprettBrevReqDto => {
+  const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => {
     return {
       produserbardokument: formValues.type || "",
       mottaker: mottakerRolle,
@@ -142,13 +148,17 @@ const SendBrev = ({
       fritekst: hentFormVerdi("FRITEKST"),
       kopiMottakere: hentKopiMottakere() || [],
       kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
+      saksvedlegg: valgteVedlegg.map((vedlegg) => ({
+        dokumentID: vedlegg.dokumentID,
+        journalpostID: vedlegg.journalpostID,
+      })),
     };
   };
 
   const sendBrev = () => {
     const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
     if (!mottaker) return;
-    let requestBody: DokumenterV2.OpprettBrevReqDto = hentBrevRequest(mottaker.rolle);
+    let requestBody: Api.DokumenterV2.OpprettBrevReqDto = hentBrevRequest(mottaker.rolle);
     if (mottaker.rolle === "ARBEIDSGIVER") {
       requestBody = {
         ...requestBody,
@@ -156,7 +166,7 @@ const SendBrev = ({
         kontaktpersonNavn: mottaker.orgnrSettesAvSaksbehandler ? formValues.kontaktperson : null,
       };
     }
-    DokumenterV2.opprettBrev(behandlingID, requestBody)
+    Api.DokumenterV2.opprettBrev(behandlingID, requestBody)
       .then(() => {
         setBrevSendt(true);
         oppdaterBehandling();
@@ -183,6 +193,7 @@ const SendBrev = ({
   if (!tilgjengeligeMaler || !formValues) return null;
 
   const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}`;
+  const vedleggFelt = formValues?.valgtMal?.felter?.find((felt) => felt.kode === Api.DokumenterV2.FeltType.VEDLEGG);
 
   return (
     <div className="send_brev">
@@ -255,6 +266,16 @@ const SendBrev = ({
             />
           </Nav.Column>
         </Nav.Row>
+      )}
+
+      {vedleggFelt && (
+        <BrevVedlegg
+          felt={vedleggFelt}
+          width={felterWidth}
+          dokumenter={dokumenter}
+          valgteVedlegg={valgteVedlegg}
+          setValgteVedlegg={setValgteVedlegg}
+        />
       )}
 
       <div>
