@@ -1,5 +1,6 @@
 import React, { ElementType, useEffect, useState } from "react";
 
+import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
 import * as Ikon from "../../resources/images";
 
@@ -19,7 +20,7 @@ const Orgnr = ({ orgnr }: { orgnr: string }) => (
   <KopierbarTekst hovertekst="Kopier organisasjonsnummer">{orgnr}</KopierbarTekst>
 );
 
-const Virksomhetlinje = ({ behandlingID }: { behandlingID: number }) => {
+const Virksomhetlinje = ({ saksnummer }: { saksnummer: string }) => {
   const [organisasjon, setOrganisasjon] = useState<Api.Organisasjon>();
 
   useEffect(() => {
@@ -27,7 +28,14 @@ const Virksomhetlinje = ({ behandlingID }: { behandlingID: number }) => {
   }, []);
 
   const hentOrganisasjon = async () => {
-    const org = await Api.Organisasjoner.hentOrganisasjonTilVirksomhet(behandlingID);
+    const org = await Api.Fagsaker.aktoer
+      .hent(saksnummer, MKV.Koder.aktoersroller.VIRKSOMHET)
+      .then((response: Api.Fagsaker.aktoer.Aktoer[]) => {
+        if (response?.length !== 1 || !response[0].orgnr) {
+          return undefined;
+        }
+        return Api.Organisasjoner.hentOrganisasjon(response[0].orgnr);
+      });
     setOrganisasjon(org);
   };
 
