@@ -190,60 +190,58 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
   return (
     <div className="sedbestilling">
       <form onSubmit={overstyrSubmit}>
-        <Nav.Fieldset legend="">
-          <Nav.Select bredde="fullbredde" label="Fagområde" onChange={fagomradeEndret} value={valgtFagomrade}>
-            <TomtFelt />
-            {tilgjengeligeFagomrader.map((fagomrade) => (
-              <option key={fagomrade.kode} value={fagomrade.kode}>
-                {fagomrade.term}
-              </option>
-            ))}
-          </Nav.Select>
-          <Nav.Select bredde="fullbredde" label="BUC" onChange={bucEndret} value={valgtBuc} feil={feil("buc")}>
-            <TomtFelt />
-            {tilgjengeligeBucer(valgtFagomrade).map((buc) => (
-              <option key={buc.kode} value={buc.kode}>
-                {displayName(buc)}
-              </option>
-            ))}
-          </Nav.Select>
-          <Nav.Select bredde="fullbredde" label="SED" value={valgtSed} disabled>
-            <TomtFelt tekst="" />
-            {tilgjengeligeSeder(valgtBuc).map((forsteSed) => (
-              <option key={forsteSed.kode} value={forsteSed.kode}>
-                {displayName(forsteSed)}
-              </option>
-            ))}
-          </Nav.Select>
-          <MultiSelect
-            label="Land"
-            onChange={landEndret}
-            options={MKV.KTObjects.landkoder.map((item) => ({ value: item.kode, label: item.term }))}
-            feil={feil("land")}
-            values={valgteLand}
-            className="multiselect"
-          />
-          <MultiSelect
-            label="Mottakerinstitusjoner"
-            onChange={mottakerinstitusjonEndret}
-            options={tilgjengeligeMottakerinstitusjoner.map((item) => ({
-              value: item.id,
-              label: `${item.landkode} - ${item.navn}`,
-            }))}
-            feil={feil("mottakerinstitusjoner")}
-            values={valgteMottakerinstitusjoner}
-            className="multiselect"
-          />
-          <Nav.Typo.Undertittel>Vedlegg</Nav.Typo.Undertittel>
-          <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={dokumenter} />
-          <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>
-            Opprett ny BUC
-          </Nav.Hovedknapp>
-          &nbsp;
-          <Nav.Knapp type="standard" onClick={resetKomponent}>
-            Avbryt utfylling
-          </Nav.Knapp>
-        </Nav.Fieldset>
+        <Nav.Select bredde="fullbredde" label="Fagområde" onChange={fagomradeEndret} value={valgtFagomrade}>
+          <TomtFelt />
+          {tilgjengeligeFagomrader.map((fagomrade) => (
+            <option key={fagomrade.kode} value={fagomrade.kode}>
+              {fagomrade.term}
+            </option>
+          ))}
+        </Nav.Select>
+        <Nav.Select bredde="fullbredde" label="BUC" onChange={bucEndret} value={valgtBuc} feil={feil("buc")}>
+          <TomtFelt />
+          {tilgjengeligeBucer(valgtFagomrade).map((buc) => (
+            <option key={buc.kode} value={buc.kode}>
+              {displayName(buc)}
+            </option>
+          ))}
+        </Nav.Select>
+        <Nav.Select bredde="fullbredde" label="SED" value={valgtSed} disabled>
+          <TomtFelt tekst="" />
+          {tilgjengeligeSeder(valgtBuc).map((forsteSed) => (
+            <option key={forsteSed.kode} value={forsteSed.kode}>
+              {displayName(forsteSed)}
+            </option>
+          ))}
+        </Nav.Select>
+        <MultiSelect
+          label="Land"
+          onChange={landEndret}
+          options={MKV.KTObjects.landkoder.map((item) => ({ value: item.kode, label: item.term }))}
+          feil={feil("land")}
+          values={valgteLand}
+          className="multiselect"
+        />
+        <MultiSelect
+          label="Mottakerinstitusjoner"
+          onChange={mottakerinstitusjonEndret}
+          options={tilgjengeligeMottakerinstitusjoner.map((item) => ({
+            value: item.id,
+            label: `${item.landkode} - ${item.navn}`,
+          }))}
+          feil={feil("mottakerinstitusjoner")}
+          values={valgteMottakerinstitusjoner}
+          className="multiselect"
+        />
+        <Nav.Typo.Element>Vedlegg</Nav.Typo.Element>
+        <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={dokumenter} />
+        <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>
+          Opprett ny BUC
+        </Nav.Hovedknapp>
+        &nbsp;
+        <Nav.Knapp type="standard" onClick={resetKomponent}>
+          Avbryt utfylling
+        </Nav.Knapp>
         {opprettetBucUrl && bucOpprettet && (
           <Nav.AlertStripe type="suksess" className="varsel">
             Saken er nå opprettet i RINA{" "}

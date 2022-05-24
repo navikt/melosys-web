@@ -71,17 +71,6 @@ const BrevMottakereTabell = ({
         ),
       },
       { verdi: muligMottaker.mottakerNavn },
-      {
-        verdi: (
-          <PdfLenkeListe
-            behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker, true)}
-            vedKlikk={() => formIsValid}
-            className="forhåndsvisning"
-          />
-        ),
-        style: "midtstilt",
-      },
     ];
   };
 
@@ -113,9 +102,8 @@ const BrevMottakereTabell = ({
         className="tabell"
         rader={mapMottakerRader(muligeMottakere)}
         kolonner={[
-          { verdi: "Dokumenter", bredde: "48%" },
-          { verdi: "Mottaker", bredde: "44%" },
-          { verdi: "Forhåndsvis", bredde: "8%", style: "normal_font_weight midtstilt" },
+          { verdi: "Dokumenter", bredde: "60%" },
+          { verdi: "Mottaker", bredde: "40%" },
         ]}
       />
     </>
