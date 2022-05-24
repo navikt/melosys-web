@@ -34,7 +34,7 @@ export const Registrering = (props) => {
     hentFagsaker,
     hentLovvalgsperioder,
     vurderingBegrunnelser,
-    behandlingGjelder,
+    hovedpartRolle,
     sed,
     redigerbart,
     Saksopplysninger,
@@ -79,7 +79,7 @@ export const Registrering = (props) => {
   if (Utils._isNil(redigerbart)) return null;
   if (!saksopplysningerErHentet) return null;
 
-  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   return (
     <>
@@ -89,7 +89,7 @@ export const Registrering = (props) => {
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {!behandlingGjelderVirksomhet && (
+                {!hovedpartErVirksomhet && (
                   <Saksopplysninger
                     redigerbart={redigerbart}
                     behandlingID={behandlingID}
@@ -116,7 +116,7 @@ export const Registrering = (props) => {
                   redigerbart={redigerbart}
                   dokumentOversikt={dokumentOversikt}
                   dokumenter={dokumenter}
-                  faner={behandlingGjelderVirksomhet ? fanerUtenBucOgSed : defaultFaner}
+                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -148,7 +148,7 @@ Registrering.propTypes = {
   lovvalgsland: MPT.Kodeverk.isRequired,
   visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
-  behandlingGjelder: PT.string.isRequired,
+  hovedpartRolle: PT.string.isRequired,
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
@@ -165,7 +165,7 @@ Registrering.defaultProps = {
 };
 const mapStateToProps = (state) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),

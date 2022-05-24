@@ -19,3 +19,8 @@ export const FagsakStatusSelector = createSelector(
 export const SakstypeSelector = createSelector(FagsakSelector, (fagsak) => fagsak.sakstype);
 
 export const SakstypeKodeSelector = createSelector(SakstypeSelector, (sakstype) => (sakstype ? sakstype.kode : ""));
+
+export const HovedpartRolleSelector = createSelector(
+  (state) => FagsakSelector(state),
+  (fagsak) => fagsak.hovedpartRolle
+);

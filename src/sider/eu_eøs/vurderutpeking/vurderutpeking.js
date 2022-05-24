@@ -49,7 +49,7 @@ const Vurderutpeking = ({
   match,
   location,
   behandlingstema,
-  behandlingGjelder,
+  hovedpartRolle,
   redigerbart,
   fagsak,
   oppsummering,
@@ -105,7 +105,7 @@ const Vurderutpeking = ({
     ? KV.kodeTilObjekt(lovvalgslandFraForm, MKV.KTObjects.landkoder)
     : undefined;
 
-  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   return (
     <>
@@ -115,7 +115,7 @@ const Vurderutpeking = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {behandlingsgrunnlagErKlart && !behandlingGjelderVirksomhet && (
+                {behandlingsgrunnlagErKlart && !hovedpartErVirksomhet && (
                   <Stegvelger
                     behandlingID={behandlingID}
                     stegMap={stegMap}
@@ -132,9 +132,7 @@ const Vurderutpeking = ({
                     forsteSteg={forsteSteg}
                   />
                 )}
-                {!behandlingGjelderVirksomhet && (
-                  <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
-                )}
+                {!hovedpartErVirksomhet && <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />}
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
@@ -154,7 +152,7 @@ const Vurderutpeking = ({
                   redigerbart={redigerbart}
                   dokumentOversikt={dokumentOversikt}
                   dokumenter={dokumenter}
-                  faner={behandlingGjelderVirksomhet ? fanerUtenBucOgSed : defaultFaner}
+                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -170,7 +168,7 @@ Vurderutpeking.propTypes = {
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   behandlingstema: PT.string.isRequired,
-  behandlingGjelder: PT.string.isRequired,
+  hovedpartRolle: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
@@ -205,7 +203,7 @@ Vurderutpeking.defaultProps = {
 
 const mapStateToProps = (state) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),

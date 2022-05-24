@@ -165,7 +165,7 @@ class Saksbehandling extends Component {
       lovvalgsperiodeTom,
       visOppfriskModal,
       arbeidsland,
-      behandlingGjelder,
+      hovedpartRolle,
       behandlingsgrunnlagPeriodeFom,
       behandlingsgrunnlagPeriodeTom,
       behandlingsgrunnlagMottaksdato,
@@ -182,7 +182,7 @@ class Saksbehandling extends Component {
     if (Utils._isNil(redigerbart)) return null;
     if (!saksopplysningerLastet) return null;
 
-    const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+    const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
     return (
       <>
@@ -192,7 +192,7 @@ class Saksbehandling extends Component {
             <Nav.Container fluid>
               <Nav.Row>
                 <Nav.Column xs="7">
-                  {!behandlingGjelderVirksomhet && (
+                  {!hovedpartErVirksomhet && (
                     <Saksopplysninger
                       behandlingID={behandlingID}
                       visOppfriskModal={visOppfriskModal}
@@ -225,7 +225,7 @@ class Saksbehandling extends Component {
                     redigerbart={redigerbart}
                     dokumentOversikt={dokumentOversikt}
                     dokumenter={dokumenter}
-                    faner={behandlingGjelderVirksomhet ? fanerUtenBucOgSed : defaultFaner}
+                    faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                   />
                 </Nav.Column>
               </Nav.Row>
@@ -239,7 +239,7 @@ class Saksbehandling extends Component {
 
 Saksbehandling.propTypes = {
   behandlingID: PT.number.isRequired,
-  behandlingGjelder: PT.string.isRequired,
+  hovedpartRolle: PT.string.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   fagsak: MPT.Fagsak,
@@ -325,7 +325,7 @@ const mapStateToProps = (state) => ({
   behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
   anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(

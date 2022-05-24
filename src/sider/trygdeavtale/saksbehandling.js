@@ -32,7 +32,7 @@ const Saksbehandling = ({
   annenBehandlingOppfriskes,
   arbeidsland,
   behandlingstype,
-  behandlingGjelder,
+  hovedpartRolle,
   behandlingOppfriskes,
   behandlingsgrunnlag,
   behandlingsgrunnlagMottaksdato,
@@ -146,7 +146,7 @@ const Saksbehandling = ({
   );
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart && !behandlingIDHarEndretSeg;
 
-  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   return (
     <>
@@ -186,7 +186,7 @@ const Saksbehandling = ({
                   redigerbart={redigerbart}
                   behandlingID={behandlingID}
                   dokumenter={dokumenter}
-                  faner={behandlingGjelderVirksomhet ? fanerUtenBucOgSed : defaultFaner}
+                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -200,7 +200,6 @@ const Saksbehandling = ({
 Saksbehandling.propTypes = {
   annenBehandlingOppfriskes: PT.bool.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
-  behandlingGjelder: PT.string.isRequired,
   behandlingstype: PT.string.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
@@ -212,6 +211,7 @@ Saksbehandling.propTypes = {
   dokumentOversikt: PT.array.isRequired,
   fagsak: MPT.Fagsak,
   fagsakStatusKode: PT.string.isRequired,
+  hovedpartRolle: PT.string.isRequired,
   location: PT.object.isRequired,
   match: PT.object.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
@@ -245,7 +245,7 @@ Saksbehandling.defaultProps = {
 
 const mapStateToProps = (state) => ({
   arbeidsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state),
-  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(

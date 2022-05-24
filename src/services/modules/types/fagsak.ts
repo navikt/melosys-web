@@ -4,16 +4,17 @@ import { Soeknadsland } from "../behandlingsgrunnlag/types";
 
 type Fagsak = {
   saksnummer: string;
+  gsakSaksnummer: number;
   sakstype: KTObject;
   saksstatus: KTObject;
   registrertDato: string;
   endretDato: string;
-  gsakSaksnummer: number;
+  hovedpartRolle: string;
 };
 
 export type FagsakOppsummering = {
-  navn: string;
   saksnummer: string;
+  navn: string;
   sakstype: KTObject;
   saksstatus: KTObject;
   opprettetDato: string;
@@ -26,6 +27,7 @@ export type FagsakOppsummering = {
     land: Soeknadsland;
     opprettetDato: string;
   }[];
+  hovedpartRolle: string;
 };
 
 export default Fagsak;

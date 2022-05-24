@@ -14,7 +14,7 @@ import "./informasjonlinje.css";
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
-  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -29,11 +29,11 @@ export const Separator = () => <div className="informasjonlinje__separator">/</d
 const Informasjonlinje = ({
   behandlingID,
   saksnummer,
-  behandlingGjelder,
+  hovedpartRolle,
   visBehandlingsmeny = true,
 }: InformasjonlinjeProps) => {
-  const visPersonLinje = behandlingGjelder === MKV.Koder.aktoersroller.BRUKER;
-  const visVirksomhetLinje = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const visPersonLinje = hovedpartRolle === MKV.Koder.aktoersroller.BRUKER;
+  const visVirksomhetLinje = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   if (!visPersonLinje && !visVirksomhetLinje) return null;
 

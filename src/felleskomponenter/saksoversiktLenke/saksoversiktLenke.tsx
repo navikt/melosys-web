@@ -17,19 +17,19 @@ import "./saksoversiktLenke.css";
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
-  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
 });
 
 const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const SaksoversiktLenke = ({ behandlingID, saksnummer, behandlingGjelder }: PropsFromRedux) => {
-  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
-  const personopplysninger = useHentPersonopplysninger(behandlingID, behandlingGjelderVirksomhet);
+const SaksoversiktLenke = ({ behandlingID, saksnummer, hovedpartRolle }: PropsFromRedux) => {
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const personopplysninger = useHentPersonopplysninger(behandlingID, hovedpartErVirksomhet);
 
   const hentSaksoversikt = async () => {
-    if (behandlingGjelderVirksomhet) {
+    if (hovedpartErVirksomhet) {
       const org = await Api.Fagsaker.aktoer
         .hent(saksnummer, MKV.Koder.aktoersroller.VIRKSOMHET)
         .then((response: Api.Fagsaker.aktoer.Aktoer[]) => {
