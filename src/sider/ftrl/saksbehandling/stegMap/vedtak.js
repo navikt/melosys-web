@@ -26,7 +26,6 @@ class Vedtak extends Steg {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       oppdater: propsLight.tilgjengeligeHandlers.oppdater,
       lagreOgFatteVedtak: propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
-      kontrollerVedtak: propsLight.tilgjengeligeHandlers.kontrollerVedtak,
     };
     this.status = FANE_STATUS.OK;
   }

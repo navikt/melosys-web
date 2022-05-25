@@ -18,7 +18,6 @@ class Artikkel16Vedtak extends Steg {
     this.handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      kontrollerVedtak: this._propsLight.tilgjengeligeHandlers.kontrollerVedtak,
     };
     this._status = FANE_STATUS.OK;
   }

@@ -27,6 +27,7 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel16VedtakSchema from "./vurderingArtikkel16VedtakSchema";
 
 import "./vurderingArtikkel16Vedtak.css";
+import * as Api from "../../../services/api";
 
 export const VurderingArtikkel16VedtakBegrunnelser = ({
   art12_1_begrunnelser,
@@ -358,7 +359,6 @@ export const VurderingArtikkel16Vedtak = ({
   hentLovvalgsperioder,
   lagreLovvalgsperioder,
   tilbake,
-  kontrollerVedtak,
   harFeilmeldinger,
   aktivtSteg,
 }) => {
@@ -416,7 +416,12 @@ export const VurderingArtikkel16Vedtak = ({
     async function kontroller() {
       if (aktivtSteg && formIsValid) {
         setVedtakPending(true);
-        await kontrollerVedtak(lagFattVedtakEOSReqDto(), oppdaterFoerKontroll);
+        await Api.Kontroller.kontrollerFerdigbehandling({
+          behandlingID,
+          vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+          skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
+        });
         setOppdaterFoerKontroll(false);
         setVedtakPending(false);
       }
@@ -576,7 +581,6 @@ VurderingArtikkel16Vedtak.propTypes = {
   lagreLovvalgsperioder: PT.func.isRequired,
   anmodningsperiode: PT.object,
   hentLovvalgsperioder: PT.func.isRequired,
-  kontrollerVedtak: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
 };

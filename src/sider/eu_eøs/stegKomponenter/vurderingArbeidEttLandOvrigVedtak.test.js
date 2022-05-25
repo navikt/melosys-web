@@ -39,7 +39,6 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
       behandlingsgrunnlagTom: "",
       soknadsperiode: { tom: "", fom: "" },
       harFeilmeldinger: false,
-      kontrollerVedtak: jest.fn(),
     };
   });
 

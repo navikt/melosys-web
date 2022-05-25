@@ -68,10 +68,6 @@ interface Props {
   redigerbart: boolean;
   alleLandkoder: KTObject[];
   formValues: FormValuesProps;
-  kontrollerVedtak: (
-    data: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto,
-    skalRegisteropplysningerOppdateres: boolean
-  ) => Promise<void>;
   harFeilmeldinger: boolean;
   aktivtSteg: boolean;
 }
@@ -93,7 +89,6 @@ const VurderingVedtak = ({
   familieFormValues,
   lagreOgFatteVedtak,
   vedtakstype,
-  kontrollerVedtak,
   harFeilmeldinger,
   aktivtSteg,
 }: Props & PropsFromRedux) => {
@@ -261,11 +256,20 @@ const VurderingVedtak = ({
     };
   };
 
+  const lagKontrollerFerdigbehandlingDto = () => {
+    return {
+      behandlingID,
+      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
+      skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
+    };
+  };
+
   useEffect(() => {
     async function kontroller() {
       if (aktivtSteg) {
         setVedtakPending(true);
-        await kontrollerVedtak(lagFattVedtakFTRLReqDto(), oppdaterFoerKontroll);
+        await Api.Kontroller.kontrollerFerdigbehandling(lagKontrollerFerdigbehandlingDto());
         setOppdaterFoerKontroll(false);
         setVedtakPending(false);
       }

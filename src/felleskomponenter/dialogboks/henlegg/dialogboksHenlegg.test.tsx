@@ -21,7 +21,6 @@ describe("Dialogbokshenlegg", () => {
     props.henleggHandle = jest.fn();
     // props.dispatch = jest.fn();
     props.feilmeldinger = [];
-    props.kontrollerVedtak = jest.fn();
   });
 
   it("viser en Nav Modal", () => {

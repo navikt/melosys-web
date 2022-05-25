@@ -16,7 +16,6 @@ describe("DialogboksAvslagSoknad", () => {
     dispatch: jest.fn(),
     vedtakstype: null,
     feilmeldinger: [],
-    kontrollerVedtak: jest.fn(),
   };
 
   it("viser en Nav Modal", () => {
