@@ -116,7 +116,7 @@ class Journalforing extends Component {
       skalTilordnes,
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
     };
-    if (intensjon === JOURNALFORING_HENSIKT.KNYTT) {
+    if (intensjon === JOURNALFORING_HENSIKT.KNYTT || intensjon === JOURNALFORING_HENSIKT.NY_VURDERING) {
       journalPostData = { ...journalPostData, ikkeSendForvaltingsmelding: null };
     }
     // /opprett har i tillegg arbeidsgiverID og representantID
@@ -187,9 +187,10 @@ class Journalforing extends Component {
       settFeilFelt,
       tilForsiden,
     } = this.props;
+    const intensjon = behandlingstypeKode ? JOURNALFORING_HENSIKT.NY_VURDERING : JOURNALFORING_HENSIKT.KNYTT;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
-    const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
+    const vasketJournalforing = this.vaskDokumentInformasjon(intensjon);
     const journalforingData = {
       saksnummer,
       behandlingstypeKode,
@@ -213,7 +214,12 @@ class Journalforing extends Component {
     }
 
     try {
-      await Api.Journalforing.tilordne(journalforingData);
+      if (intensjon === JOURNALFORING_HENSIKT.NY_VURDERING) {
+        await Api.Journalforing.nyVurdering(journalforingData);
+      }
+      if (intensjon === JOURNALFORING_HENSIKT.KNYTT) {
+        await Api.Journalforing.knytt(journalforingData);
+      }
       this.setState({ visFeilmeldingDialog: false });
       return tilForsiden();
     } catch (error) {
