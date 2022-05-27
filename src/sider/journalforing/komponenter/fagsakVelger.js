@@ -10,14 +10,15 @@ import MKV from "../../../melosyskodeverk";
 import { JOURNALFORING_HENSIKT } from "../../../constants";
 
 import "./fagsakVelger.css";
+import { useFeatureToggle } from "../../../featuretoggle";
 
-const behandlingstyper = (sakstype) => {
+const behandlingstyper = (sakstype, alltidNyBehandlingToggle) => {
   switch (sakstype) {
     case MKV.Koder.sakstyper.EU_EOS:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
         ({ kode }) =>
           kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
-          kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
+          (alltidNyBehandlingToggle === "enabled" && kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING)
       );
     case MKV.Koder.sakstyper.TRYGDEAVTALE:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
@@ -29,6 +30,7 @@ const behandlingstyper = (sakstype) => {
 };
 
 const FagsakVelger = (props) => {
+  const alltidNyBehandlingToggle = useFeatureToggle("melosys.api.journalfoering.alltid.opprett.ny.behandling");
   const { fagsakListe, settJournalforingHensikt } = props;
   const notifier = async (saksnummer) => {
     const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
@@ -40,7 +42,9 @@ const FagsakVelger = (props) => {
       {
         value: sak.saksnummer,
         innhold: <EnkeltSak sak={sak} />,
-        footer: <KnyttTilSak sak={sak} behandlingstyper={behandlingstyper(sak.sakstype.kode)} />,
+        footer: (
+          <KnyttTilSak sak={sak} behandlingstyper={behandlingstyper(sak.sakstype.kode, alltidNyBehandlingToggle)} />
+        ),
       },
     ],
     []
