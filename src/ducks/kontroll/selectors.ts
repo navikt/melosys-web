@@ -1,6 +1,6 @@
 import { createSelector, Selector } from "reselect";
-import { STATUS } from "../../services/utils";
 import { RootState, StateSection } from "AppTypes";
+import { STATUS } from "../../services";
 
 import * as Types from "./types";
 
