@@ -40,7 +40,6 @@ import {
 } from "../../../felleskomponenter/stegvelger";
 
 import "./vurderingArbeidEttLandOvrigVedtak.css";
-import * as Api from "../../../services/api";
 
 const InformertMyndighetVelger = ({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) => {
   useEffect(() => {
@@ -115,6 +114,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   behandlingsgrunnlagTom,
   soknadsperiode,
   informertMyndighetFakta,
+  kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
 }) => {
@@ -246,7 +246,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
     async function kontroller() {
       if (aktivtSteg && formIsValid) {
         setVedtakPending(true);
-        await Api.Kontroller.kontrollerFerdigbehandling({
+        await kontrollerFerdigbehandling({
           behandlingID,
           vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
           behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
@@ -438,6 +438,7 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
     tom: PT.string.isRequired,
   }).isRequired,
   informertMyndighetFakta: MPT.Avklartefakta,
+  kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
 };

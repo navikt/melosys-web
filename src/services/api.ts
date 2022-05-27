@@ -9,7 +9,7 @@ import * as Fagsaker from "./modules/fagsaker";
 import * as Featuretoggle from "./modules/featuretoggle";
 import * as Journalforing from "./modules/journalforing";
 import * as Kodeverk from "./modules/kodeverk";
-import * as Kontroller from "./modules/kontroller";
+import * as Kontroll from "./modules/kontroll";
 import * as Lovvalgsperioder from "./modules/lovvalgsperioder";
 import * as Medlemskapsperioder from "./modules/medlemskapsperioder";
 import * as Representant from "./modules/representant";
@@ -48,7 +48,7 @@ export {
   Featuretoggle,
   Journalforing,
   Kodeverk,
-  Kontroller,
+  Kontroll,
   Lovvalgsperioder,
   Medlemskapsperioder,
   Oppgaver,

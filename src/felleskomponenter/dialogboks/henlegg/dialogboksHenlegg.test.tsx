@@ -19,7 +19,7 @@ describe("Dialogbokshenlegg", () => {
     props.ariaHideApp = false;
     props.avbryt = jest.fn();
     props.henleggHandle = jest.fn();
-    // props.dispatch = jest.fn();
+    props.dispatch = jest.fn();
     props.feilmeldinger = [];
   });
 

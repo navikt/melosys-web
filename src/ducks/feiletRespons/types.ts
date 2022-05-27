@@ -1,9 +1,9 @@
 import { ErrorResponse } from "melosys-api";
 
 import { utpekTypes } from "../utpek";
-import { vedtakTypes } from "../vedtak";
 import { videresendingTypes } from "../videresending";
 import { anmodningunntakTypes } from "../anmodningunntak";
+import { kontrollTypes } from "../kontroll";
 
 export const RESET = "feiletRespons/RESET";
 
@@ -16,7 +16,7 @@ export interface Data {
 
 export type Action =
   | utpekTypes.Action
-  | vedtakTypes.Action
+  | kontrollTypes.Action
   | videresendingTypes.Action
   | anmodningunntakTypes.Action
   | ResetAction;

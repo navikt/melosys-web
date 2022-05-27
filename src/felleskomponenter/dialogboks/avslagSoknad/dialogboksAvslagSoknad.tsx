@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
+import { Action } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 
 import { RootState } from "AppTypes";
 
@@ -19,6 +21,7 @@ import "./dialogboksAvslagSoknad.css";
 import HtmlEditor from "../../htmlEditor";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../feilmeldinger";
+import { kontrollOperations } from "../../../ducks/kontroll";
 
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
@@ -27,7 +30,12 @@ const mapStateToProps = (state: RootState) => ({
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
+    dispatch(kontrollOperations.kontroller(data)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 interface DialogboksAvslagSoknadProps {
   avslaaSoknadHandle: (data: { fritekst?: string }) => void;
@@ -41,11 +49,20 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
   const [brevFritekst, setBrevFritekst] = useState("");
   const [vedtakPending, setVedtakPending] = useState(true);
 
-  const { ariaHideApp, avbryt, behandlingID, redigerbart, avslaaSoknadHandle, vedtakstype, feilmeldinger } = props;
+  const {
+    ariaHideApp,
+    avbryt,
+    behandlingID,
+    redigerbart,
+    avslaaSoknadHandle,
+    vedtakstype,
+    kontrollerFerdigbehandling,
+    feilmeldinger,
+  } = props;
 
   useEffect(() => {
     (async () => {
-      await Api.Kontroller.kontrollerFerdigbehandling({
+      await kontrollerFerdigbehandling({
         behandlingID,
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,

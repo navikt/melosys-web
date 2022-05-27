@@ -38,6 +38,7 @@ import { Feilmeldinger } from "../feilmeldinger";
 
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.css";
+import { kontrollOperations } from "../../ducks/kontroll";
 
 class Stegvelger extends Component {
   state = {
@@ -360,6 +361,7 @@ class Stegvelger extends Component {
       tilbake: this.tilbake,
       oppdater: this.oppdater,
       lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+      kontrollerFerdigbehandling: this.kontrollerFerdigbehandling,
     };
 
     const { props } = this;
@@ -512,6 +514,10 @@ class Stegvelger extends Component {
     return this.state.aktuelleSteg[stegNummer]?.vedtakSteg;
   }
 
+  kontrollerFerdigbehandling = (data) => {
+    return this.props.kontrollerFerdigbehandling(data);
+  };
+
   render() {
     const { visBehandlingsgrunnlagFeilmeldinger } = this.state;
 
@@ -551,6 +557,7 @@ Stegvelger.propTypes = {
   history: PT.object.isRequired,
   fattVedtak: PT.func.isRequired,
   endreVedtak: PT.func.isRequired,
+  kontrollerFerdigbehandling: PT.func.isRequired,
   lagreBehandlingsgrunnlagHandler: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
@@ -718,6 +725,7 @@ const mapDispatchToProps = (dispatch) => ({
   hentVilkar: (behandlingID) => dispatch(vilkarOperations.hent(behandlingID)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
   endreVedtak: (behandlingID, body) => dispatch(vedtakOperations.endre(behandlingID, body)),
+  kontrollerFerdigbehandling: (data) => dispatch(kontrollOperations.kontroller(data)),
   videresend: (saksnummer, videresending) => dispatch(videresendingOperations.send(saksnummer, videresending)),
   hentAvklartefakta: (behandlingID) => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentLovvalgsperioder: (behandlingID) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),

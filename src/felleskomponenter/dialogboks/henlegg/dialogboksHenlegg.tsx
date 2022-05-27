@@ -1,6 +1,8 @@
 import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
 
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
@@ -12,6 +14,7 @@ import Knapperad from "../../knapperad";
 import HtmlEditor from "../../htmlEditor";
 import bem from "../../../bemUtils";
 
+import { kontrollOperations } from "../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
@@ -25,7 +28,12 @@ const mapStateToProps = (state: RootState) => ({
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
+    dispatch(kontrollOperations.kontroller(data)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -41,6 +49,7 @@ export const DialogboksHenleggSak = ({
   feilmeldinger,
   henleggHandle,
   avbryt,
+  kontrollerFerdigbehandling,
   ariaHideApp = false,
 }: DialogboksHenleggSakProps) => {
   const [begrunnelseKode, setBegrunnelseKode] = useState<string>("");
@@ -50,7 +59,7 @@ export const DialogboksHenleggSak = ({
 
   useEffect(() => {
     (async () => {
-      await Api.Kontroller.kontrollerFerdigbehandling({
+      await kontrollerFerdigbehandling({
         behandlingID,
         vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.HENLEGGELSE,

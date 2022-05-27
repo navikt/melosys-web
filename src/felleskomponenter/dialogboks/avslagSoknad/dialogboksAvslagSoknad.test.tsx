@@ -14,6 +14,7 @@ describe("DialogboksAvslagSoknad", () => {
     redigerbart: true,
     behandlingID: 1,
     dispatch: jest.fn(),
+    kontrollerFerdigbehandling: jest.fn(),
     vedtakstype: null,
     feilmeldinger: [],
   };

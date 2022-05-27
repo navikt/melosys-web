@@ -28,7 +28,6 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel13_x_vedtakSchema from "./vurderingArtikkel13_x_vedtakSchema";
 
 import "./vurderingArtikkel13_x_vedtak.css";
-import * as Api from "../../../services/api";
 
 export const VurderingArtikkel13_x_vedtak = ({
   redigerbart,
@@ -47,6 +46,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
   behandlingstype,
   soknadsperiode,
+  kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
 }) => {
@@ -117,7 +117,7 @@ export const VurderingArtikkel13_x_vedtak = ({
     async function kontroller() {
       if (aktivtSteg && formIsValid) {
         setVedtakPending(true);
-        await Api.Kontroller.kontrollerFerdigbehandling({
+        await kontrollerFerdigbehandling({
           behandlingID,
           vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
           behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
@@ -257,6 +257,7 @@ VurderingArtikkel13_x_vedtak.propTypes = {
     fom: PT.string.isRequired,
     tom: PT.string.isRequired,
   }).isRequired,
+  kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
 };
