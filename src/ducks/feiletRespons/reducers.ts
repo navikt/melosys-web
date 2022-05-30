@@ -3,6 +3,7 @@ import { StateSection } from "AppTypes";
 import { STATUS } from "../../services";
 import * as Types from "./types";
 import { utpekTypes } from "../utpek";
+import { vedtakTypes } from "../vedtak";
 import { kontrollTypes } from "../kontroll";
 import { videresendingTypes } from "../videresending";
 import { anmodningunntakTypes } from "../anmodningunntak";
@@ -21,6 +22,7 @@ export default function reducer(state = initialState, action: Types.Action): Sta
     case Types.RESET:
       return initialState;
     case utpekTypes.FEILET:
+    case vedtakTypes.FEILET:
     case kontrollTypes.FEILET:
     case videresendingTypes.FEILET:
     case anmodningunntakTypes.FEILET:
