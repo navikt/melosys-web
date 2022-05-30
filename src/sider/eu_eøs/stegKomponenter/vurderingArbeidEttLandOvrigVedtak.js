@@ -114,7 +114,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   behandlingsgrunnlagTom,
   soknadsperiode,
   informertMyndighetFakta,
-  kontrollerVedtak,
+  kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
 }) => {
@@ -246,7 +246,12 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
     async function kontroller() {
       if (aktivtSteg && formIsValid) {
         setVedtakPending(true);
-        await kontrollerVedtak(lagFattVedtakEOSReqDto(), oppdaterFoerKontroll);
+        await kontrollerFerdigbehandling({
+          behandlingID,
+          vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+          skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
+        });
         setOppdaterFoerKontroll(false);
         setVedtakPending(false);
       }
@@ -433,7 +438,7 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
     tom: PT.string.isRequired,
   }).isRequired,
   informertMyndighetFakta: MPT.Avklartefakta,
-  kontrollerVedtak: PT.func.isRequired,
+  kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
 };

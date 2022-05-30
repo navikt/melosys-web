@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
 import { Medlemskapsperiode } from "Domene";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
@@ -26,6 +28,7 @@ import MottakerTabell from "../../../../felleskomponenter/tabell/mottakerTabell"
 import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from "./selectors";
 import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 import { RepresentantformValues } from "./vurderingRepresentant";
+import { kontrollOperations } from "../../../../ducks/kontroll";
 
 import "./vurderingVedtak.css";
 
@@ -51,7 +54,12 @@ const mapStateToProps = (state: RootState) => ({
   },
 });
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
+    dispatch(kontrollOperations.kontroller(data)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -68,10 +76,6 @@ interface Props {
   redigerbart: boolean;
   alleLandkoder: KTObject[];
   formValues: FormValuesProps;
-  kontrollerVedtak: (
-    data: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto,
-    skalRegisteropplysningerOppdateres: boolean
-  ) => Promise<void>;
   harFeilmeldinger: boolean;
   aktivtSteg: boolean;
 }
@@ -93,7 +97,7 @@ const VurderingVedtak = ({
   familieFormValues,
   lagreOgFatteVedtak,
   vedtakstype,
-  kontrollerVedtak,
+  kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
 }: Props & PropsFromRedux) => {
@@ -261,11 +265,20 @@ const VurderingVedtak = ({
     };
   };
 
+  const lagKontrollerFerdigbehandlingDto = () => {
+    return {
+      behandlingID,
+      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
+      skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
+    };
+  };
+
   useEffect(() => {
     async function kontroller() {
       if (aktivtSteg) {
         setVedtakPending(true);
-        await kontrollerVedtak(lagFattVedtakFTRLReqDto(), oppdaterFoerKontroll);
+        await kontrollerFerdigbehandling(lagKontrollerFerdigbehandlingDto());
         setOppdaterFoerKontroll(false);
         setVedtakPending(false);
       }

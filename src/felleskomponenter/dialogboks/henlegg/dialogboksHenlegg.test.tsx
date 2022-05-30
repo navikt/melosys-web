@@ -20,6 +20,7 @@ describe("Dialogbokshenlegg", () => {
     props.avbryt = jest.fn();
     props.henleggHandle = jest.fn();
     props.dispatch = jest.fn();
+    props.feilmeldinger = [];
   });
 
   it("viser en Nav Modal", () => {
