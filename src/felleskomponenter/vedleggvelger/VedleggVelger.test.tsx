@@ -2,9 +2,12 @@ import React, { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
 import { shallow } from "enzyme";
 
-import * as Mui from "../ui";
+import { Lenkeknapp } from "../ui";
+import * as Nav from "../../navFrontend";
 
-import VedleggVelger, { VedleggListe } from "./VedleggVelger";
+import VedleggVelger from "./VedleggVelger";
+import VedleggVelgerModal from "./VedleggVelgerModal";
+import { VedleggTable } from "./VedleggTable";
 
 describe("VedleggVelger", () => {
   const mockedProps = mock<ComponentProps<typeof VedleggVelger>>();
@@ -48,33 +51,25 @@ describe("VedleggVelger", () => {
     ];
 
     const vedleggVelger = shallow(<VedleggVelger {...props} />);
-    const vedleggListe = vedleggVelger.find(VedleggListe);
-    const { markerteVedlegg } = vedleggListe.props();
-    expect(markerteVedlegg.length === 1);
-    expect(markerteVedlegg.find((str) => str === "ID2"));
+    const vedleggTable = vedleggVelger.find(VedleggTable);
+    const { valgteVedlegg } = vedleggTable.props();
+    expect(valgteVedlegg.length === 2);
   });
 
-  it("rendrer en knapp med tekst 'Legg til vedlegg' når ingen vedlegg er markert", () => {
+  it("rendrer en knapp med tekst 'Legg til vedlegg'", () => {
     props.valgteVedlegg = [];
     const vedleggVelger = shallow(<VedleggVelger {...props} />);
 
-    expect(vedleggVelger.find(Mui.Knapp).contains("Legg til vedlegg")).toBe(true);
+    expect(vedleggVelger.find(Lenkeknapp).contains("Legg til vedlegg")).toBe(true);
   });
+});
 
-  it("rendrer en knapp med tekst 'Legg til andre vedlegg' når minst ett vedlegg er markert", () => {
-    props.valgteVedlegg = [
-      {
-        dokumentID: "1234",
-        tittel: "dokument",
-        logiskeVedlegg: [],
-        id: "2345",
-        journalpostID: "987987",
-        dato: null,
-        avsenderEllerMottaker: "AVSENDER",
-      },
-    ];
-    const vedleggVelger = shallow(<VedleggVelger {...props} />);
+describe("VedleggVelgerModal", () => {
+  const mockedProps = mock<ComponentProps<typeof VedleggVelgerModal>>();
+  const props = instance(mockedProps);
 
-    expect(vedleggVelger.find(Mui.Knapp).contains("Legg til andre vedlegg")).toBe(true);
+  it("viser en Nav Modal", () => {
+    const vedleggVelgerModal = shallow(<VedleggVelgerModal {...props} />);
+    expect(vedleggVelgerModal.exists(Nav.Modal)).toBe(true);
   });
 });
