@@ -6,7 +6,7 @@ import MKV from "../../../melosyskodeverk";
 
 import { KnyttTilSak } from "./knyttTilSak";
 
-describe("KnyttTilSak", () => {
+describe("KnyttTilSak toggle = disabled", () => {
   let props = null;
 
   beforeEach(() => {
