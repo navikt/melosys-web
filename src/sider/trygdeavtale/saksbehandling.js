@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
 
@@ -65,24 +65,14 @@ const Saksbehandling = ({
   lovvalgsperiodeTom,
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
-  const [behandlingIDHarEndretSeg, setBehandlingIDHarEndretSeg] = useState(false);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const saksnummer = match?.params?.snr;
-
-  const handleNyVurdering = (skalHenteBehandling, nyVurderingBehandlingID) => {
-    if (skalHenteBehandling) hentBehandling(nyVurderingBehandlingID);
-    setBehandlingIDHarEndretSeg(false);
-  };
-  const debouncedHandleNyVurdering = useCallback(Utils._debounce(handleNyVurdering, 500), []);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
 
     if (Utils._toInteger(behandlingIDFraParam) !== behandlingID) {
-      if (behandlingID !== -1) setBehandlingIDHarEndretSeg(true);
       setBehandlingID(Utils._toInteger(behandlingIDFraParam));
-    } else if (behandlingIDHarEndretSeg) {
-      debouncedHandleNyVurdering(!redigerbart, behandlingIDFraParam);
     }
   };
 
@@ -143,7 +133,7 @@ const Saksbehandling = ({
   const behandlingsgrunnlagErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
   );
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart && !behandlingIDHarEndretSeg;
+  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
   return (
     <>
       <Personlinje />

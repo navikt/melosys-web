@@ -30,9 +30,9 @@ import { datalastingOperations } from "../../../ducks/datalasting";
 import { dokumenterOperations, dokumenterSelectors } from "../../../ducks/dokumenter";
 import { anmodningsperiodesvarOperations } from "../../../ducks/anmodningsperiodesvar";
 import { landkoderOperations } from "../../../ducks/landkoder";
+import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 import "./saksbehandling.css";
-import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 class Saksbehandling extends Component {
   state = {
