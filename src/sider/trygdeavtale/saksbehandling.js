@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
 
@@ -8,9 +8,9 @@ import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
-import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog/sideDialog";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
-import Oppsummering from "../../felleskomponenter/oppsummering/oppsummering";
+import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 
@@ -32,7 +32,7 @@ const Saksbehandling = ({
   annenBehandlingOppfriskes,
   arbeidsland,
   behandlingstype,
-  behandlingGjelder,
+  hovedpartRolle,
   behandlingOppfriskes,
   behandlingsgrunnlag,
   behandlingsgrunnlagMottaksdato,
@@ -66,24 +66,14 @@ const Saksbehandling = ({
   lovvalgsperiodeTom,
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
-  const [behandlingIDHarEndretSeg, setBehandlingIDHarEndretSeg] = useState(false);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const saksnummer = match?.params?.snr;
-
-  const handleNyVurdering = (skalHenteBehandling, nyVurderingBehandlingID) => {
-    if (skalHenteBehandling) hentBehandling(nyVurderingBehandlingID);
-    setBehandlingIDHarEndretSeg(false);
-  };
-  const debouncedHandleNyVurdering = useCallback(Utils._debounce(handleNyVurdering, 500), []);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
 
     if (Utils._toInteger(behandlingIDFraParam) !== behandlingID) {
-      if (behandlingID !== -1) setBehandlingIDHarEndretSeg(true);
       setBehandlingID(Utils._toInteger(behandlingIDFraParam));
-    } else if (behandlingIDHarEndretSeg) {
-      debouncedHandleNyVurdering(!redigerbart, behandlingIDFraParam);
     }
   };
 
@@ -144,14 +134,9 @@ const Saksbehandling = ({
   const behandlingsgrunnlagErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
   );
-  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
-  const visStegVelger =
-    !erHenlagtSak &&
-    !erAvslaattSoknad &&
-    behandlingsgrunnlagErKlart &&
-    !behandlingIDHarEndretSeg &&
-    !behandlingGjelderVirksomhet;
+  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart && !hovedpartErVirksomhet;
 
   return (
     <>
@@ -191,7 +176,7 @@ const Saksbehandling = ({
                   redigerbart={redigerbart}
                   behandlingID={behandlingID}
                   dokumenter={dokumenter}
-                  faner={behandlingGjelderVirksomhet ? fanerUtenBucOgSed : defaultFaner}
+                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -205,7 +190,6 @@ const Saksbehandling = ({
 Saksbehandling.propTypes = {
   annenBehandlingOppfriskes: PT.bool.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
-  behandlingGjelder: PT.string.isRequired,
   behandlingstype: PT.string.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
@@ -217,6 +201,7 @@ Saksbehandling.propTypes = {
   dokumentOversikt: PT.array.isRequired,
   fagsak: MPT.Fagsak,
   fagsakStatusKode: PT.string.isRequired,
+  hovedpartRolle: PT.string.isRequired,
   location: PT.object.isRequired,
   match: PT.object.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
@@ -250,7 +235,7 @@ Saksbehandling.defaultProps = {
 
 const mapStateToProps = (state) => ({
   arbeidsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state),
-  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(

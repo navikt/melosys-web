@@ -15,7 +15,6 @@ export interface Oppsummering {
   behandlingsfrist: string | null;
   svarFrist: string | null;
   behandlingstema: KTObject;
-  behandlingGjelder: string | null;
 }
 
 interface Arbeidsavtale {

@@ -9,28 +9,37 @@ import * as Nav from "../../navFrontend";
 import * as Routing from "../../routing";
 
 import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { fagsakSelectors } from "../../ducks/fagsaker";
 import useHentPersonopplysninger from "../informasjonlinje/useHentpersonopplysninger";
 
 import "./saksoversiktLenke.css";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
+  saksnummer: fagsakSelectors.SaksnummerSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
 });
 
 const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const SaksoversiktLenke = ({ behandlingID, behandlingGjelder }: PropsFromRedux) => {
-  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
-  const personopplysninger = useHentPersonopplysninger(behandlingID, behandlingGjelderVirksomhet);
+const SaksoversiktLenke = ({ behandlingID, saksnummer, hovedpartRolle }: PropsFromRedux) => {
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const personopplysninger = useHentPersonopplysninger(behandlingID, hovedpartErVirksomhet);
 
   const hentSaksoversikt = async () => {
-    if (behandlingGjelderVirksomhet) {
-      const { orgnr } = await Api.Organisasjoner.hentOrganisasjonTilVirksomhet(behandlingID);
-      if (!orgnr) throw new Error("Organisasjonsopplysninger mangler orgnr");
-      sessionStorage.setItem("sokefrase", orgnr);
+    if (hovedpartErVirksomhet) {
+      const org = await Api.Fagsaker.aktoer
+        .hent(saksnummer, MKV.Koder.aktoersroller.VIRKSOMHET)
+        .then((response: Api.Fagsaker.aktoer.Aktoer[]) => {
+          if (response?.length !== 1 || !response[0].orgnr) {
+            return undefined;
+          }
+          return Api.Organisasjoner.hentOrganisasjon(response[0].orgnr);
+        });
+      if (!org?.orgnr) throw new Error("Organisasjonsopplysninger mangler orgnr");
+      sessionStorage.setItem("sokefrase", org.orgnr);
     } else {
       const fnr = personopplysninger?.fnr;
       if (!fnr) throw new Error("Personopplysninger mangler fnr");

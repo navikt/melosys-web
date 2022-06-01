@@ -5,6 +5,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { isPristine } from "redux-form";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
+import { FysiskDokument } from "Domene";
 import { useBeforeunload } from "react-beforeunload";
 
 import * as Nav from "../../navFrontend";
@@ -34,9 +35,13 @@ interface RouteParams {
   behandlingID: string;
 }
 
-type SendbrevProps = RouteComponentProps<RouteParams> & PropsFromRedux;
+interface Props {
+  dokumenter: FysiskDokument[];
+}
 
-const Sendbrev = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine }: SendbrevProps) => {
+type SendbrevProps = RouteComponentProps<RouteParams> & PropsFromRedux & Props;
+
+const Sendbrev = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine, dokumenter }: SendbrevProps) => {
   const behandlingID = Utils._toInteger(match.params.behandlingID);
 
   useEffect(() => {
@@ -67,6 +72,7 @@ const Sendbrev = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine }
               mottakerSelectWidth="5"
               mottakerTabellWidth="5"
               felterWidth="5"
+              dokumenter={dokumenter}
             />
           </Nav.Panel>
         </Nav.Container>

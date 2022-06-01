@@ -72,7 +72,7 @@ const VurderingVedtak = ({
   visAntallManederUtland,
   pdfDokumenter,
   erArtikkel11_4,
-  kontrollerVedtak,
+  kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
 }) => {
@@ -119,7 +119,12 @@ const VurderingVedtak = ({
     async function kontroller() {
       if (aktivtSteg && formIsValid) {
         setVedtakPending(true);
-        await kontrollerVedtak(lagFattVedtakEOSReqDto(), oppdaterFoerKontroll);
+        await kontrollerFerdigbehandling({
+          behandlingID,
+          vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+          skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
+        });
         setOppdaterFoerKontroll(false);
         setVedtakPending(false);
       }
@@ -249,7 +254,7 @@ VurderingVedtak.propTypes = {
   visAntallManederUtland: PT.bool,
   pdfDokumenter: MPT.DokumentMetadataListe.isRequired,
   erArtikkel11_4: PT.bool.isRequired,
-  kontrollerVedtak: PT.func.isRequired,
+  kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
 };

@@ -1,11 +1,14 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
 import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
+import { FysiskDokument } from "Domene";
 import { ColumnWidth } from "nav-frontend-grid";
+
+import { URL_BASENAME } from "../../../constants";
 
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
@@ -16,13 +19,13 @@ import * as Utils from "../../../utils";
 
 import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { formSelectors } from "../../../ducks/form";
-import { URL_BASENAME } from "../../../constants";
-import { SendBrevFormValues } from "./types";
-import BrevMottaker from "./brevMottaker";
-import BrevMottakereTabell from "./brevMottakereTabell";
-import BrevFelt from "./brevFelt";
 import ValgAlternativer from "./valgAlternativer";
 import FeltBeskrivelse from "./feltBeskrivelse";
+import BrevFelt from "./brevFelt";
+import BrevMottaker from "./brevMottaker";
+import { SendBrevFormValues } from "./types";
+import BrevVedlegg from "./brevVedlegg";
+import BrevMottakereTabell from "./brevMottakereTabell";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
@@ -55,6 +58,7 @@ interface Props {
   mottakerTabellWidth?: ColumnWidth;
   felterWidth?: ColumnWidth;
   formValues: SendBrevFormValues;
+  dokumenter: FysiskDokument[];
 }
 
 const SendBrev = ({
@@ -66,6 +70,7 @@ const SendBrev = ({
   redigerbart,
   resetForm,
   visApneINyttVindu,
+  dokumenter,
   brevTypeSelectWidth = "12",
   mottakerSelectWidth = "12",
   mottakerTabellWidth = "12",
@@ -76,6 +81,7 @@ const SendBrev = ({
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
   const [mottakerFeil, setMottakerFeil] = useState<string>();
+  const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
@@ -141,6 +147,10 @@ const SendBrev = ({
       fritekst: hentFormVerdi("FRITEKST"),
       kopiMottakere: hentKopiMottakere() || [],
       kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
+      saksvedlegg: valgteVedlegg.map((vedlegg) => ({
+        dokumentID: vedlegg.dokumentID,
+        journalpostID: vedlegg.journalpostID,
+      })),
     };
   };
 
@@ -182,6 +192,7 @@ const SendBrev = ({
   if (!tilgjengeligeMaler || !formValues) return null;
 
   const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}`;
+  const vedleggFelt = formValues?.valgtMal?.felter?.find((felt) => felt.kode === Api.DokumenterV2.FeltType.VEDLEGG);
 
   return (
     <div className="send_brev">
@@ -254,6 +265,16 @@ const SendBrev = ({
             />
           </Nav.Column>
         </Nav.Row>
+      )}
+
+      {vedleggFelt && (
+        <BrevVedlegg
+          felt={vedleggFelt}
+          width={felterWidth}
+          dokumenter={dokumenter}
+          valgteVedlegg={valgteVedlegg}
+          setValgteVedlegg={setValgteVedlegg}
+        />
       )}
 
       <div>

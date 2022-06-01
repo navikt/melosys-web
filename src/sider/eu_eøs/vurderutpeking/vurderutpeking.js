@@ -3,14 +3,15 @@ import { connect } from "react-redux";
 import PT from "prop-types";
 import { getFormValues } from "redux-form";
 
+import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog/sideDialog";
-import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
+import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
@@ -27,11 +28,9 @@ import { anmodningsperioderOperations } from "../../../ducks/anmodningsperioder"
 import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 import { behandlingsperioderOperations } from "../../../ducks/behandlingsperioder";
 import { landkoderOperations } from "../../../ducks/landkoder";
-
-import stegMap from "./stegMap";
-import MKV from "../../../melosyskodeverk";
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
+import stegMap from "./stegMap";
 import "./vurderutpeking.css";
 
 const hentForsteSteg = (behandlingstema) => {
@@ -45,11 +44,13 @@ const hentForsteSteg = (behandlingstema) => {
 };
 
 const Vurderutpeking = ({
+  match: {
+    params: { snr: saksnummer },
+  },
   lastInnSaksopplysninger,
-  match,
   location,
   behandlingstema,
-  behandlingGjelder,
+  hovedpartRolle,
   redigerbart,
   fagsak,
   oppsummering,
@@ -75,9 +76,6 @@ const Vurderutpeking = ({
   vurderUtpekingFormValues,
   hentLandkoder,
 }) => {
-  const {
-    params: { snr: saksnummer },
-  } = match;
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
   useEffect(() => {
@@ -105,7 +103,7 @@ const Vurderutpeking = ({
     ? KV.kodeTilObjekt(lovvalgslandFraForm, MKV.KTObjects.landkoder)
     : undefined;
 
-  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   return (
     <>
@@ -115,7 +113,7 @@ const Vurderutpeking = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {behandlingsgrunnlagErKlart && !behandlingGjelderVirksomhet && (
+                {behandlingsgrunnlagErKlart && !hovedpartErVirksomhet && (
                   <Stegvelger
                     behandlingID={behandlingID}
                     stegMap={stegMap}
@@ -132,9 +130,7 @@ const Vurderutpeking = ({
                     forsteSteg={forsteSteg}
                   />
                 )}
-                {!behandlingGjelderVirksomhet && (
-                  <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
-                )}
+                {!hovedpartErVirksomhet && <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />}
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
@@ -154,7 +150,7 @@ const Vurderutpeking = ({
                   redigerbart={redigerbart}
                   dokumentOversikt={dokumentOversikt}
                   dokumenter={dokumenter}
-                  faner={behandlingGjelderVirksomhet ? fanerUtenBucOgSed : defaultFaner}
+                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -170,7 +166,7 @@ Vurderutpeking.propTypes = {
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   behandlingstema: PT.string.isRequired,
-  behandlingGjelder: PT.string.isRequired,
+  hovedpartRolle: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
@@ -205,7 +201,7 @@ Vurderutpeking.defaultProps = {
 
 const mapStateToProps = (state) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),

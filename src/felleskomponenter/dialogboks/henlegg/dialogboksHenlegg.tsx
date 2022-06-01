@@ -1,25 +1,39 @@
-import React, { ChangeEventHandler, useState } from "react";
+import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
 
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
+import * as Api from "../../../services/api";
 
 import MKV from "../../../melosyskodeverk";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Knapperad from "../../knapperad";
+import HtmlEditor from "../../htmlEditor";
+import bem from "../../../bemUtils";
 
+import { kontrollOperations } from "../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
+import { Feilmeldinger } from "../../feilmeldinger";
 
 import "./dialogboksHenlegg.css";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   redigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
+  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
+    dispatch(kontrollOperations.kontroller(data)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -30,10 +44,12 @@ type DialogboksHenleggSakProps = PropsFromRedux & {
 };
 
 export const DialogboksHenleggSak = ({
-  henleggHandle,
-  avbryt,
   behandlingID,
   redigerbart,
+  feilmeldinger,
+  henleggHandle,
+  avbryt,
+  kontrollerFerdigbehandling,
   ariaHideApp = false,
 }: DialogboksHenleggSakProps) => {
   const [begrunnelseKode, setBegrunnelseKode] = useState<string>("");
@@ -41,20 +57,21 @@ export const DialogboksHenleggSak = ({
   const [feilmeldingFritekst, setFeilmeldingFritekst] = useState<string | null>(null);
   const [fritekst, setFritekst] = useState<string>("");
 
-  const velgBegrunnelseHandle: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setBegrunnelseKode(event.target.value);
-    setFeilmeldingSelect(null);
-  };
+  useEffect(() => {
+    (async () => {
+      await kontrollerFerdigbehandling({
+        behandlingID,
+        vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.HENLEGGELSE,
+        skalRegisteropplysningerOppdateres: false,
+      });
+    })();
+  }, []);
 
   const erBegrunnelseValgt = begrunnelseKode !== "";
   const erFritekstValgt = begrunnelseKode === MKV.Koder.begrunnelser.henleggelsesgrunner.ANNET;
-  const erFritekstTom = fritekst === "";
-
-  const handleForhandsvisBrev = async () => {
-    const begrunnelsePassertValidering = validerBegrunnelse();
-    const fritekstPassertValidering = validerFritekst();
-    return begrunnelsePassertValidering && fritekstPassertValidering;
-  };
+  const erFritekstTom = fritekst.replace("<p></p>", "").trim() === "";
+  const harIngenFeilmeldinger = !(feilmeldinger && feilmeldinger.length > 0);
 
   const validerBegrunnelse = () => {
     if (!erBegrunnelseValgt) {
@@ -71,14 +88,24 @@ export const DialogboksHenleggSak = ({
     return fritekstValideringPassert;
   };
 
-  const fritekstOnchange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setFritekst(event.target.value);
+  const fritekstOnchange = (tekst: string) => {
+    setFritekst(tekst);
     setFeilmeldingFritekst(null);
   };
 
-  const vedKlikkHenlegg = () => {
-    if (!(validerBegrunnelse() && validerFritekst())) return;
+  const velgBegrunnelseHandle: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setBegrunnelseKode(event.target.value);
+    setFeilmeldingSelect(null);
+  };
 
+  const handleForhandsvisBrev = async () => {
+    const begrunnelsePassertValidering = validerBegrunnelse();
+    const fritekstPassertValidering = validerFritekst();
+    return begrunnelsePassertValidering && fritekstPassertValidering;
+  };
+
+  const handleHenlegg = () => {
+    if (!(validerBegrunnelse() && validerFritekst())) return;
     henleggHandle({
       begrunnelseKode,
       fritekst,
@@ -101,9 +128,11 @@ export const DialogboksHenleggSak = ({
     },
   ];
 
+  const dialogboksHenleggClassName = bem("dialogboks-henlegg");
+
   return (
     <Nav.Modal
-      className="dialogboksHenlegg"
+      className={dialogboksHenleggClassName.block}
       isOpen
       contentLabel="Henlegg sak"
       onRequestClose={avbryt}
@@ -113,7 +142,10 @@ export const DialogboksHenleggSak = ({
       ariaHideApp={ariaHideApp}
     >
       <div>
-        <Nav.Typo.Systemtittel className="overskrift">Henlegg saken</Nav.Typo.Systemtittel>
+        <Nav.Typo.Systemtittel className={dialogboksHenleggClassName.element("overskrift")}>
+          Henlegg saken
+        </Nav.Typo.Systemtittel>
+        <Feilmeldinger className={dialogboksHenleggClassName.element("feilmeldinger")} feilmeldinger={feilmeldinger} />
         <Mui.KodeTermSelect
           feil={feilmeldingSelect}
           onChange={velgBegrunnelseHandle}
@@ -124,15 +156,21 @@ export const DialogboksHenleggSak = ({
           redigerbart={redigerbart}
         />
         {erFritekstValgt && (
-          <Nav.Textarea feil={feilmeldingFritekst} label="Fritekst" onChange={fritekstOnchange} value={fritekst} />
+          <HtmlEditor
+            className={dialogboksHenleggClassName.element("fritekst")}
+            feil={feilmeldingFritekst}
+            value={fritekst}
+            onChange={fritekstOnchange}
+            label="Fritekst"
+          />
         )}
-        {redigerbart && (
+        {redigerbart && harIngenFeilmeldinger && (
           <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={handleForhandsvisBrev} />
         )}
         <Knapperad
-          bekreft={vedKlikkHenlegg}
+          bekreft={handleHenlegg}
           bekreftTekst="HENLEGG SAKEN"
-          bekreftRedigerbart={erBegrunnelseValgt}
+          bekreftRedigerbart={erBegrunnelseValgt && harIngenFeilmeldinger}
           avbryt={avbryt}
           avbrytTekst="AVBRYT"
           redigerbart={redigerbart}

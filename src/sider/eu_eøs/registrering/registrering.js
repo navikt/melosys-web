@@ -1,16 +1,18 @@
 /* eslint no-alert:off, consistent-return:off */
-import React from "react";
+import React, { useEffect } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 
+import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog/sideDialog";
-import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
+import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
+
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../ducks/avklartefakta";
@@ -20,39 +22,35 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./registrering.css";
-import MKV from "../../../melosyskodeverk";
 
-export const Registrering = (props) => {
-  const {
-    match: {
-      params: { snr },
-    },
-    tilForsiden,
-    location,
-    hentAvklartefakta,
-    hentBehandling,
-    hentFagsaker,
-    hentLovvalgsperioder,
-    vurderingBegrunnelser,
-    behandlingGjelder,
-    sed,
-    redigerbart,
-    Saksopplysninger,
-    fagsak,
-    oppsummering,
-    lovvalgsperiodeFom,
-    lovvalgsperiodeTom,
-    lovvalgsland,
-    visOppfriskModal,
-    behandlingOppfriskes,
-    dokumentOversikt,
-    dokumenter,
-    startOgVisOppfriskModal,
-  } = props;
-
-  const saksnummer = snr;
+export const Registrering = ({
+  match: {
+    params: { snr: saksnummer },
+  },
+  tilForsiden,
+  location,
+  hentAvklartefakta,
+  hentBehandling,
+  hentFagsaker,
+  hentLovvalgsperioder,
+  vurderingBegrunnelser,
+  hovedpartRolle,
+  sed,
+  redigerbart,
+  Saksopplysninger,
+  fagsak,
+  oppsummering,
+  lovvalgsperiodeFom,
+  lovvalgsperiodeTom,
+  lovvalgsland,
+  visOppfriskModal,
+  behandlingOppfriskes,
+  dokumentOversikt,
+  dokumenter,
+  startOgVisOppfriskModal,
+  resetFagsakState,
+}) => {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
-
   const [saksopplysningerErHentet, setSaksopplysningerErHentet] = React.useState(false);
 
   const lastInnSaksopplysninger = async () => {
@@ -66,20 +64,21 @@ export const Registrering = (props) => {
     setSaksopplysningerErHentet(true);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     lastInnSaksopplysninger();
 
     if (behandlingOppfriskes) {
       visOppfriskModal();
     }
 
-    return () => props.resetFagsakState();
+    return () => resetFagsakState();
   }, []);
 
   if (Utils._isNil(redigerbart)) return null;
+  if (!behandlingID) return null;
   if (!saksopplysningerErHentet) return null;
 
-  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   return (
     <>
@@ -89,7 +88,7 @@ export const Registrering = (props) => {
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {!behandlingGjelderVirksomhet && (
+                {!hovedpartErVirksomhet && (
                   <Saksopplysninger
                     redigerbart={redigerbart}
                     behandlingID={behandlingID}
@@ -116,7 +115,7 @@ export const Registrering = (props) => {
                   redigerbart={redigerbart}
                   dokumentOversikt={dokumentOversikt}
                   dokumenter={dokumenter}
-                  faner={behandlingGjelderVirksomhet ? fanerUtenBucOgSed : defaultFaner}
+                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -148,7 +147,7 @@ Registrering.propTypes = {
   lovvalgsland: MPT.Kodeverk.isRequired,
   visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
-  behandlingGjelder: PT.string.isRequired,
+  hovedpartRolle: PT.string.isRequired,
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
@@ -165,7 +164,7 @@ Registrering.defaultProps = {
 };
 const mapStateToProps = (state) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  behandlingGjelder: behandlingerSelectors.BehandlingGjelderSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),

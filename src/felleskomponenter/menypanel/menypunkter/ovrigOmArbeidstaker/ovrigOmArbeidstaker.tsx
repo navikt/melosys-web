@@ -63,9 +63,9 @@ const OvrigOmArbeidstaker = ({
         <Nav.Row>
           <Nav.Column xs="9" className="rediger-lagre-knapp-container">
             {status === Status.RedigeringUtfort && (
-              <Mui.Knappelenke title="Rediger svar" ikon={Ikoner.Pencil} onClick={() => setStatus(Status.Redigerer)}>
+              <Mui.Lenkeknapp ikon={Ikoner.Pencil} onClick={() => setStatus(Status.Redigerer)}>
                 Rediger svar
-              </Mui.Knappelenke>
+              </Mui.Lenkeknapp>
             )}
             {status === Status.Redigerer && (
               <Mui.Knapp onClick={lagreHandler} capitalCase disabled={!redigerbart} type="hoved">

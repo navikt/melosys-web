@@ -5,6 +5,3 @@ import { Organisasjon } from "./types";
 
 export const hentOrganisasjon = (orgnr: string): Promise<Organisasjon> =>
   cachedGetAsJson(`${API_BASE_URL}${ORGANISASJONER}/${orgnr}`);
-
-export const hentOrganisasjonTilVirksomhet = (behandlingID: number): Promise<Organisasjon> =>
-  cachedGetAsJson(`${API_BASE_URL}${ORGANISASJONER}/virksomhet/${behandlingID}`);

@@ -5,20 +5,20 @@ import { ThunkDispatch } from "redux-thunk";
 import { connect, ConnectedProps } from "react-redux";
 import classNames from "classnames";
 
+import MKV from "../../../melosyskodeverk";
 import * as Ikon from "../../../resources/images";
 import * as KV from "../../../kodeverk";
-import MKV from "../../../melosyskodeverk";
-import { mapBehandlingstemaToBehandlingskategori } from "../../../kodeverk/utils";
+
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
 import AvsluttSak from "./avsluttsak";
 import Handling from "./handling";
 
 import { oppgaverOperations } from "../../../ducks/oppgaver";
 import { navigeringOperations } from "../../../ducks/navigering";
-import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { modalerOperations } from "../../../ducks/modaler";
-import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 
 import "./behandlingsmeny.css";
 
@@ -61,7 +61,7 @@ export const Behandlingsmeny = ({
 }: PropsFromRedux) => {
   const [visBehandlingsmeny, setVisBehandlingsmeny] = useState(false);
 
-  const behandlingskategori = mapBehandlingstemaToBehandlingskategori(behandlingstema);
+  const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
 
   const toggleBehandlingsmeny = () => setVisBehandlingsmeny(!visBehandlingsmeny);
 

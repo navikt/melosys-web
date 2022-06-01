@@ -10,18 +10,22 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
 
 import "./knyttTilSak.css";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 export const KnyttTilSak = (props) => {
   const { sak, behandlingstyper, opprettBehandling } = props;
   const { behandlingOversikter } = sak;
   const sisteBehandling = behandlingOversikter[0];
-  const sakInneholderSEDBehandling = behandlingOversikter.some(
-    (behandling) => behandling.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SED
+  const sakInneholderSoeknad = behandlingOversikter.some(
+    (behandling) => behandling.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
   );
+
   const clsElementskrift = { "border-bottom": "none" };
 
-  const visOpprettNyBehandling = !sakInneholderSEDBehandling;
-  const visUtenOppretteBehandling = sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
+  const alltidNyBehandlingToggle = useFeatureToggle("melosys.api.journalfoering.alltid.opprett.ny.behandling");
+
+  const visUtenOppretteBehandling =
+    alltidNyBehandlingToggle === "enabled" ? !sakInneholderSoeknad : sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
 
   if (sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
     return (
@@ -33,7 +37,7 @@ export const KnyttTilSak = (props) => {
           style={clsElementskrift}
         />
         <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
-          {visOpprettNyBehandling && <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />}
+          {sakInneholderSoeknad && <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />}
           {visUtenOppretteBehandling && (
             <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
           )}

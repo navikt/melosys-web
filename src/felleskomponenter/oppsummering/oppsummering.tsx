@@ -53,9 +53,8 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   if (!oppsummering || !fagsak?.sakstype) return <div />;
 
-  const { saksnummer, sakstype, registrertDato } = fagsak;
-  const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist, behandlingstema, behandlingGjelder } =
-    oppsummering;
+  const { saksnummer, sakstype, registrertDato, hovedpartRolle } = fagsak;
+  const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist, behandlingstema } = oppsummering;
   const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
   const behandlingsgrunnlagperiode = `${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`;
 
@@ -68,7 +67,7 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   const erSed = behandlingstype && KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.SED;
   const erTrygdeavtale = sakstype && KV.objektTilKode(sakstype) === MKV.Koder.sakstyper.TRYGDEAVTALE;
-  const behandlingGjelderVirksomhet = behandlingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   const tabellEnKolonne = (data: string[][]) => {
     const rows: JSX.Element[] = [];
@@ -114,7 +113,7 @@ const Oppsummering = (props: OppsummeringProps) => {
   const renderTabell = () => {
     let col1;
     let col2;
-    if (behandlingGjelderVirksomhet) {
+    if (hovedpartErVirksomhet) {
       col1 = [["Beh. opprettet", formatterDatoTilNorsk(registrertDato)]];
       col2 = [["Sist oppdatert", formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`]];
     } else {

@@ -11,8 +11,8 @@ import * as MPT from "../../../proptypes";
 import * as API from "../../../services/api";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
+import SideDialog from "../../../felleskomponenter/sideDialog";
+import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
@@ -33,11 +33,11 @@ import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
 import { landkoderOperations, landkoderSelectors } from "../../../ducks/landkoder";
 import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperioder";
+import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { stegMap } from "./stegMap";
 import "./saksbehandling.css";
-import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 const Saksbehandling = ({
   annenBehandlingOppfriskes,

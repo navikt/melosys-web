@@ -44,9 +44,9 @@ const InnerAdresselinjer = (props: InnerAdresselinjerProps) => {
       {redigerbart && felter && felter.length < 4 && (
         <Nav.Row>
           <Nav.Column xs="9" className={adresselinjerCls.element("leggTil_symbol")}>
-            <Mui.Knappelenke onClick={leggTilTomtFelt} ikon={Ikoner.Add}>
+            <Mui.Lenkeknapp onClick={leggTilTomtFelt} ikon={Ikoner.Add}>
               Legg til adresselinje
-            </Mui.Knappelenke>
+            </Mui.Lenkeknapp>
           </Nav.Column>
         </Nav.Row>
       )}

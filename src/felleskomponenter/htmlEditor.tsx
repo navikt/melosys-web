@@ -27,7 +27,7 @@ function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
   };
 
   return (
-    <div className="htmlEditor">
+    <div className={classNames("htmlEditor", rest?.className)}>
       {rest?.label ? <Nav.Typo.Element className="editor_label">{rest?.label}</Nav.Typo.Element> : ""}
       <Editor
         editorState={currentEditorState}
@@ -41,7 +41,7 @@ function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
       />
       {rest?.feil && (
         <div role="alert" aria-live="assertive" className="feilmelding">
-          {rest.feil?.melding}
+          {rest.feil?.melding || rest.feil}
         </div>
       )}
     </div>
