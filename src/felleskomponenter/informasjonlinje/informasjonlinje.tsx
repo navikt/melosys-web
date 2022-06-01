@@ -24,8 +24,6 @@ type InformasjonlinjeProps = PropsFromRedux & {
   visBehandlingsmeny?: boolean;
 };
 
-export const Separator = () => <div className="informasjonlinje__separator">/</div>;
-
 const Informasjonlinje = ({
   behandlingID,
   saksnummer,

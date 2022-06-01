@@ -8,14 +8,14 @@ const JournalforingOppgavePropType = PT.shape({
   prioritet: PT.string,
   versjon: PT.number,
   ansvarligID: PT.string,
-  id: PT.string,
+  hovedpartIdent: PT.string,
   navn: PT.string,
 });
 const SaksbehandlingOppgavePropType = PT.shape({
   oppgaveID: PT.string,
   redigerbart: PT.bool,
   navn: PT.string,
-  id: PT.string,
+  hovedpartIdent: PT.string,
   saksnummer: PT.string,
   sakstype: MPT.Kodeverk,
   behandling: PT.shape({
