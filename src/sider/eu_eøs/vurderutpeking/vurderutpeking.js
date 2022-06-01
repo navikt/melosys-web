@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PT from "prop-types";
 import { getFormValues } from "redux-form";
 
+import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
@@ -27,11 +28,9 @@ import { anmodningsperioderOperations } from "../../../ducks/anmodningsperioder"
 import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 import { behandlingsperioderOperations } from "../../../ducks/behandlingsperioder";
 import { landkoderOperations } from "../../../ducks/landkoder";
-
-import stegMap from "./stegMap";
-import MKV from "../../../melosyskodeverk";
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
+import stegMap from "./stegMap";
 import "./vurderutpeking.css";
 
 const hentForsteSteg = (behandlingstema) => {
@@ -45,8 +44,10 @@ const hentForsteSteg = (behandlingstema) => {
 };
 
 const Vurderutpeking = ({
+  match: {
+    params: { snr: saksnummer },
+  },
   lastInnSaksopplysninger,
-  match,
   location,
   behandlingstema,
   hovedpartRolle,
@@ -75,9 +76,6 @@ const Vurderutpeking = ({
   vurderUtpekingFormValues,
   hentLandkoder,
 }) => {
-  const {
-    params: { snr: saksnummer },
-  } = match;
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
   useEffect(() => {

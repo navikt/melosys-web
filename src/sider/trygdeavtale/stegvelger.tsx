@@ -193,8 +193,8 @@ class Stegvelger extends Component<Props, State> {
     return harFeilmeldinger;
   };
 
-  oppdaterFeilmeldinger = (data: Api.Saksflyt.Vedtak.FattVedtakReqDto, skalRegisteropplysningerOppdateres: boolean) => {
-    Api.Saksflyt.Vedtak.kontroller(this.props.behandlingID, skalRegisteropplysningerOppdateres, data)
+  oppdaterFeilmeldinger = (data: Api.Kontroll.FerdigbehandlingKontrollData) => {
+    Api.Kontroll.kontrollerFerdigbehandling(data)
       .then(() => this.setState({ feilmeldinger: [] }))
       .catch((response) => this.setState({ feilmeldinger: response?.body?.feilkoder }));
   };

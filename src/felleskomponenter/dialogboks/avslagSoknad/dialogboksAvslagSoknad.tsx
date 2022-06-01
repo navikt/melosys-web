@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
+import { Action } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 
 import { RootState } from "AppTypes";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
 
 import MKV from "../../../melosyskodeverk";
 
@@ -19,9 +19,9 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import "./dialogboksAvslagSoknad.css";
 import HtmlEditor from "../../htmlEditor";
-import { vedtakOperations } from "../../../ducks/vedtak";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../feilmeldinger";
+import { kontrollOperations } from "../../../ducks/kontroll";
 
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
@@ -29,12 +29,10 @@ const mapStateToProps = (state: RootState) => ({
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
+
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  kontrollerVedtak: (
-    behandlingID: number,
-    skalRegisteropplysningerOppdateres: boolean,
-    body: Api.Saksflyt.Vedtak.FattVedtakReqDto
-  ) => dispatch(vedtakOperations.kontroller(behandlingID, skalRegisteropplysningerOppdateres, body)),
+  kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
+    dispatch(kontrollOperations.kontroller(data)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -58,19 +56,17 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
     redigerbart,
     avslaaSoknadHandle,
     vedtakstype,
-    kontrollerVedtak,
+    kontrollerFerdigbehandling,
     feilmeldinger,
   } = props;
 
   useEffect(() => {
     (async () => {
-      await kontrollerVedtak(behandlingID, false, {
-        behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
+      await kontrollerFerdigbehandling({
+        behandlingID,
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-        fritekst: null,
-        fritekstSed: null,
-        mottakerinstitusjoner: [],
-        nyVurderingBakgrunn: null,
+        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
+        skalRegisteropplysningerOppdateres: false,
       });
       setVedtakPending(false);
     })();

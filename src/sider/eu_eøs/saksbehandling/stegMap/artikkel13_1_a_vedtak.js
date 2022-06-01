@@ -21,7 +21,7 @@ class Artikkel13_1_a_vedtak extends Steg {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
       byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
-      kontrollerVedtak: this._propsLight.tilgjengeligeHandlers.kontrollerVedtak,
+      kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
     };
     this._status = FANE_STATUS.OK;
   }

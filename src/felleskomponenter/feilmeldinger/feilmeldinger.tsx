@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 import { Feilkode } from "../../@types";
 
 import MKV from "../../melosyskodeverk";
@@ -8,7 +9,12 @@ import * as Utils from "../../utils";
 
 import "./feilmelding.css";
 
-export default ({ feilmeldinger }: { feilmeldinger: Feilkode[] | string }) => {
+type feilmeldingerProps = {
+  feilmeldinger: Feilkode[] | string;
+  className?: string;
+};
+
+export default ({ feilmeldinger, className }: feilmeldingerProps) => {
   if (Utils._isEmpty(feilmeldinger)) {
     return null;
   }
@@ -29,8 +35,10 @@ export default ({ feilmeldinger }: { feilmeldinger: Feilkode[] | string }) => {
     );
   };
 
+  const classNameFeilmeldinger = classNames("feilmelding", className);
+
   return (
-    <div className="feilmelding">
+    <div className={classNameFeilmeldinger}>
       <Nav.AlertStripeFeil className="varselstripe">{renderInnhold()}</Nav.AlertStripeFeil>
     </div>
   );

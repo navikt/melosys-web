@@ -42,7 +42,7 @@ class ArbeidEttLandOvrigVedtak extends Steg {
       byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
       slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
-      kontrollerVedtak: this._propsLight.tilgjengeligeHandlers.kontrollerVedtak,
+      kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
     };
     this._status = FANE_STATUS.OK;
   }
