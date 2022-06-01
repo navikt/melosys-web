@@ -9,7 +9,7 @@ import SideDialogSendBrev from "./sendBrev";
 import SideDialogOpprettNyBuc from "./sideDialogOpprettNyBuc";
 import SideDialogDokumenter from "./sideDialogDokumenter";
 import SideDialogBesvarSed from "./sideDialogBesvarSed";
-import SideDialogNotater from "./sideDialogNotater/sideDialogNotater";
+import SideDialogNotater from "./sideDialogNotater";
 
 import "./sideDialog.css";
 

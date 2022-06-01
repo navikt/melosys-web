@@ -8,8 +8,8 @@ import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
+import SideDialog from "../../../felleskomponenter/sideDialog";
+import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 
 import { fagsakSelectors } from "../../../ducks/fagsaker";

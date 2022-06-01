@@ -3,13 +3,14 @@ import React, { useEffect } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 
+import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog/sideDialog";
-import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
+import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
@@ -21,7 +22,6 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./registrering.css";
-import MKV from "../../../melosyskodeverk";
 
 export const Registrering = ({
   match: {

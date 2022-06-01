@@ -10,9 +10,9 @@ import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog, { fanerUtenBucOgSed, defaultFaner } from "../../../felleskomponenter/sideDialog/sideDialog";
+import SideDialog, { fanerUtenBucOgSed, defaultFaner } from "../../../felleskomponenter/sideDialog";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
-import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
+import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";

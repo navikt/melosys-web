@@ -8,9 +8,9 @@ import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
-import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog/sideDialog";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
-import Oppsummering from "../../felleskomponenter/oppsummering/oppsummering";
+import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 
