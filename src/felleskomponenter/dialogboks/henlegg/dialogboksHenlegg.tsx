@@ -169,10 +169,10 @@ export const DialogboksHenleggSak = ({
         )}
         <Knapperad
           bekreft={handleHenlegg}
-          bekreftTekst="HENLEGG SAKEN"
+          bekreftTekst="Henlegg saken"
           bekreftRedigerbart={erBegrunnelseValgt && harIngenFeilmeldinger}
           avbryt={avbryt}
-          avbrytTekst="AVBRYT"
+          avbrytTekst="Avbryt"
           redigerbart={redigerbart}
         />
       </div>
