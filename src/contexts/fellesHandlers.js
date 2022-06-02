@@ -111,8 +111,8 @@ const FellesHandlersProviderUnconnected = ({
       const res = await Api.Fagsaker.fagsak.revurder(saksnummer);
       const { behandlingID: nyBehandlingID } = res;
 
-      history.replace(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
-      lastInnSaksopplysninger(sakstype, saksnummer, nyBehandlingID);
+      history.push(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
+      window.location.reload();
     } finally {
       debouncedSetVenterPaVurderFagsak.cancel();
       setVenterPaRevurderFagsak(false);

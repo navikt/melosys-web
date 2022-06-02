@@ -358,7 +358,7 @@ export const VurderingArtikkel16Vedtak = ({
   hentLovvalgsperioder,
   lagreLovvalgsperioder,
   tilbake,
-  kontrollerVedtak,
+  kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
 }) => {
@@ -416,7 +416,12 @@ export const VurderingArtikkel16Vedtak = ({
     async function kontroller() {
       if (aktivtSteg && formIsValid) {
         setVedtakPending(true);
-        await kontrollerVedtak(lagFattVedtakEOSReqDto(), oppdaterFoerKontroll);
+        await kontrollerFerdigbehandling({
+          behandlingID,
+          vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+          skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
+        });
         setOppdaterFoerKontroll(false);
         setVedtakPending(false);
       }
@@ -576,7 +581,7 @@ VurderingArtikkel16Vedtak.propTypes = {
   lagreLovvalgsperioder: PT.func.isRequired,
   anmodningsperiode: PT.object,
   hentLovvalgsperioder: PT.func.isRequired,
-  kontrollerVedtak: PT.func.isRequired,
+  kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
 };

@@ -1,5 +1,5 @@
 /* eslint no-alert:off, consistent-return:off */
-import React from "react";
+import React, { useEffect } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 
@@ -11,6 +11,7 @@ import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
+
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../ducks/avklartefakta";
@@ -21,36 +22,33 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./registrering.css";
 
-export const Registrering = (props) => {
-  const {
-    match: {
-      params: { snr },
-    },
-    tilForsiden,
-    location,
-    hentAvklartefakta,
-    hentBehandling,
-    hentFagsaker,
-    hentLovvalgsperioder,
-    vurderingBegrunnelser,
-    sed,
-    redigerbart,
-    Saksopplysninger,
-    fagsak,
-    oppsummering,
-    lovvalgsperiodeFom,
-    lovvalgsperiodeTom,
-    lovvalgsland,
-    visOppfriskModal,
-    behandlingOppfriskes,
-    dokumentOversikt,
-    dokumenter,
-    startOgVisOppfriskModal,
-  } = props;
-
-  const saksnummer = snr;
+export const Registrering = ({
+  match: {
+    params: { snr: saksnummer },
+  },
+  tilForsiden,
+  location,
+  hentAvklartefakta,
+  hentBehandling,
+  hentFagsaker,
+  hentLovvalgsperioder,
+  vurderingBegrunnelser,
+  sed,
+  redigerbart,
+  Saksopplysninger,
+  fagsak,
+  oppsummering,
+  lovvalgsperiodeFom,
+  lovvalgsperiodeTom,
+  lovvalgsland,
+  visOppfriskModal,
+  behandlingOppfriskes,
+  dokumentOversikt,
+  dokumenter,
+  startOgVisOppfriskModal,
+  resetFagsakState,
+}) => {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
-
   const [saksopplysningerErHentet, setSaksopplysningerErHentet] = React.useState(false);
 
   const lastInnSaksopplysninger = async () => {
@@ -64,17 +62,18 @@ export const Registrering = (props) => {
     setSaksopplysningerErHentet(true);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     lastInnSaksopplysninger();
 
     if (behandlingOppfriskes) {
       visOppfriskModal();
     }
 
-    return () => props.resetFagsakState();
+    return () => resetFagsakState();
   }, []);
 
   if (Utils._isNil(redigerbart)) return null;
+  if (!behandlingID) return null;
   if (!saksopplysningerErHentet) return null;
 
   return (

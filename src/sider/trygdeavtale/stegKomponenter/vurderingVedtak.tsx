@@ -98,10 +98,7 @@ interface Props {
   hentFlytOgOppdaterAktuelleSteg: () => void;
   tilbake: () => void;
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
-  oppdaterFeilmeldinger: (
-    data: Api.Saksflyt.Vedtak.FattVedtakReqDto,
-    skalRegisteropplysningerOppdateres: boolean
-  ) => void;
+  oppdaterFeilmeldinger: (data: Api.Kontroll.FerdigbehandlingKontrollData) => void;
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
@@ -188,7 +185,14 @@ const VurderingVedtak = ({
   });
 
   const kontrollerVedtak = (skalRegisteropplysningerOppdateres: boolean = false) => {
-    oppdaterFeilmeldinger(lagFattVedtakTrygdeavtaleReqDto(), skalRegisteropplysningerOppdateres);
+    oppdaterFeilmeldinger({
+      behandlingID,
+      vedtakstype: erNyVurdering
+        ? MKV.Koder.vedtakstyper.ENDRINGSVEDTAK
+        : vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      skalRegisteropplysningerOppdateres,
+    });
     setOppdaterFørKontroll(false);
     hentFlytOgOppdaterAktuelleSteg();
   };
