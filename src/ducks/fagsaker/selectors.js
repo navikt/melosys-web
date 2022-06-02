@@ -22,5 +22,5 @@ export const SakstypeKodeSelector = createSelector(SakstypeSelector, (sakstype) 
 
 export const HovedpartRolleSelector = createSelector(
   (state) => FagsakSelector(state),
-  (fagsak) => fagsak.hovedpartRolle
+  (fagsak) => fagsak.hovedpartRolle || ""
 );
