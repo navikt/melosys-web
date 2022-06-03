@@ -146,17 +146,21 @@ const Saksbehandling = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
-                {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
-                {visStegVelger && (
-                  <Stegvelger
-                    redigerbart={redigerbart}
-                    annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-                    oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger}
-                    tilForsiden={tilForsiden}
-                  />
+                {!hovedpartErVirksomhet && (
+                  <>
+                    {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
+                    {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
+                    {visStegVelger && (
+                      <Stegvelger
+                        redigerbart={redigerbart}
+                        annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+                        oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger}
+                        tilForsiden={tilForsiden}
+                      />
+                    )}
+                    <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />{" "}
+                  </>
                 )}
-                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering

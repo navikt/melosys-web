@@ -1,5 +1,6 @@
 import React from "react";
 import PT from "prop-types";
+import parse from "html-react-parser";
 
 import * as Nav from "../../../../../navFrontend";
 
@@ -11,7 +12,7 @@ const StegerstatterBase = ({ tittel, beskrivelse }) => (
       <Nav.Row>
         <Nav.Typo.Systemtittel>{tittel}</Nav.Typo.Systemtittel>
       </Nav.Row>
-      <p>{beskrivelse}</p>
+      <p>{parse(beskrivelse)}</p>
     </Nav.Panel>
   </section>
 );

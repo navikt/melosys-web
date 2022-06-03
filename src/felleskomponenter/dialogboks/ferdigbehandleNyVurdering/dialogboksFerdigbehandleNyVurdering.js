@@ -31,9 +31,9 @@ export const DialogboksFerdigbehandleNyVurdering = ({
     </Nav.Typo.Normaltekst>
     <Knapperad
       bekreft={ferdigbehandleNyVurdering}
-      bekreftTekst="BEKREFT"
+      bekreftTekst="Bekreft"
       avbryt={avbryt}
-      avbrytTekst="AVBRYT"
+      avbrytTekst="Avbryt"
       redigerbart={redigerbart}
     />
   </Nav.Modal>

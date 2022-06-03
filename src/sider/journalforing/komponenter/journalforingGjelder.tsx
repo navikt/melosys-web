@@ -18,7 +18,8 @@ import "./journalforingGjelder.css";
 
 const mapStateToProps = (state: RootState) => ({
   journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
-  defaultBrukerID: journalforingSelectors.BrukerIDSelector(state),
+  journalpostBrukerID: journalforingSelectors.BrukerIDSelector(state),
+  journalpostVirksomhetOrgnr: journalforingSelectors.VirksomhetOrgnrSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -29,16 +30,22 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const JournalforingGjelder = ({ journalforingGjelder, oppdaterFelt, defaultBrukerID }: PropsFromRedux) => {
+const JournalforingGjelder = ({
+  journalforingGjelder,
+  oppdaterFelt,
+  journalpostBrukerID,
+  journalpostVirksomhetOrgnr,
+}: PropsFromRedux) => {
   const handleClick = (event: SyntheticEvent<EventTarget>, value: string) => {
     oppdaterFelt("journalforingGjelder", value);
     if (value === BRUKER) {
       oppdaterFelt("ikkeSendForvaltingsmelding", false);
-      oppdaterFelt("brukerID", defaultBrukerID);
+      oppdaterFelt("brukerID", journalpostBrukerID);
       oppdaterFelt("virksomhetOrgnr", null);
       oppdaterFelt("virksomhetNavn", null);
     } else {
       oppdaterFelt("ikkeSendForvaltingsmelding", true);
+      oppdaterFelt("virksomhetOrgnr", journalpostVirksomhetOrgnr);
       oppdaterFelt("brukerID", null);
       oppdaterFelt("brukerNavn", null);
     }

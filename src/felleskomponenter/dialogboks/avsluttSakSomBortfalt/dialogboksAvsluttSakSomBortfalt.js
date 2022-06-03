@@ -26,9 +26,9 @@ export const DialogboksAvsluttSakSomBortfalt = ({ avsluttSakSomBortfalt, avbryt,
     </Nav.Typo.Normaltekst>
     <Knapperad
       bekreft={avsluttSakSomBortfalt}
-      bekreftTekst="BEKREFT"
+      bekreftTekst="Bekreft"
       avbryt={avbryt}
-      avbrytTekst="AVBRYT"
+      avbrytTekst="Avbryt"
       redigerbart={redigerbart}
     />
   </Nav.Modal>

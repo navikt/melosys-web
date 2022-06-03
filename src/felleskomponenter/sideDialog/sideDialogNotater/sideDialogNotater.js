@@ -139,9 +139,9 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
             />
             <Knapperad
               avbryt={avbrytLeggTilNotat}
-              avbrytTekst="AVBRYT"
+              avbrytTekst="Avbryt"
               bekreft={opprettNotat}
-              bekreftTekst="LAGRE NOTAT"
+              bekreftTekst="Lagre notat"
               bekreftRedigerbart={!disableLagreKnapp}
               redigerbart
             />
