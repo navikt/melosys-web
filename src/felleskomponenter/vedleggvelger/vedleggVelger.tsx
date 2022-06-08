@@ -6,9 +6,9 @@ import * as Nav from "../../navFrontend";
 import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 
-import "./VedleggVelger.css";
-import { VedleggTable } from "./VedleggTable";
-import VedleggVelgerModal from "./VedleggVelgerModal";
+import "./vedleggVelger.css";
+import { VedleggTable } from "./vedleggTable";
+import VedleggVelgerModal from "./vedleggVelgerModal";
 
 interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];

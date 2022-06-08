@@ -5,9 +5,9 @@ import { shallow } from "enzyme";
 import { Lenkeknapp } from "../ui";
 import * as Nav from "../../navFrontend";
 
-import VedleggVelger from "./VedleggVelger";
-import VedleggVelgerModal from "./VedleggVelgerModal";
-import { VedleggTable } from "./VedleggTable";
+import VedleggVelger from "./vedleggVelger";
+import VedleggVelgerModal from "./vedleggVelgerModal";
+import { VedleggTable } from "./vedleggTable";
 
 describe("VedleggVelger", () => {
   const mockedProps = mock<ComponentProps<typeof VedleggVelger>>();
@@ -53,7 +53,8 @@ describe("VedleggVelger", () => {
     const vedleggVelger = shallow(<VedleggVelger {...props} />);
     const vedleggTable = vedleggVelger.find(VedleggTable);
     const { valgteVedlegg } = vedleggTable.props();
-    expect(valgteVedlegg.length === 2);
+    expect(valgteVedlegg).toHaveLength(1);
+    expect(valgteVedlegg[0].id).toBe("ID2");
   });
 
   it("rendrer en knapp med tekst 'Legg til vedlegg'", () => {
