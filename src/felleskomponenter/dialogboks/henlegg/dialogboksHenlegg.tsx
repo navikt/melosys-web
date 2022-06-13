@@ -21,6 +21,7 @@ import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../feilmeldinger";
 
 import "./dialogboksHenlegg.css";
+import * as StringUtils from "../../../utils/streng";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -70,7 +71,6 @@ export const DialogboksHenleggSak = ({
 
   const erBegrunnelseValgt = begrunnelseKode !== "";
   const erFritekstValgt = begrunnelseKode === MKV.Koder.begrunnelser.henleggelsesgrunner.ANNET;
-  const erFritekstTom = fritekst.replace("<p></p>", "").trim() === "";
   const harIngenFeilmeldinger = !(feilmeldinger && feilmeldinger.length > 0);
 
   const validerBegrunnelse = () => {
@@ -81,7 +81,7 @@ export const DialogboksHenleggSak = ({
   };
 
   const validerFritekst = () => {
-    const fritekstValideringPassert = !(erFritekstValgt && erFritekstTom);
+    const fritekstValideringPassert = !(erFritekstValgt && !StringUtils.harStrengInnhold(fritekst));
     if (!fritekstValideringPassert) {
       setFeilmeldingFritekst("Mangler fritekst");
     }

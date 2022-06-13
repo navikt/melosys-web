@@ -11,6 +11,7 @@ import {
   storeForbokstaver,
   storeForbokstaverForLand,
   arrayTilKonjunksjon,
+  harStrengInnhold,
 } from "./streng";
 import { BOOLSK_STRING } from "../constants";
 
@@ -183,6 +184,20 @@ describe("streng.js", () => {
       const forventetResultat = "Foo, Bar";
 
       expect(arrayTilKonjunksjon(liste)).toEqual(forventetResultat);
+    });
+  });
+  describe("harStrengInnhold", () => {
+    test("streng med innhold gir true", () => {
+      expect(harStrengInnhold("En streng")).toBeTruthy();
+    });
+    test("tom streng gir false", () => {
+      expect(harStrengInnhold("")).toBeFalsy();
+    });
+    test("null gir false", () => {
+      expect(harStrengInnhold(null)).toBeFalsy();
+    });
+    test("<p></p> gir false", () => {
+      expect(harStrengInnhold("<p></p>")).toBeFalsy();
     });
   });
 });
