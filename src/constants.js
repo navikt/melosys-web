@@ -1,9 +1,6 @@
-export const ANTALL_TALL_I_FNR = 11;
-export const ANTALL_TALL_I_DNR = 11;
-export const ANTALL_TALL_I_ORGNR = 9;
-
 export const JOURNALFORING_HENSIKT = {
   KNYTT: "KNYTT",
+  NY_VURDERING: "NY_VURDERING",
   OPPRETT: "OPPRETT",
 };
 

@@ -15,6 +15,7 @@ import * as MPT from "../../proptypes";
 import { JOURNALFORING_HENSIKT } from "../../constants";
 
 import Sticky from "../../felleskomponenter/sticky";
+import { erFeatureToggleEnabled } from "../../featuretoggle";
 import PDFDokument from "./komponenter/pdfdokument";
 import JournalforingSED from "./komponenter/journalforingsed";
 import JournalforingForm from "./komponenter/journalforingform";
@@ -70,9 +71,9 @@ class Journalforing extends Component {
    *
    * @returns {object} Objektet som skal sendes videre som payload.
    */
-  vaskDokumentInformasjon = (intensjon) => {
+  vaskDokumentInformasjon = (hensikt) => {
     /* eslint-disable no-console */
-    console.assert(intensjon, { message: "intensjon må ha verdi" });
+    console.assert(hensikt, { message: "hensikt må ha verdi" });
     /* eslint-enable no-console */
     const { oppgaveID, journalpostID } = this.props.match.params;
     const {
@@ -116,11 +117,11 @@ class Journalforing extends Component {
       skalTilordnes,
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
     };
-    if (intensjon === JOURNALFORING_HENSIKT.KNYTT) {
+    if (hensikt === JOURNALFORING_HENSIKT.KNYTT || hensikt === JOURNALFORING_HENSIKT.NY_VURDERING) {
       journalPostData = { ...journalPostData, ikkeSendForvaltingsmelding: null };
     }
     // /opprett har i tillegg arbeidsgiverID og representantID
-    if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
+    if (hensikt === JOURNALFORING_HENSIKT.OPPRETT) {
       journalPostData = Object.assign(journalPostData, {
         arbeidsgiverID,
         behandlingstemaKode,
@@ -187,9 +188,10 @@ class Journalforing extends Component {
       settFeilFelt,
       tilForsiden,
     } = this.props;
+    const hensikt = behandlingstypeKode ? JOURNALFORING_HENSIKT.NY_VURDERING : JOURNALFORING_HENSIKT.KNYTT;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
-    const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
+    const vasketJournalforing = this.vaskDokumentInformasjon(hensikt);
     const journalforingData = {
       saksnummer,
       behandlingstypeKode,
@@ -200,7 +202,7 @@ class Journalforing extends Component {
       ...vasketJournalforing,
     };
 
-    await settJournalforingHensikt(JOURNALFORING_HENSIKT.KNYTT);
+    await settJournalforingHensikt(hensikt);
 
     this.touchAll(KV.Form.JOURNALFORING, this.props.errors);
 
@@ -213,7 +215,16 @@ class Journalforing extends Component {
     }
 
     try {
-      await Api.Journalforing.tilordne(journalforingData);
+      if (await erFeatureToggleEnabled("melosys.dele_opp_tilordne_endepunkt")) {
+        if (hensikt === JOURNALFORING_HENSIKT.NY_VURDERING) {
+          await Api.Journalforing.nyVurdering(journalforingData);
+        }
+        if (hensikt === JOURNALFORING_HENSIKT.KNYTT) {
+          await Api.Journalforing.knytt(journalforingData);
+        }
+      } else {
+        await Api.Journalforing.tilordne(journalforingData);
+      }
       this.setState({ visFeilmeldingDialog: false });
       return tilForsiden();
     } catch (error) {
