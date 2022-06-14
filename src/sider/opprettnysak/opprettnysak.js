@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
-import { FormSection, getFormValues, reduxForm, SubmissionError } from "redux-form";
+import { FormSection, getFormValues, isValid, reduxForm } from "redux-form";
 
 import * as Nav from "../../navFrontend";
 import * as Skjema from "../../felleskomponenter/skjema";
@@ -10,6 +10,7 @@ import * as Ikoner from "../../resources/images";
 import * as KV from "../../kodeverk";
 import * as Api from "../../services/api";
 import * as Utils from "../../utils";
+import { fagsakOperations } from "../../ducks/fagsaker";
 
 import BrukerNavnSkjema from "../../felleskomponenter/brukerNavnSkjema";
 import Knapperad from "../../felleskomponenter/knapperad";
@@ -21,6 +22,9 @@ import { useFeatureToggle } from "../../featuretoggle";
 import opprettNySakSchema from "./opprettnysakSchema";
 
 import "./opprettnysak.css";
+import { feiletResponsSelectors } from "../../ducks/feiletRespons";
+import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
+import { formOperations } from "../../ducks/form";
 
 const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
   .filter(({ kode }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
@@ -38,8 +42,19 @@ const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
   ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
 );
 
-const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, error }) => {
+const OpprettNySak = ({
+  form,
+  formValues,
+  tilForsiden,
+  change,
+  error: formError,
+  feilmeldinger,
+  opprettSak,
+  touchAll,
+  formIsValid,
+}) => {
   const [oppgaver, setOppgaver] = useState([]);
+  const [bekreftPending, setBekreftPending] = useState(false);
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
 
   const { behandlingstema, soknadsinfo, sakstype } = formValues;
@@ -47,6 +62,11 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+
+  const validerForm = () => {
+    touchAll();
+    return formIsValid;
+  };
 
   const hentOppgaver = async (brukerID) => {
     if (Utils.person.erGyldigFnr(brukerID) || Utils.person.erGyldigDnr(brukerID)) {
@@ -61,6 +81,40 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
       setOppgaver([]);
       setOppgaverForsoktHentetFraEksisterendePerson(false);
     }
+  };
+
+  const opprettNySak = (event) => {
+    event.preventDefault();
+    if (!validerForm()) return;
+
+    setBekreftPending(true);
+    const fom = soknadErValgt ? Utils.dato.formatterDatoTilISO(soknadsinfo.fom) : null;
+    const tomErUtfylt = soknadsinfo && soknadsinfo.tom;
+    const tom = tomErUtfylt && soknadErValgt ? Utils.dato.formatterDatoTilISO(soknadsinfo.tom) : null;
+
+    const soknadDto = {
+      periode: {
+        fom,
+        tom,
+      },
+      land: {
+        landkoder: soknadErValgt ? soknadsinfo.landkoder : [],
+        erUkjenteEllerAlleEosLand: soknadErValgt ? soknadsinfo.erUkjenteEllerAlleEosLand : false,
+      },
+    };
+
+    const data = {
+      brukerID: formValues.brukerID,
+      sakstype: formValues.sakstype,
+      behandlingstema: formValues.behandlingstema,
+      soknadDto,
+      skalTilordnes: formValues.skalTilordnes,
+      oppgaveID: formValues.oppgaveID,
+    };
+
+    opprettSak(data)
+      .then(() => setBekreftPending(false))
+      .catch(() => setBekreftPending(false));
   };
 
   const radioValg = oppgaver.map((oppgave) => {
@@ -114,7 +168,7 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
     erUkjenteEllerAlleEosLand && behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
 
   return (
-    <form className="opprettnysak" onSubmit={handleSubmit}>
+    <form className="opprettnysak" onSubmit={opprettNySak}>
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="12">
@@ -223,18 +277,19 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                     {!oppgaverFinnes && oppgaverForsoktHentetFraEksisterendePerson && (
                       <Nav.AlertStripeAdvarsel>Det finnes ingen oppgaver på denne personen.</Nav.AlertStripeAdvarsel>
                     )}
+                    <Feilmeldinger feilmeldinger={feilmeldinger} />
                     <Skjema.Checkbox
                       className="skalTilordnes"
                       feltNavn="skalTilordnes"
                       label="Legg behandlingen i mine oppgaver"
                     />
-                    {error && <Nav.AlertStripeAdvarsel className="formError">{error}</Nav.AlertStripeAdvarsel>}
+                    {formError && <Nav.AlertStripeAdvarsel className="formError">{formError}</Nav.AlertStripeAdvarsel>}
                     <Knapperad
                       bekreftTekst="Opprett sak"
                       avbryt={tilForsiden}
                       avbrytTekst="Avbryt"
                       redigerbart
-                      bekreftRedigerbart={oppgaverFinnes}
+                      bekreftRedigerbart={!bekreftPending && oppgaverFinnes}
                       bekreftHtmlType="submit"
                     />
                   </div>
@@ -252,9 +307,12 @@ OpprettNySak.propTypes = {
   form: PT.string.isRequired,
   formValues: PT.object,
   tilForsiden: PT.func.isRequired,
-  handleSubmit: PT.func.isRequired,
   change: PT.func.isRequired,
   error: PT.string,
+  feilmeldinger: PT.array.isRequired,
+  opprettSak: PT.func.isRequired,
+  touchAll: PT.func.isRequired,
+  formIsValid: PT.bool.isRequired,
 };
 
 OpprettNySak.defaultProps = {
@@ -269,46 +327,16 @@ const mapStateToProps = (state) => ({
     behandlingstema: undefined,
     soknadsinfo: { landkoder: [], erUkjenteEllerAlleEosLand: false },
   },
+  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+  formIsValid: isValid(KV.Form.OPPRETT_NY_SAK)(state),
 });
 
-const opprettNySak = async (values, dispatch, props) => {
-  const soknadErValgt = MKVUtils.erSoknad(values.behandlingstema);
-  const fom = soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.fom) : null;
-  const tomErUtfylt = values.soknadsinfo && values.soknadsinfo.tom;
-  const tom = tomErUtfylt && soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.tom) : null;
-
-  const soknadDto = {
-    periode: {
-      fom,
-      tom,
-    },
-    land: {
-      landkoder: soknadErValgt ? values.soknadsinfo.landkoder : [],
-      erUkjenteEllerAlleEosLand: soknadErValgt ? values.soknadsinfo.erUkjenteEllerAlleEosLand : false,
-    },
-  };
-
-  const data = {
-    brukerID: values.brukerID,
-    sakstype: values.sakstype,
-    behandlingstema: values.behandlingstema,
-    soknadDto,
-    skalTilordnes: values.skalTilordnes,
-    oppgaveID: values.oppgaveID,
-  };
-
-  try {
-    await Api.Fagsaker.fagsak.opprett(data);
-    props.tilForsiden();
-  } catch (e) {
-    if (e.body.message) {
-      throw new SubmissionError({ _error: e.body.message });
-    }
-  }
-};
+const mapDispatchToProps = (dispatch) => ({
+  touchAll: () => dispatch(formOperations.touchAll(KV.Form.OPPRETT_NY_SAK)),
+  opprettSak: (body) => dispatch(fagsakOperations.opprett(body)),
+});
 
 const OpprettNySakForm = reduxForm({
-  onSubmit: opprettNySak,
   form: KV.Form.OPPRETT_NY_SAK,
   enableReinitialize: true,
   destroyOnUnmount: true,
@@ -316,4 +344,4 @@ const OpprettNySakForm = reduxForm({
   validate: lagYupToReduxformErrorMapper(opprettNySakSchema),
 })(OpprettNySak);
 
-export default connect(mapStateToProps)(OpprettNySakForm);
+export default connect(mapStateToProps, mapDispatchToProps)(OpprettNySakForm);

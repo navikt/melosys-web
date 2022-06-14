@@ -12,7 +12,7 @@ interface SoknadDto {
   };
   land: string[];
 }
-interface OpprettReqDto {
+export interface OpprettReqDto {
   brukerID: string;
   sakstype: string;
   behandlingstema: string;
