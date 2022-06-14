@@ -24,6 +24,9 @@ import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from "./validering/
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 
 import "../saksopplysninger.css";
+import { kontrollerGodkjennUnntaksperiode } from "../../../../ducks/kontroll/operations";
+import { kontrollOperations } from "../../../../ducks/kontroll";
+import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
 const uuid = require("uuid/v4");
 
@@ -43,6 +46,7 @@ const Saksopplysninger = ({
   tilForsiden,
   startOgVisOppfriskModal,
   behandlingsresultatErHentet,
+  kontrollFeilmeldinger,
 }) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.AVSLAG);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState("");
@@ -69,8 +73,10 @@ const Saksopplysninger = ({
   const {
     params: { snr: saksnummer },
   } = match;
+
   React.useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
+    kontrollerGodkjennUnntaksperiode(behandlingID);
   }, []);
 
   const erGyldigLovvalgsperiode = () =>
@@ -292,6 +298,8 @@ const Saksopplysninger = ({
     return null;
   }
 
+  const kanGodkjenne = () => !(kontrollFeilmeldinger && kontrollFeilmeldinger.length > 0);
+
   const listevalgEndringHandler = (event) => {
     const ikkeGodkjentBegrunnelse = [...event.value];
     setIkkeGodkjentBegrunnelseKoder(ikkeGodkjentBegrunnelse);
@@ -326,7 +334,7 @@ const Saksopplysninger = ({
                       value={KV.Koder.Unntaksperiode.GODKJENT}
                       checked={KV.Koder.Unntaksperiode.GODKJENT === unntaksperiodeVurdering}
                       onChange={endreUnntaksperiodeVurdering}
-                      disabled={!erGyldigLovvalgsperiode()}
+                      disabled={!kanGodkjenne() && !erGyldigLovvalgsperiode()}
                       label="Godkjenn unntaksperiode"
                     />
                     <Nav.Radio
@@ -334,6 +342,7 @@ const Saksopplysninger = ({
                       value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT}
                       checked={KV.Koder.Unntaksperiode.DELVIS_GODKJENT === unntaksperiodeVurdering}
                       onChange={endreUnntaksperiodeVurdering}
+                      disabled={!kanGodkjenne()}
                       label="Godkjenn, men endre periode"
                     />
                     {kanEndrePeriode() && (
@@ -442,6 +451,7 @@ Saksopplysninger.propTypes = {
   tilForsiden: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   behandlingsresultatErHentet: PT.bool.isRequired,
+  kontrollFeilmeldinger: PT.arrayOf(PT.string).isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -458,12 +468,16 @@ const mapStateToProps = (state) => ({
   sedLovvalgsbestemmelse: behandlingerSelectors.SEDSelector(state).lovvalgsbestemmelse,
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingsresultatErHentet: behandlingsresultatSelectors.BehandlingsresultatStatusErOkSelector(state),
+  kontrollFeilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
+
 const mapDispatchToProps = (dispatch) => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) =>
     dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) =>
     datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
+  kontrollerGodkjennUnntaksperiode: (behandlingID) =>
+    dispatch(kontrollOperations.kontrollerGodkjennUnntaksperiode(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

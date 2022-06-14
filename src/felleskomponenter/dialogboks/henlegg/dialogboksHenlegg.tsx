@@ -30,7 +30,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
-    dispatch(kontrollOperations.kontroller(data)),
+    dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

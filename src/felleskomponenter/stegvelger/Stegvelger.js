@@ -725,7 +725,7 @@ const mapDispatchToProps = (dispatch) => ({
   hentVilkar: (behandlingID) => dispatch(vilkarOperations.hent(behandlingID)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
   endreVedtak: (behandlingID, body) => dispatch(vedtakOperations.endre(behandlingID, body)),
-  kontrollerFerdigbehandling: (data) => dispatch(kontrollOperations.kontroller(data)),
+  kontrollerFerdigbehandling: (data) => dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
   videresend: (saksnummer, videresending) => dispatch(videresendingOperations.send(saksnummer, videresending)),
   hentAvklartefakta: (behandlingID) => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentLovvalgsperioder: (behandlingID) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),

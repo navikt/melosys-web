@@ -10,3 +10,6 @@ export type FerdigbehandlingKontrollData = {
 
 export const kontrollerFerdigbehandling = (data: FerdigbehandlingKontrollData) =>
   postAsJson(`${API_BASE_URL}${KONTROLL}/ferdigbehandling`, data);
+
+export const kontrollerGodkjennUnntaksperiode = (behandlingID: number) =>
+  postAsJson(`${API_BASE_URL}${KONTROLL}/godkjenn-unntaksperiode`, behandlingID);
