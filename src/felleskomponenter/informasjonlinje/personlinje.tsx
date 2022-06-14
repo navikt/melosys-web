@@ -20,23 +20,16 @@ const Personlinje = ({ behandlingID }: { behandlingID: number }) => {
             <Ikon.Kjoenn kjoenn={personopplysninger.kjoenn} className="ikon-navn" />
             {personopplysninger.navn}
           </div>
-
           {personopplysninger.erDoed && (
             <div className="personlinje_dod">
               <span>(Død)</span> <Ikon.Kors className="ikon-doed" />
             </div>
           )}
-
           <div className="personlinje__separator">/</div>
-
           <KopierbarTekst hovertekst="Kopier fødselsnummer">{personopplysninger.fnr}</KopierbarTekst>
-
           <div className="personlinje__separator">/</div>
-
           <div>{StringUtils.separerListeMedBindestrek([...new Set(personopplysninger.statsborgerskap)])}</div>
-
           <div className="personlinje__separator">/</div>
-
           <div>{personopplysninger.sivilstand}</div>
         </div>
       ) : (

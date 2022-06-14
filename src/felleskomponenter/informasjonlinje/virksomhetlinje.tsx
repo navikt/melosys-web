@@ -33,9 +33,7 @@ const Virksomhetlinje = ({ saksnummer }: { saksnummer: string }) => {
             <Ikon.Building className="ikon-navn" />
             {organisasjon.navn}
           </div>
-
           <div className="virksomhetlinje__separator">/</div>
-
           <KopierbarTekst hovertekst="Kopier organisasjonsnummer">{organisasjon.orgnr}</KopierbarTekst>
         </div>
       ) : (
