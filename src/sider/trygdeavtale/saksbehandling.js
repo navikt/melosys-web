@@ -134,9 +134,9 @@ const Saksbehandling = ({
   const behandlingsgrunnlagErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
   );
-  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
 
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart && !hovedpartErVirksomhet;
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   return (
     <>

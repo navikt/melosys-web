@@ -1,0 +1,98 @@
+@coreModulePath: "../../../node_modules/";
+@frontendModuler: "@{coreModulePath}nav-frontend-";
+@import "@{frontendModuler}core/less/core";
+@import (reference) "~nav-frontend-core/less/_variabler";
+
+.vedleggvelger {
+  margin: 0;
+  padding-top: 0.4rem;
+
+  .vedleggtable {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.vedleggvelger-modal {
+  max-width: 1024px;
+
+  width: 95%;
+  @media (min-width: @screen-lg-min) {
+    width: 80%;
+  }
+
+  padding: 1rem;
+  .typo-element {
+    padding-left: 0.4rem;
+    padding-bottom: 1.7rem;
+  }
+
+  .vedleggtable {
+    margin-bottom: 1.7rem;
+  }
+
+  .knapp {
+    float: right;
+  }
+}
+
+.vedleggvelger,
+.vedleggvelger-modal {
+  .vedleggtable {
+    border-spacing: 0 0.3rem;
+    width: 100%;
+
+    .enkeltvedlegg--border-bottom {
+      td {
+        border-bottom: 0.7px solid #d8d8d8;
+        padding: 0.4rem;
+      }
+    }
+
+    .enkeltvedlegg {
+      background: #f8f8f8;
+
+      td {
+        border-style: solid;
+        border-color: #e6e6e6;
+        border-width: 1px 0;
+        padding: 0.2rem 0.4rem;
+        margin-bottom: 0.4rem;
+
+        &:first-child {
+          border-width: 1px 0 1px 1px;
+        }
+        &:last-child {
+          border-width: 1px 1px 1px 0;
+        }
+      }
+    }
+
+    .enkeltvedlegg--border-bottom,
+    .enkeltvedlegg {
+      .skjemaelement {
+        margin-bottom: 0;
+      }
+
+      a {
+        color: #0067c5;
+      }
+
+      .knapp {
+        min-height: 2rem;
+        width: 2.5rem;
+        padding: 0;
+        margin-top: 0;
+
+        .ikon {
+          height: 18px;
+          width: 18px;
+          margin-right: 0;
+
+          :hover {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+}

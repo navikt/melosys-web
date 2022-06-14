@@ -1,4 +1,5 @@
 import { object, string } from "yup";
+import * as StringUtils from "../../../utils/streng";
 
 const TYPE_MANGLER = { melding: "Velg type brev" };
 const VALGT_MAL_MANGLER = { melding: "Finner ikke mal tilhørende type brev" };
@@ -11,8 +12,7 @@ const TITTEL_MANGLER = { melding: "Fyll inn tittel" };
 
 const manglerFeltVerdi = (felt) => {
   if (felt && !felt.valg) {
-    // htmlEditor har defaultverdi <p></p> når feltet er tomt.
-    return !felt.feltVerdi?.replace("<p></p>", "").trim();
+    return !StringUtils.harStrengInnhold(felt.feltVerdi);
   }
   return !felt;
 };

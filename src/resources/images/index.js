@@ -6,6 +6,7 @@ import { ReactComponent as AddOne } from "./line-version-add-1.svg";
 import { ReactComponent as Arbeidsgiver } from "./ikon-arbeidsgiver.svg";
 import { ReactComponent as Arbeidsforhold } from "./ikon-arbeidsforhold.svg";
 import { ReactComponent as Bin } from "./bin-small.svg";
+import { ReactComponent as BinBlack } from "./bin-small-black.svg";
 import { ReactComponent as Binders } from "./paperclip.svg";
 import { ReactComponent as BlyantActive } from "./blyant-active.svg";
 import { ReactComponent as BlyantDisabled } from "./blyant-disabled.svg";
@@ -77,6 +78,7 @@ export {
   Arbeidsgiver,
   Arbeidsforhold,
   Bin,
+  BinBlack,
   Binders,
   BlyantActive,
   BlyantDisabled,

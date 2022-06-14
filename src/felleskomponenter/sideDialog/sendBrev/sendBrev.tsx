@@ -77,9 +77,10 @@ const SendBrev = ({
   felterWidth = "12",
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
-  const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
+
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
+  const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [mottakerFeil, setMottakerFeil] = useState<string>();
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
 

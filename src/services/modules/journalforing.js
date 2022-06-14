@@ -4,4 +4,6 @@ import { API_BASE_URL, JOURNALFORING } from "../api-constants";
 export const hent = (journalpostID) => getAsJson(`${API_BASE_URL}${JOURNALFORING}/${journalpostID}`);
 export const opprett = (data) => postAsJson(`${API_BASE_URL}${JOURNALFORING}/opprett`, data);
 export const tilordne = (data) => postAsJson(`${API_BASE_URL}${JOURNALFORING}/tilordne`, data);
+export const knytt = (data) => postAsJson(`${API_BASE_URL}${JOURNALFORING}/knytt`, data);
+export const nyVurdering = (data) => postAsJson(`${API_BASE_URL}${JOURNALFORING}/nyvurdering`, data);
 export const sed = (data) => postAsJson(`${API_BASE_URL}${JOURNALFORING}/sed`, data);

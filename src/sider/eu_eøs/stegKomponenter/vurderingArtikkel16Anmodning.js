@@ -532,13 +532,8 @@ class VurderingArtikkel16Anmodning extends Component {
           {redigerbart && (
             <Nav.Row>
               <Nav.Column xs="12">
-                <Nav.Typo.Undertittel>Vedlegg til SED</Nav.Typo.Undertittel>
-                <VedleggVelger
-                  className="vedleggvelger"
-                  valgteVedlegg={valgteVedlegg}
-                  onChange={setValgteVedlegg}
-                  dokumenter={fysiskeDokument}
-                />
+                <Nav.Typo.Element>Vedlegg til SED</Nav.Typo.Element>
+                <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={fysiskeDokument} />
               </Nav.Column>
             </Nav.Row>
           )}
