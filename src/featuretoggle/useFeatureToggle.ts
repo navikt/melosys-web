@@ -1,6 +1,6 @@
 import * as Api from "../services/api";
 
-import { useAsyncCallbackState } from "../hooks/useCallbackState";
+import { useAsyncCallbackState } from "../hooks";
 
 export enum Status {
   fetching = "fetching",
@@ -8,8 +8,15 @@ export enum Status {
   disabled = "disabled",
 }
 
+const hentFeatureToggle = (toggleName: string) => Api.Featuretoggle.hent([toggleName]);
+
+export const erFeatureToggleEnabled = (toggleName: string): Promise<boolean> =>
+  hentFeatureToggle(toggleName)
+    .then((response) => response[toggleName])
+    .catch(() => false);
+
 const useFeatureToggle = (toggleName: string, deps: unknown[] = []): Status => {
-  const [toggles] = useAsyncCallbackState(() => Api.Featuretoggle.hent([toggleName]), {}, [toggleName, ...deps]);
+  const [toggles] = useAsyncCallbackState(() => hentFeatureToggle(toggleName), {}, [toggleName, ...deps]);
 
   const toggleFetched = toggles[toggleName] !== undefined;
 

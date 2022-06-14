@@ -123,7 +123,8 @@ const journalforing = object().shape({
           .nullable()
   ),
   saksnummer: string().when("journalforingHensikt", {
-    is: Konstanter.JOURNALFORING_HENSIKT.KNYTT,
+    is: (hensikt) =>
+      hensikt === Konstanter.JOURNALFORING_HENSIKT.KNYTT || hensikt === Konstanter.JOURNALFORING_HENSIKT.NY_VURDERING,
     then: string().required(VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT),
   }),
   journalforingPeriodeFraOgMed: string().when(["journalforingHensikt", "opprettnysak_behandlingstema"], {

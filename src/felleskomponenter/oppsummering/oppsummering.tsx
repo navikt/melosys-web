@@ -58,11 +58,11 @@ const Oppsummering = (props: OppsummeringProps) => {
   const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
   const behandlingsgrunnlagperiode = `${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`;
 
-  const landStorBokstav = (land: KTObject) => (land ? storeForbokstaverForLand(land.term) : "Ukjent");
+  const landStorBokstav = (land: KTObject) => (land?.term ? storeForbokstaverForLand(land.term) : "Ukjent");
 
   const landTilSetning = (land: KTObject[]) =>
     land && land.length > 0
-      ? arrayTilKonjunksjon(land.map((enkeltLand) => storeForbokstaverForLand(enkeltLand.term)))
+      ? arrayTilKonjunksjon(land.map((enkeltLand) => storeForbokstaverForLand(enkeltLand.term || "")))
       : "Ukjent";
 
   const erSed = behandlingstype && KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.SED;
