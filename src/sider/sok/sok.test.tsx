@@ -1,12 +1,13 @@
 import React from "react";
+import { shallow } from "enzyme";
 
 import * as Utils from "../../utils";
 
-import { Sok } from "./sok";
-import SorterbarListe from "../../felleskomponenter/sorterbarListe/sorterbarListe";
+import { Sok, SokProps } from "./sok";
+import SorterbarListe from "../../felleskomponenter/sorterbarListe";
 
 describe("Sok", () => {
-  let props = null;
+  let props: SokProps;
 
   const getItemPrototype = Storage.prototype.getItem;
 
@@ -24,7 +25,11 @@ describe("Sok", () => {
   it("viser en sorterbarliste ved søk på fnr med ett resultat", () => {
     const generator = new Utils.testhelpers.Generator();
     Storage.prototype.getItem = jest.fn(() => generator.generateBirthNumber());
-    props.sokResultat = [{}];
+    props.sokResultat = [
+      {
+        saksnummer: "",
+      },
+    ];
     const sok = shallow(<Sok {...props} />);
 
     const sorterbarListe = sok.find(SorterbarListe);

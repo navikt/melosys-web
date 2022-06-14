@@ -7,10 +7,10 @@ import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
-import Personlinje from "../../felleskomponenter/personlinje";
-import SideDialog from "../../felleskomponenter/sideDialog/sideDialog";
+import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
-import Oppsummering from "../../felleskomponenter/oppsummering/oppsummering";
+import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 
@@ -32,6 +32,7 @@ const Saksbehandling = ({
   annenBehandlingOppfriskes,
   arbeidsland,
   behandlingstype,
+  hovedpartRolle,
   behandlingOppfriskes,
   behandlingsgrunnlag,
   behandlingsgrunnlagMottaksdato,
@@ -134,25 +135,32 @@ const Saksbehandling = ({
     Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
   );
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
+
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+
   return (
     <>
-      <Personlinje />
+      <Informasjonlinje />
       <div id="main-container" className="main-container">
         <div className="saksbehandling">
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
-                {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
-                {visStegVelger && (
-                  <Stegvelger
-                    redigerbart={redigerbart}
-                    annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-                    oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger}
-                    tilForsiden={tilForsiden}
-                  />
+                {!hovedpartErVirksomhet && (
+                  <>
+                    {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
+                    {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
+                    {visStegVelger && (
+                      <Stegvelger
+                        redigerbart={redigerbart}
+                        annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+                        oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger}
+                        tilForsiden={tilForsiden}
+                      />
+                    )}
+                    <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />{" "}
+                  </>
                 )}
-                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
@@ -172,6 +180,7 @@ const Saksbehandling = ({
                   redigerbart={redigerbart}
                   behandlingID={behandlingID}
                   dokumenter={dokumenter}
+                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -196,6 +205,7 @@ Saksbehandling.propTypes = {
   dokumentOversikt: PT.array.isRequired,
   fagsak: MPT.Fagsak,
   fagsakStatusKode: PT.string.isRequired,
+  hovedpartRolle: PT.string.isRequired,
   location: PT.object.isRequired,
   match: PT.object.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
@@ -229,6 +239,7 @@ Saksbehandling.defaultProps = {
 
 const mapStateToProps = (state) => ({
   arbeidsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(

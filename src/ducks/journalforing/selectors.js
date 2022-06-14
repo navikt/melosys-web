@@ -36,15 +36,20 @@ export const JournalforingVedleggsDokumenter = createSelector(
 
 export const BrukerIDSelector = createSelector(JournalforingAlle, (journalforing) => journalforing.brukerID);
 
+export const VirksomhetOrgnrSelector = createSelector(
+  JournalforingAlle,
+  (journalforing) => journalforing.virksomhetOrgnr
+);
+
 export const AvsenderIDSelector = createSelector(JournalforingAlle, (journalforing) => journalforing.avsenderID);
 
 export const AvsenderNavnSelector = createSelector(JournalforingAlle, (journalforing) => journalforing.avsenderNavn);
 
 export const AvsenderTypeSelector = createSelector(JournalforingAlle, (journalforing) => journalforing.avsenderType);
 
-export const ErBrukerAvsenderSelector = createSelector(
+export const ErHovedpartAvsenderSelector = createSelector(
   JournalforingAlle,
-  (journalforing) => journalforing.erBrukerAvsender
+  (journalforing) => journalforing.erHovedpartAvsender
 );
 
 export const MottattDatoSelector = createSelector(JournalforingAlle, (journalforing) => journalforing.mottattDato);

@@ -8,7 +8,7 @@ describe("Journalforing endepunkt", () => {
     const oppgave = {
       brukerID: "30098000492",
       avsenderID: null,
-      erBrukerAvsender: true,
+      erHovedpartAvsender: true,
       dokument: {
         ID: "Dok_ID",
         tittel: "Søknad om medlemskap",
@@ -32,7 +32,7 @@ describe("Journalforing endepunkt", () => {
     const oppgave = {
       brukerID: "30098000492",
       avsenderID: "30098000492",
-      erBrukerAvsender: true,
+      erHovedpartAvsender: true,
       dokument: {
         ID: "Dok_ID",
         tittel: "Søknad om medlemskap",

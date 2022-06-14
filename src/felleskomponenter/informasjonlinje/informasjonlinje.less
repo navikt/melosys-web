@@ -1,0 +1,46 @@
+@import (reference) "~nav-frontend-core/less/_variabler";
+
+.informasjonlinje {
+  background-color: #f8f8f8;
+  border: 1px solid @navMorkGra;
+  display: flex;
+  flex-direction: row;
+  height: 48px;
+
+  .personlinje,
+  .virksomhetlinje {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .personlinje__navn,
+    .virksomhetlinje__navn {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .ikon-navn {
+        height: 24px;
+        width: 24px;
+        margin-right: 8px;
+        margin-left: 32px;
+      }
+    }
+
+    .personlinje__separator,
+    .virksomhetlinje__separator {
+      margin-left: 20px;
+      margin-right: 15px;
+    }
+  }
+
+  .personlinje_dod {
+    display: flex;
+    margin-left: 10px;
+
+    .ikon-doed {
+      height: 24px;
+      width: 24px;
+    }
+  }
+}
