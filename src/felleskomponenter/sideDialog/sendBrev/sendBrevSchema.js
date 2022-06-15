@@ -1,5 +1,5 @@
 import { object, string } from "yup";
-import * as StringUtils from "../../utils/streng";
+import * as StringUtils from "../../../utils/streng";
 
 const TYPE_MANGLER = { melding: "Velg type brev" };
 const VALGT_MAL_MANGLER = { melding: "Finner ikke mal tilhørende type brev" };

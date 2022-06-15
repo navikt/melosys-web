@@ -28,7 +28,7 @@ import BrevVedlegg from "./brevVedlegg";
 import BrevMottakereTabell from "./brevMottakereTabell";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
-import sendBrevSchema from "../sendBrevSchema";
+import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
 
 const mapStateToProps = (state: RootState) => ({
