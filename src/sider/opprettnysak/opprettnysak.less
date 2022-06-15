@@ -5,7 +5,16 @@
     margin-bottom: 0.7em;
   }
 
-  .brukerNavnSkjema {
+  .navnTittel {
+    display: inline-block;
+    margin-right: 0.5rem;
+  }
+
+  .navn {
+    display: inline-block;
+  }
+
+  .marginBottom {
     margin-bottom: 3em;
   }
 
@@ -25,5 +34,20 @@
   .hjelpetekst {
     vertical-align: bottom;
     margin-left: 0.75rem;
+  }
+
+  .hovedpart {
+    margin-bottom: 2em;
+    .inputPanelGruppe__inner {
+      display: flex;
+
+      .radioPanel {
+        flex: 1;
+        margin: auto 0.2rem;
+      }
+      .inputPanel:not(:last-child) {
+        margin-bottom: 0;
+      }
+    }
   }
 }

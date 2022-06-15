@@ -22,8 +22,7 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import JournalforingSchema from "./journalforingSchema";
 import "./journalforingform.css";
 
-export const BRUKER = "Bruker";
-export const VIRKSOMHET = "Virksomhet";
+const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
 export const JournalforingForm = (props) => {
   const {
