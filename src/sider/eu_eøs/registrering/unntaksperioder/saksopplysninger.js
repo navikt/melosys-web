@@ -334,7 +334,7 @@ const Saksopplysninger = ({
                       value={KV.Koder.Unntaksperiode.GODKJENT}
                       checked={KV.Koder.Unntaksperiode.GODKJENT === unntaksperiodeVurdering}
                       onChange={endreUnntaksperiodeVurdering}
-                      disabled={!kanGodkjenne() && !erGyldigLovvalgsperiode()}
+                      disabled={!kanGodkjenne() || !erGyldigLovvalgsperiode()}
                       label="Godkjenn unntaksperiode"
                     />
                     <Nav.Radio
