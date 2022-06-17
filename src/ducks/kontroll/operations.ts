@@ -10,8 +10,16 @@ export function kontrollerFerdigbehandling(data: Api.Kontroll.FerdigbehandlingKo
   });
 }
 
-export function kontrollerGodkjennUnntaksperiode(data: Api.Kontroll.GodkjennUnntaksperiodeKontrollData) {
-  return doThenDispatch(() => Api.Kontroll.kontrollerGodkjennUnntaksperiode(data), {
+export function kontrollerGodkjennUnntaksperiode(behandlingID: number) {
+  return doThenDispatch(() => Api.Kontroll.kontrollerGodkjennUnntaksperiode(behandlingID), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.FEILET,
+  });
+}
+
+export function kontrollerPeriode(behandlingID: number, data: Api.Kontroll.PeriodeKontrollData) {
+  return doThenDispatch(() => Api.Kontroll.kontrollerPeriode(behandlingID, data), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.FEILET,

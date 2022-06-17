@@ -46,6 +46,7 @@ const Saksopplysninger = ({
   startOgVisOppfriskModal,
   behandlingsresultatErHentet,
   kontrollerGodkjennUnntaksperiode,
+  kontrollerPeriode,
   kontrollFeilmeldinger,
 }) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.AVSLAG);
@@ -76,10 +77,14 @@ const Saksopplysninger = ({
 
   React.useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
-    console.log("Behandling ID:");
-    console.log(behandlingID);
-    kontrollerGodkjennUnntaksperiode({ behandlingID });
+    kontrollerGodkjennUnntaksperiode(behandlingID);
   }, []);
+
+  React.useEffect(() => {
+    if (endrePeriodeFom && endrePeriodeTom) {
+      kontrollerPeriode(behandlingID, endrePeriodeFom, endrePeriodeTom);
+    }
+  }, [endrePeriodeFom, endrePeriodeTom]);
 
   const erGyldigLovvalgsperiode = () =>
     !Utils._isEmpty(lovvalgsperiode)
@@ -453,6 +458,7 @@ Saksopplysninger.propTypes = {
   startOgVisOppfriskModal: PT.func.isRequired,
   behandlingsresultatErHentet: PT.bool.isRequired,
   kontrollerGodkjennUnntaksperiode: PT.func.isRequired,
+  kontrollerPeriode: PT.func.isRequired,
   kontrollFeilmeldinger: PT.arrayOf(PT.string).isRequired,
 };
 
@@ -479,7 +485,9 @@ const mapDispatchToProps = (dispatch) => ({
   lastInnSaksopplysninger: (saksnummer, behandlingID) =>
     datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
   kontrollerGodkjennUnntaksperiode: (behandlingID) =>
-    dispatch(kontrollOperations.kontrollerGodkjennUnntaksperiode({ behandlingID })),
+    dispatch(kontrollOperations.kontrollerGodkjennUnntaksperiode(behandlingID)),
+  kontrollerPeriode: (behandlingID, periodeFom, periodeTom) =>
+    dispatch(kontrollOperations.kontrollerPeriode(behandlingID, { periodeFom, periodeTom })),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
