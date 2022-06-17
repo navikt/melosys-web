@@ -24,7 +24,6 @@ import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from "./validering/
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 
 import "../saksopplysninger.css";
-import { kontrollerGodkjennUnntaksperiode } from "../../../../ducks/kontroll/operations";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
@@ -46,6 +45,7 @@ const Saksopplysninger = ({
   tilForsiden,
   startOgVisOppfriskModal,
   behandlingsresultatErHentet,
+  kontrollerGodkjennUnntaksperiode,
   kontrollFeilmeldinger,
 }) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.AVSLAG);
@@ -76,7 +76,9 @@ const Saksopplysninger = ({
 
   React.useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
-    kontrollerGodkjennUnntaksperiode(behandlingID);
+    console.log("Behandling ID:");
+    console.log(behandlingID);
+    kontrollerGodkjennUnntaksperiode({ behandlingID });
   }, []);
 
   const erGyldigLovvalgsperiode = () =>
@@ -298,7 +300,7 @@ const Saksopplysninger = ({
     return null;
   }
 
-  const kanGodkjenne = () => !(kontrollFeilmeldinger && kontrollFeilmeldinger.length > 0);
+  const kanGodkjenne = () => Utils._isEmpty(kontrollFeilmeldinger);
 
   const listevalgEndringHandler = (event) => {
     const ikkeGodkjentBegrunnelse = [...event.value];
@@ -342,7 +344,6 @@ const Saksopplysninger = ({
                       value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT}
                       checked={KV.Koder.Unntaksperiode.DELVIS_GODKJENT === unntaksperiodeVurdering}
                       onChange={endreUnntaksperiodeVurdering}
-                      disabled={!kanGodkjenne()}
                       label="Godkjenn, men endre periode"
                     />
                     {kanEndrePeriode() && (
@@ -417,7 +418,7 @@ const Saksopplysninger = ({
                       spinner: registreringPending,
                       autoDisableVedSpinner: true,
                       onClick: () => submitRegistrering(),
-                      disabled: !redigerbart,
+                      disabled: !redigerbart || !kanGodkjenne(),
                       htmlType: "submit",
                     }}
                     bekreftTekst="Lagre"
@@ -451,6 +452,7 @@ Saksopplysninger.propTypes = {
   tilForsiden: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   behandlingsresultatErHentet: PT.bool.isRequired,
+  kontrollerGodkjennUnntaksperiode: PT.func.isRequired,
   kontrollFeilmeldinger: PT.arrayOf(PT.string).isRequired,
 };
 
@@ -477,7 +479,7 @@ const mapDispatchToProps = (dispatch) => ({
   lastInnSaksopplysninger: (saksnummer, behandlingID) =>
     datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
   kontrollerGodkjennUnntaksperiode: (behandlingID) =>
-    dispatch(kontrollOperations.kontrollerGodkjennUnntaksperiode(behandlingID)),
+    dispatch(kontrollOperations.kontrollerGodkjennUnntaksperiode({ behandlingID })),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

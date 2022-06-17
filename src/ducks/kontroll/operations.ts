@@ -10,8 +10,8 @@ export function kontrollerFerdigbehandling(data: Api.Kontroll.FerdigbehandlingKo
   });
 }
 
-export function kontrollerGodkjennUnntaksperiode(behandlingID: number) {
-  return doThenDispatch(() => Api.Kontroll.kontrollerGodkjennUnntaksperiode(behandlingID), {
+export function kontrollerGodkjennUnntaksperiode(data: Api.Kontroll.GodkjennUnntaksperiodeKontrollData) {
+  return doThenDispatch(() => Api.Kontroll.kontrollerGodkjennUnntaksperiode(data), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.FEILET,
