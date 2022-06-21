@@ -37,6 +37,7 @@ export const JournalforingForm = (props) => {
     settFeltInnhold,
     settJournalforingHensikt,
     avbrytJournalforing,
+    submitSpinner,
     kanSubmittes,
     handleSubmit,
   } = props;
@@ -74,7 +75,7 @@ export const JournalforingForm = (props) => {
         </Nav.AlertStripeFeil>
       )}
       <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
-      <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} />
+      <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
     </form>
   );
 };
@@ -89,6 +90,7 @@ JournalforingForm.propTypes = {
   submitFailed: PT.bool.isRequired,
   settFeltInnhold: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
+  submitSpinner: PT.bool.isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
   kanSubmittes: PT.bool.isRequired,
