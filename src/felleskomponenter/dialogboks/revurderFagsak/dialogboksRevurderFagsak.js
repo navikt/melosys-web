@@ -20,9 +20,9 @@ export const DialogboksRevurderFagsak = ({ bekreft, avbryt, ariaHideApp, spinner
     <Nav.Typo.Systemtittel className="overskrift">Vurder saken på nytt</Nav.Typo.Systemtittel>
     <Knapperad
       bekreft={bekreft}
-      bekreftTekst="BEKREFT"
+      bekreftTekst="Bekreft"
       avbryt={avbryt}
-      avbrytTekst="AVBRYT"
+      avbrytTekst="Avbryt"
       redigerbart
       spinner={spinner}
     />

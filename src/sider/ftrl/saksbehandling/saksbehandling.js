@@ -10,9 +10,9 @@ import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as API from "../../../services/api";
 
-import Personlinje from "../../../felleskomponenter/personlinje";
-import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
+import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
+import SideDialog from "../../../felleskomponenter/sideDialog";
+import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
@@ -176,7 +176,7 @@ const Saksbehandling = ({
 
   return (
     <>
-      <Personlinje />
+      <Informasjonlinje />
       <div id="main-container" className="main-container">
         <div className="saksbehandling">
           <Nav.Container fluid>

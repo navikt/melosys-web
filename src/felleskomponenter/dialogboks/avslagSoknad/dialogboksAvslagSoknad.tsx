@@ -117,9 +117,9 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
           <div className="knapperadcontainer">
             <Knapperad
               avbryt={avbryt}
-              avbrytTekst="AVBRYT"
+              avbrytTekst="Avbryt"
               bekreft={avslaaSoknad}
-              bekreftTekst="AVSLÅ SØKNAD"
+              bekreftTekst="Avslå søknad"
               redigerbart={redigerbart}
               bekreftRedigerbart={bekreftRedigerbart}
             />

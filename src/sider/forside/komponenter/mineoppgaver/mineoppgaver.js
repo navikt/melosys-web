@@ -7,7 +7,7 @@ import * as MPT from "../../../../proptypes";
 import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
 import withErrorHandling from "../../../../felleskomponenter/withErrorHandling";
 import JournalforingOppgave from "../../../../felleskomponenter/oppgaveliste/journalforingOppgave";
-import SorterbarListe from "../../../../felleskomponenter/sorterbarListe/sorterbarListe";
+import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 
 import "./mineoppgaver.css";
 

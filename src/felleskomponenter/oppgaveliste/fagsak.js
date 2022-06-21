@@ -10,7 +10,7 @@ import Behandling from "./behandling";
 import PanelHeader from "../panelHeader/panelHeader";
 import EnkeltDato from "../datoOmrade/enkeltDato";
 import { DatoOmradeDescription } from "../datoOmrade/datoOmrade";
-import sorterElementerEtterDato from "../sorterbarListe/sorterElementerEtterDato";
+import { sorterElementerEtterDato } from "../sorterbarListe";
 import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
@@ -45,7 +45,7 @@ const Fagsak = ({ sak }) => {
           </Nav.Column>
           <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
-              <dt>Opprettet:</dt>
+              <dt>Sak opprettet:</dt>
               <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
               <dt>Land:</dt>
               <dd>

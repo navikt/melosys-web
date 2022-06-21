@@ -9,9 +9,9 @@ import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 
-import Personlinje from "../../../felleskomponenter/personlinje";
-import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
+import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
+import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
@@ -50,6 +50,7 @@ const Vurderutpeking = ({
   lastInnSaksopplysninger,
   location,
   behandlingstema,
+  hovedpartRolle,
   redigerbart,
   fagsak,
   oppsummering,
@@ -102,15 +103,17 @@ const Vurderutpeking = ({
     ? KV.kodeTilObjekt(lovvalgslandFraForm, MKV.KTObjects.landkoder)
     : undefined;
 
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+
   return (
     <>
-      <Personlinje />
+      <Informasjonlinje />
       <div id="main-container" className="main-container">
         <div className="vurderutpeking">
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {behandlingsgrunnlagErKlart && (
+                {behandlingsgrunnlagErKlart && !hovedpartErVirksomhet && (
                   <Stegvelger
                     behandlingID={behandlingID}
                     stegMap={stegMap}
@@ -127,7 +130,7 @@ const Vurderutpeking = ({
                     forsteSteg={forsteSteg}
                   />
                 )}
-                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+                {!hovedpartErVirksomhet && <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />}
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
@@ -147,6 +150,7 @@ const Vurderutpeking = ({
                   redigerbart={redigerbart}
                   dokumentOversikt={dokumentOversikt}
                   dokumenter={dokumenter}
+                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -162,6 +166,7 @@ Vurderutpeking.propTypes = {
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   behandlingstema: PT.string.isRequired,
+  hovedpartRolle: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
@@ -196,6 +201,7 @@ Vurderutpeking.defaultProps = {
 
 const mapStateToProps = (state) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),

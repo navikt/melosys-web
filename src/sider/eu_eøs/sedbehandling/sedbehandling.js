@@ -7,9 +7,9 @@ import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 
-import Personlinje from "../../../felleskomponenter/personlinje";
-import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
+import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
+import SideDialog from "../../../felleskomponenter/sideDialog";
+import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 
 import { fagsakSelectors } from "../../../ducks/fagsaker";
@@ -66,7 +66,7 @@ const SedBehandling = ({
 
   return (
     <>
-      <Personlinje />
+      <Informasjonlinje />
       <div id="main-container" className="main-container">
         <div className="sedbehandling">
           <Nav.Container fluid>

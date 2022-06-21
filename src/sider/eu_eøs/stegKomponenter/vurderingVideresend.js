@@ -101,7 +101,7 @@ export const VurderingVideresend = ({
         {redigerbart && (
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Typo.Undertittel>Vedlegg til SED</Nav.Typo.Undertittel>
+              <Nav.Typo.Element>Vedlegg til SED</Nav.Typo.Element>
               <VedleggVelger
                 className="vedleggvelger"
                 valgteVedlegg={valgteVedlegg}
