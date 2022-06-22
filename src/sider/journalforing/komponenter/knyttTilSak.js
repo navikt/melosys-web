@@ -31,9 +31,10 @@ export const KnyttTilSak = (props) => {
     ? !sakInneholderSoeknad
     : sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
 
-  const erInaktiv =
-    sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET ||
-    sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING;
+  const erInaktiv = [
+    MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+    MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING,
+  ].includes(sisteBehandling.behandlingsstatus.kode);
 
   if (erInaktiv) {
     return (
