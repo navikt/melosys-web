@@ -71,15 +71,15 @@ const OpprettNySak = ({ formValues, tilForsiden, handleSubmit, change, error, so
     }
   };
 
-  const hentBruker = async (fnrdnr) => {
-    if (Utils.person.erGyldigFnrEllerDnr(fnrdnr)) {
-      const navn = await hentSammensattNavn(fnrdnr);
+  const hentBruker = async (personIdent) => {
+    if (Utils.person.erGyldigFnrEllerDnr(personIdent)) {
+      const navn = await hentSammensattNavn(personIdent);
       change("brukerNavn", navn);
     } else {
       change("brukerNavn", null);
     }
 
-    await hentOppgaver(fnrdnr);
+    await hentOppgaver(personIdent);
   };
 
   const hentVirksomhet = async (orgnr) => {
