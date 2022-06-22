@@ -8,17 +8,17 @@ import KnyttTilSak from "./knyttTilSak";
 import OpprettSak, { OpprettSakTittel } from "./opprettSak";
 import MKV from "../../../melosyskodeverk";
 import { JOURNALFORING_HENSIKT } from "../../../constants";
+import { erFeatureToggleEnabled } from "../../../featuretoggle";
 
 import "./fagsakVelger.css";
-import { useFeatureToggle } from "../../../featuretoggle";
 
-const behandlingstyper = (sakstype, alltidNyBehandlingToggle) => {
+const behandlingstyper = (sakstype, alltidNyBehandlingToggleEnabled) => {
   switch (sakstype) {
     case MKV.Koder.sakstyper.EU_EOS:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
         ({ kode }) =>
           kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
-          (alltidNyBehandlingToggle === "enabled" && kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING)
+          (alltidNyBehandlingToggleEnabled && kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING)
       );
     case MKV.Koder.sakstyper.TRYGDEAVTALE:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
@@ -30,7 +30,9 @@ const behandlingstyper = (sakstype, alltidNyBehandlingToggle) => {
 };
 
 const FagsakVelger = (props) => {
-  const alltidNyBehandlingToggle = useFeatureToggle("melosys.api.journalfoering.alltid.opprett.ny.behandling");
+  const alltidNyBehandlingToggleEnabled = erFeatureToggleEnabled(
+    "melosys.api.journalfoering.alltid.opprett.ny.behandling"
+  );
   const { fagsakListe, settJournalforingHensikt } = props;
   const notifier = async (saksnummer) => {
     const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
@@ -43,7 +45,10 @@ const FagsakVelger = (props) => {
         value: sak.saksnummer,
         innhold: <EnkeltSak sak={sak} />,
         footer: (
-          <KnyttTilSak sak={sak} behandlingstyper={behandlingstyper(sak.sakstype.kode, alltidNyBehandlingToggle)} />
+          <KnyttTilSak
+            sak={sak}
+            behandlingstyper={behandlingstyper(sak.sakstype.kode, alltidNyBehandlingToggleEnabled)}
+          />
         ),
       },
     ],

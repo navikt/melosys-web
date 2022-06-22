@@ -9,8 +9,9 @@ import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
 
+import { erFeatureToggleEnabled } from "../../../featuretoggle";
+
 import "./knyttTilSak.css";
-import { useFeatureToggle } from "../../../featuretoggle";
 
 export const KnyttTilSak = (props) => {
   const { sak, behandlingstyper, opprettBehandling } = props;
@@ -22,12 +23,19 @@ export const KnyttTilSak = (props) => {
 
   const clsElementskrift = { "border-bottom": "none" };
 
-  const alltidNyBehandlingToggle = useFeatureToggle("melosys.api.journalfoering.alltid.opprett.ny.behandling");
+  const alltidNyBehandlingToggleEnabled = erFeatureToggleEnabled(
+    "melosys.api.journalfoering.alltid.opprett.ny.behandling"
+  );
 
-  const visUtenOppretteBehandling =
-    alltidNyBehandlingToggle === "enabled" ? !sakInneholderSoeknad : sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
+  const visUtenOppretteBehandling = alltidNyBehandlingToggleEnabled
+    ? !sakInneholderSoeknad
+    : sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
 
-  if (sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
+  const erInaktiv =
+    sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET ||
+    sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING;
+
+  if (erInaktiv) {
     return (
       <div className="panelramme">
         <Mui.Elementskrift
