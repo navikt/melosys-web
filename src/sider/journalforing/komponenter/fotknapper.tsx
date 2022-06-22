@@ -1,14 +1,19 @@
 import React from "react";
-import * as PT from "prop-types";
 
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 
-const Fotknapper = ({ avbrytJournalforing, kanSubmittes }) => (
+interface FotknapperProps {
+  avbrytJournalforing: () => void;
+  kanSubmittes: boolean;
+  spinner?: boolean;
+}
+
+const Fotknapper = ({ avbrytJournalforing, kanSubmittes, spinner = false }: FotknapperProps) => (
   <div className="journalforing__fotknapper">
     <Nav.Row>
       <Nav.Column xs="6">
-        <Mui.Knapp type="hoved" htmlType="submit" disabled={!kanSubmittes}>
+        <Mui.Knapp type="hoved" htmlType="submit" disabled={!kanSubmittes} spinner={spinner} autoDisableVedSpinner>
           JOURNALFØR
         </Mui.Knapp>
       </Nav.Column>
@@ -18,10 +23,5 @@ const Fotknapper = ({ avbrytJournalforing, kanSubmittes }) => (
     </Nav.Row>
   </div>
 );
-
-Fotknapper.propTypes = {
-  avbrytJournalforing: PT.func.isRequired,
-  kanSubmittes: PT.bool.isRequired,
-};
 
 export default Fotknapper;
