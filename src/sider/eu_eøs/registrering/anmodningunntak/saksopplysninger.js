@@ -18,7 +18,7 @@ import RegisterkontrollTreff from "../../../../felleskomponenter/registerkontrol
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { datalastingOperations } from "../../../../ducks/datalasting";
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
-import { anmodningsperiodesvarSelectors } from "../../../../ducks/anmodningsperiodesvar";
+import {anmodningsperiodesvarSelectors} from "../../../../ducks/anmodningsperiodesvar";
 import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 
 import "../saksopplysninger.css";
@@ -26,6 +26,7 @@ import { DatoOmradeMedVarighet } from "../../../../felleskomponenter/datoOmrade/
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import { delvisInnvilgelseSkjema, avslagSkjema } from "./validering/anmodningunntakSkjema";
 import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
+import { anmodningunntakOperations } from "../../../../ducks/anmodningunntak";
 
 const uuid = require("uuid/v4");
 
@@ -67,6 +68,7 @@ const Saksopplysninger = ({
   tilForsiden,
   startOgVisOppfriskModal,
   saksnummer,
+  sendAnmodningUnntakSvar,
 }) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(
     MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE
@@ -235,7 +237,7 @@ const Saksopplysninger = ({
 
     try {
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
-      await Api.Saksflyt.Anmodningsperioder.svar(behandlingID, { ytterligereInfo: ytterligereInfoFritekst });
+      await sendAnmodningUnntakSvar(behandlingID, { ytterligereInfo: ytterligereInfoFritekst });
     } catch (e) {
       return false;
     } finally {
@@ -473,6 +475,7 @@ Saksopplysninger.propTypes = {
   tilForsiden: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   saksnummer: PT.string.isRequired,
+  sendAnmodningUnntakSvar: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -493,6 +496,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) =>
     dispatch(datalastingOperations.lastInnSaksopplysningerBehandleMottattAOU(saksnummer, behandlingID)),
+  sendAnmodningUnntakSvar: (behandlingID, svar) => dispatch(anmodningunntakOperations.svar(behandlingID, svar)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
