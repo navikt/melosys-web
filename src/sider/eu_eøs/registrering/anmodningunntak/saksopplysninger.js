@@ -27,6 +27,8 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import { delvisInnvilgelseSkjema, avslagSkjema } from "./validering/anmodningunntakSkjema";
 import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 import { anmodningunntakOperations } from "../../../../ducks/anmodningunntak";
+import {Feilmeldinger} from "../../../../felleskomponenter/feilmeldinger";
+import {feiletResponsSelectors} from "../../../../ducks/feiletRespons";
 
 const uuid = require("uuid/v4");
 
@@ -65,10 +67,10 @@ const Saksopplysninger = ({
   vurderingBegrunnelser,
   lastInnSaksopplysninger,
   lovvalgsperiode,
-  tilForsiden,
   startOgVisOppfriskModal,
   saksnummer,
   sendAnmodningUnntakSvar,
+  feilmeldinger,
 }) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(
     MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE
@@ -77,7 +79,7 @@ const Saksopplysninger = ({
   const [ytterligereInfoFritekst, setYtterligereInfoFritekst] = useState("");
   const [endretPeriodeFom, setEndretPeriodeFom] = useState("");
   const [endretPeriodeTom, setEndretPeriodeTom] = useState("");
-  const [feilmeldinger, setFeilmeldinger] = useState({ fom: undefined, tom: undefined, fritekst: undefined });
+  const [valideringFeil, setValideringFeil] = useState({ fom: undefined, tom: undefined, fritekst: undefined });
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = useState(false);
   const [durationWarningMessage, setDurationWarningMessage] = useState(null);
   const [registreringPending, setRegistreringPending] = useState(false);
@@ -141,7 +143,7 @@ const Saksopplysninger = ({
         return false;
     }
 
-    setFeilmeldinger(valideringsresultat);
+    setValideringFeil(valideringsresultat);
     return Utils._isEmpty(valideringsresultat);
   };
 
@@ -242,7 +244,6 @@ const Saksopplysninger = ({
       return false;
     } finally {
       setRegistreringPending(false);
-      tilForsiden();
     }
     return true;
   };
@@ -285,7 +286,7 @@ const Saksopplysninger = ({
           onChange={begrunnelseTextAreaOnChange}
           value={begrunnelseFritekst}
           maxLength={255}
-          feil={feilmeldinger.fritekst}
+          feil={valideringFeil.fritekst}
           bredde="fullbredde"
         />
       </Nav.Column>
@@ -322,7 +323,7 @@ const Saksopplysninger = ({
                   value={endretPeriodeFom}
                   onChange={(e) => oppdaterDato(e, setEndretPeriodeFom)}
                   onBlur={(e) => formaterDato(e, setEndretPeriodeFom)}
-                  feil={feilmeldinger.fom}
+                  feil={valideringFeil.fom}
                   disabled={!redigerbart}
                 />
               </Nav.Column>
@@ -333,7 +334,7 @@ const Saksopplysninger = ({
                   value={endretPeriodeTom}
                   onChange={(e) => oppdaterDato(e, setEndretPeriodeTom)}
                   onBlur={(e) => formaterDato(e, setEndretPeriodeTom)}
-                  feil={feilmeldinger.tom}
+                  feil={valideringFeil.tom}
                   disabled={!redigerbart}
                 />
               </Nav.Column>
@@ -364,6 +365,7 @@ const Saksopplysninger = ({
 
   return (
     <div>
+      <Feilmeldinger className="anmodningunntak_feilmelding" feilmeldinger={feilmeldinger} />
       <form name="anmodningunntak" id="anmodningunntak" onSubmit={overstyrSubmit}>
         <div className="stegvelger panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
@@ -476,12 +478,22 @@ Saksopplysninger.propTypes = {
   startOgVisOppfriskModal: PT.func.isRequired,
   saksnummer: PT.string.isRequired,
   sendAnmodningUnntakSvar: PT.func.isRequired,
+  feilmeldinger: PT.oneOfType([
+    PT.arrayOf(
+      PT.shape({
+        kode: PT.string.isRequired,
+        felter: PT.arrayOf(PT.string).isRequired,
+      })
+    ),
+    PT.string,
+  ]),
 };
 
 Saksopplysninger.defaultProps = {
   sed: {},
   skjema: {},
   anmodningsperiodeID: undefined,
+  feilmeldinger: [],
 };
 
 const mapStateToProps = (state) => ({
@@ -489,6 +501,7 @@ const mapStateToProps = (state) => ({
   anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
   anmodningsperiodeSvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
