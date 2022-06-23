@@ -18,7 +18,7 @@ import RegisterkontrollTreff from "../../../../felleskomponenter/registerkontrol
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { datalastingOperations } from "../../../../ducks/datalasting";
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
-import {anmodningsperiodesvarSelectors} from "../../../../ducks/anmodningsperiodesvar";
+import { anmodningsperiodesvarSelectors } from "../../../../ducks/anmodningsperiodesvar";
 import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 
 import "../saksopplysninger.css";
@@ -27,8 +27,8 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import { delvisInnvilgelseSkjema, avslagSkjema } from "./validering/anmodningunntakSkjema";
 import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 import { anmodningunntakOperations } from "../../../../ducks/anmodningunntak";
-import {Feilmeldinger} from "../../../../felleskomponenter/feilmeldinger";
-import {feiletResponsSelectors} from "../../../../ducks/feiletRespons";
+import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
+import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
 const uuid = require("uuid/v4");
 
