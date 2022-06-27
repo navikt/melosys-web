@@ -4,7 +4,6 @@ import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
 import * as Konstanter from "../../../constants";
 import * as KV from "../../../kodeverk";
-import { BRUKER, VIRKSOMHET } from "./journalforingform";
 
 const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer." };
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig fnr eller dnr." };
@@ -25,6 +24,7 @@ const VELG_ETT_LAND = { melding: "Velg ett land." };
 const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
 const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
+const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
 const kreverPeriode = (journalforingHensikt, behandlingstema) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&

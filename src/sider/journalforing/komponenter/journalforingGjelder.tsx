@@ -5,6 +5,7 @@ import { RootState } from "AppTypes";
 import { Action } from "redux";
 import { change } from "redux-form";
 
+import MKV from "../../../melosyskodeverk";
 import * as Ikoner from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
@@ -12,9 +13,10 @@ import * as Nav from "../../../navFrontend";
 import Komponent from "./komponent";
 import { formSelectors } from "../../../ducks/form";
 import { journalforingSelectors } from "../../../ducks/journalforing";
-import { BRUKER, VIRKSOMHET } from "./journalforingform";
 
 import "./journalforingGjelder.css";
+
+const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
 const mapStateToProps = (state: RootState) => ({
   journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
