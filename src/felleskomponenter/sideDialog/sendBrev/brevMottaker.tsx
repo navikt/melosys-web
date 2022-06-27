@@ -144,7 +144,7 @@ const BrevMottaker = ({
       {mottakerErBruker && (
         <Nav.Row>
           <Nav.Column xs="12">
-            {feil && <AlertStripeFeil className="marginBottom1rem">{feil}</AlertStripeFeil>}
+            {feil && <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>}
             {adresse?.mottakerAdresse && <MottakerAdresse {...adresse?.mottakerAdresse} className="brukeradresse" />}
           </Nav.Column>
         </Nav.Row>
@@ -154,10 +154,10 @@ const BrevMottaker = ({
         <Nav.Row>
           {feil ? (
             <Nav.Column xs="12">
-              <AlertStripeFeil className="marginBottom1rem">{feil}</AlertStripeFeil>
+              <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>
             </Nav.Column>
           ) : (
-            <Nav.Column xs="12" className="marginBottom1rem">
+            <Nav.Column xs="12" className="arbeidsgiver">
               <Nav.Typo.Normaltekst tag="div">
                 Velg:
                 {formValues?.valgtMottaker?.rolle === ARBEIDSGIVER && (
@@ -175,7 +175,7 @@ const BrevMottaker = ({
               {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.MottakerAdresse) => (
                 <Fragment key={Utils._uuid()}>
                   <Skjema.Radio
-                    className="arbeidsgiver_radio"
+                    className="arbeidsgiver__radio"
                     feltNavn="arbeidsgiver"
                     label={`${virksomhet.tittel.mottakerNavn} (org.nr. ${virksomhet.tittel.orgnr})`}
                     id={`arbeidsgiver.${virksomhet.tittel.orgnr}`}
@@ -184,7 +184,7 @@ const BrevMottaker = ({
                     disabled={!redigerbart}
                   />
                   {formValues.arbeidsgiver === virksomhet.tittel.orgnr && adresse?.mottakerAdresse && (
-                    <MottakerAdresse {...adresse?.mottakerAdresse} className="arbeidsgiveradresse" />
+                    <MottakerAdresse {...adresse?.mottakerAdresse} className="arbeidsgiver__adresse" />
                   )}
                 </Fragment>
               ))}
@@ -204,7 +204,7 @@ const BrevMottaker = ({
             />
             {adresse?.organisasjonsAdresse && (
               <OrganisasjonsAdresse
-                className="marginBottom1rem"
+                className="organisasjonsAdresse"
                 organisasjon={adresse.organisasjonsAdresse}
                 visNavn
                 boldNavn
@@ -222,7 +222,7 @@ const BrevMottaker = ({
           </Nav.Column>
           {feil && (
             <Nav.Column xs="12">
-              <AlertStripeFeil className="marginBottom1rem">{feil}</AlertStripeFeil>
+              <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>
             </Nav.Column>
           )}
         </Nav.Row>
