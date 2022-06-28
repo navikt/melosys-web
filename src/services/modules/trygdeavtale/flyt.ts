@@ -46,6 +46,7 @@ export interface StegData {
   periodeTom?: string | null;
   soeknadsland?: string[];
   landValg: KTObject[];
+  andreLandValg: KTObject[];
   virksomheter?: Virksomhet[];
   vedtakValg?: KTObject[];
   innvilgelseValg?: KTObject[];
