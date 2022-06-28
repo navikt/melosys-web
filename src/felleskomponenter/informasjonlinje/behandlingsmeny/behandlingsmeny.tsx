@@ -16,6 +16,7 @@ import Handling from "./handling";
 import { oppgaverOperations } from "../../../ducks/oppgaver";
 import { navigeringOperations } from "../../../ducks/navigering";
 import { modalerOperations } from "../../../ducks/modaler";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
@@ -25,13 +26,14 @@ import "./behandlingsmeny.css";
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
   anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
 });
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
-  lagreOgLukkHandle: () => dispatch(navigeringOperations.tilForsiden()),
+  tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
   tilbakeleggHandle: (oppgaveID: string, venterPaaDokumentasjon: boolean) =>
     oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
@@ -45,7 +47,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export const Behandlingsmeny = ({
-  lagreOgLukkHandle,
+  tilForsiden,
   tilbakeleggHandle,
   visAvslagSoknadDialogHandle,
   visHenleggDialogHandle,
@@ -53,6 +55,7 @@ export const Behandlingsmeny = ({
   visFerdigbehandleNyVurderingDialogHandle,
   visRevurderFagsakDialogHandle,
   redigerbart,
+  sakstype,
   behandlingID,
   behandlingstema,
   behandlingstype,
@@ -112,20 +115,23 @@ export const Behandlingsmeny = ({
       {visBehandlingsmeny && (
         <div className="behandlingsmeny__meny">
           <LeggBehandlingTilbake
-            lagreOgLukkHandle={lagreOgLukkHandle}
+            lagreOgLukkHandle={tilForsiden}
             tilbakeleggHandle={tilbakeleggHandle}
             behandlingID={behandlingID}
             redigerbart={redigerbart}
           />
           <AvsluttSak
             avslaaSoknad={visAvslagSoknadDialogHandle}
+            behandlingID={behandlingID}
             henleggSak={visHenleggDialogHandle}
             avsluttSakSomBortfalt={visAvsluttSakSomBortfaltDialogHandle}
+            sakstype={sakstype}
             behandlingstema={behandlingstema}
             behandlingstype={behandlingstype}
             redigerbart={redigerbart}
             ferdigbehandleNyVurdering={visFerdigbehandleNyVurderingDialogHandle}
             behandlingsstatus={behandlingsstatus}
+            tilForsiden={tilForsiden}
           />
           {skalViseVurderSakenPaaNytt() && (
             <div className="behandlingsmeny__meny__handlinger">

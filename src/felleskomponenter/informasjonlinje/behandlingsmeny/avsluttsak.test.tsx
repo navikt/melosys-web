@@ -16,7 +16,8 @@ const {
   REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
   REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
 } = MKV.Koder.behandlinger.behandlingstema;
-const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
+const { NY_VURDERING, FØRSTEGANG, HENVENDELSE } = MKV.Koder.behandlinger.behandlingstyper;
+const { FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { VURDER_DOKUMENT } = MKV.Koder.behandlinger.behandlingsstatus;
 
 const mockedProps = mock<ComponentProps<typeof AvsluttSak>>();
@@ -37,8 +38,8 @@ describe("AvsluttSak", () => {
 
     expect(handlinger).toHaveLength(3);
     expect(handlinger.at(0).props().tekst).toBe("Avslå søknad pga. manglende opplysninger");
-    expect(handlinger.at(1).props().tekst).toBe("Kan ikke behandles i Melosys");
-    expect(handlinger.at(2).props().tekst).toBe("Søknaden er henlagt/trukket");
+    expect(handlinger.at(1).props().tekst).toBe("Søknaden er henlagt/trukket");
+    expect(handlinger.at(2).props().tekst).toBe("Kan ikke behandles i Melosys");
   });
 
   it("viser bare avsluttSak om tema er trygdetid", () => {
@@ -60,8 +61,8 @@ describe("AvsluttSak", () => {
     const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
-    expect(handlinger).toHaveLength(4);
-    expect(handlinger.at(1).props().tekst).toBe("Ferdigbehandlet");
+    expect(handlinger).toHaveLength(5);
+    expect(handlinger.at(4).props().tekst).toBe("Ferdigbehandlet");
   });
 
   it("returerer null om EØS_VURDER_UTPEKING og ikke redigerbart", () => {
@@ -86,7 +87,7 @@ describe("AvsluttSak", () => {
     expect(avsluttSakSomBortfalt).toHaveLength(0);
   });
 
-  it(`viser 'Kan ikke behandles i Melosys' dersomn behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
+  it(`viser 'Kan ikke behandles i Melosys' dersom behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
     props.behandlingsstatus = VURDER_DOKUMENT;
     props.behandlingstema = REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE;
 
@@ -97,7 +98,7 @@ describe("AvsluttSak", () => {
     expect(handlinger.at(0).props().tekst).toBe("Kan ikke behandles i Melosys");
   });
 
-  it(`viser 'Kan ikke behandles i Melosys' dersomn behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
+  it(`viser 'Kan ikke behandles i Melosys' dersom behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
     props.behandlingsstatus = VURDER_DOKUMENT;
     props.behandlingstema = REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
 
@@ -106,5 +107,66 @@ describe("AvsluttSak", () => {
 
     expect(handlinger).toHaveLength(1);
     expect(handlinger.at(0).props().tekst).toBe("Kan ikke behandles i Melosys");
+  });
+
+  it(`viser 'Søknaden er avslått' dersom behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, () => {
+    props.redigerbart = false;
+    props.behandlingstype = FØRSTEGANG;
+    props.behandlingstema = YRKESAKTIV;
+
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const handlinger = avsluttSak.find(Handling);
+
+    expect(handlinger).toHaveLength(1);
+    expect(handlinger.at(0).props().tekst).toBe("Søknaden er avslått");
+  });
+
+  it(`viser ikke 'Søknaden er avslått' dersom behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, () => {
+    props.redigerbart = false;
+    props.behandlingstype = HENVENDELSE;
+    props.behandlingstema = YRKESAKTIV;
+
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const handlinger = avsluttSak.find(Handling);
+
+    expect(handlinger).toHaveLength(0);
+  });
+
+  it(`viser 'Søknaden er innvilget' dersom sakstype er ${FTRL} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, () => {
+    props.redigerbart = false;
+    props.sakstype = FTRL;
+    props.behandlingstype = NY_VURDERING;
+    props.behandlingstema = YRKESAKTIV;
+
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const handlinger = avsluttSak.find(Handling);
+
+    expect(handlinger).toHaveLength(2);
+    expect(handlinger.at(0).props().tekst).toBe("Søknaden er innvilget");
+  });
+
+  it(`viser 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, () => {
+    props.redigerbart = false;
+    props.sakstype = TRYGDEAVTALE;
+    props.behandlingstype = NY_VURDERING;
+    props.behandlingstema = YRKESAKTIV;
+
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const handlinger = avsluttSak.find(Handling);
+
+    expect(handlinger).toHaveLength(2);
+    expect(handlinger.at(0).props().tekst).toBe("Søknaden er innvilget");
+  });
+
+  it(`viser ikke 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, () => {
+    props.redigerbart = false;
+    props.sakstype = TRYGDEAVTALE;
+    props.behandlingstype = HENVENDELSE;
+    props.behandlingstema = YRKESAKTIV;
+
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const handlinger = avsluttSak.find(Handling);
+
+    expect(handlinger).toHaveLength(0);
   });
 });
