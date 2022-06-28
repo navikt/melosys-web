@@ -77,7 +77,7 @@ interface Props {
 
 const VurderingInngang = ({
   annenBehandlingOppfriskes,
-  data: { landValg, andreLandValg },
+  data: { landValg, landValgUtenStøtte },
   formValues,
   formIsValid,
   fortsett,
@@ -160,8 +160,8 @@ const VurderingInngang = ({
               disabled={!redigerbart}
             >
               <VurderingInngangKomponenter.LandValgSomOptions landValg={landValg} />
-              {landValg && andreLandValg && <option disabled>{"\u2500"}</option>}
-              <VurderingInngangKomponenter.LandValgSomOptions landValg={andreLandValg} />
+              {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}
+              <VurderingInngangKomponenter.LandValgSomOptions landValg={landValgUtenStøtte} />
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>

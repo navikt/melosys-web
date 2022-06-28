@@ -15,7 +15,7 @@ import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
 import BehandlingsgrunnlagFeilmeldinger from "../../felleskomponenter/behandlingsgrunnlagFeilmeldinger";
-import VurderingInngang from "./stegKomponenter/vurderingInngang/vurderingInngang";
+import VurderingInngang from "./stegKomponenter/vurderingInngang";
 import VurderingAvklarVirksomhet from "./stegKomponenter/vurderingAvklarVirksomhet";
 import VurderingBestemmelse from "./stegKomponenter/vurderingBestemmelse";
 import VurderingFamilie from "./stegKomponenter/vurderingFamilie";
