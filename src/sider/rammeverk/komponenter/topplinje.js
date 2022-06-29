@@ -23,7 +23,7 @@ const Topplinje = (props) => {
     const { hentOppgaveOversikt, history } = props;
     const { push } = history;
     const { byggVersjon } = Utils.buildinfo();
-    if (byggVersjon === "local") {
+    if (byggVersjon === "local" || byggVersjon === "nginx_local") {
       hentOppgaveOversikt();
       push("/");
       return;
