@@ -3,6 +3,7 @@ import * as Api from "../../../services/api";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
+import { erFeatureToggleEnabled } from "../../../featuretoggle";
 import Handling from "./handling";
 
 const {
@@ -47,6 +48,7 @@ const AvsluttSak = ({
   redigerbart,
   behandlingsstatus,
 }: avsluttSakProps) => {
+  const skjulAngiBehandlingsresultattype = !erFeatureToggleEnabled("melosys.sakstema");
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
 
   const behandlingstemaErTrygdetid = behandlingstema === TRYGDETID;
@@ -125,6 +127,9 @@ const AvsluttSak = ({
   };
 
   const skalViseSøknadenErInnvilget = () => {
+    if (skjulAngiBehandlingsresultattype) {
+      return false;
+    }
     if (
       sakstype === FTRL &&
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
@@ -141,6 +146,9 @@ const AvsluttSak = ({
   };
 
   const skalViseSøknadenErAvslått = () => {
+    if (skjulAngiBehandlingsresultattype) {
+      return false;
+    }
     return (
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
       [ARBEID_ETT_LAND_ØVRIG, YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, UNNTAK_MEDLEMSKAP].includes(behandlingstema)
