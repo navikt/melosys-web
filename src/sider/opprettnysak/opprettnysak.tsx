@@ -1,7 +1,10 @@
-import React, { Fragment, useState } from "react";
-import PT from "prop-types";
-import { connect } from "react-redux";
-import { FormSection, getFormValues, isValid, reduxForm } from "redux-form";
+import React, { FormEvent, Fragment, useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { FormSection, getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
+import { RootState } from "AppTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { AnyAction } from "redux";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../navFrontend";
 import * as Skjema from "../../felleskomponenter/skjema";
@@ -25,22 +28,29 @@ import "./opprettnysak.css";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 import { formOperations } from "../../ducks/form";
+import { OpprettReqDto } from "../../services/modules/fagsaker/fagsak";
+import { Oppgave } from "../../services/modules/types/oppgave";
 
-const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
-  .filter(({ kode }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
-  .filter(
-    ({ kode }) =>
-      kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND &&
-      kode !== MKV.Koder.behandlinger.behandlingstema.TRYGDETID
-  );
+const mapStateToProps = (state: RootState) => ({
+  formValues: getFormValues(KV.Form.OPPRETT_NY_SAK)(state) as KV.Form.OpprettNySakFormData,
+  initialValues: {
+    skalTilordnes: false,
+    behandlingstema: undefined,
+    soknadsinfo: { landkoder: [], erUkjenteEllerAlleEosLand: false },
+  },
+  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+  formIsValid: isValid(KV.Form.OPPRETT_NY_SAK)(state),
+});
 
-const ftrlBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
-  ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
-);
-
-const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
-  ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
-);
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
+  touchAll: () => dispatch(formOperations.touchAll(KV.Form.OPPRETT_NY_SAK)),
+  opprettSak: (body: OpprettReqDto) => dispatch(fagsakOperations.opprett(body)),
+});
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type OpprettNySakProps = {
+  tilForsiden: () => void;
+} & PropsFromRedux;
 
 const OpprettNySak = ({
   form,
@@ -52,13 +62,13 @@ const OpprettNySak = ({
   opprettSak,
   touchAll,
   formIsValid,
-}) => {
-  const [oppgaver, setOppgaver] = useState([]);
+}: InjectedFormProps<KV.Form.OpprettNySakFormData, OpprettNySakProps> & OpprettNySakProps) => {
+  const [oppgaver, setOppgaver] = useState<Oppgave[]>([]);
   const [bekreftPending, setBekreftPending] = useState(false);
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
 
-  const { behandlingstema, soknadsinfo, sakstype } = formValues;
-  const { landkoder, erUkjenteEllerAlleEosLand } = soknadsinfo;
+  const { behandlingstema, soknadsinfo, sakstype } = formValues || {};
+  const { landkoder, erUkjenteEllerAlleEosLand } = soknadsinfo || {};
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -68,7 +78,7 @@ const OpprettNySak = ({
     return formIsValid;
   };
 
-  const hentOppgaver = async (brukerID) => {
+  const hentOppgaver = async (brukerID: string) => {
     if (Utils.person.erGyldigFnr(brukerID) || Utils.person.erGyldigDnr(brukerID)) {
       try {
         const oppgaverResponse = await Api.Oppgaver.sok(brukerID);
@@ -83,7 +93,7 @@ const OpprettNySak = ({
     }
   };
 
-  const opprettNySak = (event) => {
+  const opprettNySak = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!validerForm()) return;
 
@@ -137,10 +147,10 @@ const OpprettNySak = ({
     };
   });
 
-  const oppgaverFinnes = radioValg.length > 0;
+  const oppgaverFinnes = oppgaver.length > 0;
 
   const valgbareSakstyper = MKV.KTObjects.sakstyper.filter(
-    ({ kode }) =>
+    ({ kode }: { kode: string }) =>
       kode === MKV.Koder.sakstyper.EU_EOS ||
       (folketrygdenToggle === "enabled" && kode === MKV.Koder.sakstyper.FTRL) ||
       kode === MKV.Koder.sakstyper.TRYGDEAVTALE
@@ -159,9 +169,9 @@ const OpprettNySak = ({
     }
   };
 
-  const settJournalpostID = (oppgaveID) => {
-    const { journalpostID } = oppgaver.find((oppgave) => oppgave.oppgaveID === oppgaveID);
-    change("journalpostID", journalpostID);
+  const settJournalpostID = (oppgaveID: string) => {
+    const oppgave = oppgaver.find((o) => o.oppgaveID === oppgaveID);
+    change("journalpostID", oppgave?.journalpostID);
   };
 
   const erLandvelgerDisabled =
@@ -200,7 +210,7 @@ const OpprettNySak = ({
                       label="Sakstype"
                       onChange={() => change("behandlingstema", undefined)}
                     >
-                      {valgbareSakstyper.map(({ kode, term }) => (
+                      {valgbareSakstyper.map(({ kode, term }: KTObject) => (
                         <option key={kode} value={kode}>
                           {term}
                         </option>
@@ -212,7 +222,7 @@ const OpprettNySak = ({
                       label="Behandlingstema"
                       onChange={() => change("soknadsinfo.erUkjenteEllerAlleEosLand", false)}
                     >
-                      {hentValgbareBehandlingstema().map(({ kode, term }) => (
+                      {hentValgbareBehandlingstema().map(({ kode, term }: KTObject) => (
                         <option key={kode} value={kode}>
                           {term}
                         </option>
@@ -303,40 +313,23 @@ const OpprettNySak = ({
   );
 };
 
-OpprettNySak.propTypes = {
-  form: PT.string.isRequired,
-  formValues: PT.object,
-  tilForsiden: PT.func.isRequired,
-  change: PT.func.isRequired,
-  error: PT.string,
-  feilmeldinger: PT.array.isRequired,
-  opprettSak: PT.func.isRequired,
-  touchAll: PT.func.isRequired,
-  formIsValid: PT.bool.isRequired,
-};
+const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
+  .filter(({ kode }: { kode: string }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
+  .filter(
+    ({ kode }: { kode: string }) =>
+      kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND &&
+      kode !== MKV.Koder.behandlinger.behandlingstema.TRYGDETID
+  );
 
-OpprettNySak.defaultProps = {
-  formValues: { soknadsinfo: {} },
-  error: undefined,
-};
+const ftrlBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
+  ({ kode }: { kode: string }) => kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+);
 
-const mapStateToProps = (state) => ({
-  formValues: getFormValues(KV.Form.OPPRETT_NY_SAK)(state),
-  initialValues: {
-    skalTilordnes: false,
-    behandlingstema: undefined,
-    soknadsinfo: { landkoder: [], erUkjenteEllerAlleEosLand: false },
-  },
-  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
-  formIsValid: isValid(KV.Form.OPPRETT_NY_SAK)(state),
-});
+const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
+  ({ kode }: { kode: string }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
+);
 
-const mapDispatchToProps = (dispatch) => ({
-  touchAll: () => dispatch(formOperations.touchAll(KV.Form.OPPRETT_NY_SAK)),
-  opprettSak: (body) => dispatch(fagsakOperations.opprett(body)),
-});
-
-const OpprettNySakForm = reduxForm({
+const OpprettNySakForm = reduxForm<KV.Form.OpprettNySakFormData, OpprettNySakProps>({
   form: KV.Form.OPPRETT_NY_SAK,
   enableReinitialize: true,
   destroyOnUnmount: true,
@@ -344,4 +337,4 @@ const OpprettNySakForm = reduxForm({
   validate: lagYupToReduxformErrorMapper(opprettNySakSchema),
 })(OpprettNySak);
 
-export default connect(mapStateToProps, mapDispatchToProps)(OpprettNySakForm);
+export default connector(OpprettNySakForm);
