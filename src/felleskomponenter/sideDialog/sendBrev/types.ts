@@ -1,9 +1,10 @@
-import { DokumenterV2 } from "../../../services/api";
+import * as Api from "../../../services/api";
 
 export interface SendBrevFormValues {
-  valgtMal?: DokumenterV2.TilgjengeligeMaler;
-  type?: string;
   mottaker?: string;
+  type?: string;
+  valgtMottaker?: Api.DokumenterV2.TilgjengeligMottaker;
+  valgtBrev?: Api.DokumenterV2.TilgjengeligBrev;
   organisasjonsnummer?: string;
   kontaktperson?: string;
   arbeidsgiver?: string;
