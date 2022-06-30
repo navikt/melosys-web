@@ -10,7 +10,6 @@ import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
 
 import MKV from "../../../../melosyskodeverk";
-import { useFeatureToggle } from "../../../../featuretoggle";
 
 const journalforingFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.JOURNALFORING);
 
@@ -37,13 +36,11 @@ const AvsenderFullmektig = ({
     settFeltInnhold("representantID", avsenderID || null);
   }, [avsenderID]);
 
-  const fullmektigPersonToggle = useFeatureToggle("melosys.journalforing.fullmektig-person");
-
   const IDFeltTastOppHandler = async (event: ChangeEvent<HTMLFormElement>) => {
     const { value } = event.target;
     if (Utils.organisasjon.erOrgnrGyldig(value)) {
       hentOgVisRepresentant(value);
-    } else if (fullmektigPersonToggle === "enabled" && Utils.person.erGyldigFnrEllerDnr(value?.replace(" ", ""))) {
+    } else if (Utils.person.erGyldigFnrEllerDnr(value?.replace(" ", ""))) {
       hentOgVisRepresentant(value.replace(" ", ""));
       settFeltInnhold("representantRepresenterer", MKV.Koder.representerer.BRUKER);
     } else {
@@ -62,7 +59,7 @@ const AvsenderFullmektig = ({
     <div className="avsender">
       <Skjema.Input
         feltNavn="avsenderID"
-        label={fullmektigPersonToggle === "enabled" ? "Fullmektigs org.nr. eller f.nr./d-nr." : "Fullmektigs org.nr."}
+        label="Fullmektigs org.nr. eller f.nr./d-nr."
         onKeyUp={IDFeltTastOppHandler}
         className="avsender__input"
       />
@@ -83,7 +80,7 @@ const AvsenderFullmektig = ({
           ))}
         </Skjema.Select>
       )}
-      {fullmektigPersonToggle === "enabled" && Utils.person.erGyldigFnrEllerDnr(avsenderID) && (
+      {Utils.person.erGyldigFnrEllerDnr(avsenderID) && (
         <Nav.Typo.Normaltekst>Fullmektig representerer bruker</Nav.Typo.Normaltekst>
       )}
     </div>

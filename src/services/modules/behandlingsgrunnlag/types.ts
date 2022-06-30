@@ -315,7 +315,7 @@ interface LuftfartBase {
   hjemmebaseLand: HjemmebaseLand;
   typeFlyvninger: TypeFlyvninger;
 }
-interface Soeknadsland {
+export interface Soeknadsland {
   landkoder: string[];
   erUkjenteEllerAlleEosLand: boolean;
 }

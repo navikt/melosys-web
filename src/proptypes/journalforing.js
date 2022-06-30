@@ -6,7 +6,8 @@ import { Kodeverk } from "./kodeverk";
 const JournalforingPropType = PT.shape({
   avsenderID: PT.string,
   brukerID: PT.string,
-  erBrukerAvsender: PT.bool,
+  virksomhetOrgnr: PT.string,
+  erHovedpartAvsender: PT.bool,
   hoveddokument: Dokument,
   mottattDato: PT.string,
   vedlegg: Vedlegg,
@@ -19,7 +20,7 @@ const JournalforingSkjemaVerdierPropType = PT.shape({
   brukerID: PT.string,
   brukerNavn: PT.string,
   dokumentID: PT.string,
-  erBrukerAvsender: PT.bool,
+  erHovedpartAvsender: PT.bool,
   hoveddokumentTittel: PT.string,
   mottattDato: PT.string,
   journalpostID: PT.string,

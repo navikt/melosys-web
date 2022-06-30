@@ -25,6 +25,7 @@ const JournalforingSED = ({
   sakstype,
   behandlingstema,
   form,
+  submitSpinner,
   kanSubmittes,
   avbrytJournalforing,
   handleSubmit,
@@ -61,7 +62,7 @@ const JournalforingSED = ({
         <Nav.Typo.Normaltekst>{behandlingstema.term}</Nav.Typo.Normaltekst>
       </Nav.Column>
     </Nav.Row>
-    <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} />
+    <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
   </form>
 );
 
@@ -71,6 +72,7 @@ JournalforingSED.propTypes = {
   sakstype: MPT.Kodeverk.isRequired,
   behandlingstema: MPT.Kodeverk.isRequired,
   form: PT.string.isRequired,
+  submitSpinner: PT.bool.isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
   kanSubmittes: PT.bool.isRequired,

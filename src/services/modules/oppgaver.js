@@ -7,5 +7,8 @@ export const sendPlukk = (body) => postAsJson(`${API_BASE_URL}${OPPGAVER}/plukk`
 
 export const tilbakelegg = (body) => postAsJson(`${API_BASE_URL}${OPPGAVER}/tilbakelegg`, body);
 
-export const sok = (fnrDnr, cacheDuration = 30) =>
-  cachedGetAsJson(`${API_BASE_URL}${OPPGAVER}/sok?fnr=${fnrDnr}`, cacheDuration);
+export const sok = (personIdent, orgnr, cacheDuration = 30) =>
+  cachedGetAsJson(
+    `${API_BASE_URL}${OPPGAVER}/sok?personIdent=${personIdent || ""}&orgnr=${orgnr || ""}`,
+    cacheDuration
+  );

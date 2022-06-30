@@ -11,7 +11,6 @@ import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
 import * as Mui from "../../../felleskomponenter/ui";
-import { VIRKSOMHET } from "./journalforingform";
 
 import AvsenderVelger from "./avsender";
 import LenkeListeVelger from "./lenkelistevelger";
@@ -24,6 +23,8 @@ import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 
 import "./informasjon.css";
+
+const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
 const dokumenttitler = [
   { term: "Arbeidsforhold" },
@@ -81,10 +82,10 @@ class Informasjon extends Component {
   hentOgVisBruker = async (brukerID) => {
     const { kopierBrukerTilAvsender, tomAvsender } = this;
     const { settFeltInnhold, hentFagsakListe, journalforingSkjemaVerdier } = this.props;
-    const brukerErAvsender = journalforingSkjemaVerdier.avsenderType === MKV.Koder.avsendertyper.PERSON;
+    const journalfoeringGjelderBruker = journalforingSkjemaVerdier.journalforingGjelder === BRUKER;
 
     settFeltInnhold("brukerNavn", null);
-    if (brukerErAvsender) {
+    if (journalfoeringGjelderBruker) {
       tomAvsender();
     }
 
@@ -98,7 +99,7 @@ class Informasjon extends Component {
     }
     settFeltInnhold("brukerNavn", sammensattNavn);
     await hentFagsakListe(brukerID);
-    if (brukerErAvsender) {
+    if (journalfoeringGjelderBruker) {
       kopierBrukerTilAvsender(brukerID, sammensattNavn);
     }
   };

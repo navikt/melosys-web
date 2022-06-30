@@ -22,8 +22,7 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import JournalforingSchema from "./journalforingSchema";
 import "./journalforingform.css";
 
-export const BRUKER = "Bruker";
-export const VIRKSOMHET = "Virksomhet";
+const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
 export const JournalforingForm = (props) => {
   const {
@@ -37,6 +36,7 @@ export const JournalforingForm = (props) => {
     settFeltInnhold,
     settJournalforingHensikt,
     avbrytJournalforing,
+    submitSpinner,
     kanSubmittes,
     handleSubmit,
   } = props;
@@ -74,7 +74,7 @@ export const JournalforingForm = (props) => {
         </Nav.AlertStripeFeil>
       )}
       <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
-      <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} />
+      <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
     </form>
   );
 };
@@ -89,6 +89,7 @@ JournalforingForm.propTypes = {
   submitFailed: PT.bool.isRequired,
   settFeltInnhold: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
+  submitSpinner: PT.bool.isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
   kanSubmittes: PT.bool.isRequired,
@@ -115,9 +116,10 @@ const mapStateToProps = (state) => ({
     avsenderType: journalforingSelectors.AvsenderTypeSelector(state),
     behandlingstype: null,
     saksnummer: "",
-    journalforingGjelder: BRUKER,
+    journalforingGjelder: journalforingSelectors.VirksomhetOrgnrSelector(state) ? VIRKSOMHET : BRUKER,
     brukerID: journalforingSelectors.BrukerIDSelector(state),
-    erBrukerAvsender: journalforingSelectors.ErBrukerAvsenderSelector(state),
+    virksomhetOrgnr: journalforingSelectors.VirksomhetOrgnrSelector(state),
+    erHovedpartAvsender: journalforingSelectors.ErHovedpartAvsenderSelector(state),
     avsenderID: journalforingSelectors.AvsenderIDSelector(state),
     avsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
     arbeidsgiverID: null,

@@ -6,6 +6,11 @@ import MKV from "../../../melosyskodeverk";
 
 import { KnyttTilSak } from "./knyttTilSak";
 
+jest.mock("../../../featuretoggle", () => ({
+  __esModule: true,
+  erFeatureToggleEnabled: () => false,
+}));
+
 describe("KnyttTilSak toggle = disabled", () => {
   let props = null;
 

@@ -103,6 +103,10 @@ export interface OpprettNySakFormData {
   brukerID: string;
   skalTilordnes: boolean;
   oppgaveID: string;
+  hovedpart: string;
+  brukerNavn: string;
+  virksomhetOrgnr: string;
+  virksomhetNavn: string;
 }
 export const VURDERING_VIDERESEND = "vurdering_videresend";
 export const VURDER_UTPEKING = "vurder_utpeking";

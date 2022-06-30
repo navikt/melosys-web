@@ -3,15 +3,16 @@ import { connect } from "react-redux";
 import PT from "prop-types";
 import { withRouter } from "react-router-dom";
 
+import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 
-import Personlinje from "../../../felleskomponenter/personlinje";
-import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
+import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
+import SideDialog, { fanerUtenBucOgSed, defaultFaner } from "../../../felleskomponenter/sideDialog";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
-import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
+import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
@@ -164,6 +165,7 @@ class Saksbehandling extends Component {
       lovvalgsperiodeTom,
       visOppfriskModal,
       arbeidsland,
+      hovedpartRolle,
       behandlingsgrunnlagPeriodeFom,
       behandlingsgrunnlagPeriodeTom,
       behandlingsgrunnlagMottaksdato,
@@ -180,26 +182,30 @@ class Saksbehandling extends Component {
     if (Utils._isNil(redigerbart)) return null;
     if (!saksopplysningerLastet) return null;
 
+    const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+
     return (
       <>
-        <Personlinje />
+        <Informasjonlinje />
         <div id="main-container" className="main-container">
           <div className="saksbehandling">
             <Nav.Container fluid>
               <Nav.Row>
                 <Nav.Column xs="7">
-                  <Saksopplysninger
-                    behandlingID={behandlingID}
-                    visOppfriskModal={visOppfriskModal}
-                    lagreVilkarHandler={this.props.lagreVilkar}
-                    lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
-                    lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
-                    lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
-                    oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
-                    lagreAllData={this.props.lagreAllData}
-                    tilForsiden={tilForsiden}
-                    startOgVisOppfriskModal={startOgVisOppfriskModal}
-                  />
+                  {!hovedpartErVirksomhet && (
+                    <Saksopplysninger
+                      behandlingID={behandlingID}
+                      visOppfriskModal={visOppfriskModal}
+                      lagreVilkarHandler={this.props.lagreVilkar}
+                      lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
+                      lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
+                      lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
+                      oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
+                      lagreAllData={this.props.lagreAllData}
+                      tilForsiden={tilForsiden}
+                      startOgVisOppfriskModal={startOgVisOppfriskModal}
+                    />
+                  )}
                 </Nav.Column>
                 <Nav.Column xs="5">
                   <Oppsummering
@@ -219,6 +225,7 @@ class Saksbehandling extends Component {
                     redigerbart={redigerbart}
                     dokumentOversikt={dokumentOversikt}
                     dokumenter={dokumenter}
+                    faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                   />
                 </Nav.Column>
               </Nav.Row>
@@ -232,6 +239,7 @@ class Saksbehandling extends Component {
 
 Saksbehandling.propTypes = {
   behandlingID: PT.number.isRequired,
+  hovedpartRolle: PT.string.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   fagsak: MPT.Fagsak,
@@ -317,6 +325,7 @@ const mapStateToProps = (state) => ({
   behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
   anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(

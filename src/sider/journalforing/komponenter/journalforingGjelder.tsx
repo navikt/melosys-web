@@ -5,6 +5,7 @@ import { RootState } from "AppTypes";
 import { Action } from "redux";
 import { change } from "redux-form";
 
+import MKV from "../../../melosyskodeverk";
 import * as Ikoner from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
@@ -12,13 +13,15 @@ import * as Nav from "../../../navFrontend";
 import Komponent from "./komponent";
 import { formSelectors } from "../../../ducks/form";
 import { journalforingSelectors } from "../../../ducks/journalforing";
-import { BRUKER, VIRKSOMHET } from "./journalforingform";
 
 import "./journalforingGjelder.css";
 
+const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
+
 const mapStateToProps = (state: RootState) => ({
   journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
-  defaultBrukerID: journalforingSelectors.BrukerIDSelector(state),
+  journalpostBrukerID: journalforingSelectors.BrukerIDSelector(state),
+  journalpostVirksomhetOrgnr: journalforingSelectors.VirksomhetOrgnrSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -29,16 +32,22 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const JournalforingGjelder = ({ journalforingGjelder, oppdaterFelt, defaultBrukerID }: PropsFromRedux) => {
+const JournalforingGjelder = ({
+  journalforingGjelder,
+  oppdaterFelt,
+  journalpostBrukerID,
+  journalpostVirksomhetOrgnr,
+}: PropsFromRedux) => {
   const handleClick = (event: SyntheticEvent<EventTarget>, value: string) => {
     oppdaterFelt("journalforingGjelder", value);
     if (value === BRUKER) {
       oppdaterFelt("ikkeSendForvaltingsmelding", false);
-      oppdaterFelt("brukerID", defaultBrukerID);
+      oppdaterFelt("brukerID", journalpostBrukerID);
       oppdaterFelt("virksomhetOrgnr", null);
       oppdaterFelt("virksomhetNavn", null);
     } else {
       oppdaterFelt("ikkeSendForvaltingsmelding", true);
+      oppdaterFelt("virksomhetOrgnr", journalpostVirksomhetOrgnr);
       oppdaterFelt("brukerID", null);
       oppdaterFelt("brukerNavn", null);
     }

@@ -53,20 +53,21 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   if (!oppsummering || !fagsak?.sakstype) return <div />;
 
-  const { saksnummer, sakstype, registrertDato } = fagsak;
+  const { saksnummer, sakstype, registrertDato, hovedpartRolle } = fagsak;
   const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist, behandlingstema } = oppsummering;
   const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
   const behandlingsgrunnlagperiode = `${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`;
 
-  const landStorBokstav = (land: KTObject) => (land ? storeForbokstaverForLand(land.term) : "Ukjent");
+  const landStorBokstav = (land: KTObject) => (land?.term ? storeForbokstaverForLand(land.term) : "Ukjent");
 
   const landTilSetning = (land: KTObject[]) =>
     land && land.length > 0
-      ? arrayTilKonjunksjon(land.map((enkeltLand) => storeForbokstaverForLand(enkeltLand.term)))
+      ? arrayTilKonjunksjon(land.map((enkeltLand) => storeForbokstaverForLand(enkeltLand.term || "")))
       : "Ukjent";
 
   const erSed = behandlingstype && KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.SED;
   const erTrygdeavtale = sakstype && KV.objektTilKode(sakstype) === MKV.Koder.sakstyper.TRYGDEAVTALE;
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   const tabellEnKolonne = (data: string[][]) => {
     const rows: JSX.Element[] = [];
@@ -110,15 +111,22 @@ const Oppsummering = (props: OppsummeringProps) => {
   };
 
   const renderTabell = () => {
-    const col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", behandlingsgrunnlagperiode]];
-    if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
-    col1.push(["Land", erSed ? landStorBokstav(lovvalgsland) : landTilSetning(arbeidsland)]);
+    let col1;
+    let col2;
+    if (hovedpartErVirksomhet) {
+      col1 = [["Beh. opprettet", formatterDatoTilNorsk(registrertDato)]];
+      col2 = [["Sist oppdatert", formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`]];
+    } else {
+      col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", behandlingsgrunnlagperiode]];
+      if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
+      col1.push(["Land", erSed ? landStorBokstav(lovvalgsland) : landTilSetning(arbeidsland)]);
 
-    const col2 = [
-      ["Søknad mottatt", mottattDato || "-"],
-      ["Beh. opprettet", formatterDatoTilNorsk(registrertDato)],
-      ["Sist oppdatert", formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`],
-    ];
+      col2 = [
+        ["Søknad mottatt", mottattDato || "-"],
+        ["Beh. opprettet", formatterDatoTilNorsk(registrertDato)],
+        ["Sist oppdatert", formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`],
+      ];
+    }
 
     return isLitenSkjerm ? tabellEnKolonne(col1.concat(col2)) : tabellToKolonner(col1, col2);
   };

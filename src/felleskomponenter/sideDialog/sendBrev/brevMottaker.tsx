@@ -18,7 +18,11 @@ import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 import { SendBrevFormValues } from "./types";
 
-const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
+const { BRUKER, ARBEIDSGIVER, VIRKSOMHET } = KV.Koder.MottakerRolle;
+
+const erBruker = (rolle: string | undefined) => rolle === BRUKER;
+const erArbeidsgiverEllerVirksomhet = (rolle: string | undefined) =>
+  rolle && [ARBEIDSGIVER, VIRKSOMHET].includes(rolle);
 
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
@@ -58,17 +62,16 @@ const BrevMottaker = ({
     organisasjonsAdresse?: Organisasjon;
   }>();
 
-  const finnMottakerFraValgtMal = (uuid?: string) => {
-    if (!formValues?.valgtMal) return undefined;
-    return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
+  const valgtMottaker = () => {
+    if (!formValues?.valgtMal || !formValues?.mottaker) return undefined;
+    return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === formValues.mottaker);
   };
-  const mottakerErBruker = finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === BRUKER;
-  const mottakerErArbeidsgiver =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER &&
-    !finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
+
+  const mottakerErBruker = erBruker(valgtMottaker()?.rolle);
+  const mottakerErArbeidsgiverEllerVirksomhet =
+    erArbeidsgiverEllerVirksomhet(valgtMottaker()?.rolle) && !valgtMottaker()?.orgnrSettesAvSaksbehandler;
   const mottakerOrgNrSettesAvSaksbehandler =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER &&
-    finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
+    erArbeidsgiverEllerVirksomhet(valgtMottaker()?.rolle) && valgtMottaker()?.orgnrSettesAvSaksbehandler;
 
   const arbeidsgiverHjelptekst =
     "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen " +
@@ -101,19 +104,19 @@ const BrevMottaker = ({
     setMottakerFeil(undefined);
     setMuligeMottakere(undefined);
     if (!formValues || !formValues.type) return;
-    const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
+    const mottaker = valgtMottaker();
     if (!mottaker) return;
-    if (mottaker.rolle === BRUKER) {
+    if (erBruker(mottaker.rolle)) {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
       else {
         setAdresse({ mottakerAdresse: mottaker?.adresser ? mottaker.adresser[0] : undefined });
         hentMuligeMottakere(formValues.type, undefined);
       }
     }
-    if (mottaker.rolle === ARBEIDSGIVER && mottaker.orgnrSettesAvSaksbehandler) {
+    if (erArbeidsgiverEllerVirksomhet(mottaker.rolle) && mottaker.orgnrSettesAvSaksbehandler) {
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid, type: formValues.type });
     }
-    if (mottaker.rolle === ARBEIDSGIVER && !mottaker.orgnrSettesAvSaksbehandler) {
+    if (erArbeidsgiverEllerVirksomhet(mottaker.rolle) && !mottaker.orgnrSettesAvSaksbehandler) {
       if (formValues?.arbeidsgiver) {
         setAdresse({
           mottakerAdresse:
@@ -148,6 +151,7 @@ const BrevMottaker = ({
           </option>
         ))}
       </Skjema.Select>
+
       {mottakerErBruker && (
         <Nav.Row>
           <Nav.Column xs="12">
@@ -157,7 +161,7 @@ const BrevMottaker = ({
         </Nav.Row>
       )}
 
-      {mottakerErArbeidsgiver && (
+      {mottakerErArbeidsgiverEllerVirksomhet && (
         <Nav.Row>
           {mottakerFeil ? (
             <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>
@@ -165,34 +169,34 @@ const BrevMottaker = ({
             <Nav.Column xs="12">
               <Nav.Typo.Normaltekst style={{ marginBottom: "0.5rem" }} tag="div">
                 Velg:
-                <Nav.Hjelpetekst
-                  className="hjelpetekst"
-                  tittel={arbeidsgiverHjelptekst}
-                  type={Nav.PopoverOrientering.Venstre}
-                >
-                  {arbeidsgiverHjelptekst.split("\n").map((paragraf) => (
-                    <p key={Utils._uuid()}>{paragraf}</p>
-                  ))}
-                </Nav.Hjelpetekst>
+                {valgtMottaker()?.rolle === ARBEIDSGIVER && (
+                  <Nav.Hjelpetekst
+                    className="hjelpetekst"
+                    tittel={arbeidsgiverHjelptekst}
+                    type={Nav.PopoverOrientering.Venstre}
+                  >
+                    {arbeidsgiverHjelptekst.split("\n").map((paragraf) => (
+                      <p key={Utils._uuid()}>{paragraf}</p>
+                    ))}
+                  </Nav.Hjelpetekst>
+                )}
               </Nav.Typo.Normaltekst>
-              {finnMottakerFraValgtMal(formValues.mottaker)?.adresser?.map(
-                (virksomhet: DokumenterV2.MottakerAdresse) => (
-                  <Fragment key={Utils._uuid()}>
-                    <Skjema.Radio
-                      className="arbeidsgiver_radio"
-                      feltNavn="arbeidsgiver"
-                      label={`${virksomhet.tittel.mottakerNavn} (org.nr. ${virksomhet.tittel.orgnr})`}
-                      id={`arbeidsgiver.${virksomhet.tittel.orgnr}`}
-                      key={`arbeidsgiver.${virksomhet.tittel.orgnr}`}
-                      value={virksomhet.tittel.orgnr}
-                      disabled={!redigerbart}
-                    />
-                    {formValues.arbeidsgiver === virksomhet.tittel.orgnr && adresse?.mottakerAdresse && (
-                      <MottakerAdresse {...adresse?.mottakerAdresse} className="arbeidsgiveradresse" />
-                    )}
-                  </Fragment>
-                )
-              )}
+              {valgtMottaker()?.adresser?.map((virksomhet: DokumenterV2.MottakerAdresse) => (
+                <Fragment key={Utils._uuid()}>
+                  <Skjema.Radio
+                    className="arbeidsgiver_radio"
+                    feltNavn="arbeidsgiver"
+                    label={`${virksomhet.tittel.mottakerNavn} (org.nr. ${virksomhet.tittel.orgnr})`}
+                    id={`arbeidsgiver.${virksomhet.tittel.orgnr}`}
+                    key={`arbeidsgiver.${virksomhet.tittel.orgnr}`}
+                    value={virksomhet.tittel.orgnr}
+                    disabled={!redigerbart}
+                  />
+                  {formValues.arbeidsgiver === virksomhet.tittel.orgnr && adresse?.mottakerAdresse && (
+                    <MottakerAdresse {...adresse?.mottakerAdresse} className="arbeidsgiveradresse" />
+                  )}
+                </Fragment>
+              ))}
             </Nav.Column>
           )}
         </Nav.Row>

@@ -1,4 +1,4 @@
-import React, { FormEvent, Fragment, useState } from "react";
+import React, { FormEvent, Fragment, useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { FormSection, getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 import { RootState } from "AppTypes";
@@ -15,13 +15,14 @@ import * as Api from "../../services/api";
 import * as Utils from "../../utils";
 import { fagsakOperations } from "../../ducks/fagsaker";
 
-import BrukerNavnSkjema from "../../felleskomponenter/brukerNavnSkjema";
 import Knapperad from "../../felleskomponenter/knapperad";
 import EnkeltDato from "../../felleskomponenter/datoOmrade/enkeltDato";
 
 import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
+import { OrganisasjonOperations } from "../../ducks/organisasjoner";
+import { hentSammensattNavn } from "../../graphql/navn";
 import { lagYupToReduxformErrorMapper } from "../../yup";
-import { useFeatureToggle } from "../../featuretoggle";
+import { erFeatureToggleEnabled } from "../../featuretoggle";
 import opprettNySakSchema from "./opprettnysakSchema";
 
 import "./opprettnysak.css";
@@ -45,6 +46,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.OPPRETT_NY_SAK)),
   opprettSak: (body: OpprettReqDto) => dispatch(fagsakOperations.opprett(body)),
+  sokOrgnr: (orgnr: string) => dispatch(OrganisasjonOperations.hent(orgnr)),
 });
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -53,7 +55,6 @@ type OpprettNySakProps = {
 } & PropsFromRedux;
 
 const OpprettNySak = ({
-  form,
   formValues,
   tilForsiden,
   change,
@@ -62,36 +63,96 @@ const OpprettNySak = ({
   opprettSak,
   touchAll,
   formIsValid,
+  sokOrgnr,
 }: InjectedFormProps<KV.Form.OpprettNySakFormData, OpprettNySakProps> & OpprettNySakProps) => {
   const [oppgaver, setOppgaver] = useState<Oppgave[]>([]);
   const [bekreftPending, setBekreftPending] = useState(false);
-  const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
+  const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
+  const [folketrygdenToggleEnabled, setFolketrygdenToggleEnabled] = useState(false);
+  const [behandleAlleSakerToggleEnabled, setBehandleAlleSakerToggleEnabled] = useState(false);
 
-  const { behandlingstema, soknadsinfo, sakstype } = formValues || {};
+  const { behandlingstema, soknadsinfo, sakstype, hovedpart, brukerID, brukerNavn, virksomhetOrgnr, virksomhetNavn } =
+    formValues || {};
   const { landkoder, erUkjenteEllerAlleEosLand } = soknadsinfo || {};
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
-
-  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
 
   const validerForm = () => {
     touchAll();
     return formIsValid;
   };
 
-  const hentOppgaver = async (brukerID: string) => {
-    if (Utils.person.erGyldigFnr(brukerID) || Utils.person.erGyldigDnr(brukerID)) {
+  const hentOppgaver = async (value: string) => {
+    if (Utils.person.erGyldigFnrEllerDnr(value) || Utils.organisasjon.erOrgnrGyldig(value)) {
       try {
-        const oppgaverResponse = await Api.Oppgaver.sok(brukerID);
+        const oppgaverResponse = await Api.Oppgaver.sok(
+          Utils.person.erGyldigFnrEllerDnr(value) ? value : null,
+          Utils.organisasjon.erOrgnrGyldig(value) ? value : null
+        );
         setOppgaver(oppgaverResponse);
-        setOppgaverForsoktHentetFraEksisterendePerson(true);
+        setOppgaverForsoktHentet(true);
       } catch (e) {
         setOppgaver([]);
       }
     } else {
       setOppgaver([]);
-      setOppgaverForsoktHentetFraEksisterendePerson(false);
+      setOppgaverForsoktHentet(false);
     }
   };
+
+  const hentBruker = async (personIdent: string) => {
+    if (Utils.person.erGyldigFnrEllerDnr(personIdent)) {
+      const navn = await hentSammensattNavn(personIdent);
+      change("brukerNavn", navn);
+    } else {
+      change("brukerNavn", null);
+    }
+
+    await hentOppgaver(personIdent);
+  };
+
+  const hentVirksomhet = async (orgnr: string) => {
+    if (Utils.organisasjon.erOrgnrGyldig(orgnr)) {
+      const response = await sokOrgnr(orgnr);
+      const navn = response?.data.navn;
+      change("virksomhetNavn", navn);
+    } else {
+      change("virksomhetNavn", null);
+    }
+
+    await hentOppgaver(virksomhetOrgnr);
+  };
+
+  useEffect(() => {
+    erFeatureToggleEnabled("melosys.folketrygden.mvp").then((res) => {
+      setFolketrygdenToggleEnabled(res);
+    });
+    erFeatureToggleEnabled("melosys.behandle_alle_saker").then((res) => {
+      setBehandleAlleSakerToggleEnabled(res);
+    });
+  }, []);
+
+  useEffect(() => {
+    hentBruker(brukerID);
+  }, [brukerID]);
+
+  useEffect(() => {
+    hentVirksomhet(virksomhetOrgnr);
+  }, [virksomhetOrgnr]);
+
+  useEffect(() => {
+    if (hovedpart === BRUKER) {
+      change("virksomhetOrgnr", null);
+      change("virksomhetNavn", null);
+    }
+    if (hovedpart === VIRKSOMHET) {
+      change("brukerID", null);
+      change("brukerNavn", null);
+    }
+    change("oppgaveID", null);
+    change("journalpostID", null);
+    setOppgaver([]);
+    setOppgaverForsoktHentet(false);
+  }, [hovedpart]);
 
   const opprettNySak = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -152,7 +213,7 @@ const OpprettNySak = ({
   const valgbareSakstyper = MKV.KTObjects.sakstyper.filter(
     ({ kode }: { kode: string }) =>
       kode === MKV.Koder.sakstyper.EU_EOS ||
-      (folketrygdenToggle === "enabled" && kode === MKV.Koder.sakstyper.FTRL) ||
+      (folketrygdenToggleEnabled && kode === MKV.Koder.sakstyper.FTRL) ||
       kode === MKV.Koder.sakstyper.TRYGDEAVTALE
   );
 
@@ -174,9 +235,37 @@ const OpprettNySak = ({
     change("journalpostID", oppgave?.journalpostID);
   };
 
+  // eslint-disable-next-line react/prop-types
+  const IdentOgNavn = ({
+    tittel,
+    feltNavn,
+    label,
+    navn,
+  }: {
+    tittel: string;
+    feltNavn: string;
+    label: string;
+    navn: string;
+  }) => (
+    <>
+      <Mui.Undertittel tekst={tittel} ikon={Ikoner.AccountCircle} className="undertittel" understrek />
+      <div className="innrykk marginBottom">
+        <Skjema.Input feltNavn={feltNavn} label={label} />
+        {!Utils._isEmpty(navn) && (
+          <span>
+            <Nav.Typo.Element className="navnTittel">Navn:</Nav.Typo.Element>
+            <Nav.Typo.Normaltekst className="navn">{navn}</Nav.Typo.Normaltekst>
+          </span>
+        )}
+      </div>
+    </>
+  );
   const erLandvelgerDisabled =
     erUkjenteEllerAlleEosLand && behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
 
+  const hovedpartErBruker = hovedpart === BRUKER;
+
+  // @ts-ignore
   return (
     <form className="opprettnysak" onSubmit={opprettNySak}>
       <Nav.Container fluid>
@@ -190,13 +279,45 @@ const OpprettNySak = ({
             <Nav.Panel>
               <Nav.Row>
                 <Nav.Column xs="8">
-                  <Mui.Undertittel
-                    tekst="Informasjon om bruker"
-                    ikon={Ikoner.AccountCircle}
-                    className="undertittel"
-                    understrek
-                  />
-                  <BrukerNavnSkjema className="brukerNavnSkjema innrykk" form={form} onHentBruker={hentOppgaver} />
+                  {behandleAlleSakerToggleEnabled && (
+                    <>
+                      <Mui.Undertittel
+                        tekst="Hvem skal saken opprettes på?"
+                        ikon={Ikoner.FindAccount}
+                        className="undertittel"
+                        understrek
+                      />
+                      <Nav.RadioPanelGruppe
+                        name="hovedpart"
+                        legend=""
+                        radios={[
+                          { label: BRUKER, value: BRUKER, id: BRUKER },
+                          { label: VIRKSOMHET, value: VIRKSOMHET, id: VIRKSOMHET },
+                        ]}
+                        checked={hovedpart}
+                        // @ts-ignore
+                        onChange={(event) => change("hovedpart", event.target.value)}
+                        className="hovedpart innrykk"
+                      />
+                    </>
+                  )}
+
+                  {hovedpartErBruker ? (
+                    <IdentOgNavn
+                      tittel="Informasjon om bruker"
+                      feltNavn="brukerID"
+                      label="Brukers f.nr eller d.nr:"
+                      navn={brukerNavn}
+                    />
+                  ) : (
+                    <IdentOgNavn
+                      tittel="Informasjon om virksomhet"
+                      feltNavn="virksomhetOrgnr"
+                      label="Organisasjonsnummer:"
+                      navn={virksomhetNavn}
+                    />
+                  )}
+
                   <Mui.Undertittel
                     tekst="Informasjon om sak"
                     ikon={Ikoner.Filenew}
@@ -228,7 +349,7 @@ const OpprettNySak = ({
                         </option>
                       ))}
                     </Skjema.Select>
-                    {soknadErValgt && (
+                    {soknadErValgt && hovedpartErBruker && (
                       <Fragment>
                         <Nav.Typo.Normaltekst>Søknadsperiode</Nav.Typo.Normaltekst>
                         <FormSection name="soknadsinfo">
@@ -281,11 +402,19 @@ const OpprettNySak = ({
                         notify={settJournalpostID}
                       />
                     )}
-                    {!oppgaverFinnes && !oppgaverForsoktHentetFraEksisterendePerson && (
-                      <Nav.AlertStripeInfo>Skriv inn brukers f.nr eller d.nr for å hente oppgaver.</Nav.AlertStripeInfo>
+                    {!oppgaverFinnes && !oppgaverForsoktHentet && (
+                      <Nav.AlertStripeInfo>
+                        {hovedpartErBruker
+                          ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
+                          : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver."}
+                      </Nav.AlertStripeInfo>
                     )}
-                    {!oppgaverFinnes && oppgaverForsoktHentetFraEksisterendePerson && (
-                      <Nav.AlertStripeAdvarsel>Det finnes ingen oppgaver på denne personen.</Nav.AlertStripeAdvarsel>
+                    {!oppgaverFinnes && oppgaverForsoktHentet && (
+                      <Nav.AlertStripeAdvarsel>
+                        {hovedpartErBruker
+                          ? "Det finnes ingen oppgaver på denne personen."
+                          : "Det finnes ingen oppgaver på denne organisasjonen."}
+                      </Nav.AlertStripeAdvarsel>
                     )}
                     <Feilmeldinger feilmeldinger={feilmeldinger} />
                     <Skjema.Checkbox
@@ -328,6 +457,8 @@ const ftrlBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
 const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
   ({ kode }: { kode: string }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
 );
+
+const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
 const OpprettNySakForm = reduxForm<KV.Form.OpprettNySakFormData, OpprettNySakProps>({
   form: KV.Form.OPPRETT_NY_SAK,

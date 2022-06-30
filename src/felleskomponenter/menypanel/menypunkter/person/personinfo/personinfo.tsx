@@ -5,7 +5,7 @@ import bem from "../../../../../bemUtils";
 import EnkeltDato from "../../../../datoOmrade/enkeltDato";
 import Sivilstand from "./sivilstand/sivilstand";
 import Personstatus from "./personstatus/personstatus";
-import useHentPersonopplysninger from "../../../../personlinje/useHentpersonopplysninger";
+import useHentPersonopplysninger from "../../../../informasjonlinje/useHentpersonopplysninger";
 
 import { useHentPersoninfoQuery } from "./hentPersoninfo.generated";
 

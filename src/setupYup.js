@@ -4,6 +4,7 @@ import * as Utils from "./utils";
 
 import MKV from "./melosyskodeverk";
 import * as KV from "./kodeverk";
+import * as StringUtils from "./utils/streng";
 
 const { TIDLIGERE_ENN_FOM, SKRIV_INN_GYLDIG_DATO, UTENFOR_SOKNADSPERIODEN } = KV.Feilmeldinger;
 
@@ -82,7 +83,7 @@ addMethod(string, "erIkkeBlank", function (message) {
 addMethod(string, "erIkkeBlankHtml", function (message) {
   return this.test("er ikke blank html", message, function (value) {
     if (Utils._isEmpty(value)) return false;
-    return Boolean(value.replace("<p></p>", "").replace("\n", "").trim());
+    return StringUtils.harStrengInnhold(value);
   });
 });
 

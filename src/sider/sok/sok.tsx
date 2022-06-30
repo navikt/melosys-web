@@ -1,19 +1,36 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import PT from "prop-types";
+import { connect, ConnectedProps } from "react-redux";
+import { RootState } from "AppTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
+
+import * as Nav from "../../navFrontend";
+import * as Utils from "../../utils";
 
 import withErrorHandling from "../../felleskomponenter/withErrorHandling";
-import * as Nav from "../../navFrontend";
-import * as MPT from "../../proptypes";
-import * as Utils from "../../utils";
 import Fagsak from "../../felleskomponenter/oppgaveliste/fagsak";
-import SorterbarListe from "../../felleskomponenter/sorterbarListe/sorterbarListe";
-
+import SorterbarListe from "../../felleskomponenter/sorterbarListe";
 import { sokSelectors, sokOperations } from "../../ducks/sok";
 
 import "./sok.css";
 
-export const Sok = ({ sokResultat, children, sok }) => {
+const mapStateToProps = (state: RootState) => ({
+  sokResultat: sokSelectors.FagsakSokSelector(state),
+});
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  sok: (sokefrase: string) => dispatch(sokOperations.sok(sokefrase)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export type SokProps = PropsFromRedux & {
+  children?: JSX.Element;
+};
+
+export const Sok = ({ sokResultat, children, sok }: SokProps) => {
   const sokefrase = sessionStorage.getItem("sokefrase");
 
   useEffect(() => {
@@ -28,12 +45,17 @@ export const Sok = ({ sokResultat, children, sok }) => {
 
   if (!sokResultat) return null;
 
-  const sokeFraseErFnrDnr = Utils.person.erGyldigFnr(sokefrase);
-  const ingenTreff = (
-    <Nav.Panel>
-      Fant ingen saker knyttet til {sokeFraseErFnrDnr ? "f.nr./d-nr." : "saksnummer"} {sokefrase}.
-    </Nav.Panel>
-  );
+  const enhet = (value: string | null): string => {
+    if (Utils.person.erGyldigFnr(value)) {
+      return `f.nr./d-nr. ${value}`;
+    }
+    if (Utils.organisasjon.erOrgnrGyldig(value)) {
+      return `org.nr. ${value}`;
+    }
+    return `saksnummer ${value}`;
+  };
+
+  const ingenTreff = <Nav.Panel>Fant ingen saker knyttet til {enhet(sokefrase)}.</Nav.Panel>;
 
   return (
     <div className="sok">
@@ -43,8 +65,8 @@ export const Sok = ({ sokResultat, children, sok }) => {
           <section className="sokresultat">
             <h1>Saksoversikt</h1>
             <h2>
-              Resultater for {sokeFraseErFnrDnr ? "f.nr./d-nr." : "saksnummer"} {sokefrase}
-              {sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
+              Resultater for {enhet(sokefrase)}
+              {sokResultat.length > 0 ? ` - ${sokResultat[0].navn}` : undefined}
             </h2>
             {sokResultat.length > 0 && (
               <SorterbarListe
@@ -64,28 +86,10 @@ export const Sok = ({ sokResultat, children, sok }) => {
   );
 };
 
-Sok.propTypes = {
-  sokResultat: MPT.FagsakSokListe.isRequired,
-  children: PT.node,
-  sok: PT.func.isRequired,
-};
-
-Sok.defaultProps = {
-  children: null,
-};
-
-const mapStateToProps = (state) => ({
-  sokResultat: sokSelectors.FagsakSokSelector(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  sok: (sokefrase) => dispatch(sokOperations.sok(sokefrase)),
-});
-
 const kontekster = [
   { navn: "saksbehandler", melding: "Det har oppstått en feil: Kunne ikke hente saksbehandler." },
   { navn: "fagsaker", melding: "Det har oppstått en feil: Kunne ikke hente fagsaker" },
   { navn: "oppgaver", melding: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" },
 ];
 
-export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(Sok));
+export default withErrorHandling(kontekster, connector(Sok));

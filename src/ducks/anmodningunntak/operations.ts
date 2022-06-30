@@ -26,6 +26,25 @@ export function bestill(
   );
 }
 
+export function svar(
+  behandlingID: number,
+  data: Api.Saksflyt.Anmodningsperioder.AnmodningOmUnntakSvarReqDto
+): AppThunk<Promise<Types.Action>, Types.Action> {
+  return doThenDispatch(
+    () => Api.Saksflyt.Anmodningsperioder.svar(behandlingID, data),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    {
+      success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
+        dispatch(navigeringOperations.tilForsiden());
+      },
+    }
+  );
+}
+
 export function reset(): AppThunk<Types.Action, Types.Action> {
   return (dispatch) => dispatch(Actions.reset());
 }

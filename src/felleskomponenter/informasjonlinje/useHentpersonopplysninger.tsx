@@ -1,11 +1,11 @@
-import "./personlinje.css";
+import "./informasjonlinje.css";
 import MKV from "../../melosyskodeverk";
 import * as StringUtils from "../../utils/streng";
 import * as PersonUtils from "../../utils/person";
 import { useHentPersonopplysningerQuery } from "./hentpersonopplysninger.generated";
 import { KjoennType } from "../../graphql";
 
-type PersonopplysningerProps = {
+export type PersonopplysningerProps = {
   navn: string;
   kjoenn: KjoennType;
   erDoed: boolean;
