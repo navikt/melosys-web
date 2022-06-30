@@ -22,18 +22,47 @@ import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
 import { hentSammensattNavn } from "../../graphql/navn";
 import { lagYupToReduxformErrorMapper } from "../../yup";
-import { erFeatureToggleEnabled } from "../../featuretoggle";
+import { useFeatureToggle } from "../../featuretoggle";
 import opprettNySakSchema from "./opprettnysakSchema";
 
 import "./opprettnysak.css";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 import { formOperations } from "../../ducks/form";
-import { OpprettReqDto } from "../../services/modules/fagsaker/fagsak";
-import { Oppgave } from "../../services/modules/types/oppgave";
+
+const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
+  .filter(({ kode }: { kode: string }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
+  .filter(
+    ({ kode }: { kode: string }) =>
+      kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND &&
+      kode !== MKV.Koder.behandlinger.behandlingstema.TRYGDETID
+  );
+
+const ftrlBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
+  ({ kode }: { kode: string }) => kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+);
+
+const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
+  ({ kode }: { kode: string }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
+);
+
+const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
+
+interface OpprettNySakFormData {
+  behandlingstema: string;
+  soknadsinfo: any;
+  sakstype: string;
+  brukerID: string;
+  skalTilordnes: boolean;
+  oppgaveID: string;
+  hovedpart: string;
+  brukerNavn: string;
+  virksomhetOrgnr: string;
+  virksomhetNavn: string;
+}
 
 const mapStateToProps = (state: RootState) => ({
-  formValues: getFormValues(KV.Form.OPPRETT_NY_SAK)(state) as KV.Form.OpprettNySakFormData,
+  formValues: getFormValues(KV.Form.OPPRETT_NY_SAK)(state) as OpprettNySakFormData,
   initialValues: {
     skalTilordnes: false,
     behandlingstema: undefined,
@@ -45,7 +74,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.OPPRETT_NY_SAK)),
-  opprettSak: (body: OpprettReqDto) => dispatch(fagsakOperations.opprett(body)),
+  opprettSak: (body: Api.Fagsaker.fagsak.OpprettReqDto) => dispatch(fagsakOperations.opprett(body)),
   sokOrgnr: (orgnr: string) => dispatch(OrganisasjonOperations.hent(orgnr)),
 });
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -64,15 +93,23 @@ const OpprettNySak = ({
   touchAll,
   formIsValid,
   sokOrgnr,
-}: InjectedFormProps<KV.Form.OpprettNySakFormData, OpprettNySakProps> & OpprettNySakProps) => {
-  const [oppgaver, setOppgaver] = useState<Oppgave[]>([]);
+}: InjectedFormProps<OpprettNySakFormData, OpprettNySakProps> & OpprettNySakProps) => {
+  const [oppgaver, setOppgaver] = useState<Api.Oppgaver.SokOppgaveResDto[]>([]);
   const [bekreftPending, setBekreftPending] = useState(false);
   const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
-  const [folketrygdenToggleEnabled, setFolketrygdenToggleEnabled] = useState(false);
-  const [behandleAlleSakerToggleEnabled, setBehandleAlleSakerToggleEnabled] = useState(false);
+  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp");
+  const behandleAlleSakerToggleEnabled = useFeatureToggle("melosys.behandle_alle_saker");
 
-  const { behandlingstema, soknadsinfo, sakstype, hovedpart, brukerID, brukerNavn, virksomhetOrgnr, virksomhetNavn } =
-    formValues || {};
+  const {
+    behandlingstema,
+    soknadsinfo,
+    sakstype,
+    hovedpart = BRUKER,
+    brukerID,
+    brukerNavn,
+    virksomhetOrgnr,
+    virksomhetNavn,
+  } = formValues || {};
   const { landkoder, erUkjenteEllerAlleEosLand } = soknadsinfo || {};
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
@@ -123,15 +160,6 @@ const OpprettNySak = ({
   };
 
   useEffect(() => {
-    erFeatureToggleEnabled("melosys.folketrygden.mvp").then((res) => {
-      setFolketrygdenToggleEnabled(res);
-    });
-    erFeatureToggleEnabled("melosys.behandle_alle_saker").then((res) => {
-      setBehandleAlleSakerToggleEnabled(res);
-    });
-  }, []);
-
-  useEffect(() => {
     hentBruker(brukerID);
   }, [brukerID]);
 
@@ -160,8 +188,7 @@ const OpprettNySak = ({
 
     setBekreftPending(true);
     const fom = soknadErValgt ? Utils.dato.formatterDatoTilISO(soknadsinfo.fom) : null;
-    const tomErUtfylt = soknadsinfo && soknadsinfo.tom;
-    const tom = tomErUtfylt && soknadErValgt ? Utils.dato.formatterDatoTilISO(soknadsinfo.tom) : null;
+    const tom = soknadsinfo?.tom && soknadErValgt ? Utils.dato.formatterDatoTilISO(soknadsinfo.tom) : null;
 
     const soknadDto = {
       periode: {
@@ -429,6 +456,7 @@ const OpprettNySak = ({
                       avbrytTekst="Avbryt"
                       redigerbart
                       bekreftRedigerbart={!bekreftPending && oppgaverFinnes}
+                      spinner={bekreftPending}
                       bekreftHtmlType="submit"
                     />
                   </div>
@@ -442,25 +470,7 @@ const OpprettNySak = ({
   );
 };
 
-const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
-  .filter(({ kode }: { kode: string }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
-  .filter(
-    ({ kode }: { kode: string }) =>
-      kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND &&
-      kode !== MKV.Koder.behandlinger.behandlingstema.TRYGDETID
-  );
-
-const ftrlBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
-  ({ kode }: { kode: string }) => kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
-);
-
-const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
-  ({ kode }: { kode: string }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
-);
-
-const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
-
-const OpprettNySakForm = reduxForm<KV.Form.OpprettNySakFormData, OpprettNySakProps>({
+const OpprettNySakForm = reduxForm<OpprettNySakFormData, OpprettNySakProps>({
   form: KV.Form.OPPRETT_NY_SAK,
   enableReinitialize: true,
   destroyOnUnmount: true,
