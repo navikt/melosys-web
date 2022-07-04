@@ -8,7 +8,7 @@ import { KnyttTilSak } from "./knyttTilSak";
 
 jest.mock("../../../featuretoggle", () => ({
   __esModule: true,
-  erFeatureToggleEnabled: () => false,
+  useFeatureToggle: () => "disabled",
 }));
 
 describe("KnyttTilSak toggle = disabled", () => {

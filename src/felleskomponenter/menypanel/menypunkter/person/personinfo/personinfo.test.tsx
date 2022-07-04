@@ -10,6 +10,7 @@ import { HentPersoninfoDocument } from "./hentPersoninfo.generated";
 import Personinfo from "./personinfo";
 import SivilstandModal from "./sivilstand/sivilstandModal";
 import PersonstatusModal from "./personstatus/personstatusModal";
+import Personstatus from "./personstatus/personstatus";
 
 describe("Personinfo", () => {
   const mockedProps = mock<ComponentProps<typeof Personinfo>>();
@@ -192,7 +193,8 @@ describe("Personinfo", () => {
       });
       personinfo.update();
 
-      const visMerPersonstatusKnapp = personinfo.find(".personstatus__vis-detaljer-button").hostNodes();
+      const personStatus = personinfo.find(Personstatus);
+      const visMerPersonstatusKnapp = personStatus.find(".personstatus__vis-detaljer-button").hostNodes();
       expect(visMerPersonstatusKnapp).toHaveLength(1);
       const mouseEvent = instance(mock<MouseEvent<HTMLButtonElement>>());
       visMerPersonstatusKnapp.props().onClick?.(mouseEvent);
