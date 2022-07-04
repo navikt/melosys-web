@@ -14,7 +14,6 @@ import { doThenDispatch } from "../../services/utils";
 import * as Actions from "./actions";
 import * as Api from "../../services/api";
 import * as Types from "./types";
-import { OpprettReqDto } from "../../services/modules/fagsaker/fagsak";
 import { navigeringOperations } from "../navigering";
 
 /**
@@ -33,7 +32,7 @@ export function hent(snr: string) {
   });
 }
 
-export function opprett(body: OpprettReqDto) {
+export function opprett(body: Api.Fagsaker.fagsak.OpprettReqDto) {
   return doThenDispatch(
     () => Api.Fagsaker.fagsak.opprett(body),
     {

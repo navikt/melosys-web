@@ -8,7 +8,7 @@ import KnyttTilSak from "./knyttTilSak";
 import OpprettSak, { OpprettSakTittel } from "./opprettSak";
 import MKV from "../../../melosyskodeverk";
 import { JOURNALFORING_HENSIKT } from "../../../constants";
-import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./fagsakVelger.css";
 
