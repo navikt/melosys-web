@@ -245,8 +245,8 @@ describe("Avklartefaktaselectors", () => {
     ]).it(
       "returnerer korrekt verdi for arbeidsland som ikke er Norge",
       (forventetResultat, behandlingsgrunnlagData) => {
-        const land = MKV.Koder.landkoder.DE;
-        const avklartefakta = [lagSoknadslandFakta(land)];
+        const arbeidsland = MKV.Koder.landkoder.DE;
+        const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
         const state = lagState({
           avklartefakta,
           behandlingstype,
@@ -361,8 +361,8 @@ describe("Avklartefaktaselectors", () => {
         },
       ],
     ]).it("returner korrekt verdi for arbeidsland lik Norge", (forventetResultat, behandlingsgrunnlagData) => {
-      const land = MKV.Koder.landkoder.NO;
-      const avklartefakta = [lagSoknadslandFakta(land)];
+      const arbeidsland = MKV.Koder.landkoder.NO;
+      const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
       const behandlingerSaksopplysninger = {
         arbeidsforhold: [
           {
@@ -821,13 +821,13 @@ describe("Avklartefaktaselectors", () => {
               {
                 orgnr: "991492704",
                 forretningsadresse: {
-                  arbeidsland: "NORGE",
+                  land: "NORGE",
                 },
               },
               {
                 orgnr: "810072512",
                 forretningsadresse: {
-                  arbeidsland: "NORGE",
+                  land: "NORGE",
                 },
               },
             ],
@@ -855,13 +855,13 @@ describe("Avklartefaktaselectors", () => {
           {
             orgnr: "910253158",
             forretningsadresse: {
-              arbeidsland: "NORGE",
+              land: "NORGE",
             },
           },
           {
             orgnr: "810072512",
             forretningsadresse: {
-              arbeidsland: "NORGE",
+              land: "NORGE",
             },
           },
         ],
