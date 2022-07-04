@@ -113,10 +113,11 @@ class Stegvelger extends Component<Props, State> {
     }
   }
 
-  hentFlytOgOppdaterAktuelleSteg = () =>
+  hentFlytOgOppdaterAktuelleSteg = () => {
     Api.Trygdeavtale.hentFlyt(this.props.behandlingID).then((response) =>
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
+  };
 
   harEndringer = (propsObject: any, prevPropsObject: any, path: string) => {
     const propsValue = getValueAtPath(propsObject, path);
@@ -130,8 +131,8 @@ class Stegvelger extends Component<Props, State> {
     );
   };
 
-  oppdaterFlyt = (request: Api.Trygdeavtale.FlytReqDto, callBack?: () => void) => {
-    Api.Trygdeavtale.sendFlyt(this.props.behandlingID, request).then((response) => {
+  oppdaterFlyt = (resultat: Api.Trygdeavtale.Resultat, callBack?: () => void) => {
+    Api.Trygdeavtale.sendFlyt(this.props.behandlingID, resultat).then((response) => {
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) });
       if (callBack) callBack();
     });

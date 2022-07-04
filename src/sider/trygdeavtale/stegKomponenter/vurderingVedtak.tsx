@@ -31,6 +31,7 @@ import bem from "../../../bemUtils";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { Feilkode } from "../../../@types";
+import { Resultat } from "../../../services/modules/trygdeavtale/flyt";
 
 const { STORBRITANNIA } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
@@ -94,7 +95,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   data: Api.Trygdeavtale.StegData;
-  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto, callback?: () => void) => void;
+  oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat, callback?: () => void) => void;
   hentFlytOgOppdaterAktuelleSteg: () => void;
   tilbake: () => void;
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
@@ -207,7 +208,7 @@ const VurderingVedtak = ({
   };
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
   const debouncedOppdaterFlyten = useCallback(
-    Utils._debounce((data: Api.Trygdeavtale.Resultat) => oppdaterFlyt({ resultat: data }), 2000),
+    Utils._debounce((data: Api.Trygdeavtale.Resultat) => oppdaterFlyt(data), 2000),
     []
   );
 
@@ -254,11 +255,9 @@ const VurderingVedtak = ({
       const isoTom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeTom);
       oppdaterFlyt(
         {
-          resultat: {
-            ...resultat,
-            lovvalgsperiodeFom: isoFom === "Invalid date" ? undefined : isoFom,
-            lovvalgsperiodeTom: isoTom === "Invalid date" ? undefined : isoTom,
-          },
+          ...resultat,
+          lovvalgsperiodeFom: isoFom === "Invalid date" ? undefined : isoFom,
+          lovvalgsperiodeTom: isoTom === "Invalid date" ? undefined : isoTom,
         },
         () => hentLovvalgsperiode(behandlingID)
       );

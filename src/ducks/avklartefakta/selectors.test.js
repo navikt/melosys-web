@@ -174,7 +174,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
+            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
             erLonnetArbeid: true,
             erSelvstendigNaeringsvirksomhet: false,
           },
@@ -200,7 +200,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
+            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
             erLonnetArbeid: false,
             erSelvstendigNaeringsvirksomhet: false,
           },
@@ -219,7 +219,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
+            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
             erLonnetArbeid: false,
             erSelvstendigNaeringsvirksomhet: true,
           },
@@ -261,7 +261,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
             erLonnetArbeid: false,
             erSelvstendigNaeringsvirksomhet: false,
           },
@@ -279,7 +279,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
             erLonnetArbeid: false,
             erSelvstendigNaeringsvirksomhet: true,
           },
@@ -298,7 +298,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
             erLonnetArbeid: true,
             erSelvstendigNaeringsvirksomhet: false,
           },
@@ -317,7 +317,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
             erLonnetArbeid: true,
             erSelvstendigNaeringsvirksomhet: true,
           },
@@ -337,7 +337,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
             erLonnetArbeid: true,
             erSelvstendigNaeringsvirksomhet: false,
           },
@@ -821,13 +821,13 @@ describe("Avklartefaktaselectors", () => {
               {
                 orgnr: "991492704",
                 forretningsadresse: {
-                  land: "NORGE",
+                  arbeidsland: "NORGE",
                 },
               },
               {
                 orgnr: "810072512",
                 forretningsadresse: {
-                  land: "NORGE",
+                  arbeidsland: "NORGE",
                 },
               },
             ],
@@ -855,13 +855,13 @@ describe("Avklartefaktaselectors", () => {
           {
             orgnr: "910253158",
             forretningsadresse: {
-              land: "NORGE",
+              arbeidsland: "NORGE",
             },
           },
           {
             orgnr: "810072512",
             forretningsadresse: {
-              land: "NORGE",
+              arbeidsland: "NORGE",
             },
           },
         ],

@@ -21,6 +21,7 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
+import { Resultat } from "../../../services/modules/trygdeavtale/flyt";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -57,7 +58,7 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
 }
 
 const VurderingBestemmelse = ({
@@ -75,12 +76,10 @@ const VurderingBestemmelse = ({
   useEffect(() => {
     if (redigerbart && formValues) {
       oppdaterFlyt({
-        resultat: {
-          ...resultat,
-          vedtak: formValues?.vedtak,
-          innvilgelse: formValues?.innvilgelse,
-          bestemmelse: formValues?.bestemmelse,
-        },
+        ...resultat,
+        vedtak: formValues?.vedtak,
+        innvilgelse: formValues?.innvilgelse,
+        bestemmelse: formValues?.bestemmelse,
       });
     }
   }, [formValues]);

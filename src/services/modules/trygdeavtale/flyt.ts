@@ -64,14 +64,10 @@ export type FlytResDto = {
   data: StegData;
 };
 
-export interface FlytReqDto {
-  resultat: Resultat;
-}
-
 export const hentFlyt = (behandlingID: number): Promise<FlytResDto> =>
   getAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`);
 
-export const sendFlyt = (behandlingID: number, data: FlytReqDto): Promise<FlytResDto> =>
-  putAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`, data);
+export const sendFlyt = (behandlingID: number, resultat: Resultat): Promise<FlytResDto> =>
+  putAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`, { resultat });
 
 export const resetFlyt = (behandlingID: number) => deleteAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`);

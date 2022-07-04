@@ -32,7 +32,7 @@ interface Periode {
 const initializeValues = (periode: Periode, landkoder: string[]) => ({
   fom: periode.fom ? Utils.dato.formatterDatoTilNorsk(periode.fom) : undefined,
   tom: periode.tom ? Utils.dato.formatterDatoTilNorsk(periode.tom) : undefined,
-  land: landkoder[0],
+  arbeidsland: landkoder[0],
 });
 
 const mapStateToProps = (state: RootState) => ({
@@ -59,7 +59,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 interface FormValuesProps {
   fom?: string;
   tom?: string;
-  land?: string;
+  arbeidsland?: string;
 }
 
 interface Props {
@@ -69,9 +69,11 @@ interface Props {
   formValues: FormValuesProps;
   hentFlytOgOppdaterAktuelleSteg: () => void;
   redigerbart: boolean;
+  resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   tilForsiden: () => void;
   oppfriskOgLastInnSaksopplysninger: () => void;
+  oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
   resetFlyt: () => void;
 }
 
@@ -85,26 +87,28 @@ const VurderingInngang = ({
   hentFlytOgOppdaterAktuelleSteg,
   lagreBehandlingsgrunnlag,
   redigerbart,
+  resultat,
   steg,
   tilForsiden,
   oppdaterPeriode,
   oppdaterSoeknadsland,
   oppfriskOgLastInnSaksopplysninger,
+  oppdaterFlyt,
   resetFlyt,
   visMenypanel,
 }: PropsFromRedux & Props) => {
-  const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; land?: string }>({});
+  const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
   const [ugyldigLandValgt, setUgyldigLandValgt] = useState(false);
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const skalHenteRegisteropplysninger =
     formValues?.fom !== initialFomTomLand?.fom ||
     formValues?.tom !== initialFomTomLand?.tom ||
-    formValues?.land !== initialFomTomLand?.land;
+    formValues?.arbeidsland !== initialFomTomLand?.arbeidsland;
 
   useEffect(() => {
     if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
       visMenypanel();
-      setInitialFomTomLand({ fom: initialValues.fom, tom: initialValues.tom, land: initialValues.land });
+      setInitialFomTomLand({ fom: initialValues.fom, tom: initialValues.tom, arbeidsland: initialValues.arbeidsland });
     }
   }, []);
 
@@ -125,19 +129,21 @@ const VurderingInngang = ({
         fom: isoFom === "Invalid date" ? null : isoFom,
         tom: isoTom === "Invalid date" ? null : isoTom,
       });
-      oppdaterSoeknadsland(formValues?.land ? [formValues.land] : []);
+      oppdaterSoeknadsland(formValues?.arbeidsland ? [formValues.arbeidsland] : []);
 
       debouncedLagrebehandlingsgrunnlagOgOppdaterFlyt();
     }
-  }, [formValues?.fom, formValues?.tom, formValues?.land, formIsValid]);
+  }, [formValues?.fom, formValues?.tom, formValues?.arbeidsland, formIsValid]);
 
-  useEffect(
-    () => setUgyldigLandValgt(formValues?.land ? !landValg.map(({ kode }) => kode).includes(formValues?.land) : false),
-    [formValues?.land]
-  );
+  useEffect(() => {
+    setUgyldigLandValgt(
+      formValues?.arbeidsland ? !landValg.map(({ kode }) => kode).includes(formValues?.arbeidsland) : false
+    );
+    oppdaterFlyt(resultat);
+  }, [formValues?.arbeidsland]);
 
   const innhentRegisteropplysningerHandle = () => {
-    setInitialFomTomLand({ fom: formValues.fom, tom: formValues.tom, land: formValues.land });
+    setInitialFomTomLand({ fom: formValues.fom, tom: formValues.tom, arbeidsland: formValues.arbeidsland });
     setVisOppfrisk(true);
   };
 
@@ -155,7 +161,7 @@ const VurderingInngang = ({
           <Nav.Column xs="5">
             <Skjema.Select
               label={<VurderingInngangKomponenter.ArbeidslandLabel />}
-              feltNavn="land"
+              feltNavn="arbeidsland"
               placeholder="Velg..."
               disabled={!redigerbart}
             >

@@ -19,6 +19,7 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurdering_familie from "./vurderingFamilieSchema";
 
 import "./vurderingFamilie.css";
+import { Resultat } from "../../../services/modules/trygdeavtale/flyt";
 
 const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: Api.Trygdeavtale.Resultat) => ({
   barn: {
@@ -83,7 +84,7 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
 }
 
 const VurderingFamilie = ({
@@ -110,28 +111,26 @@ const VurderingFamilie = ({
   useEffect(() => {
     if (!redigerbart || !formValues || !formValues.barn || !formValues.ektefelle) return;
     oppdaterFlyt({
-      resultat: {
-        ...resultat,
-        barn:
-          tilknyttedeBarn && !Utils._isEmpty(tilknyttedeBarn)
-            ? [
-                ...tilknyttedeBarn.map((barn) => ({
-                  uuid: barn?.uuid || "",
-                  omfattet: Utils.streng.uppercaseStrengTilBool(finnBarn(barn?.uuid, formValues.barn)?.innvilget),
-                  begrunnelseKode: finnBarn(barn?.uuid, formValues.barn)?.begrunnelse || null,
-                  begrunnelseFritekst: formValues.barn?.fritekst || null,
-                })),
-              ]
-            : [],
-        ektefelle: tilknyttetEktefelle
-          ? {
-              uuid: tilknyttetEktefelle?.uuid || "",
-              omfattet: Utils.streng.uppercaseStrengTilBool(formValues.ektefelle.innvilget),
-              begrunnelseKode: formValues.ektefelle.begrunnelse,
-              begrunnelseFritekst: formValues.ektefelle.fritekst,
-            }
-          : null,
-      },
+      ...resultat,
+      barn:
+        tilknyttedeBarn && !Utils._isEmpty(tilknyttedeBarn)
+          ? [
+              ...tilknyttedeBarn.map((barn) => ({
+                uuid: barn?.uuid || "",
+                omfattet: Utils.streng.uppercaseStrengTilBool(finnBarn(barn?.uuid, formValues.barn)?.innvilget),
+                begrunnelseKode: finnBarn(barn?.uuid, formValues.barn)?.begrunnelse || null,
+                begrunnelseFritekst: formValues.barn?.fritekst || null,
+              })),
+            ]
+          : [],
+      ektefelle: tilknyttetEktefelle
+        ? {
+            uuid: tilknyttetEktefelle?.uuid || "",
+            omfattet: Utils.streng.uppercaseStrengTilBool(formValues.ektefelle.innvilget),
+            begrunnelseKode: formValues.ektefelle.begrunnelse,
+            begrunnelseFritekst: formValues.ektefelle.fritekst,
+          }
+        : null,
     });
   }, [formValues, tilknyttedeBarn, tilknyttetEktefelle]);
 

@@ -7,7 +7,7 @@ const ARBEIDSLAND_FELT_KREVES = { melding: "Du må velge arbeidsland" };
 const vurdering_inngang = object().shape({
   fom: string().erGyldigDato().required(MAA_FYLLES_UT),
   tom: string().erGyldigDato().erEtterDatofelt("fom").nullable(),
-  land: string().required(ARBEIDSLAND_FELT_KREVES),
+  arbeidsland: string().required(ARBEIDSLAND_FELT_KREVES),
 });
 
 export default vurdering_inngang;
