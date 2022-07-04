@@ -174,7 +174,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
+            land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
             erLonnetArbeid: true,
             erSelvstendigNaeringsvirksomhet: false,
           },
@@ -200,7 +200,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
+            land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
             erLonnetArbeid: false,
             erSelvstendigNaeringsvirksomhet: false,
           },
@@ -219,7 +219,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
+            land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
             erLonnetArbeid: false,
             erSelvstendigNaeringsvirksomhet: true,
           },
@@ -245,8 +245,8 @@ describe("Avklartefaktaselectors", () => {
     ]).it(
       "returnerer korrekt verdi for arbeidsland som ikke er Norge",
       (forventetResultat, behandlingsgrunnlagData) => {
-        const arbeidsland = MKV.Koder.landkoder.DE;
-        const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
+        const land = MKV.Koder.landkoder.DE;
+        const avklartefakta = [lagSoknadslandFakta(land)];
         const state = lagState({
           avklartefakta,
           behandlingstype,
@@ -261,7 +261,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
             erLonnetArbeid: false,
             erSelvstendigNaeringsvirksomhet: false,
           },
@@ -279,7 +279,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
             erLonnetArbeid: false,
             erSelvstendigNaeringsvirksomhet: true,
           },
@@ -298,7 +298,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
             erLonnetArbeid: true,
             erSelvstendigNaeringsvirksomhet: false,
           },
@@ -317,7 +317,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
             erLonnetArbeid: true,
             erSelvstendigNaeringsvirksomhet: true,
           },
@@ -337,7 +337,7 @@ describe("Avklartefaktaselectors", () => {
       [
         [
           {
-            arbeidsland: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
             erLonnetArbeid: true,
             erSelvstendigNaeringsvirksomhet: false,
           },
@@ -361,8 +361,8 @@ describe("Avklartefaktaselectors", () => {
         },
       ],
     ]).it("returner korrekt verdi for arbeidsland lik Norge", (forventetResultat, behandlingsgrunnlagData) => {
-      const arbeidsland = MKV.Koder.landkoder.NO;
-      const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
+      const land = MKV.Koder.landkoder.NO;
+      const avklartefakta = [lagSoknadslandFakta(land)];
       const behandlingerSaksopplysninger = {
         arbeidsforhold: [
           {
