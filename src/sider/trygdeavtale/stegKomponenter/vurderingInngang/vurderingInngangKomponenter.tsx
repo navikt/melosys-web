@@ -27,7 +27,7 @@ export const LandValgSomOptions = ({ landValg }: { landValg: KTObject[] }) => {
   );
 };
 
-export const StegvelgerFinnesIkke = () => (
+export const FlytFinnesIkke = () => (
   <Nav.AlertStripeAdvarsel>
     <Nav.Typo.Undertittel> Det finnes ikke en stegvelger for landet du har valgt </Nav.Typo.Undertittel>
     <ul>

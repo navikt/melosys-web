@@ -11,12 +11,12 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
-import * as VurderingInngangKomponenter from "./vurderingInngangKomponenter";
 
 import DialogboksOppfriskSak from "../../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
+import { ArbeidslandLabel, FlytFinnesIkke, LandValgSomOptions } from "./vurderingInngangKomponenter";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import { StegStatus } from "../../stegvelger";
@@ -98,7 +98,7 @@ const VurderingInngang = ({
   visMenypanel,
 }: PropsFromRedux & Props) => {
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
-  const [ugyldigLandValgt, setUgyldigLandValgt] = useState(false);
+  const [landUtenStøtteValgt, setLandUtenStøtteValgt] = useState(false);
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const skalHenteRegisteropplysninger =
     formValues?.fom !== initialFomTomLand?.fom ||
@@ -136,7 +136,7 @@ const VurderingInngang = ({
   }, [formValues?.fom, formValues?.tom, formValues?.arbeidsland, formIsValid]);
 
   useEffect(() => {
-    setUgyldigLandValgt(
+    setLandUtenStøtteValgt(
       formValues?.arbeidsland ? !landValg.map(({ kode }) => kode).includes(formValues?.arbeidsland) : false
     );
     oppdaterFlyt(resultat);
@@ -160,20 +160,20 @@ const VurderingInngang = ({
           </Nav.Column>
           <Nav.Column xs="5">
             <Skjema.Select
-              label={<VurderingInngangKomponenter.ArbeidslandLabel />}
+              label={<ArbeidslandLabel />}
               feltNavn="arbeidsland"
               placeholder="Velg..."
               disabled={!redigerbart}
             >
-              <VurderingInngangKomponenter.LandValgSomOptions landValg={landValg} />
+              <LandValgSomOptions landValg={landValg} />
               {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}
-              <VurderingInngangKomponenter.LandValgSomOptions landValg={landValgUtenStøtte} />
+              <LandValgSomOptions landValg={landValgUtenStøtte} />
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
 
-      {ugyldigLandValgt && <VurderingInngangKomponenter.StegvelgerFinnesIkke />}
+      {landUtenStøtteValgt && <FlytFinnesIkke />}
 
       {skalHenteRegisteropplysninger ? (
         <Mui.StegKnapper
@@ -187,7 +187,7 @@ const VurderingInngang = ({
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: fortsett,
-            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || ugyldigLandValgt,
+            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || landUtenStøtteValgt,
           }}
         />
       )}
