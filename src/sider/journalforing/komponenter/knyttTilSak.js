@@ -9,7 +9,7 @@ import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
 
-import { erFeatureToggleEnabled } from "../../../featuretoggle";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./knyttTilSak.css";
 
@@ -23,13 +23,10 @@ export const KnyttTilSak = (props) => {
 
   const clsElementskrift = { "border-bottom": "none" };
 
-  const alltidNyBehandlingToggleEnabled = erFeatureToggleEnabled(
-    "melosys.api.journalfoering.alltid.opprett.ny.behandling"
-  );
+  const alltidNyBehandlingToggle = useFeatureToggle("melosys.api.journalfoering.alltid.opprett.ny.behandling");
 
-  const visUtenOppretteBehandling = alltidNyBehandlingToggleEnabled
-    ? !sakInneholderSoeknad
-    : sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
+  const visUtenOppretteBehandling =
+    alltidNyBehandlingToggle === "enabled" ? !sakInneholderSoeknad : sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
 
   const erInaktiv = [
     MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,

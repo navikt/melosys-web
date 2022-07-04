@@ -60,6 +60,7 @@ LandVelger.propTypes = {
   landkoderFraSakstype: PT.arrayOf(MPT.Kodeverk).isRequired,
   visAlleLandkoder: PT.bool,
   className: PT.string,
+  errorConfig: PT.object,
 };
 
 LandVelger.defaultProps = {
@@ -71,6 +72,7 @@ LandVelger.defaultProps = {
   landkoder: undefined,
   visAlleLandkoder: false,
   className: "",
+  errorConfig: undefined,
 };
 
 export default connector(LandVelger);
