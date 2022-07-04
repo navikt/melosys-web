@@ -65,7 +65,8 @@ const opprettnysak = object().shape({
   }),
   oppgaveID: string()
     .siblingIs("journalpostID", (journalpostID) => !Utils._isEmpty(journalpostID), MANGLER_JOURNALPOST)
-    .required(VELG_EN_OPPGAVE),
+    .required(VELG_EN_OPPGAVE)
+    .nullable(),
 
   /* Følgene felter viser ingen feilmeldinger til brukerNavn, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
 });

@@ -8,7 +8,7 @@ import KnyttTilSak from "./knyttTilSak";
 import OpprettSak, { OpprettSakTittel } from "./opprettSak";
 import MKV from "../../../melosyskodeverk";
 import { JOURNALFORING_HENSIKT } from "../../../constants";
-import { erFeatureToggleEnabled } from "../../../featuretoggle";
+import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 
 import "./fagsakVelger.css";
 
@@ -30,9 +30,7 @@ const behandlingstyper = (sakstype, alltidNyBehandlingToggleEnabled) => {
 };
 
 const FagsakVelger = (props) => {
-  const alltidNyBehandlingToggleEnabled = erFeatureToggleEnabled(
-    "melosys.api.journalfoering.alltid.opprett.ny.behandling"
-  );
+  const alltidNyBehandlingToggle = useFeatureToggle("melosys.api.journalfoering.alltid.opprett.ny.behandling");
   const { fagsakListe, settJournalforingHensikt } = props;
   const notifier = async (saksnummer) => {
     const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
@@ -47,7 +45,7 @@ const FagsakVelger = (props) => {
         footer: (
           <KnyttTilSak
             sak={sak}
-            behandlingstyper={behandlingstyper(sak.sakstype.kode, alltidNyBehandlingToggleEnabled)}
+            behandlingstyper={behandlingstyper(sak.sakstype.kode, alltidNyBehandlingToggle === "enabled")}
           />
         ),
       },

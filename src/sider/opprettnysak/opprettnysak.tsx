@@ -6,6 +6,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
+import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as Skjema from "../../felleskomponenter/skjema";
 import * as Mui from "../../felleskomponenter/ui";
@@ -13,22 +14,22 @@ import * as Ikoner from "../../resources/images";
 import * as KV from "../../kodeverk";
 import * as Api from "../../services/api";
 import * as Utils from "../../utils";
-import { fagsakOperations } from "../../ducks/fagsaker";
 
 import Knapperad from "../../felleskomponenter/knapperad";
 import EnkeltDato from "../../felleskomponenter/datoOmrade/enkeltDato";
-
-import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
-import { OrganisasjonOperations } from "../../ducks/organisasjoner";
-import { hentSammensattNavn } from "../../graphql/navn";
-import { lagYupToReduxformErrorMapper } from "../../yup";
-import { useFeatureToggle } from "../../featuretoggle";
-import opprettNySakSchema from "./opprettnysakSchema";
-
-import "./opprettnysak.css";
-import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
+import { OrganisasjonOperations } from "../../ducks/organisasjoner";
+import { feiletResponsSelectors } from "../../ducks/feiletRespons";
+import { fagsakOperations } from "../../ducks/fagsaker";
 import { formOperations } from "../../ducks/form";
+
+import { hentSammensattNavn } from "../../graphql/navn";
+import { useFeatureToggle } from "../../featuretoggle";
+import IdentOgNavn from "./identOgNavn";
+
+import { lagYupToReduxformErrorMapper } from "../../yup";
+import opprettNySakSchema from "./opprettnysakSchema";
+import "./opprettnysak.css";
 
 const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
   .filter(({ kode }: { kode: string }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
@@ -67,6 +68,7 @@ const mapStateToProps = (state: RootState) => ({
     skalTilordnes: false,
     behandlingstema: undefined,
     soknadsinfo: { landkoder: [], erUkjenteEllerAlleEosLand: false },
+    hovedpart: BRUKER,
   },
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
   formIsValid: isValid(KV.Form.OPPRETT_NY_SAK)(state),
@@ -77,8 +79,11 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
   opprettSak: (body: Api.Fagsaker.fagsak.OpprettReqDto) => dispatch(fagsakOperations.opprett(body)),
   sokOrgnr: (orgnr: string) => dispatch(OrganisasjonOperations.hent(orgnr)),
 });
+
 const connector = connect(mapStateToProps, mapDispatchToProps);
+
 type PropsFromRedux = ConnectedProps<typeof connector>;
+
 type OpprettNySakProps = {
   tilForsiden: () => void;
 } & PropsFromRedux;
@@ -97,19 +102,11 @@ const OpprettNySak = ({
   const [oppgaver, setOppgaver] = useState<Api.Oppgaver.SokOppgaveResDto[]>([]);
   const [bekreftPending, setBekreftPending] = useState(false);
   const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
-  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp");
-  const behandleAlleSakerToggleEnabled = useFeatureToggle("melosys.behandle_alle_saker");
+  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
 
-  const {
-    behandlingstema,
-    soknadsinfo,
-    sakstype,
-    hovedpart = BRUKER,
-    brukerID,
-    brukerNavn,
-    virksomhetOrgnr,
-    virksomhetNavn,
-  } = formValues || {};
+  const { behandlingstema, soknadsinfo, sakstype, hovedpart, brukerID, brukerNavn, virksomhetOrgnr, virksomhetNavn } =
+    formValues || {};
   const { landkoder, erUkjenteEllerAlleEosLand } = soknadsinfo || {};
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
@@ -240,7 +237,7 @@ const OpprettNySak = ({
   const valgbareSakstyper = MKV.KTObjects.sakstyper.filter(
     ({ kode }: { kode: string }) =>
       kode === MKV.Koder.sakstyper.EU_EOS ||
-      (folketrygdenToggleEnabled && kode === MKV.Koder.sakstyper.FTRL) ||
+      (folketrygdenToggle === "enabled" && kode === MKV.Koder.sakstyper.FTRL) ||
       kode === MKV.Koder.sakstyper.TRYGDEAVTALE
   );
 
@@ -262,37 +259,11 @@ const OpprettNySak = ({
     change("journalpostID", oppgave?.journalpostID);
   };
 
-  // eslint-disable-next-line react/prop-types
-  const IdentOgNavn = ({
-    tittel,
-    feltNavn,
-    label,
-    navn,
-  }: {
-    tittel: string;
-    feltNavn: string;
-    label: string;
-    navn: string;
-  }) => (
-    <>
-      <Mui.Undertittel tekst={tittel} ikon={Ikoner.AccountCircle} className="undertittel" understrek />
-      <div className="innrykk marginBottom">
-        <Skjema.Input feltNavn={feltNavn} label={label} />
-        {!Utils._isEmpty(navn) && (
-          <span>
-            <Nav.Typo.Element className="navnTittel">Navn:</Nav.Typo.Element>
-            <Nav.Typo.Normaltekst className="navn">{navn}</Nav.Typo.Normaltekst>
-          </span>
-        )}
-      </div>
-    </>
-  );
   const erLandvelgerDisabled =
     erUkjenteEllerAlleEosLand && behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
 
   const hovedpartErBruker = hovedpart === BRUKER;
 
-  // @ts-ignore
   return (
     <form className="opprettnysak" onSubmit={opprettNySak}>
       <Nav.Container fluid>
@@ -306,7 +277,7 @@ const OpprettNySak = ({
             <Nav.Panel>
               <Nav.Row>
                 <Nav.Column xs="8">
-                  {behandleAlleSakerToggleEnabled && (
+                  {behandleAlleSakerToggle === "enabled" && (
                     <>
                       <Mui.Undertittel
                         tekst="Hvem skal saken opprettes på?"
@@ -322,8 +293,7 @@ const OpprettNySak = ({
                           { label: VIRKSOMHET, value: VIRKSOMHET, id: VIRKSOMHET },
                         ]}
                         checked={hovedpart}
-                        // @ts-ignore
-                        onChange={(event) => change("hovedpart", event.target.value)}
+                        onChange={(event, value) => change("hovedpart", value)}
                         className="hovedpart innrykk"
                       />
                     </>

@@ -2,7 +2,7 @@
 import * as Types from "./types";
 
 describe("test vilkar/types.js", () => {
-  describe("types.ts", () => {
+  describe("types.js", () => {
     test("OK", () => {
       expect(Types.OK).toEqual("vilkar/OK");
     });
