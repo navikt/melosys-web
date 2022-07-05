@@ -19,7 +19,6 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurdering_familie from "./vurderingFamilieSchema";
 
 import "./vurderingFamilie.css";
-import { Resultat } from "../../../services/modules/trygdeavtale/flyt";
 
 const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: Api.Trygdeavtale.Resultat) => ({
   barn: {

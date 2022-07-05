@@ -15,7 +15,6 @@ import { StegStatus } from "../stegvelger";
 import vurdering_avklar_virksomhet from "./vurderingAvklarVirksomhetSchema";
 
 import "./vurderingAvklarVirksomhet.css";
-import { Resultat } from "../../../services/modules/trygdeavtale/flyt";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   virksomheterListe:

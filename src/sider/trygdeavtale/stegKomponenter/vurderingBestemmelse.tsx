@@ -21,7 +21,6 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
-import { Resultat } from "../../../services/modules/trygdeavtale/flyt";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),

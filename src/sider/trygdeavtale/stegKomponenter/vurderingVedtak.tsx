@@ -31,7 +31,6 @@ import bem from "../../../bemUtils";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { Feilkode } from "../../../@types";
-import { Resultat } from "../../../services/modules/trygdeavtale/flyt";
 
 const { STORBRITANNIA } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
@@ -208,7 +207,7 @@ const VurderingVedtak = ({
   };
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
   const debouncedOppdaterFlyten = useCallback(
-    Utils._debounce((data: Api.Trygdeavtale.Resultat) => oppdaterFlyt(data), 2000),
+    Utils._debounce((trygdeavtaleresultat: Api.Trygdeavtale.Resultat) => oppdaterFlyt(trygdeavtaleresultat), 2000),
     []
   );
 
