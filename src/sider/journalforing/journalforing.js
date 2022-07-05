@@ -15,7 +15,6 @@ import * as MPT from "../../proptypes";
 import { JOURNALFORING_HENSIKT } from "../../constants";
 
 import Sticky from "../../felleskomponenter/sticky";
-import { erFeatureToggleEnabled } from "../../featuretoggle";
 import PDFDokument from "./komponenter/pdfdokument";
 import JournalforingSED from "./komponenter/journalforingsed";
 import JournalforingForm from "./komponenter/journalforingform";
@@ -216,15 +215,11 @@ class Journalforing extends Component {
     }
 
     try {
-      if (await erFeatureToggleEnabled("melosys.dele_opp_tilordne_endepunkt")) {
-        if (hensikt === JOURNALFORING_HENSIKT.NY_VURDERING) {
-          await Api.Journalforing.nyVurdering(journalforingData);
-        }
-        if (hensikt === JOURNALFORING_HENSIKT.KNYTT) {
-          await Api.Journalforing.knytt(journalforingData);
-        }
-      } else {
-        await Api.Journalforing.tilordne(journalforingData);
+      if (hensikt === JOURNALFORING_HENSIKT.NY_VURDERING) {
+        await Api.Journalforing.nyVurdering(journalforingData);
+      }
+      if (hensikt === JOURNALFORING_HENSIKT.KNYTT) {
+        await Api.Journalforing.knytt(journalforingData);
       }
       this.setState({ visFeilmeldingDialog: false });
       return tilForsiden();
