@@ -6,31 +6,31 @@ import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import MKV from "../../../melosyskodeverk";
-import * as Api from "../../../services/api";
-import * as Hooks from "../../../hooks";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Nav from "../../../navFrontend";
-import * as Utils from "../../../utils";
-import * as KV from "../../../kodeverk";
-import * as Ikoner from "../../../resources/images";
-import * as Skjema from "../../../felleskomponenter/skjema";
+import MKV from "../../../../melosyskodeverk";
+import * as Api from "../../../../services/api";
+import * as Hooks from "../../../../hooks";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
+import * as Utils from "../../../../utils";
+import * as KV from "../../../../kodeverk";
+import * as Ikoner from "../../../../resources/images";
+import * as Skjema from "../../../../felleskomponenter/skjema";
 
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
-import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { formSelectors } from "../../../ducks/form";
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { lovvalgsperioderOperations } from "../../../../ducks/lovvalgsperioder";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { formSelectors } from "../../../../ducks/form";
 
-import MottakerTabell from "../../../felleskomponenter/tabell/mottakerTabell";
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
-import { StegStatus } from "../stegvelger";
-import bem from "../../../bemUtils";
+import MottakerTabell from "../../../../felleskomponenter/tabell/mottakerTabell";
+import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import { StegStatus } from "../../stegvelger";
+import bem from "../../../../bemUtils";
 
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
-import { Feilkode } from "../../../@types";
+import { Feilkode } from "../../../../@types";
 
 const { STORBRITANNIA } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";

@@ -4,18 +4,18 @@ import { getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import * as Api from "../../../services/api";
-import * as KV from "../../../kodeverk";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Utils from "../../../utils";
+import * as Api from "../../../../services/api";
+import * as KV from "../../../../kodeverk";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Utils from "../../../../utils";
 
-import { formSelectors } from "../../../ducks/form";
-import { BOOLSK_STRING } from "../../../constants";
-import { StegStatus } from "../stegvelger";
+import { formSelectors } from "../../../../ducks/form";
+import { BOOLSK_STRING } from "../../../../constants";
+import { StegStatus } from "../../stegvelger";
 
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_familie from "./vurderingFamilieSchema";
 
 import "./vurderingFamilie.css";
