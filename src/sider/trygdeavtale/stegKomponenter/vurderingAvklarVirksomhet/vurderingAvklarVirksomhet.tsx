@@ -3,15 +3,15 @@ import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { reduxForm, getFormValues } from "redux-form";
 
-import * as Api from "../../../services/api";
-import * as KV from "../../../kodeverk";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Nav from "../../../navFrontend";
+import * as Api from "../../../../services/api";
+import * as KV from "../../../../kodeverk";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
 
-import { formSelectors } from "../../../ducks/form";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
-import { StegStatus } from "../stegvelger";
+import { formSelectors } from "../../../../ducks/form";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import { StegStatus } from "../../stegvelger";
 import vurdering_avklar_virksomhet from "./vurderingAvklarVirksomhetSchema";
 
 import "./vurderingAvklarVirksomhet.css";
@@ -44,7 +44,7 @@ interface Props {
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   tilbake: () => void;
-  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
 }
 
 const VurderingAvklarVirksomhet = ({
@@ -66,7 +66,8 @@ const VurderingAvklarVirksomhet = ({
   useEffect(() => {
     if (redigerbart && formValues) {
       oppdaterFlyt({
-        resultat: { ...resultat, virksomhet: formValues.virksomhet },
+        ...resultat,
+        virksomhet: formValues.virksomhet,
       });
     }
   }, [formValues]);

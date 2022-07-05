@@ -7,17 +7,17 @@ import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import parse from "html-react-parser";
 
-import * as Api from "../../../services/api";
-import * as KV from "../../../kodeverk";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Utils from "../../../utils";
+import * as Api from "../../../../services/api";
+import * as KV from "../../../../kodeverk";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Utils from "../../../../utils";
 
-import { formSelectors } from "../../../ducks/form";
-import { StegStatus } from "../stegvelger";
+import { formSelectors } from "../../../../ducks/form";
+import { StegStatus } from "../../stegvelger";
 
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
@@ -57,7 +57,7 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
 }
 
 const VurderingBestemmelse = ({
@@ -75,12 +75,10 @@ const VurderingBestemmelse = ({
   useEffect(() => {
     if (redigerbart && formValues) {
       oppdaterFlyt({
-        resultat: {
-          ...resultat,
-          vedtak: formValues?.vedtak,
-          innvilgelse: formValues?.innvilgelse,
-          bestemmelse: formValues?.bestemmelse,
-        },
+        ...resultat,
+        vedtak: formValues?.vedtak,
+        innvilgelse: formValues?.innvilgelse,
+        bestemmelse: formValues?.bestemmelse,
       });
     }
   }, [formValues]);
