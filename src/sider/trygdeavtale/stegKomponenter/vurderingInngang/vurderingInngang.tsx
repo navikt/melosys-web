@@ -23,6 +23,7 @@ import { StegStatus } from "../../stegvelger";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
+import { useFeatureToggle } from "../../../../featuretoggle";
 
 interface Periode {
   fom?: string | null;
@@ -105,6 +106,8 @@ const VurderingInngang = ({
     formValues?.tom !== initialFomTomLand?.tom ||
     formValues?.arbeidsland !== initialFomTomLand?.arbeidsland;
 
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
+
   useEffect(() => {
     if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
       visMenypanel();
@@ -166,8 +169,10 @@ const VurderingInngang = ({
               disabled={!redigerbart}
             >
               <LandValgSomOptions landValg={landValg} />
-              {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}
-              <LandValgSomOptions landValg={landValgUtenStøtte} />
+              {behandleAlleSakerToggle === "enabled" && landValg && landValgUtenStøtte && (
+                <option disabled>{"\u2500"}</option>
+              )}
+              {behandleAlleSakerToggle === "enabled" && <LandValgSomOptions landValg={landValgUtenStøtte} />}
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>
