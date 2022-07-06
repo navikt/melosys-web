@@ -20,8 +20,10 @@ import { SendBrevFormValues } from "./types";
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET } = KV.Koder.MottakerRolle;
 
 const erBruker = (rolle: string | undefined) => rolle === BRUKER;
-const erArbeidsgiverEllerVirksomhet = (rolle: string | undefined) =>
-  rolle && [ARBEIDSGIVER, VIRKSOMHET].includes(rolle);
+const erVirksomhet = (rolle: string | undefined) => rolle === VIRKSOMHET;
+const erArbeidsgiver = (rolle: string | undefined) => rolle === ARBEIDSGIVER;
+export const erArbeidsgiverEllerVirksomhet = (rolle: string | undefined) =>
+  erArbeidsgiver(rolle) || erVirksomhet(rolle);
 
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
@@ -58,9 +60,9 @@ const BrevMottaker = ({
   }>();
 
   const mottakerErBruker = erBruker(formValues?.valgtMottaker?.rolle);
-  const mottakerErArbeidsgiverEllerVirksomhet =
-    erArbeidsgiverEllerVirksomhet(formValues?.valgtMottaker?.rolle) &&
-    !formValues?.valgtMottaker?.orgnrSettesAvSaksbehandler;
+  const mottakerErVirksomhet = erVirksomhet(formValues?.valgtMottaker?.rolle);
+  const mottakerErArbeidsgiver =
+    erArbeidsgiver(formValues?.valgtMottaker?.rolle) && !formValues?.valgtMottaker?.orgnrSettesAvSaksbehandler;
   const mottakerOrgNrSettesAvSaksbehandler =
     erArbeidsgiverEllerVirksomhet(formValues?.valgtMottaker?.rolle) &&
     formValues?.valgtMottaker?.orgnrSettesAvSaksbehandler;
@@ -104,7 +106,12 @@ const BrevMottaker = ({
       setAdresse({ mottakerAdresse: valgtMottaker.adresser ? valgtMottaker.adresser[0] : undefined });
     }
 
-    if (erArbeidsgiverEllerVirksomhet(valgtMottaker.rolle) && !valgtMottaker.orgnrSettesAvSaksbehandler) {
+    if (erVirksomhet(valgtMottaker.rolle)) {
+      setAdresse({ mottakerAdresse: valgtMottaker.adresser ? valgtMottaker.adresser[0] : undefined });
+      changeField("arbeidsgiver", valgtMottaker.adresser && valgtMottaker.adresser[0].tittel.orgnr);
+    }
+
+    if (erArbeidsgiver(valgtMottaker.rolle) && !valgtMottaker.orgnrSettesAvSaksbehandler) {
       setAdresse({
         mottakerAdresse: valgtMottaker.adresser?.find(
           (mottakerAdresse: DokumenterV2.MottakerAdresse) => mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
@@ -141,16 +148,19 @@ const BrevMottaker = ({
         ))}
       </Skjema.Select>
 
-      {mottakerErBruker && (
-        <Nav.Row>
-          <Nav.Column xs="12">
-            {feil && <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>}
-            {adresse?.mottakerAdresse && <MottakerAdresse {...adresse?.mottakerAdresse} className="brukeradresse" />}
-          </Nav.Column>
-        </Nav.Row>
-      )}
+      {mottakerErBruker ||
+        (mottakerErVirksomhet && (
+          <Nav.Row>
+            <Nav.Column xs="12">
+              {feil && <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>}
+              {adresse?.mottakerAdresse && (
+                <MottakerAdresse {...adresse?.mottakerAdresse} className="brukeradresse" visNavn />
+              )}
+            </Nav.Column>
+          </Nav.Row>
+        ))}
 
-      {mottakerErArbeidsgiverEllerVirksomhet && (
+      {mottakerErArbeidsgiver && (
         <Nav.Row>
           {feil ? (
             <Nav.Column xs="12">

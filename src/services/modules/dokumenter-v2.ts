@@ -19,7 +19,7 @@ export enum ValgType {
   SELECT = "SELECT",
 }
 
-interface ValgAlternativ {
+export interface ValgAlternativ {
   kode: string;
   beskrivelse: string;
   visFelt: boolean;

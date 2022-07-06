@@ -10,9 +10,10 @@ const MottakerAdresse = ({
   region,
   land,
   className,
-}: DokumenterV2.MottakerAdresse & { className: string }) => (
+  visNavn = false,
+}: DokumenterV2.MottakerAdresse & { className: string; visNavn?: boolean }) => (
   <div className={className}>
-    {!tittel?.orgnr && (
+    {visNavn && (
       <div>
         <b>{tittel.mottakerNavn}</b>
       </div>
