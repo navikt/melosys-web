@@ -142,11 +142,11 @@ const Saksbehandling = ({
     <>
       <Informasjonlinje />
       <div id="main-container" className="main-container">
-        <div className="saksbehandling">
+        <div className="trygdeavtale_saksbehandling">
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {!hovedpartErVirksomhet && (
+                {!hovedpartErVirksomhet ? (
                   <>
                     {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
                     {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
@@ -160,6 +160,10 @@ const Saksbehandling = ({
                     )}
                     <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />{" "}
                   </>
+                ) : (
+                  <Nav.AlertStripeInfo className="infostripe">
+                    Behandlingen er journalført på virksomhet
+                  </Nav.AlertStripeInfo>
                 )}
               </Nav.Column>
               <Nav.Column xs="5">

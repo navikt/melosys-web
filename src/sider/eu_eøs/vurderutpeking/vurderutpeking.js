@@ -131,6 +131,11 @@ const Vurderutpeking = ({
                   />
                 )}
                 {!hovedpartErVirksomhet && <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />}
+                {hovedpartErVirksomhet && (
+                  <Nav.AlertStripeInfo className="infostripe">
+                    Behandlingen er journalført på virksomhet
+                  </Nav.AlertStripeInfo>
+                )}
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
