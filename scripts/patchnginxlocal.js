@@ -8,7 +8,7 @@ const { proxy } = pkg;
 const DEFAULT_NGINX_SERVER_PORT = "3000";
 
 // update .env with custom version
-dotenv.set("REACT_APP_BUILD_VERSION", "java_local");
+dotenv.set("REACT_APP_BUILD_VERSION", "nginx_local");
 dotenv.set("REACT_APP_LOCAL_CONTEXT", "/melosys");
 dotenv.set("REACT_APP_GRAPHQL_URL", "/graphql/");
 dotenv.set("REACT_APP_LOCAL_API_PORT", DEFAULT_NGINX_SERVER_PORT);
