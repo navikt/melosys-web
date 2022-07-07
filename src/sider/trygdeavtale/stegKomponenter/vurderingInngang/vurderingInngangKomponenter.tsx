@@ -29,10 +29,10 @@ export const LandValgSomOptions = ({ landValg }: { landValg: KTObject[] }) => {
 
 export const FlytFinnesIkke = () => (
   <Nav.AlertStripeAdvarsel>
-    <Nav.Typo.Undertittel> Det finnes ikke en stegvelger for landet du har valgt </Nav.Typo.Undertittel>
+    <Nav.Typo.Undertittel> Det finnes ikke en stegvelger for landet du har valgt men: </Nav.Typo.Undertittel>
     <ul>
-      <li>Du kan fremdeles bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak</li>
-      <li>I behandlingsmenyen kan du avslutte saken og angi behandlingsresultatet</li>
+      <li>du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak</li>
+      <li>du kan avslutte saken og angi behandlingsresultatet i behandlingsmenyen</li>
     </ul>
   </Nav.AlertStripeAdvarsel>
 );
