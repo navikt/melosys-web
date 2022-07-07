@@ -30,6 +30,7 @@ const VurderingAvslag12_x_og_16 = ({
   lagreOgFatteVedtak,
   redigerbart,
   behandlingstype,
+  behandlingstema,
   touch,
   formIsValid,
   formValues,
@@ -75,12 +76,20 @@ const VurderingAvslag12_x_og_16 = ({
   };
 
   const avslaa = async () => {
+    const { UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG } = MKV.Koder.behandlinger.behandlingstema;
+
+    const { FASTSATT_LOVVALGSLAND, AVSLAG_SØKNAD } = MKV.Koder.behandlinger.behandlingsresultattyper;
+    const behandlingsresultatTypeKode =
+      behandlingstema === UTSENDT_ARBEIDSTAKER || behandlingstema === UTSENDT_SELVSTENDIG
+        ? AVSLAG_SØKNAD
+        : FASTSATT_LOVVALGSLAND;
+
     if (!validerForm()) return;
 
     setVedtakPending(true);
 
     await lagreOgFatteVedtak({
-      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      behandlingsresultatTypeKode,
       fritekst: formValues.vedtaksbrevFritekst,
       fritekstSed: null,
       mottakerinstitusjoner: null,
@@ -93,7 +102,6 @@ const VurderingAvslag12_x_og_16 = ({
       setVedtakPending(false);
     }
   };
-
   return (
     <div>
       <Nav.Typo.Undertittel>Avslag</Nav.Typo.Undertittel>
@@ -162,6 +170,7 @@ VurderingAvslag12_x_og_16.propTypes = {
   tilbake: PT.func.isRequired,
   redigerbart: PT.bool,
   behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
   formIsValid: PT.bool.isRequired,
   touch: PT.func.isRequired,
   formValues: PT.object,
@@ -195,6 +204,7 @@ const mapStateToProps = (state) => ({
   vilkarBegrunnelser: VilkarSelectors.vilkarBegrunnelserSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   formIsValid: isValid(KV.Form.AVSLAG_ARTIKKEL_12_OG_16)(state),
   formValues: getFormValues(KV.Form.AVSLAG_ARTIKKEL_12_OG_16)(state),
   initialValues: {
