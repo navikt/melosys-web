@@ -30,7 +30,7 @@
     "lodash": "^4.17.21",
     "lodash.throttle": "^4.1.1",
     "melosys-ikoner-assets": "^1.0.1",
-    "moment": "^2.29.2",
+    "moment": "^2.29.4",
     "moment-duration-format": "^2.3.2",
     "moment-timezone": "^0.5.27",
     "nav-frontend-alertstriper": "^4.0.1",
