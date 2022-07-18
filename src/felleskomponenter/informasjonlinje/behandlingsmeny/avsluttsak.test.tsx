@@ -61,8 +61,8 @@ describe("AvsluttSak", () => {
     const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
-    expect(handlinger).toHaveLength(5);
-    expect(handlinger.at(4).props().tekst).toBe("Ferdigbehandlet");
+    expect(handlinger).toHaveLength(4);
+    expect(handlinger.at(3).props().tekst).toBe("Ferdigbehandlet");
   });
 
   it("returerer null om EØS_VURDER_UTPEKING og ikke redigerbart", () => {
@@ -110,20 +110,52 @@ describe("AvsluttSak", () => {
   });
 
   it(`viser 'Søknaden er avslått' dersom behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, () => {
-    props.redigerbart = false;
+    props.redigerbart = true;
+    props.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
     props.behandlingstype = FØRSTEGANG;
     props.behandlingstema = YRKESAKTIV;
 
     const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
-    expect(handlinger).toHaveLength(1);
+    expect(handlinger).toHaveLength(4);
     expect(handlinger.at(0).props().tekst).toBe("Søknaden er avslått");
   });
 
   it(`viser ikke 'Søknaden er avslått' dersom behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, () => {
-    props.redigerbart = false;
+    props.redigerbart = true;
+    props.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
     props.behandlingstype = HENVENDELSE;
+    props.behandlingstema = YRKESAKTIV;
+
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const handlinger = avsluttSak.find(Handling);
+
+    expect(handlinger).toHaveLength(3);
+    expect(handlinger.at(0).props().tekst).not.toBe("Søknaden er avslått");
+    expect(handlinger.at(1).props().tekst).not.toBe("Søknaden er avslått");
+    expect(handlinger.at(2).props().tekst).not.toBe("Søknaden er avslått");
+  });
+
+  it(`viser ikke 'Søknaden er avslått' dersom sakstema er ${MKV.Koder.sakstemaer.UNNTAK}`, () => {
+    props.redigerbart = true;
+    props.sakstema = MKV.Koder.sakstemaer.UNNTAK;
+    props.behandlingstype = FØRSTEGANG;
+    props.behandlingstema = YRKESAKTIV;
+
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const handlinger = avsluttSak.find(Handling);
+
+    expect(handlinger).toHaveLength(3);
+    expect(handlinger.at(0).props().tekst).not.toBe("Søknaden er avslått");
+    expect(handlinger.at(1).props().tekst).not.toBe("Søknaden er avslått");
+    expect(handlinger.at(2).props().tekst).not.toBe("Søknaden er avslått");
+  });
+
+  it(`viser ikke 'Søknaden er avslått' dersom redigerbart er false`, () => {
+    props.redigerbart = false;
+    props.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
+    props.behandlingstype = FØRSTEGANG;
     props.behandlingstema = YRKESAKTIV;
 
     const avsluttSak = shallow(<AvsluttSak {...props} />);
@@ -133,20 +165,22 @@ describe("AvsluttSak", () => {
   });
 
   it(`viser 'Søknaden er innvilget' dersom sakstype er ${FTRL} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, () => {
-    props.redigerbart = false;
+    props.redigerbart = true;
+    props.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
     props.sakstype = FTRL;
-    props.behandlingstype = NY_VURDERING;
+    props.behandlingstype = FØRSTEGANG;
     props.behandlingstema = YRKESAKTIV;
 
     const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
-    expect(handlinger).toHaveLength(2);
+    expect(handlinger).toHaveLength(5);
     expect(handlinger.at(0).props().tekst).toBe("Søknaden er innvilget");
   });
 
   it(`viser 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, () => {
-    props.redigerbart = false;
+    props.redigerbart = true;
+    props.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
     props.sakstype = TRYGDEAVTALE;
     props.behandlingstype = NY_VURDERING;
     props.behandlingstema = YRKESAKTIV;
@@ -154,14 +188,48 @@ describe("AvsluttSak", () => {
     const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
-    expect(handlinger).toHaveLength(2);
+    expect(handlinger).toHaveLength(6);
     expect(handlinger.at(0).props().tekst).toBe("Søknaden er innvilget");
   });
 
   it(`viser ikke 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, () => {
-    props.redigerbart = false;
+    props.redigerbart = true;
+    props.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
     props.sakstype = TRYGDEAVTALE;
     props.behandlingstype = HENVENDELSE;
+    props.behandlingstema = YRKESAKTIV;
+
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const handlinger = avsluttSak.find(Handling);
+
+    expect(handlinger).toHaveLength(3);
+    expect(handlinger.at(0).props().tekst).not.toBe("Søknaden er innvilget");
+    expect(handlinger.at(1).props().tekst).not.toBe("Søknaden er innvilget");
+    expect(handlinger.at(2).props().tekst).not.toBe("Søknaden er innvilget");
+  });
+
+  it(`viser ikke 'Søknaden er innvilget' dersom sakstema er ${MKV.Koder.sakstemaer.UNNTAK}`, () => {
+    props.redigerbart = true;
+    props.sakstema = MKV.Koder.sakstemaer.UNNTAK;
+    props.sakstype = TRYGDEAVTALE;
+    props.behandlingstype = NY_VURDERING;
+    props.behandlingstema = YRKESAKTIV;
+
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const handlinger = avsluttSak.find(Handling);
+
+    expect(handlinger).toHaveLength(4);
+    expect(handlinger.at(0).props().tekst).not.toBe("Søknaden er innvilget");
+    expect(handlinger.at(1).props().tekst).not.toBe("Søknaden er innvilget");
+    expect(handlinger.at(2).props().tekst).not.toBe("Søknaden er innvilget");
+    expect(handlinger.at(3).props().tekst).not.toBe("Søknaden er innvilget");
+  });
+
+  it(`viser ikke 'Søknaden er innvilget' dersom redigerbart er false`, () => {
+    props.redigerbart = false;
+    props.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
+    props.sakstype = TRYGDEAVTALE;
+    props.behandlingstype = NY_VURDERING;
     props.behandlingstema = YRKESAKTIV;
 
     const avsluttSak = shallow(<AvsluttSak {...props} />);
