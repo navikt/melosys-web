@@ -62,12 +62,11 @@ const AvsluttSak = ({
 
   const skalViseAvslåPgaManglendeOpplysninger = () => {
     switch (behandlingskategori) {
-      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
-        return redigerbart;
       case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
         return redigerbart && !behandlingstemaErTrygdetid;
       case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
         return false;
+      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
@@ -129,7 +128,7 @@ const AvsluttSak = ({
   };
 
   const skalViseSøknadenErInnvilget = () => {
-    if (skjulAngiBehandlingsresultattype) {
+    if (skjulAngiBehandlingsresultattype || !redigerbart) {
       return false;
     }
     if (sakstema !== MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG) {
@@ -151,7 +150,7 @@ const AvsluttSak = ({
   };
 
   const skalViseSøknadenErAvslått = () => {
-    if (skjulAngiBehandlingsresultattype) {
+    if (skjulAngiBehandlingsresultattype || !redigerbart) {
       return false;
     }
     if (sakstema !== MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG) {
