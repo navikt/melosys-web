@@ -27,6 +27,7 @@ type avsluttSakProps = {
   henleggSak: () => void;
   avsluttSakSomBortfalt: () => void;
   ferdigbehandleNyVurdering: () => void;
+  sakstema: string;
   sakstype: string;
   behandlingstema: string;
   behandlingstype: string;
@@ -41,6 +42,7 @@ const AvsluttSak = ({
   tilForsiden,
   henleggSak,
   avsluttSakSomBortfalt,
+  sakstema,
   sakstype,
   behandlingstema,
   behandlingstype,
@@ -130,6 +132,9 @@ const AvsluttSak = ({
     if (skjulAngiBehandlingsresultattype) {
       return false;
     }
+    if (sakstema !== MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG) {
+      return false;
+    }
     if (
       sakstype === FTRL &&
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
@@ -147,6 +152,9 @@ const AvsluttSak = ({
 
   const skalViseSøknadenErAvslått = () => {
     if (skjulAngiBehandlingsresultattype) {
+      return false;
+    }
+    if (sakstema !== MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG) {
       return false;
     }
     return (

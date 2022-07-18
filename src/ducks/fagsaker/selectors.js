@@ -20,6 +20,10 @@ export const SakstypeSelector = createSelector(FagsakSelector, (fagsak) => fagsa
 
 export const SakstypeKodeSelector = createSelector(SakstypeSelector, (sakstype) => (sakstype ? sakstype.kode : ""));
 
+export const SakstemaSelector = createSelector(FagsakSelector, (fagsak) => fagsak.sakstema);
+
+export const SakstemaKodeSelector = createSelector(SakstemaSelector, (sakstema) => (sakstema ? sakstema.kode : ""));
+
 export const HovedpartRolleSelector = createSelector(
   (state) => FagsakSelector(state),
   (fagsak) => fagsak.hovedpartRolle || ""

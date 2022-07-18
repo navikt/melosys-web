@@ -26,6 +26,7 @@ import "./behandlingsmeny.css";
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  sakstema: fagsakSelectors.SakstemaKodeSelector(state),
   sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
@@ -55,6 +56,7 @@ export const Behandlingsmeny = ({
   visFerdigbehandleNyVurderingDialogHandle,
   visRevurderFagsakDialogHandle,
   redigerbart,
+  sakstema,
   sakstype,
   behandlingID,
   behandlingstema,
@@ -125,6 +127,7 @@ export const Behandlingsmeny = ({
             behandlingID={behandlingID}
             henleggSak={visHenleggDialogHandle}
             avsluttSakSomBortfalt={visAvsluttSakSomBortfaltDialogHandle}
+            sakstema={sakstema}
             sakstype={sakstype}
             behandlingstema={behandlingstema}
             behandlingstype={behandlingstype}
