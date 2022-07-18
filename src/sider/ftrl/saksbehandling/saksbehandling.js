@@ -11,7 +11,7 @@ import * as MPT from "../../../proptypes";
 import * as API from "../../../services/api";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog from "../../../felleskomponenter/sideDialog";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
@@ -43,6 +43,7 @@ const Saksbehandling = ({
   annenBehandlingOppfriskes,
   arbeidsland,
   behandlingstype,
+  hovedpartRolle,
   behandlingOppfriskes,
   behandlingsgrunnlag,
   behandlingsgrunnlagPeriodeFom,
@@ -174,6 +175,8 @@ const Saksbehandling = ({
   );
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
 
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+
   return (
     <>
       <Informasjonlinje />
@@ -182,27 +185,31 @@ const Saksbehandling = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
-                {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
-                {visStegVelger && (
-                  <Stegvelger
-                    annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-                    behandlingID={behandlingID}
-                    lagreAvklartefaktaHandler={lagreAvklartefakta}
-                    lagreAllData={lagreAllData}
-                    lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={
-                      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger
-                    }
-                    lagreVilkarHandler={lagreVilkar}
-                    oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
-                    begrunnelser={MKV.KTObjects.begrunnelser}
-                    landkoder={landkoder}
-                    bestemmelser={bestemmelser}
-                    tilForsiden={tilForsiden}
-                    stegMap={stegMap}
-                    forsteSteg={STEG.START}
-                    sakstype={MKV.Koder.sakstyper.FTRL}
-                  />
+                {!hovedpartErVirksomhet && (
+                  <>
+                    {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
+                    {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
+                    {visStegVelger && (
+                      <Stegvelger
+                        annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+                        behandlingID={behandlingID}
+                        lagreAvklartefaktaHandler={lagreAvklartefakta}
+                        lagreAllData={lagreAllData}
+                        lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={
+                          lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger
+                        }
+                        lagreVilkarHandler={lagreVilkar}
+                        oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
+                        begrunnelser={MKV.KTObjects.begrunnelser}
+                        landkoder={landkoder}
+                        bestemmelser={bestemmelser}
+                        tilForsiden={tilForsiden}
+                        stegMap={stegMap}
+                        forsteSteg={STEG.START}
+                        sakstype={MKV.Koder.sakstyper.FTRL}
+                      />
+                    )}
+                  </>
                 )}
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
@@ -226,6 +233,7 @@ const Saksbehandling = ({
                   redigerbart={redigerbart}
                   dokumentOversikt={dokumentOversikt}
                   dokumenter={dokumenter}
+                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -250,6 +258,7 @@ Saksbehandling.propTypes = {
   dokumentOversikt: PT.array.isRequired,
   fagsak: MPT.Fagsak,
   fagsakStatusKode: PT.string.isRequired,
+  hovedpartRolle: PT.string.isRequired,
   history: PT.object.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   location: PT.object.isRequired,
@@ -294,6 +303,7 @@ Saksbehandling.defaultProps = {
 
 const mapStateToProps = (state) => ({
   arbeidsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(

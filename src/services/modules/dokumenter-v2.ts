@@ -47,7 +47,7 @@ export interface Felt {
   valg: null | Valg;
 }
 
-export type TilgjengeligeMalerMottaker = {
+export type TilgjengeligMottaker = {
   uuid: string;
   type: string;
   rolle: string;
@@ -56,13 +56,16 @@ export type TilgjengeligeMalerMottaker = {
   feilmelding: string | null;
 };
 
-export type TilgjengeligeMaler = {
+export type TilgjengeligMal = {
+  mottaker: TilgjengeligMottaker;
+  brevTyper: TilgjengeligBrev[];
+};
+
+export type TilgjengeligBrev = {
   type: KTObject;
   felter: Felt[] | null;
-  muligeMottakere: TilgjengeligeMalerMottaker[];
-  mottakereHjelpetekst: string | null;
 };
-export type TilgjengeligeMalerResDto = TilgjengeligeMaler[];
+export type TilgjengeligeMalerResDto = TilgjengeligMal[];
 
 export type KopiMottaker = {
   rolle: string;

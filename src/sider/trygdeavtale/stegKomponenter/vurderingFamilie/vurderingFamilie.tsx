@@ -4,18 +4,18 @@ import { getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import * as Api from "../../../services/api";
-import * as KV from "../../../kodeverk";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Utils from "../../../utils";
+import * as Api from "../../../../services/api";
+import * as KV from "../../../../kodeverk";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Utils from "../../../../utils";
 
-import { formSelectors } from "../../../ducks/form";
-import { BOOLSK_STRING } from "../../../constants";
-import { StegStatus } from "../stegvelger";
+import { formSelectors } from "../../../../ducks/form";
+import { BOOLSK_STRING } from "../../../../constants";
+import { StegStatus } from "../../stegvelger";
 
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_familie from "./vurderingFamilieSchema";
 
 import "./vurderingFamilie.css";
@@ -83,7 +83,7 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
 }
 
 const VurderingFamilie = ({
@@ -110,28 +110,26 @@ const VurderingFamilie = ({
   useEffect(() => {
     if (!redigerbart || !formValues || !formValues.barn || !formValues.ektefelle) return;
     oppdaterFlyt({
-      resultat: {
-        ...resultat,
-        barn:
-          tilknyttedeBarn && !Utils._isEmpty(tilknyttedeBarn)
-            ? [
-                ...tilknyttedeBarn.map((barn) => ({
-                  uuid: barn?.uuid || "",
-                  omfattet: Utils.streng.uppercaseStrengTilBool(finnBarn(barn?.uuid, formValues.barn)?.innvilget),
-                  begrunnelseKode: finnBarn(barn?.uuid, formValues.barn)?.begrunnelse || null,
-                  begrunnelseFritekst: formValues.barn?.fritekst || null,
-                })),
-              ]
-            : [],
-        ektefelle: tilknyttetEktefelle
-          ? {
-              uuid: tilknyttetEktefelle?.uuid || "",
-              omfattet: Utils.streng.uppercaseStrengTilBool(formValues.ektefelle.innvilget),
-              begrunnelseKode: formValues.ektefelle.begrunnelse,
-              begrunnelseFritekst: formValues.ektefelle.fritekst,
-            }
-          : null,
-      },
+      ...resultat,
+      barn:
+        tilknyttedeBarn && !Utils._isEmpty(tilknyttedeBarn)
+          ? [
+              ...tilknyttedeBarn.map((barn) => ({
+                uuid: barn?.uuid || "",
+                omfattet: Utils.streng.uppercaseStrengTilBool(finnBarn(barn?.uuid, formValues.barn)?.innvilget),
+                begrunnelseKode: finnBarn(barn?.uuid, formValues.barn)?.begrunnelse || null,
+                begrunnelseFritekst: formValues.barn?.fritekst || null,
+              })),
+            ]
+          : [],
+      ektefelle: tilknyttetEktefelle
+        ? {
+            uuid: tilknyttetEktefelle?.uuid || "",
+            omfattet: Utils.streng.uppercaseStrengTilBool(formValues.ektefelle.innvilget),
+            begrunnelseKode: formValues.ektefelle.begrunnelse,
+            begrunnelseFritekst: formValues.ektefelle.fritekst,
+          }
+        : null,
     });
   }, [formValues, tilknyttedeBarn, tilknyttetEktefelle]);
 
