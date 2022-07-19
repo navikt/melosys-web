@@ -10,6 +10,7 @@ export enum Status {
 
 const hentFeatureToggle = (toggleName: string) => Api.Featuretoggle.hent([toggleName]);
 
+// OBS: Denne returnerer promise. Må brukes med await. Bruk heller useFeatureToggle dersom du er i funksjonell komponent.
 export const erFeatureToggleEnabled = (toggleName: string): Promise<boolean> =>
   hentFeatureToggle(toggleName)
     .then((response) => response[toggleName])

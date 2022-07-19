@@ -3,7 +3,7 @@ import * as Api from "../../../services/api";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
-import { erFeatureToggleEnabled } from "../../../featuretoggle";
+import { useFeatureToggle } from "../../../featuretoggle";
 import Handling from "./handling";
 
 const {
@@ -18,6 +18,7 @@ const {
 } = MKV.Koder.behandlinger.behandlingstema;
 const { NY_VURDERING, ENDRET_PERIODE, FØRSTEGANG } = MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
+const { MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
 const { MEDLEM_I_FOLKETRYGDEN, UNNTATT_MEDLEMSKAP, FASTSATT_LOVVALGSLAND, AVSLAG_SØKNAD } =
   MKV.Koder.behandlinger.behandlingsresultattyper;
 
@@ -50,9 +51,8 @@ const AvsluttSak = ({
   redigerbart,
   behandlingsstatus,
 }: avsluttSakProps) => {
-  const skjulAngiBehandlingsresultattype = !erFeatureToggleEnabled("melosys.sakstema");
+  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
-
   const behandlingstemaErTrygdetid = behandlingstema === TRYGDETID;
   const behandlingstypeErNyVurdering = behandlingstype === NY_VURDERING;
   const behandlingstypeErEndretPeriode = behandlingstype === ENDRET_PERIODE;
@@ -64,13 +64,12 @@ const AvsluttSak = ({
     switch (behandlingskategori) {
       case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
         return redigerbart && !behandlingstemaErTrygdetid;
-      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
-        return false;
       case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
         return redigerbart;
+      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
       default:
         return false;
     }
@@ -82,12 +81,11 @@ const AvsluttSak = ({
         return redigerbart && !behandlingstypeErEndretPeriode;
       case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
         return redigerbart && !behandlingstemaErTrygdetid;
-      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
-        return false;
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
         return redigerbart;
+      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
       default:
         return false;
     }
@@ -128,10 +126,7 @@ const AvsluttSak = ({
   };
 
   const skalViseSøknadenErInnvilget = () => {
-    if (skjulAngiBehandlingsresultattype || !redigerbart) {
-      return false;
-    }
-    if (sakstema !== MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG) {
+    if (sakstemaToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
       return false;
     }
     if (
@@ -150,10 +145,7 @@ const AvsluttSak = ({
   };
 
   const skalViseSøknadenErAvslått = () => {
-    if (skjulAngiBehandlingsresultattype || !redigerbart) {
-      return false;
-    }
-    if (sakstema !== MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG) {
+    if (sakstemaToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
       return false;
     }
     return (
