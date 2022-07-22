@@ -117,7 +117,7 @@ export const Behandlingsmeny = ({
       {visBehandlingsmeny && (
         <div className="behandlingsmeny__meny">
           <LeggBehandlingTilbake
-            lagreOgLukkHandle={tilForsiden}
+            tilForsiden={tilForsiden}
             tilbakeleggHandle={tilbakeleggHandle}
             behandlingID={behandlingID}
             redigerbart={redigerbart}
