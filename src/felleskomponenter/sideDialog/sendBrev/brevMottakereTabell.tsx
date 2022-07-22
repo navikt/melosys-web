@@ -2,17 +2,20 @@ import React from "react";
 import { RootState } from "AppTypes";
 import { getFormValues } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
-import MottakerTabell from "../../tabell/mottakerTabell";
+
+import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { formSelectors } from "../../../ducks/form";
-import { DokumenterV2 } from "../../../services/api";
-import PdfLenkeListe from "../../pdfLenkeListe";
 import * as Ikoner from "../../../resources/images";
-import { SendBrevFormValues } from "./types";
 import * as Skjema from "../../skjema";
 
-const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { formSelectors } from "../../../ducks/form";
+import MottakerTabell from "../../tabell/mottakerTabell";
+import { erArbeidsgiverEllerVirksomhet } from "./brevMottaker";
+import PdfLenkeListe from "../../pdfLenkeListe";
+import { SendBrevFormValues } from "./types";
+
+const { BRUKER } = KV.Koder.MottakerRolle;
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -24,7 +27,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface BrevMottakereTabellProps {
-  muligeMottakere: DokumenterV2.HentMuligeMottakereResDto;
+  muligeMottakere: Api.DokumenterV2.HentMuligeMottakereResDto;
   formIsValid: boolean;
   valgtMottaker: any;
   hentBrevRequest: any;
@@ -38,7 +41,7 @@ const BrevMottakereTabell = ({
   formIsValid,
   hentBrevRequest,
 }: BrevMottakereTabellProps & PropsFromRedux) => {
-  const lagDokumenterData = (muligMottaker: DokumenterV2.MuligMottaker, ikon?: boolean) => {
+  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
     const orgnrFraFormValues = valgtMottaker.orgnrSettesAvSaksbehandler
       ? formValues.organisasjonsnummer
       : formValues.arbeidsgiver;
@@ -50,7 +53,7 @@ const BrevMottakereTabell = ({
           ...hentBrevRequest(muligMottaker.rolle),
           orgNr: muligMottaker.rolle !== BRUKER ? muligMottaker.orgnr || orgnrFraFormValues : null,
           kontaktpersonNavn:
-            muligMottaker.rolle === ARBEIDSGIVER && valgtMottaker.orgnrSettesAvSaksbehandler
+            erArbeidsgiverEllerVirksomhet(muligMottaker.rolle) && valgtMottaker.orgnrSettesAvSaksbehandler
               ? formValues.kontaktperson
               : null,
         },
@@ -58,7 +61,7 @@ const BrevMottakereTabell = ({
     ];
   };
 
-  const mapRad = (muligMottaker: DokumenterV2.MuligMottaker) => {
+  const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return [
       {
         verdi: (
@@ -74,13 +77,13 @@ const BrevMottakereTabell = ({
     ];
   };
 
-  const mapKopiMottakere = (muligeBrevMottakere: DokumenterV2.HentMuligeMottakereResDto) => {
+  const mapKopiMottakere = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
     return formValues?.kopimottaker
       ? muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker))
       : [];
   };
 
-  const mapMottakerRader = (muligeBrevMottakere: DokumenterV2.HentMuligeMottakereResDto) => {
+  const mapMottakerRader = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
     return [
       mapRad(muligeBrevMottakere.hovedMottaker),
       ...mapKopiMottakere(muligeBrevMottakere),

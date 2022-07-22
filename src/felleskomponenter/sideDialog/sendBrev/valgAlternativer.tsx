@@ -6,9 +6,10 @@ interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
   feltKode: string;
   redigerbart: boolean;
+  changeField: (felt: string, data: any) => void;
 }
 
-const ValgAlternativer = ({ valg, feltKode, redigerbart }: ValgAlternativProps) => {
+const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlternativProps) => {
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {
     return (
       <>
@@ -26,6 +27,10 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart }: ValgAlternativProps) 
     );
   }
   if (valg.valgType === DokumenterV2.ValgType.SELECT) {
+    if (valg.valgAlternativer.length === 1) {
+      changeField(`felt.${feltKode}.valg`, valg.valgAlternativer[0].beskrivelse);
+      return null;
+    }
     return (
       <Skjema.Select feltNavn={`felt.${feltKode}.valg`} label="" emptyFieldText="Velg...">
         {valg.valgAlternativer.map((alternativ) => (

@@ -113,24 +113,32 @@ const Vurderutpeking = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {behandlingsgrunnlagErKlart && !hovedpartErVirksomhet && (
-                  <Stegvelger
-                    behandlingID={behandlingID}
-                    stegMap={stegMap}
-                    lagreVilkarHandler={lagreVilkar}
-                    lagreAvklartefaktaHandler={lagreAvklartefakta}
-                    lagreLovvalgsperioderHandler={lagreLovvalgsperioder}
-                    lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
-                    oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
-                    lagreAllData={lagreAllData}
-                    oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
-                    begrunnelser={MKV.KTObjects.begrunnelser}
-                    landkoder={MKV.KTObjects.landkoder}
-                    tilForsiden={tilForsiden}
-                    forsteSteg={forsteSteg}
-                  />
+                {hovedpartErVirksomhet ? (
+                  <Nav.AlertStripeInfo className="infostripe">
+                    Behandlingen er journalført på virksomhet
+                  </Nav.AlertStripeInfo>
+                ) : (
+                  <>
+                    {behandlingsgrunnlagErKlart && (
+                      <Stegvelger
+                        behandlingID={behandlingID}
+                        stegMap={stegMap}
+                        lagreVilkarHandler={lagreVilkar}
+                        lagreAvklartefaktaHandler={lagreAvklartefakta}
+                        lagreLovvalgsperioderHandler={lagreLovvalgsperioder}
+                        lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
+                        oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
+                        lagreAllData={lagreAllData}
+                        oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
+                        begrunnelser={MKV.KTObjects.begrunnelser}
+                        landkoder={MKV.KTObjects.landkoder}
+                        tilForsiden={tilForsiden}
+                        forsteSteg={forsteSteg}
+                      />
+                    )}
+                    <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+                  </>
                 )}
-                {!hovedpartErVirksomhet && <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />}
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering

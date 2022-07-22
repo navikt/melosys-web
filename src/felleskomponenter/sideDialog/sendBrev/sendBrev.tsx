@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -19,10 +19,8 @@ import * as Utils from "../../../utils";
 
 import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { formSelectors } from "../../../ducks/form";
-import ValgAlternativer from "./valgAlternativer";
-import FeltBeskrivelse from "./feltBeskrivelse";
-import BrevFelt from "./brevFelt";
-import BrevMottaker from "./brevMottaker";
+import BrevValg from "./brevValg";
+import BrevMottaker, { erArbeidsgiverEllerVirksomhet } from "./brevMottaker";
 import { SendBrevFormValues } from "./types";
 import BrevVedlegg from "./brevVedlegg";
 import BrevMottakereTabell from "./brevMottakereTabell";
@@ -100,13 +98,35 @@ const SendBrev = ({
       "valgtBrev",
       tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === formValues.type)
     );
-    if (formValues?.type && !formValues?.valgtMottaker?.feilmelding) {
+  }, [formValues?.type]);
+
+  const erMottakerGyldig = (values: SendBrevFormValues) => {
+    if (!values?.valgtMottaker) return false;
+    const { rolle, orgnrSettesAvSaksbehandler } = values.valgtMottaker;
+    if (erArbeidsgiverEllerVirksomhet(rolle) && !orgnrSettesAvSaksbehandler && !values.arbeidsgiver) return false;
+    if (erArbeidsgiverEllerVirksomhet(rolle) && orgnrSettesAvSaksbehandler && !values.organisasjonsnummer) return false;
+    return true;
+  };
+
+  useEffect(() => {
+    if (tilgjengeligeBrevtyper?.length === 1 && erMottakerGyldig(formValues)) {
+      changeField("type", tilgjengeligeBrevtyper[0].type.kode);
+    }
+  }, [tilgjengeligeBrevtyper, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
+
+  const kanHenteMuligeMottakere = (values: SendBrevFormValues) => {
+    if (!values || !values.valgtMottaker || !values.type || values.valgtMottaker?.feilmelding) return false;
+    return erMottakerGyldig(values);
+  };
+
+  useEffect(() => {
+    if (kanHenteMuligeMottakere(formValues)) {
       Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-        produserbartdokument: formValues.type,
+        produserbartdokument: formValues?.type || "",
         orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
       }).then((response) => setMuligeMottakere(response));
     }
-  }, [formValues?.type]);
+  }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find(
@@ -218,7 +238,7 @@ const SendBrev = ({
         </Nav.Column>
       </Nav.Row>
 
-      {mottakerErValgt && (
+      {mottakerErValgt && tilgjengeligeBrevtyper.length !== 1 && (
         <Nav.Row>
           <Nav.Column xs={brevTypeSelectWidth}>
             <Skjema.Select
@@ -239,21 +259,13 @@ const SendBrev = ({
         </Nav.Row>
       )}
 
-      {formValues.valgtBrev?.felter?.map((felt) => (
-        <Fragment key={felt.kode}>
-          {felt.valg && (
-            <Nav.Row>
-              <Nav.Column xs={felterWidth}>
-                <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />
-                <ValgAlternativer valg={felt.valg} feltKode={felt.kode} redigerbart={redigerbart} />
-              </Nav.Column>
-            </Nav.Row>
-          )}
-          {(felt.valg === null || finnValgAlternativ(felt)?.visFelt) && (
-            <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={felterWidth} />
-          )}
-        </Fragment>
-      ))}
+      <BrevValg
+        formValues={formValues}
+        width={felterWidth}
+        redigerbart={redigerbart}
+        changeField={changeField}
+        finnValgAlternativ={finnValgAlternativ}
+      />
 
       {formIsValid && brevtypeErValgt && muligeMottakere && (
         <Nav.Row>
