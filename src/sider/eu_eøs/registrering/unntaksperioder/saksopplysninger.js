@@ -45,7 +45,6 @@ const Saksopplysninger = ({
   tilForsiden,
   startOgVisOppfriskModal,
   behandlingsresultatErHentet,
-  kontrollerGodkjennUnntaksperiode,
   kontrollerPeriode,
   kontrollFeilmeldinger,
 }) => {
@@ -77,7 +76,6 @@ const Saksopplysninger = ({
 
   React.useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
-    kontrollerGodkjennUnntaksperiode(behandlingID);
   }, []);
 
   React.useEffect(() => {
@@ -457,7 +455,6 @@ Saksopplysninger.propTypes = {
   tilForsiden: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   behandlingsresultatErHentet: PT.bool.isRequired,
-  kontrollerGodkjennUnntaksperiode: PT.func.isRequired,
   kontrollerPeriode: PT.func.isRequired,
   kontrollFeilmeldinger: PT.arrayOf(PT.string).isRequired,
 };
@@ -484,8 +481,6 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) =>
     datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
-  kontrollerGodkjennUnntaksperiode: (behandlingID) =>
-    dispatch(kontrollOperations.kontrollerGodkjennUnntaksperiode(behandlingID)),
   kontrollerPeriode: (behandlingID, periodeFom, periodeTom) =>
     dispatch(kontrollOperations.kontrollerPeriode(behandlingID, { periodeFom, periodeTom })),
 });
