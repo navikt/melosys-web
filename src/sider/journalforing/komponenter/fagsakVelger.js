@@ -8,17 +8,17 @@ import KnyttTilSak from "./knyttTilSak";
 import OpprettSak, { OpprettSakTittel } from "./opprettSak";
 import MKV from "../../../melosyskodeverk";
 import { JOURNALFORING_HENSIKT } from "../../../constants";
-
-import "./fagsakVelger.css";
 import { useFeatureToggle } from "../../../featuretoggle";
 
-const behandlingstyper = (sakstype, alltidNyBehandlingToggle) => {
+import "./fagsakVelger.css";
+
+const behandlingstyper = (sakstype, alltidNyBehandlingToggleEnabled) => {
   switch (sakstype) {
     case MKV.Koder.sakstyper.EU_EOS:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
         ({ kode }) =>
           kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
-          (alltidNyBehandlingToggle === "enabled" && kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING)
+          (alltidNyBehandlingToggleEnabled && kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING)
       );
     case MKV.Koder.sakstyper.TRYGDEAVTALE:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
@@ -43,7 +43,10 @@ const FagsakVelger = (props) => {
         value: sak.saksnummer,
         innhold: <EnkeltSak sak={sak} />,
         footer: (
-          <KnyttTilSak sak={sak} behandlingstyper={behandlingstyper(sak.sakstype.kode, alltidNyBehandlingToggle)} />
+          <KnyttTilSak
+            sak={sak}
+            behandlingstyper={behandlingstyper(sak.sakstype.kode, alltidNyBehandlingToggle === "enabled")}
+          />
         ),
       },
     ],

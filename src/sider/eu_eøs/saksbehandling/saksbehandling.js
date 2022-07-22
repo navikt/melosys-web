@@ -188,11 +188,11 @@ class Saksbehandling extends Component {
       <>
         <Informasjonlinje />
         <div id="main-container" className="main-container">
-          <div className="saksbehandling">
+          <div className="eueos_saksbehandling">
             <Nav.Container fluid>
               <Nav.Row>
                 <Nav.Column xs="7">
-                  {!hovedpartErVirksomhet && (
+                  {!hovedpartErVirksomhet ? (
                     <Saksopplysninger
                       behandlingID={behandlingID}
                       visOppfriskModal={visOppfriskModal}
@@ -205,6 +205,10 @@ class Saksbehandling extends Component {
                       tilForsiden={tilForsiden}
                       startOgVisOppfriskModal={startOgVisOppfriskModal}
                     />
+                  ) : (
+                    <Nav.AlertStripeInfo className="infostripe">
+                      Behandlingen er journalført på virksomhet
+                    </Nav.AlertStripeInfo>
                   )}
                 </Nav.Column>
                 <Nav.Column xs="5">

@@ -11,7 +11,6 @@ import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
 import * as Mui from "../../../felleskomponenter/ui";
-import { BRUKER, VIRKSOMHET } from "./journalforingform";
 
 import AvsenderVelger from "./avsender";
 import LenkeListeVelger from "./lenkelistevelger";
@@ -24,6 +23,8 @@ import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 
 import "./informasjon.css";
+
+const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
 const dokumenttitler = [
   { term: "Arbeidsforhold" },

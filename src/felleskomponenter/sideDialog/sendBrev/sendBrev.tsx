@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -19,10 +19,8 @@ import * as Utils from "../../../utils";
 
 import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { formSelectors } from "../../../ducks/form";
-import ValgAlternativer from "./valgAlternativer";
-import FeltBeskrivelse from "./feltBeskrivelse";
-import BrevFelt from "./brevFelt";
-import BrevMottaker from "./brevMottaker";
+import BrevValg from "./brevValg";
+import BrevMottaker, { erArbeidsgiverEllerVirksomhet } from "./brevMottaker";
 import { SendBrevFormValues } from "./types";
 import BrevVedlegg from "./brevVedlegg";
 import BrevMottakereTabell from "./brevMottakereTabell";
@@ -77,37 +75,58 @@ const SendBrev = ({
   felterWidth = "12",
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
-
+  const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
-  const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
-  const [mottakerFeil, setMottakerFeil] = useState<string>();
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
+
+  const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
+  const tilgjengeligeBrevtyper =
+    tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
-      response.forEach((mal) =>
-        mal.muligeMottakere.forEach((muligMottaker) => {
-          muligMottaker.uuid = Utils._uuid();
-        })
-      );
+      response.forEach((mal) => {
+        mal.mottaker.uuid = Utils._uuid();
+      });
       setTilgjengeligeMaler(response);
     });
   }, []);
 
   useEffect(() => {
-    const valgtMal = tilgjengeligeMaler?.find((mal) => mal.type.kode === formValues.type);
-    changeField("valgtMal", valgtMal);
-    changeField("mottaker", undefined);
-    if (valgtMal?.muligeMottakere.length === 1) {
-      changeField("mottaker", valgtMal?.muligeMottakere[0].uuid);
-    }
+    changeField(
+      "valgtBrev",
+      tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === formValues.type)
+    );
   }, [formValues?.type]);
 
-  const finnMottakerFraValgtMal = (uuid?: string) => {
-    if (!formValues?.valgtMal) return undefined;
-    return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
+  const erMottakerGyldig = (values: SendBrevFormValues) => {
+    if (!values?.valgtMottaker) return false;
+    const { rolle, orgnrSettesAvSaksbehandler } = values.valgtMottaker;
+    if (erArbeidsgiverEllerVirksomhet(rolle) && !orgnrSettesAvSaksbehandler && !values.arbeidsgiver) return false;
+    if (erArbeidsgiverEllerVirksomhet(rolle) && orgnrSettesAvSaksbehandler && !values.organisasjonsnummer) return false;
+    return true;
   };
+
+  useEffect(() => {
+    if (tilgjengeligeBrevtyper?.length === 1 && erMottakerGyldig(formValues)) {
+      changeField("type", tilgjengeligeBrevtyper[0].type.kode);
+    }
+  }, [tilgjengeligeBrevtyper, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
+
+  const kanHenteMuligeMottakere = (values: SendBrevFormValues) => {
+    if (!values || !values.valgtMottaker || !values.type || values.valgtMottaker?.feilmelding) return false;
+    return erMottakerGyldig(values);
+  };
+
+  useEffect(() => {
+    if (kanHenteMuligeMottakere(formValues)) {
+      Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+        produserbartdokument: formValues?.type || "",
+        orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
+      }).then((response) => setMuligeMottakere(response));
+    }
+  }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find(
@@ -116,7 +135,7 @@ const SendBrev = ({
   };
 
   const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false): any => {
-    const feltFraValgtMal = formValues?.valgtMal?.felter?.find((felt) => felt.kode === feltNavn);
+    const feltFraValgtMal = formValues?.valgtBrev?.felter?.find((felt) => felt.kode === feltNavn);
     if (!feltFraValgtMal) {
       return null;
     }
@@ -156,14 +175,16 @@ const SendBrev = ({
   };
 
   const sendBrev = () => {
-    const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
-    if (!mottaker) return;
-    let requestBody: Api.DokumenterV2.OpprettBrevReqDto = hentBrevRequest(mottaker.rolle);
-    if (mottaker.rolle === "ARBEIDSGIVER") {
+    if (!formValues?.valgtMottaker) return;
+
+    let requestBody: Api.DokumenterV2.OpprettBrevReqDto = hentBrevRequest(formValues.valgtMottaker.rolle);
+    if (formValues.valgtMottaker.rolle === "ARBEIDSGIVER") {
       requestBody = {
         ...requestBody,
-        orgNr: mottaker.orgnrSettesAvSaksbehandler ? formValues.organisasjonsnummer : formValues.arbeidsgiver,
-        kontaktpersonNavn: mottaker.orgnrSettesAvSaksbehandler ? formValues.kontaktperson : null,
+        orgNr: formValues.valgtMottaker.orgnrSettesAvSaksbehandler
+          ? formValues.organisasjonsnummer
+          : formValues.arbeidsgiver,
+        kontaktpersonNavn: formValues.valgtMottaker.orgnrSettesAvSaksbehandler ? formValues.kontaktperson : null,
       };
     }
     Api.DokumenterV2.opprettBrev(behandlingID, requestBody)
@@ -187,13 +208,13 @@ const SendBrev = ({
     event.preventDefault();
   };
 
-  const maltypeErValgt = formValues?.type;
-  const mottakerErValgt = formValues?.mottaker;
-
   if (!tilgjengeligeMaler || !formValues) return null;
 
+  const mottakerErValgt = formValues.valgtMottaker;
+  const brevtypeErValgt = formValues.valgtBrev;
+
   const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}`;
-  const vedleggFelt = formValues?.valgtMal?.felter?.find((felt) => felt.kode === Api.DokumenterV2.FeltType.VEDLEGG);
+  const vedleggFelt = formValues.valgtBrev?.felter?.find((felt) => felt.kode === Api.DokumenterV2.FeltType.VEDLEGG);
 
   return (
     <div className="send_brev">
@@ -207,61 +228,51 @@ const SendBrev = ({
       )}
 
       <Nav.Row>
-        <Nav.Column xs={brevTypeSelectWidth}>
-          <Skjema.Select
-            feltNavn="type"
-            label={<Nav.Typo.Element>Type brev</Nav.Typo.Element>}
-            disabled={!redigerbart}
-            emptyFieldText="Velg..."
-            emptyFieldDisabled={!!formValues.type}
-            onBlur={overstyrBlurEvent}
-          >
-            {tilgjengeligeMaler.map((mal) => (
-              <option key={mal.type.kode} value={mal.type.kode}>
-                {mal.type.term}
-              </option>
-            ))}
-          </Skjema.Select>
+        <Nav.Column xs={mottakerSelectWidth}>
+          <BrevMottaker
+            redigerbart={redigerbart}
+            tilgjengeligeMottakere={tilgjengeligeMottakere}
+            overstyrBlurEvent={overstyrBlurEvent}
+            changeField={changeField}
+          />
         </Nav.Column>
       </Nav.Row>
 
-      {maltypeErValgt && !!formValues.valgtMal && (
+      {mottakerErValgt && tilgjengeligeBrevtyper.length !== 1 && (
         <Nav.Row>
-          <Nav.Column xs={mottakerSelectWidth}>
-            <BrevMottaker
-              redigerbart={redigerbart}
-              muligeMottakere={muligeMottakere}
-              setMuligeMottakere={setMuligeMottakere}
-              mottakerFeil={mottakerFeil}
-              setMottakerFeil={setMottakerFeil}
-              overstyrBlurEvent={overstyrBlurEvent}
-            />
+          <Nav.Column xs={brevTypeSelectWidth}>
+            <Skjema.Select
+              feltNavn="type"
+              label={<Nav.Typo.Element>Type brev</Nav.Typo.Element>}
+              disabled={!redigerbart}
+              emptyFieldText="Velg..."
+              emptyFieldDisabled={!!formValues.type}
+              onBlur={overstyrBlurEvent}
+            >
+              {tilgjengeligeBrevtyper.map((brevType) => (
+                <option key={brevType.type.kode} value={brevType.type.kode}>
+                  {brevType.type.term}
+                </option>
+              ))}
+            </Skjema.Select>
           </Nav.Column>
         </Nav.Row>
       )}
 
-      {formValues.valgtMal?.felter?.map((felt) => (
-        <Fragment key={felt.kode}>
-          {felt.valg && (
-            <Nav.Row>
-              <Nav.Column xs={felterWidth}>
-                <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />
-                <ValgAlternativer valg={felt.valg} feltKode={felt.kode} redigerbart={redigerbart} />
-              </Nav.Column>
-            </Nav.Row>
-          )}
-          {(felt.valg === null || finnValgAlternativ(felt)?.visFelt) && (
-            <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={felterWidth} />
-          )}
-        </Fragment>
-      ))}
+      <BrevValg
+        formValues={formValues}
+        width={felterWidth}
+        redigerbart={redigerbart}
+        changeField={changeField}
+        finnValgAlternativ={finnValgAlternativ}
+      />
 
-      {formIsValid && mottakerErValgt && muligeMottakere && (
+      {formIsValid && brevtypeErValgt && muligeMottakere && (
         <Nav.Row>
           <Nav.Column xs={mottakerTabellWidth}>
             <BrevMottakereTabell
               muligeMottakere={muligeMottakere}
-              valgtMottaker={finnMottakerFraValgtMal(formValues.mottaker)}
+              valgtMottaker={formValues.valgtMottaker}
               hentBrevRequest={hentBrevRequest}
             />
           </Nav.Column>
@@ -281,7 +292,7 @@ const SendBrev = ({
       <div>
         <Nav.Hovedknapp
           mini
-          disabled={!redigerbart || !formIsValid || !!mottakerFeil}
+          disabled={!redigerbart || !formIsValid || !!formValues.valgtMottaker?.feilmelding}
           className="brevknapp"
           onClick={sendBrev}
         >

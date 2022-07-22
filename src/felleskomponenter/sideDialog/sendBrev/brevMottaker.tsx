@@ -13,7 +13,6 @@ import * as Utils from "../../../utils";
 import { OrganisasjonsAdresse } from "../../adresser";
 import MottakerAdresse from "./mottakerAdresse";
 import FeltBeskrivelse from "./feltBeskrivelse";
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 import { SendBrevFormValues } from "./types";
@@ -21,12 +20,13 @@ import { SendBrevFormValues } from "./types";
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET } = KV.Koder.MottakerRolle;
 
 const erBruker = (rolle: string | undefined) => rolle === BRUKER;
-const erArbeidsgiverEllerVirksomhet = (rolle: string | undefined) =>
-  rolle && [ARBEIDSGIVER, VIRKSOMHET].includes(rolle);
+const erVirksomhet = (rolle: string | undefined) => rolle === VIRKSOMHET;
+const erArbeidsgiver = (rolle: string | undefined) => rolle === ARBEIDSGIVER;
+export const erArbeidsgiverEllerVirksomhet = (rolle: string | undefined) =>
+  erArbeidsgiver(rolle) || erVirksomhet(rolle);
 
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   orgnrValid: formSelectors.SendBrevOrgnummerValidSelector(state),
 });
 
@@ -39,61 +39,50 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   redigerbart: boolean;
-  muligeMottakere: DokumenterV2.HentMuligeMottakereResDto | undefined;
-  setMuligeMottakere: (muligeMottakere: DokumenterV2.HentMuligeMottakereResDto | undefined) => void;
-  setMottakerFeil: (mottakerFeil: string | undefined) => void;
-  mottakerFeil: string | undefined;
+  tilgjengeligeMottakere: DokumenterV2.TilgjengeligMottaker[];
+  changeField: (felt: string, data: any) => void;
   overstyrBlurEvent: (event: React.FocusEvent) => void;
 }
 
 const BrevMottaker = ({
+  tilgjengeligeMottakere,
   formValues,
   redigerbart,
-  behandlingID,
   hentOrganisasjon,
-  setMuligeMottakere,
   orgnrValid,
-  setMottakerFeil,
-  mottakerFeil,
+  changeField,
   overstyrBlurEvent,
 }: Props & PropsFromRedux) => {
+  const [feil, setFeil] = useState<string>();
   const [adresse, setAdresse] = useState<{
     mottakerAdresse?: DokumenterV2.MottakerAdresse;
     organisasjonsAdresse?: Organisasjon;
   }>();
 
-  const valgtMottaker = () => {
-    if (!formValues?.valgtMal || !formValues?.mottaker) return undefined;
-    return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === formValues.mottaker);
-  };
-
-  const mottakerErBruker = erBruker(valgtMottaker()?.rolle);
-  const mottakerErArbeidsgiverEllerVirksomhet =
-    erArbeidsgiverEllerVirksomhet(valgtMottaker()?.rolle) && !valgtMottaker()?.orgnrSettesAvSaksbehandler;
+  const mottakerErBruker = erBruker(formValues?.valgtMottaker?.rolle);
+  const mottakerErVirksomhet = erVirksomhet(formValues?.valgtMottaker?.rolle);
+  const mottakerErArbeidsgiver =
+    erArbeidsgiver(formValues?.valgtMottaker?.rolle) && !formValues?.valgtMottaker?.orgnrSettesAvSaksbehandler;
   const mottakerOrgNrSettesAvSaksbehandler =
-    erArbeidsgiverEllerVirksomhet(valgtMottaker()?.rolle) && valgtMottaker()?.orgnrSettesAvSaksbehandler;
+    erArbeidsgiverEllerVirksomhet(formValues?.valgtMottaker?.rolle) &&
+    formValues?.valgtMottaker?.orgnrSettesAvSaksbehandler;
 
+  const mottakerHjelpetekst =
+    "Hvis bruker eller arbeidsgiver har fullmektig som er lagt inn i sidemenyen, vil brevet automatisk bli sendt til denne.";
   const arbeidsgiverHjelptekst =
     "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen " +
     "under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. " +
     "\nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
-  const hentMuligeMottakere = (valgtMal: string, orgnr: string | undefined) => {
-    DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null }).then(
-      setMuligeMottakere
-    );
-  };
-
-  const hentOrganisasjonIfValid = async (data: { orgnr?: string; valid: boolean; type: string }) => {
+  const hentOrganisasjonIfValid = async (data: { orgnr?: string; valid: boolean }) => {
     if (!data.valid || !data.orgnr) return;
     const response = await hentOrganisasjon(data.orgnr);
     if (response.data.response) {
-      setMottakerFeil(
+      setFeil(
         response.data.response.status === 404 ? "Kunne ikke finne organisasjon" : "Feil ved henting av organisasjon"
       );
     } else {
       setAdresse({ organisasjonsAdresse: response.data });
-      hentMuligeMottakere(data.type, data.orgnr);
     }
   };
 
@@ -101,35 +90,37 @@ const BrevMottaker = ({
 
   useEffect(() => {
     setAdresse(undefined);
-    setMottakerFeil(undefined);
-    setMuligeMottakere(undefined);
-    if (!formValues || !formValues.type) return;
-    const mottaker = valgtMottaker();
-    if (!mottaker) return;
-    if (erBruker(mottaker.rolle)) {
-      if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
-      else {
-        setAdresse({ mottakerAdresse: mottaker?.adresser ? mottaker.adresser[0] : undefined });
-        hentMuligeMottakere(formValues.type, undefined);
-      }
+    setFeil(undefined);
+    changeField("type", undefined);
+
+    const valgtMottaker = tilgjengeligeMottakere.find((mottaker) => mottaker.uuid === formValues.mottaker);
+    changeField("valgtMottaker", valgtMottaker);
+    if (!valgtMottaker) return;
+
+    if (valgtMottaker.feilmelding) {
+      setFeil(valgtMottaker.feilmelding);
+      return;
     }
-    if (erArbeidsgiverEllerVirksomhet(mottaker.rolle) && mottaker.orgnrSettesAvSaksbehandler) {
-      debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid, type: formValues.type });
+
+    if (erBruker(valgtMottaker.rolle)) {
+      setAdresse({ mottakerAdresse: valgtMottaker.adresser ? valgtMottaker.adresser[0] : undefined });
     }
-    if (erArbeidsgiverEllerVirksomhet(mottaker.rolle) && !mottaker.orgnrSettesAvSaksbehandler) {
-      if (formValues?.arbeidsgiver) {
-        setAdresse({
-          mottakerAdresse:
-            mottaker && mottaker?.adresser
-              ? mottaker.adresser.find(
-                  (mottakerAdresse: DokumenterV2.MottakerAdresse) =>
-                    mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
-                )
-              : undefined,
-        });
-        hentMuligeMottakere(formValues.type, formValues.arbeidsgiver);
-      }
-      if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
+
+    if (erVirksomhet(valgtMottaker.rolle)) {
+      setAdresse({ mottakerAdresse: valgtMottaker.adresser ? valgtMottaker.adresser[0] : undefined });
+      changeField("arbeidsgiver", valgtMottaker.adresser && valgtMottaker.adresser[0].tittel.orgnr);
+    }
+
+    if (erArbeidsgiver(valgtMottaker.rolle) && !valgtMottaker.orgnrSettesAvSaksbehandler) {
+      setAdresse({
+        mottakerAdresse: valgtMottaker.adresser?.find(
+          (mottakerAdresse: DokumenterV2.MottakerAdresse) => mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
+        ),
+      });
+    }
+
+    if (erArbeidsgiverEllerVirksomhet(valgtMottaker.rolle) && valgtMottaker.orgnrSettesAvSaksbehandler) {
+      debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid });
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid, formValues?.arbeidsgiver]);
 
@@ -138,38 +129,47 @@ const BrevMottaker = ({
       <Skjema.Select
         feltNavn="mottaker"
         label={
-          <FeltBeskrivelse beskrivelse="Mottaker" hjelpetekst={formValues.valgtMal?.mottakereHjelpetekst || null} />
+          <FeltBeskrivelse
+            beskrivelse="Mottaker"
+            hjelpetekst={
+              tilgjengeligeMottakere.some((mottaker) => mottaker.rolle === VIRKSOMHET) ? null : mottakerHjelpetekst
+            }
+          />
         }
-        disabled={!redigerbart || formValues.valgtMal?.muligeMottakere.length === 1}
+        disabled={!redigerbart || tilgjengeligeMottakere?.length === 1}
         emptyFieldText="Velg..."
         emptyFieldDisabled={!!formValues.mottaker}
         onBlur={overstyrBlurEvent}
       >
-        {formValues.valgtMal?.muligeMottakere.map((mottaker) => (
+        {tilgjengeligeMottakere?.map((mottaker) => (
           <option key={mottaker.uuid} value={mottaker.uuid}>
             {mottaker.type}
           </option>
         ))}
       </Skjema.Select>
 
-      {mottakerErBruker && (
+      {(mottakerErBruker || mottakerErVirksomhet) && (
         <Nav.Row>
           <Nav.Column xs="12">
-            {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
-            {adresse?.mottakerAdresse && <MottakerAdresse {...adresse?.mottakerAdresse} className="brukeradresse" />}
+            {feil && <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>}
+            {adresse?.mottakerAdresse && (
+              <MottakerAdresse {...adresse?.mottakerAdresse} className="brukeradresse" visNavn />
+            )}
           </Nav.Column>
         </Nav.Row>
       )}
 
-      {mottakerErArbeidsgiverEllerVirksomhet && (
+      {mottakerErArbeidsgiver && (
         <Nav.Row>
-          {mottakerFeil ? (
-            <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>
-          ) : (
+          {feil ? (
             <Nav.Column xs="12">
-              <Nav.Typo.Normaltekst style={{ marginBottom: "0.5rem" }} tag="div">
+              <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>
+            </Nav.Column>
+          ) : (
+            <Nav.Column xs="12" className="arbeidsgiver">
+              <Nav.Typo.Normaltekst tag="div">
                 Velg:
-                {valgtMottaker()?.rolle === ARBEIDSGIVER && (
+                {formValues?.valgtMottaker?.rolle === ARBEIDSGIVER && (
                   <Nav.Hjelpetekst
                     className="hjelpetekst"
                     tittel={arbeidsgiverHjelptekst}
@@ -181,10 +181,10 @@ const BrevMottaker = ({
                   </Nav.Hjelpetekst>
                 )}
               </Nav.Typo.Normaltekst>
-              {valgtMottaker()?.adresser?.map((virksomhet: DokumenterV2.MottakerAdresse) => (
+              {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.MottakerAdresse) => (
                 <Fragment key={Utils._uuid()}>
                   <Skjema.Radio
-                    className="arbeidsgiver_radio"
+                    className="arbeidsgiver__radio"
                     feltNavn="arbeidsgiver"
                     label={`${virksomhet.tittel.mottakerNavn} (org.nr. ${virksomhet.tittel.orgnr})`}
                     id={`arbeidsgiver.${virksomhet.tittel.orgnr}`}
@@ -193,7 +193,7 @@ const BrevMottaker = ({
                     disabled={!redigerbart}
                   />
                   {formValues.arbeidsgiver === virksomhet.tittel.orgnr && adresse?.mottakerAdresse && (
-                    <MottakerAdresse {...adresse?.mottakerAdresse} className="arbeidsgiveradresse" />
+                    <MottakerAdresse {...adresse?.mottakerAdresse} className="arbeidsgiver__adresse" />
                   )}
                 </Fragment>
               ))}
@@ -212,7 +212,13 @@ const BrevMottaker = ({
               disabled={!redigerbart}
             />
             {adresse?.organisasjonsAdresse && (
-              <OrganisasjonsAdresse organisasjon={adresse.organisasjonsAdresse} visNavn boldNavn visTittel={false} />
+              <OrganisasjonsAdresse
+                className="organisasjonsAdresse"
+                organisasjon={adresse.organisasjonsAdresse}
+                visNavn
+                boldNavn
+                visTittel={false}
+              />
             )}
           </Nav.Column>
           <Nav.Column xs="6">
@@ -223,7 +229,11 @@ const BrevMottaker = ({
               disabled={!redigerbart}
             />
           </Nav.Column>
-          {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
+          {feil && (
+            <Nav.Column xs="12">
+              <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>
+            </Nav.Column>
+          )}
         </Nav.Row>
       )}
     </>

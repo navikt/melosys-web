@@ -9,8 +9,9 @@ import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
 
-import "./knyttTilSak.css";
 import { useFeatureToggle } from "../../../featuretoggle";
+
+import "./knyttTilSak.css";
 
 export const KnyttTilSak = (props) => {
   const { sak, behandlingstyper, opprettBehandling } = props;
@@ -27,7 +28,12 @@ export const KnyttTilSak = (props) => {
   const visUtenOppretteBehandling =
     alltidNyBehandlingToggle === "enabled" ? !sakInneholderSoeknad : sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
 
-  if (sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
+  const erInaktiv = [
+    MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+    MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING,
+  ].includes(sisteBehandling.behandlingsstatus.kode);
+
+  if (erInaktiv) {
     return (
       <div className="panelramme">
         <Mui.Elementskrift

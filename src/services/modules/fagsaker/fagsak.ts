@@ -10,9 +10,12 @@ interface SoknadDto {
     fom: string | null;
     tom: string | null;
   };
-  land: string[];
+  land: {
+    landkoder: string[];
+    erUkjenteEllerAlleEosLand: boolean;
+  };
 }
-interface OpprettReqDto {
+export interface OpprettReqDto {
   brukerID: string;
   sakstype: string;
   behandlingstema: string;

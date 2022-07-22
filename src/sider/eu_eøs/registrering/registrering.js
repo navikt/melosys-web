@@ -88,7 +88,7 @@ export const Registrering = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {!hovedpartErVirksomhet && (
+                {!hovedpartErVirksomhet ? (
                   <Saksopplysninger
                     redigerbart={redigerbart}
                     behandlingID={behandlingID}
@@ -98,6 +98,10 @@ export const Registrering = ({
                     tilForsiden={tilForsiden}
                     startOgVisOppfriskModal={startOgVisOppfriskModal}
                   />
+                ) : (
+                  <Nav.AlertStripeInfo className="infostripe">
+                    Behandlingen er journalført på virksomhet
+                  </Nav.AlertStripeInfo>
                 )}
               </Nav.Column>
               <Nav.Column xs="5">

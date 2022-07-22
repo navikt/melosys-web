@@ -3,11 +3,6 @@ import { isUndefined as _isUndefined } from "lodash";
 const byggVersjon = process.env.REACT_APP_BUILD_VERSION || "(ukjent)";
 
 export function buildinfo() {
-  if (byggVersjon === "local") {
-    return {
-      byggVersjon,
-    };
-  }
   return {
     byggVersjon,
   };

@@ -15,7 +15,6 @@ import * as MPT from "../../proptypes";
 import { JOURNALFORING_HENSIKT } from "../../constants";
 
 import Sticky from "../../felleskomponenter/sticky";
-import { erFeatureToggleEnabled } from "../../featuretoggle";
 import PDFDokument from "./komponenter/pdfdokument";
 import JournalforingSED from "./komponenter/journalforingsed";
 import JournalforingForm from "./komponenter/journalforingform";
@@ -32,6 +31,7 @@ class Journalforing extends Component {
     valgtDokumentID: -1,
     visFeilmeldingDialog: false,
     feilmeldinger: [],
+    submitSpinner: false,
   };
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
@@ -215,15 +215,11 @@ class Journalforing extends Component {
     }
 
     try {
-      if (await erFeatureToggleEnabled("melosys.dele_opp_tilordne_endepunkt")) {
-        if (hensikt === JOURNALFORING_HENSIKT.NY_VURDERING) {
-          await Api.Journalforing.nyVurdering(journalforingData);
-        }
-        if (hensikt === JOURNALFORING_HENSIKT.KNYTT) {
-          await Api.Journalforing.knytt(journalforingData);
-        }
-      } else {
-        await Api.Journalforing.tilordne(journalforingData);
+      if (hensikt === JOURNALFORING_HENSIKT.NY_VURDERING) {
+        await Api.Journalforing.nyVurdering(journalforingData);
+      }
+      if (hensikt === JOURNALFORING_HENSIKT.KNYTT) {
+        await Api.Journalforing.knytt(journalforingData);
       }
       this.setState({ visFeilmeldingDialog: false });
       return tilForsiden();
@@ -349,18 +345,20 @@ class Journalforing extends Component {
     }
   };
 
-  submitJournalforing = () => {
+  submitJournalforing = async () => {
+    this.setState({ submitSpinner: true });
     const { journalforingSkjemaVerdier, journalforSEDSkjemaVerdier } = this.props;
     if (journalforSEDSkjemaVerdier.brukerID) {
       this.journalforSed();
     } else {
       const { saksnummer } = journalforingSkjemaVerdier;
       if (saksnummer === "-1") {
-        this.opprettFagsak();
+        await this.opprettFagsak();
       } else {
-        this.knyttTilEksisterendeSak();
+        await this.knyttTilEksisterendeSak();
       }
     }
+    this.setState({ submitSpinner: false });
   };
 
   kanSubmittes = () => {
@@ -378,7 +376,7 @@ class Journalforing extends Component {
       settFeltInnhold,
     } = this.props;
 
-    const { visFeilmeldingDialog, feilmeldinger } = this.state;
+    const { visFeilmeldingDialog, feilmeldinger, submitSpinner } = this.state;
 
     const { knyttTilEksisterendeSak, opprettFagsak } = this;
     const { journalpostID } = this.props.match.params;
@@ -408,6 +406,7 @@ class Journalforing extends Component {
                           avsenderNavn={avsenderNavn}
                           behandlingstema={behandlingstema}
                           sakstype={sakstype}
+                          submitSpinner={submitSpinner}
                           submitJournalforing={this.submitJournalforing}
                           avbrytJournalforing={this.avbrytJournalforing}
                           kanSubmittes={this.kanSubmittes()}
@@ -422,6 +421,7 @@ class Journalforing extends Component {
                           fagsakListe={fagsakListe}
                           knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                           opprettFagsak={opprettFagsak}
+                          submitSpinner={submitSpinner}
                           submitJournalforing={this.submitJournalforing}
                           avbrytJournalforing={this.avbrytJournalforing}
                           kanSubmittes={this.kanSubmittes()}

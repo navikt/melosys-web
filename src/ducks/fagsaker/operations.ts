@@ -7,10 +7,14 @@
  *
  */
 
+import { ThunkDispatch } from "redux-thunk";
+import { RootState } from "AppTypes";
+
 import { doThenDispatch } from "../../services/utils";
 import * as Actions from "./actions";
 import * as Api from "../../services/api";
 import * as Types from "./types";
+import { navigeringOperations } from "../navigering";
 
 /**
  * Henter registerinformasjon som allerede er importert backend i forbindelse
@@ -20,12 +24,28 @@ import * as Types from "./types";
  * @param snr String Saksnummeret
  * @returns {*}
  */
-export function hent(snr) {
+export function hent(snr: string) {
   return doThenDispatch(() => Api.Fagsaker.fagsak.hent(snr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function opprett(body: Api.Fagsaker.fagsak.OpprettReqDto) {
+  return doThenDispatch(
+    () => Api.Fagsaker.fagsak.opprett(body),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    {
+      success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
+        dispatch(navigeringOperations.tilForsiden());
+      },
+    }
+  );
 }
 
 export function resetFagsakState() {

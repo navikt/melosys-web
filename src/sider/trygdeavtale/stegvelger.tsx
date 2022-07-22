@@ -10,16 +10,12 @@ import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
+import * as Steg from "./stegKomponenter";
 
 import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
 import BehandlingsgrunnlagFeilmeldinger from "../../felleskomponenter/behandlingsgrunnlagFeilmeldinger";
-import VurderingInngang from "./stegKomponenter/vurderingInngang";
-import VurderingAvklarVirksomhet from "./stegKomponenter/vurderingAvklarVirksomhet";
-import VurderingBestemmelse from "./stegKomponenter/vurderingBestemmelse";
-import VurderingFamilie from "./stegKomponenter/vurderingFamilie";
-import VurderingVedtak from "./stegKomponenter/vurderingVedtak";
 
 import { behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { datalastingOperations } from "../../ducks/datalasting";
@@ -48,11 +44,11 @@ interface AktueltSteg {
 }
 
 const stegMap = {
-  INNGANG: { tittel: "Inngang", komponent: VurderingInngang },
-  AVKLAR_VIRKSOMHET: { tittel: "Avklar virksomhet", komponent: VurderingAvklarVirksomhet },
-  BESTEMMELSE: { tittel: "Bestemmelse", komponent: VurderingBestemmelse },
-  FAMILIE: { tittel: "Familie", komponent: VurderingFamilie },
-  VEDTAK: { tittel: "Vedtak", komponent: VurderingVedtak },
+  INNGANG: { tittel: "Inngang", komponent: Steg.VurderingInngang },
+  AVKLAR_VIRKSOMHET: { tittel: "Avklar virksomhet", komponent: Steg.VurderingAvklarVirksomhet },
+  BESTEMMELSE: { tittel: "Bestemmelse", komponent: Steg.VurderingBestemmelse },
+  FAMILIE: { tittel: "Familie", komponent: Steg.VurderingFamilie },
+  VEDTAK: { tittel: "Vedtak", komponent: Steg.VurderingVedtak },
 };
 
 const mapStateToProps = (state: RootState) => ({
@@ -113,10 +109,11 @@ class Stegvelger extends Component<Props, State> {
     }
   }
 
-  hentFlytOgOppdaterAktuelleSteg = () =>
+  hentFlytOgOppdaterAktuelleSteg = () => {
     Api.Trygdeavtale.hentFlyt(this.props.behandlingID).then((response) =>
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
+  };
 
   harEndringer = (propsObject: any, prevPropsObject: any, path: string) => {
     const propsValue = getValueAtPath(propsObject, path);
@@ -130,8 +127,8 @@ class Stegvelger extends Component<Props, State> {
     );
   };
 
-  oppdaterFlyt = (request: Api.Trygdeavtale.FlytReqDto, callBack?: () => void) => {
-    Api.Trygdeavtale.sendFlyt(this.props.behandlingID, request).then((response) => {
+  oppdaterFlyt = (resultat: Api.Trygdeavtale.Resultat, callBack?: () => void) => {
+    Api.Trygdeavtale.sendFlyt(this.props.behandlingID, resultat).then((response) => {
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) });
       if (callBack) callBack();
     });

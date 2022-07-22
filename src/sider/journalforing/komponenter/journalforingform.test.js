@@ -2,9 +2,10 @@ import React from "react";
 
 import MKV from "../../../melosyskodeverk";
 
-import { JournalforingForm, BRUKER, VIRKSOMHET } from "./journalforingform";
+import { JournalforingForm } from "./journalforingform";
 import SendForvaltningsMelding from "./sendForvaltningsMelding";
 
+const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 const {
   UTSENDT_ARBEIDSTAKER,
   UTSENDT_SELVSTENDIG,

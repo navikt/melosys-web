@@ -1,6 +1,6 @@
 import { lazy, object, string } from "yup";
-import { BOOLSK_STRING } from "../../../constants";
-import * as Utils from "../../../utils";
+import { BOOLSK_STRING } from "../../../../constants";
+import * as Utils from "../../../../utils";
 
 const INNVILGET_KREVES = { melding: "Du må velge om familiemedlem skal innvilges" };
 const BEGRUNNELSE_KREVES = { melding: "Du må velge begrunnelse" };
