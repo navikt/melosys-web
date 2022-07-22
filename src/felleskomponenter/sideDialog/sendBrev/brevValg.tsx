@@ -18,6 +18,8 @@ interface BrevValgProps {
 }
 
 const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlternativ }: BrevValgProps) => {
+  const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => felt.valg === null || finnValgAlternativ(felt)?.visFelt;
+
   return (
     <>
       {formValues.valgtBrev?.felter?.map((felt) => (
@@ -35,9 +37,7 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
               </Nav.Column>
             </Nav.Row>
           )}
-          {(felt.valg === null || finnValgAlternativ(felt)?.visFelt) && (
-            <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={width} />
-          )}
+          {skalViseBrevFelt(felt) && <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={width} />}
         </Fragment>
       ))}
     </>

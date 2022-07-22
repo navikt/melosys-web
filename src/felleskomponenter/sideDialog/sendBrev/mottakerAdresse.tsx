@@ -10,7 +10,7 @@ const MottakerAdresse = ({
   region,
   land,
   className,
-  visNavn = false,
+  visNavn,
 }: DokumenterV2.MottakerAdresse & { className: string; visNavn?: boolean }) => (
   <div className={className}>
     {visNavn && (

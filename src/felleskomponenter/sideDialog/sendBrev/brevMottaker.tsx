@@ -148,17 +148,16 @@ const BrevMottaker = ({
         ))}
       </Skjema.Select>
 
-      {mottakerErBruker ||
-        (mottakerErVirksomhet && (
-          <Nav.Row>
-            <Nav.Column xs="12">
-              {feil && <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>}
-              {adresse?.mottakerAdresse && (
-                <MottakerAdresse {...adresse?.mottakerAdresse} className="brukeradresse" visNavn />
-              )}
-            </Nav.Column>
-          </Nav.Row>
-        ))}
+      {(mottakerErBruker || mottakerErVirksomhet) && (
+        <Nav.Row>
+          <Nav.Column xs="12">
+            {feil && <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>}
+            {adresse?.mottakerAdresse && (
+              <MottakerAdresse {...adresse?.mottakerAdresse} className="brukeradresse" visNavn />
+            )}
+          </Nav.Column>
+        </Nav.Row>
+      )}
 
       {mottakerErArbeidsgiver && (
         <Nav.Row>
