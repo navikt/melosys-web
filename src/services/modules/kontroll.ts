@@ -16,5 +16,5 @@ export type PeriodeKontrollData = {
   periodeTom: Date;
 };
 
-export const kontrollerPeriode = (behandlingID: number, data: PeriodeKontrollData) =>
+export const kontrollerUnntaksperiode = (behandlingID: number, data: PeriodeKontrollData) =>
   postAsJson(`${API_BASE_URL}${KONTROLL}/${behandlingID}/unntaksperiode`, data);

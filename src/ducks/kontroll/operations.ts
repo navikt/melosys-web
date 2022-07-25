@@ -10,8 +10,8 @@ export function kontrollerFerdigbehandling(data: Api.Kontroll.FerdigbehandlingKo
   });
 }
 
-export function kontrollerPeriode(behandlingID: number, data: Api.Kontroll.PeriodeKontrollData) {
-  return doThenDispatch(() => Api.Kontroll.kontrollerPeriode(behandlingID, data), {
+export function kontrollerUnntaksperiode(behandlingID: number, data: Api.Kontroll.PeriodeKontrollData) {
+  return doThenDispatch(() => Api.Kontroll.kontrollerUnntaksperiode(behandlingID, data), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.FEILET,

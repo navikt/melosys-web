@@ -45,7 +45,7 @@ const Saksopplysninger = ({
   tilForsiden,
   startOgVisOppfriskModal,
   behandlingsresultatErHentet,
-  kontrollerPeriode,
+  kontrollerUnntaksperiode,
   kontrollFeilmeldinger,
 }) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.AVSLAG);
@@ -80,7 +80,7 @@ const Saksopplysninger = ({
 
   React.useEffect(() => {
     if (endrePeriodeFom && endrePeriodeTom) {
-      kontrollerPeriode(behandlingID, endrePeriodeFom, endrePeriodeTom);
+      kontrollerUnntaksperiode(behandlingID, endrePeriodeFom, endrePeriodeTom);
     }
   }, [endrePeriodeFom, endrePeriodeTom]);
 
@@ -455,7 +455,7 @@ Saksopplysninger.propTypes = {
   tilForsiden: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   behandlingsresultatErHentet: PT.bool.isRequired,
-  kontrollerPeriode: PT.func.isRequired,
+  kontrollerUnntaksperiode: PT.func.isRequired,
   kontrollFeilmeldinger: PT.arrayOf(PT.string).isRequired,
 };
 
@@ -481,8 +481,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) =>
     datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
-  kontrollerPeriode: (behandlingID, periodeFom, periodeTom) =>
-    dispatch(kontrollOperations.kontrollerPeriode(behandlingID, { periodeFom, periodeTom })),
+  kontrollerUnntaksperiode: (behandlingID, periodeFom, periodeTom) =>
+    dispatch(kontrollOperations.kontrollerUnntaksperiode(behandlingID, { periodeFom, periodeTom })),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
