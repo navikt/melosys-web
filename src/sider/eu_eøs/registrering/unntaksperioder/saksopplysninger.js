@@ -46,7 +46,7 @@ const Saksopplysninger = ({
   startOgVisOppfriskModal,
   behandlingsresultatErHentet,
   kontrollerUnntaksperiode,
-  kontrollFeilmeldinger,
+  unntaksperiodeFeilmeldinger,
 }) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.AVSLAG);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState("");
@@ -60,6 +60,7 @@ const Saksopplysninger = ({
     tom: undefined,
     fritekst: undefined,
   });
+  const [kanIkkeGodkjenneUnntaksperiodeUtenEndring, setKanIkkeGodkjenneUnntaksperiode] = React.useState(false);
   const [endrePeriodeFom, setEndrePeriodeFom] = React.useState("");
   const [endrePeriodeTom, setEndrePeriodeTom] = React.useState("");
   const [endrePeriodeBegrunnelse, setEndrePeriodeBegrunnelse] = React.useState(
@@ -74,8 +75,21 @@ const Saksopplysninger = ({
     params: { snr: saksnummer },
   } = match;
 
+  const harUnntaksperiodefeil = () => !Utils._isEmpty(unntaksperiodeFeilmeldinger);
+  const harValgtIkkeGodkjenn = () => KV.Koder.Unntaksperiode.AVSLAG === unntaksperiodeVurdering;
+  const kanIkkeGodkjenneUnntaksperiodeUtenEndringAvPerioden = () => {
+    const harIkkeForsøktEndrePeriode = !endrePeriodeTom && !endrePeriodeFom;
+    const harFeilEtterFørsteSjekk =
+      harIkkeForsøktEndrePeriode && !kanIkkeGodkjenneUnntaksperiodeUtenEndring && harUnntaksperiodefeil();
+    if (harFeilEtterFørsteSjekk) {
+      setKanIkkeGodkjenneUnntaksperiode(true);
+    }
+    return kanIkkeGodkjenneUnntaksperiodeUtenEndring;
+  };
+
   React.useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
+    kontrollerUnntaksperiode(behandlingID, sedLovvalgsperiode.fom, sedLovvalgsperiode.tom);
   }, []);
 
   React.useEffect(() => {
@@ -303,8 +317,6 @@ const Saksopplysninger = ({
     return null;
   }
 
-  const kanGodkjenne = () => Utils._isEmpty(kontrollFeilmeldinger);
-
   const listevalgEndringHandler = (event) => {
     const ikkeGodkjentBegrunnelse = [...event.value];
     setIkkeGodkjentBegrunnelseKoder(ikkeGodkjentBegrunnelse);
@@ -339,7 +351,7 @@ const Saksopplysninger = ({
                       value={KV.Koder.Unntaksperiode.GODKJENT}
                       checked={KV.Koder.Unntaksperiode.GODKJENT === unntaksperiodeVurdering}
                       onChange={endreUnntaksperiodeVurdering}
-                      disabled={!kanGodkjenne() || !erGyldigLovvalgsperiode()}
+                      disabled={kanIkkeGodkjenneUnntaksperiodeUtenEndringAvPerioden() || !erGyldigLovvalgsperiode()}
                       label="Godkjenn unntaksperiode"
                     />
                     <Nav.Radio
@@ -421,7 +433,7 @@ const Saksopplysninger = ({
                       spinner: registreringPending,
                       autoDisableVedSpinner: true,
                       onClick: () => submitRegistrering(),
-                      disabled: !redigerbart || !kanGodkjenne(),
+                      disabled: !harValgtIkkeGodkjenn() && (!redigerbart || harUnntaksperiodefeil()),
                       htmlType: "submit",
                     }}
                     bekreftTekst="Lagre"
@@ -456,7 +468,7 @@ Saksopplysninger.propTypes = {
   startOgVisOppfriskModal: PT.func.isRequired,
   behandlingsresultatErHentet: PT.bool.isRequired,
   kontrollerUnntaksperiode: PT.func.isRequired,
-  kontrollFeilmeldinger: PT.arrayOf(PT.string).isRequired,
+  unntaksperiodeFeilmeldinger: PT.arrayOf(PT.object).isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -473,7 +485,7 @@ const mapStateToProps = (state) => ({
   sedLovvalgsbestemmelse: behandlingerSelectors.SEDSelector(state).lovvalgsbestemmelse,
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingsresultatErHentet: behandlingsresultatSelectors.BehandlingsresultatStatusErOkSelector(state),
-  kontrollFeilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+  unntaksperiodeFeilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -481,8 +493,11 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) =>
     datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
-  kontrollerUnntaksperiode: (behandlingID, periodeFom, periodeTom) =>
-    dispatch(kontrollOperations.kontrollerUnntaksperiode(behandlingID, { periodeFom, periodeTom })),
+  kontrollerUnntaksperiode: (behandlingID, periodeFom, periodeTom) => {
+    if (periodeFom && periodeTom) {
+      dispatch(kontrollOperations.kontrollerUnntaksperiode(behandlingID, { periodeFom, periodeTom }));
+    }
+  },
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
