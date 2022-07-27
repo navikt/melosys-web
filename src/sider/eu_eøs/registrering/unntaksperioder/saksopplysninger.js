@@ -81,7 +81,7 @@ const Saksopplysninger = ({
   React.useEffect(() => {
     setHarUnntaksperiodefeil(!Utils._isEmpty(unntaksperiodeFeilmeldinger));
     setHarValgtIkkeGodkjenn(KV.Koder.Unntaksperiode.AVSLAG === unntaksperiodeVurdering);
-  }, [unntaksperiodeVurdering, unntaksperiodeFeilmeldinger, harUnntaksperiodefeil]);
+  }, [unntaksperiodeVurdering, unntaksperiodeFeilmeldinger]);
 
   React.useEffect(() => {
     if (!kanIkkeGodkjenneUtenÅEndrePerioden && !endrePeriodeTom && !endrePeriodeFom) {
