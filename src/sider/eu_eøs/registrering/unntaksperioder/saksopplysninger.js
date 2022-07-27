@@ -60,7 +60,6 @@ const Saksopplysninger = ({
     tom: undefined,
     fritekst: undefined,
   });
-  const [kanIkkeGodkjenneUnntaksperiodeUtenEndring, setKanIkkeGodkjenneUnntaksperiode] = React.useState(false);
   const [endrePeriodeFom, setEndrePeriodeFom] = React.useState("");
   const [endrePeriodeTom, setEndrePeriodeTom] = React.useState("");
   const [endrePeriodeBegrunnelse, setEndrePeriodeBegrunnelse] = React.useState(
@@ -75,22 +74,20 @@ const Saksopplysninger = ({
     params: { snr: saksnummer },
   } = match;
 
-  const harUnntaksperiodefeil = () => !Utils._isEmpty(unntaksperiodeFeilmeldinger);
-
-  const kanIkkeGodkjenneUnntaksperiodeUtenEndringAvPerioden = () => {
-    const harIkkeForsøktEndrePeriode = !endrePeriodeTom && !endrePeriodeFom;
-    const harFeilEtterFørsteSjekk =
-      harIkkeForsøktEndrePeriode && !kanIkkeGodkjenneUnntaksperiodeUtenEndring && harUnntaksperiodefeil();
-    if (harFeilEtterFørsteSjekk) {
-      setKanIkkeGodkjenneUnntaksperiode(true);
-    }
-    return kanIkkeGodkjenneUnntaksperiodeUtenEndring;
-  };
-
   const [harValgtIkkeGodkjenn, setHarValgtIkkeGodkjenn] = React.useState(false);
+  const [harUnntaksperiodefeil, setHarUnntaksperiodefeil] = React.useState(false);
+  const [kanIkkeGodkjenneUtenÅEndrePerioden, setKanIkkeGodkjenneUtenÅEndrePerioden] = React.useState(false);
+
   React.useEffect(() => {
+    setHarUnntaksperiodefeil(!Utils._isEmpty(unntaksperiodeFeilmeldinger));
     setHarValgtIkkeGodkjenn(KV.Koder.Unntaksperiode.AVSLAG === unntaksperiodeVurdering);
-  }, [unntaksperiodeVurdering]);
+
+    if (!kanIkkeGodkjenneUtenÅEndrePerioden) {
+      const harIkkeForsøktEndrePeriode = !endrePeriodeTom && !endrePeriodeFom;
+      const skalIkkeKunneVelgeGodkjenneManuelt = harIkkeForsøktEndrePeriode && harUnntaksperiodefeil;
+      setKanIkkeGodkjenneUtenÅEndrePerioden(skalIkkeKunneVelgeGodkjenneManuelt);
+    }
+  }, [unntaksperiodeVurdering, unntaksperiodeFeilmeldinger, harUnntaksperiodefeil]);
 
   React.useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
@@ -107,7 +104,6 @@ const Saksopplysninger = ({
     !Utils._isEmpty(lovvalgsperiode)
       ? Utils.dato.erGyldigPeriode(lovvalgsperiode?.fomDato, lovvalgsperiode?.tomDato)
       : Utils.dato.erGyldigPeriode(sedLovvalgsperiode?.fom, sedLovvalgsperiode?.tom);
-
   const settEndretPeriodeOpplysninger = async (avklartFakta) => {
     setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.DELVIS_GODKJENT);
     setEndrePeriodeBegrunnelse(avklartFakta.fakta[0]); // Har alltid bare ett fakta i disse tilfellene
@@ -356,7 +352,7 @@ const Saksopplysninger = ({
                       value={KV.Koder.Unntaksperiode.GODKJENT}
                       checked={KV.Koder.Unntaksperiode.GODKJENT === unntaksperiodeVurdering}
                       onChange={endreUnntaksperiodeVurdering}
-                      disabled={kanIkkeGodkjenneUnntaksperiodeUtenEndringAvPerioden() || !erGyldigLovvalgsperiode()}
+                      disabled={kanIkkeGodkjenneUtenÅEndrePerioden || !erGyldigLovvalgsperiode()}
                       label="Godkjenn unntaksperiode"
                     />
                     <Nav.Radio
@@ -438,7 +434,7 @@ const Saksopplysninger = ({
                       spinner: registreringPending,
                       autoDisableVedSpinner: true,
                       onClick: () => submitRegistrering(),
-                      disabled: !harValgtIkkeGodkjenn && (!redigerbart || harUnntaksperiodefeil()),
+                      disabled: !harValgtIkkeGodkjenn && (!redigerbart || harUnntaksperiodefeil),
                       htmlType: "submit",
                     }}
                     bekreftTekst="Lagre"
