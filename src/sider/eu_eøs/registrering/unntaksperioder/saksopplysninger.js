@@ -76,7 +76,7 @@ const Saksopplysninger = ({
   } = match;
 
   const harUnntaksperiodefeil = () => !Utils._isEmpty(unntaksperiodeFeilmeldinger);
-  const harValgtIkkeGodkjenn = () => KV.Koder.Unntaksperiode.AVSLAG === unntaksperiodeVurdering;
+
   const kanIkkeGodkjenneUnntaksperiodeUtenEndringAvPerioden = () => {
     const harIkkeForsøktEndrePeriode = !endrePeriodeTom && !endrePeriodeFom;
     const harFeilEtterFørsteSjekk =
@@ -86,6 +86,11 @@ const Saksopplysninger = ({
     }
     return kanIkkeGodkjenneUnntaksperiodeUtenEndring;
   };
+
+  const [harValgtIkkeGodkjenn, setHarValgtIkkeGodkjenn] = React.useState(false);
+  React.useEffect(() => {
+    setHarValgtIkkeGodkjenn(KV.Koder.Unntaksperiode.AVSLAG === unntaksperiodeVurdering);
+  }, [unntaksperiodeVurdering]);
 
   React.useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
@@ -433,7 +438,7 @@ const Saksopplysninger = ({
                       spinner: registreringPending,
                       autoDisableVedSpinner: true,
                       onClick: () => submitRegistrering(),
-                      disabled: !harValgtIkkeGodkjenn() && (!redigerbart || harUnntaksperiodefeil()),
+                      disabled: !harValgtIkkeGodkjenn && (!redigerbart || harUnntaksperiodefeil()),
                       htmlType: "submit",
                     }}
                     bekreftTekst="Lagre"
