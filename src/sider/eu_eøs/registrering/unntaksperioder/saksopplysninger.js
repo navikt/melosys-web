@@ -81,24 +81,24 @@ const Saksopplysninger = ({
   React.useEffect(() => {
     setHarUnntaksperiodefeil(!Utils._isEmpty(unntaksperiodeFeilmeldinger));
     setHarValgtIkkeGodkjenn(KV.Koder.Unntaksperiode.AVSLAG === unntaksperiodeVurdering);
-
-    if (!kanIkkeGodkjenneUtenÅEndrePerioden) {
-      const harIkkeForsøktEndrePeriode = !endrePeriodeTom && !endrePeriodeFom;
-      const skalIkkeKunneVelgeGodkjenneManuelt = harIkkeForsøktEndrePeriode && harUnntaksperiodefeil;
-      setKanIkkeGodkjenneUtenÅEndrePerioden(skalIkkeKunneVelgeGodkjenneManuelt);
-    }
   }, [unntaksperiodeVurdering, unntaksperiodeFeilmeldinger, harUnntaksperiodefeil]);
 
   React.useEffect(() => {
-    lastInnSaksopplysninger(saksnummer, behandlingID);
-    kontrollerUnntaksperiode(behandlingID, sedLovvalgsperiode.fom, sedLovvalgsperiode.tom);
-  }, []);
+    if (!kanIkkeGodkjenneUtenÅEndrePerioden && !endrePeriodeTom && !endrePeriodeFom) {
+      setKanIkkeGodkjenneUtenÅEndrePerioden(harUnntaksperiodefeil);
+    }
+  }, [harUnntaksperiodefeil]);
 
   React.useEffect(() => {
     if (endrePeriodeFom && endrePeriodeTom) {
       kontrollerUnntaksperiode(behandlingID, endrePeriodeFom, endrePeriodeTom);
     }
   }, [endrePeriodeFom, endrePeriodeTom]);
+
+  React.useEffect(() => {
+    lastInnSaksopplysninger(saksnummer, behandlingID);
+    kontrollerUnntaksperiode(behandlingID, sedLovvalgsperiode.fom, sedLovvalgsperiode.tom);
+  }, []);
 
   const erGyldigLovvalgsperiode = () =>
     !Utils._isEmpty(lovvalgsperiode)
