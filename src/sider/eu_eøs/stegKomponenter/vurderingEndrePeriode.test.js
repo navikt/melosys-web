@@ -14,7 +14,7 @@ describe("vurderingEndrePeriode", () => {
     props = {
       behandlingID: 1,
       lovvalgsPeriode: {},
-      endreDatoOgSendLovvalgsperioderHandler: jest.fn(),
+      endreLovvalgsperioderHandler: jest.fn(),
       endreVedtak: jest.fn(),
       tilForsiden: jest.fn(),
       tilbake: jest.fn(),
@@ -23,6 +23,7 @@ describe("vurderingEndrePeriode", () => {
         aarsakEndringPeriodeAvklartfakta: lagAvklartfakta("a", "b", "c", [], "fritekst"),
       },
       oppdaterData: jest.fn(),
+      oppdaterPeriode: jest.fn(),
       slettData: jest.fn(),
       soknadsland: ["SE"],
     };
@@ -44,7 +45,8 @@ describe("vurderingEndrePeriode", () => {
       const stegKnapper = component.find("StegKnapper");
       component.instance().validerAlt = jest.fn(() => true);
       stegKnapper.props().bekreftKnappProps.onClick();
-      expect(props.endreDatoOgSendLovvalgsperioderHandler).toHaveBeenCalled();
+      expect(props.oppdaterPeriode).toHaveBeenCalled();
+      expect(props.endreLovvalgsperioderHandler).toHaveBeenCalled();
     });
   });
 

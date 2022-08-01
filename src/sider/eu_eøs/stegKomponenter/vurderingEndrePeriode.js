@@ -90,12 +90,7 @@ export class VurderingEndrePeriode extends React.Component {
 
   lagrePeriodeForForhandsvisning = () => {
     if (this.validerTomDatoOgPeriode()) {
-      const {
-        nyTomDato,
-        opprinneligLovvalgsperiode: { fom },
-      } = this.state;
-
-      this.props.endreDatoOgSendLovvalgsperioderHandler(fom, Utils.dato.formatterDatoTilISO(nyTomDato));
+      this.oppdaterPeriodeOgSendEndretLovvalgsperiode();
     }
   };
 
@@ -138,13 +133,13 @@ export class VurderingEndrePeriode extends React.Component {
     this.setState({ vedtakFeilmelding: null });
 
     const { endreVedtak } = this.props;
-    const { sendEndretLovvalgsPeriode, validerAlt } = this;
+    const { oppdaterPeriodeOgSendEndretLovvalgsperiode, validerAlt } = this;
     const { begrunnelse, fritekstSed } = this.state;
 
     if (validerAlt()) {
       this.setState({ endringPending: true });
 
-      await sendEndretLovvalgsPeriode();
+      await oppdaterPeriodeOgSendEndretLovvalgsperiode();
 
       const data = {
         begrunnelseKode: begrunnelse,
@@ -164,13 +159,14 @@ export class VurderingEndrePeriode extends React.Component {
     }
   };
 
-  sendEndretLovvalgsPeriode = async () => {
+  oppdaterPeriodeOgSendEndretLovvalgsperiode = async () => {
     const {
       nyTomDato,
       opprinneligLovvalgsperiode: { fom },
     } = this.state;
 
-    this.props.endreDatoOgSendLovvalgsperioderHandler(fom, Utils.dato.formatterDatoTilISO(nyTomDato));
+    this.props.oppdaterPeriode({ fom, tom: nyTomDato });
+    this.props.endreLovvalgsperioderHandler(fom, Utils.dato.formatterDatoTilISO(nyTomDato));
   };
 
   validerAlt = () => {
@@ -322,11 +318,12 @@ export class VurderingEndrePeriode extends React.Component {
 VurderingEndrePeriode.propTypes = {
   behandlingID: PT.number.isRequired,
   lovvalgsPeriode: PT.object.isRequired,
-  endreDatoOgSendLovvalgsperioderHandler: PT.func.isRequired,
+  endreLovvalgsperioderHandler: PT.func.isRequired,
   fomDato: PT.string,
   endreVedtak: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
+  oppdaterPeriode: PT.func.isRequired,
   slettData: PT.func.isRequired,
   tilstand: PT.shape({
     aarsakEndringPeriodeAvklartfakta: MPT.Avklartefakta.isRequired,

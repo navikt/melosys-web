@@ -311,7 +311,7 @@ class Stegvelger extends Component {
     this.props.oppdaterAnmodningsPerioder(perioderStegState);
   };
 
-  endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {
+  endreLovvalgsperioderHandler = (fomdato, tomdato) => {
     const { behandlingID, lovvalgsperioder } = this.props;
 
     const forkortetPeriode = lovvalgsperioder.map((periode) => ({ ...periode, fomDato: fomdato, tomDato: tomdato }));
@@ -347,7 +347,7 @@ class Stegvelger extends Component {
       lagreVilkarHandler: this.props.lagreVilkarHandler,
       lagreAnmodningsperioderHandler: this.props.lagreAnmodningsperioderHandler,
       endreVedtak: this.endreVedtak,
-      endreDatoOgSendLovvalgsperioderHandler: this.endreDatoOgSendLovvalgsperioderHandler,
+      endreLovvalgsperioderHandler: this.endreLovvalgsperioderHandler,
       tilForsiden: this.props.tilForsiden,
       lagreOgBestillAnmodningsperioder: this.lagreOgBestillAnmodningsperioder,
       byggAnmodningsperioderHandler: this.byggAnmodningsperioderHandler,
