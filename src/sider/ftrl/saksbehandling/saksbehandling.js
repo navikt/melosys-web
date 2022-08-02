@@ -25,7 +25,7 @@ import { avklartefaktaOperations } from "../../../ducks/avklartefakta";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 import { datalastingOperations } from "../../../ducks/datalasting";
-import { dokumenterOperations, dokumenterSelectors } from "../../../ducks/dokumenter";
+import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { formSelectors } from "../../../ducks/form";
 import { menypanelOperations } from "../../../ducks/menypanel";
 import { folketrygdenkodeverkOperations } from "../../../ducks/folketrygdenkodeverk";
@@ -50,8 +50,6 @@ const Saksbehandling = ({
   behandlingsgrunnlagPeriodeTom,
   behandlingsgrunnlagMottaksdato,
   behandlingsresultat,
-  dokumenter,
-  dokumentOversikt,
   fagsak,
   fagsakStatusKode,
   hentBehandling,
@@ -155,10 +153,6 @@ const Saksbehandling = ({
     oppdaterBehandlingIDState();
   });
 
-  const {
-    params: { snr: saksnummer },
-  } = match;
-
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;
   if (!saksopplysningerLastet) return null;
@@ -231,14 +225,7 @@ const Saksbehandling = ({
                   behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
                 />
                 <SaksoversiktLenke />
-                <SideDialog
-                  behandlingID={behandlingID}
-                  saksnummer={saksnummer}
-                  redigerbart={redigerbart}
-                  dokumentOversikt={dokumentOversikt}
-                  dokumenter={dokumenter}
-                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
-                />
+                <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>
@@ -258,8 +245,6 @@ Saksbehandling.propTypes = {
   behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
   behandlingsgrunnlagMottaksdato: PT.string.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
-  dokumenter: PT.array.isRequired,
-  dokumentOversikt: PT.array.isRequired,
   fagsak: MPT.Fagsak,
   fagsakStatusKode: PT.string.isRequired,
   hovedpartRolle: PT.string.isRequired,
@@ -320,8 +305,6 @@ const mapStateToProps = (state) => ({
     behandlingsgrunnlagSelectors.MottaksdatoSelector(state)
   ),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
-  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
-  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   landkoder: landkoderSelectors.LandkoderFraSakstypeSelector(state),

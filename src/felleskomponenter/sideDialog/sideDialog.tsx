@@ -1,9 +1,16 @@
 import React, { useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { RootState } from "AppTypes";
 import classnames from "classnames";
 import { DokumentOversikt, FysiskDokument } from "Domene";
 
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
+
+import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../ducks/redigerbart";
+import { dokumenterSelectors } from "../../ducks/dokumenter";
+import { fagsakSelectors } from "../../ducks/fagsaker";
 
 import SideDialogSendBrev from "./sendBrev";
 import SideDialogOpprettNyBuc from "./sideDialogOpprettNyBuc";
@@ -18,7 +25,9 @@ type FaneNavn = "sedbestilling" | "dokumenter" | "notat" | "brevbestilling" | "b
 export interface FaneViserProps {
   navn: FaneNavn;
   saksnummer: string;
+  sakstype: string;
   behandlingID: number;
+  behandlingstema: string;
   redigerbart: boolean;
   dokumentOversikt: DokumentOversikt[];
   dokumenter: FysiskDokument[];
@@ -27,7 +36,9 @@ export interface FaneViserProps {
 export const FaneViser = ({
   navn,
   behandlingID,
+  behandlingstema,
   saksnummer,
+  sakstype,
   redigerbart,
   dokumentOversikt,
   dokumenter,
@@ -45,7 +56,14 @@ export const FaneViser = ({
         />
       );
     case "sedbestilling":
-      return <SideDialogOpprettNyBuc behandlingID={behandlingID} dokumenter={dokumenter} />;
+      return (
+        <SideDialogOpprettNyBuc
+          behandlingID={behandlingID}
+          behandlingstema={behandlingstema}
+          sakstype={sakstype}
+          dokumenter={dokumenter}
+        />
+      );
     case "besvarsed":
       return <SideDialogBesvarSed behandlingID={behandlingID} />;
     case "notat":
@@ -57,23 +75,33 @@ export const FaneViser = ({
 
 type Fane = { navn: FaneNavn; tittel: string };
 
+const mapStateToProps = (state: RootState) => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
+  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
+  saksnummer: fagsakSelectors.SaksnummerSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+});
+
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
 interface SideDialogProps {
   faner?: Fane[];
-  saksnummer: string;
-  behandlingID: number;
-  redigerbart: boolean;
-  dokumentOversikt: DokumentOversikt[];
-  dokumenter: FysiskDokument[];
 }
 
 const SideDialog = ({
   behandlingID,
+  behandlingstema,
   saksnummer,
+  sakstype,
   redigerbart,
   dokumentOversikt,
   dokumenter,
   faner = defaultFaner,
-}: SideDialogProps) => {
+}: SideDialogProps & PropsFromRedux) => {
   const [aktivFane, setAktivFane] = useState<FaneNavn>(faner[0].navn);
 
   return (
@@ -95,7 +123,9 @@ const SideDialog = ({
           <FaneViser
             navn={aktivFane}
             behandlingID={behandlingID}
+            behandlingstema={behandlingstema}
             saksnummer={saksnummer}
+            sakstype={sakstype}
             redigerbart={redigerbart}
             dokumentOversikt={dokumentOversikt}
             dokumenter={dokumenter}
@@ -120,4 +150,4 @@ export const fanerUtenBucOgSed: Fane[] = [
   { navn: "brevbestilling", tittel: "Send brev" },
 ];
 
-export default SideDialog;
+export default connector(SideDialog);

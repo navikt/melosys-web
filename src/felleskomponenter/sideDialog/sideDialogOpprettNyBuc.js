@@ -25,7 +25,7 @@ TomtFelt.defaultProps = {
   tekst: "Velg...",
 };
 
-const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
+const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokumenter }) => {
   const [tilgjengeligeMottakerinstitusjoner, setTilgjengeligeMottakerinstitusjoner] = useState([]);
 
   const [valgtFagomrade, setValgtFagomrade] = useState(EKV.Koder.sektor.LA);
@@ -139,8 +139,25 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
   ];
   const ignorerteHBucer = EKV.KTObjects.buctyper.horizontal.filter(({ kode }) => !tilgjengeligeHBucer.includes(kode));
 
+  const kanVelgeLABUC01 = () => {
+    switch (behandlingstema) {
+      case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
+      case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
+        return true;
+      case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
+        return sakstype === MKV.Koder.sakstyper.EU_EOS;
+      default:
+        return false;
+    }
+  };
+  const ignorerteLABucer = EKV.KTObjects.buctyper.legislation.filter(
+    ({ kode }) => !kanVelgeLABUC01() && kode === EKV.Koder.buctyper.legislation.LA_BUC_01
+  );
+
   const tilgjengeligeBucer = (fagomrade) =>
-    EKV.Selectors.hentBucTyperForFagomrade(fagomrade).filter((buc) => !ignorerteHBucer.includes(buc));
+    EKV.Selectors.hentBucTyperForFagomrade(fagomrade)
+      .filter((buc) => !ignorerteHBucer.includes(buc))
+      .filter((buc) => !ignorerteLABucer.includes(buc));
 
   const tilgjengeligeSeder = (buc) => EKV.Selectors.hentSedTyperForBuc(buc);
 
@@ -262,6 +279,8 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
 
 SideDialogOpprettNyBuc.propTypes = {
   behandlingID: PT.number.isRequired,
+  behandlingstema: PT.string.isRequired,
+  sakstype: PT.string.isRequired,
   dokumenter: PT.arrayOf(PT.object).isRequired,
 };
 

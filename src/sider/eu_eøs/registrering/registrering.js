@@ -19,7 +19,6 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../ducks/
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./registrering.css";
 
@@ -45,8 +44,6 @@ export const Registrering = ({
   lovvalgsland,
   visOppfriskModal,
   behandlingOppfriskes,
-  dokumentOversikt,
-  dokumenter,
   startOgVisOppfriskModal,
   resetFagsakState,
 }) => {
@@ -113,14 +110,7 @@ export const Registrering = ({
                   lovvalgsperiodeTom={lovvalgsperiodeTom}
                 />
                 <SaksoversiktLenke />
-                <SideDialog
-                  saksnummer={saksnummer}
-                  behandlingID={behandlingID}
-                  redigerbart={redigerbart}
-                  dokumentOversikt={dokumentOversikt}
-                  dokumenter={dokumenter}
-                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
-                />
+                <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>
@@ -152,8 +142,6 @@ Registrering.propTypes = {
   visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   hovedpartRolle: PT.string.isRequired,
-  dokumentOversikt: PT.array.isRequired,
-  dokumenter: PT.array.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
 };
 Registrering.defaultProps = {
@@ -178,8 +166,6 @@ const mapStateToProps = (state) => ({
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
-  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
-  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

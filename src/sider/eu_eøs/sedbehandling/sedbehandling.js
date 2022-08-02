@@ -17,7 +17,6 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { datalastingOperations } from "../../../ducks/datalasting";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
-import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./sedbehandling.css";
 
@@ -36,8 +35,6 @@ const SedBehandling = ({
   lastInnSaksopplysninger,
   resetSaksopplysninger,
   hentBehandlingsgrunnlag,
-  dokumentOversikt,
-  dokumenter,
 }) => {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
   const {
@@ -87,13 +84,7 @@ const SedBehandling = ({
                   }
                 />
                 <SaksoversiktLenke />
-                <SideDialog
-                  behandlingID={behandlingID}
-                  saksnummer={saksnummer}
-                  redigerbart={redigerbart}
-                  dokumentOversikt={dokumentOversikt}
-                  dokumenter={dokumenter}
-                />
+                <SideDialog />
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>
@@ -119,8 +110,6 @@ SedBehandling.propTypes = {
   resetSaksopplysninger: PT.func.isRequired,
   hentBehandlingsgrunnlag: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
-  dokumentOversikt: PT.array.isRequired,
-  dokumenter: PT.array.isRequired,
 };
 
 SedBehandling.defaultProps = {
@@ -146,8 +135,6 @@ const mapStateToProps = (state) => ({
   ),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
-  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
-  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
