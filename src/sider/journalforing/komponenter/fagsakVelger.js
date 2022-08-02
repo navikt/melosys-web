@@ -12,18 +12,25 @@ import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./fagsakVelger.css";
 
-const behandlingstyper = (sakstype, alltidNyBehandlingToggleEnabled) => {
+const {
+  behandlinger: { behandlingstyper, behandlingstema },
+  sakstyper,
+} = MKV.Koder;
+
+const valgbareBehandlingstyper = (sakstype, behtema, alltidNyBehandlingToggleEnabled) => {
   switch (sakstype) {
-    case MKV.Koder.sakstyper.EU_EOS:
-      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
-        ({ kode }) =>
-          kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
-          (alltidNyBehandlingToggleEnabled && kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING)
-      );
-    case MKV.Koder.sakstyper.TRYGDEAVTALE:
-      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
-        ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
-      );
+    case sakstyper.EU_EOS:
+      return MKV.KTObjects.behandlinger.behandlingstyper.filter(({ kode }) => {
+        if (alltidNyBehandlingToggleEnabled) {
+          return (
+            (behtema.kode === behandlingstema.UTSENDT_ARBEIDSTAKER && kode === behandlingstyper.ENDRET_PERIODE) ||
+            kode === behandlingstyper.NY_VURDERING
+          );
+        }
+        return kode === behandlingstyper.ENDRET_PERIODE;
+      });
+    case sakstyper.TRYGDEAVTALE:
+      return MKV.KTObjects.behandlinger.behandlingstyper.filter(({ kode }) => kode === behandlingstyper.NY_VURDERING);
     default:
       return [];
   }
@@ -45,7 +52,11 @@ const FagsakVelger = (props) => {
         footer: (
           <KnyttTilSak
             sak={sak}
-            behandlingstyper={behandlingstyper(sak.sakstype.kode, alltidNyBehandlingToggle === "enabled")}
+            behandlingstyper={valgbareBehandlingstyper(
+              sak.sakstype.kode,
+              sak.behandlingOversikter[0].behandlingstema,
+              alltidNyBehandlingToggle === "enabled"
+            )}
           />
         ),
       },
