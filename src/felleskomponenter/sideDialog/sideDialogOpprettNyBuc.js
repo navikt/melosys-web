@@ -201,7 +201,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
   };
 
   const bucHjelpetekst =
-    "Det er ikke mulig å opprette LA_BUC_01 i behandlinger som ikke har saksbehandlingsstøtte tilpasset artikkel 16.";
+    "Det er ikke mulig å opprette LA_BUC_01 i behandlinger som ikke har saksbehandlingsstøtte tilpasset artikkel 16";
 
   const displayName = (elem) => `${elem.kode} - ${elem.term}`;
 
