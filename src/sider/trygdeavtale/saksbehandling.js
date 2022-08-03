@@ -17,7 +17,7 @@ import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
-import { dokumenterOperations, dokumenterSelectors } from "../../ducks/dokumenter";
+import { dokumenterOperations } from "../../ducks/dokumenter";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
@@ -39,8 +39,6 @@ const Saksbehandling = ({
   behandlingsgrunnlagPeriodeFom,
   behandlingsgrunnlagPeriodeTom,
   behandlingsresultat,
-  dokumenter,
-  dokumentOversikt,
   fagsak,
   fagsakStatusKode,
   hentBehandling,
@@ -178,14 +176,7 @@ const Saksbehandling = ({
                   behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
                 />
                 <SaksoversiktLenke />
-                <SideDialog
-                  dokumentOversikt={dokumentOversikt}
-                  saksnummer={saksnummer}
-                  redigerbart={redigerbart}
-                  behandlingID={behandlingID}
-                  dokumenter={dokumenter}
-                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
-                />
+                <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>
@@ -205,8 +196,6 @@ Saksbehandling.propTypes = {
   behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
   behandlingsgrunnlagMottaksdato: PT.string.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
-  dokumenter: PT.array.isRequired,
-  dokumentOversikt: PT.array.isRequired,
   fagsak: MPT.Fagsak,
   fagsakStatusKode: PT.string.isRequired,
   hovedpartRolle: PT.string.isRequired,
@@ -256,8 +245,6 @@ const mapStateToProps = (state) => ({
     behandlingsgrunnlagSelectors.MottaksdatoSelector(state)
   ),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
-  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
-  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),

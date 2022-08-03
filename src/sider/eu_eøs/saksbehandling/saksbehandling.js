@@ -28,7 +28,7 @@ import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../
 import { behandlingsperioderOperations, behandlingsperioderSelectors } from "../../../ducks/behandlingsperioder";
 import { formSelectors } from "../../../ducks/form";
 import { datalastingOperations } from "../../../ducks/datalasting";
-import { dokumenterOperations, dokumenterSelectors } from "../../../ducks/dokumenter";
+import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { anmodningsperiodesvarOperations } from "../../../ducks/anmodningsperiodesvar";
 import { landkoderOperations } from "../../../ducks/landkoder";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
@@ -158,7 +158,6 @@ class Saksbehandling extends Component {
   render() {
     const {
       redigerbart,
-      match,
       fagsak,
       oppsummering,
       lovvalgsperiodeFom,
@@ -171,12 +170,7 @@ class Saksbehandling extends Component {
       behandlingsgrunnlagMottaksdato,
       tilForsiden,
       startOgVisOppfriskModal,
-      dokumentOversikt,
-      dokumenter,
     } = this.props;
-    const {
-      params: { snr: saksnummer },
-    } = match;
     const { behandlingID, saksopplysningerLastet } = this.state;
 
     if (Utils._isNil(redigerbart)) return null;
@@ -223,14 +217,7 @@ class Saksbehandling extends Component {
                     behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
                   />
                   <SaksoversiktLenke />
-                  <SideDialog
-                    behandlingID={behandlingID}
-                    saksnummer={saksnummer}
-                    redigerbart={redigerbart}
-                    dokumentOversikt={dokumentOversikt}
-                    dokumenter={dokumenter}
-                    faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
-                  />
+                  <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
                 </Nav.Column>
               </Nav.Row>
             </Nav.Container>
@@ -292,8 +279,6 @@ Saksbehandling.propTypes = {
   behandlingOppfriskes: PT.bool.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   hentDokumentOversikt: PT.func.isRequired,
-  dokumentOversikt: PT.array.isRequired,
-  dokumenter: PT.array.isRequired,
   hentAnmodningsperiodesvar: PT.func.isRequired,
   resetFeiletrespons: PT.func.isRequired,
 };
@@ -341,8 +326,6 @@ const mapStateToProps = (state) => ({
   behandlingsgrunnlagMottaksdato: Utils.dato.formatterDatoTilNorsk(
     behandlingsgrunnlagSelectors.MottaksdatoSelector(state)
   ),
-  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
-  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -28,7 +28,6 @@ import { anmodningsperioderOperations } from "../../../ducks/anmodningsperioder"
 import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 import { behandlingsperioderOperations } from "../../../ducks/behandlingsperioder";
 import { landkoderOperations } from "../../../ducks/landkoder";
-import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import stegMap from "./stegMap";
 import "./vurderutpeking.css";
@@ -71,8 +70,6 @@ const Vurderutpeking = ({
   startOgVisOppfriskModal,
   soknadForm,
   behandlingsgrunnlag,
-  dokumentOversikt,
-  dokumenter,
   vurderUtpekingFormValues,
   hentLandkoder,
 }) => {
@@ -152,14 +149,7 @@ const Vurderutpeking = ({
                   behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
                 />
                 <SaksoversiktLenke />
-                <SideDialog
-                  behandlingID={behandlingID}
-                  saksnummer={saksnummer}
-                  redigerbart={redigerbart}
-                  dokumentOversikt={dokumentOversikt}
-                  dokumenter={dokumenter}
-                  faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner}
-                />
+                <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>
@@ -196,8 +186,6 @@ Vurderutpeking.propTypes = {
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   soknadForm: PT.object.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
-  dokumentOversikt: PT.array.isRequired,
-  dokumenter: PT.array.isRequired,
   vurderUtpekingFormValues: PT.object,
   hentLandkoder: PT.func.isRequired,
 };
@@ -224,8 +212,6 @@ const mapStateToProps = (state) => ({
   ),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
-  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
-  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
   vurderUtpekingFormValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
 });
 
