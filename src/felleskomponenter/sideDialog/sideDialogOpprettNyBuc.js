@@ -139,7 +139,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
   ];
   const ignorerteHBucer = EKV.KTObjects.buctyper.horizontal.filter(({ kode }) => !tilgjengeligeHBucer.includes(kode));
 
-  const kanVelgeLABUC01 = () => {
+  const kanVelgeLA_BUC_01 = () => {
     switch (behandlingstema) {
       case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
       case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
@@ -151,7 +151,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
     }
   };
   const ignorerteLABucer = EKV.KTObjects.buctyper.legislation.filter(
-    ({ kode }) => !kanVelgeLABUC01() && kode === EKV.Koder.buctyper.legislation.LA_BUC_01
+    ({ kode }) => kode === EKV.Koder.buctyper.legislation.LA_BUC_01 && !kanVelgeLA_BUC_01()
   );
 
   const tilgjengeligeBucer = (fagomrade) =>
