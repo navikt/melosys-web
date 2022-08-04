@@ -200,6 +200,9 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
     valider({ mottakerinstitusjoner });
   };
 
+  const bucHjelpetekst =
+    "Det er ikke mulig å opprette LA_BUC_01 i behandlinger som ikke har saksbehandlingsstøtte tilpasset artikkel 16";
+
   const displayName = (elem) => `${elem.kode} - ${elem.term}`;
 
   const feil = (felt) => (oppdaterteFelt[felt] ? feilmeldinger[felt] : undefined);
@@ -215,7 +218,20 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
             </option>
           ))}
         </Nav.Select>
-        <Nav.Select bredde="fullbredde" label="BUC" onChange={bucEndret} value={valgtBuc} feil={feil("buc")}>
+        <Nav.Select
+          bredde="fullbredde"
+          onChange={bucEndret}
+          value={valgtBuc}
+          feil={feil("buc")}
+          label={
+            <>
+              BUC
+              <Nav.Hjelpetekst className="hjelpetekst" tittel={bucHjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
+                {bucHjelpetekst}
+              </Nav.Hjelpetekst>
+            </>
+          }
+        >
           <TomtFelt />
           {tilgjengeligeBucer(valgtFagomrade).map((buc) => (
             <option key={buc.kode} value={buc.kode}>
