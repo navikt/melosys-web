@@ -220,6 +220,9 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
         </Nav.Select>
         <Nav.Select
           bredde="fullbredde"
+          onChange={bucEndret}
+          value={valgtBuc}
+          feil={feil("buc")}
           label={
             <>
               BUC
@@ -228,9 +231,6 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
               </Nav.Hjelpetekst>
             </>
           }
-          onChange={bucEndret}
-          value={valgtBuc}
-          feil={feil("buc")}
         >
           <TomtFelt />
           {tilgjengeligeBucer(valgtFagomrade).map((buc) => (
