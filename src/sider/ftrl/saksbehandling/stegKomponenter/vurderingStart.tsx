@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
@@ -6,22 +6,22 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
+import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 
+import DialogboksOppfriskSak from "../../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
+import NavnOgHjelpetekst from "../../../../felleskomponenter/navnOgHjelpetekst";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 
-import MKV from "../../../../melosyskodeverk";
 import vurderingStartSchema from "./vurderingStartSchema";
-import DialogboksOppfriskSak from "../../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
-
 import "./vurderingStart.css";
 
 const landHarTrygdeavtaleMedNorgeEllerErEosLand = (landKode: string) => {
@@ -102,12 +102,6 @@ export const VurderingStart = ({
     tom: undefined,
   });
   const [visOppfrisk, setVisOppfrisk] = useState(false);
-  const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
-  const Hjelpetekst = () => (
-    <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
-      {hjelpetekst}
-    </Nav.Hjelpetekst>
-  );
 
   useEffect(() => {
     if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
@@ -160,10 +154,11 @@ export const VurderingStart = ({
           <Nav.Column xs="5">
             <Skjema.LandVelger
               label={
-                <Fragment>
-                  <b>Arbeidsland</b>
-                  <Hjelpetekst />
-                </Fragment>
+                <NavnOgHjelpetekst
+                  navn="Arbeidsland"
+                  hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
+                  className="hjelpetekst"
+                />
               }
               feltNavn="land"
               placeholder="Velg..."
