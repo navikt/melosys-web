@@ -77,7 +77,7 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues });
-  }, [aktivtSteg, formIsValid, formValues?.tomDato]);
+  }, [aktivtSteg, formIsValid]);
 
   const oppdaterLovvalgsperiode = async (fomdato, tomdato) => {
     await endreLovvalgsPeriode(fomdato, tomdato);
@@ -88,6 +88,7 @@ export const VurderingArtikkel13_x_vedtak = ({
     if (!Utils._isEmpty(formValues?.tomDato)) {
       oppdaterLovvalgsperiode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
     }
+    debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues });
   }, [formValues?.tomDato]);
 
   const gjenopprettOpprinneligLovvalgsperiode = () => {
