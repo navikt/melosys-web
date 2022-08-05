@@ -2,7 +2,7 @@ import React from "react";
 import PT from "prop-types";
 import classnames from "classnames";
 
-import * as Mui from "./ui";
+import * as Mui from "../ui";
 
 import "./knapperad.css";
 

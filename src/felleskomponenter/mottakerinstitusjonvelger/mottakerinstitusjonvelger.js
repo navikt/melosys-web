@@ -3,12 +3,12 @@ import { connect } from "react-redux";
 import { change, Field, formValueSelector, FieldArray } from "redux-form";
 import * as PT from "prop-types";
 
-import * as Api from "../services/api";
-import * as Utils from "../utils";
-import MKV from "../melosyskodeverk";
+import * as Api from "../../services/api";
+import * as Utils from "../../utils";
+import MKV from "../../melosyskodeverk";
 
-import { useAsyncCallbackState } from "../hooks";
-import { SelectWrappedComponent } from "./skjema/input/select";
+import { useAsyncCallbackState } from "../../hooks";
+import { SelectWrappedComponent } from "../skjema/input/select";
 
 const MOTTAKERINSTITUSJON = "mottakerinstitusjon";
 const KREVER_MOTTAKERINSTITUSJON = "kreverMottakerinstitusjon";

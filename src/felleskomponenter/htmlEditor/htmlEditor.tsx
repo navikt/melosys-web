@@ -4,7 +4,7 @@ import { ContentState, convertFromHTML, convertToRaw, EditorState } from "draft-
 import draftToHtml from "draftjs-to-html";
 import classNames from "classnames";
 import "./htmlEditor.css";
-import * as Nav from "../navFrontend";
+import * as Nav from "../../navFrontend";
 
 const toolbar = {
   options: ["inline", "fontSize", "list", "link", "history"],

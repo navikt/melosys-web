@@ -3,12 +3,12 @@ import PT from "prop-types";
 import moment from "moment/moment";
 import { connect } from "react-redux";
 
-import * as Api from "../services/api";
-import * as Nav from "../navFrontend";
-import * as Mui from "./ui";
-import * as MPT from "../proptypes";
+import * as Api from "../../services/api";
+import * as Nav from "../../navFrontend";
+import * as Mui from "../ui";
+import * as MPT from "../../proptypes";
 
-import { behandlingerOperations } from "../ducks/behandlinger";
+import { behandlingerOperations } from "../../ducks/behandlinger";
 
 import "./behandlingsstatus.css";
 

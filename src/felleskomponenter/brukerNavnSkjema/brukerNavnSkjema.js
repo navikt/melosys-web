@@ -3,11 +3,11 @@ import PT from "prop-types";
 import { getFormValues, change, clearFields } from "redux-form";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import bem from "../bemUtils";
-import { hentSammensattNavn } from "../graphql/navn";
+import bem from "../../bemUtils";
+import { hentSammensattNavn } from "../../graphql/navn";
 
-import * as Skjema from "./skjema";
-import * as Nav from "../navFrontend";
+import * as Skjema from "../skjema";
+import * as Nav from "../../navFrontend";
 
 import "./brukerNavnSkjema.css";
 
