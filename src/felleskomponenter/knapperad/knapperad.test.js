@@ -1,6 +1,6 @@
 import React from "react";
 
-import * as Mui from "./ui";
+import * as Mui from "../ui";
 
 import Knapperad from "./knapperad";
 

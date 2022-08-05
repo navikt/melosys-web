@@ -1,6 +1,6 @@
 import React from "react";
 
-import * as Skjema from "./skjema";
+import * as Skjema from "../skjema";
 
 import { BrukerNavnSkjema } from "./brukerNavnSkjema";
 

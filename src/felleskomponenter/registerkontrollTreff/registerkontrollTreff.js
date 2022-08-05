@@ -1,11 +1,11 @@
 import React from "react";
 import PT from "prop-types";
 
-import MKV from "../melosyskodeverk";
+import MKV from "../../melosyskodeverk";
 
-import * as KV from "../kodeverk";
-import * as Nav from "../navFrontend";
-import * as Utils from "../utils";
+import * as KV from "../../kodeverk";
+import * as Nav from "../../navFrontend";
+import * as Utils from "../../utils";
 
 import "./registerkontrolltreff.css";
 

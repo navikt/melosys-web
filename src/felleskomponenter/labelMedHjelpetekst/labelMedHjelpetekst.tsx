@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import classnames from "classnames";
-import * as Nav from "../navFrontend";
+import * as Nav from "../../navFrontend";
 
 import "./labelMedHjelpetekst.css";
 
