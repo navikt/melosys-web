@@ -14,7 +14,7 @@ import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 
 import DialogboksOppfriskSak from "../../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
-import NavnOgHjelpetekst from "../../../../felleskomponenter/navnOgHjelpetekst";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { menypanelOperations } from "../../../../ducks/menypanel";
@@ -154,8 +154,8 @@ export const VurderingStart = ({
           <Nav.Column xs="5">
             <Skjema.LandVelger
               label={
-                <NavnOgHjelpetekst
-                  navn="Arbeidsland"
+                <LabelMedHjelpetekst
+                  label="Arbeidsland"
                   hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
                   className="hjelpetekst"
                 />

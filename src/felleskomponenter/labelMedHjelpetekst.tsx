@@ -2,31 +2,31 @@ import React, { Fragment } from "react";
 import classnames from "classnames";
 import * as Nav from "../navFrontend";
 
-import "./navnOgHjelpetekst.css";
+import "./labelMedHjelpetekst.css";
 
-type NavnOgHjelpetekstProps = {
-  navn: string;
+type LabelMedHjelpetekstProps = {
+  label: string;
   hjelpetekst: string;
   type?: Nav.PopoverOrientering;
   className?: string;
 };
 
-const NavnOgHjelpetekst = ({
-  navn,
+const LabelMedHjelpetekst = ({
+  label,
   hjelpetekst,
   type = Nav.PopoverOrientering.Hoyre,
   className,
-}: NavnOgHjelpetekstProps) => (
+}: LabelMedHjelpetekstProps) => (
   <Fragment>
-    {navn}
+    {label}
     <Nav.Hjelpetekst
       tittel={hjelpetekst}
       type={type}
-      className={classnames("navnOgHjelpetekst__hjelpetekst", className)}
+      className={classnames("labelMedHjelpetekst__hjelpetekst", className)}
     >
       {hjelpetekst}
     </Nav.Hjelpetekst>
   </Fragment>
 );
 
-export default NavnOgHjelpetekst;
+export default LabelMedHjelpetekst;
