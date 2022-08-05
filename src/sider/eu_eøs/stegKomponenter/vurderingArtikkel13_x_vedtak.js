@@ -58,26 +58,25 @@ export const VurderingArtikkel13_x_vedtak = ({
   const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
   const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
 
-  const kontrollerSteg = () => {
-    return kontrollerFerdigbehandling({
-      behandlingID,
-      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
-      skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
-    });
-  };
-  const kontroller = async (data) => {
+  const kontrollerBehandling = async (data) => {
     if (data.aktivtSteg && data.formIsValid) {
       setVedtakPending(true);
-      await kontrollerSteg();
+      await kontrollerFerdigbehandling({
+        behandlingID,
+        vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
+        skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
+      });
       setOppdaterFoerKontroll(false);
       setVedtakPending(false);
     }
   };
-  const debouncedKontroller = useCallback(Utils._debounce(kontroller, 250), [kontrollerFerdigbehandling]);
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontrollerBehandling, 250), [
+    kontrollerFerdigbehandling,
+  ]);
 
   useEffect(() => {
-    debouncedKontroller({ aktivtSteg, formIsValid });
+    debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues });
   }, [aktivtSteg, formIsValid, formValues?.tomDato]);
 
   const oppdaterLovvalgsperiode = async (fomdato, tomdato) => {
@@ -92,7 +91,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   }, [formValues?.tomDato]);
 
   const gjenopprettOpprinneligLovvalgsperiode = () => {
-    oppdaterLovvalgsperiode(fom, tom);
+    oppdaterLovvalgsperiode(soknadsperiode.fom, soknadsperiode.tom);
   };
 
   const vedKlikkForhandsvis = async () => {
@@ -260,7 +259,7 @@ VurderingArtikkel13_x_vedtak.propTypes = {
   handleSubmit: PT.func.isRequired,
   soknadsperiode: PT.shape({
     fom: PT.string.isRequired,
-    tom: PT.string.isRequired,
+    tom: PT.string,
   }).isRequired,
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
