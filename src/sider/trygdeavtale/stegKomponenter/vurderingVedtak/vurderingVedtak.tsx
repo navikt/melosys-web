@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { RootState } from "AppTypes";
@@ -22,15 +22,16 @@ import { lovvalgsperioderOperations } from "../../../../ducks/lovvalgsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
 
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import MottakerTabell from "../../../../felleskomponenter/tabell/mottakerTabell";
 import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import { Feilkode } from "../../../../@types";
 import { StegStatus } from "../../stegvelger";
 import bem from "../../../../bemUtils";
 
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
-import { Feilkode } from "../../../../@types";
 
 const { STORBRITANNIA } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
@@ -138,10 +139,16 @@ const VurderingVedtak = ({
 }: Props & PropsFromRedux) => {
   const periodeHjelpetekst =
     "Perioden som vises her er søknadsperiode. Hvis sluttdato for oppholdet ikke er oppgitt i søknaden, og/eller du vil endre sluttdato for vedtaket, trykk på Endre og skriv inn sluttdato.";
-  const innledningFritekstHjelpetekstTittel =
-    "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: 'Du er omfattet av norsk trygdelovgivning og medlem i folketrygden fra 1. september 2022 til 31. desember 2024.' Friteksten kommer her";
-  const begrunnelseFritekstHjelpetekstTittel =
-    "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen. Eksempel: 'Vi har lagt til grunn at du er ansatt av og lønnet av en norsk arbeidsgiver, og sendt ut for å jobbe i Storbritannia i inntil tre år. Vi har gjort vurderingen fordi du har opplyst at du jobber for er ansatt av Equinor ASA.' Friteksten kommer her.";
+  const innledningFritekst =
+    "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat.\n\n " +
+    "Eksempel:\n " +
+    '"Du er omfattet av norsk trygdelovgivning og medlem i folketrygden fra 1. september 2022 til 31. desember 2024."\n\n ' +
+    "Friteksten kommer her";
+  const begrunnelseFritekstHjelpetekst =
+    "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.\n\n " +
+    "Eksempel:\n " +
+    '"Vi har lagt til grunn at du er ansatt av og lønnet av en norsk arbeidsgiver, og sendt ut for å jobbe i Storbritannia i inntil tre år. Vi har gjort vurderingen fordi du har opplyst at du jobber for/er ansatt av Equinor ASA."\n\n ' +
+    "Friteksten kommer her";
   const nyVurderingBakgrunnHjelpetekst =
     "Velg en innledningstekst til vedtaket. Teksten kommer først i vedtaket og skal forklare hvorfor vi har gjort nytt vedtak. Hvis ingen av standardtekstene passer, velger du fritekst og skriver egen innledning til vedtaket.";
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
@@ -364,14 +371,11 @@ const VurderingVedtak = ({
 
         <Nav.Column xs="5">
           <Nav.Typo.Element className={vurderingVedtakCls.element("info")} tag="div">
-            Periode
-            <Nav.Hjelpetekst
-              tittel={periodeHjelpetekst}
-              className={vurderingVedtakCls.element("hjelpetekst")}
-              type={Nav.PopoverOrientering.Hoyre}
-            >
-              {periodeHjelpetekst}
-            </Nav.Hjelpetekst>
+            <LabelMedHjelpetekst
+              label="Periode"
+              hjelpetekst={periodeHjelpetekst}
+              hjelpetekstClassName="vurderingVedtak__hjelpetekst"
+            />
           </Nav.Typo.Element>
           <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("datofelt_wrapper")} tag="div">
             {`${formValues?.lovvalgsperiodeFom ? formValues?.lovvalgsperiodeFom : ""} - `}
@@ -402,16 +406,11 @@ const VurderingVedtak = ({
           <Nav.Fieldset
             className={vurderingVedtakCls.element("nyvurdering")}
             legend={
-              <Fragment>
-                Oppgi grunn for nytt vedtak (Obligatorisk)
-                <Nav.Hjelpetekst
-                  className={vurderingVedtakCls.element("hjelpetekst")}
-                  tittel={nyVurderingBakgrunnHjelpetekst}
-                  type={Nav.PopoverOrientering.Hoyre}
-                >
-                  {nyVurderingBakgrunnHjelpetekst}
-                </Nav.Hjelpetekst>
-              </Fragment>
+              <LabelMedHjelpetekst
+                label="Oppgi grunn for nytt vedtak (Obligatorisk)"
+                hjelpetekst={nyVurderingBakgrunnHjelpetekst}
+                hjelpetekstClassName="vurderingVedtak__hjelpetekst"
+              />
             }
           >
             <Nav.Row>
@@ -443,21 +442,11 @@ const VurderingVedtak = ({
       )}
 
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
-        Fritekst til innledning
-        <Nav.Hjelpetekst
-          tittel={innledningFritekstHjelpetekstTittel}
-          className={vurderingVedtakCls.element("hjelpetekst")}
-          type={Nav.PopoverOrientering.Hoyre}
-        >
-          <p>Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat.</p>
-          <p>
-            Eksempel:
-            <br />
-            &quot;Du er omfattet av norsk trygdelovgivning og medlem i folketrygden fra 1. september 2022 til 31.
-            desember 2024.&quot;
-          </p>
-          <p>Friteksten kommer her.</p>
-        </Nav.Hjelpetekst>
+        <LabelMedHjelpetekst
+          label="Fritekst til innledning"
+          hjelpetekst={innledningFritekst}
+          hjelpetekstClassName="vurderingVedtak__hjelpetekst"
+        />
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
         feltNavn="innledningFritekst"
@@ -467,22 +456,11 @@ const VurderingVedtak = ({
       />
 
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
-        Fritekst til begrunnelse{" "}
-        <Nav.Hjelpetekst
-          tittel={begrunnelseFritekstHjelpetekstTittel}
-          className={vurderingVedtakCls.element("hjelpetekst")}
-          type={Nav.PopoverOrientering.Hoyre}
-        >
-          <p>Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.</p>
-          <p>
-            Eksempel:
-            <br />
-            &quot;Vi har lagt til grunn at du er ansatt av og lønnet av en norsk arbeidsgiver, og sendt ut for å jobbe i
-            Storbritannia i inntil tre år. Vi har gjort vurderingen fordi du har opplyst at du jobber for/er ansatt av
-            Equinor ASA.&quot;
-          </p>
-          <p>Friteksten kommer her.</p>
-        </Nav.Hjelpetekst>
+        <LabelMedHjelpetekst
+          label="Fritekst til begrunnelse"
+          hjelpetekst={begrunnelseFritekstHjelpetekst}
+          hjelpetekstClassName="vurderingVedtak__hjelpetekst"
+        />
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
         feltNavn="begrunnelseFritekst"

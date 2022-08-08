@@ -9,6 +9,7 @@ import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Utils from "../../../../utils";
 
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { vilkarSelectors } from "../../../../ducks/vilkar";
 import { lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
@@ -163,18 +164,10 @@ const VurderingBestemmelse = ({
         <Nav.Fieldset
           className="radio"
           legend={
-            <Fragment>
-              {finnTermFraListe(vilkaarKodeverk, vilkaar)}
-              {hjelpetekstForVilkaar && (
-                <Nav.Hjelpetekst
-                  className="hjelpetekst"
-                  tittel={hjelpetekstForVilkaar}
-                  type={Nav.PopoverOrientering.Hoyre}
-                >
-                  {hjelpetekstForVilkaar}
-                </Nav.Hjelpetekst>
-              )}
-            </Fragment>
+            <LabelMedHjelpetekst
+              label={finnTermFraListe(vilkaarKodeverk, vilkaar)}
+              hjelpetekst={hjelpetekstForVilkaar}
+            />
           }
         >
           <Nav.Row>
@@ -206,18 +199,7 @@ const VurderingBestemmelse = ({
         {muligeBegrunnelser.length > 0 && valgteVilkarForVilkaar === BOOLSK_STRING.SANN && (
           <Nav.Fieldset
             className="select"
-            legend={
-              <Fragment>
-                Velg særlig grunn
-                <Nav.Hjelpetekst
-                  className="hjelpetekst"
-                  tittel={hjelpetekster.get(SAERLIG_GRUNN)}
-                  type={Nav.PopoverOrientering.Hoyre}
-                >
-                  {hjelpetekster.get(SAERLIG_GRUNN)}
-                </Nav.Hjelpetekst>
-              </Fragment>
-            }
+            legend={<LabelMedHjelpetekst label="Velg særlig grunn" hjelpetekst={hjelpetekster.get(SAERLIG_GRUNN)} />}
           >
             <Nav.Row>
               <Nav.Column xs="7">

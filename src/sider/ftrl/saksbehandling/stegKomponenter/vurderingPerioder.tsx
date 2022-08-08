@@ -20,9 +20,10 @@ import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunn
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import { formSelectors } from "../../../../ducks/form";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 
@@ -346,10 +347,11 @@ const VurderingPerioder = ({
   return (
     <div className="vurderingPerioder">
       <Nav.Typo.Undertittel className="undertittel">
-        Kontroller foreslåtte medlemskapsperioder
-        <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
-          {hjelpetekst}
-        </Nav.Hjelpetekst>
+        <LabelMedHjelpetekst
+          label="Kontroller foreslåtte medlemskapsperioder"
+          hjelpetekst={hjelpetekst}
+          hjelpetekstClassName="hjelpetekst"
+        />
       </Nav.Typo.Undertittel>
 
       <div>

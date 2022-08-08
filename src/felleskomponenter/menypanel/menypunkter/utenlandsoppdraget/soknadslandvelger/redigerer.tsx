@@ -4,13 +4,13 @@ import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { formValueSelector } from "redux-form";
 
+import MKV from "../../../../../melosyskodeverk";
 import * as Skjema from "../../../../skjema";
 import * as Nav from "../../../../../navFrontend";
 import * as KV from "../../../../../kodeverk";
 
-import MKV from "../../../../../melosyskodeverk";
-
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import LabelMedHjelpetekst from "../../../../labelMedHjelpetekst";
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 
@@ -30,13 +30,10 @@ const Redigerer = ({ soknadsland: { erUkjenteEllerAlleEosLand, landkoder }, beha
         <Skjema.Checkbox
           feltNavn="soknadsland.erUkjenteEllerAlleEosLand"
           label={
-            <Nav.Typo.Normaltekst>
-              Flere EØS-land/Sveits. Ikke kjent hvilke.{" "}
-              <Nav.Hjelpetekst>
-                Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her. Det er ikke mulig å
-                legge til andre land i tillegg.
-              </Nav.Hjelpetekst>
-            </Nav.Typo.Normaltekst>
+            <LabelMedHjelpetekst
+              label="Flere EØS-land/Sveits. Ikke kjent hvilke."
+              hjelpetekst="Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her. Det er ikke mulig å legge til andre land i tillegg."
+            />
           }
           disabled={minstEttLandValgt}
         />

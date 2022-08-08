@@ -7,6 +7,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import { formSelectors } from "../../../ducks/form";
 import MKV from "../../../melosyskodeverk";
+import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./opprettSak.css";
@@ -138,14 +139,14 @@ const OpprettFagsak = (props) => {
                   feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
                   disabled={valgteLand.length > 0}
                   label={
-                    <div>
-                      Flere EØS-land/Sveits. Ikke kjent hvilke
-                      <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}>
-                        Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.
-                        <br />
-                        Det er ikke mulig å legge til andre land i tillegg.
-                      </Nav.Hjelpetekst>
-                    </div>
+                    <LabelMedHjelpetekst
+                      label="Flere EØS-land/Sveits. Ikke kjent hvilke"
+                      hjelpetekst={
+                        "Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.\n" +
+                        "Det er ikke mulig å legge til andre land i tillegg."
+                      }
+                      hjelpetekstClassName="hjelpetekst"
+                    />
                   }
                 />
               </Nav.Row>

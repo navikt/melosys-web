@@ -17,6 +17,7 @@ import * as Utils from "../../utils";
 
 import Knapperad from "../../felleskomponenter/knapperad";
 import EnkeltDato from "../../felleskomponenter/datoOmrade/enkeltDato";
+import LabelMedHjelpetekst from "../../felleskomponenter/labelMedHjelpetekst";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
@@ -370,14 +371,14 @@ const OpprettNySak = ({
                               feltNavn="erUkjenteEllerAlleEosLand"
                               disabled={landkoder.length > 0}
                               label={
-                                <div>
-                                  Flere EØS-land/Sveits. Ikke kjent hvilke
-                                  <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}>
-                                    Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.
-                                    <br />
-                                    Det er ikke mulig å legge til andre land i tillegg.
-                                  </Nav.Hjelpetekst>
-                                </div>
+                                <LabelMedHjelpetekst
+                                  label="Flere EØS-land/Sveits. Ikke kjent hvilke"
+                                  hjelpetekst={
+                                    "Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.\n" +
+                                    "Det er ikke mulig å legge til andre land i tillegg."
+                                  }
+                                  hjelpetekstClassName="hjelpetekst"
+                                />
                               }
                             />
                           )}

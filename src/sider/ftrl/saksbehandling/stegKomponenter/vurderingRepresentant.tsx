@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, Fragment } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm } from "redux-form";
 import { ThunkDispatch } from "redux-thunk";
@@ -15,10 +15,11 @@ import * as Utils from "../../../../utils";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { OrganisasjonOperations } from "../../../../ducks/organisasjoner";
 import { formSelectors } from "../../../../ducks/form";
+import { OrganisasjonsAdresse } from "../../../../felleskomponenter/adresser";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingRepresentantSchema from "./vurderingRepresentantSchema";
-import { OrganisasjonsAdresse } from "../../../../felleskomponenter/adresser";
-
 import "./vurderingRepresentant.css";
 
 export interface RepresentantformValues {
@@ -72,7 +73,9 @@ const VurderingRepresentant = ({
   const [representantData, setRepresentantData] = useState<Api.Representant.RepresentantDataResDto>();
   const [organisasjon, setOrganisasjon] = useState<Api.Organisasjon | undefined>();
   const hjelpetekstNummer =
-    "Representantnummeret du legger til her vil bli overført til Avgiftssystemet (ME7-bildet) når du fatter vedtak.\nSkal du opprette en ny representant, må du gjøre det i Avgiftssystemet.\nListen du finner her oppdateres hvert døgn. Hvis du har opprettet eller endret en representant i Avgiftssystemet i dag, vil du derfor ikke finne oppdateringen her. Dette har ikke betydning for overføringen til Avgiftssystemet, så lenge nummeret er riktig.";
+    "Representantnummeret du legger til her vil bli overført til Avgiftssystemet (ME7-bildet) når du fatter vedtak.\n\n" +
+    "Skal du opprette en ny representant, må du gjøre det i Avgiftssystemet.\n\n" +
+    "Listen du finner her oppdateres hvert døgn. Hvis du har opprettet eller endret en representant i Avgiftssystemet i dag, vil du derfor ikke finne oppdateringen her. Dette har ikke betydning for overføringen til Avgiftssystemet, så lenge nummeret er riktig.";
   const hjelpetekstAdresse =
     "Kopi av vedtak sendes til adressen som hentes opp når du legger inn organisasjonsnummer. Kontroller at org.nr. og adresse er korrekt og stemmer overens med det som ligger i Avgiftssystemet.";
 
@@ -152,14 +155,12 @@ const VurderingRepresentant = ({
       <Nav.Row>
         <Nav.Fieldset
           legend={
-            <div className="representantnummer">
-              Representantnummer til Avgiftssystemet
-              <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekstNummer} type={Nav.PopoverOrientering.Hoyre}>
-                {hjelpetekstNummer.split("\n").map((paragraf) => (
-                  <p key={Utils._uuid()}>{paragraf}</p>
-                ))}
-              </Nav.Hjelpetekst>
-            </div>
+            <LabelMedHjelpetekst
+              label="Representantnummer til Avgiftssystemet"
+              className="representantnummer"
+              hjelpetekst={hjelpetekstNummer}
+              hjelpetekstClassName="hjelpetekst"
+            />
           }
           className="velg-representantnummer"
         >
@@ -205,12 +206,7 @@ const VurderingRepresentant = ({
       {formValues && !formValues.selvbetalende && (
         <Nav.Row>
           <Nav.Typo.Undertittel className="representantadresse">
-            <Fragment>
-              Representantens adresse
-              <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekstAdresse} type={Nav.PopoverOrientering.Hoyre}>
-                {hjelpetekstAdresse}
-              </Nav.Hjelpetekst>
-            </Fragment>
+            <LabelMedHjelpetekst label="Representantens adresse" hjelpetekst={hjelpetekstAdresse} />
           </Nav.Typo.Undertittel>
           <Nav.Column xs="4">
             <Skjema.Input

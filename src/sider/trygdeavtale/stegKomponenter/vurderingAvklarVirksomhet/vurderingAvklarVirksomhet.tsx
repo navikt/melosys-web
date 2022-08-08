@@ -9,11 +9,12 @@ import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { formSelectors } from "../../../../ducks/form";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import { StegStatus } from "../../stegvelger";
-import vurdering_avklar_virksomhet from "./vurderingAvklarVirksomhetSchema";
 
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import vurdering_avklar_virksomhet from "./vurderingAvklarVirksomhetSchema";
 import "./vurderingAvklarVirksomhet.css";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
@@ -75,10 +76,7 @@ const VurderingAvklarVirksomhet = ({
   return (
     <div className="vurderingAvklarVirksomhet">
       <Nav.Typo.Undertittel className="undertittel">
-        Velg virksomhet
-        <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
-          {hjelpetekst}
-        </Nav.Hjelpetekst>
+        <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={hjelpetekst} hjelpetekstClassName="hjelpetekst" />
       </Nav.Typo.Undertittel>
 
       {virksomheterListe?.length !== 0 ? (
