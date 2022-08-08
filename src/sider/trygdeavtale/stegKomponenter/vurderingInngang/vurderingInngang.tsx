@@ -13,17 +13,19 @@ import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 
 import DialogboksOppfriskSak from "../../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { StegStatus } from "../../stegvelger";
+
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
-import { ArbeidslandLabel, FlytFinnesIkke, LandValgSomOptions } from "./vurderingInngangKomponenter";
 
+import { FlytFinnesIkke, LandValgSomOptions } from "./vurderingInngangKomponenter";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
-import { StegStatus } from "../../stegvelger";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
-import { useFeatureToggle } from "../../../../featuretoggle";
 
 interface Periode {
   fom?: string | null;
@@ -48,7 +50,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   oppdaterPeriode: (periode: Periode) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
-  oppdaterSoeknadsland: (landkoder: String[]) =>
+  oppdaterSoeknadsland: (landkoder: string[]) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterSoeknadsland(landkoder, false)),
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
 });
@@ -139,10 +141,12 @@ const VurderingInngang = ({
   }, [formValues?.fom, formValues?.tom, formValues?.arbeidsland, formIsValid]);
 
   useEffect(() => {
-    setLandUtenStøtteValgt(
-      formValues?.arbeidsland ? !landValg.map(({ kode }) => kode).includes(formValues?.arbeidsland) : false
-    );
-    oppdaterFlyt(resultat);
+    if (redigerbart && formValues) {
+      setLandUtenStøtteValgt(
+        formValues.arbeidsland ? !landValg.map(({ kode }) => kode).includes(formValues.arbeidsland) : false
+      );
+      oppdaterFlyt(resultat);
+    }
   }, [formValues?.arbeidsland]);
 
   const innhentRegisteropplysningerHandle = () => {
@@ -163,7 +167,12 @@ const VurderingInngang = ({
           </Nav.Column>
           <Nav.Column xs="5">
             <Skjema.Select
-              label={<ArbeidslandLabel />}
+              label={
+                <LabelMedHjelpetekst
+                  label="Arbeidsland"
+                  hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet."
+                />
+              }
               feltNavn="arbeidsland"
               placeholder="Velg..."
               disabled={!redigerbart}

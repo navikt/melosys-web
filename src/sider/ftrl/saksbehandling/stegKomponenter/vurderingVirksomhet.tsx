@@ -10,14 +10,15 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as KV from "../../../../kodeverk";
 import * as Api from "../../../../services/api";
 
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
+import { formSelectors } from "../../../../ducks/form";
+
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
-import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
-
 import "./vurderingVirksomhet.css";
-import { formSelectors } from "../../../../ducks/form";
 
 const mapStateToProps = (state: RootState) => {
   const lagredeValgtevirksomheter = oppsummertfaktaSelectors.VirksomhetIDerSelector(state);
@@ -105,10 +106,7 @@ const VurderingVirksomhet = ({
   return (
     <div className="vurderingVirksomhet">
       <Nav.Typo.Undertittel className="undertittel">
-        Velg virksomhet
-        <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
-          {hjelpetekst}
-        </Nav.Hjelpetekst>
+        <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={hjelpetekst} hjelpetekstClassName="hjelpetekst" />
       </Nav.Typo.Undertittel>
 
       <Mui.Checkboxgruppe

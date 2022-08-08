@@ -157,7 +157,7 @@ export const VurderingStart = ({
                 <LabelMedHjelpetekst
                   label="Arbeidsland"
                   hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                  className="hjelpetekst"
+                  hjelpetekstClassName="hjelpetekst"
                 />
               }
               feltNavn="land"

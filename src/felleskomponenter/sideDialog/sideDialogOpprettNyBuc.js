@@ -3,16 +3,16 @@ import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
 import MKV from "../../melosyskodeverk";
-
 import * as Nav from "../../navFrontend";
 import * as Api from "../../services/api";
 
-import { lagYupToReduxformErrorMapper } from "../../yup";
-import sideDialogOpprettNyBucSchema from "./sideDialogOpprettNyBucSchema";
+import LabelMedHjelpetekst from "../labelMedHjelpetekst";
 import { kodeTilObjekt } from "../../kodeverk";
 import VedleggVelger from "../vedleggvelger";
 import MultiSelect from "../multiSelect";
 
+import { lagYupToReduxformErrorMapper } from "../../yup";
+import sideDialogOpprettNyBucSchema from "./sideDialogOpprettNyBucSchema";
 import "./sideDialogOpprettNyBuc.css";
 
 const TomtFelt = ({ tekst }) => <option value="">{tekst}</option>;
@@ -200,9 +200,6 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
     valider({ mottakerinstitusjoner });
   };
 
-  const bucHjelpetekst =
-    "Det er ikke mulig å opprette LA_BUC_01 i behandlinger som ikke har saksbehandlingsstøtte tilpasset artikkel 16";
-
   const displayName = (elem) => `${elem.kode} - ${elem.term}`;
 
   const feil = (felt) => (oppdaterteFelt[felt] ? feilmeldinger[felt] : undefined);
@@ -224,12 +221,10 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
           value={valgtBuc}
           feil={feil("buc")}
           label={
-            <>
-              BUC
-              <Nav.Hjelpetekst className="hjelpetekst" tittel={bucHjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
-                {bucHjelpetekst}
-              </Nav.Hjelpetekst>
-            </>
+            <LabelMedHjelpetekst
+              label="BUC"
+              hjelpetekst="Det er ikke mulig å opprette LA_BUC_01 i behandlinger som ikke har saksbehandlingsstøtte tilpasset artikkel 16"
+            />
           }
         >
           <TomtFelt />
