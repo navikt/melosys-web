@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
@@ -43,7 +43,6 @@ export const VurderingArtikkel13_x_vedtak = ({
   endreLovvalgsPeriode,
   tilstand: { overskrift },
   lagreLovvalgsperioder,
-  byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
   behandlingstype,
   soknadsperiode,
   kontrollerFerdigbehandling,
@@ -56,20 +55,51 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
-  const forkortLovvalgsperiode = () =>
-    endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+  const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
+  const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
+
+  const kontrollerBehandling = async (data) => {
+    if (data.aktivtSteg && data.formIsValid) {
+      setVedtakPending(true);
+      await kontrollerFerdigbehandling({
+        behandlingID,
+        vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
+        skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
+      });
+      setOppdaterFoerKontroll(false);
+      setVedtakPending(false);
+    }
+  };
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontrollerBehandling, 250), [
+    kontrollerFerdigbehandling,
+  ]);
+
+  useEffect(() => {
+    debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues });
+  }, [aktivtSteg, formIsValid]);
+
+  const oppdaterLovvalgsperiode = async (fomdato, tomdato) => {
+    await endreLovvalgsPeriode(fomdato, tomdato);
+    lagreLovvalgsperioder();
+  };
+
+  useEffect(() => {
+    if (!Utils._isEmpty(formValues?.tomDato)) {
+      oppdaterLovvalgsperiode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+    }
+    debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues });
+  }, [formValues?.tomDato]);
+
+  const gjenopprettOpprinneligLovvalgsperiode = () => {
+    oppdaterLovvalgsperiode(soknadsperiode.fom, soknadsperiode.tom);
+  };
 
   const vedKlikkForhandsvis = async () => {
     if (!formIsValid) {
       touchAll();
       return false;
     }
-
-    if (formValues.forkortLovvalgsperiode) {
-      await forkortLovvalgsperiode();
-    }
-
-    lagreLovvalgsperioder();
     return formIsValid;
   };
 
@@ -97,9 +127,6 @@ export const VurderingArtikkel13_x_vedtak = ({
     });
   }
 
-  const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
-  const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
-
   const lagFattVedtakEOSReqDto = () => {
     return {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
@@ -113,29 +140,8 @@ export const VurderingArtikkel13_x_vedtak = ({
     };
   };
 
-  useEffect(() => {
-    async function kontroller() {
-      if (aktivtSteg && formIsValid) {
-        setVedtakPending(true);
-        await kontrollerFerdigbehandling({
-          behandlingID,
-          vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-          behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
-          skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
-        });
-        setOppdaterFoerKontroll(false);
-        setVedtakPending(false);
-      }
-    }
-    kontroller();
-  }, [aktivtSteg, formIsValid]);
-
   const fattVedtak = async (values, dispatch, props) => {
     setVedtakPending(true);
-
-    if (values.forkortLovvalgsperiode) {
-      await props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
-    }
 
     await props.lagreOgFatteVedtak(lagFattVedtakEOSReqDto());
 
@@ -248,14 +254,13 @@ VurderingArtikkel13_x_vedtak.propTypes = {
   formValues: PT.object,
   touchAll: PT.func.isRequired,
   endreLovvalgsPeriode: PT.func.isRequired,
-  byggLovvalgsperioder: PT.func.isRequired,
   lagreLovvalgsperioder: PT.func.isRequired,
   behandlingstype: PT.string.isRequired,
   form: PT.string.isRequired,
   handleSubmit: PT.func.isRequired,
   soknadsperiode: PT.shape({
     fom: PT.string.isRequired,
-    tom: PT.string.isRequired,
+    tom: PT.string,
   }).isRequired,
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
