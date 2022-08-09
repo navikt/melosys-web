@@ -1,9 +1,9 @@
 import React from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import MKV from "../melosyskodeverk";
-import * as MPT from "../proptypes";
-import * as Ikoner from "../resources/images";
-import * as KV from "../kodeverk";
+import MKV from "../../melosyskodeverk";
+import * as MPT from "../../proptypes";
+import * as Ikoner from "../../resources/images";
+import * as KV from "../../kodeverk";
 
 interface BehandlingsstatuskodeProps {
   behandlingsstatus: KTObject;
@@ -13,9 +13,10 @@ const getIkon = (status: string) => {
   switch (status) {
     case MKV.Koder.behandlinger.behandlingsstatus.OPPRETTET:
     case MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING:
-    case MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT:
     case MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT:
       return <Ikoner.LockOpenFilled color="#0056B4" />;
+    case MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT:
+      return <Ikoner.LockOpenFilled color="#D47B00" />;
     case MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL:
     case MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART:
     case MKV.Koder.behandlinger.behandlingsstatus.AVVENT_FAGLIG_AVKLARING:

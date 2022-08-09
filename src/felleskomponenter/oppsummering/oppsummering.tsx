@@ -16,9 +16,10 @@ import { arrayTilKonjunksjon, storeForbokstaverForLand } from "../../utils/stren
 
 import "./oppsummering.css";
 import KopierbarTekst from "../kopierbarTekst";
-import Behandlingsstatuskode from "../behandlingsstatuskode";
+import Behandlingsstatuskode from "./behandlingsstatuskode";
 import { useMediaQuery } from "../../utils/mediaQuery";
 import EndreBehandlingModal from "./endreBehandlingModal";
+import { useFeatureToggle } from "../../featuretoggle";
 
 interface OppsummeringProps {
   oppsummering: Api.Behandlinger.behandling.Oppsummering;
@@ -46,15 +47,24 @@ const Oppsummering = (props: OppsummeringProps) => {
     behandlingsgrunnlagPeriodeTom,
     className,
   } = props;
-
+  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
   const isLitenSkjerm = useMediaQuery({ maxWidth: 1440 });
 
   if (!oppsummering || !fagsak?.sakstype) return <div />;
 
-  const { saksnummer, sakstype, registrertDato, hovedpartRolle } = fagsak;
-  const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist, behandlingstema } = oppsummering;
+  const { saksnummer, sakstype, sakstema, registrertDato, hovedpartRolle } = fagsak;
+  const {
+    endretDato,
+    endretAvNavn,
+    svarFrist,
+    behandlingstype,
+    behandlingsfrist,
+    behandlingstema,
+    behandlingsstatus,
+    behandlingsresultattype,
+  } = oppsummering;
   const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
   const behandlingsgrunnlagperiode = `${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`;
 
@@ -68,6 +78,10 @@ const Oppsummering = (props: OppsummeringProps) => {
   const erSed = behandlingstype && KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.SED;
   const erTrygdeavtale = sakstype && KV.objektTilKode(sakstype) === MKV.Koder.sakstyper.TRYGDEAVTALE;
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+
+  const behandlingsstatusErAvsluttetEllerMidlertidigBeslutning =
+    behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET ||
+    behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING;
 
   const tabellEnKolonne = (data: string[][]) => {
     const rows: JSX.Element[] = [];
@@ -158,7 +172,13 @@ const Oppsummering = (props: OppsummeringProps) => {
               <Nav.Panel className="saksinfo">
                 <Nav.Row>
                   <Nav.Column xs="8">
-                    <Nav.Typo.Undertittel>{KV.objektTilTerm(sakstype)}</Nav.Typo.Undertittel>
+                    {sakstemaToggle === "enabled" ? (
+                      <Nav.Typo.Undertittel>
+                        {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
+                      </Nav.Typo.Undertittel>
+                    ) : (
+                      <Nav.Typo.Undertittel>{KV.objektTilTerm(sakstype)}</Nav.Typo.Undertittel>
+                    )}
                   </Nav.Column>
                   <Nav.Column xs="4">
                     <Nav.Knapp className="hoyrestill endre-knapp" mini onClick={() => setSkalViseEndreModal(true)}>
@@ -169,12 +189,12 @@ const Oppsummering = (props: OppsummeringProps) => {
                 </Nav.Row>
                 <Nav.Row>
                   <Nav.Column xs="12">
-                    <span className="bold">{KV.objektTilTerm(behandlingstype)}</span>
+                    <span className="bold">{KV.objektTilTerm(behandlingstema)}</span>
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>
                   <Nav.Column xs="12">
-                    <span className="bold">{KV.objektTilTerm(behandlingstema)}</span>
+                    <span className="bold">{KV.objektTilTerm(behandlingstype)}</span>
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>
@@ -183,9 +203,16 @@ const Oppsummering = (props: OppsummeringProps) => {
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>
-                  <Nav.Column xs="12" className="behandlingsstatus">
-                    <Behandlingsstatuskode behandlingsstatus={oppsummering.behandlingsstatus} />
-                    {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
+                  <Nav.Column xs="12" className="status-resultattype-wrapper">
+                    <div className="behandlingsstatus">
+                      <Behandlingsstatuskode behandlingsstatus={oppsummering.behandlingsstatus} />
+                      {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
+                    </div>
+                    {behandlingsstatusErAvsluttetEllerMidlertidigBeslutning && (
+                      <Nav.EtikettBase type="info" className="behandlingsresultattype">
+                        {behandlingsresultattype.term}
+                      </Nav.EtikettBase>
+                    )}
                   </Nav.Column>
                 </Nav.Row>
               </Nav.Panel>

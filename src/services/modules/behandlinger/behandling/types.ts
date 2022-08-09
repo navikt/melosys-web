@@ -5,6 +5,7 @@ import { Periode, Organisasjon } from "../../types";
 export interface Oppsummering {
   saksnummer: string;
   sakstype: KTObject;
+  sakstema: KTObject;
   status: KTObject;
   registrertDato: string;
   endretDato: string;
@@ -15,6 +16,7 @@ export interface Oppsummering {
   behandlingsfrist: string | null;
   svarFrist: string | null;
   behandlingstema: KTObject;
+  behandlingsresultattype: KTObject;
 }
 
 interface Arbeidsavtale {
