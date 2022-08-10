@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import PT from "prop-types";
 
-import * as Oppgaver from "../../../../ducks/oppgaver";
 import * as MPT from "../../../../proptypes";
 
 import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
@@ -9,10 +9,9 @@ import withErrorHandling from "../../../../felleskomponenter/withErrorHandling";
 import JournalforingOppgave from "../../../../felleskomponenter/oppgaveliste/journalforingOppgave";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 
-import { hentLandkoderIso2 } from "../../../../services/modules/kodeverk";
+import { oppgaverSelectors } from "../../../../ducks/oppgaver";
+import { landkoderSelectors, landkoderOperations } from "../../../../ducks/landkoder";
 import { useFeatureToggle } from "../../../../featuretoggle";
-import { useAsyncCallbackState } from "../../../../hooks";
-import { gjørOmTilStoreForbokstaver } from "../../../../utils/land";
 
 import "./mineoppgaver.css";
 
@@ -21,19 +20,20 @@ import "./mineoppgaver.css";
  */
 export const MineOppgaver = (props) => {
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
-  const [landkoder] = useAsyncCallbackState(
-    () => hentLandkoderIso2().then((response) => gjørOmTilStoreForbokstaver(response)),
-    [],
-    []
-  );
 
-  const { minesaker } = props;
+  const { minesaker, landkoder, hentLandkoder } = props;
   const { journalforing, saksbehandling } = minesaker;
+
+  useEffect(() => {
+    hentLandkoder();
+  }, []);
+
   const antall = () => {
     const jf = journalforing ? journalforing.length : 0;
     const sb = saksbehandling ? saksbehandling.length : 0;
     return jf + sb;
   };
+
   const ingenSakerMelding =
     "Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra panelene til høyre.";
 
@@ -65,6 +65,8 @@ export const MineOppgaver = (props) => {
 
 MineOppgaver.propTypes = {
   minesaker: MPT.MineOppgaver,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  hentLandkoder: PT.func.isRequired,
 };
 
 MineOppgaver.defaultProps = {
@@ -72,9 +74,14 @@ MineOppgaver.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  minesaker: Oppgaver.oppgaverSelectors.MineSakerSelector(state),
+  minesaker: oppgaverSelectors.MineSakerSelector(state),
+  landkoder: landkoderSelectors.LandkoderSelector(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
 });
 
 const kontekster = [{ navn: "oppgaver", melding: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" }];
 
-export default withErrorHandling(kontekster, connect(mapStateToProps)(MineOppgaver));
+export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(MineOppgaver));
