@@ -21,8 +21,8 @@ import "./mineoppgaver.css";
 export const MineOppgaver = (props) => {
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
 
-  const { minesaker, landkoder, hentLandkoder } = props;
-  const { journalforing, saksbehandling } = minesaker;
+  const { mineSaker, landkoder, hentLandkoder } = props;
+  const { journalforing, saksbehandling } = mineSaker;
 
   useEffect(() => {
     hentLandkoder();
@@ -64,17 +64,17 @@ export const MineOppgaver = (props) => {
 };
 
 MineOppgaver.propTypes = {
-  minesaker: MPT.MineOppgaver,
+  mineSaker: MPT.MineOppgaver,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   hentLandkoder: PT.func.isRequired,
 };
 
 MineOppgaver.defaultProps = {
-  minesaker: {},
+  mineSaker: {},
 };
 
 const mapStateToProps = (state) => ({
-  minesaker: oppgaverSelectors.MineSakerSelector(state),
+  mineSaker: oppgaverSelectors.MineSakerSelector(state),
   landkoder: landkoderSelectors.LandkoderSelector(state),
 });
 

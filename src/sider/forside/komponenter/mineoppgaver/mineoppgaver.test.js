@@ -73,7 +73,7 @@ describe("MineOppgaver", () => {
 
   beforeEach(() => {
     props = {
-      minesaker: {
+      mineSaker: {
         journalforing,
         saksbehandling,
       },
@@ -89,7 +89,7 @@ describe("MineOppgaver", () => {
 
     const journalforingOppgaverProps = journalforingOppgaver.props();
     expect(journalforingOppgaverProps.component).toBe(JournalforingOppgave);
-    expect(journalforingOppgaverProps.elementer).toBe(props.minesaker.journalforing);
+    expect(journalforingOppgaverProps.elementer).toBe(props.mineSaker.journalforing);
   });
 
   it("viser en OppgaverMedSortering for behandlinger", () => {
@@ -99,11 +99,11 @@ describe("MineOppgaver", () => {
 
     const journalforingOppgaverProps = journalforingOppgaver.props();
     expect(journalforingOppgaverProps.component).toBe(BehandlingOppgave);
-    expect(journalforingOppgaverProps.elementer).toBe(props.minesaker.saksbehandling);
+    expect(journalforingOppgaverProps.elementer).toBe(props.mineSaker.saksbehandling);
   });
 
   it("viser en melding dersom det ikke er noen journalføringsoppgaver eller behandlinger", () => {
-    props.minesaker = {
+    props.mineSaker = {
       journalforing: [],
       saksbehandling: [],
     };
