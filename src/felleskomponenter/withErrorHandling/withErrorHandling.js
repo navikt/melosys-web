@@ -117,7 +117,7 @@ const ErrorComponent = connect(mapStateToProps)(ErrorComponentInner);
  * @param WrappedComponent React-komponenten som wrappes.
  */
 
-const withErrorHandling = (kontekster, WrappedComponent) => () => {
-  return <ErrorComponent kontekster={kontekster} WrappedComponent={WrappedComponent} />;
+const withErrorHandling = (kontekster, WrappedComponent) => (props) => {
+  return <ErrorComponent kontekster={kontekster} WrappedComponent={WrappedComponent} {...props} />;
 };
 export default withErrorHandling;
