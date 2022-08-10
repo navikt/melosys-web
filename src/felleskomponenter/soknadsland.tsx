@@ -7,11 +7,11 @@ interface SoknadslandProps {
     landkoder: string[];
     erUkjenteEllerAlleEosLand: boolean;
   };
-  fulltNavn?: boolean;
+  visFulltNavn?: boolean;
   landkoderKodeverk?: KTObject[];
 }
 
-const Soknadsland = ({ land, fulltNavn = false, landkoderKodeverk = MKV.KTObjects.landkoder }: SoknadslandProps) => {
+const Soknadsland = ({ land, visFulltNavn = false, landkoderKodeverk = MKV.KTObjects.landkoder }: SoknadslandProps) => {
   if (!land) return "(ukjent)";
 
   const { landkoder, erUkjenteEllerAlleEosLand } = land;
@@ -20,7 +20,9 @@ const Soknadsland = ({ land, fulltNavn = false, landkoderKodeverk = MKV.KTObject
 
   if (!landkoder || landkoder.length === 0) return "(ukjent)";
 
-  return fulltNavn ? landkoder.map((l) => kodeTilTerm(l, landkoderKodeverk) || l).join(", ") : landkoder.join(", ");
+  const mapOmTilFulltNavn = (landkode: string) => kodeTilTerm(landkode, landkoderKodeverk) || landkode;
+
+  return visFulltNavn ? landkoder.map(mapOmTilFulltNavn).join(", ") : landkoder.join(", ");
 };
 
 export default Soknadsland;

@@ -103,7 +103,7 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
                       </Nav.Column>
                       <Nav.Column>
                         <dd className="infoDetalj">
-                          <Soknadsland land={land} fulltNavn landkoderKodeverk={landkoder} />
+                          <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
                         </dd>
                       </Nav.Column>
                     </dl>
