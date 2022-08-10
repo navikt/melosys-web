@@ -77,6 +77,8 @@ describe("MineOppgaver", () => {
         journalforing,
         saksbehandling,
       },
+      landkoder: [],
+      hentLandkoder: () => {},
     };
   });
 
