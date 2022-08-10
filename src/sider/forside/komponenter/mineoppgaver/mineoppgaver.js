@@ -9,12 +9,24 @@ import withErrorHandling from "../../../../felleskomponenter/withErrorHandling";
 import JournalforingOppgave from "../../../../felleskomponenter/oppgaveliste/journalforingOppgave";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 
+import { hentLandkoderIso2 } from "../../../../services/modules/kodeverk";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { useAsyncCallbackState } from "../../../../hooks";
+import { gjørOmTilStoreForbokstaver } from "../../../../utils/land";
+
 import "./mineoppgaver.css";
 
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
 export const MineOppgaver = (props) => {
+  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+  const [landkoder] = useAsyncCallbackState(
+    () => hentLandkoderIso2().then((response) => gjørOmTilStoreForbokstaver(response)),
+    [],
+    []
+  );
+
   const { minesaker } = props;
   const { journalforing, saksbehandling } = minesaker;
   const antall = () => {
@@ -43,6 +55,8 @@ export const MineOppgaver = (props) => {
         sortingLegend="Sorter behandlinger etter opprettelsesdato:"
         sortingPath="behandling.registrertDato"
         radioGroupName="behandlingsortering"
+        visSakstema={sakstemaToggle === "enabled"}
+        landkoder={landkoder}
       />
       {antall() === 0 && ingenSakerMelding}
     </div>
