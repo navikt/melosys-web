@@ -27,7 +27,6 @@ jobs:
 
       - name: install dependencies
         env:
-          CYPRESS_INSTALL_BINARY: 0
           # NPM krever tydeligvis en token for å hente pakker fra github packages
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: npm ci
@@ -42,7 +41,7 @@ jobs:
         run: npm run eslint
 
       - name: test
-        run: npm run test:ci
+        run: npm run test
         env:
           CI: true
 
