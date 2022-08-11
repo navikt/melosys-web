@@ -48,7 +48,7 @@ const FagsakVelger = (props) => {
       ...samling,
       {
         value: sak.saksnummer,
-        innhold: <EnkeltSak sak={sak} />,
+        innhold: <EnkeltSak sak={sak} visSakstema={visSakstema} />,
         footer: (
           <KnyttTilSak
             sak={sak}
