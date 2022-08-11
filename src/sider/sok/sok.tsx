@@ -10,16 +10,20 @@ import * as Utils from "../../utils";
 import withErrorHandling from "../../felleskomponenter/withErrorHandling";
 import Fagsak from "../../felleskomponenter/oppgaveliste/fagsak";
 import SorterbarListe from "../../felleskomponenter/sorterbarListe";
+import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
 import { sokSelectors, sokOperations } from "../../ducks/sok";
+import { useFeatureToggle } from "../../featuretoggle";
 
 import "./sok.css";
 
 const mapStateToProps = (state: RootState) => ({
   sokResultat: sokSelectors.FagsakSokSelector(state),
+  landkoder: landkoderSelectors.LandkoderSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   sok: (sokefrase: string) => dispatch(sokOperations.sok(sokefrase)),
+  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -30,13 +34,15 @@ export type SokProps = PropsFromRedux & {
   children?: JSX.Element;
 };
 
-export const Sok = ({ sokResultat, children, sok }: SokProps) => {
+export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: SokProps) => {
+  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const sokefrase = sessionStorage.getItem("sokefrase");
 
   useEffect(() => {
     if (sokefrase) {
       sok(sokefrase);
     }
+    hentLandkoder();
 
     return () => {
       sessionStorage.removeItem("sokefrase");
@@ -76,6 +82,8 @@ export const Sok = ({ sokResultat, children, sok }: SokProps) => {
                 sortingLegend="Sorter fagsaker etter opprettelsesdato:"
                 sortingPath="opprettetDato"
                 radioGroupName="fagsaksortering"
+                visSakstema={sakstemaToggle === "enabled"}
+                landkoder={landkoder}
               />
             )}
             {sokResultat.length === 0 && ingenTreff}
