@@ -16,7 +16,7 @@ import { arrayTilKonjunksjon, storeForbokstaverForLand } from "../../utils/stren
 
 import "./oppsummering.css";
 import KopierbarTekst from "../kopierbarTekst";
-import Behandlingsstatuskode from "./behandlingsstatuskode";
+import Behandlingsstatuskode from "../behandlingsstatuskode";
 import { useMediaQuery } from "../../utils/mediaQuery";
 import EndreBehandlingModal from "./endreBehandlingModal";
 import { useFeatureToggle } from "../../featuretoggle";

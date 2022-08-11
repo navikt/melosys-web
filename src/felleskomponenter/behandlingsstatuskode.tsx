@@ -1,9 +1,9 @@
 import React from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import MKV from "../../melosyskodeverk";
-import * as MPT from "../../proptypes";
-import * as Ikoner from "../../resources/images";
-import * as KV from "../../kodeverk";
+import MKV from "../melosyskodeverk";
+import * as MPT from "../proptypes";
+import * as Ikoner from "../resources/images";
+import * as KV from "../kodeverk";
 
 interface BehandlingsstatuskodeProps {
   behandlingsstatus: KTObject;
