@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
-import TrackVisibility from "react-on-screen";
 
 import MKV from "../../melosyskodeverk";
 import * as MPT from "../../proptypes";
@@ -522,20 +521,14 @@ class Stegvelger extends Component {
     const { visBehandlingsgrunnlagFeilmeldinger } = this.state;
 
     return (
-      <TrackVisibility partialVisibility>
-        {({ isVisible }) => (
-          <div className="stegvelger panelSeksjon">
-            <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
-            {this.erVedtakSteg(this.state.aktivtStegNummer) && (
-              <Feilmeldinger feilmeldinger={this.props.feilmeldinger} />
-            )}
-            {this.state.aktuelleSteg.map((item) => (
-              <StegFane key={item.id} faneData={item} />
-            ))}
-            {isVisible && visBehandlingsgrunnlagFeilmeldinger && <BehandlingsgrunnlagFeilmeldinger />}
-          </div>
-        )}
-      </TrackVisibility>
+      <div className="stegvelger panelSeksjon">
+        <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
+        {this.erVedtakSteg(this.state.aktivtStegNummer) && <Feilmeldinger feilmeldinger={this.props.feilmeldinger} />}
+        {this.state.aktuelleSteg.map((item) => (
+          <StegFane key={item.id} faneData={item} />
+        ))}
+        {visBehandlingsgrunnlagFeilmeldinger && <BehandlingsgrunnlagFeilmeldinger />}
+      </div>
     );
   }
 }
