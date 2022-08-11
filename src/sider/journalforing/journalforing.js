@@ -14,6 +14,7 @@ import * as Api from "../../services/api";
 import * as MPT from "../../proptypes";
 import { JOURNALFORING_HENSIKT } from "../../constants";
 
+import { erFeatureToggleEnabled } from "../../featuretoggle";
 import Sticky from "../../felleskomponenter/sticky";
 import PDFDokument from "./komponenter/pdfdokument";
 import JournalforingSED from "./komponenter/journalforingsed";
@@ -32,10 +33,13 @@ class Journalforing extends Component {
     visFeilmeldingDialog: false,
     feilmeldinger: [],
     submitSpinner: false,
+    visSakstema: false,
   };
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
     await this.props.hentJournalOppgave(journalpostID);
+    const sakstemaToggleEnabled = await erFeatureToggleEnabled("melosys.sakstema");
+    this.setState({ visSakstema: sakstemaToggleEnabled });
   }
 
   componentWillUnmount() {
@@ -86,6 +90,7 @@ class Journalforing extends Component {
       avsenderID,
       arbeidsgiverID,
       opprettnysak_behandlingstema: behandlingstemaKode,
+      opprettnysak_behandlingstype: behandlingstypeKode,
       representantID,
       representantKontaktPerson,
       representantRepresenterer,
@@ -125,6 +130,7 @@ class Journalforing extends Component {
       journalPostData = Object.assign(journalPostData, {
         arbeidsgiverID,
         behandlingstemaKode,
+        behandlingstypeKode,
         representantID,
         representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
         representererKode: representantRepresenterer,
@@ -260,6 +266,7 @@ class Journalforing extends Component {
     const tom = journalforingPeriodeTilOgMed ? Utils.dato.formatterDatoTilISO(journalforingPeriodeTilOgMed) : null;
     const fagsak = {
       sakstype: journalforingSkjemaVerdier.sakstype,
+      sakstema: journalforingSkjemaVerdier.sakstema,
       soknadsperiode: {
         fom,
         tom,
@@ -376,7 +383,7 @@ class Journalforing extends Component {
       settFeltInnhold,
     } = this.props;
 
-    const { visFeilmeldingDialog, feilmeldinger, submitSpinner } = this.state;
+    const { visFeilmeldingDialog, feilmeldinger, submitSpinner, visSakstema } = this.state;
 
     const { knyttTilEksisterendeSak, opprettFagsak } = this;
     const { journalpostID } = this.props.match.params;
@@ -426,6 +433,7 @@ class Journalforing extends Component {
                           avbrytJournalforing={this.avbrytJournalforing}
                           kanSubmittes={this.kanSubmittes()}
                           settFeltInnhold={settFeltInnhold}
+                          visSakstema={visSakstema}
                         />
                       )}
                     </div>

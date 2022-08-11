@@ -39,6 +39,7 @@ export const JournalforingForm = (props) => {
     submitSpinner,
     kanSubmittes,
     handleSubmit,
+    visSakstema,
   } = props;
   const visForvaltningsMelding =
     formValues.saksnummer === "-1" &&
@@ -57,7 +58,11 @@ export const JournalforingForm = (props) => {
         ikon={Ikoner.CheckList}
         className="undertittel oversteUndertittel"
       />
-      <FagsakVelger fagsakListe={fagsakListe} settJournalforingHensikt={settJournalforingHensikt} />
+      <FagsakVelger
+        fagsakListe={fagsakListe}
+        settJournalforingHensikt={settJournalforingHensikt}
+        visSakstema={visSakstema}
+      />
       {visForvaltningsMelding && (
         <Fragment>
           <Mui.Undertittel
@@ -94,6 +99,7 @@ JournalforingForm.propTypes = {
   avbrytJournalforing: PT.func.isRequired,
   kanSubmittes: PT.bool.isRequired,
   handleSubmit: PT.func.isRequired,
+  visSakstema: PT.bool.isRequired,
 };
 
 JournalforingForm.defaultProps = {
@@ -160,6 +166,7 @@ const form = {
     const options = {
       context: {
         erAvsenderPreutfylt: props.erAvsenderPreutfylt,
+        visSakstema: props.visSakstema,
       },
     };
 

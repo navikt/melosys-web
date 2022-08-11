@@ -38,7 +38,7 @@ const valgbareBehandlingstyper = (sakstype, behtema, alltidNyBehandlingToggleEna
 
 const FagsakVelger = (props) => {
   const alltidNyBehandlingToggle = useFeatureToggle("melosys.api.journalfoering.alltid.opprett.ny.behandling");
-  const { fagsakListe, settJournalforingHensikt } = props;
+  const { fagsakListe, settJournalforingHensikt, visSakstema } = props;
   const notifier = async (saksnummer) => {
     const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
     await settJournalforingHensikt(hensikt);
@@ -66,7 +66,7 @@ const FagsakVelger = (props) => {
   radioValg.push({
     value: "-1",
     innhold: <OpprettSakTittel />,
-    footer: <OpprettSak />,
+    footer: <OpprettSak visSakstema={visSakstema} />,
   });
   return (
     <div className="eksisterendeSaker">
@@ -79,6 +79,7 @@ const FagsakVelger = (props) => {
 FagsakVelger.propTypes = {
   fagsakListe: PT.array.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
+  visSakstema: PT.bool.isRequired,
 };
 
 export default FagsakVelger;
