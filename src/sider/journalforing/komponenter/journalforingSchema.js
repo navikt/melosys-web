@@ -164,7 +164,7 @@ const journalforing = object().shape({
   sakstype: string().required(MAA_FYLLES_UT).nullable(),
   sakstema: string()
     .nullable()
-    .when("$visSakstema", {
+    .when("$sakstemaToggleEnabled", {
       is: true,
       then: string().required(MAA_FYLLES_UT).nullable(),
     }),
@@ -176,8 +176,9 @@ const journalforing = object().shape({
     }),
   opprettnysak_behandlingstype: string()
     .nullable()
-    .when(["$visSakstema", "journalforingHensikt"], {
-      is: (visSakstema, hensikt) => visSakstema && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+    .when(["$sakstemaToggleEnabled", "journalforingHensikt"], {
+      is: (sakstemaToggleEnabled, hensikt) =>
+        sakstemaToggleEnabled && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
       then: string().required(MAA_FYLLES_UT).nullable(),
     }),
 

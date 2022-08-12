@@ -16,6 +16,7 @@ describe("KnyttTilSak", () => {
 
   beforeEach(() => {
     props = {
+      sakstemaToggleEnabled: false,
       sak: {
         sakstype: {
           kode: MKV.Koder.sakstyper.EU_EOS,
@@ -23,6 +24,7 @@ describe("KnyttTilSak", () => {
         behandlingOversikter: [
           {
             behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET },
+            behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD },
           },
         ],
       },
@@ -87,5 +89,49 @@ describe("KnyttTilSak", () => {
 
     expect(radios).toHaveLength(1);
     expect(radios.first().props().label).toBe("Uten å opprette behandling");
+  });
+
+  it(`Vis journalfør uten videre behandling dersom saktype er EØS og sakstema-toggle er enabled`, () => {
+    props.sak.behandlingOversikter[0].behandlingsstatus = {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    };
+    props.sak.sakstype.kode = MKV.Koder.sakstyper.EU_EOS;
+    props.sakstemaToggleEnabled = true;
+
+    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+
+    const checkbox = knyttTilSak.find(Skjema.Checkbox);
+
+    expect(checkbox).toHaveLength(1);
+    expect(checkbox.first().props().label).toBe("Journalfør uten videre behandling");
+  });
+
+  it(`Ikke vis journalfør uten videre behandling dersom saktype er FTLR og sakstema-toggle er enabled`, () => {
+    props.sak.behandlingOversikter[0].behandlingsstatus = {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    };
+    props.sak.sakstype.kode = MKV.Koder.sakstyper.FTRL;
+    props.sakstemaToggleEnabled = true;
+
+    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+
+    const checkbox = knyttTilSak.find(Skjema.Checkbox);
+
+    expect(checkbox).toHaveLength(0);
+  });
+
+  it(`Vis journalfør uten videre behandling dersom saktype er FTLR og sakstema-toggle er disabled`, () => {
+    props.sak.behandlingOversikter[0].behandlingsstatus = {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    };
+    props.sak.sakstype.kode = MKV.Koder.sakstyper.FTRL;
+    props.sakstemaToggleEnabled = false;
+
+    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+
+    const checkbox = knyttTilSak.find(Skjema.Checkbox);
+
+    expect(checkbox).toHaveLength(1);
+    expect(checkbox.first().props().label).toBe("Journalfør uten videre behandling");
   });
 });

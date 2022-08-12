@@ -14,8 +14,8 @@ import { useFeatureToggle } from "../../../featuretoggle";
 import "./knyttTilSak.css";
 
 export const KnyttTilSak = (props) => {
-  const { sak, behandlingstyper, opprettBehandling } = props;
-  const { behandlingOversikter } = sak;
+  const { sak, behandlingstyper, opprettBehandling, sakstemaToggleEnabled } = props;
+  const { behandlingOversikter, sakstype } = sak;
   const sisteBehandling = behandlingOversikter[0];
   const sakInneholderSoeknad = behandlingOversikter.some(
     (behandling) => behandling.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
@@ -63,9 +63,14 @@ export const KnyttTilSak = (props) => {
       </div>
     );
   }
+
+  const visUtenVidereBehandling = sakstemaToggleEnabled ? sakstype.kode === MKV.Koder.sakstyper.EU_EOS : true;
+
   return (
     <div className="behandlingspanel">
-      <Skjema.Checkbox className="knyttTilSak" feltNavn="ingenVurdering" label="Journalfør uten videre behandling" />
+      {visUtenVidereBehandling && (
+        <Skjema.Checkbox className="knyttTilSak" feltNavn="ingenVurdering" label="Journalfør uten videre behandling" />
+      )}
     </div>
   );
 };
@@ -73,8 +78,10 @@ KnyttTilSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   opprettBehandling: PT.func.isRequired,
+  sakstemaToggleEnabled: PT.bool.isRequired,
 };
 KnyttTilSak.defaultProps = {};
+
 const selector = formValueSelector("journalforing");
 const mapStateToProps = (state) => ({
   opprettBehandling: () => selector(state, "opprettBehandling"),

@@ -39,7 +39,7 @@ export const OpprettSakTittel = () => (
 );
 
 const OpprettFagsak = (props) => {
-  const { journalforingSkjemaVerdier, visSakstema, settFeltInnhold } = props;
+  const { journalforingSkjemaVerdier, sakstemaToggleEnabled, settFeltInnhold } = props;
   const {
     opprettnysak_behandlingstema: valgtBehandlingstema,
     sakstype: valgtSakstype,
@@ -107,7 +107,7 @@ const OpprettFagsak = (props) => {
           </option>
         ))}
       </Skjema.Select>
-      {visSakstema && (
+      {sakstemaToggleEnabled && (
         <Skjema.Select feltNavn="sakstema" bredde="fullbredde" label="Sakstema">
           {MKV.KTObjects.sakstemaer.map((elem) => (
             <option key={elem.kode} value={elem.kode}>
@@ -128,7 +128,7 @@ const OpprettFagsak = (props) => {
           </option>
         ))}
       </Skjema.Select>
-      {visSakstema && (
+      {sakstemaToggleEnabled && (
         <Skjema.Select feltNavn="opprettnysak_behandlingstype" bredde="fullbredde" label="Behandlingstype">
           {MKV.KTObjects.behandlinger.behandlingstyper.map((elem) => (
             <option key={elem.kode} value={elem.kode}>
@@ -187,7 +187,7 @@ const OpprettFagsak = (props) => {
 OpprettFagsak.propTypes = {
   journalforingSkjemaVerdier: PT.object,
   settFeltInnhold: PT.func.isRequired,
-  visSakstema: PT.bool.isRequired,
+  sakstemaToggleEnabled: PT.bool.isRequired,
 };
 
 OpprettFagsak.defaultProps = {

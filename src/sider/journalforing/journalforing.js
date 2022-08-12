@@ -33,13 +33,13 @@ class Journalforing extends Component {
     visFeilmeldingDialog: false,
     feilmeldinger: [],
     submitSpinner: false,
-    visSakstema: false,
+    sakstemaToggleEnabled: false,
   };
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
     await this.props.hentJournalOppgave(journalpostID);
-    const sakstemaToggleEnabled = await erFeatureToggleEnabled("melosys.sakstema");
-    this.setState({ visSakstema: sakstemaToggleEnabled });
+    const toggleEnabled = await erFeatureToggleEnabled("melosys.sakstema");
+    this.setState({ sakstemaToggleEnabled: toggleEnabled });
   }
 
   componentWillUnmount() {
@@ -383,7 +383,7 @@ class Journalforing extends Component {
       settFeltInnhold,
     } = this.props;
 
-    const { visFeilmeldingDialog, feilmeldinger, submitSpinner, visSakstema } = this.state;
+    const { visFeilmeldingDialog, feilmeldinger, submitSpinner, sakstemaToggleEnabled } = this.state;
 
     const { knyttTilEksisterendeSak, opprettFagsak } = this;
     const { journalpostID } = this.props.match.params;
@@ -433,7 +433,7 @@ class Journalforing extends Component {
                           avbrytJournalforing={this.avbrytJournalforing}
                           kanSubmittes={this.kanSubmittes()}
                           settFeltInnhold={settFeltInnhold}
-                          visSakstema={visSakstema}
+                          sakstemaToggleEnabled={sakstemaToggleEnabled}
                         />
                       )}
                     </div>
