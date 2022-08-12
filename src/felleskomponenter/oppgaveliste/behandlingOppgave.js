@@ -85,48 +85,26 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
                     {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
                   </Nav.Row>
                   <Nav.Row>
-                    <dl className="infoRad">
-                      <Nav.Column>
-                        <dt className="infoTerm">Frist:</dt>
-                      </Nav.Column>
-                      <Nav.Column>
-                        <dd className="infoDetalj">
-                          <EnkeltDato dato={aktivTil} />
-                        </dd>
-                      </Nav.Column>
-                    </dl>
+                    <Nav.Column className="infoTerm">Frist:</Nav.Column>
+                    <Nav.Column className="infoDetalj">
+                      <EnkeltDato dato={aktivTil} />
+                    </Nav.Column>
                   </Nav.Row>
                   <Nav.Row>
-                    <dl className="infoRad">
-                      <Nav.Column>
-                        <dt className="infoTerm">Land:</dt>
-                      </Nav.Column>
-                      <Nav.Column>
-                        <dd className="infoDetalj">
-                          <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
-                        </dd>
-                      </Nav.Column>
-                    </dl>
+                    <Nav.Column className="infoTerm">Land:</Nav.Column>
+                    <Nav.Column className="infoDetalj">
+                      <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
+                    </Nav.Column>
                   </Nav.Row>
                   <Nav.Row>
-                    <dl className="infoRad">
-                      <Nav.Column>
-                        <dt className="infoTerm">Opprettelsesdato:</dt>
-                      </Nav.Column>
-                      <Nav.Column>
-                        <dd className="infoDetalj">{<EnkeltDato dato={registrertDato} /> || "(ukjent)"}</dd>
-                      </Nav.Column>
-                    </dl>
+                    <Nav.Column className="infoTerm">Opprettelsesdato:</Nav.Column>
+                    <Nav.Column className="infoDetalj">{<EnkeltDato dato={registrertDato} /> || "(ukjent)"}</Nav.Column>
                   </Nav.Row>
                   <Nav.Row>
-                    <dl className="infoRad">
-                      <Nav.Column>
-                        <dt className="infoTerm">Sist oppdatert:</dt>
-                      </Nav.Column>
-                      <Nav.Column>
-                        <dd className="infoDetalj">{oppdateringStatus || formatterDatoTilNorsk(endretDato)}</dd>
-                      </Nav.Column>
-                    </dl>
+                    <Nav.Column className="infoTerm">Sist oppdatert:</Nav.Column>
+                    <Nav.Column className="infoDetalj">
+                      {oppdateringStatus || formatterDatoTilNorsk(endretDato)}
+                    </Nav.Column>
                   </Nav.Row>
                 </Nav.Column>
               </Nav.Row>
