@@ -3,10 +3,11 @@ import { connect } from "react-redux";
 import { change } from "redux-form";
 import PT from "prop-types";
 
+import MKV from "../../../melosyskodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
+
 import { formSelectors } from "../../../ducks/form";
-import MKV from "../../../melosyskodeverk";
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
 import { useFeatureToggle } from "../../../featuretoggle";
 
@@ -45,6 +46,7 @@ const OpprettFagsak = (props) => {
     sakstype: valgtSakstype,
     journalforingSoknadsland: valgteLand,
     journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand,
+    journalforingGjelder,
   } = journalforingSkjemaVerdier;
   const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
   const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
@@ -90,13 +92,14 @@ const OpprettFagsak = (props) => {
     );
   }, [folketrygdenToggle]);
 
-  const skalViseSoknadsperiodeOgLand = ![
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
-    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
-    MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
-    MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
-  ].includes(valgtBehandlingstema);
+  const skalViseSoknadsperiodeOgLand =
+    journalforingGjelder !== MKV.Koder.aktoersroller.VIRKSOMHET &&
+    valgtSakstype === MKV.Koder.sakstyper.EU_EOS &&
+    ![
+      MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
+      MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
+      MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+    ].includes(valgtBehandlingstema);
 
   return (
     <div className="panelramme">
