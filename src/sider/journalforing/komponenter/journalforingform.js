@@ -113,7 +113,7 @@ const toVedleggMedProps = (vedlegg) =>
     acc[`tittel_${index}`] = d.tittel;
     return acc;
   }, {});
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, ownProps) => ({
   erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   formErrors: formSelectors.JournalforingFormSelector(state).syncErrors || {},
@@ -141,9 +141,11 @@ const mapStateToProps = (state) => ({
     },
     journalforingSoknadsland: [],
     journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-    sakstype: MKV.Koder.sakstyper.EU_EOS,
+    sakstype: ownProps.sakstemaToggleEnabled ? null : MKV.Koder.sakstyper.EU_EOS,
     opprettBehandling: false,
-    opprettnysak_behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+    opprettnysak_behandlingstema: ownProps.sakstemaToggleEnabled
+      ? null
+      : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
     ingenVurdering: false,
     ikkeSendForvaltingsmelding: false,
     skalTilordnes: false,
