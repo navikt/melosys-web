@@ -34,12 +34,13 @@ class Journalforing extends Component {
     feilmeldinger: [],
     submitSpinner: false,
     sakstemaToggleEnabled: false,
+    toggleHentet: false, // Kan fjernes når melosys.sakstema toggle fjernes
   };
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
     await this.props.hentJournalOppgave(journalpostID);
     const toggleEnabled = await erFeatureToggleEnabled("melosys.sakstema");
-    this.setState({ sakstemaToggleEnabled: toggleEnabled });
+    this.setState({ sakstemaToggleEnabled: toggleEnabled, toggleHentet: true });
   }
 
   componentWillUnmount() {
@@ -383,7 +384,7 @@ class Journalforing extends Component {
       settFeltInnhold,
     } = this.props;
 
-    const { visFeilmeldingDialog, feilmeldinger, submitSpinner, sakstemaToggleEnabled } = this.state;
+    const { visFeilmeldingDialog, feilmeldinger, submitSpinner, sakstemaToggleEnabled, toggleHentet } = this.state;
 
     const { knyttTilEksisterendeSak, opprettFagsak } = this;
     const { journalpostID } = this.props.match.params;
@@ -392,6 +393,8 @@ class Journalforing extends Component {
 
     const visSedJournalforing = Utils._isObject(behandlingsInformasjon);
     const visNormalJournalforing = behandlingsInformasjon === null;
+
+    if (!toggleHentet) return null;
 
     return (
       <>

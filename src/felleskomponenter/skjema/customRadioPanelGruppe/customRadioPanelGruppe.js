@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment, useState } from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { Field } from "redux-form";
@@ -6,6 +6,7 @@ import { Field } from "redux-form";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as SkjemaUtils from "../utils";
+import * as Ikoner from "../../../resources/images";
 
 import "./customRadioPanelGruppe.css";
 
@@ -122,15 +123,19 @@ const CustomRadioPanelGruppe = (props) => {
     input: { onChange, value: currentCheckedValue },
     meta,
     notify,
+    begrensVisteRadios,
   } = props;
 
   const { touched, active } = meta;
   const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
+  const [visAlle, setVisAlle] = useState(!begrensVisteRadios);
+  const radiosSomVises = visAlle ? radios : radios.slice(0, 4);
+
   return (
     <Nav.SkjemaGruppe className="customRadioPanelGruppe" feil={feil}>
       <Nav.Fieldset legend={legend}>
-        {radios.map((radio) => (
+        {radiosSomVises.map((radio) => (
           <CustomRadioPanel
             feltNavn={feltNavn}
             key={`${feltNavn}-${radio.value}`}
@@ -142,6 +147,23 @@ const CustomRadioPanelGruppe = (props) => {
           />
         ))}
       </Nav.Fieldset>
+      {begrensVisteRadios && (
+        <div className="visMerMindre">
+          <button type="button" onClick={() => setVisAlle(!visAlle)}>
+            {visAlle ? (
+              <>
+                Vis mindre
+                <Ikoner.Up />
+              </>
+            ) : (
+              <>
+                Vis flere saker
+                <Ikoner.Down />
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </Nav.SkjemaGruppe>
   );
 };
@@ -153,11 +175,13 @@ CustomRadioPanelGruppe.propTypes = {
   meta: PT.object.isRequired,
   legend: PT.string,
   notify: PT.func,
+  begrensVisteRadios: PT.bool,
 };
 
 CustomRadioPanelGruppe.defaultProps = {
   legend: "",
   notify: undefined,
+  begrensVisteRadios: false,
 };
 
 const CustomRadioPanelGruppeReduxForm = ({ feltNavn, ...rest }) => (
