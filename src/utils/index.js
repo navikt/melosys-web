@@ -18,9 +18,8 @@ import {
   has,
   merge,
   isEqual,
+  throttle,
 } from "lodash";
-
-import throttle from "lodash.throttle";
 
 import * as adresse from "./adresse";
 import * as dato from "./dato";

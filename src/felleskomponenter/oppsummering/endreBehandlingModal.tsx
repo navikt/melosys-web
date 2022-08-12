@@ -7,21 +7,22 @@ import { Action } from "redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
-import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
-import { behandlingsgrunnlagOperations } from "../../ducks/behandlingsgrunnlag";
-import { behandlingstemaOperations, behandlingstemaSelectors } from "../../ducks/behandlingstema";
-import { behandlingstypeOperations, behandlingstypeSelectors } from "../../ducks/behandlingstype";
-import { navigeringOperations } from "../../ducks/navigering";
-import Knapperad from "../knapperad";
 import * as Mui from "../ui";
 import * as KV from "../../kodeverk";
 import * as Api from "../../services/api";
 import * as Nav from "../../navFrontend";
 import * as Routing from "../../routing";
-import { behandlingsstatusOperations, behandlingsstatusSelectors } from "../../ducks/behandlingsstatus";
-import Datovelger from "../datovelger";
-
 import * as Datoutils from "../../utils/dato";
+
+import { behandlingsstatusOperations, behandlingsstatusSelectors } from "../../ducks/behandlingsstatus";
+import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
+import { behandlingsgrunnlagOperations } from "../../ducks/behandlingsgrunnlag";
+import { behandlingstemaOperations, behandlingstemaSelectors } from "../../ducks/behandlingstema";
+import { behandlingstypeOperations, behandlingstypeSelectors } from "../../ducks/behandlingstype";
+import { navigeringOperations } from "../../ducks/navigering";
+import Datovelger from "../datovelger";
+import Knapperad from "../knapperad";
+
 import "./endreBehandlingModal.css";
 
 const mapStateToProps = (state: RootState) => ({
@@ -74,12 +75,12 @@ function EndreBehandlingModal({
   const [generellFeil, setGenerellFeil] = useState("");
   const [behandlingEndret, setBehandlingEndret] = useState(false);
 
-  const [behandlingstype, setBehandlingstype] = useState(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstype));
   const [behandlingstema, setBehandlingstema] = useState(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstema));
+  const [behandlingstype, setBehandlingstype] = useState(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstype));
+  const [behandlingsfrist, setBehandlingsfrist] = useState(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
   const [behandlingsstatus, setBehandlingsstatus] = useState(
     KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingsstatus)
   );
-  const [behandlingsfrist, setBehandlingsfrist] = useState(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
 
   useEffect(() => {
     if (skalViseModal) {
@@ -88,20 +89,20 @@ function EndreBehandlingModal({
       hentMuligeBehandlingsstatuser(behandlingID);
       setGenerellFeil("");
       setBehandlingEndret(false);
-      setBehandlingstype(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstype));
       setBehandlingstema(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstema));
-      setBehandlingsstatus(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingsstatus));
+      setBehandlingstype(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstype));
       setBehandlingsfrist(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
+      setBehandlingsstatus(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingsstatus));
     }
   }, [skalViseModal]);
 
   const endreBehandlingHandle = () => {
     const req: Api.Behandlinger.behandling.EndreBehandlingReqDto = {
       sakstype: KV.objektTilKode(fagsak.sakstype),
-      behandlingstype,
       behandlingstema,
-      behandlingsstatus,
+      behandlingstype,
       behandlingsfrist: Datoutils.dateTilIsoString(behandlingsfrist) || "",
+      behandlingsstatus,
     };
     Api.Behandlinger.behandling
       .endreBehandling(behandlingID, req)
@@ -141,17 +142,17 @@ function EndreBehandlingModal({
               redigerbart={false}
             />
             <Mui.KodeTermSelect
-              onChange={(e) => setBehandlingstype(e.target.value)}
-              label="Behandlingstype"
-              value={behandlingstype}
-              koder={muligeVerdierPlussValgt(muligeBehandlingstyper, oppsummering.behandlingstype)}
-              disableForsteValg
-            />
-            <Mui.KodeTermSelect
               onChange={(e) => setBehandlingstema(e.target.value)}
               label="Behandlingstema"
               value={behandlingstema}
               koder={muligeVerdierPlussValgt(muligeBehandlingstema, oppsummering.behandlingstema)}
+              disableForsteValg
+            />
+            <Mui.KodeTermSelect
+              onChange={(e) => setBehandlingstype(e.target.value)}
+              label="Behandlingstype"
+              value={behandlingstype}
+              koder={muligeVerdierPlussValgt(muligeBehandlingstyper, oppsummering.behandlingstype)}
               disableForsteValg
             />
             <Datovelger onChange={setBehandlingsfrist} label="Frist" value={behandlingsfrist} />

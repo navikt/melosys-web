@@ -6,6 +6,7 @@ type Fagsak = {
   saksnummer: string;
   gsakSaksnummer: number;
   sakstype: KTObject;
+  sakstema: KTObject;
   saksstatus: KTObject;
   registrertDato: string;
   endretDato: string;
