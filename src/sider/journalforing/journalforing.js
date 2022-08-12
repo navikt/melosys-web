@@ -91,7 +91,8 @@ class Journalforing extends Component {
       avsenderID,
       arbeidsgiverID,
       opprettnysak_behandlingstema: behandlingstemaKode,
-      opprettnysak_behandlingstype: behandlingstypeKode,
+      opprettnysak_behandlingstype,
+      behandlingstype,
       representantID,
       representantKontaktPerson,
       representantRepresenterer,
@@ -106,7 +107,7 @@ class Journalforing extends Component {
     const { dokumentID } = hoveddokument;
     const vedlegg = [...this.mapFysiskeVedleggsTitlerTilVedlegg(vedleggSkjema.pdf)];
 
-    // Data for /tilordne i.e KNYTT
+    // Data for hensikt KNYTT/NY_VURDERING
     let journalPostData = {
       avsenderID,
       avsenderNavn,
@@ -124,14 +125,14 @@ class Journalforing extends Component {
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
     };
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT || hensikt === JOURNALFORING_HENSIKT.NY_VURDERING) {
-      journalPostData = { ...journalPostData, ikkeSendForvaltingsmelding: null };
+      journalPostData = { ...journalPostData, ikkeSendForvaltingsmelding: null, behandlingstypeKode: behandlingstype };
     }
-    // /opprett har i tillegg arbeidsgiverID og representantID
+    // /Hensikt OPPRETT har flere felt
     if (hensikt === JOURNALFORING_HENSIKT.OPPRETT) {
       journalPostData = Object.assign(journalPostData, {
         arbeidsgiverID,
         behandlingstemaKode,
-        behandlingstypeKode,
+        behandlingstypeKode: opprettnysak_behandlingstype,
         representantID,
         representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
         representererKode: representantRepresenterer,
@@ -190,18 +191,17 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: { saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering, avsenderType },
+      journalforingSkjemaVerdier: { saksnummer, behandlingstype, ingenVurdering, avsenderType },
       settJournalforingHensikt,
       settFeilFelt,
       tilForsiden,
     } = this.props;
-    const hensikt = behandlingstypeKode ? JOURNALFORING_HENSIKT.NY_VURDERING : JOURNALFORING_HENSIKT.KNYTT;
+    const hensikt = behandlingstype ? JOURNALFORING_HENSIKT.NY_VURDERING : JOURNALFORING_HENSIKT.KNYTT;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
     const vasketJournalforing = this.vaskDokumentInformasjon(hensikt);
     const journalforingData = {
       saksnummer,
-      behandlingstypeKode,
       ingenVurdering,
       avsenderType: this.organisasjonAliaser.includes(avsenderType)
         ? MKV.Koder.avsendertyper.ORGANISASJON

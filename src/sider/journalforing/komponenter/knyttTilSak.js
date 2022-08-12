@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { formValueSelector } from "redux-form";
+import classNames from "classnames";
 import PT from "prop-types";
 
 import MKV from "../../../melosyskodeverk";
@@ -35,30 +36,45 @@ export const KnyttTilSak = (props) => {
 
   if (erInaktiv) {
     return (
-      <div className="panelramme">
+      <div className="knyttTilSak__panelramme">
         <Mui.Elementskrift
           tekst="Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet"
           ikon={Ikoner.InformationCircle}
           className="elementTittel oversteUndertittel"
           style={clsElementskrift}
         />
-        <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
+        <Skjema.RadioGruppe
+          feltNavn="opprettBehandling"
+          label={sakstemaToggleEnabled ? "" : "Knytt til sak"}
+          className={classNames("panelElement", { "nyBehandling-utenBehandling": sakstemaToggleEnabled })}
+        >
           {sakInneholderSoeknad && <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />}
           {visUtenOppretteBehandling && (
             <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
           )}
         </Skjema.RadioGruppe>
         {opprettBehandling() && (
-          <Skjema.Select
-            feltNavn="behandlingstype"
-            bredde="fullbredde"
-            label="Velg behandlingstype"
-            emptyFieldDisabled={false}
-          >
-            {behandlingstyper?.map((elem) => (
-              <option key={elem.kode} value={elem.kode} label={elem.term} />
-            ))}
-          </Skjema.Select>
+          <>
+            {sakstemaToggleEnabled ? (
+              <Skjema.RadioGruppe feltNavn="behandlingstype" label="Velg behandlingstype" className="behandlingstype">
+                {behandlingstyper?.map((elem) => (
+                  <Skjema.Radio feltNavn="behandlingstype" key={elem.kode} value={elem.kode} label={elem.term} />
+                ))}
+              </Skjema.RadioGruppe>
+            ) : (
+              <Skjema.Select
+                feltNavn="behandlingstype"
+                bredde="fullbredde"
+                label="Velg behandlingstype"
+                className="panelElement"
+                emptyFieldDisabled={false}
+              >
+                {behandlingstyper?.map((elem) => (
+                  <option key={elem.kode} value={elem.kode} label={elem.term} />
+                ))}
+              </Skjema.Select>
+            )}
+          </>
         )}
       </div>
     );
@@ -67,7 +83,7 @@ export const KnyttTilSak = (props) => {
   const visUtenVidereBehandling = sakstemaToggleEnabled ? sakstype.kode === MKV.Koder.sakstyper.EU_EOS : true;
 
   return (
-    <div className="behandlingspanel">
+    <div className="knyttTilSak__behandlingspanel">
       {visUtenVidereBehandling && (
         <Skjema.Checkbox className="knyttTilSak" feltNavn="ingenVurdering" label="Journalfør uten videre behandling" />
       )}

@@ -161,11 +161,17 @@ const journalforing = object().shape({
     then: string().ensure().required(VELG_EN_AVSENDER),
   }),
   mottattDato: string().erGyldigDato().required(MAA_FYLLES_UT),
-  sakstype: string().required(MAA_FYLLES_UT).nullable(),
+  sakstype: string()
+    .nullable()
+    .when("journalforingHensikt", {
+      is: (hensikt) => hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+      then: string().required(MAA_FYLLES_UT).nullable(),
+    }),
   sakstema: string()
     .nullable()
-    .when("$sakstemaToggleEnabled", {
-      is: true,
+    .when(["$sakstemaToggleEnabled", "journalforingHensikt"], {
+      is: (sakstemaToggleEnabled, hensikt) =>
+        sakstemaToggleEnabled && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
       then: string().required(MAA_FYLLES_UT).nullable(),
     }),
   opprettnysak_behandlingstema: string()
