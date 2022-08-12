@@ -392,9 +392,7 @@ class Journalforing extends Component {
     const { behandlingstema, sakstype } = behandlingsInformasjon || {};
 
     const visSedJournalforing = Utils._isObject(behandlingsInformasjon);
-    const visNormalJournalforing = behandlingsInformasjon === null;
-
-    if (!toggleHentet) return null;
+    const visNormalJournalforing = behandlingsInformasjon === null && toggleHentet;
 
     return (
       <>

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 import PT from "prop-types";
 
@@ -45,6 +45,7 @@ const FagsakVelger = (props) => {
   const alltidNyBehandlingToggle = useFeatureToggle("melosys.api.journalfoering.alltid.opprett.ny.behandling");
   const { fagsakListe, settJournalforingHensikt, sakstemaToggleEnabled } = props;
   const [valgtVisning, setValgtVisning] = useState(EKSISTRENDE);
+  const ingenSakerFinnes = fagsakListe.length === 0;
 
   const notifier = async (saksnummer) => {
     const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
@@ -80,42 +81,53 @@ const FagsakVelger = (props) => {
     });
   }
 
+  if (sakstemaToggleEnabled) {
+    return (
+      <>
+        {ingenSakerFinnes ? (
+          <div className="fagsakVelger">
+            <div className="ingenSaker">Ingen eksisterende saker funnet. Du må opprette en ny sak.</div>
+            <OpprettSak sakstemaToggleEnabled />
+          </div>
+        ) : (
+          <div className="fagsakVelger">
+            <div className="velgVisning">
+              <Nav.Radio
+                label={EKSISTRENDE}
+                className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTRENDE })}
+                name="velgVisning"
+                onChange={() => setValgtVisning(EKSISTRENDE)}
+                checked={valgtVisning === EKSISTRENDE}
+                value={EKSISTRENDE}
+              />
+              <Nav.Radio
+                label={OPPRETT}
+                className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
+                name="velgVisning"
+                onChange={() => setValgtVisning(OPPRETT)}
+                checked={valgtVisning === OPPRETT}
+                value={OPPRETT}
+              />
+            </div>
+            {valgtVisning === EKSISTRENDE && (
+              <Skjema.CustomRadioPanelGruppe
+                feltNavn="saksnummer"
+                radios={radioValg}
+                notify={notifier}
+                begrensVisteRadios
+              />
+            )}
+            {valgtVisning === OPPRETT && <OpprettSak sakstemaToggleEnabled />}
+          </div>
+        )}
+      </>
+    );
+  }
+
   return (
     <div className="fagsakVelger">
-      {sakstemaToggleEnabled ? (
-        <Fragment>
-          <div className="velgVisning">
-            <Nav.Radio
-              label={EKSISTRENDE}
-              className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTRENDE })}
-              name="velgVisning"
-              onChange={() => setValgtVisning(EKSISTRENDE)}
-              checked={valgtVisning === EKSISTRENDE}
-              value={EKSISTRENDE}
-            />
-            <Nav.Radio
-              label={OPPRETT}
-              className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
-              name="velgVisning"
-              onChange={() => setValgtVisning(OPPRETT)}
-              checked={valgtVisning === OPPRETT}
-              value={OPPRETT}
-            />
-          </div>
-          {valgtVisning === EKSISTRENDE && (
-            <Skjema.CustomRadioPanelGruppe
-              feltNavn="saksnummer"
-              radios={radioValg}
-              notify={notifier}
-              begrensVisteRadios
-            />
-          )}
-          {valgtVisning === OPPRETT && <OpprettSak sakstemaToggleEnabled />}
-        </Fragment>
-      ) : (
-        <Skjema.CustomRadioPanelGruppe feltNavn="saksnummer" radios={radioValg} notify={notifier} />
-      )}
-      {fagsakListe.length === 0 && "Ingen eksisterende saker funnet."}
+      <Skjema.CustomRadioPanelGruppe feltNavn="saksnummer" radios={radioValg} notify={notifier} />
+      {ingenSakerFinnes && "Ingen eksisterende saker funnet."}
     </div>
   );
 };
