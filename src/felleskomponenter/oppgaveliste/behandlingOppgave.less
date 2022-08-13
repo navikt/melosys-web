@@ -4,10 +4,53 @@
 .behandlingOppgave {
   margin-bottom: 1em;
   flex: 1;
-}
 
-.behandlingOppgave__stengt {
-  background-color: @gray-dark;
+  &__stengt {
+    background-color: @gray-dark;
+  }
+
+  &__info {
+    margin-top: 0.5em;
+    margin-left: 0.5em;
+    font-size: 0.9em;
+  }
+
+  &__uthevetKolonne {
+    display: block;
+    border-radius: 0;
+    border: 1px solid #e9e9e9;
+    background-color: #f8f8f8;
+
+    .infoTerm {
+      margin: 0.3em 0.3em;
+      font-weight: bold;
+    }
+  }
+
+  &__kolonne {
+    margin-left: 3em;
+
+    .infoTerm {
+      float: left;
+      clear: left;
+      font-weight: bold;
+      margin-right: 0.4em;
+    }
+    .infoDetalj {
+      float: left;
+      clear: right;
+      margin: 0;
+    }
+  }
+
+  &__statusOgFrist {
+    margin-top: -2.2em;
+    margin-bottom: 0.5em;
+    display: flex;
+    span {
+      margin-left: 4px;
+    }
+  }
 }
 
 .behandlingOppgave__link:link,
@@ -17,35 +60,4 @@
   text-decoration: none;
   flex-grow: 1;
   display: flex;
-}
-
-.behandlingOppgave__meta {
-  display: block;
-  margin: 0.1em 0;
-}
-
-.behandlingOppgave__meta__term {
-  float: left;
-  clear: left;
-  font-weight: bold;
-  margin-right: 0.4em;
-}
-
-.behandlingOppgave__meta__detalj {
-  float: left;
-  clear: right;
-  margin: 0;
-}
-
-.behandlingOppgave__info {
-  margin-top: 0.5em;
-  font-size: 0.9em;
-
-  .uthevetRad {
-    background-color: @white-off;
-  }
-
-  .row {
-    padding: 0.1em 0;
-  }
 }
