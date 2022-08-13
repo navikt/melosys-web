@@ -35,7 +35,7 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
 
   return (
     <Nav.Panel className="fagsak">
-      <PanelHeader tittel={tittel} undertittel="" />
+      <PanelHeader tittel={tittel} />
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="12" md="5">

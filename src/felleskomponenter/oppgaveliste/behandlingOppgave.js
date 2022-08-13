@@ -62,55 +62,49 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
   return (
     <BehandlingOppgavesLinjeWrapper link={link} stengt={erUnderOppdatering}>
       <Nav.Panel data-cy-behandlingstema={behandlingstema.kode} className={cl}>
-        <PanelHeader
-          tittel={tittel}
-          undertittel={
-            <div className="behandlingOppgave__info">
-              <Nav.Row>
-                <Nav.Column xs="7" className="behandlingOppgave__uthevetKolonne">
-                  {visSakstema ? (
-                    <Nav.Row className="infoTerm">
-                      {KV.objektTilTerm(sakstype) || "(ukjent)"} - {KV.objektTilTerm(sakstema) || "(ukjent)"}
-                    </Nav.Row>
-                  ) : (
-                    <Nav.Row className="infoTerm">{KV.objektTilTerm(sakstype) || "(ukjent)"}</Nav.Row>
-                  )}
-                  <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstema) || "(ukjent)"}</Nav.Row>
-                  <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstype) || "(ukjent)"}</Nav.Row>
-                </Nav.Column>
+        <PanelHeader tittel={tittel} />
+        <div className="behandlingOppgave__info">
+          <Nav.Row>
+            <Nav.Column xs="7" className="behandlingOppgave__uthevetKolonne">
+              {visSakstema ? (
+                <Nav.Row className="infoTerm">
+                  {KV.objektTilTerm(sakstype) || "(ukjent)"} - {KV.objektTilTerm(sakstema) || "(ukjent)"}
+                </Nav.Row>
+              ) : (
+                <Nav.Row className="infoTerm">{KV.objektTilTerm(sakstype) || "(ukjent)"}</Nav.Row>
+              )}
+              <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstema) || "(ukjent)"}</Nav.Row>
+              <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstype) || "(ukjent)"}</Nav.Row>
+            </Nav.Column>
 
-                <Nav.Column xs="4" className="behandlingOppgave__kolonne">
-                  <Nav.Row className="behandlingOppgave__statusOgFrist">
-                    <Behandlingsstatuskode behandlingsstatus={behandlingsstatus} />
-                    {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
-                  </Nav.Row>
-                  <Nav.Row>
-                    <Nav.Column className="infoTerm">Frist:</Nav.Column>
-                    <Nav.Column className="infoDetalj">
-                      <EnkeltDato dato={aktivTil} />
-                    </Nav.Column>
-                  </Nav.Row>
-                  <Nav.Row>
-                    <Nav.Column className="infoTerm">Land:</Nav.Column>
-                    <Nav.Column className="infoDetalj">
-                      <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
-                    </Nav.Column>
-                  </Nav.Row>
-                  <Nav.Row>
-                    <Nav.Column className="infoTerm">Opprettelsesdato:</Nav.Column>
-                    <Nav.Column className="infoDetalj">{<EnkeltDato dato={registrertDato} /> || "(ukjent)"}</Nav.Column>
-                  </Nav.Row>
-                  <Nav.Row>
-                    <Nav.Column className="infoTerm">Sist oppdatert:</Nav.Column>
-                    <Nav.Column className="infoDetalj">
-                      {oppdateringStatus || formatterDatoTilNorsk(endretDato)}
-                    </Nav.Column>
-                  </Nav.Row>
+            <Nav.Column xs="4" className="behandlingOppgave__kolonne">
+              <Nav.Row className="behandlingOppgave__statusOgFrist">
+                <Behandlingsstatuskode behandlingsstatus={behandlingsstatus} />
+                {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
+              </Nav.Row>
+              <Nav.Row>
+                <Nav.Column className="infoTerm">Frist:</Nav.Column>
+                <Nav.Column className="infoDetalj">
+                  <EnkeltDato dato={aktivTil} />
                 </Nav.Column>
               </Nav.Row>
-            </div>
-          }
-        />
+              <Nav.Row>
+                <Nav.Column className="infoTerm">Land:</Nav.Column>
+                <Nav.Column className="infoDetalj">
+                  <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
+                </Nav.Column>
+              </Nav.Row>
+              <Nav.Row>
+                <Nav.Column className="infoTerm">Opprettelsesdato:</Nav.Column>
+                <Nav.Column className="infoDetalj">{<EnkeltDato dato={registrertDato} /> || "(ukjent)"}</Nav.Column>
+              </Nav.Row>
+              <Nav.Row>
+                <Nav.Column className="infoTerm">Sist oppdatert:</Nav.Column>
+                <Nav.Column className="infoDetalj">{oppdateringStatus || formatterDatoTilNorsk(endretDato)}</Nav.Column>
+              </Nav.Row>
+            </Nav.Column>
+          </Nav.Row>
+        </div>
       </Nav.Panel>
     </BehandlingOppgavesLinjeWrapper>
   );

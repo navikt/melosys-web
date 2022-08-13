@@ -14,21 +14,17 @@ const JournalforingOppgave = ({ sak }) => {
   const tittel = `Journalføring - ${navn} - ${hovedpartIdent}`;
   const link = `/journalforing/${journalpostID}/${oppgaveID}`;
 
-  const undertittel = () => (
-    <Nav.Row>
-      <Nav.Column xs="12" md="6">
-        <dl className="journalOppgave__meta">
-          <dt className="journalOppgave__meta__term">Frist:</dt>
-          <dd className="journalOppgave__meta__detalj">{aktivTil}</dd>
-        </dl>
-      </Nav.Column>
-    </Nav.Row>
+  const undertittel = (
+    <>
+      <span className="frist">Frist:</span>
+      {aktivTil}
+    </>
   );
 
   return (
     <Link to={link} className="journalOppgave__link">
       <Nav.Panel className="journalOppgave">
-        <PanelHeader ikon={Ikoner.IkonSak} tittel={tittel} undertittel={undertittel()} />
+        <PanelHeader ikon={Ikoner.IkonSak} tittel={tittel} undertittel={undertittel} />
       </Nav.Panel>
     </Link>
   );
