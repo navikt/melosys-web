@@ -2,13 +2,14 @@ import React from "react";
 import PT from "prop-types";
 import { Link } from "react-router-dom";
 
+import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
+
+import Behandlingsstatus from "../behandlingsstatus";
 import EnkeltDato from "../enkeltDato";
 
 import "./behandling.css";
-import Behandlingsstatuskode from "../behandlingsstatuskode";
-import MKV from "../../melosyskodeverk";
 
 const BehandlingPanel = ({ behandling, kanVises }) => {
   const { behandlingstype, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;
@@ -31,7 +32,7 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
           <Nav.Column xs="12" md="4">
             <dl className="behandling__meta">
               <dd>
-                <Behandlingsstatuskode behandlingsstatus={behandlingsstatus} />
+                <Behandlingsstatus behandlingsstatus={behandlingsstatus} />
               </dd>
               {behandlingsstatusErAvsluttetEllerMidlertidigBeslutning && (
                 <dt>

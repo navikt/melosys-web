@@ -10,7 +10,7 @@ import * as Routing from "../../routing";
 
 import PanelHeader from "../panelHeader";
 import EnkeltDato from "../enkeltDato";
-import Behandlingsstatuskode from "../behandlingsstatuskode";
+import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
 import Soknadsland from "../soknadsland";
 
 import { formatterDatoTilNorsk } from "../../utils/dato";
@@ -79,8 +79,7 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
 
             <Nav.Column xs="4" className="behandlingOppgave__kolonne">
               <Nav.Row className="behandlingOppgave__statusOgFrist">
-                <Behandlingsstatuskode behandlingsstatus={behandlingsstatus} />
-                {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
+                <BehandlingsstatusMedSvarfrist behandlingsstatus={behandlingsstatus} svarFrist={svarFrist} />
               </Nav.Row>
               <Nav.Row>
                 <Nav.Column className="infoTerm">Frist:</Nav.Column>
