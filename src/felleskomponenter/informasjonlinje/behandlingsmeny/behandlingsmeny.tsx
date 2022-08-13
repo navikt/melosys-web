@@ -5,7 +5,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { connect, ConnectedProps } from "react-redux";
 import classNames from "classnames";
 
-import MKV from "../../../melosyskodeverk";
+import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
 import * as Ikon from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 
@@ -76,10 +76,7 @@ export const Behandlingsmeny = ({
     }
   };
 
-  const behandlingErAvsluttet = [
-    MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-    MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING,
-  ].includes(behandlingsstatus);
+  const behandlingErAvsluttet = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus);
 
   const behandlingstypeErEndretPeriode = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE;
 

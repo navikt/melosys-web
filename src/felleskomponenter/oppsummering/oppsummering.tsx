@@ -3,7 +3,7 @@ import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import MKV from "../../melosyskodeverk";
+import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
 import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
@@ -79,10 +79,6 @@ const Oppsummering = (props: OppsummeringProps) => {
   const erSed = behandlingstype && KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.SED;
   const erTrygdeavtale = sakstype && KV.objektTilKode(sakstype) === MKV.Koder.sakstyper.TRYGDEAVTALE;
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
-
-  const behandlingsstatusErAvsluttetEllerMidlertidigBeslutning =
-    behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET ||
-    behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING;
 
   const tabellEnKolonne = (data: string[][]) => {
     const rows: JSX.Element[] = [];
@@ -210,7 +206,7 @@ const Oppsummering = (props: OppsummeringProps) => {
                       svarFrist={svarFrist}
                       className="behandlingsstatus"
                     />
-                    {behandlingsstatusErAvsluttetEllerMidlertidigBeslutning && (
+                    {MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus.kode) && (
                       <Nav.EtikettBase type="info" className="behandlingsresultattype">
                         {behandlingsresultattype.term}
                       </Nav.EtikettBase>

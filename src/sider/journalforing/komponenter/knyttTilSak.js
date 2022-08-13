@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { formValueSelector } from "redux-form";
 import PT from "prop-types";
 
-import MKV from "../../../melosyskodeverk";
+import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
 import * as MPT from "../../../proptypes";
 import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
@@ -28,10 +28,7 @@ export const KnyttTilSak = (props) => {
   const visUtenOppretteBehandling =
     alltidNyBehandlingToggle === "enabled" ? !sakInneholderSoeknad : sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
 
-  const erInaktiv = [
-    MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-    MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING,
-  ].includes(sisteBehandling.behandlingsstatus.kode);
+  const erInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(sisteBehandling.behandlingsstatus.kode);
 
   if (erInaktiv) {
     return (

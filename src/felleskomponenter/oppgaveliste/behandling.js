@@ -2,7 +2,7 @@ import React from "react";
 import PT from "prop-types";
 import { Link } from "react-router-dom";
 
-import MKV from "../../melosyskodeverk";
+import { Utils as MKVUtils } from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 
@@ -13,10 +13,6 @@ import "./behandling.css";
 
 const BehandlingPanel = ({ behandling, kanVises }) => {
   const { behandlingstype, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;
-
-  const behandlingsstatusErAvsluttetEllerMidlertidigBeslutning =
-    behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET ||
-    behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING;
 
   return (
     <Nav.Panel className="behandling">
@@ -34,7 +30,7 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
               <dd>
                 <Behandlingsstatus behandlingsstatus={behandlingsstatus} />
               </dd>
-              {behandlingsstatusErAvsluttetEllerMidlertidigBeslutning && (
+              {MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus.kode) && (
                 <dt>
                   <Nav.EtikettBase type="info" className="behandlingsresultattype">
                     {behandlingsresultattype.term}

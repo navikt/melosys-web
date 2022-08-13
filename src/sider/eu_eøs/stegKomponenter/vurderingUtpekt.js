@@ -10,7 +10,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
 
-import MKV from "../../../melosyskodeverk";
+import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
 import RegisterKontrollTreff from "../../../felleskomponenter/registerkontrollTreff";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -243,8 +243,7 @@ const mapStateToProps = (state, ownProps) => {
   const behandlingsstatus = behandlingerSelectors.BehandlingsstatusKodeSelector(state);
 
   const behandlingsstatusErAvsluttetEllerMidlertidigBeslutning =
-    behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET ||
-    behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING;
+    MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus);
 
   const lovvalgsperiode = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
     ? {
