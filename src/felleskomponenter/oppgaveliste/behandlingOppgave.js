@@ -8,8 +8,8 @@ import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 import * as Routing from "../../routing";
 
-import PanelHeader from "../panelHeader/panelHeader";
-import EnkeltDato from "../datoOmrade/enkeltDato";
+import PanelHeader from "../panelHeader";
+import EnkeltDato from "../enkeltDato";
 import Behandlingsstatuskode from "../behandlingsstatuskode";
 import Soknadsland from "../soknadsland";
 

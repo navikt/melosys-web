@@ -5,7 +5,7 @@ import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 
 import Tabell from "../../../tabell/tabell";
-import EnkeltDato from "../../../datoOmrade/enkeltDato";
+import EnkeltDato from "../../../enkeltDato";
 
 import "./arbeidsavtaler.css";
 

@@ -22,7 +22,7 @@ import { anmodningsperiodesvarSelectors } from "../../../../ducks/anmodningsperi
 import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 
 import "../saksopplysninger.css";
-import { DatoOmradeMedVarighet } from "../../../../felleskomponenter/datoOmrade/datoOmrade";
+import { DatoOmradeMedVarighet } from "../../../../felleskomponenter/datoOmrade";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import { delvisInnvilgelseSkjema, avslagSkjema } from "./validering/anmodningunntakSkjema";
 import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";

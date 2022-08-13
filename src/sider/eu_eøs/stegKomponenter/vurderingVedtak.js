@@ -21,7 +21,7 @@ import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat
 import { flytSelectors } from "../../../ducks/flyt";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
-import DatoOmrade from "../../../felleskomponenter/datoOmrade/datoOmrade";
+import DatoOmrade from "../../../felleskomponenter/datoOmrade";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";

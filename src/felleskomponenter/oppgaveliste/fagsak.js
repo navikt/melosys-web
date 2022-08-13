@@ -7,9 +7,9 @@ import * as KV from "../../kodeverk";
 import * as Routing from "../../routing";
 
 import Behandling from "./behandling";
-import PanelHeader from "../panelHeader/panelHeader";
-import EnkeltDato from "../datoOmrade/enkeltDato";
-import { DatoOmradeDescription } from "../datoOmrade/datoOmrade";
+import PanelHeader from "../panelHeader";
+import EnkeltDato from "../enkeltDato";
+import { DatoOmradeDescription } from "../datoOmrade";
 import { sorterElementerEtterDato } from "../sorterbarListe";
 import Soknadsland from "../soknadsland";
 

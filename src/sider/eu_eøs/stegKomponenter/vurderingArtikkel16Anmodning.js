@@ -21,7 +21,7 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from "../../../utils/dato";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
-import DatoOmrade from "../../../felleskomponenter/datoOmrade/datoOmrade";
+import DatoOmrade from "../../../felleskomponenter/datoOmrade";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 import VedleggVelger from "../../../felleskomponenter/vedleggvelger";

@@ -4,7 +4,7 @@ import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 import * as MPT from "../../proptypes";
 
-import EnkeltDato from "./enkeltDato";
+import EnkeltDato from "../enkeltDato";
 
 import "./datoOmrade.css";
 

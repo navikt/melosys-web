@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
-import EnkeltDato from "../datoOmrade/enkeltDato";
+import EnkeltDato from "../enkeltDato";
 
 import "./behandling.css";
 import Behandlingsstatuskode from "../behandlingsstatuskode";

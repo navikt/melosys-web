@@ -2,7 +2,7 @@ import React from "react";
 import * as Nav from "../../../../../navFrontend";
 
 import bem from "../../../../../bemUtils";
-import EnkeltDato from "../../../../datoOmrade/enkeltDato";
+import EnkeltDato from "../../../../enkeltDato/enkeltDato";
 import Sivilstand from "./sivilstand/sivilstand";
 import Personstatus from "./personstatus/personstatus";
 import useHentPersonopplysninger from "../../../../informasjonlinje/useHentpersonopplysninger";
