@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import PT from "prop-types";
 
-import * as Oppgaver from "../../../../ducks/oppgaver";
 import * as MPT from "../../../../proptypes";
 
 import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
@@ -9,19 +9,31 @@ import withErrorHandling from "../../../../felleskomponenter/withErrorHandling";
 import JournalforingOppgave from "../../../../felleskomponenter/oppgaveliste/journalforingOppgave";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 
+import { oppgaverSelectors } from "../../../../ducks/oppgaver";
+import { landkoderSelectors, landkoderOperations } from "../../../../ducks/landkoder";
+import { useFeatureToggle } from "../../../../featuretoggle";
+
 import "./mineoppgaver.css";
 
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
 export const MineOppgaver = (props) => {
-  const { minesaker } = props;
-  const { journalforing, saksbehandling } = minesaker;
+  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+
+  const { mineSaker, landkoder, hentLandkoder } = props;
+  const { journalforing, saksbehandling } = mineSaker;
+
+  useEffect(() => {
+    hentLandkoder();
+  }, []);
+
   const antall = () => {
     const jf = journalforing ? journalforing.length : 0;
     const sb = saksbehandling ? saksbehandling.length : 0;
     return jf + sb;
   };
+
   const ingenSakerMelding =
     "Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra panelene til høyre.";
 
@@ -43,6 +55,8 @@ export const MineOppgaver = (props) => {
         sortingLegend="Sorter behandlinger etter opprettelsesdato:"
         sortingPath="behandling.registrertDato"
         radioGroupName="behandlingsortering"
+        visSakstema={sakstemaToggle === "enabled"}
+        landkoder={landkoder}
       />
       {antall() === 0 && ingenSakerMelding}
     </div>
@@ -50,17 +64,24 @@ export const MineOppgaver = (props) => {
 };
 
 MineOppgaver.propTypes = {
-  minesaker: MPT.MineOppgaver,
+  mineSaker: MPT.MineOppgaver,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  hentLandkoder: PT.func.isRequired,
 };
 
 MineOppgaver.defaultProps = {
-  minesaker: {},
+  mineSaker: {},
 };
 
 const mapStateToProps = (state) => ({
-  minesaker: Oppgaver.oppgaverSelectors.MineSakerSelector(state),
+  mineSaker: oppgaverSelectors.MineSakerSelector(state),
+  landkoder: landkoderSelectors.LandkoderSelector(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
 });
 
 const kontekster = [{ navn: "oppgaver", melding: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" }];
 
-export default withErrorHandling(kontekster, connect(mapStateToProps)(MineOppgaver));
+export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(MineOppgaver));
