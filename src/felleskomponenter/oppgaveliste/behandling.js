@@ -7,9 +7,15 @@ import * as KV from "../../kodeverk";
 import EnkeltDato from "../datoOmrade/enkeltDato";
 
 import "./behandling.css";
+import Behandlingsstatuskode from "../behandlingsstatuskode";
+import MKV from "../../melosyskodeverk";
 
 const BehandlingPanel = ({ behandling, kanVises }) => {
-  const { behandlingstema, behandlingstype, behandlingsstatus, opprettetDato } = behandling;
+  const { behandlingstype, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;
+
+  const behandlingsstatusErAvsluttetEllerMidlertidigBeslutning =
+    behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET ||
+    behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING;
 
   return (
     <Nav.Panel className="behandling">
@@ -17,23 +23,28 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
         <Nav.Column>
           <Nav.Column xs="12" md="5">
             <dl className="behandling__meta">
-              <dt>Behandlingstema:</dt>
-              <dd>{KV.objektTilTerm(behandlingstema) || "(ukjent)"}</dd>
-              <dt>Behandling opprettet:</dt>
+              <dt>{KV.objektTilTerm(behandlingstype) || "(ukjent)"}</dt>
+              <dt>Opprettet:</dt>
               <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="4">
             <dl className="behandling__meta">
-              <dt>Behandlingstype:</dt>
-              <dd>{KV.objektTilTerm(behandlingstype) || "(ukjent)"}</dd>
-              <dt>Behandlingsstatus:</dt>
-              <dd>{KV.objektTilTerm(behandlingsstatus) || "(ukjent)"}</dd>
+              <dd>
+                <Behandlingsstatuskode behandlingsstatus={behandlingsstatus} />
+              </dd>
+              {behandlingsstatusErAvsluttetEllerMidlertidigBeslutning && (
+                <dt>
+                  <Nav.EtikettBase type="info" className="behandlingsresultattype">
+                    {behandlingsresultattype.term}
+                  </Nav.EtikettBase>
+                </dt>
+              )}
             </dl>
           </Nav.Column>
         </Nav.Column>
-        <Nav.Column xs="12" md="3">
-          {kanVises && <Nav.Knapp>VIS BEHANDLING</Nav.Knapp>}
+        <Nav.Column xs="12" md="3" className="visBehandlingKnapp">
+          {kanVises && <Nav.Knapp>Vis behandling</Nav.Knapp>}
         </Nav.Column>
       </Nav.Row>
     </Nav.Panel>
