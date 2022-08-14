@@ -10,9 +10,11 @@ import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import { oppgaverOperations } from "../../../ducks/oppgaver";
-import "./behandling.css";
+import { useFeatureToggle } from "../../../featuretoggle";
 
-const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
+import "./saksplukker.css";
+
+const { EU_EOS, TRYGDEAVTALE, FTRL } = MKV.Koder.sakstyper;
 
 const compareTerm = (a: KTObject, b: KTObject) => {
   if (!a.term) return 1;
@@ -21,33 +23,48 @@ const compareTerm = (a: KTObject, b: KTObject) => {
   return a.term.localeCompare(b.term);
 };
 
+export interface SaksplukkerFormData {
+  sakstype: string;
+  sakstema: string;
+  behandlingstema: string;
+}
+
 const mapStateToProps = (state: RootState) => ({
   initialValues: {
     sakstype: EU_EOS,
     behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
   },
-  formValues: getFormValues(KV.Form.BEHANDLINGS_FORM)(state) as KV.Form.BehandlingsFormData,
+  formValues: getFormValues(KV.Form.SAKSPLUKKER_FORM)(state) as SaksplukkerFormData,
 });
+
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type BehandlingProps = PropsFromRedux & RouteComponentProps;
+type SaksplukkerProps = PropsFromRedux & RouteComponentProps;
 
-export const Behandling = ({
+export const Saksplukker = ({
   handleSubmit,
   history,
   formValues,
   change,
   initialValues,
-}: InjectedFormProps<KV.Form.BehandlingsFormData, BehandlingProps> & BehandlingProps) => {
+}: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) => {
+  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+
   useEffect(() => {
     if (formValues?.sakstype) {
-      change(
-        "behandlingstema",
-        formValues.sakstype === EU_EOS
-          ? initialValues.behandlingstema
-          : MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
-      );
+      if (sakstemaToggle === "enabled") {
+        change("sakstema", null);
+        change("behandlingstema", null);
+      } else {
+        change(
+          "behandlingstema",
+          formValues.sakstype === EU_EOS
+            ? initialValues.behandlingstema
+            : MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
+        );
+      }
     }
   }, [formValues?.sakstype]);
 
@@ -63,6 +80,10 @@ export const Behandling = ({
     return true;
   };
 
+  const sakstemaErPlukkbart = (sakstemaKTObject: KTObject) => {
+    return MKV.Kodekombinasjoner.gyldigeSakstema(formValues?.sakstype).includes(sakstemaKTObject.kode);
+  };
+
   const ikkePlukkbareBehandlingstemaerEOS = [
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
@@ -71,23 +92,44 @@ export const Behandling = ({
   const plukkbareBehandlingstemaerTrygdeavtale = [MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV];
 
   const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => {
+    if (sakstemaToggle === "enabled") {
+      return MKV.Kodekombinasjoner.gyldigeBehandlingstema(formValues?.sakstype, formValues?.sakstema).includes(
+        behandlingtemaKTObject.kode
+      );
+    }
     return formValues?.sakstype === EU_EOS
       ? !ikkePlukkbareBehandlingstemaerEOS.includes(behandlingtemaKTObject.kode)
       : plukkbareBehandlingstemaerTrygdeavtale.includes(behandlingtemaKTObject.kode);
   };
 
   return (
-    <Nav.Panel className="forside__sidepanel sidepanel__behandling">
+    <Nav.Panel className="forside__sidepanel saksplukker">
       <Nav.Typo.Systemtittel>Behandle sak</Nav.Typo.Systemtittel>
-      <p>Velg sakstype og behandlingstema for å få tildelt en sak.</p>
-      <form className="behandling__skjema" onSubmit={submitOgVideresend}>
+      {sakstemaToggle === "enabled" ? (
+        <p>Velg sakstype, saks- og behandlingstema for å få tildelt en sak.</p>
+      ) : (
+        <p>Velg sakstype og behandlingstema for å få tildelt en sak.</p>
+      )}
+      <form className="saksplukker__skjema" onSubmit={submitOgVideresend}>
         <Nav.Row>
           <Nav.Column xs="12">
             <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
               <option key={EU_EOS} value={EU_EOS} label={MKV.Terms.sakstyper.EU_EOS} />
               <option key={TRYGDEAVTALE} value={TRYGDEAVTALE} label={MKV.Terms.sakstyper.TRYGDEAVTALE} />
+              {folketrygdenToggle === "enabled" && <option key={FTRL} value={FTRL} label={MKV.Terms.sakstyper.FTRL} />}
             </Skjema.Select>
           </Nav.Column>
+          {sakstemaToggle === "enabled" && (
+            <Nav.Column xs="12">
+              <Skjema.Select feltNavn="sakstema" bredde="fullbredde" label="Sakstema">
+                {MKV.KTObjects.sakstemaer.filter(sakstemaErPlukkbart).map(({ kode, term }: KTObject) => (
+                  <option key={kode} value={kode}>
+                    {term}
+                  </option>
+                ))}
+              </Skjema.Select>
+            </Nav.Column>
+          )}
           <Nav.Column xs="12">
             <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
               {MKV.KTObjects.behandlinger.behandlingstema
@@ -101,16 +143,16 @@ export const Behandling = ({
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>
-        <Nav.Knapp className="behandling__knapp">Behandle sak</Nav.Knapp>
+        <Nav.Knapp className="saksplukker__knapp">Behandle sak</Nav.Knapp>
       </form>
     </Nav.Panel>
   );
 };
 
-const BehandlingForm = reduxForm<KV.Form.BehandlingsFormData, BehandlingProps>({
-  form: KV.Form.BEHANDLINGS_FORM,
+const SaksplukkerForm = reduxForm<SaksplukkerFormData, SaksplukkerProps>({
+  form: KV.Form.SAKSPLUKKER_FORM,
   destroyOnUnmount: false,
-  onSubmit: (values: KV.Form.BehandlingsFormData) => oppgaverOperations.sendBehandlingsOppgave(values),
-})(Behandling);
+  onSubmit: (values: SaksplukkerFormData) => oppgaverOperations.sendBehandlingsOppgave(values),
+})(Saksplukker);
 
-export default withRouter(connector(BehandlingForm));
+export default withRouter(connector(SaksplukkerForm));

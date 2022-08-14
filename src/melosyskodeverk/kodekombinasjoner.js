@@ -28,3 +28,82 @@ export const unntaksbestemmelser = Utils._uniqBy(
   [...alleLovvalg].filter(({ kode }) => !bestemmelserIkkeRelevanteForUnntak.includes(kode)),
   ({ kode }) => kode
 ).sort(kodeverkComparator);
+
+export const gyldigeSakstema = (sakstype) => {
+  switch (sakstype) {
+    case MKV.Koder.sakstyper.EU_EOS:
+    case MKV.Koder.sakstyper.TRYGDEAVTALE:
+      return [MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG, MKV.Koder.sakstemaer.UNNTAK, MKV.Koder.sakstemaer.TRYGDEAVGIFT];
+    case MKV.Koder.sakstyper.FTRL:
+      return [MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG, MKV.Koder.sakstemaer.TRYGDEAVGIFT];
+    default:
+      return [];
+  }
+};
+
+const gyldigeBehandlingstemaTrygdeavgift = [
+  MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+  MKV.Koder.behandlinger.behandlingstema.PENSJONIST,
+];
+
+const gyldigeBehandlingstemaUnntakEUEØS = [MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET];
+
+const gyldigeBehandlingstemaUnntakTRYGDEAVTALE = [
+  MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP, // TODO: Disse er feil. Venter på svar fra fag
+  MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+];
+
+const gyldigeBehandlingstemaMedlemskapLovvalgEUEØS = [
+  MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+  MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+  MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+  MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+  MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+  MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+  MKV.Koder.behandlinger.behandlingstema.PENSJONIST,
+  MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET,
+  MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+];
+
+const gyldigeBehandlingstemaMedlemskapLovvalgFTRL = [
+  MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP,
+  MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+  MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+  MKV.Koder.behandlinger.behandlingstema.PENSJONIST,
+];
+
+const gyldigeBehandlingstemaMedlemskapLovvalgTRYGDEAVTALE = [
+  MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+  MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+  MKV.Koder.behandlinger.behandlingstema.PENSJONIST,
+];
+
+export const gyldigeBehandlingstema = (sakstype, sakstema) => {
+  if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
+    return gyldigeBehandlingstemaTrygdeavgift;
+  }
+  if (sakstema === MKV.Koder.sakstemaer.UNNTAK) {
+    switch (sakstype) {
+      case MKV.Koder.sakstyper.EU_EOS:
+        return gyldigeBehandlingstemaUnntakEUEØS;
+      case MKV.Koder.sakstyper.Trygdeavtale:
+        return gyldigeBehandlingstemaUnntakTRYGDEAVTALE;
+      case MKV.Koder.sakstyper.FTRL:
+      default:
+        return [];
+    }
+  }
+  if (sakstema === MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG) {
+    switch (sakstype) {
+      case MKV.Koder.sakstyper.EU_EOS:
+        return gyldigeBehandlingstemaMedlemskapLovvalgEUEØS;
+      case MKV.Koder.sakstyper.TRYGDEAVTALE:
+        return gyldigeBehandlingstemaMedlemskapLovvalgTRYGDEAVTALE;
+      case MKV.Koder.sakstyper.FTRL:
+        return gyldigeBehandlingstemaMedlemskapLovvalgFTRL;
+      default:
+        return [];
+    }
+  }
+  return [];
+};

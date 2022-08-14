@@ -5,7 +5,7 @@ import PT from "prop-types";
 import withErrorHandling from "../../felleskomponenter/withErrorHandling";
 import * as Nav from "../../navFrontend";
 
-import Behandling from "./komponenter/behandling";
+import Saksplukker from "./komponenter/saksplukker";
 import MineOppgaver from "./komponenter/mineoppgaver";
 import SokSkjema from "./komponenter/sokskjema";
 import OpprettNySakKnapp from "./komponenter/opprettnysakknapp";
@@ -26,7 +26,7 @@ const Forside = (props) => {
           <Nav.Column className="hoyrekolonne" xs="5">
             <OpprettNySakKnapp onClick={tilOpprettNySak} />
             <SokSkjema />
-            <Behandling />
+            <Saksplukker />
           </Nav.Column>
         </Nav.Row>
       </Nav.Container>

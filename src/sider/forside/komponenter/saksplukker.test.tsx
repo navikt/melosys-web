@@ -6,14 +6,14 @@ import MKV from "../../../melosyskodeverk";
 
 import * as Skjema from "../../../felleskomponenter/skjema";
 
-import { Behandling } from "./behandling";
+import { Saksplukker } from "./saksplukker";
 
-describe("Behandling", () => {
-  const mockedProps = mock<ComponentProps<typeof Behandling>>();
+describe("Saksplukker", () => {
+  const mockedProps = mock<ComponentProps<typeof Saksplukker>>();
   const props = instance(mockedProps);
 
   it(`viser ikke behandlingstema ${MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND}`, () => {
-    const behandling = shallow(<Behandling {...props} />);
+    const behandling = shallow(<Saksplukker {...props} />);
     const select = behandling.find(Skjema.Select);
     const options = select.find("option");
 
