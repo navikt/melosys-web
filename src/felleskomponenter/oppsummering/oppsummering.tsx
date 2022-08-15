@@ -48,7 +48,7 @@ const Oppsummering = (props: OppsummeringProps) => {
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
-  const isLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
+  const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
   if (!oppsummering || !fagsak?.sakstype) return <div />;
 
@@ -139,7 +139,7 @@ const Oppsummering = (props: OppsummeringProps) => {
       ];
     }
 
-    return isLitenSkjerm ? tabellEnKolonne(col1.concat(col2)) : tabellToKolonner(col1, col2);
+    return erLitenSkjerm ? tabellEnKolonne(col1.concat(col2)) : tabellToKolonner(col1, col2);
   };
 
   return (
