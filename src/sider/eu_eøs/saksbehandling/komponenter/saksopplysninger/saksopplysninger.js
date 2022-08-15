@@ -8,7 +8,7 @@ import * as Utils from "../../../../../utils";
 import * as MPT from "../../../../../proptypes";
 
 import Stegvelger, { STEG } from "../../../../../felleskomponenter/stegvelger";
-import { HenlagtSak, AvslaattSoknad } from "../stegErstatter";
+import { AvslaattSoknad, HenlagtSak } from "../stegErstatter";
 import { SoknadMenypanelForm } from "../../../../../felleskomponenter/menypanelForm";
 
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
@@ -47,7 +47,6 @@ const Saksopplysninger = ({
   lagreAnmodningsperioderHandler,
   oppdaterOgLagreBehandlingerHandler,
   lagreAllData,
-  oppdaterBehandlingsgrunnlag,
   startOgVisOppfriskModal,
   anmodningsperioderErSendtUtlandet,
 }) => {
@@ -85,7 +84,6 @@ const Saksopplysninger = ({
           lagreAnmodningsperioderHandler={lagreAnmodningsperioderHandler}
           oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingerHandler}
           lagreAllData={lagreAllData}
-          oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
           begrunnelser={MKV.KTObjects.begrunnelser}
           landkoder={MKV.KTObjects.landkoder}
           tilForsiden={tilForsiden}
@@ -148,7 +146,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   sendBehandlingsgrunnlag: (bid, dokument) => dispatch(behandlingsgrunnlagOperations.send(bid, dokument)),
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

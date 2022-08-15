@@ -68,7 +68,6 @@ const Saksbehandling = ({
   landkoder,
   location,
   match,
-  oppdaterBehandlingsgrunnlag,
   oppsummering,
   redigerbart,
   resetBehandlingerState,
@@ -193,7 +192,6 @@ const Saksbehandling = ({
                           lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger
                         }
                         lagreVilkarHandler={lagreVilkar}
-                        oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
                         begrunnelser={MKV.KTObjects.begrunnelser}
                         landkoder={landkoder}
                         bestemmelser={bestemmelser}
@@ -269,7 +267,6 @@ Saksbehandling.propTypes = {
   lagreAvklartefakta: PT.func.isRequired,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
   lagreVilkar: PT.func.isRequired,
-  oppdaterBehandlingsgrunnlag: PT.func.isRequired,
   resetBehandlingerState: PT.func.isRequired,
   resetBehandlingsgrunnlagState: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
@@ -327,7 +324,6 @@ const mapDispatchToProps = (dispatch) => ({
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   resetVilkarState: () => dispatch(vilkarOperations.resetState()),
   resetOppsummertFaktaState: () => dispatch(oppsummertfaktaOperations.resetOppsummertFakta()),
   resetMedlemskapsperiodeState: () => dispatch(medlemskapsperioderOperations.resetMedlemskapsperioder()),
