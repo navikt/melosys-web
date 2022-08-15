@@ -3,7 +3,7 @@ import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
 import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";

@@ -4,7 +4,7 @@ import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
-import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";

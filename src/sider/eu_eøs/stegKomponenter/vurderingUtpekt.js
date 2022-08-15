@@ -10,7 +10,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
 
-import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import RegisterKontrollTreff from "../../../felleskomponenter/registerkontrollTreff";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";

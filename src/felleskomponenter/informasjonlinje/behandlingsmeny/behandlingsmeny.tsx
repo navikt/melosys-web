@@ -5,7 +5,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { connect, ConnectedProps } from "react-redux";
 import classNames from "classnames";
 
-import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as Ikon from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 

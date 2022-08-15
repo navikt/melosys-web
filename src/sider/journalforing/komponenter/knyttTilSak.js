@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { formValueSelector } from "redux-form";
 import PT from "prop-types";
 
-import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as MPT from "../../../proptypes";
 import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";

@@ -2,7 +2,7 @@ import React from "react";
 import PT from "prop-types";
 import { Link } from "react-router-dom";
 
-import { Utils as MKVUtils } from "../../melosyskodeverk";
+import { MKVUtils } from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 

@@ -6,7 +6,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as Skjema from "../../felleskomponenter/skjema";
 import * as Mui from "../../felleskomponenter/ui";

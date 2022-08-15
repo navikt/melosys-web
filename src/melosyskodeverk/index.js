@@ -1,10 +1,10 @@
 import filtrertMKV from "./filtrertmelosyskodeverk";
 import * as Kodekombinasjoner from "./kodekombinasjoner";
-import * as Utils from "./utils";
+import * as MKVUtils from "./utils";
 
 export default {
   ...filtrertMKV,
   Kodekombinasjoner,
 };
 
-export { Utils };
+export { MKVUtils };
