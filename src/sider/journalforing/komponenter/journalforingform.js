@@ -3,16 +3,19 @@ import PT from "prop-types";
 import { connect } from "react-redux";
 import { reduxForm, getFormValues, change } from "redux-form";
 
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as Ikoner from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
+import * as MPT from "../../../proptypes";
 
-import MKV, { MKVUtils } from "../../../melosyskodeverk";
+import { landkoderSelectors } from "../../../ducks/landkoder";
 import { journalforingSelectors } from "../../../ducks/journalforing";
 import { formSelectors } from "../../../ducks/form";
+
 import Informasjon from "./informasjon";
 import FagsakVelger from "./fagsakVelger";
 import SendForvaltningsMelding from "./sendForvaltningsMelding";
@@ -40,6 +43,7 @@ export const JournalforingForm = (props) => {
     kanSubmittes,
     handleSubmit,
     sakstemaToggleEnabled,
+    landkoder,
   } = props;
   const visForvaltningsMelding =
     formValues.saksnummer === "-1" &&
@@ -62,6 +66,7 @@ export const JournalforingForm = (props) => {
         fagsakListe={fagsakListe}
         settJournalforingHensikt={settJournalforingHensikt}
         sakstemaToggleEnabled={sakstemaToggleEnabled}
+        landkoder={landkoder}
       />
       {visForvaltningsMelding && (
         <Fragment>
@@ -100,6 +105,7 @@ JournalforingForm.propTypes = {
   kanSubmittes: PT.bool.isRequired,
   handleSubmit: PT.func.isRequired,
   sakstemaToggleEnabled: PT.bool.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 JournalforingForm.defaultProps = {
@@ -115,6 +121,7 @@ const toVedleggMedProps = (vedlegg) =>
   }, {});
 const mapStateToProps = (state, ownProps) => ({
   erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
+  landkoder: landkoderSelectors.LandkoderSelector(state),
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   formErrors: formSelectors.JournalforingFormSelector(state).syncErrors || {},
   submitFailed: formSelectors.JournalforingFormSelector(state).submitFailed,

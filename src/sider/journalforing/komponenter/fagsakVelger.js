@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import PT from "prop-types";
 
+import MKV from "../../../melosyskodeverk";
+import * as MPT from "../../../proptypes";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 
-import EnkeltSak from "./enkeltSak";
-import KnyttTilSak from "./knyttTilSak";
-import OpprettSak, { OpprettSakTittel } from "./opprettSak";
-import MKV from "../../../melosyskodeverk";
 import { JOURNALFORING_HENSIKT } from "../../../constants";
 import { useFeatureToggle } from "../../../featuretoggle";
+
+import OpprettSak, { OpprettSakTittel } from "./opprettSak";
+import EnkeltSak from "./enkeltSak";
+import KnyttTilSak from "./knyttTilSak";
 
 import "./fagsakVelger.css";
 
@@ -43,7 +45,7 @@ const OPPRETT = "Opprett ny sak";
 
 const FagsakVelger = (props) => {
   const alltidNyBehandlingToggle = useFeatureToggle("melosys.api.journalfoering.alltid.opprett.ny.behandling");
-  const { fagsakListe, settJournalforingHensikt, sakstemaToggleEnabled } = props;
+  const { fagsakListe, settJournalforingHensikt, sakstemaToggleEnabled, landkoder } = props;
   const [valgtVisning, setValgtVisning] = useState(EKSISTRENDE);
   const ingenSakerFinnes = fagsakListe.length === 0;
 
@@ -56,7 +58,7 @@ const FagsakVelger = (props) => {
       ...samling,
       {
         value: sak.saksnummer,
-        innhold: <EnkeltSak sak={sak} sakstemaToggleEnabled={sakstemaToggleEnabled} />,
+        innhold: <EnkeltSak sak={sak} sakstemaToggleEnabled={sakstemaToggleEnabled} landkoder={landkoder} />,
         footer: (
           <KnyttTilSak
             sak={sak}
@@ -136,6 +138,7 @@ FagsakVelger.propTypes = {
   fagsakListe: PT.array.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
   sakstemaToggleEnabled: PT.bool.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 export default FagsakVelger;

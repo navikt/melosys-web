@@ -22,6 +22,7 @@ import JournalforingForm from "./komponenter/journalforingform";
 import FeilmeldingDialog from "./komponenter/feilmeldingDialog";
 
 import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
+import { landkoderOperations } from "../../ducks/landkoder";
 import { formSelectors } from "../../ducks/form";
 import { sokSelectors } from "../../ducks/sok";
 
@@ -41,6 +42,7 @@ class Journalforing extends Component {
     await this.props.hentJournalOppgave(journalpostID);
     const toggleEnabled = await erFeatureToggleEnabled("melosys.sakstema");
     this.setState({ sakstemaToggleEnabled: toggleEnabled, toggleHentet: true });
+    this.props.hentLandkoder();
   }
 
   componentWillUnmount() {
@@ -499,6 +501,7 @@ Journalforing.propTypes = {
   journalforSEDSkjemaVerdier: PT.object,
   journalforSEDSkjemaErrors: PT.object.isRequired,
   resetJournalforingState: PT.func.isRequired,
+  hentLandkoder: PT.func.isRequired,
 };
 
 Journalforing.defaultProps = {
@@ -527,6 +530,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(change(KV.Form.JOURNALFORING, "journalforingHensikt", journalforingHensikt)),
   touch: (formName, ...fields) => dispatch(touch(formName, ...fields)),
   resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
+  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Journalforing));

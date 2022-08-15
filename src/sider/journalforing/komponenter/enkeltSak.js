@@ -7,15 +7,14 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import Soknadsland from "../../../felleskomponenter/soknadsland";
-import Behandlingsstatuskode from "../../../felleskomponenter/behandlingsstatuskode";
-import { formatterDatoTilNorsk } from "../../../utils/dato";
+import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behandlingsstatus";
 
 import "./enkeltSak.css";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = (props) => {
-  const { sakstemaToggleEnabled } = props;
+  const { sakstemaToggleEnabled, landkoder } = props;
   const { opprettetDato, behandlingOversikter, sakstype, saksstatus, saksnummer, sakstema } = props.sak;
 
   const { land, behandlingstype, periode, behandlingsstatus, behandlingstema, svarFrist } = behandlingOversikter[0];
@@ -45,13 +44,12 @@ const EnkeltSak = (props) => {
             },
             {
               term: "Land:",
-              description: <Soknadsland land={land} />,
-            }, // TODO: visFulltNavn
+              description: <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />,
+            },
             {
               description: (
-                <div className="behandlingsstatus">
-                  <Behandlingsstatuskode behandlingsstatus={behandlingsstatus} />
-                  {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
+                <div className="behandlingsstatusSvarfrist-wrapper">
+                  <BehandlingsstatusMedSvarfrist behandlingsstatus={behandlingsstatus} svarFrist={svarFrist} />
                 </div>
               ),
             },
@@ -87,6 +85,7 @@ const EnkeltSak = (props) => {
 EnkeltSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
   sakstemaToggleEnabled: PT.bool.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 export default EnkeltSak;
