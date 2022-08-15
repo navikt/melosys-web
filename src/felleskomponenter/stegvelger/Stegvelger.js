@@ -39,6 +39,7 @@ import { Feilmeldinger } from "../feilmeldinger";
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.css";
 import { kontrollOperations } from "../../ducks/kontroll";
+import { datalastingOperations } from "../../ducks/datalasting";
 
 class Stegvelger extends Component {
   state = {
@@ -750,6 +751,7 @@ const mapDispatchToProps = (dispatch) => ({
   bestillAnmodningsperioder: (behandlingID, bestilling) =>
     dispatch(anmodningunntakOperations.bestill(behandlingID, bestilling)),
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

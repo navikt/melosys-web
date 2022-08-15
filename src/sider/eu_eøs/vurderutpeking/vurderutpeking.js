@@ -64,7 +64,6 @@ const Vurderutpeking = ({
   lagreLovvalgsperioder,
   lagreAnmodningsperioder,
   oppdaterOgLagreBehandlingsperioder,
-  lagreAllData,
   tilForsiden,
   startOgVisOppfriskModal,
   soknadForm,
@@ -124,7 +123,6 @@ const Vurderutpeking = ({
                         lagreLovvalgsperioderHandler={lagreLovvalgsperioder}
                         lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
                         oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
-                        lagreAllData={lagreAllData}
                         begrunnelser={MKV.KTObjects.begrunnelser}
                         landkoder={MKV.KTObjects.landkoder}
                         tilForsiden={tilForsiden}
@@ -179,7 +177,6 @@ Vurderutpeking.propTypes = {
   lagreLovvalgsperioder: PT.func.isRequired,
   lagreAnmodningsperioder: PT.func.isRequired,
   oppdaterOgLagreBehandlingsperioder: PT.func.isRequired,
-  lagreAllData: PT.func.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   soknadForm: PT.object.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
@@ -221,7 +218,6 @@ const mapDispatchToProps = (dispatch) => ({
   lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),
   lagreAnmodningsperioder: () => dispatch(anmodningsperioderOperations.lagre()),
   oppdaterOgLagreBehandlingsperioder: () => dispatch(behandlingsperioderOperations.oppdaterOgLagre()),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
 });
 

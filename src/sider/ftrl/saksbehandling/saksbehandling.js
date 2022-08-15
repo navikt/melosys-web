@@ -24,7 +24,6 @@ import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/be
 import { avklartefaktaOperations } from "../../../ducks/avklartefakta";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
-import { datalastingOperations } from "../../../ducks/datalasting";
 import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { formSelectors } from "../../../ducks/form";
 import { menypanelOperations } from "../../../ducks/menypanel";
@@ -61,7 +60,6 @@ const Saksbehandling = ({
   hentLandkoder,
   hentMedlemskapsperioder,
   hentOppsummertFakta,
-  lagreAllData,
   lagreAvklartefakta,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   lagreVilkar,
@@ -187,7 +185,6 @@ const Saksbehandling = ({
                         annenBehandlingOppfriskes={annenBehandlingOppfriskes}
                         behandlingID={behandlingID}
                         lagreAvklartefaktaHandler={lagreAvklartefakta}
-                        lagreAllData={lagreAllData}
                         lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={
                           lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger
                         }
@@ -263,7 +260,6 @@ Saksbehandling.propTypes = {
   hentMedlemskapsperioder: PT.func.isRequired,
   hentOppsummertFakta: PT.func.isRequired,
   hentFolketrygdenKodeverk: PT.func.isRequired,
-  lagreAllData: PT.func.isRequired,
   lagreAvklartefakta: PT.func.isRequired,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
   lagreVilkar: PT.func.isRequired,
@@ -321,7 +317,6 @@ const mapDispatchToProps = (dispatch) => ({
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
   hentMedlemskapsperioder: (bid) => dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(bid)),
   hentOppsummertFakta: (bid) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(bid)),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   resetVilkarState: () => dispatch(vilkarOperations.resetState()),
