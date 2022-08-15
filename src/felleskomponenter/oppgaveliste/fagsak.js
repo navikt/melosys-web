@@ -1,15 +1,15 @@
 import React from "react";
+import PT from "prop-types";
 
 import * as MPT from "../../proptypes";
-import * as Ikoner from "../../resources/images";
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 import * as Routing from "../../routing";
 
 import Behandling from "./behandling";
-import PanelHeader from "../panelHeader/panelHeader";
-import EnkeltDato from "../datoOmrade/enkeltDato";
-import { DatoOmradeDescription } from "../datoOmrade/datoOmrade";
+import PanelHeader from "../panelHeader";
+import EnkeltDato from "../enkeltDato";
+import { DatoOmradeDescription } from "../datoOmrade";
 import { sorterElementerEtterDato } from "../sorterbarListe";
 import Soknadsland from "../soknadsland";
 
@@ -20,11 +20,13 @@ import "./fagsak.css";
  * for å gi saksbehandler oversikt over sakens innhold før hun klikker
  * seg inn på den.
  */
-const Fagsak = ({ sak }) => {
-  const { opprettetDato, sakstype, saksstatus, saksnummer, behandlingOversikter } = sak;
+const Fagsak = ({ sak, visSakstema, landkoder }) => {
+  const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
   const VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND = 0;
   const { periode, land } = behandlingOversikter[VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND]; // UX ønsker å ha periode og land vist kun en gang. på topp
-  const tittel = `${KV.objektTilTerm(sakstype)}`;
+  const tittel = visSakstema
+    ? `${KV.objektTilTerm(sakstype)} - ${KV.objektTilTerm(sakstema)}`
+    : `${KV.objektTilTerm(sakstype)}`;
   const customMargin = { marginLeft: "1em" };
 
   const sorterteBehandlinger = behandlingOversikter
@@ -33,23 +35,23 @@ const Fagsak = ({ sak }) => {
 
   return (
     <Nav.Panel className="fagsak">
-      <PanelHeader ikon={Ikoner.IkonSak} tittel={tittel} undertittel="" />
+      <PanelHeader tittel={tittel} />
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="12" md="5">
             <dl className="fagsak__meta">
               <dt>Saksstatus:</dt>
-              <dd>{KV.objektTilTerm(saksstatus) || "(ukjent)"}</dd>
-              <DatoOmradeDescription label="Periode: " periode={periode} />
+              <dd>{KV.objektTilTerm(saksstatus, "(ukjent)")}</dd>
+              <dt>Sak opprettet:</dt>
+              <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
-              <dt>Sak opprettet:</dt>
-              <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
+              <DatoOmradeDescription label="Periode: " periode={periode} />
               <dt>Land:</dt>
               <dd>
-                <Soknadsland land={land} />
+                <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
               </dd>
             </dl>
           </Nav.Column>
@@ -78,6 +80,8 @@ const Fagsak = ({ sak }) => {
 
 Fagsak.propTypes = {
   sak: MPT.BehandligOversikt,
+  visSakstema: PT.bool.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 Fagsak.defaultProps = {

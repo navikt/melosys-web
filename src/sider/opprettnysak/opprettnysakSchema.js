@@ -3,7 +3,7 @@ import { object, string, mixed, array, lazy, boolean } from "yup";
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
-import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../melosyskodeverk";
 
 const SKRIV_INN_FNR_ELLER_DNR = { melding: "Skriv inn f.nr eller d.nr" };
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig f.nr eller d.nr" };

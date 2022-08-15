@@ -1,13 +1,33 @@
 import React from "react";
+import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import MKV from "../melosyskodeverk";
-import * as MPT from "../proptypes";
-import * as Ikoner from "../resources/images";
-import * as KV from "../kodeverk";
 
-interface BehandlingsstatuskodeProps {
+import MKV from "../../melosyskodeverk";
+import * as Ikoner from "../../resources/images";
+import * as KV from "../../kodeverk";
+
+import { formatterDatoTilNorsk } from "../../utils/dato";
+
+import "./behandlingsstatus.css";
+
+interface BehandlingsstatusMedSvarfristProps {
   behandlingsstatus: KTObject;
+  svarFrist: string | null;
+  className?: string;
 }
+
+export const BehandlingsstatusMedSvarfrist = ({
+  behandlingsstatus,
+  svarFrist,
+  className,
+}: BehandlingsstatusMedSvarfristProps) => {
+  return (
+    <div className={classNames("behandlingsstatus__behandlingsstatusMedSaksfrist", className)}>
+      <Behandlingsstatus behandlingsstatus={behandlingsstatus} />
+      {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
+    </div>
+  );
+};
 
 const getIkon = (status: string) => {
   switch (status) {
@@ -33,21 +53,17 @@ const getIkon = (status: string) => {
   }
 };
 
-const Behandlingsstatuskode = ({ behandlingsstatus }: BehandlingsstatuskodeProps) => {
+interface BehandlingsstatusProps {
+  behandlingsstatus: KTObject;
+}
+
+const Behandlingsstatus = ({ behandlingsstatus }: BehandlingsstatusProps) => {
   return (
-    <div className="behandlingsstatuskode">
+    <div className="behandlingsstatus__behandlingsstatusMedSaksfrist">
       {getIkon(behandlingsstatus?.kode)}
       <span>{KV.objektTilTerm(behandlingsstatus)}</span>
     </div>
   );
 };
 
-Behandlingsstatuskode.defaultProps = {
-  behandlingsstatus: null,
-};
-
-Behandlingsstatuskode.propTypes = {
-  behandlingsstatus: MPT.Kodeverk,
-};
-
-export default Behandlingsstatuskode;
+export default Behandlingsstatus;

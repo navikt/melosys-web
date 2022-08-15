@@ -5,7 +5,7 @@ import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
 
-import EnkeltDato from "../../../felleskomponenter/datoOmrade/enkeltDato";
+import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import Soknadsland from "../../../felleskomponenter/soknadsland";
 import Behandlingsstatuskode from "../../../felleskomponenter/behandlingsstatuskode";
 import { formatterDatoTilNorsk } from "../../../utils/dato";

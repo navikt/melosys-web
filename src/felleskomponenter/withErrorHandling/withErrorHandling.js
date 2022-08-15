@@ -61,6 +61,51 @@ const parseErrorObject = (kontekst, currentReduxState) => {
   return parseStructuredPayload(melding, payload);
 };
 
+const ErrorComponentInner = ({ kontekster, WrappedComponent, reduxRootState, ...props }) => {
+  const feilSamling = [];
+
+  kontekster.forEach((kontekst) => {
+    const currentReduxState = reduxRootState[kontekst.navn];
+    const { status: feilStatus } = currentReduxState;
+    if (feilStatus === "ERROR") {
+      const eobj = parseErrorObject(kontekst, currentReduxState);
+      feilSamling.push(eobj);
+    }
+  });
+
+  if (feilSamling.length === 0) {
+    return <WrappedComponent {...props} />;
+  }
+
+  feilSamling.sort((a, b) => b.status - a.status);
+
+  if (feilSamling[0].status === 404) {
+    return (
+      <div {...props} className="errorContainer">
+        <FeilKomponent feilobjekt={feilSamling[0]} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="errorContainer">
+      <FeilKomponent feilobjekt={feilSamling[0]} />
+    </div>
+  );
+};
+
+ErrorComponentInner.propTypes = {
+  kontekster: PT.any.isRequired,
+  WrappedComponent: PT.any.isRequired,
+  reduxRootState: PT.any.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  reduxRootState: state,
+});
+
+const ErrorComponent = connect(mapStateToProps)(ErrorComponentInner);
+
 /** Dette er en HOC som benyttes til å wrappe rundt alle komponenter som
  * skal støttes av en feilhåndtering.
  *
@@ -69,50 +114,6 @@ const parseErrorObject = (kontekst, currentReduxState) => {
  */
 
 const withErrorHandling = (kontekster, WrappedComponent) => (props) => {
-  const ErrorComponent = (errorProps) => {
-    const { reduxRootState } = errorProps;
-    const feilSamling = [];
-
-    kontekster.forEach((kontekst) => {
-      const currentReduxState = reduxRootState[kontekst.navn];
-      const { status: feilStatus } = currentReduxState;
-      if (feilStatus === "ERROR") {
-        const eobj = parseErrorObject(kontekst, currentReduxState);
-        feilSamling.push(eobj);
-      }
-    });
-
-    // Dersom ingen feilstatus er funnet returner wrappet component.
-    if (feilSamling.length === 0) {
-      return <WrappedComponent {...props} />;
-    }
-
-    // Finn hvilke feil kode(r) som finnes og legg til kun 1 alert stripe.
-    // Sorter feilkoder med synkende verdi
-    feilSamling.sort((a, b) => b.status - a.status);
-
-    // Dersom 404 så skal både alertstripe og kompoonent vises.
-    if (feilSamling[0].status === 404) {
-      return (
-        <div {...props} className="errorContainer">
-          <FeilKomponent feilobjekt={feilSamling[0]} />
-        </div>
-      );
-    }
-    // alle andre feilkoder gir full stopp uten å vise komponenten.
-    return (
-      <div className="errorContainer">
-        <FeilKomponent feilobjekt={feilSamling[0]} />
-      </div>
-    );
-  };
-
-  const mapStateToProps = (state) => ({
-    reduxRootState: state,
-  });
-
-  const ReturnComponent = connect(mapStateToProps)(ErrorComponent);
-
-  return <ReturnComponent />;
+  return <ErrorComponent kontekster={kontekster} WrappedComponent={WrappedComponent} {...props} />;
 };
 export default withErrorHandling;

@@ -29,3 +29,9 @@ export const kanHaFlereSoknadsland = (behandlingstema) =>
     MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
     MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
   ].includes(behandlingstema);
+
+export const erAvsluttetEllerMidlertidigBeslutning = (behandlingsstatus) =>
+  [
+    MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+    MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING,
+  ].includes(behandlingsstatus);

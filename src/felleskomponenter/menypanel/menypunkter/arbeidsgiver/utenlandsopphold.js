@@ -3,7 +3,7 @@ import React from "react";
 import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";
 
-import EnkeltDato from "../../../datoOmrade/enkeltDato";
+import EnkeltDato from "../../../enkeltDato";
 import Tabell from "../../../tabell/tabell";
 
 const Utenlandsopphold = ({ utenlandsopphold }) => {

@@ -5,7 +5,7 @@ import * as MPT from "../../proptypes";
 import * as Ikoner from "../../resources/images";
 import * as Nav from "../../navFrontend";
 
-import PanelHeader from "../panelHeader/panelHeader";
+import PanelHeader from "../panelHeader";
 
 import "./journalforingOppgave.css";
 
@@ -14,21 +14,17 @@ const JournalforingOppgave = ({ sak }) => {
   const tittel = `Journalføring - ${navn} - ${hovedpartIdent}`;
   const link = `/journalforing/${journalpostID}/${oppgaveID}`;
 
-  const undertittel = () => (
-    <Nav.Row>
-      <Nav.Column xs="12" md="6">
-        <dl className="journalOppgave__meta">
-          <dt className="journalOppgave__meta__term">Frist:</dt>
-          <dd className="journalOppgave__meta__detalj">{aktivTil}</dd>
-        </dl>
-      </Nav.Column>
-    </Nav.Row>
+  const undertittel = (
+    <div className="frist-wrapper">
+      <span className="frist">Frist:</span>
+      {aktivTil}
+    </div>
   );
 
   return (
     <Link to={link} className="journalOppgave__link">
       <Nav.Panel className="journalOppgave">
-        <PanelHeader ikon={Ikoner.IkonSak} tittel={tittel} undertittel={undertittel()} />
+        <PanelHeader ikon={Ikoner.IkonSak} tittel={tittel} undertittel={undertittel} />
       </Nav.Panel>
     </Link>
   );

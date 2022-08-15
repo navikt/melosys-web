@@ -4,7 +4,7 @@ import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
-import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
@@ -21,7 +21,7 @@ import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat
 import { flytSelectors } from "../../../ducks/flyt";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
-import DatoOmrade from "../../../felleskomponenter/datoOmrade/datoOmrade";
+import DatoOmrade from "../../../felleskomponenter/datoOmrade";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";

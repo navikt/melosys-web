@@ -4,7 +4,7 @@ import { formValueSelector } from "redux-form";
 import classNames from "classnames";
 import PT from "prop-types";
 
-import MKV from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as MPT from "../../../proptypes";
 import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
@@ -29,12 +29,11 @@ export const KnyttTilSak = (props) => {
   const visUtenOppretteBehandling =
     alltidNyBehandlingToggle === "enabled" ? !sakInneholderSoeknad : sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
 
-  const erInaktiv = [
-    MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-    MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING,
-  ].includes(sisteBehandling.behandlingsstatus.kode);
+  const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
+    sisteBehandling.behandlingsstatus.kode
+  );
 
-  if (erInaktiv) {
+  if (sisteBehandlingErInaktiv) {
     return (
       <div className="knyttTilSak__panelramme">
         <Mui.Elementskrift
