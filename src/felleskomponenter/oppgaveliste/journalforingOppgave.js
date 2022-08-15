@@ -15,10 +15,10 @@ const JournalforingOppgave = ({ sak }) => {
   const link = `/journalforing/${journalpostID}/${oppgaveID}`;
 
   const undertittel = (
-    <>
+    <div className="frist-wrapper">
       <span className="frist">Frist:</span>
       {aktivTil}
-    </>
+    </div>
   );
 
   return (
