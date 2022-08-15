@@ -68,13 +68,13 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
             <Nav.Column xs="7" className="behandlingOppgave__uthevetKolonne">
               {visSakstema ? (
                 <Nav.Row className="infoTerm">
-                  {KV.objektTilTerm(sakstype) || "(ukjent)"} - {KV.objektTilTerm(sakstema) || "(ukjent)"}
+                  {KV.objektTilTerm(sakstype, "(ukjent)")} - {KV.objektTilTerm(sakstema, "(ukjent)")}
                 </Nav.Row>
               ) : (
-                <Nav.Row className="infoTerm">{KV.objektTilTerm(sakstype) || "(ukjent)"}</Nav.Row>
+                <Nav.Row className="infoTerm">{KV.objektTilTerm(sakstype, "(ukjent)")}</Nav.Row>
               )}
-              <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstema) || "(ukjent)"}</Nav.Row>
-              <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstype) || "(ukjent)"}</Nav.Row>
+              <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstema, "(ukjent)")}</Nav.Row>
+              <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstype, "(ukjent)")}</Nav.Row>
             </Nav.Column>
 
             <Nav.Column xs="4" className="behandlingOppgave__kolonne">
