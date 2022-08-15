@@ -152,7 +152,7 @@ export const Saksplukker = ({
 const SaksplukkerForm = reduxForm<SaksplukkerFormData, SaksplukkerProps>({
   form: KV.Form.SAKSPLUKKER_FORM,
   destroyOnUnmount: false,
-  onSubmit: (values: SaksplukkerFormData) => oppgaverOperations.sendBehandlingsOppgave(values),
+  onSubmit: (values: SaksplukkerFormData) => oppgaverOperations.plukkSak(values),
 })(Saksplukker);
 
 export default withRouter(connector(SaksplukkerForm));
