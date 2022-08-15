@@ -2,9 +2,9 @@ import React, { ComponentProps } from "react";
 import { shallow } from "enzyme";
 import { mock, instance } from "ts-mockito";
 
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Skjema from "../../../../felleskomponenter/skjema";
 
 import { Saksplukker } from "./saksplukker";
 

@@ -5,13 +5,16 @@ import { RouteComponentProps, withRouter } from "react-router-dom";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
 
-import MKV from "../../../melosyskodeverk";
-import * as KV from "../../../kodeverk";
-import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import { oppgaverOperations } from "../../../ducks/oppgaver";
-import { useFeatureToggle } from "../../../featuretoggle";
+import MKV from "../../../../melosyskodeverk";
+import * as KV from "../../../../kodeverk";
+import * as Nav from "../../../../navFrontend";
+import * as Skjema from "../../../../felleskomponenter/skjema";
 
+import { oppgaverOperations } from "../../../../ducks/oppgaver";
+import { useFeatureToggle } from "../../../../featuretoggle";
+
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import saksplukkerSchema from "./saksplukkerSchema";
 import "./saksplukker.css";
 
 const { EU_EOS, TRYGDEAVTALE, FTRL } = MKV.Koder.sakstyper;
@@ -32,7 +35,6 @@ export interface SaksplukkerFormData {
 const mapStateToProps = (state: RootState) => ({
   initialValues: {
     sakstype: EU_EOS,
-    behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
   },
   formValues: getFormValues(KV.Form.SAKSPLUKKER_FORM)(state) as SaksplukkerFormData,
 });
@@ -47,7 +49,7 @@ export const Saksplukker = ({
   history,
   formValues,
   change,
-  initialValues,
+  invalid,
 }: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) => {
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -61,12 +63,12 @@ export const Saksplukker = ({
         change(
           "behandlingstema",
           formValues.sakstype === EU_EOS
-            ? initialValues.behandlingstema
+            ? MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
             : MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
         );
       }
     }
-  }, [formValues?.sakstype]);
+  }, [formValues?.sakstype, sakstemaToggle]);
 
   const submitOgVideresend = async (form: any) => {
     const redirectURL = await handleSubmit(form);
@@ -150,7 +152,9 @@ export const Saksplukker = ({
           </Nav.Column>
         </Nav.Row>
         <Nav.Row className="saksplukker__knapperad">
-          <Nav.Knapp className="saksplukker__knapp">Behandle sak</Nav.Knapp>
+          <Nav.Knapp className="saksplukker__knapp" disabled={invalid}>
+            Behandle sak
+          </Nav.Knapp>
           <Nav.Flatknapp htmlType="reset">Nullstill</Nav.Flatknapp>
         </Nav.Row>
       </form>
@@ -162,6 +166,7 @@ const SaksplukkerForm = reduxForm<SaksplukkerFormData, SaksplukkerProps>({
   form: KV.Form.SAKSPLUKKER_FORM,
   destroyOnUnmount: false,
   onSubmit: (values: SaksplukkerFormData) => oppgaverOperations.plukkSak(values),
+  validate: lagYupToReduxformErrorMapper(saksplukkerSchema),
 })(Saksplukker);
 
 export default withRouter(connector(SaksplukkerForm));
