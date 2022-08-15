@@ -147,7 +147,7 @@ const VurderingVedtak = ({
   const begrunnelseFritekstHjelpetekst =
     "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.\n\n " +
     "Eksempel:\n " +
-    '"Vi har lagt til grunn at du er ansatt av og lønnet av en norsk arbeidsgiver, og sendt ut for å jobbe i Storbritannia i inntil tre år. Vi har gjort vurderingen fordi du har opplyst at du jobber for/er ansatt av Equinor ASA."\n\n ' +
+    '"Vi har lagt til grunn at du er ansatt av og lønnet av en norsk arbeidsgiver, og sendt ut for å jobbe i Storbritannia i inntil tre år."\n\n ' +
     "Friteksten kommer her";
   const nyVurderingBakgrunnHjelpetekst =
     "Velg en innledningstekst til vedtaket. Teksten kommer først i vedtaket og skal forklare hvorfor vi har gjort nytt vedtak. Hvis ingen av standardtekstene passer, velger du fritekst og skriver egen innledning til vedtaket.";
