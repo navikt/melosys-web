@@ -7,9 +7,9 @@ import * as KV from "../../kodeverk";
 import * as Routing from "../../routing";
 
 import Behandling from "./behandling";
-import PanelHeader from "../panelHeader/panelHeader";
-import EnkeltDato from "../datoOmrade/enkeltDato";
-import { DatoOmradeDescription } from "../datoOmrade/datoOmrade";
+import PanelHeader from "../panelHeader";
+import EnkeltDato from "../enkeltDato";
+import { DatoOmradeDescription } from "../datoOmrade";
 import { sorterElementerEtterDato } from "../sorterbarListe";
 import Soknadsland from "../soknadsland";
 
@@ -35,13 +35,13 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
 
   return (
     <Nav.Panel className="fagsak">
-      <PanelHeader tittel={tittel} undertittel="" />
+      <PanelHeader tittel={tittel} />
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="12" md="5">
             <dl className="fagsak__meta">
               <dt>Saksstatus:</dt>
-              <dd>{KV.objektTilTerm(saksstatus) || "(ukjent)"}</dd>
+              <dd>{KV.objektTilTerm(saksstatus, "(ukjent)")}</dd>
               <dt>Sak opprettet:</dt>
               <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
             </dl>

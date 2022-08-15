@@ -2,20 +2,17 @@ import React from "react";
 import PT from "prop-types";
 import { Link } from "react-router-dom";
 
+import { MKVUtils } from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
-import EnkeltDato from "../datoOmrade/enkeltDato";
+
+import Behandlingsstatus from "../behandlingsstatus";
+import EnkeltDato from "../enkeltDato";
 
 import "./behandling.css";
-import Behandlingsstatuskode from "../behandlingsstatuskode";
-import MKV from "../../melosyskodeverk";
 
 const BehandlingPanel = ({ behandling, kanVises }) => {
   const { behandlingstype, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;
-
-  const behandlingsstatusErAvsluttetEllerMidlertidigBeslutning =
-    behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET ||
-    behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING;
 
   return (
     <Nav.Panel className="behandling">
@@ -23,7 +20,7 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
         <Nav.Column>
           <Nav.Column xs="12" md="5">
             <dl className="behandling__meta">
-              <dt>{KV.objektTilTerm(behandlingstype) || "(ukjent)"}</dt>
+              <dt>{KV.objektTilTerm(behandlingstype, "(ukjent)")}</dt>
               <dt>Opprettet:</dt>
               <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
             </dl>
@@ -31,9 +28,9 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
           <Nav.Column xs="12" md="4">
             <dl className="behandling__meta">
               <dd>
-                <Behandlingsstatuskode behandlingsstatus={behandlingsstatus} />
+                <Behandlingsstatus behandlingsstatus={behandlingsstatus} />
               </dd>
-              {behandlingsstatusErAvsluttetEllerMidlertidigBeslutning && (
+              {MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus.kode) && (
                 <dt>
                   <Nav.EtikettBase type="info" className="behandlingsresultattype">
                     {behandlingsresultattype.term}

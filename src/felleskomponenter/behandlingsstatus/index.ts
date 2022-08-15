@@ -1,3 +1,4 @@
-import BehandlingsStatus from "./behandlingsstatus";
+import Behandlingsstatus, { BehandlingsstatusMedSvarfrist } from "./behandlingsstatus";
 
-export default BehandlingsStatus;
+export { BehandlingsstatusMedSvarfrist };
+export default Behandlingsstatus;

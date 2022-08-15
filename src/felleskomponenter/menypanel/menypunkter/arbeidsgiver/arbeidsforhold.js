@@ -6,7 +6,7 @@ import * as MPT from "../../../../proptypes";
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 
-import EnkeltDato from "../../../datoOmrade/enkeltDato";
+import EnkeltDato from "../../../enkeltDato";
 import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 import Permisjoner from "./permisjoner";
 import TimerTimelonnet from "./timertimelonnet";

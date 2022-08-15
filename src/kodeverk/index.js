@@ -10,7 +10,8 @@ const objektTilTermUtenFeilmelding = (KTObjekt) => {
   return Object.keys(KTObjekt).includes("term") ? KTObjekt.term : null;
 };
 
-const objektTilTerm = (KTObjekt) => objektTilTermUtenFeilmelding(KTObjekt) || "(mangler informasjon)";
+const objektTilTerm = (KTObjekt, defaultMelding = "(mangler informasjon)") =>
+  objektTilTermUtenFeilmelding(KTObjekt) || defaultMelding;
 
 const objektTilKodeUtenFeilmelding = (KTObjekt) => {
   if (!KTObjekt || !KTObjekt.kode) return null;

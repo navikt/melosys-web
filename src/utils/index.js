@@ -31,6 +31,7 @@ import * as person from "./person";
 import * as land from "./land";
 import * as organisasjon from "./organisasjon";
 import * as feilmelding from "./feilmelding";
+import * as mediaQuery from "./mediaQuery";
 
 import {
   buildinfo,
@@ -64,6 +65,7 @@ export {
   land,
   organisasjon,
   feilmelding,
+  mediaQuery,
   capitalize as _capitalize,
   isUndefined as _isUndefined,
   isEqual as _isEqual,

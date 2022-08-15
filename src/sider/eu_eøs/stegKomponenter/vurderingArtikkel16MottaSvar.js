@@ -13,7 +13,7 @@ import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
 import * as Services from "../../../services";
 
-import { DatoOmradeMedVarighet } from "../../../felleskomponenter/datoOmrade/datoOmrade";
+import { DatoOmradeMedVarighet } from "../../../felleskomponenter/datoOmrade";
 
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";

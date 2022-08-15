@@ -1,5 +1,4 @@
 import React from "react";
-import PT from "prop-types";
 
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
@@ -13,21 +12,10 @@ interface EnkeltDatoProps {
  *
  * @param { props }  props object
  */
-function EnkeltDato(props: EnkeltDatoProps) {
-  const { dato, visTidspunkt } = props;
+function EnkeltDato({ dato = "", visTidspunkt = false }: EnkeltDatoProps) {
   const lesbarDato = formatterDatoTilNorsk(dato, visTidspunkt);
 
   return dato ? <time dateTime={dato}>{lesbarDato}</time> : <>-</>;
 }
-
-EnkeltDato.propTypes = {
-  dato: PT.string,
-  visTidspunkt: PT.bool,
-};
-
-EnkeltDato.defaultProps = {
-  dato: "",
-  visTidspunkt: false,
-};
 
 export default EnkeltDato;
