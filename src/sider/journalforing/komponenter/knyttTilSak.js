@@ -28,9 +28,11 @@ export const KnyttTilSak = (props) => {
   const visUtenOppretteBehandling =
     alltidNyBehandlingToggle === "enabled" ? !sakInneholderSoeknad : sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
 
-  const erInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(sisteBehandling.behandlingsstatus.kode);
+  const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
+    sisteBehandling.behandlingsstatus.kode
+  );
 
-  if (erInaktiv) {
+  if (sisteBehandlingErInaktiv) {
     return (
       <div className="panelramme">
         <Mui.Elementskrift
