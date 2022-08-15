@@ -80,6 +80,12 @@ export const Saksplukker = ({
     return true;
   };
 
+  const nullstill = () => {
+    change("sakstype", null);
+    change("sakstema", null);
+    change("behandlingstema", null);
+  };
+
   const sakstemaErPlukkbart = (sakstemaKTObject: KTObject) => {
     return MKV.Kodekombinasjoner.gyldigeSakstema(formValues?.sakstype).includes(sakstemaKTObject.kode);
   };
@@ -110,7 +116,7 @@ export const Saksplukker = ({
       ) : (
         <p>Velg sakstype og behandlingstema for å få tildelt en sak.</p>
       )}
-      <form className="saksplukker__skjema" onSubmit={submitOgVideresend}>
+      <form className="saksplukker__skjema" onSubmit={submitOgVideresend} onReset={nullstill}>
         <Nav.Row>
           <Nav.Column xs="12">
             <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
@@ -143,7 +149,10 @@ export const Saksplukker = ({
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>
-        <Nav.Knapp className="saksplukker__knapp">Behandle sak</Nav.Knapp>
+        <Nav.Row className="saksplukker__knapperad">
+          <Nav.Knapp className="saksplukker__knapp">Behandle sak</Nav.Knapp>
+          <Nav.Flatknapp htmlType="reset">Nullstill</Nav.Flatknapp>
+        </Nav.Row>
       </form>
     </Nav.Panel>
   );
