@@ -11,6 +11,7 @@ import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { formSelectors } from "../../../../ducks/form";
 import { BOOLSK_STRING } from "../../../../constants";
 import { StegStatus } from "../../stegvelger";
@@ -103,8 +104,12 @@ const VurderingFamilie = ({
   oppdaterFlyt,
 }: PropsFromRedux & Props) => {
   const obsTekst = '* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".';
+  const hjelpetekst =
+    "Teksten du skriver her vil vises etter begrunnelsen du har valgt. Eksempel:\n\n" +
+    '"Kari Nordmann f.nr xxxxxx xxxxx er over 18 år, og må derfor sende inn egen søknad om medlemskap i folketrygden."\n\n' +
+    "Teksten din kommer etter dette.";
 
-  const erIkkeInnvilget = (innvilget?: string | null): Boolean => innvilget === BOOLSK_STRING.USANN;
+  const erIkkeInnvilget = (innvilget?: string | null): boolean => innvilget === BOOLSK_STRING.USANN;
   const finnBarn = (uuid: string, barn?: BarnProps): undefined | FamilieProps => barn && barn[uuid];
 
   useEffect(() => {
@@ -203,8 +208,12 @@ const VurderingFamilie = ({
               {tilknyttedeBarn?.some((barn: Api.Trygdeavtale.FamilieValg) =>
                 erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget)
               ) && (
-                <div className="fritekstWrapper" style={{ marginBottom: "2rem" }}>
-                  <Nav.Typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.Typo.Element>
+                <div className="fritekstWrapper--barn">
+                  <LabelMedHjelpetekst
+                    label="Fritekst til avsnitt om barn i vedtaksbrev"
+                    className="fritekst-tittel"
+                    hjelpetekst={hjelpetekst}
+                  />
                   <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" disabled={!redigerbart} />
                 </div>
               )}
@@ -257,7 +266,11 @@ const VurderingFamilie = ({
               </Nav.Row>
               {erIkkeInnvilget(formValues.ektefelle?.innvilget) && (
                 <div className="fritekstWrapper">
-                  <Nav.Typo.Element>Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev</Nav.Typo.Element>
+                  <LabelMedHjelpetekst
+                    label="Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev"
+                    className="fritekst-tittel"
+                    hjelpetekst={hjelpetekst}
+                  />
                   <Skjema.HTMLEditor feltNavn="ektefelle.fritekst" className="fritekst" disabled={!redigerbart} />
                 </div>
               )}
