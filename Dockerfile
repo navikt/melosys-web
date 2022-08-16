@@ -1,11 +1,8 @@
-FROM navikt/nginx-oidc:latest
+FROM nginxinc/nginx-unprivileged
 
-ENV APP_DIR="/app" \
-  APP_CALLBACK_PATH="/openid_connect_login" \
-  APP_PATH_PREFIX="/melosys" \
-  APP_PORT="3000"
+COPY /build /usr/share/nginx/html
+COPY nais/nginx-default.conf /etc/nginx/templates/default.conf.template
 
-COPY ./build /app/melosys
-COPY ./nais/proxy.nginx /nginx/proxy.nginx
-
-EXPOSE 3000
+# USER root
+RUN chown -R 1069:1069 /etc/nginx/conf.d/
+USER 1069
