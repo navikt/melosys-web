@@ -12,7 +12,6 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Mui from "../../../felleskomponenter/ui";
-import * as Hooks from "../../../hooks";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
@@ -40,6 +39,7 @@ import {
 } from "../../../felleskomponenter/stegvelger";
 
 import "./vurderingArbeidEttLandOvrigVedtak.css";
+import { vedtakOperations } from "../../../ducks/vedtak";
 
 const InformertMyndighetVelger = ({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) => {
   useEffect(() => {
@@ -117,10 +117,11 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
+  validerBehandlingsgrunnlag,
+  fattVedtak,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
-  const isMounted = Hooks.useIsMounted();
 
   useEffect(() => {
     if (lovvalgsbestemmelseSomSkalLagres) {
@@ -259,25 +260,28 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
     kontroller();
   }, [aktivtSteg, formIsValid]);
 
-  const fattVedtak = async (values, dispatch, props) => {
+  const onSubmit = async (values, dispatch, props) => {
     setVedtakPending(true);
 
     if (values.forkortLovvalgsperiode) {
       await props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
     }
 
-    await props.lagreOgFatteVedtak(lagFattVedtakEOSReqDto());
-
-    // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
-    if (isMounted.current) {
-      setVedtakPending(false);
-    }
+    validerBehandlingsgrunnlag()
+      .then(() => {
+        fattVedtak(behandlingID, lagFattVedtakEOSReqDto()).then((res) => {
+          if (res.data?.data?.error) {
+            setVedtakPending(false);
+          }
+        });
+      })
+      .catch(() => setVedtakPending(false));
   };
 
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
 
   return (
-    <form onSubmit={handleSubmit(fattVedtak)} className="vurderingArbeidEttLandOvrigVedtak">
+    <form onSubmit={handleSubmit(onSubmit)} className="vurderingArbeidEttLandOvrigVedtak">
       <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
       <Nav.Row className="velgLovvalgsbestemmelse">
         <Nav.Column xs="7">
@@ -416,7 +420,6 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgsperiode: MPT.Periode,
-  lagreOgFatteVedtak: PT.func.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
   touchAll: PT.func.isRequired,
@@ -441,6 +444,8 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
+  validerBehandlingsgrunnlag: PT.func.isRequired,
+  fattVedtak: PT.func.isRequired,
 };
 
 VurderingArbeidEttLandOvrigVedtak.defaultProps = {
@@ -496,6 +501,7 @@ const mapDispatchToProps = (dispatch) => ({
   endreLovvalgsPeriode: (fomdato, tomdato) =>
     dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK)),
+  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
 const VurderingArbeidEttLandOvrigVedtakForm = reduxForm({

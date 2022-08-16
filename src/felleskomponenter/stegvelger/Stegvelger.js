@@ -198,17 +198,17 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
-  fatteVedtakHandler = (data) => {
-    const { behandlingID, fattVedtak } = this.props;
-    return fattVedtak(behandlingID, data);
-  };
-
-  lagreOgFatteVedtak = async (data) => {
+  /**
+   * Generisk metode for validering av behandlingsgrunnlag benyttet i stegkomponenter. Denne valideringen kjøres i forkant av kall
+   * til melosys-api. Opprettet som første steg i opprydning av redux bruk i Stegvelger. Har som mål å fjerne prop passing av
+   * action creators. Se slettingen av lagreOgFatteVedtak for eksempel på denne prosessen
+   * @returns {Promise<*>}
+   */
+  validerBehandlingsgrunnlag = async () => {
     if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
-      await this.props.lagreAllData();
-      return this.fatteVedtakHandler(data);
+      return this.props.lagreAllData();
     }
-    return Promise.resolve();
+    return Promise.reject(new Error("Feil i behandlingsgrunnlag"));
   };
 
   utpekHandler = (data) => {
@@ -340,7 +340,6 @@ class Stegvelger extends Component {
   oppdaterAktuelleSteg = (aktivtStegNummer) => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
-      lagreOgFatteVedtak: this.lagreOgFatteVedtak,
       lagreOgUtpek: this.lagreOgUtpek,
       oppdaterOgLagreBehandlinger: this.props.oppdaterOgLagreBehandlingerHandler,
       oppdaterStegData: this.oppdaterStegData,
@@ -363,6 +362,7 @@ class Stegvelger extends Component {
       oppdater: this.oppdater,
       lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
       kontrollerFerdigbehandling: this.kontrollerFerdigbehandling,
+      validerBehandlingsgrunnlag: this.validerBehandlingsgrunnlag,
     };
 
     const { props } = this;

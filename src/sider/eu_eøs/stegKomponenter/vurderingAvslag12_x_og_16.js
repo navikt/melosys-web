@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { reduxForm, isValid, getFormValues } from "redux-form";
+import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import MKV from "../../../melosyskodeverk";
 
@@ -8,7 +8,6 @@ import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
-import * as Hooks from "../../../hooks";
 import * as VilkarSelectors from "../../../ducks/vilkar/selectors";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -19,6 +18,7 @@ import Begrunnelser from "../../../felleskomponenter/begrunnelser";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Schema";
+import { vedtakOperations } from "../../../ducks/vedtak";
 
 const VurderingAvslag12_x_og_16 = ({
   valgte_art_12_1_begrunnelser,
@@ -27,7 +27,6 @@ const VurderingAvslag12_x_og_16 = ({
   art16_1_fritekst,
   vilkarBegrunnelser,
   behandlingID,
-  lagreOgFatteVedtak,
   redigerbart,
   behandlingstype,
   behandlingstema,
@@ -35,9 +34,10 @@ const VurderingAvslag12_x_og_16 = ({
   formIsValid,
   formValues,
   tilbake,
+  validerBehandlingsgrunnlag,
+  fattVedtak,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
-  const isMounted = Hooks.useIsMounted();
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
@@ -88,20 +88,24 @@ const VurderingAvslag12_x_og_16 = ({
 
     setVedtakPending(true);
 
-    await lagreOgFatteVedtak({
-      behandlingsresultatTypeKode,
-      fritekst: formValues.vedtaksbrevFritekst,
-      fritekstSed: null,
-      mottakerinstitusjoner: null,
-      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
-    });
-
-    // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
-    if (isMounted.current) {
-      setVedtakPending(false);
-    }
+    validerBehandlingsgrunnlag()
+      .then(() => {
+        fattVedtak(behandlingID, {
+          behandlingsresultatTypeKode,
+          fritekst: formValues.vedtaksbrevFritekst,
+          fritekstSed: null,
+          mottakerinstitusjoner: null,
+          vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
+        }).then((res) => {
+          if (res.data?.data?.error) {
+            setVedtakPending(false);
+          }
+        });
+      })
+      .catch(() => setVedtakPending(false));
   };
+
   return (
     <div>
       <Nav.Typo.Undertittel>Avslag</Nav.Typo.Undertittel>
@@ -166,7 +170,6 @@ VurderingAvslag12_x_og_16.propTypes = {
   art16_1_fritekst: PT.string,
   vilkarBegrunnelser: PT.array.isRequired,
   behandlingID: PT.number.isRequired,
-  lagreOgFatteVedtak: PT.func.isRequired,
   tilbake: PT.func.isRequired,
   redigerbart: PT.bool,
   behandlingstype: PT.string.isRequired,
@@ -174,6 +177,8 @@ VurderingAvslag12_x_og_16.propTypes = {
   formIsValid: PT.bool.isRequired,
   touch: PT.func.isRequired,
   formValues: PT.object,
+  validerBehandlingsgrunnlag: PT.func.isRequired,
+  fattVedtak: PT.func.isRequired,
 };
 
 VurderingAvslag12_x_og_16.defaultProps = {
@@ -214,4 +219,8 @@ const mapStateToProps = (state) => ({
   },
 });
 
-export default connect(mapStateToProps)(VurderingAvslagArtikkel12Og16Form);
+const mapDispatchToProps = (dispatch) => ({
+  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingAvslagArtikkel12Og16Form);
