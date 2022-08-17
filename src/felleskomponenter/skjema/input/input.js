@@ -6,11 +6,12 @@ import * as Nav from "../../../navFrontend";
 import * as SkjemaUtils from "../utils";
 
 import "../skjema.css";
+import { FellesInputFnrDnrOrgnrSaksnr } from "./fellesInputFnrDnrOrgnrSaksnr";
 
 /** Komponenten nedenfor tar imot errorMessage (og alle andre props). ErrorMessage gjøres om til
  * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.
  */
-function InnerInputComponent({ input, label, onBlur, onChange, ...rest }) {
+function InnerInputComponent({ input, label, onBlur, onChange, fnrEllerDnr, ...rest }) {
   const {
     meta,
     meta: { touched, active },
@@ -35,12 +36,17 @@ function InnerInputComponent({ input, label, onBlur, onChange, ...rest }) {
     onChange: innerChange,
   };
 
-  return !rest.hidden && <Nav.Input label={label} feil={feil || undefined} {...inputProps} />;
+  return !rest.hidden && fnrEllerDnr ? (
+    <FellesInputFnrDnrOrgnrSaksnr label={label} feil={feil || undefined} {...inputProps} />
+  ) : (
+    <Nav.Input label={label} feil={feil || undefined} {...inputProps} />
+  );
 }
 
 InnerInputComponent.propTypes = {
   label: PT.node.isRequired,
   bredde: PT.string,
+  fnrEllerDnr: PT.bool,
   meta: PT.object,
   input: PT.object,
   onBlur: PT.func,
@@ -53,6 +59,7 @@ InnerInputComponent.defaultProps = {
   input: undefined,
   onBlur: undefined,
   onChange: undefined,
+  fnrEllerDnr: false,
 };
 
 function Input({ feltNavn, bredde = "fullbredde", className = "", normalize = (value) => value, ...rest }) {
@@ -71,6 +78,7 @@ function Input({ feltNavn, bredde = "fullbredde", className = "", normalize = (v
 Input.propTypes = {
   bredde: PT.string,
   feltNavn: PT.string.isRequired,
+  fnrEllerDnr: PT.bool,
   className: PT.string,
   normalize: PT.func,
 };
@@ -78,6 +86,7 @@ Input.propTypes = {
 Input.defaultProps = {
   bredde: "fullbredde",
   className: "",
+  fnrEllerDnr: false,
   normalize: (value) => value,
 };
 

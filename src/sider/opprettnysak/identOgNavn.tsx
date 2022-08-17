@@ -1,9 +1,9 @@
 import React from "react";
 import * as Nav from "../../navFrontend";
-import * as Skjema from "../../felleskomponenter/skjema";
 import * as Mui from "../../felleskomponenter/ui";
 import * as Ikoner from "../../resources/images";
 import * as Utils from "../../utils";
+import { FellesInputFnrDnrOrgnrSaksnr } from "../../felleskomponenter/skjema/input/fellesInputFnrDnrOrgnrSaksnr";
 
 interface IdentOgNavnProps {
   tittel: string;
@@ -16,7 +16,7 @@ const IdentOgNavn = ({ tittel, feltNavn, label, navn }: IdentOgNavnProps) => (
   <>
     <Mui.Undertittel tekst={tittel} ikon={Ikoner.AccountCircle} className="undertittel" understrek />
     <div className="innrykk marginBottom">
-      <Skjema.Input feltNavn={feltNavn} label={label} />
+      <FellesInputFnrDnrOrgnrSaksnr feltNavn={feltNavn} label={label} />
       {!Utils._isEmpty(navn) && (
         <span>
           <Nav.Typo.Element className="navnTittel">Navn:</Nav.Typo.Element>

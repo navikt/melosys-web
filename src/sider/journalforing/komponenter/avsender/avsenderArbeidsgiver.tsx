@@ -3,10 +3,10 @@ import { connect, ConnectedProps } from "react-redux";
 import { formValueSelector } from "redux-form";
 import { RootState } from "AppTypes";
 
-import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
+import { FellesInputFnrDnrOrgnrSaksnr } from "../../../../felleskomponenter/skjema/input/fellesInputFnrDnrOrgnrSaksnr";
 
 const journalforingFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.JOURNALFORING);
 
@@ -40,9 +40,10 @@ export const AvsenderArbeidsgiver = ({
 
   return (
     <div className="avsender">
-      <Skjema.Input
+      <FellesInputFnrDnrOrgnrSaksnr
         feltNavn="avsenderID"
         label="Oppgi avsenders org.nr"
+        startTom
         onKeyUp={IDFeltTastOppHandler}
         className="avsender__input"
       />

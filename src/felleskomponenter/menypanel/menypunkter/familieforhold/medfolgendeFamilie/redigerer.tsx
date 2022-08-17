@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEventHandler, useCallback } from "react";
+import React, { useState, useEffect, useCallback, ChangeEventHandler } from "react";
 
 import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
@@ -11,6 +11,7 @@ import { normalizeDate } from "../../../../../utils/normalisering";
 import { hentSammensattNavn } from "../../../../../graphql/navn";
 
 import "./redigerer.css";
+import { FellesInputFnrDnrOrgnrSaksnr } from "../../../../skjema/input/fellesInputFnrDnrOrgnrSaksnr";
 
 const Redigerer = ({
   redigerbart,
@@ -65,7 +66,7 @@ const Redigerer = ({
   return (
     <Nav.Row className="medfolgende-familie__redigerer">
       <Nav.Column xs="5">
-        <Skjema.Input
+        <FellesInputFnrDnrOrgnrSaksnr
           label="F.nr./d-nr./fødselsdato"
           feltNavn={`${overordnetFeltNavn}.fnr`}
           disabled={!redigerbart}

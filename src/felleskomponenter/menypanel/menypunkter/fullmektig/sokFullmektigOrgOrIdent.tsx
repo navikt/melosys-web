@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
@@ -6,6 +6,7 @@ import * as Api from "../../../../services/api";
 
 import { isApiError } from "../../../../services";
 import { hentBostedsadresseForPerson } from "../../../../graphql/adresse";
+import { FellesInputFnrDnrOrgnrSaksnr } from "../../../skjema/input/fellesInputFnrDnrOrgnrSaksnr";
 
 interface SokFullmektigOrgProps {
   onIdentFunnet: (orgnr: string, personIdent: string) => Promise<any>;
@@ -52,19 +53,20 @@ function SokFullmektigOrgOrIdent(props: SokFullmektigOrgProps) {
     }
   };
 
-  const vedEndretInput: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setIdent(event.target.value);
+  const vedEndretInput = (sokStreng: string) => {
+    setIdent(sokStreng);
     setFeilmelding(undefined);
-    sok(event.target.value?.replace(" ", ""));
+    sok(sokStreng);
   };
+  const debouncedEndringInput = useCallback(Utils._debounce(vedEndretInput, 400), []);
 
   return (
     <Nav.Row>
       <Nav.Column xs="9">
-        <Nav.Input
+        <FellesInputFnrDnrOrgnrSaksnr
           label="Organisasjonsnr. eller fødselsnr./d-nr.: "
           placeholder="Skriv inn..."
-          onChange={vedEndretInput}
+          vedEndring={debouncedEndringInput}
           value={ident}
           feil={feilmelding}
         />
