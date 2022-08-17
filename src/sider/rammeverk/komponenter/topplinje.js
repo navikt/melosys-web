@@ -22,8 +22,7 @@ const Topplinje = (props) => {
     event.preventDefault();
     const { hentOppgaveOversikt, history } = props;
     const { push } = history;
-    const { byggVersjon } = Utils.buildinfo();
-    if (byggVersjon === "local" || byggVersjon === "nginx_local") {
+    if (process.env.NODE_ENV !== "production") {
       hentOppgaveOversikt();
       push("/");
       return;

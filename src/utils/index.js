@@ -33,21 +33,11 @@ import * as organisasjon from "./organisasjon";
 import * as feilmelding from "./feilmelding";
 import * as mediaQuery from "./mediaQuery";
 
-import {
-  buildinfo,
-  delay,
-  fn,
-  isJSON,
-  verdiSomNullable,
-  queryParamsTilObjekt,
-  erPropertyUnik,
-  finnVerdierMedKey,
-} from "./utils";
+import { delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from "./utils";
 
 const uuid = require("uuid/v4");
 
 export {
-  buildinfo,
   delay,
   fn,
   isJSON,
