@@ -121,7 +121,7 @@
     "test": "npm run patch:init && npm run build:css && react-scripts test",
     "eject": "react-scripts eject",
     "eslint:src": "eslint src --ext .js,.ts,.tsx",
-    "eslint:scripts": "eslint scripts --ext .js,.ts,.tsx",
+    "eslint:scripts": "eslint --ext .js,.ts,.tsx",
     "eslint": "npm-run-all -p eslint:*",
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",

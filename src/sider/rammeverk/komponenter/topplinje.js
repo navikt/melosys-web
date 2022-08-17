@@ -5,7 +5,6 @@ import PT from "prop-types";
 
 import { ReactComponent as NavLogo } from "../../../resources/images/nav.svg";
 import * as MPT from "../../../proptypes";
-import * as Utils from "../../../utils/utils";
 import * as Nav from "../../../navFrontend";
 
 import { saksbehandlerSelectors } from "../../../ducks/saksbehandler";
