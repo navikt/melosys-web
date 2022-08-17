@@ -105,8 +105,6 @@
   "disabled-homepage": "http://eesi2.no/melosys",
   "homepage": "http://./melosys",
   "scripts": {
-    "patch:init": "node ./scripts/patchinit.js",
-    "patch:nginxlocal": "node ./scripts/patchnginxlocal.js",
     "analyze": "source-map-explorer build/static/js/main.*",
     "start:js": "react-scripts start",
     "build:js": "react-scripts build",
@@ -118,7 +116,7 @@
     "watch": "env-cmd -f ./.localdev.env npm-run-all -p start:css build:watch",
     "build:dev": "env-cmd -f ./.dev.env npm-run-all -p build:css build:js",
     "build:prod": "env-cmd -f ./.prod.env npm-run-all -p build:css build:js",
-    "test": "npm run patch:init && npm run build:css && react-scripts test",
+    "test": "npm run build:css && react-scripts test",
     "eject": "react-scripts eject",
     "eslint:src": "eslint src --ext .js,.ts,.tsx",
     "eslint:scripts": "eslint --ext .js,.ts,.tsx",
