@@ -58,4 +58,18 @@ interface UtpekReqDto {
 export const utpek = (saksnummer: string, body: UtpekReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/utpek`, body);
 
+export interface EndreFagsakDto {
+  sakstype: string | null;
+  sakstema: string | null;
+}
+
+export const hentMuligeSakstema = (saksnummer: string) =>
+  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstema`);
+
+export const hentMuligeSakstype = (saksnummer: string) =>
+  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstype`);
+
+export const endreFagsak = (saksnummer: string, body: EndreFagsakDto) =>
+  postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/endre`, body);
+
 export const revurder = (saksnummer: string) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/revurder`, {});

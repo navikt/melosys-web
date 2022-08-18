@@ -11,6 +11,9 @@ export const PENDING = "fagsaker/PENDING";
 
 export const RESET = "fagsaker/RESET";
 
+export const HENTET_MULIGE_SAKSTEMA = "fagsaker/HENTET_MULIGE_SAKSTEMA";
+export const HENTET_MULIGE_SAKSTYPE = "fagsaker/HENTET_MULIGE_SAKSTYPE";
+
 interface FeiletAction {
   type: typeof FEILET;
   data: any;
@@ -25,4 +28,14 @@ interface OkAction {
   data: any;
 }
 
-export type Action = FeiletAction | PendingAction | OkAction;
+interface HentetMuligeSakstemaAction {
+  type: typeof HENTET_MULIGE_SAKSTEMA;
+  data: any;
+}
+
+interface HentetMuligeSakstypeAction {
+  type: typeof HENTET_MULIGE_SAKSTYPE;
+  data: any;
+}
+
+export type Action = HentetMuligeSakstemaAction | HentetMuligeSakstypeAction | FeiletAction | PendingAction | OkAction;

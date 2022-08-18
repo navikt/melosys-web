@@ -162,7 +162,6 @@ export interface BehandlingResDto {
 }
 
 export interface EndreBehandlingReqDto {
-  sakstype: string;
   behandlingstype: string;
   behandlingstema: string;
   behandlingsstatus: string;
