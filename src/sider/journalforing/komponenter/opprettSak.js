@@ -39,7 +39,7 @@ export const OpprettSakTittel = () => (
   </div>
 );
 
-const OpprettFagsak = (props) => {
+const OpprettSak = (props) => {
   const { journalforingSkjemaVerdier, sakstemaToggleEnabled, settFeltInnhold } = props;
   const {
     opprettnysak_behandlingstema: valgtBehandlingstema,
@@ -187,13 +187,13 @@ const OpprettFagsak = (props) => {
     </div>
   );
 };
-OpprettFagsak.propTypes = {
+OpprettSak.propTypes = {
   journalforingSkjemaVerdier: PT.object,
   settFeltInnhold: PT.func.isRequired,
   sakstemaToggleEnabled: PT.bool.isRequired,
 };
 
-OpprettFagsak.defaultProps = {
+OpprettSak.defaultProps = {
   journalforingSkjemaVerdier: {},
 };
 const mapStateToProps = (state) => ({
@@ -203,4 +203,4 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   settFeltInnhold: (feltNavn, verdi) => dispatch(change("journalforing", feltNavn, verdi)),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(OpprettFagsak);
+export default connect(mapStateToProps, mapDispatchToProps)(OpprettSak);
