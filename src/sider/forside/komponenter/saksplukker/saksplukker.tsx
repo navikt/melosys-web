@@ -163,7 +163,7 @@ export const Saksplukker = ({
           <Nav.Knapp className="saksplukker__knapp" disabled={invalid}>
             Behandle sak
           </Nav.Knapp>
-          <Nav.Flatknapp htmlType="reset">Nullstill</Nav.Flatknapp>
+          {sakstemaToggle === "enabled" && <Nav.Flatknapp htmlType="reset">Nullstill</Nav.Flatknapp>}
         </Nav.Row>
       </form>
     </Nav.Panel>
