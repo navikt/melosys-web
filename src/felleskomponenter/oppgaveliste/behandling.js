@@ -12,7 +12,7 @@ import EnkeltDato from "../enkeltDato";
 import "./behandling.css";
 
 const BehandlingPanel = ({ behandling, kanVises }) => {
-  const { behandlingstype, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;
+  const { behandlingstema, behandlingstype, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;
 
   return (
     <Nav.Panel className="behandling">
@@ -20,6 +20,7 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
         <Nav.Column>
           <Nav.Column xs="12" md="5">
             <dl className="behandling__meta">
+              <dt>{KV.objektTilTerm(behandlingstema, "(ukjent)")}</dt>
               <dt>{KV.objektTilTerm(behandlingstype, "(ukjent)")}</dt>
               <dt>Opprettet:</dt>
               <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
