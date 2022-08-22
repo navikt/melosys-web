@@ -7,8 +7,6 @@
  *
  */
 
-import MKV from "../../melosyskodeverk";
-
 import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
@@ -36,11 +34,11 @@ export const tilbakelegg = (behandlingID, venterPaaDokumentasjon) => {
   return Api.Oppgaver.tilbakelegg(oppgaveObjekt).catch((error) => error);
 };
 
-export const sendBehandlingsOppgave = async (data) => {
-  const { behandlingstema: valgtBehandlingstema } = data;
-
+export const plukkSak = async (data) => {
   const oppgave = {
-    behandlingstema: valgtBehandlingstema,
+    sakstype: data.sakstype,
+    sakstema: data.sakstema,
+    behandlingstema: data.behandlingstema,
   };
 
   const response = await Api.Oppgaver.sendPlukk(oppgave);
@@ -50,20 +48,4 @@ export const sendBehandlingsOppgave = async (data) => {
   }
 
   return Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
-};
-
-export const sendJournalOppgave = async (fagomrade) => {
-  const behandlingstyper = fagomrade === "MED" ? [] : [fagomrade];
-
-  const oppgave = {
-    oppgavetype: MKV.Koder.oppgavetyper.JFR,
-    sakstyper: [],
-    behandlingstyper,
-  };
-  const response = await Api.Oppgaver.sendPlukk(oppgave);
-  const { oppgaveID, journalpostID } = response;
-  if (!(oppgaveID || journalpostID)) {
-    return false;
-  }
-  return `/journalforing/${journalpostID}/${oppgaveID}`;
 };

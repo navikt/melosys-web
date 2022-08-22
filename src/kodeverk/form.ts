@@ -1,10 +1,6 @@
 import { StrukturertAdresse } from "../services/api";
 
-export const BEHANDLINGS_FORM = "behandlingsform";
-export interface BehandlingsFormData {
-  sakstype: string;
-  behandlingstema: string;
-}
+export const SAKSPLUKKER_FORM = "saksplukkerform";
 export const SEND_BREV = "send_brev";
 export const FORSIDE_JOURNALFORINGS_FORM = "journalforingsform";
 export const JOURNALFORING = "journalforing";
