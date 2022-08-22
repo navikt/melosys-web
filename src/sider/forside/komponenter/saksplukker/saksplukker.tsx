@@ -70,6 +70,14 @@ export const Saksplukker = ({
     }
   }, [formValues?.sakstype, sakstemaToggle]);
 
+  useEffect(() => {
+    if (formValues?.sakstema) {
+      if (sakstemaToggle === "enabled") {
+        change("behandlingstema", null);
+      }
+    }
+  }, [formValues?.sakstema, sakstemaToggle]);
+
   const submitOgVideresend = async (form: any) => {
     const redirectURL = await handleSubmit(form);
 

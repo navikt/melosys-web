@@ -5,7 +5,7 @@ const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 export const saksplukker = object().shape({
   sakstype: string().required(MAA_FYLLES_UT).nullable(),
-  sakstema: string().nullable(),
+  sakstema: string().nullable(), // Når toggle melosys.sakstema fjernes må denne bli required.
   behandlingstema: string().required(MAA_FYLLES_UT).nullable(),
 });
 

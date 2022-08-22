@@ -49,8 +49,8 @@ const gyldigeBehandlingstemaTrygdeavgift = [
 const gyldigeBehandlingstemaUnntakEUEØS = [MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET];
 
 const gyldigeBehandlingstemaUnntakTRYGDEAVTALE = [
-  MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP, // TODO: Disse er feil. Venter på svar fra fag
-  MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+  MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL,
+  MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
 ];
 
 const gyldigeBehandlingstemaMedlemskapLovvalgEUEØS = [
@@ -86,7 +86,7 @@ export const gyldigeBehandlingstema = (sakstype, sakstema) => {
     switch (sakstype) {
       case MKV.Koder.sakstyper.EU_EOS:
         return gyldigeBehandlingstemaUnntakEUEØS;
-      case MKV.Koder.sakstyper.Trygdeavtale:
+      case MKV.Koder.sakstyper.TRYGDEAVTALE:
         return gyldigeBehandlingstemaUnntakTRYGDEAVTALE;
       case MKV.Koder.sakstyper.FTRL:
       default:
