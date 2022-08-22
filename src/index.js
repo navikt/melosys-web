@@ -21,13 +21,12 @@ import { apolloClient } from "./graphql";
 const SideLoadingFailMessage = "Beklager, kunne ikke laste inn siden.";
 
 const store = createStore(routerHistory);
-loadInitialData(store);
 
 ReactDOM.render(
   <ReduxProvider store={store}>
     <ConnectedRouter history={routerHistory}>
       <ApolloProvider client={apolloClient}>
-        <App>
+        <App loadInitialData={() => loadInitialData(store)}>
           <ErrorBoundary message={SideLoadingFailMessage}>
             <FellesHandlersProvider>
               <Routing />

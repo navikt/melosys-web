@@ -1,5 +1,7 @@
 import sjekkStatuskode from "./sjekkStatuskode";
 
+const { fetch: originalFetch } = window;
+
 export const STATUS = {
   NOT_STARTED: "NOT_STARTED",
   PENDING: "PENDING",
@@ -18,6 +20,24 @@ const toJson = async (response) => {
     console.error(res); // eslint-disable-line no-console
     return {};
   }
+};
+
+export const setTokenInterceptor = (getAccessToken, accounts) => {
+  window.fetch = async (...args) => {
+    const [url, options] = args;
+    console.log("url ", url);
+    if (!options.headers) {
+      options.headers = {};
+    }
+    if (accounts[0] !== undefined && !url.includes("microsoft")) {
+      const accessToken = await getAccessToken();
+
+      options.headers = { ...options.headers, Authorization: `Bearer ${accessToken}` };
+    }
+    console.log("Ok, vi har token...", options);
+
+    return originalFetch(url, options);
+  };
 };
 
 export const sendResultatTilDispatch =
@@ -246,6 +266,7 @@ const methodToText = (method, url, data) => {
   const headers = {
     Accept: "text/plain",
     "Accept-Charset": "UTF-8",
+
     // 'Cache-control': 'no-store, must-revalidate, no-cache, max-age=0',
     // Expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
     // Pragma: 'no-cache',
