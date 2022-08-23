@@ -9,8 +9,6 @@ import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
 
-import { useFeatureToggle } from "../../../featuretoggle";
-
 import "./knyttTilSak.css";
 
 export const KnyttTilSak = (props) => {
@@ -23,10 +21,7 @@ export const KnyttTilSak = (props) => {
 
   const clsElementskrift = { "border-bottom": "none" };
 
-  const alltidNyBehandlingToggle = useFeatureToggle("melosys.api.journalfoering.alltid.opprett.ny.behandling");
-
-  const visUtenOppretteBehandling =
-    alltidNyBehandlingToggle === "enabled" ? !sakInneholderSoeknad : sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
+  const visUtenOppretteBehandling = !sakInneholderSoeknad;
 
   const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
     sisteBehandling.behandlingsstatus.kode
