@@ -19,7 +19,34 @@ const {
   sakstyper,
 } = MKV.Koder;
 
-const valgbareBehandlingstyper = (sakstype, behtema) => {
+const kanVelgeEndretPeriode = (sisteBehandling) =>
+  [MKVBehandlingstema.UTSENDT_ARBEIDSTAKER, MKVBehandlingstema.UTSENDT_SELVSTENDIG].includes(
+    sisteBehandling.behandlingstema.kode
+  ) && sisteBehandling.behandlingstype.kode === MKVBehandlingstyper.FØRSTEGANG;
+
+const valgbareBehandlingstyper = (sakstype, behandlingstema, sisteBehandling) =>
+  MKV.KTObjects.behandlinger.behandlingstyper.filter(
+    ({ kode }) =>
+      (kanVelgeEndretPeriode(sisteBehandling) && kode === MKVBehandlingstyper.ENDRET_PERIODE) ||
+      MKV.Kodekombinasjoner.gyldigeBehandlingstyper(behandlingstema).includes(kode)
+  );
+
+const behandlingstemaSomIkkeKanEndres = [
+  MKVBehandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
+  MKVBehandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
+  MKVBehandlingstema.BESLUTNING_LOVVALG_NORGE,
+  MKVBehandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
+  MKVBehandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL,
+];
+
+const valgbareBehandlingstema = (sakstype, sakstema, behandlingstema) =>
+  MKV.KTObjects.behandlinger.behandlingstema.filter(({ kode }) =>
+    behandlingstemaSomIkkeKanEndres.includes(behandlingstema)
+      ? behandlingstema === kode
+      : MKV.Kodekombinasjoner.gyldigeBehandlingstema(sakstype.kode, sakstema.kode).includes(kode)
+  );
+
+const behandlingstyper = (sakstype, behtema) => {
   switch (sakstype) {
     case sakstyper.EU_EOS:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
@@ -41,6 +68,14 @@ export const KnyttTilSak = (props) => {
   const { behandlingOversikter, sakstype, sakstema } = sak;
 
   const sisteBehandling = behandlingOversikter[0];
+
+  useEffect(() => {
+    return () => {
+      changeField("opprettBehandling", false);
+      changeField("behandlingstema", "");
+      changeField("behandlingstype", "");
+    };
+  }, []);
 
   useEffect(() => {
     if (opprettBehandling && !behandlingstema) {
@@ -84,27 +119,23 @@ export const KnyttTilSak = (props) => {
             {sakstemaToggleEnabled ? (
               <div className="panelElement">
                 <Nav.Typo.Undertittel className="temaTypeOverskrift">
-                  Velg type og tema for ny behandling
+                  Velg tema og type for ny behandling
                 </Nav.Typo.Undertittel>
-                <Skjema.RadioGruppe feltNavn="behandlingstype" label="Behandlingstype" className="behandlingstype">
-                  {valgbareBehandlingstyper(sakstype, sisteBehandling.behandlingsstatus)?.map((elem) => (
-                    <Skjema.Radio feltNavn="behandlingstype" key={elem.kode} value={elem.kode} label={elem.term} />
-                  ))}
-                </Skjema.RadioGruppe>
                 <Skjema.Select
                   feltNavn="behandlingstema"
                   bredde="fullbredde"
                   label="Behandlingstema"
-                  emptyFieldDisabled={false}
+                  emptyFieldDisabled={behandlingstema}
                 >
-                  {MKV.Kodekombinasjoner.gyldigeBehandlingstema(sakstype.kode, sakstema.kode)?.map((elem) => (
-                    <option
-                      key={elem}
-                      value={elem}
-                      label={KV.finnTermFraListe(MKV.KTObjects.behandlinger.behandlingstema, elem)}
-                    />
+                  {valgbareBehandlingstema(sakstype, sakstema, behandlingstema)?.map((elem) => (
+                    <option key={elem.kode} value={elem.kode} label={elem.term} />
                   ))}
                 </Skjema.Select>
+                <Skjema.RadioGruppe feltNavn="behandlingstype" label="Behandlingstype" className="behandlingstype">
+                  {valgbareBehandlingstyper(sakstype, behandlingstema, sisteBehandling)?.map((elem) => (
+                    <Skjema.Radio feltNavn="behandlingstype" key={elem.kode} value={elem.kode} label={elem.term} />
+                  ))}
+                </Skjema.RadioGruppe>
               </div>
             ) : (
               <Skjema.Select
@@ -114,7 +145,7 @@ export const KnyttTilSak = (props) => {
                 className="panelElement"
                 emptyFieldDisabled={false}
               >
-                {valgbareBehandlingstyper(sakstype, sisteBehandling.behandlingsstatus)?.map((elem) => (
+                {behandlingstyper(sakstype, sisteBehandling.behandlingstype)?.map((elem) => (
                   <option key={elem.kode} value={elem.kode} label={elem.term} />
                 ))}
               </Skjema.Select>
@@ -137,7 +168,6 @@ export const KnyttTilSak = (props) => {
 };
 KnyttTilSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
-  behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   opprettBehandling: PT.bool.isRequired,
   behandlingstema: PT.string,
   sakstemaToggleEnabled: PT.bool.isRequired,
