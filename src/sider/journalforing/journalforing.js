@@ -92,8 +92,9 @@ class Journalforing extends Component {
       virksomhetOrgnr,
       avsenderID,
       arbeidsgiverID,
-      opprettnysak_behandlingstema: behandlingstemaKode,
+      opprettnysak_behandlingstema,
       opprettnysak_behandlingstype,
+      behandlingstema,
       behandlingstype,
       representantID,
       representantKontaktPerson,
@@ -127,13 +128,18 @@ class Journalforing extends Component {
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
     };
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT || hensikt === JOURNALFORING_HENSIKT.NY_VURDERING) {
-      journalPostData = { ...journalPostData, ikkeSendForvaltingsmelding: null, behandlingstypeKode: behandlingstype };
+      journalPostData = {
+        ...journalPostData,
+        ikkeSendForvaltingsmelding: null,
+        behandlingstemaKode: behandlingstema,
+        behandlingstypeKode: behandlingstype,
+      };
     }
     // /Hensikt OPPRETT har flere felt
     if (hensikt === JOURNALFORING_HENSIKT.OPPRETT) {
       journalPostData = Object.assign(journalPostData, {
         arbeidsgiverID,
-        behandlingstemaKode,
+        behandlingstemaKode: opprettnysak_behandlingstema,
         behandlingstypeKode: opprettnysak_behandlingstype,
         representantID,
         representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
