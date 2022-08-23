@@ -16,7 +16,8 @@ import "./knyttTilSak.css";
 
 const {
   behandlinger: { behandlingstyper: MKVBehandlingstyper, behandlingstema: MKVBehandlingstema },
-  sakstyper,
+  sakstyper: MKVSakstyper,
+  saksstatuser: MKVSaksstatuser,
 } = MKV.Koder;
 
 const kanVelgeEndretPeriode = (sisteBehandling) =>
@@ -40,21 +41,22 @@ const behandlingstemaSomIkkeKanEndres = [
 ];
 
 const valgbareBehandlingstema = (sakstype, sakstema, behandlingstema) =>
-  MKV.KTObjects.behandlinger.behandlingstema.filter(({ kode }) =>
-    behandlingstemaSomIkkeKanEndres.includes(behandlingstema)
-      ? behandlingstema === kode
-      : MKV.Kodekombinasjoner.gyldigeBehandlingstema(sakstype.kode, sakstema.kode).includes(kode)
+  MKV.KTObjects.behandlinger.behandlingstema.filter(
+    ({ kode }) =>
+      behandlingstemaSomIkkeKanEndres.includes(behandlingstema)
+        ? behandlingstema === kode
+        : MKV.Kodekombinasjoner.gyldigeBehandlingstema(sakstype.kode, sakstema.kode).includes(kode) // TODO: Kan denne erstattes av backend når det implementeres der?
   );
 
 const behandlingstyper = (sakstype, behtema) => {
   switch (sakstype) {
-    case sakstyper.EU_EOS:
+    case MKVSakstyper.EU_EOS:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
         ({ kode }) =>
           (behtema.kode === MKVBehandlingstema.UTSENDT_ARBEIDSTAKER && kode === MKVBehandlingstyper.ENDRET_PERIODE) ||
           kode === MKVBehandlingstyper.NY_VURDERING
       );
-    case sakstyper.TRYGDEAVTALE:
+    case MKVSakstyper.TRYGDEAVTALE:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
         ({ kode }) => kode === MKVBehandlingstyper.NY_VURDERING
       );
@@ -89,8 +91,13 @@ export const KnyttTilSak = (props) => {
   const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
     sisteBehandling.behandlingsstatus.kode
   );
+  const sakErHenlagtEllerBortfalt = [MKVSaksstatuser.HENLAGT, MKVSaksstatuser.HENLAGT_BORTFALT].includes(
+    sak.saksstatus.kode
+  );
 
-  if (sisteBehandlingErInaktiv) {
+  const visKnyttTilEksisterende = sisteBehandlingErInaktiv && (!sakstemaToggleEnabled || !sakErHenlagtEllerBortfalt);
+
+  if (visKnyttTilEksisterende) {
     const sakInneholderSoeknad = behandlingOversikter.some(
       (behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD
     );
@@ -156,7 +163,7 @@ export const KnyttTilSak = (props) => {
     );
   }
 
-  const visUtenVidereBehandling = sakstemaToggleEnabled ? sakstype.kode === sakstyper.EU_EOS : true;
+  const visUtenVidereBehandling = sakstemaToggleEnabled ? sakstype.kode === MKVSakstyper.EU_EOS : true;
 
   return (
     <div className="knyttTilSak__behandlingspanel">
