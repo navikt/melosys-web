@@ -12,13 +12,9 @@ import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 
-import { useFeatureToggle } from "../../../featuretoggle";
-
 import "./knyttTilSak.css";
 
 export const KnyttTilSak = (props) => {
-  const alltidNyBehandlingToggle = useFeatureToggle("melosys.api.journalfoering.alltid.opprett.ny.behandling");
-
   const { sak, behandlingstyper, opprettBehandling, behandlingstema, sakstemaToggleEnabled, changeField } = props;
   const { behandlingOversikter, sakstype, sakstema } = sak;
 
@@ -41,8 +37,7 @@ export const KnyttTilSak = (props) => {
     const sakInneholderSoeknad = behandlingOversikter.some(
       (behandling) => behandling.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
     );
-    const visUtenOppretteBehandling =
-      alltidNyBehandlingToggle === "enabled" ? !sakInneholderSoeknad : sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
+    const visUtenOppretteBehandling = !sakInneholderSoeknad;
 
     return (
       <div className="knyttTilSak__panelramme">

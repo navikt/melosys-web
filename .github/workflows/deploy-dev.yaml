@@ -81,7 +81,7 @@ jobs:
           CLUSTER: dev-fss
           RESOURCE: nais/nais.yaml
           VAR: image=${{ env.docker_image }}
-          VARS: nais/vars-dev.json
+          VARS: nais/vars-q2.json
       - name: get commit message
         run: | # Må hentes med et script fordi workflow_dispatch ikke har github.event.head_commit
           echo "COMMIT_MSG=$(git log --format=%s -n 1 ${{ github.event.after }})" >> $GITHUB_ENV
