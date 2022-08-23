@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import PT from "prop-types";
 
-import MKV from "../../../melosyskodeverk";
 import * as MPT from "../../../proptypes";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
@@ -14,26 +13,6 @@ import EnkeltSak from "./enkeltSak";
 import KnyttTilSak from "./knyttTilSak";
 
 import "./fagsakVelger.css";
-
-const {
-  behandlinger: { behandlingstyper, behandlingstema },
-  sakstyper,
-} = MKV.Koder;
-
-const valgbareBehandlingstyper = (sakstype, behtema) => {
-  switch (sakstype) {
-    case sakstyper.EU_EOS:
-      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
-        ({ kode }) =>
-          (behtema.kode === behandlingstema.UTSENDT_ARBEIDSTAKER && kode === behandlingstyper.ENDRET_PERIODE) ||
-          kode === behandlingstyper.NY_VURDERING
-      );
-    case sakstyper.TRYGDEAVTALE:
-      return MKV.KTObjects.behandlinger.behandlingstyper.filter(({ kode }) => kode === behandlingstyper.NY_VURDERING);
-    default:
-      return [];
-  }
-};
 
 const EKSISTRENDE = "Eksisterende sak";
 const OPPRETT = "Opprett ny sak";
@@ -53,13 +32,7 @@ const FagsakVelger = (props) => {
       {
         value: sak.saksnummer,
         innhold: <EnkeltSak sak={sak} sakstemaToggleEnabled={sakstemaToggleEnabled} landkoder={landkoder} />,
-        footer: (
-          <KnyttTilSak
-            sak={sak}
-            behandlingstyper={valgbareBehandlingstyper(sak.sakstype.kode, sak.behandlingOversikter[0].behandlingstema)}
-            sakstemaToggleEnabled={sakstemaToggleEnabled}
-          />
-        ),
+        footer: <KnyttTilSak sak={sak} sakstemaToggleEnabled={sakstemaToggleEnabled} />,
       },
     ],
     []

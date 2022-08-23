@@ -14,8 +14,30 @@ import * as Mui from "../../../felleskomponenter/ui";
 
 import "./knyttTilSak.css";
 
+const {
+  behandlinger: { behandlingstyper: MKVBehandlingstyper, behandlingstema: MKVBehandlingstema },
+  sakstyper,
+} = MKV.Koder;
+
+const valgbareBehandlingstyper = (sakstype, behtema) => {
+  switch (sakstype) {
+    case sakstyper.EU_EOS:
+      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
+        ({ kode }) =>
+          (behtema.kode === MKVBehandlingstema.UTSENDT_ARBEIDSTAKER && kode === MKVBehandlingstyper.ENDRET_PERIODE) ||
+          kode === MKVBehandlingstyper.NY_VURDERING
+      );
+    case sakstyper.TRYGDEAVTALE:
+      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
+        ({ kode }) => kode === MKVBehandlingstyper.NY_VURDERING
+      );
+    default:
+      return [];
+  }
+};
+
 export const KnyttTilSak = (props) => {
-  const { sak, behandlingstyper, opprettBehandling, behandlingstema, sakstemaToggleEnabled, changeField } = props;
+  const { sak, opprettBehandling, behandlingstema, sakstemaToggleEnabled, changeField } = props;
   const { behandlingOversikter, sakstype, sakstema } = sak;
 
   const sisteBehandling = behandlingOversikter[0];
@@ -35,9 +57,8 @@ export const KnyttTilSak = (props) => {
 
   if (sisteBehandlingErInaktiv) {
     const sakInneholderSoeknad = behandlingOversikter.some(
-      (behandling) => behandling.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
+      (behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD
     );
-    const visUtenOppretteBehandling = !sakInneholderSoeknad;
 
     return (
       <div className="knyttTilSak__panelramme">
@@ -52,8 +73,9 @@ export const KnyttTilSak = (props) => {
           label={sakstemaToggleEnabled ? "" : "Knytt til sak"}
           className={classNames("panelElement", { "nyBehandling-utenBehandling": sakstemaToggleEnabled })}
         >
-          {sakInneholderSoeknad && <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />}
-          {visUtenOppretteBehandling && (
+          {sakInneholderSoeknad ? (
+            <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />
+          ) : (
             <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
           )}
         </Skjema.RadioGruppe>
@@ -65,7 +87,7 @@ export const KnyttTilSak = (props) => {
                   Velg type og tema for ny behandling
                 </Nav.Typo.Undertittel>
                 <Skjema.RadioGruppe feltNavn="behandlingstype" label="Behandlingstype" className="behandlingstype">
-                  {behandlingstyper?.map((elem) => (
+                  {valgbareBehandlingstyper(sakstype, sisteBehandling.behandlingsstatus)?.map((elem) => (
                     <Skjema.Radio feltNavn="behandlingstype" key={elem.kode} value={elem.kode} label={elem.term} />
                   ))}
                 </Skjema.RadioGruppe>
@@ -92,7 +114,7 @@ export const KnyttTilSak = (props) => {
                 className="panelElement"
                 emptyFieldDisabled={false}
               >
-                {behandlingstyper?.map((elem) => (
+                {valgbareBehandlingstyper(sakstype, sisteBehandling.behandlingsstatus)?.map((elem) => (
                   <option key={elem.kode} value={elem.kode} label={elem.term} />
                 ))}
               </Skjema.Select>
@@ -103,7 +125,7 @@ export const KnyttTilSak = (props) => {
     );
   }
 
-  const visUtenVidereBehandling = sakstemaToggleEnabled ? sakstype.kode === MKV.Koder.sakstyper.EU_EOS : true;
+  const visUtenVidereBehandling = sakstemaToggleEnabled ? sakstype.kode === sakstyper.EU_EOS : true;
 
   return (
     <div className="knyttTilSak__behandlingspanel">
