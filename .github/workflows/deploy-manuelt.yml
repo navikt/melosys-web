@@ -125,7 +125,7 @@ jobs:
           SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
 
   # Deploy til q2 manuelt eller ved push på master-branch
-  deploy_dev:
+  deploy_q2:
     name: Deploy til Q2
     needs: build
     # always() er nødvendig for å kunne kjøre denne jobben selv om build-job er skipped, https://github.com/actions/runner/issues/491
