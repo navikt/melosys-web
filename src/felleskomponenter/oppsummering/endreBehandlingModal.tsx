@@ -38,6 +38,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppfriskSaksopplysninger: (behandlingID: number) => saksopplysningerOperations.oppfrisk(behandlingID),
   hentBehandling: (behandlingID: number) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+  hentFagsaker: (saksnummer: string) => dispatch(fagsakOperations.hent(saksnummer)),
   hentBehandlingsgrunnlag: (behandlingID: number) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
   hentMuligeBehandlingstema: (behandlingID: number) =>
     dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
@@ -69,6 +70,7 @@ function EndreBehandlingModal({
   fagsak,
   hentBehandling,
   hentBehandlingsgrunnlag,
+  hentFagsaker,
   muligeBehandlingstyper,
   muligeBehandlingstema,
   muligeBehandlingsstatuser,
@@ -109,8 +111,8 @@ function EndreBehandlingModal({
       hentMuligeBehandlingsstatuser(behandlingID);
       setGenerellFeil("");
       setBehandlingEndret(false);
-      setSakstema(oppsummering.sakstema.kode);
-      setSakstype(oppsummering.sakstype.kode);
+      setSakstema(fagsak.sakstema?.kode);
+      setSakstype(fagsak.sakstype?.kode);
       setBehandlingstema(oppsummering.behandlingstema.kode);
       setBehandlingstype(oppsummering.behandlingstype.kode);
       setBehandlingsstatus(oppsummering.behandlingsstatus.kode);
@@ -139,6 +141,7 @@ function EndreBehandlingModal({
       .then(() => {
         setBehandlingEndret(true);
         hentBehandling(behandlingID);
+        hentFagsaker(fagsak.saksnummer);
         hentBehandlingsgrunnlag(behandlingID);
         const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
         if (nyLink && nyLink !== location.pathname + location.search) tilAnnenSide(nyLink);
@@ -156,7 +159,7 @@ function EndreBehandlingModal({
       });
   };
 
-  const muligeVerdierPlussValgt = (muligeVerdier: KTObject[], valgtVerdi: KTObject) => {
+  const muligeVerdierPlussValgt = (valgtVerdi: KTObject, muligeVerdier: KTObject[] = []) => {
     return [valgtVerdi].concat(muligeVerdier.filter((verdi) => verdi.kode !== valgtVerdi.kode));
   };
 
@@ -170,7 +173,7 @@ function EndreBehandlingModal({
               onChange={(e) => setSakstype(e.target.value)}
               label="Sakstype"
               value={sakstype}
-              koder={muligeVerdierPlussValgt(muligeSakstyper || [], oppsummering.sakstype)}
+              koder={muligeVerdierPlussValgt(fagsak.sakstype, muligeSakstyper)}
               disableForsteValg
               redigerbart={!endringerErBegrenset}
             />
@@ -178,7 +181,7 @@ function EndreBehandlingModal({
               onChange={(e) => setSakstema(e.target.value)}
               label="Sakstema"
               value={sakstema}
-              koder={muligeVerdierPlussValgt(muligeSakstemaer || [], oppsummering.sakstema)}
+              koder={muligeVerdierPlussValgt(fagsak.sakstema, muligeSakstemaer)}
               disableForsteValg
               redigerbart={!endringerErBegrenset}
             />
@@ -186,7 +189,7 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"
               value={behandlingstype}
-              koder={muligeVerdierPlussValgt(muligeBehandlingstyper, oppsummering.behandlingstype)}
+              koder={muligeVerdierPlussValgt(oppsummering.behandlingstype, muligeBehandlingstyper)}
               disableForsteValg
               redigerbart={!endringerErBegrenset}
             />
@@ -194,7 +197,7 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingstema(e.target.value)}
               label="Behandlingstema"
               value={behandlingstema}
-              koder={muligeVerdierPlussValgt(muligeBehandlingstema, oppsummering.behandlingstema)}
+              koder={muligeVerdierPlussValgt(oppsummering.behandlingstema, muligeBehandlingstema)}
               disableForsteValg
               redigerbart={!endringerErBegrenset}
             />
@@ -203,7 +206,7 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingsstatus(e.target.value)}
               label="Behandlingsstatus"
               value={behandlingsstatus}
-              koder={muligeVerdierPlussValgt(muligeBehandlingsstatuser, oppsummering.behandlingsstatus)}
+              koder={muligeVerdierPlussValgt(oppsummering.behandlingsstatus, muligeBehandlingsstatuser)}
               disableForsteValg
             />
           </div>
