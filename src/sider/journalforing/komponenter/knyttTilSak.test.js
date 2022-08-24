@@ -21,6 +21,12 @@ describe("KnyttTilSak", () => {
         sakstype: {
           kode: MKV.Koder.sakstyper.EU_EOS,
         },
+        sakstema: {
+          kode: MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+        },
+        saksstatus: {
+          kode: MKV.Koder.saksstatuser.UNDER_BEHANDLING,
+        },
         behandlingOversikter: [
           {
             behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET },
