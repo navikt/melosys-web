@@ -66,7 +66,7 @@ const behandlingstyper = (sakstype, behtema) => {
 };
 
 export const KnyttTilSak = (props) => {
-  const { sak, opprettBehandling, behandlingstema, sakstemaToggleEnabled, changeField } = props;
+  const { sak, opprettBehandling, behandlingstema, behandlingstype, sakstemaToggleEnabled, changeField } = props;
   const { behandlingOversikter, sakstype, sakstema } = sak;
 
   const sisteBehandling = behandlingOversikter[0];
@@ -85,6 +85,9 @@ export const KnyttTilSak = (props) => {
     }
     if (!opprettBehandling && behandlingstema) {
       changeField("behandlingstema", "");
+    }
+    if (!opprettBehandling && behandlingstype) {
+      changeField("behandlingstype", "");
     }
   }, [opprettBehandling]);
 
@@ -177,11 +180,13 @@ KnyttTilSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
   opprettBehandling: PT.bool.isRequired,
   behandlingstema: PT.string,
+  behandlingstype: PT.string,
   sakstemaToggleEnabled: PT.bool.isRequired,
   changeField: PT.func.isRequired,
 };
 KnyttTilSak.defaultProps = {
   behandlingstema: "",
+  behandlingstype: "",
 };
 
 const selector = formValueSelector(KV.Form.JOURNALFORING);
@@ -189,6 +194,7 @@ const selector = formValueSelector(KV.Form.JOURNALFORING);
 const mapStateToProps = (state) => ({
   opprettBehandling: selector(state, "opprettBehandling"),
   behandlingstema: selector(state, "behandlingstema"),
+  behandlingstype: selector(state, "behandlingstype"),
 });
 const mapDispatchToProps = (dispatch) => ({
   changeField: (felt, verdi) => dispatch(change(KV.Form.JOURNALFORING, felt, verdi)),
