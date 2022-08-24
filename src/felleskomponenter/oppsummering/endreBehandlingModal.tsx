@@ -22,11 +22,11 @@ import { behandlingstypeOperations, behandlingstypeSelectors } from "../../ducks
 import { navigeringOperations } from "../../ducks/navigering";
 import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
-import MKV from "../../melosyskodeverk";
 
 import "./endreBehandlingModal.css";
 import { fagsakOperations } from "../../ducks/fagsaker";
 import { saksopplysningerOperations } from "../../ducks/saksopplysninger";
+import { behandlingsTemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -41,8 +41,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   hentBehandlingsgrunnlag: (behandlingID: number) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
   hentMuligeBehandlingstema: (behandlingID: number) =>
     dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
-  hentMuligeSakstema: (saksnummer: string) => dispatch(fagsakOperations.hentMuligeSakstema(saksnummer)),
-  hentMuligeSakstype: (saksnummer: string) => dispatch(fagsakOperations.hentMuligeSakstype(saksnummer)),
+  hentMuligeSakstemaer: (saksnummer: string) => dispatch(fagsakOperations.hentMuligeSakstemaer(saksnummer)),
+  hentMuligeSakstyper: (saksnummer: string) => dispatch(fagsakOperations.hentMuligeSakstyper(saksnummer)),
   hentMuligeBehandlingstyper: (behandlingID: number) =>
     dispatch(behandlingstypeOperations.hentMuligeBehandlingstyper(behandlingID)),
   hentMuligeBehandlingsstatuser: (behandlingID: number) =>
@@ -61,22 +61,6 @@ type EndreBehandlingModalProps = PropsFromRedux &
     lukkModal: () => void;
   };
 
-const {
-  REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
-  REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
-  BESLUTNING_LOVVALG_NORGE,
-  BESLUTNING_LOVVALG_ANNET_LAND,
-  ANMODNING_OM_UNNTAK_HOVEDREGEL,
-} = MKV.Koder.behandlinger.behandlingstema;
-
-const behandlingsTemaMedBegrensetRettigheter = [
-  REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
-  REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
-  BESLUTNING_LOVVALG_NORGE,
-  BESLUTNING_LOVVALG_ANNET_LAND,
-  ANMODNING_OM_UNNTAK_HOVEDREGEL,
-];
-
 function EndreBehandlingModal({
   skalViseModal,
   lukkModal,
@@ -90,8 +74,8 @@ function EndreBehandlingModal({
   muligeBehandlingsstatuser,
   hentMuligeBehandlingstyper,
   hentMuligeBehandlingstema,
-  hentMuligeSakstema,
-  hentMuligeSakstype,
+  hentMuligeSakstemaer,
+  hentMuligeSakstyper,
   hentMuligeBehandlingsstatuser,
   tilAnnenSide,
   location,
@@ -120,17 +104,17 @@ function EndreBehandlingModal({
       const { saksnummer } = fagsak;
       hentMuligeBehandlingstyper(behandlingID);
       hentMuligeBehandlingstema(behandlingID);
-      hentMuligeSakstema(saksnummer);
-      hentMuligeSakstype(saksnummer);
+      hentMuligeSakstemaer(saksnummer);
+      hentMuligeSakstyper(saksnummer);
       hentMuligeBehandlingsstatuser(behandlingID);
       setGenerellFeil("");
       setBehandlingEndret(false);
-      setSakstema(KV.objektTilKodeUtenFeilmelding(oppsummering.sakstema));
-      setSakstype(KV.objektTilKodeUtenFeilmelding(oppsummering.sakstype));
-      setBehandlingstema(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstema));
-      setBehandlingstype(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstype));
+      setSakstema(oppsummering.sakstema.kode);
+      setSakstype(oppsummering.sakstype.kode);
+      setBehandlingstema(oppsummering.behandlingstema.kode);
+      setBehandlingstype(oppsummering.behandlingstype.kode);
+      setBehandlingsstatus(oppsummering.behandlingsstatus.kode);
       setBehandlingsfrist(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
-      setBehandlingsstatus(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingsstatus));
     }
   }, [skalViseModal]);
 
@@ -177,32 +161,27 @@ function EndreBehandlingModal({
   };
 
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
-
   const renderEndreBehandling = () => {
     return (
       <div className="dialogboks">
         <div>
           <div className="innhold">
-            {muligeSakstyper && (
-              <Mui.KodeTermSelect
-                onChange={(e) => setSakstype(e.target.value)}
-                label="Sakstype"
-                value={sakstype}
-                koder={muligeVerdierPlussValgt(muligeSakstyper, oppsummering.sakstype)}
-                disableForsteValg
-                redigerbart={!endringerErBegrenset}
-              />
-            )}
-            {muligeSakstemaer && (
-              <Mui.KodeTermSelect
-                onChange={(e) => setSakstema(e.target.value)}
-                label="Sakstema"
-                value={sakstema}
-                koder={muligeVerdierPlussValgt(muligeSakstemaer, oppsummering.sakstema)}
-                disableForsteValg
-                redigerbart={!endringerErBegrenset}
-              />
-            )}
+            <Mui.KodeTermSelect
+              onChange={(e) => setSakstype(e.target.value)}
+              label="Sakstype"
+              value={sakstype}
+              koder={muligeVerdierPlussValgt(muligeSakstyper || [], oppsummering.sakstype)}
+              disableForsteValg
+              redigerbart={!endringerErBegrenset}
+            />
+            <Mui.KodeTermSelect
+              onChange={(e) => setSakstema(e.target.value)}
+              label="Sakstema"
+              value={sakstema}
+              koder={muligeVerdierPlussValgt(muligeSakstemaer || [], oppsummering.sakstema)}
+              disableForsteValg
+              redigerbart={!endringerErBegrenset}
+            />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"

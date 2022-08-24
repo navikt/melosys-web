@@ -34,12 +34,12 @@ export default function reducer(state = initialState, action = {}) {
       };
     case Types.RESET:
       return initialState;
-    case Types.HENTET_MULIGE_SAKSTEMA: {
+    case Types.HENT_MULIGE_SAKSTEMA: {
       const muligeSakstemaer = action.data;
       if (!muligeSakstemaer) return { ...state };
       return { ...state, data: { ...state.data, muligeSakstemaer } };
     }
-    case Types.HENTET_MULIGE_SAKSTYPE: {
+    case Types.HENT_MULIGE_SAKSTYPE: {
       const muligeSakstyper = action.data;
       if (!muligeSakstyper) return { ...state };
       return { ...state, data: { ...state.data, muligeSakstyper } };

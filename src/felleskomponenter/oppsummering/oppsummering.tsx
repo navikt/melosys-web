@@ -50,11 +50,11 @@ const Oppsummering = (props: OppsummeringProps) => {
   } = props;
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
-  const [skjulEndreKnapp, setSkjulEndreKnapp] = useState(false);
+  const [disableEndreKnapp, setDisableEndreKnapp] = useState(false);
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
   useEffect(() => {
-    setSkjulEndreKnapp(behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode));
+    setDisableEndreKnapp(behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode));
   }, [oppsummering.behandlingsstatus]);
 
   if (!oppsummering || !fagsak?.sakstype) return <div />;
@@ -185,13 +185,13 @@ const Oppsummering = (props: OppsummeringProps) => {
                   </Nav.Column>
                   <Nav.Column xs="4">
                     <Mui.Knapp
-                      disabled={skjulEndreKnapp}
+                      disabled={disableEndreKnapp}
                       onClick={() => setSkalViseEndreModal(true)}
                       mini
                       className="hoyrestill endre-knapp"
                     >
                       <span>Endre</span>
-                      {skjulEndreKnapp ? <Ikoner.BlyantDisabled /> : <Ikoner.BlyantActive />}
+                      {disableEndreKnapp ? <Ikoner.BlyantDisabled /> : <Ikoner.BlyantActive />}
                     </Mui.Knapp>
                   </Nav.Column>
                 </Nav.Row>

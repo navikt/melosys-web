@@ -63,11 +63,11 @@ export interface EndreFagsakDto {
   sakstema: string | null;
 }
 
-export const hentMuligeSakstema = (saksnummer: string) =>
-  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstema`);
+export const hentMuligeSakstemaer = (saksnummer: string) =>
+  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstemaer`);
 
-export const hentMuligeSakstype = (saksnummer: string) =>
-  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstype`);
+export const hentMuligeSakstyper = (saksnummer: string) =>
+  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstyper`);
 
 export const endreFagsak = (saksnummer: string, body: EndreFagsakDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/endre`, body);

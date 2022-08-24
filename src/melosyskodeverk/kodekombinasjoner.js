@@ -22,6 +22,14 @@ const bestemmelserIkkeRelevanteForUnntak = [
   MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11,
 ];
 
+export const behandlingsTemaMedBegrensetRettigheter = [
+  MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
+  MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
+  MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
+  MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
+  MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL,
+];
+
 const kodeverkComparator = ({ kode: k1 }, { kode: k2 }) => k1.localeCompare(k2);
 
 export const unntaksbestemmelser = Utils._uniqBy(

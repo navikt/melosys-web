@@ -36,11 +36,6 @@ export const BehandlingstemaKodeSelector = createSelector(
   (oppsummering) => (oppsummering.behandlingstema ? oppsummering.behandlingstema.kode : "")
 );
 
-export const SakstemaKodeSelector = createSelector(
-  (state) => OppsummeringSelector(state),
-  (oppsummering) => (oppsummering.sakstema ? oppsummering.sakstema.kode : "")
-);
-
 export const BehandlingsstatusKodeSelector = createSelector(
   (state) => OppsummeringSelector(state),
   (oppsummering) => (oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : "")
