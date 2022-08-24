@@ -6,11 +6,6 @@ import MKV from "../../../melosyskodeverk";
 
 import { KnyttTilSak } from "./knyttTilSak";
 
-jest.mock("../../../featuretoggle", () => ({
-  __esModule: true,
-  useFeatureToggle: () => "enabled",
-}));
-
 describe("KnyttTilSak", () => {
   let props = null;
 
@@ -35,7 +30,10 @@ describe("KnyttTilSak", () => {
         ],
       },
       behandlingstyper: [],
-      opprettBehandling: jest.fn(),
+      opprettBehandling: false,
+      behandlingstema: "",
+      behandlingstype: "",
+      changeField: jest.fn(),
     };
   });
 
@@ -139,5 +137,25 @@ describe("KnyttTilSak", () => {
 
     expect(checkbox).toHaveLength(1);
     expect(checkbox.first().props().label).toBe("Journalfør uten videre behandling");
+  });
+
+  it(`Ikke vis knytt til eksisterende sak komponent dersom status er henlagt og sakstema er enabled`, () => {
+    props.sak.saksstatus.kode = MKV.Koder.saksstatuser.HENLAGT;
+    props.sakstemaToggleEnabled = true;
+
+    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+    const knyttTilEksisterendeSakKomponent = knyttTilSak.find(".knyttTilSak__panelramme");
+
+    expect(knyttTilEksisterendeSakKomponent).toHaveLength(0);
+  });
+
+  it(`Vis knytt til eksisterende sak komponent dersom status er henlagt og sakstema er disabled`, () => {
+    props.sak.saksstatus.kode = MKV.Koder.saksstatuser.HENLAGT;
+    props.sakstemaToggleEnabled = false;
+
+    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+    const knyttTilEksisterendeSakKomponent = knyttTilSak.find(".knyttTilSak__panelramme");
+
+    expect(knyttTilEksisterendeSakKomponent).toHaveLength(1);
   });
 });
