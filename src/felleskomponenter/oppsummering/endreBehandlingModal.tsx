@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { connect, ConnectedProps, useSelector } from "react-redux";
+import { connect, ConnectedProps } from "react-redux";
 import classNames from "classnames";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
@@ -24,12 +24,14 @@ import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
 
 import "./endreBehandlingModal.css";
-import { fagsakOperations } from "../../ducks/fagsaker";
+import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { saksopplysningerOperations } from "../../ducks/saksopplysninger";
 import { behandlingsTemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  muligeSakstemaer: fagsakSelectors.SakstyperSelector(state),
+  muligeSakstyper: fagsakSelectors.SakstemaerSelector(state),
   muligeBehandlingstyper: behandlingstypeSelectors.MuligeBehandlingstyperSelector(state),
   muligeBehandlingstema: behandlingstemaSelectors.MuligeBehandlingstemaSelector(state),
   muligeBehandlingsstatuser: behandlingsstatusSelectors.MuligeBehandlingsstatusSelector(state),
@@ -71,6 +73,8 @@ function EndreBehandlingModal({
   hentBehandling,
   hentBehandlingsgrunnlag,
   hentFagsaker,
+  muligeSakstemaer,
+  muligeSakstyper,
   muligeBehandlingstyper,
   muligeBehandlingstema,
   muligeBehandlingsstatuser,
@@ -94,7 +98,6 @@ function EndreBehandlingModal({
     KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingsstatus)
   );
   const [endringerErBegrenset, setEndringerErBegrenset] = useState(false);
-  const { muligeSakstemaer, muligeSakstyper } = useSelector((state: any) => state.fagsaker.data);
   useEffect(() => {
     if (behandlingsTemaMedBegrensetRettigheter.includes(behandlingstema)) {
       setEndringerErBegrenset(true);
