@@ -30,8 +30,8 @@ import { useFeatureToggle } from "../../featuretoggle";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  muligeSakstemaer: fagsakSelectors.SakstyperSelector(state),
-  muligeSakstyper: fagsakSelectors.SakstemaerSelector(state),
+  muligeSakstemaer: fagsakSelectors.SakstemaerSelector(state),
+  muligeSakstyper: fagsakSelectors.SakstyperSelector(state),
   muligeBehandlingstyper: behandlingstypeSelectors.MuligeBehandlingstyperSelector(state),
   muligeBehandlingstema: behandlingstemaSelectors.MuligeBehandlingstemaSelector(state),
   muligeBehandlingsstatuser: behandlingsstatusSelectors.MuligeBehandlingsstatusSelector(state),
@@ -89,12 +89,12 @@ function EndreBehandlingModal({
 }: EndreBehandlingModalProps) {
   const [generellFeil, setGenerellFeil] = useState("");
   const [behandlingEndret, setBehandlingEndret] = useState(false);
-  const [sakstema, setSakstema] = useState(fagsak.sakstema.kode);
-  const [sakstype, setSakstype] = useState(fagsak.sakstype.kode);
-  const [behandlingstema, setBehandlingstema] = useState(oppsummering.behandlingstema.kode);
-  const [behandlingstype, setBehandlingstype] = useState(oppsummering.behandlingstype.kode);
+  const [sakstema, setSakstema] = useState(fagsak.sakstema?.kode);
+  const [sakstype, setSakstype] = useState(fagsak.sakstype?.kode);
+  const [behandlingstema, setBehandlingstema] = useState(oppsummering.behandlingstema?.kode);
+  const [behandlingstype, setBehandlingstype] = useState(oppsummering.behandlingstype?.kode);
   const [behandlingsfrist, setBehandlingsfrist] = useState(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
-  const [behandlingsstatus, setBehandlingsstatus] = useState(oppsummering.behandlingsstatus.kode);
+  const [behandlingsstatus, setBehandlingsstatus] = useState(oppsummering.behandlingsstatus?.kode);
   const [endringerErBegrenset, setEndringerErBegrenset] = useState(false);
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
 
@@ -172,24 +172,24 @@ function EndreBehandlingModal({
       <div className="dialogboks">
         <div>
           <div className="innhold">
+            <Mui.KodeTermSelect
+              onChange={(e) => setSakstype(e.target.value)}
+              label="Sakstype"
+              value={sakstype}
+              koder={muligeVerdierPlussValgt(fagsak.sakstype, muligeSakstyper)}
+              disableForsteValg
+              redigerbart={!endringerErBegrenset}
+            />
             {sakstemaToggle === "enabled" && (
               <Mui.KodeTermSelect
-                onChange={(e) => setSakstype(e.target.value)}
-                label="Sakstype"
-                value={sakstype}
-                koder={muligeVerdierPlussValgt(fagsak.sakstype, muligeSakstyper)}
+                onChange={(e) => setSakstema(e.target.value)}
+                label="Sakstema"
+                value={sakstema}
+                koder={muligeVerdierPlussValgt(fagsak.sakstema, muligeSakstemaer)}
                 disableForsteValg
                 redigerbart={!endringerErBegrenset}
               />
             )}
-            <Mui.KodeTermSelect
-              onChange={(e) => setSakstema(e.target.value)}
-              label="Sakstema"
-              value={sakstema}
-              koder={muligeVerdierPlussValgt(fagsak.sakstema, muligeSakstemaer)}
-              disableForsteValg
-              redigerbart={!endringerErBegrenset}
-            />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"

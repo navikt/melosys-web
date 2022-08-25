@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -50,12 +50,9 @@ const Oppsummering = (props: OppsummeringProps) => {
   } = props;
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
-  const [disableEndreKnapp, setDisableEndreKnapp] = useState(false);
-  const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
-  useEffect(() => {
-    setDisableEndreKnapp(behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode));
-  }, [oppsummering.behandlingsstatus]);
+  const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode);
+  const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
   if (!oppsummering || !fagsak?.sakstype) return <div />;
 
