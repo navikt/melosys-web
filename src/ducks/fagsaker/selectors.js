@@ -25,12 +25,13 @@ export const SakstemaSelector = createSelector(FagsakSelector, (fagsak) => fagsa
 export const SakstemaKodeSelector = createSelector(SakstemaSelector, (sakstema) => (sakstema ? sakstema.kode : ""));
 
 export const SakstemaerSelector = createSelector(
-  (state) => (state.fagsaker.data.muligeSakstemaer ? state.fagsaker.data.muligeSakstemaer : []),
-  (muligeSakstemaer) => muligeSakstemaer
+  (state) => FagsakSelector(state),
+  (fagsak) => (fagsak.muligeSakstemaer ? fagsak.muligeSakstemaer : [])
 );
+
 export const SakstyperSelector = createSelector(
-  (state) => (state.fagsaker.data.muligeSakstyper ? state.fagsaker.data.muligeSakstyper : []),
-  (muligeSakstyper) => muligeSakstyper
+  (state) => FagsakSelector(state),
+  (fagsak) => (fagsak.muligeSakstyper ? fagsak.muligeSakstyper : [])
 );
 
 export const HovedpartRolleSelector = createSelector(

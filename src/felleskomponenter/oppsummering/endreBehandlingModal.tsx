@@ -8,7 +8,6 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
 import * as Mui from "../ui";
-import * as KV from "../../kodeverk";
 import * as Api from "../../services/api";
 import * as Nav from "../../navFrontend";
 import * as Routing from "../../routing";
@@ -27,6 +26,7 @@ import "./endreBehandlingModal.css";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { saksopplysningerOperations } from "../../ducks/saksopplysninger";
 import { behandlingsTemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
+import { useFeatureToggle } from "../../featuretoggle";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -89,15 +89,15 @@ function EndreBehandlingModal({
 }: EndreBehandlingModalProps) {
   const [generellFeil, setGenerellFeil] = useState("");
   const [behandlingEndret, setBehandlingEndret] = useState(false);
-  const [sakstema, setSakstema] = useState(KV.objektTilKodeUtenFeilmelding(oppsummering.sakstema));
-  const [sakstype, setSakstype] = useState(KV.objektTilKodeUtenFeilmelding(oppsummering.sakstype));
-  const [behandlingstema, setBehandlingstema] = useState(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstema));
-  const [behandlingstype, setBehandlingstype] = useState(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstype));
+  const [sakstema, setSakstema] = useState(fagsak.sakstema.kode);
+  const [sakstype, setSakstype] = useState(fagsak.sakstype.kode);
+  const [behandlingstema, setBehandlingstema] = useState(oppsummering.behandlingstema.kode);
+  const [behandlingstype, setBehandlingstype] = useState(oppsummering.behandlingstype.kode);
   const [behandlingsfrist, setBehandlingsfrist] = useState(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
-  const [behandlingsstatus, setBehandlingsstatus] = useState(
-    KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingsstatus)
-  );
+  const [behandlingsstatus, setBehandlingsstatus] = useState(oppsummering.behandlingsstatus.kode);
   const [endringerErBegrenset, setEndringerErBegrenset] = useState(false);
+  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+
   useEffect(() => {
     if (behandlingsTemaMedBegrensetRettigheter.includes(behandlingstema)) {
       setEndringerErBegrenset(true);
@@ -116,9 +116,9 @@ function EndreBehandlingModal({
       setBehandlingEndret(false);
       setSakstema(fagsak.sakstema?.kode);
       setSakstype(fagsak.sakstype?.kode);
-      setBehandlingstema(oppsummering.behandlingstema.kode);
-      setBehandlingstype(oppsummering.behandlingstype.kode);
-      setBehandlingsstatus(oppsummering.behandlingsstatus.kode);
+      setBehandlingstema(oppsummering.behandlingstema?.kode);
+      setBehandlingstype(oppsummering.behandlingstype?.kode);
+      setBehandlingsstatus(oppsummering.behandlingsstatus?.kode);
       setBehandlingsfrist(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
     }
   }, [skalViseModal]);
@@ -144,7 +144,7 @@ function EndreBehandlingModal({
       .then(() => {
         setBehandlingEndret(true);
         hentBehandling(behandlingID);
-        hentFagsaker(fagsak.saksnummer);
+        hentFagsaker(saksnummer);
         hentBehandlingsgrunnlag(behandlingID);
         const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
         if (nyLink && nyLink !== location.pathname + location.search) tilAnnenSide(nyLink);
@@ -172,14 +172,16 @@ function EndreBehandlingModal({
       <div className="dialogboks">
         <div>
           <div className="innhold">
-            <Mui.KodeTermSelect
-              onChange={(e) => setSakstype(e.target.value)}
-              label="Sakstype"
-              value={sakstype}
-              koder={muligeVerdierPlussValgt(fagsak.sakstype, muligeSakstyper)}
-              disableForsteValg
-              redigerbart={!endringerErBegrenset}
-            />
+            {sakstemaToggle === "enabled" && (
+              <Mui.KodeTermSelect
+                onChange={(e) => setSakstype(e.target.value)}
+                label="Sakstype"
+                value={sakstype}
+                koder={muligeVerdierPlussValgt(fagsak.sakstype, muligeSakstyper)}
+                disableForsteValg
+                redigerbart={!endringerErBegrenset}
+              />
+            )}
             <Mui.KodeTermSelect
               onChange={(e) => setSakstema(e.target.value)}
               label="Sakstema"
