@@ -25,7 +25,11 @@ import Knapperad from "../knapperad";
 import "./endreBehandlingModal.css";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { saksopplysningerOperations } from "../../ducks/saksopplysninger";
-import { behandlingsTemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
+import {
+  erEOS,
+  standardBehandlingsTemaMedBegrensetRettigheter,
+  utvidetBehandlingsTemaMedBegrensetRettigheter,
+} from "../../melosyskodeverk/kodekombinasjoner";
 import { useFeatureToggle } from "../../featuretoggle";
 import { resetFlyt } from "../../services/modules/trygdeavtale/flyt";
 
@@ -100,10 +104,12 @@ function EndreBehandlingModal({
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
 
   useEffect(() => {
-    if (behandlingsTemaMedBegrensetRettigheter.includes(behandlingstema)) {
-      setEndringerErBegrenset(true);
-    }
-  }, [behandlingstema]);
+    const begrensetEndringer = erEOS(sakstype)
+      ? utvidetBehandlingsTemaMedBegrensetRettigheter.includes(behandlingstema)
+      : standardBehandlingsTemaMedBegrensetRettigheter.includes(behandlingstema);
+
+    setEndringerErBegrenset(begrensetEndringer);
+  }, [behandlingstema, sakstype]);
 
   useEffect(() => {
     if (skalViseModal) {
