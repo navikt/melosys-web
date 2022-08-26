@@ -13,6 +13,13 @@ server {
     proxy_pass "${APP_URL_MELOSYS}/api/";
   }
 
+  location /melosys/api/ {
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Server $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_pass "${APP_URL_MELOSYS}/api/";
+  }
+
   location  /trygdeavtale-flyt/ {
     proxy_set_header X-Forwarded-Host $host;
     proxy_set_header X-Forwarded-Server $host;
