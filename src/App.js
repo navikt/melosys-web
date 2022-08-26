@@ -29,6 +29,8 @@ export function App({ loadInitialData, children }) {
   }
 
   if (auth.error) {
+    auth.clearStaleState();
+    auth.signinRedirect();
     return (
       <>
         <div>Det oppsto en teknisk feil. Prøv å last siden inn på nytt.</div>
