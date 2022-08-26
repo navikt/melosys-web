@@ -4,5 +4,6 @@
   "APP_URL_TRYGDEAVTALE": "http://melosys-trygdeavtale.teammelosys",
   "APP_URL_MELOSYS": "http://melosys-q1.teammelosys",
   "INGRESS": "https://melosys-q1.dev.intern.nav.no",
-  "ENVIRONMENT": "q1"
+  "ENVIRONMENT": "q1",
+  "OIDC_HOST_URL": "https://isso-q.adeo.no"
 }

@@ -6,5 +6,6 @@
   "INGRESS": [
     "https://melosys.dev.intern.nav.no",
     "https://melosys.q2.intern.nav.no"
-  ]
+  ],
+  "OIDC_HOST_URL": "https://isso-q.adeo.no"
 }
