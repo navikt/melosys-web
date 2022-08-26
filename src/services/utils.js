@@ -1,4 +1,33 @@
+import { User } from "oidc-client-ts";
 import sjekkStatuskode from "./sjekkStatuskode";
+
+const originalFetch = window.fetch;
+
+export const getUser = () => {
+  const oidcStorage = localStorage.getItem(
+    `oidc.user:${process.env.REACT_APP_AUTHORITY_URL}:${process.env.REACT_APP_AUTHORITY_CLIENT_ID}`
+  );
+
+  if (!oidcStorage) {
+    return null;
+  }
+
+  return User.fromStorageString(oidcStorage);
+};
+
+export const hentAuthorizationHeader = () => (getUser() ? { Authorization: `Bearer ${getUser().id_token}` } : {});
+
+export const setOidcInterceptor = () => {
+  window.fetch = async (...args) => {
+    const [url, options] = args;
+    const oidcReplacedUrl = url.replace(
+      process.env.REACT_APP_OIDC_HOST_URL,
+      `${window.location.protocol}//${window.location.host}`
+    );
+
+    return originalFetch(oidcReplacedUrl, options);
+  };
+};
 
 export const STATUS = {
   NOT_STARTED: "NOT_STARTED",
@@ -117,6 +146,7 @@ const cachedFetch = async (url, cacheDurationSec) => {
     // Pragma: 'no-cache',
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
+    ...hentAuthorizationHeader(),
   };
 
   const fetchConfig = {
@@ -199,7 +229,6 @@ if (config.headers) {
   }
 }
 */
-
   const fetchResponse = await fetch(url, config); // eslint-disable-line no-undef
 
   const sjekketResponse = await sjekkStatuskode(fetchResponse);
@@ -220,6 +249,7 @@ const methodToJson = (method, url, data, extendResponse = false, accept = "appli
     // Pragma: 'no-cache',
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
+    ...hentAuthorizationHeader(),
   };
 
   const fetchConfig = {
@@ -251,6 +281,7 @@ const methodToText = (method, url, data) => {
     // Pragma: 'no-cache',
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
+    ...hentAuthorizationHeader(),
   };
 
   const fetchConfig = {
