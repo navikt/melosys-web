@@ -1,5 +1,7 @@
 import React from "react";
 import PT from "prop-types";
+import { apnePdfINyFane } from "../../services/utils";
+import * as Nav from "../../navFrontend";
 
 export const lagPdfUrl = (journalpostID: string, dokumentID: string) =>
   `/api/dokumenter/pdf/${journalpostID}/${dokumentID}`;
@@ -11,9 +13,9 @@ interface PdfLinkProps {
 }
 
 const PdfLink = ({ journalpostID, dokumentID, tittel }: PdfLinkProps) => (
-  <a href={lagPdfUrl(journalpostID, dokumentID)} rel="noopener noreferrer" target="_blank">
+  <Nav.Lenker href="#" onClick={() => apnePdfINyFane(lagPdfUrl(journalpostID, dokumentID))} target="_blank">
     {tittel}
-  </a>
+  </Nav.Lenker>
 );
 
 PdfLink.propTypes = {

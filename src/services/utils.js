@@ -318,8 +318,17 @@ export const putAsJson = (url, data, extendResponse = false) => methodToJson("PU
 export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) =>
   methodToJson("POST", url, data, extendResponse, "application/pdf, application/json");
 
-export const getAsPDF = (url, extendResponse = false) =>
-  methodToJson("GET", url, null, extendResponse, "application/pdf, application/json");
+export const fetchAsPDFBlob = (url) =>
+  fetch(url, { headers: hentAuthorizationHeader() })
+    .then((response) => response.blob())
+    .then((blob) => new Blob([blob], { type: "application/pdf" }));
+
+export const apnePdfINyFane = async (url) => {
+  fetchAsPDFBlob(url).then((pdfBlob) => {
+    const _url = window.URL.createObjectURL(pdfBlob);
+    window.open(_url, "_blank")?.focus();
+  });
+};
 
 export function doThenDispatch(api, { OK, FEILET, PENDING }, callbacks = {}) {
   return async (dispatch, getState) => {
