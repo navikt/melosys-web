@@ -27,6 +27,7 @@ import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { saksopplysningerOperations } from "../../ducks/saksopplysninger";
 import { behandlingsTemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
 import { useFeatureToggle } from "../../featuretoggle";
+import { resetFlyt } from "../../services/modules/trygdeavtale/flyt";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -141,7 +142,7 @@ function EndreBehandlingModal({
       Api.Behandlinger.behandling.endreBehandling(behandlingID, reqBehandling),
       Api.Fagsaker.fagsak.endreFagsak(saksnummer, reqFagsak),
     ])
-      .then(() => {
+      .then(async () => {
         setBehandlingEndret(true);
         hentBehandling(behandlingID);
         hentFagsaker(saksnummer);
@@ -149,17 +150,20 @@ function EndreBehandlingModal({
         const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
         if (nyLink && nyLink !== location.pathname + location.search) tilAnnenSide(nyLink);
         setTimeout(lukkModal, 2000);
+        restart();
       })
       .catch(() => {
         setGenerellFeil(
           "Behandling ble ikke endret og oppdatert. Prøv igjen, eller se driftsmeldinger for mer informasjon"
         );
         setTimeout(lukkModal, 5000);
-      })
-      .finally(async () => {
-        await oppfriskSaksopplysninger(behandlingID);
-        window.location.reload();
       });
+  };
+
+  const restart = async () => {
+    await oppfriskSaksopplysninger(behandlingID);
+    await resetFlyt(behandlingID);
+    window.location.reload();
   };
 
   const muligeVerdierPlussValgt = (valgtVerdi: KTObject, muligeVerdier: KTObject[] = []) => {
