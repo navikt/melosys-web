@@ -30,10 +30,10 @@ export function App({ loadInitialData, children }) {
 
   if (auth.error) {
     return (
-      <div>
-        Det oppsto en teknisk feil. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger.{" "}
-        {auth.error.message}
-      </div>
+      <>
+        <div>Det oppsto en teknisk feil. Prøv å last siden inn på nytt.</div>
+        <div>Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger. {auth.error.message}</div>
+      </>
     );
   }
   if (auth.isAuthenticated) {
