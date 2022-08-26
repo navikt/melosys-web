@@ -4,6 +4,7 @@ import * as KV from "../../kodeverk";
 
 export interface PlukkOppgaveReqDto {
   sakstype: string;
+  sakstema: string;
   behandlingstema: string;
 }
 
