@@ -40,7 +40,7 @@ function LenkeListeVelger(props) {
     <Nav.Row>
       <Nav.Column xs="9">
         {!visListevelger && (
-          <Nav.Lenker href="#" onClick={onClick} target="_blank">
+          <Nav.Lenker href="#" onClick={onClick}>
             {dokumentTittel}
           </Nav.Lenker>
         )}
