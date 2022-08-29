@@ -2,13 +2,24 @@ import sjekkStatuskode from "./sjekkStatuskode";
 
 const originalFetch = window.fetch;
 
-export const hentAuthorizationHeader = () => ({
-  Authorization: `Bearer Ikke implementert Azure Token enda.`,
-});
-
-export const setOidcInterceptor = () => {
+export const setTokenInterceptor = (getAccessToken, accounts) => {
   window.fetch = async (...args) => {
     const [url, options] = args;
+    console.log("url ", url);
+    if (!options.headers) {
+      options.headers = {};
+    }
+    if (accounts[0] !== undefined && !url.includes("microsoft")) {
+      const accessToken = await getAccessToken();
+
+      if (options.headers instanceof Headers) {
+        options.headers.append("Authorization", `Bearer ${accessToken}`);
+      } else {
+        console.log("Ikke instance of Headers");
+        options.headers = { ...options.headers, Authorization: `Bearer ${accessToken}` };
+      }
+    }
+    console.log("Ok, vi har token...", options.headers);
 
     return originalFetch(url, options);
   };
@@ -131,7 +142,6 @@ const cachedFetch = async (url, cacheDurationSec) => {
     // Pragma: 'no-cache',
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
-    ...hentAuthorizationHeader(),
   };
 
   const fetchConfig = {
@@ -234,7 +244,6 @@ const methodToJson = (method, url, data, extendResponse = false, accept = "appli
     // Pragma: 'no-cache',
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
-    ...hentAuthorizationHeader(),
   };
 
   const fetchConfig = {
@@ -266,7 +275,6 @@ const methodToText = (method, url, data) => {
     // Pragma: 'no-cache',
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
-    ...hentAuthorizationHeader(),
   };
 
   const fetchConfig = {
@@ -304,7 +312,7 @@ export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) =
   methodToJson("POST", url, data, extendResponse, "application/pdf, application/json");
 
 export const fetchAsPDFBlob = (url) =>
-  fetch(url, { headers: hentAuthorizationHeader() })
+  fetch(url)
     .then((response) => response.blob())
     .then((blob) => new Blob([blob], { type: "application/pdf" }));
 

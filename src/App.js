@@ -1,14 +1,18 @@
 import React from "react";
 import PT from "prop-types";
-
+import { MsalProvider } from "@azure/msal-react";
+import { PublicClientApplication } from "@azure/msal-browser";
 import Rammeverk from "./sider/rammeverk";
+import { msalConfig } from "./auth/authConfig";
 
 export function App({ loadInitialData, children }) {
-  loadInitialData();
+  const pca = new PublicClientApplication(msalConfig);
 
   return (
     <div className="App">
-      <Rammeverk>{children}</Rammeverk>
+      <MsalProvider instance={pca}>
+        <Rammeverk loadInitialData={loadInitialData}>{children}</Rammeverk>
+      </MsalProvider>
     </div>
   );
 }
