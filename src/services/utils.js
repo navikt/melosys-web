@@ -2,8 +2,9 @@ import sjekkStatuskode from "./sjekkStatuskode";
 
 const originalFetch = window.fetch;
 
-export const hentAuthorizationHeader = () =>
-  getUser() ? { Authorization: `Bearer Ikke implementert Azure Token enda.` } : {};
+export const hentAuthorizationHeader = () => {
+  Authorization: `Bearer Ikke implementert Azure Token enda.`;
+};
 
 export const setOidcInterceptor = () => {
   window.fetch = async (...args) => {

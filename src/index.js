@@ -16,6 +16,7 @@ import ErrorBoundary from "./felleskomponenter/ErrorBoundary";
 import { unregister } from "./registerServiceWorker";
 import { FellesHandlersProvider } from "./contexts";
 import Modals from "./modals";
+import { apolloClient } from "./graphql";
 import { setOidcInterceptor } from "./services/utils";
 
 const SideLoadingFailMessage = "Beklager, kunne ikke laste inn siden.";
