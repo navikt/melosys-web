@@ -42,5 +42,3 @@ spec:
       value: {{APP_URL_MELOSYS}}
     - name: APP_URL_TRYGDEAVTALE
       value: {{APP_URL_TRYGDEAVTALE}}
-    - name: OIDC_HOST_URL
-      value: {{ OIDC_HOST_URL }}

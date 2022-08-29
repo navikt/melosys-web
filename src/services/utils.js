@@ -1,31 +1,15 @@
-import { User } from "oidc-client-ts";
 import sjekkStatuskode from "./sjekkStatuskode";
 
 const originalFetch = window.fetch;
 
-export const getUser = () => {
-  const oidcStorage = localStorage.getItem(
-    `oidc.user:${process.env.REACT_APP_AUTHORITY_URL}:${process.env.REACT_APP_AUTHORITY_CLIENT_ID}`
-  );
-
-  if (!oidcStorage) {
-    return null;
-  }
-
-  return User.fromStorageString(oidcStorage);
-};
-
-export const hentAuthorizationHeader = () => (getUser() ? { Authorization: `Bearer ${getUser().id_token}` } : {});
+export const hentAuthorizationHeader = () =>
+  getUser() ? { Authorization: `Bearer Ikke implementert Azure Token enda.` } : {};
 
 export const setOidcInterceptor = () => {
   window.fetch = async (...args) => {
     const [url, options] = args;
-    const oidcReplacedUrl = url.replace(
-      process.env.REACT_APP_OIDC_HOST_URL,
-      `${window.location.protocol}//${window.location.host}`
-    );
 
-    return originalFetch(oidcReplacedUrl, options);
+    return originalFetch(url, options);
   };
 };
 
