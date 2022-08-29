@@ -5,6 +5,7 @@
   "APP_URL_MELOSYS": "http://melosys.teammelosys",
   "INGRESS": [
     "https://melosys.dev.intern.nav.no",
-    "https://melosys.q2.intern.nav.no"
-  ]
+    "https://melosys-q2.dev.intern.nav.no"
+  ],
+  "OIDC_HOST_URL": "https://isso-q.adeo.no"
 }

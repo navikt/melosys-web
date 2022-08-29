@@ -3,9 +3,10 @@ import PT from "prop-types";
 import classNames from "classnames";
 import * as MPT from "../../proptypes";
 import { dokumenterOperations } from "../../ducks/dokumenter";
-import * as Nav from "../../navFrontend";
 
+import * as Nav from "../../navFrontend";
 import "./pdfLenkeListe.css";
+import { apnePdfINyFane } from "../../services/utils";
 
 const uuid = require("uuid/v4");
 
@@ -51,7 +52,7 @@ class PdfLenkeListe extends Component {
     }
 
     if (fileURL) {
-      window.open(fileURL);
+      apnePdfINyFane(fileURL);
       this.setState({ feilmelding: false });
     }
   };

@@ -19,7 +19,8 @@ export default function getSdkApollo<C>(client: ApolloClient<C>) {
     doc: DocumentNode,
     variables: V,
     options?: ApolloRequesterOptions<V, R>
-  ): Promise<R> => {
+  ): // @ts-ignore
+  Promise<R> => {
     // Valid document should contain *single* query or mutation unless it's has a fragment
     if (
       doc.definitions.filter((d) => d.kind === "OperationDefinition" && validDocDefOps.includes(d.operation)).length !==

@@ -14,7 +14,7 @@ function LenkeListeVelger(props) {
     feltNavn,
     placeholder,
     muligeValg,
-    linkTo,
+    onClick,
     dokumentTittel,
     undoTittel,
     updateTittel,
@@ -40,14 +40,14 @@ function LenkeListeVelger(props) {
     <Nav.Row>
       <Nav.Column xs="9">
         {!visListevelger && (
-          <Nav.Lenker href={linkTo} target="_blank">
+          <Nav.Lenker href="#" onClick={onClick}>
             {dokumentTittel}
           </Nav.Lenker>
         )}
       </Nav.Column>
       <Nav.Column xs="3">
         {!visListevelger && (
-          <Nav.Lenker onClick={tittelEndres}>
+          <Nav.Lenker href="#" onClick={tittelEndres}>
             <Ikoner.Pencil />
             <span>&nbsp;Endre tittel</span>
           </Nav.Lenker>
@@ -73,7 +73,7 @@ function LenkeListeVelger(props) {
 
 LenkeListeVelger.propTypes = {
   feltNavn: PT.string.isRequired,
-  linkTo: PT.string.isRequired,
+  onClick: PT.func.isRequired,
   dokumentTittel: PT.string.isRequired,
   undoTittel: PT.string,
   updateTittel: PT.func.isRequired,

@@ -6,7 +6,9 @@ metadata:
   labels:
     team: teammelosys
   annotations:
-    nais.io/security-does-not-matter: "true"
+    nais.io/read-only-file-system: "false"
+    nais.io/run-as-user: "1069"
+    nais.io/run-as-group: "1069"
 spec:
   image: {{image}}
   port: 3000
@@ -40,3 +42,5 @@ spec:
       value: {{APP_URL_MELOSYS}}
     - name: APP_URL_TRYGDEAVTALE
       value: {{APP_URL_TRYGDEAVTALE}}
+    - name: OIDC_HOST_URL
+      value: {{ OIDC_HOST_URL }}
