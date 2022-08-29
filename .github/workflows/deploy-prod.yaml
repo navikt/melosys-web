@@ -13,13 +13,6 @@ jobs:
           IMAGE=docker.pkg.github.com/$GITHUB_REPOSITORY/$APPLICATION:$GITHUB_SHA
           echo "IMAGE=${IMAGE}" >> $GITHUB_ENV
           echo $IMAGE
-      - name: Deploy redis
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-fss
-          RESOURCE: nais/redis.yaml
-          VAR: APP_NAME=melosys-web-redis
       - name: Deploy
         uses: nais/deploy/actions/deploy@v1
         env:
