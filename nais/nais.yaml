@@ -33,8 +33,7 @@ spec:
       memory: 256Mi
   vault:
     enabled: true
-  ingresses:
-    - {{INGRESS}}
+  ingresses: {{INGRESS}}
   env:
     - name: REDIS_HOST
       value: {{REDIS_APP_NAME}}.teammelosys.svc.nais.local
