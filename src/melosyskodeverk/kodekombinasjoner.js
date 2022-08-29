@@ -38,6 +38,12 @@ export const erEOS = (sakstype) => {
   return sakstype === MKV.Koder.sakstyper.EU_EOS;
 };
 
+export const erBehandlingstemaMedBegrensetRettigheter = (behandlingstema, sakstype) => {
+  return erEOS(sakstype)
+    ? utvidetBehandlingsTemaMedBegrensetRettigheter.includes(behandlingstema)
+    : standardBehandlingsTemaMedBegrensetRettigheter.includes(behandlingstema);
+};
+
 const kodeverkComparator = ({ kode: k1 }, { kode: k2 }) => k1.localeCompare(k2);
 
 export const unntaksbestemmelser = Utils._uniqBy(

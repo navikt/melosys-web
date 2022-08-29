@@ -25,13 +25,9 @@ import Knapperad from "../knapperad";
 import "./endreBehandlingModal.css";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { saksopplysningerOperations } from "../../ducks/saksopplysninger";
-import {
-  erEOS,
-  standardBehandlingsTemaMedBegrensetRettigheter,
-  utvidetBehandlingsTemaMedBegrensetRettigheter,
-} from "../../melosyskodeverk/kodekombinasjoner";
 import { useFeatureToggle } from "../../featuretoggle";
 import { resetFlyt } from "../../services/modules/trygdeavtale/flyt";
+import { erBehandlingstemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -100,16 +96,7 @@ function EndreBehandlingModal({
   const [behandlingstype, setBehandlingstype] = useState(oppsummering.behandlingstype?.kode);
   const [behandlingsfrist, setBehandlingsfrist] = useState(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
   const [behandlingsstatus, setBehandlingsstatus] = useState(oppsummering.behandlingsstatus?.kode);
-  const [endringerErBegrenset, setEndringerErBegrenset] = useState(false);
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
-
-  useEffect(() => {
-    const begrensetEndringer = erEOS(sakstype)
-      ? utvidetBehandlingsTemaMedBegrensetRettigheter.includes(behandlingstema)
-      : standardBehandlingsTemaMedBegrensetRettigheter.includes(behandlingstema);
-
-    setEndringerErBegrenset(begrensetEndringer);
-  }, [behandlingstema, sakstype]);
 
   useEffect(() => {
     if (skalViseModal) {
@@ -177,6 +164,8 @@ function EndreBehandlingModal({
   };
 
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
+  const endringerErBegrenset = erBehandlingstemaMedBegrensetRettigheter(oppsummering.behandlingstema, fagsak.sakstype);
+
   const renderEndreBehandling = () => {
     return (
       <div className="dialogboks">
