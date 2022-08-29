@@ -214,9 +214,15 @@ export const PeriodeSelector = createSelector(
   (behandlingsgrunnlag) => behandlingsgrunnlag.periode || {}
 );
 
-export const PeriodeFomSelector = createSelector(PeriodeSelector, (soknadsperiode) => soknadsperiode.fom);
+export const PeriodeFomSelector = createSelector(
+  (state) => PeriodeSelector(state),
+  (soknadsperiode) => soknadsperiode.fom
+);
 
-export const PeriodeTomSelector = createSelector(PeriodeSelector, (soknadsperiode) => soknadsperiode.tom);
+export const PeriodeTomSelector = createSelector(
+  (state) => PeriodeSelector(state),
+  (soknadsperiode) => soknadsperiode.tom
+);
 
 export const PersonOpplysningerSelector = createSelector(
   (state) => BehandlingsgrunnlagDataSelector(state),

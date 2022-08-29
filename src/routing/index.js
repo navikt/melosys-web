@@ -1,5 +1,5 @@
 import Routing from "./routing";
-import { lagUrl, nyFane } from "./url";
+import { lagUrl, nyFane, lagUrlNy } from "./url";
 
 export default Routing;
-export { lagUrl, nyFane };
+export { lagUrl, nyFane, lagUrlNy };

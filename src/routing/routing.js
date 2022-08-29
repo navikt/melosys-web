@@ -36,6 +36,13 @@ const TrygdeavtaleSaksbehandlingLoadable = loadable(
     fallback: SideLoadingStatus,
   }
 );
+
+const TomFlytBehandlingLoadable = loadable(
+  () => import(/* webpackChunkName: "tom-flyt-behandling" */ "../sider/tomFlyt/behandling"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
 const JournalforingLoadable = loadable(() => import(/* webpackChunkName: "journalføring" */ "../sider/journalforing"), {
   fallback: SideLoadingStatus,
 });
@@ -102,6 +109,10 @@ const Routing = () => (
         <Route
           path={`/${TRYGDEAVTALE}/saksbehandling/:snr`}
           render={(props) => <TrygdeavtaleSaksbehandlingLoadable {...props} {...fellesHandlers} />}
+        />
+        <Route
+          path="/:sakstype/behandling/:snr"
+          render={(props) => <TomFlytBehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route
           path="/journalforing/:journalpostID/:oppgaveID"

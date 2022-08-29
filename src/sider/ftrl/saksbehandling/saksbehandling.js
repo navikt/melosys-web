@@ -16,6 +16,7 @@ import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
+import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
@@ -205,9 +206,7 @@ const Saksbehandling = ({
                     )}
                   </>
                 ) : (
-                  <Nav.AlertStripeInfo className="infostripe">
-                    Behandlingen er journalført på virksomhet
-                  </Nav.AlertStripeInfo>
+                  <VirksomhetMelding />
                 )}
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>

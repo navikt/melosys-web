@@ -14,6 +14,7 @@ import SideDialog, { fanerUtenBucOgSed, defaultFaner } from "../../../felleskomp
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
+import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingsresultatOperations } from "../../../ducks/behandlingsresultat";
@@ -200,9 +201,7 @@ class Saksbehandling extends Component {
                       startOgVisOppfriskModal={startOgVisOppfriskModal}
                     />
                   ) : (
-                    <Nav.AlertStripeInfo className="infostripe">
-                      Behandlingen er journalført på virksomhet
-                    </Nav.AlertStripeInfo>
+                    <VirksomhetMelding />
                   )}
                 </Nav.Column>
                 <Nav.Column xs="5">
