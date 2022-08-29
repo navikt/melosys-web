@@ -57,6 +57,7 @@ const gyldigeBehandlingstemaMedlemskapLovvalgEUEØS = [
   MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
   MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
   MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+  MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
   MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
   MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
   MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
