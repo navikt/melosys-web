@@ -46,10 +46,10 @@ spec:
           - id: {{GROUP_MELOSYS_INNLOGGING}}
       allowAllUsers: false
       singlePageApplication: true
-      sidecar:
-        enabled: true
-        autoLogin: false
-        errorPath: "/error"
+    sidecar:
+      enabled: true
+      autoLogin: true
+      errorPath: "/error"
   accessPolicy:
     outbound:
       rules:
