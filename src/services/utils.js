@@ -5,7 +5,7 @@ const originalFetch = window.fetch;
 export const setTokenInterceptor = (getAccessToken, accounts) => {
   window.fetch = async (...args) => {
     const [url, options] = args;
-    console.log("url ", url);
+    console.log("url ", url); // eslint-disable-line no-console
     if (!options.headers) {
       options.headers = {};
     }
@@ -15,11 +15,11 @@ export const setTokenInterceptor = (getAccessToken, accounts) => {
       if (options.headers instanceof Headers) {
         options.headers.append("Authorization", `Bearer ${accessToken}`);
       } else {
-        console.log("Ikke instance of Headers");
+        console.log("Ikke instance of Headers"); // eslint-disable-line no-console
         options.headers = { ...options.headers, Authorization: `Bearer ${accessToken}` };
       }
     }
-    console.log("Ok, vi har token...", options.headers);
+    console.log("Ok, vi har token...", options.headers); // eslint-disable-line no-console
 
     return originalFetch(url, options);
   };

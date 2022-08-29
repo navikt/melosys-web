@@ -29,7 +29,7 @@ function Hovedside({ loadInitialData, children }) {
         return response.accessToken;
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error); // eslint-disable-line no-console
         return null;
       });
   };
