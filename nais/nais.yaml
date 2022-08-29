@@ -31,6 +31,25 @@ spec:
     requests:
       cpu: 100m
       memory: 256Mi
+  azure:
+    application:
+      enabled: true
+      tenant: {{TENANT_URL}}
+      replyURLs:
+        - {{INGRESS}}
+        - {{REPLY_URL}} # Workaround: For prod må REPLY_URL være samme som INGRESS i vars-prod.json. Dette for å ha localhost:3000 i tillegg til INGRESS i dev, men kun ha INGRESS i prod.
+      claims:
+        extra:
+          - "NAVident"
+          - "azp_name"
+        groups:
+          - id: {{GROUP_MELOSYS_INNLOGGING}}
+      allowAllUsers: false
+      singlePageApplication: true
+  accessPolicy:
+    outbound:
+      rules:
+        - application: {{APP_NAME_API}}
   vault:
     enabled: true
   ingresses:
