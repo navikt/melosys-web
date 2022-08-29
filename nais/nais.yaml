@@ -46,10 +46,15 @@ spec:
           - id: {{GROUP_MELOSYS_INNLOGGING}}
       allowAllUsers: false
       singlePageApplication: true
+      sidecar:
+        enabled: true
+        autoLogin: false
+        errorPath: "/error"
   accessPolicy:
     outbound:
       rules:
         - application: {{APP_NAME_API}}
+        - application: {{APP_NAME_OPPGAVE_API}}
   vault:
     enabled: true
   ingresses:
