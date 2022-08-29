@@ -73,7 +73,7 @@ jobs:
       - name: test
         run: npm run test
         env:
-          CI: true
+          CI: false
       - name: build
         run: |
           BRANCH_NAME=$GITHUB_REF
