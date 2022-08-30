@@ -1,4 +1,4 @@
-name: deploy-dev
+name: deploy-q2
 on:
   push:
     paths-ignore:
@@ -12,7 +12,7 @@ env:
   docker_image: docker.pkg.github.com/${{ github.repository }}/melosys-web:${{ github.sha }}
 jobs:
   build:
-    name: Build, deploy to dev, and draft release
+    name: Build, deploy to q2, and draft release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout latest code
@@ -55,7 +55,7 @@ jobs:
         run: |
           BRANCH_NAME=$GITHUB_REF
           BUILD_NUMBER="$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)"
-          npm run build:dev
+          npm run build:q2
       - name: pre-deploy
         uses: navikt/digihot-deploy/actions/pre-deploy@v2
         env:
@@ -74,7 +74,7 @@ jobs:
           CLUSTER: dev-fss
           RESOURCE: nais/redis.yaml
           VAR: APP_NAME=melosys-web-redis
-      - name: Deploy dev
+      - name: Deploy q2
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
@@ -92,7 +92,7 @@ jobs:
           SLACK_COLOR: good
           SLACK_USERNAME: Github Actions
           SLACK_ICON: https://github.com/github.png?size=48
-          SLACK_TITLE: ':clap: melosys-web ble deployet til dev :rocket:'
+          SLACK_TITLE: ':clap: melosys-web ble deployet til q2 :rocket:'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
       - name: post-deploy

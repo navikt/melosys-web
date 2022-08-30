@@ -23,6 +23,7 @@ import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 
 import "./informasjon.css";
+import { apnePdfINyFane } from "../../../services/utils";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -293,7 +294,7 @@ class Informasjon extends Component {
             feltNavn="hoveddokument.tittel"
             placeholder="(velg eller skriv inn egen tittel)"
             muligeValg={dokumenttitler}
-            linkTo={dokumentURI(journalpostID, dokumentID)}
+            onClick={() => apnePdfINyFane(dokumentURI(journalpostID, dokumentID))}
             dokumentTittel={hoveddokumentTittel}
             undoTittel={this.state.hoveddokumentTittel}
             updateTittel={() => this.oppdaterState("hoveddokumentTittel", hoveddokumentTittel)}
@@ -307,7 +308,7 @@ class Informasjon extends Component {
                 feltNavn={`vedlegg.pdf.tittel_${index}`}
                 placeholder="(velg eller skriv inn egen tittel)"
                 muligeValg={dokumenttitler}
-                linkTo={dokumentURI(journalpostID, elem.dokumentID)}
+                onClick={() => apnePdfINyFane(dokumentURI(journalpostID, elem.dokumentID))}
                 dokumentTittel={skjemaVedlegg.pdf[`tittel_${index}`]}
                 undoTittel={this.state.vedleggPdfTittler[index]}
                 updateTittel={() => this.updateVedleggTittel(index, skjemaVedlegg.pdf[`tittel_${index}`])}
