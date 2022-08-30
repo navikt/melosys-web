@@ -21,10 +21,16 @@ export const BehandlingsstatusMedSvarfrist = ({
   svarFrist,
   className,
 }: BehandlingsstatusMedSvarfristProps) => {
+  const visSvarFrist =
+    svarFrist &&
+    [
+      MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+      MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+    ].includes(behandlingsstatus?.kode);
   return (
     <div className={classNames("behandlingsstatus__behandlingsstatusMedSaksfrist", className)}>
       <Behandlingsstatus behandlingsstatus={behandlingsstatus} />
-      {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
+      {visSvarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
     </div>
   );
 };
