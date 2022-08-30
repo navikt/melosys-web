@@ -140,15 +140,10 @@ const AvsluttSak = ({
     if (
       [EU_EOS, TRYGDEAVTALE].includes(sakstype) &&
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
-      [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST].includes(behandlingstema)
+      [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, ARBEID_KUN_NORGE].includes(behandlingstema)
     )
       return true;
-    if (
-      [EU_EOS].includes(sakstype) &&
-      [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
-      [ARBEID_KUN_NORGE].includes(behandlingstema)
-    )
-      return true;
+
     return false;
   };
 
@@ -157,18 +152,12 @@ const AvsluttSak = ({
       return false;
     }
 
-    if (
-      [EU_EOS].includes(sakstype) &&
-      [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
-      [ARBEID_KUN_NORGE].includes(behandlingstema)
-    )
-      return true;
-
     return (
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
       [
         ARBEID_ETT_LAND_ØVRIG,
         ARBEID_TJENESTEPERSON_ELLER_FLY,
+        ARBEID_KUN_NORGE,
         YRKESAKTIV,
         IKKE_YRKESAKTIV,
         PENSJONIST,
