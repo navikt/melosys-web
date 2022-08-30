@@ -141,7 +141,7 @@ export const VurderingArtikkel13_x_vedtak = ({
     };
   };
 
-  const onSubmit = async (values, dispatch, props) => {
+  const onSubmit = async () => {
     setVedtakPending(true);
 
     validerBehandlingsgrunnlag()
