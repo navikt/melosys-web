@@ -23,6 +23,7 @@ const {
   IKKE_YRKESAKTIV,
   ARBEID_ETT_LAND_ØVRIG,
   ARBEID_TJENESTEPERSON_ELLER_FLY,
+  ARBEID_KUN_NORGE,
   ARBEID_NORGE_BOSATT_ANNET_LAND,
   REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
   REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
@@ -51,6 +52,7 @@ describe("MenyPanel", () => {
     IKKE_YRKESAKTIV,
     ARBEID_ETT_LAND_ØVRIG,
     ARBEID_TJENESTEPERSON_ELLER_FLY,
+    ARBEID_KUN_NORGE,
     ARBEID_NORGE_BOSATT_ANNET_LAND,
   ]).it("Viser korrekte menypunkter for behandlingstema %p", (behandlingstema) => {
     props.behandlingstema = behandlingstema;
