@@ -67,13 +67,6 @@ jobs:
           docker build --tag ${docker_image} .
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${docker_image}
-      - name: Deploy redis
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-fss
-          RESOURCE: nais/redis.yaml
-          VAR: APP_NAME=melosys-web-redis
       - name: Deploy q2
         uses: nais/deploy/actions/deploy@v1
         env:
