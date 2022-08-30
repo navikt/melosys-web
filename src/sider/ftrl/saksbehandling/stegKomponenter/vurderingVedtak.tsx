@@ -22,12 +22,14 @@ import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkod
 import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
-import { formSelectors } from "../../../../ducks/form";
-import MottakerTabell from "../../../../felleskomponenter/tabell/mottakerTabell";
-import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from "./selectors";
-import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
-import { RepresentantformValues } from "./vurderingRepresentant";
 import { kontrollOperations } from "../../../../ducks/kontroll";
+import { formSelectors } from "../../../../ducks/form";
+
+import MottakerTabell from "../../../../felleskomponenter/tabell/mottakerTabell";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
+import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from "./selectors";
+import { RepresentantformValues } from "./vurderingRepresentant";
 
 import "./vurderingVedtak.css";
 import { vedtakOperations } from "../../../../ducks/vedtak";
@@ -305,10 +307,14 @@ const VurderingVedtak = ({
 
   const soknadslandErEtAvtaleland = avtaleland[soknadsland?.toString()] !== undefined;
 
-  const innledningFritekstHjelpetekstTittel =
-    "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: Du er medlem i folketrygden fra 1. september 2022 til 31. desember 2024. Medlemskapet omfatter trygdedekning i folketrygdens helse- og pensjonsdel. Friteksten kommer her.";
-  const begrunnelseFritekstHjelpetekstTittel =
-    "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.  Eksempel: Du har opplyst at du arbeider for Equinor ASA i Brasil. Vi har lagt til grunn at du er ansatt i en virksomhet med hovedsete i Norge. Friteksten kommer her.";
+  const innledningFritekstHjelpetekst =
+    "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: \n\n" +
+    '"Du er medlem i folketrygden fra 1. september 2022 til 31. desember 2024. Medlemskapet omfatter trygdedekning i folketrygdens helse- og pensjonsdel."\n\n' +
+    "Friteksten kommer her.";
+  const begrunnelseFritekstHjelpetekst =
+    "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.  Eksempel: \n\n" +
+    '"Du har opplyst at du arbeider for Equinor ASA i Brasil. Vi har lagt til grunn at du er ansatt i en virksomhet med hovedsete i Norge."\n\n' +
+    "Friteksten kommer her.";
 
   return (
     <div className="vurderingVedtak">
@@ -370,17 +376,11 @@ const VurderingVedtak = ({
       )}
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-        Fritekst til innledning
-        <Nav.Hjelpetekst
-          tittel={innledningFritekstHjelpetekstTittel}
-          className="hjelpetekst"
-          type={Nav.PopoverOrientering.Hoyre}
-        >
-          <p>Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel:</p>
-          <p>&quot;Du er medlem i folketrygden fra 1. september 2022 til 31. desember 2024.</p>
-          <p>Medlemskapet omfatter trygdedekning i folketrygdens helse- og pensjonsdel.&quot;</p>
-          <p>Friteksten kommer her.</p>
-        </Nav.Hjelpetekst>
+        <LabelMedHjelpetekst
+          label="Fritekst til innledning"
+          hjelpetekst={innledningFritekstHjelpetekst}
+          hjelpetekstClassName="hjelpetekst"
+        />
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
         feltNavn="innledningFritekst"
@@ -390,17 +390,11 @@ const VurderingVedtak = ({
       />
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-        Fritekst til begrunnelse{" "}
-        <Nav.Hjelpetekst
-          tittel={begrunnelseFritekstHjelpetekstTittel}
-          className="hjelpetekst"
-          type={Nav.PopoverOrientering.Hoyre}
-        >
-          <p>Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen. Eksempel:</p>
-          <p>&quot;Du har opplyst at du arbeider for Equinor ASA i Brasil.</p>
-          <p>Vi har lagt til grunn at du er ansatt i en virksomhet med hovedsete i Norge.&quot;</p>
-          <p>Friteksten kommer her.</p>
-        </Nav.Hjelpetekst>
+        <LabelMedHjelpetekst
+          label="Fritekst til begrunnelse"
+          hjelpetekst={begrunnelseFritekstHjelpetekst}
+          hjelpetekstClassName="hjelpetekst"
+        />
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
         feltNavn="begrunnelseFritekst"

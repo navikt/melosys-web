@@ -11,7 +11,7 @@ import * as Utils from "../../../utils";
 import * as Api from "../../../services/api";
 import * as Mui from "../../../felleskomponenter/ui";
 
-import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../ducks/vilkar";

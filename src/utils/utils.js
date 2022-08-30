@@ -1,12 +1,5 @@
 import { isUndefined as _isUndefined } from "lodash";
 
-const byggVersjon = process.env.REACT_APP_BUILD_VERSION || "(ukjent)";
-
-export function buildinfo() {
-  return {
-    byggVersjon,
-  };
-}
 export const delay = (ms) =>
   new Promise((resolve) => {
     setTimeout(resolve, ms);

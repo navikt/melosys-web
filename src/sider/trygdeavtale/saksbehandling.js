@@ -156,7 +156,7 @@ const Saksbehandling = ({
                         tilForsiden={tilForsiden}
                       />
                     )}
-                    <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />{" "}
+                    <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
                   </>
                 ) : (
                   <Nav.AlertStripeInfo className="infostripe">

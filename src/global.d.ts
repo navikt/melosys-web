@@ -45,16 +45,6 @@ declare module "melosys-api" {
   }
 }
 
-declare module "objectpath" {
-  interface Objectpath {
-    parse: (path: string) => string[];
-    stringify: (tokens: string[]) => string;
-  }
-
-  declare const objectpath: Objectpath;
-  export default objectpath;
-}
-
 declare module "nav-frontend-grid" {
   export type ColumnWidth = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12";
 }

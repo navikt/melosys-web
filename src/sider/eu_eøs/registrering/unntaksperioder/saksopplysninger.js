@@ -91,7 +91,11 @@ const Saksopplysninger = ({
 
   React.useEffect(() => {
     if (endrePeriodeFom && endrePeriodeTom) {
-      kontrollerUnntaksperiode(behandlingID, endrePeriodeFom, endrePeriodeTom);
+      kontrollerUnntaksperiode(
+        behandlingID,
+        Utils.dato.formatterDatoTilISO(endrePeriodeFom),
+        Utils.dato.formatterDatoTilISO(endrePeriodeTom)
+      );
     }
   }, [endrePeriodeFom, endrePeriodeTom]);
 

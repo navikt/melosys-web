@@ -5,7 +5,6 @@ import PT from "prop-types";
 
 import { ReactComponent as NavLogo } from "../../../resources/images/nav.svg";
 import * as MPT from "../../../proptypes";
-import * as Utils from "../../../utils/utils";
 import * as Nav from "../../../navFrontend";
 
 import { saksbehandlerSelectors } from "../../../ducks/saksbehandler";
@@ -22,8 +21,7 @@ const Topplinje = (props) => {
     event.preventDefault();
     const { hentOppgaveOversikt, history } = props;
     const { push } = history;
-    const { byggVersjon } = Utils.buildinfo();
-    if (byggVersjon === "local" || byggVersjon === "nginx_local") {
+    if (process.env.NODE_ENV !== "production") {
       hentOppgaveOversikt();
       push("/");
       return;

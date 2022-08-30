@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import TrackVisibility from "react-on-screen";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -248,33 +247,27 @@ class Stegvelger extends Component<Props, State> {
     const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
     return (
-      <TrackVisibility partialVisibility>
-        {() => (
-          <div className="stegvelger panelSeksjon">
-            {aktuelleSteg && (
-              <div>
-                <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
-                {vedtakStegErAktivt && <Feilmeldinger feilmeldinger={feilmeldinger} />}
-                {erNyVurdering && redigerbart && inngangStegErAktivt && (
-                  <Nav.AlertStripeAdvarsel className="varselstripe">
-                    <Nav.Typo.Normaltekst className="varselstripe__overskrift">
-                      Ny behandling av sak
-                    </Nav.Typo.Normaltekst>
-                    <Nav.Typo.Normaltekst>
-                      Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens
-                      opplysninger og vurder videre behandling.
-                    </Nav.Typo.Normaltekst>
-                  </Nav.AlertStripeAdvarsel>
-                )}
-                {aktuelleSteg.map((item: AktueltSteg) => (
-                  <StegFane key={item.id} faneData={item} />
-                ))}
-              </div>
+      <div className="stegvelger panelSeksjon">
+        {aktuelleSteg && (
+          <div>
+            <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
+            {vedtakStegErAktivt && <Feilmeldinger feilmeldinger={feilmeldinger} />}
+            {erNyVurdering && redigerbart && inngangStegErAktivt && (
+              <Nav.AlertStripeAdvarsel className="varselstripe">
+                <Nav.Typo.Normaltekst className="varselstripe__overskrift">Ny behandling av sak</Nav.Typo.Normaltekst>
+                <Nav.Typo.Normaltekst>
+                  Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens
+                  opplysninger og vurder videre behandling.
+                </Nav.Typo.Normaltekst>
+              </Nav.AlertStripeAdvarsel>
             )}
-            {visBehandlingsgrunnlagFeilmeldinger && <BehandlingsgrunnlagFeilmeldinger />}
+            {aktuelleSteg.map((item: AktueltSteg) => (
+              <StegFane key={item.id} faneData={item} />
+            ))}
           </div>
         )}
-      </TrackVisibility>
+        {visBehandlingsgrunnlagFeilmeldinger && <BehandlingsgrunnlagFeilmeldinger />}
+      </div>
     );
   }
 }

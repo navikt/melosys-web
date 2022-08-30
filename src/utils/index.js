@@ -18,9 +18,8 @@ import {
   has,
   merge,
   isEqual,
+  throttle,
 } from "lodash";
-
-import throttle from "lodash.throttle";
 
 import * as adresse from "./adresse";
 import * as dato from "./dato";
@@ -32,22 +31,13 @@ import * as person from "./person";
 import * as land from "./land";
 import * as organisasjon from "./organisasjon";
 import * as feilmelding from "./feilmelding";
+import * as mediaQuery from "./mediaQuery";
 
-import {
-  buildinfo,
-  delay,
-  fn,
-  isJSON,
-  verdiSomNullable,
-  queryParamsTilObjekt,
-  erPropertyUnik,
-  finnVerdierMedKey,
-} from "./utils";
+import { delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from "./utils";
 
 const uuid = require("uuid/v4");
 
 export {
-  buildinfo,
   delay,
   fn,
   isJSON,
@@ -65,6 +55,7 @@ export {
   land,
   organisasjon,
   feilmelding,
+  mediaQuery,
   capitalize as _capitalize,
   isUndefined as _isUndefined,
   isEqual as _isEqual,

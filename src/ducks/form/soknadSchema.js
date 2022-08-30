@@ -3,7 +3,7 @@ import { array, boolean, lazy, number, object, string } from "yup";
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
-import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../melosyskodeverk";
 
 const { TIDLIGERE_ENN_FOM, SENERE_ENN_TOM, SKRIV_INN_GYLDIG_DATO, MAA_FYLLES_UT } = KV.Feilmeldinger;
 

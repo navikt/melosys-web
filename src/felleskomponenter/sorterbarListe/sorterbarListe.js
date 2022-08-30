@@ -14,7 +14,8 @@ const SorterbarListe = ({
   sortingLegend,
   sortingPath,
   radioGroupName,
-  className,
+  className = undefined,
+  ...props
 }) => {
   const defaultOrder = defaultChecked === "nyeste" ? "descending" : "ascending";
   const [sortOrder, setSortOrder] = useState(defaultOrder);
@@ -51,7 +52,7 @@ const SorterbarListe = ({
         </Nav.Fieldset>
       )}
       {sorterteElementer.map((oppgave) => (
-        <Component key={Utils._uuid()} sak={oppgave} />
+        <Component key={Utils._uuid()} sak={oppgave} {...props} />
       ))}
     </div>
   );

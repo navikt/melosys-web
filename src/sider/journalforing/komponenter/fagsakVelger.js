@@ -8,7 +8,6 @@ import KnyttTilSak from "./knyttTilSak";
 import OpprettSak, { OpprettSakTittel } from "./opprettSak";
 import MKV from "../../../melosyskodeverk";
 import { JOURNALFORING_HENSIKT } from "../../../constants";
-import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./fagsakVelger.css";
 
@@ -17,18 +16,14 @@ const {
   sakstyper,
 } = MKV.Koder;
 
-const valgbareBehandlingstyper = (sakstype, behtema, alltidNyBehandlingToggleEnabled) => {
+const valgbareBehandlingstyper = (sakstype, behtema) => {
   switch (sakstype) {
     case sakstyper.EU_EOS:
-      return MKV.KTObjects.behandlinger.behandlingstyper.filter(({ kode }) => {
-        if (alltidNyBehandlingToggleEnabled) {
-          return (
-            (behtema.kode === behandlingstema.UTSENDT_ARBEIDSTAKER && kode === behandlingstyper.ENDRET_PERIODE) ||
-            kode === behandlingstyper.NY_VURDERING
-          );
-        }
-        return kode === behandlingstyper.ENDRET_PERIODE;
-      });
+      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
+        ({ kode }) =>
+          (behtema.kode === behandlingstema.UTSENDT_ARBEIDSTAKER && kode === behandlingstyper.ENDRET_PERIODE) ||
+          kode === behandlingstyper.NY_VURDERING
+      );
     case sakstyper.TRYGDEAVTALE:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(({ kode }) => kode === behandlingstyper.NY_VURDERING);
     default:
@@ -37,7 +32,6 @@ const valgbareBehandlingstyper = (sakstype, behtema, alltidNyBehandlingToggleEna
 };
 
 const FagsakVelger = (props) => {
-  const alltidNyBehandlingToggle = useFeatureToggle("melosys.api.journalfoering.alltid.opprett.ny.behandling");
   const { fagsakListe, settJournalforingHensikt } = props;
   const notifier = async (saksnummer) => {
     const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
@@ -52,11 +46,7 @@ const FagsakVelger = (props) => {
         footer: (
           <KnyttTilSak
             sak={sak}
-            behandlingstyper={valgbareBehandlingstyper(
-              sak.sakstype.kode,
-              sak.behandlingOversikter[0].behandlingstema,
-              alltidNyBehandlingToggle === "enabled"
-            )}
+            behandlingstyper={valgbareBehandlingstyper(sak.sakstype.kode, sak.behandlingOversikter[0].behandlingstema)}
           />
         ),
       },

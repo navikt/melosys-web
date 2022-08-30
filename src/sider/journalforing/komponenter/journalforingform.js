@@ -10,7 +10,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 
-import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import { journalforingSelectors } from "../../../ducks/journalforing";
 import { formSelectors } from "../../../ducks/form";
 import Informasjon from "./informasjon";

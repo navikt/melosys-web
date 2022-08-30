@@ -4,17 +4,19 @@ import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { getFormValues } from "redux-form";
-import { AlertStripeFeil } from "nav-frontend-alertstriper";
+
 import * as Skjema from "../../skjema";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
-import { DokumenterV2, Organisasjon } from "../../../services/api";
 import * as Utils from "../../../utils";
+
+import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
+import { formSelectors } from "../../../ducks/form";
+
+import { DokumenterV2, Organisasjon } from "../../../services/api";
 import { OrganisasjonsAdresse } from "../../adresser";
 import MottakerAdresse from "./mottakerAdresse";
 import FeltBeskrivelse from "./feltBeskrivelse";
-import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
-import { formSelectors } from "../../../ducks/form";
 import { SendBrevFormValues } from "./types";
 
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET } = KV.Koder.MottakerRolle;
@@ -70,9 +72,8 @@ const BrevMottaker = ({
   const mottakerHjelpetekst =
     "Hvis bruker eller arbeidsgiver har fullmektig som er lagt inn i sidemenyen, vil brevet automatisk bli sendt til denne.";
   const arbeidsgiverHjelptekst =
-    "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen " +
-    "under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. " +
-    "\nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
+    "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger.\n" +
+    "Hvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
   const hentOrganisasjonIfValid = async (data: { orgnr?: string; valid: boolean }) => {
     if (!data.valid || !data.orgnr) return;
@@ -151,7 +152,7 @@ const BrevMottaker = ({
       {(mottakerErBruker || mottakerErVirksomhet) && (
         <Nav.Row>
           <Nav.Column xs="12">
-            {feil && <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>}
+            {feil && <Nav.AlertStripeFeil className="alertstripe_feil">{feil}</Nav.AlertStripeFeil>}
             {adresse?.mottakerAdresse && (
               <MottakerAdresse {...adresse?.mottakerAdresse} className="brukeradresse" visNavn />
             )}
@@ -163,7 +164,7 @@ const BrevMottaker = ({
         <Nav.Row>
           {feil ? (
             <Nav.Column xs="12">
-              <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>
+              <Nav.AlertStripeFeil className="alertstripe_feil">{feil}</Nav.AlertStripeFeil>
             </Nav.Column>
           ) : (
             <Nav.Column xs="12" className="arbeidsgiver">
@@ -175,9 +176,7 @@ const BrevMottaker = ({
                     tittel={arbeidsgiverHjelptekst}
                     type={Nav.PopoverOrientering.Venstre}
                   >
-                    {arbeidsgiverHjelptekst.split("\n").map((paragraf) => (
-                      <p key={Utils._uuid()}>{paragraf}</p>
-                    ))}
+                    {arbeidsgiverHjelptekst}
                   </Nav.Hjelpetekst>
                 )}
               </Nav.Typo.Normaltekst>
@@ -231,7 +230,7 @@ const BrevMottaker = ({
           </Nav.Column>
           {feil && (
             <Nav.Column xs="12">
-              <AlertStripeFeil className="alertstripe_feil">{feil}</AlertStripeFeil>
+              <Nav.AlertStripeFeil className="alertstripe_feil">{feil}</Nav.AlertStripeFeil>
             </Nav.Column>
           )}
         </Nav.Row>

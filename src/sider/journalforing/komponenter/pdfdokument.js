@@ -6,6 +6,7 @@ import * as Utils from "../../../utils";
 import * as Api from "../../../services/api";
 
 import "./pdfdokument.css";
+import { hentAuthorizationHeader } from "../../../services/utils";
 
 const pdfjsWorker = import("react-pdf/node_modules/pdfjs-dist/build/pdf.worker.entry");
 
@@ -47,7 +48,7 @@ class PDFViser extends Component {
 }
 
 PDFViser.propTypes = {
-  pdfDokument: PT.string.isRequired,
+  pdfDokument: PT.object.isRequired,
   wrapperDivSize: PT.number,
 };
 
@@ -99,7 +100,13 @@ class PDFDokument extends Component {
             this.pdfWrapper = ref;
           }}
         >
-          <PDFViser wrapperDivSize={this.state.width} pdfDokument={pdfDokumentURI} />
+          <PDFViser
+            wrapperDivSize={this.state.width}
+            pdfDokument={{
+              url: pdfDokumentURI,
+              httpHeaders: hentAuthorizationHeader(),
+            }}
+          />
         </div>
       </div>
     );

@@ -4,7 +4,7 @@ import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
 
-import EnkeltDato from "../../../felleskomponenter/datoOmrade/enkeltDato";
+import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import Soknadsland from "../../../felleskomponenter/soknadsland";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen

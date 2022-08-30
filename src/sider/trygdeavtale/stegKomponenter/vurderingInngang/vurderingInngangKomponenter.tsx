@@ -1,18 +1,6 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import * as Nav from "../../../../navFrontend";
-
-export const ArbeidslandLabel = () => {
-  const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
-  return (
-    <Fragment>
-      Arbeidsland
-      <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
-        {hjelpetekst}
-      </Nav.Hjelpetekst>
-    </Fragment>
-  );
-};
 
 export const LandValgSomOptions = ({ landValg }: { landValg: KTObject[] }) => {
   if (!landValg) return null;
