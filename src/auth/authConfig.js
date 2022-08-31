@@ -12,5 +12,5 @@ export const msalConfig = {
 };
 
 export const loginRequest = {
-  scopes: ["api://dev-fss.teammelosys.melosys-web-q1/.default"], // "openid_profile", // [process.env.REACT_APP_MELOSYS_TRYGDEAVGIFT_AZURE_APP_UD_URI + "/.default"],
+  scopes: ["api://dev-fss.teammelosys.melosys-q1/.default"],
 };
