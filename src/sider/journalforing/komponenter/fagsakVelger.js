@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
+import { useDispatch } from "react-redux";
+import { change } from "redux-form";
 import PT from "prop-types";
 
 import * as MPT from "../../../proptypes";
 import * as Nav from "../../../navFrontend";
+import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 
 import { JOURNALFORING_HENSIKT } from "../../../constants";
@@ -20,12 +23,25 @@ const OPPRETT = "Opprett ny sak";
 const FagsakVelger = (props) => {
   const { fagsakListe, settJournalforingHensikt, sakstemaToggleEnabled, landkoder } = props;
   const [valgtVisning, setValgtVisning] = useState(EKSISTRENDE);
+  const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
+
+  useEffect(() => {
+    if (!sakstemaToggleEnabled) return;
+
+    if (valgtVisning === OPPRETT || ingenSakerFinnes) {
+      dispatch(change(KV.Form.JOURNALFORING, "saksnummer", "-1"));
+    }
+    if (valgtVisning === EKSISTRENDE) {
+      dispatch(change(KV.Form.JOURNALFORING, "saksnummer", ""));
+    }
+  }, [ingenSakerFinnes, valgtVisning, sakstemaToggleEnabled]);
 
   const notifier = async (saksnummer) => {
     const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
     await settJournalforingHensikt(hensikt);
   };
+
   const radioValg = fagsakListe.reduce(
     (samling, sak) => [
       ...samling,

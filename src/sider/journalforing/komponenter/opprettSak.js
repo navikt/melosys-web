@@ -4,6 +4,7 @@ import { change } from "redux-form";
 import PT from "prop-types";
 
 import MKV from "../../../melosyskodeverk";
+import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 
@@ -201,6 +202,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  settFeltInnhold: (feltNavn, verdi) => dispatch(change("journalforing", feltNavn, verdi)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.JOURNALFORING, feltNavn, verdi)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(OpprettSak);
