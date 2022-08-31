@@ -31,8 +31,7 @@ const FagsakVelger = (props) => {
 
     if (valgtVisning === OPPRETT || ingenSakerFinnes) {
       dispatch(change(KV.Form.JOURNALFORING, "saksnummer", "-1"));
-    }
-    if (valgtVisning === EKSISTRENDE) {
+    } else if (valgtVisning === EKSISTRENDE) {
       dispatch(change(KV.Form.JOURNALFORING, "saksnummer", ""));
     }
   }, [ingenSakerFinnes, valgtVisning, sakstemaToggleEnabled]);
