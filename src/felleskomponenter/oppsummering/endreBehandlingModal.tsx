@@ -26,7 +26,6 @@ import "./endreBehandlingModal.css";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { saksopplysningerOperations } from "../../ducks/saksopplysninger";
 import { useFeatureToggle } from "../../featuretoggle";
-import { resetFlyt } from "../../services/modules/trygdeavtale/flyt";
 import { erBehandlingstemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
 
 const mapStateToProps = (state: RootState) => ({
@@ -41,7 +40,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppfriskSaksopplysninger: (behandlingID: number) => saksopplysningerOperations.oppfrisk(behandlingID),
   hentBehandling: (behandlingID: number) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
-  hentFagsaker: (saksnummer: string) => dispatch(fagsakOperations.hent(saksnummer)),
+  hentFagsak: (saksnummer: string) => dispatch(fagsakOperations.hent(saksnummer)),
   hentBehandlingsgrunnlag: (behandlingID: number) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
   hentMuligeBehandlingstema: (behandlingID: number) =>
     dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
@@ -73,7 +72,7 @@ function EndreBehandlingModal({
   fagsak,
   hentBehandling,
   hentBehandlingsgrunnlag,
-  hentFagsaker,
+  hentFagsak,
   muligeSakstemaer,
   muligeSakstyper,
   muligeBehandlingstyper,
@@ -138,12 +137,12 @@ function EndreBehandlingModal({
       .then(async () => {
         setBehandlingEndret(true);
         hentBehandling(behandlingID);
-        hentFagsaker(saksnummer);
+        hentFagsak(saksnummer);
         hentBehandlingsgrunnlag(behandlingID);
         const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
         if (nyLink && nyLink !== location.pathname + location.search) tilAnnenSide(nyLink);
         setTimeout(lukkModal, 2000);
-        restart();
+        nullstillFlyt();
       })
       .catch(() => {
         setGenerellFeil(
@@ -153,9 +152,9 @@ function EndreBehandlingModal({
       });
   };
 
-  const restart = async () => {
+  const nullstillFlyt = async () => {
     await oppfriskSaksopplysninger(behandlingID);
-    await resetFlyt(behandlingID);
+    await Api.Trygdeavtale.resetFlyt(behandlingID);
     window.location.reload();
   };
 
