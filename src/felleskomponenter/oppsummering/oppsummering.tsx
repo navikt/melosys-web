@@ -10,6 +10,7 @@ import * as Nav from "../../navFrontend";
 import * as Api from "../../services/api";
 import * as Ikoner from "../../resources/images";
 import * as Utils from "../../utils";
+import * as Mui from "../ui";
 
 import { useFeatureToggle } from "../../featuretoggle";
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
@@ -31,6 +32,8 @@ interface OppsummeringProps {
   behandlingsgrunnlagPeriodeTom: string;
   className?: string;
 }
+const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
+const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
 
 const Oppsummering = (props: OppsummeringProps) => {
   const {
@@ -48,6 +51,7 @@ const Oppsummering = (props: OppsummeringProps) => {
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
+  const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode);
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
   if (!oppsummering || !fagsak?.sakstype) return <div />;
@@ -141,7 +145,6 @@ const Oppsummering = (props: OppsummeringProps) => {
 
     return erLitenSkjerm ? tabellEnKolonne(col1.concat(col2)) : tabellToKolonner(col1, col2);
   };
-
   return (
     <section aria-label="oppsummeringer" className="oppsummering panelSeksjon">
       <EndreBehandlingModal
@@ -178,10 +181,15 @@ const Oppsummering = (props: OppsummeringProps) => {
                     )}
                   </Nav.Column>
                   <Nav.Column xs="4">
-                    <Nav.Knapp className="hoyrestill endre-knapp" mini onClick={() => setSkalViseEndreModal(true)}>
+                    <Mui.Knapp
+                      disabled={disableEndreKnapp}
+                      onClick={() => setSkalViseEndreModal(true)}
+                      mini
+                      className="hoyrestill endre-knapp"
+                    >
                       <span>Endre</span>
-                      <Ikoner.BlyantActive />
-                    </Nav.Knapp>
+                      {disableEndreKnapp ? <Ikoner.BlyantDisabled /> : <Ikoner.BlyantActive />}
+                    </Mui.Knapp>
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>

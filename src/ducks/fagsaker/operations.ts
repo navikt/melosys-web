@@ -48,6 +48,22 @@ export function opprett(body: Api.Fagsaker.fagsak.OpprettReqDto) {
   );
 }
 
+export function hentMuligeSakstemaer(saksnummer: string) {
+  return doThenDispatch(() => Api.Fagsaker.fagsak.hentMuligeSakstemaer(saksnummer), {
+    OK: Types.HENT_MULIGE_SAKSTEMA,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
+export function hentMuligeSakstyper(saksnummer: string) {
+  return doThenDispatch(() => Api.Fagsaker.fagsak.hentMuligeSakstyper(saksnummer), {
+    OK: Types.HENT_MULIGE_SAKSTYPE,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
 export function resetFagsakState() {
   return Actions.resetFagsakState();
 }
