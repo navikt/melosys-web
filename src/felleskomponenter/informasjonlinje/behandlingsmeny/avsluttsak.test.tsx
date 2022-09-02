@@ -16,7 +16,7 @@ const {
   REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
   REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
 } = MKV.Koder.behandlinger.behandlingstema;
-const { NY_VURDERING, FØRSTEGANG, HENVENDELSE } = MKV.Koder.behandlinger.behandlingstyper;
+const { NY_VURDERING, FØRSTEGANG, HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 const { FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG, UNNTAK } = MKV.Koder.sakstemaer;
 const { VURDER_DOKUMENT } = MKV.Koder.behandlinger.behandlingsstatus;
@@ -67,8 +67,8 @@ describe("AvsluttSak", () => {
     const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
-    expect(handlinger).toHaveLength(4);
-    expect(handlinger.at(1).props().tekst).toBe("Ferdigbehandlet");
+    expect(handlinger).toHaveLength(5);
+    expect(handlinger.at(2).props().tekst).toBe("Ferdigbehandlet");
   });
 
   it("returerer null om EØS_VURDER_UTPEKING og ikke redigerbart", () => {
@@ -242,6 +242,70 @@ describe("AvsluttSak", () => {
       const handlinger = avsluttSak.find(Handling);
 
       expect(handlinger).toHaveLength(0);
+    });
+  });
+
+  describe("Klage-handlinger", () => {
+    it(`viser Klage-handlinger dersom behandlingstype er ${KLAGE}`, () => {
+      props.redigerbart = true;
+      props.behandlingstema = YRKESAKTIV;
+      props.behandlingstype = KLAGE;
+
+      const avsluttSak = shallow(<AvsluttSak {...props} />);
+      const handlinger = avsluttSak.find(Handling);
+
+      expect(handlinger).toHaveLength(6);
+      expect(handlinger.at(0).props().tekst).toBe("Medhold på klage");
+      expect(handlinger.at(1).props().tekst).toBe("Klageinnstilling er oversendt til klageinstansen");
+      expect(handlinger.at(2).props().tekst).toBe("Klage er avvist");
+    });
+
+    it(`viser ikke Klage-handlinger dersom behandlingstype er ${FØRSTEGANG}`, () => {
+      props.redigerbart = true;
+      props.behandlingstema = YRKESAKTIV;
+      props.behandlingstype = FØRSTEGANG;
+
+      const avsluttSak = shallow(<AvsluttSak {...props} />);
+
+      expect(avsluttSak.findWhere((n) => n.type() === Handling && n.props().tekst === "Medhold på klage")).toHaveLength(
+        0
+      );
+
+      expect(
+        avsluttSak.findWhere(
+          (n) => n.type() === Handling && n.props().tekst === "Klageinnstilling er oversendt til klageinstansen"
+        )
+      ).toHaveLength(0);
+
+      expect(avsluttSak.findWhere((n) => n.type() === Handling && n.props().tekst === "Klage er avvist")).toHaveLength(
+        0
+      );
+    });
+  });
+
+  describe("Vedtaket er omgjort (fvl § 35)", () => {
+    it(`viser 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${NY_VURDERING}`, () => {
+      props.redigerbart = true;
+      props.behandlingstema = YRKESAKTIV;
+      props.behandlingstype = NY_VURDERING;
+
+      const avsluttSak = shallow(<AvsluttSak {...props} />);
+      const handlinger = avsluttSak.find(Handling);
+
+      expect(handlinger).toHaveLength(5);
+      expect(handlinger.at(1).props().tekst).toBe("Vedtaket er omgjort (fvl § 35)");
+    });
+
+    it(`viser ikke 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${FØRSTEGANG}`, () => {
+      props.redigerbart = true;
+      props.behandlingstema = YRKESAKTIV;
+      props.behandlingstype = FØRSTEGANG;
+
+      const avsluttSak = shallow(<AvsluttSak {...props} />);
+
+      expect(
+        avsluttSak.findWhere((n) => n.type() === Handling && n.props().tekst === "Vedtaket er omgjort (fvl § 35)")
+      ).toHaveLength(0);
     });
   });
 });
