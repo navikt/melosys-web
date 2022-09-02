@@ -12,9 +12,11 @@ const {
   REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
   YRKESAKTIV,
   IKKE_YRKESAKTIV,
+  ARBEID_KUN_NORGE,
   PENSJONIST,
   UNNTAK_MEDLEMSKAP,
   ARBEID_ETT_LAND_ØVRIG,
+  ARBEID_TJENESTEPERSON_ELLER_FLY,
 } = MKV.Koder.behandlinger.behandlingstema;
 const { NY_VURDERING, ENDRET_PERIODE, FØRSTEGANG } = MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
@@ -138,9 +140,10 @@ const AvsluttSak = ({
     if (
       [EU_EOS, TRYGDEAVTALE].includes(sakstype) &&
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
-      [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST].includes(behandlingstema)
+      [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, ARBEID_KUN_NORGE].includes(behandlingstema)
     )
       return true;
+
     return false;
   };
 
@@ -148,9 +151,18 @@ const AvsluttSak = ({
     if (sakstemaToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
       return false;
     }
+
     return (
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
-      [ARBEID_ETT_LAND_ØVRIG, YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, UNNTAK_MEDLEMSKAP].includes(behandlingstema)
+      [
+        ARBEID_ETT_LAND_ØVRIG,
+        ARBEID_TJENESTEPERSON_ELLER_FLY,
+        ARBEID_KUN_NORGE,
+        YRKESAKTIV,
+        IKKE_YRKESAKTIV,
+        PENSJONIST,
+        UNNTAK_MEDLEMSKAP,
+      ].includes(behandlingstema)
     );
   };
 

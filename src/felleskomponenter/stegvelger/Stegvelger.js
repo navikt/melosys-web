@@ -402,8 +402,10 @@ class Stegvelger extends Component {
       vurderUtpekingValid: props.vurderUtpekingValid,
       erSoknadArbeidFlereLand:
         props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-      erArbeidEttLandOvrig:
-        props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+      erArbeidEttLandOvrig: [
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+      ].includes(props.oppsummering.behandlingstema.kode),
       erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebaser: props.hjemmebaser,

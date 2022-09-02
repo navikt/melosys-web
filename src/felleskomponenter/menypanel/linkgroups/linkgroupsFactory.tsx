@@ -10,6 +10,8 @@ const {
   ARBEID_FLERE_LAND,
   IKKE_YRKESAKTIV,
   ARBEID_ETT_LAND_ØVRIG,
+  ARBEID_TJENESTEPERSON_ELLER_FLY,
+  ARBEID_KUN_NORGE,
   ARBEID_NORGE_BOSATT_ANNET_LAND,
   REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
   REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
@@ -41,6 +43,8 @@ class LinkGroupsFactory {
       case ARBEID_FLERE_LAND:
       case IKKE_YRKESAKTIV:
       case ARBEID_ETT_LAND_ØVRIG:
+      case ARBEID_TJENESTEPERSON_ELLER_FLY:
+      case ARBEID_KUN_NORGE:
       case ARBEID_NORGE_BOSATT_ANNET_LAND: {
         const fraSoknad = new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet();
         if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraSoknad.addLonnOgGodtgjorelser();
