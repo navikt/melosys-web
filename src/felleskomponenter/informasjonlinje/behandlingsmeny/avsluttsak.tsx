@@ -207,9 +207,9 @@ const AvsluttSak = ({
       {skalViseAvslåPgaManglendeOpplysninger() && (
         <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />
       )}
-      {skalViseHenleggSak() && <Handling tekst="Søknaden er henlagt/trukket" onClick={henleggSak} />}
-      {skalViseAvsluttSak() && <Handling tekst="Kan ikke behandles i Melosys" onClick={avsluttSakSomBortfalt} />}
       {skalViseFerdigbehandlet() && <Handling tekst="Ferdigbehandlet" onClick={ferdigbehandleNyVurdering} />}
+      {skalViseHenleggSak() && <Handling tekst="Søknaden/klagen er trukket" onClick={henleggSak} />}
+      {skalViseAvsluttSak() && <Handling tekst="Behandlingen er bortfalt" onClick={avsluttSakSomBortfalt} />}
     </Nav.Ekspanderbartpanel>
   );
 };

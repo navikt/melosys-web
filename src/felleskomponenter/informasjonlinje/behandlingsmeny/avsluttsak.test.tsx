@@ -44,8 +44,8 @@ describe("AvsluttSak", () => {
 
     expect(handlinger).toHaveLength(3);
     expect(handlinger.at(0).props().tekst).toBe("Avslå søknad pga. manglende opplysninger");
-    expect(handlinger.at(1).props().tekst).toBe("Søknaden er henlagt/trukket");
-    expect(handlinger.at(2).props().tekst).toBe("Kan ikke behandles i Melosys");
+    expect(handlinger.at(1).props().tekst).toBe("Søknaden/klagen er trukket");
+    expect(handlinger.at(2).props().tekst).toBe("Behandlingen er bortfalt");
   });
 
   it("viser bare avsluttSak om tema er trygdetid", () => {
@@ -56,7 +56,7 @@ describe("AvsluttSak", () => {
     const handlinger = avsluttSak.find(Handling);
 
     expect(handlinger).toHaveLength(1);
-    expect(handlinger.props().tekst).toBe("Kan ikke behandles i Melosys");
+    expect(handlinger.props().tekst).toBe("Behandlingen er bortfalt");
   });
 
   it("viser ferdigBehandlet om tema er yrkesaktiv", () => {
@@ -68,7 +68,7 @@ describe("AvsluttSak", () => {
     const handlinger = avsluttSak.find(Handling);
 
     expect(handlinger).toHaveLength(4);
-    expect(handlinger.at(3).props().tekst).toBe("Ferdigbehandlet");
+    expect(handlinger.at(1).props().tekst).toBe("Ferdigbehandlet");
   });
 
   it("returerer null om EØS_VURDER_UTPEKING og ikke redigerbart", () => {
@@ -93,8 +93,8 @@ describe("AvsluttSak", () => {
     expect(avsluttSakSomBortfalt).toHaveLength(0);
   });
 
-  describe("Kan ikke behandles i Melosys", () => {
-    it(`viser 'Kan ikke behandles i Melosys' dersom behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
+  describe("Behandlingen er bortfalt", () => {
+    it(`viser 'Behandlingen er bortfalt' dersom behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
       props.behandlingstema = REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE;
       props.behandlingsstatus = VURDER_DOKUMENT;
 
@@ -102,10 +102,10 @@ describe("AvsluttSak", () => {
       const handlinger = avsluttSak.find(Handling);
 
       expect(handlinger).toHaveLength(1);
-      expect(handlinger.at(0).props().tekst).toBe("Kan ikke behandles i Melosys");
+      expect(handlinger.at(0).props().tekst).toBe("Behandlingen er bortfalt");
     });
 
-    it(`viser 'Kan ikke behandles i Melosys' dersom behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
+    it(`viser 'Behandlingen er bortfalt' dersom behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
       props.behandlingstema = REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
       props.behandlingsstatus = VURDER_DOKUMENT;
 
@@ -113,7 +113,7 @@ describe("AvsluttSak", () => {
       const handlinger = avsluttSak.find(Handling);
 
       expect(handlinger).toHaveLength(1);
-      expect(handlinger.at(0).props().tekst).toBe("Kan ikke behandles i Melosys");
+      expect(handlinger.at(0).props().tekst).toBe("Behandlingen er bortfalt");
     });
   });
 
