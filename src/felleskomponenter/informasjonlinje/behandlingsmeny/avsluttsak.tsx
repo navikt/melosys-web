@@ -18,11 +18,19 @@ const {
   ARBEID_ETT_LAND_ØVRIG,
   ARBEID_TJENESTEPERSON_ELLER_FLY,
 } = MKV.Koder.behandlinger.behandlingstema;
-const { NY_VURDERING, ENDRET_PERIODE, FØRSTEGANG } = MKV.Koder.behandlinger.behandlingstyper;
+const { NY_VURDERING, ENDRET_PERIODE, FØRSTEGANG, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
-const { MEDLEM_I_FOLKETRYGDEN, UNNTATT_MEDLEMSKAP, FASTSATT_LOVVALGSLAND, AVSLAG_SØKNAD } =
-  MKV.Koder.behandlinger.behandlingsresultattyper;
+const {
+  MEDLEM_I_FOLKETRYGDEN,
+  UNNTATT_MEDLEMSKAP,
+  FASTSATT_LOVVALGSLAND,
+  AVSLAG_SØKNAD,
+  MEDHOLD,
+  KLAGEINNSTILLING,
+  AVVIST_KLAGE,
+  OMGJORT,
+} = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 type avsluttSakProps = {
   avslaaSoknad: () => void;
@@ -58,6 +66,7 @@ const AvsluttSak = ({
   const behandlingstemaErTrygdetid = behandlingstema === TRYGDETID;
   const behandlingstypeErNyVurdering = behandlingstype === NY_VURDERING;
   const behandlingstypeErEndretPeriode = behandlingstype === ENDRET_PERIODE;
+  const behandlingstypeErKlage = behandlingstype === KLAGE;
   const behandlingstemaErUnntakNorskTrygdØvrigEllerUtstasjonering =
     behandlingstema === REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE ||
     behandlingstema === REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
@@ -127,6 +136,10 @@ const AvsluttSak = ({
     }
   };
 
+  const skalViseKlageHandlinger = sakstemaToggle === "enabled" && redigerbart && behandlingstypeErKlage;
+
+  const skalViseVedtakOmgjort = sakstemaToggle === "enabled" && redigerbart && behandlingstypeErNyVurdering;
+
   const skalViseSøknadenErInnvilget = () => {
     if (sakstemaToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
       return false;
@@ -183,14 +196,14 @@ const AvsluttSak = ({
     tilForsiden();
   };
 
-  if (
-    !skalViseSøknadenErInnvilget() &&
-    !skalViseSøknadenErAvslått() &&
-    !skalViseAvslåPgaManglendeOpplysninger() &&
-    !skalViseHenleggSak() &&
-    !skalViseAvsluttSak() &&
-    !skalViseFerdigbehandlet()
-  )
+  const skalKunneAngiBehandlingsresultat =
+    skalViseSøknadenErInnvilget() ||
+    skalViseSøknadenErAvslått() ||
+    skalViseAvslåPgaManglendeOpplysninger() ||
+    skalViseVedtakOmgjort ||
+    skalViseKlageHandlinger;
+
+  if (!skalViseHenleggSak() && !skalViseAvsluttSak() && !skalViseFerdigbehandlet() && !skalKunneAngiBehandlingsresultat)
     return null;
 
   return (
@@ -198,15 +211,35 @@ const AvsluttSak = ({
       className="behandlingsmeny__meny__avslutt-sak"
       tittel={<div className="title">Avslutt sak</div>}
     >
-      {skalViseSøknadenErInnvilget() && (
-        <Handling tekst="Søknaden er innvilget" onClick={() => angiBehandlingsresultattype(mapType())} />
+      {skalKunneAngiBehandlingsresultat && (
+        <div className="skillestrek">
+          {skalViseKlageHandlinger && (
+            <Handling tekst="Medhold på klage" onClick={() => angiBehandlingsresultattype(MEDHOLD)} />
+          )}
+          {skalViseKlageHandlinger && (
+            <Handling
+              tekst="Klageinnstilling er oversendt til klageinstansen"
+              onClick={() => angiBehandlingsresultattype(KLAGEINNSTILLING)}
+            />
+          )}
+          {skalViseKlageHandlinger && (
+            <Handling tekst="Klage er avvist" onClick={() => angiBehandlingsresultattype(AVVIST_KLAGE)} />
+          )}
+          {skalViseSøknadenErInnvilget() && (
+            <Handling tekst="Søknaden er innvilget" onClick={() => angiBehandlingsresultattype(mapType())} />
+          )}
+          {skalViseSøknadenErAvslått() && (
+            <Handling tekst="Søknaden er avslått" onClick={() => angiBehandlingsresultattype(AVSLAG_SØKNAD)} />
+          )}
+          {skalViseAvslåPgaManglendeOpplysninger() && (
+            <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />
+          )}
+          {skalViseVedtakOmgjort && (
+            <Handling tekst="Vedtaket er omgjort (fvl § 35)" onClick={() => angiBehandlingsresultattype(OMGJORT)} />
+          )}
+        </div>
       )}
-      {skalViseSøknadenErAvslått() && (
-        <Handling tekst="Søknaden er avslått" onClick={() => angiBehandlingsresultattype(AVSLAG_SØKNAD)} />
-      )}
-      {skalViseAvslåPgaManglendeOpplysninger() && (
-        <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />
-      )}
+
       {skalViseFerdigbehandlet() && <Handling tekst="Ferdigbehandlet" onClick={ferdigbehandleNyVurdering} />}
       {skalViseHenleggSak() && <Handling tekst="Søknaden/klagen er trukket" onClick={henleggSak} />}
       {skalViseAvsluttSak() && <Handling tekst="Behandlingen er bortfalt" onClick={avsluttSakSomBortfalt} />}
