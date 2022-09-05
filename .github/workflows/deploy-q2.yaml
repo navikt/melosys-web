@@ -9,7 +9,7 @@ on:
     branches:
       - master
 env:
-  docker_image: docker.pkg.github.com/${{ github.repository }}/melosys-web:${{ github.sha }}
+  docker_image: docker.pkg.github.com/${{ github.repository }}/melosys-web-q2:${{ github.sha }}
 jobs:
   build:
     name: Build, deploy to q2, and draft release
