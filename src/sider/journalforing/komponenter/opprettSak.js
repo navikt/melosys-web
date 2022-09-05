@@ -1,18 +1,19 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { change } from "redux-form";
+import { change, getFormSyncErrors } from "redux-form";
 import PT from "prop-types";
 
-import MKV from "../../../melosyskodeverk";
-import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 
 import { formSelectors } from "../../../ducks/form";
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
+import MKV from "../../../melosyskodeverk";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./opprettSak.css";
+import MultiSelect from "../../../felleskomponenter/skjema/input/multiselect";
+import * as KV from "../../../kodeverk";
 
 const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
   ({ kode }) =>
@@ -40,15 +41,16 @@ export const OpprettSakTittel = () => (
   </div>
 );
 
-const OpprettSak = (props) => {
+export const OpprettSak = (props) => {
   const { journalforingSkjemaVerdier, sakstemaToggleEnabled, settFeltInnhold } = props;
   const {
     opprettnysak_behandlingstema: valgtBehandlingstema,
     sakstype: valgtSakstype,
-    journalforingSoknadsland: valgteLand,
+    journalforingSoknadsland,
     journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand,
     journalforingGjelder,
   } = journalforingSkjemaVerdier;
+  const [valgteLand, setValgteLand] = useState(journalforingSoknadsland);
   const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
   const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -102,6 +104,20 @@ const OpprettSak = (props) => {
       MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
     ].includes(valgtBehandlingstema);
 
+  const [oppdaterteFelt, setOppdaterteFelt] = useState({ land: false });
+  const oppdaterFelt = (felt) => {
+    const prevState = { ...oppdaterteFelt };
+    prevState[felt] = true;
+    setOppdaterteFelt(prevState);
+  };
+
+  const landEndret = (options) => {
+    const land = options ? options.map((item) => item.value) : [];
+    setValgteLand(land);
+    oppdaterFelt("land");
+    settFeltInnhold("journalforingSoknadsland", land);
+  };
+
   return (
     <div className="panelramme">
       <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
@@ -153,32 +169,37 @@ const OpprettSak = (props) => {
               </Nav.Column>
             </Nav.Row>
           </Nav.Fieldset>
-          <Nav.Fieldset legend="Land:">
+          <Nav.Fieldset>
+            <Nav.Typo.Element>
+              <LabelMedHjelpetekst
+                label="I hvilke land skal arbeidet/næringen utføres i?"
+                hjelpetekst="“Flere EØS-land/Sveits. Ikke kjent hvilke” skal kun benyttes hvis land er ukjent"
+              />
+            </Nav.Typo.Element>
             {valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
               <Nav.Row className="landcheckbox">
-                <Skjema.Checkbox
+                <Skjema.Radio
                   feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
                   disabled={valgteLand.length > 0}
-                  label={
-                    <LabelMedHjelpetekst
-                      label="Flere EØS-land/Sveits. Ikke kjent hvilke"
-                      hjelpetekst={
-                        "Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.\n" +
-                        "Det er ikke mulig å legge til andre land i tillegg."
-                      }
-                      hjelpetekstClassName="hjelpetekst"
-                    />
-                  }
+                  label="Flere EØS-land/Sveits. Ikke kjent hvilke"
+                  value
+                />
+                <Skjema.Radio
+                  feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
+                  label="Velg land fra liste"
+                  value={false}
                 />
               </Nav.Row>
             )}
             <Nav.Row className="">
               <Nav.Column xs="12">
-                <Skjema.LandVelger
+                <MultiSelect
+                  values={valgteLand}
+                  onChange={landEndret}
+                  options={MKV.KTObjects.landkoder.map((item) => ({ value: item.kode, label: item.term }))}
+                  className="multiselect"
+                  redigerbart={!ukjentEllerAlleEosLand}
                   feltNavn="journalforingSoknadsland"
-                  multiLand
-                  errorConfig={{ submitFailed: true }}
-                  disabled={ukjentEllerAlleEosLand}
                 />
               </Nav.Column>
             </Nav.Row>
@@ -190,15 +211,18 @@ const OpprettSak = (props) => {
 };
 OpprettSak.propTypes = {
   journalforingSkjemaVerdier: PT.object,
+  errors: PT.object,
   settFeltInnhold: PT.func.isRequired,
   sakstemaToggleEnabled: PT.bool.isRequired,
 };
 
 OpprettSak.defaultProps = {
   journalforingSkjemaVerdier: {},
+  errors: {},
 };
 const mapStateToProps = (state) => ({
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
+  errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
