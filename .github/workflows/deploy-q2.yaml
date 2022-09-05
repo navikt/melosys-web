@@ -56,10 +56,6 @@ jobs:
           BRANCH_NAME=$GITHUB_REF
           BUILD_NUMBER="$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)"
           npm run build:q2
-      - name: pre-deploy
-        uses: navikt/digihot-deploy/actions/pre-deploy@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and publish Docker image
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -88,7 +84,3 @@ jobs:
           SLACK_TITLE: ':clap: melosys-web ble deployet til q2 :rocket:'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
-      - name: post-deploy
-        uses: navikt/digihot-deploy/actions/post-deploy@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

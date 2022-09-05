@@ -70,6 +70,10 @@ jobs:
       - name: get commit message
         run: | # Må hentes med et script fordi workflow_dispatch ikke har github.event.head_commit
           echo "COMMIT_MSG=$(git log --format=%s -n 1 ${{ github.event.after }})" >> $GITHUB_ENV
+      - name: post-deploy
+        uses: navikt/digihot-deploy/actions/post-deploy@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: draft release
         uses: softprops/action-gh-release@v1
         env:
