@@ -58,7 +58,7 @@ describe("OpprettSak", () => {
     ARBEID_ETT_LAND_ØVRIG,
     IKKE_YRKESAKTIV,
     ARBEID_NORGE_BOSATT_ANNET_LAND,
-  ]).it(`Opprett Sak med fra/til dato`, (behandlingstema) => {
+  ]).it(`Opprett Sak. Skal ha fra/til dato og liste over land`, (behandlingstema) => {
     props.journalforingSkjemaVerdier.opprettnysak_behandlingstema = behandlingstema;
     props.journalforingSkjemaVerdier.sakstype = MKV.Koder.sakstyper.EU_EOS;
     props.journalforingSkjemaVerdier.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
@@ -75,7 +75,7 @@ describe("OpprettSak", () => {
     expect(multiselect).toHaveLength(1);
   });
 
-  each([ARBEID_I_UTLANDET, YRKESAKTIV]).it(`Opprett sak, skjulte tilvalg`, (behandlingstema) => {
+  each([ARBEID_I_UTLANDET, YRKESAKTIV]).it(`Opprett sak, skal ikke ha tilvalg`, (behandlingstema) => {
     props.journalforingSkjemaVerdier.opprettnysak_behandlingstema = behandlingstema;
     props.journalforingSkjemaVerdier.sakstype = MKV.Koder.sakstyper.TRYGDEAVTALE;
     props.journalforingSkjemaVerdier.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
@@ -90,7 +90,7 @@ describe("OpprettSak", () => {
     expect(multiselect).toHaveLength(0);
   });
 
-  it(`Opprett sak fra/til dato, valg av land, radio knapper`, () => {
+  it(`Opprett sak. Skal ha fra/til dato, valg av land, radio knapper`, () => {
     props.journalforingSkjemaVerdier.opprettnysak_behandlingstema = ARBEID_FLERE_LAND;
     props.journalforingSkjemaVerdier.journalforingSoknadsland = ARBEID_FLERE_LAND;
     props.journalforingSkjemaVerdier.sakstype = MKV.Koder.sakstyper.EU_EOS;
