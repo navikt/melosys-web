@@ -1,4 +1,4 @@
-name: deploy-q2
+name: draft-release
 on:
   push:
     paths-ignore:
@@ -55,7 +55,7 @@ jobs:
         run: |
           BRANCH_NAME=$GITHUB_REF
           BUILD_NUMBER="$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)"
-          npm run build:q2
+          npm run build:prod
       - name: pre-deploy
         uses: navikt/digihot-deploy/actions/pre-deploy@v2
         env:
@@ -67,28 +67,16 @@ jobs:
           docker build --tag ${docker_image} .
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${docker_image}
-      - name: Deploy q2
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-fss
-          RESOURCE: nais/nais.yaml
-          VAR: image=${{ env.docker_image }}
-          VARS: nais/vars-q2.json
       - name: get commit message
         run: | # Må hentes med et script fordi workflow_dispatch ikke har github.event.head_commit
           echo "COMMIT_MSG=$(git log --format=%s -n 1 ${{ github.event.after }})" >> $GITHUB_ENV
-      - name: Slack Notification (deploy success)
-        if: success()
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_COLOR: good
-          SLACK_USERNAME: Github Actions
-          SLACK_ICON: https://github.com/github.png?size=48
-          SLACK_TITLE: ':clap: melosys-web ble deployet til q2 :rocket:'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
-      - name: post-deploy
-        uses: navikt/digihot-deploy/actions/post-deploy@v2
+      - name: draft release
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION_TAG }}
+          name: ${{ env.APPLICATION }} ${{ env.VERSION_TAG }}
+          body: ${{ env.CHANGE_LOG }}
+          draft: true
+          prerelease: false
