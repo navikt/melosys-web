@@ -124,6 +124,7 @@ const CustomRadioPanelGruppe = (props) => {
     meta,
     notify,
     begrensVisteRadios,
+    className,
   } = props;
 
   const { touched, active } = meta;
@@ -133,7 +134,7 @@ const CustomRadioPanelGruppe = (props) => {
   const radiosSomVises = visAlle ? radios : radios.slice(0, 4);
 
   return (
-    <Nav.SkjemaGruppe className="customRadioPanelGruppe" feil={feil}>
+    <Nav.SkjemaGruppe className={classNames("customRadioPanelGruppe", className)} feil={feil}>
       <Nav.Fieldset legend={legend}>
         {radiosSomVises.map((radio) => (
           <CustomRadioPanel
@@ -176,12 +177,14 @@ CustomRadioPanelGruppe.propTypes = {
   legend: PT.string,
   notify: PT.func,
   begrensVisteRadios: PT.bool,
+  className: PT.string,
 };
 
 CustomRadioPanelGruppe.defaultProps = {
   legend: "",
   notify: undefined,
   begrensVisteRadios: false,
+  className: "",
 };
 
 const CustomRadioPanelGruppeReduxForm = ({ feltNavn, ...rest }) => (

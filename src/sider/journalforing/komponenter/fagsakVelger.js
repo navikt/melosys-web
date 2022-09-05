@@ -95,6 +95,7 @@ const FagsakVelger = (props) => {
                 radios={radioValg}
                 notify={notifier}
                 begrensVisteRadios
+                className="marginMellomCustomRadioPaneler"
               />
             )}
             {valgtVisning === OPPRETT && <OpprettSak sakstemaToggleEnabled />}

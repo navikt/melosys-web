@@ -25,7 +25,7 @@ const kanVelgeEndretPeriode = (sisteBehandling) =>
     sisteBehandling.behandlingstema.kode
   ) && sisteBehandling.behandlingstype.kode === MKVBehandlingstyper.FØRSTEGANG;
 
-const valgbareBehandlingstyper = (sakstype, behandlingstema, sisteBehandling) =>
+const valgbareBehandlingstyper = (behandlingstema, sisteBehandling) =>
   MKV.KTObjects.behandlinger.behandlingstyper.filter(
     ({ kode }) =>
       (kanVelgeEndretPeriode(sisteBehandling) && kode === MKVBehandlingstyper.ENDRET_PERIODE) ||
@@ -45,7 +45,7 @@ const valgbareBehandlingstema = (sakstype, sakstema, behandlingstema) =>
     ({ kode }) =>
       behandlingstemaSomIkkeKanEndres.includes(behandlingstema)
         ? behandlingstema === kode
-        : MKV.Kodekombinasjoner.gyldigeBehandlingstema(sakstype.kode, sakstema.kode).includes(kode) // TODO: Kan denne erstattes av backend når det implementeres der?
+        : MKV.Kodekombinasjoner.gyldigeBehandlingstema(sakstype, sakstema).includes(kode) // TODO: Kan denne erstattes av backend når det implementeres der?
   );
 
 const behandlingstyper = (sakstype, behtema) => {
@@ -53,7 +53,7 @@ const behandlingstyper = (sakstype, behtema) => {
     case MKVSakstyper.EU_EOS:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
         ({ kode }) =>
-          (behtema.kode === MKVBehandlingstema.UTSENDT_ARBEIDSTAKER && kode === MKVBehandlingstyper.ENDRET_PERIODE) ||
+          (behtema === MKVBehandlingstema.UTSENDT_ARBEIDSTAKER && kode === MKVBehandlingstyper.ENDRET_PERIODE) ||
           kode === MKVBehandlingstyper.NY_VURDERING
       );
     case MKVSakstyper.TRYGDEAVTALE:
@@ -135,14 +135,14 @@ export const KnyttTilSak = (props) => {
                   feltNavn="behandlingstema"
                   bredde="fullbredde"
                   label="Behandlingstema"
-                  emptyFieldDisabled={behandlingstema}
+                  emptyFieldDisabled={behandlingstema?.kode}
                 >
-                  {valgbareBehandlingstema(sakstype, sakstema, behandlingstema)?.map((elem) => (
+                  {valgbareBehandlingstema(sakstype?.kode, sakstema?.kode, behandlingstema?.kode)?.map((elem) => (
                     <option key={elem.kode} value={elem.kode} label={elem.term} />
                   ))}
                 </Skjema.Select>
                 <Skjema.RadioGruppe feltNavn="behandlingstype" label="Behandlingstype" className="behandlingstype">
-                  {valgbareBehandlingstyper(sakstype, behandlingstema, sisteBehandling)?.map((elem) => (
+                  {valgbareBehandlingstyper(behandlingstema?.kode, sisteBehandling)?.map((elem) => (
                     <Skjema.Radio feltNavn="behandlingstype" key={elem.kode} value={elem.kode} label={elem.term} />
                   ))}
                 </Skjema.RadioGruppe>
@@ -155,7 +155,7 @@ export const KnyttTilSak = (props) => {
                 className="panelElement"
                 emptyFieldDisabled={false}
               >
-                {behandlingstyper(sakstype, sisteBehandling.behandlingstype)?.map((elem) => (
+                {behandlingstyper(sakstype?.kode, sisteBehandling.behandlingstema?.kode)?.map((elem) => (
                   <option key={elem.kode} value={elem.kode} label={elem.term} />
                 ))}
               </Skjema.Select>
