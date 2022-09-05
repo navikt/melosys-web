@@ -7,9 +7,9 @@ import * as SkjemaUtils from "../utils";
 interface FellesInputFnrDnrOrgnrSaksnrProps {
   vedEndring: (sokStreng: string) => void;
   startTom?: boolean;
-  meta: any;
-  input: any;
-  label: string;
+  feil?: string;
+  meta?: any;
+  input?: any;
 }
 
 const InnerFellesInputFnrDnrOrgnrSaksnr = ({
@@ -17,22 +17,33 @@ const InnerFellesInputFnrDnrOrgnrSaksnr = ({
   startTom,
   ...rest
 }: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
-  const [inputVerdi, setInputVerdi] = useState<any>(startTom ? "" : rest.value);
   const {
     meta,
     meta: { touched, active },
-    input,
   } = rest;
 
   const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
+  return <EnkelFellesInputFnrDnrOrgnrSaksnr {...rest} feil={rest.feil || feil} vedEndring={vedEndring} />;
+};
+
+const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
+  vedEndring,
+  startTom,
+  feil,
+  ...rest
+}: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
+  const [inputVerdi, setInputVerdi] = useState<any>(startTom ? "" : rest.value);
+
+  const { input } = rest;
   const vedEndringAvInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     const trimmetStreng = value.toUpperCase().replaceAll(" ", "");
     setInputVerdi(trimmetStreng);
-    vedEndring(trimmetStreng);
+    if (vedEndring) {
+      vedEndring(trimmetStreng);
+    }
   };
-
   return (
     <Nav.Input
       {...rest}
@@ -43,13 +54,13 @@ const InnerFellesInputFnrDnrOrgnrSaksnr = ({
         }
       }}
       value={inputVerdi || ""}
-      feil={rest.feil || feil}
+      feil={feil}
       onChange={vedEndringAvInput}
     />
   );
 };
 
-export const FellesInputFnrDnrOrgnrSaksnr = ({ feltNavn = "", bredde = "fullbredde", className = "", ...rest }) => (
+const FellesInputFnrDnrOrgnrSaksnr = ({ feltNavn = "", bredde = "fullbredde", className = "", ...rest }) => (
   <Field
     bredde={bredde}
     name={feltNavn}
@@ -58,3 +69,6 @@ export const FellesInputFnrDnrOrgnrSaksnr = ({ feltNavn = "", bredde = "fullbred
     props={{ ...rest }}
   />
 );
+
+export { InnerFellesInputFnrDnrOrgnrSaksnr, EnkelFellesInputFnrDnrOrgnrSaksnr };
+export default FellesInputFnrDnrOrgnrSaksnr;

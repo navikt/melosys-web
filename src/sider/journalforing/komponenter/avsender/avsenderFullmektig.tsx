@@ -10,7 +10,6 @@ import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
 
 import MKV from "../../../../melosyskodeverk";
-import { FellesInputFnrDnrOrgnrSaksnr } from "../../../../felleskomponenter/skjema/input/fellesInputFnrDnrOrgnrSaksnr";
 
 const journalforingFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.JOURNALFORING);
 
@@ -57,7 +56,7 @@ const AvsenderFullmektig = ({
 
   return (
     <div className="avsender">
-      <FellesInputFnrDnrOrgnrSaksnr
+      <Skjema.FellesInputFnrDnrOrgnrSaksnr
         feltNavn="avsenderID"
         startTom
         label="Fullmektigs org.nr. eller f.nr./d-nr."

@@ -8,7 +8,7 @@ import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 
 import "./sokskjema.css";
-import { FellesInputFnrDnrOrgnrSaksnr } from "../../../felleskomponenter/skjema/input/fellesInputFnrDnrOrgnrSaksnr";
+import { EnkelFellesInputFnrDnrOrgnrSaksnr } from "../../../felleskomponenter/skjema/input/fellesInputFnrDnrOrgnrSaksnr";
 
 class SokSkjema extends Component {
   UNSAFE_componentWillMount() {
@@ -40,7 +40,7 @@ class SokSkjema extends Component {
       <Nav.Panel>
         <Nav.Typo.Systemtittel>Søk etter sak</Nav.Typo.Systemtittel>
         <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
-          <FellesInputFnrDnrOrgnrSaksnr
+          <EnkelFellesInputFnrDnrOrgnrSaksnr
             id="id-sokeskjema"
             label=""
             className="sokeskjema__input"

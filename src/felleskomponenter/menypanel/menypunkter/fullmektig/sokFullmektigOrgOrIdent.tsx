@@ -6,7 +6,7 @@ import * as Api from "../../../../services/api";
 
 import { isApiError } from "../../../../services";
 import { hentBostedsadresseForPerson } from "../../../../graphql/adresse";
-import { FellesInputFnrDnrOrgnrSaksnr } from "../../../skjema/input/fellesInputFnrDnrOrgnrSaksnr";
+import { EnkelFellesInputFnrDnrOrgnrSaksnr } from "../../../skjema/input/fellesInputFnrDnrOrgnrSaksnr";
 
 interface SokFullmektigOrgProps {
   onIdentFunnet: (orgnr: string, personIdent: string) => Promise<any>;
@@ -63,7 +63,7 @@ function SokFullmektigOrgOrIdent(props: SokFullmektigOrgProps) {
   return (
     <Nav.Row>
       <Nav.Column xs="9">
-        <FellesInputFnrDnrOrgnrSaksnr
+        <EnkelFellesInputFnrDnrOrgnrSaksnr
           label="Organisasjonsnr. eller fødselsnr./d-nr.: "
           placeholder="Skriv inn..."
           vedEndring={debouncedEndringInput}

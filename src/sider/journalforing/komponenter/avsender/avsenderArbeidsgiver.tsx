@@ -6,7 +6,7 @@ import { RootState } from "AppTypes";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
-import { FellesInputFnrDnrOrgnrSaksnr } from "../../../../felleskomponenter/skjema/input/fellesInputFnrDnrOrgnrSaksnr";
+import * as Skjema from "../../../../felleskomponenter/skjema";
 
 const journalforingFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.JOURNALFORING);
 
@@ -40,7 +40,7 @@ export const AvsenderArbeidsgiver = ({
 
   return (
     <div className="avsender">
-      <FellesInputFnrDnrOrgnrSaksnr
+      <Skjema.FellesInputFnrDnrOrgnrSaksnr
         feltNavn="avsenderID"
         label="Oppgi avsenders org.nr"
         startTom

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-
 import * as Nav from "../../../../../navFrontend";
 import { Organisasjon } from "../../../../../services/api";
-import { FellesInputFnrDnrOrgnrSaksnr } from "../../../../skjema/input/fellesInputFnrDnrOrgnrSaksnr";
+import { EnkelFellesInputFnrDnrOrgnrSaksnr } from "../../../../skjema/input/fellesInputFnrDnrOrgnrSaksnr";
 
 const Orgnrinput = ({
   onOrgnrFunnet,
@@ -58,7 +57,7 @@ const Orgnrinput = ({
 
   return (
     <div>
-      <FellesInputFnrDnrOrgnrSaksnr
+      <EnkelFellesInputFnrDnrOrgnrSaksnr
         label={<Nav.Typo.Element>Organisasjonsnummer</Nav.Typo.Element>}
         vedEndring={onChange}
         value={orgnr}
@@ -77,10 +76,10 @@ interface OrgnrinputProps {
   onOrgnrFunnet: (org: Organisasjon) => void;
   redigerbart: boolean;
   hentOrganisasjon: (orgNr: string) => Promise<any>;
-  defaultOrgnr: string;
-  hentVedMount: boolean;
-  ikkeFunnetFeilmelding: string;
-  feilVedHentingFeilmelding: string;
+  defaultOrgnr?: string;
+  hentVedMount?: boolean;
+  ikkeFunnetFeilmelding?: string;
+  feilVedHentingFeilmelding?: string;
   valideringer: ValideringProps[];
 }
 

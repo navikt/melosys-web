@@ -24,7 +24,6 @@ import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 
 import "./informasjon.css";
-import { FellesInputFnrDnrOrgnrSaksnr } from "../../../felleskomponenter/skjema/input/fellesInputFnrDnrOrgnrSaksnr";
 import { apnePdfINyFane } from "../../../services/utils";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
@@ -236,7 +235,7 @@ class Informasjon extends Component {
       journalforingGjelder === VIRKSOMHET ? (
         <>
           <Mui.Undertittel tekst="Informasjon om virksomhet" ikon={Ikoner.AccountCircle} className="undertittel" />
-          <FellesInputFnrDnrOrgnrSaksnr feltNavn="virksomhetOrgnr" label="Organisasjonsnummer:" />
+          <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="virksomhetOrgnr" label="Organisasjonsnummer:" />
           {!Utils._isEmpty(virksomhetNavn) && (
             <span>
               <Nav.Typo.Element style={{ display: "inline-block", marginRight: "0.5rem" }}>Navn:</Nav.Typo.Element>
