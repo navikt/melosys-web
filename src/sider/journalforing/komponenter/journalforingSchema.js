@@ -161,11 +161,36 @@ const journalforing = object().shape({
     then: string().ensure().required(VELG_EN_AVSENDER),
   }),
   mottattDato: string().erGyldigDato().required(MAA_FYLLES_UT),
+  sakstype: string()
+    .nullable()
+    .when("journalforingHensikt", {
+      is: (hensikt) => hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+      then: string().required(MAA_FYLLES_UT).nullable(),
+    }),
+  sakstema: string()
+    .nullable()
+    .when(["$sakstemaToggleEnabled", "journalforingHensikt"], {
+      is: (sakstemaToggleEnabled, hensikt) =>
+        sakstemaToggleEnabled && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+      then: string().required(MAA_FYLLES_UT).nullable(),
+    }),
+  opprettnysak_behandlingstema: string()
+    .nullable()
+    .when("journalforingHensikt", {
+      is: (hensikt) => hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+      then: string().required(MAA_FYLLES_UT).nullable(),
+    }),
+  opprettnysak_behandlingstype: string()
+    .nullable()
+    .when(["$sakstemaToggleEnabled", "journalforingHensikt"], {
+      is: (sakstemaToggleEnabled, hensikt) =>
+        sakstemaToggleEnabled && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+      then: string().required(MAA_FYLLES_UT).nullable(),
+    }),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   journalforingHensikt: string(),
   representantNavn: string().nullable(),
-  opprettnysak_behandlingstema: string(),
   journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
 });
 

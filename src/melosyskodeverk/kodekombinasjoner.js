@@ -131,3 +131,18 @@ export const gyldigeBehandlingstema = (sakstype, sakstema) => {
   }
   return [];
 };
+
+export const gyldigeBehandlingstyper = (behandlingstema) => {
+  switch (behandlingstema) {
+    case MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET:
+    case MKV.Koder.behandlinger.behandlingstema.TRYGDETID:
+      return [MKV.Koder.behandlinger.behandlingstyper.HENVENDELSE];
+    default:
+      return [
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+        MKV.Koder.behandlinger.behandlingstyper.KLAGE,
+        MKV.Koder.behandlinger.behandlingstyper.HENVENDELSE,
+      ];
+  }
+};

@@ -20,6 +20,7 @@ import { ReactComponent as Clock } from "./clock.svg";
 import { ReactComponent as ClockFilled } from "./clock-filled.svg";
 import { ReactComponent as CoApplicant } from "./co-applicant.svg";
 import { ReactComponent as Copy } from "./copy.svg";
+import { ReactComponent as Down } from "./down.svg";
 import { ReactComponent as Eye } from "./eye.svg";
 import { ReactComponent as ExternalLink } from "./external-link.svg";
 import { ReactComponent as Familie } from "./familie.svg";
@@ -61,6 +62,7 @@ import { ReactComponent as Ring } from "./ring.svg";
 import { ReactComponent as Skip } from "./skip.svg";
 import { ReactComponent as Svar } from "./reply.svg";
 import { ReactComponent as Ubehandlet } from "./ikon-steg-ubehandlet.svg";
+import { ReactComponent as Up } from "./up.svg";
 import { ReactComponent as VedtakAvslatt } from "./ikon-vedtak-avslatt.svg";
 import { ReactComponent as VedtakGodkjent } from "./ikon-vedtak-godkjent.svg";
 import { ReactComponent as VedakUbehandlet } from "./ikon-vedtak-ubehandlet.svg";
@@ -92,6 +94,7 @@ export {
   ClockFilled,
   CoApplicant,
   Copy,
+  Down,
   Eye,
   ExternalLink,
   Familie,
@@ -136,6 +139,7 @@ export {
   Svar,
   Varsel,
   Ubehandlet,
+  Up,
   VedtakAvslatt,
   VedtakGodkjent,
   VedakUbehandlet,

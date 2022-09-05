@@ -8,14 +8,14 @@ import * as Utils from "../../../utils";
 import "../skjema.css";
 import "./radio-gruppe.css";
 
-const RadioGruppeWrappedComponent = ({ feltNavn, legend, label, children, meta }) => {
+const RadioGruppeWrappedComponent = ({ feltNavn, legend, label, children, meta, className }) => {
   const { error, touched, active } = meta;
   const skjemaError = Utils._isObject(meta.error) ? error.melding : error;
   const skalViseError = error && touched && !active;
   const errorMessage = skalViseError ? <div>{skjemaError}</div> : null;
 
   return (
-    <Nav.Fieldset legend={legend || label} className="radio-gruppe">
+    <Nav.Fieldset legend={legend || label} className={classNames("radio-gruppe", className)}>
       <div className={classNames({ "radio-gruppe__skjema-feilomrade--harFeil": skalViseError })}>
         <label className="skjemaelement__label" htmlFor={feltNavn}>
           {children}
@@ -34,6 +34,10 @@ RadioGruppeWrappedComponent.propTypes = {
   meta: PT.object.isRequired,
   legend: PT.string.isRequired,
   label: PT.string.isRequired,
+  className: PT.string,
+};
+RadioGruppeWrappedComponent.defaultProps = {
+  className: "",
 };
 
 function RadioGruppe({ feltNavn, ...rest }) {
