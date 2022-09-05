@@ -5,7 +5,7 @@ import MultiSelect from "../../../felleskomponenter/skjema/input/multiselect";
 
 import MKV from "../../../melosyskodeverk";
 
-const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
+const { BRUKER } = MKV.Koder.aktoersroller;
 const {
   UTSENDT_ARBEIDSTAKER,
   UTSENDT_SELVSTENDIG,
