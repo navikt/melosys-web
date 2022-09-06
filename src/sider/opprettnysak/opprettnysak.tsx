@@ -40,14 +40,15 @@ const euEosBehandlingstemaer = (visNyeBehandlingstema: boolean) =>
         kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND &&
         kode !== MKV.Koder.behandlinger.behandlingstema.TRYGDETID
     )
-    .filter(
-      ({ kode }: { kode: string }) =>
-        visNyeBehandlingstema ||
-        ![
-          MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
-          MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
-        ].includes(kode)
-    );
+    .filter(({ kode }: { kode: string }) => {
+      if (visNyeBehandlingstema) {
+        return true;
+      }
+      return ![
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+      ].includes(kode);
+    });
 
 const ftrlBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
   ({ kode }: { kode: string }) => kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
