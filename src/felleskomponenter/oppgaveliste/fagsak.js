@@ -29,14 +29,14 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
     : `${KV.objektTilTerm(sakstype)}`;
   const link = (behandling) =>
     visSakstema
-      ? Routing.lagUrlNy(
+      ? Routing.lagUrl(
           saksnummer,
           behandling.behandlingID,
           sakstype,
           behandling.behandlingstema.kode,
           behandling.behandlingstype.kode
         )
-      : Routing.lagUrl(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode);
+      : Routing.lagUrlFraBehandlingstema(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode);
 
   const customMargin = { marginLeft: "1em" };
 

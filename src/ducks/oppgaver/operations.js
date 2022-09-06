@@ -49,7 +49,7 @@ export const plukkSak = async (data) => {
 
   if (data.sakstema) {
     // shortcut istedenfor å dra inn melosys.sakstema toggle
-    return Routing.lagUrlNy(saksnummer, behandlingID, data.sakstema, behandlingstema, behandlingstype);
+    return Routing.lagUrl(saksnummer, behandlingID, data.sakstema, behandlingstema, behandlingstype);
   }
-  return Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
+  return Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema);
 };

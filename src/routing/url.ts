@@ -4,7 +4,11 @@ import * as Constants from "../constants";
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { HENVELDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 
-export const lagUrl = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
+export const lagUrlFraBehandlingstema = (
+  saksnummer: number | string,
+  behandlingID: number,
+  behandlingstemaKode: string
+) => {
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE:
@@ -35,8 +39,7 @@ export const lagUrl = (saksnummer: number | string, behandlingID: number, behand
   }
 };
 
-export const lagUrlNy = (
-  // TODO  Når melosys.sakstema / melosys.behandle_alle_saker fjernes, kan denne funksjonen kalles lagUrl og den over lagUrlFraBehandlingstema
+export const lagUrl = (
   saksnummer: number | string,
   behandlingID: number,
   sakstypeKode: string,
@@ -46,7 +49,7 @@ export const lagUrlNy = (
   if (skalViseTomFlyt(sakstypeKode, behandlingstemaKode, behandlingstypeKode)) {
     return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
-  return lagUrl(saksnummer, behandlingID, behandlingstemaKode);
+  return lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstemaKode);
 };
 
 const skalViseTomFlyt = (sakstype: string, behandlingstema: string, behandlingstype: string) => {
