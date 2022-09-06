@@ -1,7 +1,14 @@
-.behandlingsstatus__behandlingsstatusMedSaksfrist {
-  display: flex;
-
-  span {
+.behandlingsstatus {
+  &__behandlingsstatusMedSaksfrist {
+    .behandlingsstatus__behandlingsstatus {
+      display: initial;
+    }
+  }
+  &__span {
     margin-left: 4px;
+  }
+
+  &__behandlingsstatus {
+    display: flex;
   }
 }
