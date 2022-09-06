@@ -11,6 +11,7 @@ import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
 import * as Mui from "../../../felleskomponenter/ui";
+import * as KV from "../../../kodeverk";
 
 import AvsenderVelger from "./avsender";
 import LenkeListeVelger from "./lenkelistevelger";
@@ -350,7 +351,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  settFeltInnhold: (feltNavn, verdi) => dispatch(change("journalforing", feltNavn, verdi)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.JOURNALFORING, feltNavn, verdi)),
   hentFagsakListe: (fnrEllerOrgnr) => dispatch(sokOperations.sok(fnrEllerOrgnr)),
   sokOrgnr: (orgnr) => dispatch(OrganisasjonOperations.hent(orgnr)),
 });

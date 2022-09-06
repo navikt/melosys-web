@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import PT from "prop-types";
 
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
@@ -6,13 +7,58 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import Soknadsland from "../../../felleskomponenter/soknadsland";
+import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behandlingsstatus";
+
+import "./enkeltSak.css";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = (props) => {
-  const { opprettetDato, behandlingOversikter, sakstype, saksstatus, saksnummer } = props.sak;
+  const { sakstemaToggleEnabled, landkoder } = props;
+  const { opprettetDato, behandlingOversikter, sakstype, saksstatus, saksnummer, sakstema } = props.sak;
 
-  const { land, behandlingstype, periode, behandlingsstatus } = behandlingOversikter[0];
+  const { land, behandlingstype, periode, behandlingsstatus, behandlingstema, svarFrist } = behandlingOversikter[0];
+
+  if (sakstemaToggleEnabled) {
+    return (
+      <div className="enkeltSak">
+        <Skjema.CustomRadioPanelElement
+          tittel={
+            <div className="tittel">
+              <span>
+                {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
+              </span>
+              <span className="saksnummer">{saksnummer}</span>
+            </div>
+          }
+          data={[
+            { description: KV.objektTilTerm(behandlingstema) },
+            { description: <div className="behandlingstype">{KV.objektTilTerm(behandlingstype)}</div> },
+            {
+              term: "Søknadsperiode:",
+              description: periode ? (
+                <Fragment>
+                  <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} />
+                </Fragment>
+              ) : null,
+            },
+            {
+              term: "Land:",
+              description: <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />,
+            },
+            {
+              description: (
+                <div className="behandlingsstatusSvarfrist-wrapper">
+                  <BehandlingsstatusMedSvarfrist behandlingsstatus={behandlingsstatus} svarFrist={svarFrist} />
+                </div>
+              ),
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
   return (
     <Skjema.CustomRadioPanelElement
       tittel={KV.objektTilTerm(sakstype)}
@@ -38,6 +84,8 @@ const EnkeltSak = (props) => {
 
 EnkeltSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
+  sakstemaToggleEnabled: PT.bool.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 export default EnkeltSak;

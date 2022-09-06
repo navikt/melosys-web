@@ -129,6 +129,8 @@ const lagBehandlingsgrunnlagData = (behandlingstema, behandlingsgrunnlag) => {
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:

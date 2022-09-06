@@ -21,10 +21,18 @@ export const BehandlingsstatusMedSvarfrist = ({
   svarFrist,
   className,
 }: BehandlingsstatusMedSvarfristProps) => {
+  const visSvarFrist =
+    svarFrist &&
+    [
+      MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+      MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+    ].includes(behandlingsstatus?.kode);
   return (
     <div className={classNames("behandlingsstatus__behandlingsstatusMedSaksfrist", className)}>
       <Behandlingsstatus behandlingsstatus={behandlingsstatus} />
-      {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
+      {visSvarFrist && (
+        <span className="behandlingsstatus__span">{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>
+      )}
     </div>
   );
 };
@@ -59,9 +67,9 @@ interface BehandlingsstatusProps {
 
 const Behandlingsstatus = ({ behandlingsstatus }: BehandlingsstatusProps) => {
   return (
-    <div className="behandlingsstatus__behandlingsstatusMedSaksfrist">
+    <div className="behandlingsstatus__behandlingsstatus">
       {getIkon(behandlingsstatus?.kode)}
-      <span>{KV.objektTilTerm(behandlingsstatus)}</span>
+      <span className="behandlingsstatus__span">{KV.objektTilTerm(behandlingsstatus)}</span>
     </div>
   );
 };
