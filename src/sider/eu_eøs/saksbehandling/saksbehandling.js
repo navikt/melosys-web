@@ -77,7 +77,7 @@ class Saksbehandling extends Component {
 
   lastInnSaksopplysninger = async () => {
     const { match, location } = this.props;
-    const { snr } = match.params;
+    const { saksnr } = match.params;
     const behandlingID = Utils.queryString.getParam(location, "behandlingID");
     this.setState({ behandlingID: Utils._toInteger(behandlingID) });
 
@@ -94,7 +94,7 @@ class Saksbehandling extends Component {
     } = this.props;
 
     try {
-      await hentFagsaker(snr);
+      await hentFagsaker(saksnr);
       const response = await hentBehandling(behandlingID);
       const behandling = response.data;
       if (!behandling) return false;
@@ -108,7 +108,7 @@ class Saksbehandling extends Component {
       }
 
       await hentBehandlingsgrunnlag(behandlingID);
-      await hentDokumentOversikt(snr);
+      await hentDokumentOversikt(saksnr);
       await hentLandkoder();
 
       const anmodningsperioderRes = await Api.Anmodningsperioder.hent(behandlingID);

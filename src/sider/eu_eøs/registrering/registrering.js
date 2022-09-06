@@ -25,7 +25,7 @@ import "./registrering.css";
 
 export const Registrering = ({
   match: {
-    params: { snr: saksnummer },
+    params: { saksnr: saksnummer },
   },
   tilForsiden,
   location,

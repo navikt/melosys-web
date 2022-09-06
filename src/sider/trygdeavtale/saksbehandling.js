@@ -66,7 +66,7 @@ const Saksbehandling = ({
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
-  const saksnummer = match?.params?.snr;
+  const saksnummer = match?.params?.saksnr;
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");

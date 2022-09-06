@@ -45,7 +45,7 @@ const hentForsteSteg = (behandlingstema) => {
 
 const Vurderutpeking = ({
   match: {
-    params: { snr: saksnummer },
+    params: { saksnr: saksnummer },
   },
   lastInnSaksopplysninger,
   location,

@@ -86,32 +86,32 @@ const Routing = () => (
         <Route exact path="/sok" component={SokLoadable} />
         <Route
           exact
-          path={`/${EU_EOS}/registrering/:snr/unntaksperioder`}
+          path={`/${EU_EOS}/registrering/:saksnr/unntaksperioder`}
           render={(props) => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />}
         />
         <Route
           exact
-          path={`/${EU_EOS}/registrering/:snr/anmodningunntak`}
+          path={`/${EU_EOS}/registrering/:saksnr/anmodningunntak`}
           render={(props) => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />}
         />
         <Route
-          path={`/${EU_EOS}/sedbehandling/:snr`}
+          path={`/${EU_EOS}/sedbehandling/:saksnr`}
           render={(props) => <SedBehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route
-          path={`/${EU_EOS}/saksbehandling/:snr`}
+          path={`/${EU_EOS}/saksbehandling/:saksnr`}
           render={(props) => <EuEøsSaksbehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route
-          path={`/${FTRL}/saksbehandling/:snr`}
+          path={`/${FTRL}/saksbehandling/:saksnr`}
           render={(props) => <FtrlSaksbehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route
-          path={`/${TRYGDEAVTALE}/saksbehandling/:snr`}
+          path={`/${TRYGDEAVTALE}/saksbehandling/:saksnr`}
           render={(props) => <TrygdeavtaleSaksbehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route
-          path="/:sakstype/behandling/:snr"
+          path="/:sakstype/behandling/:saksnr"
           render={(props) => <TomFlytBehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route
@@ -120,7 +120,7 @@ const Routing = () => (
         />
         <Route path="/opprettnysak" render={(props) => <OpprettNySakLoadable {...props} {...fellesHandlers} />} />;
         <Route
-          path={`/${EU_EOS}/vurderutpeking/:snr`}
+          path={`/${EU_EOS}/vurderutpeking/:saksnr`}
           render={(props) => <VurderUtpekingLoadable {...props} {...fellesHandlers} />}
         />
         <Route path="/sendbrev/:behandlingID" render={(props) => <SendbrevLoadable {...props} {...fellesHandlers} />} />

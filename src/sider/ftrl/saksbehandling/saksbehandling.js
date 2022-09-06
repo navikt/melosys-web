@@ -99,12 +99,12 @@ const Saksbehandling = ({
   };
 
   const lastInnSaksopplysninger = async () => {
-    const { snr } = match.params;
+    const { saksnr } = match.params;
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
     setBehandlingID(Utils._toInteger(behandlingIDFraParam));
 
     try {
-      await hentFagsaker(snr);
+      await hentFagsaker(saksnr);
       await hentFolketrygdenKodeverk();
       await hentOppsummertFakta(behandlingIDFraParam);
       const response = await hentBehandling(behandlingIDFraParam);
@@ -126,7 +126,7 @@ const Saksbehandling = ({
       setBestemmelser(bestemmelserResponse);
       await hentMedlemskapsperioder(behandlingIDFraParam);
       await hentBehandlingsgrunnlag(behandlingIDFraParam);
-      await hentDokumentOversikt(snr);
+      await hentDokumentOversikt(saksnr);
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {

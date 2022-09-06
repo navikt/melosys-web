@@ -41,7 +41,7 @@ const SedBehandling = ({
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
   const {
-    params: { snr: saksnummer },
+    params: { saksnr: saksnummer },
   } = match;
 
   useEffect(() => {

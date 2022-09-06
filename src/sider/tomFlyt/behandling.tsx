@@ -54,7 +54,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface MatchParams {
-  snr: string;
+  saksnr: string;
   sakstype: string;
 }
 
@@ -75,7 +75,7 @@ const Behandling = ({
   mottaksdato,
   oppsummering,
   match: {
-    params: { snr: saksnummer, sakstype },
+    params: { saksnr: saksnummer, sakstype },
   },
   redigerbart,
   resetSaksopplysninger,
