@@ -12,7 +12,6 @@ import MKV from "../../../melosyskodeverk";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./opprettSak.css";
-import MultiSelect from "../../../felleskomponenter/skjema/input/multiselect";
 import * as KV from "../../../kodeverk";
 
 const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
@@ -46,11 +45,9 @@ export const OpprettSak = (props) => {
   const {
     opprettnysak_behandlingstema: valgtBehandlingstema,
     sakstype: valgtSakstype,
-    journalforingSoknadsland,
     journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand,
     journalforingGjelder,
   } = journalforingSkjemaVerdier;
-  const [valgteLand, setValgteLand] = useState(journalforingSoknadsland);
   const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
   const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -104,20 +101,6 @@ export const OpprettSak = (props) => {
       MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
     ].includes(valgtBehandlingstema);
 
-  const [oppdaterteFelt, setOppdaterteFelt] = useState({ land: false });
-  const oppdaterFelt = (felt) => {
-    const prevState = { ...oppdaterteFelt };
-    prevState[felt] = true;
-    setOppdaterteFelt(prevState);
-  };
-
-  const landEndret = (options) => {
-    const land = options ? options.map((item) => item.value) : [];
-    setValgteLand(land);
-    oppdaterFelt("land");
-    settFeltInnhold("journalforingSoknadsland", land);
-  };
-
   return (
     <div className="panelramme">
       <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
@@ -169,18 +152,18 @@ export const OpprettSak = (props) => {
               </Nav.Column>
             </Nav.Row>
           </Nav.Fieldset>
-          <Nav.Fieldset>
-            <Nav.Typo.Element>
+          <Nav.Fieldset
+            legend={
               <LabelMedHjelpetekst
                 label="I hvilke land skal arbeidet/næringen utføres i?"
                 hjelpetekst="“Flere EØS-land/Sveits. Ikke kjent hvilke” skal kun benyttes hvis land er ukjent"
               />
-            </Nav.Typo.Element>
+            }
+          >
             {valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
               <Nav.Row className="landcheckbox">
                 <Skjema.Radio
                   feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
-                  disabled={valgteLand.length > 0}
                   label="Flere EØS-land/Sveits. Ikke kjent hvilke"
                   value
                 />
@@ -191,18 +174,17 @@ export const OpprettSak = (props) => {
                 />
               </Nav.Row>
             )}
-            <Nav.Row className="">
-              <Nav.Column xs="12">
-                <MultiSelect
-                  values={valgteLand}
-                  onChange={landEndret}
-                  options={MKV.KTObjects.landkoder.map((item) => ({ value: item.kode, label: item.term }))}
-                  className="multiselect"
-                  redigerbart={!ukjentEllerAlleEosLand}
-                  feltNavn="journalforingSoknadsland"
-                />
-              </Nav.Column>
-            </Nav.Row>
+            {!ukjentEllerAlleEosLand && (
+              <Nav.Row>
+                <Nav.Column xs="12">
+                  <Skjema.MultiSelect
+                    options={MKV.KTObjects.landkoder.map((item) => ({ value: item.kode, label: item.term }))}
+                    className="multiselect"
+                    feltNavn="journalforingSoknadsland"
+                  />
+                </Nav.Column>
+              </Nav.Row>
+            )}
           </Nav.Fieldset>
         </Fragment>
       )}
