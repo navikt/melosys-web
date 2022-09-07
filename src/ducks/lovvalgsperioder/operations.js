@@ -153,7 +153,27 @@ const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
   ].includes(behandlingerSelectors.BehandlingsstatusKodeSelector(reduxState));
 
   if (erAnmodningsperiodeSendtUtland && erBehandlingsstatusUnderBehandlingEllerAvsluttet) {
-    return Selectors.LovvalgsperioderSelector(reduxState);
+    const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
+    const soknadsland = behandlingsgrunnlagSelectors.SoknadslandkoderSelector(reduxState);
+    const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+
+    const unntakFraLovvalgsland = soknadsland.join("");
+    const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
+
+    return [
+      {
+        id: null,
+        fomDato: periode.fom,
+        tomDato: periode.tom,
+        lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
+        tilleggBestemmelse: stegState.tilleggbestemmelse,
+        lovvalgsland: MKV.Koder.landkoder.NO,
+        unntakFraBestemmelse: unntakFraBestemmelse || null,
+        unntakFraLovvalgsland,
+        medlemskapsperiodeID: medlemskapsperiodeID || null,
+        trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      },
+    ];
   }
   return [];
 };
