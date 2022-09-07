@@ -45,6 +45,7 @@ export const OpprettSak = (props) => {
   const {
     opprettnysak_behandlingstema: valgtBehandlingstema,
     sakstype: valgtSakstype,
+    journalforingSoknadsland: valgteLand,
     journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand,
     journalforingGjelder,
   } = journalforingSkjemaVerdier;
@@ -165,6 +166,7 @@ export const OpprettSak = (props) => {
                 <Skjema.Radio
                   feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
                   label="Flere EØS-land/Sveits. Ikke kjent hvilke"
+                  disabled={valgteLand.length > 0}
                   value
                 />
                 <Skjema.Radio
