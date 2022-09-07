@@ -162,7 +162,7 @@ export const OpprettSak = (props) => {
             }
           >
             {valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
-              <Nav.Row className="landcheckbox">
+              <Nav.Row className="land_radiobtn">
                 <Skjema.Radio
                   feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
                   label="Flere EØS-land/Sveits. Ikke kjent hvilke"
