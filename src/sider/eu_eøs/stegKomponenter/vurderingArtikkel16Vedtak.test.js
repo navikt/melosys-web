@@ -36,6 +36,7 @@ describe("VurderingArtikkel16Vedtak", () => {
       hentLovvalgsperioder: jest.fn(),
       lagreLovvalgsperioder: jest.fn(),
       endreLovvalgsperiode: jest.fn(),
+      publiserStegdata: jest.fn(),
     };
   });
 
@@ -60,11 +61,11 @@ describe("VurderingArtikkel16Vedtak", () => {
     expect(vurderingArtikkel16Vedtak.find(Avslag)).toHaveLength(1);
   });
 
-  it("viser en knapp for å fatte vedtak", () => {
+  it("viser en knapp for å fatte vedtak", async () => {
     const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
 
     expect(vurderingArtikkel16Vedtak.find("StegKnapper")).toHaveLength(1);
-    vurderingArtikkel16Vedtak.find("StegKnapper").props().bekreftKnappProps.onClick();
+    await vurderingArtikkel16Vedtak.find("StegKnapper").props().bekreftKnappProps.onClick();
     expect(props.lagreOgFatteVedtak).toHaveBeenCalledTimes(1);
   });
 });
