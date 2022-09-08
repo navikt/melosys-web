@@ -3,7 +3,7 @@ import React from "react";
 import MKV from "../../../melosyskodeverk";
 
 import { VurderingArtikkel16Vedtak } from "./vurderingArtikkel16Vedtak/vurderingArtikkel16Vedtak";
-import { Innvilgelse } from "./vurderingArtikkel16Vedtak/innvilgelse.js";
+import { Innvilgelse } from "./vurderingArtikkel16Vedtak/innvilgelse";
 import { DelvisInnvilgelse } from "./vurderingArtikkel16Vedtak/delvisInnvilgelse";
 import { Avslag } from "./vurderingArtikkel16Vedtak/avslag";
 
