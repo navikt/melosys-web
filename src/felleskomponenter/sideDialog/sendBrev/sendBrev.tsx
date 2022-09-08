@@ -16,6 +16,7 @@ import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
+import * as Mui from "../../ui";
 
 import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { formSelectors } from "../../../ducks/form";
@@ -28,6 +29,7 @@ import BrevMottakereTabell from "./brevMottakereTabell";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
+import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
 
 const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.SendBrevValidSelector(state),
@@ -47,6 +49,11 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+export type Fritekstvedlegg = {
+  tittel: string;
+  fritekst: string;
+};
+
 interface Props {
   redigerbart: boolean;
   visApneINyttVindu: boolean;
@@ -57,6 +64,7 @@ interface Props {
   felterWidth?: ColumnWidth;
   formValues: SendBrevFormValues;
   dokumenter: FysiskDokument[];
+  saksnummer: string;
 }
 
 const SendBrev = ({
@@ -73,12 +81,15 @@ const SendBrev = ({
   mottakerSelectWidth = "12",
   mottakerTabellWidth = "12",
   felterWidth = "12",
+  saksnummer,
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
+  const [visFritekstvedleggSkjema, setVisFritekstvedleggSkjema] = useState(false);
+  const [fritekstvedlegg, setFritekstvedlegg] = useState<Fritekstvedlegg[]>([]);
 
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
@@ -204,6 +215,25 @@ const SendBrev = ({
     setBrevSendtFeil(false);
   };
 
+  const resetFritekstvedlegg = () => {
+    changeField("felt.FRITEKSTVEDLEGG_TITTEL.feltVerdi", "");
+    changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", "");
+    setVisFritekstvedleggSkjema(false);
+  };
+
+  const leggTilFritekstvedlegg = () => {
+    const tittel = formValues.felt?.FRITEKSTVEDLEGG_TITTEL?.feltVerdi;
+    const fritekst = formValues.felt?.FRITEKSTVEDLEGG_FRITEKST?.feltVerdi;
+    if (tittel && fritekst && fritekst !== "<p></p>\n") {
+      const newFritekstvedlegg = [...fritekstvedlegg];
+      newFritekstvedlegg.push({ tittel, fritekst });
+      setFritekstvedlegg(newFritekstvedlegg);
+      changeField("felt.FRITEKSTVEDLEGG_TITTEL.feltVerdi", "");
+      changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", "");
+      setVisFritekstvedleggSkjema(false);
+    }
+  };
+
   const overstyrBlurEvent = (event: React.FocusEvent) => {
     event.preventDefault();
   };
@@ -213,8 +243,11 @@ const SendBrev = ({
   const mottakerErValgt = formValues.valgtMottaker;
   const brevtypeErValgt = formValues.valgtBrev;
 
-  const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}`;
+  const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}/${saksnummer}`;
   const vedleggFelt = formValues.valgtBrev?.felter?.find((felt) => felt.kode === Api.DokumenterV2.FeltType.VEDLEGG);
+  const fritekstvedleggFelt = formValues.valgtBrev?.felter?.find(
+    (felt) => felt.kode === Api.DokumenterV2.FeltType.FRITEKSTVEDLEGG
+  );
 
   return (
     <div className="send_brev">
@@ -286,13 +319,28 @@ const SendBrev = ({
           dokumenter={dokumenter}
           valgteVedlegg={valgteVedlegg}
           setValgteVedlegg={setValgteVedlegg}
+          fritekstvedlegg={fritekstvedlegg}
         />
       )}
+
+      {fritekstvedleggFelt &&
+        (visFritekstvedleggSkjema ? (
+          <FritekstvedleggSkjema
+            felt={fritekstvedleggFelt}
+            resetFritekstvedlegg={resetFritekstvedlegg}
+            leggTilFritekstvedlegg={leggTilFritekstvedlegg}
+            width={felterWidth}
+          />
+        ) : (
+          <Mui.Lenkeknapp onClick={() => setVisFritekstvedleggSkjema(true)} ikon={Ikoner.Add}>
+            {fritekstvedleggFelt.beskrivelse}
+          </Mui.Lenkeknapp>
+        ))}
 
       <div>
         <Nav.Hovedknapp
           mini
-          disabled={!redigerbart || !formIsValid || !!formValues.valgtMottaker?.feilmelding}
+          disabled={!redigerbart || !formIsValid || !!formValues.valgtMottaker?.feilmelding || visFritekstvedleggSkjema}
           className="brevknapp"
           onClick={sendBrev}
         >

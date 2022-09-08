@@ -7,6 +7,7 @@ import * as Utils from "../../utils";
 import * as Nav from "../../navFrontend";
 import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
+import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
 
 interface EnkeltVedleggProps {
   vedlegg: FysiskDokument;
@@ -64,6 +65,7 @@ interface VedleggTableProps {
   redigerer: boolean;
   slettVedlegg: (vedleggID: string) => void;
   leggTilVedlegg: (vedlegg: FysiskDokument) => void;
+  fritekstvedlegg?: Fritekstvedlegg[];
 }
 
 export const VedleggTable = ({
@@ -72,7 +74,9 @@ export const VedleggTable = ({
   redigerer,
   slettVedlegg,
   leggTilVedlegg,
+  fritekstvedlegg,
 }: VedleggTableProps) => {
+  console.log(fritekstvedlegg);
   const vedleggErMarkert = (vedleggID: string) => Boolean(valgteVedlegg.find((vedlegg) => vedlegg.id === vedleggID));
 
   const hentGjeldendeVedlegg = () => (redigerer ? alleVedlegg : valgteVedlegg);

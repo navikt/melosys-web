@@ -9,15 +9,17 @@ import * as Ikoner from "../../resources/images";
 import "./vedleggVelger.css";
 import { VedleggTable } from "./vedleggTable";
 import VedleggVelgerModal from "./vedleggVelgerModal";
+import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
 
 interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];
   valgteVedlegg: FysiskDokument[];
   onChange: (valgteVedlegg: FysiskDokument[]) => void;
   className?: string;
+  fritekstvedlegg: Fritekstvedlegg[];
 }
 
-const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: VedleggVelgerProps) => {
+const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className, fritekstvedlegg }: VedleggVelgerProps) => {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
@@ -42,6 +44,7 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: Vedle
           valgteVedlegg={valgteVedlegg}
           alleVedlegg={dokumenter}
           leggTilVedlegg={leggTilVedlegg}
+          fritekstvedlegg={fritekstvedlegg}
         />
       )}
       <Mui.Lenkeknapp onClick={toggleRedigerer} ikon={Ikoner.Add}>

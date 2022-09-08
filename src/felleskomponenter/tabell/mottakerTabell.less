@@ -4,17 +4,30 @@
   font-family: "Source Sans Pro", Arial, sans-serif;
   margin-bottom: 2rem;
   margin-top: 2rem;
-  .border_bottom {
-    border-bottom: 1px solid #d8d7d6;
-    border-top: none;
+
+  tr:first-child {
+    border-top: none !important;
+    th {
+      border-color: #979797;
+    }
   }
+
+  tr:last-child {
+    td {
+      border-color: #979797;
+    }
+  }
+
   th {
     text-align: left;
     padding: 0.2em 0.5em;
-    border-bottom: 1px solid #000000;
     color: #3e3832;
   }
+  th:first-child {
+    padding-left: 0;
+  }
+
   td {
-    padding: 0.5em 0.5em;
+    padding: 0.5em;
   }
 }

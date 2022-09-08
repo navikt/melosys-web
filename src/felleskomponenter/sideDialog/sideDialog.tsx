@@ -50,6 +50,7 @@ export const FaneViser = ({
       return (
         <SideDialogSendBrev
           behandlingID={behandlingID}
+          saksnummer={saksnummer}
           redigerbart={redigerbart}
           visApneINyttVindu
           dokumenter={dokumenter}
