@@ -2,7 +2,12 @@ import React from "react";
 
 import MKV from "../../../melosyskodeverk";
 
-import { VurderingArtikkel16Vedtak, Innvilgelse, DelvisInnvilgelse, Avslag } from "./vurderingArtikkel16Vedtak";
+import {
+  VurderingArtikkel16Vedtak,
+  Innvilgelse,
+  DelvisInnvilgelse,
+  Avslag,
+} from "./vurderingArtikkel16Vedtak/vurderingArtikkel16Vedtak";
 
 describe("VurderingArtikkel16Vedtak", () => {
   let props = null;

@@ -361,6 +361,7 @@ class Stegvelger extends Component {
       oppdater: this.oppdater,
       lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
       kontrollerFerdigbehandling: this.kontrollerFerdigbehandling,
+      publiserStegdata: this.publiserStegdata,
     };
 
     const { props } = this;

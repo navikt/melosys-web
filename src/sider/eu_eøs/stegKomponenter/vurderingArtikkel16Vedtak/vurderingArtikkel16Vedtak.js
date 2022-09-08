@@ -2,321 +2,30 @@ import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-import * as Nav from "../../../navFrontend";
-import * as MPT from "../../../proptypes";
-import * as KV from "../../../kodeverk";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Hooks from "../../../hooks";
-import * as Utils from "../../../utils";
+import * as Nav from "../../../../navFrontend";
+import * as KV from "../../../../kodeverk";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Hooks from "../../../../hooks";
+import * as Utils from "../../../../utils";
 
-import Begrunnelser from "../../../felleskomponenter/begrunnelser";
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
-import DatoOmrade from "../../../felleskomponenter/datoOmrade/datoOmrade";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { anmodningsperiodesvarSelectors } from "../../../../ducks/anmodningsperiodesvar";
+import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
+import { vilkarSelectors } from "../../../../ducks/vilkar";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
-import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
-import { vilkarSelectors } from "../../../ducks/vilkar";
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import VurderingArtikkel16VedtakSchema from "../vurderingArtikkel16VedtakSchema";
 
-import { lagYupToReduxformErrorMapper } from "../../../yup";
-import VurderingArtikkel16VedtakSchema from "./vurderingArtikkel16VedtakSchema";
-
-import "./vurderingArtikkel16Vedtak.css";
-
-export const VurderingArtikkel16VedtakBegrunnelser = ({
-  art12_1_begrunnelser,
-  art12_2_begrunnelser,
-  vilkarBegrunnelser,
-}) => {
-  const muligeVirksomhetBegrunnelser = [
-    ...MKV.KTObjects.begrunnelser.art12_2_normalt_virksomhet,
-    ...MKV.KTObjects.begrunnelser.art12_1_vesentlig_virksomhet,
-    ...MKV.KTObjects.begrunnelser.art12_1_forutgaaende_medl,
-    ...MKV.KTObjects.begrunnelser.bosted,
-  ];
-
-  return (
-    <Fragment>
-      {art12_1_begrunnelser.length > 0 && (
-        <Begrunnelser
-          label="Søkeren fyller ikke kriteriene for artikkel 12 nr. 1."
-          valgteBegrunnelser={[...art12_1_begrunnelser, ...vilkarBegrunnelser]}
-          muligeBegrunnelser={[...MKV.KTObjects.begrunnelser.art12_1_begrunnelser, ...muligeVirksomhetBegrunnelser]}
-        />
-      )}
-      {art12_2_begrunnelser.length > 0 && (
-        <Begrunnelser
-          label="Søkeren fyller ikke kriteriene for artikkel 12 nr. 2."
-          valgteBegrunnelser={[...art12_2_begrunnelser, ...vilkarBegrunnelser]}
-          muligeBegrunnelser={[...MKV.KTObjects.begrunnelser.art12_2_begrunnelser, ...muligeVirksomhetBegrunnelser]}
-        />
-      )}
-      <Begrunnelser
-        label="Søkeren fyller ikke kriteriene for artikkel 16 nr. 1."
-        fritekst="Utenlandske trygdemyndigheter har avslått anmodningen om unntak"
-      />
-    </Fragment>
-  );
-};
-
-VurderingArtikkel16VedtakBegrunnelser.propTypes = {
-  art12_1_begrunnelser: PT.arrayOf(PT.string).isRequired,
-  art12_2_begrunnelser: PT.arrayOf(PT.string).isRequired,
-  vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
-};
-
-export const Innvilgelse = ({
-  redigerbart,
-  behandlingID,
-  gjeldendePeriode,
-  renderFritekstFelt,
-  vedtaksbrevFritekst,
-  visOrienteringsbrevArbeidsgiver,
-  onPeriodeForkorterUncheck,
-  formValues,
-  vedKlikkForhandsvis,
-  stegErGyldig,
-}) => {
-  const pdfDokumenter = [
-    {
-      navn: "Forhåndsvis vedtaksbrev og A1",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
-      data: {
-        fritekst: vedtaksbrevFritekst,
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
-      },
-    },
-  ];
-
-  if (visOrienteringsbrevArbeidsgiver) {
-    pdfDokumenter.push({
-      navn: "Brev til arbeidsgiver",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
-      },
-    });
-  }
-
-  return (
-    <Fragment>
-      <Nav.Typo.Undertittel>
-        Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.
-      </Nav.Typo.Undertittel>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          <Skjema.PeriodeForkorter
-            redigerbart={redigerbart}
-            fomRedigerbar
-            checkboxClassName="forkortLovvalgsperiode"
-            checkboxLabel="Lovvalget innvilges for en kortere periode"
-            checkboxFeltnavn="forkortLovvalgsperiode"
-            onUncheck={onPeriodeForkorterUncheck}
-            forkortPeriode={formValues.forkortLovvalgsperiode}
-            fomLabel="Startdato"
-            fomFeltNavn="fomDato"
-            tomLabel="Sluttdato"
-            tomFeltNavn="tomDato"
-          />
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          {stegErGyldig && (
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
-          )}
-        </Nav.Column>
-      </Nav.Row>
-    </Fragment>
-  );
-};
-
-Innvilgelse.propTypes = {
-  redigerbart: PT.bool.isRequired,
-  behandlingID: PT.number.isRequired,
-  gjeldendePeriode: MPT.Periode.isRequired,
-  vedtaksbrevFritekst: PT.string,
-  renderFritekstFelt: PT.func.isRequired,
-  visOrienteringsbrevArbeidsgiver: PT.bool.isRequired,
-  onPeriodeForkorterUncheck: PT.func.isRequired,
-  formValues: PT.object.isRequired,
-  vedKlikkForhandsvis: PT.func.isRequired,
-  stegErGyldig: PT.bool.isRequired,
-};
-
-Innvilgelse.defaultProps = {
-  vedtaksbrevFritekst: undefined,
-};
-
-export const DelvisInnvilgelse = ({
-  redigerbart,
-  behandlingID,
-  gjeldendePeriode,
-  vedtaksbrevFritekst,
-  renderFritekstFelt,
-  renderBegrunnelser,
-  visOrienteringsbrevArbeidsgiver,
-  onPeriodeForkorterUncheck,
-  formValues,
-  vedKlikkForhandsvis,
-  stegErGyldig,
-}) => {
-  const pdfDokumenter = [
-    {
-      navn: "Forhåndsvis vedtaksbrev og A1",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
-      data: {
-        fritekst: vedtaksbrevFritekst,
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
-      },
-    },
-  ];
-
-  if (visOrienteringsbrevArbeidsgiver) {
-    pdfDokumenter.push({
-      navn: "Brev til arbeidsgiver",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
-      },
-    });
-  }
-
-  return (
-    <Fragment>
-      <Nav.Typo.Undertittel>
-        Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av
-        søknadsperioden
-      </Nav.Typo.Undertittel>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          <Skjema.PeriodeForkorter
-            redigerbart={redigerbart}
-            fomRedigerbar
-            checkboxClassName="forkortLovvalgsperiode"
-            checkboxLabel="Lovvalget innvilges for en kortere periode"
-            checkboxFeltnavn="forkortLovvalgsperiode"
-            onUncheck={onPeriodeForkorterUncheck}
-            forkortPeriode={formValues.forkortLovvalgsperiode}
-            fomLabel="Startdato"
-            fomFeltNavn="fomDato"
-            tomLabel="Sluttdato"
-            tomFeltNavn="tomDato"
-          />
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">{renderBegrunnelser()}</Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          {stegErGyldig && (
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
-          )}
-        </Nav.Column>
-      </Nav.Row>
-    </Fragment>
-  );
-};
-
-DelvisInnvilgelse.propTypes = {
-  redigerbart: PT.bool.isRequired,
-  behandlingID: PT.number.isRequired,
-  gjeldendePeriode: MPT.Periode.isRequired,
-  vedtaksbrevFritekst: PT.string,
-  renderFritekstFelt: PT.func.isRequired,
-  renderBegrunnelser: PT.func.isRequired,
-  visOrienteringsbrevArbeidsgiver: PT.bool.isRequired,
-  onPeriodeForkorterUncheck: PT.func.isRequired,
-  formValues: PT.object.isRequired,
-  vedKlikkForhandsvis: PT.func.isRequired,
-  stegErGyldig: PT.bool.isRequired,
-};
-
-DelvisInnvilgelse.defaultProps = {
-  vedtaksbrevFritekst: undefined,
-};
-
-export const Avslag = ({
-  redigerbart,
-  behandlingID,
-  vedtaksbrevFritekst,
-  renderFritekstFelt,
-  renderBegrunnelser,
-  visOrienteringsbrevArbeidsgiver,
-}) => {
-  const pdfDokumenter = [
-    {
-      navn: "Forhåndsvis vedtaksbrev",
-      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
-      data: {
-        fritekst: vedtaksbrevFritekst,
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
-      },
-    },
-  ];
-
-  if (visOrienteringsbrevArbeidsgiver) {
-    pdfDokumenter.push({
-      navn: "Brev til arbeidsgiver",
-      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
-      },
-    });
-  }
-
-  return (
-    <Fragment>
-      <Nav.Typo.Undertittel>Avslag</Nav.Typo.Undertittel>
-      <Nav.Row>
-        <Nav.Column xs="7">{renderBegrunnelser()}</Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
-        </Nav.Column>
-      </Nav.Row>
-    </Fragment>
-  );
-};
-
-Avslag.propTypes = {
-  redigerbart: PT.bool.isRequired,
-  behandlingID: PT.number.isRequired,
-  vedtaksbrevFritekst: PT.string,
-  renderFritekstFelt: PT.func.isRequired,
-  renderBegrunnelser: PT.func.isRequired,
-  visOrienteringsbrevArbeidsgiver: PT.bool.isRequired,
-};
-
-Avslag.defaultProps = {
-  vedtaksbrevFritekst: undefined,
-};
+import "../vurderingArtikkel16Vedtak.css";
+import { Innvilgelse } from "./innvilgelse";
+import { DelvisInnvilgelse } from "./delvisInnvilgelse";
+import { Avslag } from "./avslag";
+import { VurderingArtikkel16VedtakBegrunnelser } from "./vurderingArtikkel16VedtakBegrunnelser";
 
 const hentLovvalgsperiode = (anmodningsperiodesvar, anmodningsperiode) => {
   const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
@@ -361,6 +70,7 @@ export const VurderingArtikkel16Vedtak = ({
   kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
+  publiserStegdata,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
@@ -435,6 +145,8 @@ export const VurderingArtikkel16Vedtak = ({
     if (formValues.forkortLovvalgsperiode) {
       await forkortLovvalgsperiode();
     }
+
+    await publiserStegdata();
 
     setVedtakPending(true);
 
@@ -584,6 +296,7 @@ VurderingArtikkel16Vedtak.propTypes = {
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
+  publiserStegdata: PT.func.isRequired,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
