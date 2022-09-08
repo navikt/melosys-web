@@ -3,10 +3,12 @@ import { connect } from "react-redux";
 import { change } from "redux-form";
 import PT from "prop-types";
 
+import MKV from "../../../melosyskodeverk";
+import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
+
 import { formSelectors } from "../../../ducks/form";
-import MKV from "../../../melosyskodeverk";
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
 import { useFeatureToggle } from "../../../featuretoggle";
 
@@ -38,14 +40,14 @@ export const OpprettSakTittel = () => (
   </div>
 );
 
-const OpprettFagsak = (props) => {
-  const { journalforingSkjemaVerdier } = props;
-  const { settFeltInnhold } = props;
+const OpprettSak = (props) => {
+  const { journalforingSkjemaVerdier, sakstemaToggleEnabled, settFeltInnhold } = props;
   const {
     opprettnysak_behandlingstema: valgtBehandlingstema,
     sakstype: valgtSakstype,
     journalforingSoknadsland: valgteLand,
     journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand,
+    journalforingGjelder,
   } = journalforingSkjemaVerdier;
   const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
   const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
@@ -91,13 +93,14 @@ const OpprettFagsak = (props) => {
     );
   }, [folketrygdenToggle]);
 
-  const skalViseSoknadsperiodeOgLand = ![
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
-    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
-    MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
-    MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
-  ].includes(valgtBehandlingstema);
+  const skalViseSoknadsperiodeOgLand =
+    journalforingGjelder !== MKV.Koder.aktoersroller.VIRKSOMHET &&
+    valgtSakstype === MKV.Koder.sakstyper.EU_EOS &&
+    ![
+      MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
+      MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
+      MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+    ].includes(valgtBehandlingstema);
 
   return (
     <div className="panelramme">
@@ -108,6 +111,15 @@ const OpprettFagsak = (props) => {
           </option>
         ))}
       </Skjema.Select>
+      {sakstemaToggleEnabled && (
+        <Skjema.Select feltNavn="sakstema" bredde="fullbredde" label="Sakstema">
+          {MKV.KTObjects.sakstemaer.map((elem) => (
+            <option key={elem.kode} value={elem.kode}>
+              {elem.term}
+            </option>
+          ))}
+        </Skjema.Select>
+      )}
       <Skjema.Select
         feltNavn="opprettnysak_behandlingstema"
         bredde="fullbredde"
@@ -120,6 +132,15 @@ const OpprettFagsak = (props) => {
           </option>
         ))}
       </Skjema.Select>
+      {sakstemaToggleEnabled && (
+        <Skjema.Select feltNavn="opprettnysak_behandlingstype" bredde="fullbredde" label="Behandlingstype">
+          {MKV.KTObjects.behandlinger.behandlingstyper.map((elem) => (
+            <option key={elem.kode} value={elem.kode}>
+              {elem.term}
+            </option>
+          ))}
+        </Skjema.Select>
+      )}
       {skalViseSoknadsperiodeOgLand && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
@@ -167,12 +188,13 @@ const OpprettFagsak = (props) => {
     </div>
   );
 };
-OpprettFagsak.propTypes = {
+OpprettSak.propTypes = {
   journalforingSkjemaVerdier: PT.object,
   settFeltInnhold: PT.func.isRequired,
+  sakstemaToggleEnabled: PT.bool.isRequired,
 };
 
-OpprettFagsak.defaultProps = {
+OpprettSak.defaultProps = {
   journalforingSkjemaVerdier: {},
 };
 const mapStateToProps = (state) => ({
@@ -180,6 +202,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  settFeltInnhold: (feltNavn, verdi) => dispatch(change("journalforing", feltNavn, verdi)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.JOURNALFORING, feltNavn, verdi)),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(OpprettFagsak);
+export default connect(mapStateToProps, mapDispatchToProps)(OpprettSak);

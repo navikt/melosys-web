@@ -32,13 +32,23 @@ import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
 import "./opprettnysak.css";
 
-const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
-  .filter(({ kode }: { kode: string }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
-  .filter(
-    ({ kode }: { kode: string }) =>
-      kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND &&
-      kode !== MKV.Koder.behandlinger.behandlingstema.TRYGDETID
-  );
+const euEosBehandlingstemaer = (visNyeBehandlingstema: boolean) =>
+  MKV.KTObjects.behandlinger.behandlingstema
+    .filter(({ kode }: { kode: string }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
+    .filter(
+      ({ kode }: { kode: string }) =>
+        kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND &&
+        kode !== MKV.Koder.behandlinger.behandlingstema.TRYGDETID
+    )
+    .filter(({ kode }: { kode: string }) => {
+      if (visNyeBehandlingstema) {
+        return true;
+      }
+      return ![
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+      ].includes(kode);
+    });
 
 const ftrlBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
   ({ kode }: { kode: string }) => kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
@@ -249,7 +259,7 @@ const OpprettNySak = ({
       case MKV.Koder.sakstyper.TRYGDEAVTALE:
         return trygdeavtaleBehandlingstemaer;
       case MKV.Koder.sakstyper.EU_EOS:
-        return euEosBehandlingstemaer;
+        return euEosBehandlingstemaer(behandleAlleSakerToggle === "enabled");
       default:
         return [];
     }

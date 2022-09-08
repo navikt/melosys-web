@@ -7,6 +7,7 @@ import * as Utils from "../../../utils";
 import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
+import * as KV from "../../../kodeverk";
 import { formSelectors } from "../../../ducks/form";
 
 function LenkeListeVelger(props) {
@@ -89,14 +90,14 @@ LenkeListeVelger.defaultProps = {
   undoTittel: "",
   muligeValg: [],
 };
-const selector = formValueSelector("journalforing");
+const selector = formValueSelector(KV.Form.JOURNALFORING);
 const mapStateToProps = (state) => ({
   currentTittel: (feltNavn) => selector(state, feltNavn),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  settFeltInnhold: (feltNavn, verdi) => dispatch(change("journalforing", feltNavn, verdi)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.JOURNALFORING, feltNavn, verdi)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LenkeListeVelger);

@@ -14,6 +14,7 @@ import * as Api from "../../services/api";
 import * as MPT from "../../proptypes";
 import { JOURNALFORING_HENSIKT } from "../../constants";
 
+import { erFeatureToggleEnabled } from "../../featuretoggle";
 import Sticky from "../../felleskomponenter/sticky";
 import PDFDokument from "./komponenter/pdfdokument";
 import JournalforingSED from "./komponenter/journalforingsed";
@@ -21,6 +22,7 @@ import JournalforingForm from "./komponenter/journalforingform";
 import FeilmeldingDialog from "./komponenter/feilmeldingDialog";
 
 import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
+import { landkoderOperations } from "../../ducks/landkoder";
 import { formSelectors } from "../../ducks/form";
 import { sokSelectors } from "../../ducks/sok";
 
@@ -32,10 +34,15 @@ class Journalforing extends Component {
     visFeilmeldingDialog: false,
     feilmeldinger: [],
     submitSpinner: false,
+    sakstemaToggleEnabled: false,
+    toggleHentet: false, // Kan fjernes når melosys.sakstema toggle fjernes
   };
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
     await this.props.hentJournalOppgave(journalpostID);
+    const toggleEnabled = await erFeatureToggleEnabled("melosys.sakstema");
+    this.setState({ sakstemaToggleEnabled: toggleEnabled, toggleHentet: true });
+    this.props.hentLandkoder();
   }
 
   componentWillUnmount() {
@@ -85,7 +92,10 @@ class Journalforing extends Component {
       virksomhetOrgnr,
       avsenderID,
       arbeidsgiverID,
-      opprettnysak_behandlingstema: behandlingstemaKode,
+      opprettnysak_behandlingstema,
+      opprettnysak_behandlingstype,
+      behandlingstema,
+      behandlingstype,
       representantID,
       representantKontaktPerson,
       representantRepresenterer,
@@ -100,7 +110,7 @@ class Journalforing extends Component {
     const { dokumentID } = hoveddokument;
     const vedlegg = [...this.mapFysiskeVedleggsTitlerTilVedlegg(vedleggSkjema.pdf)];
 
-    // Data for /tilordne i.e KNYTT
+    // Data for hensikt KNYTT/NY_VURDERING
     let journalPostData = {
       avsenderID,
       avsenderNavn,
@@ -118,13 +128,19 @@ class Journalforing extends Component {
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
     };
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT || hensikt === JOURNALFORING_HENSIKT.NY_VURDERING) {
-      journalPostData = { ...journalPostData, ikkeSendForvaltingsmelding: null };
+      journalPostData = {
+        ...journalPostData,
+        ikkeSendForvaltingsmelding: null,
+        behandlingstemaKode: behandlingstema,
+        behandlingstypeKode: behandlingstype,
+      };
     }
-    // /opprett har i tillegg arbeidsgiverID og representantID
+    // /Hensikt OPPRETT har flere felt
     if (hensikt === JOURNALFORING_HENSIKT.OPPRETT) {
       journalPostData = Object.assign(journalPostData, {
         arbeidsgiverID,
-        behandlingstemaKode,
+        behandlingstemaKode: opprettnysak_behandlingstema,
+        behandlingstypeKode: opprettnysak_behandlingstype,
         representantID,
         representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
         representererKode: representantRepresenterer,
@@ -183,18 +199,17 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: { saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering, avsenderType },
+      journalforingSkjemaVerdier: { saksnummer, behandlingstype, ingenVurdering, avsenderType },
       settJournalforingHensikt,
       settFeilFelt,
       tilForsiden,
     } = this.props;
-    const hensikt = behandlingstypeKode ? JOURNALFORING_HENSIKT.NY_VURDERING : JOURNALFORING_HENSIKT.KNYTT;
+    const hensikt = behandlingstype ? JOURNALFORING_HENSIKT.NY_VURDERING : JOURNALFORING_HENSIKT.KNYTT;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
     const vasketJournalforing = this.vaskDokumentInformasjon(hensikt);
     const journalforingData = {
       saksnummer,
-      behandlingstypeKode,
       ingenVurdering,
       avsenderType: this.organisasjonAliaser.includes(avsenderType)
         ? MKV.Koder.avsendertyper.ORGANISASJON
@@ -260,6 +275,7 @@ class Journalforing extends Component {
     const tom = journalforingPeriodeTilOgMed ? Utils.dato.formatterDatoTilISO(journalforingPeriodeTilOgMed) : null;
     const fagsak = {
       sakstype: journalforingSkjemaVerdier.sakstype,
+      sakstema: journalforingSkjemaVerdier.sakstema,
       soknadsperiode: {
         fom,
         tom,
@@ -376,7 +392,7 @@ class Journalforing extends Component {
       settFeltInnhold,
     } = this.props;
 
-    const { visFeilmeldingDialog, feilmeldinger, submitSpinner } = this.state;
+    const { visFeilmeldingDialog, feilmeldinger, submitSpinner, sakstemaToggleEnabled, toggleHentet } = this.state;
 
     const { knyttTilEksisterendeSak, opprettFagsak } = this;
     const { journalpostID } = this.props.match.params;
@@ -384,7 +400,7 @@ class Journalforing extends Component {
     const { behandlingstema, sakstype } = behandlingsInformasjon || {};
 
     const visSedJournalforing = Utils._isObject(behandlingsInformasjon);
-    const visNormalJournalforing = behandlingsInformasjon === null;
+    const visNormalJournalforing = behandlingsInformasjon === null && toggleHentet;
 
     return (
       <>
@@ -426,6 +442,7 @@ class Journalforing extends Component {
                           avbrytJournalforing={this.avbrytJournalforing}
                           kanSubmittes={this.kanSubmittes()}
                           settFeltInnhold={settFeltInnhold}
+                          sakstemaToggleEnabled={sakstemaToggleEnabled}
                         />
                       )}
                     </div>
@@ -490,6 +507,7 @@ Journalforing.propTypes = {
   journalforSEDSkjemaVerdier: PT.object,
   journalforSEDSkjemaErrors: PT.object.isRequired,
   resetJournalforingState: PT.func.isRequired,
+  hentLandkoder: PT.func.isRequired,
 };
 
 Journalforing.defaultProps = {
@@ -518,6 +536,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(change(KV.Form.JOURNALFORING, "journalforingHensikt", journalforingHensikt)),
   touch: (formName, ...fields) => dispatch(touch(formName, ...fields)),
   resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
+  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Journalforing));
