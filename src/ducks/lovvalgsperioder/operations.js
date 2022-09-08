@@ -156,7 +156,6 @@ const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
     const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
     const soknadsland = behandlingsgrunnlagSelectors.SoknadslandkoderSelector(reduxState);
     const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
-    const innvilgelsesResultat = lovvalgsperioderSelectors.InnvilgelsesResultatSelector(reduxState);
 
     const unntakFraLovvalgsland = soknadsland.join("");
     const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
@@ -170,7 +169,7 @@ const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
         lovvalgsland: MKV.Koder.landkoder.NO,
         unntakFraBestemmelse: unntakFraBestemmelse || null,
         unntakFraLovvalgsland,
-        innvilgelsesResultat,
+        innvilgelsesResultat: lovvalgsperioderSelectors.InnvilgelsesResultatSelector(reduxState),
         medlemskapsperiodeID: medlemskapsperiodeID || null,
         trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
       },
