@@ -3,9 +3,9 @@ import React from "react";
 import MKV from "../../../melosyskodeverk";
 
 import { VurderingArtikkel16Vedtak } from "./vurderingArtikkel16Vedtak/vurderingArtikkel16Vedtak";
-import { Innvilgelse } from "./innvilgelse";
-import { DelvisInnvilgelse } from "./delvisInnvilgelse";
-import { Avslag } from "./avslag";
+import { Innvilgelse } from "./vurderingArtikkel16Vedtak/innvilgelse.js";
+import { DelvisInnvilgelse } from "./vurderingArtikkel16Vedtak/delvisInnvilgelse";
+import { Avslag } from "./vurderingArtikkel16Vedtak/avslag";
 
 describe("VurderingArtikkel16Vedtak", () => {
   let props = null;
