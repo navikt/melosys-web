@@ -11,7 +11,6 @@ export const mapBehandlingstemaToBehandlingskategori = (behandlingstemaKode: str
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY:
-    case MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
       return Koder.Behandlingskategori.EØS_SAKSBEHANDLING;
@@ -27,6 +26,12 @@ export const mapBehandlingstemaToBehandlingskategori = (behandlingstemaKode: str
       return Koder.Behandlingskategori.FTRL_SAKSBEHANDLING;
     case MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV:
       return Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING;
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE:
+    case MKV.Koder.behandlinger.behandlingstema.PENSJONIST:
+    case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK:
+    case MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKA:
+    case MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET:
+      return Koder.Behandlingskategori.GENERELL_BEHANDLING;
     default:
       throw new Error(`Mangler mapping for ${behandlingstemaKode}`);
   }

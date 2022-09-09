@@ -51,7 +51,9 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
   } = behandling;
 
   const tittel = `${navn} - ${hovedpartIdent}`;
-  const link = Routing.lagUrl(saksnummer, behandlingID, behandlingstema.kode);
+  const link = visSakstema
+    ? Routing.lagUrl(saksnummer, behandlingID, sakstype.kode, behandlingstema.kode, behandlingstype.kode)
+    : Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema.kode);
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 
   const cl = classNames({

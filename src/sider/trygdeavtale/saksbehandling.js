@@ -13,6 +13,7 @@ import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponente
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
+import { VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
@@ -65,7 +66,7 @@ const Saksbehandling = ({
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
-  const saksnummer = match?.params?.snr;
+  const saksnummer = match?.params?.saksnr;
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -159,9 +160,7 @@ const Saksbehandling = ({
                     <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
                   </>
                 ) : (
-                  <Nav.AlertStripeInfo className="infostripe">
-                    Behandlingen er journalført på virksomhet
-                  </Nav.AlertStripeInfo>
+                  <VirksomhetMelding />
                 )}
               </Nav.Column>
               <Nav.Column xs="5">

@@ -71,7 +71,7 @@ const Saksopplysninger = ({
   const [registreringPending, setRegistreringPending] = React.useState(false);
 
   const {
-    params: { snr: saksnummer },
+    params: { saksnr: saksnummer },
   } = match;
 
   const [harValgtIkkeGodkjenn, setHarValgtIkkeGodkjenn] = React.useState(false);

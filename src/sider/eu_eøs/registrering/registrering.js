@@ -12,6 +12,7 @@ import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
 import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
+import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -24,7 +25,7 @@ import "./registrering.css";
 
 export const Registrering = ({
   match: {
-    params: { snr: saksnummer },
+    params: { saksnr: saksnummer },
   },
   tilForsiden,
   location,
@@ -96,9 +97,7 @@ export const Registrering = ({
                     startOgVisOppfriskModal={startOgVisOppfriskModal}
                   />
                 ) : (
-                  <Nav.AlertStripeInfo className="infostripe">
-                    Behandlingen er journalført på virksomhet
-                  </Nav.AlertStripeInfo>
+                  <VirksomhetMelding />
                 )}
               </Nav.Column>
               <Nav.Column xs="5">

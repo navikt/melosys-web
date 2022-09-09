@@ -14,6 +14,7 @@ import SideDialog, { fanerUtenBucOgSed, defaultFaner } from "../../../felleskomp
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
+import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingsresultatOperations } from "../../../ducks/behandlingsresultat";
@@ -76,7 +77,7 @@ class Saksbehandling extends Component {
 
   lastInnSaksopplysninger = async () => {
     const { match, location } = this.props;
-    const { snr } = match.params;
+    const { saksnr } = match.params;
     const behandlingID = Utils.queryString.getParam(location, "behandlingID");
     this.setState({ behandlingID: Utils._toInteger(behandlingID) });
 
@@ -93,7 +94,7 @@ class Saksbehandling extends Component {
     } = this.props;
 
     try {
-      await hentFagsaker(snr);
+      await hentFagsaker(saksnr);
       const response = await hentBehandling(behandlingID);
       const behandling = response.data;
       if (!behandling) return false;
@@ -107,7 +108,7 @@ class Saksbehandling extends Component {
       }
 
       await hentBehandlingsgrunnlag(behandlingID);
-      await hentDokumentOversikt(snr);
+      await hentDokumentOversikt(saksnr);
       await hentLandkoder();
 
       const anmodningsperioderRes = await Api.Anmodningsperioder.hent(behandlingID);
@@ -200,9 +201,7 @@ class Saksbehandling extends Component {
                       startOgVisOppfriskModal={startOgVisOppfriskModal}
                     />
                   ) : (
-                    <Nav.AlertStripeInfo className="infostripe">
-                      Behandlingen er journalført på virksomhet
-                    </Nav.AlertStripeInfo>
+                    <VirksomhetMelding />
                   )}
                 </Nav.Column>
                 <Nav.Column xs="5">

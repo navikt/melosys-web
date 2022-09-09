@@ -15,6 +15,7 @@ import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
+import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 
 import { formSelectors } from "../../../ducks/form";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
@@ -44,7 +45,7 @@ const hentForsteSteg = (behandlingstema) => {
 
 const Vurderutpeking = ({
   match: {
-    params: { snr: saksnummer },
+    params: { saksnr: saksnummer },
   },
   lastInnSaksopplysninger,
   location,
@@ -111,9 +112,7 @@ const Vurderutpeking = ({
             <Nav.Row>
               <Nav.Column xs="7">
                 {hovedpartErVirksomhet ? (
-                  <Nav.AlertStripeInfo className="infostripe">
-                    Behandlingen er journalført på virksomhet
-                  </Nav.AlertStripeInfo>
+                  <VirksomhetMelding />
                 ) : (
                   <>
                     {behandlingsgrunnlagErKlart && (
