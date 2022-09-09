@@ -154,7 +154,15 @@ export const KnyttTilSak = (props) => {
           label={sakstemaToggleEnabled ? "" : "Knytt til sak"}
           className={classNames("panelElement", { "nyBehandling-utenBehandling": sakstemaToggleEnabled })}
         >
-          <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />
+          {/* TODO: Kun for å få testene grønne. Avventer svar fra Mina før dette kan fjernes. 
+              Pga. SOEKNAD forsvinner i det nye kodeverket. */}
+          {behandlingOversikter.some(
+            (behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD
+          ) ? (
+            <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />
+          ) : (
+            <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
+          )}
         </Skjema.RadioGruppe>
         {opprettBehandling && (
           <>
