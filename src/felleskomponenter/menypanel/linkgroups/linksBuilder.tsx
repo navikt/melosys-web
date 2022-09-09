@@ -111,7 +111,6 @@ class LinksBuilder implements ILinksBuilder {
         <ArbeidsgiverOgVirksomhet
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
-          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
         />
       ),
     });
@@ -126,7 +125,6 @@ class LinksBuilder implements ILinksBuilder {
         <Fullmektig
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
-          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
         />
       ),
     });
@@ -142,7 +140,6 @@ class LinksBuilder implements ILinksBuilder {
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
           lagreSoknadOgOppfriskSaksopplysninger={this.contentProps.lagreSoknadOgOppfriskSaksopplysninger}
-          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
         />
       ),
     });
@@ -158,7 +155,6 @@ class LinksBuilder implements ILinksBuilder {
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
           lagreSoknadOgOppfriskSaksopplysninger={this.contentProps.lagreSoknadOgOppfriskSaksopplysninger}
-          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
         />
       ),
     });
@@ -173,7 +169,6 @@ class LinksBuilder implements ILinksBuilder {
         <Arbeidssteder
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
-          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
           behandlingstema={this.contentProps.behandlingstema}
         />
       ),
@@ -189,7 +184,6 @@ class LinksBuilder implements ILinksBuilder {
         <LonnOgGodtgjorelser
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
-          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
         />
       ),
     });
@@ -204,7 +198,6 @@ class LinksBuilder implements ILinksBuilder {
         <OvrigOmArbeidstaker
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
-          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
         />
       ),
     });
@@ -218,7 +211,6 @@ class LinksBuilder implements ILinksBuilder {
       content: (
         <VirksomhetenINorge
           redigerbart={this.contentProps.redigerbart}
-          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
         />
       ),

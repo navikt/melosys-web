@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -315,7 +315,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type LonnOgGodtgjorelserProps = {
   visArbeidsforholdRolleEtiketter: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
   redigerbart: boolean;
 };
 
@@ -325,7 +324,6 @@ const LonnOgGodtgjorelser = connector(
     oppdaterBehandlingsgrunnlag,
     lonnOgNaturalytelser,
     arbeidsgiveravgiftOgTrygdeavgift,
-    behandlingsgrunnlagEtikett,
     visArbeidsforholdRolleEtiketter,
   }: PropsFromRedux & LonnOgGodtgjorelserProps) => {
     const lagreHandler = () => {
@@ -340,7 +338,6 @@ const LonnOgGodtgjorelser = connector(
             <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
               {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
             </Nav.Typo.Innholdstittel>
-            <span>{behandlingsgrunnlagEtikett}</span>
             {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
             <LonnOgNaturalytelser redigerbart={redigerbart} lagreHandler={lagreHandler} {...lonnOgNaturalytelser} />
             <ArbeidsgiveravgiftOgTrygdeavgift
