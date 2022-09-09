@@ -22,7 +22,7 @@ export interface Link {
 }
 
 export interface LinkGroup {
-  label: string;
+  label?: string;
   links: Link[];
 }
 
