@@ -39,8 +39,8 @@ const AvsenderFullmektig = ({
   const IDFeltTastOppHandler = async (sokStreng: string) => {
     if (Utils.organisasjon.erOrgnrGyldig(sokStreng)) {
       hentOgVisRepresentant(sokStreng);
-    } else if (Utils.person.erGyldigFnrEllerDnr(sokStreng?.replace(" ", ""))) {
-      hentOgVisRepresentant(sokStreng.replace(" ", ""));
+    } else if (Utils.person.erGyldigFnrEllerDnr(sokStreng)) {
+      hentOgVisRepresentant(sokStreng);
       settFeltInnhold("representantRepresenterer", MKV.Koder.representerer.BRUKER);
     } else {
       settFeltInnhold("representantNavn", null);
