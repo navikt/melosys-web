@@ -17,6 +17,7 @@ import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
+import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { VirksomhetMelding, TomFlytMelding } from "../../felleskomponenter/alertmeldinger";
@@ -102,7 +103,16 @@ const Behandling = ({
       <div id="main-container" className="main-container">
         <Nav.Container fluid className="tomFlyt_behandling">
           <Nav.Row>
-            <Nav.Column xs="7">{hovedpartErVirksomhet ? <VirksomhetMelding /> : <TomFlytMelding />}</Nav.Column>
+            <Nav.Column xs="7">
+              {hovedpartErVirksomhet ? (
+                <VirksomhetMelding />
+              ) : (
+                <>
+                  <TomFlytMelding />
+                  <SoknadMenypanelForm startOgVisOppfriskModal={() => null} visOppdaterRegisteropplysninger={false} />
+                </>
+              )}
+            </Nav.Column>
             <Nav.Column xs="5">
               <Oppsummering
                 oppsummering={oppsummering}

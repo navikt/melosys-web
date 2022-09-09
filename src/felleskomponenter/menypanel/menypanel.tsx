@@ -2,29 +2,29 @@ import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
+import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as Etiketter from "./etiketter";
-
-import MKV from "../../melosyskodeverk";
+import { formatterDatoTilNorsk } from "../../utils/dato";
 
 import Sidemeny from "../sidemeny";
-import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
-
-import { LinkGroupsFactory } from "./linkgroups";
 
 import { behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
-
-import "./menypanel.css";
 import { menypanelSelectors } from "../../ducks/menypanel";
-import { formatterDatoTilNorsk } from "../../utils/dato";
+import { fagsakSelectors } from "../../ducks/fagsaker";
+
+import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
+import { LinkGroupsFactory } from "./linkgroups";
+import "./menypanel.css";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
 
 const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   sisteOpplysningerHentetDato: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
   behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
   visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
@@ -42,6 +42,7 @@ type MenypanelProps = PropsFromRedux & {
 export const Menypanel = ({
   sisteOpplysningerHentetDato,
   behandlingsgrunnlagtype,
+  sakstype,
   behandlingstema,
   behandlingstype,
   visMenypanel,
@@ -69,7 +70,9 @@ export const Menypanel = ({
   };
 
   const linkGroupsWithContent = LinkGroupsFactory.createLinkGroups({
+    sakstype,
     behandlingstema,
+    behandlingstype,
     contentProps,
     behandlingsgrunnlagtype,
   });

@@ -12,6 +12,7 @@ import SideDialog from "../../../felleskomponenter/sideDialog";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import { TomFlytMelding } from "../../../felleskomponenter/alertmeldinger";
+import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 import { fagsakSelectors } from "../../../ducks/fagsaker";
@@ -71,7 +72,14 @@ const SedBehandling = ({
         <div className="sedbehandling">
           <Nav.Container fluid>
             <Nav.Row>
-              <Nav.Column xs="7">{behandleAlleSakerToggle === "enabled" && <TomFlytMelding />}</Nav.Column>
+              <Nav.Column xs="7">
+                {behandleAlleSakerToggle === "enabled" && (
+                  <>
+                    <TomFlytMelding />
+                    <SoknadMenypanelForm startOgVisOppfriskModal={() => null} visOppdaterRegisteropplysninger={false} />
+                  </>
+                )}
+              </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
                   oppsummering={oppsummering}

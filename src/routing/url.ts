@@ -52,7 +52,7 @@ export const lagUrl = (
   return lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstemaKode);
 };
 
-const skalViseTomFlyt = (sakstype: string, behandlingstema: string, behandlingstype: string) => {
+export const skalViseTomFlyt = (sakstype: string, behandlingstema: string, behandlingstype: string) => {
   if ([HENVELDELSE, KLAGE].includes(behandlingstype)) {
     return true;
   }

@@ -1,5 +1,6 @@
 import MKV from "../../../melosyskodeverk";
 
+import { skalViseTomFlyt } from "../../../routing";
 import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
@@ -28,20 +29,27 @@ const {
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
 
 interface LinkGroupsConfig {
+  sakstype: string;
   behandlingstema: string;
+  behandlingstype: string;
   behandlingsgrunnlagtype: string;
   contentProps: ContentProps;
 }
 
 class LinkGroupsFactory {
-  static createLinkGroups(config: LinkGroupsConfig): LinkGroup[] {
-    const { behandlingstema, contentProps, behandlingsgrunnlagtype } = config;
+  static createLinkGroups({
+    contentProps,
+    behandlingsgrunnlagtype,
+    sakstype,
+    behandlingstema,
+    behandlingstype,
+  }: LinkGroupsConfig): LinkGroup[] {
+    if (skalViseTomFlyt(sakstype, behandlingstema, behandlingstype)) return visKunFullmektig(contentProps);
 
     switch (behandlingstema) {
       case UTSENDT_ARBEIDSTAKER:
       case UTSENDT_SELVSTENDIG:
       case ARBEID_FLERE_LAND:
-      case IKKE_YRKESAKTIV:
       case ARBEID_ETT_LAND_ØVRIG:
       case ARBEID_TJENESTEPERSON_ELLER_FLY:
       case ARBEID_KUN_NORGE:
@@ -73,11 +81,14 @@ class LinkGroupsFactory {
           )
           .build();
       }
-      case BESLUTNING_LOVVALG_ANNET_LAND:
-      case ANMODNING_OM_UNNTAK_HOVEDREGEL:
+      case IKKE_YRKESAKTIV:
+      case TRYGDETID:
       case ØVRIGE_SED_MED:
-      case ØVRIGE_SED_UFM:
-      case TRYGDETID: {
+      case ØVRIGE_SED_UFM: {
+        return visKunFullmektig(contentProps);
+      }
+      case BESLUTNING_LOVVALG_ANNET_LAND:
+      case ANMODNING_OM_UNNTAK_HOVEDREGEL: {
         return new LinkgroupsBuilder()
           .addFraRegister(
             new LinksBuilder(contentProps)
@@ -131,5 +142,8 @@ class LinkGroupsFactory {
     }
   }
 }
+
+const visKunFullmektig = (contentProps: ContentProps) =>
+  new LinkgroupsBuilder().addWithoutLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
 
 export default LinkGroupsFactory;
