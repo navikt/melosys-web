@@ -140,33 +140,35 @@ const OpprettNySak = ({
 
   useEffect(() => {
     if (sakstemaToggle !== "enabled") return;
-    Api.Journalforing.hentSakstyper().then((muligeSakstyper) => {
+    Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
       setSakstyper(muligeSakstyper);
     });
 
     if (sakstype) {
-      Api.Journalforing.hentSakstemaer(hovedpart, sakstype).then((muligeSakstemaer) => {
+      Api.LovligeKombinasjoner.hentSakstemaer(hovedpart, sakstype).then((muligeSakstemaer) => {
         setSakstemaer(muligeSakstemaer);
       });
     }
 
     if (sakstema && sakstype) {
-      Api.Journalforing.hentBehandlingstemaer(hovedpart, sakstype, sakstema).then((muligeBehandlingstemaer) => {
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(hovedpart, sakstype, sakstema).then((muligeBehandlingstemaer) => {
         setBehandlingstemaer(muligeBehandlingstemaer);
       });
     }
 
     if (sakstema && sakstype && behandlingstema) {
-      Api.Journalforing.hentBehandlingstyper(hovedpart, sakstype, sakstema, behandlingstema).then(
+      Api.LovligeKombinasjoner.hentBehandlingstyper(hovedpart, sakstype, sakstema, behandlingstema).then(
         (muligeBehandlingstyper) => {
           setBehandlingstyper(muligeBehandlingstyper);
         }
       );
     }
     if (sakstema && sakstype && hovedpart === MKV.Koder.aktoersroller.VIRKSOMHET) {
-      Api.Journalforing.hentBehandlingstyperVirksomhet(hovedpart, sakstype, sakstema).then((muligeBehandlingstyper) => {
-        setBehandlingstyper(muligeBehandlingstyper);
-      });
+      Api.LovligeKombinasjoner.hentBehandlingstyperVirksomhet(hovedpart, sakstype, sakstema).then(
+        (muligeBehandlingstyper) => {
+          setBehandlingstyper(muligeBehandlingstyper);
+        }
+      );
     }
   }, [sakstemaToggle, hovedpart, sakstype, sakstema, behandlingstema]);
 

@@ -93,7 +93,7 @@ export const KnyttTilSak = (props) => {
   useEffect(() => {
     if (behandleAlleSakerToggle === "enabled") {
       if (sakstema.kode && sakstype.kode) {
-        Api.Journalforing.hentBehandlingstemaer(
+        Api.LovligeKombinasjoner.hentBehandlingstemaer(
           journalforingGjelder,
           sakstype.kode,
           sakstema.kode,
@@ -104,7 +104,7 @@ export const KnyttTilSak = (props) => {
       }
 
       if (sakstema.kode && sakstype.kode && behandlingstema) {
-        Api.Journalforing.hentBehandlingstyper(
+        Api.LovligeKombinasjoner.hentBehandlingstyper(
           journalforingGjelder,
           sakstype.kode,
           sakstema.kode,

@@ -84,19 +84,19 @@ function EndreBehandlingModal({
 
   useEffect(() => {
     if (sakstype) {
-      Api.Journalforing.hentSakstemaer("BRUKER", sakstype).then((muligeSakstemaer) => {
+      Api.LovligeKombinasjoner.hentSakstemaer("BRUKER", sakstype).then((muligeSakstemaer) => {
         setSakstemaer(muligeSakstemaer);
       });
     }
 
     if (sakstema && sakstype) {
-      Api.Journalforing.hentBehandlingstemaer("BRUKER", sakstype, sakstema).then((muligeBehandlingstemaer) => {
+      Api.LovligeKombinasjoner.hentBehandlingstemaer("BRUKER", sakstype, sakstema).then((muligeBehandlingstemaer) => {
         setBehandlingstemaer(muligeBehandlingstemaer);
       });
     }
 
     if (sakstema && sakstype && behandlingstema) {
-      Api.Journalforing.hentBehandlingstyper("BRUKER", sakstype, sakstema, behandlingstema).then(
+      Api.LovligeKombinasjoner.hentBehandlingstyper("BRUKER", sakstype, sakstema, behandlingstema).then(
         (muligeBehandlingstyper) => {
           setBehandlingstyper(muligeBehandlingstyper);
         }
