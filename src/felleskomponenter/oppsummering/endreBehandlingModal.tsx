@@ -6,7 +6,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-
+import MKV from "../../melosyskodeverk";
 import * as Mui from "../ui";
 import * as Api from "../../services/api";
 import * as Nav from "../../navFrontend";
@@ -84,23 +84,32 @@ function EndreBehandlingModal({
 
   useEffect(() => {
     if (sakstype) {
-      Api.LovligeKombinasjoner.hentSakstemaer("BRUKER", sakstype).then((muligeSakstemaer) => {
+      Api.LovligeKombinasjoner.hentSakstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype).then((muligeSakstemaer) => {
         setSakstemaer(muligeSakstemaer);
       });
     }
+  }, [sakstype]);
 
+  useEffect(() => {
     if (sakstema && sakstype) {
-      Api.LovligeKombinasjoner.hentBehandlingstemaer("BRUKER", sakstype, sakstema).then((muligeBehandlingstemaer) => {
-        setBehandlingstemaer(muligeBehandlingstemaer);
-      });
-    }
-
-    if (sakstema && sakstype && behandlingstema) {
-      Api.LovligeKombinasjoner.hentBehandlingstyper("BRUKER", sakstype, sakstema, behandlingstema).then(
-        (muligeBehandlingstyper) => {
-          setBehandlingstyper(muligeBehandlingstyper);
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype, sakstema).then(
+        (muligeBehandlingstemaer) => {
+          setBehandlingstemaer(muligeBehandlingstemaer);
         }
       );
+    }
+  }, [sakstema, sakstype]);
+
+  useEffect(() => {
+    if (sakstema && sakstype && behandlingstema) {
+      Api.LovligeKombinasjoner.hentBehandlingstyper(
+        MKV.Koder.aktoersroller.BRUKER,
+        sakstype,
+        sakstema,
+        behandlingstema
+      ).then((muligeBehandlingstyper) => {
+        setBehandlingstyper(muligeBehandlingstyper);
+      });
     }
   }, [sakstype, sakstema, behandlingstema]);
 

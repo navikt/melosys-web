@@ -139,22 +139,35 @@ const OpprettNySak = ({
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
   useEffect(() => {
-    if (sakstemaToggle !== "enabled") return;
+    if (behandleAlleSakerToggle !== "enabled") return;
+
     Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
       setSakstyper(muligeSakstyper);
     });
+  }, [behandleAlleSakerToggle]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
 
     if (sakstype) {
       Api.LovligeKombinasjoner.hentSakstemaer(hovedpart, sakstype).then((muligeSakstemaer) => {
         setSakstemaer(muligeSakstemaer);
       });
     }
+  }, [behandleAlleSakerToggle, hovedpart, sakstype]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
 
     if (sakstema && sakstype) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(hovedpart, sakstype, sakstema).then((muligeBehandlingstemaer) => {
         setBehandlingstemaer(muligeBehandlingstemaer);
       });
     }
+  }, [behandleAlleSakerToggle, hovedpart, sakstype, sakstema]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
 
     if (sakstema && sakstype && behandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(hovedpart, sakstype, sakstema, behandlingstema).then(
@@ -163,6 +176,11 @@ const OpprettNySak = ({
         }
       );
     }
+  }, [behandleAlleSakerToggle, hovedpart, sakstype, sakstema, behandlingstema]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+
     if (sakstema && sakstype && hovedpart === MKV.Koder.aktoersroller.VIRKSOMHET) {
       Api.LovligeKombinasjoner.hentBehandlingstyperVirksomhet(hovedpart, sakstype, sakstema).then(
         (muligeBehandlingstyper) => {
@@ -170,7 +188,7 @@ const OpprettNySak = ({
         }
       );
     }
-  }, [sakstemaToggle, hovedpart, sakstype, sakstema, behandlingstema]);
+  }, [behandleAlleSakerToggle, hovedpart, sakstype, sakstema]);
 
   const validerForm = () => {
     touchAll();

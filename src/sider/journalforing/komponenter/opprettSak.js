@@ -45,7 +45,6 @@ const OpprettSak = (props) => {
   const { journalforingSkjemaVerdier, sakstemaToggleEnabled, settFeltInnhold } = props;
   const {
     opprettnysak_behandlingstema: valgtBehandlingstema,
-    opprettnysak_behandlingstype: valgtBehandlingstype,
     sakstype: valgtSakstype,
     sakstema: valgtSakstema,
     journalforingSoknadsland: valgteLand,
@@ -103,17 +102,25 @@ const OpprettSak = (props) => {
   }, [folketrygdenToggle]);
 
   useEffect(() => {
-    if (!sakstemaToggleEnabled) return;
+    if (behandleAlleSakerToggle !== "enabled") return;
 
     Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
       setSakstyper(muligeSakstyper);
     });
+  }, [behandleAlleSakerToggle]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
 
     if (valgtSakstype) {
       Api.LovligeKombinasjoner.hentSakstemaer(journalforingGjelder, valgtSakstype).then((muligeSakstemaer) => {
         setSakstemaer(muligeSakstemaer);
       });
     }
+  }, [behandleAlleSakerToggle, journalforingGjelder, valgtSakstype]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
 
     if (valgtSakstema && valgtSakstype) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(journalforingGjelder, valgtSakstype, valgtSakstema).then(
@@ -122,6 +129,10 @@ const OpprettSak = (props) => {
         }
       );
     }
+  }, [behandleAlleSakerToggle, journalforingGjelder, valgtSakstype, valgtSakstema]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
 
     if (valgtSakstema && valgtSakstype && valgtBehandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(
@@ -133,6 +144,10 @@ const OpprettSak = (props) => {
         setBehandlingstyper(muligeBehandlingstyper);
       });
     }
+  }, [behandleAlleSakerToggle, journalforingGjelder, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
 
     if (valgtSakstema && valgtSakstype && journalforingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET) {
       Api.LovligeKombinasjoner.hentBehandlingstyperVirksomhet(journalforingGjelder, valgtSakstype, valgtSakstema).then(
@@ -141,7 +156,7 @@ const OpprettSak = (props) => {
         }
       );
     }
-  }, [journalforingGjelder, valgtBehandlingstema, valgtBehandlingstype, valgtSakstema, valgtSakstype]);
+  }, [behandleAlleSakerToggle, journalforingGjelder, valgtSakstype, valgtSakstema]);
 
   const skalViseSoknadsperiodeOgLand =
     journalforingGjelder !== MKV.Koder.aktoersroller.VIRKSOMHET &&
