@@ -43,7 +43,6 @@ export const AvsenderArbeidsgiver = ({
       <Skjema.FellesInputFnrDnrOrgnrSaksnr
         feltNavn="avsenderID"
         label="Oppgi avsenders org.nr"
-        startTom
         onKeyUp={IDFeltTastOppHandler}
         className="avsender__input"
       />

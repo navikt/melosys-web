@@ -6,17 +6,12 @@ import * as SkjemaUtils from "../utils";
 
 interface FellesInputFnrDnrOrgnrSaksnrProps {
   vedEndring: (sokStreng: string) => void;
-  startTom?: boolean;
   feil?: string;
   meta?: any;
   input?: any;
 }
 
-const InnerFellesInputFnrDnrOrgnrSaksnr = ({
-  vedEndring,
-  startTom,
-  ...rest
-}: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
+const InnerFellesInputFnrDnrOrgnrSaksnr = ({ vedEndring, ...rest }: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
   const {
     meta,
     meta: { touched, active },
@@ -29,12 +24,10 @@ const InnerFellesInputFnrDnrOrgnrSaksnr = ({
 
 const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
   vedEndring,
-  startTom,
   feil,
   ...rest
 }: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
-  const [inputVerdi, setInputVerdi] = useState<any>(startTom ? "" : rest.value);
-
+  const [inputVerdi, setInputVerdi] = useState<any>(rest.value);
   const { input } = rest;
   const vedEndringAvInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -44,6 +37,7 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
       vedEndring(trimmetStreng);
     }
   };
+
   return (
     <Nav.Input
       {...rest}
