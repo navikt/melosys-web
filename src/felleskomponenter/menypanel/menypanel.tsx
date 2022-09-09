@@ -4,7 +4,6 @@ import { RootState } from "AppTypes";
 
 import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
-import * as Etiketter from "./etiketter";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
 import Sidemeny from "../sidemeny";
@@ -62,8 +61,6 @@ export const Menypanel = ({
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
     ),
     behandlingstema,
-    behandlingsgrunnlagEtikett:
-      behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED ? <Etiketter.FraSed /> : <Etiketter.FraSoknad />,
     redigerbart,
     lagreSoknadOgOppfriskSaksopplysninger,
     setMenypanelFeilmelding,

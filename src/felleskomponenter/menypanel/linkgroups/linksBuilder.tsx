@@ -51,7 +51,6 @@ class LinksBuilder implements ILinksBuilder {
         <Person
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
-          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
           visBehandlingsgrunnlagData={this.contentProps.visBehandlingsgrunnlagData}
         />
       ),
@@ -67,7 +66,6 @@ class LinksBuilder implements ILinksBuilder {
         <Familieforhold
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
-          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
           visBehandlingsgrunnlagData={this.contentProps.visBehandlingsgrunnlagData}
           behandlingstema={this.contentProps.behandlingstema}
         />

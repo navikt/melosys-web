@@ -4,7 +4,6 @@ import { shallow } from "enzyme";
 import each from "jest-each";
 
 import * as Nav from "../../navFrontend";
-import * as Etiketter from "./etiketter";
 
 import MKV from "../../melosyskodeverk";
 
@@ -248,28 +247,6 @@ describe("MenyPanel", () => {
       const activeContent = menypanel.find(Nav.Panel);
 
       expect(activeContent.children().props().visBehandlingsgrunnlagData).toBe(false);
-    }
-  );
-
-  each([behandlingstyper.SED]).it(
-    'viser behandlingsgrunnlagetikett med tekst "FRA BRUKER" ved behandlingstype %p',
-    (behandlingstype) => {
-      props.behandlingstype = behandlingstype;
-      const menypanel = shallow(<Menypanel {...props} />);
-      const activeContent = menypanel.find(Nav.Panel);
-
-      expect(activeContent.children().props().behandlingsgrunnlagEtikett).toEqual(<Etiketter.FraSed />);
-    }
-  );
-
-  each([behandlingstyper.SOEKNAD, behandlingstyper.NY_VURDERING, behandlingstyper.ENDRET_PERIODE]).it(
-    'viser behandlingsgrunnlagetikett med tekst "FRA BRUKER" ved behandlingstype %p',
-    (behandlingstype) => {
-      props.behandlingstype = behandlingstype;
-      const menypanel = shallow(<Menypanel {...props} />);
-      const activeContent = menypanel.find(Nav.Panel);
-
-      expect(activeContent.children().props().behandlingsgrunnlagEtikett).toEqual(<Etiketter.FraSoknad />);
     }
   );
 });
