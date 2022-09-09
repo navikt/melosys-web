@@ -12,7 +12,9 @@ const SKRIV_INN_ORGNR = { melding: "Skriv inn organisasjonsnummer" };
 const SKRIV_INN_GYLDIG_ORGNR = { melding: "Skriv inn gyldig organisasjonsnummer" };
 const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisasjonsnummeret." };
 const VELG_SAKSTYPE = { melding: "Velg sakstype" };
+const VELG_SAKSTEMA = { melding: "Velg sakstema" };
 const VELG_BEHANDLINGSTEMA = { melding: "Velg behandlingstema" };
+const VELG_BEHANDLINGSTYPE = { melding: "Velg behandlingstype" };
 const VELG_LAND = { melding: "Velg land" };
 const VELG_EN_OPPGAVE = { melding: "Velg en oppgave" };
 const MANGLER_JOURNALPOST = { melding: "Den valgte oppgaven har ingen journalpost" };
@@ -58,7 +60,9 @@ const opprettnysak = object().shape({
     .nullable(),
   virksomhetNavn: string().nullable(),
   sakstype: string().required(VELG_SAKSTYPE),
+  sakstema: string().required(VELG_SAKSTEMA),
   behandlingstema: string().required(VELG_BEHANDLINGSTEMA),
+  behandlingstype: string().required(VELG_BEHANDLINGSTYPE),
   soknadsinfo: object().when(["behandlingstema", "hovedpart"], {
     is: (behandlingstema, hovedpart) => MKVUtils.erSoknad(behandlingstema) && hovedpart === BRUKER,
     then: soknadsinfo,
