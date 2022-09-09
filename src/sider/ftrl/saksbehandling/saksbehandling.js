@@ -16,6 +16,7 @@ import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
+import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
@@ -98,12 +99,12 @@ const Saksbehandling = ({
   };
 
   const lastInnSaksopplysninger = async () => {
-    const { snr } = match.params;
+    const { saksnr } = match.params;
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
     setBehandlingID(Utils._toInteger(behandlingIDFraParam));
 
     try {
-      await hentFagsaker(snr);
+      await hentFagsaker(saksnr);
       await hentFolketrygdenKodeverk();
       await hentOppsummertFakta(behandlingIDFraParam);
       const response = await hentBehandling(behandlingIDFraParam);
@@ -125,7 +126,7 @@ const Saksbehandling = ({
       setBestemmelser(bestemmelserResponse);
       await hentMedlemskapsperioder(behandlingIDFraParam);
       await hentBehandlingsgrunnlag(behandlingIDFraParam);
-      await hentDokumentOversikt(snr);
+      await hentDokumentOversikt(saksnr);
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
@@ -205,9 +206,7 @@ const Saksbehandling = ({
                     )}
                   </>
                 ) : (
-                  <Nav.AlertStripeInfo className="infostripe">
-                    Behandlingen er journalført på virksomhet
-                  </Nav.AlertStripeInfo>
+                  <VirksomhetMelding />
                 )}
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>

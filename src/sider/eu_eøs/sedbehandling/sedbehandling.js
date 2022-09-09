@@ -11,6 +11,8 @@ import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
+import { TomFlytMelding } from "../../../felleskomponenter/alertmeldinger";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -36,9 +38,10 @@ const SedBehandling = ({
   resetSaksopplysninger,
   hentBehandlingsgrunnlag,
 }) => {
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
   const {
-    params: { snr: saksnummer },
+    params: { saksnr: saksnummer },
   } = match;
 
   useEffect(() => {
@@ -68,7 +71,7 @@ const SedBehandling = ({
         <div className="sedbehandling">
           <Nav.Container fluid>
             <Nav.Row>
-              <Nav.Column xs="7" />
+              <Nav.Column xs="7">{behandleAlleSakerToggle === "enabled" && <TomFlytMelding />}</Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
                   oppsummering={oppsummering}

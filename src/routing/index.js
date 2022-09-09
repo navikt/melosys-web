@@ -1,5 +1,5 @@
 import Routing from "./routing";
-import { lagUrl, nyFane } from "./url";
+import { lagUrlFraBehandlingstema, nyFane, lagUrl } from "./url";
 
 export default Routing;
-export { lagUrl, nyFane };
+export { lagUrlFraBehandlingstema, nyFane, lagUrl };

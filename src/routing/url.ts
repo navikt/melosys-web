@@ -2,8 +2,13 @@ import MKV from "../melosyskodeverk";
 import * as Constants from "../constants";
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
+const { HENVELDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 
-export const lagUrl = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
+export const lagUrlFraBehandlingstema = (
+  saksnummer: number | string,
+  behandlingID: number,
+  behandlingstemaKode: string
+) => {
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE:
@@ -32,6 +37,42 @@ export const lagUrl = (saksnummer: number | string, behandlingID: number, behand
     default:
       return null;
   }
+};
+
+export const lagUrl = (
+  saksnummer: number | string,
+  behandlingID: number,
+  sakstypeKode: string,
+  behandlingstemaKode: string,
+  behandlingstypeKode: string
+) => {
+  if (skalViseTomFlyt(sakstypeKode, behandlingstemaKode, behandlingstypeKode)) {
+    return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
+  return lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstemaKode);
+};
+
+const skalViseTomFlyt = (sakstype: string, behandlingstema: string, behandlingstype: string) => {
+  if ([HENVELDELSE, KLAGE].includes(behandlingstype)) {
+    return true;
+  }
+  if (sakstype === FTRL && behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
+    return true;
+  }
+  if (
+    sakstype === TRYGDEAVTALE &&
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
+  ) {
+    return true;
+  }
+
+  return [
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
+    MKV.Koder.behandlinger.behandlingstema.PENSJONIST,
+    MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
+    MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP,
+    MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET,
+  ].includes(behandlingstema);
 };
 
 export const nyFane = (url: string) => {

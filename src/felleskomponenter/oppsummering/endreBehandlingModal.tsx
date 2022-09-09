@@ -139,7 +139,10 @@ function EndreBehandlingModal({
         hentBehandling(behandlingID);
         hentFagsak(saksnummer);
         hentBehandlingsgrunnlag(behandlingID);
-        const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
+        const nyLink =
+          sakstemaToggle === "enabled"
+            ? Routing.lagUrl(saksnummer, behandlingID, sakstype, behandlingstema, behandlingstype)
+            : Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema);
         if (nyLink && nyLink !== location.pathname + location.search) tilAnnenSide(nyLink);
         setTimeout(lukkModal, 2000);
         nullstillFlyt();
