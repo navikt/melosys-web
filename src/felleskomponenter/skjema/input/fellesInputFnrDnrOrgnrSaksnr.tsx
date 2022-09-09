@@ -1,5 +1,5 @@
 import { InputProps } from "nav-frontend-skjema";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Field } from "redux-form";
 import * as Nav from "../../../navFrontend";
 import * as SkjemaUtils from "../utils";
@@ -27,8 +27,13 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
   feil,
   ...rest
 }: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
-  const [inputVerdi, setInputVerdi] = useState<any>(rest.value);
+  const [inputVerdi, setInputVerdi] = useState<any>(rest.input.value ? rest.input.value : "");
   const { input } = rest;
+
+  useEffect(() => {
+    setInputVerdi(input.value);
+  }, [input.value]);
+
   const vedEndringAvInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     const trimmetStreng = value.toUpperCase().replaceAll(" ", "");
