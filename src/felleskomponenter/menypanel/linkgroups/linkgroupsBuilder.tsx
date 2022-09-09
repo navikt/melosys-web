@@ -3,7 +3,6 @@ import { Link, LinkGroup } from "./types";
 interface ILinkGroupsBuilder {
   addFraRegister: (links: Link[]) => ILinkGroupsBuilder;
   addFraRegisterOgBruker: (links: Link[]) => ILinkGroupsBuilder;
-  addFraRegisterOgSED: (links: Link[]) => ILinkGroupsBuilder;
   addFraBruker: (links: Link[]) => ILinkGroupsBuilder;
   build: () => LinkGroup[];
 }
@@ -14,14 +13,6 @@ class LinkGroupsBuilder implements ILinkGroupsBuilder {
   public addFraRegisterOgBruker(links: Link[]) {
     this.linkGroups.push({
       label: "FRA REGISTER OG BRUKER",
-      links,
-    });
-    return this;
-  }
-
-  public addFraRegisterOgSED(links: Link[]) {
-    this.linkGroups.push({
-      label: "FRA REGISTER OG SED",
       links,
     });
     return this;

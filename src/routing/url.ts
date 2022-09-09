@@ -2,7 +2,7 @@ import MKV from "../melosyskodeverk";
 import * as Constants from "../constants";
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
-const { HENVELDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
+const { HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 
 export const lagUrlFraBehandlingstema = (
   saksnummer: number | string,
@@ -53,7 +53,7 @@ export const lagUrl = (
 };
 
 export const skalViseTomFlyt = (sakstype: string, behandlingstema: string, behandlingstype: string) => {
-  if ([HENVELDELSE, KLAGE].includes(behandlingstype)) {
+  if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
     return true;
   }
   if (sakstype === FTRL && behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {

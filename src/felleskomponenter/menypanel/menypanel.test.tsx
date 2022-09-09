@@ -15,7 +15,6 @@ const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS, SØKNAD_A1_YRKESAKTIVE_EØS, SED
   MKV.Koder.behandlingsgrunnlagtyper;
 
 const { behandlingstyper } = MKV.Koder.behandlinger;
-
 const {
   UTSENDT_ARBEIDSTAKER,
   UTSENDT_SELVSTENDIG,
@@ -23,7 +22,6 @@ const {
   IKKE_YRKESAKTIV,
   ARBEID_ETT_LAND_ØVRIG,
   ARBEID_TJENESTEPERSON_ELLER_FLY,
-  ARBEID_KUN_NORGE,
   ARBEID_NORGE_BOSATT_ANNET_LAND,
   REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
   REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
@@ -49,10 +47,8 @@ describe("MenyPanel", () => {
     UTSENDT_ARBEIDSTAKER,
     UTSENDT_SELVSTENDIG,
     ARBEID_FLERE_LAND,
-    IKKE_YRKESAKTIV,
     ARBEID_ETT_LAND_ØVRIG,
     ARBEID_TJENESTEPERSON_ELLER_FLY,
-    ARBEID_KUN_NORGE,
     ARBEID_NORGE_BOSATT_ANNET_LAND,
   ]).it("Viser korrekte menypunkter for behandlingstema %p", (behandlingstema) => {
     props.behandlingstema = behandlingstema;
@@ -60,7 +56,7 @@ describe("MenyPanel", () => {
     const sidemeny = menypanel.find(Sidemeny);
     const sidemenyLinkGroups = sidemeny.props().linkGroups;
 
-    expect(sidemenyLinkGroups[0].label).toBe("FRA REGISTER OG SØKNAD");
+    expect(sidemenyLinkGroups[0].label).toBe("FRA REGISTER OG BRUKER");
     expect(sidemenyLinkGroups[0].links).toHaveLength(2);
     expect(sidemenyLinkGroups[0].links[0].label).toBe("Person");
     expect(sidemenyLinkGroups[0].links[1].label).toBe("Familieforhold");
@@ -71,7 +67,7 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[1].links[1].label).toBe("EU/EØS-barnetrygd");
     expect(sidemenyLinkGroups[1].links[2].label).toBe("Arbeidsforhold og inntekt");
 
-    expect(sidemenyLinkGroups[2].label).toBe("FRA SØKNAD");
+    expect(sidemenyLinkGroups[2].label).toBe("FRA BRUKER");
     expect(sidemenyLinkGroups[2].links).toHaveLength(4);
     expect(sidemenyLinkGroups[2].links[0].label).toBe("Arbeidsgiver/virksomhet");
     expect(sidemenyLinkGroups[2].links[1].label).toBe("Fullmektig");
@@ -86,7 +82,7 @@ describe("MenyPanel", () => {
     const sidemeny = menypanel.find(Sidemeny);
     const sidemenyLinkGroups = sidemeny.props().linkGroups;
 
-    expect(sidemenyLinkGroups[0].label).toBe("FRA REGISTER OG SØKNAD");
+    expect(sidemenyLinkGroups[0].label).toBe("FRA REGISTER OG BRUKER");
     expect(sidemenyLinkGroups[0].links).toHaveLength(2);
     expect(sidemenyLinkGroups[0].links[0].label).toBe("Person");
     expect(sidemenyLinkGroups[0].links[1].label).toBe("Familieforhold");
@@ -97,7 +93,7 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[1].links[1].label).toBe("EU/EØS-barnetrygd");
     expect(sidemenyLinkGroups[1].links[2].label).toBe("Arbeidsforhold og inntekt");
 
-    expect(sidemenyLinkGroups[2].label).toBe("FRA SØKNAD");
+    expect(sidemenyLinkGroups[2].label).toBe("FRA BRUKER");
     expect(sidemenyLinkGroups[2].links).toHaveLength(7);
     expect(sidemenyLinkGroups[2].links[0].label).toBe("Arbeidsgiver/virksomhet");
     expect(sidemenyLinkGroups[2].links[1].label).toBe("Lønn og godtgjørelser");
@@ -108,7 +104,7 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[2].links[6].label).toBe("Øvrig om arbeidstaker");
   });
 
-  each([BESLUTNING_LOVVALG_ANNET_LAND, ANMODNING_OM_UNNTAK_HOVEDREGEL, ØVRIGE_SED_MED, ØVRIGE_SED_UFM, TRYGDETID]).it(
+  each([BESLUTNING_LOVVALG_ANNET_LAND, ANMODNING_OM_UNNTAK_HOVEDREGEL]).it(
     "Viser korrekte menypunkter for behandlingstema %p",
     (behandlingstema) => {
       props.behandlingstema = behandlingstema;
@@ -123,6 +119,20 @@ describe("MenyPanel", () => {
       expect(sidemenyLinkGroups[0].links[2].label).toBe("Medlemskap");
       expect(sidemenyLinkGroups[0].links[3].label).toBe("EU/EØS-barnetrygd");
       expect(sidemenyLinkGroups[0].links[4].label).toBe("Arbeidsforhold og inntekt");
+    }
+  );
+
+  each([IKKE_YRKESAKTIV, ØVRIGE_SED_MED, ØVRIGE_SED_UFM, TRYGDETID]).it(
+    "Viser korrekte menypunkter for behandlingstema %p",
+    (behandlingstema) => {
+      props.behandlingstema = behandlingstema;
+      const menypanel = shallow(<Menypanel {...props} />);
+      const sidemeny = menypanel.find(Sidemeny);
+      const sidemenyLinkGroups = sidemeny.props().linkGroups;
+
+      expect(sidemenyLinkGroups[0].label).toBe(undefined);
+      expect(sidemenyLinkGroups[0].links).toHaveLength(1);
+      expect(sidemenyLinkGroups[0].links[0].label).toBe("Fullmektig");
     }
   );
 
@@ -149,7 +159,7 @@ describe("MenyPanel", () => {
     const sidemeny = menypanel.find(Sidemeny);
     const sidemenyLinkGroups = sidemeny.props().linkGroups;
 
-    expect(sidemenyLinkGroups[0].label).toBe("FRA REGISTER OG SED");
+    expect(sidemenyLinkGroups[0].label).toBe("FRA REGISTER OG BRUKER");
     expect(sidemenyLinkGroups[0].links).toHaveLength(2);
     expect(sidemenyLinkGroups[0].links[0].label).toBe("Person");
     expect(sidemenyLinkGroups[0].links[1].label).toBe("Familieforhold");
@@ -160,7 +170,7 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[1].links[1].label).toBe("EU/EØS-barnetrygd");
     expect(sidemenyLinkGroups[1].links[2].label).toBe("Arbeidsforhold og inntekt");
 
-    expect(sidemenyLinkGroups[2].label).toBe("FRA SED");
+    expect(sidemenyLinkGroups[2].label).toBe("FRA BRUKER");
     expect(sidemenyLinkGroups[2].links).toHaveLength(4);
     expect(sidemenyLinkGroups[2].links[0].label).toBe("Arbeidsgiver/virksomhet");
     expect(sidemenyLinkGroups[2].links[1].label).toBe("Fullmektig");
@@ -174,7 +184,7 @@ describe("MenyPanel", () => {
     const sidemeny = menypanel.find(Sidemeny);
     const sidemenyLinkGroups = sidemeny.props().linkGroups;
 
-    expect(sidemenyLinkGroups[0].label).toBe("FRA REGISTER OG SØKNAD");
+    expect(sidemenyLinkGroups[0].label).toBe("FRA REGISTER OG BRUKER");
     expect(sidemenyLinkGroups[0].links).toHaveLength(2);
     expect(sidemenyLinkGroups[0].links[0].label).toBe("Person");
     expect(sidemenyLinkGroups[0].links[1].label).toBe("Familieforhold");
@@ -185,11 +195,25 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[1].links[1].label).toBe("EU/EØS-barnetrygd");
     expect(sidemenyLinkGroups[1].links[2].label).toBe("Arbeidsforhold og inntekt");
 
-    expect(sidemenyLinkGroups[2].label).toBe("FRA SØKNAD");
+    expect(sidemenyLinkGroups[2].label).toBe("FRA BRUKER");
     expect(sidemenyLinkGroups[2].links).toHaveLength(2);
     expect(sidemenyLinkGroups[2].links[0].label).toBe("Arbeidsgiver/virksomhet");
     expect(sidemenyLinkGroups[2].links[1].label).toBe("Fullmektig");
   });
+
+  each([behandlingstyper.KLAGE, behandlingstyper.HENVENDELSE]).it(
+    "Viser korrekte menypunkter for behandlingstype %p",
+    (behandlingstype) => {
+      props.behandlingstype = behandlingstype;
+      const menypanel = shallow(<Menypanel {...props} />);
+      const sidemeny = menypanel.find(Sidemeny);
+      const sidemenyLinkGroups = sidemeny.props().linkGroups;
+
+      expect(sidemenyLinkGroups[0].label).toBe(undefined);
+      expect(sidemenyLinkGroups[0].links).toHaveLength(1);
+      expect(sidemenyLinkGroups[0].links[0].label).toBe("Fullmektig");
+    }
+  );
 
   it("hvis behandlingsgrunnlagtype er SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS vises arbeidsforholdrolleetiketter", () => {
     props.behandlingsgrunnlagtype = SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
@@ -215,9 +239,6 @@ describe("MenyPanel", () => {
     REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
     REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
     ANMODNING_OM_UNNTAK_HOVEDREGEL,
-    ØVRIGE_SED_MED,
-    ØVRIGE_SED_UFM,
-    TRYGDETID,
   ]).it(
     `viser ikke behandlingsgrunnlagdata hvis behandlingstype er ${behandlingstyper.SED} og behandlingstema er %p`,
     (behandlingstema) => {
@@ -231,7 +252,7 @@ describe("MenyPanel", () => {
   );
 
   each([behandlingstyper.SED]).it(
-    'viser behandlingsgrunnlagetikett med tekst "Fra SED" ved behandlingstype %p',
+    'viser behandlingsgrunnlagetikett med tekst "FRA BRUKER" ved behandlingstype %p',
     (behandlingstype) => {
       props.behandlingstype = behandlingstype;
       const menypanel = shallow(<Menypanel {...props} />);
@@ -242,7 +263,7 @@ describe("MenyPanel", () => {
   );
 
   each([behandlingstyper.SOEKNAD, behandlingstyper.NY_VURDERING, behandlingstyper.ENDRET_PERIODE]).it(
-    'viser behandlingsgrunnlagetikett med tekst "Fra Søknad" ved behandlingstype %p',
+    'viser behandlingsgrunnlagetikett med tekst "FRA BRUKER" ved behandlingstype %p',
     (behandlingstype) => {
       props.behandlingstype = behandlingstype;
       const menypanel = shallow(<Menypanel {...props} />);

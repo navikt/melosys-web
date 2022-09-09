@@ -103,7 +103,7 @@ class LinkGroupsFactory {
       }
       case BESLUTNING_LOVVALG_NORGE: {
         return new LinkgroupsBuilder()
-          .addFraRegisterOgSED(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
+          .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(
             new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
           )
