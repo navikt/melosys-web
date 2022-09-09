@@ -2,19 +2,18 @@ import { Link, LinkGroup } from "./types";
 
 interface ILinkGroupsBuilder {
   addFraRegister: (links: Link[]) => ILinkGroupsBuilder;
-  addFraRegisterOgSoknad: (links: Link[]) => ILinkGroupsBuilder;
+  addFraRegisterOgBruker: (links: Link[]) => ILinkGroupsBuilder;
   addFraRegisterOgSED: (links: Link[]) => ILinkGroupsBuilder;
-  addFraSoknad: (links: Link[]) => ILinkGroupsBuilder;
-  addFraSED: (links: Link[]) => ILinkGroupsBuilder;
+  addFraBruker: (links: Link[]) => ILinkGroupsBuilder;
   build: () => LinkGroup[];
 }
 
 class LinkGroupsBuilder implements ILinkGroupsBuilder {
   private readonly linkGroups: LinkGroup[] = [];
 
-  public addFraRegisterOgSoknad(links: Link[]) {
+  public addFraRegisterOgBruker(links: Link[]) {
     this.linkGroups.push({
-      label: "FRA REGISTER OG SØKNAD",
+      label: "FRA REGISTER OG BRUKER",
       links,
     });
     return this;
@@ -36,17 +35,9 @@ class LinkGroupsBuilder implements ILinkGroupsBuilder {
     return this;
   }
 
-  public addFraSoknad(links: Link[]) {
+  public addFraBruker(links: Link[]) {
     this.linkGroups.push({
-      label: "FRA SØKNAD",
-      links,
-    });
-    return this;
-  }
-
-  public addFraSED(links: Link[]) {
-    this.linkGroups.push({
-      label: "FRA SED",
+      label: "FRA BRUKER",
       links,
     });
     return this;

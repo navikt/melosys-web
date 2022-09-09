@@ -46,23 +46,23 @@ class LinkGroupsFactory {
       case ARBEID_TJENESTEPERSON_ELLER_FLY:
       case ARBEID_KUN_NORGE:
       case ARBEID_NORGE_BOSATT_ANNET_LAND: {
-        const fraSoknad = new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet();
-        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraSoknad.addLonnOgGodtgjorelser();
-        fraSoknad.addFullmektig();
-        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraSoknad.addUtenlandsoppdraget();
-        else fraSoknad.addPeriode();
-        fraSoknad.addArbeidssteder();
+        const fraBruker = new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet();
+        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraBruker.addLonnOgGodtgjorelser();
+        fraBruker.addFullmektig();
+        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraBruker.addUtenlandsoppdraget();
+        else fraBruker.addPeriode();
+        fraBruker.addArbeidssteder();
         if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) {
-          fraSoknad.addOmVirksomhetenINorge();
-          fraSoknad.addOvrigOmArbeidstaker();
+          fraBruker.addOmVirksomhetenINorge();
+          fraBruker.addOvrigOmArbeidstaker();
         }
 
         return new LinkgroupsBuilder()
-          .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
+          .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(
             new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
           )
-          .addFraSoknad(fraSoknad.build())
+          .addFraBruker(fraBruker.build())
           .build();
       }
       case REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
@@ -96,7 +96,7 @@ class LinkGroupsFactory {
           .addFraRegister(
             new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
           )
-          .addFraSED(
+          .addFraBruker(
             new LinksBuilder(contentProps)
               .addArbeidsgiverEllerVirksomhet()
               .addFullmektig()
@@ -108,22 +108,22 @@ class LinkGroupsFactory {
       }
       case YRKESAKTIV: {
         return new LinkgroupsBuilder()
-          .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
+          .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(
             new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
           )
-          .addFraSoknad(
+          .addFraBruker(
             new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().addArbeidssteder().build()
           )
           .build();
       }
       case ARBEID_I_UTLANDET: {
         return new LinkgroupsBuilder()
-          .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
+          .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(
             new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
           )
-          .addFraSoknad(new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().build())
+          .addFraBruker(new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().build())
           .build();
       }
       default:
