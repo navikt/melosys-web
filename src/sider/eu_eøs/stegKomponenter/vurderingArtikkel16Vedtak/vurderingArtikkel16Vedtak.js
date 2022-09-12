@@ -15,17 +15,16 @@ import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresul
 import { anmodningsperiodesvarSelectors } from "../../../../ducks/anmodningsperiodesvar";
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
 import { vilkarSelectors } from "../../../../ducks/vilkar";
+import { vedtakOperations } from "../../../../ducks/vedtak";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArtikkel16VedtakSchema from "../vurderingArtikkel16VedtakSchema";
-
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "../vurderingArtikkel16Vedtak.css";
 import { Innvilgelse } from "./innvilgelse";
 import { DelvisInnvilgelse } from "./delvisInnvilgelse";
 import { Avslag } from "./avslag";
 import { VurderingArtikkel16VedtakBegrunnelser } from "./vurderingArtikkel16VedtakBegrunnelser";
-import { vedtakOperations } from "../../../../ducks/vedtak";
 
 const hentLovvalgsperiode = (anmodningsperiodesvar, anmodningsperiode) => {
   const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
