@@ -161,17 +161,19 @@ const hentInnvilgesesResultatFraAnmodningsperiodeSvarType = (anmodningsperiodeSv
 
 const skalByggeLovvalgsperiodeForArtikkel16_1 = (reduxState) => {
   const anmodningsperiodeSvar = anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(reduxState);
-  const erBehandlingsstatusUnderBehandlingEllerAvsluttet = [
-    MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-  ].includes(behandlingerSelectors.BehandlingsstatusKodeSelector(reduxState));
+  const erBehandlingsstatusUnderBehandling = [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING].includes(
+    behandlingerSelectors.BehandlingsstatusKodeSelector(reduxState)
+  );
 
-  return anmodningsperiodeSvar && erBehandlingsstatusUnderBehandlingEllerAvsluttet;
+  return anmodningsperiodeSvar && erBehandlingsstatusUnderBehandling;
 };
 
 const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
   const toggleEnabled = (async () => {
     return erFeatureToggleEnabled("melosys.5278.art16lovvalgsperiodefiks");
   })();
+  console.log("ToggleEnabled:");
+  console.log(toggleEnabled);
 
   if (!toggleEnabled) {
     const erAnmodningsperiodeSendtUtland =
