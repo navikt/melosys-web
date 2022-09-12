@@ -25,6 +25,7 @@ import { behandlingerSelectors } from "../behandlinger";
 import { flytSelectors } from "../flyt";
 import { formSelectors } from "../form";
 import { anmodningsperiodesvarSelectors } from "../anmodningsperiodesvar";
+import { erFeatureToggleEnabled } from "../../featuretoggle";
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -159,17 +160,34 @@ const hentInnvilgesesResultatFraAnmodningsperiodeSvarType = (anmodningsperiodeSv
 };
 
 const skalByggeLovvalgsperiodeForArtikkel16_1 = (reduxState) => {
-  const erAnmodningsperiodeSendtUtland =
-    anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(reduxState);
+  const anmodningsperiodeSvar = anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(reduxState);
   const erBehandlingsstatusUnderBehandlingEllerAvsluttet = [
     MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
   ].includes(behandlingerSelectors.BehandlingsstatusKodeSelector(reduxState));
 
-  return erAnmodningsperiodeSendtUtland && erBehandlingsstatusUnderBehandlingEllerAvsluttet;
+  return anmodningsperiodeSvar && erBehandlingsstatusUnderBehandlingEllerAvsluttet;
 };
 
 const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
+  const toggleEnabled = (async () => {
+    // https://unleash.nais.io/#/features/strategies/melosys.5278.art16lovvalgsperiodefiks
+    return erFeatureToggleEnabled("melosys.5278.art16lovvalgsperiodefiks");
+  })();
+
+  if (!toggleEnabled) {
+    const erAnmodningsperiodeSendtUtland =
+      anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(reduxState);
+    const erBehandlingsstatusUnderBehandlingEllerAvsluttet = [
+      MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+    ].includes(behandlingerSelectors.BehandlingsstatusKodeSelector(reduxState));
+
+    if (erAnmodningsperiodeSendtUtland && erBehandlingsstatusUnderBehandlingEllerAvsluttet) {
+      return Selectors.LovvalgsperioderSelector(reduxState);
+    }
+    return [];
+  }
+
   if (!skalByggeLovvalgsperiodeForArtikkel16_1(reduxState)) {
     return [];
   }

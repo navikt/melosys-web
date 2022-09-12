@@ -43,11 +43,13 @@ describe("VurderingArtikkel16Vedtak", () => {
     };
   });
 
-  it("viser innvilgelse-komponent ved innvilgelse", () => {
+  it("viser innvilgelse-komponent ved innvilgelse", async () => {
     props.anmodningsperiodesvar.anmodningsperiodeSvarType = MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE;
     const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
 
-    expect(vurderingArtikkel16Vedtak.find(Innvilgelse)).toHaveLength(1);
+    const innvilgelse = await vurderingArtikkel16Vedtak.find(Innvilgelse);
+
+    expect(innvilgelse).toHaveLength(1);
   });
 
   it('viser "delvis innvilgelse"-komponent ved delvis innvilgelse', () => {
