@@ -174,7 +174,6 @@ const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
 
     return [
       {
-        id: null,
         fomDato: periode.fom,
         tomDato: periode.tom,
         tilleggBestemmelse: stegState.tilleggbestemmelse,
