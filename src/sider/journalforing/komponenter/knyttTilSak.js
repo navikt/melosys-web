@@ -49,7 +49,7 @@ export const KnyttTilSak = (props) => {
     changeField,
     journalforingGjelder,
   } = props;
-  const { behandlingOversikter, sakstype, sakstema, saksstatus } = sak;
+  const { behandlingOversikter, sakstype, sakstema } = sak;
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState();
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
   const sisteBehandling = behandlingOversikter[0];
@@ -77,16 +77,13 @@ export const KnyttTilSak = (props) => {
 
   useEffect(() => {
     if (!sakstemaToggleEnabled) return;
-
     if (sakstema.kode && sakstype.kode && behandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(
         journalforingGjelder,
         sakstype.kode,
         sakstema.kode,
         behandlingstema,
-        sisteBehandling.behandlingstema.kode,
-        sisteBehandling.behandlingstype.kode,
-        saksstatus.kode
+        sisteBehandling.behandlingID
       ).then((alleMuligeBehandlingstyper) => {
         setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
       });
@@ -131,7 +128,7 @@ export const KnyttTilSak = (props) => {
           {/* TODO: Kun for å få testene grønne. Avventer svar fra Mina før dette kan fjernes. 
               Pga. SOEKNAD forsvinner i det nye kodeverket. */}
           {behandlingOversikter.some(
-            (behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD
+            (behandling) => behandling.behandlingstype.kode !== MKVBehandlingstyper.SOEKNAD
           ) ? (
             <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />
           ) : (

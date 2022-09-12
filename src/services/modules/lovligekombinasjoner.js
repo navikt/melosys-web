@@ -11,20 +11,10 @@ export const hentBehandlingstemaer = (hovedpart, sakstype, sakstema, sistBehandl
     }
     `
   );
-export const hentBehandlingstyper = (
-  hovedpart,
-  sakstype,
-  sakstema,
-  behandlingstema,
-  sistBehandlingstema,
-  sistBehandlingstype,
-  saksstatus
-) =>
+export const hentBehandlingstyper = (hovedpart, sakstype, sakstema, behandlingstema, sisteBehandlingsID) =>
   getAsJson(
     `${API_BASE_URL}${LOVLIGE_KOMBINASJONER}/behandlingstyper/${hovedpart}/${sakstype}/${sakstema}/${
       behandlingstema ? `?behandlingstema=${behandlingstema}` : ""
-    }${sistBehandlingstema ? `&sistBehandlingstema=${sistBehandlingstema}` : ""}${
-      sistBehandlingstype ? `&sistBehandlingstype=${sistBehandlingstype}` : ""
-    }${saksstatus ? `&saksstatus=${saksstatus}` : ""}
+    }${sisteBehandlingsID ? `&sisteBehandlingsID=${sisteBehandlingsID}` : ""}
     `
   );

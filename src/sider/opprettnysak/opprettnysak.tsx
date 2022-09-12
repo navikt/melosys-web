@@ -31,6 +31,7 @@ import IdentOgNavn from "./identOgNavn";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
 import "./opprettnysak.css";
+import { nullstillSak, SakFormData } from "../../felleskomponenter/skjema/hooks/nullstillsak";
 
 const euEosBehandlingstemaer = (visNyeBehandlingstema: boolean) =>
   MKV.KTObjects.behandlinger.behandlingstema
@@ -159,9 +160,17 @@ const OpprettNySak = ({
     if (behandleAlleSakerToggle !== "enabled") return;
 
     if (sakstema && sakstype) {
-      Api.LovligeKombinasjoner.hentBehandlingstemaer(hovedpart, sakstype, sakstema).then((muligeBehandlingstemaer) => {
-        setBehandlingstemaer(muligeBehandlingstemaer);
-      });
+      if (hovedpart !== MKV.Koder.aktoersroller.VIRKSOMHET) {
+        Api.LovligeKombinasjoner.hentBehandlingstemaer(hovedpart, sakstype, sakstema).then(
+          (muligeBehandlingstemaer) => {
+            setBehandlingstemaer(muligeBehandlingstemaer);
+          }
+        );
+      } else {
+        Api.LovligeKombinasjoner.hentBehandlingstyper(hovedpart, sakstype, sakstema).then((muligeBehandlingstyper) => {
+          setBehandlingstyper(muligeBehandlingstyper);
+        });
+      }
     }
   }, [behandleAlleSakerToggle, hovedpart, sakstype, sakstema]);
 
@@ -176,16 +185,6 @@ const OpprettNySak = ({
       );
     }
   }, [behandleAlleSakerToggle, hovedpart, sakstype, sakstema, behandlingstema]);
-
-  useEffect(() => {
-    if (behandleAlleSakerToggle !== "enabled") return;
-
-    if (sakstema && sakstype && hovedpart === MKV.Koder.aktoersroller.VIRKSOMHET) {
-      Api.LovligeKombinasjoner.hentBehandlingstyper(hovedpart, sakstype, sakstema).then((muligeBehandlingstyper) => {
-        setBehandlingstyper(muligeBehandlingstyper);
-      });
-    }
-  }, [behandleAlleSakerToggle, hovedpart, sakstype, sakstema]);
 
   const validerForm = () => {
     touchAll();
@@ -255,7 +254,6 @@ const OpprettNySak = ({
     setOppgaver([]);
     setOppgaverForsoktHentet(false);
   }, [hovedpart]);
-
   const opprettNySak = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!validerForm()) return;
@@ -403,7 +401,7 @@ const OpprettNySak = ({
                       feltNavn="sakstype"
                       bredde="fullbredde"
                       label="Sakstype"
-                      onChange={() => change("behandlingstema", undefined)}
+                      onChange={() => nullstillSak(SakFormData.sakstype, change)}
                     >
                       {(behandleAlleSakerToggle === "enabled" ? sakstyper : valgbareSakstyper).map(
                         ({ kode, term }: KTObject) => (
@@ -418,7 +416,7 @@ const OpprettNySak = ({
                         feltNavn="sakstema"
                         bredde="fullbredde"
                         label="Sakstema"
-                        onChange={() => change("behandlingstema", undefined)}
+                        onChange={() => nullstillSak(SakFormData.sakstema, change)}
                       >
                         {sakstemaer.map(({ kode, term }: KTObject) => (
                           <option key={kode} value={kode}>
@@ -432,7 +430,7 @@ const OpprettNySak = ({
                         feltNavn="behandlingstema"
                         bredde="fullbredde"
                         label="Behandlingstema"
-                        onChange={() => change("behandlingstema", false)}
+                        onChange={() => nullstillSak(SakFormData.behandlingstema, change)}
                       >
                         {(behandleAlleSakerToggle === "enabled"
                           ? behandlingstemaer
@@ -449,7 +447,7 @@ const OpprettNySak = ({
                         feltNavn="behandlingstype"
                         bredde="fullbredde"
                         label="Behandlingstype"
-                        onChange={() => change("behandlingstype", false)}
+                        onChange={() => nullstillSak(SakFormData.behandlingstype, change)}
                       >
                         {behandlingstyper.map(({ kode, term }: KTObject) => (
                           <option key={kode} value={kode}>

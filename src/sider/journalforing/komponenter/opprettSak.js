@@ -14,6 +14,7 @@ import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst"
 
 import "./opprettSak.css";
 import { useFeatureToggle } from "../../../featuretoggle";
+import { nullstillSak, SakFormData } from "../../../felleskomponenter/skjema/hooks/nullstillsak";
 
 const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
   ({ kode }) =>
@@ -120,7 +121,6 @@ const OpprettSak = (props) => {
 
   useEffect(() => {
     if (!sakstemaToggleEnabled) return;
-
     if (valgtSakstema && valgtSakstype) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(journalforingGjelder, valgtSakstype, valgtSakstema).then(
         (muligeBehandlingstemaer) => {
@@ -171,7 +171,12 @@ const OpprettSak = (props) => {
     : true;
   return (
     <div className="panelramme">
-      <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
+      <Skjema.Select
+        feltNavn="sakstype"
+        bredde="fullbredde"
+        label="Sakstype"
+        onChange={() => nullstillSak(SakFormData.sakstype, settFeltInnhold)}
+      >
         {(sakstemaToggleEnabled ? sakstyper : valgbareSakstyper).map((elem) => (
           <option key={elem.kode} value={elem.kode}>
             {elem.term}
@@ -179,7 +184,12 @@ const OpprettSak = (props) => {
         ))}
       </Skjema.Select>
       {sakstemaToggleEnabled && (
-        <Skjema.Select feltNavn="sakstema" bredde="fullbredde" label="Sakstema">
+        <Skjema.Select
+          feltNavn="sakstema"
+          bredde="fullbredde"
+          label="Sakstema"
+          onChange={() => nullstillSak(SakFormData.sakstema, settFeltInnhold)}
+        >
           {sakstemaer.map((elem) => (
             <option key={elem.kode} value={elem.kode}>
               {elem.term}
@@ -189,10 +199,13 @@ const OpprettSak = (props) => {
       )}
       {visMuligeBehandlingstema && (
         <Skjema.Select
-          feltNavn="opprettnysak_behandlingstema"
+          feltNavn="behandlingstema"
           bredde="fullbredde"
           label="Behandlingstema"
-          onChange={() => settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false)}
+          onChange={() => {
+            nullstillSak(SakFormData.behandlingstema, settFeltInnhold);
+            settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
+          }}
         >
           {(sakstemaToggleEnabled ? behandlingstemaer : valgbareBehandlingstemaer).map((elem) => (
             <option key={elem.kode} value={elem.kode}>
@@ -202,7 +215,12 @@ const OpprettSak = (props) => {
         </Skjema.Select>
       )}
       {sakstemaToggleEnabled && (
-        <Skjema.Select feltNavn="opprettnysak_behandlingstype" bredde="fullbredde" label="Behandlingstype">
+        <Skjema.Select
+          feltNavn="behandlingstype"
+          bredde="fullbredde"
+          label="Behandlingstype"
+          onChange={() => nullstillSak(SakFormData.behandlingstype, settFeltInnhold)}
+        >
           {behandlingstyper.map((elem) => (
             <option key={elem.kode} value={elem.kode}>
               {elem.term}
