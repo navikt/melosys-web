@@ -21,14 +21,20 @@ import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
 
 import "./endreBehandlingModal.css";
-import { fagsakOperations } from "../../ducks/fagsaker";
+import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { saksopplysningerOperations } from "../../ducks/saksopplysninger";
 import { useFeatureToggle } from "../../featuretoggle";
 import { erBehandlingstemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
+import { behandlingstypeOperations, behandlingstypeSelectors } from "../../ducks/behandlingstype";
+import { behandlingstemaOperations, behandlingstemaSelectors } from "../../ducks/behandlingstema";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   muligeBehandlingsstatuser: behandlingsstatusSelectors.MuligeBehandlingsstatusSelector(state),
+  muligeSakstemaer_gammel: fagsakSelectors.SakstemaerSelector(state),
+  muligeSakstyper_gammel: fagsakSelectors.SakstyperSelector(state),
+  muligeBehandlingstyper_gammel: behandlingstypeSelectors.MuligeBehandlingstyperSelector(state),
+  muligeBehandlingstemaer_gammel: behandlingstemaSelectors.MuligeBehandlingstemaSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -36,6 +42,11 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   hentBehandling: (behandlingID: number) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentFagsak: (saksnummer: string) => dispatch(fagsakOperations.hent(saksnummer)),
   hentBehandlingsgrunnlag: (behandlingID: number) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
+  hentMuligeBehandlingstemaer_gammel: (behandlingID: number) =>
+    dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
+  hentMuligeSakstyper_gammel: (saksnummer: string) => dispatch(fagsakOperations.hentMuligeSakstyper(saksnummer)),
+  hentMuligeBehandlingstyper_gammel: (behandlingID: number) =>
+    dispatch(behandlingstypeOperations.hentMuligeBehandlingstyper(behandlingID)),
   hentMuligeBehandlingsstatuser: (behandlingID: number) =>
     dispatch(behandlingsstatusOperations.hentMuligeBehandlingsstatuser(behandlingID)),
   tilAnnenSide: (link: string) => dispatch(navigeringOperations.tilAnnenSide(link)),
@@ -61,7 +72,13 @@ function EndreBehandlingModal({
   hentBehandling,
   hentBehandlingsgrunnlag,
   hentFagsak,
+  muligeSakstyper_gammel,
+  muligeBehandlingstyper_gammel,
+  muligeBehandlingstemaer_gammel,
   muligeBehandlingsstatuser,
+  hentMuligeBehandlingstyper_gammel,
+  hentMuligeBehandlingstemaer_gammel,
+  hentMuligeSakstyper_gammel,
   hentMuligeBehandlingsstatuser,
   tilAnnenSide,
   location,
@@ -76,6 +93,7 @@ function EndreBehandlingModal({
   const [behandlingsfrist, setBehandlingsfrist] = useState(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
   const [behandlingsstatus, setBehandlingsstatus] = useState(oppsummering.behandlingsstatus?.kode);
 
+  const [muligeSakstyper] = useState([]);
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
@@ -83,14 +101,16 @@ function EndreBehandlingModal({
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
 
   useEffect(() => {
+    if (sakstemaToggle !== "enabled") return;
     if (sakstype) {
       Api.LovligeKombinasjoner.hentSakstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype).then((alleMuligesakstemaer) => {
         setMuligeSakstemaer(alleMuligesakstemaer);
       });
     }
-  }, [sakstype]);
+  }, [sakstemaToggle, sakstype]);
 
   useEffect(() => {
+    if (sakstemaToggle !== "enabled") return;
     if (sakstema && sakstype) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype, sakstema).then(
         (alleMuligeBehandlingstemaer) => {
@@ -98,9 +118,10 @@ function EndreBehandlingModal({
         }
       );
     }
-  }, [sakstema, sakstype]);
+  }, [sakstemaToggle, sakstema, sakstype]);
 
   useEffect(() => {
+    if (sakstemaToggle !== "enabled") return;
     if (sakstema && sakstype && behandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(
         MKV.Koder.aktoersroller.BRUKER,
@@ -111,10 +132,14 @@ function EndreBehandlingModal({
         setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
       });
     }
-  }, [sakstype, sakstema, behandlingstema]);
+  }, [sakstemaToggle, sakstype, sakstema, behandlingstema]);
 
   useEffect(() => {
     if (skalViseModal) {
+      const { saksnummer } = fagsak;
+      hentMuligeBehandlingstyper_gammel(behandlingID);
+      hentMuligeBehandlingstemaer_gammel(behandlingID);
+      hentMuligeSakstyper_gammel(saksnummer);
       hentMuligeBehandlingsstatuser(behandlingID);
       setGenerellFeil("");
       setBehandlingEndret(false);
@@ -188,7 +213,10 @@ function EndreBehandlingModal({
               onChange={(e) => setSakstype(e.target.value)}
               label="Sakstype"
               value={sakstype}
-              koder={muligeVerdierPlussValgt(fagsak.sakstype, [])}
+              koder={muligeVerdierPlussValgt(
+                fagsak.sakstype,
+                sakstemaToggle === "enabled" ? muligeSakstyper : muligeSakstyper_gammel
+              )}
               disableForsteValg
               redigerbart={!endringerErBegrenset}
             />
@@ -206,7 +234,10 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingstema(e.target.value)}
               label="Behandlingstema"
               value={behandlingstema}
-              koder={muligeVerdierPlussValgt(oppsummering.behandlingstema, muligeBehandlingstemaer)}
+              koder={muligeVerdierPlussValgt(
+                oppsummering.behandlingstema,
+                sakstemaToggle === "enabled" ? muligeBehandlingstemaer : muligeBehandlingstemaer_gammel
+              )}
               disableForsteValg
               redigerbart={!endringerErBegrenset}
             />
@@ -214,7 +245,10 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"
               value={behandlingstype}
-              koder={muligeVerdierPlussValgt(oppsummering.behandlingstype, muligeBehandlingstyper)}
+              koder={muligeVerdierPlussValgt(
+                oppsummering.behandlingstype,
+                sakstemaToggle === "enabled" ? muligeBehandlingstyper : muligeBehandlingstyper_gammel
+              )}
               disableForsteValg
               redigerbart={!endringerErBegrenset}
             />
