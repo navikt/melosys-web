@@ -67,7 +67,7 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
         <PanelHeader tittel={tittel} />
         <div className="behandlingOppgave__info">
           <Nav.Row>
-            <Nav.Column xs="7" className="behandlingOppgave__uthevetKolonne">
+            <Nav.Column xs="4" className="behandlingOppgave__uthevetKolonne">
               {visSakstema ? (
                 <Nav.Row className="infoTerm">
                   {KV.objektTilTerm(sakstype, "(ukjent)")} - {KV.objektTilTerm(sakstema, "(ukjent)")}
@@ -79,7 +79,7 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
               <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstype, "(ukjent)")}</Nav.Row>
             </Nav.Column>
 
-            <Nav.Column xs="4" className="behandlingOppgave__kolonne">
+            <Nav.Column xs="3" className="behandlingOppgave__kolonne">
               <Nav.Row className="behandlingOppgave__statusOgFrist">
                 <BehandlingsstatusMedSvarfrist behandlingsstatus={behandlingsstatus} svarFrist={svarFrist} />
               </Nav.Row>
@@ -103,6 +103,9 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
                 <Nav.Column className="infoTerm">Sist oppdatert:</Nav.Column>
                 <Nav.Column className="infoDetalj">{oppdateringStatus || formatterDatoTilNorsk(endretDato)}</Nav.Column>
               </Nav.Row>
+            </Nav.Column>
+            <Nav.Column xs="4" className="behandlingOppgave__notater">
+              <Nav.Row>test</Nav.Row>
             </Nav.Column>
           </Nav.Row>
         </div>
