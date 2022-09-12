@@ -197,7 +197,7 @@ KnyttTilSak.propTypes = {
   opprettBehandling: PT.bool.isRequired,
   behandlingstema: PT.string,
   behandlingstype: PT.string,
-  journalforingGjelder: PT.strin.isRequired,
+  journalforingGjelder: PT.string.isRequired,
   sakstemaToggleEnabled: PT.bool.isRequired,
   changeField: PT.func.isRequired,
 };
