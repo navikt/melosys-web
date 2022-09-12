@@ -17,10 +17,10 @@ class Artikkel13_4_vedtak extends Steg {
       overskrift: "Omfattet av norsk lovgivning etter artikkel 13 nr. 4",
     });
     this.handlers = {
-      lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
+      validerBehandlingsgrunnlag: this._propsLight.tilgjengeligeHandlers.validerBehandlingsgrunnlag,
     };
     this._status = FANE_STATUS.OK;
   }

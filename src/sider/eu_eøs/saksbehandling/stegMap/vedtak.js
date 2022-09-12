@@ -95,9 +95,9 @@ class Vedtak extends Steg {
     };
     this.beregnRelevantUI = () => ({});
     this.handlers = {
-      lagreOgFatteVedtak: propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
+      validerBehandlingsgrunnlag: this._propsLight.tilgjengeligeHandlers.validerBehandlingsgrunnlag,
     };
     this.status = FANE_STATUS.OK;
   }
