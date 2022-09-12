@@ -24,7 +24,6 @@ import { lovvalgsperioderSelectors } from "./index";
 import { behandlingerSelectors } from "../behandlinger";
 import { flytSelectors } from "../flyt";
 import { formSelectors } from "../form";
-import { MedlemskapsperiodeIDSelector } from "../anmodningsperioder/selectors";
 import { anmodningsperiodesvarSelectors } from "../anmodningsperiodesvar";
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
