@@ -8,7 +8,6 @@ import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Mui from "../../../../felleskomponenter/ui";
-import * as Hooks from "../../../../hooks";
 import * as Utils from "../../../../utils";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
