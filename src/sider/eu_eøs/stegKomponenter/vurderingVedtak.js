@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
@@ -75,10 +75,10 @@ const VurderingVedtak = ({
   harFeilmeldinger,
   aktivtSteg,
   validerBehandlingsgrunnlag,
-  fattVedtak,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const dispatch = useDispatch();
 
   const lovvalget = lovvalgsperioder[0] || {};
 
@@ -140,7 +140,7 @@ const VurderingVedtak = ({
 
     validerBehandlingsgrunnlag()
       .then(() => {
-        fattVedtak(behandlingID, lagFattVedtakEOSReqDto()).then((res) => {
+        dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakEOSReqDto())).then((res) => {
           if (res.data?.data?.error) {
             setVedtakPending(false);
           }
@@ -261,7 +261,6 @@ VurderingVedtak.propTypes = {
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
   validerBehandlingsgrunnlag: PT.func.isRequired,
-  fattVedtak: PT.func.isRequired,
 };
 
 VurderingVedtak.defaultProps = {
@@ -292,10 +291,6 @@ const mapStateToProps = (state) => ({
   },
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
-});
-
 const VurderingVedtakForm = reduxForm({
   form: KV.Form.ARTIKKEL_12_VEDTAK,
   enableReinitialize: true,
@@ -310,4 +305,4 @@ const VurderingVedtakForm = reduxForm({
     })(values),
 })(VurderingVedtak);
 
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingVedtakForm);
+export default connect(mapStateToProps)(VurderingVedtakForm);

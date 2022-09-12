@@ -549,7 +549,6 @@ Stegvelger.propTypes = {
   hentAvklartefakta: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
   history: PT.object.isRequired,
-  fattVedtak: PT.func.isRequired,
   endreVedtak: PT.func.isRequired,
   kontrollerFerdigbehandling: PT.func.isRequired,
   lagreBehandlingsgrunnlagHandler: PT.func.isRequired,
@@ -717,7 +716,6 @@ const mapStateToProps = (state) => ({
 /* eslint no-alert:off */
 const mapDispatchToProps = (dispatch) => ({
   hentVilkar: (behandlingID) => dispatch(vilkarOperations.hent(behandlingID)),
-  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
   endreVedtak: (behandlingID, body) => dispatch(vedtakOperations.endre(behandlingID, body)),
   kontrollerFerdigbehandling: (data) => dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
   videresend: (saksnummer, videresending) => dispatch(videresendingOperations.send(saksnummer, videresending)),

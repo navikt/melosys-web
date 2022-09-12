@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import MKV from "../../../melosyskodeverk";
@@ -35,9 +35,9 @@ const VurderingAvslag12_x_og_16 = ({
   formValues,
   tilbake,
   validerBehandlingsgrunnlag,
-  fattVedtak,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
+  const dispatch = useDispatch();
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
@@ -90,14 +90,16 @@ const VurderingAvslag12_x_og_16 = ({
 
     validerBehandlingsgrunnlag()
       .then(() => {
-        fattVedtak(behandlingID, {
-          behandlingsresultatTypeKode,
-          fritekst: formValues.vedtaksbrevFritekst,
-          fritekstSed: null,
-          mottakerinstitusjoner: null,
-          vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-          nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
-        }).then((res) => {
+        dispatch(
+          vedtakOperations.fatt(behandlingID, {
+            behandlingsresultatTypeKode,
+            fritekst: formValues.vedtaksbrevFritekst,
+            fritekstSed: null,
+            mottakerinstitusjoner: null,
+            vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+            nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
+          })
+        ).then((res) => {
           if (res.data?.data?.error) {
             setVedtakPending(false);
           }
@@ -178,7 +180,6 @@ VurderingAvslag12_x_og_16.propTypes = {
   touch: PT.func.isRequired,
   formValues: PT.object,
   validerBehandlingsgrunnlag: PT.func.isRequired,
-  fattVedtak: PT.func.isRequired,
 };
 
 VurderingAvslag12_x_og_16.defaultProps = {
@@ -219,8 +220,4 @@ const mapStateToProps = (state) => ({
   },
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingAvslagArtikkel12Og16Form);
+export default connect(mapStateToProps)(VurderingAvslagArtikkel12Og16Form);
