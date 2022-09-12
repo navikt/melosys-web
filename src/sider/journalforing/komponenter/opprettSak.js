@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { change } from "redux-form";
+import { change, getFormSyncErrors } from "redux-form";
 import PT from "prop-types";
 
 import MKV from "../../../melosyskodeverk";
@@ -11,9 +11,9 @@ import * as Api from "../../../services/api";
 
 import { formSelectors } from "../../../ducks/form";
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./opprettSak.css";
-import { useFeatureToggle } from "../../../featuretoggle";
 import { nullstillSak, SakFormData } from "../../../felleskomponenter/skjema/hooks/nullstillsak";
 
 const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
@@ -42,7 +42,7 @@ export const OpprettSakTittel = () => (
   </div>
 );
 
-const OpprettSak = (props) => {
+export const OpprettSak = (props) => {
   const { journalforingSkjemaVerdier, sakstemaToggleEnabled, settFeltInnhold } = props;
   const {
     opprettnysak_behandlingstema: valgtBehandlingstema,
@@ -240,35 +240,40 @@ const OpprettSak = (props) => {
               </Nav.Column>
             </Nav.Row>
           </Nav.Fieldset>
-          <Nav.Fieldset legend="Land:">
+          <Nav.Fieldset
+            legend={
+              <LabelMedHjelpetekst
+                label="I hvilke land skal arbeidet/næringen utføres i?"
+                hjelpetekst="“Flere EØS-land/Sveits. Ikke kjent hvilke” skal kun benyttes hvis land er ukjent"
+              />
+            }
+          >
             {valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
-              <Nav.Row className="landcheckbox">
-                <Skjema.Checkbox
+              <Nav.Row className="land_radiobtn">
+                <Skjema.Radio
                   feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
+                  label="Flere EØS-land/Sveits. Ikke kjent hvilke"
                   disabled={valgteLand.length > 0}
-                  label={
-                    <LabelMedHjelpetekst
-                      label="Flere EØS-land/Sveits. Ikke kjent hvilke"
-                      hjelpetekst={
-                        "Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.\n" +
-                        "Det er ikke mulig å legge til andre land i tillegg."
-                      }
-                      hjelpetekstClassName="hjelpetekst"
-                    />
-                  }
+                  value
+                />
+                <Skjema.Radio
+                  feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
+                  label="Velg land fra liste"
+                  value={false}
                 />
               </Nav.Row>
             )}
-            <Nav.Row className="">
-              <Nav.Column xs="12">
-                <Skjema.LandVelger
-                  feltNavn="journalforingSoknadsland"
-                  multiLand
-                  errorConfig={{ submitFailed: true }}
-                  disabled={ukjentEllerAlleEosLand}
-                />
-              </Nav.Column>
-            </Nav.Row>
+            {!ukjentEllerAlleEosLand && (
+              <Nav.Row>
+                <Nav.Column xs="12">
+                  <Skjema.MultiSelect
+                    options={MKV.KTObjects.landkoder.map((item) => ({ value: item.kode, label: item.term }))}
+                    className="multiselect"
+                    feltNavn="journalforingSoknadsland"
+                  />
+                </Nav.Column>
+              </Nav.Row>
+            )}
           </Nav.Fieldset>
         </Fragment>
       )}
@@ -277,15 +282,18 @@ const OpprettSak = (props) => {
 };
 OpprettSak.propTypes = {
   journalforingSkjemaVerdier: PT.object,
+  errors: PT.object,
   settFeltInnhold: PT.func.isRequired,
   sakstemaToggleEnabled: PT.bool.isRequired,
 };
 
 OpprettSak.defaultProps = {
   journalforingSkjemaVerdier: {},
+  errors: {},
 };
 const mapStateToProps = (state) => ({
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
+  errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

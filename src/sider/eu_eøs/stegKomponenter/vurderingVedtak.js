@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
@@ -12,7 +12,6 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
-import * as Hooks from "../../../hooks";
 
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -28,6 +27,7 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
 
 import "./vurderingVedtak.css";
+import { vedtakOperations } from "../../../ducks/vedtak";
 
 const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) => {
   if (
@@ -61,7 +61,6 @@ const VurderingVedtak = ({
   bostedsland,
   redigerbart,
   behandlingID,
-  lagreOgFatteVedtak,
   tilbake,
   behandlingstype,
   behandlingstema,
@@ -75,10 +74,11 @@ const VurderingVedtak = ({
   kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
+  validerBehandlingsgrunnlag,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
-  const isMounted = Hooks.useIsMounted();
+  const dispatch = useDispatch();
 
   const lovvalget = lovvalgsperioder[0] || {};
 
@@ -129,20 +129,24 @@ const VurderingVedtak = ({
         setVedtakPending(false);
       }
     }
+
     kontroller();
   }, [aktivtSteg, formIsValid]);
 
-  const fattVedtak = async () => {
+  const onSubmit = async () => {
     if (!validerForm()) return;
 
     setVedtakPending(true);
 
-    await lagreOgFatteVedtak(lagFattVedtakEOSReqDto());
-
-    // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
-    if (isMounted.current) {
-      setVedtakPending(false);
-    }
+    validerBehandlingsgrunnlag()
+      .then(() => {
+        dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakEOSReqDto())).then((res) => {
+          if (res.data?.data?.error) {
+            setVedtakPending(false);
+          }
+        });
+      })
+      .catch(() => setVedtakPending(false));
   };
 
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalget);
@@ -221,7 +225,7 @@ const VurderingVedtak = ({
                 spinner: vedtakPending,
                 autoDisableVedSpinner: true,
                 disabled: !stegErGyldig,
-                onClick: fattVedtak,
+                onClick: onSubmit,
               }}
               bekreftTekst="Fatt vedtak"
               tilbakeKnappProps={{
@@ -237,7 +241,6 @@ const VurderingVedtak = ({
 };
 
 VurderingVedtak.propTypes = {
-  lagreOgFatteVedtak: PT.func.isRequired,
   tilbake: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -257,6 +260,7 @@ VurderingVedtak.propTypes = {
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
+  validerBehandlingsgrunnlag: PT.func.isRequired,
 };
 
 VurderingVedtak.defaultProps = {

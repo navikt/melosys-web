@@ -15,7 +15,6 @@ describe("VurderingArtikkel16Vedtak", () => {
         begrunnelseFritekst: "fritekst",
       },
       behandlingID: 1,
-      lagreOgFatteVedtak: jest.fn(),
       tilbake: jest.fn(),
       redigerbart: true,
       vilkarBegrunnelser: [],
@@ -33,6 +32,10 @@ describe("VurderingArtikkel16Vedtak", () => {
       hentLovvalgsperioder: jest.fn(),
       lagreLovvalgsperioder: jest.fn(),
       endreLovvalgsperiode: jest.fn(),
+      kontrollerFerdigbehandling: jest.fn(),
+      validerBehandlingsgrunnlag: jest.fn().mockImplementation(() => Promise.resolve()),
+      fattVedtak: jest.fn(),
+      harFeilmeldinger: false,
     };
   });
 
@@ -62,6 +65,6 @@ describe("VurderingArtikkel16Vedtak", () => {
 
     expect(vurderingArtikkel16Vedtak.find("StegKnapper")).toHaveLength(1);
     vurderingArtikkel16Vedtak.find("StegKnapper").props().bekreftKnappProps.onClick();
-    expect(props.lagreOgFatteVedtak).toHaveBeenCalledTimes(1);
+    expect(props.validerBehandlingsgrunnlag).toHaveBeenCalledTimes(1);
   });
 });
