@@ -13,7 +13,6 @@ export const nullstillSak = (steg: SakFormData, change: (feltNavn: string, verdi
       change(SakFormData.behandlingstype, null);
       break;
     case SakFormData.sakstema:
-      console.log("Resetter under");
       change(SakFormData.behandlingstema, null);
       change(SakFormData.behandlingstype, null);
       break;
