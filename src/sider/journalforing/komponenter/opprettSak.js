@@ -101,7 +101,7 @@ const OpprettSak = (props) => {
   }, [folketrygdenToggle]);
 
   useEffect(() => {
-    if (sakstemaToggleEnabled) return;
+    if (!sakstemaToggleEnabled) return;
 
     Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
       setSakstyper(muligeSakstyper);
@@ -109,7 +109,7 @@ const OpprettSak = (props) => {
   }, [sakstemaToggleEnabled]);
 
   useEffect(() => {
-    if (sakstemaToggleEnabled) return;
+    if (!sakstemaToggleEnabled) return;
 
     if (valgtSakstype) {
       Api.LovligeKombinasjoner.hentSakstemaer(journalforingGjelder, valgtSakstype).then((muligeSakstemaer) => {
@@ -119,7 +119,7 @@ const OpprettSak = (props) => {
   }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype]);
 
   useEffect(() => {
-    if (sakstemaToggleEnabled) return;
+    if (!sakstemaToggleEnabled) return;
 
     if (valgtSakstema && valgtSakstype) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(journalforingGjelder, valgtSakstype, valgtSakstema).then(
@@ -131,7 +131,7 @@ const OpprettSak = (props) => {
   }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema]);
 
   useEffect(() => {
-    if (sakstemaToggleEnabled) return;
+    if (!sakstemaToggleEnabled) return;
 
     if (valgtSakstema && valgtSakstype && valgtBehandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(
@@ -146,7 +146,7 @@ const OpprettSak = (props) => {
   }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
 
   useEffect(() => {
-    if (sakstemaToggleEnabled) return;
+    if (!sakstemaToggleEnabled) return;
 
     if (valgtSakstema && valgtSakstype && journalforingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(journalforingGjelder, valgtSakstype, valgtSakstema).then(
