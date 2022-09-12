@@ -170,7 +170,6 @@ const skalByggeLovvalgsperiodeForArtikkel16_1 = (reduxState) => {
 
 const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
   const toggleEnabled = (async () => {
-    // https://unleash.nais.io/#/features/strategies/melosys.5278.art16lovvalgsperiodefiks
     return erFeatureToggleEnabled("melosys.5278.art16lovvalgsperiodefiks");
   })();
 
