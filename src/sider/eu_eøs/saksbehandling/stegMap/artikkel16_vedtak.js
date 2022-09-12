@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingArtikkel16Vedtak from "../../stegKomponenter/vurderingArtikkel16Vedtak/vurderingArtikkel16Vedtak";
+import VurderingArtikkel16Vedtak from "../../stegKomponenter/vurderingArtikkel16Vedtak";
 
 class Artikkel16Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -16,10 +16,10 @@ class Artikkel16Vedtak extends Steg {
     });
     this.beregnRelevantUI = (_propsLight) => ({});
     this.handlers = {
-      lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
       publiserStegdata: this._propsLight.tilgjengeligeHandlers.publiserStegdata,
+      validerBehandlingsgrunnlag: this._propsLight.tilgjengeligeHandlers.validerBehandlingsgrunnlag,
     };
     this._status = FANE_STATUS.OK;
   }

@@ -26,6 +26,7 @@ import { Innvilgelse } from "./innvilgelse";
 import { DelvisInnvilgelse } from "./delvisInnvilgelse";
 import { Avslag } from "./avslag";
 import { VurderingArtikkel16VedtakBegrunnelser } from "./vurderingArtikkel16VedtakBegrunnelser";
+import { vedtakOperations } from "../../../../ducks/vedtak";
 
 const hentLovvalgsperiode = (anmodningsperiodesvar, anmodningsperiode) => {
   const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
@@ -50,7 +51,6 @@ const hentLovvalgsperiode = (anmodningsperiodesvar, anmodningsperiode) => {
 };
 
 export const VurderingArtikkel16Vedtak = ({
-  lagreOgFatteVedtak,
   redigerbart,
   behandlingID,
   anmodningsperiode,
@@ -71,10 +71,11 @@ export const VurderingArtikkel16Vedtak = ({
   harFeilmeldinger,
   aktivtSteg,
   publiserStegdata,
+  validerBehandlingsgrunnlag,
+  fattVedtak,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
-  const isMounted = Hooks.useIsMounted();
 
   useEffect(() => {
     /**
@@ -136,6 +137,7 @@ export const VurderingArtikkel16Vedtak = ({
         setVedtakPending(false);
       }
     }
+
     kontroller();
   }, [aktivtSteg, formIsValid]);
 
@@ -150,12 +152,15 @@ export const VurderingArtikkel16Vedtak = ({
 
     setVedtakPending(true);
 
-    await lagreOgFatteVedtak(lagFattVedtakEOSReqDto());
-
-    // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
-    if (isMounted.current) {
-      setVedtakPending(false);
-    }
+    validerBehandlingsgrunnlag()
+      .then(() => {
+        fattVedtak(behandlingID, lagFattVedtakEOSReqDto()).then((res) => {
+          if (res.data?.data?.error) {
+            setVedtakPending(false);
+          }
+        });
+      })
+      .catch(() => setVedtakPending(false));
   };
 
   const renderBegrunnelser = useCallback(
@@ -280,7 +285,6 @@ VurderingArtikkel16Vedtak.propTypes = {
   behandlingID: PT.number.isRequired,
   behandlingstype: PT.string.isRequired,
   formIsValid: PT.bool.isRequired,
-  lagreOgFatteVedtak: PT.func.isRequired,
   tilbake: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
@@ -296,6 +300,8 @@ VurderingArtikkel16Vedtak.propTypes = {
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
+  validerBehandlingsgrunnlag: PT.func.isRequired,
+  fattVedtak: PT.func.isRequired,
   publiserStegdata: PT.func.isRequired,
 };
 
@@ -380,6 +386,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   hentLovvalgsperioder: (behandlingID) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),
+  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16VedtakForm);

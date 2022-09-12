@@ -13,7 +13,6 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
-import * as Hooks from "../../../../hooks";
 import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 
@@ -33,6 +32,7 @@ import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from ".
 import { RepresentantformValues } from "./vurderingRepresentant";
 
 import "./vurderingVedtak.css";
+import { vedtakOperations } from "../../../../ducks/vedtak";
 
 const { avtaleland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
@@ -59,6 +59,8 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
     dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
+  fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto) =>
+    dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -74,12 +76,12 @@ interface Props {
   bekreft: () => void;
   oppdater: () => void;
   tilbake: () => void;
-  lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto) => void;
   redigerbart: boolean;
   alleLandkoder: KTObject[];
   formValues: FormValuesProps;
   harFeilmeldinger: boolean;
   aktivtSteg: boolean;
+  validerBehandlingsgrunnlag: () => Promise<any>;
 }
 
 const VurderingVedtak = ({
@@ -97,16 +99,16 @@ const VurderingVedtak = ({
   skalBetaleTrygdeavgiftTilNorge,
   skalBetaleTrygdeavgiftTilUtlandet,
   familieFormValues,
-  lagreOgFatteVedtak,
   vedtakstype,
   kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
+  validerBehandlingsgrunnlag,
+  fattVedtak,
 }: Props & PropsFromRedux) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
-  const isMounted = Hooks.useIsMounted();
   const stegErGyldig = redigerbart && !harFeilmeldinger;
 
   const hentMuligeMottakere = async () => {
@@ -289,14 +291,18 @@ const VurderingVedtak = ({
     kontroller();
   }, [aktivtSteg]);
 
-  const fattVedtak = async () => {
+  const onSubmit = async () => {
     setVedtakPending(true);
 
-    await lagreOgFatteVedtak(lagFattVedtakFTRLReqDto());
-
-    if (isMounted.current) {
-      setVedtakPending(false);
-    }
+    validerBehandlingsgrunnlag()
+      .then(() => {
+        fattVedtak(behandlingID, lagFattVedtakFTRLReqDto()).then((res) => {
+          if (res.data?.data?.error) {
+            setVedtakPending(false);
+          }
+        });
+      })
+      .catch(() => setVedtakPending(false));
   };
 
   const soknadslandErEtAvtaleland = avtaleland[soknadsland?.toString()] !== undefined;
@@ -411,7 +417,7 @@ const VurderingVedtak = ({
 
       <Mui.StegKnapper
         bekreftKnappProps={{
-          onClick: fattVedtak,
+          onClick: onSubmit,
           disabled: !stegErGyldig,
           autoDisableVedSpinner: true,
           spinner: vedtakPending,

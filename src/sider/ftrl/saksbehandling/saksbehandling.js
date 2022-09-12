@@ -25,7 +25,6 @@ import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/be
 import { avklartefaktaOperations } from "../../../ducks/avklartefakta";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
-import { datalastingOperations } from "../../../ducks/datalasting";
 import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { formSelectors } from "../../../ducks/form";
 import { menypanelOperations } from "../../../ducks/menypanel";
@@ -62,14 +61,12 @@ const Saksbehandling = ({
   hentLandkoder,
   hentMedlemskapsperioder,
   hentOppsummertFakta,
-  lagreAllData,
   lagreAvklartefakta,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   lagreVilkar,
   landkoder,
   location,
   match,
-  oppdaterBehandlingsgrunnlag,
   oppsummering,
   redigerbart,
   resetBehandlingerState,
@@ -189,12 +186,10 @@ const Saksbehandling = ({
                         annenBehandlingOppfriskes={annenBehandlingOppfriskes}
                         behandlingID={behandlingID}
                         lagreAvklartefaktaHandler={lagreAvklartefakta}
-                        lagreAllData={lagreAllData}
                         lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={
                           lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger
                         }
                         lagreVilkarHandler={lagreVilkar}
-                        oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
                         begrunnelser={MKV.KTObjects.begrunnelser}
                         landkoder={landkoder}
                         bestemmelser={bestemmelser}
@@ -264,11 +259,9 @@ Saksbehandling.propTypes = {
   hentMedlemskapsperioder: PT.func.isRequired,
   hentOppsummertFakta: PT.func.isRequired,
   hentFolketrygdenKodeverk: PT.func.isRequired,
-  lagreAllData: PT.func.isRequired,
   lagreAvklartefakta: PT.func.isRequired,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
   lagreVilkar: PT.func.isRequired,
-  oppdaterBehandlingsgrunnlag: PT.func.isRequired,
   resetBehandlingerState: PT.func.isRequired,
   resetBehandlingsgrunnlagState: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
@@ -323,10 +316,8 @@ const mapDispatchToProps = (dispatch) => ({
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
   hentMedlemskapsperioder: (bid) => dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(bid)),
   hentOppsummertFakta: (bid) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(bid)),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   resetVilkarState: () => dispatch(vilkarOperations.resetState()),
   resetOppsummertFaktaState: () => dispatch(oppsummertfaktaOperations.resetOppsummertFakta()),
   resetMedlemskapsperiodeState: () => dispatch(medlemskapsperioderOperations.resetMedlemskapsperioder()),
