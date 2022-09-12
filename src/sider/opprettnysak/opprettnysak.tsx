@@ -31,7 +31,7 @@ import IdentOgNavn from "./identOgNavn";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
 import "./opprettnysak.css";
-import { nullstillSak, SakFormData } from "../../felleskomponenter/skjema/hooks/nullstillsak";
+import { nullstillSak, SakFormData } from "../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
 
 const euEosBehandlingstemaer = (visNyeBehandlingstema: boolean) =>
   MKV.KTObjects.behandlinger.behandlingstema

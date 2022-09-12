@@ -14,7 +14,7 @@ import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst"
 import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./opprettSak.css";
-import { nullstillSak, SakFormData } from "../../../felleskomponenter/skjema/hooks/nullstillsak";
+import { nullstillSak, SakFormData } from "../../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
 
 const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
   ({ kode }) =>

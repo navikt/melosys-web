@@ -27,7 +27,7 @@ import { useFeatureToggle } from "../../featuretoggle";
 import { erBehandlingstemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
 import { behandlingstypeOperations, behandlingstypeSelectors } from "../../ducks/behandlingstype";
 import { behandlingstemaOperations, behandlingstemaSelectors } from "../../ducks/behandlingstema";
-import { SakFormData } from "../skjema/hooks/nullstillsak";
+import { SakFormData } from "../skjema/formdatahjelper/nullstillsak";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
