@@ -145,6 +145,19 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
   ];
 };
 
+const konvertAnmodningsperiodeSvarTypeTilInnvilgesesResultat = (anmodningsperiodeSvarType) => {
+  switch (anmodningsperiodeSvarType) {
+    case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
+      return MKV.Koder.innvilgelsesResultat.INNVILGET;
+    case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
+      return MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET;
+    case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
+      return MKV.Koder.innvilgelsesResultat.AVSLAATT;
+    default:
+      throw new Error("Ukjent AnmodningsperiodeSvarType");
+  }
+};
+
 const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
   const erAnmodningsperiodeSendtUtland =
     anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(reduxState);
@@ -157,18 +170,19 @@ const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
     const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
     const medlemskapsperiodeID = anmodningsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
     const anmodningsperiodeSvarType = anmodningsperiodesvarSelectors.AnmodningsperiodeSvarTypeSelector(reduxState);
+    const innvilgelsesResultat = konvertAnmodningsperiodeSvarTypeTilInnvilgesesResultat(anmodningsperiodeSvarType);
 
     return [
       {
         id: null,
         fomDato: periode.fom,
         tomDato: periode.tom,
-        lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
         tilleggBestemmelse: stegState.tilleggbestemmelse,
         lovvalgsland: MKV.Koder.landkoder.NO,
+        lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
         unntakFraBestemmelse: stegState.unntakfrabestemmelse || null,
         unntakFraLovvalgsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(reduxState).join(""),
-        innvilgelsesResultat: anmodningsperiodeSvarType || null,
+        innvilgelsesResultat,
         medlemskapsperiodeID: medlemskapsperiodeID || null,
         trygdeDekning: behandlingsgrunnlagSelectors.TrygdedekningSelector(reduxState),
       },
