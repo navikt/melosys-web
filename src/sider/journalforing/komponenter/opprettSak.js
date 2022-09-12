@@ -14,7 +14,10 @@ import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst"
 import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./opprettSak.css";
-import { nullstillSak, SakFormData } from "../../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
+import {
+  nullstillFormdataVerdier,
+  FormDataVerdi,
+} from "../../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
 
 const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
   ({ kode }) =>
@@ -175,7 +178,7 @@ export const OpprettSak = (props) => {
         feltNavn="sakstype"
         bredde="fullbredde"
         label="Sakstype"
-        onChange={() => nullstillSak(SakFormData.sakstype, settFeltInnhold)}
+        onChange={() => nullstillFormdataVerdier(FormDataVerdi.sakstype, settFeltInnhold)}
       >
         {(sakstemaToggleEnabled ? sakstyper : valgbareSakstyper).map((elem) => (
           <option key={elem.kode} value={elem.kode}>
@@ -188,7 +191,7 @@ export const OpprettSak = (props) => {
           feltNavn="sakstema"
           bredde="fullbredde"
           label="Sakstema"
-          onChange={() => nullstillSak(SakFormData.sakstema, settFeltInnhold)}
+          onChange={() => nullstillFormdataVerdier(FormDataVerdi.sakstema, settFeltInnhold)}
         >
           {sakstemaer.map((elem) => (
             <option key={elem.kode} value={elem.kode}>
@@ -203,7 +206,7 @@ export const OpprettSak = (props) => {
           bredde="fullbredde"
           label="Behandlingstema"
           onChange={() => {
-            nullstillSak(SakFormData.behandlingstema, settFeltInnhold);
+            nullstillFormdataVerdier(FormDataVerdi.behandlingstema, settFeltInnhold);
             settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
           }}
         >
@@ -219,7 +222,7 @@ export const OpprettSak = (props) => {
           feltNavn="behandlingstype"
           bredde="fullbredde"
           label="Behandlingstype"
-          onChange={() => nullstillSak(SakFormData.behandlingstype, settFeltInnhold)}
+          onChange={() => nullstillFormdataVerdier(FormDataVerdi.behandlingstype, settFeltInnhold)}
         >
           {behandlingstyper.map((elem) => (
             <option key={elem.kode} value={elem.kode}>

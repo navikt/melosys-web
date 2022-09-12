@@ -27,7 +27,7 @@ import { useFeatureToggle } from "../../featuretoggle";
 import { erBehandlingstemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
 import { behandlingstypeOperations, behandlingstypeSelectors } from "../../ducks/behandlingstype";
 import { behandlingstemaOperations, behandlingstemaSelectors } from "../../ducks/behandlingstema";
-import { SakFormData } from "../skjema/formdatahjelper/nullstillsak";
+import { FormDataVerdi } from "../skjema/formdatahjelper/nullstillsak";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -205,21 +205,21 @@ function EndreBehandlingModal({
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
   const endringerErBegrenset = erBehandlingstemaMedBegrensetRettigheter(oppsummering.behandlingstema, fagsak.sakstype);
 
-  const nullstillSak = (steg: SakFormData): void => {
+  const nullstillSak = (steg: FormDataVerdi): void => {
     switch (steg) {
-      case SakFormData.sakstype:
+      case FormDataVerdi.sakstype:
         setSakstema("");
         setBehandlingstema("");
         setBehandlingstype("");
         break;
-      case SakFormData.sakstema:
+      case FormDataVerdi.sakstema:
         setBehandlingstema("");
         setBehandlingstype("");
         break;
-      case SakFormData.behandlingstema:
+      case FormDataVerdi.behandlingstema:
         setBehandlingstype("");
         break;
-      case SakFormData.behandlingstype:
+      case FormDataVerdi.behandlingstype:
         break;
       default:
         break;
@@ -234,7 +234,7 @@ function EndreBehandlingModal({
             <Mui.KodeTermSelect
               onChange={(e) => {
                 setSakstype(e.target.value);
-                nullstillSak(SakFormData.sakstype);
+                nullstillSak(FormDataVerdi.sakstype);
               }}
               label="Sakstype"
               value={sakstype}
@@ -249,7 +249,7 @@ function EndreBehandlingModal({
               <Mui.KodeTermSelect
                 onChange={(e) => {
                   setSakstema(e.target.value);
-                  nullstillSak(SakFormData.sakstema);
+                  nullstillSak(FormDataVerdi.sakstema);
                 }}
                 label="Sakstema"
                 value={sakstema}
@@ -261,7 +261,7 @@ function EndreBehandlingModal({
             <Mui.KodeTermSelect
               onChange={(e) => {
                 setBehandlingstema(e.target.value);
-                nullstillSak(SakFormData.behandlingstema);
+                nullstillSak(FormDataVerdi.behandlingstema);
               }}
               label="Behandlingstema"
               value={behandlingstema}

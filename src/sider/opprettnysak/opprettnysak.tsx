@@ -31,7 +31,7 @@ import IdentOgNavn from "./identOgNavn";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
 import "./opprettnysak.css";
-import { nullstillSak, SakFormData } from "../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
+import { nullstillFormdataVerdier, FormDataVerdi } from "../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
 
 const euEosBehandlingstemaer = (visNyeBehandlingstema: boolean) =>
   MKV.KTObjects.behandlinger.behandlingstema
@@ -401,7 +401,7 @@ const OpprettNySak = ({
                       feltNavn="sakstype"
                       bredde="fullbredde"
                       label="Sakstype"
-                      onChange={() => nullstillSak(SakFormData.sakstype, change)}
+                      onChange={() => nullstillFormdataVerdier(FormDataVerdi.sakstype, change)}
                     >
                       {(behandleAlleSakerToggle === "enabled" ? sakstyper : valgbareSakstyper).map(
                         ({ kode, term }: KTObject) => (
@@ -416,7 +416,7 @@ const OpprettNySak = ({
                         feltNavn="sakstema"
                         bredde="fullbredde"
                         label="Sakstema"
-                        onChange={() => nullstillSak(SakFormData.sakstema, change)}
+                        onChange={() => nullstillFormdataVerdier(FormDataVerdi.sakstema, change)}
                       >
                         {sakstemaer.map(({ kode, term }: KTObject) => (
                           <option key={kode} value={kode}>
@@ -430,7 +430,7 @@ const OpprettNySak = ({
                         feltNavn="behandlingstema"
                         bredde="fullbredde"
                         label="Behandlingstema"
-                        onChange={() => nullstillSak(SakFormData.behandlingstema, change)}
+                        onChange={() => nullstillFormdataVerdier(FormDataVerdi.behandlingstema, change)}
                       >
                         {(behandleAlleSakerToggle === "enabled"
                           ? behandlingstemaer
@@ -447,7 +447,7 @@ const OpprettNySak = ({
                         feltNavn="behandlingstype"
                         bredde="fullbredde"
                         label="Behandlingstype"
-                        onChange={() => nullstillSak(SakFormData.behandlingstype, change)}
+                        onChange={() => nullstillFormdataVerdier(FormDataVerdi.behandlingstype, change)}
                       >
                         {behandlingstyper.map(({ kode, term }: KTObject) => (
                           <option key={kode} value={kode}>
