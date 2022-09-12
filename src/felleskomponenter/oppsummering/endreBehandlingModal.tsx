@@ -76,16 +76,16 @@ function EndreBehandlingModal({
   const [behandlingsfrist, setBehandlingsfrist] = useState(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
   const [behandlingsstatus, setBehandlingsstatus] = useState(oppsummering.behandlingsstatus?.kode);
 
-  const [sakstemaer, setSakstemaer] = useState([]);
-  const [behandlingstemaer, setBehandlingstemaer] = useState([]);
-  const [behandlingstyper, setBehandlingstyper] = useState([]);
+  const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
+  const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
+  const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
 
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
 
   useEffect(() => {
     if (sakstype) {
-      Api.LovligeKombinasjoner.hentSakstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype).then((muligeSakstemaer) => {
-        setSakstemaer(muligeSakstemaer);
+      Api.LovligeKombinasjoner.hentSakstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype).then((alleMuligesakstemaer) => {
+        setMuligeSakstemaer(alleMuligesakstemaer);
       });
     }
   }, [sakstype]);
@@ -93,8 +93,8 @@ function EndreBehandlingModal({
   useEffect(() => {
     if (sakstema && sakstype) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype, sakstema).then(
-        (muligeBehandlingstemaer) => {
-          setBehandlingstemaer(muligeBehandlingstemaer);
+        (alleMuligeBehandlingstemaer) => {
+          setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);
         }
       );
     }
@@ -107,8 +107,8 @@ function EndreBehandlingModal({
         sakstype,
         sakstema,
         behandlingstema
-      ).then((muligeBehandlingstyper) => {
-        setBehandlingstyper(muligeBehandlingstyper);
+      ).then((alleMuligeBehandlingstyper) => {
+        setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
       });
     }
   }, [sakstype, sakstema, behandlingstema]);
@@ -197,7 +197,7 @@ function EndreBehandlingModal({
                 onChange={(e) => setSakstema(e.target.value)}
                 label="Sakstema"
                 value={sakstema}
-                koder={muligeVerdierPlussValgt(fagsak.sakstema, sakstemaer)}
+                koder={muligeVerdierPlussValgt(fagsak.sakstema, muligeSakstemaer)}
                 disableForsteValg
                 redigerbart={!endringerErBegrenset}
               />
@@ -206,7 +206,7 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingstema(e.target.value)}
               label="Behandlingstema"
               value={behandlingstema}
-              koder={muligeVerdierPlussValgt(oppsummering.behandlingstema, behandlingstemaer)}
+              koder={muligeVerdierPlussValgt(oppsummering.behandlingstema, muligeBehandlingstemaer)}
               disableForsteValg
               redigerbart={!endringerErBegrenset}
             />
@@ -214,7 +214,7 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"
               value={behandlingstype}
-              koder={muligeVerdierPlussValgt(oppsummering.behandlingstype, behandlingstyper)}
+              koder={muligeVerdierPlussValgt(oppsummering.behandlingstype, muligeBehandlingstyper)}
               disableForsteValg
               redigerbart={!endringerErBegrenset}
             />

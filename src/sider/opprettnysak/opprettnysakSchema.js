@@ -60,9 +60,14 @@ const opprettnysak = object().shape({
     .nullable(),
   virksomhetNavn: string().nullable(),
   sakstype: string().required(VELG_SAKSTYPE),
-  sakstema: string().required(VELG_SAKSTEMA),
-  behandlingstema: string().required(VELG_BEHANDLINGSTEMA),
-  behandlingstype: string().required(VELG_BEHANDLINGSTYPE),
+  sakstema: string()(VELG_SAKSTEMA),
+  behandlingstype: string()(VELG_BEHANDLINGSTYPE),
+  behandlingstema: string()
+    .when("hovedpart", {
+      is: (hovedpart) => hovedpart !== VIRKSOMHET,
+      then: string().required(VELG_BEHANDLINGSTEMA).nullable(),
+    })
+    .nullable(),
   soknadsinfo: object().when(["behandlingstema", "hovedpart"], {
     is: (behandlingstema, hovedpart) => MKVUtils.erSoknad(behandlingstema) && hovedpart === BRUKER,
     then: soknadsinfo,

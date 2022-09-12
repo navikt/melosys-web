@@ -117,7 +117,6 @@ const OpprettNySak = ({
   const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
-  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
 
   const [sakstyper, setSakstyper] = useState([]);
   const [sakstemaer, setSakstemaer] = useState([]);
@@ -182,11 +181,9 @@ const OpprettNySak = ({
     if (behandleAlleSakerToggle !== "enabled") return;
 
     if (sakstema && sakstype && hovedpart === MKV.Koder.aktoersroller.VIRKSOMHET) {
-      Api.LovligeKombinasjoner.hentBehandlingstyperVirksomhet(hovedpart, sakstype, sakstema).then(
-        (muligeBehandlingstyper) => {
-          setBehandlingstyper(muligeBehandlingstyper);
-        }
-      );
+      Api.LovligeKombinasjoner.hentBehandlingstyper(hovedpart, sakstype, sakstema).then((muligeBehandlingstyper) => {
+        setBehandlingstyper(muligeBehandlingstyper);
+      });
     }
   }, [behandleAlleSakerToggle, hovedpart, sakstype, sakstema]);
 
@@ -342,7 +339,7 @@ const OpprettNySak = ({
   const erLandvelgerDisabled =
     erUkjenteEllerAlleEosLand && behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
 
-  const hovedpartErBruker = behandleAlleSakerToggle === "enabled" ? hovedpart === BRUKER : true;
+  const hovedpartErBruker = hovedpart === BRUKER;
 
   return (
     <form className="opprettnysak" onSubmit={opprettNySak}>
@@ -406,9 +403,9 @@ const OpprettNySak = ({
                       feltNavn="sakstype"
                       bredde="fullbredde"
                       label="Sakstype"
-                      onChange={() => change("sakstype", undefined)}
+                      onChange={() => change("behandlingstema", undefined)}
                     >
-                      {(sakstemaToggle === "enabled" ? sakstyper : valgbareSakstyper).map(
+                      {(behandleAlleSakerToggle === "enabled" ? sakstyper : valgbareSakstyper).map(
                         ({ kode, term }: KTObject) => (
                           <option key={kode} value={kode}>
                             {term}
@@ -416,12 +413,12 @@ const OpprettNySak = ({
                         )
                       )}
                     </Skjema.Select>
-                    {sakstemaToggle === "enabled" && (
+                    {behandleAlleSakerToggle === "enabled" && (
                       <Skjema.Select
                         feltNavn="sakstema"
                         bredde="fullbredde"
                         label="Sakstema"
-                        onChange={() => change("sakstema", undefined)}
+                        onChange={() => change("behandlingstema", undefined)}
                       >
                         {sakstemaer.map(({ kode, term }: KTObject) => (
                           <option key={kode} value={kode}>

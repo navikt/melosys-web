@@ -4,10 +4,10 @@ import { API_BASE_URL, LOVLIGE_KOMBINASJONER } from "../api-constants";
 export const hentSakstyper = () => getAsJson(`${API_BASE_URL}${LOVLIGE_KOMBINASJONER}/sakstyper`);
 export const hentSakstemaer = (hovedpart, sakstype) =>
   getAsJson(`${API_BASE_URL}${LOVLIGE_KOMBINASJONER}/sakstemaer/${hovedpart}/${sakstype}`);
-export const hentBehandlingstemaer = (hovedpart, sakstype, sakstema, behandlingstema) =>
+export const hentBehandlingstemaer = (hovedpart, sakstype, sakstema, sistBehandlingstema) =>
   getAsJson(
     `${API_BASE_URL}${LOVLIGE_KOMBINASJONER}/behandlingstemaer/${hovedpart}/${sakstype}/${sakstema}/${
-      behandlingstema ? `?behandlingstema=${behandlingstema}` : ""
+      sistBehandlingstema ? `?sistBehandlingstema=${sistBehandlingstema}` : ""
     }
     `
   );
@@ -28,5 +28,3 @@ export const hentBehandlingstyper = (
     }${saksstatus ? `&saksstatus=${saksstatus}` : ""}
     `
   );
-export const hentBehandlingstyperVirksomhet = (hovedpart, sakstype, sakstema) =>
-  getAsJson(`${API_BASE_URL}${LOVLIGE_KOMBINASJONER}/behandlingstyper/${hovedpart}/${sakstype}/${sakstema}`);

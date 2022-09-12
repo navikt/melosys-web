@@ -59,7 +59,6 @@ const OpprettSak = (props) => {
   const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
   const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
-  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
 
   const defaultBehandlingstema = (sakstype) => {
     switch (sakstype) {
@@ -102,25 +101,25 @@ const OpprettSak = (props) => {
   }, [folketrygdenToggle]);
 
   useEffect(() => {
-    if (behandleAlleSakerToggle !== "enabled") return;
+    if (sakstemaToggleEnabled) return;
 
     Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
       setSakstyper(muligeSakstyper);
     });
-  }, [behandleAlleSakerToggle]);
+  }, [sakstemaToggleEnabled]);
 
   useEffect(() => {
-    if (behandleAlleSakerToggle !== "enabled") return;
+    if (sakstemaToggleEnabled) return;
 
     if (valgtSakstype) {
       Api.LovligeKombinasjoner.hentSakstemaer(journalforingGjelder, valgtSakstype).then((muligeSakstemaer) => {
         setSakstemaer(muligeSakstemaer);
       });
     }
-  }, [behandleAlleSakerToggle, journalforingGjelder, valgtSakstype]);
+  }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype]);
 
   useEffect(() => {
-    if (behandleAlleSakerToggle !== "enabled") return;
+    if (sakstemaToggleEnabled) return;
 
     if (valgtSakstema && valgtSakstype) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(journalforingGjelder, valgtSakstype, valgtSakstema).then(
@@ -129,10 +128,10 @@ const OpprettSak = (props) => {
         }
       );
     }
-  }, [behandleAlleSakerToggle, journalforingGjelder, valgtSakstype, valgtSakstema]);
+  }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema]);
 
   useEffect(() => {
-    if (behandleAlleSakerToggle !== "enabled") return;
+    if (sakstemaToggleEnabled) return;
 
     if (valgtSakstema && valgtSakstype && valgtBehandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(
@@ -144,19 +143,19 @@ const OpprettSak = (props) => {
         setBehandlingstyper(muligeBehandlingstyper);
       });
     }
-  }, [behandleAlleSakerToggle, journalforingGjelder, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
+  }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
 
   useEffect(() => {
-    if (behandleAlleSakerToggle !== "enabled") return;
+    if (sakstemaToggleEnabled) return;
 
     if (valgtSakstema && valgtSakstype && journalforingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET) {
-      Api.LovligeKombinasjoner.hentBehandlingstyperVirksomhet(journalforingGjelder, valgtSakstype, valgtSakstema).then(
+      Api.LovligeKombinasjoner.hentBehandlingstyper(journalforingGjelder, valgtSakstype, valgtSakstema).then(
         (muligeBehandlingstyper) => {
           setBehandlingstyper(muligeBehandlingstyper);
         }
       );
     }
-  }, [behandleAlleSakerToggle, journalforingGjelder, valgtSakstype, valgtSakstema]);
+  }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema]);
 
   const skalViseSoknadsperiodeOgLand =
     journalforingGjelder !== MKV.Koder.aktoersroller.VIRKSOMHET &&
@@ -167,6 +166,9 @@ const OpprettSak = (props) => {
       MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
     ].includes(valgtBehandlingstema);
 
+  const visMuligeBehandlingstema = sakstemaToggleEnabled
+    ? journalforingGjelder === MKV.Koder.aktoersroller.BRUKER
+    : true;
   return (
     <div className="panelramme">
       <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
@@ -185,7 +187,7 @@ const OpprettSak = (props) => {
           ))}
         </Skjema.Select>
       )}
-      {(behandleAlleSakerToggle === "enabled" ? journalforingGjelder === MKV.Koder.aktoersroller.BRUKER : true) && (
+      {visMuligeBehandlingstema && (
         <Skjema.Select
           feltNavn="opprettnysak_behandlingstema"
           bredde="fullbredde"
