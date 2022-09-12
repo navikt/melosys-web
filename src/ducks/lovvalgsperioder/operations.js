@@ -24,6 +24,8 @@ import { lovvalgsperioderSelectors } from "./index";
 import { behandlingerSelectors } from "../behandlinger";
 import { flytSelectors } from "../flyt";
 import { formSelectors } from "../form";
+import { MedlemskapsperiodeIDSelector } from "../anmodningsperioder/selectors";
+import { anmodningsperiodesvarSelectors } from "../anmodningsperiodesvar";
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -154,6 +156,9 @@ const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
 
   if (erAnmodningsperiodeSendtUtland && erBehandlingsstatusUnderBehandlingEllerAvsluttet) {
     const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
+    const medlemskapsperiodeID = anmodningsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+    const anmodningsperiodeSvarType = anmodningsperiodesvarSelectors.AnmodningsperiodeSvarTypeSelector(reduxState);
+
     return [
       {
         id: null,
@@ -164,8 +169,8 @@ const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
         lovvalgsland: MKV.Koder.landkoder.NO,
         unntakFraBestemmelse: stegState.unntakfrabestemmelse || null,
         unntakFraLovvalgsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(reduxState).join(""),
-        innvilgelsesResultat: lovvalgsperioderSelectors.InnvilgelsesResultatSelector(reduxState) || null,
-        medlemskapsperiodeID: lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState) || null,
+        innvilgelsesResultat: anmodningsperiodeSvarType || null,
+        medlemskapsperiodeID: medlemskapsperiodeID || null,
         trygdeDekning: behandlingsgrunnlagSelectors.TrygdedekningSelector(reduxState),
       },
     ];

@@ -30,6 +30,11 @@ export const FomDatoSelector = createSelector(
   (anmodningsperiode) => anmodningsperiode.fomDato
 );
 
+export const MedlemskapsperiodeIDSelector = createSelector(
+  AnmodningsperiodeSelector,
+  (anmodningsperiode) => anmodningsperiode.medlemskapsperiodeID
+);
+
 export const AlleAnmodningsperioderSendtUtlandSelector = createSelector(
   AnmodningsperioderSelector,
   (anmodningsperioder) =>
