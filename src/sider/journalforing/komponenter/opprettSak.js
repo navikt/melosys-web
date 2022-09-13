@@ -175,7 +175,9 @@ export const OpprettSak = (props) => {
         feltNavn="sakstype"
         bredde="fullbredde"
         label="Sakstype"
-        onChange={() => nullstillFormdataVerdier(FormDataVerdi.sakstype, settFeltInnhold)}
+        onChange={() => {
+          if (sakstemaToggleEnabled) nullstillFormdataVerdier(FormDataVerdi.sakstype, settFeltInnhold);
+        }}
       >
         {(sakstemaToggleEnabled ? sakstyper : valgbareSakstyper).map((elem) => (
           <option key={elem.kode} value={elem.kode}>
@@ -203,7 +205,7 @@ export const OpprettSak = (props) => {
           bredde="fullbredde"
           label="Behandlingstema"
           onChange={() => {
-            nullstillFormdataVerdier(FormDataVerdi.behandlingstema, settFeltInnhold);
+            if (sakstemaToggleEnabled) nullstillFormdataVerdier(FormDataVerdi.behandlingstema, settFeltInnhold);
             settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
           }}
         >

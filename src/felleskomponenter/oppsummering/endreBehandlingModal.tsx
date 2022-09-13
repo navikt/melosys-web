@@ -206,6 +206,7 @@ function EndreBehandlingModal({
   const endringerErBegrenset = erBehandlingstemaMedBegrensetRettigheter(oppsummering.behandlingstema, fagsak.sakstype);
 
   const nullstillSak = (steg: FormDataVerdi): void => {
+    if (sakstemaToggle !== "enabled") return;
     switch (steg) {
       case FormDataVerdi.sakstype:
         setSakstema("");
@@ -220,7 +221,6 @@ function EndreBehandlingModal({
         setBehandlingstype("");
         break;
       case FormDataVerdi.behandlingstype:
-        break;
       default:
         break;
     }

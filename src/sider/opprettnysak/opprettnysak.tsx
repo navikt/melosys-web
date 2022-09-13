@@ -401,7 +401,10 @@ const OpprettNySak = ({
                       feltNavn="sakstype"
                       bredde="fullbredde"
                       label="Sakstype"
-                      onChange={() => nullstillFormdataVerdier(FormDataVerdi.sakstype, change)}
+                      onChange={() => {
+                        if (behandleAlleSakerToggle === "enabled")
+                          nullstillFormdataVerdier(FormDataVerdi.sakstype, change);
+                      }}
                     >
                       {(behandleAlleSakerToggle === "enabled" ? sakstyper : valgbareSakstyper).map(
                         ({ kode, term }: KTObject) => (
@@ -430,7 +433,10 @@ const OpprettNySak = ({
                         feltNavn="behandlingstema"
                         bredde="fullbredde"
                         label="Behandlingstema"
-                        onChange={() => nullstillFormdataVerdier(FormDataVerdi.behandlingstema, change)}
+                        onChange={() => {
+                          if (behandleAlleSakerToggle === "enabled")
+                            nullstillFormdataVerdier(FormDataVerdi.behandlingstema, change);
+                        }}
                       >
                         {(behandleAlleSakerToggle === "enabled"
                           ? behandlingstemaer
