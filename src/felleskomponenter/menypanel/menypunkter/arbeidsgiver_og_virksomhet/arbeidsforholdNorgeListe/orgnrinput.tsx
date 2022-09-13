@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as Nav from "../../../../../navFrontend";
 import { Organisasjon } from "../../../../../services/api";
-import { EnkelFellesInputFnrDnrOrgnrSaksnr } from "../../../../skjema/input/fellesInputFnrDnrOrgnrSaksnr";
+import EnkelFellesInputFnrDnrOrgnrSaksnr from "../../../../skjema/inputFnrDnrOrgnr";
 
 const Orgnrinput = ({
   onOrgnrFunnet,

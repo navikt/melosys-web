@@ -71,7 +71,6 @@ function Input({ feltNavn, bredde = "fullbredde", className = "", normalize = (v
 Input.propTypes = {
   bredde: PT.string,
   feltNavn: PT.string.isRequired,
-  fnrEllerDnr: PT.bool,
   className: PT.string,
   normalize: PT.func,
 };
@@ -79,7 +78,6 @@ Input.propTypes = {
 Input.defaultProps = {
   bredde: "fullbredde",
   className: "",
-  fnrEllerDnr: false,
   normalize: (value) => value,
 };
 

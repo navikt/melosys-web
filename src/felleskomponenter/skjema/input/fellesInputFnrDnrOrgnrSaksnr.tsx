@@ -1,15 +1,10 @@
 import { InputProps } from "nav-frontend-skjema";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Field } from "redux-form";
-import * as Nav from "../../../navFrontend";
+import EnkelFellesInputFnrDnrOrgnrSaksnr, {
+  FellesInputFnrDnrOrgnrSaksnrProps,
+} from "../inputFnrDnrOrgnr/EnkelFellesInputFnrDnrOrgnrSaksnr";
 import * as SkjemaUtils from "../utils";
-
-interface FellesInputFnrDnrOrgnrSaksnrProps {
-  vedEndring: (sokStreng: string) => void;
-  feil?: string;
-  meta?: any;
-  input?: any;
-}
 
 const InnerFellesInputFnrDnrOrgnrSaksnr = ({ vedEndring, ...rest }: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
   const {
@@ -22,43 +17,6 @@ const InnerFellesInputFnrDnrOrgnrSaksnr = ({ vedEndring, ...rest }: FellesInputF
   return <EnkelFellesInputFnrDnrOrgnrSaksnr {...rest} feil={rest.feil || feil} vedEndring={vedEndring} />;
 };
 
-const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
-  vedEndring,
-  feil,
-  ...rest
-}: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
-  const [inputVerdi, setInputVerdi] = useState<any>(rest.input.value ? rest.input.value : "");
-  const { input } = rest;
-
-  useEffect(() => {
-    setInputVerdi(input.value);
-  }, [input.value]);
-
-  const vedEndringAvInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    const trimmetStreng = value.toUpperCase().replaceAll(" ", "");
-    setInputVerdi(trimmetStreng);
-    if (vedEndring) {
-      vedEndring(trimmetStreng);
-    }
-  };
-
-  return (
-    <Nav.Input
-      {...rest}
-      onBlur={(event) => {
-        input.onBlur(event);
-        if (rest.onBlur) {
-          rest.onBlur(event);
-        }
-      }}
-      value={inputVerdi || ""}
-      feil={feil}
-      onChange={vedEndringAvInput}
-    />
-  );
-};
-
 const FellesInputFnrDnrOrgnrSaksnr = ({ feltNavn = "", bredde = "fullbredde", className = "", ...rest }) => (
   <Field
     bredde={bredde}
@@ -69,5 +27,5 @@ const FellesInputFnrDnrOrgnrSaksnr = ({ feltNavn = "", bredde = "fullbredde", cl
   />
 );
 
-export { InnerFellesInputFnrDnrOrgnrSaksnr, EnkelFellesInputFnrDnrOrgnrSaksnr };
+export { InnerFellesInputFnrDnrOrgnrSaksnr };
 export default FellesInputFnrDnrOrgnrSaksnr;

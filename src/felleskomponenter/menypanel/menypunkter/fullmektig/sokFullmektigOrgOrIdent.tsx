@@ -6,7 +6,7 @@ import * as Api from "../../../../services/api";
 
 import { isApiError } from "../../../../services";
 import { hentBostedsadresseForPerson } from "../../../../graphql/adresse";
-import { EnkelFellesInputFnrDnrOrgnrSaksnr } from "../../../skjema/input/fellesInputFnrDnrOrgnrSaksnr";
+import EnkelFellesInputFnrDnrOrgnrSaksnr from "../../../skjema/inputFnrDnrOrgnr";
 
 interface SokFullmektigOrgProps {
   onIdentFunnet: (orgnr: string, personIdent: string) => Promise<any>;
