@@ -14,6 +14,9 @@ interface BrevVedleggProps {
   valgteVedlegg: FysiskDokument[];
   setValgteVedlegg: (valgteVedlegg: FysiskDokument[]) => void;
   fritekstvedlegg: Fritekstvedlegg[];
+  redigerFritekstvedlegg: (index: number) => void;
+  slettFritekstvedlegg: (index: number) => void;
+  lagPdfUrl: (index: number) => Promise<string | false>;
 }
 
 const BrevVedlegg = ({
@@ -23,6 +26,9 @@ const BrevVedlegg = ({
   valgteVedlegg,
   setValgteVedlegg,
   fritekstvedlegg,
+  redigerFritekstvedlegg,
+  slettFritekstvedlegg,
+  lagPdfUrl,
 }: BrevVedleggProps) => {
   return (
     <Nav.Row>
@@ -33,6 +39,9 @@ const BrevVedlegg = ({
           dokumenter={dokumenter}
           onChange={setValgteVedlegg}
           fritekstvedlegg={fritekstvedlegg}
+          redigerFritekstvedlegg={redigerFritekstvedlegg}
+          slettFritekstvedlegg={slettFritekstvedlegg}
+          lagPdfUrl={lagPdfUrl}
         />
       </Nav.Column>
     </Nav.Row>

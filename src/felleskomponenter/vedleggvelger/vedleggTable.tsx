@@ -1,63 +1,8 @@
 import { FysiskDokument } from "Domene";
 import React from "react";
-import classNames from "classnames";
-
-import PdfLink from "../pdfLink";
-import * as Utils from "../../utils";
-import * as Nav from "../../navFrontend";
-import * as Mui from "../ui";
-import * as Ikoner from "../../resources/images";
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
-
-interface EnkeltVedleggProps {
-  vedlegg: FysiskDokument;
-  leggTilVedlegg: () => void;
-  slettVedlegg: () => void;
-  vedleggErMarkert: boolean;
-  redigerer: boolean;
-}
-
-export const EnkeltVedlegg = ({
-  vedlegg,
-  leggTilVedlegg,
-  slettVedlegg,
-  vedleggErMarkert,
-  redigerer,
-}: EnkeltVedleggProps) => {
-  const checkboxChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      leggTilVedlegg();
-    } else {
-      slettVedlegg();
-    }
-  };
-
-  const cls = classNames({
-    "enkeltvedlegg--border-bottom": redigerer,
-    enkeltvedlegg: !redigerer,
-  });
-
-  return (
-    <tr className={cls}>
-      {redigerer ? (
-        <td>
-          <Nav.Checkbox onChange={checkboxChangeHandler} checked={vedleggErMarkert} label="&nbsp;" />
-        </td>
-      ) : null}
-      <td>
-        <PdfLink journalpostID={vedlegg.journalpostID} dokumentID={vedlegg.dokumentID} tittel={vedlegg.tittel} />
-      </td>
-      <td>
-        <span>{Utils.dato.formatterDatoTilNorsk(vedlegg.dato)}</span>
-      </td>
-      {!redigerer && (
-        <td>
-          <Mui.Knapp type="flat" ikon={Ikoner.BinBlack} onClick={slettVedlegg} />
-        </td>
-      )}
-    </tr>
-  );
-};
+import { VedleggRow } from "./vedleggRow";
+import { FritekstvedleggRow } from "./fritekstvedleggRow";
 
 interface VedleggTableProps {
   valgteVedlegg: FysiskDokument[];
@@ -66,6 +11,9 @@ interface VedleggTableProps {
   slettVedlegg: (vedleggID: string) => void;
   leggTilVedlegg: (vedlegg: FysiskDokument) => void;
   fritekstvedlegg?: Fritekstvedlegg[];
+  redigerFritekstvedlegg?: (index: number) => void;
+  slettFritekstvedlegg?: (index: number) => void;
+  lagPdfUrl?: (index: number) => Promise<string | false>;
 }
 
 export const VedleggTable = ({
@@ -75,17 +23,28 @@ export const VedleggTable = ({
   slettVedlegg,
   leggTilVedlegg,
   fritekstvedlegg,
+  redigerFritekstvedlegg,
+  slettFritekstvedlegg,
+  lagPdfUrl,
 }: VedleggTableProps) => {
-  console.log(fritekstvedlegg);
   const vedleggErMarkert = (vedleggID: string) => Boolean(valgteVedlegg.find((vedlegg) => vedlegg.id === vedleggID));
-
   const hentGjeldendeVedlegg = () => (redigerer ? alleVedlegg : valgteVedlegg);
 
   return (
     <table className="vedleggtable">
       <tbody>
+        {fritekstvedlegg?.map((vedlegg, index) => (
+          <FritekstvedleggRow
+            fritekstvedlegg={vedlegg}
+            redigerFritekstvedlegg={redigerFritekstvedlegg}
+            slettFritekstvedlegg={slettFritekstvedlegg}
+            key={vedlegg.tittel}
+            index={index}
+            lagPdfUrl={lagPdfUrl}
+          />
+        ))}
         {hentGjeldendeVedlegg().map((enkeltVedlegg) => (
-          <EnkeltVedlegg
+          <VedleggRow
             key={enkeltVedlegg.id}
             vedlegg={enkeltVedlegg}
             leggTilVedlegg={() => leggTilVedlegg(enkeltVedlegg)}

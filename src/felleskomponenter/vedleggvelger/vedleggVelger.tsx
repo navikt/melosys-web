@@ -17,9 +17,21 @@ interface VedleggVelgerProps {
   onChange: (valgteVedlegg: FysiskDokument[]) => void;
   className?: string;
   fritekstvedlegg: Fritekstvedlegg[];
+  redigerFritekstvedlegg: (index: number) => void;
+  slettFritekstvedlegg: (index: number) => void;
+  lagPdfUrl: (index: number) => Promise<string | false>;
 }
 
-const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className, fritekstvedlegg }: VedleggVelgerProps) => {
+const VedleggVelger = ({
+  dokumenter,
+  valgteVedlegg,
+  onChange,
+  className,
+  fritekstvedlegg,
+  redigerFritekstvedlegg,
+  slettFritekstvedlegg,
+  lagPdfUrl,
+}: VedleggVelgerProps) => {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
@@ -31,7 +43,8 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className, friteks
     onChange(valgteVedlegg.filter(({ id }) => id !== vedleggID));
   };
 
-  const harValgteVedlegg = valgteVedlegg && valgteVedlegg.length > 0;
+  const harValgteVedlegg =
+    (valgteVedlegg && valgteVedlegg.length > 0) || (fritekstvedlegg && fritekstvedlegg.length > 0);
 
   const cls = classNames(className, "vedleggvelger");
 
@@ -45,6 +58,9 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className, friteks
           alleVedlegg={dokumenter}
           leggTilVedlegg={leggTilVedlegg}
           fritekstvedlegg={fritekstvedlegg}
+          redigerFritekstvedlegg={redigerFritekstvedlegg}
+          slettFritekstvedlegg={slettFritekstvedlegg}
+          lagPdfUrl={lagPdfUrl}
         />
       )}
       <Mui.Lenkeknapp onClick={toggleRedigerer} ikon={Ikoner.Add}>

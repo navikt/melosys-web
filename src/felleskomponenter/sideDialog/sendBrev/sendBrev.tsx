@@ -30,6 +30,7 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
 import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
+import { dokumenterOperations } from "../../../ducks/dokumenter";
 
 const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.SendBrevValidSelector(state),
@@ -182,7 +183,27 @@ const SendBrev = ({
         dokumentID: vedlegg.dokumentID,
         journalpostID: vedlegg.journalpostID,
       })),
+      fritekstvedlegg,
     };
+  };
+
+  const lagFritekstPdfUrl = async (index: number) => {
+    const data = {
+      produserbardokument: formValues.type || "",
+      mottaker: muligeMottakere?.hovedMottaker.rolle || "",
+      fritekstTittel: fritekstvedlegg[index].tittel,
+      fritekst: fritekstvedlegg[index].fritekst,
+      kopiMottakere: hentKopiMottakere() || [],
+      kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
+      saksvedlegg: [],
+      fritekstvedlegg: [],
+    };
+    try {
+      return await dokumenterOperations.forhandsvisBrevV2(behandlingID, data);
+    } catch (e) {
+      // TODO: Feilhåndtering
+      return "";
+    }
   };
 
   const sendBrev = () => {
@@ -203,6 +224,7 @@ const SendBrev = ({
         setBrevSendt(true);
         oppdaterBehandling();
         resetForm();
+        setFritekstvedlegg([]);
       })
       .catch(() => {
         setBrevSendtFeil(true);
@@ -232,6 +254,22 @@ const SendBrev = ({
       changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", "");
       setVisFritekstvedleggSkjema(false);
     }
+  };
+
+  const redigerFritekstvedlegg = (index: number) => {
+    const vedlegg = fritekstvedlegg[index];
+    const newFritekstvedlegg = [...fritekstvedlegg];
+    newFritekstvedlegg.splice(index, 1);
+    setFritekstvedlegg(newFritekstvedlegg);
+    changeField("felt.FRITEKSTVEDLEGG_TITTEL.feltVerdi", vedlegg.tittel);
+    changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", vedlegg.fritekst);
+    setVisFritekstvedleggSkjema(true);
+  };
+
+  const slettFritekstvedlegg = (index: number) => {
+    const newFritekstvedlegg = [...fritekstvedlegg];
+    newFritekstvedlegg.splice(index, 1);
+    setFritekstvedlegg(newFritekstvedlegg);
   };
 
   const overstyrBlurEvent = (event: React.FocusEvent) => {
@@ -320,6 +358,9 @@ const SendBrev = ({
           valgteVedlegg={valgteVedlegg}
           setValgteVedlegg={setValgteVedlegg}
           fritekstvedlegg={fritekstvedlegg}
+          redigerFritekstvedlegg={redigerFritekstvedlegg}
+          slettFritekstvedlegg={slettFritekstvedlegg}
+          lagPdfUrl={lagFritekstPdfUrl}
         />
       )}
 

@@ -91,6 +91,10 @@ export type OpprettBrevReqDto = {
     dokumentID: string;
     journalpostID: string;
   }[];
+  fritekstvedlegg: {
+    tittel: string;
+    fritekst: string;
+  }[];
 };
 
 export type MuligMottaker = {

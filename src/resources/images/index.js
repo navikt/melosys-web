@@ -9,6 +9,7 @@ import { ReactComponent as Bin } from "./bin-small.svg";
 import { ReactComponent as BinBlack } from "./bin-small-black.svg";
 import { ReactComponent as Binders } from "./paperclip.svg";
 import { ReactComponent as BlyantActive } from "./blyant-active.svg";
+import { ReactComponent as BlyantBlack } from "./blyant-active-black.svg";
 import { ReactComponent as BlyantDisabled } from "./blyant-disabled.svg";
 import { ReactComponent as BrevSendt } from "./emailsend.svg";
 import { ReactComponent as Building } from "./building.svg";
@@ -81,6 +82,7 @@ export {
   BinBlack,
   Binders,
   BlyantActive,
+  BlyantBlack,
   BlyantDisabled,
   BrevSendt as InnBrev,
   Building,
