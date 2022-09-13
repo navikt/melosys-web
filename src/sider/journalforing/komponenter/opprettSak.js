@@ -124,12 +124,21 @@ export const OpprettSak = (props) => {
 
   useEffect(() => {
     if (!sakstemaToggleEnabled) return;
+
     if (valgtSakstema && valgtSakstype) {
-      Api.LovligeKombinasjoner.hentBehandlingstemaer(journalforingGjelder, valgtSakstype, valgtSakstema).then(
-        (muligeBehandlingstemaer) => {
-          setBehandlingstemaer(muligeBehandlingstemaer);
-        }
-      );
+      if (journalforingGjelder === MKV.Koder.aktoersroller.BRUKER) {
+        Api.LovligeKombinasjoner.hentBehandlingstemaer(journalforingGjelder, valgtSakstype, valgtSakstema).then(
+          (muligeBehandlingstemaer) => {
+            setBehandlingstemaer(muligeBehandlingstemaer);
+          }
+        );
+      } else {
+        Api.LovligeKombinasjoner.hentBehandlingstyper(journalforingGjelder, valgtSakstype, valgtSakstema).then(
+          (muligeBehandlingstyper) => {
+            setBehandlingstyper(muligeBehandlingstyper);
+          }
+        );
+      }
     }
   }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema]);
 
@@ -147,18 +156,6 @@ export const OpprettSak = (props) => {
       });
     }
   }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
-
-  useEffect(() => {
-    if (!sakstemaToggleEnabled) return;
-
-    if (valgtSakstema && valgtSakstype && journalforingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET) {
-      Api.LovligeKombinasjoner.hentBehandlingstyper(journalforingGjelder, valgtSakstype, valgtSakstema).then(
-        (muligeBehandlingstyper) => {
-          setBehandlingstyper(muligeBehandlingstyper);
-        }
-      );
-    }
-  }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema]);
 
   const skalViseSoknadsperiodeOgLand =
     journalforingGjelder !== MKV.Koder.aktoersroller.VIRKSOMHET &&

@@ -160,7 +160,7 @@ const OpprettNySak = ({
     if (behandleAlleSakerToggle !== "enabled") return;
 
     if (sakstema && sakstype) {
-      if (hovedpart !== MKV.Koder.aktoersroller.VIRKSOMHET) {
+      if (hovedpart === MKV.Koder.aktoersroller.BRUKER) {
         Api.LovligeKombinasjoner.hentBehandlingstemaer(hovedpart, sakstype, sakstema).then(
           (muligeBehandlingstemaer) => {
             setBehandlingstemaer(muligeBehandlingstemaer);
