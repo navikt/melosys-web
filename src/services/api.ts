@@ -23,6 +23,7 @@ import * as Trygdeavgift from "./modules/trygdeavgift";
 import * as Trygdeavtale from "./modules/trygdeavtale/flyt";
 import * as Utpekingsperioder from "./modules/utpekingsperioder";
 import * as Vilkar from "./modules/vilkar";
+import * as LovligeKombinasjoner from "./modules/lovligekombinasjoner";
 import {
   Avgiftsberegning,
   Avgiftsgrunnlag,
@@ -49,6 +50,7 @@ export {
   Journalforing,
   Kodeverk,
   Kontroll,
+  LovligeKombinasjoner,
   Lovvalgsperioder,
   Medlemskapsperioder,
   Oppgaver,

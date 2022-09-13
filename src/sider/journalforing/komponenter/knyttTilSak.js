@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { change, formValueSelector } from "redux-form";
 import classNames from "classnames";
@@ -11,8 +11,10 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
+import * as Api from "../../../services/api";
 
 import "./knyttTilSak.css";
+import { formSelectors } from "../../../ducks/form";
 
 const {
   behandlinger: { behandlingstyper: MKVBehandlingstyper, behandlingstema: MKVBehandlingstema },
@@ -20,35 +22,7 @@ const {
   saksstatuser: MKVSaksstatuser,
 } = MKV.Koder;
 
-const kanVelgeEndretPeriode = (sisteBehandling) =>
-  [MKVBehandlingstema.UTSENDT_ARBEIDSTAKER, MKVBehandlingstema.UTSENDT_SELVSTENDIG].includes(
-    sisteBehandling.behandlingstema.kode
-  ) && sisteBehandling.behandlingstype.kode === MKVBehandlingstyper.FØRSTEGANG;
-
-const valgbareBehandlingstyper = (behandlingstema, sisteBehandling) =>
-  MKV.KTObjects.behandlinger.behandlingstyper.filter(
-    ({ kode }) =>
-      (kanVelgeEndretPeriode(sisteBehandling) && kode === MKVBehandlingstyper.ENDRET_PERIODE) ||
-      MKV.Kodekombinasjoner.gyldigeBehandlingstyper(behandlingstema).includes(kode)
-  );
-
-const behandlingstemaSomIkkeKanEndres = [
-  MKVBehandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
-  MKVBehandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
-  MKVBehandlingstema.BESLUTNING_LOVVALG_NORGE,
-  MKVBehandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
-  MKVBehandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL,
-];
-
-const valgbareBehandlingstema = (sakstype, sakstema, behandlingstema) =>
-  MKV.KTObjects.behandlinger.behandlingstema.filter(
-    ({ kode }) =>
-      behandlingstemaSomIkkeKanEndres.includes(behandlingstema)
-        ? behandlingstema === kode
-        : MKV.Kodekombinasjoner.gyldigeBehandlingstema(sakstype, sakstema).includes(kode) // TODO: Kan denne erstattes av backend når det implementeres der?
-  );
-
-const behandlingstyper = (sakstype, behtema) => {
+const behandlingstyper_gammel = (sakstype, behtema) => {
   switch (sakstype) {
     case MKVSakstyper.EU_EOS:
       return MKV.KTObjects.behandlinger.behandlingstyper.filter(
@@ -66,11 +40,19 @@ const behandlingstyper = (sakstype, behtema) => {
 };
 
 export const KnyttTilSak = (props) => {
-  const { sak, opprettBehandling, behandlingstema, behandlingstype, sakstemaToggleEnabled, changeField } = props;
+  const {
+    sak,
+    opprettBehandling,
+    behandlingstema,
+    behandlingstype,
+    sakstemaToggleEnabled,
+    changeField,
+    journalforingGjelder,
+  } = props;
   const { behandlingOversikter, sakstype, sakstema } = sak;
-
+  const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState();
+  const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
   const sisteBehandling = behandlingOversikter[0];
-
   useEffect(() => {
     return () => {
       changeField("opprettBehandling", false);
@@ -78,6 +60,35 @@ export const KnyttTilSak = (props) => {
       changeField("behandlingstype", "");
     };
   }, []);
+  useEffect(() => {
+    if (!sakstemaToggleEnabled) return;
+
+    if (sakstema.kode && sakstype.kode) {
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(
+        journalforingGjelder,
+        sakstype.kode,
+        sakstema.kode,
+        sisteBehandling.behandlingstema.kode
+      ).then((alleMuligeBehandlingstemaer) => {
+        setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);
+      });
+    }
+  }, [sakstemaToggleEnabled, journalforingGjelder, sakstema.kode, sakstype.kode]);
+
+  useEffect(() => {
+    if (!sakstemaToggleEnabled) return;
+    if (sakstema.kode && sakstype.kode && behandlingstema) {
+      Api.LovligeKombinasjoner.hentBehandlingstyper(
+        journalforingGjelder,
+        sakstype.kode,
+        sakstema.kode,
+        behandlingstema,
+        sisteBehandling.behandlingID
+      ).then((alleMuligeBehandlingstyper) => {
+        setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
+      });
+    }
+  }, [sakstemaToggleEnabled, journalforingGjelder, sakstema.kode, sakstype.kode, behandlingstema]);
 
   useEffect(() => {
     if (opprettBehandling && !behandlingstema) {
@@ -101,10 +112,6 @@ export const KnyttTilSak = (props) => {
   const visKnyttTilEksisterende = sisteBehandlingErInaktiv && (!sakstemaToggleEnabled || !sakErHenlagtEllerBortfalt);
 
   if (visKnyttTilEksisterende) {
-    const sakInneholderSoeknad = behandlingOversikter.some(
-      (behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD
-    );
-
     return (
       <div className="knyttTilSak__panelramme">
         <Mui.Elementskrift
@@ -118,7 +125,9 @@ export const KnyttTilSak = (props) => {
           label={sakstemaToggleEnabled ? "" : "Knytt til sak"}
           className={classNames("panelElement", { "nyBehandling-utenBehandling": sakstemaToggleEnabled })}
         >
-          {sakInneholderSoeknad ? (
+          {behandlingOversikter.some(
+            (behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD
+          ) ? (
             <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />
           ) : (
             <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
@@ -131,18 +140,20 @@ export const KnyttTilSak = (props) => {
                 <Nav.Typo.Undertittel className="temaTypeOverskrift">
                   Velg tema og type for ny behandling
                 </Nav.Typo.Undertittel>
-                <Skjema.Select
-                  feltNavn="behandlingstema"
-                  bredde="fullbredde"
-                  label="Behandlingstema"
-                  emptyFieldDisabled={behandlingstema?.kode}
-                >
-                  {valgbareBehandlingstema(sakstype?.kode, sakstema?.kode, behandlingstema?.kode)?.map((elem) => (
-                    <option key={elem.kode} value={elem.kode} label={elem.term} />
-                  ))}
-                </Skjema.Select>
+                {journalforingGjelder === MKV.Koder.aktoersroller.BRUKER && (
+                  <Skjema.Select
+                    feltNavn="behandlingstema"
+                    bredde="fullbredde"
+                    label="Behandlingstema"
+                    emptyFieldDisabled={behandlingstema?.kode}
+                  >
+                    {muligeBehandlingstemaer?.map((elem) => (
+                      <option key={elem.kode} value={elem.kode} label={elem.term} />
+                    ))}
+                  </Skjema.Select>
+                )}
                 <Skjema.RadioGruppe feltNavn="behandlingstype" label="Behandlingstype" className="behandlingstype">
-                  {valgbareBehandlingstyper(behandlingstema?.kode, sisteBehandling)?.map((elem) => (
+                  {muligeBehandlingstyper?.map((elem) => (
                     <Skjema.Radio feltNavn="behandlingstype" key={elem.kode} value={elem.kode} label={elem.term} />
                   ))}
                 </Skjema.RadioGruppe>
@@ -155,7 +166,7 @@ export const KnyttTilSak = (props) => {
                 className="panelElement"
                 emptyFieldDisabled={false}
               >
-                {behandlingstyper(sakstype?.kode, sisteBehandling.behandlingstema?.kode)?.map((elem) => (
+                {behandlingstyper_gammel(sakstype?.kode, sisteBehandling.behandlingstema?.kode)?.map((elem) => (
                   <option key={elem.kode} value={elem.kode} label={elem.term} />
                 ))}
               </Skjema.Select>
@@ -181,6 +192,7 @@ KnyttTilSak.propTypes = {
   opprettBehandling: PT.bool.isRequired,
   behandlingstema: PT.string,
   behandlingstype: PT.string,
+  journalforingGjelder: PT.string.isRequired,
   sakstemaToggleEnabled: PT.bool.isRequired,
   changeField: PT.func.isRequired,
 };
@@ -195,6 +207,7 @@ const mapStateToProps = (state) => ({
   opprettBehandling: selector(state, "opprettBehandling"),
   behandlingstema: selector(state, "behandlingstema"),
   behandlingstype: selector(state, "behandlingstype"),
+  journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
 });
 const mapDispatchToProps = (dispatch) => ({
   changeField: (felt, verdi) => dispatch(change(KV.Form.JOURNALFORING, felt, verdi)),
