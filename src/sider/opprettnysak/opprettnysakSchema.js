@@ -12,6 +12,9 @@ const SKRIV_INN_ORGNR = { melding: "Skriv inn organisasjonsnummer" };
 const SKRIV_INN_GYLDIG_ORGNR = { melding: "Skriv inn gyldig organisasjonsnummer" };
 const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisasjonsnummeret." };
 const VELG_SAKSTYPE = { melding: "Velg sakstype" };
+// TODO: Legg denne på når toggle melosys.sakstema er på. Da skal sakstema og behandlingstype bli required
+// const VELG_SAKSTEMA = { melding: "Velg sakstema" };
+// const VELG_BEHANDLINGSTYPE = { melding: "Velg behandlingstype" };
 const VELG_BEHANDLINGSTEMA = { melding: "Velg behandlingstema" };
 const VELG_LAND = { melding: "Velg land" };
 const VELG_EN_OPPGAVE = { melding: "Velg en oppgave" };
@@ -57,8 +60,15 @@ const opprettnysak = object().shape({
     })
     .nullable(),
   virksomhetNavn: string().nullable(),
-  sakstype: string().required(VELG_SAKSTYPE),
-  behandlingstema: string().required(VELG_BEHANDLINGSTEMA),
+  sakstype: string().required(VELG_SAKSTYPE).nullable(),
+  sakstema: string().nullable(),
+  behandlingstype: string().nullable(),
+  behandlingstema: string()
+    .when("hovedpart", {
+      is: (hovedpart) => hovedpart !== VIRKSOMHET,
+      then: string().required(VELG_BEHANDLINGSTEMA).nullable(),
+    })
+    .nullable(),
   soknadsinfo: object().when(["behandlingstema", "hovedpart"], {
     is: (behandlingstema, hovedpart) => MKVUtils.erSoknad(behandlingstema) && hovedpart === BRUKER,
     then: soknadsinfo,
@@ -67,8 +77,6 @@ const opprettnysak = object().shape({
     .siblingIs("journalpostID", (journalpostID) => !Utils._isEmpty(journalpostID), MANGLER_JOURNALPOST)
     .required(VELG_EN_OPPGAVE)
     .nullable(),
-
-  /* Følgene felter viser ingen feilmeldinger til brukerNavn, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
 });
 
 export default opprettnysak;
