@@ -89,6 +89,7 @@ export const OpprettSak = (props) => {
   };
 
   useEffect(() => {
+    if (sakstemaToggleEnabled) return;
     settFeltInnhold("opprettnysak_behandlingstema", defaultBehandlingstema(valgtSakstype));
     setValgbareBehandlingstemaer(behandlingstemaerEtterSakstype(valgtSakstype));
   }, [valgtSakstype]);
@@ -201,7 +202,7 @@ export const OpprettSak = (props) => {
       )}
       {visMuligeBehandlingstema && (
         <Skjema.Select
-          feltNavn="behandlingstema"
+          feltNavn="opprettnysak_behandlingstema"
           bredde="fullbredde"
           label="Behandlingstema"
           onChange={() => {
@@ -218,7 +219,7 @@ export const OpprettSak = (props) => {
       )}
       {sakstemaToggleEnabled && (
         <Skjema.Select
-          feltNavn="behandlingstype"
+          feltNavn="opprettnysak_behandlingstype"
           bredde="fullbredde"
           label="Behandlingstype"
           onChange={() => nullstillFormdataVerdier(FormDataVerdi.behandlingstype, settFeltInnhold)}
