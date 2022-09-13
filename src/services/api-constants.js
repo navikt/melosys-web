@@ -35,4 +35,4 @@ export const UTPEKINGSPERIODER = "utpekingsperioder";
 export const VEDTAK = "vedtak";
 export const VILKAAR = "vilkaar";
 export const INNGANGSVILKAAR = "inngangsvilkaar";
-export const LOVLIGE_KOMBINASJONER = "lovligekombinasjoner";
+export const SAKSBEHANDLING = "saksbehandling";
