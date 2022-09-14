@@ -40,6 +40,7 @@ describe("VurderingArtikkel16Vedtak", () => {
       fattVedtak: jest.fn(),
       harFeilmeldinger: false,
       publiserStegdata: jest.fn(),
+      lagreOgFatteVedtak: jest.fn(),
     };
   });
 
@@ -70,9 +71,7 @@ describe("VurderingArtikkel16Vedtak", () => {
     const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
 
     expect(vurderingArtikkel16Vedtak.find("StegKnapper")).toHaveLength(1);
-    vurderingArtikkel16Vedtak.find("StegKnapper").props().bekreftKnappProps.onClick();
-    expect(props.validerBehandlingsgrunnlag).toHaveBeenCalledTimes(1);
     await vurderingArtikkel16Vedtak.find("StegKnapper").props().bekreftKnappProps.onClick();
-    expect(props.lagreOgFatteVedtak).toHaveBeenCalledTimes(1);
+    expect(props.validerBehandlingsgrunnlag).toHaveBeenCalledTimes(1);
   });
 });
