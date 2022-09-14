@@ -169,46 +169,44 @@ const skalByggeLovvalgsperiodeForArtikkel16_1 = (reduxState) => {
 };
 
 const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
-  const toggleEnabled = (async () => {
+  return (async () => {
     return erFeatureToggleEnabled("melosys.5278.art16lovvalgsperiodefiks");
-  })();
-  console.log("ToggleEnabled:");
-  console.log(toggleEnabled);
+  })().then((toggleEnabled) => {
+    if (!toggleEnabled) {
+      const erAnmodningsperiodeSendtUtland =
+        anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(reduxState);
+      const erBehandlingsstatusUnderBehandlingEllerAvsluttet = [
+        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+        MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+      ].includes(behandlingerSelectors.BehandlingsstatusKodeSelector(reduxState));
 
-  if (!toggleEnabled) {
-    const erAnmodningsperiodeSendtUtland =
-      anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(reduxState);
-    const erBehandlingsstatusUnderBehandlingEllerAvsluttet = [
-      MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-    ].includes(behandlingerSelectors.BehandlingsstatusKodeSelector(reduxState));
-
-    if (erAnmodningsperiodeSendtUtland && erBehandlingsstatusUnderBehandlingEllerAvsluttet) {
-      return Selectors.LovvalgsperioderSelector(reduxState);
+      if (erAnmodningsperiodeSendtUtland && erBehandlingsstatusUnderBehandlingEllerAvsluttet) {
+        return Selectors.LovvalgsperioderSelector(reduxState);
+      }
+      return [];
     }
-    return [];
-  }
 
-  if (!skalByggeLovvalgsperiodeForArtikkel16_1(reduxState)) {
-    return [];
-  }
+    if (!skalByggeLovvalgsperiodeForArtikkel16_1(reduxState)) {
+      return [];
+    }
 
-  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
-  const anmodningsperiodeSvarType = anmodningsperiodesvarSelectors.AnmodningsperiodeSvarTypeSelector(reduxState);
-  return [
-    {
-      fomDato: periode.fom,
-      tomDato: periode.tom,
-      tilleggBestemmelse: stegState.tilleggbestemmelse,
-      lovvalgsland: MKV.Koder.landkoder.NO,
-      lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
-      unntakFraBestemmelse: stegState.unntakfrabestemmelse || null,
-      unntakFraLovvalgsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(reduxState).join(""),
-      innvilgelsesResultat: hentInnvilgesesResultatFraAnmodningsperiodeSvarType(anmodningsperiodeSvarType),
-      medlemskapsperiodeID: anmodningsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState),
-      trygdeDekning: behandlingsgrunnlagSelectors.TrygdedekningSelector(reduxState),
-    },
-  ];
+    const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
+    const anmodningsperiodeSvarType = anmodningsperiodesvarSelectors.AnmodningsperiodeSvarTypeSelector(reduxState);
+    return [
+      {
+        fomDato: periode.fom,
+        tomDato: periode.tom,
+        tilleggBestemmelse: stegState.tilleggbestemmelse,
+        lovvalgsland: MKV.Koder.landkoder.NO,
+        lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
+        unntakFraBestemmelse: stegState.unntakfrabestemmelse || null,
+        unntakFraLovvalgsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(reduxState).join(""),
+        innvilgelsesResultat: hentInnvilgesesResultatFraAnmodningsperiodeSvarType(anmodningsperiodeSvarType),
+        medlemskapsperiodeID: anmodningsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState),
+        trygdeDekning: behandlingsgrunnlagSelectors.TrygdedekningSelector(reduxState),
+      },
+    ];
+  });
 };
 
 const byggAvslaattLovvalg = (reduxState, lovvalgsbestemmelse) => {
