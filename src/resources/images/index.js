@@ -3,6 +3,7 @@ import { ReactComponent as Add } from "./add.svg";
 import { ReactComponent as ArrowLeftBlue } from "./arrow-left-blue.svg";
 import { ReactComponent as ArrowLeftWhite } from "./arrow-left-white.svg";
 import { ReactComponent as AddOne } from "./line-version-add-1.svg";
+import { ReactComponent as AddOneWhite } from "./line-version-add-1-white.svg";
 import { ReactComponent as Arbeidsgiver } from "./ikon-arbeidsgiver.svg";
 import { ReactComponent as Arbeidsforhold } from "./ikon-arbeidsforhold.svg";
 import { ReactComponent as Bin } from "./bin-small.svg";
@@ -78,6 +79,7 @@ export {
   ArrowLeftBlue,
   ArrowLeftWhite,
   AddOne,
+  AddOneWhite,
   Arbeidsgiver,
   Arbeidsforhold,
   Bin,

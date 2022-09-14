@@ -1,4 +1,6 @@
 import React from "react";
+import { useSelector } from "react-redux";
+
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 
@@ -6,27 +8,40 @@ import withErrorHandling from "../../felleskomponenter/withErrorHandling";
 import * as Nav from "../../navFrontend";
 
 import Saksplukker from "./komponenter/saksplukker";
-import MineOppgaver from "./komponenter/mineoppgaver";
 import SokSkjema from "./komponenter/sokskjema";
+import JournalforingOppgaver from "./komponenter/mineoppgaver/jornualforingoppgaver";
+import BehandlingOppgaver from "./komponenter/mineoppgaver/behandlingOppgaver";
+
 import OpprettNySakKnapp from "./komponenter/opprettnysakknapp";
 
 import "./forside.css";
 
 const Forside = (props) => {
-  const { children, tilOpprettNySak } = props;
+  const { tilOpprettNySak } = props;
+  const oppgaver = useSelector((state) => state.oppgaver.data.saksbehandling);
 
   return (
     <div className="forside">
-      {children}
-      <Nav.Container fluid>
+      <div className="forside__header">
+        <div>
+          <Nav.Typo.Undertittel>Mine oppgaver</Nav.Typo.Undertittel>
+          <Nav.Typo.Normaltekst>{oppgaver?.length} oppgaver</Nav.Typo.Normaltekst>
+        </div>
+        <OpprettNySakKnapp onClick={tilOpprettNySak} />
+      </div>
+      <Nav.Container className="forside__container" fluid>
         <Nav.Row>
-          <Nav.Column xs="7">
-            <MineOppgaver />
+          <Nav.Column xs="5">
+            <JournalforingOppgaver />
           </Nav.Column>
-          <Nav.Column className="hoyrekolonne" xs="5">
-            <OpprettNySakKnapp onClick={tilOpprettNySak} />
+          <Nav.Column xs="7">
             <SokSkjema />
             <Saksplukker />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <BehandlingOppgaver />
           </Nav.Column>
         </Nav.Row>
       </Nav.Container>
