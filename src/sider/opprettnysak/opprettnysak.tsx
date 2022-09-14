@@ -31,6 +31,7 @@ import IdentOgNavn from "./identOgNavn";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
 import "./opprettnysak.css";
+import { nullstillFormdataVerdier, FormDataVerdi } from "../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
 
 const euEosBehandlingstemaer = (visNyeBehandlingstema: boolean) =>
   MKV.KTObjects.behandlinger.behandlingstema
@@ -62,8 +63,10 @@ const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
 interface OpprettNySakFormData {
   behandlingstema: string;
+  behandlingstype: string;
   soknadsinfo: any;
   sakstype: string;
+  sakstema: string;
   brukerID: string;
   skalTilordnes: boolean;
   oppgaveID: string;
@@ -116,10 +119,72 @@ const OpprettNySak = ({
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
 
-  const { behandlingstema, soknadsinfo, sakstype, hovedpart, brukerID, brukerNavn, virksomhetOrgnr, virksomhetNavn } =
-    formValues || {};
+  const [sakstyper, setSakstyper] = useState([]);
+  const [sakstemaer, setSakstemaer] = useState([]);
+  const [behandlingstemaer, setBehandlingstemaer] = useState([]);
+  const [behandlingstyper, setBehandlingstyper] = useState([]);
+
+  const {
+    behandlingstema,
+    soknadsinfo,
+    sakstype,
+    sakstema,
+    hovedpart,
+    brukerID,
+    brukerNavn,
+    virksomhetOrgnr,
+    virksomhetNavn,
+  } = formValues || {};
   const { landkoder, erUkjenteEllerAlleEosLand } = soknadsinfo || {};
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+
+    Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
+      setSakstyper(muligeSakstyper);
+    });
+  }, [behandleAlleSakerToggle]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+
+    if (sakstype) {
+      Api.LovligeKombinasjoner.hentSakstemaer(hovedpart, sakstype).then((muligeSakstemaer) => {
+        setSakstemaer(muligeSakstemaer);
+      });
+    }
+  }, [behandleAlleSakerToggle, hovedpart, sakstype]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+
+    if (sakstema && sakstype) {
+      if (hovedpart === MKV.Koder.aktoersroller.BRUKER) {
+        Api.LovligeKombinasjoner.hentBehandlingstemaer(hovedpart, sakstype, sakstema).then(
+          (muligeBehandlingstemaer) => {
+            setBehandlingstemaer(muligeBehandlingstemaer);
+          }
+        );
+      } else {
+        Api.LovligeKombinasjoner.hentBehandlingstyper(hovedpart, sakstype, sakstema).then((muligeBehandlingstyper) => {
+          setBehandlingstyper(muligeBehandlingstyper);
+        });
+      }
+    }
+  }, [behandleAlleSakerToggle, hovedpart, sakstype, sakstema]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+
+    if (sakstema && sakstype && behandlingstema) {
+      Api.LovligeKombinasjoner.hentBehandlingstyper(hovedpart, sakstype, sakstema, behandlingstema).then(
+        (muligeBehandlingstyper) => {
+          setBehandlingstyper(muligeBehandlingstyper);
+        }
+      );
+    }
+  }, [behandleAlleSakerToggle, hovedpart, sakstype, sakstema, behandlingstema]);
 
   const validerForm = () => {
     touchAll();
@@ -189,7 +254,6 @@ const OpprettNySak = ({
     setOppgaver([]);
     setOppgaverForsoktHentet(false);
   }, [hovedpart]);
-
   const opprettNySak = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!validerForm()) return;
@@ -337,26 +401,64 @@ const OpprettNySak = ({
                       feltNavn="sakstype"
                       bredde="fullbredde"
                       label="Sakstype"
-                      onChange={() => change("behandlingstema", undefined)}
+                      onChange={() => nullstillFormdataVerdier(FormDataVerdi.sakstype, change)}
                     >
-                      {valgbareSakstyper.map(({ kode, term }: KTObject) => (
-                        <option key={kode} value={kode}>
-                          {term}
-                        </option>
-                      ))}
+                      {(behandleAlleSakerToggle === "enabled" ? sakstyper : valgbareSakstyper).map(
+                        ({ kode, term }: KTObject) => (
+                          <option key={kode} value={kode}>
+                            {term}
+                          </option>
+                        )
+                      )}
                     </Skjema.Select>
-                    <Skjema.Select
-                      feltNavn="behandlingstema"
-                      bredde="fullbredde"
-                      label="Behandlingstema"
-                      onChange={() => change("soknadsinfo.erUkjenteEllerAlleEosLand", false)}
-                    >
-                      {hentValgbareBehandlingstema().map(({ kode, term }: KTObject) => (
-                        <option key={kode} value={kode}>
-                          {term}
-                        </option>
-                      ))}
-                    </Skjema.Select>
+                    {behandleAlleSakerToggle === "enabled" && (
+                      <Skjema.Select
+                        feltNavn="sakstema"
+                        bredde="fullbredde"
+                        label="Sakstema"
+                        onChange={() => nullstillFormdataVerdier(FormDataVerdi.sakstema, change)}
+                      >
+                        {sakstemaer.map(({ kode, term }: KTObject) => (
+                          <option key={kode} value={kode}>
+                            {term}
+                          </option>
+                        ))}
+                      </Skjema.Select>
+                    )}
+                    {hovedpartErBruker && (
+                      <Skjema.Select
+                        feltNavn="behandlingstema"
+                        bredde="fullbredde"
+                        label="Behandlingstema"
+                        onChange={() => {
+                          nullstillFormdataVerdier(FormDataVerdi.behandlingstema, change);
+                          change("soknadsinfo.erUkjenteEllerAlleEosLand", false);
+                        }}
+                      >
+                        {(behandleAlleSakerToggle === "enabled"
+                          ? behandlingstemaer
+                          : hentValgbareBehandlingstema()
+                        ).map(({ kode, term }: KTObject) => (
+                          <option key={kode} value={kode}>
+                            {term}
+                          </option>
+                        ))}
+                      </Skjema.Select>
+                    )}
+                    {behandleAlleSakerToggle === "enabled" && (
+                      <Skjema.Select
+                        feltNavn="behandlingstype"
+                        bredde="fullbredde"
+                        label="Behandlingstype"
+                        onChange={() => nullstillFormdataVerdier(FormDataVerdi.behandlingstype, change)}
+                      >
+                        {behandlingstyper.map(({ kode, term }: KTObject) => (
+                          <option key={kode} value={kode}>
+                            {term}
+                          </option>
+                        ))}
+                      </Skjema.Select>
+                    )}
                     {soknadErValgt && hovedpartErBruker && (
                       <Fragment>
                         <Nav.Typo.Normaltekst>Søknadsperiode</Nav.Typo.Normaltekst>
