@@ -8,7 +8,7 @@ import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 
 import "./sokskjema.css";
-import EnkelFellesInputFnrDnrOrgnrSaksnr from "../../../felleskomponenter/skjema/inputFnrDnrOrgnr";
+import EnkelFellesInputFnrDnrOrgnrSaksnr from "../../../felleskomponenter/enkeltInputFnrDnrOrgnr";
 
 class SokSkjema extends Component {
   UNSAFE_componentWillMount() {

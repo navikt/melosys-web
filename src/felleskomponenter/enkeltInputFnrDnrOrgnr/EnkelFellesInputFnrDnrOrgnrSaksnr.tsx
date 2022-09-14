@@ -1,6 +1,6 @@
 import { InputProps } from "nav-frontend-skjema";
 import React, { useEffect, useState } from "react";
-import * as Nav from "../../../navFrontend";
+import * as Nav from "../../navFrontend";
 
 export interface FellesInputFnrDnrOrgnrSaksnrProps {
   vedEndring: (sokStreng: string) => void;
@@ -14,12 +14,14 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
   feil,
   ...rest
 }: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
-  const [inputVerdi, setInputVerdi] = useState<any>(rest.input.value ? rest.input.value : "");
+  const [inputVerdi, setInputVerdi] = useState<any>(rest.input && rest.input.value ? rest.input.value : "");
   const { input } = rest;
 
   useEffect(() => {
-    setInputVerdi(input.value);
-  }, [input.value]);
+    if (input) {
+      setInputVerdi(input.value);
+    }
+  }, [input]);
 
   const vedEndringAvInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -29,12 +31,13 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
       vedEndring(trimmetStreng);
     }
   };
-
   return (
     <Nav.Input
       {...rest}
       onBlur={(event) => {
-        input.onBlur(event);
+        if (input && input.onBlur) {
+          input.onBlur(event);
+        }
         if (rest.onBlur) {
           rest.onBlur(event);
         }

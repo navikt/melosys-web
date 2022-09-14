@@ -3,7 +3,7 @@ import React from "react";
 import { Field } from "redux-form";
 import EnkelFellesInputFnrDnrOrgnrSaksnr, {
   FellesInputFnrDnrOrgnrSaksnrProps,
-} from "../inputFnrDnrOrgnr/EnkelFellesInputFnrDnrOrgnrSaksnr";
+} from "../../enkeltInputFnrDnrOrgnr/EnkelFellesInputFnrDnrOrgnrSaksnr";
 import * as SkjemaUtils from "../utils";
 
 const InnerFellesInputFnrDnrOrgnrSaksnr = ({ vedEndring, ...rest }: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
@@ -13,7 +13,6 @@ const InnerFellesInputFnrDnrOrgnrSaksnr = ({ vedEndring, ...rest }: FellesInputF
   } = rest;
 
   const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
-
   return <EnkelFellesInputFnrDnrOrgnrSaksnr {...rest} feil={rest.feil || feil} vedEndring={vedEndring} />;
 };
 
