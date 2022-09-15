@@ -1,7 +1,8 @@
 import renderer from "react-test-renderer";
-import SlettFritekstvedleggModal from "./slettFritekstvedleggModal";
 import ReactDOM from "react-dom";
 import { ReactNode, ReactPortal } from "react";
+
+import SlettFritekstvedleggModal from "./slettFritekstvedleggModal";
 
 beforeAll(() => {
   ReactDOM.createPortal = (node: ReactNode): ReactPortal => node as ReactPortal;
