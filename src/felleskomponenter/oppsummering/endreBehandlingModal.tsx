@@ -253,7 +253,7 @@ function EndreBehandlingModal({
                 }}
                 label="Sakstema"
                 value={sakstema}
-                koder={muligeVerdierPlussValgt(fagsak.sakstema, muligeSakstemaer)}
+                koder={muligeSakstemaer}
                 disableForsteValg
                 redigerbart={!endringerErBegrenset}
               />
@@ -265,10 +265,11 @@ function EndreBehandlingModal({
               }}
               label="Behandlingstema"
               value={behandlingstema}
-              koder={muligeVerdierPlussValgt(
-                oppsummering.behandlingstema,
-                sakstemaToggle === "enabled" ? muligeBehandlingstemaer : muligeBehandlingstemaer_gammel
-              )}
+              koder={
+                sakstemaToggle === "enabled"
+                  ? muligeBehandlingstemaer
+                  : muligeVerdierPlussValgt(oppsummering.behandlingstema, muligeBehandlingstemaer_gammel)
+              }
               disableForsteValg
               redigerbart={!endringerErBegrenset}
             />
@@ -276,10 +277,11 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"
               value={behandlingstype}
-              koder={muligeVerdierPlussValgt(
-                oppsummering.behandlingstype,
-                sakstemaToggle === "enabled" ? muligeBehandlingstyper : muligeBehandlingstyper_gammel
-              )}
+              koder={
+                sakstemaToggle === "enabled"
+                  ? muligeBehandlingstyper
+                  : muligeVerdierPlussValgt(oppsummering.behandlingstype, muligeBehandlingstyper_gammel)
+              }
               disableForsteValg
               redigerbart={!endringerErBegrenset}
             />
