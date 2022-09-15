@@ -15,6 +15,8 @@ const {
   UTSENDT_ARBEIDSTAKER,
   REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
   REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
+  ANMODNING_OM_UNNTAK_HOVEDREGEL,
+  REGISTRERING_UNNTAK,
 } = MKV.Koder.behandlinger.behandlingstema;
 const { NY_VURDERING, FØRSTEGANG, HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 const { FTRL, TRYGDEAVTALE, EU_EOS } = MKV.Koder.sakstyper;
@@ -299,6 +301,36 @@ describe("AvsluttSak", () => {
       expect(
         avsluttSak.findWhere((n) => n.type() === Handling && n.props().tekst === "Vedtaket er omgjort (fvl § 35)")
       ).toHaveLength(0);
+    });
+  });
+
+  describe("Unntak-handlinger", () => {
+    it(`viser Unntak-handlinger dersom behandlingstema er ${ANMODNING_OM_UNNTAK_HOVEDREGEL} og sakstype er ${TRYGDEAVTALE}`, () => {
+      setupProps(props);
+      props.behandlingstema = ANMODNING_OM_UNNTAK_HOVEDREGEL;
+      props.sakstype = TRYGDEAVTALE;
+
+      const avsluttSak = shallow(<AvsluttSak {...props} />);
+      const handlinger = avsluttSak.find(Handling);
+
+      expect(handlinger).toHaveLength(3);
+      expect(handlinger.at(0).props().tekst).toBe("Perioden er godkjent");
+      expect(handlinger.at(1).props().tekst).toBe("Perioden er delvis godkjent");
+      expect(handlinger.at(2).props().tekst).toBe("Medlem i folketrygden");
+    });
+
+    it(`viser Unntak-handlinger dersom behandlingstema er ${REGISTRERING_UNNTAK} og sakstype er ${TRYGDEAVTALE}`, () => {
+      setupProps(props);
+      props.behandlingstema = REGISTRERING_UNNTAK;
+      props.sakstype = TRYGDEAVTALE;
+
+      const avsluttSak = shallow(<AvsluttSak {...props} />);
+      const handlinger = avsluttSak.find(Handling);
+
+      expect(handlinger).toHaveLength(3);
+      expect(handlinger.at(0).props().tekst).toBe("Perioden er godkjent");
+      expect(handlinger.at(1).props().tekst).toBe("Perioden er delvis godkjent");
+      expect(handlinger.at(2).props().tekst).toBe("Medlem i folketrygden");
     });
   });
 });
