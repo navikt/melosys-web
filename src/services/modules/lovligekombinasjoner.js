@@ -28,7 +28,3 @@ export const hentBehandlingstemaerForOppgaveplukker = (sakstype, sakstema, sistB
   const params = QS.stringify({ sakstype, sakstema, sistBehandlingstema });
   return getAsJson(`${URI_PATH}/behandlingstemaer/oppgaveplukker/hent-lovlige-kombinasjoner/?${params}`);
 };
-export const hentBehandlingstyperForOppgaveplukker = (sakstype, sakstema, behandlingstema, sisteBehandlingsID) => {
-  const params = QS.stringify({ sakstype, sakstema, behandlingstema, sisteBehandlingsID });
-  return getAsJson(`${URI_PATH}/behandlingstyper/oppgaveplukker/hent-lovlige-kombinasjoner/?${params}`);
-};

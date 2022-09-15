@@ -59,7 +59,6 @@ export const Saksplukker = ({
   const [sakstyper, setSakstyper] = useState([]);
   const [sakstemaer, setSakstemaer] = useState([]);
   const [behandlingstemaer, setBehandlingstemaer] = useState([]);
-  const [behandlingstyper, setBehandlingstyper] = useState([]);
 
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") return;
@@ -90,20 +89,6 @@ export const Saksplukker = ({
       );
     }
   }, [behandleAlleSakerToggle, formValues?.sakstype, formValues?.sakstema]);
-
-  useEffect(() => {
-    if (behandleAlleSakerToggle !== "enabled") return;
-
-    if (formValues?.sakstema && formValues?.sakstype && formValues?.behandlingstema) {
-      Api.LovligeKombinasjoner.hentBehandlingstyperForOppgaveplukker(
-        formValues?.sakstype,
-        formValues?.sakstema,
-        formValues?.behandlingstema
-      ).then((muligeBehandlingstyper) => {
-        setBehandlingstyper(muligeBehandlingstyper);
-      });
-    }
-  }, [behandleAlleSakerToggle, formValues?.sakstype, formValues?.sakstema, formValues?.behandlingstema]);
 
   useEffect(() => {
     if (formValues?.sakstype) {
@@ -224,17 +209,6 @@ export const Saksplukker = ({
                 ))}
             </Skjema.Select>
           </Nav.Column>
-          {behandleAlleSakerToggle === "enabled" && (
-            <Nav.Column xs="12">
-              <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
-                {behandlingstyper.map(({ kode, term }: KTObject) => (
-                  <option key={kode} value={kode}>
-                    {term}
-                  </option>
-                ))}
-              </Skjema.Select>
-            </Nav.Column>
-          )}
         </Nav.Row>
         <Nav.Row className="saksplukker__knapperad">
           <Nav.Knapp className="saksplukker__knapp" disabled={invalid}>
