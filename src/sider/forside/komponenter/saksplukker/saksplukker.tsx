@@ -199,8 +199,10 @@ export const Saksplukker = ({
           )}
           <Nav.Column xs="12">
             <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
-              {(behandleAlleSakerToggle === "enabled" ? behandlingstemaer : MKV.KTObjects.behandlinger.behandlingstema)
-                .filter(behandlingstemaErPlukkbart)
+              {(behandleAlleSakerToggle === "enabled"
+                ? behandlingstemaer
+                : MKV.KTObjects.behandlinger.behandlingstema.filter(behandlingstemaErPlukkbart)
+              )
                 .sort(compareTerm)
                 .map(({ kode, term }: KTObject) => (
                   <option key={kode} value={kode}>
