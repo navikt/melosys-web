@@ -72,7 +72,7 @@ export const Saksplukker = ({
     if (behandleAlleSakerToggle !== "enabled") return;
 
     if (formValues?.sakstype) {
-      Api.LovligeKombinasjoner.hentSakstemaerForOppgaveplukker(formValues?.sakstype).then((muligeSakstemaer) => {
+      Api.LovligeKombinasjoner.hentSakstemaer(null, formValues?.sakstype).then((muligeSakstemaer) => {
         setSakstemaer(muligeSakstemaer);
       });
     }
@@ -82,7 +82,7 @@ export const Saksplukker = ({
     if (behandleAlleSakerToggle !== "enabled") return;
 
     if (formValues?.sakstema && formValues?.sakstype) {
-      Api.LovligeKombinasjoner.hentBehandlingstemaerForOppgaveplukker(formValues?.sakstype, formValues?.sakstema).then(
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(null, formValues?.sakstype, formValues?.sakstema).then(
         (muligeBehandlingstemaer) => {
           setBehandlingstemaer(muligeBehandlingstemaer);
         }

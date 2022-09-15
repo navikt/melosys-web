@@ -19,12 +19,3 @@ export const hentBehandlingstyper = (hovedpart, sakstype, sakstema, behandlingst
   const params = QS.stringify({ hovedpart, sakstype, sakstema, behandlingstema, sisteBehandlingsID });
   return getAsJson(`${URI_PATH}/behandlingstyper/hent-lovlige-kombinasjoner/?${params}`);
 };
-
-export const hentSakstemaerForOppgaveplukker = (sakstype) => {
-  return getAsJson(`${URI_PATH}/sakstemaer/oppgaveplukker/hent-lovlige-kombinasjoner/?sakstype=${sakstype}`);
-};
-
-export const hentBehandlingstemaerForOppgaveplukker = (sakstype, sakstema, sistBehandlingstema) => {
-  const params = QS.stringify({ sakstype, sakstema, sistBehandlingstema });
-  return getAsJson(`${URI_PATH}/behandlingstemaer/oppgaveplukker/hent-lovlige-kombinasjoner/?${params}`);
-};
