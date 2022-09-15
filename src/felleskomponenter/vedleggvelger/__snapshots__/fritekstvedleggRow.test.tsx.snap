@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fritekstvedleggRow renders correctly 1`] = `
+<tr
+  className="enkeltvedlegg"
+>
+  <td>
+    <a
+      className="lenke"
+      href="#"
+      onClick={[Function]}
+    >
+      a
+    </a>
+  </td>
+  <td />
+  <td
+    className="icon--cell"
+  >
+    <button
+      className="knapp mui-knapp knapp knapp--flat"
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+    >
+      <svg
+        className="ikon"
+      >
+        blyant-active-black.svg
+      </svg>
+    </button>
+    <button
+      className="knapp mui-knapp knapp knapp--flat"
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+    >
+      <svg
+        className="ikon"
+      >
+        bin-small-black.svg
+      </svg>
+    </button>
+  </td>
+</tr>
+`;

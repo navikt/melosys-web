@@ -7,7 +7,7 @@ import * as Nav from "../../navFrontend";
 
 import VedleggVelger from "./vedleggVelger";
 import VedleggVelgerModal from "./vedleggVelgerModal";
-import { VedleggTable } from "./vedleggTable";
+import VedleggTable from "./vedleggTable";
 
 describe("VedleggVelger", () => {
   const mockedProps = mock<ComponentProps<typeof VedleggVelger>>();

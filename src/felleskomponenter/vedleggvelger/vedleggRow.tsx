@@ -16,7 +16,7 @@ interface VedleggRowProps {
   redigerer: boolean;
 }
 
-export const VedleggRow = ({ vedlegg, leggTilVedlegg, slettVedlegg, vedleggErMarkert, redigerer }: VedleggRowProps) => {
+const VedleggRow = ({ vedlegg, leggTilVedlegg, slettVedlegg, vedleggErMarkert, redigerer }: VedleggRowProps) => {
   const checkboxChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       leggTilVedlegg();
@@ -51,3 +51,5 @@ export const VedleggRow = ({ vedlegg, leggTilVedlegg, slettVedlegg, vedleggErMar
     </tr>
   );
 };
+
+export default VedleggRow;

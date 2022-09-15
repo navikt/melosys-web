@@ -7,9 +7,9 @@ import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 
 import "./vedleggVelger.css";
-import { VedleggTable } from "./vedleggTable";
 import VedleggVelgerModal from "./vedleggVelgerModal";
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
+import VedleggTable from "./vedleggTable";
 
 interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];

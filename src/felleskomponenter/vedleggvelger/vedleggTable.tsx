@@ -1,8 +1,8 @@
 import { FysiskDokument } from "Domene";
 import React from "react";
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
-import { VedleggRow } from "./vedleggRow";
-import { FritekstvedleggRow } from "./fritekstvedleggRow";
+import FritekstvedleggRow from "./fritekstvedleggRow";
+import VedleggRow from "./vedleggRow";
 
 interface VedleggTableProps {
   valgteVedlegg: FysiskDokument[];
@@ -16,7 +16,7 @@ interface VedleggTableProps {
   lagPdfUrl?: (index: number) => Promise<string | false>;
 }
 
-export const VedleggTable = ({
+const VedleggTable = ({
   valgteVedlegg,
   alleVedlegg,
   redigerer,
@@ -57,3 +57,5 @@ export const VedleggTable = ({
     </table>
   );
 };
+
+export default VedleggTable;

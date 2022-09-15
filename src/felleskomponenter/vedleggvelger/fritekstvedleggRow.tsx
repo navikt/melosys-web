@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 
 import * as Nav from "../../navFrontend";
@@ -6,6 +6,7 @@ import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
 import { apnePdfINyFane } from "../../services/utils";
+import SlettFritekstvedleggModal from "./slettFritekstvedleggModal";
 
 interface FritekstvedleggRowProps {
   fritekstvedlegg: Fritekstvedlegg;
@@ -15,13 +16,14 @@ interface FritekstvedleggRowProps {
   lagPdfUrl?: (index: number) => Promise<string | false>;
 }
 
-export const FritekstvedleggRow = ({
+const FritekstvedleggRow = ({
   fritekstvedlegg,
   redigerFritekstvedlegg,
   slettFritekstvedlegg,
   index,
   lagPdfUrl,
 }: FritekstvedleggRowProps) => {
+  const [visBekreftelseModal, setVisBekreftelseModal] = useState<boolean>(false);
   const cls = classNames("enkeltvedlegg");
 
   const aapnePdf = async () => {
@@ -45,12 +47,16 @@ export const FritekstvedleggRow = ({
           ikon={Ikoner.BlyantBlack}
           onClick={() => redigerFritekstvedlegg && redigerFritekstvedlegg(index)}
         />
-        <Mui.Knapp
-          type="flat"
-          ikon={Ikoner.BinBlack}
-          onClick={() => slettFritekstvedlegg && slettFritekstvedlegg(index)}
-        />
+        <Mui.Knapp type="flat" ikon={Ikoner.BinBlack} onClick={() => setVisBekreftelseModal(true)} />
       </td>
+      {visBekreftelseModal ? (
+        <SlettFritekstvedleggModal
+          onRequestClose={() => setVisBekreftelseModal(false)}
+          slettVedlegg={() => slettFritekstvedlegg && slettFritekstvedlegg(index)}
+        />
+      ) : null}
     </tr>
   );
 };
+
+export default FritekstvedleggRow;

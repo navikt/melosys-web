@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import { FysiskDokument } from "Domene";
 
 import * as Nav from "../../navFrontend";
-import { VedleggTable } from "./vedleggTable";
+import VedleggTable from "./vedleggTable";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
