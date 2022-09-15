@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, InjectedFormProps, reduxForm } from "redux-form";
 import { RouteComponentProps, withRouter } from "react-router-dom";
@@ -16,6 +16,7 @@ import { useFeatureToggle } from "../../../../featuretoggle";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import saksplukkerSchema from "./saksplukkerSchema";
 import "./saksplukker.css";
+import * as Api from "../../../../services/api";
 
 const { EU_EOS, TRYGDEAVTALE, FTRL } = MKV.Koder.sakstyper;
 
@@ -53,6 +54,56 @@ export const Saksplukker = ({
 }: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) => {
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
+
+  const [sakstyper, setSakstyper] = useState([]);
+  const [sakstemaer, setSakstemaer] = useState([]);
+  const [behandlingstemaer, setBehandlingstemaer] = useState([]);
+  const [behandlingstyper, setBehandlingstyper] = useState([]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+
+    Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
+      setSakstyper(muligeSakstyper);
+    });
+  }, [behandleAlleSakerToggle]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+
+    if (formValues?.sakstype) {
+      Api.LovligeKombinasjoner.hentSakstemaerForOppgaveplukker(formValues?.sakstype).then((muligeSakstemaer) => {
+        setSakstemaer(muligeSakstemaer);
+      });
+    }
+  }, [behandleAlleSakerToggle, formValues?.sakstype]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+
+    if (formValues?.sakstema && formValues?.sakstype) {
+      Api.LovligeKombinasjoner.hentBehandlingstemaerForOppgaveplukker(formValues?.sakstype, formValues?.sakstema).then(
+        (muligeBehandlingstemaer) => {
+          setBehandlingstemaer(muligeBehandlingstemaer);
+        }
+      );
+    }
+  }, [behandleAlleSakerToggle, formValues?.sakstype, formValues?.sakstema]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+
+    if (formValues?.sakstema && formValues?.sakstype && formValues?.behandlingstema) {
+      Api.LovligeKombinasjoner.hentBehandlingstyperForOppgaveplukker(
+        formValues?.sakstype,
+        formValues?.sakstema,
+        formValues?.behandlingstema
+      ).then((muligeBehandlingstyper) => {
+        setBehandlingstyper(muligeBehandlingstyper);
+      });
+    }
+  }, [behandleAlleSakerToggle, formValues?.sakstype, formValues?.sakstema, formValues?.behandlingstema]);
 
   useEffect(() => {
     if (formValues?.sakstype) {
@@ -130,15 +181,30 @@ export const Saksplukker = ({
         <Nav.Row>
           <Nav.Column xs="12">
             <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
-              <option key={EU_EOS} value={EU_EOS} label={MKV.Terms.sakstyper.EU_EOS} />
-              <option key={TRYGDEAVTALE} value={TRYGDEAVTALE} label={MKV.Terms.sakstyper.TRYGDEAVTALE} />
-              {folketrygdenToggle === "enabled" && <option key={FTRL} value={FTRL} label={MKV.Terms.sakstyper.FTRL} />}
+              {behandleAlleSakerToggle === "enabled" ? (
+                sakstyper.map(({ kode, term }: KTObject) => (
+                  <option key={kode} value={kode}>
+                    {term}
+                  </option>
+                ))
+              ) : (
+                <>
+                  <option key={EU_EOS} value={EU_EOS} label={MKV.Terms.sakstyper.EU_EOS} />
+                  <option key={TRYGDEAVTALE} value={TRYGDEAVTALE} label={MKV.Terms.sakstyper.TRYGDEAVTALE} />
+                  {folketrygdenToggle === "enabled" && (
+                    <option key={FTRL} value={FTRL} label={MKV.Terms.sakstyper.FTRL} />
+                  )}
+                </>
+              )}
             </Skjema.Select>
           </Nav.Column>
           {sakstemaToggle === "enabled" && (
             <Nav.Column xs="12">
               <Skjema.Select feltNavn="sakstema" bredde="fullbredde" label="Sakstema">
-                {MKV.KTObjects.sakstemaer.filter(sakstemaErPlukkbart).map(({ kode, term }: KTObject) => (
+                {(behandleAlleSakerToggle === "enabled"
+                  ? sakstemaer
+                  : MKV.KTObjects.sakstemaer.filter(sakstemaErPlukkbart)
+                ).map(({ kode, term }: KTObject) => (
                   <option key={kode} value={kode}>
                     {term}
                   </option>
@@ -148,7 +214,7 @@ export const Saksplukker = ({
           )}
           <Nav.Column xs="12">
             <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
-              {MKV.KTObjects.behandlinger.behandlingstema
+              {(behandleAlleSakerToggle === "enabled" ? behandlingstemaer : MKV.KTObjects.behandlinger.behandlingstema)
                 .filter(behandlingstemaErPlukkbart)
                 .sort(compareTerm)
                 .map(({ kode, term }: KTObject) => (
@@ -158,6 +224,17 @@ export const Saksplukker = ({
                 ))}
             </Skjema.Select>
           </Nav.Column>
+          {behandleAlleSakerToggle === "enabled" && (
+            <Nav.Column xs="12">
+              <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
+                {behandlingstyper.map(({ kode, term }: KTObject) => (
+                  <option key={kode} value={kode}>
+                    {term}
+                  </option>
+                ))}
+              </Skjema.Select>
+            </Nav.Column>
+          )}
         </Nav.Row>
         <Nav.Row className="saksplukker__knapperad">
           <Nav.Knapp className="saksplukker__knapp" disabled={invalid}>
