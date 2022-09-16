@@ -34,7 +34,7 @@ class LinkGroupsBuilder implements ILinkGroupsBuilder {
     return this;
   }
 
-  public addWithoutLabel(links: Link[]) {
+  public addUtenLabel(links: Link[]) {
     this.linkGroups.push({ links });
     return this;
   }

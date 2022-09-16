@@ -144,6 +144,6 @@ class LinkGroupsFactory {
 }
 
 const visKunFullmektig = (contentProps: ContentProps) =>
-  new LinkgroupsBuilder().addWithoutLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
+  new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
 
 export default LinkGroupsFactory;
