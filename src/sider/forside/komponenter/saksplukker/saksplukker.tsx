@@ -52,7 +52,6 @@ export const Saksplukker = ({
   change,
   invalid,
 }: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) => {
-  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
 
@@ -60,7 +59,7 @@ export const Saksplukker = ({
   const [sakstemaer, setSakstemaer] = useState([]);
   const [behandlingstemaer, setBehandlingstemaer] = useState([]);
 
-  const { sakstype, sakstema } = formValues;
+  const { sakstype, sakstema } = formValues || {};
 
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") return;
@@ -92,7 +91,7 @@ export const Saksplukker = ({
 
   useEffect(() => {
     if (sakstype) {
-      if (sakstemaToggle === "enabled") {
+      if (behandleAlleSakerToggle === "enabled") {
         change("sakstema", null);
         change("behandlingstema", null);
       } else {
@@ -104,15 +103,15 @@ export const Saksplukker = ({
         );
       }
     }
-  }, [sakstype, sakstemaToggle]);
+  }, [sakstype, behandleAlleSakerToggle]);
 
   useEffect(() => {
     if (sakstema) {
-      if (sakstemaToggle === "enabled") {
+      if (behandleAlleSakerToggle === "enabled") {
         change("behandlingstema", null);
       }
     }
-  }, [sakstema, sakstemaToggle]);
+  }, [sakstema, behandleAlleSakerToggle]);
 
   const submitOgVideresend = async (form: any) => {
     const redirectURL = await handleSubmit(form);
@@ -144,7 +143,7 @@ export const Saksplukker = ({
   const plukkbareBehandlingstemaerTrygdeavtale = [MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV];
 
   const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => {
-    if (sakstemaToggle === "enabled") {
+    if (behandleAlleSakerToggle === "enabled") {
       return MKV.Kodekombinasjoner.gyldigeBehandlingstema(sakstype, sakstema).includes(behandlingtemaKTObject.kode);
     }
     return sakstype === EU_EOS
@@ -155,7 +154,7 @@ export const Saksplukker = ({
   return (
     <Nav.Panel className="forside__sidepanel saksplukker">
       <Nav.Typo.Systemtittel>Behandle sak</Nav.Typo.Systemtittel>
-      {sakstemaToggle === "enabled" ? (
+      {behandleAlleSakerToggle === "enabled" ? (
         <p>Velg sakstype, saks- og behandlingstema for å få tildelt en sak.</p>
       ) : (
         <p>Velg sakstype og behandlingstema for å få tildelt en sak.</p>
@@ -181,7 +180,7 @@ export const Saksplukker = ({
               )}
             </Skjema.Select>
           </Nav.Column>
-          {sakstemaToggle === "enabled" && (
+          {behandleAlleSakerToggle === "enabled" && (
             <Nav.Column xs="12">
               <Skjema.Select feltNavn="sakstema" bredde="fullbredde" label="Sakstema">
                 {(behandleAlleSakerToggle === "enabled"
@@ -214,7 +213,7 @@ export const Saksplukker = ({
           <Nav.Knapp className="saksplukker__knapp" disabled={invalid}>
             Behandle sak
           </Nav.Knapp>
-          {sakstemaToggle === "enabled" && <Nav.Flatknapp htmlType="reset">Nullstill</Nav.Flatknapp>}
+          {behandleAlleSakerToggle === "enabled" && <Nav.Flatknapp htmlType="reset">Nullstill</Nav.Flatknapp>}
         </Nav.Row>
       </form>
     </Nav.Panel>
