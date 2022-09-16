@@ -1,11 +1,14 @@
 import React, { useEffect } from "react";
-import PT from "prop-types";
-import { connect } from "react-redux";
-import MKV from "../../../melosyskodeverk";
+import { connect, ConnectedProps } from "react-redux";
+import { RootState } from "AppTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
+import { RouteComponentProps } from "react-router-dom";
 
+import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
-import * as MPT from "../../../proptypes";
+import { MatchParams } from "../../../@types";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog";
@@ -23,6 +26,38 @@ import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../
 
 import "./sedbehandling.css";
 
+const mapStateToProps = (state: RootState) => ({
+  fagsak: fagsakSelectors.FagsakSelector(state),
+  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
+  behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
+    behandlingsgrunnlagSelectors.PeriodeSelector(state).fom
+  ),
+  behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(
+    behandlingsgrunnlagSelectors.PeriodeSelector(state).tom
+  ),
+  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
+  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
+});
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  lastInnSaksopplysninger: (saksnummer: string, behandlingID: number) =>
+    dispatch(datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)),
+  resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
+  hentBehandlingsgrunnlag: (behandlingID: number) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+interface Props extends RouteComponentProps<MatchParams> {
+  redigerbart: boolean;
+  behandlingOppfriskes: boolean;
+}
+
 const SedBehandling = ({
   match,
   behandlingstema,
@@ -38,7 +73,7 @@ const SedBehandling = ({
   lastInnSaksopplysninger,
   resetSaksopplysninger,
   hentBehandlingsgrunnlag,
-}) => {
+}: Props & PropsFromRedux) => {
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
   const {
@@ -87,12 +122,8 @@ const SedBehandling = ({
                   lovvalgsland={behandlingstemaErIkkeYrkesaktiv ? lovvalgsland : null}
                   lovvalgsperiodeFom={lovvalgsperiodeFom}
                   lovvalgsperiodeTom={lovvalgsperiodeTom}
-                  behandlingsgrunnlagPeriodeFom={
-                    behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined
-                  }
-                  behandlingsgrunnlagPeriodeTom={
-                    behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined
-                  }
+                  behandlingsgrunnlagPeriodeFom={behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : ""}
+                  behandlingsgrunnlagPeriodeTom={behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : ""}
                 />
                 <SaksoversiktLenke />
                 <SideDialog />
@@ -105,54 +136,4 @@ const SedBehandling = ({
   );
 };
 
-SedBehandling.propTypes = {
-  match: PT.object.isRequired,
-  behandlingstema: PT.string.isRequired,
-  redigerbart: PT.bool.isRequired,
-  fagsak: MPT.Fagsak,
-  oppsummering: MPT.Behandlinger.Oppsummering,
-  lovvalgsland: MPT.Kodeverk.isRequired,
-  behandlingsgrunnlagPeriodeFom: PT.string,
-  behandlingsgrunnlagPeriodeTom: PT.string,
-  lovvalgsperiodeFom: PT.string,
-  lovvalgsperiodeTom: PT.string,
-  location: PT.object.isRequired,
-  lastInnSaksopplysninger: PT.func.isRequired,
-  resetSaksopplysninger: PT.func.isRequired,
-  hentBehandlingsgrunnlag: PT.func.isRequired,
-  behandlingOppfriskes: PT.bool.isRequired,
-};
-
-SedBehandling.defaultProps = {
-  fagsak: undefined,
-  oppsummering: undefined,
-  behandlingsgrunnlagPeriodeFom: undefined,
-  behandlingsgrunnlagPeriodeTom: undefined,
-  lovvalgsperiodeFom: undefined,
-  lovvalgsperiodeTom: undefined,
-};
-
-const mapStateToProps = (state) => ({
-  fagsak: fagsakSelectors.FagsakSelector(state),
-  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
-  behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
-    behandlingsgrunnlagSelectors.PeriodeSelector(state).fom
-  ),
-  behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(
-    behandlingsgrunnlagSelectors.PeriodeSelector(state).tom
-  ),
-  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
-  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  lastInnSaksopplysninger: (saksnummer, behandlingID) =>
-    dispatch(datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)),
-  resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
-  hentBehandlingsgrunnlag: (behandlingID) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SedBehandling);
+export default connector(SedBehandling);
