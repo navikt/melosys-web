@@ -8,7 +8,7 @@ import * as Utils from "../../../../../utils";
 import * as MPT from "../../../../../proptypes";
 
 import Stegvelger, { STEG } from "../../../../../felleskomponenter/stegvelger";
-import { HenlagtSak, AvslaattSoknad } from "../stegErstatter";
+import { AvslaattSoknad, HenlagtSak } from "../stegErstatter";
 import { SoknadMenypanelForm } from "../../../../../felleskomponenter/menypanelForm";
 
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
@@ -46,8 +46,6 @@ const Saksopplysninger = ({
   lagreLovvalgsperioderHandler,
   lagreAnmodningsperioderHandler,
   oppdaterOgLagreBehandlingerHandler,
-  lagreAllData,
-  oppdaterBehandlingsgrunnlag,
   startOgVisOppfriskModal,
   anmodningsperioderErSendtUtlandet,
 }) => {
@@ -84,8 +82,6 @@ const Saksopplysninger = ({
           lagreLovvalgsperioderHandler={lagreLovvalgsperioderHandler}
           lagreAnmodningsperioderHandler={lagreAnmodningsperioderHandler}
           oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingerHandler}
-          lagreAllData={lagreAllData}
-          oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
           begrunnelser={MKV.KTObjects.begrunnelser}
           landkoder={MKV.KTObjects.landkoder}
           tilForsiden={tilForsiden}
@@ -109,7 +105,6 @@ Saksopplysninger.propTypes = {
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   match: PT.object.isRequired,
-  oppdaterBehandlingsgrunnlag: PT.func.isRequired,
   sendBehandlingsgrunnlag: PT.func.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   soknadForm: PT.object.isRequired,
@@ -121,7 +116,6 @@ Saksopplysninger.propTypes = {
   lagreLovvalgsperioderHandler: PT.func.isRequired,
   lagreAnmodningsperioderHandler: PT.func.isRequired,
   oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
-  lagreAllData: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
@@ -148,7 +142,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   sendBehandlingsgrunnlag: (bid, dokument) => dispatch(behandlingsgrunnlagOperations.send(bid, dokument)),
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

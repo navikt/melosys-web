@@ -20,7 +20,6 @@ describe("VurderingArtikkel13_x_Vedtak", () => {
       behandlingID: 4,
       lovvalgsperiode: {},
       endreLovvalgsPeriode: jest.fn(),
-      lagreOgFatteVedtak: jest.fn(),
       tilbake: jest.fn(),
       formIsValid: true,
       formValues: {},
@@ -33,6 +32,8 @@ describe("VurderingArtikkel13_x_Vedtak", () => {
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
       harLandSomKreverSED: true,
       soknadsperiode: { tom: "", fom: "" },
+      validerBehandlingsgrunnlag: jest.fn(),
+      fattVedtak: jest.fn(),
     };
 
     const store = createStore(combineReducers({ form: formReducer }));

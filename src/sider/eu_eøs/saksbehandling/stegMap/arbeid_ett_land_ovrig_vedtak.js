@@ -36,13 +36,13 @@ class ArbeidEttLandOvrigVedtak extends Steg {
     });
     this.beregnRelevantUI = () => ({});
     this.handlers = {
-      lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
       byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
       slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
+      validerBehandlingsgrunnlag: this._propsLight.tilgjengeligeHandlers.validerBehandlingsgrunnlag,
     };
     this._status = FANE_STATUS.OK;
   }

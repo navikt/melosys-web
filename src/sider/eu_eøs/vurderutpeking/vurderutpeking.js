@@ -22,7 +22,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { datalastingOperations } from "../../../ducks/datalasting";
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 import { vilkarOperations } from "../../../ducks/vilkar";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { anmodningsperioderOperations } from "../../../ducks/anmodningsperioder";
@@ -60,13 +60,11 @@ const Vurderutpeking = ({
   behandlingsgrunnlagPeriodeFom,
   behandlingsgrunnlagPeriodeTom,
   resetSaksopplysninger,
-  oppdaterBehandlingsgrunnlag,
   lagreVilkar,
   lagreAvklartefakta,
   lagreLovvalgsperioder,
   lagreAnmodningsperioder,
   oppdaterOgLagreBehandlingsperioder,
-  lagreAllData,
   tilForsiden,
   startOgVisOppfriskModal,
   soknadForm,
@@ -124,8 +122,6 @@ const Vurderutpeking = ({
                         lagreLovvalgsperioderHandler={lagreLovvalgsperioder}
                         lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
                         oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
-                        lagreAllData={lagreAllData}
-                        oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
                         begrunnelser={MKV.KTObjects.begrunnelser}
                         landkoder={MKV.KTObjects.landkoder}
                         tilForsiden={tilForsiden}
@@ -175,13 +171,11 @@ Vurderutpeking.propTypes = {
   startOgVisOppfriskModal: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
-  oppdaterBehandlingsgrunnlag: PT.func.isRequired,
   lagreVilkar: PT.func.isRequired,
   lagreAvklartefakta: PT.func.isRequired,
   lagreLovvalgsperioder: PT.func.isRequired,
   lagreAnmodningsperioder: PT.func.isRequired,
   oppdaterOgLagreBehandlingsperioder: PT.func.isRequired,
-  lagreAllData: PT.func.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   soknadForm: PT.object.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
@@ -218,13 +212,11 @@ const mapDispatchToProps = (dispatch) => ({
   lastInnSaksopplysninger: (saksnummer, behandlingID) =>
     dispatch(datalastingOperations.lastInnSaksopplysninger(MKV.Koder.sakstyper.EU_EOS, saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),
   lagreAnmodningsperioder: () => dispatch(anmodningsperioderOperations.lagre()),
   oppdaterOgLagreBehandlingsperioder: () => dispatch(behandlingsperioderOperations.oppdaterOgLagre()),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
 });
 

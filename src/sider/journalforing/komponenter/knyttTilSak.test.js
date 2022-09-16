@@ -29,6 +29,7 @@ describe("KnyttTilSak", () => {
           },
         ],
       },
+      journalforingGjelder: MKV.Koder.aktoersroller.BRUKER,
       behandlingstyper: [],
       opprettBehandling: false,
       behandlingstema: "",

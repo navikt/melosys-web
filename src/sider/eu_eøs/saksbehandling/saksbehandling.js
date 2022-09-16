@@ -10,7 +10,7 @@ import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog, { fanerUtenBucOgSed, defaultFaner } from "../../../felleskomponenter/sideDialog";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
@@ -196,7 +196,6 @@ class Saksbehandling extends Component {
                       lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
                       lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
                       oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
-                      lagreAllData={this.props.lagreAllData}
                       tilForsiden={tilForsiden}
                       startOgVisOppfriskModal={startOgVisOppfriskModal}
                     />
@@ -264,7 +263,6 @@ Saksbehandling.propTypes = {
   anmodningsperioder: PT.array,
   sendAnmodningsperioder: PT.func.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
-  lagreAllData: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
   lovvalgsperiodeFom: PT.string,
@@ -349,7 +347,6 @@ const mapDispatchToProps = (dispatch) => ({
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
   sendAnmodningsperioder: (behandlingID, body) => dispatch(anmodningsperioderOperations.send(behandlingID, body)),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
   hentAnmodningsperiodesvar: (anmodningsperiodeID) =>
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),

@@ -8,6 +8,7 @@ import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 
 import "./sokskjema.css";
+import { EnkelFellesInputFnrDnrOrgnrSaksnr } from "../../../felleskomponenter/enkelFellesInputFnrDnrOrgnrSaksnr";
 
 class SokSkjema extends Component {
   UNSAFE_componentWillMount() {
@@ -26,8 +27,8 @@ class SokSkjema extends Component {
     history.push("/sok");
   };
 
-  vedEndretSokFelt = (event) => {
-    this.setState({ sokStreng: event.target.value });
+  vedEndretSokFelt = (sokStreng) => {
+    this.setState({ sokStreng });
   };
 
   oppdaterLokalSokState = (sokStreng) => {
@@ -39,15 +40,16 @@ class SokSkjema extends Component {
       <Nav.Panel>
         <Nav.Typo.Systemtittel>Søk etter sak</Nav.Typo.Systemtittel>
         <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
-          <Nav.Input
+          <EnkelFellesInputFnrDnrOrgnrSaksnr
             id="id-sokeskjema"
             label=""
             className="sokeskjema__input"
             bredde="XL"
-            onChange={this.vedEndretSokFelt}
+            vedEndring={this.vedEndretSokFelt}
             ref={this.state.sokStreng}
             placeholder="F.nr./d-nr./saksnr."
           />
+
           <Nav.Knapp className="sokeskjema__knapp">Søk</Nav.Knapp>
         </form>
       </Nav.Panel>

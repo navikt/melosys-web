@@ -34,7 +34,7 @@ function InnerMultiSelectComponent({
   feltNavn,
   onChange,
 }: InnerMultiSelectComponentProps) {
-  const feil = SkjemaUtils.mapReduxFormFeilTilNavFeil(meta);
+  const feil = meta.submitFailed ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
   return (
     <MultiSelect
