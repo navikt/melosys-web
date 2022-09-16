@@ -74,7 +74,7 @@ const AvsluttSak = ({
   const behandlingstemaErUnntakNorskTrygdØvrigEllerUtstasjonering =
     behandlingstema === REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE ||
     behandlingstema === REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
-  const behandlingstemaErUnntakOgSakstemaErTrygdeavtale =
+  const behandlingstemaErUnntak =
     behandlingstema === ANMODNING_OM_UNNTAK_HOVEDREGEL || behandlingstema === REGISTRERING_UNNTAK;
 
   const skalViseAvslåPgaManglendeOpplysninger = () => {
@@ -145,10 +145,7 @@ const AvsluttSak = ({
   const skalViseKlageHandlinger = sakstemaToggle === "enabled" && redigerbart && behandlingstypeErKlage;
   const skalViseVedtakOmgjort = sakstemaToggle === "enabled" && redigerbart && behandlingstypeErNyVurdering;
   const skalViseUnntaksHandlinger =
-    sakstemaToggle === "enabled" &&
-    redigerbart &&
-    behandlingstemaErUnntakOgSakstemaErTrygdeavtale &&
-    sakstype === TRYGDEAVTALE;
+    sakstemaToggle === "enabled" && redigerbart && behandlingstemaErUnntak && sakstype === TRYGDEAVTALE;
 
   const skalViseSøknadenErInnvilget = () => {
     if (sakstemaToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
