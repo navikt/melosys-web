@@ -60,6 +60,8 @@ export const Saksplukker = ({
   const [sakstemaer, setSakstemaer] = useState([]);
   const [behandlingstemaer, setBehandlingstemaer] = useState([]);
 
+  const { sakstype, sakstema } = formValues;
+
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") return;
 
@@ -71,48 +73,46 @@ export const Saksplukker = ({
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") return;
 
-    if (formValues?.sakstype) {
-      Api.LovligeKombinasjoner.hentSakstemaer(null, formValues?.sakstype).then((muligeSakstemaer) => {
+    if (sakstype) {
+      Api.LovligeKombinasjoner.hentSakstemaer(null, sakstype).then((muligeSakstemaer) => {
         setSakstemaer(muligeSakstemaer);
       });
     }
-  }, [behandleAlleSakerToggle, formValues?.sakstype]);
+  }, [behandleAlleSakerToggle, sakstype]);
 
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") return;
 
-    if (formValues?.sakstema && formValues?.sakstype) {
-      Api.LovligeKombinasjoner.hentBehandlingstemaer(null, formValues?.sakstype, formValues?.sakstema).then(
-        (muligeBehandlingstemaer) => {
-          setBehandlingstemaer(muligeBehandlingstemaer);
-        }
-      );
+    if (sakstema && sakstype) {
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(null, sakstype, sakstema).then((muligeBehandlingstemaer) => {
+        setBehandlingstemaer(muligeBehandlingstemaer);
+      });
     }
-  }, [behandleAlleSakerToggle, formValues?.sakstype, formValues?.sakstema]);
+  }, [behandleAlleSakerToggle, sakstype, sakstema]);
 
   useEffect(() => {
-    if (formValues?.sakstype) {
+    if (sakstype) {
       if (sakstemaToggle === "enabled") {
         change("sakstema", null);
         change("behandlingstema", null);
       } else {
         change(
           "behandlingstema",
-          formValues.sakstype === EU_EOS
+          sakstype === EU_EOS
             ? MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
             : MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
         );
       }
     }
-  }, [formValues?.sakstype, sakstemaToggle]);
+  }, [sakstype, sakstemaToggle]);
 
   useEffect(() => {
-    if (formValues?.sakstema) {
+    if (sakstema) {
       if (sakstemaToggle === "enabled") {
         change("behandlingstema", null);
       }
     }
-  }, [formValues?.sakstema, sakstemaToggle]);
+  }, [sakstema, sakstemaToggle]);
 
   const submitOgVideresend = async (form: any) => {
     const redirectURL = await handleSubmit(form);
@@ -133,7 +133,7 @@ export const Saksplukker = ({
   };
 
   const sakstemaErPlukkbart = (sakstemaKTObject: KTObject) => {
-    return MKV.Kodekombinasjoner.gyldigeSakstema(formValues?.sakstype).includes(sakstemaKTObject.kode);
+    return MKV.Kodekombinasjoner.gyldigeSakstema(sakstype).includes(sakstemaKTObject.kode);
   };
 
   const ikkePlukkbareBehandlingstemaerEOS = [
@@ -145,11 +145,9 @@ export const Saksplukker = ({
 
   const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => {
     if (sakstemaToggle === "enabled") {
-      return MKV.Kodekombinasjoner.gyldigeBehandlingstema(formValues?.sakstype, formValues?.sakstema).includes(
-        behandlingtemaKTObject.kode
-      );
+      return MKV.Kodekombinasjoner.gyldigeBehandlingstema(sakstype, sakstema).includes(behandlingtemaKTObject.kode);
     }
-    return formValues?.sakstype === EU_EOS
+    return sakstype === EU_EOS
       ? !ikkePlukkbareBehandlingstemaerEOS.includes(behandlingtemaKTObject.kode)
       : plukkbareBehandlingstemaerTrygdeavtale.includes(behandlingtemaKTObject.kode);
   };
