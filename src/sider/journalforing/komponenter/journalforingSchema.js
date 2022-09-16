@@ -4,6 +4,7 @@ import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
 import * as Konstanter from "../../../constants";
 import * as KV from "../../../kodeverk";
+import { skalViseSoknadsperiodeOgLand } from "./opprettSak";
 
 const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer." };
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig fnr eller dnr." };
@@ -26,18 +27,12 @@ const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
-const kreverPeriode = (journalforingHensikt, behandlingstema) =>
+const kreverPeriode = (journalforingHensikt, hovedpart, sakstype, behandlingstema) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
-  ![
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
-    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
-    MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
-    MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
-  ].includes(behandlingstema);
+  skalViseSoknadsperiodeOgLand(hovedpart, sakstype, behandlingstema);
 
-const kreverLand = (journalforingHensikt, behandlingstema, ukjentEllerAlleEosLand) =>
-  !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, behandlingstema);
+const kreverLand = (journalforingHensikt, hovedpart, sakstype, behandlingstema, ukjentEllerAlleEosLand) =>
+  !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, hovedpart, sakstype, behandlingstema);
 
 const arbeidsgiverOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
   return avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && !erAvsenderPreutfylt;
@@ -127,14 +122,17 @@ const journalforing = object().shape({
       hensikt === Konstanter.JOURNALFORING_HENSIKT.KNYTT || hensikt === Konstanter.JOURNALFORING_HENSIKT.NY_VURDERING,
     then: string().required(VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT),
   }),
-  journalforingPeriodeFraOgMed: string().when(["journalforingHensikt", "opprettnysak_behandlingstema"], {
-    is: kreverPeriode,
-    then: string().erGyldigDato().required(MAA_FYLLES_UT),
-  }),
+  journalforingPeriodeFraOgMed: string().when(
+    ["journalforingHensikt", "journalforingGjelder", "sakstype", "opprettnysak_behandlingstema"],
+    {
+      is: kreverPeriode,
+      then: string().erGyldigDato().required(MAA_FYLLES_UT),
+    }
+  ),
   journalforingPeriodeTilOgMed: lazy((value) =>
     !value
       ? string().ensure()
-      : string().when(["journalforingHensikt", "opprettnysak_behandlingstema"], {
+      : string().when(["journalforingHensikt", "journalforingGjelder", "sakstype", "opprettnysak_behandlingstema"], {
           is: kreverPeriode,
           then: string().erEtterDatofelt("journalforingPeriodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT),
         })
@@ -142,10 +140,19 @@ const journalforing = object().shape({
   journalforingSoknadsland: array()
     .of(string())
     .ensure()
-    .when(["journalforingHensikt", "opprettnysak_behandlingstema", "journalforingSoknadslandUkjenteEllerAlleEosLand"], {
-      is: kreverLand,
-      then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
-    }),
+    .when(
+      [
+        "journalforingHensikt",
+        "journalforingGjelder",
+        "sakstype",
+        "opprettnysak_behandlingstema",
+        "journalforingSoknadslandUkjenteEllerAlleEosLand",
+      ],
+      {
+        is: kreverLand,
+        then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
+      }
+    ),
   utenlandskTrygdemyndighetLandkode: string().when("avsenderType", {
     is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
     then: string().required(VELG_ETT_LAND),

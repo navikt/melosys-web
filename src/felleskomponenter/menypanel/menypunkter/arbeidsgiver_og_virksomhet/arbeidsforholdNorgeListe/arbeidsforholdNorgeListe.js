@@ -10,12 +10,12 @@ import * as Ikoner from "../../../../../resources/images";
 import * as MPT from "../../../../../proptypes";
 
 import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../../editerbartElement";
-import Orgnrinput from "./orgnrinput";
 import Organisasjon from "../../arbeidsgiver/organisasjon";
 import Kontaktopplysninger, { useKontaktOpplysninger } from "../../kontaktopplysninger";
 import EnkeltArbeidsforholdNorgeRedigeringUtfort from "./enkeltArbeidsforholdNorgeRedigeringUtfort";
 
 import "./arbeidsforholdNorgeListe.css";
+import Orgnrinput from "./orgnrinput";
 
 export const EnkeltArbeidsforholdNorgeRedigerer = ({
   erstatt,
