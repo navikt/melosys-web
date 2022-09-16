@@ -14,7 +14,7 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
   feil,
   ...rest
 }: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
-  const [inputVerdi, setInputVerdi] = useState<any>(rest.input && rest.input.value ? rest.input.value : "");
+  const [inputVerdi, setInputVerdi] = useState<any>(rest.input?.value || "");
   const { input } = rest;
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
     <Nav.Input
       {...rest}
       onBlur={(event) => {
-        if (input && input.onBlur) {
+        if (input?.onBlur) {
           input.onBlur(event);
         }
         if (rest.onBlur) {

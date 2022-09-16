@@ -1,9 +1,11 @@
 import { InputProps } from "nav-frontend-skjema";
 import React from "react";
 import { Field } from "redux-form";
-import EnkelFellesInputFnrDnrOrgnrSaksnr, {
+import {
+  EnkelFellesInputFnrDnrOrgnrSaksnr,
   FellesInputFnrDnrOrgnrSaksnrProps,
-} from "../../enkeltInputFnrDnrOrgnr/EnkelFellesInputFnrDnrOrgnrSaksnr";
+} from "../../enkelFellesInputFnrDnrOrgnrSaksnr";
+
 import * as SkjemaUtils from "../utils";
 
 const InnerFellesInputFnrDnrOrgnrSaksnr = ({ vedEndring, ...rest }: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
