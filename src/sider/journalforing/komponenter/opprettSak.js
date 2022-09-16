@@ -39,6 +39,15 @@ const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
   ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
 );
 
+export const skalViseSoknadsperiodeOgLand = (hovedpart, sakstype, behandlingstema) =>
+  hovedpart !== MKV.Koder.aktoersroller.VIRKSOMHET &&
+  sakstype === MKV.Koder.sakstyper.EU_EOS &&
+  ![
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
+    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+  ].includes(behandlingstema);
+
 export const OpprettSakTittel = () => (
   <div className="enkeltSak__meta">
     <Nav.Typo.Element>Opprett ny sak</Nav.Typo.Element>
@@ -158,15 +167,6 @@ export const OpprettSak = (props) => {
     }
   }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
 
-  const skalViseSoknadsperiodeOgLand =
-    journalforingGjelder !== MKV.Koder.aktoersroller.VIRKSOMHET &&
-    valgtSakstype === MKV.Koder.sakstyper.EU_EOS &&
-    ![
-      MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
-      MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
-      MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
-    ].includes(valgtBehandlingstema);
-
   const visMuligeBehandlingstema = sakstemaToggleEnabled
     ? journalforingGjelder === MKV.Koder.aktoersroller.BRUKER
     : true;
@@ -231,7 +231,7 @@ export const OpprettSak = (props) => {
           ))}
         </Skjema.Select>
       )}
-      {skalViseSoknadsperiodeOgLand && (
+      {skalViseSoknadsperiodeOgLand(journalforingGjelder, valgtSakstype, valgtBehandlingstema) && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
             <Nav.Row className="">
