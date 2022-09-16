@@ -45,7 +45,7 @@ export const KnyttTilSak = (props) => {
     opprettBehandling,
     behandlingstema,
     behandlingstype,
-    sakstemaToggleEnabled,
+    behandleAlleSakerToggleEnabled,
     changeField,
     journalforingGjelder,
   } = props;
@@ -61,7 +61,7 @@ export const KnyttTilSak = (props) => {
     };
   }, []);
   useEffect(() => {
-    if (!sakstemaToggleEnabled) return;
+    if (!behandleAlleSakerToggleEnabled) return;
 
     if (sakstema.kode && sakstype.kode) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(
@@ -73,10 +73,10 @@ export const KnyttTilSak = (props) => {
         setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);
       });
     }
-  }, [sakstemaToggleEnabled, journalforingGjelder, sakstema.kode, sakstype.kode]);
+  }, [behandleAlleSakerToggleEnabled, journalforingGjelder, sakstema.kode, sakstype.kode]);
 
   useEffect(() => {
-    if (!sakstemaToggleEnabled) return;
+    if (!behandleAlleSakerToggleEnabled) return;
     if (sakstema.kode && sakstype.kode && behandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(
         journalforingGjelder,
@@ -88,7 +88,7 @@ export const KnyttTilSak = (props) => {
         setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
       });
     }
-  }, [sakstemaToggleEnabled, journalforingGjelder, sakstema.kode, sakstype.kode, behandlingstema]);
+  }, [behandleAlleSakerToggleEnabled, journalforingGjelder, sakstema.kode, sakstype.kode, behandlingstema]);
 
   useEffect(() => {
     if (opprettBehandling && !behandlingstema) {
@@ -109,7 +109,8 @@ export const KnyttTilSak = (props) => {
     sak.saksstatus.kode
   );
 
-  const visKnyttTilEksisterende = sisteBehandlingErInaktiv && (!sakstemaToggleEnabled || !sakErHenlagtEllerBortfalt);
+  const visKnyttTilEksisterende =
+    sisteBehandlingErInaktiv && (!behandleAlleSakerToggleEnabled || !sakErHenlagtEllerBortfalt);
 
   if (visKnyttTilEksisterende) {
     return (
@@ -122,8 +123,8 @@ export const KnyttTilSak = (props) => {
         />
         <Skjema.RadioGruppe
           feltNavn="opprettBehandling"
-          label={sakstemaToggleEnabled ? "" : "Knytt til sak"}
-          className={classNames("panelElement", { "nyBehandling-utenBehandling": sakstemaToggleEnabled })}
+          label={behandleAlleSakerToggleEnabled ? "" : "Knytt til sak"}
+          className={classNames("panelElement", { "nyBehandling-utenBehandling": behandleAlleSakerToggleEnabled })}
         >
           {behandlingOversikter.some(
             (behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD
@@ -135,7 +136,7 @@ export const KnyttTilSak = (props) => {
         </Skjema.RadioGruppe>
         {opprettBehandling && (
           <>
-            {sakstemaToggleEnabled ? (
+            {behandleAlleSakerToggleEnabled ? (
               <div className="panelElement">
                 <Nav.Typo.Undertittel className="temaTypeOverskrift">
                   Velg tema og type for ny behandling
@@ -177,7 +178,7 @@ export const KnyttTilSak = (props) => {
     );
   }
 
-  const visUtenVidereBehandling = sakstemaToggleEnabled ? sakstype.kode === MKVSakstyper.EU_EOS : true;
+  const visUtenVidereBehandling = behandleAlleSakerToggleEnabled ? sakstype.kode === MKVSakstyper.EU_EOS : true;
 
   return (
     <div className="knyttTilSak__behandlingspanel">
@@ -193,7 +194,7 @@ KnyttTilSak.propTypes = {
   behandlingstema: PT.string,
   behandlingstype: PT.string,
   journalforingGjelder: PT.string.isRequired,
-  sakstemaToggleEnabled: PT.bool.isRequired,
+  behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   changeField: PT.func.isRequired,
 };
 KnyttTilSak.defaultProps = {

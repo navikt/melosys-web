@@ -51,12 +51,12 @@ export const Saksplukker = ({
   change,
   invalid,
 }: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) => {
-  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
 
   useEffect(() => {
     if (formValues?.sakstype) {
-      if (sakstemaToggle === "enabled") {
+      if (behandleAlleSakerToggle === "enabled") {
         change("sakstema", null);
         change("behandlingstema", null);
       } else {
@@ -68,15 +68,15 @@ export const Saksplukker = ({
         );
       }
     }
-  }, [formValues?.sakstype, sakstemaToggle]);
+  }, [formValues?.sakstype, behandleAlleSakerToggle]);
 
   useEffect(() => {
     if (formValues?.sakstema) {
-      if (sakstemaToggle === "enabled") {
+      if (behandleAlleSakerToggle === "enabled") {
         change("behandlingstema", null);
       }
     }
-  }, [formValues?.sakstema, sakstemaToggle]);
+  }, [formValues?.sakstema, behandleAlleSakerToggle]);
 
   const submitOgVideresend = async (form: any) => {
     const redirectURL = await handleSubmit(form);
@@ -108,7 +108,7 @@ export const Saksplukker = ({
   const plukkbareBehandlingstemaerTrygdeavtale = [MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV];
 
   const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => {
-    if (sakstemaToggle === "enabled") {
+    if (behandleAlleSakerToggle === "enabled") {
       return MKV.Kodekombinasjoner.gyldigeBehandlingstema(formValues?.sakstype, formValues?.sakstema).includes(
         behandlingtemaKTObject.kode
       );
@@ -121,7 +121,7 @@ export const Saksplukker = ({
   return (
     <Nav.Panel className="forside__sidepanel saksplukker">
       <Nav.Typo.Systemtittel>Behandle sak</Nav.Typo.Systemtittel>
-      {sakstemaToggle === "enabled" ? (
+      {behandleAlleSakerToggle === "enabled" ? (
         <p>Velg sakstype, saks- og behandlingstema for å få tildelt en sak.</p>
       ) : (
         <p>Velg sakstype og behandlingstema for å få tildelt en sak.</p>
@@ -135,7 +135,7 @@ export const Saksplukker = ({
               {folketrygdenToggle === "enabled" && <option key={FTRL} value={FTRL} label={MKV.Terms.sakstyper.FTRL} />}
             </Skjema.Select>
           </Nav.Column>
-          {sakstemaToggle === "enabled" && (
+          {behandleAlleSakerToggle === "enabled" && (
             <Nav.Column xs="12">
               <Skjema.Select feltNavn="sakstema" bredde="fullbredde" label="Sakstema">
                 {MKV.KTObjects.sakstemaer.filter(sakstemaErPlukkbart).map(({ kode, term }: KTObject) => (
@@ -163,7 +163,7 @@ export const Saksplukker = ({
           <Nav.Knapp className="saksplukker__knapp" disabled={invalid}>
             Behandle sak
           </Nav.Knapp>
-          {sakstemaToggle === "enabled" && <Nav.Flatknapp htmlType="reset">Nullstill</Nav.Flatknapp>}
+          {behandleAlleSakerToggle === "enabled" && <Nav.Flatknapp htmlType="reset">Nullstill</Nav.Flatknapp>}
         </Nav.Row>
       </form>
     </Nav.Panel>

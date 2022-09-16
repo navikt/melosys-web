@@ -46,7 +46,7 @@ export const OpprettSakTittel = () => (
 );
 
 export const OpprettSak = (props) => {
-  const { journalforingSkjemaVerdier, sakstemaToggleEnabled, settFeltInnhold } = props;
+  const { journalforingSkjemaVerdier, behandleAlleSakerToggleEnabled, settFeltInnhold } = props;
   const {
     opprettnysak_behandlingstema: valgtBehandlingstema,
     sakstype: valgtSakstype,
@@ -89,7 +89,7 @@ export const OpprettSak = (props) => {
   };
 
   useEffect(() => {
-    if (sakstemaToggleEnabled) return;
+    if (behandleAlleSakerToggleEnabled) return;
     settFeltInnhold("opprettnysak_behandlingstema", defaultBehandlingstema(valgtSakstype));
     setValgbareBehandlingstemaer(behandlingstemaerEtterSakstype(valgtSakstype));
   }, [valgtSakstype]);
@@ -106,25 +106,25 @@ export const OpprettSak = (props) => {
   }, [folketrygdenToggle]);
 
   useEffect(() => {
-    if (!sakstemaToggleEnabled) return;
+    if (!behandleAlleSakerToggleEnabled) return;
 
     Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
       setSakstyper(muligeSakstyper);
     });
-  }, [sakstemaToggleEnabled]);
+  }, [behandleAlleSakerToggleEnabled]);
 
   useEffect(() => {
-    if (!sakstemaToggleEnabled) return;
+    if (!behandleAlleSakerToggleEnabled) return;
 
     if (valgtSakstype) {
       Api.LovligeKombinasjoner.hentSakstemaer(journalforingGjelder, valgtSakstype).then((muligeSakstemaer) => {
         setSakstemaer(muligeSakstemaer);
       });
     }
-  }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype]);
+  }, [behandleAlleSakerToggleEnabled, journalforingGjelder, valgtSakstype]);
 
   useEffect(() => {
-    if (!sakstemaToggleEnabled) return;
+    if (!behandleAlleSakerToggleEnabled) return;
 
     if (valgtSakstema && valgtSakstype) {
       if (journalforingGjelder === MKV.Koder.aktoersroller.BRUKER) {
@@ -141,10 +141,10 @@ export const OpprettSak = (props) => {
         );
       }
     }
-  }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema]);
+  }, [behandleAlleSakerToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema]);
 
   useEffect(() => {
-    if (!sakstemaToggleEnabled) return;
+    if (!behandleAlleSakerToggleEnabled) return;
 
     if (valgtSakstema && valgtSakstype && valgtBehandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(
@@ -156,7 +156,7 @@ export const OpprettSak = (props) => {
         setBehandlingstyper(muligeBehandlingstyper);
       });
     }
-  }, [sakstemaToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
+  }, [behandleAlleSakerToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
 
   const skalViseSoknadsperiodeOgLand =
     journalforingGjelder !== MKV.Koder.aktoersroller.VIRKSOMHET &&
@@ -167,7 +167,7 @@ export const OpprettSak = (props) => {
       MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
     ].includes(valgtBehandlingstema);
 
-  const visMuligeBehandlingstema = sakstemaToggleEnabled
+  const visMuligeBehandlingstema = behandleAlleSakerToggleEnabled
     ? journalforingGjelder === MKV.Koder.aktoersroller.BRUKER
     : true;
   return (
@@ -177,16 +177,16 @@ export const OpprettSak = (props) => {
         bredde="fullbredde"
         label="Sakstype"
         onChange={() => {
-          if (sakstemaToggleEnabled) nullstillFormdataVerdier(FormDataVerdi.sakstype, settFeltInnhold);
+          if (behandleAlleSakerToggleEnabled) nullstillFormdataVerdier(FormDataVerdi.sakstype, settFeltInnhold);
         }}
       >
-        {(sakstemaToggleEnabled ? sakstyper : valgbareSakstyper).map((elem) => (
+        {(behandleAlleSakerToggleEnabled ? sakstyper : valgbareSakstyper).map((elem) => (
           <option key={elem.kode} value={elem.kode}>
             {elem.term}
           </option>
         ))}
       </Skjema.Select>
-      {sakstemaToggleEnabled && (
+      {behandleAlleSakerToggleEnabled && (
         <Skjema.Select
           feltNavn="sakstema"
           bredde="fullbredde"
@@ -206,18 +206,19 @@ export const OpprettSak = (props) => {
           bredde="fullbredde"
           label="Behandlingstema"
           onChange={() => {
-            if (sakstemaToggleEnabled) nullstillFormdataVerdier(FormDataVerdi.behandlingstema, settFeltInnhold);
+            if (behandleAlleSakerToggleEnabled)
+              nullstillFormdataVerdier(FormDataVerdi.behandlingstema, settFeltInnhold);
             settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
           }}
         >
-          {(sakstemaToggleEnabled ? behandlingstemaer : valgbareBehandlingstemaer).map((elem) => (
+          {(behandleAlleSakerToggleEnabled ? behandlingstemaer : valgbareBehandlingstemaer).map((elem) => (
             <option key={elem.kode} value={elem.kode}>
               {elem.term}
             </option>
           ))}
         </Skjema.Select>
       )}
-      {sakstemaToggleEnabled && (
+      {behandleAlleSakerToggleEnabled && (
         <Skjema.Select
           feltNavn="opprettnysak_behandlingstype"
           bredde="fullbredde"
@@ -287,7 +288,7 @@ OpprettSak.propTypes = {
   journalforingSkjemaVerdier: PT.object,
   errors: PT.object,
   settFeltInnhold: PT.func.isRequired,
-  sakstemaToggleEnabled: PT.bool.isRequired,
+  behandleAlleSakerToggleEnabled: PT.bool.isRequired,
 };
 
 OpprettSak.defaultProps = {

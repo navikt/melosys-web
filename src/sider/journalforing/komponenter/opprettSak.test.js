@@ -44,7 +44,7 @@ describe("OpprettSak", () => {
       kanSubmittes: true,
       handleSubmit: jest.fn(),
       submitJournalforing: jest.fn(),
-      sakstemaToggleEnabled: jest.fn(),
+      behandleAlleSakerToggleEnabled: jest.fn(),
       journalforingSkjemaVerdier: {
         opprettnysak_behandlingstema: "",
         journalforingSoknadsland: "",

@@ -99,19 +99,19 @@ function EndreBehandlingModal({
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
 
-  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
 
   useEffect(() => {
-    if (sakstemaToggle !== "enabled") return;
+    if (behandleAlleSakerToggle !== "enabled") return;
     if (sakstype) {
       Api.LovligeKombinasjoner.hentSakstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype).then((alleMuligesakstemaer) => {
         setMuligeSakstemaer(alleMuligesakstemaer);
       });
     }
-  }, [sakstemaToggle, sakstype]);
+  }, [behandleAlleSakerToggle, sakstype]);
 
   useEffect(() => {
-    if (sakstemaToggle !== "enabled") return;
+    if (behandleAlleSakerToggle !== "enabled") return;
     if (sakstema && sakstype) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype, sakstema).then(
         (alleMuligeBehandlingstemaer) => {
@@ -119,10 +119,10 @@ function EndreBehandlingModal({
         }
       );
     }
-  }, [sakstemaToggle, sakstema, sakstype]);
+  }, [behandleAlleSakerToggle, sakstema, sakstype]);
 
   useEffect(() => {
-    if (sakstemaToggle !== "enabled") return;
+    if (behandleAlleSakerToggle !== "enabled") return;
     if (sakstema && sakstype && behandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(
         MKV.Koder.aktoersroller.BRUKER,
@@ -133,7 +133,7 @@ function EndreBehandlingModal({
         setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
       });
     }
-  }, [sakstemaToggle, sakstype, sakstema, behandlingstema]);
+  }, [behandleAlleSakerToggle, sakstype, sakstema, behandlingstema]);
 
   useEffect(() => {
     if (skalViseModal) {
@@ -177,7 +177,7 @@ function EndreBehandlingModal({
         hentFagsak(saksnummer);
         hentBehandlingsgrunnlag(behandlingID);
         const nyLink =
-          sakstemaToggle === "enabled"
+          behandleAlleSakerToggle === "enabled"
             ? Routing.lagUrl(saksnummer, behandlingID, sakstype, behandlingstema, behandlingstype)
             : Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema);
         if (nyLink && nyLink !== location.pathname + location.search) tilAnnenSide(nyLink);
@@ -206,7 +206,7 @@ function EndreBehandlingModal({
   const endringerErBegrenset = erBehandlingstemaMedBegrensetRettigheter(oppsummering.behandlingstema, fagsak.sakstype);
 
   const nullstillSak = (steg: FormDataVerdi): void => {
-    if (sakstemaToggle !== "enabled") return;
+    if (behandleAlleSakerToggle !== "enabled") return;
     switch (steg) {
       case FormDataVerdi.sakstype:
         setSakstema("");
@@ -240,12 +240,12 @@ function EndreBehandlingModal({
               value={sakstype}
               koder={muligeVerdierPlussValgt(
                 fagsak.sakstype,
-                sakstemaToggle === "enabled" ? muligeSakstyper : muligeSakstyper_gammel
+                behandleAlleSakerToggle === "enabled" ? muligeSakstyper : muligeSakstyper_gammel
               )}
               disableForsteValg
               redigerbart={!endringerErBegrenset}
             />
-            {sakstemaToggle === "enabled" && (
+            {behandleAlleSakerToggle === "enabled" && (
               <Mui.KodeTermSelect
                 onChange={(e) => {
                   setSakstema(e.target.value);
@@ -266,7 +266,7 @@ function EndreBehandlingModal({
               label="Behandlingstema"
               value={behandlingstema}
               koder={
-                sakstemaToggle === "enabled"
+                behandleAlleSakerToggle === "enabled"
                   ? muligeBehandlingstemaer
                   : muligeVerdierPlussValgt(oppsummering.behandlingstema, muligeBehandlingstemaer_gammel)
               }
@@ -278,7 +278,7 @@ function EndreBehandlingModal({
               label="Behandlingstype"
               value={behandlingstype}
               koder={
-                sakstemaToggle === "enabled"
+                behandleAlleSakerToggle === "enabled"
                   ? muligeBehandlingstyper
                   : muligeVerdierPlussValgt(oppsummering.behandlingstype, muligeBehandlingstyper_gammel)
               }
