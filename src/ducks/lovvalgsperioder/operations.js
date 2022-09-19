@@ -169,10 +169,14 @@ const skalByggeLovvalgsperiodeForArtikkel16_1 = (reduxState) => {
 };
 
 const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
+  console.log("byggLovvalgsPeriodeARtikkel16_1 start");
   return (async () => {
+    console.log("byggLovvalgsPeriodeARtikkel16_1 inni async");
     return erFeatureToggleEnabled("melosys.5278.art16lovvalgsperiodefiks");
   })().then((toggleEnabled) => {
+    console.log("byggLovvalgsPeriodeARtikkel16_1: Har mottatt promise, fortsetter med å sjekke toggle");
     if (!toggleEnabled) {
+      console.log("byggLovvalgsPeriodeARtikkel16_1: Toggle er IKKE på!");
       const erAnmodningsperiodeSendtUtland =
         anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(reduxState);
       const erBehandlingsstatusUnderBehandlingEllerAvsluttet = [
@@ -185,6 +189,8 @@ const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
       }
       return [];
     }
+
+    console.log("byggLovvalgsPeriodeARtikkel16_1: Toggle er PÅ!");
 
     if (!skalByggeLovvalgsperiodeForArtikkel16_1(reduxState)) {
       return [];
