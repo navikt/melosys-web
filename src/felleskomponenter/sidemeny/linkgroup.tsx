@@ -9,7 +9,7 @@ import { Link } from "./types";
 import "./linkgroup.css";
 
 interface LinkGroupProps {
-  label: string;
+  label?: string;
   links: Link[];
   onClick: (index: number) => void;
 }
@@ -19,7 +19,7 @@ const labelCls = linkgroupCls.element("label");
 
 const LinkGroup = ({ label, links, onClick }: LinkGroupProps) => (
   <div className={linkgroupCls.block}>
-    <Nav.Typo.Normaltekst className={labelCls}>{label}</Nav.Typo.Normaltekst>
+    {label && <Nav.Typo.Normaltekst className={labelCls}>{label}</Nav.Typo.Normaltekst>}
     {links.map(({ label: linkLabel, active, iconSrc, iconAltText }, index) => (
       <MenyLink
         key={linkLabel.split(" ").join("")}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEventHandler, useCallback } from "react";
+import React, { useState, useEffect, useCallback, ChangeEventHandler } from "react";
 
 import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
@@ -65,7 +65,7 @@ const Redigerer = ({
   return (
     <Nav.Row className="medfolgende-familie__redigerer">
       <Nav.Column xs="5">
-        <Skjema.Input
+        <Skjema.FellesInputFnrDnrOrgnrSaksnr
           label="F.nr./d-nr./fødselsdato"
           feltNavn={`${overordnetFeltNavn}.fnr`}
           disabled={!redigerbart}

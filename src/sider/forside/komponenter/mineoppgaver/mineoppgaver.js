@@ -19,7 +19,7 @@ import "./mineoppgaver.css";
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
 export const MineOppgaver = (props) => {
-  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
 
   const { mineSaker, landkoder, hentLandkoder } = props;
   const { journalforing, saksbehandling } = mineSaker;
@@ -55,7 +55,7 @@ export const MineOppgaver = (props) => {
         sortingLegend="Sorter behandlinger etter opprettelsesdato:"
         sortingPath="behandling.registrertDato"
         radioGroupName="behandlingsortering"
-        visSakstema={sakstemaToggle === "enabled"}
+        visSakstema={behandleAlleSakerToggle === "enabled"}
         landkoder={landkoder}
       />
       {antall() === 0 && ingenSakerMelding}

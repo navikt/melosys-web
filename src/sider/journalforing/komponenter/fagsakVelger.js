@@ -21,20 +21,20 @@ const EKSISTRENDE = "Eksisterende sak";
 const OPPRETT = "Opprett ny sak";
 
 const FagsakVelger = (props) => {
-  const { fagsakListe, settJournalforingHensikt, sakstemaToggleEnabled, landkoder } = props;
+  const { fagsakListe, settJournalforingHensikt, behandleAlleSakerToggleEnabled, landkoder } = props;
   const [valgtVisning, setValgtVisning] = useState(EKSISTRENDE);
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
 
   useEffect(() => {
-    if (!sakstemaToggleEnabled) return;
+    if (!behandleAlleSakerToggleEnabled) return;
 
     if (valgtVisning === OPPRETT || ingenSakerFinnes) {
       dispatch(change(KV.Form.JOURNALFORING, "saksnummer", "-1"));
     } else if (valgtVisning === EKSISTRENDE) {
       dispatch(change(KV.Form.JOURNALFORING, "saksnummer", ""));
     }
-  }, [ingenSakerFinnes, valgtVisning, sakstemaToggleEnabled]);
+  }, [ingenSakerFinnes, valgtVisning, behandleAlleSakerToggleEnabled]);
 
   const notifier = async (saksnummer) => {
     const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
@@ -46,28 +46,30 @@ const FagsakVelger = (props) => {
       ...samling,
       {
         value: sak.saksnummer,
-        innhold: <EnkeltSak sak={sak} sakstemaToggleEnabled={sakstemaToggleEnabled} landkoder={landkoder} />,
-        footer: <KnyttTilSak sak={sak} sakstemaToggleEnabled={sakstemaToggleEnabled} />,
+        innhold: (
+          <EnkeltSak sak={sak} behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled} landkoder={landkoder} />
+        ),
+        footer: <KnyttTilSak sak={sak} behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled} />,
       },
     ],
     []
   );
 
-  if (!sakstemaToggleEnabled) {
+  if (!behandleAlleSakerToggleEnabled) {
     radioValg.push({
       value: "-1",
       innhold: <OpprettSakTittel />,
-      footer: <OpprettSak sakstemaToggleEnabled={false} />,
+      footer: <OpprettSak behandleAlleSakerToggleEnabled={false} />,
     });
   }
 
-  if (sakstemaToggleEnabled) {
+  if (behandleAlleSakerToggleEnabled) {
     return (
       <>
         {ingenSakerFinnes ? (
           <div className="fagsakVelger">
             <div className="ingenSaker">Ingen eksisterende saker funnet. Du må opprette en ny sak.</div>
-            <OpprettSak sakstemaToggleEnabled />
+            <OpprettSak behandleAlleSakerToggleEnabled />
           </div>
         ) : (
           <div className="fagsakVelger">
@@ -98,7 +100,7 @@ const FagsakVelger = (props) => {
                 className="marginMellomCustomRadioPaneler"
               />
             )}
-            {valgtVisning === OPPRETT && <OpprettSak sakstemaToggleEnabled />}
+            {valgtVisning === OPPRETT && <OpprettSak behandleAlleSakerToggleEnabled />}
           </div>
         )}
       </>
@@ -116,7 +118,7 @@ const FagsakVelger = (props) => {
 FagsakVelger.propTypes = {
   fagsakListe: PT.array.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
-  sakstemaToggleEnabled: PT.bool.isRequired,
+  behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 

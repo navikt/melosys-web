@@ -35,7 +35,7 @@ export type SokProps = PropsFromRedux & {
 };
 
 export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: SokProps) => {
-  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const sokefrase = sessionStorage.getItem("sokefrase");
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
                 sortingLegend="Sorter fagsaker etter opprettelsesdato:"
                 sortingPath="opprettetDato"
                 radioGroupName="fagsaksortering"
-                visSakstema={sakstemaToggle === "enabled"}
+                visSakstema={behandleAlleSakerToggle === "enabled"}
                 landkoder={landkoder}
               />
             )}

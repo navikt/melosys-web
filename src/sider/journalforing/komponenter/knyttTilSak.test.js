@@ -11,7 +11,7 @@ describe("KnyttTilSak", () => {
 
   beforeEach(() => {
     props = {
-      sakstemaToggleEnabled: false,
+      behandleAlleSakerToggleEnabled: false,
       sak: {
         sakstype: {
           kode: MKV.Koder.sakstyper.EU_EOS,
@@ -101,7 +101,7 @@ describe("KnyttTilSak", () => {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
     props.sak.sakstype.kode = MKV.Koder.sakstyper.EU_EOS;
-    props.sakstemaToggleEnabled = true;
+    props.behandleAlleSakerToggleEnabled = true;
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
 
@@ -116,7 +116,7 @@ describe("KnyttTilSak", () => {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
     props.sak.sakstype.kode = MKV.Koder.sakstyper.FTRL;
-    props.sakstemaToggleEnabled = true;
+    props.behandleAlleSakerToggleEnabled = true;
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
 
@@ -130,7 +130,7 @@ describe("KnyttTilSak", () => {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
     props.sak.sakstype.kode = MKV.Koder.sakstyper.FTRL;
-    props.sakstemaToggleEnabled = false;
+    props.behandleAlleSakerToggleEnabled = false;
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
 
@@ -142,7 +142,7 @@ describe("KnyttTilSak", () => {
 
   it(`Ikke vis knytt til eksisterende sak komponent dersom status er henlagt og sakstema er enabled`, () => {
     props.sak.saksstatus.kode = MKV.Koder.saksstatuser.HENLAGT;
-    props.sakstemaToggleEnabled = true;
+    props.behandleAlleSakerToggleEnabled = true;
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
     const knyttTilEksisterendeSakKomponent = knyttTilSak.find(".knyttTilSak__panelramme");
@@ -152,7 +152,7 @@ describe("KnyttTilSak", () => {
 
   it(`Vis knytt til eksisterende sak komponent dersom status er henlagt og sakstema er disabled`, () => {
     props.sak.saksstatus.kode = MKV.Koder.saksstatuser.HENLAGT;
-    props.sakstemaToggleEnabled = false;
+    props.behandleAlleSakerToggleEnabled = false;
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
     const knyttTilEksisterendeSakKomponent = knyttTilSak.find(".knyttTilSak__panelramme");

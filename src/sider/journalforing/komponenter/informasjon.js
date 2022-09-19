@@ -235,7 +235,7 @@ class Informasjon extends Component {
       journalforingGjelder === VIRKSOMHET ? (
         <>
           <Mui.Undertittel tekst="Informasjon om virksomhet" ikon={Ikoner.AccountCircle} className="undertittel" />
-          <Skjema.Input feltNavn="virksomhetOrgnr" label="Organisasjonsnummer:" />
+          <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="virksomhetOrgnr" label="Organisasjonsnummer:" />
           {!Utils._isEmpty(virksomhetNavn) && (
             <span>
               <Nav.Typo.Element style={{ display: "inline-block", marginRight: "0.5rem" }}>Navn:</Nav.Typo.Element>
@@ -246,7 +246,7 @@ class Informasjon extends Component {
       ) : (
         <>
           <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
-          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" />
+          <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="brukerID" label="Brukers fnr eller dnr:" />
           {!Utils._isEmpty(brukerNavn) && (
             <span>
               <Nav.Typo.Element style={{ display: "inline-block", marginRight: "0.5rem" }}>Navn:</Nav.Typo.Element>
@@ -268,7 +268,7 @@ class Informasjon extends Component {
             ) : (
               <>
                 <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
-                <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" />
+                <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="brukerID" label="Brukers fnr eller dnr:" />
                 <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled className="brukers-navn" />
               </>
             )
