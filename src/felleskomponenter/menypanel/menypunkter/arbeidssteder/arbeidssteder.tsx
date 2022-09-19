@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { change, formValueSelector } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -76,14 +76,12 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ArbeidsstederProps = PropsFromRedux & {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
   behandlingstema: string;
 };
 
 export const Arbeidssteder = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
-  behandlingsgrunnlagEtikett,
   slettFastArbeidsstedOgHjemmekontorAvklaring,
   erFastArbeidssted,
   erHjemmekontor,
@@ -178,7 +176,6 @@ export const Arbeidssteder = ({
       <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
         {KV.Menypunkter.Arbeidssteder.tittel}
       </Nav.Typo.Innholdstittel>
-      <span>{behandlingsgrunnlagEtikett}</span>
       {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       <div className="innhold">
         {visRepresentantIUtlandet ? <RepresentantIUtlandet redigerbart={redigerbart} /> : arbeidssteder}

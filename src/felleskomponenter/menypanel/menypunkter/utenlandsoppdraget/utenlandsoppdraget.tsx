@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -36,14 +36,12 @@ type UtenlandsoppdragetProps = PropsFromRedux & {
   visArbeidsforholdRolleEtiketter: boolean;
   redigerbart: boolean;
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
-  behandlingsgrunnlagEtikett: ReactNode;
 };
 
 export const Utenlandsoppdraget = ({
   visArbeidsforholdRolleEtiketter,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
-  behandlingsgrunnlagEtikett,
   oppdaterBehandlingsgrunnlag,
   behandlingsgrunnlagtype,
 }: UtenlandsoppdragetProps) => {
@@ -56,7 +54,6 @@ export const Utenlandsoppdraget = ({
     <div className="utenlandsoppdraget">
       <Tittellinje
         tittel={KV.Menypunkter.Utenlandsoppdraget.tittel}
-        behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
         visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
       />
       <Nav.Row>
