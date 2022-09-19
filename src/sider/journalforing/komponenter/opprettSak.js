@@ -175,7 +175,7 @@ export const OpprettSak = (props) => {
     : true;
 
   return (
-    <div className="panelramme">
+    <div className="opprettSak">
       <Skjema.Select
         feltNavn="sakstype"
         bredde="fullbredde"
