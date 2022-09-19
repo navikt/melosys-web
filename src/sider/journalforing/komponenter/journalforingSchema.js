@@ -183,8 +183,11 @@ const journalforing = object().shape({
     }),
   opprettnysak_behandlingstema: string()
     .nullable()
-    .when("journalforingHensikt", {
-      is: (hensikt) => hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+    .when(["journalforingHensikt", "journalforingGjelder"], {
+      is: (hensikt, journalforingGjelder) => {
+        if (journalforingGjelder === VIRKSOMHET) return false;
+        return hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT;
+      },
       then: string().required(MAA_FYLLES_UT).nullable(),
     }),
   opprettnysak_behandlingstype: string()
