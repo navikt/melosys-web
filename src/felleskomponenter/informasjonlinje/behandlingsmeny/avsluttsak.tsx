@@ -19,8 +19,11 @@ const {
   ARBEID_TJENESTEPERSON_ELLER_FLY,
   ANMODNING_OM_UNNTAK_HOVEDREGEL,
   REGISTRERING_UNNTAK,
+  UTSENDT_ARBEIDSTAKER,
+  UTSENDT_SELVSTENDIG,
+  ARBEID_FLERE_LAND,
 } = MKV.Koder.behandlinger.behandlingstema;
-const { NY_VURDERING, ENDRET_PERIODE, FØRSTEGANG, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
+const { NY_VURDERING, ENDRET_PERIODE, FØRSTEGANG, HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
 const {
@@ -78,54 +81,122 @@ const AvsluttSak = ({
     behandlingstema === ANMODNING_OM_UNNTAK_HOVEDREGEL || behandlingstema === REGISTRERING_UNNTAK;
 
   const skalViseAvslåPgaManglendeOpplysninger = () => {
-    switch (behandlingskategori) {
-      case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
-        return redigerbart && !behandlingstemaErTrygdetid;
-      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
-      case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
-      case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
-      case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
-        return redigerbart;
-      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
-      default:
-        return false;
+    if (behandleAlleSakerToggle !== "enabled" || !redigerbart) {
+      switch (behandlingskategori) {
+        case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
+          return redigerbart && !behandlingstemaErTrygdetid;
+        case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
+        case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
+        case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
+        case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
+          return redigerbart;
+        case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
+        default:
+          return false;
+      }
     }
+    if (sakstema !== MEDLEMSKAP_LOVVALG) return false;
+
+    if (sakstype === EU_EOS) {
+      return (
+        [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
+        [
+          UTSENDT_ARBEIDSTAKER,
+          UTSENDT_SELVSTENDIG,
+          ARBEID_TJENESTEPERSON_ELLER_FLY,
+          ARBEID_FLERE_LAND,
+          IKKE_YRKESAKTIV,
+          ARBEID_KUN_NORGE,
+          PENSJONIST,
+        ].includes(behandlingstema)
+      );
+    }
+    if (sakstype === FTRL) {
+      return (
+        [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
+        [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, UNNTAK_MEDLEMSKAP].includes(behandlingstema)
+      );
+    }
+    if (sakstype === TRYGDEAVTALE) {
+      return (
+        ![HENVENDELSE, KLAGE].includes(behandlingstype) &&
+        [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST].includes(behandlingstema)
+      );
+    }
+
+    return false;
   };
 
-  const skalViseHenleggSak = () => {
-    switch (behandlingskategori) {
-      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
-        return redigerbart && !behandlingstypeErEndretPeriode;
-      case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
-        return redigerbart && !behandlingstemaErTrygdetid;
-      case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
-      case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
-      case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
-        return redigerbart;
-      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
-      default:
-        return false;
+  const skalViseBehandlingenErHenlagt = () => {
+    if (behandleAlleSakerToggle !== "enabled" || !redigerbart) {
+      switch (behandlingskategori) {
+        case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
+          return redigerbart && !behandlingstypeErEndretPeriode;
+        case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
+          return redigerbart && !behandlingstemaErTrygdetid;
+        case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
+        case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
+        case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
+          return redigerbart;
+        case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
+        default:
+          return false;
+      }
     }
+
+    if (sakstema !== MEDLEMSKAP_LOVVALG) return false;
+
+    if (sakstype === EU_EOS) {
+      return (
+        [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
+        [
+          UTSENDT_ARBEIDSTAKER,
+          UTSENDT_SELVSTENDIG,
+          ARBEID_TJENESTEPERSON_ELLER_FLY,
+          ARBEID_FLERE_LAND,
+          IKKE_YRKESAKTIV,
+          ARBEID_KUN_NORGE,
+          PENSJONIST,
+        ].includes(behandlingstema)
+      );
+    }
+    if (sakstype === FTRL) {
+      return (
+        ![HENVENDELSE, KLAGE].includes(behandlingstype) &&
+        [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, UNNTAK_MEDLEMSKAP].includes(behandlingstema)
+      );
+    }
+    if (sakstype === TRYGDEAVTALE) {
+      return (
+        ![HENVENDELSE, KLAGE].includes(behandlingstype) &&
+        [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST].includes(behandlingstema)
+      );
+    }
+
+    return false;
   };
 
-  const skalViseAvsluttSak = () => {
-    if (
-      behandlingstemaErUnntakNorskTrygdØvrigEllerUtstasjonering &&
-      behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT
-    ) {
-      return true;
+  const skalViseBehandlingenErBortfalt = () => {
+    if (behandleAlleSakerToggle !== "enabled" || !redigerbart) {
+      if (
+        behandlingstemaErUnntakNorskTrygdØvrigEllerUtstasjonering &&
+        behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT
+      ) {
+        return true;
+      }
+      switch (behandlingskategori) {
+        case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
+        case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
+        case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
+        case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
+        case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
+          return redigerbart;
+        case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
+        default:
+          return false;
+      }
     }
-    switch (behandlingskategori) {
-      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
-      case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
-      case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
-      case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
-      case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
-        return redigerbart;
-      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
-      default:
-        return false;
-    }
+    return true;
   };
 
   const skalViseFerdigbehandlet = () => {
@@ -213,7 +284,12 @@ const AvsluttSak = ({
     skalViseKlageHandlinger ||
     skalViseUnntaksHandlinger;
 
-  if (!skalViseHenleggSak() && !skalViseAvsluttSak() && !skalViseFerdigbehandlet() && !skalKunneAngiBehandlingsresultat)
+  if (
+    !skalViseBehandlingenErHenlagt() &&
+    !skalViseBehandlingenErBortfalt() &&
+    !skalViseFerdigbehandlet() &&
+    !skalKunneAngiBehandlingsresultat
+  )
     return null;
 
   return (
@@ -264,8 +340,10 @@ const AvsluttSak = ({
       )}
 
       {skalViseFerdigbehandlet() && <Handling tekst="Ferdigbehandlet" onClick={ferdigbehandleNyVurdering} />}
-      {skalViseHenleggSak() && <Handling tekst="Søknaden/klagen er trukket" onClick={henleggSak} />}
-      {skalViseAvsluttSak() && <Handling tekst="Behandlingen er bortfalt" onClick={avsluttSakSomBortfalt} />}
+      {skalViseBehandlingenErHenlagt() && <Handling tekst="Søknaden/klagen er trukket" onClick={henleggSak} />}
+      {skalViseBehandlingenErBortfalt() && (
+        <Handling tekst="Behandlingen er bortfalt" onClick={avsluttSakSomBortfalt} />
+      )}
     </Nav.Ekspanderbartpanel>
   );
 };
