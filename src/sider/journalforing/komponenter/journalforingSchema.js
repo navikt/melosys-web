@@ -176,9 +176,9 @@ const journalforing = object().shape({
     }),
   sakstema: string()
     .nullable()
-    .when(["$sakstemaToggleEnabled", "journalforingHensikt"], {
-      is: (sakstemaToggleEnabled, hensikt) =>
-        sakstemaToggleEnabled && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+    .when(["$behandleAlleSakerToggleEnabled", "journalforingHensikt"], {
+      is: (behandleAlleSakerToggleEnabled, hensikt) =>
+        behandleAlleSakerToggleEnabled && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
       then: string().required(MAA_FYLLES_UT).nullable(),
     }),
   opprettnysak_behandlingstema: string()
@@ -189,9 +189,9 @@ const journalforing = object().shape({
     }),
   opprettnysak_behandlingstype: string()
     .nullable()
-    .when(["$sakstemaToggleEnabled", "journalforingHensikt"], {
-      is: (sakstemaToggleEnabled, hensikt) =>
-        sakstemaToggleEnabled && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+    .when(["$behandleAlleSakerToggleEnabled", "journalforingHensikt"], {
+      is: (behandleAlleSakerToggleEnabled, hensikt) =>
+        behandleAlleSakerToggleEnabled && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
       then: string().required(MAA_FYLLES_UT).nullable(),
     }),
 

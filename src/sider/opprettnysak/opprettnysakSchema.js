@@ -12,7 +12,7 @@ const SKRIV_INN_ORGNR = { melding: "Skriv inn organisasjonsnummer" };
 const SKRIV_INN_GYLDIG_ORGNR = { melding: "Skriv inn gyldig organisasjonsnummer" };
 const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisasjonsnummeret." };
 const VELG_SAKSTYPE = { melding: "Velg sakstype" };
-// TODO: Legg denne på når toggle melosys.sakstema er på. Da skal sakstema og behandlingstype bli required
+// TODO: Legg denne på når toggle melosys.behandle_alle_saker er på. Da skal sakstema og behandlingstype bli required
 // const VELG_SAKSTEMA = { melding: "Velg sakstema" };
 // const VELG_BEHANDLINGSTYPE = { melding: "Velg behandlingstype" };
 const VELG_BEHANDLINGSTEMA = { melding: "Velg behandlingstema" };

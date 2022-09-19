@@ -65,7 +65,7 @@ const AvsluttSak = ({
   redigerbart,
   behandlingsstatus,
 }: avsluttSakProps) => {
-  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
   const behandlingstemaErTrygdetid = behandlingstema === TRYGDETID;
   const behandlingstypeErNyVurdering = behandlingstype === NY_VURDERING;
@@ -142,13 +142,15 @@ const AvsluttSak = ({
     }
   };
 
-  const skalViseKlageHandlinger = sakstemaToggle === "enabled" && redigerbart && behandlingstypeErKlage;
-  const skalViseVedtakOmgjort = sakstemaToggle === "enabled" && redigerbart && behandlingstypeErNyVurdering;
+  const skalViseKlageHandlinger = behandleAlleSakerToggle === "enabled" && redigerbart && behandlingstypeErKlage;
+
+  const skalViseVedtakOmgjort = behandleAlleSakerToggle === "enabled" && redigerbart && behandlingstypeErNyVurdering;
+
   const skalViseUnntaksHandlinger =
-    sakstemaToggle === "enabled" && redigerbart && behandlingstemaErUnntak && sakstype === TRYGDEAVTALE;
+    behandleAlleSakerToggle === "enabled" && redigerbart && behandlingstemaErUnntak && sakstype === TRYGDEAVTALE;
 
   const skalViseSøknadenErInnvilget = () => {
-    if (sakstemaToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
+    if (behandleAlleSakerToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
       return false;
     }
     if (
@@ -168,7 +170,7 @@ const AvsluttSak = ({
   };
 
   const skalViseSøknadenErAvslått = () => {
-    if (sakstemaToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
+    if (behandleAlleSakerToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
       return false;
     }
 

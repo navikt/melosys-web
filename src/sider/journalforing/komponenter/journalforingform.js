@@ -42,7 +42,7 @@ export const JournalforingForm = (props) => {
     submitSpinner,
     kanSubmittes,
     handleSubmit,
-    sakstemaToggleEnabled,
+    behandleAlleSakerToggleEnabled,
     landkoder,
   } = props;
   const visForvaltningsMelding =
@@ -65,7 +65,7 @@ export const JournalforingForm = (props) => {
       <FagsakVelger
         fagsakListe={fagsakListe}
         settJournalforingHensikt={settJournalforingHensikt}
-        sakstemaToggleEnabled={sakstemaToggleEnabled}
+        behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
         landkoder={landkoder}
       />
       {visForvaltningsMelding && (
@@ -104,7 +104,7 @@ JournalforingForm.propTypes = {
   avbrytJournalforing: PT.func.isRequired,
   kanSubmittes: PT.bool.isRequired,
   handleSubmit: PT.func.isRequired,
-  sakstemaToggleEnabled: PT.bool.isRequired,
+  behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
@@ -148,9 +148,9 @@ const mapStateToProps = (state, ownProps) => ({
     },
     journalforingSoknadsland: [],
     journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-    sakstype: ownProps.sakstemaToggleEnabled ? null : MKV.Koder.sakstyper.EU_EOS,
+    sakstype: ownProps.behandleAlleSakerToggleEnabled ? null : MKV.Koder.sakstyper.EU_EOS,
     opprettBehandling: false,
-    opprettnysak_behandlingstema: ownProps.sakstemaToggleEnabled
+    opprettnysak_behandlingstema: ownProps.behandleAlleSakerToggleEnabled
       ? null
       : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
     ingenVurdering: false,
@@ -175,7 +175,7 @@ const form = {
     const options = {
       context: {
         erAvsenderPreutfylt: props.erAvsenderPreutfylt,
-        sakstemaToggleEnabled: props.sakstemaToggleEnabled,
+        behandleAlleSakerToggleEnabled: props.behandleAlleSakerToggleEnabled,
       },
     };
 
