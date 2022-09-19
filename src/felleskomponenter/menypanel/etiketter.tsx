@@ -15,15 +15,9 @@ export const FraRegister = (props: EtikettProps) => (
   </Nav.EtikettBase>
 );
 
-export const FraSoknad = (props: EtikettProps) => (
+export const FraBruker = (props: EtikettProps) => (
   <Nav.EtikettBase {...props} type="fokus">
-    Fra søknad
-  </Nav.EtikettBase>
-);
-
-export const FraSed = (props: EtikettProps) => (
-  <Nav.EtikettBase {...props} type="fokus">
-    Fra SED
+    Fra bruker
   </Nav.EtikettBase>
 );
 

@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { AnyAction } from "redux";
@@ -55,7 +55,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ArbeidsgiverOgVirksomhetProps = PropsFromRedux & {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
 };
 
 export const ArbeidsgiverOgVirksomhet = ({
@@ -68,7 +67,6 @@ export const ArbeidsgiverOgVirksomhet = ({
   selvstendigForetak = [],
   arbeidsforholdUtland = [],
   selvstendigNaeringsvirksomhetUtland = [],
-  behandlingsgrunnlagEtikett,
 }: ArbeidsgiverOgVirksomhetProps) => {
   const finnOrganisasjon = (orgnr: string) => {
     const org: Organisasjon = organisasjoner.find((o: Organisasjon) => o.orgnr === orgnr);
@@ -85,7 +83,6 @@ export const ArbeidsgiverOgVirksomhet = ({
         <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel}
         </Nav.Typo.Innholdstittel>
-        <span>{behandlingsgrunnlagEtikett}</span>
         {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       </div>
       {ekstraArbeidsgivere.length === 0 && (

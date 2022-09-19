@@ -5,7 +5,6 @@ import { RootState } from "AppTypes";
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
-import * as Etiketter from "../../etiketter";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
@@ -28,7 +27,6 @@ export const Barnetrygd = ({ sakOgBehandling: { eosBarnetrygd } }: PropsFromRedu
           <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
             {KV.Menypunkter.Barnetrygd.tittel}
           </Nav.Typo.Innholdstittel>
-          <Etiketter.FraRegister />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

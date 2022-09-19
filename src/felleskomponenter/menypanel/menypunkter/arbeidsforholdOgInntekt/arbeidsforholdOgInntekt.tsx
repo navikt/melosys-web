@@ -1,7 +1,6 @@
 import React from "react";
 
 import * as Nav from "../../../../navFrontend";
-import * as Etiketter from "../../etiketter";
 import * as KV from "../../../../kodeverk";
 
 import ArbeidsgivereNorge from "./arbeidsgivereNorge";
@@ -13,7 +12,6 @@ const ArbeidsforholdOgInntekt = () => (
         <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.ArbeidsforholdOgInntekt.tittel}
         </Nav.Typo.Innholdstittel>
-        <Etiketter.FraRegister />
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
