@@ -17,6 +17,8 @@ const {
   UNNTAK_MEDLEMSKAP,
   ARBEID_ETT_LAND_ØVRIG,
   ARBEID_TJENESTEPERSON_ELLER_FLY,
+  ANMODNING_OM_UNNTAK_HOVEDREGEL,
+  REGISTRERING_UNNTAK,
 } = MKV.Koder.behandlinger.behandlingstema;
 const { NY_VURDERING, ENDRET_PERIODE, FØRSTEGANG, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
@@ -30,6 +32,8 @@ const {
   KLAGEINNSTILLING,
   AVVIST_KLAGE,
   OMGJORT,
+  REGISTRERT_UNNTAK,
+  DELVIS_GODKJENT_UNNTAK,
 } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 type avsluttSakProps = {
@@ -61,7 +65,7 @@ const AvsluttSak = ({
   redigerbart,
   behandlingsstatus,
 }: avsluttSakProps) => {
-  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
   const behandlingstemaErTrygdetid = behandlingstema === TRYGDETID;
   const behandlingstypeErNyVurdering = behandlingstype === NY_VURDERING;
@@ -70,6 +74,8 @@ const AvsluttSak = ({
   const behandlingstemaErUnntakNorskTrygdØvrigEllerUtstasjonering =
     behandlingstema === REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE ||
     behandlingstema === REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
+  const behandlingstemaErUnntak =
+    behandlingstema === ANMODNING_OM_UNNTAK_HOVEDREGEL || behandlingstema === REGISTRERING_UNNTAK;
 
   const skalViseAvslåPgaManglendeOpplysninger = () => {
     switch (behandlingskategori) {
@@ -136,12 +142,15 @@ const AvsluttSak = ({
     }
   };
 
-  const skalViseKlageHandlinger = sakstemaToggle === "enabled" && redigerbart && behandlingstypeErKlage;
+  const skalViseKlageHandlinger = behandleAlleSakerToggle === "enabled" && redigerbart && behandlingstypeErKlage;
 
-  const skalViseVedtakOmgjort = sakstemaToggle === "enabled" && redigerbart && behandlingstypeErNyVurdering;
+  const skalViseVedtakOmgjort = behandleAlleSakerToggle === "enabled" && redigerbart && behandlingstypeErNyVurdering;
+
+  const skalViseUnntaksHandlinger =
+    behandleAlleSakerToggle === "enabled" && redigerbart && behandlingstemaErUnntak && sakstype === TRYGDEAVTALE;
 
   const skalViseSøknadenErInnvilget = () => {
-    if (sakstemaToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
+    if (behandleAlleSakerToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
       return false;
     }
     if (
@@ -161,7 +170,7 @@ const AvsluttSak = ({
   };
 
   const skalViseSøknadenErAvslått = () => {
-    if (sakstemaToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
+    if (behandleAlleSakerToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
       return false;
     }
 
@@ -201,7 +210,8 @@ const AvsluttSak = ({
     skalViseSøknadenErAvslått() ||
     skalViseAvslåPgaManglendeOpplysninger() ||
     skalViseVedtakOmgjort ||
-    skalViseKlageHandlinger;
+    skalViseKlageHandlinger ||
+    skalViseUnntaksHandlinger;
 
   if (!skalViseHenleggSak() && !skalViseAvsluttSak() && !skalViseFerdigbehandlet() && !skalKunneAngiBehandlingsresultat)
     return null;
@@ -236,6 +246,19 @@ const AvsluttSak = ({
           )}
           {skalViseVedtakOmgjort && (
             <Handling tekst="Vedtaket er omgjort (fvl § 35)" onClick={() => angiBehandlingsresultattype(OMGJORT)} />
+          )}
+          {skalViseUnntaksHandlinger && (
+            <>
+              <Handling tekst="Perioden er godkjent" onClick={() => angiBehandlingsresultattype(REGISTRERT_UNNTAK)} />
+              <Handling
+                tekst="Perioden er delvis godkjent"
+                onClick={() => angiBehandlingsresultattype(DELVIS_GODKJENT_UNNTAK)}
+              />
+              <Handling
+                tekst="Medlem i folketrygden"
+                onClick={() => angiBehandlingsresultattype(MEDLEM_I_FOLKETRYGDEN)}
+              />
+            </>
           )}
         </div>
       )}

@@ -14,12 +14,12 @@ import "./enkeltSak.css";
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = (props) => {
-  const { sakstemaToggleEnabled, landkoder } = props;
+  const { behandleAlleSakerToggleEnabled, landkoder } = props;
   const { opprettetDato, behandlingOversikter, sakstype, saksstatus, saksnummer, sakstema } = props.sak;
 
   const { land, behandlingstype, periode, behandlingsstatus, behandlingstema, svarFrist } = behandlingOversikter[0];
 
-  if (sakstemaToggleEnabled) {
+  if (behandleAlleSakerToggleEnabled) {
     return (
       <div className="enkeltSak">
         <Skjema.CustomRadioPanelElement
@@ -84,7 +84,7 @@ const EnkeltSak = (props) => {
 
 EnkeltSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
-  sakstemaToggleEnabled: PT.bool.isRequired,
+  behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 

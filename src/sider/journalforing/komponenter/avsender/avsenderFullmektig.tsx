@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect } from "react";
+import React, { useEffect } from "react";
 import { formValueSelector } from "redux-form";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
@@ -36,12 +36,11 @@ const AvsenderFullmektig = ({
     settFeltInnhold("representantID", avsenderID || null);
   }, [avsenderID]);
 
-  const IDFeltTastOppHandler = async (event: ChangeEvent<HTMLFormElement>) => {
-    const { value } = event.target;
-    if (Utils.organisasjon.erOrgnrGyldig(value)) {
-      hentOgVisRepresentant(value);
-    } else if (Utils.person.erGyldigFnrEllerDnr(value?.replace(" ", ""))) {
-      hentOgVisRepresentant(value.replace(" ", ""));
+  const IDFeltTastOppHandler = async (sokStreng: string) => {
+    if (Utils.organisasjon.erOrgnrGyldig(sokStreng)) {
+      hentOgVisRepresentant(sokStreng);
+    } else if (Utils.person.erGyldigFnrEllerDnr(sokStreng)) {
+      hentOgVisRepresentant(sokStreng);
       settFeltInnhold("representantRepresenterer", MKV.Koder.representerer.BRUKER);
     } else {
       settFeltInnhold("representantNavn", null);
@@ -57,10 +56,10 @@ const AvsenderFullmektig = ({
 
   return (
     <div className="avsender">
-      <Skjema.Input
+      <Skjema.FellesInputFnrDnrOrgnrSaksnr
         feltNavn="avsenderID"
         label="Fullmektigs org.nr. eller f.nr./d-nr."
-        onKeyUp={IDFeltTastOppHandler}
+        vedEndring={IDFeltTastOppHandler}
         className="avsender__input"
       />
       <div className="avsender__navn">

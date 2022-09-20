@@ -8,6 +8,7 @@ import { RouteComponentProps } from "react-router-dom";
 import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
+import { MatchParams } from "../../@types";
 
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { fagsakSelectors } from "../../ducks/fagsaker";
@@ -17,6 +18,7 @@ import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
+import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { VirksomhetMelding, TomFlytMelding } from "../../felleskomponenter/alertmeldinger";
@@ -52,11 +54,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-
-interface MatchParams {
-  saksnr: string;
-  sakstype: string;
-}
 
 interface Props extends RouteComponentProps<MatchParams> {}
 
@@ -102,7 +99,16 @@ const Behandling = ({
       <div id="main-container" className="main-container">
         <Nav.Container fluid className="tomFlyt_behandling">
           <Nav.Row>
-            <Nav.Column xs="7">{hovedpartErVirksomhet ? <VirksomhetMelding /> : <TomFlytMelding />}</Nav.Column>
+            <Nav.Column xs="7">
+              {hovedpartErVirksomhet ? (
+                <VirksomhetMelding />
+              ) : (
+                <>
+                  <TomFlytMelding />
+                  <SoknadMenypanelForm startOgVisOppfriskModal={() => null} visOppdaterRegisteropplysninger={false} />
+                </>
+              )}
+            </Nav.Column>
             <Nav.Column xs="5">
               <Oppsummering
                 oppsummering={oppsummering}

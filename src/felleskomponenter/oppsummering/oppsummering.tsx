@@ -48,7 +48,7 @@ const Oppsummering = (props: OppsummeringProps) => {
     behandlingsgrunnlagPeriodeTom,
     className,
   } = props;
-  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
   const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode);
@@ -172,7 +172,7 @@ const Oppsummering = (props: OppsummeringProps) => {
               <Nav.Panel className="saksinfo">
                 <Nav.Row>
                   <Nav.Column xs="8">
-                    {sakstemaToggle === "enabled" ? (
+                    {behandleAlleSakerToggle === "enabled" ? (
                       <Nav.Typo.Undertittel>
                         {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
                       </Nav.Typo.Undertittel>

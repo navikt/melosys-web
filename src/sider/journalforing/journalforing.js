@@ -34,14 +34,14 @@ class Journalforing extends Component {
     visFeilmeldingDialog: false,
     feilmeldinger: [],
     submitSpinner: false,
-    sakstemaToggleEnabled: false,
-    toggleHentet: false, // Kan fjernes når melosys.sakstema toggle fjernes
+    behandleAlleSakerToggleEnabled: false,
+    toggleHentet: false, // Kan fjernes når melosys.behandle_alle_saker toggle fjernes
   };
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
     await this.props.hentJournalOppgave(journalpostID);
-    const toggleEnabled = await erFeatureToggleEnabled("melosys.sakstema");
-    this.setState({ sakstemaToggleEnabled: toggleEnabled, toggleHentet: true });
+    const toggleEnabled = await erFeatureToggleEnabled("melosys.behandle_alle_saker");
+    this.setState({ behandleAlleSakerToggleEnabled: toggleEnabled, toggleHentet: true });
     this.props.hentLandkoder();
   }
 
@@ -392,7 +392,8 @@ class Journalforing extends Component {
       settFeltInnhold,
     } = this.props;
 
-    const { visFeilmeldingDialog, feilmeldinger, submitSpinner, sakstemaToggleEnabled, toggleHentet } = this.state;
+    const { visFeilmeldingDialog, feilmeldinger, submitSpinner, behandleAlleSakerToggleEnabled, toggleHentet } =
+      this.state;
 
     const { knyttTilEksisterendeSak, opprettFagsak } = this;
     const { journalpostID } = this.props.match.params;
@@ -442,7 +443,7 @@ class Journalforing extends Component {
                           avbrytJournalforing={this.avbrytJournalforing}
                           kanSubmittes={this.kanSubmittes()}
                           settFeltInnhold={settFeltInnhold}
-                          sakstemaToggleEnabled={sakstemaToggleEnabled}
+                          behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
                         />
                       )}
                     </div>

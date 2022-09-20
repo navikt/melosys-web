@@ -39,7 +39,7 @@ describe("MineOppgaver", () => {
       saksnummer: "4",
       sakstype: {
         kode: "TRYGDEAVTALE",
-        term: "Trygdeavtale",
+        term: "Avtaleland",
       },
       behandling: {
         behandlingID: 4,
