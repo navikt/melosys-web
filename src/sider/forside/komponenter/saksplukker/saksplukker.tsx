@@ -64,8 +64,8 @@ export const Saksplukker = ({
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") return;
 
-    Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
-      setMuligeSakstyper(muligeSakstyper);
+    Api.LovligeKombinasjoner.hentSakstyper().then((lovligeSakstyper) => {
+      setMuligeSakstyper(lovligeSakstyper);
     });
   }, [behandleAlleSakerToggle]);
 
@@ -73,8 +73,8 @@ export const Saksplukker = ({
     if (behandleAlleSakerToggle !== "enabled") return;
 
     if (sakstype) {
-      Api.LovligeKombinasjoner.hentSakstemaer(null, sakstype).then((muligeSakstemaer) => {
-        setMuligeSakstemaer(muligeSakstemaer);
+      Api.LovligeKombinasjoner.hentSakstemaer(null, sakstype).then((lovligeSakstemaer) => {
+        setMuligeSakstemaer(lovligeSakstemaer);
       });
     }
   }, [behandleAlleSakerToggle, sakstype]);
@@ -83,8 +83,8 @@ export const Saksplukker = ({
     if (behandleAlleSakerToggle !== "enabled") return;
 
     if (sakstema && sakstype) {
-      Api.LovligeKombinasjoner.hentBehandlingstemaer(null, sakstype, sakstema).then((muligeBehandlingstemaer) => {
-        setMuligeBehandlingstemaer(muligeBehandlingstemaer);
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(null, sakstype, sakstema).then((lovligeBehandlingstemaer) => {
+        setMuligeBehandlingstemaer(lovligeBehandlingstemaer);
       });
     }
   }, [behandleAlleSakerToggle, sakstype, sakstema]);
