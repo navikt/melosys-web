@@ -52,7 +52,7 @@ export const lagUrl = (
   return lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstemaKode);
 };
 
-export const skalViseTomFlyt = (sakstype: string, behandlingstema: string, behandlingstype: string) => {
+const skalViseTomFlyt = (sakstype: string, behandlingstema: string, behandlingstype: string) => {
   if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
     return true;
   }
@@ -73,6 +73,22 @@ export const skalViseTomFlyt = (sakstype: string, behandlingstema: string, behan
     MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP,
     MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET,
   ].includes(behandlingstema);
+};
+
+export const skalViseTomFlytEllerErSedBehandling = (
+  sakstype: string,
+  behandlingstema: string,
+  behandlingstype: string
+) => {
+  return (
+    skalViseTomFlyt(sakstype, behandlingstema, behandlingstype) ||
+    [
+      MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+      MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+      MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
+      MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
+    ].includes(behandlingstema)
+  );
 };
 
 export const nyFane = (url: string) => {
