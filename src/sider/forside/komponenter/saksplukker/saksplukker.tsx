@@ -55,9 +55,9 @@ export const Saksplukker = ({
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
 
-  const [sakstyper, setSakstyper] = useState([]);
-  const [sakstemaer, setSakstemaer] = useState([]);
-  const [behandlingstemaer, setBehandlingstemaer] = useState([]);
+  const [muligeSakstyper, setMuligeSakstyper] = useState([]);
+  const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
+  const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
 
   const { sakstype, sakstema } = formValues || {};
 
@@ -65,7 +65,7 @@ export const Saksplukker = ({
     if (behandleAlleSakerToggle !== "enabled") return;
 
     Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
-      setSakstyper(muligeSakstyper);
+      setMuligeSakstyper(muligeSakstyper);
     });
   }, [behandleAlleSakerToggle]);
 
@@ -74,7 +74,7 @@ export const Saksplukker = ({
 
     if (sakstype) {
       Api.LovligeKombinasjoner.hentSakstemaer(null, sakstype).then((muligeSakstemaer) => {
-        setSakstemaer(muligeSakstemaer);
+        setMuligeSakstemaer(muligeSakstemaer);
       });
     }
   }, [behandleAlleSakerToggle, sakstype]);
@@ -84,7 +84,7 @@ export const Saksplukker = ({
 
     if (sakstema && sakstype) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(null, sakstype, sakstema).then((muligeBehandlingstemaer) => {
-        setBehandlingstemaer(muligeBehandlingstemaer);
+        setMuligeBehandlingstemaer(muligeBehandlingstemaer);
       });
     }
   }, [behandleAlleSakerToggle, sakstype, sakstema]);
@@ -143,9 +143,6 @@ export const Saksplukker = ({
   const plukkbareBehandlingstemaerTrygdeavtale = [MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV];
 
   const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => {
-    if (behandleAlleSakerToggle === "enabled") {
-      return MKV.Kodekombinasjoner.gyldigeBehandlingstema(sakstype, sakstema).includes(behandlingtemaKTObject.kode);
-    }
     return sakstype === EU_EOS
       ? !ikkePlukkbareBehandlingstemaerEOS.includes(behandlingtemaKTObject.kode)
       : plukkbareBehandlingstemaerTrygdeavtale.includes(behandlingtemaKTObject.kode);
@@ -164,7 +161,7 @@ export const Saksplukker = ({
           <Nav.Column xs="12">
             <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
               {behandleAlleSakerToggle === "enabled" ? (
-                sakstyper.map(({ kode, term }: KTObject) => (
+                muligeSakstyper.map(({ kode, term }: KTObject) => (
                   <option key={kode} value={kode}>
                     {term}
                   </option>
@@ -184,7 +181,7 @@ export const Saksplukker = ({
             <Nav.Column xs="12">
               <Skjema.Select feltNavn="sakstema" bredde="fullbredde" label="Sakstema">
                 {(behandleAlleSakerToggle === "enabled"
-                  ? sakstemaer
+                  ? muligeSakstemaer
                   : MKV.KTObjects.sakstemaer.filter(sakstemaErPlukkbart)
                 ).map(({ kode, term }: KTObject) => (
                   <option key={kode} value={kode}>
@@ -197,7 +194,7 @@ export const Saksplukker = ({
           <Nav.Column xs="12">
             <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
               {(behandleAlleSakerToggle === "enabled"
-                ? behandlingstemaer
+                ? muligeBehandlingstemaer
                 : MKV.KTObjects.behandlinger.behandlingstema.filter(behandlingstemaErPlukkbart)
               )
                 .sort(compareTerm)
