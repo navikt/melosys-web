@@ -131,10 +131,6 @@ export const Saksplukker = ({
     change("behandlingstema", null);
   };
 
-  const sakstemaErPlukkbart = (sakstemaKTObject: KTObject) => {
-    return MKV.Kodekombinasjoner.gyldigeSakstema(sakstype).includes(sakstemaKTObject.kode);
-  };
-
   const ikkePlukkbareBehandlingstemaerEOS = [
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
@@ -180,10 +176,7 @@ export const Saksplukker = ({
           {behandleAlleSakerToggle === "enabled" && (
             <Nav.Column xs="12">
               <Skjema.Select feltNavn="sakstema" bredde="fullbredde" label="Sakstema">
-                {(behandleAlleSakerToggle === "enabled"
-                  ? muligeSakstemaer
-                  : MKV.KTObjects.sakstemaer.filter(sakstemaErPlukkbart)
-                ).map(({ kode, term }: KTObject) => (
+                {muligeSakstemaer.map(({ kode, term }: KTObject) => (
                   <option key={kode} value={kode}>
                     {term}
                   </option>
