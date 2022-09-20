@@ -9,7 +9,6 @@ import Handling from "./handling";
 
 const {
   BESLUTNING_LOVVALG_NORGE,
-  ARBEID_I_UTLANDET,
   TRYGDETID,
   YRKESAKTIV,
   UTSENDT_ARBEIDSTAKER,
@@ -45,18 +44,20 @@ describe("AvsluttSak", () => {
     initialProps.behandlingstype = FØRSTEGANG;
   };
 
-  it("viser alle valg dersom behandlingskategori FTRL_SAKSBEHANDLING og redigerbart", () => {
+  it("viser riktige valg for sakstype FTRL og behandlingstype FØRSTEGANG ", () => {
     setupProps(props);
     props.sakstype = FTRL;
-    props.behandlingstema = ARBEID_I_UTLANDET;
+    props.behandlingstema = YRKESAKTIV;
 
     const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
-    expect(handlinger).toHaveLength(3);
-    expect(handlinger.at(0).props().tekst).toBe("Avslå søknad pga. manglende opplysninger");
-    expect(handlinger.at(1).props().tekst).toBe("Søknaden/klagen er trukket");
-    expect(handlinger.at(2).props().tekst).toBe("Behandlingen er bortfalt");
+    expect(handlinger).toHaveLength(5);
+    expect(handlinger.at(0).props().tekst).toBe("Søknaden er innvilget");
+    expect(handlinger.at(1).props().tekst).toBe("Søknaden er avslått");
+    expect(handlinger.at(2).props().tekst).toBe("Avslå søknad pga. manglende opplysninger");
+    expect(handlinger.at(3).props().tekst).toBe("Søknaden/klagen er trukket");
+    expect(handlinger.at(4).props().tekst).toBe("Behandlingen er bortfalt");
   });
 
   it("viser bare avsluttSak dersom tema er trygdetid", () => {
@@ -78,8 +79,7 @@ describe("AvsluttSak", () => {
     const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
-    expect(handlinger).toHaveLength(7);
-    expect(handlinger.at(4).props().tekst).toBe("Ferdigbehandlet");
+    expect(handlinger.at(3).props().tekst).toBe("Ferdigbehandlet");
   });
 
   it("returerer null om EØS_VURDER_UTPEKING og ikke redigerbart", () => {
@@ -132,7 +132,7 @@ describe("AvsluttSak", () => {
   });
 
   describe("Søknaden er avslått", () => {
-    it(`viser 'Søknaden er avslått' dersom behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, () => {
+    it(`viser 'Søknaden er avslått' dersom sakstype er EØS behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, () => {
       setupProps(props);
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
@@ -140,7 +140,6 @@ describe("AvsluttSak", () => {
       const avsluttSak = shallow(<AvsluttSak {...props} />);
       const handlinger = avsluttSak.find(Handling);
 
-      expect(handlinger).toHaveLength(5);
       expect(handlinger.at(1).props().tekst).toBe("Søknaden er avslått");
     });
 
@@ -252,7 +251,7 @@ describe("AvsluttSak", () => {
       const avsluttSak = shallow(<AvsluttSak {...props} />);
       const handlinger = avsluttSak.find(Handling);
 
-      expect(handlinger).toHaveLength(6);
+      expect(handlinger).toHaveLength(4);
       expect(handlinger.at(0).props().tekst).toBe("Medhold på klage");
       expect(handlinger.at(1).props().tekst).toBe("Klageinnstilling er oversendt til klageinstansen");
       expect(handlinger.at(2).props().tekst).toBe("Klage er avvist");
@@ -313,10 +312,11 @@ describe("AvsluttSak", () => {
       const avsluttSak = shallow(<AvsluttSak {...props} />);
       const handlinger = avsluttSak.find(Handling);
 
-      expect(handlinger).toHaveLength(3);
+      expect(handlinger).toHaveLength(4);
       expect(handlinger.at(0).props().tekst).toBe("Perioden er godkjent");
       expect(handlinger.at(1).props().tekst).toBe("Perioden er delvis godkjent");
       expect(handlinger.at(2).props().tekst).toBe("Medlem i folketrygden");
+      expect(handlinger.at(3).props().tekst).toBe("Behandlingen er bortfalt");
     });
 
     it(`viser Unntak-handlinger dersom behandlingstema er ${REGISTRERING_UNNTAK} og sakstype er ${TRYGDEAVTALE}`, () => {
@@ -327,10 +327,11 @@ describe("AvsluttSak", () => {
       const avsluttSak = shallow(<AvsluttSak {...props} />);
       const handlinger = avsluttSak.find(Handling);
 
-      expect(handlinger).toHaveLength(3);
+      expect(handlinger).toHaveLength(4);
       expect(handlinger.at(0).props().tekst).toBe("Perioden er godkjent");
       expect(handlinger.at(1).props().tekst).toBe("Perioden er delvis godkjent");
       expect(handlinger.at(2).props().tekst).toBe("Medlem i folketrygden");
+      expect(handlinger.at(3).props().tekst).toBe("Behandlingen er bortfalt");
     });
   });
 });
