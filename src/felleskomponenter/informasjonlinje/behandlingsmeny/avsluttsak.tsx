@@ -177,7 +177,7 @@ const AvsluttSak = ({
   };
 
   const skalViseBehandlingenErBortfalt = () => {
-    if (behandleAlleSakerToggle !== "enabled" || !redigerbart) {
+    if (behandleAlleSakerToggle !== "enabled") {
       if (
         behandlingstemaErUnntakNorskTrygdØvrigEllerUtstasjonering &&
         behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT
@@ -196,7 +196,7 @@ const AvsluttSak = ({
           return false;
       }
     }
-    return true;
+    return redigerbart;
   };
 
   const skalViseFerdigbehandlet = () => {
