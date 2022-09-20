@@ -191,7 +191,7 @@ const AvsluttSak = ({
   const mapType = () => {
     switch (sakstype) {
       case FTRL:
-        return behandlingstype === UNNTAK_MEDLEMSKAP ? UNNTATT_MEDLEMSKAP : MEDLEM_I_FOLKETRYGDEN;
+        return behandlingstema === UNNTAK_MEDLEMSKAP ? UNNTATT_MEDLEMSKAP : MEDLEM_I_FOLKETRYGDEN;
       case EU_EOS:
       case TRYGDEAVTALE:
         return FASTSATT_LOVVALGSLAND;
