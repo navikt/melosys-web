@@ -167,11 +167,15 @@ export const OpprettSak = (props) => {
     }
   }, [behandleAlleSakerToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
 
+  const visArbeidFlereLandEllerUkjent =
+    valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
+
   const visMuligeBehandlingstema = behandleAlleSakerToggleEnabled
     ? journalforingGjelder === MKV.Koder.aktoersroller.BRUKER
     : true;
+
   return (
-    <div className="panelramme">
+    <div className="opprettSak">
       <Skjema.Select
         feltNavn="sakstype"
         bredde="fullbredde"
@@ -248,11 +252,15 @@ export const OpprettSak = (props) => {
             legend={
               <LabelMedHjelpetekst
                 label="I hvilke land skal arbeidet/næringen utføres i?"
-                hjelpetekst="“Flere EØS-land/Sveits. Ikke kjent hvilke” skal kun benyttes hvis land er ukjent"
+                hjelpetekst={
+                  visArbeidFlereLandEllerUkjent
+                    ? '"Flere EØS-land/Sveits. Ikke kjent hvilke” skal kun benyttes hvis land er ukjent'
+                    : undefined
+                }
               />
             }
           >
-            {valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
+            {visArbeidFlereLandEllerUkjent && (
               <Nav.Row className="land_radiobtn">
                 <Skjema.Radio
                   feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
