@@ -29,7 +29,7 @@ export const mapBehandlingstemaToBehandlingskategori = (behandlingstemaKode: str
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.PENSJONIST:
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK:
-    case MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKA:
+    case MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP:
     case MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET:
       return Koder.Behandlingskategori.GENERELL_BEHANDLING;
     default:
