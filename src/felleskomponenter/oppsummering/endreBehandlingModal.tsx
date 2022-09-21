@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import classNames from "classnames";
@@ -28,6 +29,8 @@ import { erBehandlingstemaMedBegrensetRettigheter } from "../../melosyskodeverk/
 import { behandlingstypeOperations, behandlingstypeSelectors } from "../../ducks/behandlingstype";
 import { behandlingstemaOperations, behandlingstemaSelectors } from "../../ducks/behandlingstema";
 import { FormDataVerdi } from "../skjema/formdatahjelper/nullstillsak";
+import { StandardMeldingOverst } from "../alertmeldinger";
+import { Spinner } from "../spinner";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -93,12 +96,12 @@ function EndreBehandlingModal({
   const [behandlingstype, setBehandlingstype] = useState(oppsummering.behandlingstype?.kode);
   const [behandlingsfrist, setBehandlingsfrist] = useState(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
   const [behandlingsstatus, setBehandlingsstatus] = useState(oppsummering.behandlingsstatus?.kode);
-
+  const [skalViseSpinner, setSkalViseSpinner] = useState(false);
   const [muligeSakstyper] = useState([]);
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
-
+  const [nyLink, setNyLink] = useState<string | undefined>(undefined);
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
 
   useEffect(() => {
@@ -154,6 +157,7 @@ function EndreBehandlingModal({
   }, [skalViseModal]);
 
   const endreBehandlingHandle = () => {
+    setSkalViseSpinner(true);
     const reqBehandling: Api.Behandlinger.behandling.EndreBehandlingReqDto = {
       behandlingstema,
       behandlingstype,
@@ -176,26 +180,35 @@ function EndreBehandlingModal({
         hentBehandling(behandlingID);
         hentFagsak(saksnummer);
         hentBehandlingsgrunnlag(behandlingID);
-        const nyLink =
+
+        const nyGenerertLink =
           behandleAlleSakerToggle === "enabled"
             ? Routing.lagUrl(saksnummer, behandlingID, sakstype, behandlingstema, behandlingstype)
             : Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema);
-        if (nyLink && nyLink !== location.pathname + location.search) tilAnnenSide(nyLink);
-        setTimeout(lukkModal, 2000);
-        nullstillFlyt();
+        if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
+          setNyLink(nyGenerertLink);
+        }
       })
       .catch(() => {
-        setGenerellFeil(
-          "Behandling ble ikke endret og oppdatert. Prøv igjen, eller se driftsmeldinger for mer informasjon"
-        );
-        setTimeout(lukkModal, 5000);
-      });
+        setGenerellFeil("Oppdateringen feilet!");
+      })
+      .finally(() => setSkalViseSpinner(false));
   };
 
   const nullstillFlyt = async () => {
-    await oppfriskSaksopplysninger(behandlingID);
-    await Api.Trygdeavtale.resetFlyt(behandlingID);
-    window.location.reload();
+    setSkalViseSpinner(true);
+    try {
+      await oppfriskSaksopplysninger(behandlingID);
+      await Api.Trygdeavtale.resetFlyt(behandlingID);
+    } finally {
+      setSkalViseSpinner(false);
+    }
+
+    if (nyLink && nyLink !== location.pathname + location.search) {
+      tilAnnenSide(nyLink);
+    } else {
+      window.location.reload();
+    }
   };
 
   const muligeVerdierPlussValgt = (valgtVerdi: KTObject, muligeVerdier: KTObject[] = []) => {
@@ -308,23 +321,38 @@ function EndreBehandlingModal({
 
   const renderInnhold = () => {
     if (generellFeil) {
-      return <Nav.AlertStripe type="feil">{generellFeil}</Nav.AlertStripe>;
+      return (
+        <StandardMeldingOverst type="feil" actionEtterSynlighet={lukkModal}>
+          {generellFeil}
+        </StandardMeldingOverst>
+      );
     }
     if (behandlingEndret) {
-      return <Nav.AlertStripe type="suksess">Behandlingen er oppdatert</Nav.AlertStripe>;
+      return (
+        <StandardMeldingOverst
+          type="suksess"
+          actionEtterSynlighet={() => {
+            lukkModal();
+            nullstillFlyt();
+          }}
+        >
+          Behandlingen er oppdatert
+        </StandardMeldingOverst>
+      );
     }
-    return renderEndreBehandling();
+    return skalViseSpinner ? null : renderEndreBehandling();
   };
 
   return (
     <Nav.Modal
-      className={classNames("modalEndreBehandling", { alert: viserAlert })}
+      className={classNames("modalEndreBehandling", { alert: viserAlert, skjulBakgrunn: skalViseSpinner })}
       contentLabel="Endre behandling"
-      isOpen={skalViseModal}
+      isOpen={skalViseModal || skalViseSpinner}
       onRequestClose={lukkModal}
-      closeButton={!viserAlert}
+      closeButton={!viserAlert && !skalViseSpinner}
       shouldCloseOnOverlayClick={viserAlert}
     >
+      {skalViseSpinner && <Spinner />}
       {renderInnhold()}
     </Nav.Modal>
   );
