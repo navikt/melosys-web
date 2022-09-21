@@ -1,6 +1,5 @@
 import React from "react";
 
-import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 
 interface FotknapperProps {
@@ -11,16 +10,12 @@ interface FotknapperProps {
 
 const Fotknapper = ({ avbrytJournalforing, kanSubmittes, spinner = false }: FotknapperProps) => (
   <div className="journalforing__fotknapper">
-    <Nav.Row>
-      <Nav.Column xs="6">
-        <Mui.Knapp type="hoved" htmlType="submit" disabled={!kanSubmittes} spinner={spinner} autoDisableVedSpinner>
-          JOURNALFØR
-        </Mui.Knapp>
-      </Nav.Column>
-      <Nav.Column xs="6">
-        <Mui.Knapp onClick={avbrytJournalforing}>Avbryt Journalføring</Mui.Knapp>
-      </Nav.Column>
-    </Nav.Row>
+    <Mui.Knapp type="hoved" htmlType="submit" disabled={!kanSubmittes} spinner={spinner} autoDisableVedSpinner>
+      Journalfør
+    </Mui.Knapp>
+    <Mui.Knapp type="flat" className="journalforing__fotknapper__avbryt" onClick={avbrytJournalforing}>
+      Avbryt
+    </Mui.Knapp>
   </div>
 );
 

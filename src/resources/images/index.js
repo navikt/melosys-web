@@ -1,5 +1,6 @@
 import { ReactComponent as AccountCircle } from "./line-version-account-circle.svg";
 import { ReactComponent as Add } from "./add.svg";
+import { ReactComponent as Applicant } from "./applicant.svg";
 import { ReactComponent as ArrowLeftBlue } from "./arrow-left-blue.svg";
 import { ReactComponent as ArrowLeftWhite } from "./arrow-left-white.svg";
 import { ReactComponent as AddOne } from "./line-version-add-1.svg";
@@ -28,6 +29,7 @@ import { ReactComponent as Forhandsvis } from "./forhandsvis.svg";
 import { ReactComponent as Ferdig } from "./ikon-steg-ferdig.svg";
 import { ReactComponent as Feil } from "./ikon-steg-feil.svg";
 import { ReactComponent as Filenew } from "./line-version-file-new-1.svg";
+import { ReactComponent as Files } from "./files.svg";
 import { ReactComponent as FindAccount } from "./account-find.svg";
 import { ReactComponent as Fly } from "./fly.svg";
 import { ReactComponent as Varsel } from "./ikon-steg-varsel.svg";
@@ -35,6 +37,7 @@ import { ReactComponent as Globe } from "./line-version-globe-1.svg";
 import { ReactComponent as GreenCheckmark } from "./green-checkmark.svg";
 import { ReactComponent as Hamburger } from "./hamburger-filled.svg";
 import { ReactComponent as Helikopter } from "./helikopter.svg";
+import { ReactComponent as Hourglass } from "./hourglass.svg";
 import { ReactComponent as InformationCircle } from "./infomationcircle.svg";
 import { ReactComponent as IkonSak } from "./ikon-sak.svg";
 import { ReactComponent as Inntekt } from "./ikon-inntekt.svg";
@@ -43,6 +46,7 @@ import { ReactComponent as KalkulatorDisabled } from "./kalkulator-disabled.svg"
 import { ReactComponent as Kors } from "./kors.svg";
 import { ReactComponent as Kvinne } from "./ikon-kvinne.svg";
 import { ReactComponent as Kontor } from "./kontor.svg";
+import { ReactComponent as Links } from "./links.svg";
 import { ReactComponent as Location } from "./location.svg";
 import { ReactComponent as LockClosed } from "./lock-closed.svg";
 import { ReactComponent as LockClosedFilled } from "./lock-closed-filled.svg";
@@ -74,6 +78,7 @@ import { Kjoenn } from "./helpercomponents";
 export {
   AccountCircle,
   Add,
+  Applicant,
   ArrowLeftBlue,
   ArrowLeftWhite,
   AddOne,
@@ -102,6 +107,7 @@ export {
   Feil,
   Ferdig,
   Filenew,
+  Files,
   FindAccount,
   Fly,
   Globe,
@@ -109,6 +115,7 @@ export {
   Hamburger,
   Helikopter,
   HentOpplysninger,
+  Hourglass,
   IkonSak,
   InformationCircle,
   Inntekt,
@@ -119,6 +126,7 @@ export {
   Kvinne,
   Kontor,
   Kopier,
+  Links,
   Location,
   LockClosed,
   LockClosedFilled,

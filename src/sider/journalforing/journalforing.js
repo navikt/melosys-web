@@ -268,6 +268,7 @@ class Journalforing extends Component {
 
     if (!Utils._isEmpty(this.props.errors)) {
       settFeilFelt("journalforingPeriodeFraOgMed", "journalforingPeriodeTilOgMed", "journalforingSoknadsland");
+
       return false;
     }
 
@@ -407,11 +408,6 @@ class Journalforing extends Component {
       <>
         <div className="journalforing">
           <Nav.Container fluid>
-            <Nav.Row>
-              <Nav.Column xs="4">
-                <Nav.Typo.Sidetittel className="journalforing__sidetittel">Journalføring</Nav.Typo.Sidetittel>
-              </Nav.Column>
-            </Nav.Row>
             <Nav.Row>
               <Nav.Column xs="4">
                 <Sticky>

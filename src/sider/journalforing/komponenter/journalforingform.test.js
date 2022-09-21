@@ -4,6 +4,7 @@ import MKV from "../../../melosyskodeverk";
 
 import { JournalforingForm } from "./journalforingform";
 import SendForvaltningsMelding from "./sendForvaltningsMelding";
+import Komponent from "./komponent";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 const {
@@ -46,6 +47,9 @@ describe("JournalforingForm", () => {
       kanSubmittes: true,
       handleSubmit: jest.fn(),
       submitJournalforing: jest.fn(),
+      submitSpinner: false,
+      behandleAlleSakerToggleEnabled: true,
+      landkoder: [],
     };
   });
 
@@ -63,9 +67,10 @@ describe("JournalforingForm", () => {
   ]).it("sending av forvaltningsmelding vises for behandlingstema %p", (behandlingstema) => {
     props.formValues.opprettnysak_behandlingstema = behandlingstema;
     const journalforingform = shallow(<JournalforingForm {...props} />);
-    const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
+    const komponenter = journalforingform.find(Komponent);
+    const sendForvaltningsMelding = komponenter.get(1).props.innhold;
 
-    expect(sendForvaltningsMelding).toHaveLength(1);
+    expect(sendForvaltningsMelding.type).toBe(SendForvaltningsMelding);
   });
 
   test("sending av forvaltningsmelding vises ikke når man journalfører på virksomhet", () => {

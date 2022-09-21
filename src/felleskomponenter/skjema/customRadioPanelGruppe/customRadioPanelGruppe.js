@@ -74,9 +74,10 @@ class CustomRadioPanel extends Component {
     return (
       <Fragment>
         <label className={cls} htmlFor={`${feltNavn}-${value}`}>
-          <input
+          <Nav.Radio
             {...inputProps}
             className="radioPanel__Input"
+            label=""
             type="radio"
             id={`${feltNavn}-${value}`}
             name={feltNavn}

@@ -1,6 +1,7 @@
 import React from "react";
 import PT from "prop-types";
 import { Field, FieldArray } from "redux-form";
+import classNames from "classnames";
 
 import * as MPT from "../../../proptypes";
 
@@ -17,11 +18,11 @@ import "./listevelger.css";
  * kodeverk-baserte objekter må reduces.
  */
 const Listevelger = ({ feltNavn, className, gruppe, ...rest }) => (
-  <div className="listevelger">
+  <div className={classNames("listevelger", className)}>
     {gruppe ? (
       <FieldArray name={feltNavn} multiListe={gruppe} component={ListevelgerFlervalg} {...rest} />
     ) : (
-      <Field name={feltNavn} className={className} component={ListevelgerEnkelt} {...rest} />
+      <Field name={feltNavn} component={ListevelgerEnkelt} {...rest} />
     )}
   </div>
 );
