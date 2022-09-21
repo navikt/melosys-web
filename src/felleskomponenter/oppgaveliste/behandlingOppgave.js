@@ -114,8 +114,9 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
               <Nav.Row>{reduserNotatLengde(nyesteNotat)}</Nav.Row>
               <Nav.Row>
                 <b>Gosys:</b>
+                <br />
+                {reduserNotatLengde(beskrivelse)}
               </Nav.Row>
-              <Nav.Row>{reduserNotatLengde(beskrivelse)}</Nav.Row>
             </Nav.Column>
           </Nav.Row>
         </div>

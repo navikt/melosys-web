@@ -37,22 +37,20 @@ class SokSkjema extends Component {
 
   render() {
     return (
-      <Nav.Panel>
-        <Nav.Typo.Systemtittel>Søk etter sak</Nav.Typo.Systemtittel>
-        <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
-          <EnkelFellesInputFnrDnrOrgnrSaksnr
-            id="id-sokeskjema"
-            label=""
-            className="sokeskjema__input"
-            bredde="XL"
-            vedEndring={this.vedEndretSokFelt}
-            ref={this.state.sokStreng}
-            placeholder="F.nr./d-nr./saksnr."
-          />
+      <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
+        <Nav.Typo.Normaltekst>Søk sak: </Nav.Typo.Normaltekst>
+        <EnkelFellesInputFnrDnrOrgnrSaksnr
+          id="id-sokeskjema"
+          label=""
+          className="sokeskjema__input"
+          bredde="XL"
+          vedEndring={this.vedEndretSokFelt}
+          ref={this.state.sokStreng}
+          placeholder="F.nr./d-nr./saksnr."
+        />
 
-          <Nav.Knapp className="sokeskjema__knapp">Søk</Nav.Knapp>
-        </form>
-      </Nav.Panel>
+        <Nav.Knapp className="sokeskjema__knapp">Søk</Nav.Knapp>
+      </form>
     );
   }
 }
