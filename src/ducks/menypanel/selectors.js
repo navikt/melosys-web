@@ -16,6 +16,6 @@ export const ErMenypanelSynlig = createSelector(
   behandlingerSelectors.BehandlingstypeKodeSelector,
   (menypanel, sakstype, behandlingstema, behandlingstype) =>
     sakstype === MKV.Koder.sakstyper.EU_EOS ||
-    (menypanel && menypanel.synlig) ||
+    menypanel?.synlig ||
     skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype)
 );
