@@ -1,6 +1,24 @@
 .opprettnysak {
   width: 100%;
+  padding-top: 8px;
 
+  .seksjon {
+    margin-bottom: 4px;
+    border-radius: 4px;
+    background-color: white;
+    padding: 12px;
+
+    .marginMellomCustomRadioPaneler {
+      margin-top: 0.5em;
+      .fieldset__legend {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .alertstripe {
+    margin-top: 0 !important;
+  }
   .undertittel {
     margin-bottom: 0.7em;
   }
@@ -20,11 +38,18 @@
 
   .innrykk {
     margin-left: 2em;
-  }
 
-  .skalTilordnes {
-    margin-top: 3em;
-    margin-bottom: 2em;
+    .fagsakVelger {
+      .panelramme {
+        background: transparent;
+        padding: 0;
+        border: none;
+      }
+
+      .ingenSaker {
+        margin: 0;
+      }
+    }
   }
 
   .formError {
@@ -36,13 +61,15 @@
   }
 
   .hovedpart {
-    margin-bottom: 2em;
     .inputPanelGruppe__inner {
       display: flex;
 
       .radioPanel {
         flex: 1;
+        border-radius: 0;
         margin: auto 0.2rem;
+        box-sizing: border-box;
+        border: 1px solid #979797;
       }
       .inputPanel:not(:last-child) {
         margin-bottom: 0;

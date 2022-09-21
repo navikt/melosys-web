@@ -48,6 +48,38 @@ export function opprett(body: Api.Fagsaker.fagsak.OpprettReqDto) {
   );
 }
 
+export function lagNySak(body: Api.Fagsaker.fagsak.OpprettReqDto) {
+  return doThenDispatch(
+    () => Api.Fagsaker.fagsak.lagNySak(body),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    {
+      success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
+        dispatch(navigeringOperations.tilForsiden());
+      },
+    }
+  );
+}
+
+export function lagNyBehandlingForSak(saksnummer: string, body: Api.Fagsaker.fagsak.OpprettReqDto) {
+  return doThenDispatch(
+    () => Api.Fagsaker.fagsak.lagNyBehandlingForSak(saksnummer, body),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    {
+      success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
+        dispatch(navigeringOperations.tilForsiden());
+      },
+    }
+  );
+}
+
 export function hentMuligeSakstemaer(saksnummer: string) {
   return doThenDispatch(() => Api.Fagsaker.fagsak.hentMuligeSakstemaer(saksnummer), {
     OK: Types.HENT_MULIGE_SAKSTEMA,

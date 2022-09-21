@@ -62,21 +62,51 @@ export const OpprettSakTittel = () => (
 );
 
 export const OpprettSak = (props) => {
-  const { journalforingSkjemaVerdier, behandleAlleSakerToggleEnabled, settFeltInnhold } = props;
+  const { journalforingSkjemaVerdier, opprettNySakSkjemaVerdier, behandleAlleSakerToggleEnabled, settFeltInnhold } =
+    props;
   const {
-    opprettnysak_behandlingstema: valgtBehandlingstema,
-    opprettnysak_behandlingstype: valgtBehandlingstype,
-    sakstype: valgtSakstype,
-    sakstema: valgtSakstema,
-    journalforingSoknadsland: valgteLand,
-    journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand,
-    journalforingGjelder,
+    opprettnysak_behandlingstema: valgtBehandlingstema_JOURNALFØRING,
+    opprettnysak_behandlingstype: valgtBehandlingstype_JOURNALFØRING,
+    sakstype: valgtSakstype_JOURNALFØRING,
+    sakstema: valgtSakstema_JOURNALFØRING,
+    journalforingSoknadsland: valgteLand_JOURNALFØRING,
+    journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand_JOURNALFØRING,
+    journalforingGjelder: journalforingGjelder_JOURNALFØRING,
   } = journalforingSkjemaVerdier;
+
+  const {
+    opprettnysak_behandlingstema: valgtBehandlingstema_OPPRETT_NY,
+    opprettnysak_behandlingstype: valgtBehandlingstype_OPPRETT_NY,
+    sakstype: valgtSakstype_OPPRETT_NY,
+    sakstema: valgtSakstema_OPPRETT_NY,
+    journalforingSoknadsland: journalforingSoknadsland_OPPRETT_NY,
+    journalforingSoknadslandUkjenteEllerAlleEosLand: journalforingSoknadslandUkjenteEllerAlleEosLand_OPPRETT_NY,
+    hovedpart: hovedpart_OPPRETT_NY,
+  } = opprettNySakSkjemaVerdier;
+
+  const {
+    valgtSakstype,
+    valgtSakstema,
+    valgtBehandlingstema,
+    valgtBehandlingstype,
+    valgteLand,
+    ukjentEllerAlleEosLand,
+    journalforingGjelder,
+  } = {
+    valgtSakstype: valgtSakstype_JOURNALFØRING ?? valgtSakstype_OPPRETT_NY,
+    valgtSakstema: valgtSakstema_JOURNALFØRING ?? valgtSakstema_OPPRETT_NY,
+    valgtBehandlingstema: valgtBehandlingstema_JOURNALFØRING ?? valgtBehandlingstema_OPPRETT_NY,
+    valgtBehandlingstype: valgtBehandlingstype_JOURNALFØRING ?? valgtBehandlingstype_OPPRETT_NY,
+    valgteLand: valgteLand_JOURNALFØRING ?? journalforingSoknadsland_OPPRETT_NY,
+    ukjentEllerAlleEosLand:
+      ukjentEllerAlleEosLand_JOURNALFØRING ?? journalforingSoknadslandUkjenteEllerAlleEosLand_OPPRETT_NY,
+    journalforingGjelder: journalforingGjelder_JOURNALFØRING ?? hovedpart_OPPRETT_NY,
+  };
+
   const [sakstyper, setSakstyper] = useState([]);
   const [sakstemaer, setSakstemaer] = useState([]);
   const [behandlingstemaer, setBehandlingstemaer] = useState([]);
   const [behandlingstyper, setBehandlingstyper] = useState([]);
-
   const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
   const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -260,7 +290,7 @@ export const OpprettSak = (props) => {
                 <Skjema.Radio
                   feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
                   label="Flere EØS-land/Sveits. Ikke kjent hvilke"
-                  disabled={valgteLand.length > 0}
+                  disabled={valgteLand?.length > 0}
                   value
                 />
                 <Skjema.Radio
@@ -289,6 +319,7 @@ export const OpprettSak = (props) => {
 };
 OpprettSak.propTypes = {
   journalforingSkjemaVerdier: PT.object,
+  opprettNySakSkjemaVerdier: PT.object,
   errors: PT.object,
   settFeltInnhold: PT.func.isRequired,
   behandleAlleSakerToggleEnabled: PT.bool.isRequired,
@@ -296,10 +327,12 @@ OpprettSak.propTypes = {
 
 OpprettSak.defaultProps = {
   journalforingSkjemaVerdier: {},
+  opprettNySakSkjemaVerdier: {},
   errors: {},
 };
 const mapStateToProps = (state) => ({
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
+  opprettNySakSkjemaVerdier: formSelectors.OpprettNySakFormSelector(state).values,
   errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
 });
 

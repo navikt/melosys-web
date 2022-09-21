@@ -44,6 +44,7 @@ import { ReactComponent as KalkulatorDisabled } from "./kalkulator-disabled.svg"
 import { ReactComponent as Kors } from "./kors.svg";
 import { ReactComponent as Kvinne } from "./ikon-kvinne.svg";
 import { ReactComponent as Kontor } from "./kontor.svg";
+import { ReactComponent as Link } from "./link.svg";
 import { ReactComponent as Location } from "./location.svg";
 import { ReactComponent as LockClosed } from "./lock-closed.svg";
 import { ReactComponent as LockClosedFilled } from "./lock-closed-filled.svg";
@@ -122,6 +123,7 @@ export {
   Kvinne,
   Kontor,
   Kopier,
+  Link,
   Location,
   LockClosed,
   LockClosedFilled,

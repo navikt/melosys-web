@@ -10,9 +10,12 @@ import * as Ikoner from "../../../resources/images";
 
 import "./customRadioPanelGruppe.css";
 
-export const CustomRadioPanelElement = ({ tittel, data }) => (
+export const CustomRadioPanelElement = ({ tittel, hoyreSideTittel, data }) => (
   <div className="customRadioPanelElement">
-    <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>
+    <div className="customRadioPanelTittel">
+      <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>
+      {hoyreSideTittel && <>{hoyreSideTittel}</>}
+    </div>
     <dl>
       {data.map(({ term, description }) => {
         if (!description) return null;
@@ -30,6 +33,7 @@ export const CustomRadioPanelElement = ({ tittel, data }) => (
 
 CustomRadioPanelElement.propTypes = {
   tittel: PT.node,
+  hoyreSideTittel: PT.node,
   data: PT.arrayOf(
     PT.shape({
       term: PT.string,
@@ -40,6 +44,7 @@ CustomRadioPanelElement.propTypes = {
 
 CustomRadioPanelElement.defaultProps = {
   tittel: undefined,
+  hoyreSideTittel: undefined,
 };
 
 /**
@@ -188,7 +193,7 @@ CustomRadioPanelGruppe.defaultProps = {
 };
 
 const CustomRadioPanelGruppeReduxForm = ({ feltNavn, ...rest }) => (
-  <Field name={feltNavn} component={CustomRadioPanelGruppe} props={{ feltNavn, ...rest }} />
+  <Field name={feltNavn} component={CustomRadioPanelGruppe} props={{ feltNavn, ...rest }} onChange={rest?.onChange} />
 );
 CustomRadioPanelGruppeReduxForm.propTypes = { feltNavn: PT.string.isRequired };
 

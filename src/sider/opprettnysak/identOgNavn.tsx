@@ -15,8 +15,8 @@ interface IdentOgNavnProps {
 const IdentOgNavn = ({ tittel, feltNavn, label, navn }: IdentOgNavnProps) => (
   <>
     <Mui.Undertittel tekst={tittel} ikon={Ikoner.AccountCircle} className="undertittel" understrek />
-    <div className="innrykk marginBottom">
-      <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn={feltNavn} label={label} />
+    <div className="innrykk">
+      <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn={feltNavn} label={label} bredde="L" />
       {!Utils._isEmpty(navn) && (
         <span>
           <Nav.Typo.Element className="navnTittel">Navn:</Nav.Typo.Element>

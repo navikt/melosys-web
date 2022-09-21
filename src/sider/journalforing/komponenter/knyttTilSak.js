@@ -46,6 +46,7 @@ export const KnyttTilSak = (props) => {
     behandlingstema,
     behandlingstype,
     behandleAlleSakerToggleEnabled,
+    erOpprettNySak,
     changeField,
     journalforingGjelder,
   } = props;
@@ -53,13 +54,16 @@ export const KnyttTilSak = (props) => {
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState();
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
   const sisteBehandling = behandlingOversikter[0];
+
   useEffect(() => {
+    changeField("opprettBehandling", erOpprettNySak);
     return () => {
       changeField("opprettBehandling", false);
       changeField("behandlingstema", "");
       changeField("behandlingstype", "");
     };
-  }, []);
+  }, [erOpprettNySak]);
+
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
 
@@ -121,42 +125,61 @@ export const KnyttTilSak = (props) => {
   if (visKnyttTilEksisterende) {
     return (
       <div className="knyttTilSak__panelramme">
-        <Mui.Elementskrift
-          tekst="Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet"
-          ikon={Ikoner.InformationCircle}
-          className="elementTittel oversteUndertittel"
-          style={{ "border-bottom": "none" }}
-        />
-        <Skjema.RadioGruppe
-          feltNavn="opprettBehandling"
-          label={behandleAlleSakerToggleEnabled ? "" : "Knytt til sak"}
-          className={classNames("panelElement", { "nyBehandling-utenBehandling": behandleAlleSakerToggleEnabled })}
-        >
-          {visOpprettNyBehandling && <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />}
-          {visUtenOpprettNyBehandling && (
-            <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
-          )}
-        </Skjema.RadioGruppe>
+        {!erOpprettNySak && (
+          <>
+            <Mui.Elementskrift
+              tekst="Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet"
+              ikon={Ikoner.InformationCircle}
+              className="elementTittel oversteUndertittel"
+              style={{ "border-bottom": "none" }}
+            />
+            <Skjema.RadioGruppe
+              feltNavn="opprettBehandling"
+              label={behandleAlleSakerToggleEnabled ? "" : "Knytt til sak"}
+              className={classNames("panelElement", { "nyBehandling-utenBehandling": behandleAlleSakerToggleEnabled })}
+            >
+              {visOpprettNyBehandling && (
+                <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />
+              )}
+              {visUtenOpprettNyBehandling && (
+                <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
+              )}
+            </Skjema.RadioGruppe>
+          </>
+        )}
         {opprettBehandling && (
           <>
             {behandleAlleSakerToggleEnabled ? (
               <div className="panelElement">
                 <Nav.Typo.Undertittel className="temaTypeOverskrift">
-                  Velg tema og type for ny behandling
+                  {erOpprettNySak
+                    ? "Tidligere behandling er avsluttet. Velg behandlingstema og -type for den nye behandlingen"
+                    : "Velg tema og type for ny behandling"}
                 </Nav.Typo.Undertittel>
-                <Skjema.Select
-                  feltNavn="behandlingstema"
-                  bredde="fullbredde"
-                  label="Behandlingstema"
-                  emptyFieldDisabled={behandlingstema?.kode}
+                {journalforingGjelder === MKV.Koder.aktoersroller.BRUKER && (
+                  <Skjema.Select
+                    feltNavn="opprettnysak_behandlingstema"
+                    bredde="fullbredde"
+                    label="Behandlingstema"
+                    emptyFieldDisabled={behandlingstema?.kode}
+                  >
+                    {muligeBehandlingstemaer?.map((elem) => (
+                      <option key={elem.kode} value={elem.kode} label={elem.term} />
+                    ))}
+                  </Skjema.Select>
+                )}
+                <Skjema.RadioGruppe
+                  feltNavn="opprettnysak_behandlingstype"
+                  label="Behandlingstype"
+                  className="behandlingstype"
                 >
-                  {muligeBehandlingstemaer?.map((elem) => (
-                    <option key={elem.kode} value={elem.kode} label={elem.term} />
-                  ))}
-                </Skjema.Select>
-                <Skjema.RadioGruppe feltNavn="behandlingstype" label="Behandlingstype" className="behandlingstype">
                   {muligeBehandlingstyper?.map((elem) => (
-                    <Skjema.Radio feltNavn="behandlingstype" key={elem.kode} value={elem.kode} label={elem.term} />
+                    <Skjema.Radio
+                      feltNavn="opprettnysak_behandlingstype"
+                      key={elem.kode}
+                      value={elem.kode}
+                      label={elem.term}
+                    />
                   ))}
                 </Skjema.RadioGruppe>
               </div>
@@ -183,8 +206,20 @@ export const KnyttTilSak = (props) => {
 
   return (
     <div className="knyttTilSak__behandlingspanel">
-      {visUtenVidereBehandling && (
-        <Skjema.Checkbox className="knyttTilSak" feltNavn="ingenVurdering" label="Journalfør uten videre behandling" />
+      {erOpprettNySak ? (
+        <div className="innrykk">
+          <Nav.AlertStripeInfo>
+            Du kan ikke opprette en ny behandling hvis forrige behandling ikke er avsluttet
+          </Nav.AlertStripeInfo>
+        </div>
+      ) : (
+        visUtenVidereBehandling && (
+          <Skjema.Checkbox
+            className="knyttTilSak"
+            feltNavn="ingenVurdering"
+            label="Journalfør uten videre behandling"
+          />
+        )
       )}
     </div>
   );
@@ -196,11 +231,13 @@ KnyttTilSak.propTypes = {
   behandlingstype: PT.string,
   journalforingGjelder: PT.string.isRequired,
   behandleAlleSakerToggleEnabled: PT.bool.isRequired,
+  erOpprettNySak: PT.bool,
   changeField: PT.func.isRequired,
 };
 KnyttTilSak.defaultProps = {
   behandlingstema: "",
   behandlingstype: "",
+  erOpprettNySak: false,
 };
 
 const selector = formValueSelector(KV.Form.JOURNALFORING);

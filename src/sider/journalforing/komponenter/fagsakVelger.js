@@ -21,10 +21,24 @@ const EKSISTRENDE = "Eksisterende sak";
 const OPPRETT = "Opprett ny sak";
 
 const FagsakVelger = (props) => {
-  const { fagsakListe, settJournalforingHensikt, behandleAlleSakerToggleEnabled, landkoder } = props;
+  const {
+    fagsakListe,
+    settJournalforingHensikt,
+    behandleAlleSakerToggleEnabled,
+    landkoder,
+    erOpprettNySak,
+    nullstillFormVerdier,
+  } = props;
   const [valgtVisning, setValgtVisning] = useState(EKSISTRENDE);
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
+
+  useEffect(() => {
+    dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", valgtVisning === EKSISTRENDE));
+    if (nullstillFormVerdier) {
+      nullstillFormVerdier();
+    }
+  }, [valgtVisning]);
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
@@ -49,7 +63,13 @@ const FagsakVelger = (props) => {
         innhold: (
           <EnkeltSak sak={sak} behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled} landkoder={landkoder} />
         ),
-        footer: <KnyttTilSak sak={sak} behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled} />,
+        footer: (
+          <KnyttTilSak
+            sak={sak}
+            behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
+            erOpprettNySak={erOpprettNySak}
+          />
+        ),
       },
     ],
     []
@@ -62,7 +82,6 @@ const FagsakVelger = (props) => {
       footer: <OpprettSak behandleAlleSakerToggleEnabled={false} />,
     });
   }
-
   if (behandleAlleSakerToggleEnabled) {
     return (
       <>
@@ -97,6 +116,7 @@ const FagsakVelger = (props) => {
                 radios={radioValg}
                 notify={notifier}
                 begrensVisteRadios
+                onChange={() => nullstillFormVerdier()}
                 className="marginMellomCustomRadioPaneler"
               />
             )}
@@ -120,6 +140,13 @@ FagsakVelger.propTypes = {
   settJournalforingHensikt: PT.func.isRequired,
   behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  erOpprettNySak: PT.bool,
+  nullstillFormVerdier: PT.func,
+};
+
+FagsakVelger.defaultProps = {
+  erOpprettNySak: false,
+  nullstillFormVerdier: undefined,
 };
 
 export default FagsakVelger;
