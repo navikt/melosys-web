@@ -133,6 +133,7 @@ const CustomRadioPanelGruppe = (props) => {
 
   const [visAlle, setVisAlle] = useState(!begrensVisteRadios);
   const radiosSomVises = visAlle ? radios : radios.slice(0, 4);
+  const alleRadiosVisesPåEnSide = radios?.length <= 4;
 
   return (
     <Nav.SkjemaGruppe className={classNames("customRadioPanelGruppe", className)} feil={feil}>
@@ -149,7 +150,7 @@ const CustomRadioPanelGruppe = (props) => {
           />
         ))}
       </Nav.Fieldset>
-      {begrensVisteRadios && (
+      {begrensVisteRadios && !alleRadiosVisesPåEnSide && (
         <div className="visMerMindre">
           <button type="button" onClick={() => setVisAlle(!visAlle)}>
             {visAlle ? (
