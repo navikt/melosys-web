@@ -19,8 +19,12 @@ const {
   ARBEID_TJENESTEPERSON_ELLER_FLY,
   ANMODNING_OM_UNNTAK_HOVEDREGEL,
   REGISTRERING_UNNTAK,
+  BESLUTNING_LOVVALG_NORGE,
+  UTSENDT_ARBEIDSTAKER,
+  UTSENDT_SELVSTENDIG,
+  ARBEID_FLERE_LAND,
 } = MKV.Koder.behandlinger.behandlingstema;
-const { NY_VURDERING, ENDRET_PERIODE, FØRSTEGANG, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
+const { NY_VURDERING, ENDRET_PERIODE, FØRSTEGANG, KLAGE, HENVENDELSE } = MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
 const {
@@ -129,16 +133,16 @@ const AvsluttSak = ({
   };
 
   const skalViseFerdigbehandlet = () => {
-    switch (behandlingskategori) {
-      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
-      case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
-      case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
-      case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
-      case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
-        return redigerbart;
-      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
+    switch (behandlingstema) {
+      case BESLUTNING_LOVVALG_NORGE:
+      case UTSENDT_ARBEIDSTAKER:
+      case UTSENDT_SELVSTENDIG:
+      case ARBEID_TJENESTEPERSON_ELLER_FLY:
+      case ARBEID_FLERE_LAND:
+      case ARBEID_ETT_LAND_ØVRIG:
+        return redigerbart && (behandlingstypeErNyVurdering || behandlingstype === HENVENDELSE);
       default:
-        return false;
+        return redigerbart;
     }
   };
 

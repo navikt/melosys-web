@@ -73,3 +73,6 @@ export const endreFagsak = (saksnummer: string, body: EndreFagsakDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/endre`, body);
 
 export const revurder = (saksnummer: string) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/revurder`, {});
+
+export const ferdigbehandleSak = (saksnummer: string, behandlingID: number) =>
+  putAsText(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/ferdigbehandle/${behandlingID}`);
