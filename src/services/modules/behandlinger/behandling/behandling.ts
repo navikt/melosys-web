@@ -9,5 +9,5 @@ export const hentBehandling = (behandlingID: number): Promise<BehandlingResDto> 
 export const endreBehandling = (behandlingID: number, body: EndreBehandlingReqDto) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/endre`, body);
 
-export const ferdigbehandleNyVurdering = (behandlingID: number) =>
+export const ferdigbehandleSak = (behandlingID: number) =>
   putAsText(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/sett-til-ferdigbehandlet`);

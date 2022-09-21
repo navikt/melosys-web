@@ -41,7 +41,7 @@ type avsluttSakProps = {
   behandlingID: string;
   henleggSak: () => void;
   avsluttSakSomBortfalt: () => void;
-  ferdigbehandleNyVurdering: () => void;
+  ferdigbehandleSak: () => void;
   sakstema: string;
   sakstype: string;
   behandlingstema: string;
@@ -61,7 +61,7 @@ const AvsluttSak = ({
   sakstype,
   behandlingstema,
   behandlingstype,
-  ferdigbehandleNyVurdering,
+  ferdigbehandleSak,
   redigerbart,
   behandlingsstatus,
 }: avsluttSakProps) => {
@@ -135,7 +135,7 @@ const AvsluttSak = ({
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
-        return redigerbart && behandlingstypeErNyVurdering;
+        return redigerbart;
       case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
       default:
         return false;
@@ -263,7 +263,7 @@ const AvsluttSak = ({
         </div>
       )}
 
-      {skalViseFerdigbehandlet() && <Handling tekst="Ferdigbehandlet" onClick={ferdigbehandleNyVurdering} />}
+      {skalViseFerdigbehandlet() && <Handling tekst="Ferdigbehandlet" onClick={ferdigbehandleSak} />}
       {skalViseHenleggSak() && <Handling tekst="Søknaden/klagen er trukket" onClick={henleggSak} />}
       {skalViseAvsluttSak() && <Handling tekst="Behandlingen er bortfalt" onClick={avsluttSakSomBortfalt} />}
     </Nav.Ekspanderbartpanel>

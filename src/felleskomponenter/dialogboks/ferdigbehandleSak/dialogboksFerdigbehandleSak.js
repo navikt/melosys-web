@@ -8,16 +8,11 @@ import Knapperad from "../../knapperad";
 
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
-import "./dialogboksFerdigbehandleNyVurdering.css";
+import "./dialogboksFerdigbehandleSak.css";
 
-export const DialogboksFerdigbehandleNyVurdering = ({
-  ferdigbehandleNyVurdering,
-  avbryt,
-  redigerbart,
-  ariaHideApp,
-}) => (
+export const DialogboksFerdigbehandleSak = ({ ferdigbehandleSak, avbryt, redigerbart, ariaHideApp }) => (
   <Nav.Modal
-    className="dialogboksFerdigbehandleNyVurdering"
+    className="dialogboksFerdigbehandleSak"
     isOpen
     contentLabel="Ferdigbehandlet"
     onRequestClose={avbryt}
@@ -30,7 +25,7 @@ export const DialogboksFerdigbehandleNyVurdering = ({
       Er du sikker på at saken er ferdigbehandlet? Vurder om du bør skrive et notat og/eller brev.
     </Nav.Typo.Normaltekst>
     <Knapperad
-      bekreft={ferdigbehandleNyVurdering}
+      bekreft={ferdigbehandleSak}
       bekreftTekst="Bekreft"
       avbryt={avbryt}
       avbrytTekst="Avbryt"
@@ -39,14 +34,14 @@ export const DialogboksFerdigbehandleNyVurdering = ({
   </Nav.Modal>
 );
 
-DialogboksFerdigbehandleNyVurdering.propTypes = {
-  ferdigbehandleNyVurdering: PT.func.isRequired,
+DialogboksFerdigbehandleSak.propTypes = {
+  ferdigbehandleSak: PT.func.isRequired,
   avbryt: PT.func.isRequired,
   ariaHideApp: PT.bool,
   redigerbart: PT.bool.isRequired,
 };
 
-DialogboksFerdigbehandleNyVurdering.defaultProps = {
+DialogboksFerdigbehandleSak.defaultProps = {
   ariaHideApp: true,
 };
 
@@ -54,4 +49,4 @@ const mapStateToProps = (state) => ({
   redigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
 });
 
-export default connect(mapStateToProps)(DialogboksFerdigbehandleNyVurdering);
+export default connect(mapStateToProps)(DialogboksFerdigbehandleSak);

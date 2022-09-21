@@ -40,7 +40,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
-  visFerdigbehandleNyVurderingDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleNyVurdering()),
+  visFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleSak()),
   visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
 });
 
@@ -53,7 +53,7 @@ export const Behandlingsmeny = ({
   visAvslagSoknadDialogHandle,
   visHenleggDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
-  visFerdigbehandleNyVurderingDialogHandle,
+  visFerdigbehandleSakDialogHandle,
   visRevurderFagsakDialogHandle,
   redigerbart,
   sakstema,
@@ -129,7 +129,7 @@ export const Behandlingsmeny = ({
             behandlingstema={behandlingstema}
             behandlingstype={behandlingstype}
             redigerbart={redigerbart}
-            ferdigbehandleNyVurdering={visFerdigbehandleNyVurderingDialogHandle}
+            ferdigbehandleSak={visFerdigbehandleSakDialogHandle}
             behandlingsstatus={behandlingsstatus}
             tilForsiden={tilForsiden}
           />
