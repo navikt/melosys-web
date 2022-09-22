@@ -1,3 +1,4 @@
+import * as QS from "qs";
 import { Fagsak } from "../types";
 
 import { getAsJson, postAsJson, putAsText } from "../../utils";
@@ -61,9 +62,10 @@ export interface EndreFagsakDto {
   sakstype: string | null;
   sakstema: string | null;
 }
-
-export const hentMuligeSakstemaer = (saksnummer: string) =>
-  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstemaer`);
+export const hentMuligeSakstemaer = (saksnummer: string, sakstype: string) => {
+  const query = QS.stringify({ sakstype });
+  return getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstemaer/?${query}`);
+};
 
 export const hentMuligeSakstyper = (saksnummer: string) =>
   getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstyper`);
