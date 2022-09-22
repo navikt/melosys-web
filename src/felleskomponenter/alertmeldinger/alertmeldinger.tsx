@@ -1,7 +1,8 @@
 import { AlertStripeType } from "nav-frontend-alertstriper";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Nav from "../../navFrontend";
 import "./alertmeldinger.css";
+import * as Ikoner from "../../resources/images";
 
 export const VirksomhetMelding = () => (
   <Nav.AlertStripeInfo className="virksomhetMelding">Behandlingen er journalført på virksomhet</Nav.AlertStripeInfo>
@@ -23,25 +24,35 @@ export const TomFlytMelding = () => (
 interface StandardMeldingOverstProps {
   type: AlertStripeType;
   actionEtterSynlighet: () => void;
-  children: ReactNode;
+  melding: string;
 }
 
-export const StandardMeldingOverst = ({ type, actionEtterSynlighet, children }: StandardMeldingOverstProps) => {
-  const [viserMelding, setViserMelding] = useState(false);
+export const StandardMeldingOverst = ({ type, actionEtterSynlighet, melding }: StandardMeldingOverstProps) => {
+  const [viserMelding, setViserMelding] = useState(true);
   const VARIGHET_MELDING = 3000;
 
   useEffect(() => {
-    setViserMelding(true);
     const timer = setTimeout(() => {
-      setViserMelding(false);
-      actionEtterSynlighet();
+      actionsEtterSynlighet();
     }, VARIGHET_MELDING);
     return () => clearTimeout(timer);
   }, []);
 
+  const actionsEtterSynlighet = () => {
+    if (viserMelding) {
+      setViserMelding(false);
+      actionEtterSynlighet();
+    }
+  };
+
   return viserMelding ? (
     <div className="standardMeldingOverst">
-      <Nav.AlertStripe type={type}>{children}</Nav.AlertStripe>
+      <Nav.AlertStripe type={type}>
+        <div className="fullBredde">
+          {melding}
+          <Ikoner.Remove onClick={() => actionsEtterSynlighet()} />
+        </div>
+      </Nav.AlertStripe>
     </div>
   ) : null;
 };

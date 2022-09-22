@@ -50,9 +50,7 @@ const Oppfrisk = ({ oppfrisk, lukk }) => {
   );
 
   return (
-    <StandardMeldingOverst type="suksess" actionEtterSynlighet={lukk}>
-      Registeropplysningene er oppdatert
-    </StandardMeldingOverst>
+    <StandardMeldingOverst type="suksess" actionEtterSynlighet={lukk} melding="Registeropplysningene er oppdatert" />
   );
 };
 
@@ -62,9 +60,7 @@ Oppfrisk.propTypes = {
 };
 
 const OppfriskFeilmelding = ({ resetErrorBoundary }) => (
-  <StandardMeldingOverst type="feil" actionEtterSynlighet={resetErrorBoundary}>
-    Oppdateringen feilet!
-  </StandardMeldingOverst>
+  <StandardMeldingOverst type="feil" actionEtterSynlighet={resetErrorBoundary} melding="Oppdateringen feilet!" />
 );
 
 OppfriskFeilmelding.propTypes = {
@@ -72,15 +68,17 @@ OppfriskFeilmelding.propTypes = {
 };
 
 // Returnerer OppfriskVenter mens behandlingen oppfriskes og OppfriskFeilmelding dersom oppfrisk() returnerer != 2xx
-const OppfriskBehandling = ({ oppfrisk, lukk, tilForsiden }) => (
-  <ErrorBoundary
-    fallbackRender={({ resetErrorBoundary }) => <OppfriskFeilmelding resetErrorBoundary={resetErrorBoundary} />}
-  >
-    <Suspense fallback={<OppfriskVenter tilForsiden={tilForsiden} />}>
-      <Oppfrisk oppfrisk={oppfrisk} lukk={lukk} />
-    </Suspense>
-  </ErrorBoundary>
-);
+const OppfriskBehandling = ({ oppfrisk, lukk, tilForsiden }) => {
+  return (
+    <ErrorBoundary
+      fallbackRender={({ resetErrorBoundary }) => <OppfriskFeilmelding resetErrorBoundary={resetErrorBoundary} />}
+    >
+      <Suspense fallback={<OppfriskVenter tilForsiden={tilForsiden} />}>
+        <Oppfrisk oppfrisk={oppfrisk} lukk={lukk} />
+      </Suspense>
+    </ErrorBoundary>
+  );
+};
 
 OppfriskBehandling.propTypes = {
   lukk: PT.func.isRequired,

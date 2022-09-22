@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import classNames from "classnames";
@@ -321,11 +320,7 @@ function EndreBehandlingModal({
 
   const renderInnhold = () => {
     if (generellFeil) {
-      return (
-        <StandardMeldingOverst type="feil" actionEtterSynlighet={lukkModal}>
-          {generellFeil}
-        </StandardMeldingOverst>
-      );
+      return <StandardMeldingOverst type="feil" actionEtterSynlighet={lukkModal} melding={generellFeil} />;
     }
     if (behandlingEndret) {
       return (
@@ -335,9 +330,8 @@ function EndreBehandlingModal({
             lukkModal();
             nullstillFlyt();
           }}
-        >
-          Behandlingen er oppdatert
-        </StandardMeldingOverst>
+          melding="Behandlingen er oppdatert"
+        />
       );
     }
     return skalViseSpinner ? null : renderEndreBehandling();
