@@ -72,4 +72,5 @@ export const hentMuligeSakstyper = (saksnummer: string) =>
 export const endreFagsak = (saksnummer: string, body: EndreFagsakDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/endre`, body);
 
+// Fjernes med melosys.behandle_alle_saker
 export const revurder = (saksnummer: string) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/revurder`, {});

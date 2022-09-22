@@ -91,6 +91,7 @@ export const Behandlingsmeny = ({
   const skalViseVurderSakenPaaNytt = () => {
     if (behandleAlleSakerToggle === "enabled") {
       // Når toggle fjernes kan hele metoden samt bruk av behandlingskategori fjernes fra komponenten
+      // Også fjern revurderFagsak, inkl dialogboks og alt av modal og redux
       return false;
     }
     switch (behandlingskategori) {
