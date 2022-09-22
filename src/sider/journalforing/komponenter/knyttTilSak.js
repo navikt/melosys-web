@@ -113,8 +113,7 @@ export const KnyttTilSak = (props) => {
     sisteBehandlingErInaktiv && (!behandleAlleSakerToggleEnabled || !sakErHenlagtEllerBortfalt);
 
   const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
-    ? sisteBehandlingErInaktiv &&
-      !behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.HENVENDELSE)
+    ? sisteBehandlingErInaktiv
     : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
 
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
