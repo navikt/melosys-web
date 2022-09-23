@@ -32,6 +32,7 @@ import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
 import "./opprettnysak.css";
 import { nullstillFormdataVerdier, FormDataVerdi } from "../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
+import { skalViseTomFlyt } from "../../routing";
 
 const euEosBehandlingstemaer = (visNyeBehandlingstema: boolean) =>
   MKV.KTObjects.behandlinger.behandlingstema
@@ -126,6 +127,7 @@ const OpprettNySak = ({
 
   const {
     behandlingstema,
+    behandlingstype,
     soknadsinfo,
     sakstype,
     sakstema,
@@ -339,6 +341,11 @@ const OpprettNySak = ({
 
   const hovedpartErBruker = hovedpart === BRUKER;
 
+  const skalViseLandOgSoknadsperiode = () =>
+    behandleAlleSakerToggle
+      ? sakstype && !skalViseTomFlyt(sakstype, behandlingstema, behandlingstype)
+      : soknadErValgt && hovedpartErBruker;
+
   return (
     <form className="opprettnysak" onSubmit={opprettNySak}>
       <Nav.Container fluid>
@@ -459,7 +466,7 @@ const OpprettNySak = ({
                         ))}
                       </Skjema.Select>
                     )}
-                    {soknadErValgt && hovedpartErBruker && (
+                    {skalViseLandOgSoknadsperiode() && (
                       <Fragment>
                         <Nav.Typo.Normaltekst>Søknadsperiode</Nav.Typo.Normaltekst>
                         <FormSection name="soknadsinfo">
