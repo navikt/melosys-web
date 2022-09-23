@@ -104,6 +104,7 @@ const FellesHandlersProviderUnconnected = ({
 
   const debouncedSetVenterPaVurderFagsak = Utils._debounce(() => setVenterPaRevurderFagsak(true), 500);
 
+  // Fjernes med melosys.behandle_alle_saker
   const revurderFagsak = async () => {
     debouncedSetVenterPaVurderFagsak();
 

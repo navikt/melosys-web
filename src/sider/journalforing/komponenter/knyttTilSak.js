@@ -112,6 +112,12 @@ export const KnyttTilSak = (props) => {
   const visKnyttTilEksisterende =
     sisteBehandlingErInaktiv && (!behandleAlleSakerToggleEnabled || !sakErHenlagtEllerBortfalt);
 
+  const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
+    ? sisteBehandlingErInaktiv
+    : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
+
+  const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
+
   if (visKnyttTilEksisterende) {
     return (
       <div className="knyttTilSak__panelramme">
@@ -126,11 +132,8 @@ export const KnyttTilSak = (props) => {
           label={behandleAlleSakerToggleEnabled ? "" : "Knytt til sak"}
           className={classNames("panelElement", { "nyBehandling-utenBehandling": behandleAlleSakerToggleEnabled })}
         >
-          {behandlingOversikter.some(
-            (behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD
-          ) ? (
-            <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />
-          ) : (
+          {visOpprettNyBehandling && <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />}
+          {visUtenOpprettNyBehandling && (
             <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
           )}
         </Skjema.RadioGruppe>
