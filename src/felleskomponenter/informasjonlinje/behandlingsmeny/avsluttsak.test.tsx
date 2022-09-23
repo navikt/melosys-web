@@ -53,10 +53,11 @@ describe("AvsluttSak", () => {
     const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
-    expect(handlinger).toHaveLength(3);
+    expect(handlinger).toHaveLength(4);
     expect(handlinger.at(0).props().tekst).toBe("Avslå søknad pga. manglende opplysninger");
-    expect(handlinger.at(1).props().tekst).toBe("Søknaden/klagen er trukket");
-    expect(handlinger.at(2).props().tekst).toBe("Behandlingen er bortfalt");
+    expect(handlinger.at(1).props().tekst).toBe("Ferdigbehandlet");
+    expect(handlinger.at(2).props().tekst).toBe("Søknaden/klagen er trukket");
+    expect(handlinger.at(3).props().tekst).toBe("Behandlingen er bortfalt");
   });
 
   it("viser bare avsluttSak dersom tema er trygdetid", () => {
@@ -66,8 +67,8 @@ describe("AvsluttSak", () => {
     const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
-    expect(handlinger).toHaveLength(1);
-    expect(handlinger.props().tekst).toBe("Behandlingen er bortfalt");
+    expect(handlinger).toHaveLength(2);
+    expect(handlinger.at(1).props().tekst).toBe("Behandlingen er bortfalt");
   });
 
   it("viser ferdigBehandlet dersom tema er yrkesaktiv og type er ny vurdering", () => {
@@ -105,6 +106,41 @@ describe("AvsluttSak", () => {
     expect(avsluttSakSomBortfalt).toHaveLength(0);
   });
 
+  describe("Ferdigbehandlet", () => {
+    it(`viser 'Ferdigbehandlet' dersom behandlingstema er ${BESLUTNING_LOVVALG_NORGE} og behandlingstype er ${NY_VURDERING}`, () => {
+      setupProps(props);
+      props.behandlingstema = BESLUTNING_LOVVALG_NORGE;
+      props.behandlingstype = NY_VURDERING;
+
+      const avsluttSak = shallow(<AvsluttSak {...props} />);
+      const handlinger = avsluttSak.find(Handling);
+
+      expect(handlinger).toHaveLength(5);
+      expect(handlinger.at(2).props().tekst).toBe("Ferdigbehandlet");
+    });
+
+    it(`viser 'Ferdigbehandlet' dersom behandlingstema er ${YRKESAKTIV}`, () => {
+      setupProps(props);
+      props.behandlingstema = YRKESAKTIV;
+
+      const avsluttSak = shallow(<AvsluttSak {...props} />);
+      const handlinger = avsluttSak.find(Handling);
+
+      expect(handlinger).toHaveLength(6);
+      expect(handlinger.at(3).props().tekst).toBe("Ferdigbehandlet");
+    });
+
+    it(`viser ikke 'Ferdigbehandlet' dersom behandling ikke er redigerbart`, () => {
+      setupProps(props);
+      props.redigerbart = false;
+
+      const avsluttSak = shallow(<AvsluttSak {...props} />);
+      const handlinger = avsluttSak.find(Handling);
+
+      expect(handlinger).toHaveLength(0);
+    });
+  });
+
   describe("Behandlingen er bortfalt", () => {
     it(`viser 'Behandlingen er bortfalt' dersom behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
       setupProps(props);
@@ -114,8 +150,8 @@ describe("AvsluttSak", () => {
       const avsluttSak = shallow(<AvsluttSak {...props} />);
       const handlinger = avsluttSak.find(Handling);
 
-      expect(handlinger).toHaveLength(1);
-      expect(handlinger.at(0).props().tekst).toBe("Behandlingen er bortfalt");
+      expect(handlinger).toHaveLength(2);
+      expect(handlinger.at(1).props().tekst).toBe("Behandlingen er bortfalt");
     });
 
     it(`viser 'Behandlingen er bortfalt' dersom behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
@@ -126,8 +162,8 @@ describe("AvsluttSak", () => {
       const avsluttSak = shallow(<AvsluttSak {...props} />);
       const handlinger = avsluttSak.find(Handling);
 
-      expect(handlinger).toHaveLength(1);
-      expect(handlinger.at(0).props().tekst).toBe("Behandlingen er bortfalt");
+      expect(handlinger).toHaveLength(2);
+      expect(handlinger.at(1).props().tekst).toBe("Behandlingen er bortfalt");
     });
   });
 
@@ -140,7 +176,7 @@ describe("AvsluttSak", () => {
       const avsluttSak = shallow(<AvsluttSak {...props} />);
       const handlinger = avsluttSak.find(Handling);
 
-      expect(handlinger).toHaveLength(5);
+      expect(handlinger).toHaveLength(6);
       expect(handlinger.at(1).props().tekst).toBe("Søknaden er avslått");
     });
 
@@ -190,7 +226,7 @@ describe("AvsluttSak", () => {
       const avsluttSak = shallow(<AvsluttSak {...props} />);
       const handlinger = avsluttSak.find(Handling);
 
-      expect(handlinger).toHaveLength(5);
+      expect(handlinger).toHaveLength(6);
       expect(handlinger.at(0).props().tekst).toBe("Søknaden er innvilget");
     });
 
@@ -203,7 +239,7 @@ describe("AvsluttSak", () => {
       const avsluttSak = shallow(<AvsluttSak {...props} />);
       const handlinger = avsluttSak.find(Handling);
 
-      expect(handlinger).toHaveLength(5);
+      expect(handlinger).toHaveLength(6);
       expect(handlinger.at(0).props().tekst).toBe("Søknaden er innvilget");
     });
 
@@ -313,7 +349,7 @@ describe("AvsluttSak", () => {
       const avsluttSak = shallow(<AvsluttSak {...props} />);
       const handlinger = avsluttSak.find(Handling);
 
-      expect(handlinger).toHaveLength(3);
+      expect(handlinger).toHaveLength(4);
       expect(handlinger.at(0).props().tekst).toBe("Perioden er godkjent");
       expect(handlinger.at(1).props().tekst).toBe("Perioden er delvis godkjent");
       expect(handlinger.at(2).props().tekst).toBe("Medlem i folketrygden");
@@ -327,7 +363,7 @@ describe("AvsluttSak", () => {
       const avsluttSak = shallow(<AvsluttSak {...props} />);
       const handlinger = avsluttSak.find(Handling);
 
-      expect(handlinger).toHaveLength(3);
+      expect(handlinger).toHaveLength(4);
       expect(handlinger.at(0).props().tekst).toBe("Perioden er godkjent");
       expect(handlinger.at(1).props().tekst).toBe("Perioden er delvis godkjent");
       expect(handlinger.at(2).props().tekst).toBe("Medlem i folketrygden");
