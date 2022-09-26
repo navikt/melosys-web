@@ -154,7 +154,7 @@ const FellesHandlersProviderUnconnected = ({
   };
 
   const ferdigbehandleSak = async () => {
-    await Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer, behandlingID);
+    await Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer);
     skjulFerdigbehandleSakDialogHandle();
     tilForsiden();
   };
