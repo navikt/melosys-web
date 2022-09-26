@@ -71,14 +71,14 @@ jobs:
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-fss
+          CLUSTER: dev-gcp
           RESOURCE: nais/redis.yaml
           VAR: APP_NAME=melosys-web-redis
       - name: Deploy q2
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-fss
+          CLUSTER: dev-gcp
           RESOURCE: nais/nais.yaml
           VAR: image=${{ env.docker_image }}
           VARS: nais/vars-q2.json
