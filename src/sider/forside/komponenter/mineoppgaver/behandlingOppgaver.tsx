@@ -27,6 +27,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const { saksbehandling } = mineSaker;
+  console.log(mineSaker);
 
   return (
     <div className="mineOppgaver">

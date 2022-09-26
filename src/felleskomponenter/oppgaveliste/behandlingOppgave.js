@@ -38,8 +38,18 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
  * seg inn på den.
  */
 const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
-  const { navn, sakstype, saksnummer, sakstema, behandling, aktivTil, land, hovedpartIdent, nyesteNotat, beskrivelse } =
-    sak;
+  const {
+    navn,
+    sakstype,
+    saksnummer,
+    sakstema,
+    behandling,
+    aktivTil,
+    land,
+    hovedpartIdent,
+    sisteNotat: notat,
+    gosysBeskrivelse: beskrivelse,
+  } = sak;
   const {
     behandlingID,
     erUnderOppdatering,
@@ -62,9 +72,9 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
     behandlingOppgave__stengt: erUnderOppdatering,
   });
 
-  const reduserNotatLengde = (notat) => {
+  const reduserTekstLengde = (tekst) => {
     const maxLengde = 60;
-    return notat != null && notat.length > maxLengde ? `${notat.slice(0, maxLengde)} (...)` : notat;
+    return tekst != null && tekst.length > maxLengde ? `${tekst.slice(0, maxLengde)} (...)` : tekst;
   };
 
   return (
@@ -111,11 +121,11 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
               </Nav.Row>
             </Nav.Column>
             <Nav.Column xs="4" className="behandlingOppgave__kolonne__notater">
-              <Nav.Row>{reduserNotatLengde(nyesteNotat)}</Nav.Row>
+              <Nav.Row>{reduserTekstLengde(notat)}</Nav.Row>
               <Nav.Row>
                 <b>Gosys:</b>
                 <br />
-                {reduserNotatLengde(beskrivelse)}
+                {reduserTekstLengde(beskrivelse)}
               </Nav.Row>
             </Nav.Column>
           </Nav.Row>
