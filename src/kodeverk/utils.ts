@@ -31,6 +31,7 @@ export const mapBehandlingstemaToBehandlingskategori = (behandlingstemaKode: str
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK:
     case MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP:
     case MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET:
+    case MKV.Koder.behandlinger.behandlingstema.VIRKSOMHET:
       return Koder.Behandlingskategori.GENERELL_BEHANDLING;
     default:
       throw new Error(`Mangler mapping for ${behandlingstemaKode}`);

@@ -136,19 +136,11 @@ export const OpprettSak = (props) => {
     if (!behandleAlleSakerToggleEnabled) return;
 
     if (valgtSakstema && valgtSakstype) {
-      if (journalforingGjelder === MKV.Koder.aktoersroller.BRUKER) {
-        Api.LovligeKombinasjoner.hentBehandlingstemaer(journalforingGjelder, valgtSakstype, valgtSakstema).then(
-          (muligeBehandlingstemaer) => {
-            setBehandlingstemaer(muligeBehandlingstemaer);
-          }
-        );
-      } else {
-        Api.LovligeKombinasjoner.hentBehandlingstyper(journalforingGjelder, valgtSakstype, valgtSakstema).then(
-          (muligeBehandlingstyper) => {
-            setBehandlingstyper(muligeBehandlingstyper);
-          }
-        );
-      }
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(journalforingGjelder, valgtSakstype, valgtSakstema).then(
+        (muligeBehandlingstemaer) => {
+          setBehandlingstemaer(muligeBehandlingstemaer);
+        }
+      );
     }
   }, [behandleAlleSakerToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema]);
 
@@ -171,7 +163,8 @@ export const OpprettSak = (props) => {
     valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
 
   const visMuligeBehandlingstema = behandleAlleSakerToggleEnabled
-    ? journalforingGjelder === MKV.Koder.aktoersroller.BRUKER
+    ? journalforingGjelder === MKV.Koder.aktoersroller.BRUKER ||
+      journalforingGjelder === MKV.Koder.aktoersroller.VIRKSOMHET
     : true;
 
   return (
