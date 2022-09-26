@@ -47,8 +47,6 @@ spec:
       rules:
         - application: {{APP_NAME_API}}
         - application: {{APP_NAME_TRYGDEAVTALE}}
-  vault:
-    enabled: true
   ingresses:
     - {{INGRESS}}
   env:
