@@ -4,11 +4,23 @@ import * as Constants from "../constants";
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 
+const erSedBehandling = (behandlingstema: string) => {
+  return [
+    MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
+  ].includes(behandlingstema);
+};
+
 export const lagUrlFraBehandlingstema = (
   saksnummer: number | string,
   behandlingID: number,
   behandlingstemaKode: string
 ) => {
+  if (erSedBehandling(behandlingstemaKode)) {
+    return `/${EU_EOS}/sedbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE:
@@ -22,11 +34,6 @@ export const lagUrlFraBehandlingstema = (
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
       return `/${EU_EOS}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
-    case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
-    case MKV.Koder.behandlinger.behandlingstema.TRYGDETID:
-    case MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED:
-    case MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM:
-      return `/${EU_EOS}/sedbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
       return `/${EU_EOS}/vurderutpeking/${saksnummer}/?behandlingID=${behandlingID}`;
@@ -52,7 +59,7 @@ export const lagUrl = (
   return lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstemaKode);
 };
 
-export const skalViseTomFlyt = (sakstype: string, behandlingstema: string, behandlingstype: string) => {
+const skalViseTomFlyt = (sakstype: string, behandlingstema: string, behandlingstype: string) => {
   if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
     return true;
   }
@@ -73,6 +80,14 @@ export const skalViseTomFlyt = (sakstype: string, behandlingstema: string, behan
     MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP,
     MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET,
   ].includes(behandlingstema);
+};
+
+export const skalViseTomFlytEllerErSedBehandling = (
+  sakstype: string,
+  behandlingstema: string,
+  behandlingstype: string
+) => {
+  return skalViseTomFlyt(sakstype, behandlingstema, behandlingstype) || erSedBehandling(behandlingstema);
 };
 
 export const nyFane = (url: string) => {
