@@ -77,6 +77,8 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
     return tekst != null && tekst.length > maxLengde ? `${tekst.slice(0, maxLengde)} (...)` : tekst;
   };
 
+  console.log(sak);
+
   return (
     <BehandlingOppgavesLinjeWrapper link={link} stengt={erUnderOppdatering}>
       <Nav.Panel data-cy-behandlingstema={behandlingstema.kode} className={cl}>

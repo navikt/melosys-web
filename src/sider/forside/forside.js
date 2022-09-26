@@ -18,14 +18,19 @@ import "./forside.css";
 
 const Forside = (props) => {
   const { tilOpprettNySak } = props;
-  const oppgaver = useSelector((state) => state.oppgaver.data.saksbehandling);
+  const data = useSelector((state) => state.oppgaver.data);
+
+  const oppgaverTotalt =
+    (data.journalforing || data.saksbehandling) === undefined
+      ? 0
+      : data.journalforing.length + data.saksbehandling.length;
 
   return (
     <div className="forside">
       <div className="forside__header">
         <div>
           <Nav.Typo.Undertittel>Mine oppgaver</Nav.Typo.Undertittel>
-          <Nav.Typo.Normaltekst>{oppgaver?.length} oppgaver</Nav.Typo.Normaltekst>
+          <Nav.Typo.Normaltekst>{oppgaverTotalt} oppgaver</Nav.Typo.Normaltekst>
         </div>
         <OpprettNySakKnapp onClick={tilOpprettNySak} />
       </div>

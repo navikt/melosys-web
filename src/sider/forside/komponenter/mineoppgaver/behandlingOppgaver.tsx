@@ -27,7 +27,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const { saksbehandling } = mineSaker;
-  console.log(mineSaker);
 
   return (
     <div className="mineOppgaver">
@@ -35,7 +34,7 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
         elementer={saksbehandling}
         component={BehandlingOppgave}
         defaultChecked="nyeste"
-        sortingLegend="Sorter behandlinger etter opprettelsesdato:"
+        sortingLegend="Sorter behandlinger etter opprettelsesdato: &nbsp;"
         sortingPath="behandling.registrertDato"
         radioGroupName="behandlingsortering"
         visSakstema={sakstemaToggle === "enabled"}

@@ -38,7 +38,7 @@ export const JournalforingsOppgaver = ({ mineSaker }: PropsFromRedux) => {
         elementer={journalforing}
         component={JournalforingOppgave}
         defaultChecked="eldste"
-        sortingLegend="Sorter journalføringsoppgaver etter frist:"
+        sortingLegend="Sorter journalføringsoppgaver etter frist: &nbsp;"
         sortingPath="aktivTil"
         radioGroupName="journalforingsoppgaver"
       />
