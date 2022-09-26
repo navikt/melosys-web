@@ -16,14 +16,6 @@ spec:
     min: 2
     max: 2
     cpuThresholdPercentage: 50
-  liveness:
-    path: melosys/health/is-alive
-    initialDelay: 30
-    timeout: 10
-  readiness:
-    path: melosys/health/is-ready
-    initialDelay: 30
-    timeout: 10
   resources:
     limits:
       cpu: 500m
