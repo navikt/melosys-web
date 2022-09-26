@@ -15,6 +15,7 @@ import { formSelectors } from "../../../ducks/form";
 import { journalforingSelectors } from "../../../ducks/journalforing";
 
 import "./journalforingGjelder.css";
+import { FormDataVerdi } from "../../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -40,6 +41,10 @@ const JournalforingGjelder = ({
 }: PropsFromRedux) => {
   const handleClick = (event: SyntheticEvent<EventTarget>, value: string) => {
     oppdaterFelt("journalforingGjelder", value);
+    oppdaterFelt(FormDataVerdi.sakstype, null);
+    oppdaterFelt(FormDataVerdi.sakstema, null);
+    oppdaterFelt(FormDataVerdi.behandlingstema, null);
+    oppdaterFelt(FormDataVerdi.behandlingstype, null);
     if (value === BRUKER) {
       oppdaterFelt("ikkeSendForvaltingsmelding", false);
       oppdaterFelt("brukerID", journalpostBrukerID);
