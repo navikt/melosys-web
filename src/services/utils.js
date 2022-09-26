@@ -131,7 +131,6 @@ const cachedFetch = async (url, cacheDurationSec) => {
     // Pragma: 'no-cache',
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
-    ...hentAuthorizationHeader(),
   };
 
   const fetchConfig = {
@@ -234,7 +233,6 @@ const methodToJson = (method, url, data, extendResponse = false, accept = "appli
     // Pragma: 'no-cache',
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
-    ...hentAuthorizationHeader(),
   };
 
   const fetchConfig = {
@@ -266,7 +264,6 @@ const methodToText = (method, url, data) => {
     // Pragma: 'no-cache',
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
-    ...hentAuthorizationHeader(),
   };
 
   const fetchConfig = {
@@ -304,7 +301,7 @@ export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) =
   methodToJson("POST", url, data, extendResponse, "application/pdf, application/json");
 
 export const fetchAsPDFBlob = (url) =>
-  fetch(url, { headers: hentAuthorizationHeader() })
+  fetch(url, {})
     .then((response) => response.blob())
     .then((blob) => new Blob([blob], { type: "application/pdf" }));
 

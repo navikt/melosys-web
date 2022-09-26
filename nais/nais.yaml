@@ -54,7 +54,7 @@ spec:
     outbound:
       rules:
         - application: {{APP_NAME_API}}
-        - application: {{APP_NAME_OPPGAVE_API}}
+        - application: {{APP_NAME_TRYGDEAVTALE}}
   vault:
     enabled: true
   ingresses:
