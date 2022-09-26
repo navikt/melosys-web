@@ -46,7 +46,11 @@ spec:
     outbound:
       rules:
         - application: {{APP_NAME_API}}
+          namespace: teammelosys
+          cluster: dev-fss
         - application: {{APP_NAME_TRYGDEAVTALE}}
+          namespace: teammelosys
+          cluster: dev-fss
   ingresses:
     - {{INGRESS}}
   env:
