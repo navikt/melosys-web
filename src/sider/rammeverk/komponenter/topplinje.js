@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { withMsal } from "@azure/msal-react";
 import PT from "prop-types";
 
 import { ReactComponent as NavLogo } from "../../../resources/images/nav.svg";
@@ -81,4 +80,4 @@ const mapDispatchToProps = (dispatch) => ({
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
 });
 
-export default withMsal(withRouter(connect(mapStateToProps, mapDispatchToProps)(Topplinje)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Topplinje));
