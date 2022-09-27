@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
-import { reduxForm, getFormValues, change } from "redux-form";
+import { change, getFormValues, reduxForm } from "redux-form";
 
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as Ikoner from "../../../resources/images";
@@ -27,6 +27,29 @@ import "./journalforingform.css";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
+const skalViseForvaltningsmelding = (formValues, toggleEnabled) => {
+  if (toggleEnabled) {
+    return (
+      formValues.saksnummer === "-1" &&
+      formValues.journalforingGjelder === BRUKER &&
+      formValues.sakstema &&
+      formValues.sakstema === MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG &&
+      formValues.opprettnysak_behandlingstype &&
+      formValues.opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG
+    );
+  }
+
+  return (
+    formValues.saksnummer === "-1" &&
+    (MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema) ||
+      [
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
+        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+      ].includes(formValues.opprettnysak_behandlingstema)) &&
+    formValues.journalforingGjelder === BRUKER
+  );
+};
+
 export const JournalforingForm = (props) => {
   const {
     journalpostID,
@@ -46,24 +69,7 @@ export const JournalforingForm = (props) => {
     landkoder,
   } = props;
 
-  let visForvaltningsMelding =
-    formValues.saksnummer === "-1" &&
-    formValues.journalforingGjelder === BRUKER &&
-    formValues.sakstema &&
-    MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG === formValues.sakstema &&
-    formValues.opprettnysak_behandlingstype &&
-    MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG === formValues.opprettnysak_behandlingstype;
-
-  if (!behandleAlleSakerToggleEnabled) {
-    visForvaltningsMelding =
-      formValues.saksnummer === "-1" &&
-      (MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema) ||
-        [
-          MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
-          MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
-        ].includes(formValues.opprettnysak_behandlingstema)) &&
-      formValues.journalforingGjelder === BRUKER;
-  }
+  const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, behandleAlleSakerToggleEnabled);
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
@@ -79,7 +85,7 @@ export const JournalforingForm = (props) => {
         behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
         landkoder={landkoder}
       />
-      {visForvaltningsMelding && (
+      {visForvaltningsmelding && (
         <Fragment>
           <Mui.Undertittel
             tekst="Melding om saksbehandlingstid"
