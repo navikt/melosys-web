@@ -50,9 +50,9 @@ export const JournalforingForm = (props) => {
     formValues.saksnummer === "-1" &&
     formValues.journalforingGjelder === BRUKER &&
     formValues.sakstema &&
-    [MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG].includes(formValues.sakstema) &&
+    MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG === formValues.sakstema &&
     formValues.opprettnysak_behandlingstype &&
-    [MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG].includes(formValues.opprettnysak_behandlingstype);
+    MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG === formValues.opprettnysak_behandlingstype;
 
   if (!behandleAlleSakerToggleEnabled) {
     visForvaltningsMelding =
