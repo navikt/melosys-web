@@ -44,7 +44,7 @@ describe("OpprettSak", () => {
       kanSubmittes: true,
       handleSubmit: jest.fn(),
       submitJournalforing: jest.fn(),
-      behandleAlleSakerToggleEnabled: jest.fn(),
+      behandleAlleSakerToggleEnabled: true,
       journalforingSkjemaVerdier: {
         opprettnysak_behandlingstema: "",
         journalforingSoknadsland: "",
@@ -60,6 +60,7 @@ describe("OpprettSak", () => {
     ARBEID_NORGE_BOSATT_ANNET_LAND,
   ]).it(`Opprett Sak. Skal ha fra/til dato og liste over land`, (behandlingstema) => {
     props.journalforingSkjemaVerdier.opprettnysak_behandlingstema = behandlingstema;
+    props.journalforingSkjemaVerdier.opprettnysak_behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
     props.journalforingSkjemaVerdier.sakstype = MKV.Koder.sakstyper.EU_EOS;
     props.journalforingSkjemaVerdier.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
@@ -92,6 +93,7 @@ describe("OpprettSak", () => {
 
   it(`Opprett sak. Skal ha fra/til dato, valg av land, radio knapper`, () => {
     props.journalforingSkjemaVerdier.opprettnysak_behandlingstema = ARBEID_FLERE_LAND;
+    props.journalforingSkjemaVerdier.opprettnysak_behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
     props.journalforingSkjemaVerdier.journalforingSoknadsland = ARBEID_FLERE_LAND;
     props.journalforingSkjemaVerdier.sakstype = MKV.Koder.sakstyper.EU_EOS;
     props.journalforingSkjemaVerdier.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
