@@ -26,13 +26,13 @@ import { formOperations } from "../../ducks/form";
 
 import { hentSammensattNavn } from "../../graphql/navn";
 import { useFeatureToggle } from "../../featuretoggle";
+import { nullstillFormdataVerdier, FormDataVerdi } from "../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
+import { skalViseTomFlyt } from "../../routing";
 import IdentOgNavn from "./identOgNavn";
 
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
 import "./opprettnysak.css";
-import { nullstillFormdataVerdier, FormDataVerdi } from "../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
-import { skalViseTomFlyt } from "../../routing";
 
 const euEosBehandlingstemaer = (visNyeBehandlingstema: boolean) =>
   MKV.KTObjects.behandlinger.behandlingstema

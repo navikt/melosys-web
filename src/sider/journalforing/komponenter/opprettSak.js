@@ -12,13 +12,13 @@ import * as Api from "../../../services/api";
 import { formSelectors } from "../../../ducks/form";
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
 import { useFeatureToggle } from "../../../featuretoggle";
+import { skalViseTomFlyt } from "../../../routing";
 
 import "./opprettSak.css";
 import {
   nullstillFormdataVerdier,
   FormDataVerdi,
 } from "../../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
-import { skalViseTomFlyt } from "../../../routing";
 
 const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
   ({ kode }) =>
