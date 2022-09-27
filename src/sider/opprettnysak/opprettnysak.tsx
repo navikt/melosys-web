@@ -27,7 +27,7 @@ import { formOperations } from "../../ducks/form";
 import { hentSammensattNavn } from "../../graphql/navn";
 import { useFeatureToggle } from "../../featuretoggle";
 import { nullstillFormdataVerdier, FormDataVerdi } from "../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
-import { skalViseTomFlyt } from "../../routing";
+import { skalViseTomFlytEllerErSedBehandling } from "../../routing";
 import IdentOgNavn from "./identOgNavn";
 
 import { lagYupToReduxformErrorMapper } from "../../yup";
@@ -347,7 +347,7 @@ const OpprettNySak = ({
         sakstema &&
         behandlingstema &&
         behandlingstype &&
-        !skalViseTomFlyt(sakstype, behandlingstema, behandlingstype)
+        !skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype)
       : soknadErValgt && hovedpartErBruker;
 
   return (

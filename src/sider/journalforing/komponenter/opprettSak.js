@@ -12,7 +12,7 @@ import * as Api from "../../../services/api";
 import { formSelectors } from "../../../ducks/form";
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
 import { useFeatureToggle } from "../../../featuretoggle";
-import { skalViseTomFlyt } from "../../../routing";
+import { skalViseTomFlytEllerErSedBehandling } from "../../../routing";
 
 import "./opprettSak.css";
 import {
@@ -41,7 +41,10 @@ const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
 );
 
 export const skalViseSoknadsperiodeOgLand = (sakstype, behandlingstema, behandlingstype) =>
-  sakstype && behandlingstema && behandlingstype && !skalViseTomFlyt(sakstype, behandlingstema, behandlingstype);
+  sakstype &&
+  behandlingstema &&
+  behandlingstype &&
+  !skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype);
 
 export const skalViseSoknadsperiodeOgLandDeprecated = (hovedpart, sakstype, behandlingstema) =>
   hovedpart !== MKV.Koder.aktoersroller.VIRKSOMHET &&
