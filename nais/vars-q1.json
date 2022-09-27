@@ -1,11 +1,11 @@
 {
   "APP_NAME": "melosys-web-q1",
   "REDIS_APP_NAME": "melosys-web-redis-q1",
-  "APP_URL_TRYGDEAVTALE": "http://melosys-trygdeavtale.teammelosys",
-  "APP_URL_MELOSYS": "http://melosys-q1.teammelosys",
+  "APP_URL_TRYGDEAVTALE": "http://melosys-trygdeavtale.dev-fss-pub.nais.io",
+  "APP_URL_MELOSYS": "http://melosys-q1.dev-fss-pub.nais.io",
   "INGRESS": "https://melosys-q1.dev.intern.nav.no",
   "GROUP_MELOSYS_INNLOGGING": "52981246-8032-40f0-863a-2bd2844f2d57",
   "REPLY_URL": "http://localhost:3000",
   "APP_NAME_API": "melosys-q1",
-  "APP_NAME_OPPGAVE_API": "oppgave-q1"
+  "APP_NAME_TRYGDEAVTALE": "melosys-trygdeavtale"
 }
