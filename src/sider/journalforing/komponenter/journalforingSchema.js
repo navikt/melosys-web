@@ -4,7 +4,7 @@ import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
 import * as Konstanter from "../../../constants";
 import * as KV from "../../../kodeverk";
-import { skalViseSoknadsperiodeOgLand } from "./opprettSak";
+import { skalViseSoknadsperiodeOgLandDeprecated } from "./opprettSak";
 
 const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer." };
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig fnr eller dnr." };
@@ -30,9 +30,9 @@ const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const kreverPeriode = (journalforingHensikt, hovedpart, sakstype, behandlingstema, behandlingstype) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
-  // skalViseSoknadsperiodeOgLandDeprecated(hovedpart, sakstype, behandlingstema);
-  // erstatter linjen over ved fjerning av toggle melosys.behandle_alle_saker. Husk å fjern eslint-disable også
-  skalViseSoknadsperiodeOgLand(sakstype, behandlingstema, behandlingstype);
+  skalViseSoknadsperiodeOgLandDeprecated(hovedpart, sakstype, behandlingstema);
+// erstatter linjen over ved fjerning av toggle melosys.behandle_alle_saker. Husk å fjern eslint-disable også
+// skalViseSoknadsperiodeOgLand(sakstype, behandlingstema, behandlingstype);
 
 const kreverLand = (
   journalforingHensikt,
