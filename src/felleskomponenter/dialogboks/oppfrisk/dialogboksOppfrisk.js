@@ -1,12 +1,15 @@
 import React, { Suspense, useState } from "react";
 import usePromise from "react-promise-suspense";
 import PT from "prop-types";
+import classNames from "classnames";
 
 import * as Nav from "../../../navFrontend";
 import ErrorBoundary from "../../ErrorBoundary";
 import Knapperad from "../../knapperad";
 
 import "./dialogboksOppfrisk.css";
+import { StandardMeldingOverst } from "../../alertmeldinger";
+import { Spinner } from "../../spinner";
 
 const OppfriskBekreft = ({ bekreft, avbryt }) => (
   <div>
@@ -32,22 +35,7 @@ OppfriskBekreft.propTypes = {
   avbryt: PT.func.isRequired,
 };
 
-const OppfriskVenter = ({ tilForsiden }) => (
-  <div>
-    <Nav.NavFrontendSpinner className="spinner" />
-    <Nav.Typo.Systemtittel className="overskrift">Oppdaterer registeropplysninger</Nav.Typo.Systemtittel>
-    <Nav.Typo.Normaltekst className="tekst">
-      Vent mens registeropplysningene hentes på nytt fra PDL, Aa-register, Medl etc.
-    </Nav.Typo.Normaltekst>
-    <div className="knapperadcontainer">
-      <Nav.Knapp onClick={tilForsiden}>Til forsiden</Nav.Knapp>
-    </div>
-  </div>
-);
-
-OppfriskVenter.propTypes = {
-  tilForsiden: PT.func.isRequired,
-};
+const OppfriskVenter = () => <Spinner />;
 
 const Oppfrisk = ({ oppfrisk, lukk }) => {
   const CACHE_LIFESPAN_MS = 1000;
@@ -62,12 +50,7 @@ const Oppfrisk = ({ oppfrisk, lukk }) => {
   );
 
   return (
-    <div>
-      <Nav.AlertStripe type="suksess">Registeropplysningene har blitt oppdatert.</Nav.AlertStripe>
-      <div className="knapperadcontainer">
-        <Nav.Knapp onClick={lukk}>Lukk</Nav.Knapp>
-      </div>
-    </div>
+    <StandardMeldingOverst type="suksess" actionEtterSynlighet={lukk} melding="Registeropplysningene er oppdatert" />
   );
 };
 
@@ -76,44 +59,36 @@ Oppfrisk.propTypes = {
   oppfrisk: PT.func.isRequired,
 };
 
-const OppfriskFeilmelding = ({ feilmelding, lukk, resetErrorBoundary }) => (
-  <div>
-    <Nav.Typo.Systemtittel>Feil ved oppdatering av registeropplysninger</Nav.Typo.Systemtittel>
-    <Nav.AlertStripe type="feil">
-      Kunne ikke oppdatere opplysninger. Feilmelding: {feilmelding}
-      <br />
-      Prøv igjen, eller meld sak i porten.
-    </Nav.AlertStripe>
-    <div className="knapperadcontainer">
-      <Nav.Knapp onClick={resetErrorBoundary}>Prøv igjen</Nav.Knapp>
-      <Nav.Knapp onClick={() => lukk() && resetErrorBoundary()}>Lukk</Nav.Knapp>
-    </div>
-  </div>
+const OppfriskFeilmelding = ({ lukk, resetErrorBoundary }) => (
+  <StandardMeldingOverst
+    type="feil"
+    actionEtterSynlighet={() => {
+      lukk();
+      resetErrorBoundary();
+    }}
+    melding="Oppdateringen feilet!"
+  />
 );
 
 OppfriskFeilmelding.propTypes = {
-  feilmelding: PT.string.isRequired,
   resetErrorBoundary: PT.func.isRequired,
   lukk: PT.func.isRequired,
 };
 
 // Returnerer OppfriskVenter mens behandlingen oppfriskes og OppfriskFeilmelding dersom oppfrisk() returnerer != 2xx
-const OppfriskBehandling = ({ oppfrisk, lukk, tilForsiden }) => (
-  <ErrorBoundary
-    fallbackRender={({ error, resetErrorBoundary }) => (
-      <OppfriskFeilmelding
-        feilmelding={error ? error.message : "Ukjent feil"}
-        resetErrorBoundary={resetErrorBoundary}
-        tilForsiden={tilForsiden}
-        lukk={lukk}
-      />
-    )}
-  >
-    <Suspense fallback={<OppfriskVenter tilForsiden={tilForsiden} />}>
-      <Oppfrisk oppfrisk={oppfrisk} lukk={lukk} />
-    </Suspense>
-  </ErrorBoundary>
-);
+const OppfriskBehandling = ({ oppfrisk, lukk, tilForsiden }) => {
+  return (
+    <ErrorBoundary
+      fallbackRender={({ resetErrorBoundary }) => (
+        <OppfriskFeilmelding resetErrorBoundary={resetErrorBoundary} lukk={lukk} />
+      )}
+    >
+      <Suspense fallback={<OppfriskVenter tilForsiden={tilForsiden} />}>
+        <Oppfrisk oppfrisk={oppfrisk} lukk={lukk} />
+      </Suspense>
+    </ErrorBoundary>
+  );
+};
 
 OppfriskBehandling.propTypes = {
   lukk: PT.func.isRequired,
@@ -168,7 +143,7 @@ const DialogboksOppfriskBehandling = ({
   return (
     <Nav.Modal
       isOpen
-      className="dialogboksOppfriskBehandling"
+      className={classNames("dialogboksOppfriskBehandling", { skjulBakgrunn: bekreftet })}
       contentLabel="Oppfrisk behandling"
       onRequestClose={tilForsiden}
       closeButton={false}

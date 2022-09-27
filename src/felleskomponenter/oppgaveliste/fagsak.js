@@ -32,7 +32,7 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
       ? Routing.lagUrl(
           saksnummer,
           behandling.behandlingID,
-          sakstype,
+          sakstype.kode,
           behandling.behandlingstema.kode,
           behandling.behandlingstype.kode
         )

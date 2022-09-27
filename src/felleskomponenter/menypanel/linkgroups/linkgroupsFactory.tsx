@@ -1,6 +1,6 @@
 import MKV from "../../../melosyskodeverk";
 
-import { skalViseTomFlyt } from "../../../routing";
+import { skalViseTomFlytEllerErSedBehandling } from "../../../routing";
 import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
@@ -9,7 +9,6 @@ const {
   UTSENDT_ARBEIDSTAKER,
   UTSENDT_SELVSTENDIG,
   ARBEID_FLERE_LAND,
-  IKKE_YRKESAKTIV,
   ARBEID_ETT_LAND_ØVRIG,
   ARBEID_TJENESTEPERSON_ELLER_FLY,
   ARBEID_KUN_NORGE,
@@ -19,9 +18,6 @@ const {
   ANMODNING_OM_UNNTAK_HOVEDREGEL,
   BESLUTNING_LOVVALG_NORGE,
   BESLUTNING_LOVVALG_ANNET_LAND,
-  ØVRIGE_SED_MED,
-  ØVRIGE_SED_UFM,
-  TRYGDETID,
   ARBEID_I_UTLANDET,
   YRKESAKTIV,
 } = MKV.Koder.behandlinger.behandlingstema;
@@ -44,7 +40,8 @@ class LinkGroupsFactory {
     behandlingstema,
     behandlingstype,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (skalViseTomFlyt(sakstype, behandlingstema, behandlingstype)) return visKunFullmektig(contentProps);
+    if (skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype))
+      return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
 
     switch (behandlingstema) {
       case UTSENDT_ARBEIDSTAKER:
@@ -80,12 +77,6 @@ class LinkGroupsFactory {
             new LinksBuilder(contentProps).addPerson().addFamilieForhold().addMedlemskap().addEUEOSBarnetrygd().build()
           )
           .build();
-      }
-      case IKKE_YRKESAKTIV:
-      case TRYGDETID:
-      case ØVRIGE_SED_MED:
-      case ØVRIGE_SED_UFM: {
-        return visKunFullmektig(contentProps);
       }
       case BESLUTNING_LOVVALG_ANNET_LAND:
       case ANMODNING_OM_UNNTAK_HOVEDREGEL: {
@@ -142,8 +133,5 @@ class LinkGroupsFactory {
     }
   }
 }
-
-const visKunFullmektig = (contentProps: ContentProps) =>
-  new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
 
 export default LinkGroupsFactory;

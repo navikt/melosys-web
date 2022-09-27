@@ -48,8 +48,6 @@ export interface VideresendReqDto {
 export const videresend = (saksnummer: string, body: VideresendReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg-videresend`, body);
 
-export const avslutt = (saksnummer: string) => putAsText(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/avslutt`);
-
 interface UtpekReqDto {
   mottakerinstitusjoner: string[];
   fritekstSed: string | null;
