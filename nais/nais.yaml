@@ -46,6 +46,9 @@ spec:
           - id: {{GROUP_MELOSYS_INNLOGGING}}
       allowAllUsers: false
       singlePageApplication: true
+      sidercar:
+        enabled: true
+        autoLogin: true
   accessPolicy:
     outbound:
       external:
