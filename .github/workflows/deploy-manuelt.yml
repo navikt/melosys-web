@@ -134,13 +134,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Deploy redis
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-gcp
-          RESOURCE: nais/redis.yaml
-          VAR: APP_NAME=melosys-web-redis
       - name: Deploy
         uses: nais/deploy/actions/deploy@v1
         env:
