@@ -3,7 +3,7 @@ import PT from "prop-types";
 import { connect } from "react-redux";
 import { reduxForm, getFormValues, change } from "redux-form";
 
-import MKV from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as Ikoner from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
@@ -45,13 +45,25 @@ export const JournalforingForm = (props) => {
     behandleAlleSakerToggleEnabled,
     landkoder,
   } = props;
-  const visForvaltningsMelding =
+
+  let visForvaltningsMelding =
     formValues.saksnummer === "-1" &&
     formValues.journalforingGjelder === BRUKER &&
     formValues.sakstema &&
     [MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG].includes(formValues.sakstema) &&
     formValues.opprettnysak_behandlingstype &&
     [MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG].includes(formValues.opprettnysak_behandlingstype);
+
+  if (!behandleAlleSakerToggleEnabled) {
+    visForvaltningsMelding =
+      formValues.saksnummer === "-1" &&
+      (MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema) ||
+        [
+          MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
+          MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+        ].includes(formValues.opprettnysak_behandlingstema)) &&
+      formValues.journalforingGjelder === BRUKER;
+  }
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">

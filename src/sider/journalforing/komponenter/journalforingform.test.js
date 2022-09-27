@@ -17,6 +17,7 @@ describe("JournalforingForm", () => {
 
   beforeEach(() => {
     props = {
+      behandleAlleSakerToggleEnabled: true,
       journalpostID: "1234",
       hoveddokumentID: "12345",
       vedlegg: [],
