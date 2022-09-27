@@ -144,18 +144,16 @@ export const KnyttTilSak = (props) => {
                 <Nav.Typo.Undertittel className="temaTypeOverskrift">
                   Velg tema og type for ny behandling
                 </Nav.Typo.Undertittel>
-                {journalforingGjelder === MKV.Koder.aktoersroller.BRUKER && (
-                  <Skjema.Select
-                    feltNavn="behandlingstema"
-                    bredde="fullbredde"
-                    label="Behandlingstema"
-                    emptyFieldDisabled={behandlingstema?.kode}
-                  >
-                    {muligeBehandlingstemaer?.map((elem) => (
-                      <option key={elem.kode} value={elem.kode} label={elem.term} />
-                    ))}
-                  </Skjema.Select>
-                )}
+                <Skjema.Select
+                  feltNavn="behandlingstema"
+                  bredde="fullbredde"
+                  label="Behandlingstema"
+                  emptyFieldDisabled={behandlingstema?.kode}
+                >
+                  {muligeBehandlingstemaer?.map((elem) => (
+                    <option key={elem.kode} value={elem.kode} label={elem.term} />
+                  ))}
+                </Skjema.Select>
                 <Skjema.RadioGruppe feltNavn="behandlingstype" label="Behandlingstype" className="behandlingstype">
                   {muligeBehandlingstyper?.map((elem) => (
                     <Skjema.Radio feltNavn="behandlingstype" key={elem.kode} value={elem.kode} label={elem.term} />
