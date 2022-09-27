@@ -343,7 +343,11 @@ const OpprettNySak = ({
 
   const skalViseLandOgSoknadsperiode = () =>
     behandleAlleSakerToggle
-      ? sakstype && !skalViseTomFlyt(sakstype, behandlingstema, behandlingstype)
+      ? sakstype &&
+        sakstema &&
+        behandlingstema &&
+        behandlingstype &&
+        !skalViseTomFlyt(sakstype, behandlingstema, behandlingstype)
       : soknadErValgt && hovedpartErBruker;
 
   return (

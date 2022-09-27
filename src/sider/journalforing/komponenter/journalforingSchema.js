@@ -27,12 +27,22 @@ const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
-const kreverPeriode = (journalforingHensikt, hovedpart, sakstype, behandlingstema) =>
+/* eslint-disable @typescript-eslint/no-unused-vars */
+const kreverPeriode = (journalforingHensikt, hovedpart, sakstype, behandlingstema, behandlingstype) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
-  skalViseSoknadsperiodeOgLand(hovedpart, sakstype, behandlingstema);
+  // skalViseSoknadsperiodeOgLandDeprecated(hovedpart, sakstype, behandlingstema);
+  // erstatter linjen over ved fjerning av toggle melosys.behandle_alle_saker. Husk å fjern eslint-disable også
+  skalViseSoknadsperiodeOgLand(sakstype, behandlingstema, behandlingstype);
 
-const kreverLand = (journalforingHensikt, hovedpart, sakstype, behandlingstema, ukjentEllerAlleEosLand) =>
-  !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, hovedpart, sakstype, behandlingstema);
+const kreverLand = (
+  journalforingHensikt,
+  hovedpart,
+  sakstype,
+  behandlingstema,
+  behandlingstype,
+  ukjentEllerAlleEosLand
+) =>
+  !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, hovedpart, sakstype, behandlingstema, behandlingstype);
 
 const arbeidsgiverOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
   return avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && !erAvsenderPreutfylt;
@@ -146,6 +156,7 @@ const journalforing = object().shape({
         "journalforingGjelder",
         "sakstype",
         "opprettnysak_behandlingstema",
+        "opprettnysak_behandlingstype",
         "journalforingSoknadslandUkjenteEllerAlleEosLand",
       ],
       {

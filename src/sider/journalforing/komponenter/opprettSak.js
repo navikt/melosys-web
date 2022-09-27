@@ -18,6 +18,7 @@ import {
   nullstillFormdataVerdier,
   FormDataVerdi,
 } from "../../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
+import { skalViseTomFlyt } from "../../../routing";
 
 const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
   ({ kode }) =>
@@ -39,7 +40,10 @@ const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
   ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
 );
 
-export const skalViseSoknadsperiodeOgLand = (hovedpart, sakstype, behandlingstema) =>
+export const skalViseSoknadsperiodeOgLand = (sakstype, behandlingstema, behandlingstype) =>
+  sakstype && behandlingstema && behandlingstype && !skalViseTomFlyt(sakstype, behandlingstema, behandlingstype);
+
+export const skalViseSoknadsperiodeOgLandDeprecated = (hovedpart, sakstype, behandlingstema) =>
   hovedpart !== MKV.Koder.aktoersroller.VIRKSOMHET &&
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
   ![
@@ -58,6 +62,7 @@ export const OpprettSak = (props) => {
   const { journalforingSkjemaVerdier, behandleAlleSakerToggleEnabled, settFeltInnhold } = props;
   const {
     opprettnysak_behandlingstema: valgtBehandlingstema,
+    opprettnysak_behandlingstype: valgtBehandlingstype,
     sakstype: valgtSakstype,
     sakstema: valgtSakstema,
     journalforingSoknadsland: valgteLand,
@@ -236,7 +241,9 @@ export const OpprettSak = (props) => {
           ))}
         </Skjema.Select>
       )}
-      {skalViseSoknadsperiodeOgLand(journalforingGjelder, valgtSakstype, valgtBehandlingstema) && (
+      {(behandleAlleSakerToggleEnabled
+        ? skalViseSoknadsperiodeOgLand(valgtSakstype, valgtBehandlingstema, valgtBehandlingstype)
+        : skalViseSoknadsperiodeOgLandDeprecated(journalforingGjelder, valgtSakstype, valgtBehandlingstema)) && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
             <Nav.Row className="">
