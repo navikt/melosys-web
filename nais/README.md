@@ -12,7 +12,7 @@ Alternativt kan man finne ønsket docker-image fra docker-repoet til melosys-web
 Dette limer man inn i feltet `spec.image` i nais.yaml.
 Husk også å bytte ut variabler som `INGRESS` og `APP_NAME` med faktiske verdier. Verdiene for de ulike miljøene kan finnes i vars-dev.json, vars-prod.json osv.
 
-Sett ønsket cluster med `kubectl config use-context dev-fss`.
+Sett ønsket cluster med `kubectl config use-context dev-gcp`.
 
 Etter app.yaml er konfigurert kjører man videre kommandoen `kubectl apply -f nais.yaml`.
 Melosys-web blir nå deployet til ønsket cluster og namespace i nais.
