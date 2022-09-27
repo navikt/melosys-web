@@ -34,7 +34,7 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
         elementer={saksbehandling}
         component={BehandlingOppgave}
         defaultChecked="nyeste"
-        sortingLegend="Sorter behandlinger etter opprettelsesdato: &nbsp;"
+        sortingLegend="Sorter behandlinger etter frist:"
         sortingPath="behandling.registrertDato"
         radioGroupName="behandlingsortering"
         visSakstema={sakstemaToggle === "enabled"}

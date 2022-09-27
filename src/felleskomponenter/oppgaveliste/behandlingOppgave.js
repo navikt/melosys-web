@@ -48,7 +48,7 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
     land,
     hovedpartIdent,
     sisteNotat: notat,
-    gosysBeskrivelse: beskrivelse,
+    oppgaveBeskrivelse: beskrivelse,
   } = sak;
   const {
     behandlingID,
@@ -76,8 +76,6 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
     const maxLengde = 60;
     return tekst != null && tekst.length > maxLengde ? `${tekst.slice(0, maxLengde)} (...)` : tekst;
   };
-
-  console.log(sak);
 
   return (
     <BehandlingOppgavesLinjeWrapper link={link} stengt={erUnderOppdatering}>

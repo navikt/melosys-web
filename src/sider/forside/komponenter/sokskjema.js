@@ -38,7 +38,7 @@ class SokSkjema extends Component {
   render() {
     return (
       <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
-        <Nav.Typo.Normaltekst>Søk sak:&nbsp;</Nav.Typo.Normaltekst>
+        <Nav.Typo.Normaltekst className="sok__tekst">Søk sak:</Nav.Typo.Normaltekst>
         <EnkelFellesInputFnrDnrOrgnrSaksnr
           id="id-sokeskjema"
           label=""
