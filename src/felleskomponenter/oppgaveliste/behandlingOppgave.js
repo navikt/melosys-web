@@ -82,17 +82,19 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
       <Nav.Panel data-cy-behandlingstema={behandlingstema.kode} className={cl}>
         <Nav.Row className="behandlingOppgave__info">
           <Nav.Column xs="6" md="6" lg="8">
-            <PanelHeader tittel={tittel} />
-            <Nav.Column md="12" lg="6" className="behandlingOppgave__uthevetKolonne">
-              {visSakstema ? (
-                <Nav.Row className="infoTerm">
-                  {KV.objektTilTerm(sakstype, "(ukjent)")} - {KV.objektTilTerm(sakstema, "(ukjent)")}
-                </Nav.Row>
-              ) : (
-                <Nav.Row className="infoTerm">{KV.objektTilTerm(sakstype, "(ukjent)")}</Nav.Row>
-              )}
-              <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstema, "(ukjent)")}</Nav.Row>
-              <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstype, "(ukjent)")}</Nav.Row>
+            <Nav.Column md="12" lg="6">
+              <PanelHeader tittel={tittel} />
+              <div className="behandlingOppgave__uthevetKolonne">
+                {visSakstema ? (
+                  <Nav.Row className="infoTerm">
+                    {KV.objektTilTerm(sakstype, "(ukjent)")} - {KV.objektTilTerm(sakstema, "(ukjent)")}
+                  </Nav.Row>
+                ) : (
+                  <Nav.Row className="infoTerm">{KV.objektTilTerm(sakstype, "(ukjent)")}</Nav.Row>
+                )}
+                <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstema, "(ukjent)")}</Nav.Row>
+                <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstype, "(ukjent)")}</Nav.Row>
+              </div>
             </Nav.Column>
 
             <Nav.Column md="12" lg="6" className="behandlingOppgave__kolonne">
@@ -115,6 +117,7 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
               </dl>
             </Nav.Column>
           </Nav.Column>
+
           <Nav.Column xs="6" md="6" lg="4" className="behandlingOppgave__kolonne__notater">
             <Nav.Row>{reduserTekstLengde(notat)}</Nav.Row>
             <Nav.Row>
