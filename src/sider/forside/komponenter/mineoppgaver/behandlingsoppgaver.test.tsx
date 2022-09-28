@@ -1,6 +1,6 @@
 import React from "react";
-import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 import { shallow } from "enzyme";
+import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 import { BehandlingOppgaver } from "./behandlingOppgaver";
 import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
 

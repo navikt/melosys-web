@@ -1,8 +1,8 @@
 import React from "react";
+import { shallow } from "enzyme";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 import JournalforingOppgave from "../../../../felleskomponenter/oppgaveliste/journalforingOppgave";
 import { JournalforingsOppgaver } from "./jornualforingoppgaver";
-import { shallow } from "enzyme";
 import * as Nav from "../../../../navFrontend";
 
 describe("Journalføringsoppgaver", () => {
