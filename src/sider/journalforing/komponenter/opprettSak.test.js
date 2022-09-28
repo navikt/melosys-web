@@ -52,29 +52,27 @@ describe("OpprettSak", () => {
     };
   });
 
-  each([
-    UTSENDT_SELVSTENDIG,
-    UTSENDT_ARBEIDSTAKER,
-    ARBEID_ETT_LAND_ØVRIG,
-    IKKE_YRKESAKTIV,
-    ARBEID_NORGE_BOSATT_ANNET_LAND,
-  ]).it(`Opprett Sak. Skal ha fra/til dato og liste over land`, (behandlingstema) => {
-    props.journalforingSkjemaVerdier.opprettnysak_behandlingstema = behandlingstema;
-    props.journalforingSkjemaVerdier.opprettnysak_behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
-    props.journalforingSkjemaVerdier.sakstype = MKV.Koder.sakstyper.EU_EOS;
-    props.journalforingSkjemaVerdier.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
+  each([UTSENDT_SELVSTENDIG, UTSENDT_ARBEIDSTAKER, ARBEID_ETT_LAND_ØVRIG, ARBEID_NORGE_BOSATT_ANNET_LAND]).it(
+    `Opprett Sak. Skal ha fra/til dato og liste over land`,
+    (behandlingstema) => {
+      props.journalforingSkjemaVerdier.opprettnysak_behandlingstema = behandlingstema;
+      props.journalforingSkjemaVerdier.opprettnysak_behandlingstype =
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
+      props.journalforingSkjemaVerdier.sakstype = MKV.Koder.sakstyper.EU_EOS;
+      props.journalforingSkjemaVerdier.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
-    props.journalforingSkjemaVerdier.journalforingSoknadsland = behandlingstema;
-    const opprettSak = shallow(<OpprettSak {...props} />);
+      props.journalforingSkjemaVerdier.journalforingSoknadsland = behandlingstema;
+      const opprettSak = shallow(<OpprettSak {...props} />);
 
-    const datovelger = opprettSak.find(Skjema.Datovelger);
-    const radioKnapper = opprettSak.find(Skjema.Radio);
-    const multiselect = opprettSak.find(MultiSelect);
+      const datovelger = opprettSak.find(Skjema.Datovelger);
+      const radioKnapper = opprettSak.find(Skjema.Radio);
+      const multiselect = opprettSak.find(MultiSelect);
 
-    expect(datovelger).toHaveLength(2);
-    expect(radioKnapper).toHaveLength(0);
-    expect(multiselect).toHaveLength(1);
-  });
+      expect(datovelger).toHaveLength(2);
+      expect(radioKnapper).toHaveLength(0);
+      expect(multiselect).toHaveLength(1);
+    }
+  );
 
   each([ARBEID_I_UTLANDET, YRKESAKTIV]).it(`Opprett sak, skal ikke ha tilvalg`, (behandlingstema) => {
     props.journalforingSkjemaVerdier.opprettnysak_behandlingstema = behandlingstema;
