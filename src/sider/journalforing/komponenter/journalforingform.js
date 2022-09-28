@@ -174,7 +174,7 @@ const mapStateToProps = (state, ownProps) => ({
       ? null
       : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
     ingenVurdering: false,
-    ikkeSendForvaltingsmelding: true,
+    ikkeSendForvaltingsmelding: false,
     skalTilordnes: false,
     submittable: false,
   },
