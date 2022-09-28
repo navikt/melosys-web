@@ -1,8 +1,8 @@
 export enum FormDataVerdi {
   sakstype = "sakstype",
   sakstema = "sakstema",
-  behandlingstema = "behandlingstema",
-  behandlingstype = "behandlingstype",
+  behandlingstema = "opprettnysak_behandlingstema",
+  behandlingstype = "opprettnysak_behandlingstype",
 }
 
 export const nullstillFormdataVerdier = (
