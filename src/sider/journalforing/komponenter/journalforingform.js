@@ -69,7 +69,7 @@ export const JournalforingForm = (props) => {
 
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, behandleAlleSakerToggleEnabled);
   useEffect(() => {
-    if (!visForvaltningsmelding) {
+    if (behandleAlleSakerToggleEnabled && !visForvaltningsmelding) {
       settFeltInnhold("ikkeSendForvaltingsmelding", true);
     }
   }, [visForvaltningsmelding]);
