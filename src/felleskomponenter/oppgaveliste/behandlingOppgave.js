@@ -101,7 +101,7 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
               <Nav.Row className="behandlingOppgave__statusOgFrist">
                 <BehandlingsstatusMedSvarfrist behandlingsstatus={behandlingsstatus} svarFrist={svarFrist} />
               </Nav.Row>
-              <dl>
+              <dl className="detaljer">
                 <dt className="infoTerm">Frist:</dt>
                 <dd className="infoDetalj">
                   <EnkeltDato dato={aktivTil} />
