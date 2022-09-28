@@ -154,7 +154,7 @@ export const Saksplukker = ({
       )}
       <form className="saksplukker__skjema" onSubmit={submitOgVideresend} onReset={nullstill}>
         <Nav.Row>
-          <Nav.Column xs="4">
+          <Nav.Column md="12" lg="4">
             <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
               {behandleAlleSakerToggle === "enabled" ? (
                 muligeSakstyper.map(({ kode, term }: KTObject) => (
@@ -174,7 +174,7 @@ export const Saksplukker = ({
             </Skjema.Select>
           </Nav.Column>
           {behandleAlleSakerToggle === "enabled" && (
-            <Nav.Column xs="4">
+            <Nav.Column md="12" lg="4">
               <Skjema.Select feltNavn="sakstema" bredde="fullbredde" label="Sakstema">
                 {muligeSakstemaer.map(({ kode, term }: KTObject) => (
                   <option key={kode} value={kode}>
@@ -184,7 +184,7 @@ export const Saksplukker = ({
               </Skjema.Select>
             </Nav.Column>
           )}
-          <Nav.Column xs="4">
+          <Nav.Column md="12" lg="4">
             <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
               {(behandleAlleSakerToggle === "enabled"
                 ? muligeBehandlingstemaer

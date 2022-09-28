@@ -36,18 +36,16 @@ const Forside = (props) => {
       </div>
       <Nav.Container className="forside__container" fluid>
         <Nav.Row>
-          <Nav.Column xs="5">
+          <Nav.Column xs="6" lg="5">
             <JournalforingOppgaver />
           </Nav.Column>
-          <Nav.Column xs="7">
+          <Nav.Column xs="6" lg="7">
             <SokSkjema />
             <Saksplukker />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs="12">
-            <BehandlingOppgaver />
-          </Nav.Column>
+          <BehandlingOppgaver />
         </Nav.Row>
       </Nav.Container>
     </div>
