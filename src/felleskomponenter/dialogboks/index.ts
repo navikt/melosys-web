@@ -1,6 +1,6 @@
 import DialogboksAvslagSoknad from "./avslagSoknad";
 import DialogboksAvsluttSakSomBortfalt from "./avsluttSakSomBortfalt";
-import DialogboksFerdigbehandleNyVurdering from "./ferdigbehandleNyVurdering";
+import DialogboksFerdigbehandleSak from "./ferdigbehandleSak";
 import DialogboksHenleggSak from "./henlegg";
 import DialogboksOppfriskSak from "./oppfrisk";
 import DialogboksRevurderFagsak from "./revurderFagsak";
@@ -8,7 +8,7 @@ import DialogboksRevurderFagsak from "./revurderFagsak";
 export {
   DialogboksAvslagSoknad,
   DialogboksAvsluttSakSomBortfalt,
-  DialogboksFerdigbehandleNyVurdering,
+  DialogboksFerdigbehandleSak,
   DialogboksHenleggSak,
   DialogboksOppfriskSak,
   DialogboksRevurderFagsak,
