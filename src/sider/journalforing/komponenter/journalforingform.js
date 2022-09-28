@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import { change, getFormValues, reduxForm } from "redux-form";
@@ -68,6 +68,11 @@ export const JournalforingForm = (props) => {
   } = props;
 
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, behandleAlleSakerToggleEnabled);
+  useEffect(() => {
+    if (!visForvaltningsmelding) {
+      settFeltInnhold("ikkeSendForvaltingsmelding", true);
+    }
+  }, [visForvaltningsmelding]);
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
@@ -169,7 +174,7 @@ const mapStateToProps = (state, ownProps) => ({
       ? null
       : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
     ingenVurdering: false,
-    ikkeSendForvaltingsmelding: false,
+    ikkeSendForvaltingsmelding: true,
     skalTilordnes: false,
     submittable: false,
   },
