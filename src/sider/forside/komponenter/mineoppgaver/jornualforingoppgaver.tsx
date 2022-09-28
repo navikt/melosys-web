@@ -11,7 +11,7 @@ import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 
 import { oppgaverSelectors } from "../../../../ducks/oppgaver";
 
-import "./mineoppgaver.css";
+import "./journalforingsppgaver.css";
 
 const mapStateToProps = (state: RootState) => ({
   mineSaker: oppgaverSelectors.MineSakerSelector(state),
@@ -33,7 +33,7 @@ export const JournalforingsOppgaver = ({ mineSaker }: PropsFromRedux) => {
   );
 
   return (
-    <div className="mineOppgaver">
+    <div className="journalforingsOppgaver">
       <SorterbarListe
         elementer={journalforing}
         component={JournalforingOppgave}

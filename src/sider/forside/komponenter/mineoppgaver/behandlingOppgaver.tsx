@@ -9,7 +9,7 @@ import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 import { oppgaverSelectors } from "../../../../ducks/oppgaver";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
 
-import "./mineoppgaver.css";
+import "./behandlingsoppgaver.css";
 import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
 import { useFeatureToggle } from "../../../../featuretoggle";
 
@@ -29,7 +29,7 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
   const { saksbehandling } = mineSaker;
 
   return (
-    <div className="mineOppgaver">
+    <div className="behandlingsOppgaver">
       <SorterbarListe
         elementer={saksbehandling}
         component={BehandlingOppgave}

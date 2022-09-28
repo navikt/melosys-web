@@ -16,7 +16,9 @@ const JournalforingOppgave = ({ sak }) => {
   const tittel = (
     <div className="panel-slim-wrapper">
       <span>{navn}</span>
-      <span className="frist">Frist: {aktivTil}</span>
+      <span className="frist">
+        <b>Frist:</b> {aktivTil}
+      </span>
     </div>
   );
 
