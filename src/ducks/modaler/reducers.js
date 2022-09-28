@@ -4,7 +4,7 @@ import * as Types from "./types";
 const modaler = {
   avslagSoknad: "avslagSoknad",
   avsluttSakSomBortfalt: "avsluttSakSomBortfalt",
-  ferdigbehandleNyVurdering: "ferdigbehandleNyVurdering",
+  ferdigbehandleSak: "ferdigbehandleSak",
   henlegg: "henlegg",
   oppfrisk: "oppfrisk",
   revurderFagsak: "revurderFagsak",
@@ -28,7 +28,7 @@ const initialState = {
     [modaler.revurderFagsak]: {
       synlig: false,
     },
-    [modaler.ferdigbehandleNyVurdering]: {
+    [modaler.ferdigbehandleSak]: {
       synlig: false,
     },
   },
@@ -55,8 +55,8 @@ export default function reducer(state = initialState, action = {}) {
     case Types.OPPDATER_AVSLUTT_SAK_SOM_BORTFALT: {
       return lagNyState(state, action, modaler.avsluttSakSomBortfalt);
     }
-    case Types.OPPDATER_FERDIGBEHANDLE_NY_VURDERING: {
-      return lagNyState(state, action, modaler.ferdigbehandleNyVurdering);
+    case Types.OPPDATER_FERDIGBEHANDLE_SAK: {
+      return lagNyState(state, action, modaler.ferdigbehandleSak);
     }
     case Types.OPPDATER_HENLEGG: {
       return lagNyState(state, action, modaler.henlegg);
