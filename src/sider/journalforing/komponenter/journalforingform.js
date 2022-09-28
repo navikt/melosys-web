@@ -32,9 +32,7 @@ const skalViseForvaltningsmelding = (formValues, toggleEnabled) => {
     return (
       formValues.saksnummer === "-1" &&
       formValues.journalforingGjelder === BRUKER &&
-      formValues.sakstema &&
       formValues.sakstema === MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG &&
-      formValues.opprettnysak_behandlingstype &&
       formValues.opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG
     );
   }
