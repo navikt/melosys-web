@@ -4,6 +4,7 @@ import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
 import MKV, { MKVUtils } from "../../melosyskodeverk";
+import { skalViseSoknadsperiodeOgLand } from "../journalforing/komponenter/opprettSak";
 
 const SKRIV_INN_FNR_ELLER_DNR = { melding: "Skriv inn f.nr eller d.nr" };
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig f.nr eller d.nr" };
@@ -69,9 +70,17 @@ const opprettnysak = object().shape({
       then: string().required(VELG_BEHANDLINGSTEMA).nullable(),
     })
     .nullable(),
-  soknadsinfo: object().when(["behandlingstema", "hovedpart"], {
-    is: (behandlingstema, hovedpart) => MKVUtils.erSoknad(behandlingstema) && hovedpart === BRUKER,
-    then: soknadsinfo,
+  soknadsinfo: object().when("$behandleAlleSakerToggleEnabled", {
+    is: (behandleAlleSakerToggleEnabled) => behandleAlleSakerToggleEnabled,
+    then: object().when(["sakstype", "behandlingstema", "behandlingstype"], {
+      is: (sakstype, behandlingstema, behandlingstype) =>
+        skalViseSoknadsperiodeOgLand(sakstype, behandlingstema, behandlingstype),
+      then: soknadsinfo,
+    }),
+    otherwise: object().when(["behandlingstema", "hovedpart"], {
+      is: (behandlingstema, hovedpart) => MKVUtils.erSoknad(behandlingstema) && hovedpart === BRUKER,
+      then: soknadsinfo,
+    }),
   }),
   oppgaveID: string()
     .siblingIs("journalpostID", (journalpostID) => !Utils._isEmpty(journalpostID), MANGLER_JOURNALPOST)
