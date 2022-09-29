@@ -22,7 +22,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 /**
- * Lister ut journalføringsoppgaver som saksbehandleren har opprettet
+ * Lister ut behandlingsoppgaver som saksbehandleren har opprettet
  */
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
