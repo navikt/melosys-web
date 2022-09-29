@@ -23,19 +23,20 @@ const MANGLER_JOURNALPOST = { melding: "Den valgte oppgaven har ingen journalpos
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
-const soknadsinfo = object().shape({
-  fom: string().erGyldigDato().required(MAA_FYLLES_UT),
-  tom: lazy((value) =>
-    !value ? string().ensure() : string().erGyldigDato().erEtterDatofelt("fom").required(MAA_FYLLES_UT)
-  ),
-  landkoder: array()
-    .of(string())
-    .when("erUkjenteEllerAlleEosLand", {
-      is: false,
-      then: array().of(string()).min(1, { _error: VELG_LAND }),
-    }),
-  erUkjenteEllerAlleEosLand: boolean(),
-});
+// Trengs når toggle melosys.behandle_alle_saker fjernes
+// const soknadsinfo = object().shape({
+//   fom: string().erGyldigDato().required(MAA_FYLLES_UT),
+//   tom: lazy((value) =>
+//     !value ? string().ensure() : string().erGyldigDato().erEtterDatofelt("fom").required(MAA_FYLLES_UT)
+//   ),
+//   landkoder: array()
+//     .of(string())
+//     .when("erUkjenteEllerAlleEosLand", {
+//       is: false,
+//       then: array().of(string()).min(1, { _error: VELG_LAND }),
+//     }),
+//   erUkjenteEllerAlleEosLand: boolean(),
+// });
 
 const opprettnysak = object().shape({
   hovedpart: string().required(MAA_FYLLES_UT),
@@ -70,18 +71,12 @@ const opprettnysak = object().shape({
       then: string().required(VELG_BEHANDLINGSTEMA).nullable(),
     })
     .nullable(),
-  soknadsinfo: object().when("$behandleAlleSakerToggleEnabled", {
-    is: (behandleAlleSakerToggleEnabled) => behandleAlleSakerToggleEnabled,
-    then: object().when(["sakstype", "behandlingstema", "behandlingstype"], {
-      is: (sakstype, behandlingstema, behandlingstype) =>
-        skalViseSoknadsperiodeOgLand(sakstype, behandlingstema, behandlingstype),
-      then: soknadsinfo,
-    }),
-    otherwise: object().when(["behandlingstema", "hovedpart"], {
-      is: (behandlingstema, hovedpart) => MKVUtils.erSoknad(behandlingstema) && hovedpart === BRUKER,
-      then: soknadsinfo,
-    }),
-  }),
+  // TODO: skru på validering når toggle melosys.behandle_alle_saker fjernes
+  // soknadsinfo: object().when(["sakstype", "behandlingstema", "behandlingstype"], {
+  //   is: (sakstype, behandlingstema, behandlingstype) =>
+  //     skalViseSoknadsperiodeOgLand(sakstype, behandlingstema, behandlingstype),
+  //   then: soknadsinfo,
+  // }),
   oppgaveID: string()
     .siblingIs("journalpostID", (journalpostID) => !Utils._isEmpty(journalpostID), MANGLER_JOURNALPOST)
     .required(VELG_EN_OPPGAVE)
