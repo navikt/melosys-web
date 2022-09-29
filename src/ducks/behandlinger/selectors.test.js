@@ -3,7 +3,7 @@ import * as selectors from "./selectors";
 import MKV from "../../melosyskodeverk";
 
 describe("Behandlingerselectors", () => {
-  const lagState = ({ lovvalgsperiode, soknadsperiode, behandlingstema }) => ({
+  const lagState = ({ lovvalgsperiode, soknadsperiode, behandlingstema, sakstype }) => ({
     behandlingsgrunnlag: {
       data: {
         data: {
@@ -64,6 +64,13 @@ describe("Behandlingerselectors", () => {
     lovvalgsperioder: {
       data: [],
     },
+    fagsaker: {
+      data: {
+        sakstype: {
+          kode: sakstype,
+        },
+      },
+    },
   });
 
   describe("ArbeidsgivereNorgeSelector", () => {
@@ -116,17 +123,24 @@ describe("Behandlingerselectors", () => {
     );
   });
 
-  describe("ErAnmodningOmUnntakHovedRegelSelector", () => {
+  describe("ErAnmodningOmUnntakHovedRegelOgHarFlytSelector", () => {
     each([
-      [true, MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL],
-      [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG],
-    ]).it("returnerer korrekte verdier", (forventetResultat, behandlingstema) => {
-      const state = lagState({
-        behandlingstema,
-      });
+      [true, MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL, MKV.Koder.sakstyper.EU_EOS],
+      [true, MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL, MKV.Koder.sakstyper.FTRL],
+      [false, MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL, MKV.Koder.sakstyper.TRYGDEAVTALE],
+      [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG, MKV.Koder.sakstyper.EU_EOS],
+      [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG, MKV.Koder.sakstyper.FTRL],
+    ]).it(
+      "returnerer korrekte verdier (%s) for behandlingstema %s og sakstype %s",
+      (forventetResultat, behandlingstema, sakstype) => {
+        const state = lagState({
+          behandlingstema,
+          sakstype,
+        });
 
-      expect(selectors.ErAnmodningOmUnntakHovedRegelSelector(state)).toBe(forventetResultat);
-    });
+        expect(selectors.ErAnmodningOmUnntakHovedRegelOgHarFlytSelector(state)).toBe(forventetResultat);
+      }
+    );
   });
 
   describe("ErRegistreringUnntakNorskTrygdUtstasjoneringSelector", () => {
