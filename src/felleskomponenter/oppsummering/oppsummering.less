@@ -39,11 +39,10 @@
     }
 
     .endre-knapp {
-      background-color: @white;
       width: auto;
       float: right;
 
-      &:hover {
+      &:hover:not([disabled]) {
         background-color: @navBla;
         stroke: @white;
         stroke-width: 2px;

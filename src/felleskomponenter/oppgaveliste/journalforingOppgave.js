@@ -10,21 +10,22 @@ import PanelHeader from "../panelHeader";
 import "./journalforingOppgave.css";
 
 const JournalforingOppgave = ({ sak }) => {
-  const { journalpostID, oppgaveID, aktivTil, hovedpartIdent, navn } = sak;
-  const tittel = `Journalføring - ${navn} - ${hovedpartIdent}`;
+  const { journalpostID, oppgaveID, aktivTil, navn } = sak;
   const link = `/journalforing/${journalpostID}/${oppgaveID}`;
 
-  const undertittel = (
-    <div className="frist-wrapper">
-      <span className="frist">Frist:</span>
-      {aktivTil}
+  const tittel = (
+    <div className="panel-slim-wrapper">
+      <span>{navn}</span>
+      <span className="frist">
+        <b>Frist:</b> {aktivTil}
+      </span>
     </div>
   );
 
   return (
     <Link to={link} className="journalOppgave__link">
       <Nav.Panel className="journalOppgave">
-        <PanelHeader ikon={Ikoner.IkonSak} tittel={tittel} undertittel={undertittel} />
+        <PanelHeader ikon={Ikoner.IkonSak} tittel={tittel} />
       </Nav.Panel>
     </Link>
   );

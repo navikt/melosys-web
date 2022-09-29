@@ -7,6 +7,7 @@ import Knapperad from "../../knapperad";
 
 import "./dialogboksRevurderFagsak.css";
 
+// Fjernes med melosys.behandle_alle_saker
 export const DialogboksRevurderFagsak = ({ bekreft, avbryt, ariaHideApp, spinner }) => (
   <Nav.Modal
     className="dialogboksRevurderFagsak"

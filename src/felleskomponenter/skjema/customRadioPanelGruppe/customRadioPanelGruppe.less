@@ -1,12 +1,10 @@
 @import "../../../constants.less";
 
 .customRadioPanelGruppe {
-  margin-top: 1em;
-
   .customRadioPanel {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: baseline;
     justify-items: center;
     border: 1px solid @gray-dark;
     margin: 0.5em 0;
@@ -32,6 +30,31 @@
 
   .radioPanel__innhold {
     flex: 10;
+  }
+
+  .visMerMindre {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 1rem;
+
+    button {
+      display: inline-flex;
+      background: none;
+      border: none;
+      color: #0067c5;
+
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+
+    svg {
+      height: 20px;
+      width: 20px;
+      margin-left: 0.25rem;
+    }
   }
 }
 

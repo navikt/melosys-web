@@ -25,7 +25,6 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
       arbeidsland: [],
       behandlingID: 4,
       lovvalgsperiode: {},
-      lagreOgFatteVedtak: jest.fn(),
       formIsValid: true,
       formValues: {},
       touchAll: jest.fn(),
@@ -40,10 +39,12 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
       soknadsperiode: { tom: "", fom: "" },
       harFeilmeldinger: false,
       kontrollerFerdigbehandling: jest.fn(),
+      validerBehandlingsgrunnlag: jest.fn().mockImplementationOnce(() => Promise.resolve()),
+      fattVedtak: jest.fn(),
     };
   });
 
-  test("lagreOgFatteVedtak kalles ved submit av form", () => {
+  test("validerBehandlingsgrunnlag kalles ved submit av form", async () => {
     props.formValues.forkortLovvalgsperiode = false;
     props.formValues.vedtaksbrevFritekst = "vedtaksbrevfritekst";
     props.formValues.fritekstSed = "fritekst til SED";
@@ -56,10 +57,11 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
     const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
     const form = vurderingArbeidEttLandOvrigVedtak.find("form");
 
-    form.props().onSubmit();
+    await form.props().onSubmit();
 
-    expect(props.lagreOgFatteVedtak).toHaveBeenCalledTimes(1);
-    expect(props.lagreOgFatteVedtak).toHaveBeenLastCalledWith({
+    expect(props.validerBehandlingsgrunnlag).toHaveBeenCalledTimes(1);
+    expect(props.fattVedtak).toHaveBeenCalledTimes(1);
+    expect(props.fattVedtak).toHaveBeenLastCalledWith(4, {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: "vedtaksbrevfritekst",
       fritekstSed: "fritekst til SED",

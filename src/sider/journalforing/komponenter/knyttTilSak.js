@@ -1,76 +1,218 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { formValueSelector } from "redux-form";
+import { change, formValueSelector } from "redux-form";
+import classNames from "classnames";
 import PT from "prop-types";
 
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as MPT from "../../../proptypes";
 import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
+import * as KV from "../../../kodeverk";
+import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
+import * as Api from "../../../services/api";
 
 import "./knyttTilSak.css";
+import { formSelectors } from "../../../ducks/form";
+
+const {
+  behandlinger: { behandlingstyper: MKVBehandlingstyper, behandlingstema: MKVBehandlingstema },
+  sakstyper: MKVSakstyper,
+  saksstatuser: MKVSaksstatuser,
+} = MKV.Koder;
+
+const behandlingstyper_gammel = (sakstype, behtema) => {
+  switch (sakstype) {
+    case MKVSakstyper.EU_EOS:
+      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
+        ({ kode }) =>
+          (behtema === MKVBehandlingstema.UTSENDT_ARBEIDSTAKER && kode === MKVBehandlingstyper.ENDRET_PERIODE) ||
+          kode === MKVBehandlingstyper.NY_VURDERING
+      );
+    case MKVSakstyper.TRYGDEAVTALE:
+      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
+        ({ kode }) => kode === MKVBehandlingstyper.NY_VURDERING
+      );
+    default:
+      return [];
+  }
+};
 
 export const KnyttTilSak = (props) => {
-  const { sak, behandlingstyper, opprettBehandling } = props;
-  const { behandlingOversikter } = sak;
+  const {
+    sak,
+    opprettBehandling,
+    behandlingstema,
+    behandlingstype,
+    behandleAlleSakerToggleEnabled,
+    changeField,
+    journalforingGjelder,
+  } = props;
+  const { behandlingOversikter, sakstype, sakstema } = sak;
+  const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState();
+  const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
   const sisteBehandling = behandlingOversikter[0];
-  const sakInneholderSoeknad = behandlingOversikter.some(
-    (behandling) => behandling.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
-  );
+  useEffect(() => {
+    return () => {
+      changeField("opprettBehandling", false);
+      changeField("behandlingstema", "");
+      changeField("behandlingstype", "");
+    };
+  }, []);
+  useEffect(() => {
+    if (!behandleAlleSakerToggleEnabled) return;
 
-  const clsElementskrift = { "border-bottom": "none" };
+    if (sakstema.kode && sakstype.kode) {
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(
+        journalforingGjelder,
+        sakstype.kode,
+        sakstema.kode,
+        sisteBehandling.behandlingstema.kode
+      ).then((alleMuligeBehandlingstemaer) => {
+        setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);
+      });
+    }
+  }, [behandleAlleSakerToggleEnabled, journalforingGjelder, sakstema.kode, sakstype.kode]);
 
-  const visUtenOppretteBehandling = !sakInneholderSoeknad;
+  useEffect(() => {
+    if (!behandleAlleSakerToggleEnabled) return;
+    if (sakstema.kode && sakstype.kode && behandlingstema) {
+      Api.LovligeKombinasjoner.hentBehandlingstyper(
+        journalforingGjelder,
+        sakstype.kode,
+        sakstema.kode,
+        behandlingstema,
+        sisteBehandling.behandlingID
+      ).then((alleMuligeBehandlingstyper) => {
+        setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
+      });
+    }
+  }, [behandleAlleSakerToggleEnabled, journalforingGjelder, sakstema.kode, sakstype.kode, behandlingstema]);
+
+  useEffect(() => {
+    if (opprettBehandling && !behandlingstema) {
+      changeField("behandlingstema", sisteBehandling.behandlingstema.kode);
+    }
+    if (!opprettBehandling && behandlingstema) {
+      changeField("behandlingstema", "");
+    }
+    if (!opprettBehandling && behandlingstype) {
+      changeField("behandlingstype", "");
+    }
+  }, [opprettBehandling]);
 
   const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
     sisteBehandling.behandlingsstatus.kode
   );
+  const sakErHenlagtEllerBortfalt = [MKVSaksstatuser.HENLAGT, MKVSaksstatuser.HENLAGT_BORTFALT].includes(
+    sak.saksstatus.kode
+  );
 
-  if (sisteBehandlingErInaktiv) {
+  const visKnyttTilEksisterende =
+    sisteBehandlingErInaktiv && (!behandleAlleSakerToggleEnabled || !sakErHenlagtEllerBortfalt);
+
+  const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
+    ? sisteBehandlingErInaktiv
+    : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
+
+  const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
+
+  if (visKnyttTilEksisterende) {
     return (
-      <div className="panelramme">
+      <div className="knyttTilSak__panelramme">
         <Mui.Elementskrift
           tekst="Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet"
           ikon={Ikoner.InformationCircle}
           className="elementTittel oversteUndertittel"
-          style={clsElementskrift}
+          style={{ "border-bottom": "none" }}
         />
-        <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
-          {sakInneholderSoeknad && <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />}
-          {visUtenOppretteBehandling && (
+        <Skjema.RadioGruppe
+          feltNavn="opprettBehandling"
+          label={behandleAlleSakerToggleEnabled ? "" : "Knytt til sak"}
+          className={classNames("panelElement", { "nyBehandling-utenBehandling": behandleAlleSakerToggleEnabled })}
+        >
+          {visOpprettNyBehandling && <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />}
+          {visUtenOpprettNyBehandling && (
             <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
           )}
         </Skjema.RadioGruppe>
-        {opprettBehandling() && (
-          <Skjema.Select
-            feltNavn="behandlingstype"
-            bredde="fullbredde"
-            label="Velg behandlingstype"
-            emptyFieldDisabled={false}
-          >
-            {behandlingstyper?.map((elem) => (
-              <option key={elem.kode} value={elem.kode} label={elem.term} />
-            ))}
-          </Skjema.Select>
+        {opprettBehandling && (
+          <>
+            {behandleAlleSakerToggleEnabled ? (
+              <div className="panelElement">
+                <Nav.Typo.Undertittel className="temaTypeOverskrift">
+                  Velg tema og type for ny behandling
+                </Nav.Typo.Undertittel>
+                <Skjema.Select
+                  feltNavn="behandlingstema"
+                  bredde="fullbredde"
+                  label="Behandlingstema"
+                  emptyFieldDisabled={behandlingstema?.kode}
+                >
+                  {muligeBehandlingstemaer?.map((elem) => (
+                    <option key={elem.kode} value={elem.kode} label={elem.term} />
+                  ))}
+                </Skjema.Select>
+                <Skjema.RadioGruppe feltNavn="behandlingstype" label="Behandlingstype" className="behandlingstype">
+                  {muligeBehandlingstyper?.map((elem) => (
+                    <Skjema.Radio feltNavn="behandlingstype" key={elem.kode} value={elem.kode} label={elem.term} />
+                  ))}
+                </Skjema.RadioGruppe>
+              </div>
+            ) : (
+              <Skjema.Select
+                feltNavn="behandlingstype"
+                bredde="fullbredde"
+                label="Velg behandlingstype"
+                className="panelElement"
+                emptyFieldDisabled={false}
+              >
+                {behandlingstyper_gammel(sakstype?.kode, sisteBehandling.behandlingstema?.kode)?.map((elem) => (
+                  <option key={elem.kode} value={elem.kode} label={elem.term} />
+                ))}
+              </Skjema.Select>
+            )}
+          </>
         )}
       </div>
     );
   }
+
+  const visUtenVidereBehandling = behandleAlleSakerToggleEnabled ? sakstype.kode === MKVSakstyper.EU_EOS : true;
+
   return (
-    <div className="behandlingspanel">
-      <Skjema.Checkbox className="knyttTilSak" feltNavn="ingenVurdering" label="Journalfør uten videre behandling" />
+    <div className="knyttTilSak__behandlingspanel">
+      {visUtenVidereBehandling && (
+        <Skjema.Checkbox className="knyttTilSak" feltNavn="ingenVurdering" label="Journalfør uten videre behandling" />
+      )}
     </div>
   );
 };
 KnyttTilSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
-  behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
-  opprettBehandling: PT.func.isRequired,
+  opprettBehandling: PT.bool.isRequired,
+  behandlingstema: PT.string,
+  behandlingstype: PT.string,
+  journalforingGjelder: PT.string.isRequired,
+  behandleAlleSakerToggleEnabled: PT.bool.isRequired,
+  changeField: PT.func.isRequired,
 };
-KnyttTilSak.defaultProps = {};
-const selector = formValueSelector("journalforing");
+KnyttTilSak.defaultProps = {
+  behandlingstema: "",
+  behandlingstype: "",
+};
+
+const selector = formValueSelector(KV.Form.JOURNALFORING);
+
 const mapStateToProps = (state) => ({
-  opprettBehandling: () => selector(state, "opprettBehandling"),
+  opprettBehandling: selector(state, "opprettBehandling"),
+  behandlingstema: selector(state, "behandlingstema"),
+  behandlingstype: selector(state, "behandlingstype"),
+  journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
 });
-export default connect(mapStateToProps)(KnyttTilSak);
+const mapDispatchToProps = (dispatch) => ({
+  changeField: (felt, verdi) => dispatch(change(KV.Form.JOURNALFORING, felt, verdi)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(KnyttTilSak);

@@ -10,10 +10,11 @@ import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog, { fanerUtenBucOgSed, defaultFaner } from "../../../felleskomponenter/sideDialog";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
+import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingsresultatOperations } from "../../../ducks/behandlingsresultat";
@@ -76,7 +77,7 @@ class Saksbehandling extends Component {
 
   lastInnSaksopplysninger = async () => {
     const { match, location } = this.props;
-    const { snr } = match.params;
+    const { saksnr } = match.params;
     const behandlingID = Utils.queryString.getParam(location, "behandlingID");
     this.setState({ behandlingID: Utils._toInteger(behandlingID) });
 
@@ -93,7 +94,7 @@ class Saksbehandling extends Component {
     } = this.props;
 
     try {
-      await hentFagsaker(snr);
+      await hentFagsaker(saksnr);
       const response = await hentBehandling(behandlingID);
       const behandling = response.data;
       if (!behandling) return false;
@@ -107,7 +108,7 @@ class Saksbehandling extends Component {
       }
 
       await hentBehandlingsgrunnlag(behandlingID);
-      await hentDokumentOversikt(snr);
+      await hentDokumentOversikt(saksnr);
       await hentLandkoder();
 
       const anmodningsperioderRes = await Api.Anmodningsperioder.hent(behandlingID);
@@ -195,14 +196,11 @@ class Saksbehandling extends Component {
                       lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
                       lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
                       oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
-                      lagreAllData={this.props.lagreAllData}
                       tilForsiden={tilForsiden}
                       startOgVisOppfriskModal={startOgVisOppfriskModal}
                     />
                   ) : (
-                    <Nav.AlertStripeInfo className="infostripe">
-                      Behandlingen er journalført på virksomhet
-                    </Nav.AlertStripeInfo>
+                    <VirksomhetMelding />
                   )}
                 </Nav.Column>
                 <Nav.Column xs="5">
@@ -265,7 +263,6 @@ Saksbehandling.propTypes = {
   anmodningsperioder: PT.array,
   sendAnmodningsperioder: PT.func.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
-  lagreAllData: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
   lovvalgsperiodeFom: PT.string,
@@ -350,7 +347,6 @@ const mapDispatchToProps = (dispatch) => ({
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
   sendAnmodningsperioder: (behandlingID, body) => dispatch(anmodningsperioderOperations.send(behandlingID, body)),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
   hentAnmodningsperiodesvar: (anmodningsperiodeID) =>
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),

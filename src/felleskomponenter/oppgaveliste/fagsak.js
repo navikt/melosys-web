@@ -27,6 +27,17 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
   const tittel = visSakstema
     ? `${KV.objektTilTerm(sakstype)} - ${KV.objektTilTerm(sakstema)}`
     : `${KV.objektTilTerm(sakstype)}`;
+  const link = (behandling) =>
+    visSakstema
+      ? Routing.lagUrl(
+          saksnummer,
+          behandling.behandlingID,
+          sakstype.kode,
+          behandling.behandlingstema.kode,
+          behandling.behandlingstype.kode
+        )
+      : Routing.lagUrlFraBehandlingstema(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode);
+
   const customMargin = { marginLeft: "1em" };
 
   const sorterteBehandlinger = behandlingOversikter
@@ -66,11 +77,7 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
         </Nav.Row>
         <Nav.Row className="fagsak__behandlinger">
           {sorterteBehandlinger.map((behandling) => (
-            <Behandling
-              key={behandling.behandlingID}
-              behandling={behandling}
-              link={Routing.lagUrl(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode)}
-            />
+            <Behandling key={behandling.behandlingID} behandling={behandling} link={link(behandling)} />
           ))}
         </Nav.Row>
       </Nav.Container>

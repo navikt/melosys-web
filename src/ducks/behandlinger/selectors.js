@@ -14,6 +14,7 @@ import * as KV from "../../kodeverk";
 import * as behandlingsgrunnlagSelectors from "../behandlingsgrunnlag/selectors";
 import * as Utils from "../../utils";
 import * as lovvalgsperioderSelectors from "../lovvalgsperioder/selectors";
+import { SakstypeKodeSelector } from "../fagsaker/selectors";
 
 export const BehandlingerSelector = createSelector(
   (state) => (state.behandlinger.data ? state.behandlinger.data : {}),
@@ -35,6 +36,7 @@ export const BehandlingstemaKodeSelector = createSelector(
   (state) => OppsummeringSelector(state),
   (oppsummering) => (oppsummering.behandlingstema ? oppsummering.behandlingstema.kode : "")
 );
+
 export const BehandlingsstatusKodeSelector = createSelector(
   (state) => OppsummeringSelector(state),
   (oppsummering) => (oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : "")
@@ -389,9 +391,12 @@ export const ErEndretPeriodeSelector = createSelector(
   (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
 );
 
-export const ErAnmodningOmUnntakHovedRegelSelector = createSelector(
+export const ErAnmodningOmUnntakHovedRegelOgHarFlytSelector = createSelector(
   BehandlingstemaKodeSelector,
-  (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
+  SakstypeKodeSelector,
+  (behandlingstema, sakstype) =>
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL &&
+    sakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE
 );
 
 export const ErRegistreringUnntakNorskTrygdUtstasjoneringSelector = createSelector(
@@ -415,6 +420,8 @@ export const ErArbeidEttLand = createSelector(BehandlingstemaKodeSelector, (beha
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
   ].includes(behandlingstema)
 );

@@ -6,9 +6,8 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-
+import MKV from "../../melosyskodeverk";
 import * as Mui from "../ui";
-import * as KV from "../../kodeverk";
 import * as Api from "../../services/api";
 import * as Nav from "../../navFrontend";
 import * as Routing from "../../routing";
@@ -17,27 +16,39 @@ import * as Datoutils from "../../utils/dato";
 import { behandlingsstatusOperations, behandlingsstatusSelectors } from "../../ducks/behandlingsstatus";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { behandlingsgrunnlagOperations } from "../../ducks/behandlingsgrunnlag";
-import { behandlingstemaOperations, behandlingstemaSelectors } from "../../ducks/behandlingstema";
-import { behandlingstypeOperations, behandlingstypeSelectors } from "../../ducks/behandlingstype";
 import { navigeringOperations } from "../../ducks/navigering";
 import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
 
 import "./endreBehandlingModal.css";
+import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
+import { saksopplysningerOperations } from "../../ducks/saksopplysninger";
+import { useFeatureToggle } from "../../featuretoggle";
+import { erBehandlingstemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
+import { behandlingstypeOperations, behandlingstypeSelectors } from "../../ducks/behandlingstype";
+import { behandlingstemaOperations, behandlingstemaSelectors } from "../../ducks/behandlingstema";
+import { FormDataVerdi } from "../skjema/formdatahjelper/nullstillsak";
+import { StandardMeldingOverst } from "../alertmeldinger";
+import { Spinner } from "../spinner";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  muligeBehandlingstyper: behandlingstypeSelectors.MuligeBehandlingstyperSelector(state),
-  muligeBehandlingstema: behandlingstemaSelectors.MuligeBehandlingstemaSelector(state),
   muligeBehandlingsstatuser: behandlingsstatusSelectors.MuligeBehandlingsstatusSelector(state),
+  muligeSakstemaer_gammel: fagsakSelectors.SakstemaerSelector(state),
+  muligeSakstyper_gammel: fagsakSelectors.SakstyperSelector(state),
+  muligeBehandlingstyper_gammel: behandlingstypeSelectors.MuligeBehandlingstyperSelector(state),
+  muligeBehandlingstemaer_gammel: behandlingstemaSelectors.MuligeBehandlingstemaSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  oppfriskSaksopplysninger: (behandlingID: number) => saksopplysningerOperations.oppfrisk(behandlingID),
   hentBehandling: (behandlingID: number) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+  hentFagsak: (saksnummer: string) => dispatch(fagsakOperations.hent(saksnummer)),
   hentBehandlingsgrunnlag: (behandlingID: number) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
-  hentMuligeBehandlingstema: (behandlingID: number) =>
+  hentMuligeBehandlingstemaer_gammel: (behandlingID: number) =>
     dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
-  hentMuligeBehandlingstyper: (behandlingID: number) =>
+  hentMuligeSakstyper_gammel: (saksnummer: string) => dispatch(fagsakOperations.hentMuligeSakstyper(saksnummer)),
+  hentMuligeBehandlingstyper_gammel: (behandlingID: number) =>
     dispatch(behandlingstypeOperations.hentMuligeBehandlingstyper(behandlingID)),
   hentMuligeBehandlingsstatuser: (behandlingID: number) =>
     dispatch(behandlingsstatusOperations.hentMuligeBehandlingsstatuser(behandlingID)),
@@ -63,70 +74,169 @@ function EndreBehandlingModal({
   fagsak,
   hentBehandling,
   hentBehandlingsgrunnlag,
-  muligeBehandlingstyper,
-  muligeBehandlingstema,
+  hentFagsak,
+  muligeSakstyper_gammel,
+  muligeBehandlingstyper_gammel,
+  muligeBehandlingstemaer_gammel,
   muligeBehandlingsstatuser,
-  hentMuligeBehandlingstyper,
-  hentMuligeBehandlingstema,
+  hentMuligeBehandlingstyper_gammel,
+  hentMuligeBehandlingstemaer_gammel,
+  hentMuligeSakstyper_gammel,
   hentMuligeBehandlingsstatuser,
   tilAnnenSide,
   location,
+  oppfriskSaksopplysninger,
 }: EndreBehandlingModalProps) {
   const [generellFeil, setGenerellFeil] = useState("");
   const [behandlingEndret, setBehandlingEndret] = useState(false);
-
-  const [behandlingstema, setBehandlingstema] = useState(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstema));
-  const [behandlingstype, setBehandlingstype] = useState(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstype));
+  const [sakstema, setSakstema] = useState(fagsak.sakstema?.kode);
+  const [sakstype, setSakstype] = useState(fagsak.sakstype?.kode);
+  const [behandlingstema, setBehandlingstema] = useState(oppsummering.behandlingstema?.kode);
+  const [behandlingstype, setBehandlingstype] = useState(oppsummering.behandlingstype?.kode);
   const [behandlingsfrist, setBehandlingsfrist] = useState(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
-  const [behandlingsstatus, setBehandlingsstatus] = useState(
-    KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingsstatus)
-  );
+  const [behandlingsstatus, setBehandlingsstatus] = useState(oppsummering.behandlingsstatus?.kode);
+  const [skalViseSpinner, setSkalViseSpinner] = useState(false);
+  const [muligeSakstyper] = useState([]);
+  const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
+  const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
+  const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
+  const [nyLink, setNyLink] = useState<string | undefined>(undefined);
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+    if (sakstype) {
+      Api.LovligeKombinasjoner.hentSakstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype).then((alleMuligesakstemaer) => {
+        setMuligeSakstemaer(alleMuligesakstemaer);
+      });
+    }
+  }, [behandleAlleSakerToggle, sakstype]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+    if (sakstema && sakstype) {
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype, sakstema).then(
+        (alleMuligeBehandlingstemaer) => {
+          setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);
+        }
+      );
+    }
+  }, [behandleAlleSakerToggle, sakstema, sakstype]);
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+    if (sakstema && sakstype && behandlingstema) {
+      Api.LovligeKombinasjoner.hentBehandlingstyper(
+        MKV.Koder.aktoersroller.BRUKER,
+        sakstype,
+        sakstema,
+        behandlingstema
+      ).then((alleMuligeBehandlingstyper) => {
+        setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
+      });
+    }
+  }, [behandleAlleSakerToggle, sakstype, sakstema, behandlingstema]);
 
   useEffect(() => {
     if (skalViseModal) {
-      hentMuligeBehandlingstyper(behandlingID);
-      hentMuligeBehandlingstema(behandlingID);
+      const { saksnummer } = fagsak;
+      hentMuligeBehandlingstyper_gammel(behandlingID);
+      hentMuligeBehandlingstemaer_gammel(behandlingID);
+      hentMuligeSakstyper_gammel(saksnummer);
       hentMuligeBehandlingsstatuser(behandlingID);
       setGenerellFeil("");
       setBehandlingEndret(false);
-      setBehandlingstema(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstema));
-      setBehandlingstype(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstype));
+      setSakstema(fagsak.sakstema?.kode);
+      setSakstype(fagsak.sakstype?.kode);
+      setBehandlingstema(oppsummering.behandlingstema?.kode);
+      setBehandlingstype(oppsummering.behandlingstype?.kode);
+      setBehandlingsstatus(oppsummering.behandlingsstatus?.kode);
       setBehandlingsfrist(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
-      setBehandlingsstatus(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingsstatus));
     }
   }, [skalViseModal]);
 
   const endreBehandlingHandle = () => {
-    const req: Api.Behandlinger.behandling.EndreBehandlingReqDto = {
-      sakstype: KV.objektTilKode(fagsak.sakstype),
+    setSkalViseSpinner(true);
+    const reqBehandling: Api.Behandlinger.behandling.EndreBehandlingReqDto = {
       behandlingstema,
       behandlingstype,
       behandlingsfrist: Datoutils.dateTilIsoString(behandlingsfrist) || "",
       behandlingsstatus,
     };
-    Api.Behandlinger.behandling
-      .endreBehandling(behandlingID, req)
-      .then(() => {
+
+    const reqFagsak: Api.Fagsaker.fagsak.EndreFagsakDto = {
+      sakstema,
+      sakstype,
+    };
+    const { saksnummer } = fagsak;
+
+    Promise.all([
+      Api.Behandlinger.behandling.endreBehandling(behandlingID, reqBehandling),
+      Api.Fagsaker.fagsak.endreFagsak(saksnummer, reqFagsak),
+    ])
+      .then(async () => {
         setBehandlingEndret(true);
         hentBehandling(behandlingID);
+        hentFagsak(saksnummer);
         hentBehandlingsgrunnlag(behandlingID);
-        const nyLink = Routing.lagUrl(fagsak.saksnummer, behandlingID, behandlingstema);
-        if (nyLink && nyLink !== location.pathname + location.search) tilAnnenSide(nyLink);
-        setTimeout(lukkModal, 2000);
+
+        const nyGenerertLink =
+          behandleAlleSakerToggle === "enabled"
+            ? Routing.lagUrl(saksnummer, behandlingID, sakstype, behandlingstema, behandlingstype)
+            : Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema);
+        if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
+          setNyLink(nyGenerertLink);
+        }
       })
       .catch(() => {
-        setGenerellFeil(
-          "Behandling ble ikke endret og oppdatert. Prøv igjen, eller se driftsmeldinger for mer informasjon"
-        );
-        setTimeout(lukkModal, 5000);
-      });
+        setGenerellFeil("Oppdateringen feilet!");
+      })
+      .finally(() => setSkalViseSpinner(false));
   };
 
-  const muligeVerdierPlussValgt = (muligeVerdier: KTObject[], valgtVerdi: KTObject) => {
+  const nullstillFlyt = async () => {
+    setSkalViseSpinner(true);
+    try {
+      await oppfriskSaksopplysninger(behandlingID);
+      await Api.Trygdeavtale.resetFlyt(behandlingID);
+    } finally {
+      setSkalViseSpinner(false);
+    }
+
+    if (nyLink && nyLink !== location.pathname + location.search) {
+      tilAnnenSide(nyLink);
+    } else {
+      window.location.reload();
+    }
+  };
+
+  const muligeVerdierPlussValgt = (valgtVerdi: KTObject, muligeVerdier: KTObject[] = []) => {
     return [valgtVerdi].concat(muligeVerdier.filter((verdi) => verdi.kode !== valgtVerdi.kode));
   };
 
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
+  const endringerErBegrenset = erBehandlingstemaMedBegrensetRettigheter(oppsummering.behandlingstema, fagsak.sakstype);
+
+  const nullstillSak = (steg: FormDataVerdi): void => {
+    if (behandleAlleSakerToggle !== "enabled") return;
+    switch (steg) {
+      case FormDataVerdi.sakstype:
+        setSakstema("");
+        setBehandlingstema("");
+        setBehandlingstype("");
+        break;
+      case FormDataVerdi.sakstema:
+        setBehandlingstema("");
+        setBehandlingstype("");
+        break;
+      case FormDataVerdi.behandlingstema:
+        setBehandlingstype("");
+        break;
+      case FormDataVerdi.behandlingstype:
+      default:
+        break;
+    }
+  };
 
   const renderEndreBehandling = () => {
     return (
@@ -134,33 +244,65 @@ function EndreBehandlingModal({
         <div>
           <div className="innhold">
             <Mui.KodeTermSelect
-              onChange={() => null}
+              onChange={(e) => {
+                setSakstype(e.target.value);
+                nullstillSak(FormDataVerdi.sakstype);
+              }}
               label="Sakstype"
-              value={KV.objektTilTerm(fagsak.sakstype)}
-              koder={[fagsak.sakstype]}
+              value={sakstype}
+              koder={muligeVerdierPlussValgt(
+                fagsak.sakstype,
+                behandleAlleSakerToggle === "enabled" ? muligeSakstyper : muligeSakstyper_gammel
+              )}
               disableForsteValg
-              redigerbart={false}
+              redigerbart={!endringerErBegrenset}
             />
+            {behandleAlleSakerToggle === "enabled" && (
+              <Mui.KodeTermSelect
+                onChange={(e) => {
+                  setSakstema(e.target.value);
+                  nullstillSak(FormDataVerdi.sakstema);
+                }}
+                label="Sakstema"
+                value={sakstema}
+                koder={muligeSakstemaer}
+                disableForsteValg
+                redigerbart={!endringerErBegrenset}
+              />
+            )}
             <Mui.KodeTermSelect
-              onChange={(e) => setBehandlingstema(e.target.value)}
+              onChange={(e) => {
+                setBehandlingstema(e.target.value);
+                nullstillSak(FormDataVerdi.behandlingstema);
+              }}
               label="Behandlingstema"
               value={behandlingstema}
-              koder={muligeVerdierPlussValgt(muligeBehandlingstema, oppsummering.behandlingstema)}
+              koder={
+                behandleAlleSakerToggle === "enabled"
+                  ? muligeBehandlingstemaer
+                  : muligeVerdierPlussValgt(oppsummering.behandlingstema, muligeBehandlingstemaer_gammel)
+              }
               disableForsteValg
+              redigerbart={!endringerErBegrenset}
             />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"
               value={behandlingstype}
-              koder={muligeVerdierPlussValgt(muligeBehandlingstyper, oppsummering.behandlingstype)}
+              koder={
+                behandleAlleSakerToggle === "enabled"
+                  ? muligeBehandlingstyper
+                  : muligeVerdierPlussValgt(oppsummering.behandlingstype, muligeBehandlingstyper_gammel)
+              }
               disableForsteValg
+              redigerbart={!endringerErBegrenset}
             />
             <Datovelger onChange={setBehandlingsfrist} label="Frist" value={behandlingsfrist} />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingsstatus(e.target.value)}
               label="Behandlingsstatus"
               value={behandlingsstatus}
-              koder={muligeVerdierPlussValgt(muligeBehandlingsstatuser, oppsummering.behandlingsstatus)}
+              koder={muligeVerdierPlussValgt(oppsummering.behandlingsstatus, muligeBehandlingsstatuser)}
               disableForsteValg
             />
           </div>
@@ -178,23 +320,33 @@ function EndreBehandlingModal({
 
   const renderInnhold = () => {
     if (generellFeil) {
-      return <Nav.AlertStripe type="feil">{generellFeil}</Nav.AlertStripe>;
+      return <StandardMeldingOverst type="feil" actionEtterSynlighet={lukkModal} melding={generellFeil} />;
     }
     if (behandlingEndret) {
-      return <Nav.AlertStripe type="suksess">Behandlingen er oppdatert</Nav.AlertStripe>;
+      return (
+        <StandardMeldingOverst
+          type="suksess"
+          actionEtterSynlighet={() => {
+            lukkModal();
+            nullstillFlyt();
+          }}
+          melding="Behandlingen er oppdatert"
+        />
+      );
     }
-    return renderEndreBehandling();
+    return skalViseSpinner ? null : renderEndreBehandling();
   };
 
   return (
     <Nav.Modal
-      className={classNames("modalEndreBehandling", { alert: viserAlert })}
+      className={classNames("modalEndreBehandling", { alert: viserAlert, skjulBakgrunn: skalViseSpinner })}
       contentLabel="Endre behandling"
-      isOpen={skalViseModal}
+      isOpen={skalViseModal || skalViseSpinner}
       onRequestClose={lukkModal}
-      closeButton={!viserAlert}
+      closeButton={!viserAlert && !skalViseSpinner}
       shouldCloseOnOverlayClick={viserAlert}
     >
+      {skalViseSpinner && <Spinner />}
       {renderInnhold()}
     </Nav.Modal>
   );
