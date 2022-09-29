@@ -3,6 +3,6 @@
   "REDIS_APP_NAME": "melosys-web-redis-q1",
   "APP_URL_TRYGDEAVTALE": "http://melosys-trygdeavtale.teammelosys",
   "APP_URL_MELOSYS": "http://melosys-q1.teammelosys",
-  "INGRESS": ["https://melosys-q1.dev.intern.nav.no"],
+  "INGRESSES": ["https://melosys-q1.dev.intern.nav.no", "https://melosys-q1.dev.intern.nav.no"],
   "OIDC_HOST_URL": "https://isso-q.adeo.no"
 }
