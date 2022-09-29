@@ -136,19 +136,11 @@ export const OpprettSak = (props) => {
     if (!behandleAlleSakerToggleEnabled) return;
 
     if (valgtSakstema && valgtSakstype) {
-      if (journalforingGjelder === MKV.Koder.aktoersroller.BRUKER) {
-        Api.LovligeKombinasjoner.hentBehandlingstemaer(journalforingGjelder, valgtSakstype, valgtSakstema).then(
-          (muligeBehandlingstemaer) => {
-            setBehandlingstemaer(muligeBehandlingstemaer);
-          }
-        );
-      } else {
-        Api.LovligeKombinasjoner.hentBehandlingstyper(journalforingGjelder, valgtSakstype, valgtSakstema).then(
-          (muligeBehandlingstyper) => {
-            setBehandlingstyper(muligeBehandlingstyper);
-          }
-        );
-      }
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(journalforingGjelder, valgtSakstype, valgtSakstema).then(
+        (muligeBehandlingstemaer) => {
+          setBehandlingstemaer(muligeBehandlingstemaer);
+        }
+      );
     }
   }, [behandleAlleSakerToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema]);
 
@@ -169,10 +161,6 @@ export const OpprettSak = (props) => {
 
   const visArbeidFlereLandEllerUkjent =
     valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
-
-  const visMuligeBehandlingstema = behandleAlleSakerToggleEnabled
-    ? journalforingGjelder === MKV.Koder.aktoersroller.BRUKER
-    : true;
 
   return (
     <div className="opprettSak">
@@ -204,24 +192,21 @@ export const OpprettSak = (props) => {
           ))}
         </Skjema.Select>
       )}
-      {visMuligeBehandlingstema && (
-        <Skjema.Select
-          feltNavn="opprettnysak_behandlingstema"
-          bredde="fullbredde"
-          label="Behandlingstema"
-          onChange={() => {
-            if (behandleAlleSakerToggleEnabled)
-              nullstillFormdataVerdier(FormDataVerdi.behandlingstema, settFeltInnhold);
-            settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
-          }}
-        >
-          {(behandleAlleSakerToggleEnabled ? behandlingstemaer : valgbareBehandlingstemaer).map((elem) => (
-            <option key={elem.kode} value={elem.kode}>
-              {elem.term}
-            </option>
-          ))}
-        </Skjema.Select>
-      )}
+      <Skjema.Select
+        feltNavn="opprettnysak_behandlingstema"
+        bredde="fullbredde"
+        label="Behandlingstema"
+        onChange={() => {
+          if (behandleAlleSakerToggleEnabled) nullstillFormdataVerdier(FormDataVerdi.behandlingstema, settFeltInnhold);
+          settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
+        }}
+      >
+        {(behandleAlleSakerToggleEnabled ? behandlingstemaer : valgbareBehandlingstemaer).map((elem) => (
+          <option key={elem.kode} value={elem.kode}>
+            {elem.term}
+          </option>
+        ))}
+      </Skjema.Select>
       {behandleAlleSakerToggleEnabled && (
         <Skjema.Select
           feltNavn="opprettnysak_behandlingstype"

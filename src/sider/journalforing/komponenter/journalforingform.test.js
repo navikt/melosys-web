@@ -7,18 +7,11 @@ import SendForvaltningsMelding from "./sendForvaltningsMelding";
 import Komponent from "./komponent";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
-const {
-  UTSENDT_ARBEIDSTAKER,
-  UTSENDT_SELVSTENDIG,
-  ARBEID_ETT_LAND_ØVRIG,
-  ARBEID_TJENESTEPERSON_ELLER_FLY,
-  ARBEID_KUN_NORGE,
-  IKKE_YRKESAKTIV,
-  ARBEID_FLERE_LAND,
-  ARBEID_NORGE_BOSATT_ANNET_LAND,
-  ARBEID_I_UTLANDET,
-  YRKESAKTIV,
-} = MKV.Koder.behandlinger.behandlingstema;
+
+const { MEDLEMSKAP_LOVVALG, UNNTAK, TRYGDEAVGIFT } = MKV.Koder.sakstemaer;
+
+const { FØRSTEGANG, SOEKNAD, SED, NY_VURDERING, HENVENDELSE, KLAGE, ANKE, ENDRET_PERIODE } =
+  MKV.Koder.behandlinger.behandlingstyper;
 
 describe("JournalforingForm", () => {
   let props = null;
@@ -53,19 +46,9 @@ describe("JournalforingForm", () => {
     };
   });
 
-  each([
-    UTSENDT_ARBEIDSTAKER,
-    UTSENDT_SELVSTENDIG,
-    ARBEID_ETT_LAND_ØVRIG,
-    ARBEID_TJENESTEPERSON_ELLER_FLY,
-    ARBEID_KUN_NORGE,
-    IKKE_YRKESAKTIV,
-    ARBEID_FLERE_LAND,
-    ARBEID_NORGE_BOSATT_ANNET_LAND,
-    ARBEID_I_UTLANDET,
-    YRKESAKTIV,
-  ]).it("sending av forvaltningsmelding vises for behandlingstema %p", (behandlingstema) => {
-    props.formValues.opprettnysak_behandlingstema = behandlingstema;
+  test("sending av forvaltningsmelding vises for sakstema MEDLEMSKAP_LOVVALG og behandlingstype FØRSTEGANG", () => {
+    props.formValues.sakstema = MEDLEMSKAP_LOVVALG;
+    props.formValues.opprettnysak_behandlingstype = FØRSTEGANG;
     const journalforingform = shallow(<JournalforingForm {...props} />);
     const komponenter = journalforingform.find(Komponent);
     const sendForvaltningsMelding = komponenter.get(1).props.innhold;
@@ -73,11 +56,35 @@ describe("JournalforingForm", () => {
     expect(sendForvaltningsMelding.type).toBe(SendForvaltningsMelding);
   });
 
+  each([UNNTAK, TRYGDEAVGIFT]).it(
+    "sending av forvaltningsmelding vises IKKE for behandlingstema FØRSTEGANG og sakstema %s",
+    (sakstema) => {
+      props.formValues.sakstema = sakstema;
+      props.formValues.opprettnysak_behandlingstema = FØRSTEGANG;
+
+      const journalforingform = shallow(<JournalforingForm {...props} />);
+      const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
+      expect(sendForvaltningsMelding).toHaveLength(0);
+    }
+  );
+
+  each([SOEKNAD, SED, NY_VURDERING, HENVENDELSE, KLAGE, ANKE, ENDRET_PERIODE]).it(
+    "sending av forvaltningsmelding vises IKKE for sakstema MEDLEMSKAP_LOVVALG og behandlingstema %s",
+    (behandlingstema) => {
+      props.formValues.sakstema = MEDLEMSKAP_LOVVALG;
+      props.formValues.opprettnysak_behandlingstema = behandlingstema;
+
+      const journalforingform = shallow(<JournalforingForm {...props} />);
+      const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
+      expect(sendForvaltningsMelding).toHaveLength(0);
+    }
+  );
+
   test("sending av forvaltningsmelding vises ikke når man journalfører på virksomhet", () => {
     props.formValues.journalforingGjelder = VIRKSOMHET;
+
     const journalforingform = shallow(<JournalforingForm {...props} />);
     const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
-
     expect(sendForvaltningsMelding).toHaveLength(0);
   });
 });
