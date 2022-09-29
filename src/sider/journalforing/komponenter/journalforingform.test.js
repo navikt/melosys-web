@@ -49,11 +49,11 @@ describe("JournalforingForm", () => {
   test("sending av forvaltningsmelding vises for sakstema MEDLEMSKAP_LOVVALG og behandlingstype FØRSTEGANG", () => {
     props.formValues.sakstema = MEDLEMSKAP_LOVVALG;
     props.formValues.opprettnysak_behandlingstype = FØRSTEGANG;
+
     const journalforingform = shallow(<JournalforingForm {...props} />);
     const komponenter = journalforingform.find(Komponent);
-    const sendForvaltningsMelding = komponenter.get(1).props.innhold;
 
-    expect(sendForvaltningsMelding.type).toBe(SendForvaltningsMelding);
+    expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(1);
   });
 
   each([UNNTAK, TRYGDEAVGIFT]).it(
@@ -63,8 +63,9 @@ describe("JournalforingForm", () => {
       props.formValues.opprettnysak_behandlingstema = FØRSTEGANG;
 
       const journalforingform = shallow(<JournalforingForm {...props} />);
-      const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
-      expect(sendForvaltningsMelding).toHaveLength(0);
+      const komponenter = journalforingform.find(Komponent);
+
+      expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(0);
     }
   );
 
@@ -75,8 +76,9 @@ describe("JournalforingForm", () => {
       props.formValues.opprettnysak_behandlingstema = behandlingstema;
 
       const journalforingform = shallow(<JournalforingForm {...props} />);
-      const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
-      expect(sendForvaltningsMelding).toHaveLength(0);
+      const komponenter = journalforingform.find(Komponent);
+
+      expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(0);
     }
   );
 
@@ -84,7 +86,8 @@ describe("JournalforingForm", () => {
     props.formValues.journalforingGjelder = VIRKSOMHET;
 
     const journalforingform = shallow(<JournalforingForm {...props} />);
-    const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
-    expect(sendForvaltningsMelding).toHaveLength(0);
+    const komponenter = journalforingform.find(Komponent);
+
+    expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(0);
   });
 });
