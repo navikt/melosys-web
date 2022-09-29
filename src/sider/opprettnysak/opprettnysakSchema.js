@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// TODO: fjern eslint-disable når toggle melosys.behandle_alle_saker fjernes
 import { object, string, mixed, array, lazy, boolean } from "yup";
 
 import * as Utils from "../../utils";
