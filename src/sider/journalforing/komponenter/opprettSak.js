@@ -12,6 +12,7 @@ import * as Api from "../../../services/api";
 import { formSelectors } from "../../../ducks/form";
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
 import { useFeatureToggle } from "../../../featuretoggle";
+import { skalViseTomFlytEllerErSedBehandling } from "../../../routing";
 
 import "./opprettSak.css";
 import {
@@ -39,7 +40,13 @@ const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
   ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
 );
 
-export const skalViseSoknadsperiodeOgLand = (hovedpart, sakstype, behandlingstema) =>
+export const skalViseSoknadsperiodeOgLand = (sakstype, behandlingstema, behandlingstype) =>
+  sakstype &&
+  behandlingstema &&
+  behandlingstype &&
+  !skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype);
+
+export const skalViseSoknadsperiodeOgLandDeprecated = (hovedpart, sakstype, behandlingstema) =>
   hovedpart !== MKV.Koder.aktoersroller.VIRKSOMHET &&
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
   ![
@@ -58,6 +65,7 @@ export const OpprettSak = (props) => {
   const { journalforingSkjemaVerdier, behandleAlleSakerToggleEnabled, settFeltInnhold } = props;
   const {
     opprettnysak_behandlingstema: valgtBehandlingstema,
+    opprettnysak_behandlingstype: valgtBehandlingstype,
     sakstype: valgtSakstype,
     sakstema: valgtSakstema,
     journalforingSoknadsland: valgteLand,
@@ -221,7 +229,9 @@ export const OpprettSak = (props) => {
           ))}
         </Skjema.Select>
       )}
-      {skalViseSoknadsperiodeOgLand(journalforingGjelder, valgtSakstype, valgtBehandlingstema) && (
+      {(behandleAlleSakerToggleEnabled
+        ? skalViseSoknadsperiodeOgLand(valgtSakstype, valgtBehandlingstema, valgtBehandlingstype)
+        : skalViseSoknadsperiodeOgLandDeprecated(journalforingGjelder, valgtSakstype, valgtBehandlingstema)) && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
             <Nav.Row className="">
