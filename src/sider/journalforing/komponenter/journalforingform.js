@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import { change, getFormValues, reduxForm } from "redux-form";
@@ -68,6 +68,11 @@ export const JournalforingForm = (props) => {
   } = props;
 
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, behandleAlleSakerToggleEnabled);
+
+  useEffect(() => {
+    if (!behandleAlleSakerToggleEnabled) return;
+    settFeltInnhold("ikkeSendForvaltingsmelding", !visForvaltningsmelding);
+  }, [visForvaltningsmelding]);
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
