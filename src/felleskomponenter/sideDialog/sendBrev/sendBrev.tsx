@@ -198,8 +198,8 @@ const SendBrev = ({
       mottaker: muligeMottakere?.hovedMottaker.rolle || "",
       fritekstTittel: fritekstvedlegg[index].tittel,
       fritekst: fritekstvedlegg[index].fritekst,
-      kopiMottakere: hentKopiMottakere() || [],
-      kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
+      kopiMottakere: [],
+      kontaktopplysninger: false,
       saksvedlegg: [],
       fritekstvedlegg: [],
     };
