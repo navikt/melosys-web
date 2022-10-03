@@ -9,7 +9,7 @@ it("fritekstvedleggRow renders correctly", () => {
         slettFritekstvedlegg={jest.fn()}
         redigerFritekstvedlegg={jest.fn()}
         index={1}
-        lagPdfUrl={jest.fn()}
+        lagFritekstPdfUrl={jest.fn()}
       />
     )
     .toJSON();

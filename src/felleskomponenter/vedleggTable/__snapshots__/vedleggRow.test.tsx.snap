@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`vedleggRow renders correctly  when redigerer is false 1`] = `
+exports[`vedleggRow renders correctly  1`] = `
 <tr
-  className="enkeltvedlegg"
+  className="vedlegg"
 >
   <td>
     <a

@@ -1,0 +1,86 @@
+@coreModulePath: "../../../node_modules/";
+@frontendModuler: "@{coreModulePath}nav-frontend-";
+@import "@{frontendModuler}core/less/core";
+@import (reference) "node_modules/nav-frontend-core/less/_variabler";
+
+.slettfritekstvedlegg-modal {
+  max-width: 600px;
+  width: 70%;
+  padding: 2rem;
+
+  .typo-element {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+  }
+
+  .typo-normal {
+    margin-bottom: 1rem;
+  }
+
+  .knapp--hoved {
+    margin-right: 1rem;
+  }
+
+  .lukknapp {
+    display: none;
+  }
+}
+
+.vedleggtable {
+  margin: 0;
+  padding-top: 0.4rem;
+
+  table {
+    margin-bottom: 0.5rem;
+    border-spacing: 0 0.3rem;
+    width: 100%;
+
+    .vedlegg {
+      background: #f8f8f8;
+
+      .skjemaelement {
+        margin-bottom: 0;
+      }
+
+      a {
+        color: #0067c5;
+      }
+
+      .knapp {
+        min-height: 2rem;
+        width: 2.5rem;
+        padding: 0;
+        margin-top: 0;
+
+        .ikon {
+          height: 18px;
+          width: 18px;
+          margin-right: 0;
+
+          :hover {
+            margin-right: 0;
+          }
+        }
+      }
+
+      td {
+        border-style: solid;
+        border-color: #e6e6e6;
+        border-width: 1px 0;
+        padding: 0.2rem 0.4rem;
+        margin-bottom: 0.4rem;
+
+        &:first-child {
+          border-width: 1px 0 1px 1px;
+        }
+        &:last-child {
+          border-width: 1px 1px 1px 0;
+        }
+      }
+
+      td.icon--cell {
+        text-align: right;
+      }
+    }
+  }
+}

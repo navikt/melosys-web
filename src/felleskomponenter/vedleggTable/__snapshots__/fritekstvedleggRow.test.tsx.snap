@@ -2,7 +2,7 @@
 
 exports[`fritekstvedleggRow renders correctly 1`] = `
 <tr
-  className="enkeltvedlegg"
+  className="vedlegg"
 >
   <td>
     <a

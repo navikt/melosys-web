@@ -1,37 +1,18 @@
 import React, { useState } from "react";
-import classNames from "classnames";
 import { FysiskDokument } from "Domene";
-
-import * as Nav from "../../navFrontend";
 import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 
 import "./vedleggVelger.css";
 import VedleggVelgerModal from "./vedleggVelgerModal";
-import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
-import VedleggTable from "./vedleggTable";
 
 interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];
   valgteVedlegg: FysiskDokument[];
   onChange: (valgteVedlegg: FysiskDokument[]) => void;
-  className?: string;
-  fritekstvedlegg: Fritekstvedlegg[];
-  redigerFritekstvedlegg: (index: number) => void;
-  slettFritekstvedlegg: (index: number) => void;
-  lagPdfUrl: (index: number) => Promise<string | false>;
 }
 
-const VedleggVelger = ({
-  dokumenter,
-  valgteVedlegg,
-  onChange,
-  className,
-  fritekstvedlegg,
-  redigerFritekstvedlegg,
-  slettFritekstvedlegg,
-  lagPdfUrl,
-}: VedleggVelgerProps) => {
+const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange }: VedleggVelgerProps) => {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
@@ -43,27 +24,9 @@ const VedleggVelger = ({
     onChange(valgteVedlegg.filter(({ id }) => id !== vedleggID));
   };
 
-  const harValgteVedlegg =
-    (valgteVedlegg && valgteVedlegg.length > 0) || (fritekstvedlegg && fritekstvedlegg.length > 0);
-
-  const cls = classNames(className, "vedleggvelger");
-
   return (
-    <Nav.Row className={cls}>
-      {harValgteVedlegg && (
-        <VedleggTable
-          redigerer={false}
-          slettVedlegg={slettVedlegg}
-          valgteVedlegg={valgteVedlegg}
-          alleVedlegg={dokumenter}
-          leggTilVedlegg={leggTilVedlegg}
-          fritekstvedlegg={fritekstvedlegg}
-          redigerFritekstvedlegg={redigerFritekstvedlegg}
-          slettFritekstvedlegg={slettFritekstvedlegg}
-          lagPdfUrl={lagPdfUrl}
-        />
-      )}
-      <Mui.Lenkeknapp onClick={toggleRedigerer} ikon={Ikoner.Add}>
+    <>
+      <Mui.Lenkeknapp className="vedleggvelger" onClick={toggleRedigerer} ikon={Ikoner.Add}>
         Legg til vedlegg
       </Mui.Lenkeknapp>
       {redigerer && (
@@ -76,7 +39,7 @@ const VedleggVelger = ({
           slettVedlegg={slettVedlegg}
         />
       )}
-    </Nav.Row>
+    </>
   );
 };
 

@@ -2,7 +2,8 @@ import React, { ComponentProps } from "react";
 import { FysiskDokument } from "Domene";
 
 import * as Nav from "../../navFrontend";
-import VedleggTable from "./vedleggTable";
+import VedleggVelgerTable from "./vedleggVelgerTable";
+import "./vedleggVelger.css";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
@@ -37,10 +38,9 @@ const VedleggVelgerModal = ({
       ariaHideApp={ariaHideApp}
     >
       <Nav.Typo.Element>{contentLabel}</Nav.Typo.Element>
-      <VedleggTable
+      <VedleggVelgerTable
         valgteVedlegg={valgteVedlegg}
         alleVedlegg={alleVedlegg}
-        redigerer
         leggTilVedlegg={leggTilVedlegg}
         slettVedlegg={slettVedlegg}
       />

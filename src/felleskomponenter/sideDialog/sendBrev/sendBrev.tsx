@@ -23,7 +23,6 @@ import { formSelectors } from "../../../ducks/form";
 import BrevValg from "./brevValg";
 import BrevMottaker, { erArbeidsgiverEllerVirksomhet } from "./brevMottaker";
 import { SendBrevFormValues } from "./types";
-import BrevVedlegg from "./brevVedlegg";
 import BrevMottakereTabell from "./brevMottakereTabell";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
@@ -31,6 +30,8 @@ import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
 import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
 import { dokumenterOperations } from "../../../ducks/dokumenter";
+import VedleggVelger from "../../vedleggvelger";
+import VedleggTable from "../../vedleggTable";
 
 const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.SendBrevValidSelector(state),
@@ -350,18 +351,20 @@ const SendBrev = ({
         </Nav.Row>
       )}
 
-      {vedleggFelt && (
-        <BrevVedlegg
-          felt={vedleggFelt}
-          width={felterWidth}
-          dokumenter={dokumenter}
+      {(vedleggFelt || fritekstvedleggFelt) && (
+        <VedleggTable
           valgteVedlegg={valgteVedlegg}
-          setValgteVedlegg={setValgteVedlegg}
           fritekstvedlegg={fritekstvedlegg}
           redigerFritekstvedlegg={redigerFritekstvedlegg}
           slettFritekstvedlegg={slettFritekstvedlegg}
-          lagPdfUrl={lagFritekstPdfUrl}
+          lagFritekstPdfUrl={lagFritekstPdfUrl}
+          setValgteVedlegg={setValgteVedlegg}
+          label="Vedlegg"
         />
+      )}
+
+      {vedleggFelt && (
+        <VedleggVelger dokumenter={dokumenter} valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} />
       )}
 
       {fritekstvedleggFelt &&

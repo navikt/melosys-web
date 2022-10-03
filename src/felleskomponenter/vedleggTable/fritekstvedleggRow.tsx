@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import classNames from "classnames";
 
 import * as Nav from "../../navFrontend";
 import * as Mui from "../ui";
@@ -13,7 +12,7 @@ interface FritekstvedleggRowProps {
   redigerFritekstvedlegg?: (index: number) => void;
   slettFritekstvedlegg?: (index: number) => void;
   index: number;
-  lagPdfUrl?: (index: number) => Promise<string | false>;
+  lagFritekstPdfUrl?: (index: number) => Promise<string | false>;
 }
 
 const FritekstvedleggRow = ({
@@ -21,20 +20,19 @@ const FritekstvedleggRow = ({
   redigerFritekstvedlegg,
   slettFritekstvedlegg,
   index,
-  lagPdfUrl,
+  lagFritekstPdfUrl,
 }: FritekstvedleggRowProps) => {
   const [visBekreftelseModal, setVisBekreftelseModal] = useState<boolean>(false);
-  const cls = classNames("enkeltvedlegg");
 
   const aapnePdf = async () => {
-    const url = lagPdfUrl ? await lagPdfUrl(index) : null;
+    const url = lagFritekstPdfUrl ? await lagFritekstPdfUrl(index) : null;
     if (url) {
       apnePdfINyFane(url);
     }
   };
 
   return (
-    <tr className={cls}>
+    <tr className="vedlegg">
       <td>
         <Nav.Lenker href="#" onClick={aapnePdf}>
           {fritekstvedlegg.tittel}
