@@ -19,6 +19,7 @@ export interface OpprettReqDto {
   brukerID: string;
   sakstype: string;
   behandlingstema: string;
+  behandlingstype: string;
   soknadDto: SoknadDto;
   skalTilordnes: boolean;
   oppgaveID: string;

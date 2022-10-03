@@ -116,7 +116,7 @@ const FagsakVelger = (props) => {
                 radios={radioValg}
                 notify={notifier}
                 begrensVisteRadios
-                onChange={() => nullstillFormVerdier()}
+                onChange={nullstillFormVerdier}
                 className="marginMellomCustomRadioPaneler"
               />
             )}
