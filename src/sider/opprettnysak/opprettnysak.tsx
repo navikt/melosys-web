@@ -279,6 +279,7 @@ const OpprettNySak = ({
       brukerID: formValues.brukerID,
       sakstype: formValues.sakstype,
       behandlingstema: formValues.behandlingstema,
+      behandlingstype: formValues.behandlingstype,
       soknadDto,
       skalTilordnes: formValues.skalTilordnes,
       oppgaveID: formValues.oppgaveID,
