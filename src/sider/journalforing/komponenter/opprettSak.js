@@ -103,16 +103,6 @@ export const OpprettSak = (props) => {
     journalforingGjelder: journalforingGjelder_JOURNALFØRING ?? hovedpart_OPPRETT_NY,
   };
 
-  console.log({
-    valgtSakstype,
-    valgtSakstema,
-    valgtBehandlingstema,
-    valgtBehandlingstype,
-    journalforingSoknadsland,
-    ukjentEllerAlleEosLand,
-    journalforingGjelder,
-  });
-
   const [sakstyper, setSakstyper] = useState([]);
   const [sakstemaer, setSakstemaer] = useState([]);
   const [behandlingstemaer, setBehandlingstemaer] = useState([]);
