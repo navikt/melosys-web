@@ -33,6 +33,8 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 
+const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
+
 const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.SendBrevValidSelector(state),
   formValues: getFormValues(KV.Form.SEND_BREV)(state),
@@ -92,6 +94,8 @@ const SendBrev = ({
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
   const [visFritekstvedleggSkjema, setVisFritekstvedleggSkjema] = useState(false);
   const [fritekstvedlegg, setFritekstvedlegg] = useState<Fritekstvedlegg[]>([]);
+  const [redigerFritekstvedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
+  const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
 
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
@@ -200,9 +204,10 @@ const SendBrev = ({
       fritekstvedlegg: [],
     };
     try {
+      setForhandsvisFritekstvedleggError(false);
       return await dokumenterOperations.forhandsvisBrevV2(behandlingID, data);
     } catch (e) {
-      // TODO: Feilhåndtering
+      setForhandsvisFritekstvedleggError(true);
       return "";
     }
   };
@@ -242,6 +247,7 @@ const SendBrev = ({
     changeField("felt.FRITEKSTVEDLEGG_TITTEL.feltVerdi", "");
     changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", "");
     setVisFritekstvedleggSkjema(false);
+    setRedigerFritekstvedleggIndex(undefined);
   };
 
   const leggTilFritekstvedlegg = () => {
@@ -249,21 +255,24 @@ const SendBrev = ({
     const fritekst = formValues.felt?.FRITEKSTVEDLEGG_FRITEKST?.feltVerdi;
     if (tittel && fritekst && fritekst !== "<p></p>\n") {
       const newFritekstvedlegg = [...fritekstvedlegg];
-      newFritekstvedlegg.push({ tittel, fritekst });
+      if (redigerFritekstvedleggIndex !== undefined) {
+        newFritekstvedlegg[redigerFritekstvedleggIndex] = { tittel, fritekst };
+      } else {
+        newFritekstvedlegg.push({ tittel, fritekst });
+      }
       setFritekstvedlegg(newFritekstvedlegg);
       changeField("felt.FRITEKSTVEDLEGG_TITTEL.feltVerdi", "");
       changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", "");
       setVisFritekstvedleggSkjema(false);
+      setRedigerFritekstvedleggIndex(undefined);
     }
   };
 
   const redigerFritekstvedlegg = (index: number) => {
     const vedlegg = fritekstvedlegg[index];
-    const newFritekstvedlegg = [...fritekstvedlegg];
-    newFritekstvedlegg.splice(index, 1);
-    setFritekstvedlegg(newFritekstvedlegg);
     changeField("felt.FRITEKSTVEDLEGG_TITTEL.feltVerdi", vedlegg.tittel);
     changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", vedlegg.fritekst);
+    setRedigerFritekstvedleggIndex(index);
     setVisFritekstvedleggSkjema(true);
   };
 
@@ -351,6 +360,12 @@ const SendBrev = ({
         </Nav.Row>
       )}
 
+      {forhandsvisFritekstvedleggError && (
+        <Nav.AlertStripe type="advarsel" className="fritekst_varsel">
+          {FORHANDSVIS_ERROR_MESSAGE}
+        </Nav.AlertStripe>
+      )}
+
       {(vedleggFelt || fritekstvedleggFelt) && (
         <VedleggTable
           valgteVedlegg={valgteVedlegg}
@@ -371,6 +386,7 @@ const SendBrev = ({
         (visFritekstvedleggSkjema ? (
           <FritekstvedleggSkjema
             felt={fritekstvedleggFelt}
+            index={redigerFritekstvedleggIndex}
             resetFritekstvedlegg={resetFritekstvedlegg}
             leggTilFritekstvedlegg={leggTilFritekstvedlegg}
             width={felterWidth}

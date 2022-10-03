@@ -10,6 +10,11 @@ import { begrensAntallTegn } from "../../../utils/normalisering";
 
 interface FritekstvedleggSkjemaProps {
   felt: DokumenterV2.Felt;
+  index?: number;
+  /* Index benyttes for å oppnå en rerendering av HtmlEditor. Dersom vi redigerer først ett eksisterende fritekstvedlegg
+  og begynner en redigering på et annet eksisterende vedlegg uten å lagre vil ikke HtmlEditor rerenderes med ny verdi da
+  denne hentes fra redux-form
+   */
   resetFritekstvedlegg: () => void;
   leggTilFritekstvedlegg: () => void;
   width: string;
@@ -19,6 +24,7 @@ const TEGNBEGRENSNING = 60;
 
 const FritekstvedleggSkjema = ({
   felt,
+  index,
   resetFritekstvedlegg,
   leggTilFritekstvedlegg,
   width,
@@ -41,7 +47,7 @@ const FritekstvedleggSkjema = ({
             />
           </Nav.Column>
         </Nav.Row>
-        <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}_FRITEKST.feltVerdi`} />
+        <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}_FRITEKST.feltVerdi`} key={index} />
         <Nav.Row>
           <Nav.Hovedknapp mini onClick={leggTilFritekstvedlegg}>
             Lagre fritekstvedlegg
