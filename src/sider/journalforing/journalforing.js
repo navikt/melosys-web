@@ -446,11 +446,11 @@ class Journalforing extends Component {
                   </Nav.Panel>
                 </Sticky>
               </Nav.Column>
-              <Nav.Column xs="6" lg="8">
+              <Nav.Column xs="6" lg="8" className="journalforing__dokument">
                 {vedlegg.length > 0 && (
                   <Nav.Panel>
                     <Nav.Select
-                      className="journalforing__dokument_visning"
+                      className="journalforing__vedlegg_velger"
                       name="journalforing_pdf_dokumenter"
                       label="Dokumentvisning"
                       defaultValue={hoveddokumentID}
@@ -468,7 +468,7 @@ class Journalforing extends Component {
                   </Nav.Panel>
                 )}
                 {this.velgDokumentID() && (
-                  <Nav.Panel>
+                  <Nav.Panel className="journalforing__dokument_visning">
                     <PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokumentID()} />
                   </Nav.Panel>
                 )}
