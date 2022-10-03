@@ -89,7 +89,7 @@ export const OpprettSak = (props) => {
     valgtSakstema,
     valgtBehandlingstema,
     valgtBehandlingstype,
-    valgteLand,
+    journalforingSoknadsland,
     ukjentEllerAlleEosLand,
     journalforingGjelder,
   } = {
@@ -97,11 +97,21 @@ export const OpprettSak = (props) => {
     valgtSakstema: valgtSakstema_JOURNALFØRING ?? valgtSakstema_OPPRETT_NY,
     valgtBehandlingstema: valgtBehandlingstema_JOURNALFØRING ?? valgtBehandlingstema_OPPRETT_NY,
     valgtBehandlingstype: valgtBehandlingstype_JOURNALFØRING ?? valgtBehandlingstype_OPPRETT_NY,
-    valgteLand: valgteLand_JOURNALFØRING ?? journalforingSoknadsland_OPPRETT_NY,
+    journalforingSoknadsland: valgteLand_JOURNALFØRING ?? journalforingSoknadsland_OPPRETT_NY,
     ukjentEllerAlleEosLand:
       ukjentEllerAlleEosLand_JOURNALFØRING ?? journalforingSoknadslandUkjenteEllerAlleEosLand_OPPRETT_NY,
     journalforingGjelder: journalforingGjelder_JOURNALFØRING ?? hovedpart_OPPRETT_NY,
   };
+
+  console.log({
+    valgtSakstype,
+    valgtSakstema,
+    valgtBehandlingstema,
+    valgtBehandlingstype,
+    journalforingSoknadsland,
+    ukjentEllerAlleEosLand,
+    journalforingGjelder,
+  });
 
   const [sakstyper, setSakstyper] = useState([]);
   const [sakstemaer, setSakstemaer] = useState([]);
@@ -290,7 +300,7 @@ export const OpprettSak = (props) => {
                 <Skjema.Radio
                   feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
                   label="Flere EØS-land/Sveits. Ikke kjent hvilke"
-                  disabled={valgteLand?.length > 0}
+                  disabled={journalforingSoknadsland?.length > 0}
                   value
                 />
                 <Skjema.Radio

@@ -278,7 +278,7 @@ const OpprettNySak = ({
     change("journalforingPeriodeFraOgMed", undefined);
     change("journalforingPeriodeTilOgMed", undefined);
     change("journalforingSoknadslandUkjenteEllerAlleEosLand", undefined);
-    change("journalforingSoknadsland", undefined);
+    change("journalforingSoknadsland", []);
     change("sakstype", undefined);
     change("sakstema", undefined);
     change("saksnummer", undefined);
