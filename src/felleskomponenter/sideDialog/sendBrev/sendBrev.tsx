@@ -280,6 +280,12 @@ const SendBrev = ({
     const newFritekstvedlegg = [...fritekstvedlegg];
     newFritekstvedlegg.splice(index, 1);
     setFritekstvedlegg(newFritekstvedlegg);
+    if (index === redigerFritekstvedleggIndex) {
+      setRedigerFritekstvedleggIndex(undefined);
+    }
+    if (redigerFritekstvedleggIndex && index < redigerFritekstvedleggIndex) {
+      setRedigerFritekstvedleggIndex(redigerFritekstvedleggIndex - 1);
+    }
   };
 
   const overstyrBlurEvent = (event: React.FocusEvent) => {
