@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { getFormValues, InjectedFormProps, reduxForm } from "redux-form";
+import { ThunkDispatch } from "redux-thunk";
+import { clearFields, getFormValues, InjectedFormProps, reduxForm } from "redux-form";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
@@ -40,7 +42,12 @@ const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SAKSPLUKKER_FORM)(state) as SaksplukkerFormData,
 });
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  nullstillForm: () =>
+    dispatch(clearFields(KV.Form.SAKSPLUKKER_FORM, false, false, "sakstype", "sakstema", "behandlingstema")),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SaksplukkerProps = PropsFromRedux & RouteComponentProps;
@@ -50,6 +57,7 @@ export const Saksplukker = ({
   history,
   formValues,
   change,
+  nullstillForm,
   invalid,
 }: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) => {
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -125,12 +133,6 @@ export const Saksplukker = ({
     return true;
   };
 
-  const nullstill = () => {
-    change("sakstype", null);
-    change("sakstema", null);
-    change("behandlingstema", null);
-  };
-
   const ikkePlukkbareBehandlingstemaerEOS = [
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
@@ -154,7 +156,7 @@ export const Saksplukker = ({
       ) : (
         <p>Velg sakstype og behandlingstema for å få tildelt en sak.</p>
       )}
-      <form className="saksplukker__skjema" onSubmit={submitOgVideresend} onReset={nullstill}>
+      <form className="saksplukker__skjema" onSubmit={submitOgVideresend}>
         <Nav.Row>
           <Nav.Column md="12" lg={behandleFagsakMarginToggle}>
             <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
@@ -205,7 +207,7 @@ export const Saksplukker = ({
           <Nav.Knapp className="saksplukker__knapp" disabled={invalid}>
             Behandle sak
           </Nav.Knapp>
-          {behandleAlleSakerToggle === "enabled" && <Nav.Flatknapp htmlType="reset">Nullstill</Nav.Flatknapp>}
+          {behandleAlleSakerToggle === "enabled" && <Nav.Flatknapp onClick={nullstillForm}>Nullstill</Nav.Flatknapp>}
         </Nav.Row>
       </form>
     </Nav.Panel>
