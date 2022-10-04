@@ -19,6 +19,7 @@ interface OppgaveVelgerProps {
   hovedpart: string;
   oppgaver: Api.Oppgaver.SokOppgaveResDto[];
   visToppValg: boolean;
+  nullstillFormverdier: () => void;
   change: (field: string, value: any) => void;
 }
 
@@ -28,6 +29,7 @@ export const OppgaveVelger = ({
   oppgaver,
   change,
   visToppValg,
+  nullstillFormverdier,
 }: OppgaveVelgerProps) => {
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const [valgtVisning, setValgtVisning] = useState(visToppValg ? OPPRETT : EKSISTRENDE);
@@ -74,7 +76,10 @@ export const OppgaveVelger = ({
               label={OPPRETT}
               className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
               name="velgVisningOppgave"
-              onChange={() => setValgtVisning(OPPRETT)}
+              onChange={() => {
+                setValgtVisning(OPPRETT);
+                nullstillFormverdier();
+              }}
               checked={valgtVisning === OPPRETT}
               value={OPPRETT}
             />
@@ -82,7 +87,10 @@ export const OppgaveVelger = ({
               label={EKSISTRENDE}
               className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTRENDE })}
               name="velgVisningOppgave"
-              onChange={() => setValgtVisning(EKSISTRENDE)}
+              onChange={() => {
+                setValgtVisning(EKSISTRENDE);
+                nullstillFormverdier();
+              }}
               checked={valgtVisning === EKSISTRENDE}
               value={EKSISTRENDE}
             />

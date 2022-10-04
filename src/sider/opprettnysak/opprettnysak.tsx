@@ -282,6 +282,10 @@ const OpprettNySak = ({
     change("sakstema", undefined);
     change("saksnummer", undefined);
   };
+
+  const nullstillOppgave = () => {
+    change("oppgaveID", undefined);
+  };
   const hovedpartErBruker = hovedpart === BRUKER;
 
   return (
@@ -360,6 +364,7 @@ const OpprettNySak = ({
                     hovedpart={hovedpart}
                     change={change}
                     oppgaver={oppgaver}
+                    nullstillFormverdier={nullstillOppgave}
                   />
                 </div>
               </div>
