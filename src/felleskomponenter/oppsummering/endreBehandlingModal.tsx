@@ -104,7 +104,6 @@ function EndreBehandlingModal({
 
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") return;
-    console.log(fagsak);
     if (sakstype) {
       Api.LovligeKombinasjoner.hentSakstemaer(fagsak.hovedpartRolle, sakstype).then((alleMuligesakstemaer) => {
         setMuligeSakstemaer(alleMuligesakstemaer);
