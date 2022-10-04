@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from "react";
-import PT from "prop-types";
-
 import * as Nav from "../../../../../navFrontend";
+import { Organisasjon } from "../../../../../services/api";
+import { EnkelFellesInputFnrDnrOrgnrSaksnr } from "../../../../enkelFellesInputFnrDnrOrgnrSaksnr";
 
 const Orgnrinput = ({
   onOrgnrFunnet,
   redigerbart,
   hentOrganisasjon,
-  defaultOrgnr,
   valideringer,
-  hentVedMount,
-  ikkeFunnetFeilmelding,
-  feilVedHentingFeilmelding,
-}) => {
-  const [orgnr, setOrgnr] = useState(defaultOrgnr);
-  const [feil, setFeil] = useState(undefined);
-  const [hasFocus, setHasFocus] = useState(false);
+  defaultOrgnr = "",
+  hentVedMount = false,
+  ikkeFunnetFeilmelding = "Kunne ikke finne organisasjon",
+  feilVedHentingFeilmelding = "Feil ved henting av organisasjon",
+}: OrgnrinputProps) => {
+  const [orgnr, setOrgnr] = useState<string>(defaultOrgnr);
+  const [feil, setFeil] = useState<string | undefined>(undefined);
+  const [hasFocus, setHasFocus] = useState<boolean>(false);
 
-  const valider = (organisasjonsnummer) => {
+  const valider = (organisasjonsnummer: string) => {
     const utlostValidering = valideringer.find(({ validering }) => validering(organisasjonsnummer));
+
     if (utlostValidering) {
       setFeil(utlostValidering.feilmelding);
     }
@@ -26,15 +27,13 @@ const Orgnrinput = ({
     return !utlostValidering;
   };
 
-  const leggTilOrg = async (tillagtOrgnr) => {
+  const leggTilOrg = async (tillagtOrgnr: string) => {
     if (!valider(tillagtOrgnr)) return;
-
     const action = await hentOrganisasjon(tillagtOrgnr);
     const { data } = action;
     const organisasjon = data;
     const orgFunnet = organisasjon.orgnr;
     const httpStatus = !orgFunnet && data.response.status;
-
     if (orgFunnet) {
       onOrgnrFunnet(organisasjon);
     } else if (httpStatus === 404) {
@@ -50,24 +49,22 @@ const Orgnrinput = ({
     }
   }, [hentVedMount]);
 
-  const onChange = (e) => {
+  const onChange = (sokStreng: string) => {
     setFeil(undefined);
-    setOrgnr(e.target.value);
-    leggTilOrg(e.target.value);
+    setOrgnr(sokStreng);
+    leggTilOrg(sokStreng);
   };
-
-  const feilmelding = !hasFocus && feil ? feil : undefined;
 
   return (
     <div>
-      <Nav.Input
+      <EnkelFellesInputFnrDnrOrgnrSaksnr
         label={<Nav.Typo.Element>Organisasjonsnummer</Nav.Typo.Element>}
-        onChange={onChange}
+        vedEndring={onChange}
         value={orgnr}
         disabled={!redigerbart}
         bredde="fullbredde"
         placeholder="Skriv inn..."
-        feil={feilmelding}
+        feil={!hasFocus && feil ? feil : undefined}
         onFocus={() => setHasFocus(true)}
         onBlur={() => setHasFocus(false)}
       />
@@ -75,27 +72,20 @@ const Orgnrinput = ({
   );
 };
 
-Orgnrinput.propTypes = {
-  onOrgnrFunnet: PT.func.isRequired,
-  redigerbart: PT.bool.isRequired,
-  hentOrganisasjon: PT.func.isRequired,
-  defaultOrgnr: PT.string,
-  hentVedMount: PT.bool,
-  valideringer: PT.arrayOf(
-    PT.shape({
-      validering: PT.func.isRequired,
-      feilmelding: PT.string.isRequired,
-    })
-  ).isRequired,
-  ikkeFunnetFeilmelding: PT.string,
-  feilVedHentingFeilmelding: PT.string,
-};
+interface OrgnrinputProps {
+  onOrgnrFunnet: (org: Organisasjon) => void;
+  redigerbart: boolean;
+  hentOrganisasjon: (orgNr: string) => Promise<any>;
+  defaultOrgnr?: string;
+  hentVedMount?: boolean;
+  ikkeFunnetFeilmelding?: string;
+  feilVedHentingFeilmelding?: string;
+  valideringer: ValideringProps[];
+}
 
-Orgnrinput.defaultProps = {
-  defaultOrgnr: "",
-  hentVedMount: false,
-  ikkeFunnetFeilmelding: "Kunne ikke finne organisasjon",
-  feilVedHentingFeilmelding: "Feil ved henting av organisasjon",
-};
+interface ValideringProps {
+  validering: (validering: string) => void;
+  feilmelding: string;
+}
 
 export default Orgnrinput;

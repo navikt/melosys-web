@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// TODO: fjern eslint-disable når toggle melosys.behandle_alle_saker fjernes
 import { object, string, mixed, array, lazy, boolean } from "yup";
 
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
 import MKV, { MKVUtils } from "../../melosyskodeverk";
+import { skalViseSoknadsperiodeOgLand } from "../journalforing/komponenter/opprettSak";
 
 const SKRIV_INN_FNR_ELLER_DNR = { melding: "Skriv inn f.nr eller d.nr" };
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig f.nr eller d.nr" };
@@ -12,6 +15,9 @@ const SKRIV_INN_ORGNR = { melding: "Skriv inn organisasjonsnummer" };
 const SKRIV_INN_GYLDIG_ORGNR = { melding: "Skriv inn gyldig organisasjonsnummer" };
 const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisasjonsnummeret." };
 const VELG_SAKSTYPE = { melding: "Velg sakstype" };
+// TODO: Legg denne på når toggle melosys.behandle_alle_saker er på. Da skal sakstema og behandlingstype bli required
+// const VELG_SAKSTEMA = { melding: "Velg sakstema" };
+// const VELG_BEHANDLINGSTYPE = { melding: "Velg behandlingstype" };
 const VELG_BEHANDLINGSTEMA = { melding: "Velg behandlingstema" };
 const VELG_LAND = { melding: "Velg land" };
 const VELG_EN_OPPGAVE = { melding: "Velg en oppgave" };
@@ -19,19 +25,20 @@ const MANGLER_JOURNALPOST = { melding: "Den valgte oppgaven har ingen journalpos
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
-const soknadsinfo = object().shape({
-  fom: string().erGyldigDato().required(MAA_FYLLES_UT),
-  tom: lazy((value) =>
-    !value ? string().ensure() : string().erGyldigDato().erEtterDatofelt("fom").required(MAA_FYLLES_UT)
-  ),
-  landkoder: array()
-    .of(string())
-    .when("erUkjenteEllerAlleEosLand", {
-      is: false,
-      then: array().of(string()).min(1, { _error: VELG_LAND }),
-    }),
-  erUkjenteEllerAlleEosLand: boolean(),
-});
+// Trengs når toggle melosys.behandle_alle_saker fjernes
+// const soknadsinfo = object().shape({
+//   fom: string().erGyldigDato().required(MAA_FYLLES_UT),
+//   tom: lazy((value) =>
+//     !value ? string().ensure() : string().erGyldigDato().erEtterDatofelt("fom").required(MAA_FYLLES_UT)
+//   ),
+//   landkoder: array()
+//     .of(string())
+//     .when("erUkjenteEllerAlleEosLand", {
+//       is: false,
+//       then: array().of(string()).min(1, { _error: VELG_LAND }),
+//     }),
+//   erUkjenteEllerAlleEosLand: boolean(),
+// });
 
 const opprettnysak = object().shape({
   hovedpart: string().required(MAA_FYLLES_UT),
@@ -57,18 +64,25 @@ const opprettnysak = object().shape({
     })
     .nullable(),
   virksomhetNavn: string().nullable(),
-  sakstype: string().required(VELG_SAKSTYPE),
-  behandlingstema: string().required(VELG_BEHANDLINGSTEMA),
-  soknadsinfo: object().when(["behandlingstema", "hovedpart"], {
-    is: (behandlingstema, hovedpart) => MKVUtils.erSoknad(behandlingstema) && hovedpart === BRUKER,
-    then: soknadsinfo,
-  }),
+  sakstype: string().required(VELG_SAKSTYPE).nullable(),
+  sakstema: string().nullable(),
+  behandlingstype: string().nullable(),
+  behandlingstema: string()
+    .when("hovedpart", {
+      is: (hovedpart) => hovedpart !== VIRKSOMHET,
+      then: string().required(VELG_BEHANDLINGSTEMA).nullable(),
+    })
+    .nullable(),
+  // TODO: skru på validering når toggle melosys.behandle_alle_saker fjernes
+  // soknadsinfo: object().when(["sakstype", "behandlingstema", "behandlingstype"], {
+  //   is: (sakstype, behandlingstema, behandlingstype) =>
+  //     skalViseSoknadsperiodeOgLand(sakstype, behandlingstema, behandlingstype),
+  //   then: soknadsinfo,
+  // }),
   oppgaveID: string()
     .siblingIs("journalpostID", (journalpostID) => !Utils._isEmpty(journalpostID), MANGLER_JOURNALPOST)
     .required(VELG_EN_OPPGAVE)
     .nullable(),
-
-  /* Følgene felter viser ingen feilmeldinger til brukerNavn, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
 });
 
 export default opprettnysak;

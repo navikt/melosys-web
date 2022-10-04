@@ -38,6 +38,7 @@ import { Feilmeldinger } from "../feilmeldinger";
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.css";
 import { kontrollOperations } from "../../ducks/kontroll";
+import { datalastingOperations } from "../../ducks/datalasting";
 
 class Stegvelger extends Component {
   state = {
@@ -196,17 +197,17 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
-  fatteVedtakHandler = (data) => {
-    const { behandlingID, fattVedtak } = this.props;
-    return fattVedtak(behandlingID, data);
-  };
-
-  lagreOgFatteVedtak = async (data) => {
+  /**
+   * Generisk metode for validering av behandlingsgrunnlag benyttet i stegkomponenter. Denne valideringen kjøres i forkant av kall
+   * til melosys-api. Opprettet som første steg i opprydning av redux bruk i Stegvelger. Har som mål å fjerne prop passing av
+   * action creators. Se slettingen av lagreOgFatteVedtak for eksempel på denne prosessen
+   * @returns {Promise<*>}
+   */
+  validerBehandlingsgrunnlag = async () => {
     if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
-      await this.props.lagreAllData();
-      return this.fatteVedtakHandler(data);
+      return this.props.lagreAllData();
     }
-    return Promise.resolve();
+    return Promise.reject(new Error("Feil i behandlingsgrunnlag"));
   };
 
   utpekHandler = (data) => {
@@ -338,7 +339,6 @@ class Stegvelger extends Component {
   oppdaterAktuelleSteg = (aktivtStegNummer) => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
-      lagreOgFatteVedtak: this.lagreOgFatteVedtak,
       lagreOgUtpek: this.lagreOgUtpek,
       oppdaterOgLagreBehandlinger: this.props.oppdaterOgLagreBehandlingerHandler,
       oppdaterStegData: this.oppdaterStegData,
@@ -361,6 +361,7 @@ class Stegvelger extends Component {
       oppdater: this.oppdater,
       lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
       kontrollerFerdigbehandling: this.kontrollerFerdigbehandling,
+      validerBehandlingsgrunnlag: this.validerBehandlingsgrunnlag,
     };
 
     const { props } = this;
@@ -402,8 +403,10 @@ class Stegvelger extends Component {
       vurderUtpekingValid: props.vurderUtpekingValid,
       erSoknadArbeidFlereLand:
         props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-      erArbeidEttLandOvrig:
-        props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+      erArbeidEttLandOvrig: [
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+      ].includes(props.oppsummering.behandlingstema.kode),
       erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebaser: props.hjemmebaser,
@@ -548,7 +551,6 @@ Stegvelger.propTypes = {
   hentAvklartefakta: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
   history: PT.object.isRequired,
-  fattVedtak: PT.func.isRequired,
   endreVedtak: PT.func.isRequired,
   kontrollerFerdigbehandling: PT.func.isRequired,
   lagreBehandlingsgrunnlagHandler: PT.func.isRequired,
@@ -716,7 +718,6 @@ const mapStateToProps = (state) => ({
 /* eslint no-alert:off */
 const mapDispatchToProps = (dispatch) => ({
   hentVilkar: (behandlingID) => dispatch(vilkarOperations.hent(behandlingID)),
-  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
   endreVedtak: (behandlingID, body) => dispatch(vedtakOperations.endre(behandlingID, body)),
   kontrollerFerdigbehandling: (data) => dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
   videresend: (saksnummer, videresending) => dispatch(videresendingOperations.send(saksnummer, videresending)),
@@ -742,6 +743,8 @@ const mapDispatchToProps = (dispatch) => ({
   lagreUtpekingsperioderHandler: () => dispatch(utpekingsperioderOperations.lagre()),
   bestillAnmodningsperioder: (behandlingID, bestilling) =>
     dispatch(anmodningunntakOperations.bestill(behandlingID, bestilling)),
+  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

@@ -11,6 +11,7 @@ import RadioGruppe from "./input/radio-gruppe";
 import Select from "./input/select";
 import Textarea from "./textarea/textarea";
 import Vedtakstype from "./vedtakstype";
+import FellesInputFnrDnrOrgnrSaksnr from "./input/fellesInputFnrDnrOrgnrSaksnr";
 
 import CustomRadioPanelGruppe, { CustomRadioPanelElement } from "./customRadioPanelGruppe";
 import { Fieldset } from "../../navFrontend";
@@ -30,6 +31,7 @@ export {
   RadioGruppe,
   Select,
   Textarea,
+  FellesInputFnrDnrOrgnrSaksnr,
   Vedtakstype,
   CustomRadioPanelGruppe,
   CustomRadioPanelElement,

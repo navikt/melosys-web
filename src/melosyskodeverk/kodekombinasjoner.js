@@ -22,6 +22,28 @@ const bestemmelserIkkeRelevanteForUnntak = [
   MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11,
 ];
 
+export const standardBehandlingsTemaMedBegrensetRettigheter = [
+  MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
+  MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
+  MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
+  MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
+];
+
+export const utvidetBehandlingsTemaMedBegrensetRettigheter = [
+  ...standardBehandlingsTemaMedBegrensetRettigheter,
+  MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL,
+];
+
+export const erEOS = (sakstype) => {
+  return sakstype === MKV.Koder.sakstyper.EU_EOS;
+};
+
+export const erBehandlingstemaMedBegrensetRettigheter = (behandlingstema, sakstype) => {
+  return erEOS(sakstype)
+    ? utvidetBehandlingsTemaMedBegrensetRettigheter.includes(behandlingstema)
+    : standardBehandlingsTemaMedBegrensetRettigheter.includes(behandlingstema);
+};
+
 const kodeverkComparator = ({ kode: k1 }, { kode: k2 }) => k1.localeCompare(k2);
 
 export const unntaksbestemmelser = Utils._uniqBy(
@@ -57,6 +79,8 @@ const gyldigeBehandlingstemaMedlemskapLovvalgEUEØS = [
   MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
   MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
   MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+  MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+  MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
   MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
   MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
   MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
@@ -106,4 +130,19 @@ export const gyldigeBehandlingstema = (sakstype, sakstema) => {
     }
   }
   return [];
+};
+
+export const gyldigeBehandlingstyper = (behandlingstema) => {
+  switch (behandlingstema) {
+    case MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET:
+    case MKV.Koder.behandlinger.behandlingstema.TRYGDETID:
+      return [MKV.Koder.behandlinger.behandlingstyper.HENVENDELSE];
+    default:
+      return [
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+        MKV.Koder.behandlinger.behandlingstyper.KLAGE,
+        MKV.Koder.behandlinger.behandlingstyper.HENVENDELSE,
+      ];
+  }
 };

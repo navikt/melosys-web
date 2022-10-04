@@ -12,22 +12,40 @@ const {
   REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
   YRKESAKTIV,
   IKKE_YRKESAKTIV,
+  ARBEID_KUN_NORGE,
   PENSJONIST,
   UNNTAK_MEDLEMSKAP,
   ARBEID_ETT_LAND_ØVRIG,
+  ARBEID_TJENESTEPERSON_ELLER_FLY,
+  ANMODNING_OM_UNNTAK_HOVEDREGEL,
+  REGISTRERING_UNNTAK,
+  BESLUTNING_LOVVALG_NORGE,
+  UTSENDT_ARBEIDSTAKER,
+  UTSENDT_SELVSTENDIG,
+  ARBEID_FLERE_LAND,
 } = MKV.Koder.behandlinger.behandlingstema;
-const { NY_VURDERING, ENDRET_PERIODE, FØRSTEGANG } = MKV.Koder.behandlinger.behandlingstyper;
+const { NY_VURDERING, ENDRET_PERIODE, FØRSTEGANG, KLAGE, HENVENDELSE } = MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
-const { MEDLEM_I_FOLKETRYGDEN, UNNTATT_MEDLEMSKAP, FASTSATT_LOVVALGSLAND, AVSLAG_SØKNAD } =
-  MKV.Koder.behandlinger.behandlingsresultattyper;
+const {
+  MEDLEM_I_FOLKETRYGDEN,
+  UNNTATT_MEDLEMSKAP,
+  FASTSATT_LOVVALGSLAND,
+  AVSLAG_SØKNAD,
+  MEDHOLD,
+  KLAGEINNSTILLING,
+  AVVIST_KLAGE,
+  OMGJORT,
+  REGISTRERT_UNNTAK,
+  DELVIS_GODKJENT_UNNTAK,
+} = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 type avsluttSakProps = {
   avslaaSoknad: () => void;
   behandlingID: string;
   henleggSak: () => void;
   avsluttSakSomBortfalt: () => void;
-  ferdigbehandleNyVurdering: () => void;
+  ferdigbehandleSak: () => void;
   sakstema: string;
   sakstype: string;
   behandlingstema: string;
@@ -47,18 +65,21 @@ const AvsluttSak = ({
   sakstype,
   behandlingstema,
   behandlingstype,
-  ferdigbehandleNyVurdering,
+  ferdigbehandleSak,
   redigerbart,
   behandlingsstatus,
 }: avsluttSakProps) => {
-  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
   const behandlingstemaErTrygdetid = behandlingstema === TRYGDETID;
   const behandlingstypeErNyVurdering = behandlingstype === NY_VURDERING;
   const behandlingstypeErEndretPeriode = behandlingstype === ENDRET_PERIODE;
+  const behandlingstypeErKlage = behandlingstype === KLAGE;
   const behandlingstemaErUnntakNorskTrygdØvrigEllerUtstasjonering =
     behandlingstema === REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE ||
     behandlingstema === REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
+  const behandlingstemaErUnntak =
+    behandlingstema === ANMODNING_OM_UNNTAK_HOVEDREGEL || behandlingstema === REGISTRERING_UNNTAK;
 
   const skalViseAvslåPgaManglendeOpplysninger = () => {
     switch (behandlingskategori) {
@@ -112,21 +133,28 @@ const AvsluttSak = ({
   };
 
   const skalViseFerdigbehandlet = () => {
-    switch (behandlingskategori) {
-      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
-      case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
-      case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
-      case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
-      case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
-        return redigerbart && behandlingstypeErNyVurdering;
-      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
+    switch (behandlingstema) {
+      case BESLUTNING_LOVVALG_NORGE:
+      case UTSENDT_ARBEIDSTAKER:
+      case UTSENDT_SELVSTENDIG:
+      case ARBEID_TJENESTEPERSON_ELLER_FLY:
+      case ARBEID_FLERE_LAND:
+      case ARBEID_ETT_LAND_ØVRIG:
+        return redigerbart && (behandlingstypeErNyVurdering || behandlingstype === HENVENDELSE);
       default:
-        return false;
+        return redigerbart;
     }
   };
 
+  const skalViseKlageHandlinger = behandleAlleSakerToggle === "enabled" && redigerbart && behandlingstypeErKlage;
+
+  const skalViseVedtakOmgjort = behandleAlleSakerToggle === "enabled" && redigerbart && behandlingstypeErNyVurdering;
+
+  const skalViseUnntaksHandlinger =
+    behandleAlleSakerToggle === "enabled" && redigerbart && behandlingstemaErUnntak && sakstype === TRYGDEAVTALE;
+
   const skalViseSøknadenErInnvilget = () => {
-    if (sakstemaToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
+    if (behandleAlleSakerToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
       return false;
     }
     if (
@@ -138,26 +166,36 @@ const AvsluttSak = ({
     if (
       [EU_EOS, TRYGDEAVTALE].includes(sakstype) &&
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
-      [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST].includes(behandlingstema)
+      [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, ARBEID_KUN_NORGE].includes(behandlingstema)
     )
       return true;
+
     return false;
   };
 
   const skalViseSøknadenErAvslått = () => {
-    if (sakstemaToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
+    if (behandleAlleSakerToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
       return false;
     }
+
     return (
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
-      [ARBEID_ETT_LAND_ØVRIG, YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, UNNTAK_MEDLEMSKAP].includes(behandlingstema)
+      [
+        ARBEID_ETT_LAND_ØVRIG,
+        ARBEID_TJENESTEPERSON_ELLER_FLY,
+        ARBEID_KUN_NORGE,
+        YRKESAKTIV,
+        IKKE_YRKESAKTIV,
+        PENSJONIST,
+        UNNTAK_MEDLEMSKAP,
+      ].includes(behandlingstema)
     );
   };
 
   const mapType = () => {
     switch (sakstype) {
       case FTRL:
-        return behandlingstype === UNNTAK_MEDLEMSKAP ? UNNTATT_MEDLEMSKAP : MEDLEM_I_FOLKETRYGDEN;
+        return behandlingstema === UNNTAK_MEDLEMSKAP ? UNNTATT_MEDLEMSKAP : MEDLEM_I_FOLKETRYGDEN;
       case EU_EOS:
       case TRYGDEAVTALE:
         return FASTSATT_LOVVALGSLAND;
@@ -171,14 +209,15 @@ const AvsluttSak = ({
     tilForsiden();
   };
 
-  if (
-    !skalViseSøknadenErInnvilget() &&
-    !skalViseSøknadenErAvslått() &&
-    !skalViseAvslåPgaManglendeOpplysninger() &&
-    !skalViseHenleggSak() &&
-    !skalViseAvsluttSak() &&
-    !skalViseFerdigbehandlet()
-  )
+  const skalKunneAngiBehandlingsresultat =
+    skalViseSøknadenErInnvilget() ||
+    skalViseSøknadenErAvslått() ||
+    skalViseAvslåPgaManglendeOpplysninger() ||
+    skalViseVedtakOmgjort ||
+    skalViseKlageHandlinger ||
+    skalViseUnntaksHandlinger;
+
+  if (!skalViseHenleggSak() && !skalViseAvsluttSak() && !skalViseFerdigbehandlet() && !skalKunneAngiBehandlingsresultat)
     return null;
 
   return (
@@ -186,18 +225,51 @@ const AvsluttSak = ({
       className="behandlingsmeny__meny__avslutt-sak"
       tittel={<div className="title">Avslutt sak</div>}
     >
-      {skalViseSøknadenErInnvilget() && (
-        <Handling tekst="Søknaden er innvilget" onClick={() => angiBehandlingsresultattype(mapType())} />
+      {skalKunneAngiBehandlingsresultat && (
+        <div className="skillestrek">
+          {skalViseKlageHandlinger && (
+            <Handling tekst="Medhold på klage" onClick={() => angiBehandlingsresultattype(MEDHOLD)} />
+          )}
+          {skalViseKlageHandlinger && (
+            <Handling
+              tekst="Klageinnstilling er oversendt til klageinstansen"
+              onClick={() => angiBehandlingsresultattype(KLAGEINNSTILLING)}
+            />
+          )}
+          {skalViseKlageHandlinger && (
+            <Handling tekst="Klage er avvist" onClick={() => angiBehandlingsresultattype(AVVIST_KLAGE)} />
+          )}
+          {skalViseSøknadenErInnvilget() && (
+            <Handling tekst="Søknaden er innvilget" onClick={() => angiBehandlingsresultattype(mapType())} />
+          )}
+          {skalViseSøknadenErAvslått() && (
+            <Handling tekst="Søknaden er avslått" onClick={() => angiBehandlingsresultattype(AVSLAG_SØKNAD)} />
+          )}
+          {skalViseAvslåPgaManglendeOpplysninger() && (
+            <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />
+          )}
+          {skalViseVedtakOmgjort && (
+            <Handling tekst="Vedtaket er omgjort (fvl § 35)" onClick={() => angiBehandlingsresultattype(OMGJORT)} />
+          )}
+          {skalViseUnntaksHandlinger && (
+            <>
+              <Handling tekst="Perioden er godkjent" onClick={() => angiBehandlingsresultattype(REGISTRERT_UNNTAK)} />
+              <Handling
+                tekst="Perioden er delvis godkjent"
+                onClick={() => angiBehandlingsresultattype(DELVIS_GODKJENT_UNNTAK)}
+              />
+              <Handling
+                tekst="Medlem i folketrygden"
+                onClick={() => angiBehandlingsresultattype(MEDLEM_I_FOLKETRYGDEN)}
+              />
+            </>
+          )}
+        </div>
       )}
-      {skalViseSøknadenErAvslått() && (
-        <Handling tekst="Søknaden er avslått" onClick={() => angiBehandlingsresultattype(AVSLAG_SØKNAD)} />
-      )}
-      {skalViseAvslåPgaManglendeOpplysninger() && (
-        <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />
-      )}
-      {skalViseHenleggSak() && <Handling tekst="Søknaden er henlagt/trukket" onClick={henleggSak} />}
-      {skalViseAvsluttSak() && <Handling tekst="Kan ikke behandles i Melosys" onClick={avsluttSakSomBortfalt} />}
-      {skalViseFerdigbehandlet() && <Handling tekst="Ferdigbehandlet" onClick={ferdigbehandleNyVurdering} />}
+
+      {skalViseFerdigbehandlet() && <Handling tekst="Ferdigbehandlet" onClick={ferdigbehandleSak} />}
+      {skalViseHenleggSak() && <Handling tekst="Søknaden/klagen er trukket" onClick={henleggSak} />}
+      {skalViseAvsluttSak() && <Handling tekst="Behandlingen er bortfalt" onClick={avsluttSakSomBortfalt} />}
     </Nav.Ekspanderbartpanel>
   );
 };

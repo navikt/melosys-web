@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -27,13 +27,11 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type OvrigOmArbeidstakerProps = PropsFromRedux & {
   visArbeidsforholdRolleEtiketter: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
   redigerbart: boolean;
 };
 
 const OvrigOmArbeidstaker = ({
   visArbeidsforholdRolleEtiketter,
-  behandlingsgrunnlagEtikett,
   redigerbart,
   oppdaterBehandlingsgrunnlag,
 }: OvrigOmArbeidstakerProps) => {
@@ -49,7 +47,6 @@ const OvrigOmArbeidstaker = ({
       <Nav.Row>
         <Nav.Column xs="10" className="tittel">
           <Nav.Typo.Innholdstittel>{KV.Menypunkter.OvrigOmArbeidstaker.tittel}</Nav.Typo.Innholdstittel>
-          {behandlingsgrunnlagEtikett}
           {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel />}
         </Nav.Column>
       </Nav.Row>

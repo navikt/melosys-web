@@ -1,4 +1,6 @@
 import React from "react";
+import { useSelector } from "react-redux";
+
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 
@@ -6,28 +8,44 @@ import withErrorHandling from "../../felleskomponenter/withErrorHandling";
 import * as Nav from "../../navFrontend";
 
 import Saksplukker from "./komponenter/saksplukker";
-import MineOppgaver from "./komponenter/mineoppgaver";
 import SokSkjema from "./komponenter/sokskjema";
+import JournalforingOppgaver from "./komponenter/mineoppgaver/jornualforingoppgaver";
+import BehandlingOppgaver from "./komponenter/mineoppgaver/behandlingOppgaver";
+
 import OpprettNySakKnapp from "./komponenter/opprettnysakknapp";
 
 import "./forside.css";
 
 const Forside = (props) => {
-  const { children, tilOpprettNySak } = props;
+  const { tilOpprettNySak } = props;
+  const data = useSelector((state) => state.oppgaver.data);
+
+  const oppgaverTotalt =
+    (data.journalforing || data.saksbehandling) === undefined
+      ? 0
+      : data.journalforing.length + data.saksbehandling.length;
 
   return (
     <div className="forside">
-      {children}
-      <Nav.Container fluid>
+      <div className="forside__header">
+        <div>
+          <Nav.Typo.Undertittel>Mine oppgaver</Nav.Typo.Undertittel>
+          <Nav.Typo.Normaltekst>{oppgaverTotalt} oppgaver</Nav.Typo.Normaltekst>
+        </div>
+        <OpprettNySakKnapp onClick={tilOpprettNySak} />
+      </div>
+      <Nav.Container className="forside__container" fluid>
         <Nav.Row>
-          <Nav.Column xs="7">
-            <MineOppgaver />
+          <Nav.Column xs="6" lg="5">
+            <JournalforingOppgaver />
           </Nav.Column>
-          <Nav.Column className="hoyrekolonne" xs="5">
-            <OpprettNySakKnapp onClick={tilOpprettNySak} />
+          <Nav.Column xs="6" lg="7">
             <SokSkjema />
             <Saksplukker />
           </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <BehandlingOppgaver />
         </Nav.Row>
       </Nav.Container>
     </div>

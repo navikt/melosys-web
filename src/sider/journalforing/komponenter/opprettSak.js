@@ -1,16 +1,24 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { change } from "redux-form";
+import { change, getFormSyncErrors } from "redux-form";
 import PT from "prop-types";
 
+import MKV from "../../../melosyskodeverk";
+import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
+import * as Api from "../../../services/api";
+
 import { formSelectors } from "../../../ducks/form";
-import MKV from "../../../melosyskodeverk";
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
 import { useFeatureToggle } from "../../../featuretoggle";
+import { skalViseTomFlytEllerErSedBehandling } from "../../../routing";
 
 import "./opprettSak.css";
+import {
+  nullstillFormdataVerdier,
+  FormDataVerdi,
+} from "../../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
 
 const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
   ({ kode }) =>
@@ -32,21 +40,43 @@ const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
   ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
 );
 
+export const skalViseSoknadsperiodeOgLand = (sakstype, behandlingstema, behandlingstype) =>
+  sakstype &&
+  behandlingstema &&
+  behandlingstype &&
+  !skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype);
+
+export const skalViseSoknadsperiodeOgLandDeprecated = (hovedpart, sakstype, behandlingstema) =>
+  hovedpart !== MKV.Koder.aktoersroller.VIRKSOMHET &&
+  sakstype === MKV.Koder.sakstyper.EU_EOS &&
+  ![
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
+    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+  ].includes(behandlingstema);
+
 export const OpprettSakTittel = () => (
   <div className="enkeltSak__meta">
     <Nav.Typo.Element>Opprett ny sak</Nav.Typo.Element>
   </div>
 );
 
-const OpprettFagsak = (props) => {
-  const { journalforingSkjemaVerdier } = props;
-  const { settFeltInnhold } = props;
+export const OpprettSak = (props) => {
+  const { journalforingSkjemaVerdier, behandleAlleSakerToggleEnabled, settFeltInnhold } = props;
   const {
     opprettnysak_behandlingstema: valgtBehandlingstema,
+    opprettnysak_behandlingstype: valgtBehandlingstype,
     sakstype: valgtSakstype,
+    sakstema: valgtSakstema,
     journalforingSoknadsland: valgteLand,
     journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand,
+    journalforingGjelder,
   } = journalforingSkjemaVerdier;
+  const [sakstyper, setSakstyper] = useState([]);
+  const [sakstemaer, setSakstemaer] = useState([]);
+  const [behandlingstemaer, setBehandlingstemaer] = useState([]);
+  const [behandlingstyper, setBehandlingstyper] = useState([]);
+
   const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
   const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -76,6 +106,7 @@ const OpprettFagsak = (props) => {
   };
 
   useEffect(() => {
+    if (behandleAlleSakerToggleEnabled) return;
     settFeltInnhold("opprettnysak_behandlingstema", defaultBehandlingstema(valgtSakstype));
     setValgbareBehandlingstemaer(behandlingstemaerEtterSakstype(valgtSakstype));
   }, [valgtSakstype]);
@@ -91,36 +122,116 @@ const OpprettFagsak = (props) => {
     );
   }, [folketrygdenToggle]);
 
-  const skalViseSoknadsperiodeOgLand = ![
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
-    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
-    MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
-    MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
-  ].includes(valgtBehandlingstema);
+  useEffect(() => {
+    if (!behandleAlleSakerToggleEnabled) return;
+
+    Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
+      setSakstyper(muligeSakstyper);
+    });
+  }, [behandleAlleSakerToggleEnabled]);
+
+  useEffect(() => {
+    if (!behandleAlleSakerToggleEnabled) return;
+
+    if (valgtSakstype) {
+      Api.LovligeKombinasjoner.hentSakstemaer(journalforingGjelder, valgtSakstype).then((muligeSakstemaer) => {
+        setSakstemaer(muligeSakstemaer);
+      });
+    }
+  }, [behandleAlleSakerToggleEnabled, journalforingGjelder, valgtSakstype]);
+
+  useEffect(() => {
+    if (!behandleAlleSakerToggleEnabled) return;
+
+    if (valgtSakstema && valgtSakstype) {
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(journalforingGjelder, valgtSakstype, valgtSakstema).then(
+        (muligeBehandlingstemaer) => {
+          setBehandlingstemaer(muligeBehandlingstemaer);
+        }
+      );
+    }
+  }, [behandleAlleSakerToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema]);
+
+  useEffect(() => {
+    if (!behandleAlleSakerToggleEnabled) return;
+
+    if (valgtSakstema && valgtSakstype && valgtBehandlingstema) {
+      Api.LovligeKombinasjoner.hentBehandlingstyper(
+        journalforingGjelder,
+        valgtSakstype,
+        valgtSakstema,
+        valgtBehandlingstema
+      ).then((muligeBehandlingstyper) => {
+        setBehandlingstyper(muligeBehandlingstyper);
+      });
+    }
+  }, [behandleAlleSakerToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
+
+  const visArbeidFlereLandEllerUkjent =
+    valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
 
   return (
-    <div className="panelramme">
-      <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
-        {valgbareSakstyper.map((elem) => (
+    <div className="opprettSak">
+      <Skjema.Select
+        feltNavn="sakstype"
+        bredde="fullbredde"
+        label="Sakstype"
+        onChange={() => {
+          if (behandleAlleSakerToggleEnabled) nullstillFormdataVerdier(FormDataVerdi.sakstype, settFeltInnhold);
+        }}
+      >
+        {(behandleAlleSakerToggleEnabled ? sakstyper : valgbareSakstyper).map((elem) => (
           <option key={elem.kode} value={elem.kode}>
             {elem.term}
           </option>
         ))}
       </Skjema.Select>
+      {behandleAlleSakerToggleEnabled && (
+        <Skjema.Select
+          feltNavn="sakstema"
+          bredde="fullbredde"
+          label="Sakstema"
+          onChange={() => nullstillFormdataVerdier(FormDataVerdi.sakstema, settFeltInnhold)}
+        >
+          {sakstemaer.map((elem) => (
+            <option key={elem.kode} value={elem.kode}>
+              {elem.term}
+            </option>
+          ))}
+        </Skjema.Select>
+      )}
       <Skjema.Select
         feltNavn="opprettnysak_behandlingstema"
         bredde="fullbredde"
         label="Behandlingstema"
-        onChange={() => settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false)}
+        onChange={() => {
+          if (behandleAlleSakerToggleEnabled) nullstillFormdataVerdier(FormDataVerdi.behandlingstema, settFeltInnhold);
+          settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
+        }}
       >
-        {valgbareBehandlingstemaer.map((elem) => (
+        {(behandleAlleSakerToggleEnabled ? behandlingstemaer : valgbareBehandlingstemaer).map((elem) => (
           <option key={elem.kode} value={elem.kode}>
             {elem.term}
           </option>
         ))}
       </Skjema.Select>
-      {skalViseSoknadsperiodeOgLand && (
+      {behandleAlleSakerToggleEnabled && (
+        <Skjema.Select
+          feltNavn="opprettnysak_behandlingstype"
+          bredde="fullbredde"
+          label="Behandlingstype"
+          onChange={() => nullstillFormdataVerdier(FormDataVerdi.behandlingstype, settFeltInnhold)}
+        >
+          {behandlingstyper.map((elem) => (
+            <option key={elem.kode} value={elem.kode}>
+              {elem.term}
+            </option>
+          ))}
+        </Skjema.Select>
+      )}
+      {(behandleAlleSakerToggleEnabled
+        ? skalViseSoknadsperiodeOgLand(valgtSakstype, valgtBehandlingstema, valgtBehandlingstype)
+        : skalViseSoknadsperiodeOgLandDeprecated(journalforingGjelder, valgtSakstype, valgtBehandlingstema)) && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
             <Nav.Row className="">
@@ -132,54 +243,67 @@ const OpprettFagsak = (props) => {
               </Nav.Column>
             </Nav.Row>
           </Nav.Fieldset>
-          <Nav.Fieldset legend="Land:">
-            {valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
-              <Nav.Row className="landcheckbox">
-                <Skjema.Checkbox
+          <Nav.Fieldset
+            legend={
+              <LabelMedHjelpetekst
+                label="I hvilke land skal arbeidet/næringen utføres i?"
+                hjelpetekst={
+                  visArbeidFlereLandEllerUkjent
+                    ? '"Flere EØS-land/Sveits. Ikke kjent hvilke” skal kun benyttes hvis land er ukjent'
+                    : undefined
+                }
+              />
+            }
+          >
+            {visArbeidFlereLandEllerUkjent && (
+              <Nav.Row className="land_radiobtn">
+                <Skjema.Radio
                   feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
+                  label="Flere EØS-land/Sveits. Ikke kjent hvilke"
                   disabled={valgteLand.length > 0}
-                  label={
-                    <LabelMedHjelpetekst
-                      label="Flere EØS-land/Sveits. Ikke kjent hvilke"
-                      hjelpetekst={
-                        "Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.\n" +
-                        "Det er ikke mulig å legge til andre land i tillegg."
-                      }
-                      hjelpetekstClassName="hjelpetekst"
-                    />
-                  }
+                  value
+                />
+                <Skjema.Radio
+                  feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
+                  label="Velg land fra liste"
+                  value={false}
                 />
               </Nav.Row>
             )}
-            <Nav.Row className="">
-              <Nav.Column xs="12">
-                <Skjema.LandVelger
-                  feltNavn="journalforingSoknadsland"
-                  multiLand
-                  errorConfig={{ submitFailed: true }}
-                  disabled={ukjentEllerAlleEosLand}
-                />
-              </Nav.Column>
-            </Nav.Row>
+            {!ukjentEllerAlleEosLand && (
+              <Nav.Row>
+                <Nav.Column xs="12">
+                  <Skjema.MultiSelect
+                    options={MKV.KTObjects.landkoder.map((item) => ({ value: item.kode, label: item.term }))}
+                    className="multiselect"
+                    feltNavn="journalforingSoknadsland"
+                  />
+                </Nav.Column>
+              </Nav.Row>
+            )}
           </Nav.Fieldset>
         </Fragment>
       )}
     </div>
   );
 };
-OpprettFagsak.propTypes = {
+OpprettSak.propTypes = {
   journalforingSkjemaVerdier: PT.object,
+  errors: PT.object,
   settFeltInnhold: PT.func.isRequired,
+  behandleAlleSakerToggleEnabled: PT.bool.isRequired,
 };
 
-OpprettFagsak.defaultProps = {
+OpprettSak.defaultProps = {
   journalforingSkjemaVerdier: {},
+  errors: {},
 };
 const mapStateToProps = (state) => ({
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
+  errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  settFeltInnhold: (feltNavn, verdi) => dispatch(change("journalforing", feltNavn, verdi)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.JOURNALFORING, feltNavn, verdi)),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(OpprettFagsak);
+export default connect(mapStateToProps, mapDispatchToProps)(OpprettSak);

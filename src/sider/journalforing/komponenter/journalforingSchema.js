@@ -4,6 +4,7 @@ import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
 import * as Konstanter from "../../../constants";
 import * as KV from "../../../kodeverk";
+import { skalViseSoknadsperiodeOgLand, skalViseSoknadsperiodeOgLandDeprecated } from "./opprettSak";
 
 const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer." };
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig fnr eller dnr." };
@@ -26,18 +27,21 @@ const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
-const kreverPeriode = (journalforingHensikt, behandlingstema) =>
+const kreverPeriode = (journalforingHensikt, sakstype, behandlingstema, behandlingstype) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
-  ![
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
-    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
-    MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
-    MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
-  ].includes(behandlingstema);
+  skalViseSoknadsperiodeOgLand(sakstype, behandlingstema, behandlingstype);
 
-const kreverLand = (journalforingHensikt, behandlingstema, ukjentEllerAlleEosLand) =>
-  !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, behandlingstema);
+// Fjernes med toggle melosys.behandle_alle_saker
+const kreverPeriodeDeprecated = (journalforingHensikt, hovedpart, sakstype, behandlingstema) =>
+  journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
+  skalViseSoknadsperiodeOgLandDeprecated(hovedpart, sakstype, behandlingstema);
+
+const kreverLand = (journalforingHensikt, sakstype, behandlingstema, behandlingstype, ukjentEllerAlleEosLand) =>
+  !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, sakstype, behandlingstema, behandlingstype);
+
+// Fjernes med toggle melosys.behandle_alle_saker
+const kreverLandDeprecated = (journalforingHensikt, hovedpart, sakstype, behandlingstema, ukjentEllerAlleEosLand) =>
+  !ukjentEllerAlleEosLand && kreverPeriodeDeprecated(journalforingHensikt, hovedpart, sakstype, behandlingstema);
 
 const arbeidsgiverOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
   return avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && !erAvsenderPreutfylt;
@@ -127,25 +131,79 @@ const journalforing = object().shape({
       hensikt === Konstanter.JOURNALFORING_HENSIKT.KNYTT || hensikt === Konstanter.JOURNALFORING_HENSIKT.NY_VURDERING,
     then: string().required(VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT),
   }),
-  journalforingPeriodeFraOgMed: string().when(["journalforingHensikt", "opprettnysak_behandlingstema"], {
-    is: kreverPeriode,
-    then: string().erGyldigDato().required(MAA_FYLLES_UT),
+  journalforingPeriodeFraOgMed: string().when("$behandleAlleSakerToggleEnabled", {
+    is: (behandleAlleSakerToggleEnabled) => behandleAlleSakerToggleEnabled,
+    then: string().when(
+      ["journalforingHensikt", "sakstype", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
+      {
+        is: kreverPeriode,
+        then: string().erGyldigDato().required(MAA_FYLLES_UT),
+      }
+    ),
+    otherwise: string().when(
+      ["journalforingHensikt", "journalforingGjelder", "sakstype", "opprettnysak_behandlingstema"],
+      {
+        is: kreverPeriodeDeprecated,
+        then: string().erGyldigDato().required(MAA_FYLLES_UT),
+      }
+    ),
   }),
   journalforingPeriodeTilOgMed: lazy((value) =>
     !value
       ? string().ensure()
-      : string().when(["journalforingHensikt", "opprettnysak_behandlingstema"], {
-          is: kreverPeriode,
-          then: string().erEtterDatofelt("journalforingPeriodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT),
+      : string().when("$behandleAlleSakerToggleEnabled", {
+          is: (behandleAlleSakerToggleEnabled) => behandleAlleSakerToggleEnabled,
+          then: string().when(
+            ["journalforingHensikt", "sakstype", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
+            {
+              is: kreverPeriode,
+              then: string().erGyldigDato().required(MAA_FYLLES_UT),
+            }
+          ),
+          otherwise: string().when(
+            ["journalforingHensikt", "journalforingGjelder", "sakstype", "opprettnysak_behandlingstema"],
+            {
+              is: kreverPeriodeDeprecated,
+              then: string().erGyldigDato().required(MAA_FYLLES_UT),
+            }
+          ),
         })
   ),
-  journalforingSoknadsland: array()
-    .of(string())
-    .ensure()
-    .when(["journalforingHensikt", "opprettnysak_behandlingstema", "journalforingSoknadslandUkjenteEllerAlleEosLand"], {
-      is: kreverLand,
-      then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
-    }),
+  journalforingSoknadsland: array().when("$behandleAlleSakerToggleEnabled", {
+    is: (behandleAlleSakerToggleEnabled) => behandleAlleSakerToggleEnabled,
+    then: array()
+      .of(string())
+      .ensure()
+      .when(
+        [
+          "journalforingHensikt",
+          "sakstype",
+          "opprettnysak_behandlingstema",
+          "opprettnysak_behandlingstype",
+          "journalforingSoknadslandUkjenteEllerAlleEosLand",
+        ],
+        {
+          is: kreverLand,
+          then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
+        }
+      ),
+    otherwise: array()
+      .of(string())
+      .ensure()
+      .when(
+        [
+          "journalforingHensikt",
+          "journalforingGjelder",
+          "sakstype",
+          "opprettnysak_behandlingstema",
+          "journalforingSoknadslandUkjenteEllerAlleEosLand",
+        ],
+        {
+          is: kreverLandDeprecated,
+          then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
+        }
+      ),
+  }),
   utenlandskTrygdemyndighetLandkode: string().when("avsenderType", {
     is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
     then: string().required(VELG_ETT_LAND),
@@ -161,11 +219,36 @@ const journalforing = object().shape({
     then: string().ensure().required(VELG_EN_AVSENDER),
   }),
   mottattDato: string().erGyldigDato().required(MAA_FYLLES_UT),
+  sakstype: string()
+    .nullable()
+    .when("journalforingHensikt", {
+      is: (hensikt) => hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+      then: string().required(MAA_FYLLES_UT).nullable(),
+    }),
+  sakstema: string()
+    .nullable()
+    .when(["$behandleAlleSakerToggleEnabled", "journalforingHensikt"], {
+      is: (behandleAlleSakerToggleEnabled, hensikt) =>
+        behandleAlleSakerToggleEnabled && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+      then: string().required(MAA_FYLLES_UT).nullable(),
+    }),
+  opprettnysak_behandlingstema: string()
+    .nullable()
+    .when("journalforingHensikt", {
+      is: (hensikt) => hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+      then: string().required(MAA_FYLLES_UT).nullable(),
+    }),
+  opprettnysak_behandlingstype: string()
+    .nullable()
+    .when(["$behandleAlleSakerToggleEnabled", "journalforingHensikt"], {
+      is: (behandleAlleSakerToggleEnabled, hensikt) =>
+        behandleAlleSakerToggleEnabled && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+      then: string().required(MAA_FYLLES_UT).nullable(),
+    }),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   journalforingHensikt: string(),
   representantNavn: string().nullable(),
-  opprettnysak_behandlingstema: string(),
   journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
 });
 

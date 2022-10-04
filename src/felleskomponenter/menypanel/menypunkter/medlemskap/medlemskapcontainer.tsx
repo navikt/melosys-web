@@ -2,7 +2,6 @@ import React from "react";
 
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
-import * as Etiketter from "../../etiketter";
 
 import Medlemskap from "./medlemskap";
 
@@ -13,7 +12,6 @@ const MedlemskapContainer = () => (
         <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.Medlemskap.tittel}
         </Nav.Typo.Innholdstittel>
-        <Etiketter.FraRegister />
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>

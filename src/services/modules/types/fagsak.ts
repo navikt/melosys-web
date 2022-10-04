@@ -17,6 +17,7 @@ export type FagsakOppsummering = {
   saksnummer: string;
   navn: string;
   sakstype: KTObject;
+  sakstema: KTObject;
   saksstatus: KTObject;
   opprettetDato: string;
   behandlingOversikter: {

@@ -75,13 +75,11 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type VirksomhetenINorgeProps = PropsFromRedux & {
   visArbeidsforholdRolleEtiketter: boolean;
   redigerbart: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
 };
 
 const VirksomhetenINorge = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
-  behandlingsgrunnlagEtikett,
   erOffentligVirksomhet,
   oppdaterBehandlingsgrunnlag,
 }: VirksomhetenINorgeProps) => {
@@ -95,7 +93,6 @@ const VirksomhetenINorge = ({
       <Nav.Row className="tittel">
         <Nav.Column xs="12" className="col">
           <Nav.Typo.Innholdstittel>{KV.Menypunkter.OmVirksomhetenINorge.tittel}</Nav.Typo.Innholdstittel>
-          {behandlingsgrunnlagEtikett}
           {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel />}
         </Nav.Column>
       </Nav.Row>

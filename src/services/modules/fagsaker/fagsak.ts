@@ -19,6 +19,7 @@ export interface OpprettReqDto {
   brukerID: string;
   sakstype: string;
   behandlingstema: string;
+  behandlingstype: string;
   soknadDto: SoknadDto;
   skalTilordnes: boolean;
   oppgaveID: string;
@@ -48,8 +49,6 @@ export interface VideresendReqDto {
 export const videresend = (saksnummer: string, body: VideresendReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg-videresend`, body);
 
-export const avslutt = (saksnummer: string) => putAsText(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/avslutt`);
-
 interface UtpekReqDto {
   mottakerinstitusjoner: string[];
   fritekstSed: string | null;
@@ -58,4 +57,22 @@ interface UtpekReqDto {
 export const utpek = (saksnummer: string, body: UtpekReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/utpek`, body);
 
+export interface EndreFagsakDto {
+  sakstype: string | null;
+  sakstema: string | null;
+}
+
+export const hentMuligeSakstemaer = (saksnummer: string) =>
+  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstemaer`);
+
+export const hentMuligeSakstyper = (saksnummer: string) =>
+  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstyper`);
+
+export const endreFagsak = (saksnummer: string, body: EndreFagsakDto) =>
+  postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/endre`, body);
+
+// Fjernes med melosys.behandle_alle_saker
 export const revurder = (saksnummer: string) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/revurder`, {});
+
+export const ferdigbehandleSak = (saksnummer: string) =>
+  putAsText(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/ferdigbehandle`);
