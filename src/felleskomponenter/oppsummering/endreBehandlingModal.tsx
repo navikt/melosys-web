@@ -195,7 +195,7 @@ function EndreBehandlingModal({
         }
       })
       .catch((error) => {
-        setGenerellFeil(error && error.message ? error.message : "Oppdateringen feilet!");
+        setGenerellFeil(error?.message ?? "Oppdateringen feilet!");
       })
       .finally(() => setSkalViseSpinner(false));
   };
