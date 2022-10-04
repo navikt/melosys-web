@@ -284,7 +284,7 @@ const OpprettNySak = ({
   };
 
   const nullstillOppgave = () => {
-    change("oppgaveID", undefined);
+    change("oppgaveID", null);
   };
   const hovedpartErBruker = hovedpart === BRUKER;
 
