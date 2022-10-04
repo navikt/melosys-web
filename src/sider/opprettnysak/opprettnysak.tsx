@@ -215,7 +215,6 @@ const OpprettNySak = ({
   }, [virksomhetOrgnr]);
 
   useEffect(() => {
-    change("brukerID", 30056928150);
     if (hovedpart === BRUKER) {
       change("virksomhetOrgnr", null);
       change("virksomhetNavn", null);
