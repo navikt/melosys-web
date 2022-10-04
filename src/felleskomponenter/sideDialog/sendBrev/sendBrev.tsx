@@ -10,6 +10,7 @@ import { ColumnWidth } from "nav-frontend-grid";
 
 import { URL_BASENAME } from "../../../constants";
 
+import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Ikoner from "../../../resources/images";
@@ -194,10 +195,16 @@ const SendBrev = ({
 
   const lagFritekstPdfUrl = async (index: number) => {
     const data = {
-      produserbardokument: formValues.type || "",
+      produserbardokument: MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTVEDLEGG,
       mottaker: muligeMottakere?.hovedMottaker.rolle || "",
-      fritekstTittel: fritekstvedlegg[index].tittel,
-      fritekst: fritekstvedlegg[index].fritekst,
+      fritekstTittel:
+        redigerFritekstvedleggIndex === index
+          ? formValues.felt?.FRITEKSTVEDLEGG_TITTEL?.feltVerdi
+          : fritekstvedlegg[index].tittel,
+      fritekst:
+        redigerFritekstvedleggIndex === index
+          ? formValues.felt?.FRITEKSTVEDLEGG_FRITEKST?.feltVerdi
+          : fritekstvedlegg[index].fritekst,
       kopiMottakere: [],
       kontaktopplysninger: false,
       saksvedlegg: [],
