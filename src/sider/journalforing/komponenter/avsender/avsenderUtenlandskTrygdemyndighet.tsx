@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Nav from "../../../../navFrontend";
@@ -18,19 +18,20 @@ const AvsenderUtenlandskTrygdemyndighet = ({
   <div className="avsender">
     <Skjema.LandVelger
       feltNavn="utenlandskTrygdemyndighetLandkode"
-      label="Velg land"
+      label="Land"
       // @ts-ignore
       onChange={fullmektigLandEndret}
       className="avsender__input"
+      bredde="XL"
     />
-    {utenlandskTrygdemyndighetLandkode && (
-      <Fragment>
-        <Nav.Typo.Element>Avsender</Nav.Typo.Element>
+    <div className="avsender__navn">
+      <Nav.Typo.Element className="avsender__navn__label">Avsender:</Nav.Typo.Element>
+      {utenlandskTrygdemyndighetLandkode && (
         <Nav.Typo.Normaltekst>
           Trygdemyndighet i {KV.kodeTilTerm(utenlandskTrygdemyndighetLandkode, MKV.KTObjects.landkoder)}
         </Nav.Typo.Normaltekst>
-      </Fragment>
-    )}
+      )}
+    </div>
   </div>
 );
 

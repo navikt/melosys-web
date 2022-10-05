@@ -4,11 +4,24 @@
 
     .radioPanel {
       flex: 1;
-      margin: auto 0.2rem;
+      border-radius: 0;
+      padding-bottom: 0.75rem;
+      padding-top: 0.75rem;
+      margin-top: 0.5rem;
     }
 
     .inputPanel:not(:last-child) {
       margin-bottom: 0;
+      margin-right: 1rem;
+    }
+
+    .inputPanel--checked {
+      border: 1px solid #0067c5;
+    }
+
+    .inputPanel__label::before {
+      top: 0.75rem;
+      left: 1rem;
     }
   }
 }

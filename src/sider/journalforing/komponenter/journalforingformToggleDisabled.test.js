@@ -4,6 +4,7 @@ import MKV from "../../../melosyskodeverk";
 
 import { JournalforingForm } from "./journalforingform";
 import SendForvaltningsMelding from "./sendForvaltningsMelding";
+import Komponent from "./komponent";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 const {
@@ -19,14 +20,13 @@ const {
   YRKESAKTIV,
 } = MKV.Koder.behandlinger.behandlingstema;
 
-// TODO: Slett denne filen når vi tar av toggle på MELOSYS-5333
+// TODO: Slett denne filen når vi tar av toggle melosys.behandle_alle_saker
 
 describe("JournalforingForm", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      behandleAlleSakerToggleEnabled: false,
       journalpostID: "1234",
       hoveddokumentID: "12345",
       vedlegg: [],
@@ -49,6 +49,9 @@ describe("JournalforingForm", () => {
       kanSubmittes: true,
       handleSubmit: jest.fn(),
       submitJournalforing: jest.fn(),
+      submitSpinner: false,
+      behandleAlleSakerToggleEnabled: false,
+      landkoder: [],
     };
   });
 
@@ -65,17 +68,19 @@ describe("JournalforingForm", () => {
     YRKESAKTIV,
   ]).it("sending av forvaltningsmelding vises for behandlingstema %p", (behandlingstema) => {
     props.formValues.opprettnysak_behandlingstema = behandlingstema;
-    const journalforingform = shallow(<JournalforingForm {...props} />);
-    const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
 
-    expect(sendForvaltningsMelding).toHaveLength(1);
+    const journalforingform = shallow(<JournalforingForm {...props} />);
+    const komponenter = journalforingform.find(Komponent);
+
+    expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(1);
   });
 
   test("sending av forvaltningsmelding vises ikke når man journalfører på virksomhet", () => {
     props.formValues.journalforingGjelder = VIRKSOMHET;
-    const journalforingform = shallow(<JournalforingForm {...props} />);
-    const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
 
-    expect(sendForvaltningsMelding).toHaveLength(0);
+    const journalforingform = shallow(<JournalforingForm {...props} />);
+    const komponenter = journalforingform.find(Komponent);
+
+    expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(0);
   });
 });
