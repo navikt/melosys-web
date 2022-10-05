@@ -6,19 +6,20 @@ import { clearFields, getFormValues, InjectedFormProps, reduxForm } from "redux-
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
+import { AlertStripeAdvarsel } from "nav-frontend-alertstriper";
 
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
+import saksplukkerSchema from "./saksplukkerSchema";
 import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Api from "../../../../services/api";
 
 import { oppgaverOperations } from "../../../../ducks/oppgaver";
 import { useFeatureToggle } from "../../../../featuretoggle";
-
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
-import saksplukkerSchema from "./saksplukkerSchema";
+
 import "./saksplukker.css";
-import * as Api from "../../../../services/api";
 
 const { EU_EOS, TRYGDEAVTALE, FTRL } = MKV.Koder.sakstyper;
 
@@ -66,6 +67,7 @@ export const Saksplukker = ({
   const [muligeSakstyper, setMuligeSakstyper] = useState([]);
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
+  const [visIngenOppgaveFunnetAlert, setVisIngenOppgaveFunnetAlert] = useState(false);
 
   const { sakstype, sakstema } = formValues || {};
 
@@ -126,7 +128,8 @@ export const Saksplukker = ({
 
     /* eslint-disable no-alert */
     if (!redirectURL) {
-      return alert("Ingen oppgaver finnes");
+      setVisIngenOppgaveFunnetAlert(true);
+      return false;
     }
     /* eslint-enable */
     history.push(redirectURL);
@@ -203,6 +206,13 @@ export const Saksplukker = ({
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>
+        {visIngenOppgaveFunnetAlert && (
+          <Nav.Row>
+            <Nav.Column md="12">
+              <AlertStripeAdvarsel>Det fins ingen saker for valgt type/tema kombinasjon</AlertStripeAdvarsel>
+            </Nav.Column>
+          </Nav.Row>
+        )}
         <Nav.Row className="saksplukker__knapperad">
           <Nav.Knapp className="saksplukker__knapp" disabled={invalid}>
             Behandle sak
