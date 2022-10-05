@@ -11,7 +11,7 @@ For manuell deploy, så kan man gå til https://github.com/navikt/melosys-web/ac
 
 Alternativt kan man finne ønsket docker-image fra docker-repoet til melosys-web på github.
 Dette limer man inn i feltet `spec.image` i nais.yaml.
-Husk også å bytte ut variabler som `INGRESS` og `APP_NAME` med faktiske verdier. Verdiene for de ulike miljøene kan finnes i vars-dev.json, vars-prod.json osv.
+Husk også å bytte ut variabler som `INGRESSES` og `APP_NAME` med faktiske verdier. Verdiene for de ulike miljøene kan finnes i vars-dev.json, vars-prod.json osv.
 
 Sett ønsket cluster med `kubectl config use-context dev-fss`.
 
