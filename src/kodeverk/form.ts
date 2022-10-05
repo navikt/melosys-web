@@ -6,6 +6,13 @@ export const FORSIDE_JOURNALFORINGS_FORM = "journalforingsform";
 export const JOURNALFORING = "journalforing";
 export const JOURNALFORING_SED = "journalforing_sed";
 
+export enum JOURNALFORING_VALUES {
+  sakstype = "sakstype",
+  sakstema = "sakstema",
+  opprettnysak_behandlingstema = "opprettnysak_behandlingstema",
+  opprettnysak_behandlingstype = "opprettnysak_behandlingstype",
+}
+
 export const SOKNAD = "soknad";
 
 export interface ArbeidsforholdUtland {

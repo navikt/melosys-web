@@ -36,21 +36,23 @@ const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
   ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
 );
 
+const { JOURNALFORING_VALUES: FormValues } = KV.Form;
+
 export const nullstillVerdier = (steg, endreFelt) => {
   switch (steg) {
-    case "sakstype":
-      endreFelt("sakstema", null);
-      endreFelt("opprettnysak_behandlingstema", null);
-      endreFelt("opprettnysak_behandlingstype", null);
+    case FormValues.sakstype:
+      endreFelt(FormValues.sakstema, null);
+      endreFelt(FormValues.opprettnysak_behandlingstema, null);
+      endreFelt(FormValues.opprettnysak_behandlingstype, null);
       break;
-    case "sakstema":
-      endreFelt("opprettnysak_behandlingstema", null);
-      endreFelt("opprettnysak_behandlingstype", null);
+    case FormValues.sakstema:
+      endreFelt(FormValues.opprettnysak_behandlingstema, null);
+      endreFelt(FormValues.opprettnysak_behandlingstype, null);
       break;
-    case "opprettnysak_behandlingstema":
-      endreFelt("opprettnysak_behandlingstype", null);
+    case FormValues.opprettnysak_behandlingstema:
+      endreFelt(FormValues.opprettnysak_behandlingstype, null);
       break;
-    case "opprettnysak_behandlingstype":
+    case FormValues.opprettnysak_behandlingstype:
     default:
       break;
   }
@@ -180,7 +182,7 @@ export const OpprettSak = (props) => {
       ).then((muligeBehandlingstyper) => {
         setBehandlingstyper(muligeBehandlingstyper);
         if (muligeBehandlingstyper.map((k) => k.kode).includes(MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG)) {
-          settFeltInnhold("opprettnysak_behandlingstype", MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG);
+          settFeltInnhold(FormValues.opprettnysak_behandlingstype, MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG);
         }
       });
     }
@@ -192,11 +194,11 @@ export const OpprettSak = (props) => {
   return (
     <div className="opprettSak">
       <Skjema.Select
-        feltNavn="sakstype"
+        feltNavn={FormValues.sakstype}
         bredde="fullbredde"
         label="Sakstype"
         onChange={() => {
-          if (behandleAlleSakerToggleEnabled) nullstillVerdier("sakstype", settFeltInnhold);
+          if (behandleAlleSakerToggleEnabled) nullstillVerdier(FormValues.sakstype, settFeltInnhold);
         }}
       >
         {(behandleAlleSakerToggleEnabled ? sakstyper : valgbareSakstyper).map((elem) => (
@@ -207,10 +209,10 @@ export const OpprettSak = (props) => {
       </Skjema.Select>
       {behandleAlleSakerToggleEnabled && (
         <Skjema.Select
-          feltNavn="sakstema"
+          feltNavn={FormValues.sakstema}
           bredde="fullbredde"
           label="Sakstema"
-          onChange={() => nullstillVerdier("sakstema", settFeltInnhold)}
+          onChange={() => nullstillVerdier(FormValues.sakstema, settFeltInnhold)}
         >
           {sakstemaer.map((elem) => (
             <option key={elem.kode} value={elem.kode}>
@@ -220,11 +222,12 @@ export const OpprettSak = (props) => {
         </Skjema.Select>
       )}
       <Skjema.Select
-        feltNavn="opprettnysak_behandlingstema"
+        feltNavn={FormValues.opprettnysak_behandlingstema}
         bredde="fullbredde"
         label="Behandlingstema"
         onChange={() => {
-          if (behandleAlleSakerToggleEnabled) nullstillVerdier("opprettnysak_behandlingstema", settFeltInnhold);
+          if (behandleAlleSakerToggleEnabled)
+            nullstillVerdier(FormValues.opprettnysak_behandlingstema, settFeltInnhold);
           settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
         }}
       >
@@ -236,10 +239,10 @@ export const OpprettSak = (props) => {
       </Skjema.Select>
       {behandleAlleSakerToggleEnabled && (
         <Skjema.Select
-          feltNavn="opprettnysak_behandlingstype"
+          feltNavn={FormValues.opprettnysak_behandlingstype}
           bredde="fullbredde"
           label="Behandlingstype"
-          onChange={() => nullstillVerdier("opprettnysak_behandlingstype", settFeltInnhold)}
+          onChange={() => nullstillVerdier(FormValues.opprettnysak_behandlingstype, settFeltInnhold)}
         >
           {behandlingstyper.map((elem) => (
             <option key={elem.kode} value={elem.kode}>

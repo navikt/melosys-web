@@ -17,6 +17,7 @@ import { journalforingSelectors } from "../../../ducks/journalforing";
 import "./journalforingGjelder.css";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
+const { JOURNALFORING_VALUES: FormValues } = KV.Form;
 
 const mapStateToProps = (state: RootState) => ({
   journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
@@ -40,10 +41,10 @@ const JournalforingGjelder = ({
 }: PropsFromRedux) => {
   const handleClick = (event: SyntheticEvent<EventTarget>, value: string) => {
     oppdaterFelt("journalforingGjelder", value);
-    oppdaterFelt("sakstype", null);
-    oppdaterFelt("sakstema", null);
-    oppdaterFelt("opprettnysak_behandlingstema", null);
-    oppdaterFelt("opprettnysak_behandlingstype", null);
+    oppdaterFelt(FormValues.sakstype, null);
+    oppdaterFelt(FormValues.sakstema, null);
+    oppdaterFelt(FormValues.opprettnysak_behandlingstema, null);
+    oppdaterFelt(FormValues.opprettnysak_behandlingstype, null);
     if (value === BRUKER) {
       oppdaterFelt("ikkeSendForvaltingsmelding", false);
       oppdaterFelt("brukerID", journalpostBrukerID);
