@@ -15,10 +15,6 @@ import { useFeatureToggle } from "../../../featuretoggle";
 import { skalViseTomFlytEllerErSedBehandling } from "../../../routing";
 
 import "./opprettSak.css";
-import {
-  nullstillFormdataVerdier,
-  FormDataVerdi,
-} from "../../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
 
 const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
   ({ kode }) =>
@@ -39,6 +35,26 @@ const ftrlBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
 const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
   ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
 );
+
+export const nullstillVerdier = (steg, endreFelt) => {
+  switch (steg) {
+    case "sakstype":
+      endreFelt("sakstema", null);
+      endreFelt("opprettnysak_behandlingstema", null);
+      endreFelt("opprettnysak_behandlingstype", null);
+      break;
+    case "sakstema":
+      endreFelt("opprettnysak_behandlingstema", null);
+      endreFelt("opprettnysak_behandlingstype", null);
+      break;
+    case "opprettnysak_behandlingstema":
+      endreFelt("opprettnysak_behandlingstype", null);
+      break;
+    case "opprettnysak_behandlingstype":
+    default:
+      break;
+  }
+};
 
 export const skalViseSoknadsperiodeOgLand = (sakstype, behandlingstema, behandlingstype) =>
   sakstype &&
@@ -177,7 +193,7 @@ export const OpprettSak = (props) => {
         bredde="fullbredde"
         label="Sakstype"
         onChange={() => {
-          if (behandleAlleSakerToggleEnabled) nullstillFormdataVerdier(FormDataVerdi.sakstype, settFeltInnhold);
+          if (behandleAlleSakerToggleEnabled) nullstillVerdier("sakstype", settFeltInnhold);
         }}
       >
         {(behandleAlleSakerToggleEnabled ? sakstyper : valgbareSakstyper).map((elem) => (
@@ -191,7 +207,7 @@ export const OpprettSak = (props) => {
           feltNavn="sakstema"
           bredde="fullbredde"
           label="Sakstema"
-          onChange={() => nullstillFormdataVerdier(FormDataVerdi.sakstema, settFeltInnhold)}
+          onChange={() => nullstillVerdier("sakstema", settFeltInnhold)}
         >
           {sakstemaer.map((elem) => (
             <option key={elem.kode} value={elem.kode}>
@@ -205,7 +221,7 @@ export const OpprettSak = (props) => {
         bredde="fullbredde"
         label="Behandlingstema"
         onChange={() => {
-          if (behandleAlleSakerToggleEnabled) nullstillFormdataVerdier(FormDataVerdi.behandlingstema, settFeltInnhold);
+          if (behandleAlleSakerToggleEnabled) nullstillVerdier("opprettnysak_behandlingstema", settFeltInnhold);
           settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
         }}
       >
@@ -220,7 +236,7 @@ export const OpprettSak = (props) => {
           feltNavn="opprettnysak_behandlingstype"
           bredde="fullbredde"
           label="Behandlingstype"
-          onChange={() => nullstillFormdataVerdier(FormDataVerdi.behandlingstype, settFeltInnhold)}
+          onChange={() => nullstillVerdier("opprettnysak_behandlingstype", settFeltInnhold)}
         >
           {behandlingstyper.map((elem) => (
             <option key={elem.kode} value={elem.kode}>
