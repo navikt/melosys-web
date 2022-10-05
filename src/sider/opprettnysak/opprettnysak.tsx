@@ -26,7 +26,6 @@ import { formOperations } from "../../ducks/form";
 
 import { hentSammensattNavn } from "../../graphql/navn";
 import { useFeatureToggle } from "../../featuretoggle";
-import { nullstillFormdataVerdier, FormDataVerdi } from "../../felleskomponenter/skjema/formdatahjelper/nullstillsak";
 import { skalViseTomFlytEllerErSedBehandling } from "../../routing";
 import IdentOgNavn from "./identOgNavn";
 
@@ -61,6 +60,27 @@ const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
 );
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
+const { OPPRETT_NY_SAK_VALUES: FormValues } = KV.Form;
+
+export const nullstillVerdier = (steg: string, change: (feltNavn: string, verdi: string | null) => void): void => {
+  switch (steg) {
+    case FormValues.sakstype:
+      change(FormValues.sakstema, null);
+      change(FormValues.behandlingstema, null);
+      change(FormValues.behandlingstype, null);
+      break;
+    case FormValues.sakstema:
+      change(FormValues.behandlingstema, null);
+      change(FormValues.behandlingstype, null);
+      break;
+    case FormValues.behandlingstema:
+      change(FormValues.behandlingstype, null);
+      break;
+    case FormValues.behandlingstype:
+    default:
+      break;
+  }
+};
 
 interface OpprettNySakFormData {
   behandlingstema: string;
@@ -256,6 +276,7 @@ const OpprettNySak = ({
     setOppgaver([]);
     setOppgaverForsoktHentet(false);
   }, [hovedpart]);
+
   const opprettNySak = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!validerForm()) return;
@@ -410,10 +431,10 @@ const OpprettNySak = ({
                   />
                   <div className="innrykk">
                     <Skjema.Select
-                      feltNavn="sakstype"
+                      feltNavn={FormValues.sakstype}
                       bredde="fullbredde"
                       label="Sakstype"
-                      onChange={() => nullstillFormdataVerdier(FormDataVerdi.sakstype, change)}
+                      onChange={() => nullstillVerdier(FormValues.sakstype, change)}
                     >
                       {(behandleAlleSakerToggle === "enabled" ? sakstyper : valgbareSakstyper).map(
                         ({ kode, term }: KTObject) => (
@@ -425,10 +446,10 @@ const OpprettNySak = ({
                     </Skjema.Select>
                     {behandleAlleSakerToggle === "enabled" && (
                       <Skjema.Select
-                        feltNavn="sakstema"
+                        feltNavn={FormValues.sakstema}
                         bredde="fullbredde"
                         label="Sakstema"
-                        onChange={() => nullstillFormdataVerdier(FormDataVerdi.sakstema, change)}
+                        onChange={() => nullstillVerdier(FormValues.sakstema, change)}
                       >
                         {sakstemaer.map(({ kode, term }: KTObject) => (
                           <option key={kode} value={kode}>
@@ -439,11 +460,11 @@ const OpprettNySak = ({
                     )}
                     {hovedpartErBruker && (
                       <Skjema.Select
-                        feltNavn="behandlingstema"
+                        feltNavn={FormValues.behandlingstema}
                         bredde="fullbredde"
                         label="Behandlingstema"
                         onChange={() => {
-                          nullstillFormdataVerdier(FormDataVerdi.behandlingstema, change);
+                          nullstillVerdier(FormValues.behandlingstema, change);
                           change("soknadsinfo.erUkjenteEllerAlleEosLand", false);
                         }}
                       >
@@ -459,10 +480,10 @@ const OpprettNySak = ({
                     )}
                     {behandleAlleSakerToggle === "enabled" && (
                       <Skjema.Select
-                        feltNavn="behandlingstype"
+                        feltNavn={FormValues.behandlingstype}
                         bredde="fullbredde"
                         label="Behandlingstype"
-                        onChange={() => nullstillFormdataVerdier(FormDataVerdi.behandlingstype, change)}
+                        onChange={() => nullstillVerdier(FormValues.behandlingstype, change)}
                       >
                         {behandlingstyper.map(({ kode, term }: KTObject) => (
                           <option key={kode} value={kode}>
