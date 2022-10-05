@@ -179,6 +179,9 @@ export const OpprettSak = (props) => {
         valgtBehandlingstema
       ).then((muligeBehandlingstyper) => {
         setBehandlingstyper(muligeBehandlingstyper);
+        if (muligeBehandlingstyper.map((k) => k.kode).includes(MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG)) {
+          settFeltInnhold("opprettnysak_behandlingstype", MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG);
+        }
       });
     }
   }, [behandleAlleSakerToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
