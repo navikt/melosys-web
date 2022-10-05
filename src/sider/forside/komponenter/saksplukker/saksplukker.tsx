@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Action } from "redux";
-import { connect, ConnectedProps } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
+import { connect, ConnectedProps, useDispatch } from "react-redux";
 import { clearFields, getFormValues, InjectedFormProps, reduxForm } from "redux-form";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -43,12 +41,7 @@ const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SAKSPLUKKER_FORM)(state) as SaksplukkerFormData,
 });
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  nullstillForm: () =>
-    dispatch(clearFields(KV.Form.SAKSPLUKKER_FORM, false, false, "sakstype", "sakstema", "behandlingstema")),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SaksplukkerProps = PropsFromRedux & RouteComponentProps;
@@ -58,7 +51,6 @@ export const Saksplukker = ({
   history,
   formValues,
   change,
-  nullstillForm,
   invalid,
 }: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) => {
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -69,6 +61,7 @@ export const Saksplukker = ({
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [visIngenOppgaveFunnetAlert, setVisIngenOppgaveFunnetAlert] = useState(false);
 
+  const dispatch = useDispatch();
   const { sakstype, sakstema } = formValues || {};
 
   useEffect(() => {
@@ -126,12 +119,10 @@ export const Saksplukker = ({
   const submitOgVideresend = async (form: any) => {
     const redirectURL = await handleSubmit(form);
 
-    /* eslint-disable no-alert */
     if (!redirectURL) {
       setVisIngenOppgaveFunnetAlert(true);
       return false;
     }
-    /* eslint-enable */
     history.push(redirectURL);
     return true;
   };
@@ -148,6 +139,9 @@ export const Saksplukker = ({
       ? !ikkePlukkbareBehandlingstemaerEOS.includes(behandlingtemaKTObject.kode)
       : plukkbareBehandlingstemaerTrygdeavtale.includes(behandlingtemaKTObject.kode);
   };
+
+  const nullstillForm = () =>
+    dispatch(clearFields(KV.Form.SAKSPLUKKER_FORM, false, false, "sakstype", "sakstema", "behandlingstema"));
 
   const behandleFagsakMarginToggle = behandleAlleSakerToggle === "enabled" ? "4" : "6";
 
