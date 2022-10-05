@@ -32,22 +32,6 @@ export function hent(snr: string) {
   });
 }
 
-export function opprett(body: Api.Fagsaker.fagsak.OpprettReqDto) {
-  return doThenDispatch(
-    () => Api.Fagsaker.fagsak.opprett(body),
-    {
-      OK: Types.OK,
-      FEILET: Types.FEILET,
-      PENDING: Types.PENDING,
-    },
-    {
-      success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
-        dispatch(navigeringOperations.tilForsiden());
-      },
-    }
-  );
-}
-
 export function lagNySak(body: Api.Fagsaker.fagsak.OpprettReqDto) {
   return doThenDispatch(
     () => Api.Fagsaker.fagsak.lagNySak(body),

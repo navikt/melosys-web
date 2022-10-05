@@ -72,7 +72,6 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.OPPRETT_NY_SAK)),
-  opprettSak: (body: Api.Fagsaker.fagsak.OpprettReqDto) => dispatch(fagsakOperations.opprett(body)),
   lagNySak: (body: Api.Fagsaker.fagsak.OpprettReqDto) => dispatch(fagsakOperations.lagNySak(body)),
   lagNyBehandlingForSak: (saksnummer: string, body: Api.Fagsaker.fagsak.OpprettReqDto) =>
     dispatch(fagsakOperations.lagNyBehandlingForSak(saksnummer, body)),
@@ -98,7 +97,6 @@ const OpprettNySak = ({
   settJournalforingHensikt,
   error: formError,
   feilmeldinger,
-  opprettSak,
   lagNySak,
   lagNyBehandlingForSak,
   hentFagsakListe,
@@ -248,8 +246,6 @@ const OpprettNySak = ({
     };
 
     const { skalTilordnes, oppgaveID } = formValues;
-    const skalOppretteNyOppgaveOgKnyttSak =
-      (erEksisterendeSak || oppgaveID === null) && behandleAlleSakerToggle === "enabled";
     const data = {
       brukerID,
       sakstype,
@@ -261,14 +257,10 @@ const OpprettNySak = ({
       skalTilordnes,
       oppgaveID,
     };
-    if (skalOppretteNyOppgaveOgKnyttSak) {
-      if (saksnummer) {
-        lagNyBehandlingForSak(saksnummer, data).finally(() => setBekreftPending(false));
-      } else {
-        lagNySak(data).finally(() => setBekreftPending(false));
-      }
+    if (saksnummer) {
+      lagNyBehandlingForSak(saksnummer, data).finally(() => setBekreftPending(false));
     } else {
-      opprettSak(data).finally(() => setBekreftPending(false));
+      lagNySak(data).finally(() => setBekreftPending(false));
     }
   };
   const nullstillFormVerdier = () => {
