@@ -7,16 +7,12 @@
     align-items: baseline;
     justify-items: center;
     border: 1px solid @gray-dark;
-    margin: 0.5em 0;
+    margin: 0;
     padding: 0.5em;
-    border-radius: 3px;
   }
 
   .customRadioPanel--checked {
     background-color: #0067c540;
-  }
-
-  .customRadioPanel--focused {
   }
 
   .customRadioPanel--disabled {
@@ -24,8 +20,9 @@
   }
 
   .radioPanel__Input {
-    margin: 0.5em;
-    flex: 1;
+    .radioknapp + .skjemaelement__label::before {
+      top: -1rem;
+    }
   }
 
   .radioPanel__innhold {

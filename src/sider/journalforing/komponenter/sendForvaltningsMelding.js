@@ -24,17 +24,11 @@ const SendForvaltningsMelding = ({ avsenderType, settFeltInnhold }) => {
       <Nav.Typo.Element>Skal melding om saksbehandlingtid sendes automatisk?</Nav.Typo.Element>
 
       <Skjema.RadioGruppe feltNavn="ikkeSendForvaltingsmelding" label="">
-        <Skjema.Radio
-          feltNavn="ikkeSendForvaltingsmelding"
-          label="Ja, melding skal sendes automatisk"
-          value={false}
-          className="sendForvaltningsmelding__radio"
-        />
+        <Skjema.Radio feltNavn="ikkeSendForvaltingsmelding" label="Ja, melding skal sendes automatisk" value={false} />
         <Skjema.Radio
           feltNavn="ikkeSendForvaltingsmelding"
           label="Nei, jeg vil sende melding senere eller behandle saken innen kort tid"
           value
-          className="sendForvaltningsmelding__radio"
         />
         {avsenderErFullmelktig && (
           <Fragment>

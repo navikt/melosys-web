@@ -1,9 +1,9 @@
 @import "../../constants";
 
-.listevelger {
+.listevelgerFlervalg {
   margin: 0 0 1em 0;
 
-  .listevelger__linje {
+  &__linje {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -11,29 +11,29 @@
     margin: 0 0 1em 0;
   }
 
-  .listevelger__innhold {
+  &__innhold {
     display: flex;
     flex: 1;
     align-items: center;
 
-    .listevelger__ikon {
+    &__ikon {
       display: flex;
       flex: 1;
       align-items: center;
     }
 
-    .listevelger__innhold__label {
+    &__innhold__label {
       flex: 20;
       padding-left: 0.5em;
     }
   }
 
-  .listevelger__linje__input {
+  &__linje__input {
     margin-bottom: 0;
     flex: 6;
   }
 
-  .listevelger__linje__knapp {
+  &__linje__knapp {
     margin: 0.4em 0 0 0.5em;
     height: 2.5em;
     display: flex;
@@ -62,7 +62,7 @@
     margin-left: 0.5em;
   }
 
-  .listevelger__linje__knapp--leggtil {
+  &__linje__knapp--leggtil {
     align-self: flex-start;
     margin-top: 1.8em;
   }

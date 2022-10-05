@@ -1,21 +1,56 @@
 .informasjon {
-  .informasjonOmAvsenderTittel {
-    margin-bottom: 1em;
+  .brukers-navn {
+    margin-top: 1em;
   }
 
-  .avsenderVelger {
-    margin-bottom: 2.5em;
-  }
-
-  .undertittel {
-    margin: 1em 0;
-
-    &:first-of-type {
-      margin-top: 0;
+  .bruker-eller-org-navn {
+    margin-top: -0.5rem;
+    display: flex;
+    .term {
+      margin-right: 0.5rem;
     }
   }
 
-  .brukers-navn {
-    margin-top: 1em;
+  .dokumentblokk {
+    margin-bottom: 0.75rem;
+
+    .tittelendring {
+      margin-top: 0.25rem;
+      .knapper {
+        margin-top: -0.5rem;
+
+        &:last-of-type {
+          margin-left: 0.5rem;
+        }
+      }
+    }
+
+    .dokumentvisning {
+      background: #f8f8f8;
+      border: 1px solid #e6e6e6;
+      display: flex;
+      margin: 0.25rem 0.5rem 0.25rem;
+      padding: 0.25rem 0;
+
+      .lenkeIkon {
+        margin-left: 0.5rem;
+      }
+      .endreSlettIkonContainer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+
+        .slettIkon {
+          margin-right: 1.5rem;
+        }
+      }
+    }
+  }
+  .logiskeVedlegg-listevelger {
+    margin-top: 0.25rem;
+    .listevelger__linje__knapp--leggtil {
+      align-self: flex-start;
+      margin-top: 0;
+    }
   }
 }

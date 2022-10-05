@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import { change, getFormValues, reduxForm } from "redux-form";
@@ -9,7 +9,6 @@ import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
-import * as Mui from "../../../felleskomponenter/ui";
 import * as MPT from "../../../proptypes";
 
 import { landkoderSelectors } from "../../../ducks/landkoder";
@@ -19,6 +18,7 @@ import { formSelectors } from "../../../ducks/form";
 import Informasjon from "./informasjon";
 import FagsakVelger from "./fagsakVelger";
 import SendForvaltningsMelding from "./sendForvaltningsMelding";
+import Komponent, { KomponentUtenOverskrift } from "./komponent";
 import Fotknapper from "./fotknapper";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
@@ -68,6 +68,7 @@ export const JournalforingForm = (props) => {
   } = props;
 
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, behandleAlleSakerToggleEnabled);
+
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
     settFeltInnhold("ikkeSendForvaltingsmelding", !visForvaltningsmelding);
@@ -76,34 +77,41 @@ export const JournalforingForm = (props) => {
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
       <Informasjon journalpostID={journalpostID} dokumentID={hoveddokumentID} vedlegg={vedlegg} />
-      <Mui.Undertittel
-        tekst="Knytt til eksisterende sak eller opprett ny sak"
-        ikon={Ikoner.CheckList}
-        className="undertittel oversteUndertittel"
-      />
-      <FagsakVelger
-        fagsakListe={fagsakListe}
-        settJournalforingHensikt={settJournalforingHensikt}
-        behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
-        landkoder={landkoder}
-      />
-      {visForvaltningsmelding && (
-        <Fragment>
-          <Mui.Undertittel
-            tekst="Melding om saksbehandlingstid"
-            ikon={Ikoner.PaperPlane}
-            className="undertittel oversteUndertittel"
+
+      <Komponent
+        ikon={Ikoner.Links}
+        tittel="Knytt til eksisterende sak eller opprett ny sak"
+        innhold={
+          <FagsakVelger
+            fagsakListe={fagsakListe}
+            settJournalforingHensikt={settJournalforingHensikt}
+            behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
+            landkoder={landkoder}
           />
-          <SendForvaltningsMelding avsenderType={formValues.avsenderType} settFeltInnhold={settFeltInnhold} />
-        </Fragment>
+        }
+      />
+
+      {visForvaltningsmelding && (
+        <Komponent
+          ikon={Ikoner.Hourglass}
+          tittel="Melding om saksbehandlingstid"
+          innhold={<SendForvaltningsMelding avsenderType={formValues.avsenderType} settFeltInnhold={settFeltInnhold} />}
+        />
       )}
-      {submitFailed && !Utils._isEmpty(formErrors) && (
-        <Nav.AlertStripeFeil className="feilmelding">
-          {Utils.feilmelding.syncErrorsTilFeilmelding(formErrors)}
-        </Nav.AlertStripeFeil>
-      )}
-      <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
-      <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
+
+      <KomponentUtenOverskrift
+        innhold={
+          <>
+            <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg behandlingen i mine oppgaver" />
+            {submitFailed && !Utils._isEmpty(formErrors) && (
+              <Nav.AlertStripeFeil className="feilmelding">
+                {Utils.feilmelding.syncErrorsTilFeilmelding(formErrors)}
+              </Nav.AlertStripeFeil>
+            )}
+            <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
+          </>
+        }
+      />
     </form>
   );
 };
@@ -138,6 +146,7 @@ const toVedleggMedProps = (vedlegg) =>
     acc[`tittel_${index}`] = d.tittel;
     return acc;
   }, {});
+
 const mapStateToProps = (state, ownProps) => ({
   erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
   landkoder: landkoderSelectors.LandkoderSelector(state),

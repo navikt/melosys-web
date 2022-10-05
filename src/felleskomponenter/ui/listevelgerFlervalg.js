@@ -20,18 +20,18 @@ const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatF
       disabled={disabled}
       value={label}
       label=""
-      className="listevelger__linje__input"
+      className="listevelgerFlervalg__linje__input"
       onChange={oppdaterElement}
       onKeyDown={(event) => event.key === "Enter" && event.preventDefault()}
     />
   ) : (
-    <div className="listevelger__linje__input">{label}</div>
+    <div className="listevelgerFlervalg__linje__input">{label}</div>
   );
 
   return (
-    <div className="listevelger__linje">
-      <div className="listevelger__innhold">{element}</div>
-      <Nav.Knapp mini disabled={disabled} className="listevelger__linje__knapp" onClick={slettElement}>
+    <div className="listevelgerFlervalg__linje">
+      <div className="listevelgerFlervalg__innhold">{element}</div>
+      <Nav.Knapp mini disabled={disabled} className="listevelgerFlervalg__linje__knapp" onClick={slettElement}>
         <div className="knapp__ikon">
           <Ikon kind="minus" size="24" />
         </div>
@@ -189,9 +189,9 @@ class ListevelgerFlervalg extends Component {
     const datalistID = uuid();
 
     return (
-      <div className="listevelger" data-cy={data_cy}>
+      <div className="listevelgerFlervalg" data-cy={data_cy}>
         {byggValgtListe(valgteElementer)}
-        <div className="listevelger__linje">
+        <div className="listevelgerFlervalg__linje">
           <Nav.Input
             id={`listevelger-${datalistID}`}
             label={label}
@@ -201,12 +201,12 @@ class ListevelgerFlervalg extends Component {
             onKeyDown={this.vedTastNed}
             value={this.state.inputVerdi}
             list={datalistID}
-            className="listevelger__linje__input"
+            className="listevelgerFlervalg__linje__input"
             disabled={disabled}
           />
           <Nav.Knapp
             mini
-            className="listevelger__linje__knapp listevelger__linje__knapp--leggtil"
+            className="listevelgerFlervalg__linje__knapp listevelgerFlervalg__linje__knapp--leggtil"
             onClick={this.leggValgTilListe}
             disabled={disabled}
           >

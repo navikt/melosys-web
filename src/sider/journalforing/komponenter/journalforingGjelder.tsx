@@ -68,8 +68,8 @@ const JournalforingGjelder = ({
           name="journalforingGjelder"
           legend=""
           radios={[
-            { label: BRUKER, value: BRUKER, id: BRUKER },
-            { label: VIRKSOMHET, value: VIRKSOMHET, id: VIRKSOMHET },
+            { label: KV.kodeTilTerm(BRUKER, MKV.KTObjects.aktoersroller), value: BRUKER, id: BRUKER },
+            { label: KV.kodeTilTerm(VIRKSOMHET, MKV.KTObjects.aktoersroller), value: VIRKSOMHET, id: VIRKSOMHET },
           ]}
           checked={journalforingGjelder}
           onChange={handleClick}
