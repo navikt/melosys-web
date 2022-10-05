@@ -60,22 +60,23 @@ const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
 );
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
+const { OPPRETT_NY_SAK_VALUES: FormValues } = KV.Form;
 
 export const nullstillVerdier = (steg: string, change: (feltNavn: string, verdi: string | null) => void): void => {
   switch (steg) {
-    case "sakstype":
-      change("sakstema", null);
-      change("behandlingstema", null);
-      change("behandlingstype", null);
+    case FormValues.sakstype:
+      change(FormValues.sakstema, null);
+      change(FormValues.behandlingstema, null);
+      change(FormValues.behandlingstype, null);
       break;
-    case "sakstema":
-      change("behandlingstema", null);
-      change("behandlingstype", null);
+    case FormValues.sakstema:
+      change(FormValues.behandlingstema, null);
+      change(FormValues.behandlingstype, null);
       break;
-    case "behandlingstema":
-      change("behandlingstype", null);
+    case FormValues.behandlingstema:
+      change(FormValues.behandlingstype, null);
       break;
-    case "behandlingstype":
+    case FormValues.behandlingstype:
     default:
       break;
   }
@@ -430,10 +431,10 @@ const OpprettNySak = ({
                   />
                   <div className="innrykk">
                     <Skjema.Select
-                      feltNavn="sakstype"
+                      feltNavn={FormValues.sakstype}
                       bredde="fullbredde"
                       label="Sakstype"
-                      onChange={() => nullstillVerdier("sakstype", change)}
+                      onChange={() => nullstillVerdier(FormValues.sakstype, change)}
                     >
                       {(behandleAlleSakerToggle === "enabled" ? sakstyper : valgbareSakstyper).map(
                         ({ kode, term }: KTObject) => (
@@ -445,10 +446,10 @@ const OpprettNySak = ({
                     </Skjema.Select>
                     {behandleAlleSakerToggle === "enabled" && (
                       <Skjema.Select
-                        feltNavn="sakstema"
+                        feltNavn={FormValues.sakstema}
                         bredde="fullbredde"
                         label="Sakstema"
-                        onChange={() => nullstillVerdier("sakstema", change)}
+                        onChange={() => nullstillVerdier(FormValues.sakstema, change)}
                       >
                         {sakstemaer.map(({ kode, term }: KTObject) => (
                           <option key={kode} value={kode}>
@@ -459,11 +460,11 @@ const OpprettNySak = ({
                     )}
                     {hovedpartErBruker && (
                       <Skjema.Select
-                        feltNavn="behandlingstema"
+                        feltNavn={FormValues.behandlingstema}
                         bredde="fullbredde"
                         label="Behandlingstema"
                         onChange={() => {
-                          nullstillVerdier("behandlingstema", change);
+                          nullstillVerdier(FormValues.behandlingstema, change);
                           change("soknadsinfo.erUkjenteEllerAlleEosLand", false);
                         }}
                       >
@@ -479,10 +480,10 @@ const OpprettNySak = ({
                     )}
                     {behandleAlleSakerToggle === "enabled" && (
                       <Skjema.Select
-                        feltNavn="behandlingstype"
+                        feltNavn={FormValues.behandlingstype}
                         bredde="fullbredde"
                         label="Behandlingstype"
-                        onChange={() => nullstillVerdier("behandlingstype", change)}
+                        onChange={() => nullstillVerdier(FormValues.behandlingstype, change)}
                       >
                         {behandlingstyper.map(({ kode, term }: KTObject) => (
                           <option key={kode} value={kode}>
