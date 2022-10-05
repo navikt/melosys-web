@@ -25,9 +25,9 @@ export interface OpprettReqDto {
   oppgaveID: string;
 }
 export const opprett = (body: OpprettReqDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}/opprett`, body);
-export const lagNySak = (body: OpprettReqDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}/lag-ny-sak`, body);
+export const lagNySak = (body: OpprettReqDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}`, body);
 export const lagNyBehandlingForSak = (saksnummer: string, body: OpprettReqDto) =>
-  postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/lag-ny-behandling`, body);
+  postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/behandlinger`, body);
 
 interface HenleggReqDto {
   begrunnelseKode: string;
