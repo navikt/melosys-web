@@ -6,6 +6,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RouteComponentProps, withRouter } from "react-router-dom";
+
 import MKV from "../../melosyskodeverk";
 import * as Mui from "../ui";
 import * as Api from "../../services/api";
@@ -16,19 +17,26 @@ import * as Datoutils from "../../utils/dato";
 import { behandlingsstatusOperations, behandlingsstatusSelectors } from "../../ducks/behandlingsstatus";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { behandlingsgrunnlagOperations } from "../../ducks/behandlingsgrunnlag";
-import { navigeringOperations } from "../../ducks/navigering";
-import Datovelger from "../datovelger";
-import Knapperad from "../knapperad";
-
-import "./endreBehandlingModal.css";
-import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
-import { saksopplysningerOperations } from "../../ducks/saksopplysninger";
-import { useFeatureToggle } from "../../featuretoggle";
-import { erBehandlingstemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
 import { behandlingstypeOperations, behandlingstypeSelectors } from "../../ducks/behandlingstype";
 import { behandlingstemaOperations, behandlingstemaSelectors } from "../../ducks/behandlingstema";
+import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
+import { saksopplysningerOperations } from "../../ducks/saksopplysninger";
+import { navigeringOperations } from "../../ducks/navigering";
+
+import { useFeatureToggle } from "../../featuretoggle";
+import Datovelger from "../datovelger";
+import Knapperad from "../knapperad";
 import { StandardMeldingOverst } from "../alertmeldinger";
 import { Spinner } from "../spinner";
+
+import "./endreBehandlingModal.css";
+
+enum FeltVerdier {
+  sakstype = "sakstype",
+  sakstema = "sakstema",
+  behandlingstema = "behandlingstema",
+  behandlingstype = "behandlingstype",
+}
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -214,24 +222,26 @@ function EndreBehandlingModal({
   };
 
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
-  const endringerErBegrenset = erBehandlingstemaMedBegrensetRettigheter(oppsummering.behandlingstema, fagsak.sakstype);
+  const endringerErBegrenset = MKV.Kodekombinasjoner.erBehandlingstemaMedBegrensetRettigheter(
+    oppsummering.behandlingstema,
+    fagsak.sakstype
+  );
 
-  const nullstillSak = (steg: string): void => {
+  const nullstillSak = (steg: FeltVerdier): void => {
     if (behandleAlleSakerToggle !== "enabled") return;
     switch (steg) {
-      case "sakstype":
+      case FeltVerdier.sakstype:
         setSakstema("");
         setBehandlingstema("");
         setBehandlingstype("");
         break;
-      case "sakstema":
+      case FeltVerdier.sakstema:
         setBehandlingstema("");
         setBehandlingstype("");
         break;
-      case "behandlingstema":
+      case FeltVerdier.behandlingstema:
         setBehandlingstype("");
         break;
-      case "behandlingstype":
       default:
         break;
     }
@@ -245,7 +255,7 @@ function EndreBehandlingModal({
             <Mui.KodeTermSelect
               onChange={(e) => {
                 setSakstype(e.target.value);
-                nullstillSak("sakstype");
+                nullstillSak(FeltVerdier.sakstype);
               }}
               label="Sakstype"
               value={sakstype}
@@ -260,7 +270,7 @@ function EndreBehandlingModal({
               <Mui.KodeTermSelect
                 onChange={(e) => {
                   setSakstema(e.target.value);
-                  nullstillSak("sakstema");
+                  nullstillSak(FeltVerdier.sakstema);
                 }}
                 label="Sakstema"
                 value={sakstema}
@@ -272,7 +282,7 @@ function EndreBehandlingModal({
             <Mui.KodeTermSelect
               onChange={(e) => {
                 setBehandlingstema(e.target.value);
-                nullstillSak("behandlingstema");
+                nullstillSak(FeltVerdier.behandlingstema);
               }}
               label="Behandlingstema"
               value={behandlingstema}
