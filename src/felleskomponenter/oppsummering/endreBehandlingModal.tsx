@@ -7,7 +7,6 @@ import { Action } from "redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
-import MKV from "../../melosyskodeverk";
 import * as Mui from "../ui";
 import * as Api from "../../services/api";
 import * as Nav from "../../navFrontend";
@@ -23,6 +22,7 @@ import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { saksopplysningerOperations } from "../../ducks/saksopplysninger";
 import { navigeringOperations } from "../../ducks/navigering";
 
+import { erBehandlingstemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
 import { useFeatureToggle } from "../../featuretoggle";
 import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
@@ -113,7 +113,7 @@ function EndreBehandlingModal({
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") return;
     if (sakstype) {
-      Api.LovligeKombinasjoner.hentSakstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype).then((alleMuligesakstemaer) => {
+      Api.LovligeKombinasjoner.hentSakstemaer(fagsak.hovedpartRolle, sakstype).then((alleMuligesakstemaer) => {
         setMuligeSakstemaer(alleMuligesakstemaer);
       });
     }
@@ -122,7 +122,7 @@ function EndreBehandlingModal({
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") return;
     if (sakstema && sakstype) {
-      Api.LovligeKombinasjoner.hentBehandlingstemaer(MKV.Koder.aktoersroller.BRUKER, sakstype, sakstema).then(
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(fagsak.hovedpartRolle, sakstype, sakstema).then(
         (alleMuligeBehandlingstemaer) => {
           setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);
         }
@@ -133,14 +133,11 @@ function EndreBehandlingModal({
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") return;
     if (sakstema && sakstype && behandlingstema) {
-      Api.LovligeKombinasjoner.hentBehandlingstyper(
-        MKV.Koder.aktoersroller.BRUKER,
-        sakstype,
-        sakstema,
-        behandlingstema
-      ).then((alleMuligeBehandlingstyper) => {
-        setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
-      });
+      Api.LovligeKombinasjoner.hentBehandlingstyper(fagsak.hovedpartRolle, sakstype, sakstema, behandlingstema).then(
+        (alleMuligeBehandlingstyper) => {
+          setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
+        }
+      );
     }
   }, [behandleAlleSakerToggle, sakstype, sakstema, behandlingstema]);
 
@@ -222,10 +219,7 @@ function EndreBehandlingModal({
   };
 
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
-  const endringerErBegrenset = MKV.Kodekombinasjoner.erBehandlingstemaMedBegrensetRettigheter(
-    oppsummering.behandlingstema,
-    fagsak.sakstype
-  );
+  const endringerErBegrenset = erBehandlingstemaMedBegrensetRettigheter(oppsummering.behandlingstema, fagsak.sakstype);
 
   const nullstillSak = (steg: FeltVerdier): void => {
     if (behandleAlleSakerToggle !== "enabled") return;
