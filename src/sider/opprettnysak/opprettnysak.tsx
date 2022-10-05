@@ -327,7 +327,7 @@ const OpprettNySak = ({
               <div className="seksjon">
                 <Mui.Undertittel
                   tekst="Knytt til eksisterende sak eller opprett ny"
-                  ikon={Ikoner.Link}
+                  ikon={Ikoner.Links}
                   className="undertittel"
                   understrek
                 />

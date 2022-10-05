@@ -4,6 +4,7 @@ import MKV from "../../../melosyskodeverk";
 
 import { JournalforingForm } from "./journalforingform";
 import SendForvaltningsMelding from "./sendForvaltningsMelding";
+import Komponent from "./komponent";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -17,7 +18,6 @@ describe("JournalforingForm", () => {
 
   beforeEach(() => {
     props = {
-      behandleAlleSakerToggleEnabled: true,
       journalpostID: "1234",
       hoveddokumentID: "12345",
       vedlegg: [],
@@ -40,15 +40,20 @@ describe("JournalforingForm", () => {
       kanSubmittes: true,
       handleSubmit: jest.fn(),
       submitJournalforing: jest.fn(),
+      submitSpinner: false,
+      behandleAlleSakerToggleEnabled: true,
+      landkoder: [],
     };
   });
 
   test("sending av forvaltningsmelding vises for sakstema MEDLEMSKAP_LOVVALG og behandlingstype FØRSTEGANG", () => {
     props.formValues.sakstema = MEDLEMSKAP_LOVVALG;
     props.formValues.opprettnysak_behandlingstype = FØRSTEGANG;
+
     const journalforingform = shallow(<JournalforingForm {...props} />);
-    const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
-    expect(sendForvaltningsMelding).toHaveLength(1);
+    const komponenter = journalforingform.find(Komponent);
+
+    expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(1);
   });
 
   each([UNNTAK, TRYGDEAVGIFT]).it(
@@ -58,8 +63,9 @@ describe("JournalforingForm", () => {
       props.formValues.opprettnysak_behandlingstema = FØRSTEGANG;
 
       const journalforingform = shallow(<JournalforingForm {...props} />);
-      const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
-      expect(sendForvaltningsMelding).toHaveLength(0);
+      const komponenter = journalforingform.find(Komponent);
+
+      expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(0);
     }
   );
 
@@ -70,8 +76,9 @@ describe("JournalforingForm", () => {
       props.formValues.opprettnysak_behandlingstema = behandlingstema;
 
       const journalforingform = shallow(<JournalforingForm {...props} />);
-      const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
-      expect(sendForvaltningsMelding).toHaveLength(0);
+      const komponenter = journalforingform.find(Komponent);
+
+      expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(0);
     }
   );
 
@@ -79,7 +86,8 @@ describe("JournalforingForm", () => {
     props.formValues.journalforingGjelder = VIRKSOMHET;
 
     const journalforingform = shallow(<JournalforingForm {...props} />);
-    const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
-    expect(sendForvaltningsMelding).toHaveLength(0);
+    const komponenter = journalforingform.find(Komponent);
+
+    expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(0);
   });
 });

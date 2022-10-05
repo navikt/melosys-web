@@ -61,6 +61,7 @@ const AvsenderFullmektig = ({
         label="Fullmektigs org.nr. eller f.nr./d-nr."
         vedEndring={IDFeltTastOppHandler}
         className="avsender__input"
+        bredde="L"
       />
       <div className="avsender__navn">
         <Nav.Typo.Element className="avsender__navn__label">Navn: </Nav.Typo.Element>
@@ -71,6 +72,7 @@ const AvsenderFullmektig = ({
           feltNavn="representantRepresenterer"
           label="Hvem representerer fullmektig?"
           className="avsender__input"
+          bredde="xl"
         >
           {MKV.KTObjects.representerer.map((representerer: KTObject) => (
             <option key={representerer.kode} value={representerer.kode}>
@@ -80,7 +82,7 @@ const AvsenderFullmektig = ({
         </Skjema.Select>
       )}
       {Utils.person.erGyldigFnrEllerDnr(avsenderID) && (
-        <Nav.Typo.Normaltekst>Fullmektig representerer bruker</Nav.Typo.Normaltekst>
+        <Nav.Typo.Element>Fullmektig representerer bruker</Nav.Typo.Element>
       )}
     </div>
   );
