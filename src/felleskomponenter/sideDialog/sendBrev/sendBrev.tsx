@@ -33,6 +33,7 @@ import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
 import { dokumenterOperations } from "../../../ducks/dokumenter";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -97,6 +98,8 @@ const SendBrev = ({
   const [fritekstvedlegg, setFritekstvedlegg] = useState<Fritekstvedlegg[]>([]);
   const [redigerFritekstvedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
   const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
+
+  const fritekstvedleggToggle = useFeatureToggle("melosys.brev.GENERELT_FRITEKSTVEDLEGG");
 
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
@@ -395,7 +398,8 @@ const SendBrev = ({
         <VedleggVelger dokumenter={dokumenter} valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} />
       )}
 
-      {fritekstvedleggFelt &&
+      {fritekstvedleggToggle === "enabled" &&
+        fritekstvedleggFelt &&
         (visFritekstvedleggSkjema ? (
           <FritekstvedleggSkjema
             felt={fritekstvedleggFelt}
