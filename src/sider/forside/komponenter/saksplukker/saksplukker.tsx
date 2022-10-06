@@ -138,6 +138,13 @@ export const Saksplukker = ({
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
     MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+    MKV.Koder.behandlinger.behandlingstema.PENSJONIST,
+    MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
+    MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP,
+    MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+    MKV.Koder.behandlinger.behandlingstema.VIRKSOMHET,
   ];
   const plukkbareBehandlingstemaerTrygdeavtale = [MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV];
 
