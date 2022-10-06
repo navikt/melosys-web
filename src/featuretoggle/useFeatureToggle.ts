@@ -24,10 +24,6 @@ const useFeatureToggle = (toggleName: string, deps: unknown[] = []): Status => {
 
   const toggleFetched = toggles[toggleName] !== undefined;
 
-  if (toggleName === "melosys.ny_opprett_sak") {
-    return Status.disabled;
-  }
-
   if (!toggleFetched) {
     return Status.fetching;
   }
