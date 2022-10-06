@@ -365,7 +365,7 @@ const OpprettNySak = ({
 
   const skalViseLandOgSoknadsperiode = () =>
     behandleAlleSakerToggle
-      ? sakstype &&
+      ? sakstype === MKV.Koder.sakstyper.EU_EOS &&
         sakstema &&
         behandlingstema &&
         behandlingstype &&
