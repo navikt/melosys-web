@@ -224,6 +224,17 @@ export const PeriodeTomSelector = createSelector(
   (soknadsperiode) => soknadsperiode.tom
 );
 
+export const HarPeriodeOgLandSelector = createSelector(
+  PeriodeFomSelector,
+  SoknadslandSelector,
+  (periodeFom, soeknadsland) => {
+    const harPeriode = periodeFom != null;
+    const harLand = !Utils._isEmpty(soeknadsland.landkoder) || soeknadsland.erUkjenteEllerAlleEosLand;
+
+    return harPeriode && harLand;
+  }
+);
+
 export const PersonOpplysningerSelector = createSelector(
   (state) => BehandlingsgrunnlagDataSelector(state),
   (behandlingsgrunnlag) => behandlingsgrunnlag.personOpplysninger || {}

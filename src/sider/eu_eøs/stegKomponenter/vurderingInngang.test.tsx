@@ -99,6 +99,20 @@ describe("Varsler", () => {
     expect(lis.first().text()).toBe("Teknisk feil, finner ingen inngangsvilkår.");
   });
 
+  it("Viser feilmelding ved manglende periode og land når det mangler og melosys.tom_periode_og_land er enabled", () => {
+    props.inngangsvilkaar = undefined;
+    props.tomLandOgPeriodeToggleEnabled = true;
+    props.behandlingHarPeriodeOgLand = false;
+
+    const varsler = shallow(<Varsler {...props} />);
+    const lis = varsler.find("li");
+
+    expect(lis).toHaveLength(1);
+    expect(lis.first().text()).toBe(
+      "Det mangler periode og/eller land. Fyll disse inn i sidemenyen nedenfor og oppdater registeropplysninger."
+    );
+  });
+
   it("Viser feilmelding ved flere valgte land og ikke tema ARBEID_FLERE_LAND", () => {
     props.oppfyllerInngangsvilkar = true;
     props.inngangsvilkaar = {
@@ -141,6 +155,7 @@ describe("VurderingInngang", () => {
       hentVilkar: jest.fn(),
       landkoder: ["DK"],
       behandlingstema: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND.kode,
+      behandlingHarPeriodeOgLand: true,
     };
   });
 
