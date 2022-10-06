@@ -25,6 +25,7 @@ import vurderingVideresendSchema from "./vurderingVideresendSchema";
 
 import "./vurderingVideresend.css";
 import * as Skjema from "../../../felleskomponenter/skjema";
+import VedleggTable from "../../../felleskomponenter/vedleggTable";
 
 export const VurderingVideresend = ({
   redigerbart,
@@ -100,14 +101,9 @@ export const VurderingVideresend = ({
         </Nav.Row>
         {redigerbart && (
           <Nav.Row>
-            <Nav.Column xs="12">
-              <Nav.Typo.Element>Vedlegg til SED</Nav.Typo.Element>
-              <VedleggVelger
-                className="vedleggvelger"
-                valgteVedlegg={valgteVedlegg}
-                onChange={setValgteVedlegg}
-                dokumenter={fysiskeDokument}
-              />
+            <Nav.Column xs="6">
+              <VedleggTable valgteVedlegg={valgteVedlegg} label="Vedlegg til SED" setValgteVedlegg={setValgteVedlegg} />
+              <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={fysiskeDokument} />
             </Nav.Column>
           </Nav.Row>
         )}

@@ -30,7 +30,7 @@ const MottakerTabell = ({ rader, kolonner, className = "" }: MottakerTabellProps
           ))}
         </tr>
         {rader.map((rad) => (
-          <tr className="border_bottom" key={Utils._uuid()}>
+          <tr key={Utils._uuid()}>
             {rad.map((radElement) => (
               <td key={Utils._uuid()} className={`${radElement.style}`}>
                 {radElement.verdi}

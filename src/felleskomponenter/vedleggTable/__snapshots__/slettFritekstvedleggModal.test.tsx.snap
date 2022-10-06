@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`slettFritekstvedleggModal renders correctly 1`] = `
+<div
+  className="ReactModal__Overlay modal__overlay"
+  onClick={[Function]}
+  onMouseDown={[Function]}
+  style={Object {}}
+>
+  <div
+    aria-label="Slett fritekstvedlegg?"
+    aria-modal={true}
+    className="ReactModal__Content modal slettfritekstvedlegg-modal"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onMouseDown={[Function]}
+    onMouseUp={[Function]}
+    role="dialog"
+    style={Object {}}
+    tabIndex="-1"
+  >
+    <section>
+      <div
+        className="row"
+      >
+        <p
+          className="typo-element"
+        >
+          Slett fritekstvedlegg?
+        </p>
+        <p
+          className="typo-normal"
+        >
+          Er du sikker på at du vil slette fritekstvedlegget?
+          <br />
+           Dokumentet vil bli permanent slettet fra Melosys
+        </p>
+      </div>
+      <div
+        className="row"
+      >
+        <button
+          className="knapp knapp--hoved knapp--mini"
+          disabled={false}
+          onClick={[MockFunction]}
+          type="submit"
+        >
+          Ja, slett
+        </button>
+        <button
+          className="knapp knapp--flat knapp--mini"
+          disabled={false}
+          onClick={[MockFunction]}
+          type="submit"
+        >
+          Avbryt
+        </button>
+      </div>
+    </section>
+    <button
+      aria-label="Lukk"
+      className="lukknapp lukknapp--overstHjorne modal__lukkknapp--shake"
+      onClick={[MockFunction]}
+    >
+      <span
+        className="text-hide"
+      >
+        Lukk
+      </span>
+    </button>
+  </div>
+</div>
+`;

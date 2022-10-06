@@ -14,6 +14,7 @@ import MultiSelect from "../multiSelect";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import sideDialogOpprettNyBucSchema from "./sideDialogOpprettNyBucSchema";
 import "./sideDialogOpprettNyBuc.css";
+import VedleggTable from "../vedleggTable";
 
 const TomtFelt = ({ tekst }) => <option value="">{tekst}</option>;
 
@@ -261,7 +262,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
           values={valgteMottakerinstitusjoner}
           className="multiselect"
         />
-        <Nav.Typo.Element>Vedlegg</Nav.Typo.Element>
+        <VedleggTable valgteVedlegg={valgteVedlegg} label="Vedlegg" setValgteVedlegg={setValgteVedlegg} />
         <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={dokumenter} />
         <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>
           Opprett ny BUC
