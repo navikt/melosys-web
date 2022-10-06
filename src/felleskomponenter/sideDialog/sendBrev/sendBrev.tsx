@@ -10,24 +10,32 @@ import { ColumnWidth } from "nav-frontend-grid";
 
 import { URL_BASENAME } from "../../../constants";
 
+import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
+import * as Mui from "../../ui";
 
 import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { formSelectors } from "../../../ducks/form";
 import BrevValg from "./brevValg";
 import BrevMottaker, { erArbeidsgiverEllerVirksomhet } from "./brevMottaker";
 import { SendBrevFormValues } from "./types";
-import BrevVedlegg from "./brevVedlegg";
 import BrevMottakereTabell from "./brevMottakereTabell";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
+import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
+import { dokumenterOperations } from "../../../ducks/dokumenter";
+import VedleggVelger from "../../vedleggvelger";
+import VedleggTable from "../../vedleggTable";
+import { useFeatureToggle } from "../../../featuretoggle";
+
+const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
 const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.SendBrevValidSelector(state),
@@ -47,6 +55,11 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+export type Fritekstvedlegg = {
+  tittel: string;
+  fritekst: string;
+};
+
 interface Props {
   redigerbart: boolean;
   visApneINyttVindu: boolean;
@@ -57,6 +70,7 @@ interface Props {
   felterWidth?: ColumnWidth;
   formValues: SendBrevFormValues;
   dokumenter: FysiskDokument[];
+  saksnummer: string;
 }
 
 const SendBrev = ({
@@ -73,12 +87,19 @@ const SendBrev = ({
   mottakerSelectWidth = "12",
   mottakerTabellWidth = "12",
   felterWidth = "12",
+  saksnummer,
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
+  const [visFritekstvedleggSkjema, setVisFritekstvedleggSkjema] = useState(false);
+  const [fritekstvedlegg, setFritekstvedlegg] = useState<Fritekstvedlegg[]>([]);
+  const [redigerFritekstvedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
+  const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
+
+  const fritekstvedleggToggle = useFeatureToggle("melosys.brev.GENERELT_FRITEKSTVEDLEGG");
 
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
@@ -171,7 +192,34 @@ const SendBrev = ({
         dokumentID: vedlegg.dokumentID,
         journalpostID: vedlegg.journalpostID,
       })),
+      fritekstvedlegg,
     };
+  };
+
+  const lagFritekstPdfUrl = async (index: number) => {
+    const data = {
+      produserbardokument: MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTVEDLEGG,
+      mottaker: muligeMottakere?.hovedMottaker.rolle || "",
+      fritekstTittel:
+        redigerFritekstvedleggIndex === index
+          ? formValues.felt?.FRITEKSTVEDLEGG_TITTEL?.feltVerdi
+          : fritekstvedlegg[index].tittel,
+      fritekst:
+        redigerFritekstvedleggIndex === index
+          ? formValues.felt?.FRITEKSTVEDLEGG_FRITEKST?.feltVerdi
+          : fritekstvedlegg[index].fritekst,
+      kopiMottakere: [],
+      kontaktopplysninger: false,
+      saksvedlegg: [],
+      fritekstvedlegg: [],
+    };
+    try {
+      setForhandsvisFritekstvedleggError(false);
+      return await dokumenterOperations.forhandsvisBrevV2(behandlingID, data);
+    } catch (e) {
+      setForhandsvisFritekstvedleggError(true);
+      return "";
+    }
   };
 
   const sendBrev = () => {
@@ -192,6 +240,7 @@ const SendBrev = ({
         setBrevSendt(true);
         oppdaterBehandling();
         resetForm();
+        setFritekstvedlegg([]);
       })
       .catch(() => {
         setBrevSendtFeil(true);
@@ -204,6 +253,51 @@ const SendBrev = ({
     setBrevSendtFeil(false);
   };
 
+  const resetFritekstvedlegg = () => {
+    changeField("felt.FRITEKSTVEDLEGG_TITTEL.feltVerdi", "");
+    changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", "");
+    setVisFritekstvedleggSkjema(false);
+    setRedigerFritekstvedleggIndex(undefined);
+  };
+
+  const leggTilFritekstvedlegg = () => {
+    const tittel = formValues.felt?.FRITEKSTVEDLEGG_TITTEL?.feltVerdi;
+    const fritekst = formValues.felt?.FRITEKSTVEDLEGG_FRITEKST?.feltVerdi;
+    if (tittel && fritekst && fritekst !== "<p></p>\n") {
+      const newFritekstvedlegg = [...fritekstvedlegg];
+      if (redigerFritekstvedleggIndex !== undefined) {
+        newFritekstvedlegg[redigerFritekstvedleggIndex] = { tittel, fritekst };
+      } else {
+        newFritekstvedlegg.push({ tittel, fritekst });
+      }
+      setFritekstvedlegg(newFritekstvedlegg);
+      changeField("felt.FRITEKSTVEDLEGG_TITTEL.feltVerdi", "");
+      changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", "");
+      setVisFritekstvedleggSkjema(false);
+      setRedigerFritekstvedleggIndex(undefined);
+    }
+  };
+
+  const redigerFritekstvedlegg = (index: number) => {
+    const vedlegg = fritekstvedlegg[index];
+    changeField("felt.FRITEKSTVEDLEGG_TITTEL.feltVerdi", vedlegg.tittel);
+    changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", vedlegg.fritekst);
+    setRedigerFritekstvedleggIndex(index);
+    setVisFritekstvedleggSkjema(true);
+  };
+
+  const slettFritekstvedlegg = (index: number) => {
+    const newFritekstvedlegg = [...fritekstvedlegg];
+    newFritekstvedlegg.splice(index, 1);
+    setFritekstvedlegg(newFritekstvedlegg);
+    if (index === redigerFritekstvedleggIndex) {
+      setRedigerFritekstvedleggIndex(undefined);
+    }
+    if (redigerFritekstvedleggIndex && index < redigerFritekstvedleggIndex) {
+      setRedigerFritekstvedleggIndex(redigerFritekstvedleggIndex - 1);
+    }
+  };
+
   const overstyrBlurEvent = (event: React.FocusEvent) => {
     event.preventDefault();
   };
@@ -213,8 +307,11 @@ const SendBrev = ({
   const mottakerErValgt = formValues.valgtMottaker;
   const brevtypeErValgt = formValues.valgtBrev;
 
-  const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}`;
+  const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}/${saksnummer}`;
   const vedleggFelt = formValues.valgtBrev?.felter?.find((felt) => felt.kode === Api.DokumenterV2.FeltType.VEDLEGG);
+  const fritekstvedleggFelt = formValues.valgtBrev?.felter?.find(
+    (felt) => felt.kode === Api.DokumenterV2.FeltType.FRITEKSTVEDLEGG
+  );
 
   return (
     <div className="send_brev">
@@ -279,20 +376,48 @@ const SendBrev = ({
         </Nav.Row>
       )}
 
-      {vedleggFelt && (
-        <BrevVedlegg
-          felt={vedleggFelt}
-          width={felterWidth}
-          dokumenter={dokumenter}
+      {forhandsvisFritekstvedleggError && (
+        <Nav.AlertStripe type="advarsel" className="fritekst_varsel">
+          {FORHANDSVIS_ERROR_MESSAGE}
+        </Nav.AlertStripe>
+      )}
+
+      {(vedleggFelt || fritekstvedleggFelt) && (
+        <VedleggTable
           valgteVedlegg={valgteVedlegg}
+          fritekstvedlegg={fritekstvedlegg}
+          redigerFritekstvedlegg={redigerFritekstvedlegg}
+          slettFritekstvedlegg={slettFritekstvedlegg}
+          lagFritekstPdfUrl={lagFritekstPdfUrl}
           setValgteVedlegg={setValgteVedlegg}
+          label="Vedlegg"
         />
       )}
+
+      {vedleggFelt && (
+        <VedleggVelger dokumenter={dokumenter} valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} />
+      )}
+
+      {fritekstvedleggToggle === "enabled" &&
+        fritekstvedleggFelt &&
+        (visFritekstvedleggSkjema ? (
+          <FritekstvedleggSkjema
+            felt={fritekstvedleggFelt}
+            index={redigerFritekstvedleggIndex}
+            resetFritekstvedlegg={resetFritekstvedlegg}
+            leggTilFritekstvedlegg={leggTilFritekstvedlegg}
+            width={felterWidth}
+          />
+        ) : (
+          <Mui.Lenkeknapp onClick={() => setVisFritekstvedleggSkjema(true)} ikon={Ikoner.Add}>
+            {fritekstvedleggFelt.beskrivelse}
+          </Mui.Lenkeknapp>
+        ))}
 
       <div>
         <Nav.Hovedknapp
           mini
-          disabled={!redigerbart || !formIsValid || !!formValues.valgtMottaker?.feilmelding}
+          disabled={!redigerbart || !formIsValid || !!formValues.valgtMottaker?.feilmelding || visFritekstvedleggSkjema}
           className="brevknapp"
           onClick={sendBrev}
         >

@@ -14,6 +14,7 @@ import * as KV from "../../kodeverk";
 import * as behandlingsgrunnlagSelectors from "../behandlingsgrunnlag/selectors";
 import * as Utils from "../../utils";
 import * as lovvalgsperioderSelectors from "../lovvalgsperioder/selectors";
+import { SakstypeKodeSelector } from "../fagsaker/selectors";
 
 export const BehandlingerSelector = createSelector(
   (state) => (state.behandlinger.data ? state.behandlinger.data : {}),
@@ -390,9 +391,12 @@ export const ErEndretPeriodeSelector = createSelector(
   (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
 );
 
-export const ErAnmodningOmUnntakHovedRegelSelector = createSelector(
+export const ErAnmodningOmUnntakHovedRegelOgHarFlytSelector = createSelector(
   BehandlingstemaKodeSelector,
-  (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
+  SakstypeKodeSelector,
+  (behandlingstema, sakstype) =>
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL &&
+    sakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE
 );
 
 export const ErRegistreringUnntakNorskTrygdUtstasjoneringSelector = createSelector(

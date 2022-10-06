@@ -20,7 +20,7 @@ export const PanelerRedigerbartSelector = createSelector(
   RedigerbartSelector,
   anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
   behandlingerSelectors.ErEndretPeriodeSelector,
-  behandlingerSelectors.ErAnmodningOmUnntakHovedRegelSelector,
+  behandlingerSelectors.ErAnmodningOmUnntakHovedRegelOgHarFlytSelector,
   behandlingerSelectors.ErRegistreringUnntakNorskTrygdUtstasjoneringSelector,
   behandlingerSelectors.ErRegistreringUnntakNorskTrygdOvrigeSelector,
   (

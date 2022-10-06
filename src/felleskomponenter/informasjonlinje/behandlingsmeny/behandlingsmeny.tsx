@@ -22,6 +22,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 
 import "./behandlingsmeny.css";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
@@ -40,7 +41,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
-  visFerdigbehandleNyVurderingDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleNyVurdering()),
+  visFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleSak()),
   visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
 });
 
@@ -53,7 +54,7 @@ export const Behandlingsmeny = ({
   visAvslagSoknadDialogHandle,
   visHenleggDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
-  visFerdigbehandleNyVurderingDialogHandle,
+  visFerdigbehandleSakDialogHandle,
   visRevurderFagsakDialogHandle,
   redigerbart,
   sakstema,
@@ -64,6 +65,8 @@ export const Behandlingsmeny = ({
   behandlingsstatus,
   anmodningsperioderErSendtUtlandet,
 }: PropsFromRedux) => {
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
+
   const [visBehandlingsmeny, setVisBehandlingsmeny] = useState(false);
 
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
@@ -86,6 +89,11 @@ export const Behandlingsmeny = ({
   ].includes(behandlingstema);
 
   const skalViseVurderSakenPaaNytt = () => {
+    if (behandleAlleSakerToggle === "enabled") {
+      // Når toggle fjernes kan hele metoden samt bruk av behandlingskategori fjernes fra komponenten
+      // Også fjern revurderFagsak, inkl dialogboks og alt av modal og redux
+      return false;
+    }
     switch (behandlingskategori) {
       case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
         return anmodningsperioderErSendtUtlandet || (behandlingErAvsluttet && !behandlingstypeErEndretPeriode);
@@ -129,7 +137,7 @@ export const Behandlingsmeny = ({
             behandlingstema={behandlingstema}
             behandlingstype={behandlingstype}
             redigerbart={redigerbart}
-            ferdigbehandleNyVurdering={visFerdigbehandleNyVurderingDialogHandle}
+            ferdigbehandleSak={visFerdigbehandleSakDialogHandle}
             behandlingsstatus={behandlingsstatus}
             tilForsiden={tilForsiden}
           />

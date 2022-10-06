@@ -112,6 +112,12 @@ export const KnyttTilSak = (props) => {
   const visKnyttTilEksisterende =
     sisteBehandlingErInaktiv && (!behandleAlleSakerToggleEnabled || !sakErHenlagtEllerBortfalt);
 
+  const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
+    ? sisteBehandlingErInaktiv
+    : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
+
+  const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
+
   if (visKnyttTilEksisterende) {
     return (
       <div className="knyttTilSak__panelramme">
@@ -126,11 +132,8 @@ export const KnyttTilSak = (props) => {
           label={behandleAlleSakerToggleEnabled ? "" : "Knytt til sak"}
           className={classNames("panelElement", { "nyBehandling-utenBehandling": behandleAlleSakerToggleEnabled })}
         >
-          {behandlingOversikter.some(
-            (behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD
-          ) ? (
-            <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />
-          ) : (
+          {visOpprettNyBehandling && <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />}
+          {visUtenOpprettNyBehandling && (
             <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
           )}
         </Skjema.RadioGruppe>
@@ -141,18 +144,16 @@ export const KnyttTilSak = (props) => {
                 <Nav.Typo.Undertittel className="temaTypeOverskrift">
                   Velg tema og type for ny behandling
                 </Nav.Typo.Undertittel>
-                {journalforingGjelder === MKV.Koder.aktoersroller.BRUKER && (
-                  <Skjema.Select
-                    feltNavn="behandlingstema"
-                    bredde="fullbredde"
-                    label="Behandlingstema"
-                    emptyFieldDisabled={behandlingstema?.kode}
-                  >
-                    {muligeBehandlingstemaer?.map((elem) => (
-                      <option key={elem.kode} value={elem.kode} label={elem.term} />
-                    ))}
-                  </Skjema.Select>
-                )}
+                <Skjema.Select
+                  feltNavn="behandlingstema"
+                  bredde="fullbredde"
+                  label="Behandlingstema"
+                  emptyFieldDisabled={behandlingstema?.kode}
+                >
+                  {muligeBehandlingstemaer?.map((elem) => (
+                    <option key={elem.kode} value={elem.kode} label={elem.term} />
+                  ))}
+                </Skjema.Select>
                 <Skjema.RadioGruppe feltNavn="behandlingstype" label="Behandlingstype" className="behandlingstype">
                   {muligeBehandlingstyper?.map((elem) => (
                     <Skjema.Radio feltNavn="behandlingstype" key={elem.kode} value={elem.kode} label={elem.term} />

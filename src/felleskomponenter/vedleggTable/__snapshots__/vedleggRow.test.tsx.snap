@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`vedleggRow renders correctly  1`] = `
+<tr
+  className="vedlegg"
+>
+  <td>
+    <a
+      className="lenke"
+      href="#"
+      onClick={[Function]}
+    >
+      test
+    </a>
+  </td>
+  <td>
+    <span>
+      
+    </span>
+  </td>
+  <td
+    className="icon--cell"
+  >
+    <button
+      className="knapp mui-knapp knapp knapp--flat"
+      disabled={false}
+      onClick={[MockFunction]}
+      type="button"
+    >
+      <svg
+        className="ikon"
+      >
+        bin-small-black.svg
+      </svg>
+    </button>
+  </td>
+</tr>
+`;

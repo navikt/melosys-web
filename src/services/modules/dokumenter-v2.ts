@@ -35,6 +35,7 @@ export enum FeltType {
   FRITEKST = "FRITEKST",
   SJEKKBOKS = "SJEKKBOKS",
   VEDLEGG = "VEDLEGG",
+  FRITEKSTVEDLEGG = "FRITEKSTVEDLEGG",
 }
 
 export interface Felt {
@@ -89,6 +90,10 @@ export type OpprettBrevReqDto = {
   saksvedlegg: {
     dokumentID: string;
     journalpostID: string;
+  }[];
+  fritekstvedlegg: {
+    tittel: string;
+    fritekst: string;
   }[];
 };
 

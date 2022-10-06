@@ -17,6 +17,9 @@ describe("Redigerbartselectors", () => {
         },
       },
     },
+    fagsaker: {
+      data: {},
+    },
   });
 
   describe("BehandlingsmenyredigerbartSelector", () => {

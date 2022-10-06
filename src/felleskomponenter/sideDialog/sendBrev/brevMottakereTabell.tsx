@@ -105,7 +105,7 @@ const BrevMottakereTabell = ({
         className="tabell"
         rader={mapMottakerRader(muligeMottakere)}
         kolonner={[
-          { verdi: "Dokumenter", bredde: "60%" },
+          { verdi: "Forhåndsvisning av brev", bredde: "60%" },
           { verdi: "Mottaker", bredde: "40%" },
         ]}
       />

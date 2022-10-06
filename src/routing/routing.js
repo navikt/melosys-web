@@ -123,7 +123,10 @@ const Routing = () => (
           path={`/${EU_EOS}/vurderutpeking/:saksnr`}
           render={(props) => <VurderUtpekingLoadable {...props} {...fellesHandlers} />}
         />
-        <Route path="/sendbrev/:behandlingID" render={(props) => <SendbrevLoadable {...props} {...fellesHandlers} />} />
+        <Route
+          path="/sendbrev/:behandlingID/:snr"
+          render={(props) => <SendbrevLoadable {...props} {...fellesHandlers} />}
+        />
         <Route component={UkjentSideLoadable} />
       </Switch>
     )}
