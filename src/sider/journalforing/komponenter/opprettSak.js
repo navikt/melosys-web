@@ -155,25 +155,28 @@ export const OpprettSak = (props) => {
       Api.LovligeKombinasjoner.hentSakstemaer(journalforingGjelder, valgtSakstype).then((muligeSakstemaer) => {
         setSakstemaer(muligeSakstemaer);
       });
+      setBehandlingstemaer([]);
+      setBehandlingstyper([]);
     }
   }, [behandleAlleSakerToggleEnabled, journalforingGjelder, valgtSakstype]);
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
 
-    if (valgtSakstema && valgtSakstype) {
+    if (valgtSakstype && valgtSakstema) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(journalforingGjelder, valgtSakstype, valgtSakstema).then(
         (muligeBehandlingstemaer) => {
           setBehandlingstemaer(muligeBehandlingstemaer);
         }
       );
+      setBehandlingstyper([]);
     }
   }, [behandleAlleSakerToggleEnabled, journalforingGjelder, valgtSakstype, valgtSakstema]);
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
 
-    if (valgtSakstema && valgtSakstype && valgtBehandlingstema) {
+    if (valgtSakstype && valgtSakstema && valgtBehandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(
         journalforingGjelder,
         valgtSakstype,
