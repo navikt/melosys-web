@@ -13,6 +13,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
 
+import { useFeatureToggle } from "../../../featuretoggle";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../ducks/vilkar";
 
@@ -25,9 +26,16 @@ interface VarslerProps {
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
   landkoder: Array<string>;
   behandlingstema: string;
+  tomLandOgPeriodeToggleEnabled: boolean;
 }
 
-export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, behandlingstema }: VarslerProps) => {
+export const Varsler = ({
+  oppfyllerInngangsvilkar,
+  inngangsvilkaar,
+  landkoder,
+  behandlingstema,
+  tomLandOgPeriodeToggleEnabled,
+}: VarslerProps) => {
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
 
   const visbareInngangsvilkaarBegrunnelseKoder = inngangsvilkaarBegrunnelseKoder.filter(
@@ -52,6 +60,15 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, b
   }inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
 
   if (Utils._isEmpty(inngangsvilkaar)) {
+    if (tomLandOgPeriodeToggleEnabled) {
+      return (
+        <ul className="betingelser__liste">
+          <li className={oppfyllerInngangsvilkarCl}>
+            Det mangler periode og/eller land. Fyll disse inn i sidemenyen nedenfor og oppdater registeropplysninger.
+          </li>
+        </ul>
+      );
+    }
     return (
       <ul className="betingelser__liste">
         <li className={oppfyllerInngangsvilkarCl}>Teknisk feil, finner ingen inngangsvilkår.</li>
@@ -122,6 +139,8 @@ export const VurderingInngang = ({
   landkoder,
   behandlingstema,
 }: VurderingInngangProps) => {
+  const tomLandOgPeriodeToggle = useFeatureToggle("melosys.tom_periode_og_land");
+
   const knappClickHandler = async () => {
     if (!oppfyllerInngangsvilkar) {
       await Api.Vilkar.overstyrInngangvilkaar(behandlingID);
@@ -139,6 +158,7 @@ export const VurderingInngang = ({
         inngangsvilkaar={inngangsvilkaar}
         landkoder={landkoder}
         behandlingstema={behandlingstema}
+        tomLandOgPeriodeToggleEnabled={tomLandOgPeriodeToggle === "enabled"}
       />
       <Mui.StegKnapper
         bekreftKnappProps={{
