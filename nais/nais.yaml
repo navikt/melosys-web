@@ -33,8 +33,12 @@ spec:
       memory: 256Mi
   vault:
     enabled: true
+  {{#if INGRESSES}}
   ingresses:
-    - {{INGRESS}}
+    {{#each INGRESSES}}
+    - "{{this}}"
+    {{/each}}
+  {{/if}}
   env:
     - name: APP_URL_MELOSYS
       value: {{APP_URL_MELOSYS}}

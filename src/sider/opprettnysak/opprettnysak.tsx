@@ -33,6 +33,27 @@ import { OppgaveVelger } from "./komponenter/oppgaveVelger";
 import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
+const { OPPRETT_NY_SAK_VALUES: FormValues } = KV.Form;
+
+export const nullstillVerdier = (steg: string, change: (feltNavn: string, verdi: string | null) => void): void => {
+  switch (steg) {
+    case FormValues.sakstype:
+      change(FormValues.sakstema, null);
+      change(FormValues.behandlingstema, null);
+      change(FormValues.behandlingstype, null);
+      break;
+    case FormValues.sakstema:
+      change(FormValues.behandlingstema, null);
+      change(FormValues.behandlingstype, null);
+      break;
+    case FormValues.behandlingstema:
+      change(FormValues.behandlingstype, null);
+      break;
+    case FormValues.behandlingstype:
+    default:
+      break;
+  }
+};
 
 interface OpprettNySakFormData {
   opprettnysak_behandlingstema: string;
@@ -227,7 +248,7 @@ const OpprettNySak = ({
     setOppgaverForsoktHentet(false);
   }, [hovedpart]);
 
-  const opprettNySak = async (event: FormEvent<HTMLFormElement>) => {
+  const opprettNySak = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!validerForm()) return;
     setBekreftPending(true);

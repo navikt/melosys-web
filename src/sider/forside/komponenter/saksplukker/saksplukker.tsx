@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from "react";
+import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { getFormValues, InjectedFormProps, reduxForm } from "redux-form";
+import { ThunkDispatch } from "redux-thunk";
+import { clearFields, getFormValues, InjectedFormProps, reduxForm } from "redux-form";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
+import { AlertStripeAdvarsel } from "nav-frontend-alertstriper";
 
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
+import saksplukkerSchema from "./saksplukkerSchema";
 import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Api from "../../../../services/api";
 
 import { oppgaverOperations } from "../../../../ducks/oppgaver";
 import { useFeatureToggle } from "../../../../featuretoggle";
-
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
-import saksplukkerSchema from "./saksplukkerSchema";
+
 import "./saksplukker.css";
-import * as Api from "../../../../services/api";
 
 const { EU_EOS, TRYGDEAVTALE, FTRL } = MKV.Koder.sakstyper;
 
@@ -40,7 +43,12 @@ const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SAKSPLUKKER_FORM)(state) as SaksplukkerFormData,
 });
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  nullstillForm: () =>
+    dispatch(clearFields(KV.Form.SAKSPLUKKER_FORM, false, false, "sakstype", "sakstema", "behandlingstema")),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SaksplukkerProps = PropsFromRedux & RouteComponentProps;
@@ -50,6 +58,7 @@ export const Saksplukker = ({
   history,
   formValues,
   change,
+  nullstillForm,
   invalid,
 }: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) => {
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -58,6 +67,7 @@ export const Saksplukker = ({
   const [muligeSakstyper, setMuligeSakstyper] = useState([]);
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
+  const [visIngenOppgaveFunnetAlert, setVisIngenOppgaveFunnetAlert] = useState(false);
 
   const { sakstype, sakstema } = formValues || {};
 
@@ -116,19 +126,12 @@ export const Saksplukker = ({
   const submitOgVideresend = async (form: any) => {
     const redirectURL = await handleSubmit(form);
 
-    /* eslint-disable no-alert */
     if (!redirectURL) {
-      return alert("Ingen oppgaver finnes");
+      setVisIngenOppgaveFunnetAlert(true);
+      return false;
     }
-    /* eslint-enable */
     history.push(redirectURL);
     return true;
-  };
-
-  const nullstill = () => {
-    change("sakstype", null);
-    change("sakstema", null);
-    change("behandlingstema", null);
   };
 
   const ikkePlukkbareBehandlingstemaerEOS = [
@@ -154,7 +157,7 @@ export const Saksplukker = ({
       ) : (
         <p>Velg sakstype og behandlingstema for å få tildelt en sak.</p>
       )}
-      <form className="saksplukker__skjema" onSubmit={submitOgVideresend} onReset={nullstill}>
+      <form className="saksplukker__skjema" onSubmit={submitOgVideresend}>
         <Nav.Row>
           <Nav.Column md="12" lg={behandleFagsakMarginToggle}>
             <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
@@ -201,11 +204,18 @@ export const Saksplukker = ({
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>
+        {visIngenOppgaveFunnetAlert && (
+          <Nav.Row>
+            <Nav.Column md="12">
+              <AlertStripeAdvarsel>Det fins ingen saker for valgt type/tema kombinasjon</AlertStripeAdvarsel>
+            </Nav.Column>
+          </Nav.Row>
+        )}
         <Nav.Row className="saksplukker__knapperad">
           <Nav.Knapp className="saksplukker__knapp" disabled={invalid}>
             Behandle sak
           </Nav.Knapp>
-          {behandleAlleSakerToggle === "enabled" && <Nav.Flatknapp htmlType="reset">Nullstill</Nav.Flatknapp>}
+          {behandleAlleSakerToggle === "enabled" && <Nav.Flatknapp onClick={nullstillForm}>Nullstill</Nav.Flatknapp>}
         </Nav.Row>
       </form>
     </Nav.Panel>
