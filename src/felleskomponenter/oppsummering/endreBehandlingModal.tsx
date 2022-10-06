@@ -109,6 +109,9 @@ function EndreBehandlingModal({
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
   const [nyLink, setNyLink] = useState<string | undefined>(undefined);
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
+  const kanEndre = !(
+    useFeatureToggle("melosys.behandle_alle_saker.ikke_endre") === "enabled" && behandleAlleSakerToggle === "enabled"
+  );
 
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") return;
@@ -258,7 +261,7 @@ function EndreBehandlingModal({
                 behandleAlleSakerToggle === "enabled" ? muligeSakstyper : muligeSakstyper_gammel
               )}
               disableForsteValg
-              redigerbart={!endringerErBegrenset}
+              redigerbart={!endringerErBegrenset && kanEndre}
             />
             {behandleAlleSakerToggle === "enabled" && (
               <Mui.KodeTermSelect
@@ -270,7 +273,7 @@ function EndreBehandlingModal({
                 value={sakstema}
                 koder={muligeSakstemaer}
                 disableForsteValg
-                redigerbart={!endringerErBegrenset}
+                redigerbart={!endringerErBegrenset && kanEndre}
               />
             )}
             <Mui.KodeTermSelect
@@ -286,7 +289,7 @@ function EndreBehandlingModal({
                   : muligeVerdierPlussValgt(oppsummering.behandlingstema, muligeBehandlingstemaer_gammel)
               }
               disableForsteValg
-              redigerbart={!endringerErBegrenset}
+              redigerbart={!endringerErBegrenset && kanEndre}
             />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingstype(e.target.value)}
@@ -298,7 +301,7 @@ function EndreBehandlingModal({
                   : muligeVerdierPlussValgt(oppsummering.behandlingstype, muligeBehandlingstyper_gammel)
               }
               disableForsteValg
-              redigerbart={!endringerErBegrenset}
+              redigerbart={!endringerErBegrenset && kanEndre}
             />
             <Datovelger onChange={setBehandlingsfrist} label="Frist" value={behandlingsfrist} />
             <Mui.KodeTermSelect
