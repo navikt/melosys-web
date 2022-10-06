@@ -14,6 +14,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
 
 import { useFeatureToggle } from "../../../featuretoggle";
+import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../ducks/vilkar";
 
@@ -27,6 +28,7 @@ interface VarslerProps {
   landkoder: Array<string>;
   behandlingstema: string;
   tomLandOgPeriodeToggleEnabled: boolean;
+  behandlingHarPeriodeOgLand: boolean;
 }
 
 export const Varsler = ({
@@ -35,6 +37,7 @@ export const Varsler = ({
   landkoder,
   behandlingstema,
   tomLandOgPeriodeToggleEnabled,
+  behandlingHarPeriodeOgLand,
 }: VarslerProps) => {
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
 
@@ -60,7 +63,7 @@ export const Varsler = ({
   }inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
 
   if (Utils._isEmpty(inngangsvilkaar)) {
-    if (tomLandOgPeriodeToggleEnabled) {
+    if (tomLandOgPeriodeToggleEnabled && !behandlingHarPeriodeOgLand) {
       return (
         <ul className="betingelser__liste">
           <li className={oppfyllerInngangsvilkarCl}>
@@ -111,6 +114,7 @@ export const Varsler = ({
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingHarPeriodeOgLand: behandlingsgrunnlagSelectors.HarPeriodeOgLandSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -127,6 +131,7 @@ type VurderingInngangProps = PropsFromRedux & {
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
   landkoder: Array<string>;
   behandlingstema: string;
+  behandlingHarPeriodeOgLand: boolean;
 };
 
 export const VurderingInngang = ({
@@ -138,6 +143,7 @@ export const VurderingInngang = ({
   hentVilkar,
   landkoder,
   behandlingstema,
+  behandlingHarPeriodeOgLand,
 }: VurderingInngangProps) => {
   const tomLandOgPeriodeToggle = useFeatureToggle("melosys.tom_periode_og_land");
 
@@ -159,6 +165,7 @@ export const VurderingInngang = ({
         landkoder={landkoder}
         behandlingstema={behandlingstema}
         tomLandOgPeriodeToggleEnabled={tomLandOgPeriodeToggle === "enabled"}
+        behandlingHarPeriodeOgLand={behandlingHarPeriodeOgLand}
       />
       <Mui.StegKnapper
         bekreftKnappProps={{
