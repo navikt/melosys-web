@@ -132,6 +132,8 @@ const OpprettNySak = ({
   const [bekreftPending, setBekreftPending] = useState(false);
   const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
+  const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
+
   const {
     opprettnysak_behandlingstema: behandlingstema,
     opprettnysak_behandlingstype: behandlingstype,
@@ -278,7 +280,7 @@ const OpprettNySak = ({
       skalTilordnes,
       oppgaveID,
     };
-    if (saksnummer) {
+    if (saksnummer && nyOpprettSakToggle === "enabled") {
       lagNyBehandlingForSak(saksnummer, data).finally(() => setBekreftPending(false));
     } else {
       lagNySak(data).finally(() => setBekreftPending(false));
@@ -372,7 +374,7 @@ const OpprettNySak = ({
                 />
                 <div className="innrykk">
                   <OppgaveVelger
-                    visToppValg={!erEksisterendeSak}
+                    lagNyOppgave={!erEksisterendeSak}
                     oppgaverForsoktHentet={oppgaverForsoktHentet}
                     hovedpart={hovedpart}
                     change={change}

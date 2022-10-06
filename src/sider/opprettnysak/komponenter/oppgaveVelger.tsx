@@ -18,7 +18,7 @@ interface OppgaveVelgerProps {
   oppgaverForsoktHentet: boolean;
   hovedpart: string;
   oppgaver: Api.Oppgaver.SokOppgaveResDto[];
-  visToppValg: boolean;
+  lagNyOppgave: boolean;
   nullstillFormverdier: () => void;
   change: (field: string, value: any) => void;
 }
@@ -28,11 +28,12 @@ export const OppgaveVelger = ({
   hovedpart,
   oppgaver,
   change,
-  visToppValg,
+  lagNyOppgave,
   nullstillFormverdier,
 }: OppgaveVelgerProps) => {
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
-  const [valgtVisning, setValgtVisning] = useState(visToppValg ? OPPRETT : EKSISTRENDE);
+  const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
+  const [valgtVisning, setValgtVisning] = useState(lagNyOppgave ? OPPRETT : EKSISTRENDE);
 
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
@@ -60,8 +61,12 @@ export const OppgaveVelger = ({
     });
 
   useEffect(() => {
-    if (behandleAlleSakerToggle === "enabled") setValgtVisning(OPPRETT);
-  }, [behandleAlleSakerToggle]);
+    if (behandleAlleSakerToggle === "enabled" && nyOpprettSakToggle === "enabled") {
+      setValgtVisning(OPPRETT);
+    } else {
+      setValgtVisning(EKSISTRENDE);
+    }
+  }, [behandleAlleSakerToggle, nyOpprettSakToggle]);
 
   const settJournalpostID = (oppgaveID: string) => {
     const oppgave = oppgaver.find((o) => o.oppgaveID === oppgaveID);
@@ -69,7 +74,7 @@ export const OppgaveVelger = ({
   };
   return (
     <>
-      {behandleAlleSakerToggle === "enabled" && visToppValg ? (
+      {behandleAlleSakerToggle === "enabled" && lagNyOppgave && oppgaverFinnes ? (
         <div className="oppgaveVelger">
           <div className="velgVisning">
             <Nav.Radio
@@ -97,9 +102,11 @@ export const OppgaveVelger = ({
           </div>
         </div>
       ) : (
-        <Nav.AlertStripeInfo>
-          Når det opprettes en ny behandling på en eksisterende sak, må det opprettes en ny oppgave
-        </Nav.AlertStripeInfo>
+        valgtVisning === OPPRETT && (
+          <Nav.AlertStripeInfo>
+            Når det opprettes en ny behandling på en eksisterende sak, må det opprettes en ny oppgave
+          </Nav.AlertStripeInfo>
+        )
       )}
       {valgtVisning === EKSISTRENDE ? (
         <>
