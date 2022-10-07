@@ -7,10 +7,13 @@ import * as Selectors from "./selectors";
 
 import MKV from "../../melosyskodeverk";
 
+import { erFeatureToggleEnabled } from "../../featuretoggle";
 import { doThenDispatch } from "../../services/utils";
+
 import { formSelectors } from "../form";
 import { behandlingerSelectors } from "../behandlinger";
 import { OrganisasjonOperations } from "../organisasjoner";
+import { fagsakSelectors } from "../fagsaker";
 
 export function hent(behandlingID) {
   return async (dispatch, getState) => {
@@ -124,7 +127,7 @@ const lagSedGrunnlagFelter = (behandlingsgrunnlag) => ({
   ytterligereInformasjon: behandlingsgrunnlag.ytterligereInformasjon || null,
 });
 
-const lagBehandlingsgrunnlagData = (behandlingstema, behandlingsgrunnlag) => {
+const lagBehandlingsgrunnlagDataEtterBehandlingstema = (behandlingstema, behandlingsgrunnlag) => {
   switch (behandlingstema) {
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
@@ -147,15 +150,36 @@ const lagBehandlingsgrunnlagData = (behandlingstema, behandlingsgrunnlag) => {
   }
 };
 
+const lagBehandlingsgrunnlagData = (sakstype, behandlingstema, behandlingsgrunnlag) => {
+  if (temaForSedGrunnlag(behandlingstema)) {
+    return lagSedGrunnlagFelter(behandlingsgrunnlag);
+  }
+
+  switch (sakstype) {
+    case MKV.Koder.sakstyper.EU_EOS:
+      return lagEØSFelter(behandlingsgrunnlag);
+    case MKV.Koder.sakstyper.FTRL:
+      return lagFTRLFelter(behandlingsgrunnlag);
+    case MKV.Koder.sakstyper.TRYGDEAVTALE:
+      return lagTrygdeavtaleFelter(behandlingsgrunnlag);
+    default:
+      throw new Error(`Vi støtter ikke sakstype: ${sakstype}`);
+  }
+};
+
 export function lagre() {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     dispatch(oppdaterState());
+    const behandleAlleSakerToggleEnabled = await erFeatureToggleEnabled("melosys.behandle_alle_saker");
 
     const behandlingsgrunnlag = Selectors.BehandlingsgrunnlagDataSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
+    const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
     const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
 
-    const data = lagBehandlingsgrunnlagData(behandlingstema, behandlingsgrunnlag);
+    const data = behandleAlleSakerToggleEnabled
+      ? lagBehandlingsgrunnlagData(sakstype, behandlingstema, behandlingsgrunnlag)
+      : lagBehandlingsgrunnlagDataEtterBehandlingstema(behandlingstema, behandlingsgrunnlag);
 
     return dispatch(send(bid, { data }));
   };

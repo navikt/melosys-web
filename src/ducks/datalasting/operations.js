@@ -2,7 +2,7 @@ import MKV from "../../melosyskodeverk";
 
 import { avklartefaktaOperations } from "../avklartefakta";
 import { fagsakOperations, fagsakSelectors } from "../fagsaker";
-import { behandlingerOperations } from "../behandlinger";
+import { behandlingerOperations, behandlingerSelectors } from "../behandlinger";
 import { behandlingsresultatOperations } from "../behandlingsresultat";
 import { behandlingsgrunnlagOperations } from "../behandlingsgrunnlag";
 import { lovvalgsperioderOperations } from "../lovvalgsperioder";
@@ -14,6 +14,8 @@ import { utpekingsperioderOperations } from "../utpekingsperioder";
 import { dokumenterOperations } from "../dokumenter";
 import { oppsummertfaktaOperations } from "../oppsummertfakta";
 import { medlemskapsperioderOperations } from "../medlemskapsperioder";
+import { skalViseTomFlytEllerErSedBehandling } from "../../routing";
+import { erFeatureToggleEnabled } from "../../featuretoggle";
 
 export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => (dispatch) => {
   dispatch(fagsakOperations.hent(saksnummer));
@@ -70,19 +72,35 @@ export const resetSaksopplysninger = () => (dispatch) => {
   dispatch(dokumenterOperations.resetDokument());
 };
 
+const harIkkeTomFlyt = async (sakstype, state) => {
+  const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
+  const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
+  const behandleAlleSakerToggleEnabled = await erFeatureToggleEnabled("melosys.behandle_alle_saker");
+
+  return behandleAlleSakerToggleEnabled
+    ? !skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype)
+    : true;
+};
+
 export const lagreAllData = () => async (dispatch, getState) => {
   const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
+  const skalLagreBehandlingsgrunnlag = await harIkkeTomFlyt(sakstype, getState());
 
   switch (sakstype) {
     case MKV.Koder.sakstyper.FTRL:
-      return Promise.all([dispatch(behandlingsgrunnlagOperations.lagre()), dispatch(vilkarOperations.lagre())]);
+      return Promise.all([
+        ...(skalLagreBehandlingsgrunnlag ? [dispatch(behandlingsgrunnlagOperations.lagre())] : []),
+        dispatch(vilkarOperations.lagre()),
+      ]);
     case MKV.Koder.sakstyper.TRYGDEAVTALE:
-      return Promise.all[dispatch(behandlingsgrunnlagOperations.lagre())];
+      return skalLagreBehandlingsgrunnlag
+        ? Promise.all[dispatch(behandlingsgrunnlagOperations.lagre())]
+        : Promise.resolve();
     case MKV.Koder.sakstyper.EU_EOS: {
       const anmodningErSendtUtland = anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector(getState());
 
       await Promise.all([
-        dispatch(behandlingsgrunnlagOperations.lagre()),
+        ...(skalLagreBehandlingsgrunnlag ? [dispatch(behandlingsgrunnlagOperations.lagre())] : []),
         ...(anmodningErSendtUtland ? [] : [dispatch(vilkarOperations.lagre())]),
         ...(anmodningErSendtUtland ? [] : [dispatch(avklartefaktaOperations.lagre())]),
         ...(anmodningErSendtUtland ? [] : [dispatch(behandlingsperioderOperations.lagre())]),
