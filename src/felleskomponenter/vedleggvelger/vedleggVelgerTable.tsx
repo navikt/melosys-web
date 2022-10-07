@@ -13,19 +13,21 @@ const VedleggVelgerTable = ({ valgteVedlegg, alleVedlegg, slettVedlegg, leggTilV
   const vedleggErMarkert = (vedleggID: string) => Boolean(valgteVedlegg.find((vedlegg) => vedlegg.id === vedleggID));
 
   return (
-    <table className="vedleggvelger-table">
-      <tbody>
-        {alleVedlegg.map((enkeltVedlegg) => (
-          <VedleggVelgerRow
-            key={enkeltVedlegg.id}
-            vedlegg={enkeltVedlegg}
-            leggTilVedlegg={() => leggTilVedlegg(enkeltVedlegg)}
-            slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
-            vedleggErMarkert={vedleggErMarkert(enkeltVedlegg.id)}
-          />
-        ))}
-      </tbody>
-    </table>
+    <div className="vedleggvelger-table-wrapper">
+      <table className="vedleggvelger-table">
+        <tbody>
+          {alleVedlegg.map((enkeltVedlegg) => (
+            <VedleggVelgerRow
+              key={enkeltVedlegg.id}
+              vedlegg={enkeltVedlegg}
+              leggTilVedlegg={() => leggTilVedlegg(enkeltVedlegg)}
+              slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
+              vedleggErMarkert={vedleggErMarkert(enkeltVedlegg.id)}
+            />
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

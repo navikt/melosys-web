@@ -39,7 +39,7 @@ function Tabell(props) {
     setState(nySide);
   };
 
-  const { tabellData, kolonneNavn, linjerPerSide, className } = props;
+  const { tabellData, kolonneNavn, linjerPerSide } = props;
   // Filter ut delen av datasettet som representerer aktive siden (paginering). Dersom
   // linjerPerSide <= 0, vis hele datasettet (dvs, tabellData.length)
   const timeLinjeChunk = tabellData.filter((linje, index) => {
@@ -72,7 +72,7 @@ function Tabell(props) {
     ) : null;
 
   return (
-    <div className={className}>
+    <div className="tabellutlisting-wrapper">
       <table className="tabellutlisting">
         <tbody>
           <tr>
@@ -97,7 +97,6 @@ Tabell.propTypes = {
   kolonneNavn: PT.arrayOf(PT.string),
   tabellData: PT.array,
   linjerPerSide: PT.number,
-  className: PT.string,
 };
 
 Tabell.defaultProps = {
@@ -105,7 +104,6 @@ Tabell.defaultProps = {
   kolonneNavn: [],
   tabellData: [],
   linjerPerSide: 10,
-  className: "",
 };
 
 export default Tabell;

@@ -12,25 +12,27 @@ import "./redigeringUtfort.css";
 const cls = classNames("tabell", "arbeidssted__offshore__redigeringutfort");
 
 const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.ArbeidsstedOffshore>) => (
-  <table className={cls}>
-    <thead>
-      <tr>
-        <th>Navn på innretning</th>
-        <th>Type innretning</th>
-        <th>Lands sokkel</th>
-      </tr>
-    </thead>
-    <tbody>
-      {verdier.map((element, index) => (
-        /* eslint-disable-next-line react/no-array-index-key */
-        <tr key={index}>
-          <td>{element.enhetNavn}</td>
-          <td>{KV.kodeTilTerm(element.innretningstype, MKV.KTObjects.innretningstyper)}</td>
-          <td>{KV.kodeTilTerm(element.innretningLandkode, MKV.KTObjects.landkoder)}</td>
+  <div className="arbeidssted__offshore__redigeringutfort-wrapper">
+    <table className={cls}>
+      <thead>
+        <tr>
+          <th>Navn på innretning</th>
+          <th>Type innretning</th>
+          <th>Lands sokkel</th>
         </tr>
-      ))}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {verdier.map((element, index) => (
+          /* eslint-disable-next-line react/no-array-index-key */
+          <tr key={index}>
+            <td>{element.enhetNavn}</td>
+            <td>{KV.kodeTilTerm(element.innretningstype, MKV.KTObjects.innretningstyper)}</td>
+            <td>{KV.kodeTilTerm(element.innretningLandkode, MKV.KTObjects.landkoder)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
 );
 
 export default RedigeringUtfort;
