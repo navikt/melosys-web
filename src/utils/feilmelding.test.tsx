@@ -37,4 +37,25 @@ describe("syncErrorsTilFeilmelding", () => {
     expect(feilmeldingListe).toHaveLength(1);
     expect(feilmeldingListe.get(0).props.children).toBe("Mangler gatenavn");
   });
+
+  test("nested errors blir mappet riktig", () => {
+    const syncErrors = {
+      adresse: {
+        postnr: {
+          melding: "Mangler postnr",
+        },
+        poststed: {
+          melding: "Mangler poststed",
+        },
+      },
+    };
+
+    // @ts-ignore
+    const feilmeldinger = mount(syncErrorsTilFeilmelding(syncErrors));
+    const feilmeldingListe = feilmeldinger.find("li");
+
+    expect(feilmeldingListe).toHaveLength(2);
+    expect(feilmeldingListe.get(0).props.children).toBe("Mangler postnr");
+    expect(feilmeldingListe.get(1).props.children).toBe("Mangler poststed");
+  });
 });

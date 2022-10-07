@@ -204,6 +204,7 @@ const form = {
       context: {
         erAvsenderPreutfylt: props.erAvsenderPreutfylt,
         behandleAlleSakerToggleEnabled: props.behandleAlleSakerToggleEnabled,
+        registeredFields: props.registeredFields,
       },
     };
 
