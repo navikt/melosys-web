@@ -93,7 +93,9 @@ export const lagreAllData = () => async (dispatch, getState) => {
         dispatch(vilkarOperations.lagre()),
       ]);
     case MKV.Koder.sakstyper.TRYGDEAVTALE:
-      return Promise.all([...(skalLagreBehandlingsgrunnlag ? [dispatch(behandlingsgrunnlagOperations.lagre())] : [])]);
+      return skalLagreBehandlingsgrunnlag
+        ? Promise.all[dispatch(behandlingsgrunnlagOperations.lagre())]
+        : Promise.resolve();
     case MKV.Koder.sakstyper.EU_EOS: {
       const anmodningErSendtUtland = anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector(getState());
 
