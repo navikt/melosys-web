@@ -26,6 +26,10 @@ function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
     onChange(draftToHtml(convertToRaw(editorState.getCurrentContent())));
   };
 
+  const handlePastedText = () => {
+    return false; // Benyttes for å få default stateChange ved paste
+  };
+
   return (
     <div className={classNames("htmlEditor", rest?.className)}>
       {rest?.label ? <Nav.Typo.Element className="editor_label">{rest?.label}</Nav.Typo.Element> : ""}
@@ -35,7 +39,7 @@ function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
         wrapperClassName={classNames("wrapper", { "wrapper-disabled": rest?.disabled, "wrapper-feil": rest?.feil })}
         editorClassName="editor"
         onEditorStateChange={onEditorStateChange}
-        stripPastedStyles
+        handlePastedText={handlePastedText}
         ariaLabel={rest?.label}
         {...rest}
       />

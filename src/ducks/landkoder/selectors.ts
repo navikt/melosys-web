@@ -1,10 +1,10 @@
 import { createSelector, Selector } from "reselect";
-import { RootState, StateSection } from "AppTypes";
+import { RootState } from "AppTypes";
 import MKV from "../../melosyskodeverk";
-import * as Types from "./types";
 import { SakstypeKodeSelector } from "../fagsaker/selectors";
+import * as MPT from "../../proptypes";
 
-export const LandkoderSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
+export const LandkoderSelector: Selector<RootState, typeof MPT.Kodeverk[]> = createSelector(
   (state: RootState) => state.landkoder,
   (landkoder) => landkoder.data || []
 );

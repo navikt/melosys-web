@@ -16,15 +16,39 @@ import EnkeltSak from "./enkeltSak";
 import KnyttTilSak from "./knyttTilSak";
 
 import "./fagsakVelger.css";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 const EKSISTRENDE = "Eksisterende sak";
 const OPPRETT = "Opprett ny sak";
 
 const FagsakVelger = (props) => {
-  const { fagsakListe, settJournalforingHensikt, behandleAlleSakerToggleEnabled, landkoder } = props;
-  const [valgtVisning, setValgtVisning] = useState(EKSISTRENDE);
+  const {
+    fagsakListe,
+    settJournalforingHensikt,
+    behandleAlleSakerToggleEnabled,
+    landkoder,
+    erOpprettNySak,
+    nullstillFormVerdier,
+  } = props;
+  const [valgtVisning, setValgtVisning] = useState(OPPRETT);
+  const [visToppValg, setVisToppValg] = useState(!erOpprettNySak);
+  const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
+
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
+
+  useEffect(() => {
+    dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", valgtVisning === EKSISTRENDE));
+    if (nullstillFormVerdier) {
+      nullstillFormVerdier();
+    }
+  }, [valgtVisning]);
+
+  useEffect(() => {
+    if (erOpprettNySak && nyOpprettSakToggle === "enabled") {
+      setVisToppValg(true);
+    }
+  }, [erOpprettNySak, nyOpprettSakToggle]);
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
@@ -49,7 +73,13 @@ const FagsakVelger = (props) => {
         innhold: (
           <EnkeltSak sak={sak} behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled} landkoder={landkoder} />
         ),
-        footer: <KnyttTilSak sak={sak} behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled} />,
+        footer: (
+          <KnyttTilSak
+            sak={sak}
+            behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
+            erOpprettNySak={erOpprettNySak}
+          />
+        ),
       },
     ],
     []
@@ -74,22 +104,26 @@ const FagsakVelger = (props) => {
         ) : (
           <div className="fagsakVelger">
             <div className="velgVisning">
-              <Nav.Radio
-                label={EKSISTRENDE}
-                className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTRENDE })}
-                name="velgVisning"
-                onChange={() => setValgtVisning(EKSISTRENDE)}
-                checked={valgtVisning === EKSISTRENDE}
-                value={EKSISTRENDE}
-              />
-              <Nav.Radio
-                label={OPPRETT}
-                className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
-                name="velgVisning"
-                onChange={() => setValgtVisning(OPPRETT)}
-                checked={valgtVisning === OPPRETT}
-                value={OPPRETT}
-              />
+              {visToppValg && (
+                <>
+                  <Nav.Radio
+                    label={EKSISTRENDE}
+                    className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTRENDE })}
+                    name="velgVisning"
+                    onChange={() => setValgtVisning(EKSISTRENDE)}
+                    checked={valgtVisning === EKSISTRENDE}
+                    value={EKSISTRENDE}
+                  />
+                  <Nav.Radio
+                    label={OPPRETT}
+                    className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
+                    name="velgVisning"
+                    onChange={() => setValgtVisning(OPPRETT)}
+                    checked={valgtVisning === OPPRETT}
+                    value={OPPRETT}
+                  />
+                </>
+              )}
             </div>
             {valgtVisning === EKSISTRENDE && (
               <Skjema.CustomRadioPanelGruppe
@@ -97,6 +131,7 @@ const FagsakVelger = (props) => {
                 radios={radioValg}
                 notify={notifier}
                 begrensVisteRadios
+                onChange={nullstillFormVerdier}
                 className="marginMellomCustomRadioPaneler"
               />
             )}
@@ -120,6 +155,13 @@ FagsakVelger.propTypes = {
   settJournalforingHensikt: PT.func.isRequired,
   behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  erOpprettNySak: PT.bool,
+  nullstillFormVerdier: PT.func,
+};
+
+FagsakVelger.defaultProps = {
+  erOpprettNySak: false,
+  nullstillFormVerdier: undefined,
 };
 
 export default FagsakVelger;
