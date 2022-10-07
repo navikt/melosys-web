@@ -32,6 +32,11 @@ export const RegisteredFieldsSelector = Utils._memoize((formName) =>
   )
 );
 
+export const OpprettNySakFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.OPPRETT_NY_SAK, {}),
+  (opprett_ny_sak) => opprett_ny_sak
+);
+
 export const SoknadenFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.SOKNAD, {}),
   (soknaden) => soknaden

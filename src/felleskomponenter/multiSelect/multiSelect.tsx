@@ -63,7 +63,6 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
   };
 
   const selectId = `select${Utils._uuid()}`;
-
   return (
     <div className={props.className} style={{ cursor: redigerbart ? "default" : "not-allowed" }}>
       <label htmlFor={selectId} style={{ display: "block", paddingBottom: "0.5rem" }}>

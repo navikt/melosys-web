@@ -5,7 +5,8 @@ import { object, string, mixed, array, lazy, boolean } from "yup";
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
-import MKV, { MKVUtils } from "../../melosyskodeverk";
+import MKV from "../../melosyskodeverk";
+import * as Konstanter from "../../constants";
 import { skalViseSoknadsperiodeOgLand } from "../journalforing/komponenter/opprettSak";
 
 const SKRIV_INN_FNR_ELLER_DNR = { melding: "Skriv inn f.nr eller d.nr" };
@@ -19,11 +20,9 @@ const VELG_SAKSTYPE = { melding: "Velg sakstype" };
 // const VELG_SAKSTEMA = { melding: "Velg sakstema" };
 // const VELG_BEHANDLINGSTYPE = { melding: "Velg behandlingstype" };
 const VELG_BEHANDLINGSTEMA = { melding: "Velg behandlingstema" };
-const VELG_LAND = { melding: "Velg land" };
-const VELG_EN_OPPGAVE = { melding: "Velg en oppgave" };
-const MANGLER_JOURNALPOST = { melding: "Den valgte oppgaven har ingen journalpost" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
+const VELG_MINST_ETT_LAND = { melding: "Velg minst ett land." };
 
 // Trengs når toggle melosys.behandle_alle_saker fjernes
 // const soknadsinfo = object().shape({
@@ -39,6 +38,12 @@ const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 //     }),
 //   erUkjenteEllerAlleEosLand: boolean(),
 // });
+const kreverPeriode = (journalforingHensikt, hovedpart, sakstype, behandlingstema) =>
+  journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
+  skalViseSoknadsperiodeOgLand(hovedpart, sakstype, behandlingstema);
+
+const kreverLand = (journalforingHensikt, hovedpart, sakstype, behandlingstema, ukjentEllerAlleEosLand) =>
+  !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, hovedpart, sakstype, behandlingstema);
 
 const opprettnysak = object().shape({
   hovedpart: string().required(MAA_FYLLES_UT),
@@ -67,7 +72,7 @@ const opprettnysak = object().shape({
   sakstype: string().required(VELG_SAKSTYPE).nullable(),
   sakstema: string().nullable(),
   behandlingstype: string().nullable(),
-  behandlingstema: string()
+  opprettnysak_behandlingstema: string()
     .when("hovedpart", {
       is: (hovedpart) => hovedpart !== VIRKSOMHET,
       then: string().required(VELG_BEHANDLINGSTEMA).nullable(),
@@ -79,10 +84,28 @@ const opprettnysak = object().shape({
   //     skalViseSoknadsperiodeOgLand(sakstype, behandlingstema, behandlingstype),
   //   then: soknadsinfo,
   // }),
-  oppgaveID: string()
-    .siblingIs("journalpostID", (journalpostID) => !Utils._isEmpty(journalpostID), MANGLER_JOURNALPOST)
-    .required(VELG_EN_OPPGAVE)
-    .nullable(),
+  oppgaveID: string().nullable(),
+  journalforingPeriodeFraOgMed: string().when(["hovedpart", "sakstype", "opprettnysak_behandlingstema"], {
+    is: kreverPeriode,
+    then: string().erGyldigDato().required(MAA_FYLLES_UT),
+  }),
+  journalforingPeriodeTilOgMed: lazy((value) =>
+    !value
+      ? string().ensure()
+      : string().when(["hovedpart", "sakstype", "opprettnysak_behandlingstema"], {
+          is: kreverPeriode,
+          then: string().erEtterDatofelt("journalforingPeriodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT),
+        })
+  ),
+  journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
+  journalforingSoknadsland: array()
+    .of(string())
+    .ensure()
+    .when(["sakstype", "opprettnysak_behandlingstema", "journalforingSoknadslandUkjenteEllerAlleEosLand"], {
+      is: kreverLand,
+      then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
+    }),
+  journalforingHensikt: string(),
 });
 
 export default opprettnysak;
