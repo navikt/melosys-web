@@ -64,6 +64,9 @@ describe("Behandlingsgrunnlag operations", () => {
           },
         },
       },
+      fagsaker: {
+        data: {},
+      },
     };
   });
 
