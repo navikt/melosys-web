@@ -10,6 +10,7 @@ describe("MenyLink", () => {
 
   it("kaller onClick ved klikk på button", () => {
     props.onClick = jest.fn();
+    props.label = "test";
 
     const menyLink = shallow(<MenyLink {...props} />);
     const button = menyLink.find("button");
