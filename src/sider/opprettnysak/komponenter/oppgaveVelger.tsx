@@ -31,7 +31,6 @@ export const OppgaveVelger = ({
   lagNyOppgave,
   nullstillFormverdier,
 }: OppgaveVelgerProps) => {
-  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
   const [valgtVisning, setValgtVisning] = useState(lagNyOppgave ? OPPRETT : EKSISTRENDE);
 
@@ -61,12 +60,12 @@ export const OppgaveVelger = ({
     });
 
   useEffect(() => {
-    if (behandleAlleSakerToggle === "enabled" && nyOpprettSakToggle === "enabled") {
+    if (nyOpprettSakToggle === "enabled") {
       setValgtVisning(OPPRETT);
     } else {
       setValgtVisning(EKSISTRENDE);
     }
-  }, [behandleAlleSakerToggle, nyOpprettSakToggle]);
+  }, [nyOpprettSakToggle]);
 
   const settJournalpostID = (oppgaveID: string) => {
     const oppgave = oppgaver.find((o) => o.oppgaveID === oppgaveID);
@@ -74,7 +73,7 @@ export const OppgaveVelger = ({
   };
   return (
     <>
-      {behandleAlleSakerToggle === "enabled" && lagNyOppgave && oppgaverFinnes ? (
+      {nyOpprettSakToggle === "enabled" && lagNyOppgave && oppgaverFinnes ? (
         <div className="oppgaveVelger">
           <div className="velgVisning">
             <Nav.Radio
@@ -127,7 +126,7 @@ export const OppgaveVelger = ({
           )}
           {!oppgaverFinnes && oppgaverForsoktHentet && (
             <Nav.AlertStripeAdvarsel>
-              {behandleAlleSakerToggle === "enabled"
+              {nyOpprettSakToggle === "enabled"
                 ? "Ingen eksisterende oppgaver funnet. Det blir opprettet en ny"
                 : `Det finnes ingen oppgaver på denne ${hovedpartErBruker ? "personen" : "organisasjonen"}.`}
             </Nav.AlertStripeAdvarsel>
