@@ -1,5 +1,7 @@
 .meny-link {
   &__button {
+    display: block;
+    padding: 0 1rem;
     background: none;
     border: none;
     position: relative;
@@ -7,7 +9,7 @@
     text-decoration: none;
     text-align: left;
     width: 100%;
-    padding: 0;
+    padding: 0 0 0 1rem;
     cursor: pointer;
     border: 3px solid transparent;
 
@@ -24,7 +26,7 @@
       background: #e7e9e9;
       border: 3px solid #e7e9e9;
       border-left: transparent;
-      padding-left: 0.1875rem;
+      padding-left: 0.8rem;
 
       &:before {
         content: "";
@@ -36,26 +38,16 @@
         top: -0.1875rem;
         z-index: 1;
       }
-
-      &:focus {
-        padding-left: 0;
-        &:before {
-          left: 0;
-          top: 0;
-          height: 100%;
-        }
-      }
     }
   }
 
   &__label {
-    padding: 0 1.75rem;
-    display: flex;
     align-items: center;
     justify-content: space-between;
     color: #3e3832;
     position: relative;
     min-height: 1.625rem;
+    padding: 0;
 
     &--active {
       font-weight: 600;
@@ -69,5 +61,19 @@
 
   &__icon {
     margin-left: 1rem;
+  }
+
+  @media only screen and (max-width: 1200px) {
+    &__button {
+      padding: 0 0.5rem;
+    }
+
+    &__label {
+      padding: 0;
+    }
+
+    &__heading {
+      margin: 0.5rem 0;
+    }
   }
 }

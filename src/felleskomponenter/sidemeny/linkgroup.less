@@ -6,10 +6,16 @@
   }
 
   &__label {
-    padding: 0 1.75rem 0.4rem 1.75rem;
+    padding: 0.75rem 1rem 0.5rem 1rem;
     color: #78706a;
     position: relative;
     margin-bottom: 0.5rem;
+  }
+
+  @media only screen and (max-width: 1200px) {
+    &__label {
+      padding-left: 0.75rem;
+    }
   }
 
   &__label:before {

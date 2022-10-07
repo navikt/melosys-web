@@ -1,6 +1,7 @@
 import classnames from "classnames";
 import TypografiBase from "nav-frontend-typografi";
 import * as React from "react";
+import parse from "html-react-parser";
 
 import bem from "../../bemUtils";
 
@@ -41,7 +42,7 @@ const MenyLink = ({ label, active, onClick, iconSrc, iconAltText }: MenyLinkProp
         type="button"
       >
         <TypografiBase type={labeltype} tag="span" className={labelCls}>
-          {label}
+          {parse(label.replace("/", "/<wbr>"))}
           {iconSrc && <img src={iconSrc} alt={iconAltText || ""} className={menyLinkCls.element("icon")} />}
         </TypografiBase>
       </button>
