@@ -87,6 +87,7 @@ export const JournalforingForm = (props) => {
             settJournalforingHensikt={settJournalforingHensikt}
             behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
             landkoder={landkoder}
+            formValues={formValues}
           />
         }
       />

@@ -1,6 +1,7 @@
 import React from "react";
 
 import * as Skjema from "../../../felleskomponenter/skjema";
+import { JOURNALFORING_VALUES } from "../../../kodeverk/form";
 
 import MKV from "../../../melosyskodeverk";
 
@@ -29,6 +30,13 @@ describe("KnyttTilSak", () => {
           },
         ],
       },
+      formValues: {
+        opprettBehandling: null,
+        behandlingstema: null,
+        behandlingstype: null,
+        journalforingGjelder: null,
+      },
+      feltNavn: JOURNALFORING_VALUES,
       journalforingGjelder: MKV.Koder.aktoersroller.BRUKER,
       behandlingstyper: [],
       opprettBehandling: false,

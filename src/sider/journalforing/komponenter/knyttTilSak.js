@@ -40,28 +40,30 @@ const behandlingstyper_gammel = (sakstype, behtema) => {
 };
 
 export const KnyttTilSak = (props) => {
-  const {
-    sak,
-    opprettBehandling,
-    behandlingstema,
-    behandlingstype,
-    behandleAlleSakerToggleEnabled,
-    erOpprettNySak,
-    changeField,
-    journalforingGjelder,
-  } = props;
+  const { sak, behandleAlleSakerToggleEnabled, erOpprettNySak, changeField, feltNavn, formValues } = props;
+
+  const { behandlingstema, behandlingstype, journalforingGjelder, opprettBehandling } = {
+    opprettBehandling: formValues.opprettBehandling,
+    behandlingstema: formValues[feltNavn.behandlingstema],
+    behandlingstype: formValues[feltNavn.behandlingstype],
+    journalforingGjelder: formValues[feltNavn.hovedpart],
+  };
+
   const { behandlingOversikter, sakstype, sakstema } = sak;
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState();
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
   const sisteBehandling = behandlingOversikter[0];
 
   useEffect(() => {
-    changeField("opprettBehandling", erOpprettNySak);
     return () => {
-      changeField("opprettBehandling", false);
-      changeField("behandlingstema", "");
-      changeField("behandlingstype", "");
+      changeField(feltNavn.formNavn, "opprettBehandling", false);
+      changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
+      changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     };
+  }, []);
+
+  useEffect(() => {
+    changeField(feltNavn.formNavn, "opprettBehandling", erOpprettNySak);
   }, [erOpprettNySak]);
 
   useEffect(() => {
@@ -78,7 +80,6 @@ export const KnyttTilSak = (props) => {
       });
     }
   }, [behandleAlleSakerToggleEnabled, journalforingGjelder, sakstema.kode, sakstype.kode]);
-
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
     if (sakstema.kode && sakstype.kode && behandlingstema) {
@@ -96,15 +97,15 @@ export const KnyttTilSak = (props) => {
 
   useEffect(() => {
     if (opprettBehandling && !behandlingstema) {
-      changeField("behandlingstema", sisteBehandling.behandlingstema.kode);
+      changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
     }
     if (!opprettBehandling && behandlingstema) {
-      changeField("behandlingstema", "");
+      changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
     }
     if (!opprettBehandling && behandlingstype) {
-      changeField("behandlingstype", "");
+      changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     }
-  }, [opprettBehandling]);
+  }, [opprettBehandling, behandlingstema, behandlingstype]);
 
   const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
     sisteBehandling.behandlingsstatus.kode
@@ -121,7 +122,6 @@ export const KnyttTilSak = (props) => {
     : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
 
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
-
   if (visKnyttTilEksisterende) {
     return (
       <div className="knyttTilSak__panelramme">
@@ -158,7 +158,7 @@ export const KnyttTilSak = (props) => {
                 </Nav.Typo.Undertittel>
                 {journalforingGjelder === MKV.Koder.aktoersroller.BRUKER && (
                   <Skjema.Select
-                    feltNavn="opprettnysak_behandlingstema"
+                    feltNavn={feltNavn.behandlingstema}
                     bredde="fullbredde"
                     label="Behandlingstema"
                     emptyFieldDisabled={behandlingstema?.kode}
@@ -169,13 +169,13 @@ export const KnyttTilSak = (props) => {
                   </Skjema.Select>
                 )}
                 <Skjema.RadioGruppe
-                  feltNavn="opprettnysak_behandlingstype"
+                  feltNavn={feltNavn.behandlingstype}
                   label="Behandlingstype"
                   className="behandlingstype"
                 >
                   {muligeBehandlingstyper?.map((elem) => (
                     <Skjema.Radio
-                      feltNavn="opprettnysak_behandlingstype"
+                      feltNavn={feltNavn.behandlingstype}
                       key={elem.kode}
                       value={elem.kode}
                       label={elem.term}
@@ -185,7 +185,7 @@ export const KnyttTilSak = (props) => {
               </div>
             ) : (
               <Skjema.Select
-                feltNavn="behandlingstype"
+                feltNavn={feltNavn.behandlingstype}
                 bredde="fullbredde"
                 label="Velg behandlingstype"
                 className="panelElement"
@@ -227,16 +227,14 @@ export const KnyttTilSak = (props) => {
 KnyttTilSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
   opprettBehandling: PT.bool.isRequired,
-  behandlingstema: PT.string,
-  behandlingstype: PT.string,
-  journalforingGjelder: PT.string.isRequired,
   behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   erOpprettNySak: PT.bool,
   changeField: PT.func.isRequired,
+  hensikt: PT.func.isRequired,
+  feltNavn: PT.object.isRequired,
+  formValues: PT.object.isRequired,
 };
 KnyttTilSak.defaultProps = {
-  behandlingstema: "",
-  behandlingstype: "",
   erOpprettNySak: false,
 };
 
@@ -249,7 +247,7 @@ const mapStateToProps = (state) => ({
   journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
 });
 const mapDispatchToProps = (dispatch) => ({
-  changeField: (felt, verdi) => dispatch(change(KV.Form.JOURNALFORING, felt, verdi)),
+  changeField: (feltNavn, felt, verdi) => dispatch(change(feltNavn, felt, verdi)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(KnyttTilSak);

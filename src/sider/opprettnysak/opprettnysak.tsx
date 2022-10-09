@@ -1,6 +1,6 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { connect, ConnectedProps, useDispatch } from "react-redux";
-import { getFormValues, InjectedFormProps, isValid, reduxForm, change as changeJournalforing } from "redux-form";
+import { connect, ConnectedProps } from "react-redux";
+import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
@@ -33,36 +33,15 @@ import { OppgaveVelger } from "./komponenter/oppgaveVelger";
 import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
-const { OPPRETT_NY_SAK_VALUES: FormValues } = KV.Form;
-
-export const nullstillVerdier = (steg: string, change: (feltNavn: string, verdi: string | null) => void): void => {
-  switch (steg) {
-    case FormValues.sakstype:
-      change(FormValues.sakstema, null);
-      change(FormValues.behandlingstema, null);
-      change(FormValues.behandlingstype, null);
-      break;
-    case FormValues.sakstema:
-      change(FormValues.behandlingstema, null);
-      change(FormValues.behandlingstype, null);
-      break;
-    case FormValues.behandlingstema:
-      change(FormValues.behandlingstype, null);
-      break;
-    case FormValues.behandlingstype:
-    default:
-      break;
-  }
-};
 
 interface OpprettNySakFormData {
-  opprettnysak_behandlingstema: string;
-  opprettnysak_behandlingstype: string;
-  journalforingPeriodeFraOgMed: string;
-  journalforingPeriodeTilOgMed: string;
+  behandlingstema: string;
+  behandlingstype: string;
+  periodeFraOgMed: string;
+  periodeTilOgMed: string;
   erEksisterendeSak: boolean;
-  journalforingSoknadslandUkjenteEllerAlleEosLand: boolean;
-  journalforingSoknadsland: [];
+  soknadslandUkjenteEllerAlleEosLand: boolean;
+  soknadsland: [];
   opprettBehandling: boolean;
   saksnummer: string;
   sakstype: string;
@@ -84,6 +63,8 @@ const mapStateToProps = (state: RootState) => ({
     skalTilordnes: false,
     behandlingstema: undefined,
     behandlingstype: undefined,
+    sakstype: undefined,
+    sakstema: undefined,
     hovedpart: BRUKER,
   },
   landkoderListe: landkoderSelectors.LandkoderSelector(state),
@@ -98,8 +79,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
     dispatch(fagsakOperations.lagNyBehandlingForSak(saksnummer, body)),
   hentFagsakListe: (fnrEllerOrgnr: string) => dispatch(sokOperations.sok(fnrEllerOrgnr)),
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
-  settJournalforingHensikt: (journalforingHensikt: string) =>
-    dispatch(changeJournalforing(KV.Form.JOURNALFORING, "journalforingHensikt", journalforingHensikt)),
   sokOrgnr: (orgnr: string) => dispatch(OrganisasjonOperations.hent(orgnr)),
 });
 
@@ -115,7 +94,6 @@ const OpprettNySak = ({
   formValues,
   tilForsiden,
   change,
-  settJournalforingHensikt,
   error: formError,
   feilmeldinger,
   lagNySak,
@@ -135,8 +113,8 @@ const OpprettNySak = ({
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
 
   const {
-    opprettnysak_behandlingstema: behandlingstema,
-    opprettnysak_behandlingstype: behandlingstype,
+    behandlingstema,
+    behandlingstype,
     sakstype,
     sakstema,
     hovedpart,
@@ -146,32 +124,24 @@ const OpprettNySak = ({
     saksnummer,
     virksomhetOrgnr,
     virksomhetNavn,
-    journalforingPeriodeFraOgMed,
-    journalforingPeriodeTilOgMed,
-    journalforingSoknadslandUkjenteEllerAlleEosLand,
-    journalforingSoknadsland,
+    periodeFraOgMed,
+    periodeTilOgMed,
+    soknadslandUkjenteEllerAlleEosLand,
+    soknadsland,
   } = formValues || {};
 
   const [erRedigerbart, setErRedigerbart] = useState(false);
   const { tom, fom, erUkjenteEllerAlleEosLand, landkoder } = {
-    fom: journalforingPeriodeFraOgMed,
-    tom: journalforingPeriodeTilOgMed,
-    erUkjenteEllerAlleEosLand: journalforingSoknadslandUkjenteEllerAlleEosLand,
-    landkoder: journalforingSoknadsland,
+    fom: periodeFraOgMed,
+    tom: periodeTilOgMed,
+    erUkjenteEllerAlleEosLand: soknadslandUkjenteEllerAlleEosLand,
+    landkoder: soknadsland,
   };
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(changeJournalforing(KV.Form.JOURNALFORING, "journalforingGjelder", hovedpart));
-  }, [hovedpart]);
 
   useEffect(() => {
     const opprettNySakKriterier =
-      sakstype !== undefined &&
-      sakstema !== undefined &&
-      behandlingstema !== undefined &&
-      behandlingstype !== undefined;
+      sakstype !== null && sakstema !== null && behandlingstema !== null && behandlingstype !== null;
 
     const eksisterendeSakKriterier = behandlingstema !== undefined && behandlingstype !== undefined;
 
@@ -287,17 +257,16 @@ const OpprettNySak = ({
     }
   };
   const nullstillFormVerdier = () => {
-    change("opprettnysak_behandlingstema", undefined);
-    change("opprettnysak_behandlingstype", undefined);
-    change("journalforingPeriodeFraOgMed", undefined);
-    change("journalforingPeriodeTilOgMed", undefined);
-    change("journalforingSoknadslandUkjenteEllerAlleEosLand", undefined);
-    change("journalforingSoknadsland", []);
-    change("sakstype", undefined);
-    change("sakstema", undefined);
-    change("saksnummer", undefined);
+    change("behandlingstema", null);
+    change("behandlingstype", null);
+    change("periodeFraOgMed", null);
+    change("periodeTilOgMed", null);
+    change("soknadslandUkjenteEllerAlleEosLand", null);
+    change("soknadsland", []);
+    change("sakstype", null);
+    change("sakstema", null);
+    change("saksnummer", null);
   };
-
   const nullstillOppgave = () => {
     change("oppgaveID", null);
   };
@@ -358,10 +327,10 @@ const OpprettNySak = ({
                   <FagsakVelger
                     erOpprettNySak
                     fagsakListe={fagsakListe}
-                    settJournalforingHensikt={settJournalforingHensikt}
                     behandleAlleSakerToggleEnabled={behandleAlleSakerToggle === "enabled"}
                     landkoder={landkoderListe}
                     nullstillFormVerdier={nullstillFormVerdier}
+                    formValues={formValues}
                   />
                 </div>
               </div>

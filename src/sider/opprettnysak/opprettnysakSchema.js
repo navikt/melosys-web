@@ -72,7 +72,7 @@ const opprettnysak = object().shape({
   sakstype: string().required(VELG_SAKSTYPE).nullable(),
   sakstema: string().nullable(),
   behandlingstype: string().nullable(),
-  opprettnysak_behandlingstema: string()
+  behandlingstema: string()
     .when("hovedpart", {
       is: (hovedpart) => hovedpart !== VIRKSOMHET,
       then: string().required(VELG_BEHANDLINGSTEMA).nullable(),

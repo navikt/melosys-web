@@ -9,8 +9,14 @@ export const JOURNALFORING_SED = "journalforing_sed";
 export enum JOURNALFORING_VALUES {
   sakstype = "sakstype",
   sakstema = "sakstema",
-  opprettnysak_behandlingstema = "opprettnysak_behandlingstema",
-  opprettnysak_behandlingstype = "opprettnysak_behandlingstype",
+  behandlingstema = "opprettnysak_behandlingstema",
+  behandlingstype = "opprettnysak_behandlingstype",
+  hovedpart = "journalforingGjelder",
+  soknadsland = "journalforingSoknadsland",
+  soknadslandUkjenteEllerAlleEosLand = "journalforingSoknadslandUkjenteEllerAlleEosLand",
+  periodeFraOgMed = "journalforingPeriodeFraOgMed",
+  periodeTilOgMed = "journalforingPeriodeTilOgMed",
+  formNavn = "journalforing",
 }
 
 export const SOKNAD = "soknad";
@@ -104,6 +110,12 @@ export enum OPPRETT_NY_SAK_VALUES {
   sakstema = "sakstema",
   behandlingstema = "behandlingstema",
   behandlingstype = "behandlingstype",
+  soknadsland = "soknadsland",
+  soknadslandUkjenteEllerAlleEosLand = "soknadslandUkjenteEllerAlleEosLand",
+  periodeFraOgMed = "periodeFraOgMed",
+  periodeTilOgMed = "periodeTilOgMed",
+  hovedpart = "hovedpart",
+  formNavn = "opprett_ny_sak",
 }
 export const VURDERING_VIDERESEND = "vurdering_videresend";
 export const VURDER_UTPEKING = "vurder_utpeking";
