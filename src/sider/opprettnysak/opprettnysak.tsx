@@ -169,9 +169,8 @@ const OpprettNySak = ({
     if (behandleAlleSakerToggle !== "enabled") {
       setErRedigerbart(!!(sakstype && behandlingstema));
     } else {
-      const opprettNySakKriterier = !!(sakstype && sakstema && behandlingstema && behandlingstype);
-
-      const eksisterendeSakKriterier = !!(behandlingstema && behandlingstype);
+      const opprettNySakKriterier = Boolean(sakstype && sakstema && behandlingstema && behandlingstype);
+      const eksisterendeSakKriterier = Boolean(sakstype && behandlingstema);
 
       setErRedigerbart(erEksisterendeSak ? eksisterendeSakKriterier : opprettNySakKriterier);
     }
