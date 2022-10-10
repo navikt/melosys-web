@@ -144,7 +144,7 @@ const OpprettNySak = ({
       setErRedigerbart(Boolean(sakstype && behandlingstema));
     } else {
       const opprettNySakKriterier = Boolean(sakstype && sakstema && behandlingstema && behandlingstype);
-      const eksisterendeSakKriterier = Boolean(sakstype && behandlingstema);
+      const eksisterendeSakKriterier = Boolean(behandlingstema && behandlingstype);
 
       setErRedigerbart(erEksisterendeSak ? eksisterendeSakKriterier : opprettNySakKriterier);
     }
