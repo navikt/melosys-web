@@ -47,7 +47,6 @@ export const KnyttTilSak = (props) => {
     behandlingstype: formValues[feltNavn.behandlingstype],
     journalforingGjelder: formValues[feltNavn.hovedpart],
   };
-  console.log({ formValues });
   const { behandlingOversikter, sakstype, sakstema } = sak;
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState();
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
