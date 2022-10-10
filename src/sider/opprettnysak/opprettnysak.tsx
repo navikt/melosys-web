@@ -66,6 +66,7 @@ const mapStateToProps = (state: RootState) => ({
     sakstype: undefined,
     sakstema: undefined,
     hovedpart: BRUKER,
+    opprettBehandling: true,
   },
   landkoderListe: landkoderSelectors.LandkoderSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
@@ -272,6 +273,7 @@ const OpprettNySak = ({
   };
   const hovedpartErBruker = hovedpart === BRUKER;
 
+  if (!formValues) return null;
   return (
     <form className="opprettnysak" onSubmit={opprettNySak}>
       <Nav.Container fluid>

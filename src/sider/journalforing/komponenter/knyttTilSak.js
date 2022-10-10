@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { change, formValueSelector } from "redux-form";
+import { change } from "redux-form";
 import classNames from "classnames";
 import PT from "prop-types";
 
@@ -8,13 +8,11 @@ import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as MPT from "../../../proptypes";
 import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
-import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Api from "../../../services/api";
 
 import "./knyttTilSak.css";
-import { formSelectors } from "../../../ducks/form";
 
 const {
   behandlinger: { behandlingstyper: MKVBehandlingstyper, behandlingstema: MKVBehandlingstema },
@@ -61,10 +59,6 @@ export const KnyttTilSak = (props) => {
       changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     };
   }, []);
-
-  useEffect(() => {
-    changeField(feltNavn.formNavn, "opprettBehandling", erOpprettNySak);
-  }, [erOpprettNySak]);
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
@@ -226,11 +220,9 @@ export const KnyttTilSak = (props) => {
 };
 KnyttTilSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
-  opprettBehandling: PT.bool.isRequired,
   behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   erOpprettNySak: PT.bool,
   changeField: PT.func.isRequired,
-  hensikt: PT.func.isRequired,
   feltNavn: PT.object.isRequired,
   formValues: PT.object.isRequired,
 };
@@ -238,16 +230,8 @@ KnyttTilSak.defaultProps = {
   erOpprettNySak: false,
 };
 
-const selector = formValueSelector(KV.Form.JOURNALFORING);
-
-const mapStateToProps = (state) => ({
-  opprettBehandling: selector(state, "opprettBehandling"),
-  behandlingstema: selector(state, "behandlingstema"),
-  behandlingstype: selector(state, "behandlingstype"),
-  journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
-});
 const mapDispatchToProps = (dispatch) => ({
   changeField: (feltNavn, felt, verdi) => dispatch(change(feltNavn, felt, verdi)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(KnyttTilSak);
+export default connect(null, mapDispatchToProps)(KnyttTilSak);
