@@ -22,7 +22,14 @@ const EnkeltSak = (props) => {
 
   const { land, behandlingstype, periode, behandlingsstatus, behandlingstema, svarFrist, behandlingID } =
     behandlingOversikter[0];
-  const link = lagUrl(saksnummer, behandlingID, sakstype.kode, behandlingstema.kode, behandlingstype.kode);
+  const link = lagUrl(
+    saksnummer,
+    behandlingID,
+    sakstype.kode,
+    behandlingstema.kode,
+    behandlingstype.kode,
+    sakstema.kode
+  );
 
   if (behandleAlleSakerToggleEnabled) {
     return (

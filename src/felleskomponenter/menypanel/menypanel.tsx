@@ -28,6 +28,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
   visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
+  sakstema: fagsakSelectors.SakstemaKodeSelector(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -48,6 +49,7 @@ export const Menypanel = ({
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
   visOppdaterRegisteropplysninger = true,
+  sakstema,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
@@ -72,6 +74,7 @@ export const Menypanel = ({
     behandlingstype,
     contentProps,
     behandlingsgrunnlagtype,
+    sakstema,
   });
 
   const handleClick = (groupIndex: number, linkIndex: number) => {

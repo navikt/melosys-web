@@ -189,7 +189,7 @@ function EndreBehandlingModal({
 
         const nyGenerertLink =
           behandleAlleSakerToggle === "enabled"
-            ? Routing.lagUrl(saksnummer, behandlingID, sakstype, behandlingstema, behandlingstype)
+            ? Routing.lagUrl(saksnummer, behandlingID, sakstype, behandlingstema, behandlingstype, sakstema)
             : Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema);
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
           setNyLink(nyGenerertLink);

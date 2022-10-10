@@ -72,19 +72,20 @@ export const resetSaksopplysninger = () => (dispatch) => {
   dispatch(dokumenterOperations.resetDokument());
 };
 
-const harIkkeTomFlyt = async (sakstype, state) => {
+const harIkkeTomFlyt = async (sakstype, sakstema, state) => {
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
   const behandleAlleSakerToggleEnabled = await erFeatureToggleEnabled("melosys.behandle_alle_saker");
 
   return behandleAlleSakerToggleEnabled
-    ? !skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype)
+    ? !skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype, sakstema)
     : true;
 };
 
 export const lagreAllData = () => async (dispatch, getState) => {
   const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
-  const skalLagreBehandlingsgrunnlag = await harIkkeTomFlyt(sakstype, getState());
+  const sakstema = fagsakSelectors.SakstemaKodeSelector(getState());
+  const skalLagreBehandlingsgrunnlag = await harIkkeTomFlyt(sakstype, sakstema, getState());
 
   switch (sakstype) {
     case MKV.Koder.sakstyper.FTRL:
