@@ -11,7 +11,7 @@ import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./oppgaveVelger.css";
 
-const EKSISTRENDE = "Eksisterende oppgave";
+const EKSISTERENDE = "Eksisterende oppgave";
 const OPPRETT = "Opprett ny oppgave";
 
 interface OppgaveVelgerProps {
@@ -32,7 +32,7 @@ export const OppgaveVelger = ({
   nullstillFormverdier,
 }: OppgaveVelgerProps) => {
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
-  const [valgtVisning, setValgtVisning] = useState(lagNyOppgave ? OPPRETT : EKSISTRENDE);
+  const [valgtVisning, setValgtVisning] = useState(lagNyOppgave ? OPPRETT : EKSISTERENDE);
 
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
@@ -63,7 +63,7 @@ export const OppgaveVelger = ({
     if (nyOpprettSakToggle === "enabled") {
       setValgtVisning(OPPRETT);
     } else {
-      setValgtVisning(EKSISTRENDE);
+      setValgtVisning(EKSISTERENDE);
     }
   }, [nyOpprettSakToggle]);
 
@@ -88,15 +88,15 @@ export const OppgaveVelger = ({
               value={OPPRETT}
             />
             <Nav.Radio
-              label={EKSISTRENDE}
-              className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTRENDE })}
+              label={EKSISTERENDE}
+              className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
               name="velgVisningOppgave"
               onChange={() => {
-                setValgtVisning(EKSISTRENDE);
+                setValgtVisning(EKSISTERENDE);
                 nullstillFormverdier();
               }}
-              checked={valgtVisning === EKSISTRENDE}
-              value={EKSISTRENDE}
+              checked={valgtVisning === EKSISTERENDE}
+              value={EKSISTERENDE}
             />
           </div>
         </div>
@@ -107,7 +107,7 @@ export const OppgaveVelger = ({
           </Nav.AlertStripeInfo>
         )
       )}
-      {valgtVisning === EKSISTRENDE ? (
+      {valgtVisning === EKSISTERENDE ? (
         <>
           {oppgaverFinnes && (
             <div className="marginMellomCustomRadioPaneler">
