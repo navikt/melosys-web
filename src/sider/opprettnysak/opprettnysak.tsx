@@ -166,16 +166,16 @@ const OpprettNySak = ({
   }, [hovedpart]);
 
   useEffect(() => {
-    const opprettNySakKriterier =
-      sakstype !== undefined &&
-      sakstema !== undefined &&
-      behandlingstema !== undefined &&
-      behandlingstype !== undefined;
+    if (behandleAlleSakerToggle !== "enabled") {
+      setErRedigerbart(!!(sakstype && behandlingstema));
+    } else {
+      const opprettNySakKriterier = !!(sakstype && sakstema && behandlingstema && behandlingstype);
 
-    const eksisterendeSakKriterier = behandlingstema !== undefined && behandlingstype !== undefined;
+      const eksisterendeSakKriterier = !!(behandlingstema && behandlingstype);
 
-    setErRedigerbart(erEksisterendeSak ? eksisterendeSakKriterier : opprettNySakKriterier);
-  }, [sakstype, sakstema, behandlingstema, behandlingstype, erEksisterendeSak]);
+      setErRedigerbart(erEksisterendeSak ? eksisterendeSakKriterier : opprettNySakKriterier);
+    }
+  }, [sakstype, sakstema, behandlingstema, behandlingstype, erEksisterendeSak, behandleAlleSakerToggle]);
 
   useEffect(() => {
     hentLandkoder();
