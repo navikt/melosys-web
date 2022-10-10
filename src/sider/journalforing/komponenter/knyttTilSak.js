@@ -11,6 +11,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Api from "../../../services/api";
+import * as KV from "../../../kodeverk";
 
 import "./knyttTilSak.css";
 
@@ -46,7 +47,7 @@ export const KnyttTilSak = (props) => {
     behandlingstype: formValues[feltNavn.behandlingstype],
     journalforingGjelder: formValues[feltNavn.hovedpart],
   };
-
+  console.log({ formValues });
   const { behandlingOversikter, sakstype, sakstema } = sak;
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState();
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
@@ -54,7 +55,7 @@ export const KnyttTilSak = (props) => {
 
   useEffect(() => {
     return () => {
-      changeField(feltNavn.formNavn, "opprettBehandling", false);
+      changeField(feltNavn.formNavn, "opprettBehandling", feltNavn.formNavn === KV.Form.OPPRETT_NY_SAK);
       changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
       changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     };
@@ -74,6 +75,7 @@ export const KnyttTilSak = (props) => {
       });
     }
   }, [behandleAlleSakerToggleEnabled, journalforingGjelder, sakstema.kode, sakstype.kode]);
+
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
     if (sakstema.kode && sakstype.kode && behandlingstema) {
@@ -116,6 +118,7 @@ export const KnyttTilSak = (props) => {
     : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
 
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
+
   if (visKnyttTilEksisterende) {
     return (
       <div className="knyttTilSak__panelramme">
