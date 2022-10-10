@@ -3,7 +3,6 @@ import classNames from "classnames";
 import { useDispatch } from "react-redux";
 import { change } from "redux-form";
 import PT from "prop-types";
-import MKV from "../../../melosyskodeverk";
 
 import * as MPT from "../../../proptypes";
 import * as Nav from "../../../navFrontend";
@@ -71,15 +70,7 @@ const FagsakVelger = (props) => {
     }
   };
 
-  const fjernSEDfilter = (sak) => {
-    if (nyOpprettSakToggle !== "enabled" && erOpprettNySak) {
-      return true;
-    }
-
-    return sak.behandlingOversikter[0].behandlingstype.kode !== MKV.Koder.behandlinger.behandlingstyper.SED;
-  };
-
-  const radioValg = fagsakListe.filter(fjernSEDfilter).reduce(
+  const radioValg = fagsakListe.reduce(
     (samling, sak) => [
       ...samling,
       {

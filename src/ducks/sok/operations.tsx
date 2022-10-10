@@ -11,7 +11,7 @@ import * as Utils from "../../utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
 
-export function sok(sokefrase) {
+export const sok = (sokefrase: string, utenSED: boolean = false) => {
   const sokefraseErIdnr = Utils.person.erGyldigFnr(sokefrase);
   const sokefraseErOrgnr = Utils.organisasjon.erOrgnrGyldig(sokefrase);
 
@@ -19,6 +19,7 @@ export function sok(sokefrase) {
     ident: sokefraseErIdnr ? sokefrase : null,
     saksnummer: sokefraseErIdnr || sokefraseErOrgnr ? null : sokefrase,
     orgnr: sokefraseErOrgnr ? sokefrase : null,
+    utenSED,
   };
 
   return doThenDispatch(() => Api.Fagsaker.sok.send(body), {
@@ -26,4 +27,4 @@ export function sok(sokefrase) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
-}
+};

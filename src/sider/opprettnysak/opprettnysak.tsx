@@ -78,7 +78,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
   lagNySak: (body: Api.Fagsaker.fagsak.OpprettReqDto) => dispatch(fagsakOperations.lagNySak(body)),
   lagNyBehandlingForSak: (saksnummer: string, body: Api.Fagsaker.fagsak.OpprettReqDto) =>
     dispatch(fagsakOperations.lagNyBehandlingForSak(saksnummer, body)),
-  hentFagsakListe: (fnrEllerOrgnr: string) => dispatch(sokOperations.sok(fnrEllerOrgnr)),
+  hentFagsakListe: (fnrEllerOrgnr: string) => dispatch(sokOperations.sok(fnrEllerOrgnr, true)),
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
   sokOrgnr: (orgnr: string) => dispatch(OrganisasjonOperations.hent(orgnr)),
 });
