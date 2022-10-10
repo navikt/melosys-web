@@ -141,7 +141,7 @@ const OpprettNySak = ({
 
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") {
-      setErRedigerbart(!!(sakstype && behandlingstema));
+      setErRedigerbart(Boolean(sakstype && behandlingstema));
     } else {
       const opprettNySakKriterier = Boolean(sakstype && sakstema && behandlingstema && behandlingstype);
       const eksisterendeSakKriterier = Boolean(sakstype && behandlingstema);
