@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // TODO: fjern eslint-disable når toggle melosys.behandle_alle_saker fjernes
-import { object, string, mixed, array, lazy, boolean } from "yup";
+import { object, string, mixed, boolean } from "yup";
 
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
 import MKV from "../../melosyskodeverk";
-import { skalViseSoknadsperiodeOgLand } from "../journalforing/komponenter/opprettSak";
 
 const SKRIV_INN_FNR_ELLER_DNR = { melding: "Skriv inn f.nr eller d.nr" };
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig f.nr eller d.nr" };
@@ -37,11 +36,12 @@ const VELG_MINST_ETT_LAND = { melding: "Velg minst ett land." };
 //     }),
 //   erUkjenteEllerAlleEosLand: boolean(),
 // });
-const kreverPeriode = (hovedpart, sakstype, behandlingstema) =>
-  skalViseSoknadsperiodeOgLand(hovedpart, sakstype, behandlingstema);
 
-const kreverLand = (hovedpart, sakstype, behandlingstema, ukjentEllerAlleEosLand) =>
-  !ukjentEllerAlleEosLand && kreverPeriode(hovedpart, sakstype, behandlingstema);
+// const kreverPeriode = (hovedpart, sakstype, behandlingstema) =>
+//   skalViseSoknadsperiodeOgLand(hovedpart, sakstype, behandlingstema);
+//
+// const kreverLand = (hovedpart, sakstype, behandlingstema, ukjentEllerAlleEosLand) =>
+//   !ukjentEllerAlleEosLand && kreverPeriode(hovedpart, sakstype, behandlingstema);
 
 const opprettnysak = object().shape({
   hovedpart: string().required(MAA_FYLLES_UT),
@@ -83,26 +83,28 @@ const opprettnysak = object().shape({
   //   then: soknadsinfo,
   // }),
   oppgaveID: string().nullable(),
-  periodeFraOgMed: string().when(["hovedpart", "sakstype", "behandlingstema"], {
-    is: kreverPeriode,
-    then: string().erGyldigDato().required(MAA_FYLLES_UT),
-  }),
-  periodeTilOgMed: lazy((value) =>
-    !value
-      ? string().ensure()
-      : string().when(["hovedpart", "sakstype", "behandlingstema"], {
-          is: kreverPeriode,
-          then: string().erEtterDatofelt("periodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT),
-        })
-  ),
+  // TODO: skru på validering når toggle melosys.behandle_alle_saker fjernes
+  // periodeFraOgMed: string().when(["hovedpart", "sakstype", "behandlingstema"], {
+  //   is: kreverPeriode,
+  //   then: string().erGyldigDato().required(MAA_FYLLES_UT),
+  // }),
+  // periodeTilOgMed: lazy((value) =>
+  //   !value
+  //     ? string().ensure()
+  //     : string().when(["hovedpart", "sakstype", "behandlingstema"], {
+  //         is: kreverPeriode,
+  //         then: string().erEtterDatofelt("periodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT),
+  //       })
+  // ),
   soknadslandUkjenteEllerAlleEosLand: boolean(),
-  soknadsland: array()
-    .of(string())
-    .ensure()
-    .when(["hovedpart", "sakstype", "behandlingstema", "soknadslandUkjenteEllerAlleEosLand"], {
-      is: kreverLand,
-      then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
-    }),
+  // TODO: skru på validering når toggle melosys.behandle_alle_saker fjernes
+  // soknadsland: array()
+  //   .of(string())
+  //   .ensure()
+  //   .when(["hovedpart", "sakstype", "behandlingstema", "soknadslandUkjenteEllerAlleEosLand"], {
+  //     is: kreverLand,
+  //     then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
+  //   }),
 });
 
 export default opprettnysak;
