@@ -133,7 +133,6 @@ const OpprettNySak = ({
   const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
-
   const {
     opprettnysak_behandlingstema: behandlingstema,
     opprettnysak_behandlingstype: behandlingstype,
@@ -349,7 +348,11 @@ const OpprettNySak = ({
               </div>
               <div className="seksjon">
                 <Mui.Undertittel
-                  tekst="Knytt til eksisterende sak eller opprett ny"
+                  tekst={
+                    nyOpprettSakToggle === "enabled"
+                      ? "Knytt til eksisterende sak eller opprett ny"
+                      : "Informasjon om sak"
+                  }
                   ikon={Ikoner.Links}
                   className="undertittel"
                   understrek

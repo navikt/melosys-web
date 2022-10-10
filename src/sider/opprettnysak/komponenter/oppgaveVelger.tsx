@@ -111,9 +111,11 @@ export const OppgaveVelger = ({
         <>
           {oppgaverFinnes && (
             <div className="marginMellomCustomRadioPaneler">
-              <Nav.AlertStripeInfo className="marginMellomHeaderOgAlertStripe">
-                Det er kun følgende oppgaver med journalpost-id som kan tilknyttes
-              </Nav.AlertStripeInfo>
+              {nyOpprettSakToggle === "enabled" && (
+                <Nav.AlertStripeInfo className="marginMellomHeaderOgAlertStripe">
+                  Det er kun følgende oppgaver med journalpost-id som kan tilknyttes
+                </Nav.AlertStripeInfo>
+              )}
               <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
             </div>
           )}
