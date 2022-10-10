@@ -50,7 +50,6 @@ const FagsakVelger = (props) => {
   useEffect(() => {
     if (erOpprettNySak && nyOpprettSakToggle === "enabled") {
       setVisToppValg(true);
-      setValgtVisning(EKSISTERENDE);
     }
   }, [erOpprettNySak, nyOpprettSakToggle]);
 
