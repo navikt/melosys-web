@@ -6,7 +6,6 @@ import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
 import MKV from "../../melosyskodeverk";
-import * as Konstanter from "../../constants";
 import { skalViseSoknadsperiodeOgLand } from "../journalforing/komponenter/opprettSak";
 
 const SKRIV_INN_FNR_ELLER_DNR = { melding: "Skriv inn f.nr eller d.nr" };
@@ -38,12 +37,11 @@ const VELG_MINST_ETT_LAND = { melding: "Velg minst ett land." };
 //     }),
 //   erUkjenteEllerAlleEosLand: boolean(),
 // });
-const kreverPeriode = (journalforingHensikt, hovedpart, sakstype, behandlingstema) =>
-  journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
+const kreverPeriode = (hovedpart, sakstype, behandlingstema) =>
   skalViseSoknadsperiodeOgLand(hovedpart, sakstype, behandlingstema);
 
-const kreverLand = (journalforingHensikt, hovedpart, sakstype, behandlingstema, ukjentEllerAlleEosLand) =>
-  !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, hovedpart, sakstype, behandlingstema);
+const kreverLand = (hovedpart, sakstype, behandlingstema, ukjentEllerAlleEosLand) =>
+  !ukjentEllerAlleEosLand && kreverPeriode(hovedpart, sakstype, behandlingstema);
 
 const opprettnysak = object().shape({
   hovedpart: string().required(MAA_FYLLES_UT),
@@ -85,27 +83,26 @@ const opprettnysak = object().shape({
   //   then: soknadsinfo,
   // }),
   oppgaveID: string().nullable(),
-  journalforingPeriodeFraOgMed: string().when(["hovedpart", "sakstype", "opprettnysak_behandlingstema"], {
+  periodeFraOgMed: string().when(["hovedpart", "sakstype", "behandlingstema"], {
     is: kreverPeriode,
     then: string().erGyldigDato().required(MAA_FYLLES_UT),
   }),
-  journalforingPeriodeTilOgMed: lazy((value) =>
+  periodeTilOgMed: lazy((value) =>
     !value
       ? string().ensure()
-      : string().when(["hovedpart", "sakstype", "opprettnysak_behandlingstema"], {
+      : string().when(["hovedpart", "sakstype", "behandlingstema"], {
           is: kreverPeriode,
-          then: string().erEtterDatofelt("journalforingPeriodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT),
+          then: string().erEtterDatofelt("periodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT),
         })
   ),
-  journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
-  journalforingSoknadsland: array()
+  soknadslandUkjenteEllerAlleEosLand: boolean(),
+  soknadsland: array()
     .of(string())
     .ensure()
-    .when(["sakstype", "opprettnysak_behandlingstema", "journalforingSoknadslandUkjenteEllerAlleEosLand"], {
+    .when(["hovedpart", "sakstype", "behandlingstema", "soknadslandUkjenteEllerAlleEosLand"], {
       is: kreverLand,
       then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
     }),
-  journalforingHensikt: string(),
 });
 
 export default opprettnysak;

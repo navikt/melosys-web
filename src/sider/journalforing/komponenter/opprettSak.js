@@ -39,17 +39,17 @@ const nullstillVerdier = (steg, endreFelt, feltNavn) => {
   switch (steg) {
     case feltNavn.sakstype:
       endreFelt(feltNavn.formNavn, feltNavn.sakstema, null);
-      endreFelt(feltNavn.formNavn, feltNavn.behandlingstema, null);
-      endreFelt(feltNavn.formNavn, feltNavn.behandlingstype, null);
+      endreFelt(feltNavn.formNavn, feltNavn.opprettnysak_behandlingstema, null);
+      endreFelt(feltNavn.formNavn, feltNavn.opprettnysak_behandlingstype, null);
       break;
     case feltNavn.sakstema:
-      endreFelt(feltNavn.formNavn, feltNavn.behandlingstema, null);
-      endreFelt(feltNavn.formNavn, feltNavn.behandlingstype, null);
+      endreFelt(feltNavn.formNavn, feltNavn.opprettnysak_behandlingstema, null);
+      endreFelt(feltNavn.formNavn, feltNavn.opprettnysak_behandlingstype, null);
       break;
-    case feltNavn.behandlingstema:
-      endreFelt(feltNavn.formNavn, feltNavn.behandlingstype, null);
+    case feltNavn.opprettnysak_behandlingstema:
+      endreFelt(feltNavn.formNavn, feltNavn.opprettnysak_behandlingstype, null);
       break;
-    case feltNavn.behandlingstype:
+    case feltNavn.opprettnysak_behandlingstype:
     default:
       break;
   }
@@ -90,8 +90,8 @@ export const OpprettSak = (props) => {
   } = {
     valgtSakstype: formValues[feltNavn.sakstype],
     valgtSakstema: formValues[feltNavn.sakstema],
-    valgtBehandlingstema: formValues[feltNavn.behandlingstema],
-    valgtBehandlingstype: formValues[feltNavn.behandlingstype],
+    valgtBehandlingstema: formValues[feltNavn.opprettnysak_behandlingstema],
+    valgtBehandlingstype: formValues[feltNavn.opprettnysak_behandlingstype],
     soknadsland: formValues[feltNavn.soknadsland],
     ukjentEllerAlleEosLand: formValues[feltNavn.soknadslandUkjenteEllerAlleEosLand],
     hovedpart: formValues[feltNavn.hovedpart],
@@ -187,7 +187,7 @@ export const OpprettSak = (props) => {
           if (muligeBehandlingstyper.map((k) => k.kode).includes(MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG)) {
             settFeltInnhold(
               formNavn,
-              formValues[feltNavn.behandlingstype],
+              feltNavn.opprettnysak_behandlingstype,
               MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG
             );
           }
@@ -229,11 +229,12 @@ export const OpprettSak = (props) => {
         </Skjema.Select>
       )}
       <Skjema.Select
-        feltNavn={feltNavn.behandlingstema}
+        feltNavn={feltNavn.opprettnysak_behandlingstema}
         bredde="fullbredde"
         label="Behandlingstema"
         onChange={() => {
-          if (behandleAlleSakerToggleEnabled) nullstillVerdier(feltNavn.behandlingstema, settFeltInnhold, feltNavn);
+          if (behandleAlleSakerToggleEnabled)
+            nullstillVerdier(feltNavn.opprettnysak_behandlingstema, settFeltInnhold, feltNavn);
           settFeltInnhold(formNavn, feltNavn.soknadslandUkjenteEllerAlleEosLand, false);
         }}
       >
@@ -245,10 +246,10 @@ export const OpprettSak = (props) => {
       </Skjema.Select>
       {behandleAlleSakerToggleEnabled && (
         <Skjema.Select
-          feltNavn={feltNavn.behandlingstype}
+          feltNavn={feltNavn.opprettnysak_behandlingstype}
           bredde="fullbredde"
           label="Behandlingstype"
-          onChange={() => nullstillVerdier(feltNavn.behandlingstype, settFeltInnhold, feltNavn)}
+          onChange={() => nullstillVerdier(feltNavn.opprettnysak_behandlingstype, settFeltInnhold, feltNavn)}
         >
           {behandlingstyper.map((elem) => (
             <option key={elem.kode} value={elem.kode}>

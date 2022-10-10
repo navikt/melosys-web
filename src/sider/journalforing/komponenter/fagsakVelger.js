@@ -33,7 +33,7 @@ const FagsakVelger = (props) => {
     erOpprettNySak,
     nullstillFormVerdier,
   } = props;
-  const [valgtVisning, setValgtVisning] = useState(OPPRETT);
+  const [valgtVisning, setValgtVisning] = useState(erOpprettNySak ? OPPRETT : EKSISTRENDE);
   const [visToppValg, setVisToppValg] = useState(!erOpprettNySak);
   const [feltNavn, setFeltNavn] = useState(erOpprettNySak ? FormValuesOpprettNySak : FormValuesJournalforing);
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
@@ -41,7 +41,7 @@ const FagsakVelger = (props) => {
 
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
-  console.log({ journalforingHensikt });
+
   useEffect(() => {
     dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", valgtVisning === EKSISTRENDE));
     if (nullstillFormVerdier) {
@@ -73,6 +73,7 @@ const FagsakVelger = (props) => {
       dispatch(change(KV.Form.JOURNALFORING, "saksnummer", ""));
     }
   }, [ingenSakerFinnes, valgtVisning, behandleAlleSakerToggleEnabled]);
+
   const notifier = async (saksnummer) => {
     if (settJournalforingHensikt && !erOpprettNySak) {
       const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
