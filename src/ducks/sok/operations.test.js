@@ -36,6 +36,7 @@ describe("sok operations", () => {
             ident: fnr,
             saksnummer: null,
             orgnr: null,
+            utenSED: false,
           }),
         })
       );
@@ -59,6 +60,7 @@ describe("sok operations", () => {
             ident: null,
             saksnummer,
             orgnr: null,
+            utenSED: false,
           }),
         })
       );
@@ -82,6 +84,7 @@ describe("sok operations", () => {
             ident: null,
             saksnummer: null,
             orgnr,
+            utenSED: false,
           }),
         })
       );
