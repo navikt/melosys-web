@@ -9,10 +9,10 @@ import * as Ikon from "../../../resources/images";
 
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import Soknadsland from "../../../felleskomponenter/soknadsland";
+import { lagUrl, lagUrlFraBehandlingstema } from "../../../routing";
 import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behandlingsstatus";
 
 import "./enkeltSak.css";
-import { lagUrl } from "../../../routing";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
@@ -24,7 +24,7 @@ const EnkeltSak = (props) => {
     behandlingOversikter[0];
   const link = behandleAlleSakerToggleEnabled
     ? lagUrl(saksnummer, behandlingID, sakstype.kode, behandlingstema.kode, behandlingstype.kode)
-    : "";
+    : lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema.kode);
 
   if (behandleAlleSakerToggleEnabled) {
     return (
