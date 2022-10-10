@@ -50,6 +50,7 @@ const FagsakVelger = (props) => {
   useEffect(() => {
     if (erOpprettNySak && nyOpprettSakToggle === "enabled") {
       setVisToppValg(true);
+      setValgtVisning(EKSISTRENDE);
     }
   }, [erOpprettNySak, nyOpprettSakToggle]);
 
@@ -99,13 +100,14 @@ const FagsakVelger = (props) => {
       footer: <OpprettSak behandleAlleSakerToggleEnabled={false} formValues={formValues} feltNavn={feltNavn} />,
     });
   }
-
   if (behandleAlleSakerToggleEnabled) {
     return (
       <>
         {ingenSakerFinnes ? (
           <div className="fagsakVelger">
-            <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
+            {nyOpprettSakToggle === "enabled" && (
+              <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
+            )}
             <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
           </div>
         ) : (
@@ -149,6 +151,14 @@ const FagsakVelger = (props) => {
         )}
       </>
     );
+  }
+
+  if (
+    (behandleAlleSakerToggleEnabled !== "enabled" || nyOpprettSakToggle !== "enabled") &&
+    valgtVisning === OPPRETT &&
+    erOpprettNySak
+  ) {
+    return <OpprettSak behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled} />;
   }
 
   return (

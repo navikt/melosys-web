@@ -15,7 +15,6 @@ import * as Api from "../../services/api";
 import * as Utils from "../../utils";
 
 import Knapperad from "../../felleskomponenter/knapperad";
-import FagsakVelger from "../journalforing/komponenter/fagsakVelger";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
@@ -31,6 +30,7 @@ import "./opprettnysak.css";
 import { sokOperations, sokSelectors } from "../../ducks/sok";
 import { OppgaveVelger } from "./komponenter/oppgaveVelger";
 import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
+import FagsakVelger from "../journalforing/komponenter/fagsakVelger";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -112,7 +112,6 @@ const OpprettNySak = ({
   const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
-
   const {
     behandlingstema,
     behandlingstype,
@@ -141,13 +140,15 @@ const OpprettNySak = ({
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
   useEffect(() => {
-    const opprettNySakKriterier =
-      sakstype !== null && sakstema !== null && behandlingstema !== null && behandlingstype !== null;
+    if (behandleAlleSakerToggle !== "enabled") {
+      setErRedigerbart(!!(sakstype && behandlingstema));
+    } else {
+      const opprettNySakKriterier = Boolean(sakstype && sakstema && behandlingstema && behandlingstype);
+      const eksisterendeSakKriterier = Boolean(sakstype && behandlingstema);
 
-    const eksisterendeSakKriterier = behandlingstema !== undefined && behandlingstype !== undefined;
-
-    setErRedigerbart(erEksisterendeSak ? eksisterendeSakKriterier : opprettNySakKriterier);
-  }, [sakstype, sakstema, behandlingstema, behandlingstype, erEksisterendeSak]);
+      setErRedigerbart(erEksisterendeSak ? eksisterendeSakKriterier : opprettNySakKriterier);
+    }
+  }, [sakstype, sakstema, behandlingstema, behandlingstype, erEksisterendeSak, behandleAlleSakerToggle]);
 
   useEffect(() => {
     hentLandkoder();
@@ -320,7 +321,11 @@ const OpprettNySak = ({
               </div>
               <div className="seksjon">
                 <Mui.Undertittel
-                  tekst="Knytt til eksisterende sak eller opprett ny"
+                  tekst={
+                    nyOpprettSakToggle === "enabled"
+                      ? "Knytt til eksisterende sak eller opprett ny"
+                      : "Informasjon om sak"
+                  }
                   ikon={Ikoner.Links}
                   className="undertittel"
                   understrek
