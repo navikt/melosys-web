@@ -38,6 +38,7 @@ const VELG_MINST_ETT_LAND = { melding: "Velg minst ett land." };
 // });
 
 // const kreverPeriode = (hovedpart, sakstype, behandlingstema) =>
+// Her kan vi bruke erEksisterendeSak til å styre om vi trenger periode og land. Er den true skal man ikke trenge det.
 //   skalViseSoknadsperiodeOgLand(hovedpart, sakstype, behandlingstema);
 //
 // const kreverLand = (hovedpart, sakstype, behandlingstema, ukjentEllerAlleEosLand) =>
