@@ -148,7 +148,7 @@ const FagsakVelger = (props) => {
     valgtVisning === OPPRETT &&
     erOpprettNySak
   ) {
-    return <OpprettSak behandleAlleSakerToggleEnabled />;
+    return <OpprettSak behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled} />;
   }
 
   return (
