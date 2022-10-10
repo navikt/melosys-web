@@ -109,7 +109,7 @@ export const referanseKoder = {
 export const Tema = {
   MED: "Medlemskap",
   UFM: "Unntak fra medlemskap",
-  TRYGDEAVGIFT: "Trygdeavgift",
+  TRY: "Trygdeavgift",
 };
 
 export const LoennetArbeidAntallLand = {

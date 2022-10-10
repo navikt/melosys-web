@@ -18,8 +18,10 @@ import KnyttTilSak from "./knyttTilSak";
 import "./fagsakVelger.css";
 import { useFeatureToggle } from "../../../featuretoggle";
 
-const EKSISTRENDE = "Eksisterende sak";
+const EKSISTERENDE = "Eksisterende sak";
 const OPPRETT = "Opprett ny sak";
+
+const { JOURNALFORING_VALUES: FormValuesJournalforing, OPPRETT_NY_SAK_VALUES: FormValuesOpprettNySak } = KV.Form;
 
 const FagsakVelger = (props) => {
   const {
@@ -27,17 +29,19 @@ const FagsakVelger = (props) => {
     settJournalforingHensikt,
     behandleAlleSakerToggleEnabled,
     landkoder,
+    formValues,
     erOpprettNySak,
     nullstillFormVerdier,
   } = props;
-  const [valgtVisning, setValgtVisning] = useState(OPPRETT);
+  const [valgtVisning, setValgtVisning] = useState(erOpprettNySak ? OPPRETT : EKSISTERENDE);
   const [visToppValg, setVisToppValg] = useState(!erOpprettNySak);
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
+  const feltNavn = erOpprettNySak ? FormValuesOpprettNySak : FormValuesJournalforing;
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
 
   useEffect(() => {
-    dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", valgtVisning === EKSISTRENDE));
+    dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", valgtVisning === EKSISTERENDE));
     if (nullstillFormVerdier) {
       nullstillFormVerdier();
     }
@@ -46,7 +50,6 @@ const FagsakVelger = (props) => {
   useEffect(() => {
     if (erOpprettNySak && nyOpprettSakToggle === "enabled") {
       setVisToppValg(true);
-      setValgtVisning(EKSISTRENDE);
     }
   }, [erOpprettNySak, nyOpprettSakToggle]);
 
@@ -55,14 +58,16 @@ const FagsakVelger = (props) => {
 
     if (valgtVisning === OPPRETT || ingenSakerFinnes) {
       dispatch(change(KV.Form.JOURNALFORING, "saksnummer", "-1"));
-    } else if (valgtVisning === EKSISTRENDE) {
+    } else if (valgtVisning === EKSISTERENDE) {
       dispatch(change(KV.Form.JOURNALFORING, "saksnummer", ""));
     }
   }, [ingenSakerFinnes, valgtVisning, behandleAlleSakerToggleEnabled]);
 
   const notifier = async (saksnummer) => {
-    const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
-    await settJournalforingHensikt(hensikt);
+    if (settJournalforingHensikt && !erOpprettNySak) {
+      const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
+      await settJournalforingHensikt(hensikt);
+    }
   };
 
   const radioValg = fagsakListe.reduce(
@@ -78,6 +83,8 @@ const FagsakVelger = (props) => {
             sak={sak}
             behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
             erOpprettNySak={erOpprettNySak}
+            feltNavn={feltNavn}
+            formValues={formValues}
           />
         ),
       },
@@ -89,7 +96,7 @@ const FagsakVelger = (props) => {
     radioValg.push({
       value: "-1",
       innhold: <OpprettSakTittel />,
-      footer: <OpprettSak behandleAlleSakerToggleEnabled={false} />,
+      footer: <OpprettSak behandleAlleSakerToggleEnabled={false} formValues={formValues} feltNavn={feltNavn} />,
     });
   }
   if (behandleAlleSakerToggleEnabled) {
@@ -100,7 +107,7 @@ const FagsakVelger = (props) => {
             {nyOpprettSakToggle === "enabled" && (
               <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
             )}
-            <OpprettSak behandleAlleSakerToggleEnabled />
+            <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
           </div>
         ) : (
           <div className="fagsakVelger">
@@ -108,12 +115,12 @@ const FagsakVelger = (props) => {
               {visToppValg && (
                 <>
                   <Nav.Radio
-                    label={EKSISTRENDE}
-                    className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTRENDE })}
+                    label={EKSISTERENDE}
+                    className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
                     name="velgVisning"
-                    onChange={() => setValgtVisning(EKSISTRENDE)}
-                    checked={valgtVisning === EKSISTRENDE}
-                    value={EKSISTRENDE}
+                    onChange={() => setValgtVisning(EKSISTERENDE)}
+                    checked={valgtVisning === EKSISTERENDE}
+                    value={EKSISTERENDE}
                   />
                   <Nav.Radio
                     label={OPPRETT}
@@ -126,7 +133,7 @@ const FagsakVelger = (props) => {
                 </>
               )}
             </div>
-            {valgtVisning === EKSISTRENDE && (
+            {valgtVisning === EKSISTERENDE && (
               <Skjema.CustomRadioPanelGruppe
                 feltNavn="saksnummer"
                 radios={radioValg}
@@ -136,7 +143,9 @@ const FagsakVelger = (props) => {
                 className="marginMellomCustomRadioPaneler"
               />
             )}
-            {valgtVisning === OPPRETT && <OpprettSak behandleAlleSakerToggleEnabled />}
+            {valgtVisning === OPPRETT && (
+              <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
+            )}
           </div>
         )}
       </>
@@ -148,7 +157,13 @@ const FagsakVelger = (props) => {
     valgtVisning === OPPRETT &&
     erOpprettNySak
   ) {
-    return <OpprettSak behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled} />;
+    return (
+      <OpprettSak
+        behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
+        formValues={formValues}
+        feltNavn={feltNavn}
+      />
+    );
   }
 
   return (
@@ -161,9 +176,10 @@ const FagsakVelger = (props) => {
 
 FagsakVelger.propTypes = {
   fagsakListe: PT.array.isRequired,
-  settJournalforingHensikt: PT.func.isRequired,
+  settJournalforingHensikt: PT.func,
   behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  formValues: PT.object.isRequired,
   erOpprettNySak: PT.bool,
   nullstillFormVerdier: PT.func,
 };
@@ -171,6 +187,7 @@ FagsakVelger.propTypes = {
 FagsakVelger.defaultProps = {
   erOpprettNySak: false,
   nullstillFormVerdier: undefined,
+  settJournalforingHensikt: undefined,
 };
 
 export default FagsakVelger;
