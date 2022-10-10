@@ -178,7 +178,7 @@ const mapStateToProps = (state, ownProps) => ({
     journalforingSoknadsland: [],
     journalforingSoknadslandUkjenteEllerAlleEosLand: false,
     sakstype: ownProps.behandleAlleSakerToggleEnabled ? null : MKV.Koder.sakstyper.EU_EOS,
-    opprettBehandling: false,
+    opprettBehandling: true,
     opprettnysak_behandlingstema: ownProps.behandleAlleSakerToggleEnabled
       ? null
       : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,

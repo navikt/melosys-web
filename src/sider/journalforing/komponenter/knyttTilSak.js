@@ -11,7 +11,6 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Api from "../../../services/api";
-import * as KV from "../../../kodeverk";
 
 import "./knyttTilSak.css";
 
@@ -54,7 +53,7 @@ export const KnyttTilSak = (props) => {
 
   useEffect(() => {
     return () => {
-      changeField(feltNavn.formNavn, "opprettBehandling", feltNavn.formNavn === KV.Form.OPPRETT_NY_SAK);
+      changeField(feltNavn.formNavn, "opprettBehandling", true);
       changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
       changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     };
