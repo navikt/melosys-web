@@ -127,6 +127,7 @@ class Journalforing extends Component {
       skalTilordnes,
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
     };
+
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT || hensikt === JOURNALFORING_HENSIKT.NY_VURDERING) {
       journalPostData = {
         ...journalPostData,
@@ -228,7 +229,6 @@ class Journalforing extends Component {
       settFeilFelt("avsenderNavn", "vedleggsTitler", "saksnummer", "behandlingstype");
       return false;
     }
-
     try {
       if (hensikt === JOURNALFORING_HENSIKT.NY_VURDERING) {
         await Api.Journalforing.nyVurdering(journalforingData);
