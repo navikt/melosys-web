@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { change } from "redux-form";
 import PT from "prop-types";
 
@@ -35,10 +35,8 @@ const FagsakVelger = (props) => {
   } = props;
   const [valgtVisning, setValgtVisning] = useState(erOpprettNySak ? OPPRETT : EKSISTRENDE);
   const [visToppValg, setVisToppValg] = useState(!erOpprettNySak);
-  const [feltNavn, setFeltNavn] = useState(erOpprettNySak ? FormValuesOpprettNySak : FormValuesJournalforing);
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
-  const { journalforingHensikt } = useSelector((state) => state.form?.journalforing?.values || {});
-
+  const feltNavn = erOpprettNySak ? FormValuesOpprettNySak : FormValuesJournalforing;
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
 
@@ -48,15 +46,6 @@ const FagsakVelger = (props) => {
       nullstillFormVerdier();
     }
   }, [valgtVisning]);
-
-  useEffect(() => {
-    if (
-      journalforingHensikt === JOURNALFORING_HENSIKT.KNYTT ||
-      journalforingHensikt === JOURNALFORING_HENSIKT.NY_VURDERING
-    ) {
-      setFeltNavn({ ...feltNavn, behandlingstema: "behandlingstema", behandlingstype: "behandlingstype" });
-    }
-  }, [journalforingHensikt]);
 
   useEffect(() => {
     if (erOpprettNySak && nyOpprettSakToggle === "enabled") {

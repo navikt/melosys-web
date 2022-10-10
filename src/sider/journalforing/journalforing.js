@@ -229,7 +229,6 @@ class Journalforing extends Component {
       settFeilFelt("avsenderNavn", "vedleggsTitler", "saksnummer", "behandlingstype");
       return false;
     }
-    console.log({ hensikt });
     try {
       if (hensikt === JOURNALFORING_HENSIKT.NY_VURDERING) {
         await Api.Journalforing.nyVurdering(journalforingData);
