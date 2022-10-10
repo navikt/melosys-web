@@ -33,7 +33,6 @@ const FagsakVelger = (props) => {
   const [valgtVisning, setValgtVisning] = useState(OPPRETT);
   const [visToppValg, setVisToppValg] = useState(!erOpprettNySak);
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
-
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
 
@@ -47,6 +46,7 @@ const FagsakVelger = (props) => {
   useEffect(() => {
     if (erOpprettNySak && nyOpprettSakToggle === "enabled") {
       setVisToppValg(true);
+      setValgtVisning(EKSISTRENDE);
     }
   }, [erOpprettNySak, nyOpprettSakToggle]);
 
@@ -92,13 +92,14 @@ const FagsakVelger = (props) => {
       footer: <OpprettSak behandleAlleSakerToggleEnabled={false} />,
     });
   }
-
   if (behandleAlleSakerToggleEnabled) {
     return (
       <>
         {ingenSakerFinnes ? (
           <div className="fagsakVelger">
-            <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
+            {nyOpprettSakToggle === "enabled" && (
+              <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
+            )}
             <OpprettSak behandleAlleSakerToggleEnabled />
           </div>
         ) : (
@@ -140,6 +141,14 @@ const FagsakVelger = (props) => {
         )}
       </>
     );
+  }
+
+  if (
+    (behandleAlleSakerToggleEnabled !== "enabled" || nyOpprettSakToggle !== "enabled") &&
+    valgtVisning === OPPRETT &&
+    erOpprettNySak
+  ) {
+    return <OpprettSak behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled} />;
   }
 
   return (
