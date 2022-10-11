@@ -27,17 +27,24 @@ const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
-const kreverPeriode = (journalforingHensikt, sakstype, behandlingstema, behandlingstype) =>
+const kreverPeriode = (journalforingHensikt, sakstype, sakstema, behandlingstema, behandlingstype) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
-  skalViseSoknadsperiodeOgLand(sakstype, behandlingstema, behandlingstype);
+  skalViseSoknadsperiodeOgLand(sakstype, sakstema, behandlingstema, behandlingstype);
 
 // Fjernes med toggle melosys.behandle_alle_saker
 const kreverPeriodeDeprecated = (journalforingHensikt, hovedpart, sakstype, behandlingstema) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
   skalViseSoknadsperiodeOgLandDeprecated(hovedpart, sakstype, behandlingstema);
 
-const kreverLand = (journalforingHensikt, sakstype, behandlingstema, behandlingstype, ukjentEllerAlleEosLand) =>
-  !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, sakstype, behandlingstema, behandlingstype);
+const kreverLand = (
+  journalforingHensikt,
+  sakstype,
+  sakstema,
+  behandlingstema,
+  behandlingstype,
+  ukjentEllerAlleEosLand
+) =>
+  !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, sakstype, sakstema, behandlingstema, behandlingstype);
 
 // Fjernes med toggle melosys.behandle_alle_saker
 const kreverLandDeprecated = (journalforingHensikt, hovedpart, sakstype, behandlingstema, ukjentEllerAlleEosLand) =>
@@ -134,7 +141,7 @@ const journalforing = object().shape({
   journalforingPeriodeFraOgMed: string().when("$behandleAlleSakerToggleEnabled", {
     is: (behandleAlleSakerToggleEnabled) => behandleAlleSakerToggleEnabled,
     then: string().when(
-      ["journalforingHensikt", "sakstype", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
+      ["journalforingHensikt", "sakstype", "sakstema", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
       {
         is: kreverPeriode,
         then: string().erGyldigDato().required(MAA_FYLLES_UT),
@@ -178,6 +185,7 @@ const journalforing = object().shape({
         [
           "journalforingHensikt",
           "sakstype",
+          "sakstema",
           "opprettnysak_behandlingstema",
           "opprettnysak_behandlingstype",
           "journalforingSoknadslandUkjenteEllerAlleEosLand",

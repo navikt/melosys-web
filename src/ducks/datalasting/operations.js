@@ -73,12 +73,13 @@ export const resetSaksopplysninger = () => (dispatch) => {
 };
 
 const harIkkeTomFlyt = async (sakstype, state) => {
+  const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
   const behandleAlleSakerToggleEnabled = await erFeatureToggleEnabled("melosys.behandle_alle_saker");
 
   return behandleAlleSakerToggleEnabled
-    ? !skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype)
+    ? !skalViseTomFlytEllerErSedBehandling(sakstype, sakstema, behandlingstema, behandlingstype)
     : true;
 };
 

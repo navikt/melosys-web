@@ -33,6 +33,7 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
           saksnummer,
           behandling.behandlingID,
           sakstype.kode,
+          sakstema.kode,
           behandling.behandlingstema.kode,
           behandling.behandlingstype.kode
         )

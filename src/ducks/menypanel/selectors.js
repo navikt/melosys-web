@@ -12,10 +12,11 @@ export const MenypanelSelector = createSelector(
 export const ErMenypanelSynlig = createSelector(
   MenypanelSelector,
   fagsakSelectors.SakstypeKodeSelector,
+  fagsakSelectors.SakstemaKodeSelector,
   behandlingerSelectors.BehandlingstemaKodeSelector,
   behandlingerSelectors.BehandlingstypeKodeSelector,
-  (menypanel, sakstype, behandlingstema, behandlingstype) =>
+  (menypanel, sakstype, sakstema, behandlingstema, behandlingstype) =>
     sakstype === MKV.Koder.sakstyper.EU_EOS ||
     menypanel?.synlig ||
-    skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype)
+    skalViseTomFlytEllerErSedBehandling(sakstype, sakstema, behandlingstema, behandlingstype)
 );

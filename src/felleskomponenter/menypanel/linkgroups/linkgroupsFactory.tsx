@@ -30,6 +30,7 @@ interface LinkGroupsConfig {
   behandlingstype: string;
   behandlingsgrunnlagtype: string;
   contentProps: ContentProps;
+  sakstema: string;
 }
 
 class LinkGroupsFactory {
@@ -39,8 +40,9 @@ class LinkGroupsFactory {
     sakstype,
     behandlingstema,
     behandlingstype,
+    sakstema,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype))
+    if (skalViseTomFlytEllerErSedBehandling(sakstype, sakstema, behandlingstema, behandlingstype))
       return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
 
     switch (behandlingstema) {
