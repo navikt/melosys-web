@@ -60,12 +60,7 @@ export const lagUrl = (
   return lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstemaKode);
 };
 
-const skalViseTomFlyt = (
-  sakstype: string,
-  sakstema: string | null,
-  behandlingstema: string,
-  behandlingstype: string
-) => {
+const skalViseTomFlyt = (sakstype: string, sakstema: string, behandlingstema: string, behandlingstype: string) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
   }
