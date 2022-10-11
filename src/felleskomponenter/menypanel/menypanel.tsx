@@ -112,8 +112,12 @@ export const Menypanel = ({
         />
       )}
       <div className="menypanel">
-        <Sidemeny heading="Opplysninger" linkGroups={linkGroups} onClick={handleClick} />
-        <Nav.Panel className="content">{activeContent || <div />}</Nav.Panel>
+        <Nav.Column xs="3">
+          <Sidemeny heading="Opplysninger" linkGroups={linkGroups} onClick={handleClick} />
+        </Nav.Column>
+        <Nav.Column xs="9">
+          <Nav.Panel className="content">{activeContent || <div />}</Nav.Panel>
+        </Nav.Column>
       </div>
     </>
   );

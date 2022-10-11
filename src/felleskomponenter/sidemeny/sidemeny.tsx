@@ -1,4 +1,3 @@
-import { Normaltekst } from "nav-frontend-typografi";
 import * as React from "react";
 import classnames from "classnames";
 
@@ -28,7 +27,7 @@ const SideMeny = ({ linkGroups, heading, onClick }: SideMenyProps): JSX.Element 
   return (
     <div className={sideMenyRootClassnames}>
       <nav className={sideMenyCls.element("container")}>
-        {heading && <Normaltekst className={sideMenyCls.element("heading")}>{heading}</Normaltekst>}
+        {heading && <h2 className={sideMenyCls.element("heading")}>{heading}</h2>}
         <ul className={sideMenyCls.element("link-list")}>
           {linkGroups.map(({ label, links }, index) => (
             <LinkGroup

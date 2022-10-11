@@ -34,19 +34,21 @@ const SorterbarListe = ({
     <div className={className}>
       {elementer.length > 1 && (
         <Nav.Fieldset className="sorteringRadiogruppe" onChange={handleSortOrderChange} legend={sortingLegend}>
-          <Nav.Radio
-            name={uniqueName}
-            label="Nyeste først"
-            value="descending"
-            defaultChecked={defaultChecked === "nyeste"}
-            className="radio"
-          />
-          <Nav.Radio
-            name={uniqueName}
-            label="Eldste først"
-            value="ascending"
-            defaultChecked={defaultChecked === "eldste"}
-          />
+          <div className="radioButtons">
+            <Nav.Radio
+              name={uniqueName}
+              label="Nyeste først"
+              value="descending"
+              defaultChecked={defaultChecked === "nyeste"}
+              className="radio"
+            />
+            <Nav.Radio
+              name={uniqueName}
+              label="Eldste først"
+              value="ascending"
+              defaultChecked={defaultChecked === "eldste"}
+            />
+          </div>
         </Nav.Fieldset>
       )}
       {sorterteElementer.map((oppgave) => (
