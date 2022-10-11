@@ -43,6 +43,8 @@ const JournalforingGjelder = ({
     oppdaterFelt("journalforingGjelder", value);
     oppdaterFelt(FormValues.sakstype, null);
     oppdaterFelt(FormValues.sakstema, null);
+    oppdaterFelt(FormValues.behandlingstema, null);
+    oppdaterFelt(FormValues.behandlingstype, null);
     oppdaterFelt(FormValues.opprettnysak_behandlingstema, null);
     oppdaterFelt(FormValues.opprettnysak_behandlingstype, null);
     if (value === BRUKER) {
