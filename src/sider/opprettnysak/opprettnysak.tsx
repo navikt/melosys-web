@@ -182,6 +182,7 @@ const OpprettNySak = ({
       change("brukerNavn", navn);
     } else {
       change("brukerNavn", null);
+      return;
     }
     await hentFagsakListe(personIdent);
     await hentOppgaver(personIdent);
@@ -194,6 +195,7 @@ const OpprettNySak = ({
       change("virksomhetNavn", navn);
     } else {
       change("virksomhetNavn", null);
+      return;
     }
     await hentFagsakListe(virksomhetOrgnr);
     await hentOppgaver(virksomhetOrgnr);
