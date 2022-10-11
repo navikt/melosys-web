@@ -9,7 +9,7 @@ import MKV from "../../melosyskodeverk";
 
 const SKRIV_INN_FNR_ELLER_DNR = { melding: "Skriv inn f.nr eller d.nr" };
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig f.nr eller d.nr" };
-const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette f.nr eller d.nr." };
+const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette f.nr eller d-nr." };
 const SKRIV_INN_ORGNR = { melding: "Skriv inn organisasjonsnummer" };
 const SKRIV_INN_GYLDIG_ORGNR = { melding: "Skriv inn gyldig organisasjonsnummer" };
 const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisasjonsnummeret." };

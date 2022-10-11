@@ -7,13 +7,28 @@ export function syncErrorsTilFeilmelding(
 ) {
   if (Utils._isEmpty(syncErrors)) return null;
 
+  const finnFeilmelding = (feil: any): any => {
+    if (Utils._isString(feil.melding)) {
+      return <li key={feil.melding}>{feil.melding}</li>;
+    }
+
+    if (Utils._isObject(feil)) {
+      return (
+        Object.keys(feil)
+          // @ts-ignore
+          .map((key) => finnFeilmelding(feil[key]))
+      );
+    }
+    return <li key="Noe gikk galt">Noe gikk galt</li>;
+  };
+
   return (
     <>
       <p>{tittel}</p>
       <ul>
         {Object.keys(syncErrors).map((key) => {
           const syncError = syncErrors[key];
-          return <li key={key}>{Utils._isObject(syncError._error) ? syncError._error.melding : syncError.melding}</li>;
+          return finnFeilmelding(syncError);
         })}
       </ul>
     </>

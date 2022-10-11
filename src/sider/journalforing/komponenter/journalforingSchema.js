@@ -7,12 +7,12 @@ import * as KV from "../../../kodeverk";
 import { skalViseSoknadsperiodeOgLand, skalViseSoknadsperiodeOgLandDeprecated } from "./opprettSak";
 
 const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer." };
-const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig fnr eller dnr." };
+const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig f.nr eller d-nr." };
 const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisasjonsnummeret." };
-const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette fnr eller dnr." };
+const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette f.nr eller d-nr." };
 const FANT_INGEN_NAVN_PA_ORGNR_FNR_ELLER_DNR = { melding: "Fant ingen navn på oppgitt org.nr., f.nr. eller d-nr." };
 const SKRIV_INN_NAVN_PA_AVSENDER = { melding: "Skriv inn navn på avsender" };
-const SKRIV_INN_GYLDIG_ORGNR = { melding: "Skriv inn gyldig orgnr." };
+const SKRIV_INN_GYLDIG_ORGNR = { melding: "Skriv inn gyldig org.nr." };
 const SKRIV_INN_GYLDIG_ORGNR_FNR_DNR = { melding: "Du må skrive et gyldig org.nr. eller f.nr./d-nr." };
 const VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN = {
   melding: "Velg dokumenttittel fra listen eller skriv din egen.",
@@ -21,6 +21,8 @@ const VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT = {
   melding: "Velg hvilken sak du ønsker å knytte journalføringen mot.",
 };
 const VELG_MINST_ETT_LAND = { melding: "Velg minst ett land." };
+const DU_MA_LAGRE_TITTEL_VEDLEGG = { melding: "Du må lagre tittel på vedlegg" };
+const DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT = { melding: "Du må lagre tittel på hoveddokument" };
 const VELG_ETT_LAND = { melding: "Velg ett land." };
 const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
 const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
@@ -57,6 +59,23 @@ const arbeidsgiverOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) 
 const fullmektigOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
   return avsenderType === KV.AvsenderTyper.FULLMEKTIG && !erAvsenderPreutfylt;
 };
+
+const erIkkeUnderRedigering = (feilmelding) => ({
+  name: "erIkkeUnderRedigering",
+  message: feilmelding,
+  test: (value, { options }) => options?.context?.registeredFields && !options.context.registeredFields[options.path],
+});
+
+const hoveddokument = object().shape({
+  tittel: string()
+    .test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT))
+    .required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN),
+  logiskeVedlegg: array().of(
+    string()
+      .test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_VEDLEGG))
+      .required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN)
+  ),
+});
 
 const erBruker = (journalforingGjelder) => journalforingGjelder === BRUKER;
 const erVirksomhet = (journalforingGjelder) => journalforingGjelder === VIRKSOMHET;
@@ -116,9 +135,7 @@ const journalforing = object().shape({
     })
     .nullable(),
   avsenderNavn: string().required(SKRIV_INN_NAVN_PA_AVSENDER).nullable(),
-  hoveddokument: object().shape({
-    tittel: string().required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN),
-  }),
+  hoveddokument,
   representantID: lazy((value) =>
     Utils._isEmpty(value)
       ? string().nullable()

@@ -42,7 +42,7 @@ export const AvsenderArbeidsgiver = ({
     <div className="avsender">
       <Skjema.FellesInputFnrDnrOrgnrSaksnr
         feltNavn="avsenderID"
-        label="Organisasjonsnummer"
+        label="Org.nr."
         onKeyUp={IDFeltTastOppHandler}
         className="avsender__input"
         bredde="L"

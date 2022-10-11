@@ -108,7 +108,11 @@ class ListevelgerFlervalg extends Component {
 
       this.setState({ inputVerdi: "", valgteElementer, feilmelding: null });
     } else {
-      this.setState({ feilmelding: "I dette feltet må du velge fra alternativene i nedtrekkslisten." });
+      this.setState({
+        feilmelding: tillatFritekst
+          ? "Velg tittel på vedlegg fra listen eller skriv din egen"
+          : "I dette feltet må du velge fra alternativene i nedtrekkslisten.",
+      });
     }
 
     if (onChange) {
