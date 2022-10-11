@@ -82,7 +82,7 @@ const AvsluttSak = ({
     behandlingstema === ANMODNING_OM_UNNTAK_HOVEDREGEL || behandlingstema === REGISTRERING_UNNTAK;
 
   const skalViseAvslåPgaManglendeOpplysninger = () => {
-    if (behandleAlleSakerToggle !== "enabled" || !redigerbart) {
+    if (behandleAlleSakerToggle !== "enabled") {
       switch (behandlingskategori) {
         case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
           return redigerbart && !behandlingstemaErTrygdetid;
@@ -96,7 +96,7 @@ const AvsluttSak = ({
           return false;
       }
     }
-    if (sakstema !== MEDLEMSKAP_LOVVALG) return false;
+    if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) return false;
 
     if (sakstype === EU_EOS) {
       return (
@@ -129,7 +129,7 @@ const AvsluttSak = ({
   };
 
   const skalViseBehandlingenErHenlagt = () => {
-    if (behandleAlleSakerToggle !== "enabled" || !redigerbart) {
+    if (behandleAlleSakerToggle !== "enabled") {
       switch (behandlingskategori) {
         case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
           return redigerbart && !behandlingstypeErEndretPeriode;
@@ -145,7 +145,7 @@ const AvsluttSak = ({
       }
     }
 
-    if (sakstema !== MEDLEMSKAP_LOVVALG) return false;
+    if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) return false;
 
     if (sakstype === EU_EOS) {
       return (
