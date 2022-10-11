@@ -42,7 +42,7 @@ class LinkGroupsFactory {
     behandlingstype,
     sakstema,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype, sakstema))
+    if (skalViseTomFlytEllerErSedBehandling(sakstype, sakstema, behandlingstema, behandlingstype))
       return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
 
     switch (behandlingstema) {

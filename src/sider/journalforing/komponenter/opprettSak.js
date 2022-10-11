@@ -55,11 +55,11 @@ const nullstillVerdier = (steg, endreFelt, feltNavn) => {
   }
 };
 
-export const skalViseSoknadsperiodeOgLand = (sakstype, behandlingstema, behandlingstype, sakstema) =>
+export const skalViseSoknadsperiodeOgLand = (sakstype, sakstema, behandlingstema, behandlingstype) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
   behandlingstema &&
   behandlingstype &&
-  !skalViseTomFlytEllerErSedBehandling(sakstype, behandlingstema, behandlingstype, sakstema);
+  !skalViseTomFlytEllerErSedBehandling(sakstype, sakstema, behandlingstema, behandlingstype);
 
 export const skalViseSoknadsperiodeOgLandDeprecated = (hovedpart, sakstype, behandlingstema) =>
   hovedpart !== MKV.Koder.aktoersroller.VIRKSOMHET &&
@@ -259,7 +259,7 @@ export const OpprettSak = (props) => {
         </Skjema.Select>
       )}
       {(behandleAlleSakerToggleEnabled
-        ? skalViseSoknadsperiodeOgLand(valgtSakstype, valgtBehandlingstema, valgtBehandlingstype, valgtSakstema)
+        ? skalViseSoknadsperiodeOgLand(valgtSakstype, valgtSakstema, valgtBehandlingstema, valgtBehandlingstype)
         : skalViseSoknadsperiodeOgLandDeprecated(hovedpart, valgtSakstype, valgtBehandlingstema)) && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">

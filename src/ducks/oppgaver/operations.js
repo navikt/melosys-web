@@ -47,9 +47,9 @@ export const plukkSak = async (data) => {
     return false;
   }
 
-  if (data.sakstype) {
+  if (data.sakstema) {
     // shortcut istedenfor å dra inn melosys.behandle_alle_saker toggle
-    return Routing.lagUrl(saksnummer, behandlingID, data.sakstype, behandlingstema, behandlingstype, data.sakstema);
+    return Routing.lagUrl(saksnummer, behandlingID, data.sakstype, data.sakstema, behandlingstema, behandlingstype);
   }
   return Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema);
 };

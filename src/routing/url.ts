@@ -50,11 +50,11 @@ export const lagUrl = (
   saksnummer: number | string,
   behandlingID: number,
   sakstypeKode: string,
+  sakstemaKode: string,
   behandlingstemaKode: string,
-  behandlingstypeKode: string,
-  sakstemaKode: string
+  behandlingstypeKode: string
 ) => {
-  if (skalViseTomFlyt(sakstypeKode, behandlingstemaKode, behandlingstypeKode, sakstemaKode)) {
+  if (skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode)) {
     return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
   return lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstemaKode);
@@ -62,9 +62,9 @@ export const lagUrl = (
 
 const skalViseTomFlyt = (
   sakstype: string,
+  sakstema: string | null,
   behandlingstema: string,
-  behandlingstype: string,
-  sakstema: string | null
+  behandlingstype: string
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
@@ -93,11 +93,11 @@ const skalViseTomFlyt = (
 
 export const skalViseTomFlytEllerErSedBehandling = (
   sakstype: string,
+  sakstema: string,
   behandlingstema: string,
-  behandlingstype: string,
-  sakstema: string
+  behandlingstype: string
 ) => {
-  return skalViseTomFlyt(sakstype, behandlingstema, behandlingstype, sakstema) || erSedBehandling(behandlingstema);
+  return skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype) || erSedBehandling(behandlingstema);
 };
 
 export const nyFane = (url: string) => {
