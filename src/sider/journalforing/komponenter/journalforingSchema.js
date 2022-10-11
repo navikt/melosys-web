@@ -21,7 +21,8 @@ const VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT = {
   melding: "Velg hvilken sak du ønsker å knytte journalføringen mot.",
 };
 const VELG_MINST_ETT_LAND = { melding: "Velg minst ett land." };
-const ÆÆÆÆÆÆHHHHH = { melding: "ÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆHHHHHHHHH" };
+const DU_MA_LAGRE_TITTEL_VEDLEGG = { melding: "Du må lagre tittel på vedlegg" };
+const DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT = { melding: "Du må lagre tittel på hoveddokument" };
 const VELG_ETT_LAND = { melding: "Velg ett land." };
 const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
 const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
@@ -52,15 +53,21 @@ const fullmektigOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) =>
   return avsenderType === KV.AvsenderTyper.FULLMEKTIG && !erAvsenderPreutfylt;
 };
 
-const erIkkeUnderRedigering = {
+const erIkkeUnderRedigering = (feilmelding) => ({
   name: "erIkkeUnderRedigering",
-  message: ÆÆÆÆÆÆHHHHH,
+  message: feilmelding,
   test: (value, { options }) => options?.context?.registeredFields && !options.context.registeredFields[options.path],
-};
+});
 
 const hoveddokument = object().shape({
-  tittel: string().test(erIkkeUnderRedigering).required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN),
-  logiskeVedlegg: array().of(string().test(erIkkeUnderRedigering)),
+  tittel: string()
+    .test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT))
+    .required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN),
+  logiskeVedlegg: array().of(
+    string()
+      .test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_VEDLEGG))
+      .required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN)
+  ),
 });
 
 const erBruker = (journalforingGjelder) => journalforingGjelder === BRUKER;
