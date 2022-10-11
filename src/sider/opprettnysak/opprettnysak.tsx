@@ -244,6 +244,7 @@ const OpprettNySak = ({
     const data = {
       brukerID,
       sakstype,
+      virksomhetOrgnr,
       sakstema,
       behandlingstema,
       behandlingstype,
