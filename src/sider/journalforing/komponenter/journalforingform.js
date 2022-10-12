@@ -48,25 +48,23 @@ const skalViseForvaltningsmelding = (formValues, toggleEnabled) => {
   );
 };
 
-export const JournalforingForm = (props) => {
-  const {
-    journalpostID,
-    hoveddokumentID,
-    vedlegg,
-    fagsakListe,
-    formValues,
-    formErrors,
-    submitFailed,
-    settFeltInnhold,
-    settJournalforingHensikt,
-    avbrytJournalforing,
-    submitSpinner,
-    kanSubmittes,
-    handleSubmit,
-    behandleAlleSakerToggleEnabled,
-    landkoder,
-  } = props;
-
+export const JournalforingForm = ({
+  journalpostID,
+  hoveddokumentID,
+  vedlegg,
+  fagsakListe,
+  formValues,
+  formErrors,
+  submitFailed,
+  settFeltInnhold,
+  settJournalforingHensikt,
+  avbrytJournalforing,
+  submitSpinner,
+  kanSubmittes,
+  handleSubmit,
+  behandleAlleSakerToggleEnabled,
+  landkoder,
+}) => {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, behandleAlleSakerToggleEnabled);
 
   useEffect(() => {
