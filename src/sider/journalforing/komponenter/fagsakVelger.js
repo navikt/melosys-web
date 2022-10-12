@@ -120,15 +120,21 @@ const FagsakVelger = (props) => {
             />
           </div>
         )}
+
         {valgtVisning === EKSISTERENDE && (
-          <Skjema.CustomRadioPanelGruppe
-            feltNavn="saksnummer"
-            radios={radioValg}
-            notify={notifier}
-            begrensVisteRadios
-            onChange={nullstillFormVerdier}
-            className="marginMellomCustomRadioPaneler"
-          />
+          <>
+            {ingenSakerFinnes && (
+              <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
+            )}
+            <Skjema.CustomRadioPanelGruppe
+              feltNavn="saksnummer"
+              radios={radioValg}
+              notify={notifier}
+              begrensVisteRadios
+              onChange={nullstillFormVerdier}
+              className="marginMellomCustomRadioPaneler"
+            />
+          </>
         )}
         {valgtVisning === OPPRETT && (
           <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />

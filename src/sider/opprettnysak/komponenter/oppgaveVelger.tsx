@@ -71,33 +71,31 @@ export const OppgaveVelger = ({
   };
 
   return (
-    <>
+    <div className="oppgaveVelger">
       {nyOpprettSakToggle === "enabled" && !erEksisterendeSak ? (
-        <div className="oppgaveVelger">
-          <div className="velgVisning">
-            <Nav.Radio
-              label={OPPRETT}
-              className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
-              name="velgVisningOppgave"
-              onChange={() => {
-                setValgtVisning(OPPRETT);
-                nullstillFormverdier();
-              }}
-              checked={valgtVisning === OPPRETT}
-              value={OPPRETT}
-            />
-            <Nav.Radio
-              label={EKSISTERENDE}
-              className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
-              name="velgVisningOppgave"
-              onChange={() => {
-                setValgtVisning(EKSISTERENDE);
-                nullstillFormverdier();
-              }}
-              checked={valgtVisning === EKSISTERENDE}
-              value={EKSISTERENDE}
-            />
-          </div>
+        <div className="velgVisning">
+          <Nav.Radio
+            label={OPPRETT}
+            className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
+            name="velgVisningOppgave"
+            onChange={() => {
+              setValgtVisning(OPPRETT);
+              nullstillFormverdier();
+            }}
+            checked={valgtVisning === OPPRETT}
+            value={OPPRETT}
+          />
+          <Nav.Radio
+            label={EKSISTERENDE}
+            className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
+            name="velgVisningOppgave"
+            onChange={() => {
+              setValgtVisning(EKSISTERENDE);
+              nullstillFormverdier();
+            }}
+            checked={valgtVisning === EKSISTERENDE}
+            value={EKSISTERENDE}
+          />
         </div>
       ) : (
         valgtVisning === OPPRETT && (
@@ -109,35 +107,31 @@ export const OppgaveVelger = ({
       {valgtVisning === EKSISTERENDE ? (
         <>
           {oppgaverFinnes && (
-            <div className="marginMellomCustomRadioPaneler">
+            <>
               {nyOpprettSakToggle === "enabled" && (
                 <Nav.AlertStripeInfo className="marginMellomHeaderOgAlertStripe">
                   Det er kun følgende oppgaver med journalpost-id som kan tilknyttes
                 </Nav.AlertStripeInfo>
               )}
               <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
-            </div>
+            </>
           )}
           {!oppgaverFinnes && !oppgaverForsoktHentet && (
-            <div className="marginMellomCustomRadioPaneler">
-              <Nav.AlertStripeInfo>
-                {hovedpartErBruker
-                  ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
-                  : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver."}
-              </Nav.AlertStripeInfo>
-            </div>
+            <Nav.AlertStripeInfo>
+              {hovedpartErBruker
+                ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
+                : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver."}
+            </Nav.AlertStripeInfo>
           )}
           {!oppgaverFinnes && oppgaverForsoktHentet && (
-            <div className="marginMellomCustomRadioPaneler">
-              <Nav.AlertStripeAdvarsel>
-                {nyOpprettSakToggle === "enabled"
-                  ? "Ingen eksisterende oppgaver funnet. Det blir opprettet en ny"
-                  : `Det finnes ingen oppgaver på denne ${hovedpartErBruker ? "personen" : "organisasjonen"}.`}
-              </Nav.AlertStripeAdvarsel>
-            </div>
+            <Nav.AlertStripeAdvarsel>
+              {nyOpprettSakToggle === "enabled"
+                ? "Ingen eksisterende oppgaver funnet. Det blir opprettet en ny"
+                : `Det finnes ingen oppgaver på denne ${hovedpartErBruker ? "personen" : "organisasjonen"}.`}
+            </Nav.AlertStripeAdvarsel>
           )}
         </>
       ) : null}
-    </>
+    </div>
   );
 };
