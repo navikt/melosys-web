@@ -251,7 +251,7 @@ class Journalforing extends Component {
     this.resetSkjemaFelterForOpprettFagsak();
 
     if (!Utils._isEmpty(this.props.errors)) {
-      throw new SubmissionError();
+      throw new SubmissionError(this.props.errors);
     }
 
     const journalforingData = this.vaskDokumentInformasjon(hensikt);
@@ -285,7 +285,7 @@ class Journalforing extends Component {
     this.resetSkjemaFelterForEksisterendeSaker();
 
     if (!Utils._isEmpty(this.props.errors)) {
-      throw new SubmissionError();
+      throw new SubmissionError(this.props.errors);
     }
 
     const journalforingData = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.OPPRETT);
