@@ -101,40 +101,49 @@ const FagsakVelger = (props) => {
         {nyOpprettSakToggle !== "enabled" && erOpprettNySak ? (
           <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
         ) : (
-          <div className="velgVisning">
-            <Nav.Radio
-              label={EKSISTERENDE}
-              className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
-              name="velgVisning"
-              onChange={() => setValgtVisning(EKSISTERENDE)}
-              checked={valgtVisning === EKSISTERENDE}
-              value={EKSISTERENDE}
-            />
-            <Nav.Radio
-              label={OPPRETT}
-              className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
-              name="velgVisning"
-              onChange={() => setValgtVisning(OPPRETT)}
-              checked={valgtVisning === OPPRETT}
-              value={OPPRETT}
-            />
-          </div>
+          <>
+            {(!ingenSakerFinnes || erOpprettNySak) && (
+              <div className="velgVisning">
+                <Nav.Radio
+                  label={EKSISTERENDE}
+                  className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
+                  name="velgVisning"
+                  onChange={() => setValgtVisning(EKSISTERENDE)}
+                  checked={valgtVisning === EKSISTERENDE}
+                  value={EKSISTERENDE}
+                />
+                <Nav.Radio
+                  label={OPPRETT}
+                  className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
+                  name="velgVisning"
+                  onChange={() => setValgtVisning(OPPRETT)}
+                  checked={valgtVisning === OPPRETT}
+                  value={OPPRETT}
+                />
+              </div>
+            )}
+            {ingenSakerFinnes && (
+              <>
+                {(valgtVisning === EKSISTERENDE || !erOpprettNySak) && (
+                  <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
+                )}
+                {!erOpprettNySak && (
+                  <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
+                )}
+              </>
+            )}
+          </>
         )}
 
         {valgtVisning === EKSISTERENDE && (
-          <>
-            {ingenSakerFinnes && (
-              <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
-            )}
-            <Skjema.CustomRadioPanelGruppe
-              feltNavn="saksnummer"
-              radios={radioValg}
-              notify={notifier}
-              begrensVisteRadios
-              onChange={nullstillFormVerdier}
-              className="marginMellomCustomRadioPaneler"
-            />
-          </>
+          <Skjema.CustomRadioPanelGruppe
+            feltNavn="saksnummer"
+            radios={radioValg}
+            notify={notifier}
+            begrensVisteRadios
+            onChange={nullstillFormVerdier}
+            className="marginMellomCustomRadioPaneler"
+          />
         )}
         {valgtVisning === OPPRETT && (
           <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
