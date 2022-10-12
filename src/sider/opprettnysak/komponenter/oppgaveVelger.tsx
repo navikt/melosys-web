@@ -18,7 +18,7 @@ interface OppgaveVelgerProps {
   oppgaverForsoktHentet: boolean;
   hovedpart: string;
   oppgaver: Api.Oppgaver.SokOppgaveResDto[];
-  lagNyOppgave: boolean;
+  erEksisterendeSak: boolean;
   nullstillFormverdier: () => void;
   change: (field: string, value: any) => void;
 }
@@ -28,11 +28,11 @@ export const OppgaveVelger = ({
   hovedpart,
   oppgaver,
   change,
-  lagNyOppgave,
+  erEksisterendeSak,
   nullstillFormverdier,
 }: OppgaveVelgerProps) => {
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
-  const [valgtVisning, setValgtVisning] = useState(lagNyOppgave ? OPPRETT : EKSISTERENDE);
+  const [valgtVisning, setValgtVisning] = useState(EKSISTERENDE);
 
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
@@ -60,20 +60,19 @@ export const OppgaveVelger = ({
     });
 
   useEffect(() => {
-    if (nyOpprettSakToggle === "enabled") {
+    if (nyOpprettSakToggle === "enabled" && (erEksisterendeSak === undefined || erEksisterendeSak)) {
       setValgtVisning(OPPRETT);
-    } else {
-      setValgtVisning(EKSISTERENDE);
     }
-  }, [nyOpprettSakToggle]);
+  }, [nyOpprettSakToggle, erEksisterendeSak]);
 
   const settJournalpostID = (oppgaveID: string) => {
     const oppgave = oppgaver.find((o) => o.oppgaveID === oppgaveID);
     change("journalpostID", oppgave?.journalpostID);
   };
+
   return (
     <>
-      {nyOpprettSakToggle === "enabled" && lagNyOppgave && oppgaverFinnes ? (
+      {nyOpprettSakToggle === "enabled" && !erEksisterendeSak ? (
         <div className="oppgaveVelger">
           <div className="velgVisning">
             <Nav.Radio
@@ -120,18 +119,22 @@ export const OppgaveVelger = ({
             </div>
           )}
           {!oppgaverFinnes && !oppgaverForsoktHentet && (
-            <Nav.AlertStripeInfo>
-              {hovedpartErBruker
-                ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
-                : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver."}
-            </Nav.AlertStripeInfo>
+            <div className="marginMellomCustomRadioPaneler">
+              <Nav.AlertStripeInfo>
+                {hovedpartErBruker
+                  ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
+                  : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver."}
+              </Nav.AlertStripeInfo>
+            </div>
           )}
           {!oppgaverFinnes && oppgaverForsoktHentet && (
-            <Nav.AlertStripeAdvarsel>
-              {nyOpprettSakToggle === "enabled"
-                ? "Ingen eksisterende oppgaver funnet. Det blir opprettet en ny"
-                : `Det finnes ingen oppgaver på denne ${hovedpartErBruker ? "personen" : "organisasjonen"}.`}
-            </Nav.AlertStripeAdvarsel>
+            <div className="marginMellomCustomRadioPaneler">
+              <Nav.AlertStripeAdvarsel>
+                {nyOpprettSakToggle === "enabled"
+                  ? "Ingen eksisterende oppgaver funnet. Det blir opprettet en ny"
+                  : `Det finnes ingen oppgaver på denne ${hovedpartErBruker ? "personen" : "organisasjonen"}.`}
+              </Nav.AlertStripeAdvarsel>
+            </div>
           )}
         </>
       ) : null}

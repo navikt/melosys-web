@@ -351,7 +351,7 @@ const OpprettNySak = ({
                 />
                 <div className="innrykk">
                   <OppgaveVelger
-                    lagNyOppgave={!erEksisterendeSak}
+                    erEksisterendeSak={erEksisterendeSak}
                     oppgaverForsoktHentet={oppgaverForsoktHentet}
                     hovedpart={hovedpart}
                     change={change}
