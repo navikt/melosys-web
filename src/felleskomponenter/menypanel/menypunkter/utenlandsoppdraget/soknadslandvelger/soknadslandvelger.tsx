@@ -4,6 +4,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { RootState } from "AppTypes";
 
+import MKV from "../../../../../melosyskodeverk";
 import * as Mui from "../../../../ui";
 import * as Symboler from "../../symboler";
 
@@ -11,6 +12,7 @@ import { Status } from "../../editerbartElement";
 import RedigererKomponent from "./redigerer";
 import RedigeringUtfortKomponent from "./redigeringUtfort";
 
+import { useFeatureToggle } from "../../../../../featuretoggle";
 import { behandlingsgrunnlagOperations } from "../../../../../ducks/behandlingsgrunnlag";
 
 import "./soknadslandvelger.css";
@@ -18,28 +20,39 @@ import "./soknadslandvelger.css";
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
 });
+
 const connector = connect(null, mapDispatchToProps);
+
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SoknadslandvelgerProps = PropsFromRedux & {
   redigerbart: boolean;
+  lagreSoknadOgOppfriskSaksopplysninger: () => void;
 };
 
-const Soknadslandvelger = ({ redigerbart, oppdaterBehandlingsgrunnlagState }: SoknadslandvelgerProps) => {
+const Soknadslandvelger = ({
+  redigerbart,
+  oppdaterBehandlingsgrunnlagState,
+  lagreSoknadOgOppfriskSaksopplysninger,
+}: SoknadslandvelgerProps) => {
   const [status, setStatus] = useState<Status>(Status.RedigeringUtfort);
+  const tomLandOgPeriodeToggle = useFeatureToggle("melosys.tom_periode_og_land");
+  const flytMedInngangsvilkår = window.location.pathname.indexOf(`${MKV.Koder.sakstyper.EU_EOS}/saksbehandling/`) > -1;
 
+  const lagre = () => {
+    setStatus(Status.RedigeringUtfort);
+    if (tomLandOgPeriodeToggle === "enabled" && flytMedInngangsvilkår) {
+      lagreSoknadOgOppfriskSaksopplysninger();
+    } else {
+      oppdaterBehandlingsgrunnlagState();
+    }
+  };
   return (
     <div className="soknadslandvelger">
       {redigerbart && status === Status.Redigerer ? (
         <>
           <RedigererKomponent />
-          <Mui.Knapp
-            onClick={() => {
-              setStatus(Status.RedigeringUtfort);
-              oppdaterBehandlingsgrunnlagState();
-            }}
-            className="lagreknapp"
-          >
+          <Mui.Knapp onClick={lagre} className="lagreknapp">
             Lagre
           </Mui.Knapp>
         </>
