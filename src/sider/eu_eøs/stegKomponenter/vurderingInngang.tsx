@@ -41,15 +41,12 @@ export const Varsler = ({
 }: VarslerProps) => {
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
 
-  const visbareInngangsvilkaarBegrunnelseKoder = inngangsvilkaarBegrunnelseKoder.filter(
-    (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
-  );
-
   const inngangsvilkaarErOverstyrtAvSaksbehandler =
     inngangsvilkaarBegrunnelseKoder.includes(OVERSTYRT_AV_SAKSBEHANDLER);
 
   const inngangsvilkaarErOverstyrtEllerIkkeOppfylt =
     inngangsvilkaarErOverstyrtAvSaksbehandler || !oppfyllerInngangsvilkar;
+
   const inngangsvilkaarErOppfyltOgIkkeOverstyrt = oppfyllerInngangsvilkar && !inngangsvilkaarErOverstyrtAvSaksbehandler;
 
   const oppfyllerInngangsvilkarCl = classNames({
@@ -57,10 +54,6 @@ export const Varsler = ({
     "liste__element--oppfylt": inngangsvilkaarErOppfyltOgIkkeOverstyrt,
     "liste__element--ikkeoppfylt": inngangsvilkaarErOverstyrtEllerIkkeOppfylt,
   });
-
-  const oppfyltTekst = `Søknaden oppfyller${
-    inngangsvilkaarErOppfyltOgIkkeOverstyrt ? " " : " ikke "
-  }inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
 
   if (Utils._isEmpty(inngangsvilkaar)) {
     if (tomLandOgPeriodeToggleEnabled && !behandlingHarPeriodeOgLand) {
@@ -78,6 +71,14 @@ export const Varsler = ({
       </ul>
     );
   }
+
+  const oppfyltTekst = `Søknaden oppfyller${
+    inngangsvilkaarErOppfyltOgIkkeOverstyrt ? " " : " ikke "
+  }inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
+
+  const visbareInngangsvilkaarBegrunnelseKoder = inngangsvilkaarBegrunnelseKoder.filter(
+    (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
+  );
 
   const flereSoknadslandEnnTillatt = landkoder.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
 

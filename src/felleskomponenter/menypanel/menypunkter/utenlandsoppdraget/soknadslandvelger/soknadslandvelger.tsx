@@ -13,15 +13,19 @@ import RedigererKomponent from "./redigerer";
 import RedigeringUtfortKomponent from "./redigeringUtfort";
 
 import { useFeatureToggle } from "../../../../../featuretoggle";
-import { behandlingsgrunnlagOperations } from "../../../../../ducks/behandlingsgrunnlag";
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../../ducks/behandlingsgrunnlag";
 
 import "./soknadslandvelger.css";
+
+const mapStateToProps = (state: RootState) => ({
+  behandlingHarPeriode: behandlingsgrunnlagSelectors.HarPeriodeSelector(state),
+});
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
 });
 
-const connector = connect(null, mapDispatchToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -34,6 +38,7 @@ const Soknadslandvelger = ({
   redigerbart,
   oppdaterBehandlingsgrunnlagState,
   lagreSoknadOgOppfriskSaksopplysninger,
+  behandlingHarPeriode,
 }: SoknadslandvelgerProps) => {
   const [status, setStatus] = useState<Status>(Status.RedigeringUtfort);
   const tomLandOgPeriodeToggle = useFeatureToggle("melosys.tom_periode_og_land");
@@ -41,7 +46,7 @@ const Soknadslandvelger = ({
 
   const lagre = () => {
     setStatus(Status.RedigeringUtfort);
-    if (tomLandOgPeriodeToggle === "enabled" && flytMedInngangsvilkår) {
+    if (tomLandOgPeriodeToggle === "enabled" && flytMedInngangsvilkår && behandlingHarPeriode) {
       lagreSoknadOgOppfriskSaksopplysninger();
     } else {
       oppdaterBehandlingsgrunnlagState();

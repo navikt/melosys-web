@@ -3,12 +3,14 @@ import { connect } from "react-redux";
 
 import PT from "prop-types";
 
+import MKV from "../../../../../melosyskodeverk";
 import * as Utils from "../../../../../utils";
 import * as Nav from "../../../../../navFrontend";
 import * as Symboler from "../../symboler";
 
 import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from "../../../../../ducks/behandlingsgrunnlag";
 import { formSelectors } from "../../../../../ducks/form";
+import { erFeatureToggleEnabled } from "../../../../../featuretoggle";
 
 import SoknadsperiodeEndring from "./soknadsperiodeEndring";
 
@@ -52,19 +54,38 @@ export class Soknadsperiode extends Component {
     });
   };
 
+  oppfriskSaksopplysingerVedLagre = async () => {
+    const { skjulEndrePeriode } = this;
+    const { behandlingHarLand, lagreSoknadOgOppfriskSaksopplysninger } = this.props;
+    const tomLandOgPeriodeToggleEnabled = await erFeatureToggleEnabled("melosys.tom_periode_og_land");
+
+    if (tomLandOgPeriodeToggleEnabled) {
+      const flytMedInngangsvilkår =
+        window.location.pathname.indexOf(`${MKV.Koder.sakstyper.EU_EOS}/saksbehandling/`) > -1;
+
+      if (!behandlingHarLand && flytMedInngangsvilkår) {
+        skjulEndrePeriode();
+      } else {
+        // Når melosys.tom_periode_og_land fjernes må vi forsikre oss om at den nyeste perioden
+        // konsekvent lagres før vi oppfrisker saksopplysningene.
+        // Se history på filen for å se tidligere hack.
+        lagreSoknadOgOppfriskSaksopplysninger();
+        skjulEndrePeriode();
+      }
+    } else {
+      lagreSoknadOgOppfriskSaksopplysninger();
+      skjulEndrePeriode();
+    }
+  };
+
   lagre = () => {
     const { soknadsperiodeFom, soknadsperiodeTom } = this.state;
+    this.oppdaterPeriode(soknadsperiodeFom, soknadsperiodeTom);
     this.setState({
       soknadsperiodeGammelFom: soknadsperiodeFom,
       soknadsperiodeGammelTom: soknadsperiodeTom,
     });
-    this.oppdaterPeriode(soknadsperiodeFom, soknadsperiodeTom);
-    // Todo: Denne er hacky. Bakgrunn: oppdatert soknad rekker ikke å re-propagate til parent før
-    // funksjonen nedenfor kalles. Vurder å skrive om til en async await-aktig løsning.
-    setTimeout(() => {
-      this.props.lagreSoknadOgOppfriskSaksopplysninger();
-      this.skjulEndrePeriode();
-    }, 0);
+    this.oppfriskSaksopplysingerVedLagre();
   };
 
   avbryt = () => {
@@ -115,6 +136,7 @@ Soknadsperiode.propTypes = {
   soknadsperiodeFomErrors: PT.string,
   soknadsperiodeTomErrors: PT.string,
   tittel: PT.string.isRequired,
+  behandlingHarLand: PT.bool.isRequired,
 };
 
 Soknadsperiode.defaultProps = {
@@ -127,6 +149,7 @@ const mapStateToProps = (state) => ({
   soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
   soknadsperiodeFomErrors: formSelectors.SoknadsperiodeFomErrorsSelector(state),
   soknadsperiodeTomErrors: formSelectors.SoknadsperiodeTomErrorsSelector(state),
+  behandlingHarLand: behandlingsgrunnlagSelectors.HarLandSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
