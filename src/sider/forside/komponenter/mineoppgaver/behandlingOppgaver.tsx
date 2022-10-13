@@ -25,7 +25,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
  * Lister ut behandlingsoppgaver som saksbehandleren har opprettet
  */
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
-  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const { saksbehandling } = mineSaker;
 
   return (
@@ -37,7 +37,7 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
         sortingLegend="Sorter behandlinger etter frist:"
         sortingPath="behandling.registrertDato"
         radioGroupName="behandlingsortering"
-        visSakstema={sakstemaToggle === "enabled"}
+        visSakstema={behandleAlleSakerToggle === "enabled"}
         landkoder={landkoder}
       />
     </div>
