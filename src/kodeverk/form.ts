@@ -19,6 +19,7 @@ export enum JOURNALFORING_VALUES {
   periodeFraOgMed = "journalforingPeriodeFraOgMed",
   periodeTilOgMed = "journalforingPeriodeTilOgMed",
   formNavn = "journalforing",
+  erAvsluttetSak = "erAvsluttetSak",
 }
 
 export const SOKNAD = "soknad";
@@ -120,6 +121,7 @@ export enum OPPRETT_NY_SAK_VALUES {
   periodeTilOgMed = "periodeTilOgMed",
   hovedpart = "hovedpart",
   formNavn = "opprett_ny_sak",
+  erAvsluttetSak = "erAvsluttetSak",
 }
 export const VURDERING_VIDERESEND = "vurdering_videresend";
 export const VURDER_UTPEKING = "vurder_utpeking";

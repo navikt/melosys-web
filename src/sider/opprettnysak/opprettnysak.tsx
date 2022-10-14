@@ -278,6 +278,7 @@ const OpprettNySak = ({
       lagNySak(data).finally(() => setBekreftPending(false));
     }
   };
+
   const nullstillFormVerdier = () => {
     change("behandlingstema", null);
     change("behandlingstype", null);
@@ -288,6 +289,7 @@ const OpprettNySak = ({
     change("sakstype", null);
     change("sakstema", null);
     change("saksnummer", null);
+    change("erAvsluttetSak", null);
   };
   const nullstillOppgave = () => {
     change("oppgaveID", null);
@@ -372,7 +374,6 @@ const OpprettNySak = ({
                     />
                     <div className="innrykk">
                       <OppgaveVelger
-                        erEksisterendeSak={erEksisterendeSak}
                         oppgaverForsoktHentet={oppgaverForsoktHentet}
                         hovedpart={hovedpart}
                         change={change}

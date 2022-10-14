@@ -41,6 +41,9 @@ const FagsakVelger = (props) => {
 
   useEffect(() => {
     dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", true));
+  }, []);
+
+  useEffect(() => {
     if (nullstillFormVerdier) {
       nullstillFormVerdier();
     }
@@ -111,7 +114,10 @@ const FagsakVelger = (props) => {
                   label={EKSISTERENDE}
                   className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
                   name="velgVisning"
-                  onChange={() => setValgtVisning(EKSISTERENDE)}
+                  onChange={() => {
+                    setValgtVisning(EKSISTERENDE);
+                    dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", true));
+                  }}
                   checked={valgtVisning === EKSISTERENDE}
                   value={EKSISTERENDE}
                 />
@@ -119,7 +125,10 @@ const FagsakVelger = (props) => {
                   label={OPPRETT}
                   className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
                   name="velgVisning"
-                  onChange={() => setValgtVisning(OPPRETT)}
+                  onChange={() => {
+                    setValgtVisning(OPPRETT);
+                    dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", false));
+                  }}
                   checked={valgtVisning === OPPRETT}
                   value={OPPRETT}
                 />

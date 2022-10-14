@@ -39,7 +39,6 @@ const behandlingstyper_gammel = (sakstype, behtema) => {
 
 export const KnyttTilSak = (props) => {
   const { sak, behandleAlleSakerToggleEnabled, erOpprettNySak, changeField, feltNavn, formValues } = props;
-
   const { behandlingstema, behandlingstype, journalforingGjelder, opprettBehandling } = {
     opprettBehandling: formValues.opprettBehandling,
     behandlingstema: formValues[feltNavn.behandlingstema],
@@ -114,8 +113,12 @@ export const KnyttTilSak = (props) => {
   const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
     ? sisteBehandlingErInaktiv
     : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
-
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
+
+  useEffect(() => {
+    changeField(feltNavn.formNavn, feltNavn.erAvsluttetSak, visKnyttTilEksisterende);
+  }, [visKnyttTilEksisterende]);
+
   if (visKnyttTilEksisterende) {
     return (
       <div className="knyttTilSak__panelramme">
