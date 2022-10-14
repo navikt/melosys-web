@@ -30,6 +30,9 @@ const kodeTilObjekt = (kode, muligeKoder) => muligeKoder.find((enkeltKode) => ob
 const finnEnkeltKodeFraListe = (kodeSomSkalFinnes, kodeverkListe) =>
   kodeverkListe.find((enkelt) => enkelt.kode === kodeSomSkalFinnes) || undefined;
 
+const erKodeIListe = (kodeSomSkalFinnes, kodeverkListe) =>
+  finnEnkeltKodeFraListe(kodeSomSkalFinnes, kodeverkListe) !== undefined;
+
 const kodeTilTerm = (kode, muligeValg) => {
   const valgtKodeverkObjekt = muligeValg.find((item) => objektTilKode(item) === kode);
   return valgtKodeverkObjekt && objektTilTerm(valgtKodeverkObjekt);
@@ -72,6 +75,7 @@ export {
   objektTilKode,
   objektTilKodeUtenFeilmelding,
   finnEnkeltKodeFraListe,
+  erKodeIListe,
   kodeTilTerm,
   kodeTilObjekt,
   termTilKode,
