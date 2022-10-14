@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import * as Api from "../../../services/api";
@@ -35,6 +35,14 @@ export const OppgaveVelger = ({
 
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
+
+  useEffect(() => {
+    if (nyOpprettSakToggle === "enabled") {
+      setValgtVisning(OPPRETT);
+    } else {
+      setValgtVisning(EKSISTERENDE);
+    }
+  }, [nyOpprettSakToggle]);
 
   const radioValg = oppgaver
     .filter((oppgave) => oppgave.journalpostID)
@@ -107,6 +115,13 @@ export const OppgaveVelger = ({
               )}
               <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
             </>
+          )}
+          {!oppgaverFinnes && !oppgaverForsoktHentet && nyOpprettSakToggle !== "enabled" && (
+            <Nav.AlertStripeInfo>
+              {hovedpartErBruker
+                ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
+                : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver."}
+            </Nav.AlertStripeInfo>
           )}
           {!oppgaverFinnes && oppgaverForsoktHentet && (
             <Nav.AlertStripeAdvarsel>

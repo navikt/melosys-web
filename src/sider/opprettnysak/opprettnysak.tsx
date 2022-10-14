@@ -210,8 +210,8 @@ const OpprettNySak = ({
   }, [virksomhetOrgnr]);
 
   useEffect(() => {
-    setSkalViseSkjema(Boolean(brukerID || virksomhetOrgnr));
-  }, [brukerID, virksomhetOrgnr]);
+    setSkalViseSkjema(nyOpprettSakToggle === "enabled" ? Boolean(brukerID || virksomhetOrgnr) : true);
+  }, [brukerID, virksomhetOrgnr, nyOpprettSakToggle]);
 
   useEffect(() => {
     if (hovedpart === BRUKER) {
