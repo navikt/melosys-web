@@ -182,6 +182,7 @@ const OpprettNySak = ({
     if (Utils.person.erGyldigFnrEllerDnr(personIdent)) {
       const navn = await hentSammensattNavn(personIdent);
       change("brukerNavn", navn);
+      setSkalViseSkjema(true);
     } else {
       change("brukerNavn", null);
       return;
@@ -195,6 +196,7 @@ const OpprettNySak = ({
       const response = await sokOrgnr(orgnr);
       const navn = response?.data.navn;
       change("virksomhetNavn", navn);
+      setSkalViseSkjema(true);
     } else {
       change("virksomhetNavn", null);
       return;
@@ -214,10 +216,8 @@ const OpprettNySak = ({
   useEffect(() => {
     if (nyOpprettSakToggle !== "enabled") {
       setSkalViseSkjema(true);
-    } else {
-      setSkalViseSkjema(Boolean(brukerID || virksomhetOrgnr));
     }
-  }, [setSkalViseSkjema, brukerID, virksomhetOrgnr, nyOpprettSakToggle]);
+  }, [nyOpprettSakToggle]);
 
   useEffect(() => {
     if (hovedpart === BRUKER) {
