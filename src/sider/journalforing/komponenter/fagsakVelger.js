@@ -144,6 +144,7 @@ const FagsakVelger = (props) => {
       </div>
     );
   }
+
   if ((!behandleAlleSakerToggleEnabled || nyOpprettSakToggle !== "enabled") && erOpprettNySak) {
     return (
       <OpprettSak

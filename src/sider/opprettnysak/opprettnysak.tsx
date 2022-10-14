@@ -210,7 +210,9 @@ const OpprettNySak = ({
   }, [virksomhetOrgnr]);
 
   useEffect(() => {
-    if (nyOpprettSakToggle === "enabled") {
+    if (nyOpprettSakToggle !== "enabled") {
+      setSkalViseSkjema(true);
+    } else {
       setSkalViseSkjema(Boolean(brukerID || virksomhetOrgnr));
     }
   }, [setSkalViseSkjema, brukerID, virksomhetOrgnr, nyOpprettSakToggle]);
