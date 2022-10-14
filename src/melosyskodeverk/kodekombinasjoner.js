@@ -51,6 +51,16 @@ export const unntaksbestemmelser = Utils._uniqBy(
   ({ kode }) => kode
 ).sort(kodeverkComparator);
 
+export const unikeAvtaleland = MKV.KTObjects.landkoder
+  .concat(MKV.KTObjects.avtaleland)
+  .filter((ktobjectA, index, self) => self.findIndex((ktobjectB) => ktobjectB.kode === ktobjectA.kode) === index);
+
+export const unikeAvtalelandKoder = unikeAvtaleland.map((ktobject) => ktobject.kode);
+
+export const landSomErAvtalelandOgEuEøsLand = MKV.KTObjects.landkoder.filter(
+  (ktobject) => !Utils._isEmpty(MKV.Koder.avtaleland[ktobject.kode])
+);
+
 export const gyldigeSakstema = (sakstype) => {
   switch (sakstype) {
     case MKV.Koder.sakstyper.EU_EOS:

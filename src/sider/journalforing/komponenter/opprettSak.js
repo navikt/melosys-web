@@ -199,6 +199,14 @@ export const OpprettSak = (props) => {
 
   const visArbeidFlereLandEllerUkjent =
     valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
+  const disableSakstype =
+    behandleAlleSakerToggleEnabled &&
+    !Utils._isEmpty(formValues?.utenlandskTrygdemyndighetLandkode) &&
+    !KV.erKodeIListe(
+      formValues.utenlandskTrygdemyndighetLandkode,
+      MKV.Kodekombinasjoner.landSomErAvtalelandOgEuEøsLand
+    );
+
   return (
     <div className="opprettSak">
       <Skjema.Select
@@ -208,7 +216,7 @@ export const OpprettSak = (props) => {
         onChange={() => {
           if (behandleAlleSakerToggleEnabled) nullstillVerdier(feltNavn.sakstype, settFeltInnhold, feltNavn);
         }}
-        disabled={behandleAlleSakerToggleEnabled && !Utils._isEmpty(formValues?.utenlandskTrygdemyndighetLandkode)}
+        disabled={disableSakstype}
       >
         {(behandleAlleSakerToggleEnabled ? sakstyper : valgbareSakstyper).map((elem) => (
           <option key={elem.kode} value={elem.kode}>

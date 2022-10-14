@@ -76,26 +76,24 @@ const AvsenderVelger = ({
   }, [formValues.avsenderType]);
 
   const fullmektigLandEndret = (landkode: string) => {
-    const avtaleLand = [
-      {
-        kode: "LA",
-        term: "Land A",
-      },
-      {
-        kode: "LB",
-        term: "Land B",
-      },
-    ];
     const avsenderNavn = landkode
-      ? `Trygdemyndighet i ${KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder.concat(avtaleLand))}`
+      ? `Trygdemyndighet i ${KV.kodeTilTerm(landkode, MKV.Kodekombinasjoner.unikeAvtaleland)}`
       : null;
 
     settFeltInnhold("avsenderID", landkode);
     settFeltInnhold("avsenderNavn", avsenderNavn);
-    if (behandleAlleSakerToggle === "enabled" && KV.erKodeIListe(landkode, avtaleLand)) {
+    if (
+      behandleAlleSakerToggle === "enabled" &&
+      KV.erKodeIListe(landkode, MKV.KTObjects.avtaleland) &&
+      !KV.erKodeIListe(landkode, MKV.Kodekombinasjoner.landSomErAvtalelandOgEuEøsLand)
+    ) {
       settFeltInnhold("sakstype", MKV.Koder.sakstyper.TRYGDEAVTALE);
     }
-    if (behandleAlleSakerToggle === "enabled" && KV.erKodeIListe(landkode, MKV.KTObjects.landkoder)) {
+    if (
+      behandleAlleSakerToggle === "enabled" &&
+      KV.erKodeIListe(landkode, MKV.KTObjects.landkoder) &&
+      !KV.erKodeIListe(landkode, MKV.Kodekombinasjoner.landSomErAvtalelandOgEuEøsLand)
+    ) {
       settFeltInnhold("sakstype", MKV.Koder.sakstyper.EU_EOS);
     }
   };
