@@ -160,6 +160,7 @@ const OpprettNySak = ({
     touchAll();
     return formIsValid;
   };
+
   const hentOppgaver = async (value: string) => {
     if (Utils.person.erGyldigFnrEllerDnr(value) || Utils.organisasjon.erOrgnrGyldig(value)) {
       try {
@@ -185,6 +186,9 @@ const OpprettNySak = ({
       setSkalViseSkjema(true);
     } else {
       change("brukerNavn", null);
+      if (nyOpprettSakToggle === "enabled") {
+        setSkalViseSkjema(false);
+      }
       return;
     }
     await hentFagsakListe(personIdent);
@@ -199,6 +203,9 @@ const OpprettNySak = ({
       setSkalViseSkjema(true);
     } else {
       change("virksomhetNavn", null);
+      if (nyOpprettSakToggle === "enabled") {
+        setSkalViseSkjema(false);
+      }
       return;
     }
     await hentFagsakListe(virksomhetOrgnr);
@@ -214,7 +221,7 @@ const OpprettNySak = ({
   }, [virksomhetOrgnr]);
 
   useEffect(() => {
-    if (nyOpprettSakToggle !== "enabled") {
+    if (nyOpprettSakToggle === "disabled") {
       setSkalViseSkjema(true);
     }
   }, [nyOpprettSakToggle]);
