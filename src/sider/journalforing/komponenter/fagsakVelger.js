@@ -102,9 +102,7 @@ const FagsakVelger = (props) => {
           <>
             {ingenSakerFinnes ? (
               <>
-                {(valgtVisning === EKSISTERENDE || !erOpprettNySak) && (
-                  <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
-                )}
+                <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
                 <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
               </>
             ) : (
