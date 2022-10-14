@@ -204,7 +204,7 @@ export const OpprettSak = (props) => {
     !Utils._isEmpty(formValues?.utenlandskTrygdemyndighetLandkode) &&
     !KV.erKodeIListe(
       formValues.utenlandskTrygdemyndighetLandkode,
-      MKV.Kodekombinasjoner.landSomErAvtalelandOgEuEøsLand
+      MKV.Kodekombinasjoner.landSomErTrygdeavtaleMyndighetslandOgEuEøsLand
     );
 
   return (

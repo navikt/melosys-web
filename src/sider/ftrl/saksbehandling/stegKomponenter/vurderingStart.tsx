@@ -27,7 +27,7 @@ import "./vurderingStart.css";
 const landHarTrygdeavtaleMedNorgeEllerErEosLand = (landKode: string) => {
   const landMedTrygdeAvtaleEllerEosLand = [
     ...MKV.KTObjects.landkoder.map((land: KTObject) => land.kode),
-    ...MKV.KTObjects.avtaleland.map((land: KTObject) => land.kode),
+    ...MKV.KTObjects.trygdeavtale_myndighetsland.map((land: KTObject) => land.kode),
   ];
 
   return landMedTrygdeAvtaleEllerEosLand.includes(landKode);

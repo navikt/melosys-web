@@ -84,15 +84,15 @@ const AvsenderVelger = ({
     settFeltInnhold("avsenderNavn", avsenderNavn);
     if (
       behandleAlleSakerToggle === "enabled" &&
-      KV.erKodeIListe(landkode, MKV.KTObjects.avtaleland) &&
-      !KV.erKodeIListe(landkode, MKV.Kodekombinasjoner.landSomErAvtalelandOgEuEøsLand)
+      KV.erKodeIListe(landkode, MKV.KTObjects.trygdeavtale_myndighetsland) &&
+      !KV.erKodeIListe(landkode, MKV.Kodekombinasjoner.landSomErTrygdeavtaleMyndighetslandOgEuEøsLand)
     ) {
       settFeltInnhold("sakstype", MKV.Koder.sakstyper.TRYGDEAVTALE);
     }
     if (
       behandleAlleSakerToggle === "enabled" &&
       KV.erKodeIListe(landkode, MKV.KTObjects.landkoder) &&
-      !KV.erKodeIListe(landkode, MKV.Kodekombinasjoner.landSomErAvtalelandOgEuEøsLand)
+      !KV.erKodeIListe(landkode, MKV.Kodekombinasjoner.landSomErTrygdeavtaleMyndighetslandOgEuEøsLand)
     ) {
       settFeltInnhold("sakstype", MKV.Koder.sakstyper.EU_EOS);
     }
