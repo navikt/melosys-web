@@ -160,6 +160,7 @@ const OpprettNySak = ({
     touchAll();
     return formIsValid;
   };
+
   const hentOppgaver = async (value: string) => {
     if (Utils.person.erGyldigFnrEllerDnr(value) || Utils.organisasjon.erOrgnrGyldig(value)) {
       try {
@@ -182,8 +183,12 @@ const OpprettNySak = ({
     if (Utils.person.erGyldigFnrEllerDnr(personIdent)) {
       const navn = await hentSammensattNavn(personIdent);
       change("brukerNavn", navn);
+      setSkalViseSkjema(true);
     } else {
       change("brukerNavn", null);
+      if (nyOpprettSakToggle === "enabled") {
+        setSkalViseSkjema(false);
+      }
       return;
     }
     await hentFagsakListe(personIdent);
@@ -195,8 +200,12 @@ const OpprettNySak = ({
       const response = await sokOrgnr(orgnr);
       const navn = response?.data.navn;
       change("virksomhetNavn", navn);
+      setSkalViseSkjema(true);
     } else {
       change("virksomhetNavn", null);
+      if (nyOpprettSakToggle === "enabled") {
+        setSkalViseSkjema(false);
+      }
       return;
     }
     await hentFagsakListe(virksomhetOrgnr);
@@ -212,12 +221,10 @@ const OpprettNySak = ({
   }, [virksomhetOrgnr]);
 
   useEffect(() => {
-    if (nyOpprettSakToggle !== "enabled") {
+    if (nyOpprettSakToggle === "disabled") {
       setSkalViseSkjema(true);
-    } else {
-      setSkalViseSkjema(Boolean(brukerID || virksomhetOrgnr));
     }
-  }, [setSkalViseSkjema, brukerID, virksomhetOrgnr, nyOpprettSakToggle]);
+  }, [nyOpprettSakToggle]);
 
   useEffect(() => {
     if (hovedpart === BRUKER) {
