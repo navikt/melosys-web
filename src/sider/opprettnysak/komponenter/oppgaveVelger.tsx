@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import * as Api from "../../../services/api";
@@ -28,11 +28,10 @@ export const OppgaveVelger = ({
   hovedpart,
   oppgaver,
   change,
-  erEksisterendeSak,
   nullstillFormverdier,
 }: OppgaveVelgerProps) => {
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
-  const [valgtVisning, setValgtVisning] = useState(EKSISTERENDE);
+  const [valgtVisning, setValgtVisning] = useState(OPPRETT);
 
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
@@ -59,20 +58,13 @@ export const OppgaveVelger = ({
       };
     });
 
-  useEffect(() => {
-    if (nyOpprettSakToggle === "enabled" && (erEksisterendeSak === undefined || erEksisterendeSak)) {
-      setValgtVisning(OPPRETT);
-    }
-  }, [nyOpprettSakToggle, erEksisterendeSak]);
-
   const settJournalpostID = (oppgaveID: string) => {
     const oppgave = oppgaver.find((o) => o.oppgaveID === oppgaveID);
     change("journalpostID", oppgave?.journalpostID);
   };
-
   return (
     <div className="oppgaveVelger">
-      {nyOpprettSakToggle === "enabled" && !erEksisterendeSak ? (
+      {nyOpprettSakToggle === "enabled" ? (
         <div className="velgVisning">
           <Nav.Radio
             label={OPPRETT}

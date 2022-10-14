@@ -33,16 +33,14 @@ const FagsakVelger = (props) => {
     erOpprettNySak,
     nullstillFormVerdier,
   } = props;
-  const [valgtVisning, setValgtVisning] = useState(!erOpprettNySak ? EKSISTERENDE : undefined);
+  const [valgtVisning, setValgtVisning] = useState(EKSISTERENDE);
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
   const feltNavn = erOpprettNySak ? FormValuesOpprettNySak : FormValuesJournalforing;
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
 
   useEffect(() => {
-    if (valgtVisning !== undefined) {
-      dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", valgtVisning === EKSISTERENDE));
-    }
+    dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", true));
     if (nullstillFormVerdier) {
       nullstillFormVerdier();
     }
@@ -102,7 +100,14 @@ const FagsakVelger = (props) => {
           <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
         ) : (
           <>
-            {(!ingenSakerFinnes || erOpprettNySak) && (
+            {ingenSakerFinnes ? (
+              <>
+                {(valgtVisning === EKSISTERENDE || !erOpprettNySak) && (
+                  <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
+                )}
+                <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
+              </>
+            ) : (
               <div className="velgVisning">
                 <Nav.Radio
                   label={EKSISTERENDE}
@@ -121,16 +126,6 @@ const FagsakVelger = (props) => {
                   value={OPPRETT}
                 />
               </div>
-            )}
-            {ingenSakerFinnes && (
-              <>
-                {(valgtVisning === EKSISTERENDE || !erOpprettNySak) && (
-                  <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
-                )}
-                {!erOpprettNySak && (
-                  <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
-                )}
-              </>
             )}
           </>
         )}

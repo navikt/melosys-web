@@ -109,6 +109,7 @@ const OpprettNySak = ({
 }: InjectedFormProps<OpprettNySakFormData, OpprettNySakProps> & OpprettNySakProps) => {
   const [oppgaver, setOppgaver] = useState<Api.Oppgaver.SokOppgaveResDto[]>([]);
   const [bekreftPending, setBekreftPending] = useState(false);
+  const [skalViseSkjema, setSkalViseSkjema] = useState(false);
   const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
@@ -129,6 +130,8 @@ const OpprettNySak = ({
     soknadslandUkjenteEllerAlleEosLand,
     soknadsland,
   } = formValues || {};
+
+  console.log({ formValues });
 
   const [erRedigerbart, setErRedigerbart] = useState(false);
   const { tom, fom, erUkjenteEllerAlleEosLand, landkoder } = {
@@ -206,6 +209,10 @@ const OpprettNySak = ({
   useEffect(() => {
     hentVirksomhet(virksomhetOrgnr);
   }, [virksomhetOrgnr]);
+
+  useEffect(() => {
+    setSkalViseSkjema(Boolean(brukerID || virksomhetOrgnr));
+  }, [brukerID, virksomhetOrgnr]);
 
   useEffect(() => {
     if (hovedpart === BRUKER) {
@@ -320,46 +327,51 @@ const OpprettNySak = ({
                   />
                 )}
               </div>
-              <div className="seksjon">
-                <Mui.Undertittel
-                  tekst={
-                    nyOpprettSakToggle === "enabled"
-                      ? "Knytt til eksisterende sak eller opprett ny"
-                      : "Informasjon om sak"
-                  }
-                  ikon={Ikoner.Links}
-                  className="undertittel"
-                  understrek
-                />
-                <div className="innrykk">
-                  <FagsakVelger
-                    erOpprettNySak
-                    fagsakListe={fagsakListe}
-                    behandleAlleSakerToggleEnabled={behandleAlleSakerToggle === "enabled"}
-                    landkoder={landkoderListe}
-                    nullstillFormVerdier={nullstillFormVerdier}
-                    formValues={formValues}
-                  />
-                </div>
-              </div>
-              <div className="seksjon">
-                <Mui.Undertittel
-                  tekst="Knytt til eksisterende Gosys oppgave eller opprett ny"
-                  ikon={Ikoner.CheckList}
-                  className="undertittel"
-                  understrek
-                />
-                <div className="innrykk">
-                  <OppgaveVelger
-                    erEksisterendeSak={erEksisterendeSak}
-                    oppgaverForsoktHentet={oppgaverForsoktHentet}
-                    hovedpart={hovedpart}
-                    change={change}
-                    oppgaver={oppgaver}
-                    nullstillFormverdier={nullstillOppgave}
-                  />
-                </div>
-              </div>
+              {skalViseSkjema && (
+                <>
+                  <div className="seksjon">
+                    <Mui.Undertittel
+                      tekst={
+                        nyOpprettSakToggle === "enabled"
+                          ? "Knytt til eksisterende sak eller opprett ny"
+                          : "Informasjon om sak"
+                      }
+                      ikon={Ikoner.Links}
+                      className="undertittel"
+                      understrek
+                    />
+                    <div className="innrykk">
+                      <FagsakVelger
+                        erOpprettNySak
+                        fagsakListe={fagsakListe}
+                        behandleAlleSakerToggleEnabled={behandleAlleSakerToggle === "enabled"}
+                        landkoder={landkoderListe}
+                        nullstillFormVerdier={nullstillFormVerdier}
+                        formValues={formValues}
+                      />
+                    </div>
+                  </div>
+                  <div className="seksjon">
+                    <Mui.Undertittel
+                      tekst="Knytt til eksisterende Gosys oppgave eller opprett ny"
+                      ikon={Ikoner.CheckList}
+                      className="undertittel"
+                      understrek
+                    />
+                    <div className="innrykk">
+                      <OppgaveVelger
+                        erEksisterendeSak={erEksisterendeSak}
+                        oppgaverForsoktHentet={oppgaverForsoktHentet}
+                        hovedpart={hovedpart}
+                        change={change}
+                        oppgaver={oppgaver}
+                        nullstillFormverdier={nullstillOppgave}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
               <div className="seksjon">
                 <Feilmeldinger feilmeldinger={feilmeldinger} />
                 <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg behandlingen i mine oppgaver" />
