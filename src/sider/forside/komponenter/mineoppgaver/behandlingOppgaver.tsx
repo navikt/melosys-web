@@ -1,14 +1,12 @@
-import React, { useEffect } from "react";
-import { connect, ConnectedProps, useSelector } from "react-redux";
+import React from "react";
+import { connect, ConnectedProps } from "react-redux";
 
 import { RootState } from "AppTypes";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
 
 import withErrorHandling from "../../../../felleskomponenter/withErrorHandling";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 
-import { oppgaverOperations, oppgaverSelectors } from "../../../../ducks/oppgaver";
+import { oppgaverSelectors } from "../../../../ducks/oppgaver";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
 
 import "./behandlingsoppgaver.css";
@@ -20,27 +18,17 @@ const mapStateToProps = (state: RootState) => ({
   landkoder: landkoderSelectors.LandkoderSelector(state),
 });
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oversikt: () => dispatch(oppgaverOperations.oversikt()),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 /**
  * Lister ut behandlingsoppgaver som saksbehandleren har opprettet
  */
-export const BehandlingOppgaver = ({ mineSaker, landkoder, oversikt }: PropsFromRedux) => {
+export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const { saksbehandling } = mineSaker;
 
-  useEffect(() => {
-    const timer = setTimeout(() => oversikt(), 5000);
-    console.log(oversikt);
-    return () => clearTimeout(timer);
-  });
-
-  const test = useSelector(() => store.getState().userNameRecuder.name);
+  console.log(mineSaker);
 
   return (
     <div className="behandlingsOppgaver">
