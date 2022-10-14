@@ -116,7 +116,6 @@ export const KnyttTilSak = (props) => {
     : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
 
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
-  console.log({ muligeBehandlingstyper });
   if (visKnyttTilEksisterende) {
     return (
       <div className="knyttTilSak__panelramme">

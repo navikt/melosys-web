@@ -108,13 +108,6 @@ export const OppgaveVelger = ({
               <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
             </>
           )}
-          {!oppgaverFinnes && !oppgaverForsoktHentet && (
-            <Nav.AlertStripeInfo>
-              {hovedpartErBruker
-                ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
-                : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver."}
-            </Nav.AlertStripeInfo>
-          )}
           {!oppgaverFinnes && oppgaverForsoktHentet && (
             <Nav.AlertStripeAdvarsel>
               {nyOpprettSakToggle === "enabled"

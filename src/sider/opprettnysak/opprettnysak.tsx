@@ -131,8 +131,6 @@ const OpprettNySak = ({
     soknadsland,
   } = formValues || {};
 
-  console.log({ formValues });
-
   const [erRedigerbart, setErRedigerbart] = useState(false);
   const { tom, fom, erUkjenteEllerAlleEosLand, landkoder } = {
     fom: periodeFraOgMed,
@@ -142,6 +140,7 @@ const OpprettNySak = ({
   };
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
+  // TODO: Fjerner denne i en annen branch som omhandler å implementere feilmeldinger som journalføring.
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") {
       setErRedigerbart(Boolean(sakstype && behandlingstema));
