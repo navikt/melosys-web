@@ -204,6 +204,7 @@ const form = {
         erAvsenderPreutfylt: props.erAvsenderPreutfylt,
         behandleAlleSakerToggleEnabled: props.behandleAlleSakerToggleEnabled,
         registeredFields: props.registeredFields,
+        journalforingKnappErTryktPå: Boolean(values.journalforingHensikt),
       },
     };
 

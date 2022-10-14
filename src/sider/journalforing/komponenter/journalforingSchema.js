@@ -68,12 +68,18 @@ const erIkkeUnderRedigering = (feilmelding) => ({
 
 const hoveddokument = object().shape({
   tittel: string()
-    .test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT))
-    .required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN),
+    .required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN)
+    .when("$journalforingKnappErTryktPå", {
+      is: true,
+      then: string().test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT)),
+    }),
   logiskeVedlegg: array().of(
     string()
-      .test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_VEDLEGG))
       .required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN)
+      .when("$journalforingKnappErTryktPå", {
+        is: true,
+        then: string().test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_VEDLEGG)),
+      })
   ),
 });
 
@@ -152,7 +158,8 @@ const journalforing = object().shape({
   ),
   saksnummer: string().when("journalforingHensikt", {
     is: (hensikt) =>
-      hensikt === Konstanter.JOURNALFORING_HENSIKT.KNYTT || hensikt === Konstanter.JOURNALFORING_HENSIKT.NY_VURDERING,
+      hensikt === Konstanter.JOURNALFORING_HENSIKT.KNYTT ||
+      hensikt === Konstanter.JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE,
     then: string().required(VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT),
   }),
   journalforingPeriodeFraOgMed: string().when("$behandleAlleSakerToggleEnabled", {
