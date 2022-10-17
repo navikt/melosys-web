@@ -72,7 +72,7 @@ export const OppgaveVelger = ({
     change("journalpostID", oppgave?.journalpostID);
   };
 
-  if (erAvsluttetSak && Boolean(saksnummer) && nyOpprettSakToggle === "enabled") {
+  if (erAvsluttetSak && saksnummer !== -1 && nyOpprettSakToggle === "enabled") {
     return (
       <div className="oppgaveVelger">
         <Nav.AlertStripeInfo>

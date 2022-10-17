@@ -286,7 +286,6 @@ const OpprettNySak = ({
     change("soknadsland", []);
     change("sakstype", null);
     change("sakstema", null);
-    change("saksnummer", null);
     change("erAvsluttetSak", null);
   };
   const nullstillOppgave = () => {

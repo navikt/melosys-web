@@ -38,7 +38,6 @@ const FagsakVelger = (props) => {
   const feltNavn = erOpprettNySak ? FormValuesOpprettNySak : FormValuesJournalforing;
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
-
   useEffect(() => {
     if (nullstillFormVerdier) {
       nullstillFormVerdier();
@@ -47,11 +46,10 @@ const FagsakVelger = (props) => {
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
-
     if (valgtVisning === OPPRETT || ingenSakerFinnes) {
-      dispatch(change(KV.Form.JOURNALFORING, "saksnummer", "-1"));
+      dispatch(change(feltNavn.formNavn, "saksnummer", "-1"));
     } else if (valgtVisning === EKSISTERENDE) {
-      dispatch(change(KV.Form.JOURNALFORING, "saksnummer", ""));
+      dispatch(change(feltNavn.formNavn, "saksnummer", ""));
     }
   }, [ingenSakerFinnes, valgtVisning, behandleAlleSakerToggleEnabled]);
 
