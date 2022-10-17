@@ -40,10 +40,8 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
       dispatch(oversikt());
       setOppdateringer(oppdateringer + 1);
     },
-    oppdateringer < 5 ? oppdateringsIntervall : null
+    oppdateringer <= 3 ? oppdateringsIntervall : null
   );
-
-  console.log(mineSaker);
 
   return (
     <div className="behandlingsOppgaver">
