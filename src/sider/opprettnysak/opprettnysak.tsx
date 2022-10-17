@@ -145,7 +145,7 @@ const OpprettNySak = ({
     } else {
       const opprettNySakKriterier = Boolean(sakstype && sakstema && behandlingstema && behandlingstype);
       const eksisterendeSakKriterier = Boolean(behandlingstema && behandlingstype);
-      setErRedigerbart(saksnummer === "-1" ? eksisterendeSakKriterier : opprettNySakKriterier);
+      setErRedigerbart(saksnummer === "-1" ? opprettNySakKriterier : eksisterendeSakKriterier);
     }
   }, [sakstype, sakstema, behandlingstema, behandlingstype, saksnummer, behandleAlleSakerToggle]);
 
@@ -269,7 +269,7 @@ const OpprettNySak = ({
       skalTilordnes,
       oppgaveID,
     };
-    if (saksnummer && nyOpprettSakToggle === "enabled") {
+    if (saksnummer !== "-1" && nyOpprettSakToggle === "enabled") {
       lagNyBehandlingForSak(saksnummer, data).finally(() => setBekreftPending(false));
     } else {
       lagNySak(data).finally(() => setBekreftPending(false));
