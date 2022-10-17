@@ -10,6 +10,9 @@ const toolbar = {
   options: ["inline", "fontSize", "list", "link", "history"],
   inline: { options: ["bold", "italic", "underline", "strikethrough"] },
   list: { inDropdown: true },
+  fontSize: {
+    options: ["11pt", "12pt", "14pt", "16pt"],
+  },
 };
 
 type TextToHtmlEditorProps = {
