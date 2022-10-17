@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
 import PT from "prop-types";
@@ -16,47 +16,48 @@ import SoknadsperiodeEndring from "./soknadsperiodeEndring";
 
 import "./soknadsperiode.css";
 
-export class Soknadsperiode extends Component {
-  state = {
-    erEndrePeriodeSynlig: false,
-    soknadsperiodeFom: this.props.soknadsperiodeFom,
-    soknadsperiodeTom: this.props.soknadsperiodeTom,
-    soknadsperiodeGammelFom: this.props.soknadsperiodeFom,
-    soknadsperiodeGammelTom: this.props.soknadsperiodeTom,
-  };
+export const Soknadsperiode = ({
+  redigerbart,
+  tittel,
+  soknadsperiodeFomErrors,
+  soknadsperiodeTomErrors,
+  lagreSoknadOgOppfriskSaksopplysninger,
+  behandlingHarLand,
+  ...props
+}) => {
+  const [erEndrePeriodeSynlig, setErEndrePeriodeSynlig] = useState(false);
+  const [soknadsperiodeFom, setSoknadsperiodeFom] = useState(props.soknadsperiodeFom);
+  const [soknadsperiodeTom, setSoknadsperiodeTom] = useState(props.soknadsperiodeTom);
+  const [soknadsperiodeGammelFom, setSoknadsperiodeGammelFom] = useState(props.soknadsperiodeFom);
+  const [soknadsperiodeGammelTom, setSoknadsperiodeGammelTom] = useState(props.soknadsperiodeTom);
 
-  componentDidUpdate() {
-    this.oppdaterPeriode(this.state.soknadsperiodeFom, this.state.soknadsperiodeTom);
-  }
-
-  componentWillUnmount() {
-    this.oppdaterPeriode(this.state.soknadsperiodeGammelFom, this.state.soknadsperiodeGammelTom);
-  }
-
-  visEndrePeriode = () => this.setState({ erEndrePeriodeSynlig: true });
-
-  skjulEndrePeriode = () => this.setState({ erEndrePeriodeSynlig: false });
-
-  oppdaterFelt = (feltNavn, verdi) => this.setState({ [feltNavn]: verdi });
-
-  oppdaterPeriode = (fom, tom) => {
-    this.props.oppdaterPeriode({
+  const oppdaterPeriode = (fom, tom) => {
+    props.oppdaterPeriode({
       fom: fom ? Utils.dato.formatterDatoTilISO(fom) : "",
       tom: tom ? Utils.dato.formatterDatoTilISO(tom) : "",
     });
   };
 
-  resetLokalPeriode = () => {
-    const { soknadsperiodeGammelFom, soknadsperiodeGammelTom } = this.state;
-    this.setState({
-      soknadsperiodeFom: soknadsperiodeGammelFom,
-      soknadsperiodeTom: soknadsperiodeGammelTom,
-    });
+  useEffect(() => {
+    return () => {
+      oppdaterPeriode(soknadsperiodeGammelFom, soknadsperiodeGammelTom);
+    };
+  }, []);
+
+  useEffect(() => {
+    oppdaterPeriode(soknadsperiodeFom, soknadsperiodeTom);
+  }, [soknadsperiodeFom, soknadsperiodeTom]);
+
+  const visEndrePeriode = () => setErEndrePeriodeSynlig(true);
+
+  const skjulEndrePeriode = () => setErEndrePeriodeSynlig(false);
+
+  const resetLokalPeriode = () => {
+    setSoknadsperiodeFom(soknadsperiodeGammelFom);
+    setSoknadsperiodeTom(soknadsperiodeGammelTom);
   };
 
-  oppfriskSaksopplysingerVedLagre = async () => {
-    const { skjulEndrePeriode } = this;
-    const { behandlingHarLand, lagreSoknadOgOppfriskSaksopplysninger } = this.props;
+  const oppfriskSaksopplysingerVedLagre = async () => {
     const tomLandOgPeriodeToggleEnabled = await erFeatureToggleEnabled("melosys.tom_periode_og_land");
 
     if (tomLandOgPeriodeToggleEnabled) {
@@ -78,54 +79,45 @@ export class Soknadsperiode extends Component {
     }
   };
 
-  lagre = () => {
-    const { soknadsperiodeFom, soknadsperiodeTom } = this.state;
-    this.oppdaterPeriode(soknadsperiodeFom, soknadsperiodeTom);
-    this.setState({
-      soknadsperiodeGammelFom: soknadsperiodeFom,
-      soknadsperiodeGammelTom: soknadsperiodeTom,
-    });
-    this.oppfriskSaksopplysingerVedLagre();
+  const lagre = () => {
+    oppdaterPeriode(soknadsperiodeFom, soknadsperiodeTom);
+    setSoknadsperiodeGammelFom(soknadsperiodeFom);
+    setSoknadsperiodeGammelTom(soknadsperiodeTom);
+    oppfriskSaksopplysingerVedLagre();
   };
 
-  avbryt = () => {
-    this.resetLokalPeriode();
-    this.skjulEndrePeriode();
+  const avbryt = () => {
+    resetLokalPeriode();
+    skjulEndrePeriode();
   };
 
-  render() {
-    const { redigerbart, soknadsperiodeFomErrors, soknadsperiodeTomErrors, tittel } = this.props;
-    const { visEndrePeriode, skjulEndrePeriode, lagre, oppdaterFelt, avbryt } = this;
-
-    const { erEndrePeriodeSynlig, soknadsperiodeFom, soknadsperiodeTom } = this.state;
-
-    return (
-      <div className="soknadsperiode">
-        <Nav.Typo.Normaltekst className="soknadsperiode__etikett">{tittel}</Nav.Typo.Normaltekst>
-        {!erEndrePeriodeSynlig && (
-          <div className="periode__container">
-            <Nav.Typo.Element className="periode">
-              {soknadsperiodeFom} - {soknadsperiodeTom}
-            </Nav.Typo.Element>
-            {redigerbart && <Symboler.Rediger onClick={visEndrePeriode} />}
-          </div>
-        )}
-        {erEndrePeriodeSynlig && (
-          <SoknadsperiodeEndring
-            soknadsperiodeFom={soknadsperiodeFom}
-            soknadsperiodeTom={soknadsperiodeTom}
-            soknadsperiodeFomErrors={soknadsperiodeFomErrors}
-            soknadsperiodeTomErrors={soknadsperiodeTomErrors}
-            skjulEndrePeriode={skjulEndrePeriode}
-            lagre={lagre}
-            vedFeltEndring={oppdaterFelt}
-            avbryt={avbryt}
-          />
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div className="soknadsperiode">
+      <Nav.Typo.Normaltekst className="soknadsperiode__etikett">{tittel}</Nav.Typo.Normaltekst>
+      {!erEndrePeriodeSynlig && (
+        <div className="periode__container">
+          <Nav.Typo.Element className="periode">
+            {soknadsperiodeFom} - {soknadsperiodeTom}
+          </Nav.Typo.Element>
+          {redigerbart && <Symboler.Rediger onClick={visEndrePeriode} />}
+        </div>
+      )}
+      {erEndrePeriodeSynlig && (
+        <SoknadsperiodeEndring
+          soknadsperiodeFom={soknadsperiodeFom}
+          soknadsperiodeTom={soknadsperiodeTom}
+          soknadsperiodeFomErrors={soknadsperiodeFomErrors}
+          soknadsperiodeTomErrors={soknadsperiodeTomErrors}
+          skjulEndrePeriode={skjulEndrePeriode}
+          lagre={lagre}
+          setSoknadsperiodeFom={setSoknadsperiodeFom}
+          setSoknadsperiodeTom={setSoknadsperiodeTom}
+          avbryt={avbryt}
+        />
+      )}
+    </div>
+  );
+};
 
 Soknadsperiode.propTypes = {
   redigerbart: PT.bool.isRequired,
