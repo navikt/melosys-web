@@ -11,6 +11,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./oppgaveVelger.css";
+import { OpprettNySakFormSelector } from "../../../ducks/form/selectors";
 
 const EKSISTERENDE = "Eksisterende oppgave";
 const OPPRETT = "Opprett ny oppgave";
@@ -32,7 +33,7 @@ export const OppgaveVelger = ({
 }: OppgaveVelgerProps) => {
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
   const [valgtVisning, setValgtVisning] = useState(OPPRETT);
-  const { erAvsluttetSak, erEksisterendeSak } = useSelector((state: any) => state.form.opprett_ny_sak.values);
+  const { erAvsluttetSak, saksnummer } = useSelector((state: any) => OpprettNySakFormSelector(state).values);
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
 
@@ -71,7 +72,7 @@ export const OppgaveVelger = ({
     change("journalpostID", oppgave?.journalpostID);
   };
 
-  if (erAvsluttetSak && erEksisterendeSak && nyOpprettSakToggle === "enabled") {
+  if (erAvsluttetSak && Boolean(saksnummer) && nyOpprettSakToggle === "enabled") {
     return (
       <div className="oppgaveVelger">
         <Nav.AlertStripeInfo>

@@ -39,7 +39,6 @@ interface OpprettNySakFormData {
   behandlingstype: string;
   periodeFraOgMed: string;
   periodeTilOgMed: string;
-  erEksisterendeSak: boolean;
   soknadslandUkjenteEllerAlleEosLand: boolean;
   soknadsland: [];
   opprettBehandling: boolean;
@@ -119,7 +118,6 @@ const OpprettNySak = ({
     sakstype,
     sakstema,
     hovedpart,
-    erEksisterendeSak,
     brukerID,
     brukerNavn,
     saksnummer,
@@ -148,9 +146,9 @@ const OpprettNySak = ({
       const opprettNySakKriterier = Boolean(sakstype && sakstema && behandlingstema && behandlingstype);
       const eksisterendeSakKriterier = Boolean(behandlingstema && behandlingstype);
 
-      setErRedigerbart(erEksisterendeSak ? eksisterendeSakKriterier : opprettNySakKriterier);
+      setErRedigerbart(saksnummer ? eksisterendeSakKriterier : opprettNySakKriterier);
     }
-  }, [sakstype, sakstema, behandlingstema, behandlingstype, erEksisterendeSak, behandleAlleSakerToggle]);
+  }, [sakstype, sakstema, behandlingstema, behandlingstype, saksnummer, behandleAlleSakerToggle]);
 
   useEffect(() => {
     hentLandkoder();

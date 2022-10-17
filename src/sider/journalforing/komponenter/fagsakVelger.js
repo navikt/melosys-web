@@ -40,10 +40,6 @@ const FagsakVelger = (props) => {
   const ingenSakerFinnes = fagsakListe.length === 0;
 
   useEffect(() => {
-    dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", true));
-  }, []);
-
-  useEffect(() => {
     if (nullstillFormVerdier) {
       nullstillFormVerdier();
     }
@@ -116,7 +112,6 @@ const FagsakVelger = (props) => {
                   name="velgVisning"
                   onChange={() => {
                     setValgtVisning(EKSISTERENDE);
-                    dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", true));
                   }}
                   checked={valgtVisning === EKSISTERENDE}
                   value={EKSISTERENDE}
@@ -127,7 +122,6 @@ const FagsakVelger = (props) => {
                   name="velgVisning"
                   onChange={() => {
                     setValgtVisning(OPPRETT);
-                    dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", false));
                   }}
                   checked={valgtVisning === OPPRETT}
                   value={OPPRETT}
