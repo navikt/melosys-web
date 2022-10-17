@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
-import { RootState } from "AppTypes";
+import { useDispatch, useSelector } from "react-redux";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Mui from "../../../../ui";
@@ -17,31 +14,17 @@ import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../
 
 import "./soknadslandvelger.css";
 
-const mapStateToProps = (state: RootState) => ({
-  behandlingHarPeriode: behandlingsgrunnlagSelectors.HarPeriodeSelector(state),
-});
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type SoknadslandvelgerProps = PropsFromRedux & {
+interface SoknadslandvelgerProps {
   redigerbart: boolean;
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
-};
+}
 
-const Soknadslandvelger = ({
-  redigerbart,
-  oppdaterBehandlingsgrunnlagState,
-  lagreSoknadOgOppfriskSaksopplysninger,
-  behandlingHarPeriode,
-}: SoknadslandvelgerProps) => {
+const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger }: SoknadslandvelgerProps) => {
+  const dispatch = useDispatch();
   const [status, setStatus] = useState<Status>(Status.RedigeringUtfort);
+  const behandlingHarPeriode = useSelector(behandlingsgrunnlagSelectors.HarPeriodeSelector);
   const tomLandOgPeriodeToggle = useFeatureToggle("melosys.tom_periode_og_land");
+
   const flytMedInngangsvilkår = window.location.pathname.indexOf(`${MKV.Koder.sakstyper.EU_EOS}/saksbehandling/`) > -1;
 
   const lagre = () => {
@@ -49,7 +32,7 @@ const Soknadslandvelger = ({
     if (tomLandOgPeriodeToggle === "enabled" && flytMedInngangsvilkår && behandlingHarPeriode) {
       lagreSoknadOgOppfriskSaksopplysninger();
     } else {
-      oppdaterBehandlingsgrunnlagState();
+      dispatch(behandlingsgrunnlagOperations.oppdaterState());
     }
   };
   return (
@@ -73,4 +56,4 @@ const Soknadslandvelger = ({
   );
 };
 
-export default connector(Soknadslandvelger);
+export default Soknadslandvelger;
