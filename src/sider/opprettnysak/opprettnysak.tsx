@@ -145,8 +145,7 @@ const OpprettNySak = ({
     } else {
       const opprettNySakKriterier = Boolean(sakstype && sakstema && behandlingstema && behandlingstype);
       const eksisterendeSakKriterier = Boolean(behandlingstema && behandlingstype);
-
-      setErRedigerbart(saksnummer ? eksisterendeSakKriterier : opprettNySakKriterier);
+      setErRedigerbart(saksnummer === "-1" ? eksisterendeSakKriterier : opprettNySakKriterier);
     }
   }, [sakstype, sakstema, behandlingstema, behandlingstype, saksnummer, behandleAlleSakerToggle]);
 

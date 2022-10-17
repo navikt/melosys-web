@@ -18,6 +18,7 @@ export enum JOURNALFORING_VALUES {
   soknadslandUkjenteEllerAlleEosLand = "journalforingSoknadslandUkjenteEllerAlleEosLand",
   periodeFraOgMed = "journalforingPeriodeFraOgMed",
   periodeTilOgMed = "journalforingPeriodeTilOgMed",
+  saksnummer = "saksnummer",
   formNavn = "journalforing",
   erAvsluttetSak = "erAvsluttetSak",
 }
@@ -119,6 +120,7 @@ export enum OPPRETT_NY_SAK_VALUES {
   soknadslandUkjenteEllerAlleEosLand = "soknadslandUkjenteEllerAlleEosLand",
   periodeFraOgMed = "periodeFraOgMed",
   periodeTilOgMed = "periodeTilOgMed",
+  saksnummer = "saksnummer",
   hovedpart = "hovedpart",
   formNavn = "opprett_ny_sak",
   erAvsluttetSak = "erAvsluttetSak",

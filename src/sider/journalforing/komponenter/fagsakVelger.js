@@ -47,9 +47,9 @@ const FagsakVelger = (props) => {
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
     if (valgtVisning === OPPRETT || ingenSakerFinnes) {
-      dispatch(change(feltNavn.formNavn, "saksnummer", "-1"));
+      dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, "-1"));
     } else if (valgtVisning === EKSISTERENDE) {
-      dispatch(change(feltNavn.formNavn, "saksnummer", ""));
+      dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, ""));
     }
   }, [ingenSakerFinnes, valgtVisning, behandleAlleSakerToggleEnabled]);
 
