@@ -116,7 +116,6 @@ export const KnyttTilSak = (props) => {
     : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
 
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
-
   if (visKnyttTilEksisterende) {
     return (
       <div className="knyttTilSak__panelramme">
@@ -202,7 +201,7 @@ export const KnyttTilSak = (props) => {
       {erOpprettNySak ? (
         <div className="innrykk">
           <Nav.AlertStripeInfo>
-            Du kan ikke opprette en ny behandling hvis forrige behandling ikke er avsluttet
+            Du kan ikke opprette en ny behandling på sak med en aktiv/pågående behandling.
           </Nav.AlertStripeInfo>
         </div>
       ) : (

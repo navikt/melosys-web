@@ -18,7 +18,7 @@ interface OppgaveVelgerProps {
   oppgaverForsoktHentet: boolean;
   hovedpart: string;
   oppgaver: Api.Oppgaver.SokOppgaveResDto[];
-  lagNyOppgave: boolean;
+  erEksisterendeSak: boolean;
   nullstillFormverdier: () => void;
   change: (field: string, value: any) => void;
 }
@@ -28,14 +28,21 @@ export const OppgaveVelger = ({
   hovedpart,
   oppgaver,
   change,
-  lagNyOppgave,
   nullstillFormverdier,
 }: OppgaveVelgerProps) => {
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
-  const [valgtVisning, setValgtVisning] = useState(lagNyOppgave ? OPPRETT : EKSISTERENDE);
+  const [valgtVisning, setValgtVisning] = useState(OPPRETT);
 
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
+
+  useEffect(() => {
+    if (nyOpprettSakToggle === "enabled") {
+      setValgtVisning(OPPRETT);
+    } else {
+      setValgtVisning(EKSISTERENDE);
+    }
+  }, [nyOpprettSakToggle]);
 
   const radioValg = oppgaver
     .filter((oppgave) => oppgave.journalpostID)
@@ -59,46 +66,36 @@ export const OppgaveVelger = ({
       };
     });
 
-  useEffect(() => {
-    if (nyOpprettSakToggle === "enabled") {
-      setValgtVisning(OPPRETT);
-    } else {
-      setValgtVisning(EKSISTERENDE);
-    }
-  }, [nyOpprettSakToggle]);
-
   const settJournalpostID = (oppgaveID: string) => {
     const oppgave = oppgaver.find((o) => o.oppgaveID === oppgaveID);
     change("journalpostID", oppgave?.journalpostID);
   };
   return (
-    <>
-      {nyOpprettSakToggle === "enabled" && lagNyOppgave && oppgaverFinnes ? (
-        <div className="oppgaveVelger">
-          <div className="velgVisning">
-            <Nav.Radio
-              label={OPPRETT}
-              className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
-              name="velgVisningOppgave"
-              onChange={() => {
-                setValgtVisning(OPPRETT);
-                nullstillFormverdier();
-              }}
-              checked={valgtVisning === OPPRETT}
-              value={OPPRETT}
-            />
-            <Nav.Radio
-              label={EKSISTERENDE}
-              className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
-              name="velgVisningOppgave"
-              onChange={() => {
-                setValgtVisning(EKSISTERENDE);
-                nullstillFormverdier();
-              }}
-              checked={valgtVisning === EKSISTERENDE}
-              value={EKSISTERENDE}
-            />
-          </div>
+    <div className="oppgaveVelger">
+      {nyOpprettSakToggle === "enabled" ? (
+        <div className="velgVisning">
+          <Nav.Radio
+            label={OPPRETT}
+            className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
+            name="velgVisningOppgave"
+            onChange={() => {
+              setValgtVisning(OPPRETT);
+              nullstillFormverdier();
+            }}
+            checked={valgtVisning === OPPRETT}
+            value={OPPRETT}
+          />
+          <Nav.Radio
+            label={EKSISTERENDE}
+            className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
+            name="velgVisningOppgave"
+            onChange={() => {
+              setValgtVisning(EKSISTERENDE);
+              nullstillFormverdier();
+            }}
+            checked={valgtVisning === EKSISTERENDE}
+            value={EKSISTERENDE}
+          />
         </div>
       ) : (
         valgtVisning === OPPRETT && (
@@ -110,16 +107,16 @@ export const OppgaveVelger = ({
       {valgtVisning === EKSISTERENDE ? (
         <>
           {oppgaverFinnes && (
-            <div className="marginMellomCustomRadioPaneler">
+            <>
               {nyOpprettSakToggle === "enabled" && (
                 <Nav.AlertStripeInfo className="marginMellomHeaderOgAlertStripe">
                   Det er kun følgende oppgaver med journalpost-id som kan tilknyttes
                 </Nav.AlertStripeInfo>
               )}
               <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
-            </div>
+            </>
           )}
-          {!oppgaverFinnes && !oppgaverForsoktHentet && (
+          {!oppgaverFinnes && !oppgaverForsoktHentet && nyOpprettSakToggle !== "enabled" && (
             <Nav.AlertStripeInfo>
               {hovedpartErBruker
                 ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
@@ -135,6 +132,6 @@ export const OppgaveVelger = ({
           )}
         </>
       ) : null}
-    </>
+    </div>
   );
 };
