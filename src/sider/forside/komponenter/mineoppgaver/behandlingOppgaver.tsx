@@ -1,7 +1,9 @@
-import React from "react";
-import { connect, ConnectedProps } from "react-redux";
+import React, { useState } from "react";
+import { connect, ConnectedProps, useDispatch } from "react-redux";
 
 import { RootState } from "AppTypes";
+
+import { useInterval } from "react-use";
 
 import withErrorHandling from "../../../../felleskomponenter/withErrorHandling";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
@@ -12,6 +14,7 @@ import { landkoderSelectors } from "../../../../ducks/landkoder";
 import "./behandlingsoppgaver.css";
 import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
 import { useFeatureToggle } from "../../../../featuretoggle";
+import { oversikt } from "../../../../ducks/oppgaver/operations";
 
 const mapStateToProps = (state: RootState) => ({
   mineSaker: oppgaverSelectors.MineSakerSelector(state),
@@ -27,6 +30,18 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const { saksbehandling } = mineSaker;
+
+  const dispatch = useDispatch();
+  const oppdateringsIntervall = 3000;
+  const [oppdateringer, setOppdateringer] = useState<number>(0);
+
+  useInterval(
+    () => {
+      dispatch(oversikt());
+      setOppdateringer(oppdateringer + 1);
+    },
+    oppdateringer < 5 ? oppdateringsIntervall : null
+  );
 
   console.log(mineSaker);
 
