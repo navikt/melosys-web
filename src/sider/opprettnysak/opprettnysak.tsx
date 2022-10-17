@@ -386,7 +386,7 @@ const OpprettNySak = ({
                 <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg behandlingen i mine oppgaver" />
                 {formError && <Nav.AlertStripeAdvarsel className="formError">{formError}</Nav.AlertStripeAdvarsel>}
                 <Knapperad
-                  bekreftTekst="Opprett sak"
+                  bekreftTekst={nyOpprettSakToggle === "enabled" ? "Opprett ny behandling" : "Opprett sak"}
                   avbryt={tilForsiden}
                   avbrytTekst="Avbryt"
                   redigerbart
