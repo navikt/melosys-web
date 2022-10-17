@@ -7,9 +7,9 @@ import * as KV from "../../../kodeverk";
 import { skalViseSoknadsperiodeOgLand, skalViseSoknadsperiodeOgLandDeprecated } from "./opprettSak";
 
 const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer" };
-const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig f.nr eller d-nr" };
+const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig f.nr. eller d-nr." };
 const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisasjonsnummeret" };
-const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette f.nr eller d-nr" };
+const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette f.nr. eller d-nr." };
 const FANT_INGEN_NAVN_PA_ORGNR_FNR_ELLER_DNR = { melding: "Fant ingen navn på oppgitt org.nr., f.nr. eller d-nr." };
 const SKRIV_INN_NAVN_PA_AVSENDER = { melding: "Skriv inn navn på avsender" };
 const SKRIV_INN_GYLDIG_ORGNR = { melding: "Skriv inn gyldig org.nr." };
@@ -162,23 +162,31 @@ const journalforing = object().shape({
       hensikt === Konstanter.JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE,
     then: string().required(VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT),
   }),
-  journalforingPeriodeFraOgMed: string().when("$behandleAlleSakerToggleEnabled", {
-    is: (behandleAlleSakerToggleEnabled) => behandleAlleSakerToggleEnabled,
-    then: string().when(
-      ["journalforingHensikt", "sakstype", "sakstema", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
-      {
-        is: kreverPeriode,
-        then: string().erGyldigDato().required(MAA_FYLLES_UT),
-      }
-    ),
-    otherwise: string().when(
-      ["journalforingHensikt", "journalforingGjelder", "sakstype", "opprettnysak_behandlingstema"],
-      {
-        is: kreverPeriodeDeprecated,
-        then: string().erGyldigDato().required(MAA_FYLLES_UT),
-      }
-    ),
-  }),
+  journalforingPeriodeFraOgMed: string()
+    .when("$behandleAlleSakerToggleEnabled", {
+      is: (behandleAlleSakerToggleEnabled) => behandleAlleSakerToggleEnabled,
+      then: string().when(
+        [
+          "journalforingHensikt",
+          "sakstype",
+          "sakstema",
+          "opprettnysak_behandlingstema",
+          "opprettnysak_behandlingstype",
+        ],
+        {
+          is: kreverPeriode,
+          then: string().erGyldigDato().required(MAA_FYLLES_UT).nullable(),
+        }
+      ),
+      otherwise: string().when(
+        ["journalforingHensikt", "journalforingGjelder", "sakstype", "opprettnysak_behandlingstema"],
+        {
+          is: kreverPeriodeDeprecated,
+          then: string().erGyldigDato().required(MAA_FYLLES_UT).nullable(),
+        }
+      ),
+    })
+    .nullable(),
   journalforingPeriodeTilOgMed: lazy((value) =>
     !value
       ? string().ensure()
