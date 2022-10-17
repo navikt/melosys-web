@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
+import { useSelector } from "react-redux";
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
@@ -10,6 +11,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./oppgaveVelger.css";
+import { OpprettNySakFormSelector } from "../../../ducks/form/selectors";
 
 const EKSISTERENDE = "Eksisterende oppgave";
 const OPPRETT = "Opprett ny oppgave";
@@ -18,7 +20,6 @@ interface OppgaveVelgerProps {
   oppgaverForsoktHentet: boolean;
   hovedpart: string;
   oppgaver: Api.Oppgaver.SokOppgaveResDto[];
-  erEksisterendeSak: boolean;
   nullstillFormverdier: () => void;
   change: (field: string, value: any) => void;
 }
@@ -32,7 +33,7 @@ export const OppgaveVelger = ({
 }: OppgaveVelgerProps) => {
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
   const [valgtVisning, setValgtVisning] = useState(OPPRETT);
-
+  const { erAvsluttetSak, saksnummer } = useSelector((state: any) => OpprettNySakFormSelector(state).values);
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
 
@@ -70,9 +71,20 @@ export const OppgaveVelger = ({
     const oppgave = oppgaver.find((o) => o.oppgaveID === oppgaveID);
     change("journalpostID", oppgave?.journalpostID);
   };
+
+  if (erAvsluttetSak && saksnummer !== -1 && nyOpprettSakToggle === "enabled") {
+    return (
+      <div className="oppgaveVelger">
+        <Nav.AlertStripeInfo>
+          Når det opprettes en ny behandling på en eksisterende sak, må det opprettes en ny oppgave
+        </Nav.AlertStripeInfo>
+      </div>
+    );
+  }
+
   return (
     <div className="oppgaveVelger">
-      {nyOpprettSakToggle === "enabled" ? (
+      {nyOpprettSakToggle === "enabled" && (
         <div className="velgVisning">
           <Nav.Radio
             label={OPPRETT}
@@ -97,12 +109,6 @@ export const OppgaveVelger = ({
             value={EKSISTERENDE}
           />
         </div>
-      ) : (
-        valgtVisning === OPPRETT && (
-          <Nav.AlertStripeInfo>
-            Når det opprettes en ny behandling på en eksisterende sak, må det opprettes en ny oppgave
-          </Nav.AlertStripeInfo>
-        )
       )}
       {valgtVisning === EKSISTERENDE ? (
         <>

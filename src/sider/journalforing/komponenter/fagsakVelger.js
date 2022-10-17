@@ -38,9 +38,7 @@ const FagsakVelger = (props) => {
   const feltNavn = erOpprettNySak ? FormValuesOpprettNySak : FormValuesJournalforing;
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
-
   useEffect(() => {
-    dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", true));
     if (nullstillFormVerdier) {
       nullstillFormVerdier();
     }
@@ -48,11 +46,10 @@ const FagsakVelger = (props) => {
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
-
     if (valgtVisning === OPPRETT || ingenSakerFinnes) {
-      dispatch(change(KV.Form.JOURNALFORING, "saksnummer", "-1"));
+      dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, "-1"));
     } else if (valgtVisning === EKSISTERENDE) {
-      dispatch(change(KV.Form.JOURNALFORING, "saksnummer", ""));
+      dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, ""));
     }
   }, [ingenSakerFinnes, valgtVisning, behandleAlleSakerToggleEnabled]);
 
@@ -111,7 +108,9 @@ const FagsakVelger = (props) => {
                   label={EKSISTERENDE}
                   className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
                   name="velgVisning"
-                  onChange={() => setValgtVisning(EKSISTERENDE)}
+                  onChange={() => {
+                    setValgtVisning(EKSISTERENDE);
+                  }}
                   checked={valgtVisning === EKSISTERENDE}
                   value={EKSISTERENDE}
                 />
@@ -119,7 +118,9 @@ const FagsakVelger = (props) => {
                   label={OPPRETT}
                   className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
                   name="velgVisning"
-                  onChange={() => setValgtVisning(OPPRETT)}
+                  onChange={() => {
+                    setValgtVisning(OPPRETT);
+                  }}
                   checked={valgtVisning === OPPRETT}
                   value={OPPRETT}
                 />
@@ -128,18 +129,22 @@ const FagsakVelger = (props) => {
           </>
         )}
 
-        {valgtVisning === EKSISTERENDE && (
-          <Skjema.CustomRadioPanelGruppe
-            feltNavn="saksnummer"
-            radios={radioValg}
-            notify={notifier}
-            begrensVisteRadios
-            onChange={nullstillFormVerdier}
-            className="marginMellomCustomRadioPaneler"
-          />
-        )}
-        {valgtVisning === OPPRETT && (
-          <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
+        {(!erOpprettNySak || nyOpprettSakToggle === "enabled") && (
+          <>
+            {valgtVisning === EKSISTERENDE && (
+              <Skjema.CustomRadioPanelGruppe
+                feltNavn="saksnummer"
+                radios={radioValg}
+                notify={notifier}
+                begrensVisteRadios
+                onChange={nullstillFormVerdier}
+                className="marginMellomCustomRadioPaneler"
+              />
+            )}
+            {valgtVisning === OPPRETT && (
+              <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
+            )}
+          </>
         )}
       </div>
     );
