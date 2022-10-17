@@ -60,7 +60,6 @@ export const JournalforingForm = ({
   settJournalforingHensikt,
   avbrytJournalforing,
   submitSpinner,
-  kanSubmittes,
   handleSubmit,
   behandleAlleSakerToggleEnabled,
   landkoder,
@@ -107,7 +106,7 @@ export const JournalforingForm = ({
                 {Utils.feilmelding.syncErrorsTilFeilmelding(formErrors)}
               </Nav.AlertStripeFeil>
             )}
-            <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
+            <Fotknapper avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
           </>
         }
       />
@@ -128,7 +127,6 @@ JournalforingForm.propTypes = {
   submitSpinner: PT.bool.isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
-  kanSubmittes: PT.bool.isRequired,
   handleSubmit: PT.func.isRequired,
   behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,

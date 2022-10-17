@@ -384,14 +384,6 @@ class Journalforing extends Component {
     this.setState({ submitSpinner: false });
   };
 
-  kanSubmittes = () => {
-    const { journalforSEDSkjemaVerdier } = this.props;
-    if (journalforSEDSkjemaVerdier.brukerID) {
-      return true;
-    }
-    return !Utils._isEmpty(this.props.journalforingSkjemaVerdier.saksnummer);
-  };
-
   render() {
     const {
       journalforing: { vedlegg = [], hoveddokument = {}, behandlingsInformasjon, avsenderID, avsenderNavn },
@@ -426,7 +418,6 @@ class Journalforing extends Component {
                           submitSpinner={submitSpinner}
                           submitJournalforing={this.submitJournalforingSED}
                           avbrytJournalforing={this.avbrytJournalforing}
-                          kanSubmittes={this.kanSubmittes()}
                         />
                       )}
                       {visNormalJournalforing && (
@@ -439,7 +430,6 @@ class Journalforing extends Component {
                           submitSpinner={submitSpinner}
                           submitJournalforing={this.submitJournalforingNormal}
                           avbrytJournalforing={this.avbrytJournalforing}
-                          kanSubmittes={this.kanSubmittes()}
                           settFeltInnhold={settFeltInnhold}
                           behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
                         />
