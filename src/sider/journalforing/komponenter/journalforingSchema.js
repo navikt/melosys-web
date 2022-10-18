@@ -6,28 +6,30 @@ import * as Konstanter from "../../../constants";
 import * as KV from "../../../kodeverk";
 import { skalViseSoknadsperiodeOgLand, skalViseSoknadsperiodeOgLandDeprecated } from "./opprettSak";
 
-const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer." };
-const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig f.nr eller d-nr." };
-const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisasjonsnummeret." };
-const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette f.nr eller d-nr." };
+const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer" };
+const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig f.nr. eller d-nr." };
+const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisasjonsnummeret" };
+const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette f.nr. eller d-nr." };
 const FANT_INGEN_NAVN_PA_ORGNR_FNR_ELLER_DNR = { melding: "Fant ingen navn på oppgitt org.nr., f.nr. eller d-nr." };
-const SKRIV_INN_NAVN_PA_AVSENDER = { melding: "Skriv inn navn på avsender" };
+const FINNER_IKKE_NAVN_PA_AVSENDER = { melding: "Finner ikke navn på avsender" };
 const SKRIV_INN_GYLDIG_ORGNR = { melding: "Skriv inn gyldig org.nr." };
 const SKRIV_INN_GYLDIG_ORGNR_FNR_DNR = { melding: "Du må skrive et gyldig org.nr. eller f.nr./d-nr." };
 const VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN = {
-  melding: "Velg dokumenttittel fra listen eller skriv din egen.",
+  melding: "Velg dokumenttittel fra listen eller skriv din egen",
 };
 const VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT = {
-  melding: "Velg hvilken sak du ønsker å knytte journalføringen mot.",
+  melding: "Velg hvilken sak du ønsker å knytte journalføringen mot",
 };
-const VELG_MINST_ETT_LAND = { melding: "Velg minst ett land." };
+const VELG_MINST_ETT_LAND = { melding: "Velg minst ett land" };
 const DU_MA_LAGRE_TITTEL_VEDLEGG = { melding: "Du må lagre tittel på vedlegg" };
 const DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT = { melding: "Du må lagre tittel på hoveddokument" };
-const VELG_ETT_LAND = { melding: "Velg ett land." };
+const VELG_ETT_LAND = { melding: "Velg land til avsender: utenlandsk trygdemyndighet" };
 const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
 const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
+
+const lagMelding = (felt) => ({ melding: `${felt} må fylles ut` });
 
 const kreverPeriode = (journalforingHensikt, sakstype, sakstema, behandlingstema, behandlingstype) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
@@ -68,12 +70,18 @@ const erIkkeUnderRedigering = (feilmelding) => ({
 
 const hoveddokument = object().shape({
   tittel: string()
-    .test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT))
-    .required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN),
+    .required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN)
+    .when("$journalforingKnappErTryktPå", {
+      is: true,
+      then: string().test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT)),
+    }),
   logiskeVedlegg: array().of(
     string()
-      .test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_VEDLEGG))
       .required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN)
+      .when("$journalforingKnappErTryktPå", {
+        is: true,
+        then: string().test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_VEDLEGG)),
+      })
   ),
 });
 
@@ -134,7 +142,7 @@ const journalforing = object().shape({
       then: string().required().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .nullable(),
-  avsenderNavn: string().required(SKRIV_INN_NAVN_PA_AVSENDER).nullable(),
+  avsenderNavn: string().required(FINNER_IKKE_NAVN_PA_AVSENDER).nullable(),
   hoveddokument,
   representantID: lazy((value) =>
     Utils._isEmpty(value)
@@ -152,26 +160,36 @@ const journalforing = object().shape({
   ),
   saksnummer: string().when("journalforingHensikt", {
     is: (hensikt) =>
-      hensikt === Konstanter.JOURNALFORING_HENSIKT.KNYTT || hensikt === Konstanter.JOURNALFORING_HENSIKT.NY_VURDERING,
+      hensikt === Konstanter.JOURNALFORING_HENSIKT.KNYTT ||
+      hensikt === Konstanter.JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE,
     then: string().required(VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT),
   }),
-  journalforingPeriodeFraOgMed: string().when("$behandleAlleSakerToggleEnabled", {
-    is: (behandleAlleSakerToggleEnabled) => behandleAlleSakerToggleEnabled,
-    then: string().when(
-      ["journalforingHensikt", "sakstype", "sakstema", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
-      {
-        is: kreverPeriode,
-        then: string().erGyldigDato().required(MAA_FYLLES_UT),
-      }
-    ),
-    otherwise: string().when(
-      ["journalforingHensikt", "journalforingGjelder", "sakstype", "opprettnysak_behandlingstema"],
-      {
-        is: kreverPeriodeDeprecated,
-        then: string().erGyldigDato().required(MAA_FYLLES_UT),
-      }
-    ),
-  }),
+  journalforingPeriodeFraOgMed: string()
+    .when("$behandleAlleSakerToggleEnabled", {
+      is: (behandleAlleSakerToggleEnabled) => behandleAlleSakerToggleEnabled,
+      then: string()
+        .when(
+          [
+            "journalforingHensikt",
+            "sakstype",
+            "sakstema",
+            "opprettnysak_behandlingstema",
+            "opprettnysak_behandlingstype",
+          ],
+          {
+            is: kreverPeriode,
+            then: string().erGyldigDato().required(MAA_FYLLES_UT).nullable(),
+          }
+        )
+        .nullable(),
+      otherwise: string()
+        .when(["journalforingHensikt", "journalforingGjelder", "sakstype", "opprettnysak_behandlingstema"], {
+          is: kreverPeriodeDeprecated,
+          then: string().erGyldigDato().required(MAA_FYLLES_UT).nullable(),
+        })
+        .nullable(),
+    })
+    .nullable(),
   journalforingPeriodeTilOgMed: lazy((value) =>
     !value
       ? string().ensure()
@@ -250,27 +268,27 @@ const journalforing = object().shape({
     .nullable()
     .when("journalforingHensikt", {
       is: (hensikt) => hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
-      then: string().required(MAA_FYLLES_UT).nullable(),
+      then: string().required(lagMelding("Sakstype")).nullable(),
     }),
   sakstema: string()
     .nullable()
     .when(["$behandleAlleSakerToggleEnabled", "journalforingHensikt"], {
       is: (behandleAlleSakerToggleEnabled, hensikt) =>
         behandleAlleSakerToggleEnabled && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
-      then: string().required(MAA_FYLLES_UT).nullable(),
+      then: string().required(lagMelding("Sakstema")).nullable(),
     }),
   opprettnysak_behandlingstema: string()
     .nullable()
     .when("journalforingHensikt", {
       is: (hensikt) => hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
-      then: string().required(MAA_FYLLES_UT).nullable(),
+      then: string().required(lagMelding("Behandlingstema")).nullable(),
     }),
   opprettnysak_behandlingstype: string()
     .nullable()
     .when(["$behandleAlleSakerToggleEnabled", "journalforingHensikt"], {
       is: (behandleAlleSakerToggleEnabled, hensikt) =>
         behandleAlleSakerToggleEnabled && hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
-      then: string().required(MAA_FYLLES_UT).nullable(),
+      then: string().required(lagMelding("Behandlingstype")).nullable(),
     }),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */

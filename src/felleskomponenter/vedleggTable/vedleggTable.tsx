@@ -31,7 +31,7 @@ const VedleggTable = ({
 
   return (
     <>
-      <Nav.Typo.Element>{label}</Nav.Typo.Element>
+      <Nav.Typo.Element className="vedleggtable-label">{label}</Nav.Typo.Element>
       {(valgteVedlegg.length > 0 || (fritekstvedlegg && fritekstvedlegg.length > 0)) && (
         <div className="vedleggtable">
           <table>

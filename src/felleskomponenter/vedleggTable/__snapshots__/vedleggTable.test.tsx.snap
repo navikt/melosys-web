@@ -3,7 +3,7 @@
 exports[`vedleggTable renders correctly 1`] = `
 Array [
   <p
-    className="typo-element"
+    className="typo-element vedleggtable-label"
   >
     a
   </p>,

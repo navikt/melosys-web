@@ -48,25 +48,22 @@ const skalViseForvaltningsmelding = (formValues, toggleEnabled) => {
   );
 };
 
-export const JournalforingForm = (props) => {
-  const {
-    journalpostID,
-    hoveddokumentID,
-    vedlegg,
-    fagsakListe,
-    formValues,
-    formErrors,
-    submitFailed,
-    settFeltInnhold,
-    settJournalforingHensikt,
-    avbrytJournalforing,
-    submitSpinner,
-    kanSubmittes,
-    handleSubmit,
-    behandleAlleSakerToggleEnabled,
-    landkoder,
-  } = props;
-
+export const JournalforingForm = ({
+  journalpostID,
+  hoveddokumentID,
+  vedlegg,
+  fagsakListe,
+  formValues,
+  formErrors,
+  submitFailed,
+  settFeltInnhold,
+  settJournalforingHensikt,
+  avbrytJournalforing,
+  submitSpinner,
+  handleSubmit,
+  behandleAlleSakerToggleEnabled,
+  landkoder,
+}) => {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, behandleAlleSakerToggleEnabled);
 
   useEffect(() => {
@@ -109,7 +106,7 @@ export const JournalforingForm = (props) => {
                 {Utils.feilmelding.syncErrorsTilFeilmelding(formErrors)}
               </Nav.AlertStripeFeil>
             )}
-            <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
+            <Fotknapper avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
           </>
         }
       />
@@ -130,7 +127,6 @@ JournalforingForm.propTypes = {
   submitSpinner: PT.bool.isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
-  kanSubmittes: PT.bool.isRequired,
   handleSubmit: PT.func.isRequired,
   behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -206,6 +202,7 @@ const form = {
         erAvsenderPreutfylt: props.erAvsenderPreutfylt,
         behandleAlleSakerToggleEnabled: props.behandleAlleSakerToggleEnabled,
         registeredFields: props.registeredFields,
+        journalforingKnappErTryktPå: Boolean(values.journalforingHensikt),
       },
     };
 

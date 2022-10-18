@@ -1,6 +1,6 @@
-import { Editor } from "react-draft-wysiwyg";
+import { Editor, SyntheticKeyboardEvent } from "react-draft-wysiwyg";
 import React, { useState } from "react";
-import { ContentState, convertFromHTML, convertToRaw, EditorState } from "draft-js";
+import { ContentState, convertFromHTML, convertToRaw, EditorState, RichUtils } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import classNames from "classnames";
 import "./htmlEditor.css";
@@ -10,6 +10,9 @@ const toolbar = {
   options: ["inline", "fontSize", "list", "link", "history"],
   inline: { options: ["bold", "italic", "underline", "strikethrough"] },
   list: { inDropdown: true },
+  fontSize: {
+    options: ["11pt", "12pt", "14pt", "16pt"],
+  },
 };
 
 type TextToHtmlEditorProps = {
@@ -30,10 +33,20 @@ function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
     return false; // Benyttes for å få default stateChange ved paste
   };
 
+  const handleReturn = (e: SyntheticKeyboardEvent) => {
+    if (e.key === "Enter") {
+      setCurrentEditorState(RichUtils.insertSoftNewline(currentEditorState));
+      onChange(draftToHtml(convertToRaw(currentEditorState.getCurrentContent())));
+      return true;
+    }
+    return false;
+  };
+
   return (
     <div className={classNames("htmlEditor", rest?.className)}>
       {rest?.label ? <Nav.Typo.Element className="editor_label">{rest?.label}</Nav.Typo.Element> : ""}
       <Editor
+        handleReturn={handleReturn}
         editorState={currentEditorState}
         toolbar={toolbar}
         wrapperClassName={classNames("wrapper", { "wrapper-disabled": rest?.disabled, "wrapper-feil": rest?.feil })}

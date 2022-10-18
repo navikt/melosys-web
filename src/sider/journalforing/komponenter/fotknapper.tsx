@@ -6,13 +6,12 @@ import "./fotknapper.css";
 
 interface FotknapperProps {
   avbrytJournalforing: () => void;
-  kanSubmittes: boolean;
   spinner?: boolean;
 }
 
-const Fotknapper = ({ avbrytJournalforing, kanSubmittes, spinner = false }: FotknapperProps) => (
+const Fotknapper = ({ avbrytJournalforing, spinner = false }: FotknapperProps) => (
   <div className="fotknapper">
-    <Mui.Knapp type="hoved" htmlType="submit" disabled={!kanSubmittes} spinner={spinner} autoDisableVedSpinner>
+    <Mui.Knapp type="hoved" htmlType="submit" spinner={spinner} autoDisableVedSpinner>
       Journalfør
     </Mui.Knapp>
     <Mui.Knapp type="flat" className="fotknapper__avbryt" onClick={avbrytJournalforing}>

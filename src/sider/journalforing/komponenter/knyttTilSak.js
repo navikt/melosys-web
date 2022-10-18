@@ -39,7 +39,6 @@ const behandlingstyper_gammel = (sakstype, behtema) => {
 
 export const KnyttTilSak = (props) => {
   const { sak, behandleAlleSakerToggleEnabled, erOpprettNySak, changeField, feltNavn, formValues } = props;
-
   const { behandlingstema, behandlingstype, journalforingGjelder, opprettBehandling } = {
     opprettBehandling: formValues.opprettBehandling,
     behandlingstema: formValues[feltNavn.behandlingstema],
@@ -114,8 +113,11 @@ export const KnyttTilSak = (props) => {
   const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
     ? sisteBehandlingErInaktiv
     : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
-
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
+
+  useEffect(() => {
+    changeField(feltNavn.formNavn, feltNavn.erAvsluttetSak, visKnyttTilEksisterende);
+  }, [visKnyttTilEksisterende]);
 
   if (visKnyttTilEksisterende) {
     return (
@@ -202,7 +204,7 @@ export const KnyttTilSak = (props) => {
       {erOpprettNySak ? (
         <div className="innrykk">
           <Nav.AlertStripeInfo>
-            Du kan ikke opprette en ny behandling hvis forrige behandling ikke er avsluttet
+            Du kan ikke opprette en ny behandling på sak med en aktiv/pågående behandling.
           </Nav.AlertStripeInfo>
         </div>
       ) : (

@@ -17,13 +17,14 @@ const SoknadsperiodeEndring = (props) => {
     soknadsperiodeTom,
     soknadsperiodeFomErrors,
     soknadsperiodeTomErrors,
-    vedFeltEndring,
+    setSoknadsperiodeFom,
+    setSoknadsperiodeTom,
     avbryt,
     lagre,
   } = props;
 
-  const vedFomEndring = (nyDato) => vedFeltEndring("soknadsperiodeFom", Utils.dateTilNorskString(nyDato));
-  const vedTomEndring = (nyDato) => vedFeltEndring("soknadsperiodeTom", Utils.dateTilNorskString(nyDato));
+  const vedFomEndring = (nyDato) => setSoknadsperiodeFom(Utils.dateTilNorskString(nyDato));
+  const vedTomEndring = (nyDato) => setSoknadsperiodeTom(Utils.dateTilNorskString(nyDato));
 
   return (
     <Nav.Fieldset legend="" className="soknadsperiode-endring">
@@ -71,7 +72,8 @@ SoknadsperiodeEndring.propTypes = {
   soknadsperiodeTom: PT.string.isRequired,
   soknadsperiodeFomErrors: PT.string,
   soknadsperiodeTomErrors: PT.string,
-  vedFeltEndring: PT.func.isRequired,
+  setSoknadsperiodeFom: PT.func.isRequired,
+  setSoknadsperiodeTom: PT.func.isRequired,
 };
 
 SoknadsperiodeEndring.defaultProps = {
