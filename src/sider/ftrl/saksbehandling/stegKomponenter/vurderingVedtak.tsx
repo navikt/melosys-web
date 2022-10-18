@@ -34,7 +34,7 @@ import { RepresentantformValues } from "./vurderingRepresentant";
 import "./vurderingVedtak.css";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 
-const { avtaleland } = MKV.Koder;
+const { trygdeavtale_myndighetsland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
 
 const mapStateToProps = (state: RootState) => ({
@@ -305,7 +305,7 @@ const VurderingVedtak = ({
       .catch(() => setVedtakPending(false));
   };
 
-  const soknadslandErEtAvtaleland = avtaleland[soknadsland?.toString()] !== undefined;
+  const soknadslandErEtAvtaleland = trygdeavtale_myndighetsland[soknadsland?.toString()] !== undefined;
 
   const innledningFritekstHjelpetekst =
     "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: \n\n" +
