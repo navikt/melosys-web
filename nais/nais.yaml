@@ -63,7 +63,6 @@ spec:
           namespace: teammelosys
   ingresses:
     - {{INGRESS}}
-    - https://melosys-api-q1.dev-fss-pub.nais.io
   env:
     - name: REDIS_HOST
       value: {{REDIS_APP_NAME}}.teammelosys.svc.nais.local
