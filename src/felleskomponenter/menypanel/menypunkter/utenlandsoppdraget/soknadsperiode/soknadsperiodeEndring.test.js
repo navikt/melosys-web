@@ -14,7 +14,8 @@ describe("SoknadsperiodeEndring", () => {
     soknadsperiodeTom: "11.12.2035",
     soknadsperiodeFomErrors: undefined,
     soknadsperiodeTomErrors: undefined,
-    vedFeltEndring: jest.fn(),
+    setSoknadsperiodeFom: jest.fn(),
+    setSoknadsperiodeTom: jest.fn(),
   });
 
   describe("fom inputfelt", () => {
@@ -34,8 +35,8 @@ describe("SoknadsperiodeEndring", () => {
       const nyDato = "01.01.2011";
       fomInput.simulate("change", Utils.dato.norskStringTilDate(nyDato));
 
-      expect(props.vedFeltEndring).toHaveBeenCalledTimes(1);
-      expect(props.vedFeltEndring).toHaveBeenLastCalledWith("soknadsperiodeFom", nyDato);
+      expect(props.setSoknadsperiodeFom).toHaveBeenCalledTimes(1);
+      expect(props.setSoknadsperiodeFom).toHaveBeenLastCalledWith(nyDato);
     });
   });
 
@@ -56,8 +57,8 @@ describe("SoknadsperiodeEndring", () => {
       const nyDato = "02.02.2012";
       tomInput.simulate("change", Utils.dato.norskStringTilDate(nyDato));
 
-      expect(props.vedFeltEndring).toHaveBeenCalledTimes(1);
-      expect(props.vedFeltEndring).toHaveBeenLastCalledWith("soknadsperiodeTom", nyDato);
+      expect(props.setSoknadsperiodeTom).toHaveBeenCalledTimes(1);
+      expect(props.setSoknadsperiodeTom).toHaveBeenLastCalledWith(nyDato);
     });
   });
 

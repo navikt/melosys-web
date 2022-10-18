@@ -40,7 +40,6 @@ const FagsakVelger = (props) => {
   const ingenSakerFinnes = fagsakListe.length === 0;
 
   useEffect(() => {
-    dispatch(change(KV.Form.OPPRETT_NY_SAK, "erEksisterendeSak", true));
     if (nullstillFormVerdier) {
       nullstillFormVerdier();
     }
@@ -50,9 +49,9 @@ const FagsakVelger = (props) => {
     if (!behandleAlleSakerToggleEnabled) return;
 
     if (valgtVisning === OPPRETT || ingenSakerFinnes) {
-      dispatch(change(KV.Form.JOURNALFORING, "saksnummer", "-1"));
+      dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, "-1"));
     } else if (valgtVisning === EKSISTERENDE) {
-      dispatch(change(KV.Form.JOURNALFORING, "saksnummer", ""));
+      dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, ""));
     }
   }, [ingenSakerFinnes, valgtVisning, behandleAlleSakerToggleEnabled]);
 
@@ -132,18 +131,22 @@ const FagsakVelger = (props) => {
           </div>
         )}
 
-        {valgtVisning === EKSISTERENDE && (
-          <Skjema.CustomRadioPanelGruppe
-            feltNavn="saksnummer"
-            radios={radioValg}
-            notify={notifier}
-            begrensVisteRadios
-            onChange={nullstillFormVerdier}
-            className="marginMellomCustomRadioPaneler"
-          />
-        )}
-        {valgtVisning === OPPRETT && (
-          <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
+        {(!erOpprettNySak || nyOpprettSakToggle === "enabled") && (
+          <>
+            {valgtVisning === EKSISTERENDE && (
+              <Skjema.CustomRadioPanelGruppe
+                feltNavn="saksnummer"
+                radios={radioValg}
+                notify={notifier}
+                begrensVisteRadios
+                onChange={nullstillFormVerdier}
+                className="marginMellomCustomRadioPaneler"
+              />
+            )}
+            {valgtVisning === OPPRETT && (
+              <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
+            )}
+          </>
         )}
       </div>
     );

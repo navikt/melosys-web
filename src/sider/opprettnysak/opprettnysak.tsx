@@ -39,7 +39,6 @@ interface OpprettNySakFormData {
   behandlingstype: string;
   periodeFraOgMed: string;
   periodeTilOgMed: string;
-  erEksisterendeSak: boolean;
   soknadslandUkjenteEllerAlleEosLand: boolean;
   soknadsland: [];
   opprettBehandling: boolean;
@@ -119,7 +118,6 @@ const OpprettNySak = ({
     sakstype,
     sakstema,
     hovedpart,
-    erEksisterendeSak,
     brukerID,
     brukerNavn,
     saksnummer,
@@ -147,10 +145,9 @@ const OpprettNySak = ({
     } else {
       const opprettNySakKriterier = Boolean(sakstype && sakstema && behandlingstema && behandlingstype);
       const eksisterendeSakKriterier = Boolean(behandlingstema && behandlingstype);
-
-      setErRedigerbart(erEksisterendeSak ? eksisterendeSakKriterier : opprettNySakKriterier);
+      setErRedigerbart(saksnummer === "-1" ? opprettNySakKriterier : eksisterendeSakKriterier);
     }
-  }, [sakstype, sakstema, behandlingstema, behandlingstype, erEksisterendeSak, behandleAlleSakerToggle]);
+  }, [sakstype, sakstema, behandlingstema, behandlingstype, saksnummer, behandleAlleSakerToggle]);
 
   useEffect(() => {
     hentLandkoder();
@@ -272,12 +269,13 @@ const OpprettNySak = ({
       skalTilordnes,
       oppgaveID,
     };
-    if (saksnummer && nyOpprettSakToggle === "enabled") {
+    if (saksnummer !== "-1" && nyOpprettSakToggle === "enabled") {
       lagNyBehandlingForSak(saksnummer, data).finally(() => setBekreftPending(false));
     } else {
       lagNySak(data).finally(() => setBekreftPending(false));
     }
   };
+
   const nullstillFormVerdier = () => {
     change("behandlingstema", null);
     change("behandlingstype", null);
@@ -287,7 +285,7 @@ const OpprettNySak = ({
     change("soknadsland", []);
     change("sakstype", null);
     change("sakstema", null);
-    change("saksnummer", null);
+    change("erAvsluttetSak", null);
   };
   const nullstillOppgave = () => {
     change("oppgaveID", null);
@@ -372,7 +370,6 @@ const OpprettNySak = ({
                     />
                     <div className="innrykk">
                       <OppgaveVelger
-                        erEksisterendeSak={erEksisterendeSak}
                         oppgaverForsoktHentet={oppgaverForsoktHentet}
                         hovedpart={hovedpart}
                         change={change}
