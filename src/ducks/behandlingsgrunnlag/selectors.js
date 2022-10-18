@@ -224,15 +224,20 @@ export const PeriodeTomSelector = createSelector(
   (soknadsperiode) => soknadsperiode.tom
 );
 
-export const HarPeriodeOgLandSelector = createSelector(
-  PeriodeFomSelector,
-  SoknadslandSelector,
-  (periodeFom, soeknadsland) => {
-    const harPeriode = periodeFom != null;
-    const harLand = !Utils._isEmpty(soeknadsland.landkoder) || soeknadsland.erUkjenteEllerAlleEosLand;
+export const HarPeriodeSelector = createSelector(
+  (state) => PeriodeFomSelector(state),
+  (periodeFom) => !Utils._isEmpty(periodeFom)
+);
 
-    return harPeriode && harLand;
-  }
+export const HarLandSelector = createSelector(
+  SoknadslandSelector,
+  (soeknadsland) => !Utils._isEmpty(soeknadsland.landkoder) || soeknadsland.erUkjenteEllerAlleEosLand
+);
+
+export const HarPeriodeOgLandSelector = createSelector(
+  HarPeriodeSelector,
+  HarLandSelector,
+  (harPeriode, harLand) => harPeriode && harLand
 );
 
 export const PersonOpplysningerSelector = createSelector(

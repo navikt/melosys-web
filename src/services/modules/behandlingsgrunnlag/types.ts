@@ -319,7 +319,7 @@ export interface Soeknadsland {
   landkoder: string[];
   erUkjenteEllerAlleEosLand: boolean;
 }
-interface Periode {
+export interface Periode {
   fom: string;
   tom: string | null;
 }

@@ -34,7 +34,10 @@ const Periode = ({
         />
       </Nav.Column>
       <Nav.Column xs="6">
-        <Soknadslandvelger redigerbart={redigerbart} />
+        <Soknadslandvelger
+          redigerbart={redigerbart}
+          lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+        />
       </Nav.Column>
     </Nav.Row>
   </div>
