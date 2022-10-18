@@ -38,6 +38,7 @@ const FagsakVelger = (props) => {
   const feltNavn = erOpprettNySak ? FormValuesOpprettNySak : FormValuesJournalforing;
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
+
   useEffect(() => {
     if (nullstillFormVerdier) {
       nullstillFormVerdier();
@@ -46,6 +47,7 @@ const FagsakVelger = (props) => {
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
+
     if (valgtVisning === OPPRETT || ingenSakerFinnes) {
       dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, "-1"));
     } else if (valgtVisning === EKSISTERENDE) {
@@ -90,43 +92,43 @@ const FagsakVelger = (props) => {
     });
   }
 
+  if (erOpprettNySak && nyOpprettSakToggle !== "enabled") {
+    return (
+      <OpprettSak
+        behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
+        formValues={formValues}
+        feltNavn={feltNavn}
+      />
+    );
+  }
+
   if (behandleAlleSakerToggleEnabled) {
     return (
       <div className="fagsakVelger">
-        {nyOpprettSakToggle !== "enabled" && erOpprettNySak ? (
-          <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
-        ) : (
+        {ingenSakerFinnes ? (
           <>
-            {ingenSakerFinnes ? (
-              <>
-                <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
-                <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
-              </>
-            ) : (
-              <div className="velgVisning">
-                <Nav.Radio
-                  label={EKSISTERENDE}
-                  className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
-                  name="velgVisning"
-                  onChange={() => {
-                    setValgtVisning(EKSISTERENDE);
-                  }}
-                  checked={valgtVisning === EKSISTERENDE}
-                  value={EKSISTERENDE}
-                />
-                <Nav.Radio
-                  label={OPPRETT}
-                  className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
-                  name="velgVisning"
-                  onChange={() => {
-                    setValgtVisning(OPPRETT);
-                  }}
-                  checked={valgtVisning === OPPRETT}
-                  value={OPPRETT}
-                />
-              </div>
-            )}
+            <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
+            <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
           </>
+        ) : (
+          <div className="velgVisning">
+            <Nav.Radio
+              label={EKSISTERENDE}
+              className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
+              name="velgVisning"
+              onChange={() => setValgtVisning(EKSISTERENDE)}
+              checked={valgtVisning === EKSISTERENDE}
+              value={EKSISTERENDE}
+            />
+            <Nav.Radio
+              label={OPPRETT}
+              className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
+              name="velgVisning"
+              onChange={() => setValgtVisning(OPPRETT)}
+              checked={valgtVisning === OPPRETT}
+              value={OPPRETT}
+            />
+          </div>
         )}
 
         {(!erOpprettNySak || nyOpprettSakToggle === "enabled") && (
@@ -147,16 +149,6 @@ const FagsakVelger = (props) => {
           </>
         )}
       </div>
-    );
-  }
-
-  if ((!behandleAlleSakerToggleEnabled || nyOpprettSakToggle !== "enabled") && erOpprettNySak) {
-    return (
-      <OpprettSak
-        behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
-        formValues={formValues}
-        feltNavn={feltNavn}
-      />
     );
   }
 

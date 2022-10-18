@@ -24,7 +24,6 @@ const JournalforingSED = ({
   behandlingstema,
   form,
   submitSpinner,
-  kanSubmittes,
   avbrytJournalforing,
   handleSubmit,
 }) => (
@@ -72,7 +71,7 @@ const JournalforingSED = ({
       }
     />
 
-    <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
+    <Fotknapper avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
   </form>
 );
 
@@ -85,7 +84,6 @@ JournalforingSED.propTypes = {
   submitSpinner: PT.bool.isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
-  kanSubmittes: PT.bool.isRequired,
   handleSubmit: PT.func.isRequired,
 };
 
