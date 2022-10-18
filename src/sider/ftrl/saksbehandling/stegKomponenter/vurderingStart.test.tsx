@@ -9,7 +9,7 @@ import MKV from "../../../../melosyskodeverk";
 import { VurderingStart } from "./vurderingStart";
 
 const { CH, DK } = MKV.Koder.landkoder;
-const { AU } = MKV.Koder.avtaleland;
+const { AU } = MKV.Koder.trygdeavtale_myndighetsland;
 
 describe("VurderingStart", () => {
   const mockedProps = mock<ComponentProps<typeof VurderingStart>>();

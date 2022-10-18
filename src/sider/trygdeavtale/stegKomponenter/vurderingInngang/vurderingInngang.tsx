@@ -12,7 +12,6 @@ import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 
-import DialogboksOppfriskSak from "../../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { StegStatus } from "../../stegvelger";
@@ -81,7 +80,6 @@ interface Props {
 }
 
 const VurderingInngang = ({
-  annenBehandlingOppfriskes,
   data: { landValg, landValgUtenStøtte },
   formValues,
   formIsValid,
@@ -92,7 +90,6 @@ const VurderingInngang = ({
   redigerbart,
   resultat,
   steg,
-  tilForsiden,
   oppdaterPeriode,
   oppdaterSoeknadsland,
   oppfriskOgLastInnSaksopplysninger,
@@ -102,7 +99,7 @@ const VurderingInngang = ({
 }: PropsFromRedux & Props) => {
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
   const [landUtenStøtteValgt, setLandUtenStøtteValgt] = useState(false);
-  const [visOppfrisk, setVisOppfrisk] = useState(false);
+  const [visSpinner, setVisSpinner] = useState(false);
   const skalHenteRegisteropplysninger =
     formValues?.fom !== initialFomTomLand?.fom ||
     formValues?.tom !== initialFomTomLand?.tom ||
@@ -149,9 +146,15 @@ const VurderingInngang = ({
     }
   }, [formValues?.arbeidsland]);
 
-  const innhentRegisteropplysningerHandle = () => {
+  const bekreftHandle = async () => {
     setInitialFomTomLand({ fom: formValues.fom, tom: formValues.tom, arbeidsland: formValues.arbeidsland });
-    setVisOppfrisk(true);
+    if (skalHenteRegisteropplysninger) {
+      setVisSpinner(true);
+      await oppfriskOgLastInnSaksopplysninger();
+      setVisSpinner(false);
+      resetFlyt();
+    }
+    fortsett();
   };
 
   return (
@@ -189,42 +192,14 @@ const VurderingInngang = ({
 
       {landUtenStøtteValgt && <FlytFinnesIkke />}
 
-      {skalHenteRegisteropplysninger ? (
-        <Mui.StegKnapper
-          bekreftKnappProps={{
-            onClick: innhentRegisteropplysningerHandle,
-            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
-          }}
-          bekreftTekst="Innhent registeropplysninger"
-        />
-      ) : (
-        <Mui.StegKnapper
-          bekreftKnappProps={{
-            onClick: fortsett,
-            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || landUtenStøtteValgt,
-          }}
-        />
-      )}
-
-      {visOppfrisk && (
-        <DialogboksOppfriskSak
-          oppfrisk={async () => {
-            await oppfriskOgLastInnSaksopplysninger();
-            resetFlyt();
-          }}
-          avbryt={() => setVisOppfrisk(false)}
-          lukk={() => {
-            setVisOppfrisk(false);
-            visMenypanel();
-          }}
-          tilForsiden={() => {
-            setVisOppfrisk(false);
-            tilForsiden();
-          }}
-          behandlingOppfriskes
-          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-        />
-      )}
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          onClick: bekreftHandle,
+          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || landUtenStøtteValgt,
+        }}
+        spinner={visSpinner}
+        bekreftTekst="Bekreft og innhent registeropplysninger"
+      />
     </div>
   );
 };
