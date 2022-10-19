@@ -247,10 +247,12 @@ const journalforing = object().shape({
         }
       ),
   }),
-  utenlandskTrygdemyndighetLandkode: string().when("avsenderType", {
-    is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
-    then: string().required(VELG_ETT_LAND),
-  }),
+  utenlandskTrygdemyndighetLandkode: string()
+    .when("avsenderType", {
+      is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
+      then: string().required(VELG_ETT_LAND).nullable(),
+    })
+    .nullable(),
   representantRepresenterer: string()
     .when("avsenderType", {
       is: KV.AvsenderTyper.FULLMEKTIG,
