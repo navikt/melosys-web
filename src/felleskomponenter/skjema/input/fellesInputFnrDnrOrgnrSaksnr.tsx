@@ -8,14 +8,38 @@ import {
 
 import * as SkjemaUtils from "../utils";
 
-const InnerFellesInputFnrDnrOrgnrSaksnr = ({ vedEndring, ...rest }: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
+const InnerFellesInputFnrDnrOrgnrSaksnr = ({
+  input,
+  label,
+  onBlur,
+  onChange,
+  ...rest
+}: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
   const {
     meta,
     meta: { touched, active },
   } = rest;
 
   const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
-  return <EnkelFellesInputFnrDnrOrgnrSaksnr {...rest} feil={rest.feil || feil} vedEndring={vedEndring} />;
+
+  const innerBlur = (e: string) => {
+    if (onBlur) onBlur(e);
+    input.onBlur(e);
+  };
+
+  const innerChange = (e: string) => {
+    if (onChange) onChange(e);
+    input.onChange(e);
+  };
+
+  const inputProps = {
+    ...input,
+    ...rest,
+    onBlur: innerBlur,
+    onChange: innerChange,
+  };
+
+  return <EnkelFellesInputFnrDnrOrgnrSaksnr label={label} feil={feil || undefined} {...inputProps} />;
 };
 
 const FellesInputFnrDnrOrgnrSaksnr = ({ feltNavn = "", bredde = "fullbredde", className = "", ...rest }) => (
