@@ -44,7 +44,7 @@ class SokSkjema extends Component {
           label=""
           className="sokeskjema__input"
           bredde="XL"
-          vedEndring={this.vedEndretSokFelt}
+          onChange={this.vedEndretSokFelt}
           ref={this.state.sokStreng}
           placeholder="F.nr./d-nr./saksnr."
         />
