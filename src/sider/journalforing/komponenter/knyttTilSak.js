@@ -15,27 +15,14 @@ import * as Api from "../../../services/api";
 import "./knyttTilSak.css";
 
 const {
-  behandlinger: { behandlingstyper: MKVBehandlingstyper, behandlingstema: MKVBehandlingstema },
+  behandlinger: { behandlingstyper: MKVBehandlingstyper },
   sakstyper: MKVSakstyper,
   saksstatuser: MKVSaksstatuser,
 } = MKV.Koder;
 
-const behandlingstyper_gammel = (sakstype, behtema) => {
-  switch (sakstype) {
-    case MKVSakstyper.EU_EOS:
-      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
-        ({ kode }) =>
-          (behtema === MKVBehandlingstema.UTSENDT_ARBEIDSTAKER && kode === MKVBehandlingstyper.ENDRET_PERIODE) ||
-          kode === MKVBehandlingstyper.NY_VURDERING
-      );
-    case MKVSakstyper.TRYGDEAVTALE:
-      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
-        ({ kode }) => kode === MKVBehandlingstyper.NY_VURDERING
-      );
-    default:
-      return [];
-  }
-};
+const behandlingstyper_gammel = MKV.KTObjects.behandlinger.behandlingstyper.filter(
+  ({ kode }) => kode === MKVBehandlingstyper.NY_VURDERING
+);
 
 export const KnyttTilSak = (props) => {
   const { sak, behandleAlleSakerToggleEnabled, erOpprettNySak, changeField, feltNavn, formValues } = props;
@@ -186,7 +173,7 @@ export const KnyttTilSak = (props) => {
                 className="panelElement"
                 emptyFieldDisabled={false}
               >
-                {behandlingstyper_gammel(sakstype?.kode, sisteBehandling.behandlingstema?.kode)?.map((elem) => (
+                {behandlingstyper_gammel?.map((elem) => (
                   <option key={elem.kode} value={elem.kode} label={elem.term} />
                 ))}
               </Skjema.Select>
