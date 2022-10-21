@@ -50,9 +50,19 @@ export const KnyttTilSak = (props) => {
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
   const sisteBehandling = behandlingOversikter[0];
 
+  const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
+    sisteBehandling.behandlingsstatus.kode
+  );
+
+  const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
+    ? sisteBehandlingErInaktiv
+    : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
+
   useEffect(() => {
+    changeField(feltNavn.formNavn, "opprettBehandling", visOpprettNyBehandling);
+
     return () => {
-      changeField(feltNavn.formNavn, "opprettBehandling", true);
+      changeField(feltNavn.formNavn, "opprettBehandling", undefined);
       changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
       changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     };
@@ -100,9 +110,6 @@ export const KnyttTilSak = (props) => {
     }
   }, [opprettBehandling, behandlingstema, behandlingstype]);
 
-  const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
-    sisteBehandling.behandlingsstatus.kode
-  );
   const sakErHenlagtEllerBortfalt = [MKVSaksstatuser.HENLAGT, MKVSaksstatuser.HENLAGT_BORTFALT].includes(
     sak.saksstatus.kode
   );
@@ -110,9 +117,6 @@ export const KnyttTilSak = (props) => {
   const visKnyttTilEksisterende =
     sisteBehandlingErInaktiv && (!behandleAlleSakerToggleEnabled || !sakErHenlagtEllerBortfalt);
 
-  const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
-    ? sisteBehandlingErInaktiv
-    : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
 
   useEffect(() => {
