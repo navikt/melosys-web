@@ -38,6 +38,7 @@ const FagsakVelger = (props) => {
   const feltNavn = erOpprettNySak ? FormValuesOpprettNySak : FormValuesJournalforing;
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
+
   useEffect(() => {
     if (nullstillFormVerdier) {
       nullstillFormVerdier();
@@ -46,6 +47,7 @@ const FagsakVelger = (props) => {
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
+
     if (valgtVisning === OPPRETT || ingenSakerFinnes) {
       dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, "-1"));
     } else if (valgtVisning === EKSISTERENDE) {
@@ -90,67 +92,7 @@ const FagsakVelger = (props) => {
     });
   }
 
-  if (behandleAlleSakerToggleEnabled) {
-    return (
-      <div className="fagsakVelger">
-        {nyOpprettSakToggle !== "enabled" && erOpprettNySak ? (
-          <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
-        ) : (
-          <>
-            {ingenSakerFinnes ? (
-              <>
-                <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
-                <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
-              </>
-            ) : (
-              <div className="velgVisning">
-                <Nav.Radio
-                  label={EKSISTERENDE}
-                  className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
-                  name="velgVisning"
-                  onChange={() => {
-                    setValgtVisning(EKSISTERENDE);
-                  }}
-                  checked={valgtVisning === EKSISTERENDE}
-                  value={EKSISTERENDE}
-                />
-                <Nav.Radio
-                  label={OPPRETT}
-                  className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
-                  name="velgVisning"
-                  onChange={() => {
-                    setValgtVisning(OPPRETT);
-                  }}
-                  checked={valgtVisning === OPPRETT}
-                  value={OPPRETT}
-                />
-              </div>
-            )}
-          </>
-        )}
-
-        {(!erOpprettNySak || nyOpprettSakToggle === "enabled") && (
-          <>
-            {valgtVisning === EKSISTERENDE && (
-              <Skjema.CustomRadioPanelGruppe
-                feltNavn="saksnummer"
-                radios={radioValg}
-                notify={notifier}
-                begrensVisteRadios
-                onChange={nullstillFormVerdier}
-                className="marginMellomCustomRadioPaneler"
-              />
-            )}
-            {valgtVisning === OPPRETT && (
-              <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
-            )}
-          </>
-        )}
-      </div>
-    );
-  }
-
-  if ((!behandleAlleSakerToggleEnabled || nyOpprettSakToggle !== "enabled") && erOpprettNySak) {
+  if (erOpprettNySak && nyOpprettSakToggle !== "enabled") {
     return (
       <OpprettSak
         behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
