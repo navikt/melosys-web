@@ -155,7 +155,7 @@ const SendBrev = ({
     );
   };
 
-  const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false): any => {
+  const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false, hentKode: boolean = false): any => {
     const feltFraValgtMal = formValues?.valgtBrev?.felter?.find((felt) => felt.kode === feltNavn);
     if (!feltFraValgtMal) {
       return null;
@@ -167,6 +167,11 @@ const SendBrev = ({
       if (!hentValgverdi) {
         return valgtAlternativ?.visFelt ? feltVerdi : null;
       }
+
+      if (hentKode) {
+        return valgtAlternativ?.kode;
+      }
+
       return valgtAlternativ?.visFelt ? feltVerdi : valgtAlternativ?.beskrivelse;
     }
     return feltVerdi;
@@ -193,6 +198,7 @@ const SendBrev = ({
         journalpostID: vedlegg.journalpostID,
       })),
       fritekstvedlegg,
+      distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
     };
   };
 
@@ -340,7 +346,7 @@ const SendBrev = ({
           <Nav.Column xs={brevTypeSelectWidth}>
             <Skjema.Select
               feltNavn="type"
-              label={<Nav.Typo.Element>Type brev</Nav.Typo.Element>}
+              label={<Nav.Typo.Element>Velg brev</Nav.Typo.Element>}
               disabled={!redigerbart}
               emptyFieldText="Velg..."
               emptyFieldDisabled={!!formValues.type}

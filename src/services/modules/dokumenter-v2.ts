@@ -95,6 +95,7 @@ export type OpprettBrevReqDto = {
     tittel: string;
     fritekst: string;
   }[];
+  distribusjonstype?: string;
 };
 
 export type MuligMottaker = {
