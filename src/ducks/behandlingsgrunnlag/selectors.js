@@ -6,7 +6,6 @@ import * as KV from "../../kodeverk";
 import { OrganisasjonSelectors } from "../organisasjoner";
 
 import MKV from "../../melosyskodeverk";
-import { unikeAvtaleland } from "../../melosyskodeverk/kodekombinasjoner";
 
 /**
  * Selectors
@@ -202,7 +201,7 @@ export const SoknadslandErUkjenteEllerAlleEosLandSelector = createSelector(
 );
 
 export const SoknadslandKTSelector = createSelector(SoknadslandkoderSelector, (soknadsland) =>
-  unikeAvtaleland.filter((landkodeObjekt) => soknadsland.includes(landkodeObjekt.kode))
+  MKV.KTObjects.land_iso2.filter((landkodeObjekt) => soknadsland.includes(landkodeObjekt.kode))
 );
 
 export const TrygdedekningSelector = createSelector(

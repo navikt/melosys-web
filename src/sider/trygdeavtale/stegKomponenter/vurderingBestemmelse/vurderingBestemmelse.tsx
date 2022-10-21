@@ -9,6 +9,7 @@ import parse from "html-react-parser";
 
 import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
+import MKV from "../../../../melosyskodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
@@ -84,6 +85,12 @@ const VurderingBestemmelse = ({
   }, [formValues]);
 
   if (!formValues) return null;
+
+  const usaBestemmelserEndaIkkeStøttet = [
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_usa.USA_ART5_1,
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_usa.USA_ART5_9,
+  ];
+
   return (
     <div className="vurderingBestemmelse">
       <Nav.Typo.Undertittel className="undertittel">Bestemmelse og vurdering</Nav.Typo.Undertittel>
@@ -130,11 +137,13 @@ const VurderingBestemmelse = ({
                 emptyFieldText="Velg"
                 emptyFieldDisabled={!!formValues.bestemmelse}
               >
-                {bestemmelseValg?.map((bestemmelse: KTObject) => (
-                  <option key={bestemmelse.kode} value={bestemmelse.kode}>
-                    {bestemmelse.term}
-                  </option>
-                ))}
+                {bestemmelseValg
+                  ?.filter((bestemmelse: KTObject) => !usaBestemmelserEndaIkkeStøttet.includes(bestemmelse.kode))
+                  .map((bestemmelse: KTObject) => (
+                    <option key={bestemmelse.kode} value={bestemmelse.kode}>
+                      {bestemmelse.term}
+                    </option>
+                  ))}
               </Skjema.Select>
             </Nav.Column>
           </Nav.Row>
