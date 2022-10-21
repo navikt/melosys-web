@@ -65,6 +65,7 @@ export const JournalforingForm = ({
   landkoder,
 }) => {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, behandleAlleSakerToggleEnabled);
+  const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
@@ -75,19 +76,21 @@ export const JournalforingForm = ({
     <form onSubmit={handleSubmit} className="journalforingform">
       <Informasjon journalpostID={journalpostID} dokumentID={hoveddokumentID} vedlegg={vedlegg} />
 
-      <Komponent
-        ikon={Ikoner.Links}
-        tittel="Knytt til eksisterende sak eller opprett ny sak"
-        innhold={
-          <FagsakVelger
-            fagsakListe={fagsakListe}
-            settJournalforingHensikt={settJournalforingHensikt}
-            behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
-            landkoder={landkoder}
-            formValues={formValues}
-          />
-        }
-      />
+      {visFagsakVelger && (
+        <Komponent
+          ikon={Ikoner.Links}
+          tittel="Knytt til eksisterende sak eller opprett ny sak"
+          innhold={
+            <FagsakVelger
+              fagsakListe={fagsakListe}
+              settJournalforingHensikt={settJournalforingHensikt}
+              behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
+              landkoder={landkoder}
+              formValues={formValues}
+            />
+          }
+        />
+      )}
 
       {visForvaltningsmelding && (
         <Komponent
