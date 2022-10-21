@@ -4,9 +4,10 @@ import { getFormValues } from "redux-form";
 import { RootState } from "AppTypes";
 
 import MKV from "../../../../melosyskodeverk";
-
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as KV from "../../../../kodeverk";
+
+import { useFeatureToggle } from "../../../../featuretoggle";
 import { journalforingSelectors } from "../../../../ducks/journalforing";
 import { AvsenderArbeidsgiver, AvsenderUtenlandskTrygdemyndighet, AvsenderFullmektig } from "./index";
 
@@ -46,7 +47,13 @@ const AvsenderVelger = ({
   settFeltInnhold,
   hentOgVisRepresentant,
 }: AvsenderVelgerProps) => {
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const avsenderTypeEndret = (avsenderType: string) => {
+    if (behandleAlleSakerToggle === "enabled" && avsenderType !== MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET) {
+      settFeltInnhold("sakstype", null);
+      settFeltInnhold("utenlandskTrygdemyndighetLandkode", null);
+    }
+
     switch (avsenderType) {
       case MKV.Koder.avsendertyper.PERSON: {
         kopierBrukerTilAvsender();
@@ -69,10 +76,26 @@ const AvsenderVelger = ({
   }, [formValues.avsenderType]);
 
   const fullmektigLandEndret = (landkode: string) => {
-    const avsenderNavn = landkode ? `Trygdemyndighet i ${KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}` : null;
+    const avsenderNavn = landkode
+      ? `Trygdemyndighet i ${KV.kodeTilTerm(landkode, MKV.Kodekombinasjoner.unikeAvtaleland)}`
+      : null;
 
     settFeltInnhold("avsenderID", landkode);
     settFeltInnhold("avsenderNavn", avsenderNavn);
+    if (
+      behandleAlleSakerToggle === "enabled" &&
+      KV.erKodeIListe(landkode, MKV.KTObjects.trygdeavtale_myndighetsland) &&
+      !KV.erKodeIListe(landkode, MKV.Kodekombinasjoner.landSomErTrygdeavtaleMyndighetslandOgEuEøsLand)
+    ) {
+      settFeltInnhold("sakstype", MKV.Koder.sakstyper.TRYGDEAVTALE);
+    }
+    if (
+      behandleAlleSakerToggle === "enabled" &&
+      KV.erKodeIListe(landkode, MKV.KTObjects.landkoder) &&
+      !KV.erKodeIListe(landkode, MKV.Kodekombinasjoner.landSomErTrygdeavtaleMyndighetslandOgEuEøsLand)
+    ) {
+      settFeltInnhold("sakstype", MKV.Koder.sakstyper.EU_EOS);
+    }
   };
 
   return (

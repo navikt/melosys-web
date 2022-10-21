@@ -108,7 +108,6 @@ const OpprettNySak = ({
 }: InjectedFormProps<OpprettNySakFormData, OpprettNySakProps> & OpprettNySakProps) => {
   const [oppgaver, setOppgaver] = useState<Api.Oppgaver.SokOppgaveResDto[]>([]);
   const [bekreftPending, setBekreftPending] = useState(false);
-  const [skalViseSkjema, setSkalViseSkjema] = useState(false);
   const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
@@ -180,12 +179,8 @@ const OpprettNySak = ({
     if (Utils.person.erGyldigFnrEllerDnr(personIdent)) {
       const navn = await hentSammensattNavn(personIdent);
       change("brukerNavn", navn);
-      setSkalViseSkjema(true);
     } else {
       change("brukerNavn", null);
-      if (nyOpprettSakToggle === "enabled") {
-        setSkalViseSkjema(false);
-      }
       return;
     }
     await hentFagsakListe(personIdent);
@@ -197,12 +192,8 @@ const OpprettNySak = ({
       const response = await sokOrgnr(orgnr);
       const navn = response?.data.navn;
       change("virksomhetNavn", navn);
-      setSkalViseSkjema(true);
     } else {
       change("virksomhetNavn", null);
-      if (nyOpprettSakToggle === "enabled") {
-        setSkalViseSkjema(false);
-      }
       return;
     }
     await hentFagsakListe(virksomhetOrgnr);
@@ -216,12 +207,6 @@ const OpprettNySak = ({
   useEffect(() => {
     hentVirksomhet(virksomhetOrgnr);
   }, [virksomhetOrgnr]);
-
-  useEffect(() => {
-    if (nyOpprettSakToggle === "disabled") {
-      setSkalViseSkjema(true);
-    }
-  }, [nyOpprettSakToggle]);
 
   useEffect(() => {
     if (hovedpart === BRUKER) {
@@ -287,10 +272,13 @@ const OpprettNySak = ({
     change("sakstema", null);
     change("erAvsluttetSak", null);
   };
+
   const nullstillOppgave = () => {
     change("oppgaveID", null);
   };
+
   const hovedpartErBruker = hovedpart === BRUKER;
+  const visFagsakOgOppgaveVelger = brukerNavn || virksomhetNavn;
 
   if (!formValues) return null;
   return (
@@ -337,7 +325,7 @@ const OpprettNySak = ({
                   />
                 )}
               </div>
-              {skalViseSkjema && (
+              {visFagsakOgOppgaveVelger && (
                 <>
                   <div className="seksjon">
                     <Mui.Undertittel
@@ -386,7 +374,7 @@ const OpprettNySak = ({
                 <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg behandlingen i mine oppgaver" />
                 {formError && <Nav.AlertStripeAdvarsel className="formError">{formError}</Nav.AlertStripeAdvarsel>}
                 <Knapperad
-                  bekreftTekst="Opprett sak"
+                  bekreftTekst={nyOpprettSakToggle === "enabled" ? "Opprett ny behandling" : "Opprett sak"}
                   avbryt={tilForsiden}
                   avbrytTekst="Avbryt"
                   redigerbart

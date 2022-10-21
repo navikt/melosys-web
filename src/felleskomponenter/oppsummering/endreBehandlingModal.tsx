@@ -297,7 +297,7 @@ function EndreBehandlingModal({
               value={behandlingstype}
               koder={
                 behandleAlleSakerToggle === "enabled"
-                  ? muligeBehandlingstyper
+                  ? muligeVerdierPlussValgt(oppsummering.behandlingstype, muligeBehandlingstyper) // Må bruke muligVerdierPlussValgt for å støtte ENDRET_PERIODE
                   : muligeVerdierPlussValgt(oppsummering.behandlingstype, muligeBehandlingstyper_gammel)
               }
               disableForsteValg

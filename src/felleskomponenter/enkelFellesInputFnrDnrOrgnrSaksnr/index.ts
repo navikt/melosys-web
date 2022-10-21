@@ -1,6 +1,6 @@
 import EnkelFellesInputFnrDnrOrgnrSaksnr, {
   FellesInputFnrDnrOrgnrSaksnrProps,
-} from "./EnkelFellesInputFnrDnrOrgnrSaksnr";
+} from "./enkelFellesInputFnrDnrOrgnrSaksnr";
 
 export { EnkelFellesInputFnrDnrOrgnrSaksnr };
 export type { FellesInputFnrDnrOrgnrSaksnrProps };

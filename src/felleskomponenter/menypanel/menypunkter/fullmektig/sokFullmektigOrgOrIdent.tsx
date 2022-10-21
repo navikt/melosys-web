@@ -53,12 +53,13 @@ function SokFullmektigOrgOrIdent(props: SokFullmektigOrgProps) {
     }
   };
 
+  const debouncedSok = useCallback(Utils._debounce(sok, 400), []);
+
   const vedEndretInput = (sokStreng: string) => {
     setIdent(sokStreng);
     setFeilmelding(undefined);
-    sok(sokStreng);
+    debouncedSok(sokStreng);
   };
-  const debouncedEndringInput = useCallback(Utils._debounce(vedEndretInput, 400), []);
 
   return (
     <Nav.Row>
@@ -66,7 +67,7 @@ function SokFullmektigOrgOrIdent(props: SokFullmektigOrgProps) {
         <EnkelFellesInputFnrDnrOrgnrSaksnr
           label="Organisasjonsnr. eller fødselsnr./d-nr.: "
           placeholder="Skriv inn..."
-          vedEndring={debouncedEndringInput}
+          onChange={vedEndretInput}
           value={ident}
           feil={feilmelding}
         />

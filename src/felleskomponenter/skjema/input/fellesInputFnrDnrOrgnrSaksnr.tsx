@@ -1,6 +1,5 @@
-import { InputProps } from "nav-frontend-skjema";
 import React from "react";
-import { Field } from "redux-form";
+import { Field, WrappedFieldProps } from "redux-form";
 import {
   EnkelFellesInputFnrDnrOrgnrSaksnr,
   FellesInputFnrDnrOrgnrSaksnrProps,
@@ -8,14 +7,38 @@ import {
 
 import * as SkjemaUtils from "../utils";
 
-const InnerFellesInputFnrDnrOrgnrSaksnr = ({ vedEndring, ...rest }: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
+const InnerFellesInputFnrDnrOrgnrSaksnr = ({
+  input,
+  label,
+  onBlur,
+  onChange,
+  ...rest
+}: FellesInputFnrDnrOrgnrSaksnrProps & WrappedFieldProps) => {
   const {
     meta,
     meta: { touched, active },
   } = rest;
 
   const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
-  return <EnkelFellesInputFnrDnrOrgnrSaksnr {...rest} feil={rest.feil || feil} vedEndring={vedEndring} />;
+
+  const innerBlur = (ident: string) => {
+    if (onBlur) onBlur(ident);
+    input.onBlur(ident);
+  };
+
+  const innerChange = (ident: string) => {
+    if (onChange) onChange(ident);
+    input.onChange(ident);
+  };
+
+  const inputProps = {
+    ...input,
+    ...rest,
+    onBlur: innerBlur,
+    onChange: innerChange,
+  };
+
+  return <EnkelFellesInputFnrDnrOrgnrSaksnr label={label} feil={feil || undefined} {...inputProps} />;
 };
 
 const FellesInputFnrDnrOrgnrSaksnr = ({ feltNavn = "", bredde = "fullbredde", className = "", ...rest }) => (
