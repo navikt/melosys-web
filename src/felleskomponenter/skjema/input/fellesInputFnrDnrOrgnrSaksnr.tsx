@@ -1,6 +1,5 @@
-import { InputProps } from "nav-frontend-skjema";
 import React from "react";
-import { Field } from "redux-form";
+import { Field, WrappedFieldProps } from "redux-form";
 import {
   EnkelFellesInputFnrDnrOrgnrSaksnr,
   FellesInputFnrDnrOrgnrSaksnrProps,
@@ -14,7 +13,7 @@ const InnerFellesInputFnrDnrOrgnrSaksnr = ({
   onBlur,
   onChange,
   ...rest
-}: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
+}: FellesInputFnrDnrOrgnrSaksnrProps & WrappedFieldProps) => {
   const {
     meta,
     meta: { touched, active },
@@ -22,14 +21,14 @@ const InnerFellesInputFnrDnrOrgnrSaksnr = ({
 
   const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
-  const innerBlur = (e: string) => {
-    if (onBlur) onBlur(e);
-    input.onBlur(e);
+  const innerBlur = (ident: string) => {
+    if (onBlur) onBlur(ident);
+    input.onBlur(ident);
   };
 
-  const innerChange = (e: string) => {
-    if (onChange) onChange(e);
-    input.onChange(e);
+  const innerChange = (ident: string) => {
+    if (onChange) onChange(ident);
+    input.onChange(ident);
   };
 
   const inputProps = {

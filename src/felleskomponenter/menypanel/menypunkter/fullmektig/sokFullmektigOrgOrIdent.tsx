@@ -67,7 +67,7 @@ function SokFullmektigOrgOrIdent(props: SokFullmektigOrgProps) {
         <EnkelFellesInputFnrDnrOrgnrSaksnr
           label="Organisasjonsnr. eller fødselsnr./d-nr.: "
           placeholder="Skriv inn..."
-          vedEndring={vedEndretInput}
+          onChange={vedEndretInput}
           value={ident}
           feil={feilmelding}
         />

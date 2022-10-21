@@ -59,7 +59,7 @@ const AvsenderFullmektig = ({
       <Skjema.FellesInputFnrDnrOrgnrSaksnr
         feltNavn="avsenderID"
         label="Fullmektigs org.nr. eller f.nr./d-nr."
-        vedEndring={IDFeltTastOppHandler}
+        onChange={IDFeltTastOppHandler}
         className="avsender__input"
         bredde="L"
       />

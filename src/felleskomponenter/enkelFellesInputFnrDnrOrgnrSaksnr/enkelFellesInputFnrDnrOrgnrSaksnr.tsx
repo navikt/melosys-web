@@ -1,25 +1,22 @@
-import { InputProps } from "nav-frontend-skjema";
-import React, { useState } from "react";
+import React, { ComponentProps, useState } from "react";
 import * as Nav from "../../navFrontend";
 
-export interface FellesInputFnrDnrOrgnrSaksnrProps {
-  label: React.ReactNode;
-  feil?: string;
-  meta?: any;
-  input?: any;
-  onChange?: (sokStreng: string) => void;
-  vedEndring?: (sokStreng: string) => void;
-  onBlur?: (sokStreng: string) => void;
-}
+type InputProps = Omit<ComponentProps<typeof Nav.Input>, "onChange" | "onBlur">;
+
+export type FellesInputFnrDnrOrgnrSaksnrProps = InputProps & {
+  value?: string;
+  onChange?: (ident: string) => void;
+  onBlur?: (ident: string) => void;
+};
 
 const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
   label,
   feil,
+  onChange,
   onBlur,
-  vedEndring,
-  ...rest
-}: FellesInputFnrDnrOrgnrSaksnrProps & InputProps) => {
-  const [inputVerdi, setInputVerdi] = useState<string>(rest?.input?.value || "");
+  ...props
+}: FellesInputFnrDnrOrgnrSaksnrProps) => {
+  const [inputVerdi, setInputVerdi] = useState<string>(props?.value || "");
 
   const hentTrimmetStrengFraEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
     const trimmetStreng = event.target.value.toUpperCase().replaceAll(" ", "") || "";
@@ -29,11 +26,8 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = hentTrimmetStrengFraEvent(event);
-    if (rest?.onChange) {
-      rest?.onChange(value);
-    }
-    if (vedEndring) {
-      vedEndring(value);
+    if (onChange) {
+      onChange(value);
     }
   };
 
@@ -45,7 +39,7 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
   };
 
   return (
-    <Nav.Input label={label} value={inputVerdi} feil={feil} onChange={handleChange} onBlur={handleBlur} {...rest} />
+    <Nav.Input label={label} value={inputVerdi} feil={feil} onChange={handleChange} onBlur={handleBlur} {...props} />
   );
 };
 
