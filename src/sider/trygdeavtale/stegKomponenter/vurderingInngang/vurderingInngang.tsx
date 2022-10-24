@@ -153,6 +153,7 @@ const VurderingInngang = ({
       await oppfriskOgLastInnSaksopplysninger();
       setVisSpinner(false);
       resetFlyt();
+      visMenypanel();
     }
     fortsett();
   };
