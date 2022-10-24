@@ -189,7 +189,7 @@ describe("Personinfo", () => {
       });
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 30);
+        setTimeout(resolve, 40);
       });
       personinfo.update();
 

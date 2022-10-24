@@ -113,6 +113,7 @@ const journalforing = object().shape({
     .nullable(),
   virksomhetNavn: string().nullable(),
   avsenderID: string()
+    .nullable()
     .when(["avsenderType", "$erAvsenderPreutfylt"], {
       is: arbeidsgiverOgIkkePreutfyltAvsender,
       then: string()
@@ -254,8 +255,9 @@ const journalforing = object().shape({
     })
     .nullable(),
   representantRepresenterer: string()
-    .when("avsenderType", {
-      is: KV.AvsenderTyper.FULLMEKTIG,
+    .when(["avsenderType", "representantNavn"], {
+      is: (avsenderType, representantNavn) =>
+        avsenderType === KV.AvsenderTyper.FULLMEKTIG && !Utils._isEmpty(representantNavn),
       then: string().required(VELG_REPRESENTERER).nullable(),
     })
     .nullable(),
