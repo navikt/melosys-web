@@ -205,10 +205,8 @@ const VurderingVedtak = ({
   };
   const debouncedKontrollerVedtak = useCallback(Utils._debounce(kontrollerVedtak, 500), []);
 
-  const hentProduserbartDokument = (): string => {
-    console.log(`soknadsland=${soknadsland}; gb=${STORBRITANNIA}`);
-    return soknadsland === MKV.KTObjects.land_iso2.GB ? STORBRITANNIA : TRYGDEAVTALE_US;
-  };
+  const hentProduserbartDokument = (): string =>
+    soknadsland[0].kode === MKV.Koder.land_iso2.GB ? STORBRITANNIA : TRYGDEAVTALE_US;
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
