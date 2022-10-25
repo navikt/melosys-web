@@ -33,7 +33,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 
-const { STORBRITANNIA } = MKV.Koder.brev.produserbaredokumenter;
+const { STORBRITANNIA, TRYGDEAVTALE_US } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
 
 const vurderingVedtakCls = bem("vurderingVedtak");
@@ -63,7 +63,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
   return {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     behandlingsgrunnlagStatus: behandlingsgrunnlagSelectors.BehandlingsgrunnlagStatusSelector(state),
-    soknadsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state)[0],
+    soknadsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state),
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
     formValues: getFormValues(KV.Form.Trygdeavtale.VEDTAK)(state),
@@ -205,9 +205,14 @@ const VurderingVedtak = ({
   };
   const debouncedKontrollerVedtak = useCallback(Utils._debounce(kontrollerVedtak, 500), []);
 
+  const hentProduserbartDokument = (): string => {
+    console.log(`soknadsland=${soknadsland}; gb=${STORBRITANNIA}`);
+    return soknadsland === MKV.KTObjects.land_iso2.GB ? STORBRITANNIA : TRYGDEAVTALE_US;
+  };
+
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: STORBRITANNIA,
+      produserbartdokument: hentProduserbartDokument(),
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -277,7 +282,7 @@ const VurderingVedtak = ({
         sendesTilDokumenterV2: true,
         navn: muligMottaker.dokumentNavn,
         data: {
-          produserbardokument: STORBRITANNIA,
+          produserbardokument: hentProduserbartDokument(),
           mottaker: muligMottaker.rolle,
           kopiMottakere: getKopiMottakere(),
           innledningFritekst: formValues?.innledningFritekst || null,
