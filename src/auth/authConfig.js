@@ -11,6 +11,7 @@ export const msalConfig = {
   system: {},
 };
 
+// TODO: Legg til trygdeavtale scope, fjern hardkodet scope melosys,
 export const loginRequest = {
   scopes: ["api://dev-fss.teammelosys.melosys-q1/.default"],
 };
