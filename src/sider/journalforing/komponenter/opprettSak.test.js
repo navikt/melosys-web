@@ -68,6 +68,7 @@ describe("OpprettSak - journalføring", () => {
       props.formValues.opprettnysak_behandlingstema = behandlingstema;
       props.formValues.opprettnysak_behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
       props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
+      props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
       props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
       props.formValues.journalforingSoknadsland = behandlingstema;
@@ -85,6 +86,7 @@ describe("OpprettSak - journalføring", () => {
 
   each([ARBEID_I_UTLANDET, YRKESAKTIV]).it(`Opprett sak, skal ikke ha tilvalg`, (behandlingstema) => {
     props.formValues.opprettnysak_behandlingstema = behandlingstema;
+    props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
     props.formValues.sakstype = MKV.Koder.sakstyper.TRYGDEAVTALE;
     props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
@@ -102,6 +104,7 @@ describe("OpprettSak - journalføring", () => {
     props.formValues.opprettnysak_behandlingstema = ARBEID_FLERE_LAND;
     props.formValues.opprettnysak_behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
     props.formValues.journalforingSoknadsland = ARBEID_FLERE_LAND;
+    props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
     props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
     props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
@@ -167,6 +170,7 @@ describe("OpprettSak - opprett ny sak", () => {
     (behandlingstema) => {
       props.formValues.behandlingstema = behandlingstema;
       props.formValues.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
+      props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
       props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
       props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
@@ -185,6 +189,7 @@ describe("OpprettSak - opprett ny sak", () => {
 
   each([ARBEID_I_UTLANDET, YRKESAKTIV]).it(`Opprett sak, skal ikke ha tilvalg`, (behandlingstema) => {
     props.formValues.behandlingstema = behandlingstema;
+    props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
     props.formValues.sakstype = MKV.Koder.sakstyper.TRYGDEAVTALE;
     props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
@@ -202,6 +207,7 @@ describe("OpprettSak - opprett ny sak", () => {
     props.formValues.behandlingstema = ARBEID_FLERE_LAND;
     props.formValues.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
     props.formValues.journalforingSoknadsland = ARBEID_FLERE_LAND;
+    props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
     props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
     props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
