@@ -44,7 +44,7 @@ export interface FamilieValg {
 export interface StegData {
   periodeFom?: string;
   periodeTom?: string | null;
-  soeknadsland?: string[];
+  soeknadsland?: KTObject;
   landValg: KTObject[];
   landValgUtenStøtte: KTObject[];
   virksomheter?: Virksomhet[];
