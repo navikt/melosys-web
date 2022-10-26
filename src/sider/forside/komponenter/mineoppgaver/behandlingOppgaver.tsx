@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { connect, ConnectedProps, useDispatch } from "react-redux";
 
 import { RootState } from "AppTypes";
-
-import { useInterval } from "react-use";
 
 import withErrorHandling from "../../../../felleskomponenter/withErrorHandling";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
@@ -30,18 +28,14 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
   const sakstemaToggle = useFeatureToggle("melosys.sakstema");
   const { saksbehandling } = mineSaker;
-
   const dispatch = useDispatch();
-  const oppdateringsIntervall = 3000;
-  const [oppdateringer, setOppdateringer] = useState<number>(0);
 
-  useInterval(
-    () => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
       dispatch(oversikt());
-      setOppdateringer(oppdateringer + 1);
-    },
-    oppdateringer <= 3 ? oppdateringsIntervall : null
-  );
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="behandlingsOppgaver">
