@@ -65,10 +65,6 @@ const mapStateToProps = (state: RootState) => ({
   fagsakListe: sokSelectors.FagsakSokSelector(state),
   initialValues: {
     skalTilordnes: false,
-    behandlingstema: undefined,
-    behandlingstype: undefined,
-    sakstype: undefined,
-    sakstema: undefined,
     hovedpart: BRUKER,
     opprettBehandling: true,
   },
