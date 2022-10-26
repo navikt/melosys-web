@@ -7,7 +7,6 @@ import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 
-import { useFeatureToggle } from "../../../featuretoggle";
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 
 import "./oppgaveVelger.css";
@@ -21,6 +20,7 @@ interface OppgaveVelgerProps {
   saksnummer: string;
   oppgaver: Api.Oppgaver.SokOppgaveResDto[];
   change: (field: string, value: any) => void;
+  nyOpprettSakToggleEnabled: boolean;
 }
 
 export const OppgaveVelger = ({
@@ -29,19 +29,19 @@ export const OppgaveVelger = ({
   saksnummer,
   oppgaver,
   change,
+  nyOpprettSakToggleEnabled,
 }: OppgaveVelgerProps) => {
-  const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
   const [valgtVisning, setValgtVisning] = useState(OPPRETT);
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
 
   useEffect(() => {
-    if (nyOpprettSakToggle === "enabled") {
+    if (nyOpprettSakToggleEnabled) {
       setValgtVisning(OPPRETT);
     } else {
       setValgtVisning(EKSISTERENDE);
     }
-  }, [nyOpprettSakToggle]);
+  }, [nyOpprettSakToggleEnabled]);
 
   const radioValg = oppgaver
     .filter((oppgave) => oppgave.journalpostID)
@@ -70,7 +70,7 @@ export const OppgaveVelger = ({
     change("journalpostID", oppgave?.journalpostID);
   };
 
-  if (saksnummer !== "-1" && nyOpprettSakToggle === "enabled") {
+  if (saksnummer !== "-1" && nyOpprettSakToggleEnabled) {
     return (
       <div className="oppgaveVelger">
         <Nav.AlertStripeInfo>
@@ -84,14 +84,13 @@ export const OppgaveVelger = ({
     ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
     : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver.";
 
-  const ingenOppgaverMelding =
-    nyOpprettSakToggle === "enabled"
-      ? "Ingen eksisterende oppgaver funnet. Det blir opprettet en ny"
-      : `Det finnes ingen oppgaver på denne ${hovedpartErBruker ? "personen" : "organisasjonen"}.`;
+  const ingenOppgaverMelding = nyOpprettSakToggleEnabled
+    ? "Ingen eksisterende oppgaver funnet. Det blir opprettet en ny"
+    : `Det finnes ingen oppgaver på denne ${hovedpartErBruker ? "personen" : "organisasjonen"}.`;
 
   return (
     <div className="oppgaveVelger">
-      {nyOpprettSakToggle === "enabled" && (
+      {nyOpprettSakToggleEnabled && (
         <div className="velgVisning">
           <Nav.Radio
             label={OPPRETT}
@@ -118,7 +117,7 @@ export const OppgaveVelger = ({
         <>
           {oppgaverFinnes && (
             <>
-              {nyOpprettSakToggle === "enabled" && (
+              {nyOpprettSakToggleEnabled && (
                 <Nav.AlertStripeInfo className="marginMellomHeaderOgAlertStripe">
                   Det er kun følgende oppgaver med journalpost-id som kan tilknyttes
                 </Nav.AlertStripeInfo>
@@ -126,7 +125,7 @@ export const OppgaveVelger = ({
               <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
             </>
           )}
-          {!oppgaverFinnes && !oppgaverForsoktHentet && nyOpprettSakToggle !== "enabled" && (
+          {!oppgaverFinnes && !oppgaverForsoktHentet && !nyOpprettSakToggleEnabled && (
             <Nav.AlertStripeInfo>{oppgaverIkkeHentetMelding}</Nav.AlertStripeInfo>
           )}
           {!oppgaverFinnes && oppgaverForsoktHentet && (

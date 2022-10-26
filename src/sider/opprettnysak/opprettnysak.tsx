@@ -337,6 +337,7 @@ const OpprettNySak = ({
                       erOpprettNySak
                       fagsakListe={fagsakListe}
                       behandleAlleSakerToggleEnabled={behandleAlleSakerToggle === "enabled"}
+                      nyOpprettSakToggleEnabled={nyOpprettSakToggle === "enabled"}
                       landkoder={landkoderListe}
                       nullstillFormVerdier={nullstillFormVerdier}
                       formValues={formValues}
@@ -352,6 +353,7 @@ const OpprettNySak = ({
                   />
                   <div className="innrykk">
                     <OppgaveVelger
+                      nyOpprettSakToggleEnabled={nyOpprettSakToggle === "enabled"}
                       oppgaverForsoktHentet={oppgaverForsoktHentet}
                       hovedpart={hovedpart}
                       saksnummer={saksnummer}
