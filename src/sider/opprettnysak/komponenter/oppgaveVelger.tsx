@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
-import { useSelector } from "react-redux";
-import EnkeltDato from "../../../felleskomponenter/enkeltDato";
+
+import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
-import MKV from "../../../melosyskodeverk";
-
 import * as Skjema from "../../../felleskomponenter/skjema";
+
 import { useFeatureToggle } from "../../../featuretoggle";
+import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 
 import "./oppgaveVelger.css";
-import { OpprettNySakFormSelector } from "../../../ducks/form/selectors";
 
 const EKSISTERENDE = "Eksisterende oppgave";
 const OPPRETT = "Opprett ny oppgave";
@@ -19,21 +18,20 @@ const OPPRETT = "Opprett ny oppgave";
 interface OppgaveVelgerProps {
   oppgaverForsoktHentet: boolean;
   hovedpart: string;
+  saksnummer: string;
   oppgaver: Api.Oppgaver.SokOppgaveResDto[];
-  nullstillFormverdier: () => void;
   change: (field: string, value: any) => void;
 }
 
 export const OppgaveVelger = ({
   oppgaverForsoktHentet,
   hovedpart,
+  saksnummer,
   oppgaver,
   change,
-  nullstillFormverdier,
 }: OppgaveVelgerProps) => {
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
   const [valgtVisning, setValgtVisning] = useState(OPPRETT);
-  const { erAvsluttetSak, saksnummer } = useSelector((state: any) => OpprettNySakFormSelector(state).values);
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
 
@@ -72,7 +70,7 @@ export const OppgaveVelger = ({
     change("journalpostID", oppgave?.journalpostID);
   };
 
-  if (erAvsluttetSak && saksnummer !== -1 && nyOpprettSakToggle === "enabled") {
+  if (saksnummer !== "-1" && nyOpprettSakToggle === "enabled") {
     return (
       <div className="oppgaveVelger">
         <Nav.AlertStripeInfo>
@@ -81,6 +79,15 @@ export const OppgaveVelger = ({
       </div>
     );
   }
+
+  const oppgaverIkkeHentetMelding = hovedpartErBruker
+    ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
+    : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver.";
+
+  const ingenOppgaverMelding =
+    nyOpprettSakToggle === "enabled"
+      ? "Ingen eksisterende oppgaver funnet. Det blir opprettet en ny"
+      : `Det finnes ingen oppgaver på denne ${hovedpartErBruker ? "personen" : "organisasjonen"}.`;
 
   return (
     <div className="oppgaveVelger">
@@ -92,7 +99,7 @@ export const OppgaveVelger = ({
             name="velgVisningOppgave"
             onChange={() => {
               setValgtVisning(OPPRETT);
-              nullstillFormverdier();
+              change("oppgaveID", null);
             }}
             checked={valgtVisning === OPPRETT}
             value={OPPRETT}
@@ -101,10 +108,7 @@ export const OppgaveVelger = ({
             label={EKSISTERENDE}
             className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
             name="velgVisningOppgave"
-            onChange={() => {
-              setValgtVisning(EKSISTERENDE);
-              nullstillFormverdier();
-            }}
+            onChange={() => setValgtVisning(EKSISTERENDE)}
             checked={valgtVisning === EKSISTERENDE}
             value={EKSISTERENDE}
           />
@@ -123,18 +127,10 @@ export const OppgaveVelger = ({
             </>
           )}
           {!oppgaverFinnes && !oppgaverForsoktHentet && nyOpprettSakToggle !== "enabled" && (
-            <Nav.AlertStripeInfo>
-              {hovedpartErBruker
-                ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
-                : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver."}
-            </Nav.AlertStripeInfo>
+            <Nav.AlertStripeInfo>{oppgaverIkkeHentetMelding}</Nav.AlertStripeInfo>
           )}
           {!oppgaverFinnes && oppgaverForsoktHentet && (
-            <Nav.AlertStripeAdvarsel>
-              {nyOpprettSakToggle === "enabled"
-                ? "Ingen eksisterende oppgaver funnet. Det blir opprettet en ny"
-                : `Det finnes ingen oppgaver på denne ${hovedpartErBruker ? "personen" : "organisasjonen"}.`}
-            </Nav.AlertStripeAdvarsel>
+            <Nav.AlertStripeAdvarsel>{ingenOppgaverMelding}</Nav.AlertStripeAdvarsel>
           )}
         </>
       ) : null}

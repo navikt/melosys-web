@@ -16,17 +16,21 @@ interface SoknadDto {
   };
 }
 export interface OpprettReqDto {
-  brukerID: string;
-  sakstype: string;
+  brukerID?: string;
+  virksomhetOrgnr?: string;
+  hovedpart?: string;
+  sakstype?: string;
+  sakstema?: string;
   behandlingstema: string;
   behandlingstype: string;
-  soknadDto: SoknadDto;
+  soknadDto?: SoknadDto;
   skalTilordnes: boolean;
-  oppgaveID: string;
+  oppgaveID?: string;
 }
-export const opprett = (body: OpprettReqDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}/opprett`, body);
-export const lagNySak = (body: OpprettReqDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}`, body);
-export const lagNyBehandlingForSak = (saksnummer: string, body: OpprettReqDto) =>
+
+export const opprettNySak = (body: OpprettReqDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}`, body);
+
+export const opprettNyBehandlingForSak = (saksnummer: string, body: OpprettReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/behandlinger`, body);
 
 interface HenleggReqDto {
