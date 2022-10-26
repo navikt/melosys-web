@@ -76,11 +76,16 @@ const opprettnysak = object().shape({
     })
     .nullable(),
   virksomhetNavn: string().nullable(),
-  saksnummer: string().test(
-    "må settes når du knytter til eksisterende sak",
-    VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_BEHANDLINGEN_TIL,
-    (saksnummer) => skalOppretteNySak(saksnummer) || !Utils._isEmpty(saksnummer)
-  ),
+  saksnummer: string()
+    .nullable()
+    .when("behandleAlleSakerToggleEnabled", {
+      is: true,
+      then: string().test(
+        "må settes når du knytter til eksisterende sak",
+        VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_BEHANDLINGEN_TIL,
+        (saksnummer) => skalOppretteNySak(saksnummer) || !Utils._isEmpty(saksnummer)
+      ),
+    }),
   sakstype: string()
     .when("saksnummer", {
       is: skalOppretteNySak,
