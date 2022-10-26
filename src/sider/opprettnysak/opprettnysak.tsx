@@ -106,7 +106,7 @@ const OpprettNySak = ({
 }: InjectedFormProps<OpprettNySakFormData, OpprettNySakProps> & OpprettNySakProps) => {
   const [oppgaver, setOppgaver] = useState<Api.Oppgaver.SokOppgaveResDto[]>([]);
   const [bekreftPending, setBekreftPending] = useState(false);
-  const [knappTrykketPå, setKnappTrykketPå] = useState(false);
+  const [visFeilmeldinger, setVisFeilmeldinger] = useState(false);
   const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
@@ -235,7 +235,7 @@ const OpprettNySak = ({
 
   const handleSubmit = () => {
     setBekreftPending(true);
-    setKnappTrykketPå(true);
+    setVisFeilmeldinger(true);
 
     touch(...Object.keys(errors));
 
@@ -363,7 +363,7 @@ const OpprettNySak = ({
 
             <div className="seksjon">
               <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg behandlingen i mine oppgaver" />
-              {knappTrykketPå && !Utils._isEmpty(errors) && (
+              {visFeilmeldinger && !Utils._isEmpty(errors) && (
                 <Nav.AlertStripeFeil className="feilmelding">
                   {Utils.feilmelding.syncErrorsTilFeilmelding(errors)}
                 </Nav.AlertStripeFeil>
