@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
-import { useSelector } from "react-redux";
-import EnkeltDato from "../../../felleskomponenter/enkeltDato";
+
+import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
-import MKV from "../../../melosyskodeverk";
-
 import * as Skjema from "../../../felleskomponenter/skjema";
-import { useFeatureToggle } from "../../../featuretoggle";
+
+import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 
 import "./oppgaveVelger.css";
-import { OpprettNySakFormSelector } from "../../../ducks/form/selectors";
 
 const EKSISTERENDE = "Eksisterende oppgave";
 const OPPRETT = "Opprett ny oppgave";
@@ -19,31 +17,31 @@ const OPPRETT = "Opprett ny oppgave";
 interface OppgaveVelgerProps {
   oppgaverForsoktHentet: boolean;
   hovedpart: string;
+  saksnummer: string;
   oppgaver: Api.Oppgaver.SokOppgaveResDto[];
-  nullstillFormverdier: () => void;
   change: (field: string, value: any) => void;
+  nyOpprettSakToggleEnabled: boolean;
 }
 
 export const OppgaveVelger = ({
   oppgaverForsoktHentet,
   hovedpart,
+  saksnummer,
   oppgaver,
   change,
-  nullstillFormverdier,
+  nyOpprettSakToggleEnabled,
 }: OppgaveVelgerProps) => {
-  const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
   const [valgtVisning, setValgtVisning] = useState(OPPRETT);
-  const { erAvsluttetSak, saksnummer } = useSelector((state: any) => OpprettNySakFormSelector(state).values);
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
 
   useEffect(() => {
-    if (nyOpprettSakToggle === "enabled") {
+    if (nyOpprettSakToggleEnabled) {
       setValgtVisning(OPPRETT);
     } else {
       setValgtVisning(EKSISTERENDE);
     }
-  }, [nyOpprettSakToggle]);
+  }, [nyOpprettSakToggleEnabled]);
 
   const radioValg = oppgaver
     .filter((oppgave) => oppgave.journalpostID)
@@ -72,7 +70,7 @@ export const OppgaveVelger = ({
     change("journalpostID", oppgave?.journalpostID);
   };
 
-  if (erAvsluttetSak && saksnummer !== -1 && nyOpprettSakToggle === "enabled") {
+  if (saksnummer !== "-1" && nyOpprettSakToggleEnabled) {
     return (
       <div className="oppgaveVelger">
         <Nav.AlertStripeInfo>
@@ -82,9 +80,17 @@ export const OppgaveVelger = ({
     );
   }
 
+  const oppgaverIkkeHentetMelding = hovedpartErBruker
+    ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
+    : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver.";
+
+  const ingenOppgaverMelding = nyOpprettSakToggleEnabled
+    ? "Ingen eksisterende oppgaver funnet. Det blir opprettet en ny"
+    : `Det finnes ingen oppgaver på denne ${hovedpartErBruker ? "personen" : "organisasjonen"}.`;
+
   return (
     <div className="oppgaveVelger">
-      {nyOpprettSakToggle === "enabled" && (
+      {nyOpprettSakToggleEnabled && (
         <div className="velgVisning">
           <Nav.Radio
             label={OPPRETT}
@@ -92,7 +98,7 @@ export const OppgaveVelger = ({
             name="velgVisningOppgave"
             onChange={() => {
               setValgtVisning(OPPRETT);
-              nullstillFormverdier();
+              change("oppgaveID", null);
             }}
             checked={valgtVisning === OPPRETT}
             value={OPPRETT}
@@ -101,10 +107,7 @@ export const OppgaveVelger = ({
             label={EKSISTERENDE}
             className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
             name="velgVisningOppgave"
-            onChange={() => {
-              setValgtVisning(EKSISTERENDE);
-              nullstillFormverdier();
-            }}
+            onChange={() => setValgtVisning(EKSISTERENDE)}
             checked={valgtVisning === EKSISTERENDE}
             value={EKSISTERENDE}
           />
@@ -114,7 +117,7 @@ export const OppgaveVelger = ({
         <>
           {oppgaverFinnes && (
             <>
-              {nyOpprettSakToggle === "enabled" && (
+              {nyOpprettSakToggleEnabled && (
                 <Nav.AlertStripeInfo className="marginMellomHeaderOgAlertStripe">
                   Det er kun følgende oppgaver med journalpost-id som kan tilknyttes
                 </Nav.AlertStripeInfo>
@@ -122,19 +125,11 @@ export const OppgaveVelger = ({
               <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
             </>
           )}
-          {!oppgaverFinnes && !oppgaverForsoktHentet && nyOpprettSakToggle !== "enabled" && (
-            <Nav.AlertStripeInfo>
-              {hovedpartErBruker
-                ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
-                : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver."}
-            </Nav.AlertStripeInfo>
+          {!oppgaverFinnes && !oppgaverForsoktHentet && !nyOpprettSakToggleEnabled && (
+            <Nav.AlertStripeInfo>{oppgaverIkkeHentetMelding}</Nav.AlertStripeInfo>
           )}
           {!oppgaverFinnes && oppgaverForsoktHentet && (
-            <Nav.AlertStripeAdvarsel>
-              {nyOpprettSakToggle === "enabled"
-                ? "Ingen eksisterende oppgaver funnet. Det blir opprettet en ny"
-                : `Det finnes ingen oppgaver på denne ${hovedpartErBruker ? "personen" : "organisasjonen"}.`}
-            </Nav.AlertStripeAdvarsel>
+            <Nav.AlertStripeAdvarsel>{ingenOppgaverMelding}</Nav.AlertStripeAdvarsel>
           )}
         </>
       ) : null}

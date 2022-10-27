@@ -1,5 +1,6 @@
 import MKV from "./filtrertmelosyskodeverk";
 
+// DEPRECATED. Vi vil ikke bruke denne i melosys.behandle_alle_saker
 export const erSoknad = (behandlingstema) =>
   [
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
@@ -12,6 +13,7 @@ export const erSoknad = (behandlingstema) =>
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
   ].includes(behandlingstema);
 
+// DEPRECATED. Vi vil ikke bruke denne i melosys.behandle_alle_saker
 export const erSedForesporsel = (behandlingstema) =>
   [
     MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,

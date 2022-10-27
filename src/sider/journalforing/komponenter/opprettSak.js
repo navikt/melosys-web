@@ -58,6 +58,7 @@ const nullstillVerdier = (steg, endreFelt, feltNavn) => {
 
 export const skalViseSoknadsperiodeOgLand = (sakstype, sakstema, behandlingstema, behandlingstype) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
+  sakstema &&
   behandlingstema &&
   behandlingstype &&
   !skalViseTomFlytEllerErSedBehandling(sakstype, sakstema, behandlingstema, behandlingstype);

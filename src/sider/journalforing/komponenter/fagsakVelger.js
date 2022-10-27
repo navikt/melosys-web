@@ -16,7 +16,6 @@ import EnkeltSak from "./enkeltSak";
 import KnyttTilSak from "./knyttTilSak";
 
 import "./fagsakVelger.css";
-import { useFeatureToggle } from "../../../featuretoggle";
 
 const EKSISTERENDE = "Eksisterende sak";
 const OPPRETT = "Opprett ny sak";
@@ -32,9 +31,9 @@ const FagsakVelger = (props) => {
     formValues,
     erOpprettNySak,
     nullstillFormVerdier,
+    nyOpprettSakToggleEnabled,
   } = props;
   const [valgtVisning, setValgtVisning] = useState(EKSISTERENDE);
-  const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
   const feltNavn = erOpprettNySak ? FormValuesOpprettNySak : FormValuesJournalforing;
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
@@ -44,6 +43,12 @@ const FagsakVelger = (props) => {
       nullstillFormVerdier();
     }
   }, [valgtVisning]);
+
+  useEffect(() => {
+    if (erOpprettNySak && !nyOpprettSakToggleEnabled) {
+      setValgtVisning(OPPRETT);
+    }
+  }, [nyOpprettSakToggleEnabled]);
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
@@ -92,7 +97,7 @@ const FagsakVelger = (props) => {
     });
   }
 
-  if (erOpprettNySak && nyOpprettSakToggle !== "enabled") {
+  if (erOpprettNySak && !nyOpprettSakToggleEnabled) {
     return (
       <OpprettSak
         behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
@@ -131,7 +136,7 @@ const FagsakVelger = (props) => {
           </div>
         )}
 
-        {(!erOpprettNySak || nyOpprettSakToggle === "enabled") && (
+        {(!erOpprettNySak || nyOpprettSakToggleEnabled) && (
           <>
             {valgtVisning === EKSISTERENDE && (
               <Skjema.CustomRadioPanelGruppe
@@ -164,6 +169,7 @@ FagsakVelger.propTypes = {
   fagsakListe: PT.array.isRequired,
   settJournalforingHensikt: PT.func,
   behandleAlleSakerToggleEnabled: PT.bool.isRequired,
+  nyOpprettSakToggleEnabled: PT.bool,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   formValues: PT.object.isRequired,
   erOpprettNySak: PT.bool,
@@ -174,6 +180,7 @@ FagsakVelger.defaultProps = {
   erOpprettNySak: false,
   nullstillFormVerdier: undefined,
   settJournalforingHensikt: undefined,
+  nyOpprettSakToggleEnabled: false,
 };
 
 export default FagsakVelger;

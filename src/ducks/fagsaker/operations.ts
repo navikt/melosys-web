@@ -32,9 +32,10 @@ export function hent(snr: string) {
   });
 }
 
+// Trenger denne i operations for å kunne bruke feiletRespons-reducer
 export function lagNySak(body: Api.Fagsaker.fagsak.OpprettReqDto) {
   return doThenDispatch(
-    () => Api.Fagsaker.fagsak.lagNySak(body),
+    () => Api.Fagsaker.fagsak.opprettNySak(body),
     {
       OK: Types.OK,
       FEILET: Types.FEILET,
@@ -48,9 +49,10 @@ export function lagNySak(body: Api.Fagsaker.fagsak.OpprettReqDto) {
   );
 }
 
+// Trenger denne i operations for å kunne bruke feiletRespons-reducer
 export function lagNyBehandlingForSak(saksnummer: string, body: Api.Fagsaker.fagsak.OpprettReqDto) {
   return doThenDispatch(
-    () => Api.Fagsaker.fagsak.lagNyBehandlingForSak(saksnummer, body),
+    () => Api.Fagsaker.fagsak.opprettNyBehandlingForSak(saksnummer, body),
     {
       OK: Types.OK,
       FEILET: Types.FEILET,
