@@ -194,9 +194,9 @@ export const KnyttTilSak = (props) => {
     <div className="knyttTilSak__behandlingspanel">
       {erOpprettNySak ? (
         <div className="innrykk">
-          <Nav.AlertStripeInfo>
-            Du kan ikke opprette en ny behandling på sak med en aktiv/pågående behandling
-          </Nav.AlertStripeInfo>
+          <Nav.AlertStripeAdvarsel>
+            Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
+          </Nav.AlertStripeAdvarsel>
         </div>
       ) : (
         visUtenVidereBehandling && (

@@ -6,7 +6,7 @@ export const SKRIV_INN_GYLDIG_DATO = { melding: "Skriv inn en gyldig dato" };
 export const UTENFOR_SOKNADSPERIODEN = { melding: "Utenfor søknadsperioden" };
 export const MAA_FYLLES_UT = { melding: "Må fylles ut" };
 export const SAK_HAR_AKTIV_BEHANDLING = {
-  melding: "Du kan ikke opprette en ny behandling på sak med en aktiv/pågående behandling",
+  melding: "Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling",
 };
 export const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig f.nr. eller d-nr." };
 export const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette f.nr. eller d-nr." };

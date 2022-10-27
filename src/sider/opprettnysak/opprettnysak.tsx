@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
+import { connect, ConnectedProps, useDispatch } from "react-redux";
 import { getFormSyncErrors, getFormValues, InjectedFormProps, reduxForm } from "redux-form";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
@@ -110,6 +110,7 @@ const OpprettNySak = ({
   const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
+  const dispatch = useDispatch();
   const {
     behandlingstema,
     behandlingstype,
@@ -133,6 +134,9 @@ const OpprettNySak = ({
 
   useEffect(() => {
     hentLandkoder();
+    return () => {
+      dispatch(fagsakOperations.resetFagsakState());
+    };
   }, []);
 
   useEffect(() => {
