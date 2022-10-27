@@ -15,7 +15,7 @@ const RedigeringUtfort = ({ adresselinjer, soknadsland }: RedigeringUtfortProps)
       {adresselinjer?.map((adresselinje) => (
         <Nav.Typo.Normaltekst key={Utils._uuid()}>{adresselinje}</Nav.Typo.Normaltekst>
       ))}
-      <Nav.Typo.Normaltekst>{KV.kodeTilTerm(soknadsland[0], MKV.KTObjects.landkoder)}</Nav.Typo.Normaltekst>
+      <Nav.Typo.Normaltekst>{KV.kodeTilTerm(soknadsland[0], MKV.KTObjects.land_iso2)}</Nav.Typo.Normaltekst>
     </Nav.Column>
   </Nav.Row>
 );
