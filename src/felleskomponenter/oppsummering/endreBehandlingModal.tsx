@@ -308,7 +308,11 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingsstatus(e.target.value)}
               label="Behandlingsstatus"
               value={behandlingsstatus}
-              koder={muligeVerdierPlussValgt(oppsummering.behandlingsstatus, muligeBehandlingsstatuser)}
+              koder={
+                behandleAlleSakerToggle === "enabled"
+                  ? muligeBehandlingsstatuser
+                  : muligeVerdierPlussValgt(oppsummering.behandlingsstatus, muligeBehandlingsstatuser)
+              }
               disableForsteValg
             />
           </div>
