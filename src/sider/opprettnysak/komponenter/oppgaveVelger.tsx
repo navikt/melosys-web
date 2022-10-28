@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import classNames from "classnames";
 
 import MKV from "../../../melosyskodeverk";
@@ -11,9 +11,6 @@ import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 
 import "./oppgaveVelger.css";
 
-const EKSISTERENDE = "Eksisterende oppgave";
-const OPPRETT = "Opprett ny oppgave";
-
 interface OppgaveVelgerProps {
   oppgaverForsoktHentet: boolean;
   hovedpart: string;
@@ -21,6 +18,7 @@ interface OppgaveVelgerProps {
   oppgaver: Api.Oppgaver.SokOppgaveResDto[];
   change: (field: string, value: any) => void;
   nyOpprettSakToggleEnabled: boolean;
+  oppretterOppgave: boolean;
 }
 
 export const OppgaveVelger = ({
@@ -29,17 +27,17 @@ export const OppgaveVelger = ({
   saksnummer,
   oppgaver,
   change,
+  oppretterOppgave,
   nyOpprettSakToggleEnabled,
 }: OppgaveVelgerProps) => {
-  const [valgtVisning, setValgtVisning] = useState(OPPRETT);
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
 
   useEffect(() => {
     if (nyOpprettSakToggleEnabled) {
-      setValgtVisning(OPPRETT);
+      change("oppretterOppgave", true);
     } else {
-      setValgtVisning(EKSISTERENDE);
+      change("oppretterOppgave", false);
     }
   }, [nyOpprettSakToggleEnabled]);
 
@@ -92,28 +90,25 @@ export const OppgaveVelger = ({
     <div className="oppgaveVelger">
       {nyOpprettSakToggleEnabled && (
         <div className="velgVisning">
-          <Nav.Radio
-            label={OPPRETT}
-            className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
+          <Skjema.Radio
+            feltNavn="oppretterOppgave"
+            label="Opprett ny oppgave"
+            className={classNames("visningValg", { "checked-valg": oppretterOppgave })}
             name="velgVisningOppgave"
-            onChange={() => {
-              setValgtVisning(OPPRETT);
-              change("oppgaveID", null);
-            }}
-            checked={valgtVisning === OPPRETT}
-            value={OPPRETT}
+            value
           />
-          <Nav.Radio
-            label={EKSISTERENDE}
-            className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
+          <Skjema.Radio
+            feltNavn="oppretterOppgave"
+            label="Eksisterende oppgave"
+            className={classNames("visningValg", { "checked-valg": !oppretterOppgave })}
             name="velgVisningOppgave"
-            onChange={() => setValgtVisning(EKSISTERENDE)}
-            checked={valgtVisning === EKSISTERENDE}
-            value={EKSISTERENDE}
+            value={false}
           />
         </div>
       )}
-      {valgtVisning === EKSISTERENDE ? (
+      {oppretterOppgave ? (
+        <Skjema.Datovelger feltNavn="mottaksdato" label="Mottaksdato" className="mottaksdato" />
+      ) : (
         <>
           {oppgaverFinnes && (
             <>
@@ -132,7 +127,7 @@ export const OppgaveVelger = ({
             <Nav.AlertStripeAdvarsel>{ingenOppgaverMelding}</Nav.AlertStripeAdvarsel>
           )}
         </>
-      ) : null}
+      )}
     </div>
   );
 };

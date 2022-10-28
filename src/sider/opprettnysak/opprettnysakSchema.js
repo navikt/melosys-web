@@ -24,6 +24,8 @@ const VELG_SAKSTYPE = { melding: "Velg sakstype" };
 const VELG_SAKSTEMA = { melding: "Velg sakstema" };
 const VELG_BEHANDLINGSTYPE = { melding: "Velg behandlingstype" };
 const VELG_BEHANDLINGSTEMA = { melding: "Velg behandlingstema" };
+const VELG_OPPGAVE = { melding: "Velg hvilken oppgave du skal opprette sak på" };
+const FYLL_UT_MOTTAKSDATO = { melding: "Fyll ut mottaksdato" };
 const VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_BEHANDLINGEN_TIL = {
   melding: "Velg hvilken sak du ønsker å knytte behandlingen til",
 };
@@ -110,7 +112,6 @@ const opprettnysak = object().shape({
       is: true,
       then: string().required(VELG_BEHANDLINGSTYPE).nullable(),
     }),
-  oppgaveID: string().nullable(),
   periodeFraOgMed: string()
     .nullable()
     .when("behandleAlleSakerToggleEnabled", {
@@ -119,13 +120,13 @@ const opprettnysak = object().shape({
         .nullable()
         .when(["saksnummer", "sakstype", "sakstema", "behandlingstema", "behandlingstype"], {
           is: kreverPeriode,
-          then: string().required(MAA_FYLLES_UT).nullable(),
+          then: string().required(MAA_FYLLES_UT).erGyldigDato().nullable(),
         }),
       otherwise: string()
         .nullable()
         .when(["saksnummer", "hovedpart", "sakstype", "behandlingstema"], {
           is: kreverPeriodeDeprecated,
-          then: string().required(MAA_FYLLES_UT).nullable(),
+          then: string().required(MAA_FYLLES_UT).erGyldigDato().nullable(),
         }),
     }),
   periodeTilOgMed: string()
@@ -176,13 +177,36 @@ const opprettnysak = object().shape({
         then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
       }),
   }),
-  behandleAlleSakerToggleEnabled: boolean(),
+  oppgaveID: string()
+    .nullable()
+    .when("behandleAlleSakerToggleEnabled", {
+      is: true,
+      then: string()
+        .when("oppretterOppgave", {
+          is: false,
+          then: string().required(VELG_OPPGAVE).nullable(),
+        })
+        .nullable(),
+    }),
+  mottaksdato: string()
+    .nullable()
+    .when("behandleAlleSakerToggleEnabled", {
+      is: true,
+      then: string()
+        .when("oppretterOppgave", {
+          is: true,
+          then: string().erGyldigDato().required(FYLL_UT_MOTTAKSDATO).nullable(),
+        })
+        .nullable(),
+    }),
   erAvsluttetSak: boolean()
     .nullable()
     .when("saksnummer", {
       is: (saksnummer) => !skalOppretteNySak(saksnummer) && !Utils._isEmpty(saksnummer),
       then: boolean().nullable().oneOf([true], SAK_HAR_AKTIV_BEHANDLING),
     }),
+  behandleAlleSakerToggleEnabled: boolean(),
+  oppretterOppgave: boolean(),
 });
 
 export default opprettnysak;

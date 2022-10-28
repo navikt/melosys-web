@@ -54,6 +54,7 @@ function InnerDatovelgerComponent({
 
 interface DatovelgerProps extends InnerDatovelgerProps {
   feltNavn: string;
+  className?: string;
 }
 
 function DatovelgerSkjema({
