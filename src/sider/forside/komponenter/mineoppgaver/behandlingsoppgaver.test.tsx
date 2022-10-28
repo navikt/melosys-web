@@ -1,9 +1,9 @@
 import React from "react";
 import { shallow } from "enzyme";
+import * as redux from "react-redux";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 import { BehandlingOppgaver } from "./behandlingOppgaver";
 import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
-import * as redux from "react-redux";
 
 describe("Behandlingsoppgaver", () => {
   const saksbehandling = [
