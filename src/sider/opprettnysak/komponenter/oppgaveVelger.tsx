@@ -41,6 +41,30 @@ export const OppgaveVelger = ({
     }
   }, [nyOpprettSakToggleEnabled]);
 
+  const settJournalpostID = (oppgaveID: string) => {
+    const oppgave = oppgaver.find((o) => o.oppgaveID === oppgaveID);
+    change("journalpostID", oppgave?.journalpostID);
+  };
+
+  if (saksnummer !== "-1" && nyOpprettSakToggleEnabled) {
+    return (
+      <div className="oppgaveVelger">
+        <Nav.AlertStripeInfo>
+          Når det opprettes en ny behandling på en eksisterende sak, må det opprettes en ny oppgave
+        </Nav.AlertStripeInfo>
+      </div>
+    );
+  }
+
+  if (!oppgaverFinnes && oppgaverForsoktHentet && nyOpprettSakToggleEnabled) {
+    return (
+      <div className="oppgaveVelger">
+        <Nav.AlertStripeInfo>Ingen eksisterende oppgaver funnet. Det blir opprettet en ny</Nav.AlertStripeInfo>
+        <Skjema.Datovelger feltNavn="mottaksdato" label="Mottaksdato" />
+      </div>
+    );
+  }
+
   const radioValg = oppgaver
     .filter((oppgave) => oppgave.journalpostID)
     .map((oppgave) => {
@@ -63,28 +87,13 @@ export const OppgaveVelger = ({
       };
     });
 
-  const settJournalpostID = (oppgaveID: string) => {
-    const oppgave = oppgaver.find((o) => o.oppgaveID === oppgaveID);
-    change("journalpostID", oppgave?.journalpostID);
-  };
-
-  if (saksnummer !== "-1" && nyOpprettSakToggleEnabled) {
-    return (
-      <div className="oppgaveVelger">
-        <Nav.AlertStripeInfo>
-          Når det opprettes en ny behandling på en eksisterende sak, må det opprettes en ny oppgave
-        </Nav.AlertStripeInfo>
-      </div>
-    );
-  }
-
   const oppgaverIkkeHentetMelding = hovedpartErBruker
     ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
     : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver.";
 
-  const ingenOppgaverMelding = nyOpprettSakToggleEnabled
-    ? "Ingen eksisterende oppgaver funnet. Det blir opprettet en ny"
-    : `Det finnes ingen oppgaver på denne ${hovedpartErBruker ? "personen" : "organisasjonen"}.`;
+  const ingenOppgaverMelding = `Det finnes ingen oppgaver på denne ${
+    hovedpartErBruker ? "personen" : "organisasjonen"
+  }.`;
 
   return (
     <div className="oppgaveVelger">
@@ -123,7 +132,7 @@ export const OppgaveVelger = ({
           {!oppgaverFinnes && !oppgaverForsoktHentet && !nyOpprettSakToggleEnabled && (
             <Nav.AlertStripeInfo>{oppgaverIkkeHentetMelding}</Nav.AlertStripeInfo>
           )}
-          {!oppgaverFinnes && oppgaverForsoktHentet && (
+          {!oppgaverFinnes && oppgaverForsoktHentet && !nyOpprettSakToggleEnabled && (
             <Nav.AlertStripeAdvarsel>{ingenOppgaverMelding}</Nav.AlertStripeAdvarsel>
           )}
         </>
