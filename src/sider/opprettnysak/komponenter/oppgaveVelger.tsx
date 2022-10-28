@@ -46,7 +46,7 @@ export const OppgaveVelger = ({
     return (
       <div className="oppgaveVelger">
         <Nav.AlertStripeInfo>
-          Når det opprettes en ny behandling på en eksisterende sak, må det opprettes en ny oppgave
+          Når det opprettes en ny behandling på en eksisterende sak opprettes det en ny oppgave
         </Nav.AlertStripeInfo>
       </div>
     );
