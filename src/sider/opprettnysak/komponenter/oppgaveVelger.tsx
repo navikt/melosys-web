@@ -34,11 +34,7 @@ export const OppgaveVelger = ({
   const oppgaverFinnes = oppgaver.length > 0;
 
   useEffect(() => {
-    if (nyOpprettSakToggleEnabled) {
-      change("oppretterOppgave", true);
-    } else {
-      change("oppretterOppgave", false);
-    }
+    change("oppretterOppgave", nyOpprettSakToggleEnabled);
   }, [nyOpprettSakToggleEnabled]);
 
   const settJournalpostID = (oppgaveID: string) => {
