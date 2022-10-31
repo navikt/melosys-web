@@ -112,6 +112,7 @@ function EndreBehandlingModal({
   const kanEndre = !(
     useFeatureToggle("melosys.behandle_alle_saker.ikke_endre") === "enabled" && behandleAlleSakerToggle === "enabled"
   );
+  const ftrlToggleEnabled = useFeatureToggle("melosys.FTRL") === "enabled";
 
   useEffect(() => {
     if (behandleAlleSakerToggle !== "enabled") return;
@@ -189,7 +190,15 @@ function EndreBehandlingModal({
 
         const nyGenerertLink =
           behandleAlleSakerToggle === "enabled"
-            ? Routing.lagUrl(saksnummer, behandlingID, sakstype, sakstema, behandlingstema, behandlingstype)
+            ? Routing.lagUrl(
+                saksnummer,
+                behandlingID,
+                sakstype,
+                sakstema,
+                behandlingstema,
+                behandlingstype,
+                ftrlToggleEnabled
+              )
             : Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema);
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
           setNyLink(nyGenerertLink);

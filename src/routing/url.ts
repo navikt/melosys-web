@@ -52,10 +52,11 @@ export const lagUrl = (
   sakstypeKode: string,
   sakstemaKode: string,
   behandlingstemaKode: string,
-  behandlingstypeKode: string
+  behandlingstypeKode: string,
+  ftrlToggle: boolean
 ) => {
   // TODO avklar forskjellige behov for ftrl flyt
-  if (erFolketrygdlovenFlyt(sakstypeKode, behandlingstemaKode)) {
+  if (ftrlToggle && erFolketrygdlovenFlyt(sakstypeKode, behandlingstemaKode)) {
     return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
   if (skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode)) {
