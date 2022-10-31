@@ -43,27 +43,25 @@ export const OppgaveVelger = ({
     }
   }, [nyOpprettSakToggleEnabled]);
 
-  const radioValg = oppgaver
-    .filter((oppgave) => oppgave.journalpostID)
-    .map((oppgave) => {
-      const tema = KV.Koder.Tema[oppgave.tema];
-      const innhold = (
-        <Skjema.CustomRadioPanelElement
-          tittel={tema}
-          data={[
-            { term: "Oppgavetype:", description: oppgave.oppgavetype },
-            { term: "Registrert dato:", description: <EnkeltDato dato={oppgave.registrertDato} /> },
-            { term: "Saksid:", description: oppgave.sakID },
-            { term: "Frist:", description: <EnkeltDato dato={oppgave.frist} /> },
-          ]}
-        />
-      );
+  const radioValg = oppgaver.map((oppgave) => {
+    const tema = KV.Koder.Tema[oppgave.tema];
+    const innhold = (
+      <Skjema.CustomRadioPanelElement
+        tittel={tema}
+        data={[
+          { term: "Oppgavetype:", description: oppgave.oppgavetype },
+          { term: "Registrert dato:", description: <EnkeltDato dato={oppgave.registrertDato} /> },
+          { term: "Saksid:", description: oppgave.sakID },
+          { term: "Frist:", description: <EnkeltDato dato={oppgave.frist} /> },
+        ]}
+      />
+    );
 
-      return {
-        value: oppgave.oppgaveID,
-        innhold,
-      };
-    });
+    return {
+      value: oppgave.oppgaveID,
+      innhold,
+    };
+  });
 
   const settJournalpostID = (oppgaveID: string) => {
     const oppgave = oppgaver.find((o) => o.oppgaveID === oppgaveID);
