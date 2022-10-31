@@ -30,10 +30,11 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
   const { saksbehandling } = mineSaker;
   const dispatch = useDispatch();
 
+  const refreshOversiktDelayMillis = 5000;
   useEffect(() => {
     const timer = setTimeout(() => {
       dispatch(oversikt());
-    }, 5000);
+    }, refreshOversiktDelayMillis);
     return () => clearTimeout(timer);
   }, []);
 
