@@ -54,6 +54,7 @@ export const lagUrl = (
   behandlingstemaKode: string,
   behandlingstypeKode: string
 ) => {
+  // TODO avklar forskjellige behov for ftrl flyt
   if (erFolketrygdlovenFlyt(sakstypeKode, behandlingstemaKode)) {
     return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
