@@ -54,18 +54,19 @@ export const lagUrl = (
   behandlingstemaKode: string,
   behandlingstypeKode: string
 ) => {
-  console.log(
-    behandlingstypeKode === FTRL && behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
-  );
-  console.log(sakstypeKode);
-  console.log(behandlingstemaKode);
-  if (sakstypeKode === FTRL && behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
-    return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
-  }
   if (skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode)) {
     return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
+  if (erFolketrygdlovenFlyt(sakstypeKode, behandlingstemaKode)) {
+    return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
   return lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstemaKode);
+};
+
+const erFolketrygdlovenFlyt = (sakstype: string, behandlingstema: string) => {
+  if (sakstype === FTRL && behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
+    return true;
+  }
 };
 
 const skalViseTomFlyt = (sakstype: string, sakstema: string, behandlingstema: string, behandlingstype: string) => {
