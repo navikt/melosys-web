@@ -64,9 +64,7 @@ export const lagUrl = (
 };
 
 const erFolketrygdlovenFlyt = (sakstype: string, behandlingstema: string) => {
-  if (sakstype === FTRL && behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
-    return true;
-  }
+  return sakstype === FTRL && behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
 };
 
 const skalViseTomFlyt = (sakstype: string, sakstema: string, behandlingstema: string, behandlingstype: string) => {
