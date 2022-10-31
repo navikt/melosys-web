@@ -54,6 +54,14 @@ export const lagUrl = (
   behandlingstemaKode: string,
   behandlingstypeKode: string
 ) => {
+  console.log(
+    behandlingstypeKode === FTRL && behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
+  );
+  console.log(sakstypeKode);
+  console.log(behandlingstemaKode);
+  if (sakstypeKode === FTRL && behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
+    return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
   if (skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode)) {
     return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
