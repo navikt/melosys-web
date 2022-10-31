@@ -54,11 +54,11 @@ export const lagUrl = (
   behandlingstemaKode: string,
   behandlingstypeKode: string
 ) => {
-  if (skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode)) {
-    return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
-  }
   if (erFolketrygdlovenFlyt(sakstypeKode, behandlingstemaKode)) {
     return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
+  if (skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode)) {
+    return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
   return lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstemaKode);
 };
