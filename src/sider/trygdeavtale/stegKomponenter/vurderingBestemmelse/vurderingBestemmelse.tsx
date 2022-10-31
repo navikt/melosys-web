@@ -5,7 +5,6 @@ import { Action } from "redux";
 import { change, getFormValues, reduxForm, untouch } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import parse from "html-react-parser";
 
 import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
@@ -22,6 +21,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
+import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -62,7 +62,7 @@ interface Props {
 }
 
 const VurderingBestemmelse = ({
-  data: { vedtakValg, innvilgelseValg, bestemmelseValg, bestemmelseTekst },
+  data: { vedtakValg, innvilgelseValg, bestemmelseValg },
   formIsValid,
   formValues,
   fortsett,
@@ -150,13 +150,11 @@ const VurderingBestemmelse = ({
         </Nav.Fieldset>
       )}
 
-      {bestemmelseTekst && (
-        <Nav.Row>
-          <Nav.Column xs="10" className="bestemmelseTekst">
-            <div>{parse(bestemmelseTekst)}</div>
-          </Nav.Column>
-        </Nav.Row>
-      )}
+      <Nav.Row>
+        <Nav.Column xs="10" className="bestemmelseTekst">
+          <BestemmelseHjelpetekst bestemmelse={formValues.bestemmelse} />
+        </Nav.Column>
+      </Nav.Row>
 
       <Mui.StegKnapper
         bekreftKnappProps={{
