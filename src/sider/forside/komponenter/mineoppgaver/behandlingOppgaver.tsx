@@ -1,5 +1,5 @@
-import React from "react";
-import { connect, ConnectedProps } from "react-redux";
+import React, { useEffect } from "react";
+import { connect, ConnectedProps, useDispatch } from "react-redux";
 
 import { RootState } from "AppTypes";
 
@@ -12,6 +12,7 @@ import { landkoderSelectors } from "../../../../ducks/landkoder";
 import "./behandlingsoppgaver.css";
 import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
 import { useFeatureToggle } from "../../../../featuretoggle";
+import { oversikt } from "../../../../ducks/oppgaver/operations";
 
 const mapStateToProps = (state: RootState) => ({
   mineSaker: oppgaverSelectors.MineSakerSelector(state),
@@ -27,6 +28,15 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const { saksbehandling } = mineSaker;
+  const dispatch = useDispatch();
+
+  const refreshOversiktDelayMillis = 5000;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      dispatch(oversikt());
+    }, refreshOversiktDelayMillis);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="behandlingsOppgaver">

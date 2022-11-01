@@ -181,6 +181,7 @@
     "cra-build-watch": "^3.4.0",
     "cross-env": "^5.2.1",
     "dotenv-save": "^1.2.0",
+    "env-cmd": "^10.1.0",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.5.0",
     "eslint-config-airbnb": "^19.0.1",
@@ -209,8 +210,7 @@
     "source-map-explorer": "^2.1.1",
     "ts-mockito": "^2.6.1",
     "typescript": "^4.0.3",
-    "write-pkg": "^4.0.0",
-    "env-cmd": "^10.1.0"
+    "write-pkg": "^4.0.0"
   },
   "browserslist": [
     ">0.2%",
