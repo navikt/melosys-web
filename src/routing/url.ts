@@ -46,6 +46,63 @@ export const lagUrlFraBehandlingstema = (
   }
 };
 
+const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
+  if (erSedBehandling(behandlingstemaKode)) {
+    return `/${EU_EOS}/sedbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
+  switch (behandlingstemaKode) {
+    case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
+    case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE:
+      return `/${EU_EOS}/registrering/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`;
+    case MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL:
+      return `/${EU_EOS}/registrering/${saksnummer}/anmodningunntak/?behandlingID=${behandlingID}`;
+    case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
+    case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
+      return `/${EU_EOS}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
+      return `/${EU_EOS}/vurderutpeking/${saksnummer}/?behandlingID=${behandlingID}`;
+    default:
+      throw new Error(`Finner ikke EuEøs-flyt for behandlingstema: ${behandlingstemaKode}`);
+  }
+};
+
+const lagUrlForFtrlFlyt = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
+  if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET) {
+    return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
+  throw new Error(`Finner ikke folketrygden-flyt for behandlingstema: ${behandlingstemaKode}`);
+};
+
+const lagUrlForTrygdeavtaleFlyt = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
+  if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
+    return `/${TRYGDEAVTALE}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
+  throw new Error(`Finner ikke trygdeavtale-flyt for behandlingstema: ${behandlingstemaKode}`);
+};
+
+export const lagUrlFraSakstypeOgBehandlingstema = (
+  saksnummer: number | string,
+  behandlingID: number,
+  sakstypeKode: string,
+  behandlingstemaKode: string
+) => {
+  if (sakstypeKode === EU_EOS) {
+    return lagUrlForEuEøsFlyter(saksnummer, behandlingID, behandlingstemaKode);
+  }
+  if (sakstypeKode === FTRL) {
+    return lagUrlForFtrlFlyt(saksnummer, behandlingID, behandlingstemaKode);
+  }
+  if (sakstypeKode === TRYGDEAVTALE) {
+    return lagUrlForTrygdeavtaleFlyt(saksnummer, behandlingID, behandlingstemaKode);
+  }
+  throw new Error(`Støtter ikke sakstype: ${sakstypeKode}`);
+};
+
 export const lagUrl = (
   saksnummer: number | string,
   behandlingID: number,
@@ -57,7 +114,7 @@ export const lagUrl = (
   if (skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode)) {
     return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
-  return lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstemaKode);
+  return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
 };
 
 const skalViseTomFlyt = (sakstype: string, sakstema: string, behandlingstema: string, behandlingstype: string) => {
@@ -73,6 +130,12 @@ const skalViseTomFlyt = (sakstype: string, sakstema: string, behandlingstema: st
   if (
     sakstype === TRYGDEAVTALE &&
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
+  ) {
+    return true;
+  }
+  if (
+    [FTRL, TRYGDEAVTALE].includes(sakstype) &&
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV
   ) {
     return true;
   }
