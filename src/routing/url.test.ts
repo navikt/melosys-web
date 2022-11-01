@@ -71,7 +71,7 @@ describe("url", () => {
         "MEL-1",
         1,
         EU_EOS,
-        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV
+        MKV.Koder.behandlinger.behandlingstema.TRYGDETID
       );
 
       expect(url).toContain("/EU_EOS/sedbehandling/");
