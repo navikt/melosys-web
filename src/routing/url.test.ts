@@ -1,4 +1,4 @@
-import { lagUrlFraSakstypeOgBehandlingstema } from "./url";
+import { lagUrl, lagUrlFraSakstypeOgBehandlingstema } from "./url";
 import MKV from "../melosyskodeverk";
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
@@ -110,6 +110,21 @@ describe("url", () => {
       );
 
       expect(url).toContain("/EU_EOS/vurderutpeking/");
+    });
+  });
+
+  describe("tom flyt", () => {
+    it("IKKE_YRKESAKTIV får tom flyt", () => {
+      const url = lagUrl(
+        "MEL-1",
+        1,
+        EU_EOS,
+        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG
+      );
+
+      expect(url).toContain("/EU_EOS/behandling/");
     });
   });
 });
