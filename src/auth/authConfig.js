@@ -5,13 +5,17 @@ export const msalConfig = {
     redirectUri: "/",
   },
   cache: {
-    cacheLocation: "sessionStorage",
+    cacheLocation: "localStorage",
     storeAuthStateInCookie: false,
   },
   system: {},
 };
 
 // TODO: Legg til trygdeavtale scope, fjern hardkodet scope melosys,
-export const loginRequest = {
+export const melosysRequest = {
   scopes: ["api://dev-fss.teammelosys.melosys-q1/.default"],
+};
+
+export const trygdeavtaleRequest = {
+  scopes: ["api://dev-fss.teammelosys.melosys-trygdeavtale-q1/.default"],
 };

@@ -3,29 +3,27 @@ import PT from "prop-types";
 import { InteractionStatus } from "@azure/msal-browser";
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import Topplinje from "./komponenter/topplinje";
-import { loginRequest } from "../../auth/authConfig";
+import { melosysRequest, trygdeavtaleRequest } from "../../auth/authConfig";
 import { setTokenInterceptor } from "../../services/utils";
+import { TRYGDEAVTALE_FLYT_BASE_URL } from "../../services/api-constants";
 
 function Hovedside({ loadInitialData, children }) {
   const { instance, inProgress, accounts } = useMsal();
   const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
-    // console.log(msalConfig);
     if (inProgress === InteractionStatus.None && !isAuthenticated) {
-      instance.loginRedirect(loginRequest);
+      instance.loginRedirect(melosysRequest);
     }
   }, [isAuthenticated, instance, inProgress]);
 
-  const getAccessToken = () => {
-    // console.log("Getting there...");
+  const getAccessToken = (url) => {
     return instance
       .acquireTokenSilent({
-        ...loginRequest,
+        ...(url.includes(TRYGDEAVTALE_FLYT_BASE_URL) ? trygdeavtaleRequest : melosysRequest),
         account: accounts[0],
       })
       .then((response) => {
-        // console.log(response);
         return response.accessToken;
       })
       .catch((error) => {
