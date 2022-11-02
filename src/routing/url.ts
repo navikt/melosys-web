@@ -39,8 +39,8 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
 
 const lagUrlForFtrlFlyt = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
   if (
-    behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET ||
-    MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
+    behandlingstemaKode ===
+    (MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET || MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV)
   ) {
     return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
