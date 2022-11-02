@@ -10,7 +10,7 @@ enum Hjelpetekster {
   PLIKTIG_TRYGDET_BEGGE_LAND = "søker er på grunnlag av arbeidsforholdet pliktig trygdet etter begge lands lovgivning",
   MAX_TRE_ÅR = "utsendingen forventes ikke å vare mer enn tre år",
   MAX_FEM_ÅR = "utsendingen forventes ikke å vare mer enn fem år",
-  MAX_12_MD = "utsendingen forventes ikke å vare mer enn 12 måneder",
+  MAX_12_MD = "utenlandsoppholdet forventes ikke å vare mer enn 12 måneder",
 }
 
 const hjelpeteksterUkArt61 = [
