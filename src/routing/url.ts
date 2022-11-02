@@ -93,6 +93,9 @@ const skalViseTomFlyt = (sakstype: string, sakstema: string, behandlingstema: st
   if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
     return true;
   }
+  if (sakstype === FTRL && behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
+    return true;
+  }
   if (
     sakstype === TRYGDEAVTALE &&
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL

@@ -16,7 +16,6 @@ import Soknadsland from "../soknadsland";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
 import "./behandlingOppgave.css";
-import { useFeatureToggle } from "../../featuretoggle";
 
 const BehandlingOppgavesLinjeWrapper = ({ link, stengt, children }) =>
   stengt ? (
