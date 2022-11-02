@@ -16,6 +16,7 @@ import Soknadsland from "../soknadsland";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
 import "./behandlingOppgave.css";
+import { useFeatureToggle } from "../../featuretoggle";
 
 const BehandlingOppgavesLinjeWrapper = ({ link, stengt, children }) =>
   stengt ? (
@@ -61,9 +62,19 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
     svarFrist,
   } = behandling;
 
+  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+
   const tittel = `${navn} - ${hovedpartIdent}`;
   const link = visSakstema
-    ? Routing.lagUrl(saksnummer, behandlingID, sakstype.kode, sakstema.kode, behandlingstema.kode, behandlingstype.kode)
+    ? Routing.lagUrl(
+        saksnummer,
+        behandlingID,
+        sakstype.kode,
+        sakstema.kode,
+        behandlingstema.kode,
+        behandlingstype.kode,
+        folketrygdenToggle
+      )
     : Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema.kode);
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 

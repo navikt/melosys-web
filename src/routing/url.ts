@@ -38,7 +38,10 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
 };
 
 const lagUrlForFtrlFlyt = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
-  if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET) {
+  if (
+    behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET ||
+    MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
+  ) {
     return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
   throw new Error(`Finner ikke folketrygden-flyt for behandlingstema: ${behandlingstemaKode}`);
@@ -75,22 +78,33 @@ export const lagUrl = (
   sakstypeKode: string,
   sakstemaKode: string,
   behandlingstemaKode: string,
-  behandlingstypeKode: string
+  behandlingstypeKode: string,
+  folketrygdenToggle?: string
 ) => {
-  if (skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode)) {
+  if (skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, folketrygdenToggle)) {
     return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
 };
 
-const skalViseTomFlyt = (sakstype: string, sakstema: string, behandlingstema: string, behandlingstype: string) => {
+const skalViseTomFlyt = (
+  sakstype: string,
+  sakstema: string,
+  behandlingstema: string,
+  behandlingstype: string,
+  folketrygdenToggle?: string
+) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
   }
   if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
     return true;
   }
-  if (sakstype === FTRL && behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
+  if (
+    folketrygdenToggle !== "enabled" &&
+    sakstype === FTRL &&
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
+  ) {
     return true;
   }
   if (
