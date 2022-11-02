@@ -78,33 +78,19 @@ export const lagUrl = (
   sakstypeKode: string,
   sakstemaKode: string,
   behandlingstemaKode: string,
-  behandlingstypeKode: string,
-  folketrygdenToggle?: string
+  behandlingstypeKode: string
 ) => {
-  if (skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, folketrygdenToggle)) {
+  if (skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode)) {
     return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
 };
 
-const skalViseTomFlyt = (
-  sakstype: string,
-  sakstema: string,
-  behandlingstema: string,
-  behandlingstype: string,
-  folketrygdenToggle?: string
-) => {
+const skalViseTomFlyt = (sakstype: string, sakstema: string, behandlingstema: string, behandlingstype: string) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
   }
   if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
-    return true;
-  }
-  if (
-    folketrygdenToggle !== "enabled" &&
-    sakstype === FTRL &&
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
-  ) {
     return true;
   }
   if (
