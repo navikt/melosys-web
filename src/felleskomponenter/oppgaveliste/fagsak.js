@@ -22,7 +22,7 @@ import "./fagsak.css";
  */
 const Fagsak = ({ sak, visSakstema, landkoder }) => {
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
-  const { periode, land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.periode != null) ?? {}; // UX ønsker å ha periode og land vist kun en gang. på topp
+  const { periode, land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.periode != null) ?? {};
   const tittel = visSakstema
     ? `${KV.objektTilTerm(sakstype)} - ${KV.objektTilTerm(sakstema)}`
     : `${KV.objektTilTerm(sakstype)}`;
