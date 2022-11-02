@@ -7,7 +7,7 @@ import { Avklartefakta, AvklartefaktaListe } from "./avklartefakta";
 import { BehandligOversikt, BehandligOversikter } from "./behandlingOversikt";
 import { Bekreftelser } from "./bekreftelser";
 import * as Behandlinger from "./behandlinger";
-import { Behandlingsgrunnlag } from "./behandlingsgrunnlag";
+import { MottatteOpplysninger } from "./mottatteOpplysninger";
 import { Behandlingsresultat } from "./behandlingsresultat";
 import { Dokument, DokumentNullable, Vedlegg } from "./dokument";
 import { DokumentMetadataListe } from "./dokumentMetadata";
@@ -84,7 +84,7 @@ export {
   PermisjonOgPermittering,
   SaksbehandlingOppgave,
   Saksbehandler,
-  Behandlingsgrunnlag,
+  MottatteOpplysninger,
   SoknadForm,
   Soknadsland,
   Soknadsperiode,

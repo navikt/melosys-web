@@ -9,7 +9,7 @@ import * as Types from "./types";
 
 export function oppdaterState(dokument) {
   return {
-    type: Types.OPPDATER_BEHANDLINGSGRUNNLAG,
+    type: Types.OPPDATER_MOTTATTE_OPPLYSNINGER,
     dokument,
   };
 }

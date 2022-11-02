@@ -17,7 +17,7 @@ import * as Actions from "./actions";
 import * as Selectors from "./selectors";
 
 import { anmodningsperioderSelectors } from "../anmodningsperioder";
-import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../mottatteOpplysninger";
 import { vilkarSelectors } from "../vilkar";
 import { avklartefaktaSelectors } from "../avklartefakta";
 import { lovvalgsperioderSelectors } from "./index";
@@ -56,7 +56,7 @@ const finnValgteVilkar = (alleLovvalgsVilkar) => {
 };
 
 const byggLovvalgsPeriodeArtikkel12_1 = (stegState, reduxState) => {
-  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
+  const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
@@ -78,7 +78,7 @@ const byggLovvalgsPeriodeArtikkel12_1 = (stegState, reduxState) => {
 };
 
 const byggLovvalgsPeriodeArtikkel12_2 = (stegState, reduState) => {
-  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduState);
+  const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
@@ -100,7 +100,7 @@ const byggLovvalgsPeriodeArtikkel12_2 = (stegState, reduState) => {
 };
 
 const byggLovvalgsPeriodeArtikkel11_3A = (stegState, reduxState) => {
-  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
+  const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const tilleggsbestemmelseFraVilkar = finnValgteVilkar(vilkarSelectors.valgteTilleggsVilkar(reduxState));
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
@@ -123,7 +123,7 @@ const byggLovvalgsPeriodeArtikkel11_3A = (stegState, reduxState) => {
 };
 
 const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
-  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
+  const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
@@ -159,7 +159,7 @@ const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
 };
 
 const byggAvslaattLovvalg = (reduxState, lovvalgsbestemmelse) => {
-  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
+  const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
 
   return [
@@ -239,7 +239,7 @@ const bestemPeriode = (reduxState) => {
   const periode = Selectors.PeriodeSelector(reduxState);
   if (periode.tom || periode.fom) return periode;
 
-  return behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
+  return mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
 };
 
 const norgeErLovvalgsland = (lovvalgsland) => lovvalgsland === MKV.Koder.landkoder.NO;

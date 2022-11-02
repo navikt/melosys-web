@@ -19,7 +19,7 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { formOperations } from "../../../ducks/form";
 import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
@@ -48,7 +48,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
-  validerBehandlingsgrunnlag,
+  validerMottatteOpplysninger,
   fattVedtak,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -144,7 +144,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   const onSubmit = async () => {
     setVedtakPending(true);
 
-    validerBehandlingsgrunnlag()
+    validerMottatteOpplysninger()
       .then(() => {
         fattVedtak(behandlingID, lagFattVedtakEOSReqDto()).then((res) => {
           if (res.data?.data?.error) {
@@ -268,7 +268,7 @@ VurderingArtikkel13_x_vedtak.propTypes = {
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
-  validerBehandlingsgrunnlag: PT.func.isRequired,
+  validerMottatteOpplysninger: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
 };
 
@@ -281,7 +281,7 @@ VurderingArtikkel13_x_vedtak.defaultProps = {
 const mapStateToProps = (state) => {
   const lovvalgsperiodeTom = lovvalgsperioderSelectors.TomDatoSelector(state);
   const erLovvalgsperiodeForkortet = () =>
-    Utils.dato.datoDiffPure(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom, lovvalgsperiodeTom, "days") !== 0;
+    Utils.dato.datoDiffPure(mottatteOpplysningerSelectors.PeriodeSelector(state).tom, lovvalgsperiodeTom, "days") !== 0;
 
   const forkortLovvalgsperiode = lovvalgsperiodeTom === null ? false : erLovvalgsperiodeForkortet();
 
@@ -291,7 +291,7 @@ const mapStateToProps = (state) => {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
     harLandSomKreverSED: avklartefaktaSelectors.LandSomKreverSEDSelector(state).length > 0,
-    soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
+    soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
     formIsValid: isValid(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
     initialValues: {

@@ -10,7 +10,10 @@ import RedigererKomponent from "./redigerer";
 import RedigeringUtfortKomponent from "./redigeringUtfort";
 
 import { useFeatureToggle } from "../../../../../featuretoggle";
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../../ducks/behandlingsgrunnlag";
+import {
+  mottatteOpplysningerOperations,
+  mottatteOpplysningerSelectors,
+} from "../../../../../ducks/mottatteOpplysninger";
 
 import "./soknadslandvelger.css";
 
@@ -22,7 +25,7 @@ interface SoknadslandvelgerProps {
 const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger }: SoknadslandvelgerProps) => {
   const dispatch = useDispatch();
   const [status, setStatus] = useState<Status>(Status.RedigeringUtfort);
-  const behandlingHarPeriode = useSelector(behandlingsgrunnlagSelectors.HarPeriodeSelector);
+  const behandlingHarPeriode = useSelector(mottatteOpplysningerSelectors.HarPeriodeSelector);
   const tomLandOgPeriodeToggle = useFeatureToggle("melosys.tom_periode_og_land");
 
   const flytMedInngangsvilkår = window.location.pathname.indexOf(`${MKV.Koder.sakstyper.EU_EOS}/saksbehandling/`) > -1;
@@ -32,7 +35,7 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
     if (tomLandOgPeriodeToggle === "enabled" && flytMedInngangsvilkår && behandlingHarPeriode) {
       lagreSoknadOgOppfriskSaksopplysninger();
     } else {
-      dispatch(behandlingsgrunnlagOperations.oppdaterState());
+      dispatch(mottatteOpplysningerOperations.oppdaterState());
     }
   };
   return (

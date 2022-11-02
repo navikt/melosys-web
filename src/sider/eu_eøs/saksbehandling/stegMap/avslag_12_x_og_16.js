@@ -15,7 +15,7 @@ class Avslag_12_x_og_16 extends Steg {
     this.beregnRelevantUI = (_propsLight) => {};
     this.handlers = {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      validerBehandlingsgrunnlag: propsLight.tilgjengeligeHandlers.validerBehandlingsgrunnlag,
+      validerMottatteOpplysninger: propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
     };
     this.status = FANE_STATUS.OK;
   }

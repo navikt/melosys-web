@@ -22,7 +22,7 @@ import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { datalastingOperations } from "../../../ducks/datalasting";
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 import "./sedbehandling.css";
 
@@ -32,11 +32,11 @@ const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
-  behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
-    behandlingsgrunnlagSelectors.PeriodeSelector(state).fom
+  mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
+    mottatteOpplysningerSelectors.PeriodeSelector(state).fom
   ),
-  behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(
-    behandlingsgrunnlagSelectors.PeriodeSelector(state).tom
+  mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
+    mottatteOpplysningerSelectors.PeriodeSelector(state).tom
   ),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
@@ -46,7 +46,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   lastInnSaksopplysninger: (saksnummer: string, behandlingID: number) =>
     dispatch(datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
-  hentBehandlingsgrunnlag: (behandlingID: number) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
+  hentMottatteOpplysninger: (behandlingID: number) => dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -65,14 +65,14 @@ const SedBehandling = ({
   fagsak,
   oppsummering,
   lovvalgsland,
-  behandlingsgrunnlagPeriodeFom,
-  behandlingsgrunnlagPeriodeTom,
+  mottatteOpplysningerPeriodeFom,
+  mottatteOpplysningerPeriodeTom,
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
   location,
   lastInnSaksopplysninger,
   resetSaksopplysninger,
-  hentBehandlingsgrunnlag,
+  hentMottatteOpplysninger,
 }: Props & PropsFromRedux) => {
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
@@ -92,7 +92,7 @@ const SedBehandling = ({
 
   useEffect(() => {
     if (behandlingstemaErIkkeYrkesaktiv) {
-      hentBehandlingsgrunnlag(behandlingID);
+      hentMottatteOpplysninger(behandlingID);
     }
   }, [behandlingstema]);
 
@@ -122,8 +122,8 @@ const SedBehandling = ({
                   lovvalgsland={behandlingstemaErIkkeYrkesaktiv ? lovvalgsland : null}
                   lovvalgsperiodeFom={lovvalgsperiodeFom}
                   lovvalgsperiodeTom={lovvalgsperiodeTom}
-                  behandlingsgrunnlagPeriodeFom={behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : ""}
-                  behandlingsgrunnlagPeriodeTom={behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : ""}
+                  mottatteOpplysningerPeriodeFom={behandlingstemaErIkkeYrkesaktiv ? mottatteOpplysningerPeriodeFom : ""}
+                  mottatteOpplysningerPeriodeTom={behandlingstemaErIkkeYrkesaktiv ? mottatteOpplysningerPeriodeTom : ""}
                 />
                 <SaksoversiktLenke />
                 <SideDialog />

@@ -28,8 +28,8 @@ interface OppsummeringProps {
   mottattDato: string;
   lovvalgsperiodeFom: string;
   lovvalgsperiodeTom: string;
-  behandlingsgrunnlagPeriodeFom: string;
-  behandlingsgrunnlagPeriodeTom: string;
+  mottatteOpplysningerPeriodeFom: string;
+  mottatteOpplysningerPeriodeTom: string;
   className?: string;
 }
 const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
@@ -44,8 +44,8 @@ const Oppsummering = (props: OppsummeringProps) => {
     mottattDato,
     lovvalgsperiodeFom,
     lovvalgsperiodeTom,
-    behandlingsgrunnlagPeriodeFom,
-    behandlingsgrunnlagPeriodeTom,
+    mottatteOpplysningerPeriodeFom,
+    mottatteOpplysningerPeriodeTom,
     className,
   } = props;
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
@@ -68,7 +68,7 @@ const Oppsummering = (props: OppsummeringProps) => {
     behandlingsresultattype,
   } = oppsummering;
   const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
-  const behandlingsgrunnlagperiode = `${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`;
+  const mottatteOpplysningerperiode = `${mottatteOpplysningerPeriodeFom} - ${mottatteOpplysningerPeriodeTom}`;
 
   const landStorBokstav = (land: KTObject) =>
     land?.term ? Utils.streng.storeForbokstaverForLand(land.term) : "Ukjent";
@@ -132,7 +132,7 @@ const Oppsummering = (props: OppsummeringProps) => {
       col1 = [["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(registrertDato)]];
       col2 = [["Sist oppdatert", Utils.dato.formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`]];
     } else {
-      col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", behandlingsgrunnlagperiode]];
+      col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", mottatteOpplysningerperiode]];
       if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
       col1.push(["Land", erSed ? landStorBokstav(lovvalgsland) : landTilSetning(arbeidsland)]);
 
@@ -237,7 +237,7 @@ Oppsummering.propTypes = {
   lovvalgsland: MPT.Kodeverk,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
-  behandlingsgrunnlagperiode: PT.string,
+  mottatteOpplysningerperiode: PT.string,
   lovvalgsperiode: PT.string,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
@@ -247,7 +247,7 @@ Oppsummering.propTypes = {
 Oppsummering.defaultProps = {
   arbeidsland: [],
   lovvalgsland: {},
-  behandlingsgrunnlagperiode: undefined,
+  mottatteOpplysningerperiode: undefined,
   lovvalgsperiode: undefined,
   mottattDato: undefined,
   className: undefined,

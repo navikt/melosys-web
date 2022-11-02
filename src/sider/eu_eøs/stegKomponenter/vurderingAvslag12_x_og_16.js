@@ -34,7 +34,7 @@ const VurderingAvslag12_x_og_16 = ({
   formIsValid,
   formValues,
   tilbake,
-  validerBehandlingsgrunnlag,
+  validerMottatteOpplysninger,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const dispatch = useDispatch();
@@ -88,7 +88,7 @@ const VurderingAvslag12_x_og_16 = ({
 
     setVedtakPending(true);
 
-    validerBehandlingsgrunnlag()
+    validerMottatteOpplysninger()
       .then(() => {
         dispatch(
           vedtakOperations.fatt(behandlingID, {
@@ -179,7 +179,7 @@ VurderingAvslag12_x_og_16.propTypes = {
   formIsValid: PT.bool.isRequired,
   touch: PT.func.isRequired,
   formValues: PT.object,
-  validerBehandlingsgrunnlag: PT.func.isRequired,
+  validerMottatteOpplysninger: PT.func.isRequired,
 };
 
 VurderingAvslag12_x_og_16.defaultProps = {

@@ -16,7 +16,7 @@ import * as Services from "../../../services";
 import { DatoOmradeMedVarighet } from "../../../felleskomponenter/datoOmrade";
 
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
-import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { formSelectors } from "../../../ducks/form";
 import { anmodningsperiodesvarOperations, anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
@@ -279,7 +279,7 @@ VurderingArtikkel16MottaSvar.defaultProps = {
 
 const mapStateToProps = (state) => ({
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
+  soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
   anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
   anmodningsperioderSvarStatus: anmodningsperiodesvarSelectors.ReduxStatusSelector(state),
   formIsValid: formSelectors.Artikkel16MottaSvarSyncErrorsSelector(state) === undefined,

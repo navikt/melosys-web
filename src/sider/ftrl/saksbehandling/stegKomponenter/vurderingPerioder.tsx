@@ -16,7 +16,7 @@ import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 
-import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -136,8 +136,8 @@ function transformInitialMedlemskapsperioder(state: RootState) {
 }
 
 const mapStateToProps = (state: RootState) => ({
-  mottaksdato: behandlingsgrunnlagSelectors.MottaksdatoSelector(state),
-  valgtTrygdedekning: behandlingsgrunnlagSelectors.TrygdedekningSelector(state),
+  mottaksdato: mottatteOpplysningerSelectors.MottaksdatoSelector(state),
+  valgtTrygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
   formValues: getFormValues(KV.Form.PERIODER)(state) as formValuesProp,
   initialValues: {
     medlemskapsperioder: transformInitialMedlemskapsperioder(state),
@@ -146,7 +146,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
   formIsValid: formSelectors.VurderPerioderFormValid(state),
-  soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
+  soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
