@@ -9,7 +9,11 @@ export function syncErrorsTilFeilmelding(
   if (Utils._isEmpty(syncErrors)) return null;
 
   const finnFeilmelding = (feil: any): any => {
-    if (Utils._isString(feil?.melding)) {
+    if (!feil) {
+      return null;
+    }
+
+    if (Utils._isString(feil.melding)) {
       return <li key={feil.melding}>{feil.melding}</li>;
     }
 
