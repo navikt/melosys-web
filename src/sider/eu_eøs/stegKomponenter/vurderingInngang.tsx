@@ -14,7 +14,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
 
 import { useFeatureToggle } from "../../../featuretoggle";
-import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../ducks/vilkar";
 
@@ -115,7 +115,7 @@ export const Varsler = ({
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  behandlingHarPeriodeOgLand: behandlingsgrunnlagSelectors.HarPeriodeOgLandSelector(state),
+  behandlingHarPeriodeOgLand: mottatteOpplysningerSelectors.HarPeriodeOgLandSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({

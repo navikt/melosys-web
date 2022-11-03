@@ -4,7 +4,7 @@ import MKV from "../../melosyskodeverk";
 
 describe("Behandlingerselectors", () => {
   const lagState = ({ lovvalgsperiode, soknadsperiode, behandlingstema, sakstype }) => ({
-    behandlingsgrunnlag: {
+    mottatteOpplysninger: {
       data: {
         data: {
           periode: soknadsperiode,

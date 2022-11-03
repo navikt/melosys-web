@@ -14,7 +14,10 @@ import { SoknadMenypanelForm } from "../../../../../felleskomponenter/menypanelF
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../../ducks/behandlingsgrunnlag";
+import {
+  mottatteOpplysningerOperations,
+  mottatteOpplysningerSelectors,
+} from "../../../../../ducks/mottatteOpplysninger";
 import { anmodningsperioderSelectors } from "../../../../../ducks/anmodningsperioder";
 
 import { avklartefaktaSelectors } from "../../../../../ducks/avklartefakta";
@@ -37,7 +40,7 @@ const Saksopplysninger = ({
   redigerbart,
   behandlingID,
   soknadForm,
-  behandlingsgrunnlag,
+  mottatteOpplysninger,
   behandlingsresultat,
   fagsakStatusKode,
   tilForsiden,
@@ -61,10 +64,10 @@ const Saksopplysninger = ({
     behandlingsresultat.behandlingsresultatTypeKode ===
       MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL && !erNyVurdering;
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
-  const behandlingsgrunnlagErKlart = !(
-    Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
+  const mottatteOpplysningerErKlart = !(
+    Object.keys(soknadForm).length === 0 || Object.keys(mottatteOpplysninger).length === 0
   );
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
+  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
   const forsteSteg = hentForsteSteg(behandlingstype);
 
   const visOppdaterRegisteropplysninger =
@@ -105,8 +108,8 @@ Saksopplysninger.propTypes = {
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   match: PT.object.isRequired,
-  sendBehandlingsgrunnlag: PT.func.isRequired,
-  behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
+  sendMottatteOpplysninger: PT.func.isRequired,
+  mottatteOpplysninger: MPT.MottatteOpplysninger,
   soknadForm: PT.object.isRequired,
   inngangForm: PT.object,
   vurdering: PT.object,
@@ -123,7 +126,7 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   redigerbart: null,
-  behandlingsgrunnlag: {},
+  mottatteOpplysninger: {},
   vurdering: {},
   syncErrors: {},
   inngangForm: {},
@@ -135,13 +138,13 @@ const mapStateToProps = (state) => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
-  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
+  mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  sendBehandlingsgrunnlag: (bid, dokument) => dispatch(behandlingsgrunnlagOperations.send(bid, dokument)),
+  sendMottatteOpplysninger: (bid, dokument) => dispatch(mottatteOpplysningerOperations.send(bid, dokument)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

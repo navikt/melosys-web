@@ -1,6 +1,6 @@
 import * as selectors from "./selectors";
 
-describe("Behandlingsgrunnlag selectors", () => {
+describe("MottatteOpplysninger selectors", () => {
   describe("SkipArbeidSelector", () => {
     it("returnerer arbeid på skip", () => {
       const { resultFunc } = selectors.SkipArbeidSelector;

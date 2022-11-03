@@ -24,7 +24,7 @@ import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../
 import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaOperations } from "../../../ducks/avklartefakta";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { formSelectors } from "../../../ducks/form";
 import { menypanelOperations } from "../../../ducks/menypanel";
@@ -45,15 +45,15 @@ const Saksbehandling = ({
   behandlingstype,
   hovedpartRolle,
   behandlingOppfriskes,
-  behandlingsgrunnlag,
-  behandlingsgrunnlagPeriodeFom,
-  behandlingsgrunnlagPeriodeTom,
-  behandlingsgrunnlagMottaksdato,
+  mottatteOpplysninger,
+  mottatteOpplysningerPeriodeFom,
+  mottatteOpplysningerPeriodeTom,
+  mottatteOpplysningerMottaksdato,
   behandlingsresultat,
   fagsak,
   fagsakStatusKode,
   hentBehandling,
-  hentBehandlingsgrunnlag,
+  hentMottatteOpplysninger,
   hentBehandlingsresultat,
   hentDokumentOversikt,
   hentFagsaker,
@@ -62,7 +62,7 @@ const Saksbehandling = ({
   hentMedlemskapsperioder,
   hentOppsummertFakta,
   lagreAvklartefakta,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
   lagreVilkar,
   landkoder,
   location,
@@ -70,7 +70,7 @@ const Saksbehandling = ({
   oppsummering,
   redigerbart,
   resetBehandlingerState,
-  resetBehandlingsgrunnlagState,
+  resetMottatteOpplysningerState,
   resetFagsakState,
   resetVilkarState,
   resetOppsummertFaktaState,
@@ -122,7 +122,7 @@ const Saksbehandling = ({
         .forEach((bestemmelse) => bestemmelse.vilkårOgBegrunnelser.sort((a, b) => a.vilkaar.localeCompare(b.vilkaar)));
       setBestemmelser(bestemmelserResponse);
       await hentMedlemskapsperioder(behandlingIDFraParam);
-      await hentBehandlingsgrunnlag(behandlingIDFraParam);
+      await hentMottatteOpplysninger(behandlingIDFraParam);
       await hentDokumentOversikt(saksnr);
       setSaksopplysningerLastet(true);
       return true;
@@ -141,7 +141,7 @@ const Saksbehandling = ({
       resetOppsummertFaktaState();
       resetMedlemskapsperiodeState();
       resetBehandlingerState();
-      resetBehandlingsgrunnlagState();
+      resetMottatteOpplysningerState();
       resetFeiletrespons();
       skjulMenypanel();
     };
@@ -162,10 +162,10 @@ const Saksbehandling = ({
     behandlingsresultat.behandlingsresultatTypeKode ===
       MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL && !erNyVurdering;
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
-  const behandlingsgrunnlagErKlart = !(
-    Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
+  const mottatteOpplysningerErKlart = !(
+    Object.keys(soknadForm).length === 0 || Object.keys(mottatteOpplysninger).length === 0
   );
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
+  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
@@ -186,8 +186,8 @@ const Saksbehandling = ({
                         annenBehandlingOppfriskes={annenBehandlingOppfriskes}
                         behandlingID={behandlingID}
                         lagreAvklartefaktaHandler={lagreAvklartefakta}
-                        lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={
-                          lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger
+                        lagreMottatteOpplysningerOgOppfriskSaksopplysninger={
+                          lagreMottatteOpplysningerOgOppfriskSaksopplysninger
                         }
                         lagreVilkarHandler={lagreVilkar}
                         begrunnelser={MKV.KTObjects.begrunnelser}
@@ -212,11 +212,11 @@ const Saksbehandling = ({
                   arbeidsland={
                     landkoder && landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
                   }
-                  mottattDato={behandlingsgrunnlagMottaksdato}
-                  lovvalgsperiodeFom={behandlingsgrunnlagPeriodeFom}
-                  lovvalgsperiodeTom={behandlingsgrunnlagPeriodeTom}
-                  behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
-                  behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+                  mottattDato={mottatteOpplysningerMottaksdato}
+                  lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom}
+                  lovvalgsperiodeTom={mottatteOpplysningerPeriodeTom}
+                  mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
+                  mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />
                 <SaksoversiktLenke />
                 <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
@@ -234,10 +234,10 @@ Saksbehandling.propTypes = {
   arbeidsland: PT.arrayOf(PT.string).isRequired,
   behandlingstype: PT.string.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
-  behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
-  behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
-  behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
-  behandlingsgrunnlagMottaksdato: PT.string.isRequired,
+  mottatteOpplysninger: MPT.MottatteOpplysninger,
+  mottatteOpplysningerPeriodeFom: PT.string.isRequired,
+  mottatteOpplysningerPeriodeTom: PT.string.isRequired,
+  mottatteOpplysningerMottaksdato: PT.string.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   fagsak: MPT.Fagsak,
   fagsakStatusKode: PT.string.isRequired,
@@ -251,7 +251,7 @@ Saksbehandling.propTypes = {
   soknadForm: PT.object.isRequired,
   // Funcs
   hentBehandling: PT.func.isRequired,
-  hentBehandlingsgrunnlag: PT.func.isRequired,
+  hentMottatteOpplysninger: PT.func.isRequired,
   hentBehandlingsresultat: PT.func.isRequired,
   hentDokumentOversikt: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
@@ -260,10 +260,10 @@ Saksbehandling.propTypes = {
   hentOppsummertFakta: PT.func.isRequired,
   hentFolketrygdenKodeverk: PT.func.isRequired,
   lagreAvklartefakta: PT.func.isRequired,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger: PT.func.isRequired,
   lagreVilkar: PT.func.isRequired,
   resetBehandlingerState: PT.func.isRequired,
-  resetBehandlingsgrunnlagState: PT.func.isRequired,
+  resetMottatteOpplysningerState: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
   resetVilkarState: PT.func.isRequired,
   resetOppsummertFaktaState: PT.func.isRequired,
@@ -276,25 +276,25 @@ Saksbehandling.propTypes = {
 };
 
 Saksbehandling.defaultProps = {
-  behandlingsgrunnlag: {},
+  mottatteOpplysninger: {},
   fagsak: {},
   oppsummering: undefined,
   redigerbart: null,
 };
 
 const mapStateToProps = (state) => ({
-  arbeidsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
+  arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
   hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
-  behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
-    behandlingsgrunnlagSelectors.PeriodeSelector(state).fom
+  mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
+  mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
+    mottatteOpplysningerSelectors.PeriodeSelector(state).fom
   ),
-  behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(
-    behandlingsgrunnlagSelectors.PeriodeSelector(state).tom
+  mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
+    mottatteOpplysningerSelectors.PeriodeSelector(state).tom
   ),
-  behandlingsgrunnlagMottaksdato: Utils.dato.formatterDatoTilNorsk(
-    behandlingsgrunnlagSelectors.MottaksdatoSelector(state)
+  mottatteOpplysningerMottaksdato: Utils.dato.formatterDatoTilNorsk(
+    mottatteOpplysningerSelectors.MottaksdatoSelector(state)
   ),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
@@ -308,7 +308,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   hentBehandling: (behandlingID) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
-  hentBehandlingsgrunnlag: (bid) => dispatch(behandlingsgrunnlagOperations.hent(bid)),
+  hentMottatteOpplysninger: (bid) => dispatch(mottatteOpplysningerOperations.hent(bid)),
   hentBehandlingsresultat: (bid) => dispatch(behandlingsresultatOperations.hent(bid)),
   hentDokumentOversikt: (saksnummer) => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
   hentFagsaker: (saksnummer) => dispatch(fagsakOperations.hent(saksnummer)),
@@ -323,7 +323,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetMedlemskapsperiodeState: () => dispatch(medlemskapsperioderOperations.resetMedlemskapsperioder()),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
-  resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),
+  resetMottatteOpplysningerState: () => dispatch(mottatteOpplysningerOperations.resetState()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
 });

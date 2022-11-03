@@ -22,7 +22,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { datalastingOperations } from "../../../ducks/datalasting";
-import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { vilkarOperations } from "../../../ducks/vilkar";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { anmodningsperioderOperations } from "../../../ducks/anmodningsperioder";
@@ -57,8 +57,8 @@ const Vurderutpeking = ({
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
   arbeidsland,
-  behandlingsgrunnlagPeriodeFom,
-  behandlingsgrunnlagPeriodeTom,
+  mottatteOpplysningerPeriodeFom,
+  mottatteOpplysningerPeriodeTom,
   resetSaksopplysninger,
   lagreVilkar,
   lagreAvklartefakta,
@@ -68,7 +68,7 @@ const Vurderutpeking = ({
   tilForsiden,
   startOgVisOppfriskModal,
   soknadForm,
-  behandlingsgrunnlag,
+  mottatteOpplysninger,
   vurderUtpekingFormValues,
   hentLandkoder,
 }) => {
@@ -87,8 +87,8 @@ const Vurderutpeking = ({
   if (!behandlingID) return null;
   if (!behandlingstema) return null;
 
-  const behandlingsgrunnlagErKlart = !(
-    Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
+  const mottatteOpplysningerErKlart = !(
+    Object.keys(soknadForm).length === 0 || Object.keys(mottatteOpplysninger).length === 0
   );
 
   const forsteSteg = hentForsteSteg(behandlingstema);
@@ -113,7 +113,7 @@ const Vurderutpeking = ({
                   <VirksomhetMelding />
                 ) : (
                   <>
-                    {behandlingsgrunnlagErKlart && (
+                    {mottatteOpplysningerErKlart && (
                       <Stegvelger
                         behandlingID={behandlingID}
                         stegMap={stegMap}
@@ -140,8 +140,8 @@ const Vurderutpeking = ({
                   lovvalgsland={lovvalgslandKTOBject}
                   lovvalgsperiodeFom={lovvalgsperiodeFom}
                   lovvalgsperiodeTom={lovvalgsperiodeTom}
-                  behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
-                  behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+                  mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
+                  mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />
                 <SaksoversiktLenke />
                 <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
@@ -166,8 +166,8 @@ Vurderutpeking.propTypes = {
   lovvalgsperiodeFom: PT.string.isRequired,
   lovvalgsperiodeTom: PT.string.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
-  behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
-  behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
+  mottatteOpplysningerPeriodeFom: PT.string.isRequired,
+  mottatteOpplysningerPeriodeTom: PT.string.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
@@ -176,7 +176,7 @@ Vurderutpeking.propTypes = {
   lagreLovvalgsperioder: PT.func.isRequired,
   lagreAnmodningsperioder: PT.func.isRequired,
   oppdaterOgLagreBehandlingsperioder: PT.func.isRequired,
-  behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
+  mottatteOpplysninger: MPT.MottatteOpplysninger,
   soknadForm: PT.object.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   vurderUtpekingFormValues: PT.object,
@@ -184,7 +184,7 @@ Vurderutpeking.propTypes = {
 };
 
 Vurderutpeking.defaultProps = {
-  behandlingsgrunnlag: {},
+  mottatteOpplysninger: {},
   vurderUtpekingFormValues: {},
 };
 
@@ -197,13 +197,13 @@ const mapStateToProps = (state) => ({
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
-    behandlingsgrunnlagSelectors.PeriodeSelector(state).fom
+  mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
+    mottatteOpplysningerSelectors.PeriodeSelector(state).fom
   ),
-  behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(
-    behandlingsgrunnlagSelectors.PeriodeSelector(state).tom
+  mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
+    mottatteOpplysningerSelectors.PeriodeSelector(state).tom
   ),
-  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
+  mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   vurderUtpekingFormValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
 });

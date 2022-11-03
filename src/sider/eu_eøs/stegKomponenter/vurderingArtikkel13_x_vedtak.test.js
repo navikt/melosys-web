@@ -32,7 +32,7 @@ describe("VurderingArtikkel13_x_Vedtak", () => {
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
       harLandSomKreverSED: true,
       soknadsperiode: { tom: "", fom: "" },
-      validerBehandlingsgrunnlag: jest.fn(),
+      validerMottatteOpplysninger: jest.fn(),
       fattVedtak: jest.fn(),
     };
 

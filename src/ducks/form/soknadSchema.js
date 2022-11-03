@@ -30,30 +30,30 @@ const erFtrlSak = (sakstype) => sakstype === MKV.Koder.sakstyper.FTRL;
 
 const erTrygdeavtaleEllerFtrl = (sakstype) => erTrygdeavtaleSak(sakstype) || erFtrlSak(sakstype);
 
-const erAltinnsøknad = (behandlingsgrunnlagtype) =>
-  behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+const erAltinnsøknad = (mottatteOpplysningerType) =>
+  mottatteOpplysningerType === MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
-const hentSoknadsperiodeMeldingtekst = (behandlingsgrunnlagtype) => {
-  const menypunkt = erAltinnsøknad(behandlingsgrunnlagtype)
+const hentSoknadsperiodeMeldingtekst = (mottatteOpplysningerType) => {
+  const menypunkt = erAltinnsøknad(mottatteOpplysningerType)
     ? KV.Menypunkter.Utenlandsoppdraget.tittel
     : KV.Menypunkter.Periode.tittel;
-  const periodeUndertittel = erAltinnsøknad(behandlingsgrunnlagtype)
+  const periodeUndertittel = erAltinnsøknad(mottatteOpplysningerType)
     ? KV.Menypunkter.Utenlandsoppdraget.undertitler.periode
     : KV.Menypunkter.Periode.undertitler.periode;
 
   return { menypunkt, periodeUndertittel };
 };
 
-const soknadsperiodeFomSchema = string().when("$behandlingsgrunnlagtype", (behandlingsgrunnlagtype) => {
-  const { menypunkt, periodeUndertittel } = hentSoknadsperiodeMeldingtekst(behandlingsgrunnlagtype);
+const soknadsperiodeFomSchema = string().when("$mottatteOpplysningerType", (mottatteOpplysningerType) => {
+  const { menypunkt, periodeUndertittel } = hentSoknadsperiodeMeldingtekst(mottatteOpplysningerType);
 
   return string()
     .erGyldigDato(lagMelding(menypunkt, periodeUndertittel, SKRIV_INN_GYLDIG_DATO.melding))
     .required(lagMelding(menypunkt, periodeUndertittel, MAA_FYLLES_UT.melding));
 });
 
-const soknadsperiodeTomSchema = string().when("$behandlingsgrunnlagtype", (behandlingsgrunnlagtype) => {
-  const { menypunkt, periodeUndertittel } = hentSoknadsperiodeMeldingtekst(behandlingsgrunnlagtype);
+const soknadsperiodeTomSchema = string().when("$mottatteOpplysningerType", (mottatteOpplysningerType) => {
+  const { menypunkt, periodeUndertittel } = hentSoknadsperiodeMeldingtekst(mottatteOpplysningerType);
 
   return string()
     .erGyldigDato(lagMelding(menypunkt, periodeUndertittel, SKRIV_INN_GYLDIG_DATO.melding))

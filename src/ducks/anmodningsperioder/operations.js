@@ -14,7 +14,7 @@ import * as Types from "./types";
 import * as Actions from "./actions";
 import * as Selectors from "./selectors";
 
-import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../mottatteOpplysninger";
 import { lovvalgsperioderSelectors } from "../lovvalgsperioder";
 import { anmodningsperioderSelectors } from ".";
 import { behandlingerSelectors } from "../behandlinger";
@@ -55,8 +55,8 @@ export function lagre() {
 }
 
 const byggAnmodningsperiodeArtikkel16 = (stegState, reduxState) => {
-  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
-  const soknadsland = behandlingsgrunnlagSelectors.SoknadslandkoderSelector(reduxState);
+  const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
+  const soknadsland = mottatteOpplysningerSelectors.SoknadslandkoderSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
 
   const unntakFraLovvalgsland = soknadsland.join("");

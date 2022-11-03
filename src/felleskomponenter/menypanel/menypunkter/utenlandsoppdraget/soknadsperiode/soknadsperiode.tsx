@@ -9,8 +9,11 @@ import * as Utils from "../../../../../utils";
 import * as Nav from "../../../../../navFrontend";
 import * as Symboler from "../../symboler";
 
-import { Periode } from "../../../../../services/modules/behandlingsgrunnlag/types";
-import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from "../../../../../ducks/behandlingsgrunnlag";
+import { Periode } from "../../../../../services/modules/mottatteOpplysninger/types";
+import {
+  mottatteOpplysningerSelectors,
+  mottatteOpplysningerOperations,
+} from "../../../../../ducks/mottatteOpplysninger";
 import { formSelectors } from "../../../../../ducks/form";
 import { erFeatureToggleEnabled } from "../../../../../featuretoggle";
 
@@ -19,15 +22,15 @@ import SoknadsperiodeEndring from "./soknadsperiodeEndring";
 import "./soknadsperiode.css";
 
 const mapStateToProps = (state: RootState) => ({
-  soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
-  soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
+  soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).fom),
+  soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).tom),
   soknadsperiodeFomErrors: formSelectors.SoknadsperiodeFomErrorsSelector(state),
   soknadsperiodeTomErrors: formSelectors.SoknadsperiodeTomErrorsSelector(state),
-  behandlingHarLand: behandlingsgrunnlagSelectors.HarLandSelector(state),
+  behandlingHarLand: mottatteOpplysningerSelectors.HarLandSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterPeriode: (periode: Periode) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
+  oppdaterPeriode: (periode: Periode) => dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

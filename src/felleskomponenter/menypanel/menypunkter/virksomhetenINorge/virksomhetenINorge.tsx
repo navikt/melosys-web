@@ -14,7 +14,7 @@ import EditerbartElement, { Status } from "../editerbartElement";
 import RedigerbarSamletVirksomhetINorge from "./redigerbarSamletVirksomhetINorge";
 import IkkeRedigerbarSamletVirksomhetINorge from "./ikkeRedigerbarSamletVirksomhetINorge";
 
-import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
 
 import "./virksomhetenINorge.css";
 
@@ -66,7 +66,7 @@ const mapStateToProps = (state: RootState) => {
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
+  oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -81,10 +81,10 @@ const VirksomhetenINorge = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
   erOffentligVirksomhet,
-  oppdaterBehandlingsgrunnlag,
+  oppdaterMottatteOpplysninger,
 }: VirksomhetenINorgeProps) => {
   const lagreHandler = () => {
-    oppdaterBehandlingsgrunnlag();
+    oppdaterMottatteOpplysninger();
     return true;
   };
 

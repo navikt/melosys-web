@@ -16,7 +16,7 @@ import * as KV from "../../../../kodeverk";
 import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { lovvalgsperioderOperations } from "../../../../ducks/lovvalgsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -62,8 +62,8 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
   );
   return {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-    behandlingsgrunnlagStatus: behandlingsgrunnlagSelectors.BehandlingsgrunnlagStatusSelector(state),
-    soknadsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state),
+    mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
+    soknadsland: mottatteOpplysningerSelectors.SoknadslandKTSelector(state),
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
     formValues: getFormValues(KV.Form.Trygdeavtale.VEDTAK)(state),
@@ -85,7 +85,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterPeriode: (periode: Periode) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
+  oppdaterPeriode: (periode: Periode) => dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
   hentLovvalgsperiode: (behandlingID: string) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
 });
 
@@ -117,7 +117,7 @@ interface Props {
 
 const VurderingVedtak = ({
   behandlingID,
-  behandlingsgrunnlagStatus,
+  mottatteOpplysningerStatus,
   data: { bestemmelseValg },
   erNyVurdering,
   hentFlytOgOppdaterAktuelleSteg,
@@ -227,10 +227,10 @@ const VurderingVedtak = ({
   }, []);
 
   useEffect(() => {
-    if (behandlingsgrunnlagStatus === "OK" && redigerbart) {
+    if (mottatteOpplysningerStatus === "OK" && redigerbart) {
       debouncedKontrollerVedtak(oppdaterFørKontroll);
     }
-  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus, resultat.bestemmelse]);
+  }, [resultat.lovvalgsperiodeTom, mottatteOpplysningerStatus, resultat.bestemmelse]);
 
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {

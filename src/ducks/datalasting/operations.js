@@ -4,7 +4,7 @@ import { avklartefaktaOperations } from "../avklartefakta";
 import { fagsakOperations, fagsakSelectors } from "../fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../behandlinger";
 import { behandlingsresultatOperations } from "../behandlingsresultat";
-import { behandlingsgrunnlagOperations } from "../behandlingsgrunnlag";
+import { mottatteOpplysningerOperations } from "../mottatteOpplysninger";
 import { lovvalgsperioderOperations } from "../lovvalgsperioder";
 import { vilkarOperations } from "../vilkar";
 import { behandlingsperioderOperations } from "../behandlingsperioder";
@@ -21,7 +21,7 @@ export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => (
   dispatch(fagsakOperations.hent(saksnummer));
   dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
   dispatch(behandlingerOperations.hentBehandling(behandlingID));
-  dispatch(behandlingsgrunnlagOperations.hent(behandlingID));
+  dispatch(mottatteOpplysningerOperations.hent(behandlingID));
   dispatch(behandlingsresultatOperations.hent(behandlingID));
 
   if (sakstype === MKV.Koder.sakstyper.FTRL) {
@@ -62,7 +62,7 @@ export const lastInnSaksopplysningerBehandleMottattAOU = (saksnummer, behandling
 export const resetSaksopplysninger = () => (dispatch) => {
   dispatch(fagsakOperations.resetFagsakState());
   dispatch(behandlingerOperations.resetBehandlingerState());
-  dispatch(behandlingsgrunnlagOperations.resetState());
+  dispatch(mottatteOpplysningerOperations.resetState());
   dispatch(behandlingsresultatOperations.resetBehandlingsresultatState());
   dispatch(avklartefaktaOperations.resetAvklartefaktaState());
   dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState());
@@ -85,23 +85,23 @@ const harIkkeTomFlyt = async (sakstype, state) => {
 
 export const lagreAllData = () => async (dispatch, getState) => {
   const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
-  const skalLagreBehandlingsgrunnlag = await harIkkeTomFlyt(sakstype, getState());
+  const skalLagreMottatteOpplysninger = await harIkkeTomFlyt(sakstype, getState());
 
   switch (sakstype) {
     case MKV.Koder.sakstyper.FTRL:
       return Promise.all([
-        ...(skalLagreBehandlingsgrunnlag ? [dispatch(behandlingsgrunnlagOperations.lagre())] : []),
+        ...(skalLagreMottatteOpplysninger ? [dispatch(mottatteOpplysningerOperations.lagre())] : []),
         dispatch(vilkarOperations.lagre()),
       ]);
     case MKV.Koder.sakstyper.TRYGDEAVTALE:
-      return skalLagreBehandlingsgrunnlag
-        ? Promise.all[dispatch(behandlingsgrunnlagOperations.lagre())]
+      return skalLagreMottatteOpplysninger
+        ? Promise.all[dispatch(mottatteOpplysningerOperations.lagre())]
         : Promise.resolve();
     case MKV.Koder.sakstyper.EU_EOS: {
       const anmodningErSendtUtland = anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector(getState());
 
       await Promise.all([
-        ...(skalLagreBehandlingsgrunnlag ? [dispatch(behandlingsgrunnlagOperations.lagre())] : []),
+        ...(skalLagreMottatteOpplysninger ? [dispatch(mottatteOpplysningerOperations.lagre())] : []),
         ...(anmodningErSendtUtland ? [] : [dispatch(vilkarOperations.lagre())]),
         ...(anmodningErSendtUtland ? [] : [dispatch(avklartefaktaOperations.lagre())]),
         ...(anmodningErSendtUtland ? [] : [dispatch(behandlingsperioderOperations.lagre())]),

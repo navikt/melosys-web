@@ -29,7 +29,7 @@ export interface LinkGroup {
 export interface ContentProps {
   visArbeidsforholdRolleEtiketter: boolean;
   redigerbart: boolean;
-  visBehandlingsgrunnlagData: boolean;
+  visMottatteOpplysningerData: boolean;
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
   setMenypanelFeilmelding: (feilmelding: string) => void;
   behandlingstema: string;

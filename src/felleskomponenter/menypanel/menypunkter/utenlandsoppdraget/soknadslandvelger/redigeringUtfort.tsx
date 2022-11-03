@@ -9,14 +9,14 @@ import * as KV from "../../../../../kodeverk";
 
 import MKV from "../../../../../melosyskodeverk";
 
-import { behandlingsgrunnlagSelectors } from "../../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 
 import "./redigeringUtfort.css";
 
 const mapStateToProps = (state: RootState) => ({
-  soknadsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
+  soknadsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
   soknadslandErUkjenteEllerAlleEosLand:
-    behandlingsgrunnlagSelectors.SoknadslandErUkjenteEllerAlleEosLandSelector(state),
+    mottatteOpplysningerSelectors.SoknadslandErUkjenteEllerAlleEosLandSelector(state),
 });
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
