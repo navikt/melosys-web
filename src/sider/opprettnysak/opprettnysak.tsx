@@ -57,6 +57,8 @@ interface OpprettNySakFormData {
   brukerNavn: string;
   virksomhetOrgnr: string;
   virksomhetNavn: string;
+  mottaksdato: string;
+  oppretterOppgave: boolean;
 }
 
 const mapStateToProps = (state: RootState) => ({
@@ -67,6 +69,7 @@ const mapStateToProps = (state: RootState) => ({
     skalTilordnes: false,
     hovedpart: BRUKER,
     opprettBehandling: true,
+    mottaksdato: Utils.dato.dateTilNorskString(new Date()),
   },
   landkoderListe: landkoderSelectors.LandkoderSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
@@ -128,6 +131,8 @@ const OpprettNySak = ({
     soknadsland,
     skalTilordnes,
     oppgaveID,
+    mottaksdato,
+    oppretterOppgave,
   } = formValues || {};
 
   const nullstillFelt = (felt: string, verdi: any = null) => change(felt, verdi);
@@ -234,6 +239,7 @@ const OpprettNySak = ({
       sakstema,
       soknadDto,
       oppgaveID,
+      mottaksdato: Utils.dato.formatterDatoTilISO(mottaksdato),
     };
   };
 
@@ -357,6 +363,7 @@ const OpprettNySak = ({
                       oppgaverForsoktHentet={oppgaverForsoktHentet}
                       hovedpart={hovedpart}
                       saksnummer={saksnummer}
+                      oppretterOppgave={oppretterOppgave}
                       change={change}
                       oppgaver={oppgaver}
                     />
