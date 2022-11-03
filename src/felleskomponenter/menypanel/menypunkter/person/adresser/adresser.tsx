@@ -2,7 +2,7 @@ import React from "react";
 
 import * as Nav from "../../../../../navFrontend";
 
-import Adresseliste, { Adressetype } from "./adresseliste";
+import AdresseTableContainer from "./adresseTable";
 
 import { HentAdresserQuery, useHentAdresserQuery } from "./hentAdresser";
 
@@ -12,17 +12,14 @@ interface AdresserProps {
 
 export const Adresser = ({ data }: AdresserProps) => {
   const { bostedsadresser, oppholdsadresser, kontaktadresser } = data.hentSaksopplysninger.persondata;
+
   return (
     <div>
-      {bostedsadresser.length > 0 && (
-        <Adresseliste adresser={bostedsadresser} adressetype={Adressetype.Bostedsadresse} />
-      )}
+      {bostedsadresser.length > 0 && <AdresseTableContainer adresser={bostedsadresser} adressetype="Bostedsadresse" />}
       {oppholdsadresser.length > 0 && (
-        <Adresseliste adresser={oppholdsadresser} adressetype={Adressetype.Oppholdsadresse} />
+        <AdresseTableContainer adresser={oppholdsadresser} adressetype="Oppholdsadresse" />
       )}
-      {kontaktadresser.length > 0 && (
-        <Adresseliste adresser={kontaktadresser} adressetype={Adressetype.Kontaktadresse} />
-      )}
+      {kontaktadresser.length > 0 && <AdresseTableContainer adresser={kontaktadresser} adressetype="Kontaktadresse" />}
     </div>
   );
 };

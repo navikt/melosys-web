@@ -6,10 +6,10 @@ import { Bostedsadresse } from "../../../../../../graphql";
 
 import ExpandableList, { ExpandableListProps } from "../../../../../expandablelist";
 
-import Adresseliste, { Adressetype } from "./adresseliste";
+import AdresseTableContainer from "./adresseTableContainer";
 
-describe("Adresseliste", () => {
-  const mockedProps = mock<ComponentProps<typeof Adresseliste>>();
+describe("AdresseTableContainer", () => {
+  const mockedProps = mock<ComponentProps<typeof AdresseTableContainer>>();
   const props = instance(mockedProps);
 
   const mockedBostedsadresse = mock<Bostedsadresse>();
@@ -20,11 +20,11 @@ describe("Adresseliste", () => {
       { ...bostedsadresse, erHistorisk: false },
       { ...bostedsadresse, erHistorisk: true },
     ];
-    props.adressetype = Adressetype.Bostedsadresse;
+    props.adressetype = "Bostedsadresse";
   });
 
   it("viser aktive adresser", () => {
-    const adresseliste = shallow(<Adresseliste {...props} />);
+    const adresseliste = shallow(<AdresseTableContainer {...props} />);
 
     const aktiveAdresserList = adresseliste.find<ExpandableListProps<Bostedsadresse>>(ExpandableList).first();
     expect(aktiveAdresserList.props().elements.map((e) => e.erHistorisk)).not.toContain(true);
@@ -33,7 +33,7 @@ describe("Adresseliste", () => {
   });
 
   it("viser historiske adresser", () => {
-    const adresseliste = shallow(<Adresseliste {...props} />);
+    const adresseliste = shallow(<AdresseTableContainer {...props} />);
 
     const historiskeAdresserList = adresseliste.find<ExpandableListProps<Bostedsadresse>>(ExpandableList).last();
     expect(historiskeAdresserList.props().elements.map((e) => e.erHistorisk)).not.toContain(false);
@@ -42,7 +42,7 @@ describe("Adresseliste", () => {
   });
 
   it("begge lister vises med chevron og divider", () => {
-    const adresseliste = shallow(<Adresseliste {...props} />);
+    const adresseliste = shallow(<AdresseTableContainer {...props} />);
 
     const adresserList = adresseliste.find(ExpandableList);
 

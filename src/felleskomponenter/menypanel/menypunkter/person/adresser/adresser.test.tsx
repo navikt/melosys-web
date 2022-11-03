@@ -4,7 +4,7 @@ import { mock, instance } from "ts-mockito";
 
 import { Bostedsadresse, Oppholdsadresse, Kontaktadresse } from "../../../../../graphql";
 import { Adresser } from "./adresser";
-import Adresseliste from "./adresseliste";
+import AdresseTableContainer from "./adresseTable";
 
 describe("Adresser", () => {
   const mockedProps = mock<ComponentProps<typeof Adresser>>();
@@ -37,7 +37,7 @@ describe("Adresser", () => {
     const adresser = shallow(<Adresser {...props} />);
 
     const bostedsadresseKomponenter = adresser.findWhere(
-      (n) => n.type() === Adresseliste && n.props().adresser === bostedsadresser
+      (n) => n.type() === AdresseTableContainer && n.props().adresser === bostedsadresser
     );
     expect(bostedsadresseKomponenter).toHaveLength(1);
   });
@@ -48,7 +48,7 @@ describe("Adresser", () => {
     const adresser = shallow(<Adresser {...props} />);
 
     const bostedsadresseKomponenter = adresser.findWhere(
-      (n) => n.type() === Adresseliste && n.props().adresser === bostedsadresser
+      (n) => n.type() === AdresseTableContainer && n.props().adresser === bostedsadresser
     );
     expect(bostedsadresseKomponenter).toHaveLength(0);
   });
@@ -57,7 +57,7 @@ describe("Adresser", () => {
     const adresser = shallow(<Adresser {...props} />);
 
     const oppholdsadresseKomponenter = adresser.findWhere(
-      (n) => n.type() === Adresseliste && n.props().adresser === oppholdsadresser
+      (n) => n.type() === AdresseTableContainer && n.props().adresser === oppholdsadresser
     );
     expect(oppholdsadresseKomponenter).toHaveLength(1);
   });
@@ -68,7 +68,7 @@ describe("Adresser", () => {
     const adresser = shallow(<Adresser {...props} />);
 
     const oppholdsadresseKomponenter = adresser.findWhere(
-      (n) => n.type() === Adresseliste && n.props().adresser === oppholdsadresser
+      (n) => n.type() === AdresseTableContainer && n.props().adresser === oppholdsadresser
     );
     expect(oppholdsadresseKomponenter).toHaveLength(0);
   });
@@ -77,7 +77,7 @@ describe("Adresser", () => {
     const adresser = shallow(<Adresser {...props} />);
 
     const kontaktadresseKomponenter = adresser.findWhere(
-      (n) => n.type() === Adresseliste && n.props().adresser === kontaktadresser
+      (n) => n.type() === AdresseTableContainer && n.props().adresser === kontaktadresser
     );
     expect(kontaktadresseKomponenter).toHaveLength(1);
   });
@@ -88,7 +88,7 @@ describe("Adresser", () => {
     const adresser = shallow(<Adresser {...props} />);
 
     const kontaktadresseKomponenter = adresser.findWhere(
-      (n) => n.type() === Adresseliste && n.props().adresser === kontaktadresser
+      (n) => n.type() === AdresseTableContainer && n.props().adresser === kontaktadresser
     );
     expect(kontaktadresseKomponenter).toHaveLength(0);
   });
