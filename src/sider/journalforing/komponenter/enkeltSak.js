@@ -1,11 +1,11 @@
 import React, { Fragment } from "react";
 import PT from "prop-types";
-import { Link } from "react-router-dom";
 
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Ikon from "../../../resources/images";
+import * as Nav from "../../../navFrontend";
 
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import Soknadsland from "../../../felleskomponenter/soknadsland";
@@ -38,10 +38,10 @@ const EnkeltSak = (props) => {
             </div>
           }
           hoyreSideTittel={
-            <div className="sideTittel">
-              <Link to={link}>{saksnummer}</Link>
+            <Nav.Lenker target="_blank" href={link} className="saklenke">
+              {saksnummer}
               <Ikon.ExternalLink className="ikon" />
-            </div>
+            </Nav.Lenker>
           }
           data={[
             { description: KV.objektTilTerm(behandlingstema) },

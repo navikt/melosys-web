@@ -5,9 +5,9 @@ import { formSelectors } from "../../ducks/form";
 
 import * as Nav from "../../navFrontend";
 
-import "./behandlingsgrunnlagFeilmeldinger.css";
+import "./mottatteOpplysningerFeilmeldinger.css";
 
-export const BehandlingsgrunnlagFeilmeldinger = ({ panelFeil }) => {
+export const MottatteOpplysningerFeilmeldinger = ({ panelFeil }) => {
   if (panelFeil.length === 0) return null;
 
   return (
@@ -29,7 +29,7 @@ export const BehandlingsgrunnlagFeilmeldinger = ({ panelFeil }) => {
   );
 };
 
-BehandlingsgrunnlagFeilmeldinger.propTypes = {
+MottatteOpplysningerFeilmeldinger.propTypes = {
   panelFeil: PT.arrayOf(
     PT.shape({
       feil: PT.arrayOf(PT.string),
@@ -38,7 +38,7 @@ BehandlingsgrunnlagFeilmeldinger.propTypes = {
   ),
 };
 
-BehandlingsgrunnlagFeilmeldinger.defaultProps = {
+MottatteOpplysningerFeilmeldinger.defaultProps = {
   panelFeil: [],
 };
 
@@ -46,4 +46,4 @@ const mapStateToProps = (state) => ({
   panelFeil: formSelectors.PanelFeilSelector(state),
 });
 
-export default connect(mapStateToProps)(BehandlingsgrunnlagFeilmeldinger);
+export default connect(mapStateToProps)(MottatteOpplysningerFeilmeldinger);

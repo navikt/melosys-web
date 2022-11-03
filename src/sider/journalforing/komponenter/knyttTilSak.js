@@ -15,27 +15,14 @@ import * as Api from "../../../services/api";
 import "./knyttTilSak.css";
 
 const {
-  behandlinger: { behandlingstyper: MKVBehandlingstyper, behandlingstema: MKVBehandlingstema },
+  behandlinger: { behandlingstyper: MKVBehandlingstyper },
   sakstyper: MKVSakstyper,
   saksstatuser: MKVSaksstatuser,
 } = MKV.Koder;
 
-const behandlingstyper_gammel = (sakstype, behtema) => {
-  switch (sakstype) {
-    case MKVSakstyper.EU_EOS:
-      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
-        ({ kode }) =>
-          (behtema === MKVBehandlingstema.UTSENDT_ARBEIDSTAKER && kode === MKVBehandlingstyper.ENDRET_PERIODE) ||
-          kode === MKVBehandlingstyper.NY_VURDERING
-      );
-    case MKVSakstyper.TRYGDEAVTALE:
-      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
-        ({ kode }) => kode === MKVBehandlingstyper.NY_VURDERING
-      );
-    default:
-      return [];
-  }
-};
+const behandlingstyper_gammel = MKV.KTObjects.behandlinger.behandlingstyper.filter(
+  ({ kode }) => kode === MKVBehandlingstyper.NY_VURDERING
+);
 
 export const KnyttTilSak = (props) => {
   const { sak, behandleAlleSakerToggleEnabled, erOpprettNySak, changeField, feltNavn, formValues } = props;
@@ -50,9 +37,19 @@ export const KnyttTilSak = (props) => {
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
   const sisteBehandling = behandlingOversikter[0];
 
+  const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
+    sisteBehandling.behandlingsstatus.kode
+  );
+
+  const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
+    ? sisteBehandlingErInaktiv
+    : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
+
   useEffect(() => {
+    changeField(feltNavn.formNavn, "opprettBehandling", visOpprettNyBehandling);
+
     return () => {
-      changeField(feltNavn.formNavn, "opprettBehandling", true);
+      changeField(feltNavn.formNavn, "opprettBehandling", undefined);
       changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
       changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     };
@@ -100,9 +97,6 @@ export const KnyttTilSak = (props) => {
     }
   }, [opprettBehandling, behandlingstema, behandlingstype]);
 
-  const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
-    sisteBehandling.behandlingsstatus.kode
-  );
   const sakErHenlagtEllerBortfalt = [MKVSaksstatuser.HENLAGT, MKVSaksstatuser.HENLAGT_BORTFALT].includes(
     sak.saksstatus.kode
   );
@@ -110,9 +104,6 @@ export const KnyttTilSak = (props) => {
   const visKnyttTilEksisterende =
     sisteBehandlingErInaktiv && (!behandleAlleSakerToggleEnabled || !sakErHenlagtEllerBortfalt);
 
-  const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
-    ? sisteBehandlingErInaktiv
-    : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
 
   useEffect(() => {
@@ -186,7 +177,7 @@ export const KnyttTilSak = (props) => {
                 className="panelElement"
                 emptyFieldDisabled={false}
               >
-                {behandlingstyper_gammel(sakstype?.kode, sisteBehandling.behandlingstema?.kode)?.map((elem) => (
+                {behandlingstyper_gammel?.map((elem) => (
                   <option key={elem.kode} value={elem.kode} label={elem.term} />
                 ))}
               </Skjema.Select>
@@ -203,9 +194,9 @@ export const KnyttTilSak = (props) => {
     <div className="knyttTilSak__behandlingspanel">
       {erOpprettNySak ? (
         <div className="innrykk">
-          <Nav.AlertStripeInfo>
-            Du kan ikke opprette en ny behandling på sak med en aktiv/pågående behandling.
-          </Nav.AlertStripeInfo>
+          <Nav.AlertStripeAdvarsel>
+            Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
+          </Nav.AlertStripeAdvarsel>
         </div>
       ) : (
         visUtenVidereBehandling && (

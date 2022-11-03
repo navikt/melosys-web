@@ -13,7 +13,7 @@ import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 
 import { behandlingerSelectors } from "../behandlinger";
-import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../mottatteOpplysninger";
 import { OrganisasjonSelectors } from "../organisasjoner";
 import { utpekingsperioderSelectors } from "../utpekingsperioder";
 
@@ -65,7 +65,7 @@ export const VurderingUnntakPeriode = createSelector(
  */
 export const Soknadsland = createSelector(
   (state) => SoknadslandFaktaerSelector(state),
-  (state) => behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
+  (state) => mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
   (soknadslandFaktaer, alleLandISoknaden) =>
     alleLandISoknaden.map(
       (enkeltLand) =>
@@ -124,9 +124,9 @@ const konverterOrganisasjonTilVirksomhet = (org) => ({
 export const VirksomheterIPeriodenSelector = createSelector(
   (state) => behandlingerSelectors.ArbeidsforholdSelector(state),
   (state) => behandlingerSelectors.OrganisasjonerSelector(state),
-  (state) => behandlingsgrunnlagSelectors.ValiderteEkstraArbeidsgivereSelector(state),
-  (state) => behandlingsgrunnlagSelectors.SelvstendigNaringsvirksomhetSelector(state),
-  (state) => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+  (state) => mottatteOpplysningerSelectors.ValiderteEkstraArbeidsgivereSelector(state),
+  (state) => mottatteOpplysningerSelectors.SelvstendigNaringsvirksomhetSelector(state),
+  (state) => mottatteOpplysningerSelectors.ForetakUtlandSelector(state),
   (arbeidsforholdene, organisasjoner, ekstraArbeidsgivere, selvstendigeNaringer, foretakUtland) => {
     const relevanteOrganisasjoner = organisasjoner.filter((organisasjonen) => {
       const organisasjonenHarArbeidsforhold = arbeidsforholdene.some(
@@ -191,7 +191,7 @@ export const ArbeidSokkelSkipSelector = createSelector(
  */
 export const SokkelEllerSkipSelector = createSelector(
   (state) => AvklartefaktaSelector(state),
-  (state) => behandlingsgrunnlagSelectors.MaritimtArbeidSelector(state),
+  (state) => mottatteOpplysningerSelectors.MaritimtArbeidSelector(state),
   (alleAvklarteFakta, alleMaritimeArbeid) => {
     // Selectoren lager 2 lister - en for avklart fakta for arbeidsland for hvert sokkel / skip
     // og én for avklartfakta om installasjonen er sokkel eller skip.
@@ -243,7 +243,7 @@ export const ArbeidslandSelector = createSelector(
   (state) => MaritimeArbeidslandSelector(state),
   (state) => behandlingerSelectors.BehandlingstemaKodeSelector(state),
   IkkeArbeidslandSoknadslandSelector,
-  (state) => behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
+  (state) => mottatteOpplysningerSelectors.HjemmebaserSelector(state),
   (soknadsland, maritimeArbeidsland, behandlingstema, IkkeArbeidslandSoknadland, hjemmebaser) => {
     if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND) {
       const vurderteArbeidsland = [...hjemmebaser, ...soknadsland, ...maritimeArbeidsland].filter(
@@ -305,9 +305,9 @@ const byggLandMedYrkesAktivitet = ({
 
 export const ArbeidslandMedYrkesAktivitetSelector = createSelector(
   ArbeidslandKTSelector,
-  (state) => behandlingsgrunnlagSelectors.FysiskeArbeidsstederSelector(state),
-  (state) => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
-  (state) => behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state),
+  (state) => mottatteOpplysningerSelectors.FysiskeArbeidsstederSelector(state),
+  (state) => mottatteOpplysningerSelectors.ForetakUtlandSelector(state),
+  (state) => mottatteOpplysningerSelectors.SelvstendigArbeidSelector(state),
   (state) => behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
   (arbeidsland, fysiskeArbeidssteder, foretakUtland, selvstendigArbeid, arbeidsgivereNorge) =>
     arbeidsland.map((land) =>
@@ -357,8 +357,8 @@ const overlappende = (liste1, liste2) => liste1.filter((element) => liste2.inclu
 export const LandMedVesentligEllerRegistrertArbeidSelector = createSelector(
   (state) => IkkeMarginaleArbeidslandSelector(state) || [],
   (state) => ArbeidslandSelector(state) || [],
-  (state) => behandlingsgrunnlagSelectors.ForetakUtlandLandkodeSelector(state) || [],
-  (state) => behandlingsgrunnlagSelectors.FysiskeArbeidsstederLandkoderSelector(state) || [],
+  (state) => mottatteOpplysningerSelectors.ForetakUtlandLandkodeSelector(state) || [],
+  (state) => mottatteOpplysningerSelectors.FysiskeArbeidsstederLandkoderSelector(state) || [],
   (ikkeMarginaleArbeidsland, arbeidsland, foretakUtland, fysiskeArbeidssteder) => [
     ...new Set([
       ...ikkeMarginaleArbeidsland,
@@ -407,7 +407,7 @@ export const AvklarteNorskeVirksomheterSelector = createSelector(
 
 export const AvklarteUtenlandskeVirksomheterSelector = createSelector(
   AvklarteVirksomhetFaktaerSelector,
-  (state) => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+  (state) => mottatteOpplysningerSelectors.ForetakUtlandSelector(state),
   (alleAvklarteVirksomhetFaktaer, foretakUtland) =>
     alleAvklarteVirksomhetFaktaer
       .map((virksomhet) => {
@@ -430,8 +430,8 @@ export const AvklarteVirksomheterSelector = createSelector(
 export const AvklarteVirksomheterIkkeNaeringsdrivendeSelector = createSelector(
   AvklarteVirksomhetFaktaerSelector,
   AlleOrganisasjonerSelector,
-  (state) => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
-  (state) => behandlingsgrunnlagSelectors.SelvstendigArbeidForetakSelector(state),
+  (state) => mottatteOpplysningerSelectors.ForetakUtlandSelector(state),
+  (state) => mottatteOpplysningerSelectors.SelvstendigArbeidForetakSelector(state),
   (alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak) =>
     alleAvklarteVirksomhetFaktaer
       .map((virksomhet) => {

@@ -19,7 +19,7 @@ import * as Skjema from "../../../../felleskomponenter/skjema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
-import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { kontrollOperations } from "../../../../ducks/kontroll";
@@ -34,7 +34,7 @@ import { RepresentantformValues } from "./vurderingRepresentant";
 import "./vurderingVedtak.css";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 
-const { avtaleland } = MKV.Koder;
+const { trygdeavtale_myndighetsland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
 
 const mapStateToProps = (state: RootState) => ({
@@ -42,7 +42,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
-  soknadsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
+  soknadsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
   trygdeavgiftFormValues: formSelectors.VurderTrygdeavgiftFormSelector(state).values,
   skalBetaleTrygdeavgiftTilNorge: LonnsforholdErNorgeEllerDelt(state),
   skalBetaleTrygdeavgiftTilUtlandet: LonnsforholdErUtlandetEllerDelt(state),
@@ -81,7 +81,7 @@ interface Props {
   formValues: FormValuesProps;
   harFeilmeldinger: boolean;
   aktivtSteg: boolean;
-  validerBehandlingsgrunnlag: () => Promise<any>;
+  validerMottatteOpplysninger: () => Promise<any>;
 }
 
 const VurderingVedtak = ({
@@ -103,7 +103,7 @@ const VurderingVedtak = ({
   kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
-  validerBehandlingsgrunnlag,
+  validerMottatteOpplysninger,
   fattVedtak,
 }: Props & PropsFromRedux) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
@@ -294,7 +294,7 @@ const VurderingVedtak = ({
   const onSubmit = async () => {
     setVedtakPending(true);
 
-    validerBehandlingsgrunnlag()
+    validerMottatteOpplysninger()
       .then(() => {
         fattVedtak(behandlingID, lagFattVedtakFTRLReqDto()).then((res) => {
           if (res.data?.data?.error) {
@@ -305,7 +305,7 @@ const VurderingVedtak = ({
       .catch(() => setVedtakPending(false));
   };
 
-  const soknadslandErEtAvtaleland = avtaleland[soknadsland?.toString()] !== undefined;
+  const soknadslandErEtAvtaleland = trygdeavtale_myndighetsland[soknadsland?.toString()] !== undefined;
 
   const innledningFritekstHjelpetekst =
     "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: \n\n" +

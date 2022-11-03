@@ -8,6 +8,7 @@ import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import * as Api from "../../../services/api";
+import * as Utils from "../../../utils";
 
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
 import { useFeatureToggle } from "../../../featuretoggle";
@@ -57,6 +58,7 @@ const nullstillVerdier = (steg, endreFelt, feltNavn) => {
 
 export const skalViseSoknadsperiodeOgLand = (sakstype, sakstema, behandlingstema, behandlingstype) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
+  sakstema &&
   behandlingstema &&
   behandlingstype &&
   !skalViseTomFlytEllerErSedBehandling(sakstype, sakstema, behandlingstema, behandlingstype);
@@ -198,6 +200,14 @@ export const OpprettSak = (props) => {
 
   const visArbeidFlereLandEllerUkjent =
     valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
+  const disableSakstype =
+    behandleAlleSakerToggleEnabled &&
+    !Utils._isEmpty(formValues?.utenlandskTrygdemyndighetLandkode) &&
+    !KV.erKodeIListe(
+      formValues.utenlandskTrygdemyndighetLandkode,
+      MKV.Kodekombinasjoner.landSomErTrygdeavtaleMyndighetslandOgEuEøsLand
+    );
+
   return (
     <div className="opprettSak">
       <Skjema.Select
@@ -207,6 +217,7 @@ export const OpprettSak = (props) => {
         onChange={() => {
           if (behandleAlleSakerToggleEnabled) nullstillVerdier(feltNavn.sakstype, settFeltInnhold, feltNavn);
         }}
+        disabled={disableSakstype}
       >
         {(behandleAlleSakerToggleEnabled ? sakstyper : valgbareSakstyper).map((elem) => (
           <option key={elem.kode} value={elem.kode}>

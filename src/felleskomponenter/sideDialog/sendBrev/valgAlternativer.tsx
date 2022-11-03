@@ -2,6 +2,8 @@ import React from "react";
 import { DokumenterV2 } from "../../../services/api";
 import * as Skjema from "../../skjema";
 
+import "./valgAlternativer.css";
+
 interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
   feltKode: string;
@@ -9,21 +11,25 @@ interface ValgAlternativProps {
   changeField: (felt: string, data: any) => void;
 }
 
+const vannretteSeksjoner = ["DISTRIBUSJONSTYPE"];
+
 const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlternativProps) => {
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {
     return (
-      <>
-        {valg.valgAlternativer.map((alternativ) => (
-          <Skjema.Radio
-            feltNavn={`felt.${feltKode}.valg`}
-            label={alternativ.beskrivelse}
-            id={`${feltKode}.${alternativ.kode}`}
-            key={`${feltKode}.${alternativ.kode}`}
-            value={alternativ.beskrivelse}
-            disabled={!redigerbart}
-          />
-        ))}
-      </>
+      <div className="valgalternativer">
+        <div className={vannretteSeksjoner.includes(feltKode) ? "vannrett" : ""}>
+          {valg.valgAlternativer.map((alternativ) => (
+            <Skjema.Radio
+              feltNavn={`felt.${feltKode}.valg`}
+              label={alternativ.beskrivelse}
+              id={`${feltKode}.${alternativ.kode}`}
+              key={`${feltKode}.${alternativ.kode}`}
+              value={alternativ.beskrivelse}
+              disabled={!redigerbart}
+            />
+          ))}
+        </div>
+      </div>
     );
   }
   if (valg.valgType === DokumenterV2.ValgType.SELECT) {

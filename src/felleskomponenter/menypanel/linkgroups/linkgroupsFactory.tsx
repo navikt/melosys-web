@@ -22,13 +22,13 @@ const {
   YRKESAKTIV,
 } = MKV.Koder.behandlinger.behandlingstema;
 
-const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
+const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
 interface LinkGroupsConfig {
   sakstype: string;
   behandlingstema: string;
   behandlingstype: string;
-  behandlingsgrunnlagtype: string;
+  mottatteOpplysningerType: string;
   contentProps: ContentProps;
   sakstema: string;
 }
@@ -36,7 +36,7 @@ interface LinkGroupsConfig {
 class LinkGroupsFactory {
   static createLinkGroups({
     contentProps,
-    behandlingsgrunnlagtype,
+    mottatteOpplysningerType,
     sakstype,
     behandlingstema,
     behandlingstype,
@@ -54,12 +54,12 @@ class LinkGroupsFactory {
       case ARBEID_KUN_NORGE:
       case ARBEID_NORGE_BOSATT_ANNET_LAND: {
         const fraBruker = new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet();
-        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraBruker.addLonnOgGodtgjorelser();
+        if (mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraBruker.addLonnOgGodtgjorelser();
         fraBruker.addFullmektig();
-        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraBruker.addUtenlandsoppdraget();
+        if (mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraBruker.addUtenlandsoppdraget();
         else fraBruker.addPeriode();
         fraBruker.addArbeidssteder();
-        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) {
+        if (mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) {
           fraBruker.addOmVirksomhetenINorge();
           fraBruker.addOvrigOmArbeidstaker();
         }

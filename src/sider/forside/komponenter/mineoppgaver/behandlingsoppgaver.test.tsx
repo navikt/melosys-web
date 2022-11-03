@@ -1,5 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
+import * as redux from "react-redux";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 import { BehandlingOppgaver } from "./behandlingOppgaver";
 import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
@@ -53,12 +54,18 @@ describe("Behandlingsoppgaver", () => {
   };
 
   it("viser en OppgaverMedSortering for journalføringsoppgaver", () => {
+    const useDispatchSpy = jest.spyOn(redux, "useDispatch");
+    const mockDispatchFn = jest.fn();
+    useDispatchSpy.mockReturnValue(mockDispatchFn);
+
     // @ts-ignore
-    const saksbehandlingsOppgaver = shallow(<BehandlingOppgaver {...props} />);
+    const saksbehandlingsOppgaver = shallow(<BehandlingOppgaver dispatch={mockDispatchFn} {...props} />);
     const behandlingsOppgaver = saksbehandlingsOppgaver.find(SorterbarListe).first();
 
     const journalforingOppgaverProps = behandlingsOppgaver.props();
     expect(journalforingOppgaverProps.component).toBe(BehandlingOppgave);
     expect(journalforingOppgaverProps.elementer).toBe(props.mineSaker.saksbehandling);
+
+    useDispatchSpy.mockClear();
   });
 });

@@ -1,9 +1,9 @@
 import React from "react";
-import * as Nav from "../../navFrontend";
-import * as Mui from "../../felleskomponenter/ui";
-import * as Ikoner from "../../resources/images";
-import * as Utils from "../../utils";
-import * as Skjema from "../../felleskomponenter/skjema";
+import * as Nav from "../../../navFrontend";
+import * as Mui from "../../../felleskomponenter/ui";
+import * as Ikoner from "../../../resources/images";
+import * as Utils from "../../../utils";
+import * as Skjema from "../../../felleskomponenter/skjema";
 
 interface IdentOgNavnProps {
   tittel: string;

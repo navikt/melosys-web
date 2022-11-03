@@ -93,7 +93,7 @@ type EkstraArbeidsgiver = string;
 type Kode = string;
 type Term = string | null;
 
-type BehandlingsgrunnlagData =
+type MottatteOpplysningerData =
   | {
       arbeidsgiversBekreftelse: {
         arbeidsgiverBekrefterUtsendelse: Arbeidsgiverbekrefterutsendelse;
@@ -254,11 +254,11 @@ type BehandlingsgrunnlagData =
       representantIUtlandet: RepresentantIUtlandet | null;
     };
 
-export type BehandlingsgrunnlagReqDto = BehandlingsgrunnlagData;
+export type MottatteOpplysningerReqDto = MottatteOpplysningerData;
 
-export interface BehandlingsgrunnlagResDto {
+export interface MottatteOpplysningerResDto {
   mottaksdato: string | null;
-  data: BehandlingsgrunnlagData;
+  data: MottatteOpplysningerData;
   type: string;
 }
 interface Personopplysninger {
@@ -319,7 +319,7 @@ export interface Soeknadsland {
   landkoder: string[];
   erUkjenteEllerAlleEosLand: boolean;
 }
-interface Periode {
+export interface Periode {
   fom: string;
   tom: string | null;
 }

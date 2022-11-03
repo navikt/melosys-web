@@ -59,7 +59,7 @@ const Orgnrinput = ({
     <div>
       <EnkelFellesInputFnrDnrOrgnrSaksnr
         label={<Nav.Typo.Element>Organisasjonsnummer</Nav.Typo.Element>}
-        vedEndring={onChange}
+        onChange={onChange}
         value={orgnr}
         disabled={!redigerbart}
         bredde="fullbredde"

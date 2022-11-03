@@ -14,29 +14,29 @@ import MKV from "../../melosyskodeverk";
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-export const BehandlingsgrunnlagStatusSelector = createSelector(
-  (state) => state.behandlingsgrunnlag.status,
+export const MottatteOpplysningerStatusSelector = createSelector(
+  (state) => state.mottatteOpplysninger.status,
   (status) => status
 );
 
-export const BehandlingsgrunnlagSelector = createSelector(
-  (state) => state.behandlingsgrunnlag.data,
-  (behandlingsgrunnlag) => behandlingsgrunnlag
+export const MottatteOpplysningerSelector = createSelector(
+  (state) => state.mottatteOpplysninger.data,
+  (mottatteOpplysninger) => mottatteOpplysninger
 );
 
-export const BehandlingsgrunnlagtypeSelector = createSelector(
-  (state) => BehandlingsgrunnlagSelector(state),
-  (behandlingsgrunnlag) => behandlingsgrunnlag.type
+export const MottatteOpplysningerTypeSelector = createSelector(
+  (state) => MottatteOpplysningerSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.type
 );
 
-export const BehandlingsgrunnlagDataSelector = createSelector(
-  (state) => BehandlingsgrunnlagSelector(state),
-  (behandlingsgrunnlagState) => behandlingsgrunnlagState.data || {}
+export const MottatteOpplysningerDataSelector = createSelector(
+  (state) => MottatteOpplysningerSelector(state),
+  (mottatteOpplysningerState) => mottatteOpplysningerState.data || {}
 );
 
 export const ArbeidPaaLandSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlagData) => behandlingsgrunnlagData.arbeidPaaLand || {}
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysningerData) => mottatteOpplysningerData.arbeidPaaLand || {}
 );
 
 export const FysiskeArbeidsstederSelector = createSelector(
@@ -55,8 +55,8 @@ export const FysiskeArbeidsstederLandkoderSelector = createSelector(
 );
 
 export const ForetakUtlandSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlag) => behandlingsgrunnlag.foretakUtland || []
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.foretakUtland || []
 );
 
 const ForetakUtlandAdresseSelector = createSelector(
@@ -80,8 +80,8 @@ export const SelvstendigNaeringsvirksomhetUtlandSelector = createSelector(
 );
 
 export const JuridiskArbeidsgiverNorgeSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlag) => behandlingsgrunnlag.juridiskArbeidsgiverNorge || {}
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.juridiskArbeidsgiverNorge || {}
 );
 
 export const EkstraArbeidsgivereSelector = createSelector(
@@ -97,8 +97,8 @@ export const ValiderteEkstraArbeidsgivereSelector = createSelector(
 );
 
 export const SelvstendigArbeidSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlag) => behandlingsgrunnlag.selvstendigArbeid || {}
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.selvstendigArbeid || {}
 );
 
 export const SelvstendigArbeidForetakSelector = createSelector(
@@ -119,8 +119,8 @@ export const SelvstendigNaringsvirksomhetSelector = createSelector(
 );
 
 export const OppholdUtlandSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlag) => behandlingsgrunnlag.oppholdUtland || {}
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.oppholdUtland || {}
 );
 
 export const OppholdsLandSelector = createSelector(
@@ -141,8 +141,8 @@ export const OppholdUtlandPeriodeSelector = createSelector(
 );
 
 export const BostedSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlag) => behandlingsgrunnlag.bosted || {}
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.bosted || {}
 );
 
 export const BostedAdresseSelector = createSelector(
@@ -154,13 +154,13 @@ export const BostedAdresseSelector = createSelector(
 );
 
 export const ArbeidsgiversBekreftelseSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlag) => behandlingsgrunnlag.arbeidsgiversBekreftelse || {}
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.arbeidsgiversBekreftelse || {}
 );
 
 export const MaritimtArbeidSelector = createSelector(
-  BehandlingsgrunnlagDataSelector,
-  (behandlingsgrunnlag) => behandlingsgrunnlag.maritimtArbeid || []
+  MottatteOpplysningerDataSelector,
+  (mottatteOpplysninger) => mottatteOpplysninger.maritimtArbeid || []
 );
 
 export const SkipArbeidSelector = createSelector(MaritimtArbeidSelector, (maritimtArbeid) =>
@@ -172,13 +172,13 @@ export const OffshoreArbeidSelector = createSelector(MaritimtArbeidSelector, (ma
 );
 
 export const LuftfartBaserSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlag) => behandlingsgrunnlag.luftfartBaser || []
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.luftfartBaser || []
 );
 
 export const RepresentantIUtlandetSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlag) => behandlingsgrunnlag.representantIUtlandet
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.representantIUtlandet
 );
 
 export const HjemmebaserSelector = createSelector(LuftfartBaserSelector, (luftfartBaser) =>
@@ -186,8 +186,8 @@ export const HjemmebaserSelector = createSelector(LuftfartBaserSelector, (luftfa
 );
 
 export const SoknadslandSelector = createSelector(
-  BehandlingsgrunnlagDataSelector,
-  (behandlingsgrunnlag) => behandlingsgrunnlag.soeknadsland || {}
+  MottatteOpplysningerDataSelector,
+  (mottatteOpplysninger) => mottatteOpplysninger.soeknadsland || {}
 );
 
 export const SoknadslandkoderSelector = createSelector(
@@ -201,17 +201,17 @@ export const SoknadslandErUkjenteEllerAlleEosLandSelector = createSelector(
 );
 
 export const SoknadslandKTSelector = createSelector(SoknadslandkoderSelector, (soknadsland) =>
-  MKV.KTObjects.landkoder.filter((landkodeObjekt) => soknadsland.includes(landkodeObjekt.kode))
+  MKV.KTObjects.land_iso2.filter((landkodeObjekt) => soknadsland.includes(landkodeObjekt.kode))
 );
 
 export const TrygdedekningSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlag) => behandlingsgrunnlag.trygdedekning
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.trygdedekning
 );
 
 export const PeriodeSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlag) => behandlingsgrunnlag.periode || {}
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.periode || {}
 );
 
 export const PeriodeFomSelector = createSelector(
@@ -224,20 +224,25 @@ export const PeriodeTomSelector = createSelector(
   (soknadsperiode) => soknadsperiode.tom
 );
 
-export const HarPeriodeOgLandSelector = createSelector(
-  PeriodeFomSelector,
-  SoknadslandSelector,
-  (periodeFom, soeknadsland) => {
-    const harPeriode = periodeFom != null;
-    const harLand = !Utils._isEmpty(soeknadsland.landkoder) || soeknadsland.erUkjenteEllerAlleEosLand;
+export const HarPeriodeSelector = createSelector(
+  (state) => PeriodeFomSelector(state),
+  (periodeFom) => !Utils._isEmpty(periodeFom)
+);
 
-    return harPeriode && harLand;
-  }
+export const HarLandSelector = createSelector(
+  SoknadslandSelector,
+  (soeknadsland) => !Utils._isEmpty(soeknadsland.landkoder) || soeknadsland.erUkjenteEllerAlleEosLand
+);
+
+export const HarPeriodeOgLandSelector = createSelector(
+  HarPeriodeSelector,
+  HarLandSelector,
+  (harPeriode, harLand) => harPeriode && harLand
 );
 
 export const PersonOpplysningerSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlag) => behandlingsgrunnlag.personOpplysninger || {}
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.personOpplysninger || {}
 );
 
 export const MedfolgendeFamilieSelector = createSelector(
@@ -270,24 +275,24 @@ export const MedfolgendeEktefelleSamboerSelector = createSelector(
 );
 
 export const OvergangsregelbestemmelserSelector = createSelector(
-  BehandlingsgrunnlagDataSelector,
-  (behandlingsgrunnlagData) => behandlingsgrunnlagData.overgangsregelbestemmelser
+  MottatteOpplysningerDataSelector,
+  (mottatteOpplysningerData) => mottatteOpplysningerData.overgangsregelbestemmelser
 );
 
 export const YtterligereInformasjonSelector = createSelector(
-  BehandlingsgrunnlagDataSelector,
-  (behandlingsgrunnlagData) => behandlingsgrunnlagData.ytterligereInformasjon
+  MottatteOpplysningerDataSelector,
+  (mottatteOpplysningerData) => mottatteOpplysningerData.ytterligereInformasjon
 );
 
 export const MottaksdatoSelector = createSelector(
-  (state) => BehandlingsgrunnlagSelector(state),
-  (behandlingsgrunnlagData) => behandlingsgrunnlagData.mottaksdato || ""
+  (state) => MottatteOpplysningerSelector(state),
+  (mottatteOpplysningerData) => mottatteOpplysningerData.mottaksdato || ""
 );
 
 export const LonnOgGodtgjorelseSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlagData) =>
-    behandlingsgrunnlagData.loennOgGodtgjoerelse || {
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysningerData) =>
+    mottatteOpplysningerData.loennOgGodtgjoerelse || {
       norskArbgUtbetalerLoenn: null,
       erArbeidstakerAnsattHelePerioden: null,
       utlArbgUtbetalerLoenn: null,
@@ -302,14 +307,14 @@ export const LonnOgGodtgjorelseSelector = createSelector(
 );
 
 export const ArbeidssituasjonOgOevrigSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlagData) => behandlingsgrunnlagData.arbeidssituasjonOgOevrig || {}
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysningerData) => mottatteOpplysningerData.arbeidssituasjonOgOevrig || {}
 );
 
 export const UtenlandsoppdragetSelector = createSelector(
-  (state) => BehandlingsgrunnlagDataSelector(state),
-  (behandlingsgrunnlagData) =>
-    behandlingsgrunnlagData.utenlandsoppdraget || {
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysningerData) =>
+    mottatteOpplysningerData.utenlandsoppdraget || {
       erUtsendelseForOppdragIUtlandet: null,
       erAnsattForOppdragIUtlandet: null,
       erFortsattAnsattEtterOppdraget: null,

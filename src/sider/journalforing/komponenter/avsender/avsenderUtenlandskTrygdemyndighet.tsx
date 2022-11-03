@@ -5,6 +5,8 @@ import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 
 import MKV from "../../../../melosyskodeverk";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { sorterLandOgGjørOmTilStoreForbokstaver } from "../../../../utils/land";
 
 type AvsenderUtenlandskTrygdemyndighetProps = {
   utenlandskTrygdemyndighetLandkode?: string;
@@ -14,25 +16,35 @@ type AvsenderUtenlandskTrygdemyndighetProps = {
 const AvsenderUtenlandskTrygdemyndighet = ({
   utenlandskTrygdemyndighetLandkode,
   fullmektigLandEndret,
-}: AvsenderUtenlandskTrygdemyndighetProps) => (
-  <div className="avsender">
-    <Skjema.LandVelger
-      feltNavn="utenlandskTrygdemyndighetLandkode"
-      label="Land"
-      // @ts-ignore
-      onChange={fullmektigLandEndret}
-      className="avsender__input"
-      bredde="XL"
-    />
-    <div className="avsender__navn">
-      <Nav.Typo.Element className="avsender__navn__label">Avsender:</Nav.Typo.Element>
-      {utenlandskTrygdemyndighetLandkode && (
-        <Nav.Typo.Normaltekst>
-          Trygdemyndighet i {KV.kodeTilTerm(utenlandskTrygdemyndighetLandkode, MKV.KTObjects.landkoder)}
-        </Nav.Typo.Normaltekst>
-      )}
+}: AvsenderUtenlandskTrygdemyndighetProps) => {
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
+
+  const landkoderTilUtenlandskTrygdemyndighet =
+    behandleAlleSakerToggle === "enabled"
+      ? sorterLandOgGjørOmTilStoreForbokstaver(MKV.Kodekombinasjoner.unikeAvtaleland)
+      : MKV.KTObjects.landkoder;
+
+  return (
+    <div className="avsender">
+      <Skjema.LandVelger
+        feltNavn="utenlandskTrygdemyndighetLandkode"
+        label="Land"
+        // @ts-ignore
+        onChange={fullmektigLandEndret}
+        className="avsender__input"
+        bredde="XL"
+        landkoder={landkoderTilUtenlandskTrygdemyndighet}
+      />
+      <div className="avsender__navn">
+        <Nav.Typo.Element className="avsender__navn__label">Avsender:</Nav.Typo.Element>
+        {utenlandskTrygdemyndighetLandkode && (
+          <Nav.Typo.Normaltekst>
+            Trygdemyndighet i {KV.kodeTilTerm(utenlandskTrygdemyndighetLandkode, landkoderTilUtenlandskTrygdemyndighet)}
+          </Nav.Typo.Normaltekst>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default AvsenderUtenlandskTrygdemyndighet;

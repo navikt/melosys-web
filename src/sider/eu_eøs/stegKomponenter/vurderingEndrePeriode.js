@@ -19,7 +19,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { behandlingsgrunnlagOperations } from "../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations } from "../../../ducks/mottatteOpplysninger";
 
 import * as Api from "../../../services/api";
 
@@ -340,7 +340,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  oppdaterPeriode: (periode) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
+  oppdaterPeriode: (periode) => dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingEndrePeriode);

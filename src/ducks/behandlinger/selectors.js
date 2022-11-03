@@ -11,7 +11,7 @@ import moment from "moment/moment";
 import MKV from "../../melosyskodeverk";
 import { datoDiff } from "../../utils/dato";
 import * as KV from "../../kodeverk";
-import * as behandlingsgrunnlagSelectors from "../behandlingsgrunnlag/selectors";
+import * as mottatteOpplysningerSelectors from "../mottatteOpplysninger/selectors";
 import * as Utils from "../../utils";
 import * as lovvalgsperioderSelectors from "../lovvalgsperioder/selectors";
 import { SakstypeKodeSelector } from "../fagsaker/selectors";
@@ -269,9 +269,9 @@ export const ArbeidsforholdeneSelector = createSelector(
 
 export const AlleVirksomheterSelector = createSelector(
   (state) => ArbeidsforholdeneSelector(state),
-  (state) => behandlingsgrunnlagSelectors.SelvstendigNaringsvirksomhetSelector(state),
-  (state) => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
-  (state) => behandlingsgrunnlagSelectors.ValiderteEkstraArbeidsgivereSelector(state),
+  (state) => mottatteOpplysningerSelectors.SelvstendigNaringsvirksomhetSelector(state),
+  (state) => mottatteOpplysningerSelectors.ForetakUtlandSelector(state),
+  (state) => mottatteOpplysningerSelectors.ValiderteEkstraArbeidsgivereSelector(state),
   (arbeidsforholdene, selvstendigNaringsvirksomhet, foretakUtland, ekstraArbeidsgivere) => {
     const virksomhetsListe = [];
     arbeidsforholdene.forEach((arbeidsforhold) => {
@@ -335,7 +335,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   OrganisasjonerSelector,
   ArbeidsforholdeneSelector,
   InntekterPrAarMaanedSelector,
-  behandlingsgrunnlagSelectors.PeriodeSelector,
+  mottatteOpplysningerSelectors.PeriodeSelector,
   LovvalgsperiodeSelector,
   (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode, sedLovvalgsperiode) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode

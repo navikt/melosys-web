@@ -24,8 +24,8 @@ class Start extends Steg {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
       oppdater: propsLight.tilgjengeligeHandlers.oppdater,
       tilForsiden: propsLight.tilgjengeligeHandlers.tilForsiden,
-      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger:
-        propsLight.tilgjengeligeHandlers.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+      lagreMottatteOpplysningerOgOppfriskSaksopplysninger:
+        propsLight.tilgjengeligeHandlers.lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
     };
     this.status = FANE_STATUS.OK;
   }

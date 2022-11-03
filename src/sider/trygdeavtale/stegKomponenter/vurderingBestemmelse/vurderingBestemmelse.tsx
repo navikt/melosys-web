@@ -5,10 +5,10 @@ import { Action } from "redux";
 import { change, getFormValues, reduxForm, untouch } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import parse from "html-react-parser";
 
 import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
+import MKV from "../../../../melosyskodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
@@ -21,6 +21,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
+import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -61,7 +62,7 @@ interface Props {
 }
 
 const VurderingBestemmelse = ({
-  data: { vedtakValg, innvilgelseValg, bestemmelseValg, bestemmelseTekst },
+  data: { vedtakValg, innvilgelseValg, bestemmelseValg },
   formIsValid,
   formValues,
   fortsett,
@@ -84,6 +85,12 @@ const VurderingBestemmelse = ({
   }, [formValues]);
 
   if (!formValues) return null;
+
+  const usaBestemmelserEndaIkkeStøttet = [
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_usa.USA_ART5_1,
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_usa.USA_ART5_9,
+  ];
+
   return (
     <div className="vurderingBestemmelse">
       <Nav.Typo.Undertittel className="undertittel">Bestemmelse og vurdering</Nav.Typo.Undertittel>
@@ -130,24 +137,24 @@ const VurderingBestemmelse = ({
                 emptyFieldText="Velg"
                 emptyFieldDisabled={!!formValues.bestemmelse}
               >
-                {bestemmelseValg?.map((bestemmelse: KTObject) => (
-                  <option key={bestemmelse.kode} value={bestemmelse.kode}>
-                    {bestemmelse.term}
-                  </option>
-                ))}
+                {bestemmelseValg
+                  ?.filter((bestemmelse: KTObject) => !usaBestemmelserEndaIkkeStøttet.includes(bestemmelse.kode))
+                  .map((bestemmelse: KTObject) => (
+                    <option key={bestemmelse.kode} value={bestemmelse.kode}>
+                      {bestemmelse.term}
+                    </option>
+                  ))}
               </Skjema.Select>
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
       )}
 
-      {bestemmelseTekst && (
-        <Nav.Row>
-          <Nav.Column xs="10" className="bestemmelseTekst">
-            <div>{parse(bestemmelseTekst)}</div>
-          </Nav.Column>
-        </Nav.Row>
-      )}
+      <Nav.Row>
+        <Nav.Column xs="10" className="bestemmelseTekst">
+          <BestemmelseHjelpetekst bestemmelse={formValues.bestemmelse} />
+        </Nav.Column>
+      </Nav.Row>
 
       <Mui.StegKnapper
         bekreftKnappProps={{

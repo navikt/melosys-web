@@ -83,7 +83,7 @@ const SoeknadslandPropType = PT.shape({
   landkoder: PT.arrayOf(PT.string),
 });
 
-const BehandlingsgrunnnlagDataPropType = PT.shape({
+const MottatteOpplysningerDataPropType = PT.shape({
   juridiskArbeidsgiverNorge: JuridiskArbeidsgiverNorgePropType,
   arbeidPaaLand: ArbeidPaaLandPropType,
   bosted: BostedPropType,
@@ -96,9 +96,9 @@ const BehandlingsgrunnnlagDataPropType = PT.shape({
   soeknadsland: SoeknadslandPropType,
 });
 
-const BehandlingsgrunnlagPropType = PT.shape({
-  data: BehandlingsgrunnnlagDataPropType,
+const MottatteOpplysningerPropType = PT.shape({
+  data: MottatteOpplysningerDataPropType,
   type: PT.string,
 });
 
-export { BehandlingsgrunnlagPropType as Behandlingsgrunnlag };
+export { MottatteOpplysningerPropType as MottatteOpplysninger };

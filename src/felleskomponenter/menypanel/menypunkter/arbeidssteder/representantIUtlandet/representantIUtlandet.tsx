@@ -13,11 +13,11 @@ import EditerbartElement, { Status } from "../../editerbartElement";
 import RedigeringUtfort from "./redigeringUtfort";
 import Redigerer from "./redigerer";
 import IngenDataRender from "./ingenDataRender";
-import { behandlingsgrunnlagSelectors } from "../../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 
 const mapStateToProps = (state: RootState) => ({
-  behandlingsgrunnlagFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
-  soknadsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
+  mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
+  soknadsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
@@ -35,7 +35,7 @@ const InnerRepresentantIUtlandet = (props: InnerRepresentantIUtlandetProps) => {
   const {
     redigerbart,
     soknadsland,
-    behandlingsgrunnlagFeilmeldinger,
+    mottatteOpplysningerFeilmeldinger,
     initializeRepresentantIUtlandet,
     input: { value, onChange },
   } = props;
@@ -57,7 +57,7 @@ const InnerRepresentantIUtlandet = (props: InnerRepresentantIUtlandetProps) => {
       tittelUnderstrek
       redigerbart={redigerbart}
       onBinClick={slettRepresentantIUtlandet}
-      onLagreClick={() => Utils._isEmpty(behandlingsgrunnlagFeilmeldinger)}
+      onLagreClick={() => Utils._isEmpty(mottatteOpplysningerFeilmeldinger)}
       harData={value.representantNavn || value.representantNavn === ""}
       redigererRender={() => <Redigerer redigerbart={redigerbart} />}
       redigeringUtfortRender={() => <RedigeringUtfort adresselinjer={value.adresselinjer} soknadsland={soknadsland} />}

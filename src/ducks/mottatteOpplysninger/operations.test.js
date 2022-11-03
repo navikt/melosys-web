@@ -12,7 +12,7 @@ const { NO, DK } = MKV.Koder.landkoder;
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe("Behandlingsgrunnlag operations", () => {
+describe("MottatteOpplysninger operations", () => {
   let initialState = null;
 
   beforeEach(() => {
@@ -39,7 +39,7 @@ describe("Behandlingsgrunnlag operations", () => {
           },
         },
       },
-      behandlingsgrunnlag: {
+      mottatteOpplysninger: {
         data: {
           data: {
             juridiskArbeidsgiverNorge: {},
@@ -91,7 +91,7 @@ describe("Behandlingsgrunnlag operations", () => {
 
       expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
-        "/api/behandlingsgrunnlag/4",
+        "/api/mottatteopplysninger/4",
         expect.objectContaining({
           body: JSON.stringify({
             data: {
@@ -127,7 +127,7 @@ describe("Behandlingsgrunnlag operations", () => {
       };
 
       const expectedActions = [
-        { type: types.OPPDATER_BEHANDLINGSGRUNNLAG, dokument: { overgangsregelbestemmelser: [] } },
+        { type: types.OPPDATER_MOTTATTE_OPPLYSNINGER, dokument: { overgangsregelbestemmelser: [] } },
         { type: types.PENDING },
         { type: types.OK, data: {} },
       ];
@@ -138,7 +138,7 @@ describe("Behandlingsgrunnlag operations", () => {
 
       expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
-        "/api/behandlingsgrunnlag/4",
+        "/api/mottatteopplysninger/4",
         expect.objectContaining({
           body: JSON.stringify({
             data: {
@@ -173,7 +173,7 @@ describe("Behandlingsgrunnlag operations", () => {
 
       expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
-        "/api/behandlingsgrunnlag/4",
+        "/api/mottatteopplysninger/4",
         expect.objectContaining({
           body: JSON.stringify({
             data: {
@@ -209,7 +209,7 @@ describe("Behandlingsgrunnlag operations", () => {
 
       expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
-        "/api/behandlingsgrunnlag/4",
+        "/api/mottatteopplysninger/4",
         expect.objectContaining({
           body: JSON.stringify({
             data: {
@@ -246,7 +246,7 @@ describe("Behandlingsgrunnlag operations", () => {
   });
 
   describe("hent", () => {
-    it("henter behandlingsgrunnlag og lager OK action", async () => {
+    it("henter mottatteOpplysninger og lager OK action", async () => {
       const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 
       const store = mockStore(initialState);
@@ -254,7 +254,7 @@ describe("Behandlingsgrunnlag operations", () => {
       await store.dispatch(operations.hent(4));
 
       expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenLastCalledWith("/api/behandlingsgrunnlag/4", expect.anything());
+      expect(fetch).toHaveBeenLastCalledWith("/api/mottatteopplysninger/4", expect.anything());
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -298,14 +298,14 @@ describe("Behandlingsgrunnlag operations", () => {
   });
 
   describe("oppdaterState", () => {
-    it("lager OPPDATER_BEHANDLINGSGRUNNLAG action", () => {
+    it("lager OPPDATER_MOTTATTE_OPPLYSNINGER action", () => {
       initialState.form[KV.Form.SOKNAD].values = {
         arbeidsforholdUtland: {},
         soknadsland: [DK],
       };
       const expectedActions = [
         {
-          type: types.OPPDATER_BEHANDLINGSGRUNNLAG,
+          type: types.OPPDATER_MOTTATTE_OPPLYSNINGER,
           dokument: {
             arbeidsforholdUtland: {},
             soknadsland: [DK],

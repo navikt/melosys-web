@@ -26,13 +26,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type PersonProps = PropsFromRedux & {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
-  visBehandlingsgrunnlagData: boolean;
+  visMottatteOpplysningerData: boolean;
 };
 
 export const Person = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
-  visBehandlingsgrunnlagData,
+  visMottatteOpplysningerData,
   behandlingID,
 }: PersonProps) => (
   <div className="person">
@@ -60,7 +60,7 @@ export const Person = ({
         <Adresser behandlingID={behandlingID} />
       </Nav.Column>
     </Nav.Row>
-    {visBehandlingsgrunnlagData && (
+    {visMottatteOpplysningerData && (
       <>
         <Nav.Row>
           <Nav.Column className="etikett__container">

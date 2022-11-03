@@ -13,20 +13,20 @@ import EditerbartElement, { Status } from "../editerbartElement";
 import { EditerbareUtenlandsoppdragetSporsmal, IkkeEditerbareUtenlandsoppdragetSporsmal } from "./sporsmal";
 import Tittellinje from "./tittellinje";
 
-import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors, mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
 
 import MKV from "../../../../melosyskodeverk";
 
 import "./utenlandsoppdraget.css";
 
-const { SØKNAD_FOLKETRYGDEN } = MKV.Koder.behandlingsgrunnlagtyper;
+const { SØKNAD_FOLKETRYGDEN } = MKV.Koder.mottatteopplysningertyper;
 
 const mapStateToProps = (state: RootState) => ({
-  behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+  mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
+  oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -42,11 +42,11 @@ export const Utenlandsoppdraget = ({
   visArbeidsforholdRolleEtiketter,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
-  oppdaterBehandlingsgrunnlag,
-  behandlingsgrunnlagtype,
+  oppdaterMottatteOpplysninger,
+  mottatteOpplysningerType,
 }: UtenlandsoppdragetProps) => {
   const lagreHandler = () => {
-    oppdaterBehandlingsgrunnlag();
+    oppdaterMottatteOpplysninger();
     return true;
   };
 
@@ -64,9 +64,12 @@ export const Utenlandsoppdraget = ({
             tittel={KV.Menypunkter.Utenlandsoppdraget.undertitler.periode}
           />
         </Nav.Column>
-        {behandlingsgrunnlagtype !== SØKNAD_FOLKETRYGDEN && (
+        {mottatteOpplysningerType !== SØKNAD_FOLKETRYGDEN && (
           <Nav.Column xs="6">
-            <Soknadslandvelger redigerbart={redigerbart} />
+            <Soknadslandvelger
+              redigerbart={redigerbart}
+              lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+            />
           </Nav.Column>
         )}
       </Nav.Row>

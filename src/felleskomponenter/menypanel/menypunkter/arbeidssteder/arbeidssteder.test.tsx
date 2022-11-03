@@ -47,11 +47,11 @@ describe("Arbeidssteder", () => {
       expect(arbeidsstederPaaLand.props().ingenDataKomponent).toBeUndefined();
     });
 
-    it("rendres med spørsmål fra altinn-søknad dersom behandlingsgrunnlagtype tilsvarer altinn-søknad", () => {
+    it("rendres med spørsmål fra altinn-søknad dersom mottatteOpplysningerType tilsvarer altinn-søknad", () => {
       props.soknadsland = {
         erUkjenteEllerAlleEosLand: false,
       };
-      props.behandlingsgrunnlagtype = MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+      props.mottatteOpplysningerType = MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
       const arbeidssteder = shallow(<Arbeidssteder {...props} />);
       const arbeidsstederPaaLand = arbeidssteder.findWhere(
         (n) => n.type() === EditerbartElementListe && n.props().feltNavn === "arbeidPaaLand.fysiskeArbeidssteder"

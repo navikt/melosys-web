@@ -48,26 +48,24 @@ const skalViseForvaltningsmelding = (formValues, toggleEnabled) => {
   );
 };
 
-export const JournalforingForm = (props) => {
-  const {
-    journalpostID,
-    hoveddokumentID,
-    vedlegg,
-    fagsakListe,
-    formValues,
-    formErrors,
-    submitFailed,
-    settFeltInnhold,
-    settJournalforingHensikt,
-    avbrytJournalforing,
-    submitSpinner,
-    kanSubmittes,
-    handleSubmit,
-    behandleAlleSakerToggleEnabled,
-    landkoder,
-  } = props;
-
+export const JournalforingForm = ({
+  journalpostID,
+  hoveddokumentID,
+  vedlegg,
+  fagsakListe,
+  formValues,
+  formErrors,
+  submitFailed,
+  settFeltInnhold,
+  settJournalforingHensikt,
+  avbrytJournalforing,
+  submitSpinner,
+  handleSubmit,
+  behandleAlleSakerToggleEnabled,
+  landkoder,
+}) => {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, behandleAlleSakerToggleEnabled);
+  const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
@@ -78,19 +76,21 @@ export const JournalforingForm = (props) => {
     <form onSubmit={handleSubmit} className="journalforingform">
       <Informasjon journalpostID={journalpostID} dokumentID={hoveddokumentID} vedlegg={vedlegg} />
 
-      <Komponent
-        ikon={Ikoner.Links}
-        tittel="Knytt til eksisterende sak eller opprett ny sak"
-        innhold={
-          <FagsakVelger
-            fagsakListe={fagsakListe}
-            settJournalforingHensikt={settJournalforingHensikt}
-            behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
-            landkoder={landkoder}
-            formValues={formValues}
-          />
-        }
-      />
+      {visFagsakVelger && (
+        <Komponent
+          ikon={Ikoner.Links}
+          tittel="Knytt til eksisterende sak eller opprett ny sak"
+          innhold={
+            <FagsakVelger
+              fagsakListe={fagsakListe}
+              settJournalforingHensikt={settJournalforingHensikt}
+              behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
+              landkoder={landkoder}
+              formValues={formValues}
+            />
+          }
+        />
+      )}
 
       {visForvaltningsmelding && (
         <Komponent
@@ -109,7 +109,7 @@ export const JournalforingForm = (props) => {
                 {Utils.feilmelding.syncErrorsTilFeilmelding(formErrors)}
               </Nav.AlertStripeFeil>
             )}
-            <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
+            <Fotknapper avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
           </>
         }
       />
@@ -130,7 +130,6 @@ JournalforingForm.propTypes = {
   submitSpinner: PT.bool.isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
-  kanSubmittes: PT.bool.isRequired,
   handleSubmit: PT.func.isRequired,
   behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -178,7 +177,6 @@ const mapStateToProps = (state, ownProps) => ({
     journalforingSoknadsland: [],
     journalforingSoknadslandUkjenteEllerAlleEosLand: false,
     sakstype: ownProps.behandleAlleSakerToggleEnabled ? null : MKV.Koder.sakstyper.EU_EOS,
-    opprettBehandling: true,
     opprettnysak_behandlingstema: ownProps.behandleAlleSakerToggleEnabled
       ? null
       : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
@@ -206,6 +204,7 @@ const form = {
         erAvsenderPreutfylt: props.erAvsenderPreutfylt,
         behandleAlleSakerToggleEnabled: props.behandleAlleSakerToggleEnabled,
         registeredFields: props.registeredFields,
+        journalforingKnappErTryktPå: Boolean(values.journalforingHensikt),
       },
     };
 

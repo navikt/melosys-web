@@ -21,7 +21,7 @@ Nav.Modal.setAppElement(document.getElementById("root"));
 const Modals = ({
   skjulOppfriskModalOgNavigerTilForside,
   visOppfriskDialog,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
   skjulOppfriskModal,
   lukkOppfriskModal,
   visHenleggDialog,
@@ -46,7 +46,7 @@ const Modals = ({
   <Fragment>
     {visOppfriskDialog && (
       <DialogboksOppfriskSak
-        oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
+        oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
         avbryt={skjulOppfriskModal}
         lukk={lukkOppfriskModal}
         tilForsiden={skjulOppfriskModalOgNavigerTilForside}
@@ -80,7 +80,7 @@ const Modals = ({
 Modals.propTypes = {
   skjulOppfriskModalOgNavigerTilForside: PT.func.isRequired,
   visOppfriskDialog: PT.bool.isRequired,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger: PT.func.isRequired,
   skjulOppfriskModal: PT.func.isRequired,
   lukkOppfriskModal: PT.func.isRequired,
   visHenleggDialog: PT.bool.isRequired,

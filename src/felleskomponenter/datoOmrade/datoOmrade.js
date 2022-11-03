@@ -88,8 +88,12 @@ export const DatoOmradeDescription = ({ periode, label }) =>
     </Fragment>
   ) : null;
 
+DatoOmradeDescription.defaultProps = {
+  periode: {},
+};
+
 DatoOmradeDescription.propTypes = {
-  periode: MPT.Periode.isRequired,
+  periode: MPT.Periode,
   label: PT.string.isRequired,
 };
 

@@ -12,7 +12,7 @@ import * as Utils from "../../../../utils";
 import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../skjema";
 
-import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
 import { BOOLSK_STRING } from "../../../../constants";
 import EditerbartElement, { Status } from "../editerbartElement";
 
@@ -307,7 +307,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
+  oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -321,13 +321,13 @@ type LonnOgGodtgjorelserProps = {
 const LonnOgGodtgjorelser = connector(
   ({
     redigerbart,
-    oppdaterBehandlingsgrunnlag,
+    oppdaterMottatteOpplysninger,
     lonnOgNaturalytelser,
     arbeidsgiveravgiftOgTrygdeavgift,
     visArbeidsforholdRolleEtiketter,
   }: PropsFromRedux & LonnOgGodtgjorelserProps) => {
     const lagreHandler = () => {
-      oppdaterBehandlingsgrunnlag();
+      oppdaterMottatteOpplysninger();
       return true;
     };
 

@@ -360,7 +360,7 @@ export const VurderingArtikkel16Vedtak = ({
   kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
-  validerBehandlingsgrunnlag,
+  validerMottatteOpplysninger,
   fattVedtak,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -439,7 +439,7 @@ export const VurderingArtikkel16Vedtak = ({
 
     setVedtakPending(true);
 
-    validerBehandlingsgrunnlag()
+    validerMottatteOpplysninger()
       .then(() => {
         fattVedtak(behandlingID, lagFattVedtakEOSReqDto()).then((res) => {
           if (res.data?.data?.error) {
@@ -587,7 +587,7 @@ VurderingArtikkel16Vedtak.propTypes = {
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
-  validerBehandlingsgrunnlag: PT.func.isRequired,
+  validerMottatteOpplysninger: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
 };
 

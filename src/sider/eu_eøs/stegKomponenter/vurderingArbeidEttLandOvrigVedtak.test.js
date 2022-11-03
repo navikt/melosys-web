@@ -34,17 +34,17 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
       form: KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK,
       handleSubmit: jest.fn(),
-      behandlingsgrunnlagFom: "",
-      behandlingsgrunnlagTom: "",
+      mottatteOpplysningerFom: "",
+      mottatteOpplysningerTom: "",
       soknadsperiode: { tom: "", fom: "" },
       harFeilmeldinger: false,
       kontrollerFerdigbehandling: jest.fn(),
-      validerBehandlingsgrunnlag: jest.fn().mockImplementationOnce(() => Promise.resolve()),
+      validerMottatteOpplysninger: jest.fn().mockImplementationOnce(() => Promise.resolve()),
       fattVedtak: jest.fn(),
     };
   });
 
-  test("validerBehandlingsgrunnlag kalles ved submit av form", async () => {
+  test("validerMottatteOpplysninger kalles ved submit av form", async () => {
     props.formValues.forkortLovvalgsperiode = false;
     props.formValues.vedtaksbrevFritekst = "vedtaksbrevfritekst";
     props.formValues.fritekstSed = "fritekst til SED";
@@ -59,7 +59,7 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
 
     await form.props().onSubmit();
 
-    expect(props.validerBehandlingsgrunnlag).toHaveBeenCalledTimes(1);
+    expect(props.validerMottatteOpplysninger).toHaveBeenCalledTimes(1);
     expect(props.fattVedtak).toHaveBeenCalledTimes(1);
     expect(props.fattVedtak).toHaveBeenLastCalledWith(4, {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,

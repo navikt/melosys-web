@@ -10,7 +10,7 @@ import * as Api from "../services/api";
 
 import { fagsakSelectors } from "../ducks/fagsaker";
 import { datalastingOperations } from "../ducks/datalasting";
-import { behandlingsgrunnlagOperations } from "../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations } from "../ducks/mottatteOpplysninger";
 import { oppgaverOperations } from "../ducks/oppgaver";
 import { vedtakOperations } from "../ducks/vedtak";
 import { saksopplysningerOperations } from "../ducks/saksopplysninger";
@@ -31,7 +31,7 @@ const FellesHandlersProviderUnconnected = ({
   tilbakeleggeOppgave,
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
-  lagreBehandlingsgrunnlag,
+  lagreMottatteOpplysninger,
   saksnummer,
   sakstype,
   avslaaSoknad,
@@ -61,9 +61,9 @@ const FellesHandlersProviderUnconnected = ({
     return apolloClient.refetchQueries({ include: "active" });
   };
 
-  const lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger = async () => {
+  const lagreMottatteOpplysningerOgOppfriskSaksopplysninger = async () => {
     await leggTilBehandlingOppfriskes(behandlingID);
-    await lagreBehandlingsgrunnlag();
+    await lagreMottatteOpplysninger();
     await oppfriskSaksopplysninger(behandlingID);
     await oppfriskGraphQLSaksopplysninger();
     await fjernBehandlingOppfriskes();
@@ -178,7 +178,7 @@ const FellesHandlersProviderUnconnected = ({
       avslaaSoknadHandle,
       avsluttSakSomBortfalt,
       ferdigbehandleSak,
-      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+      lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
       venterPaRevurderFagsak,
       behandlingOppfriskes,
@@ -201,7 +201,7 @@ const FellesHandlersProviderUnconnected = ({
       henleggHandle,
       avslaaSoknadHandle,
       avsluttSakSomBortfalt,
-      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+      lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
       venterPaRevurderFagsak,
       behandlingOppfriskes,
@@ -221,7 +221,7 @@ FellesHandlersProviderUnconnected.propTypes = {
   tilbakeleggeOppgave: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
-  lagreBehandlingsgrunnlag: PT.func.isRequired,
+  lagreMottatteOpplysninger: PT.func.isRequired,
   saksnummer: PT.string,
   sakstype: PT.string,
   avslaaSoknad: PT.func.isRequired,
@@ -262,7 +262,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
-  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+  lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) =>
     oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   avslaaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaaSoknad(behandlingID, data)),

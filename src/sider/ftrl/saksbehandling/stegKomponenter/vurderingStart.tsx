@@ -15,7 +15,7 @@ import * as KV from "../../../../kodeverk";
 
 import DialogboksOppfriskSak from "../../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
@@ -27,16 +27,16 @@ import "./vurderingStart.css";
 const landHarTrygdeavtaleMedNorgeEllerErEosLand = (landKode: string) => {
   const landMedTrygdeAvtaleEllerEosLand = [
     ...MKV.KTObjects.landkoder.map((land: KTObject) => land.kode),
-    ...MKV.KTObjects.avtaleland.map((land: KTObject) => land.kode),
+    ...MKV.KTObjects.trygdeavtale_myndighetsland.map((land: KTObject) => land.kode),
   ];
 
   return landMedTrygdeAvtaleEllerEosLand.includes(landKode);
 };
 
 const mapStateToProps = (state: RootState) => {
-  const initialSoknadsperiode = behandlingsgrunnlagSelectors.PeriodeSelector(state);
-  const initialSoeknadsland = behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state);
-  const initialTrygdedekning = behandlingsgrunnlagSelectors.TrygdedekningSelector(state);
+  const initialSoknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(state);
+  const initialSoeknadsland = mottatteOpplysningerSelectors.SoknadslandkoderSelector(state);
+  const initialTrygdedekning = mottatteOpplysningerSelectors.TrygdedekningSelector(state);
   return {
     trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
     formValues: getFormValues(KV.Form.START)(state),
@@ -53,11 +53,11 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   oppdaterPeriode: (periode: { fom: string; tom: string }) =>
-    dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
+    dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
   oppdaterSoeknadslandkoder: (landkoder: string[]) =>
-    dispatch(behandlingsgrunnlagOperations.oppdaterSoeknadsland(landkoder, false)),
+    dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(landkoder, false)),
   oppdaterTrygdedekning: (trygdedekning: string | undefined) =>
-    dispatch(behandlingsgrunnlagOperations.oppdaterTrygdedekning(trygdedekning)),
+    dispatch(mottatteOpplysningerOperations.oppdaterTrygdedekning(trygdedekning)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -78,7 +78,7 @@ interface Props {
   oppdaterData: (avklartefakta: any) => void;
   formValues: FormValuesProp;
   tilForsiden: () => void;
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => void;
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger: () => void;
   annenBehandlingOppfriskes: boolean;
 }
 
@@ -93,7 +93,7 @@ export const VurderingStart = ({
   formIsValid,
   initialValues,
   tilForsiden,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
   annenBehandlingOppfriskes,
   visMenypanel,
 }: Props & PropsFromRedux) => {
@@ -110,7 +110,7 @@ export const VurderingStart = ({
     }
   }, []);
 
-  const oppdaterLokalBehandlingsgrunnlag = async (data: { formValues: FormValuesProp; formIsValid: boolean }) => {
+  const oppdaterLokalMottatteOpplysninger = async (data: { formValues: FormValuesProp; formIsValid: boolean }) => {
     const fom = Utils.dato.formatterDatoTilISO(data.formValues.fom);
     const tom = Utils.dato.formatterDatoTilISO(data.formValues.tom);
     await Promise.all([
@@ -120,7 +120,7 @@ export const VurderingStart = ({
     ]);
   };
 
-  const debouncedOppdatering = useCallback(Utils._debounce(oppdaterLokalBehandlingsgrunnlag, 500), []);
+  const debouncedOppdatering = useCallback(Utils._debounce(oppdaterLokalMottatteOpplysninger, 500), []);
 
   useEffect(() => {
     if (redigerbart) debouncedOppdatering({ formValues, formIsValid });
@@ -201,7 +201,7 @@ export const VurderingStart = ({
 
       {visOppfrisk && (
         <DialogboksOppfriskSak
-          oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
+          oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
             setVisOppfrisk(false);
