@@ -270,6 +270,7 @@ const OpprettNySak = ({
     nullstillFelt("periodeTilOgMed");
     nullstillFelt("soknadslandUkjenteEllerAlleEosLand");
     nullstillFelt("soknadsland", []);
+    setVisFeilmeldinger(false);
   };
 
   const hovedpartErBruker = hovedpart === BRUKER;
