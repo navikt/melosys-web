@@ -11,11 +11,12 @@ export const msalConfig = {
   system: {},
 };
 
-// TODO: Legg til trygdeavtale scope, fjern hardkodet scope melosys,
 export const melosysRequest = {
-  scopes: ["api://dev-fss.teammelosys.melosys-q1/.default"],
+  scopes: [`api://${process.env.REACT_APP_CLUSTER}.teammelosys.${process.env.REACT_APP_MELOSYS_API_APP_NAME}/.default`],
 };
 
 export const trygdeavtaleRequest = {
-  scopes: ["api://dev-fss.teammelosys.melosys-trygdeavtale-q1/.default"],
+  scopes: [
+    `api://${process.env.REACT_APP_CLUSTER}.teammelosys.${process.env.REACT_APP_TRYGDEAVTALE_APP_NAME}/.default`,
+  ],
 };
