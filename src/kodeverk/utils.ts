@@ -1,6 +1,7 @@
 import * as Koder from "./koder";
 import MKV from "../melosyskodeverk";
 
+// DEPRECATED: fjernes med melosys.behandle_alle_saker
 export const mapBehandlingstemaToBehandlingskategori = (behandlingstemaKode: string) => {
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:

@@ -13,7 +13,7 @@ import fagsakerReducer, { initialState as fagsakerInitialState } from "../../../
 import lovvalgsperioderReducer, {
   initialState as lovvalgsperioderInitialState,
 } from "../../../../ducks/lovvalgsperioder";
-import soknadReducer, { initialState as soknadInitialState } from "../../../../ducks/behandlingsgrunnlag";
+import soknadReducer, { initialState as soknadInitialState } from "../../../../ducks/mottatteOpplysninger";
 
 export const initialState = {
   avklartefakta: avklartefaktaInitialState,

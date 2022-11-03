@@ -12,7 +12,7 @@ import { MatchParams } from "../../@types";
 
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { fagsakSelectors } from "../../ducks/fagsaker";
-import { behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { datalastingOperations } from "../../ducks/datalasting";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
@@ -27,12 +27,12 @@ import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskompone
 import "./behandling.css";
 
 const mapStateToProps = (state: RootState) => ({
-  arbeidsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state),
-  behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
-    behandlingsgrunnlagSelectors.PeriodeFomSelector(state)
+  arbeidsland: mottatteOpplysningerSelectors.SoknadslandKTSelector(state),
+  mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
+    mottatteOpplysningerSelectors.PeriodeFomSelector(state)
   ),
-  behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(
-    behandlingsgrunnlagSelectors.PeriodeTomSelector(state)
+  mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
+    mottatteOpplysningerSelectors.PeriodeTomSelector(state)
   ),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
@@ -40,7 +40,7 @@ const mapStateToProps = (state: RootState) => ({
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
-  mottaksdato: behandlingsgrunnlagSelectors.MottaksdatoSelector(state),
+  mottaksdato: mottatteOpplysningerSelectors.MottaksdatoSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
@@ -59,8 +59,8 @@ interface Props extends RouteComponentProps<MatchParams> {}
 
 const Behandling = ({
   arbeidsland,
-  behandlingsgrunnlagPeriodeFom,
-  behandlingsgrunnlagPeriodeTom,
+  mottatteOpplysningerPeriodeFom,
+  mottatteOpplysningerPeriodeTom,
   behandlingstema,
   fagsak,
   hovedpartRolle,
@@ -118,8 +118,8 @@ const Behandling = ({
                 mottattDato={mottaksdato}
                 lovvalgsperiodeFom={lovvalgsperiodeFom}
                 lovvalgsperiodeTom={lovvalgsperiodeTom}
-                behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
-                behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+                mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
+                mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
               />
               <SaksoversiktLenke />
               <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />

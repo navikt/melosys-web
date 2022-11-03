@@ -7,7 +7,7 @@ import MKV from "../../melosyskodeverk";
 
 const { DK, DE } = MKV.Koder.landkoder;
 
-describe("behandlingsgrunnlag reducer", () => {
+describe("mottatteOpplysninger reducer", () => {
   it("setter status pending ved action.type PENDING", () => {
     const action = {
       type: Types.PENDING,
@@ -120,9 +120,9 @@ describe("behandlingsgrunnlag reducer", () => {
     expect(nextState).toEqual(expectedState);
   });
 
-  it("Oppdaterer behandlingsgrunnlag ved action.type OPPDATER_BEHANDLINGSGRUNNLAG", () => {
+  it("Oppdaterer mottatteOpplysninger ved action.type OPPDATER_MOTTATTE_OPPLYSNINGER", () => {
     const action = {
-      type: Types.OPPDATER_BEHANDLINGSGRUNNLAG,
+      type: Types.OPPDATER_MOTTATTE_OPPLYSNINGER,
       dokument: {
         inntektNorskIPerioden: "1",
         inntektUtenlandskIPerioden: "2",

@@ -98,7 +98,7 @@ export default function reducer(state = initialState, action = {}) {
         },
       };
     }
-    case Types.OPPDATER_BEHANDLINGSGRUNNLAG: {
+    case Types.OPPDATER_MOTTATTE_OPPLYSNINGER: {
       const { dokument } = action;
 
       const foretakUtland = [

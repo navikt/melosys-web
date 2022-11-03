@@ -15,7 +15,7 @@ import * as Datoutils from "../../utils/dato";
 
 import { behandlingsstatusOperations, behandlingsstatusSelectors } from "../../ducks/behandlingsstatus";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
-import { behandlingsgrunnlagOperations } from "../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations } from "../../ducks/mottatteOpplysninger";
 import { behandlingstypeOperations, behandlingstypeSelectors } from "../../ducks/behandlingstype";
 import { behandlingstemaOperations, behandlingstemaSelectors } from "../../ducks/behandlingstema";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
@@ -51,7 +51,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   oppfriskSaksopplysninger: (behandlingID: number) => saksopplysningerOperations.oppfrisk(behandlingID),
   hentBehandling: (behandlingID: number) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentFagsak: (saksnummer: string) => dispatch(fagsakOperations.hent(saksnummer)),
-  hentBehandlingsgrunnlag: (behandlingID: number) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
+  hentMottatteOpplysninger: (behandlingID: number) => dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
   hentMuligeBehandlingstemaer_gammel: (behandlingID: number) =>
     dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
   hentMuligeSakstyper_gammel: (saksnummer: string) => dispatch(fagsakOperations.hentMuligeSakstyper(saksnummer)),
@@ -80,7 +80,7 @@ function EndreBehandlingModal({
   oppsummering,
   fagsak,
   hentBehandling,
-  hentBehandlingsgrunnlag,
+  hentMottatteOpplysninger,
   hentFagsak,
   muligeSakstyper_gammel,
   muligeBehandlingstyper_gammel,
@@ -185,7 +185,7 @@ function EndreBehandlingModal({
         setBehandlingEndret(true);
         hentBehandling(behandlingID);
         hentFagsak(saksnummer);
-        hentBehandlingsgrunnlag(behandlingID);
+        hentMottatteOpplysninger(behandlingID);
 
         const nyGenerertLink =
           behandleAlleSakerToggle === "enabled"
@@ -308,7 +308,11 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingsstatus(e.target.value)}
               label="Behandlingsstatus"
               value={behandlingsstatus}
-              koder={muligeVerdierPlussValgt(oppsummering.behandlingsstatus, muligeBehandlingsstatuser)}
+              koder={
+                behandleAlleSakerToggle === "enabled"
+                  ? muligeBehandlingsstatuser
+                  : muligeVerdierPlussValgt(oppsummering.behandlingsstatus, muligeBehandlingsstatuser)
+              }
               disableForsteValg
             />
           </div>

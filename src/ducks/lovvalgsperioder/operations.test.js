@@ -44,7 +44,7 @@ describe("Lovvalgsperioder operations", () => {
       vilkar: {
         data: [],
       },
-      behandlingsgrunnlag: {
+      mottatteOpplysninger: {
         data: {
           periode: { fom: "1234", tom: "4321" },
           soeknadsland: {

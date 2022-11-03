@@ -7,7 +7,7 @@ import * as Actions from "./actions";
 import * as Selectors from "./selectors";
 
 import { avklartefaktaSelectors } from "../avklartefakta";
-import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../mottatteOpplysninger";
 import { behandlingerSelectors } from "../behandlinger";
 import { flytSelectors } from "../flyt";
 
@@ -37,7 +37,7 @@ export function lagre() {
 }
 
 const byggUtpekingsperiode = (stegState, reduxState) => {
-  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
+  const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const lovvalgsland = stegState.lovvalgsland || avklartefaktaSelectors.OmfattesILandSelector(reduxState);
   if (!lovvalgsland) return [];
 

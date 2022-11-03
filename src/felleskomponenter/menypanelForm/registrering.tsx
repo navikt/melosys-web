@@ -9,24 +9,24 @@ import * as KV from "../../kodeverk";
 
 import Menypanel from "../menypanel";
 
-import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from "../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors, mottatteOpplysningerOperations } from "../../ducks/mottatteOpplysninger";
 
 const mapStateToProps = (state: RootState) => ({
   initialValues: {
-    oppgittAdresseTilleggsnavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).tilleggsnavn,
-    oppgittAdresseGatenavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).gatenavn,
+    oppgittAdresseTilleggsnavn: mottatteOpplysningerSelectors.BostedAdresseSelector(state).tilleggsnavn,
+    oppgittAdresseGatenavn: mottatteOpplysningerSelectors.BostedAdresseSelector(state).gatenavn,
     oppgittAdresseHusnummerEtasjeLeilighet:
-      behandlingsgrunnlagSelectors.BostedAdresseSelector(state).husnummerEtasjeLeilighet,
-    oppgittAdresseRegion: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).region,
-    oppgittAdressePostboks: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postboks,
-    oppgittAdressePostnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postnummer,
-    oppgittAdressePoststed: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).poststed,
-    oppgittAdresseLand: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).landkode,
+      mottatteOpplysningerSelectors.BostedAdresseSelector(state).husnummerEtasjeLeilighet,
+    oppgittAdresseRegion: mottatteOpplysningerSelectors.BostedAdresseSelector(state).region,
+    oppgittAdressePostboks: mottatteOpplysningerSelectors.BostedAdresseSelector(state).postboks,
+    oppgittAdressePostnummer: mottatteOpplysningerSelectors.BostedAdresseSelector(state).postnummer,
+    oppgittAdressePoststed: mottatteOpplysningerSelectors.BostedAdresseSelector(state).poststed,
+    oppgittAdresseLand: mottatteOpplysningerSelectors.BostedAdresseSelector(state).landkode,
   },
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
-  lagreSoknad: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+  lagreSoknad: () => dispatch(mottatteOpplysningerOperations.lagre()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

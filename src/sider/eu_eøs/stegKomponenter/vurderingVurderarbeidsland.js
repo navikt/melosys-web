@@ -19,7 +19,7 @@ import {
 import SokkelSkipListe from "../../../felleskomponenter/sokkelskipliste";
 
 import { formSelectors } from "../../../ducks/form";
-import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import MKV from "../../../melosyskodeverk";
 import { BOOLSK_STRING } from "../../../constants";
@@ -278,7 +278,7 @@ const soknadFormValuesSelector = formValueSelector(KV.Form.SOKNAD);
 
 const mapStateToProps = (state) => ({
   maritimtArbeid: formSelectors.MaritimtArbeidSelector(state),
-  hjemmebaser: behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
+  hjemmebaser: mottatteOpplysningerSelectors.HjemmebaserSelector(state),
   soknadsland: soknadFormValuesSelector(state, "soknadsland.landkoder"),
   arbeidsland: avklartefaktaSelectors.ArbeidslandSelector(state),
   fjernedeArbeidsland: avklartefaktaSelectors.IkkeArbeidslandSoknadslandSelector(state),

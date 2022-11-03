@@ -9,7 +9,7 @@ describe("Avklartefaktaselectors", () => {
     avklartefakta,
     behandlingstype,
     behandlingstema,
-    behandlingsgrunnlagData,
+    mottatteOpplysningerData,
     behandlingerSaksopplysninger,
     utpekingsperioder,
   }) => ({
@@ -29,9 +29,9 @@ describe("Avklartefaktaselectors", () => {
         saksopplysninger: behandlingerSaksopplysninger,
       },
     },
-    behandlingsgrunnlag: {
+    mottatteOpplysninger: {
       data: {
-        data: behandlingsgrunnlagData,
+        data: mottatteOpplysningerData,
       },
     },
     lovvalgsperioder: {
@@ -63,7 +63,7 @@ describe("Avklartefaktaselectors", () => {
 
       const behandlingstema = MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
 
-      const behandlingsgrunnlagData = {
+      const mottatteOpplysningerData = {
         luftfartBaser: [],
       };
 
@@ -72,7 +72,7 @@ describe("Avklartefaktaselectors", () => {
       const state = lagState({
         avklartefakta,
         behandlingstema,
-        behandlingsgrunnlagData,
+        mottatteOpplysningerData,
       });
       expect(selectors.ArbeidslandKTSelector(state)).toEqual(forventetResultat);
     });
@@ -120,11 +120,11 @@ describe("Avklartefaktaselectors", () => {
           luftfartBaser: [],
         },
       ],
-    ]).it("returnerer korrekt verdi", (forventetResultat, avklartefakta, behandlingstema, behandlingsgrunnlagData) => {
+    ]).it("returnerer korrekt verdi", (forventetResultat, avklartefakta, behandlingstema, mottatteOpplysningerData) => {
       const state = lagState({
         avklartefakta,
         behandlingstema,
-        behandlingsgrunnlagData,
+        mottatteOpplysningerData,
       });
       expect(selectors.ArbeidslandKTSelector(state)).toEqual(forventetResultat);
     });
@@ -244,13 +244,13 @@ describe("Avklartefaktaselectors", () => {
       ],
     ]).it(
       "returnerer korrekt verdi for arbeidsland som ikke er Norge",
-      (forventetResultat, behandlingsgrunnlagData) => {
+      (forventetResultat, mottatteOpplysningerData) => {
         const arbeidsland = MKV.Koder.landkoder.DE;
         const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
         const state = lagState({
           avklartefakta,
           behandlingstype,
-          behandlingsgrunnlagData,
+          mottatteOpplysningerData,
         });
 
         expect(selectors.ArbeidslandMedYrkesAktivitetSelector(state)).toEqual(forventetResultat);
@@ -360,7 +360,7 @@ describe("Avklartefaktaselectors", () => {
           },
         },
       ],
-    ]).it("returner korrekt verdi for arbeidsland lik Norge", (forventetResultat, behandlingsgrunnlagData) => {
+    ]).it("returner korrekt verdi for arbeidsland lik Norge", (forventetResultat, mottatteOpplysningerData) => {
       const arbeidsland = MKV.Koder.landkoder.NO;
       const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
       const behandlingerSaksopplysninger = {
@@ -409,7 +409,7 @@ describe("Avklartefaktaselectors", () => {
       const state = lagState({
         avklartefakta,
         behandlingstype,
-        behandlingsgrunnlagData,
+        mottatteOpplysningerData,
         behandlingerSaksopplysninger,
       });
 
@@ -635,10 +635,10 @@ describe("Avklartefaktaselectors", () => {
       },
     ];
 
-    const lagStateDefaults = ({ avklartefakta, behandlingsgrunnlagData, utpekingsperioder }) =>
+    const lagStateDefaults = ({ avklartefakta, mottatteOpplysningerData, utpekingsperioder }) =>
       lagState({
         avklartefakta: avklartefakta || [],
-        behandlingsgrunnlagData: behandlingsgrunnlagData || [],
+        mottatteOpplysningerData: mottatteOpplysningerData || [],
         behandlingstema: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
         utpekingsperioder: utpekingsperioder || [],
       });
@@ -652,7 +652,7 @@ describe("Avklartefaktaselectors", () => {
       const resultat = selectors.LandSomKreverSEDKTSelector(
         lagStateDefaults({
           avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
-          behandlingsgrunnlagData: {
+          mottatteOpplysningerData: {
             soeknadsland,
           },
         })
@@ -664,7 +664,7 @@ describe("Avklartefaktaselectors", () => {
       const resultat = selectors.LandSomKreverSEDKTSelector(
         lagStateDefaults({
           avklartefakta: avklartefaktaArbeidslandUtenMarginaltArbeid,
-          behandlingsgrunnlagData: {
+          mottatteOpplysningerData: {
             soeknadsland,
           },
         })
@@ -679,7 +679,7 @@ describe("Avklartefaktaselectors", () => {
       const resultat = selectors.LandSomKreverSEDKTSelector(
         lagStateDefaults({
           avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
-          behandlingsgrunnlagData: {
+          mottatteOpplysningerData: {
             soeknadsland,
             foretakUtland,
           },
@@ -695,7 +695,7 @@ describe("Avklartefaktaselectors", () => {
       const resultat = selectors.LandSomKreverSEDKTSelector(
         lagStateDefaults({
           avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
-          behandlingsgrunnlagData: {
+          mottatteOpplysningerData: {
             soeknadsland,
             arbeidPaaLand: {
               fysiskeArbeidssteder: foretakUtland,
@@ -729,7 +729,7 @@ describe("Avklartefaktaselectors", () => {
       const resultat = selectors.LandSomKreverSEDKTSelector(
         lagStateDefaults({
           avklartefakta: avklartefaktaArbeidslandUtenMarginaltArbeid,
-          behandlingsgrunnlagData: {
+          mottatteOpplysningerData: {
             soeknadsland,
             foretakUtland,
             arbeidPaaLand: {
@@ -834,7 +834,7 @@ describe("Avklartefaktaselectors", () => {
           },
         },
       },
-      behandlingsgrunnlag: {
+      mottatteOpplysninger: {
         data: {
           data: {
             juridiskArbeidsgiverNorge: {

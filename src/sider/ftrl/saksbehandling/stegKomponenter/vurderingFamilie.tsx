@@ -15,7 +15,7 @@ import * as Api from "../../../../services/api";
 
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
-import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
@@ -39,11 +39,11 @@ function initializeFamilieFormValues(barn: MedfolgendeFamilie[], ektefelleSamboe
 }
 
 const mapStateToProps = (state: RootState) => {
-  const medfolgendeBarn = behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state);
-  const medfolgendeEktefelleSamboer = behandlingsgrunnlagSelectors.MedfolgendeEktefelleSamboerSelector(state);
+  const medfolgendeBarn = mottatteOpplysningerSelectors.MedfolgendeBarnSelector(state);
+  const medfolgendeEktefelleSamboer = mottatteOpplysningerSelectors.MedfolgendeEktefelleSamboerSelector(state);
   return {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-    medfolgendeFamilie: behandlingsgrunnlagSelectors.MedfolgendeFamilieSelector(state),
+    medfolgendeFamilie: mottatteOpplysningerSelectors.MedfolgendeFamilieSelector(state),
     avklarteMedfolgendeFamilie: oppsummertfaktaSelectors.MedfolgendeFamilieSelector(state),
     medfolgendeBarn,
     medfolgendeEktefelleSamboer,

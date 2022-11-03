@@ -14,12 +14,12 @@ import { Status } from "../editerbartElement";
 import Redigerer from "./redigerer/redigerer";
 import RedigeringUtfort from "./redigeringUtfort";
 
-import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
 
 import "./ovrigOmArbeidstaker.css";
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
+  oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState()),
 });
 
 const connector = connect(null, mapDispatchToProps);
@@ -33,13 +33,13 @@ type OvrigOmArbeidstakerProps = PropsFromRedux & {
 const OvrigOmArbeidstaker = ({
   visArbeidsforholdRolleEtiketter,
   redigerbart,
-  oppdaterBehandlingsgrunnlag,
+  oppdaterMottatteOpplysninger,
 }: OvrigOmArbeidstakerProps) => {
   const [status, setStatus] = useState<Status>(Status.RedigeringUtfort);
 
   const lagreHandler = () => {
     setStatus(Status.RedigeringUtfort);
-    oppdaterBehandlingsgrunnlag();
+    oppdaterMottatteOpplysninger();
   };
 
   return (

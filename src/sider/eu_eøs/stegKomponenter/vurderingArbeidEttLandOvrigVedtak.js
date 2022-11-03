@@ -16,7 +16,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
-import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { formOperations } from "../../../ducks/form";
 
@@ -110,14 +110,14 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   oppdaterData,
   slettData,
   tilbake,
-  behandlingsgrunnlagFom,
-  behandlingsgrunnlagTom,
+  mottatteOpplysningerFom,
+  mottatteOpplysningerTom,
   soknadsperiode,
   informertMyndighetFakta,
   kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
-  validerBehandlingsgrunnlag,
+  validerMottatteOpplysninger,
   fattVedtak,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -131,8 +131,8 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
     if (redigerbart) {
       oppdaterData(
         lagLovvalgsperiode({
-          fomDato: behandlingsgrunnlagFom,
-          tomDato: behandlingsgrunnlagTom,
+          fomDato: mottatteOpplysningerFom,
+          tomDato: mottatteOpplysningerTom,
         })
       );
     }
@@ -267,7 +267,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
       await props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
     }
 
-    validerBehandlingsgrunnlag()
+    validerMottatteOpplysninger()
       .then(() => {
         fattVedtak(behandlingID, lagFattVedtakEOSReqDto()).then((res) => {
           if (res.data?.data?.error) {
@@ -434,8 +434,8 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   tilbake: PT.func.isRequired,
-  behandlingsgrunnlagFom: PT.string.isRequired,
-  behandlingsgrunnlagTom: PT.string,
+  mottatteOpplysningerFom: PT.string.isRequired,
+  mottatteOpplysningerTom: PT.string,
   soknadsperiode: PT.shape({
     fom: PT.string.isRequired,
     tom: PT.string.isRequired,
@@ -444,7 +444,7 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
-  validerBehandlingsgrunnlag: PT.func.isRequired,
+  validerMottatteOpplysninger: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
 };
 
@@ -453,7 +453,7 @@ VurderingArbeidEttLandOvrigVedtak.defaultProps = {
   formValues: {},
   lovvalgsbestemmelseSomSkalVises: "",
   lovvalgsbestemmelseSomSkalLagres: "",
-  behandlingsgrunnlagTom: null,
+  mottatteOpplysningerTom: null,
   informertMyndighetFakta: {},
   aktivtSteg: false,
 };
@@ -462,7 +462,7 @@ const mapStateToProps = (state, ownProps) => {
   const forkortLovvalgsperiode = ownProps.redigerbart
     ? false
     : Utils.dato.datoDiffPure(
-        behandlingsgrunnlagSelectors.PeriodeSelector(state).tom,
+        mottatteOpplysningerSelectors.PeriodeSelector(state).tom,
         lovvalgsperioderSelectors.TomDatoSelector(state),
         "days"
       ) !== 0;
@@ -471,12 +471,12 @@ const mapStateToProps = (state, ownProps) => {
   const mottakerLand = ownProps.informertMyndighetFakta.subjektID;
 
   return {
-    behandlingsgrunnlagFom: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
-    behandlingsgrunnlagTom: behandlingsgrunnlagSelectors.PeriodeTomSelector(state),
+    mottatteOpplysningerFom: mottatteOpplysningerSelectors.PeriodeFomSelector(state),
+    mottatteOpplysningerTom: mottatteOpplysningerSelectors.PeriodeTomSelector(state),
     behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-    soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
+    soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
     formIsValid: isValid(KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK)(state),
     initialValues: {
