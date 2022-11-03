@@ -1,49 +1,25 @@
 import React from "react";
-
-import * as Nav from "../../../../../navFrontend";
 import * as KV from "../../../../../kodeverk";
+import * as Utils from "../../../../../utils";
 
 import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
-import KopierbarTekst from "../../../../kopierbarTekst";
-
-import ExpandableList from "../../../../expandablelist";
-
-import "./redigeringUtfort.css";
-
-const Header = () => (
-  <Nav.Row className="header">
-    <Nav.Column xs="6">F.nr./d-nr.</Nav.Column>
-    <Nav.Column xs="6">Navn</Nav.Column>
-  </Nav.Row>
-);
-
-interface RadProps {
-  navn?: string;
-  idNummer?: number;
-}
-
-const Rad = ({ navn, idNummer }: RadProps) => (
-  <Nav.Row className="rad">
-    <Nav.Column xs="6">
-      {idNummer && <KopierbarTekst hovertekst="Kopier fødselsnummer">{idNummer.toString()}</KopierbarTekst>}
-    </Nav.Column>
-    <Nav.Column xs="6">{navn}</Nav.Column>
-  </Nav.Row>
-);
 
 const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.MedfolgendeFamilie>) => (
   <div className="medfolgende-familie__redigeringutfort">
-    <ExpandableList
-      elements={verdier}
-      header={<Header />}
-      renderElement={(familie) => <Rad navn={familie.navn} idNummer={familie.fnr} />}
-      idFromElement={(familie) => familie.uuid}
-      amountOfItemsCollapsed={verdier.length}
-      btnTextCollapsed="Vis flere"
-      btnTextExpanded="Vis færre"
-      chevron
-      dividers
-    />
+    <table className="menypanel__table">
+      <tbody>
+        <tr className="header">
+          <th>F.nr./d-nr.</th>
+          <th>Navn</th>
+        </tr>
+        {verdier.map((verdi) => (
+          <tr key={Utils._uuid()}>
+            <td>{verdi.fnr}</td>
+            <td>{verdi.navn}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   </div>
 );
 

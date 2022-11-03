@@ -4,9 +4,8 @@ import { mock, instance } from "ts-mockito";
 
 import { Bostedsadresse } from "../../../../../../graphql";
 
-import ExpandableList, { ExpandableListProps } from "../../../../../expandablelist";
-
 import AdresseTableContainer from "./adresseTableContainer";
+import AdresseTable from "./adresseTable";
 
 describe("AdresseTableContainer", () => {
   const mockedProps = mock<ComponentProps<typeof AdresseTableContainer>>();
@@ -24,29 +23,16 @@ describe("AdresseTableContainer", () => {
   });
 
   it("viser aktive adresser", () => {
-    const adresseliste = shallow(<AdresseTableContainer {...props} />);
-
-    const aktiveAdresserList = adresseliste.find<ExpandableListProps<Bostedsadresse>>(ExpandableList).first();
-    expect(aktiveAdresserList.props().elements.map((e) => e.erHistorisk)).not.toContain(true);
-    expect(aktiveAdresserList.props().elements.map((e) => e.erHistorisk)).toContain(false);
-    expect(aktiveAdresserList.props().amountOfItemsCollapsed).toBe(props.adresser.length);
+    const adresseTableContainer = shallow(<AdresseTableContainer {...props} />);
+    const aktivAdresseTable = adresseTableContainer.find(AdresseTable).first();
+    expect(aktivAdresseTable.props().adresser.map((e) => e.erHistorisk)).not.toContain(true);
+    expect(aktivAdresseTable.props().adresser.map((e) => e.erHistorisk)).toContain(false);
   });
 
   it("viser historiske adresser", () => {
-    const adresseliste = shallow(<AdresseTableContainer {...props} />);
-
-    const historiskeAdresserList = adresseliste.find<ExpandableListProps<Bostedsadresse>>(ExpandableList).last();
-    expect(historiskeAdresserList.props().elements.map((e) => e.erHistorisk)).not.toContain(false);
-    expect(historiskeAdresserList.props().elements.map((e) => e.erHistorisk)).toContain(true);
-    expect(historiskeAdresserList.props().amountOfItemsCollapsed).toBe(0);
-  });
-
-  it("begge lister vises med chevron og divider", () => {
-    const adresseliste = shallow(<AdresseTableContainer {...props} />);
-
-    const adresserList = adresseliste.find(ExpandableList);
-
-    expect(adresserList.map((list) => list.props().chevron)).toEqual([true, true]);
-    expect(adresserList.map((list) => list.props().dividers)).toEqual([true, true]);
+    const adresseTableContainer = shallow(<AdresseTableContainer {...props} />);
+    const historiskAdresseTable = adresseTableContainer.find(AdresseTable).last();
+    expect(historiskAdresseTable.props().adresser.map((e) => e.erHistorisk)).toContain(true);
+    expect(historiskAdresseTable.props().adresser.map((e) => e.erHistorisk)).not.toContain(false);
   });
 });
