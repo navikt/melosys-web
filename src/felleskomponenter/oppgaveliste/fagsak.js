@@ -14,6 +14,7 @@ import { sorterElementerEtterDato } from "../sorterbarListe";
 import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
+import { useFeatureToggle } from "../../featuretoggle";
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -21,7 +22,9 @@ import "./fagsak.css";
  * seg inn på den.
  */
 const Fagsak = ({ sak, visSakstema, landkoder }) => {
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
+
   const { periode, land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.periode != null) ?? {};
   const tittel = visSakstema
     ? `${KV.objektTilTerm(sakstype)} - ${KV.objektTilTerm(sakstema)}`
@@ -59,7 +62,10 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
           </Nav.Column>
           <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
-              <DatoOmradeDescription label="Periode: " periode={periode} />
+              <DatoOmradeDescription
+                label={behandleAlleSakerToggle === "enabled" ? "Lovvalgsperiode: " : "Periode: "}
+                periode={periode}
+              />
               <dt>Land:</dt>
               <dd>
                 <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
