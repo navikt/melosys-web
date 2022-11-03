@@ -74,7 +74,7 @@ const VurderingVedtak = ({
   kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
-  validerBehandlingsgrunnlag,
+  validerMottatteOpplysninger,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
@@ -138,7 +138,7 @@ const VurderingVedtak = ({
 
     setVedtakPending(true);
 
-    validerBehandlingsgrunnlag()
+    validerMottatteOpplysninger()
       .then(() => {
         dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakEOSReqDto())).then((res) => {
           if (res.data?.data?.error) {
@@ -260,7 +260,7 @@ VurderingVedtak.propTypes = {
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
-  validerBehandlingsgrunnlag: PT.func.isRequired,
+  validerMottatteOpplysninger: PT.func.isRequired,
 };
 
 VurderingVedtak.defaultProps = {

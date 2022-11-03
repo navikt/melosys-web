@@ -21,7 +21,7 @@ class Inngang extends Steg {
         redigerbart: _propsLight.generiskStegRedigerbart,
         oppfyllerInngangsvilkar: this.oppfyllerInngangsvilkaar(inngangsvilkaar),
         inngangsvilkaar,
-        landkoder: _propsLight.behandlingsgrunnlag.soeknadsland.landkoder,
+        landkoder: _propsLight.mottatteOpplysninger.soeknadsland.landkoder,
         behandlingstema: _propsLight.behandlingstema.kode,
       };
     };

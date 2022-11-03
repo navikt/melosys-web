@@ -21,14 +21,14 @@ const { ARBEID_I_UTLANDET, YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema
 interface FamilieforholdContainerProps {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
-  visBehandlingsgrunnlagData: boolean;
+  visMottatteOpplysningerData: boolean;
   behandlingstema: string;
 }
 
 const FamilieforholdContainer = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
-  visBehandlingsgrunnlagData,
+  visMottatteOpplysningerData,
   behandlingstema,
 }: FamilieforholdContainerProps) => {
   const [visFamilieforholdFraRegister, setVisFamilieforholdFraRegister] = useState(false);
@@ -53,7 +53,7 @@ const FamilieforholdContainer = ({
           )}
         </Nav.Column>
       </Nav.Row>
-      {visBehandlingsgrunnlagData && (
+      {visMottatteOpplysningerData && (
         <>
           <Nav.Row>
             <Nav.Column xs="12" className="etikett-container">

@@ -8,7 +8,7 @@ import { formatterDatoTilNorsk } from "../../utils/dato";
 
 import Sidemeny from "../sidemeny";
 
-import { behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { menypanelSelectors } from "../../ducks/menypanel";
@@ -18,14 +18,14 @@ import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
 
-const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
+const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
 const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   sisteOpplysningerHentetDato: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
-  behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+  mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
   visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
   sakstema: fagsakSelectors.SakstemaKodeSelector(state),
@@ -41,7 +41,7 @@ type MenypanelProps = PropsFromRedux & {
 
 export const Menypanel = ({
   sisteOpplysningerHentetDato,
-  behandlingsgrunnlagtype,
+  mottatteOpplysningerType,
   sakstype,
   behandlingstema,
   behandlingstype,
@@ -57,8 +57,8 @@ export const Menypanel = ({
   if (!visMenypanel) return null;
 
   const contentProps = {
-    visArbeidsforholdRolleEtiketter: behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
-    visBehandlingsgrunnlagData: !(
+    visArbeidsforholdRolleEtiketter: mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
+    visMottatteOpplysningerData: !(
       behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED &&
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
     ),
@@ -73,7 +73,7 @@ export const Menypanel = ({
     behandlingstema,
     behandlingstype,
     contentProps,
-    behandlingsgrunnlagtype,
+    mottatteOpplysningerType,
     sakstema,
   });
 

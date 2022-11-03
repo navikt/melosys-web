@@ -21,7 +21,7 @@ import { Status } from "../editerbartElement";
 
 import MKV from "../../../../melosyskodeverk";
 
-import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 
 import "./arbeidssteder.css";
 
@@ -58,7 +58,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     erHjemmekontor: arbeidPaaLand.erHjemmekontor,
     erFastArbeidssted: arbeidPaaLand.erFastArbeidssted,
-    behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+    mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
     soknadsland: soknadFormValueSelector(state, "soknadsland"),
   };
 };
@@ -85,12 +85,12 @@ export const Arbeidssteder = ({
   slettFastArbeidsstedOgHjemmekontorAvklaring,
   erFastArbeidssted,
   erHjemmekontor,
-  behandlingsgrunnlagtype,
+  mottatteOpplysningerType,
   behandlingstema,
   soknadsland: { erUkjenteEllerAlleEosLand },
 }: ArbeidsstederProps) => {
   const erSoknadFraAltinn =
-    behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+    mottatteOpplysningerType === MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
   const visRepresentantIUtlandet = behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
 
   const arbeidsstederLister = (

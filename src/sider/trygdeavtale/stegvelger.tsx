@@ -14,9 +14,9 @@ import * as Steg from "./stegKomponenter";
 import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
-import BehandlingsgrunnlagFeilmeldinger from "../../felleskomponenter/behandlingsgrunnlagFeilmeldinger";
+import MottatteOpplysningerFeilmeldinger from "../../felleskomponenter/mottatteOpplysningerFeilmeldinger";
 
-import { behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { datalastingOperations } from "../../ducks/datalasting";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { formSelectors } from "../../ducks/form";
@@ -53,8 +53,8 @@ const stegMap = {
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
-  behandlingsgrunnlagFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
+  mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
+  mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
 });
 
@@ -77,7 +77,7 @@ interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
   feilmeldinger: Feilkode[];
-  visBehandlingsgrunnlagFeilmeldinger: boolean;
+  visMottatteOpplysningerFeilmeldinger: boolean;
 }
 
 class Stegvelger extends Component<Props, State> {
@@ -85,7 +85,7 @@ class Stegvelger extends Component<Props, State> {
     aktivtStegIndex: 0,
     aktuelleSteg: [],
     feilmeldinger: [],
-    visBehandlingsgrunnlagFeilmeldinger: false,
+    visMottatteOpplysningerFeilmeldinger: false,
   };
 
   componentDidMount() {
@@ -173,19 +173,19 @@ class Stegvelger extends Component<Props, State> {
 
   oppdaterSteg = () => {
     const {
-      props: { behandlingsgrunnlagFeilmeldinger },
+      props: { mottatteOpplysningerFeilmeldinger },
       hentFlytOgOppdaterAktuelleSteg,
     } = this;
 
-    if (Utils._isEmpty(behandlingsgrunnlagFeilmeldinger)) {
+    if (Utils._isEmpty(mottatteOpplysningerFeilmeldinger)) {
       hentFlytOgOppdaterAktuelleSteg();
     }
   };
   debouncedOppdaterSteg = Utils._debounce(this.oppdaterSteg, 1250);
 
-  harBehandlingsgrunnlagFeilmeldinger = () => {
-    const harFeilmeldinger = !Utils._isEmpty(this.props.behandlingsgrunnlagFeilmeldinger);
-    this.setState({ visBehandlingsgrunnlagFeilmeldinger: harFeilmeldinger });
+  harMottatteOpplysningerFeilmeldinger = () => {
+    const harFeilmeldinger = !Utils._isEmpty(this.props.mottatteOpplysningerFeilmeldinger);
+    this.setState({ visMottatteOpplysningerFeilmeldinger: harFeilmeldinger });
     return harFeilmeldinger;
   };
 
@@ -198,10 +198,10 @@ class Stegvelger extends Component<Props, State> {
   oppdaterAktivtSteg = async (nesteStegIndex: number) => {
     const {
       state: { aktuelleSteg },
-      harBehandlingsgrunnlagFeilmeldinger,
+      harMottatteOpplysningerFeilmeldinger,
     } = this;
 
-    if (!harBehandlingsgrunnlagFeilmeldinger()) {
+    if (!harMottatteOpplysningerFeilmeldinger()) {
       this.setState({
         aktivtStegIndex: nesteStegIndex,
         aktuelleSteg: aktuelleSteg.map((steg: AktueltSteg) => ({
@@ -215,10 +215,10 @@ class Stegvelger extends Component<Props, State> {
   lagreOgFatteVedtak = async (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => {
     const {
       props: { behandlingID, lagreAllData, tilForsiden },
-      harBehandlingsgrunnlagFeilmeldinger,
+      harMottatteOpplysningerFeilmeldinger,
     } = this;
 
-    if (!harBehandlingsgrunnlagFeilmeldinger()) {
+    if (!harMottatteOpplysningerFeilmeldinger()) {
       await lagreAllData();
       return Api.Saksflyt.Vedtak.fatt(behandlingID, data)
         .then(() => tilForsiden())
@@ -237,7 +237,7 @@ class Stegvelger extends Component<Props, State> {
 
   render() {
     const {
-      state: { aktuelleSteg, visBehandlingsgrunnlagFeilmeldinger, feilmeldinger },
+      state: { aktuelleSteg, visMottatteOpplysningerFeilmeldinger, feilmeldinger },
       props: { behandlingstype, redigerbart },
       oppdaterAktivtSteg,
     } = this;
@@ -266,7 +266,7 @@ class Stegvelger extends Component<Props, State> {
             ))}
           </div>
         )}
-        {visBehandlingsgrunnlagFeilmeldinger && <BehandlingsgrunnlagFeilmeldinger />}
+        {visMottatteOpplysningerFeilmeldinger && <MottatteOpplysningerFeilmeldinger />}
       </div>
     );
   }

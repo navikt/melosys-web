@@ -10,7 +10,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 import MKV from "../../../melosyskodeverk";
 import { BOOLSK_STRING } from "../../../constants";
 
-import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 import { hentFaktaVerdi } from "../../../domeneUtils";
 import {
@@ -270,7 +270,7 @@ VurderingMedfolgendeBarn.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
+  medfolgendeBarn: mottatteOpplysningerSelectors.MedfolgendeBarnSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingMedfolgendeBarn);

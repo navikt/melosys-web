@@ -11,7 +11,7 @@ import { Menypanel } from "./menypanel";
 import Sidemeny from "../sidemeny";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS, SØKNAD_A1_YRKESAKTIVE_EØS, SED, SØKNAD_FOLKETRYGDEN } =
-  MKV.Koder.behandlingsgrunnlagtyper;
+  MKV.Koder.mottatteopplysningertyper;
 
 const { behandlingstyper } = MKV.Koder.behandlinger;
 const {
@@ -76,7 +76,7 @@ describe("MenyPanel", () => {
 
   it("Viser korrekte menypunkter for altinn-søknad", () => {
     props.behandlingstema = UTSENDT_ARBEIDSTAKER;
-    props.behandlingsgrunnlagtype = SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+    props.mottatteOpplysningerType = SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
     const menypanel = shallow(<Menypanel {...props} />);
     const sidemeny = menypanel.find(Sidemeny);
     const sidemenyLinkGroups = sidemeny.props().linkGroups;
@@ -214,8 +214,8 @@ describe("MenyPanel", () => {
     }
   );
 
-  it("hvis behandlingsgrunnlagtype er SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS vises arbeidsforholdrolleetiketter", () => {
-    props.behandlingsgrunnlagtype = SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+  it("hvis mottatteOpplysningerType er SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS vises arbeidsforholdrolleetiketter", () => {
+    props.mottatteOpplysningerType = SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
     const menypanel = shallow(<Menypanel {...props} />);
     const activeContent = menypanel.find(Nav.Panel);
 
@@ -223,9 +223,9 @@ describe("MenyPanel", () => {
   });
 
   each([SØKNAD_A1_YRKESAKTIVE_EØS, SED, SØKNAD_FOLKETRYGDEN]).it(
-    "viser ikke arbeidsforholdrolleetiketter hvis behandlingsgrunnlagtype er %p",
-    (behandlingsgrunnlagtype) => {
-      props.behandlingsgrunnlagtype = behandlingsgrunnlagtype;
+    "viser ikke arbeidsforholdrolleetiketter hvis mottatteOpplysningerType er %p",
+    (mottatteOpplysningerType) => {
+      props.mottatteOpplysningerType = mottatteOpplysningerType;
       const menypanel = shallow(<Menypanel {...props} />);
       const activeContent = menypanel.find(Nav.Panel);
 
@@ -239,14 +239,14 @@ describe("MenyPanel", () => {
     REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
     ANMODNING_OM_UNNTAK_HOVEDREGEL,
   ]).it(
-    `viser ikke behandlingsgrunnlagdata hvis behandlingstype er ${behandlingstyper.SED} og behandlingstema er %p`,
+    `viser ikke mottatteOpplysningerdata hvis behandlingstype er ${behandlingstyper.SED} og behandlingstema er %p`,
     (behandlingstema) => {
       props.behandlingstype = behandlingstyper.SED;
       props.behandlingstema = behandlingstema;
       const menypanel = shallow(<Menypanel {...props} />);
       const activeContent = menypanel.find(Nav.Panel);
 
-      expect(activeContent.children().props().visBehandlingsgrunnlagData).toBe(false);
+      expect(activeContent.children().props().visMottatteOpplysningerData).toBe(false);
     }
   );
 });

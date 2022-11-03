@@ -20,7 +20,7 @@ class Artikkel13_2_b_norge extends Steg {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
-      validerBehandlingsgrunnlag: propsLight.tilgjengeligeHandlers.validerBehandlingsgrunnlag,
+      validerMottatteOpplysninger: propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
     };
     this._status = FANE_STATUS.OK;
   }

@@ -16,7 +16,7 @@ import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetek
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { StegStatus } from "../../stegvelger";
 
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
 
@@ -40,18 +40,18 @@ const initializeValues = (periode: Periode, landkoder: string[]) => ({
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
   initialValues: initializeValues(
-    behandlingsgrunnlagSelectors.PeriodeSelector(state),
-    behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state)
+    mottatteOpplysningerSelectors.PeriodeSelector(state),
+    mottatteOpplysningerSelectors.SoknadslandkoderSelector(state)
   ),
   formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
-  oppdaterPeriode: (periode: Periode) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
+  oppdaterPeriode: (periode: Periode) => dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
   oppdaterSoeknadsland: (landkoder: string[]) =>
-    dispatch(behandlingsgrunnlagOperations.oppdaterSoeknadsland(landkoder, false)),
-  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+    dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(landkoder, false)),
+  lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -86,7 +86,7 @@ const VurderingInngang = ({
   fortsett,
   initialValues,
   hentFlytOgOppdaterAktuelleSteg,
-  lagreBehandlingsgrunnlag,
+  lagreMottatteOpplysninger,
   redigerbart,
   resultat,
   steg,
@@ -114,12 +114,12 @@ const VurderingInngang = ({
     }
   }, []);
 
-  const lagreBehandlingsgrunnlagOgOppdaterFlyt = async () => {
-    await lagreBehandlingsgrunnlag();
+  const lagreMottatteOpplysningerOgOppdaterFlyt = async () => {
+    await lagreMottatteOpplysninger();
     hentFlytOgOppdaterAktuelleSteg();
   };
-  const debouncedLagrebehandlingsgrunnlagOgOppdaterFlyt = useCallback(
-    Utils._debounce(lagreBehandlingsgrunnlagOgOppdaterFlyt, 300),
+  const debouncedLagremottatteOpplysningerOgOppdaterFlyt = useCallback(
+    Utils._debounce(lagreMottatteOpplysningerOgOppdaterFlyt, 300),
     []
   );
 
@@ -133,7 +133,7 @@ const VurderingInngang = ({
       });
       oppdaterSoeknadsland(formValues?.arbeidsland ? [formValues.arbeidsland] : []);
 
-      debouncedLagrebehandlingsgrunnlagOgOppdaterFlyt();
+      debouncedLagremottatteOpplysningerOgOppdaterFlyt();
     }
   }, [formValues?.fom, formValues?.tom, formValues?.arbeidsland, formIsValid]);
 

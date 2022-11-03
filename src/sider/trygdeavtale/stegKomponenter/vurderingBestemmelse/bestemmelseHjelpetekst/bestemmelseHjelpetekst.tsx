@@ -44,7 +44,7 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
           <li key={hjelpetekst}>{hjelpetekst}</li>
         ))}
       </ul>
-      {ikkeKravOmTidsbegrensning && <div>Det er ikke krav om at arbeidsperioden/utsendingen er tidsbegrenset.</div>}
+      {ikkeKravOmTidsbegrensning && <p>Det er ikke krav om at arbeidsperioden/utsendingen er tidsbegrenset.</p>}
     </div>
   );
 };

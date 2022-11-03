@@ -52,7 +52,7 @@ class GodkjennUtpekingNorge extends Steg {
     this.handlers = {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       kontrollerFerdigbehandling: propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
-      validerBehandlingsgrunnlag: this._propsLight.tilgjengeligeHandlers.validerBehandlingsgrunnlag,
+      validerMottatteOpplysninger: this._propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
     };
     this._status = FANE_STATUS.OK;
   }

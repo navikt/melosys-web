@@ -1,8 +1,8 @@
 import React from "react";
 
-import { BehandlingsgrunnlagFeilmeldinger } from "./behandlingsgrunnlagFeilmeldinger";
+import { MottatteOpplysningerFeilmeldinger } from "./mottatteOpplysningerFeilmeldinger";
 
-describe("BehandlingsgrunnlagFeilmeldinger", () => {
+describe("MottatteOpplysningerFeilmeldinger", () => {
   let props = null;
 
   beforeEach(() => {
@@ -21,9 +21,9 @@ describe("BehandlingsgrunnlagFeilmeldinger", () => {
   });
 
   it("viser en liste over paneler som har feil", () => {
-    const behandlingsgrunnlagFeilmeldinger = shallow(<BehandlingsgrunnlagFeilmeldinger {...props} />);
+    const mottatteOpplysningerFeilmeldinger = shallow(<MottatteOpplysningerFeilmeldinger {...props} />);
 
-    const lis = behandlingsgrunnlagFeilmeldinger.find("li");
+    const lis = mottatteOpplysningerFeilmeldinger.find("li");
 
     expect(lis.containsMatchingElement("Soknadsperiode"));
     expect(lis.containsMatchingElement("Personlig info"));
@@ -31,8 +31,8 @@ describe("BehandlingsgrunnlagFeilmeldinger", () => {
 
   it("viser ingenting hvis ingen panelfeil", () => {
     props.panelFeil = [];
-    const behandlingsgrunnlagFeilmeldinger = shallow(<BehandlingsgrunnlagFeilmeldinger {...props} />);
+    const mottatteOpplysningerFeilmeldinger = shallow(<MottatteOpplysningerFeilmeldinger {...props} />);
 
-    expect(behandlingsgrunnlagFeilmeldinger.isEmptyRender()).toBe(true);
+    expect(mottatteOpplysningerFeilmeldinger.isEmptyRender()).toBe(true);
   });
 });

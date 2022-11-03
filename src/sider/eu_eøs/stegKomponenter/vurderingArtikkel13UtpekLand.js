@@ -24,7 +24,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { formOperations } from "../../../ducks/form";
 import { flytSelectors } from "../../../ducks/flyt";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../felleskomponenter/stegvelger";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
@@ -269,7 +269,8 @@ VurderingArtikkel13UtpekLand.defaultProps = {
 const mapStateToProps = (state) => {
   const utpekingsperiodeTom = utpekingsperioderSelectors.TomDatoSelector(state);
   const erUtpekingsperiodeForkortet = () =>
-    Utils.dato.datoDiffPure(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom, utpekingsperiodeTom, "days") !== 0;
+    Utils.dato.datoDiffPure(mottatteOpplysningerSelectors.PeriodeSelector(state).tom, utpekingsperiodeTom, "days") !==
+    0;
 
   const forkortUtpekingsperiode = utpekingsperiodeTom === null ? false : erUtpekingsperiodeForkortet();
 
@@ -280,7 +281,7 @@ const mapStateToProps = (state) => {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsland: utpekingsperioderSelectors.LovvalgslandSelector(state),
     utpekingsperiode: utpekingsperioderSelectors.UtpekingsperiodeSelector(state),
-    soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
+    soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
     formIsValid: isValid(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
     formValues: getFormValues(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
     landMedVesentligEllerRegistrertArbeid:
