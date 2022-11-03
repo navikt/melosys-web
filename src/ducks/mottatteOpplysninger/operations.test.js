@@ -91,7 +91,7 @@ describe("MottatteOpplysninger operations", () => {
 
       expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
-        "/api/mottatteOpplysninger/4",
+        "/api/mottatteopplysninger/4",
         expect.objectContaining({
           body: JSON.stringify({
             data: {
@@ -138,7 +138,7 @@ describe("MottatteOpplysninger operations", () => {
 
       expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
-        "/api/mottatteOpplysninger/4",
+        "/api/mottatteopplysninger/4",
         expect.objectContaining({
           body: JSON.stringify({
             data: {
@@ -173,7 +173,7 @@ describe("MottatteOpplysninger operations", () => {
 
       expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
-        "/api/mottatteOpplysninger/4",
+        "/api/mottatteopplysninger/4",
         expect.objectContaining({
           body: JSON.stringify({
             data: {
@@ -209,7 +209,7 @@ describe("MottatteOpplysninger operations", () => {
 
       expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
-        "/api/mottatteOpplysninger/4",
+        "/api/mottatteopplysninger/4",
         expect.objectContaining({
           body: JSON.stringify({
             data: {
@@ -254,7 +254,7 @@ describe("MottatteOpplysninger operations", () => {
       await store.dispatch(operations.hent(4));
 
       expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenLastCalledWith("/api/mottatteOpplysninger/4", expect.anything());
+      expect(fetch).toHaveBeenLastCalledWith("/api/mottatteopplysninger/4", expect.anything());
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
