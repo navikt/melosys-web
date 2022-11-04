@@ -25,6 +25,7 @@ const VELG_SAKSTEMA = { melding: "Velg sakstema" };
 const VELG_BEHANDLINGSTYPE = { melding: "Velg behandlingstype" };
 const VELG_BEHANDLINGSTEMA = { melding: "Velg behandlingstema" };
 const VELG_OPPGAVE = { melding: "Velg hvilken oppgave du skal opprette sak på" };
+const VELG_BEHANDLINGSAARSAK = { melding: "Velg behandlingsårsak" };
 const FYLL_UT_MOTTAKSDATO = { melding: "Fyll ut mottaksdato" };
 const VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_BEHANDLINGEN_TIL = {
   melding: "Velg hvilken sak du ønsker å knytte behandlingen til",
@@ -196,6 +197,17 @@ const opprettnysak = object().shape({
         .when("oppretterOppgave", {
           is: true,
           then: string().erGyldigDato().required(FYLL_UT_MOTTAKSDATO).nullable(),
+        })
+        .nullable(),
+    }),
+  behandlingsaarsak: string()
+    .nullable()
+    .when("behandleAlleSakerToggleEnabled", {
+      is: true,
+      then: string()
+        .when("oppretterOppgave", {
+          is: true,
+          then: string().required(VELG_BEHANDLINGSAARSAK).nullable(),
         })
         .nullable(),
     }),

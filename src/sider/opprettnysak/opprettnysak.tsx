@@ -59,6 +59,7 @@ interface OpprettNySakFormData {
   virksomhetNavn: string;
   mottaksdato: string;
   oppretterOppgave: boolean;
+  behandlingsaarsak: string;
 }
 
 const mapStateToProps = (state: RootState) => ({
@@ -133,6 +134,7 @@ const OpprettNySak = ({
     oppgaveID,
     mottaksdato,
     oppretterOppgave,
+    behandlingsaarsak,
   } = formValues || {};
 
   const nullstillFelt = (felt: string, verdi: any = null) => change(felt, verdi);
@@ -240,6 +242,7 @@ const OpprettNySak = ({
       soknadDto,
       oppgaveID,
       mottaksdato: Utils.dato.formatterDatoTilISO(mottaksdato),
+      behandlingsaarsak,
     };
   };
 

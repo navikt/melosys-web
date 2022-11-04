@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { KTObject } from "@navikt/melosys-kodeverk";
 import classNames from "classnames";
 
 import MKV from "../../../melosyskodeverk";
@@ -110,7 +111,18 @@ export const OppgaveVelger = ({
         </div>
       )}
       {oppretterOppgave ? (
-        <Skjema.Datovelger feltNavn="mottaksdato" label="Mottaksdato" className="mottaksdato" />
+        <>
+          <Skjema.Datovelger
+            feltNavn="mottaksdato"
+            label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>}
+            className="mottaksdato"
+          />
+          <Skjema.Select feltNavn="behandlingsaarsak" label="Behandlingsårsak" bredde="m">
+            {MKV.KTObjects.behandlinger.behandlingsaarsaktyper.map((aarsak: KTObject) => (
+              <option key={aarsak.kode} value={aarsak.kode} label={aarsak.term || ""} />
+            ))}
+          </Skjema.Select>
+        </>
       ) : (
         <>
           {oppgaverFinnes && (
