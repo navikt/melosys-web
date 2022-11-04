@@ -104,7 +104,7 @@ export const JournalforingForm = ({
         innhold={
           <>
             <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg behandlingen i mine oppgaver" />
-            {submitFailed && !Utils._isEmpty(formErrors) && (
+            {submitFailed && !Utils.object.isDeepEmpty(formErrors) && (
               <Nav.AlertStripeFeil className="feilmelding">
                 {Utils.feilmelding.syncErrorsTilFeilmelding(formErrors)}
               </Nav.AlertStripeFeil>

@@ -6,8 +6,6 @@ export function syncErrorsTilFeilmelding(
   syncErrors: { [key: string]: { melding?: string; _error?: { melding: string } } } | FormErrors<any>,
   tittel: string = "Følgende feil ble funnet"
 ) {
-  if (Utils._isEmpty(syncErrors)) return null;
-
   const finnFeilmelding = (feil: any): any => {
     if (!feil) {
       return null;
