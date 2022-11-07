@@ -200,7 +200,7 @@ const opprettnysak = object().shape({
         })
         .nullable(),
     }),
-  behandlingsaarsak: string()
+  behandlingsaarsakType: string()
     .nullable()
     .when("behandleAlleSakerToggleEnabled", {
       is: true,
@@ -210,6 +210,13 @@ const opprettnysak = object().shape({
           then: string().required(VELG_BEHANDLINGSAARSAK).nullable(),
         })
         .nullable(),
+    }),
+  behandlingsaarsakFritekst: string()
+    .nullable()
+    .when(["behandlingsaarsakType", "oppretterOppgave"], {
+      is: (behandlingsaarsakType, oppretterOppgave) =>
+        Boolean(oppretterOppgave) && behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.ANNET, // TODO
+      then: string().required(VELG_BEHANDLINGSAARSAK).nullable(),
     }),
   erAvsluttetSak: boolean()
     .nullable()

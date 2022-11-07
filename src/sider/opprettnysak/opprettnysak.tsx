@@ -39,7 +39,7 @@ import "./opprettnysak.css";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
-interface OpprettNySakFormData {
+export interface OpprettNySakFormData {
   behandlingstema: string;
   behandlingstype: string;
   periodeFraOgMed: string;
@@ -59,7 +59,8 @@ interface OpprettNySakFormData {
   virksomhetNavn: string;
   mottaksdato: string;
   oppretterOppgave: boolean;
-  behandlingsaarsak: string;
+  behandlingsaarsakType: string;
+  behandlingsaarsakFritekst?: string;
 }
 
 const mapStateToProps = (state: RootState) => ({
@@ -133,8 +134,8 @@ const OpprettNySak = ({
     skalTilordnes,
     oppgaveID,
     mottaksdato,
-    oppretterOppgave,
-    behandlingsaarsak,
+    behandlingsaarsakType,
+    behandlingsaarsakFritekst,
   } = formValues || {};
 
   const nullstillFelt = (felt: string, verdi: any = null) => change(felt, verdi);
@@ -242,7 +243,8 @@ const OpprettNySak = ({
       soknadDto,
       oppgaveID,
       mottaksdato: Utils.dato.formatterDatoTilISO(mottaksdato),
-      behandlingsaarsak,
+      behandlingsaarsakType,
+      behandlingsaarsakFritekst,
     };
   };
 
@@ -364,9 +366,7 @@ const OpprettNySak = ({
                     <OppgaveVelger
                       nyOpprettSakToggleEnabled={nyOpprettSakToggle === "enabled"}
                       oppgaverForsoktHentet={oppgaverForsoktHentet}
-                      hovedpart={hovedpart}
-                      saksnummer={saksnummer}
-                      oppretterOppgave={oppretterOppgave}
+                      formValues={formValues}
                       change={change}
                       oppgaver={oppgaver}
                     />

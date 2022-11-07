@@ -9,26 +9,23 @@ import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
+import { OpprettNySakFormData } from "../opprettnysak";
 
 import "./oppgaveVelger.css";
 
 interface OppgaveVelgerProps {
   oppgaverForsoktHentet: boolean;
-  hovedpart: string;
-  saksnummer: string;
   oppgaver: Api.Oppgaver.SokOppgaveResDto[];
   change: (field: string, value: any) => void;
   nyOpprettSakToggleEnabled: boolean;
-  oppretterOppgave: boolean;
+  formValues: OpprettNySakFormData;
 }
 
 export const OppgaveVelger = ({
   oppgaverForsoktHentet,
-  hovedpart,
-  saksnummer,
+  formValues: { hovedpart, saksnummer, oppretterOppgave, behandlingsaarsakType },
   oppgaver,
   change,
-  oppretterOppgave,
   nyOpprettSakToggleEnabled,
 }: OppgaveVelgerProps) => {
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
@@ -117,11 +114,14 @@ export const OppgaveVelger = ({
             label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>}
             className="mottaksdato"
           />
-          <Skjema.Select feltNavn="behandlingsaarsak" label="Behandlingsårsak" bredde="m">
+          <Skjema.Select feltNavn="behandlingsaarsakType" label="Behandlingsårsak" bredde="m">
             {MKV.KTObjects.behandlinger.behandlingsaarsaktyper.map((aarsak: KTObject) => (
               <option key={aarsak.kode} value={aarsak.kode} label={aarsak.term || ""} />
             ))}
           </Skjema.Select>
+          {behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.ANNET && ( // TODO
+            <Skjema.Input feltNavn="behandlingsaarsakFritekst" label="Velg behandlingsårsak" />
+          )}
         </>
       ) : (
         <>

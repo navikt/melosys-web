@@ -27,7 +27,8 @@ export interface OpprettReqDto {
   skalTilordnes: boolean;
   oppgaveID?: string;
   mottaksdato?: string;
-  behandlingsaarsak?: string;
+  behandlingsaarsakType?: string;
+  behandlingsaarsakFritekst?: string;
 }
 
 export const opprettNySak = (body: OpprettReqDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}`, body);
