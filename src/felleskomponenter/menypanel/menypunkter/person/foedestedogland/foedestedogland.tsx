@@ -15,7 +15,7 @@ import Enkeltfoedestedoglandskjema from "./enkeltfoedestedoglandskjema";
 import Utfyltfoedestedogland from "./utfyltfoedestedogland";
 
 const mapStateToProps = (state: RootState) => ({
-  behandlingsgrunnlagFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
+  mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -25,7 +25,7 @@ type InnerFoedestedProps = WrappedFieldProps & { redigerbart: boolean } & Connec
 const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
   const {
     redigerbart,
-    behandlingsgrunnlagFeilmeldinger,
+    mottatteOpplysningerFeilmeldinger,
     input: { value, onChange },
   } = props;
 
@@ -39,7 +39,7 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       redigerbart={redigerbart}
       onBinClick={slettFoedestedOgLand}
       symbolsynlighet={ikkeVisBinIngenDataSymbolsynlighet}
-      onLagreClick={() => Utils._isEmpty(behandlingsgrunnlagFeilmeldinger?.foedestedOgLand)}
+      onLagreClick={() => Utils._isEmpty(mottatteOpplysningerFeilmeldinger?.foedestedOgLand)}
       harData={value.foedested && value.foedeland}
       redigererRender={() => <Enkeltfoedestedoglandskjema redigerbart={redigerbart} />}
       redigeringUtfortRender={() => <Utfyltfoedestedogland foedestedOgLand={value} />}

@@ -42,10 +42,14 @@ export const plukkSak = async (data) => {
   };
 
   const response = await Api.Oppgaver.sendPlukk(oppgave);
-  const { saksnummer, behandlingID, behandlingstema } = response;
+  const { saksnummer, behandlingID, behandlingstema, behandlingstype } = response;
   if (!saksnummer) {
     return false;
   }
 
-  return Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
+  if (data.sakstema) {
+    // shortcut istedenfor å dra inn melosys.behandle_alle_saker toggle
+    return Routing.lagUrl(saksnummer, behandlingID, data.sakstype, data.sakstema, behandlingstema, behandlingstype);
+  }
+  return Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema);
 };

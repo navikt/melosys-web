@@ -13,7 +13,7 @@ import * as Api from "../../../../services/api";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
 import { formSelectors } from "../../../../ducks/form";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
@@ -38,7 +38,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   hentOppsummertFakta: (behandlingID: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
   sendVirksomheter: (behandlingID: number, virksomheter: Api.Avklartefakta.Virksomheter) =>
     dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
-  hentBehandlingsgrunnlag: (behandlingID: number) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
+  hentMottatteOpplysninger: (behandlingID: number) => dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
   changeValgteVirksomheter: (data: string[]) => dispatch(change(KV.Form.VIRKSOMHET, "valgteVirksomheter", data)),
 });
 
@@ -63,7 +63,7 @@ const VurderingVirksomhet = ({
   changeValgteVirksomheter,
   formIsValid,
   formValues,
-  hentBehandlingsgrunnlag,
+  hentMottatteOpplysninger,
   hentOppsummertFakta,
   redigerbart,
   sendVirksomheter,
@@ -71,18 +71,18 @@ const VurderingVirksomhet = ({
   virksomheterListe,
   lagredeValgtevirksomheter,
 }: Props & PropsFromRedux) => {
-  const [erBehandlingsgrunnlagLastetInn, setErBehandlingsgrunnlagLastetInn] = useState(false);
+  const [erMottatteOpplysningerLastetInn, setErMottatteOpplysningerLastetInn] = useState(false);
   const hjelpetekst =
     "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. " +
     'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
-  const lastInnBehandlingsgrunnlag = async () => {
-    await hentBehandlingsgrunnlag(behandlingID);
-    setErBehandlingsgrunnlagLastetInn(true);
+  const lastInnMottatteOpplysninger = async () => {
+    await hentMottatteOpplysninger(behandlingID);
+    setErMottatteOpplysningerLastetInn(true);
   };
 
   useEffect(() => {
-    lastInnBehandlingsgrunnlag();
+    lastInnMottatteOpplysninger();
     return () => {
       hentOppsummertFakta(behandlingID);
     };
@@ -99,7 +99,7 @@ const VurderingVirksomhet = ({
     }
   };
 
-  if (!erBehandlingsgrunnlagLastetInn || !formValues) {
+  if (!erMottatteOpplysningerLastetInn || !formValues) {
     return null;
   }
 

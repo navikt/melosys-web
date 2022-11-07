@@ -6,6 +6,23 @@ export const FORSIDE_JOURNALFORINGS_FORM = "journalforingsform";
 export const JOURNALFORING = "journalforing";
 export const JOURNALFORING_SED = "journalforing_sed";
 
+export enum JOURNALFORING_VALUES {
+  sakstype = "sakstype",
+  sakstema = "sakstema",
+  behandlingstema = "behandlingstema",
+  opprettnysak_behandlingstema = "opprettnysak_behandlingstema",
+  behandlingstype = "behandlingstype",
+  opprettnysak_behandlingstype = "opprettnysak_behandlingstype",
+  hovedpart = "journalforingGjelder",
+  soknadsland = "journalforingSoknadsland",
+  soknadslandUkjenteEllerAlleEosLand = "journalforingSoknadslandUkjenteEllerAlleEosLand",
+  periodeFraOgMed = "journalforingPeriodeFraOgMed",
+  periodeTilOgMed = "journalforingPeriodeTilOgMed",
+  saksnummer = "saksnummer",
+  formNavn = "journalforing",
+  erAvsluttetSak = "erAvsluttetSak",
+}
+
 export const SOKNAD = "soknad";
 
 export interface ArbeidsforholdUtland {
@@ -92,6 +109,22 @@ export const ARTIKKEL_16_1_VEDTAK = "artikkel_16_1_vedtak";
 export const ARTIKKEL_13_UTPEKLAND = "artikkel_13_utpekland";
 export const ARTIKKEL_13_X_VEDTAK = "artikkel_13_x_vedtak";
 export const OPPRETT_NY_SAK = "opprett_ny_sak";
+export enum OPPRETT_NY_SAK_VALUES {
+  sakstype = "sakstype",
+  sakstema = "sakstema",
+  behandlingstema = "behandlingstema",
+  opprettnysak_behandlingstema = "behandlingstema",
+  behandlingstype = "behandlingstype",
+  opprettnysak_behandlingstype = "behandlingstype",
+  soknadsland = "soknadsland",
+  soknadslandUkjenteEllerAlleEosLand = "soknadslandUkjenteEllerAlleEosLand",
+  periodeFraOgMed = "periodeFraOgMed",
+  periodeTilOgMed = "periodeTilOgMed",
+  saksnummer = "saksnummer",
+  hovedpart = "hovedpart",
+  formNavn = "opprett_ny_sak",
+  erAvsluttetSak = "erAvsluttetSak",
+}
 export const VURDERING_VIDERESEND = "vurdering_videresend";
 export const VURDER_UTPEKING = "vurder_utpeking";
 export const AVSLAA_UTPEKING = "avslaa_utpeking";

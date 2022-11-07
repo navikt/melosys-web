@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import * as Nav from "../../../../navFrontend";
@@ -26,15 +26,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type PersonProps = PropsFromRedux & {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
-  visBehandlingsgrunnlagData: boolean;
+  visMottatteOpplysningerData: boolean;
 };
 
 export const Person = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
-  behandlingsgrunnlagEtikett,
-  visBehandlingsgrunnlagData,
+  visMottatteOpplysningerData,
   behandlingID,
 }: PersonProps) => (
   <div className="person">
@@ -62,11 +60,11 @@ export const Person = ({
         <Adresser behandlingID={behandlingID} />
       </Nav.Column>
     </Nav.Row>
-    {visBehandlingsgrunnlagData && (
+    {visMottatteOpplysningerData && (
       <>
         <Nav.Row>
           <Nav.Column className="etikett__container">
-            {behandlingsgrunnlagEtikett}
+            <Etiketter.FraBruker />
             {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel style={{ marginLeft: "0.3em" }} />}
           </Nav.Column>
         </Nav.Row>

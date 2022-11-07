@@ -7,17 +7,15 @@ import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Ikoner from "../../../resources/images";
-import * as Mui from "../../../felleskomponenter/ui";
 
 import BrukerNavnSkjema from "../../../felleskomponenter/brukerNavnSkjema";
-import Fotknapper from "./fotknapper";
-
 import { journalforingSelectors } from "../../../ducks/journalforing";
+
+import Komponent from "./komponent";
+import Fotknapper from "./fotknapper";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import journalforingsedSchema from "./journalforingsedSchema";
-
-import "./journalforingsed.css";
 
 const JournalforingSED = ({
   avsenderID,
@@ -26,43 +24,54 @@ const JournalforingSED = ({
   behandlingstema,
   form,
   submitSpinner,
-  kanSubmittes,
   avbrytJournalforing,
   handleSubmit,
 }) => (
-  <form onSubmit={handleSubmit} className="journalforingSed">
-    <Mui.Undertittel
-      tekst="Informasjon om bruker"
+  <form onSubmit={handleSubmit}>
+    <Komponent
       ikon={Ikoner.AccountCircle}
-      className="undertittel oversteUndertittel"
-      understrek
+      tittel="Informasjon om bruker"
+      innhold={
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <BrukerNavnSkjema form={form} />
+          </Nav.Column>
+        </Nav.Row>
+      }
     />
-    <Nav.Row>
-      <Nav.Column xs="6">
-        <BrukerNavnSkjema form={form} />
-      </Nav.Column>
-    </Nav.Row>
-    <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" understrek />
-    <Nav.Row>
-      <Nav.Column xs="6">
-        <Nav.Typo.Element>Avsender ID</Nav.Typo.Element>
-        <Nav.Typo.Normaltekst>{avsenderID}</Nav.Typo.Normaltekst>
-        <Nav.Typo.Element>Avsenders navn</Nav.Typo.Element>
-        <Nav.Typo.Normaltekst>{avsenderNavn}</Nav.Typo.Normaltekst>
-      </Nav.Column>
-    </Nav.Row>
-    <Mui.Undertittel tekst="Saksinformasjon" ikon={Ikoner.ParagraphTwoColumns} className="undertittel" understrek />
-    <Nav.Row>
-      <Nav.Column xs="5">
-        <Nav.Typo.Element>Sakstype</Nav.Typo.Element>
-        <Nav.Typo.Normaltekst>{sakstype.term}</Nav.Typo.Normaltekst>
-      </Nav.Column>
-      <Nav.Column xs="7">
-        <Nav.Typo.Element>Behandlingstema</Nav.Typo.Element>
-        <Nav.Typo.Normaltekst>{behandlingstema.term}</Nav.Typo.Normaltekst>
-      </Nav.Column>
-    </Nav.Row>
-    <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
+
+    <Komponent
+      ikon={Ikoner.Globe}
+      tittel="Informasjon om avsender"
+      innhold={
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <Nav.Typo.Element>Avsender ID</Nav.Typo.Element>
+            <Nav.Typo.Normaltekst>{avsenderID}</Nav.Typo.Normaltekst>
+            <Nav.Typo.Element>Avsenders navn</Nav.Typo.Element>
+            <Nav.Typo.Normaltekst>{avsenderNavn}</Nav.Typo.Normaltekst>
+          </Nav.Column>
+        </Nav.Row>
+      }
+    />
+    <Komponent
+      ikon={Ikoner.ParagraphTwoColumns}
+      tittel="Saksinformasjon"
+      innhold={
+        <Nav.Row>
+          <Nav.Column xs="5">
+            <Nav.Typo.Element>Sakstype</Nav.Typo.Element>
+            <Nav.Typo.Normaltekst>{sakstype.term}</Nav.Typo.Normaltekst>
+          </Nav.Column>
+          <Nav.Column xs="7">
+            <Nav.Typo.Element>Behandlingstema</Nav.Typo.Element>
+            <Nav.Typo.Normaltekst>{behandlingstema.term}</Nav.Typo.Normaltekst>
+          </Nav.Column>
+        </Nav.Row>
+      }
+    />
+
+    <Fotknapper avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
   </form>
 );
 
@@ -75,7 +84,6 @@ JournalforingSED.propTypes = {
   submitSpinner: PT.bool.isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
-  kanSubmittes: PT.bool.isRequired,
   handleSubmit: PT.func.isRequired,
 };
 

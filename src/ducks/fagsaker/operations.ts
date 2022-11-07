@@ -32,9 +32,10 @@ export function hent(snr: string) {
   });
 }
 
-export function opprett(body: Api.Fagsaker.fagsak.OpprettReqDto) {
+// Trenger denne i operations for å kunne bruke feiletRespons-reducer
+export function lagNySak(body: Api.Fagsaker.fagsak.OpprettReqDto) {
   return doThenDispatch(
-    () => Api.Fagsaker.fagsak.opprett(body),
+    () => Api.Fagsaker.fagsak.opprettNySak(body),
     {
       OK: Types.OK,
       FEILET: Types.FEILET,
@@ -46,6 +47,39 @@ export function opprett(body: Api.Fagsaker.fagsak.OpprettReqDto) {
       },
     }
   );
+}
+
+// Trenger denne i operations for å kunne bruke feiletRespons-reducer
+export function lagNyBehandlingForSak(saksnummer: string, body: Api.Fagsaker.fagsak.OpprettReqDto) {
+  return doThenDispatch(
+    () => Api.Fagsaker.fagsak.opprettNyBehandlingForSak(saksnummer, body),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    {
+      success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
+        dispatch(navigeringOperations.tilForsiden());
+      },
+    }
+  );
+}
+
+export function hentMuligeSakstemaer(saksnummer: string) {
+  return doThenDispatch(() => Api.Fagsaker.fagsak.hentMuligeSakstemaer(saksnummer), {
+    OK: Types.HENT_MULIGE_SAKSTEMA,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
+export function hentMuligeSakstyper(saksnummer: string) {
+  return doThenDispatch(() => Api.Fagsaker.fagsak.hentMuligeSakstyper(saksnummer), {
+    OK: Types.HENT_MULIGE_SAKSTYPE,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
 }
 
 export function resetFagsakState() {

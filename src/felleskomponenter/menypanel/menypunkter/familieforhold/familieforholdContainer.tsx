@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
 
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
@@ -21,16 +21,14 @@ const { ARBEID_I_UTLANDET, YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema
 interface FamilieforholdContainerProps {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
-  visBehandlingsgrunnlagData: boolean;
+  visMottatteOpplysningerData: boolean;
   behandlingstema: string;
 }
 
 const FamilieforholdContainer = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
-  behandlingsgrunnlagEtikett,
-  visBehandlingsgrunnlagData,
+  visMottatteOpplysningerData,
   behandlingstema,
 }: FamilieforholdContainerProps) => {
   const [visFamilieforholdFraRegister, setVisFamilieforholdFraRegister] = useState(false);
@@ -55,11 +53,11 @@ const FamilieforholdContainer = ({
           )}
         </Nav.Column>
       </Nav.Row>
-      {visBehandlingsgrunnlagData && (
+      {visMottatteOpplysningerData && (
         <>
           <Nav.Row>
             <Nav.Column xs="12" className="etikett-container">
-              {behandlingsgrunnlagEtikett}
+              <Etiketter.FraBruker />
               {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel style={{ marginLeft: "0.3em" }} />}
             </Nav.Column>
           </Nav.Row>

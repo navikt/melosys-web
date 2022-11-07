@@ -1,18 +1,77 @@
 import React, { Fragment } from "react";
+import PT from "prop-types";
 
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Ikon from "../../../resources/images";
+import * as Nav from "../../../navFrontend";
+import { URL_BASENAME } from "../../../constants";
 
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import Soknadsland from "../../../felleskomponenter/soknadsland";
+import { lagUrl, lagUrlFraBehandlingstema } from "../../../routing";
+import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behandlingsstatus";
+
+import "./enkeltSak.css";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = (props) => {
-  const { opprettetDato, behandlingOversikter, sakstype, saksstatus, saksnummer } = props.sak;
+  const { behandleAlleSakerToggleEnabled, landkoder } = props;
+  const { opprettetDato, behandlingOversikter, sakstype, saksstatus, saksnummer, sakstema } = props.sak;
 
-  const { land, behandlingstype, periode, behandlingsstatus } = behandlingOversikter[0];
+  const { land, behandlingstype, periode, behandlingsstatus, behandlingstema, svarFrist, behandlingID } =
+    behandlingOversikter[0];
+  const link = behandleAlleSakerToggleEnabled
+    ? lagUrl(saksnummer, behandlingID, sakstype.kode, sakstema.kode, behandlingstema.kode, behandlingstype.kode)
+    : lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema.kode);
+
+  if (behandleAlleSakerToggleEnabled) {
+    return (
+      <div className="enkeltSak">
+        <Skjema.CustomRadioPanelElement
+          tittel={
+            <div className="tittel">
+              <span>
+                {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
+              </span>
+            </div>
+          }
+          hoyreSideTittel={
+            <Nav.Lenker target="_blank" href={`${URL_BASENAME}${link}`} className="saklenke">
+              {saksnummer}
+              <Ikon.ExternalLink className="ikon" />
+            </Nav.Lenker>
+          }
+          data={[
+            { description: KV.objektTilTerm(behandlingstema) },
+            { description: <div className="behandlingstype">{KV.objektTilTerm(behandlingstype)}</div> },
+            {
+              term: "Søknadsperiode:",
+              description: periode ? (
+                <Fragment>
+                  <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} />
+                </Fragment>
+              ) : null,
+            },
+            {
+              term: "Land:",
+              description: <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />,
+            },
+            {
+              description: (
+                <div className="behandlingsstatusSvarfrist-wrapper">
+                  <BehandlingsstatusMedSvarfrist behandlingsstatus={behandlingsstatus} svarFrist={svarFrist} />
+                </div>
+              ),
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
   return (
     <Skjema.CustomRadioPanelElement
       tittel={KV.objektTilTerm(sakstype)}
@@ -38,6 +97,8 @@ const EnkeltSak = (props) => {
 
 EnkeltSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
+  behandleAlleSakerToggleEnabled: PT.bool.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 export default EnkeltSak;

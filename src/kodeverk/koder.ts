@@ -109,6 +109,7 @@ export const referanseKoder = {
 export const Tema = {
   MED: "Medlemskap",
   UFM: "Unntak fra medlemskap",
+  TRY: "Trygdeavgift",
 };
 
 export const LoennetArbeidAntallLand = {
@@ -177,4 +178,5 @@ export enum Behandlingskategori {
   EØS_SED_BEHANDLING = "EØS_SED_BEHANDLING",
   FTRL_SAKSBEHANDLING = "FTRL_SAKSBEHANDLING",
   TRYGDEAVTALE_SAKSBEHANDLING = "TRYGDEAVTALE_SAKSBEHANDLING",
+  GENERELL_BEHANDLING = "GENERELL_BEHANDLING",
 }

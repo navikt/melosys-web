@@ -25,8 +25,8 @@ class Vedtak extends Steg {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       oppdater: propsLight.tilgjengeligeHandlers.oppdater,
-      lagreOgFatteVedtak: propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
+      validerMottatteOpplysninger: this._propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
     };
     this.status = FANE_STATUS.OK;
   }

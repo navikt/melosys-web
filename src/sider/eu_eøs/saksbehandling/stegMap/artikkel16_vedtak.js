@@ -16,9 +16,9 @@ class Artikkel16Vedtak extends Steg {
     });
     this.beregnRelevantUI = (_propsLight) => ({});
     this.handlers = {
-      lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
+      validerMottatteOpplysninger: this._propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
     };
     this._status = FANE_STATUS.OK;
   }

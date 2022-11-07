@@ -55,8 +55,8 @@ class VesentligVirksomhet extends Steg {
     this.status = FANE_STATUS.OK;
   }
 
-  harAvklaring = (vurderingLovvalgBarnFakta, behandlingsgrunnlagMedfolgendeBarn) =>
-    vurderingLovvalgBarnFakta.length === behandlingsgrunnlagMedfolgendeBarn.length &&
+  harAvklaring = (vurderingLovvalgBarnFakta, mottatteOpplysningerMedfolgendeBarn) =>
+    vurderingLovvalgBarnFakta.length === mottatteOpplysningerMedfolgendeBarn.length &&
     vurderingLovvalgBarnFakta.every(
       (enkeltFakta) =>
         enkeltFakta.fakta.includes(BOOLSK_STRING.SANN) ||

@@ -14,6 +14,7 @@ import { sorterElementerEtterDato } from "../sorterbarListe";
 import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
+import { useFeatureToggle } from "../../featuretoggle";
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -21,12 +22,25 @@ import "./fagsak.css";
  * seg inn på den.
  */
 const Fagsak = ({ sak, visSakstema, landkoder }) => {
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
-  const VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND = 0;
-  const { periode, land } = behandlingOversikter[VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND]; // UX ønsker å ha periode og land vist kun en gang. på topp
+
+  const { periode, land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.periode != null) ?? {};
   const tittel = visSakstema
     ? `${KV.objektTilTerm(sakstype)} - ${KV.objektTilTerm(sakstema)}`
     : `${KV.objektTilTerm(sakstype)}`;
+  const link = (behandling) =>
+    visSakstema
+      ? Routing.lagUrl(
+          saksnummer,
+          behandling.behandlingID,
+          sakstype.kode,
+          sakstema.kode,
+          behandling.behandlingstema.kode,
+          behandling.behandlingstype.kode
+        )
+      : Routing.lagUrlFraBehandlingstema(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode);
+
   const customMargin = { marginLeft: "1em" };
 
   const sorterteBehandlinger = behandlingOversikter
@@ -48,7 +62,10 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
           </Nav.Column>
           <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
-              <DatoOmradeDescription label="Periode: " periode={periode} />
+              <DatoOmradeDescription
+                label={behandleAlleSakerToggle === "enabled" ? "Lovvalgsperiode: " : "Periode: "}
+                periode={periode}
+              />
               <dt>Land:</dt>
               <dd>
                 <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
@@ -66,11 +83,7 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
         </Nav.Row>
         <Nav.Row className="fagsak__behandlinger">
           {sorterteBehandlinger.map((behandling) => (
-            <Behandling
-              key={behandling.behandlingID}
-              behandling={behandling}
-              link={Routing.lagUrl(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode)}
-            />
+            <Behandling key={behandling.behandlingID} behandling={behandling} link={link(behandling)} />
           ))}
         </Nav.Row>
       </Nav.Container>

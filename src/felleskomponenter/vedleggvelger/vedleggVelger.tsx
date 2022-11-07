@@ -1,23 +1,18 @@
 import React, { useState } from "react";
-import classNames from "classnames";
 import { FysiskDokument } from "Domene";
-
-import * as Nav from "../../navFrontend";
 import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 
 import "./vedleggVelger.css";
-import { VedleggTable } from "./vedleggTable";
 import VedleggVelgerModal from "./vedleggVelgerModal";
 
 interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];
   valgteVedlegg: FysiskDokument[];
   onChange: (valgteVedlegg: FysiskDokument[]) => void;
-  className?: string;
 }
 
-const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: VedleggVelgerProps) => {
+const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange }: VedleggVelgerProps) => {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
@@ -29,22 +24,9 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: Vedle
     onChange(valgteVedlegg.filter(({ id }) => id !== vedleggID));
   };
 
-  const harValgteVedlegg = valgteVedlegg && valgteVedlegg.length > 0;
-
-  const cls = classNames(className, "vedleggvelger");
-
   return (
-    <Nav.Row className={cls}>
-      {harValgteVedlegg && (
-        <VedleggTable
-          redigerer={false}
-          slettVedlegg={slettVedlegg}
-          valgteVedlegg={valgteVedlegg}
-          alleVedlegg={dokumenter}
-          leggTilVedlegg={leggTilVedlegg}
-        />
-      )}
-      <Mui.Lenkeknapp onClick={toggleRedigerer} ikon={Ikoner.Add}>
+    <>
+      <Mui.Lenkeknapp className="vedleggvelger" onClick={toggleRedigerer} ikon={Ikoner.Add}>
         Legg til vedlegg
       </Mui.Lenkeknapp>
       {redigerer && (
@@ -57,7 +39,7 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: Vedle
           slettVedlegg={slettVedlegg}
         />
       )}
-    </Nav.Row>
+    </>
   );
 };
 

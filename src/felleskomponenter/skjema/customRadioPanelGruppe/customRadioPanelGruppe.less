@@ -1,24 +1,32 @@
 @import "../../../constants.less";
 
 .customRadioPanelGruppe {
-  margin-top: 1em;
+  justify-content: space-between;
 
+  fieldset {
+    legend {
+      margin: 0;
+    }
+  }
+
+  .customRadioPanelTittel {
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   .customRadioPanel {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: baseline;
     justify-items: center;
     border: 1px solid @gray-dark;
-    margin: 0.5em 0;
+    margin: 0;
     padding: 0.5em;
-    border-radius: 3px;
   }
 
   .customRadioPanel--checked {
     background-color: #0067c540;
-  }
-
-  .customRadioPanel--focused {
   }
 
   .customRadioPanel--disabled {
@@ -26,12 +34,38 @@
   }
 
   .radioPanel__Input {
-    margin: 0.5em;
-    flex: 1;
+    .radioknapp + .skjemaelement__label::before {
+      top: -1rem;
+    }
   }
 
   .radioPanel__innhold {
     flex: 10;
+  }
+
+  .visMerMindre {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 1rem;
+
+    button {
+      display: inline-flex;
+      background: none;
+      border: none;
+      color: #0067c5;
+
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+
+    svg {
+      height: 20px;
+      width: 20px;
+      margin-left: 0.25rem;
+    }
   }
 }
 

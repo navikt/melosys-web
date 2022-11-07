@@ -1,14 +1,17 @@
 import { ReactComponent as AccountCircle } from "./line-version-account-circle.svg";
 import { ReactComponent as Add } from "./add.svg";
+import { ReactComponent as Applicant } from "./applicant.svg";
 import { ReactComponent as ArrowLeftBlue } from "./arrow-left-blue.svg";
 import { ReactComponent as ArrowLeftWhite } from "./arrow-left-white.svg";
 import { ReactComponent as AddOne } from "./line-version-add-1.svg";
+import { ReactComponent as AddOneWhite } from "./line-version-add-1-white.svg";
 import { ReactComponent as Arbeidsgiver } from "./ikon-arbeidsgiver.svg";
 import { ReactComponent as Arbeidsforhold } from "./ikon-arbeidsforhold.svg";
 import { ReactComponent as Bin } from "./bin-small.svg";
 import { ReactComponent as BinBlack } from "./bin-small-black.svg";
 import { ReactComponent as Binders } from "./paperclip.svg";
 import { ReactComponent as BlyantActive } from "./blyant-active.svg";
+import { ReactComponent as BlyantBlack } from "./blyant-active-black.svg";
 import { ReactComponent as BlyantDisabled } from "./blyant-disabled.svg";
 import { ReactComponent as BrevSendt } from "./emailsend.svg";
 import { ReactComponent as Building } from "./building.svg";
@@ -20,6 +23,7 @@ import { ReactComponent as Clock } from "./clock.svg";
 import { ReactComponent as ClockFilled } from "./clock-filled.svg";
 import { ReactComponent as CoApplicant } from "./co-applicant.svg";
 import { ReactComponent as Copy } from "./copy.svg";
+import { ReactComponent as Down } from "./down.svg";
 import { ReactComponent as Eye } from "./eye.svg";
 import { ReactComponent as ExternalLink } from "./external-link.svg";
 import { ReactComponent as Familie } from "./familie.svg";
@@ -27,6 +31,7 @@ import { ReactComponent as Forhandsvis } from "./forhandsvis.svg";
 import { ReactComponent as Ferdig } from "./ikon-steg-ferdig.svg";
 import { ReactComponent as Feil } from "./ikon-steg-feil.svg";
 import { ReactComponent as Filenew } from "./line-version-file-new-1.svg";
+import { ReactComponent as Files } from "./files.svg";
 import { ReactComponent as FindAccount } from "./account-find.svg";
 import { ReactComponent as Fly } from "./fly.svg";
 import { ReactComponent as Varsel } from "./ikon-steg-varsel.svg";
@@ -34,6 +39,7 @@ import { ReactComponent as Globe } from "./line-version-globe-1.svg";
 import { ReactComponent as GreenCheckmark } from "./green-checkmark.svg";
 import { ReactComponent as Hamburger } from "./hamburger-filled.svg";
 import { ReactComponent as Helikopter } from "./helikopter.svg";
+import { ReactComponent as Hourglass } from "./hourglass.svg";
 import { ReactComponent as InformationCircle } from "./infomationcircle.svg";
 import { ReactComponent as IkonSak } from "./ikon-sak.svg";
 import { ReactComponent as Inntekt } from "./ikon-inntekt.svg";
@@ -42,6 +48,7 @@ import { ReactComponent as KalkulatorDisabled } from "./kalkulator-disabled.svg"
 import { ReactComponent as Kors } from "./kors.svg";
 import { ReactComponent as Kvinne } from "./ikon-kvinne.svg";
 import { ReactComponent as Kontor } from "./kontor.svg";
+import { ReactComponent as Links } from "./links.svg";
 import { ReactComponent as Location } from "./location.svg";
 import { ReactComponent as LockClosed } from "./lock-closed.svg";
 import { ReactComponent as LockClosedFilled } from "./lock-closed-filled.svg";
@@ -57,10 +64,12 @@ import { ReactComponent as Pencil } from "./pencil-2.svg";
 import { ReactComponent as ParagraphTwoColumns } from "./line-version-paragraph-two-columns.svg";
 import { ReactComponent as Refresh } from "./refresh.svg";
 import { ReactComponent as RemoveOne } from "./filled-version-remove-1.svg";
+import { ReactComponent as Remove } from "./unfilled-remove.svg";
 import { ReactComponent as Ring } from "./ring.svg";
 import { ReactComponent as Skip } from "./skip.svg";
 import { ReactComponent as Svar } from "./reply.svg";
 import { ReactComponent as Ubehandlet } from "./ikon-steg-ubehandlet.svg";
+import { ReactComponent as Up } from "./up.svg";
 import { ReactComponent as VedtakAvslatt } from "./ikon-vedtak-avslatt.svg";
 import { ReactComponent as VedtakGodkjent } from "./ikon-vedtak-godkjent.svg";
 import { ReactComponent as VedakUbehandlet } from "./ikon-vedtak-ubehandlet.svg";
@@ -72,15 +81,18 @@ import { Kjoenn } from "./helpercomponents";
 export {
   AccountCircle,
   Add,
+  Applicant,
   ArrowLeftBlue,
   ArrowLeftWhite,
   AddOne,
+  AddOneWhite,
   Arbeidsgiver,
   Arbeidsforhold,
   Bin,
   BinBlack,
   Binders,
   BlyantActive,
+  BlyantBlack,
   BlyantDisabled,
   BrevSendt as InnBrev,
   Building,
@@ -92,6 +104,7 @@ export {
   ClockFilled,
   CoApplicant,
   Copy,
+  Down,
   Eye,
   ExternalLink,
   Familie,
@@ -99,6 +112,7 @@ export {
   Feil,
   Ferdig,
   Filenew,
+  Files,
   FindAccount,
   Fly,
   Globe,
@@ -106,6 +120,7 @@ export {
   Hamburger,
   Helikopter,
   HentOpplysninger,
+  Hourglass,
   IkonSak,
   InformationCircle,
   Inntekt,
@@ -116,6 +131,7 @@ export {
   Kvinne,
   Kontor,
   Kopier,
+  Links,
   Location,
   LockClosed,
   LockClosedFilled,
@@ -130,12 +146,14 @@ export {
   Pencil,
   ParagraphTwoColumns,
   Refresh,
+  Remove,
   RemoveOne,
   Ring,
   Skip,
   Svar,
   Varsel,
   Ubehandlet,
+  Up,
   VedtakAvslatt,
   VedtakGodkjent,
   VedakUbehandlet,

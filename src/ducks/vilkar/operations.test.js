@@ -106,7 +106,7 @@ describe("vilkar operations", () => {
   });
 
   describe("oppdaterState", () => {
-    it("lager OPPDATER_BEHANDLINGSGRUNNLAG action", () => {
+    it("lager OPPDATER_MOTTATTE_OPPLYSNINGER action", () => {
       const vilkar = [{ vilkaar: "test" }, { vilkaar: "test2" }];
 
       const expectedActions = [

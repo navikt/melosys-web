@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -12,7 +12,7 @@ import * as Utils from "../../../../utils";
 import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../skjema";
 
-import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
 import { BOOLSK_STRING } from "../../../../constants";
 import EditerbartElement, { Status } from "../editerbartElement";
 
@@ -307,7 +307,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
+  oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -315,21 +315,19 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type LonnOgGodtgjorelserProps = {
   visArbeidsforholdRolleEtiketter: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
   redigerbart: boolean;
 };
 
 const LonnOgGodtgjorelser = connector(
   ({
     redigerbart,
-    oppdaterBehandlingsgrunnlag,
+    oppdaterMottatteOpplysninger,
     lonnOgNaturalytelser,
     arbeidsgiveravgiftOgTrygdeavgift,
-    behandlingsgrunnlagEtikett,
     visArbeidsforholdRolleEtiketter,
   }: PropsFromRedux & LonnOgGodtgjorelserProps) => {
     const lagreHandler = () => {
-      oppdaterBehandlingsgrunnlag();
+      oppdaterMottatteOpplysninger();
       return true;
     };
 
@@ -340,7 +338,6 @@ const LonnOgGodtgjorelser = connector(
             <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
               {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
             </Nav.Typo.Innholdstittel>
-            <span>{behandlingsgrunnlagEtikett}</span>
             {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
             <LonnOgNaturalytelser redigerbart={redigerbart} lagreHandler={lagreHandler} {...lonnOgNaturalytelser} />
             <ArbeidsgiveravgiftOgTrygdeavgift

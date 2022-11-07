@@ -14,7 +14,7 @@ import soknadSchema from "./soknadSchema";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 
 import { behandlingerSelectors } from "../behandlinger";
-import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../mottatteOpplysninger";
 import { fagsakSelectors } from "../fagsaker";
 
 const getFormState = (state, formName, defaultValue = {}) =>
@@ -30,6 +30,11 @@ export const RegisteredFieldsSelector = Utils._memoize((formName) =>
     (state) => state,
     (state) => getFormState(state, formName).registeredFields || []
   )
+);
+
+export const OpprettNySakFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.OPPRETT_NY_SAK, {}),
+  (opprett_ny_sak) => opprett_ny_sak
 );
 
 export const SoknadenFormSelector = createSelector(
@@ -304,7 +309,7 @@ export const SoknadErrorsSelector = createSelector(
   (state) => ({
     skalOppgittAdresseValideres: SoknadOppgittAdresseHarVerdierSelector(state),
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-    behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+    mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
     sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   }),
   (soknadformSyncErrors, soknadformValues, context) => {

@@ -1,21 +1,52 @@
-.behandlingspanel {
-  display: flex;
-  flex-direction: row;
-  background: lightgray;
-  border: 1px solid #b7b1a9; /* TODO HENT FARGE */
-  border-radius: 3px;
-  margin: 0.5em 0;
-  padding: 0.5em;
+@coreModulePath: "../../../../node_modules/";
+@frontendModuler: "@{coreModulePath}nav-frontend-";
+@import "@{frontendModuler}core/less/core";
 
-  .skjemaelement {
-    align-self: center;
-    margin: 0.5rem 0 0.5rem 2em;
+.knyttTilSak {
+  &__behandlingspanel {
+    display: flex;
+    flex-direction: row;
+    background: #e7e9e9;
+    border: 1px solid #979797;
+    padding: 0.5em;
+
+    .skjemaelement {
+      align-self: center;
+      margin: 0.5rem 0 0.5rem 2em;
+    }
+
+    .innrykk {
+      margin-left: 2em;
+    }
   }
-}
-.panelramme {
-  background: lightgray;
-  border: 1px solid #b7b1a9;
-  borderradius: 3px;
-  margin: 0.5em 0;
-  padding: 0.5em;
+  &__panelramme {
+    background: #e7e9e9;
+    border: 1px solid #979797;
+    padding: 0.5em;
+
+    .nyBehandling-utenBehandling {
+      margin-top: 1rem;
+    }
+
+    .panelElement {
+      margin-left: 1rem;
+    }
+
+    .temaTypeOverskrift {
+      margin-top: 0.5rem;
+      margin-bottom: 1.25rem;
+      font-size: 18px;
+    }
+
+    .behandlingstype {
+      .fieldset__legend {
+        font-family: "Source Sans Pro", Arial, sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        display: block;
+        line-height: 1.4;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
 }

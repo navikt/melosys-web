@@ -36,7 +36,9 @@ spec:
       enabled: true
       tenant: {{TENANT_URL}}
       replyURLs:
-        - {{INGRESS}}
+        { { #each INGRESSES}}
+            - "{{this}}"
+        {{/each } }
         - {{REPLY_URL}} # Workaround: For prod må REPLY_URL være samme som INGRESS i vars-prod.json. Dette for å ha localhost:3000 i tillegg til INGRESS i dev, men kun ha INGRESS i prod.
       claims:
         extra:
@@ -54,11 +56,13 @@ spec:
         - application: {{APP_NAME_TRYGDEAVTALE_API}}
   vault:
     enabled: true
-  ingresses:
-    - {{INGRESS}}
+  { { #if INGRESSES}}
+    ingresses:
+      { { #each INGRESSES}}
+          - "{{this}}"
+              {{/each } }
+        {{/if } }
   env:
-    - name: REDIS_HOST
-      value: {{REDIS_APP_NAME}}.teammelosys.svc.nais.local
     - name: APP_URL_MELOSYS
       value: {{APP_URL_MELOSYS}}
     - name: APP_URL_TRYGDEAVTALE

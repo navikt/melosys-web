@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
@@ -11,16 +11,14 @@ import "./fullmektigcontainer.css";
 interface FullmektigProps {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
 }
 
-const Fullmektig = ({ redigerbart, visArbeidsforholdRolleEtiketter, behandlingsgrunnlagEtikett }: FullmektigProps) => (
+const Fullmektig = ({ redigerbart, visArbeidsforholdRolleEtiketter }: FullmektigProps) => (
   <div className="fullmektig__container">
     <div className="tittel">
       <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
         {KV.Menypunkter.Fullmektig.tittel}
       </Nav.Typo.Innholdstittel>
-      <span>{behandlingsgrunnlagEtikett}</span>
       {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
     </div>
     <Fullmektige redigerbart={redigerbart} />

@@ -9,7 +9,6 @@ import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
-import * as Hooks from "../../../hooks";
 import * as Utils from "../../../utils";
 
 import Begrunnelser from "../../../felleskomponenter/begrunnelser";
@@ -27,6 +26,7 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel16VedtakSchema from "./vurderingArtikkel16VedtakSchema";
 
 import "./vurderingArtikkel16Vedtak.css";
+import { vedtakOperations } from "../../../ducks/vedtak";
 
 export const VurderingArtikkel16VedtakBegrunnelser = ({
   art12_1_begrunnelser,
@@ -341,7 +341,6 @@ const hentLovvalgsperiode = (anmodningsperiodesvar, anmodningsperiode) => {
 };
 
 export const VurderingArtikkel16Vedtak = ({
-  lagreOgFatteVedtak,
   redigerbart,
   behandlingID,
   anmodningsperiode,
@@ -361,10 +360,11 @@ export const VurderingArtikkel16Vedtak = ({
   kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
+  validerMottatteOpplysninger,
+  fattVedtak,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
-  const isMounted = Hooks.useIsMounted();
 
   useEffect(() => {
     /**
@@ -426,6 +426,7 @@ export const VurderingArtikkel16Vedtak = ({
         setVedtakPending(false);
       }
     }
+
     kontroller();
   }, [aktivtSteg, formIsValid]);
 
@@ -438,12 +439,15 @@ export const VurderingArtikkel16Vedtak = ({
 
     setVedtakPending(true);
 
-    await lagreOgFatteVedtak(lagFattVedtakEOSReqDto());
-
-    // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
-    if (isMounted.current) {
-      setVedtakPending(false);
-    }
+    validerMottatteOpplysninger()
+      .then(() => {
+        fattVedtak(behandlingID, lagFattVedtakEOSReqDto()).then((res) => {
+          if (res.data?.data?.error) {
+            setVedtakPending(false);
+          }
+        });
+      })
+      .catch(() => setVedtakPending(false));
   };
 
   const renderBegrunnelser = useCallback(
@@ -568,7 +572,6 @@ VurderingArtikkel16Vedtak.propTypes = {
   behandlingID: PT.number.isRequired,
   behandlingstype: PT.string.isRequired,
   formIsValid: PT.bool.isRequired,
-  lagreOgFatteVedtak: PT.func.isRequired,
   tilbake: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
@@ -584,6 +587,8 @@ VurderingArtikkel16Vedtak.propTypes = {
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
+  validerMottatteOpplysninger: PT.func.isRequired,
+  fattVedtak: PT.func.isRequired,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
@@ -667,6 +672,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   hentLovvalgsperioder: (behandlingID) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),
+  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16VedtakForm);

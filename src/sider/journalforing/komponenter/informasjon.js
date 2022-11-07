@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { change } from "redux-form";
+import { arrayRemove, change } from "redux-form";
 import PT from "prop-types";
 
 import MKV from "../../../melosyskodeverk";
@@ -8,13 +8,13 @@ import * as Utils from "../../../utils";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
-import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
-import * as Mui from "../../../felleskomponenter/ui";
+import * as KV from "../../../kodeverk";
 
 import AvsenderVelger from "./avsender";
 import LenkeListeVelger from "./lenkelistevelger";
 import JournalforingGjelder from "./journalforingGjelder";
+import Komponent from "./komponent";
 import { FeatureToggle } from "../../../featuretoggle";
 import { hentSammensattNavn } from "../../../graphql/navn";
 
@@ -23,7 +23,6 @@ import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 
 import "./informasjon.css";
-import { apnePdfINyFane } from "../../../services/utils";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -46,6 +45,7 @@ class Informasjon extends Component {
   state = {
     hoveddokumentTittel: "",
     vedleggPdfTittler: [],
+    logiskeVedleggTittler: [],
   };
 
   async componentDidMount() {
@@ -57,6 +57,10 @@ class Informasjon extends Component {
         acc.push(elem.tittel);
         return acc;
       }, [])
+    );
+    await this.oppdaterState(
+      "logiskeVedleggTittler",
+      journalforingSkjemaVerdier.hoveddokument.logiskeVedlegg.map((tittel) => ({ tittel, ny: false }))
     );
     await this.oppdaterFelter(this.props, true);
   }
@@ -217,10 +221,29 @@ class Informasjon extends Component {
     await this.oppdaterState("vedleggPdfTittler", tittler);
   };
 
+  updateLogiskeVedleggTittel = async (index, verdi) => {
+    const tittler = [...this.state.logiskeVedleggTittler];
+    tittler[index] = { ...tittler[index], tittel: verdi };
+    await this.oppdaterState("logiskeVedleggTittler", tittler);
+  };
+
+  deleteLogiskeVedleggTittel = async (index) => {
+    const tittler = [...this.state.logiskeVedleggTittler];
+    tittler.splice(index, 1);
+    await this.props.fjernFeltInnhold("hoveddokument.logiskeVedlegg", index);
+    await this.oppdaterState("logiskeVedleggTittler", tittler);
+  };
+
+  addLogiskeVedleggTittler = async (verdi) => {
+    const tittler = [...this.state.logiskeVedleggTittler];
+    tittler.push({ tittel: verdi, ny: true });
+    await this.oppdaterState("logiskeVedleggTittler", tittler);
+  };
+
   render() {
-    const { journalpostID, dokumentID, vedlegg, settFeltInnhold, journalforingSkjemaVerdier } = this.props;
+    const { vedlegg, settFeltInnhold, journalforingSkjemaVerdier } = this.props;
     const {
-      hoveddokument: { tittel: hoveddokumentTittel },
+      hoveddokument: { tittel: hoveddokumentTittel, logiskeVedlegg = [] },
       vedlegg: skjemaVedlegg,
       brukerNavn,
       virksomhetNavn,
@@ -228,31 +251,39 @@ class Informasjon extends Component {
     } = journalforingSkjemaVerdier;
     const { hentOgVisRepresentant } = this;
 
-    const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
-
     const InformasjonOmBrukerEllerVirksomhet =
       journalforingGjelder === VIRKSOMHET ? (
-        <>
-          <Mui.Undertittel tekst="Informasjon om virksomhet" ikon={Ikoner.AccountCircle} className="undertittel" />
-          <Skjema.Input feltNavn="virksomhetOrgnr" label="Organisasjonsnummer:" />
-          {!Utils._isEmpty(virksomhetNavn) && (
-            <span>
-              <Nav.Typo.Element style={{ display: "inline-block", marginRight: "0.5rem" }}>Navn:</Nav.Typo.Element>
-              <Nav.Typo.Normaltekst style={{ display: "inline-block" }}>{virksomhetNavn}</Nav.Typo.Normaltekst>
-            </span>
-          )}
-        </>
+        <Komponent
+          ikon={Ikoner.Building}
+          tittel="Informasjon om virksomhet"
+          innhold={
+            <>
+              <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="virksomhetOrgnr" label="Org.nr." bredde="L" />
+              {!Utils._isEmpty(virksomhetNavn) && (
+                <span className="bruker-eller-org-navn">
+                  <Nav.Typo.Element className="term">Navn:</Nav.Typo.Element>
+                  <Nav.Typo.Normaltekst>{virksomhetNavn}</Nav.Typo.Normaltekst>
+                </span>
+              )}
+            </>
+          }
+        />
       ) : (
-        <>
-          <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
-          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" />
-          {!Utils._isEmpty(brukerNavn) && (
-            <span>
-              <Nav.Typo.Element style={{ display: "inline-block", marginRight: "0.5rem" }}>Navn:</Nav.Typo.Element>
-              <Nav.Typo.Normaltekst style={{ display: "inline-block" }}>{brukerNavn}</Nav.Typo.Normaltekst>
-            </span>
-          )}
-        </>
+        <Komponent
+          ikon={Ikoner.AccountCircle}
+          tittel="Informasjon om bruker"
+          innhold={
+            <>
+              <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="brukerID" label="Brukers f.nr/d-nr." bredde="L" />
+              {!Utils._isEmpty(brukerNavn) && (
+                <span className="bruker-eller-org-navn">
+                  <Nav.Typo.Element className="term">Navn:</Nav.Typo.Element>
+                  <Nav.Typo.Normaltekst>{brukerNavn}</Nav.Typo.Normaltekst>
+                </span>
+              )}
+            </>
+          }
+        />
       );
 
     return (
@@ -265,63 +296,104 @@ class Informasjon extends Component {
                 {InformasjonOmBrukerEllerVirksomhet}
               </>
             ) : (
-              <>
-                <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
-                <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" />
-                <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled className="brukers-navn" />
-              </>
+              <Komponent
+                ikon={Ikoner.AccountCircle}
+                tittel="Informasjon om bruker"
+                innhold={
+                  <>
+                    <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="brukerID" label="Brukers f.nr eller d-nr." />
+                    <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled className="brukers-navn" />
+                  </>
+                }
+              />
             )
           }
         </FeatureToggle>
 
-        <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
-        {journalforingGjelder === VIRKSOMHET ? (
-          <Nav.Typo.Normaltekst>Virksomhet er avsender</Nav.Typo.Normaltekst>
-        ) : (
-          <AvsenderVelger
-            className="avsenderVelger"
-            kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
-            tomAvsender={this.tomAvsender}
-            settFeltInnhold={settFeltInnhold}
-            hentOgVisRepresentant={hentOgVisRepresentant}
-          />
-        )}
-
-        <Mui.Undertittel tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
-        <Skjema.Datovelger label="Mottatt dato" feltNavn="mottattDato" bredde="S" />
-        <Nav.Fieldset legend="Hoveddokument:">
-          <LenkeListeVelger
-            feltNavn="hoveddokument.tittel"
-            placeholder="(velg eller skriv inn egen tittel)"
-            muligeValg={dokumenttitler}
-            onClick={() => apnePdfINyFane(dokumentURI(journalpostID, dokumentID))}
-            dokumentTittel={hoveddokumentTittel}
-            undoTittel={this.state.hoveddokumentTittel}
-            updateTittel={() => this.oppdaterState("hoveddokumentTittel", hoveddokumentTittel)}
-          />
-        </Nav.Fieldset>
-        <p>Vedlegg</p>
-        {vedlegg.length > 0 &&
-          vedlegg.map((elem, index) => (
-            <Fragment key={elem.dokumentID}>
-              <LenkeListeVelger
-                feltNavn={`vedlegg.pdf.tittel_${index}`}
-                placeholder="(velg eller skriv inn egen tittel)"
-                muligeValg={dokumenttitler}
-                onClick={() => apnePdfINyFane(dokumentURI(journalpostID, elem.dokumentID))}
-                dokumentTittel={skjemaVedlegg.pdf[`tittel_${index}`]}
-                undoTittel={this.state.vedleggPdfTittler[index]}
-                updateTittel={() => this.updateVedleggTittel(index, skjemaVedlegg.pdf[`tittel_${index}`])}
+        <Komponent
+          ikon={Ikoner.Applicant}
+          tittel="Informasjon om avsender"
+          innhold={
+            journalforingGjelder === VIRKSOMHET ? (
+              <Nav.Typo.Normaltekst>Virksomhet er avsender</Nav.Typo.Normaltekst>
+            ) : (
+              <AvsenderVelger
+                kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
+                tomAvsender={this.tomAvsender}
+                settFeltInnhold={settFeltInnhold}
+                hentOgVisRepresentant={hentOgVisRepresentant}
               />
-            </Fragment>
-          ))}
-        <Skjema.ListeVelger
-          feltNavn="hoveddokument.logiskeVedlegg"
-          label="Velg ny tittel:"
-          gruppe
-          tillatFritekst
-          muligeValg={dokumenttitler}
-          placeholder="(Velg eller skriv inn egen tittel)"
+            )
+          }
+        />
+
+        <Komponent
+          ikon={Ikoner.Files}
+          tittel="Dokumenter"
+          innhold={
+            <>
+              <Skjema.Datovelger
+                label={<Nav.Typo.Element>Mottatt</Nav.Typo.Element>}
+                feltNavn="mottattDato"
+                bredde="S"
+              />
+
+              <div className="dokumentblokk">
+                <Nav.Typo.Element>Hoveddokument</Nav.Typo.Element>
+                <LenkeListeVelger
+                  feltNavn="hoveddokument.tittel"
+                  muligeValg={dokumenttitler}
+                  dokumentTittel={hoveddokumentTittel}
+                  undoTittel={this.state.hoveddokumentTittel}
+                  updateTittel={() => this.oppdaterState("hoveddokumentTittel", hoveddokumentTittel)}
+                />
+              </div>
+
+              <Nav.Typo.Element>Vedlegg</Nav.Typo.Element>
+              {(vedlegg.length > 0 || logiskeVedlegg.length > 0) && (
+                <div className="dokumentblokk">
+                  {vedlegg.length > 0 &&
+                    vedlegg.map((elem, index) => (
+                      <Fragment key={elem.dokumentID}>
+                        <LenkeListeVelger
+                          feltNavn={`vedlegg.pdf.tittel_${index}`}
+                          muligeValg={dokumenttitler}
+                          dokumentTittel={skjemaVedlegg.pdf[`tittel_${index}`]}
+                          undoTittel={this.state.vedleggPdfTittler[index]}
+                          updateTittel={() => this.updateVedleggTittel(index, skjemaVedlegg.pdf[`tittel_${index}`])}
+                        />
+                      </Fragment>
+                    ))}
+                  {logiskeVedlegg.length > 0 &&
+                    logiskeVedlegg.map((dokumentTittel, index) => (
+                      /* eslint-disable-next-line react/no-array-index-key */
+                      <Fragment key={`logiskeVedlegg[${index}]`}>
+                        <LenkeListeVelger
+                          feltNavn={`hoveddokument.logiskeVedlegg[${index}]`}
+                          muligeValg={dokumenttitler}
+                          dokumentTittel={dokumentTittel}
+                          undoTittel={this.state.logiskeVedleggTittler[index]?.tittel}
+                          updateTittel={() => this.updateLogiskeVedleggTittel(index, dokumentTittel)}
+                          slettTittel={() => this.deleteLogiskeVedleggTittel(index)}
+                          visSlett={this.state.logiskeVedleggTittler[index]?.ny}
+                        />
+                      </Fragment>
+                    ))}
+                </div>
+              )}
+
+              <Skjema.ListeVelger
+                feltNavn="hoveddokument.logiskeVedlegg"
+                gruppe
+                tillatFritekst
+                muligeValg={dokumenttitler}
+                placeholder="Velg eller skriv inn egen tittel"
+                visValgtListe={false}
+                handleLagre={(value) => this.addLogiskeVedleggTittler(value)}
+                className="logiskeVedlegg-listevelger"
+              />
+            </>
+          }
         />
       </div>
     );
@@ -334,6 +406,7 @@ Informasjon.propTypes = {
   dokumentID: PT.string,
   vedlegg: PT.arrayOf(PT.shape({ dokumentID: PT.string, tittel: PT.string })),
   settFeltInnhold: PT.func.isRequired,
+  fjernFeltInnhold: PT.func.isRequired,
   hentFagsakListe: PT.func.isRequired,
   sokOrgnr: PT.func.isRequired,
 };
@@ -350,7 +423,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  settFeltInnhold: (feltNavn, verdi) => dispatch(change("journalforing", feltNavn, verdi)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.JOURNALFORING, feltNavn, verdi)),
+  fjernFeltInnhold: (feltNavn, index) => dispatch(arrayRemove(KV.Form.JOURNALFORING, feltNavn, index)),
   hentFagsakListe: (fnrEllerOrgnr) => dispatch(sokOperations.sok(fnrEllerOrgnr)),
   sokOrgnr: (orgnr) => dispatch(OrganisasjonOperations.hent(orgnr)),
 });

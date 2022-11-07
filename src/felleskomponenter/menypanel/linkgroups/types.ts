@@ -22,15 +22,14 @@ export interface Link {
 }
 
 export interface LinkGroup {
-  label: string;
+  label?: string;
   links: Link[];
 }
 
 export interface ContentProps {
   visArbeidsforholdRolleEtiketter: boolean;
   redigerbart: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
-  visBehandlingsgrunnlagData: boolean;
+  visMottatteOpplysningerData: boolean;
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
   setMenypanelFeilmelding: (feilmelding: string) => void;
   behandlingstema: string;

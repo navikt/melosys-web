@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
@@ -13,19 +13,16 @@ interface PeriodeProps {
   visArbeidsforholdRolleEtiketter: boolean;
   redigerbart: boolean;
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
-  behandlingsgrunnlagEtikett: ReactNode;
 }
 
 const Periode = ({
   visArbeidsforholdRolleEtiketter,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
-  behandlingsgrunnlagEtikett,
 }: PeriodeProps) => (
   <div className="utenlandsoppdraget-periode">
     <Tittellinje
       tittel={KV.Menypunkter.Periode.tittel}
-      behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
       visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
     />
     <Nav.Row>
@@ -37,7 +34,10 @@ const Periode = ({
         />
       </Nav.Column>
       <Nav.Column xs="6">
-        <Soknadslandvelger redigerbart={redigerbart} />
+        <Soknadslandvelger
+          redigerbart={redigerbart}
+          lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+        />
       </Nav.Column>
     </Nav.Row>
   </div>

@@ -17,6 +17,7 @@ import { journalforingSelectors } from "../../../ducks/journalforing";
 import "./journalforingGjelder.css";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
+const { JOURNALFORING_VALUES: FormValues } = KV.Form;
 
 const mapStateToProps = (state: RootState) => ({
   journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
@@ -40,6 +41,12 @@ const JournalforingGjelder = ({
 }: PropsFromRedux) => {
   const handleClick = (event: SyntheticEvent<EventTarget>, value: string) => {
     oppdaterFelt("journalforingGjelder", value);
+    oppdaterFelt(FormValues.sakstype, null);
+    oppdaterFelt(FormValues.sakstema, null);
+    oppdaterFelt(FormValues.behandlingstema, null);
+    oppdaterFelt(FormValues.behandlingstype, null);
+    oppdaterFelt(FormValues.opprettnysak_behandlingstema, null);
+    oppdaterFelt(FormValues.opprettnysak_behandlingstype, null);
     if (value === BRUKER) {
       oppdaterFelt("ikkeSendForvaltingsmelding", false);
       oppdaterFelt("brukerID", journalpostBrukerID);
@@ -64,8 +71,8 @@ const JournalforingGjelder = ({
           name="journalforingGjelder"
           legend=""
           radios={[
-            { label: BRUKER, value: BRUKER, id: BRUKER },
-            { label: VIRKSOMHET, value: VIRKSOMHET, id: VIRKSOMHET },
+            { label: KV.kodeTilTerm(BRUKER, MKV.KTObjects.aktoersroller), value: BRUKER, id: BRUKER },
+            { label: KV.kodeTilTerm(VIRKSOMHET, MKV.KTObjects.aktoersroller), value: VIRKSOMHET, id: VIRKSOMHET },
           ]}
           checked={journalforingGjelder}
           onChange={handleClick}

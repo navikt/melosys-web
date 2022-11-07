@@ -22,16 +22,8 @@ const Topplinje = (props) => {
     event.preventDefault();
     const { hentOppgaveOversikt, history } = props;
     const { push } = history;
-    if (process.env.NODE_ENV !== "production") {
-      hentOppgaveOversikt();
-      push("/");
-      return;
-    }
-    /* eslint no-alert: off */
-    if (window.confirm("Noen endringer vil kanskje ikke bli lagret. Vil du fortsette?")) {
-      hentOppgaveOversikt();
-      push("/");
-    }
+    hentOppgaveOversikt();
+    push("/");
   };
 
   const loggUt = () => {

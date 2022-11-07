@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`vedleggTable renders correctly 1`] = `
+Array [
+  <p
+    className="typo-element vedleggtable-label"
+  >
+    a
+  </p>,
+  <div
+    className="vedleggtable"
+  >
+    <table>
+      <tbody>
+        <tr
+          className="vedlegg"
+        >
+          <td>
+            <a
+              className="lenke"
+              href="#"
+              onClick={[Function]}
+            >
+              123
+            </a>
+          </td>
+          <td />
+          <td
+            className="icon--cell"
+          >
+            <button
+              className="knapp mui-knapp knapp knapp--flat"
+              disabled={false}
+              onClick={[Function]}
+              type="button"
+            >
+              <svg
+                className="ikon"
+              >
+                blyant-active-black.svg
+              </svg>
+            </button>
+            <button
+              className="knapp mui-knapp knapp knapp--flat"
+              disabled={false}
+              onClick={[Function]}
+              type="button"
+            >
+              <svg
+                className="ikon"
+              >
+                bin-small-black.svg
+              </svg>
+            </button>
+          </td>
+        </tr>
+        <tr
+          className="vedlegg"
+        >
+          <td>
+            <a
+              className="lenke"
+              href="#"
+              onClick={[Function]}
+            >
+              test
+            </a>
+          </td>
+          <td>
+            <span>
+              
+            </span>
+          </td>
+          <td
+            className="icon--cell"
+          >
+            <button
+              className="knapp mui-knapp knapp knapp--flat"
+              disabled={false}
+              onClick={[Function]}
+              type="button"
+            >
+              <svg
+                className="ikon"
+              >
+                bin-small-black.svg
+              </svg>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>,
+]
+`;

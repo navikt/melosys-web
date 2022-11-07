@@ -10,7 +10,7 @@ import * as Api from "../services/api";
 
 import { fagsakSelectors } from "../ducks/fagsaker";
 import { datalastingOperations } from "../ducks/datalasting";
-import { behandlingsgrunnlagOperations } from "../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations } from "../ducks/mottatteOpplysninger";
 import { oppgaverOperations } from "../ducks/oppgaver";
 import { vedtakOperations } from "../ducks/vedtak";
 import { saksopplysningerOperations } from "../ducks/saksopplysninger";
@@ -31,20 +31,20 @@ const FellesHandlersProviderUnconnected = ({
   tilbakeleggeOppgave,
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
-  lagreBehandlingsgrunnlag,
+  lagreMottatteOpplysninger,
   saksnummer,
   sakstype,
   avslaaSoknad,
   skjulOppfriskDialogHandle,
   skjulHenleggDialogHandle,
   skjulAvsluttSakSomBortfaltDialogHandle,
-  skjulFerdigbehandleNyVurderingDialogHandle,
+  skjulFerdigbehandleSakDialogHandle,
   skjulRevurderFagsakDialogHandle,
   visOppfriskDialogHandle,
   visHenleggDialogHandle,
   visAvslagSoknadDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
-  visFerdigbehandleNyVurderingDialogHandle,
+  visFerdigbehandleSakDialogHandle,
   visRevurderFagsakDialogHandle,
   leggTilBehandlingOppfriskes,
   fjernBehandlingOppfriskes,
@@ -61,9 +61,9 @@ const FellesHandlersProviderUnconnected = ({
     return apolloClient.refetchQueries({ include: "active" });
   };
 
-  const lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger = async () => {
+  const lagreMottatteOpplysningerOgOppfriskSaksopplysninger = async () => {
     await leggTilBehandlingOppfriskes(behandlingID);
-    await lagreBehandlingsgrunnlag();
+    await lagreMottatteOpplysninger();
     await oppfriskSaksopplysninger(behandlingID);
     await oppfriskGraphQLSaksopplysninger();
     await fjernBehandlingOppfriskes();
@@ -104,6 +104,7 @@ const FellesHandlersProviderUnconnected = ({
 
   const debouncedSetVenterPaVurderFagsak = Utils._debounce(() => setVenterPaRevurderFagsak(true), 500);
 
+  // Fjernes med melosys.behandle_alle_saker
   const revurderFagsak = async () => {
     debouncedSetVenterPaVurderFagsak();
 
@@ -153,9 +154,9 @@ const FellesHandlersProviderUnconnected = ({
     tilForsiden();
   };
 
-  const ferdigbehandleNyVurdering = async () => {
-    await Api.Behandlinger.behandling.ferdigbehandleNyVurdering(behandlingID);
-    skjulFerdigbehandleNyVurderingDialogHandle();
+  const ferdigbehandleSak = async () => {
+    await Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer);
+    skjulFerdigbehandleSakDialogHandle();
     tilForsiden();
   };
 
@@ -165,7 +166,7 @@ const FellesHandlersProviderUnconnected = ({
       tilbakeleggOppgave,
       visHenleggDialogHandle,
       visAvsluttSakSomBortfaltDialogHandle,
-      visFerdigbehandleNyVurderingDialogHandle,
+      visFerdigbehandleSakDialogHandle,
       visAvslagSoknadDialogHandle,
       visOppfriskModal: visOppfriskDialogHandle,
       skjulOppfriskModalOgNavigerTilForside,
@@ -176,8 +177,8 @@ const FellesHandlersProviderUnconnected = ({
       henleggHandle,
       avslaaSoknadHandle,
       avsluttSakSomBortfalt,
-      ferdigbehandleNyVurdering,
-      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+      ferdigbehandleSak,
+      lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
       venterPaRevurderFagsak,
       behandlingOppfriskes,
@@ -189,7 +190,7 @@ const FellesHandlersProviderUnconnected = ({
       tilbakeleggOppgave,
       visHenleggDialogHandle,
       visAvsluttSakSomBortfaltDialogHandle,
-      visFerdigbehandleNyVurderingDialogHandle,
+      visFerdigbehandleSakDialogHandle,
       visAvslagSoknadDialogHandle,
       visOppfriskDialogHandle,
       skjulOppfriskModalOgNavigerTilForside,
@@ -200,7 +201,7 @@ const FellesHandlersProviderUnconnected = ({
       henleggHandle,
       avslaaSoknadHandle,
       avsluttSakSomBortfalt,
-      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+      lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
       venterPaRevurderFagsak,
       behandlingOppfriskes,
@@ -220,20 +221,20 @@ FellesHandlersProviderUnconnected.propTypes = {
   tilbakeleggeOppgave: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
-  lagreBehandlingsgrunnlag: PT.func.isRequired,
+  lagreMottatteOpplysninger: PT.func.isRequired,
   saksnummer: PT.string,
   sakstype: PT.string,
   avslaaSoknad: PT.func.isRequired,
   skjulOppfriskDialogHandle: PT.func.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
   skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
-  skjulFerdigbehandleNyVurderingDialogHandle: PT.func.isRequired,
+  skjulFerdigbehandleSakDialogHandle: PT.func.isRequired,
   skjulRevurderFagsakDialogHandle: PT.func.isRequired,
   visOppfriskDialogHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
-  visFerdigbehandleNyVurderingDialogHandle: PT.func.isRequired,
+  visFerdigbehandleSakDialogHandle: PT.func.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
   leggTilBehandlingOppfriskes: PT.func.isRequired,
   fjernBehandlingOppfriskes: PT.func.isRequired,
@@ -261,7 +262,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
-  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+  lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) =>
     oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   avslaaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaaSoknad(behandlingID, data)),
@@ -273,13 +274,13 @@ const mapDispatchToProps = (dispatch) => ({
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
-  skjulFerdigbehandleNyVurderingDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleNyVurdering()),
+  skjulFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleSak()),
   skjulRevurderFagsakDialogHandle: () => dispatch(modalerOperations.skjulRevurderFagsak()),
   visOppfriskDialogHandle: () => dispatch(modalerOperations.visOppfrisk()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
-  visFerdigbehandleNyVurderingDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleNyVurdering()),
+  visFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleSak()),
   visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
   resetLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),

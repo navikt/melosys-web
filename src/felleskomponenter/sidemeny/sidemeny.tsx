@@ -1,7 +1,7 @@
-import { Normaltekst } from "nav-frontend-typografi";
 import * as React from "react";
 import classnames from "classnames";
 
+import * as Utils from "../../utils";
 import bem from "../../bemUtils";
 import LinkGroup from "./linkgroup";
 import { Link } from "./types";
@@ -11,7 +11,7 @@ import "./sidemeny.css";
 const sideMenyCls = bem("side-meny");
 
 interface LinkGroupInterface {
-  label: string;
+  label?: string;
   links: Link[];
 }
 
@@ -27,10 +27,15 @@ const SideMeny = ({ linkGroups, heading, onClick }: SideMenyProps): JSX.Element 
   return (
     <div className={sideMenyRootClassnames}>
       <nav className={sideMenyCls.element("container")}>
-        {heading && <Normaltekst className={sideMenyCls.element("heading")}>{heading}</Normaltekst>}
+        {heading && <h2 className={sideMenyCls.element("heading")}>{heading}</h2>}
         <ul className={sideMenyCls.element("link-list")}>
           {linkGroups.map(({ label, links }, index) => (
-            <LinkGroup key={label} label={label} links={links} onClick={(linkIndex) => onClick(index, linkIndex)} />
+            <LinkGroup
+              key={label || Utils._uuid}
+              label={label}
+              links={links}
+              onClick={(linkIndex) => onClick(index, linkIndex)}
+            />
           ))}
         </ul>
       </nav>

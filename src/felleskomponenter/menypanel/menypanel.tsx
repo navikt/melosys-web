@@ -2,33 +2,33 @@ import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
-import * as Nav from "../../navFrontend";
-import * as Etiketter from "./etiketter";
-
 import MKV from "../../melosyskodeverk";
-
-import Sidemeny from "../sidemeny";
-import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
-
-import { LinkGroupsFactory } from "./linkgroups";
-
-import { behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
-import { behandlingerSelectors } from "../../ducks/behandlinger";
-import { redigerbartSelectors } from "../../ducks/redigerbart";
-
-import "./menypanel.css";
-import { menypanelSelectors } from "../../ducks/menypanel";
+import * as Nav from "../../navFrontend";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
-const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
+import Sidemeny from "../sidemeny";
+
+import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
+import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../ducks/redigerbart";
+import { menypanelSelectors } from "../../ducks/menypanel";
+import { fagsakSelectors } from "../../ducks/fagsaker";
+
+import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
+import { LinkGroupsFactory } from "./linkgroups";
+import "./menypanel.css";
+
+const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
 const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   sisteOpplysningerHentetDato: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
-  behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+  mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
   visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
+  sakstema: fagsakSelectors.SakstemaKodeSelector(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -41,13 +41,15 @@ type MenypanelProps = PropsFromRedux & {
 
 export const Menypanel = ({
   sisteOpplysningerHentetDato,
-  behandlingsgrunnlagtype,
+  mottatteOpplysningerType,
+  sakstype,
   behandlingstema,
   behandlingstype,
   visMenypanel,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
   visOppdaterRegisteropplysninger = true,
+  sakstema,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
@@ -55,23 +57,24 @@ export const Menypanel = ({
   if (!visMenypanel) return null;
 
   const contentProps = {
-    visArbeidsforholdRolleEtiketter: behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
-    visBehandlingsgrunnlagData: !(
+    visArbeidsforholdRolleEtiketter: mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
+    visMottatteOpplysningerData: !(
       behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED &&
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
     ),
     behandlingstema,
-    behandlingsgrunnlagEtikett:
-      behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED ? <Etiketter.FraSed /> : <Etiketter.FraSoknad />,
     redigerbart,
     lagreSoknadOgOppfriskSaksopplysninger,
     setMenypanelFeilmelding,
   };
 
   const linkGroupsWithContent = LinkGroupsFactory.createLinkGroups({
+    sakstype,
     behandlingstema,
+    behandlingstype,
     contentProps,
-    behandlingsgrunnlagtype,
+    mottatteOpplysningerType,
+    sakstema,
   });
 
   const handleClick = (groupIndex: number, linkIndex: number) => {
@@ -112,8 +115,12 @@ export const Menypanel = ({
         />
       )}
       <div className="menypanel">
-        <Sidemeny heading="Opplysninger" linkGroups={linkGroups} onClick={handleClick} />
-        <Nav.Panel className="content">{activeContent || <div />}</Nav.Panel>
+        <Nav.Column xs="3" className="utenPadding">
+          <Sidemeny heading="Opplysninger" linkGroups={linkGroups} onClick={handleClick} />
+        </Nav.Column>
+        <Nav.Column xs="9" className="utenPadding">
+          <Nav.Panel className="content">{activeContent || <div />}</Nav.Panel>
+        </Nav.Column>
       </div>
     </>
   );

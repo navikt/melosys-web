@@ -45,10 +45,10 @@ server {
   }
 
   location /openid_connect_login {
-    rewrite ^.+ /melosys/ permanent;
+    rewrite ^.+ https://$host/melosys/ permanent;
   }
 
   location = / {
-    rewrite ^.+ /melosys/ permanent;
+    rewrite ^.+ https://$host/melosys/ permanent;
   }
 }

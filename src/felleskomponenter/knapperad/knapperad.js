@@ -17,6 +17,7 @@ const Knapperad = ({
   bekreftHtmlType,
   avbrytHtmlType,
   capitalCase,
+  autoDisableVedSpinner,
 }) => {
   const cls = classnames("container__knapperad");
 
@@ -29,6 +30,7 @@ const Knapperad = ({
         onClick={bekreft}
         disabled={!redigerbart || !bekreftRedigerbart}
         spinner={spinner}
+        autoDisableVedSpinner={autoDisableVedSpinner}
       >
         {bekreftTekst}
       </Mui.Knapp>
@@ -50,6 +52,7 @@ Knapperad.propTypes = {
   bekreftHtmlType: PT.string,
   avbrytHtmlType: PT.string,
   capitalCase: PT.bool,
+  autoDisableVedSpinner: PT.bool,
 };
 
 Knapperad.defaultProps = {
@@ -59,6 +62,7 @@ Knapperad.defaultProps = {
   bekreftHtmlType: undefined,
   avbrytHtmlType: undefined,
   capitalCase: false,
+  autoDisableVedSpinner: false,
 };
 
 export default Knapperad;

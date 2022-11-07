@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { change, formValueSelector } from "redux-form";
 import PT from "prop-types";
@@ -7,96 +7,102 @@ import * as Utils from "../../../utils";
 import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
+import * as KV from "../../../kodeverk";
 import { formSelectors } from "../../../ducks/form";
 
 function LenkeListeVelger(props) {
   const {
     feltNavn,
-    placeholder,
     muligeValg,
-    onClick,
     dokumentTittel,
     undoTittel,
     updateTittel,
     settFeltInnhold,
     currentTittel,
+    visSlett,
+    slettTittel,
   } = props;
-  const [visListevelger, setState] = useState(false);
-  const style = { marginBottom: "1em" };
+  const [visListevelger, setVisListevelger] = useState(false);
 
   const tittelEndres = () => {
-    setState(!visListevelger);
+    setVisListevelger(!visListevelger);
   };
   const avbryt = () => {
     settFeltInnhold(feltNavn, undoTittel);
-    setState(false);
+    setVisListevelger(false);
   };
   const lagre = () => {
     updateTittel();
-    setState(false);
+    setVisListevelger(false);
   };
   const erTomTittel = () => Utils._isEmpty(currentTittel(feltNavn));
+
+  const dokumentKolonneStr = visSlett ? "10" : "11";
+  const ikonKolonneStr = visSlett ? "2" : "1";
+
   return (
     <Nav.Row>
-      <Nav.Column xs="9">
-        {!visListevelger && (
-          <Nav.Lenker href="#" onClick={onClick}>
-            {dokumentTittel}
-          </Nav.Lenker>
-        )}
-      </Nav.Column>
-      <Nav.Column xs="3">
-        {!visListevelger && (
-          <Nav.Lenker href="#" onClick={tittelEndres}>
-            <Ikoner.Pencil />
-            <span>&nbsp;Endre tittel</span>
-          </Nav.Lenker>
-        )}
-      </Nav.Column>
-      <Nav.Column xs="12" style={style}>
-        {visListevelger && (
-          <Fragment>
-            <Skjema.ListeVelger feltNavn={feltNavn} label="" placeholdere={placeholder} muligeValg={muligeValg} />
-            <Mui.Knapp disabled={erTomTittel()} onClick={lagre}>
-              Lagre Tittel
-            </Mui.Knapp>
-            &nbsp;
-            <Mui.Knapp type="flat" onClick={avbryt}>
-              Avbryt
-            </Mui.Knapp>
-          </Fragment>
-        )}
-      </Nav.Column>
+      {visListevelger ? (
+        <Nav.Column xs="12" className="tittelendring">
+          <Skjema.ListeVelger
+            feltNavn={feltNavn}
+            label=""
+            placeholdere="Velg eller skriv inn egen tittel"
+            muligeValg={muligeValg}
+          />
+          <Mui.Knapp type="hoved" disabled={erTomTittel()} onClick={lagre} className="knapper">
+            Lagre
+          </Mui.Knapp>
+          <Mui.Knapp type="flat" onClick={avbryt} className="knapper">
+            Avbryt
+          </Mui.Knapp>
+        </Nav.Column>
+      ) : (
+        <div className="dokumentvisning">
+          <Nav.Column xs={dokumentKolonneStr}>{dokumentTittel}</Nav.Column>
+          <Nav.Column xs={ikonKolonneStr} className="endreSlettIkonContainer">
+            {visSlett && (
+              <Nav.Lenker href="#" onClick={slettTittel} className="slettIkon">
+                <Ikoner.Bin />
+              </Nav.Lenker>
+            )}
+            <Nav.Lenker href="#" onClick={tittelEndres}>
+              <Ikoner.Pencil />
+            </Nav.Lenker>
+          </Nav.Column>
+        </div>
+      )}
     </Nav.Row>
   );
 }
 
 LenkeListeVelger.propTypes = {
   feltNavn: PT.string.isRequired,
-  onClick: PT.func.isRequired,
   dokumentTittel: PT.string.isRequired,
   undoTittel: PT.string,
   updateTittel: PT.func.isRequired,
+  visSlett: PT.bool,
+  slettTittel: PT.func,
   label: PT.string,
-  placeholder: PT.string,
   muligeValg: PT.arrayOf(PT.shape({ term: PT.string })),
   settFeltInnhold: PT.func.isRequired,
   currentTittel: PT.func.isRequired,
 };
 LenkeListeVelger.defaultProps = {
   label: "",
-  placeholder: "",
   undoTittel: "",
   muligeValg: [],
+  visSlett: false,
+  slettTittel: undefined,
 };
-const selector = formValueSelector("journalforing");
+const selector = formValueSelector(KV.Form.JOURNALFORING);
 const mapStateToProps = (state) => ({
   currentTittel: (feltNavn) => selector(state, feltNavn),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  settFeltInnhold: (feltNavn, verdi) => dispatch(change("journalforing", feltNavn, verdi)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.JOURNALFORING, feltNavn, verdi)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LenkeListeVelger);

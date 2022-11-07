@@ -1,7 +1,7 @@
 import * as Anmodningsperioder from "./modules/anmodningsperioder";
 import * as Avklartefakta from "./modules/avklartefakta";
 import * as Behandlinger from "./modules/behandlinger";
-import * as Behandlingsgrunnlag from "./modules/behandlingsgrunnlag";
+import * as MottatteOpplysninger from "./modules/mottatteOpplysninger";
 import * as Dokumenter from "./modules/dokumenter";
 import * as DokumenterV2 from "./modules/dokumenter-v2";
 import * as Eessi from "./modules/eessi";
@@ -23,6 +23,7 @@ import * as Trygdeavgift from "./modules/trygdeavgift";
 import * as Trygdeavtale from "./modules/trygdeavtale/flyt";
 import * as Utpekingsperioder from "./modules/utpekingsperioder";
 import * as Vilkar from "./modules/vilkar";
+import * as LovligeKombinasjoner from "./modules/lovligekombinasjoner";
 import {
   Avgiftsberegning,
   Avgiftsgrunnlag,
@@ -40,7 +41,7 @@ export {
   Anmodningsperioder,
   Avklartefakta,
   Behandlinger,
-  Behandlingsgrunnlag,
+  MottatteOpplysninger,
   Dokumenter,
   DokumenterV2,
   Eessi,
@@ -49,6 +50,7 @@ export {
   Journalforing,
   Kodeverk,
   Kontroll,
+  LovligeKombinasjoner,
   Lovvalgsperioder,
   Medlemskapsperioder,
   Oppgaver,

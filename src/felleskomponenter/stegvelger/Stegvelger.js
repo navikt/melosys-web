@@ -25,19 +25,20 @@ import { vilkarOperations, vilkarSelectors } from "../../ducks/vilkar";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { vedtakOperations } from "../../ducks/vedtak";
 import { formSelectors } from "../../ducks/form";
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { utpekOperations } from "../../ducks/utpek";
 import { utpekingsperioderOperations, utpekingsperioderSelectors } from "../../ducks/utpekingsperioder";
 import { videresendingOperations } from "../../ducks/videresending";
 import { oppsummertfaktaSelectors } from "../../ducks/oppsummertfakta";
 import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
-import BehandlingsgrunnlagFeilmeldinger from "../behandlingsgrunnlagFeilmeldinger";
+import MottatteOpplysningerFeilmeldinger from "../mottatteOpplysningerFeilmeldinger";
 import { Feilmeldinger } from "../feilmeldinger";
 
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.css";
 import { kontrollOperations } from "../../ducks/kontroll";
+import { datalastingOperations } from "../../ducks/datalasting";
 
 class Stegvelger extends Component {
   state = {
@@ -53,7 +54,7 @@ class Stegvelger extends Component {
       [StegStoreTyper.Lovvalgsperiode]: new EnkelDataStore(),
       [StegStoreTyper.Lovvalgsland]: new EnkelDataStore(),
     },
-    visBehandlingsgrunnlagFeilmeldinger: false,
+    visMottatteOpplysningerFeilmeldinger: false,
   };
 
   async componentDidMount() {
@@ -113,15 +114,15 @@ class Stegvelger extends Component {
 
   oppdater = () => {
     const { aktivtStegNummer } = this.state;
-    this.props.oppdaterBehandlingsgrunnlag();
+    this.props.oppdaterMottatteOpplysninger();
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
-  harBehandlingsgrunnlagFeilmeldinger = () => !Utils._isEmpty(this.props.behandlingsgrunnlagFeilmeldinger);
+  harMottatteOpplysningerFeilmeldinger = () => !Utils._isEmpty(this.props.mottatteOpplysningerFeilmeldinger);
 
-  gjemBehandlingsgrunnlagFeilmeldinger = () => this.setState({ visBehandlingsgrunnlagFeilmeldinger: false });
+  gjemMottatteOpplysningerFeilmeldinger = () => this.setState({ visMottatteOpplysningerFeilmeldinger: false });
 
-  visBehandlingsgrunnlagFeilmeldinger = () => this.setState({ visBehandlingsgrunnlagFeilmeldinger: true });
+  visMottatteOpplysningerFeilmeldinger = () => this.setState({ visMottatteOpplysningerFeilmeldinger: true });
 
   oppdaterStegData = (stegID, data) => {
     if (!data) return;
@@ -192,21 +193,21 @@ class Stegvelger extends Component {
       ]);
     }
 
-    this.props.oppdaterBehandlingsgrunnlag();
+    this.props.oppdaterMottatteOpplysninger();
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
-  fatteVedtakHandler = (data) => {
-    const { behandlingID, fattVedtak } = this.props;
-    return fattVedtak(behandlingID, data);
-  };
-
-  lagreOgFatteVedtak = async (data) => {
-    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
-      await this.props.lagreAllData();
-      return this.fatteVedtakHandler(data);
+  /**
+   * Generisk metode for validering av mottatteOpplysninger benyttet i stegkomponenter. Denne valideringen kjøres i forkant av kall
+   * til melosys-api. Opprettet som første steg i opprydning av redux bruk i Stegvelger. Har som mål å fjerne prop passing av
+   * action creators. Se slettingen av lagreOgFatteVedtak for eksempel på denne prosessen
+   * @returns {Promise<*>}
+   */
+  validerMottatteOpplysninger = async () => {
+    if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
+      return this.props.lagreAllData();
     }
-    return Promise.resolve();
+    return Promise.reject(new Error("Feil i mottatteOpplysninger"));
   };
 
   utpekHandler = (data) => {
@@ -222,7 +223,7 @@ class Stegvelger extends Component {
   };
 
   lagreOgUtpek = async (data) => {
-    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
+    if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
       await this.props.lagreAllData();
       return this.utpekHandler(data);
     }
@@ -236,7 +237,7 @@ class Stegvelger extends Component {
   };
 
   avvisUtpeking = async (data) => {
-    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
+    if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
       await this.props.lagreAllData();
       return this.avvisUtpekingHandler(data);
     }
@@ -246,7 +247,7 @@ class Stegvelger extends Component {
   lagreOgBestillAnmodningsperioder = async (bestilling) => {
     const { behandlingID, lagreAllData, bestillAnmodningsperioder } = this.props;
 
-    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
+    if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
       await lagreAllData();
       return bestillAnmodningsperioder(behandlingID, bestilling);
     }
@@ -266,7 +267,7 @@ class Stegvelger extends Component {
   };
 
   lagreOgGodkjennUnntaksperioder = async (data) => {
-    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
+    if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
       await this.props.lagreAllData();
       return this.godkjennUnntaksperioder(data);
     }
@@ -276,7 +277,7 @@ class Stegvelger extends Component {
   videresendSoknad = async (mottakerinstitusjon, fritekst, vedlegg) => {
     const { saksnummer, videresend, lagreAllData } = this.props;
 
-    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
+    if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
       const body = { mottakerinstitusjon, fritekst, vedlegg };
 
       await lagreAllData();
@@ -285,13 +286,13 @@ class Stegvelger extends Component {
     return Promise.resolve();
   };
 
-  validerOgVisBehandlingsgrunnlagFeilmeldinger = () => {
-    if (this.harBehandlingsgrunnlagFeilmeldinger()) {
-      this.visBehandlingsgrunnlagFeilmeldinger();
+  validerOgVisMottatteOpplysningerFeilmeldinger = () => {
+    if (this.harMottatteOpplysningerFeilmeldinger()) {
+      this.visMottatteOpplysningerFeilmeldinger();
       return false;
     }
 
-    this.gjemBehandlingsgrunnlagFeilmeldinger();
+    this.gjemMottatteOpplysningerFeilmeldinger();
     return true;
   };
 
@@ -338,7 +339,6 @@ class Stegvelger extends Component {
   oppdaterAktuelleSteg = (aktivtStegNummer) => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
-      lagreOgFatteVedtak: this.lagreOgFatteVedtak,
       lagreOgUtpek: this.lagreOgUtpek,
       oppdaterOgLagreBehandlinger: this.props.oppdaterOgLagreBehandlingerHandler,
       oppdaterStegData: this.oppdaterStegData,
@@ -359,8 +359,10 @@ class Stegvelger extends Component {
       bekreft: this.bekreft,
       tilbake: this.tilbake,
       oppdater: this.oppdater,
-      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+      lagreMottatteOpplysningerOgOppfriskSaksopplysninger:
+        this.props.lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       kontrollerFerdigbehandling: this.kontrollerFerdigbehandling,
+      validerMottatteOpplysninger: this.validerMottatteOpplysninger,
     };
 
     const { props } = this;
@@ -402,14 +404,16 @@ class Stegvelger extends Component {
       vurderUtpekingValid: props.vurderUtpekingValid,
       erSoknadArbeidFlereLand:
         props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-      erArbeidEttLandOvrig:
-        props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+      erArbeidEttLandOvrig: [
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+      ].includes(props.oppsummering.behandlingstema.kode),
       erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebaser: props.hjemmebaser,
       harValgtNorskArbeidsgiver: props.harValgtNorskArbeidsgiver,
       medfolgendeBarn: props.medfolgendeBarn,
-      behandlingsgrunnlag: props.behandlingsgrunnlag,
+      mottatteOpplysninger: props.mottatteOpplysninger,
       lagredeVirksomheter: props.lagredeVirksomheter,
       bestemmelser: props.bestemmelser,
       medlemskapsperioder: props.medlemskapsperioder,
@@ -442,7 +446,7 @@ class Stegvelger extends Component {
   }, 300);
 
   validerSoknadOgGaTilSteg = (nyttStegNummer) => {
-    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
+    if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
       this.tilSteg(nyttStegNummer);
     }
   };
@@ -456,7 +460,7 @@ class Stegvelger extends Component {
       artikkel16_anmodning_skjema,
       soknad_skjema,
       oppdaterPerioderState,
-      lagreBehandlingsgrunnlagHandler,
+      lagreMottatteOpplysningerHandler,
       redigerbart,
       lagreVilkarHandler,
       lagreAvklartefaktaHandler,
@@ -483,7 +487,7 @@ class Stegvelger extends Component {
       }
 
       if (this.erSisteSteg(nyttStegNummer)) {
-        await lagreBehandlingsgrunnlagHandler();
+        await lagreMottatteOpplysningerHandler();
       }
     }
 
@@ -518,7 +522,7 @@ class Stegvelger extends Component {
   };
 
   render() {
-    const { visBehandlingsgrunnlagFeilmeldinger } = this.state;
+    const { visMottatteOpplysningerFeilmeldinger } = this.state;
 
     return (
       <div className="stegvelger panelSeksjon">
@@ -527,7 +531,7 @@ class Stegvelger extends Component {
         {this.state.aktuelleSteg.map((item) => (
           <StegFane key={item.id} faneData={item} />
         ))}
-        {visBehandlingsgrunnlagFeilmeldinger && <BehandlingsgrunnlagFeilmeldinger />}
+        {visMottatteOpplysningerFeilmeldinger && <MottatteOpplysningerFeilmeldinger />}
       </div>
     );
   }
@@ -548,13 +552,12 @@ Stegvelger.propTypes = {
   hentAvklartefakta: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
   history: PT.object.isRequired,
-  fattVedtak: PT.func.isRequired,
   endreVedtak: PT.func.isRequired,
   kontrollerFerdigbehandling: PT.func.isRequired,
-  lagreBehandlingsgrunnlagHandler: PT.func.isRequired,
+  lagreMottatteOpplysningerHandler: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
-  oppdaterBehandlingsgrunnlag: PT.func.isRequired,
+  oppdaterMottatteOpplysninger: PT.func.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   soknad_skjema: PT.object,
@@ -574,7 +577,7 @@ Stegvelger.propTypes = {
   oppdaterOgLagreBehandlingerHandler: PT.func,
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
-  behandlingsgrunnlagFeilmeldinger: PT.object.isRequired,
+  mottatteOpplysningerFeilmeldinger: PT.object.isRequired,
   hentAnmodningsperioder: PT.func.isRequired,
   anmodningsperioder: PT.array.isRequired,
   anmodningErSendtUtland: PT.bool.isRequired,
@@ -607,7 +610,7 @@ Stegvelger.propTypes = {
   bestillAnmodningsperioder: PT.func.isRequired,
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
   medfolgendeBarn: PT.array.isRequired,
-  behandlingsgrunnlag: PT.object.isRequired,
+  mottatteOpplysninger: PT.object.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   lagredeVirksomheter: PT.array.isRequired,
   medlemskapsperioder: PT.object.isRequired,
@@ -619,7 +622,7 @@ Stegvelger.propTypes = {
   soknadsperiode: MPT.Soknadsperiode.isRequired,
   vurder_familie_valid: PT.bool.isRequired,
   vurder_representant_valid: PT.bool.isRequired,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func,
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger: PT.func,
   feilmeldinger: PT.oneOfType([
     PT.arrayOf(
       PT.shape({
@@ -657,7 +660,7 @@ Stegvelger.defaultProps = {
   lagreLovvalgsperioderHandler: () => {},
   lagreAnmodningsperioderHandler: () => {},
   oppdaterOgLagreBehandlingerHandler: () => {},
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => {},
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger: () => {},
   feilmeldinger: [],
 };
 
@@ -690,7 +693,7 @@ const mapStateToProps = (state) => ({
   valgteVirksomheterIkkeNaeringsDrivende:
     avklartefaktaSelectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  behandlingsgrunnlagFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
+  mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
   erIDirekteTilArtikkel16Flyt: flytSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
@@ -702,21 +705,20 @@ const mapStateToProps = (state) => ({
   lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
   valgteLovvalgsVilkarBestemmelse: lovvalgsperioderSelectors.ValgteLovvalgsVilkarBestemmelseSelector(state),
   maritimtarbeid: formSelectors.MaritimtArbeidSelector(state),
-  hjemmebaser: behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
+  hjemmebaser: mottatteOpplysningerSelectors.HjemmebaserSelector(state),
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
   harValgtNorskArbeidsgiver: flytSelectors.HarValgtNorskArbeidsgiverSelector(state),
-  medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
-  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
+  medfolgendeBarn: mottatteOpplysningerSelectors.MedfolgendeBarnSelector(state),
+  mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
-  soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
+  soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
 /* eslint no-alert:off */
 const mapDispatchToProps = (dispatch) => ({
   hentVilkar: (behandlingID) => dispatch(vilkarOperations.hent(behandlingID)),
-  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
   endreVedtak: (behandlingID, body) => dispatch(vedtakOperations.endre(behandlingID, body)),
   kontrollerFerdigbehandling: (data) => dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
   videresend: (saksnummer, videresending) => dispatch(videresendingOperations.send(saksnummer, videresending)),
@@ -736,12 +738,14 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(utpekingsperioderOperations.oppdaterUtpekingsperioderState(stegState)),
   oppdaterAnmodningsperiodesvar: (anmodningsperiodesvar) =>
     dispatch(anmodningsperiodesvarOperations.oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar)),
-  lagreBehandlingsgrunnlagHandler: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+  lagreMottatteOpplysningerHandler: () => dispatch(mottatteOpplysningerOperations.lagre()),
   utpek: (saksnummer, body) => dispatch(utpekOperations.utpek(saksnummer, body)),
   avvisUtpeking: (behandlingID, body) => dispatch(utpekOperations.avvis(behandlingID, body)),
   lagreUtpekingsperioderHandler: () => dispatch(utpekingsperioderOperations.lagre()),
   bestillAnmodningsperioder: (behandlingID, bestilling) =>
     dispatch(anmodningunntakOperations.bestill(behandlingID, bestilling)),
+  oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState()),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

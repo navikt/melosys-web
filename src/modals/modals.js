@@ -10,7 +10,7 @@ import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import {
   DialogboksAvslagSoknad,
   DialogboksAvsluttSakSomBortfalt,
-  DialogboksFerdigbehandleNyVurdering,
+  DialogboksFerdigbehandleSak,
   DialogboksHenleggSak,
   DialogboksOppfriskSak,
   DialogboksRevurderFagsak,
@@ -21,7 +21,7 @@ Nav.Modal.setAppElement(document.getElementById("root"));
 const Modals = ({
   skjulOppfriskModalOgNavigerTilForside,
   visOppfriskDialog,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
   skjulOppfriskModal,
   lukkOppfriskModal,
   visHenleggDialog,
@@ -33,9 +33,9 @@ const Modals = ({
   visAvsluttSakSomBortfaltDialog,
   skjulAvsluttSakSomBortfaltDialogHandle,
   avsluttSakSomBortfalt,
-  visFerdigbehandleNyVurderingDialog,
-  skjulFerdigbehandleNyVurderingDialogHandle,
-  ferdigbehandleNyVurdering,
+  visFerdigbehandleSakDialog,
+  skjulFerdigbehandleSakDialogHandle,
+  ferdigbehandleSak,
   visRevurderFagsak,
   skjulRevurderFagsakDialogHandle,
   revurderFagsak,
@@ -46,7 +46,7 @@ const Modals = ({
   <Fragment>
     {visOppfriskDialog && (
       <DialogboksOppfriskSak
-        oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
+        oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
         avbryt={skjulOppfriskModal}
         lukk={lukkOppfriskModal}
         tilForsiden={skjulOppfriskModalOgNavigerTilForside}
@@ -64,11 +64,8 @@ const Modals = ({
         avsluttSakSomBortfalt={avsluttSakSomBortfalt}
       />
     )}
-    {visFerdigbehandleNyVurderingDialog && (
-      <DialogboksFerdigbehandleNyVurdering
-        avbryt={skjulFerdigbehandleNyVurderingDialogHandle}
-        ferdigbehandleNyVurdering={ferdigbehandleNyVurdering}
-      />
+    {visFerdigbehandleSakDialog && (
+      <DialogboksFerdigbehandleSak avbryt={skjulFerdigbehandleSakDialogHandle} ferdigbehandleSak={ferdigbehandleSak} />
     )}
     {visRevurderFagsak && (
       <DialogboksRevurderFagsak
@@ -83,7 +80,7 @@ const Modals = ({
 Modals.propTypes = {
   skjulOppfriskModalOgNavigerTilForside: PT.func.isRequired,
   visOppfriskDialog: PT.bool.isRequired,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger: PT.func.isRequired,
   skjulOppfriskModal: PT.func.isRequired,
   lukkOppfriskModal: PT.func.isRequired,
   visHenleggDialog: PT.bool.isRequired,
@@ -95,9 +92,9 @@ Modals.propTypes = {
   visAvsluttSakSomBortfaltDialog: PT.bool.isRequired,
   skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   avsluttSakSomBortfalt: PT.func.isRequired,
-  visFerdigbehandleNyVurderingDialog: PT.bool.isRequired,
-  skjulFerdigbehandleNyVurderingDialogHandle: PT.func.isRequired,
-  ferdigbehandleNyVurdering: PT.func.isRequired,
+  visFerdigbehandleSakDialog: PT.bool.isRequired,
+  skjulFerdigbehandleSakDialogHandle: PT.func.isRequired,
+  ferdigbehandleSak: PT.func.isRequired,
   visRevurderFagsak: PT.bool.isRequired,
   skjulRevurderFagsakDialogHandle: PT.func.isRequired,
   revurderFagsak: PT.func.isRequired,
@@ -111,7 +108,7 @@ const mapStateToProps = (state) => ({
   visHenleggDialog: modalerSelectors.ErHenleggSynligSelector(state),
   visAvslagSoknadDialog: modalerSelectors.ErAvslagSoknadSynligSelector(state),
   visAvsluttSakSomBortfaltDialog: modalerSelectors.ErAvsluttSakSomBortfaltSynligSelector(state),
-  visFerdigbehandleNyVurderingDialog: modalerSelectors.ErFerdigbehandleNyVurderingSynligSelector(state),
+  visFerdigbehandleSakDialog: modalerSelectors.ErFerdigbehandleSakSynligSelector(state),
   visRevurderFagsak: modalerSelectors.ErRevurderFagsakSynligSelector(state),
 });
 
@@ -122,7 +119,7 @@ const mapDispatchToProps = (dispatch) => ({
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvslagSoknadDialogHandle: () => dispatch(modalerOperations.skjulAvslagSoknad()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
-  skjulFerdigbehandleNyVurderingDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleNyVurdering()),
+  skjulFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleSak()),
   skjulRevurderFagsakDialogHandle: () => dispatch(modalerOperations.skjulRevurderFagsak()),
 });
 

@@ -34,7 +34,7 @@ const SorterbarListe = ({
     <div className={className}>
       {elementer.length > 1 && (
         <Nav.Fieldset className="sorteringRadiogruppe" onChange={handleSortOrderChange} legend={sortingLegend}>
-          <div>
+          <div className="radioButtons">
             <Nav.Radio
               name={uniqueName}
               label="Nyeste først"

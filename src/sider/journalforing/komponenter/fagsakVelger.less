@@ -1,6 +1,34 @@
-.eksisterendeSaker {
-  .radioPanel__Input {
-    width: 2em;
-    margin: 0;
+.fagsakVelger {
+  .marginMellomCustomRadioPaneler {
+    .fieldset__legend {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .alertstripe {
+    margin-top: 0.5rem;
+  }
+
+  .velgVisning {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    .visningValg {
+      box-sizing: border-box;
+      border: 1px solid #979797;
+      width: 49%;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0;
+
+      .skjemaelement__label {
+        display: block;
+      }
+    }
+
+    .checked-valg {
+      background: #bed7f3;
+      border: 1px solid #0067c5;
+    }
   }
 }

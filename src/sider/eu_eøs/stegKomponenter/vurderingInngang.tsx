@@ -13,6 +13,8 @@ import * as Mui from "../../../felleskomponenter/ui";
 
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
 
+import { useFeatureToggle } from "../../../featuretoggle";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../ducks/vilkar";
 
@@ -25,20 +27,26 @@ interface VarslerProps {
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
   landkoder: Array<string>;
   behandlingstema: string;
+  tomLandOgPeriodeToggleEnabled: boolean;
+  behandlingHarPeriodeOgLand: boolean;
 }
 
-export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, behandlingstema }: VarslerProps) => {
+export const Varsler = ({
+  oppfyllerInngangsvilkar,
+  inngangsvilkaar,
+  landkoder,
+  behandlingstema,
+  tomLandOgPeriodeToggleEnabled,
+  behandlingHarPeriodeOgLand,
+}: VarslerProps) => {
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
-
-  const visbareInngangsvilkaarBegrunnelseKoder = inngangsvilkaarBegrunnelseKoder.filter(
-    (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
-  );
 
   const inngangsvilkaarErOverstyrtAvSaksbehandler =
     inngangsvilkaarBegrunnelseKoder.includes(OVERSTYRT_AV_SAKSBEHANDLER);
 
   const inngangsvilkaarErOverstyrtEllerIkkeOppfylt =
     inngangsvilkaarErOverstyrtAvSaksbehandler || !oppfyllerInngangsvilkar;
+
   const inngangsvilkaarErOppfyltOgIkkeOverstyrt = oppfyllerInngangsvilkar && !inngangsvilkaarErOverstyrtAvSaksbehandler;
 
   const oppfyllerInngangsvilkarCl = classNames({
@@ -47,17 +55,30 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, b
     "liste__element--ikkeoppfylt": inngangsvilkaarErOverstyrtEllerIkkeOppfylt,
   });
 
-  const oppfyltTekst = `Søknaden oppfyller${
-    inngangsvilkaarErOppfyltOgIkkeOverstyrt ? " " : " ikke "
-  }inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
-
   if (Utils._isEmpty(inngangsvilkaar)) {
+    if (tomLandOgPeriodeToggleEnabled && !behandlingHarPeriodeOgLand) {
+      return (
+        <ul className="betingelser__liste">
+          <li className={oppfyllerInngangsvilkarCl}>
+            Det mangler periode og/eller land. Fyll disse inn i sidemenyen nedenfor og oppdater registeropplysninger.
+          </li>
+        </ul>
+      );
+    }
     return (
       <ul className="betingelser__liste">
         <li className={oppfyllerInngangsvilkarCl}>Teknisk feil, finner ingen inngangsvilkår.</li>
       </ul>
     );
   }
+
+  const oppfyltTekst = `Søknaden oppfyller${
+    inngangsvilkaarErOppfyltOgIkkeOverstyrt ? " " : " ikke "
+  }inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
+
+  const visbareInngangsvilkaarBegrunnelseKoder = inngangsvilkaarBegrunnelseKoder.filter(
+    (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
+  );
 
   const flereSoknadslandEnnTillatt = landkoder.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
 
@@ -94,6 +115,7 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, b
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingHarPeriodeOgLand: mottatteOpplysningerSelectors.HarPeriodeOgLandSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -110,6 +132,7 @@ type VurderingInngangProps = PropsFromRedux & {
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
   landkoder: Array<string>;
   behandlingstema: string;
+  behandlingHarPeriodeOgLand: boolean;
 };
 
 export const VurderingInngang = ({
@@ -121,7 +144,10 @@ export const VurderingInngang = ({
   hentVilkar,
   landkoder,
   behandlingstema,
+  behandlingHarPeriodeOgLand,
 }: VurderingInngangProps) => {
+  const tomLandOgPeriodeToggle = useFeatureToggle("melosys.tom_periode_og_land");
+
   const knappClickHandler = async () => {
     if (!oppfyllerInngangsvilkar) {
       await Api.Vilkar.overstyrInngangvilkaar(behandlingID);
@@ -139,6 +165,8 @@ export const VurderingInngang = ({
         inngangsvilkaar={inngangsvilkaar}
         landkoder={landkoder}
         behandlingstema={behandlingstema}
+        tomLandOgPeriodeToggleEnabled={tomLandOgPeriodeToggle === "enabled"}
+        behandlingHarPeriodeOgLand={behandlingHarPeriodeOgLand}
       />
       <Mui.StegKnapper
         bekreftKnappProps={{

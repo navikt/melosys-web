@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEventHandler, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
@@ -38,11 +38,9 @@ const Redigerer = ({
     }
   };
 
-  const idNummerChangeHandler: ChangeEventHandler<HTMLInputElement> = async (event) => {
+  const idNummerChangeHandler = async (ident: string) => {
     setDisableNavnInput(false);
-
-    const idNummer = event.target.value;
-    hentNavn(idNummer);
+    hentNavn(ident);
   };
 
   useEffect(() => {
@@ -65,7 +63,7 @@ const Redigerer = ({
   return (
     <Nav.Row className="medfolgende-familie__redigerer">
       <Nav.Column xs="5">
-        <Skjema.Input
+        <Skjema.FellesInputFnrDnrOrgnrSaksnr
           label="F.nr./d-nr./fødselsdato"
           feltNavn={`${overordnetFeltNavn}.fnr`}
           disabled={!redigerbart}

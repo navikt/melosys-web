@@ -1,17 +1,25 @@
 .journalføringKomponent {
-  .overskrift {
+  background: white;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  &__overskrift {
     padding-bottom: 0.5rem;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid #e6e6e6;
   }
-  .ikon {
+  &__ikon {
     width: 20px;
     height: 20px;
     margin-right: 0.5rem;
     display: inline-block;
+    vertical-align: text-bottom;
   }
-  .tittel {
-    display: inline-block;
+  &__tittel {
+    display: inline;
   }
-  margin-bottom: 0.5rem;
+  &__innhold {
+    margin-left: 28px;
+    color: #3e3832;
+  }
 }

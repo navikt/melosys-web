@@ -12,12 +12,11 @@ import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 
-import DialogboksOppfriskSak from "../../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { StegStatus } from "../../stegvelger";
 
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
 
@@ -41,18 +40,18 @@ const initializeValues = (periode: Periode, landkoder: string[]) => ({
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
   initialValues: initializeValues(
-    behandlingsgrunnlagSelectors.PeriodeSelector(state),
-    behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state)
+    mottatteOpplysningerSelectors.PeriodeSelector(state),
+    mottatteOpplysningerSelectors.SoknadslandkoderSelector(state)
   ),
   formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
-  oppdaterPeriode: (periode: Periode) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
+  oppdaterPeriode: (periode: Periode) => dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
   oppdaterSoeknadsland: (landkoder: string[]) =>
-    dispatch(behandlingsgrunnlagOperations.oppdaterSoeknadsland(landkoder, false)),
-  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+    dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(landkoder, false)),
+  lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -81,18 +80,16 @@ interface Props {
 }
 
 const VurderingInngang = ({
-  annenBehandlingOppfriskes,
   data: { landValg, landValgUtenStøtte },
   formValues,
   formIsValid,
   fortsett,
   initialValues,
   hentFlytOgOppdaterAktuelleSteg,
-  lagreBehandlingsgrunnlag,
+  lagreMottatteOpplysninger,
   redigerbart,
   resultat,
   steg,
-  tilForsiden,
   oppdaterPeriode,
   oppdaterSoeknadsland,
   oppfriskOgLastInnSaksopplysninger,
@@ -102,7 +99,7 @@ const VurderingInngang = ({
 }: PropsFromRedux & Props) => {
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
   const [landUtenStøtteValgt, setLandUtenStøtteValgt] = useState(false);
-  const [visOppfrisk, setVisOppfrisk] = useState(false);
+  const [visSpinner, setVisSpinner] = useState(false);
   const skalHenteRegisteropplysninger =
     formValues?.fom !== initialFomTomLand?.fom ||
     formValues?.tom !== initialFomTomLand?.tom ||
@@ -117,12 +114,12 @@ const VurderingInngang = ({
     }
   }, []);
 
-  const lagreBehandlingsgrunnlagOgOppdaterFlyt = async () => {
-    await lagreBehandlingsgrunnlag();
+  const lagreMottatteOpplysningerOgOppdaterFlyt = async () => {
+    await lagreMottatteOpplysninger();
     hentFlytOgOppdaterAktuelleSteg();
   };
-  const debouncedLagrebehandlingsgrunnlagOgOppdaterFlyt = useCallback(
-    Utils._debounce(lagreBehandlingsgrunnlagOgOppdaterFlyt, 300),
+  const debouncedLagremottatteOpplysningerOgOppdaterFlyt = useCallback(
+    Utils._debounce(lagreMottatteOpplysningerOgOppdaterFlyt, 300),
     []
   );
 
@@ -136,7 +133,7 @@ const VurderingInngang = ({
       });
       oppdaterSoeknadsland(formValues?.arbeidsland ? [formValues.arbeidsland] : []);
 
-      debouncedLagrebehandlingsgrunnlagOgOppdaterFlyt();
+      debouncedLagremottatteOpplysningerOgOppdaterFlyt();
     }
   }, [formValues?.fom, formValues?.tom, formValues?.arbeidsland, formIsValid]);
 
@@ -149,9 +146,16 @@ const VurderingInngang = ({
     }
   }, [formValues?.arbeidsland]);
 
-  const innhentRegisteropplysningerHandle = () => {
+  const bekreftHandle = async () => {
     setInitialFomTomLand({ fom: formValues.fom, tom: formValues.tom, arbeidsland: formValues.arbeidsland });
-    setVisOppfrisk(true);
+    if (skalHenteRegisteropplysninger) {
+      setVisSpinner(true);
+      await oppfriskOgLastInnSaksopplysninger();
+      setVisSpinner(false);
+      resetFlyt();
+      visMenypanel();
+    }
+    fortsett();
   };
 
   return (
@@ -189,42 +193,14 @@ const VurderingInngang = ({
 
       {landUtenStøtteValgt && <FlytFinnesIkke />}
 
-      {skalHenteRegisteropplysninger ? (
-        <Mui.StegKnapper
-          bekreftKnappProps={{
-            onClick: innhentRegisteropplysningerHandle,
-            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
-          }}
-          bekreftTekst="Innhent registeropplysninger"
-        />
-      ) : (
-        <Mui.StegKnapper
-          bekreftKnappProps={{
-            onClick: fortsett,
-            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || landUtenStøtteValgt,
-          }}
-        />
-      )}
-
-      {visOppfrisk && (
-        <DialogboksOppfriskSak
-          oppfrisk={async () => {
-            await oppfriskOgLastInnSaksopplysninger();
-            resetFlyt();
-          }}
-          avbryt={() => setVisOppfrisk(false)}
-          lukk={() => {
-            setVisOppfrisk(false);
-            visMenypanel();
-          }}
-          tilForsiden={() => {
-            setVisOppfrisk(false);
-            tilForsiden();
-          }}
-          behandlingOppfriskes
-          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-        />
-      )}
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          onClick: bekreftHandle,
+          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || landUtenStøtteValgt,
+        }}
+        spinner={visSpinner}
+        bekreftTekst="Bekreft og innhent registeropplysninger"
+      />
     </div>
   );
 };

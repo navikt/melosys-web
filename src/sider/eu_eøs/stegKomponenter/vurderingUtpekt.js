@@ -15,7 +15,7 @@ import RegisterKontrollTreff from "../../../felleskomponenter/registerkontrollTr
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { flytSelectors } from "../../../ducks/flyt";
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 
@@ -251,8 +251,8 @@ const mapStateToProps = (state, ownProps) => {
         tomDato: lovvalgsperioderSelectors.TomDatoSelector(state),
       }
     : {
-        fomDato: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
-        tomDato: behandlingsgrunnlagSelectors.PeriodeTomSelector(state),
+        fomDato: mottatteOpplysningerSelectors.PeriodeFomSelector(state),
+        tomDato: mottatteOpplysningerSelectors.PeriodeTomSelector(state),
       };
 
   const initialLovvalgsperiodeFom = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
@@ -271,12 +271,12 @@ const mapStateToProps = (state, ownProps) => {
       lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || "",
       lovvalgsland: ownProps.tilstand.lovvalgsland,
       utpekingVurdering: flytSelectors.UtpekingVurderingSelector(state),
-      overgangsregelbestemmelser: behandlingsgrunnlagSelectors
+      overgangsregelbestemmelser: mottatteOpplysningerSelectors
         .OvergangsregelbestemmelserSelector(state)
         .map((o) => o.kode),
     },
     vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
-    ytterligereInformasjon: behandlingsgrunnlagSelectors.YtterligereInformasjonSelector(state),
+    ytterligereInformasjon: mottatteOpplysningerSelectors.YtterligereInformasjonSelector(state),
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   };
 };

@@ -18,7 +18,7 @@ describe("utpekingsperioder operations", () => {
     fetch.mockResponse(JSON.stringify({}));
 
     initialState = {
-      behandlingsgrunnlag: {
+      mottatteOpplysninger: {
         data: {
           data: {
             periode: {
@@ -104,8 +104,8 @@ describe("utpekingsperioder operations", () => {
             type: types.OPPDATER_UTPEKINGSPERIODER,
             utpekingsperioder: [
               {
-                fomDato: initialState.behandlingsgrunnlag.data.data.periode.fom,
-                tomDato: initialState.behandlingsgrunnlag.data.data.periode.tom,
+                fomDato: initialState.mottatteOpplysninger.data.data.periode.fom,
+                tomDato: initialState.mottatteOpplysninger.data.data.periode.tom,
                 lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
                 tilleggsbestemmelse: stegState.tilleggbestemmelse,
                 lovvalgsland: avklartfakta.fakta[0],
@@ -175,8 +175,8 @@ describe("utpekingsperioder operations", () => {
           type: types.OPPDATER_UTPEKINGSPERIODER,
           utpekingsperioder: [
             {
-              fomDato: initialState.behandlingsgrunnlag.data.data.periode.fom,
-              tomDato: initialState.behandlingsgrunnlag.data.data.periode.tom,
+              fomDato: initialState.mottatteOpplysninger.data.data.periode.fom,
+              tomDato: initialState.mottatteOpplysninger.data.data.periode.tom,
               lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
               tilleggsbestemmelse: undefined,
               lovvalgsland: stegState.lovvalgsland,
@@ -244,8 +244,8 @@ describe("utpekingsperioder operations", () => {
           type: types.OPPDATER_UTPEKINGSPERIODER,
           utpekingsperioder: [
             {
-              fomDato: initialState.behandlingsgrunnlag.data.data.periode.fom,
-              tomDato: initialState.behandlingsgrunnlag.data.data.periode.tom,
+              fomDato: initialState.mottatteOpplysninger.data.data.periode.fom,
+              tomDato: initialState.mottatteOpplysninger.data.data.periode.tom,
               lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
               tilleggsbestemmelse: undefined,
               lovvalgsland: stegState.lovvalgsland,

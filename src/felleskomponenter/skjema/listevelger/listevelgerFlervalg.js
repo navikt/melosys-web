@@ -1,11 +1,11 @@
 /* eslint react/no-array-index-key:off */
 import React, { Component } from "react";
 import PT from "prop-types";
-import Ikon from "melosys-ikoner-assets";
 
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
+import * as Ikoner from "../../../resources/images";
 
 import "./listevelger.css";
 
@@ -31,9 +31,7 @@ const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatF
     <div className="listevelger__linje">
       <div className="listevelger__innhold">{element}</div>
       <Mui.Knapp mini disabled={disabled} className="listevelger__linje__knapp" onClick={slettElement}>
-        <div className="knapp__ikon">
-          <Ikon kind="minus" size="24" />
-        </div>
+        <Ikoner.Minus className="knapp__ikon" />
         <div className="knapp__tittel">Fjern</div>
       </Mui.Knapp>
     </div>
@@ -92,7 +90,7 @@ class ListevelgerFlervalg extends Component {
     e.preventDefault();
     const { inputVerdi, valgteElementer } = this.state;
     const { verdiTilKode, erAlleredeLagtTil } = this;
-    const { fields, tillatFritekst, onChange } = this.props;
+    const { fields, tillatFritekst, onChange, handleLagre } = this.props;
 
     const valg = tillatFritekst ? inputVerdi : verdiTilKode(inputVerdi);
 
@@ -102,12 +100,19 @@ class ListevelgerFlervalg extends Component {
     }
 
     if (valg) {
+      if (handleLagre) {
+        handleLagre(valg);
+      }
       fields.push(valg);
       valgteElementer.push(valg);
 
       this.setState({ inputVerdi: "", valgteElementer, feilmelding: null });
     } else {
-      this.setState({ feilmelding: "I dette feltet må du velge fra alternativene i nedtrekkslisten." });
+      this.setState({
+        feilmelding: tillatFritekst
+          ? "Velg tittel på vedlegg fra listen eller skriv din egen"
+          : "I dette feltet må du velge fra alternativene i nedtrekkslisten.",
+      });
     }
 
     if (onChange) {
@@ -173,7 +178,7 @@ class ListevelgerFlervalg extends Component {
   };
 
   render() {
-    const { fields, placeholder, label, muligeValg, disabled } = this.props;
+    const { fields, placeholder, label, muligeValg, disabled, visValgtListe } = this.props;
 
     const { byggValgtListe } = this;
 
@@ -182,7 +187,7 @@ class ListevelgerFlervalg extends Component {
 
     return (
       <div>
-        {byggValgtListe(alleFelter)}
+        {visValgtListe && byggValgtListe(alleFelter)}
         <div className="listevelger__linje">
           <Nav.Input
             id={`listevelger-${fields.name}`}
@@ -202,9 +207,7 @@ class ListevelgerFlervalg extends Component {
             onClick={this.leggValgTilListe}
             disabled={disabled}
           >
-            <div className="knapp__ikon">
-              <Ikon kind="tilsette" size="24" />
-            </div>
+            <Ikoner.AddOne className="knapp__ikon" />
             <div className="knapp__tittel">Legg til</div>
           </Nav.Knapp>
         </div>
@@ -220,7 +223,7 @@ class ListevelgerFlervalg extends Component {
 
 ListevelgerFlervalg.propTypes = {
   fields: PT.object.isRequired,
-  label: PT.string.isRequired,
+  label: PT.string,
   meta: PT.object.isRequired,
   muligeValg: PT.array.isRequired,
   tillatFritekst: PT.bool.isRequired,
@@ -229,13 +232,18 @@ ListevelgerFlervalg.propTypes = {
   onChange: PT.func,
   onDelete: PT.func,
   disabled: PT.bool.isRequired,
+  visValgtListe: PT.bool,
+  handleLagre: PT.func,
 };
 
 ListevelgerFlervalg.defaultProps = {
   placeholder: "",
+  label: "",
   onAdd: undefined,
   onDelete: undefined,
   onChange: undefined,
+  visValgtListe: true,
+  handleLagre: undefined,
 };
 
 export default ListevelgerFlervalg;

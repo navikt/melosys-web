@@ -1,5 +1,6 @@
 import Routing from "./routing";
-import { lagUrl, nyFane } from "./url";
+import { nyFane, lagUrl, skalViseTomFlytEllerErSedBehandling } from "./url";
+import { lagUrlFraBehandlingstema } from "./url-gammel";
 
 export default Routing;
-export { lagUrl, nyFane };
+export { lagUrlFraBehandlingstema, nyFane, lagUrl, skalViseTomFlytEllerErSedBehandling };

@@ -17,10 +17,10 @@ class Artikkel13_1_b_vedtak extends Steg {
       overskrift: "Omfattet av norsk lovgivning etter artikkel 13 nr. 1 bokstav b",
     });
     this.handlers = {
-      lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
+      validerMottatteOpplysninger: this._propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
     };
     this._status = FANE_STATUS.OK;
   }

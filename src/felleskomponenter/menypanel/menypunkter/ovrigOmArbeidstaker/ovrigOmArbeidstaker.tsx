@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -14,12 +14,12 @@ import { Status } from "../editerbartElement";
 import Redigerer from "./redigerer/redigerer";
 import RedigeringUtfort from "./redigeringUtfort";
 
-import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
 
 import "./ovrigOmArbeidstaker.css";
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
+  oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState()),
 });
 
 const connector = connect(null, mapDispatchToProps);
@@ -27,21 +27,19 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type OvrigOmArbeidstakerProps = PropsFromRedux & {
   visArbeidsforholdRolleEtiketter: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
   redigerbart: boolean;
 };
 
 const OvrigOmArbeidstaker = ({
   visArbeidsforholdRolleEtiketter,
-  behandlingsgrunnlagEtikett,
   redigerbart,
-  oppdaterBehandlingsgrunnlag,
+  oppdaterMottatteOpplysninger,
 }: OvrigOmArbeidstakerProps) => {
   const [status, setStatus] = useState<Status>(Status.RedigeringUtfort);
 
   const lagreHandler = () => {
     setStatus(Status.RedigeringUtfort);
-    oppdaterBehandlingsgrunnlag();
+    oppdaterMottatteOpplysninger();
   };
 
   return (
@@ -49,7 +47,6 @@ const OvrigOmArbeidstaker = ({
       <Nav.Row>
         <Nav.Column xs="10" className="tittel">
           <Nav.Typo.Innholdstittel>{KV.Menypunkter.OvrigOmArbeidstaker.tittel}</Nav.Typo.Innholdstittel>
-          {behandlingsgrunnlagEtikett}
           {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel />}
         </Nav.Column>
       </Nav.Row>

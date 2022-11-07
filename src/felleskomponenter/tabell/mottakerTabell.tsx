@@ -20,26 +20,28 @@ const MottakerTabell = ({ rader, kolonner, className = "" }: MottakerTabellProps
   if (!rader || !kolonner) return null;
   const cls = classnames("mottakerTabell", className);
   return (
-    <table className={cls}>
-      <tbody>
-        <tr>
-          {kolonner.map((kolonne) => (
-            <th key={Utils._uuid()} className={`${kolonne.style}`} style={{ width: kolonne.bredde }}>
-              {kolonne.verdi}
-            </th>
-          ))}
-        </tr>
-        {rader.map((rad) => (
-          <tr className="border_bottom" key={Utils._uuid()}>
-            {rad.map((radElement) => (
-              <td key={Utils._uuid()} className={`${radElement.style}`}>
-                {radElement.verdi}
-              </td>
+    <div className="mottakerTabell-wrapper">
+      <table className={cls}>
+        <tbody>
+          <tr>
+            {kolonner.map((kolonne) => (
+              <th key={Utils._uuid()} className={`${kolonne.style}`} style={{ width: kolonne.bredde }}>
+                {kolonne.verdi}
+              </th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+          {rader.map((rad) => (
+            <tr key={Utils._uuid()}>
+              {rad.map((radElement) => (
+                <td key={Utils._uuid()} className={`${radElement.style}`}>
+                  {radElement.verdi}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

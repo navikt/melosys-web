@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { change, formValueSelector } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -21,7 +21,7 @@ import { Status } from "../editerbartElement";
 
 import MKV from "../../../../melosyskodeverk";
 
-import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 
 import "./arbeidssteder.css";
 
@@ -58,7 +58,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     erHjemmekontor: arbeidPaaLand.erHjemmekontor,
     erFastArbeidssted: arbeidPaaLand.erFastArbeidssted,
-    behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+    mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
     soknadsland: soknadFormValueSelector(state, "soknadsland"),
   };
 };
@@ -76,23 +76,21 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ArbeidsstederProps = PropsFromRedux & {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
   behandlingstema: string;
 };
 
 export const Arbeidssteder = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
-  behandlingsgrunnlagEtikett,
   slettFastArbeidsstedOgHjemmekontorAvklaring,
   erFastArbeidssted,
   erHjemmekontor,
-  behandlingsgrunnlagtype,
+  mottatteOpplysningerType,
   behandlingstema,
   soknadsland: { erUkjenteEllerAlleEosLand },
 }: ArbeidsstederProps) => {
   const erSoknadFraAltinn =
-    behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+    mottatteOpplysningerType === MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
   const visRepresentantIUtlandet = behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
 
   const arbeidsstederLister = (
@@ -178,7 +176,6 @@ export const Arbeidssteder = ({
       <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
         {KV.Menypunkter.Arbeidssteder.tittel}
       </Nav.Typo.Innholdstittel>
-      <span>{behandlingsgrunnlagEtikett}</span>
       {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       <div className="innhold">
         {visRepresentantIUtlandet ? <RepresentantIUtlandet redigerbart={redigerbart} /> : arbeidssteder}

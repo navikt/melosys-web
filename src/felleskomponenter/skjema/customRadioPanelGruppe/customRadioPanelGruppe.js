@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment, useState } from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { Field } from "redux-form";
@@ -6,12 +6,16 @@ import { Field } from "redux-form";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as SkjemaUtils from "../utils";
+import * as Ikoner from "../../../resources/images";
 
 import "./customRadioPanelGruppe.css";
 
-export const CustomRadioPanelElement = ({ tittel, data }) => (
+export const CustomRadioPanelElement = ({ tittel, hoyreSideTittel, data }) => (
   <div className="customRadioPanelElement">
-    <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>
+    <div className="customRadioPanelTittel">
+      <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>
+      {hoyreSideTittel && <>{hoyreSideTittel}</>}
+    </div>
     <dl>
       {data.map(({ term, description }) => {
         if (!description) return null;
@@ -29,9 +33,10 @@ export const CustomRadioPanelElement = ({ tittel, data }) => (
 
 CustomRadioPanelElement.propTypes = {
   tittel: PT.node,
+  hoyreSideTittel: PT.node,
   data: PT.arrayOf(
     PT.shape({
-      term: PT.string.isRequired,
+      term: PT.string,
       description: PT.node,
     })
   ).isRequired,
@@ -39,6 +44,7 @@ CustomRadioPanelElement.propTypes = {
 
 CustomRadioPanelElement.defaultProps = {
   tittel: undefined,
+  hoyreSideTittel: undefined,
 };
 
 /**
@@ -73,9 +79,10 @@ class CustomRadioPanel extends Component {
     return (
       <Fragment>
         <label className={cls} htmlFor={`${feltNavn}-${value}`}>
-          <input
+          <Nav.Radio
             {...inputProps}
             className="radioPanel__Input"
+            label=""
             type="radio"
             id={`${feltNavn}-${value}`}
             name={feltNavn}
@@ -122,15 +129,21 @@ const CustomRadioPanelGruppe = (props) => {
     input: { onChange, value: currentCheckedValue },
     meta,
     notify,
+    begrensVisteRadios,
+    className,
   } = props;
 
   const { touched, active } = meta;
   const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
+  const [visAlle, setVisAlle] = useState(!begrensVisteRadios);
+  const radiosSomVises = visAlle ? radios : radios.slice(0, 4);
+  const alleRadiosVisesPåEnSide = radios?.length <= 4;
+
   return (
-    <Nav.SkjemaGruppe className="customRadioPanelGruppe" feil={feil}>
+    <Nav.SkjemaGruppe className={classNames("customRadioPanelGruppe", className)} feil={feil}>
       <Nav.Fieldset legend={legend}>
-        {radios.map((radio) => (
+        {radiosSomVises.map((radio) => (
           <CustomRadioPanel
             feltNavn={feltNavn}
             key={`${feltNavn}-${radio.value}`}
@@ -142,6 +155,23 @@ const CustomRadioPanelGruppe = (props) => {
           />
         ))}
       </Nav.Fieldset>
+      {begrensVisteRadios && !alleRadiosVisesPåEnSide && (
+        <div className="visMerMindre">
+          <button type="button" onClick={() => setVisAlle(!visAlle)}>
+            {visAlle ? (
+              <>
+                Vis mindre
+                <Ikoner.Up />
+              </>
+            ) : (
+              <>
+                Vis flere saker
+                <Ikoner.Down />
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </Nav.SkjemaGruppe>
   );
 };
@@ -153,15 +183,19 @@ CustomRadioPanelGruppe.propTypes = {
   meta: PT.object.isRequired,
   legend: PT.string,
   notify: PT.func,
+  begrensVisteRadios: PT.bool,
+  className: PT.string,
 };
 
 CustomRadioPanelGruppe.defaultProps = {
   legend: "",
   notify: undefined,
+  begrensVisteRadios: false,
+  className: "",
 };
 
 const CustomRadioPanelGruppeReduxForm = ({ feltNavn, ...rest }) => (
-  <Field name={feltNavn} component={CustomRadioPanelGruppe} props={{ feltNavn, ...rest }} />
+  <Field name={feltNavn} component={CustomRadioPanelGruppe} props={{ feltNavn, ...rest }} onChange={rest?.onChange} />
 );
 CustomRadioPanelGruppeReduxForm.propTypes = { feltNavn: PT.string.isRequired };
 

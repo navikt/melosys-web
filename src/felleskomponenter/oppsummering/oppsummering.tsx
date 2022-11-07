@@ -10,6 +10,7 @@ import * as Nav from "../../navFrontend";
 import * as Api from "../../services/api";
 import * as Ikoner from "../../resources/images";
 import * as Utils from "../../utils";
+import * as Mui from "../ui";
 
 import { useFeatureToggle } from "../../featuretoggle";
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
@@ -27,10 +28,12 @@ interface OppsummeringProps {
   mottattDato: string;
   lovvalgsperiodeFom: string;
   lovvalgsperiodeTom: string;
-  behandlingsgrunnlagPeriodeFom: string;
-  behandlingsgrunnlagPeriodeTom: string;
+  mottatteOpplysningerPeriodeFom: string;
+  mottatteOpplysningerPeriodeTom: string;
   className?: string;
 }
+const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
+const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
 
 const Oppsummering = (props: OppsummeringProps) => {
   const {
@@ -41,13 +44,14 @@ const Oppsummering = (props: OppsummeringProps) => {
     mottattDato,
     lovvalgsperiodeFom,
     lovvalgsperiodeTom,
-    behandlingsgrunnlagPeriodeFom,
-    behandlingsgrunnlagPeriodeTom,
+    mottatteOpplysningerPeriodeFom,
+    mottatteOpplysningerPeriodeTom,
     className,
   } = props;
-  const sakstemaToggle = useFeatureToggle("melosys.sakstema");
+  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
+  const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode);
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
   if (!oppsummering || !fagsak?.sakstype) return <div />;
@@ -64,7 +68,7 @@ const Oppsummering = (props: OppsummeringProps) => {
     behandlingsresultattype,
   } = oppsummering;
   const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
-  const behandlingsgrunnlagperiode = `${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`;
+  const mottatteOpplysningerperiode = `${mottatteOpplysningerPeriodeFom} - ${mottatteOpplysningerPeriodeTom}`;
 
   const landStorBokstav = (land: KTObject) =>
     land?.term ? Utils.streng.storeForbokstaverForLand(land.term) : "Ukjent";
@@ -128,7 +132,7 @@ const Oppsummering = (props: OppsummeringProps) => {
       col1 = [["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(registrertDato)]];
       col2 = [["Sist oppdatert", Utils.dato.formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`]];
     } else {
-      col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", behandlingsgrunnlagperiode]];
+      col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", mottatteOpplysningerperiode]];
       if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
       col1.push(["Land", erSed ? landStorBokstav(lovvalgsland) : landTilSetning(arbeidsland)]);
 
@@ -141,7 +145,6 @@ const Oppsummering = (props: OppsummeringProps) => {
 
     return erLitenSkjerm ? tabellEnKolonne(col1.concat(col2)) : tabellToKolonner(col1, col2);
   };
-
   return (
     <section aria-label="oppsummeringer" className="oppsummering panelSeksjon">
       <EndreBehandlingModal
@@ -169,7 +172,7 @@ const Oppsummering = (props: OppsummeringProps) => {
               <Nav.Panel className="saksinfo">
                 <Nav.Row>
                   <Nav.Column xs="8">
-                    {sakstemaToggle === "enabled" ? (
+                    {behandleAlleSakerToggle === "enabled" ? (
                       <Nav.Typo.Undertittel>
                         {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
                       </Nav.Typo.Undertittel>
@@ -178,10 +181,15 @@ const Oppsummering = (props: OppsummeringProps) => {
                     )}
                   </Nav.Column>
                   <Nav.Column xs="4">
-                    <Nav.Knapp className="hoyrestill endre-knapp" mini onClick={() => setSkalViseEndreModal(true)}>
+                    <Mui.Knapp
+                      disabled={disableEndreKnapp}
+                      onClick={() => setSkalViseEndreModal(true)}
+                      mini
+                      className="hoyrestill endre-knapp"
+                    >
                       <span>Endre</span>
-                      <Ikoner.BlyantActive />
-                    </Nav.Knapp>
+                      {disableEndreKnapp ? <Ikoner.BlyantDisabled /> : <Ikoner.BlyantActive />}
+                    </Mui.Knapp>
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>
@@ -229,7 +237,7 @@ Oppsummering.propTypes = {
   lovvalgsland: MPT.Kodeverk,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
-  behandlingsgrunnlagperiode: PT.string,
+  mottatteOpplysningerperiode: PT.string,
   lovvalgsperiode: PT.string,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
@@ -239,7 +247,7 @@ Oppsummering.propTypes = {
 Oppsummering.defaultProps = {
   arbeidsland: [],
   lovvalgsland: {},
-  behandlingsgrunnlagperiode: undefined,
+  mottatteOpplysningerperiode: undefined,
   lovvalgsperiode: undefined,
   mottattDato: undefined,
   className: undefined,
