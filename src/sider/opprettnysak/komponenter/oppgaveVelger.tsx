@@ -119,7 +119,7 @@ export const OppgaveVelger = ({
               <option key={aarsak.kode} value={aarsak.kode} label={aarsak.term || ""} />
             ))}
           </Skjema.Select>
-          {behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.ANNET && ( // TODO
+          {behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST && (
             <Skjema.Input feltNavn="behandlingsaarsakFritekst" label="Velg behandlingsårsak" />
           )}
         </>

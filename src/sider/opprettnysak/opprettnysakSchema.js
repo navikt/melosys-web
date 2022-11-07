@@ -215,7 +215,7 @@ const opprettnysak = object().shape({
     .nullable()
     .when(["behandlingsaarsakType", "oppretterOppgave"], {
       is: (behandlingsaarsakType, oppretterOppgave) =>
-        Boolean(oppretterOppgave) && behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.ANNET, // TODO
+        Boolean(oppretterOppgave) && behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST,
       then: string().required(VELG_BEHANDLINGSAARSAK).nullable(),
     }),
   erAvsluttetSak: boolean()
