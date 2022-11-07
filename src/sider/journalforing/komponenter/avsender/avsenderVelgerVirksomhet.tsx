@@ -5,22 +5,28 @@ import MKV from "../../../../melosyskodeverk";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as KV from "../../../../kodeverk";
 
-type AvsenderVelgerVirksomhetProps = {
+type AvsenderVelgerForVirksomhetProps = {
   tomAvsender: () => void;
-  settFeltInnhold: (felt: string, innhold: string | null) => void;
+  kopierVirksomhetTilAvsender: () => void;
 };
 
-export const AvsenderVelgerVirksomhet = ({ tomAvsender, settFeltInnhold }: AvsenderVelgerVirksomhetProps) => {
+export const AvsenderVelgerForVirksomhet = ({
+  tomAvsender,
+  kopierVirksomhetTilAvsender,
+}: AvsenderVelgerForVirksomhetProps) => {
   const formValues = useSelector((state) => getFormValues(KV.Form.JOURNALFORING)(state)) as any;
 
   useEffect(() => {
     if (formValues.avsenderType === MKV.Koder.avsendertyper.ORGANISASJON) {
-      settFeltInnhold("avsenderID", formValues.virksomhetOrgnr);
-      settFeltInnhold("avsenderNavn", formValues.virksomhetNavn);
+      kopierVirksomhetTilAvsender();
     } else {
       tomAvsender();
     }
   }, [formValues.avsenderType]);
+
+  useEffect(() => {
+    console.log({ formValues });
+  }, [formValues]);
 
   return (
     <Skjema.RadioGruppe feltNavn="avsenderType" label="Hvem er avsender?">

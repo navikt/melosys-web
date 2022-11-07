@@ -73,6 +73,13 @@ class Journalforing extends Component {
     });
   };
 
+  mapAvsenderType = (avsenderType) => {
+    if (avsenderType === KV.AvsenderTyper.ANNEN) {
+      return null;
+    }
+    return this.organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType;
+  };
+
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
    * settes inn i skjemaet kun til info - ikke til endring - slik som feks navn på bruker.
    * Derfor må vi bygge opp og evt vaske et nytt objekt som kan sendes til backend.
@@ -120,16 +127,8 @@ class Journalforing extends Component {
       vedlegg,
       skalTilordnes,
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
-      avsenderType,
+      avsenderType: this.mapAvsenderType(avsenderType),
     };
-
-    if (journalPostData.avsenderType === KV.AvsenderTyper.ANNEN) {
-      journalPostData.avsenderType = null;
-    } else {
-      journalPostData.avsenderType = this.organisasjonAliaser.includes(avsenderType)
-        ? MKV.Koder.avsendertyper.ORGANISASJON
-        : avsenderType;
-    }
 
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT || hensikt === JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE) {
       return this.dataSpesifiktTilKnyttEllerAndregangs(journalPostData);

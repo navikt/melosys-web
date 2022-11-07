@@ -145,7 +145,7 @@ const journalforing = object().shape({
         }),
     })
     .when(["journalforingGjelder", "avsenderType"], {
-      is: erVirksomhet && !erAnnenAvsender,
+      is: (journalføringGjelder, avsenderType) => erVirksomhet(journalføringGjelder) && !erAnnenAvsender(avsenderType),
       then: string().required().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .nullable(),

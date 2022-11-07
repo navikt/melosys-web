@@ -28,7 +28,7 @@ type FormValuesProps = {
   utenlandskTrygdemyndighetLandkode?: string;
 };
 
-type AvsenderVelgerProps = PropsFromRedux & {
+type AvsenderVelgerForBrukerProps = PropsFromRedux & {
   className: string;
   kopierBrukerTilAvsender: () => void;
   tomAvsender: () => void;
@@ -39,14 +39,14 @@ type AvsenderVelgerProps = PropsFromRedux & {
   journalforingAvsenderNavn: string;
 };
 
-const AvsenderVelger = ({
+const AvsenderVelgerForBruker = ({
   className,
   kopierBrukerTilAvsender,
   tomAvsender,
   formValues,
   settFeltInnhold,
   hentOgVisRepresentant,
-}: AvsenderVelgerProps) => {
+}: AvsenderVelgerForBrukerProps) => {
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const avsenderTypeEndret = (avsenderType: string) => {
     if (behandleAlleSakerToggle === "enabled" && avsenderType !== MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET) {
@@ -156,4 +156,4 @@ const AvsenderVelger = ({
   );
 };
 
-export default connect(mapStateToProps)(AvsenderVelger);
+export default connect(mapStateToProps)(AvsenderVelgerForBruker);
