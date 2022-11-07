@@ -103,10 +103,11 @@ class Informasjon extends Component {
       return;
     }
     settFeltInnhold("brukerNavn", sammensattNavn);
-    await hentFagsakListe(brukerID);
     if (journalfoeringGjelderBruker) {
       kopierBrukerTilAvsender(brukerID, sammensattNavn);
     }
+
+    await hentFagsakListe(brukerID);
   };
 
   hentOgVisVirksomhet = async (virksomhetOrgnr) => {
@@ -129,8 +130,8 @@ class Informasjon extends Component {
       return;
     }
     settFeltInnhold("virksomhetNavn", navn);
-    await hentFagsakListe(virksomhetOrgnr);
     kopierVirksomhetTilAvsender(virksomhetOrgnr, navn);
+    await hentFagsakListe(virksomhetOrgnr);
   };
 
   hentOgVisAvsender = async (value) => {
