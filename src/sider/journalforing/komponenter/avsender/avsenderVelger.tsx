@@ -62,6 +62,7 @@ const AvsenderVelger = ({
       case KV.AvsenderTyper.FULLMEKTIG:
       case KV.AvsenderTyper.ARBEIDSGIVER:
       case MKV.Koder.avsendertyper.ORGANISASJON:
+      case KV.AvsenderTyper.ANNEN:
       case MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET: {
         tomAvsender();
         break;
@@ -140,6 +141,15 @@ const AvsenderVelger = ({
             utenlandskTrygdemyndighetLandkode={formValues.utenlandskTrygdemyndighetLandkode}
             fullmektigLandEndret={fullmektigLandEndret}
           />
+        )}
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Annen"
+          value={KV.AvsenderTyper.ANNEN}
+          className="avsendervelger__radio"
+        />
+        {formValues.avsenderType === KV.AvsenderTyper.ANNEN && (
+          <Skjema.Input label="" feltNavn="avsenderNavn" bredde="fullbredde" />
         )}
       </Skjema.RadioGruppe>
     </div>

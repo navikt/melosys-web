@@ -120,10 +120,16 @@ class Journalforing extends Component {
       vedlegg,
       skalTilordnes,
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
-      avsenderType: this.organisasjonAliaser.includes(avsenderType)
-        ? MKV.Koder.avsendertyper.ORGANISASJON
-        : avsenderType,
+      avsenderType,
     };
+
+    if (journalPostData.avsenderType === KV.AvsenderTyper.ANNEN) {
+      journalPostData.avsenderType = null;
+    } else {
+      journalPostData.avsenderType = this.organisasjonAliaser.includes(avsenderType)
+        ? MKV.Koder.avsendertyper.ORGANISASJON
+        : avsenderType;
+    }
 
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT || hensikt === JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE) {
       return this.dataSpesifiktTilKnyttEllerAndregangs(journalPostData);

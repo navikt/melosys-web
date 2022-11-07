@@ -11,7 +11,7 @@ import * as MPT from "../../../proptypes";
 import * as Ikoner from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 
-import AvsenderVelger from "./avsender";
+import AvsenderVelger, { AvsenderVelgerVirksomhet } from "./avsender";
 import LenkeListeVelger from "./lenkelistevelger";
 import JournalforingGjelder from "./journalforingGjelder";
 import Komponent from "./komponent";
@@ -315,7 +315,7 @@ class Informasjon extends Component {
           tittel="Informasjon om avsender"
           innhold={
             journalforingGjelder === VIRKSOMHET ? (
-              <Nav.Typo.Normaltekst>Virksomhet er avsender</Nav.Typo.Normaltekst>
+              <AvsenderVelgerVirksomhet tomAvsender={this.tomAvsender} settFeltInnhold={settFeltInnhold} />
             ) : (
               <AvsenderVelger
                 kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}

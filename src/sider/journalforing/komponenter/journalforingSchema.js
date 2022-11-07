@@ -30,6 +30,7 @@ const DU_MA_LAGRE_TITTEL_VEDLEGG = { melding: "Du må lagre tittel på vedlegg" 
 const DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT = { melding: "Du må lagre tittel på hoveddokument" };
 const VELG_ETT_LAND_UTENLANDSK_TRYGDEMYNDIGHET = { melding: "Velg land til avsender: utenlandsk trygdemyndighet" };
 const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
+const OPPGI_ANNEN_AVSENDER = { melding: "Oppgi avsender" };
 const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
 
 const lagMelding = (felt) => ({ melding: `${felt} må fylles ut` });
@@ -64,6 +65,8 @@ const arbeidsgiverOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) 
 const fullmektigOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
   return avsenderType === KV.AvsenderTyper.FULLMEKTIG && !erAvsenderPreutfylt;
 };
+
+const erAnnenAvsender = (avsenderType) => avsenderType === KV.AvsenderTyper.ANNEN;
 
 const erIkkeUnderRedigering = (feilmelding) => ({
   name: "erIkkeUnderRedigering",
@@ -141,12 +144,16 @@ const journalforing = object().shape({
             .nullable(),
         }),
     })
-    .when("journalforingGjelder", {
-      is: erVirksomhet,
+    .when(["journalforingGjelder", "avsenderType"], {
+      is: erVirksomhet && !erAnnenAvsender,
       then: string().required().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .nullable(),
-  avsenderNavn: string().required(FINNER_IKKE_NAVN_PA_AVSENDER).nullable(),
+  avsenderNavn: string().when(["avsenderType"], {
+    is: erAnnenAvsender,
+    then: string().required(OPPGI_ANNEN_AVSENDER).nullable(),
+    otherwise: string().required(FINNER_IKKE_NAVN_PA_AVSENDER).nullable(),
+  }),
   hoveddokument,
   representantID: lazy((value) =>
     Utils._isEmpty(value)
