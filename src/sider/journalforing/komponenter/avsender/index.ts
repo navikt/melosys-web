@@ -1,5 +1,5 @@
-import AvsenderVelgerForBruker from "./avsenderVelger";
-import { AvsenderVelgerForVirksomhet } from "./avsenderVelgerVirksomhet";
+import AvsenderVelgerForBruker from "./avsenderVelgerForBruker";
+import { AvsenderVelgerForVirksomhet } from "./avsenderVelgerForVirksomhet";
 import AvsenderArbeidsgiver from "./avsenderArbeidsgiver";
 import AvsenderFullmektig from "./avsenderFullmektig";
 import AvsenderUtenlandskTrygdemyndighet from "./avsenderUtenlandskTrygdemyndighet";
