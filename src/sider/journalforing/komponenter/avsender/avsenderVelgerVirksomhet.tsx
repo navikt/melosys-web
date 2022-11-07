@@ -24,10 +24,6 @@ export const AvsenderVelgerForVirksomhet = ({
     }
   }, [formValues.avsenderType]);
 
-  useEffect(() => {
-    console.log({ formValues });
-  }, [formValues]);
-
   return (
     <Skjema.RadioGruppe feltNavn="avsenderType" label="Hvem er avsender?">
       <Skjema.Radio
