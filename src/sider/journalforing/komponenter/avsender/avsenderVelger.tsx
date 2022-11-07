@@ -142,14 +142,18 @@ const AvsenderVelgerForBruker = ({
             fullmektigLandEndret={fullmektigLandEndret}
           />
         )}
-        <Skjema.Radio
-          feltNavn="avsenderType"
-          label="Annen"
-          value={KV.AvsenderTyper.ANNEN}
-          className="avsendervelger__radio"
-        />
-        {formValues.avsenderType === KV.AvsenderTyper.ANNEN && (
-          <Skjema.Input label="" feltNavn="avsenderNavn" bredde="fullbredde" />
+        {behandleAlleSakerToggle === "enabled" && (
+          <>
+            <Skjema.Radio
+              feltNavn="avsenderType"
+              label="Annen"
+              value={KV.AvsenderTyper.ANNEN}
+              className="avsendervelger__radio"
+            />
+            {formValues.avsenderType === KV.AvsenderTyper.ANNEN && (
+              <Skjema.Input label="" feltNavn="avsenderNavn" bredde="fullbredde" />
+            )}
+          </>
         )}
       </Skjema.RadioGruppe>
     </div>
