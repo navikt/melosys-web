@@ -36,9 +36,11 @@ spec:
       enabled: true
       tenant: {{TENANT_URL}}
       replyURLs:
-        { { #each INGRESSES}}
+        { { #if INGRESSES}}
+          { { #each INGRESSES}}
             - "{{this}}"
-        {{/each } }
+          {{/each } }
+        {{/if } }
         - {{REPLY_URL}} # Workaround: For prod må REPLY_URL være samme som INGRESS i vars-prod.json. Dette for å ha localhost:3000 i tillegg til INGRESS i dev, men kun ha INGRESS i prod.
       claims:
         extra:
