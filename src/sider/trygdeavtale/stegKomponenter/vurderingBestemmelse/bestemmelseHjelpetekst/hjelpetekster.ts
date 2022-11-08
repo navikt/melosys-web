@@ -19,7 +19,7 @@ const hjelpeteksterUkArt61 = [
   Hjelpetekster.MAX_TRE_ÅR,
 ];
 
-const hjelpeteksterUkArt65 = [Hjelpetekster.BOSATT_I_NORGE, Hjelpetekster.ANSATT_I_DEN_NORSKE_STAT];
+const hjelpeteksterUkArt65 = [Hjelpetekster.BOSATT_I_NORGE, Hjelpetekster.LØNNET_FRA_NORSK_ARBEIDSGIVER];
 
 const hjelpeteksterUkArt73 = [
   Hjelpetekster.BOSATT_I_NORGE,
