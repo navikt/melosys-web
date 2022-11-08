@@ -319,6 +319,7 @@ class Journalforing extends Component {
     settFeltInnhold("representantID", null);
     settFeltInnhold("representantKontaktPerson", null);
     settFeltInnhold("representantRepresenterer", null);
+    settFeltInnhold("representantNavn", null);
     settFeltInnhold("journalforingSoknadsland", []);
     settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
   };
