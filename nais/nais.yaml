@@ -41,6 +41,9 @@ spec:
         - "{{this}}"
         {{/each}}
       {{/if}}
+      {{#if REPLY_URL}}
+        - {{REPLY_URL}} # Workaround: For prod må REPLY_URL være samme som INGRESS i vars-prod.json. Dette for å ha localhost:3000 i tillegg til INGRESS i dev, men kun ha INGRESS i prod.
+      {{/if}}
       claims:
         extra:
           - "NAVident"
