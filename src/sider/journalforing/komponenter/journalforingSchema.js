@@ -149,7 +149,7 @@ const journalforing = object().shape({
       then: string().required().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .nullable(),
-  avsenderNavn: string().when(["avsenderType"], {
+  avsenderNavn: string().when("avsenderType", {
     is: erAnnenAvsender,
     then: string().required(OPPGI_ANNEN_AVSENDER).nullable(),
     otherwise: string().required(FINNER_IKKE_NAVN_PA_AVSENDER).nullable(),

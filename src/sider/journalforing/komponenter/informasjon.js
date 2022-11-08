@@ -316,18 +316,10 @@ class Informasjon extends Component {
           tittel="Informasjon om avsender"
           innhold={
             journalforingGjelder === VIRKSOMHET ? (
-              <FeatureToggle togglename="melosys.behandle_alle_saker">
-                {(toggle) =>
-                  toggle === "enabled" ? (
-                    <AvsenderVelgerForVirksomhet
-                      tomAvsender={this.tomAvsender}
-                      kopierVirksomhetTilAvsender={this.kopierVirksomhetTilAvsender}
-                    />
-                  ) : (
-                    <Nav.Typo.Normaltekst>Virksomhet er avsender</Nav.Typo.Normaltekst>
-                  )
-                }
-              </FeatureToggle>
+              <AvsenderVelgerForVirksomhet
+                tomAvsender={this.tomAvsender}
+                kopierVirksomhetTilAvsender={this.kopierVirksomhetTilAvsender}
+              />
             ) : (
               <AvsenderVelgerForBruker
                 kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
