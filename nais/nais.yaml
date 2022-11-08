@@ -35,13 +35,12 @@ spec:
     application:
       enabled: true
       tenant: {{TENANT_URL}}
+      {{#if INGRESSES}}
       replyURLs:
-        { { #if INGRESSES}}
-          { { #each INGRESSES}}
-            - "{{this}}"
-          {{/each } }
-        {{/if } }
-        - {{REPLY_URL}} # Workaround: For prod må REPLY_URL være samme som INGRESS i vars-prod.json. Dette for å ha localhost:3000 i tillegg til INGRESS i dev, men kun ha INGRESS i prod.
+        {{#each INGRESSES}}
+        - "{{this}}"
+        {{/each}}
+      {{/if}}
       claims:
         extra:
           - "NAVident"
@@ -58,12 +57,12 @@ spec:
         - application: {{APP_NAME_TRYGDEAVTALE_API}}
   vault:
     enabled: true
-  { { #if INGRESSES}}
-    ingresses:
-      { { #each INGRESSES}}
-          - "{{this}}"
-              {{/each } }
-        {{/if } }
+  {{#if INGRESSES}}
+  ingresses:
+    {{#each INGRESSES}}
+    - "{{this}}"
+    {{/each}}
+  {{/if}}
   env:
     - name: APP_URL_MELOSYS
       value: {{APP_URL_MELOSYS}}
