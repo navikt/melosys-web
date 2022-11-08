@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import classNames from "classnames";
 
 import MKV from "../../../melosyskodeverk";
@@ -10,6 +9,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import { OpprettNySakFormData } from "../opprettnysak";
+import { OpprettNyOppgave } from "./opprettNyOppgave";
 
 import "./oppgaveVelger.css";
 
@@ -46,6 +46,7 @@ export const OppgaveVelger = ({
         <Nav.AlertStripeInfo>
           Når det opprettes en ny behandling på en eksisterende sak opprettes det en ny oppgave
         </Nav.AlertStripeInfo>
+        <OpprettNyOppgave behandlingsaarsakType={behandlingsaarsakType} />
       </div>
     );
   }
@@ -54,7 +55,7 @@ export const OppgaveVelger = ({
     return (
       <div className="oppgaveVelger">
         <Nav.AlertStripeInfo>Ingen eksisterende oppgaver funnet. Det blir opprettet en ny</Nav.AlertStripeInfo>
-        <Skjema.Datovelger feltNavn="mottaksdato" label="Mottaksdato" />
+        <OpprettNyOppgave behandlingsaarsakType={behandlingsaarsakType} />
       </div>
     );
   }
@@ -108,21 +109,7 @@ export const OppgaveVelger = ({
         </div>
       )}
       {oppretterOppgave ? (
-        <>
-          <Skjema.Datovelger
-            feltNavn="mottaksdato"
-            label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>}
-            className="mottaksdato"
-          />
-          <Skjema.Select feltNavn="behandlingsaarsakType" label="Behandlingsårsak" bredde="m">
-            {MKV.KTObjects.behandlinger.behandlingsaarsaktyper.map((aarsak: KTObject) => (
-              <option key={aarsak.kode} value={aarsak.kode} label={aarsak.term || ""} />
-            ))}
-          </Skjema.Select>
-          {behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST && (
-            <Skjema.Input feltNavn="behandlingsaarsakFritekst" label="Velg behandlingsårsak" />
-          )}
-        </>
+        <OpprettNyOppgave behandlingsaarsakType={behandlingsaarsakType} />
       ) : (
         <>
           {oppgaverFinnes && (
