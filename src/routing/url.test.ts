@@ -127,7 +127,7 @@ describe("url", () => {
         "MEL-1",
         1,
         FTRL,
-        MKV.Koder.sakstemaer.FTRL_SAKSBEHANDLING,
+        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
         "enabled"
@@ -141,7 +141,7 @@ describe("url", () => {
         "MEL-1",
         1,
         FTRL,
-        MKV.Koder.sakstemaer.FTRL_SAKSBEHANDLING,
+        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
         "disabled"
