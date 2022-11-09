@@ -116,7 +116,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        "disabled"
+        "enabled"
       );
 
       expect(url).toContain("/EU_EOS/behandling/");
