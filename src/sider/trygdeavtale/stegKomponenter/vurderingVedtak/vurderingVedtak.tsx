@@ -33,7 +33,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 
-const { STORBRITANNIA, TRYGDEAVTALE_US } = MKV.Koder.brev.produserbaredokumenter;
+const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
 
 const vurderingVedtakCls = bem("vurderingVedtak");
@@ -206,7 +206,7 @@ const VurderingVedtak = ({
   const debouncedKontrollerVedtak = useCallback(Utils._debounce(kontrollerVedtak, 500), []);
 
   const hentProduserbartDokument = (): string =>
-    soknadsland[0].kode === MKV.Koder.land_iso2.GB ? STORBRITANNIA : TRYGDEAVTALE_US;
+    soknadsland[0].kode === MKV.Koder.land_iso2.GB ? TRYGDEAVTALE_GB : TRYGDEAVTALE_US;
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
