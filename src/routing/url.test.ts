@@ -18,12 +18,6 @@ describe("url", () => {
       expect(hentUrl).toThrowError("Finner ikke EuEøs-flyt for behandlingstema:");
     });
 
-    it("Sakstype FTRL med ustøttet behandlingstemaKode kaster feil", () => {
-      const hentUrl = () => lagUrlFraSakstypeOgBehandlingstema("MEL-1", 1, FTRL, "tilfeldig behandlingstemaKode");
-
-      expect(hentUrl).toThrowError("Finner ikke folketrygden-flyt for behandlingstema:");
-    });
-
     it("Sakstype TRYGDEAVTALE med ustøttet behandlingstemaKode kaster feil", () => {
       const hentUrl = () =>
         lagUrlFraSakstypeOgBehandlingstema("MEL-1", 1, TRYGDEAVTALE, "tilfeldig behandlingstemaKode");
