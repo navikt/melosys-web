@@ -244,7 +244,10 @@ const OpprettNySak = ({
       oppgaveID,
       mottaksdato: Utils.dato.formatterDatoTilISO(mottaksdato),
       behandlingsaarsakType,
-      behandlingsaarsakFritekst,
+      behandlingsaarsakFritekst:
+        behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST
+          ? behandlingsaarsakFritekst
+          : undefined,
     };
   };
 
