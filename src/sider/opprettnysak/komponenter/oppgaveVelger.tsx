@@ -23,7 +23,7 @@ interface OppgaveVelgerProps {
 
 export const OppgaveVelger = ({
   oppgaverForsoktHentet,
-  formValues: { hovedpart, saksnummer, oppretterOppgave, behandlingsaarsakType },
+  formValues: { hovedpart, saksnummer, oppretterOppgave },
   oppgaver,
   change,
   nyOpprettSakToggleEnabled,
@@ -46,7 +46,7 @@ export const OppgaveVelger = ({
         <Nav.AlertStripeInfo>
           Når det opprettes en ny behandling på en eksisterende sak opprettes det en ny oppgave
         </Nav.AlertStripeInfo>
-        <OpprettNyOppgave behandlingsaarsakType={behandlingsaarsakType} />
+        <OpprettNyOppgave />
       </div>
     );
   }
@@ -55,7 +55,7 @@ export const OppgaveVelger = ({
     return (
       <div className="oppgaveVelger">
         <Nav.AlertStripeInfo>Ingen eksisterende oppgaver funnet. Det blir opprettet en ny</Nav.AlertStripeInfo>
-        <OpprettNyOppgave behandlingsaarsakType={behandlingsaarsakType} />
+        <OpprettNyOppgave />
       </div>
     );
   }
@@ -109,7 +109,7 @@ export const OppgaveVelger = ({
         </div>
       )}
       {oppretterOppgave ? (
-        <OpprettNyOppgave behandlingsaarsakType={behandlingsaarsakType} />
+        <OpprettNyOppgave />
       ) : (
         <>
           {oppgaverFinnes && (
