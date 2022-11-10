@@ -5,7 +5,7 @@ import * as Utils from "../../../../../utils";
 import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
 
 const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.MedfolgendeFamilie>) => (
-  <div className="medfolgende-familie__redigeringutfort">
+  <div className="menypanel__table-wrapper">
     <table className="menypanel__table">
       <tbody>
         <tr className="header">
