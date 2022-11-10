@@ -11,10 +11,12 @@ import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Hooks from "../../../hooks";
 import * as Mui from "../../../felleskomponenter/ui";
+import * as Skjema from "../../../felleskomponenter/skjema";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 import VedleggVelger from "../../../felleskomponenter/vedleggvelger";
+import VedleggTable from "../../../felleskomponenter/vedleggTable";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
@@ -22,10 +24,7 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurderingVideresendSchema from "./vurderingVideresendSchema";
-
 import "./vurderingVideresend.css";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import VedleggTable from "../../../felleskomponenter/vedleggTable";
 
 export const VurderingVideresend = ({
   redigerbart,
@@ -54,8 +53,7 @@ export const VurderingVideresend = ({
   ];
 
   const [videresendPending, setVideresendPending] = useState(false);
-  const fysiskeSoknaddokument = fysiskeDokument.filter((dokument) => dokument.tittel.toLowerCase().includes("søknad"));
-  const [valgteVedlegg, setValgteVedlegg] = useState(fysiskeSoknaddokument);
+  const [valgteVedlegg, setValgteVedlegg] = useState([]);
   const isMounted = Hooks.useIsMounted();
 
   const videresendSoknad = async (values, dispatch, props) => {

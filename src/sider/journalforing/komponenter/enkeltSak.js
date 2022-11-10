@@ -6,6 +6,7 @@ import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Ikon from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
+import { URL_BASENAME } from "../../../constants";
 
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import Soknadsland from "../../../felleskomponenter/soknadsland";
@@ -38,7 +39,7 @@ const EnkeltSak = (props) => {
             </div>
           }
           hoyreSideTittel={
-            <Nav.Lenker target="_blank" href={link} className="saklenke">
+            <Nav.Lenker target="_blank" href={`${URL_BASENAME}${link}`} className="saklenke">
               {saksnummer}
               <Ikon.ExternalLink className="ikon" />
             </Nav.Lenker>
