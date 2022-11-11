@@ -68,6 +68,22 @@ describe("KnyttTilSak", () => {
     expect(radios.first().props().label).not.toBe("Opprett ny behandling");
   });
 
+  it(`Vis knapp for å opprette ny behandling dersom anmodningsperiode er sendt til utland når toggle er på`, () => {
+    props.behandleAlleSakerToggleEnabled = true;
+    props.sak.behandlingOversikter[0].anmodningsperioder = [
+      {
+        sendtUtland: true,
+      },
+    ];
+
+    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+
+    const radios = knyttTilSak.find(Skjema.Radio);
+
+    expect(radios).toHaveLength(2);
+    expect(radios.first().props().label).toBe("Opprett ny behandling");
+  });
+
   it(`Ikke vis knapp for uten å opprette behandling dersom saktype er TRYGDEAVTALE`, () => {
     props.sak.behandlingOversikter[0].behandlingstype = { kode: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD };
     props.sak.sakstype.kode = MKV.Koder.sakstyper.TRYGDEAVTALE;

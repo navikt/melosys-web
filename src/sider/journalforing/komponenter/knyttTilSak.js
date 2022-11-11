@@ -41,8 +41,12 @@ export const KnyttTilSak = (props) => {
     sisteBehandling.behandlingsstatus.kode
   );
 
+  const sisteBehandlingHarSendtAnmodningUnntakTilUtland = sisteBehandling.anmodningsperioder?.some(
+    (anmodningsperiode) => anmodningsperiode.sendtUtland
+  );
+
   const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
-    ? sisteBehandlingErInaktiv
+    ? sisteBehandlingErInaktiv || sisteBehandlingHarSendtAnmodningUnntakTilUtland
     : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
 
   useEffect(() => {
@@ -101,8 +105,9 @@ export const KnyttTilSak = (props) => {
     sak.saksstatus.kode
   );
 
-  const visKnyttTilEksisterende =
-    sisteBehandlingErInaktiv && (!behandleAlleSakerToggleEnabled || !sakErHenlagtEllerBortfalt);
+  const visKnyttTilEksisterende = behandleAlleSakerToggleEnabled
+    ? (sisteBehandlingErInaktiv || sisteBehandlingHarSendtAnmodningUnntakTilUtland) && !sakErHenlagtEllerBortfalt
+    : sisteBehandlingErInaktiv;
 
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
 
