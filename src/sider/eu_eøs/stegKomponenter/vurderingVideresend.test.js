@@ -3,10 +3,10 @@ import { combineReducers, createStore } from "redux";
 import { reducer as formReducer } from "redux-form";
 
 import * as Mui from "../../../felleskomponenter/ui";
-
-import { VurderingVideresend } from "./vurderingVideresend";
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import * as Skjema from "../../../felleskomponenter/skjema";
+
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import { VurderingVideresend } from "./vurderingVideresend";
 
 describe("Vurderingvideresend", () => {
   let props = null;

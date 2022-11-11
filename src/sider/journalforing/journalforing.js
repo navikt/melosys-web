@@ -73,6 +73,13 @@ class Journalforing extends Component {
     });
   };
 
+  mapAvsenderType = (avsenderType) => {
+    if (avsenderType === KV.AvsenderTyper.ANNEN) {
+      return null;
+    }
+    return this.organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType;
+  };
+
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
    * settes inn i skjemaet kun til info - ikke til endring - slik som feks navn på bruker.
    * Derfor må vi bygge opp og evt vaske et nytt objekt som kan sendes til backend.
@@ -120,9 +127,7 @@ class Journalforing extends Component {
       vedlegg,
       skalTilordnes,
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
-      avsenderType: this.organisasjonAliaser.includes(avsenderType)
-        ? MKV.Koder.avsendertyper.ORGANISASJON
-        : avsenderType,
+      avsenderType: this.mapAvsenderType(avsenderType),
     };
 
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT || hensikt === JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE) {
@@ -314,6 +319,7 @@ class Journalforing extends Component {
     settFeltInnhold("representantID", null);
     settFeltInnhold("representantKontaktPerson", null);
     settFeltInnhold("representantRepresenterer", null);
+    settFeltInnhold("representantNavn", null);
     settFeltInnhold("journalforingSoknadsland", []);
     settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
   };
