@@ -7,6 +7,7 @@ import { fjernFlereKoder } from "./fjernkoder";
 const filtrertMKV = fjernFlereKoder(MKV, [
   { path: "begrunnelser.art12_1_vesentlig_virksomhet", kode: "KONTRAKTER_IKKE_NORSK_LOV" },
   { path: "begrunnelser.endretperiode", kode: "ENDRINGER_ARBEIDSSITUASJON" },
+  { path: "behandlinger.behandlingsaarsaktyper", kode: "ANNET" },
 ]);
 
 export default filtrertMKV;

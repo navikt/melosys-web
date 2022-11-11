@@ -6,7 +6,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import { formSelectors } from "../../../ducks/form";
 
-const { FRITEKST, ANNET } = MKV.Koder.behandlinger.behandlingsaarsaktyper;
+const { FRITEKST } = MKV.Koder.behandlinger.behandlingsaarsaktyper;
 
 export const OpprettNyOppgave = () => {
   const { behandlingsaarsakType } = useSelector(formSelectors.OpprettNySakFormValuesSelector);
@@ -21,11 +21,9 @@ export const OpprettNyOppgave = () => {
     <div className="opprettnyoppgave">
       <Skjema.Datovelger feltNavn="mottaksdato" label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>} />
       <Skjema.Select feltNavn="behandlingsaarsakType" label="Årsak" className="aarsakfelt">
-        {MKV.KTObjects.behandlinger.behandlingsaarsaktyper
-          .filter((aarsak: KTObject) => aarsak.kode !== ANNET)
-          .map((aarsak: KTObject) => (
-            <option key={aarsak.kode} value={aarsak.kode} label={labelTilÅrsak(aarsak)} />
-          ))}
+        {MKV.KTObjects.behandlinger.behandlingsaarsaktyper.map((aarsak: KTObject) => (
+          <option key={aarsak.kode} value={aarsak.kode} label={labelTilÅrsak(aarsak)} />
+        ))}
       </Skjema.Select>
       {behandlingsaarsakType === FRITEKST && (
         <Skjema.Input feltNavn="behandlingsaarsakFritekst" className="aarsakfelt" maxLength={25} />
