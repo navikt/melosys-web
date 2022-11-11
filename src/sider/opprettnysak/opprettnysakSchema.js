@@ -25,6 +25,8 @@ const VELG_SAKSTEMA = { melding: "Velg sakstema" };
 const VELG_BEHANDLINGSTYPE = { melding: "Velg behandlingstype" };
 const VELG_BEHANDLINGSTEMA = { melding: "Velg behandlingstema" };
 const VELG_OPPGAVE = { melding: "Velg hvilken oppgave du skal opprette sak på" };
+const VELG_BEHANDLINGSAARSAK = { melding: "Velg behandlingsårsak" };
+const MAX_25_TEGN = { melding: "Årsak kan være maks 25 tegn" };
 const FYLL_UT_MOTTAKSDATO = { melding: "Fyll ut mottaksdato" };
 const VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_BEHANDLINGEN_TIL = {
   melding: "Velg hvilken sak du ønsker å knytte behandlingen til",
@@ -198,6 +200,24 @@ const opprettnysak = object().shape({
           then: string().erGyldigDato().required(FYLL_UT_MOTTAKSDATO).nullable(),
         })
         .nullable(),
+    }),
+  behandlingsaarsakType: string()
+    .nullable()
+    .when("behandleAlleSakerToggleEnabled", {
+      is: true,
+      then: string()
+        .when("oppretterOppgave", {
+          is: true,
+          then: string().required(VELG_BEHANDLINGSAARSAK).nullable(),
+        })
+        .nullable(),
+    }),
+  behandlingsaarsakFritekst: string()
+    .nullable()
+    .when(["behandlingsaarsakType", "oppretterOppgave"], {
+      is: (behandlingsaarsakType, oppretterOppgave) =>
+        Boolean(oppretterOppgave) && behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST,
+      then: string().max(25, MAX_25_TEGN).required(VELG_BEHANDLINGSAARSAK).nullable(),
     }),
   erAvsluttetSak: boolean()
     .nullable()

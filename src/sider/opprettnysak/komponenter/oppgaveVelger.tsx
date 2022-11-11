@@ -8,26 +8,24 @@ import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
+import { OpprettNySakFormData } from "../opprettnysak";
+import { OpprettNyOppgave } from "./opprettNyOppgave";
 
 import "./oppgaveVelger.css";
 
 interface OppgaveVelgerProps {
   oppgaverForsoktHentet: boolean;
-  hovedpart: string;
-  saksnummer: string;
   oppgaver: Api.Oppgaver.SokOppgaveResDto[];
   change: (field: string, value: any) => void;
   nyOpprettSakToggleEnabled: boolean;
-  oppretterOppgave: boolean;
+  formValues: OpprettNySakFormData;
 }
 
 export const OppgaveVelger = ({
   oppgaverForsoktHentet,
-  hovedpart,
-  saksnummer,
+  formValues: { hovedpart, saksnummer, oppretterOppgave },
   oppgaver,
   change,
-  oppretterOppgave,
   nyOpprettSakToggleEnabled,
 }: OppgaveVelgerProps) => {
   const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
@@ -48,6 +46,7 @@ export const OppgaveVelger = ({
         <Nav.AlertStripeInfo>
           Når det opprettes en ny behandling på en eksisterende sak opprettes det en ny oppgave
         </Nav.AlertStripeInfo>
+        <OpprettNyOppgave />
       </div>
     );
   }
@@ -56,7 +55,7 @@ export const OppgaveVelger = ({
     return (
       <div className="oppgaveVelger">
         <Nav.AlertStripeInfo>Ingen eksisterende oppgaver funnet. Det blir opprettet en ny</Nav.AlertStripeInfo>
-        <Skjema.Datovelger feltNavn="mottaksdato" label="Mottaksdato" />
+        <OpprettNyOppgave />
       </div>
     );
   }
@@ -110,7 +109,7 @@ export const OppgaveVelger = ({
         </div>
       )}
       {oppretterOppgave ? (
-        <Skjema.Datovelger feltNavn="mottaksdato" label="Mottaksdato" className="mottaksdato" />
+        <OpprettNyOppgave />
       ) : (
         <>
           {oppgaverFinnes && (
