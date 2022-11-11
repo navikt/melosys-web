@@ -4,6 +4,7 @@ import { skalViseTomFlytEllerErSedBehandling } from "../../../routing";
 import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
+import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 
 const {
   UTSENDT_ARBEIDSTAKER,
@@ -42,7 +43,17 @@ class LinkGroupsFactory {
     behandlingstype,
     sakstema,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (skalViseTomFlytEllerErSedBehandling(sakstype, sakstema, behandlingstema, behandlingstype))
+    const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
+
+    if (
+      skalViseTomFlytEllerErSedBehandling(
+        sakstype,
+        sakstema,
+        behandlingstema,
+        behandlingstype,
+        folketrygdenToggleEnabled
+      )
+    )
       return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
 
     switch (behandlingstema) {

@@ -73,9 +73,11 @@ export const lagUrl = (
   sakstemaKode: string,
   behandlingstemaKode: string,
   behandlingstypeKode: string,
-  folketrygdenToggle: string
+  folketrygdenToggleEnabled: boolean
 ) => {
-  if (skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, folketrygdenToggle)) {
+  if (
+    skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, folketrygdenToggleEnabled)
+  ) {
     return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
@@ -86,7 +88,7 @@ const skalViseTomFlyt = (
   sakstema: string,
   behandlingstema: string,
   behandlingstype: string,
-  folketrygdenToggle?: string
+  folketrygdenToggleEnabled?: boolean
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
@@ -94,7 +96,7 @@ const skalViseTomFlyt = (
   if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
     return true;
   }
-  if (sakstype === FTRL && folketrygdenToggle !== "enabled") {
+  if (sakstype === FTRL && folketrygdenToggleEnabled === false) {
     return true;
   }
   if (
@@ -118,9 +120,13 @@ export const skalViseTomFlytEllerErSedBehandling = (
   sakstype: string,
   sakstema: string,
   behandlingstema: string,
-  behandlingstype: string
+  behandlingstype: string,
+  folketrygdenToggleEnabled?: boolean
 ) => {
-  return skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype) || erSedBehandling(behandlingstema);
+  return (
+    skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled) ||
+    erSedBehandling(behandlingstema)
+  );
 };
 
 export const nyFane = (url: string) => {

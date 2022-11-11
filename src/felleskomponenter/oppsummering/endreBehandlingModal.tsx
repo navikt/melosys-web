@@ -109,7 +109,7 @@ function EndreBehandlingModal({
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
   const [nyLink, setNyLink] = useState<string | undefined>(undefined);
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
-  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
 
   const kanEndre = !(
     useFeatureToggle("melosys.behandle_alle_saker.ikke_endre") === "enabled" && behandleAlleSakerToggle === "enabled"
@@ -198,7 +198,7 @@ function EndreBehandlingModal({
                 sakstema,
                 behandlingstema,
                 behandlingstype,
-                folketrygdenToggle
+                folketrygdenToggleEnabled
               )
             : Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema);
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {

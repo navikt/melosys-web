@@ -116,7 +116,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        "enabled"
+        true
       );
 
       expect(url).toContain("/EU_EOS/behandling/");
@@ -130,7 +130,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        "enabled"
+        true
       );
 
       expect(url).toContain("/FTRL/saksbehandling/");
@@ -144,7 +144,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        "disabled"
+        false
       );
 
       expect(url).toContain("/FTRL/behandling/");

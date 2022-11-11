@@ -24,7 +24,7 @@ const EnkeltSak = (props) => {
 
   const { land, behandlingstype, periode, behandlingsstatus, behandlingstema, svarFrist, behandlingID } =
     behandlingOversikter[0];
-  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
 
   const link = behandleAlleSakerToggleEnabled
     ? lagUrl(
@@ -34,7 +34,7 @@ const EnkeltSak = (props) => {
         sakstema.kode,
         behandlingstema.kode,
         behandlingstype.kode,
-        folketrygdenToggle
+        folketrygdenToggleEnabled
       )
     : lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema.kode);
 
