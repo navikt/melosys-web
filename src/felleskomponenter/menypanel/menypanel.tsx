@@ -17,6 +17,7 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
+import { useFeatureToggle } from "../../featuretoggle";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
@@ -53,6 +54,7 @@ export const Menypanel = ({
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
+  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
 
   if (!visMenypanel) return null;
 
@@ -75,6 +77,7 @@ export const Menypanel = ({
     contentProps,
     mottatteOpplysningerType,
     sakstema,
+    folketrygdenToggleEnabled,
   });
 
   const handleClick = (groupIndex: number, linkIndex: number) => {
