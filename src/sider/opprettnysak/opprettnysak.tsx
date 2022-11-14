@@ -242,12 +242,6 @@ const OpprettNySak = ({
       sakstema,
       soknadDto,
       oppgaveID,
-      mottaksdato: Utils.dato.formatterDatoTilISO(mottaksdato),
-      behandlingsaarsakType,
-      behandlingsaarsakFritekst:
-        behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST
-          ? behandlingsaarsakFritekst
-          : undefined,
     };
   };
 
@@ -266,6 +260,12 @@ const OpprettNySak = ({
       behandlingstema,
       behandlingstype,
       skalTilordnes,
+      mottaksdato: Utils.dato.formatterDatoTilISO(mottaksdato),
+      behandlingsaarsakType,
+      behandlingsaarsakFritekst:
+        behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST
+          ? behandlingsaarsakFritekst
+          : undefined,
     };
 
     if (saksnummer !== "-1" && nyOpprettSakToggle === "enabled") {
