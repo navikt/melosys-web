@@ -73,7 +73,7 @@ export const lagUrl = (
   sakstemaKode: string,
   behandlingstemaKode: string,
   behandlingstypeKode: string,
-  folketrygdenToggleEnabled: boolean
+  folketrygdenToggleEnabled: boolean = false
 ) => {
   if (
     skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, folketrygdenToggleEnabled)
@@ -88,7 +88,7 @@ const skalViseTomFlyt = (
   sakstema: string,
   behandlingstema: string,
   behandlingstype: string,
-  folketrygdenToggleEnabled?: boolean
+  folketrygdenToggleEnabled: boolean = false
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
@@ -96,7 +96,7 @@ const skalViseTomFlyt = (
   if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
     return true;
   }
-  if (sakstype === FTRL && folketrygdenToggleEnabled === false) {
+  if (sakstype === FTRL && !folketrygdenToggleEnabled) {
     return true;
   }
   if (
