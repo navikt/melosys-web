@@ -35,14 +35,19 @@ export const KnyttTilSak = (props) => {
   const { behandlingOversikter, sakstype, sakstema } = sak;
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState();
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
+  const [sisteBehandlingHarSendtAnmodningUnntakTilUtland, setSendtAnmodningUnntakTilUtland] = useState(false);
   const sisteBehandling = behandlingOversikter[0];
+
+  useEffect(() => {
+    return () => {
+      changeField(feltNavn.formNavn, "opprettBehandling", undefined);
+      changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
+      changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
+    };
+  }, []);
 
   const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
     sisteBehandling.behandlingsstatus.kode
-  );
-
-  const sisteBehandlingHarSendtAnmodningUnntakTilUtland = sisteBehandling.anmodningsperioder?.some(
-    (anmodningsperiode) => anmodningsperiode.sendtUtland
   );
 
   const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
@@ -51,13 +56,15 @@ export const KnyttTilSak = (props) => {
 
   useEffect(() => {
     changeField(feltNavn.formNavn, "opprettBehandling", visOpprettNyBehandling);
+  }, [visOpprettNyBehandling]);
 
-    return () => {
-      changeField(feltNavn.formNavn, "opprettBehandling", undefined);
-      changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
-      changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
-    };
-  }, []);
+  useEffect(() => {
+    const erAnmodningsperiodeSendt = (anmodningsperiode) => anmodningsperiode.sendtUtland;
+
+    Api.Anmodningsperioder.hent(sisteBehandling.behandlingID).then((response) => {
+      setSendtAnmodningUnntakTilUtland(response?.anmodningsperioder?.some(erAnmodningsperiodeSendt));
+    });
+  }, [sisteBehandling]);
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;

@@ -30,7 +30,6 @@ export type FagsakOppsummering = {
     opprettetDato: string;
     behandlingsresultattype: KTObject;
     svarFrist: string;
-    anmodningsperioder: Object[];
   }[];
   hovedpartRolle: string;
 };
