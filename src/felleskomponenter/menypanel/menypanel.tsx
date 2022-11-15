@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
@@ -27,7 +27,7 @@ const mapStateToProps = (state: RootState) => ({
   sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   sisteOpplysningerHentetDato: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
   mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
-  visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
+  visMenypanelPromise: menypanelSelectors.ErMenypanelSynlig(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
   sakstema: fagsakSelectors.SakstemaKodeSelector(state),
 });
@@ -46,7 +46,7 @@ export const Menypanel = ({
   sakstype,
   behandlingstema,
   behandlingstype,
-  visMenypanel,
+  visMenypanelPromise,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
   visOppdaterRegisteropplysninger = true,
@@ -55,6 +55,16 @@ export const Menypanel = ({
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
+  const [visMenypanel, setVisMenypanel] = useState(false);
+
+  useEffect(() => {
+    async function sjekkSkalViseMenypanel() {
+      const skalViseMenypanel = await visMenypanelPromise();
+      setVisMenypanel(skalViseMenypanel);
+    }
+
+    sjekkSkalViseMenypanel();
+  }, []);
 
   if (!visMenypanel) return null;
 
