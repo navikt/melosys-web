@@ -56,7 +56,6 @@ export const Menypanel = ({
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
 
-  if (sakstype === MKV.Koder.sakstyper.FTRL && !folketrygdenToggleEnabled) return null;
   if (!visMenypanel) return null;
 
   const contentProps = {

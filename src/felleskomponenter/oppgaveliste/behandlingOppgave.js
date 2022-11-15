@@ -73,7 +73,7 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
         sakstema.kode,
         behandlingstema.kode,
         behandlingstype.kode,
-        folketrygdenToggle
+        folketrygdenToggle === "enabled"
       )
     : Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema.kode);
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";

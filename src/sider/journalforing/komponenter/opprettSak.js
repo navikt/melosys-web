@@ -275,7 +275,7 @@ export const OpprettSak = (props) => {
             valgtSakstema,
             valgtBehandlingstema,
             valgtBehandlingstype,
-            folketrygdenToggle
+            folketrygdenToggle === "enabled"
           )
         : skalViseSoknadsperiodeOgLandDeprecated(hovedpart, valgtSakstype, valgtBehandlingstema)) && (
         <Fragment>

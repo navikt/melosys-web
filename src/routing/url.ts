@@ -88,7 +88,7 @@ const skalViseTomFlyt = (
   sakstema: string,
   behandlingstema: string,
   behandlingstype: string,
-  folketrygdenToggleEnabled: boolean | string
+  folketrygdenToggleEnabled: boolean = false
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
@@ -96,7 +96,7 @@ const skalViseTomFlyt = (
   if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
     return true;
   }
-  if ((sakstype === FTRL && !folketrygdenToggleEnabled) || folketrygdenToggleEnabled === "disabled") {
+  if (sakstype === FTRL && !folketrygdenToggleEnabled) {
     return true;
   }
   if (

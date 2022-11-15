@@ -39,7 +39,7 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
           sakstema.kode,
           behandling.behandlingstema.kode,
           behandling.behandlingstype.kode,
-          folketrygdenToggle
+          folketrygdenToggle === "enabled"
         )
       : Routing.lagUrlFraBehandlingstema(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode);
 
