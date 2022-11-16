@@ -6,13 +6,15 @@ import Rammeverk from "./sider/rammeverk";
 import { msalConfig } from "./auth/authConfig";
 
 export function App({ loadInitialData, children }) {
-  const isDev = process.env.NODE_ENV === "development";
-  const pca = isDev ? null : new PublicClientApplication(msalConfig);
+  const isDevelopmentProfile = process.env.NODE_ENV === "development";
+  const pca = isDevelopmentProfile ? null : new PublicClientApplication(msalConfig);
 
   return (
     <div className="App">
-      {isDev ? (
-        <Rammeverk loadInitialData={loadInitialData}>{children}</Rammeverk>
+      {isDevelopmentProfile ? (
+        <Rammeverk loadInitialData={loadInitialData} isDevelopmentProfile={isDevelopmentProfile}>
+          {children}
+        </Rammeverk>
       ) : (
         <MsalProvider instance={pca}>
           <Rammeverk loadInitialData={loadInitialData}>{children}</Rammeverk>
