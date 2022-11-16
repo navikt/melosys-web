@@ -287,7 +287,7 @@ export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) =
   methodToJson("POST", url, data, extendResponse, "application/pdf, application/json");
 
 export const fetchAsPDFBlob = (url) =>
-  fetch(url)
+  fetch(url, {})
     .then((response) => response.blob())
     .then((blob) => new Blob([blob], { type: "application/pdf" }));
 

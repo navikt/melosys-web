@@ -6,7 +6,7 @@ const useFetch = (url, dependencies) => {
   useEffect(() => {
     setLoadState(true);
     // fetch('http://localhost:3002/api/personer/?fnr=17117802280')
-    fetch(url)
+    fetch(url, {})
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch");
