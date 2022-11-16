@@ -57,9 +57,6 @@ const hjelpeteksterCaArt7 = [
 ];
 
 // TODO: Legg til vilkår
-const hjelpeteksterCaArt8 = ["placeholder"];
-
-// TODO: Legg til vilkår
 const hjelpeteksterCaArt9 = ["placeholder"];
 
 const hjelpeteksterCaArt10 = [
@@ -79,7 +76,6 @@ export {
   hjelpeteksterUsArt56,
   hjelpeteksterCaArt62,
   hjelpeteksterCaArt7,
-  hjelpeteksterCaArt8,
   hjelpeteksterCaArt9,
   hjelpeteksterCaArt10,
 };
