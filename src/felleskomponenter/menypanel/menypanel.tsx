@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
@@ -6,6 +6,8 @@ import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
+import { useFeatureToggle } from "../../featuretoggle";
+import { skalViseTomFlytEllerErSedBehandling } from "../../routing";
 import Sidemeny from "../sidemeny";
 
 import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
@@ -17,19 +19,18 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
-import { useFeatureToggle } from "../../featuretoggle";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
 const mapStateToProps = (state: RootState) => ({
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
+  sakstema: fagsakSelectors.SakstemaKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   sisteOpplysningerHentetDato: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
   mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
-  visMenypanelPromise: menypanelSelectors.ErMenypanelSynlig(state),
+  menypanel: menypanelSelectors.MenypanelSelector(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
-  sakstema: fagsakSelectors.SakstemaKodeSelector(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -44,27 +45,27 @@ export const Menypanel = ({
   sisteOpplysningerHentetDato,
   mottatteOpplysningerType,
   sakstype,
+  sakstema,
   behandlingstema,
   behandlingstype,
-  visMenypanelPromise,
+  menypanel,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
   visOppdaterRegisteropplysninger = true,
-  sakstema,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
-  const [visMenypanel, setVisMenypanel] = useState(false);
-
-  useEffect(() => {
-    async function sjekkSkalViseMenypanel() {
-      const skalViseMenypanel = await visMenypanelPromise();
-      setVisMenypanel(skalViseMenypanel);
-    }
-
-    sjekkSkalViseMenypanel();
-  }, []);
+  const visMenypanel =
+    sakstype === MKV.Koder.sakstyper.EU_EOS ||
+    menypanel?.synlig ||
+    skalViseTomFlytEllerErSedBehandling(
+      sakstype,
+      sakstema,
+      behandlingstema,
+      behandlingstype,
+      folketrygdenToggleEnabled
+    );
 
   if (!visMenypanel) return null;
 
