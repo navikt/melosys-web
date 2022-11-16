@@ -14,6 +14,7 @@ import { lagUrl, lagUrlFraBehandlingstema } from "../../../routing";
 import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behandlingsstatus";
 
 import "./enkeltSak.css";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
@@ -23,8 +24,18 @@ const EnkeltSak = (props) => {
 
   const { land, behandlingstype, periode, behandlingsstatus, behandlingstema, svarFrist, behandlingID } =
     behandlingOversikter[0];
+  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
+
   const link = behandleAlleSakerToggleEnabled
-    ? lagUrl(saksnummer, behandlingID, sakstype.kode, sakstema.kode, behandlingstema.kode, behandlingstype.kode)
+    ? lagUrl(
+        saksnummer,
+        behandlingID,
+        sakstype.kode,
+        sakstema.kode,
+        behandlingstema.kode,
+        behandlingstype.kode,
+        folketrygdenToggleEnabled
+      )
     : lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema.kode);
 
   if (behandleAlleSakerToggleEnabled) {
