@@ -1,6 +1,6 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
-import Periode from "./periode";
 import { Soeknadsland } from "../mottatteOpplysninger/types";
+import Periode from "./periode";
 
 type Fagsak = {
   saksnummer: string;
@@ -28,6 +28,8 @@ export type FagsakOppsummering = {
     periode: Periode;
     land: Soeknadsland;
     opprettetDato: string;
+    behandlingsresultattype: KTObject;
+    svarFrist: string;
   }[];
   hovedpartRolle: string;
 };
