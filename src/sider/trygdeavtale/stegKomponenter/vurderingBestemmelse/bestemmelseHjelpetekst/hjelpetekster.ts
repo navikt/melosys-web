@@ -19,7 +19,7 @@ const hjelpeteksterUkArt61 = [
   Hjelpetekster.MAX_TRE_ÅR,
 ];
 
-const hjelpeteksterUkArt65 = [Hjelpetekster.BOSATT_I_NORGE, Hjelpetekster.ANSATT_I_DEN_NORSKE_STAT];
+const hjelpeteksterUkArt65 = [Hjelpetekster.BOSATT_I_NORGE, Hjelpetekster.LØNNET_FRA_NORSK_ARBEIDSGIVER];
 
 const hjelpeteksterUkArt73 = [
   Hjelpetekster.BOSATT_I_NORGE,
@@ -48,6 +48,23 @@ const hjelpeteksterUsArt55 = [
 
 const hjelpeteksterUsArt56 = [Hjelpetekster.ARBEIDER_PÅ_NORSKREGISTRERT_SKIP, Hjelpetekster.PLIKTIG_TRYGDET_BEGGE_LAND];
 
+const hjelpeteksterCaArt62 = [Hjelpetekster.BOSATT_I_NORGE, Hjelpetekster.MAX_12_MD];
+
+const hjelpeteksterCaArt7 = [
+  Hjelpetekster.MEDLEM_I_FOLKETRYGDEN,
+  Hjelpetekster.LØNNET_FRA_NORSK_ARBEIDSGIVER,
+  Hjelpetekster.MAX_FEM_ÅR,
+];
+
+// TODO: Legg til vilkår
+const hjelpeteksterCaArt9 = ["placeholder"];
+
+const hjelpeteksterCaArt10 = [
+  Hjelpetekster.ANSATT_I_DEN_NORSKE_STAT,
+  Hjelpetekster.ANSATT_OG_LØNNET_FRA_NORSK_ARBEIDSGIVER,
+  Hjelpetekster.NORSK_STATSBORGER,
+];
+
 export {
   hjelpeteksterUkArt61,
   hjelpeteksterUkArt65,
@@ -57,4 +74,8 @@ export {
   hjelpeteksterUsArt54,
   hjelpeteksterUsArt55,
   hjelpeteksterUsArt56,
+  hjelpeteksterCaArt62,
+  hjelpeteksterCaArt7,
+  hjelpeteksterCaArt9,
+  hjelpeteksterCaArt10,
 };

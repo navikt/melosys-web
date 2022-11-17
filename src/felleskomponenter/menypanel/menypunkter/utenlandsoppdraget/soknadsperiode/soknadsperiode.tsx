@@ -8,6 +8,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Utils from "../../../../../utils";
 import * as Nav from "../../../../../navFrontend";
 import * as Symboler from "../../symboler";
+import * as Hooks from "../../../../../hooks";
 
 import { Periode } from "../../../../../services/modules/mottatteOpplysninger/types";
 import {
@@ -57,6 +58,7 @@ export const Soknadsperiode = ({
   const [soknadsperiodeTom, setSoknadsperiodeTom] = useState(props.soknadsperiodeTom);
   const [soknadsperiodeGammelFom, setSoknadsperiodeGammelFom] = useState(props.soknadsperiodeFom);
   const [soknadsperiodeGammelTom, setSoknadsperiodeGammelTom] = useState(props.soknadsperiodeTom);
+  const isMounted = Hooks.useIsMounted();
 
   const oppdaterPeriode = (fom: string, tom: string) => {
     props.oppdaterPeriode({
@@ -67,9 +69,9 @@ export const Soknadsperiode = ({
 
   useEffect(() => {
     return () => {
-      oppdaterPeriode(soknadsperiodeGammelFom, soknadsperiodeGammelTom);
+      if (!isMounted.current) oppdaterPeriode(soknadsperiodeGammelFom, soknadsperiodeGammelTom);
     };
-  }, []);
+  }, [soknadsperiodeGammelFom, soknadsperiodeGammelTom]);
 
   useEffect(() => {
     oppdaterPeriode(soknadsperiodeFom, soknadsperiodeTom);

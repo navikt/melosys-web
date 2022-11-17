@@ -23,6 +23,7 @@ import { useFeatureToggle } from "../../featuretoggle";
  */
 const Fagsak = ({ sak, visSakstema, landkoder }) => {
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
+  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
 
   const { periode, land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.periode != null) ?? {};
@@ -37,7 +38,8 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
           sakstype.kode,
           sakstema.kode,
           behandling.behandlingstema.kode,
-          behandling.behandlingstype.kode
+          behandling.behandlingstype.kode,
+          folketrygdenToggle === "enabled"
         )
       : Routing.lagUrlFraBehandlingstema(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode);
 

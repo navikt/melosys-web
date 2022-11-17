@@ -270,7 +270,13 @@ export const OpprettSak = (props) => {
         </Skjema.Select>
       )}
       {(behandleAlleSakerToggleEnabled
-        ? skalViseSoknadsperiodeOgLand(valgtSakstype, valgtSakstema, valgtBehandlingstema, valgtBehandlingstype)
+        ? skalViseSoknadsperiodeOgLand(
+            valgtSakstype,
+            valgtSakstema,
+            valgtBehandlingstema,
+            valgtBehandlingstype,
+            folketrygdenToggle === "enabled"
+          )
         : skalViseSoknadsperiodeOgLandDeprecated(hovedpart, valgtSakstype, valgtBehandlingstema)) && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">

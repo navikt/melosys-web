@@ -17,7 +17,7 @@
     "@apollo/client": "^3.6.8",
     "@loadable/component": "^5.10.3",
     "@navikt/fnrvalidator": "^1.1.4",
-    "@navikt/melosys-kodeverk": "5.15.144",
+    "@navikt/melosys-kodeverk": "5.15.151",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.6.1",
     "date-fns": "^2.28.0",

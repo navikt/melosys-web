@@ -18,12 +18,6 @@ describe("url", () => {
       expect(hentUrl).toThrowError("Finner ikke EuEøs-flyt for behandlingstema:");
     });
 
-    it("Sakstype FTRL med ustøttet behandlingstemaKode kaster feil", () => {
-      const hentUrl = () => lagUrlFraSakstypeOgBehandlingstema("MEL-1", 1, FTRL, "tilfeldig behandlingstemaKode");
-
-      expect(hentUrl).toThrowError("Finner ikke folketrygden-flyt for behandlingstema:");
-    });
-
     it("Sakstype TRYGDEAVTALE med ustøttet behandlingstemaKode kaster feil", () => {
       const hentUrl = () =>
         lagUrlFraSakstypeOgBehandlingstema("MEL-1", 1, TRYGDEAVTALE, "tilfeldig behandlingstemaKode");
@@ -47,7 +41,7 @@ describe("url", () => {
         "MEL-1",
         1,
         FTRL,
-        MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
       );
 
       expect(url).toContain("/FTRL/saksbehandling/");
@@ -121,10 +115,39 @@ describe("url", () => {
         EU_EOS,
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
-        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        true
       );
 
       expect(url).toContain("/EU_EOS/behandling/");
+    });
+
+    it("YRKESAKTIV for FTRL får ikke tom flyt med toggle på", () => {
+      const url = lagUrl(
+        "MEL-1",
+        1,
+        FTRL,
+        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        true
+      );
+
+      expect(url).toContain("/FTRL/saksbehandling/");
+    });
+
+    it("YRKESAKTIV for FTRL får tom flyt med toggle av", () => {
+      const url = lagUrl(
+        "MEL-1",
+        1,
+        FTRL,
+        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        false
+      );
+
+      expect(url).toContain("/FTRL/behandling/");
     });
   });
 });

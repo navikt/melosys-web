@@ -11,7 +11,7 @@ import * as MPT from "../../../proptypes";
 import * as Ikoner from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 
-import AvsenderVelger from "./avsender";
+import AvsenderVelgerForBruker, { AvsenderVelgerForVirksomhet } from "./avsender";
 import LenkeListeVelger from "./lenkelistevelger";
 import JournalforingGjelder from "./journalforingGjelder";
 import Komponent from "./komponent";
@@ -103,10 +103,11 @@ class Informasjon extends Component {
       return;
     }
     settFeltInnhold("brukerNavn", sammensattNavn);
-    await hentFagsakListe(brukerID);
     if (journalfoeringGjelderBruker) {
       kopierBrukerTilAvsender(brukerID, sammensattNavn);
     }
+
+    await hentFagsakListe(brukerID);
   };
 
   hentOgVisVirksomhet = async (virksomhetOrgnr) => {
@@ -129,8 +130,8 @@ class Informasjon extends Component {
       return;
     }
     settFeltInnhold("virksomhetNavn", navn);
-    await hentFagsakListe(virksomhetOrgnr);
     kopierVirksomhetTilAvsender(virksomhetOrgnr, navn);
+    await hentFagsakListe(virksomhetOrgnr);
   };
 
   hentOgVisAvsender = async (value) => {
@@ -315,9 +316,12 @@ class Informasjon extends Component {
           tittel="Informasjon om avsender"
           innhold={
             journalforingGjelder === VIRKSOMHET ? (
-              <Nav.Typo.Normaltekst>Virksomhet er avsender</Nav.Typo.Normaltekst>
+              <AvsenderVelgerForVirksomhet
+                tomAvsender={this.tomAvsender}
+                kopierVirksomhetTilAvsender={this.kopierVirksomhetTilAvsender}
+              />
             ) : (
-              <AvsenderVelger
+              <AvsenderVelgerForBruker
                 kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
                 tomAvsender={this.tomAvsender}
                 settFeltInnhold={settFeltInnhold}

@@ -35,25 +35,36 @@ export const KnyttTilSak = (props) => {
   const { behandlingOversikter, sakstype, sakstema } = sak;
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState();
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
+  const [sisteBehandlingHarSendtAnmodningUnntakTilUtland, setSendtAnmodningUnntakTilUtland] = useState(false);
   const sisteBehandling = behandlingOversikter[0];
 
-  const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
-    sisteBehandling.behandlingsstatus.kode
-  );
-
-  const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
-    ? sisteBehandlingErInaktiv
-    : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
-
   useEffect(() => {
-    changeField(feltNavn.formNavn, "opprettBehandling", visOpprettNyBehandling);
-
     return () => {
       changeField(feltNavn.formNavn, "opprettBehandling", undefined);
       changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
       changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     };
   }, []);
+
+  const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
+    sisteBehandling.behandlingsstatus.kode
+  );
+
+  const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
+    ? sisteBehandlingErInaktiv || sisteBehandlingHarSendtAnmodningUnntakTilUtland
+    : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
+
+  useEffect(() => {
+    changeField(feltNavn.formNavn, "opprettBehandling", visOpprettNyBehandling);
+  }, [visOpprettNyBehandling]);
+
+  useEffect(() => {
+    const erAnmodningsperiodeSendt = (anmodningsperiode) => anmodningsperiode.sendtUtland;
+
+    Api.Anmodningsperioder.hent(sisteBehandling.behandlingID).then((response) => {
+      setSendtAnmodningUnntakTilUtland(response?.anmodningsperioder?.some(erAnmodningsperiodeSendt));
+    });
+  }, [sisteBehandling]);
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
@@ -101,8 +112,9 @@ export const KnyttTilSak = (props) => {
     sak.saksstatus.kode
   );
 
-  const visKnyttTilEksisterende =
-    sisteBehandlingErInaktiv && (!behandleAlleSakerToggleEnabled || !sakErHenlagtEllerBortfalt);
+  const visKnyttTilEksisterende = behandleAlleSakerToggleEnabled
+    ? (sisteBehandlingErInaktiv || sisteBehandlingHarSendtAnmodningUnntakTilUtland) && !sakErHenlagtEllerBortfalt
+    : sisteBehandlingErInaktiv;
 
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
 

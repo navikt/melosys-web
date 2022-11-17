@@ -31,6 +31,7 @@ interface LinkGroupsConfig {
   mottatteOpplysningerType: string;
   contentProps: ContentProps;
   sakstema: string;
+  folketrygdenToggleEnabled: boolean;
 }
 
 class LinkGroupsFactory {
@@ -41,8 +42,17 @@ class LinkGroupsFactory {
     behandlingstema,
     behandlingstype,
     sakstema,
+    folketrygdenToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (skalViseTomFlytEllerErSedBehandling(sakstype, sakstema, behandlingstema, behandlingstype))
+    if (
+      skalViseTomFlytEllerErSedBehandling(
+        sakstype,
+        sakstema,
+        behandlingstema,
+        behandlingstype,
+        folketrygdenToggleEnabled
+      )
+    )
       return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
 
     switch (behandlingstema) {

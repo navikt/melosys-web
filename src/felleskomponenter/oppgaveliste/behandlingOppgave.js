@@ -37,7 +37,7 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
  * for å gi saksbehandler en hent over sakens innhold før hun klikker
  * seg inn på den.
  */
-const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
+const BehandlingOppgave = ({ sak, visSakstema, folketrygdenToggleEnabled, landkoder }) => {
   const {
     navn,
     sakstype,
@@ -60,10 +60,17 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
     endretDato,
     svarFrist,
   } = behandling;
-
   const tittel = `${navn} - ${hovedpartIdent}`;
   const link = visSakstema
-    ? Routing.lagUrl(saksnummer, behandlingID, sakstype.kode, sakstema.kode, behandlingstema.kode, behandlingstype.kode)
+    ? Routing.lagUrl(
+        saksnummer,
+        behandlingID,
+        sakstype.kode,
+        sakstema.kode,
+        behandlingstema.kode,
+        behandlingstype.kode,
+        folketrygdenToggleEnabled
+      )
     : Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema.kode);
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 
@@ -135,6 +142,7 @@ const BehandlingOppgave = ({ sak, visSakstema, landkoder }) => {
 BehandlingOppgave.propTypes = {
   sak: MPT.SaksbehandlingOppgave,
   visSakstema: PT.bool.isRequired,
+  folketrygdenToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
