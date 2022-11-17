@@ -33,7 +33,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 
-const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US } = MKV.Koder.brev.produserbaredokumenter;
+const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
 
 const vurderingVedtakCls = bem("vurderingVedtak");
@@ -205,8 +205,18 @@ const VurderingVedtak = ({
   };
   const debouncedKontrollerVedtak = useCallback(Utils._debounce(kontrollerVedtak, 500), []);
 
-  const hentProduserbartDokument = (): string =>
-    soknadsland[0].kode === MKV.Koder.land_iso2.GB ? TRYGDEAVTALE_GB : TRYGDEAVTALE_US;
+  const hentProduserbartDokument = (): string => {
+    switch (soknadsland[0]?.kode) {
+      case MKV.Koder.land_iso2.GB:
+        return TRYGDEAVTALE_GB;
+      case MKV.Koder.land_iso2.US:
+        return TRYGDEAVTALE_US;
+      case MKV.Koder.land_iso2.CA:
+        return TRYGDEAVTALE_CAN;
+      default:
+        return "";
+    }
+  };
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
