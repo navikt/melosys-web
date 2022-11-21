@@ -165,34 +165,34 @@ const Trygdeavgiftsgrunnlag = ({
               value={BOOLSK_STRING.USANN}
               disabled={!redigerbart}
             />
-            {erSaerligAvgiftsGruppeValgt.get(virksomhetType) === true && (
-              <Skjema.Select
-                label=""
-                disabled={!redigerbart}
-                feltNavn={`${feltNavnBase}.særligAvgiftsgruppe`}
-                emptyFieldText="Velg gruppe"
-                emptyFieldDisabled={
-                  (erVirksomhetNorsk
-                    ? formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe
-                    : formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe) !== "TRUE"
-                }
-              >
-                {saerligeavgiftsgrupper
-                  .filter(
-                    (avgiftsgruppe) =>
-                      avgiftsgruppe.kode !==
-                      (erVirksomhetNorsk
-                        ? MKV.Koder.saerligeavgiftsgrupper.FN
-                        : MKV.Koder.saerligeavgiftsgrupper.MISJONÆR)
-                  )
-                  .map((saerligavgiftsgruppe: KTObject) => (
-                    <option key={saerligavgiftsgruppe.kode} value={saerligavgiftsgruppe.kode}>
-                      {saerligavgiftsgruppe.term}
-                    </option>
-                  ))}
-              </Skjema.Select>
-            )}
           </Nav.Fieldset>
+          {erSaerligAvgiftsGruppeValgt.get(virksomhetType) === true && (
+            <Skjema.Select
+              label=""
+              disabled={!redigerbart}
+              feltNavn={`${feltNavnBase}.særligAvgiftsgruppe`}
+              emptyFieldText="Velg gruppe"
+              emptyFieldDisabled={
+                (erVirksomhetNorsk
+                  ? formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe
+                  : formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe) !== "TRUE"
+              }
+            >
+              {saerligeavgiftsgrupper
+                .filter(
+                  (avgiftsgruppe) =>
+                    avgiftsgruppe.kode !==
+                    (erVirksomhetNorsk
+                      ? MKV.Koder.saerligeavgiftsgrupper.FN
+                      : MKV.Koder.saerligeavgiftsgrupper.MISJONÆR)
+                )
+                .map((saerligavgiftsgruppe: KTObject) => (
+                  <option key={saerligavgiftsgruppe.kode} value={saerligavgiftsgruppe.kode}>
+                    {saerligavgiftsgruppe.term}
+                  </option>
+                ))}
+            </Skjema.Select>
+          )}
         </Nav.Column>
 
         {visBetalerArbeidsgiverAvgift && (

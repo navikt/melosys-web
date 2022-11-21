@@ -145,7 +145,7 @@ const mapStateToProps = (state: RootState) => ({
   trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
-  formIsValid: formSelectors.VurderPerioderFormValid(state),
+  formErrors: formSelectors.VurderPerioderErrors(state),
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
 });
 
@@ -184,7 +184,7 @@ const VurderingPerioder = ({
   hentMedlemskapsperioder,
   valgtTrygdedekning,
   mottaksdato,
-  formIsValid,
+  formErrors,
   redigerbart,
   soknadsperiode,
   ...props
@@ -281,8 +281,11 @@ const VurderingPerioder = ({
     });
     oppdater();
     if (redigerbart)
-      debouncedLagreMedlemskapsperioder({ medlemskapsperioder: formValues?.medlemskapsperioder, valid: formIsValid });
-  }, [formValues?.medlemskapsperioder, formIsValid]);
+      debouncedLagreMedlemskapsperioder({
+        medlemskapsperioder: formValues?.medlemskapsperioder,
+        valid: Utils._isEmpty(formErrors),
+      });
+  }, [formValues?.medlemskapsperioder, formErrors]);
 
   const handleSlett = (index: number) => {
     if (!formValues || !formValues.medlemskapsperioder) return;
@@ -327,7 +330,6 @@ const VurderingPerioder = ({
 
   const visLeggTilNyPeriode =
     formValues?.medlemskapsperioder?.length !== undefined &&
-    formValues.medlemskapsperioder.length < 2 &&
     !formValues.medlemskapsperioder.some((periode) => Utils._isEmpty(periode.tomDato));
 
   const ingenMedlemskapsperioder =
@@ -400,7 +402,7 @@ const VurderingPerioder = ({
       )}
 
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: handleBekreft, disabled: !redigerbart || !formIsValid }}
+        bekreftKnappProps={{ onClick: handleBekreft, disabled: !redigerbart || !Utils._isEmpty(formErrors) }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
