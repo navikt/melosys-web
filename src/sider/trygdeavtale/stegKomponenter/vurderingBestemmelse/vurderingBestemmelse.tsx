@@ -29,6 +29,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
     vedtak: ownProps.resultat?.vedtak,
     innvilgelse: ownProps.resultat?.innvilgelse,
     bestemmelse: ownProps.resultat?.bestemmelse,
+    tilleggsbestemmelse: Boolean(ownProps.resultat?.tilleggsbestemmelse),
   },
 });
 
@@ -47,6 +48,7 @@ interface FormValuesProps {
   vedtak?: string;
   innvilgelse?: string;
   bestemmelse?: string;
+  tilleggsbestemmelse?: boolean;
 }
 
 interface Props {
@@ -61,7 +63,7 @@ interface Props {
 }
 
 const VurderingBestemmelse = ({
-  data: { vedtakValg, innvilgelseValg, bestemmelseValg },
+  data: { vedtakValg, innvilgelseValg, bestemmelseValg, tilleggsbestemmelseValg },
   formIsValid,
   formValues,
   fortsett,
@@ -79,6 +81,7 @@ const VurderingBestemmelse = ({
         vedtak: formValues?.vedtak,
         innvilgelse: formValues?.innvilgelse,
         bestemmelse: formValues?.bestemmelse,
+        tilleggsbestemmelse: formValues.tilleggsbestemmelse ? tilleggsbestemmelseValg?.kode : undefined,
       });
     }
   }, [formValues]);
@@ -130,6 +133,7 @@ const VurderingBestemmelse = ({
                 disabled={!redigerbart}
                 emptyFieldText="Velg"
                 emptyFieldDisabled={!!formValues.bestemmelse}
+                onChange={() => resetField("tilleggsbestemmelse")}
               >
                 {bestemmelseValg?.map((bestemmelse: KTObject) => (
                   <option key={bestemmelse.kode} value={bestemmelse.kode}>
@@ -140,6 +144,14 @@ const VurderingBestemmelse = ({
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
+      )}
+
+      {formValues?.innvilgelse && !Utils._isEmpty(tilleggsbestemmelseValg) && (
+        <Nav.Row>
+          <Nav.Column xs="10">
+            <Skjema.Checkbox feltNavn="tilleggsbestemmelse" label={tilleggsbestemmelseValg?.term} />
+          </Nav.Column>
+        </Nav.Row>
       )}
 
       <Nav.Row>
