@@ -76,8 +76,7 @@ const vurdering_perioder = object().shape({
         medlemskapstype: string(),
       })
     )
-    .min(1)
-    .max(2),
+    .min(1),
   ikkeStottetIMelosys: string().when(["medlemskapsperioder", "$mottaksdato"], {
     is: ugyldigeInnvilgelsesResultater,
     then: string().required(),
