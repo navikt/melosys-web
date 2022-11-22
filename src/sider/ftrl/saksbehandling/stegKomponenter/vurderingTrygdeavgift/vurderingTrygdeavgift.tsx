@@ -173,8 +173,10 @@ const VurderingTrygdeavgift = ({
         trygdeavgiftsgrunnlagNorge: formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge || null,
         trygdeavgiftsgrunnlagUtland: formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland || null,
       }).then((response) => {
-        changeField("avgiftsgrunnlag", response);
-        handleGrunnlagResponse(response);
+        if (JSON.stringify(formValues.avgiftsgrunnlag) !== JSON.stringify(response)) {
+          changeField("avgiftsgrunnlag", response);
+          handleGrunnlagResponse(response);
+        }
       });
     }
   }, [formValues?.avgiftsgrunnlag]);
