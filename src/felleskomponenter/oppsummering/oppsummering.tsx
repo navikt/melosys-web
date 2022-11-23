@@ -16,6 +16,7 @@ import { useFeatureToggle } from "../../featuretoggle";
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
 import KopierbarTekst from "../kopierbarTekst";
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
+import EndreBehandlingModalGammel from "./endreBehandlingModalGammel";
 import EndreBehandlingModal from "./endreBehandlingModal";
 
 import "./oppsummering.css";
@@ -147,12 +148,21 @@ const Oppsummering = (props: OppsummeringProps) => {
   };
   return (
     <section aria-label="oppsummeringer" className="oppsummering panelSeksjon">
-      <EndreBehandlingModal
-        fagsak={fagsak}
-        oppsummering={oppsummering}
-        skalViseModal={skalViseEndreModal}
-        lukkModal={() => setSkalViseEndreModal(false)}
-      />
+      {behandleAlleSakerToggle === "enabled" ? (
+        <EndreBehandlingModal
+          fagsak={fagsak}
+          oppsummering={oppsummering}
+          skalViseModal={skalViseEndreModal}
+          lukkModal={() => setSkalViseEndreModal(false)}
+        />
+      ) : (
+        <EndreBehandlingModalGammel
+          fagsak={fagsak}
+          oppsummering={oppsummering}
+          skalViseModal={skalViseEndreModal}
+          lukkModal={() => setSkalViseEndreModal(false)}
+        />
+      )}
 
       <Nav.Panel className="saksbehandling__soknad-sammendrag">
         <Nav.Row>
