@@ -38,8 +38,6 @@ export const Registrering = ({
   sed,
   redigerbart,
   Saksopplysninger,
-  fagsak,
-  oppsummering,
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
   lovvalgsland,
@@ -102,8 +100,6 @@ export const Registrering = ({
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  oppsummering={oppsummering}
-                  fagsak={fagsak}
                   lovvalgsland={lovvalgsland}
                   lovvalgsperiodeFom={lovvalgsperiodeFom}
                   lovvalgsperiodeTom={lovvalgsperiodeTom}
@@ -128,9 +124,7 @@ Registrering.propTypes = {
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   vurderingBegrunnelser: PT.arrayOf(PT.string),
-  fagsak: MPT.Fagsak,
   lovvalgsperioder: PT.array.isRequired, // TODO lag proptype
-  oppsummering: MPT.Behandlinger.Oppsummering,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
@@ -146,8 +140,6 @@ Registrering.propTypes = {
 Registrering.defaultProps = {
   redigerbart: null,
   avklartefakta: [],
-  fagsak: {},
-  oppsummering: {},
   sed: {},
   lovvalgsperiodeFom: undefined,
   lovvalgsperiodeTom: undefined,
@@ -158,9 +150,7 @@ const mapStateToProps = (state) => ({
   hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
-  fagsak: fagsakSelectors.FagsakSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   sed: behandlingerSelectors.SEDSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),

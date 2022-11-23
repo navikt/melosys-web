@@ -17,8 +17,6 @@ import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import { TomFlytMelding } from "../../../felleskomponenter/alertmeldinger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
 import { useFeatureToggle } from "../../../featuretoggle";
-
-import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { datalastingOperations } from "../../../ducks/datalasting";
@@ -27,8 +25,6 @@ import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from ".
 import "./sedbehandling.css";
 
 const mapStateToProps = (state: RootState) => ({
-  fagsak: fagsakSelectors.FagsakSelector(state),
-  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
@@ -62,8 +58,6 @@ const SedBehandling = ({
   match,
   behandlingstema,
   redigerbart,
-  fagsak,
-  oppsummering,
   lovvalgsland,
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
@@ -117,8 +111,6 @@ const SedBehandling = ({
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  oppsummering={oppsummering}
-                  fagsak={fagsak}
                   lovvalgsland={behandlingstemaErIkkeYrkesaktiv ? lovvalgsland : null}
                   lovvalgsperiodeFom={lovvalgsperiodeFom}
                   lovvalgsperiodeTom={lovvalgsperiodeTom}
