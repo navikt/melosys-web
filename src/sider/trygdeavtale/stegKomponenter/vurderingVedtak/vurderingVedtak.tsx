@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { RootState } from "AppTypes";
-import { connect, ConnectedProps } from "react-redux";
+import { connect, ConnectedProps, useDispatch } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
@@ -25,13 +25,14 @@ import { formSelectors } from "../../../../ducks/form";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import MottakerTabell from "../../../../felleskomponenter/tabell/mottakerTabell";
 import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
-import { Feilkode } from "../../../../@types";
 import { StegStatus } from "../../stegvelger";
 import bem from "../../../../bemUtils";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
+import { kontrollerFerdigbehandling } from "../../../../ducks/kontroll/operations";
+import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
 const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
@@ -81,6 +82,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
     formIsValid: formSelectors.TrygdeavtaleVedtakFormValidSelector(state),
     periodeIsValid: formSelectors.TrygdeavtaleVedtakFormPeriodeValidSelector(state),
     erNyVurdering,
+    feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
   };
 };
 
@@ -96,14 +98,11 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 interface Props {
   data: Api.Trygdeavtale.StegData;
   oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat, callback?: () => void) => void;
-  hentFlytOgOppdaterAktuelleSteg: () => void;
   tilbake: () => void;
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
-  oppdaterFeilmeldinger: (data: Api.Kontroll.FerdigbehandlingKontrollData) => void;
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  feilmeldinger: Feilkode[];
   formValues: {
     lovvalgsperiodeFom?: string;
     lovvalgsperiodeTom?: string;
@@ -113,6 +112,7 @@ interface Props {
     nyVurderingBakgrunn?: string;
     nyVurderingBakgrunnFritekst?: string;
   };
+  aktivtSteg: boolean;
 }
 
 const VurderingVedtak = ({
@@ -120,7 +120,6 @@ const VurderingVedtak = ({
   mottatteOpplysningerStatus,
   data: { bestemmelseValg },
   erNyVurdering,
-  hentFlytOgOppdaterAktuelleSteg,
   tilbake,
   redigerbart,
   resultat,
@@ -129,13 +128,13 @@ const VurderingVedtak = ({
   formValues,
   periodeIsValid,
   oppdaterFlyt,
-  oppdaterFeilmeldinger,
   soknadsland,
   lagreOgFatteVedtak,
   vedtakstype,
   hentLovvalgsperiode,
   formIsValid,
   feilmeldinger,
+  aktivtSteg,
 }: Props & PropsFromRedux) => {
   const periodeHjelpetekst =
     "Perioden som vises her er søknadsperiode. Hvis sluttdato for oppholdet ikke er oppgitt i søknaden, og/eller du vil endre sluttdato for vedtaket, trykk på Endre og skriv inn sluttdato.";
@@ -154,8 +153,9 @@ const VurderingVedtak = ({
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
+  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const isMounted = Hooks.useIsMounted();
+  const dispatch = useDispatch();
 
   const getNyVurderingBakgrunn = () =>
     formValues?.nyVurderingBakgrunn === FRITEKST
@@ -191,19 +191,27 @@ const VurderingVedtak = ({
     nyVurderingBakgrunn: getNyVurderingBakgrunn(),
   });
 
-  const kontrollerVedtak = (skalRegisteropplysningerOppdateres: boolean = false) => {
-    oppdaterFeilmeldinger({
-      behandlingID,
-      vedtakstype: erNyVurdering
-        ? MKV.Koder.vedtakstyper.ENDRINGSVEDTAK
-        : vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-      skalRegisteropplysningerOppdateres,
-    });
-    setOppdaterFørKontroll(false);
-    hentFlytOgOppdaterAktuelleSteg();
-  };
-  const debouncedKontrollerVedtak = useCallback(Utils._debounce(kontrollerVedtak, 500), []);
+  useEffect(() => {
+    async function kontroller() {
+      if (mottatteOpplysningerStatus === "OK" && aktivtSteg) {
+        setVedtakPending(true);
+        await dispatch(
+          kontrollerFerdigbehandling({
+            behandlingID,
+            vedtakstype: erNyVurdering
+              ? MKV.Koder.vedtakstyper.ENDRINGSVEDTAK
+              : vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+            behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+            skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
+          })
+        );
+        setOppdaterFoerKontroll(false);
+        setVedtakPending(false);
+      }
+    }
+
+    kontroller();
+  }, [aktivtSteg, resultat.lovvalgsperiodeTom, mottatteOpplysningerStatus]);
 
   const hentProduserbartDokument = (): string => {
     switch (soknadsland[0]?.kode) {
@@ -230,17 +238,6 @@ const VurderingVedtak = ({
     Utils._debounce((trygdeavtaleresultat: Api.Trygdeavtale.Resultat) => oppdaterFlyt(trygdeavtaleresultat), 2000),
     []
   );
-
-  useEffect(() => {
-    if (redigerbart) debouncedKontrollerVedtak(oppdaterFørKontroll);
-    return () => debouncedKontrollerVedtak.cancel();
-  }, []);
-
-  useEffect(() => {
-    if (mottatteOpplysningerStatus === "OK" && redigerbart) {
-      debouncedKontrollerVedtak(oppdaterFørKontroll);
-    }
-  }, [resultat.lovvalgsperiodeTom, mottatteOpplysningerStatus, resultat.bestemmelse]);
 
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {
