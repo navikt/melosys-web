@@ -193,7 +193,7 @@ const VurderingVedtak = ({
 
   useEffect(() => {
     async function kontroller() {
-      if (mottatteOpplysningerStatus === "OK" && aktivtSteg) {
+      if (mottatteOpplysningerStatus === "OK" && aktivtSteg && redigerbart) {
         setVedtakPending(true);
         await dispatch(
           kontrollerFerdigbehandling({
