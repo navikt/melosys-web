@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
 import { TRYGDEAVTALE_FLYT_BASE_URL } from "../services/api-constants";
 import { melosysRequest, trygdeavtaleRequest } from "./authConfig";
 
@@ -41,17 +43,20 @@ export const setTokenInterceptorForLocalDevelopment = () => {
   }
 };
 
-export const getAccessToken = (instance, accounts, url) => {
-  return instance
-    .acquireTokenSilent({
-      ...(url.startsWith(TRYGDEAVTALE_FLYT_BASE_URL) ? trygdeavtaleRequest : melosysRequest),
-      account: accounts[0],
-    })
+export const getAccessToken = (msalInstance, accounts, url, acquireTokenRedirect = false) => {
+  return msalInstance[acquireTokenRedirect ? "acquireTokenRedirect" : "acquireTokenSilent"]({
+    ...(url.startsWith(TRYGDEAVTALE_FLYT_BASE_URL) ? trygdeavtaleRequest : melosysRequest),
+    account: accounts[0],
+  })
     .then((response) => {
       return response.accessToken;
     })
     .catch((error) => {
-      console.log(error); // eslint-disable-line no-console
+      if (error instanceof InteractionRequiredAuthError) {
+        return getAccessToken(msalInstance, accounts, url, true);
+      }
+
+      console.log(error);
       return null;
     });
 };
