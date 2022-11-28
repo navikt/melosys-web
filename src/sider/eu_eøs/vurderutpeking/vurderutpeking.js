@@ -52,8 +52,6 @@ const Vurderutpeking = ({
   behandlingstema,
   hovedpartRolle,
   redigerbart,
-  fagsak,
-  oppsummering,
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
   arbeidsland,
@@ -134,8 +132,6 @@ const Vurderutpeking = ({
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  oppsummering={oppsummering}
-                  fagsak={fagsak}
                   arbeidsland={arbeidsland}
                   lovvalgsland={lovvalgslandKTOBject}
                   lovvalgsperiodeFom={lovvalgsperiodeFom}
@@ -161,8 +157,6 @@ Vurderutpeking.propTypes = {
   behandlingstema: PT.string.isRequired,
   hovedpartRolle: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
-  fagsak: MPT.Fagsak.isRequired,
-  oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
   lovvalgsperiodeFom: PT.string.isRequired,
   lovvalgsperiodeTom: PT.string.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -192,8 +186,6 @@ const mapStateToProps = (state) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  fagsak: fagsakSelectors.FagsakSelector(state),
-  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),

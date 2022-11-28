@@ -20,6 +20,7 @@ export interface Resultat {
   vedtak?: string;
   innvilgelse?: string;
   bestemmelse?: string;
+  tilleggsbestemmelse?: string;
   barn?: Familiemedlem[] | null;
   ektefelle?: Familiemedlem | null;
   lovvalgsperiodeFom?: string;
@@ -51,6 +52,7 @@ export interface StegData {
   vedtakValg?: KTObject[];
   innvilgelseValg?: KTObject[];
   bestemmelseValg?: KTObject[];
+  tilleggsbestemmelseValg?: KTObject;
   barnValg?: FamilieValg[];
   barnBegrunnelseValg?: KTObject[];
   ektefelleValg?: FamilieValg;

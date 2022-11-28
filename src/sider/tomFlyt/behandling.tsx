@@ -21,7 +21,7 @@ import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
-import { VirksomhetMelding, TomFlytMelding } from "../../felleskomponenter/alertmeldinger";
+import { TomFlytMelding, VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
 import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog";
 
 import "./behandling.css";
@@ -35,13 +35,11 @@ const mapStateToProps = (state: RootState) => ({
     mottatteOpplysningerSelectors.PeriodeTomSelector(state)
   ),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  fagsak: fagsakSelectors.FagsakSelector(state),
   hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   mottaksdato: mottatteOpplysningerSelectors.MottaksdatoSelector(state),
-  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
@@ -62,7 +60,6 @@ const Behandling = ({
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
   behandlingstema,
-  fagsak,
   hovedpartRolle,
   lastInnSaksopplysninger,
   location,
@@ -70,7 +67,6 @@ const Behandling = ({
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
   mottaksdato,
-  oppsummering,
   match: {
     params: { saksnr: saksnummer, sakstype },
   },
@@ -111,8 +107,6 @@ const Behandling = ({
             </Nav.Column>
             <Nav.Column xs="5">
               <Oppsummering
-                oppsummering={oppsummering}
-                fagsak={fagsak}
                 arbeidsland={arbeidsland}
                 lovvalgsland={lovvalgsland}
                 mottattDato={mottaksdato}

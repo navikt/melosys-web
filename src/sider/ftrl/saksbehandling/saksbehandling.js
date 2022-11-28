@@ -50,7 +50,6 @@ const Saksbehandling = ({
   mottatteOpplysningerPeriodeTom,
   mottatteOpplysningerMottaksdato,
   behandlingsresultat,
-  fagsak,
   fagsakStatusKode,
   hentBehandling,
   hentMottatteOpplysninger,
@@ -67,7 +66,6 @@ const Saksbehandling = ({
   landkoder,
   location,
   match,
-  oppsummering,
   redigerbart,
   resetBehandlingerState,
   resetMottatteOpplysningerState,
@@ -207,8 +205,6 @@ const Saksbehandling = ({
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  oppsummering={oppsummering}
-                  fagsak={fagsak}
                   arbeidsland={
                     landkoder && landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
                   }
@@ -239,14 +235,12 @@ Saksbehandling.propTypes = {
   mottatteOpplysningerPeriodeTom: PT.string.isRequired,
   mottatteOpplysningerMottaksdato: PT.string.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
-  fagsak: MPT.Fagsak,
   fagsakStatusKode: PT.string.isRequired,
   hovedpartRolle: PT.string.isRequired,
   history: PT.object.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   location: PT.object.isRequired,
   match: PT.object.isRequired,
-  oppsummering: MPT.Behandlinger.Oppsummering,
   redigerbart: PT.bool,
   soknadForm: PT.object.isRequired,
   // Funcs
@@ -277,8 +271,6 @@ Saksbehandling.propTypes = {
 
 Saksbehandling.defaultProps = {
   mottatteOpplysninger: {},
-  fagsak: {},
-  oppsummering: undefined,
   redigerbart: null,
 };
 
