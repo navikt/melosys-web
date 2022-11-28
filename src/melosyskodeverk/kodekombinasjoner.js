@@ -38,6 +38,7 @@ export const erEOS = (sakstype) => {
   return sakstype === MKV.Koder.sakstyper.EU_EOS;
 };
 
+// Denne kan nok flyttes inn i endreBehandlingModal siden den kun brukes der etter melosys.behandle_alle_saker fjernes
 export const erBehandlingstemaMedBegrensetRettigheter = (behandlingstema, sakstype) => {
   return erEOS(sakstype)
     ? utvidetBehandlingsTemaMedBegrensetRettigheter.includes(behandlingstema)

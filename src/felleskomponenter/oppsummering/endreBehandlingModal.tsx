@@ -214,7 +214,7 @@ function EndreBehandlingModal({
               }}
               label="Sakstype"
               value={sakstype}
-              koder={muligeVerdierPlussValgt(fagsak.sakstype, muligeSakstyper)}
+              koder={muligeSakstyper}
               disableForsteValg
               redigerbart={!endringerErBegrenset && kanEndre}
             />
