@@ -159,8 +159,6 @@ class Saksbehandling extends Component {
   render() {
     const {
       redigerbart,
-      fagsak,
-      oppsummering,
       lovvalgsperiodeFom,
       lovvalgsperiodeTom,
       visOppfriskModal,
@@ -205,8 +203,6 @@ class Saksbehandling extends Component {
                 </Nav.Column>
                 <Nav.Column xs="5">
                   <Oppsummering
-                    oppsummering={oppsummering}
-                    fagsak={fagsak}
                     arbeidsland={arbeidsland}
                     mottattDato={mottatteOpplysningerMottaksdato}
                     lovvalgsperiodeFom={lovvalgsperiodeFom}
@@ -231,7 +227,6 @@ Saksbehandling.propTypes = {
   hovedpartRolle: PT.string.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
-  fagsak: MPT.Fagsak,
   vilkar: PT.array, // TODO lag proptype
   behandlingsPeriode: PT.object.isRequired, // TODO lag proptype
   lovvalgsperioder: PT.array.isRequired, // TODO lag proptype
@@ -264,7 +259,6 @@ Saksbehandling.propTypes = {
   sendAnmodningsperioder: PT.func.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
-  oppsummering: MPT.Behandlinger.Oppsummering,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -283,12 +277,10 @@ Saksbehandling.propTypes = {
 Saksbehandling.defaultProps = {
   redigerbart: null,
   avklartefakta: [],
-  fagsak: {},
   vilkar: [],
   skjema: {},
   anmodningsperioder: [],
   artikkel16_skjema: {},
-  oppsummering: undefined,
   lovvalgsperiodeFom: undefined,
   lovvalgsperiodeTom: undefined,
 };
@@ -299,8 +291,6 @@ Saksbehandling.defaultProps = {
 const mapStateToProps = (state) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
-  fagsak: fagsakSelectors.FagsakSelector(state),
-  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),

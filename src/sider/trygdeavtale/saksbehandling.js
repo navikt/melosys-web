@@ -40,7 +40,6 @@ const Saksbehandling = ({
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
   behandlingsresultat,
-  fagsak,
   fagsakStatusKode,
   hentBehandling,
   hentMottatteOpplysninger,
@@ -52,7 +51,6 @@ const Saksbehandling = ({
   location,
   match,
   oppfriskOgLastInnSaksopplysninger,
-  oppsummering,
   redigerbart,
   resetBehandlingerState,
   resetMottatteOpplysningerState,
@@ -165,8 +163,6 @@ const Saksbehandling = ({
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  oppsummering={oppsummering}
-                  fagsak={fagsak}
                   arbeidsland={arbeidsland}
                   mottattDato={mottatteOpplysningerMottaksdato}
                   lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom}
@@ -195,12 +191,10 @@ Saksbehandling.propTypes = {
   mottatteOpplysningerPeriodeTom: PT.string.isRequired,
   mottatteOpplysningerMottaksdato: PT.string.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
-  fagsak: MPT.Fagsak,
   fagsakStatusKode: PT.string.isRequired,
   hovedpartRolle: PT.string.isRequired,
   location: PT.object.isRequired,
   match: PT.object.isRequired,
-  oppsummering: MPT.Behandlinger.Oppsummering,
   redigerbart: PT.bool,
   soknadForm: PT.object.isRequired,
   // Funcs
@@ -224,8 +218,6 @@ Saksbehandling.propTypes = {
 
 Saksbehandling.defaultProps = {
   mottatteOpplysninger: {},
-  fagsak: {},
-  oppsummering: undefined,
   redigerbart: null,
 };
 
@@ -244,9 +236,7 @@ const mapStateToProps = (state) => ({
     mottatteOpplysningerSelectors.MottaksdatoSelector(state)
   ),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
-  fagsak: fagsakSelectors.FagsakSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
-  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
