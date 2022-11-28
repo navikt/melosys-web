@@ -1,16 +1,19 @@
-import React, { useState } from "react";
-import PT from "prop-types";
+import React, { useEffect, useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { RootState } from "AppTypes";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
-import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
 import * as Api from "../../services/api";
 import * as Ikoner from "../../resources/images";
 import * as Utils from "../../utils";
 import * as Mui from "../ui";
+
+import { fagsakSelectors } from "../../ducks/fagsaker";
+import { behandlingerSelectors } from "../../ducks/behandlinger";
 
 import { useFeatureToggle } from "../../featuretoggle";
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
@@ -20,41 +23,46 @@ import EndreBehandlingModal from "./endreBehandlingModal";
 
 import "./oppsummering.css";
 
-interface OppsummeringProps {
-  oppsummering: Api.Behandlinger.behandling.Oppsummering;
-  fagsak: Api.Fagsak;
-  arbeidsland: KTObject[];
-  lovvalgsland: KTObject;
-  mottattDato: string;
+const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
+const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
+
+const mapStateToProps = (state: RootState) => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  fagsak: fagsakSelectors.FagsakSelector(state),
+  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+});
+
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type OppsummeringProps = PropsFromRedux & {
+  arbeidsland?: KTObject[];
+  lovvalgsland?: KTObject;
+  mottattDato?: string;
   lovvalgsperiodeFom: string;
   lovvalgsperiodeTom: string;
   mottatteOpplysningerPeriodeFom: string;
   mottatteOpplysningerPeriodeTom: string;
   className?: string;
-}
-const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
-const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
+};
 
-const Oppsummering = (props: OppsummeringProps) => {
-  const {
-    oppsummering,
-    fagsak,
-    arbeidsland,
-    lovvalgsland,
-    mottattDato,
-    lovvalgsperiodeFom,
-    lovvalgsperiodeTom,
-    mottatteOpplysningerPeriodeFom,
-    mottatteOpplysningerPeriodeTom,
-    className,
-  } = props;
+const Oppsummering = ({
+  oppsummering,
+  fagsak,
+  arbeidsland,
+  lovvalgsland,
+  lovvalgsperiodeFom,
+  lovvalgsperiodeTom,
+  mottatteOpplysningerPeriodeFom,
+  mottatteOpplysningerPeriodeTom,
+  className,
+  behandlingID,
+  ...props
+}: OppsummeringProps) => {
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
-
-  const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode);
-  const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
-
-  if (!oppsummering || !fagsak?.sakstype) return <div />;
+  const [mottaksdato, setMottaksdato] = useState<string | undefined>(props.mottattDato);
 
   const { saksnummer, sakstype, sakstema, registrertDato, hovedpartRolle } = fagsak;
   const {
@@ -67,22 +75,31 @@ const Oppsummering = (props: OppsummeringProps) => {
     behandlingsstatus,
     behandlingsresultattype,
   } = oppsummering;
-  const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
-  const mottatteOpplysningerperiode = `${mottatteOpplysningerPeriodeFom} - ${mottatteOpplysningerPeriodeTom}`;
 
-  const landStorBokstav = (land: KTObject) =>
+  const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode);
+  const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
+
+  const erSed = behandlingstype?.kode === MKV.Koder.behandlinger.behandlingstyper.SED;
+  const erTrygdeavtale = sakstype?.kode === MKV.Koder.sakstyper.TRYGDEAVTALE;
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+
+  useEffect(() => {
+    if (behandleAlleSakerToggle === "enabled") {
+      Api.Behandlinger.aarsak
+        .hentMottaksdato(behandlingID)
+        .then((response) => setMottaksdato(Utils.dato.formatterDatoTilNorsk(response.mottaksdato)));
+    }
+  }, [behandleAlleSakerToggle]);
+
+  const landStorBokstav = (land?: KTObject) =>
     land?.term ? Utils.streng.storeForbokstaverForLand(land.term) : "Ukjent";
 
-  const landTilSetning = (land: KTObject[]) =>
+  const landTilSetning = (land?: KTObject[]) =>
     land && land.length > 0
       ? Utils.streng.arrayTilKonjunksjon(
           land.map((enkeltLand) => Utils.streng.storeForbokstaverForLand(enkeltLand.term || ""))
         )
       : "Ukjent";
-
-  const erSed = behandlingstype && KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.SED;
-  const erTrygdeavtale = sakstype && KV.objektTilKode(sakstype) === MKV.Koder.sakstyper.TRYGDEAVTALE;
-  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   const tabellEnKolonne = (data: string[][]) => {
     const rows: JSX.Element[] = [];
@@ -132,12 +149,15 @@ const Oppsummering = (props: OppsummeringProps) => {
       col1 = [["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(registrertDato)]];
       col2 = [["Sist oppdatert", Utils.dato.formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`]];
     } else {
+      const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
+      const mottatteOpplysningerperiode = `${mottatteOpplysningerPeriodeFom} - ${mottatteOpplysningerPeriodeTom}`;
+
       col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", mottatteOpplysningerperiode]];
       if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
       col1.push(["Land", erSed ? landStorBokstav(lovvalgsland) : landTilSetning(arbeidsland)]);
 
       col2 = [
-        ["Søknad mottatt", mottattDato || "-"],
+        ["Søknad mottatt", mottaksdato || "-"],
         ["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(registrertDato)],
         ["Sist oppdatert", Utils.dato.formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`],
       ];
@@ -145,6 +165,9 @@ const Oppsummering = (props: OppsummeringProps) => {
 
     return erLitenSkjerm ? tabellEnKolonne(col1.concat(col2)) : tabellToKolonner(col1, col2);
   };
+
+  if (!fagsak?.sakstype) return <div />;
+
   return (
     <section aria-label="oppsummeringer" className="oppsummering panelSeksjon">
       <EndreBehandlingModal
@@ -232,25 +255,4 @@ const Oppsummering = (props: OppsummeringProps) => {
   );
 };
 
-Oppsummering.propTypes = {
-  arbeidsland: PT.arrayOf(MPT.Kodeverk),
-  lovvalgsland: MPT.Kodeverk,
-  fagsak: MPT.Fagsak.isRequired,
-  oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
-  mottatteOpplysningerperiode: PT.string,
-  lovvalgsperiode: PT.string,
-  lovvalgsperiodeFom: PT.string,
-  lovvalgsperiodeTom: PT.string,
-  mottattDato: PT.string,
-  className: PT.string,
-};
-Oppsummering.defaultProps = {
-  arbeidsland: [],
-  lovvalgsland: {},
-  mottatteOpplysningerperiode: undefined,
-  lovvalgsperiode: undefined,
-  mottattDato: undefined,
-  className: undefined,
-};
-
-export default Oppsummering;
+export default connector(Oppsummering);
