@@ -69,7 +69,7 @@ type EndreBehandlingModalProps = PropsFromRedux &
   RouteComponentProps & {
     fagsak: Api.Fagsak;
     oppsummering: Api.Behandlinger.behandling.Oppsummering;
-    mottattDato: string;
+    mottattDato?: string;
     skalViseModal: boolean;
     lukkModal: () => void;
   };
