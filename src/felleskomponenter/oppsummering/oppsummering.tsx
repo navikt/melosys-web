@@ -150,6 +150,7 @@ const Oppsummering = (props: OppsummeringProps) => {
       <EndreBehandlingModal
         fagsak={fagsak}
         oppsummering={oppsummering}
+        mottattDato={mottattDato}
         skalViseModal={skalViseEndreModal}
         lukkModal={() => setSkalViseEndreModal(false)}
       />

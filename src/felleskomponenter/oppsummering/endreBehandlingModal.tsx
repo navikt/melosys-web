@@ -69,6 +69,7 @@ type EndreBehandlingModalProps = PropsFromRedux &
   RouteComponentProps & {
     fagsak: Api.Fagsak;
     oppsummering: Api.Behandlinger.behandling.Oppsummering;
+    mottattDato: string;
     skalViseModal: boolean;
     lukkModal: () => void;
   };
@@ -82,6 +83,7 @@ function EndreBehandlingModal({
   hentBehandling,
   hentMottatteOpplysninger,
   hentFagsak,
+  mottattDato,
   muligeSakstyper_gammel,
   muligeBehandlingstyper_gammel,
   muligeBehandlingstemaer_gammel,
@@ -100,7 +102,7 @@ function EndreBehandlingModal({
   const [sakstype, setSakstype] = useState(fagsak.sakstype?.kode);
   const [behandlingstema, setBehandlingstema] = useState(oppsummering.behandlingstema?.kode);
   const [behandlingstype, setBehandlingstype] = useState(oppsummering.behandlingstype?.kode);
-  const [behandlingsfrist, setBehandlingsfrist] = useState(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
+  const [mottaksdato, setMottaksdato] = useState(Datoutils.isoStringTilDate(mottattDato));
   const [behandlingsstatus, setBehandlingsstatus] = useState(oppsummering.behandlingsstatus?.kode);
   const [skalViseSpinner, setSkalViseSpinner] = useState(false);
   const [muligeSakstyper] = useState([]);
@@ -160,7 +162,7 @@ function EndreBehandlingModal({
       setBehandlingstema(oppsummering.behandlingstema?.kode);
       setBehandlingstype(oppsummering.behandlingstype?.kode);
       setBehandlingsstatus(oppsummering.behandlingsstatus?.kode);
-      setBehandlingsfrist(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
+      setMottaksdato(Datoutils.isoStringTilDate(mottattDato));
     }
   }, [skalViseModal]);
 
@@ -169,7 +171,7 @@ function EndreBehandlingModal({
     const reqBehandling: Api.Behandlinger.behandling.EndreBehandlingReqDto = {
       behandlingstema,
       behandlingstype,
-      behandlingsfrist: Datoutils.dateTilIsoString(behandlingsfrist) || "",
+      mottaksdato: Datoutils.dateTilIsoString(mottaksdato) || "",
       behandlingsstatus,
     };
 
@@ -313,7 +315,7 @@ function EndreBehandlingModal({
               disableForsteValg
               redigerbart={!endringerErBegrenset && kanEndre}
             />
-            <Datovelger onChange={setBehandlingsfrist} label="Frist" value={behandlingsfrist} />
+            <Datovelger onChange={setMottaksdato} label="Mottaksdato" value={mottaksdato} />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingsstatus(e.target.value)}
               label="Behandlingsstatus"
