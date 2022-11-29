@@ -23,6 +23,7 @@ import { useFeatureToggle } from "../../featuretoggle";
 import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
 import { StandardMeldingOverst } from "../alertmeldinger";
+import { skalViseTomFlytEllerErSedBehandling } from "../../routing";
 import { Spinner } from "../spinner";
 
 import "./endreBehandlingModal.css";
@@ -155,7 +156,17 @@ function EndreBehandlingModal({
       .then(async () => {
         setBehandlingEndret(true);
 
-        if (forrigeSakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) await Api.Trygdeavtale.resetFlyt(behandlingID);
+        if (
+          forrigeSakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
+          !skalViseTomFlytEllerErSedBehandling(
+            sakstype,
+            sakstema,
+            behandlingstema,
+            behandlingstype,
+            folketrygdenToggleEnabled
+          )
+        )
+          await Api.Trygdeavtale.resetFlyt(behandlingID);
 
         const nyGenerertLink = Routing.lagUrl(
           saksnummer,
