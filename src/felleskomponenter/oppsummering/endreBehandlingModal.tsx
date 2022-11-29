@@ -82,18 +82,21 @@ function EndreBehandlingModal({
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
   const kanEndre = useFeatureToggle("melosys.behandle_alle_saker.ikke_endre") !== "enabled";
+  const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
 
   useEffect(() => {
-    Api.LovligeKombinasjoner.hentSakstyper().then((alleMuligeSakstyper) => {
+    Api.LovligeKombinasjoner.hentSakstyper(fagsak.saksnummer).then((alleMuligeSakstyper) => {
       setMuligeSakstyper(alleMuligeSakstyper);
     });
   }, []);
 
   useEffect(() => {
     if (sakstype) {
-      Api.LovligeKombinasjoner.hentSakstemaer(fagsak.hovedpartRolle, sakstype).then((alleMuligeSakstemaer) => {
-        setMuligeSakstemaer(alleMuligeSakstemaer);
-      });
+      Api.LovligeKombinasjoner.hentSakstemaer(fagsak.hovedpartRolle, sakstype, fagsak.saksnummer).then(
+        (alleMuligeSakstemaer) => {
+          setMuligeSakstemaer(alleMuligeSakstemaer);
+        }
+      );
     }
   }, [sakstype]);
 
@@ -207,6 +210,11 @@ function EndreBehandlingModal({
       <div className="dialogboks">
         <div>
           <div className="innhold">
+            {!fagsakKanEndres && kanEndre && (
+              <Nav.AlertStripeInfo className="infomelding">
+                Du kan bare endre sakstype og -tema i den første behandlingen i saken
+              </Nav.AlertStripeInfo>
+            )}
             <Mui.KodeTermSelect
               onChange={(e) => {
                 setSakstype(e.target.value);
@@ -214,9 +222,9 @@ function EndreBehandlingModal({
               }}
               label="Sakstype"
               value={sakstype}
-              koder={muligeSakstyper}
+              koder={muligeVerdierPlussValgt(fagsak.sakstype, muligeSakstyper)}
               disableForsteValg
-              redigerbart={!endringerErBegrenset && kanEndre}
+              redigerbart={!endringerErBegrenset && kanEndre && fagsakKanEndres}
             />
             <Mui.KodeTermSelect
               onChange={(e) => {
@@ -225,9 +233,9 @@ function EndreBehandlingModal({
               }}
               label="Sakstema"
               value={sakstema}
-              koder={muligeSakstemaer}
+              koder={muligeVerdierPlussValgt(fagsak.sakstema, muligeSakstemaer)}
               disableForsteValg
-              redigerbart={!endringerErBegrenset && kanEndre}
+              redigerbart={!endringerErBegrenset && kanEndre && fagsakKanEndres}
             />
             <Mui.KodeTermSelect
               onChange={(e) => {
@@ -244,7 +252,7 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"
               value={behandlingstype}
-              koder={muligeVerdierPlussValgt(oppsummering.behandlingstype, muligeBehandlingstyper)} // Må bruke muligVerdierPlussValgt for å støtte ENDRET_PERIODE
+              koder={muligeVerdierPlussValgt(oppsummering.behandlingstype, muligeBehandlingstyper)}
               disableForsteValg
               redigerbart={!endringerErBegrenset && kanEndre}
             />
