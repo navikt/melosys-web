@@ -1,6 +1,5 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { hentAuthorizationHeader } from "../services/utils";
 
 const GRAPHQL_BASE_URL = `${process.env.REACT_APP_GRAPHQL_URL}`;
 
@@ -13,7 +12,6 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      ...hentAuthorizationHeader(),
     },
   };
 });

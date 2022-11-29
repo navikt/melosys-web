@@ -1,6 +1,5 @@
 # Deploy til nais
-Frontend deployes i en nginx-container som tar seg av oidc-oppsett. I `proxy.nginx`
-defineres proxy til melosys backend.
+Frontend deployes i en nginx-container. `proxy.nginx` definerer proxy til Melosys-API.
 
 ## Automatisk deploy
 Melosys-web deployer automatisk til dev ved push på `master`-branch
@@ -17,10 +16,3 @@ Sett ønsket cluster med `kubectl config use-context dev-fss`.
 
 Etter app.yaml er konfigurert kjører man videre kommandoen `kubectl apply -f nais.yaml`.
 Melosys-web blir nå deployet til ønsket cluster og namespace i nais.
-
-Det er viktig at følgende ENV-variabler er satt i vault for å kunne rulle ut til et miljø.
-```$bash
-OIDC_AGENTNAME
-OIDC_HOST_URL
-OIDC_PASSWORD
-```

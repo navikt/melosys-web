@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { withMsal } from "@azure/msal-react";
 import PT from "prop-types";
 
 import { ReactComponent as NavLogo } from "../../../resources/images/nav.svg";
@@ -25,6 +26,10 @@ const Topplinje = (props) => {
     push("/");
   };
 
+  const loggUt = () => {
+    props.msalContext.instance.logoutRedirect();
+  };
+
   return (
     <header className="topplinje">
       <a className="skip-link" href="#main-container">
@@ -40,7 +45,14 @@ const Topplinje = (props) => {
         </div>
       </div>
       <div className="topplinje__saksbehandler">
-        <div className="saksbehandler__navn">{navn}</div>
+        <div className="dropdown">
+          <div className="saksbehandler__navn ">{navn}</div>
+          <div className="dropdown-content">
+            <button type="button" onClick={loggUt}>
+              Logg ut
+            </button>
+          </div>
+        </div>
       </div>
     </header>
   );
@@ -50,6 +62,7 @@ Topplinje.propTypes = {
   saksbehandler: MPT.Saksbehandler.isRequired,
   history: PT.object.isRequired,
   hentOppgaveOversikt: PT.func.isRequired,
+  msalContext: PT.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -60,4 +73,4 @@ const mapDispatchToProps = (dispatch) => ({
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Topplinje));
+export default withMsal(withRouter(connect(mapStateToProps, mapDispatchToProps)(Topplinje)));

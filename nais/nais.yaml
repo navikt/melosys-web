@@ -31,6 +31,33 @@ spec:
     requests:
       cpu: 100m
       memory: 256Mi
+  azure:
+    application:
+      enabled: true
+      tenant: {{TENANT_URL}}
+      {{#if INGRESSES}}
+      replyURLs:
+        {{#each INGRESSES}}
+        - "{{this}}"
+        {{/each}}
+      {{/if}}
+      {{#if REPLY_URL}}
+        - {{REPLY_URL}} # Workaround: For prod må REPLY_URL være samme som INGRESS i vars-prod.json. Dette for å ha localhost:3000 i tillegg til INGRESS i dev, men kun ha INGRESS i prod.
+      {{/if}}
+      claims:
+        extra:
+          - "NAVident"
+          - "azp_name"
+        groups:
+          - id: {{GROUP_MELOSYS_INNLOGGING}}
+      allowAllUsers: false
+      singlePageApplication: true
+  accessPolicy:
+    outbound:
+      rules:
+        - application: {{APP_NAME_API}}
+        - application: {{APP_NAME_OPPGAVE_API}}
+        - application: {{APP_NAME_TRYGDEAVTALE_API}}
   vault:
     enabled: true
   {{#if INGRESSES}}
@@ -44,5 +71,3 @@ spec:
       value: {{APP_URL_MELOSYS}}
     - name: APP_URL_TRYGDEAVTALE
       value: {{APP_URL_TRYGDEAVTALE}}
-    - name: OIDC_HOST_URL
-      value: {{ OIDC_HOST_URL }}

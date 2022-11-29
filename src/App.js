@@ -1,54 +1,27 @@
 import React from "react";
 import PT from "prop-types";
-import { useAuth } from "react-oidc-context";
-
+import { MsalProvider } from "@azure/msal-react";
+import { PublicClientApplication } from "@azure/msal-browser";
 import Rammeverk from "./sider/rammeverk";
+import { msalConfig } from "./auth/authConfig";
 
 export function App({ loadInitialData, children }) {
-  const auth = useAuth();
+  const isDevelopmentProfile = process.env.NODE_ENV === "development";
+  const pca = isDevelopmentProfile ? null : new PublicClientApplication(msalConfig);
 
-  React.useEffect(() => {
-    return auth.events.addAccessTokenExpiring(() => {
-      auth.signinSilent();
-    });
-  }, [auth.events, auth.signinSilent]);
-
-  switch (auth.activeNavigator) {
-    case "signinSilent":
-      return <div>Logger deg inn...</div>;
-    case "signinRedirect": {
-      return <div>Logger deg inn...</div>;
-    }
-    case "signoutRedirect":
-      return <div>Logger deg ut...</div>;
-    default:
-  }
-
-  if (auth.isLoading) {
-    return <div>Laster inn...</div>;
-  }
-
-  if (auth.error) {
-    auth.clearStaleState();
-    auth.signinRedirect();
-    return (
-      <>
-        <div>Det oppsto en teknisk feil. Prøv å last siden inn på nytt.</div>
-        <div>Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger. {auth.error.message}</div>
-      </>
-    );
-  }
-  if (auth.isAuthenticated) {
-    loadInitialData();
-    return (
-      <div className="App">
-        <Rammeverk>{children}</Rammeverk>
-      </div>
-    );
-  }
-  if (auth.isAuthenticated === false && auth.isLoading === false) {
-    auth.signinRedirect();
-  }
+  return (
+    <div className="App">
+      {isDevelopmentProfile ? (
+        <Rammeverk loadInitialData={loadInitialData} isDevelopmentProfile={isDevelopmentProfile}>
+          {children}
+        </Rammeverk>
+      ) : (
+        <MsalProvider instance={pca}>
+          <Rammeverk loadInitialData={loadInitialData}>{children}</Rammeverk>
+        </MsalProvider>
+      )}
+    </div>
+  );
 }
 
 App.propTypes = {

@@ -2,6 +2,5 @@
   "APP_NAME": "melosys-web",
   "APP_URL_TRYGDEAVTALE": "http://melosys-trygdeavtale.teammelosys",
   "APP_URL_MELOSYS": "http://melosys.teammelosys",
-  "INGRESSES": ["https://melosys.nais.adeo.no"],
-  "OIDC_HOST_URL": "https://isso.adeo.no"
+  "INGRESSES": ["https://melosys.nais.adeo.no"]
 }
