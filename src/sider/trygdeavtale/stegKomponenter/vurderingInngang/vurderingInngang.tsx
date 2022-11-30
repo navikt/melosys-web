@@ -76,7 +76,7 @@ interface Props {
   tilForsiden: () => void;
   oppfriskOgLastInnSaksopplysninger: () => void;
   oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
-  resetFlyt: () => void;
+  oppfriskFlyt: () => void;
 }
 
 const VurderingInngang = ({
@@ -94,7 +94,7 @@ const VurderingInngang = ({
   oppdaterSoeknadsland,
   oppfriskOgLastInnSaksopplysninger,
   oppdaterFlyt,
-  resetFlyt,
+  oppfriskFlyt,
   visMenypanel,
 }: PropsFromRedux & Props) => {
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
@@ -152,7 +152,7 @@ const VurderingInngang = ({
       setVisSpinner(true);
       await oppfriskOgLastInnSaksopplysninger();
       setVisSpinner(false);
-      resetFlyt();
+      oppfriskFlyt();
       visMenypanel();
     }
     fortsett();

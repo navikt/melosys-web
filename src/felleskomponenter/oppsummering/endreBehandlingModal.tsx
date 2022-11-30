@@ -133,6 +133,19 @@ function EndreBehandlingModal({
     }
   }, [skalViseModal]);
 
+  const håndterTrygdeavtaleFlyt = async (gammelSakstype: string) => {
+    if (gammelSakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE) return;
+
+    if (
+      sakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE ||
+      Routing.skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)
+    ) {
+      await Api.Trygdeavtale.slettFlyt(behandlingID);
+    } else {
+      await Api.Trygdeavtale.oppfriskFlyt(behandlingID);
+    }
+  };
+
   const harFristEndretSeg = () =>
     Datoutils.isoStringTilDate(oppsummering.behandlingsfrist)?.getTime() !== behandlingsfrist?.getTime();
 
@@ -157,11 +170,7 @@ function EndreBehandlingModal({
       .then(async () => {
         setBehandlingEndret(true);
 
-        if (
-          forrigeSakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
-          !Routing.skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)
-        )
-          await Api.Trygdeavtale.resetFlyt(behandlingID);
+        await håndterTrygdeavtaleFlyt(forrigeSakstype);
 
         const nyGenerertLink = Routing.lagUrl(
           saksnummer,

@@ -122,7 +122,7 @@ function EndreBehandlingModal({
         setBehandlingEndret(true);
 
         await oppfriskSaksopplysninger(behandlingID);
-        if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) await Api.Trygdeavtale.resetFlyt(behandlingID);
+        if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) await Api.Trygdeavtale.oppfriskFlyt(behandlingID);
 
         const nyGenerertLink = Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema);
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
