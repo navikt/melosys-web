@@ -133,6 +133,9 @@ function EndreBehandlingModal({
     }
   }, [skalViseModal]);
 
+  const harFristEndretSeg = () =>
+    Datoutils.isoStringTilDate(oppsummering.behandlingsfrist)?.getTime() !== behandlingsfrist?.getTime();
+
   const endreBehandlingHandle = () => {
     setSkalViseSpinner(true);
     const {
@@ -145,7 +148,7 @@ function EndreBehandlingModal({
       sakstema,
       behandlingstema,
       behandlingstype,
-      behandlingsfrist: Datoutils.dateTilIsoString(behandlingsfrist),
+      behandlingsfrist: harFristEndretSeg() ? Datoutils.dateTilIsoString(behandlingsfrist) : null,
       behandlingsstatus,
     };
 
