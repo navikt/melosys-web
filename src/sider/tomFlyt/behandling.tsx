@@ -77,11 +77,14 @@ const Behandling = ({
   const saksopplysningerErLastet = !!behandlingstema;
 
   useEffect(() => {
-    lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
     return () => {
       resetSaksopplysninger();
     };
   }, []);
+
+  useEffect(() => {
+    lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
+  }, [sakstype]);
 
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID) return null;
