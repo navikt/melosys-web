@@ -4,7 +4,6 @@ import classNames from "classnames";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
 import MKV from "../../melosyskodeverk";
@@ -183,10 +182,6 @@ function EndreBehandlingModal({
       .finally(() => setSkalViseSpinner(false));
   };
 
-  const muligeVerdierPlussValgt = (valgtVerdi: KTObject, muligeVerdier: KTObject[] = []) => {
-    return [valgtVerdi].concat(muligeVerdier.filter((verdi) => verdi.kode !== valgtVerdi.kode));
-  };
-
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
   const endringerErBegrenset = erBehandlingstemaMedBegrensetRettigheter(oppsummering.behandlingstema, fagsak.sakstype);
 
@@ -226,7 +221,7 @@ function EndreBehandlingModal({
               }}
               label="Sakstype"
               value={sakstype}
-              koder={muligeVerdierPlussValgt(fagsak.sakstype, muligeSakstyper)}
+              koder={fagsakKanEndres ? muligeSakstyper : [fagsak.sakstype]}
               disableForsteValg
               redigerbart={!endringerErBegrenset && kanEndre && fagsakKanEndres}
             />
@@ -237,7 +232,7 @@ function EndreBehandlingModal({
               }}
               label="Sakstema"
               value={sakstema}
-              koder={muligeVerdierPlussValgt(fagsak.sakstema, muligeSakstemaer)}
+              koder={fagsakKanEndres ? muligeSakstemaer : [fagsak.sakstema]}
               disableForsteValg
               redigerbart={!endringerErBegrenset && kanEndre && fagsakKanEndres}
             />
@@ -256,7 +251,7 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"
               value={behandlingstype}
-              koder={muligeVerdierPlussValgt(oppsummering.behandlingstype, muligeBehandlingstyper)}
+              koder={muligeBehandlingstyper}
               disableForsteValg
               redigerbart={!endringerErBegrenset && kanEndre}
             />
