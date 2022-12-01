@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -59,7 +59,7 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
+  oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat, callback?: () => void) => void;
 }
 
 const VurderingBestemmelse = ({
@@ -74,15 +74,20 @@ const VurderingBestemmelse = ({
   steg,
   oppdaterFlyt,
 }: PropsFromRedux & Props) => {
+  const [oppdaterPending, setOppdaterPending] = useState(false);
   useEffect(() => {
     if (redigerbart && formValues) {
-      oppdaterFlyt({
-        ...resultat,
-        vedtak: formValues?.vedtak,
-        innvilgelse: formValues?.innvilgelse,
-        bestemmelse: formValues?.bestemmelse,
-        tilleggsbestemmelse: formValues.tilleggsbestemmelse ? tilleggsbestemmelseValg?.kode : undefined,
-      });
+      setOppdaterPending(true);
+      oppdaterFlyt(
+        {
+          ...resultat,
+          vedtak: formValues?.vedtak,
+          innvilgelse: formValues?.innvilgelse,
+          bestemmelse: formValues?.bestemmelse,
+          tilleggsbestemmelse: formValues.tilleggsbestemmelse ? tilleggsbestemmelseValg?.kode : undefined,
+        },
+        () => setOppdaterPending(false)
+      );
     }
   }, [formValues]);
 
@@ -146,10 +151,14 @@ const VurderingBestemmelse = ({
         </Nav.Fieldset>
       )}
 
-      {formValues?.innvilgelse && !Utils._isEmpty(tilleggsbestemmelseValg) && (
+      {!oppdaterPending && formValues?.innvilgelse && !Utils._isEmpty(tilleggsbestemmelseValg) && (
         <Nav.Row>
           <Nav.Column xs="10">
-            <Skjema.Checkbox feltNavn="tilleggsbestemmelse" label={tilleggsbestemmelseValg?.term} />
+            <Skjema.Checkbox
+              feltNavn="tilleggsbestemmelse"
+              label={tilleggsbestemmelseValg?.term}
+              disabled={!redigerbart}
+            />
           </Nav.Column>
         </Nav.Row>
       )}
