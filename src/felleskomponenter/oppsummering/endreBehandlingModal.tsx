@@ -80,7 +80,7 @@ function EndreBehandlingModal({
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
-  const kanEndre = useFeatureToggle("melosys.behandle_alle_saker.ikke_endre") !== "enabled";
+  const kanEndre = useFeatureToggle("melosys.behandle_alle_saker.endre") === "enabled";
   const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
 
   useEffect(() => {
