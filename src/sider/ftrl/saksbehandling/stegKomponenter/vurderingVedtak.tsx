@@ -263,6 +263,7 @@ const VurderingVedtak = ({
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
       ektefelleFritekst: familieFormValues?.ektefelle_samboer?.fritekst || null,
       barnFritekst: familieFormValues?.barn?.fritekst || null,
+      betalingsintervall: trygdeavgiftFormValues?.betalingsintervall ?? "MANEDLIG",
       vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
       nyVurderingBakgrunn: null,

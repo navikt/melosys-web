@@ -19,6 +19,7 @@ interface TrygdeavgiftsgrunnlagProps {
   formValues: {
     avgiftsberegning?: Api.Avgiftsberegning | undefined;
     avgiftsgrunnlag?: Api.Avgiftsgrunnlag | undefined;
+    betalingsintervall?: undefined;
   };
   oppdatertAvgiftsberegning: OppdaterAvgiftsberegning;
   erTabellApen: Map<string, boolean>;
@@ -32,6 +33,11 @@ interface TrygdeavgiftsgrunnlagProps {
   redigerbart: boolean;
   saerligeavgiftsgrupper: KTObject[];
 }
+
+const betalingsintervaller: KTObject[] = [
+  { kode: "MANEDLIG", term: "Månedlig" },
+  { kode: "KVARTAL", term: "Kvartal" },
+];
 
 const Trygdeavgiftsgrunnlag = ({
   formValues,
@@ -247,41 +253,54 @@ const Trygdeavgiftsgrunnlag = ({
             </Nav.AlertStripeAdvarsel>
           )}
           {(erVirksomhetNorsk ? !erTrygdeavgiftsgrunnlagNorgeUgyldig : !erTrygdeavgiftsgrunnlagUtlandUgyldig) && (
-            <Nav.Row>
-              <Nav.Column xs="4">
-                <Nav.Input
-                  label="Avgiftspliktig inntekt per måned"
-                  value={
-                    (erVirksomhetNorsk &&
-                      oppdatertAvgiftsberegning.avgiftspliktigLønnNorge !== null &&
-                      oppdatertAvgiftsberegning.avgiftspliktigLønnNorge) ||
-                    (!erVirksomhetNorsk &&
-                      oppdatertAvgiftsberegning.avgiftspliktigLønnUtland !== null &&
-                      oppdatertAvgiftsberegning.avgiftspliktigLønnUtland) ||
-                    0
-                  }
-                  bredde="fullbredde"
-                  onChange={(event) => handleAvgiftspliktigLønnInputChange(event, erVirksomhetNorsk)}
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  disabled={!redigerbart}
-                />
-              </Nav.Column>
-              <Nav.Column xs="4">
-                <Nav.Knapp
-                  className="beregn_knapp"
-                  onClick={() => handleBeregnClick(erVirksomhetNorsk)}
-                  disabled={!redigerbart}
-                >
-                  {redigerbart ? (
-                    <Ikoner.Kalkulator className="beregn_ikon" />
-                  ) : (
-                    <Ikoner.KalkulatorDisabled className="beregn_ikon" />
-                  )}
-                  <span>Beregn foreløpig trygdeavgift</span>
-                </Nav.Knapp>
-              </Nav.Column>
-            </Nav.Row>
+            <>
+              <Nav.Row>
+                <Nav.Column xs="4">
+                  <Nav.Input
+                    label="Avgiftspliktig inntekt per måned"
+                    value={
+                      (erVirksomhetNorsk &&
+                        oppdatertAvgiftsberegning.avgiftspliktigLønnNorge !== null &&
+                        oppdatertAvgiftsberegning.avgiftspliktigLønnNorge) ||
+                      (!erVirksomhetNorsk &&
+                        oppdatertAvgiftsberegning.avgiftspliktigLønnUtland !== null &&
+                        oppdatertAvgiftsberegning.avgiftspliktigLønnUtland) ||
+                      0
+                    }
+                    bredde="fullbredde"
+                    onChange={(event) => handleAvgiftspliktigLønnInputChange(event, erVirksomhetNorsk)}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    disabled={!redigerbart}
+                  />
+                </Nav.Column>
+                <Nav.Column xs="4">
+                  <Nav.Knapp
+                    className="beregn_knapp"
+                    onClick={() => handleBeregnClick(erVirksomhetNorsk)}
+                    disabled={!redigerbart}
+                  >
+                    {redigerbart ? (
+                      <Ikoner.Kalkulator className="beregn_ikon" />
+                    ) : (
+                      <Ikoner.KalkulatorDisabled className="beregn_ikon" />
+                    )}
+                    <span>Beregn foreløpig trygdeavgift</span>
+                  </Nav.Knapp>
+                </Nav.Column>
+              </Nav.Row>
+              <Nav.Row>
+                <Nav.Column xs="4">
+                  <Skjema.Select label="Betalingsintervall" feltNavn="betalingsintervall">
+                    {betalingsintervaller.map((item: KTObject) => (
+                      <option key={item.kode} value={item.kode}>
+                        {item.term}
+                      </option>
+                    ))}
+                  </Skjema.Select>
+                </Nav.Column>
+              </Nav.Row>
+            </>
           )}
         </div>
       )}

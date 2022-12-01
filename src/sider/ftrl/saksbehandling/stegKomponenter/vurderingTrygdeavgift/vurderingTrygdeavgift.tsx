@@ -106,6 +106,7 @@ const VurderingTrygdeavgift = ({
       }
       setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
       changeField("avgiftsgrunnlag", response);
+      changeField("betalingsintervall", "MANEDLIG");
     });
     debouncedHentBeregning();
     return () => debouncedHentBeregning.cancel();
