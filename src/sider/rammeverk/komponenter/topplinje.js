@@ -30,6 +30,8 @@ const Topplinje = (props) => {
     props.msalContext.instance.logoutRedirect();
   };
 
+  const erProduksjonsmiljo = `${process.env.REACT_APP_CLUSTER}`.startsWith("prod");
+
   return (
     <header className="topplinje">
       <a className="skip-link" href="#main-container">
@@ -47,11 +49,13 @@ const Topplinje = (props) => {
       <div className="topplinje__saksbehandler">
         <div className="dropdown">
           <div className="saksbehandler__navn ">{navn}</div>
-          <div className="dropdown-content">
-            <button type="button" onClick={loggUt}>
-              Logg ut
-            </button>
-          </div>
+          {!erProduksjonsmiljo && (
+            <div className="dropdown-content">
+              <button type="button" onClick={loggUt}>
+                Logg ut
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
