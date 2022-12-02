@@ -16,24 +16,31 @@ function Hovedside({ loadInitialData, isDevelopmentProfile, children }) {
     }
   }, [isAuthenticated, instance, inProgress]);
 
-  if (process.env.NODE_ENV === "development") {
+  if (isDevelopmentProfile) {
     setTokenInterceptorForLocalDevelopment();
+    loadInitialData();
   } else {
     setTokenInterceptor((url) => getAccessToken(instance, accounts, url), accounts);
   }
 
-  loadInitialData();
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadInitialData();
+      // eslint-disable-next-line no-console
+      console.log("Laster inn initiell data");
+    }
+  }, [isAuthenticated]);
 
   return isDevelopmentProfile ? (
     <div>
-      <Topplinje />
+      <Topplinje saksbehandler="Lokal Testbruker" />
       {children}
     </div>
   ) : (
     <>
       <AuthenticatedTemplate>
         <div>
-          <Topplinje />
+          <Topplinje saksbehandler={accounts && accounts.length > 0 ? accounts[0].name : ""} />
           {children}
         </div>
       </AuthenticatedTemplate>
