@@ -5,18 +5,14 @@ import { withMsal } from "@azure/msal-react";
 import PT from "prop-types";
 
 import { ReactComponent as NavLogo } from "../../../resources/images/nav.svg";
-import * as MPT from "../../../proptypes";
 import * as Nav from "../../../navFrontend";
 
-import { saksbehandlerSelectors } from "../../../ducks/saksbehandler";
 import { oppgaverOperations } from "../../../ducks/oppgaver";
 
 import "./topplinje.css";
 
 const Topplinje = (props) => {
-  const {
-    saksbehandler: { navn },
-  } = props;
+  const { saksbehandler } = props;
 
   const tilForsidenHandler = (event) => {
     event.preventDefault();
@@ -48,7 +44,7 @@ const Topplinje = (props) => {
       </div>
       <div className="topplinje__saksbehandler">
         <div className="dropdown">
-          <div className="saksbehandler__navn ">{navn}</div>
+          <div className="saksbehandler__navn ">{saksbehandler}</div>
           {!erProduksjonsmiljo && (
             <div className="dropdown-content">
               <button type="button" onClick={loggUt}>
@@ -63,18 +59,18 @@ const Topplinje = (props) => {
 };
 
 Topplinje.propTypes = {
-  saksbehandler: MPT.Saksbehandler.isRequired,
+  saksbehandler: PT.string,
   history: PT.object.isRequired,
   hentOppgaveOversikt: PT.func.isRequired,
   msalContext: PT.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  saksbehandler: saksbehandlerSelectors.SaksbehandlerSelector(state),
-});
+Topplinje.defaultProps = {
+  saksbehandler: "",
+};
 
 const mapDispatchToProps = (dispatch) => ({
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
 });
 
-export default withMsal(withRouter(connect(mapStateToProps, mapDispatchToProps)(Topplinje)));
+export default withMsal(withRouter(connect(null, mapDispatchToProps)(Topplinje)));
