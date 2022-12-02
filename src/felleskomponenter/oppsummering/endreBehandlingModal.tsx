@@ -18,6 +18,7 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { navigeringOperations } from "../../ducks/navigering";
 
 import { erBehandlingstemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
+import { anmodningsperioderSelectors } from "../../ducks/anmodningsperioder";
 import { useFeatureToggle } from "../../featuretoggle";
 import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
@@ -36,6 +37,7 @@ enum FeltVerdier {
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   muligeBehandlingsstatuser: behandlingsstatusSelectors.MuligeBehandlingsstatusSelector(state),
+  anmodningsperioderSendtTilUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -65,6 +67,7 @@ function EndreBehandlingModal({
   hentMuligeBehandlingsstatuser,
   tilAnnenSide,
   location,
+  anmodningsperioderSendtTilUtlandet,
 }: EndreBehandlingModalProps) {
   const [generellFeil, setGenerellFeil] = useState("");
   const [behandlingEndret, setBehandlingEndret] = useState(false);
@@ -80,7 +83,8 @@ function EndreBehandlingModal({
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
-  const kanEndre = useFeatureToggle("melosys.behandle_alle_saker.endre") === "enabled";
+  const endreToggleEnabled = useFeatureToggle("melosys.behandle_alle_saker.endre") === "enabled";
+  const typeTemaKanEndres = endreToggleEnabled && !anmodningsperioderSendtTilUtlandet;
   const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
 
   useEffect(() => {
@@ -221,7 +225,7 @@ function EndreBehandlingModal({
       <div className="dialogboks">
         <div>
           <div className="innhold">
-            {!fagsakKanEndres && kanEndre && (
+            {!fagsakKanEndres && typeTemaKanEndres && (
               <Nav.AlertStripeInfo className="infomelding">
                 Du kan bare endre sakstype og -tema i den første behandlingen i saken
               </Nav.AlertStripeInfo>
@@ -235,7 +239,7 @@ function EndreBehandlingModal({
               value={sakstype}
               koder={fagsakKanEndres ? muligeSakstyper : [fagsak.sakstype]}
               disableForsteValg
-              redigerbart={!endringerErBegrenset && kanEndre && fagsakKanEndres}
+              redigerbart={!endringerErBegrenset && typeTemaKanEndres && fagsakKanEndres}
             />
             <Mui.KodeTermSelect
               onChange={(e) => {
@@ -246,7 +250,7 @@ function EndreBehandlingModal({
               value={sakstema}
               koder={fagsakKanEndres ? muligeSakstemaer : [fagsak.sakstema]}
               disableForsteValg
-              redigerbart={!endringerErBegrenset && kanEndre && fagsakKanEndres}
+              redigerbart={!endringerErBegrenset && typeTemaKanEndres && fagsakKanEndres}
             />
             <Mui.KodeTermSelect
               onChange={(e) => {
@@ -257,7 +261,7 @@ function EndreBehandlingModal({
               value={behandlingstema}
               koder={muligeBehandlingstemaer}
               disableForsteValg
-              redigerbart={!endringerErBegrenset && kanEndre}
+              redigerbart={!endringerErBegrenset && typeTemaKanEndres}
             />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingstype(e.target.value)}
@@ -265,7 +269,7 @@ function EndreBehandlingModal({
               value={behandlingstype}
               koder={muligeBehandlingstyper}
               disableForsteValg
-              redigerbart={!endringerErBegrenset && kanEndre}
+              redigerbart={!endringerErBegrenset && typeTemaKanEndres}
             />
             <Datovelger onChange={setBehandlingsfrist} label="Frist" value={behandlingsfrist} />
             <Mui.KodeTermSelect
