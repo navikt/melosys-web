@@ -9,7 +9,7 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_usa;
   const { UK_ART6_1, UK_ART6_5, UK_ART7_3, UK_ART8_2 } =
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_uk;
-  const { CAN_ART6_2, CAN_ART6_2_JF8, CAN_ART7, CAN_ART7_JF8, CAN_ART9, CAN_ART10 } =
+  const { CAN_ART6_2, CAN_ART7, CAN_ART9, CAN_ART10 } =
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_ca;
 
   const hjelpeteksterTilBestemmelse = () => {
@@ -33,10 +33,8 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
         return Hjelpetekster.hjelpeteksterUsArt56;
 
       case CAN_ART6_2:
-      case CAN_ART6_2_JF8:
         return Hjelpetekster.hjelpeteksterCaArt62;
       case CAN_ART7:
-      case CAN_ART7_JF8:
         return Hjelpetekster.hjelpeteksterCaArt7;
       case CAN_ART9:
         return Hjelpetekster.hjelpeteksterCaArt9;
@@ -58,7 +56,7 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
           <li key={hjelpetekst}>{hjelpetekst}</li>
         ))}
       </ul>
-      {ikkeKravOmTidsbegrensning && <p>Det er ikke krav om at utsendingsperioden er tidsbegrenset.</p>}
+      {ikkeKravOmTidsbegrensning && <p>Det er ikke krav om at utsendingsperioden/arbeidsperioden er tidsbegrenset.</p>}
     </div>
   );
 };
