@@ -1,13 +1,10 @@
 import React from "react";
-import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { withMsal } from "@azure/msal-react";
 import PT from "prop-types";
 
 import { ReactComponent as NavLogo } from "../../../resources/images/nav.svg";
 import * as Nav from "../../../navFrontend";
-
-import { oppgaverOperations } from "../../../ducks/oppgaver";
 
 import "./topplinje.css";
 
@@ -16,10 +13,8 @@ const Topplinje = (props) => {
 
   const tilForsidenHandler = (event) => {
     event.preventDefault();
-    const { hentOppgaveOversikt, history } = props;
-    const { push } = history;
-    hentOppgaveOversikt();
-    push("/");
+    const { history } = props;
+    history.push("/");
   };
 
   const loggUt = () => {
@@ -61,16 +56,10 @@ const Topplinje = (props) => {
 Topplinje.propTypes = {
   saksbehandler: PT.string,
   history: PT.object.isRequired,
-  hentOppgaveOversikt: PT.func.isRequired,
   msalContext: PT.object.isRequired,
 };
 
 Topplinje.defaultProps = {
   saksbehandler: "",
 };
-
-const mapDispatchToProps = (dispatch) => ({
-  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
-});
-
-export default withMsal(withRouter(connect(null, mapDispatchToProps)(Topplinje)));
+export default withMsal(withRouter(Topplinje));

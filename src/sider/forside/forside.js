@@ -1,5 +1,5 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
@@ -7,6 +7,7 @@ import PT from "prop-types";
 import withErrorHandling from "../../felleskomponenter/withErrorHandling";
 import * as Nav from "../../navFrontend";
 
+import { oversikt } from "../../ducks/oppgaver/operations";
 import Saksplukker from "./komponenter/saksplukker";
 import SokSkjema from "./komponenter/sokskjema";
 import JournalforingOppgaver from "./komponenter/mineoppgaver/jornualforingoppgaver";
@@ -19,6 +20,11 @@ import "./forside.css";
 const Forside = (props) => {
   const { tilOpprettNySak } = props;
   const data = useSelector((state) => state.oppgaver.data);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(oversikt());
+  }, []);
 
   const oppgaverTotalt =
     (data.journalforing || data.saksbehandling) === undefined
@@ -63,9 +69,6 @@ Forside.defaultProps = {
   children: null,
 };
 
-const kontekster = [
-  { navn: "saksbehandler", melding: "Det har oppstått en feil: Kunne ikke hente saksbehandler." },
-  { navn: "fagsaker", melding: "Det har oppstått en feil: Kunne ikke hente fagsaker" },
-];
+const kontekster = [{ navn: "fagsaker", melding: "Det har oppstått en feil: Kunne ikke hente fagsaker" }];
 
 export default withErrorHandling(kontekster, withRouter(Forside));

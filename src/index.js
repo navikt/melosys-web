@@ -8,7 +8,6 @@ import "./index.css";
 import "./setupYup";
 import App from "./App";
 
-import loadInitialData from "./startupDataLoader";
 import createStore from "./store";
 import routerHistory from "./history";
 import Routing from "./routing";
@@ -26,7 +25,7 @@ ReactDOM.render(
   <ReduxProvider store={store}>
     <ConnectedRouter history={routerHistory}>
       <ApolloProvider client={apolloClient}>
-        <App loadInitialData={() => loadInitialData(store)}>
+        <App>
           <ErrorBoundary message={SideLoadingFailMessage}>
             <FellesHandlersProvider>
               <Routing />
