@@ -68,7 +68,7 @@ const Behandling = ({
   lovvalgsperiodeTom,
   mottaksdato,
   match: {
-    params: { saksnr: saksnummer },
+    params: { saksnr: saksnummer, sakstype },
   },
   redigerbart,
   resetSaksopplysninger,
@@ -83,7 +83,7 @@ const Behandling = ({
   }, []);
 
   useEffect(() => {
-    lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
+    lastInnSaksopplysninger(saksnummer, behandlingID);
   }, [sakstype]);
 
   if (Utils._isNil(redigerbart)) return null;
