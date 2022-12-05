@@ -44,8 +44,8 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  lastInnSaksopplysninger: (sakstype: string, saksnummer: string, behandlingID: number) =>
-    dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
+  lastInnSaksopplysninger: (saksnummer: string, behandlingID: number) =>
+    dispatch(datalastingOperations.lastInnSaksopplysningerTomFlyt(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
 });
 
@@ -68,7 +68,7 @@ const Behandling = ({
   lovvalgsperiodeTom,
   mottaksdato,
   match: {
-    params: { saksnr: saksnummer, sakstype },
+    params: { saksnr: saksnummer },
   },
   redigerbart,
   resetSaksopplysninger,
@@ -77,7 +77,7 @@ const Behandling = ({
   const saksopplysningerErLastet = !!behandlingstema;
 
   useEffect(() => {
-    lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
+    lastInnSaksopplysninger(saksnummer, behandlingID);
     return () => {
       resetSaksopplysninger();
     };
