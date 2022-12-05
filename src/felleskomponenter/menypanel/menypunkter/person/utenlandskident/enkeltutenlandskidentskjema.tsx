@@ -15,28 +15,26 @@ interface EnkeltUtenlandskIdentSkjemaProps {
 }
 
 const EnkeltUtenlandskIdentSkjema = ({ overordnetFeltNavn, slett, redigerbart }: EnkeltUtenlandskIdentSkjemaProps) => (
-  <div className="enkeltUtenlandskIdentSkjema">
-    <Nav.Row>
-      <Nav.Column xs="5">
-        <Skjema.Input
-          disabled={!redigerbart}
-          bredde="fullbredde"
-          feltNavn={`${overordnetFeltNavn}.ident`}
-          label="Utenlandsk ID"
-        />
-      </Nav.Column>
-      <Nav.Column xs="6">
-        <Landvelger
-          disabled={!redigerbart}
-          feltNavn={`${overordnetFeltNavn}.landkode`}
-          label="Land"
-          bredde="fullbredde"
-          visAlleLandkoder
-        />
-      </Nav.Column>
-    </Nav.Row>
+  <Nav.Row className="enkeltUtenlandskIdentSkjema">
+    <Nav.Column xs="5">
+      <Skjema.Input
+        disabled={!redigerbart}
+        bredde="fullbredde"
+        feltNavn={`${overordnetFeltNavn}.ident`}
+        label="Utenlandsk ID"
+      />
+    </Nav.Column>
+    <Nav.Column xs="6">
+      <Landvelger
+        disabled={!redigerbart}
+        feltNavn={`${overordnetFeltNavn}.landkode`}
+        label="Land"
+        bredde="fullbredde"
+        visAlleLandkoder
+      />
+    </Nav.Column>
     <Symboler.Slett onClick={slett} className="slett__symbol" />
-  </div>
+  </Nav.Row>
 );
 
 export default EnkeltUtenlandskIdentSkjema;

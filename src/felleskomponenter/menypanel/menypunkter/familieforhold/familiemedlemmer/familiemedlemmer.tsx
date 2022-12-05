@@ -4,21 +4,19 @@ import { RootState } from "AppTypes";
 import classnames from "classnames";
 
 import * as Nav from "../../../../../navFrontend";
-import * as Utils from "../../../../../utils";
 import * as Ikoner from "../../../../../resources/images";
 import * as Mui from "../../../../ui";
 import * as Etiketter from "../../../etiketter";
-import * as StringUtils from "../../../../../utils/streng";
 
 import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { Familierelasjonsrolle, Familiemedlem } from "../../../../../graphql";
-import FamiliemedlemGruppe from "./familiemedlemGruppe";
-import Ident from "./ident";
+import { Familiemedlem, Familierelasjonsrolle } from "../../../../../graphql";
 import bem from "../../../../../bemUtils";
 import AnnenForelderModal from "./annenForelderModal";
 
 import "./familiemedlemmer.css";
+import BarnTable from "./tables/barnTable";
+import EktefelleTable from "./tables/ektefelleTable";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -55,41 +53,7 @@ export const Familiemedlemmer = ({ behandlingID }: PropsFromRedux) => {
       </Nav.Row>
       <Mui.Undertittel className={familiemedlemmerClassName.element("undertittel")} ikon={Ikoner.Child} tekst="Barn" />
       {barn.length > 0 ? (
-        <FamiliemedlemGruppe
-          familiemedlemmer={barn}
-          columns={[
-            { width: "2", headerText: "Navn", renderContent: (familiemedlem) => familiemedlem.navn },
-            {
-              width: "3",
-              headerText: "F.nr./d-nr.",
-              renderContent: (familiemedlem) => <Ident ident={familiemedlem.ident} />,
-            },
-            {
-              width: "2",
-              headerText: "Foreldreansvar",
-              renderContent: (familiemedlem) => StringUtils.storeForbokstaver(familiemedlem.foreldreansvar),
-            },
-            {
-              width: "3",
-              headerText: "F.nr. annen forelder",
-              renderContent: (familiemedlem) =>
-                familiemedlem.fnrAnnenForelder ? (
-                  <>
-                    <Ident ident={familiemedlem.fnrAnnenForelder} />
-                    <Mui.Lenkeknapp onClick={() => setBarnValgtForMerInformasjon(familiemedlem)}>
-                      Vis mer informasjon
-                    </Mui.Lenkeknapp>
-                  </>
-                ) : null,
-            },
-            {
-              width: "2",
-              headerText: "",
-              renderContent: (familiemedlem) =>
-                familiemedlem.alder && familiemedlem.alder < 18 ? <Etiketter.Under18Aar /> : "",
-            },
-          ]}
-        />
+        <BarnTable barnListe={barn} />
       ) : (
         <Nav.Typo.Normaltekst
           className={familiemedlemmerClassName.element("ingen-familiemedlemmer-registrert-etikett")}
@@ -109,24 +73,7 @@ export const Familiemedlemmer = ({ behandlingID }: PropsFromRedux) => {
         Samboer registreres ikke som relasjon i PDL
       </Nav.Typo.EtikettLiten>
       {ektefellePartner.length > 0 ? (
-        <FamiliemedlemGruppe
-          familiemedlemmer={ektefellePartner}
-          columns={[
-            { width: "3", headerText: "Navn", renderContent: (familiemedlem) => familiemedlem.navn },
-            {
-              width: "3",
-              headerText: "F.nr./d-nr.",
-              renderContent: (familiemedlem) => <Ident ident={familiemedlem.ident} />,
-            },
-            {
-              width: "3",
-              headerText: "Fra og med",
-              renderContent: (familiemedlem) =>
-                Utils.dato.formatterDatoTilNorsk(familiemedlem.sivilstand?.gyldigFraOgMed),
-            },
-            { width: "3", headerText: "Relasjon", renderContent: (familiemedlem) => familiemedlem.sivilstand?.type },
-          ]}
-        />
+        <EktefelleTable ektefelleListe={ektefellePartner} />
       ) : (
         <Nav.Typo.Normaltekst
           className={familiemedlemmerClassName.element("ingen-familiemedlemmer-registrert-etikett")}

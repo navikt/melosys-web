@@ -10,7 +10,7 @@ import PersonInfo from "./personinfo";
 import Adresser from "./adresser";
 import AnnenAdresse from "./annenadresse";
 import UtenlandskIdent from "./utenlandskident";
-import Statsborgerskapsliste from "./statsborgerskapsliste";
+import StatsborgerskapTableContainer from "./statsborgerskapTable";
 import FoedestedOgLand from "./foedestedogland";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -49,7 +49,7 @@ export const Person = ({
     <Nav.Row className="persontabell-row">
       <Nav.Column xs="12">
         <Mui.Undertittel ikon={Ikoner.Globe} tekst="Statsborgerskap" className="persontabell-row__tittel" />
-        <Statsborgerskapsliste behandlingID={behandlingID} />
+        <StatsborgerskapTableContainer behandlingID={behandlingID} />
       </Nav.Column>
     </Nav.Row>
     <Nav.Row className="persontabell-row">
