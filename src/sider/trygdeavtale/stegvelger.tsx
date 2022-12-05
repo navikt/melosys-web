@@ -22,8 +22,9 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
-import { Feilkode } from "../../@types";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
+import { feiletResponsSelectors } from "../../ducks/feiletRespons";
+import { vedtakOperations } from "../../ducks/vedtak";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -56,10 +57,13 @@ const mapStateToProps = (state: RootState) => ({
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) =>
+    dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -76,7 +80,6 @@ interface Props extends PropsFromRedux {
 interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
-  feilmeldinger: Feilkode[];
   visMottatteOpplysningerFeilmeldinger: boolean;
 }
 
@@ -84,7 +87,6 @@ class Stegvelger extends Component<Props, State> {
   state = {
     aktivtStegIndex: 0,
     aktuelleSteg: [],
-    feilmeldinger: [],
     visMottatteOpplysningerFeilmeldinger: false,
   };
 
@@ -140,7 +142,6 @@ class Stegvelger extends Component<Props, State> {
       resultat: response.resultat,
       redigerbart: this.props.redigerbart,
       annenBehandlingOppfriskes: this.props.annenBehandlingOppfriskes,
-      feilmeldinger: this.state.feilmeldinger,
     };
 
     const handlers = {
@@ -152,7 +153,6 @@ class Stegvelger extends Component<Props, State> {
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
       hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
-      oppdaterFeilmeldinger: this.oppdaterFeilmeldinger,
     };
 
     return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {
@@ -189,12 +189,6 @@ class Stegvelger extends Component<Props, State> {
     return harFeilmeldinger;
   };
 
-  oppdaterFeilmeldinger = (data: Api.Kontroll.FerdigbehandlingKontrollData) => {
-    Api.Kontroll.kontrollerFerdigbehandling(data)
-      .then(() => this.setState({ feilmeldinger: [] }))
-      .catch((response) => this.setState({ feilmeldinger: response?.body?.feilkoder }));
-  };
-
   oppdaterAktivtSteg = async (nesteStegIndex: number) => {
     const {
       state: { aktuelleSteg },
@@ -214,15 +208,13 @@ class Stegvelger extends Component<Props, State> {
 
   lagreOgFatteVedtak = async (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => {
     const {
-      props: { behandlingID, lagreAllData, tilForsiden },
+      props: { behandlingID, lagreAllData, fattVedtak },
       harMottatteOpplysningerFeilmeldinger,
     } = this;
 
     if (!harMottatteOpplysningerFeilmeldinger()) {
       await lagreAllData();
-      return Api.Saksflyt.Vedtak.fatt(behandlingID, data)
-        .then(() => tilForsiden())
-        .catch((response) => this.setState({ feilmeldinger: response?.body?.feilkoder }));
+      return fattVedtak(behandlingID, data);
     }
     return Promise.resolve();
   };
@@ -237,8 +229,8 @@ class Stegvelger extends Component<Props, State> {
 
   render() {
     const {
-      state: { aktuelleSteg, visMottatteOpplysningerFeilmeldinger, feilmeldinger },
-      props: { behandlingstype, redigerbart },
+      state: { aktuelleSteg, visMottatteOpplysningerFeilmeldinger },
+      props: { behandlingstype, redigerbart, feilmeldinger },
       oppdaterAktivtSteg,
     } = this;
 
