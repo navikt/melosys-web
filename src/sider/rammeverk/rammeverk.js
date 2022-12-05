@@ -37,7 +37,7 @@ function Hovedside({ isDevelopmentProfile, children }) {
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>
         <div className="pb-4" />
-        Du er ikke logget inn eller din sesjon har utgått. Videresender deg til innlogginggssiden.
+        Du er ikke logget inn eller din sesjon har utgått. Videresender deg til innlogging-siden.
       </UnauthenticatedTemplate>
     </>
   );

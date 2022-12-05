@@ -95,7 +95,6 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
 };
 
 const kontekster = [
-  { navn: "saksbehandler", melding: "Det har oppstått en feil: Kunne ikke hente saksbehandler." },
   { navn: "fagsaker", melding: "Det har oppstått en feil: Kunne ikke hente fagsaker" },
   { navn: "oppgaver", melding: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" },
 ];

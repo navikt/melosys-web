@@ -27,6 +27,7 @@ import { formSelectors } from "../../ducks/form";
 import { sokSelectors } from "../../ducks/sok";
 
 import "./journalforing.css";
+import { oppgaverOperations } from "../../ducks/oppgaver";
 
 class Journalforing extends Component {
   state = {
@@ -350,6 +351,8 @@ class Journalforing extends Component {
       } else {
         await this.knyttTilEksisterendeSak();
       }
+
+      setTimeout(() => this.props.hentOppgaveOversikt(), 5000);
     } finally {
       this.setState({ submitSpinner: false });
     }
@@ -502,6 +505,7 @@ Journalforing.propTypes = {
   journalforSEDSkjemaErrors: PT.object.isRequired,
   resetJournalforingState: PT.func.isRequired,
   hentLandkoder: PT.func.isRequired,
+  hentOppgaveOversikt: PT.func.isRequired,
 };
 
 Journalforing.defaultProps = {
@@ -530,6 +534,7 @@ const mapDispatchToProps = (dispatch) => ({
   touch: (formName, ...fields) => dispatch(touch(formName, ...fields)),
   resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
+  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Journalforing));
