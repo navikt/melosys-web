@@ -6,7 +6,7 @@ import Topplinje from "./komponenter/topplinje";
 import { melosysRequest } from "../../auth/authConfig";
 import { getAccessToken, setTokenInterceptor, setTokenInterceptorForLocalDevelopment } from "../../auth/authUtils";
 
-function Hovedside({ loadInitialData, isDevelopmentProfile, children }) {
+function Hovedside({ isDevelopmentProfile, children }) {
   const { instance, inProgress, accounts } = useMsal();
   const isAuthenticated = useIsAuthenticated();
 
@@ -18,18 +18,9 @@ function Hovedside({ loadInitialData, isDevelopmentProfile, children }) {
 
   if (isDevelopmentProfile) {
     setTokenInterceptorForLocalDevelopment();
-    loadInitialData();
   } else {
     setTokenInterceptor((url) => getAccessToken(instance, accounts, url), accounts);
   }
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadInitialData();
-      // eslint-disable-next-line no-console
-      console.log("Laster inn initiell data");
-    }
-  }, [isAuthenticated]);
 
   return isDevelopmentProfile ? (
     <div>
@@ -55,18 +46,15 @@ function Hovedside({ loadInitialData, isDevelopmentProfile, children }) {
 Hovedside.defaultProps = {
   children: null,
   isDevelopmentProfile: false,
-  loadInitialData: () => {},
 };
 
 Hovedside.propTypes = {
   children: PT.node,
-  loadInitialData: PT.func,
   isDevelopmentProfile: PT.bool,
 };
 
 Hovedside.defaultProps = {
   children: undefined,
-  loadInitialData: () => {},
   isDevelopmentProfile: false,
 };
 
