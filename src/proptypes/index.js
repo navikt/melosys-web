@@ -23,7 +23,6 @@ import { OrgnummerNavn, Organisasjon, Organisasjoner } from "./organisasjon";
 import { OppholdLand, OppholdPeriode } from "./opphold";
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from "./permisjon";
 import { Periode, Lovvalgsperiode } from "./periode";
-import { Saksbehandler } from "./saksbehandler";
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from "./oppgaver";
 import { SoknadForm } from "./soknadForm";
 import { Soknadsland } from "./soknadsland";
@@ -83,7 +82,6 @@ export {
   Permisjoner,
   PermisjonOgPermittering,
   SaksbehandlingOppgave,
-  Saksbehandler,
   MottatteOpplysninger,
   SoknadForm,
   Soknadsland,
