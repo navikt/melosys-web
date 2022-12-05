@@ -345,14 +345,14 @@ class Journalforing extends Component {
   submitJournalforingNormal = async () => {
     try {
       this.setState({ submitSpinner: true });
+      const refreshOversiktDelayMillis = 2500;
       const { saksnummer } = this.props.journalforingSkjemaVerdier;
       if (saksnummer === "-1") {
         await this.opprettFagsak();
       } else {
         await this.knyttTilEksisterendeSak();
       }
-
-      setTimeout(() => this.props.hentOppgaveOversikt(), 5000);
+      setTimeout(() => this.props.hentOppgaveOversikt(), refreshOversiktDelayMillis);
     } finally {
       this.setState({ submitSpinner: false });
     }
