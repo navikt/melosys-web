@@ -77,6 +77,8 @@ export const resetSaksopplysninger = () => (dispatch) => {
   dispatch(behandlingsperioderOperations.resetPerioderState());
   dispatch(utpekingsperioderOperations.resetUtpekingsperioderState());
   dispatch(dokumenterOperations.resetDokument());
+  dispatch(anmodningsperioderOperations.resetAnmodningsperioderState());
+  dispatch(anmodningsperiodesvarOperations.resetAnmodningsperiodesvarState());
 };
 
 const harIkkeTomFlyt = async (sakstype, state) => {

@@ -83,7 +83,7 @@ export const lagUrl = (
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
 };
 
-const skalViseTomFlyt = (
+export const skalViseTomFlyt = (
   sakstype: string,
   sakstema: string,
   behandlingstema: string,

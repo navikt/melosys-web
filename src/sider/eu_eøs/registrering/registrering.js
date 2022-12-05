@@ -1,7 +1,7 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { useEffect } from "react";
 import PT from "prop-types";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 
 import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
@@ -44,9 +44,9 @@ export const Registrering = ({
   visOppfriskModal,
   behandlingOppfriskes,
   startOgVisOppfriskModal,
-  resetFagsakState,
 }) => {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
+  const dispatch = useDispatch();
   const [saksopplysningerErHentet, setSaksopplysningerErHentet] = React.useState(false);
 
   const lastInnSaksopplysninger = async () => {
@@ -67,7 +67,12 @@ export const Registrering = ({
       visOppfriskModal();
     }
 
-    return () => resetFagsakState();
+    return () => {
+      dispatch(behandlingerOperations.resetBehandlingerState());
+      dispatch(fagsakOperations.resetFagsakState());
+      dispatch(avklartefaktaOperations.resetAvklartefaktaState());
+      dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState());
+    };
   }, []);
 
   if (Utils._isNil(redigerbart)) return null;
@@ -120,7 +125,6 @@ Registrering.propTypes = {
   hentBehandling: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
-  resetFagsakState: PT.func.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   vurderingBegrunnelser: PT.arrayOf(PT.string),
@@ -161,7 +165,6 @@ const mapDispatchToProps = (dispatch) => ({
   hentAvklartefakta: (behandlingID) => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentBehandling: (behandlingID) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentFagsaker: (saksnummer) => dispatch(fagsakOperations.hent(saksnummer)),
-  resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   hentLovvalgsperioder: (behandlingID) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
 });
 
