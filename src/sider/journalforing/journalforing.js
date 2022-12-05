@@ -21,13 +21,13 @@ import JournalforingSED from "./komponenter/journalforingsed";
 import JournalforingForm from "./komponenter/journalforingform";
 import FeilmeldingDialog from "./komponenter/feilmeldingDialog";
 
-import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
+import { oppgaverOperations } from "../../ducks/oppgaver";
 import { landkoderOperations } from "../../ducks/landkoder";
+import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
 import { formSelectors } from "../../ducks/form";
 import { sokSelectors } from "../../ducks/sok";
 
 import "./journalforing.css";
-import { oppgaverOperations } from "../../ducks/oppgaver";
 
 class Journalforing extends Component {
   state = {
