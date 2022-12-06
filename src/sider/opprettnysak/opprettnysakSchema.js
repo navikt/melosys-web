@@ -221,7 +221,7 @@ const opprettnysak = object().shape({
         Boolean(oppretterOppgave) && behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST,
       then: string().max(25, MAX_25_TEGN).required(VELG_BEHANDLINGSAARSAK).nullable(),
     }),
-  erAvsluttetSak: boolean()
+  kanOppretteAndregangsbehandling: boolean()
     .nullable()
     .when("saksnummer", {
       is: (saksnummer) => !skalOppretteNySak(saksnummer) && !Utils._isEmpty(saksnummer),

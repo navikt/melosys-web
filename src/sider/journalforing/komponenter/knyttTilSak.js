@@ -6,7 +6,6 @@ import PT from "prop-types";
 
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as MPT from "../../../proptypes";
-import * as KV from "../../../kodeverk";
 import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
@@ -120,7 +119,7 @@ export const KnyttTilSak = (props) => {
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
 
   useEffect(() => {
-    changeField(feltNavn.formNavn, feltNavn.erAvsluttetSak, visKnyttTilEksisterende);
+    changeField(feltNavn.formNavn, feltNavn.kanOppretteAndregangsbehandling, visKnyttTilEksisterende);
   }, [visKnyttTilEksisterende]);
 
   if (visKnyttTilEksisterende) {
@@ -205,15 +204,15 @@ export const KnyttTilSak = (props) => {
     ? sakstype.kode === MKVSakstyper.EU_EOS && !sakErHenlagtEllerBortfalt
     : true;
 
+  const kanIkkeOppretteAndregangGrunn = sakErHenlagtEllerBortfalt
+    ? "Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt i Melosys"
+    : "Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling";
+
   return (
     <div className="knyttTilSak__behandlingspanel">
       {erOpprettNySak ? (
         <div className="innrykk">
-          <Nav.AlertStripeAdvarsel>
-            {sakErHenlagtEllerBortfalt
-              ? KV.Feilmeldinger.SAK_ER_HENLAGT_BORTFALT.melding
-              : KV.Feilmeldinger.SAK_HAR_AKTIV_BEHANDLING.melding}
-          </Nav.AlertStripeAdvarsel>
+          <Nav.AlertStripeAdvarsel>{kanIkkeOppretteAndregangGrunn}</Nav.AlertStripeAdvarsel>
         </div>
       ) : (
         visUtenVidereBehandling && (

@@ -20,7 +20,7 @@ export enum JOURNALFORING_VALUES {
   periodeTilOgMed = "journalforingPeriodeTilOgMed",
   saksnummer = "saksnummer",
   formNavn = "journalforing",
-  erAvsluttetSak = "erAvsluttetSak",
+  kanOppretteAndregangsbehandling = "kanOppretteAndregangsbehandling",
 }
 
 export const SOKNAD = "soknad";
@@ -123,7 +123,7 @@ export enum OPPRETT_NY_SAK_VALUES {
   saksnummer = "saksnummer",
   hovedpart = "hovedpart",
   formNavn = "opprett_ny_sak",
-  erAvsluttetSak = "erAvsluttetSak",
+  kanOppretteAndregangsbehandling = "kanOppretteAndregangsbehandling",
 }
 export const VURDERING_VIDERESEND = "vurdering_videresend";
 export const VURDER_UTPEKING = "vurder_utpeking";
