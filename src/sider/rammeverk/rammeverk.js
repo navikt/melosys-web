@@ -3,7 +3,7 @@ import PT from "prop-types";
 import { InteractionStatus } from "@azure/msal-browser";
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import Topplinje from "./komponenter/topplinje";
-import { melosysRequest } from "../../auth/authConfig";
+import { melosysWebLoginRequest } from "../../auth/authConfig";
 import { getAccessToken, setTokenInterceptor, setTokenInterceptorForLocalDevelopment } from "../../auth/authUtils";
 
 function Hovedside({ isDevelopmentProfile, children }) {
@@ -12,7 +12,7 @@ function Hovedside({ isDevelopmentProfile, children }) {
 
   useEffect(() => {
     if (!isDevelopmentProfile && inProgress === InteractionStatus.None && !isAuthenticated) {
-      instance.loginRedirect(melosysRequest);
+      instance.loginRedirect(melosysWebLoginRequest);
     }
   }, [isAuthenticated, instance, inProgress]);
 

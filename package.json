@@ -114,6 +114,7 @@
     "build:css": "less-watch-compiler --run-once --config less.json",
     "start": "env-cmd -f .local.env npm-run-all -p start:css start:js",
     "start:q1": "env-cmd -f .q1.env npm-run-all -p start:css start:js",
+    "start:q2": "env-cmd -f .q2.env npm-run-all -p start:css start:js",
     "build": "env-cmd -f .local.env npm-run-all -p build:css build:js",
     "watch": "env-cmd -f .local.env npm-run-all -p start:css build:watch",
     "build:q1": "env-cmd -f .q1.env npm-run-all -p build:css build:js",
