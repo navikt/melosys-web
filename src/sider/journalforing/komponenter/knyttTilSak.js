@@ -6,6 +6,7 @@ import PT from "prop-types";
 
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as MPT from "../../../proptypes";
+import * as KV from "../../../kodeverk";
 import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
@@ -200,14 +201,18 @@ export const KnyttTilSak = (props) => {
     );
   }
 
-  const visUtenVidereBehandling = behandleAlleSakerToggleEnabled ? sakstype.kode === MKVSakstyper.EU_EOS : true;
+  const visUtenVidereBehandling = behandleAlleSakerToggleEnabled
+    ? sakstype.kode === MKVSakstyper.EU_EOS && !sakErHenlagtEllerBortfalt
+    : true;
 
   return (
     <div className="knyttTilSak__behandlingspanel">
       {erOpprettNySak ? (
         <div className="innrykk">
           <Nav.AlertStripeAdvarsel>
-            Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
+            {sakErHenlagtEllerBortfalt
+              ? KV.Feilmeldinger.SAK_ER_HENLAGT_BORTFALT.melding
+              : KV.Feilmeldinger.SAK_HAR_AKTIV_BEHANDLING.melding}
           </Nav.AlertStripeAdvarsel>
         </div>
       ) : (

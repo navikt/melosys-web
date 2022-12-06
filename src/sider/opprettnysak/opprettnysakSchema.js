@@ -11,7 +11,6 @@ import {
 
 const {
   MAA_FYLLES_UT,
-  SAK_HAR_AKTIV_BEHANDLING,
   SKRIV_INN_GYLDIG_FNR_ELLER_DNR,
   FANT_INGEN_NAVN_PA_FNR_ELLER_DNR,
   SKRIV_INN_GYLDIG_ORGNR,
@@ -30,6 +29,9 @@ const MAX_25_TEGN = { melding: "Årsak kan være maks 25 tegn" };
 const FYLL_UT_MOTTAKSDATO = { melding: "Fyll ut mottaksdato" };
 const VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_BEHANDLINGEN_TIL = {
   melding: "Velg hvilken sak du ønsker å knytte behandlingen til",
+};
+const DU_KAN_IKKE_OPPRETTE = {
+  melding: "Du kan ikke opprette en ny behandling på valgt sak",
 };
 
 const skalOppretteNySak = (saksnummer) => saksnummer === "-1";
@@ -223,7 +225,7 @@ const opprettnysak = object().shape({
     .nullable()
     .when("saksnummer", {
       is: (saksnummer) => !skalOppretteNySak(saksnummer) && !Utils._isEmpty(saksnummer),
-      then: boolean().nullable().oneOf([true], SAK_HAR_AKTIV_BEHANDLING),
+      then: boolean().nullable().oneOf([true], DU_KAN_IKKE_OPPRETTE),
     }),
   behandleAlleSakerToggleEnabled: boolean(),
   oppretterOppgave: boolean(),
