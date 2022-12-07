@@ -1,29 +1,27 @@
 import React from "react";
-import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { withMsal } from "@azure/msal-react";
 import PT from "prop-types";
 
 import { ReactComponent as NavLogo } from "../../../resources/images/nav.svg";
-import * as MPT from "../../../proptypes";
 import * as Nav from "../../../navFrontend";
-
-import { saksbehandlerSelectors } from "../../../ducks/saksbehandler";
-import { oppgaverOperations } from "../../../ducks/oppgaver";
 
 import "./topplinje.css";
 
 const Topplinje = (props) => {
-  const {
-    saksbehandler: { navn },
-  } = props;
+  const { saksbehandler } = props;
 
   const tilForsidenHandler = (event) => {
     event.preventDefault();
-    const { hentOppgaveOversikt, history } = props;
-    const { push } = history;
-    hentOppgaveOversikt();
-    push("/");
+    const { history } = props;
+    history.push("/");
   };
+
+  const loggUt = () => {
+    props.msalContext.instance.logoutRedirect();
+  };
+
+  const erProduksjonsmiljo = `${process.env.REACT_APP_CLUSTER}`.startsWith("prod");
 
   return (
     <header className="topplinje">
@@ -40,24 +38,28 @@ const Topplinje = (props) => {
         </div>
       </div>
       <div className="topplinje__saksbehandler">
-        <div className="saksbehandler__navn">{navn}</div>
+        <div className="dropdown">
+          <div className="saksbehandler__navn ">{saksbehandler}</div>
+          {!erProduksjonsmiljo && (
+            <div className="dropdown-content">
+              <button type="button" onClick={loggUt}>
+                Logg ut
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
 };
 
 Topplinje.propTypes = {
-  saksbehandler: MPT.Saksbehandler.isRequired,
+  saksbehandler: PT.string,
   history: PT.object.isRequired,
-  hentOppgaveOversikt: PT.func.isRequired,
+  msalContext: PT.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  saksbehandler: saksbehandlerSelectors.SaksbehandlerSelector(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
-});
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Topplinje));
+Topplinje.defaultProps = {
+  saksbehandler: "",
+};
+export default withMsal(withRouter(Topplinje));

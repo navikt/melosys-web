@@ -6,5 +6,6 @@ import { BehandlingResDto, EndreBehandlingReqDto } from "./types";
 export const hentBehandling = (behandlingID: number): Promise<BehandlingResDto> =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}`);
 
+// Kan fjernes med melosys.behandle_alle_saker
 export const endreBehandling = (behandlingID: number, body: EndreBehandlingReqDto) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/endre`, body);

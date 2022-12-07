@@ -1,12 +1,40 @@
 import React, { ComponentProps } from "react";
-import { mock, instance } from "ts-mockito";
+import { instance, mock } from "ts-mockito";
 import { shallow } from "enzyme";
 
-import * as Nav from "../../../../navFrontend";
+import { Medlemskap } from "./medlemskap";
+import MedlemskapTable from "./medlemskapTable";
 
-import { Medlemskap, MedlemskapGruppe, MedlemskapEnkeltPeriode } from "./medlemskap";
-
-import ExpandableList from "../../../expandablelist";
+const periode = {
+  periodeID: 1,
+  periode: {
+    fom: "2022-01-01",
+    tom: "2022-02-02",
+  },
+  periodetype: null,
+  status: null,
+  grunnlagstype: null,
+  land: {
+    kode: "NO",
+    term: "Norge",
+  },
+  lovvalg: {
+    kode: "L",
+    term: "l",
+  },
+  trygdedekning: {
+    kode: "T",
+    term: "t",
+  },
+  kildedokumenttype: {
+    kode: "K",
+    term: "k",
+  },
+  kilde: {
+    kode: "KI",
+    term: "ki",
+  },
+};
 
 describe("Medlemskap", () => {
   const mockedProps = mock<ComponentProps<typeof Medlemskap>>();
@@ -14,69 +42,30 @@ describe("Medlemskap", () => {
 
   beforeEach(() => {
     props.medlemskap = {
-      perioderMed: [],
-      perioderUten: [],
+      perioderMed: [periode],
+      perioderUten: [periode],
+      perioderUavklart: null,
     };
   });
 
   it("Viser to medlemskapsgrupper", () => {
     const medlemskap = shallow(<Medlemskap {...props} />);
-    const medlemskapsgrupper = medlemskap.find(MedlemskapGruppe);
 
-    expect(medlemskapsgrupper).toHaveLength(2);
-    expect(medlemskapsgrupper.first().props().perioder).toBe(props.medlemskap.perioderMed);
-    expect(medlemskapsgrupper.at(1).props().perioder).toBe(props.medlemskap.perioderUten);
-  });
-});
-
-describe("MedlemskapGruppe", () => {
-  const mockedProps = mock<ComponentProps<typeof MedlemskapGruppe>>();
-  const props = instance(mockedProps);
-
-  beforeEach(() => {
-    props.perioder = [];
-    props.overskrift = "overskrift";
-  });
-
-  it("viser overskrift", () => {
-    const medlemskapGruppe = shallow(<MedlemskapGruppe {...props} />);
-    const overskrift = medlemskapGruppe.find(Nav.Typo.Undertittel);
-
-    expect(overskrift).toHaveLength(1);
-    expect(overskrift.children().text()).toBe(props.overskrift);
-  });
-
-  it("viser en ExpandableList med gitte perioder", () => {
-    const mockedPeriode = mock<typeof mockedProps.perioder[0]>();
-    const periode1 = instance(mockedPeriode);
-    periode1.periodeID = 1;
-    const periode2 = instance(mockedPeriode);
-    periode2.periodeID = 2;
-    props.perioder = [periode1, periode2];
-    const medlemskapGruppe = shallow(<MedlemskapGruppe {...props} />);
-    const expandableList = medlemskapGruppe.find(ExpandableList);
-    const expandableListProps = expandableList.props();
-
-    expect(expandableList).toHaveLength(1);
-    expect(expandableListProps.elements).toBe(props.perioder);
+    const medlemskapTable = medlemskap.find(MedlemskapTable);
+    expect(medlemskapTable).toHaveLength(2);
+    expect(medlemskapTable.first().props().perioder).toBe(props.medlemskap.perioderMed);
+    expect(medlemskapTable.last().props().perioder).toBe(props.medlemskap.perioderUten);
   });
 
   it("viser infomelding dersom ingen perioder oppgitt", () => {
-    const medlemskapGruppe = shallow(<MedlemskapGruppe {...props} />);
-    const section = medlemskapGruppe.find("section");
+    props.medlemskap = {
+      perioderMed: [],
+      perioderUten: [],
+      perioderUavklart: null,
+    };
+    const medlemskap = shallow(<Medlemskap {...props} />);
+    const section = medlemskap.find("section");
 
-    expect(section.children().text()).toBe("(ingen data funnet)");
-  });
-});
-
-describe("MedlemskapEnkeltPeriode", () => {
-  const mockedProps = mock<ComponentProps<typeof MedlemskapEnkeltPeriode>>();
-  const props = instance(mockedProps);
-  const mockedPeriode = mock<typeof mockedProps.enkeltPeriode>();
-  const periode = instance(mockedPeriode);
-  props.enkeltPeriode = periode;
-
-  it("vises uten å krasje", () => {
-    shallow(<MedlemskapEnkeltPeriode {...props} />);
+    expect(section.children().first().text()).toBe("(ingen data funnet)");
   });
 });

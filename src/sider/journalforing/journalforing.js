@@ -21,8 +21,9 @@ import JournalforingSED from "./komponenter/journalforingsed";
 import JournalforingForm from "./komponenter/journalforingform";
 import FeilmeldingDialog from "./komponenter/feilmeldingDialog";
 
-import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
+import { oppgaverOperations } from "../../ducks/oppgaver";
 import { landkoderOperations } from "../../ducks/landkoder";
+import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
 import { formSelectors } from "../../ducks/form";
 import { sokSelectors } from "../../ducks/sok";
 
@@ -344,12 +345,14 @@ class Journalforing extends Component {
   submitJournalforingNormal = async () => {
     try {
       this.setState({ submitSpinner: true });
+      const refreshOversiktDelayMillis = 2500;
       const { saksnummer } = this.props.journalforingSkjemaVerdier;
       if (saksnummer === "-1") {
         await this.opprettFagsak();
       } else {
         await this.knyttTilEksisterendeSak();
       }
+      setTimeout(() => this.props.hentOppgaveOversikt(), refreshOversiktDelayMillis);
     } finally {
       this.setState({ submitSpinner: false });
     }
@@ -502,6 +505,7 @@ Journalforing.propTypes = {
   journalforSEDSkjemaErrors: PT.object.isRequired,
   resetJournalforingState: PT.func.isRequired,
   hentLandkoder: PT.func.isRequired,
+  hentOppgaveOversikt: PT.func.isRequired,
 };
 
 Journalforing.defaultProps = {
@@ -530,6 +534,7 @@ const mapDispatchToProps = (dispatch) => ({
   touch: (formName, ...fields) => dispatch(touch(formName, ...fields)),
   resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
+  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Journalforing));

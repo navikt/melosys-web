@@ -61,7 +61,7 @@ const hjelpeteksterCaArt9 = ["placeholder"];
 
 const hjelpeteksterCaArt10 = [
   Hjelpetekster.ANSATT_I_DEN_NORSKE_STAT,
-  Hjelpetekster.ANSATT_OG_LØNNET_FRA_NORSK_ARBEIDSGIVER,
+  Hjelpetekster.LØNNET_FRA_NORSK_ARBEIDSGIVER,
   Hjelpetekster.NORSK_STATSBORGER,
 ];
 
