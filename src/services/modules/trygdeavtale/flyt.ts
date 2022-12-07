@@ -18,7 +18,6 @@ export type Familiemedlem = {
 export interface Resultat {
   virksomhet?: string;
   vedtak?: string;
-  innvilgelse?: string;
   bestemmelse?: string;
   tilleggsbestemmelse?: string;
   barn?: Familiemedlem[] | null;
@@ -50,7 +49,6 @@ export interface StegData {
   landValgUtenStøtte: KTObject[];
   virksomheter?: Virksomhet[];
   vedtakValg?: KTObject[];
-  innvilgelseValg?: KTObject[];
   bestemmelseValg?: KTObject[];
   tilleggsbestemmelseValg?: KTObject;
   barnValg?: FamilieValg[];

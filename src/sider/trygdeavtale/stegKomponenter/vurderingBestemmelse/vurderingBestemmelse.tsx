@@ -21,13 +21,14 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
 import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
+import UnntakHjelpetekst from "./unntakHjelpetekst/unntakHjelpetekst";
+import { useFeatureToggle } from "../../../../featuretoggle";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
   formValues: getFormValues(KV.Form.Trygdeavtale.BESTEMMELSE)(state),
   initialValues: {
     vedtak: ownProps.resultat?.vedtak,
-    innvilgelse: ownProps.resultat?.innvilgelse,
     bestemmelse: ownProps.resultat?.bestemmelse,
     tilleggsbestemmelse: Boolean(ownProps.resultat?.tilleggsbestemmelse),
   },
@@ -46,7 +47,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface FormValuesProps {
   vedtak?: string;
-  innvilgelse?: string;
   bestemmelse?: string;
   tilleggsbestemmelse?: boolean;
 }
@@ -63,7 +63,7 @@ interface Props {
 }
 
 const VurderingBestemmelse = ({
-  data: { vedtakValg, innvilgelseValg, bestemmelseValg, tilleggsbestemmelseValg },
+  data: { vedtakValg, bestemmelseValg, tilleggsbestemmelseValg },
   formIsValid,
   formValues,
   fortsett,
@@ -75,6 +75,8 @@ const VurderingBestemmelse = ({
   oppdaterFlyt,
 }: PropsFromRedux & Props) => {
   const [oppdaterPending, setOppdaterPending] = useState(false);
+  const trygdeavtaleUnntakToggle = useFeatureToggle("melosys.trygdeavtale.unntak");
+
   useEffect(() => {
     if (redigerbart && formValues) {
       setOppdaterPending(true);
@@ -82,7 +84,6 @@ const VurderingBestemmelse = ({
         {
           ...resultat,
           vedtak: formValues?.vedtak,
-          innvilgelse: formValues?.innvilgelse,
           bestemmelse: formValues?.bestemmelse,
           tilleggsbestemmelse: formValues.tilleggsbestemmelse ? tilleggsbestemmelseValg?.kode : undefined,
         },
@@ -97,38 +98,23 @@ const VurderingBestemmelse = ({
     <div className="vurderingBestemmelse">
       <Nav.Typo.Undertittel className="undertittel">Bestemmelse og vurdering</Nav.Typo.Undertittel>
 
-      <Nav.Fieldset legend="Kan du fatte vedtak?">
+      <Nav.Fieldset legend="Hva er din vurdering av søknaden?">
         {vedtakValg?.map((valg) => (
           <Skjema.Radio
             key={valg.kode}
             feltNavn="vedtak"
             label={valg.term}
             value={valg.kode}
-            disabled={!redigerbart || valg.kode.startsWith("NEI")}
-            onChange={() => {
-              resetField("innvilgelse");
-              resetField("bestemmelse");
-            }}
+            disabled={
+              !redigerbart ||
+              !(valg.kode.startsWith("JA") || (trygdeavtaleUnntakToggle && valg.kode === "NEI_ANMODE_OM_UNNTAK"))
+            }
+            onChange={() => resetField("bestemmelse")}
           />
         ))}
       </Nav.Fieldset>
 
-      {formValues?.vedtak && !Utils._isEmpty(innvilgelseValg) && (
-        <Nav.Fieldset legend="Skal søknaden innvilges?">
-          {innvilgelseValg?.map((valg) => (
-            <Skjema.Radio
-              key={valg.kode}
-              feltNavn="innvilgelse"
-              label={valg.term}
-              value={valg.kode}
-              disabled={!redigerbart || valg.kode.startsWith("NEI")}
-              onChange={() => resetField("bestemmelse")}
-            />
-          ))}
-        </Nav.Fieldset>
-      )}
-
-      {formValues?.innvilgelse && !Utils._isEmpty(bestemmelseValg) && (
+      {formValues?.vedtak && !Utils._isEmpty(bestemmelseValg) && (
         <Nav.Fieldset legend="Velg bestemmelse" className="bestemmelseValg">
           <Nav.Row>
             <Nav.Column xs="10">
@@ -151,7 +137,7 @@ const VurderingBestemmelse = ({
         </Nav.Fieldset>
       )}
 
-      {!oppdaterPending && formValues?.innvilgelse && !Utils._isEmpty(tilleggsbestemmelseValg) && (
+      {formValues?.vedtak && !Utils._isEmpty(tilleggsbestemmelseValg) && (
         <Nav.Row>
           <Nav.Column xs="10">
             <Skjema.Checkbox
@@ -159,6 +145,14 @@ const VurderingBestemmelse = ({
               label={tilleggsbestemmelseValg?.term}
               disabled={!redigerbart}
             />
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
+      {formValues?.vedtak === "NEI_ANMODE_OM_UNNTAK" && (
+        <Nav.Row>
+          <Nav.Column xs="10" className="unntakTekst">
+            <UnntakHjelpetekst />
           </Nav.Column>
         </Nav.Row>
       )}
@@ -172,7 +166,7 @@ const VurderingBestemmelse = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: fortsett,
-          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
+          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || oppdaterPending,
         }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
