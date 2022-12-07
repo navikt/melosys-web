@@ -6,6 +6,7 @@ import * as Dokumenter from "./modules/dokumenter";
 import * as DokumenterV2 from "./modules/dokumenter-v2";
 import * as Eessi from "./modules/eessi";
 import * as Fagsaker from "./modules/fagsaker";
+import * as Faktureringskomponenten from "./modules/faktureringskomponenten";
 import * as Featuretoggle from "./modules/featuretoggle";
 import * as Journalforing from "./modules/journalforing";
 import * as Kodeverk from "./modules/kodeverk";
@@ -59,6 +60,7 @@ export {
   Saksopplysninger,
   Saksflyt,
   Trygdeavgift,
+  Faktureringskomponenten,
   Trygdeavtale,
   Utpekingsperioder,
   Vilkar,

@@ -22,4 +22,12 @@ module.exports = function setupProxy(app) {
       },
     })
   );
+  app.use(
+    createProxyMiddleware("/faktureringskomponenten", {
+      target: "http://localhost:8084/",
+      pathRewrite: {
+        "^/faktureringskomponenten": "",
+      },
+    })
+  );
 };
