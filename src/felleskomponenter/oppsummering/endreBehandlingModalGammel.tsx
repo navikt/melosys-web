@@ -111,7 +111,7 @@ function EndreBehandlingModal({
     const reqBehandling: Api.Behandlinger.behandling.EndreBehandlingReqDto = {
       behandlingstema,
       behandlingstype,
-      behandlingsfrist: Datoutils.dateTilIsoString(behandlingsfrist) || "",
+      mottaksdato: Datoutils.dateTilIsoString(behandlingsfrist) || "",
       behandlingsstatus,
     };
     const { saksnummer } = fagsak;
