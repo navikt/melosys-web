@@ -183,6 +183,7 @@ const Oppsummering = ({
         <EndreBehandlingModalGammel
           fagsak={fagsak}
           oppsummering={oppsummering}
+          mottattDato={mottaksdato}
           skalViseModal={skalViseEndreModal}
           lukkModal={() => setSkalViseEndreModal(false)}
         />
