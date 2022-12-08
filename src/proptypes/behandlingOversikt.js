@@ -11,7 +11,8 @@ const BehandligOversiktPropType = PT.shape({
     erUkjenteEllerAlleEosLand: PT.bool,
   }),
   opprettetDato: PT.string,
-  periode: Periode,
+  soknadsperiode: Periode,
+  lovvalgsperiode: Periode,
 });
 const BehandligOversikterPropType = PT.arrayOf(BehandligOversiktPropType);
 export { BehandligOversiktPropType as BehandligOversikt, BehandligOversikterPropType as BehandligOversikter };
