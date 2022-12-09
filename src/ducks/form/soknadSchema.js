@@ -363,7 +363,18 @@ const soknad = object().when("$behandlingstema", {
     soknadsland: object().shape({
       landkoder: array().when("erUkjenteEllerAlleEosLand", {
         is: (erUkjenteEllerAlleEosLand) => !erUkjenteEllerAlleEosLand,
-        then: array().min(
+        then: array().when("$behandlingstema", {
+          is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+          then: array().min(
+            2,
+            lagMelding(
+              KV.Menypunkter.Utenlandsoppdraget.tittel,
+              KV.Menypunkter.Utenlandsoppdraget.undertitler.land,
+              "Det er påkrevd med to eller flere land for behandlingstema ARBEID_FLERE_LAND om ikke ukjenteEllerAlleEosLand er valgt"
+            )
+          ),
+        }),
+        otherwise: array().min(
           1,
           lagMelding(
             KV.Menypunkter.Utenlandsoppdraget.tittel,
