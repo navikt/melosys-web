@@ -124,7 +124,12 @@ class LinkGroupsFactory {
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(
-            new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
+            new LinksBuilder(contentProps)
+              .addMedlemskap()
+              .addEUEOSBarnetrygd()
+              .addArbeidsforholdOgInntekt()
+              .addFaktureringskomponenten(folketrygdenToggleEnabled)
+              .build()
           )
           .addFraBruker(
             new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().addArbeidssteder().build()

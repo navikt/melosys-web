@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 
 export type Menypunkt =
   | "Person"
+  | "Fakturainformasjon"
   | "Familieforhold"
   | "Medlemskap"
   | "EU/EØS-barnetrygd"

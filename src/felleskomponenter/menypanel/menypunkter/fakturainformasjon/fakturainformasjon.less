@@ -1,0 +1,33 @@
+@import (reference) "~nav-frontend-core/less/_variabler";
+
+.fakturainformasjon {
+  .fakturainformasjon-tabell {
+    padding: 1em 0 2em 0em;
+    .fakturaseksjon {
+      padding-bottom: 3em;
+      .headerseksjon {
+        padding-bottom: 0.5em;
+        .header {
+          color: @navGra60;
+
+          > * {
+            padding-left: 0;
+          }
+        }
+      }
+      .row {
+        margin: 0;
+        border-bottom: 1px solid @navGra60;
+        padding: 0.3em 0;
+
+        &:last-child {
+          border-bottom: 0px solid @navGra60;
+        }
+
+        > * {
+          padding-left: 0;
+        }
+      }
+    }
+  }
+}
