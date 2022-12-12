@@ -370,7 +370,7 @@ const soknad = object().when("$behandlingstema", {
             lagMelding(
               KV.Menypunkter.Utenlandsoppdraget.tittel,
               KV.Menypunkter.Utenlandsoppdraget.undertitler.land,
-              "Det er påkrevd med to eller flere land for behandlingstema ARBEID_FLERE_LAND om ikke ukjenteEllerAlleEosLand er valgt"
+              "Det er påkrevd med to eller flere land for dette behandlingstemaet"
             )
           ),
         }),
