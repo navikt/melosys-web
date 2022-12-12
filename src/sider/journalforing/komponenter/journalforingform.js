@@ -66,6 +66,9 @@ export const JournalforingForm = ({
 }) => {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, behandleAlleSakerToggleEnabled);
   const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
+  const visSkalTilordnes = !fagsakListe.find(
+    (sak) => sak.saksnummer === formValues?.saksnummer && MKVUtils.erHenlagtEllerHenlagtBortfalt(sak.saksstatus.kode)
+  );
 
   useEffect(() => {
     if (!behandleAlleSakerToggleEnabled) return;
@@ -103,7 +106,7 @@ export const JournalforingForm = ({
       <KomponentUtenOverskrift
         innhold={
           <>
-            <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg behandlingen i mine oppgaver" />
+            {visSkalTilordnes && <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg behandlingen i mine oppgaver" />}
             {submitFailed && !Utils.object.isDeepEmpty(formErrors) && (
               <Nav.AlertStripeFeil className="feilmelding">
                 {Utils.feilmelding.syncErrorsTilFeilmelding(formErrors)}
