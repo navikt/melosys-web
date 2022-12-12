@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import PT from "prop-types";
 
+import { MKVUtils } from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
@@ -19,12 +20,14 @@ import { useFeatureToggle } from "../../../featuretoggle";
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = (props) => {
+  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
   const { behandleAlleSakerToggleEnabled, landkoder } = props;
   const { opprettetDato, behandlingOversikter, sakstype, saksstatus, saksnummer, sakstema } = props.sak;
 
-  const { land, behandlingstype, periode, behandlingsstatus, behandlingstema, svarFrist, behandlingID } =
+  const { behandlingstype, soknadsperiode, behandlingsstatus, behandlingstema, svarFrist, behandlingID } =
     behandlingOversikter[0];
-  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
+  const { lovvalgsperiode, land } =
+    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
 
   const link = behandleAlleSakerToggleEnabled
     ? lagUrl(
@@ -39,6 +42,9 @@ const EnkeltSak = (props) => {
     : lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema.kode);
 
   if (behandleAlleSakerToggleEnabled) {
+    const periode = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus?.kode)
+      ? lovvalgsperiode
+      : soknadsperiode;
     return (
       <div className="enkeltSak">
         <Skjema.CustomRadioPanelElement
@@ -59,7 +65,7 @@ const EnkeltSak = (props) => {
             { description: KV.objektTilTerm(behandlingstema) },
             { description: <div className="behandlingstype">{KV.objektTilTerm(behandlingstype)}</div> },
             {
-              term: "Søknadsperiode:",
+              term: "Periode:",
               description: periode ? (
                 <Fragment>
                   <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} />
@@ -90,9 +96,9 @@ const EnkeltSak = (props) => {
         { term: "Behandlingstype:", description: KV.objektTilTerm(behandlingstype) },
         {
           term: "Søknadsperiode:",
-          description: periode ? (
+          description: soknadsperiode ? (
             <Fragment>
-              <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} />
+              <EnkeltDato dato={soknadsperiode.fom} /> - <EnkeltDato dato={soknadsperiode.tom} />
             </Fragment>
           ) : null,
         },

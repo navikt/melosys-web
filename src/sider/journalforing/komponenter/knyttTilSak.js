@@ -14,14 +14,8 @@ import * as Api from "../../../services/api";
 
 import "./knyttTilSak.css";
 
-const {
-  behandlinger: { behandlingstyper: MKVBehandlingstyper },
-  sakstyper: MKVSakstyper,
-  saksstatuser: MKVSaksstatuser,
-} = MKV.Koder;
-
 const behandlingstyper_gammel = MKV.KTObjects.behandlinger.behandlingstyper.filter(
-  ({ kode }) => kode === MKVBehandlingstyper.NY_VURDERING
+  ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
 );
 
 export const KnyttTilSak = (props) => {
@@ -52,7 +46,9 @@ export const KnyttTilSak = (props) => {
 
   const visOpprettNyBehandling = behandleAlleSakerToggleEnabled
     ? sisteBehandlingErInaktiv || sisteBehandlingHarSendtAnmodningUnntakTilUtland
-    : behandlingOversikter.some((behandling) => behandling.behandlingstype.kode === MKVBehandlingstyper.SOEKNAD);
+    : behandlingOversikter.some(
+        (behandling) => behandling.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
+      );
 
   useEffect(() => {
     changeField(feltNavn.formNavn, "opprettBehandling", visOpprettNyBehandling);
@@ -108,9 +104,7 @@ export const KnyttTilSak = (props) => {
     }
   }, [opprettBehandling, behandlingstema, behandlingstype]);
 
-  const sakErHenlagtEllerBortfalt = [MKVSaksstatuser.HENLAGT, MKVSaksstatuser.HENLAGT_BORTFALT].includes(
-    sak.saksstatus.kode
-  );
+  const sakErHenlagtEllerBortfalt = MKVUtils.erHenlagtEllerHenlagtBortfalt(sak.saksstatus.kode);
 
   const visKnyttTilEksisterende = behandleAlleSakerToggleEnabled
     ? (sisteBehandlingErInaktiv || sisteBehandlingHarSendtAnmodningUnntakTilUtland) && !sakErHenlagtEllerBortfalt
@@ -119,7 +113,7 @@ export const KnyttTilSak = (props) => {
   const visUtenOpprettNyBehandling = behandleAlleSakerToggleEnabled ? true : !visOpprettNyBehandling;
 
   useEffect(() => {
-    changeField(feltNavn.formNavn, feltNavn.erAvsluttetSak, visKnyttTilEksisterende);
+    changeField(feltNavn.formNavn, feltNavn.kanOppretteAndregangsbehandling, visKnyttTilEksisterende);
   }, [visKnyttTilEksisterende]);
 
   if (visKnyttTilEksisterende) {
@@ -200,15 +194,19 @@ export const KnyttTilSak = (props) => {
     );
   }
 
-  const visUtenVidereBehandling = behandleAlleSakerToggleEnabled ? sakstype.kode === MKVSakstyper.EU_EOS : true;
+  const visUtenVidereBehandling = behandleAlleSakerToggleEnabled
+    ? sakstype.kode === MKV.Koder.sakstyper.EU_EOS && !sakErHenlagtEllerBortfalt
+    : true;
+
+  const kanIkkeOppretteAndregangGrunn = sakErHenlagtEllerBortfalt
+    ? "Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt i Melosys"
+    : "Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling";
 
   return (
     <div className="knyttTilSak__behandlingspanel">
       {erOpprettNySak ? (
         <div className="innrykk">
-          <Nav.AlertStripeAdvarsel>
-            Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
-          </Nav.AlertStripeAdvarsel>
+          <Nav.AlertStripeAdvarsel>{kanIkkeOppretteAndregangGrunn}</Nav.AlertStripeAdvarsel>
         </div>
       ) : (
         visUtenVidereBehandling && (

@@ -166,5 +166,5 @@ export interface EndreBehandlingReqDto {
   behandlingstype: string;
   behandlingstema: string;
   behandlingsstatus: string;
-  behandlingsfrist: string;
+  mottaksdato: string;
 }

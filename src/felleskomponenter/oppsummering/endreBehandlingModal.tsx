@@ -53,6 +53,7 @@ type EndreBehandlingModalProps = PropsFromRedux &
   RouteComponentProps & {
     fagsak: Api.Fagsak;
     oppsummering: Api.Behandlinger.behandling.Oppsummering;
+    mottattDato?: string;
     skalViseModal: boolean;
     lukkModal: () => void;
   };
@@ -63,6 +64,7 @@ function EndreBehandlingModal({
   behandlingID,
   oppsummering,
   fagsak,
+  mottattDato,
   muligeBehandlingsstatuser,
   hentMuligeBehandlingsstatuser,
   tilAnnenSide,
@@ -75,7 +77,7 @@ function EndreBehandlingModal({
   const [sakstema, setSakstema] = useState(fagsak.sakstema?.kode);
   const [behandlingstema, setBehandlingstema] = useState(oppsummering.behandlingstema?.kode);
   const [behandlingstype, setBehandlingstype] = useState(oppsummering.behandlingstype?.kode);
-  const [behandlingsfrist, setBehandlingsfrist] = useState(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
+  const [mottaksdato, setMottaksdato] = useState(Datoutils.isoStringTilDate(mottattDato));
   const [behandlingsstatus, setBehandlingsstatus] = useState(oppsummering.behandlingsstatus?.kode);
   const [skalViseSpinner, setSkalViseSpinner] = useState(false);
   const [muligeSakstyper, setMuligeSakstyper] = useState([]);
@@ -133,7 +135,7 @@ function EndreBehandlingModal({
       setBehandlingstema(oppsummering.behandlingstema?.kode);
       setBehandlingstype(oppsummering.behandlingstype?.kode);
       setBehandlingsstatus(oppsummering.behandlingsstatus?.kode);
-      setBehandlingsfrist(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
+      setMottaksdato(Datoutils.isoStringTilDate(mottattDato));
     }
   }, [skalViseModal]);
 
@@ -150,8 +152,7 @@ function EndreBehandlingModal({
     }
   };
 
-  const harFristEndretSeg = () =>
-    Datoutils.isoStringTilDate(oppsummering.behandlingsfrist)?.getTime() !== behandlingsfrist?.getTime();
+  const harMottaksdatoEndretSeg = () => Datoutils.isoStringTilDate(mottattDato)?.getTime() !== mottaksdato?.getTime();
 
   const endreBehandlingHandle = () => {
     setSkalViseSpinner(true);
@@ -165,7 +166,7 @@ function EndreBehandlingModal({
       sakstema,
       behandlingstema,
       behandlingstype,
-      behandlingsfrist: harFristEndretSeg() ? Datoutils.dateTilIsoString(behandlingsfrist) : null,
+      mottaksdato: harMottaksdatoEndretSeg() ? Datoutils.dateTilIsoString(mottaksdato) : null,
       behandlingsstatus,
     };
 
@@ -274,7 +275,7 @@ function EndreBehandlingModal({
               disableForsteValg
               redigerbart={!endringerErBegrenset && typeTemaKanEndres}
             />
-            <Datovelger onChange={setBehandlingsfrist} label="Frist" value={behandlingsfrist} />
+            <Datovelger onChange={setMottaksdato} label="Mottaksdato" value={mottaksdato} />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingsstatus(e.target.value)}
               label="Behandlingsstatus"

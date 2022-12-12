@@ -175,6 +175,7 @@ const Oppsummering = ({
         <EndreBehandlingModal
           fagsak={fagsak}
           oppsummering={oppsummering}
+          mottattDato={mottaksdato}
           skalViseModal={skalViseEndreModal}
           lukkModal={() => setSkalViseEndreModal(false)}
         />
@@ -182,11 +183,11 @@ const Oppsummering = ({
         <EndreBehandlingModalGammel
           fagsak={fagsak}
           oppsummering={oppsummering}
+          mottattDato={mottaksdato}
           skalViseModal={skalViseEndreModal}
           lukkModal={() => setSkalViseEndreModal(false)}
         />
       )}
-
       <Nav.Panel className="saksbehandling__soknad-sammendrag">
         <Nav.Row>
           <Nav.Column xs="12">

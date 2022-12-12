@@ -73,7 +73,7 @@ export interface EndreSakDto {
   behandlingstema: string;
   behandlingstype: string;
   behandlingsstatus?: string | null;
-  behandlingsfrist?: string | null;
+  mottaksdato?: string | null;
 }
 
 export const hentMuligeSakstemaer = (saksnummer: string) =>
