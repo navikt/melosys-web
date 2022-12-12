@@ -37,6 +37,11 @@ import { vedtakOperations } from "../../../../ducks/vedtak";
 const { trygdeavtale_myndighetsland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
 
+const betalingsintervaller: KTObject[] = [
+  { kode: "MANEDLIG", term: "Månedlig" },
+  { kode: "KVARTAL", term: "Kvartal" },
+];
+
 const mapStateToProps = (state: RootState) => ({
   medfolgendeFamilie: oppsummertfaktaSelectors.MedfolgendeFamilieSelector(state) || [],
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -69,6 +74,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface FormValuesProps {
   innledningFritekst?: string;
+  betalingsintervall?: undefined;
   begrunnelseFritekst?: string;
 }
 
@@ -263,7 +269,7 @@ const VurderingVedtak = ({
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
       ektefelleFritekst: familieFormValues?.ektefelle_samboer?.fritekst || null,
       barnFritekst: familieFormValues?.barn?.fritekst || null,
-      betalingsintervall: trygdeavgiftFormValues?.betalingsintervall ?? "MANEDLIG",
+      betalingsintervall: formValues.betalingsintervall ?? "MANEDLIG",
       vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
       nyVurderingBakgrunn: null,
@@ -375,6 +381,20 @@ const VurderingVedtak = ({
           </Nav.Typo.Normaltekst>
         </div>
       )}
+
+      <div style={{ marginTop: "0.5rem", marginLeft: "0.5rem", marginBottom: "0.5rem" }}>
+        <Nav.Row>
+          <Nav.Column xs="4">
+            <Skjema.Select label="Betalingsintervall" feltNavn="betalingsintervall">
+              {betalingsintervaller.map((item: KTObject) => (
+                <option key={item.kode} value={item.kode}>
+                  {item.term}
+                </option>
+              ))}
+            </Skjema.Select>
+          </Nav.Column>
+        </Nav.Row>
+      </div>
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         <LabelMedHjelpetekst
