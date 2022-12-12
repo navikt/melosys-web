@@ -373,15 +373,15 @@ const soknad = object().when("$behandlingstema", {
               "Det er påkrevd med to eller flere land for dette behandlingstemaet"
             )
           ),
+          otherwise: array().min(
+            1,
+            lagMelding(
+              KV.Menypunkter.Utenlandsoppdraget.tittel,
+              KV.Menypunkter.Utenlandsoppdraget.undertitler.land,
+              "Oppgi minst ett søknadsland"
+            )
+          ),
         }),
-        otherwise: array().min(
-          1,
-          lagMelding(
-            KV.Menypunkter.Utenlandsoppdraget.tittel,
-            KV.Menypunkter.Utenlandsoppdraget.undertitler.land,
-            "Oppgi minst ett søknadsland"
-          )
-        ),
       }),
       erUkjenteEllerAlleEosLand: boolean(),
     }),
