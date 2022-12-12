@@ -108,7 +108,7 @@ const VurderingInngang = ({
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
 
   useEffect(() => {
-    if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
+    if (!Utils._isEmpty(initialValues.fom) && !Utils._isEmpty(initialValues.arbeidsland)) {
       visMenypanel();
       setInitialFomTomLand({ fom: initialValues.fom, tom: initialValues.tom, arbeidsland: initialValues.arbeidsland });
     }

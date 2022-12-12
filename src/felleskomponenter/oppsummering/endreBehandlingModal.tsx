@@ -200,7 +200,10 @@ function EndreBehandlingModal({
   };
 
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
-  const endringerErBegrenset = erBehandlingstemaMedBegrensetRettigheter(oppsummering.behandlingstema, fagsak.sakstype);
+  const endringerErBegrenset = erBehandlingstemaMedBegrensetRettigheter(
+    oppsummering.behandlingstema?.kode,
+    fagsak.sakstype?.kode
+  );
 
   const nullstillSak = (steg: FeltVerdier): void => {
     switch (steg) {
