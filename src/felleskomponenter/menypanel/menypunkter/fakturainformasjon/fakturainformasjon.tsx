@@ -1,19 +1,15 @@
-/* eslint-disable */
-
-import React, { useEffect } from "react";
-import * as Api from "../../../../services/api";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as Mui from "../../../ui";
 
 import * as Nav from "../../../../navFrontend";
-import * as KV from "../../../../kodeverk";
-import * as Utils from "../../../../utils";
 
-import { useDispatch, useSelector } from "react-redux";
 import { fakturainformasjonOperations } from "../../../../ducks/fakturainformasjon";
 import OppsummeringVerdiPar from "../../../oppsummering/verdiPar/oppsummeringVerdiPar";
 import "./fakturainformasjon.css";
 import { _isEmpty, _toInteger } from "../../../../utils";
-const Fakturainformasjon = ({}) => {
+
+const Fakturainformasjon = () => {
   const dispatch = useDispatch();
   const { fakturainformasjon, fagsaker, behandlinger } = useSelector((state) => state) as any;
   const { saksnummer } = fagsaker.data;
@@ -28,15 +24,12 @@ const Fakturainformasjon = ({}) => {
     faktura: fakturaer,
     fakturaGjelder,
     fodselsnummer,
-    fullmektig,
     intervall,
-    opprettetTidspunkt,
     referanseBruker,
     referanseNAV,
     sluttdato,
     startdato,
     status,
-    vedtaksId,
   } = fakturainformasjon.data;
 
   const overordnetInfoPar = {
@@ -52,9 +45,10 @@ const Fakturainformasjon = ({}) => {
 
   if (_isEmpty(fakturainformasjon.data)) {
     return null;
-  } else if (fakturainformasjon.data.violations) {
-    return fakturainformasjon.data.violations.map((violation: any, index: number) => (
-      <Nav.Row key={index}>{violation.message}</Nav.Row>
+  }
+  if (fakturainformasjon.data.violations) {
+    return fakturainformasjon.data.violations.map((violation: any) => (
+      <Nav.Row key={violation}>{violation.message}</Nav.Row>
     ));
   }
 
@@ -71,19 +65,19 @@ const Fakturainformasjon = ({}) => {
           ))}
         </Nav.Column>
       </Nav.Row>
-      <br></br>
+      <br />
       <Nav.Row>
         <Nav.Column xs="12">
           <Mui.Undertittel tekst="Fakturaer" className="persontabell-row__tittel" />
           <div className="fakturainformasjon-tabell">
-            {fakturaer?.map((faktura: any, index: number) => (
-              <div className="fakturaseksjon" key={index}>
+            {fakturaer?.map((faktura: any) => (
+              <div className="fakturaseksjon" key={faktura.id}>
                 <div className="headerseksjon">
-                  <OppsummeringVerdiPar nokkel={"Faktura nummer"} verdi={`${index + 1}`} />
-                  <OppsummeringVerdiPar nokkel={"Dato bestilt"} verdi={faktura.datoBestilt} />
-                  <OppsummeringVerdiPar nokkel={"Periode fra"} verdi={faktura.periodeFra} />
-                  <OppsummeringVerdiPar nokkel={"Periode til"} verdi={faktura.periodeTil} />
-                  <OppsummeringVerdiPar nokkel={"Status"} verdi={faktura.status} />
+                  <OppsummeringVerdiPar nokkel="Faktura nummer" verdi={`${faktura.id + 1}`} />
+                  <OppsummeringVerdiPar nokkel="Dato bestilt" verdi={faktura.datoBestilt} />
+                  <OppsummeringVerdiPar nokkel="Periode fra" verdi={faktura.periodeFra} />
+                  <OppsummeringVerdiPar nokkel="Periode til" verdi={faktura.periodeTil} />
+                  <OppsummeringVerdiPar nokkel="Status" verdi={faktura.status} />
                 </div>
                 <Nav.Row className="header">
                   <Nav.Column xs="2">Periode fra</Nav.Column>
@@ -91,8 +85,8 @@ const Fakturainformasjon = ({}) => {
                   <Nav.Column xs="6">Beskrivelse</Nav.Column>
                   <Nav.Column xs="2">Beløp</Nav.Column>
                 </Nav.Row>
-                {faktura.fakturaLinje.map((fakturalinje: any, index: number) => (
-                  <Nav.Row key={index}>
+                {faktura.fakturaLinje.map((fakturalinje: any) => (
+                  <Nav.Row key={fakturalinje.id}>
                     <Nav.Column xs="2">{fakturalinje.periodeFra} </Nav.Column>
                     <Nav.Column xs="2">{fakturalinje.periodeTil} </Nav.Column>
                     <Nav.Column xs="6">{fakturalinje.beskrivelse} </Nav.Column>

@@ -128,7 +128,7 @@ class LinkGroupsFactory {
               .addMedlemskap()
               .addEUEOSBarnetrygd()
               .addArbeidsforholdOgInntekt()
-              .addFaktureringskomponenten()
+              .addFaktureringskomponenten(folketrygdenToggleEnabled)
               .build()
           )
           .addFraBruker(
