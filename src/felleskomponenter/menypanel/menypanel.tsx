@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
-import MKV from "../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
@@ -56,6 +56,7 @@ export const Menypanel = ({
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
+  const behandleAlleSakerToggleEnabled = useFeatureToggle("melosys.behandle_alle_saker") === "enabled";
   const visMenypanel =
     sakstype === MKV.Koder.sakstyper.EU_EOS ||
     menypanel?.synlig ||
@@ -69,12 +70,19 @@ export const Menypanel = ({
 
   if (!visMenypanel) return null;
 
+  const visMottatteOpplysningerData = behandleAlleSakerToggleEnabled
+    ? !(
+        MKVUtils.erBehandlingAvSed(behandlingstema, sakstype) &&
+        behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
+      )
+    : !(
+        behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED &&
+        behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
+      );
+
   const contentProps = {
     visArbeidsforholdRolleEtiketter: mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
-    visMottatteOpplysningerData: !(
-      behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED &&
-      behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
-    ),
+    visMottatteOpplysningerData,
     behandlingstema,
     redigerbart,
     lagreSoknadOgOppfriskSaksopplysninger,
