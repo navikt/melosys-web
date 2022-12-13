@@ -26,7 +26,9 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
 
-  const { lovvalgsperiode, soknadsperiode, land } =
+  const { soknadsperiode, land } =
+    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
+  const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
   const tittel = visSakstema
     ? `${KV.objektTilTerm(sakstype)} - ${KV.objektTilTerm(sakstema)}`

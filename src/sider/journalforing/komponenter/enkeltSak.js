@@ -24,9 +24,10 @@ const EnkeltSak = (props) => {
   const { behandleAlleSakerToggleEnabled, landkoder } = props;
   const { opprettetDato, behandlingOversikter, sakstype, saksstatus, saksnummer, sakstema } = props.sak;
 
-  const { behandlingstype, soknadsperiode, behandlingsstatus, behandlingstema, svarFrist, behandlingID } =
-    behandlingOversikter[0];
-  const { lovvalgsperiode, land } =
+  const { behandlingstype, behandlingsstatus, behandlingstema, svarFrist, behandlingID } = behandlingOversikter[0];
+  const { soknadsperiode, land } =
+    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
+  const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
 
   const link = behandleAlleSakerToggleEnabled
