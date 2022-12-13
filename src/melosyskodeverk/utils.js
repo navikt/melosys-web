@@ -13,13 +13,27 @@ export const erSoknad = (behandlingstema) =>
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
   ].includes(behandlingstema);
 
-// DEPRECATED. Vi vil ikke bruke denne i melosys.behandle_alle_saker
-export const erSedForesporsel = (behandlingstema) =>
-  [
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
-    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
-  ].includes(behandlingstema);
+export const erBehandlingstemaSedTema = [
+  MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
+  MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
+  MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
+  MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
+];
+
+export const erBehandlingstemaSedTemaOgSakstypeEuEøs = [
+  ...erBehandlingstemaSedTema,
+  MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL,
+];
+
+export const erEOS = (sakstype) => {
+  return sakstype === MKV.Koder.sakstyper.EU_EOS;
+};
+
+export const erBehandlingAvSed = (behandlingstema, sakstype) => {
+  return erEOS(sakstype)
+    ? erBehandlingstemaSedTemaOgSakstypeEuEøs.includes(behandlingstema)
+    : erBehandlingstemaSedTema.includes(behandlingstema);
+};
 
 export const erUtsendt = (behandlingstema) =>
   [

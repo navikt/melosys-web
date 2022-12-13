@@ -6,7 +6,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
-import MKV from "../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as Mui from "../ui";
 import * as Api from "../../services/api";
 import * as Nav from "../../navFrontend";
@@ -17,7 +17,6 @@ import { behandlingsstatusOperations, behandlingsstatusSelectors } from "../../d
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { navigeringOperations } from "../../ducks/navigering";
 
-import { erBehandlingstemaMedBegrensetRettigheter } from "../../melosyskodeverk/kodekombinasjoner";
 import { anmodningsperioderSelectors } from "../../ducks/anmodningsperioder";
 import { useFeatureToggle } from "../../featuretoggle";
 import Datovelger from "../datovelger";
@@ -200,10 +199,7 @@ function EndreBehandlingModal({
   };
 
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
-  const endringerErBegrenset = erBehandlingstemaMedBegrensetRettigheter(
-    oppsummering.behandlingstema?.kode,
-    fagsak.sakstype?.kode
-  );
+  const endringerErBegrenset = MKVUtils.erBehandlingAvSed(oppsummering.behandlingstema?.kode, fagsak.sakstype?.kode);
 
   const nullstillSak = (steg: FeltVerdier): void => {
     switch (steg) {
