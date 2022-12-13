@@ -80,7 +80,10 @@ const Oppsummering = ({
   const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode);
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
-  const erSed = behandlingstype?.kode === MKV.Koder.behandlinger.behandlingstyper.SED;
+  const erSed =
+    behandleAlleSakerToggle === "enabled"
+      ? MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, behandlingstema?.kode)
+      : behandlingstype?.kode === MKV.Koder.behandlinger.behandlingstyper.SED;
   const erTrygdeavtale = sakstype?.kode === MKV.Koder.sakstyper.TRYGDEAVTALE;
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
