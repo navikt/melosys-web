@@ -158,7 +158,7 @@ const Oppsummering = ({
       col1.push(["Land", erSed ? landStorBokstav(lovvalgsland) : landTilSetning(arbeidsland)]);
 
       col2 = [
-        ["Søknad mottatt", mottaksdato || "-"],
+        ["Frist", Utils.dato.formatterDatoTilNorsk(behandlingsfrist) || "-"],
         ["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(registrertDato)],
         ["Sist oppdatert", Utils.dato.formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`],
       ];
@@ -238,7 +238,7 @@ const Oppsummering = ({
                 </Nav.Row>
                 <Nav.Row>
                   <Nav.Column xs="12">
-                    <OppsummeringVerdiPar nokkel="Frist" verdi={Utils.dato.formatterDatoTilNorsk(behandlingsfrist)} />
+                    <OppsummeringVerdiPar nokkel="Mottaksdato" verdi={mottaksdato || "-"} />
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>
