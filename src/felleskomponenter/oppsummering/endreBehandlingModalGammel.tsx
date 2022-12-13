@@ -143,7 +143,7 @@ function EndreBehandlingModal({
   };
 
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
-  const endringerErBegrenset = MKVUtils.erBehandlingAvSed(oppsummering.behandlingstema?.kode, fagsak.sakstype?.kode);
+  const endringerErBegrenset = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, oppsummering.behandlingstema?.kode);
 
   const renderEndreBehandling = () => {
     return (

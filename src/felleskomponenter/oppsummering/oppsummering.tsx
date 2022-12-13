@@ -82,7 +82,7 @@ const Oppsummering = ({
 
   const erSed =
     behandleAlleSakerToggle === "enabled"
-      ? MKVUtils.erBehandlingAvSed(behandlingstema?.kode, fagsak.sakstype?.kode)
+      ? MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, behandlingstema?.kode)
       : behandlingstype?.kode === MKV.Koder.behandlinger.behandlingstyper.SED;
   const erTrygdeavtale = sakstype?.kode === MKV.Koder.sakstyper.TRYGDEAVTALE;
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;

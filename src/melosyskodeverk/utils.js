@@ -13,13 +13,12 @@ export const erSoknad = (behandlingstema) =>
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
   ].includes(behandlingstema);
 
-export const erBehandlingAvSed = (behandlingstema, sakstype) => {
+export const erBehandlingAvSed = (sakstype, behandlingstema) => {
   switch (behandlingstema) {
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE:
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
-      return true;
     case MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL:
       return sakstype === MKV.Koder.sakstyper.EU_EOS;
     default:
