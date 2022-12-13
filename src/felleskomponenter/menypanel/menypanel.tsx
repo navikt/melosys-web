@@ -72,7 +72,7 @@ export const Menypanel = ({
 
   const visMottatteOpplysningerData = behandleAlleSakerToggleEnabled
     ? !(
-        MKVUtils.erBehandlingAvSed(behandlingstema, sakstype) &&
+        MKVUtils.erBehandlingAvSed(sakstype, behandlingstema) &&
         behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
       )
     : !(
