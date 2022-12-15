@@ -5,6 +5,7 @@ import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as Mui from "../ui";
@@ -23,7 +24,6 @@ import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
 import { StandardMeldingOverst } from "../alertmeldinger";
 import { Spinner } from "../spinner";
-
 import "./endreBehandlingModal.css";
 
 enum FeltVerdier {
@@ -276,7 +276,7 @@ function EndreBehandlingModal({
               onChange={(e) => setBehandlingsstatus(e.target.value)}
               label="Behandlingsstatus"
               value={behandlingsstatus}
-              koder={muligeBehandlingsstatuser}
+              koder={muligeVerdierPlussGjeldende(oppsummering.behandlingsstatus, muligeBehandlingsstatuser)}
               disableForsteValg
             />
           </div>
@@ -290,6 +290,10 @@ function EndreBehandlingModal({
         </div>
       </div>
     );
+  };
+
+  const muligeVerdierPlussGjeldende = (valgtVerdi: KTObject, muligeVerdier: KTObject[] = []) => {
+    return [valgtVerdi].concat(muligeVerdier.filter((verdi) => verdi.kode !== valgtVerdi.kode));
   };
 
   const renderInnhold = () => {
