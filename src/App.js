@@ -6,7 +6,7 @@ import Rammeverk from "./sider/rammeverk";
 import { msalConfig } from "./auth/authConfig";
 
 export function App({ children }) {
-  const isDevelopmentProfile = process.env.NODE_ENV === "development";
+  const isDevelopmentProfile = process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
   const pca = isDevelopmentProfile ? null : new PublicClientApplication(msalConfig);
 
   return (
