@@ -60,6 +60,7 @@ interface Props {
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat, callback?: () => void) => void;
+  aktivtSteg: boolean;
 }
 
 const VurderingBestemmelse = ({
@@ -73,13 +74,14 @@ const VurderingBestemmelse = ({
   resultat,
   steg,
   oppdaterFlyt,
+  aktivtSteg,
 }: PropsFromRedux & Props) => {
-  const [oppdaterPending, setOppdaterPending] = useState(false);
+  const [updatePending, setUpdatePending] = useState(false);
   const trygdeavtaleUnntakToggle = useFeatureToggle("melosys.trygdeavtale.unntak");
 
   useEffect(() => {
-    if (redigerbart && formValues) {
-      setOppdaterPending(true);
+    if (redigerbart && formValues && aktivtSteg) {
+      setUpdatePending(true);
       oppdaterFlyt(
         {
           ...resultat,
@@ -87,10 +89,10 @@ const VurderingBestemmelse = ({
           bestemmelse: formValues?.bestemmelse,
           tilleggsbestemmelse: formValues.tilleggsbestemmelse ? tilleggsbestemmelseValg?.kode : undefined,
         },
-        () => setOppdaterPending(false)
+        () => setUpdatePending(false)
       );
     }
-  }, [formValues]);
+  }, [formValues?.vedtak, formValues?.bestemmelse, formValues?.tilleggsbestemmelse]);
 
   if (!formValues) return null;
 
@@ -106,10 +108,14 @@ const VurderingBestemmelse = ({
             label={valg.term}
             value={valg.kode}
             disabled={
+              updatePending ||
               !redigerbart ||
               !(valg.kode.startsWith("JA") || (trygdeavtaleUnntakToggle && valg.kode === "NEI_ANMODE_OM_UNNTAK"))
             }
-            onChange={() => resetField("bestemmelse")}
+            onChange={() => {
+              resetField("tilleggsbestemmelse");
+              resetField("bestemmelse");
+            }}
           />
         ))}
       </Nav.Fieldset>
@@ -121,7 +127,7 @@ const VurderingBestemmelse = ({
               <Skjema.Select
                 label=""
                 feltNavn="bestemmelse"
-                disabled={!redigerbart}
+                disabled={!redigerbart || updatePending}
                 emptyFieldText="Velg"
                 emptyFieldDisabled={!!formValues.bestemmelse}
                 onChange={() => resetField("tilleggsbestemmelse")}
@@ -166,7 +172,7 @@ const VurderingBestemmelse = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: fortsett,
-          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || oppdaterPending,
+          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || updatePending,
         }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />

@@ -248,7 +248,7 @@ const VurderingVedtak = ({
   }, [steg.status, resultat.bestemmelse, resultat.virksomhet]);
 
   useEffect(() => {
-    if (redigerbart && formValues) {
+    if (redigerbart && formValues && aktivtSteg) {
       debouncedOppdaterFlyten({
         ...resultat,
         innledningFritekst: formValues.innledningFritekst,
