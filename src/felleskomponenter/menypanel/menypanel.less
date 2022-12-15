@@ -1,6 +1,53 @@
+@import (reference) "~nav-frontend-core/less/_variabler";
+@import "../../constants";
+
 .menypanel {
   .utenPadding {
     padding: 0;
+  }
+
+  &__table-wrapper {
+    overflow-x: auto;
+  }
+
+  &__table {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-spacing: 0;
+    text-align: left;
+
+    .header {
+      margin: 0.3em 0;
+      color: @navGra60;
+    }
+
+    th {
+      font-weight: 400;
+    }
+
+    th,
+    td {
+      border-style: solid;
+      border-width: 0 0 1px 0;
+      border-color: @gray-dark;
+      padding: 0.5rem 0.5rem 0.5rem 0;
+    }
+
+    th.transparent {
+      color: rgba(0, 0, 0, 0);
+    }
+
+    th.fixed-width {
+      width: 20%;
+    }
+
+    .gyldig-label {
+      color: #006a23;
+    }
+
+    .historisk-label {
+      color: #ba3a26;
+    }
   }
 }
 

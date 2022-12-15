@@ -52,13 +52,7 @@ class Saksbehandling extends Component {
   }
 
   componentWillUnmount() {
-    this.props.resetFagsakState();
-    this.props.resetBehandlingerState();
-    this.props.resetAvklartefaktaState();
-    this.props.resetLovvalgsperiode();
-    this.props.resetVilkarState();
-    this.props.resetMottatteOpplysningerState();
-    this.props.resetBehandlingsPerioderState();
+    this.props.resetSaksopplysninger();
     this.props.resetFeiletrespons();
   }
 

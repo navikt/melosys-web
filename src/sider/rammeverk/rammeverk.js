@@ -3,33 +3,24 @@ import PT from "prop-types";
 import { InteractionStatus } from "@azure/msal-browser";
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import Topplinje from "./komponenter/topplinje";
-import { melosysRequest } from "../../auth/authConfig";
+import { melosysWebLoginRequest } from "../../auth/authConfig";
 import { getAccessToken, setTokenInterceptor, setTokenInterceptorForLocalDevelopment } from "../../auth/authUtils";
 
-function Hovedside({ loadInitialData, isDevelopmentProfile, children }) {
+function Hovedside({ isDevelopmentProfile, children }) {
   const { instance, inProgress, accounts } = useMsal();
   const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
     if (!isDevelopmentProfile && inProgress === InteractionStatus.None && !isAuthenticated) {
-      instance.loginRedirect(melosysRequest);
+      instance.loginRedirect(melosysWebLoginRequest);
     }
   }, [isAuthenticated, instance, inProgress]);
 
   if (isDevelopmentProfile) {
     setTokenInterceptorForLocalDevelopment();
-    loadInitialData();
   } else {
     setTokenInterceptor((url) => getAccessToken(instance, accounts, url), accounts);
   }
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadInitialData();
-      // eslint-disable-next-line no-console
-      console.log("Laster inn initiell data");
-    }
-  }, [isAuthenticated]);
 
   return isDevelopmentProfile ? (
     <div>
@@ -46,7 +37,7 @@ function Hovedside({ loadInitialData, isDevelopmentProfile, children }) {
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>
         <div className="pb-4" />
-        Du er ikke logget inn eller din sesjon har utgått. Videresender deg til innlogginggssiden.
+        Du er ikke logget inn eller din sesjon har utgått. Videresender deg til innlogging-siden.
       </UnauthenticatedTemplate>
     </>
   );
@@ -55,18 +46,15 @@ function Hovedside({ loadInitialData, isDevelopmentProfile, children }) {
 Hovedside.defaultProps = {
   children: null,
   isDevelopmentProfile: false,
-  loadInitialData: () => {},
 };
 
 Hovedside.propTypes = {
   children: PT.node,
-  loadInitialData: PT.func,
   isDevelopmentProfile: PT.bool,
 };
 
 Hovedside.defaultProps = {
   children: undefined,
-  loadInitialData: () => {},
   isDevelopmentProfile: false,
 };
 

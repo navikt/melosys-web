@@ -38,6 +38,13 @@ export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => (
   }
 };
 
+export const lastInnSaksopplysningerTomFlyt = (saksnummer, behandlingID) => (dispatch) => {
+  dispatch(fagsakOperations.hent(saksnummer));
+  dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
+  dispatch(behandlingerOperations.hentBehandling(behandlingID));
+  dispatch(behandlingsresultatOperations.hent(behandlingID));
+};
+
 export const lastInnSaksopplysningerSedBehandling = (saksnummer, behandlingID) => (dispatch) => {
   dispatch(fagsakOperations.hent(saksnummer));
   dispatch(behandlingerOperations.hentBehandling(behandlingID));
@@ -70,6 +77,8 @@ export const resetSaksopplysninger = () => (dispatch) => {
   dispatch(behandlingsperioderOperations.resetPerioderState());
   dispatch(utpekingsperioderOperations.resetUtpekingsperioderState());
   dispatch(dokumenterOperations.resetDokument());
+  dispatch(anmodningsperioderOperations.resetAnmodningsperioderState());
+  dispatch(anmodningsperiodesvarOperations.resetAnmodningsperiodesvarState());
 };
 
 const harIkkeTomFlyt = async (sakstype, state) => {

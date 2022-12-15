@@ -4,10 +4,13 @@ import { API_BASE_URL, SAKSBEHANDLING } from "../api-constants";
 
 const URI_PATH = `${API_BASE_URL}${SAKSBEHANDLING}`;
 
-export const hentSakstyper = () => getAsJson(`${URI_PATH}/sakstyper/hent-lovlige-kombinasjoner`);
+export const hentSakstyper = (saksnummer) => {
+  const params = QS.stringify({ saksnummer });
+  return getAsJson(`${URI_PATH}/sakstyper/hent-lovlige-kombinasjoner/?${params}`);
+};
 
-export const hentSakstemaer = (hovedpart, sakstype) => {
-  const params = QS.stringify({ hovedpart, sakstype });
+export const hentSakstemaer = (hovedpart, sakstype, saksnummer) => {
+  const params = QS.stringify({ hovedpart, sakstype, saksnummer });
   return getAsJson(`${URI_PATH}/sakstemaer/hent-lovlige-kombinasjoner/?${params}`);
 };
 

@@ -6,6 +6,7 @@ import * as Dokumenter from "./modules/dokumenter";
 import * as DokumenterV2 from "./modules/dokumenter-v2";
 import * as Eessi from "./modules/eessi";
 import * as Fagsaker from "./modules/fagsaker";
+import * as Faktureringskomponenten from "./modules/faktureringskomponenten";
 import * as Featuretoggle from "./modules/featuretoggle";
 import * as Journalforing from "./modules/journalforing";
 import * as Kodeverk from "./modules/kodeverk";
@@ -17,7 +18,6 @@ import * as Organisasjoner from "./modules/organisasjoner";
 import * as Saksopplysninger from "./modules/saksopplysninger";
 import * as Oppgaver from "./modules/oppgaver";
 import * as Registrering from "./modules/registrering";
-import * as Saksbehandler from "./modules/saksbehandler";
 import * as Saksflyt from "./modules/saksflyt";
 import * as Trygdeavgift from "./modules/trygdeavgift";
 import * as Trygdeavtale from "./modules/trygdeavtale/flyt";
@@ -57,10 +57,10 @@ export {
   Organisasjoner,
   Registrering,
   Representant,
-  Saksbehandler,
   Saksopplysninger,
   Saksflyt,
   Trygdeavgift,
+  Faktureringskomponenten,
   Trygdeavtale,
   Utpekingsperioder,
   Vilkar,

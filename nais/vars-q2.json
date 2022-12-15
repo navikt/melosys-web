@@ -1,6 +1,7 @@
 {
   "APP_NAME": "melosys-web",
   "APP_URL_TRYGDEAVTALE": "http://melosys-trygdeavtale.teammelosys",
+  "APP_URL_FAKTURERINGSKOMPONENTEN": "https://faktureringskomponenten-q2.dev.intern.nav.no",
   "APP_URL_MELOSYS": "http://melosys.teammelosys",
   "INGRESSES": ["https://melosys.dev.intern.nav.no", "https://melosys-q2.dev.intern.nav.no"],
   "GROUP_MELOSYS_INNLOGGING": "52981246-8032-40f0-863a-2bd2844f2d57",

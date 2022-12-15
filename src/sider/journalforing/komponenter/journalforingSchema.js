@@ -13,6 +13,7 @@ const {
   SKRIV_INN_GYLDIG_ORGNR,
   FANT_INGEN_NAVN_PA_ORGNR,
   VELG_MINST_ETT_LAND,
+  VELG_MINST_TO_LAND,
 } = KV.Feilmeldinger;
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -238,7 +239,11 @@ const journalforing = object().shape({
         ],
         {
           is: kreverLand,
-          then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
+          then: array().when("opprettnysak_behandlingstema", {
+            is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+            then: array().min(2, { _error: VELG_MINST_TO_LAND }),
+            otherwise: array().min(1, { _error: VELG_MINST_ETT_LAND }),
+          }),
         }
       ),
     otherwise: array()
@@ -254,7 +259,11 @@ const journalforing = object().shape({
         ],
         {
           is: kreverLandDeprecated,
-          then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
+          then: array().when("opprettnysak_behandlingstema", {
+            is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+            then: array().min(2, { _error: VELG_MINST_TO_LAND }),
+            otherwise: array().min(1, { _error: VELG_MINST_ETT_LAND }),
+          }),
         }
       ),
   }),

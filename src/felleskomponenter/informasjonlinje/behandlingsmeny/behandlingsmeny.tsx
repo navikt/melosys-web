@@ -94,6 +94,7 @@ export const Behandlingsmeny = ({
       // Også fjern revurderFagsak, inkl dialogboks og alt av modal og redux
       return false;
     }
+
     switch (behandlingskategori) {
       case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
         return anmodningsperioderErSendtUtlandet || (behandlingErAvsluttet && !behandlingstypeErEndretPeriode);

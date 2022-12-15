@@ -7,9 +7,10 @@ import { act } from "react-dom/test-utils";
 import * as Nav from "../../../../../navFrontend";
 
 import { Familiemedlemmer } from "./familiemedlemmer";
-import FamiliemedlemGruppe from "./familiemedlemGruppe";
 import { HentFamiliemedlemmerDocument } from "./hentFamiliemedlemmer.generated";
 import { Familiemedlem as FamiliemedlemType, Familierelasjonsrolle } from "../../../../../graphql";
+import BarnTable from "./tables/barnTable";
+import EktefelleTable from "./tables/ektefelleTable";
 
 describe("Familiemedlemmer", () => {
   const mockedProps = mock<ComponentProps<typeof Familiemedlemmer>>();
@@ -114,10 +115,10 @@ describe("Familiemedlemmer", () => {
       });
       familiemedlemmer.update();
 
-      const familiemedlemGrupper = familiemedlemmer.find(FamiliemedlemGruppe);
-      expect(familiemedlemGrupper).toHaveLength(2);
-      expect(familiemedlemGrupper.first().props().familiemedlemmer).toEqual([familiemedlems[0]]);
-      expect(familiemedlemGrupper.last().props().familiemedlemmer).toEqual([familiemedlems[1]]);
+      const barnTable = familiemedlemmer.find(BarnTable);
+      const ektefelleTable = familiemedlemmer.find(EktefelleTable);
+      expect(barnTable.first().props().barnListe).toEqual([familiemedlems[0]]);
+      expect(ektefelleTable.last().props().ektefelleListe).toEqual([familiemedlems[1]]);
     });
   });
 
@@ -207,14 +208,14 @@ describe("Familiemedlemmer", () => {
       });
       familiemedlemmer.update();
 
-      const familiemedlemGrupper = familiemedlemmer.find(FamiliemedlemGruppe);
-      expect(familiemedlemGrupper).toHaveLength(2);
+      const barnTable = familiemedlemmer.find(BarnTable);
+      const ektefelleTable = familiemedlemmer.find(EktefelleTable);
 
       const barnet = [ektefeller[0]];
-      expect(familiemedlemGrupper.first().props().familiemedlemmer).toEqual(barnet);
+      expect(barnTable.props().barnListe).toEqual(barnet);
 
       const nåværendeEktefelle = [ektefeller[2]];
-      expect(familiemedlemGrupper.last().props().familiemedlemmer).toEqual(nåværendeEktefelle);
+      expect(ektefelleTable.props().ektefelleListe).toEqual(nåværendeEktefelle);
     });
   });
 });

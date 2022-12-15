@@ -17,6 +17,7 @@ import {
   OvrigOmArbeidstaker,
   VirksomhetenINorge,
 } from "../menypunkter";
+import Fakturainformasjon from "../menypunkter/fakturainformasjon";
 
 interface ILinksBuilder {
   addPerson: () => ILinksBuilder;
@@ -98,6 +99,18 @@ class LinksBuilder implements ILinksBuilder {
       active: false,
       content: <ArbeidsforholdOgInntekt />,
     });
+    return this;
+  }
+
+  public addFaktureringskomponenten(erFTRLToggleEnabled: boolean) {
+    if (erFTRLToggleEnabled) {
+      this.links.push({
+        label: "Fakturainformasjon",
+        active: false,
+        content: <Fakturainformasjon />,
+      });
+    }
+
     return this;
   }
 

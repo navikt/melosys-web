@@ -27,7 +27,6 @@ import modalerReducer from "./ducks/modaler";
 import oppgaverReducer from "./ducks/oppgaver";
 import oppsummertfaktaReducer from "./ducks/oppsummertfakta";
 import organisasjonerReducer from "./ducks/organisasjoner";
-import saksbehandlerReducer from "./ducks/saksbehandler";
 import saksopplysningerReducer from "./ducks/saksopplysninger";
 import sokReducer from "./ducks/sok";
 import menypanelReducer from "./ducks/menypanel";
@@ -38,6 +37,7 @@ import vilkarReducer from "./ducks/vilkar";
 import vedtakReducer from "./ducks/vedtak";
 
 import customFormReducer from "./ducks/form";
+import fakturainformasjonReducer from "./ducks/fakturainformasjon";
 
 const createRootReducer = (history: History) =>
   combineReducers({
@@ -58,6 +58,7 @@ const createRootReducer = (history: History) =>
     fagsaker: fagsakerReducer,
     feiletRespons: feiletResponseReducer,
     folketrygdenkodeverk: folketrygdenkodeverkReducer,
+    fakturainformasjon: fakturainformasjonReducer,
     journalforing: journalforingReducer,
     kontroll: kontrollReducer,
     landkoder: landkoderReducer,
@@ -67,7 +68,6 @@ const createRootReducer = (history: History) =>
     oppgaver: oppgaverReducer,
     oppsummertfakta: oppsummertfaktaReducer,
     organisasjoner: organisasjonerReducer,
-    saksbehandler: saksbehandlerReducer,
     saksopplysninger: saksopplysningerReducer,
     sok: sokReducer,
     menypanel: menypanelReducer,

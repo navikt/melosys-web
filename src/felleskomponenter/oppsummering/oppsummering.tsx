@@ -19,6 +19,7 @@ import { useFeatureToggle } from "../../featuretoggle";
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
 import KopierbarTekst from "../kopierbarTekst";
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
+import EndreBehandlingModalGammel from "./endreBehandlingModalGammel";
 import EndreBehandlingModal from "./endreBehandlingModal";
 
 import "./oppsummering.css";
@@ -79,7 +80,10 @@ const Oppsummering = ({
   const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode);
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
-  const erSed = behandlingstype?.kode === MKV.Koder.behandlinger.behandlingstyper.SED;
+  const erSed =
+    behandleAlleSakerToggle === "enabled"
+      ? MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, behandlingstema?.kode)
+      : behandlingstype?.kode === MKV.Koder.behandlinger.behandlingstyper.SED;
   const erTrygdeavtale = sakstype?.kode === MKV.Koder.sakstyper.TRYGDEAVTALE;
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
@@ -157,7 +161,7 @@ const Oppsummering = ({
       col1.push(["Land", erSed ? landStorBokstav(lovvalgsland) : landTilSetning(arbeidsland)]);
 
       col2 = [
-        ["Søknad mottatt", mottaksdato || "-"],
+        ["Frist", Utils.dato.formatterDatoTilNorsk(behandlingsfrist) || "-"],
         ["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(registrertDato)],
         ["Sist oppdatert", Utils.dato.formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`],
       ];
@@ -170,13 +174,23 @@ const Oppsummering = ({
 
   return (
     <section aria-label="oppsummeringer" className="oppsummering panelSeksjon">
-      <EndreBehandlingModal
-        fagsak={fagsak}
-        oppsummering={oppsummering}
-        skalViseModal={skalViseEndreModal}
-        lukkModal={() => setSkalViseEndreModal(false)}
-      />
-
+      {behandleAlleSakerToggle === "enabled" ? (
+        <EndreBehandlingModal
+          fagsak={fagsak}
+          oppsummering={oppsummering}
+          mottattDato={mottaksdato}
+          skalViseModal={skalViseEndreModal}
+          lukkModal={() => setSkalViseEndreModal(false)}
+        />
+      ) : (
+        <EndreBehandlingModalGammel
+          fagsak={fagsak}
+          oppsummering={oppsummering}
+          mottattDato={mottaksdato}
+          skalViseModal={skalViseEndreModal}
+          lukkModal={() => setSkalViseEndreModal(false)}
+        />
+      )}
       <Nav.Panel className="saksbehandling__soknad-sammendrag">
         <Nav.Row>
           <Nav.Column xs="12">
@@ -227,7 +241,7 @@ const Oppsummering = ({
                 </Nav.Row>
                 <Nav.Row>
                   <Nav.Column xs="12">
-                    <OppsummeringVerdiPar nokkel="Frist" verdi={Utils.dato.formatterDatoTilNorsk(behandlingsfrist)} />
+                    <OppsummeringVerdiPar nokkel="Mottaksdato" verdi={mottaksdato || "-"} />
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>

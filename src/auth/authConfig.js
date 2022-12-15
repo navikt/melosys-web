@@ -11,6 +11,10 @@ export const msalConfig = {
   system: {},
 };
 
+export const melosysWebLoginRequest = {
+  scopes: [`api://${process.env.REACT_APP_CLUSTER}.teammelosys.${process.env.REACT_APP_AZURE_CLIENT_NAME}/.default`],
+};
+
 export const melosysRequest = {
   scopes: [`api://${process.env.REACT_APP_CLUSTER}.teammelosys.${process.env.REACT_APP_MELOSYS_API_APP_NAME}/.default`],
 };

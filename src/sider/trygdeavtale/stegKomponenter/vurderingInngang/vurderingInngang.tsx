@@ -76,7 +76,7 @@ interface Props {
   tilForsiden: () => void;
   oppfriskOgLastInnSaksopplysninger: () => void;
   oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
-  resetFlyt: () => void;
+  oppfriskFlyt: () => void;
 }
 
 const VurderingInngang = ({
@@ -94,7 +94,7 @@ const VurderingInngang = ({
   oppdaterSoeknadsland,
   oppfriskOgLastInnSaksopplysninger,
   oppdaterFlyt,
-  resetFlyt,
+  oppfriskFlyt,
   visMenypanel,
 }: PropsFromRedux & Props) => {
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
@@ -108,7 +108,7 @@ const VurderingInngang = ({
   const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
 
   useEffect(() => {
-    if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
+    if (!Utils._isEmpty(initialValues.fom) && !Utils._isEmpty(initialValues.arbeidsland)) {
       visMenypanel();
       setInitialFomTomLand({ fom: initialValues.fom, tom: initialValues.tom, arbeidsland: initialValues.arbeidsland });
     }
@@ -152,7 +152,7 @@ const VurderingInngang = ({
       setVisSpinner(true);
       await oppfriskOgLastInnSaksopplysninger();
       setVisSpinner(false);
-      resetFlyt();
+      oppfriskFlyt();
       visMenypanel();
     }
     fortsett();

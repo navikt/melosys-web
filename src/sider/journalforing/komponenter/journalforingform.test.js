@@ -4,7 +4,8 @@ import MKV from "../../../melosyskodeverk";
 
 import { JournalforingForm } from "./journalforingform";
 import SendForvaltningsMelding from "./sendForvaltningsMelding";
-import Komponent from "./komponent";
+import Komponent, { KomponentUtenOverskrift } from "./komponent";
+import Checkbox from "../../../felleskomponenter/skjema/input/checkbox";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -24,7 +25,26 @@ describe("JournalforingForm", () => {
       hentOgVisAvsender: jest.fn(),
       hentOgVisBruker: jest.fn(),
       hentOgVisVirksomhet: jest.fn(),
-      fagsakListe: [],
+      fagsakListe: [
+        {
+          saksnummer: "1",
+          saksstatus: {
+            kode: MKV.Koder.saksstatuser.OPPRETTET,
+          },
+        },
+        {
+          saksnummer: "2",
+          saksstatus: {
+            kode: MKV.Koder.saksstatuser.HENLAGT,
+          },
+        },
+        {
+          saksnummer: "3",
+          saksstatus: {
+            kode: MKV.Koder.saksstatuser.HENLAGT_BORTFALT,
+          },
+        },
+      ],
       hentOgVisRepresentant: jest.fn(),
       behandlingstemaer: [],
       formValues: {
@@ -89,5 +109,50 @@ describe("JournalforingForm", () => {
     const komponenter = journalforingform.find(Komponent);
 
     expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(0);
+  });
+
+  test("skalTilordnes vises når vi oppretter sak", () => {
+    props.formValues.saksnummer = "-1";
+
+    const journalforingform = shallow(<JournalforingForm {...props} />);
+    const komponentUtenOverskrift = journalforingform.find(KomponentUtenOverskrift);
+
+    expect(komponentUtenOverskrift.props().innhold.props.children.some((n) => n.type === Checkbox)).toBeTruthy();
+  });
+
+  test("skalTilordnes vises før vi velger sak", () => {
+    props.formValues.saksnummer = "";
+
+    const journalforingform = shallow(<JournalforingForm {...props} />);
+    const komponentUtenOverskrift = journalforingform.find(KomponentUtenOverskrift);
+
+    expect(komponentUtenOverskrift.props().innhold.props.children.some((n) => n.type === Checkbox)).toBeTruthy();
+  });
+
+  test("skalTilordnes vises når sak ikke har saksstatus HENLAGT eller HENLAGT_BORFALT", () => {
+    props.formValues.saksnummer = "1";
+
+    const journalforingform = shallow(<JournalforingForm {...props} />);
+    const komponentUtenOverskrift = journalforingform.find(KomponentUtenOverskrift);
+
+    expect(komponentUtenOverskrift.props().innhold.props.children.some((n) => n.type === Checkbox)).toBeTruthy();
+  });
+
+  test("skalTilordnes vises ikke når sak har saksstatus HENLAGT", () => {
+    props.formValues.saksnummer = "2";
+
+    const journalforingform = shallow(<JournalforingForm {...props} />);
+    const komponentUtenOverskrift = journalforingform.find(KomponentUtenOverskrift);
+
+    expect(komponentUtenOverskrift.props().innhold.props.children.some((n) => n.type === Checkbox)).toBeFalsy();
+  });
+
+  test("skalTilordnes vises ikke når sak har saksstatus HENLAGT_BORFALT", () => {
+    props.formValues.saksnummer = "3";
+
+    const journalforingform = shallow(<JournalforingForm {...props} />);
+    const komponentUtenOverskrift = journalforingform.find(KomponentUtenOverskrift);
+
+    expect(komponentUtenOverskrift.props().innhold.props.children.some((n) => n.type === Checkbox)).toBeFalsy();
   });
 });
