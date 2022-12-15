@@ -24,23 +24,21 @@ export const setTokenInterceptor = (getAccessToken, accounts) => {
 };
 
 export const setTokenInterceptorForLocalDevelopment = () => {
-  if (process.env.NODE_ENV === "development") {
-    window.fetch = async (...args) => {
-      const [url, options] = args;
-      if (!options.headers) {
-        options.headers = {};
-      }
+  window.fetch = async (...args) => {
+    const [url, options] = args;
+    if (!options.headers) {
+      options.headers = {};
+    }
 
-      const accessToken = process.env.REACT_APP_LOCAL_AUTH_TOKEN;
-      if (options.headers instanceof Headers) {
-        options.headers.append("Authorization", `Bearer ${accessToken}`);
-      } else {
-        options.headers = { ...options.headers, Authorization: `Bearer ${accessToken}` };
-      }
+    const accessToken = process.env.REACT_APP_LOCAL_AUTH_TOKEN;
+    if (options.headers instanceof Headers) {
+      options.headers.append("Authorization", `Bearer ${accessToken}`);
+    } else {
+      options.headers = { ...options.headers, Authorization: `Bearer ${accessToken}` };
+    }
 
-      return originalFetch(url, options);
-    };
-  }
+    return originalFetch(url, options);
+  };
 };
 
 export const getAccessToken = (msalInstance, accounts, url, acquireTokenRedirect = false) => {
