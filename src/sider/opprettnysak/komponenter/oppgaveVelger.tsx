@@ -116,7 +116,7 @@ export const OppgaveVelger = ({
             <>
               {nyOpprettSakToggleEnabled && (
                 <Nav.AlertStripeInfo className="marginMellomHeaderOgAlertStripe">
-                  Det er kun følgende oppgaver med journalpost-id som kan tilknyttes
+                  Du kan kun velge mellom følgende oppgaver som er knyttet til et inngående dokument
                 </Nav.AlertStripeInfo>
               )}
               <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
