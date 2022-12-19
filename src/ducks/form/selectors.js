@@ -415,3 +415,13 @@ export const TrygdeavtaleVedtakFormPeriodeValidSelector = createSelector(
   (state) => TrygdeavtaleVedtakFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors.lovvalgsperiodeFom) && Utils._isEmpty(errors.lovvalgsperiodeTom)
 );
+
+export const FolketrygdlovenVedtakFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.FTRL_VEDTAK, {}),
+  (vedtak) => vedtak
+);
+
+export const FolketrygdlovenVedtakFormValidSelector = createSelector(
+  (state) => FolketrygdlovenVedtakFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
