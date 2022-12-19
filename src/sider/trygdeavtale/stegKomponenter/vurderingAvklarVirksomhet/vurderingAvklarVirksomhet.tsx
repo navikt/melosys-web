@@ -46,6 +46,7 @@ interface Props {
   steg: Api.Trygdeavtale.Steg;
   tilbake: () => void;
   oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
+  aktivtSteg: boolean;
 }
 
 const VurderingAvklarVirksomhet = ({
@@ -58,6 +59,7 @@ const VurderingAvklarVirksomhet = ({
   oppdaterFlyt,
   tilbake,
   virksomheterListe,
+  aktivtSteg,
 }: PropsFromRedux & Props) => {
   const hjelpetekst =
     'Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Du kan kun velge én virksomhet. Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
@@ -65,13 +67,13 @@ const VurderingAvklarVirksomhet = ({
     'Det er ingen virksomhet registrert. Du må legge til virksomhet under "Arbeidsgiver/virksomhet".';
 
   useEffect(() => {
-    if (redigerbart && formValues) {
+    if (redigerbart && formValues && aktivtSteg) {
       oppdaterFlyt({
         ...resultat,
         virksomhet: formValues.virksomhet,
       });
     }
-  }, [formValues]);
+  }, [formValues?.virksomhet]);
 
   return (
     <div className="vurderingAvklarVirksomhet">

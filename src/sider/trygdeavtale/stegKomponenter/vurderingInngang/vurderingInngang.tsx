@@ -77,6 +77,7 @@ interface Props {
   oppfriskOgLastInnSaksopplysninger: () => void;
   oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
   oppfriskFlyt: () => void;
+  aktivtSteg: boolean;
 }
 
 const VurderingInngang = ({
@@ -96,6 +97,7 @@ const VurderingInngang = ({
   oppdaterFlyt,
   oppfriskFlyt,
   visMenypanel,
+  aktivtSteg,
 }: PropsFromRedux & Props) => {
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
   const [landUtenStøtteValgt, setLandUtenStøtteValgt] = useState(false);
@@ -124,7 +126,7 @@ const VurderingInngang = ({
   );
 
   useEffect(() => {
-    if (redigerbart && formValues && formIsValid) {
+    if (redigerbart && formValues && formIsValid && aktivtSteg) {
       const isoFom = Utils.dato.formatterDatoTilISO(formValues.fom);
       const isoTom = Utils.dato.formatterDatoTilISO(formValues.tom);
       oppdaterPeriode({
@@ -138,7 +140,7 @@ const VurderingInngang = ({
   }, [formValues?.fom, formValues?.tom, formValues?.arbeidsland, formIsValid]);
 
   useEffect(() => {
-    if (redigerbart && formValues) {
+    if (redigerbart && formValues && aktivtSteg) {
       setLandUtenStøtteValgt(
         formValues.arbeidsland ? !landValg.map(({ kode }) => kode).includes(formValues.arbeidsland) : false
       );

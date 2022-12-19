@@ -134,7 +134,7 @@ class Stegvelger extends Component<Props, State> {
       if (callBack) callBack();
     });
   };
-  debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 100);
+  debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 200);
 
   mapFlytResDtoOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
     const data = {

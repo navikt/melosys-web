@@ -85,6 +85,7 @@ interface Props {
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
+  aktivtSteg: boolean;
 }
 
 const VurderingFamilie = ({
@@ -102,6 +103,7 @@ const VurderingFamilie = ({
   resultat,
   steg,
   oppdaterFlyt,
+  aktivtSteg,
 }: PropsFromRedux & Props) => {
   const obsTekst = '* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".';
   const hjelpetekst =
@@ -113,7 +115,7 @@ const VurderingFamilie = ({
   const finnBarn = (uuid: string, barn?: BarnProps): undefined | FamilieProps => barn && barn[uuid];
 
   useEffect(() => {
-    if (!redigerbart || !formValues || !formValues.barn || !formValues.ektefelle) return;
+    if (!redigerbart || !formValues || !formValues.barn || !formValues.ektefelle || !aktivtSteg) return;
     oppdaterFlyt({
       ...resultat,
       barn:
@@ -136,7 +138,7 @@ const VurderingFamilie = ({
           }
         : null,
     });
-  }, [formValues, tilknyttedeBarn, tilknyttetEktefelle]);
+  }, [formValues?.barn, formValues?.ektefelle, tilknyttedeBarn, tilknyttetEktefelle]);
 
   if (!formValues || !formValues.barn || !formValues.ektefelle) return null;
 
