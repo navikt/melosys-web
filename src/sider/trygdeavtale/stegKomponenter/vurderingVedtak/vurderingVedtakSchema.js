@@ -2,11 +2,13 @@ import { object, string } from "yup";
 import * as KV from "../../../../kodeverk";
 import { FRITEKST } from "./vurderingVedtak";
 
-const { MAA_FYLLES_UT } = KV.Feilmeldinger;
+const { MAA_FYLLES_UT, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN } = KV.Feilmeldinger;
 
 const vurdering_vedtak = object().shape({
   lovvalgsperiodeFom: string().erGyldigDato().required(MAA_FYLLES_UT),
   lovvalgsperiodeTom: string().erGyldigDato().erEtterDatofelt("lovvalgsperiodeFom").required(MAA_FYLLES_UT),
+  begrunnelseFritekst: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
+  innledningFritekst: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
   nyVurderingBakgrunn: string()
     .when("$erNyVurdering", {
       is: true,

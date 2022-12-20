@@ -33,6 +33,8 @@ import { RepresentantformValues } from "./vurderingRepresentant";
 
 import "./vurderingVedtak.css";
 import { vedtakOperations } from "../../../../ducks/vedtak";
+import vurdering_vedtak from "./vurderingVedtakSchema";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 
 const { trygdeavtale_myndighetsland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
@@ -59,6 +61,7 @@ const mapStateToProps = (state: RootState) => ({
     begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state),
   },
+  formIsValid: formSelectors.FolketrygdlovenVedtakFormValidSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -111,6 +114,7 @@ const VurderingVedtak = ({
   aktivtSteg,
   validerMottatteOpplysninger,
   fattVedtak,
+  formIsValid,
 }: Props & PropsFromRedux) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
@@ -439,7 +443,7 @@ const VurderingVedtak = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: onSubmit,
-          disabled: !stegErGyldig,
+          disabled: !stegErGyldig || !formIsValid,
           autoDisableVedSpinner: true,
           spinner: vedtakPending,
         }}
@@ -455,6 +459,7 @@ const VurderingVedtakForm = reduxForm<{}, PropsFromRedux & Props>({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
+  validate: (values) => lagYupToReduxformErrorMapper(vurdering_vedtak)(values),
 })(VurderingVedtak);
 
 export default connector(VurderingVedtakForm);
