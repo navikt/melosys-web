@@ -6,6 +6,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import { AlertStripeFeil } from "nav-frontend-alertstriper";
 
 import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as Mui from "../ui";
@@ -17,13 +18,13 @@ import * as Datoutils from "../../utils/dato";
 import { behandlingsstatusOperations, behandlingsstatusSelectors } from "../../ducks/behandlingsstatus";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { navigeringOperations } from "../../ducks/navigering";
-
 import { anmodningsperioderSelectors } from "../../ducks/anmodningsperioder";
 import { useFeatureToggle } from "../../featuretoggle";
 import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
 import { StandardMeldingOverst } from "../alertmeldinger";
 import { Spinner } from "../spinner";
+
 import "./endreBehandlingModal.css";
 
 enum FeltVerdier {
@@ -71,6 +72,7 @@ function EndreBehandlingModal({
   anmodningsperioderSendtTilUtlandet,
 }: EndreBehandlingModalProps) {
   const [generellFeil, setGenerellFeil] = useState("");
+  const [forsøktLagre, setForsøktLagre] = useState(false);
   const [behandlingEndret, setBehandlingEndret] = useState(false);
   const [sakstype, setSakstype] = useState(fagsak.sakstype?.kode);
   const [sakstema, setSakstema] = useState(fagsak.sakstema?.kode);
@@ -153,7 +155,25 @@ function EndreBehandlingModal({
 
   const harMottaksdatoEndretSeg = () => Datoutils.isoStringTilDate(mottattDato)?.getTime() !== mottaksdato?.getTime();
 
+  const sakstypeFeilmelding = forsøktLagre && !sakstype ? "Du må velge sakstype" : null;
+  const sakstemaFeilmelding = forsøktLagre && !sakstema ? "Du må velge sakstema" : null;
+  const behandlingstemaFeilmelding = forsøktLagre && !behandlingstema ? "Du må velge behandlingstema" : null;
+  const behandlingstypeFeilmelding = forsøktLagre && !behandlingstype ? "Du må velge behandlingstype" : null;
+  const behandlingsstatusFeilmelding = forsøktLagre && !behandlingsstatus ? "Du må velge behandlingsstatus" : null;
+  const alleFeilmeldinger = [
+    sakstypeFeilmelding,
+    sakstemaFeilmelding,
+    behandlingstemaFeilmelding,
+    behandlingstypeFeilmelding,
+    behandlingsstatusFeilmelding,
+  ].filter((feilmelding) => feilmelding !== null);
+
   const endreBehandlingHandle = () => {
+    setForsøktLagre(true);
+    if (!(sakstype && sakstema && behandlingstema && behandlingstype && behandlingsstatus)) {
+      return;
+    }
+
     setSkalViseSpinner(true);
     const {
       saksnummer,
@@ -238,8 +258,9 @@ function EndreBehandlingModal({
               label="Sakstype"
               value={sakstype}
               koder={fagsakKanEndres ? muligeSakstyper : [fagsak.sakstype]}
-              disableForsteValg
               redigerbart={!endringerErBegrenset && typeTemaKanEndres && fagsakKanEndres}
+              feil={sakstypeFeilmelding}
+              disableForsteValg
             />
             <Mui.KodeTermSelect
               onChange={(e) => {
@@ -249,8 +270,9 @@ function EndreBehandlingModal({
               label="Sakstema"
               value={sakstema}
               koder={fagsakKanEndres ? muligeSakstemaer : [fagsak.sakstema]}
-              disableForsteValg
               redigerbart={!endringerErBegrenset && typeTemaKanEndres && fagsakKanEndres}
+              feil={sakstemaFeilmelding}
+              disableForsteValg
             />
             <Mui.KodeTermSelect
               onChange={(e) => {
@@ -260,16 +282,18 @@ function EndreBehandlingModal({
               label="Behandlingstema"
               value={behandlingstema}
               koder={muligeBehandlingstemaer}
-              disableForsteValg
               redigerbart={!endringerErBegrenset && typeTemaKanEndres}
+              feil={behandlingstemaFeilmelding}
+              disableForsteValg
             />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"
               value={behandlingstype}
               koder={muligeBehandlingstyper}
-              disableForsteValg
               redigerbart={!endringerErBegrenset && typeTemaKanEndres}
+              feil={behandlingstypeFeilmelding}
+              disableForsteValg
             />
             <Datovelger onChange={setMottaksdato} label="Mottaksdato" value={mottaksdato} />
             <Mui.KodeTermSelect
@@ -277,9 +301,22 @@ function EndreBehandlingModal({
               label="Behandlingsstatus"
               value={behandlingsstatus}
               koder={muligeVerdierPlussGjeldende(oppsummering.behandlingsstatus, muligeBehandlingsstatuser)}
+              feil={behandlingsstatusFeilmelding}
               disableForsteValg
             />
           </div>
+
+          {alleFeilmeldinger.length > 0 && (
+            <AlertStripeFeil>
+              <Nav.Typo.Normaltekst>Følgende feil ble funnet</Nav.Typo.Normaltekst>
+              <ul>
+                {alleFeilmeldinger.map((feilmelding) => (
+                  <li key={feilmelding}>{feilmelding}</li>
+                ))}
+              </ul>
+            </AlertStripeFeil>
+          )}
+
           <Knapperad
             avbryt={lukkModal}
             avbrytTekst="Avbryt"
