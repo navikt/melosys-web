@@ -304,18 +304,18 @@ function EndreBehandlingModal({
               feil={behandlingsstatusFeilmelding}
               disableForsteValg
             />
-          </div>
 
-          {alleFeilmeldinger.length > 0 && (
-            <AlertStripeFeil>
-              <Nav.Typo.Normaltekst>Følgende feil ble funnet</Nav.Typo.Normaltekst>
-              <ul>
-                {alleFeilmeldinger.map((feilmelding) => (
-                  <li key={feilmelding}>{feilmelding}</li>
-                ))}
-              </ul>
-            </AlertStripeFeil>
-          )}
+            {alleFeilmeldinger.length > 0 && (
+              <AlertStripeFeil>
+                <Nav.Typo.Normaltekst>Følgende feil ble funnet</Nav.Typo.Normaltekst>
+                <ul className="feilmeldingliste">
+                  {alleFeilmeldinger.map((feilmelding) => (
+                    <li key={feilmelding}>{feilmelding}</li>
+                  ))}
+                </ul>
+              </AlertStripeFeil>
+            )}
+          </div>
 
           <Knapperad
             avbryt={lukkModal}
