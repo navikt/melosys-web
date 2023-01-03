@@ -55,6 +55,7 @@ export type TilgjengeligMottaker = {
   orgnrSettesAvSaksbehandler: boolean;
   adresser: MottakerAdresse[] | null;
   feilmelding: string | null;
+  trygdemyndighet: string[] | null;
 };
 
 export type TilgjengeligMal = {

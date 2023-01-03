@@ -341,7 +341,7 @@ const SendBrev = ({
         </Nav.Column>
       </Nav.Row>
 
-      {mottakerErValgt && tilgjengeligeBrevtyper.length !== 1 && (
+      {mottakerErValgt && (
         <Nav.Row>
           <Nav.Column xs={brevTypeSelectWidth}>
             <Skjema.Select

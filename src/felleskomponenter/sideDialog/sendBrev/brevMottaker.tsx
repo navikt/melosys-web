@@ -19,11 +19,12 @@ import MottakerAdresse from "./mottakerAdresse";
 import FeltBeskrivelse from "./feltBeskrivelse";
 import { SendBrevFormValues } from "./types";
 
-const { BRUKER, ARBEIDSGIVER, VIRKSOMHET } = KV.Koder.MottakerRolle;
+const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, TRYGDEMYNDIGHET } = KV.Koder.MottakerRolle;
 
 const erBruker = (rolle: string | undefined) => rolle === BRUKER;
 const erVirksomhet = (rolle: string | undefined) => rolle === VIRKSOMHET;
 const erArbeidsgiver = (rolle: string | undefined) => rolle === ARBEIDSGIVER;
+const erTrygdemyndighet = (rolle: string | undefined) => rolle === TRYGDEMYNDIGHET;
 export const erArbeidsgiverEllerVirksomhet = (rolle: string | undefined) =>
   erArbeidsgiver(rolle) || erVirksomhet(rolle);
 
@@ -68,6 +69,8 @@ const BrevMottaker = ({
   const mottakerOrgNrSettesAvSaksbehandler =
     erArbeidsgiverEllerVirksomhet(formValues?.valgtMottaker?.rolle) &&
     formValues?.valgtMottaker?.orgnrSettesAvSaksbehandler;
+  const mottakerErTrygdemyndighet = erTrygdemyndighet(formValues?.valgtMottaker?.rolle);
+  const mottakerErValgt = formValues?.valgtMottaker;
 
   const mottakerHjelpetekst =
     "Hvis bruker eller arbeidsgiver har fullmektig som er lagt inn i sidemenyen, vil brevet automatisk bli sendt til denne.";
@@ -104,6 +107,10 @@ const BrevMottaker = ({
     }
 
     if (erBruker(valgtMottaker.rolle)) {
+      setAdresse({ mottakerAdresse: valgtMottaker.adresser ? valgtMottaker.adresser[0] : undefined });
+    }
+
+    if (erTrygdemyndighet(valgtMottaker.rolle)) {
       setAdresse({ mottakerAdresse: valgtMottaker.adresser ? valgtMottaker.adresser[0] : undefined });
     }
 
@@ -149,7 +156,24 @@ const BrevMottaker = ({
         ))}
       </Skjema.Select>
 
-      {(mottakerErBruker || mottakerErVirksomhet) && (
+      {mottakerErValgt && mottakerErValgt.trygdemyndighet && (
+        <Skjema.Select
+          feltNavn="trygdemyndighet"
+          label={<Nav.Typo.Element>Trygdemyndighet i avtaleland</Nav.Typo.Element>}
+          disabled={!redigerbart}
+          emptyFieldText="Velg..."
+          emptyFieldDisabled={!!formValues.trygdemyndighet}
+          onBlur={overstyrBlurEvent}
+        >
+          {mottakerErValgt.trygdemyndighet?.map((land) => (
+            <option key={land} value={land}>
+              {`Trygdemyndighet i ${land}`}
+            </option>
+          ))}
+        </Skjema.Select>
+      )}
+
+      {(mottakerErBruker || mottakerErVirksomhet || mottakerErTrygdemyndighet) && (
         <Nav.Row>
           <Nav.Column xs="12">
             {feil && <Nav.AlertStripeFeil className="alertstripe_feil">{feil}</Nav.AlertStripeFeil>}
