@@ -17,17 +17,19 @@ import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { vedtakOperations } from "../../../ducks/vedtak";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { flytSelectors } from "../../../ducks/flyt";
 
+import { skalViseTomFlytEllerErSedBehandling } from "../../../routing";
+import { useFeatureToggle } from "../../../featuretoggle";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import DatoOmrade from "../../../felleskomponenter/datoOmrade";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
-
 import "./vurderingVedtak.css";
-import { vedtakOperations } from "../../../ducks/vedtak";
 
 const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) => {
   if (
@@ -55,6 +57,31 @@ const finnSedMottakerLand = (arbeidsland, bostedsland, lovvalgsperiode) => {
   return arbeidsland[0]?.kode;
 };
 
+const skalViseMottakerinstitusjoner = (
+  sakstype,
+  sakstema,
+  behandlingstema,
+  behandlingstype,
+  folketrygdenToggleEnabled
+) => {
+  return (
+    sakstype === MKV.Koder.sakstyper.EU_EOS &&
+    [
+      MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+      MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+      MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+      MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+    ].includes(behandlingstema) &&
+    !skalViseTomFlytEllerErSedBehandling(
+      sakstype,
+      sakstema,
+      behandlingstema,
+      behandlingstype,
+      folketrygdenToggleEnabled
+    )
+  );
+};
+
 const VurderingVedtak = ({
   lovvalgsperioder,
   arbeidsland,
@@ -62,8 +89,10 @@ const VurderingVedtak = ({
   redigerbart,
   behandlingID,
   tilbake,
-  behandlingstype,
+  sakstype,
+  sakstema,
   behandlingstema,
+  behandlingstype,
   touch,
   formIsValid,
   formValues,
@@ -78,6 +107,7 @@ const VurderingVedtak = ({
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
   const dispatch = useDispatch();
 
   const lovvalget = lovvalgsperioder[0] || {};
@@ -92,7 +122,13 @@ const VurderingVedtak = ({
   );
   const lovvalgSomTerm = finnLovvalgSomTerm(lovvalgSomKodeTerm, tilleggBestemmelseSomKodeTerm);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const erSoknadEllerNyVurdering = MKVUtils.erSoknad(behandlingstema) || erNyVurdering;
+  const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(
+    sakstype,
+    sakstema,
+    behandlingstema,
+    behandlingstype,
+    folketrygdenToggleEnabled
+  );
   const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
 
   const validerForm = () => {
@@ -110,7 +146,7 @@ const VurderingVedtak = ({
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       fritekst: formValues.vedtaksbrevFritekst,
       fritekstSed: formValues.fritekstSed,
-      mottakerinstitusjoner: erSoknadEllerNyVurdering ? [formValues.mottakerinstitusjon] : [],
+      mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
       nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
     };
   };
@@ -195,7 +231,7 @@ const VurderingVedtak = ({
             </Nav.Column>
           </Nav.Row>
         )}
-        {erSoknadEllerNyVurdering && sedMottakerLand && (
+        {visMottakerinstitusjoner && sedMottakerLand && (
           <Nav.Row className="mottakerinstitusjoner">
             <Nav.Column xs="7">
               <Mottakerinstitusjonvelger
@@ -248,8 +284,10 @@ VurderingVedtak.propTypes = {
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
-  behandlingstype: PT.string.isRequired,
+  sakstype: PT.string.isRequired,
+  sakstema: PT.string.isRequired,
   behandlingstema: PT.string.isRequired,
+  behandlingstype: PT.string.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
   touch: PT.func.isRequired,
@@ -276,8 +314,10 @@ const mapStateToProps = (state) => ({
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
+  sakstema: fagsakSelectors.SakstemaKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
