@@ -3,7 +3,6 @@ import DialogboksAvsluttSakSomBortfalt from "./avsluttSakSomBortfalt";
 import DialogboksFerdigbehandleSak from "./ferdigbehandleSak";
 import DialogboksHenleggSak from "./henlegg";
 import DialogboksOppfriskSak from "./oppfrisk";
-import DialogboksRevurderFagsak from "./revurderFagsak";
 
 export {
   DialogboksAvslagSoknad,
@@ -11,5 +10,4 @@ export {
   DialogboksFerdigbehandleSak,
   DialogboksHenleggSak,
   DialogboksOppfriskSak,
-  DialogboksRevurderFagsak,
 };

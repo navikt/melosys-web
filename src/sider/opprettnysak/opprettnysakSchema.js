@@ -1,13 +1,10 @@
 import { object, string, boolean, array } from "yup";
 
+import MKV from "../../melosyskodeverk";
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
-import MKV from "../../melosyskodeverk";
-import {
-  skalViseSoknadsperiodeOgLand,
-  skalViseSoknadsperiodeOgLandDeprecated,
-} from "../journalforing/komponenter/opprettSak";
+import { skalViseSoknadsperiodeOgLand } from "../journalforing/komponenter/opprettSak";
 
 const {
   MAA_FYLLES_UT,
@@ -40,10 +37,6 @@ const skalOppretteNySak = (saksnummer) => saksnummer === "-1";
 const kreverPeriode = (saksnummer, sakstype, sakstema, behandlingstema, behandlingstype) =>
   skalOppretteNySak(saksnummer) && skalViseSoknadsperiodeOgLand(sakstype, sakstema, behandlingstema, behandlingstype);
 
-// Fjernes med toggle melosys.behandle_alle_saker
-const kreverPeriodeDeprecated = (hovedpart, sakstype, behandlingstema) =>
-  skalViseSoknadsperiodeOgLandDeprecated(hovedpart, sakstype, behandlingstema);
-
 const kreverLand = (
   saksnummer,
   sakstype,
@@ -54,10 +47,6 @@ const kreverLand = (
 ) =>
   kreverPeriode(saksnummer, sakstype, sakstema, behandlingstema, behandlingstype) &&
   !soknadslandUkjenteEllerAlleEosLand;
-
-// Fjernes med toggle melosys.behandle_alle_saker
-const kreverLandDeprecated = (hovedpart, sakstype, behandlingstema, soknadslandUkjenteEllerAlleEosLand) =>
-  kreverPeriodeDeprecated(hovedpart, sakstype, behandlingstema) && !soknadslandUkjenteEllerAlleEosLand;
 
 const opprettnysak = object().shape({
   hovedpart: string().required(MAA_FYLLES_UT),
@@ -85,14 +74,11 @@ const opprettnysak = object().shape({
   virksomhetNavn: string().nullable(),
   saksnummer: string()
     .nullable()
-    .when("behandleAlleSakerToggleEnabled", {
-      is: true,
-      then: string().test(
-        "må settes når du knytter til eksisterende sak",
-        VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_BEHANDLINGEN_TIL,
-        (saksnummer) => skalOppretteNySak(saksnummer) || !Utils._isEmpty(saksnummer)
-      ),
-    }),
+    .test(
+      "Må settes når du knytter til eksisterende sak",
+      VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_BEHANDLINGEN_TIL,
+      (saksnummer) => skalOppretteNySak(saksnummer) || !Utils._isEmpty(saksnummer)
+    ),
   sakstype: string()
     .when("saksnummer", {
       is: skalOppretteNySak,
@@ -101,149 +87,54 @@ const opprettnysak = object().shape({
     .nullable(),
   sakstema: string()
     .nullable()
-    .when("behandleAlleSakerToggleEnabled", {
-      is: true,
-      then: string()
-        .when("saksnummer", {
-          is: skalOppretteNySak,
-          then: string().required(VELG_SAKSTEMA).nullable(),
-        })
-        .nullable(),
-    }),
+    .when("saksnummer", {
+      is: skalOppretteNySak,
+      then: string().required(VELG_SAKSTEMA).nullable(),
+    })
+    .nullable(),
   behandlingstema: string().required(VELG_BEHANDLINGSTEMA).nullable(),
-  behandlingstype: string()
-    .nullable()
-    .when("behandleAlleSakerToggleEnabled", {
-      is: true,
-      then: string().required(VELG_BEHANDLINGSTYPE).nullable(),
-    }),
+  behandlingstype: string().required(VELG_BEHANDLINGSTYPE).nullable(),
   periodeFraOgMed: string()
     .nullable()
-    .when("behandleAlleSakerToggleEnabled", {
-      is: true,
-      then: string()
-        .nullable()
-        .when(["saksnummer", "sakstype", "sakstema", "behandlingstema", "behandlingstype"], {
-          is: kreverPeriode,
-          then: string().required(MAA_FYLLES_UT).erGyldigDato().nullable(),
-        }),
-      otherwise: string()
-        .nullable()
-        .when(["hovedpart", "sakstype", "behandlingstema"], {
-          is: kreverPeriodeDeprecated,
-          then: string().required(MAA_FYLLES_UT).erGyldigDato().nullable(),
-        }),
+    .when(["saksnummer", "sakstype", "sakstema", "behandlingstema", "behandlingstype"], {
+      is: kreverPeriode,
+      then: string().required(MAA_FYLLES_UT).erGyldigDato().nullable(),
     }),
   periodeTilOgMed: string()
     .nullable()
-    .when("behandleAlleSakerToggleEnabled", {
-      is: true,
-      then: string()
-        .nullable()
-        .when(["saksnummer", "sakstype", "sakstema", "behandlingstema", "behandlingstype"], {
-          is: (saksnummer, sakstype, sakstema, behandlingstema, behandlingstype) =>
-            skalOppretteNySak(saksnummer) &&
-            skalViseSoknadsperiodeOgLand(sakstype, sakstema, behandlingstema, behandlingstype),
-          then: string().erEtterDatofelt("periodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT).nullable(),
-        }),
-      otherwise: string()
-        .nullable()
-        .when(["hovedpart", "sakstype", "behandlingstema"], {
-          is: kreverPeriodeDeprecated,
-          then: string().erEtterDatofelt("periodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT).nullable(),
-        }),
+    .when(["saksnummer", "sakstype", "sakstema", "behandlingstema", "behandlingstype"], {
+      is: kreverPeriode,
+      then: string().erEtterDatofelt("periodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT).nullable(),
     }),
   soknadslandUkjenteEllerAlleEosLand: boolean().nullable(),
-  soknadsland: array()
-    .when(
-      [
-        "behandleAlleSakerToggleEnabled",
-        "saksnummer",
-        "sakstype",
-        "sakstema",
-        "behandlingstema",
-        "behandlingstype",
-        "soknadslandUkjenteEllerAlleEosLand",
-      ],
-      {
-        is: (
-          behandleAlleSakerToggleEnabled,
-          saksnummer,
-          sakstype,
-          sakstema,
-          behandlingstema,
-          behandlingstype,
-          soknadslandUkjenteEllerAlleEosLand
-        ) =>
-          behandleAlleSakerToggleEnabled &&
-          kreverLand(
-            saksnummer,
-            sakstype,
-            sakstema,
-            behandlingstema,
-            behandlingstype,
-            soknadslandUkjenteEllerAlleEosLand
-          ),
-        then: array().when("behandlingstema", {
-          is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-          then: array().min(2, { _error: VELG_MINST_TO_LAND }),
-          otherwise: array().min(1, { _error: VELG_MINST_ETT_LAND }),
-        }),
-      }
-    )
-    .when(
-      [
-        "behandleAlleSakerToggleEnabled",
-        "hovedpart",
-        "sakstype",
-        "behandlingstema",
-        "soknadslandUkjenteEllerAlleEosLand",
-      ],
-      {
-        is: (
-          behandleAlleSakerToggleEnabled,
-          hovedpart,
-          sakstype,
-          behandlingstema,
-          soknadslandUkjenteEllerAlleEosLand
-        ) =>
-          !behandleAlleSakerToggleEnabled &&
-          kreverLandDeprecated(hovedpart, sakstype, behandlingstema, soknadslandUkjenteEllerAlleEosLand),
-        then: array().min(1, { _error: VELG_MINST_ETT_LAND }),
-      }
-    ),
+  soknadsland: array().when(
+    ["saksnummer", "sakstype", "sakstema", "behandlingstema", "behandlingstype", "soknadslandUkjenteEllerAlleEosLand"],
+    {
+      is: kreverLand,
+      then: array().when("behandlingstema", {
+        is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+        then: array().min(2, { _error: VELG_MINST_TO_LAND }),
+        otherwise: array().min(1, { _error: VELG_MINST_ETT_LAND }),
+      }),
+    }
+  ),
   oppgaveID: string()
     .nullable()
-    .when("behandleAlleSakerToggleEnabled", {
-      is: true,
-      then: string()
-        .when("oppretterOppgave", {
-          is: false,
-          then: string().required(VELG_OPPGAVE).nullable(),
-        })
-        .nullable(),
+    .when("oppretterOppgave", {
+      is: false,
+      then: string().required(VELG_OPPGAVE).nullable(),
     }),
   mottaksdato: string()
     .nullable()
-    .when("behandleAlleSakerToggleEnabled", {
+    .when("oppretterOppgave", {
       is: true,
-      then: string()
-        .when("oppretterOppgave", {
-          is: true,
-          then: string().erGyldigDato().required(FYLL_UT_MOTTAKSDATO).nullable(),
-        })
-        .nullable(),
+      then: string().erGyldigDato().required(FYLL_UT_MOTTAKSDATO).nullable(),
     }),
   behandlingsaarsakType: string()
     .nullable()
-    .when("behandleAlleSakerToggleEnabled", {
+    .when("oppretterOppgave", {
       is: true,
-      then: string()
-        .when("oppretterOppgave", {
-          is: true,
-          then: string().required(VELG_BEHANDLINGSAARSAK).nullable(),
-        })
-        .nullable(),
+      then: string().required(VELG_BEHANDLINGSAARSAK).nullable(),
     }),
   behandlingsaarsakFritekst: string()
     .nullable()
@@ -258,7 +149,6 @@ const opprettnysak = object().shape({
       is: (saksnummer) => !skalOppretteNySak(saksnummer) && !Utils._isEmpty(saksnummer),
       then: boolean().nullable().oneOf([true], DU_KAN_IKKE_OPPRETTE),
     }),
-  behandleAlleSakerToggleEnabled: boolean(),
   oppretterOppgave: boolean(),
 });
 

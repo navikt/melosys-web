@@ -37,10 +37,3 @@ export const BehandlingUnderOppfriskningSelector = createSelector(
   OppfriskSelector,
   (oppfrisk) => oppfrisk.behandlingUnderOppfriskning
 );
-
-export const RevurderFagsakSelector = createSelector(ModalerSelector, (modaler) => modaler.revurderFagsak);
-
-export const ErRevurderFagsakSynligSelector = createSelector(
-  RevurderFagsakSelector,
-  (revurderFagsak) => revurderFagsak.synlig
-);

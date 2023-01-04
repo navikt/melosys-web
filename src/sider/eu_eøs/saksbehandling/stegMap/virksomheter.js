@@ -23,7 +23,7 @@ class SaksbehandlingVirksomheter extends Virksomheter {
             KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12
           );
 
-          return harValgtArbeidsgiver && (garDirekteTilArtikkel16 || propsLight.erArbeidEttLandOvrig);
+          return harValgtArbeidsgiver && (garDirekteTilArtikkel16 || propsLight.erArbeidTjenestepersonEllerFly);
         },
         nesteSteg: STEG.MEDFOLGENDE_BARN,
       },

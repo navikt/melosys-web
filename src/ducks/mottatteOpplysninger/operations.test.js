@@ -65,7 +65,11 @@ describe("MottatteOpplysninger operations", () => {
         },
       },
       fagsaker: {
-        data: {},
+        data: {
+          sakstype: {
+            kode: "EU_EOS",
+          },
+        },
       },
     };
   });
@@ -74,9 +78,7 @@ describe("MottatteOpplysninger operations", () => {
     each([
       MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
       MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
-      MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
       MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
-      MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
       MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
       MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
       MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
@@ -161,9 +163,8 @@ describe("MottatteOpplysninger operations", () => {
       );
     });
 
-    it("lagrer FtrlGrunnlagData ved behandlingstema ARBEID_I_UTLANDET", async () => {
-      initialState.behandlinger.data.oppsummering.behandlingstema.kode =
-        MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET;
+    it("lagrer FtrlGrunnlagData ved sakstype FTRL", async () => {
+      initialState.fagsaker.data.sakstype.kode = "FTRL";
 
       const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 
@@ -197,9 +198,8 @@ describe("MottatteOpplysninger operations", () => {
       );
     });
 
-    it("lagrer TrygdeavtaleGrunnlagData ved behandlingstema YRKESAKTIV", async () => {
-      initialState.behandlinger.data.oppsummering.behandlingstema.kode =
-        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
+    it("lagrer TrygdeavtaleGrunnlagData ved sakstype TRYGDEAVTALE", async () => {
+      initialState.fagsaker.data.sakstype.kode = "TRYGDEAVTALE";
 
       const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 

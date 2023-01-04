@@ -1,7 +1,7 @@
 import React from "react";
 import * as EKV from "eessi-kodeverk";
 
-import { VurderingArbeidEttLandOvrigVedtak } from "./vurderingArbeidEttLandOvrigVedtak";
+import { VurderingArbeidTjenestepersonEllerFlyVedtak } from "./vurderingArbeidTjenestepersonEllerFlyVedtak";
 import Mottakerinstitusjonvelger, {
   MottakerinstitusjonvelgerFlervalg,
 } from "../../../felleskomponenter/mottakerinstitusjonvelger";
@@ -12,7 +12,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 
 import MKV from "../../../melosyskodeverk";
 
-describe("VurderingArbeidEttLandOvrigVedtak", () => {
+describe("VurderingArbeidTjenestepersonEllerFlyVedtak", () => {
   let props = null;
 
   beforeEach(() => {
@@ -31,8 +31,8 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
       endreLovvalgsPeriode: jest.fn(),
       byggLovvalgsperioder: jest.fn(),
       lagreLovvalgsperioder: jest.fn(),
-      behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
-      form: KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK,
+      behandlingstype: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+      form: KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK,
       handleSubmit: jest.fn(),
       mottatteOpplysningerFom: "",
       mottatteOpplysningerTom: "",
@@ -54,7 +54,7 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
       onSubmitCallback({}, () => {}, props);
     };
 
-    const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
+    const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidTjenestepersonEllerFlyVedtak {...props} />);
     const form = vurderingArbeidEttLandOvrigVedtak.find("form");
 
     await form.props().onSubmit();
@@ -83,7 +83,7 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
         props.formValues.kreverMottakerinstitusjon = true;
         props.formValues.mottakerLand = MKV.Koder.landkoder.DE;
 
-        const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
+        const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidTjenestepersonEllerFlyVedtak {...props} />);
 
         const mottakerinstitusjoner = vurderingArbeidEttLandOvrigVedtak.find(Mottakerinstitusjonvelger);
         const ytterligereInformasjon = vurderingArbeidEttLandOvrigVedtak.findWhere(
@@ -107,7 +107,7 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
       test("man velger å informere utenlandsk trygdemyndighet, men ingen mottakerinstitusjoner finnes for valgt land", () => {
         props.formValues.informerUtenlandskTrygdemyndighet = true;
         props.formValues.kreverMottakerinstitusjon = false;
-        const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
+        const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidTjenestepersonEllerFlyVedtak {...props} />);
 
         const mottakerinstitusjoner = vurderingArbeidEttLandOvrigVedtak.find(Mottakerinstitusjonvelger);
         const ytterligereInformasjon = vurderingArbeidEttLandOvrigVedtak.findWhere(
@@ -128,7 +128,7 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
 
       test("man velger å ikke informere utenlandsk trygdemyndighet", () => {
         props.formValues.informerUtenlandskTrygdemyndighet = false;
-        const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
+        const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidTjenestepersonEllerFlyVedtak {...props} />);
 
         const mottakerinstitusjoner = vurderingArbeidEttLandOvrigVedtak.find(Mottakerinstitusjonvelger);
         const ytterligereInformasjon = vurderingArbeidEttLandOvrigVedtak.findWhere(
@@ -155,7 +155,7 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
     beforeEach(() => {
       props.formValues.lovvalgsbestemmelse =
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B;
-      vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
+      vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidTjenestepersonEllerFlyVedtak {...props} />);
     });
 
     it("viser periodeforkorter", () => {

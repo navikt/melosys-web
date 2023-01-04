@@ -26,7 +26,7 @@ import Mottakerinstitusjonvelger, {
 } from "../../../felleskomponenter/mottakerinstitusjonvelger";
 import { BOOLSK_STRING } from "../../../constants";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
-import VurderingArbeidEttLandOvrigVedtakSchema from "./vurderingArbeidEttLandOvrigVedtakSchema";
+import VurderingArbeidTjenestepersonEllerFlyVedtakSchema from "./vurderingArbeidTjenestepersonEllerFlyVedtakSchema";
 import {
   konverterAvklartfaktaTilStegData,
   konverterLovvalgsbestemmelseTilStegData,
@@ -38,7 +38,7 @@ import {
   slettTilleggBestemmelse,
 } from "../../../felleskomponenter/stegvelger";
 
-import "./vurderingArbeidEttLandOvrigVedtak.css";
+import "./vurderingArbeidTjenestepersonEllerFlyVedtak.css";
 import { vedtakOperations } from "../../../ducks/vedtak";
 
 const InformertMyndighetVelger = ({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) => {
@@ -92,7 +92,7 @@ const sjekkSkalSendeSed = (formValues) => {
   return false;
 };
 
-export const VurderingArbeidEttLandOvrigVedtak = ({
+export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   redigerbart,
   behandlingID,
   lovvalgsperiode,
@@ -281,7 +281,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="vurderingArbeidEttLandOvrigVedtak">
+    <form onSubmit={handleSubmit(onSubmit)} className="vurderingArbeidTjenestepersonEllerFlyVedtak">
       <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
       <Nav.Row className="velgLovvalgsbestemmelse">
         <Nav.Column xs="7">
@@ -416,7 +416,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   );
 };
 
-VurderingArbeidEttLandOvrigVedtak.propTypes = {
+VurderingArbeidTjenestepersonEllerFlyVedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgsperiode: MPT.Periode,
@@ -448,7 +448,7 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
   fattVedtak: PT.func.isRequired,
 };
 
-VurderingArbeidEttLandOvrigVedtak.defaultProps = {
+VurderingArbeidTjenestepersonEllerFlyVedtak.defaultProps = {
   lovvalgsperiode: {},
   formValues: {},
   lovvalgsbestemmelseSomSkalVises: "",
@@ -477,8 +477,8 @@ const mapStateToProps = (state, ownProps) => {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
     soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
-    formIsValid: isValid(KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK)(state),
-    formValues: getFormValues(KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK)(state),
+    formIsValid: isValid(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)(state),
+    formValues: getFormValues(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)(state),
     initialValues: {
       forkortLovvalgsperiode,
       tomDato: forkortLovvalgsperiode
@@ -500,23 +500,23 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => ({
   endreLovvalgsPeriode: (fomdato, tomdato) =>
     dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
-  touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK)),
+  touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
-const VurderingArbeidEttLandOvrigVedtakForm = reduxForm({
-  form: KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK,
+const VurderingArbeidTjenestepersonEllerFlyVedtakForm = reduxForm({
+  form: KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK,
   enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) =>
-    lagYupToReduxformErrorMapper(VurderingArbeidEttLandOvrigVedtakSchema, {
+    lagYupToReduxformErrorMapper(VurderingArbeidTjenestepersonEllerFlyVedtakSchema, {
       context: {
         soknadsperiode: props.soknadsperiode,
         behandlingstype: props.behandlingstype,
       },
     })(values),
-})(VurderingArbeidEttLandOvrigVedtak);
+})(VurderingArbeidTjenestepersonEllerFlyVedtak);
 
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingArbeidEttLandOvrigVedtakForm);
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingArbeidTjenestepersonEllerFlyVedtakForm);

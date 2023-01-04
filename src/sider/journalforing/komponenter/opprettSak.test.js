@@ -9,7 +9,6 @@ const { BRUKER } = MKV.Koder.aktoersroller;
 const {
   UTSENDT_ARBEIDSTAKER,
   UTSENDT_SELVSTENDIG,
-  ARBEID_ETT_LAND_ØVRIG,
   ARBEID_FLERE_LAND,
   ARBEID_NORGE_BOSATT_ANNET_LAND,
   ARBEID_I_UTLANDET,
@@ -58,11 +57,10 @@ describe("OpprettSak - journalføring", () => {
       kanSubmittes: true,
       handleSubmit: jest.fn(),
       submitJournalforing: jest.fn(),
-      behandleAlleSakerToggleEnabled: true,
     };
   });
 
-  each([UTSENDT_SELVSTENDIG, UTSENDT_ARBEIDSTAKER, ARBEID_ETT_LAND_ØVRIG, ARBEID_NORGE_BOSATT_ANNET_LAND]).it(
+  each([UTSENDT_SELVSTENDIG, UTSENDT_ARBEIDSTAKER, ARBEID_NORGE_BOSATT_ANNET_LAND]).it(
     `Opprett Sak. Skal ha fra/til dato og liste over land`,
     (behandlingstema) => {
       props.formValues.opprettnysak_behandlingstema = behandlingstema;
@@ -161,11 +159,10 @@ describe("OpprettSak - opprett ny sak", () => {
       kanSubmittes: true,
       handleSubmit: jest.fn(),
       submitJournalforing: jest.fn(),
-      behandleAlleSakerToggleEnabled: true,
     };
   });
 
-  each([UTSENDT_SELVSTENDIG, UTSENDT_ARBEIDSTAKER, ARBEID_ETT_LAND_ØVRIG, ARBEID_NORGE_BOSATT_ANNET_LAND]).it(
+  each([UTSENDT_SELVSTENDIG, UTSENDT_ARBEIDSTAKER, ARBEID_NORGE_BOSATT_ANNET_LAND]).it(
     `Opprett Sak. Skal ha fra/til dato og liste over land`,
     (behandlingstema) => {
       props.formValues.behandlingstema = behandlingstema;

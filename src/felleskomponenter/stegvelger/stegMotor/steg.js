@@ -116,7 +116,7 @@ class Steg {
     id === STEG.ARTIKKEL_13_3_UTPEK_LAND ||
     id === STEG.ARTIKKEL_13_4_VEDTAK ||
     id === STEG.ARTIKKEL_13_4_UTPEK_LAND ||
-    id === STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK ||
+    id === STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK ||
     id === STEG.VEDTAK_FTRL;
 
   assertRegel = (regel, avklartefakta, vilkar) => (Utils._isFunction(regel) ? regel(avklartefakta, vilkar) : false);

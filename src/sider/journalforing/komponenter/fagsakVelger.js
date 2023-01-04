@@ -11,7 +11,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 
 import { JOURNALFORING_HENSIKT } from "../../../constants";
 
-import OpprettSak, { OpprettSakTittel } from "./opprettSak";
+import OpprettSak from "./opprettSak";
 import EnkeltSak from "./enkeltSak";
 import KnyttTilSak from "./knyttTilSak";
 
@@ -23,16 +23,7 @@ const OPPRETT = "Opprett ny sak";
 const { JOURNALFORING_VALUES: FormValuesJournalforing, OPPRETT_NY_SAK_VALUES: FormValuesOpprettNySak } = KV.Form;
 
 const FagsakVelger = (props) => {
-  const {
-    fagsakListe,
-    settJournalforingHensikt,
-    behandleAlleSakerToggleEnabled,
-    landkoder,
-    formValues,
-    erOpprettNySak,
-    nullstillFormVerdier,
-    nyOpprettSakToggleEnabled,
-  } = props;
+  const { fagsakListe, settJournalforingHensikt, landkoder, formValues, erOpprettNySak, nullstillFormVerdier } = props;
   const [valgtVisning, setValgtVisning] = useState(EKSISTERENDE);
   const feltNavn = erOpprettNySak ? FormValuesOpprettNySak : FormValuesJournalforing;
   const dispatch = useDispatch();
@@ -45,20 +36,12 @@ const FagsakVelger = (props) => {
   }, [valgtVisning]);
 
   useEffect(() => {
-    if (erOpprettNySak && !nyOpprettSakToggleEnabled) {
-      setValgtVisning(OPPRETT);
-    }
-  }, [nyOpprettSakToggleEnabled]);
-
-  useEffect(() => {
-    if (!behandleAlleSakerToggleEnabled) return;
-
     if (valgtVisning === OPPRETT || ingenSakerFinnes) {
       dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, "-1"));
     } else if (valgtVisning === EKSISTERENDE) {
       dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, ""));
     }
-  }, [ingenSakerFinnes, valgtVisning, behandleAlleSakerToggleEnabled]);
+  }, [ingenSakerFinnes, valgtVisning]);
 
   const notifier = async (saksnummer) => {
     if (settJournalforingHensikt && !erOpprettNySak) {
@@ -72,95 +55,56 @@ const FagsakVelger = (props) => {
       ...samling,
       {
         value: sak.saksnummer,
-        innhold: (
-          <EnkeltSak sak={sak} behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled} landkoder={landkoder} />
-        ),
-        footer: (
-          <KnyttTilSak
-            sak={sak}
-            behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
-            erOpprettNySak={erOpprettNySak}
-            feltNavn={feltNavn}
-            formValues={formValues}
-          />
-        ),
+        innhold: <EnkeltSak sak={sak} landkoder={landkoder} />,
+        footer: <KnyttTilSak sak={sak} erOpprettNySak={erOpprettNySak} feltNavn={feltNavn} formValues={formValues} />,
       },
     ],
     []
   );
 
-  if (!behandleAlleSakerToggleEnabled) {
-    radioValg.push({
-      value: "-1",
-      innhold: <OpprettSakTittel />,
-      footer: <OpprettSak behandleAlleSakerToggleEnabled={false} formValues={formValues} feltNavn={feltNavn} />,
-    });
-  }
-
-  if (erOpprettNySak && !nyOpprettSakToggleEnabled) {
-    return (
-      <OpprettSak
-        behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
-        formValues={formValues}
-        feltNavn={feltNavn}
-      />
-    );
-  }
-
-  if (behandleAlleSakerToggleEnabled) {
-    return (
-      <div className="fagsakVelger">
-        {ingenSakerFinnes ? (
-          <>
-            <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
-            <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
-          </>
-        ) : (
-          <div className="velgVisning">
-            <Nav.Radio
-              label={EKSISTERENDE}
-              className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
-              name="velgVisning"
-              onChange={() => setValgtVisning(EKSISTERENDE)}
-              checked={valgtVisning === EKSISTERENDE}
-              value={EKSISTERENDE}
-            />
-            <Nav.Radio
-              label={OPPRETT}
-              className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
-              name="velgVisning"
-              onChange={() => setValgtVisning(OPPRETT)}
-              checked={valgtVisning === OPPRETT}
-              value={OPPRETT}
-            />
-          </div>
-        )}
-
-        {(!erOpprettNySak || nyOpprettSakToggleEnabled) && (
-          <>
-            {valgtVisning === EKSISTERENDE && (
-              <Skjema.CustomRadioPanelGruppe
-                feltNavn="saksnummer"
-                radios={radioValg}
-                notify={notifier}
-                begrensVisteRadios
-                onChange={nullstillFormVerdier}
-                className="marginMellomCustomRadioPaneler"
-              />
-            )}
-            {valgtVisning === OPPRETT && (
-              <OpprettSak behandleAlleSakerToggleEnabled formValues={formValues} feltNavn={feltNavn} />
-            )}
-          </>
-        )}
-      </div>
-    );
-  }
-
   return (
     <div className="fagsakVelger">
-      <Skjema.CustomRadioPanelGruppe feltNavn="saksnummer" radios={radioValg} notify={notifier} />
-      {ingenSakerFinnes && "Ingen eksisterende saker funnet."}
+      {ingenSakerFinnes ? (
+        <>
+          <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
+          <OpprettSak formValues={formValues} feltNavn={feltNavn} />
+        </>
+      ) : (
+        <div className="velgVisning">
+          <Nav.Radio
+            label={EKSISTERENDE}
+            className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
+            name="velgVisning"
+            onChange={() => setValgtVisning(EKSISTERENDE)}
+            checked={valgtVisning === EKSISTERENDE}
+            value={EKSISTERENDE}
+          />
+          <Nav.Radio
+            label={OPPRETT}
+            className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
+            name="velgVisning"
+            onChange={() => setValgtVisning(OPPRETT)}
+            checked={valgtVisning === OPPRETT}
+            value={OPPRETT}
+          />
+        </div>
+      )}
+
+      {!erOpprettNySak && (
+        <>
+          {valgtVisning === EKSISTERENDE && (
+            <Skjema.CustomRadioPanelGruppe
+              feltNavn="saksnummer"
+              radios={radioValg}
+              notify={notifier}
+              begrensVisteRadios
+              onChange={nullstillFormVerdier}
+              className="marginMellomCustomRadioPaneler"
+            />
+          )}
+          {valgtVisning === OPPRETT && <OpprettSak formValues={formValues} feltNavn={feltNavn} />}
+        </>
+      )}
     </div>
   );
 };
@@ -168,8 +112,6 @@ const FagsakVelger = (props) => {
 FagsakVelger.propTypes = {
   fagsakListe: PT.array.isRequired,
   settJournalforingHensikt: PT.func,
-  behandleAlleSakerToggleEnabled: PT.bool.isRequired,
-  nyOpprettSakToggleEnabled: PT.bool,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   formValues: PT.object.isRequired,
   erOpprettNySak: PT.bool,
@@ -180,7 +122,6 @@ FagsakVelger.defaultProps = {
   erOpprettNySak: false,
   nullstillFormVerdier: undefined,
   settJournalforingHensikt: undefined,
-  nyOpprettSakToggleEnabled: false,
 };
 
 export default FagsakVelger;

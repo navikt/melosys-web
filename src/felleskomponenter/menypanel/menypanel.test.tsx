@@ -19,7 +19,6 @@ const {
   UTSENDT_SELVSTENDIG,
   ARBEID_FLERE_LAND,
   IKKE_YRKESAKTIV,
-  ARBEID_ETT_LAND_ØVRIG,
   ARBEID_TJENESTEPERSON_ELLER_FLY,
   ARBEID_NORGE_BOSATT_ANNET_LAND,
   REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
@@ -46,7 +45,6 @@ describe("MenyPanel", () => {
     UTSENDT_ARBEIDSTAKER,
     UTSENDT_SELVSTENDIG,
     ARBEID_FLERE_LAND,
-    ARBEID_ETT_LAND_ØVRIG,
     ARBEID_TJENESTEPERSON_ELLER_FLY,
     ARBEID_NORGE_BOSATT_ANNET_LAND,
   ]).it("Viser korrekte menypunkter for behandlingstema %p", (behandlingstema) => {
@@ -238,15 +236,24 @@ describe("MenyPanel", () => {
     REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
     REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
     ANMODNING_OM_UNNTAK_HOVEDREGEL,
-  ]).it(
-    `viser ikke mottatteOpplysningerdata hvis behandlingstype er ${behandlingstyper.SED} og behandlingstema er %p`,
-    (behandlingstema) => {
-      props.behandlingstype = behandlingstyper.SED;
-      props.behandlingstema = behandlingstema;
-      const menypanel = shallow(<Menypanel {...props} />);
-      const activeContent = menypanel.find(Nav.Panel);
+  ]).it(`viser ikke mottatteOpplysningerdata hvis behandlingstema er %p`, (behandlingstema) => {
+    props.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
+    props.sakstype = MKV.Koder.sakstyper.EU_EOS;
+    props.behandlingstema = behandlingstema;
+    const menypanel = shallow(<Menypanel {...props} />);
+    const activeContent = menypanel.find(Nav.Panel);
 
-      expect(activeContent.children().props().visMottatteOpplysningerData).toBe(false);
-    }
-  );
+    expect(activeContent.children().props().visMottatteOpplysningerData).toBe(false);
+  });
+
+  it("viser mottatteOpplysningerdata hvis behandlingstema er BESLUTNING_LOVVALG_NORGE", () => {
+    props.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
+    props.mottatteOpplysningerType = SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+    props.sakstype = MKV.Koder.sakstyper.EU_EOS;
+    props.behandlingstema = BESLUTNING_LOVVALG_NORGE;
+    const menypanel = shallow(<Menypanel {...props} />);
+    const activeContent = menypanel.find(Nav.Panel);
+
+    expect(activeContent.children().props().visMottatteOpplysningerData).toBe(true);
+  });
 });

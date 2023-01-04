@@ -139,7 +139,7 @@ export interface RegistreringPanelerFormData {
   oppgittAdressePoststed: string;
   oppgittAdresseLand: string;
 }
-export const ARBEID_ETT_LAND_OVRIG_VEDTAK = "arbeid_ett_land_ovrig_vedtak";
+export const ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK = "arbeid_tjenesteperson_eller_fly_vedtak";
 
 export const START = "start";
 export const VIRKSOMHET = "virksomhet";

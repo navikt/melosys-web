@@ -15,11 +15,9 @@ import * as Mui from "../ui";
 import { fagsakSelectors } from "../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 
-import { useFeatureToggle } from "../../featuretoggle";
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
 import KopierbarTekst from "../kopierbarTekst";
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
-import EndreBehandlingModalGammel from "./endreBehandlingModalGammel";
 import EndreBehandlingModal from "./endreBehandlingModal";
 
 import "./oppsummering.css";
@@ -61,9 +59,8 @@ const Oppsummering = ({
   behandlingID,
   ...props
 }: OppsummeringProps) => {
-  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
-  const [mottaksdato, setMottaksdato] = useState<string | undefined>(props.mottattDato);
+  const [mottaksdato, setMottaksdato] = useState<string | undefined>(props.mottattDato); // Dette er under en annen toggle
 
   const { saksnummer, sakstype, sakstema, registrertDato, hovedpartRolle } = fagsak;
   const {
@@ -80,20 +77,15 @@ const Oppsummering = ({
   const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode);
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
-  const erSed =
-    behandleAlleSakerToggle === "enabled"
-      ? MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, behandlingstema?.kode)
-      : behandlingstype?.kode === MKV.Koder.behandlinger.behandlingstyper.SED;
+  const erSed = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, behandlingstema?.kode);
   const erTrygdeavtale = sakstype?.kode === MKV.Koder.sakstyper.TRYGDEAVTALE;
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   useEffect(() => {
-    if (behandleAlleSakerToggle === "enabled") {
-      Api.Behandlinger.aarsak
-        .hentMottaksdato(behandlingID)
-        .then((response) => setMottaksdato(Utils.dato.formatterDatoTilNorsk(response.mottaksdato)));
-    }
-  }, [behandleAlleSakerToggle]);
+    Api.Behandlinger.aarsak
+      .hentMottaksdato(behandlingID)
+      .then((response) => setMottaksdato(Utils.dato.formatterDatoTilNorsk(response.mottaksdato)));
+  }, []);
 
   const landStorBokstav = (land?: KTObject) =>
     land?.term ? Utils.streng.storeForbokstaverForLand(land.term) : "Ukjent";
@@ -174,23 +166,13 @@ const Oppsummering = ({
 
   return (
     <section aria-label="oppsummeringer" className="oppsummering panelSeksjon">
-      {behandleAlleSakerToggle === "enabled" ? (
-        <EndreBehandlingModal
-          fagsak={fagsak}
-          oppsummering={oppsummering}
-          mottattDato={mottaksdato}
-          skalViseModal={skalViseEndreModal}
-          lukkModal={() => setSkalViseEndreModal(false)}
-        />
-      ) : (
-        <EndreBehandlingModalGammel
-          fagsak={fagsak}
-          oppsummering={oppsummering}
-          mottattDato={mottaksdato}
-          skalViseModal={skalViseEndreModal}
-          lukkModal={() => setSkalViseEndreModal(false)}
-        />
-      )}
+      <EndreBehandlingModal
+        fagsak={fagsak}
+        oppsummering={oppsummering}
+        mottattDato={mottaksdato}
+        skalViseModal={skalViseEndreModal}
+        lukkModal={() => setSkalViseEndreModal(false)}
+      />
       <Nav.Panel className="saksbehandling__soknad-sammendrag">
         <Nav.Row>
           <Nav.Column xs="12">
@@ -209,13 +191,9 @@ const Oppsummering = ({
               <Nav.Panel className="saksinfo">
                 <Nav.Row>
                   <Nav.Column xs="8">
-                    {behandleAlleSakerToggle === "enabled" ? (
-                      <Nav.Typo.Undertittel>
-                        {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
-                      </Nav.Typo.Undertittel>
-                    ) : (
-                      <Nav.Typo.Undertittel>{KV.objektTilTerm(sakstype)}</Nav.Typo.Undertittel>
-                    )}
+                    <Nav.Typo.Undertittel>
+                      {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
+                    </Nav.Typo.Undertittel>
                   </Nav.Column>
                   <Nav.Column xs="4">
                     <Mui.Knapp

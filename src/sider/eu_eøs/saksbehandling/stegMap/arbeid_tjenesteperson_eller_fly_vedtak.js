@@ -1,12 +1,12 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingArbeidEttLandOvrigVedtak from "../../stegKomponenter/vurderingArbeidEttLandOvrigVedtak";
+import VurderingArbeidTjenestepersonEllerFlyVedtak from "../../stegKomponenter/vurderingArbeidTjenestepersonEllerFlyVedtak";
 
 import { hentFakta } from "../../../../domeneUtils";
 
 import MKV from "../../../../melosyskodeverk";
 
-class ArbeidEttLandOvrigVedtak extends Steg {
+class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
@@ -24,9 +24,9 @@ class ArbeidEttLandOvrigVedtak extends Steg {
     );
 
     this.kriterier = [];
-    this.id = STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK;
+    this.id = STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
     this.tittel = "Vedtak";
-    this.komponent = VurderingArbeidEttLandOvrigVedtak;
+    this.komponent = VurderingArbeidTjenestepersonEllerFlyVedtak;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
       lovvalgsbestemmelseSomSkalVises,
@@ -48,4 +48,4 @@ class ArbeidEttLandOvrigVedtak extends Steg {
   }
 }
 
-export default ArbeidEttLandOvrigVedtak;
+export default ArbeidTjenestepersonEllerFlyVedtak;

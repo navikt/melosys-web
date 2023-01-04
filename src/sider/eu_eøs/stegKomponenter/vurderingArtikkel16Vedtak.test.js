@@ -21,7 +21,7 @@ describe("VurderingArtikkel16Vedtak", () => {
       art_12_1_begrunnelser: [],
       art_12_2_begrunnelser: [],
       formIsValid: true,
-      behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+      behandlingstype: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
       touch: jest.fn(),
       formValues: {
         vedtakstypebegrunnelse: MKV.Koder.begrunnelser.nyvurderingbakgrunner.FEIL_I_BEHANDLING,

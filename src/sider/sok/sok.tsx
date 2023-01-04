@@ -12,7 +12,6 @@ import Fagsak from "../../felleskomponenter/oppgaveliste/fagsak";
 import SorterbarListe from "../../felleskomponenter/sorterbarListe";
 import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
 import { sokSelectors, sokOperations } from "../../ducks/sok";
-import { useFeatureToggle } from "../../featuretoggle";
 
 import "./sok.css";
 
@@ -35,7 +34,6 @@ export type SokProps = PropsFromRedux & {
 };
 
 export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: SokProps) => {
-  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const sokefrase = sessionStorage.getItem("sokefrase");
 
   useEffect(() => {
@@ -82,7 +80,6 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
                 sortingLegend="Sorter fagsaker etter opprettelsesdato:"
                 sortingPath="opprettetDato"
                 radioGroupName="fagsaksortering"
-                visSakstema={behandleAlleSakerToggle === "enabled"}
                 landkoder={landkoder}
               />
             )}

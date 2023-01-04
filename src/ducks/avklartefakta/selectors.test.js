@@ -131,7 +131,7 @@ describe("Avklartefaktaselectors", () => {
   });
 
   describe("ArbeidslandMedYrkesAktivitetSelector", () => {
-    const behandlingstype = MKV.Koder.behandlinger.behandlingstyper.SOEKNAD;
+    const behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
     const lagSoknadslandFakta = (land) => ({
       referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
       subjektID: land,

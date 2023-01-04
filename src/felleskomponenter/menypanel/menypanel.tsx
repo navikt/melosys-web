@@ -56,7 +56,6 @@ export const Menypanel = ({
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
-  const behandleAlleSakerToggleEnabled = useFeatureToggle("melosys.behandle_alle_saker") === "enabled";
   const visMenypanel =
     sakstype === MKV.Koder.sakstyper.EU_EOS ||
     menypanel?.synlig ||
@@ -70,15 +69,10 @@ export const Menypanel = ({
 
   if (!visMenypanel) return null;
 
-  const visMottatteOpplysningerData = behandleAlleSakerToggleEnabled
-    ? !(
-        MKVUtils.erBehandlingAvSed(sakstype, behandlingstema) &&
-        behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
-      )
-    : !(
-        behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED &&
-        behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
-      );
+  const visMottatteOpplysningerData = !(
+    MKVUtils.erBehandlingAvSed(sakstype, behandlingstema) &&
+    behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
+  );
 
   const contentProps = {
     visArbeidsforholdRolleEtiketter: mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,

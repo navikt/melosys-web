@@ -5,7 +5,6 @@ import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 
 import MKV from "../../../../melosyskodeverk";
-import { useFeatureToggle } from "../../../../featuretoggle";
 import { sorterLandOgGjørOmTilStoreForbokstaver } from "../../../../utils/land";
 
 type AvsenderUtenlandskTrygdemyndighetProps = {
@@ -17,12 +16,9 @@ const AvsenderUtenlandskTrygdemyndighet = ({
   utenlandskTrygdemyndighetLandkode,
   fullmektigLandEndret,
 }: AvsenderUtenlandskTrygdemyndighetProps) => {
-  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
-
-  const landkoderTilUtenlandskTrygdemyndighet =
-    behandleAlleSakerToggle === "enabled"
-      ? sorterLandOgGjørOmTilStoreForbokstaver(MKV.Kodekombinasjoner.unikeAvtaleland)
-      : MKV.KTObjects.landkoder;
+  const landkoderTilUtenlandskTrygdemyndighet = sorterLandOgGjørOmTilStoreForbokstaver(
+    MKV.Kodekombinasjoner.unikeAvtaleland
+  );
 
   return (
     <div className="avsender">

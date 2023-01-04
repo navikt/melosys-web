@@ -1,18 +1,5 @@
 import MKV from "./filtrertmelosyskodeverk";
 
-// DEPRECATED. Vi vil ikke bruke denne i melosys.behandle_alle_saker
-export const erSoknad = (behandlingstema) =>
-  [
-    MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-    MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
-    MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
-    MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
-    MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
-    MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
-    MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-    MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
-  ].includes(behandlingstema);
-
 export const erBehandlingAvSed = (sakstype, behandlingstema) => {
   switch (behandlingstema) {
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:

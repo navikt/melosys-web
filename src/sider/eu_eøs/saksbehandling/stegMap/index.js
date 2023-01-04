@@ -6,7 +6,7 @@ import ForutgaendeMedlemskap from "./forutgaende_medlemskap";
 import Inngang from "./inngang";
 import Yrkesaktivitet from "./yrkesaktivitet";
 import Yrkesgruppe from "./yrkesgruppe";
-import ArbeidEttLandOvrigVedtak from "./arbeid_ett_land_ovrig_vedtak";
+import ArbeidTjenestepersonEllerFlyVedtak from "./arbeid_tjenesteperson_eller_fly_vedtak";
 import Artikkel12_1 from "./artikkel12_1";
 import Artikkel12_2 from "./artikkel12_2";
 import Artikkel11_4 from "./artikkel11_4";
@@ -71,5 +71,5 @@ export const stegMap = new Map([
   [STEG.ENDRET_PERIODE, EndrePeriode],
   [STEG.VIDERESEND, Videresend],
   [STEG.VURDER_ARBEIDSLAND, VurderArbeidsland],
-  [STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK, ArbeidEttLandOvrigVedtak],
+  [STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK, ArbeidTjenestepersonEllerFlyVedtak],
 ]);

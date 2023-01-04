@@ -37,7 +37,7 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
  * for å gi saksbehandler en hent over sakens innhold før hun klikker
  * seg inn på den.
  */
-const BehandlingOppgave = ({ sak, visSakstema, folketrygdenToggleEnabled, landkoder }) => {
+const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
   const {
     navn,
     sakstype,
@@ -60,18 +60,15 @@ const BehandlingOppgave = ({ sak, visSakstema, folketrygdenToggleEnabled, landko
     endretDato,
     svarFrist,
   } = behandling;
-  const tittel = `${navn} - ${hovedpartIdent}`;
-  const link = visSakstema
-    ? Routing.lagUrl(
-        saksnummer,
-        behandlingID,
-        sakstype.kode,
-        sakstema.kode,
-        behandlingstema.kode,
-        behandlingstype.kode,
-        folketrygdenToggleEnabled
-      )
-    : Routing.lagUrlFraBehandlingstema(saksnummer, behandlingID, behandlingstema.kode);
+  const link = Routing.lagUrl(
+    saksnummer,
+    behandlingID,
+    sakstype.kode,
+    sakstema.kode,
+    behandlingstema.kode,
+    behandlingstype.kode,
+    folketrygdenToggleEnabled
+  );
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 
   const cl = classNames({
@@ -90,15 +87,11 @@ const BehandlingOppgave = ({ sak, visSakstema, folketrygdenToggleEnabled, landko
         <Nav.Row className="behandlingOppgave__info">
           <Nav.Column xs="6" md="6" lg="8">
             <Nav.Column md="12" lg="6">
-              <PanelHeader tittel={tittel} />
+              <PanelHeader tittel={`${navn} - ${hovedpartIdent}`} />
               <div className="behandlingOppgave__uthevetKolonne">
-                {visSakstema ? (
-                  <Nav.Row className="infoTerm">
-                    {KV.objektTilTerm(sakstype, "(ukjent)")} - {KV.objektTilTerm(sakstema, "(ukjent)")}
-                  </Nav.Row>
-                ) : (
-                  <Nav.Row className="infoTerm">{KV.objektTilTerm(sakstype, "(ukjent)")}</Nav.Row>
-                )}
+                <Nav.Row className="infoTerm">
+                  {KV.objektTilTerm(sakstype, "(ukjent)")} - {KV.objektTilTerm(sakstema, "(ukjent)")}
+                </Nav.Row>
                 <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstema, "(ukjent)")}</Nav.Row>
                 <Nav.Row className="infoTerm">{KV.objektTilTerm(behandlingstype, "(ukjent)")}</Nav.Row>
               </div>
@@ -141,7 +134,6 @@ const BehandlingOppgave = ({ sak, visSakstema, folketrygdenToggleEnabled, landko
 
 BehandlingOppgave.propTypes = {
   sak: MPT.SaksbehandlingOppgave,
-  visSakstema: PT.bool.isRequired,
   folketrygdenToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };

@@ -12,7 +12,6 @@ describe("KnyttTilSak", () => {
 
   beforeEach(() => {
     props = {
-      behandleAlleSakerToggleEnabled: false,
       sak: {
         sakstype: {
           kode: MKV.Koder.sakstyper.EU_EOS,
@@ -26,7 +25,7 @@ describe("KnyttTilSak", () => {
         behandlingOversikter: [
           {
             behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET },
-            behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD },
+            behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG },
           },
         ],
       },
@@ -46,70 +45,45 @@ describe("KnyttTilSak", () => {
     };
   });
 
-  it(`Vis knapp for å opprette ny behandling dersom ingen behandlinger har behandlingstype ${MKV.Koder.behandlinger.behandlingstyper.SED}`, () => {
-    props.sak.behandlingOversikter[0].behandlingstype = { kode: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD };
+  it(`Vis komponent for knytte til eksisterende sak komponent og knapper for å opprette ny behandling dersom siste behandling er inaktiv`, () => {
+    props.sak.behandlingOversikter[0].behandlingsstatus = { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET };
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+    const knyttTilEksisterendeSakKomponent = knyttTilSak.find(".knyttTilSak__panelramme");
 
-    const radios = knyttTilSak.find(Skjema.Radio);
+    expect(knyttTilEksisterendeSakKomponent).toHaveLength(1);
 
-    expect(radios).toHaveLength(1);
+    const radios = knyttTilEksisterendeSakKomponent.find(Skjema.Radio);
+
+    expect(radios).toHaveLength(2);
     expect(radios.first().props().label).toBe("Opprett ny behandling");
   });
 
-  it(`Ikke vis knapp for å opprette ny behandling dersom minst 1 behandling har behandlingstype ${MKV.Koder.behandlinger.behandlingstyper.SED}`, () => {
-    props.sak.behandlingOversikter[0].behandlingstype = { kode: MKV.Koder.behandlinger.behandlingstyper.SED };
+  it(`Ikke vis knytt til eksisterende sak komponent dersom siste behandling er aktiv`, () => {
+    props.sak.behandlingOversikter[0].behandlingsstatus = {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    };
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+    const knyttTilEksisterendeSakKomponent = knyttTilSak.find(".knyttTilSak__panelramme");
 
-    const radios = knyttTilSak.find(Skjema.Radio);
-
-    expect(radios).toHaveLength(1);
-    expect(radios.first().props().label).not.toBe("Opprett ny behandling");
+    expect(knyttTilEksisterendeSakKomponent).toHaveLength(0);
   });
 
-  it(`Ikke vis knapp for uten å opprette behandling dersom saktype er TRYGDEAVTALE`, () => {
-    props.sak.behandlingOversikter[0].behandlingstype = { kode: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD };
-    props.sak.sakstype.kode = MKV.Koder.sakstyper.TRYGDEAVTALE;
+  it(`Ikke vis knytt til eksisterende sak komponent dersom status er henlagt`, () => {
+    props.sak.saksstatus.kode = MKV.Koder.saksstatuser.HENLAGT;
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+    const knyttTilEksisterendeSakKomponent = knyttTilSak.find(".knyttTilSak__panelramme");
 
-    const radios = knyttTilSak.find(Skjema.Radio);
-
-    expect(radios).toHaveLength(1);
-    expect(radios.first().props().label).not.toBe("Uten å opprette behandling");
+    expect(knyttTilEksisterendeSakKomponent).toHaveLength(0);
   });
 
-  it(`Ikke vis knapp for uten å opprette behandling dersom saktype er EØS`, () => {
-    props.sak.behandlingOversikter[0].behandlingstype = { kode: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD };
-    props.sak.sakstype.kode = MKV.Koder.sakstyper.EU_EOS;
-
-    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
-
-    const radios = knyttTilSak.find(Skjema.Radio);
-
-    expect(radios).toHaveLength(1);
-    expect(radios.first().props().label).not.toBe("Uten å opprette behandling");
-  });
-
-  it(`Vis knapp for uten å opprette behandling dersom saktype er EØS og behandlingstype er SED`, () => {
-    props.sak.behandlingOversikter[0].behandlingstype = { kode: MKV.Koder.behandlinger.behandlingstyper.SED };
-    props.sak.sakstype.kode = MKV.Koder.sakstyper.EU_EOS;
-
-    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
-
-    const radios = knyttTilSak.find(Skjema.Radio);
-
-    expect(radios).toHaveLength(1);
-    expect(radios.first().props().label).toBe("Uten å opprette behandling");
-  });
-
-  it(`Vis journalfør uten videre behandling dersom saktype er EØS og sakstema-toggle er enabled`, () => {
+  it(`Vis journalfør uten videre behandling dersom saktype er EØS`, () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
     props.sak.sakstype.kode = MKV.Koder.sakstyper.EU_EOS;
-    props.behandleAlleSakerToggleEnabled = true;
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
 
@@ -119,12 +93,11 @@ describe("KnyttTilSak", () => {
     expect(checkbox.first().props().label).toBe("Journalfør uten videre behandling");
   });
 
-  it(`Ikke vis journalfør uten videre behandling dersom saktype er FTLR og sakstema-toggle er enabled`, () => {
+  it(`Ikke vis journalfør uten videre behandling dersom saktype er FTRL`, () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
     props.sak.sakstype.kode = MKV.Koder.sakstyper.FTRL;
-    props.behandleAlleSakerToggleEnabled = true;
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
 
@@ -133,38 +106,16 @@ describe("KnyttTilSak", () => {
     expect(checkbox).toHaveLength(0);
   });
 
-  it(`Vis journalfør uten videre behandling dersom saktype er FTLR og sakstema-toggle er disabled`, () => {
+  it(`Ikke vis journalfør uten videre behandling dersom saktype er TRYGDEAVTALE`, () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
-    props.sak.sakstype.kode = MKV.Koder.sakstyper.FTRL;
-    props.behandleAlleSakerToggleEnabled = false;
+    props.sak.sakstype.kode = MKV.Koder.sakstyper.TRYGDEAVTALE;
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
 
     const checkbox = knyttTilSak.find(Skjema.Checkbox);
 
-    expect(checkbox).toHaveLength(1);
-    expect(checkbox.first().props().label).toBe("Journalfør uten videre behandling");
-  });
-
-  it(`Ikke vis knytt til eksisterende sak komponent dersom status er henlagt og sakstema er enabled`, () => {
-    props.sak.saksstatus.kode = MKV.Koder.saksstatuser.HENLAGT;
-    props.behandleAlleSakerToggleEnabled = true;
-
-    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
-    const knyttTilEksisterendeSakKomponent = knyttTilSak.find(".knyttTilSak__panelramme");
-
-    expect(knyttTilEksisterendeSakKomponent).toHaveLength(0);
-  });
-
-  it(`Vis knytt til eksisterende sak komponent dersom status er henlagt og sakstema er disabled`, () => {
-    props.sak.saksstatus.kode = MKV.Koder.saksstatuser.HENLAGT;
-    props.behandleAlleSakerToggleEnabled = false;
-
-    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
-    const knyttTilEksisterendeSakKomponent = knyttTilSak.find(".knyttTilSak__panelramme");
-
-    expect(knyttTilEksisterendeSakKomponent).toHaveLength(1);
+    expect(checkbox).toHaveLength(0);
   });
 });

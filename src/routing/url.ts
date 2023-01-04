@@ -24,7 +24,6 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
       return `/${EU_EOS}/registrering/${saksnummer}/anmodningunntak/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
-    case MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:

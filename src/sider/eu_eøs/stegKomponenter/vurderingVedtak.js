@@ -92,7 +92,7 @@ const VurderingVedtak = ({
   );
   const lovvalgSomTerm = finnLovvalgSomTerm(lovvalgSomKodeTerm, tilleggBestemmelseSomKodeTerm);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const erSoknadEllerNyVurdering = MKVUtils.erSoknad(behandlingstema) || erNyVurdering;
+  const erSoknadEllerNyVurdering = MKVUtils.erSoknad(behandlingstema) || erNyVurdering; // TODO: Denne må løses. Helst ved at 5460 går inn før denne.
   const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
 
   const validerForm = () => {

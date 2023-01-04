@@ -24,8 +24,3 @@ export const oppdaterOppfrisk = (data) => ({
   type: Types.OPPDATER_OPPFRISK,
   data,
 });
-
-export const oppdaterRevurderFagsak = (data) => ({
-  type: Types.OPPDATER_REVURDER_FAGSAK,
-  data,
-});

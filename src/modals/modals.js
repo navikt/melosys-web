@@ -13,7 +13,6 @@ import {
   DialogboksFerdigbehandleSak,
   DialogboksHenleggSak,
   DialogboksOppfriskSak,
-  DialogboksRevurderFagsak,
 } from "../felleskomponenter/dialogboks";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
@@ -36,10 +35,6 @@ const Modals = ({
   visFerdigbehandleSakDialog,
   skjulFerdigbehandleSakDialogHandle,
   ferdigbehandleSak,
-  visRevurderFagsak,
-  skjulRevurderFagsakDialogHandle,
-  revurderFagsak,
-  venterPaRevurderFagsak,
   behandlingOppfriskes,
   annenBehandlingOppfriskes,
 }) => (
@@ -67,13 +62,6 @@ const Modals = ({
     {visFerdigbehandleSakDialog && (
       <DialogboksFerdigbehandleSak avbryt={skjulFerdigbehandleSakDialogHandle} ferdigbehandleSak={ferdigbehandleSak} />
     )}
-    {visRevurderFagsak && (
-      <DialogboksRevurderFagsak
-        avbryt={skjulRevurderFagsakDialogHandle}
-        bekreft={revurderFagsak}
-        spinner={venterPaRevurderFagsak}
-      />
-    )}
   </Fragment>
 );
 
@@ -95,10 +83,6 @@ Modals.propTypes = {
   visFerdigbehandleSakDialog: PT.bool.isRequired,
   skjulFerdigbehandleSakDialogHandle: PT.func.isRequired,
   ferdigbehandleSak: PT.func.isRequired,
-  visRevurderFagsak: PT.bool.isRequired,
-  skjulRevurderFagsakDialogHandle: PT.func.isRequired,
-  revurderFagsak: PT.func.isRequired,
-  venterPaRevurderFagsak: PT.bool.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
 };
@@ -109,7 +93,6 @@ const mapStateToProps = (state) => ({
   visAvslagSoknadDialog: modalerSelectors.ErAvslagSoknadSynligSelector(state),
   visAvsluttSakSomBortfaltDialog: modalerSelectors.ErAvsluttSakSomBortfaltSynligSelector(state),
   visFerdigbehandleSakDialog: modalerSelectors.ErFerdigbehandleSakSynligSelector(state),
-  visRevurderFagsak: modalerSelectors.ErRevurderFagsakSynligSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -120,7 +103,6 @@ const mapDispatchToProps = (dispatch) => ({
   skjulAvslagSoknadDialogHandle: () => dispatch(modalerOperations.skjulAvslagSoknad()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
   skjulFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleSak()),
-  skjulRevurderFagsakDialogHandle: () => dispatch(modalerOperations.skjulRevurderFagsak()),
 });
 
 const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);

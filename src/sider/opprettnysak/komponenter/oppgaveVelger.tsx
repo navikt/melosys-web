@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import classNames from "classnames";
 
-import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
@@ -17,30 +16,23 @@ interface OppgaveVelgerProps {
   oppgaverForsoktHentet: boolean;
   oppgaver: Api.Oppgaver.SokOppgaveResDto[];
   change: (field: string, value: any) => void;
-  nyOpprettSakToggleEnabled: boolean;
   formValues: OpprettNySakFormData;
 }
 
 export const OppgaveVelger = ({
   oppgaverForsoktHentet,
-  formValues: { hovedpart, saksnummer, oppretterOppgave },
+  formValues: { saksnummer, oppretterOppgave },
   oppgaver,
   change,
-  nyOpprettSakToggleEnabled,
 }: OppgaveVelgerProps) => {
-  const hovedpartErBruker = hovedpart === MKV.Koder.aktoersroller.BRUKER;
   const oppgaverFinnes = oppgaver.length > 0;
-
-  useEffect(() => {
-    change("oppretterOppgave", nyOpprettSakToggleEnabled);
-  }, [nyOpprettSakToggleEnabled]);
 
   const settJournalpostID = (oppgaveID: string) => {
     const oppgave = oppgaver.find((o) => o.oppgaveID === oppgaveID);
     change("journalpostID", oppgave?.journalpostID);
   };
 
-  if (saksnummer !== "-1" && nyOpprettSakToggleEnabled) {
+  if (saksnummer !== "-1") {
     return (
       <div className="oppgaveVelger">
         <Nav.AlertStripeInfo>
@@ -51,7 +43,7 @@ export const OppgaveVelger = ({
     );
   }
 
-  if (!oppgaverFinnes && oppgaverForsoktHentet && nyOpprettSakToggleEnabled) {
+  if (!oppgaverFinnes && oppgaverForsoktHentet) {
     return (
       <div className="oppgaveVelger">
         <Nav.AlertStripeInfo>Ingen eksisterende oppgaver funnet. Det blir opprettet en ny</Nav.AlertStripeInfo>
@@ -80,53 +72,35 @@ export const OppgaveVelger = ({
     };
   });
 
-  const oppgaverIkkeHentetMelding = hovedpartErBruker
-    ? "Skriv inn brukers f.nr eller d.nr for å hente oppgaver."
-    : "Skriv inn virksomhetens organisasjonsnummer for å hente oppgaver.";
-
-  const ingenOppgaverMelding = `Det finnes ingen oppgaver på denne ${
-    hovedpartErBruker ? "personen" : "organisasjonen"
-  }.`;
-
   return (
     <div className="oppgaveVelger">
-      {nyOpprettSakToggleEnabled && (
-        <div className="velgVisning">
-          <Skjema.Radio
-            feltNavn="oppretterOppgave"
-            label="Opprett ny oppgave"
-            className={classNames("visningValg", { "checked-valg": oppretterOppgave })}
-            name="velgVisningOppgave"
-            value
-          />
-          <Skjema.Radio
-            feltNavn="oppretterOppgave"
-            label="Eksisterende oppgave"
-            className={classNames("visningValg", { "checked-valg": !oppretterOppgave })}
-            name="velgVisningOppgave"
-            value={false}
-          />
-        </div>
-      )}
+      <div className="velgVisning">
+        <Skjema.Radio
+          feltNavn="oppretterOppgave"
+          label="Opprett ny oppgave"
+          className={classNames("visningValg", { "checked-valg": oppretterOppgave })}
+          name="velgVisningOppgave"
+          value
+        />
+        <Skjema.Radio
+          feltNavn="oppretterOppgave"
+          label="Eksisterende oppgave"
+          className={classNames("visningValg", { "checked-valg": !oppretterOppgave })}
+          name="velgVisningOppgave"
+          value={false}
+        />
+      </div>
       {oppretterOppgave ? (
         <OpprettNyOppgave />
       ) : (
         <>
           {oppgaverFinnes && (
             <>
-              {nyOpprettSakToggleEnabled && (
-                <Nav.AlertStripeInfo className="marginMellomHeaderOgAlertStripe">
-                  Du kan kun velge mellom følgende oppgaver som er knyttet til et inngående dokument
-                </Nav.AlertStripeInfo>
-              )}
+              <Nav.AlertStripeInfo>
+                Du kan kun velge mellom følgende oppgaver som er knyttet til et inngående dokument
+              </Nav.AlertStripeInfo>
               <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
             </>
-          )}
-          {!oppgaverFinnes && !oppgaverForsoktHentet && !nyOpprettSakToggleEnabled && (
-            <Nav.AlertStripeInfo>{oppgaverIkkeHentetMelding}</Nav.AlertStripeInfo>
-          )}
-          {!oppgaverFinnes && oppgaverForsoktHentet && !nyOpprettSakToggleEnabled && (
-            <Nav.AlertStripeAdvarsel>{ingenOppgaverMelding}</Nav.AlertStripeAdvarsel>
           )}
         </>
       )}

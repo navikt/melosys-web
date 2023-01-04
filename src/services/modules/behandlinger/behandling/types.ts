@@ -160,11 +160,3 @@ export interface BehandlingResDto {
   };
   oppsummering: Oppsummering;
 }
-
-// Kan fjernes med melosys.behandle_alle_saker
-export interface EndreBehandlingReqDto {
-  behandlingstype: string;
-  behandlingstema: string;
-  behandlingsstatus: string;
-  mottaksdato: string;
-}

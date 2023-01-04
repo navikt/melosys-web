@@ -1,2 +1,2 @@
-export { hentBehandling, endreBehandling } from "./behandling";
-export type { Oppsummering, Medlemsperiode, EndreBehandlingReqDto } from "./types";
+export { hentBehandling } from "./behandling";
+export type { Oppsummering, Medlemsperiode } from "./types";

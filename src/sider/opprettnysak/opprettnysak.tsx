@@ -23,12 +23,8 @@ import { fagsakOperations } from "../../ducks/fagsaker";
 import Knapperad from "../../felleskomponenter/knapperad";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 import { hentSammensattNavn } from "../../graphql/navn";
-import { useFeatureToggle } from "../../featuretoggle";
 import FagsakVelger from "../journalforing/komponenter/fagsakVelger";
-import {
-  skalViseSoknadsperiodeOgLand,
-  skalViseSoknadsperiodeOgLandDeprecated,
-} from "../journalforing/komponenter/opprettSak";
+import { skalViseSoknadsperiodeOgLand } from "../journalforing/komponenter/opprettSak";
 
 import { OppgaveVelger } from "./komponenter/oppgaveVelger";
 import IdentOgNavn from "./komponenter/identOgNavn";
@@ -72,6 +68,7 @@ const mapStateToProps = (state: RootState) => ({
     hovedpart: BRUKER,
     opprettBehandling: true,
     mottaksdato: Utils.dato.dateTilNorskString(new Date()),
+    oppretterOppgave: true,
   },
   landkoderListe: landkoderSelectors.LandkoderSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
@@ -113,8 +110,6 @@ const OpprettNySak = ({
   const [bekreftPending, setBekreftPending] = useState(false);
   const [visFeilmeldinger, setVisFeilmeldinger] = useState(false);
   const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
-  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
-  const nyOpprettSakToggle = useFeatureToggle("melosys.ny_opprett_sak");
   const dispatch = useDispatch();
   const {
     behandlingstema,
@@ -146,11 +141,6 @@ const OpprettNySak = ({
       dispatch(fagsakOperations.resetFagsakState());
     };
   }, []);
-
-  useEffect(() => {
-    // Fjernes med toggle melosys.behandle_alle_saker
-    change("behandleAlleSakerToggleEnabled", behandleAlleSakerToggle === "enabled");
-  }, [behandleAlleSakerToggle]);
 
   const hentOppgaver = async (value: string) => {
     if (Utils.person.erGyldigFnrEllerDnr(value) || Utils.organisasjon.erOrgnrGyldig(value)) {
@@ -217,10 +207,7 @@ const OpprettNySak = ({
   }, [hovedpart]);
 
   const dataForOpprettSak = (fellesData: Api.Fagsaker.fagsak.OpprettReqDto) => {
-    const skalSendePeriodeOgLand =
-      behandleAlleSakerToggle === "enabled"
-        ? skalViseSoknadsperiodeOgLand(sakstype, sakstema, behandlingstema, behandlingstype)
-        : skalViseSoknadsperiodeOgLandDeprecated(hovedpart, sakstype, behandlingstema);
+    const skalSendePeriodeOgLand = skalViseSoknadsperiodeOgLand(sakstype, sakstema, behandlingstema, behandlingstype);
 
     const fom = skalSendePeriodeOgLand && periodeFraOgMed ? Utils.dato.formatterDatoTilISO(periodeFraOgMed) : null;
     const tom = skalSendePeriodeOgLand && periodeTilOgMed ? Utils.dato.formatterDatoTilISO(periodeTilOgMed) : null;
@@ -268,7 +255,7 @@ const OpprettNySak = ({
           : undefined,
     };
 
-    if (saksnummer !== "-1" && nyOpprettSakToggle === "enabled") {
+    if (saksnummer !== "-1") {
       lagNyBehandlingForSak(saksnummer, fellesData).finally(() => setBekreftPending(false));
     } else {
       lagNySak(dataForOpprettSak(fellesData)).finally(() => setBekreftPending(false));
@@ -296,27 +283,25 @@ const OpprettNySak = ({
       <Nav.Row>
         <Nav.Column xs="8">
           <Nav.Column xs="8">
-            {behandleAlleSakerToggle === "enabled" && (
-              <div className="seksjon">
-                <Mui.Undertittel
-                  tekst="Hvem skal saken opprettes på?"
-                  ikon={Ikoner.FindAccount}
-                  className="undertittel"
-                  understrek
-                />
-                <Nav.RadioPanelGruppe
-                  name="hovedpart"
-                  legend=""
-                  radios={[
-                    { label: "Bruker", value: BRUKER, id: BRUKER },
-                    { label: "Virksomhet", value: VIRKSOMHET, id: VIRKSOMHET },
-                  ]}
-                  checked={hovedpart}
-                  onChange={(event, value) => change("hovedpart", value)}
-                  className="hovedpart innrykk"
-                />
-              </div>
-            )}
+            <div className="seksjon">
+              <Mui.Undertittel
+                tekst="Hvem skal saken opprettes på?"
+                ikon={Ikoner.FindAccount}
+                className="undertittel"
+                understrek
+              />
+              <Nav.RadioPanelGruppe
+                name="hovedpart"
+                legend=""
+                radios={[
+                  { label: "Bruker", value: BRUKER, id: BRUKER },
+                  { label: "Virksomhet", value: VIRKSOMHET, id: VIRKSOMHET },
+                ]}
+                checked={hovedpart}
+                onChange={(event, value) => change("hovedpart", value)}
+                className="hovedpart innrykk"
+              />
+            </div>
             <div className="seksjon">
               {hovedpartErBruker ? (
                 <IdentOgNavn
@@ -338,11 +323,7 @@ const OpprettNySak = ({
               <>
                 <div className="seksjon">
                   <Mui.Undertittel
-                    tekst={
-                      nyOpprettSakToggle === "enabled"
-                        ? "Knytt til eksisterende sak eller opprett ny"
-                        : "Informasjon om sak"
-                    }
+                    tekst="Knytt til eksisterende sak eller opprett ny"
                     ikon={Ikoner.Links}
                     className="undertittel"
                     understrek
@@ -351,8 +332,6 @@ const OpprettNySak = ({
                     <FagsakVelger
                       erOpprettNySak
                       fagsakListe={fagsakListe}
-                      behandleAlleSakerToggleEnabled={behandleAlleSakerToggle === "enabled"}
-                      nyOpprettSakToggleEnabled={nyOpprettSakToggle === "enabled"}
                       landkoder={landkoderListe}
                       nullstillFormVerdier={nullstillFormVerdier}
                       formValues={formValues}
@@ -368,7 +347,6 @@ const OpprettNySak = ({
                   />
                   <div className="innrykk">
                     <OppgaveVelger
-                      nyOpprettSakToggleEnabled={nyOpprettSakToggle === "enabled"}
                       oppgaverForsoktHentet={oppgaverForsoktHentet}
                       formValues={formValues}
                       change={change}
@@ -389,7 +367,7 @@ const OpprettNySak = ({
               <Feilmeldinger feilmeldinger={feilmeldinger} className="feilmelding" />
               <Knapperad
                 bekreft={handleSubmit}
-                bekreftTekst={nyOpprettSakToggle === "enabled" ? "Opprett ny behandling" : "Opprett sak"}
+                bekreftTekst="Opprett ny behandling"
                 avbryt={tilForsiden}
                 avbrytTekst="Avbryt"
                 redigerbart

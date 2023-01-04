@@ -9,9 +9,7 @@ const {
   UTSENDT_ARBEIDSTAKER,
   UTSENDT_SELVSTENDIG,
   ARBEID_FLERE_LAND,
-  ARBEID_ETT_LAND_ØVRIG,
   ARBEID_TJENESTEPERSON_ELLER_FLY,
-  ARBEID_KUN_NORGE,
   ARBEID_NORGE_BOSATT_ANNET_LAND,
   REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
   REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
@@ -59,9 +57,7 @@ class LinkGroupsFactory {
       case UTSENDT_ARBEIDSTAKER:
       case UTSENDT_SELVSTENDIG:
       case ARBEID_FLERE_LAND:
-      case ARBEID_ETT_LAND_ØVRIG:
       case ARBEID_TJENESTEPERSON_ELLER_FLY:
-      case ARBEID_KUN_NORGE:
       case ARBEID_NORGE_BOSATT_ANNET_LAND: {
         const fraBruker = new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet();
         if (mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraBruker.addLonnOgGodtgjorelser();
