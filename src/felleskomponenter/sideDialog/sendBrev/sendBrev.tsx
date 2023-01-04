@@ -199,6 +199,7 @@ const SendBrev = ({
       })),
       fritekstvedlegg,
       distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
+      dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
     };
   };
 
