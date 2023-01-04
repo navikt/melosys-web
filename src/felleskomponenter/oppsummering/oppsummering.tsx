@@ -38,7 +38,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type OppsummeringProps = PropsFromRedux & {
   arbeidsland?: KTObject[];
   lovvalgsland?: KTObject;
-  mottattDato?: string;
   lovvalgsperiodeFom: string;
   lovvalgsperiodeTom: string;
   mottatteOpplysningerPeriodeFom: string;
@@ -57,10 +56,9 @@ const Oppsummering = ({
   mottatteOpplysningerPeriodeTom,
   className,
   behandlingID,
-  ...props
 }: OppsummeringProps) => {
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
-  const [mottaksdato, setMottaksdato] = useState<string | undefined>(props.mottattDato); // Dette er under en annen toggle
+  const [mottaksdato, setMottaksdato] = useState<string | undefined>();
 
   const { saksnummer, sakstype, sakstema, registrertDato, hovedpartRolle } = fagsak;
   const {
