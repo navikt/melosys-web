@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import ReactHighcharts from "react-highcharts";
-
-import * as MPT from "../../../../proptypes";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
+import * as MPT from "../../../../proptypes";
 import Tabell from "../../../tabell/tabell";
 
 import "./inntekt.css";
@@ -23,7 +23,7 @@ class Inntekt extends Component {
 
     const omvendtInntektListe = [...inntektListe].reverse();
 
-    const grafConfig = {
+    const options = {
       rangeSelector: {
         selected: 0,
       },
@@ -82,7 +82,7 @@ class Inntekt extends Component {
     const inntektInnhold = harMinstEnInntekt && (
       <div className="inntekt">
         <div className="inntekt__graf">
-          <ReactHighcharts config={grafConfig} />
+          <HighchartsReact highcharts={Highcharts} options={options} />
           <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">
             {this.state.visInntektTabell ? "Skjul tabellen" : "Vis grafen som tabell"}
           </Nav.Knapp>
