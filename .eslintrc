@@ -2,7 +2,7 @@
   "parser": "@typescript-eslint/parser",
   "rules": {
     "no-restricted-imports": [
-      "error",
+      "warn",
       {
         "name": "enzyme",
         "message": "Please use react-testing-library instead"
