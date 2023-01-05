@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import Enzyme, { shallow, mount } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 import each from "jest-each";
 
 // Feiler tester som kaster en proptype-error
