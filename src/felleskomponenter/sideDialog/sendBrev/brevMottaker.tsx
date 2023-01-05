@@ -68,7 +68,6 @@ const BrevMottaker = ({
   const mottakerOrgNrSettesAvSaksbehandler =
     erArbeidsgiverEllerVirksomhet(formValues?.valgtMottaker?.rolle) &&
     formValues?.valgtMottaker?.orgnrSettesAvSaksbehandler;
-  const mottakerErValgt = formValues?.valgtMottaker;
 
   const mottakerHjelpetekst =
     "Hvis bruker eller arbeidsgiver har fullmektig som er lagt inn i sidemenyen, vil brevet automatisk bli sendt til denne.";
@@ -149,23 +148,6 @@ const BrevMottaker = ({
           </option>
         ))}
       </Skjema.Select>
-
-      {mottakerErValgt && mottakerErValgt.trygdemyndighet && (
-        <Skjema.Select
-          feltNavn="trygdemyndighet"
-          label={<Nav.Typo.Element>Trygdemyndighet i avtaleland</Nav.Typo.Element>}
-          disabled={!redigerbart}
-          emptyFieldText="Velg..."
-          emptyFieldDisabled={!!formValues.trygdemyndighet}
-          onBlur={overstyrBlurEvent}
-        >
-          {mottakerErValgt.trygdemyndighet?.map((land) => (
-            <option key={land} value={land}>
-              {`Trygdemyndighet i ${land}`}
-            </option>
-          ))}
-        </Skjema.Select>
-      )}
 
       {(mottakerErBruker || mottakerErVirksomhet) && (
         <Nav.Row>
