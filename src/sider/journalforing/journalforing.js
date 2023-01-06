@@ -14,7 +14,6 @@ import * as Api from "../../services/api";
 import * as MPT from "../../proptypes";
 import { JOURNALFORING_HENSIKT } from "../../constants";
 
-import { erFeatureToggleEnabled } from "../../featuretoggle";
 import Sticky from "../../felleskomponenter/sticky";
 import PDFDokument from "./komponenter/pdfdokument";
 import JournalforingSED from "./komponenter/journalforingsed";
@@ -35,14 +34,10 @@ class Journalforing extends Component {
     visFeilmeldingDialog: false,
     feilmeldinger: [],
     submitSpinner: false,
-    behandleAlleSakerToggleEnabled: false,
-    toggleHentet: false, // Kan fjernes når melosys.behandle_alle_saker toggle fjernes
   };
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
     await this.props.hentJournalOppgave(journalpostID);
-    const toggleEnabled = await erFeatureToggleEnabled("melosys.behandle_alle_saker");
-    this.setState({ behandleAlleSakerToggleEnabled: toggleEnabled, toggleHentet: true });
     this.props.hentLandkoder();
   }
 
@@ -400,14 +395,13 @@ class Journalforing extends Component {
       settFeltInnhold,
     } = this.props;
 
-    const { visFeilmeldingDialog, feilmeldinger, submitSpinner, behandleAlleSakerToggleEnabled, toggleHentet } =
-      this.state;
+    const { visFeilmeldingDialog, feilmeldinger, submitSpinner } = this.state;
 
     const { journalpostID } = this.props.match.params;
     const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = "Hoveddokument" } = hoveddokument;
 
     const visSedJournalforing = Utils._isObject(behandlingsInformasjon);
-    const visNormalJournalforing = behandlingsInformasjon === null && toggleHentet;
+    const visNormalJournalforing = behandlingsInformasjon === null;
 
     return (
       <>
@@ -440,7 +434,6 @@ class Journalforing extends Component {
                           submitJournalforing={this.submitJournalforingNormal}
                           avbrytJournalforing={this.avbrytJournalforing}
                           settFeltInnhold={settFeltInnhold}
-                          behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
                         />
                       )}
                     </div>

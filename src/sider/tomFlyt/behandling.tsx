@@ -39,7 +39,6 @@ const mapStateToProps = (state: RootState) => ({
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
-  mottaksdato: mottatteOpplysningerSelectors.MottaksdatoSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
@@ -66,7 +65,6 @@ const Behandling = ({
   lovvalgsland,
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
-  mottaksdato,
   match: {
     params: { saksnr: saksnummer, sakstype },
   },
@@ -112,7 +110,6 @@ const Behandling = ({
               <Oppsummering
                 arbeidsland={arbeidsland}
                 lovvalgsland={lovvalgsland}
-                mottattDato={mottaksdato}
                 lovvalgsperiodeFom={lovvalgsperiodeFom}
                 lovvalgsperiodeTom={lovvalgsperiodeTom}
                 mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}

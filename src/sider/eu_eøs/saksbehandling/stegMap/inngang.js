@@ -13,7 +13,7 @@ class SaksbehandlingInngang extends Inngang {
         nesteSteg: STEG.BOSTEDSLAND,
       },
       {
-        exec: () => harAvklaring && propsLight.erArbeidEttLandOvrig,
+        exec: () => harAvklaring && propsLight.erArbeidTjenestepersonEllerFly,
         nesteSteg: STEG.VIRKSOMHETER,
       },
       {

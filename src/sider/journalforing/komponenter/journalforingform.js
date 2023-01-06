@@ -27,26 +27,11 @@ import "./journalforingform.css";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
-const skalViseForvaltningsmelding = (formValues, toggleEnabled) => {
-  if (toggleEnabled) {
-    return (
-      formValues.saksnummer === "-1" &&
-      formValues.journalforingGjelder === BRUKER &&
-      formValues.sakstema === MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG &&
-      formValues.opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG
-    );
-  }
-
-  return (
-    formValues.saksnummer === "-1" &&
-    (MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema) ||
-      [
-        MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
-        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
-      ].includes(formValues.opprettnysak_behandlingstema)) &&
-    formValues.journalforingGjelder === BRUKER
-  );
-};
+const skalViseForvaltningsmelding = (formValues) =>
+  formValues.saksnummer === "-1" &&
+  formValues.journalforingGjelder === BRUKER &&
+  formValues.sakstema === MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG &&
+  formValues.opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
 
 export const JournalforingForm = ({
   journalpostID,
@@ -61,17 +46,15 @@ export const JournalforingForm = ({
   avbrytJournalforing,
   submitSpinner,
   handleSubmit,
-  behandleAlleSakerToggleEnabled,
   landkoder,
 }) => {
-  const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, behandleAlleSakerToggleEnabled);
+  const visForvaltningsmelding = skalViseForvaltningsmelding(formValues);
   const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
   const visSkalTilordnes = !fagsakListe.find(
     (sak) => sak.saksnummer === formValues?.saksnummer && MKVUtils.erHenlagtEllerHenlagtBortfalt(sak.saksstatus.kode)
   );
 
   useEffect(() => {
-    if (!behandleAlleSakerToggleEnabled) return;
     settFeltInnhold("ikkeSendForvaltingsmelding", !visForvaltningsmelding);
   }, [visForvaltningsmelding]);
 
@@ -87,7 +70,6 @@ export const JournalforingForm = ({
             <FagsakVelger
               fagsakListe={fagsakListe}
               settJournalforingHensikt={settJournalforingHensikt}
-              behandleAlleSakerToggleEnabled={behandleAlleSakerToggleEnabled}
               landkoder={landkoder}
               formValues={formValues}
             />
@@ -134,7 +116,6 @@ JournalforingForm.propTypes = {
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
-  behandleAlleSakerToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
@@ -150,7 +131,7 @@ const toVedleggMedProps = (vedlegg) =>
     return acc;
   }, {});
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
   erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
   landkoder: landkoderSelectors.LandkoderSelector(state),
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
@@ -179,10 +160,6 @@ const mapStateToProps = (state, ownProps) => ({
     },
     journalforingSoknadsland: [],
     journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-    sakstype: ownProps.behandleAlleSakerToggleEnabled ? null : MKV.Koder.sakstyper.EU_EOS,
-    opprettnysak_behandlingstema: ownProps.behandleAlleSakerToggleEnabled
-      ? null
-      : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
     ingenVurdering: false,
     ikkeSendForvaltingsmelding: false,
     skalTilordnes: false,
@@ -205,7 +182,6 @@ const form = {
     const options = {
       context: {
         erAvsenderPreutfylt: props.erAvsenderPreutfylt,
-        behandleAlleSakerToggleEnabled: props.behandleAlleSakerToggleEnabled,
         registeredFields: props.registeredFields,
         journalforingKnappErTryktPå: Boolean(values.journalforingHensikt),
       },

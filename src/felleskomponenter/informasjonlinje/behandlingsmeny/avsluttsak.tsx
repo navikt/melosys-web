@@ -1,21 +1,15 @@
 import React from "react";
+import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
 import * as Nav from "../../../navFrontend";
-import * as KV from "../../../kodeverk";
-import MKV from "../../../melosyskodeverk";
-import { useFeatureToggle } from "../../../featuretoggle";
 import Handling from "./handling";
 
 const {
-  TRYGDETID,
-  REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
-  REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
   YRKESAKTIV,
   IKKE_YRKESAKTIV,
   ARBEID_KUN_NORGE,
   PENSJONIST,
   UNNTAK_MEDLEMSKAP,
-  ARBEID_ETT_LAND_ØVRIG,
   ARBEID_TJENESTEPERSON_ELLER_FLY,
   ANMODNING_OM_UNNTAK_HOVEDREGEL,
   REGISTRERING_UNNTAK,
@@ -24,7 +18,7 @@ const {
   UTSENDT_SELVSTENDIG,
   ARBEID_FLERE_LAND,
 } = MKV.Koder.behandlinger.behandlingstema;
-const { NY_VURDERING, ENDRET_PERIODE, FØRSTEGANG, KLAGE, HENVENDELSE } = MKV.Koder.behandlinger.behandlingstyper;
+const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE } = MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
 const {
@@ -51,7 +45,6 @@ type avsluttSakProps = {
   behandlingstema: string;
   behandlingstype: string;
   redigerbart: boolean;
-  behandlingsstatus: string;
   tilForsiden: () => void;
 };
 
@@ -67,35 +60,13 @@ const AvsluttSak = ({
   behandlingstype,
   ferdigbehandleSak,
   redigerbart,
-  behandlingsstatus,
 }: avsluttSakProps) => {
-  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
-  const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
-  const behandlingstemaErTrygdetid = behandlingstema === TRYGDETID;
   const behandlingstypeErNyVurdering = behandlingstype === NY_VURDERING;
-  const behandlingstypeErEndretPeriode = behandlingstype === ENDRET_PERIODE;
   const behandlingstypeErKlage = behandlingstype === KLAGE;
-  const behandlingstemaErUnntakNorskTrygdØvrigEllerUtstasjonering =
-    behandlingstema === REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE ||
-    behandlingstema === REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
   const behandlingstemaErUnntak =
     behandlingstema === ANMODNING_OM_UNNTAK_HOVEDREGEL || behandlingstema === REGISTRERING_UNNTAK;
 
   const skalViseAvslåPgaManglendeOpplysninger = () => {
-    if (behandleAlleSakerToggle !== "enabled") {
-      switch (behandlingskategori) {
-        case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
-          return redigerbart && !behandlingstemaErTrygdetid;
-        case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
-        case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
-        case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
-        case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
-          return redigerbart;
-        case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
-        default:
-          return false;
-      }
-    }
     if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) return false;
 
     if (sakstype === EU_EOS) {
@@ -129,22 +100,6 @@ const AvsluttSak = ({
   };
 
   const skalViseBehandlingenErHenlagt = () => {
-    if (behandleAlleSakerToggle !== "enabled") {
-      switch (behandlingskategori) {
-        case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
-          return redigerbart && !behandlingstypeErEndretPeriode;
-        case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
-          return redigerbart && !behandlingstemaErTrygdetid;
-        case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
-        case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
-        case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
-          return redigerbart;
-        case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
-        default:
-          return false;
-      }
-    }
-
     if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) return false;
 
     if (sakstype === EU_EOS) {
@@ -178,25 +133,6 @@ const AvsluttSak = ({
   };
 
   const skalViseBehandlingenErBortfalt = () => {
-    if (behandleAlleSakerToggle !== "enabled") {
-      if (
-        behandlingstemaErUnntakNorskTrygdØvrigEllerUtstasjonering &&
-        behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT
-      ) {
-        return true;
-      }
-      switch (behandlingskategori) {
-        case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
-        case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
-        case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
-        case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
-        case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
-          return redigerbart;
-        case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
-        default:
-          return false;
-      }
-    }
     return redigerbart;
   };
 
@@ -207,22 +143,20 @@ const AvsluttSak = ({
       case UTSENDT_SELVSTENDIG:
       case ARBEID_TJENESTEPERSON_ELLER_FLY:
       case ARBEID_FLERE_LAND:
-      case ARBEID_ETT_LAND_ØVRIG:
         return redigerbart && (behandlingstypeErNyVurdering || behandlingstype === HENVENDELSE);
       default:
         return redigerbart;
     }
   };
 
-  const skalViseKlageHandlinger = behandleAlleSakerToggle === "enabled" && redigerbart && behandlingstypeErKlage;
+  const skalViseKlageHandlinger = redigerbart && behandlingstypeErKlage;
 
-  const skalViseVedtakOmgjort = behandleAlleSakerToggle === "enabled" && redigerbart && behandlingstypeErNyVurdering;
+  const skalViseVedtakOmgjort = redigerbart && behandlingstypeErNyVurdering;
 
-  const skalViseUnntaksHandlinger =
-    behandleAlleSakerToggle === "enabled" && redigerbart && behandlingstemaErUnntak && sakstype === TRYGDEAVTALE;
+  const skalViseUnntaksHandlinger = redigerbart && behandlingstemaErUnntak && sakstype === TRYGDEAVTALE;
 
   const skalViseSøknadenErInnvilget = () => {
-    if (behandleAlleSakerToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
+    if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
       return false;
     }
     if (
@@ -242,14 +176,13 @@ const AvsluttSak = ({
   };
 
   const skalViseSøknadenErAvslått = () => {
-    if (behandleAlleSakerToggle !== "enabled" || !redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
+    if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
       return false;
     }
 
     return (
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
       [
-        ARBEID_ETT_LAND_ØVRIG,
         ARBEID_TJENESTEPERSON_ELLER_FLY,
         ARBEID_KUN_NORGE,
         YRKESAKTIV,

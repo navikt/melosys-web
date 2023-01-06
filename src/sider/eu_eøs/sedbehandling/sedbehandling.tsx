@@ -16,7 +16,6 @@ import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import { TomFlytMelding } from "../../../felleskomponenter/alertmeldinger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
-import { useFeatureToggle } from "../../../featuretoggle";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { datalastingOperations } from "../../../ducks/datalasting";
@@ -68,7 +67,6 @@ const SedBehandling = ({
   resetSaksopplysninger,
   hentMottatteOpplysninger,
 }: Props & PropsFromRedux) => {
-  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
   const {
     params: { saksnr: saksnummer },
@@ -102,12 +100,8 @@ const SedBehandling = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {behandleAlleSakerToggle === "enabled" && (
-                  <>
-                    <TomFlytMelding />
-                    <SoknadMenypanelForm startOgVisOppfriskModal={() => null} visOppdaterRegisteropplysninger={false} />
-                  </>
-                )}
+                <TomFlytMelding />
+                <SoknadMenypanelForm startOgVisOppfriskModal={() => null} visOppdaterRegisteropplysninger={false} />
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering

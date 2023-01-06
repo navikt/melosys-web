@@ -12,15 +12,12 @@ const {
   TRYGDETID,
   YRKESAKTIV,
   UTSENDT_ARBEIDSTAKER,
-  REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
-  REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
   ANMODNING_OM_UNNTAK_HOVEDREGEL,
   REGISTRERING_UNNTAK,
 } = MKV.Koder.behandlinger.behandlingstema;
 const { NY_VURDERING, FØRSTEGANG, HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 const { FTRL, TRYGDEAVTALE, EU_EOS } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG, UNNTAK } = MKV.Koder.sakstemaer;
-const { VURDER_DOKUMENT } = MKV.Koder.behandlinger.behandlingsstatus;
 
 const mockedProps = mock<ComponentProps<typeof AvsluttSak>>();
 
@@ -138,32 +135,6 @@ describe("AvsluttSak", () => {
       const handlinger = avsluttSak.find(Handling);
 
       expect(handlinger).toHaveLength(0);
-    });
-  });
-
-  describe("Behandlingen er bortfalt", () => {
-    it(`viser 'Behandlingen er bortfalt' dersom behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
-      setupProps(props);
-      props.behandlingstema = REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE;
-      props.behandlingsstatus = VURDER_DOKUMENT;
-
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
-
-      expect(handlinger).toHaveLength(2);
-      expect(handlinger.at(1).props().tekst).toBe("Behandlingen er bortfalt");
-    });
-
-    it(`viser 'Behandlingen er bortfalt' dersom behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
-      setupProps(props);
-      props.behandlingstema = REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
-      props.behandlingsstatus = VURDER_DOKUMENT;
-
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
-
-      expect(handlinger).toHaveLength(2);
-      expect(handlinger.at(1).props().tekst).toBe("Behandlingen er bortfalt");
     });
   });
 

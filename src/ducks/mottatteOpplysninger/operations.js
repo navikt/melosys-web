@@ -7,7 +7,6 @@ import * as Selectors from "./selectors";
 
 import MKV from "../../melosyskodeverk";
 
-import { erFeatureToggleEnabled } from "../../featuretoggle";
 import { doThenDispatch } from "../../services/utils";
 
 import { formSelectors } from "../form";
@@ -127,29 +126,6 @@ const lagSedGrunnlagFelter = (mottatteOpplysninger) => ({
   ytterligereInformasjon: mottatteOpplysninger.ytterligereInformasjon || null,
 });
 
-const lagMottatteOpplysningerDataEtterBehandlingstema = (behandlingstema, mottatteOpplysninger) => {
-  switch (behandlingstema) {
-    case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
-    case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
-    case MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG:
-    case MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY:
-    case MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE:
-    case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
-    case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
-    case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
-      return lagEØSFelter(mottatteOpplysninger);
-    case MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET:
-      return lagFTRLFelter(mottatteOpplysninger);
-    case MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV:
-      return lagTrygdeavtaleFelter(mottatteOpplysninger);
-    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
-    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
-      return lagSedGrunnlagFelter(mottatteOpplysninger);
-    default:
-      return {};
-  }
-};
-
 const lagMottatteOpplysningerData = (sakstype, behandlingstema, mottatteOpplysninger) => {
   if (temaForSedGrunnlag(behandlingstema)) {
     return lagSedGrunnlagFelter(mottatteOpplysninger);
@@ -168,18 +144,15 @@ const lagMottatteOpplysningerData = (sakstype, behandlingstema, mottatteOpplysni
 };
 
 export function lagre() {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     dispatch(oppdaterState());
-    const behandleAlleSakerToggleEnabled = await erFeatureToggleEnabled("melosys.behandle_alle_saker");
 
     const mottatteOpplysninger = Selectors.MottatteOpplysningerDataSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
     const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
     const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
 
-    const data = behandleAlleSakerToggleEnabled
-      ? lagMottatteOpplysningerData(sakstype, behandlingstema, mottatteOpplysninger)
-      : lagMottatteOpplysningerDataEtterBehandlingstema(behandlingstema, mottatteOpplysninger);
+    const data = lagMottatteOpplysningerData(sakstype, behandlingstema, mottatteOpplysninger);
 
     return dispatch(send(bid, { data }));
   };

@@ -160,7 +160,6 @@ class Saksbehandling extends Component {
       hovedpartRolle,
       mottatteOpplysningerPeriodeFom,
       mottatteOpplysningerPeriodeTom,
-      mottatteOpplysningerMottaksdato,
       tilForsiden,
       startOgVisOppfriskModal,
     } = this.props;
@@ -198,7 +197,6 @@ class Saksbehandling extends Component {
                 <Nav.Column xs="5">
                   <Oppsummering
                     arbeidsland={arbeidsland}
-                    mottattDato={mottatteOpplysningerMottaksdato}
                     lovvalgsperiodeFom={lovvalgsperiodeFom}
                     lovvalgsperiodeTom={lovvalgsperiodeTom}
                     mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
@@ -258,7 +256,6 @@ Saksbehandling.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   mottatteOpplysningerPeriodeFom: PT.string.isRequired,
   mottatteOpplysningerPeriodeTom: PT.string.isRequired,
-  mottatteOpplysningerMottaksdato: PT.string.isRequired,
   tilForsiden: PT.func.isRequired,
   visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
@@ -303,9 +300,6 @@ const mapStateToProps = (state) => ({
   ),
   mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeSelector(state).tom
-  ),
-  mottatteOpplysningerMottaksdato: Utils.dato.formatterDatoTilNorsk(
-    mottatteOpplysningerSelectors.MottaksdatoSelector(state)
   ),
 });
 

@@ -61,7 +61,6 @@ describe("JournalforingForm", () => {
       handleSubmit: jest.fn(),
       submitJournalforing: jest.fn(),
       submitSpinner: false,
-      behandleAlleSakerToggleEnabled: true,
       landkoder: [],
     };
   });

@@ -21,30 +21,23 @@ import { useFeatureToggle } from "../../featuretoggle";
  * for å gi saksbehandler oversikt over sakens innhold før hun klikker
  * seg inn på den.
  */
-const Fagsak = ({ sak, visSakstema, landkoder }) => {
-  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
+const Fagsak = ({ sak, landkoder }) => {
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
 
-  const { soknadsperiode, land } =
-    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
+  const { land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
   const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
-  const tittel = visSakstema
-    ? `${KV.objektTilTerm(sakstype)} - ${KV.objektTilTerm(sakstema)}`
-    : `${KV.objektTilTerm(sakstype)}`;
   const link = (behandling) =>
-    visSakstema
-      ? Routing.lagUrl(
-          saksnummer,
-          behandling.behandlingID,
-          sakstype.kode,
-          sakstema.kode,
-          behandling.behandlingstema.kode,
-          behandling.behandlingstype.kode,
-          folketrygdenToggle === "enabled"
-        )
-      : Routing.lagUrlFraBehandlingstema(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode);
+    Routing.lagUrl(
+      saksnummer,
+      behandling.behandlingID,
+      sakstype.kode,
+      sakstema.kode,
+      behandling.behandlingstema.kode,
+      behandling.behandlingstype.kode,
+      folketrygdenToggle === "enabled"
+    );
 
   const customMargin = { marginLeft: "1em" };
 
@@ -54,7 +47,7 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
 
   return (
     <Nav.Panel className="fagsak">
-      <PanelHeader tittel={tittel} />
+      <PanelHeader tittel={`${sakstype?.term} - ${sakstema?.term}`} />
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="12" md="5">
@@ -67,10 +60,7 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
           </Nav.Column>
           <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
-              <DatoOmradeDescription
-                label={behandleAlleSakerToggle === "enabled" ? "Lovvalgsperiode: " : "Periode: "}
-                periode={behandleAlleSakerToggle === "enabled" ? lovvalgsperiode : soknadsperiode}
-              />
+              <DatoOmradeDescription label="Lovvalgsperiode: " periode={lovvalgsperiode} />
               <dt>Land:</dt>
               <dd>
                 <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
@@ -98,7 +88,6 @@ const Fagsak = ({ sak, visSakstema, landkoder }) => {
 
 Fagsak.propTypes = {
   sak: MPT.BehandligOversikt,
-  visSakstema: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 

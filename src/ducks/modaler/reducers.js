@@ -7,7 +7,6 @@ const modaler = {
   ferdigbehandleSak: "ferdigbehandleSak",
   henlegg: "henlegg",
   oppfrisk: "oppfrisk",
-  revurderFagsak: "revurderFagsak",
 };
 
 const initialState = {
@@ -24,9 +23,6 @@ const initialState = {
     [modaler.oppfrisk]: {
       synlig: false,
       behandlingUnderOppfriskning: null,
-    },
-    [modaler.revurderFagsak]: {
-      synlig: false,
     },
     [modaler.ferdigbehandleSak]: {
       synlig: false,
@@ -63,9 +59,6 @@ export default function reducer(state = initialState, action = {}) {
     }
     case Types.OPPDATER_OPPFRISK: {
       return lagNyState(state, action, modaler.oppfrisk);
-    }
-    case Types.OPPDATER_REVURDER_FAGSAK: {
-      return lagNyState(state, action, modaler.revurderFagsak);
     }
     default:
       return state;

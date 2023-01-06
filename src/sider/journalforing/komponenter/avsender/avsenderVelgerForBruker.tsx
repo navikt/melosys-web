@@ -7,7 +7,6 @@ import MKV from "../../../../melosyskodeverk";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as KV from "../../../../kodeverk";
 
-import { useFeatureToggle } from "../../../../featuretoggle";
 import { journalforingSelectors } from "../../../../ducks/journalforing";
 import { AvsenderArbeidsgiver, AvsenderUtenlandskTrygdemyndighet, AvsenderFullmektig } from "./index";
 
@@ -47,9 +46,8 @@ const AvsenderVelgerForBruker = ({
   settFeltInnhold,
   hentOgVisRepresentant,
 }: AvsenderVelgerForBrukerProps) => {
-  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
   const avsenderTypeEndret = (avsenderType: string) => {
-    if (behandleAlleSakerToggle === "enabled" && avsenderType !== MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET) {
+    if (avsenderType !== MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET) {
       settFeltInnhold("sakstype", null);
       settFeltInnhold("utenlandskTrygdemyndighetLandkode", null);
     }
@@ -84,14 +82,12 @@ const AvsenderVelgerForBruker = ({
     settFeltInnhold("avsenderID", landkode);
     settFeltInnhold("avsenderNavn", avsenderNavn);
     if (
-      behandleAlleSakerToggle === "enabled" &&
       KV.erKodeIListe(landkode, MKV.KTObjects.trygdeavtale_myndighetsland) &&
       !KV.erKodeIListe(landkode, MKV.Kodekombinasjoner.landSomErTrygdeavtaleMyndighetslandOgEuEøsLand)
     ) {
       settFeltInnhold("sakstype", MKV.Koder.sakstyper.TRYGDEAVTALE);
     }
     if (
-      behandleAlleSakerToggle === "enabled" &&
       KV.erKodeIListe(landkode, MKV.KTObjects.landkoder) &&
       !KV.erKodeIListe(landkode, MKV.Kodekombinasjoner.landSomErTrygdeavtaleMyndighetslandOgEuEøsLand)
     ) {
@@ -142,18 +138,15 @@ const AvsenderVelgerForBruker = ({
             fullmektigLandEndret={fullmektigLandEndret}
           />
         )}
-        {behandleAlleSakerToggle === "enabled" && (
-          <>
-            <Skjema.Radio
-              feltNavn="avsenderType"
-              label="Annen"
-              value={KV.AvsenderTyper.ANNEN}
-              className="avsendervelger__radio"
-            />
-            {formValues.avsenderType === KV.AvsenderTyper.ANNEN && (
-              <Skjema.Input label="" feltNavn="avsenderNavn" bredde="fullbredde" />
-            )}
-          </>
+
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Annen"
+          value={KV.AvsenderTyper.ANNEN}
+          className="avsendervelger__radio"
+        />
+        {formValues.avsenderType === KV.AvsenderTyper.ANNEN && (
+          <Skjema.Input label="" feltNavn="avsenderNavn" bredde="fullbredde" />
         )}
       </Skjema.RadioGruppe>
     </div>

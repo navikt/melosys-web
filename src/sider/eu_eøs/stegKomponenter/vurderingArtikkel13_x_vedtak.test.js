@@ -29,7 +29,7 @@ describe("VurderingArtikkel13_x_Vedtak", () => {
       byggLovvalgsperioder: jest.fn(),
       lagreLovvalgsperioder: jest.fn(),
       kontrollerFerdigbehandling: jest.fn(),
-      behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+      behandlingstype: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
       harLandSomKreverSED: true,
       soknadsperiode: { tom: "", fom: "" },
       validerMottatteOpplysninger: jest.fn(),

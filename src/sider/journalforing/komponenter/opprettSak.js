@@ -16,26 +16,6 @@ import { skalViseTomFlytEllerErSedBehandling } from "../../../routing";
 
 import "./opprettSak.css";
 
-const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
-  ({ kode }) =>
-    kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER ||
-    kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG ||
-    kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG ||
-    kode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV ||
-    kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND ||
-    kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED ||
-    kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM ||
-    kode === MKV.Koder.behandlinger.behandlingstema.TRYGDETID
-);
-
-const ftrlBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
-  ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
-);
-
-const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
-  ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
-);
-
 const nullstillVerdier = (steg, endreFelt, feltNavn) => {
   switch (steg) {
     case feltNavn.sakstype:
@@ -63,23 +43,8 @@ export const skalViseSoknadsperiodeOgLand = (sakstype, sakstema, behandlingstema
   behandlingstype &&
   !skalViseTomFlytEllerErSedBehandling(sakstype, sakstema, behandlingstema, behandlingstype);
 
-export const skalViseSoknadsperiodeOgLandDeprecated = (hovedpart, sakstype, behandlingstema) =>
-  hovedpart !== MKV.Koder.aktoersroller.VIRKSOMHET &&
-  sakstype === MKV.Koder.sakstyper.EU_EOS &&
-  ![
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
-    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
-  ].includes(behandlingstema);
-
-export const OpprettSakTittel = () => (
-  <div className="enkeltSak__meta">
-    <Nav.Typo.Element>Opprett ny sak</Nav.Typo.Element>
-  </div>
-);
-
 export const OpprettSak = (props) => {
-  const { behandleAlleSakerToggleEnabled, settFeltInnhold, formValues, feltNavn } = props;
+  const { settFeltInnhold, formValues, feltNavn } = props;
 
   const {
     valgtSakstype,
@@ -103,61 +68,16 @@ export const OpprettSak = (props) => {
   const [sakstemaer, setSakstemaer] = useState([]);
   const [behandlingstemaer, setBehandlingstemaer] = useState([]);
   const [behandlingstyper, setBehandlingstyper] = useState([]);
-  const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
-  const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
   const { formNavn } = feltNavn;
-  const defaultBehandlingstema = (sakstype) => {
-    switch (sakstype) {
-      case MKV.Koder.sakstyper.FTRL:
-        return MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET;
-      case MKV.Koder.sakstyper.TRYGDEAVTALE:
-        return MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
-      default:
-        return MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER;
-    }
-  };
-
-  const behandlingstemaerEtterSakstype = (sakstype) => {
-    switch (sakstype) {
-      case MKV.Koder.sakstyper.FTRL:
-        return ftrlBehandlingstemaer;
-      case MKV.Koder.sakstyper.TRYGDEAVTALE:
-        return trygdeavtaleBehandlingstemaer;
-      case MKV.Koder.sakstyper.EU_EOS:
-        return euEosBehandlingstemaer;
-      default:
-        return [];
-    }
-  };
 
   useEffect(() => {
-    if (behandleAlleSakerToggleEnabled) return;
-    settFeltInnhold(formNavn, "opprettnysak_behandlingstema", defaultBehandlingstema(valgtSakstype));
-    setValgbareBehandlingstemaer(behandlingstemaerEtterSakstype(valgtSakstype));
-  }, [valgtSakstype]);
-
-  useEffect(() => {
-    setValgbareSakstyper(
-      MKV.KTObjects.sakstyper.filter(
-        ({ kode }) =>
-          kode === MKV.Koder.sakstyper.EU_EOS ||
-          (folketrygdenToggle === "enabled" && kode === MKV.Koder.sakstyper.FTRL) ||
-          kode === MKV.Koder.sakstyper.TRYGDEAVTALE
-      )
-    );
-  }, [folketrygdenToggle]);
-
-  useEffect(() => {
-    if (!behandleAlleSakerToggleEnabled) return;
-
     Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
       setSakstyper(muligeSakstyper);
     });
-  }, [behandleAlleSakerToggleEnabled]);
+  }, []);
 
   useEffect(() => {
-    if (!behandleAlleSakerToggleEnabled) return;
     if (valgtSakstype) {
       Api.LovligeKombinasjoner.hentSakstemaer(hovedpart, valgtSakstype).then((muligeSakstemaer) => {
         setSakstemaer(muligeSakstemaer);
@@ -165,11 +85,9 @@ export const OpprettSak = (props) => {
       setBehandlingstemaer([]);
       setBehandlingstyper([]);
     }
-  }, [behandleAlleSakerToggleEnabled, hovedpart, valgtSakstype]);
+  }, [hovedpart, valgtSakstype]);
 
   useEffect(() => {
-    if (!behandleAlleSakerToggleEnabled) return;
-
     if (valgtSakstype && valgtSakstema) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(hovedpart, valgtSakstype, valgtSakstema).then(
         (muligeBehandlingstemaer) => {
@@ -178,10 +96,9 @@ export const OpprettSak = (props) => {
       );
       setBehandlingstyper([]);
     }
-  }, [behandleAlleSakerToggleEnabled, hovedpart, valgtSakstype, valgtSakstema]);
+  }, [hovedpart, valgtSakstype, valgtSakstema]);
 
   useEffect(() => {
-    if (!behandleAlleSakerToggleEnabled) return;
     if (valgtSakstype && valgtSakstema && valgtBehandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(hovedpart, valgtSakstype, valgtSakstema, valgtBehandlingstema).then(
         (muligeBehandlingstyper) => {
@@ -196,12 +113,11 @@ export const OpprettSak = (props) => {
         }
       );
     }
-  }, [behandleAlleSakerToggleEnabled, hovedpart, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
+  }, [hovedpart, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
 
   const visArbeidFlereLandEllerUkjent =
     valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
   const disableSakstype =
-    behandleAlleSakerToggleEnabled &&
     !Utils._isEmpty(formValues?.utenlandskTrygdemyndighetLandkode) &&
     !KV.erKodeIListe(
       formValues.utenlandskTrygdemyndighetLandkode,
@@ -214,70 +130,61 @@ export const OpprettSak = (props) => {
         feltNavn={feltNavn.sakstype}
         bredde="fullbredde"
         label="Sakstype"
-        onChange={() => {
-          if (behandleAlleSakerToggleEnabled) nullstillVerdier(feltNavn.sakstype, settFeltInnhold, feltNavn);
-        }}
+        onChange={() => nullstillVerdier(feltNavn.sakstype, settFeltInnhold, feltNavn)}
         disabled={disableSakstype}
       >
-        {(behandleAlleSakerToggleEnabled ? sakstyper : valgbareSakstyper).map((elem) => (
+        {sakstyper.map((elem) => (
           <option key={elem.kode} value={elem.kode}>
             {elem.term}
           </option>
         ))}
       </Skjema.Select>
-      {behandleAlleSakerToggleEnabled && (
-        <Skjema.Select
-          feltNavn={feltNavn.sakstema}
-          bredde="fullbredde"
-          label="Sakstema"
-          onChange={() => nullstillVerdier(feltNavn.sakstema, settFeltInnhold, feltNavn)}
-        >
-          {sakstemaer.map((elem) => (
-            <option key={elem.kode} value={elem.kode}>
-              {elem.term}
-            </option>
-          ))}
-        </Skjema.Select>
-      )}
+      <Skjema.Select
+        feltNavn={feltNavn.sakstema}
+        bredde="fullbredde"
+        label="Sakstema"
+        onChange={() => nullstillVerdier(feltNavn.sakstema, settFeltInnhold, feltNavn)}
+      >
+        {sakstemaer.map((elem) => (
+          <option key={elem.kode} value={elem.kode}>
+            {elem.term}
+          </option>
+        ))}
+      </Skjema.Select>
       <Skjema.Select
         feltNavn={feltNavn.opprettnysak_behandlingstema}
         bredde="fullbredde"
         label="Behandlingstema"
         onChange={() => {
-          if (behandleAlleSakerToggleEnabled)
-            nullstillVerdier(feltNavn.opprettnysak_behandlingstema, settFeltInnhold, feltNavn);
+          nullstillVerdier(feltNavn.opprettnysak_behandlingstema, settFeltInnhold, feltNavn);
           settFeltInnhold(formNavn, feltNavn.soknadslandUkjenteEllerAlleEosLand, false);
         }}
       >
-        {(behandleAlleSakerToggleEnabled ? behandlingstemaer : valgbareBehandlingstemaer).map((elem) => (
+        {behandlingstemaer.map((elem) => (
           <option key={elem.kode} value={elem.kode}>
             {elem.term}
           </option>
         ))}
       </Skjema.Select>
-      {behandleAlleSakerToggleEnabled && (
-        <Skjema.Select
-          feltNavn={feltNavn.opprettnysak_behandlingstype}
-          bredde="fullbredde"
-          label="Behandlingstype"
-          onChange={() => nullstillVerdier(feltNavn.opprettnysak_behandlingstype, settFeltInnhold, feltNavn)}
-        >
-          {behandlingstyper.map((elem) => (
-            <option key={elem.kode} value={elem.kode}>
-              {elem.term}
-            </option>
-          ))}
-        </Skjema.Select>
-      )}
-      {(behandleAlleSakerToggleEnabled
-        ? skalViseSoknadsperiodeOgLand(
-            valgtSakstype,
-            valgtSakstema,
-            valgtBehandlingstema,
-            valgtBehandlingstype,
-            folketrygdenToggle === "enabled"
-          )
-        : skalViseSoknadsperiodeOgLandDeprecated(hovedpart, valgtSakstype, valgtBehandlingstema)) && (
+      <Skjema.Select
+        feltNavn={feltNavn.opprettnysak_behandlingstype}
+        bredde="fullbredde"
+        label="Behandlingstype"
+        onChange={() => nullstillVerdier(feltNavn.opprettnysak_behandlingstype, settFeltInnhold, feltNavn)}
+      >
+        {behandlingstyper.map((elem) => (
+          <option key={elem.kode} value={elem.kode}>
+            {elem.term}
+          </option>
+        ))}
+      </Skjema.Select>
+      {skalViseSoknadsperiodeOgLand(
+        valgtSakstype,
+        valgtSakstema,
+        valgtBehandlingstema,
+        valgtBehandlingstype,
+        folketrygdenToggle === "enabled"
+      ) && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
             <Nav.Row className="">
@@ -338,7 +245,6 @@ OpprettSak.propTypes = {
   formValues: PT.object.isRequired,
   feltNavn: PT.object.isRequired,
   settFeltInnhold: PT.func.isRequired,
-  behandleAlleSakerToggleEnabled: PT.bool.isRequired,
 };
 
 OpprettSak.defaultProps = {

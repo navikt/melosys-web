@@ -13,7 +13,6 @@ import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { useFeatureToggle } from "../../../../featuretoggle";
 import { StegStatus } from "../../stegvelger";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
@@ -107,8 +106,6 @@ const VurderingInngang = ({
     formValues?.tom !== initialFomTomLand?.tom ||
     formValues?.arbeidsland !== initialFomTomLand?.arbeidsland;
 
-  const behandleAlleSakerToggle = useFeatureToggle("melosys.behandle_alle_saker");
-
   useEffect(() => {
     if (!Utils._isEmpty(initialValues.fom) && !Utils._isEmpty(initialValues.arbeidsland)) {
       visMenypanel();
@@ -184,10 +181,8 @@ const VurderingInngang = ({
               disabled={!redigerbart}
             >
               <LandValgSomOptions landValg={landValg} />
-              {behandleAlleSakerToggle === "enabled" && landValg && landValgUtenStøtte && (
-                <option disabled>{"\u2500"}</option>
-              )}
-              {behandleAlleSakerToggle === "enabled" && <LandValgSomOptions landValg={landValgUtenStøtte} />}
+              {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}
+              <LandValgSomOptions landValg={landValgUtenStøtte} />
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>

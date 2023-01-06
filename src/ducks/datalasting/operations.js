@@ -85,18 +85,15 @@ const harIkkeTomFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
-  const behandleAlleSakerToggleEnabled = await erFeatureToggleEnabled("melosys.behandle_alle_saker");
   const folketrygdenToggleEnabled = await erFeatureToggleEnabled("melosys.folketrygden.mvp");
 
-  return behandleAlleSakerToggleEnabled
-    ? !skalViseTomFlytEllerErSedBehandling(
-        sakstype,
-        sakstema,
-        behandlingstema,
-        behandlingstype,
-        folketrygdenToggleEnabled
-      )
-    : true;
+  return !skalViseTomFlytEllerErSedBehandling(
+    sakstype,
+    sakstema,
+    behandlingstema,
+    behandlingstype,
+    folketrygdenToggleEnabled
+  );
 };
 
 export const lagreAllData = () => async (dispatch, getState) => {

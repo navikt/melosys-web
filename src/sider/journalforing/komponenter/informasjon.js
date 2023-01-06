@@ -15,7 +15,6 @@ import AvsenderVelgerForBruker, { AvsenderVelgerForVirksomhet } from "./avsender
 import LenkeListeVelger from "./lenkelistevelger";
 import JournalforingGjelder from "./journalforingGjelder";
 import Komponent from "./komponent";
-import { FeatureToggle } from "../../../featuretoggle";
 import { hentSammensattNavn } from "../../../graphql/navn";
 
 import { sokOperations } from "../../../ducks/sok";
@@ -289,27 +288,8 @@ class Informasjon extends Component {
 
     return (
       <div className="informasjon">
-        <FeatureToggle togglename="melosys.behandle_alle_saker">
-          {(toggle) =>
-            toggle === "enabled" ? (
-              <>
-                <JournalforingGjelder />
-                {InformasjonOmBrukerEllerVirksomhet}
-              </>
-            ) : (
-              <Komponent
-                ikon={Ikoner.AccountCircle}
-                tittel="Informasjon om bruker"
-                innhold={
-                  <>
-                    <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="brukerID" label="Brukers f.nr eller d-nr." />
-                    <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled className="brukers-navn" />
-                  </>
-                }
-              />
-            )
-          }
-        </FeatureToggle>
+        <JournalforingGjelder />
+        {InformasjonOmBrukerEllerVirksomhet}
 
         <Komponent
           ikon={Ikoner.Applicant}

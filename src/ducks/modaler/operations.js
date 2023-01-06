@@ -23,6 +23,3 @@ export const leggTilBehandlingOppfriskes = (behandlingID) => (dispatch) =>
 
 export const fjernBehandlingOppfriskes = () => (dispatch) =>
   dispatch(Actions.oppdaterOppfrisk({ behandlingUnderOppfriskning: null }));
-
-export const visRevurderFagsak = () => (dispatch) => dispatch(Actions.oppdaterRevurderFagsak({ synlig: true }));
-export const skjulRevurderFagsak = () => (dispatch) => dispatch(Actions.oppdaterRevurderFagsak({ synlig: false }));

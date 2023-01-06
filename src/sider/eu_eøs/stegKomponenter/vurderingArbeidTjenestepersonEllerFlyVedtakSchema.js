@@ -13,7 +13,7 @@ const VELG_OM_UTENLANDSK_TRYGDEMYNDIGHET_SKAL_INFORMERES = {
 const VELG_LAND = { melding: "Velg land" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
-const arbeid_ett_land_ovrig_vedtak = object().shape({
+const arbeid_tjenesteperson_eller_fly_vedtak = object().shape({
   lovvalgsbestemmelse: string().nullable().required(VELG_EN_BESTEMMELSE),
   forkortLovvalgsperiode: bool().required(),
   fomDato: string().when("forkortLovvalgsperiode", {
@@ -57,4 +57,4 @@ const arbeid_ett_land_ovrig_vedtak = object().shape({
   }),
 });
 
-export default arbeid_ett_land_ovrig_vedtak;
+export default arbeid_tjenesteperson_eller_fly_vedtak;

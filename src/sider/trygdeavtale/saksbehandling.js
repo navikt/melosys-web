@@ -36,7 +36,6 @@ const Saksbehandling = ({
   hovedpartRolle,
   behandlingOppfriskes,
   mottatteOpplysninger,
-  mottatteOpplysningerMottaksdato,
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
   behandlingsresultat,
@@ -164,7 +163,6 @@ const Saksbehandling = ({
               <Nav.Column xs="5">
                 <Oppsummering
                   arbeidsland={arbeidsland}
-                  mottattDato={mottatteOpplysningerMottaksdato}
                   lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom}
                   lovvalgsperiodeTom={lovvalgsperiodeTom || mottatteOpplysningerPeriodeTom}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
@@ -189,7 +187,6 @@ Saksbehandling.propTypes = {
   mottatteOpplysninger: MPT.MottatteOpplysninger,
   mottatteOpplysningerPeriodeFom: PT.string.isRequired,
   mottatteOpplysningerPeriodeTom: PT.string.isRequired,
-  mottatteOpplysningerMottaksdato: PT.string.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   hovedpartRolle: PT.string.isRequired,
@@ -231,9 +228,6 @@ const mapStateToProps = (state) => ({
   ),
   mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeSelector(state).tom
-  ),
-  mottatteOpplysningerMottaksdato: Utils.dato.formatterDatoTilNorsk(
-    mottatteOpplysningerSelectors.MottaksdatoSelector(state)
   ),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),

@@ -48,7 +48,6 @@ const Saksbehandling = ({
   mottatteOpplysninger,
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
-  mottatteOpplysningerMottaksdato,
   behandlingsresultat,
   fagsakStatusKode,
   hentBehandling,
@@ -208,7 +207,6 @@ const Saksbehandling = ({
                   arbeidsland={
                     landkoder && landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
                   }
-                  mottattDato={mottatteOpplysningerMottaksdato}
                   lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom}
                   lovvalgsperiodeTom={mottatteOpplysningerPeriodeTom}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
@@ -233,7 +231,6 @@ Saksbehandling.propTypes = {
   mottatteOpplysninger: MPT.MottatteOpplysninger,
   mottatteOpplysningerPeriodeFom: PT.string.isRequired,
   mottatteOpplysningerPeriodeTom: PT.string.isRequired,
-  mottatteOpplysningerMottaksdato: PT.string.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   hovedpartRolle: PT.string.isRequired,
@@ -284,9 +281,6 @@ const mapStateToProps = (state) => ({
   ),
   mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeSelector(state).tom
-  ),
-  mottatteOpplysningerMottaksdato: Utils.dato.formatterDatoTilNorsk(
-    mottatteOpplysningerSelectors.MottaksdatoSelector(state)
   ),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),

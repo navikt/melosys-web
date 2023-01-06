@@ -19,7 +19,6 @@ const {
   UTSENDT_SELVSTENDIG,
   ARBEID_FLERE_LAND,
   IKKE_YRKESAKTIV,
-  ARBEID_ETT_LAND_ØVRIG,
   ARBEID_TJENESTEPERSON_ELLER_FLY,
   ARBEID_NORGE_BOSATT_ANNET_LAND,
   REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
@@ -27,8 +26,6 @@ const {
   ANMODNING_OM_UNNTAK_HOVEDREGEL,
   BESLUTNING_LOVVALG_NORGE,
   BESLUTNING_LOVVALG_ANNET_LAND,
-  ØVRIGE_SED_MED,
-  ØVRIGE_SED_UFM,
   TRYGDETID,
   ARBEID_I_UTLANDET,
 } = MKV.Koder.behandlinger.behandlingstema;
@@ -46,7 +43,6 @@ describe("MenyPanel", () => {
     UTSENDT_ARBEIDSTAKER,
     UTSENDT_SELVSTENDIG,
     ARBEID_FLERE_LAND,
-    ARBEID_ETT_LAND_ØVRIG,
     ARBEID_TJENESTEPERSON_ELLER_FLY,
     ARBEID_NORGE_BOSATT_ANNET_LAND,
   ]).it("Viser korrekte menypunkter for behandlingstema %p", (behandlingstema) => {
@@ -121,19 +117,16 @@ describe("MenyPanel", () => {
     }
   );
 
-  each([IKKE_YRKESAKTIV, ØVRIGE_SED_MED, ØVRIGE_SED_UFM, TRYGDETID]).it(
-    "Viser korrekte menypunkter for behandlingstema %p",
-    (behandlingstema) => {
-      props.behandlingstema = behandlingstema;
-      const menypanel = shallow(<Menypanel {...props} />);
-      const sidemeny = menypanel.find(Sidemeny);
-      const sidemenyLinkGroups = sidemeny.props().linkGroups;
+  each([IKKE_YRKESAKTIV, TRYGDETID]).it("Viser korrekte menypunkter for behandlingstema %p", (behandlingstema) => {
+    props.behandlingstema = behandlingstema;
+    const menypanel = shallow(<Menypanel {...props} />);
+    const sidemeny = menypanel.find(Sidemeny);
+    const sidemenyLinkGroups = sidemeny.props().linkGroups;
 
-      expect(sidemenyLinkGroups[0].label).toBe(undefined);
-      expect(sidemenyLinkGroups[0].links).toHaveLength(1);
-      expect(sidemenyLinkGroups[0].links[0].label).toBe("Fullmektig");
-    }
-  );
+    expect(sidemenyLinkGroups[0].label).toBe(undefined);
+    expect(sidemenyLinkGroups[0].links).toHaveLength(1);
+    expect(sidemenyLinkGroups[0].links[0].label).toBe("Fullmektig");
+  });
 
   each([REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING, REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE]).it(
     "Viser korrekte menypunkter for behandlingstema %p",
@@ -238,15 +231,24 @@ describe("MenyPanel", () => {
     REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
     REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
     ANMODNING_OM_UNNTAK_HOVEDREGEL,
-  ]).it(
-    `viser ikke mottatteOpplysningerdata hvis behandlingstype er ${behandlingstyper.SED} og behandlingstema er %p`,
-    (behandlingstema) => {
-      props.behandlingstype = behandlingstyper.SED;
-      props.behandlingstema = behandlingstema;
-      const menypanel = shallow(<Menypanel {...props} />);
-      const activeContent = menypanel.find(Nav.Panel);
+  ]).it(`viser ikke mottatteOpplysningerdata hvis behandlingstema er %p`, (behandlingstema) => {
+    props.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
+    props.sakstype = MKV.Koder.sakstyper.EU_EOS;
+    props.behandlingstema = behandlingstema;
+    const menypanel = shallow(<Menypanel {...props} />);
+    const activeContent = menypanel.find(Nav.Panel);
 
-      expect(activeContent.children().props().visMottatteOpplysningerData).toBe(false);
-    }
-  );
+    expect(activeContent.children().props().visMottatteOpplysningerData).toBe(false);
+  });
+
+  it("viser mottatteOpplysningerdata hvis behandlingstema er BESLUTNING_LOVVALG_NORGE", () => {
+    props.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
+    props.mottatteOpplysningerType = SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+    props.sakstype = MKV.Koder.sakstyper.EU_EOS;
+    props.behandlingstema = BESLUTNING_LOVVALG_NORGE;
+    const menypanel = shallow(<Menypanel {...props} />);
+    const activeContent = menypanel.find(Nav.Panel);
+
+    expect(activeContent.children().props().visMottatteOpplysningerData).toBe(true);
+  });
 });
