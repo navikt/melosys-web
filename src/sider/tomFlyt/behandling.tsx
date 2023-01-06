@@ -15,7 +15,6 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { datalastingOperations } from "../../ducks/datalasting";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
-import { lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
@@ -28,17 +27,14 @@ import "./behandling.css";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandKTSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeFomSelector(state)
   ),
   mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeTomSelector(state)
   ),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
-  lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
-  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
-  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
@@ -56,18 +52,15 @@ interface Props extends RouteComponentProps<MatchParams> {}
 
 const Behandling = ({
   arbeidsland,
-  mottatteOpplysningerPeriodeFom,
-  mottatteOpplysningerPeriodeTom,
   behandlingstema,
   hovedpartRolle,
   lastInnSaksopplysninger,
   location,
-  lovvalgsland,
-  lovvalgsperiodeFom,
-  lovvalgsperiodeTom,
   match: {
     params: { saksnr: saksnummer, sakstype },
   },
+  mottatteOpplysningerPeriodeFom,
+  mottatteOpplysningerPeriodeTom,
   redigerbart,
   resetSaksopplysninger,
 }: Props & PropsFromRedux) => {
@@ -109,9 +102,6 @@ const Behandling = ({
             <Nav.Column xs="5">
               <Oppsummering
                 arbeidsland={arbeidsland}
-                lovvalgsland={lovvalgsland}
-                lovvalgsperiodeFom={lovvalgsperiodeFom}
-                lovvalgsperiodeTom={lovvalgsperiodeTom}
                 mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                 mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
               />

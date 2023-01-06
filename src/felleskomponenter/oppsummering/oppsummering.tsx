@@ -38,8 +38,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type OppsummeringProps = PropsFromRedux & {
   arbeidsland?: KTObject[];
   lovvalgsland?: KTObject;
-  lovvalgsperiodeFom: string;
-  lovvalgsperiodeTom: string;
+  lovvalgsperiodeFom?: string;
+  lovvalgsperiodeTom?: string;
   mottatteOpplysningerPeriodeFom: string;
   mottatteOpplysningerPeriodeTom: string;
   className?: string;

@@ -497,7 +497,7 @@ const mapDispatchToProps = (dispatch) => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) =>
     dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) =>
-    datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
+    datalastingOperations.lastInnSaksopplysningerRegistreringUnntaksperioder(saksnummer, behandlingID)(dispatch),
   kontrollerUnntaksperiode: (behandlingID, periodeFom, periodeTom) => {
     if (periodeFom && periodeTom) {
       dispatch(kontrollOperations.kontrollerUnntaksperiode(behandlingID, { periodeFom, periodeTom }));

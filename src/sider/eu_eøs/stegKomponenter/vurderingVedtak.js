@@ -21,7 +21,7 @@ import { vedtakOperations } from "../../../ducks/vedtak";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { flytSelectors } from "../../../ducks/flyt";
 
-import { skalViseTomFlytEllerErSedBehandling } from "../../../routing";
+import { skalViseTomFlyt } from "../../../routing";
 import { useFeatureToggle } from "../../../featuretoggle";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import DatoOmrade from "../../../felleskomponenter/datoOmrade";
@@ -72,13 +72,7 @@ const skalViseMottakerinstitusjoner = (
       MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
       MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
     ].includes(behandlingstema) &&
-    !skalViseTomFlytEllerErSedBehandling(
-      sakstype,
-      sakstema,
-      behandlingstema,
-      behandlingstype,
-      folketrygdenToggleEnabled
-    )
+    !skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)
   );
 };
 
