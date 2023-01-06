@@ -59,62 +59,65 @@ describe("url", () => {
     });
   });
 
-  describe("lagUrlForEuEøsFlyter", () => {
-    it("Sakstype EU_EOS med sed-behandlingstema returnerer url", () => {
-      const url = lagUrlFraSakstypeOgBehandlingstema(
-        "MEL-1",
-        1,
-        EU_EOS,
-        MKV.Koder.behandlinger.behandlingstema.TRYGDETID
-      );
+  it("Sakstype EU_EOS med registrering/unntaksperioder-behandlingstema returnerer url", () => {
+    const url = lagUrlFraSakstypeOgBehandlingstema(
+      "MEL-1",
+      1,
+      EU_EOS,
+      MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING
+    );
 
-      expect(url).toContain("/EU_EOS/sedbehandling/");
-    });
+    expect(url).toContain("/EU_EOS/registrering/");
+    expect(url).toContain("unntaksperioder");
+  });
 
-    it("Sakstype EU_EOS med registrering/unntaksperioder-behandlingstema returnerer url", () => {
-      const url = lagUrlFraSakstypeOgBehandlingstema(
-        "MEL-1",
-        1,
-        EU_EOS,
-        MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING
-      );
+  it("Sakstype EU_EOS med registrering/anmodningunntak-behandlingstema returnerer url", () => {
+    const url = lagUrlFraSakstypeOgBehandlingstema(
+      "MEL-1",
+      1,
+      EU_EOS,
+      MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
+    );
 
-      expect(url).toContain("/EU_EOS/registrering/");
-      expect(url).toContain("unntaksperioder");
-    });
+    expect(url).toContain("/EU_EOS/registrering/");
+    expect(url).toContain("anmodningunntak");
+  });
 
-    it("Sakstype EU_EOS med registrering/anmodningunntak-behandlingstema returnerer url", () => {
-      const url = lagUrlFraSakstypeOgBehandlingstema(
-        "MEL-1",
-        1,
-        EU_EOS,
-        MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
-      );
+  it("Sakstype EU_EOS med vurderutpeking-behandlingstema returnerer url", () => {
+    const url = lagUrlFraSakstypeOgBehandlingstema(
+      "MEL-1",
+      1,
+      EU_EOS,
+      MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
+    );
 
-      expect(url).toContain("/EU_EOS/registrering/");
-      expect(url).toContain("anmodningunntak");
-    });
+    expect(url).toContain("/EU_EOS/vurderutpeking/");
+  });
+});
 
-    it("Sakstype EU_EOS med vurderutpeking-behandlingstema returnerer url", () => {
-      const url = lagUrlFraSakstypeOgBehandlingstema(
-        "MEL-1",
-        1,
-        EU_EOS,
-        MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
-      );
+describe("tom flyt", () => {
+  it("IKKE_YRKESAKTIV får tom flyt", () => {
+    const url = lagUrl(
+      "MEL-1",
+      1,
+      EU_EOS,
+      MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+      MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+      MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+      true
+    );
 
-      expect(url).toContain("/EU_EOS/vurderutpeking/");
-    });
+    expect(url).toContain("/EU_EOS/behandling/");
   });
 
   describe("tom flyt", () => {
-    it("IKKE_YRKESAKTIV får tom flyt", () => {
+    it("TRYGDETID får tom flyt", () => {
       const url = lagUrl(
         "MEL-1",
         1,
         EU_EOS,
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
-        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+        MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
         true
       );
