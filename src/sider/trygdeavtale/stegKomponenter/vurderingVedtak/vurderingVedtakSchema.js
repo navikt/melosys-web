@@ -18,7 +18,11 @@ const vurdering_vedtak = object().shape({
   nyVurderingBakgrunnFritekst: string()
     .when(["$erNyVurdering", "nyVurderingBakgrunn"], {
       is: (erNyVurdering, nyVurderingBakgrunn) => erNyVurdering && nyVurderingBakgrunn === FRITEKST,
-      then: string().erIkkeBlankHtml(MAA_FYLLES_UT).required(MAA_FYLLES_UT).nullable(),
+      then: string()
+        .erIkkeBlankHtml(MAA_FYLLES_UT)
+        .required(MAA_FYLLES_UT)
+        .nullable()
+        .max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
     })
     .nullable(),
 });
