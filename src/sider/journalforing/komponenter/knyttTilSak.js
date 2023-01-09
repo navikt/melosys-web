@@ -76,6 +76,7 @@ export const KnyttTilSak = (props) => {
         sakstype.kode,
         sakstema.kode,
         behandlingstema,
+        null,
         sisteBehandling.behandlingID
       ).then((alleMuligeBehandlingstyper) => {
         setMuligeBehandlingstyper(alleMuligeBehandlingstyper);

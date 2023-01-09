@@ -115,11 +115,16 @@ function EndreBehandlingModal({
 
   useEffect(() => {
     if (sakstype && sakstema && behandlingstema) {
-      Api.LovligeKombinasjoner.hentBehandlingstyper(fagsak.hovedpartRolle, sakstype, sakstema, behandlingstema).then(
-        (alleMuligeBehandlingstyper) => {
-          setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
-        }
-      );
+      Api.LovligeKombinasjoner.hentBehandlingstyper(
+        fagsak.hovedpartRolle,
+        sakstype,
+        sakstema,
+        behandlingstema,
+        behandlingID,
+        null
+      ).then((alleMuligeBehandlingstyper) => {
+        setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
+      });
     }
   }, [sakstype, sakstema, behandlingstema]);
 
