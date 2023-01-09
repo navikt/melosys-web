@@ -120,8 +120,7 @@ function EndreBehandlingModal({
         sakstype,
         sakstema,
         behandlingstema,
-        behandlingID,
-        null
+        behandlingID
       ).then((alleMuligeBehandlingstyper) => {
         setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
       });
