@@ -90,21 +90,19 @@ const FagsakVelger = (props) => {
         </div>
       )}
 
-      {!erOpprettNySak && (
-        <>
-          {valgtVisning === EKSISTERENDE && (
-            <Skjema.CustomRadioPanelGruppe
-              feltNavn="saksnummer"
-              radios={radioValg}
-              notify={notifier}
-              begrensVisteRadios
-              onChange={nullstillFormVerdier}
-              className="marginMellomCustomRadioPaneler"
-            />
-          )}
-          {valgtVisning === OPPRETT && <OpprettSak formValues={formValues} feltNavn={feltNavn} />}
-        </>
-      )}
+      <>
+        {valgtVisning === EKSISTERENDE && (
+          <Skjema.CustomRadioPanelGruppe
+            feltNavn="saksnummer"
+            radios={radioValg}
+            notify={notifier}
+            begrensVisteRadios
+            onChange={nullstillFormVerdier}
+            className="marginMellomCustomRadioPaneler"
+          />
+        )}
+        {valgtVisning === OPPRETT && <OpprettSak formValues={formValues} feltNavn={feltNavn} />}
+      </>
     </div>
   );
 };
