@@ -18,7 +18,21 @@ export const hentBehandlingstemaer = (hovedpart, sakstype, sakstema, sistBehandl
   const params = QS.stringify({ hovedpart, sakstype, sakstema, sistBehandlingstema });
   return getAsJson(`${URI_PATH}/behandlingstemaer/hent-lovlige-kombinasjoner/?${params}`);
 };
-export const hentBehandlingstyper = (hovedpart, sakstype, sakstema, behandlingstema, sisteBehandlingsID) => {
-  const params = QS.stringify({ hovedpart, sakstype, sakstema, behandlingstema, sisteBehandlingsID });
+export const hentBehandlingstyper = (
+  hovedpart,
+  sakstype,
+  sakstema,
+  behandlingstema,
+  aktivBehandlingID,
+  sisteBehandlingsID
+) => {
+  const params = QS.stringify({
+    hovedpart,
+    sakstype,
+    sakstema,
+    behandlingstema,
+    aktivBehandlingID,
+    sisteBehandlingsID,
+  });
   return getAsJson(`${URI_PATH}/behandlingstyper/hent-lovlige-kombinasjoner/?${params}`);
 };
