@@ -11,6 +11,7 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_uk;
   const { CAN_ART6_2, CAN_ART7, CAN_ART9, CAN_ART10 } =
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_ca;
+  const { AUS_ART9_2, AUS_ART9_3 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_au;
 
   const hjelpeteksterTilBestemmelse = () => {
     switch (bestemmelse) {
@@ -41,12 +42,19 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
       case CAN_ART10:
         return Hjelpetekster.hjelpeteksterCaArt10;
 
+      case AUS_ART9_2:
+        return Hjelpetekster.hjelpeteksterAuArt9_2;
+      case AUS_ART9_3:
+        return Hjelpetekster.hjelpeteksterAuArt9_3;
+
       default:
         return [];
     }
   };
 
-  const ikkeKravOmTidsbegrensning = [UK_ART6_5, UK_ART7_3, UK_ART8_2, USA_ART5_5, CAN_ART10].includes(bestemmelse);
+  const ikkeKravOmTidsbegrensning = [UK_ART6_5, UK_ART7_3, UK_ART8_2, USA_ART5_5, CAN_ART10, AUS_ART9_2].includes(
+    bestemmelse
+  );
 
   return (
     <div className="bestemmelse-hjelpetekst">

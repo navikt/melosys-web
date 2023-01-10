@@ -11,6 +11,7 @@ enum Hjelpetekster {
   MAX_TRE_ÅR = "utsendingen forventes ikke å vare mer enn tre år",
   MAX_FEM_ÅR = "utsendingen forventes ikke å vare mer enn fem år",
   MAX_12_MD = "utenlandsoppholdet forventes ikke å vare mer enn 12 måneder",
+  UTSENDT_FOR_ARBEID = "søker er utsendt for å arbeide",
 }
 
 const hjelpeteksterUkArt61 = [
@@ -65,6 +66,14 @@ const hjelpeteksterCaArt10 = [
   Hjelpetekster.NORSK_STATSBORGER,
 ];
 
+const hjelpeteksterAuArt9_2 = [Hjelpetekster.UTSENDT_FOR_ARBEID, Hjelpetekster.ANSATT_I_DEN_NORSKE_STAT];
+
+const hjelpeteksterAuArt9_3 = [
+  Hjelpetekster.MEDLEM_I_FOLKETRYGDEN,
+  Hjelpetekster.LØNNET_FRA_NORSK_ARBEIDSGIVER,
+  Hjelpetekster.MAX_TRE_ÅR,
+];
+
 export {
   hjelpeteksterUkArt61,
   hjelpeteksterUkArt65,
@@ -78,4 +87,6 @@ export {
   hjelpeteksterCaArt7,
   hjelpeteksterCaArt9,
   hjelpeteksterCaArt10,
+  hjelpeteksterAuArt9_2,
+  hjelpeteksterAuArt9_3,
 };
