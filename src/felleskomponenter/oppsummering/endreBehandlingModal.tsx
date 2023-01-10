@@ -6,7 +6,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { AlertStripeFeil } from "nav-frontend-alertstriper";
 
 import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as Mui from "../ui";
@@ -307,14 +306,14 @@ function EndreBehandlingModal({
             />
 
             {skalViseFeilmeldinger && (
-              <AlertStripeFeil>
+              <Nav.AlertStripeFeil>
                 <Nav.Typo.Normaltekst>Følgende feil ble funnet</Nav.Typo.Normaltekst>
                 <ul className="feilmeldingliste">
                   {alleFeilmeldinger.map((feilmelding) => (
                     <li key={feilmelding}>{feilmelding}</li>
                   ))}
                 </ul>
-              </AlertStripeFeil>
+              </Nav.AlertStripeFeil>
             )}
           </div>
 
