@@ -1,11 +1,11 @@
 /* eslint react/no-array-index-key:off */
 import React, { Component } from "react";
 import PT from "prop-types";
-import Ikon from "melosys-ikoner-assets";
 
 import * as KV from "../../kodeverk";
 import * as Nav from "../../navFrontend";
 import * as MPT from "../../proptypes";
+import * as Ikoner from "../../resources/images";
 
 import "./listevelgerFlervalg.css";
 
@@ -33,7 +33,7 @@ const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatF
       <div className="listevelgerFlervalg__innhold">{element}</div>
       <Nav.Knapp mini disabled={disabled} className="listevelgerFlervalg__linje__knapp" onClick={slettElement}>
         <div className="knapp__ikon">
-          <Ikon kind="minus" size="24" />
+          <Ikoner.Minus className="ikon__minus" />
         </div>
         <div className="knapp__tittel">Fjern</div>
       </Nav.Knapp>
@@ -215,7 +215,7 @@ class ListevelgerFlervalg extends Component {
             disabled={disabled}
           >
             <div className="knapp__ikon">
-              <Ikon kind="tilsette" size="24" />
+              <Ikoner.Add className="ikon__add" />
             </div>
             <div className="knapp__tittel">Legg til</div>
           </Nav.Knapp>
