@@ -2,6 +2,8 @@ import React, { ReactNode, FocusEventHandler } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { nb } from "date-fns/locale";
 import classNames from "classnames";
+import * as Popper from "popper.js";
+
 import "react-datepicker/dist/react-datepicker.css";
 import "./datovelger.css";
 
@@ -18,6 +20,7 @@ interface DatovelgerProps {
   bredde?: string;
   minDate?: Date;
   maxDate?: Date;
+  calendarPlacement?: Popper.Placement;
   onBlur?: FocusEventHandler;
   onCalendarClose?: () => void;
 }
@@ -31,6 +34,7 @@ const Datovelger = ({
   bredde = "fullbredde",
   minDate,
   maxDate,
+  calendarPlacement,
   onBlur,
   onCalendarClose,
 }: DatovelgerProps) => {
@@ -81,6 +85,7 @@ const Datovelger = ({
         disabled={disabled}
         minDate={minDate}
         maxDate={maxDate}
+        popperPlacement={calendarPlacement}
       />
       {feil && (
         <div role="alert" aria-live="assertive" className="datovelger__feilmelding">
