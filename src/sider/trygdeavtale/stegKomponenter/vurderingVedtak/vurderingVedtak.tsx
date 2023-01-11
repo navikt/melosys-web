@@ -34,7 +34,7 @@ import "./vurderingVedtak.css";
 import { kontrollerFerdigbehandling } from "../../../../ducks/kontroll/operations";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
-const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN } = MKV.Koder.brev.produserbaredokumenter;
+const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
 
 const vurderingVedtakCls = bem("vurderingVedtak");
@@ -221,6 +221,8 @@ const VurderingVedtak = ({
         return TRYGDEAVTALE_US;
       case MKV.Koder.land_iso2.CA:
         return TRYGDEAVTALE_CAN;
+      case MKV.Koder.land_iso2.AU:
+        return TRYGDEAVTALE_AU;
       default:
         return "";
     }
