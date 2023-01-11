@@ -3,17 +3,17 @@ import { RootState } from "AppTypes";
 import { getFormValues } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 
-import * as Api from "../../../services/api";
-import * as KV from "../../../kodeverk";
-import * as Ikoner from "../../../resources/images";
-import * as Skjema from "../../skjema";
+import * as Api from "../../../../services/api";
+import * as KV from "../../../../kodeverk";
+import * as Ikoner from "../../../../resources/images";
+import * as Skjema from "../../../skjema";
 
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { formSelectors } from "../../../ducks/form";
-import MottakerTabell from "../../tabell/mottakerTabell";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { formSelectors } from "../../../../ducks/form";
+import MottakerTabell from "../../../tabell/mottakerTabell";
 import { erArbeidsgiverEllerVirksomhet } from "./brevMottaker";
-import PdfLenkeListe from "../../pdfLenkeListe";
-import { SendBrevFormValues } from "./types";
+import PdfLenkeListe from "../../../pdfLenkeListe";
+import { SendBrevFormValues } from "../types";
 
 const { BRUKER } = KV.Koder.MottakerRolle;
 

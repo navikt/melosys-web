@@ -62,11 +62,18 @@ export type TilgjengeligMal = {
   brevTyper: TilgjengeligBrev[];
 };
 
+export type TilgjengeligOffentligEtat = {
+  navn: string;
+  orgnr: string;
+};
+
 export type TilgjengeligBrev = {
   type: KTObject;
   felter: Felt[] | null;
 };
 export type TilgjengeligeMalerResDto = TilgjengeligMal[];
+
+export type TilgjengeligeOffentligeEtaterResDto = TilgjengeligOffentligEtat[];
 
 export type KopiMottaker = {
   rolle: string;
@@ -140,6 +147,9 @@ export type HentMuligeMottakereReqDto = {
 
 export const hentTilgjengeligeMaler = (behandlingID: number): Promise<TilgjengeligeMalerResDto> =>
   getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-maler/${behandlingID}`);
+
+export const hentTilgjengeligeOffentligeEtater = (): Promise<TilgjengeligeOffentligeEtaterResDto> =>
+  getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-offentlige-etater`);
 
 export const hentMuligeMottakere = (
   behandlingID: number,

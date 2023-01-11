@@ -5,26 +5,25 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { getFormValues } from "redux-form";
 
-import * as Skjema from "../../skjema";
-import * as KV from "../../../kodeverk";
-import * as Nav from "../../../navFrontend";
-import * as Utils from "../../../utils";
+import * as Skjema from "../../../skjema";
+import * as KV from "../../../../kodeverk";
+import * as Nav from "../../../../navFrontend";
+import * as Utils from "../../../../utils";
 
-import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
-import { formSelectors } from "../../../ducks/form";
+import { OrganisasjonOperations } from "../../../../ducks/organisasjoner";
+import { formSelectors } from "../../../../ducks/form";
 
-import { DokumenterV2, Organisasjon } from "../../../services/api";
-import { OrganisasjonsAdresse } from "../../adresser";
-import MottakerAdresse from "./mottakerAdresse";
-import FeltBeskrivelse from "./feltBeskrivelse";
-import { SendBrevFormValues } from "./types";
+import { DokumenterV2, Organisasjon } from "../../../../services/api";
+import { OrganisasjonsAdresse } from "../../../adresser";
+import MottakerAdresse from "../mottakerAdresse";
+import FeltBeskrivelse from "../feltBeskrivelse";
+import { SendBrevFormValues } from "../types";
 
-const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, OFFENTLIG_ETAT } = KV.Koder.MottakerRolle;
+const { BRUKER, ARBEIDSGIVER, VIRKSOMHET } = KV.Koder.MottakerRolle;
 
 const erBruker = (rolle: string | undefined) => rolle === BRUKER;
 const erVirksomhet = (rolle: string | undefined) => rolle === VIRKSOMHET;
 const erArbeidsgiver = (rolle: string | undefined) => rolle === ARBEIDSGIVER;
-export const erOffentligEtat = (rolle: string | undefined) => rolle === OFFENTLIG_ETAT;
 export const erArbeidsgiverEllerVirksomhet = (rolle: string | undefined) =>
   erArbeidsgiver(rolle) || erVirksomhet(rolle);
 
