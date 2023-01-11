@@ -22,7 +22,7 @@ import * as Mui from "../../ui";
 import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { formSelectors } from "../../../ducks/form";
 import BrevValg from "./brevValg";
-import BrevMottaker, { erArbeidsgiverEllerVirksomhet } from "./brevMottaker";
+import BrevMottaker, { erArbeidsgiverEllerVirksomhet, erOffentligEtat } from "./brevMottaker";
 import { SendBrevFormValues } from "./types";
 import BrevMottakereTabell from "./brevMottakereTabell";
 
@@ -91,6 +91,7 @@ const SendBrev = ({
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
+  const [valgtBrev, setValgtBrev] = useState("");
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
@@ -126,12 +127,14 @@ const SendBrev = ({
     const { rolle, orgnrSettesAvSaksbehandler } = values.valgtMottaker;
     if (erArbeidsgiverEllerVirksomhet(rolle) && !orgnrSettesAvSaksbehandler && !values.arbeidsgiver) return false;
     if (erArbeidsgiverEllerVirksomhet(rolle) && orgnrSettesAvSaksbehandler && !values.organisasjonsnummer) return false;
+    if (erOffentligEtat(rolle) && !harValgtOffentligEtat()) return false;
     return true;
   };
 
   useEffect(() => {
-    if (tilgjengeligeBrevtyper?.length === 1 && erMottakerGyldig(formValues)) {
+    if (tilgjengeligeBrevtyper?.length === 1) {
       changeField("type", tilgjengeligeBrevtyper[0].type.kode);
+      setValgtBrev(tilgjengeligeBrevtyper[0].type.kode);
     }
   }, [tilgjengeligeBrevtyper, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
 
@@ -308,6 +311,8 @@ const SendBrev = ({
     event.preventDefault();
   };
 
+  const harValgtOffentligEtat = () => false;
+
   if (!tilgjengeligeMaler || !formValues) return null;
 
   const mottakerErValgt = formValues.valgtMottaker;
@@ -341,13 +346,15 @@ const SendBrev = ({
         </Nav.Column>
       </Nav.Row>
 
-      {mottakerErValgt && tilgjengeligeBrevtyper.length !== 1 && (
+      {mottakerErValgt && (
         <Nav.Row>
           <Nav.Column xs={brevTypeSelectWidth}>
             <Skjema.Select
               feltNavn="type"
               label={<Nav.Typo.Element>Velg brev</Nav.Typo.Element>}
-              disabled={!redigerbart}
+              value={valgtBrev}
+              onChange={(e) => setValgtBrev(e.target.value)}
+              disabled={!redigerbart || tilgjengeligeBrevtyper.length === 1}
               emptyFieldText="Velg..."
               emptyFieldDisabled={!!formValues.type}
               onBlur={overstyrBlurEvent}
