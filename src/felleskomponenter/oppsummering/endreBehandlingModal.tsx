@@ -17,13 +17,13 @@ import * as Datoutils from "../../utils/dato";
 import { behandlingsstatusOperations, behandlingsstatusSelectors } from "../../ducks/behandlingsstatus";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { navigeringOperations } from "../../ducks/navigering";
-
 import { anmodningsperioderSelectors } from "../../ducks/anmodningsperioder";
 import { useFeatureToggle } from "../../featuretoggle";
 import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
 import { StandardMeldingOverst } from "../alertmeldinger";
 import { Spinner } from "../spinner";
+
 import "./endreBehandlingModal.css";
 
 enum FeltVerdier {
@@ -79,6 +79,7 @@ function EndreBehandlingModal({
   const [mottaksdato, setMottaksdato] = useState(Datoutils.isoStringTilDate(mottattDato));
   const [behandlingsstatus, setBehandlingsstatus] = useState(oppsummering.behandlingsstatus?.kode);
   const [skalViseSpinner, setSkalViseSpinner] = useState(false);
+  const [skalViseFeilmeldinger, setSkalViseFeilmeldinger] = useState(false);
   const [muligeSakstyper, setMuligeSakstyper] = useState([]);
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
@@ -115,11 +116,15 @@ function EndreBehandlingModal({
 
   useEffect(() => {
     if (sakstype && sakstema && behandlingstema) {
-      Api.LovligeKombinasjoner.hentBehandlingstyper(fagsak.hovedpartRolle, sakstype, sakstema, behandlingstema).then(
-        (alleMuligeBehandlingstyper) => {
-          setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
-        }
-      );
+      Api.LovligeKombinasjoner.hentBehandlingstyper(
+        fagsak.hovedpartRolle,
+        sakstype,
+        sakstema,
+        behandlingstema,
+        behandlingID
+      ).then((alleMuligeBehandlingstyper) => {
+        setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
+      });
     }
   }, [sakstype, sakstema, behandlingstema]);
 
@@ -128,6 +133,7 @@ function EndreBehandlingModal({
       hentMuligeBehandlingsstatuser(behandlingID);
       setGenerellFeil("");
       setBehandlingEndret(false);
+      setSkalViseFeilmeldinger(false);
       setSakstype(fagsak.sakstype?.kode);
       setSakstema(fagsak.sakstema?.kode);
       setBehandlingstema(oppsummering.behandlingstema?.kode);
@@ -152,7 +158,25 @@ function EndreBehandlingModal({
 
   const harMottaksdatoEndretSeg = () => Datoutils.isoStringTilDate(mottattDato)?.getTime() !== mottaksdato?.getTime();
 
+  const sakstypeFeilmelding = !sakstype ? "Du må velge sakstype" : null;
+  const sakstemaFeilmelding = !sakstema ? "Du må velge sakstema" : null;
+  const behandlingstemaFeilmelding = !behandlingstema ? "Du må velge behandlingstema" : null;
+  const behandlingstypeFeilmelding = !behandlingstype ? "Du må velge behandlingstype" : null;
+  const behandlingsstatusFeilmelding = !behandlingsstatus ? "Du må velge behandlingsstatus" : null;
+  const alleFeilmeldinger = [
+    sakstypeFeilmelding,
+    sakstemaFeilmelding,
+    behandlingstemaFeilmelding,
+    behandlingstypeFeilmelding,
+    behandlingsstatusFeilmelding,
+  ].filter((feilmelding) => feilmelding !== null);
+
   const endreBehandlingHandle = () => {
+    if (alleFeilmeldinger.length > 0) {
+      setSkalViseFeilmeldinger(true);
+      return;
+    }
+
     setSkalViseSpinner(true);
     const {
       saksnummer,
@@ -237,8 +261,9 @@ function EndreBehandlingModal({
               label="Sakstype"
               value={sakstype}
               koder={fagsakKanEndres ? muligeSakstyper : [fagsak.sakstype]}
-              disableForsteValg
               redigerbart={!endringerErBegrenset && typeTemaKanEndres && fagsakKanEndres}
+              feil={skalViseFeilmeldinger ? sakstypeFeilmelding : null}
+              disableForsteValg
             />
             <Mui.KodeTermSelect
               onChange={(e) => {
@@ -248,8 +273,9 @@ function EndreBehandlingModal({
               label="Sakstema"
               value={sakstema}
               koder={fagsakKanEndres ? muligeSakstemaer : [fagsak.sakstema]}
-              disableForsteValg
               redigerbart={!endringerErBegrenset && typeTemaKanEndres && fagsakKanEndres}
+              feil={skalViseFeilmeldinger ? sakstemaFeilmelding : null}
+              disableForsteValg
             />
             <Mui.KodeTermSelect
               onChange={(e) => {
@@ -259,26 +285,41 @@ function EndreBehandlingModal({
               label="Behandlingstema"
               value={behandlingstema}
               koder={muligeBehandlingstemaer}
-              disableForsteValg
               redigerbart={!endringerErBegrenset && typeTemaKanEndres}
+              feil={skalViseFeilmeldinger ? behandlingstemaFeilmelding : null}
+              disableForsteValg
             />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"
               value={behandlingstype}
               koder={muligeBehandlingstyper}
-              disableForsteValg
               redigerbart={!endringerErBegrenset && typeTemaKanEndres}
+              feil={skalViseFeilmeldinger ? behandlingstypeFeilmelding : null}
+              disableForsteValg
             />
-            <Datovelger onChange={setMottaksdato} label="Mottaksdato" value={mottaksdato} />
+            <Datovelger onChange={setMottaksdato} label="Mottaksdato" value={mottaksdato} calendarPlacement="top" />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingsstatus(e.target.value)}
               label="Behandlingsstatus"
               value={behandlingsstatus}
               koder={muligeVerdierPlussGjeldende(oppsummering.behandlingsstatus, muligeBehandlingsstatuser)}
+              feil={skalViseFeilmeldinger ? behandlingsstatusFeilmelding : null}
               disableForsteValg
             />
+
+            {skalViseFeilmeldinger && (
+              <Nav.AlertStripeFeil>
+                <Nav.Typo.Normaltekst>Følgende feil ble funnet</Nav.Typo.Normaltekst>
+                <ul className="feilmeldingliste">
+                  {alleFeilmeldinger.map((feilmelding) => (
+                    <li key={feilmelding}>{feilmelding}</li>
+                  ))}
+                </ul>
+              </Nav.AlertStripeFeil>
+            )}
           </div>
+
           <Knapperad
             avbryt={lukkModal}
             avbrytTekst="Avbryt"

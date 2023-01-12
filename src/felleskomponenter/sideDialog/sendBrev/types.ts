@@ -12,4 +12,5 @@ export interface SendBrevFormValues {
     [key: string]: any;
   };
   kopimottaker?: boolean;
+  trygdemyndighet?: string;
 }

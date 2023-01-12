@@ -199,6 +199,7 @@ const SendBrev = ({
       })),
       fritekstvedlegg,
       distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
+      dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
     };
   };
 
@@ -341,7 +342,7 @@ const SendBrev = ({
         </Nav.Column>
       </Nav.Row>
 
-      {mottakerErValgt && tilgjengeligeBrevtyper.length !== 1 && (
+      {mottakerErValgt && (
         <Nav.Row>
           <Nav.Column xs={brevTypeSelectWidth}>
             <Skjema.Select

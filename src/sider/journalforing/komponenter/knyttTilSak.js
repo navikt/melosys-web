@@ -57,7 +57,7 @@ export const KnyttTilSak = (props) => {
   }, [sisteBehandling]);
 
   useEffect(() => {
-    if (sakstema.kode && sakstype.kode) {
+    if (sakstype.kode && sakstema.kode) {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(
         journalforingGjelder,
         sakstype.kode,
@@ -67,21 +67,22 @@ export const KnyttTilSak = (props) => {
         setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);
       });
     }
-  }, [journalforingGjelder, sakstema.kode, sakstype.kode]);
+  }, [journalforingGjelder, sakstype.kode, sakstema.kode, sisteBehandling?.behandlingstema?.kode]);
 
   useEffect(() => {
-    if (sakstema.kode && sakstype.kode && behandlingstema) {
+    if (sakstype.kode && sakstema.kode && behandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyper(
         journalforingGjelder,
         sakstype.kode,
         sakstema.kode,
         behandlingstema,
+        null,
         sisteBehandling.behandlingID
       ).then((alleMuligeBehandlingstyper) => {
         setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
       });
     }
-  }, [journalforingGjelder, sakstema.kode, sakstype.kode, behandlingstema]);
+  }, [journalforingGjelder, sakstype.kode, sakstema.kode, behandlingstema, sisteBehandling?.behandlingID]);
 
   useEffect(() => {
     if (opprettBehandling && Utils._isEmpty(behandlingstema)) {
@@ -93,7 +94,7 @@ export const KnyttTilSak = (props) => {
     if (!opprettBehandling && !Utils._isEmpty(behandlingstype)) {
       changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     }
-  }, [opprettBehandling, behandlingstema, behandlingstype]);
+  }, [opprettBehandling, behandlingstema, behandlingstype, sisteBehandling?.behandlingstema?.kode]);
 
   useEffect(() => {
     changeField(feltNavn.formNavn, feltNavn.kanOppretteAndregangsbehandling, visKnyttTilEksisterende);
@@ -161,13 +162,23 @@ export const KnyttTilSak = (props) => {
           <Nav.AlertStripeAdvarsel>{kanIkkeOppretteAndregangGrunn}</Nav.AlertStripeAdvarsel>
         </div>
       ) : (
-        visUtenVidereBehandling && (
-          <Skjema.Checkbox
-            className="knyttTilSak"
-            feltNavn="ingenVurdering"
-            label="Journalfør uten videre behandling"
-          />
-        )
+        <>
+          {sakErHenlagtEllerBortfalt && (
+            <div className="innrykk">
+              <Nav.AlertStripeInfo>
+                Du kan ikke opprette en ny behandling på en sak som er henlagt/bortfalt i Melosys, men du kan knytte
+                dokumentet til den avsluttede behandlingen
+              </Nav.AlertStripeInfo>
+            </div>
+          )}
+          {visUtenVidereBehandling && (
+            <Skjema.Checkbox
+              className="knyttTilSak"
+              feltNavn="ingenVurdering"
+              label="Journalfør uten videre behandling"
+            />
+          )}
+        </>
       )}
     </div>
   );

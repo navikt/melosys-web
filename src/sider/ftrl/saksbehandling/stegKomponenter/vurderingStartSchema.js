@@ -9,7 +9,7 @@ const vurdering_start = object().shape({
   fom: string().erGyldigDato().required(MAA_FYLLES_UT),
   tom: string().erGyldigDato().erEtterDatofelt("fom").nullable(),
   land: string().required(ARBEIDSLAND_FELT_KREVES),
-  trygdedekning: string().required(TRYGDEDEKNING_FELT_KREVES),
+  trygdedekning: string().required(TRYGDEDEKNING_FELT_KREVES).nullable(),
 });
 
 export default vurdering_start;

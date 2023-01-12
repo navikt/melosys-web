@@ -64,7 +64,7 @@ interface Props {
 }
 
 const VurderingBestemmelse = ({
-  data: { vedtakValg, bestemmelseValg, tilleggsbestemmelseValg },
+  data: { vedtakValg, bestemmelseValg, tilleggsbestemmelseValg, soeknadsland },
   formIsValid,
   formValues,
   fortsett,
@@ -110,7 +110,10 @@ const VurderingBestemmelse = ({
             disabled={
               updatePending ||
               !redigerbart ||
-              !(valg.kode.startsWith("JA") || (trygdeavtaleUnntakToggle && valg.kode === "NEI_ANMODE_OM_UNNTAK"))
+              !(
+                valg.kode.startsWith("JA") ||
+                (trygdeavtaleUnntakToggle && valg.kode === "NEI_ANMODE_OM_UNNTAK" && soeknadsland?.kode !== "AU")
+              )
             }
             onChange={() => {
               resetField("tilleggsbestemmelse");
