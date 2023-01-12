@@ -60,17 +60,6 @@ describe("url", () => {
   });
 
   describe("lagUrlForEuEøsFlyter", () => {
-    it("Sakstype EU_EOS med sed-behandlingstema returnerer url", () => {
-      const url = lagUrlFraSakstypeOgBehandlingstema(
-        "MEL-1",
-        1,
-        EU_EOS,
-        MKV.Koder.behandlinger.behandlingstema.TRYGDETID
-      );
-
-      expect(url).toContain("/EU_EOS/sedbehandling/");
-    });
-
     it("Sakstype EU_EOS med registrering/unntaksperioder-behandlingstema returnerer url", () => {
       const url = lagUrlFraSakstypeOgBehandlingstema(
         "MEL-1",
@@ -122,6 +111,20 @@ describe("url", () => {
       expect(url).toContain("/EU_EOS/behandling/");
     });
 
+    it("TRYGDETID får tom flyt", () => {
+      const url = lagUrl(
+        "MEL-1",
+        1,
+        EU_EOS,
+        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+        MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        true
+      );
+
+      expect(url).toContain("/EU_EOS/behandling/");
+    });
+
     it("YRKESAKTIV for FTRL får ikke tom flyt med toggle på", () => {
       const url = lagUrl(
         "MEL-1",
@@ -151,4 +154,5 @@ describe("url", () => {
     });
   });
 });
+
 export {};

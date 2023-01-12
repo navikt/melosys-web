@@ -1,6 +1,6 @@
 import MKV from "../../../melosyskodeverk";
 
-import { skalViseTomFlytEllerErSedBehandling } from "../../../routing";
+import { skalViseTomFlyt } from "../../../routing";
 import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
@@ -42,15 +42,7 @@ class LinkGroupsFactory {
     sakstema,
     folketrygdenToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (
-      skalViseTomFlytEllerErSedBehandling(
-        sakstype,
-        sakstema,
-        behandlingstema,
-        behandlingstype,
-        folketrygdenToggleEnabled
-      )
-    )
+    if (skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled))
       return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
 
     switch (behandlingstema) {

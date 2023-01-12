@@ -7,7 +7,7 @@ import * as Nav from "../../navFrontend";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
 import { useFeatureToggle } from "../../featuretoggle";
-import { skalViseTomFlytEllerErSedBehandling } from "../../routing";
+import { skalViseTomFlyt } from "../../routing";
 import Sidemeny from "../sidemeny";
 
 import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
@@ -59,13 +59,7 @@ export const Menypanel = ({
   const visMenypanel =
     sakstype === MKV.Koder.sakstyper.EU_EOS ||
     menypanel?.synlig ||
-    skalViseTomFlytEllerErSedBehandling(
-      sakstype,
-      sakstema,
-      behandlingstema,
-      behandlingstype,
-      folketrygdenToggleEnabled
-    );
+    skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled);
 
   if (!visMenypanel) return null;
 
