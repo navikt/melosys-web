@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import { useDispatch } from "react-redux";
+import { change } from "redux-form";
 import * as KV from "../../../../kodeverk";
 import * as Api from "../../../../services/api";
 import * as Nav from "../../../../navFrontend";
@@ -7,12 +9,18 @@ import * as Nav from "../../../../navFrontend";
 export const erOffentligEtat = (rolle: string | undefined) => rolle === KV.Koder.MottakerRolle.OFFENTLIG_ETAT;
 
 const BrevMottakerOffentligEtat = () => {
-  const [offentligeEtater, setOffentligeEtater] = useState<Api.DokumenterV2.TilgjengeligeOffentligeEtaterResDto>();
+  const [tilgjengeligeOffentligeEtater, setTilgjengeligeOffentligeEtater] =
+    useState<Api.DokumenterV2.TilgjengeligeOffentligeEtaterResDto>();
   const [valgteEtater, setValgteEtater] = useState<string[]>([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    Api.DokumenterV2.hentTilgjengeligeOffentligeEtater().then((response) => setOffentligeEtater(response));
+    Api.DokumenterV2.hentTilgjengeligeOffentligeEtater().then((response) => setTilgjengeligeOffentligeEtater(response));
   }, []);
+
+  useEffect(() => {
+    dispatch(change(KV.Form.SEND_BREV, "offentligeEtater", valgteEtater));
+  }, [valgteEtater]);
 
   const handleCheckboxChange = (item: string) => {
     if (valgteEtater.includes(item)) {
@@ -28,10 +36,6 @@ const BrevMottakerOffentligEtat = () => {
         offentligeEtater.map((etat) => (
           <Nav.Checkbox label={etat.navn} key={etat.orgnr} onChange={() => handleCheckboxChange(etat.orgnr)} />
         ))}
-
-      {valgteEtater.map((orng) => (
-        <p key={orng}>{orng}</p>
-      ))}
     </>
   );
 };
