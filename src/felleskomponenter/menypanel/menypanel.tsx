@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
 import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
-import { formatterDatoTilNorsk } from "../../utils/dato";
+import * as Utils from "../../utils";
 
 import { useFeatureToggle } from "../../featuretoggle";
 import { skalViseTomFlyt } from "../../routing";
@@ -54,14 +54,9 @@ export const Menypanel = ({
   visOppdaterRegisteropplysninger = true,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
+  const [endreFokus, setEndreFokus] = useState(false);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
-  const visMenypanel =
-    sakstype === MKV.Koder.sakstyper.EU_EOS ||
-    menypanel?.synlig ||
-    skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled);
-
-  if (!visMenypanel) return null;
 
   const visMottatteOpplysningerData = !(
     MKVUtils.erBehandlingAvSed(sakstype, behandlingstema) &&
@@ -87,14 +82,6 @@ export const Menypanel = ({
     folketrygdenToggleEnabled,
   });
 
-  const handleClick = (groupIndex: number, linkIndex: number) => {
-    setActive([groupIndex, linkIndex]);
-    setMenypanelFeilmelding("");
-  };
-
-  const activeContent =
-    linkGroupsWithContent.length !== 0 ? linkGroupsWithContent[activeGroupIndex].links[activeLinkIndex].content : null;
-
   const linkGroups = linkGroupsWithContent.map((linkGroup, groupIndex) => ({
     label: linkGroup.label,
     links: linkGroup.links.map((link, linkIndex) => ({
@@ -102,6 +89,29 @@ export const Menypanel = ({
       active: groupIndex === activeGroupIndex && linkIndex === activeLinkIndex,
     })),
   }));
+
+  const activeLink =
+    linkGroupsWithContent.length !== 0 ? linkGroupsWithContent[activeGroupIndex].links[activeLinkIndex] : null;
+
+  useEffect(() => {
+    if (endreFokus && activeLink) {
+      Utils.navigasjon.flyttFokusTilHtmlElementFraId(activeLink.label);
+      setEndreFokus(false);
+    }
+  }, [activeLink]);
+
+  const handleClick = (groupIndex: number, linkIndex: number) => {
+    setActive([groupIndex, linkIndex]);
+    setMenypanelFeilmelding("");
+    setEndreFokus(true);
+  };
+
+  const visMenypanel =
+    sakstype === MKV.Koder.sakstyper.EU_EOS ||
+    menypanel?.synlig ||
+    skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled);
+
+  if (!visMenypanel) return null;
 
   return (
     <>
@@ -120,7 +130,7 @@ export const Menypanel = ({
       </div>
       {visOppdaterRegisteropplysninger && redigerbart && (
         <OppdaterRegisteropplysninger
-          sistOppdatert={formatterDatoTilNorsk(sisteOpplysningerHentetDato)}
+          sistOppdatert={Utils.dato.formatterDatoTilNorsk(sisteOpplysningerHentetDato)}
           oppdaterRegisteropplysninger={lagreSoknadOgOppfriskSaksopplysninger}
         />
       )}
@@ -129,7 +139,9 @@ export const Menypanel = ({
           <Sidemeny heading="Opplysninger" linkGroups={linkGroups} onClick={handleClick} />
         </Nav.Column>
         <Nav.Column xs="9" className="utenPadding">
-          <Nav.Panel className="content">{activeContent || <div />}</Nav.Panel>
+          <Nav.Panel className="content" id={activeLink?.label}>
+            {activeLink?.content || <div />}
+          </Nav.Panel>
         </Nav.Column>
       </div>
     </>
