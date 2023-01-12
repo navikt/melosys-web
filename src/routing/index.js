@@ -1,5 +1,5 @@
 import Routing from "./routing";
-import { nyFane, lagUrl, skalViseTomFlytEllerErSedBehandling, skalViseTomFlyt } from "./url";
+import { nyFane, lagUrl, skalViseTomFlyt } from "./url";
 
 export default Routing;
-export { nyFane, lagUrl, skalViseTomFlytEllerErSedBehandling, skalViseTomFlyt };
+export { nyFane, lagUrl, skalViseTomFlyt };

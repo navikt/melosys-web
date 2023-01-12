@@ -12,7 +12,7 @@ import * as Utils from "../../../utils";
 
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
 import { useFeatureToggle } from "../../../featuretoggle";
-import { skalViseTomFlytEllerErSedBehandling } from "../../../routing";
+import { skalViseTomFlyt } from "../../../routing";
 
 import "./opprettSak.css";
 
@@ -41,7 +41,7 @@ export const skalViseSoknadsperiodeOgLand = (sakstype, sakstema, behandlingstema
   sakstema &&
   behandlingstema &&
   behandlingstype &&
-  !skalViseTomFlytEllerErSedBehandling(sakstype, sakstema, behandlingstema, behandlingstype);
+  !skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype);
 
 export const OpprettSak = (props) => {
   const { settFeltInnhold, formValues, feltNavn } = props;

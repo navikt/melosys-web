@@ -59,10 +59,6 @@ const RegistreringAnmodningunntakLoadable = loadable(
     fallback: SideLoadingStatus,
   }
 );
-const SedBehandlingLoadable = loadable(
-  () => import(/* webpackChunkName: "sed-behandling" */ "../sider/eu_eøs/sedbehandling"),
-  { fallback: SideLoadingStatus }
-);
 const OpprettNySakLoadable = loadable(() => import(/* webpackChunkName: "opprett-ny-sak" */ "../sider/opprettnysak"), {
   fallback: SideLoadingStatus,
 });
@@ -93,10 +89,6 @@ const Routing = () => (
           exact
           path={`/${EU_EOS}/registrering/:saksnr/anmodningunntak`}
           render={(props) => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />}
-        />
-        <Route
-          path={`/${EU_EOS}/sedbehandling/:saksnr`}
-          render={(props) => <SedBehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route
           path={`/${EU_EOS}/saksbehandling/:saksnr`}

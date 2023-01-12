@@ -14,7 +14,7 @@ import { utpekingsperioderOperations } from "../utpekingsperioder";
 import { dokumenterOperations } from "../dokumenter";
 import { oppsummertfaktaOperations } from "../oppsummertfakta";
 import { medlemskapsperioderOperations } from "../medlemskapsperioder";
-import { skalViseTomFlytEllerErSedBehandling } from "../../routing";
+import { skalViseTomFlyt } from "../../routing";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 
 export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => (dispatch) => {
@@ -45,7 +45,7 @@ export const lastInnSaksopplysningerTomFlyt = (saksnummer, behandlingID) => (dis
   dispatch(behandlingsresultatOperations.hent(behandlingID));
 };
 
-export const lastInnSaksopplysningerSedBehandling = (saksnummer, behandlingID) => (dispatch) => {
+export const lastInnSaksopplysningerRegistreringUnntaksperioder = (saksnummer, behandlingID) => (dispatch) => {
   dispatch(fagsakOperations.hent(saksnummer));
   dispatch(behandlingerOperations.hentBehandling(behandlingID));
   dispatch(behandlingsresultatOperations.hent(behandlingID));
@@ -87,13 +87,7 @@ const harIkkeTomFlyt = async (sakstype, state) => {
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
   const folketrygdenToggleEnabled = await erFeatureToggleEnabled("melosys.folketrygden.mvp");
 
-  return !skalViseTomFlytEllerErSedBehandling(
-    sakstype,
-    sakstema,
-    behandlingstema,
-    behandlingstype,
-    folketrygdenToggleEnabled
-  );
+  return !skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled);
 };
 
 export const lagreAllData = () => async (dispatch, getState) => {

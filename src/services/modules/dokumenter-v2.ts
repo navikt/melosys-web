@@ -55,6 +55,7 @@ export type TilgjengeligMottaker = {
   orgnrSettesAvSaksbehandler: boolean;
   adresser: MottakerAdresse[] | null;
   feilmelding: string | null;
+  trygdemyndighet: string[] | null;
 };
 
 export type TilgjengeligMal = {
@@ -103,6 +104,7 @@ export type OpprettBrevReqDto = {
     fritekst: string;
   }[];
   distribusjonstype?: string;
+  dokumentTittel?: string;
 };
 
 export type MuligMottaker = {

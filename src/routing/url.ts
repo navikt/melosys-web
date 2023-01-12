@@ -4,14 +4,8 @@ import * as Constants from "../constants";
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 
-const erSedBehandling = (behandlingstema: string) => {
-  return behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDETID;
-};
-
 const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
   switch (behandlingstemaKode) {
-    case MKV.Koder.behandlinger.behandlingstema.TRYGDETID:
-      return `/${EU_EOS}/sedbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE:
       return `/${EU_EOS}/registrering/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`;
@@ -107,20 +101,8 @@ export const skalViseTomFlyt = (
     MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
     MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP,
     MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET,
+    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
   ].includes(behandlingstema);
-};
-
-export const skalViseTomFlytEllerErSedBehandling = (
-  sakstype: string,
-  sakstema: string,
-  behandlingstema: string,
-  behandlingstype: string,
-  folketrygdenToggleEnabled: boolean = false
-) => {
-  return (
-    skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled) ||
-    erSedBehandling(behandlingstema)
-  );
 };
 
 export const nyFane = (url: string) => {
