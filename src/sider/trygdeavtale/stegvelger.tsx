@@ -81,6 +81,7 @@ interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
   visMottatteOpplysningerFeilmeldinger: boolean;
+  endreFokus: boolean;
 }
 
 class Stegvelger extends Component<Props, State> {
@@ -88,6 +89,7 @@ class Stegvelger extends Component<Props, State> {
     aktivtStegIndex: 0,
     aktuelleSteg: [],
     visMottatteOpplysningerFeilmeldinger: false,
+    endreFokus: false,
   };
 
   componentDidMount() {
@@ -107,6 +109,13 @@ class Stegvelger extends Component<Props, State> {
       this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
     ) {
       this.debouncedOppdaterSteg();
+    }
+
+    if (this.state.endreFokus) {
+      // @ts-ignore
+      const aktueltStegId = this.state.aktuelleSteg[this.state.aktivtStegIndex].id;
+      Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktueltStegId);
+      this.setState({ endreFokus: false });
     }
   }
 
@@ -206,6 +215,11 @@ class Stegvelger extends Component<Props, State> {
     }
   };
 
+  stegKlikkHandler = (nesteStegIndex: number) => {
+    this.oppdaterAktivtSteg(nesteStegIndex);
+    this.setState({ endreFokus: true });
+  };
+
   lagreOgFatteVedtak = async (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => {
     const {
       props: { behandlingID, lagreAllData, fattVedtak },
@@ -231,7 +245,7 @@ class Stegvelger extends Component<Props, State> {
     const {
       state: { aktuelleSteg, visMottatteOpplysningerFeilmeldinger },
       props: { behandlingstype, redigerbart, feilmeldinger },
-      oppdaterAktivtSteg,
+      stegKlikkHandler,
     } = this;
 
     const vedtakStegErAktivt = aktuelleSteg?.find((steg: AktueltSteg) => steg.vedtakSteg && steg.aktivtSteg);
@@ -242,7 +256,7 @@ class Stegvelger extends Component<Props, State> {
       <div className="stegvelger panelSeksjon">
         {aktuelleSteg && (
           <div>
-            <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
+            <StegLinje steg={aktuelleSteg} stegKlikk={stegKlikkHandler} />
             {vedtakStegErAktivt && <Feilmeldinger feilmeldinger={feilmeldinger} />}
             {erNyVurdering && redigerbart && inngangStegErAktivt && (
               <Nav.AlertStripeAdvarsel className="varselstripe">
@@ -254,7 +268,7 @@ class Stegvelger extends Component<Props, State> {
               </Nav.AlertStripeAdvarsel>
             )}
             {aktuelleSteg.map((item: AktueltSteg) => (
-              <StegFane key={item.id} faneData={item} />
+              <StegFane id={item.id} key={item.id} faneData={item} />
             ))}
           </div>
         )}
