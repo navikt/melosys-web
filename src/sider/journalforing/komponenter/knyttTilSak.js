@@ -150,31 +150,35 @@ export const KnyttTilSak = (props) => {
   }
 
   const visUtenVidereBehandling = sakstype.kode === MKV.Koder.sakstyper.EU_EOS && !sakErHenlagtEllerBortfalt;
-  const skalViseUtenVidereBehandling = !erOpprettNySak && !sakErHenlagtEllerBortfalt && visUtenVidereBehandling;
-  const skalViseSakErHenlagtEllerBortfalt = !erOpprettNySak && sakErHenlagtEllerBortfalt;
-  const skalViseErOpprettNySak = erOpprettNySak;
+
+  const kanIkkeOppretteAndregangGrunn = sakErHenlagtEllerBortfalt
+    ? "Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt i Melosys"
+    : "Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling";
 
   return (
     <div className="knyttTilSak__behandlingspanel">
-      {skalViseErOpprettNySak && (
+      {erOpprettNySak ? (
         <div className="innrykk">
-          <Nav.AlertStripeAdvarsel>
-            Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt i Melosys
-          </Nav.AlertStripeAdvarsel>
+          <Nav.AlertStripeAdvarsel>{kanIkkeOppretteAndregangGrunn}</Nav.AlertStripeAdvarsel>
         </div>
-      )}
-
-      {skalViseSakErHenlagtEllerBortfalt && (
-        <div className="innrykk">
-          <Nav.AlertStripeInfo>
-            Du kan ikke opprette en ny behandling på en sak som er henlagt/bortfalt i Melosys, men du kan knytte
-            dokumentet til den avsluttede behandlingen
-          </Nav.AlertStripeInfo>
-        </div>
-      )}
-
-      {skalViseUtenVidereBehandling && (
-        <Skjema.Checkbox className="knyttTilSak" feltNavn="ingenVurdering" label="Journalfør uten videre behandling" />
+      ) : (
+        <>
+          {sakErHenlagtEllerBortfalt && (
+            <div className="innrykk">
+              <Nav.AlertStripeInfo>
+                Du kan ikke opprette en ny behandling på en sak som er henlagt/bortfalt i Melosys, men du kan knytte
+                dokumentet til den avsluttede behandlingen
+              </Nav.AlertStripeInfo>
+            </div>
+          )}
+          {visUtenVidereBehandling && (
+            <Skjema.Checkbox
+              className="knyttTilSak"
+              feltNavn="ingenVurdering"
+              label="Journalfør uten videre behandling"
+            />
+          )}
+        </>
       )}
     </div>
   );
