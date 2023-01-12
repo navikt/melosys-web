@@ -136,8 +136,17 @@ const SendBrev = ({
     if (tilgjengeligeBrevtyper?.length === 1 && erMottakerGyldig(formValues)) {
       changeField("type", tilgjengeligeBrevtyper[0].type.kode);
       setValgtBrev(tilgjengeligeBrevtyper[0].type.kode);
+    } else if (tilgjengeligeBrevtyper?.length === 1 && !erMottakerGyldig(formValues)) {
+      changeField("type", undefined);
+      setValgtBrev("");
     }
-  }, [tilgjengeligeBrevtyper, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
+  }, [
+    tilgjengeligeBrevtyper,
+    formValues?.valgtMottaker,
+    formValues?.organisasjonsnummer,
+    formValues?.arbeidsgiver,
+    formValues?.offentligeEtater,
+  ]);
 
   const kanHenteMuligeMottakere = (values: SendBrevFormValues) => {
     if (!values || !values.valgtMottaker || !values.type || values.valgtMottaker?.feilmelding) return false;
@@ -313,7 +322,7 @@ const SendBrev = ({
     event.preventDefault();
   };
 
-  const harValgtOffentligEtat = () => false;
+  const harValgtOffentligEtat = () => formValues.offentligeEtater && formValues.offentligeEtater.length > 0;
 
   if (!tilgjengeligeMaler || !formValues) return null;
 

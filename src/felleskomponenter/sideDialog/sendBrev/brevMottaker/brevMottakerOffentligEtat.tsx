@@ -32,8 +32,9 @@ const BrevMottakerOffentligEtat = () => {
 
   return (
     <>
-      {offentligeEtater &&
-        offentligeEtater.map((etat) => (
+      <Nav.Typo.Element>Hvilke etater skal brevet sendes til?</Nav.Typo.Element>
+      {tilgjengeligeOffentligeEtater &&
+        tilgjengeligeOffentligeEtater.map((etat) => (
           <Nav.Checkbox label={etat.navn} key={etat.orgnr} onChange={() => handleCheckboxChange(etat.orgnr)} />
         ))}
     </>
