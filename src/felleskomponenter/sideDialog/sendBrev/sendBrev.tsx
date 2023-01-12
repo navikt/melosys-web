@@ -149,6 +149,14 @@ const SendBrev = ({
     }
   }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
 
+  const visInnhold = tilgjengeligeMaler && formValues;
+
+  useEffect(() => {
+    if (visInnhold) {
+      Utils.navigasjon.flyttFokusTilHtmlElementFraId("brevbestilling");
+    }
+  }, [visInnhold]);
+
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find(
       (alternativ) => alternativ.beskrivelse === formValues?.felt?.[felt.kode]?.valg
@@ -309,7 +317,7 @@ const SendBrev = ({
     event.preventDefault();
   };
 
-  if (!tilgjengeligeMaler || !formValues) return null;
+  if (!visInnhold) return null;
 
   const mottakerErValgt = formValues.valgtMottaker;
   const brevtypeErValgt = formValues.valgtBrev;
