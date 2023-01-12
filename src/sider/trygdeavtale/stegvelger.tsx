@@ -198,7 +198,7 @@ class Stegvelger extends Component<Props, State> {
     return harFeilmeldinger;
   };
 
-  oppdaterAktivtSteg = async (nesteStegIndex: number) => {
+  oppdaterAktivtSteg = (nesteStegIndex: number) => {
     const {
       state: { aktuelleSteg },
       harMottatteOpplysningerFeilmeldinger,
