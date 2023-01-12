@@ -18,6 +18,7 @@ import { OrganisasjonsAdresse } from "../../../adresser";
 import MottakerAdresse from "../mottakerAdresse";
 import FeltBeskrivelse from "../feltBeskrivelse";
 import { SendBrevFormValues } from "../types";
+import BrevMottakerOffentligEtat, { erOffentligEtat } from "./brevMottakerOffentligEtat";
 
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET } = KV.Koder.MottakerRolle;
 
@@ -63,6 +64,7 @@ const BrevMottaker = ({
 
   const mottakerErBruker = erBruker(formValues?.valgtMottaker?.rolle);
   const mottakerErVirksomhet = erVirksomhet(formValues?.valgtMottaker?.rolle);
+  const mottakerErOffentligEtat = erOffentligEtat(formValues?.valgtMottaker?.rolle);
   const mottakerErArbeidsgiver =
     erArbeidsgiver(formValues?.valgtMottaker?.rolle) && !formValues?.valgtMottaker?.orgnrSettesAvSaksbehandler;
   const mottakerOrgNrSettesAvSaksbehandler =
@@ -235,6 +237,8 @@ const BrevMottaker = ({
           )}
         </Nav.Row>
       )}
+
+      {mottakerErOffentligEtat && <BrevMottakerOffentligEtat />}
     </>
   );
 };

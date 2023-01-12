@@ -34,7 +34,7 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 import { useFeatureToggle } from "../../../featuretoggle";
-import BrevMottakerOffentligEtat, { erOffentligEtat } from "./brevMottaker/brevMottakerOffentligEtat";
+import { erOffentligEtat } from "./brevMottaker/brevMottakerOffentligEtat";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -91,7 +91,6 @@ const SendBrev = ({
   saksnummer,
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
-  const [offentligeEtater, setOffentligeEtater] = useState<Api.DokumenterV2.TilgjengeligeOffentligeEtaterResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [valgtBrev, setValgtBrev] = useState("");
   const [brevSendt, setBrevSendt] = useState(false);
@@ -153,12 +152,6 @@ const SendBrev = ({
       }).then((response) => setMuligeMottakere(response));
     }
   }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
-
-  useEffect(() => {
-    if (erOffentligEtat(formValues?.valgtMottaker?.rolle)) {
-      Api.DokumenterV2.hentTilgjengeligeOffentligeEtater().then((response) => setOffentligeEtater(response));
-    }
-  }, [formValues?.valgtMottaker]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find(
@@ -352,7 +345,6 @@ const SendBrev = ({
             overstyrBlurEvent={overstyrBlurEvent}
             changeField={changeField}
           />
-          {offentligeEtater && <BrevMottakerOffentligEtat offentligeEtater={offentligeEtater} />}
         </Nav.Column>
       </Nav.Row>
 
