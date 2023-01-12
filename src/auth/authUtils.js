@@ -42,14 +42,10 @@ export const setTokenInterceptorForLocalDevelopment = () => {
 };
 
 const tokenScopeMapper = (url) => {
-  switch (url) {
-    case url.startsWith(TRYGDEAVTALE_FLYT_BASE_URL):
-      return trygdeavtaleRequest;
-    case url.startsWith(FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL):
-      return faktureringskomponentenRequest;
-    default:
-      return melosysRequest;
-  }
+  if (url.startsWith(TRYGDEAVTALE_FLYT_BASE_URL)) return trygdeavtaleRequest;
+  if (url.startsWith(FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL)) return faktureringskomponentenRequest;
+
+  return melosysRequest;
 };
 
 export const getAccessToken = (msalInstance, accounts, url, acquireTokenRedirect = false) => {
