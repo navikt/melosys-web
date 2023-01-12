@@ -24,3 +24,9 @@ export const trygdeavtaleRequest = {
     `api://${process.env.REACT_APP_CLUSTER}.teammelosys.${process.env.REACT_APP_TRYGDEAVTALE_APP_NAME}/.default`,
   ],
 };
+
+export const faktureringskomponentenRequest = {
+  scopes: [
+    `api://${process.env.REACT_APP_FAKTURERINGSKOMPONENTEN_CLUSTER}.teammelosys.${process.env.REACT_APP_FAKTURERINGSKOMPONENTEN_APP_NAME}/.default`,
+  ],
+};
