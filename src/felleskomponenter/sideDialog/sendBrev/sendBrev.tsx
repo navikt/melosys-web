@@ -169,7 +169,13 @@ const SendBrev = ({
         }).then((response) => setMuligeMottakere(response));
       }
     }
-  }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
+  }, [
+    formValues?.type,
+    formValues?.valgtMottaker,
+    formValues?.organisasjonsnummer,
+    formValues?.arbeidsgiver,
+    formValues?.offentligeEtater,
+  ]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find(
