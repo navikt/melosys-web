@@ -150,6 +150,7 @@ const SendBrev = ({
 
   const kanHenteMuligeMottakere = (values: SendBrevFormValues) => {
     if (!values || !values.valgtMottaker || !values.type || values.valgtMottaker?.feilmelding) return false;
+    if (erOffentligEtat(formValues?.valgtMottaker?.rolle)) return false;
     return erMottakerGyldig(values);
   };
 
