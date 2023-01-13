@@ -32,11 +32,17 @@ const BrevMottakerOffentligEtat = () => {
 
   return (
     <>
-      <Nav.Typo.Element>Hvilke etater skal brevet sendes til?</Nav.Typo.Element>
-      {tilgjengeligeOffentligeEtater &&
-        tilgjengeligeOffentligeEtater.map((etat) => (
-          <Nav.Checkbox label={etat.navn} key={etat.orgnr} onChange={() => handleCheckboxChange(etat.orgnr)} />
-        ))}
+      <Nav.Typo.Element className="brev-mottaker-offentlig-etat">
+        Hvilke etater skal brevet sendes til?
+      </Nav.Typo.Element>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          {tilgjengeligeOffentligeEtater &&
+            tilgjengeligeOffentligeEtater.map((etat) => (
+              <Nav.Checkbox label={etat.navn} key={etat.orgnr} onChange={() => handleCheckboxChange(etat.orgnr)} />
+            ))}
+        </Nav.Column>
+      </Nav.Row>
     </>
   );
 };
