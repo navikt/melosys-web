@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { InteractionRequiredAuthError } from "@azure/msal-browser";
-import { TRYGDEAVTALE_FLYT_BASE_URL } from "../services/api-constants";
-import { melosysRequest, trygdeavtaleRequest } from "./authConfig";
+import { TRYGDEAVTALE_FLYT_BASE_URL, FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL } from "../services/api-constants";
+import { faktureringskomponentenRequest, melosysRequest, trygdeavtaleRequest } from "./authConfig";
 
 const originalFetch = window.fetch;
 
@@ -41,9 +41,18 @@ export const setTokenInterceptorForLocalDevelopment = () => {
   };
 };
 
+const tokenScopeMapper = (url) => {
+  if (url.startsWith(TRYGDEAVTALE_FLYT_BASE_URL)) return trygdeavtaleRequest;
+  if (url.startsWith(FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL)) return faktureringskomponentenRequest;
+
+  return melosysRequest;
+};
+
 export const getAccessToken = (msalInstance, accounts, url, acquireTokenRedirect = false) => {
+  const request = tokenScopeMapper(url);
+
   return msalInstance[acquireTokenRedirect ? "acquireTokenRedirect" : "acquireTokenSilent"]({
-    ...(url.startsWith(TRYGDEAVTALE_FLYT_BASE_URL) ? trygdeavtaleRequest : melosysRequest),
+    ...request,
     account: accounts[0],
   })
     .then((response) => {
