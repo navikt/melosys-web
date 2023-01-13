@@ -92,6 +92,7 @@ const SendBrev = ({
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
+  const [muligeMottakereEtater, setMuligeMottakereEtater] = useState<Api.DokumenterV2.MuligMottaker[]>();
   const [valgtBrev, setValgtBrev] = useState("");
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
@@ -106,6 +107,7 @@ const SendBrev = ({
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
+  const mottakerErOffentligEtat = erOffentligEtat(formValues?.valgtMottaker?.rolle);
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
@@ -150,16 +152,22 @@ const SendBrev = ({
 
   const kanHenteMuligeMottakere = (values: SendBrevFormValues) => {
     if (!values || !values.valgtMottaker || !values.type || values.valgtMottaker?.feilmelding) return false;
-    if (erOffentligEtat(formValues?.valgtMottaker?.rolle)) return false;
     return erMottakerGyldig(values);
   };
 
   useEffect(() => {
     if (kanHenteMuligeMottakere(formValues)) {
-      Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-        produserbartdokument: formValues?.type || "",
-        orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
-      }).then((response) => setMuligeMottakere(response));
+      if (mottakerErOffentligEtat) {
+        Api.DokumenterV2.hentMuligeMottakereEtater(behandlingID, {
+          produserbartdokument: formValues?.type || "",
+          orgnrEtater: formValues.offentligeEtater || [],
+        }).then((response) => setMuligeMottakereEtater(response));
+      } else {
+        Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+          produserbartdokument: formValues?.type || "",
+          orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
+        }).then((response) => setMuligeMottakere(response));
+      }
     }
   }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
 
@@ -221,7 +229,9 @@ const SendBrev = ({
   const lagFritekstPdfUrl = async (index: number) => {
     const data = {
       produserbardokument: MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTVEDLEGG,
-      mottaker: muligeMottakere?.hovedMottaker.rolle || "",
+      mottaker: mottakerErOffentligEtat
+        ? KV.Koder.MottakerRolle.OFFENTLIG_ETAT
+        : muligeMottakere?.hovedMottaker.rolle || "",
       fritekstTittel:
         redigerFritekstvedleggIndex === index
           ? formValues.felt?.FRITEKSTVEDLEGG_TITTEL?.feltVerdi
@@ -390,11 +400,12 @@ const SendBrev = ({
         finnValgAlternativ={finnValgAlternativ}
       />
 
-      {formIsValid && brevtypeErValgt && muligeMottakere && (
+      {formIsValid && brevtypeErValgt && (muligeMottakere || muligeMottakereEtater) && (
         <Nav.Row>
           <Nav.Column xs={mottakerTabellWidth}>
             <BrevMottakereTabell
               muligeMottakere={muligeMottakere}
+              muligeMottakereEtater={muligeMottakereEtater}
               valgtMottaker={formValues.valgtMottaker}
               hentBrevRequest={hentBrevRequest}
             />

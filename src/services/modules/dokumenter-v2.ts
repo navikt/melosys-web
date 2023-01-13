@@ -148,6 +148,11 @@ export type HentMuligeMottakereReqDto = {
   orgnr: string | null;
 };
 
+export type HentMuligeMottakereEtaterReqDto = {
+  produserbartdokument: string;
+  orgnrEtater: string[];
+};
+
 export const hentTilgjengeligeMaler = (behandlingID: number): Promise<TilgjengeligeMalerResDto> =>
   getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-maler/${behandlingID}`);
 
@@ -159,6 +164,12 @@ export const hentMuligeMottakere = (
   data: HentMuligeMottakereReqDto
 ): Promise<HentMuligeMottakereResDto> =>
   postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/mulige-mottakere/${behandlingID}`, data);
+
+export const hentMuligeMottakereEtater = (
+  behandlingID: number,
+  data: HentMuligeMottakereEtaterReqDto
+): Promise<MuligMottaker[]> =>
+  postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/mulige-mottakere-etater/${behandlingID}`, data);
 
 export const opprettBrev = (behandlingID: number, data: OpprettBrevReqDto) =>
   postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/opprett/${behandlingID}`, data);

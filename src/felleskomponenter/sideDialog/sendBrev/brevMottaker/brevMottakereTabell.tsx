@@ -27,7 +27,8 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface BrevMottakereTabellProps {
-  muligeMottakere: Api.DokumenterV2.HentMuligeMottakereResDto;
+  muligeMottakere?: Api.DokumenterV2.HentMuligeMottakereResDto;
+  muligeMottakereEtater?: Api.DokumenterV2.MuligMottaker[];
   formIsValid: boolean;
   valgtMottaker: any;
   hentBrevRequest: any;
@@ -35,6 +36,7 @@ interface BrevMottakereTabellProps {
 
 const BrevMottakereTabell = ({
   muligeMottakere,
+  muligeMottakereEtater,
   valgtMottaker,
   behandlingID,
   formValues,
@@ -45,6 +47,7 @@ const BrevMottakereTabell = ({
     const orgnrFraFormValues = valgtMottaker.orgnrSettesAvSaksbehandler
       ? formValues.organisasjonsnummer
       : formValues.arbeidsgiver;
+
     return [
       {
         sendesTilDokumenterV2: true,
@@ -91,6 +94,10 @@ const BrevMottakereTabell = ({
     ];
   };
 
+  const mapMottakerRaderEtater = (muligeBrevMottakere: Api.DokumenterV2.MuligMottaker[]) => {
+    return muligeBrevMottakere.map((mottaker) => mapRad(mottaker));
+  };
+
   return (
     <>
       {muligeMottakere?.kopiMottakere?.length !== 0 && (
@@ -101,14 +108,26 @@ const BrevMottakereTabell = ({
         />
       )}
 
-      <MottakerTabell
-        className="tabell"
-        rader={mapMottakerRader(muligeMottakere)}
-        kolonner={[
-          { verdi: "Forhåndsvisning av brev", bredde: "60%" },
-          { verdi: "Mottaker", bredde: "40%" },
-        ]}
-      />
+      {muligeMottakere && (
+        <MottakerTabell
+          className="tabell"
+          rader={mapMottakerRader(muligeMottakere)}
+          kolonner={[
+            { verdi: "Forhåndsvisning av brev", bredde: "60%" },
+            { verdi: "Mottaker", bredde: "40%" },
+          ]}
+        />
+      )}
+      {muligeMottakereEtater && (
+        <MottakerTabell
+          className="tabell"
+          rader={mapMottakerRaderEtater(muligeMottakereEtater)}
+          kolonner={[
+            { verdi: "Forhåndsvisning av brev", bredde: "60%" },
+            { verdi: "Mottaker", bredde: "40%" },
+          ]}
+        />
+      )}
     </>
   );
 };
