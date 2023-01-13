@@ -87,6 +87,7 @@ export type OpprettBrevReqDto = {
   produserbardokument: string;
   mottaker: string;
   orgNr?: string;
+  orgNrEtater?: string[];
   innledningFritekst?: string;
   begrunnelseFritekst?: string;
   manglerFritekst?: string;

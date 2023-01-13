@@ -201,6 +201,7 @@ const SendBrev = ({
     return {
       produserbardokument: formValues.type || "",
       mottaker: mottakerRolle,
+      orgNrEtater: formValues.offentligeEtater,
       innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
       manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
       fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
