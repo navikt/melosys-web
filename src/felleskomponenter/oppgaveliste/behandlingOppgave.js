@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import PT from "prop-types";
+import { v4 as uuidv4 } from "uuid";
 
 import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
@@ -81,6 +82,15 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
     return tekst != null && tekst.length > maxLengde ? `${tekst.slice(0, maxLengde)} (...)` : tekst;
   };
 
+  const reverserOgDelOppSisteGosysBeskrivelser = (tekst) => {
+    return tekst != null ? tekst.split("\n").reverse().slice(0, 4) : "";
+  };
+
+  const stringTilHtmlMedOppdelteLinjer = (tekst) => {
+    const sisteGosysBeskrivelser = reverserOgDelOppSisteGosysBeskrivelser(tekst);
+    return sisteGosysBeskrivelser.map((string) => [string, <br key={uuidv4()} />]);
+  };
+
   return (
     <BehandlingOppgavesLinjeWrapper link={link} stengt={erUnderOppdatering}>
       <Nav.Panel data-cy-behandlingstema={behandlingstema.kode} className={cl}>
@@ -123,7 +133,7 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
             <Nav.Row>
               <b>Gosys:</b>
               <br />
-              {reduserTekstLengde(beskrivelse)}
+              <p>{stringTilHtmlMedOppdelteLinjer(beskrivelse)}</p>
             </Nav.Row>
           </Nav.Column>
         </Nav.Row>
