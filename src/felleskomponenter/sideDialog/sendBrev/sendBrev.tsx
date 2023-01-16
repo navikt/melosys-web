@@ -34,7 +34,7 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 import { useFeatureToggle } from "../../../featuretoggle";
-import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -44,7 +44,7 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     felt: {},
   },
-  soknadsland: avklartefaktaSelectors.Soknadsland(state),
+  harLand: mottatteOpplysningerSelectors.HarLandSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -90,7 +90,7 @@ const SendBrev = ({
   mottakerTabellWidth = "12",
   felterWidth = "12",
   saksnummer,
-  soknadsland,
+  harLand,
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
@@ -108,6 +108,7 @@ const SendBrev = ({
   const tilgjengeligeBrevtyper =
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
 
+  console.log(harLand);
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
       response.forEach((mal) => {
@@ -150,13 +151,7 @@ const SendBrev = ({
         orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
       }).then((response) => setMuligeMottakere(response));
     }
-  }, [
-    formValues?.type,
-    formValues?.valgtMottaker,
-    formValues?.organisasjonsnummer,
-    formValues?.arbeidsgiver,
-    soknadsland,
-  ]);
+  }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver, harLand]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find(
