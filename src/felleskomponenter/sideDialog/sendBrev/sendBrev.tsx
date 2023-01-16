@@ -34,6 +34,7 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 import { useFeatureToggle } from "../../../featuretoggle";
+import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -43,6 +44,7 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     felt: {},
   },
+  soknadsland: avklartefaktaSelectors.Soknadsland(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -88,6 +90,7 @@ const SendBrev = ({
   mottakerTabellWidth = "12",
   felterWidth = "12",
   saksnummer,
+  soknadsland,
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
@@ -147,7 +150,13 @@ const SendBrev = ({
         orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
       }).then((response) => setMuligeMottakere(response));
     }
-  }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
+  }, [
+    formValues?.type,
+    formValues?.valgtMottaker,
+    formValues?.organisasjonsnummer,
+    formValues?.arbeidsgiver,
+    soknadsland,
+  ]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find(
