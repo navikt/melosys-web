@@ -33,6 +33,7 @@ import * as land from "./land";
 import * as organisasjon from "./organisasjon";
 import * as feilmelding from "./feilmelding";
 import * as mediaQuery from "./mediaQuery";
+import * as navigasjon from "./navigasjon";
 
 import { delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from "./utils";
 
@@ -58,6 +59,7 @@ export {
   organisasjon,
   feilmelding,
   mediaQuery,
+  navigasjon,
   capitalize as _capitalize,
   isUndefined as _isUndefined,
   isEqual as _isEqual,
