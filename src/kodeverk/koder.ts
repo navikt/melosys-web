@@ -161,7 +161,7 @@ export const MottakerRolle = {
   VIRKSOMHET: "VIRKSOMHET",
   TRYGDEMYNDIGHET: "TRYGDEMYNDIGHET",
   REPRESENTANT: "REPRESENTANT",
-  ETAT: "OFFENTLIG_ETAT",
+  ETAT: "ETAT",
 };
 
 export enum StegNavn {
