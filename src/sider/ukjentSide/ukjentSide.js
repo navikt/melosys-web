@@ -13,7 +13,8 @@ const UkjentSide = ({ location }) => {
       url: location.pathname,
     },
   };
-  window.frontendlogger.error(logdata);
+  // eslint-disable-next-line no-console
+  console.error(logdata);
   return (
     <Nav.AlertStripe type="feil" className="ukjentSide">
       <Nav.Typo.Systemtittel>Denne siden finnes ikke: &quot;{location.pathname}&quot;.</Nav.Typo.Systemtittel>
