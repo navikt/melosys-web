@@ -1,8 +1,10 @@
 /* eslint-disable */
 
 import Enzyme, { shallow, mount } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 import each from "jest-each";
+
+import "@testing-library/jest-dom/extend-expect";
 
 // Feiler tester som kaster en proptype-error
 import "jest-prop-type-error";

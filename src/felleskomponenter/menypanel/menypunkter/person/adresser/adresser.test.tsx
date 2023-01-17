@@ -1,10 +1,9 @@
 import React, { ComponentProps } from "react";
-import { shallow } from "enzyme";
-import { mock, instance } from "ts-mockito";
+import { instance, mock } from "ts-mockito";
+import { render, screen } from "@testing-library/react";
 
-import { Bostedsadresse, Oppholdsadresse, Kontaktadresse } from "../../../../../graphql";
+import { Bostedsadresse, Kontaktadresse, Oppholdsadresse } from "../../../../../graphql";
 import { Adresser } from "./adresser";
-import AdresseTableContainer from "./adresseTable";
 
 describe("Adresser", () => {
   const mockedProps = mock<ComponentProps<typeof Adresser>>();
@@ -33,63 +32,25 @@ describe("Adresser", () => {
     };
   });
 
-  it("viser bostedsadresser hvis de finnes", () => {
-    const adresser = shallow(<Adresser {...props} />);
+  it("viser tabell for hver adressetype hvis de finnes", () => {
+    render(<Adresser {...props} />);
 
-    const bostedsadresseKomponenter = adresser.findWhere(
-      (n) => n.type() === AdresseTableContainer && n.props().adresser === bostedsadresser
-    );
-    expect(bostedsadresseKomponenter).toHaveLength(1);
+    expect(screen.getAllByRole("table")).toHaveLength(3);
+    expect(screen.getByText("Bostedsadresse")).toBeDefined();
+    expect(screen.getByText("Oppholdsadresse")).toBeDefined();
+    expect(screen.getByText("Kontaktadresse")).toBeDefined();
   });
 
-  it("viser ikke bostedsadresser hvis ingen finnes", () => {
+  it("viser ikke tabell for adresser hvis ingen finnes", () => {
     props.data.hentSaksopplysninger.persondata.bostedsadresser = [];
-
-    const adresser = shallow(<Adresser {...props} />);
-
-    const bostedsadresseKomponenter = adresser.findWhere(
-      (n) => n.type() === AdresseTableContainer && n.props().adresser === bostedsadresser
-    );
-    expect(bostedsadresseKomponenter).toHaveLength(0);
-  });
-
-  it("viser oppholdsadresser hvis de finnes", () => {
-    const adresser = shallow(<Adresser {...props} />);
-
-    const oppholdsadresseKomponenter = adresser.findWhere(
-      (n) => n.type() === AdresseTableContainer && n.props().adresser === oppholdsadresser
-    );
-    expect(oppholdsadresseKomponenter).toHaveLength(1);
-  });
-
-  it("viser ikke oppholdsadresser hvis ingen finnes", () => {
     props.data.hentSaksopplysninger.persondata.oppholdsadresser = [];
-
-    const adresser = shallow(<Adresser {...props} />);
-
-    const oppholdsadresseKomponenter = adresser.findWhere(
-      (n) => n.type() === AdresseTableContainer && n.props().adresser === oppholdsadresser
-    );
-    expect(oppholdsadresseKomponenter).toHaveLength(0);
-  });
-
-  it("viser kontaktadresser hvis de finnes", () => {
-    const adresser = shallow(<Adresser {...props} />);
-
-    const kontaktadresseKomponenter = adresser.findWhere(
-      (n) => n.type() === AdresseTableContainer && n.props().adresser === kontaktadresser
-    );
-    expect(kontaktadresseKomponenter).toHaveLength(1);
-  });
-
-  it("viser ikke kontaktadresser hvis ingen finnes", () => {
     props.data.hentSaksopplysninger.persondata.kontaktadresser = [];
 
-    const adresser = shallow(<Adresser {...props} />);
+    render(<Adresser {...props} />);
 
-    const kontaktadresseKomponenter = adresser.findWhere(
-      (n) => n.type() === AdresseTableContainer && n.props().adresser === kontaktadresser
-    );
-    expect(kontaktadresseKomponenter).toHaveLength(0);
+    expect(screen.queryByRole("table")).toBeNull();
+    expect(screen.queryByText("Bostedsadresse")).toBeNull();
+    expect(screen.queryByText("Oppholdsadresse")).toBeNull();
+    expect(screen.queryByText("Kontaktadresse")).toBeNull();
   });
 });
