@@ -14,7 +14,8 @@ import { utpekingsperioderOperations } from "../utpekingsperioder";
 import { dokumenterOperations } from "../dokumenter";
 import { oppsummertfaktaOperations } from "../oppsummertfakta";
 import { medlemskapsperioderOperations } from "../medlemskapsperioder";
-import { skalViseTomFlyt } from "../../routing";
+// noinspection ES6PreferShortImport
+import { skalViseTomFlyt } from "../../routing/url";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 
 export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => (dispatch) => {
