@@ -149,7 +149,7 @@ const SendBrev = ({
     }
   }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
 
-  const visInnhold = tilgjengeligeMaler && formValues;
+  const visInnhold = Boolean(tilgjengeligeMaler && formValues);
 
   useEffect(() => {
     if (visInnhold) {
