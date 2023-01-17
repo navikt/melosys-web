@@ -6,7 +6,7 @@ export interface SendBrevFormValues {
   valgtMottaker?: Api.DokumenterV2.TilgjengeligMottaker;
   valgtBrev?: Api.DokumenterV2.TilgjengeligBrev;
   organisasjonsnummer?: string;
-  offentligeEtater?: string[];
+  etater?: string[];
   kontaktperson?: string;
   arbeidsgiver?: string;
   felt?: {

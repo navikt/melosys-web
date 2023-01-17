@@ -6,20 +6,19 @@ import * as KV from "../../../../kodeverk";
 import * as Api from "../../../../services/api";
 import * as Nav from "../../../../navFrontend";
 
-export const erOffentligEtat = (rolle: string | undefined) => rolle === KV.Koder.MottakerRolle.OFFENTLIG_ETAT;
+export const erEtat = (rolle: string | undefined) => rolle === KV.Koder.MottakerRolle.ETAT;
 
-const BrevMottakerOffentligEtat = () => {
-  const [tilgjengeligeOffentligeEtater, setTilgjengeligeOffentligeEtater] =
-    useState<Api.DokumenterV2.TilgjengeligeOffentligeEtaterResDto>();
+const BrevMottakerEtat = () => {
+  const [tilgjengeligeEtater, setTilgjengeligeEtater] = useState<Api.DokumenterV2.TilgjengeligeEtaterResDto>();
   const [valgteEtater, setValgteEtater] = useState<string[]>([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    Api.DokumenterV2.hentTilgjengeligeOffentligeEtater().then((response) => setTilgjengeligeOffentligeEtater(response));
+    Api.DokumenterV2.hentTilgjengeligeEtater().then((response) => setTilgjengeligeEtater(response));
   }, []);
 
   useEffect(() => {
-    dispatch(change(KV.Form.SEND_BREV, "offentligeEtater", valgteEtater));
+    dispatch(change(KV.Form.SEND_BREV, "etater", valgteEtater));
   }, [valgteEtater]);
 
   const handleCheckboxChange = (item: string) => {
@@ -37,8 +36,8 @@ const BrevMottakerOffentligEtat = () => {
       </Nav.Typo.Element>
       <Nav.Row>
         <Nav.Column xs="12">
-          {tilgjengeligeOffentligeEtater &&
-            tilgjengeligeOffentligeEtater.map((etat) => (
+          {tilgjengeligeEtater &&
+            tilgjengeligeEtater.map((etat) => (
               <Nav.Checkbox label={etat.navn} key={etat.orgnr} onChange={() => handleCheckboxChange(etat.orgnr)} />
             ))}
         </Nav.Column>
@@ -47,4 +46,4 @@ const BrevMottakerOffentligEtat = () => {
   );
 };
 
-export default BrevMottakerOffentligEtat;
+export default BrevMottakerEtat;

@@ -63,7 +63,7 @@ export type TilgjengeligMal = {
   brevTyper: TilgjengeligBrev[];
 };
 
-export type TilgjengeligOffentligEtat = {
+export type TilgjengeligEtat = {
   navn: string;
   orgnr: string;
 };
@@ -74,7 +74,7 @@ export type TilgjengeligBrev = {
 };
 export type TilgjengeligeMalerResDto = TilgjengeligMal[];
 
-export type TilgjengeligeOffentligeEtaterResDto = TilgjengeligOffentligEtat[];
+export type TilgjengeligeEtaterResDto = TilgjengeligEtat[];
 
 export type KopiMottaker = {
   rolle: string;
@@ -156,8 +156,8 @@ export type HentMuligeMottakereEtaterReqDto = {
 export const hentTilgjengeligeMaler = (behandlingID: number): Promise<TilgjengeligeMalerResDto> =>
   getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-maler/${behandlingID}`);
 
-export const hentTilgjengeligeOffentligeEtater = (): Promise<TilgjengeligeOffentligeEtaterResDto> =>
-  getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-offentlige-etater`);
+export const hentTilgjengeligeEtater = (): Promise<TilgjengeligeEtaterResDto> =>
+  getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-etater`);
 
 export const hentMuligeMottakere = (
   behandlingID: number,

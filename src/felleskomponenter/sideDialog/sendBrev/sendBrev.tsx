@@ -34,7 +34,7 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 import { useFeatureToggle } from "../../../featuretoggle";
-import { erOffentligEtat } from "./brevMottaker/brevMottakerOffentligEtat";
+import { erEtat } from "./brevMottaker/brevMottakerEtat";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -107,7 +107,7 @@ const SendBrev = ({
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
-  const mottakerErOffentligEtat = erOffentligEtat(formValues?.valgtMottaker?.rolle);
+  const mottakerErEtat = erEtat(formValues?.valgtMottaker?.rolle);
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
@@ -130,7 +130,7 @@ const SendBrev = ({
     const { rolle, orgnrSettesAvSaksbehandler } = values.valgtMottaker;
     if (erArbeidsgiverEllerVirksomhet(rolle) && !orgnrSettesAvSaksbehandler && !values.arbeidsgiver) return false;
     if (erArbeidsgiverEllerVirksomhet(rolle) && orgnrSettesAvSaksbehandler && !values.organisasjonsnummer) return false;
-    if (erOffentligEtat(rolle) && !harValgtOffentligEtat()) return false;
+    if (erEtat(rolle) && !harValgtEtat()) return false;
     return true;
   };
 
@@ -147,7 +147,7 @@ const SendBrev = ({
     formValues?.valgtMottaker,
     formValues?.organisasjonsnummer,
     formValues?.arbeidsgiver,
-    formValues?.offentligeEtater,
+    formValues?.etater,
   ]);
 
   const kanHenteMuligeMottakere = (values: SendBrevFormValues) => {
@@ -157,10 +157,10 @@ const SendBrev = ({
 
   useEffect(() => {
     if (kanHenteMuligeMottakere(formValues)) {
-      if (mottakerErOffentligEtat) {
+      if (mottakerErEtat) {
         Api.DokumenterV2.hentMuligeMottakereEtater(behandlingID, {
           produserbartdokument: formValues?.type || "",
-          orgnrEtater: formValues.offentligeEtater || [],
+          orgnrEtater: formValues.etater || [],
         }).then((response) => setMuligeMottakereEtater(response));
       } else {
         Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
@@ -174,7 +174,7 @@ const SendBrev = ({
     formValues?.valgtMottaker,
     formValues?.organisasjonsnummer,
     formValues?.arbeidsgiver,
-    formValues?.offentligeEtater,
+    formValues?.etater,
   ]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
@@ -215,7 +215,7 @@ const SendBrev = ({
     return {
       produserbardokument: formValues.type || "",
       mottaker: mottakerRolle,
-      orgNrEtater: formValues.offentligeEtater,
+      orgNrEtater: formValues.etater,
       innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
       manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
       fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
@@ -235,9 +235,7 @@ const SendBrev = ({
   const lagFritekstPdfUrl = async (index: number) => {
     const data = {
       produserbardokument: MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTVEDLEGG,
-      mottaker: mottakerErOffentligEtat
-        ? KV.Koder.MottakerRolle.OFFENTLIG_ETAT
-        : muligeMottakere?.hovedMottaker.rolle || "",
+      mottaker: mottakerErEtat ? KV.Koder.MottakerRolle.ETAT : muligeMottakere?.hovedMottaker.rolle || "",
       fritekstTittel:
         redigerFritekstvedleggIndex === index
           ? formValues.felt?.FRITEKSTVEDLEGG_TITTEL?.feltVerdi
@@ -340,7 +338,7 @@ const SendBrev = ({
     event.preventDefault();
   };
 
-  const harValgtOffentligEtat = () => formValues.offentligeEtater && formValues.offentligeEtater.length > 0;
+  const harValgtEtat = () => formValues.etater && formValues.etater.length > 0;
 
   if (!tilgjengeligeMaler || !formValues) return null;
 

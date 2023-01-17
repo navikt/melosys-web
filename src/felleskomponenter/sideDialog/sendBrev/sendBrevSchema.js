@@ -62,7 +62,7 @@ const send_brev = object().shape({
       then: string().erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER).nullable(),
     })
     .nullable(),
-  offentligeEtater: array().of(string()),
+  etater: array().of(string()),
   kontaktperson: string().nullable(),
   arbeidsgiver: string()
     .when("valgtMottaker", {
