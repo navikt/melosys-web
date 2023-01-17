@@ -42,12 +42,12 @@ ReactDOM.render(
     <ConnectedRouter history={routerHistory}>
       <ApolloProvider client={apolloClient}>
         <App>
-          <ErrorBoundary message={SideLoadingFailMessage}>
+          <Sentry.ErrorBoundary fallback={SideLoadingFailMessage}>
             <FellesHandlersProvider>
               <Routing />
               <Modals />
             </FellesHandlersProvider>
-          </ErrorBoundary>
+          </Sentry.ErrorBoundary>
         </App>
       </ApolloProvider>
     </ConnectedRouter>
