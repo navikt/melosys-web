@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import PT from "prop-types";
-import { v4 as uuidv4 } from "uuid";
 
 import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
@@ -15,6 +14,7 @@ import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
 import Soknadsland from "../soknadsland";
 
 import { formatterDatoTilNorsk } from "../../utils/dato";
+import * as Utils from "../../utils";
 
 import "./behandlingOppgave.css";
 
@@ -82,13 +82,15 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
     return tekst != null && tekst.length > maxLengde ? `${tekst.slice(0, maxLengde)} (...)` : tekst;
   };
 
-  const reverserOgDelOppSisteGosysBeskrivelser = (tekst) => {
-    return tekst != null ? tekst.split("\n").reverse().slice(0, 4) : "";
+  const delOppOgReverserGosysBeskrivelser = (tekst) => {
+    return tekst != null ? tekst.split("\n").reverse() : "";
   };
 
   const stringTilHtmlMedOppdelteLinjer = (tekst) => {
-    const sisteGosysBeskrivelser = reverserOgDelOppSisteGosysBeskrivelser(tekst);
-    return sisteGosysBeskrivelser.map((string) => [string, <br key={uuidv4()} />]);
+    const nyesteNotatIndex = 0;
+    const maxLinjer = 4;
+    const nyesteGosysBeskrivelser = delOppOgReverserGosysBeskrivelser(tekst).slice(nyesteNotatIndex, maxLinjer);
+    return nyesteGosysBeskrivelser.map((string) => [string, <br key={Utils._uuid()} />]);
   };
 
   return (
