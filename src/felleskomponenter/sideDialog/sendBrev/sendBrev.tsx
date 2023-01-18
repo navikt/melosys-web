@@ -34,7 +34,7 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 import { useFeatureToggle } from "../../../featuretoggle";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import { TrygdeavtaleInngangFormSelector } from "../../../ducks/form/selectors";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -44,7 +44,7 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     felt: {},
   },
-  soknadslandkoder: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
+  trygdeavtaleInngangFormValues: TrygdeavtaleInngangFormSelector(state).values,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -90,7 +90,7 @@ const SendBrev = ({
   mottakerTabellWidth = "12",
   felterWidth = "12",
   saksnummer,
-  soknadslandkoder,
+  trygdeavtaleInngangFormValues,
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
@@ -150,13 +150,20 @@ const SendBrev = ({
         orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
       }).then((response) => setMuligeMottakere(response));
     }
-  }, [
-    formValues?.type,
-    formValues?.valgtMottaker,
-    formValues?.organisasjonsnummer,
-    formValues?.arbeidsgiver,
-    soknadslandkoder,
-  ]);
+  }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
+
+  useEffect(() => {
+    if (kanHenteMuligeMottakere(formValues)) {
+      setTimeout(
+        () =>
+          Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+            produserbartdokument: formValues?.type || "",
+            orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
+          }).then((response) => setMuligeMottakere(response)),
+        500
+      );
+    }
+  }, [trygdeavtaleInngangFormValues?.arbeidsland]);
 
   const visInnhold = Boolean(tilgjengeligeMaler && formValues);
 
