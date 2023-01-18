@@ -44,7 +44,7 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     felt: {},
   },
-  harLand: mottatteOpplysningerSelectors.HarLandSelector(state),
+  soknadslandkoder: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -90,7 +90,7 @@ const SendBrev = ({
   mottakerTabellWidth = "12",
   felterWidth = "12",
   saksnummer,
-  harLand,
+  soknadslandkoder,
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
@@ -108,7 +108,6 @@ const SendBrev = ({
   const tilgjengeligeBrevtyper =
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
 
-  console.log(harLand);
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
       response.forEach((mal) => {
@@ -151,7 +150,13 @@ const SendBrev = ({
         orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
       }).then((response) => setMuligeMottakere(response));
     }
-  }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver, harLand]);
+  }, [
+    formValues?.type,
+    formValues?.valgtMottaker,
+    formValues?.organisasjonsnummer,
+    formValues?.arbeidsgiver,
+    soknadslandkoder,
+  ]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find(
