@@ -1,6 +1,13 @@
 {
   "parser": "@typescript-eslint/parser",
   "rules": {
+    "no-restricted-imports": [
+      "warn",
+      {
+        "name": "enzyme",
+        "message": "Please use react-testing-library instead"
+      }
+    ],
     "space-before-function-paren": "off",
     "no-underscore-dangle": "off",
     "camelcase": "off",

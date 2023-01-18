@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import classnames from "classnames";
@@ -104,6 +104,14 @@ const SideDialog = ({
   faner = defaultFaner,
 }: SideDialogProps & PropsFromRedux) => {
   const [aktivFane, setAktivFane] = useState<FaneNavn>(faner[0].navn);
+  const [endreFokus, setEndreFokus] = useState(false);
+
+  useEffect(() => {
+    if (endreFokus) {
+      Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktivFane);
+      setEndreFokus(false);
+    }
+  }, [aktivFane]);
 
   return (
     <div className="dialog panelSeksjon">
@@ -113,14 +121,17 @@ const SideDialog = ({
             <button
               className={classnames({ meny__element: true, "meny__element--aktiv": fane.navn === aktivFane })}
               key={Utils._uuid()}
-              onClick={() => setAktivFane(fane.navn)}
+              onClick={() => {
+                setAktivFane(fane.navn);
+                setEndreFokus(true);
+              }}
               type="button"
             >
               {fane.tittel}
             </button>
           ))}
         </div>
-        <div>
+        <div id={aktivFane}>
           <FaneViser
             navn={aktivFane}
             behandlingID={behandlingID}
