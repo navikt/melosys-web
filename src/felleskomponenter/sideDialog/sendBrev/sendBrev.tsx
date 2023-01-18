@@ -34,7 +34,7 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 import { useFeatureToggle } from "../../../featuretoggle";
-import { TrygdeavtaleInngangFormSelector } from "../../../ducks/form/selectors";
+import { SoknadslandSelector } from "../../../ducks/mottatteOpplysninger/selectors";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -44,7 +44,7 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     felt: {},
   },
-  trygdeavtaleInngangFormValues: TrygdeavtaleInngangFormSelector(state).values,
+  soknadsland: SoknadslandSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -90,7 +90,7 @@ const SendBrev = ({
   mottakerTabellWidth = "12",
   felterWidth = "12",
   saksnummer,
-  trygdeavtaleInngangFormValues,
+  soknadsland,
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
@@ -163,7 +163,7 @@ const SendBrev = ({
         500
       );
     }
-  }, [trygdeavtaleInngangFormValues?.arbeidsland]);
+  }, [soknadsland]);
 
   const visInnhold = Boolean(tilgjengeligeMaler && formValues);
 
