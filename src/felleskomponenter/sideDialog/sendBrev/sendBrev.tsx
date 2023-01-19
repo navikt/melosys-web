@@ -34,7 +34,8 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 import { useFeatureToggle } from "../../../featuretoggle";
-import { SoknadslandSelector } from "../../../ducks/mottatteOpplysninger/selectors";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -44,7 +45,8 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     felt: {},
   },
-  soknadsland: SoknadslandSelector(state),
+  soknadsland: mottatteOpplysningerSelectors.SoknadslandSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -91,9 +93,11 @@ const SendBrev = ({
   felterWidth = "12",
   saksnummer,
   soknadsland,
+  sakstype,
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
+  const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
@@ -143,25 +147,28 @@ const SendBrev = ({
     return erMottakerGyldig(values);
   };
 
+  const hentMuligeMottakere = () => {
+    setMuligeMottakereFeil(undefined);
+    Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+      produserbartdokument: formValues?.type || "",
+      orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
+    })
+      .then((response) => setMuligeMottakere(response))
+      .catch((e) => {
+        setMuligeMottakere(undefined);
+        setMuligeMottakereFeil(e?.body?.message);
+      });
+  };
+
   useEffect(() => {
     if (kanHenteMuligeMottakere(formValues)) {
-      Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-        produserbartdokument: formValues?.type || "",
-        orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
-      }).then((response) => setMuligeMottakere(response));
+      hentMuligeMottakere();
     }
   }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
 
   useEffect(() => {
-    if (kanHenteMuligeMottakere(formValues)) {
-      setTimeout(
-        () =>
-          Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-            produserbartdokument: formValues?.type || "",
-            orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
-          }).then((response) => setMuligeMottakere(response)),
-        500
-      );
+    if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE && kanHenteMuligeMottakere(formValues)) {
+      setTimeout(() => hentMuligeMottakere(), 500);
     }
   }, [soknadsland]);
 
@@ -407,8 +414,14 @@ const SendBrev = ({
         </Nav.Row>
       )}
 
+      {muligeMottakereFeil && (
+        <Nav.AlertStripe type="advarsel" className="varsel">
+          {muligeMottakereFeil}
+        </Nav.AlertStripe>
+      )}
+
       {forhandsvisFritekstvedleggError && (
-        <Nav.AlertStripe type="advarsel" className="fritekst_varsel">
+        <Nav.AlertStripe type="advarsel" className="varsel">
           {FORHANDSVIS_ERROR_MESSAGE}
         </Nav.AlertStripe>
       )}
@@ -448,7 +461,13 @@ const SendBrev = ({
       <div>
         <Nav.Hovedknapp
           mini
-          disabled={!redigerbart || !formIsValid || !!formValues.valgtMottaker?.feilmelding || visFritekstvedleggSkjema}
+          disabled={
+            !redigerbart ||
+            !formIsValid ||
+            !!formValues.valgtMottaker?.feilmelding ||
+            visFritekstvedleggSkjema ||
+            Boolean(muligeMottakereFeil)
+          }
           className="brevknapp"
           onClick={sendBrev}
         >
