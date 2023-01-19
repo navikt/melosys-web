@@ -114,8 +114,8 @@ const VurderingFamilie = ({
   const erIkkeInnvilget = (innvilget?: string | null): boolean => innvilget === BOOLSK_STRING.USANN;
   const finnBarn = (uuid: string, barn?: BarnProps): undefined | FamilieProps => barn && barn[uuid];
 
-  useEffect(() => {
-    if (!redigerbart || !formValues || !formValues.barn || !formValues.ektefelle || !aktivtSteg) return;
+  const oppdaterFlytMedFamilie = () => {
+    if (!redigerbart || !formValues?.barn || !formValues?.ektefelle || !aktivtSteg) return;
     oppdaterFlyt({
       ...resultat,
       barn:
@@ -138,7 +138,17 @@ const VurderingFamilie = ({
           }
         : null,
     });
+  };
+
+  useEffect(() => {
+    oppdaterFlytMedFamilie();
   }, [formValues?.barn, formValues?.ektefelle, tilknyttedeBarn, tilknyttetEktefelle]);
+
+  useEffect(() => {
+    if (steg.status !== StegStatus.FERDIG && aktivtSteg) {
+      oppdaterFlytMedFamilie();
+    }
+  }, [aktivtSteg, steg.status]);
 
   if (!formValues || !formValues.barn || !formValues.ektefelle) return null;
 
