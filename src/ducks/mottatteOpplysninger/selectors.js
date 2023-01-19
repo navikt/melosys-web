@@ -186,22 +186,23 @@ export const HjemmebaserSelector = createSelector(LuftfartBaserSelector, (luftfa
 );
 
 export const SoknadslandSelector = createSelector(
-  MottatteOpplysningerDataSelector,
+  (state) => MottatteOpplysningerDataSelector(state),
   (mottatteOpplysninger) => mottatteOpplysninger.soeknadsland || {}
 );
 
 export const SoknadslandkoderSelector = createSelector(
-  SoknadslandSelector,
+  (state) => SoknadslandSelector(state),
   (soknadsland) => soknadsland.landkoder || []
 );
 
 export const SoknadslandErUkjenteEllerAlleEosLandSelector = createSelector(
-  SoknadslandSelector,
+  (state) => SoknadslandSelector(state),
   (soknadsland) => soknadsland.erUkjenteEllerAlleEosLand
 );
 
-export const SoknadslandKTSelector = createSelector(SoknadslandkoderSelector, (soknadsland) =>
-  MKV.KTObjects.land_iso2.filter((landkodeObjekt) => soknadsland.includes(landkodeObjekt.kode))
+export const SoknadslandKTSelector = createSelector(
+  (state) => SoknadslandkoderSelector(state),
+  (soknadsland) => MKV.KTObjects.land_iso2.filter((landkodeObjekt) => soknadsland.includes(landkodeObjekt.kode))
 );
 
 export const TrygdedekningSelector = createSelector(
@@ -230,13 +231,13 @@ export const HarPeriodeSelector = createSelector(
 );
 
 export const HarLandSelector = createSelector(
-  SoknadslandSelector,
+  (state) => SoknadslandSelector(state),
   (soeknadsland) => !Utils._isEmpty(soeknadsland.landkoder) || soeknadsland.erUkjenteEllerAlleEosLand
 );
 
 export const HarPeriodeOgLandSelector = createSelector(
-  HarPeriodeSelector,
-  HarLandSelector,
+  (state) => HarPeriodeSelector(state),
+  (state) => HarLandSelector(state),
   (harPeriode, harLand) => harPeriode && harLand
 );
 

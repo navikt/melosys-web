@@ -10,8 +10,8 @@ export const LandkoderSelector: Selector<RootState, typeof MPT.Kodeverk[]> = cre
 );
 
 export const LandkoderFraSakstypeSelector = createSelector(
-  LandkoderSelector,
-  SakstypeKodeSelector,
+  (state: RootState) => LandkoderSelector(state),
+  (state: RootState) => SakstypeKodeSelector(state),
   (landkoder, sakstype) => {
     switch (sakstype) {
       case MKV.Koder.sakstyper.FTRL:

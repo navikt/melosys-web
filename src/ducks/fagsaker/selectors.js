@@ -16,9 +16,15 @@ export const FagsakStatusSelector = createSelector(
   (fagsakStatus) => fagsakStatus
 );
 
-export const SakstypeSelector = createSelector(FagsakSelector, (fagsak) => fagsak.sakstype);
+export const SakstypeSelector = createSelector(
+  (state) => FagsakSelector(state),
+  (fagsak) => fagsak.sakstype
+);
 
-export const SakstypeKodeSelector = createSelector(SakstypeSelector, (sakstype) => (sakstype ? sakstype.kode : ""));
+export const SakstypeKodeSelector = createSelector(
+  (state) => SakstypeSelector(state),
+  (sakstype) => (sakstype ? sakstype.kode : "")
+);
 
 export const SakstemaSelector = createSelector(FagsakSelector, (fagsak) => fagsak.sakstema);
 
