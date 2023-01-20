@@ -6,7 +6,8 @@ import * as Nav from "../../navFrontend";
 
 describe("BehandlingOppgave", () => {
   const sak = {
-    sisteNotat: "aaaaaaaaaaaaaaaaaaaaaaaa aaaaaa aaaaaaaaaaaa AAAAAAAA AAAAAAAAA AAAAAAAAAAAAA",
+    sisteNotat:
+      "dette notatet er mye lenger enn 60 bokstaver som er den nåværende begrensningen vi har for notater i melosys",
     oppgaveBeskrivelse: "linje 1 \nlinje 2 \nlinje 3 \n",
     behandling: {
       behandlingID: "1111",
@@ -42,7 +43,7 @@ describe("BehandlingOppgave", () => {
 
   it("skal vise forkortet notat", () => {
     expect(wrapper.find(".behandlingOppgave__kolonne__notater").find(Nav.Row).at(0).find("p").text()).toEqual(
-      "aaaaaaaaaaaaaaaaaaaaaaaa aaaaaa aaaaaaaaaaaa AAAAAAAA AAAAAA (...)"
+      "dette notatet er mye lenger enn 60 bokstaver som er den nåvæ (...)"
     );
   });
 });
