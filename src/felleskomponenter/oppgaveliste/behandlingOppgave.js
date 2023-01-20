@@ -14,6 +14,7 @@ import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
 import Soknadsland from "../soknadsland";
 
 import { formatterDatoTilNorsk } from "../../utils/dato";
+import * as Utils from "../../utils";
 
 import "./behandlingOppgave.css";
 
@@ -81,6 +82,17 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
     return tekst != null && tekst.length > maxLengde ? `${tekst.slice(0, maxLengde)} (...)` : tekst;
   };
 
+  const delOppOgReverserGosysBeskrivelser = (tekst) => {
+    return tekst != null ? tekst.split("\n").reverse() : "";
+  };
+
+  const stringTilHtmlMedOppdelteLinjer = (tekst) => {
+    const nyesteNotatIndex = 0;
+    const maxLinjer = 4;
+    const nyesteGosysBeskrivelser = delOppOgReverserGosysBeskrivelser(tekst).slice(nyesteNotatIndex, maxLinjer);
+    return nyesteGosysBeskrivelser.map((string) => [string, <br key={Utils._uuid()} />]);
+  };
+
   return (
     <BehandlingOppgavesLinjeWrapper link={link} stengt={erUnderOppdatering}>
       <Nav.Panel data-cy-behandlingstema={behandlingstema.kode} className={cl}>
@@ -119,11 +131,13 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
           </Nav.Column>
 
           <Nav.Column xs="6" md="6" lg="4" className="behandlingOppgave__kolonne__notater">
-            <Nav.Row>{reduserTekstLengde(notat)}</Nav.Row>
+            <Nav.Row>
+              <p>{reduserTekstLengde(notat)}</p>
+            </Nav.Row>
             <Nav.Row>
               <b>Gosys:</b>
               <br />
-              {reduserTekstLengde(beskrivelse)}
+              <p>{stringTilHtmlMedOppdelteLinjer(beskrivelse)}</p>
             </Nav.Row>
           </Nav.Column>
         </Nav.Row>
