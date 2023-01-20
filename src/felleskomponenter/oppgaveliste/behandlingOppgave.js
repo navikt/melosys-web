@@ -131,7 +131,9 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
           </Nav.Column>
 
           <Nav.Column xs="6" md="6" lg="4" className="behandlingOppgave__kolonne__notater">
-            <Nav.Row>{reduserTekstLengde(notat)}</Nav.Row>
+            <Nav.Row>
+              <p>{reduserTekstLengde(notat)}</p>
+            </Nav.Row>
             <Nav.Row>
               <b>Gosys:</b>
               <br />
