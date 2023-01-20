@@ -29,11 +29,6 @@ describe("BehandlingOppgave", () => {
     { kode: "kode 1", term: "term 1" },
     { kode: "kode 2", term: "term 2" },
   ];
-  const erUnderOppdatering = false;
-  const behandlingstema = {
-    kode: "test_code",
-    term: "ttset",
-  };
 
   const wrapper: ShallowWrapper = shallow(
     <BehandlingOppgave sak={sak} folketrygdenToggleEnabled={folketrygdenToggleEnabled} landkoder={landkoder} />
