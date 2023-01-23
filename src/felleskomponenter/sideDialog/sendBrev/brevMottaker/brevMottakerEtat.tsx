@@ -11,6 +11,7 @@ export const erEtat = (rolle: string | undefined) => rolle === KV.Koder.Mottaker
 const BrevMottakerEtat = () => {
   const [tilgjengeligeEtater, setTilgjengeligeEtater] = useState<Api.DokumenterV2.TilgjengeligeEtaterResDto>();
   const [valgteEtater, setValgteEtater] = useState<string[]>([]);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
