@@ -1,5 +1,5 @@
 import React from "react";
-import ReactHighcharts from "react-highcharts";
+import HighchartsReact from "highcharts-react-official";
 
 import * as Nav from "../../../../navFrontend";
 
@@ -28,7 +28,7 @@ describe("inntekt", () => {
       },
     ];
     const inntekt = shallow(<Inntekt {...props} />);
-    const graf = inntekt.find(ReactHighcharts);
+    const graf = inntekt.find(HighchartsReact);
 
     expect(graf).toHaveLength(1);
   });

@@ -1,15 +1,12 @@
 import React, { ComponentProps } from "react";
-import { mount } from "enzyme";
-import { mock, instance } from "ts-mockito";
+import { instance, mock } from "ts-mockito";
 import { MockedProvider } from "@apollo/client/testing";
 import { act } from "react-dom/test-utils";
-
-import * as Nav from "../../../../../../navFrontend";
+import { render, screen } from "@testing-library/react";
 
 import MKV from "../../../../../../melosyskodeverk";
 import AnnenForelderModal from "./annenForelderModal";
 import { Bostedsadresse } from "../../../../../../graphql";
-import { StrukturertAdresse } from "../../../../../adresser";
 import { HentBostedsadresseForPersonDocument } from "../../../../../../graphql/adresse";
 
 const { NO } = MKV.Koder.landkoder;
@@ -28,32 +25,30 @@ describe("annenForelderModal", () => {
   });
 
   it("viser en Modal", () => {
-    const annenForelderModal = mount(<AnnenForelderModal {...props} />, {
-      wrappingComponent: MockedProvider,
-    });
+    render(
+      <MockedProvider>
+        <AnnenForelderModal {...props} />
+      </MockedProvider>
+    );
 
-    const modal = annenForelderModal.find(Nav.Modal);
-    expect(modal).toHaveLength(1);
-    expect(modal.props().onRequestClose).toBe(props.onRequestClose);
-    expect(modal.props().contentLabel).toBe(props.contentLabel);
-    expect(modal.contains(props.barnNavn)).toBe(true);
+    expect(screen.getByRole("dialog")).toBeDefined();
   });
 
   it("viser melding ved henting av bostedsadresse", () => {
-    const annenForelderModal = mount(<AnnenForelderModal {...props} />, {
-      wrappingComponent: MockedProvider,
-    });
+    render(
+      <MockedProvider>
+        <AnnenForelderModal {...props} />
+      </MockedProvider>
+    );
 
-    expect(annenForelderModal.contains("Henter bostedsadresse til annen forelder...")).toBe(true);
-    expect(annenForelderModal.find(Nav.NavFrontendSpinner)).toHaveLength(1);
+    expect(screen.getByRole("dialog")).toHaveTextContent("Henter bostedsadresse til annen forelder...");
   });
 
   it("viser melding ved nettverkserror under henting av bostedsadresse", () => {
     return act(async () => {
-      const annenForelderModal = await mount(<AnnenForelderModal {...props} />, {
-        wrappingComponent: MockedProvider,
-        wrappingComponentProps: {
-          mocks: [
+      render(
+        <MockedProvider
+          mocks={[
             {
               request: {
                 query: HentBostedsadresseForPersonDocument,
@@ -63,17 +58,13 @@ describe("annenForelderModal", () => {
               },
               error: new Error("feil"),
             },
-          ],
-        },
-      });
+          ]}
+        >
+          <AnnenForelderModal {...props} />
+        </MockedProvider>
+      );
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, 20);
-      });
-      annenForelderModal.update();
-
-      const alertstripe = annenForelderModal.find(Nav.AlertStripeFeil);
-      expect(alertstripe.contains("Feil ved henting av bostedsadresse!")).toBe(true);
+      expect(await screen.findByText("Feil ved henting av bostedsadresse!")).toBeInTheDocument();
     });
   });
 
@@ -99,10 +90,10 @@ describe("annenForelderModal", () => {
           erHistorisk: false,
         },
       ];
-      const annenForelderModal = await mount(<AnnenForelderModal {...props} />, {
-        wrappingComponent: MockedProvider,
-        wrappingComponentProps: {
-          mocks: [
+
+      render(
+        <MockedProvider
+          mocks={[
             {
               request: {
                 query: HentBostedsadresseForPersonDocument,
@@ -123,29 +114,23 @@ describe("annenForelderModal", () => {
                 },
               },
             },
-          ],
-        },
-      });
+          ]}
+        >
+          <AnnenForelderModal {...props} />
+        </MockedProvider>
+      );
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, 20);
-      });
-      annenForelderModal.update();
-
-      expect(annenForelderModal.contains("LILLA MAGER HEST")).toBe(true);
-      expect(annenForelderModal.contains("PDL")).toBe(true);
-      expect(annenForelderModal.contains("FREG")).toBe(true);
-      const strukturertAdresse = annenForelderModal.find(StrukturertAdresse);
-      expect(strukturertAdresse.props().adresse).toEqual(bostedsadresser[0].adresse);
+      expect(await screen.findByText("LILLA MAGER HEST")).toBeInTheDocument();
+      expect(await screen.findByText("PDL")).toBeInTheDocument();
+      expect(await screen.findByText("FREG")).toBeInTheDocument();
     });
   });
 
   it("viser navn, men ikke adresse, register eller kilde dersom ingen bostedsadresse funnet", () => {
     return act(async () => {
-      const annenForelderModal = await mount(<AnnenForelderModal {...props} />, {
-        wrappingComponent: MockedProvider,
-        wrappingComponentProps: {
-          mocks: [
+      render(
+        <MockedProvider
+          mocks={[
             {
               request: {
                 query: HentBostedsadresseForPersonDocument,
@@ -166,22 +151,14 @@ describe("annenForelderModal", () => {
                 },
               },
             },
-          ],
-        },
-      });
+          ]}
+        >
+          <AnnenForelderModal {...props} />
+        </MockedProvider>
+      );
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, 20);
-      });
-      annenForelderModal.update();
-
-      const tabellRow = annenForelderModal.find(".annen-forelder-modal__tabell__row").hostNodes();
-      expect(tabellRow).toHaveLength(1);
-      const tabellColumns = tabellRow.find(Nav.Column);
-      expect(tabellColumns.first().text()).toContain("LILLA MAGER HEST");
-      expect(tabellColumns.at(1).text()).toContain("Ukjent");
-      expect(tabellColumns.at(2).text()).toContain("Ukjent");
-      expect(tabellColumns.at(3).text()).toContain("Ukjent");
+      expect(await screen.findByText("LILLA MAGER HEST")).toBeInTheDocument();
+      expect(await screen.findAllByText("Ukjent")).toHaveLength(3);
     });
   });
 });

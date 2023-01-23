@@ -14,7 +14,7 @@ const PersonContainer = ({
   visArbeidsforholdRolleEtiketter,
   visMottatteOpplysningerData,
 }: PersonContainerProps) => (
-  <Nav.Container fluid className="barnetrygd">
+  <Nav.Container fluid className="person">
     <Nav.Row className="tittel">
       <Nav.Column xs="12">
         <Nav.Typo.Innholdstittel>{KV.Menypunkter.Person.tittel}</Nav.Typo.Innholdstittel>

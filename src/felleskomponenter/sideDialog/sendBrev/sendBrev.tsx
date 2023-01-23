@@ -34,6 +34,8 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 import { useFeatureToggle } from "../../../featuretoggle";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { erEtat } from "./brevMottaker/brevMottakerEtat";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
@@ -44,6 +46,8 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     felt: {},
   },
+  soknadsland: mottatteOpplysningerSelectors.SoknadslandSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -89,9 +93,12 @@ const SendBrev = ({
   mottakerTabellWidth = "12",
   felterWidth = "12",
   saksnummer,
+  soknadsland,
+  sakstype,
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
+  const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
   const [muligeMottakereEtater, setMuligeMottakereEtater] = useState<Api.DokumenterV2.MuligMottaker[]>();
   const [valgtBrev, setValgtBrev] = useState("");
   const [brevSendt, setBrevSendt] = useState(false);
@@ -155,19 +162,33 @@ const SendBrev = ({
     return erMottakerGyldig(values);
   };
 
+  const hentMuligeMottakere = () => {
+    setMuligeMottakereFeil(undefined);
+
+    if (mottakerErEtat) {
+      Api.DokumenterV2.hentMuligeMottakereEtater(behandlingID, {
+        produserbartdokument: formValues?.type || "",
+        orgnrEtater: formValues.etater || [],
+      }).then((response) => {
+        setMuligeMottakereEtater(response);
+        setMuligeMottakereFeil(e?.body?.message);
+      });
+    } else {
+      Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+        produserbartdokument: formValues?.type || "",
+        orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
+      })
+        .then((response) => setMuligeMottakere(response))
+        .catch((e) => {
+          setMuligeMottakere(undefined);
+          setMuligeMottakereFeil(e?.body?.message);
+        });
+    }
+  };
+
   useEffect(() => {
     if (kanHenteMuligeMottakere(formValues)) {
-      if (mottakerErEtat) {
-        Api.DokumenterV2.hentMuligeMottakereEtater(behandlingID, {
-          produserbartdokument: formValues?.type || "",
-          orgnrEtater: formValues.etater || [],
-        }).then((response) => setMuligeMottakereEtater(response));
-      } else {
-        Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-          produserbartdokument: formValues?.type || "",
-          orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
-        }).then((response) => setMuligeMottakere(response));
-      }
+      hentMuligeMottakere();
     }
   }, [
     formValues?.type,
@@ -176,6 +197,20 @@ const SendBrev = ({
     formValues?.arbeidsgiver,
     formValues?.etater,
   ]);
+
+  useEffect(() => {
+    if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE && kanHenteMuligeMottakere(formValues)) {
+      setTimeout(() => hentMuligeMottakere(), 500);
+    }
+  }, [soknadsland]);
+
+  const visInnhold = Boolean(tilgjengeligeMaler && formValues);
+
+  useEffect(() => {
+    if (visInnhold) {
+      Utils.navigasjon.flyttFokusTilHtmlElementFraId("brevbestilling");
+    }
+  }, [visInnhold]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find(
@@ -341,6 +376,7 @@ const SendBrev = ({
   const harValgtEtat = () => formValues.etater && formValues.etater.length > 0;
 
   if (!tilgjengeligeMaler || !formValues) return null;
+  if (!visInnhold) return null;
 
   const mottakerErValgt = formValues.valgtMottaker;
   const brevtypeErValgt = formValues.valgtBrev;
@@ -417,8 +453,14 @@ const SendBrev = ({
         </Nav.Row>
       )}
 
+      {muligeMottakereFeil && (
+        <Nav.AlertStripe type="advarsel" className="varsel">
+          {muligeMottakereFeil}
+        </Nav.AlertStripe>
+      )}
+
       {forhandsvisFritekstvedleggError && (
-        <Nav.AlertStripe type="advarsel" className="fritekst_varsel">
+        <Nav.AlertStripe type="advarsel" className="varsel">
           {FORHANDSVIS_ERROR_MESSAGE}
         </Nav.AlertStripe>
       )}
@@ -458,7 +500,13 @@ const SendBrev = ({
       <div>
         <Nav.Hovedknapp
           mini
-          disabled={!redigerbart || !formIsValid || !!formValues.valgtMottaker?.feilmelding || visFritekstvedleggSkjema}
+          disabled={
+            !redigerbart ||
+            !formIsValid ||
+            !!formValues.valgtMottaker?.feilmelding ||
+            visFritekstvedleggSkjema ||
+            Boolean(muligeMottakereFeil)
+          }
           className="brevknapp"
           onClick={sendBrev}
         >

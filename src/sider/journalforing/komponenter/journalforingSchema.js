@@ -250,11 +250,30 @@ const journalforing = object().shape({
       is: (hensikt) => hensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
       then: string().required(lagMelding("Behandlingstype")).nullable(),
     }),
+  behandlingstema: string()
+    .nullable()
+    .when(["journalforingHensikt", "opprettBehandling"], {
+      is: (hensikt, opprettBehandling) =>
+        (hensikt === Konstanter.JOURNALFORING_HENSIKT.KNYTT ||
+          hensikt === Konstanter.JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE) &&
+        opprettBehandling,
+      then: string().required(lagMelding("Behandlingstema")).nullable(),
+    }),
+  behandlingstype: string()
+    .nullable()
+    .when(["journalforingHensikt", "opprettBehandling"], {
+      is: (hensikt, opprettBehandling) =>
+        (hensikt === Konstanter.JOURNALFORING_HENSIKT.KNYTT ||
+          hensikt === Konstanter.JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE) &&
+        opprettBehandling,
+      then: string().required(lagMelding("Behandlingstype")).nullable(),
+    }),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   journalforingHensikt: string(),
   representantNavn: string().nullable(),
   journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
+  opprettBehandling: boolean().nullable(),
 });
 
 export default journalforing;

@@ -17,13 +17,14 @@ const StegFane = (props) => {
   });
   return (
     <Nav.Panel className={stegFaneKlasse}>
-      <div>{React.createElement(faneData.komponent, componentProps)}</div>
+      <div id={props.id}>{React.createElement(faneData.komponent, componentProps)}</div>
     </Nav.Panel>
   );
 };
 
 StegFane.propTypes = {
   faneData: PT.object.isRequired,
+  id: PT.string.isRequired,
 };
 
 export default StegFane;
