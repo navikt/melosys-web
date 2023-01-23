@@ -5,19 +5,20 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { getFormValues } from "redux-form";
 
-import * as Skjema from "../../skjema";
-import * as KV from "../../../kodeverk";
-import * as Nav from "../../../navFrontend";
-import * as Utils from "../../../utils";
+import * as Skjema from "../../../skjema";
+import * as KV from "../../../../kodeverk";
+import * as Nav from "../../../../navFrontend";
+import * as Utils from "../../../../utils";
 
-import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
-import { formSelectors } from "../../../ducks/form";
+import { OrganisasjonOperations } from "../../../../ducks/organisasjoner";
+import { formSelectors } from "../../../../ducks/form";
 
-import { DokumenterV2, Organisasjon } from "../../../services/api";
-import { OrganisasjonsAdresse } from "../../adresser";
-import MottakerAdresse from "./mottakerAdresse";
-import FeltBeskrivelse from "./feltBeskrivelse";
-import { SendBrevFormValues } from "./types";
+import { DokumenterV2, Organisasjon } from "../../../../services/api";
+import { OrganisasjonsAdresse } from "../../../adresser";
+import MottakerAdresse from "../mottakerAdresse";
+import FeltBeskrivelse from "../feltBeskrivelse";
+import { SendBrevFormValues } from "../types";
+import BrevMottakerEtat, { erEtat } from "./brevMottakerEtat";
 
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET } = KV.Koder.MottakerRolle;
 
@@ -63,6 +64,7 @@ const BrevMottaker = ({
 
   const mottakerErBruker = erBruker(formValues?.valgtMottaker?.rolle);
   const mottakerErVirksomhet = erVirksomhet(formValues?.valgtMottaker?.rolle);
+  const mottakerErEtat = erEtat(formValues?.valgtMottaker?.rolle);
   const mottakerErArbeidsgiver =
     erArbeidsgiver(formValues?.valgtMottaker?.rolle) && !formValues?.valgtMottaker?.orgnrSettesAvSaksbehandler;
   const mottakerOrgNrSettesAvSaksbehandler =
@@ -235,6 +237,8 @@ const BrevMottaker = ({
           )}
         </Nav.Row>
       )}
+
+      {mottakerErEtat && <BrevMottakerEtat />}
     </>
   );
 };
