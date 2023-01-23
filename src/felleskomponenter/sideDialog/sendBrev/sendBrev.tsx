@@ -169,10 +169,12 @@ const SendBrev = ({
       Api.DokumenterV2.hentMuligeMottakereEtater(behandlingID, {
         produserbartdokument: formValues?.type || "",
         orgnrEtater: formValues.etater || [],
-      }).then((response) => {
-        setMuligeMottakereEtater(response);
-        setMuligeMottakereFeil(e?.body?.message);
-      });
+      })
+        .then((response) => setMuligeMottakereEtater(response))
+        .catch((e) => {
+          setMuligeMottakereEtater([]);
+          setMuligeMottakereFeil(e?.body?.message);
+        });
     } else {
       Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
         produserbartdokument: formValues?.type || "",
