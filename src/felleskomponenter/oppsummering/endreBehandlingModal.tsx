@@ -171,6 +171,12 @@ function EndreBehandlingModal({
     behandlingsstatusFeilmelding,
   ].filter((feilmelding) => feilmelding !== null);
 
+  useEffect(() => {
+    if (alleFeilmeldinger.length === 0) {
+      setSkalViseFeilmeldinger(false);
+    }
+  }, [alleFeilmeldinger]);
+
   const endreBehandlingHandle = () => {
     if (alleFeilmeldinger.length > 0) {
       setSkalViseFeilmeldinger(true);
