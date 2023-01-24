@@ -437,6 +437,7 @@ class Stegvelger extends Component {
     aktuelleSteg[normalisertAktivtSteg].aktivtSteg = true;
 
     this.setState({ aktuelleSteg });
+    Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktuelleSteg[normalisertAktivtSteg].id);
     return aktuelleSteg;
   };
 
@@ -446,16 +447,8 @@ class Stegvelger extends Component {
 
   validerSoknadOgGaTilSteg = (nyttStegNummer) => {
     if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
-      return this.tilSteg(nyttStegNummer);
+      this.tilSteg(nyttStegNummer);
     }
-    return null;
-  };
-
-  stegKlikkHandler = async (aktivtStegNummer) => {
-    const aktuelleSteg = await this.validerSoknadOgGaTilSteg(aktivtStegNummer);
-    const aktueltStegId = aktuelleSteg?.find((steg) => steg.aktivtSteg)?.id;
-
-    Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktueltStegId);
   };
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
@@ -498,7 +491,7 @@ class Stegvelger extends Component {
       }
     }
 
-    return this.oppdaterAktuelleSteg(nyttStegNummer);
+    this.oppdaterAktuelleSteg(nyttStegNummer);
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
@@ -533,7 +526,7 @@ class Stegvelger extends Component {
 
     return (
       <div className="stegvelger panelSeksjon">
-        <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.stegKlikkHandler} />
+        <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
         {this.erVedtakSteg(this.state.aktivtStegNummer) && <Feilmeldinger feilmeldinger={this.props.feilmeldinger} />}
         {this.state.aktuelleSteg.map((item) => (
           <StegFane id={item.id} key={item.id} faneData={item} />
