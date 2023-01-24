@@ -63,11 +63,18 @@ export type TilgjengeligMal = {
   brevTyper: TilgjengeligBrev[];
 };
 
+export type TilgjengeligEtat = {
+  navn: string;
+  orgnr: string;
+};
+
 export type TilgjengeligBrev = {
   type: KTObject;
   felter: Felt[] | null;
 };
 export type TilgjengeligeMalerResDto = TilgjengeligMal[];
+
+export type TilgjengeligeEtaterResDto = TilgjengeligEtat[];
 
 export type KopiMottaker = {
   rolle: string;
@@ -80,6 +87,7 @@ export type OpprettBrevReqDto = {
   produserbardokument: string;
   mottaker: string;
   orgNr?: string;
+  orgnrEtater?: string[];
   innledningFritekst?: string;
   begrunnelseFritekst?: string;
   manglerFritekst?: string;
@@ -140,14 +148,28 @@ export type HentMuligeMottakereReqDto = {
   orgnr: string | null;
 };
 
+export type HentMuligeMottakereEtaterReqDto = {
+  produserbartdokument: string;
+  orgnrEtater: string[];
+};
+
 export const hentTilgjengeligeMaler = (behandlingID: number): Promise<TilgjengeligeMalerResDto> =>
   getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-maler/${behandlingID}`);
+
+export const hentTilgjengeligeEtater = (): Promise<TilgjengeligeEtaterResDto> =>
+  getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-etater`);
 
 export const hentMuligeMottakere = (
   behandlingID: number,
   data: HentMuligeMottakereReqDto
 ): Promise<HentMuligeMottakereResDto> =>
   postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/mulige-mottakere/${behandlingID}`, data);
+
+export const hentMuligeMottakereEtater = (
+  behandlingID: number,
+  data: HentMuligeMottakereEtaterReqDto
+): Promise<MuligMottaker[]> =>
+  postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/mulige-mottakere-etater/${behandlingID}`, data);
 
 export const opprettBrev = (behandlingID: number, data: OpprettBrevReqDto) =>
   postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/opprett/${behandlingID}`, data);

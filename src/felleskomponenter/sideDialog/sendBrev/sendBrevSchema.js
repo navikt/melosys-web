@@ -1,4 +1,4 @@
-import { object, string } from "yup";
+import { array, object, string } from "yup";
 import * as KV from "../../../kodeverk";
 import * as StringUtils from "../../../utils/streng";
 
@@ -62,6 +62,7 @@ const send_brev = object().shape({
       then: string().erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER).nullable(),
     })
     .nullable(),
+  etater: array().of(string().erOrgnr(ORGNUMMER_UGYLDIG)),
   kontaktperson: string().nullable(),
   arbeidsgiver: string()
     .when("valgtMottaker", {

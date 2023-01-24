@@ -22,9 +22,9 @@ import * as Mui from "../../ui";
 import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { formSelectors } from "../../../ducks/form";
 import BrevValg from "./brevValg";
-import BrevMottaker, { erArbeidsgiverEllerVirksomhet } from "./brevMottaker";
+import BrevMottaker, { erArbeidsgiverEllerVirksomhet } from "./brevMottaker/brevMottaker";
 import { SendBrevFormValues } from "./types";
-import BrevMottakereTabell from "./brevMottakereTabell";
+import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
@@ -36,6 +36,7 @@ import VedleggTable from "../../vedleggTable";
 import { useFeatureToggle } from "../../../featuretoggle";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
+import { erEtat } from "./brevMottaker/brevMottakerEtat";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -98,6 +99,8 @@ const SendBrev = ({
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
+  const [muligeMottakereEtater, setMuligeMottakereEtater] = useState<Api.DokumenterV2.MuligMottaker[]>();
+  const [valgtBrev, setValgtBrev] = useState("");
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
@@ -111,6 +114,7 @@ const SendBrev = ({
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
+  const mottakerErEtat = erEtat(formValues?.valgtMottaker?.rolle);
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
@@ -133,14 +137,25 @@ const SendBrev = ({
     const { rolle, orgnrSettesAvSaksbehandler } = values.valgtMottaker;
     if (erArbeidsgiverEllerVirksomhet(rolle) && !orgnrSettesAvSaksbehandler && !values.arbeidsgiver) return false;
     if (erArbeidsgiverEllerVirksomhet(rolle) && orgnrSettesAvSaksbehandler && !values.organisasjonsnummer) return false;
+    if (erEtat(rolle) && !harValgtEtat()) return false;
     return true;
   };
 
   useEffect(() => {
     if (tilgjengeligeBrevtyper?.length === 1 && erMottakerGyldig(formValues)) {
       changeField("type", tilgjengeligeBrevtyper[0].type.kode);
+      setValgtBrev(tilgjengeligeBrevtyper[0].type.kode);
+    } else if (tilgjengeligeBrevtyper?.length === 1 && !erMottakerGyldig(formValues)) {
+      changeField("type", undefined);
+      setValgtBrev("");
     }
-  }, [tilgjengeligeBrevtyper, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
+  }, [
+    tilgjengeligeBrevtyper,
+    formValues?.valgtMottaker,
+    formValues?.organisasjonsnummer,
+    formValues?.arbeidsgiver,
+    formValues?.etater,
+  ]);
 
   const kanHenteMuligeMottakere = (values: SendBrevFormValues) => {
     if (!values || !values.valgtMottaker || !values.type || values.valgtMottaker?.feilmelding) return false;
@@ -149,22 +164,41 @@ const SendBrev = ({
 
   const hentMuligeMottakere = () => {
     setMuligeMottakereFeil(undefined);
-    Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: formValues?.type || "",
-      orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
-    })
-      .then((response) => setMuligeMottakere(response))
-      .catch((e) => {
-        setMuligeMottakere(undefined);
-        setMuligeMottakereFeil(e?.body?.message);
-      });
+
+    if (mottakerErEtat) {
+      Api.DokumenterV2.hentMuligeMottakereEtater(behandlingID, {
+        produserbartdokument: formValues?.type || "",
+        orgnrEtater: formValues.etater || [],
+      })
+        .then((response) => setMuligeMottakereEtater(response))
+        .catch((e) => {
+          setMuligeMottakereEtater([]);
+          setMuligeMottakereFeil(e?.body?.message);
+        });
+    } else {
+      Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+        produserbartdokument: formValues?.type || "",
+        orgnr: formValues.organisasjonsnummer || formValues.arbeidsgiver || null,
+      })
+        .then((response) => setMuligeMottakere(response))
+        .catch((e) => {
+          setMuligeMottakere(undefined);
+          setMuligeMottakereFeil(e?.body?.message);
+        });
+    }
   };
 
   useEffect(() => {
     if (kanHenteMuligeMottakere(formValues)) {
       hentMuligeMottakere();
     }
-  }, [formValues?.type, formValues?.valgtMottaker, formValues?.organisasjonsnummer, formValues?.arbeidsgiver]);
+  }, [
+    formValues?.type,
+    formValues?.valgtMottaker,
+    formValues?.organisasjonsnummer,
+    formValues?.arbeidsgiver,
+    formValues?.etater,
+  ]);
 
   useEffect(() => {
     if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE && kanHenteMuligeMottakere(formValues)) {
@@ -218,6 +252,7 @@ const SendBrev = ({
     return {
       produserbardokument: formValues.type || "",
       mottaker: mottakerRolle,
+      orgnrEtater: formValues.etater,
       innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
       manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
       fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
@@ -237,7 +272,7 @@ const SendBrev = ({
   const lagFritekstPdfUrl = async (index: number) => {
     const data = {
       produserbardokument: MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTVEDLEGG,
-      mottaker: muligeMottakere?.hovedMottaker.rolle || "",
+      mottaker: mottakerErEtat ? KV.Koder.MottakerRolle.ETAT : muligeMottakere?.hovedMottaker.rolle || "",
       fritekstTittel:
         redigerFritekstvedleggIndex === index
           ? formValues.felt?.FRITEKSTVEDLEGG_TITTEL?.feltVerdi
@@ -340,6 +375,9 @@ const SendBrev = ({
     event.preventDefault();
   };
 
+  const harValgtEtat = () => formValues.etater && formValues.etater.length > 0;
+
+  if (!tilgjengeligeMaler || !formValues) return null;
   if (!visInnhold) return null;
 
   const mottakerErValgt = formValues.valgtMottaker;
@@ -379,7 +417,9 @@ const SendBrev = ({
             <Skjema.Select
               feltNavn="type"
               label={<Nav.Typo.Element>Velg brev</Nav.Typo.Element>}
-              disabled={!redigerbart}
+              value={valgtBrev}
+              onChange={(e) => setValgtBrev(e.target.value)}
+              disabled={!redigerbart || tilgjengeligeBrevtyper.length === 1}
               emptyFieldText="Velg..."
               emptyFieldDisabled={!!formValues.type}
               onBlur={overstyrBlurEvent}
@@ -402,11 +442,12 @@ const SendBrev = ({
         finnValgAlternativ={finnValgAlternativ}
       />
 
-      {formIsValid && brevtypeErValgt && muligeMottakere && (
+      {formIsValid && brevtypeErValgt && (muligeMottakere || muligeMottakereEtater) && (
         <Nav.Row>
           <Nav.Column xs={mottakerTabellWidth}>
             <BrevMottakereTabell
               muligeMottakere={muligeMottakere}
+              muligeMottakereEtater={muligeMottakereEtater}
               valgtMottaker={formValues.valgtMottaker}
               hentBrevRequest={hentBrevRequest}
             />
