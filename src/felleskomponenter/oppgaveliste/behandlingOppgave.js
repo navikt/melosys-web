@@ -83,7 +83,7 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
   };
 
   const delOppOgReverserGosysBeskrivelser = (tekst) => {
-    return tekst != null ? tekst.split("\n").reverse() : "";
+    return tekst != null ? tekst.split("\n").reverse() : [];
   };
 
   const stringTilHtmlMedOppdelteLinjer = (tekst) => {
