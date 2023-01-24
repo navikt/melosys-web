@@ -31,6 +31,7 @@ enum FeltVerdier {
   sakstema = "sakstema",
   behandlingstema = "behandlingstema",
   behandlingstype = "behandlingstype",
+  behandlingsstatus = "behandlingsstatus",
 }
 
 const mapStateToProps = (state: RootState) => ({
@@ -170,6 +171,12 @@ function EndreBehandlingModal({
     behandlingstypeFeilmelding,
     behandlingsstatusFeilmelding,
   ].filter((feilmelding) => feilmelding !== null);
+
+  useEffect(() => {
+    if (alleFeilmeldinger.length === 0) {
+      setSkalViseFeilmeldinger(false);
+    }
+  }, [alleFeilmeldinger]);
 
   const endreBehandlingHandle = () => {
     if (alleFeilmeldinger.length > 0) {
