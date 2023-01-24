@@ -31,7 +31,6 @@ enum FeltVerdier {
   sakstema = "sakstema",
   behandlingstema = "behandlingstema",
   behandlingstype = "behandlingstype",
-  behandlingsstatus = "behandlingsstatus",
 }
 
 const mapStateToProps = (state: RootState) => ({
