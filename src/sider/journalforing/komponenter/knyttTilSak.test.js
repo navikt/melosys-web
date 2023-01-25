@@ -90,10 +90,10 @@ describe("KnyttTilSak", () => {
     const checkbox = knyttTilSak.find(Skjema.Checkbox);
 
     expect(checkbox).toHaveLength(1);
-    expect(checkbox.first().props().label).toBe("Journalfør uten videre behandling");
+    expect(checkbox.first().props().label).toBe(`Oppdater behandlingsstatus til "Vurder dokument"`);
   });
 
-  it(`Ikke vis journalfør uten videre behandling dersom saktype er FTRL`, () => {
+  it(`Vis journalfør uten videre behandling dersom saktype er FTRL`, () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
@@ -103,10 +103,11 @@ describe("KnyttTilSak", () => {
 
     const checkbox = knyttTilSak.find(Skjema.Checkbox);
 
-    expect(checkbox).toHaveLength(0);
+    expect(checkbox).toHaveLength(1);
+    expect(checkbox.first().props().label).toBe(`Oppdater behandlingsstatus til "Vurder dokument"`);
   });
 
-  it(`Ikke vis journalfør uten videre behandling dersom saktype er TRYGDEAVTALE`, () => {
+  it(`Vis journalfør uten videre behandling dersom saktype er TRYGDEAVTALE`, () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
@@ -116,6 +117,7 @@ describe("KnyttTilSak", () => {
 
     const checkbox = knyttTilSak.find(Skjema.Checkbox);
 
-    expect(checkbox).toHaveLength(0);
+    expect(checkbox).toHaveLength(1);
+    expect(checkbox.first().props().label).toBe(`Oppdater behandlingsstatus til "Vurder dokument"`);
   });
 });

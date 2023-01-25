@@ -126,8 +126,11 @@ class Journalforing extends Component {
       avsenderType: this.mapAvsenderType(avsenderType),
     };
 
-    if (hensikt === JOURNALFORING_HENSIKT.KNYTT || hensikt === JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE) {
-      return this.dataSpesifiktTilKnyttEllerAndregangs(journalPostData);
+    if (hensikt === JOURNALFORING_HENSIKT.KNYTT) {
+      return this.dataSpesifiktTilKnytt(journalPostData);
+    }
+    if (hensikt === JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE) {
+      return this.dataSpesifiktTilAndregangs(journalPostData);
     }
     if (hensikt === JOURNALFORING_HENSIKT.OPPRETT) {
       return this.dataSpesifiktTilOpprett(journalPostData);
@@ -140,8 +143,19 @@ class Journalforing extends Component {
     MKV.Koder.avsendertyper.ORGANISASJON,
   ];
 
-  dataSpesifiktTilKnyttEllerAndregangs = (fellesData) => {
-    const { behandlingstema, behandlingstype, saksnummer, ingenVurdering } = this.props.journalforingSkjemaVerdier;
+  dataSpesifiktTilKnytt = (fellesData) => {
+    const { saksnummer, vurderDokument } = this.props.journalforingSkjemaVerdier;
+
+    return {
+      ...fellesData,
+      ikkeSendForvaltingsmelding: null,
+      saksnummer,
+      ingenVurdering: !vurderDokument,
+    };
+  };
+
+  dataSpesifiktTilAndregangs = (fellesData) => {
+    const { behandlingstema, behandlingstype, saksnummer } = this.props.journalforingSkjemaVerdier;
 
     return {
       ...fellesData,
@@ -149,7 +163,6 @@ class Journalforing extends Component {
       behandlingstemaKode: behandlingstema,
       behandlingstypeKode: behandlingstype,
       saksnummer,
-      ingenVurdering,
     };
   };
 
@@ -324,7 +337,6 @@ class Journalforing extends Component {
     const { settFeltInnhold } = this.props;
     settFeltInnhold("behandlingstype", null);
     settFeltInnhold("behandlingstema", null);
-    settFeltInnhold("ingenVurdering", false);
   };
 
   velgDokumentID = () => {
