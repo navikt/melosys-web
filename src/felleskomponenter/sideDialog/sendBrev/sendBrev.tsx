@@ -37,6 +37,7 @@ import { useFeatureToggle } from "../../../featuretoggle";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { erEtat } from "./brevMottaker/brevMottakerEtat";
+import Brevutkast from "./brevutkast";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -108,6 +109,7 @@ const SendBrev = ({
   const [fritekstvedlegg, setFritekstvedlegg] = useState<Fritekstvedlegg[]>([]);
   const [redigerFritekstvedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
   const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
+  const [utkastPåBehandlingen, setUtkastPåBehandlingen] = useState<Api.DokumenterV2.OpprettBrevReqDto[]>([]);
 
   const fritekstvedleggToggle = useFeatureToggle("melosys.brev.GENERELT_FRITEKSTVEDLEGG");
 
@@ -123,6 +125,16 @@ const SendBrev = ({
       });
       setTilgjengeligeMaler(response);
     });
+    console.log("Henter eksisterende utkast");
+    const dummyData: Api.DokumenterV2.OpprettBrevReqDto = {
+      produserbardokument: "AVSLAG_MANGLENDE_OPPLYSNINGER",
+      mottaker: "BRUKER",
+      kopiMottakere: [],
+      kontaktopplysninger: null,
+      saksvedlegg: [],
+      fritekstvedlegg: [],
+    };
+    setUtkastPåBehandlingen([dummyData]);
   }, []);
 
   useEffect(() => {
@@ -324,6 +336,7 @@ const SendBrev = ({
     resetForm();
     setBrevSendt(false);
     setBrevSendtFeil(false);
+    console.log("Slett utkast om det finnes"); // TODO Slette utkast
   };
 
   const resetFritekstvedlegg = () => {
@@ -371,6 +384,10 @@ const SendBrev = ({
     }
   };
 
+  const lagreUtkast = () => {
+    console.log("Lagrer utkast"); // TODO Lagre utkast
+  };
+
   const overstyrBlurEvent = (event: React.FocusEvent) => {
     event.preventDefault();
   };
@@ -389,8 +406,17 @@ const SendBrev = ({
     (felt) => felt.kode === Api.DokumenterV2.FeltType.FRITEKSTVEDLEGG
   );
 
+  const knappErDisabled =
+    !redigerbart ||
+    !formIsValid ||
+    !!formValues.valgtMottaker?.feilmelding ||
+    visFritekstvedleggSkjema ||
+    Boolean(muligeMottakereFeil);
+
   return (
     <div className="send_brev">
+      <Brevutkast changeField={changeField} utkastPåBehandlingen={utkastPåBehandlingen} />
+
       {visApneINyttVindu && (
         <div className="send_brev__apne-nytt-vindu-container">
           <Nav.Lenker target="_blank" href={nyttvinduHref}>
@@ -500,20 +526,12 @@ const SendBrev = ({
         ))}
 
       <div>
-        <Nav.Hovedknapp
-          mini
-          disabled={
-            !redigerbart ||
-            !formIsValid ||
-            !!formValues.valgtMottaker?.feilmelding ||
-            visFritekstvedleggSkjema ||
-            Boolean(muligeMottakereFeil)
-          }
-          className="brevknapp"
-          onClick={sendBrev}
-        >
+        <Nav.Hovedknapp mini disabled={knappErDisabled} className="brevknapp" onClick={sendBrev}>
           Send brev
         </Nav.Hovedknapp>
+        <Nav.Flatknapp mini disabled={knappErDisabled} className="brevknapp" onClick={lagreUtkast}>
+          Lagre og fortsett senere
+        </Nav.Flatknapp>
         <Nav.Knapp mini className="brevknapp" onClick={forkastBrev}>
           Forkast brev
         </Nav.Knapp>
