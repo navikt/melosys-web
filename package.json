@@ -108,7 +108,7 @@
   "disabled-homepage": "http://eesi2.no/melosys",
   "homepage": "http://./melosys",
   "scripts": {
-    "analyze": "source-map-explorer build/static/js/main.*",
+    "analyze": "source-map-explorer build/static/js/*.chunk.js",
     "start:js": "react-scripts start",
     "build:js": "react-scripts build",
     "build:watch": "cra-build-watch --public-path /melosys/",
