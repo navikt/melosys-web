@@ -134,7 +134,15 @@ const SendBrev = ({
       saksvedlegg: [],
       fritekstvedlegg: [],
     };
-    setUtkastPåBehandlingen([dummyData]);
+    const dummyData2 = {
+      produserbardokument: "AVSLAG_MANGLENDE_OPPLYSNINGER",
+      mottaker: "BRUKER",
+      kopiMottakere: [],
+      kontaktopplysninger: null,
+      saksvedlegg: [],
+      fritekstvedlegg: [],
+    };
+    setUtkastPåBehandlingen([dummyData, dummyData2]);
   }, []);
 
   useEffect(() => {

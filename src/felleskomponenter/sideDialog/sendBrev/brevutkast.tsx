@@ -1,6 +1,7 @@
 import React, { MouseEventHandler, useState } from "react";
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
+import * as Ikoner from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
@@ -42,15 +43,17 @@ const Brevutkast = ({ changeField, utkastPåBehandlingen }: BrevutkastProps) => 
       {!Utils._isEmpty(inaktiveUtkast) && (
         <div className="brevutkast">
           <Nav.Typo.Element>Lagrede utkast</Nav.Typo.Element>
-          <ul>
-            {inaktiveUtkast.map((utkast) => (
-              <li key={tittelTilUtkast(utkast)}>
-                <Mui.Lenkeknapp value={tittelTilUtkast(utkast)} onClick={velgUtkast}>
-                  {tittelTilUtkast(utkast)}
-                </Mui.Lenkeknapp>
-              </li>
-            ))}
-          </ul>
+          {inaktiveUtkast.map((utkast) => (
+            <Mui.Lenkeknapp
+              key={tittelTilUtkast(utkast)}
+              value={tittelTilUtkast(utkast)}
+              onClick={velgUtkast}
+              ikon={Ikoner.Draft}
+              className="brevutkast__utkast"
+            >
+              {tittelTilUtkast(utkast)}
+            </Mui.Lenkeknapp>
+          ))}
         </div>
       )}
     </>
