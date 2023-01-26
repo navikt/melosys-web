@@ -35,7 +35,7 @@ const lagUrlForTrygdeavtaleFlyt = (saksnummer: number | string, behandlingID: nu
   }
   // TODO FLYTT
   if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
-    return `/${TRYGDEAVTALE}/saksbehandling/${saksnummer}/ikkeyrkesaktiv/?behandlingID=${behandlingID}`;
+    return `/${TRYGDEAVTALE}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
   }
   throw new Error(`Finner ikke trygdeavtale-flyt for behandlingstema: ${behandlingstemaKode}`);
 };

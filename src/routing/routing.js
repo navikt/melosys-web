@@ -37,7 +37,7 @@ const TrygdeavtaleSaksbehandlingLoadable = loadable(
   }
 );
 const SaksbehandlingIkkeYrkesaktivLoadable = loadable(
-  () => import(/* webpackChunkName: "trygdeavtale-saksbehandling" */ "../sider/trygdeavtale/saksbehandling"),
+  () => import(/* webpackChunkName: "ikkeYrkesaktiv-saksbehandling" */ "../sider/ikkeYrkesaktiv/saksbehandling"),
   {
     fallback: SideLoadingStatus,
   }
@@ -105,12 +105,12 @@ const Routing = () => (
           render={(props) => <FtrlSaksbehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route
-          path={`/${TRYGDEAVTALE}/saksbehandling/:saksnr`}
-          render={(props) => <TrygdeavtaleSaksbehandlingLoadable {...props} {...fellesHandlers} />}
+          path="/:sakstype/ikkeYrkesaktiv/:saksnr"
+          render={(props) => <SaksbehandlingIkkeYrkesaktivLoadable {...props} {...fellesHandlers} />}
         />
         <Route
-          path={`/${TRYGDEAVTALE}/saksbehandling/ikkeyrkesaktiv/:saksnr`}
-          render={(props) => <SaksbehandlingIkkeYrkesaktivLoadable {...props} {...fellesHandlers} />}
+          path={`/${TRYGDEAVTALE}/saksbehandling/:saksnr`}
+          render={(props) => <TrygdeavtaleSaksbehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route
           path="/:sakstype/behandling/:saksnr"
