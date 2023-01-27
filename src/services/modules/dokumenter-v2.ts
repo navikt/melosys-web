@@ -88,14 +88,14 @@ export type OpprettBrevReqDto = {
   mottaker: string;
   orgNr?: string;
   orgnrEtater?: string[];
-  innledningFritekst?: string;
-  begrunnelseFritekst?: string;
-  manglerFritekst?: string;
-  fritekstTittel?: string;
+  innledningFritekst?: string | null;
+  begrunnelseFritekst?: string | null;
+  manglerFritekst?: string | null;
+  fritekstTittel?: string | null;
   fritekst?: string;
   kontaktpersonNavn?: string | null;
   kopiMottakere: KopiMottaker[];
-  kontaktopplysninger: boolean | null;
+  kontaktopplysninger?: boolean | null;
   saksvedlegg: {
     dokumentID: string;
     journalpostID: string;
@@ -104,8 +104,8 @@ export type OpprettBrevReqDto = {
     tittel: string;
     fritekst: string;
   }[];
-  distribusjonstype?: string;
-  dokumentTittel?: string;
+  distribusjonstype?: string | null;
+  dokumentTittel?: string | null;
 };
 
 export type MuligMottaker = {

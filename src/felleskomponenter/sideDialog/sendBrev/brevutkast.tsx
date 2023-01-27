@@ -9,10 +9,11 @@ import * as Utils from "../../../utils";
 
 interface BrevutkastProps {
   changeField: (field: string, data: any) => void;
+  tilgjengeligeMottakere: Api.DokumenterV2.TilgjengeligMottaker[];
   utkastPåBehandlingen: Api.DokumenterV2.OpprettBrevReqDto[];
 }
 
-const Brevutkast = ({ changeField, utkastPåBehandlingen }: BrevutkastProps) => {
+const Brevutkast = ({ changeField, tilgjengeligeMottakere, utkastPåBehandlingen }: BrevutkastProps) => {
   const [aktivtUtkast, setAktivtUtkast] = useState<string | null>(null);
 
   const tittelTilUtkast = (utkast: Api.DokumenterV2.OpprettBrevReqDto) =>
@@ -23,10 +24,16 @@ const Brevutkast = ({ changeField, utkastPåBehandlingen }: BrevutkastProps) => 
   const inaktiveUtkast = utkastPåBehandlingen.filter((utkast) => tittelTilUtkast(utkast) !== aktivtUtkast);
 
   const fyllUtFormFraValgtUtkast = (valgtUtkast: Api.DokumenterV2.OpprettBrevReqDto) => {
+    changeField("mottaker", tilgjengeligeMottakere.find((mottaker) => mottaker.rolle === valgtUtkast.mottaker)?.uuid);
     changeField("type", valgtUtkast.produserbardokument);
-    changeField("valgtMottaker.rolle", valgtUtkast.mottaker);
+    changeField("felt.DISTRIBUSJONSTYPE.valg", valgtUtkast.distribusjonstype); // TODO Finne løsning
+    changeField("felt.DOKUMENT_TITTEL.valg", valgtUtkast.dokumentTittel);
+    changeField("felt.BREV_TITTEL.valg", valgtUtkast.fritekstTittel);
+    changeField("felt.INNLEDNING_FRITEKST", valgtUtkast.innledningFritekst);
+    changeField("felt.MANGLER_FRITEKST", valgtUtkast.manglerFritekst);
+    changeField("felt.FRITEKST", valgtUtkast.fritekst);
+    changeField("felt.STANDARDTEKST_KONTAKTINFORMASJON", valgtUtkast.kontaktopplysninger);
     changeField("etater", valgtUtkast.orgnrEtater);
-    // TODO Fyll inn resten. Må nok hente tilgjengelige maler på nytt
   };
 
   const velgUtkast: MouseEventHandler<HTMLButtonElement> = (event) => {

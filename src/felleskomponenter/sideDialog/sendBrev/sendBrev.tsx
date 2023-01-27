@@ -101,7 +101,6 @@ const SendBrev = ({
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
   const [muligeMottakereEtater, setMuligeMottakereEtater] = useState<Api.DokumenterV2.MuligMottaker[]>();
-  const [valgtBrev, setValgtBrev] = useState("");
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
@@ -135,12 +134,17 @@ const SendBrev = ({
       fritekstvedlegg: [],
     };
     const dummyData2 = {
-      produserbardokument: "AVSLAG_MANGLENDE_OPPLYSNINGER",
-      mottaker: "BRUKER",
-      kopiMottakere: [],
-      kontaktopplysninger: null,
-      saksvedlegg: [],
+      distribusjonstype: "VEDTAK",
+      dokumentTittel: null,
+      fritekst: "<p>Bø</p>\n",
+      fritekstTittel: "Svar på henvendelse om medlemskap i folketrygden",
       fritekstvedlegg: [],
+      innledningFritekst: null,
+      kopiMottakere: [],
+      manglerFritekst: null,
+      mottaker: "BRUKER",
+      produserbardokument: "GENERELT_FRITEKSTBREV_BRUKER",
+      saksvedlegg: [],
     };
     setUtkastPåBehandlingen([dummyData, dummyData2]);
   }, []);
@@ -164,10 +168,8 @@ const SendBrev = ({
   useEffect(() => {
     if (tilgjengeligeBrevtyper?.length === 1 && erMottakerGyldig(formValues)) {
       changeField("type", tilgjengeligeBrevtyper[0].type.kode);
-      setValgtBrev(tilgjengeligeBrevtyper[0].type.kode);
     } else if (tilgjengeligeBrevtyper?.length === 1 && !erMottakerGyldig(formValues)) {
       changeField("type", undefined);
-      setValgtBrev("");
     }
   }, [
     tilgjengeligeBrevtyper,
@@ -423,7 +425,11 @@ const SendBrev = ({
 
   return (
     <div className="send_brev">
-      <Brevutkast changeField={changeField} utkastPåBehandlingen={utkastPåBehandlingen} />
+      <Brevutkast
+        changeField={changeField}
+        tilgjengeligeMottakere={tilgjengeligeMottakere}
+        utkastPåBehandlingen={utkastPåBehandlingen}
+      />
 
       {visApneINyttVindu && (
         <div className="send_brev__apne-nytt-vindu-container">
@@ -451,8 +457,6 @@ const SendBrev = ({
             <Skjema.Select
               feltNavn="type"
               label={<Nav.Typo.Element>Velg brev</Nav.Typo.Element>}
-              value={valgtBrev}
-              onChange={(e) => setValgtBrev(e.target.value)}
               disabled={!redigerbart || tilgjengeligeBrevtyper.length === 1}
               emptyFieldText="Velg..."
               emptyFieldDisabled={!!formValues.type}

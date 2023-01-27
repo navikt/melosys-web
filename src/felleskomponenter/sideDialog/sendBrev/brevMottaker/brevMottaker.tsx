@@ -91,10 +91,14 @@ const BrevMottaker = ({
 
   const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonIfValid, 500), []);
 
+  const resetteType = (): boolean => {
+    return false; // TODO Lage logikk her
+  };
+
   useEffect(() => {
     setAdresse(undefined);
     setFeil(undefined);
-    changeField("type", undefined);
+    if (resetteType()) changeField("type", undefined);
 
     const valgtMottaker = tilgjengeligeMottakere.find((mottaker) => mottaker.uuid === formValues.mottaker);
     changeField("valgtMottaker", valgtMottaker);
