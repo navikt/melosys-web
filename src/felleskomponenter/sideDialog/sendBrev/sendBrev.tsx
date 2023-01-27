@@ -19,25 +19,27 @@ import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
 import * as Mui from "../../ui";
 
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerOperations } from "../../../ducks/behandlinger";
+import { dokumenterOperations } from "../../../ducks/dokumenter";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { formSelectors } from "../../../ducks/form";
-import BrevValg from "./brevValg";
+
+import { useFeatureToggle } from "../../../featuretoggle";
+import VedleggVelger from "../../vedleggvelger";
+import VedleggTable from "../../vedleggTable";
+
 import BrevMottaker, { erArbeidsgiverEllerVirksomhet } from "./brevMottaker/brevMottaker";
-import { SendBrevFormValues } from "./types";
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
+import { erEtat } from "./brevMottaker/brevMottakerEtat";
+import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
+import Brevutkast from "./brevutkast";
+import BrevValg from "./brevValg";
+import { SendBrevFormValues } from "./types";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
-import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
-import { dokumenterOperations } from "../../../ducks/dokumenter";
-import VedleggVelger from "../../vedleggvelger";
-import VedleggTable from "../../vedleggTable";
-import { useFeatureToggle } from "../../../featuretoggle";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { erEtat } from "./brevMottaker/brevMottakerEtat";
-import Brevutkast from "./brevutkast";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -137,7 +139,8 @@ const SendBrev = ({
       distribusjonstype: "VEDTAK",
       dokumentTittel: null,
       fritekst: "<p>Bø</p>\n",
-      fritekstTittel: "Svar på henvendelse om medlemskap i folketrygden",
+      fritekstTittel: "Janita er den kuleste ever",
+      kontaktopplysninger: true,
       fritekstvedlegg: [],
       innledningFritekst: null,
       kopiMottakere: [],
@@ -194,7 +197,7 @@ const SendBrev = ({
       })
         .then((response) => setMuligeMottakereEtater(response))
         .catch((e) => {
-          setMuligeMottakereEtater([]);
+          setMuligeMottakereEtater([]); // TODO: Why egen greie for etater her?
           setMuligeMottakereFeil(e?.body?.message);
         });
     } else {
@@ -237,9 +240,7 @@ const SendBrev = ({
   }, [visInnhold]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
-    return felt?.valg?.valgAlternativer.find(
-      (alternativ) => alternativ.beskrivelse === formValues?.felt?.[felt.kode]?.valg
-    );
+    return felt?.valg?.valgAlternativer.find((alternativ) => alternativ.kode === formValues?.felt?.[felt.kode]?.valg);
   };
 
   const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false, hentKode: boolean = false): any => {
@@ -427,6 +428,7 @@ const SendBrev = ({
     <div className="send_brev">
       <Brevutkast
         changeField={changeField}
+        formValues={formValues}
         tilgjengeligeMottakere={tilgjengeligeMottakere}
         utkastPåBehandlingen={utkastPåBehandlingen}
       />
