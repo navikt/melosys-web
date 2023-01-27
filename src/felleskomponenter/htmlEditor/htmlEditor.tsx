@@ -49,8 +49,9 @@ function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
 
   const handleReturn = (e: SyntheticKeyboardEvent) => {
     if (e.key === "Enter") {
-      setCurrentEditorState(RichUtils.insertSoftNewline(currentEditorState));
-      onChange(htmlFromEditorState(currentEditorState));
+      const editorState = RichUtils.insertSoftNewline(currentEditorState);
+      setCurrentEditorState(editorState);
+      onChange(htmlFromEditorState(editorState));
       return true;
     }
     return false;
