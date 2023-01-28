@@ -167,7 +167,6 @@ const SendBrev = ({
 
     if (mottakerErEtat) {
       Api.DokumenterV2.hentMuligeMottakereEtater(behandlingID, {
-        produserbartdokument: formValues?.type || "",
         orgnrEtater: formValues.etater || [],
       })
         .then((response) => setMuligeMottakereEtater(response))

@@ -149,7 +149,6 @@ export type HentMuligeMottakereReqDto = {
 };
 
 export type HentMuligeMottakereEtaterReqDto = {
-  produserbartdokument: string;
   orgnrEtater: string[];
 };
 
