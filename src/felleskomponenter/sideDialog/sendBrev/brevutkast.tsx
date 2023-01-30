@@ -76,7 +76,6 @@ const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPå
       settFeltVerdi("MANGLER_FRITEKST", aktivtUtkast.manglerFritekst);
       settFeltVerdi("FRITEKST", aktivtUtkast.fritekst);
       settFeltVerdi("STANDARDTEKST_KONTAKTINFORMASJON", aktivtUtkast.kontaktopplysninger);
-      changeField("etater", aktivtUtkast.orgnrEtater);
     }
   }, [formValues?.valgtBrev?.type, aktivtUtkastTittel]);
 
@@ -86,6 +85,10 @@ const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPå
     setAktivtUtkast(valgtUtkast || null);
     if (valgtUtkast) {
       changeField("mottaker", tilgjengeligeMottakere.find((mottaker) => mottaker.rolle === valgtUtkast.mottaker)?.uuid);
+      changeField("organisasjonsnummer", valgtUtkast.orgNr);
+      // changeField("arbeidsgiver", valgtUtkast.orgNr); // TODO: Logikk for dette kommer etter MottakerRolle
+      changeField("etater", valgtUtkast.orgnrEtater);
+      changeField("kontaktperson", valgtUtkast.kontaktpersonNavn);
     }
   };
 

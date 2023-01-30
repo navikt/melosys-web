@@ -32,9 +32,7 @@ const BrevMottakerEtat = () => {
 
   return (
     <>
-      <Nav.Typo.Element className="brev-mottaker-offentlig-etat">
-        Hvilke etater skal brevet sendes til?
-      </Nav.Typo.Element>
+      <Nav.Typo.Element className="brevmottaker__etat">Hvilke etater skal brevet sendes til?</Nav.Typo.Element>
       <Nav.Row>
         <Nav.Column xs="12">
           {tilgjengeligeEtater &&

@@ -127,46 +127,23 @@ const SendBrev = ({
       setTilgjengeligeMaler(response);
     });
     console.log("Henter eksisterende utkast");
-    const dummyData: Api.DokumenterV2.OpprettBrevReqDto = {
-      produserbardokument: "AVSLAG_MANGLENDE_OPPLYSNINGER",
-      mottaker: "BRUKER",
-      kopiMottakere: [],
-      kontaktopplysninger: null,
-      saksvedlegg: [],
-      fritekstvedlegg: [],
-    };
-    const dummyData2 = {
-      distribusjonstype: "VEDTAK",
-      dokumentTittel: null,
-      fritekst: "<p>Bø</p>\n",
-      fritekstTittel: "Janita er den kuleste ever",
-      kontaktopplysninger: true,
+    const dummyData = {
+      distribusjonstype: "VIKTIG",
+      fritekst: "<p>Hallo</p>\n",
+      fritekstTittel: "Orientering om vår beslutning",
       fritekstvedlegg: [],
       innledningFritekst: null,
-      kopiMottakere: [],
-      manglerFritekst: null,
-      mottaker: "BRUKER",
-      produserbardokument: "GENERELT_FRITEKSTBREV_BRUKER",
-      saksvedlegg: [],
-    };
-
-    const dummyData3 = {
-      distribusjonstype: null,
-      dokumentTittel: null,
-      fritekst: null,
-      fritekstTittel: null,
-      fritekstvedlegg: [],
-      innledningFritekst: "<p>Fritekst hallo</p>",
-      kontaktopplysninger: null,
+      kontaktopplysninger: true,
       kontaktpersonNavn: null,
       kopiMottakere: [],
-      manglerFritekst: "<p>Ingenting akkurat nå</p>\n",
-      mottaker: "BRUKER",
-      orgNr: null,
-      produserbardokument: "MANGELBREV_BRUKER",
+      manglerFritekst: null,
+      mottaker: "ETAT",
+      orgNr: "974761076",
+      orgnrEtater: ["974761076"],
+      produserbardokument: "FRITEKSTBREV",
       saksvedlegg: [],
     };
-    setUtkastPåBehandlingen([dummyData, dummyData2, dummyData3]);
+    setUtkastPåBehandlingen([dummyData]);
   }, []);
 
   useEffect(() => {
