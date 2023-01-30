@@ -149,7 +149,24 @@ const SendBrev = ({
       produserbardokument: "GENERELT_FRITEKSTBREV_BRUKER",
       saksvedlegg: [],
     };
-    setUtkastPåBehandlingen([dummyData, dummyData2]);
+
+    const dummyData3 = {
+      distribusjonstype: null,
+      dokumentTittel: null,
+      fritekst: null,
+      fritekstTittel: null,
+      fritekstvedlegg: [],
+      innledningFritekst: "<p>Fritekst hallo</p>",
+      kontaktopplysninger: null,
+      kontaktpersonNavn: null,
+      kopiMottakere: [],
+      manglerFritekst: "<p>Ingenting akkurat nå</p>\n",
+      mottaker: "BRUKER",
+      orgNr: null,
+      produserbardokument: "MANGELBREV_BRUKER",
+      saksvedlegg: [],
+    };
+    setUtkastPåBehandlingen([dummyData, dummyData2, dummyData3]);
   }, []);
 
   useEffect(() => {

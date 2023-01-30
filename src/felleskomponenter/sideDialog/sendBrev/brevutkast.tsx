@@ -54,12 +54,25 @@ const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPå
     }
   };
 
+  const settFeltForInnledningFritekst = () => {
+    const valgAlternativer = formValues?.valgtBrev?.felter?.find((felt) => felt.kode === "INNLEDNING_FRITEKST")?.valg
+      ?.valgAlternativer;
+    if (aktivtUtkast?.innledningFritekst) {
+      const valgAlternativTilFritekst = valgAlternativer?.find((alternativ) => alternativ.visFelt);
+      settFeltValg("INNLEDNING_FRITEKST", valgAlternativTilFritekst?.kode);
+      settFeltVerdi("INNLEDNING_FRITEKST", aktivtUtkast.innledningFritekst);
+    } else {
+      const valgAlternativSomIkkeErFritekst = valgAlternativer?.find((alternativ) => !alternativ.visFelt);
+      settFeltValg("INNLEDNING_FRITEKST", valgAlternativSomIkkeErFritekst?.kode);
+    }
+  };
+
   useEffect(() => {
     if (aktivtUtkastTittel && aktivtUtkast && formValues?.valgtBrev?.type) {
       settFeltValg("DISTRIBUSJONSTYPE", aktivtUtkast.distribusjonstype);
       settFeltValg("DOKUMENT_TITTEL", aktivtUtkast.dokumentTittel);
       settFeltForFritekstTittel();
-      settFeltVerdi("INNLEDNING_FRITEKST", aktivtUtkast.innledningFritekst);
+      settFeltForInnledningFritekst();
       settFeltVerdi("MANGLER_FRITEKST", aktivtUtkast.manglerFritekst);
       settFeltVerdi("FRITEKST", aktivtUtkast.fritekst);
       settFeltVerdi("STANDARDTEKST_KONTAKTINFORMASJON", aktivtUtkast.kontaktopplysninger);

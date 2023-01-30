@@ -86,13 +86,13 @@ export type KopiMottaker = {
 export type OpprettBrevReqDto = {
   produserbardokument: string;
   mottaker: string;
-  orgNr?: string;
+  orgNr?: string | null;
   orgnrEtater?: string[];
   innledningFritekst?: string | null;
   begrunnelseFritekst?: string | null;
   manglerFritekst?: string | null;
   fritekstTittel?: string | null;
-  fritekst?: string;
+  fritekst?: string | null;
   kontaktpersonNavn?: string | null;
   kopiMottakere: KopiMottaker[];
   kontaktopplysninger?: boolean | null;
