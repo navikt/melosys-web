@@ -13,7 +13,6 @@ import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponente
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
-import { VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
@@ -142,23 +141,17 @@ const Saksbehandling = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {!hovedpartErVirksomhet ? (
-                  <>
-                    {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
-                    {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
-                    {visStegVelger && (
-                      <Stegvelger
-                        redigerbart={redigerbart}
-                        annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-                        oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger}
-                        tilForsiden={tilForsiden}
-                      />
-                    )}
-                    <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
-                  </>
-                ) : (
-                  <VirksomhetMelding />
+                {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
+                {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
+                {visStegVelger && (
+                  <Stegvelger
+                    redigerbart={redigerbart}
+                    annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+                    oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger}
+                    tilForsiden={tilForsiden}
+                  />
                 )}
+                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering

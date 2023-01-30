@@ -19,11 +19,12 @@ import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from ".
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
 
-import { FlytFinnesIkke, LandValgSomOptions } from "./vurderingInngangKomponenter";
+import { LandValgSomOptions } from "./vurderingInngangKomponenter";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
+import { EnkeltSteg } from "../../../../services/modules/ikkeYrkesaktiv/flyt";
 
 interface Periode {
   fom?: string | null;
@@ -37,12 +38,12 @@ const initializeValues = (periode: Periode, landkoder: string[]) => ({
 });
 
 const mapStateToProps = (state: RootState) => ({
-  formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
+  formValues: getFormValues(KV.Form.IkkeYrkesaktiv.INNGANG)(state),
   initialValues: initializeValues(
     mottatteOpplysningerSelectors.PeriodeSelector(state),
     mottatteOpplysningerSelectors.SoknadslandkoderSelector(state)
   ),
-  formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
+  formIsValid: formSelectors.IkkeYrkesaktivInngangFormValidSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -65,16 +66,16 @@ interface FormValuesProps {
 
 interface Props {
   annenBehandlingOppfriskes: boolean;
-  data: Api.Trygdeavtale.StegData;
+  data: Api.IkkeYrkesaktiv.StegData;
   fortsett: () => void;
   formValues: FormValuesProps;
   hentFlytOgOppdaterAktuelleSteg: () => void;
   redigerbart: boolean;
-  resultat: Api.Trygdeavtale.Resultat;
-  steg: Api.Trygdeavtale.Steg;
+  resultat: Api.IkkeYrkesaktiv.Resultat;
+  steg: EnkeltSteg;
   tilForsiden: () => void;
   oppfriskOgLastInnSaksopplysninger: () => void;
-  oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
+  oppdaterFlyt: (resultat: Api.IkkeYrkesaktiv.Resultat) => void;
   oppfriskFlyt: () => void;
   aktivtSteg: boolean;
 }
@@ -162,6 +163,7 @@ const VurderingInngang = ({
       <Nav.Typo.Undertittel className="undertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Undertittel>
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
+          test
           <Nav.Column xs="3">
             <Skjema.Datovelger label="Fra og med:" feltNavn="fom" disabled={!redigerbart} />
           </Nav.Column>
@@ -188,8 +190,6 @@ const VurderingInngang = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      {landUtenStøtteValgt && <FlytFinnesIkke />}
-
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreftHandle,
@@ -203,7 +203,7 @@ const VurderingInngang = ({
 };
 
 const VurderingInngangForm = reduxForm<{}, PropsFromRedux & Props>({
-  form: KV.Form.Trygdeavtale.INNGANG,
+  form: KV.Form.IkkeYrkesaktiv.INNGANG,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,

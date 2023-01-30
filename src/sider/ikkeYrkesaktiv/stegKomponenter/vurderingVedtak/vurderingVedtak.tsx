@@ -13,7 +13,6 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
-import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
@@ -34,7 +33,6 @@ import "./vurderingVedtak.css";
 import { kontrollerFerdigbehandling } from "../../../../ducks/kontroll/operations";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
-const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
 
 const vurderingVedtakCls = bem("vurderingVedtak");
@@ -44,23 +42,10 @@ interface Periode {
   tom?: string | null;
 }
 
-const setNyVurderingBakgrunnFelt = (begrunnelseFraResultat: string | undefined, erNyVurdering: boolean) => {
-  if (!erNyVurdering || !begrunnelseFraResultat) {
-    return [null, null];
-  }
-  if (KV.finnEnkeltKodeFraListe(begrunnelseFraResultat, MKV.KTObjects.begrunnelser.nyvurderingbakgrunner)) {
-    return [begrunnelseFraResultat, null];
-  }
-  return [FRITEKST, begrunnelseFraResultat];
-};
-
-const mapStateToProps = (state: RootState, ownProps: Props) => {
+const mapStateToProps = (state: RootState) => {
   const erNyVurdering =
     behandlingerSelectors.BehandlingstypeKodeSelector(state) === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const [initialNyVurderingBakgrunn, initialNyVurderingBakgrunnFritekst] = setNyVurderingBakgrunnFelt(
-    ownProps.resultat.nyVurderingBakgrunn,
-    erNyVurdering
-  );
+
   return {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
@@ -68,17 +53,6 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
     formValues: getFormValues(KV.Form.Trygdeavtale.VEDTAK)(state),
-    initialValues: {
-      innledningFritekst: ownProps.resultat.innledningFritekst,
-      begrunnelseFritekst: ownProps.resultat.begrunnelseFritekst,
-      lovvalgsperiodeFom:
-        ownProps.resultat.lovvalgsperiodeFom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeFom),
-      lovvalgsperiodeTom:
-        ownProps.resultat.lovvalgsperiodeTom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeTom),
-      kopiTilArbeidsgiver: true,
-      nyVurderingBakgrunn: initialNyVurderingBakgrunn,
-      nyVurderingBakgrunnFritekst: initialNyVurderingBakgrunnFritekst,
-    },
     formIsValid: formSelectors.TrygdeavtaleVedtakFormValidSelector(state),
     periodeIsValid: formSelectors.TrygdeavtaleVedtakFormPeriodeValidSelector(state),
     erNyVurdering,
@@ -96,16 +70,15 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
-  data: Api.Trygdeavtale.StegData;
-  oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat, callback?: () => void) => void;
+  data: Api.IkkeYrkesaktiv.StegData;
+  oppdaterFlyt: (resultat: Api.IkkeYrkesaktiv.Resultat, callback?: () => void) => void;
   tilbake: () => void;
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
   redigerbart: boolean;
-  resultat: Api.Trygdeavtale.Resultat;
-  steg: Api.Trygdeavtale.Steg;
+  resultat: Api.IkkeYrkesaktiv.Resultat;
+  steg: Api.IkkeYrkesaktiv.EnkeltSteg;
   formValues: {
     lovvalgsperiodeFom?: string;
-    lovvalgsperiodeTom?: string;
     innledningFritekst?: string;
     begrunnelseFritekst?: string;
     kopiTilArbeidsgiver?: boolean;
@@ -118,7 +91,6 @@ interface Props {
 const VurderingVedtak = ({
   behandlingID,
   mottatteOpplysningerStatus,
-  data: { bestemmelseValg },
   erNyVurdering,
   tilbake,
   redigerbart,
@@ -126,18 +98,13 @@ const VurderingVedtak = ({
   steg,
   familieFormValues,
   formValues,
-  periodeIsValid,
   oppdaterFlyt,
-  soknadsland,
   lagreOgFatteVedtak,
   vedtakstype,
-  hentLovvalgsperiode,
   formIsValid,
   feilmeldinger,
   aktivtSteg,
 }: Props & PropsFromRedux) => {
-  const periodeHjelpetekst =
-    "Perioden som vises her er søknadsperiode. Hvis sluttdato for oppholdet ikke er oppgitt i søknaden, og/eller du vil endre sluttdato for vedtaket, trykk på Endre og skriv inn sluttdato.";
   const innledningFritekst =
     "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat.\n\n " +
     "Eksempel:\n " +
@@ -151,7 +118,6 @@ const VurderingVedtak = ({
   const nyVurderingBakgrunnHjelpetekst =
     "Velg en innledningstekst til vedtaket. Teksten kommer først i vedtaket og skal forklare hvorfor vi har gjort nytt vedtak. Hvis ingen av standardtekstene passer, velger du fritekst og skriver egen innledning til vedtaket.";
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
-  const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const isMounted = Hooks.useIsMounted();
@@ -211,33 +177,18 @@ const VurderingVedtak = ({
     }
 
     kontroller();
-  }, [aktivtSteg, resultat.lovvalgsperiodeTom, mottatteOpplysningerStatus]);
-
-  const hentProduserbartDokument = (): string => {
-    switch (soknadsland[0]?.kode) {
-      case MKV.Koder.land_iso2.GB:
-        return TRYGDEAVTALE_GB;
-      case MKV.Koder.land_iso2.US:
-        return TRYGDEAVTALE_US;
-      case MKV.Koder.land_iso2.CA:
-        return TRYGDEAVTALE_CAN;
-      case MKV.Koder.land_iso2.AU:
-        return TRYGDEAVTALE_AU;
-      default:
-        return "";
-    }
-  };
+  }, [aktivtSteg, mottatteOpplysningerStatus]);
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: hentProduserbartDokument(),
+      produserbartdokument: "",
       orgnr: null,
     });
     setMuligeMottakere(res);
   };
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
   const debouncedOppdaterFlyten = useCallback(
-    Utils._debounce((trygdeavtaleresultat: Api.Trygdeavtale.Resultat) => oppdaterFlyt(trygdeavtaleresultat), 2000),
+    Utils._debounce((trygdeavtaleresultat: Api.IkkeYrkesaktiv.Resultat) => oppdaterFlyt(trygdeavtaleresultat), 2000),
     []
   );
 
@@ -247,7 +198,7 @@ const VurderingVedtak = ({
     } else {
       debouncedHentMuligeMottakere.cancel();
     }
-  }, [steg.status, resultat.bestemmelse, resultat.virksomhet]);
+  }, [steg.status]);
 
   useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
@@ -267,29 +218,13 @@ const VurderingVedtak = ({
     formValues?.nyVurderingBakgrunnFritekst,
   ]);
 
-  const handleLagreTomEndring = async () => {
-    if (redigerbart && formValues) {
-      const isoFom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeFom);
-      const isoTom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeTom);
-      oppdaterFlyt(
-        {
-          ...resultat,
-          lovvalgsperiodeFom: isoFom === "Invalid date" ? undefined : isoFom,
-          lovvalgsperiodeTom: isoTom === "Invalid date" ? undefined : isoTom,
-        },
-        () => hentLovvalgsperiode(behandlingID)
-      );
-      setVisTomEndringFelt(false);
-    }
-  };
-
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return [
       {
         sendesTilDokumenterV2: true,
         navn: muligMottaker.dokumentNavn,
         data: {
-          produserbardokument: hentProduserbartDokument(),
+          produserbardokument: "",
           mottaker: muligMottaker.rolle,
           kopiMottakere: getKopiMottakere(),
           innledningFritekst: formValues?.innledningFritekst || null,
@@ -338,29 +273,6 @@ const VurderingVedtak = ({
     }
   };
 
-  const EndreTom = () =>
-    redigerbart ? (
-      <div
-        role="button"
-        className={vurderingVedtakCls.element("endreTom")}
-        tabIndex={0}
-        onClick={() => setVisTomEndringFelt(true)}
-        onKeyDown={(event) => {
-          if ([" ", "Enter"].includes(event.key)) {
-            event.preventDefault();
-            setVisTomEndringFelt(true);
-          }
-        }}
-      >
-        <Ikoner.BlyantActive className={vurderingVedtakCls.element("ikon")} />
-        <span className={vurderingVedtakCls.element("endreTomTekst")}>Endre</span>
-      </div>
-    ) : (
-      <div className={vurderingVedtakCls.elementWithModifier("endreTom", "disabled")}>
-        <Ikoner.BlyantDisabled className={vurderingVedtakCls.element("ikon")} />
-      </div>
-    );
-
   const stegErGyldig = steg.status === StegStatus.FERDIG && formIsValid && redigerbart && Utils._isEmpty(feilmeldinger);
 
   return (
@@ -369,49 +281,7 @@ const VurderingVedtak = ({
         Omfattet av norsk trygdelovgivning - trygdeavtale
       </Nav.Typo.Undertittel>
 
-      <Nav.Row className={vurderingVedtakCls.element("infolinje")}>
-        <Nav.Column xs="4">
-          <Nav.Typo.Element className={vurderingVedtakCls.element("info")}>
-            {Utils.streng.storeForbokstaver(
-              KV.finnTermFraListe(bestemmelseValg, resultat.bestemmelse)?.split(" - ")[1]
-            )}
-          </Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("info")}>
-            {KV.finnTermFraListe(bestemmelseValg, resultat.bestemmelse)?.split(" - ")[0]}
-          </Nav.Typo.Normaltekst>
-        </Nav.Column>
-
-        <Nav.Column xs="5">
-          <Nav.Typo.Element className={vurderingVedtakCls.element("info")} tag="div">
-            <LabelMedHjelpetekst
-              label="Periode"
-              hjelpetekst={periodeHjelpetekst}
-              hjelpetekstClassName="vurderingVedtak__hjelpetekst"
-            />
-          </Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("datofelt_wrapper")} tag="div">
-            {`${formValues?.lovvalgsperiodeFom ? formValues?.lovvalgsperiodeFom : ""} - `}
-            {visTomEndringFelt ? (
-              <span className={vurderingVedtakCls.element("datofelt")}>
-                <Skjema.Datovelger label="" feltNavn="lovvalgsperiodeTom" disabled={!redigerbart} />
-                <Nav.Hovedknapp mini disabled={!redigerbart || !periodeIsValid} onClick={handleLagreTomEndring}>
-                  Lagre
-                </Nav.Hovedknapp>
-              </span>
-            ) : (
-              Utils.dato.formatterDatoTilNorsk(formValues?.lovvalgsperiodeTom)
-            )}
-            {!visTomEndringFelt && <EndreTom />}
-          </Nav.Typo.Normaltekst>
-        </Nav.Column>
-
-        <Nav.Column xs="3">
-          <Nav.Typo.Element className={vurderingVedtakCls.element("info")}>Familiemedlemmer</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("info")}>
-            {resultat.ektefelle || !Utils._isEmpty(resultat.barn) ? "Ja" : "-"}
-          </Nav.Typo.Normaltekst>
-        </Nav.Column>
-      </Nav.Row>
+      <Nav.Row className={vurderingVedtakCls.element("infolinje")}>test</Nav.Row>
 
       {erNyVurdering && (
         <>

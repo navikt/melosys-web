@@ -5,6 +5,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { get as getValueAtPath } from "lodash";
 
+import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
 import * as Nav from "../../navFrontend";
@@ -16,7 +17,7 @@ import StegFane from "../../felleskomponenter/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
 import MottatteOpplysningerFeilmeldinger from "../../felleskomponenter/mottatteOpplysningerFeilmeldinger";
 
-import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { datalastingOperations } from "../../ducks/datalasting";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { formSelectors } from "../../ducks/form";
@@ -25,6 +26,12 @@ import "./stegvelger.css";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { vedtakOperations } from "../../ducks/vedtak";
+// import {VurderingBestemmelse, VurderingInngang, VurderingVedtak} from "./stegKomponenter";
+import {
+  MottatteOpplysningerReqDto,
+  MottatteOpplysningerResDto,
+} from "../../services/modules/mottatteOpplysninger/types";
+import { FlytResDto, Resultat, StegData, EnkeltSteg, StegNavn } from "../../services/modules/ikkeYrkesaktiv/flyt";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -62,6 +69,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) =>
     dispatch(vedtakOperations.fatt(behandlingID, body)),
+  lagreMottatteOpplysningerHandler: () => dispatch(mottatteOpplysningerOperations.lagre()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -91,7 +99,7 @@ class Stegvelger extends Component<Props, State> {
   };
 
   componentDidMount() {
-    this.hentFlytOgOppdaterAktuelleSteg();
+    this.oppdaterStegListe();
   }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
@@ -117,9 +125,9 @@ class Stegvelger extends Component<Props, State> {
     }
   }
 
-  hentFlytOgOppdaterAktuelleSteg = () => {
-    Api.IkkeYrkesaktiv.hentFlyt(this.props.behandlingID).then((response) =>
-      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
+  oppdaterStegListe = () => {
+    Api.MottatteOpplysninger.hent(this.props.behandlingID).then((response) =>
+      this.setState({ aktuelleSteg: this.mottatteOpplysningerTilStegListe(response) })
     );
   };
 
@@ -129,24 +137,17 @@ class Stegvelger extends Component<Props, State> {
     return propsValue && prevPropsValue && !Utils._isEqual(propsValue, prevPropsValue);
   };
 
-  oppfriskFlyt = () => {
-    return Api.IkkeYrkesaktiv.oppfriskFlyt(this.props.behandlingID).then((response) =>
-      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
-    );
-  };
-
-  oppdaterFlyt = (resultat: Api.Trygdeavtale.Resultat, callBack?: () => void) => {
-    Api.IkkeYrkesaktiv.sendFlyt(this.props.behandlingID, resultat).then((response) => {
-      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) });
+  oppdaterFlyt = (resultat: MottatteOpplysningerReqDto, callBack?: () => void) => {
+    Api.MottatteOpplysninger.send(this.props.behandlingID, resultat).then((response) => {
+      this.setState({ aktuelleSteg: this.mottatteOpplysningerTilStegListe(response) });
       if (callBack) callBack();
     });
   };
   debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 200);
 
-  mapFlytResDtoOmTilAktuelleSteg = (response: Api.IkkeYrkesaktiv.FlytResDto): AktueltSteg[] => {
+  mottatteOpplysningerTilStegListe = (response: MottatteOpplysningerResDto): AktueltSteg[] => {
     const data = {
       data: response.data,
-      resultat: response.resultat,
       redigerbart: this.props.redigerbart,
       annenBehandlingOppfriskes: this.props.annenBehandlingOppfriskes,
     };
@@ -155,15 +156,49 @@ class Stegvelger extends Component<Props, State> {
       fortsett: this.fortsett,
       tilbake: this.tilbake,
       oppdaterFlyt: this.debouncedOppdaterFlyt,
-      oppfriskFlyt: this.oppfriskFlyt,
       tilForsiden: this.props.tilForsiden,
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
-      hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
+      oppdaterStegListe: this.oppdaterStegListe,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
     };
 
-    return response.steg?.map((enkeltSteg: Api.IkkeYrkesaktiv.Steg) => {
+    const resultat: Resultat = {};
+
+    const obj1: KTObject = { kode: "001", term: "Value 1" };
+    const obj2: KTObject = { kode: "002", term: null };
+
+    const stegData: StegData = {
+      landValg: [obj1],
+      landValgUtenStøtte: [obj2],
+    };
+
+    const steg1: EnkeltSteg = {
+      navn: StegNavn.INNGANG,
+      nummer: 0,
+      status: StegStatus.IKKE_FERDIG,
+    };
+
+    const steg2: EnkeltSteg = {
+      navn: StegNavn.BESTEMMELSE,
+      nummer: 1,
+      status: StegStatus.IKKE_FERDIG,
+    };
+
+    const steg3: EnkeltSteg = {
+      navn: StegNavn.VEDTAK,
+      nummer: 2,
+      status: StegStatus.IKKE_FERDIG,
+    };
+
+    const res: FlytResDto = {
+      data: stegData,
+      resultat,
+      steg: [steg1, steg2, steg3],
+    };
+
+    return res.steg?.map((enkeltSteg: EnkeltSteg) => {
       const stegMapElement = stegMap[enkeltSteg.navn];
+
       return {
         id: enkeltSteg.navn,
         tittel: stegMapElement.tittel,
@@ -176,16 +211,31 @@ class Stegvelger extends Component<Props, State> {
         vedtakSteg: enkeltSteg.navn === "VEDTAK",
       };
     });
+
+    /* return response.steg?.map((enkeltSteg: Api.IkkeYrkesaktiv.Steg) => {
+      const stegMapElement = stegMap[enkeltSteg.navn];
+      return {
+        id: enkeltSteg.navn,
+        tittel: stegMapElement.tittel,
+        stegPosisjon: enkeltSteg.nummer,
+        aktivtSteg: this.state.aktivtStegIndex === enkeltSteg.nummer,
+        komponent: stegMapElement.komponent,
+        status: enkeltSteg.status === StegStatus.FERDIG ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
+        data: { ...data, steg: enkeltSteg },
+        handlers,
+        vedtakSteg: enkeltSteg.navn === "VEDTAK",
+      };
+    });*/
   };
 
   oppdaterSteg = () => {
     const {
       props: { mottatteOpplysningerFeilmeldinger },
-      hentFlytOgOppdaterAktuelleSteg,
+      oppdaterStegListe,
     } = this;
 
     if (Utils._isEmpty(mottatteOpplysningerFeilmeldinger)) {
-      hentFlytOgOppdaterAktuelleSteg();
+      oppdaterStegListe();
     }
   };
   debouncedOppdaterSteg = Utils._debounce(this.oppdaterSteg, 1250);
@@ -268,6 +318,7 @@ class Stegvelger extends Component<Props, State> {
             {aktuelleSteg.map((item: AktueltSteg) => (
               <StegFane id={item.id} key={item.id} faneData={item} />
             ))}
+            {vedtakStegErAktivt}
           </div>
         )}
         {visMottatteOpplysningerFeilmeldinger && <MottatteOpplysningerFeilmeldinger />}
