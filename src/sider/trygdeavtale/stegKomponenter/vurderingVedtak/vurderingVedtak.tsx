@@ -33,6 +33,12 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { kontrollerFerdigbehandling } from "../../../../ducks/kontroll/operations";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
+import {
+  BEGRUNNELSE_FRITEKST_HJELPETEKST,
+  INNLEDNING_FRITEKST,
+  NY_VURDERING_BAKGRUNN_HJELPETEKST,
+  PERIODE_HJELPETEKST,
+} from "./tekster";
 
 const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
@@ -136,20 +142,6 @@ const VurderingVedtak = ({
   feilmeldinger,
   aktivtSteg,
 }: Props & PropsFromRedux) => {
-  const periodeHjelpetekst =
-    "Perioden som vises her er søknadsperiode. Hvis sluttdato for oppholdet ikke er oppgitt i søknaden, og/eller du vil endre sluttdato for vedtaket, trykk på Endre og skriv inn sluttdato.";
-  const innledningFritekst =
-    "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat.\n\n " +
-    "Eksempel:\n " +
-    '"Du er omfattet av norsk trygdelovgivning og medlem i folketrygden fra 1. september 2022 til 31. desember 2024."\n\n ' +
-    "Friteksten kommer her";
-  const begrunnelseFritekstHjelpetekst =
-    "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.\n\n " +
-    "Eksempel:\n " +
-    '"Vi har lagt til grunn at du er ansatt av og lønnet av en norsk arbeidsgiver, og sendt ut for å jobbe i Storbritannia i inntil tre år."\n\n ' +
-    "Friteksten kommer her";
-  const nyVurderingBakgrunnHjelpetekst =
-    "Velg en innledningstekst til vedtaket. Teksten kommer først i vedtaket og skal forklare hvorfor vi har gjort nytt vedtak. Hvis ingen av standardtekstene passer, velger du fritekst og skriver egen innledning til vedtaket.";
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -385,7 +377,7 @@ const VurderingVedtak = ({
           <Nav.Typo.Element className={vurderingVedtakCls.element("info")} tag="div">
             <LabelMedHjelpetekst
               label="Periode"
-              hjelpetekst={periodeHjelpetekst}
+              hjelpetekst={PERIODE_HJELPETEKST}
               hjelpetekstClassName="vurderingVedtak__hjelpetekst"
             />
           </Nav.Typo.Element>
@@ -420,7 +412,7 @@ const VurderingVedtak = ({
             legend={
               <LabelMedHjelpetekst
                 label="Oppgi grunn for nytt vedtak (Obligatorisk)"
-                hjelpetekst={nyVurderingBakgrunnHjelpetekst}
+                hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
                 hjelpetekstClassName="vurderingVedtak__hjelpetekst"
               />
             }
@@ -456,7 +448,7 @@ const VurderingVedtak = ({
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
         <LabelMedHjelpetekst
           label="Fritekst til innledning"
-          hjelpetekst={innledningFritekst}
+          hjelpetekst={INNLEDNING_FRITEKST}
           hjelpetekstClassName="vurderingVedtak__hjelpetekst"
         />
       </Nav.Typo.Element>
@@ -470,7 +462,7 @@ const VurderingVedtak = ({
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
         <LabelMedHjelpetekst
           label="Fritekst til begrunnelse"
-          hjelpetekst={begrunnelseFritekstHjelpetekst}
+          hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST}
           hjelpetekstClassName="vurderingVedtak__hjelpetekst"
         />
       </Nav.Typo.Element>
