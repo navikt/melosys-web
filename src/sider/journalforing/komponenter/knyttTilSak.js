@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { change } from "redux-form";
 import PT from "prop-types";
 
-import MKV, { MKVUtils } from "../../../melosyskodeverk";
+import { MKVUtils } from "../../../melosyskodeverk";
 import * as MPT from "../../../proptypes";
 import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
@@ -17,7 +17,7 @@ import "./knyttTilSak.css";
 export const KnyttTilSak = (props) => {
   const { sak, erOpprettNySak, changeField, feltNavn, formValues } = props;
   const { behandlingstema, behandlingstype, journalforingGjelder, opprettBehandling } = {
-    opprettBehandling: formValues.opprettBehandling,
+    opprettBehandling: formValues[feltNavn.opprettBehandling],
     behandlingstema: formValues[feltNavn.behandlingstema],
     behandlingstype: formValues[feltNavn.behandlingstype],
     journalforingGjelder: formValues[feltNavn.hovedpart],
@@ -30,7 +30,8 @@ export const KnyttTilSak = (props) => {
 
   useEffect(() => {
     return () => {
-      changeField(feltNavn.formNavn, "opprettBehandling", undefined);
+      if (!erOpprettNySak) changeField(feltNavn.formNavn, "vurderDokument", undefined);
+      changeField(feltNavn.formNavn, feltNavn.opprettBehandling, undefined);
       changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
       changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     };
@@ -41,12 +42,18 @@ export const KnyttTilSak = (props) => {
   );
   const sakErHenlagtEllerBortfalt = MKVUtils.erHenlagtEllerHenlagtBortfalt(sak.saksstatus.kode);
 
-  const visKnyttTilEksisterende =
-    (sisteBehandlingErInaktiv || sisteBehandlingHarSendtAnmodningUnntakTilUtland) && !sakErHenlagtEllerBortfalt;
+  const sisteBehandlingKanOpprettesAndregangsbehandlingPå =
+    sisteBehandlingErInaktiv || sisteBehandlingHarSendtAnmodningUnntakTilUtland;
 
   useEffect(() => {
-    changeField(feltNavn.formNavn, "opprettBehandling", visKnyttTilEksisterende);
-  }, [visKnyttTilEksisterende]);
+    const kanOppretteAndregangsbehandling =
+      sisteBehandlingKanOpprettesAndregangsbehandlingPå && !sakErHenlagtEllerBortfalt;
+    changeField(feltNavn.formNavn, feltNavn.opprettBehandling, kanOppretteAndregangsbehandling);
+    if (!erOpprettNySak) {
+      const skalIkkeVurdereDokument = sisteBehandlingKanOpprettesAndregangsbehandlingPå || sakErHenlagtEllerBortfalt;
+      changeField(feltNavn.formNavn, "vurderDokument", !skalIkkeVurdereDokument);
+    }
+  }, [sisteBehandlingKanOpprettesAndregangsbehandlingPå, sakErHenlagtEllerBortfalt]);
 
   useEffect(() => {
     const erAnmodningsperiodeSendt = (anmodningsperiode) => anmodningsperiode.sendtUtland;
@@ -96,11 +103,24 @@ export const KnyttTilSak = (props) => {
     }
   }, [opprettBehandling, behandlingstema, behandlingstype, sisteBehandling?.behandlingstema?.kode]);
 
-  useEffect(() => {
-    changeField(feltNavn.formNavn, feltNavn.kanOppretteAndregangsbehandling, visKnyttTilEksisterende);
-  }, [visKnyttTilEksisterende]);
+  if (sakErHenlagtEllerBortfalt) {
+    return (
+      <div className="knyttTilSak__behandlingspanel">
+        {erOpprettNySak ? (
+          <Nav.AlertStripeAdvarsel className="feilmelding_innrykk">
+            Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt i Melosys
+          </Nav.AlertStripeAdvarsel>
+        ) : (
+          <Nav.AlertStripeInfo className="feilmelding_innrykk">
+            Du kan ikke opprette en ny behandling på en eksisterende sak som er henlagt/bortfalt i Melosys, men du kan
+            knytte dokumentet til den avsluttede behandlingen
+          </Nav.AlertStripeInfo>
+        )}
+      </div>
+    );
+  }
 
-  if (visKnyttTilEksisterende) {
+  if (sisteBehandlingKanOpprettesAndregangsbehandlingPå) {
     return (
       <div className="knyttTilSak__panelramme">
         {!erOpprettNySak && (
@@ -116,8 +136,8 @@ export const KnyttTilSak = (props) => {
               label=""
               className="panelElement nyBehandling-utenBehandling"
             >
-              <Skjema.Radio feltNavn="opprettBehandling" value label="Opprett ny behandling" />
-              <Skjema.Radio feltNavn="opprettBehandling" value={false} label="Uten å opprette behandling" />
+              <Skjema.Radio feltNavn={feltNavn.opprettBehandling} value label="Opprett ny behandling" />
+              <Skjema.Radio feltNavn={feltNavn.opprettBehandling} value={false} label="Uten å opprette behandling" />
             </Skjema.RadioGruppe>
           </>
         )}
@@ -149,36 +169,14 @@ export const KnyttTilSak = (props) => {
     );
   }
 
-  const visUtenVidereBehandling = sakstype.kode === MKV.Koder.sakstyper.EU_EOS && !sakErHenlagtEllerBortfalt;
-
-  const kanIkkeOppretteAndregangGrunn = sakErHenlagtEllerBortfalt
-    ? "Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt i Melosys"
-    : "Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling";
-
   return (
     <div className="knyttTilSak__behandlingspanel">
       {erOpprettNySak ? (
-        <div className="innrykk">
-          <Nav.AlertStripeAdvarsel>{kanIkkeOppretteAndregangGrunn}</Nav.AlertStripeAdvarsel>
-        </div>
+        <Nav.AlertStripeAdvarsel className="feilmelding_innrykk">
+          Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
+        </Nav.AlertStripeAdvarsel>
       ) : (
-        <>
-          {sakErHenlagtEllerBortfalt && (
-            <div className="innrykk">
-              <Nav.AlertStripeInfo>
-                Du kan ikke opprette en ny behandling på en sak som er henlagt/bortfalt i Melosys, men du kan knytte
-                dokumentet til den avsluttede behandlingen
-              </Nav.AlertStripeInfo>
-            </div>
-          )}
-          {visUtenVidereBehandling && (
-            <Skjema.Checkbox
-              className="knyttTilSak"
-              feltNavn="ingenVurdering"
-              label="Journalfør uten videre behandling"
-            />
-          )}
-        </>
+        <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />
       )}
     </div>
   );
