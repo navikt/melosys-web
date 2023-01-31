@@ -175,7 +175,7 @@ const SendBrev = ({
       })
         .then((response) => setMuligeMottakereEtater(response))
         .catch((e) => {
-          setMuligeMottakereEtater([]); // TODO: Why egen greie for etater her?
+          setMuligeMottakereEtater([]);
           setMuligeMottakereFeil(e?.body?.message);
         });
     } else {
@@ -250,9 +250,17 @@ const SendBrev = ({
   };
 
   const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => {
+    const orgnr = formValues.valgtMottaker?.orgnrSettesAvSaksbehandler
+      ? formValues.organisasjonsnummer
+      : formValues.arbeidsgiver;
     return {
       produserbardokument: formValues.type || "",
       mottaker: mottakerRolle,
+      orgNr: erArbeidsgiverEllerVirksomhet(mottakerRolle) ? orgnr : null,
+      kontaktpersonNavn:
+        erArbeidsgiverEllerVirksomhet(mottakerRolle) && formValues.valgtMottaker?.orgnrSettesAvSaksbehandler
+          ? formValues.kontaktperson
+          : null,
       orgnrEtater: formValues.etater,
       innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
       manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
@@ -299,17 +307,7 @@ const SendBrev = ({
   const sendBrev = () => {
     if (!formValues?.valgtMottaker) return;
 
-    let requestBody: Api.DokumenterV2.OpprettBrevReqDto = hentBrevRequest(formValues.valgtMottaker.rolle);
-    if (formValues.valgtMottaker.rolle === "ARBEIDSGIVER") {
-      requestBody = {
-        ...requestBody,
-        orgNr: formValues.valgtMottaker.orgnrSettesAvSaksbehandler
-          ? formValues.organisasjonsnummer
-          : formValues.arbeidsgiver,
-        kontaktpersonNavn: formValues.valgtMottaker.orgnrSettesAvSaksbehandler ? formValues.kontaktperson : null,
-      };
-    }
-    Api.DokumenterV2.opprettBrev(behandlingID, requestBody)
+    Api.DokumenterV2.opprettBrev(behandlingID, hentBrevRequest(formValues.valgtMottaker.rolle))
       .then(() => {
         setBrevSendt(true);
         oppdaterBehandling();
@@ -476,7 +474,6 @@ const SendBrev = ({
             <BrevMottakereTabell
               muligeMottakere={muligeMottakere}
               muligeMottakereEtater={muligeMottakereEtater}
-              valgtMottaker={formValues.valgtMottaker}
               hentBrevRequest={hentBrevRequest}
             />
           </Nav.Column>

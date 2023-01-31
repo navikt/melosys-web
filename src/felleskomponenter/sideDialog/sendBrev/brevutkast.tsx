@@ -8,6 +8,8 @@ import * as Mui from "../../ui";
 import * as Utils from "../../../utils";
 import { SendBrevFormValues } from "./types";
 
+const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ETAT } = KV.Koder.MottakerRolle;
+
 interface BrevutkastProps {
   aktivtUtkast: Api.Brevutkast.BrevutkastResDto | null;
   changeField: (field: string, data: any) => void;
@@ -87,11 +89,11 @@ const Brevutkast = ({
     }
   }, [formValues?.valgtBrev?.type, aktivtUtkastTittel]);
 
-  // DEPRECATED. Denne blir unødvendig når man går over til Mottakerroller
+  // DEPRECATED. Denne blir unødvendig/mindre komplisert når man går over til Mottakerroller
   const settMottaker = (valgtUtkast: Api.DokumenterV2.OpprettBrevReqDto) => {
-    if (valgtUtkast.mottaker === "BRUKER") {
+    if (valgtUtkast.mottaker === BRUKER) {
       changeField("mottaker", tilgjengeligeMottakere.find((mottaker) => mottaker.rolle === valgtUtkast.mottaker)?.uuid);
-    } else if (["ARBEIDSGIVER", "VIRKSOMHET"].includes(valgtUtkast.mottaker)) {
+    } else if ([ARBEIDSGIVER, VIRKSOMHET].includes(valgtUtkast.mottaker)) {
       const arbeidsgiverMedValgtOrgnr = tilgjengeligeMottakere.find((mottaker) =>
         mottaker.adresser?.find((adresse) => adresse.tittel.orgnr === valgtUtkast.orgNr)
       )?.uuid;
@@ -103,7 +105,7 @@ const Brevutkast = ({
       changeField("mottaker", orgnrSettesAvSaksbehandler ? organisasjonFraOrgnr : arbeidsgiverMedValgtOrgnr);
       changeField(orgnrSettesAvSaksbehandler ? "organisasjonsnummer" : "arbeidsgiver", valgtUtkast.orgNr);
       changeField("kontaktperson", valgtUtkast.kontaktpersonNavn);
-    } else if (valgtUtkast.mottaker === "ETAT") {
+    } else if (valgtUtkast.mottaker === ETAT) {
       changeField("mottaker", tilgjengeligeMottakere.find((mottaker) => mottaker.rolle === valgtUtkast.mottaker)?.uuid);
       changeField("etater", valgtUtkast.orgnrEtater);
     }

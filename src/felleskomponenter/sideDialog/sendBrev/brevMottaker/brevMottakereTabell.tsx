@@ -11,7 +11,6 @@ import * as Skjema from "../../../skjema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
 import MottakerTabell from "../../../tabell/mottakerTabell";
-import { erArbeidsgiverEllerVirksomhet } from "./brevMottaker";
 import PdfLenkeListe from "../../../pdfLenkeListe";
 import { SendBrevFormValues } from "../types";
 
@@ -30,35 +29,25 @@ interface BrevMottakereTabellProps {
   muligeMottakere?: Api.DokumenterV2.HentMuligeMottakereResDto;
   muligeMottakereEtater?: Api.DokumenterV2.MuligMottaker[];
   formIsValid: boolean;
-  valgtMottaker: any;
   hentBrevRequest: any;
 }
 
 const BrevMottakereTabell = ({
   muligeMottakere,
   muligeMottakereEtater,
-  valgtMottaker,
   behandlingID,
   formValues,
   formIsValid,
   hentBrevRequest,
 }: BrevMottakereTabellProps & PropsFromRedux) => {
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
-    const orgnrFraFormValues = valgtMottaker.orgnrSettesAvSaksbehandler
-      ? formValues.organisasjonsnummer
-      : formValues.arbeidsgiver;
-
     return [
       {
         sendesTilDokumenterV2: true,
         navn: ikon ? <Ikoner.Forhandsvis /> : muligMottaker.dokumentNavn,
         data: {
           ...hentBrevRequest(muligMottaker.rolle),
-          orgNr: muligMottaker.rolle !== BRUKER ? muligMottaker.orgnr || orgnrFraFormValues : null,
-          kontaktpersonNavn:
-            erArbeidsgiverEllerVirksomhet(muligMottaker.rolle) && valgtMottaker.orgnrSettesAvSaksbehandler
-              ? formValues.kontaktperson
-              : null,
+          ...(muligMottaker.rolle !== BRUKER && muligMottaker.orgnr ? { orgNr: muligMottaker.orgnr } : {}),
         },
       },
     ];
