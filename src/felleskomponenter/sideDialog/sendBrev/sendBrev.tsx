@@ -110,7 +110,8 @@ const SendBrev = ({
   const [fritekstvedlegg, setFritekstvedlegg] = useState<Fritekstvedlegg[]>([]);
   const [redigerFritekstvedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
   const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
-  const [utkastPåBehandlingen, setUtkastPåBehandlingen] = useState<Api.DokumenterV2.OpprettBrevReqDto[]>([]);
+  const [utkastPåBehandlingen, setUtkastPåBehandlingen] = useState<Api.DokumenterV2.BrevutkastResDto[]>([]);
+  const [aktivtUtkast, setAktivtUtkast] = useState<Api.DokumenterV2.BrevutkastResDto | null>(null);
 
   const fritekstvedleggToggle = useFeatureToggle("melosys.brev.GENERELT_FRITEKSTVEDLEGG");
 
@@ -126,41 +127,7 @@ const SendBrev = ({
       });
       setTilgjengeligeMaler(response);
     });
-    console.log("Henter eksisterende utkast");
-    const dummyData = {
-      distribusjonstype: "VIKTIG",
-      fritekst: "<p>Hallo</p>\n",
-      fritekstTittel: "Orientering om vår beslutning",
-      fritekstvedlegg: [],
-      innledningFritekst: null,
-      kontaktopplysninger: true,
-      kontaktpersonNavn: null,
-      kopiMottakere: [],
-      manglerFritekst: null,
-      mottaker: "ETAT",
-      orgNr: "974761076",
-      orgnrEtater: ["974761076"],
-      produserbardokument: "FRITEKSTBREV",
-      saksvedlegg: [],
-    };
-
-    const dummyData2 = {
-      distribusjonstype: null,
-      dokumentTittel: null,
-      fritekst: null,
-      fritekstTittel: null,
-      fritekstvedlegg: [],
-      innledningFritekst: "<p>Heihei</p>\n",
-      kontaktopplysninger: null,
-      kontaktpersonNavn: null,
-      kopiMottakere: [],
-      manglerFritekst: "<p>Ingen. Det er hemmelig</p>\n",
-      mottaker: "ARBEIDSGIVER",
-      orgNr: "888888888",
-      produserbardokument: "MANGELBREV_ARBEIDSGIVER",
-      saksvedlegg: [],
-    };
-    setUtkastPåBehandlingen([dummyData, dummyData2]);
+    Api.DokumenterV2.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
   }, []);
 
   useEffect(() => {
@@ -358,7 +325,9 @@ const SendBrev = ({
     resetForm();
     setBrevSendt(false);
     setBrevSendtFeil(false);
-    console.log("Slett utkast om det finnes"); // TODO Slette utkast
+    if (aktivtUtkast?.utkastBrevID) {
+      Api.DokumenterV2.slettBrevutkast(aktivtUtkast.utkastBrevID);
+    }
   };
 
   const resetFritekstvedlegg = () => {
@@ -407,7 +376,13 @@ const SendBrev = ({
   };
 
   const lagreUtkast = () => {
-    console.log("Lagrer utkast"); // TODO Lagre utkast
+    if (!formValues?.valgtMottaker) return;
+
+    if (aktivtUtkast?.utkastBrevID) {
+      Api.DokumenterV2.oppdaterBrevutkast(aktivtUtkast.utkastBrevID, hentBrevRequest(formValues.valgtMottaker.rolle));
+    } else {
+      Api.DokumenterV2.lagreBrevutkast(behandlingID, hentBrevRequest(formValues.valgtMottaker.rolle));
+    }
   };
 
   const overstyrBlurEvent = (event: React.FocusEvent) => {
@@ -442,6 +417,8 @@ const SendBrev = ({
         formValues={formValues}
         tilgjengeligeMottakere={tilgjengeligeMottakere}
         utkastPåBehandlingen={utkastPåBehandlingen}
+        aktivtUtkast={aktivtUtkast}
+        setAktivtUtkast={setAktivtUtkast}
       />
 
       {visApneINyttVindu && (

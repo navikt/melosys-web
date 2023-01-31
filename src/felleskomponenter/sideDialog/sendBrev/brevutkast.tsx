@@ -9,19 +9,26 @@ import * as Utils from "../../../utils";
 import { SendBrevFormValues } from "./types";
 
 interface BrevutkastProps {
+  aktivtUtkast: Api.DokumenterV2.BrevutkastResDto | null;
   changeField: (field: string, data: any) => void;
   formValues: SendBrevFormValues;
+  setAktivtUtkast: (utkast: Api.DokumenterV2.BrevutkastResDto | null) => void;
   tilgjengeligeMottakere: Api.DokumenterV2.TilgjengeligMottaker[];
-  utkastPåBehandlingen: Api.DokumenterV2.OpprettBrevReqDto[];
+  utkastPåBehandlingen: Api.DokumenterV2.BrevutkastResDto[];
 }
 
-const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPåBehandlingen }: BrevutkastProps) => {
-  const [aktivtUtkast, setAktivtUtkast] = useState<Api.DokumenterV2.OpprettBrevReqDto | null>(null);
-
-  const tittelTilUtkast = (utkast: Api.DokumenterV2.OpprettBrevReqDto) =>
-    !Utils._isEmpty(utkast.dokumentTittel)
-      ? utkast.dokumentTittel
-      : KV.finnTermFraListe(MKV.KTObjects.brev.produserbaredokumenter, utkast.produserbardokument);
+const Brevutkast = ({
+  aktivtUtkast,
+  changeField,
+  formValues,
+  setAktivtUtkast,
+  tilgjengeligeMottakere,
+  utkastPåBehandlingen,
+}: BrevutkastProps) => {
+  const tittelTilUtkast = (utkast: Api.DokumenterV2.BrevutkastResDto) =>
+    !Utils._isEmpty(utkast.brevbestilling.dokumentTittel)
+      ? utkast.brevbestilling.dokumentTittel
+      : KV.finnTermFraListe(MKV.KTObjects.brev.produserbaredokumenter, utkast.brevbestilling.produserbardokument?.kode);
 
   const aktivtUtkastTittel = aktivtUtkast ? tittelTilUtkast(aktivtUtkast) : null;
 
@@ -29,7 +36,7 @@ const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPå
 
   useEffect(() => {
     if (aktivtUtkastTittel && aktivtUtkast && formValues?.valgtMottaker?.uuid) {
-      changeField("type", aktivtUtkast.produserbardokument);
+      changeField("type", aktivtUtkast.brevbestilling.produserbardokument?.kode);
     }
   }, [formValues?.valgtMottaker?.uuid, aktivtUtkastTittel]);
 
@@ -37,12 +44,12 @@ const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPå
   const settFeltVerdi = (felt: string, verdi?: string | boolean | null) => changeField(`felt.${felt}.feltVerdi`, verdi);
 
   const settFeltForFritekstTittel = () => {
-    if (!aktivtUtkast?.fritekstTittel) return;
+    if (!aktivtUtkast?.brevbestilling.fritekstTittel) return;
 
     const valgAlternativer = formValues?.valgtBrev?.felter?.find((felt) => felt.kode === "BREV_TITTEL")?.valg
       ?.valgAlternativer;
     const valgAlternativFraFritekstTittel = valgAlternativer?.find(
-      (alternativ) => alternativ.beskrivelse === aktivtUtkast.fritekstTittel
+      (alternativ) => alternativ.beskrivelse === aktivtUtkast.brevbestilling.fritekstTittel
     );
 
     if (valgAlternativFraFritekstTittel) {
@@ -50,17 +57,17 @@ const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPå
     } else {
       const valgAlternativTilFritekst = valgAlternativer?.find((alternativ) => alternativ.visFelt);
       settFeltValg("BREV_TITTEL", valgAlternativTilFritekst?.kode);
-      settFeltVerdi("BREV_TITTEL", aktivtUtkast.fritekstTittel);
+      settFeltVerdi("BREV_TITTEL", aktivtUtkast.brevbestilling.fritekstTittel);
     }
   };
 
   const settFeltForInnledningFritekst = () => {
     const valgAlternativer = formValues?.valgtBrev?.felter?.find((felt) => felt.kode === "INNLEDNING_FRITEKST")?.valg
       ?.valgAlternativer;
-    if (aktivtUtkast?.innledningFritekst) {
+    if (aktivtUtkast?.brevbestilling.innledningFritekst) {
       const valgAlternativTilFritekst = valgAlternativer?.find((alternativ) => alternativ.visFelt);
       settFeltValg("INNLEDNING_FRITEKST", valgAlternativTilFritekst?.kode);
-      settFeltVerdi("INNLEDNING_FRITEKST", aktivtUtkast.innledningFritekst);
+      settFeltVerdi("INNLEDNING_FRITEKST", aktivtUtkast.brevbestilling.innledningFritekst);
     } else {
       const valgAlternativSomIkkeErFritekst = valgAlternativer?.find((alternativ) => !alternativ.visFelt);
       settFeltValg("INNLEDNING_FRITEKST", valgAlternativSomIkkeErFritekst?.kode);
@@ -69,13 +76,14 @@ const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPå
 
   useEffect(() => {
     if (aktivtUtkastTittel && aktivtUtkast && formValues?.valgtBrev?.type) {
-      settFeltValg("DISTRIBUSJONSTYPE", aktivtUtkast.distribusjonstype);
-      settFeltValg("DOKUMENT_TITTEL", aktivtUtkast.dokumentTittel);
+      const utkast = aktivtUtkast.brevbestilling;
+      settFeltValg("DISTRIBUSJONSTYPE", utkast.distribusjonstype);
+      settFeltValg("DOKUMENT_TITTEL", utkast.dokumentTittel);
       settFeltForFritekstTittel();
       settFeltForInnledningFritekst();
-      settFeltVerdi("MANGLER_FRITEKST", aktivtUtkast.manglerFritekst);
-      settFeltVerdi("FRITEKST", aktivtUtkast.fritekst);
-      settFeltVerdi("STANDARDTEKST_KONTAKTINFORMASJON", aktivtUtkast.kontaktopplysninger);
+      settFeltVerdi("MANGLER_FRITEKST", utkast.manglerFritekst);
+      settFeltVerdi("FRITEKST", utkast.fritekst);
+      settFeltVerdi("STANDARDTEKST_KONTAKTINFORMASJON", utkast.kontaktopplysninger);
     }
   }, [formValues?.valgtBrev?.type, aktivtUtkastTittel]);
 
@@ -105,7 +113,7 @@ const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPå
     const tittel = (event.target as HTMLButtonElement).value;
     const valgtUtkast = utkastPåBehandlingen.find((utkast) => tittelTilUtkast(utkast) === tittel);
     setAktivtUtkast(valgtUtkast || null);
-    if (valgtUtkast) settMottaker(valgtUtkast);
+    if (valgtUtkast) settMottaker(valgtUtkast.brevbestilling);
   };
 
   return (

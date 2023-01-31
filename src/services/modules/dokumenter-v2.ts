@@ -1,6 +1,6 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { getAsJson, postAsJson, postAsJsonReceiveAsPDF } from "../utils";
-import { API_BASE_URL, DOKUMENTER } from "../api-constants";
+import { deleteAsJson, getAsJson, postAsJson, postAsJsonReceiveAsPDF, putAsJson } from "../utils";
+import { API_BASE_URL, BREV, DOKUMENTER } from "../api-constants";
 
 export type MottakerAdresse = {
   tittel: {
@@ -108,6 +108,14 @@ export type OpprettBrevReqDto = {
   dokumentTittel?: string | null;
 };
 
+export type BrevutkastResDto = {
+  utkastBrevID: number;
+  lagretAvSaksbehandlerIdent: string;
+  brevbestilling: OpprettBrevReqDto & {
+    produserbardokument: KTObject;
+  };
+};
+
 export type MuligMottaker = {
   mottakerNavn: string;
   dokumentNavn: string;
@@ -176,3 +184,14 @@ export const opprettBrev = (behandlingID: number, data: OpprettBrevReqDto) =>
 
 export const opprettUtkastBrev = (behandlingID: number, data: OpprettBrevReqDto) =>
   postAsJsonReceiveAsPDF(`${API_BASE_URL}${DOKUMENTER}/v2/pdf/brev/utkast/${behandlingID}`, data, true);
+
+export const hentBrevutkast = (behandlingID: number): Promise<BrevutkastResDto[]> =>
+  getAsJson(`${API_BASE_URL}${BREV}/utkast/${behandlingID}`);
+
+export const lagreBrevutkast = (behandlingID: number, data: OpprettBrevReqDto) =>
+  postAsJson(`${API_BASE_URL}${BREV}/utkast/${behandlingID}`, data);
+
+export const oppdaterBrevutkast = (utkastID: number, data: OpprettBrevReqDto) =>
+  putAsJson(`${API_BASE_URL}${BREV}/utkast/${utkastID}`, data);
+
+export const slettBrevutkast = (utkastID: number) => deleteAsJson(`${API_BASE_URL}${BREV}/utkast/${utkastID}`);
