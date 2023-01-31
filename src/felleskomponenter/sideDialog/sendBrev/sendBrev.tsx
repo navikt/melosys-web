@@ -114,6 +114,7 @@ const SendBrev = ({
   const [aktivtUtkast, setAktivtUtkast] = useState<Api.Brevutkast.BrevutkastResDto | null>(null);
 
   const fritekstvedleggToggle = useFeatureToggle("melosys.brev.GENERELT_FRITEKSTVEDLEGG");
+  const utkastToggleEnabled = useFeatureToggle("melosys.utkast") === "enabled";
 
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
@@ -127,8 +128,14 @@ const SendBrev = ({
       });
       setTilgjengeligeMaler(response);
     });
-    Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
   }, []);
+
+  useEffect(() => {
+    // Når toggle melosys.utkast fjernes kan denne flyttes opp til useEffect onMount
+    if (utkastToggleEnabled) {
+      Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
+    }
+  }, [utkastToggleEnabled]);
 
   useEffect(() => {
     changeField(
@@ -528,9 +535,11 @@ const SendBrev = ({
         <Nav.Hovedknapp mini disabled={knappErDisabled} className="brevknapp" onClick={sendBrev}>
           Send brev
         </Nav.Hovedknapp>
-        <Nav.Knapp mini disabled={knappErDisabled} className="brevknapp" onClick={lagreUtkast}>
-          Lagre og fortsett senere
-        </Nav.Knapp>
+        {utkastToggleEnabled && (
+          <Nav.Knapp mini disabled={knappErDisabled} className="brevknapp" onClick={lagreUtkast}>
+            Lagre og fortsett senere
+          </Nav.Knapp>
+        )}
         <Nav.Knapp mini className="brevknapp" onClick={forkastBrev}>
           Forkast brev
         </Nav.Knapp>
