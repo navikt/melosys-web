@@ -79,17 +79,33 @@ const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPå
     }
   }, [formValues?.valgtBrev?.type, aktivtUtkastTittel]);
 
+  // DEPRECATED. Denne blir unødvendig når man går over til Mottakerroller
+  const settMottaker = (valgtUtkast: Api.DokumenterV2.OpprettBrevReqDto) => {
+    if (valgtUtkast.mottaker === "BRUKER") {
+      changeField("mottaker", tilgjengeligeMottakere.find((mottaker) => mottaker.rolle === valgtUtkast.mottaker)?.uuid);
+    } else if (["ARBEIDSGIVER", "VIRKSOMHET"].includes(valgtUtkast.mottaker)) {
+      const arbeidsgiverMedValgtOrgnr = tilgjengeligeMottakere.find((mottaker) =>
+        mottaker.adresser?.find((adresse) => adresse.tittel.orgnr === valgtUtkast.orgNr)
+      )?.uuid;
+      const organisasjonFraOrgnr = tilgjengeligeMottakere.find((mottaker) => mottaker.orgnrSettesAvSaksbehandler)?.uuid;
+
+      const orgnrSettesAvSaksbehandler =
+        valgtUtkast.kontaktpersonNavn || (organisasjonFraOrgnr && !arbeidsgiverMedValgtOrgnr);
+
+      changeField("mottaker", orgnrSettesAvSaksbehandler ? organisasjonFraOrgnr : arbeidsgiverMedValgtOrgnr);
+      changeField(orgnrSettesAvSaksbehandler ? "organisasjonsnummer" : "arbeidsgiver", valgtUtkast.orgNr);
+      changeField("kontaktperson", valgtUtkast.kontaktpersonNavn);
+    } else if (valgtUtkast.mottaker === "ETAT") {
+      changeField("mottaker", tilgjengeligeMottakere.find((mottaker) => mottaker.rolle === valgtUtkast.mottaker)?.uuid);
+      changeField("etater", valgtUtkast.orgnrEtater);
+    }
+  };
+
   const velgUtkast: MouseEventHandler<HTMLButtonElement> = (event) => {
     const tittel = (event.target as HTMLButtonElement).value;
     const valgtUtkast = utkastPåBehandlingen.find((utkast) => tittelTilUtkast(utkast) === tittel);
     setAktivtUtkast(valgtUtkast || null);
-    if (valgtUtkast) {
-      changeField("mottaker", tilgjengeligeMottakere.find((mottaker) => mottaker.rolle === valgtUtkast.mottaker)?.uuid);
-      changeField("organisasjonsnummer", valgtUtkast.orgNr);
-      // changeField("arbeidsgiver", valgtUtkast.orgNr); // TODO: Logikk for dette kommer etter MottakerRolle
-      changeField("etater", valgtUtkast.orgnrEtater);
-      changeField("kontaktperson", valgtUtkast.kontaktpersonNavn);
-    }
+    if (valgtUtkast) settMottaker(valgtUtkast);
   };
 
   return (

@@ -143,7 +143,24 @@ const SendBrev = ({
       produserbardokument: "FRITEKSTBREV",
       saksvedlegg: [],
     };
-    setUtkastPåBehandlingen([dummyData]);
+
+    const dummyData2 = {
+      distribusjonstype: null,
+      dokumentTittel: null,
+      fritekst: null,
+      fritekstTittel: null,
+      fritekstvedlegg: [],
+      innledningFritekst: "<p>Heihei</p>\n",
+      kontaktopplysninger: null,
+      kontaktpersonNavn: null,
+      kopiMottakere: [],
+      manglerFritekst: "<p>Ingen. Det er hemmelig</p>\n",
+      mottaker: "ARBEIDSGIVER",
+      orgNr: "888888888",
+      produserbardokument: "MANGELBREV_ARBEIDSGIVER",
+      saksvedlegg: [],
+    };
+    setUtkastPåBehandlingen([dummyData, dummyData2]);
   }, []);
 
   useEffect(() => {
@@ -537,9 +554,9 @@ const SendBrev = ({
         <Nav.Hovedknapp mini disabled={knappErDisabled} className="brevknapp" onClick={sendBrev}>
           Send brev
         </Nav.Hovedknapp>
-        <Nav.Flatknapp mini disabled={knappErDisabled} className="brevknapp" onClick={lagreUtkast}>
+        <Nav.Knapp mini disabled={knappErDisabled} className="brevknapp" onClick={lagreUtkast}>
           Lagre og fortsett senere
-        </Nav.Flatknapp>
+        </Nav.Knapp>
         <Nav.Knapp mini className="brevknapp" onClick={forkastBrev}>
           Forkast brev
         </Nav.Knapp>
