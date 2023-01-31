@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, { MouseEventHandler, useEffect } from "react";
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
@@ -9,12 +9,12 @@ import * as Utils from "../../../utils";
 import { SendBrevFormValues } from "./types";
 
 interface BrevutkastProps {
-  aktivtUtkast: Api.DokumenterV2.BrevutkastResDto | null;
+  aktivtUtkast: Api.Brevutkast.BrevutkastResDto | null;
   changeField: (field: string, data: any) => void;
   formValues: SendBrevFormValues;
-  setAktivtUtkast: (utkast: Api.DokumenterV2.BrevutkastResDto | null) => void;
+  setAktivtUtkast: (utkast: Api.Brevutkast.BrevutkastResDto | null) => void;
   tilgjengeligeMottakere: Api.DokumenterV2.TilgjengeligMottaker[];
-  utkastPåBehandlingen: Api.DokumenterV2.BrevutkastResDto[];
+  utkastPåBehandlingen: Api.Brevutkast.BrevutkastResDto[];
 }
 
 const Brevutkast = ({
@@ -25,7 +25,7 @@ const Brevutkast = ({
   tilgjengeligeMottakere,
   utkastPåBehandlingen,
 }: BrevutkastProps) => {
-  const tittelTilUtkast = (utkast: Api.DokumenterV2.BrevutkastResDto) =>
+  const tittelTilUtkast = (utkast: Api.Brevutkast.BrevutkastResDto) =>
     !Utils._isEmpty(utkast.brevbestilling.dokumentTittel)
       ? utkast.brevbestilling.dokumentTittel
       : KV.finnTermFraListe(MKV.KTObjects.brev.produserbaredokumenter, utkast.brevbestilling.produserbardokument?.kode);

@@ -110,8 +110,8 @@ const SendBrev = ({
   const [fritekstvedlegg, setFritekstvedlegg] = useState<Fritekstvedlegg[]>([]);
   const [redigerFritekstvedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
   const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
-  const [utkastPåBehandlingen, setUtkastPåBehandlingen] = useState<Api.DokumenterV2.BrevutkastResDto[]>([]);
-  const [aktivtUtkast, setAktivtUtkast] = useState<Api.DokumenterV2.BrevutkastResDto | null>(null);
+  const [utkastPåBehandlingen, setUtkastPåBehandlingen] = useState<Api.Brevutkast.BrevutkastResDto[]>([]);
+  const [aktivtUtkast, setAktivtUtkast] = useState<Api.Brevutkast.BrevutkastResDto | null>(null);
 
   const fritekstvedleggToggle = useFeatureToggle("melosys.brev.GENERELT_FRITEKSTVEDLEGG");
 
@@ -127,7 +127,7 @@ const SendBrev = ({
       });
       setTilgjengeligeMaler(response);
     });
-    Api.DokumenterV2.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
+    Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
   }, []);
 
   useEffect(() => {
@@ -326,7 +326,7 @@ const SendBrev = ({
     setBrevSendt(false);
     setBrevSendtFeil(false);
     if (aktivtUtkast?.utkastBrevID) {
-      Api.DokumenterV2.slettBrevutkast(aktivtUtkast.utkastBrevID);
+      Api.Brevutkast.slettBrevutkast(aktivtUtkast.utkastBrevID);
     }
   };
 
@@ -379,9 +379,9 @@ const SendBrev = ({
     if (!formValues?.valgtMottaker) return;
 
     if (aktivtUtkast?.utkastBrevID) {
-      Api.DokumenterV2.oppdaterBrevutkast(aktivtUtkast.utkastBrevID, hentBrevRequest(formValues.valgtMottaker.rolle));
+      Api.Brevutkast.oppdaterBrevutkast(aktivtUtkast.utkastBrevID, hentBrevRequest(formValues.valgtMottaker.rolle));
     } else {
-      Api.DokumenterV2.lagreBrevutkast(behandlingID, hentBrevRequest(formValues.valgtMottaker.rolle));
+      Api.Brevutkast.lagreBrevutkast(behandlingID, hentBrevRequest(formValues.valgtMottaker.rolle));
     }
   };
 
