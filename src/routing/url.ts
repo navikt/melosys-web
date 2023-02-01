@@ -1,6 +1,5 @@
 import MKV from "../melosyskodeverk";
 import * as Constants from "../constants";
-import { erFeatureToggleEnabled } from "../featuretoggle";
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
@@ -21,17 +20,20 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
       return `/${EU_EOS}/vurderutpeking/${saksnummer}/?behandlingID=${behandlingID}`;
+    case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
+      return `/${EU_EOS}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
       throw new Error(`Finner ikke EuEøs-flyt for behandlingstema: ${behandlingstemaKode}`);
   }
 };
 
-const lagUrlForFtrlFlyt = (saksnummer: number | string, behandlingID: number) => {
+const lagUrlForFtrlFlyt = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
+  if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
+    return `/${FTRL}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
+
   return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
 };
-
-const ikkeYrkesaktivFlytEnabled = async () => erFeatureToggleEnabled("melosys.ikkeYrkesaktivForenkletFlyt");
-
 const lagUrlForTrygdeavtaleFlyt = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
   if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
     return `/${TRYGDEAVTALE}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
@@ -53,7 +55,7 @@ export const lagUrlFraSakstypeOgBehandlingstema = (
     return lagUrlForEuEøsFlyter(saksnummer, behandlingID, behandlingstemaKode);
   }
   if (sakstypeKode === FTRL) {
-    return lagUrlForFtrlFlyt(saksnummer, behandlingID);
+    return lagUrlForFtrlFlyt(saksnummer, behandlingID, behandlingstemaKode);
   }
   if (sakstypeKode === TRYGDEAVTALE) {
     return lagUrlForTrygdeavtaleFlyt(saksnummer, behandlingID, behandlingstemaKode);
@@ -68,10 +70,18 @@ export const lagUrl = (
   sakstemaKode: string,
   behandlingstemaKode: string,
   behandlingstypeKode: string,
-  folketrygdenToggleEnabled: boolean = false
+  folketrygdenToggleEnabled: boolean = false,
+  ikkeYrkesaktivToggleEnabled: boolean = false
 ) => {
   if (
-    skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, folketrygdenToggleEnabled)
+    skalViseTomFlyt(
+      sakstypeKode,
+      sakstemaKode,
+      behandlingstemaKode,
+      behandlingstypeKode,
+      folketrygdenToggleEnabled,
+      ikkeYrkesaktivToggleEnabled
+    )
   ) {
     return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
@@ -83,7 +93,8 @@ export const skalViseTomFlyt = (
   sakstema: string,
   behandlingstema: string,
   behandlingstype: string,
-  folketrygdenToggleEnabled: boolean = false
+  folketrygdenToggleEnabled: boolean = false,
+  ikkeYrkesaktivFlytToggleEnabled: boolean = false
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
@@ -101,11 +112,9 @@ export const skalViseTomFlyt = (
     return true;
   }
 
-  ikkeYrkesaktivFlytEnabled().then((isEnabled) => {
-    if (isEnabled && behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
-      return false;
-    }
-  });
+  if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV && ikkeYrkesaktivFlytToggleEnabled) {
+    return false;
+  }
 
   return [
     MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,

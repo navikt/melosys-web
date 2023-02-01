@@ -47,6 +47,17 @@ describe("url", () => {
       expect(url).toContain("/FTRL/saksbehandling/");
     });
 
+    it("Sakstype FTRL med støttet behandlingstemaKode returnerer url for ikkeYrkesaktiv", () => {
+      const url = lagUrlFraSakstypeOgBehandlingstema(
+        "MEL-1",
+        1,
+        FTRL,
+        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV
+      );
+
+      expect(url).toContain("/FTRL/ikkeYrkesaktiv/");
+    });
+
     it("Sakstype TRYGDEAVTALE med støttet behandlingstemaKode returnerer url", () => {
       const url = lagUrlFraSakstypeOgBehandlingstema(
         "MEL-1",
@@ -56,6 +67,17 @@ describe("url", () => {
       );
 
       expect(url).toContain("/TRYGDEAVTALE/saksbehandling/");
+    });
+
+    it("Sakstype TRYGDEAVTALE med støttet behandlingstemaKode returnerer url for ikkeYrkesaktiv", () => {
+      const url = lagUrlFraSakstypeOgBehandlingstema(
+        "MEL-1",
+        1,
+        TRYGDEAVTALE,
+        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV
+      );
+
+      expect(url).toContain("/TRYGDEAVTALE/ikkeYrkesaktiv/");
     });
   });
 
@@ -97,7 +119,7 @@ describe("url", () => {
   });
 
   describe("tom flyt", () => {
-    it("IKKE_YRKESAKTIV får tom flyt", () => {
+    it("IKKE_YRKESAKTIV får tom flyt med toggle av", () => {
       const url = lagUrl(
         "MEL-1",
         1,
@@ -105,10 +127,26 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        true
+        true,
+        false
       );
 
       expect(url).toContain("/EU_EOS/behandling/");
+    });
+
+    it("IKKE_YRKESAKTIV ikke får tom flyt med toggle på", () => {
+      const url = lagUrl(
+        "MEL-1",
+        1,
+        EU_EOS,
+        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        true,
+        true
+      );
+
+      expect(url).toContain("/EU_EOS/ikkeYrkesaktiv/");
     });
 
     it("TRYGDETID får tom flyt", () => {
