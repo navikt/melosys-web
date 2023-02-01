@@ -324,6 +324,7 @@ const SendBrev = ({
     resetForm();
     setBrevSendt(false);
     setBrevSendtFeil(false);
+    setMuligeMottakereFeil(undefined);
   };
 
   const resetFritekstvedlegg = () => {
