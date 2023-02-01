@@ -1,5 +1,6 @@
 import MKV from "../melosyskodeverk";
 import * as Constants from "../constants";
+import { erFeatureToggleEnabled } from "../featuretoggle";
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
@@ -28,6 +29,8 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
 const lagUrlForFtrlFlyt = (saksnummer: number | string, behandlingID: number) => {
   return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
 };
+
+const ikkeYrkesaktivFlytEnabled = async () => erFeatureToggleEnabled("melosys.ikkeYrkesaktivForenkletFlyt");
 
 const lagUrlForTrygdeavtaleFlyt = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
   if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
@@ -85,9 +88,6 @@ export const skalViseTomFlyt = (
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
   }
-  if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
-    return false;
-  }
   if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
     return true;
   }
@@ -100,6 +100,12 @@ export const skalViseTomFlyt = (
   ) {
     return true;
   }
+
+  ikkeYrkesaktivFlytEnabled().then((isEnabled) => {
+    if (isEnabled && behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
+      return false;
+    }
+  });
 
   return [
     MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
