@@ -17,7 +17,8 @@ export const hentBrevutkast = (behandlingID: number): Promise<BrevutkastResDto[]
 export const lagreBrevutkast = (behandlingID: number, data: OpprettBrevReqDto) =>
   postAsJson(`${API_BASE_URL}${BREV}/utkast/${behandlingID}`, data);
 
-export const oppdaterBrevutkast = (utkastID: number, data: OpprettBrevReqDto) =>
-  putAsJson(`${API_BASE_URL}${BREV}/utkast/${utkastID}`, data);
+export const oppdaterBrevutkast = (behandlingID: number, utkastID: number, data: OpprettBrevReqDto) =>
+  putAsJson(`${API_BASE_URL}${BREV}/utkast/${behandlingID}/${utkastID}`, data);
 
-export const slettBrevutkast = (utkastID: number) => deleteAsJson(`${API_BASE_URL}${BREV}/utkast/${utkastID}`);
+export const slettBrevutkast = (behandlingID: number, utkastID: number) =>
+  deleteAsJson(`${API_BASE_URL}${BREV}/utkast/${behandlingID}/${utkastID}`);

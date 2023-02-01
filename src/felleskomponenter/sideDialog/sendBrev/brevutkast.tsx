@@ -80,7 +80,7 @@ const Brevutkast = ({
     if (aktivtUtkastTittel && aktivtUtkast && formValues?.valgtBrev?.type) {
       const utkast = aktivtUtkast.brevbestilling;
       settFeltValg("DISTRIBUSJONSTYPE", utkast.distribusjonstype);
-      settFeltValg("DOKUMENT_TITTEL", utkast.dokumentTittel);
+      settFeltVerdi("DOKUMENT_TITTEL", utkast.dokumentTittel);
       settFeltForFritekstTittel();
       settFeltForInnledningFritekst();
       settFeltVerdi("MANGLER_FRITEKST", utkast.manglerFritekst);

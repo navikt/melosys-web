@@ -318,8 +318,7 @@ const SendBrev = ({
       .then(() => {
         setBrevSendt(true);
         oppdaterBehandling();
-        resetForm();
-        setFritekstvedlegg([]);
+        resetFormOgFritekstvedleggState();
       })
       .catch(() => {
         setBrevSendtFeil(true);
@@ -327,12 +326,22 @@ const SendBrev = ({
   };
 
   const forkastBrev = () => {
-    resetForm();
+    resetFormOgFritekstvedleggState();
     setBrevSendt(false);
     setBrevSendtFeil(false);
     if (aktivtUtkast?.utkastBrevID) {
-      Api.Brevutkast.slettBrevutkast(aktivtUtkast.utkastBrevID);
+      Api.Brevutkast.slettBrevutkast(behandlingID, aktivtUtkast.utkastBrevID).then(() => {
+        setAktivtUtkast(null);
+        Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
+      });
     }
+  };
+
+  const resetFormOgFritekstvedleggState = () => {
+    resetForm();
+    setFritekstvedlegg([]);
+    setVisFritekstvedleggSkjema(false);
+    setRedigerFritekstvedleggIndex(undefined);
   };
 
   const resetFritekstvedlegg = () => {
@@ -383,11 +392,16 @@ const SendBrev = ({
   const lagreUtkast = () => {
     if (!formValues?.valgtMottaker) return;
 
-    if (aktivtUtkast?.utkastBrevID) {
-      Api.Brevutkast.oppdaterBrevutkast(aktivtUtkast.utkastBrevID, hentBrevRequest(formValues.valgtMottaker.rolle));
-    } else {
-      Api.Brevutkast.lagreBrevutkast(behandlingID, hentBrevRequest(formValues.valgtMottaker.rolle));
-    }
+    const requestData = hentBrevRequest(formValues.valgtMottaker.rolle);
+
+    (aktivtUtkast?.utkastBrevID
+      ? Api.Brevutkast.oppdaterBrevutkast(behandlingID, aktivtUtkast.utkastBrevID, requestData)
+      : Api.Brevutkast.lagreBrevutkast(behandlingID, requestData)
+    ).then(() => {
+      resetFormOgFritekstvedleggState();
+      setAktivtUtkast(null);
+      Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
+    });
   };
 
   const overstyrBlurEvent = (event: React.FocusEvent) => {
