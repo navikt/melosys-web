@@ -1,5 +1,4 @@
 import React, { MouseEventHandler, useEffect } from "react";
-import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
 import * as KV from "../../../kodeverk";
@@ -27,14 +26,14 @@ const Brevutkast = ({
   tilgjengeligeMottakere,
   utkastPåBehandlingen,
 }: BrevutkastProps) => {
-  const tittelTilUtkast = (utkast: Api.Brevutkast.BrevutkastResDto) =>
+  const tittelTilUtkast = (utkast: Api.Brevutkast.BrevutkastResDto): string =>
     !Utils._isEmpty(utkast.brevbestilling.dokumentTittel)
-      ? utkast.brevbestilling.dokumentTittel
-      : KV.finnTermFraListe(MKV.KTObjects.brev.produserbaredokumenter, utkast.brevbestilling.produserbardokument?.kode);
+      ? utkast.brevbestilling.dokumentTittel!!
+      : utkast.brevbestilling.produserbardokument.term!!;
 
   const aktivtUtkastTittel = aktivtUtkast ? tittelTilUtkast(aktivtUtkast) : null;
 
-  const inaktiveUtkast = utkastPåBehandlingen.filter((utkast) => tittelTilUtkast(utkast) !== aktivtUtkast);
+  const inaktiveUtkast = utkastPåBehandlingen.filter((utkast) => tittelTilUtkast(utkast) !== aktivtUtkastTittel);
 
   useEffect(() => {
     if (aktivtUtkastTittel && aktivtUtkast && formValues?.valgtMottaker?.uuid) {
