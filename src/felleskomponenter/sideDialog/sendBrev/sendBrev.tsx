@@ -329,6 +329,7 @@ const SendBrev = ({
     resetFormOgFritekstvedleggState();
     setBrevSendt(false);
     setBrevSendtFeil(false);
+    setMuligeMottakereFeil(undefined);
     if (aktivtUtkast?.utkastBrevID) {
       Api.Brevutkast.slettBrevutkast(behandlingID, aktivtUtkast.utkastBrevID).then(() => {
         setAktivtUtkast(null);

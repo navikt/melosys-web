@@ -16,6 +16,7 @@ import { StegStatus } from "../../stegvelger";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_avklar_virksomhet from "./vurderingAvklarVirksomhetSchema";
 import "./vurderingAvklarVirksomhet.css";
+import { HJELPETEKST, INGEN_VIRKSOMHETER_TEKST } from "./tekster";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   virksomheterListe:
@@ -61,11 +62,6 @@ const VurderingAvklarVirksomhet = ({
   virksomheterListe,
   aktivtSteg,
 }: PropsFromRedux & Props) => {
-  const hjelpetekst =
-    'Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Du kan kun velge én virksomhet. Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
-  const ingenVirksomheterTekst =
-    'Det er ingen virksomhet registrert. Du må legge til virksomhet under "Arbeidsgiver/virksomhet".';
-
   useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
       oppdaterFlyt({
@@ -78,7 +74,7 @@ const VurderingAvklarVirksomhet = ({
   return (
     <div className="vurderingAvklarVirksomhet">
       <Nav.Typo.Undertittel className="undertittel">
-        <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={hjelpetekst} hjelpetekstClassName="hjelpetekst" />
+        <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={HJELPETEKST} hjelpetekstClassName="hjelpetekst" />
       </Nav.Typo.Undertittel>
 
       {virksomheterListe?.length !== 0 ? (
@@ -94,7 +90,7 @@ const VurderingAvklarVirksomhet = ({
           ))}
         </Skjema.RadioGruppe>
       ) : (
-        <Nav.AlertStripeFeil className="alertstripe">{ingenVirksomheterTekst}</Nav.AlertStripeFeil>
+        <Nav.AlertStripeFeil className="alertstripe">{INGEN_VIRKSOMHETER_TEKST}</Nav.AlertStripeFeil>
       )}
 
       <Mui.StegKnapper

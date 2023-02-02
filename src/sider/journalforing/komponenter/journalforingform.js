@@ -160,7 +160,6 @@ const mapStateToProps = (state) => ({
     },
     journalforingSoknadsland: [],
     journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-    ingenVurdering: false,
     ikkeSendForvaltingsmelding: false,
     skalTilordnes: false,
     submittable: false,

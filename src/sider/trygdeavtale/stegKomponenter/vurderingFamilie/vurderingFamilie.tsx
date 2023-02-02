@@ -20,6 +20,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_familie from "./vurderingFamilieSchema";
 
 import "./vurderingFamilie.css";
+import { HJELPETEKST, OBS_TEKST } from "./tekster";
 
 const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: Api.Trygdeavtale.Resultat) => ({
   barn: {
@@ -105,12 +106,6 @@ const VurderingFamilie = ({
   oppdaterFlyt,
   aktivtSteg,
 }: PropsFromRedux & Props) => {
-  const obsTekst = '* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".';
-  const hjelpetekst =
-    "Teksten du skriver her vil vises etter begrunnelsen du har valgt. Eksempel:\n\n" +
-    '"Kari Nordmann f.nr xxxxxx xxxxx er over 18 år, og må derfor sende inn egen søknad om medlemskap i folketrygden."\n\n' +
-    "Teksten din kommer etter dette.";
-
   const erIkkeInnvilget = (innvilget?: string | null): boolean => innvilget === BOOLSK_STRING.USANN;
   const finnBarn = (uuid: string, barn?: BarnProps): undefined | FamilieProps => barn && barn[uuid];
 
@@ -163,7 +158,7 @@ const VurderingFamilie = ({
           <Nav.AlertStripe className="alertstripe" type="suksess">
             Ingen medfølgende familiemedlemmer.
           </Nav.AlertStripe>
-          <span>{obsTekst}</span>
+          <span>{OBS_TEKST}</span>
         </div>
       ) : (
         <div>
@@ -224,7 +219,7 @@ const VurderingFamilie = ({
                   <LabelMedHjelpetekst
                     label="Fritekst til avsnitt om barn i vedtaksbrev"
                     className="fritekst-tittel"
-                    hjelpetekst={hjelpetekst}
+                    hjelpetekst={HJELPETEKST}
                   />
                   <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" disabled={!redigerbart} />
                 </div>
@@ -281,7 +276,7 @@ const VurderingFamilie = ({
                   <LabelMedHjelpetekst
                     label="Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev"
                     className="fritekst-tittel"
-                    hjelpetekst={hjelpetekst}
+                    hjelpetekst={HJELPETEKST}
                   />
                   <Skjema.HTMLEditor feltNavn="ektefelle.fritekst" className="fritekst" disabled={!redigerbart} />
                 </div>
