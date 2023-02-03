@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as Nav from "../../../../../navFrontend";
+import * as Utils from "../../../../../utils";
 
 import bem from "../../../../../bemUtils";
 import EnkeltDato from "../../../../enkeltDato/enkeltDato";
@@ -23,6 +24,12 @@ const PersonInfo = ({ behandlingID, modalAriaHideApp }: PersonInfoProps) => {
     loading: personinfoLoading,
     error: personinfoError,
   } = useHentPersoninfoQuery({ variables: { behandlingID } });
+
+  useEffect(() => {
+    if (!personinfoLoading) {
+      Utils.navigasjon.flyttFokusTilHtmlElementFraId("Person");
+    }
+  }, [personinfoLoading]);
 
   const personinfoClassName = bem("personinfo");
 
