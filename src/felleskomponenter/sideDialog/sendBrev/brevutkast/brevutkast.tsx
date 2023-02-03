@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
-import * as Utils from "../../../../utils";
 import { SendBrevFormValues } from "../types";
 import LagredeUtkast from "./lagredeUtkast";
 
@@ -15,15 +14,11 @@ interface BrevutkastProps {
 }
 
 const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPåBehandlingen }: BrevutkastProps) => {
-  const finnTittelTilUtkast = (utkast: Api.Brevutkast.BrevutkastResDto): string =>
-    !Utils._isEmpty(utkast.brevbestilling.dokumentTittel)
-      ? utkast.brevbestilling.dokumentTittel!!
-      : utkast.brevbestilling.produserbardokument.term!!;
-
   const aktivtUtkast = formValues?.aktivtUtkast;
-  const aktivtUtkastTittel = aktivtUtkast ? finnTittelTilUtkast(aktivtUtkast) : null;
 
-  const inaktiveUtkast = utkastPåBehandlingen.filter((utkast) => finnTittelTilUtkast(utkast) !== aktivtUtkastTittel);
+  const aktivtUtkastTittel = aktivtUtkast?.tittel || null;
+
+  const inaktiveUtkast = utkastPåBehandlingen.filter((utkast) => utkast.tittel !== aktivtUtkastTittel);
 
   // DEPRECATED. Denne blir unødvendig/mindre komplisert når man går over til Mottakerroller
   const settMottaker = (valgtUtkast: Api.DokumenterV2.OpprettBrevReqDto) => {

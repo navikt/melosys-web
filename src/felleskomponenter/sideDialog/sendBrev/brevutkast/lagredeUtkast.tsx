@@ -13,14 +13,9 @@ interface LagredeUtkastProps {
 }
 
 const LagredeUtkast = ({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) => {
-  const finnTittelTilUtkast = (utkast: Api.Brevutkast.BrevutkastResDto): string =>
-    !Utils._isEmpty(utkast.brevbestilling.dokumentTittel)
-      ? utkast.brevbestilling.dokumentTittel!!
-      : utkast.brevbestilling.produserbardokument.term!!;
-
   const velgUtkast: MouseEventHandler<HTMLButtonElement> = (event) => {
     const tittel = (event.target as HTMLButtonElement).value;
-    const valgtUtkast = alleUtkast.find((utkast) => finnTittelTilUtkast(utkast) === tittel);
+    const valgtUtkast = alleUtkast.find((utkast) => utkast.tittel === tittel);
     settAktivtUtkast(valgtUtkast || null);
   };
 
@@ -31,13 +26,13 @@ const LagredeUtkast = ({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) => 
           <Nav.Typo.Element>Lagrede utkast</Nav.Typo.Element>
           {alleUtkast.map((utkast) => (
             <Mui.Lenkeknapp
-              key={finnTittelTilUtkast(utkast)}
-              value={finnTittelTilUtkast(utkast)}
+              key={utkast.tittel}
+              value={utkast.tittel}
               onClick={velgUtkast}
               ikon={Ikoner.Draft}
               className="lagredeUtkast__utkast"
             >
-              {finnTittelTilUtkast(utkast)}
+              {utkast.tittel}
             </Mui.Lenkeknapp>
           ))}
         </div>

@@ -6,6 +6,7 @@ import { OpprettBrevReqDto } from "./dokumenter-v2";
 export type BrevutkastResDto = {
   utkastBrevID: number;
   lagretAvSaksbehandlerIdent: string;
+  tittel: string;
   brevbestilling: OpprettBrevReqDto & {
     produserbardokument: KTObject;
   };
