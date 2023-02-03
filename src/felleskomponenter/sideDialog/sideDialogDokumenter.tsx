@@ -1,5 +1,5 @@
 import React from "react";
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { DokumentOversikt, Mottaksretning } from "Domene";
 import { change } from "redux-form";
 
@@ -119,4 +119,4 @@ const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, endreFane }: Sid
   );
 };
 
-export default connect()(SideDialogDokumenter);
+export default SideDialogDokumenter;
