@@ -33,7 +33,7 @@ import BrevMottaker, { erArbeidsgiverEllerVirksomhet } from "./brevMottaker/brev
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
 import { erEtat } from "./brevMottaker/brevMottakerEtat";
 import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
-import Brevutkast from "./brevutkast";
+import Brevutkast from "./brevutkast/brevutkast";
 import BrevValg from "./brevValg";
 import { SendBrevFormValues } from "./types";
 
@@ -111,7 +111,6 @@ const SendBrev = ({
   const [redigerFritekstvedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
   const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
   const [utkastPåBehandlingen, setUtkastPåBehandlingen] = useState<Api.Brevutkast.BrevutkastResDto[]>([]);
-  const [aktivtUtkast, setAktivtUtkast] = useState<Api.Brevutkast.BrevutkastResDto | null>(null);
 
   const fritekstvedleggToggle = useFeatureToggle("melosys.brev.GENERELT_FRITEKSTVEDLEGG");
   const utkastToggleEnabled = useFeatureToggle("melosys.utkast") === "enabled";
@@ -330,9 +329,9 @@ const SendBrev = ({
     setBrevSendt(false);
     setBrevSendtFeil(false);
     setMuligeMottakereFeil(undefined);
-    if (aktivtUtkast?.utkastBrevID) {
-      Api.Brevutkast.slettBrevutkast(behandlingID, aktivtUtkast.utkastBrevID).then(() => {
-        setAktivtUtkast(null);
+    if (formValues?.aktivtUtkast?.utkastBrevID) {
+      Api.Brevutkast.slettBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID).then(() => {
+        changeField("aktivtUtkast", null);
         Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
       });
     }
@@ -395,12 +394,12 @@ const SendBrev = ({
 
     const requestData = hentBrevRequest(formValues.valgtMottaker.rolle);
 
-    (aktivtUtkast?.utkastBrevID
-      ? Api.Brevutkast.oppdaterBrevutkast(behandlingID, aktivtUtkast.utkastBrevID, requestData)
+    (formValues?.aktivtUtkast?.utkastBrevID
+      ? Api.Brevutkast.oppdaterBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID, requestData)
       : Api.Brevutkast.lagreBrevutkast(behandlingID, requestData)
     ).then(() => {
       resetFormOgFritekstvedleggState();
-      setAktivtUtkast(null);
+      changeField("aktivtUtkast", null);
       Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
     });
   };
@@ -437,8 +436,6 @@ const SendBrev = ({
         formValues={formValues}
         tilgjengeligeMottakere={tilgjengeligeMottakere}
         utkastPåBehandlingen={utkastPåBehandlingen}
-        aktivtUtkast={aktivtUtkast}
-        setAktivtUtkast={setAktivtUtkast}
       />
 
       {visApneINyttVindu && (
@@ -577,6 +574,7 @@ const SendBrevForm = reduxForm<{}, Props & PropsFromRedux>({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
+  keepValues: true,
   validate: lagYupToReduxformErrorMapper(sendBrevSchema),
 })(SendBrev);
 

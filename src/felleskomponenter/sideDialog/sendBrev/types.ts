@@ -14,4 +14,5 @@ export interface SendBrevFormValues {
   };
   kopimottaker?: boolean;
   trygdemyndighet?: string;
+  aktivtUtkast?: Api.Brevutkast.BrevutkastResDto | null;
 }
