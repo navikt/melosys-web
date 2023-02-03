@@ -433,9 +433,12 @@ const SendBrev = ({
     <div className="send_brev">
       <Brevutkast
         changeField={changeField}
+        dokumenter={dokumenter}
         formValues={formValues}
         tilgjengeligeMottakere={tilgjengeligeMottakere}
         utkastPåBehandlingen={utkastPåBehandlingen}
+        setSaksvedlegg={setValgteVedlegg}
+        setFritekstvedlegg={setFritekstvedlegg}
       />
 
       {visApneINyttVindu && (

@@ -1,19 +1,32 @@
 import React, { useEffect } from "react";
+import { FysiskDokument } from "Domene";
 import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
 import { SendBrevFormValues } from "../types";
+import { Fritekstvedlegg } from "../sendBrev";
 import LagredeUtkast from "./lagredeUtkast";
 
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ETAT } = KV.Koder.MottakerRolle;
 
 interface BrevutkastProps {
   changeField: (field: string, data: any) => void;
+  dokumenter: FysiskDokument[];
   formValues: SendBrevFormValues;
   tilgjengeligeMottakere: Api.DokumenterV2.TilgjengeligMottaker[];
   utkastPåBehandlingen: Api.Brevutkast.BrevutkastResDto[];
+  setSaksvedlegg: (vedlegg: FysiskDokument[]) => void;
+  setFritekstvedlegg: (vedlegg: Fritekstvedlegg[]) => void;
 }
 
-const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPåBehandlingen }: BrevutkastProps) => {
+const Brevutkast = ({
+  changeField,
+  dokumenter,
+  formValues,
+  tilgjengeligeMottakere,
+  utkastPåBehandlingen,
+  setSaksvedlegg,
+  setFritekstvedlegg,
+}: BrevutkastProps) => {
   const aktivtUtkast = formValues?.aktivtUtkast;
 
   const aktivtUtkastTittel = aktivtUtkast?.tittel || null;
@@ -86,6 +99,16 @@ const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPå
     }
   };
 
+  const settFeltForSaksvedlegg = (saksvedlegg: Api.DokumenterV2.Saksvedlegg[]) => {
+    const dokumentIDer = saksvedlegg?.map((vedlegg) => vedlegg.dokumentID);
+    const journalpostIDer = saksvedlegg?.map((vedlegg) => vedlegg.journalpostID);
+    setSaksvedlegg(
+      dokumenter?.filter(
+        (dokument) => dokumentIDer.includes(dokument.dokumentID) && journalpostIDer.includes(dokument.journalpostID)
+      )
+    );
+  };
+
   useEffect(() => {
     if (aktivtUtkastTittel && aktivtUtkast && formValues?.valgtBrev?.type) {
       const utkast = aktivtUtkast.brevbestilling;
@@ -96,6 +119,8 @@ const Brevutkast = ({ changeField, formValues, tilgjengeligeMottakere, utkastPå
       settFeltVerdi("MANGLER_FRITEKST", utkast.manglerFritekst);
       settFeltVerdi("FRITEKST", utkast.fritekst);
       settFeltVerdi("STANDARDTEKST_KONTAKTINFORMASJON", utkast.kontaktopplysninger);
+      setFritekstvedlegg(utkast.fritekstvedlegg);
+      settFeltForSaksvedlegg(utkast.saksvedlegg);
     }
   }, [formValues?.valgtBrev?.type, aktivtUtkastTittel]);
 

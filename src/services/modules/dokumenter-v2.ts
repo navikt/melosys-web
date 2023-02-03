@@ -83,6 +83,11 @@ export type KopiMottaker = {
   institusjonId: string | null;
 };
 
+export type Saksvedlegg = {
+  dokumentID: string;
+  journalpostID: string;
+};
+
 export type OpprettBrevReqDto = {
   produserbardokument: string;
   mottaker: string;
@@ -96,10 +101,7 @@ export type OpprettBrevReqDto = {
   kontaktpersonNavn?: string | null;
   kopiMottakere: KopiMottaker[];
   kontaktopplysninger?: boolean | null;
-  saksvedlegg: {
-    dokumentID: string;
-    journalpostID: string;
-  }[];
+  saksvedlegg: Saksvedlegg[];
   fritekstvedlegg: {
     tittel: string;
     fritekst: string;
