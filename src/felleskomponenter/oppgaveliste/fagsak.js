@@ -22,7 +22,7 @@ import { useFeatureToggle } from "../../featuretoggle";
  * seg inn på den.
  */
 const Fagsak = ({ sak, landkoder }) => {
-  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
+  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
   const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
 
@@ -37,7 +37,7 @@ const Fagsak = ({ sak, landkoder }) => {
       sakstema.kode,
       behandling.behandlingstema.kode,
       behandling.behandlingstype.kode,
-      folketrygdenToggle,
+      folketrygdenToggleEnabled,
       ikkeYrkesaktivFlytToggleEnabled
     );
 
