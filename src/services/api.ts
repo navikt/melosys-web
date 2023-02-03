@@ -21,6 +21,7 @@ import * as Registrering from "./modules/registrering";
 import * as Saksflyt from "./modules/saksflyt";
 import * as Trygdeavgift from "./modules/trygdeavgift";
 import * as Trygdeavtale from "./modules/trygdeavtale/flyt";
+import * as IkkeYrkesaktiv from "../sider/ikkeYrkesaktiv/flyt";
 import * as Utpekingsperioder from "./modules/utpekingsperioder";
 import * as Vilkar from "./modules/vilkar";
 import * as LovligeKombinasjoner from "./modules/lovligekombinasjoner";
@@ -62,6 +63,7 @@ export {
   Trygdeavgift,
   Faktureringskomponenten,
   Trygdeavtale,
+  IkkeYrkesaktiv,
   Utpekingsperioder,
   Vilkar,
 };

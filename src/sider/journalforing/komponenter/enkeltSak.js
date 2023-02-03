@@ -21,6 +21,8 @@ import { useFeatureToggle } from "../../../featuretoggle";
  */
 const EnkeltSak = (props) => {
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
+  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
+
   const { landkoder } = props;
   const { behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
 
@@ -37,7 +39,8 @@ const EnkeltSak = (props) => {
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    folketrygdenToggleEnabled
+    folketrygdenToggleEnabled,
+    ikkeYrkesaktivFlytToggleEnabled
   );
 
   const periode = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus?.kode)

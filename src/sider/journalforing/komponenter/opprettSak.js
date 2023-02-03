@@ -69,6 +69,7 @@ export const OpprettSak = (props) => {
   const [behandlingstemaer, setBehandlingstemaer] = useState([]);
   const [behandlingstyper, setBehandlingstyper] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
   const { formNavn } = feltNavn;
 
   useEffect(() => {
@@ -183,7 +184,8 @@ export const OpprettSak = (props) => {
         valgtSakstema,
         valgtBehandlingstema,
         valgtBehandlingstype,
-        folketrygdenToggle === "enabled"
+        folketrygdenToggle === "enabled",
+        ikkeYrkesaktivFlytToggleEnabled === "enabled"
       ) && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">

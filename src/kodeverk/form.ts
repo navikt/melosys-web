@@ -156,3 +156,7 @@ export const Trygdeavtale = {
   FAMILIE: "trygdeavtale_familie",
   VEDTAK: "trygdeavtale_vedtak",
 };
+
+export const IkkeYrkesaktiv = {
+  INNGANG: "ikke_yrkesaktiv_inngang",
+};
