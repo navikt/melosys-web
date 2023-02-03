@@ -83,29 +83,31 @@ export type KopiMottaker = {
   institusjonId: string | null;
 };
 
+export type Saksvedlegg = {
+  dokumentID: string;
+  journalpostID: string;
+};
+
 export type OpprettBrevReqDto = {
   produserbardokument: string;
   mottaker: string;
-  orgNr?: string;
+  orgNr?: string | null;
   orgnrEtater?: string[];
-  innledningFritekst?: string;
-  begrunnelseFritekst?: string;
-  manglerFritekst?: string;
-  fritekstTittel?: string;
-  fritekst?: string;
+  innledningFritekst?: string | null;
+  begrunnelseFritekst?: string | null;
+  manglerFritekst?: string | null;
+  fritekstTittel?: string | null;
+  fritekst?: string | null;
   kontaktpersonNavn?: string | null;
   kopiMottakere: KopiMottaker[];
-  kontaktopplysninger: boolean | null;
-  saksvedlegg: {
-    dokumentID: string;
-    journalpostID: string;
-  }[];
+  kontaktopplysninger?: boolean | null;
+  saksvedlegg: Saksvedlegg[];
   fritekstvedlegg: {
     tittel: string;
     fritekst: string;
   }[];
-  distribusjonstype?: string;
-  dokumentTittel?: string;
+  distribusjonstype?: string | null;
+  dokumentTittel?: string | null;
 };
 
 export type MuligMottaker = {

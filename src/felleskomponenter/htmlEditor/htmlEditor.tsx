@@ -1,10 +1,13 @@
 import { Editor, SyntheticKeyboardEvent } from "react-draft-wysiwyg";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ContentState, convertFromHTML, convertToRaw, EditorState, RichUtils } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import classNames from "classnames";
-import "./htmlEditor.css";
+
 import * as Nav from "../../navFrontend";
+import * as Utils from "../../utils";
+
+import "./htmlEditor.css";
 
 const toolbar = {
   options: ["inline", "fontSize", "list", "link", "history"],
@@ -15,18 +18,29 @@ const toolbar = {
   },
 };
 
+const editorStateFromHTML = (htmlValue: string) =>
+  EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(htmlValue).contentBlocks));
+const htmlFromEditorState = (editorState: EditorState) => draftToHtml(convertToRaw(editorState.getCurrentContent()));
+
 type TextToHtmlEditorProps = {
   [x: string]: any;
 };
 
 function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
-  const [currentEditorState, setCurrentEditorState] = useState(
-    EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(value).contentBlocks))
-  );
+  const [currentEditorState, setCurrentEditorState] = useState(editorStateFromHTML(value));
+
+  useEffect(() => {
+    const currentHtml = htmlFromEditorState(currentEditorState);
+    if (!Utils._isEmpty(currentHtml) && !Utils._isEmpty(value) && currentHtml !== value) {
+      const editorState = editorStateFromHTML(value);
+      setCurrentEditorState(editorState);
+      onChange(htmlFromEditorState(editorState));
+    }
+  }, [value]);
 
   const onEditorStateChange = (editorState: EditorState) => {
     setCurrentEditorState(editorState);
-    onChange(draftToHtml(convertToRaw(editorState.getCurrentContent())));
+    onChange(htmlFromEditorState(editorState));
   };
 
   const handlePastedText = () => {
@@ -35,8 +49,9 @@ function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
 
   const handleReturn = (e: SyntheticKeyboardEvent) => {
     if (e.key === "Enter") {
-      setCurrentEditorState(RichUtils.insertSoftNewline(currentEditorState));
-      onChange(draftToHtml(convertToRaw(currentEditorState.getCurrentContent())));
+      const editorState = RichUtils.insertSoftNewline(currentEditorState);
+      setCurrentEditorState(editorState);
+      onChange(htmlFromEditorState(editorState));
       return true;
     }
     return false;

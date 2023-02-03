@@ -36,7 +36,7 @@ const manglerFeltMedValg = (feltNavn) => (felt, valgtBrev) => {
     return false;
   }
   const valgtAlternativ = feltFravalgtBrev?.valg?.valgAlternativer.find(
-    (alternativ) => alternativ.beskrivelse === felt?.[feltNavn]?.valg
+    (alternativ) => alternativ.kode === felt?.[feltNavn]?.valg
   );
   return valgtAlternativ && !valgtAlternativ.visFelt ? false : !felt?.[feltNavn]?.feltVerdi;
 };

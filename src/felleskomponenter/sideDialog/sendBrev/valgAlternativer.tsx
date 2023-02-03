@@ -24,7 +24,7 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
               label={alternativ.beskrivelse}
               id={`${feltKode}.${alternativ.kode}`}
               key={`${feltKode}.${alternativ.kode}`}
-              value={alternativ.beskrivelse}
+              value={alternativ.kode}
               disabled={!redigerbart}
             />
           ))}
@@ -40,7 +40,7 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
     return (
       <Skjema.Select feltNavn={`felt.${feltKode}.valg`} label="" emptyFieldText="Velg...">
         {valg.valgAlternativer.map((alternativ) => (
-          <option key={alternativ.kode} value={alternativ.beskrivelse}>
+          <option key={alternativ.kode} value={alternativ.kode}>
             {alternativ.beskrivelse}
           </option>
         ))}

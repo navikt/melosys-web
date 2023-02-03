@@ -8,6 +8,7 @@ interface LenkeknappProps {
   children?: React.ReactNode;
   className?: string;
   ikon?: ElementType;
+  value?: string;
 }
 
 const Lenkeknapp = ({ onClick, children, className, ikon: Ikon, ...rest }: LenkeknappProps) => {
