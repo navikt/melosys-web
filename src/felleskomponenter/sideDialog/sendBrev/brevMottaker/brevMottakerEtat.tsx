@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { connect, ConnectedProps, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { change, getFormValues } from "redux-form";
-import { RootState } from "AppTypes";
 
 import * as KV from "../../../../kodeverk";
 import * as Api from "../../../../services/api";
@@ -10,13 +9,8 @@ import { SendBrevFormValues } from "../types";
 
 export const erEtat = (rolle: string | undefined) => rolle === KV.Koder.MottakerRolle.ETAT;
 
-const mapStateToProps = (state: RootState) => ({
-  formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
-});
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-const BrevMottakerEtat = ({ formValues }: PropsFromRedux) => {
+const BrevMottakerEtat = () => {
+  const formValues = useSelector((state) => getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues);
   const [tilgjengeligeEtater, setTilgjengeligeEtater] = useState<Api.DokumenterV2.TilgjengeligeEtaterResDto>();
   const [valgteEtater, setValgteEtater] = useState<string[]>(formValues?.etater || []);
 
@@ -57,4 +51,4 @@ const BrevMottakerEtat = ({ formValues }: PropsFromRedux) => {
   );
 };
 
-export default connector(BrevMottakerEtat);
+export default BrevMottakerEtat;
