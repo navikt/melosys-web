@@ -148,8 +148,7 @@ const SendBrev = ({
     const { rolle, orgnrSettesAvSaksbehandler } = values.valgtMottaker;
     if (erArbeidsgiverEllerVirksomhet(rolle) && !orgnrSettesAvSaksbehandler && !values.arbeidsgiver) return false;
     if (erArbeidsgiverEllerVirksomhet(rolle) && orgnrSettesAvSaksbehandler && !values.organisasjonsnummer) return false;
-    if (erEtat(rolle) && !harValgtEtat()) return false;
-    return true;
+    return !(erEtat(rolle) && !harValgtEtat());
   };
 
   useEffect(() => {
@@ -250,7 +249,7 @@ const SendBrev = ({
   };
 
   const hentKopiMottakere = () => {
-    return formValues.kopimottaker
+    return formValues.kopiTilBruker
       ? muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker)
       : [];
   };

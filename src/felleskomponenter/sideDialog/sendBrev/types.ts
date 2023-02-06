@@ -12,7 +12,7 @@ export interface SendBrevFormValues {
   felt?: {
     [key: string]: any;
   };
-  kopimottaker?: boolean;
+  kopiTilBruker?: boolean;
   trygdemyndighet?: string;
   aktivtUtkast?: Api.Brevutkast.BrevutkastResDto | null;
 }
