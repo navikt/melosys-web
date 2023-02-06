@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { FysiskDokument } from "Domene";
 import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
 import { SendBrevFormValues } from "../types";
 import { Fritekstvedlegg } from "../sendBrev";
 import LagredeUtkast from "./lagredeUtkast";
@@ -109,6 +110,12 @@ const Brevutkast = ({
     );
   };
 
+  const settKopiTilBruker = (kopiMottakere: Api.DokumenterV2.KopiMottaker[]) => {
+    if (!Utils._isEmpty(kopiMottakere)) {
+      changeField("kopiTilBruker", true);
+    }
+  };
+
   useEffect(() => {
     if (aktivtUtkastTittel && aktivtUtkast && formValues?.valgtBrev?.type) {
       const utkast = aktivtUtkast.brevbestilling;
@@ -121,6 +128,7 @@ const Brevutkast = ({
       settFeltVerdi("STANDARDTEKST_KONTAKTINFORMASJON", utkast.kontaktopplysninger);
       setFritekstvedlegg(utkast.fritekstvedlegg);
       settFeltForSaksvedlegg(utkast.saksvedlegg);
+      settKopiTilBruker(utkast.kopiMottakere);
     }
   }, [formValues?.valgtBrev?.type, aktivtUtkastTittel]);
 

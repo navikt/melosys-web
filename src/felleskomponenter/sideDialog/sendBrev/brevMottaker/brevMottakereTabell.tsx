@@ -7,6 +7,7 @@ import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
 import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../skjema";
+import * as Utils from "../../../../utils";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
@@ -70,7 +71,7 @@ const BrevMottakereTabell = ({
   };
 
   const mapKopiMottakere = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
-    return formValues?.kopimottaker
+    return formValues?.kopiTilBruker
       ? muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker))
       : [];
   };
@@ -89,10 +90,10 @@ const BrevMottakereTabell = ({
 
   return (
     <>
-      {muligeMottakere?.kopiMottakere?.length !== 0 && (
+      {!Utils._isEmpty(muligeMottakere?.kopiMottakere) && (
         <Skjema.Checkbox
-          className="kopimottakerSjekkboks"
-          feltNavn="kopimottaker"
+          className="kopiTilBrukerSjekkboks"
+          feltNavn="kopiTilBruker"
           label="Send kopi til bruker/brukers fullmektig"
         />
       )}
