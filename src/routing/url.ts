@@ -23,7 +23,7 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
       return `/${EU_EOS}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
-      throw new Error(`Finner ikke EuEøs-flyt for behandlingstema: ${behandlingstemaKode}`);
+      return `/flyt-finnes-ikke-for-behandlingstema`;
   }
 };
 
