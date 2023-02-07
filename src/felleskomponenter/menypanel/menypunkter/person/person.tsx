@@ -27,6 +27,7 @@ type PersonProps = PropsFromRedux & {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
   visMottatteOpplysningerData: boolean;
+  endreFokus: boolean;
 };
 
 export const Person = ({
@@ -34,6 +35,7 @@ export const Person = ({
   visArbeidsforholdRolleEtiketter,
   visMottatteOpplysningerData,
   behandlingID,
+  endreFokus,
 }: PersonProps) => (
   <div className="person">
     <Nav.Row>
@@ -43,7 +45,7 @@ export const Person = ({
     </Nav.Row>
     <Nav.Row>
       <Nav.Column xs="12">
-        <PersonInfo behandlingID={behandlingID} />
+        <PersonInfo behandlingID={behandlingID} endreFokus={endreFokus} />
       </Nav.Column>
     </Nav.Row>
     <Nav.Row className="persontabell-row">

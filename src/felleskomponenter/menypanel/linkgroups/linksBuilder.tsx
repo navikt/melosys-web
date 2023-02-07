@@ -52,6 +52,7 @@ class LinksBuilder implements ILinksBuilder {
         <Person
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
+          endreFokus={this.contentProps.endreFokus}
           visMottatteOpplysningerData={this.contentProps.visMottatteOpplysningerData}
         />
       ),
