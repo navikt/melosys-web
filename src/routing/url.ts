@@ -11,6 +11,8 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
       return `/${EU_EOS}/registrering/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL:
       return `/${EU_EOS}/registrering/${saksnummer}/anmodningunntak/?behandlingID=${behandlingID}`;
+    case MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR:
+      return `/${EU_EOS}/registrering/${saksnummer}/NY-FELLES-FLYT/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY:
@@ -114,6 +116,10 @@ export const skalViseTomFlyt = (
 
   if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV && ikkeYrkesaktivFlytToggleEnabled) {
     return false;
+  }
+
+  if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR) {
+    return true;
   }
 
   return [
