@@ -28,11 +28,13 @@ const MottaksretningIkon = ({ mottaksretning }: MottaksretningIkonProps) => {
 
   switch (kode) {
     case MKV.Koder.mottaksretning.INN:
-      return <Ikoner.InnBrev />;
+      return <div className="mottaksretning mottaksretning__inn">inn</div>;
     case MKV.Koder.mottaksretning.UT:
-      return <Ikoner.Svar />;
+      return <div className="mottaksretning mottaksretning__ut">ut</div>;
+    case MKV.Koder.mottaksretning.NOTAT:
+      return <div className="mottaksretning mottaksretning__notat">notat</div>;
     default:
-      return <Ikoner.Svar />;
+      return <div className="mottaksretning">ukjent</div>;
   }
 };
 
