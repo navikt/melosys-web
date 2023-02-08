@@ -10,7 +10,6 @@
 import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
-import * as Routing from "../../routing";
 
 /**
  * Hent Soknad
@@ -41,11 +40,5 @@ export const plukkSak = async (data) => {
     behandlingstema: data.behandlingstema,
   };
 
-  const response = await Api.Oppgaver.sendPlukk(oppgave);
-  const { saksnummer, behandlingID, behandlingstema, behandlingstype } = response;
-  if (!saksnummer) {
-    return false;
-  }
-
-  return Routing.lagUrl(saksnummer, behandlingID, data.sakstype, data.sakstema, behandlingstema, behandlingstype);
+  return Api.Oppgaver.sendPlukk(oppgave);
 };

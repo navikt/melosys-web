@@ -18,6 +18,7 @@ import { oppgaverOperations } from "../../../../ducks/oppgaver";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 
 import "./saksplukker.css";
+import * as Routing from "../../../../routing";
 
 const compareTerm = (a: KTObject, b: KTObject) => {
   if (!a.term) return 1;
@@ -58,6 +59,7 @@ export const Saksplukker = ({
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [visIngenOppgaveFunnetAlert, setVisIngenOppgaveFunnetAlert] = useState(false);
+  const [oppgaver, setOppgaver] = useState(0);
 
   const { sakstype, sakstema } = formValues || {};
 
@@ -92,12 +94,23 @@ export const Saksplukker = ({
   }, [sakstema]);
 
   const submitOgVideresend = async (form: any) => {
-    const redirectURL = await handleSubmit(form);
-
-    if (!redirectURL) {
+    const response = await handleSubmit(form);
+    const { saksnummer, behandlingID, behandlingstema, behandlingstype, antallUtildelteOppgaver } = response;
+    if (!saksnummer) {
+      setOppgaver(antallUtildelteOppgaver);
       setVisIngenOppgaveFunnetAlert(true);
       return false;
     }
+
+    const redirectURL = Routing.lagUrl(
+      saksnummer,
+      behandlingID,
+      form.sakstype,
+      form.sakstema,
+      behandlingstema,
+      behandlingstype
+    );
+
     history.push(redirectURL);
     return true;
   };
@@ -140,7 +153,9 @@ export const Saksplukker = ({
         {visIngenOppgaveFunnetAlert && (
           <Nav.Row>
             <Nav.Column md="12">
-              <AlertStripeAdvarsel>Det fins ingen saker for valgt type/tema kombinasjon</AlertStripeAdvarsel>
+              <AlertStripeAdvarsel>
+                Det fins ingen saker for valgt type/tema kombinasjon blant de {oppgaver} eldste sakene
+              </AlertStripeAdvarsel>
             </Nav.Column>
           </Nav.Row>
         )}
