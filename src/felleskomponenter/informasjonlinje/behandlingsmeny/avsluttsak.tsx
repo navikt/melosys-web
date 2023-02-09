@@ -17,6 +17,7 @@ const {
   UTSENDT_ARBEIDSTAKER,
   UTSENDT_SELVSTENDIG,
   ARBEID_FLERE_LAND,
+  A1_ANMODNING_OM_UNNTAK_PAPIR,
 } = MKV.Koder.behandlinger.behandlingstema;
 const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE } = MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
@@ -153,7 +154,10 @@ const AvsluttSak = ({
 
   const skalViseVedtakOmgjort = redigerbart && behandlingstypeErNyVurdering;
 
-  const skalViseUnntaksHandlinger = redigerbart && behandlingstemaErUnntak && sakstype === TRYGDEAVTALE;
+  const skalViseUnntaksHandlinger =
+    redigerbart &&
+    ((behandlingstemaErUnntak && sakstype === TRYGDEAVTALE) ||
+      (behandlingstema === A1_ANMODNING_OM_UNNTAK_PAPIR && sakstype === EU_EOS));
 
   const skalViseSøknadenErInnvilget = () => {
     if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
@@ -163,14 +167,16 @@ const AvsluttSak = ({
       sakstype === FTRL &&
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
       [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, UNNTAK_MEDLEMSKAP].includes(behandlingstema)
-    )
+    ) {
       return true;
+    }
     if (
       [EU_EOS, TRYGDEAVTALE].includes(sakstype) &&
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
       [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, ARBEID_KUN_NORGE].includes(behandlingstema)
-    )
+    ) {
       return true;
+    }
 
     return false;
   };
