@@ -29,7 +29,6 @@ import MottakerTabell from "../../../../felleskomponenter/tabell/mottakerTabell"
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from "./selectors";
-import { RepresentantformValues } from "./vurderingRepresentant";
 
 import "./vurderingVedtak.css";
 import { vedtakOperations } from "../../../../ducks/vedtak";
@@ -56,7 +55,6 @@ const mapStateToProps = (state: RootState) => ({
   familieFormValues: formSelectors.VurderFamilieFormSelector(state).values,
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   formValues: getFormValues(KV.Form.FTRL_VEDTAK)(state),
-  formValuesRepresentant: getFormValues(KV.Form.REPRESENTANT)(state) as RepresentantformValues,
   initialValues: {
     begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state),
@@ -100,7 +98,6 @@ const VurderingVedtak = ({
   medlemskapsperioder,
   innvilgelsesResultater,
   formValues,
-  formValuesRepresentant,
   medfolgendeFamilie,
   soknadsland,
   alleLandkoder,
@@ -138,11 +135,6 @@ const VurderingVedtak = ({
       TODO: SKATT_FÅR_KOPI_HVIS_AVGIFTSPLIKTIG_INNTEKT
     Burde derfor hente mottakere på nytt når disse dataene endres.
    */
-  const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 2000), []);
-  useEffect(() => {
-    debouncedHentMuligeMottakere();
-    return debouncedHentMuligeMottakere.cancel();
-  }, [formValuesRepresentant.selvbetalende]);
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
