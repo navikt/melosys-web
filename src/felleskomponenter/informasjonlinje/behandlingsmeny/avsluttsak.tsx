@@ -156,7 +156,8 @@ const AvsluttSak = ({
 
   const skalViseUnntaksHandlinger =
     redigerbart &&
-    ((behandlingstemaErUnntak && sakstype === TRYGDEAVTALE) || behandlingstema === A1_ANMODNING_OM_UNNTAK_PAPIR);
+    ((behandlingstemaErUnntak && sakstype === TRYGDEAVTALE) ||
+      (behandlingstema === A1_ANMODNING_OM_UNNTAK_PAPIR && sakstype === EU_EOS));
 
   const skalViseSøknadenErInnvilget = () => {
     if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
