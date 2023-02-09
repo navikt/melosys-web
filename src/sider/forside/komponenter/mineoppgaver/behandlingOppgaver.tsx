@@ -27,6 +27,9 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
   const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt");
+  const registreringAnmodningUnntakToggleEnabled = useFeatureToggle(
+    "melosys.registrering_anmodning_unntak_MELOSYS-5684"
+  );
 
   const { saksbehandling } = mineSaker;
 
@@ -41,6 +44,7 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
         radioGroupName="behandlingsortering"
         folketrygdenToggleEnabled={folketrygdenToggle === "enabled"}
         ikkeYrkesaktivFlytToggleEnabled={ikkeYrkesaktivFlytToggleEnabled === "enabled"}
+        registreringAnmodningUnntakToggleEnabled={registreringAnmodningUnntakToggleEnabled === "enabled"}
         landkoder={landkoder}
       />
     </div>

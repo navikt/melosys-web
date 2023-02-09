@@ -121,7 +121,6 @@ export const Menypanel = ({
     );
 
   if (!visMenypanel) return null;
-
   return (
     <>
       <div role="alert">

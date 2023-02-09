@@ -78,6 +78,10 @@ const SendbrevLoadable = loadable(() => import(/* webpackChunkName: "sendbrev" *
   fallback: SideLoadingStatus,
 });
 
+const FellesUnntakLoadable = loadable(() => import(/* webpackChunkName: "felles-unntak" */ "../sider/fellesUnntak"), {
+  fallback: SideLoadingStatus,
+});
+
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
 const Routing = () => (
@@ -128,6 +132,10 @@ const Routing = () => (
         <Route
           path="/sendbrev/:behandlingID/:snr"
           render={(props) => <SendbrevLoadable {...props} {...fellesHandlers} />}
+        />
+        <Route
+          path="/:sakstype/fellesUnntak/:saksnr"
+          render={(props) => <FellesUnntakLoadable {...props} {...fellesHandlers} />}
         />
         <Route component={UkjentSideLoadable} />
       </Switch>

@@ -36,16 +36,31 @@ const nullstillVerdier = (steg, endreFelt, feltNavn) => {
   }
 };
 
-export const skalViseSoknadsperiodeOgLand = (sakstype, sakstema, behandlingstema, behandlingstype) =>
+export const skalViseSoknadsperiodeOgLand = (
+  sakstype,
+  sakstema,
+  behandlingstema,
+  behandlingstype,
+  folketrygdenToggleEnabled,
+  ikkeYrkesaktivFlytToggleEnabled,
+  registreringAnmodningUnntakToggleEnabled
+) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
   sakstema &&
   behandlingstema &&
   behandlingstype &&
-  !skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype);
+  !skalViseTomFlyt(
+    sakstype,
+    sakstema,
+    behandlingstema,
+    behandlingstype,
+    folketrygdenToggleEnabled,
+    ikkeYrkesaktivFlytToggleEnabled,
+    registreringAnmodningUnntakToggleEnabled
+  );
 
 export const OpprettSak = (props) => {
   const { settFeltInnhold, formValues, feltNavn } = props;
-
   const {
     valgtSakstype,
     valgtSakstema,
@@ -185,7 +200,7 @@ export const OpprettSak = (props) => {
         valgtBehandlingstema,
         valgtBehandlingstype,
         folketrygdenToggle === "enabled",
-        ikkeYrkesaktivFlytToggleEnabled === "enabled"
+        ikkeYrkesaktivFlytToggleEnabled
       ) && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">

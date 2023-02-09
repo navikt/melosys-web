@@ -11,6 +11,8 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
       return `/${EU_EOS}/registrering/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL:
       return `/${EU_EOS}/registrering/${saksnummer}/anmodningunntak/?behandlingID=${behandlingID}`;
+    case MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR:
+      return `/${EU_EOS}/fellesUnntak/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY:
@@ -23,7 +25,7 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
       return `/${EU_EOS}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
-      throw new Error(`Finner ikke EuEøs-flyt for behandlingstema: ${behandlingstemaKode}`);
+      return "/funkerikke. IKKE COMMIT DETTE.";
   }
 };
 
@@ -35,14 +37,17 @@ const lagUrlForFtrlFlyt = (saksnummer: number | string, behandlingID: number, be
   return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
 };
 const lagUrlForTrygdeavtaleFlyt = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
-  if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
-    return `/${TRYGDEAVTALE}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+  switch (behandlingstemaKode) {
+    case MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV:
+      return `/${TRYGDEAVTALE}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+    case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
+      return `/${TRYGDEAVTALE}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
+    case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK:
+    case MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL:
+      return `/${TRYGDEAVTALE}/fellesUnntak/${saksnummer}/?behandlingID=${behandlingID}`;
+    default:
+      throw new Error(`Finner ikke trygdeavtale-flyt for behandlingstema: ${behandlingstemaKode}`);
   }
-  // TODO FLYTT
-  if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
-    return `/${TRYGDEAVTALE}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
-  }
-  throw new Error(`Finner ikke trygdeavtale-flyt for behandlingstema: ${behandlingstemaKode}`);
 };
 
 export const lagUrlFraSakstypeOgBehandlingstema = (
@@ -71,7 +76,8 @@ export const lagUrl = (
   behandlingstemaKode: string,
   behandlingstypeKode: string,
   folketrygdenToggleEnabled: boolean = false,
-  ikkeYrkesaktivToggleEnabled: boolean = false
+  ikkeYrkesaktivToggleEnabled: boolean = false,
+  registreringAnmodningUnntakToggleEnabled: boolean = false
 ) => {
   if (
     skalViseTomFlyt(
@@ -80,7 +86,8 @@ export const lagUrl = (
       behandlingstemaKode,
       behandlingstypeKode,
       folketrygdenToggleEnabled,
-      ikkeYrkesaktivToggleEnabled
+      ikkeYrkesaktivToggleEnabled,
+      registreringAnmodningUnntakToggleEnabled
     )
   ) {
     return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
@@ -94,7 +101,8 @@ export const skalViseTomFlyt = (
   behandlingstema: string,
   behandlingstype: string,
   folketrygdenToggleEnabled: boolean = false,
-  ikkeYrkesaktivFlytToggleEnabled: boolean = false
+  ikkeYrkesaktivFlytToggleEnabled: boolean = false,
+  registreringAnmodningUnntakToggleEnabled: boolean = false
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
@@ -107,12 +115,28 @@ export const skalViseTomFlyt = (
   }
   if (
     sakstype === TRYGDEAVTALE &&
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL &&
+    !registreringAnmodningUnntakToggleEnabled
   ) {
     return true;
   }
 
   if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV && ikkeYrkesaktivFlytToggleEnabled) {
+    return false;
+  }
+
+  if (
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK &&
+    sakstype === TRYGDEAVTALE &&
+    registreringAnmodningUnntakToggleEnabled
+  ) {
+    return false;
+  }
+
+  if (
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
+    registreringAnmodningUnntakToggleEnabled
+  ) {
     return false;
   }
 
