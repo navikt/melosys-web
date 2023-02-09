@@ -240,7 +240,8 @@ const VurderingBestemmelse = ({
             <Nav.Select
               label=""
               disabled={!redigerbart}
-              onChange={(event) => handleEndreBestemmelse(event.target.value)}
+              // eslint-disable-next-line no-return-await
+              onChange={async (event) => await handleEndreBestemmelse(event.target.value)}
               value={valgtBestemmelse}
             >
               <option disabled={!!valgtBestemmelse} value="" key="">

@@ -151,7 +151,7 @@ export function lagre() {
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
     const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
     const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
-
+    console.log({ yooyo: mottatteOpplysninger });
     const data = lagMottatteOpplysningerData(sakstype, behandlingstema, mottatteOpplysninger);
 
     return dispatch(send(bid, { data }));

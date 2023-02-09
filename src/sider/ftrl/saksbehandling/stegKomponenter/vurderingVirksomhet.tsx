@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { change, getFormValues, reduxForm } from "redux-form";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, FieldValues, useForm } from "react-hook-form";
 
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
-import * as KV from "../../../../kodeverk";
 import * as Api from "../../../../services/api";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
@@ -16,7 +16,6 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
 import { formSelectors } from "../../../../ducks/form";
 
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
 import "./vurderingVirksomhet.css";
 
@@ -26,7 +25,6 @@ const mapStateToProps = (state: RootState) => {
     virksomheterListe: behandlingerSelectors.AlleVirksomheterSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lagredeValgtevirksomheter,
-    formValues: getFormValues(KV.Form.VIRKSOMHET)(state),
     initialValues: {
       valgteVirksomheter: lagredeValgtevirksomheter,
     },
@@ -39,7 +37,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   sendVirksomheter: (behandlingID: number, virksomheter: Api.Avklartefakta.Virksomheter) =>
     dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
   hentMottatteOpplysninger: (behandlingID: number) => dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
-  changeValgteVirksomheter: (data: string[]) => dispatch(change(KV.Form.VIRKSOMHET, "valgteVirksomheter", data)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -60,9 +57,7 @@ interface Props {
 const VurderingVirksomhet = ({
   behandlingID,
   bekreft,
-  changeValgteVirksomheter,
-  formIsValid,
-  formValues,
+  initialValues,
   hentMottatteOpplysninger,
   hentOppsummertFakta,
   redigerbart,
@@ -71,6 +66,22 @@ const VurderingVirksomhet = ({
   virksomheterListe,
   lagredeValgtevirksomheter,
 }: Props & PropsFromRedux) => {
+  const {
+    setValue,
+    handleSubmit,
+    control,
+    getValues,
+    formState: { isValid: formIsValid },
+  } = useForm({
+    resolver: yupResolver(vurderingVirksomhetSchema),
+    mode: "onChange",
+    defaultValues: {
+      ...initialValues,
+    } as FieldValues,
+  });
+
+  const formValues = getValues();
+
   const [erMottatteOpplysningerLastetInn, setErMottatteOpplysningerLastetInn] = useState(false);
   const hjelpetekst =
     "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. " +
@@ -87,10 +98,6 @@ const VurderingVirksomhet = ({
       hentOppsummertFakta(behandlingID);
     };
   }, []);
-
-  useEffect(() => {
-    changeValgteVirksomheter(lagredeValgtevirksomheter);
-  }, [lagredeValgtevirksomheter]);
 
   const handleFortsett = () => {
     if (formValues && formValues.valgteVirksomheter) {
@@ -109,27 +116,28 @@ const VurderingVirksomhet = ({
         <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={hjelpetekst} hjelpetekstClassName="hjelpetekst" />
       </Nav.Typo.Undertittel>
 
-      <Mui.Checkboxgruppe
-        muligeValg={virksomheterListe}
-        onChange={(checkedVirksomheter) => changeValgteVirksomheter(checkedVirksomheter)}
-        disabled={!redigerbart}
-        defaultValg={lagredeValgtevirksomheter}
+      <Controller
+        name="valgteVirksomheter"
+        control={control}
+        render={({ field }) => (
+          <Mui.Checkboxgruppe
+            {...field}
+            muligeValg={virksomheterListe}
+            onChange={(checkedVirksomheter) =>
+              setValue("valgteVirksomheter", checkedVirksomheter, { shouldValidate: true })
+            }
+            disabled={!redigerbart}
+            defaultValg={lagredeValgtevirksomheter}
+          />
+        )}
       />
 
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: handleFortsett, disabled: !formIsValid || !redigerbart }}
+        bekreftKnappProps={{ onClick: handleSubmit(handleFortsett), disabled: !formIsValid || !redigerbart }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
   );
 };
 
-const VurderingVirksomhetForm = reduxForm<FormValuesProps, PropsFromRedux & Props>({
-  form: KV.Form.VIRKSOMHET,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(vurderingVirksomhetSchema),
-})(VurderingVirksomhet);
-
-export default connector(VurderingVirksomhetForm);
+export default connector(VurderingVirksomhet);

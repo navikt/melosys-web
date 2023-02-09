@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { change, getFormValues, reduxForm } from "redux-form";
+/*eslint-disable */
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -13,7 +13,6 @@ import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
-import * as KV from "../../../../kodeverk";
 
 import DialogboksOppfriskSak from "../../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
@@ -21,7 +20,6 @@ import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from ".
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
 
 import vurderingStartSchema from "./vurderingStartSchema";
 import "./vurderingStart.css";
@@ -45,7 +43,6 @@ const mapStateToProps = (state: RootState) => {
   const fagsak = fagsakSelectors.FagsakSelector(state);
   return {
     trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
-    formValues: getFormValues(KV.Form.START)(state),
     initialValues: {
       fom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.fom),
       tom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.tom),
@@ -60,7 +57,6 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
-  settFormLand: (land: string) => dispatch(change(KV.Form.START, "land", land)),
   oppdaterPeriode: (periode: { fom: string; tom: string }) =>
     dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
   oppdaterSoeknadslandkoder: (landkoder: string[]) =>
@@ -73,19 +69,11 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface FormValuesProp {
-  fom?: string;
-  tom?: string;
-  land?: string;
-  trygdedekning?: string;
-}
-
 interface Props {
   bekreft: () => void;
   oppdater: () => void;
   redigerbart: boolean;
   oppdaterData: (avklartefakta: any) => void;
-  formValues: FormValuesProp;
   tilForsiden: () => void;
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger: () => void;
   annenBehandlingOppfriskes: boolean;
@@ -95,12 +83,10 @@ export const VurderingStart = ({
   bekreft,
   redigerbart,
   oppdaterPeriode,
-  settFormLand,
   oppdaterSoeknadslandkoder,
   oppdaterTrygdedekning,
   trygdedekninger,
   alleLandkoder,
-  erFTRL,
   initialValues,
   tilForsiden,
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
@@ -110,56 +96,60 @@ export const VurderingStart = ({
   const {
     control,
     setValue,
-    handleSubmit,
     getValues,
     formState: { isValid: formIsValid, errors },
   } = useForm({
     resolver: yupResolver(vurderingStartSchema),
     mode: "onChange",
     defaultValues: {
-      fom: undefined,
-      tom: undefined,
-      land: undefined,
-      trygdedekning: undefined,
+      ...initialValues,
     } as FieldValues,
   });
   const formValues = getValues();
 
-  const [initialFomTom, setInitialFomTom] = useState<{ fom: string | undefined; tom: string | undefined }>({
-    fom: undefined,
-    tom: undefined,
-  });
-
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const [valgteLand, setValgteLand] = useState<string[]>([]);
-
   useEffect(() => {
     if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
       visMenypanel();
-      setInitialFomTom({ fom: initialValues.fom, tom: initialValues.tom });
     }
-    settFormLand("");
+    if (!Utils._isEmpty(initialValues.land)) {
+      setValgteLand([initialValues.land]);
+    }
   }, []);
 
-  const oppdaterLokalMottatteOpplysninger = async (data: { formValues: FormValuesProp; formIsValid: boolean }) => {
-    const fom = Utils.dato.formatterDatoTilISO(data.formValues.fom);
-    const tom = Utils.dato.formatterDatoTilISO(data.formValues.tom);
+  const oppdaterLokalMottatteOpplysninger = async () => {
+    const fom = Utils.dato.formatterDatoTilISO(formValues.fom);
+    const tom = Utils.dato.formatterDatoTilISO(formValues.tom);
     await Promise.all([
       oppdaterPeriode({ fom: fom === "Invalid date" ? "" : fom, tom: tom === "Invalid date" ? "" : tom }),
-      oppdaterSoeknadslandkoder(data.formValues.land ? [data.formValues.land] : []),
-      oppdaterTrygdedekning(data.formValues.trygdedekning),
+      oppdaterSoeknadslandkoder(formValues.land ? [formValues.land] : []),
+      oppdaterTrygdedekning(formValues.trygdedekning),
     ]);
   };
 
-  const debouncedOppdatering = useCallback(Utils._debounce(oppdaterLokalMottatteOpplysninger, 500), []);
+  // const debouncedOppdatering = useCallback(Utils._debounce(oppdaterLokalMottatteOpplysninger, 500), []);
 
   useEffect(() => {
-    if (redigerbart) debouncedOppdatering({ formValues, formIsValid });
-  }, [formIsValid, formValues]);
+    const erSammeSomInitialVerdier =
+      formValues.fom === initialValues.fom &&
+      formValues.tom === initialValues.tom &&
+      formValues.land === initialValues.land &&
+      formValues.trygdedekning === initialValues.trygdedekning;
+
+    if (!erSammeSomInitialVerdier && formIsValid) {
+      oppdaterLokalMottatteOpplysninger().finally(() => console.log("Ferdig med å oppdatere"));
+    }
+  }, [formIsValid, formValues, initialValues]);
 
   const fortsettHandle = () => {
-    if (formValues.fom !== initialFomTom.fom || formValues.tom !== initialFomTom.tom) {
-      setInitialFomTom({ fom: formValues.fom, tom: formValues.tom });
+    const erSammeSomInitialVerdier =
+      formValues.fom === initialValues.fom &&
+      formValues.tom === initialValues.tom &&
+      formValues.land === initialValues.land &&
+      formValues.trygdedekning === initialValues.trygdedekning;
+    console.log({ erSammeSomInitialVerdier, formValues, initialValues });
+    if (!erSammeSomInitialVerdier) {
       setVisOppfrisk(true);
     } else {
       bekreft();
@@ -174,7 +164,6 @@ export const VurderingStart = ({
     const land = options ? options.slice(-1).map((item: { value: string }) => item.value) : [];
     setValgteLand(land);
     const formLand = Object.assign([], land).shift();
-    settFormLand(formLand || "");
     setValue("land", formLand || undefined, { shouldValidate: true });
   };
 
@@ -203,34 +192,19 @@ export const VurderingStart = ({
             />
           </Nav.Column>
           <Nav.Column xs="5">
-            {!erFTRL ? (
-              <Skjema.LandVelger
-                label={
-                  <LabelMedHjelpetekst
-                    label="Arbeidsland"
-                    hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                    hjelpetekstClassName="hjelpetekst"
-                  />
-                }
-                feltNavn="land"
-                placeholder="Velg..."
-                disabled={!redigerbart}
-              />
-            ) : (
-              <MultiSelect
-                label={
-                  <LabelMedHjelpetekst
-                    label="Arbeidsland"
-                    hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                    hjelpetekstClassName="hjelpetekst"
-                  />
-                }
-                onChange={landEndret}
-                values={valgteLand}
-                feil={(errors.land?.message as any)?.melding.toString()}
-                options={alleLandkoder.map((item: any) => ({ value: item.kode, label: item.term }))}
-              />
-            )}
+            <MultiSelect
+              label={
+                <LabelMedHjelpetekst
+                  label="Arbeidsland"
+                  hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
+                  hjelpetekstClassName="hjelpetekst"
+                />
+              }
+              onChange={landEndret}
+              values={valgteLand}
+              feil={(errors.land?.message as any)?.melding.toString()}
+              options={alleLandkoder.map((item: any) => ({ value: item.kode, label: item.term }))}
+            />
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
@@ -266,7 +240,10 @@ export const VurderingStart = ({
       </Nav.Fieldset>
 
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: handleSubmit(fortsettHandle), disabled: !formIsValid || !redigerbart }}
+        bekreftKnappProps={{
+          onClick: fortsettHandle,
+          disabled: !formIsValid || !redigerbart,
+        }}
       />
 
       {visOppfrisk && (
@@ -290,12 +267,4 @@ export const VurderingStart = ({
   );
 };
 
-const VurderingStartForm = reduxForm<{}, PropsFromRedux & Props>({
-  form: KV.Form.START,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(vurderingStartSchema),
-})(VurderingStart);
-
-export default connector(VurderingStartForm);
+export default connector(VurderingStart);
