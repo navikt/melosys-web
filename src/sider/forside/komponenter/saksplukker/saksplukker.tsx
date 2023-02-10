@@ -105,8 +105,8 @@ export const Saksplukker = ({
     const redirectURL = Routing.lagUrl(
       saksnummer,
       behandlingID,
-      form.sakstype,
-      form.sakstema,
+      formValues.sakstype,
+      formValues.sakstema,
       behandlingstema,
       behandlingstype
     );
