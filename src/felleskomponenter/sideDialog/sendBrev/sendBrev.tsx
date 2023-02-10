@@ -551,7 +551,7 @@ const SendBrev = ({
         </Nav.Hovedknapp>
         {utkastToggleEnabled && (
           <Nav.Knapp mini disabled={knappErDisabled} className="brevknapp" onClick={lagreUtkast}>
-            Lagre og fortsett senere
+            Lagre utkast
           </Nav.Knapp>
         )}
         <Nav.Knapp mini className="brevknapp" onClick={forkastBrev}>
