@@ -146,8 +146,6 @@ export const VIRKSOMHET = "virksomhet";
 export const PERIODER = "perioder";
 export const TRYGDEAVGIFT = "trygdeavgift";
 export const FTRL_VEDTAK = "ftrl_vedtak";
-export const FAMILIE = "familie";
-export const REPRESENTANT = "representant";
 
 export const Trygdeavtale = {
   INNGANG: "trygdeavtale_inngang",

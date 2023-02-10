@@ -52,7 +52,6 @@ const mapStateToProps = (state: RootState) => ({
   trygdeavgiftFormValues: formSelectors.VurderTrygdeavgiftFormSelector(state).values,
   skalBetaleTrygdeavgiftTilNorge: LonnsforholdErNorgeEllerDelt(state),
   skalBetaleTrygdeavgiftTilUtlandet: LonnsforholdErUtlandetEllerDelt(state),
-  familieFormValues: formSelectors.VurderFamilieFormSelector(state).values,
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   formValues: getFormValues(KV.Form.FTRL_VEDTAK)(state),
   initialValues: {
@@ -104,7 +103,6 @@ const VurderingVedtak = ({
   trygdeavgiftFormValues,
   skalBetaleTrygdeavgiftTilNorge,
   skalBetaleTrygdeavgiftTilUtlandet,
-  familieFormValues,
   vedtakstype,
   kontrollerFerdigbehandling,
   harFeilmeldinger,
@@ -192,8 +190,6 @@ const VurderingVedtak = ({
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
           orgNr: muligMottaker?.orgnr || null,
-          ektefelleFritekst: familieFormValues?.ektefelle_samboer?.fritekst || null,
-          barnFritekst: familieFormValues?.barn?.fritekst || null,
         },
       },
     ];
@@ -263,8 +259,6 @@ const VurderingVedtak = ({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
       innledningFritekst: formValues?.innledningFritekst || null,
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-      ektefelleFritekst: familieFormValues?.ektefelle_samboer?.fritekst || null,
-      barnFritekst: familieFormValues?.barn?.fritekst || null,
       betalingsintervall: formValues.betalingsintervall ?? "MANEDLIG",
       vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),

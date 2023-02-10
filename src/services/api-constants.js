@@ -25,7 +25,6 @@ export const OPPGAVER = "oppgaver";
 export const ORGANISASJONER = "organisasjoner";
 export const PERSONER = "personer";
 export const REGISTRERING = "registrering";
-export const REPRESENTANT = "representant";
 export const SAKSBEHANDLER = "saksbehandler";
 export const SAKSFLYT = "saksflyt";
 export const SAKSOPPLYSNINGER = "saksopplysninger";
