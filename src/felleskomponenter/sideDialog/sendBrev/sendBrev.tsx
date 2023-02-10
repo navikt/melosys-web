@@ -318,6 +318,9 @@ const SendBrev = ({
         setBrevSendt(true);
         oppdaterBehandling();
         resetFormOgFritekstvedleggState();
+        if (utkastToggleEnabled) {
+          Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
+        }
       })
       .catch(() => {
         setFeil("Brevet er ikke sendt. Det skjedde en feil.");
