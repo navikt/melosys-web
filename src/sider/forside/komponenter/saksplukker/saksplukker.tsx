@@ -59,7 +59,7 @@ export const Saksplukker = ({
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [visIngenOppgaveFunnetAlert, setVisIngenOppgaveFunnetAlert] = useState(false);
-  const [oppgaver, setOppgaver] = useState(0);
+  const [antallOppgaver, setAntallOppgaver] = useState(0);
 
   const { sakstype, sakstema } = formValues || {};
 
@@ -97,7 +97,7 @@ export const Saksplukker = ({
     const response = await handleSubmit(form);
     const { saksnummer, behandlingID, behandlingstema, behandlingstype, antallUtildelteOppgaver } = response;
     if (!saksnummer) {
-      setOppgaver(antallUtildelteOppgaver);
+      setAntallOppgaver(antallUtildelteOppgaver);
       setVisIngenOppgaveFunnetAlert(true);
       return false;
     }
@@ -154,7 +154,7 @@ export const Saksplukker = ({
           <Nav.Row>
             <Nav.Column md="12">
               <AlertStripeAdvarsel>
-                Det fins ingen saker for valgt type/tema kombinasjon blant de {oppgaver} eldste sakene
+                Det fins ingen saker for valgt type/tema kombinasjon blant de {antallOppgaver} eldste sakene
               </AlertStripeAdvarsel>
             </Nav.Column>
           </Nav.Row>
