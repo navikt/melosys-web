@@ -138,7 +138,6 @@ const DialogboksOppfriskBehandling = ({
   ariaHideApp,
 }) => {
   const [bekreftet, setBekreftet] = useState(behandlingOppfriskes);
-
   return (
     <Nav.Modal
       isOpen

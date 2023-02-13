@@ -43,15 +43,10 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface FormValuesProps {
-  valgteVirksomheter?: string[];
-}
-
 interface Props {
   bekreft: () => void;
   redigerbart: boolean;
   tilbake: () => void;
-  formValues: FormValuesProps;
 }
 
 const VurderingVirksomhet = ({
@@ -68,8 +63,7 @@ const VurderingVirksomhet = ({
 }: Props & PropsFromRedux) => {
   const {
     setValue,
-    handleSubmit,
-    getValues,
+    watch,
     formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurderingVirksomhetSchema),
@@ -79,7 +73,7 @@ const VurderingVirksomhet = ({
     } as FieldValues,
   });
 
-  const formValues = getValues();
+  const formValues = watch();
 
   const [erMottatteOpplysningerLastetInn, setErMottatteOpplysningerLastetInn] = useState(false);
   const hjelpetekst =
@@ -125,7 +119,7 @@ const VurderingVirksomhet = ({
       />
 
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: handleSubmit(handleFortsett), disabled: !formIsValid || !redigerbart }}
+        bekreftKnappProps={{ onClick: handleFortsett, disabled: !formIsValid || !redigerbart }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>

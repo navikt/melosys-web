@@ -1,4 +1,3 @@
-/*eslint-disable */
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
@@ -14,7 +13,6 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 
-import DialogboksOppfriskSak from "../../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
@@ -88,15 +86,12 @@ export const VurderingStart = ({
   trygdedekninger,
   alleLandkoder,
   initialValues,
-  tilForsiden,
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
-  annenBehandlingOppfriskes,
   visMenypanel,
 }: Props & PropsFromRedux) => {
   const {
     control,
     setValue,
-    handleSubmit,
     watch,
     formState: { isValid: formIsValid, errors },
   } = useForm({
@@ -109,7 +104,6 @@ export const VurderingStart = ({
 
   const formValues = watch();
 
-  const [visOppfrisk, setVisOppfrisk] = useState(false);
   const [valgteLand, setValgteLand] = useState<string[]>([]);
   useEffect(() => {
     if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
@@ -138,7 +132,11 @@ export const VurderingStart = ({
       formValues.trygdedekning === initialValues.trygdedekning;
 
     if (!erSammeSomInitialVerdier) {
-      oppdaterLokalMottatteOpplysninger().finally(() => setVisOppfrisk(true));
+      oppdaterLokalMottatteOpplysninger().finally(() => {
+        lagreMottatteOpplysningerOgOppfriskSaksopplysninger();
+        visMenypanel();
+        bekreft();
+      });
     } else {
       bekreft();
     }
@@ -229,28 +227,10 @@ export const VurderingStart = ({
 
       <Mui.StegKnapper
         bekreftKnappProps={{
-          onClick: handleSubmit(fortsettHandle),
+          onClick: fortsettHandle,
           disabled: !formIsValid || !redigerbart,
         }}
       />
-
-      {visOppfrisk && (
-        <DialogboksOppfriskSak
-          oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
-          avbryt={() => setVisOppfrisk(false)}
-          lukk={() => {
-            setVisOppfrisk(false);
-            visMenypanel();
-            bekreft();
-          }}
-          tilForsiden={() => {
-            setVisOppfrisk(false);
-            tilForsiden();
-          }}
-          behandlingOppfriskes
-          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-        />
-      )}
     </div>
   );
 };

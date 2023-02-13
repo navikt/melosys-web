@@ -75,6 +75,7 @@ const VurderingBestemmelse = ({
   bestemmelse,
   lagreVilkar,
 }: Props & PropsFromRedux) => {
+  console.log({ vilkarListe });
   const [valgtBestemmelse, setValgtBestemmelse] = useState("");
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
   const [valgteVilkar, setValgteVilkar] = useState(new Map());
@@ -158,7 +159,7 @@ const VurderingBestemmelse = ({
   const Vilkaar = ({ vilkaar, muligeBegrunnelser }: VilkarOgBegrunnelser) => {
     const hjelpetekstForVilkaar = hjelpetekster.get(vilkaar);
     const valgteVilkarForVilkaar = valgteVilkar.get(`${vilkaar}`);
-
+    console.log({ valgteVilkarForVilkaar });
     return (
       <Fragment>
         <Nav.Fieldset
