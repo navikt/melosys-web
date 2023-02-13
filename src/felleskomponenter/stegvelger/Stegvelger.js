@@ -334,9 +334,10 @@ class Stegvelger extends Component {
    * steg så langt det er mulig å komme. Alle ubesvarte steg går direkte til vedtak som default.
    *
    * @param aktivtStegNummer
+   * @param endreFokus
    * @returns {Array}
    */
-  oppdaterAktuelleSteg = (aktivtStegNummer) => {
+  oppdaterAktuelleSteg = (aktivtStegNummer, endreFokus = false) => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgUtpek: this.lagreOgUtpek,
@@ -437,7 +438,7 @@ class Stegvelger extends Component {
     aktuelleSteg[normalisertAktivtSteg].aktivtSteg = true;
 
     this.setState({ aktuelleSteg });
-    Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktuelleSteg[normalisertAktivtSteg].id);
+    if (endreFokus) Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktuelleSteg[normalisertAktivtSteg].id);
     return aktuelleSteg;
   };
 
@@ -491,7 +492,7 @@ class Stegvelger extends Component {
       }
     }
 
-    this.oppdaterAktuelleSteg(nyttStegNummer);
+    this.oppdaterAktuelleSteg(nyttStegNummer, true);
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
