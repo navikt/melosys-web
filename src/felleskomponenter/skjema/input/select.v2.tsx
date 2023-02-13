@@ -18,7 +18,15 @@ type SelectInnerComponentProps = SelectComponentProps & RegisterHookFormProps;
 const SelectInnerComponent = React.forwardRef<HTMLSelectElement, SelectInnerComponentProps>(
   ({ label, emptyFieldDisabled, emptyFieldText, disabled, children, ...rest }: SelectProps) => {
     return (
-      <Nav.Select label={label} disabled={disabled} onChange={rest.onChange} onBlur={rest.onBlur} name={rest.name}>
+      <Nav.Select
+        label={label}
+        disabled={disabled}
+        onChange={rest.onChange}
+        onBlur={rest.onBlur}
+        name={rest.name}
+        value={rest.value}
+        ref={rest.itemRef}
+      >
         <option disabled={emptyFieldDisabled} value="">
           {emptyFieldText}
         </option>

@@ -4,7 +4,7 @@ import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
@@ -69,7 +69,6 @@ const VurderingVirksomhet = ({
   const {
     setValue,
     handleSubmit,
-    control,
     getValues,
     formState: { isValid: formIsValid },
   } = useForm({
@@ -116,20 +115,13 @@ const VurderingVirksomhet = ({
         <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={hjelpetekst} hjelpetekstClassName="hjelpetekst" />
       </Nav.Typo.Undertittel>
 
-      <Controller
-        name="valgteVirksomheter"
-        control={control}
-        render={({ field }) => (
-          <Mui.Checkboxgruppe
-            {...field}
-            muligeValg={virksomheterListe}
-            onChange={(checkedVirksomheter) =>
-              setValue("valgteVirksomheter", checkedVirksomheter, { shouldValidate: true })
-            }
-            disabled={!redigerbart}
-            defaultValg={lagredeValgtevirksomheter}
-          />
-        )}
+      <Mui.Checkboxgruppe
+        muligeValg={virksomheterListe}
+        onChange={(checkedVirksomheter) =>
+          setValue("valgteVirksomheter", checkedVirksomheter, { shouldValidate: true })
+        }
+        disabled={!redigerbart}
+        defaultValg={lagredeValgtevirksomheter}
       />
 
       <Mui.StegKnapper

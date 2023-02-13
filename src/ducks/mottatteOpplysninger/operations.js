@@ -62,7 +62,11 @@ export function oppdaterState() {
   return (dispatch, getState) => {
     const mottatteOpplysningerData = {
       ...formSelectors.SoknadenFormSelector(getState()).values,
-      ...formSelectors.VurderStartFormSelector(getState()).values,
+      ...{
+        periode: getState().mottatteOpplysninger.data.data.periode,
+        soeknadsland: getState().mottatteOpplysninger.data.data.soeknadsland,
+        trygdedekning: getState().mottatteOpplysninger.data.data.trygdedekning,
+      },
     };
 
     const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
@@ -130,7 +134,6 @@ const lagMottatteOpplysningerData = (sakstype, behandlingstema, mottatteOpplysni
   if (temaForSedGrunnlag(behandlingstema)) {
     return lagSedGrunnlagFelter(mottatteOpplysninger);
   }
-
   switch (sakstype) {
     case MKV.Koder.sakstyper.EU_EOS:
       return lagEØSFelter(mottatteOpplysninger);
@@ -151,7 +154,6 @@ export function lagre() {
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
     const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
     const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
-    console.log({ yooyo: mottatteOpplysninger });
     const data = lagMottatteOpplysningerData(sakstype, behandlingstema, mottatteOpplysninger);
 
     return dispatch(send(bid, { data }));

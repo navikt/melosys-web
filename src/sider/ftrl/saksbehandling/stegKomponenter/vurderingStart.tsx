@@ -96,7 +96,8 @@ export const VurderingStart = ({
   const {
     control,
     setValue,
-    getValues,
+    handleSubmit,
+    watch,
     formState: { isValid: formIsValid, errors },
   } = useForm({
     resolver: yupResolver(vurderingStartSchema),
@@ -105,7 +106,8 @@ export const VurderingStart = ({
       ...initialValues,
     } as FieldValues,
   });
-  const formValues = getValues();
+
+  const formValues = watch();
 
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const [valgteLand, setValgteLand] = useState<string[]>([]);
@@ -128,29 +130,15 @@ export const VurderingStart = ({
     ]);
   };
 
-  // const debouncedOppdatering = useCallback(Utils._debounce(oppdaterLokalMottatteOpplysninger, 500), []);
-
-  useEffect(() => {
-    const erSammeSomInitialVerdier =
-      formValues.fom === initialValues.fom &&
-      formValues.tom === initialValues.tom &&
-      formValues.land === initialValues.land &&
-      formValues.trygdedekning === initialValues.trygdedekning;
-
-    if (!erSammeSomInitialVerdier && formIsValid) {
-      oppdaterLokalMottatteOpplysninger().finally(() => console.log("Ferdig med å oppdatere"));
-    }
-  }, [formIsValid, formValues, initialValues]);
-
   const fortsettHandle = () => {
     const erSammeSomInitialVerdier =
       formValues.fom === initialValues.fom &&
       formValues.tom === initialValues.tom &&
       formValues.land === initialValues.land &&
       formValues.trygdedekning === initialValues.trygdedekning;
-    console.log({ erSammeSomInitialVerdier, formValues, initialValues });
+
     if (!erSammeSomInitialVerdier) {
-      setVisOppfrisk(true);
+      oppdaterLokalMottatteOpplysninger().finally(() => setVisOppfrisk(true));
     } else {
       bekreft();
     }
@@ -241,7 +229,7 @@ export const VurderingStart = ({
 
       <Mui.StegKnapper
         bekreftKnappProps={{
-          onClick: fortsettHandle,
+          onClick: handleSubmit(fortsettHandle),
           disabled: !formIsValid || !redigerbart,
         }}
       />

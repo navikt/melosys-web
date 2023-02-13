@@ -39,7 +39,6 @@ const OppfriskVenter = () => <Spinner />;
 
 const Oppfrisk = ({ oppfrisk, lukk }) => {
   const CACHE_LIFESPAN_MS = 1000;
-
   // Blokkerer visning av denne komponenten frem til oppfrisk() svarer. Resultatet blir cachet.
   usePromise(
     async () => {
