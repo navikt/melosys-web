@@ -129,10 +129,13 @@ const SendBrev = ({
     });
   }, []);
 
+  const hentUtkast = () =>
+    Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
+
   useEffect(() => {
     // Når toggle melosys.utkast fjernes kan denne flyttes opp til useEffect onMount
     if (utkastToggleEnabled) {
-      Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
+      hentUtkast();
     }
   }, [utkastToggleEnabled]);
 
@@ -317,14 +320,23 @@ const SendBrev = ({
       .then(() => {
         setBrevSendt(true);
         oppdaterBehandling();
+        slettUtkast();
         resetFormOgFritekstvedleggState();
-        if (utkastToggleEnabled) {
-          Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
-        }
       })
       .catch(() => {
         setFeil("Brevet er ikke sendt. Det skjedde en feil.");
       });
+  };
+
+  const slettUtkast = () => {
+    if (formValues?.aktivtUtkast?.utkastBrevID) {
+      Api.Brevutkast.slettBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID)
+        .then(() => {
+          changeField("aktivtUtkast", null);
+          hentUtkast();
+        })
+        .catch(() => setFeil("Utkastet er ikke slettet. Det skjedde en feil"));
+    }
   };
 
   const forkastBrev = () => {
@@ -332,14 +344,7 @@ const SendBrev = ({
     setBrevSendt(false);
     setFeil(undefined);
     setMuligeMottakereFeil(undefined);
-    if (formValues?.aktivtUtkast?.utkastBrevID) {
-      Api.Brevutkast.slettBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID)
-        .then(() => {
-          changeField("aktivtUtkast", null);
-          Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
-        })
-        .catch(() => setFeil("Utkastet er ikke slettet. Det skjedde en feil"));
-    }
+    slettUtkast();
   };
 
   const resetFormOgFritekstvedleggState = () => {
@@ -406,8 +411,7 @@ const SendBrev = ({
     )
       .then(() => {
         resetFormOgFritekstvedleggState();
-        changeField("aktivtUtkast", null);
-        Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
+        hentUtkast();
       })
       .catch(() => setFeil("Utkastet ble ikke lagret. Det skjedde en feil."));
   };
