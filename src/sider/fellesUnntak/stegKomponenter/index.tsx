@@ -1,4 +1,4 @@
 import VurderingInngang from "./vurderingInngang";
-import RegistrerUnntaksperiode from "./registrerUnntaksperiode";
+import UnntakMedlemskap from "./unntakMedlemskap";
 
-export { VurderingInngang, RegistrerUnntaksperiode };
+export { VurderingInngang, UnntakMedlemskap };

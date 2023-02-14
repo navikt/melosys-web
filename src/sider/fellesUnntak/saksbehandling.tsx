@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// eslint-disable-file @typescript-eslint/no-unused-vars
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
@@ -15,14 +18,10 @@ import { fagsakOperations } from "../../ducks/fagsaker";
 import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
-// import { dokumenterOperations } from "../../ducks/dokumenter";
 import "./saksbehandling.css";
 import { dokumenterOperations } from "../../ducks/dokumenter";
-// import StegVelger from "./stegVelger";
-import Stegvelger, { STEG } from "../../felleskomponenter/stegvelger";
-import MKV from "../../melosyskodeverk";
-import { stegMap } from "../ftrl/saksbehandling/stegMap";
 import { navigeringOperations } from "../../ducks/navigering";
+import StegVelger from "./stegVelger";
 
 interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
@@ -44,9 +43,9 @@ const Saksbehandling = ({
   const saksnummer = match?.params?.saksnr;
   const arbeidsland = useSelector(mottatteOpplysningerSelectors.SoknadslandKTSelector);
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
+  const lovvalgsperiodeTom = Utils.dato.formatterDatoTilNorsk(useSelector(lovvalgsperioderSelectors.TomDatoSelector));
   const mottatteOpplysningerPeriodeFom = Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.fom);
   const mottatteOpplysningerPeriodeTom = Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.tom);
-  const lovvalgsperiodeTom = Utils.dato.formatterDatoTilNorsk(useSelector(lovvalgsperioderSelectors.TomDatoSelector));
   const redigerbart = useSelector((state) => redigerbartSelectors.RedigerbartSelector(state));
 
   const tilForsiden = () => dispatch(navigeringOperations.tilForsiden());
@@ -83,7 +82,7 @@ const Saksbehandling = ({
   };
 
   if (Utils._isNil(redigerbart)) return null;
-  if (!behandlingID || behandlingID < 0) return null;
+  if (!behandlingID) return null;
   if (!saksopplysningerLastet) return null;
 
   return (
@@ -94,14 +93,8 @@ const Saksbehandling = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                <Stegvelger
-                  behandlingID={behandlingID}
-                  begrunnelser={MKV.KTObjects.begrunnelser}
-                  tilForsiden={tilForsiden}
-                  stegMap={stegMap}
-                  forsteSteg={STEG.INNGANG}
-                  sakstype={MKV.Koder.sakstyper.EU_EOS} // TODO: Dynamisk sakstype!
-                />
+                {/* Stegvelger  */}
+                <StegVelger />
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">

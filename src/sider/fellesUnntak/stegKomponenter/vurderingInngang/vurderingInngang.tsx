@@ -18,7 +18,6 @@ const VurderingInngang = () => {
         <option value="test1">test1</option>
         <option value="test2">test2</option>
       </select>
-
       <input type="submit" />
     </form>
   );

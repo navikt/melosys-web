@@ -12,8 +12,6 @@ interface AktueltSteg {
   vedtakSteg?: boolean;
   komponent: any;
   status: string;
-  data?: object;
-  handlers?: object;
 }
 
 // TODO: Er denne komponenten nødvendig? Kan virke som trygdeavtale sin måte å gjøre det på ikke passer inn her.

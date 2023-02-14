@@ -1,5 +1,5 @@
 import { FANE_STATUS, STEG } from "../../../felleskomponenter/stegvelger";
-import { RegistrerUnntaksperiode } from "../stegKomponenter";
+import { UnntakMedlemskap } from "../stegKomponenter";
 import Steg from "../../../felleskomponenter/stegvelger/stegMotor/steg";
 
 class RegistreringUnntaksperiode extends Steg {
@@ -14,7 +14,7 @@ class RegistreringUnntaksperiode extends Steg {
     ];
     this.id = STEG.INNGANG;
     this.tittel = "Inngang";
-    this.komponent = RegistrerUnntaksperiode;
+    this.komponent = UnntakMedlemskap;
     this.samleRelevanteData = (_propsLight) => ({
       // TODO: Sjekk om dette stemmer
       redigerbart: _propsLight.generiskStegRedigerbart,
