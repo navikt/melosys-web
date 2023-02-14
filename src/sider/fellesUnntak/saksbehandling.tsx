@@ -27,6 +27,8 @@ interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
   behandlingOppfriskes: boolean;
   startOgVisOppfriskModal: () => void;
+  annenBehandlingOppfriskes: boolean;
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger: () => {};
 }
 
 const Saksbehandling = ({
@@ -35,6 +37,8 @@ const Saksbehandling = ({
   visOppfriskModal,
   behandlingOppfriskes,
   startOgVisOppfriskModal,
+  annenBehandlingOppfriskes,
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
 }: SaksbehandlingProps) => {
   const dispatch = useDispatch();
 
@@ -46,8 +50,10 @@ const Saksbehandling = ({
   const lovvalgsperiodeTom = Utils.dato.formatterDatoTilNorsk(useSelector(lovvalgsperioderSelectors.TomDatoSelector));
   const mottatteOpplysningerPeriodeFom = Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.fom);
   const mottatteOpplysningerPeriodeTom = Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.tom);
-  const redigerbart = useSelector((state) => redigerbartSelectors.RedigerbartSelector(state));
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
 
+  console.log("redigerbart", redigerbart);
   const tilForsiden = () => dispatch(navigeringOperations.tilForsiden());
 
   useEffect(() => {
@@ -84,7 +90,7 @@ const Saksbehandling = ({
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID) return null;
   if (!saksopplysningerLastet) return null;
-
+  console.log("registeropplysningerHentet", registeropplysningerHentet);
   return (
     <>
       <Informasjonlinje />
@@ -94,8 +100,15 @@ const Saksbehandling = ({
             <Nav.Row>
               <Nav.Column xs="7">
                 {/* Stegvelger  */}
-                <StegVelger />
-                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+                <StegVelger
+                  annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+                  lagreMottatteOpplysningerOgOppfriskSaksopplysninger={
+                    lagreMottatteOpplysningerOgOppfriskSaksopplysninger
+                  }
+                />
+                {registeropplysningerHentet && (
+                  <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+                )}
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
