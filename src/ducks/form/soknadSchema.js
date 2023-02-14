@@ -22,7 +22,8 @@ const lagAndelMellomNullOgHundreMelding = (feltbeskrivelse) =>
 const tomStringTilNull = (value, originalValue) => (originalValue === "" ? null : value);
 
 const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
-  behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
+  behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND &&
+  behandlingstema === MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR;
 
 const erTrygdeavtaleSak = (sakstype) => sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE;
 
