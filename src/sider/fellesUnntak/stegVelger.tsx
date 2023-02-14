@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import StegLinje from "../../felleskomponenter/stegLinje";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
