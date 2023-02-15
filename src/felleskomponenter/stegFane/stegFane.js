@@ -8,12 +8,12 @@ import "./stegFane.css";
 
 // Stegfanen er komponenten som vises for hvert steg
 const StegFane = (props) => {
-  const { faneData } = props;
+  const { id, faneData, rest } = props;
   const componentProps = {
     ...faneData.data,
     ...faneData.handlers,
     aktivtSteg: faneData.aktivtSteg,
-    ...faneData.komponentProps,
+    ...rest,
   };
   const stegFaneKlasse = classnames({
     stegFane: true,
@@ -22,7 +22,7 @@ const StegFane = (props) => {
   });
   return (
     <Nav.Panel className={stegFaneKlasse}>
-      <div id={props.id}>{React.createElement(faneData.komponent, componentProps)}</div>
+      <div id={id}>{React.createElement(faneData.komponent, componentProps)}</div>
     </Nav.Panel>
   );
 };
@@ -30,6 +30,11 @@ const StegFane = (props) => {
 StegFane.propTypes = {
   faneData: PT.object.isRequired,
   id: PT.string.isRequired,
+  rest: PT.object,
+};
+
+StegFane.defaultProps = {
+  rest: {},
 };
 
 export default StegFane;

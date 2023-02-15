@@ -5,11 +5,8 @@ import StegFane from "../../felleskomponenter/stegFane";
 import { UnntakMedlemskap, VurderingInngang } from "./stegKomponenter";
 import * as Utils from "../../utils";
 
-interface AktueltStegData {
-  id: string;
-}
-
 interface AktueltSteg {
+  id: string;
   tittel: string;
   stegPosisjon: number;
   aktivtSteg?: boolean;
@@ -17,53 +14,46 @@ interface AktueltSteg {
   komponent: any;
   status: string;
   handlers?: object;
-  data: AktueltStegData;
+  data?: object;
 }
 
 interface StegVelgerProps {
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger: () => void;
   annenBehandlingOppfriskes: boolean;
 }
+
 const StegVelger = ({
   annenBehandlingOppfriskes,
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
 }: StegVelgerProps) => {
   const [aktivtStegIndex, setAktivtStegIndex] = useState(0);
   const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   console.log(annenBehandlingOppfriskes);
+
   const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean) => {
-    console.log("NÅ OPPDATERER VI STATUS");
-    console.log("Aktuelle steg NÅ: ", aktuelleSteg);
-
-    const nyeAktuelleSteg = aktuelleSteg?.map((steg: any) =>
-      steg.id === stegId ? { ...steg, status: isSchemaValid ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET } : steg
+    setAktuellesteg(
+      aktuelleSteg?.map((steg: any) =>
+        steg.id === stegId ? { ...steg, status: isSchemaValid ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET } : steg
+      )
     );
-    console.log("AKTUELLE STEG x2: ", nyeAktuelleSteg);
-
-    setAktuellesteg(nyeAktuelleSteg);
   };
 
   const bekreft = () => {
-    console.log("berkreft trykket");
-
     setAktuellesteg(
       aktuelleSteg?.map((steg: any) => ({ ...steg, aktivtSteg: steg.stegPosisjon === aktivtStegIndex + 1 }))
     );
   };
 
   const tilbake = () => {
-    console.log("tilbakeknapp trykket");
     setAktuellesteg(
       aktuelleSteg?.map((steg: any) => ({ ...steg, aktivtSteg: steg.stegPosisjon === aktivtStegIndex - 1 }))
     );
   };
 
   useEffect(() => {
-    console.log("jojo1");
-
     setAktuellesteg([
       {
+        id: "1",
         stegPosisjon: 0,
         status: FANE_STATUS.UBEHANDLET,
         aktivtSteg: true,
@@ -71,35 +61,25 @@ const StegVelger = ({
         tittel: "Inngang",
         komponent: VurderingInngang,
         handlers: {
-          oppdaterStatus,
           bekreft,
           tilbake,
           innhentRegisteropplysninger: lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
         },
-        data: {
-          id: "1",
-        },
       },
       {
+        id: "2",
         stegPosisjon: 1,
         status: FANE_STATUS.UBEHANDLET,
         aktivtSteg: false,
         vedtakSteg: false,
         tittel: "Unntak medlemskap",
         komponent: UnntakMedlemskap,
-        data: {
-          id: "2",
-        },
       },
     ]);
     console.log("jojo");
   }, []);
 
-  console.log("aktuelleSteg: ", aktuelleSteg);
-
   const handleKlikk = (stegIndex: number) => {
-    console.log("handleKlikk: ", aktuelleSteg);
-
     setAktivtStegIndex(stegIndex);
     setAktuellesteg(aktuelleSteg?.map((steg: any) => ({ ...steg, aktivtSteg: steg.stegPosisjon === stegIndex })));
   };
@@ -111,7 +91,7 @@ const StegVelger = ({
           {/* eslint-disable-next-line no-return-assign */}
           <StegLinje steg={aktuelleSteg} stegKlikk={handleKlikk} />
           {aktuelleSteg.map((steg) => (
-            <StegFane faneData={steg} id={steg.data.id} key={steg.data.id} />
+            <StegFane faneData={steg} id={steg.id} key={steg.id} rest={{ oppdaterStatus: oppdaterStatus(steg.id) }} />
           ))}
         </div>
       )}

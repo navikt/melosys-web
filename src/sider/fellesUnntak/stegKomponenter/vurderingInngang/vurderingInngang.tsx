@@ -12,20 +12,19 @@ import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import vurderingInngangSchema from "./vurderingInngangSchema";
-import "./vurderingInngang.css";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
 import { visMenypanel } from "../../../../ducks/menypanel/operations";
 import { navigeringOperations } from "../../../../ducks/navigering";
 
 interface VurderingInngangProps {
-  oppdaterStatus: (id: string, isValid: boolean) => void;
+  oppdaterStatus: (isValid: boolean) => void;
   bekreft: () => void;
   innhentRegisteropplysninger: () => void;
   id: string;
 }
 
-const VurderingInngang = ({ id, bekreft, oppdaterStatus, innhentRegisteropplysninger }: VurderingInngangProps) => {
+const VurderingInngang = ({ bekreft, oppdaterStatus, innhentRegisteropplysninger }: VurderingInngangProps) => {
   const dispatch = useDispatch();
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const tilForsiden = () => dispatch(navigeringOperations.tilForsiden());
@@ -38,11 +37,8 @@ const VurderingInngang = ({ id, bekreft, oppdaterStatus, innhentRegisteropplysni
   });
   const formValues = getValues();
 
-  console.log("formState", formState);
-
   useEffect(() => {
-    console.log("useEffect", formState?.isValid);
-    oppdaterStatus(id, formState.isValid);
+    oppdaterStatus(formState.isValid);
   }, [formState?.isValid]);
 
   const onSubmit = (data: any) => oppdaterLokalMottatteOpplysninger(data);
