@@ -22,7 +22,7 @@ import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 
 import { MatchParams } from "../../@types";
-import StegVelger from "./stegVelger";
+import Stegvelger from "./stegvelger";
 import "./saksbehandling.css";
 
 interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
@@ -94,8 +94,7 @@ const Saksbehandling = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {/* Stegvelger  */}
-                <StegVelger oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger} />
+                <Stegvelger oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger} />
                 {registeropplysningerHentet && (
                   <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
                 )}

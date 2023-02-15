@@ -12,11 +12,13 @@ import * as Utils from "../../../../utils";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
+import "./vurderingInngang.css";
 
 interface VurderingInngangProps {
   oppdaterStatus: (isValid: boolean) => void;
@@ -31,6 +33,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
   const periode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const soknadslandkoder = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const lovvalgsland = useSelector(lovvalgsperioderSelectors.LovvalgslandSelector);
+  const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
 
   const { control, getValues, formState } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
@@ -58,6 +61,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
   }, [formState?.isValid]);
 
   const skalHenteRegisteropplysninger =
+    !registeropplysningerHentet ||
     formValues?.fom !== initialFormState?.fom ||
     formValues?.tom !== initialFormState?.tom ||
     formValues?.avsenderland !== initialFormState?.avsenderland ||
@@ -110,9 +114,10 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
 
   return (
     <div className="vurderingInngang">
+      <Nav.Typo.Undertittel className="undertittel">Oppgi opplysninger fra attesten</Nav.Typo.Undertittel>
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
-          <Nav.Column xs="3">
+          <Nav.Column xs="2">
             <Skjema.DatovelgerV2
               label="Fra og med:"
               name="fom"
@@ -122,7 +127,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
               onChange={lagreFom}
             />
           </Nav.Column>
-          <Nav.Column xs="3">
+          <Nav.Column xs="2">
             <Skjema.DatovelgerV2
               label="Til og med:"
               name="tom"
@@ -132,7 +137,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
               onChange={lagreTom}
             />
           </Nav.Column>
-          <Nav.Column xs="3">
+          <Nav.Column xs="4">
             <Skjema.SelectV2
               name="avsenderland"
               control={control}
@@ -150,7 +155,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
             </Skjema.SelectV2>
           </Nav.Column>
           {sakstype === MKV.Koder.sakstyper.EU_EOS && (
-            <Nav.Column xs="3">
+            <Nav.Column xs="4">
               <Skjema.SelectV2
                 name="lovvalgsland"
                 control={control}
@@ -170,6 +175,11 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
           )}
         </Nav.Row>
       </Nav.Fieldset>
+      {sakstype === MKV.Koder.sakstyper.EU_EOS && (
+        <Nav.AlertStripeInfo className="alert">
+          Hvis avsenderlandet ikke er lovvalgsland, må du endre lovvalgsland.
+        </Nav.AlertStripeInfo>
+      )}
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreftHandle,

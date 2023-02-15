@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 
 import * as Utils from "../../../utils/dato";
+import * as Nav from "../../../navFrontend";
 
 import Datovelger from "../../datovelger";
 
@@ -25,7 +26,7 @@ const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatove
     return (
       <div className="skjemaelement__datovelger" {...rest}>
         <Datovelger
-          label={label}
+          label={<Nav.Typo.Element>{label}</Nav.Typo.Element>}
           onChange={(nyDato) => rest.onChange(Utils.dateTilNorskString(nyDato))}
           onBlur={rest.onBlur}
           value={Utils.norskStringTilDate(rest.value)}

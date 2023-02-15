@@ -17,11 +17,11 @@ interface AktueltSteg {
   data?: object;
 }
 
-interface StegVelgerProps {
+interface StegvelgerProps {
   oppfriskOgLastInnSaksopplysninger: () => void;
 }
 
-const StegVelger = ({ oppfriskOgLastInnSaksopplysninger }: StegVelgerProps) => {
+const Stegvelger = ({ oppfriskOgLastInnSaksopplysninger }: StegvelgerProps) => {
   const [aktivtStegIndex, setAktivtStegIndex] = useState(0);
   const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([]);
 
@@ -99,4 +99,4 @@ const StegVelger = ({ oppfriskOgLastInnSaksopplysninger }: StegVelgerProps) => {
   );
 };
 
-export default StegVelger;
+export default Stegvelger;
