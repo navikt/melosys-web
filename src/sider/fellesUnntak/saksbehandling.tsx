@@ -1,27 +1,29 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// eslint-disable-file @typescript-eslint/no-unused-vars
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
-import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
+
+import MKV from "../../melosyskodeverk";
+import * as KV from "../../kodeverk";
 import * as Nav from "../../navFrontend";
-import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
-import Oppsummering from "../../felleskomponenter/oppsummering";
-import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
-import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
 import * as Utils from "../../utils";
+
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
-import { MatchParams } from "../../@types";
-import { fagsakOperations } from "../../ducks/fagsaker";
-import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
+import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
-import "./saksbehandling.css";
 import { dokumenterOperations } from "../../ducks/dokumenter";
-import { navigeringOperations } from "../../ducks/navigering";
+import { fagsakOperations } from "../../ducks/fagsaker";
+
+import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
+import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
+import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
+import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
+import Oppsummering from "../../felleskomponenter/oppsummering";
+
+import { MatchParams } from "../../@types";
 import StegVelger from "./stegVelger";
+import "./saksbehandling.css";
 
 interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
@@ -43,16 +45,11 @@ const Saksbehandling = ({
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const saksnummer = match?.params?.saksnr;
-  const arbeidsland = useSelector(mottatteOpplysningerSelectors.SoknadslandKTSelector);
+  const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandKTSelector);
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
-  const lovvalgsperiodeTom = Utils.dato.formatterDatoTilNorsk(useSelector(lovvalgsperioderSelectors.TomDatoSelector));
-  const mottatteOpplysningerPeriodeFom = Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.fom);
-  const mottatteOpplysningerPeriodeTom = Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.tom);
+  const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
-
-  console.log("redigerbart", redigerbart);
-  const tilForsiden = () => dispatch(navigeringOperations.tilForsiden());
 
   useEffect(() => {
     lastInnSaksopplysninger();
@@ -105,11 +102,12 @@ const Saksbehandling = ({
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  arbeidsland={arbeidsland}
-                  lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom || ""}
-                  lovvalgsperiodeTom={lovvalgsperiodeTom || mottatteOpplysningerPeriodeTom || ""}
-                  mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
-                  mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
+                  arbeidsland={soknadsland}
+                  lovvalgsland={KV.kodeTilObjekt(lovvalgsperiode.lovvalgsland, MKV.KTObjects.landkoder)}
+                  lovvalgsperiodeFom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato)}
+                  lovvalgsperiodeTom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato)}
+                  mottatteOpplysningerPeriodeFom={Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.fom)}
+                  mottatteOpplysningerPeriodeTom={Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.tom)}
                 />
                 <SaksoversiktLenke />
                 <SideDialog faner={defaultFaner} />

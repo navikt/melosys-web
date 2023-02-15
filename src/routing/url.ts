@@ -95,6 +95,33 @@ export const lagUrl = (
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
 };
 
+export const harUnntakFlyt = (
+  sakstype: string,
+  sakstema: string,
+  behandlingstema: string,
+  registreringAnmodningUnntakToggleEnabled: boolean = false
+) => {
+  if (sakstema !== MKV.Koder.sakstemaer.UNNTAK || !registreringAnmodningUnntakToggleEnabled) {
+    return false;
+  }
+
+  if (
+    sakstype === TRYGDEAVTALE &&
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
+  ) {
+    return true;
+  }
+
+  if (sakstype === TRYGDEAVTALE && behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK) {
+    return true;
+  }
+
+  if (sakstype === EU_EOS && behandlingstema === MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR) {
+    return true;
+  }
+  return false;
+};
+
 export const skalViseTomFlyt = (
   sakstype: string,
   sakstema: string,
@@ -104,6 +131,8 @@ export const skalViseTomFlyt = (
   ikkeYrkesaktivFlytToggleEnabled: boolean = false,
   registreringAnmodningUnntakToggleEnabled: boolean = false
 ) => {
+  if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringAnmodningUnntakToggleEnabled)) return false;
+
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
   }
@@ -115,29 +144,12 @@ export const skalViseTomFlyt = (
   }
   if (
     sakstype === TRYGDEAVTALE &&
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL &&
-    !registreringAnmodningUnntakToggleEnabled
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
   ) {
     return true;
   }
 
   if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV && ikkeYrkesaktivFlytToggleEnabled) {
-    return false;
-  }
-
-  if (
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK &&
-    sakstype === TRYGDEAVTALE &&
-    registreringAnmodningUnntakToggleEnabled
-  ) {
-    return false;
-  }
-
-  if (
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
-    sakstype === EU_EOS &&
-    registreringAnmodningUnntakToggleEnabled
-  ) {
     return false;
   }
 
