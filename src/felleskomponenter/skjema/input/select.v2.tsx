@@ -11,6 +11,7 @@ interface SelectComponentProps extends Nav.SelectProps {
   emptyFieldText?: string;
   disabled?: boolean;
   children: React.ReactNode | React.ReactNode[];
+  onChange?: (value: any) => void;
 }
 
 type SelectInnerComponentProps = SelectComponentProps & RegisterHookFormProps;
@@ -18,7 +19,14 @@ type SelectInnerComponentProps = SelectComponentProps & RegisterHookFormProps;
 const SelectInnerComponent = React.forwardRef<HTMLSelectElement, SelectInnerComponentProps>(
   ({ label, emptyFieldDisabled, emptyFieldText, disabled, children, ...rest }: SelectProps) => {
     return (
-      <Nav.Select label={label} disabled={disabled} onChange={rest.onChange} onBlur={rest.onBlur} name={rest.name}>
+      <Nav.Select
+        label={label}
+        disabled={disabled}
+        onChange={rest.onChange}
+        onBlur={rest.onBlur}
+        name={rest.name}
+        value={rest.value}
+      >
         <option disabled={emptyFieldDisabled} value="">
           {emptyFieldText}
         </option>
@@ -42,6 +50,10 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(({ name, control
           emptyFieldText={rest.emptyFieldText}
           emptyFieldDisabled={rest.emptyFieldDisabled}
           disabled={rest.disabled}
+          onChange={(event: any) => {
+            field.onChange(event);
+            if (rest.onChange) rest.onChange(event?.target?.value);
+          }}
         >
           {rest.children}
         </SelectInnerComponent>

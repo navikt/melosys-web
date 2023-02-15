@@ -88,7 +88,7 @@ const Saksbehandling = ({
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID) return null;
   if (!saksopplysningerLastet) return null;
-  console.log("registeropplysningerHentet", registeropplysningerHentet);
+
   return (
     <>
       <Informasjonlinje />
@@ -108,8 +108,8 @@ const Saksbehandling = ({
                   arbeidsland={arbeidsland}
                   lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom || ""}
                   lovvalgsperiodeTom={lovvalgsperiodeTom || mottatteOpplysningerPeriodeTom || ""}
-                  mottatteOpplysningerPeriodeFom="asd"
-                  mottatteOpplysningerPeriodeTom="asd"
+                  mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
+                  mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />
                 <SaksoversiktLenke />
                 <SideDialog faner={defaultFaner} />

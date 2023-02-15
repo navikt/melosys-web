@@ -15,6 +15,7 @@ interface DatovelgerComponentProps {
   minDate?: Date;
   maxDate?: Date;
   feil?: string;
+  onChange?: (dato: string) => void;
 }
 
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;
@@ -56,6 +57,10 @@ const DatovelgerV2 = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
             bredde={rest.bredde}
             minDate={rest.minDate}
             maxDate={rest.maxDate}
+            onChange={(value: any) => {
+              field.onChange(value);
+              if (rest.onChange) rest.onChange(value);
+            }}
           />
         )}
       />

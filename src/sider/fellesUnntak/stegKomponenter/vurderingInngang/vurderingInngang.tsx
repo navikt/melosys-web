@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useCallback, useEffect, useState } from "react";
+import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -10,7 +10,8 @@ import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 
-import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
@@ -27,11 +28,20 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
   const dispatch = useDispatch();
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const periode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
+  const soknadslandkoder = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  const lovvalgsland = useSelector(lovvalgsperioderSelectors.LovvalgslandSelector);
 
   const { control, getValues, formState } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
     context: { sakstype },
     mode: "onChange",
+    defaultValues: {
+      fom: Utils.dato.formatterDatoTilNorsk(periode?.fom),
+      tom: Utils.dato.formatterDatoTilNorsk(periode?.tom),
+      avsenderland: soknadslandkoder[0],
+      lovvalgsland,
+    } as FieldValues,
   });
   const formValues = getValues();
 
@@ -53,18 +63,34 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
     formValues?.avsenderland !== initialFormState?.avsenderland ||
     formValues?.lovvalgsland !== initialFormState?.lovvalgsland;
 
-  const oppdaterLokalMottatteOpplysninger = (data: any) => {
-    const fom = Utils.dato.formatterDatoTilISO(data.periodeFraOgMed);
-    const tom = Utils.dato.formatterDatoTilISO(data.periodeFraOgMed);
+  const oppdaterPeriode = (data: { fom: string; tom: string }) => {
+    const fom = Utils.dato.formatterDatoTilISO(data.fom);
+    const tom = Utils.dato.formatterDatoTilISO(data.tom);
     dispatch(
       mottatteOpplysningerOperations.oppdaterPeriode({
-        fom,
-        tom,
+        fom: fom === "Invalid date" ? "" : fom,
+        tom: tom === "Invalid date" ? "" : tom,
       })
     );
-    dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(["NO"], false));
   };
-  console.log(oppdaterLokalMottatteOpplysninger);
+  const debouncedOppdaterPeriode = useCallback(Utils._debounce(oppdaterPeriode, 500), []);
+
+  const lagreFom = (fom: string) => {
+    debouncedOppdaterPeriode({ fom, tom: formValues.tom });
+  };
+
+  const lagreTom = (tom: string) => {
+    debouncedOppdaterPeriode({ fom: formValues.fom, tom });
+  };
+
+  const lagreAvsenderland = (valgtLand: string) => {
+    dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(valgtLand ? [valgtLand] : [], false));
+  };
+
+  const lagreLovvalgsperiode = (valgtLand: string) => {
+    dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState({ lovvalgsland: valgtLand }));
+    dispatch(lovvalgsperioderOperations.lagre());
+  };
 
   const bekreftHandle = async () => {
     setInitialFormState({
@@ -93,6 +119,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
               feil={(formState.errors.fom?.message as any)?.melding}
               disabled={!redigerbart}
               control={control}
+              onChange={lagreFom}
             />
           </Nav.Column>
           <Nav.Column xs="3">
@@ -102,6 +129,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
               feil={(formState.errors.tom?.message as any)?.melding}
               disabled={!redigerbart}
               control={control}
+              onChange={lagreTom}
             />
           </Nav.Column>
           <Nav.Column xs="3">
@@ -112,6 +140,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
               emptyFieldText="Velg"
               emptyFieldDisabled={!!formValues.avsenderland}
               disabled={!redigerbart}
+              onChange={lagreAvsenderland}
             >
               {MKV.KTObjects.landkoder.map((item: KTObject) => (
                 <option key={item.kode} value={item.kode}>
@@ -127,8 +156,9 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
                 control={control}
                 label="Lovvalgsland"
                 emptyFieldText="Velg"
-                emptyFieldDisabled={!!formValues.avsenderland}
+                emptyFieldDisabled={!!formValues.lovvalgsland}
                 disabled={!redigerbart}
+                onChange={lagreLovvalgsperiode}
               >
                 {MKV.KTObjects.landkoder.map((item: KTObject) => (
                   <option key={item.kode} value={item.kode}>
