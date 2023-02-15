@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingBestemmelse from "../stegKomponenter/vurderingBestemmelse";
+import { VurderingBestemmelse } from "../stegKomponenter/vurderingBestemmelse";
 
 class Bestemmelse extends Steg {
   constructor(propsLight, stegPosisjon) {

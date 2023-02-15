@@ -1,6 +1,7 @@
-import React, { ChangeEventHandler, Fragment, useCallback, useEffect, useState } from "react";
+/* eslint-disable */
+import { ChangeEventHandler, Fragment, useCallback, useContext, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
-import { connect, ConnectedProps } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 
@@ -10,7 +11,7 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { vilkarSelectors } from "../../../../ducks/vilkar";
+import { vilkarOperations, vilkarSelectors } from "../../../../ducks/vilkar";
 import { lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -19,8 +20,11 @@ import { finnTermFraListe, termFraNestedKTObject } from "../../../../kodeverk";
 
 import { BOOLSK_STRING } from "../../../../constants";
 import "./vurderingBestemmelse.css";
+import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
+import { SaksbehandlingFTRLContext, VilkarOgBegrunnelser } from "../saksbehandlingFTRLContext";
+import { FellesHandlersContext } from "../../../../contexts";
 
-const mapStateToProps = (state: RootState) => ({
+const komponentState = (state: RootState) => ({
   vilkarListe: vilkarSelectors.VilkarSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   bestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
@@ -28,54 +32,26 @@ const mapStateToProps = (state: RootState) => ({
   begrunnelserKodeverk: folketrygdenkodeverkSelectors.BegrunnelserSelector(state),
 });
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterBestemmelse: (bestemmelse: string) =>
     dispatch(medlemskapsperioderOperations.oppdaterBestemmelse(bestemmelse)),
   opprettMedlemskapsperiodeFraBestemmelse: () =>
     dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse()),
+  lagreVilkar: () => dispatch(vilkarOperations.lagre()),
 });
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-interface VilkarOgBegrunnelser {
-  vilkaar: string;
-  muligeBegrunnelser: string[];
-}
-
-interface BestemmelsesVilkar {
-  bestemmelse: string;
-  vilkårOgBegrunnelser: VilkarOgBegrunnelser[];
-}
-
 interface Props {
   bekreft: () => void;
-  bestemmelseVilkar: BestemmelsesVilkar[];
-  oppdater: () => void;
   tilbake: () => void;
-  redigerbart: boolean;
-  oppdaterData: (data: any) => void;
-  vilkar: [];
-  lagreVilkar: () => void;
 }
 
-const VurderingBestemmelse = ({
-  bekreft,
-  bestemmelseVilkar,
-  tilbake,
-  redigerbart,
-  oppdaterData,
-  begrunnelserKodeverk,
-  vilkaarKodeverk,
-  oppdaterBestemmelse,
-  oppdater,
-  opprettMedlemskapsperiodeFraBestemmelse,
-  vilkarListe,
-  bestemmelse,
-  lagreVilkar,
-}: Props & PropsFromRedux) => {
-  console.log({ vilkarListe });
+export const VurderingBestemmelse = ({ bekreft, tilbake }: Props) => {
+  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
+  const { bestemmelseVilkar } = useContext(SaksbehandlingFTRLContext);
+  const dispatch = useDispatch();
+  const { vilkarListe, bestemmelse, vilkaarKodeverk, begrunnelserKodeverk } = useSelector((state: RootState) =>
+    komponentState(state)
+  );
+  const { oppdaterBestemmelse, opprettMedlemskapsperiodeFraBestemmelse, lagreVilkar } = komponentDispatch(dispatch);
   const [valgtBestemmelse, setValgtBestemmelse] = useState("");
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
   const [valgteVilkar, setValgteVilkar] = useState(new Map());
@@ -159,7 +135,6 @@ const VurderingBestemmelse = ({
   const Vilkaar = ({ vilkaar, muligeBegrunnelser }: VilkarOgBegrunnelser) => {
     const hjelpetekstForVilkaar = hjelpetekster.get(vilkaar);
     const valgteVilkarForVilkaar = valgteVilkar.get(`${vilkaar}`);
-    console.log({ valgteVilkarForVilkaar });
     return (
       <Fragment>
         <Nav.Fieldset
@@ -277,5 +252,3 @@ const VurderingBestemmelse = ({
     </div>
   );
 };
-
-export default connector(VurderingBestemmelse);

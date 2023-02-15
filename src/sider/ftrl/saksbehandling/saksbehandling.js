@@ -1,3 +1,4 @@
+/*eslint-disable */
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
@@ -38,6 +39,8 @@ import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { stegMap } from "./stegMap";
 import "./saksbehandling.css";
+import { StegvelgerFTRL } from "../../../felleskomponenter/stegvelger/StegvelgerFTRL";
+import { SaksbehandlingFTRLContext, SaksbehandlingFTRLContextProvider } from "./saksbehandlingFTRLContext";
 
 const Saksbehandling = ({
   annenBehandlingOppfriskes,
@@ -165,7 +168,6 @@ const Saksbehandling = ({
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
-
   return (
     <>
       <Informasjonlinje />
@@ -179,22 +181,25 @@ const Saksbehandling = ({
                     {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
                     {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
                     {visStegVelger && (
-                      <Stegvelger
-                        annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-                        behandlingID={behandlingID}
-                        lagreAvklartefaktaHandler={lagreAvklartefakta}
-                        lagreMottatteOpplysningerOgOppfriskSaksopplysninger={
-                          lagreMottatteOpplysningerOgOppfriskSaksopplysninger
-                        }
-                        lagreVilkarHandler={lagreVilkar}
-                        begrunnelser={MKV.KTObjects.begrunnelser}
-                        landkoder={landkoder}
-                        bestemmelser={bestemmelser}
-                        tilForsiden={tilForsiden}
-                        stegMap={stegMap}
-                        forsteSteg={STEG.START}
-                        sakstype={MKV.Koder.sakstyper.FTRL}
-                      />
+                      <SaksbehandlingFTRLContext.Provider value={{ bestemmelseVilkar: bestemmelser }}>
+                        <StegvelgerFTRL />
+                      </SaksbehandlingFTRLContext.Provider>
+                      // <Stegvelger
+                      //   annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+                      //   behandlingID={behandlingID}
+                      //   lagreAvklartefaktaHandler={lagreAvklartefakta}
+                      //   lagreMottatteOpplysningerOgOppfriskSaksopplysninger={
+                      //     lagreMottatteOpplysningerOgOppfriskSaksopplysninger
+                      //   }
+                      //   lagreVilkarHandler={lagreVilkar}
+                      //   begrunnelser={MKV.KTObjects.begrunnelser}
+                      //   landkoder={landkoder}
+                      //   bestemmelser={bestemmelser}
+                      //   tilForsiden={tilForsiden}
+                      //   stegMap={stegMap}
+                      //   forsteSteg={STEG.START}
+                      //   sakstype={MKV.Koder.sakstyper.FTRL}
+                      // />
                     )}
                   </>
                 ) : (

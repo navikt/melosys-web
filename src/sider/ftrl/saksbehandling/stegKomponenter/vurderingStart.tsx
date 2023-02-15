@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
+import { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
@@ -17,13 +17,13 @@ import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetek
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { menypanelOperations } from "../../../../ducks/menypanel";
-import { formSelectors } from "../../../../ducks/form";
 
 import vurderingStartSchema from "./vurderingStartSchema";
 import "./vurderingStart.css";
 import MultiSelect from "../../../../felleskomponenter/multiSelect";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
-import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { FellesHandlersContext } from "../../../../contexts";
+import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
 
 const landHarTrygdeavtaleMedNorgeEllerErEosLand = (landKode: string) => {
   const landMedTrygdeAvtaleEllerEosLand = [
@@ -34,11 +34,10 @@ const landHarTrygdeavtaleMedNorgeEllerErEosLand = (landKode: string) => {
   return landMedTrygdeAvtaleEllerEosLand.includes(landKode);
 };
 
-const mapStateToProps = (state: RootState) => {
+const komponentState = (state: RootState) => {
   const initialSoknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(state);
   const initialSoeknadsland = mottatteOpplysningerSelectors.SoknadslandkoderSelector(state);
   const initialTrygdedekning = mottatteOpplysningerSelectors.TrygdedekningSelector(state);
-  const fagsak = fagsakSelectors.FagsakSelector(state);
   return {
     trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
     initialValues: {
@@ -48,12 +47,10 @@ const mapStateToProps = (state: RootState) => {
       trygdedekning: initialTrygdedekning,
     },
     alleLandkoder: landkoderSelectors.LandkoderSelector(state),
-    erFTRL: fagsak.sakstype.kode === MKV.Koder.sakstyper.FTRL,
-    formIsValid: formSelectors.VurderStartFormValid(state),
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   oppdaterPeriode: (periode: { fom: string; tom: string }) =>
     dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
@@ -63,32 +60,17 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
     dispatch(mottatteOpplysningerOperations.oppdaterTrygdedekning(trygdedekning)),
 });
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 interface Props {
   bekreft: () => void;
-  oppdater: () => void;
-  redigerbart: boolean;
-  oppdaterData: (avklartefakta: any) => void;
-  tilForsiden: () => void;
-  lagreMottatteOpplysningerOgOppfriskSaksopplysninger: () => void;
-  annenBehandlingOppfriskes: boolean;
 }
 
-export const VurderingStart = ({
-  bekreft,
-  redigerbart,
-  oppdaterPeriode,
-  oppdaterSoeknadslandkoder,
-  oppdaterTrygdedekning,
-  trygdedekninger,
-  alleLandkoder,
-  initialValues,
-  lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
-  visMenypanel,
-}: Props & PropsFromRedux) => {
+export const VurderingStart = ({ bekreft }: Props) => {
+  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
+  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
+  const { trygdedekninger, initialValues, alleLandkoder } = useSelector((state: RootState) => komponentState(state));
+  const dispatch = useDispatch();
+  const { visMenypanel, oppdaterPeriode, oppdaterSoeknadslandkoder, oppdaterTrygdedekning } =
+    komponentDispatch(dispatch);
   const {
     control,
     setValue,
@@ -101,7 +83,6 @@ export const VurderingStart = ({
       ...initialValues,
     } as FieldValues,
   });
-
   const formValues = watch();
 
   const [valgteLand, setValgteLand] = useState<string[]>([]);
@@ -234,5 +215,3 @@ export const VurderingStart = ({
     </div>
   );
 };
-
-export default connector(VurderingStart);

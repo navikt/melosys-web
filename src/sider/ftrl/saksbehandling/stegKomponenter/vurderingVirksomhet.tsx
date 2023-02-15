@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -14,12 +14,12 @@ import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetek
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
-import { formSelectors } from "../../../../ducks/form";
 
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
 import "./vurderingVirksomhet.css";
+import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
 
-const mapStateToProps = (state: RootState) => {
+const komponentState = (state: RootState) => {
   const lagredeValgtevirksomheter = oppsummertfaktaSelectors.VirksomhetIDerSelector(state);
   return {
     virksomheterListe: behandlingerSelectors.AlleVirksomheterSelector(state),
@@ -28,20 +28,15 @@ const mapStateToProps = (state: RootState) => {
     initialValues: {
       valgteVirksomheter: lagredeValgtevirksomheter,
     },
-    formIsValid: formSelectors.VurderVirksomhetFormValid(state),
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   hentOppsummertFakta: (behandlingID: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
   sendVirksomheter: (behandlingID: number, virksomheter: Api.Avklartefakta.Virksomheter) =>
     dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
   hentMottatteOpplysninger: (behandlingID: number) => dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
 });
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   bekreft: () => void;
@@ -49,18 +44,15 @@ interface Props {
   tilbake: () => void;
 }
 
-const VurderingVirksomhet = ({
-  behandlingID,
-  bekreft,
-  initialValues,
-  hentMottatteOpplysninger,
-  hentOppsummertFakta,
-  redigerbart,
-  sendVirksomheter,
-  tilbake,
-  virksomheterListe,
-  lagredeValgtevirksomheter,
-}: Props & PropsFromRedux) => {
+export const VurderingVirksomhet = ({ bekreft, tilbake }: Props) => {
+  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
+  const dispatch = useDispatch();
+
+  const { hentOppsummertFakta, sendVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
+  const { virksomheterListe, behandlingID, initialValues, lagredeValgtevirksomheter } = useSelector(
+    (state: RootState) => komponentState(state)
+  );
+
   const {
     setValue,
     watch,
@@ -125,5 +117,3 @@ const VurderingVirksomhet = ({
     </div>
   );
 };
-
-export default connector(VurderingVirksomhet);
