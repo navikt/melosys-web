@@ -19,12 +19,13 @@ import { visMenypanel } from "../../../../ducks/menypanel/operations";
 import { navigeringOperations } from "../../../../ducks/navigering";
 
 interface VurderingInngangProps {
-  oppdaterStatus: (isValid: boolean) => void;
+  oppdaterStatus: (id: string, isValid: boolean) => void;
   bekreft: () => void;
   innhentRegisteropplysninger: () => void;
+  id: string;
 }
 
-const VurderingInngang = ({ bekreft, oppdaterStatus, innhentRegisteropplysninger }: VurderingInngangProps) => {
+const VurderingInngang = ({ id, bekreft, oppdaterStatus, innhentRegisteropplysninger }: VurderingInngangProps) => {
   const dispatch = useDispatch();
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const tilForsiden = () => dispatch(navigeringOperations.tilForsiden());
@@ -41,7 +42,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, innhentRegisteropplysninger
 
   useEffect(() => {
     console.log("useEffect", formState?.isValid);
-    oppdaterStatus(formState.isValid);
+    oppdaterStatus(id, formState.isValid);
   }, [formState?.isValid]);
 
   const onSubmit = (data: any) => oppdaterLokalMottatteOpplysninger(data);
@@ -141,7 +142,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, innhentRegisteropplysninger
             setVisOppfrisk(false);
             tilForsiden();
           }}
-          behandlingOppfriskes
+          behandlingOppfriskes={false}
           annenBehandlingOppfriskes={false}
         />
       )}
