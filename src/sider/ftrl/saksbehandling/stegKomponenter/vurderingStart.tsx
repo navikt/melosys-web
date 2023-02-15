@@ -24,6 +24,8 @@ import MultiSelect from "../../../../felleskomponenter/multiSelect";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
 import { FellesHandlersContext } from "../../../../contexts";
 import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
+import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 const landHarTrygdeavtaleMedNorgeEllerErEosLand = (landKode: string) => {
   const landMedTrygdeAvtaleEllerEosLand = [
@@ -62,9 +64,10 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 
 interface Props {
   bekreft: () => void;
+  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
 
-export const VurderingStart = ({ bekreft }: Props) => {
+export const VurderingStart = ({ bekreft, rapporterSkjema }: Props) => {
   const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
   const { trygdedekninger, initialValues, alleLandkoder } = useSelector((state: RootState) => komponentState(state));
@@ -94,6 +97,10 @@ export const VurderingStart = ({ bekreft }: Props) => {
       setValgteLand([initialValues.land]);
     }
   }, []);
+
+  useEffect(() => {
+    rapporterSkjema({ stegNavn: STEG.START, dataErGyldig: formIsValid });
+  }, [formIsValid]);
 
   const oppdaterLokalMottatteOpplysninger = async () => {
     const fom = Utils.dato.formatterDatoTilISO(formValues.fom);

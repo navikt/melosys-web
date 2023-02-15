@@ -25,10 +25,10 @@ const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerCompon
         label={rest.label}
         onChange={rest.onChange}
         onBlur={rest.onBlur}
+        value={rest.value}
         name={rest.name}
         checked={gjeldendeFeltVerdi === radioButtonVerdi || forhandsvalgt}
-        // feil={feil}
-        onFocus={() => {}}
+        ref={rest.ref}
       />
     );
   }

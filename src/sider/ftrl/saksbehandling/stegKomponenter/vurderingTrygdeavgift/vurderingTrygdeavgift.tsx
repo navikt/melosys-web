@@ -1,34 +1,30 @@
 import React, { useEffect, useState, ChangeEvent, useCallback } from "react";
 import { RootState } from "AppTypes";
-import { connect, ConnectedProps } from "react-redux";
-import { change, getFormValues, reduxForm } from "redux-form";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
+import { useSelector } from "react-redux";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm, FieldValues } from "react-hook-form";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
-import * as KV from "../../../../../kodeverk";
 import * as Skjema from "../../../../../felleskomponenter/skjema";
 
 import Trygdeavgiftsgrunnlag from "./trygdeavgiftsgrunnlag/trygdeavgiftsgrunnlag";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../../ducks/form";
 import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
-import { lagYupToReduxformErrorMapper } from "../../../../../yup";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import { OppdaterAvgiftsberegning } from "../../../../../services/modules/trygdeavgift";
 import { VurderingTrygdeavgiftVirksomhetTyper } from "../../../../../kodeverk/koder";
 import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from "../selectors";
 
 import "./vurderingTrygdeavgift.css";
+import { RedigerbartSelector } from "../../../../../ducks/redigerbart/selectors";
 
-const mapStateToProps = (state: RootState) => ({
+const komponentState = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  formValues: getFormValues(KV.Form.TRYGDEAVGIFT)(state),
-  formValid: formSelectors.VurderTrygdeavgiftFormValid(state),
   saerligeavgiftsgrupper: folketrygdenkodeverkSelectors.SaerligeavgiftsgrupperSelector(state),
   erTrygdeavgiftsgrunnlagNorgeUgyldig: formSelectors.VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagNorgeUgyldig(state),
   erTrygdeavgiftsgrunnlagUtlandUgyldig: formSelectors.VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagUtlandUgyldig(state),
@@ -36,42 +32,40 @@ const mapStateToProps = (state: RootState) => ({
   lonnsforholdErUtlandetEllerDelt: LonnsforholdErUtlandetEllerDelt(state),
 });
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  changeField: (field: string, data: any) => dispatch(change(KV.Form.TRYGDEAVGIFT, field, data)),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 interface Props {
   bekreft: () => void;
-  oppdater: () => void;
   tilbake: () => void;
-  redigerbart: boolean;
-  formValues: {
-    avgiftsgrunnlag?: Api.Avgiftsgrunnlag;
-    avgiftsberegning?: Api.Avgiftsberegning;
-  };
-  erStegGyldig: boolean;
 }
 
-const VurderingTrygdeavgift = ({
-  bekreft,
-  oppdater,
-  tilbake,
-  redigerbart,
-  behandlingID,
-  formValues,
-  changeField,
-  formValid,
-  saerligeavgiftsgrupper,
-  erTrygdeavgiftsgrunnlagNorgeUgyldig,
-  erTrygdeavgiftsgrunnlagUtlandUgyldig,
-  erStegGyldig,
-  lonnsforholdErNorgeEllerDelt,
-  lonnsforholdErUtlandetEllerDelt,
-}: Props & PropsFromRedux) => {
+export const VurderingTrygdeavgift = ({ bekreft, tilbake }: Props) => {
+  const {
+    behandlingID,
+    saerligeavgiftsgrupper,
+    erTrygdeavgiftsgrunnlagNorgeUgyldig,
+    erTrygdeavgiftsgrunnlagUtlandUgyldig,
+    lonnsforholdErNorgeEllerDelt,
+    lonnsforholdErUtlandetEllerDelt,
+  } = useSelector((state: RootState) => komponentState(state));
+
+  const {
+    control,
+    setValue,
+    watch,
+    formState: { isValid: formIsValid },
+  } = useForm({
+    resolver: yupResolver(vurderingTrygdeavgiftSchema),
+    mode: "onChange",
+    defaultValues: {
+      avgiftsgrunnlag: null,
+      avgiftsberegning: null,
+    } as FieldValues,
+  });
+  const formValues = watch();
+  useEffect(() => {
+    console.log({ formValues });
+  }, [formValues]);
+  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
+
   const [erTabellApen, setErTabellApen] = useState(new Map());
   const [erSaerligAvgiftsGruppeValgt, setErSaerligAvgiftsGruppeValgt] = useState(new Map());
   const [oppdatertAvgiftsberegning, setOppdatertAvgiftsberegning] = useState<OppdaterAvgiftsberegning>({
@@ -85,7 +79,7 @@ const VurderingTrygdeavgift = ({
         avgiftspliktigLønnNorge: response.avgiftspliktigLønnNorge,
         avgiftspliktigLønnUtland: response.avgiftspliktigLønnUtland,
       });
-      changeField("avgiftsberegning", response);
+      setValue("avgiftsberegning", response);
     });
   };
   const debouncedHentBeregning = useCallback(Utils._debounce(hentBeregning, 1000), []);
@@ -105,15 +99,11 @@ const VurderingTrygdeavgift = ({
         );
       }
       setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
-      changeField("avgiftsgrunnlag", response);
+      setValue("avgiftsgrunnlag", response);
     });
     debouncedHentBeregning();
     return () => debouncedHentBeregning.cancel();
   }, []);
-
-  useEffect(() => {
-    oppdater();
-  }, [formValid]);
 
   function erTrygdeavgiftsgrunnlagGyldig(trygdeavgiftsgrunnlag: Api.AvgiftsgrunnlagInfo | null | undefined) {
     return (
@@ -174,7 +164,7 @@ const VurderingTrygdeavgift = ({
         trygdeavgiftsgrunnlagUtland: formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland || null,
       }).then((response) => {
         if (JSON.stringify(formValues.avgiftsgrunnlag) !== JSON.stringify(response)) {
-          changeField("avgiftsgrunnlag", response);
+          setValue("avgiftsgrunnlag", response);
           handleGrunnlagResponse(response);
         }
       });
@@ -191,20 +181,20 @@ const VurderingTrygdeavgift = ({
     const fieldBase = erNorskVirksomhet
       ? "avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge"
       : "avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland";
-    changeField(`${fieldBase}.særligAvgiftsgruppe`, erSærligAvgiftsgruppe ? "TRUE" : null);
-    changeField(`${fieldBase}.betalerArbeidsgiverAvgift`, erNorskVirksomhet);
-    changeField(`${fieldBase}.erSkattepliktig`, undefined);
-    changeField("avgiftsberegning", {});
+    setValue(`${fieldBase}.særligAvgiftsgruppe`, erSærligAvgiftsgruppe ? "TRUE" : null);
+    setValue(`${fieldBase}.betalerArbeidsgiverAvgift`, erNorskVirksomhet);
+    setValue(`${fieldBase}.erSkattepliktig`, undefined);
+    setValue("avgiftsberegning", {});
   }
 
   useEffect(() => {
     const særligAvgiftsgruppe = formValues?.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe;
     if (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.MISJONÆR) {
-      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift", false);
+      setValue("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift", false);
     }
     if (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.ARBEIDSTAKER_MALAYSIA) {
-      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift", true);
-      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.erSkattepliktig", false);
+      setValue("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift", true);
+      setValue("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.erSkattepliktig", false);
     }
   }, [formValues?.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe]);
 
@@ -215,7 +205,7 @@ const VurderingTrygdeavgift = ({
         særligAvgiftsgruppe
       )
     ) {
-      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.erSkattepliktig", false);
+      setValue("avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.erSkattepliktig", false);
     }
   }, [formValues?.avgiftsgrunnlag?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe]);
 
@@ -229,7 +219,7 @@ const VurderingTrygdeavgift = ({
 
   function handleBeregnClick(erNorskVirksomhet: boolean) {
     Api.Trygdeavgift.sendBeregning(behandlingID, oppdatertAvgiftsberegning).then((response) => {
-      changeField("avgiftsberegning", response);
+      setValue("avgiftsberegning", response);
     });
     setErTabellApen(
       new Map(
@@ -264,25 +254,25 @@ const VurderingTrygdeavgift = ({
       <Nav.Row>
         <Nav.Column xs="12">
           <Nav.Fieldset legend="Hvor mottar søker inntekt fra?">
-            <Skjema.Radio
+            <Skjema.RadioV2
               label="Norsk virksomhet"
-              feltNavn="avgiftsgrunnlag.lønnsforhold"
+              name="avgiftsgrunnlag.lønnsforhold"
+              control={control}
               value={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
-              id={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               disabled={!redigerbart}
             />
-            <Skjema.Radio
-              feltNavn="avgiftsgrunnlag.lønnsforhold"
+            <Skjema.RadioV2
+              name="avgiftsgrunnlag.lønnsforhold"
+              control={control}
               label="Utenlandsk virksomhet"
               value={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
-              id={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               disabled={!redigerbart}
             />
-            <Skjema.Radio
+            <Skjema.RadioV2
               label="Norsk og utenlandsk virksomhet"
-              feltNavn="avgiftsgrunnlag.lønnsforhold"
+              name="avgiftsgrunnlag.lønnsforhold"
+              control={control}
               value={MKV.Koder.loenn_forhold.DELT_LØNN}
-              id={MKV.Koder.loenn_forhold.DELT_LØNN}
               disabled={!redigerbart}
             />
           </Nav.Fieldset>
@@ -297,19 +287,9 @@ const VurderingTrygdeavgift = ({
       )}
 
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: bekreft, disabled: !redigerbart || !erStegGyldig }}
+        bekreftKnappProps={{ onClick: bekreft, disabled: !redigerbart || !formIsValid }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
   );
 };
-
-const VurderingTrygdeavgiftForm = reduxForm<{}, Props & PropsFromRedux>({
-  form: KV.Form.TRYGDEAVGIFT,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(vurderingTrygdeavgiftSchema),
-})(VurderingTrygdeavgift);
-
-export default connector(VurderingTrygdeavgiftForm);

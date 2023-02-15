@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingTrygdeavgift from "../stegKomponenter/vurderingTrygdeavgift";
+import { VurderingTrygdeavgift } from "../stegKomponenter/vurderingTrygdeavgift";
 
 class Trygdeavgift extends Steg {
   constructor(propsLight, stegPosisjon) {

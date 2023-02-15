@@ -48,6 +48,7 @@ export function lagre() {
 }
 
 export function oppdaterState(skjema) {
+  console.log({ skjema });
   return (dispatch) => dispatch(Actions.oppdaterState(skjema));
 }
 

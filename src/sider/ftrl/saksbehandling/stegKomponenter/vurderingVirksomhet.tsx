@@ -18,6 +18,8 @@ import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplys
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
 import "./vurderingVirksomhet.css";
 import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
+import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 const komponentState = (state: RootState) => {
   const lagredeValgtevirksomheter = oppsummertfaktaSelectors.VirksomhetIDerSelector(state);
@@ -40,11 +42,11 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 
 interface Props {
   bekreft: () => void;
-  redigerbart: boolean;
   tilbake: () => void;
+  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
 
-export const VurderingVirksomhet = ({ bekreft, tilbake }: Props) => {
+export const VurderingVirksomhet = ({ bekreft, tilbake, rapporterSkjema }: Props) => {
   const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
   const dispatch = useDispatch();
 
@@ -76,6 +78,9 @@ export const VurderingVirksomhet = ({ bekreft, tilbake }: Props) => {
     await hentMottatteOpplysninger(behandlingID);
     setErMottatteOpplysningerLastetInn(true);
   };
+  useEffect(() => {
+    rapporterSkjema({ stegNavn: STEG.VIRKSOMHET, dataErGyldig: formIsValid });
+  }, [formIsValid]);
 
   useEffect(() => {
     lastInnMottatteOpplysninger();
