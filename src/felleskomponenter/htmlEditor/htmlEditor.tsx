@@ -1,12 +1,14 @@
 import { Editor, SyntheticKeyboardEvent } from "react-draft-wysiwyg";
 import React, { useEffect, useState } from "react";
-import { ContentState, convertFromHTML, convertToRaw, EditorState, RichUtils } from "draft-js";
+import { ContentState, convertToRaw, EditorState, RichUtils } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
 import classNames from "classnames";
 
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
+import FontSize from "./fontSize";
 import "./htmlEditor.css";
 
 const toolbar = {
@@ -14,12 +16,13 @@ const toolbar = {
   inline: { options: ["bold", "italic", "underline", "strikethrough"] },
   list: { inDropdown: true },
   fontSize: {
-    options: ["11pt", "12pt", "14pt", "16pt"],
+    options: [11, 12, 14, 16],
+    component: FontSize,
   },
 };
 
 const editorStateFromHTML = (htmlValue: string) =>
-  EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(htmlValue).contentBlocks));
+  EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(htmlValue).contentBlocks));
 const htmlFromEditorState = (editorState: EditorState) => draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
 type TextToHtmlEditorProps = {
@@ -33,8 +36,7 @@ function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
     const currentHtml = htmlFromEditorState(currentEditorState);
     if (!Utils._isEmpty(currentHtml) && !Utils._isEmpty(value) && currentHtml !== value) {
       const editorState = editorStateFromHTML(value);
-      setCurrentEditorState(editorState);
-      onChange(htmlFromEditorState(editorState));
+      onEditorStateChange(editorState);
     }
   }, [value]);
 
@@ -50,8 +52,7 @@ function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
   const handleReturn = (e: SyntheticKeyboardEvent) => {
     if (e.key === "Enter") {
       const editorState = RichUtils.insertSoftNewline(currentEditorState);
-      setCurrentEditorState(editorState);
-      onChange(htmlFromEditorState(editorState));
+      onEditorStateChange(editorState);
       return true;
     }
     return false;
