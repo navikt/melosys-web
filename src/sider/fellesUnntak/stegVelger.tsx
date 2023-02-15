@@ -18,17 +18,12 @@ interface AktueltSteg {
 }
 
 interface StegVelgerProps {
-  lagreMottatteOpplysningerOgOppfriskSaksopplysninger: () => void;
-  annenBehandlingOppfriskes: boolean;
+  oppfriskOgLastInnSaksopplysninger: () => void;
 }
 
-const StegVelger = ({
-  annenBehandlingOppfriskes,
-  lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
-}: StegVelgerProps) => {
+const StegVelger = ({ oppfriskOgLastInnSaksopplysninger }: StegVelgerProps) => {
   const [aktivtStegIndex, setAktivtStegIndex] = useState(0);
   const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([]);
-  console.log(annenBehandlingOppfriskes);
 
   const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean) => {
     setAktuellesteg(
@@ -60,11 +55,6 @@ const StegVelger = ({
         vedtakSteg: false,
         tittel: "Inngang",
         komponent: VurderingInngang,
-        handlers: {
-          bekreft,
-          tilbake,
-          innhentRegisteropplysninger: lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
-        },
       },
       {
         id: "2",
@@ -91,7 +81,17 @@ const StegVelger = ({
           {/* eslint-disable-next-line no-return-assign */}
           <StegLinje steg={aktuelleSteg} stegKlikk={handleKlikk} />
           {aktuelleSteg.map((steg) => (
-            <StegFane faneData={steg} id={steg.id} key={steg.id} rest={{ oppdaterStatus: oppdaterStatus(steg.id) }} />
+            <StegFane
+              faneData={steg}
+              id={steg.id}
+              key={steg.id}
+              rest={{
+                oppdaterStatus: oppdaterStatus(steg.id),
+                bekreft,
+                tilbake,
+                oppfriskOgLastInnSaksopplysninger,
+              }}
+            />
           ))}
         </div>
       )}

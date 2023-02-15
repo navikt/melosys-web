@@ -27,8 +27,7 @@ interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
   behandlingOppfriskes: boolean;
   startOgVisOppfriskModal: () => void;
-  annenBehandlingOppfriskes: boolean;
-  lagreMottatteOpplysningerOgOppfriskSaksopplysninger: () => {};
+  oppfriskOgLastInnSaksopplysninger: () => {};
 }
 
 const Saksbehandling = ({
@@ -37,8 +36,7 @@ const Saksbehandling = ({
   visOppfriskModal,
   behandlingOppfriskes,
   startOgVisOppfriskModal,
-  annenBehandlingOppfriskes,
-  lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
+  oppfriskOgLastInnSaksopplysninger,
 }: SaksbehandlingProps) => {
   const dispatch = useDispatch();
 
@@ -100,12 +98,7 @@ const Saksbehandling = ({
             <Nav.Row>
               <Nav.Column xs="7">
                 {/* Stegvelger  */}
-                <StegVelger
-                  annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-                  lagreMottatteOpplysningerOgOppfriskSaksopplysninger={
-                    lagreMottatteOpplysningerOgOppfriskSaksopplysninger
-                  }
-                />
+                <StegVelger oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger} />
                 {registeropplysningerHentet && (
                   <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
                 )}

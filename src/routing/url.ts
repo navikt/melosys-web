@@ -135,6 +135,7 @@ export const skalViseTomFlyt = (
 
   if (
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
+    sakstype === EU_EOS &&
     registreringAnmodningUnntakToggleEnabled
   ) {
     return false;

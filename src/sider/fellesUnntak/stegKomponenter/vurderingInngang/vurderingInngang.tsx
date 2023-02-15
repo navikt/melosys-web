@@ -1,34 +1,32 @@
-// noinspection ES6UnusedImports
-
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KTObject } from "@navikt/melosys-kodeverk";
+
 import MKV from "../../../../melosyskodeverk";
-import * as Utils from "../../../../utils";
-import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
+import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Utils from "../../../../utils";
+
+import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import vurderingInngangSchema from "./vurderingInngangSchema";
+import { menypanelOperations } from "../../../../ducks/menypanel";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
-import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
-import { visMenypanel } from "../../../../ducks/menypanel/operations";
-import { navigeringOperations } from "../../../../ducks/navigering";
+
+import vurderingInngangSchema from "./vurderingInngangSchema";
 
 interface VurderingInngangProps {
   oppdaterStatus: (isValid: boolean) => void;
   bekreft: () => void;
-  innhentRegisteropplysninger: () => void;
-  id: string;
+  oppfriskOgLastInnSaksopplysninger: () => void;
 }
 
-const VurderingInngang = ({ bekreft, oppdaterStatus, innhentRegisteropplysninger }: VurderingInngangProps) => {
+const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplysninger }: VurderingInngangProps) => {
   const dispatch = useDispatch();
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
-  const tilForsiden = () => dispatch(navigeringOperations.tilForsiden());
-  const [visOppfrisk, setVisOppfrisk] = useState(false);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
 
   const { control, getValues, formState } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
@@ -37,13 +35,24 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, innhentRegisteropplysninger
   });
   const formValues = getValues();
 
+  const [initialFormState, setInitialFormState] = useState<{
+    fom?: string;
+    tom?: string;
+    avsenderland?: string;
+    lovvalgsland?: string;
+  }>({});
+  const [visSpinner, setVisSpinner] = useState(false);
+
   useEffect(() => {
     oppdaterStatus(formState.isValid);
   }, [formState?.isValid]);
 
-  const onSubmit = (data: any) => oppdaterLokalMottatteOpplysninger(data);
-  console.log(onSubmit);
-  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const skalHenteRegisteropplysninger =
+    formValues?.fom !== initialFormState?.fom ||
+    formValues?.tom !== initialFormState?.tom ||
+    formValues?.avsenderland !== initialFormState?.avsenderland ||
+    formValues?.lovvalgsland !== initialFormState?.lovvalgsland;
+
   const oppdaterLokalMottatteOpplysninger = (data: any) => {
     const fom = Utils.dato.formatterDatoTilISO(data.periodeFraOgMed);
     const tom = Utils.dato.formatterDatoTilISO(data.periodeFraOgMed);
@@ -54,6 +63,23 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, innhentRegisteropplysninger
       })
     );
     dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(["NO"], false));
+  };
+  console.log(oppdaterLokalMottatteOpplysninger);
+
+  const bekreftHandle = async () => {
+    setInitialFormState({
+      fom: formValues.fom,
+      tom: formValues.tom,
+      avsenderland: formValues.avsenderland,
+      lovvalgsland: formValues.lovvalgsland,
+    });
+    if (skalHenteRegisteropplysninger) {
+      setVisSpinner(true);
+      await oppfriskOgLastInnSaksopplysninger();
+      setVisSpinner(false);
+      dispatch(menypanelOperations.visMenypanel());
+    }
+    bekreft();
   };
 
   return (
@@ -114,34 +140,14 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, innhentRegisteropplysninger
           )}
         </Nav.Row>
       </Nav.Fieldset>
-      {}
-      <Nav.Hovedknapp
-        onClick={() => {
-          console.log("innhente registeropplysninger");
-          setVisOppfrisk(true);
-          bekreft();
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          onClick: bekreftHandle,
+          disabled: !formState?.isValid || !redigerbart,
         }}
-      >
-        Bekreft og innhent registeropplysninger
-      </Nav.Hovedknapp>
-
-      {visOppfrisk && (
-        <DialogboksOppfriskSak
-          oppfrisk={innhentRegisteropplysninger}
-          avbryt={() => setVisOppfrisk(false)}
-          lukk={() => {
-            setVisOppfrisk(false);
-            visMenypanel();
-            bekreft();
-          }}
-          tilForsiden={() => {
-            setVisOppfrisk(false);
-            tilForsiden();
-          }}
-          behandlingOppfriskes={false}
-          annenBehandlingOppfriskes={false}
-        />
-      )}
+        spinner={visSpinner}
+        bekreftTekst="Bekreft og innhent registeropplysninger"
+      />
     </div>
   );
 };
