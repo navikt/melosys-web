@@ -422,8 +422,6 @@ class Stegvelger extends Component {
       vurder_periode_valid: props.vurder_periode_valid,
       vurder_trygdeavgift_valid: props.vurder_trygdeavgift_valid,
       soknadsperiode: props.soknadsperiode,
-      vurder_familie_valid: props.vurder_familie_valid,
-      vurder_representant_valid: props.vurder_representant_valid,
       annenBehandlingOppfriskes: props.annenBehandlingOppfriskes,
       harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger),
     };
@@ -621,8 +619,6 @@ Stegvelger.propTypes = {
   vurder_periode_valid: PT.bool.isRequired,
   vurder_trygdeavgift_valid: PT.bool.isRequired,
   soknadsperiode: MPT.Soknadsperiode.isRequired,
-  vurder_familie_valid: PT.bool.isRequired,
-  vurder_representant_valid: PT.bool.isRequired,
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger: PT.func,
   feilmeldinger: PT.oneOfType([
     PT.arrayOf(
@@ -687,8 +683,6 @@ const mapStateToProps = (state) => ({
   vurder_virksomhet_valid: formSelectors.VurderVirksomhetFormValid(state),
   vurder_periode_valid: formSelectors.VurderPerioderFormValid(state),
   vurder_trygdeavgift_valid: formSelectors.VurderTrygdeavgiftFormValid(state),
-  vurder_familie_valid: formSelectors.VurderFamilieFormValid(state),
-  vurder_representant_valid: formSelectors.VurderRepresentantFormValid(state),
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   valgteVirksomheterIkkeNaeringsDrivende:
