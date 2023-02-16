@@ -20,6 +20,7 @@ interface TrygdeavgiftsgrunnlagProps {
     avgiftsberegning?: Api.Avgiftsberegning | undefined;
     avgiftsgrunnlag?: Api.Avgiftsgrunnlag | undefined;
   };
+  control: any;
   oppdatertAvgiftsberegning: OppdaterAvgiftsberegning;
   erTabellApen: Map<string, boolean>;
   erVirksomhetNorsk: boolean;
@@ -35,6 +36,7 @@ interface TrygdeavgiftsgrunnlagProps {
 
 const Trygdeavgiftsgrunnlag = ({
   formValues,
+  control,
   oppdatertAvgiftsberegning,
   erTabellApen,
   erVirksomhetNorsk,
@@ -130,7 +132,8 @@ const Trygdeavgiftsgrunnlag = ({
       trygdeavgiftsgrunnlag?.særligAvgiftsgruppe
     );
   };
-
+  console.log({ ingenTrygdeavgiftBetalesTilNAV, formValues });
+  const erSkattePliktig = trygdeavgiftsgrunnlag?.erSkattepliktig;
   return (
     <div className="vurderingTrygdeavgift__overstrek vurderingTrygdeavgift">
       <Nav.Row>
@@ -167,10 +170,11 @@ const Trygdeavgiftsgrunnlag = ({
             />
           </Nav.Fieldset>
           {erSaerligAvgiftsGruppeValgt.get(virksomhetType) === true && (
-            <Skjema.Select
+            <Skjema.SelectV2
               label=""
               disabled={!redigerbart}
-              feltNavn={`${feltNavnBase}.særligAvgiftsgruppe`}
+              name={`${feltNavnBase}.særligAvgiftsgruppe`}
+              control={control}
               emptyFieldText="Velg gruppe"
               emptyFieldDisabled={
                 (erVirksomhetNorsk
@@ -191,7 +195,7 @@ const Trygdeavgiftsgrunnlag = ({
                     {saerligavgiftsgruppe.term}
                   </option>
                 ))}
-            </Skjema.Select>
+            </Skjema.SelectV2>
           )}
         </Nav.Column>
 
@@ -214,21 +218,23 @@ const Trygdeavgiftsgrunnlag = ({
                 </Nav.Typo.Normaltekst>
               ) : (
                 <Fragment>
-                  <Skjema.Radio
+                  <Skjema.RadioV2
                     className="column"
                     label="Ja"
-                    feltNavn={`${feltNavnBase}.erSkattepliktig`}
-                    value
+                    name={`${feltNavnBase}.erSkattepliktig`}
+                    control={control}
+                    checked={Boolean(erSkattePliktig)}
+                    value={BOOLSK_STRING.SANN}
                     disabled={!redigerbart}
-                    id={`${feltNavnBase}.erSkattepliktig`}
                   />
-                  <Skjema.Radio
+                  <Skjema.RadioV2
                     className="column"
                     label="Nei"
-                    feltNavn={`${feltNavnBase}.erSkattepliktig`}
-                    value={false}
+                    name={`${feltNavnBase}.erSkattepliktig`}
+                    control={control}
+                    checked={Boolean(!erSkattePliktig)}
+                    value={BOOLSK_STRING.USANN}
                     disabled={!redigerbart}
-                    id={`${feltNavnBase}.erIkkeSkattepliktig`}
                   />
                 </Fragment>
               )}

@@ -5,30 +5,40 @@ import * as Nav from "../../../navFrontend";
 
 import "../skjema.css";
 import { RegisterHookFormProps } from "../reacthookProps";
+import { BOOLSK_STRING } from "../../../constants";
 
 interface RadioComponentProps {
+  className?: string;
   forhandsvalgt?: boolean;
   value?: string;
   label?: string;
   disabled?: boolean;
+  checked?: boolean;
 }
 
 type RadioInnerComponentProps = RadioComponentProps & RegisterHookFormProps;
 
+const normaliserReduxBoolean = (valg: string) => {
+  if (valg === BOOLSK_STRING.SANN) {
+    return true;
+  }
+  if (valg === BOOLSK_STRING.USANN) {
+    return false;
+  }
+  return valg;
+};
 const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerComponentProps>(
-  ({ forhandsvalgt, disabled, ...rest }: RadioInnerComponentProps) => {
-    const gjeldendeFeltVerdi = rest.value;
-    const radioButtonVerdi = rest.value;
-
+  ({ forhandsvalgt, disabled, checked, ...rest }: RadioInnerComponentProps) => {
     return (
       <Nav.Radio
+        className={rest.className}
         label={rest.label}
-        onChange={rest.onChange}
+        checked={checked}
+        onChange={() => rest.onChange(normaliserReduxBoolean(rest.value))}
         onBlur={rest.onBlur}
         value={rest.value}
         name={rest.name}
-        checked={gjeldendeFeltVerdi === radioButtonVerdi || forhandsvalgt}
-        ref={rest.ref}
+        radioRef={rest.ref}
       />
     );
   }
