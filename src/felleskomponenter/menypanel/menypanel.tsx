@@ -84,6 +84,7 @@ export const Menypanel = ({
     sakstema,
     folketrygdenToggleEnabled,
     ikkeYrkesaktivFlytToggleEnabled,
+    registreringAnmodningUnntakToggleEnabled,
   });
 
   const linkGroups = linkGroupsWithContent.map((linkGroup, groupIndex) => ({

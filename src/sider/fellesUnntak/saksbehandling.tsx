@@ -22,6 +22,7 @@ import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 
 import { MatchParams } from "../../@types";
+// @ts-ignore
 import Stegvelger from "./stegvelger";
 import "./saksbehandling.css";
 
