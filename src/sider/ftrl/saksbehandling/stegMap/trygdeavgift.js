@@ -9,7 +9,7 @@ class Trygdeavgift extends Steg {
     this.kriterier = [
       {
         exec: () => harAvklaring,
-        nesteSteg: STEG.REPRESENTANT,
+        nesteSteg: STEG.VEDTAK_FTRL,
       },
     ];
     this.id = STEG.TRYGDEAVGIFT;
