@@ -73,6 +73,7 @@ export const Menypanel = ({
     redigerbart,
     lagreSoknadOgOppfriskSaksopplysninger,
     setMenypanelFeilmelding,
+    endreFokus,
   };
 
   const linkGroupsWithContent = LinkGroupsFactory.createLinkGroups({

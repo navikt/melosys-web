@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as Nav from "../../../../../navFrontend";
+import * as Utils from "../../../../../utils";
 
 import bem from "../../../../../bemUtils";
 import EnkeltDato from "../../../../enkeltDato/enkeltDato";
@@ -14,15 +15,24 @@ import "./personinfo.css";
 interface PersonInfoProps {
   behandlingID: number;
   modalAriaHideApp?: boolean;
+  endreFokus: boolean;
 }
 
-const PersonInfo = ({ behandlingID, modalAriaHideApp }: PersonInfoProps) => {
+const PersonInfo = ({ behandlingID, modalAriaHideApp, ...props }: PersonInfoProps) => {
   const personopplysninger = useHentPersonopplysninger(behandlingID, false);
   const {
     data: personinfoData,
     loading: personinfoLoading,
     error: personinfoError,
   } = useHentPersoninfoQuery({ variables: { behandlingID } });
+  const [endreFokus, setEndreFokus] = useState(props.endreFokus);
+
+  useEffect(() => {
+    if (!personinfoLoading && endreFokus) {
+      Utils.navigasjon.flyttFokusTilHtmlElementFraId("Person");
+      setEndreFokus(false);
+    }
+  }, [personinfoLoading]);
 
   const personinfoClassName = bem("personinfo");
 

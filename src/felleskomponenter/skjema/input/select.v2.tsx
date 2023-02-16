@@ -17,7 +17,7 @@ interface SelectComponentProps extends Nav.SelectProps {
 type SelectInnerComponentProps = SelectComponentProps & RegisterHookFormProps;
 
 const SelectInnerComponent = React.forwardRef<HTMLSelectElement, SelectInnerComponentProps>(
-  ({ label, emptyFieldDisabled, emptyFieldText, disabled, children, ...rest }: SelectProps) => {
+  ({ label, emptyFieldDisabled, emptyFieldText, disabled, children, ...rest }: SelectProps, _ref: any) => {
     return (
       <Nav.Select
         label={label}
@@ -26,6 +26,7 @@ const SelectInnerComponent = React.forwardRef<HTMLSelectElement, SelectInnerComp
         onBlur={rest.onBlur}
         name={rest.name}
         value={rest.value}
+        ref={rest.itemRef}
       >
         <option disabled={emptyFieldDisabled} value="">
           {emptyFieldText}
@@ -38,28 +39,30 @@ const SelectInnerComponent = React.forwardRef<HTMLSelectElement, SelectInnerComp
 
 type SelectProps = SelectComponentProps & UseControllerProps;
 
-const Select = React.forwardRef<HTMLSelectElement, SelectProps>(({ name, control, ...rest }: SelectProps) => {
-  return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field }) => (
-        <SelectInnerComponent
-          {...field}
-          label={rest.label}
-          emptyFieldText={rest.emptyFieldText}
-          emptyFieldDisabled={rest.emptyFieldDisabled}
-          disabled={rest.disabled}
-          onChange={(event: any) => {
-            field.onChange(event);
-            if (rest.onChange) rest.onChange(event?.target?.value);
-          }}
-        >
-          {rest.children}
-        </SelectInnerComponent>
-      )}
-    />
-  );
-});
+const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
+  ({ name, control, ...rest }: SelectProps, _ref: any) => {
+    return (
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <SelectInnerComponent
+            {...field}
+            label={rest.label}
+            emptyFieldText={rest.emptyFieldText}
+            emptyFieldDisabled={rest.emptyFieldDisabled}
+            disabled={rest.disabled}
+            onChange={(event: any) => {
+              field.onChange(event);
+              if (rest.onChange) rest.onChange(event?.target?.value);
+            }}
+          >
+            {rest.children}
+          </SelectInnerComponent>
+        )}
+      />
+    );
+  }
+);
 
 export default Select;

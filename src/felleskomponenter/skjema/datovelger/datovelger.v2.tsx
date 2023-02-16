@@ -44,7 +44,7 @@ const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatove
 type DatovelgerProps = DatovelgerComponentProps & UseControllerProps;
 
 const DatovelgerV2 = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
-  ({ name, control, ...rest }: DatovelgerProps) => {
+  ({ name, control, ...rest }: DatovelgerProps, _ref: any) => {
     return (
       <Controller
         name={name}

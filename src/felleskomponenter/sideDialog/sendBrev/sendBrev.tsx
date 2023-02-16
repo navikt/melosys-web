@@ -104,7 +104,7 @@ const SendBrev = ({
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
   const [muligeMottakereEtater, setMuligeMottakereEtater] = useState<Api.DokumenterV2.MuligMottaker[]>();
   const [brevSendt, setBrevSendt] = useState(false);
-  const [brevSendtFeil, setBrevSendtFeil] = useState(false);
+  const [feil, setFeil] = useState<string | undefined>();
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
   const [visFritekstvedleggSkjema, setVisFritekstvedleggSkjema] = useState(false);
   const [fritekstvedlegg, setFritekstvedlegg] = useState<Fritekstvedlegg[]>([]);
@@ -129,10 +129,13 @@ const SendBrev = ({
     });
   }, []);
 
+  const hentUtkast = () =>
+    Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
+
   useEffect(() => {
     // Når toggle melosys.utkast fjernes kan denne flyttes opp til useEffect onMount
     if (utkastToggleEnabled) {
-      Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
+      hentUtkast();
     }
   }, [utkastToggleEnabled]);
 
@@ -311,29 +314,37 @@ const SendBrev = ({
 
   const sendBrev = () => {
     if (!formValues?.valgtMottaker) return;
+    setFeil(undefined);
 
     Api.DokumenterV2.opprettBrev(behandlingID, hentBrevRequest(formValues.valgtMottaker.rolle))
       .then(() => {
         setBrevSendt(true);
         oppdaterBehandling();
+        slettUtkast();
         resetFormOgFritekstvedleggState();
       })
       .catch(() => {
-        setBrevSendtFeil(true);
+        setFeil("Brevet er ikke sendt. Det skjedde en feil.");
       });
+  };
+
+  const slettUtkast = () => {
+    if (formValues?.aktivtUtkast?.utkastBrevID) {
+      Api.Brevutkast.slettBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID)
+        .then(() => {
+          changeField("aktivtUtkast", null);
+          hentUtkast();
+        })
+        .catch(() => setFeil("Utkastet er ikke slettet. Det skjedde en feil"));
+    }
   };
 
   const forkastBrev = () => {
     resetFormOgFritekstvedleggState();
     setBrevSendt(false);
-    setBrevSendtFeil(false);
+    setFeil(undefined);
     setMuligeMottakereFeil(undefined);
-    if (formValues?.aktivtUtkast?.utkastBrevID) {
-      Api.Brevutkast.slettBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID).then(() => {
-        changeField("aktivtUtkast", null);
-        Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
-      });
-    }
+    slettUtkast();
   };
 
   const resetFormOgFritekstvedleggState = () => {
@@ -390,17 +401,19 @@ const SendBrev = ({
 
   const lagreUtkast = () => {
     if (!formValues?.valgtMottaker) return;
+    setFeil(undefined);
 
     const requestData = hentBrevRequest(formValues.valgtMottaker.rolle);
 
     (formValues?.aktivtUtkast?.utkastBrevID
       ? Api.Brevutkast.oppdaterBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID, requestData)
       : Api.Brevutkast.lagreBrevutkast(behandlingID, requestData)
-    ).then(() => {
-      resetFormOgFritekstvedleggState();
-      changeField("aktivtUtkast", null);
-      Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
-    });
+    )
+      .then(() => {
+        resetFormOgFritekstvedleggState();
+        hentUtkast();
+      })
+      .catch(() => setFeil("Utkastet ble ikke lagret. Det skjedde en feil."));
   };
 
   const overstyrBlurEvent = (event: React.FocusEvent) => {
@@ -551,7 +564,7 @@ const SendBrev = ({
         </Nav.Hovedknapp>
         {utkastToggleEnabled && (
           <Nav.Knapp mini disabled={knappErDisabled} className="brevknapp" onClick={lagreUtkast}>
-            Lagre og fortsett senere
+            Lagre utkast
           </Nav.Knapp>
         )}
         <Nav.Knapp mini className="brevknapp" onClick={forkastBrev}>
@@ -564,9 +577,7 @@ const SendBrev = ({
           Brevet er bestilt. Det kan ta noe tid før brevet vises i dokumentlisten.
         </AlertStripeSuksess>
       )}
-      {brevSendtFeil && (
-        <AlertStripeFeil className="brev_sendt">Brevet er ikke sendt. Det skjedde en feil.</AlertStripeFeil>
-      )}
+      {feil && <AlertStripeFeil className="brev_sendt">{feil}</AlertStripeFeil>}
     </div>
   );
 };
