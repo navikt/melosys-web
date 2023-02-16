@@ -41,14 +41,14 @@ function sjekkOmAvgiftsberegningIkkeErBeregnet(avgiftsgrunnlag, avgiftsberegning
         MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
       )
         return false;
-      return !avgiftsberegning.avgiftspliktigLønnNorge;
+      return !avgiftsberegning?.avgiftspliktigLønnNorge;
     case MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET:
       if (
         avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt ===
         MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
       )
         return false;
-      return !avgiftsberegning.avgiftspliktigLønnUtland;
+      return !avgiftsberegning?.avgiftspliktigLønnUtland;
     case MKV.Koder.loenn_forhold.DELT_LØNN:
       if (
         avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt ===
@@ -62,15 +62,15 @@ function sjekkOmAvgiftsberegningIkkeErBeregnet(avgiftsgrunnlag, avgiftsberegning
         avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt ===
         MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
       ) {
-        return !avgiftsberegning.avgiftspliktigLønnUtland;
+        return !avgiftsberegning?.avgiftspliktigLønnUtland;
       }
       if (
         avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt ===
         MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
       ) {
-        return !avgiftsberegning.avgiftspliktigLønnNorge;
+        return !avgiftsberegning?.avgiftspliktigLønnNorge;
       }
-      return !avgiftsberegning.avgiftspliktigLønnNorge || !avgiftsberegning.avgiftspliktigLønnUtland;
+      return !avgiftsberegning?.avgiftspliktigLønnNorge || !avgiftsberegning?.avgiftspliktigLønnUtland;
     default:
       return true;
   }

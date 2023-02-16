@@ -8,7 +8,7 @@ import classNames from "classnames";
 import * as Nav from "../../navFrontend";
 import { VurderingPerioder } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingPerioder";
 import { VurderingTrygdeavgift } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift";
-import VurderingVedtak from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingVedtak";
+import { VurderingVedtak } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingVedtak";
 import StegLinje from "../stegLinje/stegLinje";
 import { VurderingBestemmelse } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingBestemmelse";
 import { useFormContext } from "react-hook-form";

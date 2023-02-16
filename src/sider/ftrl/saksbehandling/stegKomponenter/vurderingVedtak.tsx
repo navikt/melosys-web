@@ -1,11 +1,14 @@
+/* eslint-disable */
+
 import React, { useCallback, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
-import { connect, ConnectedProps } from "react-redux";
-import { getFormValues, reduxForm } from "redux-form";
+import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { Medlemskapsperiode } from "Domene";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import { FieldValues, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
@@ -29,12 +32,11 @@ import MottakerTabell from "../../../../felleskomponenter/tabell/mottakerTabell"
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from "./selectors";
-import { RepresentantformValues } from "./vurderingRepresentant";
 
 import "./vurderingVedtak.css";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import vurdering_vedtak from "./vurderingVedtakSchema";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
 
 const { trygdeavtale_myndighetsland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
@@ -44,7 +46,7 @@ const betalingsintervaller: KTObject[] = [
   { kode: "KVARTAL", term: "Kvartal" },
 ];
 
-const mapStateToProps = (state: RootState) => ({
+const komponentState = (state: RootState) => ({
   medfolgendeFamilie: oppsummertfaktaSelectors.MedfolgendeFamilieSelector(state) || [],
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
@@ -55,8 +57,6 @@ const mapStateToProps = (state: RootState) => ({
   skalBetaleTrygdeavgiftTilUtlandet: LonnsforholdErUtlandetEllerDelt(state),
   familieFormValues: formSelectors.VurderFamilieFormSelector(state).values,
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
-  formValues: getFormValues(KV.Form.FTRL_VEDTAK)(state),
-  formValuesRepresentant: getFormValues(KV.Form.REPRESENTANT)(state) as RepresentantformValues,
   initialValues: {
     begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state),
@@ -64,16 +64,12 @@ const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.FolketrygdlovenVedtakFormValidSelector(state),
 });
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
     dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
   fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto) =>
     dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface FormValuesProps {
   innledningFritekst?: string;
@@ -83,39 +79,49 @@ interface FormValuesProps {
 
 interface Props {
   bekreft: () => void;
-  oppdater: () => void;
   tilbake: () => void;
-  redigerbart: boolean;
   alleLandkoder: KTObject[];
-  formValues: FormValuesProps;
   harFeilmeldinger: boolean;
   aktivtSteg: boolean;
   validerMottatteOpplysninger: () => Promise<any>;
 }
 
-const VurderingVedtak = ({
-  behandlingID,
+export const VurderingVedtak = ({
   tilbake,
-  redigerbart,
-  medlemskapsperioder,
-  innvilgelsesResultater,
-  formValues,
-  formValuesRepresentant,
-  medfolgendeFamilie,
-  soknadsland,
   alleLandkoder,
-  trygdeavgiftFormValues,
-  skalBetaleTrygdeavgiftTilNorge,
-  skalBetaleTrygdeavgiftTilUtlandet,
-  familieFormValues,
-  vedtakstype,
-  kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
   validerMottatteOpplysninger,
-  fattVedtak,
-  formIsValid,
-}: Props & PropsFromRedux) => {
+}: Props) => {
+  const dispatch = useDispatch();
+  const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
+  const {
+    medfolgendeFamilie,
+    behandlingID,
+    medlemskapsperioder,
+    innvilgelsesResultater,
+    soknadsland,
+    trygdeavgiftFormValues,
+    skalBetaleTrygdeavgiftTilNorge,
+    skalBetaleTrygdeavgiftTilUtlandet,
+    familieFormValues,
+    vedtakstype,
+    initialValues,
+  } = useSelector((state: RootState) => komponentState(state));
+  const {
+    watch,
+    control,
+    formState: { isValid: formIsValid, errors },
+  } = useForm({
+    resolver: yupResolver(vurdering_vedtak),
+    defaultValues: {
+      ...initialValues,
+    } as FieldValues,
+  });
+
+  const formValues = watch();
+
+  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -138,11 +144,7 @@ const VurderingVedtak = ({
       TODO: SKATT_FÅR_KOPI_HVIS_AVGIFTSPLIKTIG_INNTEKT
     Burde derfor hente mottakere på nytt når disse dataene endres.
    */
-  const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 2000), []);
-  useEffect(() => {
-    debouncedHentMuligeMottakere();
-    return debouncedHentMuligeMottakere.cancel();
-  }, [formValuesRepresentant.selvbetalende]);
+  useCallback(Utils._debounce(hentMuligeMottakere, 2000), []);
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
@@ -389,13 +391,13 @@ const VurderingVedtak = ({
       <div style={{ marginTop: "0.5rem", marginLeft: "0.5rem", marginBottom: "0.5rem" }}>
         <Nav.Row>
           <Nav.Column xs="4">
-            <Skjema.Select label="Betalingsintervall" feltNavn="betalingsintervall">
+            <Skjema.SelectV2 label="Betalingsintervall" name="betalingsintervall" control={control}>
               {betalingsintervaller.map((item: KTObject) => (
                 <option key={item.kode} value={item.kode}>
                   {item.term}
                 </option>
               ))}
-            </Skjema.Select>
+            </Skjema.SelectV2>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -407,8 +409,10 @@ const VurderingVedtak = ({
           hjelpetekstClassName="hjelpetekst"
         />
       </Nav.Typo.Element>
-      <Skjema.HTMLEditor
-        feltNavn="innledningFritekst"
+      <Skjema.HTMLEditorV2
+        name="innledningFritekst"
+        control={control}
+        feil={errors.innledningFritekst?.message?.toString()}
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til innledning..."
         disabled={!redigerbart}
@@ -421,8 +425,10 @@ const VurderingVedtak = ({
           hjelpetekstClassName="hjelpetekst"
         />
       </Nav.Typo.Element>
-      <Skjema.HTMLEditor
-        feltNavn="begrunnelseFritekst"
+      <Skjema.HTMLEditorV2
+        name="begrunnelseFritekst"
+        control={control}
+        feil={errors.begrunnelseFritekst?.message?.toString()}
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
         disabled={!redigerbart}
@@ -453,13 +459,3 @@ const VurderingVedtak = ({
     </div>
   );
 };
-
-const VurderingVedtakForm = reduxForm<{}, PropsFromRedux & Props>({
-  form: KV.Form.FTRL_VEDTAK,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  validate: (values) => lagYupToReduxformErrorMapper(vurdering_vedtak)(values),
-})(VurderingVedtak);
-
-export default connector(VurderingVedtakForm);

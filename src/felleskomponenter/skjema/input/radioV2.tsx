@@ -14,6 +14,7 @@ interface RadioComponentProps {
   label?: string;
   disabled?: boolean;
   checked?: boolean;
+  onChangeRadio?: () => void;
 }
 
 type RadioInnerComponentProps = RadioComponentProps & RegisterHookFormProps;
@@ -28,13 +29,16 @@ const normaliserReduxBoolean = (valg: string) => {
   return valg;
 };
 const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerComponentProps>(
-  ({ forhandsvalgt, disabled, checked, ...rest }: RadioInnerComponentProps, _ref: any) => {
+  ({ forhandsvalgt, disabled, checked, onChangeRadio, ...rest }: RadioInnerComponentProps, _ref: any) => {
     return (
       <Nav.Radio
         className={rest.className}
         label={rest.label}
         checked={checked}
-        onChange={() => rest.onChange(normaliserReduxBoolean(rest.value))}
+        onChange={() => {
+          if (onChangeRadio) onChangeRadio();
+          rest.onChange(normaliserReduxBoolean(rest.value));
+        }}
         onBlur={rest.onBlur}
         value={rest.value}
         name={rest.name}
