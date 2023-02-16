@@ -34,7 +34,7 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
   }
   if (valg.valgType === DokumenterV2.ValgType.SELECT) {
     if (valg.valgAlternativer.length === 1) {
-      changeField(`felt.${feltKode}.valg`, valg.valgAlternativer[0].beskrivelse);
+      changeField(`felt.${feltKode}.valg`, valg.valgAlternativer[0].kode);
       return null;
     }
     return (

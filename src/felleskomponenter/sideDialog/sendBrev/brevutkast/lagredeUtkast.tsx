@@ -33,10 +33,9 @@ const LagredeUtkast = ({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) => 
           </Nav.Row>
 
           {alleUtkast.map((utkast) => (
-            <Nav.Row>
+            <Nav.Row key={utkast.tittel}>
               <Nav.Column xs="9">
                 <Mui.Lenkeknapp
-                  key={utkast.tittel}
                   value={utkast.tittel}
                   onClick={velgUtkast}
                   ikon={Ikoner.Draft}
