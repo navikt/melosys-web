@@ -20,6 +20,8 @@ import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from ".
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { lovvalgsperioderOperations } from "../../../../ducks/lovvalgsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { kontrollerFerdigbehandling } from "../../../../ducks/kontroll/operations";
+import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 import { formSelectors } from "../../../../ducks/form";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
@@ -31,8 +33,6 @@ import bem from "../../../../bemUtils";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
-import { kontrollerFerdigbehandling } from "../../../../ducks/kontroll/operations";
-import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 import {
   BEGRUNNELSE_FRITEKST_HJELPETEKST,
   INNLEDNING_FRITEKST,
@@ -155,7 +155,7 @@ const VurderingVedtak = ({
       : formValues?.nyVurderingBakgrunn;
 
   const filterKopiMottakere = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    if ([KV.Koder.MottakerRolle.ARBEIDSGIVER, KV.Koder.MottakerRolle.REPRESENTANT].includes(muligMottaker?.rolle)) {
+    if ([MKV.Koder.mottakerroller.ARBEIDSGIVER, MKV.Koder.mottakerroller.FULLMEKTIG].includes(muligMottaker?.rolle)) {
       return formValues?.kopiTilArbeidsgiver;
     }
     return true;
