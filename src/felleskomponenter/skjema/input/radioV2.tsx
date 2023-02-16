@@ -28,7 +28,7 @@ const normaliserReduxBoolean = (valg: string) => {
   return valg;
 };
 const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerComponentProps>(
-  ({ forhandsvalgt, disabled, checked, ...rest }: RadioInnerComponentProps) => {
+  ({ forhandsvalgt, disabled, checked, ...rest }: RadioInnerComponentProps, _ref: any) => {
     return (
       <Nav.Radio
         className={rest.className}
@@ -46,7 +46,7 @@ const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerCompon
 
 type RadioProps = RadioComponentProps & UseControllerProps;
 
-const Radio = React.forwardRef<HTMLSelectElement, RadioProps>(({ name, control, ...rest }: RadioProps) => {
+const Radio = React.forwardRef<HTMLSelectElement, RadioProps>(({ name, control, ...rest }: RadioProps, _ref: any) => {
   return (
     <Controller name={name} control={control} render={({ field }) => <InnerRadioComponent {...field} {...rest} />} />
   );

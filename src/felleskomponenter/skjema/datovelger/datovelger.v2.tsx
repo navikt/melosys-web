@@ -20,7 +20,7 @@ interface DatovelgerComponentProps {
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;
 
 const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatovelgerComponentProps>(
-  ({ label, disabled, bredde, minDate, maxDate, feil, ...rest }: InnerDatovelgerComponentProps) => {
+  ({ label, disabled, bredde, minDate, maxDate, feil, ...rest }: InnerDatovelgerComponentProps, _ref: any) => {
     return (
       <div className="skjemaelement__datovelger" {...rest}>
         <Datovelger
@@ -42,7 +42,7 @@ const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatove
 type DatovelgerProps = DatovelgerComponentProps & UseControllerProps;
 
 const DatovelgerV2 = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
-  ({ name, control, ...rest }: DatovelgerProps) => {
+  ({ name, control, ...rest }: DatovelgerProps, _ref: any) => {
     return (
       <Controller
         name={name}

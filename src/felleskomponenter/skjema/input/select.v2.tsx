@@ -16,7 +16,7 @@ interface SelectComponentProps extends Nav.SelectProps {
 type SelectInnerComponentProps = SelectComponentProps & RegisterHookFormProps;
 
 const SelectInnerComponent = React.forwardRef<HTMLSelectElement, SelectInnerComponentProps>(
-  ({ label, emptyFieldDisabled, emptyFieldText, disabled, children, ...rest }: SelectProps) => {
+  ({ label, emptyFieldDisabled, emptyFieldText, disabled, children, ...rest }: SelectProps, _ref: any) => {
     return (
       <Nav.Select
         label={label}
@@ -38,24 +38,26 @@ const SelectInnerComponent = React.forwardRef<HTMLSelectElement, SelectInnerComp
 
 type SelectProps = SelectComponentProps & UseControllerProps;
 
-const Select = React.forwardRef<HTMLSelectElement, SelectProps>(({ name, control, ...rest }: SelectProps) => {
-  return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field }) => (
-        <SelectInnerComponent
-          {...field}
-          label={rest.label}
-          emptyFieldText={rest.emptyFieldText}
-          emptyFieldDisabled={rest.emptyFieldDisabled}
-          disabled={rest.disabled}
-        >
-          {rest.children}
-        </SelectInnerComponent>
-      )}
-    />
-  );
-});
+const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
+  ({ name, control, ...rest }: SelectProps, _ref: any) => {
+    return (
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <SelectInnerComponent
+            {...field}
+            label={rest.label}
+            emptyFieldText={rest.emptyFieldText}
+            emptyFieldDisabled={rest.emptyFieldDisabled}
+            disabled={rest.disabled}
+          >
+            {rest.children}
+          </SelectInnerComponent>
+        )}
+      />
+    );
+  }
+);
 
 export default Select;
