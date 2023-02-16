@@ -49,7 +49,6 @@ const Saksbehandling = ({
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
-  const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
 
   useEffect(() => {
     lastInnSaksopplysninger();
@@ -95,9 +94,7 @@ const Saksbehandling = ({
             <Nav.Row>
               <Nav.Column xs="7">
                 <Stegvelger oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger} />
-                {registeropplysningerHentet && (
-                  <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
-                )}
+                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering

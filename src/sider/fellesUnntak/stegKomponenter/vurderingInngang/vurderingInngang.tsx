@@ -20,6 +20,8 @@ import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
 
+const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
+
 interface VurderingInngangProps {
   oppdaterStatus: (isValid: boolean) => void;
   bekreft: () => void;
@@ -31,7 +33,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const periode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
-  const soknadslandkoder = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  const avsenderland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector)[0];
   const lovvalgsland = useSelector(lovvalgsperioderSelectors.LovvalgslandSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
 
@@ -42,42 +44,45 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
     defaultValues: {
       fom: Utils.dato.formatterDatoTilNorsk(periode?.fom),
       tom: Utils.dato.formatterDatoTilNorsk(periode?.tom),
-      avsenderland: soknadslandkoder[0],
+      avsenderland,
       lovvalgsland,
     } as FieldValues,
   });
   const formValues = getValues();
 
-  const [initialFormState, setInitialFormState] = useState<{
-    fom?: string;
-    tom?: string;
-    avsenderland?: string;
-    lovvalgsland?: string;
-  }>({});
+  const [initialValues, setInitialValues] = useState<FieldValues>({ ...formState.defaultValues });
   const [visSpinner, setVisSpinner] = useState(false);
+
+  useEffect(() => {
+    if (registeropplysningerHentet) {
+      dispatch(menypanelOperations.visMenypanel());
+    }
+  }, []);
 
   useEffect(() => {
     oppdaterStatus(formState.isValid);
   }, [formState?.isValid]);
 
-  const skalHenteRegisteropplysninger =
-    !registeropplysningerHentet ||
-    formValues?.fom !== initialFormState?.fom ||
-    formValues?.tom !== initialFormState?.tom ||
-    formValues?.avsenderland !== initialFormState?.avsenderland ||
-    formValues?.lovvalgsland !== initialFormState?.lovvalgsland;
+  useEffect(() => {
+    if (formState?.isValid && sakstype === TRYGDEAVTALE) {
+      dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState({ lovvalgsland: formValues.lovvalgsland }));
+      dispatch(lovvalgsperioderOperations.lagre());
+    }
+  }, [periode?.fom, periode?.tom, avsenderland]);
 
-  const oppdaterPeriode = (data: { fom: string; tom: string }) => {
-    const fom = Utils.dato.formatterDatoTilISO(data.fom);
-    const tom = Utils.dato.formatterDatoTilISO(data.tom);
-    dispatch(
-      mottatteOpplysningerOperations.oppdaterPeriode({
-        fom: fom === "Invalid date" ? "" : fom,
-        tom: tom === "Invalid date" ? "" : tom,
-      })
-    );
-  };
-  const debouncedOppdaterPeriode = useCallback(Utils._debounce(oppdaterPeriode, 500), []);
+  const debouncedOppdaterPeriode = useCallback(
+    Utils._debounce(
+      (data: { fom: string; tom: string }) =>
+        dispatch(
+          mottatteOpplysningerOperations.oppdaterPeriode({
+            fom: Utils.dato.formatterDatoTilISO(data.fom, ""),
+            tom: Utils.dato.formatterDatoTilISO(data.tom, ""),
+          })
+        ),
+      500
+    ),
+    []
+  );
 
   const lagreFom = (fom: string) => {
     debouncedOppdaterPeriode({ fom, tom: formValues.tom });
@@ -97,12 +102,20 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
   };
 
   const bekreftHandle = async () => {
-    setInitialFormState({
+    const skalHenteRegisteropplysninger =
+      !registeropplysningerHentet ||
+      formValues?.fom !== initialValues?.fom ||
+      formValues?.tom !== initialValues?.tom ||
+      formValues?.avsenderland !== initialValues?.avsenderland ||
+      formValues?.lovvalgsland !== initialValues?.lovvalgsland;
+
+    setInitialValues({
       fom: formValues.fom,
       tom: formValues.tom,
       avsenderland: formValues.avsenderland,
       lovvalgsland: formValues.lovvalgsland,
     });
+
     if (skalHenteRegisteropplysninger) {
       setVisSpinner(true);
       await oppfriskOgLastInnSaksopplysninger();
@@ -154,7 +167,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
               ))}
             </Skjema.SelectV2>
           </Nav.Column>
-          {sakstype === MKV.Koder.sakstyper.EU_EOS && (
+          {sakstype === EU_EOS && (
             <Nav.Column xs="4">
               <Skjema.SelectV2
                 name="lovvalgsland"
@@ -175,7 +188,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
           )}
         </Nav.Row>
       </Nav.Fieldset>
-      {sakstype === MKV.Koder.sakstyper.EU_EOS && (
+      {sakstype === EU_EOS && (
         <Nav.AlertStripeInfo className="alert">
           Hvis avsenderlandet ikke er lovvalgsland, må du endre lovvalgsland.
         </Nav.AlertStripeInfo>

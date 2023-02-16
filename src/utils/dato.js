@@ -84,10 +84,11 @@ function formatterDatoTilNorsk(dato, visTidspunkt) {
  * formatet "YYYY-MM-DDTHH:mm:ss"
  *
  */
-function formatterDatoTilISO(dato, tid) {
+function formatterDatoTilISO(dato, tid, defaultValue = "Invalid date") {
   const inputFormat = ["DD.MM.YYYY HH:mm", "DD.MM.YYYY"];
   const momentFormat = tid ? "YYYY-MM-DDTHH:mm:ss" : "YYYY-MM-DD";
-  return moment(dato, inputFormat).format(momentFormat);
+  const isoDato = moment(dato, inputFormat).format(momentFormat);
+  return isoDato === "Invalid date" ? defaultValue : isoDato;
 }
 
 /** Enkelte data kommer fra backend i form av en "kortdato", feks 2017-01. Denne funksjonen
