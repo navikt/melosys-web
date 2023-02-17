@@ -99,7 +99,6 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, rapporterSkjema }: Props
   if (!erMottatteOpplysningerLastetInn || !formValues) {
     return null;
   }
-
   return (
     <div className="vurderingVirksomhet">
       <Nav.Typo.Undertittel className="undertittel">

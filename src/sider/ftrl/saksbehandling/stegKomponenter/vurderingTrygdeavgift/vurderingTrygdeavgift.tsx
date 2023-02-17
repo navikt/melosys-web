@@ -78,9 +78,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake }: Props) => {
   const lonnsforholdErUtlandetEllerDelt = [LØNN_FRA_UTLANDET, DELT_LØNN].includes(
     formValues.avgiftsgrunnlag?.lønnsforhold
   );
-  useEffect(() => {
-    console.log({ formValues, errors, formIsValid });
-  }, [errors, formIsValid]);
+
   const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
 
   const [erTabellApen, setErTabellApen] = useState(new Map());
@@ -253,6 +251,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake }: Props) => {
   const trygdeavgiftsgrunnlagComponentProps = {
     formValues,
     control,
+    errors,
     oppdatertAvgiftsberegning,
     erTabellApen,
     erSaerligAvgiftsGruppeValgt,
@@ -276,6 +275,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake }: Props) => {
               label="Norsk virksomhet"
               name="avgiftsgrunnlag.lønnsforhold"
               control={control}
+              feil={(errors.avgiftsgrunnlag as any)?.lønnsforhold.message?.melding}
               value={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               checked={formValues.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               disabled={!redigerbart}
@@ -284,6 +284,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake }: Props) => {
               name="avgiftsgrunnlag.lønnsforhold"
               control={control}
               label="Utenlandsk virksomhet"
+              feil={(errors.avgiftsgrunnlag as any)?.lønnsforhold.message?.melding}
               value={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               checked={formValues.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               disabled={!redigerbart}
@@ -291,6 +292,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake }: Props) => {
             <Skjema.RadioV2
               label="Norsk og utenlandsk virksomhet"
               name="avgiftsgrunnlag.lønnsforhold"
+              feil={(errors.avgiftsgrunnlag as any)?.lønnsforhold.message?.melding}
               control={control}
               value={MKV.Koder.loenn_forhold.DELT_LØNN}
               checked={formValues.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN}

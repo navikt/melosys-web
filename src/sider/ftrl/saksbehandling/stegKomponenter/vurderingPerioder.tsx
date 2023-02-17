@@ -40,6 +40,7 @@ interface PeriodeElementProps {
   innvilgelsesResultater: KTObject[];
   control: any;
   formValues: formValuesProp;
+  errors: any;
   handleSlett: (index: number) => void;
   erPeriodeFoerSoknadMottatDato: (medlemskapsperiode: MedlemskapsperiodeProp) => boolean;
 }
@@ -50,6 +51,7 @@ const PeriodeElement = ({
   trygdedekninger,
   innvilgelsesResultater,
   formValues,
+  errors,
   control,
   handleSlett,
   erPeriodeFoerSoknadMottatDato,
@@ -67,6 +69,7 @@ const PeriodeElement = ({
           <Skjema.DatovelgerV2
             label="Fra og med:"
             control={control}
+            feil={errors.medlemskapsperioder?.at(index)?.fomDato?.message?.melding}
             name={`medlemskapsperioder[${index}].fomDato`}
             disabled
           />
@@ -76,6 +79,7 @@ const PeriodeElement = ({
             label="Til og med:"
             control={control}
             name={`medlemskapsperioder[${index}].tomDato`}
+            feil={errors.medlemskapsperioder?.at(index)?.tomDato?.message?.melding}
             disabled={!redigerbart}
           />
         </Nav.Column>
@@ -83,6 +87,7 @@ const PeriodeElement = ({
           <Skjema.SelectV2
             label="Trygdedekning"
             name={`medlemskapsperioder[${index}].trygdedekning`}
+            feil={errors.medlemskapsperioder?.at(index)?.trygdedekning?.message?.melding}
             control={control}
             emptyFieldText="Velg"
             emptyFieldDisabled={!!formValues.medlemskapsperioder[index].trygdedekning}
@@ -98,6 +103,7 @@ const PeriodeElement = ({
           <Skjema.SelectV2
             label="Resultat"
             name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
+            feil={errors.medlemskapsperioder?.at(index)?.innvilgelsesResultat?.message?.melding}
             control={control}
             emptyFieldText="Velg"
             emptyFieldDisabled={!!formValues.medlemskapsperioder[index].innvilgelsesResultat}
@@ -185,7 +191,7 @@ export const VurderingPerioder = ({ bekreft, tilbake }: VurderingPerioderProps) 
     setValue,
     control,
     watch,
-    formState: { isValid: formIsValid },
+    formState: { isValid: formIsValid, errors },
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
     mode: "onChange",
@@ -371,6 +377,7 @@ export const VurderingPerioder = ({ bekreft, tilbake }: VurderingPerioderProps) 
           <PeriodeElement
             trygdedekninger={trygdedekninger}
             innvilgelsesResultater={innvilgelsesResultater}
+            errors={errors}
             key={medlemskapsperiode.id}
             index={index}
             control={control}

@@ -26,6 +26,7 @@ const SelectInnerComponent = React.forwardRef<HTMLSelectElement, SelectInnerComp
         name={rest.name}
         value={rest.value}
         ref={rest.itemRef}
+        feil={rest.feil}
       >
         <option disabled={emptyFieldDisabled} value="">
           {emptyFieldText}

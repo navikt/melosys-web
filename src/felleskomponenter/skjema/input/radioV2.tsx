@@ -15,6 +15,7 @@ interface RadioComponentProps {
   disabled?: boolean;
   checked?: boolean;
   onChangeRadio?: () => void;
+  feil?: any;
 }
 
 type RadioInnerComponentProps = RadioComponentProps & RegisterHookFormProps;
@@ -39,6 +40,7 @@ const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerCompon
           if (onChangeRadio) onChangeRadio();
           rest.onChange(normaliserReduxBoolean(rest.value));
         }}
+        feil={rest.feil}
         onBlur={rest.onBlur}
         value={rest.value}
         name={rest.name}

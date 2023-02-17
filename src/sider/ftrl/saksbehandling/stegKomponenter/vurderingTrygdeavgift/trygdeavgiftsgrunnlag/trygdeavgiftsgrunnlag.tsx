@@ -21,6 +21,7 @@ interface TrygdeavgiftsgrunnlagProps {
     avgiftsberegning?: Api.Avgiftsberegning | undefined;
     avgiftsgrunnlag?: Api.Avgiftsgrunnlag | undefined;
   };
+  errors: any;
   control: any;
   setValue: (field: string, value: string) => void;
   oppdatertAvgiftsberegning: OppdaterAvgiftsberegning;
@@ -40,6 +41,7 @@ const Trygdeavgiftsgrunnlag = ({
   formValues,
   setValue,
   control,
+  errors,
   oppdatertAvgiftsberegning,
   erTabellApen,
   erVirksomhetNorsk,
@@ -176,6 +178,7 @@ const Trygdeavgiftsgrunnlag = ({
               className="column"
               label="Ja"
               name={`${virksomhetType}særligAvgiftsgruppe`}
+              feil={errors[virksomhetType]?.særligAvgiftsgruppe?.message?.melding}
               onChange={(event) => handleSærligAvgiftsgruppeRadioChange(event, erVirksomhetNorsk)}
               checked={erSaerligAvgiftsGruppeValgt.get(virksomhetType) === true}
               value={BOOLSK_STRING.SANN}
@@ -185,6 +188,7 @@ const Trygdeavgiftsgrunnlag = ({
               className="column"
               label="Nei"
               name={`${virksomhetType}særligAvgiftsgruppe`}
+              feil={errors[virksomhetType]?.særligAvgiftsgruppe?.message?.melding}
               onChange={(event) => handleSærligAvgiftsgruppeRadioChange(event, erVirksomhetNorsk)}
               checked={erSaerligAvgiftsGruppeValgt.get(virksomhetType) === false}
               value={BOOLSK_STRING.USANN}
@@ -196,6 +200,7 @@ const Trygdeavgiftsgrunnlag = ({
               label=""
               disabled={!redigerbart}
               name={`${feltNavnBase}.særligAvgiftsgruppe`}
+              feil={errors[feltNavnBase]?.særligAvgiftsgruppe?.message?.melding}
               control={control}
               emptyFieldText="Velg gruppe"
               emptyFieldDisabled={
@@ -244,6 +249,7 @@ const Trygdeavgiftsgrunnlag = ({
                     className="column"
                     label="Ja"
                     name={`${feltNavnBase}.erSkattepliktig`}
+                    feil={errors[feltNavnBase]?.erSkattepliktig?.message?.melding}
                     control={control}
                     checked={
                       erSkattePliktig === null || erSkattePliktig === undefined ? undefined : Boolean(erSkattePliktig)
@@ -261,6 +267,7 @@ const Trygdeavgiftsgrunnlag = ({
                     className="column"
                     label="Nei"
                     name={`${feltNavnBase}.erSkattepliktig`}
+                    feil={errors[feltNavnBase]?.erSkattepliktig?.message?.melding}
                     control={control}
                     onChangeRadio={() =>
                       setValue(feltNavnTrygdeavgiftBetalesTilNAV.feltNavn, feltNavnTrygdeavgiftBetalesTilNAV.verdi)

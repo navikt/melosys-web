@@ -59,6 +59,7 @@ const komponentState = (state: RootState) => ({
   initialValues: {
     begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state),
+    betalingsintervall: "MANEDLIG",
   },
   formIsValid: formSelectors.FolketrygdlovenVedtakFormValidSelector(state),
 });
@@ -118,7 +119,6 @@ export const VurderingVedtak = ({
   });
 
   const formValues = watch();
-
   const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
@@ -269,7 +269,7 @@ export const VurderingVedtak = ({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
       innledningFritekst: formValues?.innledningFritekst || null,
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-      betalingsintervall: formValues.betalingsintervall ?? "MANEDLIG",
+      betalingsintervall: formValues?.betalingsintervall,
       vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
       nyVurderingBakgrunn: null,
@@ -406,7 +406,7 @@ export const VurderingVedtak = ({
       <Skjema.HTMLEditorV2
         name="innledningFritekst"
         control={control}
-        feil={errors.innledningFritekst?.message?.toString()}
+        feil={(errors.innledningFritekst?.message as any)?.melding}
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til innledning..."
         disabled={!redigerbart}
@@ -422,7 +422,7 @@ export const VurderingVedtak = ({
       <Skjema.HTMLEditorV2
         name="begrunnelseFritekst"
         control={control}
-        feil={errors.begrunnelseFritekst?.message?.toString()}
+        feil={(errors.begrunnelseFritekst?.message as any)?.melding}
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
         disabled={!redigerbart}
