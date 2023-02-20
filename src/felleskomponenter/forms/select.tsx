@@ -26,6 +26,7 @@ const SelectInnerComponent = React.forwardRef<HTMLSelectElement, SelectInnerComp
         name={rest.name}
         value={rest.value}
         ref={rest.itemRef}
+        feil={rest.feil}
       >
         <option disabled={emptyFieldDisabled} value="">
           {emptyFieldText}
@@ -44,7 +45,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       <Controller
         name={name}
         control={control}
-        render={({ field }) => (
+        render={({ field, formState }) => (
           <SelectInnerComponent
             {...field}
             label={rest.label}
@@ -55,6 +56,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               field.onChange(event);
               if (rest.onChange) rest.onChange(event?.target?.value);
             }}
+            feil={(formState.errors?.[field.name]?.message as any)?.melding}
           >
             {rest.children}
           </SelectInnerComponent>

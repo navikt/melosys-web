@@ -48,7 +48,7 @@ const Datovelger = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
       <Controller
         name={name}
         control={control}
-        render={({ field }) => (
+        render={({ field, formState }) => (
           <InnerDatovelgerComponent
             {...field}
             {...rest}
@@ -61,6 +61,7 @@ const Datovelger = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
               field.onChange(value);
               if (rest.onChange) rest.onChange(value);
             }}
+            feil={(formState.errors?.[field.name]?.message as any)?.melding}
           />
         )}
       />

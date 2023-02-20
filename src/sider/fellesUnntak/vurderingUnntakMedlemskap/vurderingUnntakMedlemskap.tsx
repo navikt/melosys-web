@@ -28,19 +28,19 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const periodeMottatteOpplysninger = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
-  const periodeLovvalg = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
+  const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
 
-  const { control, watch, formState } = useForm({
+  const { control, getValues, formState } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
-    mode: "onChange",
+    mode: "all",
     defaultValues: {
-      innvilgelsesResultat: "",
-      fom: Utils.dato.formatterDatoTilNorsk(periodeLovvalg.fom ? periodeLovvalg.fom : periodeMottatteOpplysninger.fom),
-      tom: Utils.dato.formatterDatoTilNorsk(periodeLovvalg.tom ? periodeLovvalg.tom : periodeMottatteOpplysninger.tom),
-      bestemmelse: "",
+      innvilgelsesResultat: lovvalgsperiode.innvilgelsesResultat,
+      fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato || periodeMottatteOpplysninger.fom),
+      tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato || periodeMottatteOpplysninger.tom),
+      bestemmelse: lovvalgsperiode.bestemmelse || "",
     } as FieldValues,
   });
-  const formValues = watch();
+  const formValues = getValues();
 
   useEffect(() => {
     oppdaterStatus(formState.isValid);
@@ -114,7 +114,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
               control={control}
               label="Bestemmelse"
               emptyFieldText="Velg"
-              feil={(formState.errors.bestemmelse?.message as any)?.melding}
               emptyFieldDisabled={!!formValues.bestemmelse}
               disabled={!redigerbart}
             >
@@ -133,9 +132,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
           <Nav.Row>
             <Nav.Column xs="2">
               <Forms.Datovelger
-                label="Fra og med:"
+                label="Fra og med"
                 name="fom"
-                feil={(formState.errors.fom?.message as any)?.melding}
                 disabled={!redigerbart}
                 control={control}
                 onChange={lagreFom}
@@ -143,9 +141,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
             </Nav.Column>
             <Nav.Column xs="2">
               <Forms.Datovelger
-                label="Til og med:"
+                label="Til og med"
                 name="tom"
-                feil={(formState.errors.tom?.message as any)?.melding}
                 disabled={!redigerbart}
                 control={control}
                 onChange={lagreTom}
@@ -157,7 +154,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
                 control={control}
                 label="Bestemmelse"
                 emptyFieldText="Velg"
-                feil={(formState.errors.bestemmelse?.message as any)?.melding}
                 emptyFieldDisabled={!!formValues.bestemmelse}
                 disabled={!redigerbart}
               >

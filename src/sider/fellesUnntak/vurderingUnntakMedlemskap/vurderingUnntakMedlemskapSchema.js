@@ -18,7 +18,7 @@ const vurdering_unntak_medlemskap = object().shape({
     is: (vurdering) =>
       vurdering === MKV.Koder.innvilgelsesResultat.INNVILGET ||
       vurdering === MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET,
-    then: string().erIkkeBlank(MAA_FYLLES_UT).required(MAA_FYLLES_UT),
+    then: string().required(MAA_FYLLES_UT),
   }),
 });
 

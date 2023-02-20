@@ -40,12 +40,12 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
   const { control, getValues, setValue, formState } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
     context: { sakstype },
-    mode: "onChange",
+    mode: "all",
     defaultValues: {
       fom: Utils.dato.formatterDatoTilNorsk(periode?.fom),
       tom: Utils.dato.formatterDatoTilNorsk(periode?.tom),
-      avsenderland,
-      lovvalgsland,
+      avsenderland: avsenderland || "",
+      lovvalgsland: lovvalgsland || "",
     } as FieldValues,
   });
   const formValues = getValues();
@@ -135,9 +135,8 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
         <Nav.Row>
           <Nav.Column xs="2">
             <Forms.Datovelger
-              label="Fra og med:"
+              label="Fra og med"
               name="fom"
-              feil={(formState.errors.fom?.message as any)?.melding}
               disabled={!redigerbart}
               control={control}
               onChange={lagreFom}
@@ -145,9 +144,8 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
           </Nav.Column>
           <Nav.Column xs="2">
             <Forms.Datovelger
-              label="Til og med:"
+              label="Til og med"
               name="tom"
-              feil={(formState.errors.tom?.message as any)?.melding}
               disabled={!redigerbart}
               control={control}
               onChange={lagreTom}
