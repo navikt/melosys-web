@@ -23,30 +23,8 @@ interface StegvelgerProps {
 }
 
 const Stegvelger = ({ oppfriskOgLastInnSaksopplysninger }: StegvelgerProps) => {
-  const [aktivtStegIndex, setAktivtStegIndex] = useState(0);
   const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([]);
-
-  const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean) => {
-    setAktuellesteg(
-      aktuelleSteg?.map((steg: any) =>
-        steg.id === stegId ? { ...steg, status: isSchemaValid ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET } : steg
-      )
-    );
-  };
-
-  const bekreft = () => {
-    setAktuellesteg(
-      aktuelleSteg?.map((steg: any) => ({ ...steg, aktivtSteg: steg.stegPosisjon === aktivtStegIndex + 1 }))
-    );
-    setAktivtStegIndex(aktivtStegIndex + 1);
-  };
-
-  const tilbake = () => {
-    setAktuellesteg(
-      aktuelleSteg?.map((steg: any) => ({ ...steg, aktivtSteg: steg.stegPosisjon === aktivtStegIndex - 1 }))
-    );
-    setAktivtStegIndex(aktivtStegIndex - 1);
-  };
+  const aktivtStegIndex = aktuelleSteg?.findIndex((steg) => steg.aktivtSteg);
 
   useEffect(() => {
     setAktuellesteg([
@@ -71,9 +49,27 @@ const Stegvelger = ({ oppfriskOgLastInnSaksopplysninger }: StegvelgerProps) => {
     ]);
   }, []);
 
+  const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean) => {
+    setAktuellesteg(
+      aktuelleSteg?.map((steg: AktueltSteg) =>
+        steg.id === stegId ? { ...steg, status: isSchemaValid ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET } : steg
+      )
+    );
+  };
+
+  const aktuelleStegMedNyttAktivtSteg = (stegIndex: number) =>
+    aktuelleSteg?.map((steg: AktueltSteg) => ({ ...steg, aktivtSteg: steg.stegPosisjon === stegIndex }));
+
+  const bekreft = () => {
+    setAktuellesteg(aktuelleStegMedNyttAktivtSteg(aktivtStegIndex + 1));
+  };
+
+  const tilbake = () => {
+    setAktuellesteg(aktuelleStegMedNyttAktivtSteg(aktivtStegIndex - 1));
+  };
+
   const handleKlikk = (stegIndex: number) => {
-    setAktivtStegIndex(stegIndex);
-    setAktuellesteg(aktuelleSteg?.map((steg: any) => ({ ...steg, aktivtSteg: steg.stegPosisjon === stegIndex })));
+    setAktuellesteg(aktuelleStegMedNyttAktivtSteg(stegIndex));
   };
 
   return (
