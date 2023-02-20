@@ -567,7 +567,7 @@ const SendBrev = ({
             Lagre utkast
           </Nav.Knapp>
         )}
-        <Nav.Knapp mini disabled={!formValues.valgtMottaker} className="brevknapp" onClick={forkastBrev}>
+        <Nav.Knapp mini disabled={!formValues.mottaker || !redigerbart} className="brevknapp" onClick={forkastBrev}>
           Forkast brev
         </Nav.Knapp>
       </div>
