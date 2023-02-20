@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as Utils from "../../utils";
 import StegLinje from "../../felleskomponenter/stegLinje";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
@@ -22,36 +22,45 @@ interface StegvelgerProps {
   oppfriskOgLastInnSaksopplysninger: () => void;
 }
 
+const initialVurderingInngangSteg = {
+  id: "1",
+  stegPosisjon: 0,
+  status: FANE_STATUS.UBEHANDLET,
+  aktivtSteg: true,
+  vedtakSteg: false,
+  tittel: "Inngang",
+  komponent: VurderingInngang,
+};
+
+const initialVurderingUnntakMedlemskapSteg = {
+  id: "2",
+  stegPosisjon: 1,
+  status: FANE_STATUS.UBEHANDLET,
+  aktivtSteg: false,
+  vedtakSteg: false,
+  tittel: "Unntak medlemskap",
+  komponent: VurderingUnntakMedlemskap,
+};
+
 const Stegvelger = ({ oppfriskOgLastInnSaksopplysninger }: StegvelgerProps) => {
-  const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([]);
+  const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([initialVurderingInngangSteg]);
   const aktivtStegIndex = aktuelleSteg?.findIndex((steg) => steg.aktivtSteg);
 
-  useEffect(() => {
-    setAktuellesteg([
-      {
-        id: "1",
-        stegPosisjon: 0,
-        status: FANE_STATUS.UBEHANDLET,
-        aktivtSteg: true,
-        vedtakSteg: false,
-        tittel: "Inngang",
-        komponent: VurderingInngang,
-      },
-      {
-        id: "2",
-        stegPosisjon: 1,
-        status: FANE_STATUS.UBEHANDLET,
-        aktivtSteg: false,
-        vedtakSteg: false,
-        tittel: "Unntak medlemskap",
-        komponent: VurderingUnntakMedlemskap,
-      },
-    ]);
-  }, []);
-
   const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean) => {
+    let nyeSteg = aktuelleSteg;
+    const erInngangSteg = stegId === initialVurderingInngangSteg.id;
+    const viserUnntakMedlemskapSteg = aktuelleSteg.find((steg) => steg.id === initialVurderingUnntakMedlemskapSteg.id);
+
+    if (erInngangSteg && isSchemaValid && !viserUnntakMedlemskapSteg) {
+      nyeSteg.push(initialVurderingUnntakMedlemskapSteg);
+    }
+
+    if (erInngangSteg && !isSchemaValid && viserUnntakMedlemskapSteg) {
+      nyeSteg = nyeSteg.filter((steg) => steg.id !== initialVurderingUnntakMedlemskapSteg.id);
+    }
+
     setAktuellesteg(
-      aktuelleSteg?.map((steg: AktueltSteg) =>
+      nyeSteg?.map((steg: AktueltSteg) =>
         steg.id === stegId ? { ...steg, status: isSchemaValid ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET } : steg
       )
     );

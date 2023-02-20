@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,10 +20,11 @@ import "./vurderingUnntakMedlemskap.css";
 const { INNVILGET, DELVIS_INNVILGET, AVSLAATT } = MKV.Koder.innvilgelsesResultat;
 
 interface VurderingUnntakMedlemskapProps {
+  oppdaterStatus: (isValid: boolean) => void;
   tilbake: () => void;
 }
 
-const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) => {
+const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakMedlemskapProps) => {
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const periodeMottatteOpplysninger = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
@@ -40,6 +41,10 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
     } as FieldValues,
   });
   const formValues = watch();
+
+  useEffect(() => {
+    oppdaterStatus(formState.isValid);
+  }, [formState?.isValid]);
 
   const lagreFom = (fom: string) => {
     debouncedOppdaterPeriode({ fom, tom: formValues.tom, innvilgelsesResultat: formValues.innvilgelsesResultat });
