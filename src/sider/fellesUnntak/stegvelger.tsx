@@ -37,12 +37,14 @@ const Stegvelger = ({ oppfriskOgLastInnSaksopplysninger }: StegvelgerProps) => {
     setAktuellesteg(
       aktuelleSteg?.map((steg: any) => ({ ...steg, aktivtSteg: steg.stegPosisjon === aktivtStegIndex + 1 }))
     );
+    setAktivtStegIndex(aktivtStegIndex + 1);
   };
 
   const tilbake = () => {
     setAktuellesteg(
       aktuelleSteg?.map((steg: any) => ({ ...steg, aktivtSteg: steg.stegPosisjon === aktivtStegIndex - 1 }))
     );
+    setAktivtStegIndex(aktivtStegIndex - 1);
   };
 
   useEffect(() => {
@@ -51,7 +53,7 @@ const Stegvelger = ({ oppfriskOgLastInnSaksopplysninger }: StegvelgerProps) => {
         id: "1",
         stegPosisjon: 0,
         status: FANE_STATUS.UBEHANDLET,
-        aktivtSteg: false,
+        aktivtSteg: true,
         vedtakSteg: false,
         tittel: "Inngang",
         komponent: VurderingInngang,
@@ -60,13 +62,12 @@ const Stegvelger = ({ oppfriskOgLastInnSaksopplysninger }: StegvelgerProps) => {
         id: "2",
         stegPosisjon: 1,
         status: FANE_STATUS.UBEHANDLET,
-        aktivtSteg: true,
+        aktivtSteg: false,
         vedtakSteg: false,
         tittel: "Unntak medlemskap",
         komponent: UnntakMedlemskap,
       },
     ]);
-    console.log("jojo");
   }, []);
 
   const handleKlikk = (stegIndex: number) => {

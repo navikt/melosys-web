@@ -253,6 +253,7 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
   const periode = bestemPeriode(reduxState);
   const fomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.fomDato : null) || periode.fom;
   const tomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.tomDato : null) || periode.tom;
+  const innvilgelsesResultat = stegState.innvilgelsesResultat || MKV.Koder.innvilgelsesResultat.INNVILGET;
 
   return [
     {
@@ -263,7 +264,7 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
       tilleggBestemmelse: stegState.tilleggbestemmelse || null,
       unntakFraBestemmelse: unntakFraBestemmelse || null,
       unntakFraLovvalgsland: null,
-      innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
+      innvilgelsesResultat,
       lovvalgsland,
       trygdeDekning: norgeErLovvalgsland(lovvalgsland)
         ? MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO
@@ -314,7 +315,8 @@ export function oppdaterLovvalgsperioderState(stegState) {
       stegState.tilleggbestemmelse ||
       stegState.unntakfrabestemmelse ||
       stegState.lovvalgsland ||
-      stegState.lovvalgsperiode
+      stegState.lovvalgsperiode ||
+      stegState.innvilgelsesResultat
     ) {
       const lovvalgsPerioder = byggLovvalgsPerioder(stegState, reduxState);
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));

@@ -37,7 +37,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
   const lovvalgsland = useSelector(lovvalgsperioderSelectors.LovvalgslandSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
 
-  const { control, getValues, formState } = useForm({
+  const { control, getValues, setValue, formState } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
     context: { sakstype },
     mode: "onChange",
@@ -94,6 +94,9 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
 
   const lagreAvsenderland = (valgtLand: string) => {
     dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(valgtLand ? [valgtLand] : [], false));
+    if (Utils._isEmpty(formValues.lovvalgsland)) {
+      setValue("lovvalgsland", valgtLand);
+    }
   };
 
   const lagreLovvalgsperiode = (valgtLand: string) => {

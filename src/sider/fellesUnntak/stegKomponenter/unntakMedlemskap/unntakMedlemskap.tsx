@@ -13,7 +13,11 @@ import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysn
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import unntak_medlemskap from "./unntakMedlemskapSchema";
 
-const UnntakMedlemskap = () => {
+interface UnntakMedlemskapProps {
+  tilbake: () => void;
+}
+
+const UnntakMedlemskap = ({ tilbake }: UnntakMedlemskapProps) => {
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const periodeMottatteOpplysninger = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
@@ -33,21 +37,31 @@ const UnntakMedlemskap = () => {
   const formValues = watch();
 
   const lagreFom = (fom: string) => {
-    debouncedOppdaterPeriode({ fom, tom: formValues.tom });
+    debouncedOppdaterPeriode({ fom, tom: formValues.tom, innvilgelsesResultat: formValues.vurdering });
   };
 
   const lagreTom = (tom: string) => {
-    debouncedOppdaterPeriode({ fom: formValues.fom, tom });
+    debouncedOppdaterPeriode({ fom: formValues.fom, tom, innvilgelsesResultat: formValues.vurdering });
+  };
+
+  const lagreVurdering = (vurdering: string) => {
+    dispatch(
+      lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
+        innvilgelsesResultat: vurdering,
+      })
+    );
+    dispatch(lovvalgsperioderOperations.lagre());
   };
 
   const debouncedOppdaterPeriode = useCallback(
-    Utils._debounce((data: { fom: string; tom: string }) => {
+    Utils._debounce((data: { fom: string; tom: string; innvilgelsesResultat: string }) => {
       dispatch(
         lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
           lovvalgsperiode: {
             fom: Utils.dato.formatterDatoTilISO(data.fom, null, ""),
             tom: Utils.dato.formatterDatoTilISO(data.tom, null, ""),
           },
+          innvilgelsesResultat: data.innvilgelsesResultat,
         })
       );
       dispatch(lovvalgsperioderOperations.lagre());
@@ -55,8 +69,6 @@ const UnntakMedlemskap = () => {
     []
   );
 
-  console.log("bestemmelse", formValues.bestemmelse);
-  console.log("state", formState);
   return (
     <div className="unntakMedlemskap">
       <Nav.Typo.Undertittel className="undertittel">Vurder unntaksperioder</Nav.Typo.Undertittel>
@@ -66,6 +78,7 @@ const UnntakMedlemskap = () => {
           control={control}
           label="Godkjenn unntaksperiode"
           value={MKV.Koder.innvilgelsesResultat.INNVILGET}
+          onChange={lagreVurdering}
           checked={formValues.vurdering === MKV.Koder.innvilgelsesResultat.INNVILGET}
         />
         <Skjema.RadioV2
@@ -73,6 +86,7 @@ const UnntakMedlemskap = () => {
           control={control}
           label="Godkjenn, men endre periode"
           value={MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET}
+          onChange={lagreVurdering}
           checked={formValues.vurdering === MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET}
         />
         <Skjema.RadioV2
@@ -80,30 +94,31 @@ const UnntakMedlemskap = () => {
           control={control}
           label="Ikke godkjenn"
           value={MKV.Koder.innvilgelsesResultat.AVSLAATT}
+          onChange={lagreVurdering}
           checked={formValues.vurdering === MKV.Koder.innvilgelsesResultat.AVSLAATT}
         />
       </Nav.Fieldset>
-
       {formValues.vurdering === MKV.Koder.innvilgelsesResultat.INNVILGET && (
-        <Nav.Column xs="4">
-          <Skjema.SelectV2
-            name="bestemmelse"
-            control={control}
-            label="Bestemmelse"
-            emptyFieldText="Velg"
-            feil={(formState.errors.bestemmelse?.message as any)?.melding}
-            emptyFieldDisabled={!!formValues.bestemmelse}
-            disabled={!redigerbart}
-          >
-            {MKV.KTObjects.landkoder.map((item: KTObject) => (
-              <option key={item.kode} value={item.kode}>
-                {item.term}
-              </option>
-            ))}
-          </Skjema.SelectV2>
-        </Nav.Column>
+        <Nav.Row>
+          <Nav.Column xs="4">
+            <Skjema.SelectV2
+              name="bestemmelse"
+              control={control}
+              label="Bestemmelse"
+              emptyFieldText="Velg"
+              feil={(formState.errors.bestemmelse?.message as any)?.melding}
+              emptyFieldDisabled={!!formValues.bestemmelse}
+              disabled={!redigerbart}
+            >
+              {MKV.KTObjects.landkoder.map((item: KTObject) => (
+                <option key={item.kode} value={item.kode}>
+                  {item.term}
+                </option>
+              ))}
+            </Skjema.SelectV2>
+          </Nav.Column>
+        </Nav.Row>
       )}
-
       {formValues.vurdering === MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET && (
         <Nav.Fieldset legend="Lovvalgsperiode">
           <Nav.Row>
@@ -151,7 +166,6 @@ const UnntakMedlemskap = () => {
           </Nav.AlertStripeInfo>
         </Nav.Fieldset>
       )}
-
       {formValues.vurdering === MKV.Koder.innvilgelsesResultat.AVSLAATT && (
         <Nav.AlertStripeInfo className="alert">
           Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i
@@ -159,6 +173,7 @@ const UnntakMedlemskap = () => {
         </Nav.AlertStripeInfo>
       )}
       <Mui.StegKnapper
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
         bekreftKnappProps={{
           onClick: () => console.log("bekreft"),
           disabled: !formState?.isValid || !redigerbart,
