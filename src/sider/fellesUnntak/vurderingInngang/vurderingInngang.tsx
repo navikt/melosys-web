@@ -5,9 +5,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../melosyskodeverk";
+import * as Forms from "../../../felleskomponenter/forms";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
@@ -134,7 +134,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="2">
-            <Skjema.DatovelgerV2
+            <Forms.Datovelger
               label="Fra og med:"
               name="fom"
               feil={(formState.errors.fom?.message as any)?.melding}
@@ -144,7 +144,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
             />
           </Nav.Column>
           <Nav.Column xs="2">
-            <Skjema.DatovelgerV2
+            <Forms.Datovelger
               label="Til og med:"
               name="tom"
               feil={(formState.errors.tom?.message as any)?.melding}
@@ -154,7 +154,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
             />
           </Nav.Column>
           <Nav.Column xs="4">
-            <Skjema.SelectV2
+            <Forms.Select
               name="avsenderland"
               control={control}
               label="Avsenderland"
@@ -168,11 +168,11 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
                   {item.term}
                 </option>
               ))}
-            </Skjema.SelectV2>
+            </Forms.Select>
           </Nav.Column>
           {sakstype === EU_EOS && (
             <Nav.Column xs="4">
-              <Skjema.SelectV2
+              <Forms.Select
                 name="lovvalgsland"
                 control={control}
                 label="Lovvalgsland"
@@ -186,7 +186,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
                     {item.term}
                   </option>
                 ))}
-              </Skjema.SelectV2>
+              </Forms.Select>
             </Nav.Column>
           )}
         </Nav.Row>

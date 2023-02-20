@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import MKV from "../../../melosyskodeverk";
+import * as Forms from "../../../felleskomponenter/forms";
 import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Utils from "../../../utils";
 
@@ -76,7 +76,7 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
     <div className="vurderingUnntakMedlemskap">
       <Nav.Typo.Undertittel className="undertittel">Vurder unntaksperioder</Nav.Typo.Undertittel>
       <Nav.Fieldset legend="Vurder unntaksperiode">
-        <Skjema.RadioV2
+        <Forms.Radio
           name="innvilgelsesResultat"
           control={control}
           label="Godkjenn unntaksperiode"
@@ -84,7 +84,7 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
           onChange={lagreInnvilgelsesResultat}
           checked={formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET}
         />
-        <Skjema.RadioV2
+        <Forms.Radio
           name="innvilgelsesResultat"
           control={control}
           label="Godkjenn, men endre periode"
@@ -92,7 +92,7 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
           onChange={lagreInnvilgelsesResultat}
           checked={formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET}
         />
-        <Skjema.RadioV2
+        <Forms.Radio
           name="innvilgelsesResultat"
           control={control}
           label="Ikke godkjenn"
@@ -104,7 +104,7 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
       {formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET && (
         <Nav.Row>
           <Nav.Column xs="4">
-            <Skjema.SelectV2
+            <Forms.Select
               name="bestemmelse"
               control={control}
               label="Bestemmelse"
@@ -118,7 +118,7 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
                   {item.term}
                 </option>
               ))}
-            </Skjema.SelectV2>
+            </Forms.Select>
           </Nav.Column>
         </Nav.Row>
       )}
@@ -126,7 +126,7 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
         <Nav.Fieldset legend="Lovvalgsperiode">
           <Nav.Row>
             <Nav.Column xs="2">
-              <Skjema.DatovelgerV2
+              <Forms.Datovelger
                 label="Fra og med:"
                 name="fom"
                 feil={(formState.errors.fom?.message as any)?.melding}
@@ -136,7 +136,7 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
               />
             </Nav.Column>
             <Nav.Column xs="2">
-              <Skjema.DatovelgerV2
+              <Forms.Datovelger
                 label="Til og med:"
                 name="tom"
                 feil={(formState.errors.tom?.message as any)?.melding}
@@ -146,7 +146,7 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
               />
             </Nav.Column>
             <Nav.Column xs="4">
-              <Skjema.SelectV2
+              <Forms.Select
                 name="bestemmelse"
                 control={control}
                 label="Bestemmelse"
@@ -160,7 +160,7 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
                     {item.term}
                   </option>
                 ))}
-              </Skjema.SelectV2>
+              </Forms.Select>
             </Nav.Column>
           </Nav.Row>
           <Nav.AlertStripeInfo className="alert">

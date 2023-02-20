@@ -1,9 +1,8 @@
 import React from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
-import * as Nav from "../../../navFrontend";
+import * as Nav from "../../navFrontend";
 
-import "../skjema.css";
-import { RegisterHookFormProps } from "../reacthookProps";
+import { RegisterHookFormProps } from "./reacthookProps";
 
 interface SelectComponentProps extends Nav.SelectProps {
   label?: string;

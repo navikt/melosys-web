@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
 
 import MKV from "../../../../melosyskodeverk";
+import * as Forms from "../../../../felleskomponenter/forms";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Skjema from "../../../../felleskomponenter/skjema";
@@ -185,7 +186,7 @@ export const VurderingStart = ({
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <Skjema.DatovelgerV2
+            <Forms.Datovelger
               label="Fra og med:"
               name="fom"
               feil={(errors.fom?.message as any)?.melding}
@@ -194,7 +195,7 @@ export const VurderingStart = ({
             />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Skjema.DatovelgerV2
+            <Forms.Datovelger
               label="Til og med:"
               name="tom"
               feil={(errors.tom?.message as any)?.melding}
@@ -247,7 +248,7 @@ export const VurderingStart = ({
       <Nav.Fieldset legend="Trygdedekning">
         <Nav.Row>
           <Nav.Column xs="6">
-            <Skjema.SelectV2
+            <Forms.Select
               name="trygdedekning"
               control={control}
               label=""
@@ -260,7 +261,7 @@ export const VurderingStart = ({
                   {item.term}
                 </option>
               ))}
-            </Skjema.SelectV2>
+            </Forms.Select>
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>

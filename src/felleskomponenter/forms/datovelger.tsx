@@ -1,13 +1,12 @@
 import React, { ReactNode } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 
-import * as Utils from "../../../utils/dato";
-import * as Nav from "../../../navFrontend";
+import * as Utils from "../../utils/dato";
+import * as Nav from "../../navFrontend";
 
-import Datovelger from "../../datovelger";
+import PlainDatovelger from "../datovelger";
 
-import "../skjema.css";
-import { RegisterHookFormProps } from "../reacthookProps";
+import { RegisterHookFormProps } from "./reacthookProps";
 
 interface DatovelgerComponentProps {
   label: ReactNode;
@@ -22,10 +21,10 @@ interface DatovelgerComponentProps {
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;
 
 const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatovelgerComponentProps>(
-  ({ label, disabled, bredde, minDate, maxDate, feil, ...rest }: InnerDatovelgerComponentProps) => {
+  ({ label, disabled, bredde, minDate, maxDate, feil, ...rest }: InnerDatovelgerComponentProps, _ref: any) => {
     return (
-      <div className="skjemaelement__datovelger" {...rest}>
-        <Datovelger
+      <div {...rest}>
+        <PlainDatovelger
           label={<Nav.Typo.Element>{label}</Nav.Typo.Element>}
           onChange={(nyDato) => rest.onChange(Utils.dateTilNorskString(nyDato))}
           onBlur={rest.onBlur}
@@ -43,7 +42,7 @@ const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatove
 
 type DatovelgerProps = DatovelgerComponentProps & UseControllerProps;
 
-const DatovelgerV2 = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
+const Datovelger = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
   ({ name, control, ...rest }: DatovelgerProps, _ref: any) => {
     return (
       <Controller
@@ -69,4 +68,4 @@ const DatovelgerV2 = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
   }
 );
 
-export default DatovelgerV2;
+export default Datovelger;
