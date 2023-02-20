@@ -17,6 +17,8 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 import "./vurderingUnntakMedlemskap.css";
 
+const { INNVILGET, DELVIS_INNVILGET, AVSLAATT } = MKV.Koder.innvilgelsesResultat;
+
 interface VurderingUnntakMedlemskapProps {
   tilbake: () => void;
 }
@@ -80,28 +82,26 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
           name="innvilgelsesResultat"
           control={control}
           label="Godkjenn unntaksperiode"
-          value={MKV.Koder.innvilgelsesResultat.INNVILGET}
+          value={INNVILGET}
           onChange={lagreInnvilgelsesResultat}
-          checked={formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET}
         />
         <Forms.Radio
           name="innvilgelsesResultat"
           control={control}
           label="Godkjenn, men endre periode"
-          value={MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET}
+          value={DELVIS_INNVILGET}
           onChange={lagreInnvilgelsesResultat}
-          checked={formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET}
         />
         <Forms.Radio
           name="innvilgelsesResultat"
           control={control}
           label="Ikke godkjenn"
-          value={MKV.Koder.innvilgelsesResultat.AVSLAATT}
+          value={AVSLAATT}
           onChange={lagreInnvilgelsesResultat}
-          checked={formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT}
         />
       </Nav.Fieldset>
-      {formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET && (
+
+      {formValues.innvilgelsesResultat === INNVILGET && (
         <Nav.Row>
           <Nav.Column xs="4">
             <Forms.Select
@@ -122,7 +122,8 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
           </Nav.Column>
         </Nav.Row>
       )}
-      {formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET && (
+
+      {formValues.innvilgelsesResultat === DELVIS_INNVILGET && (
         <Nav.Fieldset legend="Lovvalgsperiode">
           <Nav.Row>
             <Nav.Column xs="2">
@@ -169,12 +170,14 @@ const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) 
           </Nav.AlertStripeInfo>
         </Nav.Fieldset>
       )}
-      {formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT && (
+
+      {formValues.innvilgelsesResultat === AVSLAATT && (
         <Nav.AlertStripeInfo className="alert">
           Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i
           brevmenyen.
         </Nav.AlertStripeInfo>
       )}
+
       <Mui.StegKnapper
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
         bekreftKnappProps={{
