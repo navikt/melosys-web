@@ -1,13 +1,13 @@
 import DialogboksAvslagSoknad from "./avslagSoknad";
 import DialogboksAvsluttSakSomBortfalt from "./avsluttSakSomBortfalt";
-import DialogboksFerdigbehandleSak from "./ferdigbehandleSak";
+import DialogboksBekreftValg from "./bekreftValg";
 import DialogboksHenleggSak from "./henlegg";
 import DialogboksOppfriskSak from "./oppfrisk";
 
 export {
   DialogboksAvslagSoknad,
   DialogboksAvsluttSakSomBortfalt,
-  DialogboksFerdigbehandleSak,
+  DialogboksBekreftValg,
   DialogboksHenleggSak,
   DialogboksOppfriskSak,
 };

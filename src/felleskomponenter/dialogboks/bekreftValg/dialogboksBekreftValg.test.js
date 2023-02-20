@@ -2,7 +2,7 @@ import React from "react";
 
 import * as Nav from "../../../navFrontend";
 
-import { DialogboksFerdigbehandleSak } from "./dialogboksFerdigbehandleSak";
+import { DialogboksBekreftValg } from "./dialogboksBekreftValg";
 import Knapperad from "../../knapperad";
 
 describe("DialogboksFerdigbehandleSak", () => {
@@ -19,12 +19,12 @@ describe("DialogboksFerdigbehandleSak", () => {
   });
 
   it("viser en Nav Modal", () => {
-    const dialogboks = shallow(<DialogboksFerdigbehandleSak {...props} />);
+    const dialogboks = shallow(<DialogboksBekreftValg {...props} />);
     expect(dialogboks.exists(Nav.Modal)).toBe(true);
   });
 
   it("sender korrekte handlere til en knapperad", () => {
-    const dialogboks = shallow(<DialogboksFerdigbehandleSak {...props} />);
+    const dialogboks = shallow(<DialogboksBekreftValg {...props} />);
     const knapperad = dialogboks.find(Knapperad);
 
     expect(knapperad).toHaveLength(1);

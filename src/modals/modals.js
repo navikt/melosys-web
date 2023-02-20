@@ -10,7 +10,7 @@ import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import {
   DialogboksAvslagSoknad,
   DialogboksAvsluttSakSomBortfalt,
-  DialogboksFerdigbehandleSak,
+  DialogboksBekreftValg,
   DialogboksHenleggSak,
   DialogboksOppfriskSak,
 } from "../felleskomponenter/dialogboks";
@@ -60,7 +60,7 @@ const Modals = ({
       />
     )}
     {visFerdigbehandleSakDialog && (
-      <DialogboksFerdigbehandleSak avbryt={skjulFerdigbehandleSakDialogHandle} ferdigbehandleSak={ferdigbehandleSak} />
+      <DialogboksBekreftValg avbrytCallback={skjulFerdigbehandleSakDialogHandle} bekreftCallback={ferdigbehandleSak} />
     )}
   </Fragment>
 );

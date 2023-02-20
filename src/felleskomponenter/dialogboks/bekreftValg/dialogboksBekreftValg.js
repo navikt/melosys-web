@@ -8,14 +8,14 @@ import Knapperad from "../../knapperad";
 
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
-import "./dialogboksFerdigbehandleSak.css";
+import "./dialogboksBekreftValg.css";
 
-export const DialogboksFerdigbehandleSak = ({ ferdigbehandleSak, avbryt, redigerbart, ariaHideApp }) => (
+export const DialogboksBekreftValg = ({ bekreftCallback, avbrytCallback, redigerbart, ariaHideApp }) => (
   <Nav.Modal
     className="dialogboksFerdigbehandleSak"
     isOpen
     contentLabel="Ferdigbehandlet"
-    onRequestClose={avbryt}
+    onRequestClose={avbrytCallback}
     closeButton={false}
     shouldCloseOnOverlayClick
     ariaHideApp={ariaHideApp}
@@ -25,23 +25,23 @@ export const DialogboksFerdigbehandleSak = ({ ferdigbehandleSak, avbryt, rediger
       Er du sikker på at saken er ferdigbehandlet? Vurder om du bør skrive et notat og/eller brev.
     </Nav.Typo.Normaltekst>
     <Knapperad
-      bekreft={ferdigbehandleSak}
+      bekreft={bekreftCallback}
       bekreftTekst="Bekreft"
-      avbryt={avbryt}
+      avbryt={avbrytCallback}
       avbrytTekst="Avbryt"
       redigerbart={redigerbart}
     />
   </Nav.Modal>
 );
 
-DialogboksFerdigbehandleSak.propTypes = {
-  ferdigbehandleSak: PT.func.isRequired,
-  avbryt: PT.func.isRequired,
+DialogboksBekreftValg.propTypes = {
+  bekreftCallback: PT.func.isRequired,
+  avbrytCallback: PT.func.isRequired,
   ariaHideApp: PT.bool,
   redigerbart: PT.bool.isRequired,
 };
 
-DialogboksFerdigbehandleSak.defaultProps = {
+DialogboksBekreftValg.defaultProps = {
   ariaHideApp: true,
 };
 
@@ -49,4 +49,4 @@ const mapStateToProps = (state) => ({
   redigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
 });
 
-export default connect(mapStateToProps)(DialogboksFerdigbehandleSak);
+export default connect(mapStateToProps)(DialogboksBekreftValg);
