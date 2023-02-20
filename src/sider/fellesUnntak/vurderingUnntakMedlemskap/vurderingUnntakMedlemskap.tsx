@@ -3,51 +3,54 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Nav from "../../../../navFrontend";
-import * as Skjema from "../../../../felleskomponenter/skjema";
-import * as Mui from "../../../../felleskomponenter/ui";
-import MKV from "../../../../melosyskodeverk";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import * as Utils from "../../../../utils";
-import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
-import unntak_medlemskap from "./unntakMedlemskapSchema";
 
-interface UnntakMedlemskapProps {
+import MKV from "../../../melosyskodeverk";
+import * as Nav from "../../../navFrontend";
+import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Mui from "../../../felleskomponenter/ui";
+import * as Utils from "../../../utils";
+
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
+
+import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
+import "./vurderingUnntakMedlemskap.css";
+
+interface VurderingUnntakMedlemskapProps {
   tilbake: () => void;
 }
 
-const UnntakMedlemskap = ({ tilbake }: UnntakMedlemskapProps) => {
+const VurderingUnntakMedlemskap = ({ tilbake }: VurderingUnntakMedlemskapProps) => {
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const periodeMottatteOpplysninger = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const periodeLovvalg = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
 
   const { control, watch, formState } = useForm({
-    resolver: yupResolver(unntak_medlemskap),
-    // context: { vurdering },
+    resolver: yupResolver(vurdering_unntak_medlemskap),
     mode: "onChange",
     defaultValues: {
+      innvilgelsesResultat: "",
       fom: Utils.dato.formatterDatoTilNorsk(periodeLovvalg.fom ? periodeLovvalg.fom : periodeMottatteOpplysninger.fom),
       tom: Utils.dato.formatterDatoTilNorsk(periodeLovvalg.tom ? periodeLovvalg.tom : periodeMottatteOpplysninger.tom),
       bestemmelse: "",
-      vurdering: "",
     } as FieldValues,
   });
   const formValues = watch();
 
   const lagreFom = (fom: string) => {
-    debouncedOppdaterPeriode({ fom, tom: formValues.tom, innvilgelsesResultat: formValues.vurdering });
+    debouncedOppdaterPeriode({ fom, tom: formValues.tom, innvilgelsesResultat: formValues.innvilgelsesResultat });
   };
 
   const lagreTom = (tom: string) => {
-    debouncedOppdaterPeriode({ fom: formValues.fom, tom, innvilgelsesResultat: formValues.vurdering });
+    debouncedOppdaterPeriode({ fom: formValues.fom, tom, innvilgelsesResultat: formValues.innvilgelsesResultat });
   };
 
-  const lagreVurdering = (vurdering: string) => {
+  const lagreInnvilgelsesResultat = (innvilgelsesResultat: string) => {
     dispatch(
       lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
-        innvilgelsesResultat: vurdering,
+        innvilgelsesResultat,
       })
     );
     dispatch(lovvalgsperioderOperations.lagre());
@@ -70,35 +73,35 @@ const UnntakMedlemskap = ({ tilbake }: UnntakMedlemskapProps) => {
   );
 
   return (
-    <div className="unntakMedlemskap">
+    <div className="vurderingUnntakMedlemskap">
       <Nav.Typo.Undertittel className="undertittel">Vurder unntaksperioder</Nav.Typo.Undertittel>
       <Nav.Fieldset legend="Vurder unntaksperiode">
         <Skjema.RadioV2
-          name="vurdering"
+          name="innvilgelsesResultat"
           control={control}
           label="Godkjenn unntaksperiode"
           value={MKV.Koder.innvilgelsesResultat.INNVILGET}
-          onChange={lagreVurdering}
-          checked={formValues.vurdering === MKV.Koder.innvilgelsesResultat.INNVILGET}
+          onChange={lagreInnvilgelsesResultat}
+          checked={formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET}
         />
         <Skjema.RadioV2
-          name="vurdering"
+          name="innvilgelsesResultat"
           control={control}
           label="Godkjenn, men endre periode"
           value={MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET}
-          onChange={lagreVurdering}
-          checked={formValues.vurdering === MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET}
+          onChange={lagreInnvilgelsesResultat}
+          checked={formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET}
         />
         <Skjema.RadioV2
-          name="vurdering"
+          name="innvilgelsesResultat"
           control={control}
           label="Ikke godkjenn"
           value={MKV.Koder.innvilgelsesResultat.AVSLAATT}
-          onChange={lagreVurdering}
-          checked={formValues.vurdering === MKV.Koder.innvilgelsesResultat.AVSLAATT}
+          onChange={lagreInnvilgelsesResultat}
+          checked={formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT}
         />
       </Nav.Fieldset>
-      {formValues.vurdering === MKV.Koder.innvilgelsesResultat.INNVILGET && (
+      {formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET && (
         <Nav.Row>
           <Nav.Column xs="4">
             <Skjema.SelectV2
@@ -119,7 +122,7 @@ const UnntakMedlemskap = ({ tilbake }: UnntakMedlemskapProps) => {
           </Nav.Column>
         </Nav.Row>
       )}
-      {formValues.vurdering === MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET && (
+      {formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET && (
         <Nav.Fieldset legend="Lovvalgsperiode">
           <Nav.Row>
             <Nav.Column xs="2">
@@ -166,7 +169,7 @@ const UnntakMedlemskap = ({ tilbake }: UnntakMedlemskapProps) => {
           </Nav.AlertStripeInfo>
         </Nav.Fieldset>
       )}
-      {formValues.vurdering === MKV.Koder.innvilgelsesResultat.AVSLAATT && (
+      {formValues.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT && (
         <Nav.AlertStripeInfo className="alert">
           Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i
           brevmenyen.
@@ -184,4 +187,4 @@ const UnntakMedlemskap = ({ tilbake }: UnntakMedlemskapProps) => {
   );
 };
 
-export default UnntakMedlemskap;
+export default VurderingUnntakMedlemskap;

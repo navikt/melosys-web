@@ -1,6 +1,6 @@
 import { object, string } from "yup";
-import MKV from "../../../../melosyskodeverk";
-import * as KV from "../../../../kodeverk";
+import MKV from "../../../melosyskodeverk";
+import * as KV from "../../../kodeverk";
 
 const { MAA_FYLLES_UT, TIDLIGERE_ENN_FOM } = KV.Feilmeldinger;
 const ARBEIDSLAND_FELT_KREVES = { melding: "Du må velge avsenderland" };

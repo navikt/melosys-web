@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
+import * as Utils from "../../utils";
 import StegLinje from "../../felleskomponenter/stegLinje";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
 import StegFane from "../../felleskomponenter/stegFane";
-import { UnntakMedlemskap, VurderingInngang } from "./stegKomponenter";
-import * as Utils from "../../utils";
+import VurderingUnntakMedlemskap from "./vurderingUnntakMedlemskap";
+import VurderingInngang from "./vurderingInngang";
 
 interface AktueltSteg {
   id: string;
@@ -65,7 +66,7 @@ const Stegvelger = ({ oppfriskOgLastInnSaksopplysninger }: StegvelgerProps) => {
         aktivtSteg: false,
         vedtakSteg: false,
         tittel: "Unntak medlemskap",
-        komponent: UnntakMedlemskap,
+        komponent: VurderingUnntakMedlemskap,
       },
     ]);
   }, []);
@@ -79,7 +80,6 @@ const Stegvelger = ({ oppfriskOgLastInnSaksopplysninger }: StegvelgerProps) => {
     <div className="stegvelger panelSeksjon">
       {!Utils._isEmpty(aktuelleSteg) && (
         <div>
-          {/* eslint-disable-next-line no-return-assign */}
           <StegLinje steg={aktuelleSteg} stegKlikk={handleKlikk} />
           {aktuelleSteg.map((steg) => (
             <StegFane

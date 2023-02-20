@@ -4,18 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import MKV from "../../../../melosyskodeverk";
-import * as Mui from "../../../../felleskomponenter/ui";
-import * as Nav from "../../../../navFrontend";
-import * as Skjema from "../../../../felleskomponenter/skjema";
-import * as Utils from "../../../../utils";
+import MKV from "../../../melosyskodeverk";
+import * as Mui from "../../../felleskomponenter/ui";
+import * as Nav from "../../../navFrontend";
+import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Utils from "../../../utils";
 
-import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import { menypanelOperations } from "../../../../ducks/menypanel";
-import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { menypanelOperations } from "../../../ducks/menypanel";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
