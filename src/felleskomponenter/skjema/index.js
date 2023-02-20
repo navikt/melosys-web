@@ -7,6 +7,7 @@ import ListeVelger from "./listevelger";
 import MultiSelect from "./input/multiselect";
 import PeriodeForkorter from "./periodeForkorter";
 import Radio from "./input/radio";
+import RadioV2 from "./input/radioV2";
 import RadioGruppe from "./input/radio-gruppe";
 import Select from "./input/select";
 import SelectV2 from "./input/select.v2";
@@ -30,6 +31,7 @@ export {
   MultiSelect,
   PeriodeForkorter,
   Radio,
+  RadioV2,
   RadioGruppe,
   Select,
   SelectV2,
