@@ -32,8 +32,8 @@ const Modals = ({
   visAvsluttSakSomBortfaltDialog,
   skjulAvsluttSakSomBortfaltDialogHandle,
   avsluttSakSomBortfalt,
-  visFerdigbehandleSakDialog,
-  skjulFerdigbehandleSakDialogHandle,
+  visBekreftValgDialog,
+  skjulBekreftValgDialogHandle,
   ferdigbehandleSak,
   behandlingOppfriskes,
   annenBehandlingOppfriskes,
@@ -59,8 +59,8 @@ const Modals = ({
         avsluttSakSomBortfalt={avsluttSakSomBortfalt}
       />
     )}
-    {visFerdigbehandleSakDialog && (
-      <DialogboksBekreftValg avbrytCallback={skjulFerdigbehandleSakDialogHandle} bekreftCallback={ferdigbehandleSak} />
+    {visBekreftValgDialog && (
+      <DialogboksBekreftValg avbrytCallback={skjulBekreftValgDialogHandle} bekreftCallback={ferdigbehandleSak} />
     )}
   </Fragment>
 );
@@ -80,8 +80,8 @@ Modals.propTypes = {
   visAvsluttSakSomBortfaltDialog: PT.bool.isRequired,
   skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   avsluttSakSomBortfalt: PT.func.isRequired,
-  visFerdigbehandleSakDialog: PT.bool.isRequired,
-  skjulFerdigbehandleSakDialogHandle: PT.func.isRequired,
+  visBekreftValgDialog: PT.bool.isRequired,
+  skjulBekreftValgDialogHandle: PT.func.isRequired,
   ferdigbehandleSak: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
@@ -92,7 +92,7 @@ const mapStateToProps = (state) => ({
   visHenleggDialog: modalerSelectors.ErHenleggSynligSelector(state),
   visAvslagSoknadDialog: modalerSelectors.ErAvslagSoknadSynligSelector(state),
   visAvsluttSakSomBortfaltDialog: modalerSelectors.ErAvsluttSakSomBortfaltSynligSelector(state),
-  visFerdigbehandleSakDialog: modalerSelectors.ErFerdigbehandleSakSynligSelector(state),
+  visBekreftValgDialog: modalerSelectors.ErFerdigbehandleSakSynligSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -102,7 +102,7 @@ const mapDispatchToProps = (dispatch) => ({
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvslagSoknadDialogHandle: () => dispatch(modalerOperations.skjulAvslagSoknad()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
-  skjulFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleSak()),
+  skjulBekreftValgDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleSak()),
 });
 
 const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);

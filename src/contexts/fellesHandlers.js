@@ -37,12 +37,12 @@ const FellesHandlersProviderUnconnected = ({
   skjulOppfriskDialogHandle,
   skjulHenleggDialogHandle,
   skjulAvsluttSakSomBortfaltDialogHandle,
-  skjulFerdigbehandleSakDialogHandle,
+  skjulBekreftValgDialogHandle,
   visOppfriskDialogHandle,
   visHenleggDialogHandle,
   visAvslagSoknadDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
-  visFerdigbehandleSakDialogHandle,
+  visBekreftValgDialogHandle,
   leggTilBehandlingOppfriskes,
   fjernBehandlingOppfriskes,
   behandlingUnderOppfriskning,
@@ -132,7 +132,7 @@ const FellesHandlersProviderUnconnected = ({
 
   const ferdigbehandleSak = async () => {
     await Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer);
-    skjulFerdigbehandleSakDialogHandle();
+    skjulBekreftValgDialogHandle();
     tilForsiden();
   };
 
@@ -142,7 +142,7 @@ const FellesHandlersProviderUnconnected = ({
       tilbakeleggOppgave,
       visHenleggDialogHandle,
       visAvsluttSakSomBortfaltDialogHandle,
-      visFerdigbehandleSakDialogHandle,
+      visBekreftValgDialogHandle,
       visAvslagSoknadDialogHandle,
       visOppfriskModal: visOppfriskDialogHandle,
       skjulOppfriskModalOgNavigerTilForside,
@@ -163,7 +163,7 @@ const FellesHandlersProviderUnconnected = ({
       tilbakeleggOppgave,
       visHenleggDialogHandle,
       visAvsluttSakSomBortfaltDialogHandle,
-      visFerdigbehandleSakDialogHandle,
+      visBekreftValgDialogHandle,
       visAvslagSoknadDialogHandle,
       visOppfriskDialogHandle,
       skjulOppfriskModalOgNavigerTilForside,
@@ -198,12 +198,12 @@ FellesHandlersProviderUnconnected.propTypes = {
   skjulOppfriskDialogHandle: PT.func.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
   skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
-  skjulFerdigbehandleSakDialogHandle: PT.func.isRequired,
+  skjulBekreftValgDialogHandle: PT.func.isRequired,
   visOppfriskDialogHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
-  visFerdigbehandleSakDialogHandle: PT.func.isRequired,
+  visBekreftValgDialogHandle: PT.func.isRequired,
   leggTilBehandlingOppfriskes: PT.func.isRequired,
   fjernBehandlingOppfriskes: PT.func.isRequired,
   behandlingUnderOppfriskning: PT.number,
@@ -242,12 +242,12 @@ const mapDispatchToProps = (dispatch) => ({
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
-  skjulFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleSak()),
+  skjulBekreftValgDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleSak()),
   visOppfriskDialogHandle: () => dispatch(modalerOperations.visOppfrisk()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
-  visFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleSak()),
+  visBekreftValgDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleSak()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
   resetLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   resetAnmodningsperioder: () => dispatch(anmodningsperioderOperations.resetAnmodningsperioderState()),

@@ -34,7 +34,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
-  visFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleSak()),
+  visBekreftValgDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleSak()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -46,7 +46,7 @@ export const Behandlingsmeny = ({
   visAvslagSoknadDialogHandle,
   visHenleggDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
-  visFerdigbehandleSakDialogHandle,
+  visBekreftValgDialogHandle,
   redigerbart,
   sakstema,
   sakstype,
@@ -92,7 +92,7 @@ export const Behandlingsmeny = ({
             behandlingstema={behandlingstema}
             behandlingstype={behandlingstype}
             redigerbart={redigerbart}
-            ferdigbehandleSak={visFerdigbehandleSakDialogHandle}
+            ferdigbehandleSak={visBekreftValgDialogHandle}
             tilForsiden={tilForsiden}
           />
         </div>
