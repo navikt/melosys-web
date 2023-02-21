@@ -84,75 +84,75 @@ const Modals = ({
         return {
           tittel: "Ferdigbehandlet",
           tekst: "Er du sikker på at saken er ferdigbehandlet? Vurder om du bør skrive et notat og/eller brev.",
-          bekreftCallback: ferdigbehandleSak,
+          handleBekreft: ferdigbehandleSak,
         };
       case BekreftValgTypes.VEDTAKET_ER_OMGJORT:
         return {
           tittel: "Vedtaket er omgjort (fvl §35)",
           tekst: "Er du sikker på at du vil avslutte saken? Husk å sende vedtak før du bekrefter.",
-          bekreftCallback: () => angiBehandlingsresultattype(OMGJORT),
+          handleBekreft: () => angiBehandlingsresultattype(OMGJORT),
         };
 
       case BekreftValgTypes.SOKNADEN_ER_INNVILGET:
         return {
           tittel: "Søknaden er innvilget",
           tekst: "Er du sikker på at du vil avslutte saken? Husk å sende vedtak før du bekrefter.",
-          bekreftCallback: () => angiBehandlingsresultattype(mapType()),
+          handleBekreft: () => angiBehandlingsresultattype(mapType()),
         };
       case BekreftValgTypes.SOKNADEN_ER_AVSLATT:
         return {
           tittel: "Søknaden er avslått",
           tekst: "Er du sikker på at du vil avslutte saken? Husk å sende vedtak før du bekrefter.",
-          bekreftCallback: () => angiBehandlingsresultattype(AVSLAG_SØKNAD),
+          handleBekreft: () => angiBehandlingsresultattype(AVSLAG_SØKNAD),
         };
       case BekreftValgTypes.PERIODEN_ER_GODKJENT:
         return {
           tittel: "Perioden er godkjent",
           tekst:
             "Er du sikker på at du vil avslutte saken? Vurder om du skal registrere periode i MEDL/skrive notat/etc.",
-          bekreftCallback: () => angiBehandlingsresultattype(REGISTRERT_UNNTAK),
+          handleBekreft: () => angiBehandlingsresultattype(REGISTRERT_UNNTAK),
         };
       case BekreftValgTypes.PERIODEN_ER_DELVIS_GODKJENT:
         return {
           tittel: "Perioden er delvis godkjent",
           tekst:
             "Er du sikker på at du vil avslutte saken? Vurder om du skal registrere periode i MEDL/skrive notat/etc.",
-          bekreftCallback: () => angiBehandlingsresultattype(DELVIS_GODKJENT_UNNTAK),
+          handleBekreft: () => angiBehandlingsresultattype(DELVIS_GODKJENT_UNNTAK),
         };
       case BekreftValgTypes.MEDLEM_I_FOLKETRYGDEN:
         return {
           tittel: "Medlem i folketrygden",
           tekst:
             "Er du sikker på at du vil avslutte saken? Vurder om du skal registrere periode i MEDL/skrive notat/etc.",
-          bekreftCallback: () => angiBehandlingsresultattype(MEDLEM_I_FOLKETRYGDEN),
+          handleBekreft: () => angiBehandlingsresultattype(MEDLEM_I_FOLKETRYGDEN),
         };
 
       case BekreftValgTypes.KLAGE_MEDHOLD:
         return {
           tittel: "Medhold på klage",
           tekst: "Er du sikker på at du vil avslutte saken? Husk å sende vedtak før du bekrefter.",
-          bekreftCallback: () => angiBehandlingsresultattype(MEDHOLD),
+          handleBekreft: () => angiBehandlingsresultattype(MEDHOLD),
         };
 
       case BekreftValgTypes.KLAGE_AVVIST:
         return {
           tittel: "Klage er avvist",
           tekst: "Er du sikker på at du vil avslutte saken? Husk å sende vedtak før du bekrefter.",
-          bekreftCallback: () => angiBehandlingsresultattype(AVVIST_KLAGE),
+          handleBekreft: () => angiBehandlingsresultattype(AVVIST_KLAGE),
         };
 
       case BekreftValgTypes.KLAGE_OVERSENDT_TIL_KLAGEINSTANSER:
         return {
           tittel: "Klageinnstilling er oversendt til klageinstansen",
           tekst: "Er du sikker på at du vil avslutte saken? Husk å sende innstillingen før du bekrefter.",
-          bekreftCallback: () => angiBehandlingsresultattype(KLAGEINNSTILLING),
+          handleBekreft: () => angiBehandlingsresultattype(KLAGEINNSTILLING),
         };
 
       case BekreftValgTypes.AVSLUTT_SAK_SOM_BORTFALT:
         return {
           tittel: "Avslutt sak som bortfalt",
           tekst: "Er du sikker på at saken ikke kan behandles i Melosys? Vurder om du må opprette sak i annet system.",
-          bekreftCallback: avsluttSakSomBortfalt,
+          handleBekreft: avsluttSakSomBortfalt,
         };
 
       default:
@@ -182,8 +182,8 @@ const Modals = ({
         <DialogboksBekreftValg
           tittel={bekreftValgTypeData.tittel}
           tekst={bekreftValgTypeData.tekst}
-          avbrytCallback={skjulBekreftValgDialogHandle}
-          bekreftCallback={bekreftValgTypeData.bekreftCallback}
+          handleAvbryt={skjulBekreftValgDialogHandle}
+          handleBekreft={bekreftValgTypeData.handleBekreft}
         />
       )}
     </Fragment>

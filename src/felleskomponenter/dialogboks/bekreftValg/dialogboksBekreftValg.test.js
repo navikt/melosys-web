@@ -10,8 +10,8 @@ describe("DialogboksBekreftValg", () => {
 
   beforeEach(() => {
     props = {
-      avbrytCallback: jest.fn(),
-      bekreftCallback: jest.fn(),
+      handleAvbryt: jest.fn(),
+      handleBekreft: jest.fn(),
       redigerbart: true,
       ariaHideApp: false,
       behandlingID: 1,
@@ -35,8 +35,8 @@ describe("DialogboksBekreftValg", () => {
 
     const { avbryt, bekreft } = knapperad.props();
 
-    expect(avbryt).toBe(props.avbrytCallback);
-    expect(bekreft).toBe(props.bekreftCallback);
+    expect(avbryt).toBe(props.handleAvbryt);
+    expect(bekreft).toBe(props.handleBekreft);
     expect(systemTittel.getNodeInternal().props.children).toBe(props.tittel);
     expect(normalTekst.getNodeInternal().props.children).toBe(props.tekst);
   });
