@@ -4,7 +4,7 @@ import * as Types from "./types";
 const modaler = {
   avslagSoknad: "avslagSoknad",
   avsluttSakSomBortfalt: "avsluttSakSomBortfalt",
-  ferdigbehandleSak: "ferdigbehandleSak",
+  bekreftValg: "bekreftValg",
   henlegg: "henlegg",
   oppfrisk: "oppfrisk",
 };
@@ -24,8 +24,9 @@ const initialState = {
       synlig: false,
       behandlingUnderOppfriskning: null,
     },
-    [modaler.ferdigbehandleSak]: {
+    [modaler.bekreftValg]: {
       synlig: false,
+      bekreftValgType: "",
     },
   },
   status: STATUS.NOT_STARTED,
@@ -51,8 +52,8 @@ export default function reducer(state = initialState, action = {}) {
     case Types.OPPDATER_AVSLUTT_SAK_SOM_BORTFALT: {
       return lagNyState(state, action, modaler.avsluttSakSomBortfalt);
     }
-    case Types.OPPDATER_FERDIGBEHANDLE_SAK: {
-      return lagNyState(state, action, modaler.ferdigbehandleSak);
+    case Types.OPPDATER_BEKREFT_VALG: {
+      return lagNyState(state, action, modaler.bekreftValg);
     }
     case Types.OPPDATER_HENLEGG: {
       return lagNyState(state, action, modaler.henlegg);

@@ -10,20 +10,18 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
 import "./dialogboksBekreftValg.css";
 
-export const DialogboksBekreftValg = ({ bekreftCallback, avbrytCallback, redigerbart, ariaHideApp }) => (
+export const DialogboksBekreftValg = ({ bekreftCallback, avbrytCallback, tittel, tekst, redigerbart, ariaHideApp }) => (
   <Nav.Modal
-    className="dialogboksFerdigbehandleSak"
+    className="dialogboksBekreftValg"
     isOpen
-    contentLabel="Ferdigbehandlet"
+    contentLabel={tittel}
     onRequestClose={avbrytCallback}
     closeButton={false}
     shouldCloseOnOverlayClick
     ariaHideApp={ariaHideApp}
   >
-    <Nav.Typo.Systemtittel>Ferdigbehandlet</Nav.Typo.Systemtittel>
-    <Nav.Typo.Normaltekst className="normaltekst">
-      Er du sikker på at saken er ferdigbehandlet? Vurder om du bør skrive et notat og/eller brev.
-    </Nav.Typo.Normaltekst>
+    <Nav.Typo.Systemtittel>{tittel}</Nav.Typo.Systemtittel>
+    <Nav.Typo.Normaltekst className="normaltekst">{tekst}</Nav.Typo.Normaltekst>
     <Knapperad
       bekreft={bekreftCallback}
       bekreftTekst="Bekreft"
@@ -37,6 +35,8 @@ export const DialogboksBekreftValg = ({ bekreftCallback, avbrytCallback, rediger
 DialogboksBekreftValg.propTypes = {
   bekreftCallback: PT.func.isRequired,
   avbrytCallback: PT.func.isRequired,
+  tittel: PT.string.isRequired,
+  tekst: PT.string.isRequired,
   ariaHideApp: PT.bool,
   redigerbart: PT.bool.isRequired,
 };

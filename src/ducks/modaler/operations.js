@@ -8,9 +8,10 @@ export const visAvsluttSakSomBortfalt = () => (dispatch) =>
 export const skjulAvsluttSakSomBortfalt = () => (dispatch) =>
   dispatch(Actions.oppdaterAvsluttSakSomBortfalt({ synlig: false }));
 
-export const visFerdigbehandleSak = () => (dispatch) => dispatch(Actions.oppdaterFerdigbehandleSak({ synlig: true }));
+export const visBekreftValgDialog = (bekreftValgType) => (dispatch) =>
+  dispatch(Actions.oppdaterBekreftValg({ synlig: true, bekreftValgType }));
 export const skjulFerdigbehandleSak = () => (dispatch) =>
-  dispatch(Actions.oppdaterFerdigbehandleSak({ synlig: false }));
+  dispatch(Actions.oppdaterBekreftValg({ synlig: false, bekreftValgType: "" }));
 
 export const visAvslagSoknad = () => (dispatch) => dispatch(Actions.oppdaterAvslagSoknad({ synlig: true }));
 export const skjulAvslagSoknad = () => (dispatch) => dispatch(Actions.oppdaterAvslagSoknad({ synlig: false }));

@@ -18,6 +18,7 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
 import "./behandlingsmeny.css";
+import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
 
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
@@ -34,7 +35,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
-  visBekreftValgDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleSak()),
+  visBekreftValgDialogHandle: (bekreftValgType: BekreftValgTypes) =>
+    dispatch(modalerOperations.visBekreftValgDialog(bekreftValgType)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -92,7 +94,7 @@ export const Behandlingsmeny = ({
             behandlingstema={behandlingstema}
             behandlingstype={behandlingstype}
             redigerbart={redigerbart}
-            ferdigbehandleSak={visBekreftValgDialogHandle}
+            bekreftValg={visBekreftValgDialogHandle}
             tilForsiden={tilForsiden}
           />
         </div>

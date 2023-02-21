@@ -1,8 +1,8 @@
 import React from "react";
 import MKV from "../../../melosyskodeverk";
-import * as Api from "../../../services/api";
 import * as Nav from "../../../navFrontend";
 import Handling from "./handling";
+import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
 
 const {
   YRKESAKTIV,
@@ -22,25 +22,13 @@ const {
 const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE } = MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
-const {
-  MEDLEM_I_FOLKETRYGDEN,
-  UNNTATT_MEDLEMSKAP,
-  FASTSATT_LOVVALGSLAND,
-  AVSLAG_SØKNAD,
-  MEDHOLD,
-  KLAGEINNSTILLING,
-  AVVIST_KLAGE,
-  OMGJORT,
-  REGISTRERT_UNNTAK,
-  DELVIS_GODKJENT_UNNTAK,
-} = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 type avsluttSakProps = {
   avslaaSoknad: () => void;
   behandlingID: string;
   henleggSak: () => void;
   avsluttSakSomBortfalt: () => void;
-  ferdigbehandleSak: () => void;
+  bekreftValg: (bekreftValgType: BekreftValgTypes) => void;
   sakstema: string;
   sakstype: string;
   behandlingstema: string;
@@ -51,15 +39,13 @@ type avsluttSakProps = {
 
 const AvsluttSak = ({
   avslaaSoknad,
-  behandlingID,
-  tilForsiden,
   henleggSak,
   avsluttSakSomBortfalt,
   sakstema,
   sakstype,
   behandlingstema,
   behandlingstype,
-  ferdigbehandleSak,
+  bekreftValg,
   redigerbart,
 }: avsluttSakProps) => {
   const behandlingstypeErNyVurdering = behandlingstype === NY_VURDERING;
@@ -199,23 +185,6 @@ const AvsluttSak = ({
     );
   };
 
-  const mapType = () => {
-    switch (sakstype) {
-      case FTRL:
-        return behandlingstema === UNNTAK_MEDLEMSKAP ? UNNTATT_MEDLEMSKAP : MEDLEM_I_FOLKETRYGDEN;
-      case EU_EOS:
-      case TRYGDEAVTALE:
-        return FASTSATT_LOVVALGSLAND;
-      default:
-        throw new Error("Finner ikke behandlingsresultattype for denne sakstypen");
-    }
-  };
-
-  const angiBehandlingsresultattype = async (type: string) => {
-    await Api.Behandlinger.resultat.angiBehandlingsresultattype(behandlingID, { type });
-    tilForsiden();
-  };
-
   const skalKunneAngiBehandlingsresultat =
     skalViseSøknadenErInnvilget() ||
     skalViseSøknadenErAvslått() ||
@@ -240,46 +209,57 @@ const AvsluttSak = ({
       {skalKunneAngiBehandlingsresultat && (
         <div className="skillestrek">
           {skalViseKlageHandlinger && (
-            <Handling tekst="Medhold på klage" onClick={() => angiBehandlingsresultattype(MEDHOLD)} />
+            <Handling tekst="Medhold på klage" onClick={() => bekreftValg(BekreftValgTypes.KLAGE_MEDHOLD)} />
           )}
           {skalViseKlageHandlinger && (
             <Handling
               tekst="Klageinnstilling er oversendt til klageinstansen"
-              onClick={() => angiBehandlingsresultattype(KLAGEINNSTILLING)}
+              onClick={() => bekreftValg(BekreftValgTypes.KLAGE_OVERSENDT_TIL_KLAGEINSTANSER)}
             />
           )}
           {skalViseKlageHandlinger && (
-            <Handling tekst="Klage er avvist" onClick={() => angiBehandlingsresultattype(AVVIST_KLAGE)} />
+            <Handling tekst="Klage er avvist" onClick={() => bekreftValg(BekreftValgTypes.KLAGE_AVVIST)} />
           )}
           {skalViseSøknadenErInnvilget() && (
-            <Handling tekst="Søknaden er innvilget" onClick={() => angiBehandlingsresultattype(mapType())} />
+            <Handling
+              tekst="Søknaden er innvilget"
+              onClick={() => bekreftValg(BekreftValgTypes.SOKNADEN_ER_INNVILGET)}
+            />
           )}
           {skalViseSøknadenErAvslått() && (
-            <Handling tekst="Søknaden er avslått" onClick={() => angiBehandlingsresultattype(AVSLAG_SØKNAD)} />
+            <Handling tekst="Søknaden er avslått" onClick={() => bekreftValg(BekreftValgTypes.SOKNADEN_ER_AVSLATT)} />
           )}
           {skalViseAvslåPgaManglendeOpplysninger() && (
             <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />
           )}
           {skalViseVedtakOmgjort && (
-            <Handling tekst="Vedtaket er omgjort (fvl § 35)" onClick={() => angiBehandlingsresultattype(OMGJORT)} />
+            <Handling
+              tekst="Vedtaket er omgjort (fvl § 35)"
+              onClick={() => bekreftValg(BekreftValgTypes.VEDTAKET_ER_OMGJORT)}
+            />
           )}
           {skalViseUnntaksHandlinger && (
             <>
-              <Handling tekst="Perioden er godkjent" onClick={() => angiBehandlingsresultattype(REGISTRERT_UNNTAK)} />
+              <Handling
+                tekst="Perioden er godkjent"
+                onClick={() => bekreftValg(BekreftValgTypes.PERIODEN_ER_GODKJENT)}
+              />
               <Handling
                 tekst="Perioden er delvis godkjent"
-                onClick={() => angiBehandlingsresultattype(DELVIS_GODKJENT_UNNTAK)}
+                onClick={() => bekreftValg(BekreftValgTypes.PERIODEN_ER_DELVIS_GODKJENT)}
               />
               <Handling
                 tekst="Medlem i folketrygden"
-                onClick={() => angiBehandlingsresultattype(MEDLEM_I_FOLKETRYGDEN)}
+                onClick={() => bekreftValg(BekreftValgTypes.MEDLEM_I_FOLKETRYGDEN)}
               />
             </>
           )}
         </div>
       )}
 
-      {skalViseFerdigbehandlet() && <Handling tekst="Ferdigbehandlet" onClick={ferdigbehandleSak} />}
+      {skalViseFerdigbehandlet() && (
+        <Handling tekst="Ferdigbehandlet" onClick={() => bekreftValg(BekreftValgTypes.FERDIGBEHANDLET)} />
+      )}
       {skalViseBehandlingenErHenlagt() && <Handling tekst="Søknaden/klagen er trukket" onClick={henleggSak} />}
       {skalViseBehandlingenErBortfalt() && (
         <Handling tekst="Behandlingen er bortfalt" onClick={avsluttSakSomBortfalt} />

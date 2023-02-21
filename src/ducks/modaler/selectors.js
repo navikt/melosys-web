@@ -18,11 +18,16 @@ export const ErAvsluttSakSomBortfaltSynligSelector = createSelector(
   (avsluttSakSomBortfalt) => avsluttSakSomBortfalt.synlig
 );
 
-export const FerdigbehandleSakSelector = createSelector(ModalerSelector, (modaler) => modaler.ferdigbehandleSak);
+export const ModalerBekreftValgSelector = createSelector(ModalerSelector, (modaler) => modaler.bekreftValg);
 
-export const ErFerdigbehandleSakSynligSelector = createSelector(
-  FerdigbehandleSakSelector,
-  (ferdigbehandleSak) => ferdigbehandleSak.synlig
+export const ErBekreftValgSynligSelector = createSelector(
+  ModalerBekreftValgSelector,
+  (bekreftValgDialogSelector) => bekreftValgDialogSelector.synlig
+);
+
+export const BekreftValgTypeSelector = createSelector(
+  ModalerBekreftValgSelector,
+  (bekreftValgDialogSelector) => bekreftValgDialogSelector.bekreftValgType
 );
 
 export const HenleggSelector = createSelector(ModalerSelector, (modaler) => modaler.henlegg);
