@@ -145,7 +145,11 @@ export const StegvelgerFTRL = () => {
         steg={alleSteg}
         stegKlikk={(stegId) => setAktivtSteg(alleSteg.find((steg: any) => steg.id === stegId.toString())!!.navn)}
       />
-      <Nav.Panel className={stegFaneKlasse}>{renderAlleSteg.map((steg) => steg.komponent)}</Nav.Panel>
+      <Nav.Panel className={stegFaneKlasse}>
+        {renderAlleSteg.map((steg, index) => (
+          <div key={index}>{steg.komponent}</div>
+        ))}
+      </Nav.Panel>
     </div>
   );
 };

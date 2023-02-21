@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
@@ -63,9 +63,8 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, rapporterSkj
   } = useForm({
     resolver: yupResolver(vurderingVirksomhetSchema),
     mode: "onChange",
-    defaultValues: {
-      ...initialValues,
-    } as FieldValues,
+    reValidateMode: "onChange",
+    values: useMemo(() => initialValues, [initialValues]),
   });
 
   const formValues = watch();

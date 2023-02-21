@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { useDispatch, useSelector } from "react-redux";
@@ -199,12 +199,12 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, rapporterSkjem
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
     mode: "onChange",
-    defaultValues: {
-      ...initialValues,
-    } as FieldValues,
+    reValidateMode: "onChange",
+    values: useMemo(() => initialValues as FieldValues, [initialValues]),
   });
 
   const formValues = watch();
+
   useEffect(() => {
     if (
       formValues.medlemskapsperioder.length === 0 &&

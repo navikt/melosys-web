@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { ChangeEventHandler, Fragment, useCallback, useContext, useEffect, useState } from "react";
+import { ChangeEventHandler, Fragment, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -52,7 +52,6 @@ interface Props {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSkjema }: Props) => {
   const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
-  const [bekreftet, setBekreftet] = useState(false);
   const { bestemmelseVilkar } = useContext(SaksbehandlingFTRLContext);
   const dispatch = useDispatch();
   const { behandlingID, vilkarListe, bestemmelse, vilkaarKodeverk, begrunnelserKodeverk } = useSelector(
@@ -111,11 +110,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
           valgteVilkar.get(vilkar.vilkaar) === BOOLSK_STRING.SANN &&
           (vilkar.muligeBegrunnelser.length > 0 ? valgteBegrunnelser.get(vilkar.vilkaar) : true)
       ).length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
-
     setErAlleValgGjort(!!alleVilkarHarSvarJaOgvalgtBegrunnelse);
   }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]);
 
-  const handleBekreft = async () => {
+  const handleBekreft = () => {
     lagreVilkar();
     setTimeout(() => {
       opprettMedlemskapsperiodeFraBestemmelse();
@@ -266,7 +264,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
         )}
 
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: async () => await handleBekreft(), disabled: !erAlleValgGjort || !redigerbart }}
+        bekreftKnappProps={{ onClick: handleBekreft, disabled: !erAlleValgGjort || !redigerbart }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>

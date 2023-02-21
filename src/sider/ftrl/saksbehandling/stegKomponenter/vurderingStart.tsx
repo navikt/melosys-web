@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -83,9 +83,8 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
   } = useForm({
     resolver: yupResolver(vurderingStartSchema),
     mode: "onChange",
-    defaultValues: {
-      ...initialValues,
-    } as FieldValues,
+    reValidateMode: "onChange",
+    values: useMemo(() => initialValues as FieldValues, [initialValues]),
   });
   const formValues = watch();
 

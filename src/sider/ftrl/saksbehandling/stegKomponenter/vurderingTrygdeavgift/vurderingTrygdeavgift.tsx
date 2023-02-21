@@ -72,7 +72,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
     mode: "onChange",
-    defaultValues: {
+    values: {
       avgiftsgrunnlag: null,
       avgiftsberegning: null,
     } as FieldValues,
