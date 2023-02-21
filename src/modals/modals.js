@@ -3,10 +3,13 @@ import PT from "prop-types";
 import { connect } from "react-redux";
 
 import * as Nav from "../navFrontend";
+import * as Api from "../services/api";
 
+import MKV from "../melosyskodeverk";
 import { FellesHandlersContext } from "../contexts";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
-
+import { behandlingerSelectors } from "../ducks/behandlinger";
+import { fagsakSelectors } from "../ducks/fagsaker";
 import {
   DialogboksAvslagSoknad,
   DialogboksBekreftValg,
@@ -14,11 +17,7 @@ import {
   DialogboksOppfriskSak,
 } from "../felleskomponenter/dialogboks";
 import { BekreftValgTypes } from "./bekreftValgTypes";
-import * as Api from "../services/api";
-import MKV from "../melosyskodeverk";
-import { behandlingerSelectors } from "../ducks/behandlinger";
 import { tilForsiden } from "../ducks/navigering/operations";
-import { fagsakSelectors } from "../ducks/fagsaker";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
