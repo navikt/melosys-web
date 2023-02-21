@@ -158,6 +158,7 @@ export const DialogboksBekreftValg = ({
       onRequestClose={handleAvbryt}
       closeButton={false}
       shouldCloseOnOverlayClick
+      // @ts-ignore
       ariaHideApp={ariaHideApp}
     >
       <Nav.Typo.Systemtittel>{bekreftValgTypeData.tittel}</Nav.Typo.Systemtittel>
