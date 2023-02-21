@@ -100,7 +100,7 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, ikkeYrkesaktivFlytT
   };
 
   const reduserTekstLinjer = (tekst) => {
-    const lines = tekst.split("\n");
+    const lines = tekst && tekst.split("\n");
     return lines.slice(0, 3).join("\n");
   };
 
