@@ -5,7 +5,7 @@ import * as Nav from "../../../navFrontend";
 import { DialogboksBekreftValg } from "./dialogboksBekreftValg";
 import Knapperad from "../../knapperad";
 
-describe("DialogboksFerdigbehandleSak", () => {
+describe("DialogboksBekreftValg", () => {
   let props = null;
 
   beforeEach(() => {

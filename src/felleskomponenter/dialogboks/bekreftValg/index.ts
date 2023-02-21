@@ -1,3 +1,3 @@
-import DialogboksFerdigbehandleSak from "./dialogboksBekreftValg";
+import DialogboksBekreftValg from "./dialogboksBekreftValg";
 
-export default DialogboksFerdigbehandleSak;
+export default DialogboksBekreftValg;

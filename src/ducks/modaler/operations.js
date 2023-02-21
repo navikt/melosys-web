@@ -5,7 +5,7 @@ export const skjulHenlegg = () => (dispatch) => dispatch(Actions.oppdaterHenlegg
 
 export const visBekreftValgDialog = (bekreftValgType) => (dispatch) =>
   dispatch(Actions.oppdaterBekreftValg({ synlig: true, bekreftValgType }));
-export const skjulFerdigbehandleSak = () => (dispatch) =>
+export const skjulBekreftValg = () => (dispatch) =>
   dispatch(Actions.oppdaterBekreftValg({ synlig: false, bekreftValgType: "" }));
 
 export const visAvslagSoknad = () => (dispatch) => dispatch(Actions.oppdaterAvslagSoknad({ synlig: true }));
