@@ -37,6 +37,10 @@ import "./vurderingVedtak.css";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
+import { landkoderSelectors } from "../../../../ducks/landkoder";
+import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
+import { datalastingOperations } from "../../../../ducks/datalasting";
 
 const { trygdeavtale_myndighetsland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
@@ -55,6 +59,7 @@ const komponentState = (state: RootState) => ({
   trygdeavgiftFormValues: formSelectors.VurderTrygdeavgiftFormSelector(state).values,
   skalBetaleTrygdeavgiftTilNorge: LonnsforholdErNorgeEllerDelt(state),
   skalBetaleTrygdeavgiftTilUtlandet: LonnsforholdErUtlandetEllerDelt(state),
+  mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   initialValues: {
     begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
@@ -69,6 +74,7 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
     dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
   fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto) =>
     dispatch(vedtakOperations.fatt(behandlingID, body)),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
 });
 
 interface FormValuesProps {
@@ -78,22 +84,13 @@ interface FormValuesProps {
 }
 
 interface Props {
-  bekreft: () => void;
   tilbake: () => void;
-  alleLandkoder: KTObject[];
-  harFeilmeldinger: boolean;
-  aktivtSteg: boolean;
-  validerMottatteOpplysninger: () => Promise<any>;
+  aktivtSteg: string;
+  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
-
-export const VurderingVedtak = ({
-  tilbake,
-  alleLandkoder,
-  harFeilmeldinger,
-  aktivtSteg,
-  validerMottatteOpplysninger,
-}: Props) => {
+export const VurderingVedtak = ({ tilbake, aktivtSteg, rapporterSkjema }: Props) => {
   const dispatch = useDispatch();
+
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
   const {
     medfolgendeFamilie,
@@ -101,6 +98,7 @@ export const VurderingVedtak = ({
     medlemskapsperioder,
     innvilgelsesResultater,
     soknadsland,
+    mottatteOpplysningerFeilmeldinger,
     trygdeavgiftFormValues,
     skalBetaleTrygdeavgiftTilNorge,
     skalBetaleTrygdeavgiftTilUtlandet,
@@ -120,10 +118,13 @@ export const VurderingVedtak = ({
 
   const formValues = watch();
   const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
+  const alleLandkoder = useSelector((state: RootState) => landkoderSelectors.LandkoderSelector(state));
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
-  const stegErGyldig = redigerbart && !harFeilmeldinger;
+  const stegErGyldig = redigerbart && formIsValid;
+
+  const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
@@ -132,9 +133,14 @@ export const VurderingVedtak = ({
     });
     setMuligeMottakere(res);
   };
+
   useEffect(() => {
     hentMuligeMottakere();
   }, []);
+
+  useEffect(() => {
+    rapporterSkjema({ stegNavn: STEG.VEDTAK_FTRL, dataErGyldig: formIsValid });
+  }, [formIsValid]);
 
   /* Mottakere settes av backend og følger regler:
       TODO: BRUKER_FÅR_KOPI_HVIS_FULLMEKTIG_FINNES,
@@ -287,7 +293,7 @@ export const VurderingVedtak = ({
 
   useEffect(() => {
     async function kontroller() {
-      if (aktivtSteg) {
+      if (aktivtSteg === STEG.VEDTAK_FTRL) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling(lagKontrollerFerdigbehandlingDto());
         setOppdaterFoerKontroll(false);
@@ -300,16 +306,15 @@ export const VurderingVedtak = ({
 
   const onSubmit = async () => {
     setVedtakPending(true);
-
-    validerMottatteOpplysninger()
-      .then(() => {
-        fattVedtak(behandlingID, lagFattVedtakFTRLReqDto()).then((res) => {
-          if (res.data?.data?.error) {
-            setVedtakPending(false);
-          }
-        });
-      })
-      .catch(() => setVedtakPending(false));
+    if (mottatteOpplysningerErGyldig()) {
+      fattVedtak(behandlingID, lagFattVedtakFTRLReqDto()).then((res) => {
+        if (res.data?.data?.error) {
+          setVedtakPending(false);
+        }
+      });
+    } else {
+      setVedtakPending(false);
+    }
   };
 
   const soknadslandErEtAvtaleland = trygdeavtale_myndighetsland[soknadsland?.toString()] !== undefined;
@@ -322,6 +327,8 @@ export const VurderingVedtak = ({
     "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.  Eksempel: \n\n" +
     '"Du har opplyst at du arbeider for Equinor ASA i Brasil. Vi har lagt til grunn at du er ansatt i en virksomhet med hovedsete i Norge."\n\n' +
     "Friteksten kommer her.";
+
+  if (aktivtSteg !== STEG.VEDTAK_FTRL) return null;
 
   return (
     <div className="vurderingVedtak">

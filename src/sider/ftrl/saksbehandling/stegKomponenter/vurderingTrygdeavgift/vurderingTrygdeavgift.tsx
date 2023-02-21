@@ -20,6 +20,8 @@ import { VurderingTrygdeavgiftVirksomhetTyper } from "../../../../../kodeverk/ko
 
 import "./vurderingTrygdeavgift.css";
 import { RedigerbartSelector } from "../../../../../ducks/redigerbart/selectors";
+import { FormSkjemaStegStatus } from "../../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
+import { STEG } from "../../../../../felleskomponenter/stegvelger";
 
 const komponentState = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -30,6 +32,8 @@ const { LØNN_FRA_NORGE, LØNN_FRA_UTLANDET, DELT_LØNN } = MKV.Koder.loenn_forh
 interface Props {
   bekreft: () => void;
   tilbake: () => void;
+  aktivtSteg: string;
+  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
 
 const erTrygdeavgiftsgrunnlagNorgeUgyldig = (trygdeavgift: any) =>
@@ -57,7 +61,7 @@ const erTrygdeavgiftsgrunnlagUtlandUgyldig = (trygdeavgift: any) => {
   );
 };
 
-export const VurderingTrygdeavgift = ({ bekreft, tilbake }: Props) => {
+export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterSkjema }: Props) => {
   const { behandlingID, saerligeavgiftsgrupper } = useSelector((state: RootState) => komponentState(state));
 
   const {
@@ -87,6 +91,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake }: Props) => {
     avgiftspliktigLønnNorge: null,
     avgiftspliktigLønnUtland: null,
   });
+
+  useEffect(() => {
+    rapporterSkjema({ stegNavn: STEG.TRYGDEAVGIFT, dataErGyldig: formIsValid });
+  }, [formIsValid]);
 
   const hentBeregning = () => {
     Api.Trygdeavgift.hentBeregning(behandlingID).then((response) => {
@@ -264,6 +272,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake }: Props) => {
     saerligeavgiftsgrupper,
   };
 
+  if (aktivtSteg !== STEG.TRYGDEAVGIFT) return null;
+
   return (
     <div className="vurderingTrygdeavgift">
       <Nav.Typo.Undertittel className="undertittel">Trygdeavgift</Nav.Typo.Undertittel>
@@ -275,7 +285,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake }: Props) => {
               label="Norsk virksomhet"
               name="avgiftsgrunnlag.lønnsforhold"
               control={control}
-              feil={(errors.avgiftsgrunnlag as any)?.lønnsforhold.message?.melding}
+              feil={(errors.avgiftsgrunnlag as any)?.lønnsforhold?.message?.melding}
               value={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               checked={formValues.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               disabled={!redigerbart}
@@ -284,7 +294,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake }: Props) => {
               name="avgiftsgrunnlag.lønnsforhold"
               control={control}
               label="Utenlandsk virksomhet"
-              feil={(errors.avgiftsgrunnlag as any)?.lønnsforhold.message?.melding}
+              feil={(errors.avgiftsgrunnlag as any)?.lønnsforhold?.message?.melding}
               value={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               checked={formValues.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               disabled={!redigerbart}
@@ -292,7 +302,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake }: Props) => {
             <Skjema.RadioV2
               label="Norsk og utenlandsk virksomhet"
               name="avgiftsgrunnlag.lønnsforhold"
-              feil={(errors.avgiftsgrunnlag as any)?.lønnsforhold.message?.melding}
+              feil={(errors.avgiftsgrunnlag as any)?.lønnsforhold?.message?.melding}
               control={control}
               value={MKV.Koder.loenn_forhold.DELT_LØNN}
               checked={formValues.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN}

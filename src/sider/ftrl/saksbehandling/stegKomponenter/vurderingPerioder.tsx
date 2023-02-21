@@ -26,6 +26,8 @@ import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetek
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
+import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 interface formValuesProp {
   medlemskapsperioder?: MedlemskapsperiodeProp[];
@@ -171,9 +173,11 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 interface VurderingPerioderProps {
   bekreft: () => void;
   tilbake: () => void;
+  aktivtSteg: string;
+  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
 
-export const VurderingPerioder = ({ bekreft, tilbake }: VurderingPerioderProps) => {
+export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, rapporterSkjema }: VurderingPerioderProps) => {
   const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
   const dispatch = useDispatch();
   const {
@@ -201,6 +205,19 @@ export const VurderingPerioder = ({ bekreft, tilbake }: VurderingPerioderProps) 
   });
 
   const formValues = watch();
+  useEffect(() => {
+    if (
+      formValues.medlemskapsperioder.length === 0 &&
+      initialValues.medlemskapsperioder &&
+      initialValues.medlemskapsperioder.length > 0
+    ) {
+      setValue("medlemskapsperioder", initialValues.medlemskapsperioder);
+    }
+  }, [initialValues, formValues]);
+
+  useEffect(() => {
+    rapporterSkjema({ stegNavn: STEG.PERIODER, dataErGyldig: formIsValid });
+  }, [formIsValid]);
 
   const hjelpetekst =
     "Melosys har foreslått medlemskapsperioder på bakgrunn av periode og dekning det er søkt for, og tidspunktet søknaden ble mottatt. Du har mulighet til å gjøre endringer. Hvis du har mottatt opplysninger om at søknadsperiode eller trygdedekning det er søkt om er endret, må du endre dette i det inngangssteget «start».";
@@ -347,6 +364,8 @@ export const VurderingPerioder = ({ bekreft, tilbake }: VurderingPerioderProps) 
           !erPeriodeFoerSoknadMottatDato(medlemskapsperiode) &&
           medlemskapsperiode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT
       ));
+
+  if (aktivtSteg !== STEG.PERIODER) return null;
 
   return (
     <div className="vurderingPerioder">

@@ -43,10 +43,11 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 interface Props {
   bekreft: () => void;
   tilbake: () => void;
+  aktivtSteg: string;
   rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
 
-export const VurderingVirksomhet = ({ bekreft, tilbake, rapporterSkjema }: Props) => {
+export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, rapporterSkjema }: Props) => {
   const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
   const dispatch = useDispatch();
 
@@ -96,7 +97,7 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, rapporterSkjema }: Props
     }
   };
 
-  if (!erMottatteOpplysningerLastetInn || !formValues) {
+  if (!erMottatteOpplysningerLastetInn || !formValues || aktivtSteg !== STEG.VIRKSOMHET) {
     return null;
   }
   return (

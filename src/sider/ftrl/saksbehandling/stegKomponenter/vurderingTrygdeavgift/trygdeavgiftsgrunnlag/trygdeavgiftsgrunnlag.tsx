@@ -254,7 +254,7 @@ const Trygdeavgiftsgrunnlag = ({
                     checked={
                       erSkattePliktig === null || erSkattePliktig === undefined ? undefined : Boolean(erSkattePliktig)
                     }
-                    onChangeRadio={() =>
+                    onChange={() =>
                       setValue(
                         feltNavnIngenTrygdeavgiftBetalesTilNAV.feltNavn,
                         feltNavnIngenTrygdeavgiftBetalesTilNAV.verdi
@@ -269,7 +269,7 @@ const Trygdeavgiftsgrunnlag = ({
                     name={`${feltNavnBase}.erSkattepliktig`}
                     feil={errors[feltNavnBase]?.erSkattepliktig?.message?.melding}
                     control={control}
-                    onChangeRadio={() =>
+                    onChange={() =>
                       setValue(feltNavnTrygdeavgiftBetalesTilNAV.feltNavn, feltNavnTrygdeavgiftBetalesTilNAV.verdi)
                     }
                     checked={

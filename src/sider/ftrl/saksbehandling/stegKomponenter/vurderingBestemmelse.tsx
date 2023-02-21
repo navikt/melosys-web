@@ -12,7 +12,7 @@ import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { vilkarOperations, vilkarSelectors } from "../../../../ducks/vilkar";
-import { lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
+import { lagVilkarbegrunnelse, lagVilkaar, STEG } from "../../../../felleskomponenter/stegvelger";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
@@ -24,6 +24,7 @@ import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
 import { SaksbehandlingFTRLContext, VilkarOgBegrunnelser } from "../saksbehandlingFTRLContext";
 import { FellesHandlersContext } from "../../../../contexts";
 import { VilkaarSelector } from "../../../../ducks/folketrygdenkodeverk/selectors";
+import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
 
 const komponentState = (state: RootState) => ({
   vilkarListe: vilkarSelectors.VilkarSelector(state),
@@ -45,10 +46,13 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 interface Props {
   bekreft: () => void;
   tilbake: () => void;
+  aktivtSteg: string;
+  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
 
-export const VurderingBestemmelse = ({ bekreft, tilbake }: Props) => {
+export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSkjema }: Props) => {
   const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
+  const [bekreftet, setBekreftet] = useState(false);
   const { bestemmelseVilkar } = useContext(SaksbehandlingFTRLContext);
   const dispatch = useDispatch();
   const { behandlingID, vilkarListe, bestemmelse, vilkaarKodeverk, begrunnelserKodeverk } = useSelector(
@@ -73,6 +77,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake }: Props) => {
     ],
   ]);
 
+  useEffect(() => {
+    rapporterSkjema({ stegNavn: STEG.BESTEMMELSE, dataErGyldig: erAlleValgGjort });
+  }, [erAlleValgGjort]);
+
   const handleEndreBestemmelse = async (nyBestemmelse: string) => {
     setValgtBestemmelse(nyBestemmelse);
     await oppdaterBestemmelse(nyBestemmelse);
@@ -82,7 +90,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake }: Props) => {
     hentVilkaar(behandlingID);
   }, [behandlingID]);
 
-  const debouncedLagreVilkar = useCallback(Utils._debounce(lagreVilkar, 1000), []);
   useEffect(() => {
     handleEndreBestemmelse(bestemmelse);
     vilkarListe.forEach((vilkar: any) => {
@@ -93,7 +100,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake }: Props) => {
     });
     setValgteVilkar(new Map(valgteVilkar));
     setValgteBegrunnelser(new Map(valgteBegrunnelser));
-    return () => debouncedLagreVilkar.cancel();
   }, [vilkarListe]);
 
   useEffect(() => {
@@ -107,14 +113,14 @@ export const VurderingBestemmelse = ({ bekreft, tilbake }: Props) => {
       ).length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
 
     setErAlleValgGjort(!!alleVilkarHarSvarJaOgvalgtBegrunnelse);
-    if (alleVilkarHarSvarJaOgvalgtBegrunnelse && redigerbart) {
-      debouncedLagreVilkar();
-    }
   }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]);
 
-  const handleBekreft = () => {
-    opprettMedlemskapsperiodeFraBestemmelse();
-    bekreft();
+  const handleBekreft = async () => {
+    lagreVilkar();
+    setTimeout(() => {
+      opprettMedlemskapsperiodeFraBestemmelse();
+      bekreft();
+    }, 1000);
   };
 
   const handleEndreVilkar: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -216,6 +222,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake }: Props) => {
     );
   };
 
+  if (aktivtSteg !== STEG.BESTEMMELSE) return null;
+
   return (
     <div className="vurderingBestemmelse">
       <Nav.Typo.Undertittel className="undertittel">
@@ -258,7 +266,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake }: Props) => {
         )}
 
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: handleBekreft, disabled: !erAlleValgGjort || !redigerbart }}
+        bekreftKnappProps={{ onClick: async () => await handleBekreft(), disabled: !erAlleValgGjort || !redigerbart }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>

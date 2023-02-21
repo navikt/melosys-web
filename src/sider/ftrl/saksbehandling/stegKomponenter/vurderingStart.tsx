@@ -64,10 +64,11 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 
 interface Props {
   bekreft: () => void;
+  aktivtSteg: string;
   rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
 
-export const VurderingStart = ({ bekreft, rapporterSkjema }: Props) => {
+export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) => {
   const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
   const { trygdedekninger, initialValues, alleLandkoder } = useSelector((state: RootState) => komponentState(state));
@@ -140,6 +141,7 @@ export const VurderingStart = ({ bekreft, rapporterSkjema }: Props) => {
     const formLand = Object.assign([], land).shift();
     setValue("land", formLand || undefined, { shouldValidate: true });
   };
+  if (aktivtSteg !== STEG.START) return null;
 
   return (
     <div className="vurderingStart">

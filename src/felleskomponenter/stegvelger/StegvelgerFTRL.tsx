@@ -11,69 +11,66 @@ import { VurderingTrygdeavgift } from "../../sider/ftrl/saksbehandling/stegKompo
 import { VurderingVedtak } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingVedtak";
 import StegLinje from "../stegLinje/stegLinje";
 import { VurderingBestemmelse } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingBestemmelse";
-import { useFormContext } from "react-hook-form";
 
 type stegMapType = {
   aktivtSteg: string;
   status: string;
 };
 
-const stegMap = [
-  {
-    navn: STEG.START,
-    id: "0",
-    tittel: "Start",
-    vedtakSteg: false,
-    nesteSteg: STEG.VIRKSOMHET,
-    forrigeSteg: null,
-    komponent: VurderingStart,
-  },
-  {
-    navn: STEG.VIRKSOMHET,
-    id: "1",
-    tittel: "Virksomhet",
-    vedtakSteg: false,
-    nesteSteg: STEG.BESTEMMELSE,
-    forrigeSteg: STEG.START,
-    komponent: VurderingVirksomhet,
-  },
-  {
-    navn: STEG.BESTEMMELSE,
-    id: "2",
-    tittel: "Bestemmelse",
-    vedtakSteg: false,
-    nesteSteg: STEG.PERIODER,
-    forrigeSteg: STEG.VIRKSOMHET,
-    komponent: VurderingBestemmelse,
-  },
-  {
-    navn: STEG.PERIODER,
-    id: "3",
-    tittel: "Perioder",
-    vedtakSteg: false,
-    nesteSteg: STEG.TRYGDEAVGIFT,
-    forrigeSteg: STEG.BESTEMMELSE,
-    komponent: VurderingPerioder,
-  },
-  {
-    navn: STEG.TRYGDEAVGIFT,
-    id: "4",
-    tittel: "Trygdeavgift",
-    vedtakSteg: false,
-    nesteSteg: STEG.VEDTAK_FTRL,
-    forrigeSteg: STEG.PERIODER,
-    komponent: VurderingTrygdeavgift,
-  },
-  {
-    navn: STEG.VEDTAK_FTRL,
-    id: "5",
-    tittel: "Vedtak",
-    vedtakSteg: false,
-    nesteSteg: null,
-    forrigeSteg: STEG.TRYGDEAVGIFT,
-    komponent: VurderingVedtak,
-  },
-];
+const START = {
+  navn: STEG.START,
+  id: "0",
+  tittel: "Start",
+  vedtakSteg: false,
+  nesteSteg: STEG.VIRKSOMHET,
+  forrigeSteg: null,
+  komponent: VurderingStart,
+};
+const VIRKSOMHET = {
+  navn: STEG.VIRKSOMHET,
+  id: "1",
+  tittel: "Virksomhet",
+  vedtakSteg: false,
+  nesteSteg: STEG.BESTEMMELSE,
+  forrigeSteg: STEG.START,
+  komponent: VurderingVirksomhet,
+};
+const BESTEMMELSE = {
+  navn: STEG.BESTEMMELSE,
+  id: "2",
+  tittel: "Bestemmelse",
+  vedtakSteg: false,
+  nesteSteg: STEG.PERIODER,
+  forrigeSteg: STEG.VIRKSOMHET,
+  komponent: VurderingBestemmelse,
+};
+const PERIODER = {
+  navn: STEG.PERIODER,
+  id: "3",
+  tittel: "Perioder",
+  vedtakSteg: false,
+  nesteSteg: STEG.TRYGDEAVGIFT,
+  forrigeSteg: STEG.BESTEMMELSE,
+  komponent: VurderingPerioder,
+};
+const TRYGDEAVGIFT = {
+  navn: STEG.TRYGDEAVGIFT,
+  id: "4",
+  tittel: "Trygdeavgift",
+  vedtakSteg: false,
+  nesteSteg: STEG.VEDTAK_FTRL,
+  forrigeSteg: STEG.PERIODER,
+  komponent: VurderingTrygdeavgift,
+};
+const VEDTAK_FTRL = {
+  navn: STEG.VEDTAK_FTRL,
+  id: "5",
+  tittel: "Vedtak",
+  vedtakSteg: true,
+  nesteSteg: null,
+  forrigeSteg: STEG.TRYGDEAVGIFT,
+  komponent: VurderingVedtak,
+};
 
 export interface FormSkjemaStegStatus {
   stegNavn: string;
@@ -82,8 +79,20 @@ export interface FormSkjemaStegStatus {
 
 export const StegvelgerFTRL = () => {
   const [aktivtSteg, setAktivtSteg] = useState(STEG.START);
+  const [stegMap, setStegMap] = useState([START, VIRKSOMHET, BESTEMMELSE, PERIODER, TRYGDEAVGIFT]);
   const [formSkjemaStatus, setFormSkjemaStatus] = useState<FormSkjemaStegStatus[]>();
-
+  // useEffect(() => {
+  //   setStegMap((prev: any) =>
+  //     prev.map((steg: any, index: number, alleSteg: []) => {
+  //       const formStatus = formSkjemaStatus?.find((status) => status.stegNavn === steg.navn);
+  //       console.log({ alleSteg });
+  //       return {
+  //         ...steg,
+  //         synligSteg: formStatus?.dataErGyldig,
+  //       };
+  //     })
+  //   );
+  // }, [formSkjemaStatus]);
   const stegFaneKlasse = classNames({
     stegFane: true,
     "stegFane--aktiv": true,
@@ -99,10 +108,11 @@ export const StegvelgerFTRL = () => {
     };
   });
 
-  const renderAlleSteg = alleSteg.map((steg) => {
+  const renderAlleSteg = stegMap.map((steg) => {
     return {
       navn: steg.navn,
       komponent: React.createElement(steg.komponent as any, {
+        aktivtSteg: aktivtSteg,
         bekreft: () => {
           setAktivtSteg(steg.nesteSteg ?? "");
         },
@@ -129,15 +139,13 @@ export const StegvelgerFTRL = () => {
     };
   });
 
-  const aktivtStegKomponent = renderAlleSteg.find((steg: any) => steg.navn === aktivtSteg)!!;
-
   return (
     <div className="stegvelger panelSeksjon">
       <StegLinje
         steg={alleSteg}
         stegKlikk={(stegId) => setAktivtSteg(alleSteg.find((steg: any) => steg.id === stegId.toString())!!.navn)}
       />
-      <Nav.Panel className={stegFaneKlasse}>{aktivtStegKomponent.komponent}</Nav.Panel>
+      <Nav.Panel className={stegFaneKlasse}>{renderAlleSteg.map((steg) => steg.komponent)}</Nav.Panel>
     </div>
   );
 };
