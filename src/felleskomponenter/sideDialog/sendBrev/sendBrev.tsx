@@ -29,9 +29,8 @@ import { useFeatureToggle } from "../../../featuretoggle";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 
-import BrevMottaker, { erArbeidsgiverEllerVirksomhet } from "./brevMottaker/brevMottaker";
+import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet } from "./brevMottaker/brevMottaker";
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
-import { erEtat } from "./brevMottaker/brevMottakerEtat";
 import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
 import Brevutkast from "./brevutkast/brevutkast";
 import BrevValg from "./brevValg";
@@ -40,6 +39,8 @@ import { SendBrevFormValues } from "./types";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
+
+const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -102,7 +103,8 @@ const SendBrev = ({
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
-  const [muligeMottakereEtater, setMuligeMottakereEtater] = useState<Api.DokumenterV2.MuligMottaker[]>();
+  const [muligeMottakereNorskMyndighet, setMuligeMottakereNorskMyndighet] =
+    useState<Api.DokumenterV2.MuligMottaker[]>();
   const [brevSendt, setBrevSendt] = useState(false);
   const [feil, setFeil] = useState<string | undefined>();
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
@@ -118,7 +120,7 @@ const SendBrev = ({
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
-  const mottakerErEtat = erEtat(formValues?.valgtMottaker?.rolle);
+  const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
@@ -147,11 +149,17 @@ const SendBrev = ({
   }, [formValues?.type]);
 
   const erMottakerGyldig = (values: SendBrevFormValues) => {
-    if (!values?.valgtMottaker) return false;
-    const { rolle, orgnrSettesAvSaksbehandler } = values.valgtMottaker;
-    if (erArbeidsgiverEllerVirksomhet(rolle) && !orgnrSettesAvSaksbehandler && !values.arbeidsgiver) return false;
-    if (erArbeidsgiverEllerVirksomhet(rolle) && orgnrSettesAvSaksbehandler && !values.organisasjonsnummer) return false;
-    return !(erEtat(rolle) && !harValgtEtat());
+    if (!values?.valgtMottaker?.rolle) return false;
+    switch (values.valgtMottaker.rolle) {
+      case ARBEIDSGIVER:
+        return Boolean(values.arbeidsgiver);
+      case ANNEN_ORGANISASJON:
+        return Boolean(values.organisasjonsnummer);
+      case NORSK_MYNDIGHET:
+        return !Utils._isEmpty(values.norskeMyndigheter);
+      default:
+        return true;
+    }
   };
 
   useEffect(() => {
@@ -165,7 +173,7 @@ const SendBrev = ({
     formValues?.valgtMottaker,
     formValues?.organisasjonsnummer,
     formValues?.arbeidsgiver,
-    formValues?.etater,
+    formValues?.norskeMyndigheter,
   ]);
 
   const kanHenteMuligeMottakere = (values: SendBrevFormValues) => {
@@ -176,14 +184,14 @@ const SendBrev = ({
   const hentMuligeMottakere = () => {
     setMuligeMottakereFeil(undefined);
 
-    if (mottakerErEtat) {
-      Api.DokumenterV2.hentMuligeMottakereEtater(behandlingID, {
+    if (mottakerErNorskMyndighet) {
+      Api.DokumenterV2.hentMuligeMottakereNorskMyndighet(behandlingID, {
         produserbartdokument: formValues?.type || "",
-        orgnrEtater: formValues.etater || [],
+        orgnrNorskMyndighet: formValues.norskeMyndigheter || [],
       })
-        .then((response) => setMuligeMottakereEtater(response))
+        .then((response) => setMuligeMottakereNorskMyndighet(response))
         .catch((e) => {
-          setMuligeMottakereEtater([]);
+          setMuligeMottakereNorskMyndighet([]);
           setMuligeMottakereFeil(e?.body?.message);
         });
     } else {
@@ -208,7 +216,7 @@ const SendBrev = ({
     formValues?.valgtMottaker,
     formValues?.organisasjonsnummer,
     formValues?.arbeidsgiver,
-    formValues?.etater,
+    formValues?.norskeMyndigheter,
   ]);
 
   useEffect(() => {
@@ -257,39 +265,45 @@ const SendBrev = ({
       : [];
   };
 
-  const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => {
-    const orgnr = formValues.valgtMottaker?.orgnrSettesAvSaksbehandler
-      ? formValues.organisasjonsnummer
-      : formValues.arbeidsgiver;
-    return {
-      produserbardokument: formValues.type || "",
-      mottaker: mottakerRolle,
-      orgNr: erArbeidsgiverEllerVirksomhet(mottakerRolle) ? orgnr : null,
-      kontaktpersonNavn:
-        erArbeidsgiverEllerVirksomhet(mottakerRolle) && formValues.valgtMottaker?.orgnrSettesAvSaksbehandler
-          ? formValues.kontaktperson
-          : null,
-      orgnrEtater: formValues.etater,
-      innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
-      manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
-      fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
-      fritekst: hentFormVerdi("FRITEKST"),
-      kopiMottakere: hentKopiMottakere() || [],
-      kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
-      saksvedlegg: valgteVedlegg.map((vedlegg) => ({
-        dokumentID: vedlegg.dokumentID,
-        journalpostID: vedlegg.journalpostID,
-      })),
-      fritekstvedlegg,
-      distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
-      dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
-    };
+  const hentOrgnr = (mottakerRolle: string) => {
+    switch (mottakerRolle) {
+      case VIRKSOMHET:
+      case ARBEIDSGIVER:
+        return formValues.arbeidsgiver;
+      case ANNEN_ORGANISASJON:
+        return formValues.organisasjonsnummer;
+      default:
+        return null;
+    }
   };
+
+  const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => ({
+    produserbardokument: formValues.type || "",
+    mottaker: mottakerRolle,
+    orgNr: hentOrgnr(mottakerRolle),
+    kontaktpersonNavn: erAnnenOrganisasjon(mottakerRolle) ? formValues.kontaktperson : null,
+    orgnrNorskMyndighet: formValues.norskeMyndigheter,
+    innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
+    manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
+    fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
+    fritekst: hentFormVerdi("FRITEKST"),
+    kopiMottakere: hentKopiMottakere() || [],
+    kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
+    saksvedlegg: valgteVedlegg.map((vedlegg) => ({
+      dokumentID: vedlegg.dokumentID,
+      journalpostID: vedlegg.journalpostID,
+    })),
+    fritekstvedlegg,
+    distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
+    dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
+  });
 
   const lagFritekstPdfUrl = async (index: number) => {
     const data = {
       produserbardokument: MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTVEDLEGG,
-      mottaker: mottakerErEtat ? KV.Koder.MottakerRolle.ETAT : muligeMottakere?.hovedMottaker.rolle || "",
+      mottaker: mottakerErNorskMyndighet
+        ? MKV.Koder.mottakerroller.NORSK_MYNDIGHET
+        : muligeMottakere?.hovedMottaker.rolle || "",
       fritekstTittel:
         redigerFritekstvedleggIndex === index
           ? formValues.felt?.FRITEKSTVEDLEGG_TITTEL?.feltVerdi
@@ -420,8 +434,6 @@ const SendBrev = ({
     event.preventDefault();
   };
 
-  const harValgtEtat = () => formValues.etater && formValues.etater.length > 0;
-
   if (!tilgjengeligeMaler || !formValues) return null;
   if (!visInnhold) return null;
 
@@ -502,12 +514,12 @@ const SendBrev = ({
         finnValgAlternativ={finnValgAlternativ}
       />
 
-      {formIsValid && brevtypeErValgt && (muligeMottakere || muligeMottakereEtater) && (
+      {formIsValid && brevtypeErValgt && (muligeMottakere || muligeMottakereNorskMyndighet) && (
         <Nav.Row>
           <Nav.Column xs={mottakerTabellWidth}>
             <BrevMottakereTabell
               muligeMottakere={muligeMottakere}
-              muligeMottakereEtater={muligeMottakereEtater}
+              muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
               hentBrevRequest={hentBrevRequest}
             />
           </Nav.Column>
