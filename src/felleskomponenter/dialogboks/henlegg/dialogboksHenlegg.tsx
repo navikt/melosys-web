@@ -116,7 +116,7 @@ export const DialogboksHenleggSak = ({
     ? {
         begrunnelseKode,
         fritekst,
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
       }
     : {};
 

@@ -23,7 +23,7 @@ describe("PdfLenkeListe", () => {
           data: {
             begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
             fritekst: null,
-            mottaker: MKV.Koder.aktoersroller.BRUKER,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
           },
         },
         {

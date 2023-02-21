@@ -46,7 +46,7 @@ const VurderingAvslag12_x_og_16 = ({
       navn: "Forhåndsvis vedtaksbrev",
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
       data: {
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: formValues.vedtaksbrevFritekst,
       },
     },
@@ -57,7 +57,7 @@ const VurderingAvslag12_x_og_16 = ({
       navn: "Orientering til arbeidsgiver om avslag",
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
       data: {
-        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
+        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
   }

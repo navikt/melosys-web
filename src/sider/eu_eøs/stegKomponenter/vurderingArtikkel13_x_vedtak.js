@@ -111,7 +111,7 @@ export const VurderingArtikkel13_x_vedtak = ({
       navn: "Forhåndsvis vedtaksbrev og A1",
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
       data: {
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: formValues.vedtaksbrevFritekst,
       },
     },
