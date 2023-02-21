@@ -40,7 +40,6 @@ type avsluttSakProps = {
 const AvsluttSak = ({
   avslaaSoknad,
   henleggSak,
-  avsluttSakSomBortfalt,
   sakstema,
   sakstype,
   behandlingstema,
@@ -262,7 +261,10 @@ const AvsluttSak = ({
       )}
       {skalViseBehandlingenErHenlagt() && <Handling tekst="Søknaden/klagen er trukket" onClick={henleggSak} />}
       {skalViseBehandlingenErBortfalt() && (
-        <Handling tekst="Behandlingen er bortfalt" onClick={avsluttSakSomBortfalt} />
+        <Handling
+          tekst="Behandlingen er bortfalt"
+          onClick={() => bekreftValg(BekreftValgTypes.AVSLUTT_SAK_SOM_BORTFALT)}
+        />
       )}
     </Nav.Ekspanderbartpanel>
   );

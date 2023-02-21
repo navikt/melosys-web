@@ -151,6 +151,13 @@ const Modals = ({
           bekreftCallback: () => angiBehandlingsresultattype(KLAGEINNSTILLING),
         };
 
+      case BekreftValgTypes.AVSLUTT_SAK_SOM_BORTFALT:
+        return {
+          tittel: "Avslutt sak som bortfalt",
+          tekst: "Er du sikker på at saken ikke kan behandles i Melosys? Vurder om du må opprette sak i annet system.",
+          bekreftCallback: () => avsluttSakSomBortfalt(),
+        };
+
       default:
         return {};
     }
