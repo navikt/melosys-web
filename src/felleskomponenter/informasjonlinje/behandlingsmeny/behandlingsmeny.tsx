@@ -34,7 +34,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
     oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
-  visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
   visBekreftValgDialogHandle: (bekreftValgType: BekreftValgTypes) =>
     dispatch(modalerOperations.visBekreftValgDialog(bekreftValgType)),
 });
@@ -47,7 +46,6 @@ export const Behandlingsmeny = ({
   tilbakeleggHandle,
   visAvslagSoknadDialogHandle,
   visHenleggDialogHandle,
-  visAvsluttSakSomBortfaltDialogHandle,
   visBekreftValgDialogHandle,
   redigerbart,
   sakstema,
@@ -88,7 +86,6 @@ export const Behandlingsmeny = ({
             avslaaSoknad={visAvslagSoknadDialogHandle}
             behandlingID={behandlingID}
             henleggSak={visHenleggDialogHandle}
-            avsluttSakSomBortfalt={visAvsluttSakSomBortfaltDialogHandle}
             sakstema={sakstema}
             sakstype={sakstype}
             behandlingstema={behandlingstema}

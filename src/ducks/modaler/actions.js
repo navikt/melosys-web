@@ -5,11 +5,6 @@ export const oppdaterHenlegg = (data) => ({
   data,
 });
 
-export const oppdaterAvsluttSakSomBortfalt = (data) => ({
-  type: Types.OPPDATER_AVSLUTT_SAK_SOM_BORTFALT,
-  data,
-});
-
 export const oppdaterBekreftValg = (data) => ({
   type: Types.OPPDATER_BEKREFT_VALG,
   data,

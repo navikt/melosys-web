@@ -9,7 +9,6 @@ import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 
 import {
   DialogboksAvslagSoknad,
-  DialogboksAvsluttSakSomBortfalt,
   DialogboksBekreftValg,
   DialogboksHenleggSak,
   DialogboksOppfriskSak,
@@ -35,8 +34,6 @@ const Modals = ({
   visAvslagSoknadDialog,
   skjulAvslagSoknadDialogHandle,
   avslaaSoknadHandle,
-  visAvsluttSakSomBortfaltDialog,
-  skjulAvsluttSakSomBortfaltDialogHandle,
   avsluttSakSomBortfalt,
   visBekreftValgDialog,
   skjulBekreftValgDialogHandle,
@@ -181,12 +178,6 @@ const Modals = ({
       {visAvslagSoknadDialog && (
         <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} avslaaSoknadHandle={avslaaSoknadHandle} />
       )}
-      {visAvsluttSakSomBortfaltDialog && (
-        <DialogboksAvsluttSakSomBortfalt
-          avbryt={skjulAvsluttSakSomBortfaltDialogHandle}
-          avsluttSakSomBortfalt={avsluttSakSomBortfalt}
-        />
-      )}
       {visBekreftValgDialog && (
         <DialogboksBekreftValg
           tittel={bekreftValgTypeData.tittel}
@@ -211,8 +202,6 @@ Modals.propTypes = {
   visAvslagSoknadDialog: PT.bool.isRequired,
   skjulAvslagSoknadDialogHandle: PT.func.isRequired,
   avslaaSoknadHandle: PT.func.isRequired,
-  visAvsluttSakSomBortfaltDialog: PT.bool.isRequired,
-  skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   avsluttSakSomBortfalt: PT.func.isRequired,
   visBekreftValgDialog: PT.bool.isRequired,
   skjulBekreftValgDialogHandle: PT.func.isRequired,
@@ -232,7 +221,6 @@ const mapStateToProps = (state) => ({
   visOppfriskDialog: modalerSelectors.ErOppfriskSynligSelector(state),
   visHenleggDialog: modalerSelectors.ErHenleggSynligSelector(state),
   visAvslagSoknadDialog: modalerSelectors.ErAvslagSoknadSynligSelector(state),
-  visAvsluttSakSomBortfaltDialog: modalerSelectors.ErAvsluttSakSomBortfaltSynligSelector(state),
   visBekreftValgDialog: modalerSelectors.ErBekreftValgSynligSelector(state),
   bekreftValgType: modalerSelectors.BekreftValgTypeSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -246,7 +234,6 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(modalerOperations.skjulOppfrisk()) && dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvslagSoknadDialogHandle: () => dispatch(modalerOperations.skjulAvslagSoknad()),
-  skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
   skjulBekreftValgDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleSak()),
 });
 

@@ -36,12 +36,10 @@ const FellesHandlersProviderUnconnected = ({
   avslaaSoknad,
   skjulOppfriskDialogHandle,
   skjulHenleggDialogHandle,
-  skjulAvsluttSakSomBortfaltDialogHandle,
   skjulBekreftValgDialogHandle,
   visOppfriskDialogHandle,
   visHenleggDialogHandle,
   visAvslagSoknadDialogHandle,
-  visAvsluttSakSomBortfaltDialogHandle,
   leggTilBehandlingOppfriskes,
   fjernBehandlingOppfriskes,
   behandlingUnderOppfriskning,
@@ -125,7 +123,7 @@ const FellesHandlersProviderUnconnected = ({
 
   const avsluttSakSomBortfalt = async () => {
     await Api.Fagsaker.fagsak.bortfall(saksnummer);
-    skjulAvsluttSakSomBortfaltDialogHandle();
+    skjulBekreftValgDialogHandle();
     tilForsiden();
   };
 
@@ -140,7 +138,6 @@ const FellesHandlersProviderUnconnected = ({
       lagreOgLukk,
       tilbakeleggOppgave,
       visHenleggDialogHandle,
-      visAvsluttSakSomBortfaltDialogHandle,
       visAvslagSoknadDialogHandle,
       visOppfriskModal: visOppfriskDialogHandle,
       skjulOppfriskModalOgNavigerTilForside,
@@ -160,7 +157,6 @@ const FellesHandlersProviderUnconnected = ({
       lagreOgLukk,
       tilbakeleggOppgave,
       visHenleggDialogHandle,
-      visAvsluttSakSomBortfaltDialogHandle,
       visAvslagSoknadDialogHandle,
       visOppfriskDialogHandle,
       skjulOppfriskModalOgNavigerTilForside,
@@ -194,12 +190,10 @@ FellesHandlersProviderUnconnected.propTypes = {
   avslaaSoknad: PT.func.isRequired,
   skjulOppfriskDialogHandle: PT.func.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
-  skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   skjulBekreftValgDialogHandle: PT.func.isRequired,
   visOppfriskDialogHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
-  visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   leggTilBehandlingOppfriskes: PT.func.isRequired,
   fjernBehandlingOppfriskes: PT.func.isRequired,
   behandlingUnderOppfriskning: PT.number,
@@ -237,12 +231,10 @@ const mapDispatchToProps = (dispatch) => ({
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
-  skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
   skjulBekreftValgDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleSak()),
   visOppfriskDialogHandle: () => dispatch(modalerOperations.visOppfrisk()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
-  visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
   resetLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   resetAnmodningsperioder: () => dispatch(anmodningsperioderOperations.resetAnmodningsperioderState()),

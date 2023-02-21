@@ -27,7 +27,6 @@ type avsluttSakProps = {
   avslaaSoknad: () => void;
   behandlingID: string;
   henleggSak: () => void;
-  avsluttSakSomBortfalt: () => void;
   bekreftValg: (bekreftValgType: BekreftValgTypes) => void;
   sakstema: string;
   sakstype: string;

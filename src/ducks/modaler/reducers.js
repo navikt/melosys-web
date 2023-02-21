@@ -3,7 +3,6 @@ import * as Types from "./types";
 
 const modaler = {
   avslagSoknad: "avslagSoknad",
-  avsluttSakSomBortfalt: "avsluttSakSomBortfalt",
   bekreftValg: "bekreftValg",
   henlegg: "henlegg",
   oppfrisk: "oppfrisk",
@@ -12,9 +11,6 @@ const modaler = {
 const initialState = {
   data: {
     [modaler.avslagSoknad]: {
-      synlig: false,
-    },
-    [modaler.avsluttSakSomBortfalt]: {
       synlig: false,
     },
     [modaler.henlegg]: {
@@ -48,9 +44,6 @@ export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Types.OPPDATER_AVSLAG_SOKNAD: {
       return lagNyState(state, action, modaler.avslagSoknad);
-    }
-    case Types.OPPDATER_AVSLUTT_SAK_SOM_BORTFALT: {
-      return lagNyState(state, action, modaler.avsluttSakSomBortfalt);
     }
     case Types.OPPDATER_BEKREFT_VALG: {
       return lagNyState(state, action, modaler.bekreftValg);
