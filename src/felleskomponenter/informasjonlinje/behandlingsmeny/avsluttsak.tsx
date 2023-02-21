@@ -27,7 +27,7 @@ type avsluttSakProps = {
   avslaaSoknad: () => void;
   behandlingID: string;
   henleggSak: () => void;
-  bekreftValg: (bekreftValgType: BekreftValgTypes) => void;
+  apneBekreftValgModal: (bekreftValgType: BekreftValgTypes) => void;
   sakstema: string;
   sakstype: string;
   behandlingstema: string;
@@ -43,7 +43,7 @@ const AvsluttSak = ({
   sakstype,
   behandlingstema,
   behandlingstype,
-  bekreftValg,
+  apneBekreftValgModal,
   redigerbart,
 }: avsluttSakProps) => {
   const behandlingstypeErNyVurdering = behandlingstype === NY_VURDERING;
@@ -207,25 +207,28 @@ const AvsluttSak = ({
       {skalKunneAngiBehandlingsresultat && (
         <div className="skillestrek">
           {skalViseKlageHandlinger && (
-            <Handling tekst="Medhold på klage" onClick={() => bekreftValg(BekreftValgTypes.KLAGE_MEDHOLD)} />
+            <Handling tekst="Medhold på klage" onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_MEDHOLD)} />
           )}
           {skalViseKlageHandlinger && (
             <Handling
               tekst="Klageinnstilling er oversendt til klageinstansen"
-              onClick={() => bekreftValg(BekreftValgTypes.KLAGE_OVERSENDT_TIL_KLAGEINSTANSER)}
+              onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_OVERSENDT_TIL_KLAGEINSTANSER)}
             />
           )}
           {skalViseKlageHandlinger && (
-            <Handling tekst="Klage er avvist" onClick={() => bekreftValg(BekreftValgTypes.KLAGE_AVVIST)} />
+            <Handling tekst="Klage er avvist" onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_AVVIST)} />
           )}
           {skalViseSøknadenErInnvilget() && (
             <Handling
               tekst="Søknaden er innvilget"
-              onClick={() => bekreftValg(BekreftValgTypes.SOKNADEN_ER_INNVILGET)}
+              onClick={() => apneBekreftValgModal(BekreftValgTypes.SOKNADEN_ER_INNVILGET)}
             />
           )}
           {skalViseSøknadenErAvslått() && (
-            <Handling tekst="Søknaden er avslått" onClick={() => bekreftValg(BekreftValgTypes.SOKNADEN_ER_AVSLATT)} />
+            <Handling
+              tekst="Søknaden er avslått"
+              onClick={() => apneBekreftValgModal(BekreftValgTypes.SOKNADEN_ER_AVSLATT)}
+            />
           )}
           {skalViseAvslåPgaManglendeOpplysninger() && (
             <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />
@@ -233,22 +236,22 @@ const AvsluttSak = ({
           {skalViseVedtakOmgjort && (
             <Handling
               tekst="Vedtaket er omgjort (fvl § 35)"
-              onClick={() => bekreftValg(BekreftValgTypes.VEDTAKET_ER_OMGJORT)}
+              onClick={() => apneBekreftValgModal(BekreftValgTypes.VEDTAKET_ER_OMGJORT)}
             />
           )}
           {skalViseUnntaksHandlinger && (
             <>
               <Handling
                 tekst="Perioden er godkjent"
-                onClick={() => bekreftValg(BekreftValgTypes.PERIODEN_ER_GODKJENT)}
+                onClick={() => apneBekreftValgModal(BekreftValgTypes.PERIODEN_ER_GODKJENT)}
               />
               <Handling
                 tekst="Perioden er delvis godkjent"
-                onClick={() => bekreftValg(BekreftValgTypes.PERIODEN_ER_DELVIS_GODKJENT)}
+                onClick={() => apneBekreftValgModal(BekreftValgTypes.PERIODEN_ER_DELVIS_GODKJENT)}
               />
               <Handling
                 tekst="Medlem i folketrygden"
-                onClick={() => bekreftValg(BekreftValgTypes.MEDLEM_I_FOLKETRYGDEN)}
+                onClick={() => apneBekreftValgModal(BekreftValgTypes.MEDLEM_I_FOLKETRYGDEN)}
               />
             </>
           )}
@@ -256,13 +259,13 @@ const AvsluttSak = ({
       )}
 
       {skalViseFerdigbehandlet() && (
-        <Handling tekst="Ferdigbehandlet" onClick={() => bekreftValg(BekreftValgTypes.FERDIGBEHANDLET)} />
+        <Handling tekst="Ferdigbehandlet" onClick={() => apneBekreftValgModal(BekreftValgTypes.FERDIGBEHANDLET)} />
       )}
       {skalViseBehandlingenErHenlagt() && <Handling tekst="Søknaden/klagen er trukket" onClick={henleggSak} />}
       {skalViseBehandlingenErBortfalt() && (
         <Handling
           tekst="Behandlingen er bortfalt"
-          onClick={() => bekreftValg(BekreftValgTypes.AVSLUTT_SAK_SOM_BORTFALT)}
+          onClick={() => apneBekreftValgModal(BekreftValgTypes.AVSLUTT_SAK_SOM_BORTFALT)}
         />
       )}
     </Nav.Ekspanderbartpanel>

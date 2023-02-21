@@ -91,7 +91,7 @@ export const Behandlingsmeny = ({
             behandlingstema={behandlingstema}
             behandlingstype={behandlingstype}
             redigerbart={redigerbart}
-            bekreftValg={visBekreftValgDialogHandle}
+            apneBekreftValgModal={visBekreftValgDialogHandle}
             tilForsiden={tilForsiden}
           />
         </div>
