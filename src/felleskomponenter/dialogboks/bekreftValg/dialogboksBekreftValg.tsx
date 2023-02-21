@@ -1,5 +1,4 @@
 import React from "react";
-import PT from "prop-types";
 import { useSelector } from "react-redux";
 
 import * as Nav from "../../../navFrontend";
@@ -16,7 +15,7 @@ interface DialogboksBekreftValgProps {
   tittel: string;
   tekst: string;
   redigerbart: boolean;
-  ariaHideApp: boolean;
+  ariaHideApp?: boolean;
 }
 export const DialogboksBekreftValg = ({
   handleBekreft,
@@ -48,15 +47,6 @@ export const DialogboksBekreftValg = ({
       />
     </Nav.Modal>
   );
-};
-
-DialogboksBekreftValg.propTypes = {
-  handleBekreft: PT.func.isRequired,
-  handleAvbryt: PT.func.isRequired,
-  tittel: PT.string.isRequired,
-  tekst: PT.string.isRequired,
-  ariaHideApp: PT.bool,
-  redigerbart: PT.bool.isRequired,
 };
 
 DialogboksBekreftValg.defaultProps = {
