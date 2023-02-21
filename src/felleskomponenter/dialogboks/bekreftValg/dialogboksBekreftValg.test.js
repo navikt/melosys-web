@@ -28,6 +28,8 @@ describe("DialogboksBekreftValg", () => {
   it("sender korrekte handlere til en knapperad", () => {
     const dialogboks = shallow(<DialogboksBekreftValg {...props} />);
     const knapperad = dialogboks.find(Knapperad);
+    const systemTittel = dialogboks.find(Nav.Typo.Systemtittel);
+    const normalTekst = dialogboks.find(Nav.Typo.Normaltekst);
 
     expect(knapperad).toHaveLength(1);
 
@@ -35,5 +37,7 @@ describe("DialogboksBekreftValg", () => {
 
     expect(avbryt).toBe(props.avbrytCallback);
     expect(bekreft).toBe(props.bekreftCallback);
+    expect(systemTittel.getNodeInternal().props.children).toBe(props.tittel);
+    expect(normalTekst.getNodeInternal().props.children).toBe(props.tekst);
   });
 });
