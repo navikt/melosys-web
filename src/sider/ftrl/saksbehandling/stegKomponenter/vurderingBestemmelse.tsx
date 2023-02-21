@@ -89,6 +89,13 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
     hentVilkaar(behandlingID);
   }, [behandlingID]);
 
+  useMemo(() => {
+    if (vilkarListe.length !== valgteVilkar.size) {
+      hentVilkaar(behandlingID);
+      setValgteVilkar(new Map());
+    }
+  }, [vilkarListe]);
+
   useEffect(() => {
     handleEndreBestemmelse(bestemmelse);
     vilkarListe.forEach((vilkar: any) => {

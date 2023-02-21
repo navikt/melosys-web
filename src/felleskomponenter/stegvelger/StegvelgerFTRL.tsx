@@ -1,21 +1,14 @@
-/* eslint-disable */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
+import classNames from "classnames";
 import { FANE_STATUS, STEG } from "./stegMotor";
-import { FellesHandlersContext } from "../../contexts";
 import { VurderingStart } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingStart";
 import { VurderingVirksomhet } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingVirksomhet";
-import classNames from "classnames";
 import * as Nav from "../../navFrontend";
 import { VurderingPerioder } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingPerioder";
 import { VurderingTrygdeavgift } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift";
 import { VurderingVedtak } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingVedtak";
 import StegLinje from "../stegLinje/stegLinje";
 import { VurderingBestemmelse } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingBestemmelse";
-
-type stegMapType = {
-  aktivtSteg: string;
-  status: string;
-};
 
 const START = {
   navn: STEG.START,
@@ -79,7 +72,7 @@ export interface FormSkjemaStegStatus {
 
 export const StegvelgerFTRL = () => {
   const [aktivtSteg, setAktivtSteg] = useState(STEG.START);
-  const [stegMap, setStegMap] = useState([START, VIRKSOMHET, BESTEMMELSE, PERIODER, TRYGDEAVGIFT]);
+  const [stegMap, _setStegMap] = useState([START, VIRKSOMHET, BESTEMMELSE, PERIODER, TRYGDEAVGIFT, VEDTAK_FTRL]);
   const [formSkjemaStatus, setFormSkjemaStatus] = useState<FormSkjemaStegStatus[]>();
   // useEffect(() => {
   //   setStegMap((prev: any) =>
@@ -112,13 +105,14 @@ export const StegvelgerFTRL = () => {
     return {
       navn: steg.navn,
       komponent: React.createElement(steg.komponent as any, {
-        aktivtSteg: aktivtSteg,
+        aktivtSteg,
         bekreft: () => {
           setAktivtSteg(steg.nesteSteg ?? "");
         },
         tilbake: () => {
           setAktivtSteg(steg.forrigeSteg ?? "");
         },
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         rapporterSkjema: (formSkjemaStatus: FormSkjemaStegStatus) => {
           setFormSkjemaStatus((prev) => {
             const fantEksisterendeFormSkjemaStatus = prev?.find(
@@ -126,7 +120,7 @@ export const StegvelgerFTRL = () => {
             );
             if (prev && fantEksisterendeFormSkjemaStatus) {
               return prev?.map((status) =>
-                status.stegNavn === formSkjemaStatus.stegNavn ? Object.assign({}, formSkjemaStatus) : status
+                status.stegNavn === formSkjemaStatus.stegNavn ? { ...formSkjemaStatus } : status
               );
             }
             if (prev && !fantEksisterendeFormSkjemaStatus) {
@@ -146,8 +140,8 @@ export const StegvelgerFTRL = () => {
         stegKlikk={(stegId) => setAktivtSteg(alleSteg.find((steg: any) => steg.id === stegId.toString())!!.navn)}
       />
       <Nav.Panel className={stegFaneKlasse}>
-        {renderAlleSteg.map((steg, index) => (
-          <div key={index}>{steg.komponent}</div>
+        {renderAlleSteg.map((steg) => (
+          <div key={steg.navn}>{steg.komponent}</div>
         ))}
       </Nav.Panel>
     </div>
