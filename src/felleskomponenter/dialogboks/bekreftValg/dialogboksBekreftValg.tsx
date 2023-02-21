@@ -18,7 +18,7 @@ interface DialogboksBekreftValgProps {
   handleAvbryt: () => void;
   ferdigbehandleSak: () => void;
   avsluttSakSomBortfalt: () => void;
-  ariaHideApp?: boolean;
+  ariaHideApp: boolean;
 }
 export const DialogboksBekreftValg = ({
   handleAvbryt,
