@@ -18,7 +18,7 @@ export const ErBekreftValgSynligSelector = createSelector(
 
 export const BekreftValgTypeSelector = createSelector(
   ModalerBekreftValgSelector,
-  (bekreftValgDialogSelector) => bekreftValgDialogSelector.bekreftValgType
+  (bekreftValgDialogSelector) => bekreftValgDialogSelector.type
 );
 
 export const HenleggSelector = createSelector(ModalerSelector, (modaler) => modaler.henlegg);

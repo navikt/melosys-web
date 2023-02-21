@@ -4,9 +4,8 @@ export const visHenlegg = () => (dispatch) => dispatch(Actions.oppdaterHenlegg({
 export const skjulHenlegg = () => (dispatch) => dispatch(Actions.oppdaterHenlegg({ synlig: false }));
 
 export const visBekreftValgDialog = (bekreftValgType) => (dispatch) =>
-  dispatch(Actions.oppdaterBekreftValg({ synlig: true, bekreftValgType }));
-export const skjulBekreftValg = () => (dispatch) =>
-  dispatch(Actions.oppdaterBekreftValg({ synlig: false, bekreftValgType: "" }));
+  dispatch(Actions.oppdaterBekreftValg({ synlig: true, type: bekreftValgType }));
+export const skjulBekreftValg = () => (dispatch) => dispatch(Actions.oppdaterBekreftValg({ synlig: false, type: "" }));
 
 export const visAvslagSoknad = () => (dispatch) => dispatch(Actions.oppdaterAvslagSoknad({ synlig: true }));
 export const skjulAvslagSoknad = () => (dispatch) => dispatch(Actions.oppdaterAvslagSoknad({ synlig: false }));

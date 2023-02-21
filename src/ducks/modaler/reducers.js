@@ -22,7 +22,7 @@ const initialState = {
     },
     [modaler.bekreftValg]: {
       synlig: false,
-      bekreftValgType: "",
+      type: "",
     },
   },
   status: STATUS.NOT_STARTED,
