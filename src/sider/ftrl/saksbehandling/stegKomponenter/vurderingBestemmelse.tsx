@@ -1,5 +1,4 @@
-/* eslint-disable */
-import { ChangeEventHandler, Fragment, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { ChangeEventHandler, Fragment, useContext, useEffect, useMemo, useState } from "react";
 import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -8,11 +7,10 @@ import { Action } from "redux";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
-import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { vilkarOperations, vilkarSelectors } from "../../../../ducks/vilkar";
-import { lagVilkarbegrunnelse, lagVilkaar, STEG } from "../../../../felleskomponenter/stegvelger";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
@@ -22,8 +20,6 @@ import { BOOLSK_STRING } from "../../../../constants";
 import "./vurderingBestemmelse.css";
 import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
 import { SaksbehandlingFTRLContext, VilkarOgBegrunnelser } from "../saksbehandlingFTRLContext";
-import { FellesHandlersContext } from "../../../../contexts";
-import { VilkaarSelector } from "../../../../ducks/folketrygdenkodeverk/selectors";
 import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
 
 const komponentState = (state: RootState) => ({
@@ -132,7 +128,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
     setValgteVilkar(new Map(valgteVilkar.set(event.target.name, event.target.value)));
     oppdaterVilkaar({
       ...{ ...valgteVilkar },
-      [event.target.name]: event.target.value === BOOLSK_STRING.USANN ? false : true,
+      [event.target.name]: event.target.value !== BOOLSK_STRING.USANN,
     });
     if (event.target.value === BOOLSK_STRING.USANN && valgteBegrunnelser.get(event.target.name)) {
       valgteBegrunnelser.delete(event.target.name);
@@ -145,7 +141,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
     setValgteBegrunnelser(new Map(valgteBegrunnelser.set(event.target.name, event.target.value)));
     oppdaterVilkaar({
       ...{ ...valgteBegrunnelser },
-      [event.target.name]: [event.target.value === BOOLSK_STRING.USANN ? false : true],
+      [event.target.name]: [event.target.value !== BOOLSK_STRING.USANN],
     });
   };
 

@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React, { useCallback, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,7 +36,6 @@ import { vedtakOperations } from "../../../../ducks/vedtak";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
-import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
 import { STEG } from "../../../../felleskomponenter/stegvelger";
 import { datalastingOperations } from "../../../../ducks/datalasting";
 
@@ -86,9 +83,8 @@ interface FormValuesProps {
 interface Props {
   tilbake: () => void;
   aktivtSteg: string;
-  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
-export const VurderingVedtak = ({ tilbake, aktivtSteg, rapporterSkjema }: Props) => {
+export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const dispatch = useDispatch();
 
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
@@ -137,10 +133,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg, rapporterSkjema }: Props)
   useEffect(() => {
     hentMuligeMottakere();
   }, []);
-
-  useEffect(() => {
-    rapporterSkjema({ stegNavn: STEG.VEDTAK_FTRL, dataErGyldig: formIsValid });
-  }, [formIsValid]);
 
   /* Mottakere settes av backend og følger regler:
       TODO: BRUKER_FÅR_KOPI_HVIS_FULLMEKTIG_FINNES,

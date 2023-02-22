@@ -158,7 +158,6 @@ const Trygdeavgiftsgrunnlag = ({
       trygdeavgiftsgrunnlag?.særligAvgiftsgruppe
     );
   };
-  console.log({ redigerbart });
   const erSkattePliktig = trygdeavgiftsgrunnlag?.erSkattepliktig;
   return (
     <div className="vurderingTrygdeavgift__overstrek vurderingTrygdeavgift">

@@ -1,6 +1,6 @@
 /*eslint-disable*/
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import { FANE_STATUS, STEG } from "./stegMotor";
 import { VurderingStart } from "../../sider/ftrl/saksbehandling/stegKomponenter/vurderingStart";
@@ -62,7 +62,7 @@ const VEDTAK_FTRL = {
   id: "5",
   tittel: "Vedtak",
   vedtakSteg: true,
-  nesteSteg: null,
+  nesteSteg: "",
   forrigeSteg: STEG.TRYGDEAVGIFT,
   komponent: VurderingVedtak,
 };
@@ -74,8 +74,18 @@ export interface FormSkjemaStegStatus {
 
 export const StegvelgerFTRL = () => {
   const [aktivtSteg, setAktivtSteg] = useState(STEG.START);
-  const [stegMap, _setStegMap] = useState([START, VIRKSOMHET, BESTEMMELSE, PERIODER, TRYGDEAVGIFT]);
+  const [stegMap, setStegMap] = useState([START, VIRKSOMHET, BESTEMMELSE, PERIODER, TRYGDEAVGIFT]);
   const [formSkjemaStatus, setFormSkjemaStatus] = useState<FormSkjemaStegStatus[]>();
+
+  useEffect(() => {
+    const finnesUgyldigSide = formSkjemaStatus?.find((status) => !status.dataErGyldig);
+    const vedtakLagtTil = stegMap.find((steg) => steg.navn === STEG.VEDTAK_FTRL);
+    if (!finnesUgyldigSide && !vedtakLagtTil) {
+      setStegMap((prev) => [...prev, VEDTAK_FTRL]);
+    } else {
+      setStegMap([START, VIRKSOMHET, BESTEMMELSE, PERIODER, TRYGDEAVGIFT]);
+    }
+  }, [formSkjemaStatus]);
 
   const stegFaneKlasse = classNames({
     stegFane: true,
