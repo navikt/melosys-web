@@ -28,6 +28,7 @@ const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerCompon
         label={rest.label}
         checked={checked}
         onChange={rest.onChange}
+        disabled={disabled}
         feil={rest.feil}
         onBlur={rest.onBlur}
         value={rest.value}

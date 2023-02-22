@@ -392,7 +392,12 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg, rapporterSkjema }: Props)
       <div style={{ marginTop: "0.5rem", marginLeft: "0.5rem", marginBottom: "0.5rem" }}>
         <Nav.Row>
           <Nav.Column xs="4">
-            <Skjema.SelectV2 label="Betalingsintervall" name="betalingsintervall" control={control}>
+            <Skjema.SelectV2
+              label="Betalingsintervall"
+              name="betalingsintervall"
+              control={control}
+              disabled={!redigerbart}
+            >
               {betalingsintervaller.map((item: KTObject) => (
                 <option key={item.kode} value={item.kode}>
                   {item.term}

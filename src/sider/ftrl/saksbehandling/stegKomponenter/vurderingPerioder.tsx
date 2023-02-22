@@ -91,6 +91,7 @@ const PeriodeElement = ({
             name={`medlemskapsperioder[${index}].trygdedekning`}
             feil={errors.medlemskapsperioder?.at(index)?.trygdedekning?.message?.melding}
             control={control}
+            disabled={!redigerbart}
             emptyFieldText="Velg"
             emptyFieldDisabled={!!formValues.medlemskapsperioder[index].trygdedekning}
           >
@@ -107,6 +108,7 @@ const PeriodeElement = ({
             name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
             feil={errors.medlemskapsperioder?.at(index)?.innvilgelsesResultat?.message?.melding}
             control={control}
+            disabled={!redigerbart}
             emptyFieldText="Velg"
             emptyFieldDisabled={!!formValues.medlemskapsperioder[index].innvilgelsesResultat}
           >

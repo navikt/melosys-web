@@ -83,7 +83,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
   const { behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
   useMemo(() => reset(), [behandlingOppfriskes]);
-  console.log({ formValues });
 
   const lonnsforholdErNorgeEllerDelt = [LØNN_FRA_NORGE, DELT_LØNN].includes(formValues.avgiftsgrunnlag?.lønnsforhold);
   const lonnsforholdErUtlandetEllerDelt = [LØNN_FRA_UTLANDET, DELT_LØNN].includes(
@@ -186,23 +185,23 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
     }
   }
 
-  useEffect(() => {
-    if (redigerbart && formValues?.avgiftsgrunnlag && erAvgiftsgrunnlagGyldig(formValues.avgiftsgrunnlag)) {
+  const handleErSøkerPliktigChange = () => {
+    const { avgiftsgrunnlag } = formValues;
+    if (redigerbart && avgiftsgrunnlag && erAvgiftsgrunnlagGyldig(avgiftsgrunnlag)) {
       Api.Trygdeavgift.sendGrunnlag(behandlingID, {
-        lønnsforhold: formValues.avgiftsgrunnlag.lønnsforhold,
-        trygdeavgiftsgrunnlagNorge: formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge || null,
-        trygdeavgiftsgrunnlagUtland: formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland || null,
+        lønnsforhold: avgiftsgrunnlag.lønnsforhold,
+        trygdeavgiftsgrunnlagNorge: avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge || null,
+        trygdeavgiftsgrunnlagUtland: avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland || null,
       }).then((response) => {
-        if (JSON.stringify(formValues.avgiftsgrunnlag) !== JSON.stringify(response)) {
+        if (JSON.stringify(avgiftsgrunnlag) !== JSON.stringify(response)) {
           setValue("avgiftsgrunnlag", response, { shouldValidate: true });
           handleGrunnlagResponse(response);
         }
       });
     }
-  }, [formValues?.avgiftsgrunnlag]);
+  };
 
   function handleSærligAvgiftsgruppeRadioChange(event: ChangeEvent<HTMLInputElement>, erNorskVirksomhet: boolean) {
-    console.log("JADA");
     const erSærligAvgiftsgruppe = Utils.streng.tryParseBool(event.target.value);
     erSaerligAvgiftsGruppeValgt.set(
       erNorskVirksomhet ? VurderingTrygdeavgiftVirksomhetTyper.NORSK : VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
@@ -279,6 +278,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
     erTrygdeavgiftsgrunnlagNorgeUgyldig,
     erTrygdeavgiftsgrunnlagUtlandUgyldig,
     saerligeavgiftsgrupper,
+    handleErSøkerPliktigChange,
   };
 
   if (aktivtSteg !== STEG.TRYGDEAVGIFT) return null;

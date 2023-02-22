@@ -177,6 +177,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
               }
               onChange={landEndret}
               values={valgteLand}
+              redigerbart={redigerbart}
               feil={(errors.land?.message as any)?.melding.toString()}
               options={alleLandkoder.map((item: any) => ({ value: item.kode, label: item.term }))}
             />

@@ -30,6 +30,7 @@ interface TrygdeavgiftsgrunnlagProps {
   erSaerligAvgiftsGruppeValgt: Map<string, boolean>;
   erTrygdeavgiftsgrunnlagNorgeUgyldig: boolean;
   erTrygdeavgiftsgrunnlagUtlandUgyldig: boolean;
+  handleErSøkerPliktigChange: () => void;
   handleBeregnClick: (erVirksomhetNorsk: boolean) => void;
   handleSærligAvgiftsgruppeRadioChange: (event: ChangeEvent<HTMLInputElement>, erVirksomhetNorsk: boolean) => void;
   handleAvgiftspliktigLønnInputChange: (event: ChangeEvent<HTMLInputElement>, erVirksomhetNorsk: boolean) => void;
@@ -45,6 +46,7 @@ const Trygdeavgiftsgrunnlag = ({
   oppdatertAvgiftsberegning,
   erTabellApen,
   erVirksomhetNorsk,
+  handleErSøkerPliktigChange,
   erSaerligAvgiftsGruppeValgt,
   erTrygdeavgiftsgrunnlagNorgeUgyldig,
   erTrygdeavgiftsgrunnlagUtlandUgyldig,
@@ -156,7 +158,7 @@ const Trygdeavgiftsgrunnlag = ({
       trygdeavgiftsgrunnlag?.særligAvgiftsgruppe
     );
   };
-
+  console.log({ redigerbart });
   const erSkattePliktig = trygdeavgiftsgrunnlag?.erSkattepliktig;
   return (
     <div className="vurderingTrygdeavgift__overstrek vurderingTrygdeavgift">
@@ -255,11 +257,11 @@ const Trygdeavgiftsgrunnlag = ({
                       erSkattePliktig === null || erSkattePliktig === undefined ? undefined : Boolean(erSkattePliktig)
                     }
                     onChangeRadio={() => {
-                      console.log("JA");
                       setValue(
                         feltNavnIngenTrygdeavgiftBetalesTilNAV.feltNavn,
                         feltNavnIngenTrygdeavgiftBetalesTilNAV.verdi
                       );
+                      handleErSøkerPliktigChange();
                     }}
                     value={BOOLSK_STRING.SANN}
                     disabled={!redigerbart}
@@ -271,8 +273,8 @@ const Trygdeavgiftsgrunnlag = ({
                     feil={errors[feltNavnBase]?.erSkattepliktig?.message?.melding}
                     control={control}
                     onChangeRadio={() => {
-                      console.log("NEI");
                       setValue(feltNavnTrygdeavgiftBetalesTilNAV.feltNavn, feltNavnTrygdeavgiftBetalesTilNAV.verdi);
+                      handleErSøkerPliktigChange();
                     }}
                     checked={
                       erSkattePliktig === null || erSkattePliktig === undefined ? undefined : Boolean(!erSkattePliktig)
