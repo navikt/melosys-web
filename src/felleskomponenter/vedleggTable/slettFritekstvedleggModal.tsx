@@ -22,7 +22,6 @@ const SlettFritekstvedleggModal = ({
       isOpen
       shouldCloseOnOverlayClick
       onRequestClose={onRequestClose}
-      // @ts-ignore
       ariaHideApp={ariaHideApp}
     >
       <Nav.Row>

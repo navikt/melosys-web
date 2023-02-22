@@ -85,7 +85,6 @@ const AnnenForelderModal = ({
       shouldCloseOnOverlayClick
       closeButton
       onRequestClose={onRequestClose}
-      // @ts-ignore
       ariaHideApp={ariaHideApp}
     >
       <Nav.Typo.Innholdstittel className={annenForelderModalClassName.element("tittel")}>

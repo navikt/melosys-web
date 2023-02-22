@@ -138,7 +138,6 @@ export const DialogboksHenleggSak = ({
       onRequestClose={avbryt}
       closeButton={false}
       shouldCloseOnOverlayClick
-      // @ts-ignore
       ariaHideApp={ariaHideApp}
     >
       <div>
