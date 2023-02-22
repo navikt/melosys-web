@@ -16,9 +16,9 @@ import { modalerOperations } from "../../../ducks/modaler";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
 
 import "./behandlingsmeny.css";
-import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
 
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
@@ -35,7 +35,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visBekreftValgDialogHandle: (bekreftValgType: BekreftValgTypes) =>
-    dispatch(modalerOperations.visBekreftValgDialog(bekreftValgType)),
+    dispatch(modalerOperations.visBekreftValg(bekreftValgType)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

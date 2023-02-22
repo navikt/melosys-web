@@ -1,54 +1,46 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import * as Nav from "../../../navFrontend";
-
-import Knapperad from "../../knapperad";
-
-import "./dialogboksBekreftValg.css";
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
+import * as Nav from "../../../navFrontend";
+
 import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
 import { navigeringOperations } from "../../../ducks/navigering";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { modalerSelectors } from "../../../ducks/modaler";
+import { modalerOperations, modalerSelectors } from "../../../ducks/modaler";
+import Knapperad from "../../knapperad";
+
+import "./dialogboksBekreftValg.css";
+
+const { UNNTAK_MEDLEMSKAP } = MKV.Koder.behandlinger.behandlingstema;
+const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
+const {
+  MEDHOLD,
+  KLAGEINNSTILLING,
+  AVVIST_KLAGE,
+  AVSLAG_SØKNAD,
+  OMGJORT,
+  REGISTRERT_UNNTAK,
+  DELVIS_GODKJENT_UNNTAK,
+  MEDLEM_I_FOLKETRYGDEN,
+  FASTSATT_LOVVALGSLAND,
+  UNNTATT_MEDLEMSKAP,
+} = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 interface DialogboksBekreftValgProps {
-  handleAvbryt: () => void;
-  ferdigbehandleSak: () => void;
-  avsluttSakSomBortfalt: () => void;
-  ariaHideApp: boolean;
+  ariaHideApp?: boolean;
 }
-export const DialogboksBekreftValg = ({
-  handleAvbryt,
-  ariaHideApp = true,
-  ferdigbehandleSak,
-  avsluttSakSomBortfalt,
-}: DialogboksBekreftValgProps) => {
+
+export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftValgProps) => {
   const dispatch = useDispatch();
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const sakstype = useSelector(fagsakSelectors.SaksnummerSelector);
+  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const bekreftValgType = useSelector(modalerSelectors.BekreftValgTypeSelector);
+  const skjulModal = () => dispatch(modalerOperations.skjulBekreftValg());
   const tilForsiden = () => dispatch(navigeringOperations.tilForsiden());
-
-  const {
-    MEDHOLD,
-    KLAGEINNSTILLING,
-    AVVIST_KLAGE,
-    AVSLAG_SØKNAD,
-    OMGJORT,
-    REGISTRERT_UNNTAK,
-    DELVIS_GODKJENT_UNNTAK,
-    MEDLEM_I_FOLKETRYGDEN,
-    FASTSATT_LOVVALGSLAND,
-    UNNTATT_MEDLEMSKAP,
-  } = MKV.Koder.behandlinger.behandlingsresultattyper;
-
-  const { UNNTAK_MEDLEMSKAP } = MKV.Koder.behandlinger.behandlingstema;
-
-  const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
   const mapType = () => {
     switch (sakstype) {
@@ -63,6 +55,7 @@ export const DialogboksBekreftValg = ({
   };
   const angiBehandlingsresultattype = async (type: string) => {
     await Api.Behandlinger.resultat.angiBehandlingsresultattype(behandlingID, { type });
+    skjulModal();
     tilForsiden();
   };
 
@@ -74,6 +67,7 @@ export const DialogboksBekreftValg = ({
           tekst: "Er du sikker på at saken er ferdigbehandlet? Vurder om du bør skrive et notat og/eller brev.",
           handleBekreft: ferdigbehandleSak,
         };
+
       case BekreftValgTypes.VEDTAKET_ER_OMGJORT:
         return {
           tittel: "Vedtaket er omgjort (fvl §35)",
@@ -87,12 +81,14 @@ export const DialogboksBekreftValg = ({
           tekst: "Er du sikker på at du vil avslutte saken? Husk å sende vedtak før du bekrefter.",
           handleBekreft: () => angiBehandlingsresultattype(mapType()),
         };
+
       case BekreftValgTypes.SOKNADEN_ER_AVSLATT:
         return {
           tittel: "Søknaden er avslått",
           tekst: "Er du sikker på at du vil avslutte saken? Husk å sende vedtak før du bekrefter.",
           handleBekreft: () => angiBehandlingsresultattype(AVSLAG_SØKNAD),
         };
+
       case BekreftValgTypes.PERIODEN_ER_GODKJENT:
         return {
           tittel: "Perioden er godkjent",
@@ -100,6 +96,7 @@ export const DialogboksBekreftValg = ({
             "Er du sikker på at du vil avslutte saken? Vurder om du skal registrere periode i MEDL/skrive notat/etc.",
           handleBekreft: () => angiBehandlingsresultattype(REGISTRERT_UNNTAK),
         };
+
       case BekreftValgTypes.PERIODEN_ER_DELVIS_GODKJENT:
         return {
           tittel: "Perioden er delvis godkjent",
@@ -107,6 +104,7 @@ export const DialogboksBekreftValg = ({
             "Er du sikker på at du vil avslutte saken? Vurder om du skal registrere periode i MEDL/skrive notat/etc.",
           handleBekreft: () => angiBehandlingsresultattype(DELVIS_GODKJENT_UNNTAK),
         };
+
       case BekreftValgTypes.MEDLEM_I_FOLKETRYGDEN:
         return {
           tittel: "Medlem i folketrygden",
@@ -155,7 +153,7 @@ export const DialogboksBekreftValg = ({
       className="dialogboksBekreftValg"
       isOpen
       contentLabel={bekreftValgTypeData.tittel || ""}
-      onRequestClose={handleAvbryt}
+      onRequestClose={skjulModal}
       closeButton={false}
       shouldCloseOnOverlayClick
       // @ts-ignore
@@ -166,7 +164,7 @@ export const DialogboksBekreftValg = ({
       <Knapperad
         bekreft={bekreftValgTypeData.handleBekreft}
         bekreftTekst="Bekreft"
-        avbryt={handleAvbryt}
+        avbryt={skjulModal}
         avbrytTekst="Avbryt"
         redigerbart
       />

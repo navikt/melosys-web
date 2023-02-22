@@ -6,8 +6,6 @@ import * as Nav from "../navFrontend";
 
 import { FellesHandlersContext } from "../contexts";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
-import { behandlingerSelectors } from "../ducks/behandlinger";
-import { fagsakSelectors } from "../ducks/fagsaker";
 import {
   DialogboksAvslagSoknad,
   DialogboksBekreftValg,
@@ -29,39 +27,28 @@ const Modals = ({
   visAvslagSoknadDialog,
   skjulAvslagSoknadDialogHandle,
   avslaaSoknadHandle,
-  avsluttSakSomBortfalt,
   visBekreftValgDialog,
-  skjulBekreftValgDialogHandle,
-  ferdigbehandleSak,
   behandlingOppfriskes,
   annenBehandlingOppfriskes,
-}) => {
-  return (
-    <Fragment>
-      {visOppfriskDialog && (
-        <DialogboksOppfriskSak
-          oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
-          avbryt={skjulOppfriskModal}
-          lukk={lukkOppfriskModal}
-          tilForsiden={skjulOppfriskModalOgNavigerTilForside}
-          behandlingOppfriskes={behandlingOppfriskes}
-          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-        />
-      )}
-      {visHenleggDialog && <DialogboksHenleggSak avbryt={skjulHenleggDialogHandle} henleggHandle={henleggHandle} />}
-      {visAvslagSoknadDialog && (
-        <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} avslaaSoknadHandle={avslaaSoknadHandle} />
-      )}
-      {visBekreftValgDialog && (
-        <DialogboksBekreftValg
-          ferdigbehandleSak={ferdigbehandleSak}
-          avsluttSakSomBortfalt={avsluttSakSomBortfalt}
-          handleAvbryt={skjulBekreftValgDialogHandle}
-        />
-      )}
-    </Fragment>
-  );
-};
+}) => (
+  <Fragment>
+    {visOppfriskDialog && (
+      <DialogboksOppfriskSak
+        oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
+        avbryt={skjulOppfriskModal}
+        lukk={lukkOppfriskModal}
+        tilForsiden={skjulOppfriskModalOgNavigerTilForside}
+        behandlingOppfriskes={behandlingOppfriskes}
+        annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+      />
+    )}
+    {visHenleggDialog && <DialogboksHenleggSak avbryt={skjulHenleggDialogHandle} henleggHandle={henleggHandle} />}
+    {visAvslagSoknadDialog && (
+      <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} avslaaSoknadHandle={avslaaSoknadHandle} />
+    )}
+    {visBekreftValgDialog && <DialogboksBekreftValg />}
+  </Fragment>
+);
 
 Modals.propTypes = {
   skjulOppfriskModalOgNavigerTilForside: PT.func.isRequired,
@@ -75,19 +62,9 @@ Modals.propTypes = {
   visAvslagSoknadDialog: PT.bool.isRequired,
   skjulAvslagSoknadDialogHandle: PT.func.isRequired,
   avslaaSoknadHandle: PT.func.isRequired,
-  avsluttSakSomBortfalt: PT.func.isRequired,
   visBekreftValgDialog: PT.bool.isRequired,
-  skjulBekreftValgDialogHandle: PT.func.isRequired,
-  ferdigbehandleSak: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
-  bekreftValgType: PT.oneOfType([PT.string, PT.number]),
-  behandlingID: PT.number.isRequired,
-  behandlingstema: PT.string.isRequired,
-  sakstype: PT.string.isRequired,
-};
-Modals.defaultProps = {
-  bekreftValgType: "",
 };
 
 const mapStateToProps = (state) => ({
@@ -95,10 +72,6 @@ const mapStateToProps = (state) => ({
   visHenleggDialog: modalerSelectors.ErHenleggSynligSelector(state),
   visAvslagSoknadDialog: modalerSelectors.ErAvslagSoknadSynligSelector(state),
   visBekreftValgDialog: modalerSelectors.ErBekreftValgSynligSelector(state),
-  bekreftValgType: modalerSelectors.BekreftValgTypeSelector(state),
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -107,7 +80,6 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(modalerOperations.skjulOppfrisk()) && dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvslagSoknadDialogHandle: () => dispatch(modalerOperations.skjulAvslagSoknad()),
-  skjulBekreftValgDialogHandle: () => dispatch(modalerOperations.skjulBekreftValg()),
 });
 
 const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);
