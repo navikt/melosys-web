@@ -1,5 +1,3 @@
-/*eslint-disable*/
-
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import { FANE_STATUS, STEG } from "./stegMotor";
@@ -110,8 +108,10 @@ export const StegvelgerFTRL = () => {
         (steg.status === FANE_STATUS.UBEHANDLET &&
           forrigeSteg?.stegNavn === steg.forrigeSteg &&
           forrigeSteg.dataErGyldig)
-      )
+      ) {
         return true;
+      }
+      return false;
     });
 
   const renderAlleSteg = stegMap.map((steg) => {
