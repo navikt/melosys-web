@@ -166,7 +166,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       navn: "Forhåndsvis vedtaksbrev og A1",
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: formValues.vedtaksbrevFritekst,
       },
     },

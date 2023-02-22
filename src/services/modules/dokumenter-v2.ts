@@ -52,7 +52,6 @@ export type TilgjengeligMottaker = {
   uuid: string;
   type: string;
   rolle: string;
-  orgnrSettesAvSaksbehandler: boolean;
   adresser: MottakerAdresse[] | null;
   feilmelding: string | null;
   trygdemyndighet: string[] | null;
@@ -63,7 +62,7 @@ export type TilgjengeligMal = {
   brevTyper: TilgjengeligBrev[];
 };
 
-export type TilgjengeligEtat = {
+export type TilgjengeligNorskMyndighet = {
   navn: string;
   orgnr: string;
 };
@@ -74,7 +73,7 @@ export type TilgjengeligBrev = {
 };
 export type TilgjengeligeMalerResDto = TilgjengeligMal[];
 
-export type TilgjengeligeEtaterResDto = TilgjengeligEtat[];
+export type TilgjengeligeNorskeMyndigheterResDto = TilgjengeligNorskMyndighet[];
 
 export type KopiMottaker = {
   rolle: string;
@@ -92,7 +91,7 @@ export type OpprettBrevReqDto = {
   produserbardokument: string;
   mottaker: string;
   orgNr?: string | null;
-  orgnrEtater?: string[];
+  orgnrNorskMyndighet?: string[];
   innledningFritekst?: string | null;
   begrunnelseFritekst?: string | null;
   manglerFritekst?: string | null;
@@ -150,16 +149,16 @@ export type HentMuligeMottakereReqDto = {
   orgnr: string | null;
 };
 
-export type HentMuligeMottakereEtaterReqDto = {
+export type HentMuligeMottakereNorskMyndighetReqDto = {
   produserbartdokument: string;
-  orgnrEtater: string[];
+  orgnrNorskMyndighet: string[];
 };
 
 export const hentTilgjengeligeMaler = (behandlingID: number): Promise<TilgjengeligeMalerResDto> =>
   getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-maler/${behandlingID}`);
 
-export const hentTilgjengeligeEtater = (): Promise<TilgjengeligeEtaterResDto> =>
-  getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-etater`);
+export const hentTilgjengeligeNorskeMyndigheter = (): Promise<TilgjengeligeNorskeMyndigheterResDto> =>
+  getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-norske-myndigheter`);
 
 export const hentMuligeMottakere = (
   behandlingID: number,
@@ -167,11 +166,11 @@ export const hentMuligeMottakere = (
 ): Promise<HentMuligeMottakereResDto> =>
   postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/mulige-mottakere/${behandlingID}`, data);
 
-export const hentMuligeMottakereEtater = (
+export const hentMuligeMottakereNorskMyndighet = (
   behandlingID: number,
-  data: HentMuligeMottakereEtaterReqDto
+  data: HentMuligeMottakereNorskMyndighetReqDto
 ): Promise<MuligMottaker[]> =>
-  postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/mulige-mottakere-etater/${behandlingID}`, data);
+  postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/mulige-mottakere-norske-myndigheter/${behandlingID}`, data);
 
 export const opprettBrev = (behandlingID: number, data: OpprettBrevReqDto) =>
   postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/opprett/${behandlingID}`, data);

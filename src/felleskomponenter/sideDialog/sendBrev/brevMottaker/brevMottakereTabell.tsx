@@ -14,8 +14,7 @@ import { formSelectors } from "../../../../ducks/form";
 import MottakerTabell from "../../../tabell/mottakerTabell";
 import PdfLenkeListe from "../../../pdfLenkeListe";
 import { SendBrevFormValues } from "../types";
-
-const { BRUKER } = KV.Koder.MottakerRolle;
+import { erBruker } from "./brevMottaker";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -28,14 +27,14 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface BrevMottakereTabellProps {
   muligeMottakere?: Api.DokumenterV2.HentMuligeMottakereResDto;
-  muligeMottakereEtater?: Api.DokumenterV2.MuligMottaker[];
+  muligeMottakereNorskMyndighet?: Api.DokumenterV2.MuligMottaker[];
   formIsValid: boolean;
   hentBrevRequest: any;
 }
 
 const BrevMottakereTabell = ({
   muligeMottakere,
-  muligeMottakereEtater,
+  muligeMottakereNorskMyndighet,
   behandlingID,
   formValues,
   formIsValid,
@@ -48,7 +47,7 @@ const BrevMottakereTabell = ({
         navn: ikon ? <Ikoner.Forhandsvis /> : muligMottaker.dokumentNavn,
         data: {
           ...hentBrevRequest(muligMottaker.rolle),
-          ...(muligMottaker.rolle !== BRUKER && muligMottaker.orgnr ? { orgNr: muligMottaker.orgnr } : {}),
+          ...(!erBruker(muligMottaker.rolle) && muligMottaker.orgnr ? { orgNr: muligMottaker.orgnr } : {}),
         },
       },
     ];
@@ -84,7 +83,7 @@ const BrevMottakereTabell = ({
     ];
   };
 
-  const mapMottakerRaderEtater = (muligeBrevMottakere: Api.DokumenterV2.MuligMottaker[]) => {
+  const mapMottakerRaderNorskeMyndigheter = (muligeBrevMottakere: Api.DokumenterV2.MuligMottaker[]) => {
     return muligeBrevMottakere.map((mottaker) => mapRad(mottaker));
   };
 
@@ -108,10 +107,10 @@ const BrevMottakereTabell = ({
           ]}
         />
       )}
-      {muligeMottakereEtater && (
+      {muligeMottakereNorskMyndighet && (
         <MottakerTabell
           className="tabell"
-          rader={mapMottakerRaderEtater(muligeMottakereEtater)}
+          rader={mapMottakerRaderNorskeMyndigheter(muligeMottakereNorskMyndighet)}
           kolonner={[
             { verdi: "Forhåndsvisning av brev", bredde: "60%" },
             { verdi: "Mottaker", bredde: "40%" },

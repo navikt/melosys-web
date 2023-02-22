@@ -73,7 +73,6 @@ const SivilstandModal = ({
       onRequestClose={lukkModal}
       isOpen={skalViseModal}
       closeButton
-      // @ts-ignore
       ariaHideApp={modalAriaHideApp}
     >
       <Mui.Undertittel tekst="Sivilstand" />

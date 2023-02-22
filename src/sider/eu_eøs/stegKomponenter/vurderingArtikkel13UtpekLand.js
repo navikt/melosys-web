@@ -114,7 +114,7 @@ export const VurderingArtikkel13UtpekLand = ({
       data: {
         begrunnelseKode: null,
         fritekst: formValues.fritekstOrienteringsbrev,
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
       },
     },
     {
