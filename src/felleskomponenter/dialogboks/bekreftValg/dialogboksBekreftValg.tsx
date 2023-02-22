@@ -35,6 +35,8 @@ interface DialogboksBekreftValgProps {
 
 export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftValgProps) => {
   const dispatch = useDispatch();
+
+  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
@@ -53,6 +55,19 @@ export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftV
         throw new Error("Finner ikke behandlingsresultattype for denne sakstypen");
     }
   };
+
+  const avsluttSakSomBortfalt = async () => {
+    await Api.Fagsaker.fagsak.bortfall(saksnummer);
+    skjulModal();
+    tilForsiden();
+  };
+
+  const ferdigbehandleSak = async () => {
+    await Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer);
+    skjulModal();
+    tilForsiden();
+  };
+
   const angiBehandlingsresultattype = async (type: string) => {
     await Api.Behandlinger.resultat.angiBehandlingsresultattype(behandlingID, { type });
     skjulModal();

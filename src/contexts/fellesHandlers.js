@@ -36,7 +36,6 @@ const FellesHandlersProviderUnconnected = ({
   avslaaSoknad,
   skjulOppfriskDialogHandle,
   skjulHenleggDialogHandle,
-  skjulBekreftValgDialogHandle,
   visOppfriskDialogHandle,
   visHenleggDialogHandle,
   visAvslagSoknadDialogHandle,
@@ -121,18 +120,6 @@ const FellesHandlersProviderUnconnected = ({
     avslaaSoknad(behandlingID, data);
   };
 
-  const avsluttSakSomBortfalt = async () => {
-    await Api.Fagsaker.fagsak.bortfall(saksnummer);
-    skjulBekreftValgDialogHandle();
-    tilForsiden();
-  };
-
-  const ferdigbehandleSak = async () => {
-    await Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer);
-    skjulBekreftValgDialogHandle();
-    tilForsiden();
-  };
-
   const fellesHandlers = useMemo(
     () => ({
       lagreOgLukk,
@@ -145,8 +132,6 @@ const FellesHandlersProviderUnconnected = ({
       tilOpprettNySak,
       henleggHandle,
       avslaaSoknadHandle,
-      avsluttSakSomBortfalt,
-      ferdigbehandleSak,
       lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
       behandlingOppfriskes,
@@ -164,7 +149,6 @@ const FellesHandlersProviderUnconnected = ({
       tilOpprettNySak,
       henleggHandle,
       avslaaSoknadHandle,
-      avsluttSakSomBortfalt,
       lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
       behandlingOppfriskes,
@@ -190,7 +174,6 @@ FellesHandlersProviderUnconnected.propTypes = {
   avslaaSoknad: PT.func.isRequired,
   skjulOppfriskDialogHandle: PT.func.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
-  skjulBekreftValgDialogHandle: PT.func.isRequired,
   visOppfriskDialogHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
@@ -231,7 +214,6 @@ const mapDispatchToProps = (dispatch) => ({
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
-  skjulBekreftValgDialogHandle: () => dispatch(modalerOperations.skjulBekreftValg()),
   visOppfriskDialogHandle: () => dispatch(modalerOperations.visOppfrisk()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
