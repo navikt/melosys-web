@@ -1,3 +1,5 @@
+/*eslint-disable*/
+
 import React, { useState } from "react";
 import classNames from "classnames";
 import { FANE_STATUS, STEG } from "./stegMotor";
@@ -72,34 +74,35 @@ export interface FormSkjemaStegStatus {
 
 export const StegvelgerFTRL = () => {
   const [aktivtSteg, setAktivtSteg] = useState(STEG.START);
-  const [stegMap, _setStegMap] = useState([START, VIRKSOMHET, BESTEMMELSE, PERIODER, TRYGDEAVGIFT, VEDTAK_FTRL]);
+  const [stegMap, _setStegMap] = useState([START, VIRKSOMHET, BESTEMMELSE, PERIODER, TRYGDEAVGIFT]);
   const [formSkjemaStatus, setFormSkjemaStatus] = useState<FormSkjemaStegStatus[]>();
-  // useEffect(() => {
-  //   setStegMap((prev: any) =>
-  //     prev.map((steg: any, index: number, alleSteg: []) => {
-  //       const formStatus = formSkjemaStatus?.find((status) => status.stegNavn === steg.navn);
-  //       console.log({ alleSteg });
-  //       return {
-  //         ...steg,
-  //         synligSteg: formStatus?.dataErGyldig,
-  //       };
-  //     })
-  //   );
-  // }, [formSkjemaStatus]);
+
   const stegFaneKlasse = classNames({
     stegFane: true,
     "stegFane--aktiv": true,
   });
-
-  const alleSteg = stegMap.map((steg) => {
-    return {
-      ...steg,
-      status: formSkjemaStatus?.find((status) => status.stegNavn === steg.navn)?.dataErGyldig
-        ? FANE_STATUS.OK
-        : FANE_STATUS.UBEHANDLET,
-      aktivtSteg: steg.navn === aktivtSteg,
-    };
-  });
+  const alleSynligeSteg = stegMap
+    .map((steg) => {
+      return {
+        ...steg,
+        status: formSkjemaStatus?.find((status) => status.stegNavn === steg.navn)?.dataErGyldig
+          ? FANE_STATUS.OK
+          : FANE_STATUS.UBEHANDLET,
+        aktivtSteg: steg.navn === aktivtSteg,
+      };
+    })
+    .filter((steg) => {
+      const forrigeSteg = formSkjemaStatus?.find((status) => status.stegNavn === steg.forrigeSteg);
+      if (
+        steg.status === FANE_STATUS.OK ||
+        steg.navn === STEG.START ||
+        steg.aktivtSteg ||
+        (steg.status === FANE_STATUS.UBEHANDLET &&
+          forrigeSteg?.stegNavn === steg.forrigeSteg &&
+          forrigeSteg.dataErGyldig)
+      )
+        return true;
+    });
 
   const renderAlleSteg = stegMap.map((steg) => {
     return {
@@ -136,8 +139,8 @@ export const StegvelgerFTRL = () => {
   return (
     <div className="stegvelger panelSeksjon">
       <StegLinje
-        steg={alleSteg}
-        stegKlikk={(stegId) => setAktivtSteg(alleSteg.find((steg: any) => steg.id === stegId.toString())!!.navn)}
+        steg={alleSynligeSteg}
+        stegKlikk={(stegId) => setAktivtSteg(alleSynligeSteg.find((steg: any) => steg.id === stegId.toString())!!.navn)}
       />
       <Nav.Panel className={stegFaneKlasse}>
         {renderAlleSteg.map((steg) => (
