@@ -14,6 +14,7 @@ interface RadioComponentProps {
   disabled?: boolean;
   checked?: boolean;
   onChange?: (value: any) => void;
+  onChangeRadio?: () => void;
   feil?: any;
 }
 
@@ -51,6 +52,7 @@ const Radio = React.forwardRef<HTMLSelectElement, RadioProps>(({ name, control, 
           onChange={(event: any) => {
             field.onChange(event);
             if (rest.onChange) rest.onChange(event?.target?.value);
+            if (rest.onChangeRadio) rest.onChangeRadio();
           }}
         />
       )}

@@ -254,12 +254,13 @@ const Trygdeavgiftsgrunnlag = ({
                     checked={
                       erSkattePliktig === null || erSkattePliktig === undefined ? undefined : Boolean(erSkattePliktig)
                     }
-                    onChange={() =>
+                    onChangeRadio={() => {
+                      console.log("JA");
                       setValue(
                         feltNavnIngenTrygdeavgiftBetalesTilNAV.feltNavn,
                         feltNavnIngenTrygdeavgiftBetalesTilNAV.verdi
-                      )
-                    }
+                      );
+                    }}
                     value={BOOLSK_STRING.SANN}
                     disabled={!redigerbart}
                   />
@@ -269,9 +270,10 @@ const Trygdeavgiftsgrunnlag = ({
                     name={`${feltNavnBase}.erSkattepliktig`}
                     feil={errors[feltNavnBase]?.erSkattepliktig?.message?.melding}
                     control={control}
-                    onChange={() =>
-                      setValue(feltNavnTrygdeavgiftBetalesTilNAV.feltNavn, feltNavnTrygdeavgiftBetalesTilNAV.verdi)
-                    }
+                    onChangeRadio={() => {
+                      console.log("NEI");
+                      setValue(feltNavnTrygdeavgiftBetalesTilNAV.feltNavn, feltNavnTrygdeavgiftBetalesTilNAV.verdi);
+                    }}
                     checked={
                       erSkattePliktig === null || erSkattePliktig === undefined ? undefined : Boolean(!erSkattePliktig)
                     }

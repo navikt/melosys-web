@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent, useCallback } from "react";
+import React, { useEffect, useState, ChangeEvent, useContext, useMemo } from "react";
 import { RootState } from "AppTypes";
 import { useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -22,6 +22,7 @@ import "./vurderingTrygdeavgift.css";
 import { RedigerbartSelector } from "../../../../../ducks/redigerbart/selectors";
 import { FormSkjemaStegStatus } from "../../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
 import { STEG } from "../../../../../felleskomponenter/stegvelger";
+import { FellesHandlersContext } from "../../../../../contexts";
 
 const komponentState = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -68,6 +69,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
     control,
     setValue,
     watch,
+    reset,
     formState: { isValid: formIsValid, errors },
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
@@ -78,6 +80,11 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
     } as FieldValues,
   });
   const formValues = watch();
+  const { behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
+
+  useMemo(() => reset(), [behandlingOppfriskes]);
+  console.log({ formValues });
+
   const lonnsforholdErNorgeEllerDelt = [LØNN_FRA_NORGE, DELT_LØNN].includes(formValues.avgiftsgrunnlag?.lønnsforhold);
   const lonnsforholdErUtlandetEllerDelt = [LØNN_FRA_UTLANDET, DELT_LØNN].includes(
     formValues.avgiftsgrunnlag?.lønnsforhold
@@ -105,28 +112,28 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
       setValue("avgiftsberegning", response, { shouldValidate: true });
     });
   };
-  const debouncedHentBeregning = useCallback(Utils._debounce(hentBeregning, 1000), []);
 
   useEffect(() => {
-    Api.Trygdeavgift.hentGrunnlag(behandlingID).then((response) => {
-      if (response?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe !== undefined) {
-        erSaerligAvgiftsGruppeValgt.set(
-          VurderingTrygdeavgiftVirksomhetTyper.NORSK,
-          !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe
-        );
-      }
-      if (response?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe !== undefined) {
-        erSaerligAvgiftsGruppeValgt.set(
-          VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
-          !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe
-        );
-      }
-      setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
-      setValue("avgiftsgrunnlag", response, { shouldValidate: true });
-    });
-    debouncedHentBeregning();
-    return () => debouncedHentBeregning.cancel();
-  }, []);
+    if (formValues.avgiftsgrunnlag === null && formValues.avgiftsberegning === null) {
+      hentBeregning();
+      Api.Trygdeavgift.hentGrunnlag(behandlingID).then((response) => {
+        if (response?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe !== undefined) {
+          erSaerligAvgiftsGruppeValgt.set(
+            VurderingTrygdeavgiftVirksomhetTyper.NORSK,
+            !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe
+          );
+        }
+        if (response?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe !== undefined) {
+          erSaerligAvgiftsGruppeValgt.set(
+            VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
+            !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe
+          );
+        }
+        setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
+        setValue("avgiftsgrunnlag", response, { shouldValidate: true });
+      });
+    }
+  }, [formValues.avgiftsgrunnlag, formValues.avgiftsberegning]);
 
   function erTrygdeavgiftsgrunnlagGyldig(trygdeavgiftsgrunnlag: Api.AvgiftsgrunnlagInfo | null | undefined) {
     return (
@@ -195,6 +202,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
   }, [formValues?.avgiftsgrunnlag]);
 
   function handleSærligAvgiftsgruppeRadioChange(event: ChangeEvent<HTMLInputElement>, erNorskVirksomhet: boolean) {
+    console.log("JADA");
     const erSærligAvgiftsgruppe = Utils.streng.tryParseBool(event.target.value);
     erSaerligAvgiftsGruppeValgt.set(
       erNorskVirksomhet ? VurderingTrygdeavgiftVirksomhetTyper.NORSK : VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
@@ -208,6 +216,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
     setValue(`${fieldBase}.særligAvgiftsgruppe`, erSærligAvgiftsgruppe ? "TRUE" : null, { shouldValidate: true });
     setValue(`${fieldBase}.betalerArbeidsgiverAvgift`, erNorskVirksomhet, { shouldValidate: true });
     setValue(`${fieldBase}.erSkattepliktig`, undefined, { shouldValidate: true });
+    setValue("avgiftsberegning", {});
   }
 
   useEffect(() => {
