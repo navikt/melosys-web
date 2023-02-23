@@ -113,7 +113,7 @@ export const DialogboksHenleggSak = ({
     ? {
         begrunnelseKode,
         fritekst,
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
       }
     : {};
 
@@ -135,7 +135,6 @@ export const DialogboksHenleggSak = ({
       onRequestClose={avbryt}
       closeButton={false}
       shouldCloseOnOverlayClick
-      // @ts-ignore
       ariaHideApp={ariaHideApp}
     >
       <div>

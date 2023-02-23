@@ -330,7 +330,7 @@ class VurderingArtikkel16Anmodning extends Component {
             navn: "Forhåndsvis orienteringsbrev til bruker",
             type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK,
             data: {
-              mottaker: MKV.Koder.aktoersroller.BRUKER,
+              mottaker: MKV.Koder.mottakerroller.BRUKER,
             },
           },
           {
@@ -347,14 +347,14 @@ class VurderingArtikkel16Anmodning extends Component {
             navn: "Forhåndsvis orienteringsbrev til bruker",
             type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK,
             data: {
-              mottaker: MKV.Koder.aktoersroller.BRUKER,
+              mottaker: MKV.Koder.mottakerroller.BRUKER,
             },
           },
           {
             navn: "Forhåndsvis anmodning til utenlandsk myndighet",
             type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK,
             data: {
-              mottaker: MKV.Koder.aktoersroller.TRYGDEMYNDIGHET,
+              mottaker: MKV.Koder.mottakerroller.UTENLANDSK_TRYGDEMYNDIGHET,
               ytterligereInformasjon: this.props.formValues.fritekstSed,
             },
           },

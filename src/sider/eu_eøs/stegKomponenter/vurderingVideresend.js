@@ -41,7 +41,7 @@ export const VurderingVideresend = ({
       navn: "Forhåndsvis orienteringsbrev",
       type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_VIDERESENDT_SOEKNAD,
       data: {
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: formValues.orienteringsbrevFritekst,
       },
     },

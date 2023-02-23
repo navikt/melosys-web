@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 import { FysiskDokument } from "Domene";
+
+import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
-import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
+
 import { SendBrevFormValues } from "../types";
 import { Fritekstvedlegg } from "../sendBrev";
 import LagredeUtkast from "./lagredeUtkast";
 
-const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ETAT } = KV.Koder.MottakerRolle;
+const { BRUKER, VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
 
 interface BrevutkastProps {
   changeField: (field: string, data: any) => void;
@@ -34,25 +36,37 @@ const Brevutkast = ({
 
   const inaktiveUtkast = utkastPåBehandlingen.filter((utkast) => utkast.tittel !== aktivtUtkastTittel);
 
-  // DEPRECATED. Denne blir unødvendig/mindre komplisert når man går over til Mottakerroller
   const settMottaker = (valgtUtkast: Api.DokumenterV2.OpprettBrevReqDto) => {
-    if (valgtUtkast.mottaker === BRUKER) {
-      changeField("mottaker", tilgjengeligeMottakere.find((mottaker) => mottaker.rolle === valgtUtkast.mottaker)?.uuid);
-    } else if ([ARBEIDSGIVER, VIRKSOMHET].includes(valgtUtkast.mottaker)) {
-      const arbeidsgiverMedValgtOrgnr = tilgjengeligeMottakere.find((mottaker) =>
-        mottaker.adresser?.find((adresse) => adresse.tittel.orgnr === valgtUtkast.orgNr)
-      )?.uuid;
-      const organisasjonFraOrgnr = tilgjengeligeMottakere.find((mottaker) => mottaker.orgnrSettesAvSaksbehandler)?.uuid;
-
-      const orgnrSettesAvSaksbehandler =
-        valgtUtkast.kontaktpersonNavn || (organisasjonFraOrgnr && !arbeidsgiverMedValgtOrgnr);
-
-      changeField("mottaker", orgnrSettesAvSaksbehandler ? organisasjonFraOrgnr : arbeidsgiverMedValgtOrgnr);
-      changeField(orgnrSettesAvSaksbehandler ? "organisasjonsnummer" : "arbeidsgiver", valgtUtkast.orgNr);
-      changeField("kontaktperson", valgtUtkast.kontaktpersonNavn);
-    } else if (valgtUtkast.mottaker === ETAT) {
-      changeField("mottaker", tilgjengeligeMottakere.find((mottaker) => mottaker.rolle === valgtUtkast.mottaker)?.uuid);
-      changeField("etater", valgtUtkast.orgnrEtater);
+    const mottakerFraRolle = (rolle: string) =>
+      tilgjengeligeMottakere.find((mottaker) => mottaker.rolle === rolle)?.uuid;
+    switch (valgtUtkast.mottaker) {
+      case BRUKER:
+        changeField("mottaker", mottakerFraRolle(BRUKER));
+        break;
+      case VIRKSOMHET:
+        changeField("mottaker", mottakerFraRolle(VIRKSOMHET));
+        changeField("arbeidsgiver", valgtUtkast.orgNr);
+        break;
+      case ARBEIDSGIVER:
+        changeField(
+          "mottaker",
+          tilgjengeligeMottakere.find((mottaker) =>
+            mottaker.adresser?.find((adresse) => adresse.tittel.orgnr === valgtUtkast.orgNr)
+          )?.uuid
+        );
+        changeField("arbeidsgiver", valgtUtkast.orgNr);
+        break;
+      case ANNEN_ORGANISASJON:
+        changeField("mottaker", mottakerFraRolle(ANNEN_ORGANISASJON));
+        changeField("organisasjonsnummer", valgtUtkast.orgNr);
+        changeField("kontaktperson", valgtUtkast.kontaktpersonNavn);
+        break;
+      case NORSK_MYNDIGHET:
+        changeField("mottaker", mottakerFraRolle(NORSK_MYNDIGHET));
+        changeField("norskeMyndigheter", valgtUtkast.orgnrNorskMyndighet);
+        break;
+      default:
+        break;
     }
   };
 
