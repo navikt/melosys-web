@@ -22,47 +22,6 @@ describe("Redigerbartselectors", () => {
     },
   });
 
-  describe("BehandlingsmenyredigerbartSelector", () => {
-    each([
-      [
-        true,
-        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-        true,
-        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-      ],
-      [
-        false,
-        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-        false,
-        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-      ],
-      [
-        true,
-        MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-        true,
-        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-      ],
-      [
-        true,
-        MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-        false,
-        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-      ],
-      [
-        true,
-        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-        true,
-        MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
-      ],
-    ]).it(
-      "returnerer %p dersom behandlingsstatus er %p, redigerbart er %p, og behandlingstype er %p",
-      (forventetResultat, behandlingsstatus, redigerbart, behandlingstype) => {
-        const state = lagState(redigerbart, behandlingsstatus, behandlingstype);
-        expect(selectors.BehandlingsmenyRedigerbartSelector(state)).toBe(forventetResultat);
-      }
-    );
-  });
-
   describe("PanelerRedigerbartSelector", () => {
     each([
       [
