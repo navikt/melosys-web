@@ -106,8 +106,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
     });
   };
 
-  const initierBeregningOgGrunnlag = () => {
-    hentBeregning();
+  const hentGrunnlag = () => {
     Api.Trygdeavgift.hentGrunnlag(behandlingID).then((response) => {
       if (response?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe !== undefined) {
         erSaerligAvgiftsGruppeValgt.set(
@@ -124,6 +123,13 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
       setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
       setValue("avgiftsgrunnlag", response, { shouldValidate: true });
     });
+  };
+
+  const initierBeregningOgGrunnlag = () => {
+    if (aktivtSteg === STEG.TRYGDEAVGIFT) {
+      hentBeregning();
+      hentGrunnlag();
+    }
   };
 
   useMemo(() => {
