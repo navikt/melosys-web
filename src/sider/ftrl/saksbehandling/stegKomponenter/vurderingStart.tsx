@@ -42,7 +42,6 @@ const komponentState = (state: RootState) => {
   const initialSoknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(state);
   const initialSoeknadsland = mottatteOpplysningerSelectors.SoknadslandkoderSelector(state);
   const initialTrygdedekning = mottatteOpplysningerSelectors.TrygdedekningSelector(state);
-  console.log({ initialSoeknadsland, initialSoknadsperiode, initialTrygdedekning });
   return {
     trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
     initialValues: {
