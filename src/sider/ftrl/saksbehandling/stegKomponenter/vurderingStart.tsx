@@ -26,6 +26,8 @@ import { FellesHandlersContext } from "../../../../contexts";
 import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
 import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
 import { STEG } from "../../../../felleskomponenter/stegvelger";
+import { tilForsiden } from "../../../../ducks/navigering/operations";
+import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
 
 const landHarTrygdeavtaleMedNorgeEllerErEosLand = (landKode: string) => {
   const landMedTrygdeAvtaleEllerEosLand = [
@@ -70,7 +72,10 @@ interface Props {
 
 export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) => {
   const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
-  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
+  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger, annenBehandlingOppfriskes } = useContext(
+    FellesHandlersContext
+  ) as any;
   const { trygdedekninger, initialValues, alleLandkoder } = useSelector((state: RootState) => komponentState(state));
   const dispatch = useDispatch();
   const { visMenypanel, oppdaterPeriode, oppdaterSoeknadslandkoder, oppdaterTrygdedekning } =
@@ -121,9 +126,8 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
 
     if (!erSammeSomInitialVerdier) {
       oppdaterLokalMottatteOpplysninger().finally(() => {
-        lagreMottatteOpplysningerOgOppfriskSaksopplysninger();
         visMenypanel();
-        bekreft();
+        setVisOppfrisk(true);
       });
     } else {
       bekreft();
@@ -221,6 +225,23 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
           disabled: !formIsValid || !redigerbart,
         }}
       />
+
+      {visOppfrisk && (
+        <DialogboksOppfriskSak
+          oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
+          avbryt={() => setVisOppfrisk(false)}
+          lukk={() => {
+            setVisOppfrisk(false);
+            bekreft();
+          }}
+          tilForsiden={() => {
+            setVisOppfrisk(false);
+            tilForsiden();
+          }}
+          behandlingOppfriskes
+          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+        />
+      )}
     </div>
   );
 };

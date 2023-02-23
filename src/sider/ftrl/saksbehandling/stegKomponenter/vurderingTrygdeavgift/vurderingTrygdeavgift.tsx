@@ -82,8 +82,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
   const formValues = watch();
   const { behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
-  useMemo(() => reset(), [behandlingOppfriskes]);
-
   const lonnsforholdErNorgeEllerDelt = [LØNN_FRA_NORGE, DELT_LØNN].includes(formValues.avgiftsgrunnlag?.lønnsforhold);
   const lonnsforholdErUtlandetEllerDelt = [LØNN_FRA_UTLANDET, DELT_LØNN].includes(
     formValues.avgiftsgrunnlag?.lønnsforhold
@@ -98,10 +96,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
     avgiftspliktigLønnUtland: null,
   });
 
-  useEffect(() => {
-    rapporterSkjema({ stegNavn: STEG.TRYGDEAVGIFT, dataErGyldig: formIsValid });
-  }, [formIsValid]);
-
   const hentBeregning = () => {
     Api.Trygdeavgift.hentBeregning(behandlingID).then((response) => {
       setOppdatertAvgiftsberegning({
@@ -112,27 +106,39 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, rapporterS
     });
   };
 
+  const initierBeregningOgGrunnlag = () => {
+    hentBeregning();
+    Api.Trygdeavgift.hentGrunnlag(behandlingID).then((response) => {
+      if (response?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe !== undefined) {
+        erSaerligAvgiftsGruppeValgt.set(
+          VurderingTrygdeavgiftVirksomhetTyper.NORSK,
+          !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe
+        );
+      }
+      if (response?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe !== undefined) {
+        erSaerligAvgiftsGruppeValgt.set(
+          VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
+          !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe
+        );
+      }
+      setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
+      setValue("avgiftsgrunnlag", response, { shouldValidate: true });
+    });
+  };
+
+  useMemo(() => {
+    reset();
+    setErSaerligAvgiftsGruppeValgt(new Map());
+    initierBeregningOgGrunnlag();
+  }, [behandlingOppfriskes]);
+
   useEffect(() => {
-    if (formValues.avgiftsgrunnlag === null && formValues.avgiftsberegning === null) {
-      hentBeregning();
-      Api.Trygdeavgift.hentGrunnlag(behandlingID).then((response) => {
-        if (response?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe !== undefined) {
-          erSaerligAvgiftsGruppeValgt.set(
-            VurderingTrygdeavgiftVirksomhetTyper.NORSK,
-            !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe
-          );
-        }
-        if (response?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe !== undefined) {
-          erSaerligAvgiftsGruppeValgt.set(
-            VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
-            !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe
-          );
-        }
-        setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
-        setValue("avgiftsgrunnlag", response, { shouldValidate: true });
-      });
-    }
-  }, [formValues.avgiftsgrunnlag, formValues.avgiftsberegning]);
+    rapporterSkjema({ stegNavn: STEG.TRYGDEAVGIFT, dataErGyldig: formIsValid });
+  }, [formIsValid]);
+
+  useEffect(() => {
+    initierBeregningOgGrunnlag();
+  }, []);
 
   function erTrygdeavgiftsgrunnlagGyldig(trygdeavgiftsgrunnlag: Api.AvgiftsgrunnlagInfo | null | undefined) {
     return (
