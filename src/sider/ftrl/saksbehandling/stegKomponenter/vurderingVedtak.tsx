@@ -285,7 +285,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   useEffect(() => {
     async function kontroller() {
-      if (aktivtSteg === STEG.VEDTAK_FTRL) {
+      if (aktivtSteg === STEG.VEDTAK_FTRL && redigerbart) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling(lagKontrollerFerdigbehandlingDto());
         setOppdaterFoerKontroll(false);
@@ -294,7 +294,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     }
 
     kontroller();
-  }, [aktivtSteg]);
+  }, [aktivtSteg, redigerbart]);
 
   const onSubmit = async () => {
     setVedtakPending(true);
