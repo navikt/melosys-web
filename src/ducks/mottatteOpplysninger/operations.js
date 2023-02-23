@@ -62,11 +62,6 @@ export function oppdaterState() {
   return (dispatch, getState) => {
     const mottatteOpplysningerData = {
       ...formSelectors.SoknadenFormSelector(getState()).values,
-      ...{
-        periode: getState().mottatteOpplysninger.data.data.periode,
-        soeknadsland: getState().mottatteOpplysninger.data.data.soeknadsland,
-        trygdedekning: getState().mottatteOpplysninger.data.data.trygdedekning,
-      },
     };
 
     const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());

@@ -12,7 +12,7 @@ const { NO, DK } = MKV.Koder.landkoder;
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe.skip("MottatteOpplysninger operations", () => {
+describe("MottatteOpplysninger operations", () => {
   let initialState = null;
 
   beforeEach(() => {
