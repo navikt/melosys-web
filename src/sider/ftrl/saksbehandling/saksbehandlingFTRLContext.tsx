@@ -4,7 +4,7 @@ export interface VilkarOgBegrunnelser {
   vilkaar: string;
   muligeBegrunnelser: string[];
 }
-export interface BestemmelsesVilkar {
+interface BestemmelsesVilkar {
   bestemmelse: string;
   vilkårOgBegrunnelser: VilkarOgBegrunnelser[];
 }
