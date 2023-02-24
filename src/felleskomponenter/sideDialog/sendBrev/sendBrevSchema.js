@@ -1,6 +1,6 @@
 import { array, object, string } from "yup";
-import * as KV from "../../../kodeverk";
 import * as StringUtils from "../../../utils/streng";
+import { erAnnenOrganisasjon, erArbeidsgiver, erVirksomhet } from "./brevMottaker/brevMottaker";
 
 const TYPE_MANGLER = { melding: "Velg type brev" };
 const VALGT_MAL_MANGLER = { melding: "Finner ikke mal tilhørende type brev" };
@@ -10,8 +10,6 @@ const FELT_MANGLER = { melding: "Fyll ut alle felter" };
 const ORGNUMMER_FELT_MANGLER = { melding: "Fyll ut organisasjonsnummer" };
 const ORGNUMMER_UGYLDIG = { melding: "Ugyldig organisasjonsnummer" };
 const TITTEL_MANGLER = { melding: "Fyll inn tittel" };
-
-const { ARBEIDSGIVER, VIRKSOMHET } = KV.Koder.MottakerRolle;
 
 const manglerFeltVerdi = (felt) => {
   if (felt && !felt.valg) {
@@ -41,14 +39,6 @@ const manglerFeltMedValg = (feltNavn) => (felt, valgtBrev) => {
   return valgtAlternativ && !valgtAlternativ.visFelt ? false : !felt?.[feltNavn]?.feltVerdi;
 };
 
-const harValgtMottakerRolle = (valgtMottaker, rolle, orgNrSettesAvSaksbehandler) => {
-  return (
-    valgtMottaker &&
-    valgtMottaker.rolle === rolle &&
-    valgtMottaker.orgnrSettesAvSaksbehandler === orgNrSettesAvSaksbehandler
-  );
-};
-
 const send_brev = object().shape({
   mottaker: string().required(MOTTAKER_MANGLER),
   type: string().required(TYPE_MANGLER),
@@ -56,19 +46,15 @@ const send_brev = object().shape({
   valgtBrev: object().required(VALGT_MAL_MANGLER),
   organisasjonsnummer: string()
     .when("valgtMottaker", {
-      is: (valgtMottaker) =>
-        harValgtMottakerRolle(valgtMottaker, ARBEIDSGIVER, true) ||
-        harValgtMottakerRolle(valgtMottaker, VIRKSOMHET, true),
+      is: (valgtMottaker) => erAnnenOrganisasjon(valgtMottaker?.rolle),
       then: string().erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER).nullable(),
     })
     .nullable(),
-  etater: array().of(string().erOrgnr(ORGNUMMER_UGYLDIG)),
+  norskeMyndigheter: array().of(string().erOrgnr(ORGNUMMER_UGYLDIG)),
   kontaktperson: string().nullable(),
   arbeidsgiver: string()
     .when("valgtMottaker", {
-      is: (valgtMottaker) =>
-        harValgtMottakerRolle(valgtMottaker, ARBEIDSGIVER, false) ||
-        harValgtMottakerRolle(valgtMottaker, VIRKSOMHET, false),
+      is: (valgtMottaker) => erVirksomhet(valgtMottaker?.rolle) || erArbeidsgiver(valgtMottaker?.rolle),
       then: string().required(ARBEIDSGIVER_MANGLER).nullable(),
     })
     .nullable(),

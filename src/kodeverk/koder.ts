@@ -155,15 +155,6 @@ export const PersonStatus = {
   FØDR: "FØDR",
 };
 
-export const MottakerRolle = {
-  BRUKER: "BRUKER",
-  ARBEIDSGIVER: "ARBEIDSGIVER",
-  VIRKSOMHET: "VIRKSOMHET",
-  TRYGDEMYNDIGHET: "TRYGDEMYNDIGHET",
-  REPRESENTANT: "REPRESENTANT",
-  ETAT: "ETAT",
-};
-
 export enum StegNavn {
   INNGANG = "INNGANG",
   AVKLAR_VIRKSOMHET = "AVKLAR_VIRKSOMHET",

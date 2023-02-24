@@ -16,7 +16,6 @@ import bem from "../../../bemUtils";
 
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../feilmeldinger";
 
@@ -25,7 +24,6 @@ import * as StringUtils from "../../../utils/streng";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  redigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
@@ -46,7 +44,6 @@ type DialogboksHenleggSakProps = PropsFromRedux & {
 
 export const DialogboksHenleggSak = ({
   behandlingID,
-  redigerbart,
   feilmeldinger,
   henleggHandle,
   avbryt,
@@ -116,7 +113,7 @@ export const DialogboksHenleggSak = ({
     ? {
         begrunnelseKode,
         fritekst,
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
       }
     : {};
 
@@ -138,7 +135,6 @@ export const DialogboksHenleggSak = ({
       onRequestClose={avbryt}
       closeButton={false}
       shouldCloseOnOverlayClick
-      // @ts-ignore
       ariaHideApp={ariaHideApp}
     >
       <div>
@@ -153,7 +149,7 @@ export const DialogboksHenleggSak = ({
           value={begrunnelseKode}
           koder={MKV.KTObjects.begrunnelser.henleggelsesgrunner}
           disableForsteValg={erBegrunnelseValgt}
-          redigerbart={redigerbart}
+          redigerbart
         />
         {erFritekstValgt && (
           <HtmlEditor
@@ -164,7 +160,7 @@ export const DialogboksHenleggSak = ({
             label="Fritekst"
           />
         )}
-        {redigerbart && harIngenFeilmeldinger && (
+        {harIngenFeilmeldinger && (
           <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={handleForhandsvisBrev} />
         )}
         <Knapperad
@@ -173,7 +169,7 @@ export const DialogboksHenleggSak = ({
           bekreftRedigerbart={erBegrunnelseValgt && harIngenFeilmeldinger}
           avbryt={avbryt}
           avbrytTekst="Avbryt"
-          redigerbart={redigerbart}
+          redigerbart
         />
       </div>
     </Nav.Modal>

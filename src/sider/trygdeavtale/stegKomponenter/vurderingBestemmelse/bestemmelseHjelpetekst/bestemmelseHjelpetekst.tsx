@@ -6,12 +6,12 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
   if (!bestemmelse) return null;
 
   const { USA_ART5_2, USA_ART5_4, USA_ART5_5, USA_ART5_6 } =
-    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_usa;
+    MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us;
   const { UK_ART6_1, UK_ART6_5, UK_ART7_3, UK_ART8_2 } =
-    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_uk;
+    MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_gb;
   const { CAN_ART6_2, CAN_ART7, CAN_ART9, CAN_ART10 } =
-    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_ca;
-  const { AUS_ART9_2, AUS_ART9_3 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_trygdeavtale_au;
+    MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca;
+  const { AUS_ART9_2, AUS_ART9_3 } = MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_au;
 
   const hjelpeteksterTilBestemmelse = () => {
     switch (bestemmelse) {

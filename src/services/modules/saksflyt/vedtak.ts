@@ -18,13 +18,20 @@ export interface FattVedtakFTRLReqDto {
   vedtakstype: string | null;
   innledningFritekst: string | null;
   begrunnelseFritekst: string | null;
-  ektefelleFritekst: string | null;
-  barnFritekst: string | null;
   kopiMottakere: KopiMottaker[];
   nyVurderingBakgrunn: string | null | undefined;
 }
 
-export type FattVedtakTrygdeavtaleReqDto = FattVedtakFTRLReqDto;
+export type FattVedtakTrygdeavtaleReqDto = {
+  behandlingsresultatTypeKode: string;
+  vedtakstype: string | null;
+  innledningFritekst: string | null;
+  begrunnelseFritekst: string | null;
+  ektefelleFritekst: string | null;
+  barnFritekst: string | null;
+  kopiMottakere: KopiMottaker[];
+  nyVurderingBakgrunn: string | null | undefined;
+};
 
 interface EndreVedtakReqDto {
   begrunnelseKode: string;

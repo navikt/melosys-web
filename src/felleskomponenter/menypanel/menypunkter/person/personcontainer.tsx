@@ -13,6 +13,7 @@ const PersonContainer = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
   visMottatteOpplysningerData,
+  endreFokus,
 }: PersonContainerProps) => (
   <Nav.Container fluid className="person">
     <Nav.Row className="tittel">
@@ -26,6 +27,7 @@ const PersonContainer = ({
           redigerbart={redigerbart}
           visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
           visMottatteOpplysningerData={visMottatteOpplysningerData}
+          endreFokus={endreFokus}
         />
       </Nav.Column>
     </Nav.Row>

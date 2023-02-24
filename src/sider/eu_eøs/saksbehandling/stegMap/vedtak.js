@@ -31,7 +31,7 @@ class Vedtak extends Steg {
           navn: "Forhåndsvis vedtaksbrev og A1",
           type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
           data: {
-            mottaker: MKV.Koder.aktoersroller.BRUKER,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
             fritekst: formValues.vedtaksbrevFritekst,
           },
         },
@@ -51,7 +51,7 @@ class Vedtak extends Steg {
           navn: "Orienteringsbrev til arbeidsgiver",
           type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
           data: {
-            mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
+            mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
           },
         });
       }

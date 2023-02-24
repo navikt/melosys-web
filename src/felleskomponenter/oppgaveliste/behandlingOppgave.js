@@ -14,7 +14,6 @@ import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
 import Soknadsland from "../soknadsland";
 
 import { formatterDatoTilNorsk } from "../../utils/dato";
-import * as Utils from "../../utils";
 
 import "./behandlingOppgave.css";
 
@@ -78,20 +77,30 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, ikkeYrkesaktivFlytT
     behandlingOppgave__stengt: erUnderOppdatering,
   });
 
-  const reduserTekstLengde = (tekst) => {
-    const maxLengde = 60;
-    return tekst != null && tekst.length > maxLengde ? `${tekst.slice(0, maxLengde)} (...)` : tekst;
+  const hentForsteGosysTekstblokk = (tekst) => {
+    if (!tekst || !tekst.includes("\n")) {
+      return tekst;
+    }
+
+    let forsteBlokk = tekst;
+    const start = tekst.indexOf("---");
+    if (start >= 0 && !tekst.startsWith("---")) {
+      forsteBlokk = tekst.substring(0, start).trim();
+    }
+
+    if (start >= 0) {
+      const andreDelimeter = tekst.indexOf("---", start + 1);
+      const siste = tekst.indexOf("---", andreDelimeter + 1);
+      if (siste >= 0) {
+        forsteBlokk = tekst.substring(start, siste).trim();
+      }
+    }
+
+    return <span>{forsteBlokk}</span>;
   };
 
-  const delOppOgReverserGosysBeskrivelser = (tekst) => {
-    return tekst != null ? tekst.split("\n").reverse() : [];
-  };
-
-  const stringTilHtmlMedOppdelteLinjer = (tekst) => {
-    const nyesteNotatIndex = 0;
-    const maxLinjer = 4;
-    const nyesteGosysBeskrivelser = delOppOgReverserGosysBeskrivelser(tekst).slice(nyesteNotatIndex, maxLinjer);
-    return nyesteGosysBeskrivelser.map((string) => [string, <br key={Utils._uuid()} />]);
+  const reduserTekstLinjer = (tekst) => {
+    return tekst?.split("\n").slice(0, 3).join("\n") || null;
   };
 
   return (
@@ -132,13 +141,13 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, ikkeYrkesaktivFlytT
           </Nav.Column>
 
           <Nav.Column xs="6" md="6" lg="4" className="behandlingOppgave__kolonne__notater">
+            <span>
+              <b>Behandlingsnotat:</b> {reduserTekstLinjer(notat)}
+            </span>
             <Nav.Row>
-              <p>{reduserTekstLengde(notat)}</p>
-            </Nav.Row>
-            <Nav.Row>
-              <b>Gosys:</b>
+              <b>Gosys beskrivelseshistorikk:</b>
               <br />
-              <p>{stringTilHtmlMedOppdelteLinjer(beskrivelse)}</p>
+              {hentForsteGosysTekstblokk(beskrivelse)}
             </Nav.Row>
           </Nav.Column>
         </Nav.Row>
