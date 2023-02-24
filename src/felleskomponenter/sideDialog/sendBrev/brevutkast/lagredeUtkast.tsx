@@ -23,17 +23,29 @@ const LagredeUtkast = ({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) => 
     <>
       {!Utils._isEmpty(alleUtkast) && (
         <div className="lagredeUtkast">
-          <Nav.Typo.Element>Lagrede utkast</Nav.Typo.Element>
+          <Nav.Row>
+            <Nav.Column xs="9">
+              <Nav.Typo.Element>Lagrede utkast</Nav.Typo.Element>
+            </Nav.Column>
+            <Nav.Column xs="3">
+              <Nav.Typo.Element>Eier</Nav.Typo.Element>
+            </Nav.Column>
+          </Nav.Row>
+
           {alleUtkast.map((utkast) => (
-            <Mui.Lenkeknapp
-              key={utkast.tittel}
-              value={utkast.tittel}
-              onClick={velgUtkast}
-              ikon={Ikoner.Draft}
-              className="lagredeUtkast__utkast"
-            >
-              {utkast.tittel}
-            </Mui.Lenkeknapp>
+            <Nav.Row key={utkast.tittel}>
+              <Nav.Column xs="9">
+                <Mui.Lenkeknapp
+                  value={utkast.tittel}
+                  onClick={velgUtkast}
+                  ikon={Ikoner.Draft}
+                  className="lagredeUtkast__utkast"
+                >
+                  {utkast.tittel}
+                </Mui.Lenkeknapp>
+              </Nav.Column>
+              <Nav.Column xs="3">{utkast.lagretAvSaksbehandlerIdent}</Nav.Column>
+            </Nav.Row>
           ))}
         </div>
       )}

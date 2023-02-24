@@ -334,9 +334,10 @@ class Stegvelger extends Component {
    * steg så langt det er mulig å komme. Alle ubesvarte steg går direkte til vedtak som default.
    *
    * @param aktivtStegNummer
+   * @param endreFokus
    * @returns {Array}
    */
-  oppdaterAktuelleSteg = (aktivtStegNummer) => {
+  oppdaterAktuelleSteg = (aktivtStegNummer, endreFokus = false) => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgUtpek: this.lagreOgUtpek,
@@ -421,8 +422,6 @@ class Stegvelger extends Component {
       vurder_periode_valid: props.vurder_periode_valid,
       vurder_trygdeavgift_valid: props.vurder_trygdeavgift_valid,
       soknadsperiode: props.soknadsperiode,
-      vurder_familie_valid: props.vurder_familie_valid,
-      vurder_representant_valid: props.vurder_representant_valid,
       annenBehandlingOppfriskes: props.annenBehandlingOppfriskes,
       harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger),
     };
@@ -437,6 +436,7 @@ class Stegvelger extends Component {
     aktuelleSteg[normalisertAktivtSteg].aktivtSteg = true;
 
     this.setState({ aktuelleSteg });
+    if (endreFokus) Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktuelleSteg[normalisertAktivtSteg].id);
     return aktuelleSteg;
   };
 
@@ -446,16 +446,8 @@ class Stegvelger extends Component {
 
   validerSoknadOgGaTilSteg = (nyttStegNummer) => {
     if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
-      return this.tilSteg(nyttStegNummer);
+      this.tilSteg(nyttStegNummer);
     }
-    return null;
-  };
-
-  stegKlikkHandler = async (aktivtStegNummer) => {
-    const aktuelleSteg = await this.validerSoknadOgGaTilSteg(aktivtStegNummer);
-    const aktueltStegId = aktuelleSteg?.find((steg) => steg.aktivtSteg)?.id;
-
-    Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktueltStegId);
   };
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
@@ -498,7 +490,7 @@ class Stegvelger extends Component {
       }
     }
 
-    return this.oppdaterAktuelleSteg(nyttStegNummer);
+    this.oppdaterAktuelleSteg(nyttStegNummer, true);
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
@@ -533,7 +525,7 @@ class Stegvelger extends Component {
 
     return (
       <div className="stegvelger panelSeksjon">
-        <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.stegKlikkHandler} />
+        <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
         {this.erVedtakSteg(this.state.aktivtStegNummer) && <Feilmeldinger feilmeldinger={this.props.feilmeldinger} />}
         {this.state.aktuelleSteg.map((item) => (
           <StegFane id={item.id} key={item.id} faneData={item} />
@@ -627,8 +619,6 @@ Stegvelger.propTypes = {
   vurder_periode_valid: PT.bool.isRequired,
   vurder_trygdeavgift_valid: PT.bool.isRequired,
   soknadsperiode: MPT.Soknadsperiode.isRequired,
-  vurder_familie_valid: PT.bool.isRequired,
-  vurder_representant_valid: PT.bool.isRequired,
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger: PT.func,
   feilmeldinger: PT.oneOfType([
     PT.arrayOf(
@@ -693,8 +683,6 @@ const mapStateToProps = (state) => ({
   vurder_virksomhet_valid: formSelectors.VurderVirksomhetFormValid(state),
   vurder_periode_valid: formSelectors.VurderPerioderFormValid(state),
   vurder_trygdeavgift_valid: formSelectors.VurderTrygdeavgiftFormValid(state),
-  vurder_familie_valid: formSelectors.VurderFamilieFormValid(state),
-  vurder_representant_valid: formSelectors.VurderRepresentantFormValid(state),
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   valgteVirksomheterIkkeNaeringsDrivende:

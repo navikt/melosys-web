@@ -11,6 +11,7 @@ import * as Ikoner from "../../resources/images";
 import { hentDato } from "../../ducks/dokumenter/selectors";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 import { useAsyncCallbackState } from "../../hooks";
+import { useFeatureToggle } from "../../featuretoggle";
 import PdfLink from "../pdfLink";
 import LagredeUtkast from "./sendBrev/brevutkast/lagredeUtkast";
 import { FaneNavn } from "./sideDialog";
@@ -28,11 +29,13 @@ const MottaksretningIkon = ({ mottaksretning }: MottaksretningIkonProps) => {
 
   switch (kode) {
     case MKV.Koder.mottaksretning.INN:
-      return <Ikoner.InnBrev />;
+      return <div className="mottaksretning mottaksretning__inn">inn</div>;
     case MKV.Koder.mottaksretning.UT:
-      return <Ikoner.Svar />;
+      return <div className="mottaksretning mottaksretning__ut">ut</div>;
+    case MKV.Koder.mottaksretning.NOTAT:
+      return <div className="mottaksretning mottaksretning__notat">notat</div>;
     default:
-      return <Ikoner.Svar />;
+      return <div className="mottaksretning">ukjent</div>;
   }
 };
 
@@ -92,6 +95,7 @@ interface SideDialogDokumenterProps {
 
 const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, endreFane }: SideDialogDokumenterProps) => {
   const [utkast] = useAsyncCallbackState(() => Api.Brevutkast.hentBrevutkast(behandlingID), [], []);
+  const utkastToggleEnabled = useFeatureToggle("melosys.utkast") === "enabled";
   const dispatch = useDispatch();
   const handleValgtUtkast = (valgtUtkast: Api.Brevutkast.BrevutkastResDto | null) => {
     dispatch(change(KV.Form.SEND_BREV, "aktivtUtkast", valgtUtkast));
@@ -99,7 +103,7 @@ const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, endreFane }: Sid
   };
   return (
     <div className="sideDialogDokumenter">
-      <LagredeUtkast alleUtkast={utkast} settAktivtUtkast={handleValgtUtkast} />
+      {utkastToggleEnabled && <LagredeUtkast alleUtkast={utkast} settAktivtUtkast={handleValgtUtkast} />}
       <table width="100%" className="dokumentTabell" aria-label="Liste over dokumenter knyttet til saken">
         <thead>
           <tr>

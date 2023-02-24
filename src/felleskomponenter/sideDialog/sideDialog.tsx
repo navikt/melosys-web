@@ -157,7 +157,7 @@ const SideDialog = ({
 
 export const defaultFaner: Fane[] = [
   { navn: "dokumenter", tittel: "Dokumenter" },
-  { navn: "notat", tittel: "Notat" },
+  { navn: "notat", tittel: "Behandlingsnotat" },
   { navn: "brevbestilling", tittel: "Send brev" },
   { navn: "sedbestilling", tittel: "Opprett ny BUC" },
   { navn: "besvarsed", tittel: "SED-utveksling" },
@@ -165,7 +165,7 @@ export const defaultFaner: Fane[] = [
 
 export const fanerUtenBucOgSed: Fane[] = [
   { navn: "dokumenter", tittel: "Dokumenter" },
-  { navn: "notat", tittel: "Notat" },
+  { navn: "notat", tittel: "Behandlingsnotat" },
   { navn: "brevbestilling", tittel: "Send brev" },
 ];
 

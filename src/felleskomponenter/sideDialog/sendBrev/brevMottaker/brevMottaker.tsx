@@ -5,6 +5,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { getFormValues } from "redux-form";
 
+import MKV from "../../../../melosyskodeverk";
 import * as Skjema from "../../../skjema";
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
@@ -18,15 +19,15 @@ import { OrganisasjonsAdresse } from "../../../adresser";
 import MottakerAdresse from "../mottakerAdresse";
 import FeltBeskrivelse from "../feltBeskrivelse";
 import { SendBrevFormValues } from "../types";
-import BrevMottakerEtat, { erEtat } from "./brevMottakerEtat";
+import BrevMottakerNorskMyndighet from "./brevMottakerNorskMyndighet";
 
-const { BRUKER, ARBEIDSGIVER, VIRKSOMHET } = KV.Koder.MottakerRolle;
+const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
 
-const erBruker = (rolle: string | undefined) => rolle === BRUKER;
-const erVirksomhet = (rolle: string | undefined) => rolle === VIRKSOMHET;
-const erArbeidsgiver = (rolle: string | undefined) => rolle === ARBEIDSGIVER;
-export const erArbeidsgiverEllerVirksomhet = (rolle: string | undefined) =>
-  erArbeidsgiver(rolle) || erVirksomhet(rolle);
+export const erBruker = (rolle: string | undefined) => rolle === BRUKER;
+export const erVirksomhet = (rolle: string | undefined) => rolle === VIRKSOMHET;
+export const erArbeidsgiver = (rolle: string | undefined) => rolle === ARBEIDSGIVER;
+export const erAnnenOrganisasjon = (rolle: string | undefined) => rolle === ANNEN_ORGANISASJON;
+export const erNorskMyndighet = (rolle: string | undefined) => rolle === NORSK_MYNDIGHET;
 
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
@@ -64,12 +65,9 @@ const BrevMottaker = ({
 
   const mottakerErBruker = erBruker(formValues?.valgtMottaker?.rolle);
   const mottakerErVirksomhet = erVirksomhet(formValues?.valgtMottaker?.rolle);
-  const mottakerErEtat = erEtat(formValues?.valgtMottaker?.rolle);
-  const mottakerErArbeidsgiver =
-    erArbeidsgiver(formValues?.valgtMottaker?.rolle) && !formValues?.valgtMottaker?.orgnrSettesAvSaksbehandler;
-  const mottakerOrgNrSettesAvSaksbehandler =
-    erArbeidsgiverEllerVirksomhet(formValues?.valgtMottaker?.rolle) &&
-    formValues?.valgtMottaker?.orgnrSettesAvSaksbehandler;
+  const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
+  const mottakerErArbeidsgiver = erArbeidsgiver(formValues?.valgtMottaker?.rolle);
+  const mottakerErAnnenOrganisasjon = erAnnenOrganisasjon(formValues?.valgtMottaker?.rolle);
 
   const mottakerHjelpetekst =
     "Hvis bruker eller arbeidsgiver har fullmektig som er lagt inn i sidemenyen, vil brevet automatisk bli sendt til denne.";
@@ -114,7 +112,7 @@ const BrevMottaker = ({
       changeField("arbeidsgiver", valgtMottaker.adresser && valgtMottaker.adresser[0].tittel.orgnr);
     }
 
-    if (erArbeidsgiver(valgtMottaker.rolle) && !valgtMottaker.orgnrSettesAvSaksbehandler) {
+    if (erArbeidsgiver(valgtMottaker.rolle)) {
       setAdresse({
         mottakerAdresse: valgtMottaker.adresser?.find(
           (mottakerAdresse: DokumenterV2.MottakerAdresse) => mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
@@ -122,7 +120,7 @@ const BrevMottaker = ({
       });
     }
 
-    if (erArbeidsgiverEllerVirksomhet(valgtMottaker.rolle) && valgtMottaker.orgnrSettesAvSaksbehandler) {
+    if (erAnnenOrganisasjon(valgtMottaker.rolle)) {
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid });
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid, formValues?.arbeidsgiver]);
@@ -203,7 +201,7 @@ const BrevMottaker = ({
         </Nav.Row>
       )}
 
-      {mottakerOrgNrSettesAvSaksbehandler && (
+      {mottakerErAnnenOrganisasjon && (
         <Nav.Row>
           <Nav.Column xs="6">
             <Skjema.Input
@@ -238,7 +236,7 @@ const BrevMottaker = ({
         </Nav.Row>
       )}
 
-      {mottakerErEtat && <BrevMottakerEtat />}
+      {mottakerErNorskMyndighet && <BrevMottakerNorskMyndighet />}
     </>
   );
 };

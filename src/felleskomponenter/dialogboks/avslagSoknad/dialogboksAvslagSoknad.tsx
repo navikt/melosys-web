@@ -79,7 +79,7 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
       data: {
         begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
         fritekst: brevFritekst,
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
       },
     },
   ];
@@ -102,7 +102,6 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
       onRequestClose={avbryt}
       closeButton={false}
       shouldCloseOnOverlayClick
-      // @ts-ignore
       ariaHideApp={ariaHideApp}
     >
       <div className="avslagsoknadcontainer">

@@ -36,13 +36,9 @@ const FellesHandlersProviderUnconnected = ({
   avslaaSoknad,
   skjulOppfriskDialogHandle,
   skjulHenleggDialogHandle,
-  skjulAvsluttSakSomBortfaltDialogHandle,
-  skjulFerdigbehandleSakDialogHandle,
   visOppfriskDialogHandle,
   visHenleggDialogHandle,
   visAvslagSoknadDialogHandle,
-  visAvsluttSakSomBortfaltDialogHandle,
-  visFerdigbehandleSakDialogHandle,
   leggTilBehandlingOppfriskes,
   fjernBehandlingOppfriskes,
   behandlingUnderOppfriskning,
@@ -124,25 +120,11 @@ const FellesHandlersProviderUnconnected = ({
     avslaaSoknad(behandlingID, data);
   };
 
-  const avsluttSakSomBortfalt = async () => {
-    await Api.Fagsaker.fagsak.bortfall(saksnummer);
-    skjulAvsluttSakSomBortfaltDialogHandle();
-    tilForsiden();
-  };
-
-  const ferdigbehandleSak = async () => {
-    await Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer);
-    skjulFerdigbehandleSakDialogHandle();
-    tilForsiden();
-  };
-
   const fellesHandlers = useMemo(
     () => ({
       lagreOgLukk,
       tilbakeleggOppgave,
       visHenleggDialogHandle,
-      visAvsluttSakSomBortfaltDialogHandle,
-      visFerdigbehandleSakDialogHandle,
       visAvslagSoknadDialogHandle,
       visOppfriskModal: visOppfriskDialogHandle,
       skjulOppfriskModalOgNavigerTilForside,
@@ -150,8 +132,6 @@ const FellesHandlersProviderUnconnected = ({
       tilOpprettNySak,
       henleggHandle,
       avslaaSoknadHandle,
-      avsluttSakSomBortfalt,
-      ferdigbehandleSak,
       lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
       behandlingOppfriskes,
@@ -162,8 +142,6 @@ const FellesHandlersProviderUnconnected = ({
       lagreOgLukk,
       tilbakeleggOppgave,
       visHenleggDialogHandle,
-      visAvsluttSakSomBortfaltDialogHandle,
-      visFerdigbehandleSakDialogHandle,
       visAvslagSoknadDialogHandle,
       visOppfriskDialogHandle,
       skjulOppfriskModalOgNavigerTilForside,
@@ -171,7 +149,6 @@ const FellesHandlersProviderUnconnected = ({
       tilOpprettNySak,
       henleggHandle,
       avslaaSoknadHandle,
-      avsluttSakSomBortfalt,
       lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
       behandlingOppfriskes,
@@ -197,13 +174,9 @@ FellesHandlersProviderUnconnected.propTypes = {
   avslaaSoknad: PT.func.isRequired,
   skjulOppfriskDialogHandle: PT.func.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
-  skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
-  skjulFerdigbehandleSakDialogHandle: PT.func.isRequired,
   visOppfriskDialogHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
-  visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
-  visFerdigbehandleSakDialogHandle: PT.func.isRequired,
   leggTilBehandlingOppfriskes: PT.func.isRequired,
   fjernBehandlingOppfriskes: PT.func.isRequired,
   behandlingUnderOppfriskning: PT.number,
@@ -241,13 +214,9 @@ const mapDispatchToProps = (dispatch) => ({
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
-  skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
-  skjulFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleSak()),
   visOppfriskDialogHandle: () => dispatch(modalerOperations.visOppfrisk()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
-  visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
-  visFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleSak()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
   resetLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   resetAnmodningsperioder: () => dispatch(anmodningsperioderOperations.resetAnmodningsperioderState()),

@@ -124,6 +124,7 @@ export const skalViseTomFlyt = (
     MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP,
     MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET,
     MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+    MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR,
   ].includes(behandlingstema);
 };
 

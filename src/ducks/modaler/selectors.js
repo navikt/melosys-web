@@ -9,21 +9,11 @@ export const AvslagSoknadSelector = createSelector(ModalerSelector, (modaler) =>
 
 export const ErAvslagSoknadSynligSelector = createSelector(AvslagSoknadSelector, (avslagSoknad) => avslagSoknad.synlig);
 
-export const AvsluttSakSomBortfaltSelector = createSelector(
-  ModalerSelector,
-  (modaler) => modaler.avsluttSakSomBortfalt
-);
-export const ErAvsluttSakSomBortfaltSynligSelector = createSelector(
-  AvsluttSakSomBortfaltSelector,
-  (avsluttSakSomBortfalt) => avsluttSakSomBortfalt.synlig
-);
+export const BekreftValgSelector = createSelector(ModalerSelector, (modaler) => modaler.bekreftValg);
 
-export const FerdigbehandleSakSelector = createSelector(ModalerSelector, (modaler) => modaler.ferdigbehandleSak);
+export const ErBekreftValgSynligSelector = createSelector(BekreftValgSelector, (bekreftValg) => bekreftValg.synlig);
 
-export const ErFerdigbehandleSakSynligSelector = createSelector(
-  FerdigbehandleSakSelector,
-  (ferdigbehandleSak) => ferdigbehandleSak.synlig
-);
+export const BekreftValgTypeSelector = createSelector(BekreftValgSelector, (bekreftValg) => bekreftValg.type);
 
 export const HenleggSelector = createSelector(ModalerSelector, (modaler) => modaler.henlegg);
 
