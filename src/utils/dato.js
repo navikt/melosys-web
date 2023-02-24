@@ -73,11 +73,11 @@ const normaliserInputDato = (verdi, forrigeVerdi) => {
  * til å enklere åpne opp for dato med eller uten tidspunkt.
  *
  */
-function formatterDatoTilNorsk(dato, visTidspunkt) {
+function formatterDatoTilNorsk(dato, visTidspunkt = false, defaultValue = "") {
   const inputFormat = ["YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ss", "DD-MM-YYYY", "DD-MM-YYYY HH:mm"];
   const momentFormat = visTidspunkt ? "DD.MM.YYYY HH:mm" : "DD.MM.YYYY";
   const momentDato = moment.utc(dato, inputFormat);
-  return momentDato.isValid() ? momentTZ(momentDato).tz("Europe/Oslo").format(momentFormat) : "";
+  return momentDato.isValid() ? momentTZ(momentDato).tz("Europe/Oslo").format(momentFormat) : defaultValue;
 }
 
 /** Forutsatt at datoen er validert korrekt norsk (DD.MM.YYYY HH:mm), formatter den til det maskinlesbare

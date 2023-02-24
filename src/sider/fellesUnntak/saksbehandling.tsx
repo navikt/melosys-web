@@ -22,7 +22,6 @@ import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 
 import { MatchParams } from "../../@types";
-// @ts-ignore
 import Stegvelger from "./stegvelger";
 import "./saksbehandling.css";
 
@@ -46,10 +45,15 @@ const Saksbehandling = ({
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const saksnummer = match?.params?.saksnr;
-  const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandKTSelector);
-  const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
-  const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const avsenderland = useSelector(mottatteOpplysningerSelectors.AvsenderlandSelector);
+  const lovvalgsland = useSelector(mottatteOpplysningerSelectors.LovvalgslandSelector);
+
+  const formatterDato = (dato: string | null) => Utils.dato.formatterDatoTilNorsk(dato, false, undefined);
+  const mottatteOpplysningerFom = formatterDato(useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector));
+  const mottatteOpplysningerTom = formatterDato(useSelector(mottatteOpplysningerSelectors.PeriodeTomSelector));
+  const lovvalgsperiodeFom = formatterDato(useSelector(lovvalgsperioderSelectors.FomDatoSelector));
+  const lovvalgsperiodeTom = formatterDato(useSelector(lovvalgsperioderSelectors.TomDatoSelector));
 
   useEffect(() => {
     lastInnSaksopplysninger();
@@ -99,12 +103,12 @@ const Saksbehandling = ({
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  arbeidsland={soknadsland}
-                  lovvalgsland={KV.kodeTilObjekt(lovvalgsperiode.lovvalgsland, MKV.KTObjects.landkoder)}
-                  lovvalgsperiodeFom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato)}
-                  lovvalgsperiodeTom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato)}
-                  mottatteOpplysningerPeriodeFom={Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.fom)}
-                  mottatteOpplysningerPeriodeTom={Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.tom)}
+                  avsenderland={KV.kodeTilObjekt(avsenderland, MKV.KTObjects.land_iso2)}
+                  lovvalgsland={KV.kodeTilObjekt(lovvalgsland, MKV.KTObjects.landkoder)}
+                  lovvalgsperiodeFom={lovvalgsperiodeFom || mottatteOpplysningerFom}
+                  lovvalgsperiodeTom={lovvalgsperiodeTom || mottatteOpplysningerFom}
+                  mottatteOpplysningerPeriodeFom={mottatteOpplysningerFom}
+                  mottatteOpplysningerPeriodeTom={mottatteOpplysningerTom}
                 />
                 <SaksoversiktLenke />
                 <SideDialog faner={defaultFaner} />

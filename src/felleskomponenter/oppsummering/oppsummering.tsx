@@ -39,6 +39,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type OppsummeringProps = PropsFromRedux & {
   arbeidsland?: KTObject[];
+  avsenderland?: KTObject;
   lovvalgsland?: KTObject;
   lovvalgsperiodeFom?: string;
   lovvalgsperiodeTom?: string;
@@ -51,6 +52,7 @@ const Oppsummering = ({
   oppsummering,
   fagsak,
   arbeidsland,
+  avsenderland,
   lovvalgsland,
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
@@ -164,7 +166,7 @@ const Oppsummering = ({
       } else if (erUnntak && erTrygdeavtale) {
         col1 = [
           ["Lovvalgsperiode", lovvalgsperiode],
-          ["Land", landTilSetning(arbeidsland)],
+          ["Land", landStorBokstav(avsenderland)],
         ];
       } else {
         col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", mottatteOpplysningerperiode]];
