@@ -13,6 +13,7 @@ import * as Utils from "../../../utils";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 import "./vurderingUnntakMedlemskap.css";
@@ -27,6 +28,7 @@ interface VurderingUnntakMedlemskapProps {
 const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakMedlemskapProps) => {
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
 
@@ -182,8 +184,9 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
 
       {formValues.innvilgelsesResultat === AVSLAATT && (
         <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__alertstripe">
-          Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i
-          brevmenyen.
+          {sakstype === MKV.Koder.sakstyper.EU_EOS
+            ? "Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Send SED." // TODO: Det er ikke bestemt hvilken tekst som kommer her enda.
+            : "Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i brevmenyen."}
         </Nav.AlertStripeInfo>
       )}
 
