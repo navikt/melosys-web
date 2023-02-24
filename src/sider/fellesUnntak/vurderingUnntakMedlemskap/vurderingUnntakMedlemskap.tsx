@@ -27,16 +27,17 @@ interface VurderingUnntakMedlemskapProps {
 const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakMedlemskapProps) => {
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
-  const periodeMottatteOpplysninger = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
+  const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
 
   const { control, getValues, formState } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
+    context: { sluttDato: mottatteOpplysningerPeriode.tom },
     mode: "all",
     defaultValues: {
       innvilgelsesResultat: lovvalgsperiode.innvilgelsesResultat,
-      fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato || periodeMottatteOpplysninger.fom),
-      tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato || periodeMottatteOpplysninger.tom),
+      fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato || mottatteOpplysningerPeriode.fom),
+      tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato || mottatteOpplysningerPeriode.tom),
       bestemmelse: lovvalgsperiode.bestemmelse || "",
     } as FieldValues,
   });
@@ -107,24 +108,31 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
       </Nav.Fieldset>
 
       {formValues.innvilgelsesResultat === INNVILGET && (
-        <Nav.Row>
-          <Nav.Column xs="4">
-            <Forms.Select
-              name="bestemmelse"
-              control={control}
-              label="Bestemmelse"
-              emptyFieldText="Velg"
-              emptyFieldDisabled={!!formValues.bestemmelse}
-              disabled={!redigerbart}
-            >
-              {MKV.KTObjects.landkoder.map((item: KTObject) => (
-                <option key={item.kode} value={item.kode}>
-                  {item.term}
-                </option>
-              ))}
-            </Forms.Select>
-          </Nav.Column>
-        </Nav.Row>
+        <>
+          <Nav.Row>
+            <Nav.Column xs="4">
+              <Forms.Select
+                name="bestemmelse"
+                control={control}
+                label="Bestemmelse"
+                emptyFieldText="Velg"
+                emptyFieldDisabled={!!formValues.bestemmelse}
+                disabled={!redigerbart}
+              >
+                {MKV.KTObjects.landkoder.map((item: KTObject) => (
+                  <option key={item.kode} value={item.kode}>
+                    {item.term}
+                  </option>
+                ))}
+              </Forms.Select>
+            </Nav.Column>
+          </Nav.Row>
+          {Utils._isEmpty(mottatteOpplysningerPeriode.tom) && (
+            <Nav.AlertStripeAdvarsel className="alert">
+              Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
+            </Nav.AlertStripeAdvarsel>
+          )}
+        </>
       )}
 
       {formValues.innvilgelsesResultat === DELVIS_INNVILGET && (
