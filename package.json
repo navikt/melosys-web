@@ -18,7 +18,7 @@
     "@hookform/resolvers": "^2.9.11",
     "@loadable/component": "^5.10.3",
     "@navikt/fnrvalidator": "^1.1.4",
-    "@navikt/melosys-kodeverk": "5.15.168",
+    "@navikt/melosys-kodeverk": "5.15.169-beta.619dfd2",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.6.1",
     "date-fns": "^2.28.0",
