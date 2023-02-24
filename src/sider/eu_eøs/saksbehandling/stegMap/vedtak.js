@@ -44,6 +44,7 @@ class Vedtak extends Steg {
       if (
         lovvalgSomKodeTerm &&
         visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
+        formValues?.kopiTilArbeidsgiver &&
         !erNyVurdering
       ) {
         pdfDokumenter.push({

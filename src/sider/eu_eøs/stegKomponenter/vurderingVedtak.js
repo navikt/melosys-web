@@ -150,6 +150,7 @@ const VurderingVedtak = ({
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       fritekst: formValues.vedtaksbrevFritekst,
       fritekstSed: formValues.fritekstSed,
+      kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
       mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
       nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
     };
@@ -163,6 +164,7 @@ const VurderingVedtak = ({
           behandlingID,
           vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
           behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+          kontrollerSomSkalIgnoreres: formValues.kopiTilArbeidsgiver ? [] : ["OPPHØRT_ARBEIDSGIVER"],
           skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
         });
         setOppdaterFoerKontroll(false);
@@ -171,7 +173,7 @@ const VurderingVedtak = ({
     }
 
     kontroller();
-  }, [aktivtSteg, formIsValid]);
+  }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver]);
 
   const onSubmit = async () => {
     if (!validerForm()) return;
@@ -234,6 +236,12 @@ const VurderingVedtak = ({
               />
             </Nav.Column>
           </Nav.Row>
+        )}
+        {redigerbart && (
+          <Skjema.Checkbox
+            feltNavn="kopiTilArbeidsgiver"
+            label="Send kopi til arbeidsgiver/virksomhet"
+            />
         )}
         {visMottakerinstitusjoner && sedMottakerLand && (
           <Nav.Row className="mottakerinstitusjoner">
@@ -329,6 +337,7 @@ const mapStateToProps = (state) => ({
   initialValues: {
     vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    kopiTilArbeidsgiver: true,
     mottakerinstitusjon: "",
     kreverMottakerinstitusjon: false,
     fritekstSed: null,
