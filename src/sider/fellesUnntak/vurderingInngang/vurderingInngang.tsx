@@ -185,7 +185,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
         </Nav.Row>
       </Nav.Fieldset>
       {sakstype === EU_EOS && (
-        <Nav.AlertStripeInfo className="alert">
+        <Nav.AlertStripeInfo className="vurderingInngang__alertstripe">
           Hvis avsenderlandet ikke er lovvalgsland, må du endre lovvalgsland.
         </Nav.AlertStripeInfo>
       )}

@@ -128,7 +128,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
             </Nav.Column>
           </Nav.Row>
           {Utils._isEmpty(mottatteOpplysningerPeriode.tom) && (
-            <Nav.AlertStripeAdvarsel className="alert">
+            <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__alertstripe">
               Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
             </Nav.AlertStripeAdvarsel>
           )}
@@ -173,7 +173,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
               </Forms.Select>
             </Nav.Column>
           </Nav.Row>
-          <Nav.AlertStripeInfo className="alert">
+          <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__alertstripe">
             Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i
             brevmenyen.
           </Nav.AlertStripeInfo>
@@ -181,7 +181,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
       )}
 
       {formValues.innvilgelsesResultat === AVSLAATT && (
-        <Nav.AlertStripeInfo className="alert">
+        <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__alertstripe">
           Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i
           brevmenyen.
         </Nav.AlertStripeInfo>
