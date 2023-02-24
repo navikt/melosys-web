@@ -38,11 +38,10 @@ const lagUrlForTrygdeavtaleFlyt = (saksnummer: number | string, behandlingID: nu
   if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
     return `/${TRYGDEAVTALE}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
-  // TODO FLYTT
   if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
     return `/${TRYGDEAVTALE}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
   }
-  throw new Error(`Finner ikke trygdeavtale-flyt for behandlingstema: ${behandlingstemaKode}`);
+  return `/flyt-finnes-ikke-for-behandlingstema`;
 };
 
 export const lagUrlFraSakstypeOgBehandlingstema = (
@@ -60,7 +59,7 @@ export const lagUrlFraSakstypeOgBehandlingstema = (
   if (sakstypeKode === TRYGDEAVTALE) {
     return lagUrlForTrygdeavtaleFlyt(saksnummer, behandlingID, behandlingstemaKode);
   }
-  throw new Error(`Støtter ikke sakstype: ${sakstypeKode}`);
+  return `/flyt-finnes-ikke-for-sakstype`;
 };
 
 export const lagUrl = (
