@@ -238,10 +238,7 @@ const VurderingVedtak = ({
           </Nav.Row>
         )}
         {redigerbart && (
-          <Skjema.Checkbox
-            feltNavn="kopiTilArbeidsgiver"
-            label="Send kopi til arbeidsgiver/virksomhet"
-            />
+          <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send kopi til arbeidsgiver/virksomhet" />
         )}
         {visMottakerinstitusjoner && sedMottakerLand && (
           <Nav.Row className="mottakerinstitusjoner">
