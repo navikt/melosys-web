@@ -29,6 +29,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const lovvalgsland = useSelector(mottatteOpplysningerSelectors.LovvalgslandSelector);
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
 
@@ -82,6 +83,28 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
     []
   );
 
+  const gyldigeBestemmelser = () => {
+    if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) {
+      return MKV.KTObjects.lovvalgsbestemmelser.trygdeavtale[
+        `lovvalgsbestemmelser_trygdeavtale_${lovvalgsland?.toLowerCase()}`
+      ];
+    }
+    return [
+      ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
+      ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
+      ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
+      ...MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser,
+    ].filter(
+      (kt: KTObject) =>
+        ![
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1,
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ANNET,
+          MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87_8,
+          MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87A,
+        ].includes(kt.kode)
+    );
+  };
+
   return (
     <div className="vurderingUnntakMedlemskap">
       <Nav.Typo.Undertittel className="undertittel">Vurder unntaksperioder</Nav.Typo.Undertittel>
@@ -121,7 +144,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
                 emptyFieldDisabled={!!formValues.bestemmelse}
                 disabled={!redigerbart}
               >
-                {MKV.KTObjects.landkoder.map((item: KTObject) => (
+                {gyldigeBestemmelser().map((item: KTObject) => (
                   <option key={item.kode} value={item.kode}>
                     {item.term}
                   </option>
@@ -167,7 +190,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
                 emptyFieldDisabled={!!formValues.bestemmelse}
                 disabled={!redigerbart}
               >
-                {MKV.KTObjects.landkoder.map((item: KTObject) => (
+                {gyldigeBestemmelser().map((item: KTObject) => (
                   <option key={item.kode} value={item.kode}>
                     {item.term}
                   </option>
