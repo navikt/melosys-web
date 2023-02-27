@@ -61,7 +61,12 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
     Api.Behandlinger.resultat.oppdaterUtfallRegistreringUnntak(behandlingID, { utfallRegistreringUnntak: utfall });
   };
 
-  const lagLovvalgsperiode = (values: FieldValues) => {
+  const debouncedLagreLovvalgsperiode = useCallback(
+    Utils._debounce(() => dispatch(lovvalgsperioderOperations.lagre()), 1500),
+    []
+  );
+
+  const oppdaterOgLagreLovvalgsperiode = (values: FieldValues) => {
     const harMedlemskapstypeDelvisUnntatt =
       sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
       [
@@ -74,40 +79,27 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
         ? UNNTATT_CAN_7_5_B
         : UNNTATT_USA_5_2_G;
 
-    return {
-      lovvalgsperiode: {
-        fom: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
-        tom: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
-      },
-      innvilgelsesResultat: "",
-      lovvalgsbestemmelse: values.bestemmelse,
-      lovvalgsland: lovvalgsland === MKV.Koder.land_iso2.CA_QC ? MKV.Koder.land_iso2.CA : lovvalgsland,
-      medlemskapstype: harMedlemskapstypeDelvisUnntatt ? DELVIS_UNNTATT : UNNTATT,
-      trygdeDekning: harMedlemskapstypeDelvisUnntatt ? trygdedekningUnntatt : UTEN_DEKNING,
-    };
-  };
-
-  const debouncedLagreLovvalgsperiode = useCallback(
-    Utils._debounce(() => dispatch(lovvalgsperioderOperations.lagre()), 1500),
-    []
-  );
-
-  const lagreFom = (fom: string) => {
-    dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lagLovvalgsperiode({ ...formValues, fom })));
-    debouncedLagreLovvalgsperiode();
-  };
-
-  const lagreTom = (tom: string) => {
-    dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lagLovvalgsperiode({ ...formValues, tom })));
-    debouncedLagreLovvalgsperiode();
-  };
-
-  const lagreBestemmelse = (bestemmelse: string) => {
     dispatch(
-      lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lagLovvalgsperiode({ ...formValues, bestemmelse }))
+      lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
+        lovvalgsperiode: {
+          fom: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
+          tom: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
+        },
+        innvilgelsesResultat: "",
+        lovvalgsbestemmelse: values.bestemmelse,
+        lovvalgsland: lovvalgsland === MKV.Koder.land_iso2.CA_QC ? MKV.Koder.land_iso2.CA : lovvalgsland,
+        medlemskapstype: harMedlemskapstypeDelvisUnntatt ? DELVIS_UNNTATT : UNNTATT,
+        trygdeDekning: harMedlemskapstypeDelvisUnntatt ? trygdedekningUnntatt : UTEN_DEKNING,
+      })
     );
     debouncedLagreLovvalgsperiode();
   };
+
+  const lagreFom = (fom: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, fom });
+
+  const lagreTom = (tom: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, tom });
+
+  const lagreBestemmelse = (bestemmelse: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, bestemmelse });
 
   const gyldigeBestemmelser = () => {
     if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) {
