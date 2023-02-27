@@ -23,7 +23,7 @@ import "./vurderingUnntakMedlemskap.css";
 
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
-const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_USA_5_2_G } = MKV.Koder.medlemskapstyper;
+const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_USA_5_2_G } = MKV.Koder.trygdedekninger;
 
 interface VurderingUnntakMedlemskapProps {
   oppdaterStatus: (isValid: boolean) => void;
@@ -81,7 +81,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
       },
       innvilgelsesResultat: "",
       lovvalgsbestemmelse: values.bestemmelse,
-      lovvalgsland: lovvalgsland === MKV.Koder.land_iso2.ca_qc ? MKV.Koder.land_iso2.ca : lovvalgsland,
+      lovvalgsland: lovvalgsland === MKV.Koder.land_iso2.CA_QC ? MKV.Koder.land_iso2.CA : lovvalgsland,
       medlemskapstype: harMedlemskapstypeDelvisUnntatt ? DELVIS_UNNTATT : UNNTATT,
       trygdeDekning: harMedlemskapstypeDelvisUnntatt ? trygdedekningUnntatt : UTEN_DEKNING,
     };
