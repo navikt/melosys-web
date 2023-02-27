@@ -65,7 +65,6 @@ const PersonstatusModal = ({
       onRequestClose={lukkModal}
       isOpen={skalViseModal}
       closeButton
-      // @ts-ignore
       ariaHideApp={modalAriaHideApp}
     >
       <Nav.Typo.Innholdstittel>Personstatus</Nav.Typo.Innholdstittel>

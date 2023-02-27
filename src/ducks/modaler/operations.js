@@ -3,14 +3,8 @@ import * as Actions from "./actions";
 export const visHenlegg = () => (dispatch) => dispatch(Actions.oppdaterHenlegg({ synlig: true }));
 export const skjulHenlegg = () => (dispatch) => dispatch(Actions.oppdaterHenlegg({ synlig: false }));
 
-export const visAvsluttSakSomBortfalt = () => (dispatch) =>
-  dispatch(Actions.oppdaterAvsluttSakSomBortfalt({ synlig: true }));
-export const skjulAvsluttSakSomBortfalt = () => (dispatch) =>
-  dispatch(Actions.oppdaterAvsluttSakSomBortfalt({ synlig: false }));
-
-export const visFerdigbehandleSak = () => (dispatch) => dispatch(Actions.oppdaterFerdigbehandleSak({ synlig: true }));
-export const skjulFerdigbehandleSak = () => (dispatch) =>
-  dispatch(Actions.oppdaterFerdigbehandleSak({ synlig: false }));
+export const visBekreftValg = (type) => (dispatch) => dispatch(Actions.oppdaterBekreftValg({ synlig: true, type }));
+export const skjulBekreftValg = () => (dispatch) => dispatch(Actions.oppdaterBekreftValg({ synlig: false, type: "" }));
 
 export const visAvslagSoknad = () => (dispatch) => dispatch(Actions.oppdaterAvslagSoknad({ synlig: true }));
 export const skjulAvslagSoknad = () => (dispatch) => dispatch(Actions.oppdaterAvslagSoknad({ synlig: false }));

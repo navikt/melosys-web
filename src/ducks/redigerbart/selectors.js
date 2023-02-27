@@ -38,11 +38,3 @@ export const PanelerRedigerbartSelector = createSelector(
     redigerbart &&
     !erArtikkel16AnmodningSendt
 );
-
-export const BehandlingsmenyRedigerbartSelector = createSelector(
-  RedigerbartSelector,
-  behandlingerSelectors.ErStatusAnmodningUnntakSendtSelector,
-  behandlingerSelectors.ErEndretPeriodeSelector,
-  (redigerbart, erStatusAnmodningunntakSendt, erEndretPeriode) =>
-    erEndretPeriode || erStatusAnmodningunntakSendt || redigerbart
-);

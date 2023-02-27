@@ -102,7 +102,6 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
       onRequestClose={avbryt}
       closeButton={false}
       shouldCloseOnOverlayClick
-      // @ts-ignore
       ariaHideApp={ariaHideApp}
     >
       <div className="avslagsoknadcontainer">
