@@ -9,26 +9,26 @@ const erIkkeInnvilgetMedÅpenSluttDato = {
   name: "Ikke godkjenn åpen sluttdato",
   message: { feilmelding: "Du kan ikke godkjenne en periode med åpen sluttdato" },
   test() {
-    const resultat = this.parent.innvilgelsesResultat;
+    const resultat = this.parent.utfallRegistreringUnntak;
     const sluttdato = this.options.context.sluttDato;
-    return !(resultat === MKV.Koder.innvilgelsesResultat.INNVILGET && Utils._isEmpty(sluttdato));
+    return !(resultat === MKV.Koder.utfallregistreringunntak.GODKJENT && Utils._isEmpty(sluttdato));
   },
 };
 
 const vurdering_unntak_medlemskap = object().shape({
-  innvilgelsesResultat: string().test(erIkkeInnvilgetMedÅpenSluttDato).required(MAA_FYLLES_UT),
-  fom: string().when("innvilgelsesResultat", {
-    is: MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET,
+  utfallRegistreringUnntak: string().test(erIkkeInnvilgetMedÅpenSluttDato).required(MAA_FYLLES_UT),
+  fom: string().when("utfallRegistreringUnntak", {
+    is: MKV.Koder.innvilgelsesResultat.DELVIS_GODKJENT,
     then: string().erGyldigDato().required(MAA_FYLLES_UT),
   }),
-  tom: string().when("innvilgelsesResultat", {
-    is: MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET,
+  tom: string().when("utfallRegistreringUnntak", {
+    is: MKV.Koder.innvilgelsesResultat.DELVIS_GODKJENT,
     then: string().erGyldigDato().erEtterDatofelt("fom", TIDLIGERE_ENN_FOM).required(MAA_FYLLES_UT),
   }),
-  bestemmelse: string().when("innvilgelsesResultat", {
+  bestemmelse: string().when("utfallRegistreringUnntak", {
     is: (vurdering) =>
-      vurdering === MKV.Koder.innvilgelsesResultat.INNVILGET ||
-      vurdering === MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET,
+      vurdering === MKV.Koder.utfallregistreringunntak.GODKJENT ||
+      vurdering === MKV.Koder.utfallregistreringunntak.DELVIS_GODKJENT,
     then: string().required(MAA_FYLLES_UT),
   }),
 });
