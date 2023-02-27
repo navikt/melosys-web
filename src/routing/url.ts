@@ -4,6 +4,8 @@ import * as Constants from "../constants";
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 
+const flytFinnesIkkeForBehandlingPath = "/flyt-finnes-ikke-for-behandling";
+
 const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
@@ -23,7 +25,7 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
       return `/${EU_EOS}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
-      return `/flyt-finnes-ikke-for-behandlingstema`;
+      return flytFinnesIkkeForBehandlingPath;
   }
 };
 
@@ -41,7 +43,7 @@ const lagUrlForTrygdeavtaleFlyt = (saksnummer: number | string, behandlingID: nu
   if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
     return `/${TRYGDEAVTALE}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
   }
-  return `/flyt-finnes-ikke-for-behandlingstema`;
+  return flytFinnesIkkeForBehandlingPath;
 };
 
 export const lagUrlFraSakstypeOgBehandlingstema = (
@@ -59,7 +61,7 @@ export const lagUrlFraSakstypeOgBehandlingstema = (
   if (sakstypeKode === TRYGDEAVTALE) {
     return lagUrlForTrygdeavtaleFlyt(saksnummer, behandlingID, behandlingstemaKode);
   }
-  return `/flyt-finnes-ikke-for-sakstype`;
+  return flytFinnesIkkeForBehandlingPath;
 };
 
 export const lagUrl = (

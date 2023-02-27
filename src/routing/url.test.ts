@@ -13,19 +13,19 @@ describe("url", () => {
         "tilfeldig behandlingstemaKode"
       );
 
-      expect(url).toContain("/flyt-finnes-ikke-for-sakstype");
+      expect(url).toContain("/flyt-finnes-ikke-for-behandling");
     });
 
     it("Sakstype EU_EOS med ustøttet behandlingstemaKode kaster feil", () => {
       const url = lagUrlFraSakstypeOgBehandlingstema("MEL-1", 1, EU_EOS, "tilfeldig behandlingstemaKode");
 
-      expect(url).toContain("/flyt-finnes-ikke-for-behandlingstema");
+      expect(url).toContain("/flyt-finnes-ikke-for-behandling");
     });
 
     it("Sakstype TRYGDEAVTALE med ustøttet behandlingstemaKode kaster feil", () => {
       const url = lagUrlFraSakstypeOgBehandlingstema("MEL-1", 1, TRYGDEAVTALE, "tilfeldig behandlingstemaKode");
 
-      expect(url).toContain("/flyt-finnes-ikke-for-behandlingstema");
+      expect(url).toContain("/flyt-finnes-ikke-for-behandling");
     });
 
     it("Sakstype EU_EOS med støttet behandlingstemaKode returnerer url", () => {
