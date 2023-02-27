@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import MKV from "../../../melosyskodeverk";
+import * as Api from "../../../services/api";
 import * as Forms from "../../../felleskomponenter/forms";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
@@ -13,12 +14,16 @@ import * as Utils from "../../../utils";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
+import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 import "./vurderingUnntakMedlemskap.css";
 
-const { INNVILGET, DELVIS_INNVILGET, AVSLAATT } = MKV.Koder.innvilgelsesResultat;
+const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
+const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
+const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_USA_5_2_G } = MKV.Koder.medlemskapstyper;
 
 interface VurderingUnntakMedlemskapProps {
   oppdaterStatus: (isValid: boolean) => void;
@@ -28,17 +33,19 @@ interface VurderingUnntakMedlemskapProps {
 const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakMedlemskapProps) => {
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const lovvalgsland = useSelector(mottatteOpplysningerSelectors.LovvalgslandSelector);
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
+  const utfallRegistreringUnntak = useSelector(behandlingsresultatSelectors.UtfallRegistreringUnntakSelector);
 
   const { control, getValues, formState } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
     context: { sluttDato: mottatteOpplysningerPeriode.tom },
     mode: "all",
     defaultValues: {
-      innvilgelsesResultat: lovvalgsperiode.innvilgelsesResultat,
+      utfallRegistreringUnntak,
       fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato || mottatteOpplysningerPeriode.fom),
       tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato || mottatteOpplysningerPeriode.tom),
       bestemmelse: lovvalgsperiode.bestemmelse || "",
@@ -50,38 +57,57 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
     oppdaterStatus(formState.isValid);
   }, [formState?.isValid]);
 
+  const lagreUtfallRegistreringUnntak = (utfall: string) => {
+    Api.Behandlinger.resultat.oppdaterUtfallRegistreringUnntak(behandlingID, { utfallRegistreringUnntak: utfall });
+  };
+
+  const lagLovvalgsperiode = (values: FieldValues) => {
+    const harMedlemskapstypeDelvisUnntatt =
+      sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
+      [
+        MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART7,
+        MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us.USA_ART5_2,
+      ].includes(values.bestemmelse);
+
+    const trygdedekningUnntatt =
+      MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART7 === values.bestemmelse
+        ? UNNTATT_CAN_7_5_B
+        : UNNTATT_USA_5_2_G;
+
+    return {
+      lovvalgsperiode: {
+        fom: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
+        tom: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
+      },
+      innvilgelsesResultat: "",
+      lovvalgsbestemmelse: values.bestemmelse,
+      lovvalgsland: lovvalgsland === MKV.Koder.land_iso2.ca_qc ? MKV.Koder.land_iso2.ca : lovvalgsland,
+      medlemskapstype: harMedlemskapstypeDelvisUnntatt ? DELVIS_UNNTATT : UNNTATT,
+      trygdeDekning: harMedlemskapstypeDelvisUnntatt ? trygdedekningUnntatt : UTEN_DEKNING,
+    };
+  };
+
+  const debouncedLagreLovvalgsperiode = useCallback(
+    Utils._debounce(() => dispatch(lovvalgsperioderOperations.lagre()), 1500),
+    []
+  );
+
   const lagreFom = (fom: string) => {
-    debouncedOppdaterPeriode({ fom, tom: formValues.tom, innvilgelsesResultat: formValues.innvilgelsesResultat });
+    dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lagLovvalgsperiode({ ...formValues, fom })));
+    debouncedLagreLovvalgsperiode();
   };
 
   const lagreTom = (tom: string) => {
-    debouncedOppdaterPeriode({ fom: formValues.fom, tom, innvilgelsesResultat: formValues.innvilgelsesResultat });
+    dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lagLovvalgsperiode({ ...formValues, tom })));
+    debouncedLagreLovvalgsperiode();
   };
 
-  const lagreInnvilgelsesResultat = (innvilgelsesResultat: string) => {
+  const lagreBestemmelse = (bestemmelse: string) => {
     dispatch(
-      lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
-        innvilgelsesResultat,
-      })
+      lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lagLovvalgsperiode({ ...formValues, bestemmelse }))
     );
-    dispatch(lovvalgsperioderOperations.lagre());
+    debouncedLagreLovvalgsperiode();
   };
-
-  const debouncedOppdaterPeriode = useCallback(
-    Utils._debounce((data: { fom: string; tom: string; innvilgelsesResultat: string }) => {
-      dispatch(
-        lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
-          lovvalgsperiode: {
-            fom: Utils.dato.formatterDatoTilISO(data.fom, null, ""),
-            tom: Utils.dato.formatterDatoTilISO(data.tom, null, ""),
-          },
-          innvilgelsesResultat: data.innvilgelsesResultat,
-        })
-      );
-      dispatch(lovvalgsperioderOperations.lagre());
-    }, 500),
-    []
-  );
 
   const gyldigeBestemmelser = () => {
     if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) {
@@ -110,29 +136,29 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
       <Nav.Typo.Undertittel className="undertittel">Vurder unntaksperioder</Nav.Typo.Undertittel>
       <Nav.Fieldset legend="Vurder unntaksperiode">
         <Forms.Radio
-          name="innvilgelsesResultat"
+          name="utfallRegistreringUnntak"
           control={control}
           label="Godkjenn unntaksperiode"
-          value={INNVILGET}
-          onChange={lagreInnvilgelsesResultat}
+          value={GODKJENT}
+          onChange={lagreUtfallRegistreringUnntak}
         />
         <Forms.Radio
-          name="innvilgelsesResultat"
+          name="utfallRegistreringUnntak"
           control={control}
           label="Godkjenn, men endre periode"
-          value={DELVIS_INNVILGET}
-          onChange={lagreInnvilgelsesResultat}
+          value={DELVIS_GODKJENT}
+          onChange={lagreUtfallRegistreringUnntak}
         />
         <Forms.Radio
-          name="innvilgelsesResultat"
+          name="utfallRegistreringUnntak"
           control={control}
           label="Ikke godkjenn"
-          value={AVSLAATT}
-          onChange={lagreInnvilgelsesResultat}
+          value={IKKE_GODKJENT}
+          onChange={lagreUtfallRegistreringUnntak}
         />
       </Nav.Fieldset>
 
-      {formValues.innvilgelsesResultat === INNVILGET && (
+      {formValues.utfallRegistreringUnntak === GODKJENT && (
         <>
           <Nav.Row>
             <Nav.Column xs="4">
@@ -143,6 +169,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
                 emptyFieldText="Velg"
                 emptyFieldDisabled={!!formValues.bestemmelse}
                 disabled={!redigerbart}
+                onChange={lagreBestemmelse}
               >
                 {gyldigeBestemmelser().map((item: KTObject) => (
                   <option key={item.kode} value={item.kode}>
@@ -160,7 +187,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
         </>
       )}
 
-      {formValues.innvilgelsesResultat === DELVIS_INNVILGET && (
+      {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && (
         <Nav.Fieldset legend="Lovvalgsperiode">
           <Nav.Row>
             <Nav.Column xs="2">
@@ -189,6 +216,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
                 emptyFieldText="Velg"
                 emptyFieldDisabled={!!formValues.bestemmelse}
                 disabled={!redigerbart}
+                onChange={lagreBestemmelse}
               >
                 {gyldigeBestemmelser().map((item: KTObject) => (
                   <option key={item.kode} value={item.kode}>
@@ -205,10 +233,10 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
         </Nav.Fieldset>
       )}
 
-      {formValues.innvilgelsesResultat === AVSLAATT && (
+      {formValues.utfallRegistreringUnntak === IKKE_GODKJENT && (
         <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__alertstripe">
           {sakstype === MKV.Koder.sakstyper.EU_EOS
-            ? "Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Send SED." // TODO: Det er ikke bestemt hvilken tekst som kommer her enda.
+            ? "Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt SED."
             : "Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i brevmenyen."}
         </Nav.AlertStripeInfo>
       )}

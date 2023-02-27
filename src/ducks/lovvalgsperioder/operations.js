@@ -254,6 +254,14 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
   const fomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.fomDato : null) || periode.fom;
   const tomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.tomDato : null) || periode.tom;
   const innvilgelsesResultat = stegState.innvilgelsesResultat || MKV.Koder.innvilgelsesResultat.INNVILGET;
+  const defaultTrygdeDekning = norgeErLovvalgsland(lovvalgsland)
+    ? MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO
+    : MKV.Koder.trygdedekninger.UTEN_DEKNING;
+  const trygdeDekning = stegState.trygdeDekning || defaultTrygdeDekning;
+  const defaultMedlemskapstype = norgeErLovvalgsland(lovvalgsland)
+    ? MKV.Koder.medlemskapstyper.PLIKTIG
+    : MKV.Koder.medlemskapstyper.UNNTATT;
+  const medlemskapstype = stegState.medlemskapstype || defaultMedlemskapstype;
 
   return [
     {
@@ -266,12 +274,8 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
       unntakFraLovvalgsland: null,
       innvilgelsesResultat,
       lovvalgsland,
-      trygdeDekning: norgeErLovvalgsland(lovvalgsland)
-        ? MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO
-        : MKV.Koder.trygdedekninger.UTEN_DEKNING,
-      medlemskapstype: norgeErLovvalgsland(lovvalgsland)
-        ? MKV.Koder.medlemskapstyper.PLIKTIG
-        : MKV.Koder.medlemskapstyper.UNNTATT,
+      trygdeDekning,
+      medlemskapstype,
     },
   ];
 };

@@ -30,6 +30,7 @@ const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerCompon
         name={rest.name}
         radioRef={rest.ref}
         feil={rest.feil}
+        checked={rest.checked}
       />
     );
   }
