@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,8 +14,9 @@ import * as Utils from "../../../utils";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
-import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { navigeringOperations } from "../../../ducks/navigering";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
@@ -39,8 +40,10 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const utfallRegistreringUnntak = useSelector(behandlingsresultatSelectors.UtfallRegistreringUnntakSelector);
+  const sisteOpplysningerHentetDato = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
+  const [initialSisteOpplysningerHentet, setInitialSisteOpplysningerHentet] = useState(sisteOpplysningerHentetDato);
 
-  const { control, getValues, formState } = useForm({
+  const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
     context: { sluttDato: mottatteOpplysningerPeriode.tom },
     mode: "all",
@@ -48,17 +51,31 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
       utfallRegistreringUnntak,
       fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato || mottatteOpplysningerPeriode.fom),
       tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato || mottatteOpplysningerPeriode.tom),
-      bestemmelse: lovvalgsperiode.bestemmelse || "",
+      bestemmelse: lovvalgsperiode.lovvalgsbestemmelse || "",
     } as FieldValues,
   });
-  const formValues = getValues();
+  const formValues = watch();
 
   useEffect(() => {
     oppdaterStatus(formState.isValid);
   }, [formState?.isValid]);
 
+  const resetFeltVedOppfriskning = () => {
+    setValue("utfallRegistreringUnntak", utfallRegistreringUnntak);
+    setValue("fom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.fom));
+    setValue("tom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.tom));
+    setValue("bestemmelse", lovvalgsperiode.lovvalgsbestemmelse);
+  };
+
+  useEffect(() => {
+    if (!utfallRegistreringUnntak && initialSisteOpplysningerHentet !== sisteOpplysningerHentetDato) {
+      setInitialSisteOpplysningerHentet(initialSisteOpplysningerHentet);
+      resetFeltVedOppfriskning();
+    }
+  }, [utfallRegistreringUnntak, sisteOpplysningerHentetDato]);
+
   const lagreUtfallRegistreringUnntak = (utfall: string) => {
-    Api.Behandlinger.resultat.oppdaterUtfallRegistreringUnntak(behandlingID, { utfallRegistreringUnntak: utfall });
+    dispatch(behandlingsresultatOperations.oppdaterUtfallRegistreringUnntak(behandlingID, utfall));
   };
 
   const debouncedLagreLovvalgsperiode = useCallback(
@@ -121,6 +138,11 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
           MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87A,
         ].includes(kt.kode)
     );
+  };
+
+  const handleBekreft = async () => {
+    await Api.Saksflyt.Unntaksregistrering.registrerUnntakFraMedlemskap(behandlingID);
+    dispatch(navigeringOperations.tilForsiden());
   };
 
   return (
@@ -239,7 +261,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
       <Mui.StegKnapper
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
         bekreftKnappProps={{
-          onClick: () => console.log("bekreft"),
+          onClick: handleBekreft,
           disabled: !formState?.isValid || !redigerbart,
         }}
         bekreftTekst="Bekreft og avslutt"

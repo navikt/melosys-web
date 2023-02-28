@@ -32,6 +32,7 @@ export const STATISTIKK = "statistikk";
 export const SVAR = "svar";
 export const TRYGDEAVGIFT = "trygdeavgift";
 export const UNNTAKSPERIODER = "unntaksperioder";
+export const UNNTAKSREGISTRERING = "unntaksregistrering";
 export const UTPEKING = "utpeking";
 export const UTPEKINGSPERIODER = "utpekingsperioder";
 export const VEDTAK = "vedtak";
