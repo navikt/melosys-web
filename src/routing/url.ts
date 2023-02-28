@@ -4,6 +4,8 @@ import * as Constants from "../constants";
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 
+const flytFinnesIkkeForBehandlingPath = "/flyt-finnes-ikke-for-behandling";
+
 const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
@@ -11,8 +13,6 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
       return `/${EU_EOS}/registrering/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL:
       return `/${EU_EOS}/registrering/${saksnummer}/anmodningunntak/?behandlingID=${behandlingID}`;
-    case MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR:
-      return `/${EU_EOS}/fellesUnntak/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY:
@@ -25,7 +25,7 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
       return `/${EU_EOS}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
-      return "/funkerikke. IKKE COMMIT DETTE.";
+      return flytFinnesIkkeForBehandlingPath;
   }
 };
 
@@ -37,17 +37,13 @@ const lagUrlForFtrlFlyt = (saksnummer: number | string, behandlingID: number, be
   return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
 };
 const lagUrlForTrygdeavtaleFlyt = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
-  switch (behandlingstemaKode) {
-    case MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV:
-      return `/${TRYGDEAVTALE}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
-    case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
-      return `/${TRYGDEAVTALE}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
-    case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK:
-    case MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL:
-      return `/${TRYGDEAVTALE}/fellesUnntak/${saksnummer}/?behandlingID=${behandlingID}`;
-    default:
-      throw new Error(`Finner ikke trygdeavtale-flyt for behandlingstema: ${behandlingstemaKode}`);
+  if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
+    return `/${TRYGDEAVTALE}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
   }
+  if (behandlingstemaKode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
+    return `/${TRYGDEAVTALE}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
+  return flytFinnesIkkeForBehandlingPath;
 };
 
 export const lagUrlFraSakstypeOgBehandlingstema = (
@@ -65,7 +61,7 @@ export const lagUrlFraSakstypeOgBehandlingstema = (
   if (sakstypeKode === TRYGDEAVTALE) {
     return lagUrlForTrygdeavtaleFlyt(saksnummer, behandlingID, behandlingstemaKode);
   }
-  throw new Error(`Støtter ikke sakstype: ${sakstypeKode}`);
+  return flytFinnesIkkeForBehandlingPath;
 };
 
 export const lagUrl = (

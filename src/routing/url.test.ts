@@ -6,23 +6,26 @@ const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 describe("url", () => {
   describe("lagUrlFraSakstypeOgBehandlingstema", () => {
     it("sakstype finnes ikke kaster feil", () => {
-      const hentUrl = () =>
-        lagUrlFraSakstypeOgBehandlingstema("MEL-1", 1, "En sakstype vi ikke støtter", "tilfeldig behandlingstemaKode");
+      const url = lagUrlFraSakstypeOgBehandlingstema(
+        "MEL-1",
+        1,
+        "En sakstype vi ikke støtter",
+        "tilfeldig behandlingstemaKode"
+      );
 
-      expect(hentUrl).toThrowError("Støtter ikke sakstype:");
+      expect(url).toContain("/flyt-finnes-ikke-for-behandling");
     });
 
     it("Sakstype EU_EOS med ustøttet behandlingstemaKode kaster feil", () => {
-      const hentUrl = () => lagUrlFraSakstypeOgBehandlingstema("MEL-1", 1, EU_EOS, "tilfeldig behandlingstemaKode");
+      const url = lagUrlFraSakstypeOgBehandlingstema("MEL-1", 1, EU_EOS, "tilfeldig behandlingstemaKode");
 
-      expect(hentUrl).toThrowError("Finner ikke EuEøs-flyt for behandlingstema:");
+      expect(url).toContain("/flyt-finnes-ikke-for-behandling");
     });
 
     it("Sakstype TRYGDEAVTALE med ustøttet behandlingstemaKode kaster feil", () => {
-      const hentUrl = () =>
-        lagUrlFraSakstypeOgBehandlingstema("MEL-1", 1, TRYGDEAVTALE, "tilfeldig behandlingstemaKode");
+      const url = lagUrlFraSakstypeOgBehandlingstema("MEL-1", 1, TRYGDEAVTALE, "tilfeldig behandlingstemaKode");
 
-      expect(hentUrl).toThrowError("Finner ikke trygdeavtale-flyt for behandlingstema:");
+      expect(url).toContain("/flyt-finnes-ikke-for-behandling");
     });
 
     it("Sakstype EU_EOS med støttet behandlingstemaKode returnerer url", () => {
