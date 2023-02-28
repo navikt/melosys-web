@@ -287,7 +287,6 @@ VurderingVedtak.propTypes = {
   bostedsland: MPT.Kodeverk,
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
-  lovvalgsland: PT.string,
   sakstype: PT.string.isRequired,
   sakstema: PT.string.isRequired,
   behandlingstema: PT.string.isRequired,
@@ -306,7 +305,6 @@ VurderingVedtak.propTypes = {
 };
 
 VurderingVedtak.defaultProps = {
-  lovvalgsland: "",
   formValues: {},
   visAntallManederUtland: true,
   bostedsland: {},
@@ -322,7 +320,6 @@ const mapStateToProps = (state) => ({
   sakstema: fagsakSelectors.SakstemaKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   erArtikkel11_4: flytSelectors.ErIArtikkel11_4Selector(state),

@@ -133,6 +133,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
           label="Godkjenn unntaksperiode"
           value={GODKJENT}
           onChange={lagreUtfallRegistreringUnntak}
+          disabled={!redigerbart}
         />
         <Forms.Radio
           name="utfallRegistreringUnntak"
@@ -140,6 +141,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
           label="Godkjenn, men endre periode"
           value={DELVIS_GODKJENT}
           onChange={lagreUtfallRegistreringUnntak}
+          disabled={!redigerbart}
         />
         <Forms.Radio
           name="utfallRegistreringUnntak"
@@ -147,6 +149,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
           label="Ikke godkjenn"
           value={IKKE_GODKJENT}
           onChange={lagreUtfallRegistreringUnntak}
+          disabled={!redigerbart}
         />
       </Nav.Fieldset>
 

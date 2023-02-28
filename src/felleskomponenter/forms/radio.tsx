@@ -7,7 +7,6 @@ import { RegisterHookFormProps } from "./reacthookProps";
 
 interface RadioComponentProps {
   className?: string;
-  forhandsvalgt?: boolean;
   value?: string;
   label?: string;
   disabled?: boolean;
@@ -19,7 +18,7 @@ interface RadioComponentProps {
 type RadioInnerComponentProps = RadioComponentProps & RegisterHookFormProps;
 
 const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerComponentProps>(
-  ({ forhandsvalgt, disabled, ...rest }: RadioInnerComponentProps, _ref: any) => {
+  ({ disabled, ...rest }: RadioInnerComponentProps, _ref: any) => {
     return (
       <Nav.Radio
         className={rest.className}
@@ -31,6 +30,7 @@ const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerCompon
         radioRef={rest.ref}
         feil={rest.feil}
         checked={rest.checked}
+        disabled={disabled}
       />
     );
   }
