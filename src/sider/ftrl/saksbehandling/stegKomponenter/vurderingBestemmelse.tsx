@@ -1,10 +1,10 @@
-import { ChangeEventHandler, Fragment, useContext, useEffect, useMemo, useState } from "react";
+import { ChangeEventHandler, Fragment, useEffect, useMemo, useState } from "react";
 import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-
 import MKV from "../../../../melosyskodeverk";
+import * as API from "../../../../services/api";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 
@@ -19,9 +19,13 @@ import { finnTermFraListe, termFraNestedKTObject } from "../../../../kodeverk";
 import { BOOLSK_STRING } from "../../../../constants";
 import "./vurderingBestemmelse.css";
 import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
-import { SaksbehandlingFTRLContext, VilkarOgBegrunnelser } from "../saksbehandlingFTRLContext";
 import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
+import { FlytFinnesIkke } from "../vurderingStartKomponenter";
 
+interface VilkarOgBegrunnelser {
+  vilkaar: string;
+  muligeBegrunnelser: string[];
+}
 const komponentState = (state: RootState) => ({
   vilkarListe: vilkarSelectors.VilkarSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -48,7 +52,11 @@ interface Props {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSkjema }: Props) => {
   const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
-  const { bestemmelseVilkar } = useContext(SaksbehandlingFTRLContext);
+  const behandlingstema = useSelector((state) => behandlingerSelectors.BehandlingstemaKodeSelector(state));
+  const [bestemmelseVilkarStøttet, setBestemmelseVilkarStøttet] = useState<any[]>([]);
+  const [filtrerteVilkår, setFiltrerteVilkår] = useState<any[]>([]);
+  const [bestemmelseVilkarIkkeStøttet, setBestemmelseVilkarIkkeStøttet] = useState<any[]>([]);
+  const [bestemmelseIkkeStøttetValgt, setBestemmelseIkkeStøttetValgt] = useState(false);
   const dispatch = useDispatch();
   const { behandlingID, vilkarListe, bestemmelse, vilkaarKodeverk, begrunnelserKodeverk } = useSelector(
     (state: RootState) => komponentState(state)
@@ -60,7 +68,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
   const [valgteVilkar, setValgteVilkar] = useState(new Map());
   const [erAlleValgGjort, setErAlleValgGjort] = useState(false);
   const SAERLIG_GRUNN = "SAERLIG_GRUNN";
-
   const hjelpetekster = new Map([
     [
       SAERLIG_GRUNN,
@@ -71,6 +78,53 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
       "Husk at perioder med trygdetid fra andre EØS-land sidestilles med norsk trygdetid.",
     ],
   ]);
+
+  const hentBestemmelser = async () => {
+    if (behandlingstema) {
+      const bestemmelserResponse = await API.Medlemskapsperioder.hentBestemmelserMedVilkår(behandlingstema);
+      setBestemmelseVilkarStøttet(sorterBestemmelser(bestemmelserResponse.støttedeBestemmelserMedVilkår));
+      setBestemmelseVilkarIkkeStøttet(sorterBestemmelser(bestemmelserResponse.ikkeStøttedeBestemmelserMedVilkår));
+    }
+  };
+
+  const sorterBestemmelser = (bestemmelser: any) => {
+    bestemmelser
+      .sort((a: any, b: any) => b.bestemmelse.localeCompare(a.bestemmelse))
+      .reverse()
+      .forEach((bestemmelseRes: any) =>
+        bestemmelseRes.vilkårOgBegrunnelser.sort((a: any, b: any) => a.vilkaar.localeCompare(b.vilkaar))
+      );
+    return bestemmelser;
+  };
+
+  useEffect(() => {
+    const filtrerteBestemmelsesVilkår = bestemmelseVilkarStøttet.find(
+      (bestemmelseMedVilkar) => bestemmelseMedVilkar.bestemmelse === valgtBestemmelse
+    );
+
+    const { vilkårOgBegrunnelser } = filtrerteBestemmelsesVilkår ?? { vilkårOgBegrunnelser: [] };
+    const alleFiltrerteVilkår = [];
+
+    if (vilkårOgBegrunnelser.length > 0) {
+      alleFiltrerteVilkår.push(vilkårOgBegrunnelser[0]);
+    }
+
+    vilkårOgBegrunnelser.forEach((vilkårOgMuligeBegrunnelser: any, index: number) => {
+      if (valgteVilkar.get(vilkårOgMuligeBegrunnelser.vilkaar) === BOOLSK_STRING.SANN) {
+        if (vilkårOgBegrunnelser[index + 1] !== undefined) {
+          alleFiltrerteVilkår.push(vilkårOgBegrunnelser[index + 1]);
+        }
+      }
+    });
+
+    setFiltrerteVilkår(alleFiltrerteVilkår);
+  }, [valgteVilkar, valgtBestemmelse, valgteBegrunnelser]);
+
+  useEffect(() => {
+    if (bestemmelseVilkarStøttet.length === 0 && bestemmelseVilkarIkkeStøttet.length === 0) {
+      hentBestemmelser();
+    }
+  }, [behandlingstema]);
 
   useEffect(() => {
     rapporterSkjema({ stegNavn: STEG.BESTEMMELSE, dataErGyldig: erAlleValgGjort });
@@ -97,7 +151,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
     vilkarListe.forEach((vilkar: any) => {
       valgteVilkar.set(vilkar.vilkaar, vilkar.oppfylt ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN);
       if (vilkar.begrunnelseKoder && vilkar.begrunnelseKoder.length === 1) {
-        valgteBegrunnelser.set(vilkar.vilkaar, vilkar.begrunnelseKoder[0]);
+        valgteBegrunnelser.set(`${vilkar.vilkaar}_begrunnelser`, vilkar.begrunnelseKoder[0]);
       }
     });
     setValgteVilkar(new Map(valgteVilkar));
@@ -105,13 +159,20 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
   }, [vilkarListe]);
 
   useEffect(() => {
-    const valgteBestemmelseVilkar = bestemmelseVilkar.find((element) => element.bestemmelse === valgtBestemmelse);
+    setBestemmelseIkkeStøttetValgt(
+      bestemmelseVilkarIkkeStøttet.find(
+        (bestemmelseOgVilkår: any) => bestemmelseOgVilkår.bestemmelse === valgtBestemmelse
+      ) !== undefined
+    );
+    const valgteBestemmelseVilkar = bestemmelseVilkarStøttet.find(
+      (element) => element.bestemmelse === valgtBestemmelse
+    );
     const alleVilkarHarSvarJaOgvalgtBegrunnelse =
       valgteBestemmelseVilkar &&
       valgteBestemmelseVilkar.vilkårOgBegrunnelser.filter(
-        (vilkar) =>
+        (vilkar: any) =>
           valgteVilkar.get(vilkar.vilkaar) === BOOLSK_STRING.SANN &&
-          (vilkar.muligeBegrunnelser.length > 0 ? valgteBegrunnelser.get(vilkar.vilkaar) : true)
+          (vilkar.muligeBegrunnelser.length > 0 ? valgteBegrunnelser.get(`${vilkar.vilkaar}_begrunnelser`) : true)
       ).length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
     setErAlleValgGjort(!!alleVilkarHarSvarJaOgvalgtBegrunnelse);
   }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]);
@@ -124,32 +185,33 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
     }, 1000);
   };
 
+  const oppdaterAlleVilkaarOgBegrunnelser = () => {
+    const alleVilkår: { [key: string]: boolean } = {};
+    valgteVilkar.forEach((value: string, key: string) => {
+      alleVilkår[key] = value === BOOLSK_STRING.SANN;
+    });
+    const alleBegrunnelser: { [key: string]: string[] } = {};
+    valgteBegrunnelser.forEach((value: string, key: string) => {
+      alleBegrunnelser[key] = [value];
+    });
+    oppdaterVilkaar({ ...alleBegrunnelser, ...alleVilkår });
+  };
+
   const handleEndreVilkar: ChangeEventHandler<HTMLInputElement> = (event) => {
     setValgteVilkar(new Map(valgteVilkar.set(event.target.name, event.target.value)));
-    oppdaterVilkaar({
-      ...{ ...valgteVilkar },
-      [event.target.name]: event.target.value !== BOOLSK_STRING.USANN,
-    });
-    if (event.target.value === BOOLSK_STRING.USANN && valgteBegrunnelser.get(event.target.name)) {
-      valgteBegrunnelser.delete(event.target.name);
+    if (event.target.value === BOOLSK_STRING.USANN && valgteBegrunnelser.get(`${event.target.name}_begrunnelser`)) {
+      valgteBegrunnelser.delete(`${event.target.name}_begrunnelser`);
       setValgteBegrunnelser(new Map(valgteBegrunnelser));
-      oppdaterVilkaar({ ...{ ...valgteBegrunnelser }, [event.target.name]: [] });
+      oppdaterAlleVilkaarOgBegrunnelser();
+    } else {
+      oppdaterAlleVilkaarOgBegrunnelser();
     }
   };
 
   const handleEndreBegrunnelse: ChangeEventHandler<HTMLSelectElement> = (event) => {
     setValgteBegrunnelser(new Map(valgteBegrunnelser.set(event.target.name, event.target.value)));
-    oppdaterVilkaar({
-      ...{ ...valgteBegrunnelser },
-      [event.target.name]: [event.target.value !== BOOLSK_STRING.USANN],
-    });
+    oppdaterAlleVilkaarOgBegrunnelser();
   };
-
-  const Alert = () => (
-    <Nav.AlertStripe type="feil" className="alerstripe">
-      Søknaden kan foreløpig ikke behandles i Melosys. Avslutt saken som bortfalt.
-    </Nav.AlertStripe>
-  );
 
   const Vilkaar = ({ vilkaar, muligeBegrunnelser }: VilkarOgBegrunnelser) => {
     const hjelpetekstForVilkaar = hjelpetekster.get(vilkaar);
@@ -190,7 +252,11 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
-        {valgteVilkarForVilkaar === BOOLSK_STRING.USANN && <Alert />}
+        {valgteVilkarForVilkaar === BOOLSK_STRING.USANN && (
+          <div className="flytFinnesIkke">
+            <FlytFinnesIkke />
+          </div>
+        )}
         {muligeBegrunnelser.length > 0 && valgteVilkarForVilkaar === BOOLSK_STRING.SANN && (
           <Nav.Fieldset
             className="select"
@@ -202,14 +268,14 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
                   label=""
                   bredde="fullbredde"
                   onChange={handleEndreBegrunnelse}
-                  name={vilkaar}
-                  value={valgteBegrunnelser.get(`${vilkaar}`)}
+                  name={`${vilkaar}_begrunnelser`}
+                  value={valgteBegrunnelser.get(`${vilkaar}_begrunnelser`)}
                   disabled={!redigerbart}
                 >
-                  <option key="" value="" disabled={!!valgteBegrunnelser.get(`${vilkaar}`)}>
+                  <option key="" value="" disabled={!!valgteBegrunnelser.get(`${vilkaar}_begrunnelser`)}>
                     Velg
                   </option>
-                  {muligeBegrunnelser.map((begrunnelse) => (
+                  {muligeBegrunnelser.map((begrunnelse: any) => (
                     <option key={begrunnelse} value={begrunnelse}>
                       {termFraNestedKTObject(begrunnelserKodeverk, begrunnelse)}
                     </option>
@@ -231,7 +297,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
         Hvilken bestemmelse skal søknaden vurderes etter?
       </Nav.Typo.Undertittel>
 
-      <Nav.Fieldset className="select" legend="Velg bestemmelse">
+      <Nav.Fieldset className="select" legend="Bestemmelse">
         <Nav.Row>
           <Nav.Column xs="7">
             <Nav.Select
@@ -242,11 +308,23 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
               value={valgtBestemmelse}
             >
               <option disabled={!!valgtBestemmelse} value="" key="">
-                Velg
+                Velg...
               </option>
-              {bestemmelseVilkar.map((bestemmelseMedVilkar) => (
+              {bestemmelseVilkarStøttet.map((bestemmelseMedVilkar) => (
                 <option key={bestemmelseMedVilkar.bestemmelse} value={bestemmelseMedVilkar.bestemmelse}>
                   {finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, bestemmelseMedVilkar.bestemmelse)}
+                </option>
+              ))}
+              {bestemmelseVilkarStøttet && bestemmelseVilkarIkkeStøttet && <option disabled>{"\u2500"}</option>}
+              {bestemmelseVilkarIkkeStøttet.map((bestemmelseMedVilkarIkkeStøttet) => (
+                <option
+                  key={bestemmelseMedVilkarIkkeStøttet.bestemmelse}
+                  value={bestemmelseMedVilkarIkkeStøttet.bestemmelse}
+                >
+                  {finnTermFraListe(
+                    MKV.KTObjects.folketrygdloven_kap2_bestemmelser,
+                    bestemmelseMedVilkarIkkeStøttet.bestemmelse
+                  )}
                 </option>
               ))}
             </Nav.Select>
@@ -254,17 +332,19 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
         </Nav.Row>
       </Nav.Fieldset>
 
-      {bestemmelseVilkar
-        .filter((bestemmelseMedVilkar) => bestemmelseMedVilkar.bestemmelse === valgtBestemmelse)
-        .map((bestemmelseMedVilkar) =>
-          bestemmelseMedVilkar.vilkårOgBegrunnelser.map((vilkaarMedBegrunnelser) => (
-            <Vilkaar
-              key={vilkaarMedBegrunnelser.vilkaar}
-              vilkaar={vilkaarMedBegrunnelser.vilkaar}
-              muligeBegrunnelser={vilkaarMedBegrunnelser.muligeBegrunnelser}
-            />
-          ))
-        )}
+      {filtrerteVilkår.map((vilkårOgBegrunnelse) => (
+        <Vilkaar
+          key={vilkårOgBegrunnelse.vilkaar}
+          vilkaar={vilkårOgBegrunnelse.vilkaar}
+          muligeBegrunnelser={vilkårOgBegrunnelse.muligeBegrunnelser}
+        />
+      ))}
+
+      {bestemmelseIkkeStøttetValgt && (
+        <div className="flytFinnesIkke">
+          <FlytFinnesIkke />
+        </div>
+      )}
 
       <Mui.StegKnapper
         bekreftKnappProps={{ onClick: handleBekreft, disabled: !erAlleValgGjort || !redigerbart }}

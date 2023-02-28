@@ -8,7 +8,6 @@ import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
-import * as API from "../../../services/api";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
 import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
@@ -37,7 +36,6 @@ import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import "./saksbehandling.css";
 import { StegvelgerFTRL } from "../../../felleskomponenter/stegvelger/StegvelgerFTRL";
-import { SaksbehandlingFTRLContext } from "./saksbehandlingFTRLContext";
 
 const Saksbehandling = ({
   arbeidsland,
@@ -75,7 +73,6 @@ const Saksbehandling = ({
   resetFeiletrespons,
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
-  const [bestemmelser, setBestemmelser] = useState([]);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
 
@@ -107,12 +104,6 @@ const Saksbehandling = ({
         visOppfriskModal();
         return false;
       }
-
-      const bestemmelserResponse = await API.Medlemskapsperioder.hentBestemmelserMedVilkår();
-      bestemmelserResponse
-        .sort((a, b) => b.bestemmelse.localeCompare(a.bestemmelse))
-        .forEach((bestemmelse) => bestemmelse.vilkårOgBegrunnelser.sort((a, b) => a.vilkaar.localeCompare(b.vilkaar)));
-      setBestemmelser(bestemmelserResponse);
       await hentMedlemskapsperioder(behandlingIDFraParam);
       await hentMottatteOpplysninger(behandlingIDFraParam);
       await hentDokumentOversikt(saksnr);
@@ -172,12 +163,7 @@ const Saksbehandling = ({
                   <>
                     {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
                     {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
-                    {visStegVelger && (
-                      // eslint-disable-next-line react/jsx-no-constructed-context-values
-                      <SaksbehandlingFTRLContext.Provider value={{ bestemmelseVilkar: bestemmelser }}>
-                        <StegvelgerFTRL />
-                      </SaksbehandlingFTRLContext.Provider>
-                    )}
+                    {visStegVelger && <StegvelgerFTRL />}
                   </>
                 ) : (
                   <VirksomhetMelding />

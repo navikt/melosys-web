@@ -13,7 +13,7 @@ import { VurderingBestemmelse } from "../../sider/ftrl/saksbehandling/stegKompon
 const START = {
   navn: STEG.START,
   id: "0",
-  tittel: "Start",
+  tittel: "Inngang",
   vedtakSteg: false,
   nesteSteg: STEG.VIRKSOMHET,
   forrigeSteg: null,
