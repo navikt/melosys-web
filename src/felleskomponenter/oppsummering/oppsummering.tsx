@@ -61,8 +61,8 @@ const Oppsummering = ({
   className,
   behandlingID,
 }: OppsummeringProps) => {
-  const registreringAnmodningUnntakToggleEnabled =
-    useFeatureToggle("melosys.registrering_anmodning_unntak_MELOSYS-5684") === "enabled";
+  const registreringUnntakFraMedlemskapToggleEnabled =
+    useFeatureToggle("melosys.registrering_unntak_fra_medlemskap") === "enabled";
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
   const [mottaksdato, setMottaksdato] = useState<string | undefined>();
 
@@ -156,7 +156,7 @@ const Oppsummering = ({
         sakstype.kode,
         sakstema.kode,
         behandlingstema.kode,
-        registreringAnmodningUnntakToggleEnabled
+        registreringUnntakFraMedlemskapToggleEnabled
       );
       if (erUnntak && sakstype.kode === MKV.Koder.sakstyper.EU_EOS) {
         col1 = [

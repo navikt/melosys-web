@@ -63,7 +63,8 @@ const skalViseMottakerinstitusjoner = (
   behandlingstema,
   behandlingstype,
   folketrygdenToggleEnabled,
-  ikkeYrkesaktivFlytToggleEnabled
+  ikkeYrkesaktivFlytToggleEnabled,
+  registreringUnntakFraMedlemskapToggleEnabled
 ) => {
   return (
     sakstype === MKV.Koder.sakstyper.EU_EOS &&
@@ -79,7 +80,8 @@ const skalViseMottakerinstitusjoner = (
       behandlingstema,
       behandlingstype,
       folketrygdenToggleEnabled,
-      ikkeYrkesaktivFlytToggleEnabled
+      ikkeYrkesaktivFlytToggleEnabled,
+      registreringUnntakFraMedlemskapToggleEnabled
     )
   );
 };
@@ -111,6 +113,8 @@ const VurderingVedtak = ({
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
   const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
+  const registreringUnntakFraMedlemskapToggleEnabled =
+    useFeatureToggle("melosys.registrering_unntak_fra_medlemskap") === "enabled";
   const dispatch = useDispatch();
 
   const lovvalget = lovvalgsperioder[0] || {};
@@ -131,7 +135,8 @@ const VurderingVedtak = ({
     behandlingstema,
     behandlingstype,
     folketrygdenToggleEnabled,
-    ikkeYrkesaktivFlytToggleEnabled
+    ikkeYrkesaktivFlytToggleEnabled,
+    registreringUnntakFraMedlemskapToggleEnabled
   );
   const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
 

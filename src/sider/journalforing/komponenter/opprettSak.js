@@ -43,7 +43,7 @@ export const skalViseSoknadsperiodeOgLand = (
   behandlingstype,
   folketrygdenToggleEnabled,
   ikkeYrkesaktivFlytToggleEnabled,
-  registreringAnmodningUnntakToggleEnabled
+  registreringUnntakFraMedlemskapToggleEnabled
 ) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
   sakstema &&
@@ -56,7 +56,7 @@ export const skalViseSoknadsperiodeOgLand = (
     behandlingstype,
     folketrygdenToggleEnabled,
     ikkeYrkesaktivFlytToggleEnabled,
-    registreringAnmodningUnntakToggleEnabled
+    registreringUnntakFraMedlemskapToggleEnabled
   );
 
 export const OpprettSak = (props) => {

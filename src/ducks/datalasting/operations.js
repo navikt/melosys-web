@@ -14,8 +14,8 @@ import { utpekingsperioderOperations } from "../utpekingsperioder";
 import { dokumenterOperations } from "../dokumenter";
 import { oppsummertfaktaOperations } from "../oppsummertfakta";
 import { medlemskapsperioderOperations } from "../medlemskapsperioder";
-import { skalViseTomFlyt } from "../../routing";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
+import { skalViseTomFlyt } from "../../routing";
 
 export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => (dispatch) => {
   dispatch(fagsakOperations.hent(saksnummer));
@@ -87,6 +87,9 @@ const harIkkeTomFlyt = async (sakstype, state) => {
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
   const folketrygdenToggleEnabled = await erFeatureToggleEnabled("melosys.folketrygden.mvp");
   const ikkeYrkesaktivFlytToggleEnabled = await erFeatureToggleEnabled("melosys.ikkeYrkesaktivForenkletFlyt");
+  const registreringUnntakFraMedlemskapToggleEnabled = await erFeatureToggleEnabled(
+    "melosys.registrering_unntak_fra_medlemskap"
+  );
 
   return !skalViseTomFlyt(
     sakstype,
@@ -94,7 +97,8 @@ const harIkkeTomFlyt = async (sakstype, state) => {
     behandlingstema,
     behandlingstype,
     folketrygdenToggleEnabled,
-    ikkeYrkesaktivFlytToggleEnabled
+    ikkeYrkesaktivFlytToggleEnabled,
+    registreringUnntakFraMedlemskapToggleEnabled
   );
 };
 

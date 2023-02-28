@@ -58,8 +58,8 @@ export const Menypanel = ({
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
   const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
-  const registreringAnmodningUnntakToggleEnabled =
-    useFeatureToggle("melosys.registrering_anmodning_unntak_MELOSYS-5684") === "enabled";
+  const registreringUnntakFraMedlemskapToggleEnabled =
+    useFeatureToggle("melosys.registrering_unntak_fra_medlemskap") === "enabled";
 
   const visMottatteOpplysningerData = !(
     MKVUtils.erBehandlingAvSed(sakstype, behandlingstema) &&
@@ -85,7 +85,7 @@ export const Menypanel = ({
     sakstema,
     folketrygdenToggleEnabled,
     ikkeYrkesaktivFlytToggleEnabled,
-    registreringAnmodningUnntakToggleEnabled,
+    registreringUnntakFraMedlemskapToggleEnabled,
   });
 
   const linkGroups = linkGroupsWithContent.map((linkGroup, groupIndex) => ({
@@ -123,7 +123,7 @@ export const Menypanel = ({
       behandlingstype,
       folketrygdenToggleEnabled,
       ikkeYrkesaktivFlytToggleEnabled,
-      registreringAnmodningUnntakToggleEnabled
+      registreringUnntakFraMedlemskapToggleEnabled
     );
 
   if (!visMenypanel) return null;

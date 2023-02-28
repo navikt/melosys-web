@@ -41,7 +41,7 @@ const BehandlingOppgave = ({
   sak,
   folketrygdenToggleEnabled,
   ikkeYrkesaktivFlytToggleEnabled,
-  registreringAnmodningUnntakToggleEnabled,
+  registreringUnntakFraMedlemskapToggleEnabled,
   landkoder,
 }) => {
   const {
@@ -75,7 +75,7 @@ const BehandlingOppgave = ({
     behandlingstype.kode,
     folketrygdenToggleEnabled,
     ikkeYrkesaktivFlytToggleEnabled,
-    registreringAnmodningUnntakToggleEnabled
+    registreringUnntakFraMedlemskapToggleEnabled
   );
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 
@@ -167,7 +167,7 @@ BehandlingOppgave.propTypes = {
   sak: MPT.SaksbehandlingOppgave,
   folketrygdenToggleEnabled: PT.bool.isRequired,
   ikkeYrkesaktivFlytToggleEnabled: PT.bool.isRequired,
-  registreringAnmodningUnntakToggleEnabled: PT.bool.isRequired,
+  registreringUnntakFraMedlemskapToggleEnabled: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 

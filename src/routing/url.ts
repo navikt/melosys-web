@@ -77,7 +77,7 @@ export const lagUrl = (
   behandlingstypeKode: string,
   folketrygdenToggleEnabled: boolean = false,
   ikkeYrkesaktivToggleEnabled: boolean = false,
-  registreringAnmodningUnntakToggleEnabled: boolean = false
+  registreringUnntakFraMedlemskapToggleEnabled: boolean = false
 ) => {
   if (
     skalViseTomFlyt(
@@ -87,7 +87,7 @@ export const lagUrl = (
       behandlingstypeKode,
       folketrygdenToggleEnabled,
       ikkeYrkesaktivToggleEnabled,
-      registreringAnmodningUnntakToggleEnabled
+      registreringUnntakFraMedlemskapToggleEnabled
     )
   ) {
     return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
@@ -99,9 +99,9 @@ export const harUnntakFlyt = (
   sakstype: string,
   sakstema: string,
   behandlingstema: string,
-  registreringAnmodningUnntakToggleEnabled: boolean = false
+  registreringUnntakFraMedlemskapToggleEnabled: boolean = false
 ) => {
-  if (sakstema !== MKV.Koder.sakstemaer.UNNTAK || !registreringAnmodningUnntakToggleEnabled) {
+  if (sakstema !== MKV.Koder.sakstemaer.UNNTAK || !registreringUnntakFraMedlemskapToggleEnabled) {
     return false;
   }
 
@@ -129,9 +129,9 @@ export const skalViseTomFlyt = (
   behandlingstype: string,
   folketrygdenToggleEnabled: boolean = false,
   ikkeYrkesaktivFlytToggleEnabled: boolean = false,
-  registreringAnmodningUnntakToggleEnabled: boolean = false
+  registreringUnntakFraMedlemskapToggleEnabled: boolean = false
 ) => {
-  if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringAnmodningUnntakToggleEnabled)) return false;
+  if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) return false;
 
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
