@@ -1,4 +1,4 @@
-import { getAsJson, postAsJson } from "../../utils";
+import { getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, BEHANDLINGER } from "../../api-constants";
 
 export interface OppdaterFritekster {
@@ -21,7 +21,7 @@ export const oppdatererFritekster = (behandlingID: string, data: OppdaterFriteks
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/resultat/fritekst`, data);
 
 export const oppdaterUtfallRegistreringUnntak = (behandlingID: string, data: OppdaterUtfallRegistreringUnntak) =>
-  postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/resultat/utfallregistreringunntak`, data);
+  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/resultat/utfallregistreringunntak`, data);
 
 export const angiBehandlingsresultattype = (behandlingID: string, data: AngiBehandlingsresultattype) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/resultat/type`, data);
