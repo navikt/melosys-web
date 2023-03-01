@@ -60,21 +60,16 @@ const Saksbehandling = ({
   }, []);
 
   const lastInnSaksopplysninger = async () => {
-    const behandlingIDFraParam = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
+    if (behandlingOppfriskes) {
+      visOppfriskModal();
+      return;
+    }
 
     try {
+      const behandlingIDFraParam = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
       await dispatch(fagsakOperations.hent(saksnummer));
-      const response = await dispatch(behandlingerOperations.hentBehandling(behandlingIDFraParam));
-
-      if (!response) return;
-
+      await dispatch(behandlingerOperations.hentBehandling(behandlingIDFraParam));
       await dispatch(behandlingsresultatOperations.hent(behandlingIDFraParam));
-
-      if (behandlingOppfriskes) {
-        visOppfriskModal();
-        return;
-      }
-
       await dispatch(mottatteOpplysningerOperations.hent(behandlingIDFraParam));
       await dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
       await dispatch(lovvalgsperioderOperations.hent(behandlingIDFraParam));

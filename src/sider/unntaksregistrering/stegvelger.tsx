@@ -10,12 +10,10 @@ interface AktueltSteg {
   id: string;
   tittel: string;
   stegPosisjon: number;
-  aktivtSteg?: boolean;
-  vedtakSteg?: boolean;
-  komponent: any;
   status: string;
-  handlers?: object;
-  data?: object;
+  aktivtSteg: boolean;
+  vedtakSteg: boolean;
+  komponent: any;
 }
 
 interface StegvelgerProps {
@@ -23,22 +21,22 @@ interface StegvelgerProps {
 }
 
 const initialVurderingInngangSteg = {
-  id: "1",
+  id: "Inngang",
+  tittel: "Inngang",
   stegPosisjon: 0,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: true,
   vedtakSteg: false,
-  tittel: "Inngang",
   komponent: VurderingInngang,
 };
 
 const initialVurderingUnntakMedlemskapSteg = {
-  id: "2",
+  id: "Unntak medlemskap",
+  tittel: "Unntak medlemskap",
   stegPosisjon: 1,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: false,
   vedtakSteg: false,
-  tittel: "Unntak medlemskap",
   komponent: VurderingUnntakMedlemskap,
 };
 
