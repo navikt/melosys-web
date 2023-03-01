@@ -15,12 +15,12 @@ import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { finnTermFraListe, termFraNestedKTObject } from "../../../../kodeverk";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 import { BOOLSK_STRING } from "../../../../constants";
 import "./vurderingBestemmelse.css";
-import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
 import { SaksbehandlingFTRLContext, VilkarOgBegrunnelser } from "../saksbehandlingFTRLContext";
-import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
+import { FormSkjemaStegStatus } from "../StegvelgerFTRL";
 
 const komponentState = (state: RootState) => ({
   vilkarListe: vilkarSelectors.VilkarSelector(state),
@@ -28,6 +28,7 @@ const komponentState = (state: RootState) => ({
   bestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
   vilkaarKodeverk: folketrygdenkodeverkSelectors.VilkaarSelector(state),
   begrunnelserKodeverk: folketrygdenkodeverkSelectors.BegrunnelserSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -43,14 +44,13 @@ interface Props {
   bekreft: () => void;
   tilbake: () => void;
   aktivtSteg: string;
-  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
+  oppdaterStatus: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
 
-export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSkjema }: Props) => {
-  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
+export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const { bestemmelseVilkar } = useContext(SaksbehandlingFTRLContext);
   const dispatch = useDispatch();
-  const { behandlingID, vilkarListe, bestemmelse, vilkaarKodeverk, begrunnelserKodeverk } = useSelector(
+  const { behandlingID, vilkarListe, bestemmelse, vilkaarKodeverk, begrunnelserKodeverk, redigerbart } = useSelector(
     (state: RootState) => komponentState(state)
   );
   const { hentVilkaar, oppdaterVilkaar, oppdaterBestemmelse, opprettMedlemskapsperiodeFraBestemmelse, lagreVilkar } =
@@ -73,12 +73,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
   ]);
 
   useEffect(() => {
-    rapporterSkjema({ stegNavn: STEG.BESTEMMELSE, dataErGyldig: erAlleValgGjort });
+    oppdaterStatus({ stegNavn: STEG.BESTEMMELSE, dataErGyldig: erAlleValgGjort });
   }, [erAlleValgGjort]);
 
-  const handleEndreBestemmelse = async (nyBestemmelse: string) => {
+  const handleEndreBestemmelse = (nyBestemmelse: string) => {
     setValgtBestemmelse(nyBestemmelse);
-    await oppdaterBestemmelse(nyBestemmelse);
+    oppdaterBestemmelse(nyBestemmelse);
   };
 
   useEffect(() => {
@@ -238,7 +238,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, rapporterSk
               label=""
               disabled={!redigerbart}
               // eslint-disable-next-line no-return-await
-              onChange={async (event) => await handleEndreBestemmelse(event.target.value)}
+              onChange={(event) => handleEndreBestemmelse(event.target.value)}
               value={valgtBestemmelse}
             >
               <option disabled={!!valgtBestemmelse} value="" key="">

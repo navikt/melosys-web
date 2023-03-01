@@ -36,7 +36,7 @@ import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import "./saksbehandling.css";
-import { StegvelgerFTRL } from "../../../felleskomponenter/stegvelger/StegvelgerFTRL";
+import { StegvelgerFTRL } from "./StegvelgerFTRL";
 import { SaksbehandlingFTRLContext } from "./saksbehandlingFTRLContext";
 
 const Saksbehandling = ({

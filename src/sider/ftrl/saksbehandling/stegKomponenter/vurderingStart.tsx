@@ -23,8 +23,8 @@ import "./vurderingStart.css";
 import MultiSelect from "../../../../felleskomponenter/multiSelect";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
 import { FellesHandlersContext } from "../../../../contexts";
-import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
-import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import { FormSkjemaStegStatus } from "../StegvelgerFTRL";
 import { STEG } from "../../../../felleskomponenter/stegvelger";
 import { tilForsiden } from "../../../../ducks/navigering/operations";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
@@ -51,6 +51,7 @@ const komponentState = (state: RootState) => {
       trygdedekning: initialTrygdedekning,
     },
     alleLandkoder: landkoderSelectors.LandkoderSelector(state),
+    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   };
 };
 
@@ -67,16 +68,17 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 interface Props {
   bekreft: () => void;
   aktivtSteg: string;
-  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
+  oppdaterStatus: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
 
-export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) => {
-  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
+export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger, annenBehandlingOppfriskes } = useContext(
     FellesHandlersContext
   ) as any;
-  const { trygdedekninger, initialValues, alleLandkoder } = useSelector((state: RootState) => komponentState(state));
+  const { redigerbart, trygdedekninger, initialValues, alleLandkoder } = useSelector((state: RootState) =>
+    komponentState(state)
+  );
   const dispatch = useDispatch();
   const { visMenypanel, oppdaterPeriode, oppdaterSoeknadslandkoder, oppdaterTrygdedekning } =
     komponentDispatch(dispatch);
@@ -104,7 +106,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
   }, []);
 
   useEffect(() => {
-    rapporterSkjema({ stegNavn: STEG.START, dataErGyldig: formIsValid });
+    oppdaterStatus({ stegNavn: STEG.START, dataErGyldig: formIsValid });
   }, [formIsValid]);
 
   const oppdaterLokalMottatteOpplysninger = async () => {
@@ -126,7 +128,6 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
 
     if (!erSammeSomInitialVerdier) {
       oppdaterLokalMottatteOpplysninger().finally(() => {
-        visMenypanel();
         setVisOppfrisk(true);
       });
     } else {
@@ -232,6 +233,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
             setVisOppfrisk(false);
+            visMenypanel();
             bekreft();
           }}
           tilForsiden={() => {

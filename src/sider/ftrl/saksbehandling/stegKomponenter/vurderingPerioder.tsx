@@ -17,6 +17,7 @@ import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
@@ -25,8 +26,7 @@ import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetek
 
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
-import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
-import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
+import { FormSkjemaStegStatus } from "../StegvelgerFTRL";
 import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 interface formValuesProp {
@@ -165,6 +165,7 @@ const komponentState = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -176,14 +177,14 @@ interface VurderingPerioderProps {
   bekreft: () => void;
   tilbake: () => void;
   aktivtSteg: string;
-  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
+  oppdaterStatus: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
 
-export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, rapporterSkjema }: VurderingPerioderProps) => {
-  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
+export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) => {
   const dispatch = useDispatch();
   const {
     mottaksdato,
+    redigerbart,
     valgtTrygdedekning,
     initialValues,
     trygdedekninger,
@@ -208,17 +209,13 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, rapporterSkjem
   const formValues = watch();
 
   useEffect(() => {
-    if (
-      formValues.medlemskapsperioder.length === 0 &&
-      initialValues.medlemskapsperioder &&
-      initialValues.medlemskapsperioder.length > 0
-    ) {
+    if (formValues.medlemskapsperioder.length === 0 && !Utils._isEmpty(initialValues.medlemskapsperioder)) {
       setValue("medlemskapsperioder", initialValues.medlemskapsperioder);
     }
   }, [initialValues, formValues]);
 
   useEffect(() => {
-    rapporterSkjema({ stegNavn: STEG.PERIODER, dataErGyldig: formIsValid });
+    oppdaterStatus({ stegNavn: STEG.PERIODER, dataErGyldig: formIsValid });
   }, [formIsValid]);
 
   const hjelpetekst =

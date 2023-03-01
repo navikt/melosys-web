@@ -34,10 +34,10 @@ import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from ".
 import "./vurderingVedtak.css";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import vurdering_vedtak from "./vurderingVedtakSchema";
-import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
 import { STEG } from "../../../../felleskomponenter/stegvelger";
 import { datalastingOperations } from "../../../../ducks/datalasting";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 const { trygdeavtale_myndighetsland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
@@ -64,6 +64,8 @@ const komponentState = (state: RootState) => ({
     betalingsintervall: "MANEDLIG",
   },
   formIsValid: formSelectors.FolketrygdlovenVedtakFormValidSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  alleLandkoder: landkoderSelectors.LandkoderSelector(state),
 });
 
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -100,6 +102,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     skalBetaleTrygdeavgiftTilUtlandet,
     vedtakstype,
     initialValues,
+    alleLandkoder,
+    redigerbart,
   } = useSelector((state: RootState) => komponentState(state));
   const {
     watch,
@@ -113,8 +117,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   });
 
   const formValues = watch();
-  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
-  const alleLandkoder = useSelector((state: RootState) => landkoderSelectors.LandkoderSelector(state));
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -134,14 +136,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     hentMuligeMottakere();
   }, []);
 
-  /* Mottakere settes av backend og følger regler:
-      TODO: BRUKER_FÅR_KOPI_HVIS_FULLMEKTIG_FINNES,
-      ARBEIDSGIVER_FÅR_KOPI_HVIS_IKKE_SELVBETALENDE_BRUKER,
-      TODO: SKATT_FÅR_KOPI_HVIS_AVGIFTSPLIKTIG_INNTEKT
-    Burde derfor hente mottakere på nytt når disse dataene endres.
-   */
-  useCallback(Utils._debounce(hentMuligeMottakere, 2000), []);
-
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
       Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
@@ -150,6 +144,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       });
     }
   };
+
   const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), []);
 
   useEffect(() => {

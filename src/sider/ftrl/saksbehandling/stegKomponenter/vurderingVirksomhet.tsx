@@ -17,9 +17,9 @@ import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplys
 
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
 import "./vurderingVirksomhet.css";
-import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
-import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
+import { FormSkjemaStegStatus } from "../StegvelgerFTRL";
 import { STEG } from "../../../../felleskomponenter/stegvelger";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 const komponentState = (state: RootState) => {
   const lagredeValgtevirksomheter = oppsummertfaktaSelectors.VirksomhetIDerSelector(state);
@@ -30,6 +30,7 @@ const komponentState = (state: RootState) => {
     initialValues: {
       valgteVirksomheter: lagredeValgtevirksomheter,
     },
+    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   };
 };
 
@@ -44,15 +45,14 @@ interface Props {
   bekreft: () => void;
   tilbake: () => void;
   aktivtSteg: string;
-  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
+  oppdaterStatus: (skjemaStatus: FormSkjemaStegStatus) => {};
 }
 
-export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, rapporterSkjema }: Props) => {
-  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
+export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
 
   const { hentOppsummertFakta, sendVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
-  const { virksomheterListe, behandlingID, initialValues, lagredeValgtevirksomheter } = useSelector(
+  const { redigerbart, virksomheterListe, behandlingID, initialValues, lagredeValgtevirksomheter } = useSelector(
     (state: RootState) => komponentState(state)
   );
 
@@ -79,7 +79,7 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, rapporterSkj
     setErMottatteOpplysningerLastetInn(true);
   };
   useEffect(() => {
-    rapporterSkjema({ stegNavn: STEG.VIRKSOMHET, dataErGyldig: formIsValid });
+    oppdaterStatus({ stegNavn: STEG.VIRKSOMHET, dataErGyldig: formIsValid });
   }, [formIsValid]);
 
   useEffect(() => {

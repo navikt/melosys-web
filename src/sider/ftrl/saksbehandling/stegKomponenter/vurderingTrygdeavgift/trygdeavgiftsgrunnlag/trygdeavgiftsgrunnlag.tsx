@@ -157,7 +157,7 @@ const Trygdeavgiftsgrunnlag = ({
       trygdeavgiftsgrunnlag?.særligAvgiftsgruppe
     );
   };
-  const erSkattePliktig = trygdeavgiftsgrunnlag?.erSkattepliktig;
+  const erSkattepliktig = trygdeavgiftsgrunnlag?.erSkattepliktig;
   return (
     <div className="vurderingTrygdeavgift__overstrek vurderingTrygdeavgift">
       <Nav.Row>
@@ -252,7 +252,7 @@ const Trygdeavgiftsgrunnlag = ({
                     feil={errors[feltNavnBase]?.erSkattepliktig?.message?.melding}
                     control={control}
                     checked={
-                      erSkattePliktig === null || erSkattePliktig === undefined ? undefined : Boolean(erSkattePliktig)
+                      erSkattepliktig === null || erSkattepliktig === undefined ? undefined : Boolean(erSkattepliktig)
                     }
                     onChange={() => {
                       setValue(
@@ -275,7 +275,7 @@ const Trygdeavgiftsgrunnlag = ({
                       handleErSøkerPliktigChange();
                     }}
                     checked={
-                      erSkattePliktig === null || erSkattePliktig === undefined ? undefined : Boolean(!erSkattePliktig)
+                      erSkattepliktig === null || erSkattepliktig === undefined ? undefined : Boolean(!erSkattepliktig)
                     }
                     value={BOOLSK_STRING.USANN}
                     disabled={!redigerbart}
