@@ -79,7 +79,7 @@ const SendbrevLoadable = loadable(() => import(/* webpackChunkName: "sendbrev" *
 });
 
 const UnntaksregistreringLoadable = loadable(
-  () => import(/* webpackChunkName: "felles-unntak" */ "../sider/unntaksregistrering"),
+  () => import(/* webpackChunkName: "unntaksregistrering" */ "../sider/unntaksregistrering"),
   {
     fallback: SideLoadingStatus,
   }

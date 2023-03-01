@@ -11,7 +11,6 @@ import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
-import { useFeatureToggle } from "../../../featuretoggle";
 import { skalViseTomFlyt } from "../../../routing";
 
 import "./opprettSak.css";
@@ -36,28 +35,12 @@ const nullstillVerdier = (steg, endreFelt, feltNavn) => {
   }
 };
 
-export const skalViseSoknadsperiodeOgLand = (
-  sakstype,
-  sakstema,
-  behandlingstema,
-  behandlingstype,
-  folketrygdenToggleEnabled,
-  ikkeYrkesaktivFlytToggleEnabled,
-  registreringUnntakFraMedlemskapToggleEnabled
-) =>
+export const skalViseSoknadsperiodeOgLand = (sakstype, sakstema, behandlingstema, behandlingstype) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
   sakstema &&
   behandlingstema &&
   behandlingstype &&
-  !skalViseTomFlyt(
-    sakstype,
-    sakstema,
-    behandlingstema,
-    behandlingstype,
-    folketrygdenToggleEnabled,
-    ikkeYrkesaktivFlytToggleEnabled,
-    registreringUnntakFraMedlemskapToggleEnabled
-  );
+  !skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype);
 
 export const OpprettSak = (props) => {
   const { settFeltInnhold, formValues, feltNavn } = props;
@@ -83,8 +66,6 @@ export const OpprettSak = (props) => {
   const [sakstemaer, setSakstemaer] = useState([]);
   const [behandlingstemaer, setBehandlingstemaer] = useState([]);
   const [behandlingstyper, setBehandlingstyper] = useState([]);
-  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
-  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
   const { formNavn } = feltNavn;
 
   useEffect(() => {
@@ -194,14 +175,7 @@ export const OpprettSak = (props) => {
           </option>
         ))}
       </Skjema.Select>
-      {skalViseSoknadsperiodeOgLand(
-        valgtSakstype,
-        valgtSakstema,
-        valgtBehandlingstema,
-        valgtBehandlingstype,
-        folketrygdenToggle === "enabled",
-        ikkeYrkesaktivFlytToggleEnabled
-      ) && (
+      {skalViseSoknadsperiodeOgLand(valgtSakstype, valgtSakstema, valgtBehandlingstema, valgtBehandlingstype) && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
             <Nav.Row className="">

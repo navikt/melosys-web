@@ -471,6 +471,7 @@ class Stegvelger extends Component {
     } = this.props;
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
+
     if (redigerbart) {
       if (sakstype !== MKV.Koder.sakstyper.FTRL) {
         await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });

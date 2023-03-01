@@ -5,11 +5,8 @@ import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { FieldValues, useForm } from "react-hook-form";
 
 import MKV from "../../../../melosyskodeverk";
-import * as Forms from "../../../../felleskomponenter/forms";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Skjema from "../../../../felleskomponenter/skjema";
@@ -95,6 +92,7 @@ interface Props {
 export const VurderingStart = ({
   bekreft,
   redigerbart,
+  formValues = {},
   oppdaterPeriode,
   settFormLand,
   oppdaterSoeknadslandkoder,
@@ -102,35 +100,17 @@ export const VurderingStart = ({
   trygdedekninger,
   alleLandkoder,
   erFTRL,
+  formIsValid,
   initialValues,
   tilForsiden,
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
   annenBehandlingOppfriskes,
   visMenypanel,
 }: Props & PropsFromRedux) => {
-  const {
-    control,
-    setValue,
-    handleSubmit,
-    getValues,
-    formState: { isValid: formIsValid, errors },
-  } = useForm({
-    resolver: yupResolver(vurderingStartSchema),
-    mode: "onChange",
-    defaultValues: {
-      fom: undefined,
-      tom: undefined,
-      land: undefined,
-      trygdedekning: undefined,
-    } as FieldValues,
-  });
-  const formValues = getValues();
-
   const [initialFomTom, setInitialFomTom] = useState<{ fom: string | undefined; tom: string | undefined }>({
     fom: undefined,
     tom: undefined,
   });
-
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const [valgteLand, setValgteLand] = useState<string[]>([]);
 
@@ -174,9 +154,7 @@ export const VurderingStart = ({
   const landEndret = (options: []) => {
     const land = options ? options.slice(-1).map((item: { value: string }) => item.value) : [];
     setValgteLand(land);
-    const formLand = Object.assign([], land).shift();
-    settFormLand(formLand || "");
-    setValue("land", formLand || undefined, { shouldValidate: true });
+    settFormLand(Object.assign([], land).shift() || "");
   };
 
   return (
@@ -186,22 +164,10 @@ export const VurderingStart = ({
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <Forms.Datovelger
-              label="Fra og med:"
-              name="fom"
-              feil={(errors.fom?.message as any)?.melding}
-              disabled={!redigerbart}
-              control={control}
-            />
+            <Skjema.Datovelger label="Fra og med:" feltNavn="fom" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Forms.Datovelger
-              label="Til og med:"
-              name="tom"
-              feil={(errors.tom?.message as any)?.melding}
-              disabled={!redigerbart}
-              control={control}
-            />
+            <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="5">
             {!erFTRL ? (
@@ -228,7 +194,6 @@ export const VurderingStart = ({
                 }
                 onChange={landEndret}
                 values={valgteLand}
-                feil={(errors.land?.message as any)?.melding.toString()}
                 options={alleLandkoder.map((item: any) => ({ value: item.kode, label: item.term }))}
               />
             )}
@@ -248,10 +213,9 @@ export const VurderingStart = ({
       <Nav.Fieldset legend="Trygdedekning">
         <Nav.Row>
           <Nav.Column xs="6">
-            <Forms.Select
-              name="trygdedekning"
-              control={control}
+            <Skjema.Select
               label=""
+              feltNavn="trygdedekning"
               emptyFieldText="Velg"
               emptyFieldDisabled={!!formValues.trygdedekning}
               disabled={!redigerbart}
@@ -261,14 +225,12 @@ export const VurderingStart = ({
                   {item.term}
                 </option>
               ))}
-            </Forms.Select>
+            </Skjema.Select>
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
 
-      <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: handleSubmit(fortsettHandle), disabled: !formIsValid || !redigerbart }}
-      />
+      <Mui.StegKnapper bekreftKnappProps={{ onClick: fortsettHandle, disabled: !formIsValid || !redigerbart }} />
 
       {visOppfrisk && (
         <DialogboksOppfriskSak

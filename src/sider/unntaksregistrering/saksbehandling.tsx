@@ -41,10 +41,10 @@ const Saksbehandling = ({
   oppfriskOgLastInnSaksopplysninger,
 }: SaksbehandlingProps) => {
   const dispatch = useDispatch();
-
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const saksnummer = match?.params?.saksnr;
+
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const avsenderland = useSelector(mottatteOpplysningerSelectors.AvsenderlandSelector);
   const lovvalgsland = useSelector(mottatteOpplysningerSelectors.LovvalgslandSelector);
@@ -66,24 +66,22 @@ const Saksbehandling = ({
       await dispatch(fagsakOperations.hent(saksnummer));
       const response = await dispatch(behandlingerOperations.hentBehandling(behandlingIDFraParam));
 
-      if (!response) return false;
+      if (!response) return;
 
       await dispatch(behandlingsresultatOperations.hent(behandlingIDFraParam));
 
       if (behandlingOppfriskes) {
         visOppfriskModal();
-        return false;
+        return;
       }
 
       await dispatch(mottatteOpplysningerOperations.hent(behandlingIDFraParam));
       await dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
       await dispatch(lovvalgsperioderOperations.hent(behandlingIDFraParam));
       setSaksopplysningerLastet(true);
-      return true;
     } catch (e) {
       Utils.logger.error(e);
     }
-    return false;
   };
 
   if (Utils._isNil(redigerbart)) return null;
@@ -94,7 +92,7 @@ const Saksbehandling = ({
     <>
       <Informasjonlinje />
       <div id="main-container" className="main-container">
-        <div className="trygdeavtale_saksbehandling">
+        <div className="unntaksregistrering_saksbehandling">
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
