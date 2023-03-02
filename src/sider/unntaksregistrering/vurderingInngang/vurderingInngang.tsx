@@ -195,6 +195,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
         bekreftKnappProps={{
           onClick: bekreftHandle,
           disabled: !formState?.isValid || !redigerbart,
+          autoDisableVedSpinner: true,
         }}
         spinner={visSpinner}
         bekreftTekst="Bekreft og innhent registeropplysninger"

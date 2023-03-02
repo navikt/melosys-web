@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Utils from "../../utils";
 import StegLinje from "../../felleskomponenter/stegLinje";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
@@ -42,7 +42,13 @@ const initialVurderingUnntakMedlemskapSteg = {
 
 const Stegvelger = ({ oppfriskOgLastInnSaksopplysninger }: StegvelgerProps) => {
   const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([initialVurderingInngangSteg]);
-  const aktivtStegIndex = aktuelleSteg?.findIndex((steg) => steg.aktivtSteg);
+  const [aktivtStegIndex, setAktivtStegIndex] = useState(0);
+
+  useEffect(() => {
+    setAktuellesteg(
+      aktuelleSteg?.map((steg: AktueltSteg) => ({ ...steg, aktivtSteg: steg.stegPosisjon === aktivtStegIndex }))
+    );
+  }, [aktivtStegIndex]);
 
   const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean) => {
     let nyeSteg = aktuelleSteg;
@@ -64,19 +70,16 @@ const Stegvelger = ({ oppfriskOgLastInnSaksopplysninger }: StegvelgerProps) => {
     );
   };
 
-  const aktuelleStegMedNyttAktivtSteg = (stegIndex: number) =>
-    aktuelleSteg?.map((steg: AktueltSteg) => ({ ...steg, aktivtSteg: steg.stegPosisjon === stegIndex }));
-
   const bekreft = () => {
-    setAktuellesteg(aktuelleStegMedNyttAktivtSteg(aktivtStegIndex + 1));
+    setAktivtStegIndex(aktivtStegIndex + 1);
   };
 
   const tilbake = () => {
-    setAktuellesteg(aktuelleStegMedNyttAktivtSteg(aktivtStegIndex - 1));
+    setAktivtStegIndex(aktivtStegIndex - 1);
   };
 
   const handleKlikk = (stegIndex: number) => {
-    setAktuellesteg(aktuelleStegMedNyttAktivtSteg(stegIndex));
+    setAktivtStegIndex(stegIndex);
   };
 
   return (
