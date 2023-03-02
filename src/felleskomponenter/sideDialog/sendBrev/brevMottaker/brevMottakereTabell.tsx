@@ -5,7 +5,6 @@ import { connect, ConnectedProps } from "react-redux";
 
 import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
-import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../skjema";
 import * as Utils from "../../../../utils";
 
@@ -40,26 +39,27 @@ const BrevMottakereTabell = ({
   formIsValid,
   hentBrevRequest,
 }: BrevMottakereTabellProps & PropsFromRedux) => {
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
+  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, erHovedMottaker: boolean) => {
+    const rolle = erHovedMottaker ? formValues.valgtMottaker?.rolle : muligMottaker.rolle;
     return [
       {
         sendesTilDokumenterV2: true,
-        navn: ikon ? <Ikoner.Forhandsvis /> : muligMottaker.dokumentNavn,
+        navn: muligMottaker.dokumentNavn,
         data: {
-          ...hentBrevRequest(muligMottaker.rolle),
-          ...(!erBruker(muligMottaker.rolle) && muligMottaker.orgnr ? { orgNr: muligMottaker.orgnr } : {}),
+          ...hentBrevRequest(rolle),
+          ...(!erBruker(rolle) && muligMottaker.orgnr ? { orgNr: muligMottaker.orgnr } : {}),
         },
       },
     ];
   };
 
-  const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
+  const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker, erHovedMottaker: boolean = false) => {
     return [
       {
         verdi: (
           <PdfLenkeListe
             behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker)}
+            dokumenter={lagDokumenterData(muligMottaker, erHovedMottaker)}
             vedKlikk={() => formIsValid}
             className="forhåndsvisning"
           />
@@ -77,7 +77,7 @@ const BrevMottakereTabell = ({
 
   const mapMottakerRader = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
     return [
-      mapRad(muligeBrevMottakere.hovedMottaker),
+      mapRad(muligeBrevMottakere.hovedMottaker, true),
       ...mapKopiMottakere(muligeBrevMottakere),
       ...muligeBrevMottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker)),
     ];
