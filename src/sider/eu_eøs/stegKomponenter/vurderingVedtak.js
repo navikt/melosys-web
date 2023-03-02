@@ -164,7 +164,9 @@ const VurderingVedtak = ({
           behandlingID,
           vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
           behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-          kontrollerSomSkalIgnoreres: formValues.kopiTilArbeidsgiver ? [] : ["OPPHØRT_ARBEIDSGIVER"],
+          kontrollerSomSkalIgnoreres: formValues.kopiTilArbeidsgiver
+            ? []
+            : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
           skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
         });
         setOppdaterFoerKontroll(false);
