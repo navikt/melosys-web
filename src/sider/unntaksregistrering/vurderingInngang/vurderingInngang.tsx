@@ -39,7 +39,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
   const lovvalgsland = useSelector(mottatteOpplysningerSelectors.LovvalgslandSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
 
-  const { control, getValues, setValue, formState } = useForm({
+  const { control, watch, setValue, formState } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
     context: { sakstype },
     mode: "all",
@@ -50,10 +50,19 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
       lovvalgsland: lovvalgsland || "",
     } as FieldValues,
   });
-  const formValues = getValues();
+  const formValues = watch();
 
   const [initialValues, setInitialValues] = useState<FieldValues>({ ...formState.defaultValues });
   const [visSpinner, setVisSpinner] = useState(false);
+
+  const skalHenteRegisteropplysninger =
+    !registeropplysningerHentet ||
+    formValues?.fom !== initialValues?.fom ||
+    formValues?.tom !== initialValues?.tom ||
+    formValues?.avsenderland !== initialValues?.avsenderland ||
+    formValues?.lovvalgsland !== initialValues?.lovvalgsland;
+
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger;
 
   useEffect(() => {
     if (registeropplysningerHentet) {
@@ -62,8 +71,8 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
   }, []);
 
   useEffect(() => {
-    oppdaterStatus(formState.isValid);
-  }, [formState?.isValid]);
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
 
   const debouncedOppdaterPeriode = useCallback(
     Utils._debounce(
@@ -100,13 +109,6 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
   };
 
   const bekreftHandle = async () => {
-    const skalHenteRegisteropplysninger =
-      !registeropplysningerHentet ||
-      formValues?.fom !== initialValues?.fom ||
-      formValues?.tom !== initialValues?.tom ||
-      formValues?.avsenderland !== initialValues?.avsenderland ||
-      formValues?.lovvalgsland !== initialValues?.lovvalgsland;
-
     setInitialValues({
       fom: formValues.fom,
       tom: formValues.tom,

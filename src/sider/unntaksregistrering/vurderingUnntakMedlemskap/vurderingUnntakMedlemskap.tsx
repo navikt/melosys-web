@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,10 +40,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const utfallRegistreringUnntak = useSelector(behandlingsresultatSelectors.UtfallRegistreringUnntakSelector);
-  const sisteOpplysningerHentetDato = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
-  const [initialSisteOpplysningerHentet, setInitialSisteOpplysningerHentet] = useState(sisteOpplysningerHentetDato);
 
-  const { control, watch, formState, setValue } = useForm({
+  const { control, watch, formState } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
     context: { sluttDato: mottatteOpplysningerPeriode.tom },
     mode: "all",
@@ -60,26 +58,12 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
     oppdaterStatus(formState.isValid);
   }, [formState?.isValid]);
 
-  const resetFeltVedOppfriskning = () => {
-    setValue("utfallRegistreringUnntak", utfallRegistreringUnntak);
-    setValue("fom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.fom));
-    setValue("tom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.tom));
-    setValue("bestemmelse", lovvalgsperiode.lovvalgsbestemmelse);
-  };
-
-  useEffect(() => {
-    if (!utfallRegistreringUnntak && initialSisteOpplysningerHentet !== sisteOpplysningerHentetDato) {
-      setInitialSisteOpplysningerHentet(initialSisteOpplysningerHentet);
-      resetFeltVedOppfriskning();
-    }
-  }, [utfallRegistreringUnntak, sisteOpplysningerHentetDato]);
-
   const lagreUtfallRegistreringUnntak = (utfall: string) => {
     dispatch(behandlingsresultatOperations.oppdaterUtfallRegistreringUnntak(behandlingID, utfall));
   };
 
   const debouncedLagreLovvalgsperiode = useCallback(
-    Utils._debounce(() => dispatch(lovvalgsperioderOperations.lagre()), 1500),
+    Utils._debounce(() => dispatch(lovvalgsperioderOperations.lagre()), 1000),
     []
   );
 
@@ -99,8 +83,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
     dispatch(
       lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
         lovvalgsperiode: {
-          fom: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
-          tom: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
+          fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
+          tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
         },
         innvilgelsesResultat: "",
         lovvalgsbestemmelse: values.bestemmelse,
