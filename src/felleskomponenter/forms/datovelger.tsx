@@ -21,12 +21,15 @@ interface DatovelgerComponentProps {
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;
 
 const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatovelgerComponentProps>(
-  ({ label, disabled, bredde, minDate, maxDate, feil, ...rest }: InnerDatovelgerComponentProps, _ref: any) => {
+  (
+    { label, disabled, bredde, minDate, maxDate, feil, onChange, ...rest }: InnerDatovelgerComponentProps,
+    _ref: any
+  ) => {
     return (
       <div {...rest}>
         <PlainDatovelger
           label={<Nav.Typo.Element>{label}</Nav.Typo.Element>}
-          onChange={(nyDato) => rest.onChange(Utils.dateTilNorskString(nyDato))}
+          onChange={(nyDato) => onChange(Utils.dateTilNorskString(nyDato))}
           onBlur={rest.onBlur}
           value={Utils.norskStringTilDate(rest.value)}
           feil={feil}
