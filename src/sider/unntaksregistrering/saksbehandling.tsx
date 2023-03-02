@@ -97,7 +97,7 @@ const Saksbehandling = ({
               <Nav.Column xs="5">
                 <Oppsummering
                   avsenderland={KV.kodeTilObjekt(avsenderland, MKV.KTObjects.land_iso2)}
-                  lovvalgsland={KV.kodeTilObjekt(lovvalgsland, MKV.KTObjects.land_iso2)}
+                  lovvalgsland={KV.kodeTilObjekt(lovvalgsland, MKV.KTObjects.landkoder)}
                   lovvalgsperiodeFom={lovvalgsperiodeFom || mottatteOpplysningerFom}
                   lovvalgsperiodeTom={lovvalgsperiodeTom || mottatteOpplysningerFom}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerFom}

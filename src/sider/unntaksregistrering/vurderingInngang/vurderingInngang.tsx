@@ -20,9 +20,8 @@ import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
 
 const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
-const gyldigeLandkoder = MKV.KTObjects.trygdeavtale_myndighetsland.filter(
-  (kt: KTObject) => kt.kode !== "JE" && kt.kode !== "IM"
-);
+const gyldigeLandkoder = (sakstype: string) =>
+  sakstype === EU_EOS ? MKV.KTObjects.landkoder : MKV.KTObjects.trygdeavtale_myndighetsland;
 
 interface VurderingInngangProps {
   oppdaterStatus: (isValid: boolean) => void;
@@ -158,7 +157,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
               disabled={!redigerbart}
               onChange={lagreAvsenderland}
             >
-              {gyldigeLandkoder.map((item: KTObject) => (
+              {gyldigeLandkoder(sakstype).map((item: KTObject) => (
                 <option key={item.kode} value={item.kode}>
                   {item.term}
                 </option>
@@ -176,7 +175,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
                 disabled={!redigerbart}
                 onChange={lagreLovvalgsland}
               >
-                {gyldigeLandkoder.map((item: KTObject) => (
+                {gyldigeLandkoder(sakstype).map((item: KTObject) => (
                   <option key={item.kode} value={item.kode}>
                     {item.term}
                   </option>
