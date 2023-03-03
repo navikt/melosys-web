@@ -28,6 +28,12 @@ describe("url", () => {
       expect(url).toContain("/flyt-finnes-ikke-for-behandling");
     });
 
+    it("Sakstype FTRL med ustøttet behandlingstemaKode kaster feil", () => {
+      const url = lagUrlFraSakstypeOgBehandlingstema("MEL-1", 1, FTRL, "tilfeldig behandlingstemaKode");
+
+      expect(url).toContain("/flyt-finnes-ikke-for-behandling");
+    });
+
     it("Sakstype EU_EOS med støttet behandlingstemaKode returnerer url", () => {
       const url = lagUrlFraSakstypeOgBehandlingstema(
         "MEL-1",
@@ -50,7 +56,7 @@ describe("url", () => {
       expect(url).toContain("/FTRL/saksbehandling/");
     });
 
-    it("Sakstype FTRL med støttet behandlingstemaKode returnerer url for ikkeYrkesaktiv", () => {
+    it("Sakstype FTRL med IKKE_YRKESAKTIV returnerer url for ikkeYrkesaktiv", () => {
       const url = lagUrlFraSakstypeOgBehandlingstema(
         "MEL-1",
         1,
@@ -72,7 +78,7 @@ describe("url", () => {
       expect(url).toContain("/TRYGDEAVTALE/saksbehandling/");
     });
 
-    it("Sakstype TRYGDEAVTALE med støttet behandlingstemaKode returnerer url for ikkeYrkesaktiv", () => {
+    it("Sakstype TRYGDEAVTALE med IKKE_YRKESAKTIV returnerer url for ikkeYrkesaktiv", () => {
       const url = lagUrlFraSakstypeOgBehandlingstema(
         "MEL-1",
         1,
@@ -131,13 +137,14 @@ describe("url", () => {
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
         true,
-        false
+        false,
+        true
       );
 
       expect(url).toContain("/EU_EOS/behandling/");
     });
 
-    it("IKKE_YRKESAKTIV ikke får tom flyt med toggle på", () => {
+    it("IKKE_YRKESAKTIV får ikke tom flyt med toggle på", () => {
       const url = lagUrl(
         "MEL-1",
         1,
@@ -145,6 +152,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        true,
         true,
         true
       );
@@ -160,6 +168,8 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        true,
+        true,
         true
       );
 
@@ -174,6 +184,8 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        true,
+        true,
         true
       );
 
@@ -188,10 +200,44 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false
+        false,
+        true,
+        true
       );
 
       expect(url).toContain("/FTRL/behandling/");
+    });
+
+    it("Kombinasjoner som har unntaksregistrering-flyt får tom flyt med toggle på", () => {
+      const url = lagUrl(
+        "MEL-1",
+        1,
+        TRYGDEAVTALE,
+        MKV.Koder.sakstemaer.UNNTAK,
+        MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        true,
+        true,
+        true
+      );
+
+      expect(url).toContain("/TRYGDEAVTALE/unntaksregistrering/");
+    });
+
+    it("Kombinasjoner som har unntaksregistrering-flyt får ikke tom flyt med toggle av", () => {
+      const url = lagUrl(
+        "MEL-1",
+        1,
+        TRYGDEAVTALE,
+        MKV.Koder.sakstemaer.UNNTAK,
+        MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        true,
+        true,
+        false
+      );
+
+      expect(url).toContain("/TRYGDEAVTALE/behandling/");
     });
   });
 });

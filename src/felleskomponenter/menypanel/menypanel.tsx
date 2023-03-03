@@ -58,6 +58,8 @@ export const Menypanel = ({
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
   const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
+  const registreringUnntakFraMedlemskapToggleEnabled =
+    useFeatureToggle("melosys.registrering_unntak_fra_medlemskap") === "enabled";
 
   const visMottatteOpplysningerData = !(
     MKVUtils.erBehandlingAvSed(sakstype, behandlingstema) &&
@@ -83,6 +85,7 @@ export const Menypanel = ({
     sakstema,
     folketrygdenToggleEnabled,
     ikkeYrkesaktivFlytToggleEnabled,
+    registreringUnntakFraMedlemskapToggleEnabled,
   });
 
   const linkGroups = linkGroupsWithContent.map((linkGroup, groupIndex) => ({
@@ -110,7 +113,8 @@ export const Menypanel = ({
   };
 
   const visMenypanel =
-    sakstype === MKV.Koder.sakstyper.EU_EOS ||
+    (sakstype === MKV.Koder.sakstyper.EU_EOS &&
+      behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR) ||
     menypanel?.synlig ||
     skalViseTomFlyt(
       sakstype,
@@ -118,11 +122,11 @@ export const Menypanel = ({
       behandlingstema,
       behandlingstype,
       folketrygdenToggleEnabled,
-      ikkeYrkesaktivFlytToggleEnabled
+      ikkeYrkesaktivFlytToggleEnabled,
+      registreringUnntakFraMedlemskapToggleEnabled
     );
 
   if (!visMenypanel) return null;
-
   return (
     <>
       <div role="alert">

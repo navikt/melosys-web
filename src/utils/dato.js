@@ -73,21 +73,22 @@ const normaliserInputDato = (verdi, forrigeVerdi) => {
  * til å enklere åpne opp for dato med eller uten tidspunkt.
  *
  */
-function formatterDatoTilNorsk(dato, visTidspunkt) {
+function formatterDatoTilNorsk(dato, visTidspunkt = false, defaultValue = "") {
   const inputFormat = ["YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ss", "DD-MM-YYYY", "DD-MM-YYYY HH:mm"];
   const momentFormat = visTidspunkt ? "DD.MM.YYYY HH:mm" : "DD.MM.YYYY";
   const momentDato = moment.utc(dato, inputFormat);
-  return momentDato.isValid() ? momentTZ(momentDato).tz("Europe/Oslo").format(momentFormat) : "";
+  return momentDato.isValid() ? momentTZ(momentDato).tz("Europe/Oslo").format(momentFormat) : defaultValue;
 }
 
 /** Forutsatt at datoen er validert korrekt norsk (DD.MM.YYYY HH:mm), formatter den til det maskinlesbare
  * formatet "YYYY-MM-DDTHH:mm:ss"
  *
  */
-function formatterDatoTilISO(dato, tid) {
+function formatterDatoTilISO(dato, tid, defaultValue = "Invalid date") {
   const inputFormat = ["DD.MM.YYYY HH:mm", "DD.MM.YYYY"];
   const momentFormat = tid ? "YYYY-MM-DDTHH:mm:ss" : "YYYY-MM-DD";
-  return moment(dato, inputFormat).format(momentFormat);
+  const isoDato = moment(dato, inputFormat).format(momentFormat);
+  return isoDato === "Invalid date" ? defaultValue : isoDato;
 }
 
 /** Enkelte data kommer fra backend i form av en "kortdato", feks 2017-01. Denne funksjonen
