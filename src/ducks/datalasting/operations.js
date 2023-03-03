@@ -15,27 +15,95 @@ import { dokumenterOperations } from "../dokumenter";
 import { oppsummertfaktaOperations } from "../oppsummertfakta";
 import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
-import { skalViseTomFlyt } from "../../routing";
+import { harUnntakFlyt, skalViseTomFlyt } from "../../routing";
 
-export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => (dispatch) => {
-  dispatch(fagsakOperations.hent(saksnummer));
-  dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
-  dispatch(behandlingerOperations.hentBehandling(behandlingID));
-  dispatch(mottatteOpplysningerOperations.hent(behandlingID));
-  dispatch(behandlingsresultatOperations.hent(behandlingID));
+const harTomFlyt = async (sakstype, state) => {
+  const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
+  const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
+  const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
+  const folketrygdenToggleEnabled = await erFeatureToggleEnabled("melosys.folketrygden.mvp");
+  const ikkeYrkesaktivFlytToggleEnabled = await erFeatureToggleEnabled("melosys.ikkeYrkesaktivForenkletFlyt");
+  const registreringUnntakFraMedlemskapToggleEnabled = await erFeatureToggleEnabled(
+    "melosys.registrering_unntak_fra_medlemskap"
+  );
+
+  return skalViseTomFlyt(
+    sakstype,
+    sakstema,
+    behandlingstema,
+    behandlingstype,
+    folketrygdenToggleEnabled,
+    ikkeYrkesaktivFlytToggleEnabled,
+    registreringUnntakFraMedlemskapToggleEnabled
+  );
+};
+const harUnntaksregistreringFlyt = async (sakstype, state) => {
+  const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
+  const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
+  const registreringUnntakFraMedlemskapToggleEnabled = await erFeatureToggleEnabled(
+    "melosys.registrering_unntak_fra_medlemskap"
+  );
+  return harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled);
+};
+
+export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => async (dispatch, getState) => {
+  if (await harTomFlyt(sakstype, getState())) {
+    return Promise.all([
+      dispatch(fagsakOperations.hent(saksnummer)),
+      dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+      dispatch(behandlingsresultatOperations.hent(behandlingID)),
+      dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
+    ]);
+  }
+
+  if (await harUnntaksregistreringFlyt(sakstype, getState())) {
+    return Promise.all([
+      dispatch(fagsakOperations.hent(saksnummer)),
+      dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+      dispatch(behandlingsresultatOperations.hent(behandlingID)),
+      dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
+      dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+      dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
+    ]);
+  }
 
   if (sakstype === MKV.Koder.sakstyper.FTRL) {
-    dispatch(vilkarOperations.hent(behandlingID));
-    dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID));
-    dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
-  } else if (sakstype === MKV.Koder.sakstyper.EU_EOS) {
-    dispatch(vilkarOperations.hent(behandlingID));
-    dispatch(anmodningsperioderOperations.hent(behandlingID));
-    dispatch(avklartefaktaOperations.hent(behandlingID));
-    dispatch(lovvalgsperioderOperations.hent(behandlingID));
-    dispatch(utpekingsperioderOperations.hent(behandlingID));
-    dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID));
+    return Promise.all([
+      dispatch(fagsakOperations.hent(saksnummer)),
+      dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+      dispatch(behandlingsresultatOperations.hent(behandlingID)),
+      dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
+      dispatch(vilkarOperations.hent(behandlingID)),
+      dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
+      dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID)),
+      dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
+    ]);
   }
+
+  if (sakstype === MKV.Koder.sakstyper.EU_EOS) {
+    return Promise.all([
+      dispatch(fagsakOperations.hent(saksnummer)),
+      dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+      dispatch(behandlingsresultatOperations.hent(behandlingID)),
+      dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
+      dispatch(vilkarOperations.hent(behandlingID)),
+      dispatch(anmodningsperioderOperations.hent(behandlingID)),
+      dispatch(avklartefaktaOperations.hent(behandlingID)),
+      dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+      dispatch(utpekingsperioderOperations.hent(behandlingID)),
+      dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),
+      dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
+    ]);
+  }
+
+  return Promise.all([
+    dispatch(fagsakOperations.hent(saksnummer)),
+    dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+    dispatch(behandlingsresultatOperations.hent(behandlingID)),
+    dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
+    dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+    dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
+  ]);
 };
 
 export const lastInnSaksopplysningerTomFlyt = (saksnummer, behandlingID) => (dispatch) => {
@@ -81,30 +149,9 @@ export const resetSaksopplysninger = () => (dispatch) => {
   dispatch(anmodningsperiodesvarOperations.resetAnmodningsperiodesvarState());
 };
 
-const harIkkeTomFlyt = async (sakstype, state) => {
-  const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
-  const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
-  const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
-  const folketrygdenToggleEnabled = await erFeatureToggleEnabled("melosys.folketrygden.mvp");
-  const ikkeYrkesaktivFlytToggleEnabled = await erFeatureToggleEnabled("melosys.ikkeYrkesaktivForenkletFlyt");
-  const registreringUnntakFraMedlemskapToggleEnabled = await erFeatureToggleEnabled(
-    "melosys.registrering_unntak_fra_medlemskap"
-  );
-
-  return !skalViseTomFlyt(
-    sakstype,
-    sakstema,
-    behandlingstema,
-    behandlingstype,
-    folketrygdenToggleEnabled,
-    ikkeYrkesaktivFlytToggleEnabled,
-    registreringUnntakFraMedlemskapToggleEnabled
-  );
-};
-
 export const lagreAllData = () => async (dispatch, getState) => {
   const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
-  const skalLagreMottatteOpplysninger = await harIkkeTomFlyt(sakstype, getState());
+  const skalLagreMottatteOpplysninger = !(await harTomFlyt(sakstype, getState()));
 
   switch (sakstype) {
     case MKV.Koder.sakstyper.FTRL:
