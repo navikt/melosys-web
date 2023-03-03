@@ -172,7 +172,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
                 disabled={!redigerbart}
                 onChange={lagreBestemmelse}
               >
-                {gyldigeBestemmelser().map((item: KTObject) => (
+                {gyldigeBestemmelser()?.map((item: KTObject) => (
                   <option key={item.kode} value={item.kode}>
                     {item.term}
                   </option>
@@ -219,7 +219,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
                 disabled={!redigerbart}
                 onChange={lagreBestemmelse}
               >
-                {gyldigeBestemmelser().map((item: KTObject) => (
+                {gyldigeBestemmelser()?.map((item: KTObject) => (
                   <option key={item.kode} value={item.kode}>
                     {item.term}
                   </option>
