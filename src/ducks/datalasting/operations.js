@@ -101,7 +101,6 @@ export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => a
     dispatch(behandlingerOperations.hentBehandling(behandlingID)),
     dispatch(behandlingsresultatOperations.hent(behandlingID)),
     dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
-    dispatch(lovvalgsperioderOperations.hent(behandlingID)),
     dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
   ]);
 };
