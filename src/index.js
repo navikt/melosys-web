@@ -9,6 +9,9 @@ import { BrowserTracing } from "@sentry/tracing";
 import { CaptureConsole } from "@sentry/integrations";
 import App from "./App";
 
+import "./setupYup";
+import "./index.css";
+
 import createStore from "./store";
 import routerHistory from "./history";
 import Routing from "./routing";
@@ -16,8 +19,6 @@ import { unregister } from "./registerServiceWorker";
 import { FellesHandlersProvider } from "./contexts";
 import Modals from "./modals";
 import { apolloClient } from "./graphql";
-import "./index.css";
-import "./setupYup";
 
 const SideLoadingFailMessage = <p>Beklager, kunne ikke laste inn siden.</p>;
 
