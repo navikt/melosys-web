@@ -3,10 +3,8 @@ import ReactDOM from "react-dom";
 import { ConnectedRouter } from "connected-react-router";
 import { Provider as ReduxProvider } from "react-redux";
 import { ApolloProvider } from "@apollo/client";
-
-import "./index.css";
-import "./setupYup";
 import * as Sentry from "@sentry/react";
+import { Breadcrumbs } from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
 import { CaptureConsole } from "@sentry/integrations";
 import App from "./App";
@@ -18,7 +16,8 @@ import { unregister } from "./registerServiceWorker";
 import { FellesHandlersProvider } from "./contexts";
 import Modals from "./modals";
 import { apolloClient } from "./graphql";
-import { Breadcrumbs } from "@sentry/react";
+import "./index.css";
+import "./setupYup";
 
 const SideLoadingFailMessage = <p>Beklager, kunne ikke laste inn siden.</p>;
 
@@ -39,7 +38,7 @@ Sentry.init({
   dsn: "https://69e47f5f658e4a7c956dbaf975f6b575@sentry.gc.nav.no/156",
   integrations: sentryIntegrations,
   tracesSampleRate: 1.0,
-  environment: environment,
+  environment,
   beforeSend: (event) => {
     if (isDevelopmentProfile) {
       return null;
