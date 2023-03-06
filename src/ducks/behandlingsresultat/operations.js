@@ -18,6 +18,18 @@ export function hent(behandlingID) {
   });
 }
 
+export function oppdaterUtfallRegistreringUnntak(behandlingID, utfall) {
+  return doThenDispatch(
+    () =>
+      Api.Behandlinger.resultat.oppdaterUtfallRegistreringUnntak(behandlingID, { utfallRegistreringUnntak: utfall }),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    }
+  );
+}
+
 export function resetBehandlingsresultatState() {
   return { type: Types.RESET };
 }

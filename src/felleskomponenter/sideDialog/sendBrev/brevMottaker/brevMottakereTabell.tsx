@@ -5,17 +5,15 @@ import { connect, ConnectedProps } from "react-redux";
 
 import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
-import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../skjema";
+import * as Utils from "../../../../utils";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
 import MottakerTabell from "../../../tabell/mottakerTabell";
-import { erArbeidsgiverEllerVirksomhet } from "./brevMottaker";
 import PdfLenkeListe from "../../../pdfLenkeListe";
 import { SendBrevFormValues } from "../types";
-
-const { BRUKER } = KV.Koder.MottakerRolle;
+import { erBruker } from "./brevMottaker";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -28,49 +26,40 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface BrevMottakereTabellProps {
   muligeMottakere?: Api.DokumenterV2.HentMuligeMottakereResDto;
-  muligeMottakereEtater?: Api.DokumenterV2.MuligMottaker[];
+  muligeMottakereNorskMyndighet?: Api.DokumenterV2.MuligMottaker[];
   formIsValid: boolean;
-  valgtMottaker: any;
   hentBrevRequest: any;
 }
 
 const BrevMottakereTabell = ({
   muligeMottakere,
-  muligeMottakereEtater,
-  valgtMottaker,
+  muligeMottakereNorskMyndighet,
   behandlingID,
   formValues,
   formIsValid,
   hentBrevRequest,
 }: BrevMottakereTabellProps & PropsFromRedux) => {
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
-    const orgnrFraFormValues = valgtMottaker.orgnrSettesAvSaksbehandler
-      ? formValues.organisasjonsnummer
-      : formValues.arbeidsgiver;
-
+  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, erHovedMottaker: boolean) => {
+    const rolle = erHovedMottaker ? formValues.valgtMottaker?.rolle : muligMottaker.rolle;
     return [
       {
         sendesTilDokumenterV2: true,
-        navn: ikon ? <Ikoner.Forhandsvis /> : muligMottaker.dokumentNavn,
+        navn: muligMottaker.dokumentNavn,
         data: {
-          ...hentBrevRequest(muligMottaker.rolle),
-          orgNr: muligMottaker.rolle !== BRUKER ? muligMottaker.orgnr || orgnrFraFormValues : null,
-          kontaktpersonNavn:
-            erArbeidsgiverEllerVirksomhet(muligMottaker.rolle) && valgtMottaker.orgnrSettesAvSaksbehandler
-              ? formValues.kontaktperson
-              : null,
+          ...hentBrevRequest(rolle),
+          ...(!erBruker(rolle) && muligMottaker.orgnr ? { orgNr: muligMottaker.orgnr } : {}),
         },
       },
     ];
   };
 
-  const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
+  const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker, erHovedMottaker: boolean = false) => {
     return [
       {
         verdi: (
           <PdfLenkeListe
             behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker)}
+            dokumenter={lagDokumenterData(muligMottaker, erHovedMottaker)}
             vedKlikk={() => formIsValid}
             className="forhåndsvisning"
           />
@@ -81,29 +70,29 @@ const BrevMottakereTabell = ({
   };
 
   const mapKopiMottakere = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
-    return formValues?.kopimottaker
+    return formValues?.kopiTilBruker
       ? muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker))
       : [];
   };
 
   const mapMottakerRader = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
     return [
-      mapRad(muligeBrevMottakere.hovedMottaker),
+      mapRad(muligeBrevMottakere.hovedMottaker, true),
       ...mapKopiMottakere(muligeBrevMottakere),
       ...muligeBrevMottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker)),
     ];
   };
 
-  const mapMottakerRaderEtater = (muligeBrevMottakere: Api.DokumenterV2.MuligMottaker[]) => {
+  const mapMottakerRaderNorskeMyndigheter = (muligeBrevMottakere: Api.DokumenterV2.MuligMottaker[]) => {
     return muligeBrevMottakere.map((mottaker) => mapRad(mottaker));
   };
 
   return (
     <>
-      {muligeMottakere?.kopiMottakere?.length !== 0 && (
+      {!Utils._isEmpty(muligeMottakere?.kopiMottakere) && (
         <Skjema.Checkbox
-          className="kopimottakerSjekkboks"
-          feltNavn="kopimottaker"
+          className="kopiTilBrukerSjekkboks"
+          feltNavn="kopiTilBruker"
           label="Send kopi til bruker/brukers fullmektig"
         />
       )}
@@ -118,10 +107,10 @@ const BrevMottakereTabell = ({
           ]}
         />
       )}
-      {muligeMottakereEtater && (
+      {muligeMottakereNorskMyndighet && (
         <MottakerTabell
           className="tabell"
-          rader={mapMottakerRaderEtater(muligeMottakereEtater)}
+          rader={mapMottakerRaderNorskeMyndigheter(muligeMottakereNorskMyndighet)}
           kolonner={[
             { verdi: "Forhåndsvisning av brev", bredde: "60%" },
             { verdi: "Mottaker", bredde: "40%" },

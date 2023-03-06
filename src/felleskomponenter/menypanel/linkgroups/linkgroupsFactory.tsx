@@ -1,6 +1,6 @@
 import MKV from "../../../melosyskodeverk";
 
-import { skalViseTomFlyt } from "../../../routing";
+import { harUnntakFlyt, skalViseTomFlyt } from "../../../routing";
 import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
@@ -30,6 +30,8 @@ interface LinkGroupsConfig {
   contentProps: ContentProps;
   sakstema: string;
   folketrygdenToggleEnabled: boolean;
+  ikkeYrkesaktivFlytToggleEnabled: boolean;
+  registreringUnntakFraMedlemskapToggleEnabled: boolean;
 }
 
 class LinkGroupsFactory {
@@ -41,9 +43,36 @@ class LinkGroupsFactory {
     behandlingstype,
     sakstema,
     folketrygdenToggleEnabled,
+    ikkeYrkesaktivFlytToggleEnabled,
+    registreringUnntakFraMedlemskapToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled))
+    if (
+      skalViseTomFlyt(
+        sakstype,
+        sakstema,
+        behandlingstema,
+        behandlingstype,
+        folketrygdenToggleEnabled,
+        ikkeYrkesaktivFlytToggleEnabled,
+        registreringUnntakFraMedlemskapToggleEnabled
+      )
+    ) {
       return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
+    }
+
+    if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) {
+      return new LinkgroupsBuilder()
+        .addFraRegister(
+          new LinksBuilder(contentProps)
+            .addPerson()
+            .addFamilieForhold()
+            .addMedlemskap()
+            .addEUEOSBarnetrygd()
+            .addArbeidsforholdOgInntekt()
+            .build()
+        )
+        .build();
+    }
 
     switch (behandlingstema) {
       case UTSENDT_ARBEIDSTAKER:

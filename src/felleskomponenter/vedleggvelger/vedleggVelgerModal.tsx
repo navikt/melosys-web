@@ -34,7 +34,6 @@ const VedleggVelgerModal = ({
       shouldCloseOnOverlayClick
       closeButton
       onRequestClose={onRequestClose}
-      // @ts-ignore
       ariaHideApp={ariaHideApp}
     >
       <Nav.Typo.Element>{contentLabel}</Nav.Typo.Element>

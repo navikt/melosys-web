@@ -126,7 +126,17 @@ const lagSedGrunnlagFelter = (mottatteOpplysninger) => ({
   ytterligereInformasjon: mottatteOpplysninger.ytterligereInformasjon || null,
 });
 
-const lagMottatteOpplysningerData = (sakstype, behandlingstema, mottatteOpplysninger) => {
+const lagAnmodningEllerAttestFelter = (mottatteOpplysninger) => ({
+  ...lagMottatteOpplysningerFelter(mottatteOpplysninger),
+  avsenderland: mottatteOpplysninger.avsenderland,
+  lovvalgsland: mottatteOpplysninger.lovvalgsland,
+});
+
+const lagMottatteOpplysningerData = (sakstype, behandlingstema, mottatteOpplysninger, mottatteOpplysningerType) => {
+  if (mottatteOpplysningerType === MKV.Koder.mottatteopplysningertyper.ANMODNING_ELLER_ATTEST) {
+    return lagAnmodningEllerAttestFelter(mottatteOpplysninger);
+  }
+
   if (temaForSedGrunnlag(behandlingstema)) {
     return lagSedGrunnlagFelter(mottatteOpplysninger);
   }
@@ -148,11 +158,12 @@ export function lagre() {
     dispatch(oppdaterState());
 
     const mottatteOpplysninger = Selectors.MottatteOpplysningerDataSelector(getState());
+    const mottatteOpplysningerType = Selectors.MottatteOpplysningerTypeSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
     const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
     const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
 
-    const data = lagMottatteOpplysningerData(sakstype, behandlingstema, mottatteOpplysninger);
+    const data = lagMottatteOpplysningerData(sakstype, behandlingstema, mottatteOpplysninger, mottatteOpplysningerType);
 
     return dispatch(send(bid, { data }));
   };
@@ -164,6 +175,14 @@ export function oppdaterPeriode(periode) {
 
 export function oppdaterSoeknadsland(landkoder, erUkjenteEllerAlleEosLand) {
   return (dispatch) => dispatch(Actions.oppdaterSoeknadsland(landkoder, erUkjenteEllerAlleEosLand));
+}
+
+export function oppdaterAvsenderland(avsenderland) {
+  return (dispatch) => dispatch(Actions.oppdaterAvsenderland(avsenderland));
+}
+
+export function oppdaterLovvalgsland(lovvalgsland) {
+  return (dispatch) => dispatch(Actions.oppdaterLovvalgsland(lovvalgsland));
 }
 
 export function oppdaterTrygdedekning(trygdedekning) {

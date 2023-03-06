@@ -130,36 +130,6 @@ export const VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagUtlandUgyldig = create
   }
 );
 
-export const VurderFamilieFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.FAMILIE, {}),
-  (familie) => familie
-);
-
-export const VurderFamilieFormValid = createSelector(
-  (state) => VurderFamilieFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
-);
-
-export const VurderRepresentantFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.REPRESENTANT, {}),
-  (familie) => familie
-);
-
-export const VurderRepresentantFormValid = createSelector(
-  (state) => VurderRepresentantFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
-);
-
-export const VurderRepresentantRepresentantnummerValid = createSelector(
-  (state) => VurderRepresentantFormSelector(state).syncErrors || {},
-  (errors) => !("representantnummer" in errors)
-);
-
-export const VurderRepresentantOrganisasjonsnummerValid = createSelector(
-  (state) => VurderRepresentantFormSelector(state).syncErrors || {},
-  (errors) => !("organisasjonsnummer" in errors)
-);
-
 export const VurderUtpekingFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.VURDER_UTPEKING, {}),
   (vurderUtpekingForm) => vurderUtpekingForm
@@ -368,6 +338,16 @@ export const TrygdeavtaleInngangFormSelector = createSelector(
 
 export const TrygdeavtaleInngangFormValidSelector = createSelector(
   (state) => TrygdeavtaleInngangFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
+export const IkkeYrkesaktivInngangFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.IkkeYrkesaktiv.INNGANG, {}),
+  (inngang) => inngang
+);
+
+export const IkkeYrkesaktivInngangFormValidSelector = createSelector(
+  (state) => IkkeYrkesaktivInngangFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors)
 );
 

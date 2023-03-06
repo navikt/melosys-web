@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { getFormValues, reduxForm } from "redux-form";
+import { change, getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -23,6 +23,9 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 
 import vurderingStartSchema from "./vurderingStartSchema";
 import "./vurderingStart.css";
+import MultiSelect from "../../../../felleskomponenter/multiSelect";
+import { landkoderSelectors } from "../../../../ducks/landkoder";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
 
 const landHarTrygdeavtaleMedNorgeEllerErEosLand = (landKode: string) => {
   const landMedTrygdeAvtaleEllerEosLand = [
@@ -37,6 +40,7 @@ const mapStateToProps = (state: RootState) => {
   const initialSoknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(state);
   const initialSoeknadsland = mottatteOpplysningerSelectors.SoknadslandkoderSelector(state);
   const initialTrygdedekning = mottatteOpplysningerSelectors.TrygdedekningSelector(state);
+  const fagsak = fagsakSelectors.FagsakSelector(state);
   return {
     trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
     formValues: getFormValues(KV.Form.START)(state),
@@ -46,12 +50,15 @@ const mapStateToProps = (state: RootState) => {
       land: initialSoeknadsland && initialSoeknadsland.toString(),
       trygdedekning: initialTrygdedekning,
     },
+    alleLandkoder: landkoderSelectors.LandkoderSelector(state),
+    erFTRL: fagsak.sakstype.kode === MKV.Koder.sakstyper.FTRL,
     formIsValid: formSelectors.VurderStartFormValid(state),
   };
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
+  settFormLand: (land: string) => dispatch(change(KV.Form.START, "land", land)),
   oppdaterPeriode: (periode: { fom: string; tom: string }) =>
     dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
   oppdaterSoeknadslandkoder: (landkoder: string[]) =>
@@ -87,9 +94,12 @@ export const VurderingStart = ({
   redigerbart,
   formValues = {},
   oppdaterPeriode,
+  settFormLand,
   oppdaterSoeknadslandkoder,
   oppdaterTrygdedekning,
   trygdedekninger,
+  alleLandkoder,
+  erFTRL,
   formIsValid,
   initialValues,
   tilForsiden,
@@ -102,12 +112,14 @@ export const VurderingStart = ({
     tom: undefined,
   });
   const [visOppfrisk, setVisOppfrisk] = useState(false);
+  const [valgteLand, setValgteLand] = useState<string[]>([]);
 
   useEffect(() => {
     if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
       visMenypanel();
       setInitialFomTom({ fom: initialValues.fom, tom: initialValues.tom });
     }
+    settFormLand("");
   }, []);
 
   const oppdaterLokalMottatteOpplysninger = async (data: { formValues: FormValuesProp; formIsValid: boolean }) => {
@@ -139,6 +151,12 @@ export const VurderingStart = ({
     ? landHarTrygdeavtaleMedNorgeEllerErEosLand(formValues.land)
     : false;
 
+  const landEndret = (options: []) => {
+    const land = options ? options.slice(-1).map((item: { value: string }) => item.value) : [];
+    setValgteLand(land);
+    settFormLand(Object.assign([], land).shift() || "");
+  };
+
   return (
     <div className="vurderingStart">
       <Nav.Typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.Typo.Undertittel>
@@ -152,18 +170,33 @@ export const VurderingStart = ({
             <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="5">
-            <Skjema.LandVelger
-              label={
-                <LabelMedHjelpetekst
-                  label="Arbeidsland"
-                  hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                  hjelpetekstClassName="hjelpetekst"
-                />
-              }
-              feltNavn="land"
-              placeholder="Velg..."
-              disabled={!redigerbart}
-            />
+            {!erFTRL ? (
+              <Skjema.LandVelger
+                label={
+                  <LabelMedHjelpetekst
+                    label="Arbeidsland"
+                    hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
+                    hjelpetekstClassName="hjelpetekst"
+                  />
+                }
+                feltNavn="land"
+                placeholder="Velg..."
+                disabled={!redigerbart}
+              />
+            ) : (
+              <MultiSelect
+                label={
+                  <LabelMedHjelpetekst
+                    label="Arbeidsland"
+                    hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
+                    hjelpetekstClassName="hjelpetekst"
+                  />
+                }
+                onChange={landEndret}
+                values={valgteLand}
+                options={alleLandkoder.map((item: any) => ({ value: item.kode, label: item.term }))}
+              />
+            )}
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>

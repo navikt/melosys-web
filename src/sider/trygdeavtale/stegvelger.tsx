@@ -211,13 +211,9 @@ class Stegvelger extends Component<Props, State> {
           ...steg,
           aktivtSteg: steg.stegPosisjon === nesteStegIndex,
         })),
+        endreFokus: true,
       });
     }
-  };
-
-  stegKlikkHandler = (nesteStegIndex: number) => {
-    this.oppdaterAktivtSteg(nesteStegIndex);
-    this.setState({ endreFokus: true });
   };
 
   lagreOgFatteVedtak = async (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => {
@@ -245,7 +241,7 @@ class Stegvelger extends Component<Props, State> {
     const {
       state: { aktuelleSteg, visMottatteOpplysningerFeilmeldinger },
       props: { behandlingstype, redigerbart, feilmeldinger },
-      stegKlikkHandler,
+      oppdaterAktivtSteg,
     } = this;
 
     const vedtakStegErAktivt = aktuelleSteg?.find((steg: AktueltSteg) => steg.vedtakSteg && steg.aktivtSteg);
@@ -256,7 +252,7 @@ class Stegvelger extends Component<Props, State> {
       <div className="stegvelger panelSeksjon">
         {aktuelleSteg && (
           <div>
-            <StegLinje steg={aktuelleSteg} stegKlikk={stegKlikkHandler} />
+            <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
             {vedtakStegErAktivt && <Feilmeldinger feilmeldinger={feilmeldinger} />}
             {erNyVurdering && redigerbart && inngangStegErAktivt && (
               <Nav.AlertStripeAdvarsel className="varselstripe">

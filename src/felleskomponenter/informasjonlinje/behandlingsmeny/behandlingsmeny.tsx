@@ -16,6 +16,7 @@ import { modalerOperations } from "../../../ducks/modaler";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
 
 import "./behandlingsmeny.css";
 
@@ -33,8 +34,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
     oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
-  visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
-  visFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleSak()),
+  visBekreftValgDialogHandle: (bekreftValgType: BekreftValgTypes) =>
+    dispatch(modalerOperations.visBekreftValg(bekreftValgType)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -45,8 +46,7 @@ export const Behandlingsmeny = ({
   tilbakeleggHandle,
   visAvslagSoknadDialogHandle,
   visHenleggDialogHandle,
-  visAvsluttSakSomBortfaltDialogHandle,
-  visFerdigbehandleSakDialogHandle,
+  visBekreftValgDialogHandle,
   redigerbart,
   sakstema,
   sakstype,
@@ -86,13 +86,12 @@ export const Behandlingsmeny = ({
             avslaaSoknad={visAvslagSoknadDialogHandle}
             behandlingID={behandlingID}
             henleggSak={visHenleggDialogHandle}
-            avsluttSakSomBortfalt={visAvsluttSakSomBortfaltDialogHandle}
             sakstema={sakstema}
             sakstype={sakstype}
             behandlingstema={behandlingstema}
             behandlingstype={behandlingstype}
             redigerbart={redigerbart}
-            ferdigbehandleSak={visFerdigbehandleSakDialogHandle}
+            apneBekreftValgModal={visBekreftValgDialogHandle}
             tilForsiden={tilForsiden}
           />
         </div>

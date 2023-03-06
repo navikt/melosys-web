@@ -11,7 +11,6 @@ import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
-import { useFeatureToggle } from "../../../featuretoggle";
 import { skalViseTomFlyt } from "../../../routing";
 
 import "./opprettSak.css";
@@ -45,7 +44,6 @@ export const skalViseSoknadsperiodeOgLand = (sakstype, sakstema, behandlingstema
 
 export const OpprettSak = (props) => {
   const { settFeltInnhold, formValues, feltNavn } = props;
-
   const {
     valgtSakstype,
     valgtSakstema,
@@ -68,7 +66,6 @@ export const OpprettSak = (props) => {
   const [sakstemaer, setSakstemaer] = useState([]);
   const [behandlingstemaer, setBehandlingstemaer] = useState([]);
   const [behandlingstyper, setBehandlingstyper] = useState([]);
-  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
   const { formNavn } = feltNavn;
 
   useEffect(() => {
@@ -178,13 +175,7 @@ export const OpprettSak = (props) => {
           </option>
         ))}
       </Skjema.Select>
-      {skalViseSoknadsperiodeOgLand(
-        valgtSakstype,
-        valgtSakstema,
-        valgtBehandlingstema,
-        valgtBehandlingstype,
-        folketrygdenToggle === "enabled"
-      ) && (
+      {skalViseSoknadsperiodeOgLand(valgtSakstype, valgtSakstema, valgtBehandlingstema, valgtBehandlingstype) && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
             <Nav.Row className="">

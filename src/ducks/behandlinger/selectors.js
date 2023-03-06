@@ -79,10 +79,9 @@ export const LovvalgsperiodeTomSelector = createSelector(
   (lovvalgsperiode) => lovvalgsperiode.tom
 );
 
-const landkodeTilKodeverksobjekt = (landkode) => KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder);
 export const LovvalgslandSelector = createSelector(
   (state) => SEDSelector(state).lovvalgslandKode || "",
-  (lovvalgsland) => landkodeTilKodeverksobjekt(lovvalgsland) || {}
+  (lovvalgsland) => KV.kodeTilObjekt(lovvalgsland, MKV.KTObjects.landkoder) || {}
 );
 
 export const OrganisasjonerSelector = createSelector(

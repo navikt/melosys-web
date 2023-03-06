@@ -1,5 +1,5 @@
 import Checkbox from "./input/checkbox";
-import Datovelger from "./datovelger";
+import { Datovelger } from "./datovelger";
 import HTMLEditor from "./htmlEditor";
 import Input from "./input/input";
 import LandVelger from "./landvelger";

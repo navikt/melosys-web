@@ -15,6 +15,8 @@ import Journalforing from "../sider/journalforing";
 import OpprettNySak from "../sider/opprettnysak";
 import VurderUtpeking from "../sider/eu_eøs/vurderutpeking";
 import Sendbrev from "../sider/sendbrev";
+import IkkeYrkesaktiv from "../sider/ikkeYrkesaktiv/saksbehandling";
+import Unntaksregistrering from "../sider/unntaksregistrering";
 import UkjentSide from "../sider/ukjentSide";
 
 import { FellesHandlersContext } from "../contexts";
@@ -48,6 +50,10 @@ const Routing = () => (
           render={(props) => <FtrlSaksbehandling {...props} {...fellesHandlers} />}
         />
         <SentryRoute
+          path="/:sakstype/ikkeYrkesaktiv/:saksnr"
+          render={(props) => <IkkeYrkesaktiv {...props} {...fellesHandlers} />}
+        />
+        <SentryRoute
           path={`/${TRYGDEAVTALE}/saksbehandling/:saksnr`}
           render={(props) => <TrygdeavtaleSaksbehandling {...props} {...fellesHandlers} />}
         />
@@ -67,6 +73,10 @@ const Routing = () => (
         <SentryRoute
           path="/sendbrev/:behandlingID/:snr"
           render={(props) => <Sendbrev {...props} {...fellesHandlers} />}
+        />
+        <SentryRoute
+          path="/:sakstype/unntaksregistrering/:saksnr"
+          render={(props) => <Unntaksregistrering {...props} {...fellesHandlers} />}
         />
         <SentryRoute component={UkjentSide} />
       </Switch>

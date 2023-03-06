@@ -1,17 +1,16 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
-
 import { RootState } from "AppTypes";
 
+import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
 import withErrorHandling from "../../../../felleskomponenter/withErrorHandling";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 
 import { oppgaverSelectors } from "../../../../ducks/oppgaver";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
 
-import "./behandlingsoppgaver.css";
-import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
 import { useFeatureToggle } from "../../../../featuretoggle";
+import "./behandlingsoppgaver.css";
 
 const mapStateToProps = (state: RootState) => ({
   mineSaker: oppgaverSelectors.MineSakerSelector(state),
@@ -26,6 +25,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
  */
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+  const ikkeYrkesaktivFlytToggle = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt");
+  const registreringUnntakFraMedlemskapToggle = useFeatureToggle("melosys.registrering_unntak_fra_medlemskap");
 
   const { saksbehandling } = mineSaker;
 
@@ -39,6 +40,8 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
         sortingPath="behandling.registrertDato"
         radioGroupName="behandlingsortering"
         folketrygdenToggleEnabled={folketrygdenToggle === "enabled"}
+        ikkeYrkesaktivFlytToggleEnabled={ikkeYrkesaktivFlytToggle === "enabled"}
+        registreringUnntakFraMedlemskapToggleEnabled={registreringUnntakFraMedlemskapToggle === "enabled"}
         landkoder={landkoder}
       />
     </div>

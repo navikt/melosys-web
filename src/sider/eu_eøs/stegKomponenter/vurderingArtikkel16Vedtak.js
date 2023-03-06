@@ -88,7 +88,7 @@ export const Innvilgelse = ({
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
         fritekst: vedtaksbrevFritekst,
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
       },
     },
   ];
@@ -98,7 +98,7 @@ export const Innvilgelse = ({
       navn: "Brev til arbeidsgiver",
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
       data: {
-        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
+        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
   }
@@ -180,7 +180,7 @@ export const DelvisInnvilgelse = ({
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
         fritekst: vedtaksbrevFritekst,
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
       },
     },
   ];
@@ -190,7 +190,7 @@ export const DelvisInnvilgelse = ({
       navn: "Brev til arbeidsgiver",
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
       data: {
-        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
+        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
   }
@@ -272,7 +272,7 @@ export const Avslag = ({
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
       data: {
         fritekst: vedtaksbrevFritekst,
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
       },
     },
   ];
@@ -282,7 +282,7 @@ export const Avslag = ({
       navn: "Brev til arbeidsgiver",
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
       data: {
-        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
+        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
   }

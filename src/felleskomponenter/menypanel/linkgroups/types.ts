@@ -34,4 +34,5 @@ export interface ContentProps {
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
   setMenypanelFeilmelding: (feilmelding: string) => void;
   behandlingstema: string;
+  endreFokus: boolean;
 }

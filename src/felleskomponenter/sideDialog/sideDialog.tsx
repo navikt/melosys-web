@@ -20,7 +20,7 @@ import SideDialogNotater from "./sideDialogNotater";
 
 import "./sideDialog.css";
 
-type FaneNavn = "sedbestilling" | "dokumenter" | "notat" | "brevbestilling" | "besvarsed";
+export type FaneNavn = "sedbestilling" | "dokumenter" | "notat" | "brevbestilling" | "besvarsed";
 
 export interface FaneViserProps {
   navn: FaneNavn;
@@ -31,6 +31,7 @@ export interface FaneViserProps {
   redigerbart: boolean;
   dokumentOversikt: DokumentOversikt[];
   dokumenter: FysiskDokument[];
+  endreFane: (fanenavn: FaneNavn) => void;
 }
 
 export const FaneViser = ({
@@ -42,10 +43,13 @@ export const FaneViser = ({
   redigerbart,
   dokumentOversikt,
   dokumenter,
+  endreFane,
 }: FaneViserProps) => {
   switch (navn) {
     case "dokumenter":
-      return <SideDialogDokumenter dokumentOversikt={dokumentOversikt} />;
+      return (
+        <SideDialogDokumenter behandlingID={behandlingID} dokumentOversikt={dokumentOversikt} endreFane={endreFane} />
+      );
     case "brevbestilling":
       return (
         <SideDialogSendBrev
@@ -113,6 +117,11 @@ const SideDialog = ({
     }
   }, [aktivFane]);
 
+  const endreFane = (fanenavn: FaneNavn) => {
+    setAktivFane(fanenavn);
+    setEndreFokus(true);
+  };
+
   return (
     <div className="dialog panelSeksjon">
       <Nav.Panel>
@@ -121,10 +130,7 @@ const SideDialog = ({
             <button
               className={classnames({ meny__element: true, "meny__element--aktiv": fane.navn === aktivFane })}
               key={Utils._uuid()}
-              onClick={() => {
-                setAktivFane(fane.navn);
-                setEndreFokus(true);
-              }}
+              onClick={() => endreFane(fane.navn)}
               type="button"
             >
               {fane.tittel}
@@ -141,6 +147,7 @@ const SideDialog = ({
             redigerbart={redigerbart}
             dokumentOversikt={dokumentOversikt}
             dokumenter={dokumenter}
+            endreFane={endreFane}
           />
         </div>
       </Nav.Panel>
@@ -150,7 +157,7 @@ const SideDialog = ({
 
 export const defaultFaner: Fane[] = [
   { navn: "dokumenter", tittel: "Dokumenter" },
-  { navn: "notat", tittel: "Notat" },
+  { navn: "notat", tittel: "Behandlingsnotat" },
   { navn: "brevbestilling", tittel: "Send brev" },
   { navn: "sedbestilling", tittel: "Opprett ny BUC" },
   { navn: "besvarsed", tittel: "SED-utveksling" },
@@ -158,7 +165,7 @@ export const defaultFaner: Fane[] = [
 
 export const fanerUtenBucOgSed: Fane[] = [
   { navn: "dokumenter", tittel: "Dokumenter" },
-  { navn: "notat", tittel: "Notat" },
+  { navn: "notat", tittel: "Behandlingsnotat" },
   { navn: "brevbestilling", tittel: "Send brev" },
 ];
 

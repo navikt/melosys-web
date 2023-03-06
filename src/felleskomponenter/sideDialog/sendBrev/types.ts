@@ -6,12 +6,13 @@ export interface SendBrevFormValues {
   valgtMottaker?: Api.DokumenterV2.TilgjengeligMottaker;
   valgtBrev?: Api.DokumenterV2.TilgjengeligBrev;
   organisasjonsnummer?: string;
-  etater?: string[];
+  norskeMyndigheter?: string[];
   kontaktperson?: string;
   arbeidsgiver?: string;
   felt?: {
     [key: string]: any;
   };
-  kopimottaker?: boolean;
+  kopiTilBruker?: boolean;
   trygdemyndighet?: string;
+  aktivtUtkast?: Api.Brevutkast.BrevutkastResDto | null;
 }

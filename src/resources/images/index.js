@@ -24,6 +24,7 @@ import { ReactComponent as ClockFilled } from "./clock-filled.svg";
 import { ReactComponent as CoApplicant } from "./co-applicant.svg";
 import { ReactComponent as Copy } from "./copy.svg";
 import { ReactComponent as Down } from "./down.svg";
+import { ReactComponent as Draft } from "./draft.svg";
 import { ReactComponent as Eye } from "./eye.svg";
 import { ReactComponent as ExternalLink } from "./external-link.svg";
 import { ReactComponent as Familie } from "./familie.svg";
@@ -105,6 +106,7 @@ export {
   CoApplicant,
   Copy,
   Down,
+  Draft,
   Eye,
   ExternalLink,
   Familie,

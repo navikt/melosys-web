@@ -1,14 +1,21 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { DokumentOversikt, Mottaksretning } from "Domene";
+import { change } from "redux-form";
 
 import MKV from "../../melosyskodeverk";
-
-import PdfLink from "../pdfLink";
-import { formatterDatoTilNorsk } from "../../utils/dato";
+import * as Api from "../../services/api";
+import * as KV from "../../kodeverk";
 import * as Ikoner from "../../resources/images";
 
-import "./sideDialogDokumenter.css";
 import { hentDato } from "../../ducks/dokumenter/selectors";
+import { formatterDatoTilNorsk } from "../../utils/dato";
+import { useAsyncCallbackState } from "../../hooks";
+import PdfLink from "../pdfLink";
+import LagredeUtkast from "./sendBrev/brevutkast/lagredeUtkast";
+import { FaneNavn } from "./sideDialog";
+
+import "./sideDialogDokumenter.css";
 
 const uuid = require("uuid/v4");
 
@@ -21,11 +28,13 @@ const MottaksretningIkon = ({ mottaksretning }: MottaksretningIkonProps) => {
 
   switch (kode) {
     case MKV.Koder.mottaksretning.INN:
-      return <Ikoner.InnBrev />;
+      return <div className="mottaksretning mottaksretning__inn">inn</div>;
     case MKV.Koder.mottaksretning.UT:
-      return <Ikoner.Svar />;
+      return <div className="mottaksretning mottaksretning__ut">ut</div>;
+    case MKV.Koder.mottaksretning.NOTAT:
+      return <div className="mottaksretning mottaksretning__notat">notat</div>;
     default:
-      return <Ikoner.Svar />;
+      return <div className="mottaksretning">ukjent</div>;
   }
 };
 
@@ -78,27 +87,38 @@ const OversiktRad = ({
   </tr>
 );
 interface SideDialogDokumenterProps {
+  behandlingID: number;
   dokumentOversikt: DokumentOversikt[];
+  endreFane: (fanenavn: FaneNavn) => void;
 }
 
-const SideDialogDokumenter = ({ dokumentOversikt }: SideDialogDokumenterProps) => (
-  <div className="sideDialogDokumenter">
-    <table width="100%" className="dokumentTabell" aria-label="Liste over dokumenter knyttet til saken">
-      <thead>
-        <tr>
-          <th aria-label="Mottaksretning" />
-          <th>Dokument</th>
-          <th>Avsender/mottaker</th>
-          <th>Dato</th>
-        </tr>
-      </thead>
-      <tbody>
-        {dokumentOversikt.map((oversikt) => (
-          <OversiktRad key={uuid()} dokumentOversikt={oversikt} />
-        ))}
-      </tbody>
-    </table>
-  </div>
-);
+const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, endreFane }: SideDialogDokumenterProps) => {
+  const [utkast] = useAsyncCallbackState(() => Api.Brevutkast.hentBrevutkast(behandlingID), [], []);
+  const dispatch = useDispatch();
+  const handleValgtUtkast = (valgtUtkast: Api.Brevutkast.BrevutkastResDto | null) => {
+    dispatch(change(KV.Form.SEND_BREV, "aktivtUtkast", valgtUtkast));
+    endreFane("brevbestilling");
+  };
+  return (
+    <div className="sideDialogDokumenter">
+      <LagredeUtkast alleUtkast={utkast} settAktivtUtkast={handleValgtUtkast} />
+      <table width="100%" className="dokumentTabell" aria-label="Liste over dokumenter knyttet til saken">
+        <thead>
+          <tr>
+            <th aria-label="Mottaksretning" />
+            <th>Dokument</th>
+            <th>Avsender/mottaker</th>
+            <th>Dato</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dokumentOversikt.map((oversikt) => (
+            <OversiktRad key={uuid()} dokumentOversikt={oversikt} />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 export default SideDialogDokumenter;

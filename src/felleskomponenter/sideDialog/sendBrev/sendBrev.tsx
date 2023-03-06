@@ -19,24 +19,28 @@ import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
 import * as Mui from "../../ui";
 
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerOperations } from "../../../ducks/behandlinger";
+import { dokumenterOperations } from "../../../ducks/dokumenter";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { formSelectors } from "../../../ducks/form";
-import BrevValg from "./brevValg";
-import BrevMottaker, { erArbeidsgiverEllerVirksomhet } from "./brevMottaker/brevMottaker";
-import { SendBrevFormValues } from "./types";
+
+import { useFeatureToggle } from "../../../featuretoggle";
+import VedleggVelger from "../../vedleggvelger";
+import VedleggTable from "../../vedleggTable";
+
+import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet } from "./brevMottaker/brevMottaker";
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
+import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
+import Brevutkast from "./brevutkast/brevutkast";
+import BrevValg from "./brevValg";
+import { SendBrevFormValues } from "./types";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
-import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
-import { dokumenterOperations } from "../../../ducks/dokumenter";
-import VedleggVelger from "../../vedleggvelger";
-import VedleggTable from "../../vedleggTable";
-import { useFeatureToggle } from "../../../featuretoggle";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { erEtat } from "./brevMottaker/brevMottakerEtat";
+
+const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -99,22 +103,26 @@ const SendBrev = ({
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
-  const [muligeMottakereEtater, setMuligeMottakereEtater] = useState<Api.DokumenterV2.MuligMottaker[]>();
-  const [valgtBrev, setValgtBrev] = useState("");
+  const [muligeMottakereNorskMyndighet, setMuligeMottakereNorskMyndighet] =
+    useState<Api.DokumenterV2.MuligMottaker[]>();
   const [brevSendt, setBrevSendt] = useState(false);
-  const [brevSendtFeil, setBrevSendtFeil] = useState(false);
+  const [feil, setFeil] = useState<string | undefined>();
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
   const [visFritekstvedleggSkjema, setVisFritekstvedleggSkjema] = useState(false);
   const [fritekstvedlegg, setFritekstvedlegg] = useState<Fritekstvedlegg[]>([]);
   const [redigerFritekstvedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
   const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
+  const [utkastPåBehandlingen, setUtkastPåBehandlingen] = useState<Api.Brevutkast.BrevutkastResDto[]>([]);
 
   const fritekstvedleggToggle = useFeatureToggle("melosys.brev.GENERELT_FRITEKSTVEDLEGG");
 
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
-  const mottakerErEtat = erEtat(formValues?.valgtMottaker?.rolle);
+  const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
+
+  const hentUtkast = () =>
+    Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
@@ -123,6 +131,7 @@ const SendBrev = ({
       });
       setTilgjengeligeMaler(response);
     });
+    hentUtkast();
   }, []);
 
   useEffect(() => {
@@ -133,28 +142,31 @@ const SendBrev = ({
   }, [formValues?.type]);
 
   const erMottakerGyldig = (values: SendBrevFormValues) => {
-    if (!values?.valgtMottaker) return false;
-    const { rolle, orgnrSettesAvSaksbehandler } = values.valgtMottaker;
-    if (erArbeidsgiverEllerVirksomhet(rolle) && !orgnrSettesAvSaksbehandler && !values.arbeidsgiver) return false;
-    if (erArbeidsgiverEllerVirksomhet(rolle) && orgnrSettesAvSaksbehandler && !values.organisasjonsnummer) return false;
-    if (erEtat(rolle) && !harValgtEtat()) return false;
-    return true;
+    if (!values?.valgtMottaker?.rolle) return false;
+    switch (values.valgtMottaker.rolle) {
+      case ARBEIDSGIVER:
+        return Boolean(values.arbeidsgiver);
+      case ANNEN_ORGANISASJON:
+        return Boolean(values.organisasjonsnummer);
+      case NORSK_MYNDIGHET:
+        return !Utils._isEmpty(values.norskeMyndigheter);
+      default:
+        return true;
+    }
   };
 
   useEffect(() => {
     if (tilgjengeligeBrevtyper?.length === 1 && erMottakerGyldig(formValues)) {
       changeField("type", tilgjengeligeBrevtyper[0].type.kode);
-      setValgtBrev(tilgjengeligeBrevtyper[0].type.kode);
     } else if (tilgjengeligeBrevtyper?.length === 1 && !erMottakerGyldig(formValues)) {
       changeField("type", undefined);
-      setValgtBrev("");
     }
   }, [
     tilgjengeligeBrevtyper,
     formValues?.valgtMottaker,
     formValues?.organisasjonsnummer,
     formValues?.arbeidsgiver,
-    formValues?.etater,
+    formValues?.norskeMyndigheter,
   ]);
 
   const kanHenteMuligeMottakere = (values: SendBrevFormValues) => {
@@ -165,14 +177,14 @@ const SendBrev = ({
   const hentMuligeMottakere = () => {
     setMuligeMottakereFeil(undefined);
 
-    if (mottakerErEtat) {
-      Api.DokumenterV2.hentMuligeMottakereEtater(behandlingID, {
+    if (mottakerErNorskMyndighet) {
+      Api.DokumenterV2.hentMuligeMottakereNorskMyndighet(behandlingID, {
         produserbartdokument: formValues?.type || "",
-        orgnrEtater: formValues.etater || [],
+        orgnrNorskMyndighet: formValues.norskeMyndigheter || [],
       })
-        .then((response) => setMuligeMottakereEtater(response))
+        .then((response) => setMuligeMottakereNorskMyndighet(response))
         .catch((e) => {
-          setMuligeMottakereEtater([]);
+          setMuligeMottakereNorskMyndighet([]);
           setMuligeMottakereFeil(e?.body?.message);
         });
     } else {
@@ -197,7 +209,7 @@ const SendBrev = ({
     formValues?.valgtMottaker,
     formValues?.organisasjonsnummer,
     formValues?.arbeidsgiver,
-    formValues?.etater,
+    formValues?.norskeMyndigheter,
   ]);
 
   useEffect(() => {
@@ -215,9 +227,7 @@ const SendBrev = ({
   }, [visInnhold]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
-    return felt?.valg?.valgAlternativer.find(
-      (alternativ) => alternativ.beskrivelse === formValues?.felt?.[felt.kode]?.valg
-    );
+    return felt?.valg?.valgAlternativer.find((alternativ) => alternativ.kode === formValues?.felt?.[felt.kode]?.valg);
   };
 
   const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false, hentKode: boolean = false): any => {
@@ -243,36 +253,50 @@ const SendBrev = ({
   };
 
   const hentKopiMottakere = () => {
-    return formValues.kopimottaker
+    return formValues.kopiTilBruker
       ? muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker)
       : [];
   };
 
-  const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => {
-    return {
-      produserbardokument: formValues.type || "",
-      mottaker: mottakerRolle,
-      orgnrEtater: formValues.etater,
-      innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
-      manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
-      fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
-      fritekst: hentFormVerdi("FRITEKST"),
-      kopiMottakere: hentKopiMottakere() || [],
-      kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
-      saksvedlegg: valgteVedlegg.map((vedlegg) => ({
-        dokumentID: vedlegg.dokumentID,
-        journalpostID: vedlegg.journalpostID,
-      })),
-      fritekstvedlegg,
-      distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
-      dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
-    };
+  const hentOrgnr = (mottakerRolle: string) => {
+    switch (mottakerRolle) {
+      case VIRKSOMHET:
+      case ARBEIDSGIVER:
+        return formValues.arbeidsgiver;
+      case ANNEN_ORGANISASJON:
+        return formValues.organisasjonsnummer;
+      default:
+        return null;
+    }
   };
+
+  const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => ({
+    produserbardokument: formValues.type || "",
+    mottaker: mottakerRolle,
+    orgNr: hentOrgnr(mottakerRolle),
+    kontaktpersonNavn: erAnnenOrganisasjon(mottakerRolle) ? formValues.kontaktperson : null,
+    orgnrNorskMyndighet: formValues.norskeMyndigheter,
+    innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
+    manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
+    fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
+    fritekst: hentFormVerdi("FRITEKST"),
+    kopiMottakere: hentKopiMottakere() || [],
+    kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
+    saksvedlegg: valgteVedlegg.map((vedlegg) => ({
+      dokumentID: vedlegg.dokumentID,
+      journalpostID: vedlegg.journalpostID,
+    })),
+    fritekstvedlegg,
+    distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
+    dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
+  });
 
   const lagFritekstPdfUrl = async (index: number) => {
     const data = {
       produserbardokument: MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTVEDLEGG,
-      mottaker: mottakerErEtat ? KV.Koder.MottakerRolle.ETAT : muligeMottakere?.hovedMottaker.rolle || "",
+      mottaker: mottakerErNorskMyndighet
+        ? MKV.Koder.mottakerroller.NORSK_MYNDIGHET
+        : muligeMottakere?.hovedMottaker.rolle || "",
       fritekstTittel:
         redigerFritekstvedleggIndex === index
           ? formValues.felt?.FRITEKSTVEDLEGG_TITTEL?.feltVerdi
@@ -297,34 +321,44 @@ const SendBrev = ({
 
   const sendBrev = () => {
     if (!formValues?.valgtMottaker) return;
+    setFeil(undefined);
 
-    let requestBody: Api.DokumenterV2.OpprettBrevReqDto = hentBrevRequest(formValues.valgtMottaker.rolle);
-    if (formValues.valgtMottaker.rolle === "ARBEIDSGIVER") {
-      requestBody = {
-        ...requestBody,
-        orgNr: formValues.valgtMottaker.orgnrSettesAvSaksbehandler
-          ? formValues.organisasjonsnummer
-          : formValues.arbeidsgiver,
-        kontaktpersonNavn: formValues.valgtMottaker.orgnrSettesAvSaksbehandler ? formValues.kontaktperson : null,
-      };
-    }
-    Api.DokumenterV2.opprettBrev(behandlingID, requestBody)
+    Api.DokumenterV2.opprettBrev(behandlingID, hentBrevRequest(formValues.valgtMottaker.rolle))
       .then(() => {
         setBrevSendt(true);
         oppdaterBehandling();
-        resetForm();
-        setFritekstvedlegg([]);
+        slettUtkast();
+        resetFormOgFritekstvedleggState();
       })
       .catch(() => {
-        setBrevSendtFeil(true);
+        setFeil("Brevet er ikke sendt. Det skjedde en feil.");
       });
   };
 
+  const slettUtkast = () => {
+    if (formValues?.aktivtUtkast?.utkastBrevID) {
+      Api.Brevutkast.slettBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID)
+        .then(() => {
+          changeField("aktivtUtkast", null);
+          hentUtkast();
+        })
+        .catch(() => setFeil("Utkastet er ikke slettet. Det skjedde en feil"));
+    }
+  };
+
   const forkastBrev = () => {
-    resetForm();
+    resetFormOgFritekstvedleggState();
     setBrevSendt(false);
-    setBrevSendtFeil(false);
+    setFeil(undefined);
     setMuligeMottakereFeil(undefined);
+    slettUtkast();
+  };
+
+  const resetFormOgFritekstvedleggState = () => {
+    resetForm();
+    setFritekstvedlegg([]);
+    setVisFritekstvedleggSkjema(false);
+    setRedigerFritekstvedleggIndex(undefined);
   };
 
   const resetFritekstvedlegg = () => {
@@ -372,11 +406,26 @@ const SendBrev = ({
     }
   };
 
+  const lagreUtkast = () => {
+    if (!formValues?.valgtMottaker) return;
+    setFeil(undefined);
+
+    const requestData = hentBrevRequest(formValues.valgtMottaker.rolle);
+
+    (formValues?.aktivtUtkast?.utkastBrevID
+      ? Api.Brevutkast.oppdaterBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID, requestData)
+      : Api.Brevutkast.lagreBrevutkast(behandlingID, requestData)
+    )
+      .then(() => {
+        resetFormOgFritekstvedleggState();
+        hentUtkast();
+      })
+      .catch(() => setFeil("Utkastet ble ikke lagret. Det skjedde en feil."));
+  };
+
   const overstyrBlurEvent = (event: React.FocusEvent) => {
     event.preventDefault();
   };
-
-  const harValgtEtat = () => formValues.etater && formValues.etater.length > 0;
 
   if (!tilgjengeligeMaler || !formValues) return null;
   if (!visInnhold) return null;
@@ -390,8 +439,25 @@ const SendBrev = ({
     (felt) => felt.kode === Api.DokumenterV2.FeltType.FRITEKSTVEDLEGG
   );
 
+  const knappErDisabled =
+    !redigerbart ||
+    !formIsValid ||
+    !!formValues.valgtMottaker?.feilmelding ||
+    visFritekstvedleggSkjema ||
+    Boolean(muligeMottakereFeil);
+
   return (
     <div className="send_brev">
+      <Brevutkast
+        changeField={changeField}
+        dokumenter={dokumenter}
+        formValues={formValues}
+        tilgjengeligeMottakere={tilgjengeligeMottakere}
+        utkastPåBehandlingen={utkastPåBehandlingen}
+        setSaksvedlegg={setValgteVedlegg}
+        setFritekstvedlegg={setFritekstvedlegg}
+      />
+
       {visApneINyttVindu && (
         <div className="send_brev__apne-nytt-vindu-container">
           <Nav.Lenker target="_blank" href={nyttvinduHref}>
@@ -418,8 +484,6 @@ const SendBrev = ({
             <Skjema.Select
               feltNavn="type"
               label={<Nav.Typo.Element>Velg brev</Nav.Typo.Element>}
-              value={valgtBrev}
-              onChange={(e) => setValgtBrev(e.target.value)}
               disabled={!redigerbart || tilgjengeligeBrevtyper.length === 1}
               emptyFieldText="Velg..."
               emptyFieldDisabled={!!formValues.type}
@@ -443,13 +507,12 @@ const SendBrev = ({
         finnValgAlternativ={finnValgAlternativ}
       />
 
-      {formIsValid && brevtypeErValgt && (muligeMottakere || muligeMottakereEtater) && (
+      {formIsValid && brevtypeErValgt && (muligeMottakere || muligeMottakereNorskMyndighet) && (
         <Nav.Row>
           <Nav.Column xs={mottakerTabellWidth}>
             <BrevMottakereTabell
               muligeMottakere={muligeMottakere}
-              muligeMottakereEtater={muligeMottakereEtater}
-              valgtMottaker={formValues.valgtMottaker}
+              muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
               hentBrevRequest={hentBrevRequest}
             />
           </Nav.Column>
@@ -501,21 +564,13 @@ const SendBrev = ({
         ))}
 
       <div>
-        <Nav.Hovedknapp
-          mini
-          disabled={
-            !redigerbart ||
-            !formIsValid ||
-            !!formValues.valgtMottaker?.feilmelding ||
-            visFritekstvedleggSkjema ||
-            Boolean(muligeMottakereFeil)
-          }
-          className="brevknapp"
-          onClick={sendBrev}
-        >
+        <Nav.Hovedknapp mini disabled={knappErDisabled} className="brevknapp" onClick={sendBrev}>
           Send brev
         </Nav.Hovedknapp>
-        <Nav.Knapp mini className="brevknapp" onClick={forkastBrev}>
+        <Nav.Knapp mini disabled={knappErDisabled} className="brevknapp" onClick={lagreUtkast}>
+          Lagre utkast
+        </Nav.Knapp>
+        <Nav.Knapp mini disabled={!formValues.mottaker || !redigerbart} className="brevknapp" onClick={forkastBrev}>
           Forkast brev
         </Nav.Knapp>
       </div>
@@ -525,9 +580,7 @@ const SendBrev = ({
           Brevet er bestilt. Det kan ta noe tid før brevet vises i dokumentlisten.
         </AlertStripeSuksess>
       )}
-      {brevSendtFeil && (
-        <AlertStripeFeil className="brev_sendt">Brevet er ikke sendt. Det skjedde en feil.</AlertStripeFeil>
-      )}
+      {feil && <AlertStripeFeil className="brev_sendt">{feil}</AlertStripeFeil>}
     </div>
   );
 };
@@ -537,6 +590,7 @@ const SendBrevForm = reduxForm<{}, Props & PropsFromRedux>({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
+  keepValues: true,
   validate: lagYupToReduxformErrorMapper(sendBrevSchema),
 })(SendBrev);
 

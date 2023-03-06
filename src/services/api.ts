@@ -13,7 +13,6 @@ import * as Kodeverk from "./modules/kodeverk";
 import * as Kontroll from "./modules/kontroll";
 import * as Lovvalgsperioder from "./modules/lovvalgsperioder";
 import * as Medlemskapsperioder from "./modules/medlemskapsperioder";
-import * as Representant from "./modules/representant";
 import * as Organisasjoner from "./modules/organisasjoner";
 import * as Saksopplysninger from "./modules/saksopplysninger";
 import * as Oppgaver from "./modules/oppgaver";
@@ -21,6 +20,8 @@ import * as Registrering from "./modules/registrering";
 import * as Saksflyt from "./modules/saksflyt";
 import * as Trygdeavgift from "./modules/trygdeavgift";
 import * as Trygdeavtale from "./modules/trygdeavtale/flyt";
+import * as Brevutkast from "./modules/brevutkast";
+import * as IkkeYrkesaktiv from "../sider/ikkeYrkesaktiv/flyt";
 import * as Utpekingsperioder from "./modules/utpekingsperioder";
 import * as Vilkar from "./modules/vilkar";
 import * as LovligeKombinasjoner from "./modules/lovligekombinasjoner";
@@ -56,12 +57,13 @@ export {
   Oppgaver,
   Organisasjoner,
   Registrering,
-  Representant,
   Saksopplysninger,
   Saksflyt,
   Trygdeavgift,
   Faktureringskomponenten,
   Trygdeavtale,
+  Brevutkast,
+  IkkeYrkesaktiv,
   Utpekingsperioder,
   Vilkar,
 };
