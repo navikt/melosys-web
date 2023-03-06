@@ -8,7 +8,7 @@ import "./index.css";
 import "./setupYup";
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
-import { CaptureConsole, HttpClient } from "@sentry/integrations";
+import { CaptureConsole } from "@sentry/integrations";
 import App from "./App";
 
 import createStore from "./store";
@@ -18,21 +18,34 @@ import { unregister } from "./registerServiceWorker";
 import { FellesHandlersProvider } from "./contexts";
 import Modals from "./modals";
 import { apolloClient } from "./graphql";
+import { Breadcrumbs } from "@sentry/react";
 
 const SideLoadingFailMessage = <p>Beklager, kunne ikke laste inn siden.</p>;
 
+const environment = process.env.REACT_APP_ENVIRONMENT;
+const isDevelopmentProfile = environment === "local";
+
+const sentryIntegrations = [
+  new BrowserTracing({
+    routingInstrumentation: Sentry.reactRouterV5Instrumentation(routerHistory),
+  }),
+  new CaptureConsole({
+    levels: ["error", "warn"],
+  }),
+  new Breadcrumbs({ console: false }),
+];
+
 Sentry.init({
   dsn: "https://69e47f5f658e4a7c956dbaf975f6b575@sentry.gc.nav.no/156",
-  integrations: [
-    new BrowserTracing({
-      routingInstrumentation: Sentry.reactRouterV5Instrumentation(routerHistory),
-    }),
-    new CaptureConsole({
-      levels: ["error", "warn"],
-    }),
-    new HttpClient(),
-  ],
+  integrations: sentryIntegrations,
   tracesSampleRate: 1.0,
+  environment: environment,
+  beforeSend: (event) => {
+    if (isDevelopmentProfile) {
+      return null;
+    }
+    return event;
+  },
 });
 
 const store = createStore(routerHistory);
@@ -41,7 +54,7 @@ ReactDOM.render(
   <ReduxProvider store={store}>
     <ConnectedRouter history={routerHistory}>
       <ApolloProvider client={apolloClient}>
-        <App>
+        <App isDevelopmentProfile={isDevelopmentProfile}>
           <Sentry.ErrorBoundary fallback={SideLoadingFailMessage}>
             <FellesHandlersProvider>
               <Routing />

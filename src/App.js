@@ -6,8 +6,7 @@ import { PublicClientApplication } from "@azure/msal-browser";
 import Rammeverk from "./sider/rammeverk";
 import { msalConfig } from "./auth/authConfig";
 
-export function App({ children }) {
-  const isDevelopmentProfile = process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
+export function App({ children, isDevelopmentProfile }) {
   const pca = isDevelopmentProfile ? null : new PublicClientApplication(msalConfig);
 
   return (
@@ -25,10 +24,12 @@ export function App({ children }) {
 
 App.propTypes = {
   children: PT.node,
+  isDevelopmentProfile: PT.bool,
 };
 
 App.defaultProps = {
   children: undefined,
+  isDevelopmentProfile: false,
 };
 
 export default Sentry.withProfiler(App);
