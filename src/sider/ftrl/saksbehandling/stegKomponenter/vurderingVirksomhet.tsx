@@ -11,15 +11,16 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Api from "../../../../services/api";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { FormSkjemaStegStatus } from "../stegvelger";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
+
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
 import "./vurderingVirksomhet.css";
-import { FormSkjemaStegStatus } from "../StegvelgerFTRL";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 const komponentState = (state: RootState) => {
   const lagredeValgtevirksomheter = oppsummertfaktaSelectors.VirksomhetIDerSelector(state);

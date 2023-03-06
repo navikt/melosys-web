@@ -5,22 +5,23 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 
 import MKV from "../../../../melosyskodeverk";
+import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { vilkarOperations, vilkarSelectors } from "../../../../ducks/vilkar";
 import { STEG } from "../../../../felleskomponenter/stegvelger";
+import { SaksbehandlingFTRLContext, VilkarOgBegrunnelser } from "../saksbehandlingFTRLContext";
+import { FormSkjemaStegStatus } from "../stegvelger";
+
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
-import { finnTermFraListe, termFraNestedKTObject } from "../../../../kodeverk";
+import { vilkarOperations, vilkarSelectors } from "../../../../ducks/vilkar";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 import { BOOLSK_STRING } from "../../../../constants";
 import "./vurderingBestemmelse.css";
-import { SaksbehandlingFTRLContext, VilkarOgBegrunnelser } from "../saksbehandlingFTRLContext";
-import { FormSkjemaStegStatus } from "../StegvelgerFTRL";
 
 const komponentState = (state: RootState) => ({
   vilkarListe: vilkarSelectors.VilkarSelector(state),
@@ -160,7 +161,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           className="radio"
           legend={
             <LabelMedHjelpetekst
-              label={finnTermFraListe(vilkaarKodeverk, vilkaar)}
+              label={KV.finnTermFraListe(vilkaarKodeverk, vilkaar)}
               hjelpetekst={hjelpetekstForVilkaar}
             />
           }
@@ -211,7 +212,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
                   </option>
                   {muligeBegrunnelser.map((begrunnelse) => (
                     <option key={begrunnelse} value={begrunnelse}>
-                      {termFraNestedKTObject(begrunnelserKodeverk, begrunnelse)}
+                      {KV.termFraNestedKTObject(begrunnelserKodeverk, begrunnelse)}
                     </option>
                   ))}
                 </Nav.Select>
@@ -246,7 +247,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
               </option>
               {bestemmelseVilkar.map((bestemmelseMedVilkar) => (
                 <option key={bestemmelseMedVilkar.bestemmelse} value={bestemmelseMedVilkar.bestemmelse}>
-                  {finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, bestemmelseMedVilkar.bestemmelse)}
+                  {KV.finnTermFraListe(
+                    MKV.KTObjects.folketrygdloven_kap2_bestemmelser,
+                    bestemmelseMedVilkar.bestemmelse
+                  )}
                 </option>
               ))}
             </Nav.Select>

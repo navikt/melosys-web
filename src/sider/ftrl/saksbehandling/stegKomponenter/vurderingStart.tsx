@@ -8,26 +8,27 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
 
 import MKV from "../../../../melosyskodeverk";
+import * as Forms from "../../../../felleskomponenter/forms";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
-import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import MultiSelect from "../../../../felleskomponenter/multiSelect";
+import { FellesHandlersContext } from "../../../../contexts";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
+import { FormSkjemaStegStatus } from "../stegvelger";
+import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
+
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../../ducks/menypanel";
+import { landkoderSelectors } from "../../../../ducks/landkoder";
+import { tilForsiden } from "../../../../ducks/navigering/operations";
 
 import vurderingStartSchema from "./vurderingStartSchema";
 import "./vurderingStart.css";
-import MultiSelect from "../../../../felleskomponenter/multiSelect";
-import { landkoderSelectors } from "../../../../ducks/landkoder";
-import { FellesHandlersContext } from "../../../../contexts";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import { FormSkjemaStegStatus } from "../StegvelgerFTRL";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
-import { tilForsiden } from "../../../../ducks/navigering/operations";
-import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
 
 const landHarTrygdeavtaleMedNorgeEllerErEosLand = (landKode: string) => {
   const landMedTrygdeAvtaleEllerEosLand = [
@@ -154,7 +155,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <Skjema.DatovelgerV2
+            <Forms.Datovelger
               label="Fra og med:"
               name="fom"
               feil={(errors.fom?.message as any)?.melding}
@@ -163,7 +164,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
             />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Skjema.DatovelgerV2
+            <Forms.Datovelger
               label="Til og med:"
               name="tom"
               feil={(errors.tom?.message as any)?.melding}
@@ -202,7 +203,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
       <Nav.Fieldset legend="Trygdedekning">
         <Nav.Row>
           <Nav.Column xs="6">
-            <Skjema.SelectV2
+            <Forms.Select
               name="trygdedekning"
               control={control}
               label=""
@@ -215,7 +216,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
                   {item.term}
                 </option>
               ))}
-            </Skjema.SelectV2>
+            </Forms.Select>
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>

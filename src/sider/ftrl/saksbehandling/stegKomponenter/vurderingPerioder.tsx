@@ -14,7 +14,7 @@ import * as Ikoner from "../../../../resources/images";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
-import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Forms from "../../../../felleskomponenter/forms";
 import * as Utils from "../../../../utils";
 
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
@@ -22,12 +22,13 @@ import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysn
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
+import { FormSkjemaStegStatus } from "../stegvelger";
 
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
-import { FormSkjemaStegStatus } from "../StegvelgerFTRL";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 interface formValuesProp {
   medlemskapsperioder?: MedlemskapsperiodeProp[];
@@ -42,7 +43,6 @@ interface PeriodeElementProps {
   innvilgelsesResultater: KTObject[];
   control: any;
   formValues: formValuesProp;
-  errors: any;
   handleSlett: (index: number) => void;
   erPeriodeFoerSoknadMottatDato: (medlemskapsperiode: MedlemskapsperiodeProp) => boolean;
 }
@@ -53,7 +53,6 @@ const PeriodeElement = ({
   trygdedekninger,
   innvilgelsesResultater,
   formValues,
-  errors,
   control,
   handleSlett,
   erPeriodeFoerSoknadMottatDato,
@@ -68,28 +67,25 @@ const PeriodeElement = ({
     <Nav.Fieldset legend="Periode" className="understrek">
       <Nav.Row>
         <Nav.Column xs="2">
-          <Skjema.DatovelgerV2
+          <Forms.Datovelger
             label="Fra og med:"
             control={control}
-            feil={errors.medlemskapsperioder?.at(index)?.fomDato?.message?.melding}
             name={`medlemskapsperioder[${index}].fomDato`}
             disabled
           />
         </Nav.Column>
         <Nav.Column xs="2">
-          <Skjema.DatovelgerV2
+          <Forms.Datovelger
             label="Til og med:"
             control={control}
             name={`medlemskapsperioder[${index}].tomDato`}
-            feil={errors.medlemskapsperioder?.at(index)?.tomDato?.message?.melding}
             disabled={!redigerbart}
           />
         </Nav.Column>
         <Nav.Column xs="4">
-          <Skjema.SelectV2
+          <Forms.Select
             label="Trygdedekning"
             name={`medlemskapsperioder[${index}].trygdedekning`}
-            feil={errors.medlemskapsperioder?.at(index)?.trygdedekning?.message?.melding}
             control={control}
             disabled={!redigerbart}
             emptyFieldText="Velg"
@@ -100,13 +96,12 @@ const PeriodeElement = ({
                 {item.term}
               </option>
             ))}
-          </Skjema.SelectV2>
+          </Forms.Select>
         </Nav.Column>
         <Nav.Column xs="4">
-          <Skjema.SelectV2
+          <Forms.Select
             label="Resultat"
             name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
-            feil={errors.medlemskapsperioder?.at(index)?.innvilgelsesResultat?.message?.melding}
             control={control}
             disabled={!redigerbart}
             emptyFieldText="Velg"
@@ -121,7 +116,7 @@ const PeriodeElement = ({
                   {item.term}
                 </option>
               ))}
-          </Skjema.SelectV2>
+          </Forms.Select>
         </Nav.Column>
       </Nav.Row>
       {formValues.medlemskapsperioder[index].feil && (
@@ -198,7 +193,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     setValue,
     control,
     watch,
-    formState: { isValid: formIsValid, errors },
+    formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
     mode: "onChange",
@@ -395,7 +390,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
           <PeriodeElement
             trygdedekninger={trygdedekninger}
             innvilgelsesResultater={innvilgelsesResultater}
-            errors={errors}
             key={medlemskapsperiode.id}
             index={index}
             control={control}

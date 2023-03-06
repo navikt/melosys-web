@@ -36,7 +36,7 @@ import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import "./saksbehandling.css";
-import { StegvelgerFTRL } from "./StegvelgerFTRL";
+import { Stegvelger } from "./stegvelger";
 import { SaksbehandlingFTRLContext } from "./saksbehandlingFTRLContext";
 
 const Saksbehandling = ({
@@ -175,7 +175,7 @@ const Saksbehandling = ({
                     {visStegVelger && (
                       // eslint-disable-next-line react/jsx-no-constructed-context-values
                       <SaksbehandlingFTRLContext.Provider value={{ bestemmelseVilkar: bestemmelser }}>
-                        <StegvelgerFTRL />
+                        <Stegvelger />
                       </SaksbehandlingFTRLContext.Provider>
                     )}
                   </>

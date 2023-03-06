@@ -5,24 +5,24 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, FieldValues } from "react-hook-form";
 
 import MKV from "../../../../../melosyskodeverk";
+import * as Api from "../../../../../services/api";
+import * as Forms from "../../../../../felleskomponenter/forms";
+import * as KV from "../../../../../kodeverk";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
-import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
-import * as Skjema from "../../../../../felleskomponenter/skjema";
 
-import Trygdeavgiftsgrunnlag from "./trygdeavgiftsgrunnlag/trygdeavgiftsgrunnlag";
+import { STEG } from "../../../../../felleskomponenter/stegvelger";
+import { FormSkjemaStegStatus } from "../../stegvelger";
+import { FellesHandlersContext } from "../../../../../contexts";
+
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
-import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
-import { OppdaterAvgiftsberegning } from "../../../../../services/modules/trygdeavgift";
-import { VurderingTrygdeavgiftVirksomhetTyper } from "../../../../../kodeverk/koder";
-
-import "./vurderingTrygdeavgift.css";
-import { FormSkjemaStegStatus } from "../../StegvelgerFTRL";
-import { STEG } from "../../../../../felleskomponenter/stegvelger";
-import { FellesHandlersContext } from "../../../../../contexts";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+
+import Trygdeavgiftsgrunnlag from "./trygdeavgiftsgrunnlag/trygdeavgiftsgrunnlag";
+import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
+import "./vurderingTrygdeavgift.css";
 
 const { LØNN_FRA_NORGE, LØNN_FRA_UTLANDET, DELT_LØNN } = MKV.Koder.loenn_forhold;
 
@@ -87,10 +87,12 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const [erTabellApen, setErTabellApen] = useState(new Map());
   const [erSaerligAvgiftsGruppeValgt, setErSaerligAvgiftsGruppeValgt] = useState(new Map());
-  const [oppdatertAvgiftsberegning, setOppdatertAvgiftsberegning] = useState<OppdaterAvgiftsberegning>({
-    avgiftspliktigLønnNorge: null,
-    avgiftspliktigLønnUtland: null,
-  });
+  const [oppdatertAvgiftsberegning, setOppdatertAvgiftsberegning] = useState<Api.Trygdeavgift.OppdaterAvgiftsberegning>(
+    {
+      avgiftspliktigLønnNorge: null,
+      avgiftspliktigLønnUtland: null,
+    }
+  );
 
   const setValue = (formNavn: string, data: any) => {
     setValueForm(formNavn, data, { shouldValidate: true });
@@ -110,13 +112,13 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     Api.Trygdeavgift.hentGrunnlag(behandlingID).then((response) => {
       if (response?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe !== undefined) {
         erSaerligAvgiftsGruppeValgt.set(
-          VurderingTrygdeavgiftVirksomhetTyper.NORSK,
+          KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.NORSK,
           !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe
         );
       }
       if (response?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe !== undefined) {
         erSaerligAvgiftsGruppeValgt.set(
-          VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
+          KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
           !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe
         );
       }
@@ -177,20 +179,20 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt ===
       MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
     ) {
-      setErTabellApen(new Map(erTabellApen.set(VurderingTrygdeavgiftVirksomhetTyper.NORSK, false)));
+      setErTabellApen(new Map(erTabellApen.set(KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.NORSK, false)));
     }
     if (
       avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt ===
       MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
     ) {
-      setErTabellApen(new Map(erTabellApen.set(VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK, false)));
+      setErTabellApen(new Map(erTabellApen.set(KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK, false)));
     }
     if (avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE) {
-      erSaerligAvgiftsGruppeValgt.delete(VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK);
+      erSaerligAvgiftsGruppeValgt.delete(KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK);
       setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
     }
     if (avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET) {
-      erSaerligAvgiftsGruppeValgt.delete(VurderingTrygdeavgiftVirksomhetTyper.NORSK);
+      erSaerligAvgiftsGruppeValgt.delete(KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.NORSK);
       setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
     }
   }
@@ -214,7 +216,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   function handleSærligAvgiftsgruppeRadioChange(event: ChangeEvent<HTMLInputElement>, erNorskVirksomhet: boolean) {
     const erSærligAvgiftsgruppe = Utils.streng.tryParseBool(event.target.value);
     erSaerligAvgiftsGruppeValgt.set(
-      erNorskVirksomhet ? VurderingTrygdeavgiftVirksomhetTyper.NORSK : VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
+      erNorskVirksomhet
+        ? KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.NORSK
+        : KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
       erSærligAvgiftsgruppe
     );
     setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
@@ -266,8 +270,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       new Map(
         erTabellApen.set(
           erNorskVirksomhet
-            ? VurderingTrygdeavgiftVirksomhetTyper.NORSK
-            : VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
+            ? KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.NORSK
+            : KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
           true
         )
       )
@@ -300,31 +304,25 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       <Nav.Row>
         <Nav.Column xs="12">
           <Nav.Fieldset legend="Hvor mottar søker inntekt fra?">
-            <Skjema.RadioV2
+            <Forms.Radio
               label="Norsk virksomhet"
               name="avgiftsgrunnlag.lønnsforhold"
               control={control}
-              feil={(errors.avgiftsgrunnlag as any)?.lønnsforhold?.message?.melding}
               value={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
-              checked={formValues.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               disabled={!redigerbart}
             />
-            <Skjema.RadioV2
+            <Forms.Radio
               name="avgiftsgrunnlag.lønnsforhold"
               control={control}
               label="Utenlandsk virksomhet"
-              feil={(errors.avgiftsgrunnlag as any)?.lønnsforhold?.message?.melding}
               value={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
-              checked={formValues.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               disabled={!redigerbart}
             />
-            <Skjema.RadioV2
+            <Forms.Radio
               label="Norsk og utenlandsk virksomhet"
               name="avgiftsgrunnlag.lønnsforhold"
-              feil={(errors.avgiftsgrunnlag as any)?.lønnsforhold?.message?.melding}
               control={control}
               value={MKV.Koder.loenn_forhold.DELT_LØNN}
-              checked={formValues.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN}
               disabled={!redigerbart}
             />
           </Nav.Fieldset>

@@ -10,7 +10,7 @@ export interface FormSkjemaStegStatus {
   dataErGyldig: boolean;
 }
 
-export const StegvelgerFTRL = () => {
+export const Stegvelger = () => {
   const [aktivtSteg, setAktivtSteg] = useState(STEG.START);
   const [stegMap, setStegMap] = useState([START, VIRKSOMHET, BESTEMMELSE, PERIODER, TRYGDEAVGIFT]);
   const [formSkjemaStatus, setFormSkjemaStatus] = useState<FormSkjemaStegStatus[]>();

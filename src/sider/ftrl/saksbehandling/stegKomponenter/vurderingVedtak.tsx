@@ -10,12 +10,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
+import * as Forms from "../../../../felleskomponenter/forms";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 import * as Ikoner from "../../../../resources/images";
-import * as Skjema from "../../../../felleskomponenter/skjema";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
@@ -108,7 +108,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const {
     watch,
     control,
-    formState: { isValid: formIsValid, errors },
+    formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurdering_vedtak),
     defaultValues: {
@@ -379,7 +379,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       <div style={{ marginTop: "0.5rem", marginLeft: "0.5rem", marginBottom: "0.5rem" }}>
         <Nav.Row>
           <Nav.Column xs="4">
-            <Skjema.SelectV2
+            <Forms.Select
               label="Betalingsintervall"
               name="betalingsintervall"
               control={control}
@@ -390,7 +390,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
                   {item.term}
                 </option>
               ))}
-            </Skjema.SelectV2>
+            </Forms.Select>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -402,10 +402,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           hjelpetekstClassName="hjelpetekst"
         />
       </Nav.Typo.Element>
-      <Skjema.HTMLEditorV2
+      <Forms.HtmlEditor
         name="innledningFritekst"
         control={control}
-        feil={(errors.innledningFritekst?.message as any)?.melding}
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til innledning..."
         disabled={!redigerbart}
@@ -418,10 +417,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           hjelpetekstClassName="hjelpetekst"
         />
       </Nav.Typo.Element>
-      <Skjema.HTMLEditorV2
+      <Forms.HtmlEditor
         name="begrunnelseFritekst"
         control={control}
-        feil={(errors.begrunnelseFritekst?.message as any)?.melding}
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
         disabled={!redigerbart}
