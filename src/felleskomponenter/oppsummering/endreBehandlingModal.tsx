@@ -85,6 +85,9 @@ function EndreBehandlingModal({
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
+  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
+  const registreringUnntakFraMedlemskapToggleEnabled =
+    useFeatureToggle("melosys.registrering_unntak_fra_medlemskap") === "enabled";
   const typeTemaKanEndres = !anmodningsperioderSendtTilUtlandet;
   const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
 
@@ -148,7 +151,15 @@ function EndreBehandlingModal({
 
     if (
       sakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE ||
-      Routing.skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)
+      Routing.skalViseTomFlyt(
+        sakstype,
+        sakstema,
+        behandlingstema,
+        behandlingstype,
+        folketrygdenToggleEnabled,
+        ikkeYrkesaktivFlytToggleEnabled,
+        registreringUnntakFraMedlemskapToggleEnabled
+      )
     ) {
       await Api.Trygdeavtale.slettFlyt(behandlingID);
     } else {

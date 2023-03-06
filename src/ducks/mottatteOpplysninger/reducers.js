@@ -86,6 +86,30 @@ export default function reducer(state = initialState, action = {}) {
         },
       };
     }
+    case Types.OPPDATER_AVSENDERLAND: {
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          data: {
+            ...state.data.data,
+            avsenderland: action.data.avsenderland,
+          },
+        },
+      };
+    }
+    case Types.OPPDATER_LOVVALGSLAND: {
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          data: {
+            ...state.data.data,
+            lovvalgsland: action.data.lovvalgsland,
+          },
+        },
+      };
+    }
     case Types.OPPDATER_TRYGDEDEKNING: {
       return {
         ...state,
@@ -250,6 +274,8 @@ export default function reducer(state = initialState, action = {}) {
             landkoder: dokument.soknadsland.landkoder,
             erUkjenteEllerAlleEosLand: dokument.soknadsland.erUkjenteEllerAlleEosLand,
           },
+          avsenderland: dokument.avsenderland,
+          lovvalgsland: dokument.lovvalgsland,
           periode: {
             fom: dokument.soknadsperiodeFom ? formatterDatoTilISO(dokument.soknadsperiodeFom) : null,
             tom: dokument.soknadsperiodeTom ? formatterDatoTilISO(dokument.soknadsperiodeTom) : null,

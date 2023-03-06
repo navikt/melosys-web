@@ -1,14 +1,12 @@
 import React from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 
-import * as Nav from "../../../navFrontend";
+import * as Nav from "../../navFrontend";
 
-import "../skjema.css";
-import { RegisterHookFormProps } from "../reacthookProps";
+import { RegisterHookFormProps } from "./reacthookProps";
 
 interface RadioComponentProps {
   className?: string;
-  forhandsvalgt?: boolean;
   value?: string;
   label?: string;
   disabled?: boolean;
@@ -20,19 +18,19 @@ interface RadioComponentProps {
 type RadioInnerComponentProps = RadioComponentProps & RegisterHookFormProps;
 
 const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerComponentProps>(
-  ({ forhandsvalgt, disabled, checked, ...rest }: RadioInnerComponentProps, _ref: any) => {
+  ({ disabled, ...rest }: RadioInnerComponentProps, _ref: any) => {
     return (
       <Nav.Radio
         className={rest.className}
         label={rest.label}
-        checked={checked}
         onChange={rest.onChange}
-        disabled={disabled}
-        feil={rest.feil}
         onBlur={rest.onBlur}
         value={rest.value}
         name={rest.name}
         radioRef={rest.ref}
+        feil={rest.feil}
+        checked={rest.checked}
+        disabled={disabled}
       />
     );
   }
@@ -45,14 +43,16 @@ const Radio = React.forwardRef<HTMLSelectElement, RadioProps>(({ name, control, 
     <Controller
       name={name}
       control={control}
-      render={({ field }) => (
+      render={({ field, formState }) => (
         <InnerRadioComponent
           {...field}
           {...rest}
+          checked={field.value === rest.value}
           onChange={(event: any) => {
             field.onChange(event);
             if (rest.onChange) rest.onChange(event?.target?.value);
           }}
+          feil={(formState.errors?.[field.name]?.message as any)?.melding}
         />
       )}
     />

@@ -210,6 +210,16 @@ export const TrygdedekningSelector = createSelector(
   (mottatteOpplysninger) => mottatteOpplysninger.trygdedekning
 );
 
+export const AvsenderlandSelector = createSelector(
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.avsenderland
+);
+
+export const LovvalgslandSelector = createSelector(
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.lovvalgsland
+);
+
 export const PeriodeSelector = createSelector(
   (state) => MottatteOpplysningerDataSelector(state),
   (mottatteOpplysninger) => mottatteOpplysninger.periode || {}

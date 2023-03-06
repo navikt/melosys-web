@@ -24,6 +24,8 @@ import { useFeatureToggle } from "../../featuretoggle";
 const Fagsak = ({ sak, landkoder }) => {
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
   const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
+  const registreringUnntakFraMedlemskapToggleEnabled =
+    useFeatureToggle("melosys.registrering_unntak_fra_medlemskap") === "enabled";
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
 
   const { land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
@@ -38,7 +40,8 @@ const Fagsak = ({ sak, landkoder }) => {
       behandling.behandlingstema.kode,
       behandling.behandlingstype.kode,
       folketrygdenToggleEnabled,
-      ikkeYrkesaktivFlytToggleEnabled
+      ikkeYrkesaktivFlytToggleEnabled,
+      registreringUnntakFraMedlemskapToggleEnabled
     );
 
   const customMargin = { marginLeft: "1em" };
