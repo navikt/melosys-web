@@ -28,7 +28,7 @@ import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetek
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 
-interface formValuesProp {
+interface FormValuesProp {
   medlemskapsperioder?: MedlemskapsperiodeProp[];
 }
 
@@ -40,7 +40,7 @@ interface PeriodeElementProps {
   trygdedekninger: KTObject[];
   innvilgelsesResultater: KTObject[];
   control: any;
-  formValues: formValuesProp;
+  formValues: FormValuesProp;
   handleSlett: (index: number) => void;
   erPeriodeFoerSoknadMottatDato: (medlemskapsperiode: MedlemskapsperiodeProp) => boolean;
 }
@@ -161,11 +161,6 @@ const komponentState = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
-const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  hentMedlemskapsperioder: (behandlingID: number) =>
-    dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID)),
-});
-
 interface VurderingPerioderProps {
   bekreft: () => void;
   tilbake: () => void;
@@ -184,8 +179,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     behandlingID,
     innvilgelsesResultater,
     soknadsperiode,
-  } = useSelector((state: RootState) => komponentState(state));
-  const { hentMedlemskapsperioder } = komponentDispatch(dispatch);
+  } = useSelector(komponentState);
 
   const {
     setValue,
@@ -335,7 +329,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   };
 
   const handleBekreft = () => {
-    hentMedlemskapsperioder(behandlingID);
+    dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
     bekreft();
   };
 

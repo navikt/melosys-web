@@ -25,11 +25,11 @@ const komponentState = (state: RootState) => {
   return {
     virksomheterListe: behandlingerSelectors.AlleVirksomheterSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
     lagredeValgtevirksomheter,
     initialValues: {
       valgteVirksomheter: lagredeValgtevirksomheter,
     },
-    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   };
 };
 
@@ -51,9 +51,12 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
   const dispatch = useDispatch();
 
   const { hentOppsummertFakta, sendVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
-  const { redigerbart, virksomheterListe, behandlingID, initialValues, lagredeValgtevirksomheter } = useSelector(
-    (state: RootState) => komponentState(state)
-  );
+  const { redigerbart, virksomheterListe, behandlingID, initialValues, lagredeValgtevirksomheter } =
+    useSelector(komponentState);
+  const [erMottatteOpplysningerLastetInn, setErMottatteOpplysningerLastetInn] = useState(false);
+  const hjelpetekst =
+    "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. " +
+    'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
   const {
     setValue,
@@ -65,21 +68,12 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
     reValidateMode: "onChange",
     values: useMemo(() => initialValues, [initialValues]),
   });
-
   const formValues = watch();
-
-  const [erMottatteOpplysningerLastetInn, setErMottatteOpplysningerLastetInn] = useState(false);
-  const hjelpetekst =
-    "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. " +
-    'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
   const lastInnMottatteOpplysninger = async () => {
     await hentMottatteOpplysninger(behandlingID);
     setErMottatteOpplysningerLastetInn(true);
   };
-  useEffect(() => {
-    oppdaterStatus(formIsValid);
-  }, [formIsValid]);
 
   useEffect(() => {
     lastInnMottatteOpplysninger();
@@ -87,6 +81,10 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
       hentOppsummertFakta(behandlingID);
     };
   }, []);
+
+  useEffect(() => {
+    oppdaterStatus(formIsValid);
+  }, [formIsValid]);
 
   const handleFortsett = () => {
     if (formValues && formValues.valgteVirksomheter) {

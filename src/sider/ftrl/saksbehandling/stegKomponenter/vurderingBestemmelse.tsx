@@ -30,16 +30,6 @@ const komponentState = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
-const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterBestemmelse: (bestemmelse: string) =>
-    dispatch(medlemskapsperioderOperations.oppdaterBestemmelse(bestemmelse)),
-  opprettMedlemskapsperiodeFraBestemmelse: () =>
-    dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse()),
-  oppdaterVilkaar: (skjema: any) => dispatch(vilkarOperations.oppdaterState(skjema)),
-  lagreVilkar: () => dispatch(vilkarOperations.lagre()),
-  hentVilkaar: (behandlingsId: string) => dispatch(vilkarOperations.hent(behandlingsId)),
-});
-
 interface Props {
   bekreft: () => void;
   tilbake: () => void;
@@ -48,13 +38,13 @@ interface Props {
 }
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
-  const { bestemmelseVilkar } = useContext(SaksbehandlingContext);
   const dispatch = useDispatch();
-  const { behandlingID, vilkarListe, bestemmelse, vilkaarKodeverk, begrunnelserKodeverk, redigerbart } = useSelector(
-    (state: RootState) => komponentState(state)
-  );
-  const { hentVilkaar, oppdaterVilkaar, oppdaterBestemmelse, opprettMedlemskapsperiodeFraBestemmelse, lagreVilkar } =
-    komponentDispatch(dispatch);
+  const { bestemmelseVilkar } = useContext(SaksbehandlingContext);
+  const { behandlingID, vilkarListe, bestemmelse, vilkaarKodeverk, begrunnelserKodeverk, redigerbart } =
+    useSelector(komponentState);
+  const hentVilkaar = (behandlingsId: string) => dispatch(vilkarOperations.hent(behandlingsId));
+  const oppdaterVilkaar = (skjema: any) => dispatch(vilkarOperations.oppdaterState(skjema));
+
   const [valgtBestemmelse, setValgtBestemmelse] = useState("");
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
   const [valgteVilkar, setValgteVilkar] = useState(new Map());
@@ -78,7 +68,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const handleEndreBestemmelse = (nyBestemmelse: string) => {
     setValgtBestemmelse(nyBestemmelse);
-    oppdaterBestemmelse(nyBestemmelse);
+    dispatch(medlemskapsperioderOperations.oppdaterBestemmelse(nyBestemmelse));
   };
 
   useEffect(() => {
@@ -117,9 +107,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]);
 
   const handleBekreft = () => {
-    lagreVilkar();
+    dispatch(vilkarOperations.lagre());
     setTimeout(() => {
-      opprettMedlemskapsperiodeFraBestemmelse();
+      dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse());
       bekreft();
     }, 1000);
   };

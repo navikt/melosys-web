@@ -72,7 +72,6 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
     dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
   fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto) =>
     dispatch(vedtakOperations.fatt(behandlingID, body)),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
 });
 
 interface FormValuesProps {
@@ -104,7 +103,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     initialValues,
     alleLandkoder,
     redigerbart,
-  } = useSelector((state: RootState) => komponentState(state));
+  } = useSelector(komponentState);
+
   const {
     watch,
     control,
@@ -115,8 +115,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       ...initialValues,
     } as FieldValues,
   });
-
   const formValues = watch();
+
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);

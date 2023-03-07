@@ -55,11 +55,10 @@ const erTrygdeavgiftsgrunnlagUtlandUgyldig = (trygdeavgift: any) => {
 };
 
 export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
-  const behandlingID = useSelector((state: RootState) => behandlingerSelectors.BehandlingIDSelector(state));
-  const redigerbart = useSelector((state: RootState) => redigerbartSelectors.RedigerbartSelector(state));
-  const saerligeavgiftsgrupper = useSelector((state: RootState) =>
-    folketrygdenkodeverkSelectors.SaerligeavgiftsgrupperSelector(state)
-  );
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const saerligeavgiftsgrupper = useSelector(folketrygdenkodeverkSelectors.SaerligeavgiftsgrupperSelector);
+  const { behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
   const {
     control,
@@ -76,7 +75,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     } as FieldValues,
   });
   const formValues = watch();
-  const { behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
   const lonnsforholdErNorgeEllerDelt = [LØNN_FRA_NORGE, DELT_LØNN].includes(formValues.avgiftsgrunnlag?.lønnsforhold);
   const lonnsforholdErUtlandetEllerDelt = [LØNN_FRA_UTLANDET, DELT_LØNN].includes(

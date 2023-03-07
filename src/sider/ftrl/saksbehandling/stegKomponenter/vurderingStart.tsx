@@ -28,27 +28,18 @@ import { tilForsiden } from "../../../../ducks/navigering/operations";
 import vurderingStartSchema from "./vurderingStartSchema";
 import "./vurderingStart.css";
 
-const landHarTrygdeavtaleMedNorgeEllerErEosLand = (landKode: string) => {
-  const landMedTrygdeAvtaleEllerEosLand = [
-    ...MKV.KTObjects.landkoder.map((land: KTObject) => land.kode),
-    ...MKV.KTObjects.trygdeavtale_myndighetsland.map((land: KTObject) => land.kode),
-  ];
-
-  return landMedTrygdeAvtaleEllerEosLand.includes(landKode);
-};
-
 const komponentState = (state: RootState) => {
   const initialSoknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(state);
   const initialSoeknadsland = mottatteOpplysningerSelectors.SoknadslandkoderSelector(state);
   const initialTrygdedekning = mottatteOpplysningerSelectors.TrygdedekningSelector(state);
   return {
-    trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
     initialValues: {
       fom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.fom),
       tom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.tom),
       land: initialSoeknadsland && initialSoeknadsland.toString(),
       trygdedekning: initialTrygdedekning,
     },
+    trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
     alleLandkoder: landkoderSelectors.LandkoderSelector(state),
     redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   };
@@ -71,16 +62,16 @@ interface Props {
 }
 
 export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
-  const [visOppfrisk, setVisOppfrisk] = useState(false);
+  const dispatch = useDispatch();
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger, annenBehandlingOppfriskes } = useContext(
     FellesHandlersContext
   ) as any;
-  const { redigerbart, trygdedekninger, initialValues, alleLandkoder } = useSelector((state: RootState) =>
-    komponentState(state)
-  );
-  const dispatch = useDispatch();
+  const { redigerbart, trygdedekninger, initialValues, alleLandkoder } = useSelector(komponentState);
   const { visMenypanel, oppdaterPeriode, oppdaterSoeknadslandkoder, oppdaterTrygdedekning } =
     komponentDispatch(dispatch);
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
+  const [valgteLand, setValgteLand] = useState<string[]>([]);
+
   const {
     control,
     setValue,
@@ -94,9 +85,8 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
   });
   const formValues = watch();
 
-  const [valgteLand, setValgteLand] = useState<string[]>([]);
   useEffect(() => {
-    if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
+    if (!Utils._isEmpty(initialValues.fom)) {
       visMenypanel();
     }
     if (!Utils._isEmpty(initialValues.land)) {
@@ -109,10 +99,11 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
   }, [formIsValid]);
 
   const oppdaterLokalMottatteOpplysninger = async () => {
-    const fom = Utils.dato.formatterDatoTilISO(formValues.fom);
-    const tom = Utils.dato.formatterDatoTilISO(formValues.tom);
     await Promise.all([
-      oppdaterPeriode({ fom: fom === "Invalid date" ? "" : fom, tom: tom === "Invalid date" ? "" : tom }),
+      oppdaterPeriode({
+        fom: Utils.dato.formatterDatoTilISO(formValues.fom, null, ""),
+        tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
+      }),
       oppdaterSoeknadslandkoder(formValues.land ? [formValues.land] : []),
       oppdaterTrygdedekning(formValues.trygdedekning),
     ]);
@@ -135,7 +126,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
   };
 
   const valgtLandHarTrygdeavtaleMedNorgeEllerErEosLand = formValues.land
-    ? landHarTrygdeavtaleMedNorgeEllerErEosLand(formValues.land)
+    ? MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(formValues.land)
     : false;
 
   const landEndret = (options: []) => {
@@ -144,6 +135,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
     const formLand = Object.assign([], land).shift();
     setValue("land", formLand || undefined, { shouldValidate: true });
   };
+
   if (!aktivtSteg) return null;
 
   return (
