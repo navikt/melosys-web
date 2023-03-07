@@ -11,7 +11,7 @@ import * as Mui from "../../../../felleskomponenter/ui";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { STEG } from "../../../../felleskomponenter/stegvelger";
-import { SaksbehandlingFTRLContext, VilkarOgBegrunnelser } from "../saksbehandlingFTRLContext";
+import { SaksbehandlingContext, VilkarOgBegrunnelser } from "../saksbehandlingContext";
 import { FormSkjemaStegStatus } from "../stegvelger";
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
@@ -49,7 +49,7 @@ interface Props {
 }
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
-  const { bestemmelseVilkar } = useContext(SaksbehandlingFTRLContext);
+  const { bestemmelseVilkar } = useContext(SaksbehandlingContext);
   const dispatch = useDispatch();
   const { behandlingID, vilkarListe, bestemmelse, vilkaarKodeverk, begrunnelserKodeverk, redigerbart } = useSelector(
     (state: RootState) => komponentState(state)

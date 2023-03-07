@@ -17,6 +17,7 @@ import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
 import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 import { useFeatureToggle } from "../../../featuretoggle";
+import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
@@ -34,10 +35,9 @@ import { landkoderOperations, landkoderSelectors } from "../../../ducks/landkode
 import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperioder";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
-import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
-import "./saksbehandling.css";
+import { SaksbehandlingContext } from "./saksbehandlingContext";
 import { Stegvelger } from "./stegvelger";
-import { SaksbehandlingFTRLContext } from "./saksbehandlingFTRLContext";
+import "./saksbehandling.css";
 
 const Saksbehandling = ({
   arbeidsland,
@@ -174,9 +174,9 @@ const Saksbehandling = ({
                     {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
                     {visStegVelger && (
                       // eslint-disable-next-line react/jsx-no-constructed-context-values
-                      <SaksbehandlingFTRLContext.Provider value={{ bestemmelseVilkar: bestemmelser }}>
+                      <SaksbehandlingContext.Provider value={{ bestemmelseVilkar: bestemmelser }}>
                         <Stegvelger />
-                      </SaksbehandlingFTRLContext.Provider>
+                      </SaksbehandlingContext.Provider>
                     )}
                   </>
                 ) : (

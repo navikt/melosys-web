@@ -13,6 +13,6 @@ interface SaksbehandlingFTRLContextProps {
   bestemmelseVilkar: BestemmelsesVilkar[];
 }
 
-export const SaksbehandlingFTRLContext = React.createContext<SaksbehandlingFTRLContextProps>({
+export const SaksbehandlingContext = React.createContext<SaksbehandlingFTRLContextProps>({
   bestemmelseVilkar: [],
 });
