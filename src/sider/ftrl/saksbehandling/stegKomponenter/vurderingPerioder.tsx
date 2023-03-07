@@ -6,7 +6,7 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
 import { Medlemskapsperiode, OppdaterMedlemskapsperiode } from "Domene";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, FieldValues } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
@@ -24,8 +24,6 @@ import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkod
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
-import { FormSkjemaStegStatus } from "../stegvelger";
 
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
@@ -171,8 +169,8 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 interface VurderingPerioderProps {
   bekreft: () => void;
   tilbake: () => void;
-  aktivtSteg: string;
-  oppdaterStatus: (skjemaStatus: FormSkjemaStegStatus) => {};
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
 }
 
 export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) => {
@@ -210,7 +208,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   }, [initialValues, formValues]);
 
   useEffect(() => {
-    oppdaterStatus({ stegNavn: STEG.PERIODER, dataErGyldig: formIsValid });
+    oppdaterStatus(formIsValid);
   }, [formIsValid]);
 
   const hjelpetekst =
@@ -359,7 +357,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
           medlemskapsperiode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT
       ));
 
-  if (aktivtSteg !== STEG.PERIODER) return null;
+  if (!aktivtSteg) return null;
 
   return (
     <div className="vurderingPerioder">

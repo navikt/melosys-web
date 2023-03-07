@@ -35,7 +35,6 @@ import "./vurderingVedtak.css";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
 import { datalastingOperations } from "../../../../ducks/datalasting";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
@@ -84,8 +83,9 @@ interface FormValuesProps {
 
 interface Props {
   tilbake: () => void;
-  aktivtSteg: string;
+  aktivtSteg: boolean;
 }
+
 export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const dispatch = useDispatch();
 
@@ -280,7 +280,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   useEffect(() => {
     async function kontroller() {
-      if (aktivtSteg === STEG.VEDTAK_FTRL && redigerbart) {
+      if (aktivtSteg && redigerbart) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling(lagKontrollerFerdigbehandlingDto());
         setOppdaterFoerKontroll(false);
@@ -315,7 +315,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     '"Du har opplyst at du arbeider for Equinor ASA i Brasil. Vi har lagt til grunn at du er ansatt i en virksomhet med hovedsete i Norge."\n\n' +
     "Friteksten kommer her.";
 
-  if (aktivtSteg !== STEG.VEDTAK_FTRL) return null;
+  if (!aktivtSteg) return null;
 
   return (
     <div className="vurderingVedtak">

@@ -11,8 +11,6 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Api from "../../../../services/api";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { FormSkjemaStegStatus } from "../stegvelger";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -45,8 +43,8 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 interface Props {
   bekreft: () => void;
   tilbake: () => void;
-  aktivtSteg: string;
-  oppdaterStatus: (skjemaStatus: FormSkjemaStegStatus) => {};
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
 }
 
 export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
@@ -80,7 +78,7 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
     setErMottatteOpplysningerLastetInn(true);
   };
   useEffect(() => {
-    oppdaterStatus({ stegNavn: STEG.VIRKSOMHET, dataErGyldig: formIsValid });
+    oppdaterStatus(formIsValid);
   }, [formIsValid]);
 
   useEffect(() => {
@@ -97,7 +95,7 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
     }
   };
 
-  if (!erMottatteOpplysningerLastetInn || !formValues || aktivtSteg !== STEG.VIRKSOMHET) {
+  if (!erMottatteOpplysningerLastetInn || !formValues || !aktivtSteg) {
     return null;
   }
   return (

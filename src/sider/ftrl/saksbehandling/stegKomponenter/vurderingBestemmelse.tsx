@@ -10,9 +10,7 @@ import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
 import { SaksbehandlingContext, VilkarOgBegrunnelser } from "../saksbehandlingContext";
-import { FormSkjemaStegStatus } from "../stegvelger";
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
@@ -41,11 +39,12 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   hentVilkaar: (behandlingsId: string) => dispatch(vilkarOperations.hent(behandlingsId)),
 });
+
 interface Props {
   bekreft: () => void;
   tilbake: () => void;
-  aktivtSteg: string;
-  oppdaterStatus: (skjemaStatus: FormSkjemaStegStatus) => {};
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
 }
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
@@ -74,7 +73,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   ]);
 
   useEffect(() => {
-    oppdaterStatus({ stegNavn: STEG.BESTEMMELSE, dataErGyldig: erAlleValgGjort });
+    oppdaterStatus(erAlleValgGjort);
   }, [erAlleValgGjort]);
 
   const handleEndreBestemmelse = (nyBestemmelse: string) => {
@@ -224,7 +223,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     );
   };
 
-  if (aktivtSteg !== STEG.BESTEMMELSE) return null;
+  if (!aktivtSteg) return null;
 
   return (
     <div className="vurderingBestemmelse">

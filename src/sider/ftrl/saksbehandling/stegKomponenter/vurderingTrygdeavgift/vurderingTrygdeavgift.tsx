@@ -1,8 +1,8 @@
-import React, { useEffect, useState, ChangeEvent, useContext, useMemo } from "react";
+import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from "react";
 import { RootState } from "AppTypes";
 import { useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, FieldValues } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
@@ -11,9 +11,6 @@ import * as KV from "../../../../../kodeverk";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
-
-import { STEG } from "../../../../../felleskomponenter/stegvelger";
-import { FormSkjemaStegStatus } from "../../stegvelger";
 import { FellesHandlersContext } from "../../../../../contexts";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -29,9 +26,10 @@ const { LØNN_FRA_NORGE, LØNN_FRA_UTLANDET, DELT_LØNN } = MKV.Koder.loenn_forh
 interface Props {
   bekreft: () => void;
   tilbake: () => void;
-  aktivtSteg: string;
-  oppdaterStatus: (skjemaStatus: FormSkjemaStegStatus) => {};
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
 }
+
 const erTrygdeavgiftsgrunnlagNorgeUgyldig = (trygdeavgift: any) => {
   const { trygdeavgiftsgrunnlagNorge } = trygdeavgift.avgiftsgrunnlag;
   const { erSkattepliktig, betalerArbeidsgiverAvgift, særligAvgiftsgruppe } = trygdeavgiftsgrunnlagNorge ?? {};
@@ -139,7 +137,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   }, [behandlingOppfriskes]);
 
   useEffect(() => {
-    oppdaterStatus({ stegNavn: STEG.TRYGDEAVGIFT, dataErGyldig: formIsValid });
+    oppdaterStatus(formIsValid);
   }, [formIsValid]);
 
   useEffect(() => {
@@ -295,7 +293,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     handleErSøkerPliktigChange,
   };
 
-  if (aktivtSteg !== STEG.TRYGDEAVGIFT) return null;
+  if (!aktivtSteg) return null;
 
   return (
     <div className="vurderingTrygdeavgift">

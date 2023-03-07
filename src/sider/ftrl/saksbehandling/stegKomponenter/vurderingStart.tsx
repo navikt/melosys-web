@@ -16,8 +16,6 @@ import * as Utils from "../../../../utils";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import MultiSelect from "../../../../felleskomponenter/multiSelect";
 import { FellesHandlersContext } from "../../../../contexts";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
-import { FormSkjemaStegStatus } from "../stegvelger";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
@@ -68,8 +66,8 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 
 interface Props {
   bekreft: () => void;
-  aktivtSteg: string;
-  oppdaterStatus: (skjemaStatus: FormSkjemaStegStatus) => {};
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
 }
 
 export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
@@ -107,7 +105,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
   }, []);
 
   useEffect(() => {
-    oppdaterStatus({ stegNavn: STEG.START, dataErGyldig: formIsValid });
+    oppdaterStatus(formIsValid);
   }, [formIsValid]);
 
   const oppdaterLokalMottatteOpplysninger = async () => {
@@ -146,7 +144,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
     const formLand = Object.assign([], land).shift();
     setValue("land", formLand || undefined, { shouldValidate: true });
   };
-  if (aktivtSteg !== STEG.START) return null;
+  if (!aktivtSteg) return null;
 
   return (
     <div className="vurderingStart">
