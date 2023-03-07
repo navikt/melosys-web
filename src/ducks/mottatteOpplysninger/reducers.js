@@ -245,7 +245,6 @@ export default function reducer(state = initialState, action = {}) {
           bosted: {
             intensjonOmRetur: null,
             antallMaanederINorge: dokument.antallMaanederINorge || 0,
-            EOSBarnetrygdFraNAV: dokument.EOSBarnetrygdFraNAV,
             oppgittAdresse: {
               tilleggsnavn: dokument.oppgittAdresseTilleggsnavn,
               gatenavn: dokument.oppgittAdresseGatenavn,

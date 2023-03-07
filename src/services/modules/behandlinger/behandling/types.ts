@@ -153,9 +153,7 @@ export interface BehandlingResDto {
     medlemskap: {
       medlemsperiode: Medlemsperiode[];
     };
-    sakOgBehandling: {
-      eosBarnetrygd: boolean;
-    };
+    sakOgBehandling: {};
     sed: Sed | null;
   };
   oppsummering: Oppsummering;

@@ -6,7 +6,6 @@ import {
   ArbeidsforholdOgInntekt,
   ArbeidsgiverOgVirksomhet,
   Arbeidssteder,
-  Barnetrygd,
   Fullmektig,
   Medlemskap,
   Utenlandsoppdraget,
@@ -23,7 +22,6 @@ interface ILinksBuilder {
   addPerson: () => ILinksBuilder;
   addFamilieForhold: () => ILinksBuilder;
   addMedlemskap: () => ILinksBuilder;
-  addEUEOSBarnetrygd: () => ILinksBuilder;
   addArbeidsforholdOgInntekt: () => ILinksBuilder;
   addArbeidsgiverEllerVirksomhet: () => ILinksBuilder;
   addFullmektig: () => ILinksBuilder;
@@ -81,15 +79,6 @@ class LinksBuilder implements ILinksBuilder {
       label: "Medlemskap",
       active: false,
       content: <Medlemskap />,
-    });
-    return this;
-  }
-
-  public addEUEOSBarnetrygd() {
-    this.links.push({
-      label: "EU/EØS-barnetrygd",
-      active: false,
-      content: <Barnetrygd />,
     });
     return this;
   }
