@@ -1,11 +1,11 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import * as Nav from "../../navFrontend";
 
 import { RegisterHookFormProps } from "./reacthookProps";
 
 interface SelectComponentProps extends Nav.SelectProps {
-  label?: string;
+  label?: string | ReactElement;
   emptyFieldDisabled?: boolean;
   emptyFieldText?: string;
   disabled?: boolean;

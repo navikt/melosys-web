@@ -190,7 +190,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     reValidateMode: "onChange",
     values: useMemo(() => initialValues as FieldValues, [initialValues]),
   });
-
   const formValues = watch();
 
   useEffect(() => {

@@ -14,7 +14,6 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import MultiSelect from "../../../../felleskomponenter/multiSelect";
 import { FellesHandlersContext } from "../../../../contexts";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
 
@@ -70,11 +69,9 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
   const { visMenypanel, oppdaterPeriode, oppdaterSoeknadslandkoder, oppdaterTrygdedekning } =
     komponentDispatch(dispatch);
   const [visOppfrisk, setVisOppfrisk] = useState(false);
-  const [valgteLand, setValgteLand] = useState<string[]>([]);
 
   const {
     control,
-    setValue,
     watch,
     formState: { isValid: formIsValid, errors },
   } = useForm({
@@ -88,9 +85,6 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
   useEffect(() => {
     if (!Utils._isEmpty(initialValues.fom)) {
       visMenypanel();
-    }
-    if (!Utils._isEmpty(initialValues.land)) {
-      setValgteLand([initialValues.land]);
     }
   }, []);
 
@@ -129,13 +123,6 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
     ? MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(formValues.land)
     : false;
 
-  const landEndret = (options: []) => {
-    const land = options ? options.slice(-1).map((item: { value: string }) => item.value) : [];
-    setValgteLand(land);
-    const formLand = Object.assign([], land).shift();
-    setValue("land", formLand || undefined, { shouldValidate: true });
-  };
-
   if (!aktivtSteg) return null;
 
   return (
@@ -163,7 +150,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
             />
           </Nav.Column>
           <Nav.Column xs="5">
-            <MultiSelect
+            <Forms.Select
               label={
                 <LabelMedHjelpetekst
                   label="Arbeidsland"
@@ -171,12 +158,18 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
                   hjelpetekstClassName="hjelpetekst"
                 />
               }
-              onChange={landEndret}
-              values={valgteLand}
-              redigerbart={redigerbart}
-              feil={(errors.land?.message as any)?.melding.toString()}
-              options={alleLandkoder.map((item: any) => ({ value: item.kode, label: item.term }))}
-            />
+              emptyFieldText="Velg"
+              emptyFieldDisabled={!!formValues.land}
+              name="land"
+              disabled={!redigerbart}
+              control={control}
+            >
+              {alleLandkoder.map((item: KTObject) => (
+                <option key={item.kode} value={item.kode}>
+                  {item.term}
+                </option>
+              ))}
+            </Forms.Select>
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>

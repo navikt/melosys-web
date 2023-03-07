@@ -1,10 +1,10 @@
 import { createSelector, Selector } from "reselect";
 import { RootState } from "AppTypes";
+import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../melosyskodeverk";
 import { SakstypeKodeSelector } from "../fagsaker/selectors";
-import * as MPT from "../../proptypes";
 
-export const LandkoderSelector: Selector<RootState, typeof MPT.Kodeverk[]> = createSelector(
+export const LandkoderSelector: Selector<RootState, KTObject[]> = createSelector(
   (state: RootState) => state.landkoder,
   (landkoder) => landkoder.data || []
 );
@@ -12,7 +12,7 @@ export const LandkoderSelector: Selector<RootState, typeof MPT.Kodeverk[]> = cre
 export const LandkoderFraSakstypeSelector = createSelector(
   (state: RootState) => LandkoderSelector(state),
   (state: RootState) => SakstypeKodeSelector(state),
-  (landkoder, sakstype) => {
+  (landkoder, sakstype): KTObject[] => {
     switch (sakstype) {
       case MKV.Koder.sakstyper.FTRL:
       case MKV.Koder.sakstyper.TRYGDEAVTALE:

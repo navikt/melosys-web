@@ -225,7 +225,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
             <Nav.Select
               label=""
               disabled={!redigerbart}
-              // eslint-disable-next-line no-return-await
               onChange={(event) => handleEndreBestemmelse(event.target.value)}
               value={valgtBestemmelse}
             >
