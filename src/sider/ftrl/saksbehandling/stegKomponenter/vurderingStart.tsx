@@ -73,7 +73,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
   const {
     control,
     watch,
-    formState: { isValid: formIsValid, errors },
+    formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurderingStartSchema),
     mode: "onChange",
@@ -132,22 +132,10 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <Forms.Datovelger
-              label="Fra og med:"
-              name="fom"
-              feil={(errors.fom?.message as any)?.melding}
-              disabled={!redigerbart}
-              control={control}
-            />
+            <Forms.Datovelger label="Fra og med:" name="fom" disabled={!redigerbart} control={control} />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Forms.Datovelger
-              label="Til og med:"
-              name="tom"
-              feil={(errors.tom?.message as any)?.melding}
-              disabled={!redigerbart}
-              control={control}
-            />
+            <Forms.Datovelger label="Til og med:" name="tom" disabled={!redigerbart} control={control} />
           </Nav.Column>
           <Nav.Column xs="5">
             <Forms.Select

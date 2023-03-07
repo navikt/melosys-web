@@ -187,6 +187,10 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
     mode: "onChange",
+    context: {
+      soknadsperiode,
+      mottaksdato,
+    },
     reValidateMode: "onChange",
     values: useMemo(() => initialValues as FieldValues, [initialValues]),
   });
