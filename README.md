@@ -46,16 +46,16 @@ Bruk github-brukernavnet ditt, og PAT som passord.
 npm install
 npm start
 ```
-Dette starter applikasjonen med proxyinnstillinger rettet mot [melosys-web-mock](https://github.com/navikt/melosys-web-mock).
+Dette starter applikasjonen med proxyinnstillinger rettet mot [melosys-api](https://github.com/navikt/melosys-api) kjørende lokalt på port 8080.
 
-### Kjøring mot kjørende API
+### Kjøring mot API koblet mot testmiljø
 
-Dersom du heller ønsker å koble mot din kjørende [melosys-api](https://github.com/navikt/melosys-api#lokal-utvikling), kan du bruke følgende script for å sette proxyinnstillinger mot [melosys-docker-compose](https://github.com/navikt/melosys-docker-compose#frontendutvikling):
+Dersom du heller ønsker å koble mot [melosys-api](https://github.com/navikt/melosys-api#lokal-utvikling) kjørende lokalt, men som er koblet på database/tjenester i et miljø, kan du kjøre følgende script:
 ```
 npm install
-npm run start:nginxlocal
+npm run start:q2
 ```
-Dersom du ikke allerede har en token lagret i cookies på localhost, vil det ikke være mulig å få kontakt med APIet. En workaround for å få token er å først starte [docker-compose](https://github.com/navikt/melosys-docker-compose#frontendutvikling) for frontendutvikling. Logg så inn på porten som kjører frontend-containeren. Du vil da få cookies som vil være tilgjengelig på alle portene som kjører under localhost.
+Dette sørger for at du logger inn gjennom Azure AD i dev og sender ekte autoriseringstokens til backend. Tilgjengelige miljøer for dette er q1 og q2.
 
 ## Genering av graphql-kode
 
