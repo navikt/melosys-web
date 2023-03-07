@@ -1,8 +1,6 @@
 import { ChangeEventHandler, Fragment, useContext, useEffect, useMemo, useState } from "react";
 import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
 
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";

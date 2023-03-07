@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
 import { useDispatch, useSelector } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";

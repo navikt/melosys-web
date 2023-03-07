@@ -35,7 +35,6 @@ import "./vurderingVedtak.css";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
-import { datalastingOperations } from "../../../../ducks/datalasting";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 const { trygdeavtale_myndighetsland } = MKV.Koder;
@@ -58,8 +57,8 @@ const komponentState = (state: RootState) => ({
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   initialValues: {
-    begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state),
+    begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state) || "",
+    innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state) || "",
     betalingsintervall: "MANEDLIG",
   },
   formIsValid: formSelectors.FolketrygdlovenVedtakFormValidSelector(state),

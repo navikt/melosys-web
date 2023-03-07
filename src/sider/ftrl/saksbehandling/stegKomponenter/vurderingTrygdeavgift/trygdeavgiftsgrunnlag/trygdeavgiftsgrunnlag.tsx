@@ -156,7 +156,7 @@ const Trygdeavgiftsgrunnlag = ({
     );
   };
   const erSkattepliktig = trygdeavgiftsgrunnlag?.erSkattepliktig;
-  console.log(erSkattepliktig);
+
   return (
     <div className="vurderingTrygdeavgift__overstrek vurderingTrygdeavgift">
       <Nav.Row>
