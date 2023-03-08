@@ -100,7 +100,7 @@ const Saksbehandling = ({
                   avsenderland={KV.kodeTilObjekt(avsenderland, MKV.KTObjects.land_iso2)}
                   lovvalgsland={KV.kodeTilObjekt(lovvalgsland, MKV.KTObjects.landkoder)}
                   lovvalgsperiodeFom={lovvalgsperiodeFom || mottatteOpplysningerFom}
-                  lovvalgsperiodeTom={lovvalgsperiodeTom || mottatteOpplysningerFom}
+                  lovvalgsperiodeTom={lovvalgsperiodeTom || mottatteOpplysningerTom}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerTom}
                 />
