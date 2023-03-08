@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 
-import * as Utils from "../../../utils/dato";
+import * as Utils from "../../utils/dato";
+import * as Nav from "../../navFrontend";
 
-import Datovelger from "../../datovelger";
+import PlainDatovelger from "../datovelger";
 
-import "../skjema.css";
-import { RegisterHookFormProps } from "../reacthookProps";
+import { RegisterHookFormProps } from "./reacthookProps";
 
 interface DatovelgerComponentProps {
   label: ReactNode;
@@ -15,17 +15,21 @@ interface DatovelgerComponentProps {
   minDate?: Date;
   maxDate?: Date;
   feil?: string;
+  onChange?: (dato: string) => void;
 }
 
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;
 
 const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatovelgerComponentProps>(
-  ({ label, disabled, bredde, minDate, maxDate, feil, ...rest }: InnerDatovelgerComponentProps, _ref: any) => {
+  (
+    { label, disabled, bredde, minDate, maxDate, feil, onChange, ...rest }: InnerDatovelgerComponentProps,
+    _ref: any
+  ) => {
     return (
-      <div className="skjemaelement__datovelger" {...rest}>
-        <Datovelger
-          label={label}
-          onChange={(nyDato) => rest.onChange(Utils.dateTilNorskString(nyDato))}
+      <div {...rest}>
+        <PlainDatovelger
+          label={<Nav.Typo.Element>{label}</Nav.Typo.Element>}
+          onChange={(nyDato) => onChange(Utils.dateTilNorskString(nyDato))}
           onBlur={rest.onBlur}
           value={Utils.norskStringTilDate(rest.value)}
           feil={feil}
@@ -41,13 +45,13 @@ const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatove
 
 type DatovelgerProps = DatovelgerComponentProps & UseControllerProps;
 
-const DatovelgerV2 = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
+const Datovelger = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
   ({ name, control, ...rest }: DatovelgerProps, _ref: any) => {
     return (
       <Controller
         name={name}
         control={control}
-        render={({ field }) => (
+        render={({ field, formState }) => (
           <InnerDatovelgerComponent
             {...field}
             {...rest}
@@ -56,6 +60,11 @@ const DatovelgerV2 = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
             bredde={rest.bredde}
             minDate={rest.minDate}
             maxDate={rest.maxDate}
+            onChange={(value: any) => {
+              field.onChange(value || "");
+              if (rest.onChange) rest.onChange(value);
+            }}
+            feil={(formState.errors?.[field.name]?.message as any)?.melding}
           />
         )}
       />
@@ -63,4 +72,4 @@ const DatovelgerV2 = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
   }
 );
 
-export default DatovelgerV2;
+export default Datovelger;

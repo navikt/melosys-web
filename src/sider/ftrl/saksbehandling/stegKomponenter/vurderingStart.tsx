@@ -8,49 +8,39 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
 
 import MKV from "../../../../melosyskodeverk";
+import * as Forms from "../../../../felleskomponenter/forms";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
-import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { FellesHandlersContext } from "../../../../contexts";
+import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
+
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../../ducks/menypanel";
+import { landkoderSelectors } from "../../../../ducks/landkoder";
+import { tilForsiden } from "../../../../ducks/navigering/operations";
 
 import vurderingStartSchema from "./vurderingStartSchema";
 import "./vurderingStart.css";
-import MultiSelect from "../../../../felleskomponenter/multiSelect";
-import { landkoderSelectors } from "../../../../ducks/landkoder";
-import { FellesHandlersContext } from "../../../../contexts";
-import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
-import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
-import { tilForsiden } from "../../../../ducks/navigering/operations";
-import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
-
-const landHarTrygdeavtaleMedNorgeEllerErEosLand = (landKode: string) => {
-  const landMedTrygdeAvtaleEllerEosLand = [
-    ...MKV.KTObjects.landkoder.map((land: KTObject) => land.kode),
-    ...MKV.KTObjects.trygdeavtale_myndighetsland.map((land: KTObject) => land.kode),
-  ];
-
-  return landMedTrygdeAvtaleEllerEosLand.includes(landKode);
-};
 
 const komponentState = (state: RootState) => {
   const initialSoknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(state);
   const initialSoeknadsland = mottatteOpplysningerSelectors.SoknadslandkoderSelector(state);
   const initialTrygdedekning = mottatteOpplysningerSelectors.TrygdedekningSelector(state);
   return {
-    trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
     initialValues: {
       fom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.fom),
       tom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.tom),
       land: initialSoeknadsland && initialSoeknadsland.toString(),
       trygdedekning: initialTrygdedekning,
     },
+    trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
     alleLandkoder: landkoderSelectors.LandkoderSelector(state),
+    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   };
 };
 
@@ -66,52 +56,47 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 
 interface Props {
   bekreft: () => void;
-  aktivtSteg: string;
-  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
 }
 
-export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) => {
-  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
-  const [visOppfrisk, setVisOppfrisk] = useState(false);
+export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
+  const dispatch = useDispatch();
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger, annenBehandlingOppfriskes } = useContext(
     FellesHandlersContext
   ) as any;
-  const { trygdedekninger, initialValues, alleLandkoder } = useSelector((state: RootState) => komponentState(state));
-  const dispatch = useDispatch();
+  const { redigerbart, trygdedekninger, initialValues, alleLandkoder } = useSelector(komponentState);
   const { visMenypanel, oppdaterPeriode, oppdaterSoeknadslandkoder, oppdaterTrygdedekning } =
     komponentDispatch(dispatch);
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
+
   const {
     control,
-    setValue,
     watch,
-    formState: { isValid: formIsValid, errors },
+    formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurderingStartSchema),
-    mode: "onChange",
-    reValidateMode: "onChange",
+    mode: "all",
     values: useMemo(() => initialValues as FieldValues, [initialValues]),
   });
   const formValues = watch();
 
-  const [valgteLand, setValgteLand] = useState<string[]>([]);
   useEffect(() => {
-    if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
+    if (!Utils._isEmpty(initialValues.fom)) {
       visMenypanel();
-    }
-    if (!Utils._isEmpty(initialValues.land)) {
-      setValgteLand([initialValues.land]);
     }
   }, []);
 
   useEffect(() => {
-    rapporterSkjema({ stegNavn: STEG.START, dataErGyldig: formIsValid });
+    oppdaterStatus(formIsValid);
   }, [formIsValid]);
 
   const oppdaterLokalMottatteOpplysninger = async () => {
-    const fom = Utils.dato.formatterDatoTilISO(formValues.fom);
-    const tom = Utils.dato.formatterDatoTilISO(formValues.tom);
     await Promise.all([
-      oppdaterPeriode({ fom: fom === "Invalid date" ? "" : fom, tom: tom === "Invalid date" ? "" : tom }),
+      oppdaterPeriode({
+        fom: Utils.dato.formatterDatoTilISO(formValues.fom, null, ""),
+        tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
+      }),
       oppdaterSoeknadslandkoder(formValues.land ? [formValues.land] : []),
       oppdaterTrygdedekning(formValues.trygdedekning),
     ]);
@@ -126,7 +111,6 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
 
     if (!erSammeSomInitialVerdier) {
       oppdaterLokalMottatteOpplysninger().finally(() => {
-        visMenypanel();
         setVisOppfrisk(true);
       });
     } else {
@@ -135,16 +119,10 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
   };
 
   const valgtLandHarTrygdeavtaleMedNorgeEllerErEosLand = formValues.land
-    ? landHarTrygdeavtaleMedNorgeEllerErEosLand(formValues.land)
+    ? MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(formValues.land)
     : false;
 
-  const landEndret = (options: []) => {
-    const land = options ? options.slice(-1).map((item: { value: string }) => item.value) : [];
-    setValgteLand(land);
-    const formLand = Object.assign([], land).shift();
-    setValue("land", formLand || undefined, { shouldValidate: true });
-  };
-  if (aktivtSteg !== STEG.START) return null;
+  if (!aktivtSteg) return null;
 
   return (
     <div className="vurderingStart">
@@ -153,25 +131,13 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <Skjema.DatovelgerV2
-              label="Fra og med:"
-              name="fom"
-              feil={(errors.fom?.message as any)?.melding}
-              disabled={!redigerbart}
-              control={control}
-            />
+            <Forms.Datovelger label="Fra og med:" name="fom" disabled={!redigerbart} control={control} />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Skjema.DatovelgerV2
-              label="Til og med:"
-              name="tom"
-              feil={(errors.tom?.message as any)?.melding}
-              disabled={!redigerbart}
-              control={control}
-            />
+            <Forms.Datovelger label="Til og med:" name="tom" disabled={!redigerbart} control={control} />
           </Nav.Column>
           <Nav.Column xs="5">
-            <MultiSelect
+            <Forms.Select
               label={
                 <LabelMedHjelpetekst
                   label="Arbeidsland"
@@ -179,12 +145,18 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
                   hjelpetekstClassName="hjelpetekst"
                 />
               }
-              onChange={landEndret}
-              values={valgteLand}
-              redigerbart={redigerbart}
-              feil={(errors.land?.message as any)?.melding.toString()}
-              options={alleLandkoder.map((item: any) => ({ value: item.kode, label: item.term }))}
-            />
+              emptyFieldText="Velg"
+              emptyFieldDisabled={!!formValues.land}
+              name="land"
+              disabled={!redigerbart}
+              control={control}
+            >
+              {alleLandkoder.map((item: KTObject) => (
+                <option key={item.kode} value={item.kode}>
+                  {item.term}
+                </option>
+              ))}
+            </Forms.Select>
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
@@ -201,7 +173,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
       <Nav.Fieldset legend="Trygdedekning">
         <Nav.Row>
           <Nav.Column xs="6">
-            <Skjema.SelectV2
+            <Forms.Select
               name="trygdedekning"
               control={control}
               label=""
@@ -214,7 +186,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
                   {item.term}
                 </option>
               ))}
-            </Skjema.SelectV2>
+            </Forms.Select>
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
@@ -232,6 +204,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, rapporterSkjema }: Props) 
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
             setVisOppfrisk(false);
+            visMenypanel();
             bekreft();
           }}
           tilForsiden={() => {

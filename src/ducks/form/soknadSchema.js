@@ -21,8 +21,9 @@ const lagAndelMellomNullOgHundreMelding = (feltbeskrivelse) =>
   );
 const tomStringTilNull = (value, originalValue) => (originalValue === "" ? null : value);
 
-const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
-  behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
+const skalValidereSoknad = (behandlingstema, mottatteOpplysningerType) =>
+  behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND &&
+  mottatteOpplysningerType !== MKV.Koder.mottatteopplysningertyper.ANMODNING_ELLER_ATTEST;
 
 const erTrygdeavtaleSak = (sakstype) => sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE;
 
@@ -149,8 +150,8 @@ const foedestedOgLandSchema = object()
     ),
   });
 
-const soknad = object().when("$behandlingstema", {
-  is: erIkkeBeslutningLovvalgAnnetLand,
+const soknad = object().when(["$behandlingstema", "$mottatteOpplysningerType"], {
+  is: skalValidereSoknad,
   then: object().shape({
     arbeidsforholdUtland: array().of(
       object().shape({

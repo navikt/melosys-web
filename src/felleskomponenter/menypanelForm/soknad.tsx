@@ -159,6 +159,8 @@ const mapStateToProps = (state: RootState) => ({
       landkoder: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
       erUkjenteEllerAlleEosLand: mottatteOpplysningerSelectors.SoknadslandErUkjenteEllerAlleEosLandSelector(state),
     },
+    avsenderland: mottatteOpplysningerSelectors.AvsenderlandSelector(state),
+    lovvalgsland: mottatteOpplysningerSelectors.LovvalgslandSelector(state),
     trygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
     arbeidsforholdUtland: mottatteOpplysningerSelectors.ArbeidsforholdUtlandSelector(state),
     selvstendigNaeringsvirksomhetUtland:

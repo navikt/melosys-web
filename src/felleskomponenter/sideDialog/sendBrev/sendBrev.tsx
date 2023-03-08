@@ -115,12 +115,14 @@ const SendBrev = ({
   const [utkastPåBehandlingen, setUtkastPåBehandlingen] = useState<Api.Brevutkast.BrevutkastResDto[]>([]);
 
   const fritekstvedleggToggle = useFeatureToggle("melosys.brev.GENERELT_FRITEKSTVEDLEGG");
-  const utkastToggleEnabled = useFeatureToggle("melosys.utkast") === "enabled";
 
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
+
+  const hentUtkast = () =>
+    Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
@@ -129,17 +131,8 @@ const SendBrev = ({
       });
       setTilgjengeligeMaler(response);
     });
+    hentUtkast();
   }, []);
-
-  const hentUtkast = () =>
-    Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
-
-  useEffect(() => {
-    // Når toggle melosys.utkast fjernes kan denne flyttes opp til useEffect onMount
-    if (utkastToggleEnabled) {
-      hentUtkast();
-    }
-  }, [utkastToggleEnabled]);
 
   useEffect(() => {
     changeField(
@@ -574,11 +567,9 @@ const SendBrev = ({
         <Nav.Hovedknapp mini disabled={knappErDisabled} className="brevknapp" onClick={sendBrev}>
           Send brev
         </Nav.Hovedknapp>
-        {utkastToggleEnabled && (
-          <Nav.Knapp mini disabled={knappErDisabled} className="brevknapp" onClick={lagreUtkast}>
-            Lagre utkast
-          </Nav.Knapp>
-        )}
+        <Nav.Knapp mini disabled={knappErDisabled} className="brevknapp" onClick={lagreUtkast}>
+          Lagre utkast
+        </Nav.Knapp>
         <Nav.Knapp mini disabled={!formValues.mottaker || !redigerbart} className="brevknapp" onClick={forkastBrev}>
           Forkast brev
         </Nav.Knapp>

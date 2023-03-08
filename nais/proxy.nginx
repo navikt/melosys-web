@@ -42,10 +42,6 @@ server {
     alias /usr/share/nginx/html/static/;
   }
 
-  location /melosys/frontendlogger/ {
-    alias /usr/share/nginx/html/frontendlogger/;
-  }
-
   location /melosys/ {
     add_header Cache-Control 'no-store';
     add_header Cache-Control 'no-cache';

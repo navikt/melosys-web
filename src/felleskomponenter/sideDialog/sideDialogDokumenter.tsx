@@ -11,7 +11,6 @@ import * as Ikoner from "../../resources/images";
 import { hentDato } from "../../ducks/dokumenter/selectors";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 import { useAsyncCallbackState } from "../../hooks";
-import { useFeatureToggle } from "../../featuretoggle";
 import PdfLink from "../pdfLink";
 import LagredeUtkast from "./sendBrev/brevutkast/lagredeUtkast";
 import { FaneNavn } from "./sideDialog";
@@ -95,7 +94,6 @@ interface SideDialogDokumenterProps {
 
 const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, endreFane }: SideDialogDokumenterProps) => {
   const [utkast] = useAsyncCallbackState(() => Api.Brevutkast.hentBrevutkast(behandlingID), [], []);
-  const utkastToggleEnabled = useFeatureToggle("melosys.utkast") === "enabled";
   const dispatch = useDispatch();
   const handleValgtUtkast = (valgtUtkast: Api.Brevutkast.BrevutkastResDto | null) => {
     dispatch(change(KV.Form.SEND_BREV, "aktivtUtkast", valgtUtkast));
@@ -103,7 +101,7 @@ const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, endreFane }: Sid
   };
   return (
     <div className="sideDialogDokumenter">
-      {utkastToggleEnabled && <LagredeUtkast alleUtkast={utkast} settAktivtUtkast={handleValgtUtkast} />}
+      <LagredeUtkast alleUtkast={utkast} settAktivtUtkast={handleValgtUtkast} />
       <table width="100%" className="dokumentTabell" aria-label="Liste over dokumenter knyttet til saken">
         <thead>
           <tr>

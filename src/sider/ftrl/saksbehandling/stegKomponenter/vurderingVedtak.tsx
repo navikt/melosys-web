@@ -10,12 +10,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
+import * as Forms from "../../../../felleskomponenter/forms";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 import * as Ikoner from "../../../../resources/images";
-import * as Skjema from "../../../../felleskomponenter/skjema";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
@@ -34,10 +34,8 @@ import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from ".
 import "./vurderingVedtak.css";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import vurdering_vedtak from "./vurderingVedtakSchema";
-import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
-import { datalastingOperations } from "../../../../ducks/datalasting";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 const { trygdeavtale_myndighetsland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
@@ -59,11 +57,13 @@ const komponentState = (state: RootState) => ({
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   initialValues: {
-    begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state),
+    begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state) || "",
+    innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state) || "",
     betalingsintervall: "MANEDLIG",
   },
   formIsValid: formSelectors.FolketrygdlovenVedtakFormValidSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  alleLandkoder: landkoderSelectors.LandkoderSelector(state),
 });
 
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -71,7 +71,6 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
     dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
   fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto) =>
     dispatch(vedtakOperations.fatt(behandlingID, body)),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
 });
 
 interface FormValuesProps {
@@ -82,8 +81,9 @@ interface FormValuesProps {
 
 interface Props {
   tilbake: () => void;
-  aktivtSteg: string;
+  aktivtSteg: boolean;
 }
+
 export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const dispatch = useDispatch();
 
@@ -100,21 +100,22 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     skalBetaleTrygdeavgiftTilUtlandet,
     vedtakstype,
     initialValues,
-  } = useSelector((state: RootState) => komponentState(state));
+    alleLandkoder,
+    redigerbart,
+  } = useSelector(komponentState);
+
   const {
     watch,
     control,
-    formState: { isValid: formIsValid, errors },
+    formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurdering_vedtak),
     defaultValues: {
       ...initialValues,
     } as FieldValues,
   });
-
   const formValues = watch();
-  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
-  const alleLandkoder = useSelector((state: RootState) => landkoderSelectors.LandkoderSelector(state));
+
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -134,14 +135,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     hentMuligeMottakere();
   }, []);
 
-  /* Mottakere settes av backend og følger regler:
-      TODO: BRUKER_FÅR_KOPI_HVIS_FULLMEKTIG_FINNES,
-      ARBEIDSGIVER_FÅR_KOPI_HVIS_IKKE_SELVBETALENDE_BRUKER,
-      TODO: SKATT_FÅR_KOPI_HVIS_AVGIFTSPLIKTIG_INNTEKT
-    Burde derfor hente mottakere på nytt når disse dataene endres.
-   */
-  useCallback(Utils._debounce(hentMuligeMottakere, 2000), []);
-
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
       Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
@@ -150,6 +143,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       });
     }
   };
+
   const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), []);
 
   useEffect(() => {
@@ -285,7 +279,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   useEffect(() => {
     async function kontroller() {
-      if (aktivtSteg === STEG.VEDTAK_FTRL && redigerbart) {
+      if (aktivtSteg && redigerbart) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling(lagKontrollerFerdigbehandlingDto());
         setOppdaterFoerKontroll(false);
@@ -320,7 +314,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     '"Du har opplyst at du arbeider for Equinor ASA i Brasil. Vi har lagt til grunn at du er ansatt i en virksomhet med hovedsete i Norge."\n\n' +
     "Friteksten kommer her.";
 
-  if (aktivtSteg !== STEG.VEDTAK_FTRL) return null;
+  if (!aktivtSteg) return null;
 
   return (
     <div className="vurderingVedtak">
@@ -384,7 +378,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       <div style={{ marginTop: "0.5rem", marginLeft: "0.5rem", marginBottom: "0.5rem" }}>
         <Nav.Row>
           <Nav.Column xs="4">
-            <Skjema.SelectV2
+            <Forms.Select
               label="Betalingsintervall"
               name="betalingsintervall"
               control={control}
@@ -395,7 +389,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
                   {item.term}
                 </option>
               ))}
-            </Skjema.SelectV2>
+            </Forms.Select>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -407,10 +401,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           hjelpetekstClassName="hjelpetekst"
         />
       </Nav.Typo.Element>
-      <Skjema.HTMLEditorV2
+      <Forms.HtmlEditor
         name="innledningFritekst"
         control={control}
-        feil={(errors.innledningFritekst?.message as any)?.melding}
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til innledning..."
         disabled={!redigerbart}
@@ -423,10 +416,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           hjelpetekstClassName="hjelpetekst"
         />
       </Nav.Typo.Element>
-      <Skjema.HTMLEditorV2
+      <Forms.HtmlEditor
         name="begrunnelseFritekst"
         control={control}
-        feil={(errors.begrunnelseFritekst?.message as any)?.melding}
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
         disabled={!redigerbart}

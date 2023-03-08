@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
 import { useDispatch, useSelector } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
 import { Medlemskapsperiode, OppdaterMedlemskapsperiode } from "Domene";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, FieldValues } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
@@ -14,22 +12,21 @@ import * as Ikoner from "../../../../resources/images";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
-import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Forms from "../../../../felleskomponenter/forms";
 import * as Utils from "../../../../utils";
 
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
-import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
-import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
 
-interface formValuesProp {
+interface FormValuesProp {
   medlemskapsperioder?: MedlemskapsperiodeProp[];
 }
 
@@ -41,8 +38,7 @@ interface PeriodeElementProps {
   trygdedekninger: KTObject[];
   innvilgelsesResultater: KTObject[];
   control: any;
-  formValues: formValuesProp;
-  errors: any;
+  formValues: FormValuesProp;
   handleSlett: (index: number) => void;
   erPeriodeFoerSoknadMottatDato: (medlemskapsperiode: MedlemskapsperiodeProp) => boolean;
 }
@@ -53,7 +49,6 @@ const PeriodeElement = ({
   trygdedekninger,
   innvilgelsesResultater,
   formValues,
-  errors,
   control,
   handleSlett,
   erPeriodeFoerSoknadMottatDato,
@@ -68,28 +63,25 @@ const PeriodeElement = ({
     <Nav.Fieldset legend="Periode" className="understrek">
       <Nav.Row>
         <Nav.Column xs="2">
-          <Skjema.DatovelgerV2
+          <Forms.Datovelger
             label="Fra og med:"
             control={control}
-            feil={errors.medlemskapsperioder?.at(index)?.fomDato?.message?.melding}
             name={`medlemskapsperioder[${index}].fomDato`}
             disabled
           />
         </Nav.Column>
         <Nav.Column xs="2">
-          <Skjema.DatovelgerV2
+          <Forms.Datovelger
             label="Til og med:"
             control={control}
             name={`medlemskapsperioder[${index}].tomDato`}
-            feil={errors.medlemskapsperioder?.at(index)?.tomDato?.message?.melding}
             disabled={!redigerbart}
           />
         </Nav.Column>
         <Nav.Column xs="4">
-          <Skjema.SelectV2
+          <Forms.Select
             label="Trygdedekning"
             name={`medlemskapsperioder[${index}].trygdedekning`}
-            feil={errors.medlemskapsperioder?.at(index)?.trygdedekning?.message?.melding}
             control={control}
             disabled={!redigerbart}
             emptyFieldText="Velg"
@@ -100,13 +92,12 @@ const PeriodeElement = ({
                 {item.term}
               </option>
             ))}
-          </Skjema.SelectV2>
+          </Forms.Select>
         </Nav.Column>
         <Nav.Column xs="4">
-          <Skjema.SelectV2
+          <Forms.Select
             label="Resultat"
             name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
-            feil={errors.medlemskapsperioder?.at(index)?.innvilgelsesResultat?.message?.melding}
             control={control}
             disabled={!redigerbart}
             emptyFieldText="Velg"
@@ -121,7 +112,7 @@ const PeriodeElement = ({
                   {item.term}
                 </option>
               ))}
-          </Skjema.SelectV2>
+          </Forms.Select>
         </Nav.Column>
       </Nav.Row>
       {formValues.medlemskapsperioder[index].feil && (
@@ -165,60 +156,54 @@ const komponentState = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
-});
-
-const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  hentMedlemskapsperioder: (behandlingID: number) =>
-    dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID)),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
 interface VurderingPerioderProps {
   bekreft: () => void;
   tilbake: () => void;
-  aktivtSteg: string;
-  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
 }
 
-export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, rapporterSkjema }: VurderingPerioderProps) => {
-  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
+export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) => {
   const dispatch = useDispatch();
   const {
     mottaksdato,
+    redigerbart,
     valgtTrygdedekning,
     initialValues,
     trygdedekninger,
     behandlingID,
     innvilgelsesResultater,
     soknadsperiode,
-  } = useSelector((state: RootState) => komponentState(state));
-  const { hentMedlemskapsperioder } = komponentDispatch(dispatch);
+  } = useSelector(komponentState);
 
   const {
     setValue,
     control,
     watch,
-    formState: { isValid: formIsValid, errors },
+    formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
     mode: "onChange",
+    context: {
+      soknadsperiode,
+      mottaksdato,
+    },
     reValidateMode: "onChange",
     values: useMemo(() => initialValues as FieldValues, [initialValues]),
   });
-
   const formValues = watch();
 
   useEffect(() => {
-    if (
-      formValues.medlemskapsperioder.length === 0 &&
-      initialValues.medlemskapsperioder &&
-      initialValues.medlemskapsperioder.length > 0
-    ) {
+    if (formValues.medlemskapsperioder.length === 0 && !Utils._isEmpty(initialValues.medlemskapsperioder)) {
       setValue("medlemskapsperioder", initialValues.medlemskapsperioder);
     }
   }, [initialValues, formValues]);
 
   useEffect(() => {
-    rapporterSkjema({ stegNavn: STEG.PERIODER, dataErGyldig: formIsValid });
+    oppdaterStatus(formIsValid);
   }, [formIsValid]);
 
   const hjelpetekst =
@@ -345,7 +330,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, rapporterSkjem
   };
 
   const handleBekreft = () => {
-    hentMedlemskapsperioder(behandlingID);
+    dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
     bekreft();
   };
 
@@ -367,7 +352,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, rapporterSkjem
           medlemskapsperiode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT
       ));
 
-  if (aktivtSteg !== STEG.PERIODER) return null;
+  if (!aktivtSteg) return null;
 
   return (
     <div className="vurderingPerioder">
@@ -398,7 +383,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, rapporterSkjem
           <PeriodeElement
             trygdedekninger={trygdedekninger}
             innvilgelsesResultater={innvilgelsesResultater}
-            errors={errors}
             key={medlemskapsperiode.id}
             index={index}
             control={control}

@@ -11,21 +11,21 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Api from "../../../../services/api";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
 import "./vurderingVirksomhet.css";
-import { RedigerbartSelector } from "../../../../ducks/redigerbart/selectors";
-import { FormSkjemaStegStatus } from "../../../../felleskomponenter/stegvelger/StegvelgerFTRL";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 const komponentState = (state: RootState) => {
   const lagredeValgtevirksomheter = oppsummertfaktaSelectors.VirksomhetIDerSelector(state);
   return {
     virksomheterListe: behandlingerSelectors.AlleVirksomheterSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
     lagredeValgtevirksomheter,
     initialValues: {
       valgteVirksomheter: lagredeValgtevirksomheter,
@@ -43,18 +43,20 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 interface Props {
   bekreft: () => void;
   tilbake: () => void;
-  aktivtSteg: string;
-  rapporterSkjema: (skjemaStatus: FormSkjemaStegStatus) => {};
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
 }
 
-export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, rapporterSkjema }: Props) => {
-  const redigerbart = useSelector((state: RootState) => RedigerbartSelector(state));
+export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
 
   const { hentOppsummertFakta, sendVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
-  const { virksomheterListe, behandlingID, initialValues, lagredeValgtevirksomheter } = useSelector(
-    (state: RootState) => komponentState(state)
-  );
+  const { redigerbart, virksomheterListe, behandlingID, initialValues, lagredeValgtevirksomheter } =
+    useSelector(komponentState);
+  const [erMottatteOpplysningerLastetInn, setErMottatteOpplysningerLastetInn] = useState(false);
+  const hjelpetekst =
+    "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. " +
+    'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
   const {
     setValue,
@@ -66,21 +68,12 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, rapporterSkj
     reValidateMode: "onChange",
     values: useMemo(() => initialValues, [initialValues]),
   });
-
   const formValues = watch();
-
-  const [erMottatteOpplysningerLastetInn, setErMottatteOpplysningerLastetInn] = useState(false);
-  const hjelpetekst =
-    "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. " +
-    'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
   const lastInnMottatteOpplysninger = async () => {
     await hentMottatteOpplysninger(behandlingID);
     setErMottatteOpplysningerLastetInn(true);
   };
-  useEffect(() => {
-    rapporterSkjema({ stegNavn: STEG.VIRKSOMHET, dataErGyldig: formIsValid });
-  }, [formIsValid]);
 
   useEffect(() => {
     lastInnMottatteOpplysninger();
@@ -89,6 +82,10 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, rapporterSkj
     };
   }, []);
 
+  useEffect(() => {
+    oppdaterStatus(formIsValid);
+  }, [formIsValid]);
+
   const handleFortsett = () => {
     if (formValues && formValues.valgteVirksomheter) {
       sendVirksomheter(behandlingID, { virksomhetIDer: formValues.valgteVirksomheter });
@@ -96,7 +93,7 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, rapporterSkj
     }
   };
 
-  if (!erMottatteOpplysningerLastetInn || !formValues || aktivtSteg !== STEG.VIRKSOMHET) {
+  if (!erMottatteOpplysningerLastetInn || !formValues || !aktivtSteg) {
     return null;
   }
   return (

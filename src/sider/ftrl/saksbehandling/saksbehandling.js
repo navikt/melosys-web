@@ -16,6 +16,7 @@ import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
 import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 import { useFeatureToggle } from "../../../featuretoggle";
+import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
@@ -33,9 +34,8 @@ import { landkoderOperations, landkoderSelectors } from "../../../ducks/landkode
 import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperioder";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
-import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
+import { Stegvelger } from "./stegvelger";
 import "./saksbehandling.css";
-import { StegvelgerFTRL } from "../../../felleskomponenter/stegvelger/StegvelgerFTRL";
 
 const Saksbehandling = ({
   arbeidsland,
@@ -151,6 +151,7 @@ const Saksbehandling = ({
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+
   return (
     <>
       <Informasjonlinje />
@@ -163,7 +164,7 @@ const Saksbehandling = ({
                   <>
                     {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
                     {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
-                    {visStegVelger && <StegvelgerFTRL />}
+                    {visStegVelger && <Stegvelger />}
                   </>
                 ) : (
                   <VirksomhetMelding />

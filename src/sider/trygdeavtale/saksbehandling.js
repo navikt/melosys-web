@@ -96,7 +96,8 @@ const Saksbehandling = ({
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
-      Utils.logger.error(e);
+      // eslint-disable-next-line no-console
+      console.error(e);
     }
     return false;
   };

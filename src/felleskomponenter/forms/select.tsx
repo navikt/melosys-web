@@ -1,16 +1,16 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
-import * as Nav from "../../../navFrontend";
+import * as Nav from "../../navFrontend";
 
-import "../skjema.css";
-import { RegisterHookFormProps } from "../reacthookProps";
+import { RegisterHookFormProps } from "./reacthookProps";
 
 interface SelectComponentProps extends Nav.SelectProps {
-  label?: string;
+  label?: string | ReactElement;
   emptyFieldDisabled?: boolean;
   emptyFieldText?: string;
   disabled?: boolean;
   children: React.ReactNode | React.ReactNode[];
+  onChange?: (value: any) => void;
 }
 
 type SelectInnerComponentProps = SelectComponentProps & RegisterHookFormProps;
@@ -45,13 +45,18 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       <Controller
         name={name}
         control={control}
-        render={({ field }) => (
+        render={({ field, formState }) => (
           <SelectInnerComponent
             {...field}
             label={rest.label}
             emptyFieldText={rest.emptyFieldText}
             emptyFieldDisabled={rest.emptyFieldDisabled}
             disabled={rest.disabled}
+            onChange={(event: any) => {
+              field.onChange(event);
+              if (rest.onChange) rest.onChange(event?.target?.value);
+            }}
+            feil={(formState.errors?.[field.name]?.message as any)?.melding}
           >
             {rest.children}
           </SelectInnerComponent>

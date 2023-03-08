@@ -2,9 +2,8 @@ import React, { Suspense, useState } from "react";
 import usePromise from "react-promise-suspense";
 import PT from "prop-types";
 import classNames from "classnames";
-
+import * as Sentry from "@sentry/react";
 import * as Nav from "../../../navFrontend";
-import ErrorBoundary from "../../ErrorBoundary";
 import Knapperad from "../../knapperad";
 
 import "./dialogboksOppfrisk.css";
@@ -77,15 +76,13 @@ OppfriskFeilmelding.propTypes = {
 // Returnerer OppfriskVenter mens behandlingen oppfriskes og OppfriskFeilmelding dersom oppfrisk() returnerer != 2xx
 const OppfriskBehandling = ({ oppfrisk, lukk, tilForsiden }) => {
   return (
-    <ErrorBoundary
-      fallbackRender={({ resetErrorBoundary }) => (
-        <OppfriskFeilmelding resetErrorBoundary={resetErrorBoundary} lukk={lukk} />
-      )}
+    <Sentry.ErrorBoundary
+      fallback={({ resetError }) => <OppfriskFeilmelding resetErrorBoundary={resetError} lukk={lukk} />}
     >
       <Suspense fallback={<OppfriskVenter tilForsiden={tilForsiden} />}>
         <Oppfrisk oppfrisk={oppfrisk} lukk={lukk} />
       </Suspense>
-    </ErrorBoundary>
+    </Sentry.ErrorBoundary>
   );
 };
 

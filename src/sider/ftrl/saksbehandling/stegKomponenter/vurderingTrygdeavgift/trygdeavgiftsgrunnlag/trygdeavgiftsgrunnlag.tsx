@@ -2,18 +2,16 @@ import React, { ChangeEvent, Fragment } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../../melosyskodeverk";
-import * as Nav from "../../../../../../navFrontend";
 import * as Api from "../../../../../../services/api";
+import * as Forms from "../../../../../../felleskomponenter/forms";
 import * as Ikoner from "../../../../../../resources/images";
-import * as Utils from "../../../../../../utils";
 import * as KV from "../../../../../../kodeverk";
-import * as Skjema from "../../../../../../felleskomponenter/skjema";
+import * as Nav from "../../../../../../navFrontend";
+import * as Utils from "../../../../../../utils";
 
-import PeriodeTabell from "./periodetabell";
-import SpesiellGruppeHjelpetekst from "./spesiellGruppeHjelpeTekst";
-import { OppdaterAvgiftsberegning } from "../../../../../../services/modules/trygdeavgift";
 import { BOOLSK_STRING } from "../../../../../../constants";
-import { VurderingTrygdeavgiftVirksomhetTyper } from "../../../../../../kodeverk/koder";
+import SpesiellGruppeHjelpetekst from "./spesiellGruppeHjelpeTekst";
+import PeriodeTabell from "./periodetabell";
 
 interface TrygdeavgiftsgrunnlagProps {
   formValues: {
@@ -23,7 +21,7 @@ interface TrygdeavgiftsgrunnlagProps {
   errors: any;
   control: any;
   setValue: (field: string, value: string) => void;
-  oppdatertAvgiftsberegning: OppdaterAvgiftsberegning;
+  oppdatertAvgiftsberegning: Api.Trygdeavgift.OppdaterAvgiftsberegning;
   erTabellApen: Map<string, boolean>;
   erVirksomhetNorsk: boolean;
   erSaerligAvgiftsGruppeValgt: Map<string, boolean>;
@@ -103,8 +101,8 @@ const Trygdeavgiftsgrunnlag = ({
   if (!formValues.avgiftsgrunnlag) return null;
 
   const virksomhetType = erVirksomhetNorsk
-    ? VurderingTrygdeavgiftVirksomhetTyper.NORSK
-    : VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK;
+    ? KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.NORSK
+    : KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK;
   const feltNavnBase = erVirksomhetNorsk
     ? "avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge"
     : "avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland";
@@ -157,7 +155,8 @@ const Trygdeavgiftsgrunnlag = ({
       trygdeavgiftsgrunnlag?.særligAvgiftsgruppe
     );
   };
-  const erSkattePliktig = trygdeavgiftsgrunnlag?.erSkattepliktig;
+  const erSkattepliktig = trygdeavgiftsgrunnlag?.erSkattepliktig;
+
   return (
     <div className="vurderingTrygdeavgift__overstrek vurderingTrygdeavgift">
       <Nav.Row>
@@ -196,11 +195,10 @@ const Trygdeavgiftsgrunnlag = ({
             />
           </Nav.Fieldset>
           {erSaerligAvgiftsGruppeValgt.get(virksomhetType) === true && (
-            <Skjema.SelectV2
+            <Forms.Select
               label=""
               disabled={!redigerbart}
               name={`${feltNavnBase}.særligAvgiftsgruppe`}
-              feil={errors[feltNavnBase]?.særligAvgiftsgruppe?.message?.melding}
               control={control}
               emptyFieldText="Velg gruppe"
               emptyFieldDisabled={
@@ -222,7 +220,7 @@ const Trygdeavgiftsgrunnlag = ({
                     {saerligavgiftsgruppe.term}
                   </option>
                 ))}
-            </Skjema.SelectV2>
+            </Forms.Select>
           )}
         </Nav.Column>
 
@@ -245,14 +243,13 @@ const Trygdeavgiftsgrunnlag = ({
                 </Nav.Typo.Normaltekst>
               ) : (
                 <Fragment>
-                  <Skjema.RadioV2
+                  <Forms.Radio
                     className="column"
                     label="Ja"
                     name={`${feltNavnBase}.erSkattepliktig`}
-                    feil={errors[feltNavnBase]?.erSkattepliktig?.message?.melding}
                     control={control}
                     checked={
-                      erSkattePliktig === null || erSkattePliktig === undefined ? undefined : Boolean(erSkattePliktig)
+                      erSkattepliktig === null || erSkattepliktig === undefined ? undefined : Boolean(erSkattepliktig)
                     }
                     onChange={() => {
                       setValue(
@@ -264,18 +261,17 @@ const Trygdeavgiftsgrunnlag = ({
                     value={BOOLSK_STRING.SANN}
                     disabled={!redigerbart}
                   />
-                  <Skjema.RadioV2
+                  <Forms.Radio
                     className="column"
                     label="Nei"
                     name={`${feltNavnBase}.erSkattepliktig`}
-                    feil={errors[feltNavnBase]?.erSkattepliktig?.message?.melding}
                     control={control}
                     onChange={() => {
                       setValue(feltNavnTrygdeavgiftBetalesTilNAV.feltNavn, feltNavnTrygdeavgiftBetalesTilNAV.verdi);
                       handleErSøkerPliktigChange();
                     }}
                     checked={
-                      erSkattePliktig === null || erSkattePliktig === undefined ? undefined : Boolean(!erSkattePliktig)
+                      erSkattepliktig === null || erSkattepliktig === undefined ? undefined : Boolean(!erSkattepliktig)
                     }
                     value={BOOLSK_STRING.USANN}
                     disabled={!redigerbart}
