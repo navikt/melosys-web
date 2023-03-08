@@ -75,7 +75,8 @@ const Saksbehandling = ({
       await dispatch(lovvalgsperioderOperations.hent(behandlingIDFraParam));
       setSaksopplysningerLastet(true);
     } catch (e) {
-      Utils.logger.error(e);
+      // eslint-disable-next-line no-console
+      console.error(e);
     }
   };
 

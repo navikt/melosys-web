@@ -15,7 +15,8 @@ import { dokumenterOperations } from "../dokumenter";
 import { oppsummertfaktaOperations } from "../oppsummertfakta";
 import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
-import { harUnntakFlyt, skalViseTomFlyt } from "../../routing";
+// noinspection ES6PreferShortImport
+import { harUnntakFlyt, skalViseTomFlyt } from "../../routing/url";
 
 const harTomFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);

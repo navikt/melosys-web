@@ -25,7 +25,6 @@ import * as adresse from "./adresse";
 import * as dato from "./dato";
 import * as streng from "./streng";
 import * as object from "./object";
-import * as logger from "./logger";
 import * as queryString from "./queryString";
 import * as testhelpers from "./testhelpers";
 import * as person from "./person";
@@ -51,7 +50,6 @@ export {
   dato,
   object,
   streng,
-  logger,
   queryString,
   testhelpers,
   person,
