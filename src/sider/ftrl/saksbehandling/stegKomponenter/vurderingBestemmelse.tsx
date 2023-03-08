@@ -44,7 +44,6 @@ interface Props {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
-  const { bestemmelseVilkar } = useContext(SaksbehandlingContext);
   const {
     behandlingID,
     behandlingstema,
