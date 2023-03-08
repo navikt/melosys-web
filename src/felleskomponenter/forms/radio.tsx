@@ -12,7 +12,7 @@ interface RadioComponentProps {
   disabled?: boolean;
   checked?: boolean;
   onChange?: (value: any) => void;
-  feil?: boolean;
+  feil?: any;
 }
 
 type RadioInnerComponentProps = RadioComponentProps & RegisterHookFormProps;
@@ -38,25 +38,27 @@ const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerCompon
 
 type RadioProps = RadioComponentProps & UseControllerProps;
 
-const Radio = React.forwardRef<HTMLSelectElement, RadioProps>(({ name, control, ...rest }: RadioProps, _ref: any) => {
-  return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, formState }) => (
-        <InnerRadioComponent
-          {...field}
-          {...rest}
-          checked={field.value === rest.value}
-          onChange={(event: any) => {
-            field.onChange(event);
-            if (rest.onChange) rest.onChange(event?.target?.value);
-          }}
-          feil={(formState.errors?.[field.name]?.message as any)?.melding}
-        />
-      )}
-    />
-  );
-});
+const Radio = React.forwardRef<HTMLSelectElement, RadioProps>(
+  ({ name, control, checked, ...rest }: RadioProps, _ref: any) => {
+    return (
+      <Controller
+        name={name}
+        control={control}
+        render={({ field, formState }) => (
+          <InnerRadioComponent
+            {...field}
+            {...rest}
+            checked={checked !== undefined ? checked : field.value === rest.value}
+            onChange={(event: any) => {
+              field.onChange(event);
+              if (rest.onChange) rest.onChange(event?.target?.value);
+            }}
+            feil={(formState.errors?.[field.name]?.message as any)?.melding}
+          />
+        )}
+      />
+    );
+  }
+);
 
 export default Radio;

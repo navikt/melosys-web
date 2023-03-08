@@ -1,80 +1,48 @@
-import React, { ChangeEventHandler, Fragment, useCallback, useEffect, useState } from "react";
+import { ChangeEventHandler, Fragment, useContext, useEffect, useMemo, useState } from "react";
 import { RootState } from "AppTypes";
-import { connect, ConnectedProps } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import MKV from "../../../../melosyskodeverk";
+import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
-import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { vilkarSelectors } from "../../../../ducks/vilkar";
-import { lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
+import { SaksbehandlingContext, VilkarOgBegrunnelser } from "../saksbehandlingContext";
+
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
-import { finnTermFraListe, termFraNestedKTObject } from "../../../../kodeverk";
+import { vilkarOperations, vilkarSelectors } from "../../../../ducks/vilkar";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 import { BOOLSK_STRING } from "../../../../constants";
 import "./vurderingBestemmelse.css";
 
-const mapStateToProps = (state: RootState) => ({
+const komponentState = (state: RootState) => ({
   vilkarListe: vilkarSelectors.VilkarSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   bestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
   vilkaarKodeverk: folketrygdenkodeverkSelectors.VilkaarSelector(state),
   begrunnelserKodeverk: folketrygdenkodeverkSelectors.BegrunnelserSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterBestemmelse: (bestemmelse: string) =>
-    dispatch(medlemskapsperioderOperations.oppdaterBestemmelse(bestemmelse)),
-  opprettMedlemskapsperiodeFraBestemmelse: () =>
-    dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse()),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-interface VilkarOgBegrunnelser {
-  vilkaar: string;
-  muligeBegrunnelser: string[];
-}
-
-interface BestemmelsesVilkar {
-  bestemmelse: string;
-  vilkårOgBegrunnelser: VilkarOgBegrunnelser[];
-}
 
 interface Props {
   bekreft: () => void;
-  bestemmelseVilkar: BestemmelsesVilkar[];
-  oppdater: () => void;
   tilbake: () => void;
-  redigerbart: boolean;
-  oppdaterData: (data: any) => void;
-  vilkar: [];
-  lagreVilkar: () => void;
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
 }
 
-const VurderingBestemmelse = ({
-  bekreft,
-  bestemmelseVilkar,
-  tilbake,
-  redigerbart,
-  oppdaterData,
-  begrunnelserKodeverk,
-  vilkaarKodeverk,
-  oppdaterBestemmelse,
-  oppdater,
-  opprettMedlemskapsperiodeFraBestemmelse,
-  vilkarListe,
-  bestemmelse,
-  lagreVilkar,
-}: Props & PropsFromRedux) => {
+export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
+  const dispatch = useDispatch();
+  const { bestemmelseVilkar } = useContext(SaksbehandlingContext);
+  const { behandlingID, vilkarListe, bestemmelse, vilkaarKodeverk, begrunnelserKodeverk, redigerbart } =
+    useSelector(komponentState);
+  const hentVilkaar = (behandlingsId: string) => dispatch(vilkarOperations.hent(behandlingsId));
+  const oppdaterVilkaar = (skjema: any) => dispatch(vilkarOperations.oppdaterState(skjema));
+
   const [valgtBestemmelse, setValgtBestemmelse] = useState("");
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
   const [valgteVilkar, setValgteVilkar] = useState(new Map());
@@ -92,13 +60,25 @@ const VurderingBestemmelse = ({
     ],
   ]);
 
-  const handleEndreBestemmelse = async (nyBestemmelse: string) => {
+  useEffect(() => {
+    oppdaterStatus(erAlleValgGjort);
+  }, [erAlleValgGjort]);
+
+  const handleEndreBestemmelse = (nyBestemmelse: string) => {
     setValgtBestemmelse(nyBestemmelse);
-    await oppdaterBestemmelse(nyBestemmelse);
-    oppdater();
+    dispatch(medlemskapsperioderOperations.oppdaterBestemmelse(nyBestemmelse));
   };
 
-  const debouncedLagreVilkar = useCallback(Utils._debounce(lagreVilkar, 1000), []);
+  useEffect(() => {
+    hentVilkaar(behandlingID);
+  }, [behandlingID]);
+
+  useMemo(() => {
+    if (vilkarListe.length !== valgteVilkar.size) {
+      hentVilkaar(behandlingID);
+      setValgteVilkar(new Map());
+    }
+  }, [vilkarListe]);
 
   useEffect(() => {
     handleEndreBestemmelse(bestemmelse);
@@ -110,8 +90,7 @@ const VurderingBestemmelse = ({
     });
     setValgteVilkar(new Map(valgteVilkar));
     setValgteBegrunnelser(new Map(valgteBegrunnelser));
-    return () => debouncedLagreVilkar.cancel();
-  }, []);
+  }, [vilkarListe]);
 
   useEffect(() => {
     const valgteBestemmelseVilkar = bestemmelseVilkar.find((element) => element.bestemmelse === valgtBestemmelse);
@@ -122,31 +101,36 @@ const VurderingBestemmelse = ({
           valgteVilkar.get(vilkar.vilkaar) === BOOLSK_STRING.SANN &&
           (vilkar.muligeBegrunnelser.length > 0 ? valgteBegrunnelser.get(vilkar.vilkaar) : true)
       ).length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
-
     setErAlleValgGjort(!!alleVilkarHarSvarJaOgvalgtBegrunnelse);
-    if (alleVilkarHarSvarJaOgvalgtBegrunnelse && redigerbart) {
-      debouncedLagreVilkar();
-    }
   }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]);
 
   const handleBekreft = () => {
-    opprettMedlemskapsperiodeFraBestemmelse();
-    bekreft();
+    dispatch(vilkarOperations.lagre());
+    setTimeout(() => {
+      dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse());
+      bekreft();
+    }, 1000);
   };
 
   const handleEndreVilkar: ChangeEventHandler<HTMLInputElement> = (event) => {
     setValgteVilkar(new Map(valgteVilkar.set(event.target.name, event.target.value)));
-    oppdaterData(lagVilkaar(event.target.name, event.target.value));
+    oppdaterVilkaar({
+      ...{ ...valgteVilkar },
+      [event.target.name]: event.target.value !== BOOLSK_STRING.USANN,
+    });
     if (event.target.value === BOOLSK_STRING.USANN && valgteBegrunnelser.get(event.target.name)) {
       valgteBegrunnelser.delete(event.target.name);
       setValgteBegrunnelser(new Map(valgteBegrunnelser));
-      oppdaterData(lagVilkarbegrunnelse(event.target.name, []));
+      oppdaterVilkaar({ ...{ ...valgteBegrunnelser }, [event.target.name]: [] });
     }
   };
 
   const handleEndreBegrunnelse: ChangeEventHandler<HTMLSelectElement> = (event) => {
     setValgteBegrunnelser(new Map(valgteBegrunnelser.set(event.target.name, event.target.value)));
-    oppdaterData(lagVilkarbegrunnelse(event.target.name, [event.target.value]));
+    oppdaterVilkaar({
+      ...{ ...valgteBegrunnelser },
+      [event.target.name]: [event.target.value !== BOOLSK_STRING.USANN],
+    });
   };
 
   const Alert = () => (
@@ -158,14 +142,13 @@ const VurderingBestemmelse = ({
   const Vilkaar = ({ vilkaar, muligeBegrunnelser }: VilkarOgBegrunnelser) => {
     const hjelpetekstForVilkaar = hjelpetekster.get(vilkaar);
     const valgteVilkarForVilkaar = valgteVilkar.get(`${vilkaar}`);
-
     return (
       <Fragment>
         <Nav.Fieldset
           className="radio"
           legend={
             <LabelMedHjelpetekst
-              label={finnTermFraListe(vilkaarKodeverk, vilkaar)}
+              label={KV.finnTermFraListe(vilkaarKodeverk, vilkaar)}
               hjelpetekst={hjelpetekstForVilkaar}
             />
           }
@@ -216,7 +199,7 @@ const VurderingBestemmelse = ({
                   </option>
                   {muligeBegrunnelser.map((begrunnelse) => (
                     <option key={begrunnelse} value={begrunnelse}>
-                      {termFraNestedKTObject(begrunnelserKodeverk, begrunnelse)}
+                      {KV.termFraNestedKTObject(begrunnelserKodeverk, begrunnelse)}
                     </option>
                   ))}
                 </Nav.Select>
@@ -227,6 +210,8 @@ const VurderingBestemmelse = ({
       </Fragment>
     );
   };
+
+  if (!aktivtSteg) return null;
 
   return (
     <div className="vurderingBestemmelse">
@@ -248,7 +233,10 @@ const VurderingBestemmelse = ({
               </option>
               {bestemmelseVilkar.map((bestemmelseMedVilkar) => (
                 <option key={bestemmelseMedVilkar.bestemmelse} value={bestemmelseMedVilkar.bestemmelse}>
-                  {finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, bestemmelseMedVilkar.bestemmelse)}
+                  {KV.finnTermFraListe(
+                    MKV.KTObjects.folketrygdloven_kap2_bestemmelser,
+                    bestemmelseMedVilkar.bestemmelse
+                  )}
                 </option>
               ))}
             </Nav.Select>
@@ -275,5 +263,3 @@ const VurderingBestemmelse = ({
     </div>
   );
 };
-
-export default connector(VurderingBestemmelse);

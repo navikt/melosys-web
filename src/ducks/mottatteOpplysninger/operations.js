@@ -62,7 +62,6 @@ export function oppdaterState() {
   return (dispatch, getState) => {
     const mottatteOpplysningerData = {
       ...formSelectors.SoknadenFormSelector(getState()).values,
-      ...formSelectors.VurderStartFormSelector(getState()).values,
     };
 
     const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
@@ -140,7 +139,6 @@ const lagMottatteOpplysningerData = (sakstype, behandlingstema, mottatteOpplysni
   if (temaForSedGrunnlag(behandlingstema)) {
     return lagSedGrunnlagFelter(mottatteOpplysninger);
   }
-
   switch (sakstype) {
     case MKV.Koder.sakstyper.EU_EOS:
       return lagEØSFelter(mottatteOpplysninger);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
 import { withRouter } from "react-router-dom";
@@ -14,10 +14,10 @@ import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
 import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
-import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
 import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 import { useFeatureToggle } from "../../../featuretoggle";
+import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
@@ -35,12 +35,11 @@ import { landkoderOperations, landkoderSelectors } from "../../../ducks/landkode
 import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperioder";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
-import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
-import { stegMap } from "./stegMap";
+import { SaksbehandlingContext } from "./saksbehandlingContext";
+import { Stegvelger } from "./stegvelger";
 import "./saksbehandling.css";
 
 const Saksbehandling = ({
-  annenBehandlingOppfriskes,
   arbeidsland,
   behandlingstype,
   hovedpartRolle,
@@ -59,9 +58,6 @@ const Saksbehandling = ({
   hentLandkoder,
   hentMedlemskapsperioder,
   hentOppsummertFakta,
-  lagreAvklartefakta,
-  lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
-  lagreVilkar,
   landkoder,
   location,
   match,
@@ -75,7 +71,6 @@ const Saksbehandling = ({
   skjulMenypanel,
   soknadForm,
   startOgVisOppfriskModal,
-  tilForsiden,
   visOppfriskModal,
   resetFeiletrespons,
 }) => {
@@ -165,7 +160,6 @@ const Saksbehandling = ({
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
-
   return (
     <>
       <Informasjonlinje />
@@ -179,22 +173,10 @@ const Saksbehandling = ({
                     {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
                     {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
                     {visStegVelger && (
-                      <Stegvelger
-                        annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-                        behandlingID={behandlingID}
-                        lagreAvklartefaktaHandler={lagreAvklartefakta}
-                        lagreMottatteOpplysningerOgOppfriskSaksopplysninger={
-                          lagreMottatteOpplysningerOgOppfriskSaksopplysninger
-                        }
-                        lagreVilkarHandler={lagreVilkar}
-                        begrunnelser={MKV.KTObjects.begrunnelser}
-                        landkoder={landkoder}
-                        bestemmelser={bestemmelser}
-                        tilForsiden={tilForsiden}
-                        stegMap={stegMap}
-                        forsteSteg={STEG.START}
-                        sakstype={MKV.Koder.sakstyper.FTRL}
-                      />
+                      // eslint-disable-next-line react/jsx-no-constructed-context-values
+                      <SaksbehandlingContext.Provider value={{ bestemmelseVilkar: bestemmelser }}>
+                        <Stegvelger />
+                      </SaksbehandlingContext.Provider>
                     )}
                   </>
                 ) : (

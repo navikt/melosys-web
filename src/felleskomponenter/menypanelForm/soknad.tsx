@@ -161,6 +161,7 @@ const mapStateToProps = (state: RootState) => ({
     },
     avsenderland: mottatteOpplysningerSelectors.AvsenderlandSelector(state),
     lovvalgsland: mottatteOpplysningerSelectors.LovvalgslandSelector(state),
+    trygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
     arbeidsforholdUtland: mottatteOpplysningerSelectors.ArbeidsforholdUtlandSelector(state),
     selvstendigNaeringsvirksomhetUtland:
       mottatteOpplysningerSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(state),

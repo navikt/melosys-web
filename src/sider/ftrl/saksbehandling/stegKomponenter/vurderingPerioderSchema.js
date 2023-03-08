@@ -32,19 +32,25 @@ const erFeilAktivPaaPerioder = (medlemskapsperioder) =>
   medlemskapsperioder && medlemskapsperioder.some((medlemskapsperiode) => !!medlemskapsperiode.feil);
 
 const erPeriodeSisteMedlemskapsperiode = (id, formValues) => {
-  const medlemskapsperioder = formValues.medlemskapsperioder || [];
+  const medlemskapsperioder = formValues?.medlemskapsperioder || [];
   return medlemskapsperioder[medlemskapsperioder.length - 1]?.id?.toString() === id;
 };
 
-const gyldigTomDatoTest = {
-  name: "Gyldig tomDato",
+const åpenTomNårIkkeSistePeriodeTest = {
+  name: "Åpen sluttdato ved etterfølgende perioder",
+  message: "Sluttdato må fylles ut når det finnes etterfølgende perioder",
+  test: (tomDato, schema) => {
+    const erSisteMedlemskapsperiode = erPeriodeSisteMedlemskapsperiode(schema.parent.id, schema.from[1].value);
+    return !(!erSisteMedlemskapsperiode && Utils._isEmpty(tomDato));
+  },
+};
+
+const utenforSøknadsperioden = {
+  name: "Utenfor søknadsperioden",
   message: "Utenfor søknadsperioden",
   test: (tomDato, schema) => {
     const tomDatoFraSoknadsperiode = schema.options.context.soknadsperiode.tom;
-    const erSisteMedlemskapsperiode = erPeriodeSisteMedlemskapsperiode(
-      schema.parent.id,
-      schema.options.context.formValues
-    );
+    const erSisteMedlemskapsperiode = erPeriodeSisteMedlemskapsperiode(schema.parent.id, schema.from[1].value);
 
     return Utils._isEmpty(tomDato)
       ? !erSisteMedlemskapsperiode || Utils._isEmpty(tomDatoFraSoknadsperiode)
@@ -64,11 +70,8 @@ const vurdering_perioder = object().shape({
         tomDato: string()
           .erGyldigDato()
           .erEtterDatofelt("fomDato")
-          .test(gyldigTomDatoTest)
-          .when(["id", "$formValues"], {
-            is: (id, formValues) => !erPeriodeSisteMedlemskapsperiode(id, formValues),
-            then: string().required(MAA_FYLLES_UT),
-          })
+          .test(utenforSøknadsperioden)
+          .test(åpenTomNårIkkeSistePeriodeTest)
           .nullable(),
         bestemmelse: string(),
         innvilgelsesResultat: string().required(INNGILGELSESRESULTAT_FELT_KREVES),
