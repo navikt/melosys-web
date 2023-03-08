@@ -76,8 +76,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
     formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurderingStartSchema),
-    mode: "onChange",
-    reValidateMode: "onChange",
+    mode: "all",
     values: useMemo(() => initialValues as FieldValues, [initialValues]),
   });
   const formValues = watch();

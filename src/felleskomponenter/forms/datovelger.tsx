@@ -61,7 +61,7 @@ const Datovelger = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
             minDate={rest.minDate}
             maxDate={rest.maxDate}
             onChange={(value: any) => {
-              field.onChange(value);
+              field.onChange(value || "");
               if (rest.onChange) rest.onChange(value);
             }}
             feil={(formState.errors?.[field.name]?.message as any)?.melding}
