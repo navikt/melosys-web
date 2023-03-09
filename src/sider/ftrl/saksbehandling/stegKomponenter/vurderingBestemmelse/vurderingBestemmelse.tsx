@@ -16,14 +16,18 @@ import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 
 import { BOOLSK_STRING } from "../../../../../constants";
+import { useAsyncCallbackState } from "../../../../../hooks";
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import { FlytFinnesIkke } from "./komponenter/flytFinnesIkke";
 import "./vurderingBestemmelse.css";
 
-export interface VilkarOgBegrunnelser {
-  vilkaar: string;
-  muligeBegrunnelser: string[];
-}
+const sorterBestemmelser = (bestemmelser: Api.Medlemskapsperioder.BestemmelseMedVilkaar[]) => {
+  bestemmelser
+    .sort((a, b) => b.bestemmelse.localeCompare(a.bestemmelse))
+    .reverse()
+    .forEach((item) => item.vilkårOgBegrunnelser.sort((a, b) => a.vilkaar.localeCompare(b.vilkaar)));
+  return bestemmelser;
+};
 
 const komponentState = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -34,7 +38,7 @@ const komponentState = (state: RootState) => ({
   begrunnelserKodeverk: folketrygdenkodeverkSelectors.BegrunnelserSelector(state),
 });
 
-export interface VurderingBestemmelseProps {
+interface VurderingBestemmelseProps {
   bekreft: () => void;
   tilbake: () => void;
   aktivtSteg: boolean;
@@ -45,42 +49,34 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const dispatch = useDispatch();
   const { behandlingID, behandlingstema, bestemmelse, vilkaarKodeverk, begrunnelserKodeverk, redigerbart } =
     useSelector(komponentState);
-  const oppdaterVilkaar = (skjema: any) => dispatch(vilkarOperations.oppdaterState(skjema));
-  const [bestemmelseVilkarStøttet, setBestemmelseVilkarStøttet] = useState<any[]>([]);
-  const [valgtBestemmelsesVilkår, setValgtBestemmelsesVilkår] = useState<any[]>([]);
-  const [bestemmelseVilkarIkkeStøttet, setBestemmelseVilkarIkkeStøttet] = useState<any[]>([]);
-  const [valgtBestemmelse, setValgtBestemmelse] = useState("");
-  const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
-  const [valgteVilkar, setValgteVilkar] = useState(new Map());
-  const [erAlleValgGjort, setErAlleValgGjort] = useState(false);
-
-  const bestemmelseIkkeStøttetValgt = bestemmelseVilkarIkkeStøttet?.some(
-    (bestemmelseOgVilkår: any) => bestemmelseOgVilkår.bestemmelse === valgtBestemmelse
+  const [bestemmelserMedVilkår] = useAsyncCallbackState<Api.Medlemskapsperioder.HentBestemmelserMedVilkårResponse>(
+    () => Api.Medlemskapsperioder.hentBestemmelserMedVilkår(behandlingstema),
+    { støttedeBestemmelserMedVilkår: [], ikkeStøttedeBestemmelserMedVilkår: [] },
+    [behandlingstema]
   );
 
-  const sorterBestemmelser = (bestemmelser: any) => {
-    bestemmelser
-      .sort((a: any, b: any) => b.bestemmelse.localeCompare(a.bestemmelse))
-      .reverse()
-      .forEach((bestemmelseRes: any) =>
-        bestemmelseRes.vilkårOgBegrunnelser.sort((a: any, b: any) => a.vilkaar.localeCompare(b.vilkaar))
-      );
-    return bestemmelser;
-  };
+  const oppdaterVilkaar = (skjema: any) => dispatch(vilkarOperations.oppdaterState(skjema));
+  const [valgtBestemmelse, setValgtBestemmelse] = useState("");
+  const [valgteVilkar, setValgteVilkar] = useState<Map<string, string>>(new Map());
+  const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, string>>(new Map());
+  const [valgtBestemmelsesSynligeVilkår, setValgtBestemmelsesSynligeVilkår] = useState<
+    Api.Medlemskapsperioder.VilkårOgBegrunnelser[]
+  >([]);
+  const [erAlleValgGjort, setErAlleValgGjort] = useState(false);
 
-  const hentBestemmelser = async () => {
-    const { støttedeBestemmelserMedVilkår, ikkeStøttedeBestemmelserMedVilkår } =
-      await Api.Medlemskapsperioder.hentBestemmelserMedVilkår(behandlingstema);
-    setBestemmelseVilkarStøttet(sorterBestemmelser(støttedeBestemmelserMedVilkår));
-    setBestemmelseVilkarIkkeStøttet(sorterBestemmelser(ikkeStøttedeBestemmelserMedVilkår));
-  };
+  const bestemmelseVilkarStøttet = sorterBestemmelser(bestemmelserMedVilkår.støttedeBestemmelserMedVilkår);
+  const bestemmelseVilkarIkkeStøttet = sorterBestemmelser(bestemmelserMedVilkår.ikkeStøttedeBestemmelserMedVilkår);
+
+  const bestemmelseIkkeStøttetValgt = bestemmelseVilkarIkkeStøttet?.some(
+    (bestemmelseOgVilkår) => bestemmelseOgVilkår.bestemmelse === valgtBestemmelse
+  );
 
   const hentEksisterendeVilkår = async () => {
     // @ts-ignore
     const response: { data: Api.Vilkar.Vilkaar[] } = await dispatch(vilkarOperations.hent(behandlingID));
 
     handleEndreBestemmelse(bestemmelse);
-    response.data?.forEach((vilkar: any) => {
+    response.data?.forEach((vilkar) => {
       valgteVilkar.set(vilkar.vilkaar, vilkar.oppfylt ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN);
       if (vilkar.begrunnelseKoder && vilkar.begrunnelseKoder.length === 1) {
         valgteBegrunnelser.set(`${vilkar.vilkaar}_begrunnelser`, vilkar.begrunnelseKoder[0]);
@@ -91,7 +87,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   };
 
   useEffect(() => {
-    hentBestemmelser();
     hentEksisterendeVilkår();
   }, []);
 
@@ -101,12 +96,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     )?.vilkårOgBegrunnelser;
 
     if (Utils._isEmpty(valgtBestemmelsesVilkårOgBegrunnelser)) {
-      setValgtBestemmelsesVilkår([]);
+      setValgtBestemmelsesSynligeVilkår([]);
       return;
     }
-    const vilkårSomSkalVises: any = [];
+    const vilkårSomSkalVises: Api.Medlemskapsperioder.VilkårOgBegrunnelser[] = [];
 
-    valgtBestemmelsesVilkårOgBegrunnelser.forEach((vilkårOgMuligeBegrunnelser: any) => {
+    valgtBestemmelsesVilkårOgBegrunnelser?.forEach((vilkårOgMuligeBegrunnelser) => {
       if (Utils._isEmpty(vilkårSomSkalVises)) {
         vilkårSomSkalVises.push(vilkårOgMuligeBegrunnelser);
         return;
@@ -116,7 +111,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         vilkårSomSkalVises.push(vilkårOgMuligeBegrunnelser);
       }
     });
-    setValgtBestemmelsesVilkår(vilkårSomSkalVises);
+    setValgtBestemmelsesSynligeVilkår(vilkårSomSkalVises);
   }, [valgtBestemmelse, valgteVilkar]);
 
   useEffect(() => {
@@ -130,7 +125,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     const alleVilkarHarSvarJaOgvalgtBegrunnelse =
       valgteBestemmelseVilkar &&
       valgteBestemmelseVilkar.vilkårOgBegrunnelser.filter(
-        (vilkar: any) =>
+        (vilkar) =>
           valgteVilkar.get(vilkar.vilkaar) === BOOLSK_STRING.SANN &&
           (vilkar.muligeBegrunnelser.length > 0 ? valgteBegrunnelser.get(`${vilkar.vilkaar}_begrunnelser`) : true)
       ).length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
@@ -193,8 +188,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
             <Nav.Select
               label=""
               disabled={!redigerbart}
-              // eslint-disable-next-line no-return-await
-              onChange={async (event) => await handleEndreBestemmelse(event.target.value)}
+              onChange={(event) => handleEndreBestemmelse(event.target.value)}
               value={valgtBestemmelse}
             >
               <option disabled={!!valgtBestemmelse} value="" key="">
@@ -225,25 +219,20 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       </Nav.Fieldset>
 
-      {valgtBestemmelsesVilkår.map((vilkårOgBegrunnelse) => (
+      {valgtBestemmelsesSynligeVilkår.map((vilkårOgBegrunnelse) => (
         <VilkaarOgBegrunnelser
-          key={vilkårOgBegrunnelse.vilkaar}
           vilkaarOgBegrunnelser={vilkårOgBegrunnelse}
           valgteVilkar={valgteVilkar}
+          valgteBegrunnelser={valgteBegrunnelser}
           vilkaarKodeverk={vilkaarKodeverk}
+          begrunnelserKodeverk={begrunnelserKodeverk}
           handleEndreVilkar={handleEndreVilkar}
           handleEndreBegrunnelse={handleEndreBegrunnelse}
           redigerbart={redigerbart}
-          begrunnelserKodeverk={begrunnelserKodeverk}
-          valgteBegrunnelser={valgteBegrunnelser}
         />
       ))}
 
-      {bestemmelseIkkeStøttetValgt && (
-        <div className="flytFinnesIkke">
-          <FlytFinnesIkke />
-        </div>
-      )}
+      {bestemmelseIkkeStøttetValgt && <FlytFinnesIkke />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{ onClick: handleBekreft, disabled: !erAlleValgGjort || !redigerbart }}

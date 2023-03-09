@@ -1,13 +1,14 @@
-import React, { Fragment } from "react";
+import React, { ChangeEventHandler, Fragment } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../../melosyskodeverk";
+import * as Api from "../../../../../../services/api";
 import * as KV from "../../../../../../kodeverk";
 import * as Nav from "../../../../../../navFrontend";
+import * as Utils from "../../../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import { BOOLSK_STRING } from "../../../../../../constants";
-import { VilkarOgBegrunnelser } from "../vurderingBestemmelse";
 import { FlytFinnesIkke } from "./flytFinnesIkke";
 
 const SAERLIG_GRUNN = "SAERLIG_GRUNN";
@@ -23,14 +24,14 @@ const hjelpetekster = new Map([
 ]);
 
 interface VilkaarOgBegrunnelserProps {
-  vilkaarOgBegrunnelser: VilkarOgBegrunnelser;
-  valgteVilkar: any;
+  vilkaarOgBegrunnelser: Api.Medlemskapsperioder.VilkårOgBegrunnelser;
+  valgteVilkar: Map<string, string>;
+  valgteBegrunnelser: Map<string, string>;
   vilkaarKodeverk: KTObject[];
-  handleEndreVilkar: (vilkar: any) => void;
-  redigerbart: boolean;
-  handleEndreBegrunnelse: (begrunnelse: any) => void;
   begrunnelserKodeverk: { [key: string]: KTObject[] };
-  valgteBegrunnelser: any;
+  handleEndreVilkar: ChangeEventHandler<HTMLInputElement>;
+  handleEndreBegrunnelse: ChangeEventHandler<HTMLSelectElement>;
+  redigerbart: boolean;
 }
 
 export const VilkaarOgBegrunnelser = ({
@@ -38,16 +39,16 @@ export const VilkaarOgBegrunnelser = ({
   valgteVilkar,
   valgteBegrunnelser,
   vilkaarKodeverk,
-  handleEndreVilkar,
-  redigerbart,
-  handleEndreBegrunnelse,
   begrunnelserKodeverk,
+  handleEndreVilkar,
+  handleEndreBegrunnelse,
+  redigerbart,
 }: VilkaarOgBegrunnelserProps) => {
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkaar);
   const valgteVilkarForVilkaar = valgteVilkar.get(`${vilkaar}`);
 
   return (
-    <Fragment>
+    <Fragment key={vilkaar}>
       <Nav.Fieldset
         className="radio"
         legend={
@@ -82,12 +83,9 @@ export const VilkaarOgBegrunnelser = ({
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
-      {valgteVilkarForVilkaar === BOOLSK_STRING.USANN && (
-        <div className="flytFinnesIkke">
-          <FlytFinnesIkke />
-        </div>
-      )}
-      {muligeBegrunnelser.length > 0 && valgteVilkarForVilkaar === BOOLSK_STRING.SANN && (
+
+      {valgteVilkarForVilkaar === BOOLSK_STRING.USANN && <FlytFinnesIkke />}
+      {valgteVilkarForVilkaar === BOOLSK_STRING.SANN && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
           className="select"
           legend={<LabelMedHjelpetekst label="Velg særlig grunn" hjelpetekst={hjelpetekster.get(SAERLIG_GRUNN)} />}
@@ -105,7 +103,7 @@ export const VilkaarOgBegrunnelser = ({
                 <option key="" value="" disabled={!!valgteBegrunnelser.get(`${vilkaar}_begrunnelser`)}>
                   Velg
                 </option>
-                {muligeBegrunnelser.map((begrunnelse: any) => (
+                {muligeBegrunnelser.map((begrunnelse) => (
                   <option key={begrunnelse} value={begrunnelse}>
                     {KV.termFraNestedKTObject(begrunnelserKodeverk, begrunnelse)}
                   </option>
