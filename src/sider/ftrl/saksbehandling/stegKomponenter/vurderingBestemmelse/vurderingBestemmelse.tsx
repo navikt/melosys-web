@@ -90,6 +90,19 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     hentEksisterendeVilkår();
   }, []);
 
+  const validerForm = () => {
+    const valgtBestemmelseMedVilkår = bestemmelseVilkarStøttet.find(
+      (element) => element.bestemmelse === valgtBestemmelse
+    );
+    const alleVilkarHarSvarJaOgvalgtBegrunnelse = valgtBestemmelseMedVilkår?.vilkårOgBegrunnelser.every(
+      (element) =>
+        valgteVilkar.get(element.vilkaar) === BOOLSK_STRING.SANN &&
+        (Utils._isEmpty(element.muligeBegrunnelser) ? true : valgteBegrunnelser.get(`${element.vilkaar}_begrunnelser`))
+    );
+
+    setFormIsValid(Boolean(alleVilkarHarSvarJaOgvalgtBegrunnelse));
+  };
+
   const oppdaterValgtBestemmelsesSynligeVilkår = () => {
     const valgtBestemmelsesVilkårOgBegrunnelser = bestemmelseVilkarStøttet.find(
       (bestemmelseMedVilkar) => bestemmelseMedVilkar.bestemmelse === valgtBestemmelse
@@ -118,40 +131,21 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     setValgteBegrunnelser(new Map());
     setValgteVilkar(new Map());
     oppdaterValgtBestemmelsesSynligeVilkår();
+    validerForm();
   }, [valgtBestemmelse]);
 
   useEffect(() => {
     oppdaterValgtBestemmelsesSynligeVilkår();
+    validerForm();
   }, [valgteVilkar]);
+
+  useEffect(() => {
+    validerForm();
+  }, [valgteBegrunnelser]);
 
   useEffect(() => {
     oppdaterStatus(formIsValid);
   }, [formIsValid]);
-
-  const validerForm = () => {
-    const valgtBestemmelseMedVilkår = bestemmelseVilkarStøttet.find(
-      (element) => element.bestemmelse === valgtBestemmelse
-    );
-    const alleVilkarHarSvarJaOgvalgtBegrunnelse = valgtBestemmelseMedVilkår?.vilkårOgBegrunnelser.every(
-      (element) =>
-        valgteVilkar.get(element.vilkaar) === BOOLSK_STRING.SANN &&
-        (Utils._isEmpty(element.muligeBegrunnelser) ? true : valgteBegrunnelser.get(`${element.vilkaar}_begrunnelser`))
-    );
-
-    setFormIsValid(Boolean(alleVilkarHarSvarJaOgvalgtBegrunnelse));
-  };
-
-  useEffect(() => {
-    validerForm();
-  }, [valgtBestemmelse, valgteVilkar, valgteBegrunnelser]);
-
-  const handleBekreft = () => {
-    dispatch(vilkarOperations.lagre());
-    setTimeout(() => {
-      dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse());
-      bekreft();
-    }, 1000);
-  };
 
   const oppdaterVilkaarState = () => {
     const alleVilkår: { [key: string]: boolean } = {};
@@ -171,9 +165,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   };
 
   const handleEndreVilkar: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setValgteVilkar(new Map(valgteVilkar.set(event.target.name, event.target.value)));
-    if (event.target.value === BOOLSK_STRING.USANN && valgteBegrunnelser.get(`${event.target.name}_begrunnelser`)) {
-      valgteBegrunnelser.delete(`${event.target.name}_begrunnelser`);
+    const vilkårKode = event.target.name;
+    setValgteVilkar(new Map(valgteVilkar.set(vilkårKode, event.target.value)));
+    if (event.target.value === BOOLSK_STRING.USANN && valgteBegrunnelser.get(`${vilkårKode}_begrunnelser`)) {
+      valgteBegrunnelser.delete(`${vilkårKode}_begrunnelser`);
       setValgteBegrunnelser(new Map(valgteBegrunnelser));
       oppdaterVilkaarState();
     } else {
@@ -184,6 +179,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const handleEndreBegrunnelse: ChangeEventHandler<HTMLSelectElement> = (event) => {
     setValgteBegrunnelser(new Map(valgteBegrunnelser.set(event.target.name, event.target.value)));
     oppdaterVilkaarState();
+  };
+
+  const handleBekreft = async () => {
+    await dispatch(vilkarOperations.lagre());
+    await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse());
+    bekreft();
   };
 
   if (!aktivtSteg) return null;
