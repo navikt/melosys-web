@@ -26,13 +26,12 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
   const dispatch = useDispatch();
   const [status, setStatus] = useState<Status>(Status.RedigeringUtfort);
   const behandlingHarPeriode = useSelector(mottatteOpplysningerSelectors.HarPeriodeSelector);
-  const tomLandOgPeriodeToggle = useFeatureToggle("melosys.tom_periode_og_land");
 
   const flytMedInngangsvilkår = window.location.pathname.indexOf(`${MKV.Koder.sakstyper.EU_EOS}/saksbehandling/`) > -1;
 
   const lagre = () => {
     setStatus(Status.RedigeringUtfort);
-    if (tomLandOgPeriodeToggle === "enabled" && flytMedInngangsvilkår && behandlingHarPeriode) {
+    if (flytMedInngangsvilkår && behandlingHarPeriode) {
       lagreSoknadOgOppfriskSaksopplysninger();
     } else {
       dispatch(mottatteOpplysningerOperations.oppdaterState());

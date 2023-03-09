@@ -12,8 +12,6 @@ import * as Api from "../../../services/api";
 import * as Mui from "../../../felleskomponenter/ui";
 
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
-
-import { useFeatureToggle } from "../../../featuretoggle";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../ducks/vilkar";
@@ -27,7 +25,6 @@ interface VarslerProps {
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
   landkoder: Array<string>;
   behandlingstema: string;
-  tomLandOgPeriodeToggleEnabled: boolean;
   behandlingHarPeriodeOgLand: boolean;
 }
 
@@ -36,7 +33,6 @@ export const Varsler = ({
   inngangsvilkaar,
   landkoder,
   behandlingstema,
-  tomLandOgPeriodeToggleEnabled,
   behandlingHarPeriodeOgLand,
 }: VarslerProps) => {
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
@@ -56,7 +52,7 @@ export const Varsler = ({
   });
 
   if (Utils._isEmpty(inngangsvilkaar)) {
-    if (tomLandOgPeriodeToggleEnabled && !behandlingHarPeriodeOgLand) {
+    if (!behandlingHarPeriodeOgLand) {
       return (
         <ul className="betingelser__liste">
           <li className={oppfyllerInngangsvilkarCl}>
@@ -146,8 +142,6 @@ export const VurderingInngang = ({
   behandlingstema,
   behandlingHarPeriodeOgLand,
 }: VurderingInngangProps) => {
-  const tomLandOgPeriodeToggle = useFeatureToggle("melosys.tom_periode_og_land");
-
   const knappClickHandler = async () => {
     if (!oppfyllerInngangsvilkar) {
       await Api.Vilkar.overstyrInngangvilkaar(behandlingID);
@@ -165,7 +159,6 @@ export const VurderingInngang = ({
         inngangsvilkaar={inngangsvilkaar}
         landkoder={landkoder}
         behandlingstema={behandlingstema}
-        tomLandOgPeriodeToggleEnabled={tomLandOgPeriodeToggle === "enabled"}
         behandlingHarPeriodeOgLand={behandlingHarPeriodeOgLand}
       />
       <Mui.StegKnapper
