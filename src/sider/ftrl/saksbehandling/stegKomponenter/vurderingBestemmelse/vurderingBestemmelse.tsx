@@ -90,7 +90,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     hentEksisterendeVilkår();
   }, []);
 
-  useEffect(() => {
+  const oppdaterValgtBestemmelsesSynligeVilkår = () => {
     const valgtBestemmelsesVilkårOgBegrunnelser = bestemmelseVilkarStøttet.find(
       (bestemmelseMedVilkar) => bestemmelseMedVilkar.bestemmelse === valgtBestemmelse
     )?.vilkårOgBegrunnelser;
@@ -112,7 +112,17 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       }
     });
     setValgtBestemmelsesSynligeVilkår(vilkårSomSkalVises);
-  }, [valgtBestemmelse, valgteVilkar]);
+  };
+
+  useEffect(() => {
+    setValgteBegrunnelser(new Map());
+    setValgteVilkar(new Map());
+    oppdaterValgtBestemmelsesSynligeVilkår();
+  }, [valgtBestemmelse]);
+
+  useEffect(() => {
+    oppdaterValgtBestemmelsesSynligeVilkår();
+  }, [valgteVilkar]);
 
   useEffect(() => {
     oppdaterStatus(formIsValid);
@@ -223,6 +233,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
       {valgtBestemmelsesSynligeVilkår.map((vilkårOgBegrunnelse) => (
         <VilkaarOgBegrunnelser
+          key={vilkårOgBegrunnelse.vilkaar}
           vilkaarOgBegrunnelser={vilkårOgBegrunnelse}
           valgteVilkar={valgteVilkar}
           valgteBegrunnelser={valgteBegrunnelser}

@@ -48,7 +48,7 @@ export const VilkaarOgBegrunnelser = ({
   const valgteVilkarForVilkaar = valgteVilkar.get(`${vilkaar}`);
 
   return (
-    <Fragment key={vilkaar}>
+    <Fragment>
       <Nav.Fieldset
         className="radio"
         legend={
