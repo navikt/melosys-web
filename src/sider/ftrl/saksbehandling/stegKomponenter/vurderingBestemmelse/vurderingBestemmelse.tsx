@@ -62,7 +62,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const [valgtBestemmelsesSynligeVilkår, setValgtBestemmelsesSynligeVilkår] = useState<
     Api.Medlemskapsperioder.VilkårOgBegrunnelser[]
   >([]);
-  const [erAlleValgGjort, setErAlleValgGjort] = useState(false);
+  const [formIsValid, setFormIsValid] = useState(false);
 
   const bestemmelseVilkarStøttet = sorterBestemmelser(bestemmelserMedVilkår.støttedeBestemmelserMedVilkår);
   const bestemmelseVilkarIkkeStøttet = sorterBestemmelser(bestemmelserMedVilkår.ikkeStøttedeBestemmelserMedVilkår);
@@ -115,23 +115,25 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   }, [valgtBestemmelse, valgteVilkar]);
 
   useEffect(() => {
-    oppdaterStatus(erAlleValgGjort);
-  }, [erAlleValgGjort]);
+    oppdaterStatus(formIsValid);
+  }, [formIsValid]);
 
-  useEffect(() => {
-    const valgteBestemmelseVilkar = bestemmelseVilkarStøttet.find(
+  const validerForm = () => {
+    const valgtBestemmelseMedVilkår = bestemmelseVilkarStøttet.find(
       (element) => element.bestemmelse === valgtBestemmelse
     );
-    const alleVilkarHarSvarJaOgvalgtBegrunnelse =
-      valgteBestemmelseVilkar &&
-      valgteBestemmelseVilkar.vilkårOgBegrunnelser.filter(
-        (vilkar) =>
-          valgteVilkar.get(vilkar.vilkaar) === BOOLSK_STRING.SANN &&
-          (vilkar.muligeBegrunnelser.length > 0 ? valgteBegrunnelser.get(`${vilkar.vilkaar}_begrunnelser`) : true)
-      ).length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
+    const alleVilkarHarSvarJaOgvalgtBegrunnelse = valgtBestemmelseMedVilkår?.vilkårOgBegrunnelser.every(
+      (element) =>
+        valgteVilkar.get(element.vilkaar) === BOOLSK_STRING.SANN &&
+        (Utils._isEmpty(element.muligeBegrunnelser) ? true : valgteBegrunnelser.get(`${element.vilkaar}_begrunnelser`))
+    );
 
-    setErAlleValgGjort(!!alleVilkarHarSvarJaOgvalgtBegrunnelse);
-  }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]); // TODO: yup-skjema og react-hook-forms
+    setFormIsValid(Boolean(alleVilkarHarSvarJaOgvalgtBegrunnelse));
+  };
+
+  useEffect(() => {
+    validerForm();
+  }, [valgtBestemmelse, valgteVilkar, valgteBegrunnelser]);
 
   const handleBekreft = () => {
     dispatch(vilkarOperations.lagre());
@@ -235,7 +237,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       {bestemmelseIkkeStøttetValgt && <FlytFinnesIkke />}
 
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: handleBekreft, disabled: !erAlleValgGjort || !redigerbart }}
+        bekreftKnappProps={{ onClick: handleBekreft, disabled: !formIsValid || !redigerbart }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
