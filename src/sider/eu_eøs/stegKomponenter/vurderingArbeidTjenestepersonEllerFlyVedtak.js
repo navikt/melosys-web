@@ -92,6 +92,11 @@ const sjekkSkalSendeSed = (formValues) => {
   return false;
 };
 
+const sjekkSkalSendeOrienteringsbrev = (selvstendigArbeid) => {
+  // Selvstendig næringsdrivende skal ikke sende brevet INNVILGESE_ARBEIDSGIVER
+  return selvstendigArbeid ? !selvstendigArbeid.erSelvstendig : false;
+};
+
 export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   redigerbart,
   behandlingID,
@@ -119,6 +124,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   aktivtSteg,
   validerMottatteOpplysninger,
   fattVedtak,
+  selvstendigArbeid,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
@@ -184,6 +190,16 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
         },
       },
     ];
+  }
+
+  if (sjekkSkalSendeOrienteringsbrev(selvstendigArbeid)) {
+    pdfDokumenter.push({
+      navn: "Orienteringsbrev til arbeidsgiver",
+      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+      data: {
+        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+      },
+    });
   }
 
   const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
@@ -446,6 +462,7 @@ VurderingArbeidTjenestepersonEllerFlyVedtak.propTypes = {
   aktivtSteg: PT.bool,
   validerMottatteOpplysninger: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
+  selvstendigArbeid: PT.object.isRequired,
 };
 
 VurderingArbeidTjenestepersonEllerFlyVedtak.defaultProps = {
@@ -477,6 +494,7 @@ const mapStateToProps = (state, ownProps) => {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
     soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
+    selvstendigArbeid: mottatteOpplysningerSelectors.SelvstendigArbeidSelector(state),
     formIsValid: isValid(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)(state),
     initialValues: {

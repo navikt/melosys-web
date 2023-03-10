@@ -20,7 +20,6 @@ class Vedtak extends Steg {
     this.komponent = VurderingVedtak;
     this.samleRelevanteData = (_propsLight) => {
       const formValues = _propsLight.artikkel12_vedtak_skjema;
-      const erNyVurdering = _propsLight.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
       const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(
         _propsLight.valgteLovvalgsVilkarBestemmelse,
         MKV.Kodekombinasjoner.alleLovvalg
@@ -41,11 +40,7 @@ class Vedtak extends Steg {
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
       ];
 
-      if (
-        lovvalgSomKodeTerm &&
-        visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
-        !erNyVurdering
-      ) {
+      if (lovvalgSomKodeTerm && visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode)) {
         pdfDokumenter.push({
           navn: "Orienteringsbrev til arbeidsgiver",
           type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
