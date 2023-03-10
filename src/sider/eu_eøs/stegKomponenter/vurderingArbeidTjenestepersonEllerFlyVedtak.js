@@ -93,7 +93,6 @@ const sjekkSkalSendeSed = (formValues) => {
 };
 
 const sjekkSkalSendeOrienteringsbrev = (selvstendigArbeid) => {
-  // Selvstendig næringsdrivende skal ikke sende brevet INNVILGESE_ARBEIDSGIVER
   return selvstendigArbeid ? !selvstendigArbeid.erSelvstendig : false;
 };
 
