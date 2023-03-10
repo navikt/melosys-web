@@ -63,7 +63,8 @@ const skalViseMottakerinstitusjoner = (
   behandlingstema,
   behandlingstype,
   folketrygdenToggleEnabled,
-  ikkeYrkesaktivFlytToggleEnabled
+  ikkeYrkesaktivFlytToggleEnabled,
+  registreringUnntakFraMedlemskapToggleEnabled
 ) => {
   return (
     sakstype === MKV.Koder.sakstyper.EU_EOS &&
@@ -79,7 +80,8 @@ const skalViseMottakerinstitusjoner = (
       behandlingstema,
       behandlingstype,
       folketrygdenToggleEnabled,
-      ikkeYrkesaktivFlytToggleEnabled
+      ikkeYrkesaktivFlytToggleEnabled,
+      registreringUnntakFraMedlemskapToggleEnabled
     )
   );
 };
@@ -111,6 +113,8 @@ const VurderingVedtak = ({
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
   const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
+  const registreringUnntakFraMedlemskapToggleEnabled =
+    useFeatureToggle("melosys.registrering_unntak_fra_medlemskap") === "enabled";
   const dispatch = useDispatch();
 
   const lovvalget = lovvalgsperioder[0] || {};
@@ -131,7 +135,8 @@ const VurderingVedtak = ({
     behandlingstema,
     behandlingstype,
     folketrygdenToggleEnabled,
-    ikkeYrkesaktivFlytToggleEnabled
+    ikkeYrkesaktivFlytToggleEnabled,
+    registreringUnntakFraMedlemskapToggleEnabled
   );
   const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
 
@@ -294,7 +299,6 @@ VurderingVedtak.propTypes = {
   bostedsland: MPT.Kodeverk,
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
-  lovvalgsland: PT.string,
   sakstype: PT.string.isRequired,
   sakstema: PT.string.isRequired,
   behandlingstema: PT.string.isRequired,
@@ -313,7 +317,6 @@ VurderingVedtak.propTypes = {
 };
 
 VurderingVedtak.defaultProps = {
-  lovvalgsland: "",
   formValues: {},
   visAntallManederUtland: true,
   bostedsland: {},
@@ -329,7 +332,6 @@ const mapStateToProps = (state) => ({
   sakstema: fagsakSelectors.SakstemaKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   erArtikkel11_4: flytSelectors.ErIArtikkel11_4Selector(state),

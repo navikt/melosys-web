@@ -1,80 +1,74 @@
-import React, { useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { change, getFormValues, reduxForm } from "redux-form";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
-import * as KV from "../../../../kodeverk";
 import * as Api from "../../../../services/api";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
-import { formSelectors } from "../../../../ducks/form";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
 import "./vurderingVirksomhet.css";
 
-const mapStateToProps = (state: RootState) => {
+const komponentState = (state: RootState) => {
   const lagredeValgtevirksomheter = oppsummertfaktaSelectors.VirksomhetIDerSelector(state);
   return {
     virksomheterListe: behandlingerSelectors.AlleVirksomheterSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
     lagredeValgtevirksomheter,
-    formValues: getFormValues(KV.Form.VIRKSOMHET)(state),
     initialValues: {
       valgteVirksomheter: lagredeValgtevirksomheter,
     },
-    formIsValid: formSelectors.VurderVirksomhetFormValid(state),
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   hentOppsummertFakta: (behandlingID: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
   sendVirksomheter: (behandlingID: number, virksomheter: Api.Avklartefakta.Virksomheter) =>
     dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
   hentMottatteOpplysninger: (behandlingID: number) => dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
-  changeValgteVirksomheter: (data: string[]) => dispatch(change(KV.Form.VIRKSOMHET, "valgteVirksomheter", data)),
 });
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-interface FormValuesProps {
-  valgteVirksomheter?: string[];
-}
 
 interface Props {
   bekreft: () => void;
-  redigerbart: boolean;
   tilbake: () => void;
-  formValues: FormValuesProps;
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
 }
 
-const VurderingVirksomhet = ({
-  behandlingID,
-  bekreft,
-  changeValgteVirksomheter,
-  formIsValid,
-  formValues,
-  hentMottatteOpplysninger,
-  hentOppsummertFakta,
-  redigerbart,
-  sendVirksomheter,
-  tilbake,
-  virksomheterListe,
-  lagredeValgtevirksomheter,
-}: Props & PropsFromRedux) => {
+export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
+  const dispatch = useDispatch();
+
+  const { hentOppsummertFakta, sendVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
+  const { redigerbart, virksomheterListe, behandlingID, initialValues, lagredeValgtevirksomheter } =
+    useSelector(komponentState);
   const [erMottatteOpplysningerLastetInn, setErMottatteOpplysningerLastetInn] = useState(false);
   const hjelpetekst =
     "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. " +
     'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
+
+  const {
+    setValue,
+    watch,
+    formState: { isValid: formIsValid },
+  } = useForm({
+    resolver: yupResolver(vurderingVirksomhetSchema),
+    mode: "onChange",
+    reValidateMode: "onChange",
+    values: useMemo(() => initialValues, [initialValues]),
+  });
+  const formValues = watch();
 
   const lastInnMottatteOpplysninger = async () => {
     await hentMottatteOpplysninger(behandlingID);
@@ -89,8 +83,8 @@ const VurderingVirksomhet = ({
   }, []);
 
   useEffect(() => {
-    changeValgteVirksomheter(lagredeValgtevirksomheter);
-  }, [lagredeValgtevirksomheter]);
+    oppdaterStatus(formIsValid);
+  }, [formIsValid]);
 
   const handleFortsett = () => {
     if (formValues && formValues.valgteVirksomheter) {
@@ -99,10 +93,9 @@ const VurderingVirksomhet = ({
     }
   };
 
-  if (!erMottatteOpplysningerLastetInn || !formValues) {
+  if (!erMottatteOpplysningerLastetInn || !formValues || !aktivtSteg) {
     return null;
   }
-
   return (
     <div className="vurderingVirksomhet">
       <Nav.Typo.Undertittel className="undertittel">
@@ -111,7 +104,9 @@ const VurderingVirksomhet = ({
 
       <Mui.Checkboxgruppe
         muligeValg={virksomheterListe}
-        onChange={(checkedVirksomheter) => changeValgteVirksomheter(checkedVirksomheter)}
+        onChange={(checkedVirksomheter) =>
+          setValue("valgteVirksomheter", checkedVirksomheter, { shouldValidate: true })
+        }
         disabled={!redigerbart}
         defaultValg={lagredeValgtevirksomheter}
       />
@@ -123,13 +118,3 @@ const VurderingVirksomhet = ({
     </div>
   );
 };
-
-const VurderingVirksomhetForm = reduxForm<FormValuesProps, PropsFromRedux & Props>({
-  form: KV.Form.VIRKSOMHET,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(vurderingVirksomhetSchema),
-})(VurderingVirksomhet);
-
-export default connector(VurderingVirksomhetForm);

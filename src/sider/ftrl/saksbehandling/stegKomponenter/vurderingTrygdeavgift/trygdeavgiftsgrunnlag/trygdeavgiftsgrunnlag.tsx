@@ -2,30 +2,32 @@ import React, { ChangeEvent, Fragment } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../../melosyskodeverk";
-import * as Nav from "../../../../../../navFrontend";
 import * as Api from "../../../../../../services/api";
+import * as Forms from "../../../../../../felleskomponenter/forms";
 import * as Ikoner from "../../../../../../resources/images";
-import * as Utils from "../../../../../../utils";
 import * as KV from "../../../../../../kodeverk";
-import * as Skjema from "../../../../../../felleskomponenter/skjema";
+import * as Nav from "../../../../../../navFrontend";
+import * as Utils from "../../../../../../utils";
 
-import PeriodeTabell from "./periodetabell";
-import SpesiellGruppeHjelpetekst from "./spesiellGruppeHjelpeTekst";
-import { OppdaterAvgiftsberegning } from "../../../../../../services/modules/trygdeavgift";
 import { BOOLSK_STRING } from "../../../../../../constants";
-import { VurderingTrygdeavgiftVirksomhetTyper } from "../../../../../../kodeverk/koder";
+import SpesiellGruppeHjelpetekst from "./spesiellGruppeHjelpeTekst";
+import PeriodeTabell from "./periodetabell";
 
 interface TrygdeavgiftsgrunnlagProps {
   formValues: {
     avgiftsberegning?: Api.Avgiftsberegning | undefined;
     avgiftsgrunnlag?: Api.Avgiftsgrunnlag | undefined;
   };
-  oppdatertAvgiftsberegning: OppdaterAvgiftsberegning;
+  errors: any;
+  control: any;
+  setValue: (field: string, value: string) => void;
+  oppdatertAvgiftsberegning: Api.Trygdeavgift.OppdaterAvgiftsberegning;
   erTabellApen: Map<string, boolean>;
   erVirksomhetNorsk: boolean;
   erSaerligAvgiftsGruppeValgt: Map<string, boolean>;
   erTrygdeavgiftsgrunnlagNorgeUgyldig: boolean;
   erTrygdeavgiftsgrunnlagUtlandUgyldig: boolean;
+  handleErSøkerPliktigChange: () => void;
   handleBeregnClick: (erVirksomhetNorsk: boolean) => void;
   handleSærligAvgiftsgruppeRadioChange: (event: ChangeEvent<HTMLInputElement>, erVirksomhetNorsk: boolean) => void;
   handleAvgiftspliktigLønnInputChange: (event: ChangeEvent<HTMLInputElement>, erVirksomhetNorsk: boolean) => void;
@@ -35,9 +37,13 @@ interface TrygdeavgiftsgrunnlagProps {
 
 const Trygdeavgiftsgrunnlag = ({
   formValues,
+  setValue,
+  control,
+  errors,
   oppdatertAvgiftsberegning,
   erTabellApen,
   erVirksomhetNorsk,
+  handleErSøkerPliktigChange,
   erSaerligAvgiftsGruppeValgt,
   erTrygdeavgiftsgrunnlagNorgeUgyldig,
   erTrygdeavgiftsgrunnlagUtlandUgyldig,
@@ -95,11 +101,30 @@ const Trygdeavgiftsgrunnlag = ({
   if (!formValues.avgiftsgrunnlag) return null;
 
   const virksomhetType = erVirksomhetNorsk
-    ? VurderingTrygdeavgiftVirksomhetTyper.NORSK
-    : VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK;
+    ? KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.NORSK
+    : KV.Koder.VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK;
   const feltNavnBase = erVirksomhetNorsk
     ? "avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge"
     : "avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland";
+  const feltNavnIngenTrygdeavgiftBetalesTilNAV = erVirksomhetNorsk
+    ? {
+        feltNavn: "avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt",
+        verdi: MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV,
+      }
+    : {
+        feltNavn: "avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt",
+        verdi: MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV,
+      };
+
+  const feltNavnTrygdeavgiftBetalesTilNAV = erVirksomhetNorsk
+    ? {
+        feltNavn: "avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt",
+        verdi: MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_TRYGDEAVGIFT_NAV,
+      }
+    : {
+        feltNavn: "avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt",
+        verdi: MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_TRYGDEAVGIFT_NAV,
+      };
   const ingenTrygdeavgiftBetalesTilNAV = erVirksomhetNorsk
     ? formValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt ===
       MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
@@ -130,6 +155,7 @@ const Trygdeavgiftsgrunnlag = ({
       trygdeavgiftsgrunnlag?.særligAvgiftsgruppe
     );
   };
+  const erSkattepliktig = trygdeavgiftsgrunnlag?.erSkattepliktig;
 
   return (
     <div className="vurderingTrygdeavgift__overstrek vurderingTrygdeavgift">
@@ -151,6 +177,7 @@ const Trygdeavgiftsgrunnlag = ({
               className="column"
               label="Ja"
               name={`${virksomhetType}særligAvgiftsgruppe`}
+              feil={errors[virksomhetType]?.særligAvgiftsgruppe?.message?.melding}
               onChange={(event) => handleSærligAvgiftsgruppeRadioChange(event, erVirksomhetNorsk)}
               checked={erSaerligAvgiftsGruppeValgt.get(virksomhetType) === true}
               value={BOOLSK_STRING.SANN}
@@ -160,6 +187,7 @@ const Trygdeavgiftsgrunnlag = ({
               className="column"
               label="Nei"
               name={`${virksomhetType}særligAvgiftsgruppe`}
+              feil={errors[virksomhetType]?.særligAvgiftsgruppe?.message?.melding}
               onChange={(event) => handleSærligAvgiftsgruppeRadioChange(event, erVirksomhetNorsk)}
               checked={erSaerligAvgiftsGruppeValgt.get(virksomhetType) === false}
               value={BOOLSK_STRING.USANN}
@@ -167,10 +195,11 @@ const Trygdeavgiftsgrunnlag = ({
             />
           </Nav.Fieldset>
           {erSaerligAvgiftsGruppeValgt.get(virksomhetType) === true && (
-            <Skjema.Select
+            <Forms.Select
               label=""
               disabled={!redigerbart}
-              feltNavn={`${feltNavnBase}.særligAvgiftsgruppe`}
+              name={`${feltNavnBase}.særligAvgiftsgruppe`}
+              control={control}
               emptyFieldText="Velg gruppe"
               emptyFieldDisabled={
                 (erVirksomhetNorsk
@@ -191,7 +220,7 @@ const Trygdeavgiftsgrunnlag = ({
                     {saerligavgiftsgruppe.term}
                   </option>
                 ))}
-            </Skjema.Select>
+            </Forms.Select>
           )}
         </Nav.Column>
 
@@ -214,21 +243,38 @@ const Trygdeavgiftsgrunnlag = ({
                 </Nav.Typo.Normaltekst>
               ) : (
                 <Fragment>
-                  <Skjema.Radio
+                  <Forms.Radio
                     className="column"
                     label="Ja"
-                    feltNavn={`${feltNavnBase}.erSkattepliktig`}
-                    value
+                    name={`${feltNavnBase}.erSkattepliktig`}
+                    control={control}
+                    checked={
+                      erSkattepliktig === null || erSkattepliktig === undefined ? undefined : Boolean(erSkattepliktig)
+                    }
+                    onChange={() => {
+                      setValue(
+                        feltNavnIngenTrygdeavgiftBetalesTilNAV.feltNavn,
+                        feltNavnIngenTrygdeavgiftBetalesTilNAV.verdi
+                      );
+                      handleErSøkerPliktigChange();
+                    }}
+                    value={BOOLSK_STRING.SANN}
                     disabled={!redigerbart}
-                    id={`${feltNavnBase}.erSkattepliktig`}
                   />
-                  <Skjema.Radio
+                  <Forms.Radio
                     className="column"
                     label="Nei"
-                    feltNavn={`${feltNavnBase}.erSkattepliktig`}
-                    value={false}
+                    name={`${feltNavnBase}.erSkattepliktig`}
+                    control={control}
+                    onChange={() => {
+                      setValue(feltNavnTrygdeavgiftBetalesTilNAV.feltNavn, feltNavnTrygdeavgiftBetalesTilNAV.verdi);
+                      handleErSøkerPliktigChange();
+                    }}
+                    checked={
+                      erSkattepliktig === null || erSkattepliktig === undefined ? undefined : Boolean(!erSkattepliktig)
+                    }
+                    value={BOOLSK_STRING.USANN}
                     disabled={!redigerbart}
-                    id={`${feltNavnBase}.erIkkeSkattepliktig`}
                   />
                 </Fragment>
               )}
@@ -240,58 +286,60 @@ const Trygdeavgiftsgrunnlag = ({
       {ingenTrygdeavgiftBetalesTilNAV && <VurderingsutfallIngenTrygdeavgift />}
 
       {trygdeavgiftBetalesTilNAV && (
-        <div>
-          {!erVirksomhetNorsk && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland?.betalerArbeidsgiverAvgift && (
-            <Nav.AlertStripeAdvarsel className="stor_margin_bottom">
-              Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.
-            </Nav.AlertStripeAdvarsel>
-          )}
-          {(erVirksomhetNorsk ? !erTrygdeavgiftsgrunnlagNorgeUgyldig : !erTrygdeavgiftsgrunnlagUtlandUgyldig) && (
+        <>
+          <div>
+            {!erVirksomhetNorsk &&
+              formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland?.betalerArbeidsgiverAvgift && (
+                <Nav.AlertStripeAdvarsel className="stor_margin_bottom">
+                  Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.
+                </Nav.AlertStripeAdvarsel>
+              )}
+            {(erVirksomhetNorsk ? !erTrygdeavgiftsgrunnlagNorgeUgyldig : !erTrygdeavgiftsgrunnlagUtlandUgyldig) && (
+              <Nav.Row>
+                <Nav.Column xs="4">
+                  <Nav.Input
+                    label="Avgiftspliktig inntekt per måned"
+                    value={
+                      (erVirksomhetNorsk &&
+                        oppdatertAvgiftsberegning.avgiftspliktigLønnNorge !== null &&
+                        oppdatertAvgiftsberegning.avgiftspliktigLønnNorge) ||
+                      (!erVirksomhetNorsk &&
+                        oppdatertAvgiftsberegning.avgiftspliktigLønnUtland !== null &&
+                        oppdatertAvgiftsberegning.avgiftspliktigLønnUtland) ||
+                      0
+                    }
+                    bredde="fullbredde"
+                    onChange={(event) => handleAvgiftspliktigLønnInputChange(event, erVirksomhetNorsk)}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    disabled={!redigerbart}
+                  />
+                </Nav.Column>
+                <Nav.Column xs="4">
+                  <Nav.Knapp
+                    className="beregn_knapp"
+                    onClick={() => handleBeregnClick(erVirksomhetNorsk)}
+                    disabled={!redigerbart}
+                  >
+                    {redigerbart ? (
+                      <Ikoner.Kalkulator className="beregn_ikon" />
+                    ) : (
+                      <Ikoner.KalkulatorDisabled className="beregn_ikon" />
+                    )}
+                    <span>Beregn foreløpig trygdeavgift</span>
+                  </Nav.Knapp>
+                </Nav.Column>
+              </Nav.Row>
+            )}
+          </div>
+          {erTabellApen.get(virksomhetType) && formValues.avgiftsberegning && (
             <Nav.Row>
-              <Nav.Column xs="4">
-                <Nav.Input
-                  label="Avgiftspliktig inntekt per måned"
-                  value={
-                    (erVirksomhetNorsk &&
-                      oppdatertAvgiftsberegning.avgiftspliktigLønnNorge !== null &&
-                      oppdatertAvgiftsberegning.avgiftspliktigLønnNorge) ||
-                    (!erVirksomhetNorsk &&
-                      oppdatertAvgiftsberegning.avgiftspliktigLønnUtland !== null &&
-                      oppdatertAvgiftsberegning.avgiftspliktigLønnUtland) ||
-                    0
-                  }
-                  bredde="fullbredde"
-                  onChange={(event) => handleAvgiftspliktigLønnInputChange(event, erVirksomhetNorsk)}
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  disabled={!redigerbart}
-                />
-              </Nav.Column>
-              <Nav.Column xs="4">
-                <Nav.Knapp
-                  className="beregn_knapp"
-                  onClick={() => handleBeregnClick(erVirksomhetNorsk)}
-                  disabled={!redigerbart}
-                >
-                  {redigerbart ? (
-                    <Ikoner.Kalkulator className="beregn_ikon" />
-                  ) : (
-                    <Ikoner.KalkulatorDisabled className="beregn_ikon" />
-                  )}
-                  <span>Beregn foreløpig trygdeavgift</span>
-                </Nav.Knapp>
+              <Nav.Column xs="12">
+                <PeriodeTabell perioder={mapTabell()} />
               </Nav.Column>
             </Nav.Row>
           )}
-        </div>
-      )}
-
-      {erTabellApen.get(virksomhetType) && formValues.avgiftsberegning && (
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <PeriodeTabell perioder={mapTabell()} />
-          </Nav.Column>
-        </Nav.Row>
+        </>
       )}
     </div>
   );

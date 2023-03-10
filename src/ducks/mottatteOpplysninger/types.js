@@ -11,6 +11,8 @@ export const PENDING = "mottatteOpplysninger/PENDING";
 export const OPPDATER_MOTTATTE_OPPLYSNINGER = "mottatteOpplysninger/OPPDATER_MOTTATTE_OPPLYSNINGER";
 export const OPPDATER_PERIODE = "mottatteOpplysninger/OPPDATER_PERIODE";
 export const OPPDATER_SOEKNADSLAND = "mottatteOpplysninger/OPPDATER_SOEKNADSLAND";
+export const OPPDATER_AVSENDERLAND = "mottatteOpplysninger/OPPDATER_AVSENDERLAND";
+export const OPPDATER_LOVVALGSLAND = "mottatteOpplysninger/OPPDATER_LOVVALGSLAND";
 export const OPPDATER_TRYGDEDEKNING = "mottatteOpplysninger/OPPDATER_TRYGDEDEKNING";
 
 export const RESET = "mottatteOpplysninger/RESET";

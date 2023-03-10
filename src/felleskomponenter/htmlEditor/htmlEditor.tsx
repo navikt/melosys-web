@@ -23,6 +23,7 @@ const toolbar = {
 
 const editorStateFromHTML = (htmlValue: string) =>
   EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(htmlValue).contentBlocks));
+
 const htmlFromEditorState = (editorState: EditorState) => draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
 type TextToHtmlEditorProps = {

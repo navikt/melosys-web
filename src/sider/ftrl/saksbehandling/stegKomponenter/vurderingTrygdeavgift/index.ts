@@ -1,3 +1,3 @@
-import VurderingTrygdeavgift from "./vurderingTrygdeavgift";
+import { VurderingTrygdeavgift } from "./vurderingTrygdeavgift";
 
-export default VurderingTrygdeavgift;
+export { VurderingTrygdeavgift };

@@ -35,6 +35,24 @@ export function oppdaterSoeknadsland(landkoder, erUkjenteEllerAlleEosLand) {
   };
 }
 
+export function oppdaterAvsenderland(avsenderland) {
+  return {
+    type: Types.OPPDATER_AVSENDERLAND,
+    data: {
+      avsenderland,
+    },
+  };
+}
+
+export function oppdaterLovvalgsland(lovvalgsland) {
+  return {
+    type: Types.OPPDATER_LOVVALGSLAND,
+    data: {
+      lovvalgsland,
+    },
+  };
+}
+
 export function oppdaterTrygdedekning(trygdedekning) {
   return {
     type: Types.OPPDATER_TRYGDEDEKNING,
