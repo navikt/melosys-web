@@ -351,9 +351,6 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
           </Nav.Column>
         </Nav.Row>
       )}
-      {redigerbart && (
-        <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
-      )}
       {visSendSEDValg && formValues.informerUtenlandskTrygdemyndighet && (
         <Nav.Row>
           <Nav.Column xs="6">
@@ -398,6 +395,9 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
             />
           </Nav.Column>
         </Nav.Row>
+      )}
+      {redigerbart && (
+        <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
       )}
       <Nav.Row>
         <Nav.Column xs="6">

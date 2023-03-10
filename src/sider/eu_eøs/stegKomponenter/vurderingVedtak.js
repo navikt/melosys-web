@@ -239,9 +239,6 @@ const VurderingVedtak = ({
             </Nav.Column>
           </Nav.Row>
         )}
-        {redigerbart && (
-          <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
-        )}
         {visMottakerinstitusjoner && sedMottakerLand && (
           <Nav.Row className="mottakerinstitusjoner">
             <Nav.Column xs="7">
@@ -253,6 +250,9 @@ const VurderingVedtak = ({
               />
             </Nav.Column>
           </Nav.Row>
+        )}
+        {redigerbart && (
+          <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
         )}
         <Nav.Row>
           <Nav.Column xs="6">
