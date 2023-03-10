@@ -8,8 +8,6 @@ import * as Symboler from "../../symboler";
 import { Status } from "../../editerbartElement";
 import RedigererKomponent from "./redigerer";
 import RedigeringUtfortKomponent from "./redigeringUtfort";
-
-import { useFeatureToggle } from "../../../../../featuretoggle";
 import {
   mottatteOpplysningerOperations,
   mottatteOpplysningerSelectors,
