@@ -23,15 +23,6 @@ import "./vurderingBestemmelse.css";
 
 const { SANN, USANN } = BOOLSK_STRING;
 
-const sorterBestemmelser = (bestemmelser: Api.Medlemskapsperioder.BestemmelseMedVilkårOgBegrunnelser[]) => {
-  // TODO
-  bestemmelser
-    .sort((a, b) => b.bestemmelse.localeCompare(a.bestemmelse))
-    .reverse()
-    .forEach((item) => item.vilkårOgBegrunnelser.sort((a, b) => a.vilkår.localeCompare(b.vilkår)));
-  return bestemmelser;
-};
-
 const komponentState = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
@@ -74,7 +65,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   >([]);
   const [formIsValid, setFormIsValid] = useState(false);
 
-  const støttedeBestemmelserMedVilkårOgBegrunnelser = sorterBestemmelser(støttedeBestemmelser);
   const bestemmelseIkkeStøttetValgt = ikkeStøttedeBestemmelser?.some((bestemmelse) => bestemmelse === valgtBestemmelse);
 
   const hentEksisterendeVilkår = async () => {
@@ -97,7 +87,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   }, []);
 
   const validerForm = () => {
-    const valgtBestemmelseMedVilkårOgBegrunnelser = støttedeBestemmelserMedVilkårOgBegrunnelser.find(
+    const valgtBestemmelseMedVilkårOgBegrunnelser = støttedeBestemmelser.find(
       (element) => element.bestemmelse === valgtBestemmelse
     );
     const alleVilkårHarSvarJaOgValgtBegrunnelse = valgtBestemmelseMedVilkårOgBegrunnelser?.vilkårOgBegrunnelser.every(
@@ -110,7 +100,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   };
 
   const oppdaterValgtBestemmelsesSynligeVilkår = () => {
-    const valgtBestemmelsesVilkårOgBegrunnelser = støttedeBestemmelserMedVilkårOgBegrunnelser.find(
+    const valgtBestemmelsesVilkårOgBegrunnelser = støttedeBestemmelser.find(
       (bestemmelseMedVilkårOgBegrunnelser) => bestemmelseMedVilkårOgBegrunnelser.bestemmelse === valgtBestemmelse
     )?.vilkårOgBegrunnelser;
 
@@ -214,7 +204,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
               <option disabled={!!valgtBestemmelse} value="" key="">
                 Velg...
               </option>
-              {støttedeBestemmelserMedVilkårOgBegrunnelser.map((element) => (
+              {støttedeBestemmelser.map((element) => (
                 <option key={element.bestemmelse} value={element.bestemmelse}>
                   {KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, element.bestemmelse)}
                 </option>
