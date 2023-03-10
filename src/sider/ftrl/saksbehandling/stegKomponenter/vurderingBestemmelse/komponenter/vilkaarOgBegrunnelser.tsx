@@ -12,12 +12,7 @@ import { BOOLSK_STRING } from "../../../../../../constants";
 import { FlytFinnesIkke } from "./flytFinnesIkke";
 
 const { SANN, USANN } = BOOLSK_STRING;
-const SAERLIG_GRUNN = "SAERLIG_GRUNN";
 const hjelpetekster = new Map([
-  [
-    SAERLIG_GRUNN,
-    "Nedtrekksmenyen inneholder grupper av personer som kan tas opp etter en rimelighetsvurdering i tilfeller der en søknad om medlemskap vurderes etter § 2-8 andre ledd.",
-  ],
   [
     MKV.Koder.vilkaar.FTRL_2_8_FORUTGÅENDE_TRYGDETID,
     "Husk at perioder med trygdetid fra andre EØS-land sidestilles med norsk trygdetid.",
@@ -89,7 +84,12 @@ export const VilkaarOgBegrunnelser = ({
       {valgtVilkår === SANN && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
           className="select"
-          legend={<LabelMedHjelpetekst label="Velg særlig grunn" hjelpetekst={hjelpetekster.get(SAERLIG_GRUNN)} />}
+          legend={
+            <LabelMedHjelpetekst
+              label="Velg særlig grunn"
+              hjelpetekst="Nedtrekksmenyen inneholder grupper av personer som kan tas opp etter en rimelighetsvurdering i tilfeller der en søknad om medlemskap vurderes etter § 2-8 andre ledd."
+            />
+          }
         >
           <Nav.Row>
             <Nav.Column xs="7">
