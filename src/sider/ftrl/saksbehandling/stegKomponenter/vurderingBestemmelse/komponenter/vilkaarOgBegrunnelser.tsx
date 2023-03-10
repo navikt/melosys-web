@@ -11,6 +11,7 @@ import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHje
 import { BOOLSK_STRING } from "../../../../../../constants";
 import { FlytFinnesIkke } from "./flytFinnesIkke";
 
+const { SANN, USANN } = BOOLSK_STRING;
 const SAERLIG_GRUNN = "SAERLIG_GRUNN";
 const hjelpetekster = new Map([
   [
@@ -24,28 +25,28 @@ const hjelpetekster = new Map([
 ]);
 
 interface VilkaarOgBegrunnelserProps {
-  vilkaarOgBegrunnelser: Api.Medlemskapsperioder.VilkårOgBegrunnelser;
-  valgteVilkar: Map<string, string>;
-  valgteBegrunnelser: Map<string, string>;
-  vilkaarKodeverk: KTObject[];
-  begrunnelserKodeverk: { [key: string]: KTObject[] };
-  handleEndreVilkar: ChangeEventHandler<HTMLInputElement>;
+  vilkårOgBegrunnelser: Api.Medlemskapsperioder.VilkårOgBegrunnelser;
+  alleValgteVilkår: Map<string, string>;
+  alleValgteBegrunnelser: Map<string, string>;
+  vilkårKodeverk: KTObject[];
+  begrunnelseKodeverk: { [key: string]: KTObject[] };
+  handleEndreVilkår: ChangeEventHandler<HTMLInputElement>;
   handleEndreBegrunnelse: ChangeEventHandler<HTMLSelectElement>;
   redigerbart: boolean;
 }
 
 export const VilkaarOgBegrunnelser = ({
-  vilkaarOgBegrunnelser: { vilkaar, muligeBegrunnelser },
-  valgteVilkar,
-  valgteBegrunnelser,
-  vilkaarKodeverk,
-  begrunnelserKodeverk,
-  handleEndreVilkar,
+  vilkårOgBegrunnelser: { vilkår, muligeBegrunnelser },
+  alleValgteVilkår,
+  alleValgteBegrunnelser,
+  vilkårKodeverk,
+  begrunnelseKodeverk,
+  handleEndreVilkår,
   handleEndreBegrunnelse,
   redigerbart,
 }: VilkaarOgBegrunnelserProps) => {
-  const hjelpetekstForVilkaar = hjelpetekster.get(vilkaar);
-  const valgteVilkarForVilkaar = valgteVilkar.get(`${vilkaar}`);
+  const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
+  const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
 
   return (
     <Fragment>
@@ -53,7 +54,7 @@ export const VilkaarOgBegrunnelser = ({
         className="radio"
         legend={
           <LabelMedHjelpetekst
-            label={KV.finnTermFraListe(vilkaarKodeverk, vilkaar)}
+            label={KV.finnTermFraListe(vilkårKodeverk, vilkår)}
             hjelpetekst={hjelpetekstForVilkaar}
           />
         }
@@ -62,30 +63,30 @@ export const VilkaarOgBegrunnelser = ({
           <Nav.Column xs="1">
             <Nav.Radio
               label="Ja"
-              name={vilkaar}
-              onChange={handleEndreVilkar}
-              checked={valgteVilkarForVilkaar === BOOLSK_STRING.SANN}
-              value={BOOLSK_STRING.SANN}
-              key={BOOLSK_STRING.SANN}
+              name={vilkår}
+              onChange={handleEndreVilkår}
+              checked={valgtVilkår === SANN}
+              value={SANN}
+              key={SANN}
               disabled={!redigerbart}
             />
           </Nav.Column>
           <Nav.Column xs="1">
             <Nav.Radio
               label="Nei"
-              name={vilkaar}
-              onChange={handleEndreVilkar}
-              checked={valgteVilkarForVilkaar === BOOLSK_STRING.USANN}
-              value={BOOLSK_STRING.USANN}
-              key={BOOLSK_STRING.USANN}
+              name={vilkår}
+              onChange={handleEndreVilkår}
+              checked={valgtVilkår === USANN}
+              value={USANN}
+              key={USANN}
               disabled={!redigerbart}
             />
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
 
-      {valgteVilkarForVilkaar === BOOLSK_STRING.USANN && <FlytFinnesIkke />}
-      {valgteVilkarForVilkaar === BOOLSK_STRING.SANN && !Utils._isEmpty(muligeBegrunnelser) && (
+      {valgtVilkår === USANN && <FlytFinnesIkke />}
+      {valgtVilkår === SANN && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
           className="select"
           legend={<LabelMedHjelpetekst label="Velg særlig grunn" hjelpetekst={hjelpetekster.get(SAERLIG_GRUNN)} />}
@@ -96,16 +97,16 @@ export const VilkaarOgBegrunnelser = ({
                 label=""
                 bredde="fullbredde"
                 onChange={handleEndreBegrunnelse}
-                name={`${vilkaar}_begrunnelser`}
-                value={valgteBegrunnelser.get(`${vilkaar}_begrunnelser`)}
+                name={`${vilkår}_begrunnelser`}
+                value={alleValgteBegrunnelser.get(`${vilkår}_begrunnelser`)}
                 disabled={!redigerbart}
               >
-                <option key="" value="" disabled={!!valgteBegrunnelser.get(`${vilkaar}_begrunnelser`)}>
+                <option key="" value="" disabled={!!alleValgteBegrunnelser.get(`${vilkår}_begrunnelser`)}>
                   Velg
                 </option>
                 {muligeBegrunnelser.map((begrunnelse) => (
                   <option key={begrunnelse} value={begrunnelse}>
-                    {KV.termFraNestedKTObject(begrunnelserKodeverk, begrunnelse)}
+                    {KV.termFraNestedKTObject(begrunnelseKodeverk, begrunnelse)}
                   </option>
                 ))}
               </Nav.Select>

@@ -3,18 +3,18 @@ import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../utils";
 import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../api-constants";
 
 export interface VilkårOgBegrunnelser {
-  vilkaar: string;
+  vilkår: string;
   muligeBegrunnelser: string[];
 }
 
-export interface BestemmelseMedVilkaar {
+export interface BestemmelseMedVilkårOgBegrunnelser {
   bestemmelse: string;
   vilkårOgBegrunnelser: VilkårOgBegrunnelser[];
 }
 
 export interface HentBestemmelserMedVilkårResponse {
-  støttedeBestemmelserMedVilkår: BestemmelseMedVilkaar[];
-  ikkeStøttedeBestemmelserMedVilkår: BestemmelseMedVilkaar[];
+  støttedeBestemmelser: BestemmelseMedVilkårOgBegrunnelser[];
+  ikkeStøttedeBestemmelser: string[];
 }
 
 export const getMedlemskapsperioder = (behandlingID: number) =>
