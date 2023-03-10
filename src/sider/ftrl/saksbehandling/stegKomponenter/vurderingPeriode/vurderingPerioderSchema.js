@@ -1,7 +1,7 @@
 import { object, string, array } from "yup";
-import MKV from "../../../../melosyskodeverk";
-import * as KV from "../../../../kodeverk";
-import * as Utils from "../../../../utils";
+import MKV from "../../../../../melosyskodeverk";
+import * as KV from "../../../../../kodeverk";
+import * as Utils from "../../../../../utils";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const INNGILGELSESRESULTAT_FELT_KREVES = { melding: "Du må velge innvilgelsesresultat" };
