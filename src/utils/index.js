@@ -66,6 +66,7 @@ export {
   isNumber as _isNumber,
   isString as _isString,
   throttle as _throttle,
+  // Merk at isEmpty returnerer true for alle numbers
   isEmpty as _isEmpty,
   isObject as _isObject,
   isBoolean as _isBoolean,

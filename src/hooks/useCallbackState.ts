@@ -2,6 +2,13 @@ import { useEffect, useState, SetStateAction, Dispatch } from "react";
 
 import * as Utils from "../utils";
 
+const dependencyFinnes = (dependency: any) => {
+  if (typeof dependency === "number") {
+    return dependency !== 0;
+  }
+  return !Utils._isEmpty(dependency);
+};
+
 export const useCallbackState = <StateType>(
   callback: () => StateType,
   defaultState: StateType,
@@ -12,7 +19,7 @@ export const useCallbackState = <StateType>(
 
   useEffect(() => {
     // Kaller callback og oppdaterer state dersom alle dependencies finnes
-    if (deps.every((dep) => !Utils._isEmpty(dep))) {
+    if (deps.every((dep) => dependencyFinnes(dep))) {
       try {
         setState(callback());
       } catch (e: any) {
@@ -36,7 +43,7 @@ export const useAsyncCallbackState = <StateType>(
     let isMounted = true;
 
     // Kaller callback og oppdaterer state dersom alle dependencies finnes
-    if (deps.every((dep) => !Utils._isEmpty(dep))) {
+    if (deps.every((dep) => dependencyFinnes(dep))) {
       asyncCallback()
         .then((result) => {
           if (isMounted) {
