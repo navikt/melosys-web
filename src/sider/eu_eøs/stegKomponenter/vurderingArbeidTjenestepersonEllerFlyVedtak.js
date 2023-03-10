@@ -92,9 +92,7 @@ const sjekkSkalSendeSed = (formValues) => {
   return false;
 };
 
-const sjekkSkalSendeOrienteringsbrev = (selvstendigArbeid) => {
-  return selvstendigArbeid ? !selvstendigArbeid.erSelvstendig : false;
-};
+const sjekkSkalSendeOrienteringsbrev = (selvstendigArbeid) => selvstendigArbeid?.erSelvstendig !== true;
 
 export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   redigerbart,
