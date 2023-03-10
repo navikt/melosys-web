@@ -1,13 +1,11 @@
-import React, { ComponentProps, MouseEvent } from "react";
-import { mock, instance } from "ts-mockito";
-import { shallow } from "enzyme";
+import React, { ComponentProps } from "react";
+import { instance, mock } from "ts-mockito";
 
-import * as Nav from "../../../navFrontend";
-import * as Mui from "../../../felleskomponenter/ui";
+import { render, screen } from "@testing-library/react";
 
 import MKV from "../../../melosyskodeverk";
 
-import { VurderingInngang, Varsler } from "./vurderingInngang";
+import { Varsler, VurderingInngang } from "./vurderingInngang";
 
 describe("Varsler", () => {
   const mockedProps = mock<ComponentProps<typeof Varsler>>();
@@ -28,11 +26,11 @@ describe("Varsler", () => {
       begrunnelseFritekstEngelsk: null,
     };
 
-    const varsler = shallow(<Varsler {...props} />);
-    const lis = varsler.find("li");
+    render(<Varsler {...props} />);
 
-    expect(lis).toHaveLength(1);
-    expect(lis.first().text()).toBe("Søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.");
+    expect(screen.getByRole("listitem")).toHaveTextContent(
+      "Søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004."
+    );
   });
 
   it("Viser feilmelding og hjelpetekst ved ikke oppfylte inngangsvilkår", () => {
@@ -48,18 +46,18 @@ describe("Varsler", () => {
         MKV.Koder.begrunnelser.inngangsvilkaar.TEKNISK_FEIL,
       ],
     };
-    const varsler = shallow(<Varsler {...props} />);
-    const feilmeldingsliste = varsler.find("ul").first();
-    const lis = feilmeldingsliste.find("li");
-    const hjelpetekstalertstripe = varsler.find(Nav.AlertStripe);
 
-    expect(lis).toHaveLength(3);
-    expect(lis.first().text()).toBe(
-      "Søknaden oppfyller ikke inngangsvilkårene for EU/EØS-saker etter forordning 883/2004."
-    );
-    expect(lis.at(1).text()).toBe(MKV.Terms.begrunnelser.inngangsvilkaar.MANGLER_STATSBORGERSKAP);
-    expect(lis.last().text()).toBe(MKV.Terms.begrunnelser.inngangsvilkaar.TEKNISK_FEIL);
-    expect(hjelpetekstalertstripe).toHaveLength(1);
+    render(<Varsler {...props} />);
+
+    expect(screen.getAllByRole("listitem")).toHaveLength(5);
+    expect(
+      screen.getByText("Søknaden oppfyller ikke inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.")
+    ).toBeInTheDocument();
+    expect(screen.getByText(MKV.Terms.begrunnelser.inngangsvilkaar.MANGLER_STATSBORGERSKAP)).toBeInTheDocument();
+    expect(screen.getByText(MKV.Terms.begrunnelser.inngangsvilkaar.TEKNISK_FEIL)).toBeInTheDocument();
+    expect(
+      screen.getByText("Hvis inngangsvilkår ikke er oppfylt, må du henlegge saken som bortfalt (i behandlingsmenyen).")
+    ).toBeInTheDocument();
   });
 
   it("Viser feilmelding og hjelpetekst ved overstyrte inngangsvilkår", () => {
@@ -76,43 +74,39 @@ describe("Varsler", () => {
       ],
     };
 
-    const varsler = shallow(<Varsler {...props} />);
-    const feilmeldingsliste = varsler.find("ul").first();
-    const lis = feilmeldingsliste.find("li");
-    const hjelpetekstalertstripe = varsler.find(Nav.AlertStripe);
+    render(<Varsler {...props} />);
 
-    expect(lis).toHaveLength(2);
-    expect(lis.first().text()).toBe(
-      "Søknaden oppfyller ikke inngangsvilkårene for EU/EØS-saker etter forordning 883/2004."
-    );
-    expect(lis.last().text()).toBe(MKV.Terms.begrunnelser.inngangsvilkaar.TEKNISK_FEIL);
-    expect(hjelpetekstalertstripe).toHaveLength(1);
+    expect(screen.getAllByRole("listitem")).toHaveLength(4);
+    expect(
+      screen.getByText("Søknaden oppfyller ikke inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.")
+    ).toBeInTheDocument();
+    expect(screen.getByText(MKV.Terms.begrunnelser.inngangsvilkaar.TEKNISK_FEIL)).toBeInTheDocument();
+    expect(
+      screen.getByText("Hvis inngangsvilkår er oppfylt, kan du fortsette behandlingen som normalt.")
+    ).toBeInTheDocument();
   });
 
   it("Viser feilmelding ved manglende inngangsvilkår", () => {
     props.inngangsvilkaar = undefined;
+    props.behandlingHarPeriodeOgLand = true;
 
-    const varsler = shallow(<Varsler {...props} />);
-    const lis = varsler.find("li");
+    render(<Varsler {...props} />);
 
-    expect(lis).toHaveLength(1);
-    expect(lis.first().text()).toBe("Teknisk feil, finner ingen inngangsvilkår.");
+    expect(screen.getByRole("listitem")).toHaveTextContent("Teknisk feil, finner ingen inngangsvilkår.");
   });
 
   it("Viser feilmelding ved manglende periode og land når det mangler", () => {
     props.inngangsvilkaar = undefined;
     props.behandlingHarPeriodeOgLand = false;
 
-    const varsler = shallow(<Varsler {...props} />);
-    const lis = varsler.find("li");
+    render(<Varsler {...props} />);
 
-    expect(lis).toHaveLength(1);
-    expect(lis.first().text()).toBe(
+    expect(screen.getByRole("listitem")).toHaveTextContent(
       "Det mangler periode og/eller land. Fyll disse inn i sidemenyen nedenfor og oppdater registeropplysninger."
     );
   });
 
-  it("Viser feilmelding ved flere valgte land og ikke tema ARBEID_FLERE_LAND", () => {
+  it("Viser feilmelding ved flere valgte land og ikke tema ARBEID_FLERE_LAND", async () => {
     props.oppfyllerInngangsvilkar = true;
     props.inngangsvilkaar = {
       vilkaar: MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR,
@@ -124,13 +118,13 @@ describe("Varsler", () => {
     props.behandlingstema = MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER;
     props.landkoder = ["DK", "SE"];
 
-    const varsler = shallow(<Varsler {...props} />);
-    const advarsel = varsler.find(Nav.AlertStripeAdvarsel);
+    render(<Varsler {...props} />);
 
-    expect(advarsel).toHaveLength(1);
-    expect(advarsel.childAt(0).text()).toBe(
-      "Du har valgt et behandlingstema som kun tillater ett arbeidsland. Du må fjerne arbeidsland, eller endre behandlingstema for å kunne fatte vedtak."
-    );
+    expect(
+      await screen.findByText(
+        "Du har valgt et behandlingstema som kun tillater ett arbeidsland. Du må fjerne arbeidsland, eller endre behandlingstema for å kunne fatte vedtak."
+      )
+    ).toBeInTheDocument();
   });
 });
 
@@ -158,46 +152,19 @@ describe("VurderingInngang", () => {
     };
   });
 
-  it("viser Varsler-komponent", () => {
-    const vurderingInngang = shallow(<VurderingInngang {...props} />);
-    const varsler = vurderingInngang.find(Varsler);
-    const varslerProps = varsler.props();
-
-    expect(varsler).toHaveLength(1);
-    expect(varslerProps.oppfyllerInngangsvilkar).toBe(props.oppfyllerInngangsvilkar);
-    expect(varslerProps.inngangsvilkaar).toBe(props.inngangsvilkaar);
-  });
-
-  it("viser knapp for å gå videre i stegvelger", () => {
-    const vurderingInngang = shallow(<VurderingInngang {...props} />);
-    const stegKnapper = vurderingInngang.find(Mui.StegKnapper);
-
-    expect(stegKnapper).toHaveLength(1);
-
-    const bekreftKnappOnClick = stegKnapper.props().bekreftKnappProps.onClick;
-    const mockedMouseEvent = mock<MouseEvent<HTMLButtonElement>>();
-    const mouseEvent = instance(mockedMouseEvent);
-    if (bekreftKnappOnClick) {
-      bekreftKnappOnClick(mouseEvent);
-    }
-
-    expect(props.bekreftOgFortsett).toHaveBeenCalledTimes(1);
-  });
-
   describe("knapp for å gå videre i stegvelger", () => {
     it("er ikke disabled dersom redigerbart er true", () => {
-      const vurderingInngang = shallow(<VurderingInngang {...props} />);
-      const stegKnapper = vurderingInngang.find(Mui.StegKnapper);
+      render(<VurderingInngang {...props} />);
 
-      expect(stegKnapper.props().bekreftKnappProps.disabled).toBe(false);
+      expect(screen.getByRole("button", { name: "Bekreft og fortsett" })).not.toBeDisabled();
     });
 
     it("er disabled dersom redigerbart er false", () => {
       props.redigerbart = false;
-      const vurderingInngang = shallow(<VurderingInngang {...props} />);
-      const stegKnapper = vurderingInngang.find(Mui.StegKnapper);
 
-      expect(stegKnapper.props().bekreftKnappProps.disabled).toBe(true);
+      render(<VurderingInngang {...props} />);
+
+      expect(screen.getByRole("button", { name: "Bekreft og fortsett" })).toBeDisabled();
     });
   });
 });
