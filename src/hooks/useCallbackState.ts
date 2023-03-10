@@ -2,11 +2,11 @@ import { useEffect, useState, SetStateAction, Dispatch } from "react";
 
 import * as Utils from "../utils";
 
-const dependencyFinnes = (dep: any) => {
-  if (typeof dep === "number") {
-    return dep !== 0;
+const dependencyFinnes = (dependency: any) => {
+  if (typeof dependency === "number") {
+    return dependency !== 0;
   }
-  return !Utils._isEmpty(dep);
+  return !Utils._isEmpty(dependency);
 };
 
 export const useCallbackState = <StateType>(
