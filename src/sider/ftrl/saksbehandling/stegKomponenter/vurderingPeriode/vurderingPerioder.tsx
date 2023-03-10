@@ -20,6 +20,7 @@ import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygden
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 
 import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
+import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { PeriodeElement } from "./periodeElement";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
@@ -42,7 +43,6 @@ function transformInitialMedlemskapsperioder(state: RootState) {
 }
 
 const komponentState = (state: RootState) => ({
-  mottaksdato: mottatteOpplysningerSelectors.MottaksdatoSelector(state),
   valgtTrygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
   initialValues: {
     medlemskapsperioder: transformInitialMedlemskapsperioder(state),
@@ -64,7 +64,6 @@ interface VurderingPerioderProps {
 export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) => {
   const dispatch = useDispatch();
   const {
-    mottaksdato,
     redigerbart,
     valgtTrygdedekning,
     initialValues,
@@ -73,6 +72,9 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     innvilgelsesResultater,
     soknadsperiode,
   } = useSelector(komponentState);
+  const [{ mottaksdato }] = useAsyncCallbackState(() => Api.Behandlinger.aarsak.hentMottaksdato(behandlingID), {}, [
+    behandlingID,
+  ]);
 
   const {
     setValue,
