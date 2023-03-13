@@ -239,7 +239,7 @@ const SendBrev = ({
       MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTBREV_VIRKSOMHET,
     ].includes(formValues.type);
 
-  const finnSaksbehandlerNavnForDobbelSignatur = () => {
+  const finnSaksbehandlerIdentForDobbelSignatur = () => {
     if (!erFritekstBrev()) return null;
 
     const saksbehandler = accounts && accounts.length > 0 ? accounts[0] : null;
@@ -307,7 +307,7 @@ const SendBrev = ({
     fritekstvedlegg,
     distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
     dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
-    saksbehandlerNrToIdent: finnSaksbehandlerNavnForDobbelSignatur(),
+    saksbehandlerNrToIdent: finnSaksbehandlerIdentForDobbelSignatur(),
   });
 
   const lagFritekstPdfUrl = async (index: number) => {
