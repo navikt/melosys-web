@@ -8,6 +8,7 @@ import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
 import { FysiskDokument } from "Domene";
 import { ColumnWidth } from "nav-frontend-grid";
 
+import { useMsal } from "@azure/msal-react";
 import { URL_BASENAME } from "../../../constants";
 
 import MKV from "../../../melosyskodeverk";
@@ -120,6 +121,7 @@ const SendBrev = ({
   const tilgjengeligeBrevtyper =
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
+  const { accounts } = useMsal();
 
   const hentUtkast = () =>
     Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
@@ -230,6 +232,22 @@ const SendBrev = ({
     return felt?.valg?.valgAlternativer.find((alternativ) => alternativ.kode === formValues?.felt?.[felt.kode]?.valg);
   };
 
+  const erFritekstBrev = () =>
+    [
+      MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTBREV_BRUKER,
+      MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTBREV_ARBEIDSGIVER,
+      MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTBREV_VIRKSOMHET,
+    ].includes(formValues.type);
+
+  const finnSaksbehandlerNavnForDobbelSignatur = () => {
+    if (!erFritekstBrev()) return null;
+
+    const saksbehandler = accounts && accounts.length > 0 ? accounts[0] : null;
+    return saksbehandler?.idTokenClaims?.NAVident !== formValues.aktivtUtkast?.lagretAvSaksbehandlerIdent
+      ? formValues.aktivtUtkast?.lagretAvSaksbehandlerIdent
+      : null;
+  };
+
   const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false, hentKode: boolean = false): any => {
     const feltFraValgtMal = formValues?.valgtBrev?.felter?.find((felt) => felt.kode === feltNavn);
     if (!feltFraValgtMal) {
@@ -289,6 +307,7 @@ const SendBrev = ({
     fritekstvedlegg,
     distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
     dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
+    saksbehandlerNrToIdent: finnSaksbehandlerNavnForDobbelSignatur(),
   });
 
   const lagFritekstPdfUrl = async (index: number) => {
