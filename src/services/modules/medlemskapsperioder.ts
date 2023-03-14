@@ -12,7 +12,7 @@ export interface BestemmelseMedVilkårOgBegrunnelser {
   vilkårOgBegrunnelser: VilkårOgBegrunnelser[];
 }
 
-export interface HentBestemmelserMedVilkårResponse {
+export interface HentBestemmelserResponse {
   støttedeBestemmelser: BestemmelseMedVilkårOgBegrunnelser[];
   ikkeStøttedeBestemmelser: string[];
 }
@@ -29,7 +29,7 @@ export const putMedlemskapsperioder = (behandlingID: number, medlemskapsID: numb
 export const deleteMedlemskapsperioder = (behandlingID: number, medlemskapsID: number) =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/${medlemskapsID}`);
 
-export const hentBestemmelserMedVilkår = (behandlingstema: string): Promise<HentBestemmelserMedVilkårResponse> =>
+export const hentBestemmelser = (behandlingstema: string): Promise<HentBestemmelserResponse> =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${MEDLEMSKAPSPERIODER}/bestemmelser/${behandlingstema}`);
 
 export const opprettMedlemskapsperioderFraBestemmelse = (behandlingID: number, bestemmelse: string) =>

@@ -51,8 +51,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     redigerbart,
   } = useSelector(komponentState);
   const [{ støttedeBestemmelser, ikkeStøttedeBestemmelser }] =
-    useAsyncCallbackState<Api.Medlemskapsperioder.HentBestemmelserMedVilkårResponse>(
-      () => Api.Medlemskapsperioder.hentBestemmelserMedVilkår(behandlingstema),
+    useAsyncCallbackState<Api.Medlemskapsperioder.HentBestemmelserResponse>(
+      () => Api.Medlemskapsperioder.hentBestemmelser(behandlingstema),
       { støttedeBestemmelser: [], ikkeStøttedeBestemmelser: [] },
       [behandlingstema]
     );
