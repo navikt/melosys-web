@@ -56,17 +56,6 @@ describe("url", () => {
       expect(url).toContain("/FTRL/saksbehandling/");
     });
 
-    it("Sakstype FTRL med IKKE_YRKESAKTIV returnerer url for ikkeYrkesaktiv", () => {
-      const url = lagUrlFraSakstypeOgBehandlingstema(
-        "MEL-1",
-        1,
-        FTRL,
-        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV
-      );
-
-      expect(url).toContain("/FTRL/ikkeYrkesaktiv/");
-    });
-
     it("Sakstype TRYGDEAVTALE med støttet behandlingstemaKode returnerer url", () => {
       const url = lagUrlFraSakstypeOgBehandlingstema(
         "MEL-1",

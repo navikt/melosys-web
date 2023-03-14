@@ -163,14 +163,6 @@ export const skalViseTomFlyt = (
     return true;
   }
 
-  if (
-    sakstype !== FTRL &&
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV &&
-    ikkeYrkesaktivFlytToggleEnabled
-  ) {
-    return false;
-  }
-
   return [
     MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
