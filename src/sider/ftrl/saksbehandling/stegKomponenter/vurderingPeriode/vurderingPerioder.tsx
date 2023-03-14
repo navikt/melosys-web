@@ -1,136 +1,32 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
 import { Medlemskapsperiode, OppdaterMedlemskapsperiode } from "Domene";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
 
-import MKV from "../../../../melosyskodeverk";
-import * as Api from "../../../../services/api";
-import * as Ikoner from "../../../../resources/images";
-import * as KV from "../../../../kodeverk";
-import * as Mui from "../../../../felleskomponenter/ui";
-import * as Nav from "../../../../navFrontend";
-import * as Forms from "../../../../felleskomponenter/forms";
-import * as Utils from "../../../../utils";
+import MKV from "../../../../../melosyskodeverk";
+import * as Api from "../../../../../services/api";
+import * as Ikoner from "../../../../../resources/images";
+import * as KV from "../../../../../kodeverk";
+import * as Mui from "../../../../../felleskomponenter/ui";
+import * as Nav from "../../../../../navFrontend";
+import * as Utils from "../../../../../utils";
 
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
-import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
-import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
+import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
+import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
+import { useAsyncCallbackState } from "../../../../../hooks";
 
+import { PeriodeElement } from "./periodeElement";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 
-interface FormValuesProp {
-  medlemskapsperioder?: MedlemskapsperiodeProp[];
-}
-
-type MedlemskapsperiodeProp = Medlemskapsperiode & { ny: boolean; feil: string | undefined };
-
-interface PeriodeElementProps {
-  index: number;
-  redigerbart: boolean;
-  trygdedekninger: KTObject[];
-  innvilgelsesResultater: KTObject[];
-  control: any;
-  formValues: FormValuesProp;
-  handleSlett: (index: number) => void;
-  erPeriodeFoerSoknadMottatDato: (medlemskapsperiode: MedlemskapsperiodeProp) => boolean;
-}
-
-const PeriodeElement = ({
-  index,
-  redigerbart,
-  trygdedekninger,
-  innvilgelsesResultater,
-  formValues,
-  control,
-  handleSlett,
-  erPeriodeFoerSoknadMottatDato,
-}: PeriodeElementProps) => {
-  const skalDelvisInnvilgetVises =
-    formValues?.medlemskapsperioder &&
-    erPeriodeFoerSoknadMottatDato(formValues.medlemskapsperioder[index]) &&
-    formValues.medlemskapsperioder[index].trygdedekning === MKV.Koder.trygdedekninger.PENSJONSDEL;
-
-  if (!formValues || !formValues.medlemskapsperioder) return null;
-  return (
-    <Nav.Fieldset legend="Periode" className="understrek">
-      <Nav.Row>
-        <Nav.Column xs="2">
-          <Forms.Datovelger
-            label="Fra og med:"
-            control={control}
-            name={`medlemskapsperioder[${index}].fomDato`}
-            disabled
-          />
-        </Nav.Column>
-        <Nav.Column xs="2">
-          <Forms.Datovelger
-            label="Til og med:"
-            control={control}
-            name={`medlemskapsperioder[${index}].tomDato`}
-            disabled={!redigerbart}
-          />
-        </Nav.Column>
-        <Nav.Column xs="4">
-          <Forms.Select
-            label="Trygdedekning"
-            name={`medlemskapsperioder[${index}].trygdedekning`}
-            control={control}
-            disabled={!redigerbart}
-            emptyFieldText="Velg"
-            emptyFieldDisabled={!!formValues.medlemskapsperioder[index].trygdedekning}
-          >
-            {trygdedekninger.map((item: KTObject) => (
-              <option key={item.kode} value={item.kode}>
-                {item.term}
-              </option>
-            ))}
-          </Forms.Select>
-        </Nav.Column>
-        <Nav.Column xs="4">
-          <Forms.Select
-            label="Resultat"
-            name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
-            control={control}
-            disabled={!redigerbart}
-            emptyFieldText="Velg"
-            emptyFieldDisabled={!!formValues.medlemskapsperioder[index].innvilgelsesResultat}
-          >
-            {innvilgelsesResultater
-              .filter((item: KTObject) =>
-                skalDelvisInnvilgetVises ? true : item.kode !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET
-              )
-              .map((item: KTObject) => (
-                <option key={item.kode} value={item.kode}>
-                  {item.term}
-                </option>
-              ))}
-          </Forms.Select>
-        </Nav.Column>
-      </Nav.Row>
-      {formValues.medlemskapsperioder[index].feil && (
-        <Nav.AlertStripe type="feil" style={{ marginBottom: "1rem" }}>
-          {formValues.medlemskapsperioder[index].feil}
-        </Nav.AlertStripe>
-      )}
-      {redigerbart &&
-        index === formValues.medlemskapsperioder.length - 1 &&
-        formValues.medlemskapsperioder.length !== 1 && (
-          <Nav.Lenker className="slettKnapp" href="#" onClick={() => handleSlett(index)} title="Slett periode">
-            <Ikoner.Bin />
-            <span>Slett periode</span>
-          </Nav.Lenker>
-        )}
-    </Nav.Fieldset>
-  );
-};
+export type MedlemskapsperiodeProp = Medlemskapsperiode & { ny: boolean; feil: string | undefined };
 
 function transformInitialMedlemskapsperioder(state: RootState) {
   const medlemskapsperioder = medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state);
@@ -147,7 +43,6 @@ function transformInitialMedlemskapsperioder(state: RootState) {
 }
 
 const komponentState = (state: RootState) => ({
-  mottaksdato: mottatteOpplysningerSelectors.MottaksdatoSelector(state),
   valgtTrygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
   initialValues: {
     medlemskapsperioder: transformInitialMedlemskapsperioder(state),
@@ -169,7 +64,6 @@ interface VurderingPerioderProps {
 export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) => {
   const dispatch = useDispatch();
   const {
-    mottaksdato,
     redigerbart,
     valgtTrygdedekning,
     initialValues,
@@ -178,6 +72,9 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     innvilgelsesResultater,
     soknadsperiode,
   } = useSelector(komponentState);
+  const [{ mottaksdato }] = useAsyncCallbackState(() => Api.Behandlinger.aarsak.hentMottaksdato(behandlingID), {}, [
+    behandlingID,
+  ]);
 
   const {
     setValue,
