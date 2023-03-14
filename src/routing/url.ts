@@ -35,8 +35,6 @@ const lagUrlForFtrlFlyt = (saksnummer: number | string, behandlingID: number, be
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV:
       return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
-    case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
-      return `/${FTRL}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
       return flytFinnesIkkeForBehandlingPath;
   }
@@ -155,7 +153,11 @@ export const skalViseTomFlyt = (
     return true;
   }
 
-  if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV && ikkeYrkesaktivFlytToggleEnabled) {
+  if (
+    sakstype !== FTRL &&
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV &&
+    ikkeYrkesaktivFlytToggleEnabled
+  ) {
     return false;
   }
 
