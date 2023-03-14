@@ -126,6 +126,14 @@ export const harUnntakFlyt = (
   return false;
 };
 
+const harIkkeYrkesaktivFlyt = (sakstype: string, behandlingstema: string, ikkeYrkesaktivFlytToggleEnabled: boolean) => {
+  return (
+    ikkeYrkesaktivFlytToggleEnabled &&
+    sakstype !== FTRL &&
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV
+  );
+};
+
 export const skalViseTomFlyt = (
   sakstype: string,
   sakstema: string,
@@ -136,6 +144,8 @@ export const skalViseTomFlyt = (
   registreringUnntakFraMedlemskapToggleEnabled: boolean = false
 ) => {
   if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) return false;
+
+  if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled)) return false;
 
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
