@@ -161,15 +161,17 @@ const VurderingVedtak = ({
     };
   };
 
+  const { kopiTilArbeidsgiver, vedtakstype } = formValues;
+
   useEffect(() => {
     async function kontroller() {
       if (aktivtSteg && formIsValid) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling({
           behandlingID,
-          vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
           behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-          kontrollerSomSkalIgnoreres: formValues.kopiTilArbeidsgiver
+          kontrollerSomSkalIgnoreres: kopiTilArbeidsgiver
             ? []
             : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
           skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
@@ -180,7 +182,7 @@ const VurderingVedtak = ({
     }
 
     kontroller();
-  }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver]);
+  }, [aktivtSteg, formIsValid, kopiTilArbeidsgiver]);
 
   const onSubmit = async () => {
     if (!validerForm()) return;
