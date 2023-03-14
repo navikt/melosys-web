@@ -6,7 +6,7 @@ import { VurderingPerioder } from "./stegKomponenter/vurderingPeriode/vurderingP
 import { VurderingTrygdeavgift } from "./stegKomponenter/vurderingTrygdeavgift";
 import { VurderingVedtak } from "./stegKomponenter/vurderingVedtak";
 
-export const initialStartSteg = {
+const initialStartSteg = {
   id: "Start",
   tittel: "Start",
   stegPosisjon: 0,
@@ -66,7 +66,7 @@ const initialVedtakSteg = {
   komponent: VurderingVedtak,
 };
 
-const alleSteg = [
+export const alleSteg = [
   initialStartSteg,
   initialVirksomhetSteg,
   initialBestemmelseSteg,
@@ -74,5 +74,3 @@ const alleSteg = [
   initialTrygdeavgiftSteg,
   initialVedtakSteg,
 ];
-
-export const hentNesteSteg = (stegPosisjon: number) => alleSteg.find((steg) => steg.stegPosisjon === stegPosisjon + 1);

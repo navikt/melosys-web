@@ -36,8 +36,9 @@ import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperiode
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 import { SaksbehandlingContext } from "./saksbehandlingContext";
-import { Stegvelger } from "./stegvelger";
 import "./saksbehandling.css";
+import { alleSteg } from "./initialStegArray";
+import { EnkelStegvelger } from "../../../felleskomponenter/enkelStegvelger";
 
 const Saksbehandling = ({
   arbeidsland,
@@ -175,7 +176,7 @@ const Saksbehandling = ({
                     {visStegVelger && (
                       // eslint-disable-next-line react/jsx-no-constructed-context-values
                       <SaksbehandlingContext.Provider value={{ bestemmelseVilkar: bestemmelser }}>
-                        <Stegvelger />
+                        <EnkelStegvelger alleSteg={alleSteg} />
                       </SaksbehandlingContext.Provider>
                     )}
                   </>

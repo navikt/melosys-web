@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import * as Utils from "../../../utils";
-import { FANE_STATUS } from "../../../felleskomponenter/stegvelger/stegMotor";
-import StegLinje from "../../../felleskomponenter/stegLinje/stegLinje";
-import StegFane from "../../../felleskomponenter/stegFane";
-import { hentNesteSteg, initialStartSteg } from "./initialStegs";
+import * as Utils from "../../utils";
+import StegLinje from "../stegLinje/stegLinje";
+import StegFane from "../stegFane";
+import { FANE_STATUS } from "../stegvelger";
 
 interface AktueltSteg {
   id: string;
@@ -15,9 +14,15 @@ interface AktueltSteg {
   komponent: any;
 }
 
-export const Stegvelger = () => {
-  const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([initialStartSteg]);
+interface EnkelStegvelgerProps {
+  alleSteg: AktueltSteg[];
+}
+
+export default ({ alleSteg }: EnkelStegvelgerProps) => {
+  const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([alleSteg[0]]);
   const [aktivtStegIndex, setAktivtStegIndex] = useState(0);
+
+  const hentNesteSteg = (stegPosisjon: number) => alleSteg.find((steg) => steg.stegPosisjon === stegPosisjon + 1);
 
   useEffect(() => {
     setAktuellesteg(

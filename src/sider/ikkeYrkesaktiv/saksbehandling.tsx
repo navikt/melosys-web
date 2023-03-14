@@ -12,7 +12,6 @@ import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import * as Nav from "../../navFrontend";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { SaksbehandlingContext } from "../ftrl/saksbehandling/saksbehandlingContext";
-import { Stegvelger } from "../ftrl/saksbehandling/stegvelger";
 import { VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
@@ -34,6 +33,8 @@ import { vilkarOperations } from "../../ducks/vilkar";
 import { menypanelOperations } from "../../ducks/menypanel";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { MatchParams } from "../../@types";
+import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
+import { alleSteg } from "./initialStegArray";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
@@ -227,7 +228,7 @@ const Saksbehandling = ({
                     {visStegVelger && (
                       // eslint-disable-next-line react/jsx-no-constructed-context-values
                       <SaksbehandlingContext.Provider value={{ bestemmelseVilkar: bestemmelser }}>
-                        <Stegvelger />
+                        <EnkelStegvelger alleSteg={alleSteg} />
                       </SaksbehandlingContext.Provider>
                     )}
                   </>
