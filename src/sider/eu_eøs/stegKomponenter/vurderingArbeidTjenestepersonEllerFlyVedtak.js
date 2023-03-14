@@ -79,7 +79,7 @@ const art11_5_ErValgt = (formValues) =>
 const art11_3B_ErValgt = (formValues) =>
   formValues.lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B;
 
-const sjekkSkalSendeSed = (formValues) => {
+const skalSendeSed = (formValues) => {
   const { kreverMottakerinstitusjon } = formValues;
 
   if (art11_5_ErValgt(formValues)) {
@@ -91,6 +91,8 @@ const sjekkSkalSendeSed = (formValues) => {
 
   return false;
 };
+
+const skalSendeOrienteringsbrev = (selvstendigArbeid) => selvstendigArbeid?.erSelvstendig !== true;
 
 export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   redigerbart,
@@ -119,6 +121,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   aktivtSteg,
   validerMottatteOpplysninger,
   fattVedtak,
+  selvstendigArbeid,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
@@ -172,7 +175,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
     },
   ];
 
-  if (sjekkSkalSendeSed(formValues)) {
+  if (skalSendeSed(formValues)) {
     pdfDokumenter = [
       ...pdfDokumenter,
       {
@@ -184,6 +187,16 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
         },
       },
     ];
+  }
+
+  if (skalSendeOrienteringsbrev(selvstendigArbeid)) {
+    pdfDokumenter.push({
+      navn: "Orienteringsbrev til arbeidsgiver",
+      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+      data: {
+        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+      },
+    });
   }
 
   const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
@@ -220,8 +233,6 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 
   const visSendSEDValg = art11_5_ErValgt(formValues);
   const visMottakerinstitusjonvelgerFlervalg = art11_3B_ErValgt(formValues);
-
-  const skalSendeSed = sjekkSkalSendeSed(formValues);
 
   const lagFattVedtakEOSReqDto = () => {
     let mottakerinstitusjoner = null;
@@ -383,7 +394,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
           </Nav.Column>
         </Nav.Row>
       )}
-      {redigerbart && skalSendeSed && (
+      {redigerbart && skalSendeSed(formValues) && (
         <Nav.Row className="fritekstSed">
           <Nav.Column xs="8">
             <Skjema.Textarea
@@ -453,6 +464,7 @@ VurderingArbeidTjenestepersonEllerFlyVedtak.propTypes = {
   aktivtSteg: PT.bool,
   validerMottatteOpplysninger: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
+  selvstendigArbeid: PT.object.isRequired,
 };
 
 VurderingArbeidTjenestepersonEllerFlyVedtak.defaultProps = {
@@ -484,6 +496,7 @@ const mapStateToProps = (state, ownProps) => {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
     soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
+    selvstendigArbeid: mottatteOpplysningerSelectors.SelvstendigArbeidSelector(state),
     formIsValid: isValid(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)(state),
     initialValues: {
