@@ -237,6 +237,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
       fritekstSed: formValues.fritekstSed,
+      kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
       mottakerinstitusjoner,
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
@@ -251,6 +252,9 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
           behandlingID,
           vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
           behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+          kontrollerSomSkalIgnoreres: formValues.kopiTilArbeidsgiver
+            ? []
+            : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
           skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
         });
         setOppdaterFoerKontroll(false);
@@ -258,7 +262,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       }
     }
     kontroller();
-  }, [aktivtSteg, formIsValid]);
+  }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver]);
 
   const onSubmit = async (values, dispatch, props) => {
     setVedtakPending(true);
@@ -392,6 +396,9 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
           </Nav.Column>
         </Nav.Row>
       )}
+      {redigerbart && (
+        <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
+      )}
       <Nav.Row>
         <Nav.Column xs="6">
           {stegErGyldig && (
@@ -491,6 +498,7 @@ const mapStateToProps = (state, ownProps) => {
       mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
       lovvalgsbestemmelse: ownProps.lovvalgsbestemmelseSomSkalVises,
       fritekstSed: "",
+      kopiTilArbeidsgiver: true,
       informerUtenlandskTrygdemyndighet,
       mottakerLand,
     },

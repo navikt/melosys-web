@@ -5,6 +5,7 @@ export type FerdigbehandlingKontrollData = {
   behandlingID: number;
   vedtakstype: string | null;
   behandlingsresultattype: string;
+  kontrollerSomSkalIgnoreres?: string[];
   skalRegisteropplysningerOppdateres: boolean;
 };
 
