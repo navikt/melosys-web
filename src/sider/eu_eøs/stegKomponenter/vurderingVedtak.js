@@ -155,10 +155,13 @@ const VurderingVedtak = ({
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       fritekst: formValues.vedtaksbrevFritekst,
       fritekstSed: formValues.fritekstSed,
+      kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
       mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
       nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
     };
   };
+
+  const { kopiTilArbeidsgiver, vedtakstype } = formValues;
 
   useEffect(() => {
     async function kontroller() {
@@ -166,8 +169,11 @@ const VurderingVedtak = ({
         setVedtakPending(true);
         await kontrollerFerdigbehandling({
           behandlingID,
-          vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
           behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+          kontrollerSomSkalIgnoreres: kopiTilArbeidsgiver
+            ? []
+            : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
           skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
         });
         setOppdaterFoerKontroll(false);
@@ -176,7 +182,7 @@ const VurderingVedtak = ({
     }
 
     kontroller();
-  }, [aktivtSteg, formIsValid]);
+  }, [aktivtSteg, formIsValid, kopiTilArbeidsgiver]);
 
   const onSubmit = async () => {
     if (!validerForm()) return;
@@ -251,6 +257,9 @@ const VurderingVedtak = ({
               />
             </Nav.Column>
           </Nav.Row>
+        )}
+        {redigerbart && (
+          <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
         )}
         <Nav.Row>
           <Nav.Column xs="6">
@@ -331,6 +340,7 @@ const mapStateToProps = (state) => ({
   initialValues: {
     vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    kopiTilArbeidsgiver: true,
     mottakerinstitusjon: "",
     kreverMottakerinstitusjon: false,
     fritekstSed: null,

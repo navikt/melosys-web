@@ -35,8 +35,6 @@ const lagUrlForFtrlFlyt = (saksnummer: number | string, behandlingID: number, be
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV:
       return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
-    case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
-      return `/${FTRL}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
       return flytFinnesIkkeForBehandlingPath;
   }
@@ -128,6 +126,14 @@ export const harUnntakFlyt = (
   return false;
 };
 
+const harIkkeYrkesaktivFlyt = (sakstype: string, behandlingstema: string, ikkeYrkesaktivFlytToggleEnabled: boolean) => {
+  return (
+    ikkeYrkesaktivFlytToggleEnabled &&
+    sakstype !== FTRL &&
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV
+  );
+};
+
 export const skalViseTomFlyt = (
   sakstype: string,
   sakstema: string,
@@ -138,6 +144,8 @@ export const skalViseTomFlyt = (
   registreringUnntakFraMedlemskapToggleEnabled: boolean = false
 ) => {
   if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) return false;
+
+  if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled)) return false;
 
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
@@ -153,10 +161,6 @@ export const skalViseTomFlyt = (
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
   ) {
     return true;
-  }
-
-  if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV && ikkeYrkesaktivFlytToggleEnabled) {
-    return false;
   }
 
   return [

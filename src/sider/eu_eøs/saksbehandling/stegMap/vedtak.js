@@ -40,7 +40,11 @@ class Vedtak extends Steg {
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
       ];
 
-      if (lovvalgSomKodeTerm && visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode)) {
+      if (
+        lovvalgSomKodeTerm &&
+        visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
+        formValues?.kopiTilArbeidsgiver
+      ) {
         pdfDokumenter.push({
           navn: "Orienteringsbrev til arbeidsgiver",
           type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
