@@ -12,11 +12,10 @@ import * as Hooks from "../../../../../hooks";
 
 import { Periode } from "../../../../../services/modules/mottatteOpplysninger/types";
 import {
-  mottatteOpplysningerSelectors,
   mottatteOpplysningerOperations,
+  mottatteOpplysningerSelectors,
 } from "../../../../../ducks/mottatteOpplysninger";
 import { formSelectors } from "../../../../../ducks/form";
-import { erFeatureToggleEnabled } from "../../../../../featuretoggle";
 
 import SoknadsperiodeEndring from "./soknadsperiodeEndring";
 
@@ -87,24 +86,18 @@ export const Soknadsperiode = ({
   };
 
   const oppfriskSaksopplysingerVedLagre = async () => {
-    const tomLandOgPeriodeToggleEnabled = await erFeatureToggleEnabled("melosys.tom_periode_og_land");
+    const flytMedInngangsvilkår =
+      window.location.pathname.indexOf(`${MKV.Koder.sakstyper.EU_EOS}/saksbehandling/`) > -1;
 
-    if (tomLandOgPeriodeToggleEnabled) {
-      const flytMedInngangsvilkår =
-        window.location.pathname.indexOf(`${MKV.Koder.sakstyper.EU_EOS}/saksbehandling/`) > -1;
-
-      if (!behandlingHarLand && flytMedInngangsvilkår) {
-        skjulEndrePeriode();
-      } else {
-        // Når melosys.tom_periode_og_land fjernes må vi forsikre oss om at den nyeste perioden
-        // konsekvent lagres før vi oppfrisker saksopplysningene.
-        // Se history på filen for å se tidligere hack.
+    if (!behandlingHarLand && flytMedInngangsvilkår) {
+      skjulEndrePeriode();
+    } else {
+      // Todo: Denne er hacky. Bakgrunn: oppdatert soknad rekker ikke å re-propagate til parent før
+      // funksjonen nedenfor kalles. Vurder å skrive om til en async await-aktig løsning.
+      setTimeout(() => {
         lagreSoknadOgOppfriskSaksopplysninger();
         skjulEndrePeriode();
-      }
-    } else {
-      lagreSoknadOgOppfriskSaksopplysninger();
-      skjulEndrePeriode();
+      }, 0);
     }
   };
 
