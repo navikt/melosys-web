@@ -2,6 +2,21 @@ import { OppdaterMedlemskapsperiode } from "Domene";
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../utils";
 import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../api-constants";
 
+export interface VilkårOgBegrunnelser {
+  vilkår: string;
+  muligeBegrunnelser: string[];
+}
+
+export interface BestemmelseMedVilkårOgBegrunnelser {
+  bestemmelse: string;
+  vilkårOgBegrunnelser: VilkårOgBegrunnelser[];
+}
+
+export interface HentBestemmelserResponse {
+  støttedeBestemmelser: BestemmelseMedVilkårOgBegrunnelser[];
+  ikkeStøttedeBestemmelser: string[];
+}
+
 export const getMedlemskapsperioder = (behandlingID: number) =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`);
 
@@ -14,8 +29,8 @@ export const putMedlemskapsperioder = (behandlingID: number, medlemskapsID: numb
 export const deleteMedlemskapsperioder = (behandlingID: number, medlemskapsID: number) =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/${medlemskapsID}`);
 
-export const hentBestemmelserMedVilkår = () =>
-  getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${MEDLEMSKAPSPERIODER}/bestemmelser`);
+export const hentBestemmelser = (behandlingstema: string): Promise<HentBestemmelserResponse> =>
+  getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${MEDLEMSKAPSPERIODER}/bestemmelser/${behandlingstema}`);
 
 export const opprettMedlemskapsperioderFraBestemmelse = (behandlingID: number, bestemmelse: string) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/bestemmelser`, { bestemmelse });
