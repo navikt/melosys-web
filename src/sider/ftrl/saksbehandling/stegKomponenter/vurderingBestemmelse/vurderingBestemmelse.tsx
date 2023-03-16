@@ -22,6 +22,10 @@ import { FlytFinnesIkke } from "./komponenter/flytFinnesIkke";
 import "./vurderingBestemmelse.css";
 
 const { SANN, USANN } = BOOLSK_STRING;
+export interface Begrunnelse {
+  begrunnelseKode: string;
+  begrunnelseFritekst?: string | null;
+}
 
 const komponentState = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -59,7 +63,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const [valgtBestemmelse, setValgtBestemmelse] = useState("");
   const [valgteVilkår, setValgteVilkår] = useState<Map<string, string>>(new Map());
-  const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, string>>(new Map());
+  const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, Begrunnelse>>(new Map());
   const [valgtBestemmelsesSynligeVilkår, setValgtBestemmelsesSynligeVilkår] = useState<
     Api.Medlemskapsperioder.VilkårOgBegrunnelser[]
   >([]);
@@ -75,7 +79,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     response.data?.forEach((vilkar) => {
       valgteVilkår.set(vilkar.vilkaar, vilkar.oppfylt ? SANN : USANN);
       if (vilkar.begrunnelseKoder && vilkar.begrunnelseKoder.length === 1) {
-        valgteBegrunnelser.set(`${vilkar.vilkaar}_begrunnelser`, vilkar.begrunnelseKoder[0]);
+        valgteBegrunnelser.set(`${vilkar.vilkaar}_begrunnelser`, {
+          begrunnelseKode: vilkar.begrunnelseKoder[0],
+          begrunnelseFritekst: vilkar.begrunnelseFritekst,
+        });
       }
     });
     setValgteVilkår(new Map(valgteVilkår));
@@ -148,9 +155,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     valgteVilkår.forEach((value: string, key: string) => {
       alleVilkår[key] = value === SANN;
     });
-    const alleBegrunnelser: { [key: string]: string[] } = {};
-    valgteBegrunnelser.forEach((value: string, key: string) => {
-      alleBegrunnelser[key] = [value];
+    const alleBegrunnelser: { [key: string]: string[] | string } = {};
+    valgteBegrunnelser.forEach((value: Begrunnelse, key: string) => {
+      alleBegrunnelser[key] = [value.begrunnelseKode];
+      if (value.begrunnelseFritekst) alleBegrunnelser[`${key}_fritekst`] = value.begrunnelseFritekst;
     });
     oppdaterVilkår({ ...alleBegrunnelser, ...alleVilkår });
   };
@@ -173,8 +181,21 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     }
   };
 
-  const handleEndreBegrunnelse: ChangeEventHandler<HTMLSelectElement> = (event) => {
-    setValgteBegrunnelser(new Map(valgteBegrunnelser.set(event.target.name, event.target.value)));
+  const handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement> = (event) => {
+    setValgteBegrunnelser(new Map(valgteBegrunnelser.set(event.target.name, { begrunnelseKode: event.target.value })));
+    oppdaterVilkårState();
+  };
+
+  const handleEndreBegrunnelseFritekst = (valgtBegrunnelse: string, begrunnelseFritekst: string) => {
+    const valgtBegrunnelseKode = valgteBegrunnelser.get(valgtBegrunnelse)!!.begrunnelseKode;
+    setValgteBegrunnelser(
+      new Map(
+        valgteBegrunnelser.set(valgtBegrunnelse, {
+          begrunnelseKode: valgtBegrunnelseKode,
+          begrunnelseFritekst,
+        })
+      )
+    );
     oppdaterVilkårState();
   };
 
@@ -229,7 +250,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           vilkårKodeverk={vilkårKodeverk}
           begrunnelseKodeverk={begrunnelseKodeverk}
           handleEndreVilkår={handleEndreVilkår}
-          handleEndreBegrunnelse={handleEndreBegrunnelse}
+          handleEndreBegrunnelseKode={handleEndreBegrunnelseKode}
+          handleEndreBegrunnelseFritekst={handleEndreBegrunnelseFritekst}
           redigerbart={redigerbart}
         />
       ))}

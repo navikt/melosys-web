@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, Fragment } from "react";
+import React, { ChangeEventHandler, Fragment, useCallback } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../../melosyskodeverk";
@@ -8,7 +8,9 @@ import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
+import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
 import { BOOLSK_STRING } from "../../../../../../constants";
+import { Begrunnelse } from "../vurderingBestemmelse";
 import { FlytFinnesIkke } from "./flytFinnesIkke";
 
 const { SANN, USANN } = BOOLSK_STRING;
@@ -22,11 +24,12 @@ const hjelpetekster = new Map([
 interface VilkaarOgBegrunnelserProps {
   vilkårOgBegrunnelser: Api.Medlemskapsperioder.VilkårOgBegrunnelser;
   alleValgteVilkår: Map<string, string>;
-  alleValgteBegrunnelser: Map<string, string>;
+  alleValgteBegrunnelser: Map<string, Begrunnelse>;
   vilkårKodeverk: KTObject[];
   begrunnelseKodeverk: { [key: string]: KTObject[] };
   handleEndreVilkår: ChangeEventHandler<HTMLInputElement>;
-  handleEndreBegrunnelse: ChangeEventHandler<HTMLSelectElement>;
+  handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement>;
+  handleEndreBegrunnelseFritekst: (vilkår: string, fritekst: string) => void;
   redigerbart: boolean;
 }
 
@@ -37,11 +40,21 @@ export const VilkaarOgBegrunnelser = ({
   vilkårKodeverk,
   begrunnelseKodeverk,
   handleEndreVilkår,
-  handleEndreBegrunnelse,
+  handleEndreBegrunnelseKode,
+  handleEndreBegrunnelseFritekst,
   redigerbart,
 }: VilkaarOgBegrunnelserProps) => {
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
   const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
+  const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}_begrunnelser`);
+
+  const debouncedHandleEndreBegrunnelseFritekst = useCallback(
+    Utils._debounce(
+      (vilkår_begrunnelser, fritekst) => handleEndreBegrunnelseFritekst(vilkår_begrunnelser, fritekst),
+      750
+    ),
+    []
+  );
 
   return (
     <Fragment>
@@ -96,13 +109,13 @@ export const VilkaarOgBegrunnelser = ({
               <Nav.Select
                 label=""
                 bredde="fullbredde"
-                onChange={handleEndreBegrunnelse}
+                onChange={handleEndreBegrunnelseKode}
                 name={`${vilkår}_begrunnelser`}
-                value={alleValgteBegrunnelser.get(`${vilkår}_begrunnelser`)}
+                value={valgtBegrunnelseForVilkår?.begrunnelseKode}
                 disabled={!redigerbart}
               >
                 <option key="" value="" disabled={!!alleValgteBegrunnelser.get(`${vilkår}_begrunnelser`)}>
-                  Velg
+                  Velg...
                 </option>
                 {muligeBegrunnelser.map((begrunnelse) => (
                   <option key={begrunnelse} value={begrunnelse}>
@@ -112,6 +125,22 @@ export const VilkaarOgBegrunnelser = ({
               </Nav.Select>
             </Nav.Column>
           </Nav.Row>
+          {valgtBegrunnelseForVilkår?.begrunnelseKode?.includes("FRITEKST") && (
+            <Nav.Row>
+              <Nav.Column xs="12">
+                <HtmlEditor
+                  value={valgtBegrunnelseForVilkår?.begrunnelseFritekst || ""}
+                  onChange={(fritekst: string) =>
+                    debouncedHandleEndreBegrunnelseFritekst(`${vilkår}_begrunnelser`, fritekst)
+                  }
+                  placeholder="Vennligst spesifiser..."
+                  spellCheck
+                  readOnly={!redigerbart}
+                  disabled={!redigerbart}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          )}
         </Nav.Fieldset>
       )}
     </Fragment>
