@@ -1,19 +1,19 @@
 import { FANE_STATUS } from "../../../felleskomponenter/stegvelger";
-import { VurderingStart } from "./stegKomponenter/vurderingStart";
+import { VurderingInngang } from "./stegKomponenter/vurderingInngang";
 import { VurderingVirksomhet } from "./stegKomponenter/vurderingVirksomhet";
 import { VurderingPerioder } from "./stegKomponenter/vurderingPeriode/vurderingPerioder";
 import { VurderingBestemmelse } from "./stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
 import { VurderingTrygdeavgift } from "./stegKomponenter/vurderingTrygdeavgift";
 import { VurderingVedtak } from "./stegKomponenter/vurderingVedtak";
 
-export const initialStartSteg = {
-  id: "Start",
-  tittel: "Start",
+export const initialInngangSteg = {
+  id: "Inngang",
+  tittel: "Inngang",
   stegPosisjon: 0,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: true,
   vedtakSteg: false,
-  komponent: VurderingStart,
+  komponent: VurderingInngang,
 };
 
 const initialVirksomhetSteg = {
@@ -67,7 +67,7 @@ const initialVedtakSteg = {
 };
 
 const alleSteg = [
-  initialStartSteg,
+  initialInngangSteg,
   initialVirksomhetSteg,
   initialBestemmelseSteg,
   initialPeriodeSteg,
