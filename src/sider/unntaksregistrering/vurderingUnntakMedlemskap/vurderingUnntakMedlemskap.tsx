@@ -129,6 +129,12 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
     dispatch(navigeringOperations.tilForsiden());
   };
 
+  const kanIkkeGodkjenneUnntaksperiodeAdvarsel = (
+    <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__alertstripe">
+      Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
+    </Nav.AlertStripeAdvarsel>
+  );
+
   return (
     <div className="vurderingUnntakMedlemskap">
       <Nav.Typo.Undertittel className="undertittel">Unntak medlemskap</Nav.Typo.Undertittel>
@@ -180,11 +186,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
               </Forms.Select>
             </Nav.Column>
           </Nav.Row>
-          {Utils._isEmpty(mottatteOpplysningerPeriode.tom) && (
-            <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__alertstripe">
-              Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
-            </Nav.AlertStripeAdvarsel>
-          )}
+          {Utils._isEmpty(mottatteOpplysningerPeriode.tom) && kanIkkeGodkjenneUnntaksperiodeAdvarsel}
         </>
       )}
 
@@ -231,6 +233,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
             Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i
             brevmenyen.
           </Nav.AlertStripeInfo>
+          {Utils._isEmpty(formValues.tom) && kanIkkeGodkjenneUnntaksperiodeAdvarsel}
         </Nav.Fieldset>
       )}
 
