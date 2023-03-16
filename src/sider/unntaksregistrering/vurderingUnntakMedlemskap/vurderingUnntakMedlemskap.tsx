@@ -129,12 +129,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
     dispatch(navigeringOperations.tilForsiden());
   };
 
-  const kanIkkeGodkjenneUnntaksperiodeAdvarsel = (
-    <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__alertstripe">
-      Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
-    </Nav.AlertStripeAdvarsel>
-  );
-
   return (
     <div className="vurderingUnntakMedlemskap">
       <Nav.Typo.Undertittel className="undertittel">Unntak medlemskap</Nav.Typo.Undertittel>
@@ -186,7 +180,11 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
               </Forms.Select>
             </Nav.Column>
           </Nav.Row>
-          {Utils._isEmpty(mottatteOpplysningerPeriode.tom) && kanIkkeGodkjenneUnntaksperiodeAdvarsel}
+          {Utils._isEmpty(mottatteOpplysningerPeriode.tom) && (
+            <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__godkjent_advarsel">
+              Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
+            </Nav.AlertStripeAdvarsel>
+          )}
         </>
       )}
 
@@ -229,11 +227,15 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
               </Forms.Select>
             </Nav.Column>
           </Nav.Row>
-          <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__alertstripe">
+          <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__info">
             Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i
             brevmenyen.
           </Nav.AlertStripeInfo>
-          {Utils._isEmpty(formValues.tom) && kanIkkeGodkjenneUnntaksperiodeAdvarsel}
+          {Utils._isEmpty(formValues.tom) && (
+            <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
+              Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
+            </Nav.AlertStripeAdvarsel>
+          )}
         </Nav.Fieldset>
       )}
 

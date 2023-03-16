@@ -17,12 +17,12 @@ const erIkkeInnvilgetMedÅpenSluttDatoGodkjentUtfall = {
 
 const vurdering_unntak_medlemskap = object().shape({
   utfallRegistreringUnntak: string().test(erIkkeInnvilgetMedÅpenSluttDatoGodkjentUtfall).required(MAA_FYLLES_UT),
-  fom: string().when("$utfallRegistreringUnntak", {
-    is: MKV.Koder.innvilgelsesResultat.DELVIS_GODKJENT,
+  fom: string().when("utfallRegistreringUnntak", {
+    is: MKV.Koder.utfallregistreringunntak.DELVIS_GODKJENT,
     then: string().erGyldigDato().required(MAA_FYLLES_UT),
   }),
   tom: string().when("utfallRegistreringUnntak", {
-    is: (utfall) => utfall === MKV.Koder.utfallregistreringunntak.DELVIS_GODKJENT,
+    is: MKV.Koder.utfallregistreringunntak.DELVIS_GODKJENT,
     then: string().erGyldigDato().erEtterDatofelt("fom", TIDLIGERE_ENN_FOM).required(MAA_FYLLES_UT),
   }),
   bestemmelse: string().when("utfallRegistreringUnntak", {
