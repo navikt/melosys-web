@@ -20,7 +20,7 @@ function SelectWrappedComponent({
   children,
   meta,
   emptyFieldDisabled,
-  emptyFieldText,
+  emptyFieldText = "Velg...",
   onChange,
   ...rest
 }: SelectWrappedComponentProps) {
