@@ -145,7 +145,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
                   hjelpetekstClassName="hjelpetekst"
                 />
               }
-              emptyFieldText="Velg"
               emptyFieldDisabled={!!formValues.land}
               name="land"
               disabled={!redigerbart}
@@ -177,7 +176,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
               name="trygdedekning"
               control={control}
               label=""
-              emptyFieldText="Velg"
               emptyFieldDisabled={!!formValues.trygdedekning}
               disabled={!redigerbart}
             >

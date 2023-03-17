@@ -131,7 +131,6 @@ const VurderingBestemmelse = ({
                 label=""
                 feltNavn="bestemmelse"
                 disabled={!redigerbart || updatePending}
-                emptyFieldText="Velg"
                 emptyFieldDisabled={!!formValues.bestemmelse}
                 onChange={() => resetField("tilleggsbestemmelse")}
               >
