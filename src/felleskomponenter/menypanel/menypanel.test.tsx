@@ -57,10 +57,9 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[0].links[1].label).toBe("Familieforhold");
 
     expect(sidemenyLinkGroups[1].label).toBe("FRA REGISTER");
-    expect(sidemenyLinkGroups[1].links).toHaveLength(3);
+    expect(sidemenyLinkGroups[1].links).toHaveLength(2);
     expect(sidemenyLinkGroups[1].links[0].label).toBe("Medlemskap");
-    expect(sidemenyLinkGroups[1].links[1].label).toBe("EU/EØS-barnetrygd");
-    expect(sidemenyLinkGroups[1].links[2].label).toBe("Arbeidsforhold og inntekt");
+    expect(sidemenyLinkGroups[1].links[1].label).toBe("Arbeidsforhold og inntekt");
 
     expect(sidemenyLinkGroups[2].label).toBe("FRA BRUKER");
     expect(sidemenyLinkGroups[2].links).toHaveLength(4);
@@ -83,10 +82,9 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[0].links[1].label).toBe("Familieforhold");
 
     expect(sidemenyLinkGroups[1].label).toBe("FRA REGISTER");
-    expect(sidemenyLinkGroups[1].links).toHaveLength(3);
+    expect(sidemenyLinkGroups[1].links).toHaveLength(2);
     expect(sidemenyLinkGroups[1].links[0].label).toBe("Medlemskap");
-    expect(sidemenyLinkGroups[1].links[1].label).toBe("EU/EØS-barnetrygd");
-    expect(sidemenyLinkGroups[1].links[2].label).toBe("Arbeidsforhold og inntekt");
+    expect(sidemenyLinkGroups[1].links[1].label).toBe("Arbeidsforhold og inntekt");
 
     expect(sidemenyLinkGroups[2].label).toBe("FRA BRUKER");
     expect(sidemenyLinkGroups[2].links).toHaveLength(7);
@@ -108,12 +106,11 @@ describe("MenyPanel", () => {
       const sidemenyLinkGroups = sidemeny.props().linkGroups;
 
       expect(sidemenyLinkGroups[0].label).toBe("FRA REGISTER");
-      expect(sidemenyLinkGroups[0].links).toHaveLength(5);
+      expect(sidemenyLinkGroups[0].links).toHaveLength(4);
       expect(sidemenyLinkGroups[0].links[0].label).toBe("Person");
       expect(sidemenyLinkGroups[0].links[1].label).toBe("Familieforhold");
       expect(sidemenyLinkGroups[0].links[2].label).toBe("Medlemskap");
-      expect(sidemenyLinkGroups[0].links[3].label).toBe("EU/EØS-barnetrygd");
-      expect(sidemenyLinkGroups[0].links[4].label).toBe("Arbeidsforhold og inntekt");
+      expect(sidemenyLinkGroups[0].links[3].label).toBe("Arbeidsforhold og inntekt");
     }
   );
 
@@ -137,11 +134,10 @@ describe("MenyPanel", () => {
       const sidemenyLinkGroups = sidemeny.props().linkGroups;
 
       expect(sidemenyLinkGroups[0].label).toBe("FRA REGISTER");
-      expect(sidemenyLinkGroups[0].links).toHaveLength(4);
+      expect(sidemenyLinkGroups[0].links).toHaveLength(3);
       expect(sidemenyLinkGroups[0].links[0].label).toBe("Person");
       expect(sidemenyLinkGroups[0].links[1].label).toBe("Familieforhold");
       expect(sidemenyLinkGroups[0].links[2].label).toBe("Medlemskap");
-      expect(sidemenyLinkGroups[0].links[3].label).toBe("EU/EØS-barnetrygd");
     }
   );
 
@@ -157,10 +153,9 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[0].links[1].label).toBe("Familieforhold");
 
     expect(sidemenyLinkGroups[1].label).toBe("FRA REGISTER");
-    expect(sidemenyLinkGroups[1].links).toHaveLength(3);
+    expect(sidemenyLinkGroups[1].links).toHaveLength(2);
     expect(sidemenyLinkGroups[1].links[0].label).toBe("Medlemskap");
-    expect(sidemenyLinkGroups[1].links[1].label).toBe("EU/EØS-barnetrygd");
-    expect(sidemenyLinkGroups[1].links[2].label).toBe("Arbeidsforhold og inntekt");
+    expect(sidemenyLinkGroups[1].links[1].label).toBe("Arbeidsforhold og inntekt");
 
     expect(sidemenyLinkGroups[2].label).toBe("FRA BRUKER");
     expect(sidemenyLinkGroups[2].links).toHaveLength(4);
@@ -182,10 +177,9 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[0].links[1].label).toBe("Familieforhold");
 
     expect(sidemenyLinkGroups[1].label).toBe("FRA REGISTER");
-    expect(sidemenyLinkGroups[1].links).toHaveLength(3);
+    expect(sidemenyLinkGroups[1].links).toHaveLength(2);
     expect(sidemenyLinkGroups[1].links[0].label).toBe("Medlemskap");
-    expect(sidemenyLinkGroups[1].links[1].label).toBe("EU/EØS-barnetrygd");
-    expect(sidemenyLinkGroups[1].links[2].label).toBe("Arbeidsforhold og inntekt");
+    expect(sidemenyLinkGroups[1].links[1].label).toBe("Arbeidsforhold og inntekt");
 
     expect(sidemenyLinkGroups[2].label).toBe("FRA BRUKER");
     expect(sidemenyLinkGroups[2].links).toHaveLength(2);

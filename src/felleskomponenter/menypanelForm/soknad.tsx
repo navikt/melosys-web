@@ -152,7 +152,6 @@ const mapStateToProps = (state: RootState) => ({
     erSelvstendig: mottatteOpplysningerSelectors.SelvstendigArbeidSelector(state).erSelvstendig,
     selvstendigForetak: mottatteOpplysningerSelectors.SelvstendigArbeidSelector(state).selvstendigForetak,
     antallMaanederINorge: mottatteOpplysningerSelectors.BostedSelector(state).antallMaanederINorge,
-    EOSBarnetrygdFraNAV: mottatteOpplysningerSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
     soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).fom),
     soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).tom),
     soknadsland: {
