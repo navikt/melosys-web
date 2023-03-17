@@ -138,7 +138,6 @@ const BrevMottaker = ({
           />
         }
         disabled={!redigerbart || tilgjengeligeMottakere?.length === 1}
-        emptyFieldText="Velg..."
         emptyFieldDisabled={!!formValues.mottaker}
         onBlur={overstyrBlurEvent}
       >
