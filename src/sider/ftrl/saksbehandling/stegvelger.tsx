@@ -3,7 +3,7 @@ import * as Utils from "../../../utils";
 import { FANE_STATUS } from "../../../felleskomponenter/stegvelger/stegMotor";
 import StegLinje from "../../../felleskomponenter/stegLinje/stegLinje";
 import StegFane from "../../../felleskomponenter/stegFane";
-import { hentNesteSteg, initialStartSteg } from "./initialStegs";
+import { hentNesteSteg, initialInngangSteg } from "./initialStegs";
 
 interface AktueltSteg {
   id: string;
@@ -16,7 +16,7 @@ interface AktueltSteg {
 }
 
 export const Stegvelger = () => {
-  const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([initialStartSteg]);
+  const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([initialInngangSteg]);
   const [aktivtStegIndex, setAktivtStegIndex] = useState(0);
 
   useEffect(() => {

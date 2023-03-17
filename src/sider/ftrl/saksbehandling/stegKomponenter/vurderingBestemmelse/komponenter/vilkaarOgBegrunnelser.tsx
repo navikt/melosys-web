@@ -86,8 +86,8 @@ export const VilkaarOgBegrunnelser = ({
           className="select"
           legend={
             <LabelMedHjelpetekst
-              label="Velg særlig grunn"
-              hjelpetekst="Nedtrekksmenyen inneholder grupper av personer som kan tas opp etter en rimelighetsvurdering i tilfeller der en søknad om medlemskap vurderes etter § 2-8 andre ledd."
+              label="Særlig grunn"
+              hjelpetekst="Grunnen du velger utløser en standardtekst i vedtaksbrevet."
             />
           }
         >
