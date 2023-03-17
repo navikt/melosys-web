@@ -56,6 +56,11 @@ export const VilkaarOgBegrunnelser = ({
     []
   );
 
+  const visBegrunnelseFritekst = KV.termFraNestedKTObject(
+    begrunnelseKodeverk,
+    valgtBegrunnelseForVilkår?.begrunnelseKode
+  )?.includes("(fritekst)");
+
   return (
     <Fragment>
       <Nav.Fieldset
@@ -125,7 +130,7 @@ export const VilkaarOgBegrunnelser = ({
               </Nav.Select>
             </Nav.Column>
           </Nav.Row>
-          {valgtBegrunnelseForVilkår?.begrunnelseKode?.includes("FRITEKST") && (
+          {visBegrunnelseFritekst && (
             <Nav.Row>
               <Nav.Column xs="12">
                 <HtmlEditor
