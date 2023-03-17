@@ -16,7 +16,7 @@ interface SelectComponentProps extends Nav.SelectProps {
 type SelectInnerComponentProps = SelectComponentProps & RegisterHookFormProps;
 
 const SelectInnerComponent = React.forwardRef<HTMLSelectElement, SelectInnerComponentProps>(
-  ({ label, emptyFieldDisabled, emptyFieldText, disabled, children, ...rest }: SelectProps, _ref: any) => {
+  ({ label, emptyFieldDisabled, emptyFieldText = "Velg...", disabled, children, ...rest }: SelectProps, _ref: any) => {
     return (
       <Nav.Select
         label={label}

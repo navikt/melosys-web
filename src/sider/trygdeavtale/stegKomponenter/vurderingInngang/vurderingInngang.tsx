@@ -177,7 +177,6 @@ const VurderingInngang = ({
                 />
               }
               feltNavn="arbeidsland"
-              placeholder="Velg..."
               disabled={!redigerbart}
             >
               <LandValgSomOptions landValg={landValg} />

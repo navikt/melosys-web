@@ -485,7 +485,6 @@ const SendBrev = ({
               feltNavn="type"
               label={<Nav.Typo.Element>Velg brev</Nav.Typo.Element>}
               disabled={!redigerbart || tilgjengeligeBrevtyper.length === 1}
-              emptyFieldText="Velg..."
               emptyFieldDisabled={!!formValues.type}
               onBlur={overstyrBlurEvent}
             >
