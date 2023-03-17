@@ -107,6 +107,7 @@ export type OpprettBrevReqDto = {
   }[];
   distribusjonstype?: string | null;
   dokumentTittel?: string | null;
+  saksbehandlerNrToIdent?: string | null;
 };
 
 export type MuligMottaker = {
