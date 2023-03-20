@@ -12,11 +12,10 @@ import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import * as Nav from "../../navFrontend";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { SaksbehandlingContext } from "../ftrl/saksbehandling/saksbehandlingContext";
-import { VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
-import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog";
+import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
@@ -35,10 +34,10 @@ import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { MatchParams } from "../../@types";
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 import { alleSteg } from "./initialStegArray";
+import "./saksbehandling.css";
 
 const mapStateToProps = (state: RootState) => ({
-  arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
-  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
+  land: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
@@ -91,9 +90,8 @@ interface Props extends RouteComponentProps<MatchParams> {
 }
 
 const Saksbehandling = ({
-  arbeidsland,
+  land,
   behandlingstype,
-  hovedpartRolle,
   behandlingOppfriskes,
   mottatteOpplysninger,
   mottatteOpplysningerPeriodeFom,
@@ -212,43 +210,34 @@ const Saksbehandling = ({
   );
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
 
-  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
   return (
     <>
       <Informasjonlinje />
       <div id="main-container" className="main-container">
-        <div className="ftrl_saksbehandling">
+        <div className="saksbehandling">
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {!hovedpartErVirksomhet ? (
-                  <>
-                    {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
-                    {visAvslaattSoknad && <AvslaattSoknad />}
-                    {visStegVelger && (
-                      // eslint-disable-next-line react/jsx-no-constructed-context-values
-                      <SaksbehandlingContext.Provider value={{ bestemmelseVilkar: bestemmelser }}>
-                        <EnkelStegvelger alleSteg={alleSteg} />
-                      </SaksbehandlingContext.Provider>
-                    )}
-                  </>
-                ) : (
-                  <VirksomhetMelding />
+                {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
+                {visAvslaattSoknad && <AvslaattSoknad />}
+                {visStegVelger && (
+                  // eslint-disable-next-line react/jsx-no-constructed-context-values
+                  <SaksbehandlingContext.Provider value={{ bestemmelseVilkar: bestemmelser }}>
+                    <EnkelStegvelger alleSteg={alleSteg} />
+                  </SaksbehandlingContext.Provider>
                 )}
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  arbeidsland={
-                    landkoder && landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
-                  }
+                  arbeidsland={landkoder && landkoder.filter((landkodeObjekt) => land.includes(landkodeObjekt.kode))}
                   lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom}
                   lovvalgsperiodeTom={mottatteOpplysningerPeriodeTom}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />
                 <SaksoversiktLenke />
-                <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
+                <SideDialog faner={defaultFaner} />
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>
