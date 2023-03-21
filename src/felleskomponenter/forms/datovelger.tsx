@@ -9,7 +9,7 @@ import PlainDatovelger from "../datovelger";
 import { RegisterHookFormProps } from "./reacthookProps";
 
 interface DatovelgerComponentProps {
-  label: ReactNode;
+  label?: ReactNode;
   disabled?: boolean;
   bredde?: string;
   minDate?: Date;
@@ -28,7 +28,7 @@ const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatove
     return (
       <div {...rest}>
         <PlainDatovelger
-          label={<Nav.Typo.Element>{label}</Nav.Typo.Element>}
+          label={label && <Nav.Typo.Element>{label}</Nav.Typo.Element>}
           onChange={(nyDato) => onChange(Utils.dateTilNorskString(nyDato))}
           onBlur={rest.onBlur}
           value={Utils.norskStringTilDate(rest.value)}
