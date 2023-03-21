@@ -79,6 +79,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     setValue,
     control,
     watch,
+    trigger: triggerValidation,
     formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
@@ -95,6 +96,11 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   useEffect(() => {
     oppdaterStatus(formIsValid);
+    if (redigerbart)
+      debouncedLagreMedlemskapsperioder({
+        medlemskapsperioder: formValues?.medlemskapsperioder,
+        valid: formIsValid,
+      });
   }, [formIsValid]);
 
   const antallMedlemskapsperioder = formValues.medlemskapsperioder?.length;
@@ -162,41 +168,46 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     return medlemskapsperiode.innvilgelsesResultat !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET;
   };
 
+  const finnesUgyldigKombinasjon = formValues?.medlemskapsperioder?.some(
+    (medlemskapsperiode: MedlemskapsperiodeProp) => !erKombinasjonGyldig(medlemskapsperiode)
+  );
+
   useEffect(() => {
-    if (antallMedlemskapsperioder === 2) {
-      setValue(`medlemskapsperioder[1].fomDato`, Utils.dato.plussEnDag(formValues.medlemskapsperioder[0].tomDato));
-    }
-    formValues?.medlemskapsperioder?.forEach((medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
-      if (!erKombinasjonGyldig(medlemskapsperiode)) {
-        setValue(`medlemskapsperioder[${index}].innvilgelsesResultat`, "");
-      }
-    });
-    if (redigerbart)
-      debouncedLagreMedlemskapsperioder({
-        medlemskapsperioder: formValues?.medlemskapsperioder,
-        valid: formIsValid,
+    if (finnesUgyldigKombinasjon) {
+      formValues?.medlemskapsperioder?.forEach((medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
+        if (!erKombinasjonGyldig(medlemskapsperiode)) {
+          setValue(`medlemskapsperioder[${index}].innvilgelsesResultat`, "");
+        }
       });
-  }, [JSON.stringify(formValues?.medlemskapsperioder), formIsValid]); // TODO: Endre til onChanges
+    }
+  }, [finnesUgyldigKombinasjon]);
 
   if (!aktivtSteg || !formValues) return null;
 
   const hjelpetekst =
     "Melosys har foreslått medlemskapsperioder på bakgrunn av periode og dekning det er søkt for, og tidspunktet søknaden ble mottatt. Du har mulighet til å gjøre endringer. Hvis du har mottatt opplysninger om at søknadsperiode eller trygdedekning det er søkt om er endret, må du endre dette i det inngangssteget «Inngang».";
 
+  const handleEndreTomDato = (tomDato: string, index: number) => {
+    if (antallMedlemskapsperioder === 2 && index === 0) {
+      setValue(`medlemskapsperioder[1].fomDato`, Utils.dato.plussEnDag(tomDato));
+    }
+  };
+
   const handleSlett = (index: number) => {
     if (!formValues?.medlemskapsperioder) return;
+
     if (formValues.medlemskapsperioder[index].ny) {
       formValues.medlemskapsperioder.splice(index, 1);
-      return;
+    } else {
+      Api.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, formValues.medlemskapsperioder[index].id)
+        .then(() => {
+          formValues.medlemskapsperioder.splice(index, 1);
+        })
+        .catch((error) => {
+          setValue(`medlemskapsperioder[${index}].feil`, error.body?.message || error);
+        });
     }
-
-    Api.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, formValues.medlemskapsperioder[index].id)
-      .then(() => {
-        formValues.medlemskapsperioder.splice(index, 1);
-      })
-      .catch((error) => {
-        setValue(`medlemskapsperioder[${index}].feil`, error.body && error.body.message ? error.body.message : error);
-      });
+    triggerValidation();
   };
 
   const handleLeggTil = () => {
@@ -268,6 +279,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         handleSlett={handleSlett}
         redigerbart={redigerbart}
         erPeriodeFoerSoknadMottatDato={erPeriodeFørMottaksdato}
+        handleEndreTomDato={handleEndreTomDato}
       />
 
       {visLeggTilNyPeriode && (

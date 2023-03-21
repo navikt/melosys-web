@@ -21,6 +21,7 @@ export const PeriodeElement = ({
   control,
   handleSlett,
   erPeriodeFoerSoknadMottatDato,
+  handleEndreTomDato,
 }: PeriodeElementProps) => {
   const skalDelvisInnvilgetVises =
     erPeriodeFoerSoknadMottatDato(medlemskapsperioder[index]) &&
@@ -35,7 +36,12 @@ export const PeriodeElement = ({
           <Forms.Datovelger control={control} name={`medlemskapsperioder[${index}].fomDato`} disabled />
         </Nav.Column>
         <Nav.Column xs="2">
-          <Forms.Datovelger control={control} name={`medlemskapsperioder[${index}].tomDato`} disabled={!redigerbart} />
+          <Forms.Datovelger
+            control={control}
+            name={`medlemskapsperioder[${index}].tomDato`}
+            disabled={!redigerbart}
+            onChange={(dato) => handleEndreTomDato(dato, index)}
+          />
         </Nav.Column>
         <Nav.Column xs="4">
           <Forms.Select
