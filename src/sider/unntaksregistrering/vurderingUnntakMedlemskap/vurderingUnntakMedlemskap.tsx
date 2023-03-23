@@ -63,7 +63,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
   };
 
   const debouncedLagreLovvalgsperiode = useCallback(
-    Utils._debounce(async () => dispatch(lovvalgsperioderOperations.lagre()), 1000),
+    Utils._debounce(() => dispatch(lovvalgsperioderOperations.lagre()), 1000),
     []
   );
 
