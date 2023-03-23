@@ -57,6 +57,13 @@ const finnSedMottakerLand = (arbeidsland, bostedsland, lovvalgsperiode) => {
   return arbeidsland[0]?.kode;
 };
 
+const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
+  sakstype === MKV.Koder.sakstyper.EU_EOS &&
+  [
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+  ].includes(behandlingstema);
+
 const skalViseMottakerinstitusjoner = (
   sakstype,
   sakstema,
@@ -258,7 +265,7 @@ const VurderingVedtak = ({
             </Nav.Column>
           </Nav.Row>
         )}
-        {redigerbart && (
+        {redigerbart && skalViseSendOrienteringsbrev(sakstype, behandlingstema) && (
           <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
         )}
         <Nav.Row>

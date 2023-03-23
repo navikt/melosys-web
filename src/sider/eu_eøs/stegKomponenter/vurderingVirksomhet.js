@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import PT from "prop-types";
+import { useDispatch } from "react-redux";
 
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
@@ -14,6 +15,7 @@ import * as KV from "../../../kodeverk";
 import { BOOLSK_STRING } from "../../../constants";
 
 import "./vurderingArbeidsgiver.css";
+import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 /**
  * Enkeltsjekkboks for ett arbeidsgiver.
@@ -22,6 +24,7 @@ import "./vurderingArbeidsgiver.css";
  */
 const VirksomheterLinje = (props) => {
   const { virksomheten, avklartVirksomhet, redigerbart, oppdaterData, slettData } = props;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, avklartVirksomhet));
@@ -36,6 +39,7 @@ const VirksomheterLinje = (props) => {
 
   const virksomhetKlikkHandler = () => {
     const verdi = virksomhetErValgt ? BOOLSK_STRING.USANN : BOOLSK_STRING.SANN;
+    dispatch(feiletResponsOperations.resetFeiletRespons());
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.virksomhetId, verdi));
   };
 
