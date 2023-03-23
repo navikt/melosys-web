@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,7 +40,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const utfallRegistreringUnntak = useSelector(behandlingsresultatSelectors.UtfallRegistreringUnntakSelector);
-  const [lovvalgsperioderLagret, setLovvalgsperioderLagret] = useState(true);
 
   const { control, watch, formState } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
@@ -64,15 +63,11 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
   };
 
   const debouncedLagreLovvalgsperiode = useCallback(
-    Utils._debounce(async () => {
-      await dispatch(lovvalgsperioderOperations.lagre());
-      setLovvalgsperioderLagret(true);
-    }, 1000),
+    Utils._debounce(async () => dispatch(lovvalgsperioderOperations.lagre()), 1000),
     []
   );
 
   const oppdaterOgLagreLovvalgsperiode = (values: FieldValues) => {
-    setLovvalgsperioderLagret(false);
     const harMedlemskapstypeDelvisUnntatt =
       sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
       [
@@ -130,6 +125,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
   };
 
   const handleBekreft = async () => {
+    await dispatch(lovvalgsperioderOperations.lagre());
     await Api.Saksflyt.Unntaksregistrering.registrerUnntakFraMedlemskap(behandlingID);
     dispatch(navigeringOperations.tilForsiden());
   };
@@ -254,7 +250,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
         bekreftKnappProps={{
           onClick: handleBekreft,
-          disabled: !formState?.isValid || !lovvalgsperioderLagret || !redigerbart,
+          disabled: !formState?.isValid || !redigerbart,
         }}
         bekreftTekst="Bekreft og avslutt"
       />
