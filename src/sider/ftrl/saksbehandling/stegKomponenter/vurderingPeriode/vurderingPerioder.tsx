@@ -291,17 +291,19 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       )}
 
       {visIkkeStottetIMelosys && (
-        <Nav.AlertStripeInfo>
+        <Nav.AlertStripeInfo className="infomelding">
           Søknaden kan foreløpig ikke behandles i Melosys. Avslutt saken som bortfalt.
         </Nav.AlertStripeInfo>
       )}
 
       {ingenMedlemskapsperioder && (
-        <Nav.AlertStripeAdvarsel>Du må legge inn minst én periode før du kan fortsette.</Nav.AlertStripeAdvarsel>
+        <Nav.AlertStripeAdvarsel className="infomelding">
+          Du må legge inn minst én periode før du kan fortsette.
+        </Nav.AlertStripeAdvarsel>
       )}
 
       {ingenSluttdato && (
-        <Nav.AlertStripeInfo>
+        <Nav.AlertStripeInfo className="infomelding">
           Du må oppgi sluttdato for å kunne angi resultat. Dette blir sluttdatoen på vedtaket.
         </Nav.AlertStripeInfo>
       )}
