@@ -38,7 +38,7 @@ const erPeriodeSisteMedlemskapsperiode = (id, formValues) => {
 
 const åpenTomNårIkkeSistePeriodeTest = {
   name: "Åpen sluttdato ved etterfølgende perioder",
-  message: "Sluttdato må fylles ut når det finnes etterfølgende perioder",
+  message: { melding: "Sluttdato må fylles ut når det finnes etterfølgende perioder" },
   test: (tomDato, schema) => {
     const erSisteMedlemskapsperiode = erPeriodeSisteMedlemskapsperiode(schema.parent.id, schema.from[1].value);
     return !(!erSisteMedlemskapsperiode && Utils._isEmpty(tomDato));
@@ -47,16 +47,15 @@ const åpenTomNårIkkeSistePeriodeTest = {
 
 const utenforSøknadsperioden = {
   name: "Utenfor søknadsperioden",
-  message: "Utenfor søknadsperioden",
+  message: { melding: "Utenfor søknadsperioden" },
   test: (tomDato, schema) => {
-    const tomDatoFraSoknadsperiode = schema.options.context.soknadsperiode.tom;
-    const erSisteMedlemskapsperiode = erPeriodeSisteMedlemskapsperiode(schema.parent.id, schema.from[1].value);
+    if (Utils._isEmpty(tomDato) || !Utils.dato.vaskInputDato(tomDato)) return true;
 
-    return Utils._isEmpty(tomDato)
-      ? !erSisteMedlemskapsperiode || Utils._isEmpty(tomDatoFraSoknadsperiode)
-      : Utils.dato.vaskInputDato(tomDato) &&
-          (Utils._isEmpty(tomDatoFraSoknadsperiode) ||
-            Utils.dato.erGyldigPeriode(tomDato, Utils.dato.formatterDatoTilNorsk(tomDatoFraSoknadsperiode)));
+    const tomDatoFraSoknadsperiode = schema.options.context.soknadsperiode.tom;
+    return (
+      Utils._isEmpty(tomDatoFraSoknadsperiode) ||
+      Utils.dato.erGyldigPeriode(tomDato, Utils.dato.formatterDatoTilNorsk(tomDatoFraSoknadsperiode))
+    );
   },
 };
 
@@ -72,7 +71,7 @@ const vurdering_perioder = object().shape({
           .erEtterDatofelt("fomDato")
           .test(utenforSøknadsperioden)
           .test(åpenTomNårIkkeSistePeriodeTest)
-          .nullable(),
+          .required(MAA_FYLLES_UT),
         bestemmelse: string(),
         innvilgelsesResultat: string().required(INNGILGELSESRESULTAT_FELT_KREVES),
         trygdedekning: string().required(TRYGDEDEKNING_FELT_KREVES),

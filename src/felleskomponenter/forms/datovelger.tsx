@@ -7,6 +7,7 @@ import * as Nav from "../../navFrontend";
 import PlainDatovelger from "../datovelger";
 
 import { RegisterHookFormProps } from "./reacthookProps";
+import { getErrorMessage } from "./mapFeilmelding";
 
 interface DatovelgerComponentProps {
   label?: ReactNode;
@@ -64,7 +65,7 @@ const Datovelger = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
               field.onChange(value || "");
               if (rest.onChange) rest.onChange(value);
             }}
-            feil={(formState.errors?.[field.name]?.message as any)?.melding}
+            feil={getErrorMessage(field, formState)}
           />
         )}
       />
