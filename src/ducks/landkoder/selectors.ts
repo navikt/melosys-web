@@ -14,8 +14,9 @@ export const LandkoderFraSakstypeSelector = createSelector(
   (state: RootState) => SakstypeKodeSelector(state),
   (landkoder, sakstype): KTObject[] => {
     switch (sakstype) {
-      case MKV.Koder.sakstyper.FTRL:
       case MKV.Koder.sakstyper.TRYGDEAVTALE:
+        return MKV.KTObjects.trygdeavtale_myndighetsland;
+      case MKV.Koder.sakstyper.FTRL:
         return landkoder;
       case MKV.Koder.sakstyper.EU_EOS:
       default:

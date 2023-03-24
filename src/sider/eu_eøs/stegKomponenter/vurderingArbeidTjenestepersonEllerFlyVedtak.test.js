@@ -41,6 +41,9 @@ describe("VurderingArbeidTjenestepersonEllerFlyVedtak", () => {
       kontrollerFerdigbehandling: jest.fn(),
       validerMottatteOpplysninger: jest.fn().mockImplementationOnce(() => Promise.resolve()),
       fattVedtak: jest.fn(),
+      selvstendigArbeid: {
+        erSelvstendig: false,
+      },
     };
   });
 
