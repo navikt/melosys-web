@@ -17,6 +17,9 @@ describe("SideDialog", () => {
         navn: "dokumenter",
         behandlingID: 4,
         saksnummer: "4",
+        sakstype: "TRYGDEAVTALE",
+        behandlingstema: "YRKESAKTIV",
+        endreFane: jest.fn(),
         redigerbart: true,
         dokumentOversikt: [
           {

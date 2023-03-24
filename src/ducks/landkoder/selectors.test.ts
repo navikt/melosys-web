@@ -31,7 +31,7 @@ describe("LandkoderFraSakstypeSelector", () => {
     each([
       [MKV.Koder.sakstyper.FTRL, landkoderFraFellesKodeverk],
       [MKV.Koder.sakstyper.EU_EOS, MKV.KTObjects.landkoder],
-      [MKV.Koder.sakstyper.TRYGDEAVTALE, landkoderFraFellesKodeverk],
+      [MKV.Koder.sakstyper.TRYGDEAVTALE, MKV.KTObjects.trygdeavtale_myndighetsland],
       [null, MKV.KTObjects.landkoder],
     ]).it("returnerer rett landkodeliste for sakstype %s", (sakstypeKode, forventetKodeListe) => {
       const state = lagState(sakstypeKode);

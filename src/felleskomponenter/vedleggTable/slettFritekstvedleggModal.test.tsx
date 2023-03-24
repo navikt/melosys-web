@@ -10,7 +10,7 @@ beforeAll(() => {
 
 it("slettFritekstvedleggModal renders correctly", () => {
   const tree = renderer
-    .create(<SlettFritekstvedleggModal slettVedlegg={jest.fn()} onRequestClose={jest.fn()} />)
+    .create(<SlettFritekstvedleggModal slettVedlegg={jest.fn()} onRequestClose={jest.fn()} ariaHideApp={false} />)
     .toJSON();
   expect(tree).toMatchSnapshot();
 });
