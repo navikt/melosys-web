@@ -1,14 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import MKV from "../../../melosyskodeverk";
-import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
-import { SaksbehandlingContext } from "../saksbehandlingContext";
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../ducks/folketrygdenkodeverk";
@@ -40,7 +37,6 @@ interface Props {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
-  const { bestemmelseVilkar } = useContext(SaksbehandlingContext);
   const { bestemmelse, redigerbart } = useSelector(komponentState);
   const [valgtBestemmelse, setValgtBestemmelse] = useState("");
 
@@ -117,14 +113,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
                 <option disabled={!!valgtBestemmelse} value="" key="">
                   Velg
                 </option>
-                {bestemmelseVilkar.map((bestemmelseMedVilkar) => (
-                  <option key={bestemmelseMedVilkar.bestemmelse} value={bestemmelseMedVilkar.bestemmelse}>
-                    {KV.finnTermFraListe(
-                      MKV.KTObjects.folketrygdloven_kap2_bestemmelser,
-                      bestemmelseMedVilkar.bestemmelse
-                    )}
-                  </option>
-                ))}
               </Nav.Select>
             </Nav.Column>
           </Nav.Row>
