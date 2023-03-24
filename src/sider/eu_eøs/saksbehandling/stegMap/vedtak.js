@@ -20,7 +20,6 @@ class Vedtak extends Steg {
     this.komponent = VurderingVedtak;
     this.samleRelevanteData = (_propsLight) => {
       const formValues = _propsLight.artikkel12_vedtak_skjema;
-      const erNyVurdering = _propsLight.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
       const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(
         _propsLight.valgteLovvalgsVilkarBestemmelse,
         MKV.Kodekombinasjoner.alleLovvalg
@@ -44,7 +43,7 @@ class Vedtak extends Steg {
       if (
         lovvalgSomKodeTerm &&
         visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
-        !erNyVurdering
+        formValues?.kopiTilArbeidsgiver
       ) {
         pdfDokumenter.push({
           navn: "Orienteringsbrev til arbeidsgiver",

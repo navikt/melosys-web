@@ -6,7 +6,7 @@
  */
 import MKV from "../../melosyskodeverk";
 
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 
 import * as Types from "./types";
 import * as Constants from "./constants";
@@ -113,7 +113,8 @@ export default function reducer(state = initialState, action = {}) {
         vilkarTilObjekt(
           MKV.Koder.vilkaar.FTRL_2_8_NÆR_TILKNYTNING_NORGE,
           action.data.vilkar.FTRL_2_8_NÆR_TILKNYTNING_NORGE,
-          action.data.vilkar.FTRL_2_8_NÆR_TILKNYTNING_NORGE_begrunnelser
+          action.data.vilkar.FTRL_2_8_NÆR_TILKNYTNING_NORGE_begrunnelser,
+          action.data.vilkar.FTRL_2_8_NÆR_TILKNYTNING_NORGE_begrunnelser_fritekst
         ),
       ].filter((vilkar) => vilkar !== null);
 

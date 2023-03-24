@@ -56,14 +56,9 @@ class Bostedsland extends Steg {
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = (_propsLight) => {
-      const { saksopplysninger = {} } = _propsLight;
-      const { sakOgBehandling } = saksopplysninger;
-      const { eosBarnetrygd = {} } = sakOgBehandling;
-
       return {
         harAvklaring,
         bostedslandFakta,
-        harEOSBarnetrygdSak: eosBarnetrygd,
         erBegrunnelserPaakrevd,
       };
     };

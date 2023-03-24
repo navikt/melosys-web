@@ -61,7 +61,6 @@ export const PeriodeElement = ({
             name={`medlemskapsperioder[${index}].trygdedekning`}
             control={control}
             disabled={!redigerbart}
-            emptyFieldText="Velg"
             emptyFieldDisabled={!!formValues.medlemskapsperioder[index].trygdedekning}
           >
             {trygdedekninger.map((item: KTObject) => (
@@ -77,7 +76,6 @@ export const PeriodeElement = ({
             name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
             control={control}
             disabled={!redigerbart}
-            emptyFieldText="Velg"
             emptyFieldDisabled={!!formValues.medlemskapsperioder[index].innvilgelsesResultat}
           >
             {innvilgelsesResultater

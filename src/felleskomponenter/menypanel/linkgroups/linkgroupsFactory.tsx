@@ -67,7 +67,6 @@ class LinkGroupsFactory {
             .addPerson()
             .addFamilieForhold()
             .addMedlemskap()
-            .addEUEOSBarnetrygd()
             .addArbeidsforholdOgInntekt()
             .build()
         )
@@ -93,18 +92,14 @@ class LinkGroupsFactory {
 
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
-          .addFraRegister(
-            new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
-          )
+          .addFraRegister(new LinksBuilder(contentProps).addMedlemskap().addArbeidsforholdOgInntekt().build())
           .addFraBruker(fraBruker.build())
           .build();
       }
       case REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
       case REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE: {
         return new LinkgroupsBuilder()
-          .addFraRegister(
-            new LinksBuilder(contentProps).addPerson().addFamilieForhold().addMedlemskap().addEUEOSBarnetrygd().build()
-          )
+          .addFraRegister(new LinksBuilder(contentProps).addPerson().addFamilieForhold().addMedlemskap().build())
           .build();
       }
       case BESLUTNING_LOVVALG_ANNET_LAND:
@@ -115,7 +110,6 @@ class LinkGroupsFactory {
               .addPerson()
               .addFamilieForhold()
               .addMedlemskap()
-              .addEUEOSBarnetrygd()
               .addArbeidsforholdOgInntekt()
               .build()
           )
@@ -124,9 +118,7 @@ class LinkGroupsFactory {
       case BESLUTNING_LOVVALG_NORGE: {
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
-          .addFraRegister(
-            new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
-          )
+          .addFraRegister(new LinksBuilder(contentProps).addMedlemskap().addArbeidsforholdOgInntekt().build())
           .addFraBruker(
             new LinksBuilder(contentProps)
               .addArbeidsgiverEllerVirksomhet()
@@ -143,7 +135,6 @@ class LinkGroupsFactory {
           .addFraRegister(
             new LinksBuilder(contentProps)
               .addMedlemskap()
-              .addEUEOSBarnetrygd()
               .addArbeidsforholdOgInntekt()
               .addFaktureringskomponenten(folketrygdenToggleEnabled)
               .build()
@@ -156,9 +147,7 @@ class LinkGroupsFactory {
       case ARBEID_I_UTLANDET: {
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
-          .addFraRegister(
-            new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
-          )
+          .addFraRegister(new LinksBuilder(contentProps).addMedlemskap().addArbeidsforholdOgInntekt().build())
           .addFraBruker(new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().build())
           .build();
       }

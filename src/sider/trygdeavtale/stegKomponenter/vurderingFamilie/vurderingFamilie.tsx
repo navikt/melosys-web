@@ -196,7 +196,6 @@ const VurderingFamilie = ({
                           <Skjema.Select
                             label="Begrunnelse:"
                             feltNavn={`barn.${barn.uuid}.begrunnelse`}
-                            emptyFieldText="Velg..."
                             emptyFieldDisabled={!redigerbart || !!finnBarn(barn?.uuid, formValues.barn)?.begrunnelse}
                             name={barn.uuid}
                             disabled={!redigerbart}
@@ -258,7 +257,6 @@ const VurderingFamilie = ({
                     <Skjema.Select
                       label="Begrunnelse:"
                       feltNavn="ektefelle.begrunnelse"
-                      emptyFieldText="Velg..."
                       emptyFieldDisabled={!redigerbart || !!formValues.ektefelle.begrunnelse}
                       disabled={!redigerbart}
                     >

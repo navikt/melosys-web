@@ -24,8 +24,8 @@ import { menypanelOperations } from "../../../../ducks/menypanel";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
 import { tilForsiden } from "../../../../ducks/navigering/operations";
 
-import vurderingStartSchema from "./vurderingStartSchema";
-import "./vurderingStart.css";
+import vurderingInngangSchema from "./vurderingInngangSchema";
+import "./vurderingInngang.css";
 
 const komponentState = (state: RootState) => {
   const initialSoknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(state);
@@ -60,7 +60,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
+export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger, annenBehandlingOppfriskes } = useContext(
     FellesHandlersContext
@@ -75,7 +75,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
     watch,
     formState: { isValid: formIsValid },
   } = useForm({
-    resolver: yupResolver(vurderingStartSchema),
+    resolver: yupResolver(vurderingInngangSchema),
     mode: "all",
     values: useMemo(() => initialValues as FieldValues, [initialValues]),
   });
@@ -125,7 +125,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
   if (!aktivtSteg) return null;
 
   return (
-    <div className="vurderingStart">
+    <div className="vurderingInngang">
       <Nav.Typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.Typo.Undertittel>
 
       <Nav.Fieldset legend="Periode">
@@ -145,7 +145,6 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
                   hjelpetekstClassName="hjelpetekst"
                 />
               }
-              emptyFieldText="Velg"
               emptyFieldDisabled={!!formValues.land}
               name="land"
               disabled={!redigerbart}
@@ -177,7 +176,6 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
               name="trygdedekning"
               control={control}
               label=""
-              emptyFieldText="Velg"
               emptyFieldDisabled={!!formValues.trygdedekning}
               disabled={!redigerbart}
             >

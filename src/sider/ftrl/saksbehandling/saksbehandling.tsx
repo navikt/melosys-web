@@ -6,12 +6,10 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { useFeatureToggle } from "../../../featuretoggle";
 import * as Utils from "../../../utils";
-import * as API from "../../../services/api";
 import MKV from "../../../melosyskodeverk";
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
 import * as Nav from "../../../navFrontend";
 import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
-import { SaksbehandlingContext } from "./saksbehandlingContext";
 import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
@@ -35,6 +33,7 @@ import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 import { MatchParams } from "../../../@types";
 import { EnkelStegvelger } from "../../../felleskomponenter/enkelStegvelger";
 import { alleSteg } from "./initialStegArray";
+import "./saksbehandling.css";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
@@ -126,7 +125,6 @@ const Saksbehandling = ({
   resetFeiletrespons,
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
-  const [bestemmelser, setBestemmelser] = useState([]);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
 
@@ -158,14 +156,6 @@ const Saksbehandling = ({
         visOppfriskModal();
         return false;
       }
-
-      const bestemmelserResponse = await API.Medlemskapsperioder.hentBestemmelserMedVilkår();
-      bestemmelserResponse
-        .sort((a: any, b: any) => b.bestemmelse.localeCompare(a.bestemmelse))
-        .forEach((bestemmelse: any) =>
-          bestemmelse.vilkårOgBegrunnelser.sort((a: any, b: any) => a.vilkaar.localeCompare(b.vilkaar))
-        );
-      setBestemmelser(bestemmelserResponse);
       await hentMedlemskapsperioder(behandlingId);
       await hentMottatteOpplysninger(behandlingId);
       await hentDokumentOversikt(saksnr);
@@ -213,6 +203,7 @@ const Saksbehandling = ({
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+
   return (
     <>
       <Informasjonlinje />
@@ -225,12 +216,7 @@ const Saksbehandling = ({
                   <>
                     {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
                     {visAvslaattSoknad && <AvslaattSoknad />}
-                    {visStegVelger && (
-                      // eslint-disable-next-line react/jsx-no-constructed-context-values
-                      <SaksbehandlingContext.Provider value={{ bestemmelseVilkar: bestemmelser }}>
-                        <EnkelStegvelger alleSteg={alleSteg} />
-                      </SaksbehandlingContext.Provider>
-                    )}
+                    {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
                   </>
                 ) : (
                   <VirksomhetMelding />

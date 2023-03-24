@@ -56,17 +56,6 @@ describe("url", () => {
       expect(url).toContain("/FTRL/saksbehandling/");
     });
 
-    it("Sakstype FTRL med IKKE_YRKESAKTIV returnerer url for ikkeYrkesaktiv", () => {
-      const url = lagUrlFraSakstypeOgBehandlingstema(
-        "MEL-1",
-        1,
-        FTRL,
-        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV
-      );
-
-      expect(url).toContain("/FTRL/ikkeYrkesaktiv/");
-    });
-
     it("Sakstype TRYGDEAVTALE med støttet behandlingstemaKode returnerer url", () => {
       const url = lagUrlFraSakstypeOgBehandlingstema(
         "MEL-1",
@@ -142,6 +131,22 @@ describe("url", () => {
       );
 
       expect(url).toContain("/EU_EOS/behandling/");
+    });
+
+    it("Sakstype FTRL med IKKE_YRKESAKTIV får tom flyt med toggle på", () => {
+      const url = lagUrl(
+        "MEL-1",
+        1,
+        FTRL,
+        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        true,
+        true,
+        true
+      );
+
+      expect(url).toContain("/FTRL/behandling/");
     });
 
     it("IKKE_YRKESAKTIV får ikke tom flyt med toggle på", () => {

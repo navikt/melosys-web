@@ -131,12 +131,12 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
 
   return (
     <div className="vurderingUnntakMedlemskap">
-      <Nav.Typo.Undertittel className="undertittel">Vurder unntaksperioder</Nav.Typo.Undertittel>
+      <Nav.Typo.Undertittel className="undertittel">Unntak medlemskap</Nav.Typo.Undertittel>
       <Nav.Fieldset legend="Vurder unntaksperiode">
         <Forms.Radio
           name="utfallRegistreringUnntak"
           control={control}
-          label="Godkjenn unntaksperiode"
+          label="Godkjenn"
           value={GODKJENT}
           onChange={lagreUtfallRegistreringUnntak}
           disabled={!redigerbart}
@@ -167,7 +167,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
                 name="bestemmelse"
                 control={control}
                 label="Bestemmelse"
-                emptyFieldText="Velg"
                 emptyFieldDisabled={!!formValues.bestemmelse}
                 disabled={!redigerbart}
                 onChange={lagreBestemmelse}
@@ -181,7 +180,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
             </Nav.Column>
           </Nav.Row>
           {Utils._isEmpty(mottatteOpplysningerPeriode.tom) && (
-            <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__alertstripe">
+            <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__godkjent_advarsel">
               Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
             </Nav.AlertStripeAdvarsel>
           )}
@@ -214,7 +213,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
                 name="bestemmelse"
                 control={control}
                 label="Bestemmelse"
-                emptyFieldText="Velg"
                 emptyFieldDisabled={!!formValues.bestemmelse}
                 disabled={!redigerbart}
                 onChange={lagreBestemmelse}
@@ -227,10 +225,15 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
               </Forms.Select>
             </Nav.Column>
           </Nav.Row>
-          <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__alertstripe">
+          <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__info">
             Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i
             brevmenyen.
           </Nav.AlertStripeInfo>
+          {Utils._isEmpty(formValues.tom) && (
+            <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
+              Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
+            </Nav.AlertStripeAdvarsel>
+          )}
         </Nav.Fieldset>
       )}
 

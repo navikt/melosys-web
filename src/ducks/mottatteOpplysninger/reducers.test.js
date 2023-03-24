@@ -245,7 +245,6 @@ describe("mottatteOpplysninger reducer", () => {
         ],
         intensjonOmRetur: true,
         antallMaanederINorge: 11,
-        EOSBarnetrygdFraNAV: true,
         oppgittAdresseTilleggsnavn: "Storgård",
         oppgittAdresseGatenavn: "12345",
         oppgittAdresseHusnummerEtasjeLeilighet: "12345",
@@ -447,7 +446,6 @@ describe("mottatteOpplysninger reducer", () => {
           bosted: {
             intensjonOmRetur: null,
             antallMaanederINorge: 11,
-            EOSBarnetrygdFraNAV: true,
             oppgittAdresse: {
               tilleggsnavn: "Storgård",
               gatenavn: "12345",
