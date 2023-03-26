@@ -19,6 +19,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 
 import "./saksplukker.css";
 import * as Routing from "../../../../routing";
+import { useFeatureToggle } from "../../../../featuretoggle";
 
 const compareTerm = (a: KTObject, b: KTObject) => {
   if (!a.term) return 1;
@@ -62,6 +63,11 @@ export const Saksplukker = ({
   const [antallOppgaver, setAntallOppgaver] = useState(0);
 
   const { sakstype, sakstema } = formValues || {};
+
+  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
+  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
+  const registreringUnntakFraMedlemskapToggleEnabled =
+    useFeatureToggle("melosys.registrering_unntak_fra_medlemskap") === "enabled";
 
   useEffect(() => {
     Api.LovligeKombinasjoner.hentSakstyper().then((lovligeSakstyper) => {
@@ -108,7 +114,10 @@ export const Saksplukker = ({
       formValues.sakstype,
       formValues.sakstema,
       behandlingstema,
-      behandlingstype
+      behandlingstype,
+      folketrygdenToggleEnabled,
+      ikkeYrkesaktivFlytToggleEnabled,
+      registreringUnntakFraMedlemskapToggleEnabled
     );
 
     history.push(redirectURL);

@@ -223,7 +223,9 @@ function EndreBehandlingModal({
           sakstema,
           behandlingstema,
           behandlingstype,
-          folketrygdenToggleEnabled
+          folketrygdenToggleEnabled,
+          ikkeYrkesaktivFlytToggleEnabled,
+          registreringUnntakFraMedlemskapToggleEnabled
         );
 
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
