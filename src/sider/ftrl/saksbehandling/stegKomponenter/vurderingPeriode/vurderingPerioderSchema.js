@@ -51,10 +51,10 @@ const utenforSøknadsperioden = {
   test: (tomDato, schema) => {
     if (Utils._isEmpty(tomDato) || !Utils.dato.vaskInputDato(tomDato)) return true;
 
-    const tomDatoFraSoknadsperiode = schema.options.context.soknadsperiode.tom;
+    const sluttdatoFraSoknadsperiode = schema.options.context.soknadsperiode.tom;
     return (
-      Utils._isEmpty(tomDatoFraSoknadsperiode) ||
-      Utils.dato.erGyldigPeriode(tomDato, Utils.dato.formatterDatoTilNorsk(tomDatoFraSoknadsperiode))
+      Utils._isEmpty(sluttdatoFraSoknadsperiode) ||
+      Utils.dato.erGyldigPeriode(tomDato, Utils.dato.formatterDatoTilNorsk(sluttdatoFraSoknadsperiode))
     );
   },
 };

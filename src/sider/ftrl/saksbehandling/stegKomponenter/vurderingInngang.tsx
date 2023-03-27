@@ -118,7 +118,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     }
   };
 
-  const valgtLandHarTrygdeavtaleMedNorgeEllerErEosLand = formValues.land
+  const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = formValues.land
     ? MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(formValues.land)
     : false;
 
@@ -185,7 +185,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
-      {valgtLandHarTrygdeavtaleMedNorgeEllerErEosLand && (
+      {valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand && (
         <Nav.Row>
           <Nav.Column xs="4" />
           <Nav.Column xs="3">

@@ -4,6 +4,7 @@ export const getErrorMessage = (
   field: ControllerRenderProps<any, any>,
   formState: UseFormStateReturn<any>
 ): string | undefined => {
+  // Finner ut om feltnavnet inneholder liste-index
   const match = field.name.match(/(.+)\[(\d)]\.(.+)/);
 
   if (match) {
