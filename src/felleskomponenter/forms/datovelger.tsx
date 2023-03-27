@@ -7,9 +7,10 @@ import * as Nav from "../../navFrontend";
 import PlainDatovelger from "../datovelger";
 
 import { RegisterHookFormProps } from "./reacthookProps";
+import { getErrorMessage } from "./mapFeilmelding";
 
 interface DatovelgerComponentProps {
-  label: ReactNode;
+  label?: ReactNode;
   disabled?: boolean;
   bredde?: string;
   minDate?: Date;
@@ -28,7 +29,7 @@ const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatove
     return (
       <div {...rest}>
         <PlainDatovelger
-          label={<Nav.Typo.Element>{label}</Nav.Typo.Element>}
+          label={label && <Nav.Typo.Element>{label}</Nav.Typo.Element>}
           onChange={(nyDato) => onChange(Utils.dateTilNorskString(nyDato))}
           onBlur={rest.onBlur}
           value={Utils.norskStringTilDate(rest.value)}
@@ -64,7 +65,7 @@ const Datovelger = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
               field.onChange(value || "");
               if (rest.onChange) rest.onChange(value);
             }}
-            feil={(formState.errors?.[field.name]?.message as any)?.melding}
+            feil={getErrorMessage(field, formState)}
           />
         )}
       />

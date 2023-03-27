@@ -3,6 +3,7 @@ import { Controller, UseControllerProps } from "react-hook-form";
 import * as Nav from "../../navFrontend";
 
 import { RegisterHookFormProps } from "./reacthookProps";
+import { getErrorMessage } from "./mapFeilmelding";
 
 interface SelectComponentProps extends Nav.SelectProps {
   label?: string | ReactElement;
@@ -56,7 +57,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               field.onChange(event);
               if (rest.onChange) rest.onChange(event?.target?.value);
             }}
-            feil={(formState.errors?.[field.name]?.message as any)?.melding}
+            feil={getErrorMessage(field, formState)}
           >
             {rest.children}
           </SelectInnerComponent>

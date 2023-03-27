@@ -3,6 +3,7 @@ import { Controller, UseControllerProps } from "react-hook-form";
 import HtmlEditor from "../htmlEditor";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { RegisterHookFormProps } from "./reacthookProps";
+import { getErrorMessage } from "./mapFeilmelding";
 
 type HtmlEditorComponentProps = {
   spellcheck?: boolean;
@@ -43,11 +44,7 @@ const HTMLEditor = React.forwardRef<HTMLEditorProps, HTMLEditorProps>(
         name={name}
         control={control}
         render={({ field, formState }) => (
-          <InnerHTMLEditorComponent
-            {...field}
-            {...rest}
-            feil={(formState.errors?.[field.name]?.message as any)?.melding}
-          />
+          <InnerHTMLEditorComponent {...field} {...rest} feil={getErrorMessage(field, formState)} />
         )}
       />
     );
