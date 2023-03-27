@@ -4,38 +4,40 @@ import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { useFeatureToggle } from "../../featuretoggle";
-import * as Utils from "../../utils";
-import MKV from "../../melosyskodeverk";
-import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
-import * as Nav from "../../navFrontend";
-import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
-import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
-import Oppsummering from "../../felleskomponenter/oppsummering";
-import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
-import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
-import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
-import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
-import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
-import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
-import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
-import { redigerbartSelectors } from "../../ducks/redigerbart";
-import { formSelectors } from "../../ducks/form";
-import { dokumenterOperations } from "../../ducks/dokumenter";
-import { folketrygdenkodeverkOperations } from "../../ducks/folketrygdenkodeverk";
-import { medlemskapsperioderOperations } from "../../ducks/medlemskapsperioder";
-import { oppsummertfaktaOperations } from "../../ducks/oppsummertfakta";
-import { avklartefaktaOperations } from "../../ducks/avklartefakta";
-import { vilkarOperations } from "../../ducks/vilkar";
-import { menypanelOperations } from "../../ducks/menypanel";
-import { feiletResponsOperations } from "../../ducks/feiletRespons";
-import { MatchParams } from "../../@types";
-import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
-import "./saksbehandling.css";
+import { useFeatureToggle } from "../../../featuretoggle";
+import * as Utils from "../../../utils";
+import MKV from "../../../melosyskodeverk";
+import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
+import * as Nav from "../../../navFrontend";
+import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
+import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
+import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
+import Oppsummering from "../../../felleskomponenter/oppsummering";
+import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
+import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
+import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
+import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { landkoderOperations, landkoderSelectors } from "../../../ducks/landkoder";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { formSelectors } from "../../../ducks/form";
+import { dokumenterOperations } from "../../../ducks/dokumenter";
+import { folketrygdenkodeverkOperations } from "../../../ducks/folketrygdenkodeverk";
+import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperioder";
+import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
+import { avklartefaktaOperations } from "../../../ducks/avklartefakta";
+import { vilkarOperations } from "../../../ducks/vilkar";
+import { menypanelOperations } from "../../../ducks/menypanel";
+import { feiletResponsOperations } from "../../../ducks/feiletRespons";
+import { MatchParams } from "../../../@types";
+import { EnkelStegvelger } from "../../../felleskomponenter/enkelStegvelger";
 import { alleSteg } from "./initialStegArray";
+import "./saksbehandling.css";
 
 const mapStateToProps = (state: RootState) => ({
-  land: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
+  arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
+  hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
@@ -88,8 +90,9 @@ interface Props extends RouteComponentProps<MatchParams> {
 }
 
 const Saksbehandling = ({
-  land,
+  arbeidsland,
   behandlingstype,
+  hovedpartRolle,
   behandlingOppfriskes,
   mottatteOpplysninger,
   mottatteOpplysningerPeriodeFom,
@@ -153,7 +156,6 @@ const Saksbehandling = ({
         visOppfriskModal();
         return false;
       }
-
       await hentMedlemskapsperioder(behandlingId);
       await hentMottatteOpplysninger(behandlingId);
       await hentDokumentOversikt(saksnr);
@@ -200,29 +202,39 @@ const Saksbehandling = ({
   );
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
 
+  const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+
   return (
     <>
       <Informasjonlinje />
       <div id="main-container" className="main-container">
-        <div className="saksbehandling">
+        <div className="ftrl_saksbehandling">
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
-                {visAvslaattSoknad && <AvslaattSoknad />}
-                {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
+                {!hovedpartErVirksomhet ? (
+                  <>
+                    {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
+                    {visAvslaattSoknad && <AvslaattSoknad />}
+                    {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
+                  </>
+                ) : (
+                  <VirksomhetMelding />
+                )}
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  arbeidsland={landkoder && landkoder.filter((landkodeObjekt) => land.includes(landkodeObjekt.kode))}
+                  arbeidsland={
+                    landkoder && landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
+                  }
                   lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom}
                   lovvalgsperiodeTom={mottatteOpplysningerPeriodeTom}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />
                 <SaksoversiktLenke />
-                <SideDialog faner={defaultFaner} />
+                <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>

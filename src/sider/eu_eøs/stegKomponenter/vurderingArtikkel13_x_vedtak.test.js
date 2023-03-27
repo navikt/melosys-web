@@ -34,6 +34,7 @@ describe("VurderingArtikkel13_x_Vedtak", () => {
       soknadsperiode: { tom: "", fom: "" },
       validerMottatteOpplysninger: jest.fn(),
       fattVedtak: jest.fn(),
+      harFeilmeldinger: false,
     };
 
     const store = createStore(combineReducers({ form: formReducer }));
