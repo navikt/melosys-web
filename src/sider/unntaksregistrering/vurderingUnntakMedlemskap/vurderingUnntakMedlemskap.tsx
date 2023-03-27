@@ -125,6 +125,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
   };
 
   const handleBekreft = async () => {
+    await dispatch(lovvalgsperioderOperations.lagre());
     await Api.Saksflyt.Unntaksregistrering.registrerUnntakFraMedlemskap(behandlingID);
     dispatch(navigeringOperations.tilForsiden());
   };
