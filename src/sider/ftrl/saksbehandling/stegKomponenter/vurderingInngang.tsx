@@ -187,8 +187,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       </Nav.Fieldset>
       {valgtLandHarTrygdeavtaleMedNorgeEllerErEosLand && (
         <Nav.Row>
-          <Nav.Column xs="6" />
-          <Nav.Column xs="5">
+          <Nav.Column xs="4" />
+          <Nav.Column xs="3">
             <Nav.AlertStripeAdvarsel>
               Landet er et EØS-land og/eller et land Norge har trygdeavtale med
             </Nav.AlertStripeAdvarsel>
