@@ -79,9 +79,9 @@ export const lagUrl = (
   sakstemaKode: string,
   behandlingstemaKode: string,
   behandlingstypeKode: string,
-  folketrygdenToggleEnabled: boolean = false,
-  ikkeYrkesaktivToggleEnabled: boolean = false,
-  registreringUnntakFraMedlemskapToggleEnabled: boolean = false
+  folketrygdenToggleEnabled: boolean,
+  ikkeYrkesaktivToggleEnabled: boolean,
+  registreringUnntakFraMedlemskapToggleEnabled: boolean
 ) => {
   if (
     skalViseTomFlyt(
