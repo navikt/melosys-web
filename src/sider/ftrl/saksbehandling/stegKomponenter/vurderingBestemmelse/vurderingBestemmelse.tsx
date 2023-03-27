@@ -99,11 +99,11 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       (element) => element.bestemmelse === valgtBestemmelse
     );
 
-    const vilkårBegrunnelse = valgteBegrunnelser.get(
+    const vilgårBegrunnelser = valgteBegrunnelser.get(
       `${MKV.Koder.vilkaar.FTRL_2_8_NÆR_TILKNYTNING_NORGE}_begrunnelser`
     );
-    const harValgtAnnenGrunn =
-      vilkårBegrunnelse?.begrunnelseKode && vilkårBegrunnelse?.begrunnelseKode === "ANNEN_GRUNN";
+    const harValgtBegrunnelseAnnenGrunn =
+      vilgårBegrunnelser?.begrunnelseKode && vilgårBegrunnelser?.begrunnelseKode === "ANNEN_GRUNN";
 
     const alleVilkårHarSvarJaOgValgtBegrunnelse = valgtBestemmelseMedVilkårOgBegrunnelser?.vilkårOgBegrunnelser.every(
       (element) => {
@@ -112,7 +112,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           (Utils._isEmpty(element.muligeBegrunnelser)
             ? true
             : valgteBegrunnelser.get(`${element.vilkår}_begrunnelser`)) &&
-          (harValgtAnnenGrunn ? harStrengInnhold(vilkårBegrunnelse?.begrunnelseFritekst ?? "") : true)
+          (harValgtBegrunnelseAnnenGrunn ? harStrengInnhold(vilgårBegrunnelser?.begrunnelseFritekst ?? "") : true)
         );
       }
     );
