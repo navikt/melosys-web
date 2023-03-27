@@ -154,6 +154,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
           onClick: fortsettHandle,
           disabled: !formIsValid || !redigerbart,
         }}
+        bekreftTekst="Bekreft og innhent registeropplysninger"
       />
 
       {visOppfrisk && (
