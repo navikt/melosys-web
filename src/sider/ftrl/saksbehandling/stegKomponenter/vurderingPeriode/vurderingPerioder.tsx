@@ -88,7 +88,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       soknadsperiode,
       mottaksdato,
     },
-    defaultValues: {
+    values: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(medlemskapsperioder),
     } as FieldValues,
   });
