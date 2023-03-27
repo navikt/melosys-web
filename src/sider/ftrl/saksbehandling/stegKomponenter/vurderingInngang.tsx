@@ -126,17 +126,28 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   return (
     <div className="vurderingInngang">
-      <Nav.Typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.Typo.Undertittel>
+      <Nav.Typo.Undertittel className="undertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Undertittel>
 
-      <Nav.Fieldset legend="Periode">
+      <Nav.Fieldset legend="Søknadsperiode">
         <Nav.Row>
-          <Nav.Column xs="3">
-            <Forms.Datovelger label="Fra og med:" name="fom" disabled={!redigerbart} control={control} />
+          <Nav.Column xs="2">
+            <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
+          </Nav.Column>
+          <Nav.Column xs="2">
+            <Forms.Datovelger
+              label={
+                <LabelMedHjelpetekst
+                  label="Til og med"
+                  hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Medlemskapsperiode(r) registreres senere.`}
+                  hjelpetekstClassName="hjelpetekst"
+                />
+              }
+              name="tom"
+              disabled={!redigerbart}
+              control={control}
+            />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Forms.Datovelger label="Til og med:" name="tom" disabled={!redigerbart} control={control} />
-          </Nav.Column>
-          <Nav.Column xs="5">
             <Forms.Select
               label={
                 <LabelMedHjelpetekst
@@ -157,25 +168,11 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
               ))}
             </Forms.Select>
           </Nav.Column>
-        </Nav.Row>
-      </Nav.Fieldset>
-      {valgtLandHarTrygdeavtaleMedNorgeEllerErEosLand && (
-        <Nav.Row>
-          <Nav.Column xs="6" />
           <Nav.Column xs="5">
-            <Nav.AlertStripeAdvarsel>
-              Landet er et EØS-land og/eller et land Norge har trygdeavtale med
-            </Nav.AlertStripeAdvarsel>
-          </Nav.Column>
-        </Nav.Row>
-      )}
-      <Nav.Fieldset legend="Trygdedekning">
-        <Nav.Row>
-          <Nav.Column xs="6">
             <Forms.Select
               name="trygdedekning"
               control={control}
-              label=""
+              label="Trygdedekning"
               emptyFieldDisabled={!!formValues.trygdedekning}
               disabled={!redigerbart}
             >
@@ -188,8 +185,19 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
+      {valgtLandHarTrygdeavtaleMedNorgeEllerErEosLand && (
+        <Nav.Row>
+          <Nav.Column xs="6" />
+          <Nav.Column xs="5">
+            <Nav.AlertStripeAdvarsel>
+              Landet er et EØS-land og/eller et land Norge har trygdeavtale med
+            </Nav.AlertStripeAdvarsel>
+          </Nav.Column>
+        </Nav.Row>
+      )}
 
       <Mui.StegKnapper
+        bekreftTekst="Bekreft og innhent registeropplysninger"
         bekreftKnappProps={{
           onClick: fortsettHandle,
           disabled: !formIsValid || !redigerbart,
