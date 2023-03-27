@@ -20,6 +20,7 @@ import { useAsyncCallbackState } from "../../../../../hooks";
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import { FlytFinnesIkke } from "./komponenter/flytFinnesIkke";
 import "./vurderingBestemmelse.css";
+import { harStrengInnhold } from "../../../../../utils/streng";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export interface Begrunnelse {
@@ -97,10 +98,23 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     const valgtBestemmelseMedVilkårOgBegrunnelser = støttedeBestemmelser.find(
       (element) => element.bestemmelse === valgtBestemmelse
     );
+
+    const vilkårBegrunnelse = valgteBegrunnelser.get(
+      `${MKV.Koder.vilkaar.FTRL_2_8_NÆR_TILKNYTNING_NORGE}_begrunnelser`
+    );
+    const harValgtAnnenGrunn =
+      vilkårBegrunnelse?.begrunnelseKode && vilkårBegrunnelse?.begrunnelseKode === "ANNEN_GRUNN";
+
     const alleVilkårHarSvarJaOgValgtBegrunnelse = valgtBestemmelseMedVilkårOgBegrunnelser?.vilkårOgBegrunnelser.every(
-      (element) =>
-        valgteVilkår.get(element.vilkår) === SANN &&
-        (Utils._isEmpty(element.muligeBegrunnelser) ? true : valgteBegrunnelser.get(`${element.vilkår}_begrunnelser`))
+      (element) => {
+        return (
+          valgteVilkår.get(element.vilkår) === SANN &&
+          (Utils._isEmpty(element.muligeBegrunnelser)
+            ? true
+            : valgteBegrunnelser.get(`${element.vilkår}_begrunnelser`)) &&
+          (harValgtAnnenGrunn ? harStrengInnhold(vilkårBegrunnelse?.begrunnelseFritekst ?? "") : true)
+        );
+      }
     );
 
     setFormIsValid(Boolean(alleVilkårHarSvarJaOgValgtBegrunnelse));
