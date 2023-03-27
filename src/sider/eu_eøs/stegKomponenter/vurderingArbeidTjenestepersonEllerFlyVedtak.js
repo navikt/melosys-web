@@ -40,6 +40,7 @@ import {
 
 import "./vurderingArbeidTjenestepersonEllerFlyVedtak.css";
 import { vedtakOperations } from "../../../ducks/vedtak";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 const InformertMyndighetVelger = ({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) => {
   useEffect(() => {
@@ -94,6 +95,13 @@ const skalSendeSed = (formValues) => {
 
 const skalSendeOrienteringsbrev = (selvstendigArbeid) => selvstendigArbeid?.erSelvstendig !== true;
 
+const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
+  sakstype === MKV.Koder.sakstyper.EU_EOS &&
+  [
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+  ].includes(behandlingstema);
+
 export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   redigerbart,
   behandlingID,
@@ -107,6 +115,8 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   lagreLovvalgsperioder,
   byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
   behandlingstype,
+  behandlingstema,
+  sakstype,
   lovvalgsbestemmelseSomSkalVises,
   lovvalgsbestemmelseSomSkalLagres,
   oppdaterData,
@@ -407,7 +417,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
           </Nav.Column>
         </Nav.Row>
       )}
-      {redigerbart && (
+      {redigerbart && skalViseSendOrienteringsbrev(sakstype, behandlingstema) && (
         <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
       )}
       <Nav.Row>
@@ -445,6 +455,8 @@ VurderingArbeidTjenestepersonEllerFlyVedtak.propTypes = {
   byggLovvalgsperioder: PT.func.isRequired,
   lagreLovvalgsperioder: PT.func.isRequired,
   behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
+  sakstype: PT.string.isRequired,
   form: PT.string.isRequired,
   handleSubmit: PT.func.isRequired,
   lovvalgsbestemmelseSomSkalVises: PT.string,
@@ -493,6 +505,8 @@ const mapStateToProps = (state, ownProps) => {
     mottatteOpplysningerFom: mottatteOpplysningerSelectors.PeriodeFomSelector(state),
     mottatteOpplysningerTom: mottatteOpplysningerSelectors.PeriodeTomSelector(state),
     behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+    behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+    sakstype: fagsakSelectors.SakstypeKodeSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
     soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
