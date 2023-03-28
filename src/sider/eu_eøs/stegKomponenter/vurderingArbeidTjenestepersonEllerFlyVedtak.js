@@ -198,8 +198,8 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       },
     ];
   }
-
-  if (skalSendeOrienteringsbrev(selvstendigArbeid)) {
+  const { kopiTilArbeidsgiver } = formValues;
+  if (skalSendeOrienteringsbrev(selvstendigArbeid) && kopiTilArbeidsgiver) {
     pdfDokumenter.push({
       navn: "Orienteringsbrev til arbeidsgiver",
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
