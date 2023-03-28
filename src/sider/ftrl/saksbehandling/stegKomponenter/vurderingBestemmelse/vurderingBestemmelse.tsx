@@ -99,21 +99,17 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       (element) => element.bestemmelse === valgtBestemmelse
     );
 
-    const vilgårBegrunnelser = valgteBegrunnelser.get(
-      `${MKV.Koder.vilkaar.FTRL_2_8_NÆR_TILKNYTNING_NORGE}_begrunnelser`
-    );
-    const harValgtBegrunnelseAnnenGrunn =
-      vilgårBegrunnelser?.begrunnelseKode && vilgårBegrunnelser?.begrunnelseKode === "ANNEN_GRUNN";
-
     const alleVilkårHarSvarJaOgValgtBegrunnelse = valgtBestemmelseMedVilkårOgBegrunnelser?.vilkårOgBegrunnelser.every(
       (element) => {
-        return (
-          valgteVilkår.get(element.vilkår) === SANN &&
-          (Utils._isEmpty(element.muligeBegrunnelser)
-            ? true
-            : valgteBegrunnelser.get(`${element.vilkår}_begrunnelser`)) &&
-          (harValgtBegrunnelseAnnenGrunn ? harStrengInnhold(vilgårBegrunnelser?.begrunnelseFritekst ?? "") : true)
-        );
+        const valgtBegrunnelseForVilkår = valgteBegrunnelser.get(`${element.vilkår}_begrunnelser`);
+        const vilgårBegrunnelser =
+          valgtBegrunnelseForVilkår?.begrunnelseKode === "ANNEN_GRUNN" ? valgtBegrunnelseForVilkår : undefined;
+        const erGyldigAnnenGrunn =
+          !vilgårBegrunnelser || harStrengInnhold(vilgårBegrunnelser?.begrunnelseFritekst ?? "");
+        const harVilkår = valgteVilkår.get(element.vilkår) === SANN;
+        const harGyldigValgtBegrunnelse = Utils._isEmpty(element.muligeBegrunnelser) ? true : valgtBegrunnelseForVilkår;
+
+        return harVilkår && harGyldigValgtBegrunnelse && erGyldigAnnenGrunn;
       }
     );
 
