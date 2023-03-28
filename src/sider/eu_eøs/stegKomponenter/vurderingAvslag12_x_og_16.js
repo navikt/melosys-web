@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+/* eslint-disable */
+
+import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
@@ -19,6 +21,15 @@ import Begrunnelser from "../../../felleskomponenter/begrunnelser";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Schema";
 import { vedtakOperations } from "../../../ducks/vedtak";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
+import { kontrollerFerdigbehandling } from "../../../ducks/kontroll/operations";
+
+const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
+  sakstype === MKV.Koder.sakstyper.EU_EOS &&
+  [
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+  ].includes(behandlingstema);
 
 const VurderingAvslag12_x_og_16 = ({
   valgte_art_12_1_begrunnelser,
@@ -28,9 +39,11 @@ const VurderingAvslag12_x_og_16 = ({
   vilkarBegrunnelser,
   behandlingID,
   redigerbart,
+  harFeilmeldinger,
   behandlingstype,
   behandlingstema,
   touch,
+  sakstype,
   formIsValid,
   formValues,
   tilbake,
@@ -51,8 +64,9 @@ const VurderingAvslag12_x_og_16 = ({
       },
     },
   ];
+  const { kopiTilArbeidsgiver, vedtakstype } = formValues;
 
-  if (!erNyVurdering) {
+  if (!erNyVurdering && kopiTilArbeidsgiver) {
     pdfDokumenter.push({
       navn: "Orientering til arbeidsgiver om avslag",
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
@@ -68,6 +82,20 @@ const VurderingAvslag12_x_og_16 = ({
     ...MKV.KTObjects.begrunnelser.art12_1_forutgaaende_medl,
     ...MKV.KTObjects.begrunnelser.bosted,
   ];
+
+  useEffect(() => {
+    dispatch(
+      kontrollerFerdigbehandling({
+        behandlingID,
+        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+        kontrollerSomSkalIgnoreres: kopiTilArbeidsgiver
+          ? []
+          : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
+        skalRegisteropplysningerOppdateres: false,
+      })
+    );
+  }, [kopiTilArbeidsgiver]);
 
   const validerForm = () => {
     touch("vedtakstype");
@@ -95,6 +123,7 @@ const VurderingAvslag12_x_og_16 = ({
             behandlingsresultatTypeKode,
             fritekst: formValues.vedtaksbrevFritekst,
             fritekstSed: null,
+            kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
             mottakerinstitusjoner: null,
             vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
             nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
@@ -107,6 +136,7 @@ const VurderingAvslag12_x_og_16 = ({
       })
       .catch(() => setVedtakPending(false));
   };
+  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
 
   return (
     <div>
@@ -143,8 +173,11 @@ const VurderingAvslag12_x_og_16 = ({
           />
         </Nav.Column>
       </Nav.Row>
+      {redigerbart && skalViseSendOrienteringsbrev(sakstype, behandlingstema) && (
+        <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
+      )}
       {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
-      {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+      {stegErGyldig && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
       {erNyVurdering && redigerbart && (
         <Nav.AlertStripeInfo>{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.AlertStripeInfo>
       )}
@@ -153,7 +186,7 @@ const VurderingAvslag12_x_og_16 = ({
         bekreftKnappProps={{
           spinner: vedtakPending,
           autoDisableVedSpinner: true,
-          disabled: !redigerbart,
+          disabled: !stegErGyldig,
           onClick: avslaa,
         }}
         tilbakeKnappProps={{
@@ -174,8 +207,10 @@ VurderingAvslag12_x_og_16.propTypes = {
   behandlingID: PT.number.isRequired,
   tilbake: PT.func.isRequired,
   redigerbart: PT.bool,
+  sakstype: PT.string.isRequired,
   behandlingstype: PT.string.isRequired,
   behandlingstema: PT.string.isRequired,
+  harFeilmeldinger: PT.bool.isRequired,
   formIsValid: PT.bool.isRequired,
   touch: PT.func.isRequired,
   formValues: PT.object,
@@ -209,6 +244,7 @@ const mapStateToProps = (state) => ({
   art16_1_fritekst: VilkarSelectors.art16_1_fritekstSelector(state),
   vilkarBegrunnelser: VilkarSelectors.vilkarBegrunnelserSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   formIsValid: isValid(KV.Form.AVSLAG_ARTIKKEL_12_OG_16)(state),
