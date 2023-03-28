@@ -19,7 +19,6 @@ import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../
 import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 
-import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { PeriodeElementer } from "./komponenter/periodeElementer";
@@ -184,9 +183,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   if (!aktivtSteg || !formValues) return null;
 
-  const hjelpetekst =
-    "Melosys har foreslått medlemskapsperioder på bakgrunn av periode og dekning det er søkt for, og tidspunktet søknaden ble mottatt. Du har mulighet til å gjøre endringer. Hvis du har mottatt opplysninger om at søknadsperiode eller trygdedekning det er søkt om er endret, må du endre dette i det inngangssteget «Inngang».";
-
   const handleEndreTomDato = (tomDato: string, index: number) => {
     if (antallMedlemskapsperioder === 2 && index === 0) {
       setValue(`medlemskapsperioder[1].fomDato`, Utils.dato.plussEnDag(tomDato));
@@ -250,13 +246,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   return (
     <div className="vurderingPerioder">
-      <Nav.Typo.Undertittel className="undertittel">
-        <LabelMedHjelpetekst
-          label="Kontroller medlemskapsperioder"
-          hjelpetekst={hjelpetekst}
-          hjelpetekstClassName="hjelpetekst"
-        />
-      </Nav.Typo.Undertittel>
+      <Nav.Typo.Undertittel className="undertittel">Kontroller medlemskapsperioder</Nav.Typo.Undertittel>
 
       <div>
         <Nav.Typo.Element className="info_element">Søknad mottatt: </Nav.Typo.Element>

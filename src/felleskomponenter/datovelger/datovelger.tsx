@@ -81,7 +81,6 @@ const Datovelger = ({
         selected={value}
         locale="nb"
         dateFormat={dateFormat}
-        placeholderText={disabled || feil ? "" : "Velg en dato"}
         disabled={disabled}
         minDate={minDate}
         maxDate={maxDate}
