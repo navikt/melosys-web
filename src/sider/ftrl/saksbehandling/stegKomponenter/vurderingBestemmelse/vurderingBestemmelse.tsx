@@ -20,6 +20,7 @@ import { useAsyncCallbackState } from "../../../../../hooks";
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import { FlytFinnesIkke } from "./komponenter/flytFinnesIkke";
 import "./vurderingBestemmelse.css";
+import { harStrengInnhold } from "../../../../../utils/streng";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export interface Begrunnelse {
@@ -97,10 +98,26 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     const valgtBestemmelseMedVilkårOgBegrunnelser = støttedeBestemmelser.find(
       (element) => element.bestemmelse === valgtBestemmelse
     );
+
     const alleVilkårHarSvarJaOgValgtBegrunnelse = valgtBestemmelseMedVilkårOgBegrunnelser?.vilkårOgBegrunnelser.every(
-      (element) =>
-        valgteVilkår.get(element.vilkår) === SANN &&
-        (Utils._isEmpty(element.muligeBegrunnelser) ? true : valgteBegrunnelser.get(`${element.vilkår}_begrunnelser`))
+      (element) => {
+        const harVilkår = valgteVilkår.get(element.vilkår) === SANN;
+        const valgtBegrunnelseForVilkår = valgteBegrunnelser.get(`${element.vilkår}_begrunnelser`);
+        const begrunnelseInneholderFritekst = KV.termFraNestedKTObject(
+          begrunnelseKodeverk,
+          valgtBegrunnelseForVilkår?.begrunnelseKode
+        )?.includes("(fritekst)");
+
+        if (Utils._isEmpty(element.muligeBegrunnelser)) {
+          return harVilkår;
+        }
+
+        if (!begrunnelseInneholderFritekst) {
+          return harVilkår && valgtBegrunnelseForVilkår;
+        }
+
+        return harVilkår && harStrengInnhold(valgtBegrunnelseForVilkår?.begrunnelseFritekst ?? "");
+      }
     );
 
     setFormIsValid(Boolean(alleVilkårHarSvarJaOgValgtBegrunnelse));
