@@ -101,28 +101,22 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
     const alleVilkårHarSvarJaOgValgtBegrunnelse = valgtBestemmelseMedVilkårOgBegrunnelser?.vilkårOgBegrunnelser.every(
       (element) => {
+        const harVilkår = valgteVilkår.get(element.vilkår) === SANN;
         const valgtBegrunnelseForVilkår = valgteBegrunnelser.get(`${element.vilkår}_begrunnelser`);
         const begrunnelseInneholderFritekst = KV.termFraNestedKTObject(
           begrunnelseKodeverk,
           valgtBegrunnelseForVilkår?.begrunnelseKode
         )?.includes("(fritekst)");
 
-        const harVilkår = valgteVilkår.get(element.vilkår) === SANN;
-        const ingenMuligeBegrunnelser = Utils._isEmpty(element.muligeBegrunnelser);
-        const harValgtFritekstBegrunnelse = begrunnelseInneholderFritekst;
-        const valgtBegrunnelseFinnes = valgtBegrunnelseForVilkår;
-        const harStrengInnholdIFritekst = harStrengInnhold(valgtBegrunnelseForVilkår?.begrunnelseFritekst ?? "");
-
-        if (ingenMuligeBegrunnelser) {
+        if (Utils._isEmpty(element.muligeBegrunnelser)) {
           return harVilkår;
         }
 
-        if (!harValgtFritekstBegrunnelse) {
-          return harVilkår && valgtBegrunnelseFinnes;
+        if (!begrunnelseInneholderFritekst) {
+          return harVilkår && valgtBegrunnelseForVilkår;
         }
 
-        return harVilkår && harStrengInnholdIFritekst;
-      }
+        return harVilkår && harStrengInnhold(valgtBegrunnelseForVilkår?.begrunnelseFritekst ?? "");
     );
 
     setFormIsValid(Boolean(alleVilkårHarSvarJaOgValgtBegrunnelse));
