@@ -107,12 +107,21 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           valgtBegrunnelseForVilkår?.begrunnelseKode
         )?.includes("(fritekst)");
 
-        const erGyldigAnnenGrunn =
-          !begrunnelseInneholderFritekst || harStrengInnhold(valgtBegrunnelseForVilkår?.begrunnelseFritekst ?? "");
         const harVilkår = valgteVilkår.get(element.vilkår) === SANN;
-        const harGyldigValgtBegrunnelse = Utils._isEmpty(element.muligeBegrunnelser) ? true : valgtBegrunnelseForVilkår;
+        const ingenMuligeBegrunnelser = Utils._isEmpty(element.muligeBegrunnelser);
+        const harValgtFritekstBegrunnelse = begrunnelseInneholderFritekst;
+        const valgtBegrunnelseFinnes = valgtBegrunnelseForVilkår;
+        const harStrengInnholdIFritekst = harStrengInnhold(valgtBegrunnelseForVilkår?.begrunnelseFritekst ?? "");
 
-        return harVilkår && harGyldigValgtBegrunnelse && erGyldigAnnenGrunn;
+        if (ingenMuligeBegrunnelser) {
+          return harVilkår;
+        }
+
+        if (!harValgtFritekstBegrunnelse) {
+          return harVilkår && valgtBegrunnelseFinnes;
+        }
+
+        return harVilkår && harStrengInnholdIFritekst;
       }
     );
 
