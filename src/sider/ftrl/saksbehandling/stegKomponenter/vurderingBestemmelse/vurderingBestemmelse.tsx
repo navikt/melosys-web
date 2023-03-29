@@ -117,6 +117,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         }
 
         return harVilkår && harStrengInnhold(valgtBegrunnelseForVilkår?.begrunnelseFritekst ?? "");
+      }
     );
 
     setFormIsValid(Boolean(alleVilkårHarSvarJaOgValgtBegrunnelse));
