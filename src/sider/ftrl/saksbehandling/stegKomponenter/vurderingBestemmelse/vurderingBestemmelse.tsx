@@ -102,10 +102,13 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     const alleVilkårHarSvarJaOgValgtBegrunnelse = valgtBestemmelseMedVilkårOgBegrunnelser?.vilkårOgBegrunnelser.every(
       (element) => {
         const valgtBegrunnelseForVilkår = valgteBegrunnelser.get(`${element.vilkår}_begrunnelser`);
-        const vilgårBegrunnelser =
-          valgtBegrunnelseForVilkår?.begrunnelseKode === "ANNEN_GRUNN" ? valgtBegrunnelseForVilkår : undefined;
+        const begrunnelseInneholderFritekst = KV.termFraNestedKTObject(
+          begrunnelseKodeverk,
+          valgtBegrunnelseForVilkår?.begrunnelseKode
+        )?.includes("(fritekst)");
+
         const erGyldigAnnenGrunn =
-          !vilgårBegrunnelser || harStrengInnhold(vilgårBegrunnelser?.begrunnelseFritekst ?? "");
+          !begrunnelseInneholderFritekst || harStrengInnhold(valgtBegrunnelseForVilkår?.begrunnelseFritekst ?? "");
         const harVilkår = valgteVilkår.get(element.vilkår) === SANN;
         const harGyldigValgtBegrunnelse = Utils._isEmpty(element.muligeBegrunnelser) ? true : valgtBegrunnelseForVilkår;
 
