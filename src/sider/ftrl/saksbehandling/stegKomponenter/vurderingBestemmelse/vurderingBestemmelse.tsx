@@ -117,14 +117,13 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         }
 
         const maksLengdeTillatt = 4000;
-        const begrunnelseFritekstErIkkeForLang = !(
-          (valgtBegrunnelseForVilkår?.begrunnelseFritekst?.length ?? 0) > maksLengdeTillatt
-        );
+        const begrunnelseFritekstErForLang =
+          (valgtBegrunnelseForVilkår?.begrunnelseFritekst?.length ?? 0) > maksLengdeTillatt;
 
         return (
           harVilkår &&
           harStrengInnhold(valgtBegrunnelseForVilkår?.begrunnelseFritekst ?? "") &&
-          begrunnelseFritekstErIkkeForLang
+          !begrunnelseFritekstErForLang
         );
       }
     );
