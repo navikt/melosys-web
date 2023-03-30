@@ -3,6 +3,7 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Feilmeldinger } from "../../../felleskomponenter/feilmeldinger";
 
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
@@ -18,12 +19,12 @@ import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { navigeringOperations } from "../../../ducks/navigering";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
+import { kontrollOperations } from "../../../ducks/kontroll";
+import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
+
 import "./vurderingUnntakMedlemskap.css";
-import { kontrollOperations } from "../../../ducks/kontroll";
-import { Feilmeldinger } from "../../../felleskomponenter/feilmeldinger";
-import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
