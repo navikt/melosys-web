@@ -21,6 +21,9 @@ import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 import "./vurderingUnntakMedlemskap.css";
+import { kontrollOperations } from "../../../ducks/kontroll";
+import { Feilmeldinger } from "../../../felleskomponenter/feilmeldinger";
+import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
@@ -36,12 +39,14 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const lovvalgsland = useSelector(mottatteOpplysningerSelectors.LovvalgslandSelector);
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const utfallRegistreringUnntak = useSelector(behandlingsresultatSelectors.UtfallRegistreringUnntakSelector);
+  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
 
-  const { control, watch, formState } = useForm({
+  const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
     context: { sluttDato: mottatteOpplysningerPeriode.tom },
     mode: "all",
@@ -54,18 +59,32 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
   });
   const formValues = watch();
 
+  const kontrollerFerdigbehandling = (skalRegisteropplysningerOppdateres: boolean = false) =>
+    dispatch(
+      kontrollOperations.kontrollerFerdigbehandling({
+        behandlingID,
+        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        skalRegisteropplysningerOppdateres,
+      })
+    );
+
   useEffect(() => {
     oppdaterStatus(formState.isValid);
   }, [formState?.isValid]);
 
   const lagreUtfallRegistreringUnntak = (utfall: string) => {
     dispatch(behandlingsresultatOperations.oppdaterUtfallRegistreringUnntak(behandlingID, utfall));
+    setValue("fom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.fom));
+    setValue("tom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.tom));
+    setValue("bestemmelse", "");
   };
 
-  const debouncedLagreLovvalgsperiode = useCallback(
-    Utils._debounce(() => dispatch(lovvalgsperioderOperations.lagre()), 1000),
-    []
-  );
+  const lagreLovvalgsperiodeOgKontroller = async () => {
+    await dispatch(lovvalgsperioderOperations.lagre());
+    kontrollerFerdigbehandling();
+  };
+
+  const debouncedLagreLovvalgsperiode = useCallback(Utils._debounce(lagreLovvalgsperiodeOgKontroller, 500), []);
 
   const oppdaterOgLagreLovvalgsperiode = (values: FieldValues) => {
     const harMedlemskapstypeDelvisUnntatt =
@@ -161,7 +180,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
       </Nav.Fieldset>
 
       {formValues.utfallRegistreringUnntak === GODKJENT && (
-        <>
+        <Nav.Fieldset legend="">
           <Nav.Row>
             <Nav.Column xs="4">
               <Forms.Select
@@ -180,62 +199,75 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
               </Forms.Select>
             </Nav.Column>
           </Nav.Row>
+
+          {formState.isValid && (
+            <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" feilmeldinger={feilmeldinger} />
+          )}
+
           {Utils._isEmpty(mottatteOpplysningerPeriode.tom) && (
             <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__godkjent_advarsel">
               Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
             </Nav.AlertStripeAdvarsel>
           )}
-        </>
+        </Nav.Fieldset>
       )}
 
       {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && (
-        <Nav.Fieldset legend="Lovvalgsperiode">
-          <Nav.Row>
-            <Nav.Column xs="2">
-              <Forms.Datovelger
-                label="Fra og med"
-                name="fom"
-                disabled={!redigerbart}
-                control={control}
-                onChange={lagreFom}
-              />
-            </Nav.Column>
-            <Nav.Column xs="2">
-              <Forms.Datovelger
-                label="Til og med"
-                name="tom"
-                disabled={!redigerbart}
-                control={control}
-                onChange={lagreTom}
-              />
-            </Nav.Column>
-            <Nav.Column xs="4">
-              <Forms.Select
-                name="bestemmelse"
-                control={control}
-                label="Bestemmelse"
-                emptyFieldDisabled={!!formValues.bestemmelse}
-                disabled={!redigerbart}
-                onChange={lagreBestemmelse}
-              >
-                {gyldigeBestemmelser()?.map((item: KTObject) => (
-                  <option key={item.kode} value={item.kode}>
-                    {item.term}
-                  </option>
-                ))}
-              </Forms.Select>
-            </Nav.Column>
-          </Nav.Row>
+        <>
+          <Nav.Fieldset legend="Lovvalgsperiode">
+            <Nav.Row>
+              <Nav.Column xs="2">
+                <Forms.Datovelger
+                  label="Fra og med"
+                  name="fom"
+                  disabled={!redigerbart}
+                  control={control}
+                  onChange={lagreFom}
+                />
+              </Nav.Column>
+              <Nav.Column xs="2">
+                <Forms.Datovelger
+                  label="Til og med"
+                  name="tom"
+                  disabled={!redigerbart}
+                  control={control}
+                  onChange={lagreTom}
+                />
+              </Nav.Column>
+              <Nav.Column xs="4">
+                <Forms.Select
+                  name="bestemmelse"
+                  control={control}
+                  label="Bestemmelse"
+                  emptyFieldDisabled={!!formValues.bestemmelse}
+                  disabled={!redigerbart}
+                  onChange={lagreBestemmelse}
+                >
+                  {gyldigeBestemmelser()?.map((item: KTObject) => (
+                    <option key={item.kode} value={item.kode}>
+                      {item.term}
+                    </option>
+                  ))}
+                </Forms.Select>
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Fieldset>
+
+          {formState.isValid && (
+            <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" feilmeldinger={feilmeldinger} />
+          )}
+
           <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__info">
             Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i
             brevmenyen.
           </Nav.AlertStripeInfo>
+
           {Utils._isEmpty(formValues.tom) && (
             <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
               Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
             </Nav.AlertStripeAdvarsel>
           )}
-        </Nav.Fieldset>
+        </>
       )}
 
       {formValues.utfallRegistreringUnntak === IKKE_GODKJENT && (
@@ -250,7 +282,10 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
         bekreftKnappProps={{
           onClick: handleBekreft,
-          disabled: !formState?.isValid || !redigerbart,
+          disabled:
+            !formState?.isValid ||
+            (feilmeldinger.length > 0 && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
+            !redigerbart,
         }}
         bekreftTekst="Bekreft og avslutt"
       />
