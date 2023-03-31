@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { KTObject } from "@navikt/melosys-kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 
@@ -14,6 +15,8 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import * as Forms from "../../../felleskomponenter/forms";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
+import * as Api from "../../../services/api";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 const INNVILGE = "INNVILGE";
 const AVSLAG = "AVSLAG";
@@ -38,6 +41,9 @@ interface Props {
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
   const { bestemmelse, redigerbart } = useSelector(komponentState);
+  const fagsak = useSelector(fagsakSelectors.FagsakSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+  const [muligeBestemmelser, setMuligeBestemmelser] = useState<KTObject[]>([]);
   const [valgtBestemmelse, setValgtBestemmelse] = useState("");
 
   const { control, watch, formState, setValue } = useForm({
@@ -58,6 +64,15 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     setValue("bestemmelse", "");
   }, [formValues.utfall]);
 
+  useEffect(() => {
+    Api.Lovvalgsbestemmelser.hent({
+      sakstype: fagsak.sakstype.kode,
+      sakstema: fagsak.sakstema.kode,
+      behandlingstema,
+      land: "GB", // TODO: hent valgt land ra forrige steg
+    }).then((res) => setMuligeBestemmelser(res));
+  }, [fagsak, behandlingstema]);
+
   const handleEndreBestemmelse = (nyBestemmelse: string) => {
     setValgtBestemmelse(nyBestemmelse);
     dispatch(medlemskapsperioderOperations.oppdaterBestemmelse(nyBestemmelse));
@@ -76,6 +91,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   return (
     <div className="vurderingBestemmelse">
       <Nav.Typo.Undertittel className="undertittel">Bestemmelse og vurdering</Nav.Typo.Undertittel>
+
+      <Nav.AlertStripeInfo>
+        Du må vurdere om søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004
+      </Nav.AlertStripeInfo>
 
       <Nav.Fieldset legend="Hva er din vurdering av søknaden?">
         <Forms.Radio
@@ -100,7 +119,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           disabled={!redigerbart}
         />
       </Nav.Fieldset>
-      {formValues.utfall === INNVILGE ? (
+
+      {formValues.utfall === INNVILGE && (
         <Nav.Fieldset className="select" legend="Velg bestemmelse">
           <Nav.Row>
             <Nav.Column xs="7">
@@ -110,14 +130,17 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
                 onChange={(event) => handleEndreBestemmelse(event.target.value)}
                 value={valgtBestemmelse}
               >
-                <option disabled={!!valgtBestemmelse} value="" key="">
-                  Velg
-                </option>
+                {muligeBestemmelser.map((muligBestemmelse) => (
+                  <option disabled={!!valgtBestemmelse} value={muligBestemmelse.kode} key={muligBestemmelse.kode}>
+                    {muligBestemmelse.term}
+                  </option>
+                ))}
               </Nav.Select>
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
-      ) : null}
+      )}
+
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: handleBekreft,

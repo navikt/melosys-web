@@ -19,6 +19,7 @@ export const JOURNALFORING = "journalforing";
 export const KODEVERK = "kodeverk";
 export const KONTROLL = "kontroll";
 export const LOVVALGSPERIODER = "lovvalgsperioder";
+export const LOVVALGSBESTEMMELSER = "lovvalgsbestemmelser";
 export const MEDLEMSKAPSPERIODER = "medlemskapsperioder";
 export const NOTATER = "notater";
 export const OPPGAVER = "oppgaver";
