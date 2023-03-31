@@ -23,10 +23,13 @@ import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpe
 import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { PeriodeElementer } from "./komponenter/periodeElementer";
+import { Feilmelding, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 
 export type MedlemskapsperiodeProp = Medlemskapsperiode & { ny: boolean; feil: string | undefined };
+
+export const sorterPerioder = (a: Medlemskapsperiode, b: Medlemskapsperiode) => a.fomDato.localeCompare(b.fomDato);
 
 const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: Medlemskapsperiode): MedlemskapsperiodeProp => ({
   ...medlemskapsperiode,
@@ -39,9 +42,7 @@ const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: Medlemskapsperiode): 
 const mapInitialMedlemskapsperioder = (
   medlemskapsperioder: Medlemskapsperiode[] | undefined
 ): MedlemskapsperiodeProp[] =>
-  medlemskapsperioder
-    ? [...medlemskapsperioder].sort((a, b) => a.fomDato.localeCompare(b.fomDato)).map(mapTilMedlemskapsperiodeProps)
-    : [];
+  medlemskapsperioder ? [...medlemskapsperioder].sort(sorterPerioder).map(mapTilMedlemskapsperiodeProps) : [];
 
 const komponentState = (state: RootState) => ({
   valgtTrygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
@@ -84,10 +85,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
     mode: "all",
-    context: {
-      soknadsperiode,
-      mottaksdato,
-    },
+    context: { soknadsperiode },
     values: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(medlemskapsperioder),
     } as FieldValues,
@@ -106,10 +104,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const antallMedlemskapsperioder = formValues.medlemskapsperioder?.length;
 
   const ingenMedlemskapsperioder = antallMedlemskapsperioder === undefined || antallMedlemskapsperioder === 0;
-
-  const erPeriodeFørMottaksdato = (medlemskapsperiode: MedlemskapsperiodeProp) =>
-    Utils.dato.erGyldigPeriode(medlemskapsperiode.fomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato)) &&
-    Utils.dato.erGyldigPeriode(medlemskapsperiode.tomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato));
 
   const oppdaterMedlemskapsperiode = (
     oppdatertMedlemskapsperiode: OppdaterMedlemskapsperiode,
@@ -158,40 +152,10 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   };
   const debouncedLagreMedlemskapsperioder = useCallback(Utils._debounce(lagreMedlemskapsperioder, 1000), []);
 
-  const erKombinasjonGyldig = (medlemskapsperiode: MedlemskapsperiodeProp) => {
-    if (erPeriodeFørMottaksdato(medlemskapsperiode)) {
-      return (
-        medlemskapsperiode.innvilgelsesResultat !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET ||
-        medlemskapsperiode.trygdedekning === MKV.Koder.trygdedekninger.PENSJONSDEL
-      );
-    }
-    return medlemskapsperiode.innvilgelsesResultat !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET;
-  };
-
-  const finnesUgyldigKombinasjon = formValues?.medlemskapsperioder?.some(
-    (medlemskapsperiode: MedlemskapsperiodeProp) => !erKombinasjonGyldig(medlemskapsperiode)
-  );
-
-  useEffect(() => {
-    if (finnesUgyldigKombinasjon) {
-      formValues?.medlemskapsperioder?.forEach((medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
-        if (!erKombinasjonGyldig(medlemskapsperiode)) {
-          setValue(`medlemskapsperioder[${index}].innvilgelsesResultat`, "");
-        }
-      });
-    }
-  }, [finnesUgyldigKombinasjon]);
-
   if (!aktivtSteg || !formValues) return null;
 
   const hjelpetekst =
     "Melosys har foreslått medlemskapsperioder på bakgrunn av periode og dekning det er søkt for, og tidspunktet søknaden ble mottatt. Du har mulighet til å gjøre endringer. Hvis du har mottatt opplysninger om at søknadsperiode eller trygdedekning det er søkt om er endret, må du endre dette i det inngangssteget «Inngang».";
-
-  const handleEndreTomDato = (tomDato: string, index: number) => {
-    if (antallMedlemskapsperioder === 2 && index === 0) {
-      setValue(`medlemskapsperioder[1].fomDato`, Utils.dato.plussEnDag(tomDato));
-    }
-  };
 
   const handleSlett = (index: number) => {
     if (!formValues?.medlemskapsperioder) return;
@@ -213,15 +177,9 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const handleLeggTil = () => {
     if (!antallMedlemskapsperioder) return;
 
-    const nyPeriodeFomDato =
-      antallMedlemskapsperioder > 0
-        ? Utils.dato.plussEnDag(formValues.medlemskapsperioder[antallMedlemskapsperioder - 1].tomDato)
-        : Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
-
     const nyMedlemskapsperiode = {
       id: Utils._uuid(),
       ny: true,
-      fomDato: nyPeriodeFomDato,
     };
     setValue(`medlemskapsperioder[${antallMedlemskapsperioder}]`, nyMedlemskapsperiode);
   };
@@ -233,20 +191,15 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const visLeggTilNyPeriode =
     !ingenMedlemskapsperioder &&
-    !formValues.medlemskapsperioder.some((periode: MedlemskapsperiodeProp) => Utils._isEmpty(periode.tomDato));
+    !formValues.medlemskapsperioder.some(
+      (periode: MedlemskapsperiodeProp) =>
+        Utils._isEmpty(periode.fomDato) ||
+        Utils._isEmpty(periode.tomDato) ||
+        Utils._isEmpty(periode.trygdedekning) ||
+        Utils._isEmpty(periode.innvilgelsesResultat)
+    );
 
-  const visIkkeStottetIMelosys =
-    !ingenMedlemskapsperioder &&
-    (formValues.medlemskapsperioder.every(
-      (periode: MedlemskapsperiodeProp) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT
-    ) ||
-      formValues.medlemskapsperioder.some(
-        (periode: MedlemskapsperiodeProp) =>
-          !erPeriodeFørMottaksdato(periode) && periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT
-      ));
-
-  const ingenSluttdato =
-    !ingenMedlemskapsperioder && Utils._isEmpty(formValues.medlemskapsperioder[antallMedlemskapsperioder - 1].tomDato);
+  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, mottaksdato);
 
   return (
     <div className="vurderingPerioder">
@@ -278,8 +231,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         medlemskapsperioder={formValues.medlemskapsperioder}
         handleSlett={handleSlett}
         redigerbart={redigerbart}
-        erPeriodeFoerSoknadMottatDato={erPeriodeFørMottaksdato}
-        handleEndreTomDato={handleEndreTomDato}
       />
 
       {visLeggTilNyPeriode && (
@@ -290,26 +241,13 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         </div>
       )}
 
-      {visIkkeStottetIMelosys && (
-        <Nav.AlertStripeInfo className="infomelding">
-          Søknaden kan foreløpig ikke behandles i Melosys. Avslutt saken som bortfalt.
-        </Nav.AlertStripeInfo>
-      )}
-
-      {ingenMedlemskapsperioder && (
-        <Nav.AlertStripeAdvarsel className="infomelding">
-          Du må legge inn minst én periode før du kan fortsette.
-        </Nav.AlertStripeAdvarsel>
-      )}
-
-      {ingenSluttdato && (
-        <Nav.AlertStripeInfo className="infomelding">
-          Du må oppgi sluttdato for å kunne angi resultat. Dette blir sluttdatoen på vedtaket.
-        </Nav.AlertStripeInfo>
-      )}
+      <Feilmelding type={aktivFeilmeldingType} />
 
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: handleBekreft, disabled: !redigerbart || !formIsValid }}
+        bekreftKnappProps={{
+          onClick: handleBekreft,
+          disabled: !redigerbart || !formIsValid || !!aktivFeilmeldingType,
+        }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>

@@ -20,28 +20,17 @@ export const PeriodeElement = ({
   medlemskapsperioder,
   control,
   handleSlett,
-  erPeriodeFoerSoknadMottatDato,
-  handleEndreTomDato,
 }: PeriodeElementProps) => {
-  const skalDelvisInnvilgetVises =
-    erPeriodeFoerSoknadMottatDato(medlemskapsperioder[index]) &&
-    medlemskapsperioder[index].trygdedekning === MKV.Koder.trygdedekninger.PENSJONSDEL;
-
-  const kanSlettePeriode = redigerbart && index === medlemskapsperioder.length - 1 && medlemskapsperioder.length !== 1;
+  const kanSlettePeriode = redigerbart && medlemskapsperioder.length !== 1;
 
   return (
     <>
       <Nav.Row>
         <Nav.Column xs="2">
-          <Forms.Datovelger control={control} name={`medlemskapsperioder[${index}].fomDato`} disabled />
+          <Forms.Datovelger control={control} name={`medlemskapsperioder[${index}].fomDato`} disabled={!redigerbart} />
         </Nav.Column>
         <Nav.Column xs="2">
-          <Forms.Datovelger
-            control={control}
-            name={`medlemskapsperioder[${index}].tomDato`}
-            disabled={!redigerbart}
-            onChange={(dato) => handleEndreTomDato(dato, index)}
-          />
+          <Forms.Datovelger control={control} name={`medlemskapsperioder[${index}].tomDato`} disabled={!redigerbart} />
         </Nav.Column>
         <Nav.Column xs="4">
           <Forms.Select
@@ -65,9 +54,7 @@ export const PeriodeElement = ({
             emptyFieldDisabled={!!medlemskapsperioder[index].innvilgelsesResultat}
           >
             {innvilgelsesResultater
-              .filter((item: KTObject) =>
-                skalDelvisInnvilgetVises ? true : item.kode !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET
-              )
+              .filter((item: KTObject) => item.kode !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET)
               .map((item: KTObject) => (
                 <option key={item.kode} value={item.kode}>
                   {item.term}
