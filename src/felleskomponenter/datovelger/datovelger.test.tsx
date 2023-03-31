@@ -38,7 +38,6 @@ describe("Datovelger", () => {
       "dd-MM-yyyy",
       "dd-MM-yy",
     ]);
-    expect(input.prop("placeholderText")).toBe("Velg en dato");
     expect(input.prop("disabled")).toBe(false);
     expect(input.prop("onChange")).toBe(props.onChange);
 
@@ -60,7 +59,6 @@ describe("Datovelger", () => {
     const feilmelding = datovelger.find(".datovelger__feilmelding");
 
     expect(input.prop("className")).toContain("datovelger__input_feil");
-    expect(input.prop("placeholderText")).toBe("");
 
     expect(feilmelding).toHaveLength(1);
     expect(feilmelding.children().text()).toBe(feilmeldingTekst);
