@@ -116,10 +116,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           return harVilkår && valgtBegrunnelseForVilkår;
         }
 
-        const maksLengdeTillatt = 3000;
         const pTagsLengde = 7;
+        const maksLengdeTillatt = 3000 + pTagsLengde;
         const begrunnelseFritekstErForLang =
-          (valgtBegrunnelseForVilkår?.begrunnelseFritekst?.length ?? 0) >= maksLengdeTillatt + pTagsLengde;
+          (valgtBegrunnelseForVilkår?.begrunnelseFritekst?.length ?? 0) >= maksLengdeTillatt;
 
         return (
           harVilkår &&
