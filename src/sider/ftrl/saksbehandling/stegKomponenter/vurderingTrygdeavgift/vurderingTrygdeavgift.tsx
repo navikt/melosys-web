@@ -101,6 +101,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
         </Nav.Hovedknapp>
       )}
 
+      {!skalBeregneForeløpigTrygdeavgift && formIsValid && (
+        <Nav.AlertStripeInfo className="infomelding">Trygdeavgift skal ikke betales til NAV</Nav.AlertStripeInfo>
+      )}
+
       <Mui.StegKnapper
         bekreftKnappProps={{ onClick: bekreft, disabled: !redigerbart || !formIsValid }} // TODO: må også sjekke at saksbehandler har beregnet dersom det er relevant
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
