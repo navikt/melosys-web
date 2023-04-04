@@ -27,6 +27,7 @@ import {
   Select,
   SelectProps,
   Input,
+  InputProps,
   Textarea,
 } from "./skjema";
 import * as Typo from "./typografi";
@@ -47,6 +48,7 @@ export {
   Select,
   SelectProps,
   Input,
+  InputProps,
   Textarea,
   Ekspanderbartpanel,
   Panel,

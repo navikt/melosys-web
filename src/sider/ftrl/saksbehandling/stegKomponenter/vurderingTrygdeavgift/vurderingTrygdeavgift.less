@@ -1,22 +1,6 @@
+@import (reference) "~nav-frontend-core/less/_variabler";
+
 .vurderingTrygdeavgift {
-  .column {
-    float: left;
-    min-height: 1px;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-  .extra_left_margin {
-    margin-left: 1rem;
-  }
-  .sub_undertittel {
-    font-size: 18px;
-    margin-left: 0.5rem;
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-  }
-  &__overstrek {
-    border-top: 1px solid #b7b1a9;
-  }
   .undertittel {
     margin-bottom: 1.5rem;
   }
@@ -25,56 +9,41 @@
     vertical-align: bottom;
     margin-left: 0.75rem;
   }
-  .beregn_knapp {
-    text-transform: none;
-    padding-right: 1rem;
-    padding-left: 1.25rem;
-    margin-top: 30px;
-    margin-bottom: 1.75rem;
-    .beregn_ikon {
-      width: auto;
-      height: auto;
-      fill: none;
+
+  .inntektsrader {
+    padding: 0 1rem 1rem;
+    margin-top: 2rem;
+    background: @navLysGra;
+    position: relative;
+
+    &__legend {
+      margin-left: -1rem;
+      margin-top: -2rem;
       position: absolute;
-      left: 1rem;
-    }
-  }
-  .knapp:disabled,
-  .knapp--disabled {
-    background-color: #ffffff;
-    border-color: #78706a;
-    color: #78706a;
-  }
-  .periode_tabell-wrapper {
-    overflow-x: auto;
-  }
-  .periode_tabell {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 1em 0;
-    font-family: "Source Sans Pro", Arial, sans-serif;
-
-    th {
-      text-align: left;
-      padding: 0.2em 0.5em;
-      color: #78706a;
+      font-size: 18px;
     }
 
-    .border_top {
-      border-top: 1px solid #d8d7d6;
+    &__overskriftrad {
+      margin-bottom: 0.5rem;
     }
 
-    td {
-      padding: 0.5em 0.5em;
+    .radioknapp_vertikal {
+      float: left;
+      min-height: 1px;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      margin-top: 0.5rem;
     }
-  }
-  .stor_margin_bottom {
-    margin-bottom: 2rem;
-  }
-  .liten_margin_bottom {
-    margin-bottom: 0.5rem;
-  }
-  .ja_nei {
-    margin-left: 1rem;
+
+    .slett {
+      margin-top: 0.5rem;
+    }
+
+    .skillestrek {
+      border-top: 1px solid #d8d8d8;
+      padding-top: 0.5rem;
+      margin-left: 0.25rem;
+      margin-right: 0.25rem;
+    }
   }
 }

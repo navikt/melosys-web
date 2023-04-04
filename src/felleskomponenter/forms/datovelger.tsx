@@ -6,8 +6,8 @@ import * as Nav from "../../navFrontend";
 
 import PlainDatovelger from "../datovelger";
 
-import { RegisterHookFormProps } from "./reacthookProps";
-import { getErrorMessage } from "./mapFeilmelding";
+import { RegisterHookFormProps } from "./support/reacthookProps";
+import { getErrorMessage } from "./support/mapFeilmelding";
 
 interface DatovelgerComponentProps {
   label?: ReactNode;

@@ -2,8 +2,8 @@ import React, { ReactElement } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import * as Nav from "../../navFrontend";
 
-import { RegisterHookFormProps } from "./reacthookProps";
-import { getErrorMessage } from "./mapFeilmelding";
+import { RegisterHookFormProps } from "./support/reacthookProps";
+import { getErrorMessage } from "./support/mapFeilmelding";
 
 interface SelectComponentProps extends Nav.SelectProps {
   label?: string | ReactElement;

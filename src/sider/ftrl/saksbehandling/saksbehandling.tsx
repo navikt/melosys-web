@@ -36,7 +36,7 @@ import { vilkarOperations } from "../../../ducks/vilkar";
 import { menypanelOperations } from "../../../ducks/menypanel";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
-import { alleSteg } from "./initialStegArray";
+import { alleSteg, alleStegGammel } from "./initialStegArray";
 import "./saksbehandling.css";
 
 const mapStateToProps = (state: RootState) => ({
@@ -131,6 +131,7 @@ const Saksbehandling = ({
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+  const trygdeavgiftstegToggle = useFeatureToggle("melosys.ftrl.trygdeavgiftsteget");
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -204,7 +205,8 @@ const Saksbehandling = ({
   const mottatteOpplysningerErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(mottatteOpplysninger).length === 0
   );
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
+  const visStegVelger =
+    !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart && trygdeavgiftstegToggle !== "fetching";
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
@@ -220,7 +222,9 @@ const Saksbehandling = ({
                   <>
                     {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
                     {visAvslaattSoknad && <AvslaattSoknad />}
-                    {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
+                    {visStegVelger && (
+                      <EnkelStegvelger alleSteg={trygdeavgiftstegToggle === "enabled" ? alleSteg : alleStegGammel} />
+                    )}
                   </>
                 ) : (
                   <VirksomhetMelding />
