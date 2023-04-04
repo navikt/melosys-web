@@ -12,9 +12,9 @@ import * as Ikoner from "../../../../../resources/images";
 import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 import { BOOLSK_STRING } from "../../../../../constants";
 import { FieldArrayProps, FormValuesProps, Inntekstsrad } from "./types";
+import { bruttoInntektKreves } from "./vurderingTrygdeavgiftSchema";
 
-const { ARBEIDSINNTEKT_FRA_NORGE, NÆRINGSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR, FN_SKATTEFRITAK } =
-  MKV.Koder.inntektskildetype;
+const { ARBEIDSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR } = MKV.Koder.inntektskildetype;
 
 interface InntektsraderProps {
   formValues: FormValuesProps;
@@ -77,10 +77,11 @@ export const Inntektsrader = ({
       {fields.map((field, index) => {
         const visArbAvgBetales = !Utils._isEmpty(field.inntektskilde);
         const visBruttoInntekt = Boolean(field.arbAvgBetales);
-        const skalFylleInnBruttoInntekt =
-          !erSkattepliktig ||
-          [NÆRINGSINNTEKT_FRA_NORGE, FN_SKATTEFRITAK].includes(field.inntektskilde) ||
-          (field.inntektskilde === INNTEKT_FRA_UTLANDET && field.arbAvgBetales === BOOLSK_STRING.USANN);
+        const skalFylleInnBruttoInntekt = bruttoInntektKreves(
+          formValues.skattepliktig,
+          field.inntektskilde,
+          field.arbAvgBetales
+        );
 
         return (
           <Nav.Row key={field.id}>

@@ -6,12 +6,13 @@ import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
+import * as Utils from "../../../../../utils";
 
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { BOOLSK_STRING } from "../../../../../constants";
 
 import { Inntektsrader } from "./inntektsrader";
-import { FieldArrayProps, FormValuesProps } from "./types";
+import { FieldArrayProps, FormValuesProps, Inntekstsrad } from "./types";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
 
@@ -46,6 +47,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
   const formValues = watch();
 
   if (!aktivtSteg) return null;
+
+  const skalBeregneForeløpigTrygdeavgift = formValues.inntektsrader.some(
+    (rad: Inntekstsrad) => !Utils._isEmpty(rad.bruttoInntekt)
+  );
 
   return (
     <div className="vurderingTrygdeavgift">
@@ -85,8 +90,19 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
         />
       )}
 
+      {skalBeregneForeløpigTrygdeavgift && (
+        <Nav.Hovedknapp
+          className="beregnKnapp"
+          disabled={!redigerbart || !formIsValid}
+          onClick={() => console.log("Beregn foreløpig trygdeavgift")}
+          mini
+        >
+          Beregn foreløpig trygdeavgift
+        </Nav.Hovedknapp>
+      )}
+
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: bekreft, disabled: !redigerbart || !formIsValid }}
+        bekreftKnappProps={{ onClick: bekreft, disabled: !redigerbart || !formIsValid }} // TODO: må også sjekke at saksbehandler har beregnet dersom det er relevant
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
