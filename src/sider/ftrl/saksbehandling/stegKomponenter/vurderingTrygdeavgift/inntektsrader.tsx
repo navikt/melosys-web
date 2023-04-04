@@ -87,7 +87,7 @@ export const Inntektsrader = ({
             <Nav.Column xs="5">
               <Forms.Select
                 label=""
-                name={`inntektsrader.${index}.inntektskilde` as const}
+                name={`inntektsrader.${index}.inntektskilde`}
                 control={control}
                 disabled={!redigerbart}
                 emptyFieldDisabled={visArbAvgBetales}
@@ -108,7 +108,7 @@ export const Inntektsrader = ({
                 <>
                   <Forms.Radio
                     label="Ja"
-                    name={`inntektsrader.${index}.arbAvgBetales` as const}
+                    name={`inntektsrader.${index}.arbAvgBetales`}
                     control={control}
                     value={BOOLSK_STRING.SANN}
                     disabled={!redigerbart || settesDefaultArbAvgBetales(field.inntektskilde)}
@@ -117,7 +117,7 @@ export const Inntektsrader = ({
                   />
                   <Forms.Radio
                     label="Nei"
-                    name={`inntektsrader.${index}.arbAvgBetales` as const}
+                    name={`inntektsrader.${index}.arbAvgBetales`}
                     control={control}
                     value={BOOLSK_STRING.USANN}
                     disabled={!redigerbart || settesDefaultArbAvgBetales(field.inntektskilde)}
@@ -134,7 +134,7 @@ export const Inntektsrader = ({
                   {skalFylleInnBruttoInntekt ? (
                     <Forms.Input
                       label=""
-                      name={`inntektsrader.${index}.bruttoInntekt` as const}
+                      name={`inntektsrader.${index}.bruttoInntekt`}
                       control={control}
                       disabled={!redigerbart}
                     />
