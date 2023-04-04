@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FieldValues, useFieldArray, useForm } from "react-hook-form";
+import { FieldValue, FieldValues, useFieldArray, useForm } from "react-hook-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../melosyskodeverk";
@@ -17,7 +17,8 @@ import { BOOLSK_STRING } from "../../../../../constants";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
 
-const { MISJONÆR } = MKV.Koder.inntektskildetype;
+const { ARBEIDSINNTEKT_FRA_NORGE, NÆRINGSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR, FN_SKATTEFRITAK } =
+  MKV.Koder.inntektskildetype;
 
 interface Props {
   bekreft: () => void;
@@ -26,13 +27,22 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
+interface Inntekstsrad {
+  inntektskilde?: string;
+  arbAvgBetales?: string;
+  bruttoInntekt?: string;
+}
+
+interface FieldArrayProps {
+  inntektsrader: Inntekstsrad[];
+}
+
+type FormValuesProps = FieldValues & {
+  skattepliktig?: string;
+} & FieldArrayProps;
+
 export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) => {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
-  const defaultRad = {
-    inntektskilde: "",
-    arbeidsavgiftBetales: undefined,
-    bruttoInntekt: undefined,
-  };
   const {
     control,
     watch,
@@ -42,13 +52,41 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
     mode: "onChange",
     defaultValues: {
       skattepliktig: undefined,
-      inntektsrader: [defaultRad],
-    } as FieldValues,
+      inntektsrader: [{}],
+    } as FieldValue<FormValuesProps>,
   });
-  const { fields, append, remove } = useFieldArray({ control, name: "inntektsrader" });
+  const {
+    fields,
+    append,
+    remove,
+    update,
+    replace: resetInntektsrader,
+  } = useFieldArray<FieldArrayProps, "inntektsrader", "id">({ control, name: "inntektsrader" });
   const formValues = watch();
 
   if (!aktivtSteg) return null;
+
+  const erSkattepliktig = formValues?.skattepliktig === BOOLSK_STRING.SANN;
+
+  const visArbAvgBetales = (inntektsrad: Inntekstsrad) => !Utils._isEmpty(inntektsrad.inntektskilde);
+  const visBruttoInntekt = (inntektsrad: Inntekstsrad) => Boolean(inntektsrad.arbAvgBetales);
+
+  const settesDefaultArbAvgBetales = (inntektskilde?: string) => inntektskilde !== INNTEKT_FRA_UTLANDET;
+  const skalFylleInnBruttoInntekt = (inntektsrad: Inntekstsrad) =>
+    !erSkattepliktig ||
+    [NÆRINGSINNTEKT_FRA_NORGE, FN_SKATTEFRITAK].includes(inntektsrad.inntektskilde) ||
+    (inntektsrad.inntektskilde === INNTEKT_FRA_UTLANDET && inntektsrad.arbAvgBetales === BOOLSK_STRING.USANN);
+
+  const handleEndreInntektskilde = (index: number, inntektskilde: string) => {
+    let defaultArbAvgBetales;
+    if (settesDefaultArbAvgBetales(inntektskilde)) {
+      defaultArbAvgBetales = inntektskilde === ARBEIDSINNTEKT_FRA_NORGE ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN;
+    }
+    update(index, { inntektskilde, arbAvgBetales: defaultArbAvgBetales });
+  };
+  const handleEndreArbAvgBetales = (index: number, arbAvgBetales: string) => {
+    update(index, { inntektskilde: formValues.inntektsrader[index].inntektskilde, arbAvgBetales });
+  };
 
   console.log(formValues);
   return (
@@ -63,6 +101,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
               control={control}
               value={BOOLSK_STRING.SANN}
               disabled={!redigerbart}
+              onChange={() => resetInntektsrader([{}])}
             />
             <Forms.Radio
               label="Nei"
@@ -70,6 +109,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
               control={control}
               value={BOOLSK_STRING.USANN}
               disabled={!redigerbart}
+              onChange={() => resetInntektsrader([{}])}
             />
           </Nav.Fieldset>
         </Nav.Column>
@@ -103,15 +143,14 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
               <Nav.Column xs="5">
                 <Forms.Select
                   label=""
-                  name={`inntektsrader.${index}.inntektskilde`}
+                  name={`inntektsrader.${index}.inntektskilde` as const}
                   control={control}
                   disabled={!redigerbart}
                   emptyFieldDisabled={!Utils._isEmpty(formValues.inntektsrader[index].inntektskilde)}
+                  onChange={(value) => handleEndreInntektskilde(index, value)}
                 >
                   {MKV.KTObjects.inntektskildetype
-                    .filter(
-                      (kt: KTObject) => !(formValues.skattepliktig === BOOLSK_STRING.SANN && kt.kode === MISJONÆR)
-                    )
+                    .filter((kt: KTObject) => !(erSkattepliktig && kt.kode === MISJONÆR))
                     .map((kt: KTObject) => (
                       <option key={kt.kode} value={kt.kode}>
                         {kt.term}
@@ -120,30 +159,44 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
                 </Forms.Select>
               </Nav.Column>
               <Nav.Column xs="3">
-                <Forms.Radio
-                  label="Ja"
-                  name={`inntektsrader.${index}.arbeidsavgiftBetales`}
-                  control={control}
-                  value={BOOLSK_STRING.SANN}
-                  disabled={!redigerbart}
-                  className="radioknapp_vertikal"
-                />
-                <Forms.Radio
-                  label="Nei"
-                  name={`inntektsrader.${index}.arbeidsavgiftBetales`}
-                  control={control}
-                  value={BOOLSK_STRING.USANN}
-                  disabled={!redigerbart}
-                  className="radioknapp_vertikal"
-                />
+                {visArbAvgBetales(field) && (
+                  <>
+                    <Forms.Radio
+                      label="Ja"
+                      name={`inntektsrader.${index}.arbAvgBetales` as const}
+                      control={control}
+                      value={BOOLSK_STRING.SANN}
+                      disabled={!redigerbart || settesDefaultArbAvgBetales(field.inntektskilde)}
+                      className="radioknapp_vertikal"
+                      onChange={(value) => handleEndreArbAvgBetales(index, value)}
+                    />
+                    <Forms.Radio
+                      label="Nei"
+                      name={`inntektsrader.${index}.arbAvgBetales` as const}
+                      control={control}
+                      value={BOOLSK_STRING.USANN}
+                      disabled={!redigerbart || settesDefaultArbAvgBetales(field.inntektskilde)}
+                      className="radioknapp_vertikal"
+                      onChange={(value) => handleEndreArbAvgBetales(index, value)}
+                    />
+                  </>
+                )}
               </Nav.Column>
               <Nav.Column xs="3">
-                <Forms.Input
-                  label=""
-                  name={`inntektsrader.${index}.bruttoInntekt`}
-                  control={control}
-                  disabled={!redigerbart}
-                />
+                {visBruttoInntekt(field) && (
+                  <>
+                    {skalFylleInnBruttoInntekt(field) ? (
+                      <Forms.Input
+                        label=""
+                        name={`inntektsrader.${index}.bruttoInntekt` as const}
+                        control={control}
+                        disabled={!redigerbart}
+                      />
+                    ) : (
+                      <p className="ikkeRelevant">Ikke relevant</p>
+                    )}
+                  </>
+                )}
               </Nav.Column>
               <Nav.Column xs="1">
                 {formValues.inntektsrader.length > 1 && (
@@ -153,7 +206,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
             </Nav.Row>
           ))}
           <Nav.Row className="skillestrek">
-            <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append(defaultRad)}>
+            <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append({})}>
               Legg til inntekt
             </Mui.Lenkeknapp>
           </Nav.Row>
