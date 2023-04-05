@@ -180,6 +180,9 @@ function dateTilIsoString(dato) {
 }
 
 function perioderOverlapper(periode1Fom, periode1Tom, periode2Fom, periode2Tom) {
+  if (!erGyldigPeriode(periode1Fom, periode1Tom)) return false;
+  if (!erGyldigPeriode(periode2Fom, periode2Tom)) return false;
+
   const intervalLeft = {
     start: norskStringTilDate(periode1Fom),
     end: norskStringTilDate(periode1Tom),
