@@ -55,12 +55,15 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
   const ikkeKravOmTidsbegrensning = [UK_ART6_5, UK_ART7_3, UK_ART8_2, USA_ART5_5, CAN_ART10, AUS_ART9_2].includes(
     bestemmelse
   );
+  const hjelpetekster = hjelpeteksterTilBestemmelse();
+
+  if (hjelpetekster.length === 0) return null;
 
   return (
     <div className="bestemmelse-hjelpetekst">
       <b>Følgende vilkår må være oppfylt</b>
       <ul>
-        {hjelpeteksterTilBestemmelse().map((hjelpetekst) => (
+        {hjelpetekster.map((hjelpetekst) => (
           <li key={hjelpetekst}>{hjelpetekst}</li>
         ))}
       </ul>

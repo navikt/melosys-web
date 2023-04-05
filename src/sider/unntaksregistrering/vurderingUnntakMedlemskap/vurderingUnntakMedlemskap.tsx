@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,7 @@ import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 import "./vurderingUnntakMedlemskap.css";
+import { getLovvalgsbestemmelser } from "../../../services/modules/lovvalgsbestemmelser";
 
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
@@ -29,9 +30,13 @@ const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_USA_5_2_G } = MKV.Koder.trygded
 interface VurderingUnntakMedlemskapProps {
   oppdaterStatus: (isValid: boolean) => void;
   tilbake: () => void;
+  aktivtSteg: boolean;
 }
 
-const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakMedlemskapProps) => {
+const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: VurderingUnntakMedlemskapProps) => {
+  const [bestemmelser, setBestemmelser] = useState<KTObject[] | undefined>(undefined);
+  const [updatePending, setUpdatePending] = useState(false);
+
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
@@ -40,6 +45,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const utfallRegistreringUnntak = useSelector(behandlingsresultatSelectors.UtfallRegistreringUnntakSelector);
+  const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
 
   const { control, watch, formState } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
@@ -53,6 +60,16 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
     } as FieldValues,
   });
   const formValues = watch();
+
+  useEffect(() => {
+    if (lovvalgsland && aktivtSteg) {
+      setUpdatePending(true);
+      getLovvalgsbestemmelser(MKV.Koder.sakstyper.TRYGDEAVTALE, sakstema, behandlingstema, lovvalgsland).then((res) => {
+        setBestemmelser(res);
+        setUpdatePending(false);
+      });
+    }
+  }, [lovvalgsland, aktivtSteg]);
 
   useEffect(() => {
     oppdaterStatus(formState.isValid);
@@ -102,28 +119,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
 
   const lagreBestemmelse = (bestemmelse: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, bestemmelse });
 
-  const gyldigeBestemmelser = () => {
-    if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) {
-      return MKV.KTObjects.lovvalgsbestemmelser.trygdeavtale[
-        `lovvalgsbestemmelser_trygdeavtale_${lovvalgsland?.toLowerCase()}`
-      ];
-    }
-    return [
-      ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
-      ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
-      ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
-      ...MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser,
-    ].filter(
-      (kt: KTObject) =>
-        ![
-          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1,
-          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ANNET,
-          MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87_8,
-          MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87A,
-        ].includes(kt.kode)
-    );
-  };
-
   const handleBekreft = async () => {
     await dispatch(lovvalgsperioderOperations.lagre());
     await Api.Saksflyt.Unntaksregistrering.registrerUnntakFraMedlemskap(behandlingID);
@@ -172,7 +167,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
                 disabled={!redigerbart}
                 onChange={lagreBestemmelse}
               >
-                {gyldigeBestemmelser()?.map((item: KTObject) => (
+                {bestemmelser?.map((item: KTObject) => (
                   <option key={item.kode} value={item.kode}>
                     {item.term}
                   </option>
@@ -215,10 +210,10 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
                 control={control}
                 label="Bestemmelse"
                 emptyFieldDisabled={!!formValues.bestemmelse}
-                disabled={!redigerbart}
+                disabled={!redigerbart || updatePending}
                 onChange={lagreBestemmelse}
               >
-                {gyldigeBestemmelser()?.map((item: KTObject) => (
+                {bestemmelser?.map((item: KTObject) => (
                   <option key={item.kode} value={item.kode}>
                     {item.term}
                   </option>
