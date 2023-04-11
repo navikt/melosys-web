@@ -1,5 +1,6 @@
 import moment from "moment";
 import momentTZ from "moment-timezone";
+import { areIntervalsOverlapping } from "date-fns";
 
 /**
  * Saksbehandlere har forskjellig måte å taste inn datoer på. Denne funksjonen forsøker å
@@ -178,6 +179,23 @@ function dateTilIsoString(dato) {
   return `${dato.getFullYear()}-${maned}-${dag}`;
 }
 
+function perioderOverlapper(periode1Fom, periode1Tom, periode2Fom, periode2Tom) {
+  if (!erGyldigPeriode(periode1Fom, periode1Tom)) return false;
+  if (!erGyldigPeriode(periode2Fom, periode2Tom)) return false;
+
+  const intervalLeft = {
+    start: norskStringTilDate(periode1Fom),
+    end: norskStringTilDate(periode1Tom),
+  };
+  const intervalRight = {
+    start: norskStringTilDate(periode2Fom),
+    end: norskStringTilDate(periode2Tom),
+  };
+  if (!intervalLeft || !intervalRight) return false;
+
+  return areIntervalsOverlapping(intervalLeft, intervalRight, { inclusive: true });
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
@@ -196,5 +214,6 @@ export {
   isoStringTilDate,
   dateTilNorskString,
   dateTilIsoString,
+  perioderOverlapper,
   MAX_AR_FREM_I_TID,
 };

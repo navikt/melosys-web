@@ -13,8 +13,6 @@ export interface PeriodeElementerProps {
   control: Control;
   medlemskapsperioder: MedlemskapsperiodeProp[];
   handleSlett: (index: number) => void;
-  erPeriodeFoerSoknadMottatDato: (medlemskapsperiode: MedlemskapsperiodeProp) => boolean;
-  handleEndreTomDato: (tomDato: string, index: number) => void;
 }
 
 export const PeriodeElementer = (props: PeriodeElementerProps) => {
