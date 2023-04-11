@@ -1,13 +1,13 @@
 import { FieldValues } from "react-hook-form";
 
-export interface Inntekstsrad {
-  inntektskilde?: string;
+export interface Inntekstskilde {
+  kildetype?: string;
   arbAvgBetales?: string;
   bruttoInntekt?: string;
 }
 
 export interface FieldArrayProps {
-  inntektsrader: Inntekstsrad[];
+  inntektskilder: Inntekstskilde[];
 }
 
 export type FormValuesProps = FieldValues & {

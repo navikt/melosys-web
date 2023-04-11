@@ -11,8 +11,8 @@ import * as Utils from "../../../../../utils";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { BOOLSK_STRING } from "../../../../../constants";
 
-import { Inntektsrader } from "./inntektsrader";
-import { FieldArrayProps, FormValuesProps, Inntekstsrad } from "./types";
+import { Inntektskilder } from "./inntektskilder";
+import { FieldArrayProps, FormValuesProps, Inntekstskilde } from "./types";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
 
@@ -34,7 +34,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
     mode: "onChange",
     defaultValues: {
       skattepliktig: undefined,
-      inntektsrader: [{}],
+      inntektskilder: [{}],
     } as FieldValue<FormValuesProps>,
   });
   const {
@@ -42,14 +42,14 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
     append,
     remove,
     update,
-    replace: resetInntektsrader,
-  } = useFieldArray<FieldArrayProps, "inntektsrader", "id">({ control, name: "inntektsrader" });
+    replace: resetInntektskilder,
+  } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
 
   if (!aktivtSteg) return null;
 
-  const skalBeregneForeløpigTrygdeavgift = formValues.inntektsrader.some(
-    (rad: Inntekstsrad) => !Utils._isEmpty(rad.bruttoInntekt)
+  const skalBeregneForeløpigTrygdeavgift = formValues.inntektskilder.some(
+    (inntekstskilde: Inntekstskilde) => !Utils._isEmpty(inntekstskilde.bruttoInntekt)
   );
 
   return (
@@ -64,7 +64,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
               control={control}
               value={BOOLSK_STRING.SANN}
               disabled={!redigerbart}
-              onChange={() => resetInntektsrader([{}])}
+              onChange={() => resetInntektskilder([{}])}
             />
             <Forms.Radio
               label="Nei"
@@ -72,14 +72,14 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
               control={control}
               value={BOOLSK_STRING.USANN}
               disabled={!redigerbart}
-              onChange={() => resetInntektsrader([{}])}
+              onChange={() => resetInntektskilder([{}])}
             />
           </Nav.Fieldset>
         </Nav.Column>
       </Nav.Row>
 
       {formValues?.skattepliktig && (
-        <Inntektsrader
+        <Inntektskilder
           formValues={formValues}
           fields={fields}
           redigerbart={redigerbart}

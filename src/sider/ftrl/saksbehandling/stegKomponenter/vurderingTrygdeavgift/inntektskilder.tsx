@@ -11,22 +11,22 @@ import * as Ikoner from "../../../../../resources/images";
 
 import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 import { BOOLSK_STRING } from "../../../../../constants";
-import { FieldArrayProps, FormValuesProps, Inntekstsrad } from "./types";
+import { FieldArrayProps, FormValuesProps, Inntekstskilde } from "./types";
 import { bruttoInntektKreves } from "./vurderingTrygdeavgiftSchema";
 
 const { ARBEIDSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR } = MKV.Koder.inntektskildetype;
 
-interface InntektsraderProps {
+interface InntektskilderProps {
   formValues: FormValuesProps;
-  fields: FieldArrayWithId<FieldArrayProps, "inntektsrader">[];
+  fields: FieldArrayWithId<FieldArrayProps, "inntektskilder">[];
   control: Control;
-  update: (index: number, inntektsrad: Inntekstsrad) => void;
+  update: (index: number, inntektskilde: Inntekstskilde) => void;
   remove: (index: number) => void;
-  append: (inntektsrad: Inntekstsrad) => void;
+  append: (inntektskilde: Inntekstskilde) => void;
   redigerbart: boolean;
 }
 
-export const Inntektsrader = ({
+export const Inntektskilder = ({
   formValues,
   fields,
   control,
@@ -34,20 +34,20 @@ export const Inntektsrader = ({
   remove,
   append,
   redigerbart,
-}: InntektsraderProps) => {
+}: InntektskilderProps) => {
   const erSkattepliktig = formValues?.skattepliktig === BOOLSK_STRING.SANN;
-  const settesDefaultArbAvgBetales = (inntektskilde?: string) => inntektskilde !== INNTEKT_FRA_UTLANDET;
+  const settesDefaultArbAvgBetales = (kildetype?: string) => kildetype !== INNTEKT_FRA_UTLANDET;
 
-  const handleEndreInntektskilde = (index: number, inntektskilde: string) => {
+  const handleEndreKildetype = (index: number, kildetype: string) => {
     let defaultArbAvgBetales;
-    if (settesDefaultArbAvgBetales(inntektskilde)) {
-      defaultArbAvgBetales = inntektskilde === ARBEIDSINNTEKT_FRA_NORGE ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN;
+    if (settesDefaultArbAvgBetales(kildetype)) {
+      defaultArbAvgBetales = kildetype === ARBEIDSINNTEKT_FRA_NORGE ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN;
     }
-    update(index, { inntektskilde, arbAvgBetales: defaultArbAvgBetales });
+    update(index, { kildetype, arbAvgBetales: defaultArbAvgBetales });
   };
 
   const handleEndreArbAvgBetales = (index: number, arbAvgBetales: string) => {
-    update(index, { inntektskilde: formValues.inntektsrader[index].inntektskilde, arbAvgBetales });
+    update(index, { kildetype: formValues.inntektskilder[index].kildetype, arbAvgBetales });
   };
 
   return (
@@ -55,14 +55,14 @@ export const Inntektsrader = ({
       legend={
         <LabelMedHjelpetekst
           label="Oppgi informasjon om brukers inntekt"
-          className="inntektsrader__legend"
+          className="inntektskilder__legend"
           hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
           hjelpetekstClassName="hjelpetekst"
         />
       }
-      className="inntektsrader"
+      className="inntektskilder"
     >
-      <Nav.Row className="inntektsrader__overskriftrad">
+      <Nav.Row className="inntektskilder__overskriftrad">
         <Nav.Column xs="5">
           <Nav.Typo.Element>Type inntekt</Nav.Typo.Element>
         </Nav.Column>
@@ -75,11 +75,11 @@ export const Inntektsrader = ({
       </Nav.Row>
 
       {fields.map((field, index) => {
-        const visArbAvgBetales = !Utils._isEmpty(field.inntektskilde);
+        const visArbAvgBetales = !Utils._isEmpty(field.kildetype);
         const visBruttoInntekt = Boolean(field.arbAvgBetales);
         const skalFylleInnBruttoInntekt = bruttoInntektKreves(
           formValues.skattepliktig,
-          field.inntektskilde,
+          field.kildetype,
           field.arbAvgBetales
         );
 
@@ -88,11 +88,11 @@ export const Inntektsrader = ({
             <Nav.Column xs="5">
               <Forms.Select
                 label=""
-                name={`inntektsrader.${index}.inntektskilde`}
+                name={`inntektskilder.${index}.kildetype`}
                 control={control}
                 disabled={!redigerbart}
                 emptyFieldDisabled={visArbAvgBetales}
-                onChange={(value) => handleEndreInntektskilde(index, value)}
+                onChange={(value) => handleEndreKildetype(index, value)}
               >
                 {MKV.KTObjects.inntektskildetype
                   .filter((kt: KTObject) => !(erSkattepliktig && kt.kode === MISJONÆR))
@@ -109,19 +109,19 @@ export const Inntektsrader = ({
                 <>
                   <Forms.Radio
                     label="Ja"
-                    name={`inntektsrader.${index}.arbAvgBetales`}
+                    name={`inntektskilder.${index}.arbAvgBetales`}
                     control={control}
                     value={BOOLSK_STRING.SANN}
-                    disabled={!redigerbart || settesDefaultArbAvgBetales(field.inntektskilde)}
+                    disabled={!redigerbart || settesDefaultArbAvgBetales(field.kildetype)}
                     className="radioknapp_vertikal"
                     onChange={(value) => handleEndreArbAvgBetales(index, value)}
                   />
                   <Forms.Radio
                     label="Nei"
-                    name={`inntektsrader.${index}.arbAvgBetales`}
+                    name={`inntektskilder.${index}.arbAvgBetales`}
                     control={control}
                     value={BOOLSK_STRING.USANN}
-                    disabled={!redigerbart || settesDefaultArbAvgBetales(field.inntektskilde)}
+                    disabled={!redigerbart || settesDefaultArbAvgBetales(field.kildetype)}
                     className="radioknapp_vertikal"
                     onChange={(value) => handleEndreArbAvgBetales(index, value)}
                   />
@@ -135,7 +135,7 @@ export const Inntektsrader = ({
                   {skalFylleInnBruttoInntekt ? (
                     <Forms.Input
                       label=""
-                      name={`inntektsrader.${index}.bruttoInntekt`}
+                      name={`inntektskilder.${index}.bruttoInntekt`}
                       control={control}
                       disabled={!redigerbart}
                     />
@@ -147,7 +147,7 @@ export const Inntektsrader = ({
             </Nav.Column>
 
             <Nav.Column xs="1">
-              {formValues.inntektsrader.length > 1 && (
+              {formValues.inntektskilder.length > 1 && (
                 <Mui.Lenkeknapp ikon={Ikoner.Bin} onClick={() => remove(index)} className="slett" />
               )}
             </Nav.Column>
