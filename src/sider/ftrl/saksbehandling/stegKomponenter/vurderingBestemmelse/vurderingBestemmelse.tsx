@@ -18,8 +18,8 @@ import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { BOOLSK_STRING } from "../../../../../constants";
 import { useAsyncCallbackState } from "../../../../../hooks";
 
+import { FlytFinnesIkke } from "../felles/flytFinnesIkke";
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
-import { FlytFinnesIkke } from "./komponenter/flytFinnesIkke";
 import "./vurderingBestemmelse.css";
 
 const { SANN, USANN } = BOOLSK_STRING;

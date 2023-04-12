@@ -10,8 +10,8 @@ import * as Utils from "../../../../../../utils";
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
 import { BOOLSK_STRING } from "../../../../../../constants";
+import { FlytFinnesIkke } from "../../felles/flytFinnesIkke";
 import { Begrunnelse } from "../vurderingBestemmelse";
-import { FlytFinnesIkke } from "./flytFinnesIkke";
 
 const { SANN, USANN } = BOOLSK_STRING;
 const hjelpetekster = new Map([

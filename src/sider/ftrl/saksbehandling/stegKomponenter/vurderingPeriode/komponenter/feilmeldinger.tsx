@@ -2,15 +2,10 @@ import React from "react";
 import MKV from "../../../../../../melosyskodeverk";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
+import { FlytFinnesIkke } from "../../felles/flytFinnesIkke";
 import { MedlemskapsperiodeProp, sorterPerioder } from "../vurderingPerioder";
 
 const { AVSLAATT, INNVILGET } = MKV.Koder.innvilgelsesResultat;
-
-const IkkeStottetIMelosys = (
-  <Nav.AlertStripeInfo className="infomelding">
-    Søknaden kan foreløpig ikke behandles i Melosys. Avslutt saken som bortfalt.
-  </Nav.AlertStripeInfo>
-);
 
 const IngenMedlemskapsperioder = (
   <Nav.AlertStripeAdvarsel className="infomelding">
@@ -115,7 +110,7 @@ export const Feilmelding = ({ type }: { type?: string }) => {
     case TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER:
       return IngenMedlemskapsperioder;
     case TypeFeilmelding.IKKE_STØTTET_I_MELOSYS:
-      return IkkeStottetIMelosys;
+      return <FlytFinnesIkke />;
     case TypeFeilmelding.INGEN_SLUTTDATO:
       return IngenSluttdato;
     case TypeFeilmelding.OVERLAPPENDE_PERIODER:
