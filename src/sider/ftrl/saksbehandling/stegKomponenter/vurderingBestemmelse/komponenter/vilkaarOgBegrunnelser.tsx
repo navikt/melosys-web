@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, Fragment, useCallback } from "react";
+import React, { ChangeEventHandler, Fragment } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../../melosyskodeverk";
@@ -47,14 +47,6 @@ export const VilkaarOgBegrunnelser = ({
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
   const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
   const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}_begrunnelser`);
-
-  const debouncedHandleEndreBegrunnelseFritekst = useCallback(
-    Utils._debounce(
-      (vilkår_begrunnelser, fritekst) => handleEndreBegrunnelseFritekst(vilkår_begrunnelser, fritekst),
-      750
-    ),
-    []
-  );
 
   const visBegrunnelseFritekst = KV.termFraNestedKTObject(
     begrunnelseKodeverk,
@@ -135,9 +127,7 @@ export const VilkaarOgBegrunnelser = ({
               <Nav.Column xs="12">
                 <HtmlEditor
                   value={valgtBegrunnelseForVilkår?.begrunnelseFritekst || ""}
-                  onChange={(fritekst: string) =>
-                    debouncedHandleEndreBegrunnelseFritekst(`${vilkår}_begrunnelser`, fritekst)
-                  }
+                  onChange={(fritekst: string) => handleEndreBegrunnelseFritekst(`${vilkår}_begrunnelser`, fritekst)}
                   placeholder="Vennligst spesifiser..."
                   spellCheck
                   readOnly={!redigerbart}

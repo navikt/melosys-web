@@ -4,7 +4,7 @@ import { API_BASE_URL, KONTROLL } from "../api-constants";
 export type FerdigbehandlingKontrollData = {
   behandlingID: number;
   vedtakstype: string | null;
-  behandlingsresultattype: string;
+  behandlingsresultattype?: string;
   kontrollerSomSkalIgnoreres?: string[];
   skalRegisteropplysningerOppdateres: boolean;
 };
