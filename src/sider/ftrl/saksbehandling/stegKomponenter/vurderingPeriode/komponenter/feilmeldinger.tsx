@@ -32,24 +32,14 @@ const IngenSluttdato = (
   </Nav.AlertStripeInfo>
 );
 
-const erIkkeStøtteIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[], mottaksdato: string | undefined) => {
-  const erPeriodeTidligereEnnMottaksdato = (periode: MedlemskapsperiodeProp) =>
-    Utils.dato.erGyldigPeriode(periode.fomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato)) &&
-    Utils.dato.erGyldigPeriode(periode.tomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato));
-
-  return (
-    medlemskapsperioder.every((periode) => periode.innvilgelsesResultat === AVSLAATT) ||
-    medlemskapsperioder.some(
-      (periode) => !erPeriodeTidligereEnnMottaksdato(periode) && periode.innvilgelsesResultat === AVSLAATT
-    )
-  );
-};
+const erIkkeStøttetIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>
+  medlemskapsperioder.every((periode) => periode.innvilgelsesResultat === AVSLAATT);
 
 const perioderErLike = (periode1: MedlemskapsperiodeProp, periode2: MedlemskapsperiodeProp) =>
   periode1.fomDato === periode2.fomDato && periode1.tomDato === periode2.tomDato;
 
 const finnesOverlappendePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
-  const sortertePerioder = medlemskapsperioder.sort(sorterPerioder);
+  const sortertePerioder = [...medlemskapsperioder].sort(sorterPerioder);
 
   if (!sortertePerioder?.length || sortertePerioder.length < 2) return false;
 
@@ -68,7 +58,7 @@ const finnesOverlappendePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[
 };
 
 const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
-  const innvilgedePerioder = medlemskapsperioder
+  const innvilgedePerioder = [...medlemskapsperioder]
     ?.filter((periode) => periode.innvilgelsesResultat === INNVILGET)
     .sort(sorterPerioder);
 
@@ -94,16 +84,13 @@ enum TypeFeilmelding {
   OPPHOLD_I_PERIODENE = "OPPHOLD_I_PERIODENE",
 }
 
-export function finnAktivFeilmelding(
-  medlemskapsperioder: MedlemskapsperiodeProp[],
-  mottaksdato?: string
-): string | undefined {
+export function finnAktivFeilmelding(medlemskapsperioder: MedlemskapsperiodeProp[]): string | undefined {
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
   if (ingenMedlemskapsperioder) {
     return TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER;
   }
 
-  if (erIkkeStøtteIMelosys(medlemskapsperioder, mottaksdato)) {
+  if (erIkkeStøttetIMelosys(medlemskapsperioder)) {
     return TypeFeilmelding.IKKE_STØTTET_I_MELOSYS;
   }
 

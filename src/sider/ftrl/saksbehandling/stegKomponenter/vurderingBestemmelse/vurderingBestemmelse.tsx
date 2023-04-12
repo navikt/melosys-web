@@ -17,10 +17,10 @@ import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 
 import { BOOLSK_STRING } from "../../../../../constants";
 import { useAsyncCallbackState } from "../../../../../hooks";
+
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import { FlytFinnesIkke } from "./komponenter/flytFinnesIkke";
 import "./vurderingBestemmelse.css";
-import { harStrengInnhold } from "../../../../../utils/streng";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export interface Begrunnelse {
@@ -102,28 +102,28 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     const alleVilkårHarSvarJaOgValgtBegrunnelse = valgtBestemmelseMedVilkårOgBegrunnelser?.vilkårOgBegrunnelser.every(
       (element) => {
         const harVilkår = valgteVilkår.get(element.vilkår) === SANN;
+
+        if (Utils._isEmpty(element.muligeBegrunnelser)) {
+          return harVilkår;
+        }
+
         const valgtBegrunnelseForVilkår = valgteBegrunnelser.get(`${element.vilkår}_begrunnelser`);
         const begrunnelseInneholderFritekst = KV.termFraNestedKTObject(
           begrunnelseKodeverk,
           valgtBegrunnelseForVilkår?.begrunnelseKode
         )?.includes("(fritekst)");
 
-        if (Utils._isEmpty(element.muligeBegrunnelser)) {
-          return harVilkår;
-        }
-
         if (!begrunnelseInneholderFritekst) {
           return harVilkår && valgtBegrunnelseForVilkår;
         }
 
-        const pTagsLengde = 7;
-        const maksLengdeTillatt = 3000 + pTagsLengde;
+        const maksLengdeTillatt = 3000;
         const begrunnelseFritekstErForLang =
           (valgtBegrunnelseForVilkår?.begrunnelseFritekst?.length ?? 0) >= maksLengdeTillatt;
 
         return (
           harVilkår &&
-          harStrengInnhold(valgtBegrunnelseForVilkår?.begrunnelseFritekst ?? "") &&
+          Utils.streng.harStrengInnhold(valgtBegrunnelseForVilkår?.begrunnelseFritekst) &&
           !begrunnelseFritekstErForLang
         );
       }

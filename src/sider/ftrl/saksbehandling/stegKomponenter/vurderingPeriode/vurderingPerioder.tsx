@@ -195,7 +195,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         Utils._isEmpty(periode.innvilgelsesResultat)
     );
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, mottaksdato);
+  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder);
 
   return (
     <div className="vurderingPerioder">
