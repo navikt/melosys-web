@@ -126,7 +126,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
 
   return (
     <div className="vurderingInngang">
-      <Nav.Typo.Undertittel className="undertittel">Oppgi opplysninger fra attesten</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra attesten</Nav.Typo.Innholdstittel>
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="2">

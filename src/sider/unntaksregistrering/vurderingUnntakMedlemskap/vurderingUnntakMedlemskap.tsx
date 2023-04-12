@@ -152,7 +152,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
 
   return (
     <div className="vurderingUnntakMedlemskap">
-      <Nav.Typo.Undertittel className="undertittel">Unntak medlemskap</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Unntak medlemskap</Nav.Typo.Innholdstittel>
       <Nav.Fieldset legend="Vurder unntaksperiode">
         <Forms.Radio
           name="utfallRegistreringUnntak"

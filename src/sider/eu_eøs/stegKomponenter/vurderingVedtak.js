@@ -214,7 +214,9 @@ const VurderingVedtak = ({
 
   return (
     <div className="vedtak">
-      <Nav.Typo.Undertittel>Omfattet av norsk trygdelovgivning etter {lovvalgSomTerm}</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        Omfattet av norsk trygdelovgivning etter {lovvalgSomTerm}
+      </Nav.Typo.Innholdstittel>
       <div>
         <Nav.Row className="lovvalgsperiode">
           <Nav.Column xs="6">

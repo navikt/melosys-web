@@ -318,7 +318,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   return (
     <div className="vurderingVedtak">
-      <Nav.Typo.Undertittel className="undertittel">Frivillig medlemskap etter paragraf 2.8</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        Frivillig medlemskap etter paragraf 2.8
+      </Nav.Typo.Innholdstittel>
 
       <MottakerTabell
         rader={mapPeriodeRader(medlemskapsperioder)}

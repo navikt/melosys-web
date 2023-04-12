@@ -71,7 +71,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
 
   return (
     <Fragment>
-      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
       {redigerbart && (
         <>
           <Nav.Row className="sendA012">

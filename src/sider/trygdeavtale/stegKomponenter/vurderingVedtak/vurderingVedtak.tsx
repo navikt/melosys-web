@@ -357,9 +357,9 @@ const VurderingVedtak = ({
 
   return (
     <div className={vurderingVedtakCls.block}>
-      <Nav.Typo.Undertittel className={vurderingVedtakCls.element("undertittel")}>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Omfattet av norsk trygdelovgivning - trygdeavtale
-      </Nav.Typo.Undertittel>
+      </Nav.Typo.Innholdstittel>
 
       <Nav.Row className={vurderingVedtakCls.element("infolinje")}>
         <Nav.Column xs="4">

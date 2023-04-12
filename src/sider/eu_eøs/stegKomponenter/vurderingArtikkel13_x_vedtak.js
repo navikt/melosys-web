@@ -159,7 +159,7 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingArtikkel13_x_vedtak">
-      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
       {redigerbart && (
         <Fragment>
           <Nav.Typo.Element className="undertittel">Søknadsperiode</Nav.Typo.Element>
