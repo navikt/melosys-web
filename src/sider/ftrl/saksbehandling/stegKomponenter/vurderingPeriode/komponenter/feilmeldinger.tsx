@@ -8,35 +8,37 @@ import { MedlemskapsperiodeProp } from "../vurderingPerioder";
 const { AVSLAATT, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
 const IngenMedlemskapsperioder = (
-  <Nav.AlertStripeAdvarsel className="infomelding">
+  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
     Du må legge inn minst én periode før du kan fortsette.
   </Nav.AlertStripeAdvarsel>
 );
 
 const OppholdIPeriodene = (
-  <Nav.AlertStripeAdvarsel className="infomelding">Det er opphold mellom innvilgede perioder.</Nav.AlertStripeAdvarsel>
+  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
+    Det er opphold mellom innvilgede perioder.
+  </Nav.AlertStripeAdvarsel>
 );
 
 const OverlappIInnvilgedePerioder = (
-  <Nav.AlertStripeAdvarsel className="infomelding">Innvilgede perioder overlapper.</Nav.AlertStripeAdvarsel>
+  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">Innvilgede perioder overlapper.</Nav.AlertStripeAdvarsel>
 );
 
 const OverlappMenIkkeLikPeriode = (
-  <Nav.AlertStripeAdvarsel className="infomelding">
+  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
     Innvilget og avslått periode som overlapper må ha lik periode.
   </Nav.AlertStripeAdvarsel>
 );
 
 const IngenSluttdato = (
-  <Nav.AlertStripeInfo className="infomelding">
+  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
     Du må oppgi sluttdato for å kunne angi resultat. Dette blir sluttdatoen på vedtaket.
-  </Nav.AlertStripeInfo>
+  </Nav.AlertStripeAdvarsel>
 );
 
 const MåStartePåSøknadsperiodeFom = (
-  <Nav.AlertStripeInfo className="infomelding">
+  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
     Minst én periode må starte samme dato som søknadsperioden .
-  </Nav.AlertStripeInfo>
+  </Nav.AlertStripeAdvarsel>
 );
 
 const erIkkeStøttetIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>
