@@ -39,7 +39,6 @@ interface VurderingUnntakMedlemskapProps {
 
 const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: VurderingUnntakMedlemskapProps) => {
   const [bestemmelser, setBestemmelser] = useState<KTObject[] | undefined>(undefined);
-  const [updatePending, setUpdatePending] = useState(false);
 
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -78,10 +77,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   useEffect(() => {
     if (lovvalgsland && aktivtSteg) {
-      setUpdatePending(true);
       getLovvalgsbestemmelser(MKV.Koder.sakstyper.TRYGDEAVTALE, sakstema, behandlingstema, lovvalgsland).then((res) => {
         setBestemmelser(res);
-        setUpdatePending(false);
       });
     }
   }, [lovvalgsland, aktivtSteg]);
