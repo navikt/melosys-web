@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`undertittel viser et ikon 1`] = `
+<div
+  className="undertittel"
+>
+  <h3
+    className="typo-undertittel undertittel__navUndertittel"
+    id="6caa3127-11d4-435c-a7c9-78c70a5efa54"
+  >
+    <svg
+      aria-labelledby="6caa3127-11d4-435c-a7c9-78c70a5efa54"
+      className="undertittel__ikon"
+      focusable="false"
+      role="img"
+      title="Tekst - undefined"
+    >
+      line-version-paragraph-two-columns.svg
+    </svg>
+    <span
+      className="undertittel__tekst"
+    >
+      Tekst
+    </span>
+    <span />
+  </h3>
+</div>
+`;
