@@ -2,15 +2,10 @@ import React from "react";
 import MKV from "../../../../../../melosyskodeverk";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
+import { FlytFinnesIkke } from "../../felles/flytFinnesIkke";
 import { MedlemskapsperiodeProp, sorterPerioder } from "../vurderingPerioder";
 
 const { AVSLAATT, INNVILGET } = MKV.Koder.innvilgelsesResultat;
-
-const IkkeStottetIMelosys = (
-  <Nav.AlertStripeInfo className="infomelding">
-    Søknaden kan foreløpig ikke behandles i Melosys. Avslutt saken som bortfalt.
-  </Nav.AlertStripeInfo>
-);
 
 const IngenMedlemskapsperioder = (
   <Nav.AlertStripeAdvarsel className="infomelding">
@@ -22,8 +17,14 @@ const OppholdIPeriodene = (
   <Nav.AlertStripeAdvarsel className="infomelding">Det er opphold mellom innvilgede perioder.</Nav.AlertStripeAdvarsel>
 );
 
-const OverlappendePerioder = (
+const OverlappIInnvilgedePerioder = (
   <Nav.AlertStripeAdvarsel className="infomelding">Innvilgede perioder overlapper.</Nav.AlertStripeAdvarsel>
+);
+
+const OverlappMenIkkeLikPeriode = (
+  <Nav.AlertStripeAdvarsel className="infomelding">
+    Innvilget og avslått periode som overlapper må ha lik periode.
+  </Nav.AlertStripeAdvarsel>
 );
 
 const IngenSluttdato = (
@@ -32,24 +33,34 @@ const IngenSluttdato = (
   </Nav.AlertStripeInfo>
 );
 
-const erIkkeStøtteIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[], mottaksdato: string | undefined) => {
-  const erPeriodeTidligereEnnMottaksdato = (periode: MedlemskapsperiodeProp) =>
-    Utils.dato.erGyldigPeriode(periode.fomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato)) &&
-    Utils.dato.erGyldigPeriode(periode.tomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato));
-
-  return (
-    medlemskapsperioder.every((periode) => periode.innvilgelsesResultat === AVSLAATT) ||
-    medlemskapsperioder.some(
-      (periode) => !erPeriodeTidligereEnnMottaksdato(periode) && periode.innvilgelsesResultat === AVSLAATT
-    )
-  );
-};
+const erIkkeStøttetIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>
+  medlemskapsperioder.every((periode) => periode.innvilgelsesResultat === AVSLAATT);
 
 const perioderErLike = (periode1: MedlemskapsperiodeProp, periode2: MedlemskapsperiodeProp) =>
   periode1.fomDato === periode2.fomDato && periode1.tomDato === periode2.tomDato;
 
-const finnesOverlappendePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
-  const sortertePerioder = medlemskapsperioder.sort(sorterPerioder);
+const finnesOverlappIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
+  const innvilgedePerioder = [...medlemskapsperioder]
+    ?.filter((periode) => periode.innvilgelsesResultat === INNVILGET)
+    .sort(sorterPerioder);
+
+  if (!innvilgedePerioder?.length || innvilgedePerioder.length < 2) return false;
+
+  for (let i = 0; i < innvilgedePerioder.length - 1; i += 1) {
+    const periode = innvilgedePerioder[i];
+    const nestePeriode = innvilgedePerioder[i + 1];
+
+    if (Utils.dato.perioderOverlapper(periode.fomDato, periode.tomDato, nestePeriode.fomDato, nestePeriode.tomDato)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const finnesInnvilgetOgAvslåttPeriodeSomOverlapperMenIkkeHarLikPeriode = (
+  medlemskapsperioder: MedlemskapsperiodeProp[]
+) => {
+  const sortertePerioder = [...medlemskapsperioder].sort(sorterPerioder);
 
   if (!sortertePerioder?.length || sortertePerioder.length < 2) return false;
 
@@ -57,18 +68,25 @@ const finnesOverlappendePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[
     const periode = sortertePerioder[i];
     const nestePeriode = sortertePerioder[i + 1];
 
-    if (Utils.dato.perioderOverlapper(periode.fomDato, periode.tomDato, nestePeriode.fomDato, nestePeriode.tomDato)) {
-      const innvilgelsesResultater = [periode.innvilgelsesResultat, nestePeriode.innvilgelsesResultat];
-      const énAvslåttÉnInnvilget =
-        innvilgelsesResultater.includes(AVSLAATT) && innvilgelsesResultater.includes(INNVILGET);
-      return !(énAvslåttÉnInnvilget && perioderErLike(periode, nestePeriode));
+    const periodeneOverlapper = Utils.dato.perioderOverlapper(
+      periode.fomDato,
+      periode.tomDato,
+      nestePeriode.fomDato,
+      nestePeriode.tomDato
+    );
+    const innvilgelsesResultater = [periode.innvilgelsesResultat, nestePeriode.innvilgelsesResultat];
+    const énAvslåttÉnInnvilget =
+      innvilgelsesResultater.includes(AVSLAATT) && innvilgelsesResultater.includes(INNVILGET);
+
+    if (periodeneOverlapper && énAvslåttÉnInnvilget && !perioderErLike(periode, nestePeriode)) {
+      return true;
     }
   }
   return false;
 };
 
 const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
-  const innvilgedePerioder = medlemskapsperioder
+  const innvilgedePerioder = [...medlemskapsperioder]
     ?.filter((periode) => periode.innvilgelsesResultat === INNVILGET)
     .sort(sorterPerioder);
 
@@ -90,20 +108,18 @@ enum TypeFeilmelding {
   INGEN_MEDLEMSKAPSPERIODER = "INGEN_MEDLEMSKAPSPERIODER",
   IKKE_STØTTET_I_MELOSYS = "IKKE_STØTTET_I_MELOSYS",
   INGEN_SLUTTDATO = "INGEN_SLUTTDATO",
-  OVERLAPPENDE_PERIODER = "OVERLAPPENDE_PERIODER",
+  OVERLAPP_I_INNVILGEDE_PERIODER = "OVERLAPP_I_INNVILGEDE_PERIODER",
+  OVERLAPP_MEN_FORSKJELLIG_PERIODE = "OVERLAPP_MEN_FORSKJELLIG_PERIODE",
   OPPHOLD_I_PERIODENE = "OPPHOLD_I_PERIODENE",
 }
 
-export function finnAktivFeilmelding(
-  medlemskapsperioder: MedlemskapsperiodeProp[],
-  mottaksdato?: string
-): string | undefined {
+export function finnAktivFeilmelding(medlemskapsperioder: MedlemskapsperiodeProp[]): string | undefined {
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
   if (ingenMedlemskapsperioder) {
     return TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER;
   }
 
-  if (erIkkeStøtteIMelosys(medlemskapsperioder, mottaksdato)) {
+  if (erIkkeStøttetIMelosys(medlemskapsperioder)) {
     return TypeFeilmelding.IKKE_STØTTET_I_MELOSYS;
   }
 
@@ -112,8 +128,12 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.INGEN_SLUTTDATO;
   }
 
-  if (finnesOverlappendePerioder(medlemskapsperioder)) {
-    return TypeFeilmelding.OVERLAPPENDE_PERIODER;
+  if (finnesOverlappIInnvilgedePerioder(medlemskapsperioder)) {
+    return TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER;
+  }
+
+  if (finnesInnvilgetOgAvslåttPeriodeSomOverlapperMenIkkeHarLikPeriode(medlemskapsperioder)) {
+    return TypeFeilmelding.OVERLAPP_MEN_FORSKJELLIG_PERIODE;
   }
 
   if (finnesOppholdIInnvilgedePerioder(medlemskapsperioder)) {
@@ -128,11 +148,13 @@ export const Feilmelding = ({ type }: { type?: string }) => {
     case TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER:
       return IngenMedlemskapsperioder;
     case TypeFeilmelding.IKKE_STØTTET_I_MELOSYS:
-      return IkkeStottetIMelosys;
+      return <FlytFinnesIkke />;
     case TypeFeilmelding.INGEN_SLUTTDATO:
       return IngenSluttdato;
-    case TypeFeilmelding.OVERLAPPENDE_PERIODER:
-      return OverlappendePerioder;
+    case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
+      return OverlappIInnvilgedePerioder;
+    case TypeFeilmelding.OVERLAPP_MEN_FORSKJELLIG_PERIODE:
+      return OverlappMenIkkeLikPeriode;
     case TypeFeilmelding.OPPHOLD_I_PERIODENE:
       return OppholdIPeriodene;
     default:
