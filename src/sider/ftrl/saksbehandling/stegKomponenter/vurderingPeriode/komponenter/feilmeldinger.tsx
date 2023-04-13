@@ -33,8 +33,19 @@ const IngenSluttdato = (
   </Nav.AlertStripeInfo>
 );
 
+const MåStartePåSøknadsperiodeFom = (
+  <Nav.AlertStripeInfo className="infomelding">
+    Minst én periode må starte samme dato som søknadsperioden .
+  </Nav.AlertStripeInfo>
+);
+
 const erIkkeStøttetIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>
   medlemskapsperioder.every((periode) => periode.innvilgelsesResultat === AVSLAATT);
+
+const finnesPeriodeSomStarterSamtidigSomSøknadsperioden = (
+  medlemskapsperioder: MedlemskapsperiodeProp[],
+  søknadsperiodeFomDato: string
+) => medlemskapsperioder.some((periode) => periode.fomDato === Utils.dato.formatterDatoTilNorsk(søknadsperiodeFomDato));
 
 const perioderErLike = (periode1: MedlemskapsperiodeProp, periode2: MedlemskapsperiodeProp) =>
   periode1.fomDato === periode2.fomDato && periode1.tomDato === periode2.tomDato;
@@ -110,9 +121,13 @@ enum TypeFeilmelding {
   OVERLAPP_I_INNVILGEDE_PERIODER = "OVERLAPP_I_INNVILGEDE_PERIODER",
   OVERLAPP_MEN_FORSKJELLIG_PERIODE = "OVERLAPP_MEN_FORSKJELLIG_PERIODE",
   OPPHOLD_I_PERIODENE = "OPPHOLD_I_PERIODENE",
+  MÅ_STARTE_PÅ_SØKNADSFOM = "MÅ_STARTE_PÅ_SØKNADSFOM",
 }
 
-export function finnAktivFeilmelding(medlemskapsperioder: MedlemskapsperiodeProp[]): string | undefined {
+export function finnAktivFeilmelding(
+  medlemskapsperioder: MedlemskapsperiodeProp[],
+  søknadsperiodeFomDato: string
+): string | undefined {
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
   if (ingenMedlemskapsperioder) {
     return TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER;
@@ -125,6 +140,10 @@ export function finnAktivFeilmelding(medlemskapsperioder: MedlemskapsperiodeProp
   const manglerSluttdato = Utils._isEmpty(medlemskapsperioder[medlemskapsperioder.length - 1].tomDato);
   if (manglerSluttdato) {
     return TypeFeilmelding.INGEN_SLUTTDATO;
+  }
+
+  if (!finnesPeriodeSomStarterSamtidigSomSøknadsperioden(medlemskapsperioder, søknadsperiodeFomDato)) {
+    return TypeFeilmelding.MÅ_STARTE_PÅ_SØKNADSFOM;
   }
 
   if (finnesOverlappIInnvilgedePerioder(medlemskapsperioder)) {
@@ -150,6 +169,8 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return <FlytFinnesIkke />;
     case TypeFeilmelding.INGEN_SLUTTDATO:
       return IngenSluttdato;
+    case TypeFeilmelding.MÅ_STARTE_PÅ_SØKNADSFOM:
+      return MåStartePåSøknadsperiodeFom;
     case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
       return OverlappIInnvilgedePerioder;
     case TypeFeilmelding.OVERLAPP_MEN_FORSKJELLIG_PERIODE:
