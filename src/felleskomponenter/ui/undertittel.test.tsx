@@ -1,10 +1,13 @@
 import React, { ComponentProps } from "react";
 import renderer from "react-test-renderer";
 import { instance, mock } from "ts-mockito";
-
 import * as Ikoner from "../../resources/images";
 
 import Undertittel from "./undertittel";
+
+jest.mock("../../utils", () => ({
+  _uuid: () => "123",
+}));
 
 describe("undertittel", () => {
   const mockedProps = mock<ComponentProps<typeof Undertittel>>();
@@ -14,7 +17,7 @@ describe("undertittel", () => {
     props = instance(mockedProps);
   });
 
-  it("viser et ikon", () => {
+  it("snapshot test", () => {
     props.ikon = Ikoner.ParagraphTwoColumns;
     props.tekst = "Tekst";
 

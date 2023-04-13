@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`undertittel viser et ikon 1`] = `
+exports[`undertittel snapshot test 1`] = `
 <div
   className="undertittel"
 >
   <h3
     className="typo-undertittel undertittel__navUndertittel"
-    id="6caa3127-11d4-435c-a7c9-78c70a5efa54"
+    id="123"
   >
     <svg
-      aria-labelledby="6caa3127-11d4-435c-a7c9-78c70a5efa54"
+      aria-labelledby="123"
       className="undertittel__ikon"
       focusable="false"
       role="img"
