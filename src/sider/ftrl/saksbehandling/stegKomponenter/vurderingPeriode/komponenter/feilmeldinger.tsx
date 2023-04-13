@@ -44,21 +44,16 @@ const sorterPerioder = (a: MedlemskapsperiodeProp, b: MedlemskapsperiodeProp) =>
   (Utils.dato.norskStringTilDate(b.fomDato)?.getTime() ?? 0);
 
 const finnesOverlappIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
-  const innvilgedePerioder = [...medlemskapsperioder]
+  return [...medlemskapsperioder]
     ?.filter((periode) => periode.innvilgelsesResultat === INNVILGET)
-    .sort(sorterPerioder);
-
-  if (!innvilgedePerioder?.length || innvilgedePerioder.length < 2) return false;
-
-  for (let i = 0; i < innvilgedePerioder.length - 1; i += 1) {
-    const periode = innvilgedePerioder[i];
-    const nestePeriode = innvilgedePerioder[i + 1];
-
-    if (Utils.dato.perioderOverlapper(periode.fomDato, periode.tomDato, nestePeriode.fomDato, nestePeriode.tomDato)) {
-      return true;
-    }
-  }
-  return false;
+    .sort(sorterPerioder)
+    .some((periode, index, perioder) =>
+      perioder
+        .slice(index + 1)
+        .some((nestePeriode) =>
+          Utils.dato.perioderOverlapper(periode.fomDato, periode.tomDato, nestePeriode.fomDato, nestePeriode.tomDato)
+        )
+    );
 };
 
 const finnesInnvilgetOgAvslåttPeriodeSomOverlapperMenIkkeHarLikPeriode = (
