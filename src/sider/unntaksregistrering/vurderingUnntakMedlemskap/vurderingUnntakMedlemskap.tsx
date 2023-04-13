@@ -78,6 +78,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake }: VurderingUnntakM
     setValue("fom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.fom));
     setValue("tom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.tom));
     setValue("bestemmelse", "");
+    dispatch(lovvalgsperioderOperations.send(behandlingID, []));
   };
 
   const lagreLovvalgsperiodeOgKontroller = async () => {
