@@ -39,4 +39,3 @@ export const VEDTAK = "vedtak";
 export const VILKAAR = "vilkaar";
 export const INNGANGSVILKAAR = "inngangsvilkaar";
 export const SAKSBEHANDLING = "saksbehandling";
-export const LOVVALGSBESTEMMELSER = "lovvalgsbestemmelser";
