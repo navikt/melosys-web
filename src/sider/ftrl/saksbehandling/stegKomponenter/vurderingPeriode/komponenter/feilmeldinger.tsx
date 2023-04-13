@@ -3,7 +3,7 @@ import MKV from "../../../../../../melosyskodeverk";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
 import { FlytFinnesIkke } from "../../felles/flytFinnesIkke";
-import { MedlemskapsperiodeProp, sorterPerioder } from "../vurderingPerioder";
+import { MedlemskapsperiodeProp } from "../vurderingPerioder";
 
 const { AVSLAATT, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
@@ -38,6 +38,10 @@ const erIkkeStøttetIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
 
 const perioderErLike = (periode1: MedlemskapsperiodeProp, periode2: MedlemskapsperiodeProp) =>
   periode1.fomDato === periode2.fomDato && periode1.tomDato === periode2.tomDato;
+
+const sorterPerioder = (a: MedlemskapsperiodeProp, b: MedlemskapsperiodeProp) =>
+  (Utils.dato.norskStringTilDate(a.fomDato)?.getTime() ?? 0) -
+  (Utils.dato.norskStringTilDate(b.fomDato)?.getTime() ?? 0);
 
 const finnesOverlappIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
   const innvilgedePerioder = [...medlemskapsperioder]
