@@ -23,10 +23,6 @@ import "./vurderingBestemmelse.css";
 import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
 import UnntakHjelpetekst from "./unntakHjelpetekst/unntakHjelpetekst";
 import { useFeatureToggle } from "../../../../featuretoggle";
-import { getLovvalgsbestemmelser } from "../../../../services/modules/lovvalgsbestemmelser";
-import { fagsakSelectors } from "../../../../ducks/fagsaker";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import MKV from "../../../../melosyskodeverk";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -36,8 +32,6 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
     bestemmelse: ownProps.resultat?.bestemmelse,
     tilleggsbestemmelse: Boolean(ownProps.resultat?.tilleggsbestemmelse),
   },
-  sakstema: fagsakSelectors.SakstemaKodeSelector(state),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -81,10 +75,7 @@ const VurderingBestemmelse = ({
   steg,
   oppdaterFlyt,
   aktivtSteg,
-  sakstema,
-  behandlingstema,
 }: PropsFromRedux & Props) => {
-  const [bestemmelser, setBestemmelser] = useState<KTObject[] | undefined>(undefined);
   const [updatePending, setUpdatePending] = useState(false);
   const trygdeavtaleUnntakToggle = useFeatureToggle("melosys.trygdeavtale.unntak");
 
@@ -102,18 +93,6 @@ const VurderingBestemmelse = ({
       );
     }
   }, [formValues?.vedtak, formValues?.bestemmelse, formValues?.tilleggsbestemmelse]);
-
-  useEffect(() => {
-    if (soeknadsland && aktivtSteg) {
-      setUpdatePending(true);
-      getLovvalgsbestemmelser(MKV.Koder.sakstyper.TRYGDEAVTALE, sakstema, behandlingstema, soeknadsland?.kode).then(
-        (res) => {
-          setBestemmelser(res);
-          setUpdatePending(false);
-        }
-      );
-    }
-  }, [soeknadsland, aktivtSteg]);
 
   if (!formValues) return null;
 
@@ -155,7 +134,7 @@ const VurderingBestemmelse = ({
                 emptyFieldDisabled={!!formValues.bestemmelse}
                 onChange={() => resetField("tilleggsbestemmelse")}
               >
-                {bestemmelser?.map((bestemmelse: KTObject) => (
+                {bestemmelseValg?.map((bestemmelse: KTObject) => (
                   <option key={bestemmelse.kode} value={bestemmelse.kode}>
                     {bestemmelse.term}
                   </option>
