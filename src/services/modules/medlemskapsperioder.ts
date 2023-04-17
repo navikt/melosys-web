@@ -1,4 +1,3 @@
-import { OppdaterMedlemskapsperiode } from "Domene";
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../utils";
 import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../api-constants";
 
@@ -16,6 +15,24 @@ export interface HentBestemmelserResponse {
   støttedeBestemmelser: BestemmelseMedVilkårOgBegrunnelser[];
   ikkeStøttedeBestemmelser: string[];
 }
+
+export type Medlemskapsperiode = {
+  id: number;
+  arbeidsland: string;
+  fomDato: string;
+  tomDato: string;
+  bestemmelse: string;
+  innvilgelsesResultat: string;
+  trygdedekning: string;
+  medlemskapstype: string;
+};
+
+export type OppdaterMedlemskapsperiode = {
+  fomDato: string;
+  tomDato?: string | null;
+  innvilgelsesResultat: string;
+  trygdedekning: string;
+};
 
 export const getMedlemskapsperioder = (behandlingID: number) =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`);

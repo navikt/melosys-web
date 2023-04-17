@@ -1,4 +1,4 @@
-import { Medlemskapsperiode } from "Domene";
+import { Medlemskapsperiode } from "../../services/modules/medlemskapsperioder";
 
 export const OK = "medlemskapsperioder/OK";
 export const FEILET = "medlemskapsperioder/FEILET";

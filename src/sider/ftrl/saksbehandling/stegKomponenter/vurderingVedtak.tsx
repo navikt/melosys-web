@@ -3,7 +3,6 @@ import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { Medlemskapsperiode } from "Domene";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -151,7 +150,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     return debouncedOppdaterFritekster.cancel();
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
 
-  function mapPeriodeRader(perioder: Medlemskapsperiode[] | undefined) {
+  function mapPeriodeRader(perioder: Api.Medlemskapsperioder.Medlemskapsperiode[] | undefined) {
     return perioder
       ? perioder.map((medlemskapsperiode) => [
           {
