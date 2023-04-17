@@ -28,8 +28,6 @@ import "./vurderingPerioder.css";
 
 export type MedlemskapsperiodeProp = Medlemskapsperiode & { ny: boolean; feil: string | undefined };
 
-export const sorterPerioder = (a: Medlemskapsperiode, b: Medlemskapsperiode) => a.fomDato.localeCompare(b.fomDato);
-
 const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: Medlemskapsperiode): MedlemskapsperiodeProp => ({
   ...medlemskapsperiode,
   fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
@@ -41,7 +39,11 @@ const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: Medlemskapsperiode): 
 const mapInitialMedlemskapsperioder = (
   medlemskapsperioder: Medlemskapsperiode[] | undefined
 ): MedlemskapsperiodeProp[] =>
-  medlemskapsperioder ? [...medlemskapsperioder].sort(sorterPerioder).map(mapTilMedlemskapsperiodeProps) : [];
+  medlemskapsperioder
+    ? [...medlemskapsperioder]
+        .sort((a, b) => new Date(a.fomDato).getTime() - new Date(b.fomDato).getTime())
+        .map(mapTilMedlemskapsperiodeProps)
+    : [];
 
 const komponentState = (state: RootState) => ({
   valgtTrygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
@@ -195,7 +197,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         Utils._isEmpty(periode.innvilgelsesResultat)
     );
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, mottaksdato);
+  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, soknadsperiode.fom);
 
   return (
     <div className="vurderingPerioder">

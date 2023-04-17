@@ -96,7 +96,7 @@ export function separerListeMedBindestrek(liste: string[] | string): string {
   }, "");
 }
 
-export function harStrengInnhold(streng?: string): boolean {
+export function harStrengInnhold(streng?: string | null): boolean {
   // htmlEditor har defaultverdi <p></p> når feltet er tomt.
   return !!streng && streng.replace("<p></p>", "").trim() !== "";
 }
