@@ -25,6 +25,7 @@ import { StandardMeldingOverst } from "../alertmeldinger";
 import { Spinner } from "../spinner";
 
 import "./endreBehandlingModal.css";
+import { harUnntakFlyt } from "../../routing";
 
 enum FeltVerdier {
   sakstype = "sakstype",
@@ -230,7 +231,7 @@ function EndreBehandlingModal({
 
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
           tilAnnenSide(nyGenerertLink);
-          if (sakstema === MKV.Koder.sakstemaer.UNNTAK) {
+          if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) {
             window.location.reload();
           }
         } else {
