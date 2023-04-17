@@ -230,6 +230,9 @@ function EndreBehandlingModal({
 
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
           tilAnnenSide(nyGenerertLink);
+          if (sakstema === MKV.Koder.sakstemaer.UNNTAK) {
+            window.location.reload();
+          }
         } else {
           window.location.reload();
         }
