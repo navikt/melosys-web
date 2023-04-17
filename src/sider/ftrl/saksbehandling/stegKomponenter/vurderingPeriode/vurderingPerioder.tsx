@@ -41,7 +41,11 @@ const mapInitialMedlemskapsperioder = (
 ): MedlemskapsperiodeProp[] =>
   medlemskapsperioder
     ? [...medlemskapsperioder]
-        .sort((a, b) => new Date(a.fomDato).getTime() - new Date(b.fomDato).getTime())
+        .sort(
+          (a, b) =>
+            new Date(a.fomDato).getTime() - new Date(b.fomDato).getTime() ||
+            (a.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT ? -1 : 1)
+        )
         .map(mapTilMedlemskapsperiodeProps)
     : [];
 
