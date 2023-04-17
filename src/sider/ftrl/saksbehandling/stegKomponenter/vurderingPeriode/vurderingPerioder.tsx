@@ -28,7 +28,7 @@ import "./vurderingPerioder.css";
 export type MedlemskapsperiodeProp = {
   ny: boolean;
   feil?: string;
-  id: number;
+  periodeId: number;
   fomDato: string;
   tomDato: string;
   innvilgelsesResultat: string;
@@ -49,6 +49,7 @@ const mapTilMedlemskapsperiodeProps = (
   tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
   ny: false,
   feil: undefined,
+  periodeId: medlemskapsperiode.id,
 });
 
 const mapInitialMedlemskapsperioder = (
@@ -124,7 +125,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
     (medlemskapsperiode.ny
       ? Api.Medlemskapsperioder.postMedlemskapsperioder(behandlingID, periodeRequest)
-      : Api.Medlemskapsperioder.putMedlemskapsperioder(behandlingID, medlemskapsperiode.id, periodeRequest)
+      : Api.Medlemskapsperioder.putMedlemskapsperioder(behandlingID, medlemskapsperiode.periodeId, periodeRequest)
     )
       .then((response) => {
         update(index, mapTilMedlemskapsperiodeProps(response));
@@ -170,7 +171,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     if (medlemskapsperiode.ny) {
       remove(index);
     } else {
-      Api.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, medlemskapsperiode.id)
+      Api.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, medlemskapsperiode.periodeId)
         .then(() => {
           remove(index);
         })
@@ -182,7 +183,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const handleLeggTil = () => {
     const nyMedlemskapsperiode = {
-      id: Utils._uuid(),
+      periodeId: Utils._uuid(),
       ny: true,
       fomDato: "",
       tomDato: "",
