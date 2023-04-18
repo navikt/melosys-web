@@ -3,18 +3,20 @@ import { useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 
+import MKV from "../../../../../melosyskodeverk";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
-import { BOOLSK_STRING } from "../../../../../constants";
 
 import { Inntektskilder } from "./inntektskilder";
 import { FieldArrayProps, FormValuesProps, Inntekstskilde } from "./types";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
+
+const { SKATTEPLIKTIG, IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 interface Props {
   bekreft: () => void;
@@ -62,7 +64,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
               label="Ja"
               name="skattepliktig"
               control={control}
-              value={BOOLSK_STRING.SANN}
+              value={SKATTEPLIKTIG}
               disabled={!redigerbart}
               onChange={() => resetInntektskilder([{}])}
             />
@@ -70,7 +72,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
               label="Nei"
               name="skattepliktig"
               control={control}
-              value={BOOLSK_STRING.USANN}
+              value={IKKE_SKATTEPLIKTIG}
               disabled={!redigerbart}
               onChange={() => resetInntektskilder([{}])}
             />

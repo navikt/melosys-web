@@ -15,6 +15,7 @@ import { FieldArrayProps, FormValuesProps, Inntekstskilde } from "./types";
 import { bruttoInntektKreves } from "./vurderingTrygdeavgiftSchema";
 
 const { ARBEIDSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR } = MKV.Koder.inntektskildetype;
+const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 interface InntektskilderProps {
   formValues: FormValuesProps;
@@ -35,7 +36,7 @@ export const Inntektskilder = ({
   append,
   redigerbart,
 }: InntektskilderProps) => {
-  const erSkattepliktig = formValues?.skattepliktig === BOOLSK_STRING.SANN;
+  const erSkattepliktig = formValues?.skattepliktig === SKATTEPLIKTIG;
   const settesDefaultArbAvgBetales = (kildetype?: string) => kildetype !== INNTEKT_FRA_UTLANDET;
 
   const handleEndreKildetype = (index: number, kildetype: string) => {

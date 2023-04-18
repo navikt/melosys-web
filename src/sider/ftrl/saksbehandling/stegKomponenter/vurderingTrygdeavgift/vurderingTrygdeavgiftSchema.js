@@ -6,9 +6,10 @@ import { BOOLSK_STRING } from "../../../../../constants";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const { NÆRINGSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, FN_SKATTEFRITAK } = MKV.Koder.inntektskildetype;
+const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 export const bruttoInntektKreves = (skattepliktig, kildetype, arbAvgBetales) =>
-  skattepliktig === BOOLSK_STRING.USANN ||
+  skattepliktig === IKKE_SKATTEPLIKTIG ||
   [NÆRINGSINNTEKT_FRA_NORGE, FN_SKATTEFRITAK].includes(kildetype) ||
   (kildetype === INNTEKT_FRA_UTLANDET && arbAvgBetales === BOOLSK_STRING.USANN);
 
