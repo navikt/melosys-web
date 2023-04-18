@@ -8,16 +8,16 @@ const TRYGDEDEKNING_FELT_KREVES = { melding: "Du må velge trygdedekning" };
 
 const erFeilPaaPerioder = (medlemskapsperioder) => medlemskapsperioder?.some((periode) => !!periode.feil);
 
-const erPeriodeSisteMedlemskapsperiode = (id, formValues) => {
+const erPeriodeSisteMedlemskapsperiode = (periodeId, formValues) => {
   const medlemskapsperioder = formValues?.medlemskapsperioder || [];
-  return medlemskapsperioder[medlemskapsperioder.length - 1]?.id?.toString() === id;
+  return medlemskapsperioder[medlemskapsperioder.length - 1]?.periodeId?.toString() === periodeId;
 };
 
 const åpenTomNårIkkeSistePeriodeTest = {
   name: "Åpen sluttdato ved etterfølgende perioder",
   message: { melding: "Sluttdato må fylles ut når det finnes etterfølgende perioder" },
   test: (tomDato, schema) => {
-    const erSisteMedlemskapsperiode = erPeriodeSisteMedlemskapsperiode(schema.parent.id, schema.from[1].value);
+    const erSisteMedlemskapsperiode = erPeriodeSisteMedlemskapsperiode(schema.parent.periodeId, schema.from[1].value);
     return !(!erSisteMedlemskapsperiode && Utils._isEmpty(tomDato));
   },
 };
@@ -40,7 +40,7 @@ const vurdering_perioder = object().shape({
   medlemskapsperioder: array()
     .of(
       object().shape({
-        id: string().required(),
+        periodeId: string().required(),
         fomDato: string().erGyldigDato().erInnenforSoknadsperioden().required(MAA_FYLLES_UT),
         tomDato: string()
           .erGyldigDato()

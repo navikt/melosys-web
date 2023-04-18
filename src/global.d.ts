@@ -23,8 +23,6 @@ declare module "Domene" {
   export type Mottaksretning = import("./@types").Mottaksretning;
   export type BrevPdfData = import("./@types").BrevPdfData;
   export type SedPdfData = import("./@types").SedPdfData;
-  export type Medlemskapsperiode = import("./@types").Medlemskapsperiode;
-  export type OppdaterMedlemskapsperiode = import("./@types").OppdaterMedlemskapsperiode;
 }
 
 declare module "@navikt/melosys-kodeverk" {
