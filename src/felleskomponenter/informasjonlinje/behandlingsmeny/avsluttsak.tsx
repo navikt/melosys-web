@@ -157,7 +157,15 @@ const AvsluttSak = ({
     if (
       [EU_EOS, TRYGDEAVTALE].includes(sakstype) &&
       [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
-      [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, ARBEID_KUN_NORGE].includes(behandlingstema)
+      [
+        YRKESAKTIV,
+        IKKE_YRKESAKTIV,
+        PENSJONIST,
+        ARBEID_KUN_NORGE,
+        UTSENDT_ARBEIDSTAKER,
+        UTSENDT_SELVSTENDIG,
+        ARBEID_TJENESTEPERSON_ELLER_FLY,
+      ].includes(behandlingstema)
     ) {
       return true;
     }
@@ -179,6 +187,8 @@ const AvsluttSak = ({
         IKKE_YRKESAKTIV,
         PENSJONIST,
         UNNTAK_MEDLEMSKAP,
+        UTSENDT_ARBEIDSTAKER,
+        UTSENDT_SELVSTENDIG,
       ].includes(behandlingstema)
     );
   };
