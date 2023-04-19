@@ -14,9 +14,7 @@ const IngenMedlemskapsperioder = (
 );
 
 const OppholdIPeriodene = (
-  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
-    Det er opphold mellom innvilgede perioder.
-  </Nav.AlertStripeAdvarsel>
+  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">Det er opphold mellom perioder.</Nav.AlertStripeAdvarsel>
 );
 
 const OverlappIInnvilgedePerioder = (
@@ -97,16 +95,14 @@ const finnesInnvilgetOgAvslåttPeriodeSomOverlapperMenIkkeHarLikPeriode = (
   return false;
 };
 
-const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
-  const innvilgedePerioder = [...medlemskapsperioder]
-    ?.filter((periode) => periode.innvilgelsesResultat === INNVILGET)
-    .sort(sorterPerioder);
+const finnesOppholdIPerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
+  const sortertePerioder = [...medlemskapsperioder].sort(sorterPerioder);
 
-  if (!innvilgedePerioder?.length || innvilgedePerioder.length < 2) return false;
+  if (!sortertePerioder?.length || sortertePerioder.length < 2) return false;
 
-  for (let i = 0; i < innvilgedePerioder.length - 1; i += 1) {
-    const periode = innvilgedePerioder[i];
-    const nestePeriode = innvilgedePerioder[i + 1];
+  for (let i = 0; i < sortertePerioder.length - 1; i += 1) {
+    const periode = sortertePerioder[i];
+    const nestePeriode = sortertePerioder[i + 1];
 
     const nestePeriodeErPåfølgende = nestePeriode.fomDato === Utils.dato.plussEnDag(periode.tomDato);
     if (!(nestePeriodeErPåfølgende || perioderErLike(periode, nestePeriode))) {
@@ -156,7 +152,7 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.OVERLAPP_MEN_FORSKJELLIG_PERIODE;
   }
 
-  if (finnesOppholdIInnvilgedePerioder(medlemskapsperioder)) {
+  if (finnesOppholdIPerioder(medlemskapsperioder)) {
     return TypeFeilmelding.OPPHOLD_I_PERIODENE;
   }
 
