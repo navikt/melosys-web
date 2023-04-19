@@ -191,25 +191,27 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       </Nav.Fieldset>
 
       {formValues.utfallRegistreringUnntak === GODKJENT && (
-        <Nav.Fieldset legend="">
-          <Nav.Row>
-            <Nav.Column xs="4">
-              <Forms.Select
-                name="bestemmelse"
-                control={control}
-                label="Bestemmelse"
-                emptyFieldDisabled={!!formValues.bestemmelse}
-                disabled={!redigerbart}
-                onChange={lagreBestemmelse}
-              >
-                {bestemmelser?.map((item: KTObject) => (
-                  <option key={item.kode} value={item.kode}>
-                    {item.term}
-                  </option>
-                ))}
-              </Forms.Select>
-            </Nav.Column>
-          </Nav.Row>
+        <>
+          <Nav.Fieldset legend="">
+            <Nav.Row>
+              <Nav.Column xs="8">
+                <Forms.Select
+                  name="bestemmelse"
+                  control={control}
+                  label="Bestemmelse"
+                  emptyFieldDisabled={!!formValues.bestemmelse}
+                  disabled={!redigerbart}
+                  onChange={lagreBestemmelse}
+                >
+                  {bestemmelser?.map((item: KTObject) => (
+                    <option key={item.kode} value={item.kode}>
+                      {item.term}
+                    </option>
+                  ))}
+                </Forms.Select>
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Fieldset>
 
           {formState.isValid && (
             <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" feilmeldinger={feilmeldinger} />
@@ -220,7 +222,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
               Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
             </Nav.AlertStripeAdvarsel>
           )}
-        </Nav.Fieldset>
+        </>
       )}
 
       {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && (
@@ -245,7 +247,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
                   onChange={lagreTom}
                 />
               </Nav.Column>
-              <Nav.Column xs="4">
+              <Nav.Column xs="8">
                 <Forms.Select
                   name="bestemmelse"
                   control={control}
@@ -269,8 +271,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           )}
 
           <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__info">
-            Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i
-            brevmenyen.
+            Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet.
           </Nav.AlertStripeInfo>
 
           {Utils._isEmpty(formValues.tom) && (
@@ -283,9 +284,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
       {formValues.utfallRegistreringUnntak === IKKE_GODKJENT && (
         <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__alertstripe">
-          {sakstype === MKV.Koder.sakstyper.EU_EOS
-            ? "Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt SED."
-            : "Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet. Benytt fritekstbrev i brevmenyen."}
+          Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet.
         </Nav.AlertStripeInfo>
       )}
 
