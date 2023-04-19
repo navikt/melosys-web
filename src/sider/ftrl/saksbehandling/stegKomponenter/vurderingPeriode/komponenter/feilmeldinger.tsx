@@ -95,7 +95,7 @@ const finnesInnvilgetOgAvslåttPeriodeSomOverlapperMenIkkeHarLikPeriode = (
   return false;
 };
 
-const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
+const finnesOppholdIPerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
   const sortertePerioder = [...medlemskapsperioder].sort(sorterPerioder);
 
   if (!sortertePerioder?.length || sortertePerioder.length < 2) return false;
@@ -152,7 +152,7 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.OVERLAPP_MEN_FORSKJELLIG_PERIODE;
   }
 
-  if (finnesOppholdIInnvilgedePerioder(medlemskapsperioder)) {
+  if (finnesOppholdIPerioder(medlemskapsperioder)) {
     return TypeFeilmelding.OPPHOLD_I_PERIODENE;
   }
 
