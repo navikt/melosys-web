@@ -21,7 +21,7 @@ describe("Lovvalgsperioder operations", () => {
   beforeEach(() => {
     fetch.resetMocks();
     fetch.mockResponse(JSON.stringify({}));
-    erFeatureToggleEnabled.mockResolvedValueOnce(true);
+    erFeatureToggleEnabled.mockResolvedValue(true);
 
     initialState = {
       avklartefakta: {
