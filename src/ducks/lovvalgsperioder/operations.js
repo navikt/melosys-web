@@ -24,6 +24,9 @@ import { lovvalgsperioderSelectors } from "./index";
 import { behandlingerSelectors } from "../behandlinger";
 import { flytSelectors } from "../flyt";
 import { formSelectors } from "../form";
+import { fagsakSelectors } from "../fagsaker";
+import { harUnntakFlyt } from "../../routing/url";
+import { erFeatureToggleEnabled } from "../../featuretoggle";
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -228,8 +231,19 @@ const bestemLovvalgsland = (lovvalgsbestemmelse, reduxState) => {
   }
 };
 
-const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) =>
-  lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 ||
+const erUnntakFlyt = async (reduxState) => {
+  const sakstype = fagsakSelectors.SakstypeKodeSelector(reduxState);
+  const sakstema = fagsakSelectors.SakstemaKodeSelector(reduxState);
+  const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(reduxState);
+  const registreringUnntakFraMedlemskapToggleEnabled = await erFeatureToggleEnabled(
+    "melosys.registrering_unntak_fra_medlemskap"
+  );
+  return harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled);
+};
+
+const lovvalgsperiodeSkalVaereTom = async (lovvalgsbestemmelse, reduxState) =>
+  (lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 &&
+    !(await erUnntakFlyt(reduxState))) ||
   avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState) ||
   flytSelectors.HarOffentligTjenesteAnnetLandSelector(reduxState) ||
   flytSelectors.HarLonnetArbeidAnnetLand(reduxState) ||
@@ -244,8 +258,8 @@ const bestemPeriode = (reduxState) => {
 
 const norgeErLovvalgsland = (lovvalgsland) => lovvalgsland === MKV.Koder.landkoder.NO;
 
-const byggLovvalgsPerioder = (stegState, reduxState) => {
-  if (lovvalgsperiodeSkalVaereTom(stegState.lovvalgsbestemmelse, reduxState)) return [];
+const byggLovvalgsPerioder = async (stegState, reduxState) => {
+  if (await lovvalgsperiodeSkalVaereTom(stegState.lovvalgsbestemmelse, reduxState)) return [];
 
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const lovvalgsland = stegState.lovvalgsland || bestemLovvalgsland(stegState.lovvalgsbestemmelse, reduxState);
@@ -303,7 +317,7 @@ export function lagre() {
 }
 
 export function oppdaterLovvalgsperioderState(stegState) {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const reduxState = getState();
     const alleLovvalgsvilkar = vilkarSelectors.valgteLovvalgsVilkar(reduxState);
 
@@ -321,7 +335,7 @@ export function oppdaterLovvalgsperioderState(stegState) {
       stegState.medlemskapstype ||
       stegState.innvilgelsesResultat
     ) {
-      const lovvalgsPerioder = byggLovvalgsPerioder(stegState, reduxState);
+      const lovvalgsPerioder = await byggLovvalgsPerioder(stegState, reduxState);
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
     } else {
       dispatch(Actions.resetLovvalgsperioderState());
