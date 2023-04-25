@@ -98,13 +98,15 @@ export const VurderingArtikkel13UtpekLand = ({
   };
 
   const endreLovvalgsland = (land) => {
-    oppdaterData(lagLovvalgsland(land));
+    if (land !== formValues.lovvalgsland) {
+      oppdaterData(lagLovvalgsland(land));
 
-    oppdaterMottakerinstitusjoner(
-      [...new Set([...landMedVesentligEllerRegistrertArbeid, land])].map((landkode) =>
-        KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder)
-      )
-    );
+      oppdaterMottakerinstitusjoner(
+        [...new Set([...landMedVesentligEllerRegistrertArbeid, land])].map((landkode) =>
+          KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder)
+        )
+      );
+    }
   };
 
   const pdfDokumenter = [
