@@ -3,12 +3,42 @@ import react from "@vitejs/plugin-react";
 import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgrPlugin from "vite-plugin-svgr";
 import { fileURLToPath, URL } from "node:url";
+import * as path from "path";
+import vitePluginJsx from "./vite-plugin-jsx";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react({ include: /\.jsx?$/ }), viteTsconfigPaths(), svgrPlugin()],
+  base: "/melosys",
+  plugins: [
+    {
+      name: "vite-plugin-disable-import-analysis",
+      enforce: "pre",
+      async transform(code, id) {
+        return {
+          code,
+          map: null,
+          meta: {
+            skipParsing: true,
+          },
+        };
+      },
+    },
+    // @ts-ignore
+    react({
+      include: /\.(js|jsx|ts|tsx)$/,
+      jsxImportSource: "react",
+      jsxRuntime: "classic",
+    }),
+    vitePluginJsx(),
+    viteTsconfigPaths(),
+    svgrPlugin(),
+  ],
+  server: {
+    host: "0.0.0.0",
+    port: 3000,
+  },
   // esbuild: {
-  //   loader: 'jsx',
+  //   loader: "jsx",
   //   include: /\.jsx?$/,
   //   exclude: /node_modules/,
   // },
@@ -18,6 +48,9 @@ export default defineConfig({
         ".js": "jsx",
       },
     },
+  },
+  define: {
+    "process.env": {},
   },
   css: {
     preprocessorOptions: {
@@ -31,6 +64,7 @@ export default defineConfig({
   resolve: {
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
+      src: fileURLToPath(new URL("./src", import.meta.url)),
       "nav-frontend-alertstriper-style": fileURLToPath(new URL("src/nav-style/alertstriper.css", import.meta.url)),
       "nav-frontend-chevron-style": fileURLToPath(new URL("src/nav-style/chevron.css", import.meta.url)),
       "nav-frontend-ekspanderbartpanel-style": fileURLToPath(
@@ -52,6 +86,10 @@ export default defineConfig({
       "nav-frontend-spinner-style": fileURLToPath(new URL("src/nav-style/spinner.css", import.meta.url)),
       "nav-frontend-stegindikator-style": fileURLToPath(new URL("src/nav-style/stegindikator.css", import.meta.url)),
       "nav-frontend-typografi-style": fileURLToPath(new URL("src/nav-style/typografi.css", import.meta.url)),
+      AppTypes: path.resolve(__dirname, "src/globalmodules/AppTypes.ts"),
+      Domene: path.resolve(__dirname, "src/globalmodules/Domene.ts"),
+      "melosys-api": path.resolve(__dirname, "src/globalmodules/melosys-api.ts"),
+      // "nav-frontend-grid": path.resolve(__dirname, "src/globalmodules/nav-frontend-grid.ts"),
     },
   },
 });
