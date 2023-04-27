@@ -41,7 +41,7 @@ export const skalViseSoknadsperiodeOgLand = (sakstype, sakstema, behandlingstema
   behandlingstema &&
   behandlingstype &&
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV &&
-  !skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype);
+  !skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, "", true);
 
 export const OpprettSak = (props) => {
   const { settFeltInnhold, formValues, feltNavn } = props;

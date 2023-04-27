@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import PT from "prop-types";
 
+import { useSelector } from "react-redux";
 import { MKVUtils } from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
@@ -16,6 +17,7 @@ import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behand
 
 import "./enkeltSak.css";
 import { useFeatureToggle } from "../../../featuretoggle";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
@@ -34,6 +36,8 @@ const EnkeltSak = (props) => {
   const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
 
+  const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
+
   const link = lagUrl(
     saksnummer,
     behandlingID,
@@ -41,6 +45,8 @@ const EnkeltSak = (props) => {
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
+    behandlingsstatus.kode,
+    mottatteOpplysningerStatus === "OK",
     folketrygdenToggleEnabled,
     ikkeYrkesaktivFlytToggleEnabled,
     registreringUnntakFraMedlemskapToggleEnabled

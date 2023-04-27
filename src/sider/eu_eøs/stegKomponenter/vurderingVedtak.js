@@ -30,6 +30,7 @@ import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstit
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
 import "./vurderingVedtak.css";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) => {
   if (
@@ -69,6 +70,8 @@ const skalViseMottakerinstitusjoner = (
   sakstema,
   behandlingstema,
   behandlingstype,
+  behandlingsstatus,
+  mottatteOpplysningerStatus,
   folketrygdenToggleEnabled,
   ikkeYrkesaktivFlytToggleEnabled,
   registreringUnntakFraMedlemskapToggleEnabled
@@ -86,6 +89,8 @@ const skalViseMottakerinstitusjoner = (
       sakstema,
       behandlingstema,
       behandlingstype,
+      behandlingsstatus,
+      mottatteOpplysningerStatus === "OK",
       folketrygdenToggleEnabled,
       ikkeYrkesaktivFlytToggleEnabled,
       registreringUnntakFraMedlemskapToggleEnabled
@@ -104,6 +109,7 @@ const VurderingVedtak = ({
   sakstema,
   behandlingstema,
   behandlingstype,
+  behandlingsstatus,
   touch,
   formIsValid,
   formValues,
@@ -114,6 +120,7 @@ const VurderingVedtak = ({
   kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
+  mottatteOpplysningerStatus,
   validerMottatteOpplysninger,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -141,6 +148,8 @@ const VurderingVedtak = ({
     sakstema,
     behandlingstema,
     behandlingstype,
+    behandlingsstatus,
+    mottatteOpplysningerStatus,
     folketrygdenToggleEnabled,
     ikkeYrkesaktivFlytToggleEnabled,
     registreringUnntakFraMedlemskapToggleEnabled
@@ -312,6 +321,7 @@ VurderingVedtak.propTypes = {
   sakstema: PT.string.isRequired,
   behandlingstema: PT.string.isRequired,
   behandlingstype: PT.string.isRequired,
+  behandlingsstatus: PT.string.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
   touch: PT.func.isRequired,
@@ -322,6 +332,7 @@ VurderingVedtak.propTypes = {
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
+  mottatteOpplysningerStatus: PT.string.isRequired,
   validerMottatteOpplysninger: PT.func.isRequired,
 };
 
@@ -341,6 +352,8 @@ const mapStateToProps = (state) => ({
   sakstema: fagsakSelectors.SakstemaKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
+  mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   erArtikkel11_4: flytSelectors.ErIArtikkel11_4Selector(state),

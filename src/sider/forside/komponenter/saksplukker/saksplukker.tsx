@@ -20,6 +20,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "./saksplukker.css";
 import * as Routing from "../../../../routing";
 import { useFeatureToggle } from "../../../../featuretoggle";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 
 const compareTerm = (a: KTObject, b: KTObject) => {
   if (!a.term) return 1;
@@ -36,6 +37,7 @@ export interface SaksplukkerFormData {
 
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SAKSPLUKKER_FORM)(state) as SaksplukkerFormData,
+  mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -49,6 +51,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type SaksplukkerProps = PropsFromRedux & RouteComponentProps;
 
 export const Saksplukker = ({
+  mottatteOpplysningerStatus,
   handleSubmit,
   history,
   formValues,
@@ -101,7 +104,8 @@ export const Saksplukker = ({
 
   const submitOgVideresend = async (form: any) => {
     const response = await handleSubmit(form);
-    const { saksnummer, behandlingID, behandlingstema, behandlingstype, antallUtildelteOppgaver } = response;
+    const { saksnummer, behandlingID, behandlingstema, behandlingstype, behandlingsstatus, antallUtildelteOppgaver } =
+      response;
     if (!saksnummer) {
       setAntallOppgaver(antallUtildelteOppgaver);
       setVisIngenOppgaveFunnetAlert(true);
@@ -115,6 +119,8 @@ export const Saksplukker = ({
       formValues.sakstema,
       behandlingstema,
       behandlingstype,
+      behandlingsstatus,
+      mottatteOpplysningerStatus === "OK",
       folketrygdenToggleEnabled,
       ikkeYrkesaktivFlytToggleEnabled,
       registreringUnntakFraMedlemskapToggleEnabled

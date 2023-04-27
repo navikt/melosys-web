@@ -4,7 +4,7 @@ import { avklartefaktaOperations } from "../avklartefakta";
 import { fagsakOperations, fagsakSelectors } from "../fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../behandlinger";
 import { behandlingsresultatOperations } from "../behandlingsresultat";
-import { mottatteOpplysningerOperations } from "../mottatteOpplysninger";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../mottatteOpplysninger";
 import { lovvalgsperioderOperations } from "../lovvalgsperioder";
 import { vilkarOperations } from "../vilkar";
 import { behandlingsperioderOperations } from "../behandlingsperioder";
@@ -22,6 +22,8 @@ const harTomFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
+  const behandlingsstatus = behandlingerSelectors.BehandlingsstatusKodeSelector(state);
+  const mottatteOpplysningerStatus = mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state);
   const folketrygdenToggleEnabled = await erFeatureToggleEnabled("melosys.folketrygden.mvp");
   const ikkeYrkesaktivFlytToggleEnabled = await erFeatureToggleEnabled("melosys.ikkeYrkesaktivForenkletFlyt");
   const registreringUnntakFraMedlemskapToggleEnabled = await erFeatureToggleEnabled(
@@ -33,6 +35,8 @@ const harTomFlyt = async (sakstype, state) => {
     sakstema,
     behandlingstema,
     behandlingstype,
+    behandlingsstatus,
+    mottatteOpplysningerStatus === "OK",
     folketrygdenToggleEnabled,
     ikkeYrkesaktivFlytToggleEnabled,
     registreringUnntakFraMedlemskapToggleEnabled

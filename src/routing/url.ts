@@ -1,4 +1,4 @@
-import MKV from "../melosyskodeverk";
+import MKV, { MKVUtils } from "../melosyskodeverk";
 import * as Constants from "../constants";
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
@@ -79,6 +79,8 @@ export const lagUrl = (
   sakstemaKode: string,
   behandlingstemaKode: string,
   behandlingstypeKode: string,
+  behandlingsstatus: string,
+  harMottatteOpplysninger: boolean,
   folketrygdenToggleEnabled: boolean,
   ikkeYrkesaktivToggleEnabled: boolean,
   registreringUnntakFraMedlemskapToggleEnabled: boolean
@@ -89,6 +91,8 @@ export const lagUrl = (
       sakstemaKode,
       behandlingstemaKode,
       behandlingstypeKode,
+      behandlingsstatus,
+      harMottatteOpplysninger,
       folketrygdenToggleEnabled,
       ikkeYrkesaktivToggleEnabled,
       registreringUnntakFraMedlemskapToggleEnabled
@@ -139,10 +143,14 @@ export const skalViseTomFlyt = (
   sakstema: string,
   behandlingstema: string,
   behandlingstype: string,
+  behandlingsstatus: string,
+  harMottatteOpplysninger: boolean,
   folketrygdenToggleEnabled: boolean = false,
   ikkeYrkesaktivFlytToggleEnabled: boolean = false,
   registreringUnntakFraMedlemskapToggleEnabled: boolean = false
 ) => {
+  if (!harMottatteOpplysninger && MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus)) return true;
+
   if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) return false;
 
   if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled)) return false;

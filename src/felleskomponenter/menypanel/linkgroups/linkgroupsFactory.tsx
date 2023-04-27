@@ -26,6 +26,7 @@ interface LinkGroupsConfig {
   sakstype: string;
   behandlingstema: string;
   behandlingstype: string;
+  behandlingsstatus: string;
   mottatteOpplysningerType: string;
   contentProps: ContentProps;
   sakstema: string;
@@ -41,6 +42,7 @@ class LinkGroupsFactory {
     sakstype,
     behandlingstema,
     behandlingstype,
+    behandlingsstatus,
     sakstema,
     folketrygdenToggleEnabled,
     ikkeYrkesaktivFlytToggleEnabled,
@@ -52,6 +54,8 @@ class LinkGroupsFactory {
         sakstema,
         behandlingstema,
         behandlingstype,
+        behandlingsstatus,
+        !!mottatteOpplysningerType,
         folketrygdenToggleEnabled,
         ikkeYrkesaktivFlytToggleEnabled,
         registreringUnntakFraMedlemskapToggleEnabled

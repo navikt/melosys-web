@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 import PT from "prop-types";
 
+import { useSelector } from "react-redux";
 import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
@@ -16,6 +17,7 @@ import Soknadsland from "../soknadsland";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
 import "./behandlingOppgave.css";
+import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 
 const BehandlingOppgavesLinjeWrapper = ({ link, stengt, children }) =>
   stengt ? (
@@ -62,10 +64,15 @@ const BehandlingOppgave = ({
     behandlingsstatus,
     behandlingstema,
     behandlingstype,
+    mottatteOpplysninger,
     registrertDato,
     endretDato,
     svarFrist,
   } = behandling;
+
+  const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
+  const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
+
   const link = Routing.lagUrl(
     saksnummer,
     behandlingID,
@@ -73,11 +80,13 @@ const BehandlingOppgave = ({
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
+    behandlingsstatus.kode,
+    mottatteOpplysningerStatus === "OK",
+    mottatteOpplysninger,
     folketrygdenToggleEnabled,
     ikkeYrkesaktivFlytToggleEnabled,
     registreringUnntakFraMedlemskapToggleEnabled
   );
-  const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 
   const cl = classNames({
     behandlingOppgave: true,

@@ -39,6 +39,8 @@ const Fagsak = ({ sak, landkoder }) => {
       sakstema.kode,
       behandling.behandlingstema.kode,
       behandling.behandlingstype.kode,
+      behandling.behandlingsstatus.kode,
+      behandling.mottatteOpplysninger,
       folketrygdenToggleEnabled,
       ikkeYrkesaktivFlytToggleEnabled,
       registreringUnntakFraMedlemskapToggleEnabled

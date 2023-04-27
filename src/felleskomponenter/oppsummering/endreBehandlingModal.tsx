@@ -26,6 +26,7 @@ import { Spinner } from "../spinner";
 
 import "./endreBehandlingModal.css";
 import { harUnntakFlyt } from "../../routing";
+import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 
 enum FeltVerdier {
   sakstype = "sakstype",
@@ -36,6 +37,7 @@ enum FeltVerdier {
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
   muligeBehandlingsstatuser: behandlingsstatusSelectors.MuligeBehandlingsstatusSelector(state),
   anmodningsperioderSendtTilUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
 });
@@ -64,6 +66,7 @@ function EndreBehandlingModal({
   behandlingID,
   oppsummering,
   fagsak,
+  mottatteOpplysningerStatus,
   mottattDato,
   muligeBehandlingsstatuser,
   hentMuligeBehandlingsstatuser,
@@ -157,6 +160,8 @@ function EndreBehandlingModal({
         sakstema,
         behandlingstema,
         behandlingstype,
+        behandlingsstatus,
+        mottatteOpplysningerStatus === "OK",
         folketrygdenToggleEnabled,
         ikkeYrkesaktivFlytToggleEnabled,
         registreringUnntakFraMedlemskapToggleEnabled
@@ -224,6 +229,8 @@ function EndreBehandlingModal({
           sakstema,
           behandlingstema,
           behandlingstype,
+          behandlingsstatus,
+          mottatteOpplysningerStatus === "OK",
           folketrygdenToggleEnabled,
           ikkeYrkesaktivFlytToggleEnabled,
           registreringUnntakFraMedlemskapToggleEnabled

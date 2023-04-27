@@ -125,6 +125,8 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+        true,
         true,
         false,
         true
@@ -141,6 +143,8 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+        true,
         true,
         true,
         true
@@ -157,6 +161,8 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+        true,
         true,
         true,
         true
@@ -173,6 +179,8 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+        true,
         true,
         true,
         true
@@ -189,6 +197,8 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+        true,
         true,
         true,
         true
@@ -205,6 +215,8 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+        true,
         false,
         true,
         true
@@ -221,6 +233,8 @@ describe("url", () => {
         MKV.Koder.sakstemaer.UNNTAK,
         MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+        true,
         true,
         true,
         true
@@ -237,6 +251,8 @@ describe("url", () => {
         MKV.Koder.sakstemaer.UNNTAK,
         MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+        true,
         true,
         true,
         false
@@ -244,6 +260,24 @@ describe("url", () => {
 
       expect(url).toContain("/TRYGDEAVTALE/behandling/");
     });
+  });
+
+  it("tom flyt om ferdigstilt og mangler mottatteopplysninger", () => {
+    const url = lagUrl(
+      "MEL-1",
+      1,
+      EU_EOS,
+      MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+      MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+      MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+      MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+      false,
+      true,
+      true,
+      true
+    );
+
+    expect(url).toContain("/EU_EOS/behandling/");
   });
 });
 
