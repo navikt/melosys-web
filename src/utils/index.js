@@ -36,7 +36,7 @@ import * as navigasjon from "./navigasjon";
 
 import { delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from "./utils";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 export {
   delay,

@@ -12,7 +12,7 @@ import {
   lagAvklartefaktaBegrunnelse,
 } from "../../../../felleskomponenter/stegvelger";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 const EnkeltAvklartfakta = (props) => {
   const {

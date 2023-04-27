@@ -30,7 +30,7 @@ import { anmodningunntakOperations } from "../../../../ducks/anmodningunntak";
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 const LinkForhandsvisningSed = ({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst }) => {
   let pdfDokument = [];

@@ -12,7 +12,7 @@ import "jest-prop-type-error";
 // Oppsettfilen for Yup kjøres ikke uten videre av jest. Derfor er det nødvendig å importere den manuelt her.
 import "./setupYup";
 
-global.fetch = require("jest-fetch-mock");
+global.fetch = import("jest-fetch-mock");
 
 Enzyme.configure({ adapter: new Adapter() });
 

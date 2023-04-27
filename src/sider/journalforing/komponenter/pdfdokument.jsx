@@ -11,7 +11,7 @@ const pdfjsWorker = import("react-pdf/dist/esm/pdf.worker.entry");
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 /** For å oppnå full bredde innenfor div-kontainer må
  * vi plassere PDF-komponenten(pdf-js) i en wrapper siden pdf-js ikke støtter prosentvis bredde (kun px).

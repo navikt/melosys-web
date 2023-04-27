@@ -8,7 +8,7 @@ import * as Nav from "../../navFrontend";
 import "./pdfLenkeListe.css";
 import { apnePdfINyFane } from "../../services/utils";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 class PdfLenkeListe extends Component {
   state = {

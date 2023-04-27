@@ -1,27 +1,89 @@
 /* eslint react/jsx-pascal-case: 0 */
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import * as Sentry from "@sentry/react";
+import loadable from "@loadable/component";
+
 import * as MKV from "@navikt/melosys-kodeverk";
-import Forside from "../sider/forside";
-import Unntaksperioder from "../sider/eu_eøs/registrering/unntaksperioder";
-import Anmodningsunntak from "../sider/eu_eøs/registrering/anmodningunntak";
-import Sok from "../sider/sok";
-import EuEøsSaksbehandling from "../sider/eu_eøs/saksbehandling";
-import FtrlSaksbehandling from "../sider/ftrl/saksbehandling";
-import TrygdeavtaleSaksbehandling from "../sider/trygdeavtale/saksbehandling";
-import TomFlytBehandling from "../sider/tomFlyt/behandling";
-import Journalforing from "../sider/journalforing";
-import OpprettNySak from "../sider/opprettnysak";
-import VurderUtpeking from "../sider/eu_eøs/vurderutpeking";
-import Sendbrev from "../sider/sendbrev";
-import IkkeYrkesaktiv from "../sider/ikkeYrkesaktiv/saksbehandling";
-import Unntaksregistrering from "../sider/unntaksregistrering";
-import UkjentSide from "../sider/ukjentSide";
 
 import { FellesHandlersContext } from "../contexts";
 
-const SentryRoute = Sentry.withSentryRouting(Route);
+const SideLoadingStatus = <div>Laster inn siden...</div>;
+
+const UkjentSideLoadable = loadable(() => import(/* webpackChunkName: "ukjent-side" */ "../sider/ukjentSide"), {
+  fallback: SideLoadingStatus,
+});
+const ForsideLoadable = loadable(() => import(/* webpackChunkName: "forside" */ "../sider/forside"), {
+  fallback: SideLoadingStatus,
+});
+const SokLoadable = loadable(() => import(/* webpackChunkName: "sok" */ "../sider/sok"), {
+  fallback: SideLoadingStatus,
+});
+const EuEøsSaksbehandlingLoadable = loadable(
+  () => import(/* webpackChunkName: "eu-eøs-saksbehandling" */ "../sider/eu_eøs/saksbehandling"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
+const FtrlSaksbehandlingLoadable = loadable(
+  () => import(/* webpackChunkName: "ftrl-saksbehandling" */ "../sider/ftrl/saksbehandling"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
+const TrygdeavtaleSaksbehandlingLoadable = loadable(
+  () => import(/* webpackChunkName: "trygdeavtale-saksbehandling" */ "../sider/trygdeavtale/saksbehandling"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
+const SaksbehandlingIkkeYrkesaktivLoadable = loadable(
+  () => import(/* webpackChunkName: "ikkeYrkesaktiv-saksbehandling" */ "../sider/ikkeYrkesaktiv/saksbehandling"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
+
+const TomFlytBehandlingLoadable = loadable(
+  () => import(/* webpackChunkName: "tom-flyt-behandling" */ "../sider/tomFlyt/behandling"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
+const JournalforingLoadable = loadable(() => import(/* webpackChunkName: "journalføring" */ "../sider/journalforing"), {
+  fallback: SideLoadingStatus,
+});
+const RegistreringUnntaksperioderLoadable = loadable(
+  () => import(/* webpackChunkName: "registrering-unntaksperioder" */ "../sider/eu_eøs/registrering/unntaksperioder"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
+const RegistreringAnmodningunntakLoadable = loadable(
+  () =>
+    import(/* webpackChunkName: "registrering-anmodning-om-unntak" */ "../sider/eu_eøs/registrering/anmodningunntak"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
+const OpprettNySakLoadable = loadable(() => import(/* webpackChunkName: "opprett-ny-sak" */ "../sider/opprettnysak"), {
+  fallback: SideLoadingStatus,
+});
+const VurderUtpekingLoadable = loadable(
+  () => import(/* webpackChunkName: "vurder-utpeking" */ "../sider/eu_eøs/vurderutpeking"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
+const SendbrevLoadable = loadable(() => import(/* webpackChunkName: "sendbrev" */ "../sider/sendbrev"), {
+  fallback: SideLoadingStatus,
+});
+
+const UnntaksregistreringLoadable = loadable(
+  () => import(/* webpackChunkName: "unntaksregistrering" */ "../sider/unntaksregistrering"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
@@ -29,56 +91,56 @@ const Routing = () => (
   <FellesHandlersContext.Consumer>
     {(fellesHandlers) => (
       <Switch>
-        <SentryRoute exact path="/" render={(props) => <Forside {...props} {...fellesHandlers} />} />
-        <SentryRoute exact path="/sok" component={Sok} />
-        <SentryRoute
+        <Route exact path="/" render={(props) => <ForsideLoadable {...props} {...fellesHandlers} />} />
+        <Route exact path="/sok" component={SokLoadable} />
+        <Route
           exact
           path={`/${EU_EOS}/registrering/:saksnr/unntaksperioder`}
-          render={(props) => <Unntaksperioder {...props} {...fellesHandlers} />}
+          render={(props) => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />}
         />
-        <SentryRoute
+        <Route
           exact
           path={`/${EU_EOS}/registrering/:saksnr/anmodningunntak`}
-          render={(props) => <Anmodningsunntak {...props} {...fellesHandlers} />}
+          render={(props) => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />}
         />
-        <SentryRoute
+        <Route
           path={`/${EU_EOS}/saksbehandling/:saksnr`}
-          render={(props) => <EuEøsSaksbehandling {...props} {...fellesHandlers} />}
+          render={(props) => <EuEøsSaksbehandlingLoadable {...props} {...fellesHandlers} />}
         />
-        <SentryRoute
+        <Route
           path={`/${FTRL}/saksbehandling/:saksnr`}
-          render={(props) => <FtrlSaksbehandling {...props} {...fellesHandlers} />}
+          render={(props) => <FtrlSaksbehandlingLoadable {...props} {...fellesHandlers} />}
         />
-        <SentryRoute
+        <Route
           path="/:sakstype/ikkeYrkesaktiv/:saksnr"
-          render={(props) => <IkkeYrkesaktiv {...props} {...fellesHandlers} />}
+          render={(props) => <SaksbehandlingIkkeYrkesaktivLoadable {...props} {...fellesHandlers} />}
         />
-        <SentryRoute
+        <Route
           path={`/${TRYGDEAVTALE}/saksbehandling/:saksnr`}
-          render={(props) => <TrygdeavtaleSaksbehandling {...props} {...fellesHandlers} />}
+          render={(props) => <TrygdeavtaleSaksbehandlingLoadable {...props} {...fellesHandlers} />}
         />
-        <SentryRoute
+        <Route
           path="/:sakstype/behandling/:saksnr"
-          render={(props) => <TomFlytBehandling {...props} {...fellesHandlers} />}
+          render={(props) => <TomFlytBehandlingLoadable {...props} {...fellesHandlers} />}
         />
-        <SentryRoute
+        <Route
           path="/journalforing/:journalpostID/:oppgaveID"
-          render={(props) => <Journalforing {...props} {...fellesHandlers} />}
+          render={(props) => <JournalforingLoadable {...props} {...fellesHandlers} />}
         />
-        <SentryRoute path="/opprettnysak" render={(props) => <OpprettNySak {...props} {...fellesHandlers} />} />;
-        <SentryRoute
+        <Route path="/opprettnysak" render={(props) => <OpprettNySakLoadable {...props} {...fellesHandlers} />} />;
+        <Route
           path={`/${EU_EOS}/vurderutpeking/:saksnr`}
-          render={(props) => <VurderUtpeking {...props} {...fellesHandlers} />}
+          render={(props) => <VurderUtpekingLoadable {...props} {...fellesHandlers} />}
         />
-        <SentryRoute
+        <Route
           path="/sendbrev/:behandlingID/:snr"
-          render={(props) => <Sendbrev {...props} {...fellesHandlers} />}
+          render={(props) => <SendbrevLoadable {...props} {...fellesHandlers} />}
         />
-        <SentryRoute
+        <Route
           path="/:sakstype/unntaksregistrering/:saksnr"
-          render={(props) => <Unntaksregistrering {...props} {...fellesHandlers} />}
+          render={(props) => <UnntaksregistreringLoadable {...props} {...fellesHandlers} />}
         />
-        <SentryRoute component={UkjentSide} />
+        <Route component={UkjentSideLoadable} />
       </Switch>
     )}
   </FellesHandlersContext.Consumer>

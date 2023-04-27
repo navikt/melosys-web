@@ -22,7 +22,7 @@ import { hentFaktaVerdi } from "../../../domeneUtils";
 
 import "./vurderingBostedsland.css";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 const Avklaringer = ({ avklaringer }) => (
   <div>

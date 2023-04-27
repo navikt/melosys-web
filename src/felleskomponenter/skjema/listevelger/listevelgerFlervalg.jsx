@@ -9,7 +9,7 @@ import * as Ikoner from "../../../resources/images";
 
 import "./listevelger.css";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 /** Dette er komponent for ett enkeltvalg. Dersom tillatFritekst === true, vil Nav.Input brukes
  * slik at brukeren kan redigere innholdet i feltet også ETTER at det er lagt til.

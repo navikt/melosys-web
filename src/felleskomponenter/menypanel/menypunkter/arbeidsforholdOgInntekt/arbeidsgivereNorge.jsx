@@ -15,7 +15,7 @@ import Inntekt from "../arbeidsgiver/inntekt";
 
 import "./arbeidsgivereNorge.css";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 export const ArbeidsgivereEnkeltNorge = (props) => {
   const { kilde, organisasjon, arbeidsforholdene, inntektListe, wrapIPanel } = props;

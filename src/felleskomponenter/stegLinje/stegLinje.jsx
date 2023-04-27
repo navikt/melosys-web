@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import StegIkon from "./stegIkon";
 import "./stegLinje.css";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 const StegLinje = (props) => {
   const { steg } = props;

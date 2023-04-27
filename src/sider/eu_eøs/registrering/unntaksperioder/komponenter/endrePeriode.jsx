@@ -9,7 +9,7 @@ import * as MPT from "../../../../../proptypes";
 import "./endrePeriode.css";
 import Datovelger from "../../../../../felleskomponenter/datovelger";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 const EndrePeriode = ({
   endrePeriode,

@@ -4,7 +4,7 @@ import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgrPlugin from "vite-plugin-svgr";
 import { fileURLToPath, URL } from "node:url";
 import * as path from "path";
-import vitePluginJsx from "./vite-plugin-jsx";
+import reactRefresh from "@vitejs/plugin-react-refresh";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -29,7 +29,7 @@ export default defineConfig({
       jsxImportSource: "react",
       jsxRuntime: "classic",
     }),
-    vitePluginJsx(),
+    reactRefresh(),
     viteTsconfigPaths(),
     svgrPlugin(),
   ],
@@ -51,6 +51,7 @@ export default defineConfig({
   },
   define: {
     "process.env": {},
+    module: {},
   },
   css: {
     preprocessorOptions: {

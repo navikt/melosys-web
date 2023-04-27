@@ -4,7 +4,7 @@ import classnames from "classnames";
 
 import "./tabell.css";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 /** Lister en enkeltlinje i tabellen. Denne linjen må være en array som kan mappes direkte
  * siden innhold og typer er ukjent. Evt formattering eller komponenter må gjøres av

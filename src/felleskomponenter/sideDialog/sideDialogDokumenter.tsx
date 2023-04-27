@@ -17,7 +17,7 @@ import { FaneNavn } from "./sideDialog";
 
 import "./sideDialogDokumenter.css";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 interface MottaksretningIkonProps {
   mottaksretning: Mottaksretning;

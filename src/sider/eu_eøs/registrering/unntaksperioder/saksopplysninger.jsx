@@ -27,7 +27,7 @@ import "../saksopplysninger.css";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 const Saksopplysninger = ({
   match,

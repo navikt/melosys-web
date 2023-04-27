@@ -15,7 +15,7 @@ import Arbeidsavtaler from "./arbeidsavtaler";
 
 import "./arbeidsforhold.css";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 export const Arbeidsforholdet = (props) => {
   const {

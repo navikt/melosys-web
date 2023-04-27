@@ -6,7 +6,7 @@ import * as KV from "../../../kodeverk";
 
 import "./listevelger.css";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 /** Enkeltlisten representerer ETT listevalg hvor brukeren kan velge fra listen eller skrive
  * inn sin egen verdi.

@@ -38,7 +38,7 @@ import "./vurderingArtikkel16Anmodning.css";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import VedleggTable from "../../../felleskomponenter/vedleggTable";
 
-const uuid = require("uuid/v4");
+const uuid = import("uuid/v4");
 
 const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked, redigerbart }) => {
   const { periodeID, periode } = perm;
