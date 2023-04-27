@@ -163,7 +163,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     dispatch(navigeringOperations.tilForsiden());
   };
 
-  const kunAlerts = (feil: Feilkode[] | string) => {
+  const feilmeldingerUtenUnntaksperioder = (feil: Feilkode[] | string) => {
     if (typeof feil === "string") {
       return feil;
     }
@@ -328,7 +328,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           onClick: handleBekreft,
           disabled:
             !formState?.isValid ||
-            (kunAlerts(feilmeldinger).length > 0 && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
+            (feilmeldingerUtenUnntaksperioder(feilmeldinger).length > 0 &&
+              formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
             !redigerbart,
         }}
         bekreftTekst="Bekreft og avslutt"
