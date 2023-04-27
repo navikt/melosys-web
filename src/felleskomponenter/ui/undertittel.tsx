@@ -30,11 +30,11 @@ const Undertittel = ({ ikon: Ikon, tekst, etterTekst, className, understrek = fa
 
   return (
     <div className={cl}>
-      <Nav.Typo.Undertittel id={undertittelId} className={navUndertittelCl}>
+      <Nav.Typo.UndertittelH3 id={undertittelId} className={navUndertittelCl}>
         {Ikon && <Ikon className="undertittel__ikon" {...defaultIkonProps} {...ikonProps} />}
         <span className="undertittel__tekst">{tekst}</span>
         <span>{etterTekst}</span>
-      </Nav.Typo.Undertittel>
+      </Nav.Typo.UndertittelH3>
     </div>
   );
 };

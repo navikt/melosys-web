@@ -214,7 +214,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   return (
     <div className="vurderingPerioder">
-      <Nav.Typo.Undertittel className="undertittel">Kontroller medlemskapsperioder</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Kontroller medlemskapsperioder</Nav.Typo.Innholdstittel>
 
       <div>
         <Nav.Typo.Element className="info_element">Søknad mottatt: </Nav.Typo.Element>

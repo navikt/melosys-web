@@ -61,7 +61,7 @@ const VurderingYrkesgruppe = (props) => {
   const fakta = hentFaktaVerdi(yrkesgruppe);
   return (
     <div>
-      <Nav.Typo.Undertittel>Hva er søkerens yrkessituasjon?</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Hva er søkerens yrkessituasjon?</Nav.Typo.Innholdstittel>
       <Nav.Fieldset legend="">
         <Nav.Radio
           name="yrkesgruppe"
