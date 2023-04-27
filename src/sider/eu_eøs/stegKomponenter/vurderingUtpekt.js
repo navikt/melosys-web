@@ -102,6 +102,10 @@ export const VurderingUtpekt = ({
       ? lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt
       : MKV.Kodekombinasjoner.alleLovvalg;
 
+  useEffect(() => {
+    console.log({ lovvalgsbe: formValues.lovvalgsbestemmelse });
+  }, [formValues.lovvalgsbestemmelse]);
+
   return (
     <form onSubmit={handleSubmit}>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Vurder lovvalgsbeslutningen (A003)</Nav.Typo.Innholdstittel>
