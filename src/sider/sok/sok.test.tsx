@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 
 import * as Utils from "../../utils";
 
-import { Sok, SokProps } from "./sok";
+import { Sok } from "./sok";
 import SorterbarListe from "../../felleskomponenter/sorterbarListe";
 
 describe("Sok", () => {
