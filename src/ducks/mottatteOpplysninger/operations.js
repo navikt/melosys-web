@@ -14,6 +14,7 @@ import { behandlingerSelectors } from "../behandlinger";
 import { OrganisasjonOperations } from "../organisasjoner";
 import { fagsakSelectors } from "../fagsaker";
 import { navigeringOperations } from "../navigering";
+import { erFeatureToggleEnabled } from "../../featuretoggle";
 
 export function hent(behandlingID) {
   return async (dispatch, getState) => {
@@ -24,7 +25,10 @@ export function hent(behandlingID) {
     });
     const dispatchedMottatteOpplysningerAction = await doThenDispatchResult(dispatch, getState);
 
-    if (dispatchedMottatteOpplysningerAction.type === Types.FEILET) {
+    if (
+      dispatchedMottatteOpplysningerAction.type === Types.FEILET &&
+      (await erFeatureToggleEnabled("melosys.registrering_unntak_fra_medlemskap"))
+    ) {
       await dispatch(navigeringOperations.tilTomFlyt());
       return dispatchedMottatteOpplysningerAction;
     }
