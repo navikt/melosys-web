@@ -72,6 +72,9 @@ export const lagUrlFraSakstypeOgBehandlingstema = (
   return flytFinnesIkkeForBehandlingPath;
 };
 
+export const lagTomFlytUrl = (sakstypeKode: string, saksnummer: number | string, behandlingID: number) =>
+  `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
+
 export const lagUrl = (
   saksnummer: number | string,
   behandlingID: number,
@@ -94,7 +97,7 @@ export const lagUrl = (
       registreringUnntakFraMedlemskapToggleEnabled
     )
   ) {
-    return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
+    return lagTomFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
 };
