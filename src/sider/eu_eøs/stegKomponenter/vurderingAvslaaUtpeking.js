@@ -76,7 +76,9 @@ export const VurderingAvslaaUtpeking = ({
 
   return (
     <form onSubmit={handleSubmit(avsluttOgSendSed)}>
-      <Nav.Typo.Undertittel className="stegTittel">Avvis utpeking — informasjon til SED</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        Avvis utpeking — informasjon til SED
+      </Nav.Typo.Innholdstittel>
       {redigerbart && (
         <Fragment>
           <Skjema.Textarea

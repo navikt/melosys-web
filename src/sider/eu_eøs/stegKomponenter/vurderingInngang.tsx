@@ -153,7 +153,7 @@ export const VurderingInngang = ({
 
   return (
     <div className="vurderingInngang">
-      <Nav.Typo.Undertittel>Kontroller inngangsvilkår</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Kontroller inngangsvilkår</Nav.Typo.Innholdstittel>
       <Varsler
         oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
         inngangsvilkaar={inngangsvilkaar}

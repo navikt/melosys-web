@@ -226,7 +226,7 @@ export class VurderingEndrePeriode extends React.Component {
 
     return (
       <div className="vurderingEndrePeriode">
-        <Nav.Typo.Undertittel>Endre lovvalgsperiode</Nav.Typo.Undertittel>
+        <Nav.Typo.Innholdstittel className="stegvelgertittel">Endre lovvalgsperiode</Nav.Typo.Innholdstittel>
         <Nav.Typo.Element className="mindreTittel">Opprinnelig lovvalgsperiode</Nav.Typo.Element>
         <Nav.Row>
           <Nav.Column xs="3">

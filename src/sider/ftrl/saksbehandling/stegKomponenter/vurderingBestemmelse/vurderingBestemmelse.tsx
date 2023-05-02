@@ -235,9 +235,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   return (
     <div className="vurderingBestemmelse">
-      <Nav.Typo.Undertittel className="undertittel">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Hvilken bestemmelse skal søknaden vurderes etter?
-      </Nav.Typo.Undertittel>
+      </Nav.Typo.Innholdstittel>
 
       <Nav.Fieldset className="select" legend="Bestemmelse">
         <Nav.Row>

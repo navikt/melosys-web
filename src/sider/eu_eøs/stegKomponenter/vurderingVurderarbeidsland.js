@@ -226,7 +226,7 @@ export const VurderingVurderarbeidsland = ({
 
   return (
     <div className="vurderingVurderArbeidsland">
-      <Nav.Typo.Undertittel className="overskrift">Vurder arbeidsland</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel overskrift">Vurder arbeidsland</Nav.Typo.Innholdstittel>
       {innhold}
       <Mui.StegKnapper
         bekreftKnappProps={{

@@ -307,7 +307,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingArbeidTjenestepersonEllerFlyVedtak">
-      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
       <Nav.Row className="velgLovvalgsbestemmelse">
         <Nav.Column xs="7">
           <Skjema.Select label="Velg en lovvalgsbestemmelse" feltNavn="lovvalgsbestemmelse" disabled={!redigerbart}>

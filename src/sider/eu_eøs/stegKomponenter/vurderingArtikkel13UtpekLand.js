@@ -98,13 +98,15 @@ export const VurderingArtikkel13UtpekLand = ({
   };
 
   const endreLovvalgsland = (land) => {
-    oppdaterData(lagLovvalgsland(land));
+    if (land !== formValues.lovvalgsland) {
+      oppdaterData(lagLovvalgsland(land));
 
-    oppdaterMottakerinstitusjoner(
-      [...new Set([...landMedVesentligEllerRegistrertArbeid, land])].map((landkode) =>
-        KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder)
-      )
-    );
+      oppdaterMottakerinstitusjoner(
+        [...new Set([...landMedVesentligEllerRegistrertArbeid, land])].map((landkode) =>
+          KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder)
+        )
+      );
+    }
   };
 
   const pdfDokumenter = [
@@ -147,7 +149,7 @@ export const VurderingArtikkel13UtpekLand = ({
 
   return (
     <div className="vurderingArtikkel13UtpekLand">
-      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
       <Nav.Typo.Undertittel>
         <Nav.Typo.Element className="undertittel">{lovvalgslandTittel}</Nav.Typo.Element>
       </Nav.Typo.Undertittel>

@@ -21,8 +21,10 @@ const lagAndelMellomNullOgHundreMelding = (feltbeskrivelse) =>
   );
 const tomStringTilNull = (value, originalValue) => (originalValue === "" ? null : value);
 
-const skalValidereSoknad = (behandlingstema, mottatteOpplysningerType) =>
-  behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND &&
+const skalValidereSoknad = (behandlingstema) =>
+  behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
+
+const skalValidereSoknadsland = (mottatteOpplysningerType) =>
   mottatteOpplysningerType !== MKV.Koder.mottatteopplysningertyper.ANMODNING_ELLER_ATTEST;
 
 const erTrygdeavtaleSak = (sakstype) => sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE;
@@ -150,7 +152,7 @@ const foedestedOgLandSchema = object()
     ),
   });
 
-const soknad = object().when(["$behandlingstema", "$mottatteOpplysningerType"], {
+const soknad = object().when(["$behandlingstema"], {
   is: skalValidereSoknad,
   then: object().shape({
     arbeidsforholdUtland: array().of(
@@ -361,30 +363,34 @@ const soknad = object().when(["$behandlingstema", "$mottatteOpplysningerType"], 
           ),
       }),
     }),
-    soknadsland: object().shape({
-      landkoder: array().when("erUkjenteEllerAlleEosLand", {
-        is: (erUkjenteEllerAlleEosLand) => !erUkjenteEllerAlleEosLand,
-        then: array().when("$behandlingstema", {
-          is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-          then: array().min(
-            2,
-            lagMelding(
-              KV.Menypunkter.Utenlandsoppdraget.tittel,
-              KV.Menypunkter.Utenlandsoppdraget.undertitler.land,
-              "Det er påkrevd med to eller flere land for dette behandlingstemaet"
-            )
-          ),
-          otherwise: array().min(
-            1,
-            lagMelding(
-              KV.Menypunkter.Utenlandsoppdraget.tittel,
-              KV.Menypunkter.Utenlandsoppdraget.undertitler.land,
-              "Oppgi minst ett søknadsland"
-            )
-          ),
+    soknadsland: object().when("$mottatteOpplysningerType", {
+      is: skalValidereSoknadsland,
+      then: object().shape({
+        landkoder: array().when("erUkjenteEllerAlleEosLand", {
+          is: (erUkjenteEllerAlleEosLand) => !erUkjenteEllerAlleEosLand,
+          then: array().when("$behandlingstema", {
+            is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+            then: array().min(
+              2,
+              lagMelding(
+                KV.Menypunkter.Utenlandsoppdraget.tittel,
+                KV.Menypunkter.Utenlandsoppdraget.undertitler.land,
+                "Det er påkrevd med to eller flere land for dette behandlingstemaet"
+              )
+            ),
+            otherwise: array().min(
+              1,
+              lagMelding(
+                KV.Menypunkter.Utenlandsoppdraget.tittel,
+                KV.Menypunkter.Utenlandsoppdraget.undertitler.land,
+                "Oppgi minst ett søknadsland"
+              )
+            ),
+          }),
         }),
+        erUkjenteEllerAlleEosLand: boolean(),
       }),
-      erUkjenteEllerAlleEosLand: boolean(),
+      otherwise: object().nullable(),
     }),
   }),
 });

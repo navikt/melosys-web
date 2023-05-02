@@ -335,9 +335,9 @@ const LonnOgGodtgjorelser = connector(
       <Nav.Container fluid className="lonnOgGodtgjorelser">
         <Nav.Row className="tittel">
           <Nav.Column xs="12">
-            <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+            <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
               {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
-            </Nav.Typo.Innholdstittel>
+            </Nav.Typo.Systemtittel>
             {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
             <LonnOgNaturalytelser redigerbart={redigerbart} lagreHandler={lagreHandler} {...lonnOgNaturalytelser} />
             <ArbeidsgiveravgiftOgTrygdeavgift
