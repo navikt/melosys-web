@@ -17,10 +17,12 @@ import * as Forms from "../../../felleskomponenter/forms";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 import * as Api from "../../../services/api";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import UnntakHjelpetekst from "../../trygdeavtale/stegKomponenter/vurderingBestemmelse/unntakHjelpetekst/unntakHjelpetekst";
 
 const INNVILGE = "INNVILGE";
-const AVSLAG = "AVSLAG";
 const UNNTAK = "UNNTAK";
+const AVSLAG = "AVSLAG";
 
 const komponentState = (state: RootState) => ({
   vilkarListe: vilkarSelectors.VilkarSelector(state),
@@ -29,6 +31,7 @@ const komponentState = (state: RootState) => ({
   vilkaarKodeverk: folketrygdenkodeverkSelectors.VilkaarSelector(state),
   begrunnelserKodeverk: folketrygdenkodeverkSelectors.BegrunnelserSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  soeknadsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
 });
 
 interface Props {
@@ -40,7 +43,7 @@ interface Props {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
-  const { bestemmelse, redigerbart } = useSelector(komponentState);
+  const { bestemmelse, redigerbart, soeknadsland } = useSelector(komponentState);
   const fagsak = useSelector(fagsakSelectors.FagsakSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const [muligeBestemmelser, setMuligeBestemmelser] = useState<KTObject[]>([]);
@@ -69,7 +72,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       sakstype: fagsak.sakstype.kode,
       sakstema: fagsak.sakstema.kode,
       behandlingstema,
-      land: "GB", // TODO: hent valgt land ra forrige steg
+      land: soeknadsland,
     }).then((res) => setMuligeBestemmelser(res));
   }, [fagsak, behandlingstema]);
 
@@ -139,6 +142,14 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
+      )}
+
+      {formValues.utfall === UNNTAK && (
+        <Nav.Row>
+          <Nav.Column xs="10" className="unntakTekst">
+            <UnntakHjelpetekst />
+          </Nav.Column>
+        </Nav.Row>
       )}
 
       <Mui.StegKnapper
