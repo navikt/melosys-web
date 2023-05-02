@@ -4,6 +4,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Feilmeldinger } from "../../../felleskomponenter/feilmeldinger";
+import { Alertmeldinger } from "../../../felleskomponenter/alertmeldinger";
 
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
@@ -26,10 +27,12 @@ import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 
 import "./vurderingUnntakMedlemskap.css";
 import { getLovvalgsbestemmelser } from "../../../services/modules/lovvalgsbestemmelser";
+import { Feilkode } from "../../../@types";
 
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
 const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_USA_5_2_G } = MKV.Koder.trygdedekninger;
+const { OVERLAPPENDE_UNNTAK_PERIODER, OVERLAPPENDE_MEDLEMSKAPSPERIODER } = MKV.Koder.begrunnelser.kontroll_begrunnelser;
 
 interface VurderingUnntakMedlemskapProps {
   oppdaterStatus: (isValid: boolean) => void;
@@ -160,6 +163,13 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     dispatch(navigeringOperations.tilForsiden());
   };
 
+  const feilmeldingerUtenUnntaksperioder = (feil: Feilkode[] | string) => {
+    if (typeof feil === "string") {
+      return feil;
+    }
+    return feil.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER);
+  };
+
   return (
     <div className="vurderingUnntakMedlemskap">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Unntak medlemskap</Nav.Typo.Innholdstittel>
@@ -214,7 +224,19 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           </Nav.Fieldset>
 
           {formState.isValid && (
-            <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" feilmeldinger={feilmeldinger} />
+            <Feilmeldinger
+              className="vurderingUnntakMedlemskap__feilmelding"
+              feilmeldinger={feilmeldinger}
+              exclude={OVERLAPPENDE_UNNTAK_PERIODER}
+            />
+          )}
+
+          {formState.isValid && (
+            <Alertmeldinger
+              className="vurderingUnntakMedlemskap__alertmeldinger"
+              meldinger={feilmeldinger}
+              exclude={OVERLAPPENDE_MEDLEMSKAPSPERIODER}
+            />
           )}
 
           {Utils._isEmpty(mottatteOpplysningerPeriode.tom) && (
@@ -267,11 +289,23 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           </Nav.Fieldset>
 
           {formState.isValid && (
-            <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" feilmeldinger={feilmeldinger} />
+            <Feilmeldinger
+              className="vurderingUnntakMedlemskap__feilmelding"
+              feilmeldinger={feilmeldinger}
+              exclude={OVERLAPPENDE_UNNTAK_PERIODER}
+            />
+          )}
+
+          {formState.isValid && (
+            <Alertmeldinger
+              className="vurderingUnntakMedlemskap__alertmeldinger"
+              meldinger={feilmeldinger}
+              exclude={OVERLAPPENDE_MEDLEMSKAPSPERIODER}
+            />
           )}
 
           <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__info">
-            Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet.
+            Ved endring/ikke godkjenning av unntaksperiode bør det sendes informasjon til utenlandsk trygdemyndighet
           </Nav.AlertStripeInfo>
 
           {Utils._isEmpty(formValues.tom) && (
@@ -294,7 +328,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           onClick: handleBekreft,
           disabled:
             !formState?.isValid ||
-            (feilmeldinger.length > 0 && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
+            (feilmeldingerUtenUnntaksperioder(feilmeldinger).length > 0 &&
+              formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
             !redigerbart,
         }}
         bekreftTekst="Bekreft og avslutt"

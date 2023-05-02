@@ -12,9 +12,10 @@ import "./feilmelding.css";
 type feilmeldingerProps = {
   feilmeldinger: Feilkode[] | string;
   className?: string;
+  exclude?: string;
 };
 
-export default ({ feilmeldinger, className }: feilmeldingerProps) => {
+export default ({ feilmeldinger, className, exclude }: feilmeldingerProps) => {
   if (Utils._isEmpty(feilmeldinger)) {
     return null;
   }
@@ -23,12 +24,19 @@ export default ({ feilmeldinger, className }: feilmeldingerProps) => {
     if (typeof feilmeldinger === "string") {
       return feilmeldinger;
     }
-    if (feilmeldinger.length === 1) {
-      return KV.kodeTilTerm(feilmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+
+    const filtrerteFeilmeldinger = feilmeldinger.filter((value) => value.kode !== exclude);
+
+    if (filtrerteFeilmeldinger.length === 0) {
+      return null;
+    }
+
+    if (filtrerteFeilmeldinger.length === 1) {
+      return KV.kodeTilTerm(filtrerteFeilmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
     }
     return (
       <ul className="feilkoder__liste">
-        {feilmeldinger.map((feil) => (
+        {filtrerteFeilmeldinger.map((feil) => (
           <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
         ))}
       </ul>
@@ -36,10 +44,13 @@ export default ({ feilmeldinger, className }: feilmeldingerProps) => {
   };
 
   const classNameFeilmeldinger = classNames("feilmelding", className);
-
+  const innhold = renderInnhold();
+  if (!innhold) {
+    return null;
+  }
   return (
     <div className={classNameFeilmeldinger}>
-      <Nav.AlertStripeFeil className="varselstripe">{renderInnhold()}</Nav.AlertStripeFeil>
+      <Nav.AlertStripeFeil className="varselstripe">{innhold}</Nav.AlertStripeFeil>
     </div>
   );
 };
