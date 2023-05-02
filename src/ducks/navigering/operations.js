@@ -1,5 +1,5 @@
 import { push } from "connected-react-router";
-import { lagTomFlytUrl } from "../../routing";
+import { lagTomFlytUrl } from "../../routing/url";
 import { fagsakSelectors } from "../fagsaker";
 import { behandlingerSelectors } from "../behandlinger";
 
