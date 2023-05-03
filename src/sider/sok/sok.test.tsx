@@ -3,11 +3,11 @@ import { shallow } from "enzyme";
 
 import * as Utils from "../../utils";
 
-import { Sok, SokProps } from "./sok";
+import { Sok } from "./sok";
 import SorterbarListe from "../../felleskomponenter/sorterbarListe";
 
 describe("Sok", () => {
-  let props: SokProps;
+  let props: { sokResultat: any[]; sok: jest.Mock<any, any> };
 
   const getItemPrototype = Storage.prototype.getItem;
 
@@ -30,7 +30,7 @@ describe("Sok", () => {
         saksnummer: "",
       },
     ];
-    const sok = shallow(<Sok {...props} />);
+    const sok = shallow(<Sok landkoder={[]} hentLandkoder={() => Promise.resolve()} {...props} />);
 
     const sorterbarListe = sok.find(SorterbarListe);
     const sorterbarListeProps = sorterbarListe.props();
@@ -42,7 +42,7 @@ describe("Sok", () => {
   it("viser ikke sorterbarliste ved søk på fnr uten resultat", () => {
     const generator = new Utils.testhelpers.Generator();
     Storage.prototype.getItem = jest.fn(() => generator.generateBirthNumber());
-    const sok = shallow(<Sok {...props} />);
+    const sok = shallow(<Sok landkoder={[]} hentLandkoder={() => Promise.resolve()} {...props} />);
 
     const sorterbarListe = sok.find(SorterbarListe);
 
