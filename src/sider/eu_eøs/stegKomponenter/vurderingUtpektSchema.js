@@ -1,9 +1,10 @@
-import { string, object } from "yup";
+import { string, object, array } from "yup";
 import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
-const VELG_MOTTAKERINSTITUSJON = { melding: "Velg mottakerinstitusjon" };
+const VELG_OVERGANGSREGEL_MINST_1 = "Du må velge en overgangsregel";
+const VELG_OVERGANGSREGEL_MAKS_1 = "Du kan kun velge en overgangsregel";
 
 const harOvergangsregler = (lovvalgsbestemmelse) => {
   const grunnlag87 = [
@@ -17,9 +18,9 @@ const harOvergangsregler = (lovvalgsbestemmelse) => {
 const vurder_utpeking = object().shape({
   fom: string().erGyldigDato().required(MAA_FYLLES_UT),
   tom: string().erGyldigDato().erEtterDatofelt("fom").required(MAA_FYLLES_UT),
-  overgangsregelbestemmelser: string().when("lovvalgsbestemmelse", {
+  overgangsregelbestemmelser: array().when("lovvalgsbestemmelse", {
     is: (lovvalgsbestemmelse) => harOvergangsregler(lovvalgsbestemmelse),
-    then: string().required(VELG_MOTTAKERINSTITUSJON).min(1).max(1),
+    then: array().min(1, { _error: VELG_OVERGANGSREGEL_MINST_1 }).max(1, { _error: VELG_OVERGANGSREGEL_MAKS_1 }),
   }),
 });
 

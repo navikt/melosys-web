@@ -102,10 +102,6 @@ export const VurderingUtpekt = ({
       ? lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt
       : MKV.Kodekombinasjoner.alleLovvalg;
 
-  useEffect(() => {
-    console.log({ lovvalgsbe: formValues.lovvalgsbestemmelse });
-  }, [formValues.lovvalgsbestemmelse]);
-
   return (
     <form onSubmit={handleSubmit}>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Vurder lovvalgsbeslutningen (A003)</Nav.Typo.Innholdstittel>
@@ -146,14 +142,16 @@ export const VurderingUtpekt = ({
         <Nav.Row className="rad">
           <Nav.Column xs="5">
             <Nav.Typo.Element>Overgangsregler gjelder:</Nav.Typo.Element>
-            <Skjema.ListeVelger
-              feltNavn="overgangsregelbestemmelser"
-              label="Legg til ny overgangsregelbestemmelse:"
-              placeholder="(Velg bestemmelse)"
-              muligeValg={MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser}
-              disabled={!redigerbart}
-              gruppe
-            />
+            <Nav.Fieldset>
+              <Skjema.ListeVelger
+                feltNavn="overgangsregelbestemmelser"
+                label="Legg til ny overgangsregelbestemmelse:"
+                placeholder="(Velg bestemmelse)"
+                muligeValg={MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser}
+                disabled={!redigerbart}
+                gruppe
+              />
+            </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
       )}
