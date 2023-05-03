@@ -296,8 +296,8 @@ describe("AvsluttSak", () => {
       const avsluttSak = shallow(<AvsluttSak {...props} />);
       const handlinger = avsluttSak.find(Handling);
 
-      expect(handlinger).toHaveLength(5);
-      expect(handlinger.at(1).props().tekst).toBe("Vedtaket er omgjort (fvl § 35)");
+      expect(handlinger).toHaveLength(7);
+      expect(handlinger.at(3).props().tekst).toBe("Vedtaket er omgjort (fvl § 35)");
     });
 
     it(`viser ikke 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${FØRSTEGANG}`, () => {

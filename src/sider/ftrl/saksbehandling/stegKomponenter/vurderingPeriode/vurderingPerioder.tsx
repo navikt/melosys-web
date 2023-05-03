@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "AppTypes";
-import { Medlemskapsperiode, OppdaterMedlemskapsperiode } from "Domene";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValue, FieldValues, useFieldArray, useForm } from "react-hook-form";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
@@ -22,29 +21,53 @@ import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { PeriodeElementer } from "./komponenter/periodeElementer";
+import { Feilmelding, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 
-export type MedlemskapsperiodeProp = Medlemskapsperiode & { ny: boolean; feil: string | undefined };
+export type MedlemskapsperiodeProp = {
+  ny: boolean;
+  feil?: string;
+  periodeId: number;
+  fomDato: string;
+  tomDato: string;
+  innvilgelsesResultat: string;
+  trygdedekning: string;
+};
 
-const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: Medlemskapsperiode): MedlemskapsperiodeProp => ({
+export interface FieldArrayProps {
+  medlemskapsperioder: MedlemskapsperiodeProp[];
+}
+
+export type FormValuesProps = FieldValues & FieldArrayProps;
+
+const mapTilMedlemskapsperiodeProps = (
+  medlemskapsperiode: Api.Medlemskapsperioder.Medlemskapsperiode
+): MedlemskapsperiodeProp => ({
   ...medlemskapsperiode,
   fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
   tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
   ny: false,
   feil: undefined,
+  periodeId: medlemskapsperiode.id,
 });
 
 const mapInitialMedlemskapsperioder = (
-  medlemskapsperioder: Medlemskapsperiode[] | undefined
+  medlemskapsperioder: Api.Medlemskapsperioder.Medlemskapsperiode[] | undefined
 ): MedlemskapsperiodeProp[] =>
   medlemskapsperioder
-    ? [...medlemskapsperioder].sort((a, b) => a.fomDato.localeCompare(b.fomDato)).map(mapTilMedlemskapsperiodeProps)
+    ? [...medlemskapsperioder]
+        .sort(
+          (a, b) =>
+            new Date(a.fomDato).getTime() - new Date(b.fomDato).getTime() ||
+            (a.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT ? -1 : 1)
+        )
+        .map(mapTilMedlemskapsperiodeProps)
     : [];
 
 const komponentState = (state: RootState) => ({
   valgtTrygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
-  medlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
+  lagredeMedlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
   trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
@@ -64,7 +87,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const {
     redigerbart,
     valgtTrygdedekning,
-    medlemskapsperioder,
+    lagredeMedlemskapsperioder,
     trygdedekninger,
     behandlingID,
     innvilgelsesResultater,
@@ -75,151 +98,103 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   ]);
 
   const {
-    setValue,
     control,
     watch,
-    trigger: triggerValidation,
     formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
     mode: "all",
-    context: {
-      soknadsperiode,
-      mottaksdato,
-    },
+    context: { soknadsperiode },
     values: {
-      medlemskapsperioder: mapInitialMedlemskapsperioder(medlemskapsperioder),
-    } as FieldValues,
+      medlemskapsperioder: mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder),
+    } as FieldValue<FormValuesProps>,
+  });
+  const { fields, append, remove, update } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({
+    control,
+    name: "medlemskapsperioder",
   });
   const formValues = watch();
 
   useEffect(() => {
     oppdaterStatus(formIsValid);
-    if (redigerbart)
-      debouncedLagreMedlemskapsperioder({
-        medlemskapsperioder: formValues?.medlemskapsperioder,
-        valid: formIsValid,
-      });
   }, [formIsValid]);
+
+  const lagreMedlemskapsperiode = (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
+    const periodeRequest = {
+      fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato),
+      tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato),
+      trygdedekning: medlemskapsperiode.trygdedekning,
+      innvilgelsesResultat: medlemskapsperiode.innvilgelsesResultat,
+    };
+
+    (medlemskapsperiode.ny
+      ? Api.Medlemskapsperioder.postMedlemskapsperioder(behandlingID, periodeRequest)
+      : Api.Medlemskapsperioder.putMedlemskapsperioder(behandlingID, medlemskapsperiode.periodeId, periodeRequest)
+    )
+      .then((response) => {
+        update(index, mapTilMedlemskapsperiodeProps(response));
+      })
+      .catch((error) => {
+        update(index, { ...formValues.medlemskapsperioder[index], feil: error.body?.message || error });
+      });
+  };
+
+  const debouncedLagreMedlemskapsperioder = useCallback(
+    Utils._debounce(
+      (medlemskapsperioder, isValid, overskrevetIndex) =>
+        isValid &&
+        medlemskapsperioder.forEach((medlemskapsperiode: MedlemskapsperiodeProp, index: number) =>
+          lagreMedlemskapsperiode(medlemskapsperiode, overskrevetIndex !== undefined ? overskrevetIndex : index)
+        ),
+      500
+    ),
+    []
+  );
+
+  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, soknadsperiode.fom);
+
+  useEffect(() => {
+    if (redigerbart && aktivtSteg) {
+      debouncedLagreMedlemskapsperioder(
+        formValues.medlemskapsperioder,
+        formIsValid && !aktivFeilmeldingType,
+        undefined
+      );
+    }
+  }, [formIsValid, aktivFeilmeldingType]);
 
   const antallMedlemskapsperioder = formValues.medlemskapsperioder?.length;
 
   const ingenMedlemskapsperioder = antallMedlemskapsperioder === undefined || antallMedlemskapsperioder === 0;
 
-  const erPeriodeFørMottaksdato = (medlemskapsperiode: MedlemskapsperiodeProp) =>
-    Utils.dato.erGyldigPeriode(medlemskapsperiode.fomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato)) &&
-    Utils.dato.erGyldigPeriode(medlemskapsperiode.tomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato));
-
-  const oppdaterMedlemskapsperiode = (
-    oppdatertMedlemskapsperiode: OppdaterMedlemskapsperiode,
-    index: number,
-    medlemskapsperiodeID: number
-  ) => {
-    Api.Medlemskapsperioder.putMedlemskapsperioder(behandlingID, medlemskapsperiodeID, oppdatertMedlemskapsperiode)
-      .then(() => {
-        setValue(`medlemskapsperioder[${index}].feil`, undefined);
-      })
-      .catch((error) => {
-        setValue(`medlemskapsperioder[${index}].feil`, error.body?.message || error);
-      });
-  };
-
-  const opprettMedlemskapsperiode = (oppdatertMedlemskapsperiode: OppdaterMedlemskapsperiode, index: number) => {
-    Api.Medlemskapsperioder.postMedlemskapsperioder(behandlingID, oppdatertMedlemskapsperiode)
-      .then((response) => {
-        setValue(`medlemskapsperioder[${index}]`, mapTilMedlemskapsperiodeProps(response));
-      })
-      .catch((error) => {
-        setValue(`medlemskapsperioder[${index}].feil`, error.body?.message || error);
-      });
-  };
-
-  const lagreMedlemskapsperioder = (data: {
-    medlemskapsperioder: MedlemskapsperiodeProp[] | undefined;
-    valid: boolean;
-  }) => {
-    if (data.medlemskapsperioder && data.valid) {
-      data.medlemskapsperioder.forEach((medlemskapsperiode, index) => {
-        const oppdatertMedlemskapsperiode = {
-          fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato),
-          tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, null, undefined),
-          trygdedekning: medlemskapsperiode.trygdedekning,
-          innvilgelsesResultat: medlemskapsperiode.innvilgelsesResultat,
-        };
-
-        if (medlemskapsperiode.ny) {
-          opprettMedlemskapsperiode(oppdatertMedlemskapsperiode, index);
-        } else {
-          oppdaterMedlemskapsperiode(oppdatertMedlemskapsperiode, index, medlemskapsperiode.id);
-        }
-      });
-    }
-  };
-  const debouncedLagreMedlemskapsperioder = useCallback(Utils._debounce(lagreMedlemskapsperioder, 1000), []);
-
-  const erKombinasjonGyldig = (medlemskapsperiode: MedlemskapsperiodeProp) => {
-    if (erPeriodeFørMottaksdato(medlemskapsperiode)) {
-      return (
-        medlemskapsperiode.innvilgelsesResultat !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET ||
-        medlemskapsperiode.trygdedekning === MKV.Koder.trygdedekninger.PENSJONSDEL
-      );
-    }
-    return medlemskapsperiode.innvilgelsesResultat !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET;
-  };
-
-  const finnesUgyldigKombinasjon = formValues?.medlemskapsperioder?.some(
-    (medlemskapsperiode: MedlemskapsperiodeProp) => !erKombinasjonGyldig(medlemskapsperiode)
-  );
-
-  useEffect(() => {
-    if (finnesUgyldigKombinasjon) {
-      formValues?.medlemskapsperioder?.forEach((medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
-        if (!erKombinasjonGyldig(medlemskapsperiode)) {
-          setValue(`medlemskapsperioder[${index}].innvilgelsesResultat`, "");
-        }
-      });
-    }
-  }, [finnesUgyldigKombinasjon]);
-
   if (!aktivtSteg || !formValues) return null;
 
-  const handleEndreTomDato = (tomDato: string, index: number) => {
-    if (antallMedlemskapsperioder === 2 && index === 0) {
-      setValue(`medlemskapsperioder[1].fomDato`, Utils.dato.plussEnDag(tomDato));
-    }
-  };
-
   const handleSlett = (index: number) => {
-    if (!formValues?.medlemskapsperioder) return;
+    const medlemskapsperiode = formValues.medlemskapsperioder[index];
 
-    if (formValues.medlemskapsperioder[index].ny) {
-      formValues.medlemskapsperioder.splice(index, 1);
+    if (medlemskapsperiode.ny) {
+      remove(index);
     } else {
-      Api.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, formValues.medlemskapsperioder[index].id)
+      Api.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, medlemskapsperiode.periodeId)
         .then(() => {
-          formValues.medlemskapsperioder.splice(index, 1);
+          remove(index);
         })
         .catch((error) => {
-          setValue(`medlemskapsperioder[${index}].feil`, error.body?.message || error);
+          update(index, { ...medlemskapsperiode, feil: error.body?.message || error });
         });
     }
-    triggerValidation();
   };
 
   const handleLeggTil = () => {
-    if (!antallMedlemskapsperioder) return;
-
-    const nyPeriodeFomDato =
-      antallMedlemskapsperioder > 0
-        ? Utils.dato.plussEnDag(formValues.medlemskapsperioder[antallMedlemskapsperioder - 1].tomDato)
-        : Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
-
     const nyMedlemskapsperiode = {
-      id: Utils._uuid(),
+      periodeId: Utils._uuid(),
       ny: true,
-      fomDato: nyPeriodeFomDato,
+      fomDato: "",
+      tomDato: "",
+      innvilgelsesResultat: "",
+      trygdedekning: "",
     };
-    setValue(`medlemskapsperioder[${antallMedlemskapsperioder}]`, nyMedlemskapsperiode);
+    append(nyMedlemskapsperiode);
   };
 
   const handleBekreft = () => {
@@ -229,24 +204,17 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const visLeggTilNyPeriode =
     !ingenMedlemskapsperioder &&
-    !formValues.medlemskapsperioder.some((periode: MedlemskapsperiodeProp) => Utils._isEmpty(periode.tomDato));
-
-  const visIkkeStottetIMelosys =
-    !ingenMedlemskapsperioder &&
-    (formValues.medlemskapsperioder.every(
-      (periode: MedlemskapsperiodeProp) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT
-    ) ||
-      formValues.medlemskapsperioder.some(
-        (periode: MedlemskapsperiodeProp) =>
-          !erPeriodeFørMottaksdato(periode) && periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT
-      ));
-
-  const ingenSluttdato =
-    !ingenMedlemskapsperioder && Utils._isEmpty(formValues.medlemskapsperioder[antallMedlemskapsperioder - 1].tomDato);
+    !formValues.medlemskapsperioder.some(
+      (periode: MedlemskapsperiodeProp) =>
+        Utils._isEmpty(periode.fomDato) ||
+        Utils._isEmpty(periode.tomDato) ||
+        Utils._isEmpty(periode.trygdedekning) ||
+        Utils._isEmpty(periode.innvilgelsesResultat)
+    );
 
   return (
     <div className="vurderingPerioder">
-      <Nav.Typo.Undertittel className="undertittel">Kontroller medlemskapsperioder</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Kontroller medlemskapsperioder</Nav.Typo.Innholdstittel>
 
       <div>
         <Nav.Typo.Element className="info_element">Søknad mottatt: </Nav.Typo.Element>
@@ -265,11 +233,11 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         trygdedekninger={trygdedekninger}
         innvilgelsesResultater={innvilgelsesResultater}
         control={control}
-        medlemskapsperioder={formValues.medlemskapsperioder}
+        fields={fields}
         handleSlett={handleSlett}
         redigerbart={redigerbart}
-        erPeriodeFoerSoknadMottatDato={erPeriodeFørMottaksdato}
-        handleEndreTomDato={handleEndreTomDato}
+        formIsValid={formIsValid && !aktivFeilmeldingType}
+        handleChange={debouncedLagreMedlemskapsperioder}
       />
 
       {visLeggTilNyPeriode && (
@@ -280,26 +248,13 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         </div>
       )}
 
-      {visIkkeStottetIMelosys && (
-        <Nav.AlertStripeInfo className="infomelding">
-          Søknaden kan foreløpig ikke behandles i Melosys. Avslutt saken som bortfalt.
-        </Nav.AlertStripeInfo>
-      )}
-
-      {ingenMedlemskapsperioder && (
-        <Nav.AlertStripeAdvarsel className="infomelding">
-          Du må legge inn minst én periode før du kan fortsette.
-        </Nav.AlertStripeAdvarsel>
-      )}
-
-      {ingenSluttdato && (
-        <Nav.AlertStripeInfo className="infomelding">
-          Du må oppgi sluttdato for å kunne angi resultat. Dette blir sluttdatoen på vedtaket.
-        </Nav.AlertStripeInfo>
-      )}
+      <Feilmelding type={aktivFeilmeldingType} />
 
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: handleBekreft, disabled: !redigerbart || !formIsValid }}
+        bekreftKnappProps={{
+          onClick: handleBekreft,
+          disabled: !redigerbart || !formIsValid || !!aktivFeilmeldingType,
+        }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>

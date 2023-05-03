@@ -388,7 +388,9 @@ class VurderingArtikkel16Anmodning extends Component {
     /* eslint-disable max-len */
     return (
       <div>
-        <Nav.Typo.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.Typo.Undertittel>
+        <Nav.Typo.Innholdstittel className="stegvelgertittel">
+          Anmodning om unntak etter artikkel 16.1
+        </Nav.Typo.Innholdstittel>
         <div className="artikkel16">
           {erIDirekteTilArtikkel16Flyt && (
             <Nav.Row className="vilAnmode">

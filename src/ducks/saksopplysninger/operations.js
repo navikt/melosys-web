@@ -7,17 +7,7 @@
  *
  */
 
-import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
-import * as Types from "./types";
-
-export function sjekkStatus(behandlingID) {
-  return doThenDispatch(() => Api.Saksopplysninger.sjekkStatus(behandlingID), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
 
 /**
  * Kaller backend for å be om oppfrisking av en sak.

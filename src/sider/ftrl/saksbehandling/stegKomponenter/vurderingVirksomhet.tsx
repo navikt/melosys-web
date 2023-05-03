@@ -98,9 +98,9 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
   }
   return (
     <div className="vurderingVirksomhet">
-      <Nav.Typo.Undertittel className="undertittel">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
         <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={hjelpetekst} hjelpetekstClassName="hjelpetekst" />
-      </Nav.Typo.Undertittel>
+      </Nav.Typo.Innholdstittel>
 
       <Mui.Checkboxgruppe
         muligeValg={virksomheterListe}

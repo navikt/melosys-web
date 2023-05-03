@@ -104,7 +104,7 @@ export const VurderingUtpekt = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <Nav.Typo.Undertittel className="stegTittel">Vurder lovvalgsbeslutningen (A003)</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Vurder lovvalgsbeslutningen (A003)</Nav.Typo.Innholdstittel>
       <Nav.Row className="rad">
         <Nav.Column xs="5">
           {vurderingBegrunnelser.length > 0 && (

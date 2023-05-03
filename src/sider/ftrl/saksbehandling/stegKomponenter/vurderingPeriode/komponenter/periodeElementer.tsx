@@ -1,23 +1,40 @@
 import React from "react";
-import { Control } from "react-hook-form";
+import { Control, FieldArrayWithId } from "react-hook-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
+
+import MKV from "../../../../../../melosyskodeverk";
+import * as Forms from "../../../../../../felleskomponenter/forms";
+import * as Ikoner from "../../../../../../resources/images";
 import * as Nav from "../../../../../../navFrontend";
+import * as Mui from "../../../../../../felleskomponenter/ui";
+
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
-import { MedlemskapsperiodeProp } from "../vurderingPerioder";
-import { PeriodeElement } from "./periodeElement";
+
+import { FieldArrayProps, MedlemskapsperiodeProp } from "../vurderingPerioder";
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
   trygdedekninger: KTObject[];
   innvilgelsesResultater: KTObject[];
   control: Control;
-  medlemskapsperioder: MedlemskapsperiodeProp[];
+  fields: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">[];
   handleSlett: (index: number) => void;
-  erPeriodeFoerSoknadMottatDato: (medlemskapsperiode: MedlemskapsperiodeProp) => boolean;
-  handleEndreTomDato: (tomDato: string, index: number) => void;
+  handleChange: (medlemskapsperiode: MedlemskapsperiodeProp[], isValid: boolean, index: number) => void;
+  formIsValid: boolean;
 }
 
-export const PeriodeElementer = (props: PeriodeElementerProps) => {
+export const PeriodeElementer = ({
+  redigerbart,
+  trygdedekninger,
+  innvilgelsesResultater,
+  fields,
+  control,
+  handleSlett,
+  formIsValid,
+  handleChange,
+}: PeriodeElementerProps) => {
+  const kanSlettePeriode = redigerbart && fields.length !== 1;
+
   return (
     <Nav.Fieldset
       legend={
@@ -43,8 +60,71 @@ export const PeriodeElementer = (props: PeriodeElementerProps) => {
         </Nav.Column>
       </Nav.Row>
 
-      {props.medlemskapsperioder?.map((medlemskapsperiode: MedlemskapsperiodeProp, index: number) => (
-        <PeriodeElement index={index} key={medlemskapsperiode.id} {...props} />
+      {fields?.map((field, index) => (
+        <div key={field.id}>
+          <Nav.Row>
+            <Nav.Column xs="2">
+              <Forms.Datovelger
+                control={control}
+                name={`medlemskapsperioder[${index}].fomDato`}
+                disabled={!redigerbart}
+                onChange={(value) => handleChange([{ ...field, fomDato: value }], formIsValid, index)}
+              />
+            </Nav.Column>
+            <Nav.Column xs="2">
+              <Forms.Datovelger
+                control={control}
+                name={`medlemskapsperioder[${index}].tomDato`}
+                disabled={!redigerbart}
+                onChange={(value) => handleChange([{ ...field, tomDato: value }], formIsValid, index)}
+              />
+            </Nav.Column>
+            <Nav.Column xs="4">
+              <Forms.Select
+                name={`medlemskapsperioder[${index}].trygdedekning`}
+                control={control}
+                disabled={!redigerbart}
+                emptyFieldDisabled={!!field.trygdedekning}
+                onChange={(value) => handleChange([{ ...field, trygdedekning: value }], formIsValid, index)}
+              >
+                {trygdedekninger.map((item: KTObject) => (
+                  <option key={item.kode} value={item.kode}>
+                    {item.term}
+                  </option>
+                ))}
+              </Forms.Select>
+            </Nav.Column>
+            <Nav.Column xs="2">
+              <Forms.Select
+                name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
+                control={control}
+                disabled={!redigerbart}
+                emptyFieldDisabled={!!field.innvilgelsesResultat}
+                onChange={(value) => handleChange([{ ...field, innvilgelsesResultat: value }], formIsValid, index)}
+              >
+                {innvilgelsesResultater
+                  .filter((item: KTObject) => item.kode !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET)
+                  .map((item: KTObject) => (
+                    <option key={item.kode} value={item.kode}>
+                      {item.term}
+                    </option>
+                  ))}
+              </Forms.Select>
+            </Nav.Column>
+            <Nav.Column xs="2">
+              {kanSlettePeriode && (
+                <Mui.Knapp className="slettKnapp" ikon={Ikoner.Bin} onClick={() => handleSlett(index)} mini>
+                  Slett
+                </Mui.Knapp>
+              )}
+            </Nav.Column>
+          </Nav.Row>
+          {field.feil && (
+            <Nav.AlertStripe type="feil" className="medlemskapsperiodeFeil">
+              {field.feil}
+            </Nav.AlertStripe>
+          )}
+        </div>
       ))}
     </Nav.Fieldset>
   );

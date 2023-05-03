@@ -1,8 +1,19 @@
 import { AlertStripeType } from "nav-frontend-alertstriper";
 import React, { useEffect, useState } from "react";
+import classNames from "classnames";
 import * as Nav from "../../navFrontend";
 import "./alertmeldinger.css";
 import * as Ikoner from "../../resources/images";
+import * as Utils from "../../utils";
+import * as KV from "../../kodeverk";
+import MKV from "../../melosyskodeverk";
+import { Feilkode } from "../../@types";
+
+type alertmeldingerProps = {
+  meldinger: Feilkode[] | string;
+  className?: string;
+  exclude?: string;
+};
 
 export const VirksomhetMelding = () => (
   <Nav.AlertStripeInfo className="virksomhetMelding">Behandlingen er journalført på virksomhet</Nav.AlertStripeInfo>
@@ -55,4 +66,40 @@ export const StandardMeldingOverst = ({ type, actionEtterSynlighet, melding }: S
       </Nav.AlertStripe>
     </div>
   ) : null;
+};
+
+export const Alertmeldinger = ({ meldinger, className, exclude }: alertmeldingerProps) => {
+  if (Utils._isEmpty(meldinger)) {
+    return null;
+  }
+
+  const renderInnhold = () => {
+    if (typeof meldinger === "string") {
+      return meldinger;
+    }
+
+    const filtrerteAlertmeldinger = meldinger.filter((value) => value.kode !== exclude);
+
+    if (filtrerteAlertmeldinger.length === 1) {
+      return KV.kodeTilTerm(filtrerteAlertmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+    }
+    return (
+      <ul className="feilkoder__liste">
+        {filtrerteAlertmeldinger.map((feil) => (
+          <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
+        ))}
+      </ul>
+    );
+  };
+
+  const classNameAlertmeldinger = classNames("alertmeldinger", className);
+  const innhold = renderInnhold();
+  if (!innhold) {
+    return null;
+  }
+  return (
+    <div className={classNameAlertmeldinger}>
+      <Nav.AlertStripeAdvarsel className="varselstripe">{innhold}</Nav.AlertStripeAdvarsel>
+    </div>
+  );
 };

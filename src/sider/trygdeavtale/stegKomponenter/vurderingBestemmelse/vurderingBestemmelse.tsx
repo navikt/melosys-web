@@ -98,7 +98,7 @@ const VurderingBestemmelse = ({
 
   return (
     <div className="vurderingBestemmelse">
-      <Nav.Typo.Undertittel className="undertittel">Bestemmelse og vurdering</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
 
       <Nav.Fieldset legend="Hva er din vurdering av søknaden?">
         {vedtakValg?.map((valg) => (

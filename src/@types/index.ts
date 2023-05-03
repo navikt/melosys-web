@@ -1,4 +1,4 @@
 export type { DokumentOversikt, Mottaksretning, FysiskDokument, Dokument, BrevPdfData, SedPdfData } from "./dokument";
-export type { Periode, Lovvalgsperiode, Medlemskapsperiode, OppdaterMedlemskapsperiode } from "./periode";
+export type { Periode, Lovvalgsperiode } from "./periode";
 export type { Feilkode } from "./feilmelding";
 export type { MatchParams } from "./match";

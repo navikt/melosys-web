@@ -37,7 +37,9 @@ const VurderingVesentligVirksomhet = (props) => {
 
   return (
     <div>
-      <Nav.Typo.Undertittel>Har {arbeidsgivereTekst} vesentlig virksomhet i Norge?</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        Har {arbeidsgivereTekst} vesentlig virksomhet i Norge?
+      </Nav.Typo.Innholdstittel>
       <EnkeltVilkaar
         redigerbart={redigerbart}
         begrunnelser={begrunnelser}

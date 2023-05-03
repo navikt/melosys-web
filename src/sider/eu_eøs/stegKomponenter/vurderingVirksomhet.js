@@ -140,7 +140,7 @@ const VurderingVirksomhet = (props) => {
 
   return (
     <div className="vurderingArbeidsgiver">
-      <Nav.Typo.Undertittel>Velg relevante virksomheter</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Velg relevante virksomheter</Nav.Typo.Innholdstittel>
       <div className="arbeidsgiver">
         <VirksomheterListe
           avklarteVirksomheter={virksomheter}

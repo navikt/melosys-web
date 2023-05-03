@@ -173,9 +173,9 @@ export const Arbeidssteder = ({
 
   return (
     <div className="arbeidssteder">
-      <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+      <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
         {KV.Menypunkter.Arbeidssteder.tittel}
-      </Nav.Typo.Innholdstittel>
+      </Nav.Typo.Systemtittel>
       {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       <div className="innhold">
         {visRepresentantIUtlandet ? <RepresentantIUtlandet redigerbart={redigerbart} /> : arbeidssteder}

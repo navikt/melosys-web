@@ -339,7 +339,9 @@ export const VurderingArbeidsmonster = ({
 
   return (
     <div className="vurderingArbeidsmonster">
-      <Nav.Typo.Undertittel>Vurder aktiviteten i de ulike landene</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        Vurder aktiviteten i de ulike landene
+      </Nav.Typo.Innholdstittel>
       <div className="arbeidsmonster">
         <ConnectedMarginaltArbeid
           redigerbart={redigerbart}
