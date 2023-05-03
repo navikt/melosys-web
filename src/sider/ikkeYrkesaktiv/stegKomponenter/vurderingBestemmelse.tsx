@@ -20,7 +20,7 @@ import * as Api from "../../../services/api";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import UnntakHjelpetekst from "../../trygdeavtale/stegKomponenter/vurderingBestemmelse/unntakHjelpetekst/unntakHjelpetekst";
-import { FlytFinnesIkke } from "../../ftrl/saksbehandling/stegKomponenter/vurderingBestemmelse/komponenter/flytFinnesIkke";
+import { FlytFinnesIkke } from "../../trygdeavtale/stegKomponenter/vurderingInngang/vurderingInngangKomponenter";
 
 const INNVILGE = "INNVILGE";
 const UNNTAK = "UNNTAK";
@@ -75,12 +75,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   }, [formValues.bestemmelse]);
 
   useEffect(() => {
-    Api.Lovvalgsbestemmelser.hent({
-      sakstype: fagsak.sakstype.kode,
-      sakstema: fagsak.sakstema.kode,
+    Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(
+      fagsak.sakstype.kode,
+      fagsak.sakstema.kode,
       behandlingstema,
-      land: soeknadsland,
-    }).then((res) => setMuligeBestemmelser(res));
+      soeknadsland
+    ).then((res) => setMuligeBestemmelser(res));
   }, [fagsak, behandlingstema]);
 
   const handleEndreBestemmelse = (nyBestemmelse: string) => {
