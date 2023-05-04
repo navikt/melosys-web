@@ -9,6 +9,9 @@ import { avklartefaktaSelectors } from "../avklartefakta";
 import { vilkarSelectors } from "../vilkar";
 import { behandlingerSelectors } from "../behandlinger";
 import { behandlingsresultatSelectors } from "../behandlingsresultat";
+import { harUnntakFlyt } from "../../routing/url";
+import { fagsakSelectors } from "../fagsaker";
+import { erFeatureToggleEnabled } from "../../featuretoggle";
 
 export const ErIArtikkel11_4Selector = createSelector(
   (state: RootState) => vilkarSelectors.art11_4_1(state),
@@ -55,4 +58,17 @@ export const ErIDirekteTilArtikkel16FlytSelector = createSelector(
 export const HarValgtNorskArbeidsgiverSelector = createSelector(
   (state: RootState) => avklartefaktaSelectors.AvklarteNorskeVirksomheterSelector(state),
   (avklarteNorskeVirksomheter) => avklarteNorskeVirksomheter.length > 0
+);
+
+export const HarUnntakFlytSelector = createSelector(
+  (state: RootState) => fagsakSelectors.SakstypeKodeSelector(state),
+  (state: RootState) => fagsakSelectors.SakstemaKodeSelector(state),
+  (state: RootState) => behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  async (sakstype, sakstema, behandlingstema) =>
+    harUnntakFlyt(
+      sakstype,
+      sakstema,
+      behandlingstema,
+      await erFeatureToggleEnabled("melosys.registrering_unntak_fra_medlemskap")
+    )
 );
