@@ -16,6 +16,7 @@ import { lagYupToReduxformErrorMapper } from "../../yup";
 import { behandlingerSelectors } from "../behandlinger";
 import { mottatteOpplysningerSelectors } from "../mottatteOpplysninger";
 import { fagsakSelectors } from "../fagsaker";
+import { flytSelectors } from "../flyt";
 
 const getFormState = (state, formName, defaultValue = {}) =>
   state.form[formName] ? state.form[formName] : defaultValue;
@@ -283,6 +284,7 @@ export const SoknadErrorsSelector = createSelector(
   (state) => SoknadenFormSelector(state).values || {},
   (state) => ({
     skalOppgittAdresseValideres: SoknadOppgittAdresseHarVerdierSelector(state),
+    harUnntakFlyt: flytSelectors.HarUnntakFlytSelector(state),
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
     mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
     sakstype: fagsakSelectors.SakstypeKodeSelector(state),
