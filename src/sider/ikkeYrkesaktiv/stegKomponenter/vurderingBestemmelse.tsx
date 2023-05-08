@@ -36,6 +36,11 @@ const komponentState = (state: RootState) => ({
   begrunnelserKodeverk: folketrygdenkodeverkSelectors.BegrunnelserSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soeknadsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  sakstema: fagsakSelectors.SakstemaKodeSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
+  utfallRegistreringUnntak: behandlingsresultatSelectors.UtfallRegistreringUnntakSelector(state),
+  vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
 });
 
 interface Props {
@@ -47,13 +52,18 @@ interface Props {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
-  const { lovvalgsbestemmelse, redigerbart, soeknadsland } = useSelector(komponentState);
-  const fagsak = useSelector(fagsakSelectors.FagsakSelector);
-  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+  const {
+    lovvalgsbestemmelse,
+    redigerbart,
+    soeknadsland,
+    utfallRegistreringUnntak,
+    vedtakstype,
+    behandlingID,
+    sakstype,
+    sakstema,
+    behandlingstema,
+  } = useSelector(komponentState);
   const [muligeBestemmelser, setMuligeBestemmelser] = useState<KTObject[]>([]);
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const utfallRegistreringUnntak = useSelector(behandlingsresultatSelectors.UtfallRegistreringUnntakSelector);
-  const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_bestemmelse),
@@ -80,13 +90,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   }, [formValues.bestemmelse]);
 
   useEffect(() => {
-    Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(
-      fagsak.sakstype.kode,
-      fagsak.sakstema.kode,
-      behandlingstema,
-      soeknadsland
-    ).then((res) => setMuligeBestemmelser(res));
-  }, [fagsak, behandlingstema, soeknadsland]);
+    Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, soeknadsland).then((res) =>
+      setMuligeBestemmelser(res)
+    );
+  }, [sakstype, sakstema, behandlingstema, soeknadsland]);
 
   const handleBekreft = () => {
     dispatch(vilkarOperations.lagre());
@@ -145,7 +152,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     <div className="vurderingBestemmelse">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
 
-      {fagsak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS && (
+      {sakstype === MKV.Koder.sakstyper.EU_EOS && (
         <Nav.AlertStripeInfo>
           Du må vurdere om søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004
         </Nav.AlertStripeInfo>
@@ -218,7 +225,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </>
       )}
 
-      {formValues.utfall === UNNTAK && fagsak.sakstype.kode === MKV.Koder.sakstyper.TRYGDEAVTALE && (
+      {formValues.utfall === UNNTAK && sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <UnntakHjelpetekst />
@@ -226,7 +233,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       )}
 
-      {formValues.utfall === UNNTAK && fagsak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS && (
+      {formValues.utfall === UNNTAK && sakstype === MKV.Koder.sakstyper.EU_EOS && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <Nav.EtikettBase type="info">
