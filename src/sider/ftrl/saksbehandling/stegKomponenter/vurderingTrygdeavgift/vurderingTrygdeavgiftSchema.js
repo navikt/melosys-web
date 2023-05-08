@@ -5,8 +5,20 @@ import * as Utils from "../../../../../utils";
 import { BOOLSK_STRING } from "../../../../../constants";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
-const { NÆRINGSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, FN_SKATTEFRITAK } = MKV.Koder.inntektskildetype;
+const { NÆRINGSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, FN_SKATTEFRITAK, MISJONÆR } = MKV.Koder.inntektskildetype;
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
+
+export const arbAvgBetalesKreves = (kildetype) => kildetype !== MISJONÆR;
+
+const arbAvgBetalesFyltUtNårDetKrevesTest = {
+  name: "Fyll inn arb.avg. betales når det kreves",
+  message: { message: "Velg om arb.avg. betales til skatt" },
+  test: (arbAvgBetales, schema) => {
+    const { kildetype } = schema.from[0].value;
+
+    return !(arbAvgBetalesKreves(kildetype) && Utils._isEmpty(arbAvgBetales));
+  },
+};
 
 export const bruttoInntektKreves = (skattepliktig, kildetype, arbAvgBetales) =>
   skattepliktig === IKKE_SKATTEPLIKTIG ||
@@ -28,7 +40,7 @@ const vurdering_trygdeavgift = object().shape({
   skattepliktig: string().required(MAA_FYLLES_UT),
   inntektskilder: array().of(
     object().shape({
-      kildetype: string().required(MAA_FYLLES_UT),
+      kildetype: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
       arbAvgBetales: string().required(MAA_FYLLES_UT),
       bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
     })

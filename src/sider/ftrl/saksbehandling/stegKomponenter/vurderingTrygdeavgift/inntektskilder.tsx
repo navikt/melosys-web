@@ -12,10 +12,9 @@ import * as Ikoner from "../../../../../resources/images";
 import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 import { BOOLSK_STRING } from "../../../../../constants";
 import { FieldArrayProps, FormValuesProps, Inntekstskilde } from "./types";
-import { bruttoInntektKreves } from "./vurderingTrygdeavgiftSchema";
+import { arbAvgBetalesKreves, bruttoInntektKreves } from "./vurderingTrygdeavgiftSchema";
 
 const { ARBEIDSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR } = MKV.Koder.inntektskildetype;
-const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 interface InntektskilderProps {
   formValues: FormValuesProps;
@@ -36,8 +35,7 @@ export const Inntektskilder = ({
   append,
   redigerbart,
 }: InntektskilderProps) => {
-  const erSkattepliktig = formValues?.skattepliktig === SKATTEPLIKTIG;
-  const settesDefaultArbAvgBetales = (kildetype?: string) => kildetype !== INNTEKT_FRA_UTLANDET;
+  const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
   const handleEndreKildetype = (index: number, kildetype: string) => {
     let defaultArbAvgBetales;
@@ -65,7 +63,7 @@ export const Inntektskilder = ({
     >
       <Nav.Row className="inntektskilder__overskriftrad">
         <Nav.Column xs="5">
-          <Nav.Typo.Element>Type inntekt</Nav.Typo.Element>
+          <Nav.Typo.Element>Type inntektskilde</Nav.Typo.Element>
         </Nav.Column>
         <Nav.Column xs="3">
           <Nav.Typo.Element>Betales arb.avg. til skatt?</Nav.Typo.Element>
@@ -77,7 +75,8 @@ export const Inntektskilder = ({
 
       {fields.map((field, index) => {
         const visArbAvgBetales = !Utils._isEmpty(field.kildetype);
-        const visBruttoInntekt = Boolean(field.arbAvgBetales);
+        const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(field.kildetype);
+        const visBruttoInntekt = Boolean(field.arbAvgBetales) || !skalFylleInnArbAvgBetales;
         const skalFylleInnBruttoInntekt = bruttoInntektKreves(
           formValues.skattepliktig,
           field.kildetype,
@@ -95,37 +94,41 @@ export const Inntektskilder = ({
                 emptyFieldDisabled={visArbAvgBetales}
                 onChange={(value) => handleEndreKildetype(index, value)}
               >
-                {MKV.KTObjects.inntektskildetype
-                  .filter((kt: KTObject) => !(erSkattepliktig && kt.kode === MISJONÆR))
-                  .map((kt: KTObject) => (
-                    <option key={kt.kode} value={kt.kode}>
-                      {kt.term}
-                    </option>
-                  ))}
+                {MKV.KTObjects.inntektskildetype.map((kt: KTObject) => (
+                  <option key={kt.kode} value={kt.kode}>
+                    {kt.term}
+                  </option>
+                ))}
               </Forms.Select>
             </Nav.Column>
 
             <Nav.Column xs="3">
               {visArbAvgBetales && (
                 <>
-                  <Forms.Radio
-                    label="Ja"
-                    name={`inntektskilder.${index}.arbAvgBetales`}
-                    control={control}
-                    value={BOOLSK_STRING.SANN}
-                    disabled={!redigerbart || settesDefaultArbAvgBetales(field.kildetype)}
-                    className="radioknapp_vertikal"
-                    onChange={(value) => handleEndreArbAvgBetales(index, value)}
-                  />
-                  <Forms.Radio
-                    label="Nei"
-                    name={`inntektskilder.${index}.arbAvgBetales`}
-                    control={control}
-                    value={BOOLSK_STRING.USANN}
-                    disabled={!redigerbart || settesDefaultArbAvgBetales(field.kildetype)}
-                    className="radioknapp_vertikal"
-                    onChange={(value) => handleEndreArbAvgBetales(index, value)}
-                  />
+                  {skalFylleInnArbAvgBetales ? (
+                    <>
+                      <Forms.Radio
+                        label="Ja"
+                        name={`inntektskilder.${index}.arbAvgBetales`}
+                        control={control}
+                        value={BOOLSK_STRING.SANN}
+                        disabled={!redigerbart || settesDefaultArbAvgBetales(field.kildetype)}
+                        className="radioknapp_vertikal"
+                        onChange={(value) => handleEndreArbAvgBetales(index, value)}
+                      />
+                      <Forms.Radio
+                        label="Nei"
+                        name={`inntektskilder.${index}.arbAvgBetales`}
+                        control={control}
+                        value={BOOLSK_STRING.USANN}
+                        disabled={!redigerbart || settesDefaultArbAvgBetales(field.kildetype)}
+                        className="radioknapp_vertikal"
+                        onChange={(value) => handleEndreArbAvgBetales(index, value)}
+                      />
+                    </>
+                  ) : (
+                    <p className="ikkeRelevant">Ikke relevant</p>
+                  )}
                 </>
               )}
             </Nav.Column>
