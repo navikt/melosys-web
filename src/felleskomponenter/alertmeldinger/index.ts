@@ -1,3 +1,4 @@
-import { VirksomhetMelding, TomFlytMelding, StandardMeldingOverst, Alertmeldinger } from "./alertmeldinger";
+import { Alertmeldinger, StandardMeldingOverst, TomFlytMelding, VirksomhetMelding } from "./alertmeldinger";
+import UnntakHjelpetekst from "./unntakHjelpetekst";
 
-export { VirksomhetMelding, TomFlytMelding, StandardMeldingOverst, Alertmeldinger };
+export { VirksomhetMelding, TomFlytMelding, StandardMeldingOverst, Alertmeldinger, UnntakHjelpetekst };

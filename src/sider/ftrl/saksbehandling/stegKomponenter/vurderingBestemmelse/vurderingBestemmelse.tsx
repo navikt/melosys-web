@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useEffect, useState } from "react";
+import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -18,9 +18,9 @@ import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { BOOLSK_STRING } from "../../../../../constants";
 import { useAsyncCallbackState } from "../../../../../hooks";
 
-import { FlytFinnesIkke } from "../felles/flytFinnesIkke";
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import "./vurderingBestemmelse.css";
+import { TomFlytMelding } from "../../../../../felleskomponenter/alertmeldinger";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export interface Begrunnelse {
@@ -282,7 +282,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         />
       ))}
 
-      {bestemmelseIkkeStøttetValgt && <FlytFinnesIkke />}
+      {bestemmelseIkkeStøttetValgt && <TomFlytMelding visBuc={false} />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{ onClick: handleBekreft, disabled: !formIsValid || !redigerbart }}

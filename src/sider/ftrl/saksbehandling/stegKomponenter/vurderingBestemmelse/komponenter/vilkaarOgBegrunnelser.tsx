@@ -10,8 +10,8 @@ import * as Utils from "../../../../../../utils";
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
 import { BOOLSK_STRING } from "../../../../../../constants";
-import { FlytFinnesIkke } from "../../felles/flytFinnesIkke";
 import { Begrunnelse } from "../vurderingBestemmelse";
+import { TomFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 
 const { SANN, USANN } = BOOLSK_STRING;
 const hjelpetekster = new Map([
@@ -90,7 +90,7 @@ export const VilkaarOgBegrunnelser = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      {valgtVilkår === USANN && <FlytFinnesIkke />}
+      {valgtVilkår === USANN && <TomFlytMelding visBuc={false} />}
       {valgtVilkår === SANN && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
           className="select"

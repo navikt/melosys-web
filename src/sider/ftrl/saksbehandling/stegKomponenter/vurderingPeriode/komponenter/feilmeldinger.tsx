@@ -2,8 +2,8 @@ import React from "react";
 import MKV from "../../../../../../melosyskodeverk";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
-import { FlytFinnesIkke } from "../../felles/flytFinnesIkke";
 import { MedlemskapsperiodeProp } from "../vurderingPerioder";
+import { TomFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 
 const { AVSLAATT, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
@@ -164,7 +164,7 @@ export const Feilmelding = ({ type }: { type?: string }) => {
     case TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER:
       return IngenMedlemskapsperioder;
     case TypeFeilmelding.IKKE_STØTTET_I_MELOSYS:
-      return <FlytFinnesIkke />;
+      return <TomFlytMelding visBuc={false} />;
     case TypeFeilmelding.INGEN_SLUTTDATO:
       return IngenSluttdato;
     case TypeFeilmelding.MÅ_STARTE_PÅ_SØKNADSFOM:

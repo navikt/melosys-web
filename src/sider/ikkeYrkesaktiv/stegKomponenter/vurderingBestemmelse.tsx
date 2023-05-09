@@ -19,8 +19,7 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 import * as Api from "../../../services/api";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-import UnntakHjelpetekst from "../../trygdeavtale/stegKomponenter/vurderingBestemmelse/unntakHjelpetekst/unntakHjelpetekst";
-import { FlytFinnesIkke } from "../../trygdeavtale/stegKomponenter/vurderingInngang/vurderingInngangKomponenter";
+import { UnntakHjelpetekst, TomFlytMelding } from "../../../felleskomponenter/alertmeldinger";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 import * as Utils from "../../../utils";
@@ -254,7 +253,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       )}
 
-      {formValues.utfall === IKKE_GODKJENT && <FlytFinnesIkke />}
+      {formValues.utfall === IKKE_GODKJENT && <TomFlytMelding visBuc={false} />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
