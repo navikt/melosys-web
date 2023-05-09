@@ -282,7 +282,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         />
       ))}
 
-      {bestemmelseIkkeStøttetValgt && <TomFlytMelding visBuc={false} />}
+      {bestemmelseIkkeStøttetValgt && <TomFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{ onClick: handleBekreft, disabled: !formIsValid || !redigerbart }}

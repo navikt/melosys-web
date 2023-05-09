@@ -19,20 +19,22 @@ export const VirksomhetMelding = () => (
   <Nav.AlertStripeInfo className="virksomhetMelding">Behandlingen er journalført på virksomhet</Nav.AlertStripeInfo>
 );
 
-export const TomFlytMelding = ({ visBuc = true }) => (
-  <Nav.AlertStripeAdvarsel className="tomFlytMelding">
-    <b>Det finnes ikke en stegvelger for behandlingstemaet du har valgt, men:</b>
-    <ul>
-      {visBuc && (
-        <li>
-          du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak og &quot;Opprett ny BUC&quot;-fanen for å
-          sende SED
-        </li>
-      )}
-      {!visBuc && <li>du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak</li>}
-      <li>du kan avslutte saken og angi resultatet i behandlingsmenyen</li>
-    </ul>
-  </Nav.AlertStripeAdvarsel>
+export const TomFlytMelding = ({ visBuc = false }) => (
+  <div className="tomFlytMelding">
+    <Nav.AlertStripeAdvarsel className="tomFlytMelding">
+      <b>Det finnes ikke en stegvelger for behandlingstemaet du har valgt, men:</b>
+      <ul>
+        {visBuc && (
+          <li>
+            du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak og &quot;Opprett ny BUC&quot;-fanen for
+            å sende SED
+          </li>
+        )}
+        {!visBuc && <li>du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak</li>}
+        <li>du kan avslutte saken og angi resultatet i behandlingsmenyen</li>
+      </ul>
+    </Nav.AlertStripeAdvarsel>
+  </div>
 );
 
 interface StandardMeldingOverstProps {

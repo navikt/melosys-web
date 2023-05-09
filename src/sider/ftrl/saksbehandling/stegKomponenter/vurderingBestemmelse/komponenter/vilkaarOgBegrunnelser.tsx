@@ -90,7 +90,7 @@ export const VilkaarOgBegrunnelser = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      {valgtVilkår === USANN && <TomFlytMelding visBuc={false} />}
+      {valgtVilkår === USANN && <TomFlytMelding />}
       {valgtVilkår === SANN && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
           className="select"

@@ -164,7 +164,7 @@ export const Feilmelding = ({ type }: { type?: string }) => {
     case TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER:
       return IngenMedlemskapsperioder;
     case TypeFeilmelding.IKKE_STØTTET_I_MELOSYS:
-      return <TomFlytMelding visBuc={false} />;
+      return <TomFlytMelding />;
     case TypeFeilmelding.INGEN_SLUTTDATO:
       return IngenSluttdato;
     case TypeFeilmelding.MÅ_STARTE_PÅ_SØKNADSFOM:

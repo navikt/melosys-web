@@ -253,7 +253,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       )}
 
-      {formValues.utfall === IKKE_GODKJENT && <TomFlytMelding visBuc={false} />}
+      {formValues.utfall === IKKE_GODKJENT && <TomFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{

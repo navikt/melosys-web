@@ -188,7 +188,7 @@ const VurderingInngang = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      {landUtenStøtteValgt && <TomFlytMelding visBuc={false} />}
+      {landUtenStøtteValgt && <TomFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
