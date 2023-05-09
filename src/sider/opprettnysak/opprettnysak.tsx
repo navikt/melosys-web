@@ -16,7 +16,7 @@ import * as Utils from "../../utils";
 
 import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
-import { feiletResponsSelectors } from "../../ducks/feiletRespons";
+import { feiletResponsSelectors, feiletResponsOperations } from "../../ducks/feiletRespons";
 import { sokOperations, sokSelectors } from "../../ducks/sok";
 import { fagsakOperations } from "../../ducks/fagsaker";
 
@@ -136,6 +136,7 @@ const OpprettNySak = ({
   const nullstillFelt = (felt: string, verdi: any = null) => change(felt, verdi);
 
   useEffect(() => {
+    dispatch(feiletResponsOperations.resetFeiletRespons());
     hentLandkoder();
     return () => {
       dispatch(fagsakOperations.resetFagsakState());
