@@ -25,6 +25,7 @@ describe("FTRL stegkomponenter selectors", () => {
           },
         },
       };
+      // @ts-ignore
       expect(LonnsforholdErNorgeEllerDelt(state)).toBe(forventetResultat);
     });
   });
@@ -46,6 +47,7 @@ describe("FTRL stegkomponenter selectors", () => {
           },
         },
       };
+      // @ts-ignore
       expect(LonnsforholdErUtlandetEllerDelt(state)).toBe(forventetResultat);
     });
   });

@@ -56,7 +56,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg }: Props) =
 
   return (
     <div className="vurderingTrygdeavgift">
-      <Nav.Typo.Undertittel className="undertittel">Trygdeavgift</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Trygdeavgift</Nav.Typo.Innholdstittel>
+
       <Nav.Row>
         <Nav.Column xs="12">
           <Nav.Fieldset legend="Er bruker skattepliktig?">

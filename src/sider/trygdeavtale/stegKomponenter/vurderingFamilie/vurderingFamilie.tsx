@@ -149,9 +149,9 @@ const VurderingFamilie = ({
 
   return (
     <div className="vurderingFamilie">
-      <Nav.Typo.Undertittel className="undertittel">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Skal familiemedlemmer oppgitt i søknaden innvilges medlemskap?
-      </Nav.Typo.Undertittel>
+      </Nav.Typo.Innholdstittel>
 
       {Utils._isEmpty(tilknyttedeBarn) && !tilknyttetEktefelle ? (
         <div>

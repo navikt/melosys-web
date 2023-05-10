@@ -114,7 +114,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
 
   return (
     <div className="vurderingStart">
-      <Nav.Typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi søknadsperiode og -land</Nav.Typo.Innholdstittel>
 
       <Nav.Fieldset legend="Periode">
         <Nav.Row>

@@ -7,7 +7,7 @@ import * as Api from "../../../services/api";
 
 import "./pdfdokument.css";
 
-const pdfjsWorker = import("react-pdf/node_modules/pdfjs-dist/build/pdf.worker.entry");
+const pdfjsWorker = import("react-pdf/dist/esm/pdf.worker.entry");
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 

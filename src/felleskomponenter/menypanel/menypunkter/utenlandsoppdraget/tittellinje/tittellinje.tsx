@@ -12,7 +12,7 @@ interface TittellinjeProps {
 
 const Tittellinje = ({ tittel, visArbeidsforholdRolleEtiketter }: TittellinjeProps) => (
   <div className="utenlandsoppdraget-tittellinje">
-    <Nav.Typo.Innholdstittel className="utenlandsoppdraget-tittellinje__tittel">{tittel}</Nav.Typo.Innholdstittel>
+    <Nav.Typo.Systemtittel className="utenlandsoppdraget-tittellinje__tittel">{tittel}</Nav.Typo.Systemtittel>
     {visArbeidsforholdRolleEtiketter && (
       <Etiketter.ArbeidsgiversDel className="utenlandsoppdraget-tittellinje__arbeidsgiversdel-etikett" />
     )}

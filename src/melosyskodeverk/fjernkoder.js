@@ -12,7 +12,11 @@ const fjernKode = (kodeverk, path, kode) => {
 };
 
 const fjernFlereKoder = (kodeverk, koder) => {
-  const rensetKodeverk = cloneDeep(kodeverk);
+  const rensetKodeverk = {
+    KTObjects: cloneDeep(kodeverk.KTObjects),
+    Koder: cloneDeep(kodeverk.Koder),
+    Terms: cloneDeep(kodeverk.Terms),
+  };
   koder.forEach(({ path, kode }) => fjernKode(rensetKodeverk, path, kode));
 
   return rensetKodeverk;

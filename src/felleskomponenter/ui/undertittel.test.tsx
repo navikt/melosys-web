@@ -1,11 +1,13 @@
 import React, { ComponentProps } from "react";
-import { mock, instance } from "ts-mockito";
-import { shallow } from "enzyme";
-
+import renderer from "react-test-renderer";
+import { instance, mock } from "ts-mockito";
 import * as Ikoner from "../../resources/images";
-import * as Nav from "../../navFrontend";
 
 import Undertittel from "./undertittel";
+
+jest.mock("../../utils", () => ({
+  _uuid: () => "123",
+}));
 
 describe("undertittel", () => {
   const mockedProps = mock<ComponentProps<typeof Undertittel>>();
@@ -15,21 +17,11 @@ describe("undertittel", () => {
     props = instance(mockedProps);
   });
 
-  it("viser en nav undertittel", () => {
-    const undertittel = shallow(<Undertittel {...props} />);
-
-    expect(undertittel.find(Nav.Typo.Undertittel)).toHaveLength(1);
-  });
-
-  it("viser et ikon", () => {
+  it("snapshot test", () => {
     props.ikon = Ikoner.ParagraphTwoColumns;
-    props.ikonProps = {
-      focusable: true,
-    };
-    const undertittel = shallow(<Undertittel {...props} />);
-    const ikon = undertittel.find(props.ikon);
+    props.tekst = "Tekst";
 
-    expect(ikon).toHaveLength(1);
-    expect(ikon.props().focusable).toBe(true);
+    const tree = renderer.create(<Undertittel {...props} />).toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });

@@ -1,14 +1,13 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import { change, Field, formValueSelector, FieldArray } from "redux-form";
+import { useEffect } from "react";
+import { connect, useSelector } from "react-redux";
+import { change, Field, formValueSelector, FieldArray, getFormValues } from "redux-form";
 import * as PT from "prop-types";
-
-import * as Api from "../../services/api";
 import * as Utils from "../../utils";
 import MKV from "../../melosyskodeverk";
+import * as Api from "../../services/api";
 
-import { useAsyncCallbackState } from "../../hooks";
 import { SelectWrappedComponent } from "../skjema/input/select";
+import { useAsyncCallbackState } from "../../hooks";
 
 const MOTTAKERINSTITUSJON = "mottakerinstitusjon";
 const KREVER_MOTTAKERINSTITUSJON = "kreverMottakerinstitusjon";
@@ -16,14 +15,21 @@ const KREVER_MOTTAKERINSTITUSJON = "kreverMottakerinstitusjon";
 export const MottakerinstitusjonvelgerSchema = ({
   redigerbart,
   bucType,
+  form,
   landkode,
   label,
   oppdaterKreverMottakerinstitusjon,
   data_cy,
   ...rest
 }) => {
+  const formValues = useSelector((state) => getFormValues(form)(state));
+  const { lovvalgsland } = formValues ?? {};
   const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, [landkode]);
-  const [mottakerinstitusjoner] = useAsyncCallbackState(hentMottakerinstitusjoner, [], [landkode, bucType]);
+  const [mottakerinstitusjoner] = useAsyncCallbackState(
+    hentMottakerinstitusjoner,
+    [],
+    [landkode, bucType, lovvalgsland ?? landkode]
+  );
 
   useEffect(() => {
     oppdaterKreverMottakerinstitusjon(!Utils._isEmpty(mottakerinstitusjoner));
@@ -31,7 +37,7 @@ export const MottakerinstitusjonvelgerSchema = ({
     return () => {
       oppdaterKreverMottakerinstitusjon(undefined);
     };
-  }, [mottakerinstitusjoner]);
+  }, [lovvalgsland, mottakerinstitusjoner]);
 
   if (Utils._isEmpty(mottakerinstitusjoner) || !redigerbart) {
     return null;
@@ -57,6 +63,7 @@ export const MottakerinstitusjonvelgerSchema = ({
 MottakerinstitusjonvelgerSchema.propTypes = {
   redigerbart: PT.bool.isRequired,
   bucType: PT.string.isRequired,
+  form: PT.string.isRequired,
   landkode: PT.string.isRequired,
   label: PT.string,
   oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
@@ -67,12 +74,20 @@ MottakerinstitusjonvelgerSchema.defaultProps = {
   label: "Velg utenlandsk institusjon som skal motta SED",
 };
 
-const Mottakerinstitusjonvelger = ({ redigerbart, landkode, bucType, oppdaterKreverMottakerinstitusjon, data_cy }) =>
+const Mottakerinstitusjonvelger = ({
+  form,
+  redigerbart,
+  landkode,
+  bucType,
+  oppdaterKreverMottakerinstitusjon,
+  data_cy,
+}) =>
   landkode !== MKV.Koder.landkoder.NO ? (
     <Field
       name={MOTTAKERINSTITUSJON}
       component={MottakerinstitusjonvelgerSchema}
       props={{
+        form,
         redigerbart,
         landkode,
         bucType,
@@ -133,6 +148,7 @@ const MottakerinstitusjonvelgerFlervalgInner = ({
         props={{
           redigerbart,
           bucType,
+          form,
           landkode: hentFelt(`${mottakerinstitusjon}.kode`),
           label: `Velg institusjon i ${hentFelt(`${mottakerinstitusjon}.term`)} som skal motta SED`,
           oppdaterKreverMottakerinstitusjon: oppdaterKreverMottakerinstitusjon(
