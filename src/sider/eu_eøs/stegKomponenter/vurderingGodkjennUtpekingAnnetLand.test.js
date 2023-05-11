@@ -3,7 +3,6 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import MKV from "../../../melosyskodeverk";
-
 import { VurderingGodkjennUtpekingAnnetLand } from "./vurderingGodkjennUtpekingAnnetLand";
 
 jest.mock("../../../services/modules/kontroll", () => ({
@@ -31,8 +30,7 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
   it("checkbox og fritekstfelt eksisterer og onchange metoder fungerer som forventet", async () => {
     render(<VurderingGodkjennUtpekingAnnetLand {...props} />);
     const user = userEvent.setup();
-
-    await user.click(screen.getByText("Send A012"));
+    await user.click(await screen.findByText("Send A012"));
 
     expect(screen.getByLabelText("Send A012")).toBeChecked();
 
@@ -42,15 +40,15 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
     expect(input.value).toBe("Fritekst her");
   });
 
-  it("viser overskrift", () => {
+  it("viser overskrift", async () => {
     render(<VurderingGodkjennUtpekingAnnetLand {...props} />);
 
-    expect(screen.getByText(props.overskrift)).toBeInTheDocument();
+    expect(await screen.findByText(props.overskrift)).toBeInTheDocument();
   });
 
-  it("knapp er ikke disabled når redigerbar er true", () => {
+  it("knapp er ikke disabled når redigerbar er true", async () => {
     render(<VurderingGodkjennUtpekingAnnetLand {...props} />);
 
-    expect(screen.getByText("Bekreft")).not.toBeDisabled();
+    expect(await screen.findByText("Bekreft")).not.toBeDisabled();
   });
 });
