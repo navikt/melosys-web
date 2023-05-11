@@ -40,6 +40,7 @@ import { SendBrevFormValues } from "./types";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
+import { MELOSYS_BREV_GENERELT_FRITEKSTVEDLEGG } from "../../../featuretoggle/toggleNavn";
 
 const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
 
@@ -115,7 +116,7 @@ const SendBrev = ({
   const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
   const [utkastPåBehandlingen, setUtkastPåBehandlingen] = useState<Api.Brevutkast.BrevutkastResDto[]>([]);
 
-  const fritekstvedleggToggle = useFeatureToggle("melosys.brev.GENERELT_FRITEKSTVEDLEGG");
+  const fritekstvedleggToggle = useFeatureToggle(MELOSYS_BREV_GENERELT_FRITEKSTVEDLEGG);
 
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
@@ -565,7 +566,7 @@ const SendBrev = ({
         <VedleggVelger dokumenter={dokumenter} valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} />
       )}
 
-      {fritekstvedleggToggle === "enabled" &&
+      {fritekstvedleggToggle &&
         fritekstvedleggFelt &&
         (visFritekstvedleggSkjema ? (
           <FritekstvedleggSkjema

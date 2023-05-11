@@ -1,14 +1,28 @@
-import React, { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import PT from "prop-types";
 import { InteractionStatus } from "@azure/msal-browser";
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import Topplinje from "./komponenter/topplinje";
 import { melosysWebLoginRequest } from "../../auth/authConfig";
 import { getAccessToken, setTokenInterceptor, setTokenInterceptorForLocalDevelopment } from "../../auth/authUtils";
+import { hentAlleFeatureToggles } from "../../featuretoggle/useFeatureToggle";
+import { FeatureToggleContext } from "../../contexts/featureToggleContext";
 
 function Hovedside({ isDevelopmentProfile, children }) {
   const { instance, inProgress, accounts } = useMsal();
+  const { erInvalidert, validerFeatureTokens } = useContext(FeatureToggleContext);
   const isAuthenticated = useIsAuthenticated();
+
+  const hentAlleFeatureTogglesOgValider = () => {
+    hentAlleFeatureToggles();
+    validerFeatureTokens();
+  };
+
+  useEffect(() => {
+    if (erInvalidert) {
+      hentAlleFeatureTogglesOgValider();
+    }
+  }, [erInvalidert]);
 
   useEffect(() => {
     if (!isDevelopmentProfile && inProgress === InteractionStatus.None && !isAuthenticated) {
@@ -17,9 +31,11 @@ function Hovedside({ isDevelopmentProfile, children }) {
   }, [isAuthenticated, instance, inProgress]);
 
   if (isDevelopmentProfile) {
-    setTokenInterceptorForLocalDevelopment();
+    setTokenInterceptorForLocalDevelopment().then(() => hentAlleFeatureTogglesOgValider());
   } else {
-    setTokenInterceptor((url) => getAccessToken(instance, accounts, url), accounts);
+    setTokenInterceptor((url) => getAccessToken(instance, accounts, url), accounts).then(() =>
+      hentAlleFeatureTogglesOgValider()
+    );
   }
 
   return isDevelopmentProfile ? (

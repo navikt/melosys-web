@@ -15,6 +15,7 @@ import { OrganisasjonOperations } from "../organisasjoner";
 import { fagsakSelectors } from "../fagsaker";
 import { navigeringOperations } from "../navigering";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
+import { MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP } from "../../featuretoggle/toggleNavn";
 
 export function hent(behandlingID) {
   return async (dispatch, getState) => {
@@ -27,7 +28,7 @@ export function hent(behandlingID) {
 
     if (
       dispatchedMottatteOpplysningerAction.type === Types.FEILET &&
-      (await erFeatureToggleEnabled("melosys.registrering_unntak_fra_medlemskap"))
+      erFeatureToggleEnabled(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP)
     ) {
       await dispatch(navigeringOperations.tilTomFlyt());
       return dispatchedMottatteOpplysningerAction;

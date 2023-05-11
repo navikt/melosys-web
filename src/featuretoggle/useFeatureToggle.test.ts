@@ -1,59 +1,65 @@
-import { renderHook, act } from "@testing-library/react-hooks";
+import { renderHook } from "@testing-library/react-hooks";
 
-import useFeatureToggle, { Status } from "./useFeatureToggle";
+import useFeatureToggle from "./useFeatureToggle";
+import { FEATURE_TOGGLE } from "./toggleNavn";
+
+interface SessionStorageMock {
+  getAll: () => Record<string, any>;
+  getItem: (key: string) => string | null;
+  setItem: (key: string, value: any) => void;
+  removeItem: (key: string) => void;
+  clear: () => void;
+}
+
+const createSessionStorageMock = (data: Record<string, any> = {}): SessionStorageMock => {
+  const sessionStorageData: Record<string, any> = { ...data };
+  const sessionStorageMock: SessionStorageMock = {
+    getAll: () => sessionStorageData,
+    getItem: (key: string) => sessionStorageData[key],
+    setItem: (key: string, value: any) => {
+      sessionStorageData[key] = JSON.stringify(value);
+    },
+    removeItem: (key: string) => {
+      delete sessionStorageData[key];
+    },
+    clear: () => {
+      Object.keys(sessionStorageData).forEach((key) => {
+        delete sessionStorageData[key];
+      });
+    },
+  };
+  Object.defineProperty(window, "sessionStorage", {
+    value: sessionStorageMock,
+  });
+  return sessionStorageMock;
+};
 
 describe("useFeatureToggle", () => {
-  it("henter en featuretoggle som er enabled", async () => {
-    (fetch as any).mockResponse(
-      JSON.stringify({
-        testFeature: true,
-      })
-    );
+  let sessionStorageMock: SessionStorageMock;
 
-    const rh = renderHook(() => useFeatureToggle("testFeature"));
-
-    await act(async () => {
-      await rh.waitForNextUpdate();
-    });
-
-    const toggleStatus = rh.result.current;
-    expect(toggleStatus).toBe(Status.enabled);
+  beforeEach(() => {
+    sessionStorageMock = createSessionStorageMock();
   });
 
-  it("henter en featuretoggle som er disabled", async () => {
-    (fetch as any).mockResponse(
-      JSON.stringify({
-        testFeature: false,
-      })
-    );
+  it("henter featuretoggles og sletter de", async () => {
+    sessionStorageMock.setItem(FEATURE_TOGGLE, { testFeatureEnabled: true, testFeatureDisabled: false });
 
-    const rh = renderHook(() => useFeatureToggle("testFeature"));
+    const { result: enabledToggle } = renderHook(() => useFeatureToggle("testFeatureEnabled"));
+    const toggleStatusEnabled = enabledToggle.current;
+    const { result: disabledToggle } = renderHook(() => useFeatureToggle("testFeatureDisabled"));
+    const toggleStatusDisabled = disabledToggle.current;
 
-    await act(async () => {
-      await rh.waitForNextUpdate();
-    });
+    expect(toggleStatusEnabled).toBe(true);
+    expect(toggleStatusDisabled).toBe(false);
 
-    const toggleStatus = rh.result.current;
-    expect(toggleStatus).toBe(Status.disabled);
-  });
+    sessionStorageMock.clear();
 
-  it("toggle har status fetching bare imens den hentes", async () => {
-    (fetch as any).mockResponse(
-      JSON.stringify({
-        testFeature: false,
-      })
-    );
+    const { result: enabledToggleCleared } = renderHook(() => useFeatureToggle("testFeatureEnabled"));
+    const toggleStatusEnabledCleared = enabledToggleCleared.current;
+    const { result: disabledToggleCleared } = renderHook(() => useFeatureToggle("testFeatureDisabled"));
+    const toggleStatusDisabledCleared = disabledToggleCleared.current;
 
-    const rh = renderHook(() => useFeatureToggle("testFeature"));
-
-    let toggleStatus = rh.result.current;
-    expect(toggleStatus).toBe(Status.fetching);
-
-    await act(async () => {
-      await rh.waitForNextUpdate();
-    });
-
-    toggleStatus = rh.result.current;
-    expect(toggleStatus).not.toBe(Status.fetching);
+    expect(toggleStatusEnabledCleared).toBe(null);
+    expect(toggleStatusDisabledCleared).toBe(null);
   });
 });

@@ -17,6 +17,6 @@ describe("FeatureToggle", () => {
     shallow(<FeatureToggle {...props} />);
 
     expect(props.children).toHaveBeenCalledTimes(1);
-    expect(props.children).toHaveBeenLastCalledWith("fetching");
+    expect(props.children).toHaveBeenLastCalledWith(undefined);
   });
 });

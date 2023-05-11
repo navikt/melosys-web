@@ -1,36 +1,35 @@
+import { useEffect, useState } from "react";
 import * as Api from "../services/api";
 
-import { useAsyncCallbackState } from "../hooks";
+import { FEATURE_TOGGLE, alleToggleNavn } from "./toggleNavn";
+import { getCachedItem, setCachedItem } from "../services/utils";
 
-export enum Status {
-  fetching = "fetching",
-  enabled = "enabled",
-  disabled = "disabled",
-}
-
-const hentFeatureToggle = (toggleName: string) => Api.Featuretoggle.hent([toggleName]);
+export const hentAlleFeatureToggles = () => {
+  Api.Featuretoggle.hent(alleToggleNavn).then((alleToggles) => {
+    setCachedItem(FEATURE_TOGGLE, JSON.stringify(alleToggles));
+  });
+};
 
 /**
  * erFeatureToggleEnabled
- * OBS: Denne returnerer promise. Må brukes med await. Bruk heller useFeatureToggle dersom du er i funksjonell komponent.
+ * OBS: Bruk heller useFeatureToggle dersom du er i funksjonell komponent.
  */
-export const erFeatureToggleEnabled = (toggleName: string): Promise<boolean> =>
-  hentFeatureToggle(toggleName)
-    .then((response) => response[toggleName])
-    .catch(() => false);
-
-const useFeatureToggle = (toggleName: string, deps: unknown[] = []): Status => {
-  const [toggles] = useAsyncCallbackState(() => hentFeatureToggle(toggleName), {}, [toggleName, ...deps]);
-
-  const toggleFetched = toggles[toggleName] !== undefined;
-
-  if (!toggleFetched) {
-    return Status.fetching;
+export const erFeatureToggleEnabled = (featureToggle: string) => {
+  if (getCachedItem(FEATURE_TOGGLE) === undefined) {
+    return null;
   }
-  if (toggles[toggleName]) {
-    return Status.enabled;
-  }
-  return Status.disabled;
+  const toggles = JSON.parse(getCachedItem(FEATURE_TOGGLE)!);
+  return toggles && toggles[featureToggle];
+};
+
+const useFeatureToggle = (toggleName: string): boolean | undefined => {
+  const [featureToggleEnabled, setFeatureToggleEnabled] = useState(undefined);
+
+  useEffect(() => {
+    setFeatureToggleEnabled(erFeatureToggleEnabled(toggleName));
+  }, [toggleName]);
+
+  return featureToggleEnabled;
 };
 
 export default useFeatureToggle;

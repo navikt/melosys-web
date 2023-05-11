@@ -33,6 +33,7 @@ import { MatchParams } from "../../@types";
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 import "./saksbehandling.css";
 import { alleSteg } from "./initialStegArray";
+import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
 
 const mapStateToProps = (state: RootState) => ({
   land: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
@@ -123,7 +124,7 @@ const Saksbehandling = ({
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
-  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+  const folketrygdenToggle = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -187,7 +188,7 @@ const Saksbehandling = ({
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;
   if (!saksopplysningerLastet) return null;
-  if (folketrygdenToggle === "fetching" || folketrygdenToggle === "disabled") return null;
+  if (folketrygdenToggle === undefined || !folketrygdenToggle) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;

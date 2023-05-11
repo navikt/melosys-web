@@ -19,6 +19,7 @@ import { unregister } from "./registerServiceWorker";
 import { FellesHandlersProvider } from "./contexts";
 import Modals from "./modals";
 import { apolloClient } from "./graphql";
+import { FeatureToggleProvider } from "./contexts/featureToggleContext";
 
 const SideLoadingFailMessage = <p>Beklager, kunne ikke laste inn siden.</p>;
 
@@ -54,14 +55,16 @@ ReactDOM.render(
   <ReduxProvider store={store}>
     <ConnectedRouter history={routerHistory}>
       <ApolloProvider client={apolloClient}>
-        <App isDevelopmentProfile={isDevelopmentProfile}>
-          <Sentry.ErrorBoundary fallback={SideLoadingFailMessage}>
-            <FellesHandlersProvider>
-              <Routing />
-              <Modals />
-            </FellesHandlersProvider>
-          </Sentry.ErrorBoundary>
-        </App>
+        <FeatureToggleProvider>
+          <App isDevelopmentProfile={isDevelopmentProfile}>
+            <Sentry.ErrorBoundary fallback={SideLoadingFailMessage}>
+              <FellesHandlersProvider>
+                <Routing />
+                <Modals />
+              </FellesHandlersProvider>
+            </Sentry.ErrorBoundary>
+          </App>
+        </FeatureToggleProvider>
       </ApolloProvider>
     </ConnectedRouter>
   </ReduxProvider>,
