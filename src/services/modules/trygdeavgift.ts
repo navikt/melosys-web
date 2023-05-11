@@ -24,3 +24,23 @@ export const hentGrunnlag = (behandlingID: number): Promise<Avgiftsgrunnlag> =>
 
 export const sendGrunnlag = (behandlingID: number, grunnlag: OppdaterAvgiftsgrunnlag): Promise<Avgiftsgrunnlag> =>
   putAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/grunnlag`, grunnlag);
+
+export type Inntektskilde = {
+  type: string;
+  arbeidsgiversavgiftBetales: boolean;
+  avgiftspliktigInntektMnd?: number;
+};
+
+export type TrygdeavgiftsgrunnlagDto = {
+  skatteplikttype: string;
+  inntektskilder: Inntektskilde[];
+};
+
+export const hentTrygdeavgiftsgrunnlaget = (behandlingID: number): Promise<TrygdeavgiftsgrunnlagDto> =>
+  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/grunnlag`);
+
+export const oppdaterTrygdeavgiftsgrunnlag = (
+  behandlingID: number,
+  grunnlag: TrygdeavgiftsgrunnlagDto
+): Promise<TrygdeavgiftsgrunnlagDto> =>
+  putAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/grunnlag`, grunnlag);
