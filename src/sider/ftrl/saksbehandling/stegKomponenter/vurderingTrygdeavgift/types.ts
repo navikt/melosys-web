@@ -3,7 +3,7 @@ import { FieldValues } from "react-hook-form";
 export interface Inntekstskilde {
   kildetype?: string;
   arbAvgBetales?: string;
-  bruttoInntekt?: string;
+  bruttoInntekt?: number;
 }
 
 export interface FieldArrayProps {

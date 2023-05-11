@@ -95,7 +95,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   if (!aktivtSteg) return null;
 
   const skalBeregneForeløpigTrygdeavgift = formValues.inntektskilder.some(
-    (inntekstskilde: Inntekstskilde) => !Utils._isEmpty(inntekstskilde.bruttoInntekt)
+    (inntekstskilde: Inntekstskilde) => inntekstskilde.bruttoInntekt && inntekstskilde.bruttoInntekt !== 0
   );
 
   return (
