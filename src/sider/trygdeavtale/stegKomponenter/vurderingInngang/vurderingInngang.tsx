@@ -19,11 +19,12 @@ import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from ".
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
 
-import { FlytFinnesIkke, LandValgSomOptions } from "./vurderingInngangKomponenter";
+import { LandValgSomOptions } from "./vurderingInngangKomponenter";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
+import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
 
 interface Periode {
   fom?: string | null;
@@ -187,7 +188,7 @@ const VurderingInngang = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      {landUtenStøtteValgt && <FlytFinnesIkke />}
+      {landUtenStøtteValgt && <TomFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
