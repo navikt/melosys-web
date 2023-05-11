@@ -6,6 +6,10 @@ import MKV from "../../../melosyskodeverk";
 
 import { VurderingGodkjennUtpekingAnnetLand } from "./vurderingGodkjennUtpekingAnnetLand";
 
+jest.mock("../../../services/modules/kontroll", () => ({
+  kanOppretteSedTypePaaBuc: () => Promise.resolve(true),
+}));
+
 describe("vurderingGodkjennUtpekingAnnetLand", () => {
   let props = null;
 
