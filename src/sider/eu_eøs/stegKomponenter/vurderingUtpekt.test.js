@@ -26,7 +26,7 @@ describe("VurderingUtpekt", () => {
       formValues: {},
       lovvalgsperiode: { fom: "", tom: "" },
       behandlingstema: MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
-      behandlingID: "",
+      behandlingID: 1,
     };
   });
 
