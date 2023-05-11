@@ -24,6 +24,7 @@ import Oppsummering from "../../felleskomponenter/oppsummering";
 import { MatchParams } from "../../@types";
 import Stegvelger from "./stegvelger";
 import "./saksbehandling.css";
+import { feiletResponsOperations } from "../../ducks/feiletRespons";
 
 interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
@@ -57,6 +58,14 @@ const Saksbehandling = ({
 
   useEffect(() => {
     lastInnSaksopplysninger();
+
+    return () => {
+      dispatch(fagsakOperations.resetFagsakState());
+      dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState());
+      dispatch(behandlingerOperations.resetBehandlingerState());
+      dispatch(mottatteOpplysningerOperations.resetState());
+      dispatch(feiletResponsOperations.resetFeiletRespons());
+    };
   }, []);
 
   const lastInnSaksopplysninger = async () => {

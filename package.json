@@ -18,7 +18,7 @@
     "@hookform/resolvers": "^2.9.11",
     "@loadable/component": "^5.10.3",
     "@navikt/fnrvalidator": "^1.1.4",
-    "@navikt/melosys-kodeverk": "5.15.191",
+    "@navikt/melosys-kodeverk": "5.15.193",
     "@sentry/integrations": "^7.30.0",
     "@sentry/react": "^7.30.0",
     "@sentry/tracing": "^7.30.0",
