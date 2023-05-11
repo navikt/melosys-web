@@ -2,17 +2,17 @@ import React from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { Control, FieldArrayWithId } from "react-hook-form";
 
-import MKV from "../../../../../melosyskodeverk";
-import * as Forms from "../../../../../felleskomponenter/forms";
-import * as Nav from "../../../../../navFrontend";
-import * as Utils from "../../../../../utils";
-import * as Mui from "../../../../../felleskomponenter/ui";
-import * as Ikoner from "../../../../../resources/images";
+import MKV from "../../../../../../melosyskodeverk";
+import * as Forms from "../../../../../../felleskomponenter/forms";
+import * as Nav from "../../../../../../navFrontend";
+import * as Utils from "../../../../../../utils";
+import * as Mui from "../../../../../../felleskomponenter/ui";
+import * as Ikoner from "../../../../../../resources/images";
 
-import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
-import { BOOLSK_STRING } from "../../../../../constants";
+import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
+import { BOOLSK_STRING } from "../../../../../../constants";
 import { FieldArrayProps, FormValuesProps, Inntekstskilde } from "./types";
-import { arbAvgBetalesKreves, bruttoInntektKreves } from "./vurderingTrygdeavgiftSchema";
+import { arbAvgBetalesKreves, bruttoInntektKreves } from "../vurderingTrygdeavgiftSchema";
 
 const { ARBEIDSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR } = MKV.Koder.inntektskildetype;
 

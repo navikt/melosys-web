@@ -14,8 +14,9 @@ import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { useAsyncCallbackState } from "../../../../../hooks";
 
-import { Inntektskilder } from "./inntektskilder";
-import { FieldArrayProps, FormValuesProps, Inntekstskilde } from "./types";
+import { Inntektskilder } from "./komponenter/inntektskilder";
+import TrygdeavgiftsperioderTabell from "./komponenter/trygdeavgiftsperioderTabell";
+import { FieldArrayProps, FormValuesProps, Inntekstskilde } from "./komponenter/types";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
 
@@ -162,9 +163,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.Hovedknapp>
       )}
 
-      {lagretTrygdeavgift?.trygdeavgiftsperioder?.map((periode) => (
-        <p>Midlertidig visning : {periode.avgiftPerMd}</p>
-      ))}
+      {lagretTrygdeavgift?.trygdeavgiftsperioder && (
+        <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift.trygdeavgiftsperioder} />
+      )}
 
       {feil && <Nav.AlertStripeFeil className="infomelding">{feil}</Nav.AlertStripeFeil>}
 
