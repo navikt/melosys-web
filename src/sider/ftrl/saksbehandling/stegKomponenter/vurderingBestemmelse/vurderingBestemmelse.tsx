@@ -32,7 +32,7 @@ const komponentState = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  medlemskapsperiodeBestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
+  lagretBestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
   vilkårKodeverk: folketrygdenkodeverkSelectors.VilkaarSelector(state),
   begrunnelseKodeverk: folketrygdenkodeverkSelectors.BegrunnelserSelector(state),
 });
@@ -47,17 +47,11 @@ interface VurderingBestemmelseProps {
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) => {
   const dispatch = useDispatch();
   const oppdaterVilkår = (skjema: any) => dispatch(vilkarOperations.oppdaterState(skjema));
-  const {
-    behandlingID,
-    behandlingstema,
-    medlemskapsperiodeBestemmelse,
-    vilkårKodeverk,
-    begrunnelseKodeverk,
-    redigerbart,
-  } = useSelector(komponentState);
+  const { behandlingID, behandlingstema, lagretBestemmelse, vilkårKodeverk, begrunnelseKodeverk, redigerbart } =
+    useSelector(komponentState);
   const [{ støttedeBestemmelser, ikkeStøttedeBestemmelser }] =
-    useAsyncCallbackState<Api.Medlemskapsperioder.HentBestemmelserResponse>(
-      () => Api.Medlemskapsperioder.hentBestemmelser(behandlingstema),
+    useAsyncCallbackState<Api.Medlemskapsperioder.HentMuligeBestemmelserResponse>(
+      () => Api.Medlemskapsperioder.hentMuligeBestemmelser(behandlingstema),
       { støttedeBestemmelser: [], ikkeStøttedeBestemmelser: [] },
       [behandlingstema]
     );
@@ -76,7 +70,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     // @ts-ignore
     const response: { data: Api.Vilkar.Vilkaar[] } = await dispatch(vilkarOperations.hent(behandlingID));
 
-    handleEndreBestemmelse(medlemskapsperiodeBestemmelse);
+    handleEndreBestemmelse(lagretBestemmelse);
     response.data?.forEach((vilkar) => {
       valgteVilkår.set(vilkar.vilkaar, vilkar.oppfylt ? SANN : USANN);
       if (vilkar.begrunnelseKoder && vilkar.begrunnelseKoder.length === 1) {

@@ -1,5 +1,5 @@
 import { StateSection } from "AppTypes";
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 import * as Types from "./types";
 
 export const initialState: StateSection<Types.Data> = {
@@ -13,15 +13,24 @@ export default function reducer(state = initialState, action: Types.Action): Sta
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data };
-    case Types.OK: {
-      const { data: medlemskapsperioder } = action;
-      const bestemmelse = medlemskapsperioder.length > 0 ? medlemskapsperioder[0].bestemmelse : "";
+    case Types.OK_MEDLEMSKAPSPERIODE: {
       return {
         ...state,
         status: STATUS.OK,
         data: {
-          bestemmelse,
-          medlemskapsperioder,
+          ...state.data,
+          medlemskapsperioder: action.data,
+        },
+      };
+    }
+    case Types.OK_BESTEMMELSE: {
+      console.log(action.data);
+      return {
+        ...state,
+        status: STATUS.OK,
+        data: {
+          ...state.data,
+          bestemmelse: action.data?.bestemmelse || "",
         },
       };
     }
