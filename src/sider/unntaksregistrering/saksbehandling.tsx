@@ -25,10 +25,6 @@ import { MatchParams } from "../../@types";
 import Stegvelger from "./stegvelger";
 import "./saksbehandling.css";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
-import { menypanelOperations } from "../../ducks/menypanel";
-import { medlemskapsperioderOperations } from "../../ducks/medlemskapsperioder";
-import { oppsummertfaktaOperations } from "../../ducks/oppsummertfakta";
-import { vilkarOperations } from "../../ducks/vilkar";
 
 interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
@@ -65,13 +61,10 @@ const Saksbehandling = ({
 
     return () => {
       dispatch(fagsakOperations.resetFagsakState());
-      dispatch(vilkarOperations.resetState());
-      dispatch(oppsummertfaktaOperations.resetOppsummertFakta());
-      dispatch(medlemskapsperioderOperations.resetMedlemskapsperioder());
+      dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState());
       dispatch(behandlingerOperations.resetBehandlingerState());
       dispatch(mottatteOpplysningerOperations.resetState());
       dispatch(feiletResponsOperations.resetFeiletRespons());
-      dispatch(menypanelOperations.skjulMenypanel());
     };
   }, []);
 
