@@ -31,8 +31,13 @@ interface Props {
 export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const [lagretTrygdeavgift] = useAsyncCallbackState(
+  const [lagretTrygdeavgiftsgrunnlag] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID),
+    undefined,
+    [behandlingID]
+  );
+  const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
+    () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
     undefined,
     [behandlingID]
   );
@@ -45,9 +50,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
     mode: "onChange",
     values: {
-      skattepliktig: lagretTrygdeavgift?.skatteplikttype,
-      inntektskilder: lagretTrygdeavgift?.inntektskilder
-        ? [...lagretTrygdeavgift.inntektskilder].map((kilde) => ({
+      skattepliktig: lagretTrygdeavgiftsgrunnlag?.skatteplikttype,
+      inntektskilder: lagretTrygdeavgiftsgrunnlag?.inntektskilder
+        ? [...lagretTrygdeavgiftsgrunnlag.inntektskilder].map((kilde) => ({
             kildetype: kilde.type,
             arbAvgBetales: Utils.streng.boolTilUppercaseStreng(kilde.arbeidsgiversavgiftBetales),
             bruttoInntekt: kilde.avgiftspliktigInntektMnd,
@@ -93,6 +98,15 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   }, [formIsValid, isValidating]);
 
   if (!aktivtSteg) return null;
+
+  const beregnTrygdeavgift = () => {
+    Api.Trygdeavgift.beregnTrygdeavgift(behandlingID)
+      .then((response) => {
+        setFeil(undefined);
+        setTrygdeavgift(response);
+      })
+      .catch((error) => setFeil(error.body?.message || error));
+  };
 
   const skalBeregneForeløpigTrygdeavgift = formValues.inntektskilder.some(
     (inntekstskilde: Inntekstskilde) => inntekstskilde.bruttoInntekt && inntekstskilde.bruttoInntekt !== 0
@@ -140,13 +154,17 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       {skalBeregneForeløpigTrygdeavgift && (
         <Nav.Hovedknapp
           className="beregnKnapp"
-          disabled={!redigerbart || !formIsValid}
-          onClick={() => console.log("Beregn foreløpig trygdeavgift")}
+          disabled={!redigerbart || !formIsValid || isValidating}
+          onClick={beregnTrygdeavgift}
           mini
         >
           Beregn foreløpig trygdeavgift
         </Nav.Hovedknapp>
       )}
+
+      {lagretTrygdeavgift?.trygdeavgiftsperioder?.map((periode) => (
+        <p>Midlertidig visning : {periode.avgiftPerMd}</p>
+      ))}
 
       {feil && <Nav.AlertStripeFeil className="infomelding">{feil}</Nav.AlertStripeFeil>}
 

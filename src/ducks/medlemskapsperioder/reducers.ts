@@ -24,7 +24,6 @@ export default function reducer(state = initialState, action: Types.Action): Sta
       };
     }
     case Types.OK_BESTEMMELSE: {
-      console.log(action.data);
       return {
         ...state,
         status: STATUS.OK,

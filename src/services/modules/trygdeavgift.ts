@@ -44,3 +44,21 @@ export const oppdaterTrygdeavgiftsgrunnlag = (
   grunnlag: TrygdeavgiftsgrunnlagDto
 ): Promise<TrygdeavgiftsgrunnlagDto> =>
   putAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/grunnlag`, grunnlag);
+
+export type Trygdeavgiftsperiode = {
+  fom: string;
+  tom: string;
+  trygdedekning: string;
+  avgiftssats: number;
+  avgiftPerMd: number;
+};
+
+export type BeregnetTrygdeavgift = {
+  trygdeavgiftsperioder: Trygdeavgiftsperiode[];
+};
+
+export const hentBeregnetTrygdeavgift = (behandlingID: number): Promise<BeregnetTrygdeavgift> =>
+  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`);
+
+export const beregnTrygdeavgift = (behandlingID: number): Promise<BeregnetTrygdeavgift> =>
+  putAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`);
