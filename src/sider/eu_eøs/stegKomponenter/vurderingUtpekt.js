@@ -249,7 +249,7 @@ VurderingUtpekt.propTypes = {
   ytterligereInformasjon: PT.string,
   behandlingstema: PT.string.isRequired,
   endreFelt: PT.func.isRequired,
-  behandlingID: PT.string.isRequired,
+  behandlingID: PT.number.isRequired,
 };
 
 VurderingUtpekt.defaultProps = {
