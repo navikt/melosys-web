@@ -88,6 +88,11 @@ export const Alertmeldinger = ({ meldinger, className, exclude }: alertmeldinger
     if (filtrerteAlertmeldinger.length === 1) {
       return KV.kodeTilTerm(filtrerteAlertmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
     }
+
+    if (filtrerteAlertmeldinger.length === 0) {
+      return null;
+    }
+
     return (
       <ul className="feilkoder__liste">
         {filtrerteAlertmeldinger.map((feil) => (
