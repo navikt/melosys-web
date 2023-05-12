@@ -83,12 +83,20 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         avgiftspliktigInntektMnd: kilde.bruttoInntekt,
       })),
     })
-      .then(() => setFeil(undefined))
+      .then(() => {
+        setFeil(undefined);
+        Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID)
+          .then((response) => {
+            setFeil(undefined);
+            setTrygdeavgift(response);
+          })
+          .catch((error) => setFeil(error.body?.message || error));
+      })
       .catch((error) => setFeil(error.body?.message || error));
   };
 
   const debouncedLagreMedlemskapsperioder = useCallback(
-    Utils._debounce((formVerdier, isValid) => isValid && lagreTrygdeavgiftsgrunnlag(formVerdier), 500),
+    Utils._debounce((formVerdier, isValid) => isValid && lagreTrygdeavgiftsgrunnlag(formVerdier), 250),
     []
   );
 
@@ -100,7 +108,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   if (!aktivtSteg) return null;
 
-  const beregnTrygdeavgift = () => {
+  const handleBeregnTrygdeavgift = () => {
+    setTrygdeavgift(undefined);
     Api.Trygdeavgift.beregnTrygdeavgift(behandlingID)
       .then((response) => {
         setFeil(undefined);
@@ -112,6 +121,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const skalBeregneForeløpigTrygdeavgift = formValues.inntektskilder.some(
     (inntekstskilde: Inntekstskilde) => inntekstskilde.bruttoInntekt && inntekstskilde.bruttoInntekt !== 0
   );
+
+  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
+
+  const harBeregnetForeløpigTrygdeavgift = !skalBeregneForeløpigTrygdeavgift || trygdeavgiftErIkkeTom;
 
   return (
     <div className="vurderingTrygdeavgift">
@@ -156,16 +169,14 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         <Nav.Hovedknapp
           className="beregnKnapp"
           disabled={!redigerbart || !formIsValid || isValidating}
-          onClick={beregnTrygdeavgift}
+          onClick={handleBeregnTrygdeavgift}
           mini
         >
           Beregn foreløpig trygdeavgift
         </Nav.Hovedknapp>
       )}
 
-      {lagretTrygdeavgift?.trygdeavgiftsperioder && (
-        <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift.trygdeavgiftsperioder} />
-      )}
+      {trygdeavgiftErIkkeTom && <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />}
 
       {feil && <Nav.AlertStripeFeil className="infomelding">{feil}</Nav.AlertStripeFeil>}
 
@@ -176,8 +187,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreft,
-          disabled: !redigerbart || !formIsValid,
-        }} // TODO: må også sjekke at saksbehandler har beregnet dersom det er relevant
+          disabled: !redigerbart || !formIsValid || !harBeregnetForeløpigTrygdeavgift,
+        }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
