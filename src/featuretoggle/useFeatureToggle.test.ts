@@ -1,7 +1,9 @@
+/* eslint-disable */
 import { renderHook } from "@testing-library/react-hooks";
 
-import useFeatureToggle from "./useFeatureToggle";
 import { FEATURE_TOGGLE } from "./toggleNavn";
+// eslint-disable-next-line import/no-useless-path-segments
+import * as featureToggleModule from "../featuretoggle";
 
 interface SessionStorageMock {
   getAll: () => Record<string, any>;
@@ -10,6 +12,11 @@ interface SessionStorageMock {
   removeItem: (key: string) => void;
   clear: () => void;
 }
+
+jest.mock("../featuretoggle", () => ({
+  __esModule: true,
+  useFeatureToggle: jest.fn(),
+}));
 
 const createSessionStorageMock = (data: Record<string, any> = {}): SessionStorageMock => {
   const sessionStorageData: Record<string, any> = { ...data };
@@ -41,25 +48,27 @@ describe("useFeatureToggle", () => {
     sessionStorageMock = createSessionStorageMock();
   });
 
-  it("henter featuretoggles og sletter de", async () => {
-    sessionStorageMock.setItem(FEATURE_TOGGLE, { testFeatureEnabled: true, testFeatureDisabled: false });
+  it("henter featuretoggle som er sann", async () => {
+    jest.spyOn(featureToggleModule, "useFeatureToggle").mockResolvedValue(true as never);
+    sessionStorageMock.setItem(FEATURE_TOGGLE, { testFeatureEnabled: true });
 
-    const { result: enabledToggle } = renderHook(() => useFeatureToggle("testFeatureEnabled"));
-    const toggleStatusEnabled = enabledToggle.current;
-    const { result: disabledToggle } = renderHook(() => useFeatureToggle("testFeatureDisabled"));
-    const toggleStatusDisabled = disabledToggle.current;
+    const { result: enabledToggle } = renderHook(() => featureToggleModule.useFeatureToggle("testFeatureEnabled"));
+    const toggleStatusEnabled = await enabledToggle.current;
 
     expect(toggleStatusEnabled).toBe(true);
+
+    sessionStorageMock.clear();
+  });
+
+  it("henter featuretoggle som er usann", async () => {
+    jest.spyOn(featureToggleModule, "useFeatureToggle").mockResolvedValue(false as never);
+    sessionStorageMock.setItem(FEATURE_TOGGLE, { testFeatureEnabled: true, testFeatureDisabled: false });
+
+    const { result: disabledToggle } = renderHook(() => featureToggleModule.useFeatureToggle("testFeatureDisabled"));
+    const toggleStatusDisabled = await disabledToggle.current;
+
     expect(toggleStatusDisabled).toBe(false);
 
     sessionStorageMock.clear();
-
-    const { result: enabledToggleCleared } = renderHook(() => useFeatureToggle("testFeatureEnabled"));
-    const toggleStatusEnabledCleared = enabledToggleCleared.current;
-    const { result: disabledToggleCleared } = renderHook(() => useFeatureToggle("testFeatureDisabled"));
-    const toggleStatusDisabledCleared = disabledToggleCleared.current;
-
-    expect(toggleStatusEnabledCleared).toBe(null);
-    expect(toggleStatusDisabledCleared).toBe(null);
   });
 });

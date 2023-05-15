@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
-import * as Api from "../services/api";
 
-import { FEATURE_TOGGLE, alleToggleNavn } from "./toggleNavn";
-import { getCachedItem, setCachedItem } from "../services/utils";
-
-export const hentAlleFeatureToggles = () => {
-  Api.Featuretoggle.hent(alleToggleNavn).then((alleToggles) => {
-    setCachedItem(FEATURE_TOGGLE, JSON.stringify(alleToggles));
-  });
-};
+import { useSelector } from "react-redux";
+import { FEATURE_TOGGLE } from "./toggleNavn";
+import { STATUS, getCachedItem } from "../services/utils";
+import { featureToggleSelectors } from "../ducks/featuretoggle";
 
 /**
  * erFeatureToggleEnabled
@@ -23,13 +18,16 @@ export const erFeatureToggleEnabled = (featureToggle: string) => {
 };
 
 const useFeatureToggle = (toggleName: string): boolean | undefined => {
-  const [featureToggleEnabled, setFeatureToggleEnabled] = useState(undefined);
+  const [featureToggle, setFeatureToggle] = useState(undefined);
+  const featureToggleReduxState: any = useSelector((state: any) => featureToggleSelectors.FeatureToggleSelector(state));
 
   useEffect(() => {
-    setFeatureToggleEnabled(erFeatureToggleEnabled(toggleName));
-  }, [toggleName]);
+    if (featureToggleReduxState.status === STATUS.OK) {
+      setFeatureToggle(featureToggleReduxState.data[toggleName]);
+    }
+  }, [toggleName, featureToggleReduxState]);
 
-  return featureToggleEnabled;
+  return featureToggle;
 };
 
 export default useFeatureToggle;

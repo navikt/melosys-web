@@ -1,14 +1,21 @@
 import React, { ComponentProps } from "react";
 import { shallow } from "enzyme";
 import { mock, instance } from "ts-mockito";
-
 import MKV from "../../../../melosyskodeverk";
-
 import * as Skjema from "../../../../felleskomponenter/skjema";
-
 import { Saksplukker } from "./saksplukker";
+import * as featureToggleModule from "../../../../featuretoggle";
+
+jest.mock("../../../../featuretoggle", () => ({
+  __esModule: true,
+  useFeatureToggle: jest.fn(),
+}));
 
 describe("Saksplukker", () => {
+  beforeEach(() => {
+    jest.spyOn(featureToggleModule, "useFeatureToggle").mockResolvedValue(true as never);
+  });
+
   const mockedProps = mock<ComponentProps<typeof Saksplukker>>();
   const props = instance(mockedProps);
 

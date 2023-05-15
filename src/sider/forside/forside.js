@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { withRouter } from "react-router-dom";
@@ -16,16 +16,15 @@ import BehandlingOppgaver from "./komponenter/mineoppgaver/behandlingOppgaver";
 import OpprettNySakKnapp from "./komponenter/opprettnysakknapp";
 
 import "./forside.css";
-import { FeatureToggleContext } from "../../contexts/featureToggleContext";
+import { featureToggleOperations } from "../../ducks/featuretoggle";
 
 const Forside = (props) => {
   const { tilOpprettNySak } = props;
   const data = useSelector((state) => state.oppgaver.data);
-  const { invaliderFeatureTokens } = useContext(FeatureToggleContext);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    invaliderFeatureTokens();
+    dispatch(featureToggleOperations.hent());
     dispatch(oversikt());
   }, []);
 

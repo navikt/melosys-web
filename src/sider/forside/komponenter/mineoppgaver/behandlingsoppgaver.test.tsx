@@ -4,8 +4,18 @@ import * as redux from "react-redux";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 import { BehandlingOppgaver } from "./behandlingOppgaver";
 import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
+import * as featureToggleModule from "../../../../featuretoggle";
+
+jest.mock("../../../../featuretoggle", () => ({
+  __esModule: true,
+  useFeatureToggle: jest.fn(),
+}));
 
 describe("Behandlingsoppgaver", () => {
+  beforeEach(() => {
+    jest.spyOn(featureToggleModule, "useFeatureToggle").mockResolvedValue(true as never);
+  });
+
   const saksbehandling = [
     {
       oppgaveID: "174562068",

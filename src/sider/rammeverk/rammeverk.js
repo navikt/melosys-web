@@ -1,28 +1,27 @@
-import { useContext, useEffect } from "react";
+import { useEffect, useState } from "react";
 import PT from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
 import { InteractionStatus } from "@azure/msal-browser";
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import Topplinje from "./komponenter/topplinje";
 import { melosysWebLoginRequest } from "../../auth/authConfig";
 import { getAccessToken, setTokenInterceptor, setTokenInterceptorForLocalDevelopment } from "../../auth/authUtils";
-import { hentAlleFeatureToggles } from "../../featuretoggle/useFeatureToggle";
-import { FeatureToggleContext } from "../../contexts/featureToggleContext";
+import { featureToggleOperations, featureToggleSelectors } from "../../ducks/featuretoggle";
+import { STATUS } from "../../services";
 
 function Hovedside({ isDevelopmentProfile, children }) {
   const { instance, inProgress, accounts } = useMsal();
-  const { erInvalidert, validerFeatureTokens } = useContext(FeatureToggleContext);
+  const [harToken, setHarToken] = useState(false);
   const isAuthenticated = useIsAuthenticated();
+  const featureToggleReduxState = useSelector((state) => featureToggleSelectors.FeatureToggleSelector(state));
 
-  const hentAlleFeatureTogglesOgValider = () => {
-    hentAlleFeatureToggles();
-    validerFeatureTokens();
-  };
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (erInvalidert) {
-      hentAlleFeatureTogglesOgValider();
+    if (harToken && featureToggleReduxState.status === STATUS.NOT_STARTED) {
+      dispatch(featureToggleOperations.hent());
     }
-  }, [erInvalidert]);
+  }, [harToken]);
 
   useEffect(() => {
     if (!isDevelopmentProfile && inProgress === InteractionStatus.None && !isAuthenticated) {
@@ -31,11 +30,9 @@ function Hovedside({ isDevelopmentProfile, children }) {
   }, [isAuthenticated, instance, inProgress]);
 
   if (isDevelopmentProfile) {
-    setTokenInterceptorForLocalDevelopment().then(() => hentAlleFeatureTogglesOgValider());
+    setTokenInterceptorForLocalDevelopment().then(() => setHarToken(true));
   } else {
-    setTokenInterceptor((url) => getAccessToken(instance, accounts, url), accounts).then(() =>
-      hentAlleFeatureTogglesOgValider()
-    );
+    setTokenInterceptor((url) => getAccessToken(instance, accounts, url), accounts).then(() => setHarToken(true));
   }
 
   return isDevelopmentProfile ? (
