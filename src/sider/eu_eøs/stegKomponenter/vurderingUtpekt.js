@@ -204,6 +204,7 @@ export const VurderingUtpekt = ({
           <Nav.Fieldset legend="Skal lovvalget godkjennes?" disabled={skjemaDisabled}>
             <Skjema.Radio
               label="Godkjenn"
+              forhandsvalgt={!kanSendeSed}
               value={MKV.Koder.utfallregistreringunntak.GODKJENT}
               name="godkjenn"
               feltNavn="utpekingVurdering"
@@ -219,7 +220,7 @@ export const VurderingUtpekt = ({
       </Nav.Row>
       <Mui.StegKnapper
         bekreftKnappProps={{
-          disabled: !(redigerbart && harAvklaring),
+          disabled: !harAvklaring,
           htmlType: "submit",
         }}
         tilbakeKnappProps={{
