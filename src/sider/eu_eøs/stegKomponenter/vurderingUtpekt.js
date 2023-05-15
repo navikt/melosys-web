@@ -220,7 +220,7 @@ export const VurderingUtpekt = ({
       </Nav.Row>
       <Mui.StegKnapper
         bekreftKnappProps={{
-          disabled: !harAvklaring,
+          disabled: !(redigerbart && harAvklaring),
           htmlType: "submit",
         }}
         tilbakeKnappProps={{
