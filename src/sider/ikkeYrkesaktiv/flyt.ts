@@ -6,6 +6,7 @@ export interface Resultat {
   tilleggsbestemmelse?: string;
   lovvalgsperiodeFom?: string;
   lovvalgsperiodeTom?: string;
+  lovvalgsland?: string;
   innledningFritekst?: string;
   begrunnelseFritekst?: string;
   nyVurderingBakgrunn?: string;

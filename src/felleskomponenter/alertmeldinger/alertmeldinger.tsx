@@ -19,17 +19,22 @@ export const VirksomhetMelding = () => (
   <Nav.AlertStripeInfo className="virksomhetMelding">Behandlingen er journalført på virksomhet</Nav.AlertStripeInfo>
 );
 
-export const TomFlytMelding = () => (
-  <Nav.AlertStripeAdvarsel className="tomFlytMelding">
-    <b>Det finnes ikke en stegvelger for behandlingstemaet du har valgt, men:</b>
-    <ul>
-      <li>
-        du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak og &quot;Opprett ny BUC&quot;-fanen for å
-        sende SED
-      </li>
-      <li>du kan avslutte saken og angi resultatet i behandlingsmenyen</li>
-    </ul>
-  </Nav.AlertStripeAdvarsel>
+export const TomFlytMelding = ({ visBuc = false }) => (
+  <div className="tomFlytMelding">
+    <Nav.AlertStripeAdvarsel className="tomFlytMelding">
+      <b>Det finnes ikke en stegvelger for behandlingstemaet du har valgt, men:</b>
+      <ul>
+        {visBuc && (
+          <li>
+            du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak og &quot;Opprett ny BUC&quot;-fanen for
+            å sende SED
+          </li>
+        )}
+        {!visBuc && <li>du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak</li>}
+        <li>du kan avslutte saken og angi resultatet i behandlingsmenyen</li>
+      </ul>
+    </Nav.AlertStripeAdvarsel>
+  </div>
 );
 
 interface StandardMeldingOverstProps {
@@ -83,6 +88,11 @@ export const Alertmeldinger = ({ meldinger, className, exclude }: alertmeldinger
     if (filtrerteAlertmeldinger.length === 1) {
       return KV.kodeTilTerm(filtrerteAlertmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
     }
+
+    if (filtrerteAlertmeldinger.length === 0) {
+      return null;
+    }
+
     return (
       <ul className="feilkoder__liste">
         {filtrerteAlertmeldinger.map((feil) => (

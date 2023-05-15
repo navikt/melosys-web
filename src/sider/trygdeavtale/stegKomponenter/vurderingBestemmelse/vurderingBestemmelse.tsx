@@ -21,7 +21,7 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
 import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
-import UnntakHjelpetekst from "./unntakHjelpetekst/unntakHjelpetekst";
+import { UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
 import { useFeatureToggle } from "../../../../featuretoggle";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
