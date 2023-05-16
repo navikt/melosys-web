@@ -49,6 +49,7 @@ export type Trygdeavgiftsperiode = {
   fom: string;
   tom: string;
   trygdedekning: string;
+  inntektskildetype: string;
   avgiftssats: number;
   avgiftPerMd: number;
 };

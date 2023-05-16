@@ -17,6 +17,9 @@ const TrygdeavgiftsperioderTabell = ({ perioder }: { perioder: Trygdeavgiftsperi
             <th key="dekning" style={{ width: "45%" }} scope="col">
               Dekning
             </th>
+            <th key="inntektskilde" style={{ width: "10%" }} scope="col">
+              Inntektskilde
+            </th>
             <th key="sats" style={{ width: "10%" }} scope="col">
               Sats
             </th>
@@ -33,6 +36,9 @@ const TrygdeavgiftsperioderTabell = ({ perioder }: { perioder: Trygdeavgiftsperi
               </td>
               <td key={Utils._uuid()}>
                 {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, trygdeavgiftsperiode.trygdedekning)}
+              </td>
+              <td key={Utils._uuid()}>
+                {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, trygdeavgiftsperiode.inntektskildetype)}
               </td>
               <td key={Utils._uuid()}>{trygdeavgiftsperiode.avgiftssats}</td>
               <td key={Utils._uuid()}>

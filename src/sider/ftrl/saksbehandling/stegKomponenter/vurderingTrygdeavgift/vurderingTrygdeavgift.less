@@ -57,12 +57,19 @@
   }
   .periode_tabell-wrapper {
     overflow-x: auto;
+    display: block;
+    white-space: nowrap;
   }
   .periode_tabell {
     border-collapse: collapse;
     width: 100%;
     margin: 1em 0;
     font-family: "Source Sans Pro", Arial, sans-serif;
+
+    tbody {
+      display: table;
+      width: 100%;
+    }
 
     th {
       text-align: left;
