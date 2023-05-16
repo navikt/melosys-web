@@ -203,6 +203,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   };
 
   const visLeggTilNyPeriode =
+    redigerbart &&
     !ingenMedlemskapsperioder &&
     !formValues.medlemskapsperioder.some(
       (periode: MedlemskapsperiodeProp) =>

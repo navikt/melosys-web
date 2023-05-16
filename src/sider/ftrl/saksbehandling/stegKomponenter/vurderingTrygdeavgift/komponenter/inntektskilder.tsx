@@ -151,7 +151,7 @@ export const Inntektskilder = ({
             </Nav.Column>
 
             <Nav.Column xs="1">
-              {formValues.inntektskilder.length > 1 && (
+              {redigerbart && formValues.inntektskilder.length > 1 && (
                 <Mui.Lenkeknapp ikon={Ikoner.Bin} onClick={() => remove(index)} className="slett" />
               )}
             </Nav.Column>
@@ -159,11 +159,13 @@ export const Inntektskilder = ({
         );
       })}
 
-      <Nav.Row className="skillestrek">
-        <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append({})}>
-          Legg til inntekt
-        </Mui.Lenkeknapp>
-      </Nav.Row>
+      {redigerbart && (
+        <Nav.Row className="skillestrek">
+          <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append({})}>
+            Legg til inntekt
+          </Mui.Lenkeknapp>
+        </Nav.Row>
+      )}
     </Nav.Fieldset>
   );
 };
