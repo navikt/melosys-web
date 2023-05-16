@@ -3,7 +3,6 @@ import { VurderingInngang } from "./stegKomponenter/vurderingInngang";
 import { VurderingVirksomhet } from "./stegKomponenter/vurderingVirksomhet";
 import { VurderingPerioder } from "./stegKomponenter/vurderingPeriode/vurderingPerioder";
 import { VurderingBestemmelse } from "./stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
-import { VurderingTrygdeavgiftGammel } from "./stegKomponenter/vurderingTrygdeavgiftGammel";
 import { VurderingTrygdeavgift } from "./stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
 import { VurderingVedtak } from "./stegKomponenter/vurderingVedtak";
 
@@ -57,16 +56,6 @@ const initialTrygdeavgiftSteg = {
   komponent: VurderingTrygdeavgift,
 };
 
-const initialTrygdeavgiftStegGammel = {
-  id: "Trygdeavgift",
-  tittel: "Trygdeavgift",
-  stegPosisjon: 4,
-  status: FANE_STATUS.UBEHANDLET,
-  aktivtSteg: false,
-  vedtakSteg: false,
-  komponent: VurderingTrygdeavgiftGammel,
-};
-
 const initialVedtakSteg = {
   id: "Vedtak",
   tittel: "Vedtak",
@@ -83,14 +72,5 @@ export const alleSteg = [
   initialBestemmelseSteg,
   initialPeriodeSteg,
   initialTrygdeavgiftSteg,
-  initialVedtakSteg,
-];
-
-export const alleStegGammel = [
-  initialInngangSteg,
-  initialVirksomhetSteg,
-  initialBestemmelseSteg,
-  initialPeriodeSteg,
-  initialTrygdeavgiftStegGammel,
   initialVedtakSteg,
 ];
