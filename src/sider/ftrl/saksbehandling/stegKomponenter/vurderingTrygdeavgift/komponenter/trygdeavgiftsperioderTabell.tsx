@@ -21,7 +21,7 @@ const TrygdeavgiftsperioderTabell = ({ perioder }: { perioder: Trygdeavgiftsperi
               Sats
             </th>
             <th key="avgift" style={{ width: "20%" }} scope="col">
-              Avgift per måned
+              Avgift per md.
             </th>
           </tr>
           {perioder.map((trygdeavgiftsperiode) => (
@@ -36,7 +36,7 @@ const TrygdeavgiftsperioderTabell = ({ perioder }: { perioder: Trygdeavgiftsperi
               </td>
               <td key={Utils._uuid()}>{trygdeavgiftsperiode.avgiftssats}</td>
               <td key={Utils._uuid()}>
-                <b>{trygdeavgiftsperiode.avgiftPerMd}</b> kroner
+                <b>{trygdeavgiftsperiode.avgiftPerMd}</b> nkr
               </td>
             </tr>
           ))}

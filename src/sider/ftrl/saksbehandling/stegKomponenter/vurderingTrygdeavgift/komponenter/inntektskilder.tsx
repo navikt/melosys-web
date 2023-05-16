@@ -63,13 +63,13 @@ export const Inntektskilder = ({
     >
       <Nav.Row className="inntektskilder__overskriftrad">
         <Nav.Column xs="5">
-          <Nav.Typo.Element>Type inntektskilde</Nav.Typo.Element>
+          <Nav.Typo.Element>Inntektskilde</Nav.Typo.Element>
         </Nav.Column>
         <Nav.Column xs="3">
           <Nav.Typo.Element>Betales arb.avg. til skatt?</Nav.Typo.Element>
         </Nav.Column>
         <Nav.Column xs="3">
-          <Nav.Typo.Element>Brutto inntekt per mnd.</Nav.Typo.Element>
+          <Nav.Typo.Element>Brutto inntekt per md.</Nav.Typo.Element>
         </Nav.Column>
       </Nav.Row>
 

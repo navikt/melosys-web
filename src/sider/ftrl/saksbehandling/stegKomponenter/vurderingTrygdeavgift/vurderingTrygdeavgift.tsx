@@ -70,9 +70,17 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
 
+  const skalBeregneForeløpigTrygdeavgift = formValues.inntektskilder.some(
+    (inntekstskilde: Inntekstskilde) => inntekstskilde.bruttoInntekt && inntekstskilde.bruttoInntekt !== 0
+  );
+
+  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
+
+  const harBeregnetForeløpigTrygdeavgift = !skalBeregneForeløpigTrygdeavgift || trygdeavgiftErIkkeTom;
+
   useEffect(() => {
-    oppdaterStatus(formIsValid);
-  }, [formIsValid]);
+    oppdaterStatus(formIsValid && harBeregnetForeløpigTrygdeavgift);
+  }, [formIsValid, harBeregnetForeløpigTrygdeavgift]);
 
   const lagreTrygdeavgiftsgrunnlag = (formVerdier: FieldValue<FormValuesProps>) => {
     Api.Trygdeavgift.oppdaterTrygdeavgiftsgrunnlag(behandlingID, {
@@ -118,14 +126,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       .catch((error) => setFeil(error.body?.message || error));
   };
 
-  const skalBeregneForeløpigTrygdeavgift = formValues.inntektskilder.some(
-    (inntekstskilde: Inntekstskilde) => inntekstskilde.bruttoInntekt && inntekstskilde.bruttoInntekt !== 0
-  );
-
-  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
-
-  const harBeregnetForeløpigTrygdeavgift = !skalBeregneForeløpigTrygdeavgift || trygdeavgiftErIkkeTom;
-
   return (
     <div className="vurderingTrygdeavgift">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Trygdeavgift</Nav.Typo.Innholdstittel>
@@ -166,14 +166,14 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       )}
 
       {skalBeregneForeløpigTrygdeavgift && (
-        <Nav.Hovedknapp
+        <Nav.Knapp
           className="beregnKnapp"
           disabled={!redigerbart || !formIsValid || isValidating}
           onClick={handleBeregnTrygdeavgift}
           mini
         >
           Beregn foreløpig trygdeavgift
-        </Nav.Hovedknapp>
+        </Nav.Knapp>
       )}
 
       {trygdeavgiftErIkkeTom && <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />}
