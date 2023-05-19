@@ -32,7 +32,7 @@ import { Feilkode } from "../../../@types";
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
 const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_USA_5_2_G } = MKV.Koder.trygdedekninger;
-const { OVERLAPPENDE_UNNTAK_PERIODER, OVERLAPPENDE_MEDLEMSKAPSPERIODER } = MKV.Koder.begrunnelser.kontroll_begrunnelser;
+const { OVERLAPPENDE_UNNTAK_PERIODER } = MKV.Koder.begrunnelser.kontroll_begrunnelser;
 
 interface VurderingUnntakMedlemskapProps {
   oppdaterStatus: (isValid: boolean) => void;
@@ -170,6 +170,13 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     return feil.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER);
   };
 
+  const feilmeldingerKunUnntaksperioder = (feil: Feilkode[] | string) => {
+    if (typeof feil === "string") {
+      return "";
+    }
+    return feil.filter((value) => value.kode === OVERLAPPENDE_UNNTAK_PERIODER);
+  };
+
   return (
     <div className="vurderingUnntakMedlemskap">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Unntak medlemskap</Nav.Typo.Innholdstittel>
@@ -234,8 +241,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           {formState.isValid && (
             <Alertmeldinger
               className="vurderingUnntakMedlemskap__alertmeldinger"
-              meldinger={feilmeldinger}
-              exclude={OVERLAPPENDE_MEDLEMSKAPSPERIODER}
+              meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
             />
           )}
 
@@ -299,8 +305,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           {formState.isValid && (
             <Alertmeldinger
               className="vurderingUnntakMedlemskap__alertmeldinger"
-              meldinger={feilmeldinger}
-              exclude={OVERLAPPENDE_MEDLEMSKAPSPERIODER}
+              meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
             />
           )}
 
