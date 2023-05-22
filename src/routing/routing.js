@@ -3,23 +3,24 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import * as Sentry from "@sentry/react";
 import * as MKV from "@navikt/melosys-kodeverk";
-import Forside from "../sider/forside";
-import Unntaksperioder from "../sider/eu_eøs/registrering/unntaksperioder";
-import Anmodningsunntak from "../sider/eu_eøs/registrering/anmodningunntak";
-import Sok from "../sider/sok";
-import EuEøsSaksbehandling from "../sider/eu_eøs/saksbehandling";
-import FtrlSaksbehandling from "../sider/ftrl/saksbehandling";
-import TrygdeavtaleSaksbehandling from "../sider/trygdeavtale/saksbehandling";
-import TomFlytBehandling from "../sider/tomFlyt/behandling";
-import Journalforing from "../sider/journalforing";
-import OpprettNySak from "../sider/opprettnysak";
-import VurderUtpeking from "../sider/eu_eøs/vurderutpeking";
-import Sendbrev from "../sider/sendbrev";
-import IkkeYrkesaktiv from "../sider/ikkeYrkesaktiv/saksbehandling";
-import Unntaksregistrering from "../sider/unntaksregistrering";
-import UkjentSide from "../sider/ukjentSide";
 
 import { FellesHandlersContext } from "../contexts";
+
+const Forside = React.lazy(() => import("../sider/forside"));
+const Unntaksperioder = React.lazy(() => import("../sider/eu_eøs/registrering/unntaksperioder"));
+const Anmodningsunntak = React.lazy(() => import("../sider/eu_eøs/registrering/anmodningunntak"));
+const Sok = React.lazy(() => import("../sider/sok"));
+const EuEøsSaksbehandling = React.lazy(() => import("../sider/eu_eøs/saksbehandling"));
+const FtrlSaksbehandling = React.lazy(() => import("../sider/ftrl/saksbehandling"));
+const TrygdeavtaleSaksbehandling = React.lazy(() => import("../sider/trygdeavtale/saksbehandling"));
+const TomFlytBehandling = React.lazy(() => import("../sider/tomFlyt/behandling"));
+const Journalforing = React.lazy(() => import("../sider/journalforing"));
+const OpprettNySak = React.lazy(() => import("../sider/opprettnysak"));
+const VurderUtpeking = React.lazy(() => import("../sider/eu_eøs/vurderutpeking"));
+const Sendbrev = React.lazy(() => import("../sider/sendbrev"));
+const IkkeYrkesaktiv = React.lazy(() => import("../sider/ikkeYrkesaktiv/saksbehandling"));
+const Unntaksregistrering = React.lazy(() => import("../sider/unntaksregistrering"));
+const UkjentSide = React.lazy(() => import("../sider/ukjentSide"));
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 

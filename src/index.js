@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import { ConnectedRouter } from "connected-react-router";
 import { Provider as ReduxProvider } from "react-redux";
@@ -57,7 +57,9 @@ ReactDOM.render(
         <App isDevelopmentProfile={isDevelopmentProfile}>
           <Sentry.ErrorBoundary fallback={SideLoadingFailMessage}>
             <FellesHandlersProvider>
-              <Routing />
+              <Suspense fallback={<div>Loading...</div>}>
+                <Routing />
+              </Suspense>
               <Modals />
             </FellesHandlersProvider>
           </Sentry.ErrorBoundary>
