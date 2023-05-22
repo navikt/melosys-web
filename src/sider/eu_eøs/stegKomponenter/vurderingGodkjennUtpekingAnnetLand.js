@@ -85,7 +85,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
         <Nav.AlertStripe className="buc__varsel" type="advarsel">
           <strong>BUC er lukket</strong>
           <ul>
-            <li>Det kan ikke sendes SED A012. Perioden blir alikevel lagret i Melosys og overført til Medl</li>
+            <li>Det kan ikke sendes SED A012. Perioden blir likevel lagret i Melosys og overført til Medl.</li>
           </ul>
         </Nav.AlertStripe>
       ) : null}
@@ -106,9 +106,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
               disabled={skjemaDisabled}
             />
           </Nav.Row>
-          <Nav.Row>
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
-          </Nav.Row>
+          <Nav.Row>{kanSendeSed && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}</Nav.Row>
         </>
       )}
       <Nav.Row>

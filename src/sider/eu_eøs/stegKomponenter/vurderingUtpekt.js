@@ -119,7 +119,7 @@ export const VurderingUtpekt = ({
         <Nav.AlertStripe className="buc__varsel" type="advarsel">
           <strong>BUC er lukket</strong>
           <ul>
-            <li>Du kan godkjenne perioden ved å trykke &quot;Bekreft&quot;</li>
+            <li>Du kan godkjenne perioden ved å trykke &quot;Bekreft og fortsett&quot;.</li>
             <li>
               Hvis du ikke ønsker å godkjenne perioden må du sende en SED i en ny BUC og oppdatere behandlingsstatus til
               &quot;Avventer svar fra utenlandsk trygdemyndighet&quot;.
