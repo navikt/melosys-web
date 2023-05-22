@@ -1,8 +1,9 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
-import { getFormValues, reduxForm } from "redux-form";
+import { change, getFormValues, reduxForm } from "redux-form";
 
+import * as Api from "../../../services/api";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
@@ -21,10 +22,10 @@ import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 
 import {
   konverterLovvalgsbestemmelseTilStegData,
-  lagLovvalgsbestemmelse,
   konverterLovvalgslandTilStegData,
-  lagLovvalgsland,
   konverterLovvalgsperiodeTilStegData,
+  lagLovvalgsbestemmelse,
+  lagLovvalgsland,
   lagLovvalgsperiode,
   slettLovvalgsperiode,
 } from "../../../felleskomponenter/stegvelger";
@@ -58,8 +59,16 @@ export const VurderingUtpekt = ({
   lovvalgsperiode,
   ytterligereInformasjon,
   behandlingstema,
+  endreFelt,
+  behandlingID,
 }) => {
+  const [kanSendeSed, setKanSendeSed] = useState(false);
+
   useEffect(() => {
+    Api.Kontroll.kanOppretteSedTypePaaBuc(behandlingID, "A004").then((res) => {
+      setKanSendeSed(res);
+      if (!res) endreFelt(KV.Form.VURDER_UTPEKING, "utpekingVurdering", MKV.Koder.utfallregistreringunntak.GODKJENT);
+    });
     if (lovvalgsland) {
       oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
       oppdaterData(lagLovvalgsland(lovvalgsland));
@@ -102,8 +111,22 @@ export const VurderingUtpekt = ({
       ? lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt
       : MKV.Kodekombinasjoner.alleLovvalg;
 
+  const skjemaDisabled = !redigerbart || !kanSendeSed;
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="vurderingutpekt" onSubmit={handleSubmit}>
+      {!kanSendeSed ? (
+        <Nav.AlertStripe className="buc__varsel" type="advarsel">
+          <strong>BUC er lukket</strong>
+          <ul>
+            <li>Du kan godkjenne perioden ved å trykke &quot;Bekreft og fortsett&quot;.</li>
+            <li>
+              Hvis du ikke ønsker å godkjenne perioden må du sende en SED i en ny BUC og oppdatere behandlingsstatus til
+              &quot;Avventer svar fra utenlandsk trygdemyndighet&quot;.
+            </li>
+          </ul>
+        </Nav.AlertStripe>
+      ) : null}
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Vurder lovvalgsbeslutningen (A003)</Nav.Typo.Innholdstittel>
       <Nav.Row className="rad">
         <Nav.Column xs="5">
@@ -126,7 +149,7 @@ export const VurderingUtpekt = ({
       <Nav.Row className="rad">
         <Nav.Column xs="5">
           <Nav.Typo.Element>Grunnlag</Nav.Typo.Element>
-          <Skjema.Select feltNavn="lovvalgsbestemmelse" label="" disabled={!redigerbart}>
+          <Skjema.Select feltNavn="lovvalgsbestemmelse" label="" disabled={skjemaDisabled}>
             <option disabled key="VELG" value="">
               Velg
             </option>
@@ -148,7 +171,7 @@ export const VurderingUtpekt = ({
                 label="Legg til ny overgangsregelbestemmelse:"
                 placeholder="(Velg bestemmelse)"
                 muligeValg={MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser}
-                disabled={!redigerbart}
+                disabled={skjemaDisabled}
                 gruppe
               />
             </Nav.Fieldset>
@@ -160,10 +183,10 @@ export const VurderingUtpekt = ({
           <Nav.Typo.Element>Lovvalgsperiode</Nav.Typo.Element>
           <Nav.Row>
             <Nav.Column xs="6">
-              <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
+              <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={skjemaDisabled} />
             </Nav.Column>
             <Nav.Column xs="6">
-              <Skjema.Datovelger label="Til og med" feltNavn="tom" disabled={!redigerbart} />
+              <Skjema.Datovelger label="Til og med" feltNavn="tom" disabled={skjemaDisabled} />
             </Nav.Column>
           </Nav.Row>
         </Nav.Column>
@@ -178,9 +201,10 @@ export const VurderingUtpekt = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="5">
-          <Nav.Fieldset legend="Skal lovvalget godkjennes?" disabled={!redigerbart}>
+          <Nav.Fieldset legend="Skal lovvalget godkjennes?" disabled={skjemaDisabled}>
             <Skjema.Radio
               label="Godkjenn"
+              forhandsvalgt={!kanSendeSed}
               value={MKV.Koder.utfallregistreringunntak.GODKJENT}
               name="godkjenn"
               feltNavn="utpekingVurdering"
@@ -192,14 +216,6 @@ export const VurderingUtpekt = ({
               feltNavn="utpekingVurdering"
             />
           </Nav.Fieldset>
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="12">
-          <Nav.AlertStripe type="advarsel">
-            Hvis det ikke er nok informasjon, må dette innhentes før du velger «Godkjenn» eller «Ikke godkjenn».
-            Lovvalgsbestemmelsen og perioden kan kun redigeres etter avtale med utenlandsk trygdemyndighet.
-          </Nav.AlertStripe>
         </Nav.Column>
       </Nav.Row>
       <Mui.StegKnapper
@@ -233,6 +249,8 @@ VurderingUtpekt.propTypes = {
   lovvalgsperiode: MPT.Periode.isRequired,
   ytterligereInformasjon: PT.string,
   behandlingstema: PT.string.isRequired,
+  endreFelt: PT.func.isRequired,
+  behandlingID: PT.number.isRequired,
 };
 
 VurderingUtpekt.defaultProps = {
@@ -280,8 +298,13 @@ const mapStateToProps = (state, ownProps) => {
     vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
     ytterligereInformasjon: mottatteOpplysningerSelectors.YtterligereInformasjonSelector(state),
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+    behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   };
 };
+
+const mapDispatchToProps = (dispatch) => ({
+  endreFelt: (form, field, value) => dispatch(change(form, field, value)),
+});
 
 const nesteSteg = (values, dispatch, props) => {
   props.bekreftOgFortsett();
@@ -297,4 +320,4 @@ const VurderingUtpektForm = reduxForm({
   validate: lagYupToReduxformErrorMapper(vurderingUtpektSchema),
 })(VurderingUtpekt);
 
-export default connect(mapStateToProps)(VurderingUtpektForm);
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingUtpektForm);
