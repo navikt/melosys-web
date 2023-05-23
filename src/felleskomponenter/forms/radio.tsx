@@ -3,8 +3,8 @@ import { Controller, UseControllerProps } from "react-hook-form";
 
 import * as Nav from "../../navFrontend";
 
-import { RegisterHookFormProps } from "./reacthookProps";
-import { getErrorMessage } from "./mapFeilmelding";
+import { RegisterHookFormProps } from "./misc/reacthookProps";
+import { getErrorMessage } from "./misc/mapFeilmelding";
 
 interface RadioComponentProps {
   className?: string;

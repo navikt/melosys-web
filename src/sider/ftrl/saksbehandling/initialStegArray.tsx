@@ -3,7 +3,7 @@ import { VurderingInngang } from "./stegKomponenter/vurderingInngang";
 import { VurderingVirksomhet } from "./stegKomponenter/vurderingVirksomhet";
 import { VurderingPerioder } from "./stegKomponenter/vurderingPeriode/vurderingPerioder";
 import { VurderingBestemmelse } from "./stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
-import { VurderingTrygdeavgift } from "./stegKomponenter/vurderingTrygdeavgift";
+import { VurderingTrygdeavgift } from "./stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
 import { VurderingVedtak } from "./stegKomponenter/vurderingVedtak";
 
 const initialInngangSteg = {

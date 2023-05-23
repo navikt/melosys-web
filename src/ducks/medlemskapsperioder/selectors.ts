@@ -17,6 +17,6 @@ export const AlleMedlemskapsperioderSelector = createSelector(
   (medlemskapsperioder) => medlemskapsperioder.medlemskapsperioder
 );
 
-export const BestemmelseSelector = createSelector(MedlemskapsperioderDataSelector, (medlemskapsperioder) =>
-  medlemskapsperioder.bestemmelse ? medlemskapsperioder.bestemmelse : ""
+export const BestemmelseSelector = createSelector(MedlemskapsperioderDataSelector, (medlemskapsperioderData) =>
+  medlemskapsperioderData.bestemmelse ? medlemskapsperioderData.bestemmelse : ""
 );
