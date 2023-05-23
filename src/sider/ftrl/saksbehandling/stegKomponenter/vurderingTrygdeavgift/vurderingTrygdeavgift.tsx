@@ -32,11 +32,6 @@ interface Props {
 export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const [lagretTrygdeavgiftsgrunnlag] = useAsyncCallbackState(
-    () => Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID),
-    undefined,
-    [behandlingID]
-  );
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
     undefined,
@@ -46,19 +41,14 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const {
     control,
     watch,
+    setValue,
     formState: { isValid: formIsValid, isValidating },
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
     mode: "onChange",
-    values: {
-      skattepliktig: lagretTrygdeavgiftsgrunnlag?.skatteplikttype,
-      inntektskilder: lagretTrygdeavgiftsgrunnlag?.inntektskilder
-        ? [...lagretTrygdeavgiftsgrunnlag.inntektskilder].map((kilde) => ({
-            kildetype: kilde.type,
-            arbAvgBetales: Utils.streng.boolTilUppercaseStreng(kilde.arbeidsgiversavgiftBetales),
-            bruttoInntekt: kilde.avgiftspliktigInntektMnd,
-          }))
-        : [{}],
+    defaultValues: {
+      skattepliktig: "",
+      inntektskilder: [{}],
     } as FieldValue<FormValuesProps>,
   });
   const {
@@ -69,6 +59,21 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
+
+  useEffect(() => {
+    Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
+      setValue("skattepliktig", lagretTrygdeavgiftsgrunnlag.skatteplikttype);
+      resetInntektskilder(
+        lagretTrygdeavgiftsgrunnlag?.inntektskilder
+          ? [...lagretTrygdeavgiftsgrunnlag.inntektskilder].map((kilde) => ({
+              kildetype: kilde.type,
+              arbAvgBetales: Utils.streng.boolTilUppercaseStreng(kilde.arbeidsgiversavgiftBetales),
+              bruttoInntekt: kilde.avgiftspliktigInntektMnd,
+            }))
+          : [{}]
+      );
+    });
+  }, []);
 
   const skalBeregneForeløpigTrygdeavgift = formValues.inntektskilder.some(
     (inntekstskilde: Inntekstskilde) => inntekstskilde.bruttoInntekt && inntekstskilde.bruttoInntekt !== 0
@@ -103,16 +108,16 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       .catch((error) => setFeil(error.body?.message || error));
   };
 
-  const debouncedLagreMedlemskapsperioder = useCallback(
+  const debouncedLagreTrygdeavgiftsgrunnlag = useCallback(
     Utils._debounce((formVerdier, isValid) => isValid && lagreTrygdeavgiftsgrunnlag(formVerdier), 250),
     []
   );
 
   useEffect(() => {
     if (redigerbart && aktivtSteg && !isValidating) {
-      debouncedLagreMedlemskapsperioder(formValues, formIsValid);
+      debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid);
     }
-  }, [formIsValid, isValidating]);
+  }, [formIsValid, isValidating, formValues?.inntektskilder?.length]);
 
   if (!aktivtSteg) return null;
 
