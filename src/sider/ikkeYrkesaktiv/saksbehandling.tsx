@@ -38,6 +38,7 @@ import { MatchParams } from "../../@types";
 
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
+import { lovvalgsperioderOperations } from "../../ducks/lovvalgsperioder";
 
 const mapStateToProps = (state: RootState) => ({
   land: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
@@ -81,6 +82,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   resetMottatteOpplysningerState: () => dispatch(mottatteOpplysningerOperations.resetState()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
+  hentLovvalgsperiode: (behandlingId: number) => dispatch(lovvalgsperioderOperations.hent(behandlingId)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -127,6 +129,7 @@ const Saksbehandling = ({
   startOgVisOppfriskModal,
   visOppfriskModal,
   resetFeiletrespons,
+  hentLovvalgsperiode,
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
@@ -165,6 +168,7 @@ const Saksbehandling = ({
       await hentBestemmelse(behandlingId);
       await hentMottatteOpplysninger(behandlingId);
       await hentDokumentOversikt(saksnr);
+      await hentLovvalgsperiode(behandlingId);
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
