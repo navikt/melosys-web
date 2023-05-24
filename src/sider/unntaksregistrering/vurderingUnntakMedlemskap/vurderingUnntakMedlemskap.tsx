@@ -177,6 +177,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     return feil.filter((value) => value.kode === OVERLAPPENDE_UNNTAK_PERIODER);
   };
 
+  const manglerSluttdato = Utils._isEmpty(formValues.tom);
+
   return (
     <div className="vurderingUnntakMedlemskap">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Unntak medlemskap</Nav.Typo.Innholdstittel>
@@ -187,7 +189,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           label="Godkjenn"
           value={GODKJENT}
           onChange={lagreUtfallRegistreringUnntak}
-          disabled={!redigerbart}
+          disabled={!redigerbart || manglerSluttdato}
         />
         <Forms.Radio
           name="utfallRegistreringUnntak"
@@ -312,13 +314,13 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__info">
             Ved endring/ikke godkjenning av unntaksperiode bør det sendes informasjon til utenlandsk trygdemyndighet
           </Nav.AlertStripeInfo>
-
-          {Utils._isEmpty(formValues.tom) && (
-            <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
-              Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
-            </Nav.AlertStripeAdvarsel>
-          )}
         </>
+      )}
+
+      {manglerSluttdato && (
+        <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
+          Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
+        </Nav.AlertStripeAdvarsel>
       )}
 
       {formValues.utfallRegistreringUnntak === IKKE_GODKJENT && (
