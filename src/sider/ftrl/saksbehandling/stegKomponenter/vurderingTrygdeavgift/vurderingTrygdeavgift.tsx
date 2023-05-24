@@ -181,7 +181,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.Knapp>
       )}
 
-      {trygdeavgiftErIkkeTom && <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />}
+      {trygdeavgiftErIkkeTom && formIsValid && (
+        <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />
+      )}
 
       {feil && <Nav.AlertStripeFeil className="infomelding">{feil}</Nav.AlertStripeFeil>}
 
