@@ -64,7 +64,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
       setValue("skattepliktig", lagretTrygdeavgiftsgrunnlag.skatteplikttype);
       resetInntektskilder(
-        lagretTrygdeavgiftsgrunnlag?.inntektskilder
+        !Utils._isEmpty(lagretTrygdeavgiftsgrunnlag?.inntektskilder)
           ? [...lagretTrygdeavgiftsgrunnlag.inntektskilder].map((kilde) => ({
               kildetype: kilde.type,
               arbAvgBetales: Utils.streng.boolTilUppercaseStreng(kilde.arbeidsgiversavgiftBetales),
@@ -87,14 +87,16 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     oppdaterStatus(formIsValid && harBeregnetForeløpigTrygdeavgift);
   }, [formIsValid, harBeregnetForeløpigTrygdeavgift]);
 
-  const lagreTrygdeavgiftsgrunnlag = (formVerdier: FieldValue<FormValuesProps>) => {
+  const lagreTrygdeavgiftsgrunnlag = (formVerdier: FieldValue<FormValuesProps>, formErGyldig: boolean) => {
     Api.Trygdeavgift.oppdaterTrygdeavgiftsgrunnlag(behandlingID, {
       skatteplikttype: formVerdier.skattepliktig,
-      inntektskilder: [...formVerdier.inntektskilder]?.map((kilde) => ({
-        type: kilde.kildetype,
-        arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(kilde.arbAvgBetales) || false,
-        avgiftspliktigInntektMnd: kilde.bruttoInntekt,
-      })),
+      inntektskilder: formErGyldig
+        ? [...formVerdier.inntektskilder]?.map((kilde) => ({
+            type: kilde.kildetype,
+            arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(kilde.arbAvgBetales) || false,
+            avgiftspliktigInntektMnd: kilde.bruttoInntekt,
+          }))
+        : [],
     })
       .then(() => {
         setFeil(undefined);
@@ -109,7 +111,11 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   };
 
   const debouncedLagreTrygdeavgiftsgrunnlag = useCallback(
-    Utils._debounce((formVerdier, isValid) => isValid && lagreTrygdeavgiftsgrunnlag(formVerdier), 250),
+    Utils._debounce(
+      (formVerdier, formErGyldig) =>
+        !Utils._isEmpty(formVerdier.skattepliktig) && lagreTrygdeavgiftsgrunnlag(formVerdier, formErGyldig),
+      250
+    ),
     []
   );
 
