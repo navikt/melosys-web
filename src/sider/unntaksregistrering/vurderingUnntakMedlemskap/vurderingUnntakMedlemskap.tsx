@@ -167,11 +167,11 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     dispatch(navigeringOperations.tilForsiden());
   };
 
-  const feilmeldingerUtenUnntaksperioder = (feil: Feilkode[] | string) => {
-    if (typeof feil === "string") {
-      return feil;
+  const harRødFeilmelding = () => {
+    if (typeof feilmeldinger === "string") {
+      return !!feilmeldinger;
     }
-    return feil.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER);
+    return feilmeldinger.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER).length > 0;
   };
 
   const feilmeldingerKunUnntaksperioder = (feil: Feilkode[] | string) => {
@@ -244,51 +244,45 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         </>
       )}
 
-      {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && (
-        <>
-          <Nav.Fieldset legend="Lovvalgsperiode">
-            <Nav.Row>
-              <Nav.Column xs="2">
-                <Forms.Datovelger
-                  label="Fra og med"
-                  name="fom"
-                  disabled={!redigerbart}
-                  control={control}
-                  onChange={lagreFom}
-                />
-              </Nav.Column>
-              <Nav.Column xs="2">
-                <Forms.Datovelger
-                  label="Til og med"
-                  name="tom"
-                  disabled={!redigerbart}
-                  control={control}
-                  onChange={lagreTom}
-                />
-              </Nav.Column>
-              <Nav.Column xs="8">
-                <Forms.Select
-                  name="bestemmelse"
-                  control={control}
-                  label="Bestemmelse"
-                  emptyFieldDisabled={!!formValues.bestemmelse}
-                  disabled={!redigerbart}
-                  onChange={lagreBestemmelse}
-                >
-                  {bestemmelser?.map((item: KTObject) => (
-                    <option key={item.kode} value={item.kode}>
-                      {item.term}
-                    </option>
-                  ))}
-                </Forms.Select>
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Fieldset>
-
-          <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__info">
-            Ved endring/ikke godkjenning av unntaksperiode bør det sendes informasjon til utenlandsk trygdemyndighet
-          </Nav.AlertStripeInfo>
-        </>
+      {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && !harRødFeilmelding() && (
+        <Nav.Fieldset legend="Lovvalgsperiode">
+          <Nav.Row>
+            <Nav.Column xs="2">
+              <Forms.Datovelger
+                label="Fra og med"
+                name="fom"
+                disabled={!redigerbart}
+                control={control}
+                onChange={lagreFom}
+              />
+            </Nav.Column>
+            <Nav.Column xs="2">
+              <Forms.Datovelger
+                label="Til og med"
+                name="tom"
+                disabled={!redigerbart}
+                control={control}
+                onChange={lagreTom}
+              />
+            </Nav.Column>
+            <Nav.Column xs="8">
+              <Forms.Select
+                name="bestemmelse"
+                control={control}
+                label="Bestemmelse"
+                emptyFieldDisabled={!!formValues.bestemmelse}
+                disabled={!redigerbart}
+                onChange={lagreBestemmelse}
+              >
+                {bestemmelser?.map((item: KTObject) => (
+                  <option key={item.kode} value={item.kode}>
+                    {item.term}
+                  </option>
+                ))}
+              </Forms.Select>
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Fieldset>
       )}
 
       <Feilmeldinger
@@ -308,9 +302,9 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         </Nav.AlertStripeAdvarsel>
       )}
 
-      {formValues.utfallRegistreringUnntak === IKKE_GODKJENT && (
+      {[DELVIS_GODKJENT, IKKE_GODKJENT].includes(formValues.utfallRegistreringUnntak) && (
         <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__alertstripe">
-          Ved endring av unntaksperiode bør det sendes informasjon til utenlandsk myndighet.
+          Ved endring/ikke godkjenning av unntaksperiode bør det sendes informasjon til utenlandsk myndighet.
         </Nav.AlertStripeInfo>
       )}
 
@@ -320,8 +314,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           onClick: handleBekreft,
           disabled:
             !formState?.isValid ||
-            (feilmeldingerUtenUnntaksperioder(feilmeldinger).length > 0 &&
-              formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
+            (harRødFeilmelding() && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
             !redigerbart,
         }}
         bekreftTekst="Bekreft og avslutt"
