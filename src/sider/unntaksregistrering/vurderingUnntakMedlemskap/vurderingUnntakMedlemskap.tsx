@@ -79,6 +79,10 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     );
 
   useEffect(() => {
+    kontrollerFerdigbehandling();
+  }, []);
+
+  useEffect(() => {
     if (MKV.Koder.sakstyper.TRYGDEAVTALE === sakstype && lovvalgsland && aktivtSteg) {
       getLovvalgsbestemmelser(MKV.Koder.sakstyper.TRYGDEAVTALE, sakstema, behandlingstema, lovvalgsland).then((res) => {
         setBestemmelser(res);
@@ -232,21 +236,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
             </Nav.Row>
           </Nav.Fieldset>
 
-          {formState.isValid && (
-            <Feilmeldinger
-              className="vurderingUnntakMedlemskap__feilmelding"
-              feilmeldinger={feilmeldinger}
-              exclude={OVERLAPPENDE_UNNTAK_PERIODER}
-            />
-          )}
-
-          {formState.isValid && (
-            <Alertmeldinger
-              className="vurderingUnntakMedlemskap__alertmeldinger"
-              meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
-            />
-          )}
-
           {Utils._isEmpty(mottatteOpplysningerPeriode.tom) && (
             <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__godkjent_advarsel">
               Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
@@ -296,26 +285,22 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
             </Nav.Row>
           </Nav.Fieldset>
 
-          {formState.isValid && (
-            <Feilmeldinger
-              className="vurderingUnntakMedlemskap__feilmelding"
-              feilmeldinger={feilmeldinger}
-              exclude={OVERLAPPENDE_UNNTAK_PERIODER}
-            />
-          )}
-
-          {formState.isValid && (
-            <Alertmeldinger
-              className="vurderingUnntakMedlemskap__alertmeldinger"
-              meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
-            />
-          )}
-
           <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__info">
             Ved endring/ikke godkjenning av unntaksperiode bør det sendes informasjon til utenlandsk trygdemyndighet
           </Nav.AlertStripeInfo>
         </>
       )}
+
+      <Feilmeldinger
+        className="vurderingUnntakMedlemskap__feilmelding"
+        feilmeldinger={feilmeldinger}
+        exclude={OVERLAPPENDE_UNNTAK_PERIODER}
+      />
+
+      <Alertmeldinger
+        className="vurderingUnntakMedlemskap__alertmeldinger"
+        meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
+      />
 
       {manglerSluttdato && (
         <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
