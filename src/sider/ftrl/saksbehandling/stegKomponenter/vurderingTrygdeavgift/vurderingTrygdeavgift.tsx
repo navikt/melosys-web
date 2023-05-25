@@ -64,7 +64,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
       setValue("skattepliktig", lagretTrygdeavgiftsgrunnlag.skatteplikttype);
       resetInntektskilder(
-        lagretTrygdeavgiftsgrunnlag?.inntektskilder
+        !Utils._isEmpty(lagretTrygdeavgiftsgrunnlag?.inntektskilder)
           ? [...lagretTrygdeavgiftsgrunnlag.inntektskilder].map((kilde) => ({
               kildetype: kilde.type,
               arbAvgBetales: Utils.streng.boolTilUppercaseStreng(kilde.arbeidsgiversavgiftBetales),
