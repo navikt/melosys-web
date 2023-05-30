@@ -27,10 +27,11 @@ const harTomFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
-  const folketrygdenToggleEnabled = erFeatureToggleEnabled(MELOSYS_FOLKETRYGDEN_MVP);
-  const ikkeYrkesaktivFlytToggleEnabled = erFeatureToggleEnabled(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
+  const folketrygdenToggleEnabled = erFeatureToggleEnabled(MELOSYS_FOLKETRYGDEN_MVP, state);
+  const ikkeYrkesaktivFlytToggleEnabled = erFeatureToggleEnabled(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT, state);
   const registreringUnntakFraMedlemskapToggleEnabled = erFeatureToggleEnabled(
-    MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP
+    MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+    state
   );
 
   return skalViseTomFlyt(
@@ -47,7 +48,8 @@ const harUnntaksregistreringFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
   const registreringUnntakFraMedlemskapToggleEnabled = erFeatureToggleEnabled(
-    MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP
+    MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+    state
   );
   return harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled);
 };

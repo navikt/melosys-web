@@ -237,7 +237,8 @@ const erUnntakFlyt = async (reduxState) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(reduxState);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(reduxState);
   const registreringUnntakFraMedlemskapToggleEnabled = erFeatureToggleEnabled(
-    MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP
+    MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+    reduxState
   );
   return harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled);
 };

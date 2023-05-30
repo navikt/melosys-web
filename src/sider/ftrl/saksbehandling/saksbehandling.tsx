@@ -194,7 +194,7 @@ const Saksbehandling = ({
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;
   if (!saksopplysningerLastet) return null;
-  if (folketrygdenToggle === undefined || !folketrygdenToggle) return null;
+  if (!folketrygdenToggle) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;

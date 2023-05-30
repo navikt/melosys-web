@@ -65,11 +65,7 @@ export const HarUnntakFlytSelector = createSelector(
   (state: RootState) => fagsakSelectors.SakstypeKodeSelector(state),
   (state: RootState) => fagsakSelectors.SakstemaKodeSelector(state),
   (state: RootState) => behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  async (sakstype, sakstema, behandlingstema) =>
-    harUnntakFlyt(
-      sakstype,
-      sakstema,
-      behandlingstema,
-      erFeatureToggleEnabled(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP)
-    )
+  (state: RootState) => erFeatureToggleEnabled(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP, state),
+  async (sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled) =>
+    harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)
 );
