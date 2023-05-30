@@ -87,16 +87,14 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     oppdaterStatus(formIsValid && harBeregnetForeløpigTrygdeavgift);
   }, [formIsValid, harBeregnetForeløpigTrygdeavgift]);
 
-  const lagreTrygdeavgiftsgrunnlag = (formVerdier: FieldValue<FormValuesProps>, formErGyldig: boolean) => {
+  const lagreTrygdeavgiftsgrunnlag = (formVerdier: FieldValue<FormValuesProps>) => {
     Api.Trygdeavgift.oppdaterTrygdeavgiftsgrunnlag(behandlingID, {
       skatteplikttype: formVerdier.skattepliktig,
-      inntektskilder: formErGyldig
-        ? [...formVerdier.inntektskilder]?.map((kilde) => ({
-            type: kilde.kildetype,
-            arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(kilde.arbAvgBetales) || false,
-            avgiftspliktigInntektMnd: kilde.bruttoInntekt,
-          }))
-        : [],
+      inntektskilder: [...formVerdier.inntektskilder]?.map((kilde) => ({
+        type: kilde.kildetype,
+        arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(kilde.arbAvgBetales) || false,
+        avgiftspliktigInntektMnd: kilde.bruttoInntekt,
+      })),
     })
       .then(() => {
         setFeil(undefined);
@@ -111,11 +109,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   };
 
   const debouncedLagreTrygdeavgiftsgrunnlag = useCallback(
-    Utils._debounce(
-      (formVerdier, formErGyldig) =>
-        !Utils._isEmpty(formVerdier.skattepliktig) && lagreTrygdeavgiftsgrunnlag(formVerdier, formErGyldig),
-      250
-    ),
+    Utils._debounce((formVerdier, isValid) => isValid && lagreTrygdeavgiftsgrunnlag(formVerdier), 500),
     []
   );
 
@@ -126,6 +120,18 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   }, [formIsValid, isValidating, formValues?.inntektskilder?.length]);
 
   if (!aktivtSteg) return null;
+
+  const handleEndreSkattepliktig = (skattepliktig: string) => {
+    Api.Trygdeavgift.oppdaterTrygdeavgiftsgrunnlag(behandlingID, {
+      skatteplikttype: skattepliktig,
+      inntektskilder: [],
+    })
+      .then(() => setFeil(undefined))
+      .catch((error) => setFeil(error.body?.message || error));
+
+    resetInntektskilder([{}]);
+    setTrygdeavgift(undefined);
+  };
 
   const handleBeregnTrygdeavgift = () => {
     setTrygdeavgift(undefined);
@@ -150,7 +156,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
               control={control}
               value={SKATTEPLIKTIG}
               disabled={!redigerbart}
-              onChange={() => resetInntektskilder([{}])}
+              onChange={handleEndreSkattepliktig}
             />
             <Forms.Radio
               label="Nei"
@@ -158,7 +164,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
               control={control}
               value={IKKE_SKATTEPLIKTIG}
               disabled={!redigerbart}
-              onChange={() => resetInntektskilder([{}])}
+              onChange={handleEndreSkattepliktig}
             />
           </Nav.Fieldset>
         </Nav.Column>
