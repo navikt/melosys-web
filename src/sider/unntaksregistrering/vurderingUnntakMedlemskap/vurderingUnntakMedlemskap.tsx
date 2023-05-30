@@ -167,9 +167,9 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     dispatch(navigeringOperations.tilForsiden());
   };
 
-  const harRødFeilmelding = () => {
+  const harErrorFeilmelding = () => {
     if (typeof feilmeldinger === "string") {
-      return !!feilmeldinger;
+      return !Utils._isEmpty(feilmeldinger);
     }
     return feilmeldinger.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER).length > 0;
   };
@@ -244,7 +244,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         </>
       )}
 
-      {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && !harRødFeilmelding() && (
+      {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && !harErrorFeilmelding() && (
         <Nav.Fieldset legend="Lovvalgsperiode">
           <Nav.Row>
             <Nav.Column xs="2">
@@ -314,7 +314,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           onClick: handleBekreft,
           disabled:
             !formState?.isValid ||
-            (harRødFeilmelding() && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
+            (harErrorFeilmelding() && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
             !redigerbart,
         }}
         bekreftTekst="Bekreft og avslutt"
