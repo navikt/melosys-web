@@ -65,7 +65,7 @@ export const VurderingUtpekt = ({
   const [kanSendeSed, setKanSendeSed] = useState(false);
 
   useEffect(() => {
-    Api.Kontroll.kanOppretteSedTypePaaBuc(behandlingID, "A004").then((res) => {
+    Api.Kontroll.erBucLukket(behandlingID).then((res) => {
       setKanSendeSed(res);
       if (!res) endreFelt(KV.Form.VURDER_UTPEKING, "utpekingVurdering", MKV.Koder.utfallregistreringunntak.GODKJENT);
     });

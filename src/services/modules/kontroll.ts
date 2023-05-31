@@ -12,8 +12,7 @@ export type FerdigbehandlingKontrollData = {
 export const kontrollerFerdigbehandling = (data: FerdigbehandlingKontrollData) =>
   postAsJson(`${API_BASE_URL}${KONTROLL}/ferdigbehandling`, data);
 
-export const kanOppretteSedTypePaaBuc = (rinaSaksnummer: string, sedType: string) =>
-  getAsJson(`${API_BASE_URL}${KONTROLL}/${rinaSaksnummer}/sed/${sedType}`);
+export const erBucLukket = (behandlingID: number) => getAsJson(`${API_BASE_URL}${KONTROLL}/${behandlingID}/buc`);
 
 export type PeriodeKontrollData = {
   periodeFom: Date;
