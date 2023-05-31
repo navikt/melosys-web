@@ -31,7 +31,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
   const isMounted = Hooks.useIsMounted();
 
   useEffect(() => {
-    Api.Kontroll.erBucLukket(behandlingID).then((res) => {
+    Api.Kontroll.erBucAapen(behandlingID).then((res) => {
       setKanSendeSed(res);
     });
   }, []);
