@@ -1,4 +1,4 @@
-import { postAsJson } from "../utils";
+import { getAsJson, postAsJson } from "../utils";
 import { API_BASE_URL, KONTROLL } from "../api-constants";
 
 export type FerdigbehandlingKontrollData = {
@@ -11,6 +11,9 @@ export type FerdigbehandlingKontrollData = {
 
 export const kontrollerFerdigbehandling = (data: FerdigbehandlingKontrollData) =>
   postAsJson(`${API_BASE_URL}${KONTROLL}/ferdigbehandling`, data);
+
+export const kanOppretteSedTypePaaBuc = (rinaSaksnummer: string, sedType: string) =>
+  getAsJson(`${API_BASE_URL}${KONTROLL}/${rinaSaksnummer}/sed/${sedType}`);
 
 export type PeriodeKontrollData = {
   periodeFom: Date;

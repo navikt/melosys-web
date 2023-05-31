@@ -27,9 +27,6 @@ import * as Utpekingsperioder from "./modules/utpekingsperioder";
 import * as Vilkar from "./modules/vilkar";
 import * as LovligeKombinasjoner from "./modules/lovligekombinasjoner";
 import {
-  Avgiftsberegning,
-  Avgiftsgrunnlag,
-  AvgiftsgrunnlagInfo,
   Fagsak,
   RegisterAdresse,
   UstrukturertAdresse,
@@ -71,9 +68,6 @@ export {
 };
 
 export type {
-  Avgiftsberegning,
-  Avgiftsgrunnlag,
-  AvgiftsgrunnlagInfo,
   Fagsak,
   RegisterAdresse,
   UstrukturertAdresse,

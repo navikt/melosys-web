@@ -37,7 +37,7 @@ const Forside = (props) => {
     <div className="forside">
       <div className="forside__header">
         <div>
-          <Nav.Typo.Undertittel>Mine oppgaver</Nav.Typo.Undertittel>
+          <Nav.Typo.Innholdstittel>Mine oppgaver</Nav.Typo.Innholdstittel>
           <Nav.Typo.Normaltekst>{oppgaverTotalt} oppgaver</Nav.Typo.Normaltekst>
         </div>
         <OpprettNySakKnapp onClick={tilOpprettNySak} />

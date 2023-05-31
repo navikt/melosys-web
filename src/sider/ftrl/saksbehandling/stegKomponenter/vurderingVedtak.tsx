@@ -22,19 +22,18 @@ import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkod
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import { landkoderSelectors } from "../../../../ducks/landkoder";
 import { kontrollOperations } from "../../../../ducks/kontroll";
+import { vedtakOperations } from "../../../../ducks/vedtak";
 import { formSelectors } from "../../../../ducks/form";
 
 import MottakerTabell from "../../../../felleskomponenter/tabell/mottakerTabell";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
-import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from "./selectors";
 
-import "./vurderingVedtak.css";
-import { vedtakOperations } from "../../../../ducks/vedtak";
 import vurdering_vedtak from "./vurderingVedtakSchema";
-import { landkoderSelectors } from "../../../../ducks/landkoder";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import "./vurderingVedtak.css";
 
 const { trygdeavtale_myndighetsland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
@@ -50,9 +49,6 @@ const komponentState = (state: RootState) => ({
   medlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
   soknadsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
-  trygdeavgiftFormValues: formSelectors.VurderTrygdeavgiftFormSelector(state).values,
-  skalBetaleTrygdeavgiftTilNorge: LonnsforholdErNorgeEllerDelt(state),
-  skalBetaleTrygdeavgiftTilUtlandet: LonnsforholdErUtlandetEllerDelt(state),
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   initialValues: {
@@ -60,7 +56,6 @@ const komponentState = (state: RootState) => ({
     innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state) || "",
     betalingsintervall: "MANEDLIG",
   },
-  formIsValid: formSelectors.FolketrygdlovenVedtakFormValidSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   alleLandkoder: landkoderSelectors.LandkoderSelector(state),
 });
@@ -94,9 +89,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     innvilgelsesResultater,
     soknadsland,
     mottatteOpplysningerFeilmeldinger,
-    trygdeavgiftFormValues,
-    skalBetaleTrygdeavgiftTilNorge,
-    skalBetaleTrygdeavgiftTilUtlandet,
     vedtakstype,
     initialValues,
     alleLandkoder,
@@ -242,19 +234,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     ];
   };
 
-  function getTrygdeavgiftString(sentence: string, boldWord: string) {
-    if (!sentence) return null;
-    const part1 = sentence.slice(0, sentence.indexOf(boldWord));
-    const part2 = sentence.slice(sentence.indexOf(boldWord) + boldWord.length, sentence.length);
-    return (
-      <>
-        {part1}
-        <b>{boldWord}</b>
-        {part2}
-      </>
-    );
-  }
-
   const lagFattVedtakFTRLReqDto = () => {
     return {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
@@ -346,35 +325,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           <Nav.Typo.Normaltekst className="info">{medfolgendeFamilie.length > 0 ? "Ja" : "Nei"}</Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
-
-      {skalBetaleTrygdeavgiftTilNorge && (
-        <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
-          <Ikoner.Inntekt className="trygdeavgift_ikon" focusable={false} />
-          <Nav.Typo.Normaltekst>
-            {getTrygdeavgiftString(
-              KV.finnTermFraListe(
-                MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt,
-                trygdeavgiftFormValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt
-              ),
-              "norsk inntekt"
-            )}
-          </Nav.Typo.Normaltekst>
-        </div>
-      )}
-      {skalBetaleTrygdeavgiftTilUtlandet && (
-        <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
-          <Ikoner.Inntekt className="trygdeavgift_ikon" focusable={false} />
-          <Nav.Typo.Normaltekst>
-            {getTrygdeavgiftString(
-              KV.finnTermFraListe(
-                MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt,
-                trygdeavgiftFormValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt
-              ),
-              "utenlandsk inntekt"
-            )}
-          </Nav.Typo.Normaltekst>
-        </div>
-      )}
 
       <div style={{ marginTop: "0.5rem", marginLeft: "0.5rem", marginBottom: "0.5rem" }}>
         <Nav.Row>

@@ -84,6 +84,7 @@ export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => a
       dispatch(vilkarOperations.hent(behandlingID)),
       dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
       dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID)),
+      dispatch(medlemskapsperioderOperations.hentBestemmelse(behandlingID)),
       dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
     ]);
   }

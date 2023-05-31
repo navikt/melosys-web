@@ -30,15 +30,14 @@ import { utpekOperations } from "../../ducks/utpek";
 import { utpekingsperioderOperations, utpekingsperioderSelectors } from "../../ducks/utpekingsperioder";
 import { videresendingOperations } from "../../ducks/videresending";
 import { oppsummertfaktaSelectors } from "../../ducks/oppsummertfakta";
-import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
+import { datalastingOperations } from "../../ducks/datalasting";
+import { kontrollOperations } from "../../ducks/kontroll";
+
 import MottatteOpplysningerFeilmeldinger from "../mottatteOpplysningerFeilmeldinger";
 import { Feilmeldinger } from "../feilmeldinger";
-
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.css";
-import { kontrollOperations } from "../../ducks/kontroll";
-import { datalastingOperations } from "../../ducks/datalasting";
 
 class Stegvelger extends Component {
   state = {
@@ -416,11 +415,6 @@ class Stegvelger extends Component {
       mottatteOpplysninger: props.mottatteOpplysninger,
       lagredeVirksomheter: props.lagredeVirksomheter,
       bestemmelser: props.bestemmelser,
-      medlemskapsperioder: props.medlemskapsperioder,
-      vurder_start_valid: props.vurder_start_valid,
-      vurder_virksomhet_valid: props.vurder_virksomhet_valid,
-      vurder_periode_valid: props.vurder_periode_valid,
-      vurder_trygdeavgift_valid: props.vurder_trygdeavgift_valid,
       soknadsperiode: props.soknadsperiode,
       annenBehandlingOppfriskes: props.annenBehandlingOppfriskes,
       harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger),
@@ -612,12 +606,7 @@ Stegvelger.propTypes = {
   mottatteOpplysninger: PT.object.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   lagredeVirksomheter: PT.array.isRequired,
-  medlemskapsperioder: PT.object.isRequired,
   sakstype: PT.string,
-  vurder_start_valid: PT.bool.isRequired,
-  vurder_virksomhet_valid: PT.bool.isRequired,
-  vurder_periode_valid: PT.bool.isRequired,
-  vurder_trygdeavgift_valid: PT.bool.isRequired,
   soknadsperiode: MPT.Soknadsperiode.isRequired,
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger: PT.func,
   feilmeldinger: PT.oneOfType([
@@ -679,10 +668,6 @@ const mapStateToProps = (state) => ({
   artikkel16_anmodning_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
   vurder_utpeking_skjema: formSelectors.VurderUtpekingFormSelector(state).values,
-  vurder_start_valid: formSelectors.VurderStartFormValid(state),
-  vurder_virksomhet_valid: formSelectors.VurderVirksomhetFormValid(state),
-  vurder_periode_valid: formSelectors.VurderPerioderFormValid(state),
-  vurder_trygdeavgift_valid: formSelectors.VurderTrygdeavgiftFormValid(state),
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   valgteVirksomheterIkkeNaeringsDrivende:
@@ -706,7 +691,6 @@ const mapStateToProps = (state) => ({
   medfolgendeBarn: mottatteOpplysningerSelectors.MedfolgendeBarnSelector(state),
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
-  medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });

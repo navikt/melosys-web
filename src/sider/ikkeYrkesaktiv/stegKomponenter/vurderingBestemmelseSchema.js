@@ -5,7 +5,7 @@ import MKV from "../../../melosyskodeverk";
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 const vurdering_bestemmelse = object().shape({
-  utfallRegistreringUnntak: string().required(MAA_FYLLES_UT),
+  utfall: string().required(MAA_FYLLES_UT),
   bestemmelse: string().when("utfall", {
     is: (utfall) => utfall === "GODKJENT",
     then: string().required(MAA_FYLLES_UT),

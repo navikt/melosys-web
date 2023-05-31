@@ -89,6 +89,8 @@ addMethod(string, "erIkkeBlankHtml", function (message) {
 
 addMethod(string, "erNummer", function (message) {
   return this.test("er et nummer", message, function (value) {
+    if (!value) return true;
+
     const { path } = this;
 
     if (new RegExp(/^\d+$/).test(value)) return true;

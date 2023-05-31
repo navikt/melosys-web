@@ -2,8 +2,8 @@ import React, { ReactNode } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import HtmlEditor from "../htmlEditor";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { RegisterHookFormProps } from "./reacthookProps";
-import { getErrorMessage } from "./mapFeilmelding";
+import { RegisterHookFormProps } from "./misc/reacthookProps";
+import { getErrorMessage } from "./misc/mapFeilmelding";
 
 type HtmlEditorComponentProps = {
   spellcheck?: boolean;
