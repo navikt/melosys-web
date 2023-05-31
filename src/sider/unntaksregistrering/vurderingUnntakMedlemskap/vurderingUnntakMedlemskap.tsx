@@ -79,8 +79,10 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     );
 
   useEffect(() => {
-    kontrollerFerdigbehandling();
-  }, []);
+    if (aktivtSteg) {
+      oppdaterOgLagreLovvalgsperiode(formValues);
+    }
+  }, [aktivtSteg]);
 
   useEffect(() => {
     if (MKV.Koder.sakstyper.TRYGDEAVTALE === sakstype && lovvalgsland && aktivtSteg) {
