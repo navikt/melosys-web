@@ -29,9 +29,9 @@ interface LinkGroupsConfig {
   mottatteOpplysningerType: string;
   contentProps: ContentProps;
   sakstema: string;
-  folketrygdenToggleEnabled: boolean;
-  ikkeYrkesaktivFlytToggleEnabled: boolean;
-  registreringUnntakFraMedlemskapToggleEnabled: boolean;
+  folketrygdenToggleEnabled: boolean | undefined;
+  ikkeYrkesaktivFlytToggleEnabled: boolean | undefined;
+  registreringUnntakFraMedlemskapToggleEnabled: boolean | undefined;
 }
 
 class LinkGroupsFactory {

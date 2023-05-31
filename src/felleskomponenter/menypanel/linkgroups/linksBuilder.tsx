@@ -92,7 +92,7 @@ class LinksBuilder implements ILinksBuilder {
     return this;
   }
 
-  public addFaktureringskomponenten(erFTRLToggleEnabled: boolean) {
+  public addFaktureringskomponenten(erFTRLToggleEnabled: boolean | undefined) {
     if (erFTRLToggleEnabled) {
       this.links.push({
         label: "Fakturainformasjon",

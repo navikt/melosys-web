@@ -1,36 +1,20 @@
-import * as Api from "../services/api";
-
-import { useAsyncCallbackState } from "../hooks";
-
-export enum Status {
-  fetching = "fetching",
-  enabled = "enabled",
-  disabled = "disabled",
-}
-
-const hentFeatureToggle = (toggleName: string) => Api.Featuretoggle.hent([toggleName]);
+import { useSelector } from "react-redux";
+import { RootState } from "AppTypes";
+import { STATUS } from "../services";
+import { featureToggleSelectors } from "../ducks/featuretoggle";
 
 /**
  * erFeatureToggleEnabled
- * OBS: Denne returnerer promise. Må brukes med await. Bruk heller useFeatureToggle dersom du er i funksjonell komponent.
+ * OBS: Bruk heller useFeatureToggle dersom du er i funksjonell komponent.
  */
-export const erFeatureToggleEnabled = (toggleName: string): Promise<boolean> =>
-  hentFeatureToggle(toggleName)
-    .then((response) => response[toggleName])
-    .catch(() => false);
+export const erFeatureToggleEnabled = (toggleName: string, state: RootState) => {
+  const featureToggleReduxState = featureToggleSelectors.FeatureToggleSelector(state);
+  return featureToggleReduxState.status === STATUS.OK ? featureToggleReduxState.data[toggleName] : undefined;
+};
 
-const useFeatureToggle = (toggleName: string, deps: unknown[] = []): Status => {
-  const [toggles] = useAsyncCallbackState(() => hentFeatureToggle(toggleName), {}, [toggleName, ...deps]);
-
-  const toggleFetched = toggles[toggleName] !== undefined;
-
-  if (!toggleFetched) {
-    return Status.fetching;
-  }
-  if (toggles[toggleName]) {
-    return Status.enabled;
-  }
-  return Status.disabled;
+const useFeatureToggle = (toggleName: string): boolean | undefined => {
+  const featureToggleReduxState: any = useSelector((state: any) => featureToggleSelectors.FeatureToggleSelector(state));
+  return featureToggleReduxState.status === STATUS.OK ? featureToggleReduxState.data[toggleName] : undefined;
 };
 
 export default useFeatureToggle;

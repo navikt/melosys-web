@@ -165,14 +165,17 @@ const BehandlingOppgave = ({
 
 BehandlingOppgave.propTypes = {
   sak: MPT.SaksbehandlingOppgave,
-  folketrygdenToggleEnabled: PT.bool.isRequired,
-  ikkeYrkesaktivFlytToggleEnabled: PT.bool.isRequired,
-  registreringUnntakFraMedlemskapToggleEnabled: PT.bool.isRequired,
+  folketrygdenToggleEnabled: PT.bool,
+  ikkeYrkesaktivFlytToggleEnabled: PT.bool,
+  registreringUnntakFraMedlemskapToggleEnabled: PT.bool,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 BehandlingOppgave.defaultProps = {
   sak: {},
+  folketrygdenToggleEnabled: undefined,
+  ikkeYrkesaktivFlytToggleEnabled: undefined,
+  registreringUnntakFraMedlemskapToggleEnabled: undefined,
 };
 
 export default BehandlingOppgave;
