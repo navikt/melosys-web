@@ -22,7 +22,7 @@ export const VirksomhetMelding = () => (
 export const TomFlytMelding = ({ visBuc = false }) => (
   <div className="tomFlytMelding">
     <Nav.AlertStripeAdvarsel className="tomFlytMelding">
-      <b>Det finnes ikke en stegvelger for behandlingstemaet du har valgt, men:</b>
+      <b>Du kan ikke gå videre, men:</b>
       <ul>
         {visBuc && (
           <li>
