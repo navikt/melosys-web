@@ -56,7 +56,7 @@ export const FaneViser = ({
           behandlingID={behandlingID}
           saksnummer={saksnummer}
           redigerbart={redigerbart}
-          visApneINyttVindu
+          visApneINyttVindu={redigerbart}
           dokumenter={dokumenter}
         />
       );
