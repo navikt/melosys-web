@@ -32,7 +32,8 @@ import { Feilkode } from "../../../@types";
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
 const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_USA_5_2_G } = MKV.Koder.trygdedekninger;
-const { OVERLAPPENDE_UNNTAK_PERIODER } = MKV.Koder.begrunnelser.kontroll_begrunnelser;
+const { OVERLAPPENDE_UNNTAK_PERIODER, OVERLAPPENDE_MEDLEMSKAPSPERIODER, INGEN_SLUTTDATO } =
+  MKV.Koder.begrunnelser.kontroll_begrunnelser;
 
 interface VurderingUnntakMedlemskapProps {
   oppdaterStatus: (isValid: boolean) => void;
@@ -216,37 +217,29 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       </Nav.Fieldset>
 
       {formValues.utfallRegistreringUnntak === GODKJENT && (
-        <>
-          <Nav.Fieldset legend="">
-            <Nav.Row>
-              <Nav.Column xs="8">
-                <Forms.Select
-                  name="bestemmelse"
-                  control={control}
-                  label="Bestemmelse"
-                  emptyFieldDisabled={!!formValues.bestemmelse}
-                  disabled={!redigerbart}
-                  onChange={lagreBestemmelse}
-                >
-                  {bestemmelser?.map((item: KTObject) => (
-                    <option key={item.kode} value={item.kode}>
-                      {item.term}
-                    </option>
-                  ))}
-                </Forms.Select>
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Fieldset>
-
-          {Utils._isEmpty(mottatteOpplysningerPeriode.tom) && (
-            <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__godkjent_advarsel">
-              Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
-            </Nav.AlertStripeAdvarsel>
-          )}
-        </>
+        <Nav.Fieldset legend="">
+          <Nav.Row>
+            <Nav.Column xs="8">
+              <Forms.Select
+                name="bestemmelse"
+                control={control}
+                label="Bestemmelse"
+                emptyFieldDisabled={!!formValues.bestemmelse}
+                disabled={!redigerbart}
+                onChange={lagreBestemmelse}
+              >
+                {bestemmelser?.map((item: KTObject) => (
+                  <option key={item.kode} value={item.kode}>
+                    {item.term}
+                  </option>
+                ))}
+              </Forms.Select>
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Fieldset>
       )}
 
-      {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && !harErrorFeilmelding() && (
+      {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && (
         <Nav.Fieldset legend="Lovvalgsperiode">
           <Nav.Row>
             <Nav.Column xs="2">
@@ -290,7 +283,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       <Feilmeldinger
         className="vurderingUnntakMedlemskap__feilmelding"
         feilmeldinger={feilmeldinger}
-        exclude={OVERLAPPENDE_UNNTAK_PERIODER}
+        exclude={[OVERLAPPENDE_UNNTAK_PERIODER, OVERLAPPENDE_MEDLEMSKAPSPERIODER, INGEN_SLUTTDATO]}
       />
 
       <Alertmeldinger
@@ -298,7 +291,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
       />
 
-      {manglerSluttdato && (
+      {manglerSluttdato && ![IKKE_GODKJENT, DELVIS_GODKJENT].includes(formValues.utfallRegistreringUnntak) && (
         <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
           Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
         </Nav.AlertStripeAdvarsel>

@@ -12,7 +12,7 @@ import "./feilmelding.css";
 type feilmeldingerProps = {
   feilmeldinger: Feilkode[] | string;
   className?: string;
-  exclude?: string;
+  exclude?: string[];
 };
 
 export default ({ feilmeldinger, className, exclude }: feilmeldingerProps) => {
@@ -25,7 +25,7 @@ export default ({ feilmeldinger, className, exclude }: feilmeldingerProps) => {
       return feilmeldinger;
     }
 
-    const filtrerteFeilmeldinger = feilmeldinger.filter((value) => value.kode !== exclude);
+    const filtrerteFeilmeldinger = feilmeldinger.filter((value) => !exclude?.includes(value.kode));
 
     if (filtrerteFeilmeldinger.length === 0) {
       return null;
