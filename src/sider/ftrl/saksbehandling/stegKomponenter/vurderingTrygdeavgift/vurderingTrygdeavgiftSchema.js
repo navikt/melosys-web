@@ -40,8 +40,8 @@ const vurdering_trygdeavgift = object().shape({
   skattepliktig: string().required(MAA_FYLLES_UT),
   inntektskilder: array().of(
     object().shape({
-      kildetype: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
-      arbAvgBetales: string().required(MAA_FYLLES_UT),
+      kildetype: string().required(MAA_FYLLES_UT),
+      arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
       bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
     })
   ),
