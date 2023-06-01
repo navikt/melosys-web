@@ -291,7 +291,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
       />
 
-      {manglerSluttdato && IKKE_GODKJENT !== formValues.utfallRegistreringUnntak && (
+      {manglerSluttdato && ![IKKE_GODKJENT, DELVIS_GODKJENT].includes(formValues.utfallRegistreringUnntak) && (
         <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
           Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
         </Nav.AlertStripeAdvarsel>
