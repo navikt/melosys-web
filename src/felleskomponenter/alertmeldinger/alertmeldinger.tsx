@@ -31,7 +31,7 @@ export const TomFlytMelding = ({ visBuc = false }) => (
           </li>
         )}
         {!visBuc && <li>du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak</li>}
-        <li>du kan avslutte saken og angi resultatet i behandlingsmenyen</li>
+        <li>du må avslutte saken og angi resultatet i behandlingsmenyen</li>
       </ul>
     </Nav.AlertStripeAdvarsel>
   </div>
