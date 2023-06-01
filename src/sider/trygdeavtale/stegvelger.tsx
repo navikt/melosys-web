@@ -15,16 +15,17 @@ import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
 import MottatteOpplysningerFeilmeldinger from "../../felleskomponenter/mottatteOpplysningerFeilmeldinger";
+import { InnsynMelding } from "../../felleskomponenter/alertmeldinger";
+import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 
 import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
+import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { datalastingOperations } from "../../ducks/datalasting";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { vedtakOperations } from "../../ducks/vedtak";
 import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
-import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
-import { feiletResponsSelectors } from "../../ducks/feiletRespons";
-import { vedtakOperations } from "../../ducks/vedtak";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -253,6 +254,7 @@ class Stegvelger extends Component<Props, State> {
         {aktuelleSteg && (
           <div>
             <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
+            {!redigerbart && <InnsynMelding />}
             {vedtakStegErAktivt && <Feilmeldinger feilmeldinger={feilmeldinger} />}
             {erNyVurdering && redigerbart && inngangStegErAktivt && (
               <Nav.AlertStripeAdvarsel className="varselstripe">

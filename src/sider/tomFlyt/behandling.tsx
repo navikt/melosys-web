@@ -20,7 +20,7 @@ import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
-import { TomFlytMelding, VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
+import { InnsynMelding, TomFlytMelding, VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
 import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog";
 
 import "./behandling.css";
@@ -90,6 +90,7 @@ const Behandling = ({
         <Nav.Container fluid className="tomFlyt_behandling">
           <Nav.Row>
             <Nav.Column xs="7">
+              {!redigerbart && <InnsynMelding className="tomFlyt_behandling__innsynsmelding" />}
               {hovedpartErVirksomhet ? (
                 <VirksomhetMelding />
               ) : (
