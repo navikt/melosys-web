@@ -12,7 +12,7 @@ import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
 import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
-import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
+import { InnsynMelding, VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -89,6 +89,7 @@ export const Registrering = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
+                {!redigerbart && <InnsynMelding />}
                 {!hovedpartErVirksomhet ? (
                   <Saksopplysninger
                     redigerbart={redigerbart}
