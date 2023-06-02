@@ -217,16 +217,14 @@ const AvsluttSak = ({
       {skalKunneAngiBehandlingsresultat && (
         <div className="skillestrek">
           {skalViseKlageHandlinger && (
-            <Handling tekst="Medhold på klage" onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_MEDHOLD)} />
-          )}
-          {skalViseKlageHandlinger && (
-            <Handling
-              tekst="Klageinnstilling er oversendt til klageinstansen"
-              onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_OVERSENDT_TIL_KLAGEINSTANSER)}
-            />
-          )}
-          {skalViseKlageHandlinger && (
-            <Handling tekst="Klage er avvist" onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_AVVIST)} />
+            <>
+              <Handling tekst="Medhold på klage" onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_MEDHOLD)} />
+              <Handling
+                tekst="Klageinnstilling er oversendt til klageinstansen"
+                onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_OVERSENDT_TIL_KLAGEINSTANSER)}
+              />
+              <Handling tekst="Klage er avvist" onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_AVVIST)} />
+            </>
           )}
           {skalViseSøknadenErInnvilget() && (
             <Handling
