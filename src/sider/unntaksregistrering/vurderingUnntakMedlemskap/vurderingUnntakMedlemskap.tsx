@@ -32,8 +32,7 @@ import { Feilkode } from "../../../@types";
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
 const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_USA_5_2_G } = MKV.Koder.trygdedekninger;
-const { OVERLAPPENDE_UNNTAK_PERIODER, OVERLAPPENDE_MEDLEMSKAPSPERIODER, INGEN_SLUTTDATO } =
-  MKV.Koder.begrunnelser.kontroll_begrunnelser;
+const { OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO } = MKV.Koder.begrunnelser.kontroll_begrunnelser;
 
 interface VurderingUnntakMedlemskapProps {
   oppdaterStatus: (isValid: boolean) => void;
@@ -283,7 +282,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       <Feilmeldinger
         className="vurderingUnntakMedlemskap__feilmelding"
         feilmeldinger={feilmeldinger}
-        exclude={[OVERLAPPENDE_UNNTAK_PERIODER, OVERLAPPENDE_MEDLEMSKAPSPERIODER, INGEN_SLUTTDATO]}
+        exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]}
       />
 
       <Alertmeldinger
