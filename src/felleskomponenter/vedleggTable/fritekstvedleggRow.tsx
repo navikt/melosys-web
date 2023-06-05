@@ -40,12 +40,12 @@ const FritekstvedleggRow = ({
       </td>
       <td />
       <td className="icon--cell">
-        <Mui.Knapp
-          type="flat"
-          ikon={Ikoner.BlyantBlack}
+        <Mui.IkonKnapp
+          ikon={Ikoner.Pencil}
           onClick={() => redigerFritekstvedlegg && redigerFritekstvedlegg(index)}
+          ariaLabel="Rediger vedlegg"
         />
-        <Mui.Knapp type="flat" ikon={Ikoner.BinBlack} onClick={() => setVisBekreftelseModal(true)} />
+        <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => setVisBekreftelseModal(true)} ariaLabel="Slett vedlegg" />
       </td>
       {visBekreftelseModal ? (
         <SlettFritekstvedleggModal

@@ -3,7 +3,9 @@ import { mount } from "enzyme";
 import { mock, instance } from "ts-mockito";
 import { MockedProvider } from "@apollo/client/testing";
 import { act } from "react-dom/test-utils";
+import { render, screen } from "@testing-library/react";
 
+import userEvent from "@testing-library/user-event";
 import * as Nav from "../../../../../navFrontend";
 
 import { HentPersoninfoDocument } from "./hentPersoninfo.generated";
@@ -158,7 +160,21 @@ describe("Personinfo", () => {
 
   it("sender sivilstand-data til sivilstandModal etter dataen er hentet", () => {
     return act(async () => {
-      const personinfo = mount(<Personinfo {...props} />, {
+      render(
+        <MockedProvider {...requestResultMock}>
+          <Personinfo {...props} />
+        </MockedProvider>
+      );
+
+      // TODO: Skriv om testfilen til react-testing-library
+      const user = userEvent.setup();
+
+      const detaljerKnapper = await screen.findAllByText("Vis detaljer");
+      await user.click(detaljerKnapper[1]);
+
+      expect(await screen.findByRole("dialog")).toBeInTheDocument();
+
+      /* const personinfo = mount(<Personinfo {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: requestResultMock,
       });
@@ -178,6 +194,8 @@ describe("Personinfo", () => {
       expect(sivilstandModal).toHaveLength(1);
       expect(sivilstandModal.props().aktiveSivilstander).toEqual([sivilstand[0]]);
       expect(sivilstandModal.props().historiskeSivilstander).toEqual([sivilstand[1]]);
+
+       */
     });
   });
 

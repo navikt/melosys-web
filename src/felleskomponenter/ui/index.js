@@ -9,6 +9,7 @@ import RedigerbarListe from "./redigerbarliste";
 import LesMerPanel from "./lesmerpanel";
 import Checkbox from "./checkbox";
 import StegKnapper from "./stegKnapp";
+import IkonKnapp from "./ikonKnapp";
 
 export {
   Knapp,
@@ -22,4 +23,5 @@ export {
   RedigerbarListe,
   LesMerPanel,
   StegKnapper,
+  IkonKnapp,
 };
