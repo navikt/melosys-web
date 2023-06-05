@@ -287,7 +287,7 @@ export const MedfolgendeEktefelleSamboerSelector = createSelector(
 
 export const OvergangsregelbestemmelserSelector = createSelector(
   MottatteOpplysningerDataSelector,
-  (mottatteOpplysningerData) => mottatteOpplysningerData.overgangsregelbestemmelser
+  (mottatteOpplysningerData) => mottatteOpplysningerData.overgangsregelbestemmelser || []
 );
 
 export const YtterligereInformasjonSelector = createSelector(
