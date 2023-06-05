@@ -17,15 +17,21 @@ import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 // noinspection ES6PreferShortImport
 import { harUnntakFlyt, skalViseTomFlyt } from "../../routing/url";
+import {
+  MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
+  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+} from "../../featuretoggle/toggleNavn";
 
 const harTomFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
-  const folketrygdenToggleEnabled = await erFeatureToggleEnabled("melosys.folketrygden.mvp");
-  const ikkeYrkesaktivFlytToggleEnabled = await erFeatureToggleEnabled("melosys.ikkeYrkesaktivForenkletFlyt");
-  const registreringUnntakFraMedlemskapToggleEnabled = await erFeatureToggleEnabled(
-    "melosys.registrering_unntak_fra_medlemskap"
+  const folketrygdenToggleEnabled = erFeatureToggleEnabled(MELOSYS_FOLKETRYGDEN_MVP, state);
+  const ikkeYrkesaktivFlytToggleEnabled = erFeatureToggleEnabled(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT, state);
+  const registreringUnntakFraMedlemskapToggleEnabled = erFeatureToggleEnabled(
+    MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+    state
   );
 
   return skalViseTomFlyt(
@@ -41,8 +47,9 @@ const harTomFlyt = async (sakstype, state) => {
 const harUnntaksregistreringFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
-  const registreringUnntakFraMedlemskapToggleEnabled = await erFeatureToggleEnabled(
-    "melosys.registrering_unntak_fra_medlemskap"
+  const registreringUnntakFraMedlemskapToggleEnabled = erFeatureToggleEnabled(
+    MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+    state
   );
   return harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled);
 };

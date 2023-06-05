@@ -23,6 +23,7 @@ import "./vurderingBestemmelse.css";
 import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
 import { UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
 import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_TRYGDEAVTALE_UNNTAK } from "../../../../featuretoggle/toggleNavn";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -77,7 +78,7 @@ const VurderingBestemmelse = ({
   aktivtSteg,
 }: PropsFromRedux & Props) => {
   const [updatePending, setUpdatePending] = useState(false);
-  const trygdeavtaleUnntakToggle = useFeatureToggle("melosys.trygdeavtale.unntak");
+  const trygdeavtaleUnntakToggle = useFeatureToggle(MELOSYS_TRYGDEAVTALE_UNNTAK);
 
   useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {

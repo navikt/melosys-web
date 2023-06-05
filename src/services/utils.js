@@ -67,13 +67,13 @@ export const getCookie = (name) => {
 };
 
 const getCacheTS = (cacheKey) => `${cacheKey}:ts`;
-const getCachedItem = (cacheKey) => sessionStorage.getItem(cacheKey);
+export const getCachedItem = (cacheKey) => sessionStorage.getItem(cacheKey);
 const getCachedItemTS = (cacheKey) => sessionStorage.getItem(getCacheTS(cacheKey));
-const removeCachedItem = (cacheKey) => {
+export const removeCachedItem = (cacheKey) => {
   sessionStorage.removeItem(cacheKey);
   sessionStorage.removeItem(getCacheTS(cacheKey));
 };
-const setCachedItem = (cacheKey, content) => {
+export const setCachedItem = (cacheKey, content) => {
   sessionStorage.setItem(cacheKey, content);
   sessionStorage.setItem(getCacheTS(cacheKey), Date.now());
 };

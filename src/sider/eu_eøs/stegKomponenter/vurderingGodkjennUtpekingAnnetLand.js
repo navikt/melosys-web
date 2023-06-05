@@ -31,7 +31,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
   const isMounted = Hooks.useIsMounted();
 
   useEffect(() => {
-    Api.Kontroll.kanOppretteSedTypePaaBuc(behandlingID, "A012").then((res) => {
+    Api.Kontroll.erBucAapen(behandlingID).then((res) => {
       setKanSendeSed(res);
     });
   }, []);

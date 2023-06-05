@@ -11,6 +11,7 @@ import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from ".
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
+import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { dokumenterOperations } from "../../ducks/dokumenter";
 import { fagsakOperations } from "../../ducks/fagsaker";
@@ -19,18 +20,17 @@ import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
+import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 
 import { MatchParams } from "../../@types";
-import Stegvelger from "./stegvelger";
+import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
-import { feiletResponsOperations } from "../../ducks/feiletRespons";
 
 interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
   behandlingOppfriskes: boolean;
   startOgVisOppfriskModal: () => void;
-  oppfriskOgLastInnSaksopplysninger: () => {};
 }
 
 const Saksbehandling = ({
@@ -39,7 +39,6 @@ const Saksbehandling = ({
   visOppfriskModal,
   behandlingOppfriskes,
   startOgVisOppfriskModal,
-  oppfriskOgLastInnSaksopplysninger,
 }: SaksbehandlingProps) => {
   const dispatch = useDispatch();
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
@@ -101,7 +100,7 @@ const Saksbehandling = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                <Stegvelger oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger} />
+                <EnkelStegvelger alleSteg={alleSteg} />
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">

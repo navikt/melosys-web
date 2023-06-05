@@ -1,4 +1,5 @@
-import React, { ComponentProps } from "react";
+/* eslint-disable */
+import React, { ComponentProps, ReactElement, ReactNode } from "react";
 import { mock, instance } from "ts-mockito";
 import { shallow } from "enzyme";
 import each from "jest-each";
@@ -9,6 +10,7 @@ import MKV from "../../melosyskodeverk";
 
 import { Menypanel } from "./menypanel";
 import Sidemeny from "../sidemeny";
+import * as featureToggleModule from "../../featuretoggle";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS, SØKNAD_A1_YRKESAKTIVE_EØS, SED, SØKNAD_FOLKETRYGDEN } =
   MKV.Koder.mottatteopplysningertyper;
@@ -30,6 +32,11 @@ const {
   ARBEID_I_UTLANDET,
 } = MKV.Koder.behandlinger.behandlingstema;
 
+jest.mock("../../featuretoggle", () => ({
+  __esModule: true,
+  useFeatureToggle: jest.fn(),
+}));
+
 describe("MenyPanel", () => {
   const mockedProps = mock<ComponentProps<typeof Menypanel>>();
   let props = instance(mockedProps);
@@ -37,6 +44,7 @@ describe("MenyPanel", () => {
   beforeEach(() => {
     props = instance(mockedProps);
     props.menypanel = { synlig: true };
+    jest.spyOn(featureToggleModule, "useFeatureToggle").mockResolvedValueOnce(true as never);
   });
 
   each([

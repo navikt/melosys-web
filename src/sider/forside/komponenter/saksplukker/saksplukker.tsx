@@ -20,6 +20,11 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "./saksplukker.css";
 import * as Routing from "../../../../routing";
 import { useFeatureToggle } from "../../../../featuretoggle";
+import {
+  MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
+  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+} from "../../../../featuretoggle/toggleNavn";
 
 const compareTerm = (a: KTObject, b: KTObject) => {
   if (!a.term) return 1;
@@ -64,10 +69,9 @@ export const Saksplukker = ({
 
   const { sakstype, sakstema } = formValues || {};
 
-  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
-  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
-  const registreringUnntakFraMedlemskapToggleEnabled =
-    useFeatureToggle("melosys.registrering_unntak_fra_medlemskap") === "enabled";
+  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
+  const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
 
   useEffect(() => {
     Api.LovligeKombinasjoner.hentSakstyper().then((lovligeSakstyper) => {

@@ -19,6 +19,11 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
+import {
+  MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
+  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+} from "../../featuretoggle/toggleNavn";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
@@ -56,10 +61,9 @@ export const Menypanel = ({
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [endreFokus, setEndreFokus] = useState(false);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
-  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
-  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
-  const registreringUnntakFraMedlemskapToggleEnabled =
-    useFeatureToggle("melosys.registrering_unntak_fra_medlemskap") === "enabled";
+  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
+  const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
 
   const visMottatteOpplysningerData = !(
     MKVUtils.erBehandlingAvSed(sakstype, behandlingstema) &&

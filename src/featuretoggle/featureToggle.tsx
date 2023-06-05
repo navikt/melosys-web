@@ -1,8 +1,8 @@
-import useFeatureToggle, { Status } from "./useFeatureToggle";
+import useFeatureToggle from "./useFeatureToggle";
 
 interface FeatureToggleProps {
   togglename: string;
-  children: (toggle: Status) => JSX.Element | null;
+  children: (toggle: boolean | undefined) => JSX.Element | null;
 }
 
 const FeatureToggle = ({ children, togglename }: FeatureToggleProps) => {

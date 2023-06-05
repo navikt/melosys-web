@@ -27,6 +27,7 @@ import { formSelectors } from "../form";
 import { fagsakSelectors } from "../fagsaker";
 import { harUnntakFlyt } from "../../routing/url";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
+import { MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP } from "../../featuretoggle/toggleNavn";
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -235,8 +236,9 @@ const erUnntakFlyt = async (reduxState) => {
   const sakstype = fagsakSelectors.SakstypeKodeSelector(reduxState);
   const sakstema = fagsakSelectors.SakstemaKodeSelector(reduxState);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(reduxState);
-  const registreringUnntakFraMedlemskapToggleEnabled = await erFeatureToggleEnabled(
-    "melosys.registrering_unntak_fra_medlemskap"
+  const registreringUnntakFraMedlemskapToggleEnabled = erFeatureToggleEnabled(
+    MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+    reduxState
   );
   return harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled);
 };
