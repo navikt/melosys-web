@@ -36,6 +36,7 @@ import { kontrollOperations } from "../../ducks/kontroll";
 
 import MottatteOpplysningerFeilmeldinger from "../mottatteOpplysningerFeilmeldinger";
 import { Feilmeldinger } from "../feilmeldinger";
+import { Innsynsmelding } from "../alertmeldinger";
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.css";
 
@@ -520,6 +521,7 @@ class Stegvelger extends Component {
     return (
       <div className="stegvelger panelSeksjon">
         <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
+        {!this.props.redigerbart && <Innsynsmelding />}
         {this.erVedtakSteg(this.state.aktivtStegNummer) && <Feilmeldinger feilmeldinger={this.props.feilmeldinger} />}
         {this.state.aktuelleSteg.map((item) => (
           <StegFane id={item.id} key={item.id} faneData={item} />

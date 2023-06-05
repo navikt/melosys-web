@@ -1,19 +1,25 @@
-import { AlertStripeType } from "nav-frontend-alertstriper";
 import React, { useEffect, useState } from "react";
+import { AlertStripeType } from "nav-frontend-alertstriper";
 import classNames from "classnames";
-import * as Nav from "../../navFrontend";
-import "./alertmeldinger.css";
-import * as Ikoner from "../../resources/images";
-import * as Utils from "../../utils";
-import * as KV from "../../kodeverk";
+
 import MKV from "../../melosyskodeverk";
+import * as Ikoner from "../../resources/images";
+import * as KV from "../../kodeverk";
+import * as Nav from "../../navFrontend";
+import * as Utils from "../../utils";
+
 import { Feilkode } from "../../@types";
+import "./alertmeldinger.css";
 
 type alertmeldingerProps = {
   meldinger: Feilkode[] | string;
   className?: string;
   exclude?: string;
 };
+
+export const Innsynsmelding = ({ className = "" }) => (
+  <Nav.AlertStripeInfo className={`innsynsmelding ${className}`}>Innsynsmodus</Nav.AlertStripeInfo>
+);
 
 export const VirksomhetMelding = () => (
   <Nav.AlertStripeInfo className="virksomhetMelding">Behandlingen er journalført på virksomhet</Nav.AlertStripeInfo>
