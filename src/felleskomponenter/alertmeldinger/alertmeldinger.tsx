@@ -17,7 +17,7 @@ type alertmeldingerProps = {
   exclude?: string;
 };
 
-export const InnsynMelding = ({ className = "" }) => (
+export const Innsynsmelding = ({ className = "" }) => (
   <Nav.AlertStripeInfo className={`innsynsmelding ${className}`}>Innsynsmodus</Nav.AlertStripeInfo>
 );
 

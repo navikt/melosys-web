@@ -15,7 +15,7 @@ import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
 import MottatteOpplysningerFeilmeldinger from "../../felleskomponenter/mottatteOpplysningerFeilmeldinger";
-import { InnsynMelding } from "../../felleskomponenter/alertmeldinger";
+import { Innsynsmelding } from "../../felleskomponenter/alertmeldinger";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 
 import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
@@ -254,7 +254,7 @@ class Stegvelger extends Component<Props, State> {
         {aktuelleSteg && (
           <div>
             <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
-            {!redigerbart && <InnsynMelding />}
+            {!redigerbart && <Innsynsmelding />}
             {vedtakStegErAktivt && <Feilmeldinger feilmeldinger={feilmeldinger} />}
             {erNyVurdering && redigerbart && inngangStegErAktivt && (
               <Nav.AlertStripeAdvarsel className="varselstripe">

@@ -3,8 +3,8 @@ import {
   StandardMeldingOverst,
   TomFlytMelding,
   VirksomhetMelding,
-  InnsynMelding,
+  Innsynsmelding,
 } from "./alertmeldinger";
 import UnntakHjelpetekst from "./unntakHjelpetekst";
 
-export { VirksomhetMelding, TomFlytMelding, StandardMeldingOverst, Alertmeldinger, UnntakHjelpetekst, InnsynMelding };
+export { VirksomhetMelding, TomFlytMelding, StandardMeldingOverst, Alertmeldinger, UnntakHjelpetekst, Innsynsmelding };

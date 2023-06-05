@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import * as Utils from "../../utils";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
-import { InnsynMelding } from "../alertmeldinger";
+import { Innsynsmelding } from "../alertmeldinger";
 import StegLinje from "../stegLinje/stegLinje";
 import StegFane from "../stegFane";
 import { FANE_STATUS } from "../stegvelger";
@@ -68,7 +68,7 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
       {!Utils._isEmpty(aktuelleSteg) && (
         <div>
           <StegLinje steg={aktuelleSteg} stegKlikk={handleKlikk} />
-          {!redigerbart && <InnsynMelding />}
+          {!redigerbart && <Innsynsmelding />}
           {aktuelleSteg.map((steg) => (
             <StegFane
               faneData={steg}
