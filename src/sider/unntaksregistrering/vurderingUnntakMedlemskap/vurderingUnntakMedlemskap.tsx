@@ -31,7 +31,8 @@ import { Feilkode } from "../../../@types";
 
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
-const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_USA_5_2_G } = MKV.Koder.trygdedekninger;
+const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_CAN_11, UNNTATT_USA_5_2_G, UNNTATT_USA_5_9 } =
+  MKV.Koder.trygdedekninger;
 const { OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO } = MKV.Koder.begrunnelser.kontroll_begrunnelser;
 
 interface VurderingUnntakMedlemskapProps {
@@ -133,13 +134,25 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
       [
         MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART7,
+        MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART11,
         MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us.USA_ART5_2,
+        MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us.USA_ART5_9,
       ].includes(values.bestemmelse);
 
-    const trygdedekningUnntatt =
-      MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART7 === values.bestemmelse
-        ? UNNTATT_CAN_7_5_B
-        : UNNTATT_USA_5_2_G;
+    const trygdedekningUnntatt = () => {
+      switch (values.bestemmelse) {
+        case MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART7:
+          return UNNTATT_CAN_7_5_B;
+        case MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART11:
+          return UNNTATT_CAN_11;
+        case MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us.USA_ART5_2:
+          return UNNTATT_USA_5_2_G;
+        case MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us.USA_ART5_9:
+          return UNNTATT_USA_5_9;
+        default:
+          return null;
+      }
+    };
 
     dispatch(
       lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
@@ -151,7 +164,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         lovvalgsbestemmelse: values.bestemmelse,
         lovvalgsland: lovvalgsland === MKV.Koder.land_iso2.CA_QC ? MKV.Koder.land_iso2.CA : lovvalgsland,
         medlemskapstype: harMedlemskapstypeDelvisUnntatt ? DELVIS_UNNTATT : UNNTATT,
-        trygdeDekning: harMedlemskapstypeDelvisUnntatt ? trygdedekningUnntatt : UTEN_DEKNING,
+        trygdeDekning: harMedlemskapstypeDelvisUnntatt ? trygdedekningUnntatt() : UTEN_DEKNING,
       })
     );
     debouncedLagreLovvalgsperiode();
