@@ -122,6 +122,18 @@ export default function reducer(state = initialState, action = {}) {
         },
       };
     }
+    case Types.OPPDATER_IKKE_YRKESAKTIV_SITUASJONTYPE: {
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          data: {
+            ...state.data.data,
+            ikkeYrkesaktivSituasjontype: action.data.ikkeYrkesaktivSituasjontype,
+          },
+        },
+      };
+    }
     case Types.OPPDATER_MOTTATTE_OPPLYSNINGER: {
       const { dokument } = action;
 
@@ -256,6 +268,7 @@ export default function reducer(state = initialState, action = {}) {
               landkode: dokument.oppgittAdresseLand,
             },
           },
+          ikkeYrkesaktivSituasjontype: dokument.ikkeYrkesaktivSituasjontype,
           representantIUtlandet: Utils._isNil(dokument.representantIUtlandet)
             ? null
             : {

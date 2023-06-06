@@ -14,7 +14,7 @@ import * as Forms from "../../../felleskomponenter/forms";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 import * as Api from "../../../services/api";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import { mottatteOpplysningerSelectors, mottatteOpplysningerOperations } from "../../../ducks/mottatteOpplysninger";
 import { TomFlytMelding, UnntakHjelpetekst } from "../../../felleskomponenter/alertmeldinger";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
@@ -36,6 +36,7 @@ const komponentState = (state: RootState) => ({
   utfallRegistreringUnntak: behandlingsresultatSelectors.UtfallRegistreringUnntakSelector(state),
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+  ikkeYrkesaktivSituasjonstype: mottatteOpplysningerSelectors.IkkeYrkesaktivSituasjontypeSelector(state),
 });
 
 interface Props {
@@ -52,6 +53,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     redigerbart,
     soeknadsland,
     utfallRegistreringUnntak,
+    ikkeYrkesaktivSituasjonstype,
     vedtakstype,
     behandlingID,
     sakstype,
@@ -67,7 +69,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     defaultValues: {
       utfall: utfallRegistreringUnntak,
       bestemmelse: lovvalgsperiode.lovvalgsbestemmelse || "",
-      brukersSituasjon: "",
+      ikkeYrkesaktivSituasjontype: ikkeYrkesaktivSituasjonstype,
     } as FieldValues,
   });
   const formValues = watch();
@@ -93,6 +95,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const lagreLovvalgsperiodeOgKontroller = async () => {
     await dispatch(lovvalgsperioderOperations.lagre());
     kontrollerFerdigbehandling();
+  };
+
+  const lagreIkkeYrkesaktivSituasjontype = (ikkeYrkesaktivSituasjontype: string | null) => {
+    dispatch(mottatteOpplysningerOperations.oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype));
   };
 
   const kontrollerFerdigbehandling = (skalRegisteropplysningerOppdateres: boolean = false) =>
@@ -121,10 +127,17 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING,
       })
     );
+
     debouncedLagreLovvalgsperiode();
   };
 
-  const lagreBestemmelse = (bestemmelse: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, bestemmelse });
+  const lagreBestemmelse = (bestemmelse: string) => {
+    if (bestemmelse !== MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3E) {
+      setValue("ikkeYrkesaktivSituasjontype", null);
+      lagreIkkeYrkesaktivSituasjontype(null);
+    }
+    oppdaterOgLagreLovvalgsperiode({ ...formValues, bestemmelse });
+  };
 
   if (!aktivtSteg) return null;
   return (
@@ -191,11 +204,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
             <Nav.Fieldset legend="Velg brukers situasjon ">
               {MKV.KTObjects.begrunnelser.ikkeyrkesaktivsituasjontype.map((value: KTObject) => (
                 <Forms.Radio
-                  name="brukersSituasjon"
+                  name="ikkeYrkesaktivSituasjontype"
                   control={control}
                   label={value.term || ""}
                   value={value.kode}
                   disabled={!redigerbart}
+                  onChange={lagreIkkeYrkesaktivSituasjontype}
                   key={value.kode}
                 />
               ))}
@@ -228,9 +242,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
                 <li>Registrer perioden i MEDL som uavklart</li>
               </ul>
               <p>
-                <strong>
-                  Når du får svar fra utenlandsk trygdemyndighet, må du endre valget på dette steget, og fatte vedtak.
-                </strong>
+                Når du får svar fra utenlandsk trygdemyndighet, må du endre valget på dette steget, og fatte vedtak.
               </p>
             </Nav.EtikettBase>
           </Nav.Column>

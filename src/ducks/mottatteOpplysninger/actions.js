@@ -61,6 +61,16 @@ export function oppdaterTrygdedekning(trygdedekning) {
     },
   };
 }
+
+export function oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype) {
+  return {
+    type: Types.OPPDATER_IKKE_YRKESAKTIV_SITUASJONTYPE,
+    data: {
+      ikkeYrkesaktivSituasjontype,
+    },
+  };
+}
+
 /** Tømmer avklartefakta-state når komponenten unmounter
  *
  * @returns {{type: *}}

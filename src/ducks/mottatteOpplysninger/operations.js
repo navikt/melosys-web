@@ -97,6 +97,7 @@ const lagMottatteOpplysningerFelter = (mottatteOpplysninger) => ({
   selvstendigArbeid: mottatteOpplysninger.selvstendigArbeid,
   soeknadsland: mottatteOpplysninger.soeknadsland,
   periode: mottatteOpplysninger.periode,
+  ikkeYrkesaktivSituasjontype: mottatteOpplysninger.ikkeYrkesaktivSituasjontype,
 });
 
 const lagArbeidsstederFelter = (mottatteOpplysninger) => ({
@@ -196,6 +197,10 @@ export function oppdaterLovvalgsland(lovvalgsland) {
 
 export function oppdaterTrygdedekning(trygdedekning) {
   return (dispatch) => dispatch(Actions.oppdaterTrygdedekning(trygdedekning));
+}
+
+export function oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype) {
+  return (dispatch) => dispatch(Actions.oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype));
 }
 
 export function resetState() {

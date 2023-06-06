@@ -129,7 +129,11 @@ export const harUnntakFlyt = (
   return false;
 };
 
-const harIkkeYrkesaktivFlyt = (sakstype: string, behandlingstema: string, ikkeYrkesaktivFlytToggleEnabled: boolean) => {
+export const harIkkeYrkesaktivFlyt = (
+  sakstype: string,
+  behandlingstema: string,
+  ikkeYrkesaktivFlytToggleEnabled: boolean
+) => {
   return (
     ikkeYrkesaktivFlytToggleEnabled &&
     sakstype !== FTRL &&
