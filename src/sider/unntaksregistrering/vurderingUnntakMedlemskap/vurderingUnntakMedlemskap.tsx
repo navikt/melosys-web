@@ -31,8 +31,7 @@ import { Feilkode } from "../../../@types";
 
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
-const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_CAN_11, UNNTATT_USA_5_2_G, UNNTATT_USA_5_9 } =
-  MKV.Koder.trygdedekninger;
+const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_USA_5_2_G } = MKV.Koder.trygdedekninger;
 const { OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO } = MKV.Koder.begrunnelser.kontroll_begrunnelser;
 
 interface VurderingUnntakMedlemskapProps {
@@ -142,13 +141,11 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     const trygdedekningUnntatt = () => {
       switch (values.bestemmelse) {
         case MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART7:
-          return UNNTATT_CAN_7_5_B;
         case MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART11:
-          return UNNTATT_CAN_11;
+          return UNNTATT_CAN_7_5_B;
         case MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us.USA_ART5_2:
-          return UNNTATT_USA_5_2_G;
         case MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us.USA_ART5_9:
-          return UNNTATT_USA_5_9;
+          return UNNTATT_USA_5_2_G;
         default:
           return null;
       }
