@@ -1,8 +1,8 @@
-import { mount } from "enzyme";
+import { render, screen } from "@testing-library/react";
 import { syncErrorsTilFeilmelding } from "./feilmelding";
 
 describe("syncErrorsTilFeilmelding", () => {
-  test("Vanlige sync-errors blir mappet riktig", () => {
+  test("Vanlige sync-errors blir mappet riktig", async () => {
     const syncErrors = {
       gatenavn: {
         melding: "Mangler gatenavn",
@@ -11,14 +11,12 @@ describe("syncErrorsTilFeilmelding", () => {
         melding: "Mangler postkode",
       },
     };
+    render(syncErrorsTilFeilmelding(syncErrors));
 
-    // @ts-ignore
-    const feilmeldinger = mount(syncErrorsTilFeilmelding(syncErrors));
-    const feilmeldingListe = feilmeldinger.find("li");
-
-    expect(feilmeldingListe).toHaveLength(2);
-    expect(feilmeldingListe.get(0).props.children).toBe("Mangler gatenavn");
-    expect(feilmeldingListe.get(1).props.children).toBe("Mangler postkode");
+    const items = screen.getAllByRole("listitem");
+    expect(items).toHaveLength(2);
+    expect(items.at(0)?.textContent).toBe("Mangler gatenavn");
+    expect(items.at(1)?.textContent).toBe("Mangler postkode");
   });
 
   test("form-wide errors blir mappet riktig", () => {
@@ -29,13 +27,11 @@ describe("syncErrorsTilFeilmelding", () => {
         },
       },
     };
+    render(syncErrorsTilFeilmelding(syncErrors));
 
-    // @ts-ignore
-    const feilmeldinger = mount(syncErrorsTilFeilmelding(syncErrors));
-    const feilmeldingListe = feilmeldinger.find("li");
-
-    expect(feilmeldingListe).toHaveLength(1);
-    expect(feilmeldingListe.get(0).props.children).toBe("Mangler gatenavn");
+    const items = screen.getAllByRole("listitem");
+    expect(items).toHaveLength(1);
+    expect(items.at(0)?.textContent).toBe("Mangler gatenavn");
   });
 
   test("nested errors blir mappet riktig", () => {
@@ -49,13 +45,11 @@ describe("syncErrorsTilFeilmelding", () => {
         },
       },
     };
+    render(syncErrorsTilFeilmelding(syncErrors));
 
-    // @ts-ignore
-    const feilmeldinger = mount(syncErrorsTilFeilmelding(syncErrors));
-    const feilmeldingListe = feilmeldinger.find("li");
-
-    expect(feilmeldingListe).toHaveLength(2);
-    expect(feilmeldingListe.get(0).props.children).toBe("Mangler postnr");
-    expect(feilmeldingListe.get(1).props.children).toBe("Mangler poststed");
+    const items = screen.getAllByRole("listitem");
+    expect(items).toHaveLength(2);
+    expect(items.at(0)?.textContent).toBe("Mangler postnr");
+    expect(items.at(1)?.textContent).toBe("Mangler poststed");
   });
 });
