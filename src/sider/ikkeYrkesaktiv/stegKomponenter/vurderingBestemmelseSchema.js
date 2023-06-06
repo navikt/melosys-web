@@ -10,7 +10,7 @@ const vurdering_bestemmelse = object().shape({
     is: (utfall) => utfall === "GODKJENT",
     then: string().required(MAA_FYLLES_UT),
   }),
-  brukersSituasjon: string().when("bestemmelse", {
+  ikkeYrkesaktivSituasjontype: string().when("bestemmelse", {
     is: (bestemmelse) =>
       bestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3E,
     then: string().required(MAA_FYLLES_UT),

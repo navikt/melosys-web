@@ -14,5 +14,6 @@ export const OPPDATER_SOEKNADSLAND = "mottatteOpplysninger/OPPDATER_SOEKNADSLAND
 export const OPPDATER_AVSENDERLAND = "mottatteOpplysninger/OPPDATER_AVSENDERLAND";
 export const OPPDATER_LOVVALGSLAND = "mottatteOpplysninger/OPPDATER_LOVVALGSLAND";
 export const OPPDATER_TRYGDEDEKNING = "mottatteOpplysninger/OPPDATER_TRYGDEDEKNING";
+export const OPPDATER_IKKE_YRKESAKTIV_SITUASJONTYPE = "mottatteOpplysninger/IKKE_YRKESAKTIV_SITUASJONTYPE";
 
 export const RESET = "mottatteOpplysninger/RESET";

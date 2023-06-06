@@ -39,6 +39,13 @@ export const ArbeidPaaLandSelector = createSelector(
   (mottatteOpplysningerData) => mottatteOpplysningerData.arbeidPaaLand || {}
 );
 
+export const IkkeYrkesaktivSituasjontypeSelector = createSelector(
+  (state) => MottatteOpplysningerSelector(state),
+  (mottatteOpplysningerData) => {
+    return mottatteOpplysningerData.data.ikkeYrkesaktivSituasjontype || null;
+  }
+);
+
 export const FysiskeArbeidsstederSelector = createSelector(
   (state) => ArbeidPaaLandSelector(state),
   (arbeidPaaLand) => arbeidPaaLand.fysiskeArbeidssteder || []
