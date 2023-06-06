@@ -112,8 +112,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const debouncedLagreLovvalgsperiode = useCallback(Utils._debounce(lagreLovvalgsperiodeOgKontroller, 500), []);
 
-  const oppdaterOgLagreLovvalgsperiode = async (values: FieldValues) => {
-    await dispatch(
+  const oppdaterOgLagreLovvalgsperiode = (values: FieldValues) => {
+    dispatch(
       lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
         lovvalgsperiode: {
           fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
@@ -136,7 +136,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       setValue("ikkeYrkesaktivSituasjontype", null);
       lagreIkkeYrkesaktivSituasjontype(null);
     }
-    console.log({ ...formValues, bestemmelse });
     oppdaterOgLagreLovvalgsperiode({ ...formValues, bestemmelse });
   };
 
