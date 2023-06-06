@@ -69,7 +69,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   });
   const formValues = watch();
 
-  const kontrollerFerdigbehandling = (skalRegisteropplysningerOppdateres: boolean = false) =>
+  const kontrollerFerdigbehandling = (skalRegisteropplysningerOppdateres: boolean) =>
     dispatch(
       kontrollOperations.kontrollerFerdigbehandling({
         behandlingID,
@@ -80,7 +80,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   useEffect(() => {
     if (aktivtSteg) {
-      oppdaterOgLagreLovvalgsperiode(formValues);
+      oppdaterOgLagreLovvalgsperiode(formValues, true);
     }
   }, [aktivtSteg]);
 
@@ -121,14 +121,20 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     dispatch(lovvalgsperioderOperations.send(behandlingID, []));
   };
 
-  const lagreLovvalgsperiodeOgKontroller = async () => {
+  const lagreLovvalgsperiodeOgKontroller = async (skalRegisteropplysningerOppdateres: boolean) => {
     await dispatch(lovvalgsperioderOperations.lagre());
-    kontrollerFerdigbehandling();
+    kontrollerFerdigbehandling(skalRegisteropplysningerOppdateres);
   };
 
-  const debouncedLagreLovvalgsperiode = useCallback(Utils._debounce(lagreLovvalgsperiodeOgKontroller, 500), []);
+  const debouncedLagreLovvalgsperiode = useCallback(
+    Utils._debounce(
+      (skalRegisteropplysningerOppdateres) => lagreLovvalgsperiodeOgKontroller(skalRegisteropplysningerOppdateres),
+      500
+    ),
+    []
+  );
 
-  const oppdaterOgLagreLovvalgsperiode = (values: FieldValues) => {
+  const oppdaterOgLagreLovvalgsperiode = (values: FieldValues, skalRegisteropplysningerOppdateres: boolean = false) => {
     const harMedlemskapstypeDelvisUnntatt =
       sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
       [
@@ -154,7 +160,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         trygdeDekning: harMedlemskapstypeDelvisUnntatt ? trygdedekningUnntatt : UTEN_DEKNING,
       })
     );
-    debouncedLagreLovvalgsperiode();
+    debouncedLagreLovvalgsperiode(skalRegisteropplysningerOppdateres);
   };
 
   const lagreFom = (fom: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, fom });
