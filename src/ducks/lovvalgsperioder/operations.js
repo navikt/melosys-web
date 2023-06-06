@@ -25,9 +25,12 @@ import { behandlingerSelectors } from "../behandlinger";
 import { flytSelectors } from "../flyt";
 import { formSelectors } from "../form";
 import { fagsakSelectors } from "../fagsaker";
-import { harUnntakFlyt } from "../../routing/url";
+import { harIkkeYrkesaktivFlyt, harUnntakFlyt } from "../../routing/url";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
-import { MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP } from "../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
+  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+} from "../../featuretoggle/toggleNavn";
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -232,7 +235,7 @@ const bestemLovvalgsland = (lovvalgsbestemmelse, reduxState) => {
   }
 };
 
-const erUnntakFlyt = async (reduxState) => {
+const erUnntakEllerIkkeYrkesaktivFlyt = async (reduxState) => {
   const sakstype = fagsakSelectors.SakstypeKodeSelector(reduxState);
   const sakstema = fagsakSelectors.SakstemaKodeSelector(reduxState);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(reduxState);
@@ -240,12 +243,18 @@ const erUnntakFlyt = async (reduxState) => {
     MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
     reduxState
   );
-  return harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled);
+
+  const ikkeYrkesaktivToggleEnabled = erFeatureToggleEnabled(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT, reduxState);
+
+  return (
+    harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled) ||
+    harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivToggleEnabled)
+  );
 };
 
 const lovvalgsperiodeSkalVaereTom = async (lovvalgsbestemmelse, reduxState) =>
   (lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 &&
-    !(await erUnntakFlyt(reduxState))) ||
+    !(await erUnntakEllerIkkeYrkesaktivFlyt(reduxState))) ||
   avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState) ||
   flytSelectors.HarOffentligTjenesteAnnetLandSelector(reduxState) ||
   flytSelectors.HarLonnetArbeidAnnetLand(reduxState) ||
