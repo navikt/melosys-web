@@ -24,7 +24,7 @@ jest.mock("../../../featuretoggle", () => ({
 }));
 
 describe("AvsluttSak", () => {
-  let props = instance(mockedProps);
+  const props = instance(mockedProps);
 
   const setupProps = (initialProps: typeof mockedProps) => {
     initialProps.redigerbart = true;
