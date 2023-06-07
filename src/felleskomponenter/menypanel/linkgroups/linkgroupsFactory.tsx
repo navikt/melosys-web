@@ -75,7 +75,7 @@ class LinkGroupsFactory {
     }
 
     if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled || false)) {
-      if (sakstype === MKV.Koder.sakstyper.EU_EOS) {
+      if (sakstype === MKV.Koder.sakstyper.EU_EOS || sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) {
         return new LinkgroupsBuilder()
           .addFraRegister(
             new LinksBuilder(contentProps)
@@ -83,26 +83,7 @@ class LinkGroupsFactory {
               .addFamilieForhold()
               .addMedlemskap()
               .addArbeidsforholdOgInntekt()
-              .addFullmektig()
               .build()
-          )
-          .addFraBruker(
-            new LinksBuilder(contentProps)
-              .addArbeidsgiverEllerVirksomhet()
-              .addFullmektig()
-              .addPeriode()
-              .addLonnOgGodtgjorelser()
-              .addArbeidssteder()
-              .addOmVirksomhetenINorge()
-              .addOvrigOmArbeidstaker()
-              .build()
-          )
-          .build();
-      }
-      if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) {
-        return new LinkgroupsBuilder()
-          .addFraRegister(
-            new LinksBuilder(contentProps).addPerson().addFamilieForhold().addMedlemskap().addFullmektig().build()
           )
           .addFraBruker(new LinksBuilder(contentProps).addFullmektig().build())
           .build();
