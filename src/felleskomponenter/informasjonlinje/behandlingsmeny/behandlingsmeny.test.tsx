@@ -16,7 +16,7 @@ describe("Behandlingsmeny", () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button"));
 
-    expect(await screen.findByText("Legg behandling tilbake"));
-    expect(await screen.findByText("Avslutt sak"));
+    expect(await screen.findByText("Legg behandling tilbake")).toBeInTheDocument();
+    expect(await screen.findByText("Avslutt sak")).toBeInTheDocument();
   });
 });

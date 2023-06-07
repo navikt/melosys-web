@@ -73,7 +73,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Behandlingen er bortfalt"));
+      expect(await screen.findByText("Behandlingen er bortfalt")).toBeInTheDocument();
     });
   });
 
@@ -85,7 +85,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Ferdigbehandlet"));
+      expect(await screen.findByText("Ferdigbehandlet")).toBeInTheDocument();
     });
 
     it(`viser 'Ferdigbehandlet' dersom behandlingstema er blant de tillatte og behandlingstype er ${HENVENDELSE}`, async () => {
@@ -95,7 +95,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Ferdigbehandlet"));
+      expect(await screen.findByText("Ferdigbehandlet")).toBeInTheDocument();
     });
 
     it(`viser 'Ferdigbehandlet' dersom behandlingstema ikke er blant de tillatte så lenge behandling er redigerbart`, async () => {
@@ -105,7 +105,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Ferdigbehandlet"));
+      expect(await screen.findByText("Ferdigbehandlet")).toBeInTheDocument();
     });
   });
 
@@ -116,7 +116,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Søknaden er avslått"));
+      expect(await screen.findByText("Søknaden er avslått")).toBeInTheDocument();
     });
 
     it(`viser ikke 'Søknaden er avslått' dersom behandlingstype er ${HENVENDELSE}`, async () => {
@@ -149,7 +149,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Søknaden er innvilget"));
+      expect(await screen.findByText("Søknaden er innvilget")).toBeInTheDocument();
     });
 
     it(`viser 'Søknaden er innvilget' dersom sakstype er ${FTRL} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
@@ -161,7 +161,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Søknaden er innvilget"));
+      expect(await screen.findByText("Søknaden er innvilget")).toBeInTheDocument();
     });
 
     it(`viser 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
@@ -173,7 +173,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Søknaden er innvilget"));
+      expect(await screen.findByText("Søknaden er innvilget")).toBeInTheDocument();
     });
 
     it(`viser ikke 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, async () => {
@@ -208,7 +208,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Søknaden/klagen er trukket"));
+      expect(await screen.findByText("Søknaden/klagen er trukket")).toBeInTheDocument();
     });
 
     it(`viser 'Søknaden/klagen er trukket' dersom sakstype er ${FTRL} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
@@ -220,7 +220,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Søknaden/klagen er trukket"));
+      expect(await screen.findByText("Søknaden/klagen er trukket")).toBeInTheDocument();
     });
 
     it(`viser 'Søknaden/klagen er trukket' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
@@ -232,7 +232,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Søknaden/klagen er trukket"));
+      expect(await screen.findByText("Søknaden/klagen er trukket")).toBeInTheDocument();
     });
 
     it(`viser ikke 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, async () => {
@@ -267,7 +267,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Avslå søknad pga. manglende opplysninger"));
+      expect(await screen.findByText("Avslå søknad pga. manglende opplysninger")).toBeInTheDocument();
     });
 
     it(`viser 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${FTRL} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
@@ -279,7 +279,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Avslå søknad pga. manglende opplysninger"));
+      expect(await screen.findByText("Avslå søknad pga. manglende opplysninger")).toBeInTheDocument();
     });
 
     it(`viser 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
@@ -291,7 +291,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Avslå søknad pga. manglende opplysninger"));
+      expect(await screen.findByText("Avslå søknad pga. manglende opplysninger")).toBeInTheDocument();
     });
 
     it(`viser ikke 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, async () => {
@@ -359,7 +359,7 @@ describe("AvsluttSak", () => {
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
 
-      expect(await screen.findByText("Vedtaket er omgjort (fvl § 35)"));
+      expect(await screen.findByText("Vedtaket er omgjort (fvl § 35)")).toBeInTheDocument();
     });
 
     it(`viser ikke 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${FØRSTEGANG}`, async () => {
