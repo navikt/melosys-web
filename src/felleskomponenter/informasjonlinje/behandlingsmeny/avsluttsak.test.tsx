@@ -235,7 +235,7 @@ describe("AvsluttSak", () => {
       expect(await screen.findByText("Søknaden/klagen er trukket")).toBeInTheDocument();
     });
 
-    it(`viser ikke 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, async () => {
+    it(`viser ikke 'Søknaden/klagen er trukket' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, async () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = HENVENDELSE;
       props.behandlingstema = YRKESAKTIV;
