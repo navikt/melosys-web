@@ -209,7 +209,7 @@ describe("Personinfo", () => {
       expect(dialog).toBeInTheDocument();
 
       expect(within(dialog).getByText("Historikk")).toBeInTheDocument();
-      expect(within(dialog).getAllByText("Gift")).toBeInTheDocument();
+      expect(within(dialog).getByText("Gift")).toBeInTheDocument();
       expect(within(dialog).getByText("Ugift")).toBeInTheDocument();
     });
   });
