@@ -41,10 +41,10 @@ export interface DokumentOversikt {
  * @deprecated Typer fra Api flyttes til Api-modul
  */
 export interface BrevPdfData {
-  mottaker: string | null;
-  fritekst: string | null;
-  begrunnelseKode: string | null;
-  ytterligereInformasjon: string | null;
+  mottaker: string;
+  fritekst?: string | null;
+  begrunnelseKode?: string | null;
+  ytterligereInformasjon?: string | null;
 }
 
 /**

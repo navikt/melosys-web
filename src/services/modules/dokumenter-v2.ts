@@ -98,16 +98,18 @@ export type OpprettBrevReqDto = {
   fritekstTittel?: string | null;
   fritekst?: string | null;
   kontaktpersonNavn?: string | null;
-  kopiMottakere: KopiMottaker[];
+  kopiMottakere?: KopiMottaker[];
   kontaktopplysninger?: boolean | null;
-  saksvedlegg: Saksvedlegg[];
-  fritekstvedlegg: {
+  saksvedlegg?: Saksvedlegg[];
+  fritekstvedlegg?: {
     tittel: string;
     fritekst: string;
   }[];
   distribusjonstype?: string | null;
   dokumentTittel?: string | null;
   saksbehandlerNrToIdent?: string | null;
+  begrunnelseKode?: string | null;
+  ytterligereInformasjon?: string | null;
 };
 
 export type MuligMottaker = {

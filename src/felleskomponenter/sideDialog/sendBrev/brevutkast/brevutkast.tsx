@@ -140,9 +140,9 @@ const Brevutkast = ({
       settFeltVerdi("MANGLER_FRITEKST", utkast.manglerFritekst);
       settFeltVerdi("FRITEKST", utkast.fritekst);
       settFeltVerdi("STANDARDTEKST_KONTAKTINFORMASJON", utkast.kontaktopplysninger);
-      setFritekstvedlegg(utkast.fritekstvedlegg);
-      settFeltForSaksvedlegg(utkast.saksvedlegg);
-      settKopiTilBruker(utkast.kopiMottakere);
+      setFritekstvedlegg(utkast.fritekstvedlegg || []);
+      settFeltForSaksvedlegg(utkast.saksvedlegg || []);
+      settKopiTilBruker(utkast.kopiMottakere || []);
     }
   }, [formValues?.valgtBrev?.type, aktivtUtkastTittel]);
 

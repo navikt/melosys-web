@@ -26,6 +26,7 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { formSelectors } from "../../../ducks/form";
 
+import { MELOSYS_BREV_GENERELT_FRITEKSTVEDLEGG } from "../../../featuretoggle/toggleNavn";
 import { useFeatureToggle } from "../../../featuretoggle";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
@@ -40,7 +41,6 @@ import { SendBrevFormValues } from "./types";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
-import { MELOSYS_BREV_GENERELT_FRITEKSTVEDLEGG } from "../../../featuretoggle/toggleNavn";
 
 const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
 
@@ -325,10 +325,7 @@ const SendBrev = ({
         redigerFritekstvedleggIndex === index
           ? formValues.felt?.FRITEKSTVEDLEGG_FRITEKST?.feltVerdi
           : fritekstvedlegg[index].fritekst,
-      kopiMottakere: [],
       kontaktopplysninger: false,
-      saksvedlegg: [],
-      fritekstvedlegg: [],
     };
     try {
       setForhandsvisFritekstvedleggError(false);

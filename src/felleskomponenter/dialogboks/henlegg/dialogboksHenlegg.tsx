@@ -7,6 +7,7 @@ import { Action } from "redux";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
 import * as Api from "../../../services/api";
+import * as StringUtils from "../../../utils/streng";
 
 import MKV from "../../../melosyskodeverk";
 import PdfLenkeListe from "../../pdfLenkeListe";
@@ -20,7 +21,6 @@ import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../feilmeldinger";
 
 import "./dialogboksHenlegg.css";
-import * as StringUtils from "../../../utils/streng";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -109,19 +109,15 @@ export const DialogboksHenleggSak = ({
     });
   };
 
-  const data = erBegrunnelseValgt
-    ? {
-        begrunnelseKode,
-        fritekst,
-        mottaker: MKV.Koder.mottakerroller.BRUKER,
-      }
-    : {};
-
   const pdfDokumenter = [
     {
       navn: "Forhåndsvis brev",
       type: MKV.Koder.brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
-      data,
+      data: {
+        begrunnelseKode,
+        fritekst,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
+      },
     },
   ];
 
