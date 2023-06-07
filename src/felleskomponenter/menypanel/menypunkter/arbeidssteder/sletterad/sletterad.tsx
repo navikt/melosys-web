@@ -11,9 +11,7 @@ interface SletteradProps {
 
 const Sletterad = ({ onClick }: SletteradProps) => (
   <div className="sletterad">
-    <Mui.Lenkeknapp onClick={onClick} ikon={Ikoner.Bin} className="slett__knapp">
-      Slett arbeidssted
-    </Mui.Lenkeknapp>
+    <Mui.IkonKnapp ikon={Ikoner.Bin} ariaLabel="Slett arbeidssted" onClick={onClick} />
   </div>
 );
 

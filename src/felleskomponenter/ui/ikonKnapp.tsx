@@ -15,7 +15,14 @@ const IkonKnapp = ({ ikon: Ikon, onClick, ariaLabel, className, disabled }: Ikon
   const cls = classnames("ikon-knapp", className);
 
   return (
-    <button type="button" aria-label={ariaLabel} className={cls} disabled={disabled} onClick={onClick}>
+    <button
+      type="button"
+      aria-label={ariaLabel}
+      title={ariaLabel}
+      className={cls}
+      disabled={disabled}
+      onClick={onClick}
+    >
       <Ikon className="ikon" />
     </button>
   );

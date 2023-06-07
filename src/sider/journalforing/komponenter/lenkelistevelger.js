@@ -37,9 +37,6 @@ function LenkeListeVelger(props) {
   };
   const erTomTittel = () => Utils._isEmpty(currentTittel(feltNavn));
 
-  const dokumentKolonneStr = visSlett ? "10" : "11";
-  const ikonKolonneStr = visSlett ? "2" : "1";
-
   return (
     <Nav.Row>
       {visListevelger ? (
@@ -59,17 +56,18 @@ function LenkeListeVelger(props) {
         </Nav.Column>
       ) : (
         <div className="dokumentvisning">
-          <Nav.Column xs={dokumentKolonneStr}>{dokumentTittel}</Nav.Column>
-          <Nav.Column xs={ikonKolonneStr} className="endreSlettIkonContainer">
+          <span>{dokumentTittel}</span>
+          <div className="ikon-wrapper">
             {visSlett && (
-              <Nav.Lenker href="#" onClick={slettTittel} className="slettIkon">
-                <Ikoner.Bin />
-              </Nav.Lenker>
+              <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={slettTittel} ariaLabel="Slett" className="ikon-knapp-graa" />
             )}
-            <Nav.Lenker href="#" onClick={tittelEndres}>
-              <Ikoner.Pencil />
-            </Nav.Lenker>
-          </Nav.Column>
+            <Mui.IkonKnapp
+              ikon={Ikoner.Pencil}
+              onClick={tittelEndres}
+              ariaLabel="Rediger"
+              className="ikon-knapp-graa"
+            />
+          </div>
         </div>
       )}
     </Nav.Row>

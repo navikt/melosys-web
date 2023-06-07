@@ -1,10 +1,8 @@
 import React, { ComponentProps } from "react";
-import { shallow } from "enzyme";
-import { mock, instance } from "ts-mockito";
+import { instance, mock } from "ts-mockito";
 
-import * as Nav from "../../../../../../navFrontend";
-
-import PersonstatusModal, { PersonstatusTabell } from "./personstatusModal";
+import { render, screen } from "@testing-library/react";
+import PersonstatusModal from "./personstatusModal";
 
 describe("PersonstatusModal", () => {
   const mockedProps = mock<ComponentProps<typeof PersonstatusModal>>();
@@ -13,6 +11,8 @@ describe("PersonstatusModal", () => {
   beforeEach(() => {
     props = instance(mockedProps);
     props.lukkModal = jest.fn();
+    props.skalViseModal = true;
+    props.modalAriaHideApp = false;
     props.aktivePersonstatuser = [
       {
         kode: "BOSATT",
@@ -43,20 +43,12 @@ describe("PersonstatusModal", () => {
     ];
   });
 
-  it("viser en Modal", () => {
-    const personstatusModal = shallow(<PersonstatusModal {...props} />);
-
-    const modal = personstatusModal.find(Nav.Modal);
-    expect(modal).toHaveLength(1);
-    expect(modal.props().onRequestClose).toBe(props.lukkModal);
-  });
-
   it("viser tabell for aktiv personstatus og historiske personstatuser", () => {
-    const personstatusModal = shallow(<PersonstatusModal {...props} />);
+    render(<PersonstatusModal {...props} />);
 
-    const personstatusTabeller = personstatusModal.find(PersonstatusTabell);
-    expect(personstatusTabeller).toHaveLength(2);
-    expect(personstatusTabeller.first().props().personstatuser).toEqual(props.aktivePersonstatuser);
-    expect(personstatusTabeller.last().props().personstatuser).toEqual(props.historiskePersonstatuser);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.queryByText("Ingen historikk registrert i folkeregisteret.")).not.toBeInTheDocument();
+    expect(screen.getAllByText("Bosatt etter folkeregisterloven")).toHaveLength(2);
+    expect(screen.getByText("Bosatt utenfor Norge")).toBeInTheDocument();
   });
 });

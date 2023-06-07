@@ -44,8 +44,14 @@ const FritekstvedleggRow = ({
           ikon={Ikoner.Pencil}
           onClick={() => redigerFritekstvedlegg && redigerFritekstvedlegg(index)}
           ariaLabel="Rediger vedlegg"
+          className="ikon-knapp-graa"
         />
-        <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => setVisBekreftelseModal(true)} ariaLabel="Slett vedlegg" />
+        <Mui.IkonKnapp
+          ikon={Ikoner.Bin}
+          onClick={() => setVisBekreftelseModal(true)}
+          ariaLabel="Slett vedlegg"
+          className="ikon-knapp-graa"
+        />
       </td>
       {visBekreftelseModal ? (
         <SlettFritekstvedleggModal

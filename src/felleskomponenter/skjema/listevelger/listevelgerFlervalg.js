@@ -5,7 +5,6 @@ import PT from "prop-types";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
-import * as Ikoner from "../../../resources/images";
 
 import "./listevelger.css";
 
@@ -31,8 +30,7 @@ const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatF
     <div className="listevelger__linje">
       <div className="listevelger__innhold">{element}</div>
       <Mui.Knapp mini disabled={disabled} className="listevelger__linje__knapp" onClick={slettElement}>
-        <Ikoner.Minus className="knapp__ikon" />
-        <div className="knapp__tittel">Fjern</div>
+        Fjern
       </Mui.Knapp>
     </div>
   );
@@ -207,8 +205,7 @@ class ListevelgerFlervalg extends Component {
             onClick={this.leggValgTilListe}
             disabled={disabled}
           >
-            <Ikoner.AddOne className="knapp__ikon" />
-            <div className="knapp__tittel">Legg til</div>
+            Legg til
           </Nav.Knapp>
         </div>
         <datalist id={`dataliste-${fields.name}`}>
