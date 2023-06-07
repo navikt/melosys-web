@@ -4,7 +4,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 
 import MKV from "../../../melosyskodeverk";
 
-import { VurderingVurderarbeidsland } from "./vurderingVurderarbeidsland";
+import { VurderingVurderarbeidsland } from "./vurderingArbeidsland/vurderingVurderarbeidsland";
 import SokkelSkipListe from "../../../felleskomponenter/sokkelskipliste";
 
 describe("VurderingVurderarbeidsland", () => {

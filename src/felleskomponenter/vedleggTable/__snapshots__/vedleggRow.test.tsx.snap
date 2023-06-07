@@ -22,15 +22,16 @@ exports[`vedleggRow renders correctly  1`] = `
     className="icon--cell"
   >
     <button
-      className="knapp mui-knapp knapp knapp--flat"
-      disabled={false}
+      aria-label="Fjern vedlegg"
+      className="ikon-knapp ikon-knapp-graa"
       onClick={[MockFunction]}
+      title="Fjern vedlegg"
       type="button"
     >
       <svg
         className="ikon"
       >
-        bin-small-black.svg
+        bin-small.svg
       </svg>
     </button>
   </td>

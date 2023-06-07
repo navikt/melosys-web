@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import PT from "prop-types";
 
-import * as Nav from "../../../navFrontend";
-import * as Mui from "..";
-import * as Ikoner from "../../../resources/images";
+import * as Nav from "../../../../navFrontend";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Ikoner from "../../../../resources/images";
 
 import "./element.css";
 

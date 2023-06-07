@@ -3,7 +3,6 @@ import PT from "prop-types";
 
 import Element from "./element";
 
-// TODO: Flytt denne koden inn i vurderingVurderArbeidsland og slett komponenten
 const RedigerbarListe = ({ elementer, onFjern, onAngreFjern, className, redigerbar }) => (
   <div className={className}>
     {elementer.map(({ kode, term, fjernbar, defaultFjernet }) => (
