@@ -1,9 +1,8 @@
 import React, { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
-import { shallow } from "enzyme";
-
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
-import Handling from "./handling";
 
 const mockedProps = mock<ComponentProps<typeof LeggBehandlingTilbake>>();
 
@@ -14,24 +13,33 @@ describe("LeggBehandlingTilbake", () => {
     props = instance(mockedProps);
   });
 
-  it("viser begge valg om redigerbart", () => {
+  it("viser begge valg som knapper om redigerbart", async () => {
     props.redigerbart = true;
-    const leggBehandlingTilbake = shallow(<LeggBehandlingTilbake {...props} />);
-    const handlinger = leggBehandlingTilbake.find(Handling);
+    render(<LeggBehandlingTilbake {...props} />);
 
-    expect(handlinger).toHaveLength(2);
-    expect(handlinger.at(0).props().tekst).toBe("Til min oppgaveliste");
-    expect(handlinger.at(1).props().tekst).toBe("Til felles oppgaveliste");
-    expect(handlinger.at(1).props().disabled).toBeFalsy();
+    expect(screen.queryAllByRole("button")).toHaveLength(1);
+
+    const user = userEvent.setup();
+    await user.click(screen.getByText("Legg behandling tilbake"));
+
+    const knapper = await screen.findAllByRole("button");
+    expect(knapper).toHaveLength(3);
+    expect(knapper.at(1)?.textContent).toBe("Til min oppgaveliste");
+    expect(knapper.at(2)?.textContent).toBe("Til felles oppgaveliste");
   });
 
-  it("viser bare tilFellesOppgaveListe som er disabled om ikke redigerbart", () => {
+  it("viser bare Til felles oppgaveliste som er en tekst om ikke redigerbart", async () => {
     props.redigerbart = false;
-    const leggBehandlingTilbake = shallow(<LeggBehandlingTilbake {...props} />);
-    const handlinger = leggBehandlingTilbake.find(Handling);
+    render(<LeggBehandlingTilbake {...props} />);
 
-    expect(handlinger).toHaveLength(1);
-    expect(handlinger.props().tekst).toBe("Til felles oppgaveliste");
-    expect(handlinger.props().disabled).toBeTruthy();
+    expect(screen.queryAllByRole("button")).toHaveLength(1);
+
+    const user = userEvent.setup();
+    await user.click(screen.getByText("Legg behandling tilbake"));
+
+    const knapper = await screen.findAllByRole("button");
+    expect(knapper).toHaveLength(1);
+    expect(knapper.at(1)?.textContent).not.toBe("Til felles oppgaveliste");
+    expect(screen.getByText("Til felles oppgaveliste"));
   });
 });

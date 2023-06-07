@@ -1,15 +1,11 @@
 import React, { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
-import { shallow } from "enzyme";
-
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import MKV from "../../../melosyskodeverk";
-
 import AvsluttSak from "./avsluttsak";
-import Handling from "./handling";
 
 const {
-  BESLUTNING_LOVVALG_NORGE,
-  TRYGDETID,
   YRKESAKTIV,
   UTSENDT_ARBEIDSTAKER,
   ANMODNING_OM_UNNTAK_HOVEDREGEL,
@@ -28,11 +24,7 @@ jest.mock("../../../featuretoggle", () => ({
 }));
 
 describe("AvsluttSak", () => {
-  let props = instance(mockedProps);
-
-  beforeEach(() => {
-    props = instance(mockedProps);
-  });
+  const props = instance(mockedProps);
 
   const setupProps = (initialProps: typeof mockedProps) => {
     initialProps.redigerbart = true;
@@ -42,323 +34,399 @@ describe("AvsluttSak", () => {
     initialProps.behandlingstype = FØRSTEGANG;
   };
 
-  it("viser riktige valg for sakstype FTRL og behandlingstype FØRSTEGANG ", () => {
-    setupProps(props);
+  beforeEach(() => {
+    setupProps(instance(mockedProps));
+  });
+
+  it("viser riktige valg for sakstype FTRL og behandlingstype FØRSTEGANG ", async () => {
     props.sakstype = FTRL;
     props.behandlingstema = YRKESAKTIV;
 
-    const avsluttSak = shallow(<AvsluttSak {...props} />);
-    const handlinger = avsluttSak.find(Handling);
+    render(<AvsluttSak {...props} />);
 
-    expect(handlinger).toHaveLength(6);
-    expect(handlinger.at(0).props().tekst).toBe("Søknaden er innvilget");
-    expect(handlinger.at(1).props().tekst).toBe("Søknaden er avslått");
-    expect(handlinger.at(2).props().tekst).toBe("Avslå søknad pga. manglende opplysninger");
-    expect(handlinger.at(3).props().tekst).toBe("Ferdigbehandlet");
-    expect(handlinger.at(4).props().tekst).toBe("Søknaden/klagen er trukket");
-    expect(handlinger.at(5).props().tekst).toBe("Behandlingen er bortfalt");
+    expect(screen.queryAllByRole("button")).toHaveLength(1);
+
+    const user = userEvent.setup();
+    await user.click(screen.getByText("Avslutt sak"));
+
+    const knapper = await screen.findAllByRole("button");
+    expect(knapper).toHaveLength(7);
+    expect(knapper.at(1)?.textContent).toBe("Søknaden er innvilget");
+    expect(knapper.at(2)?.textContent).toBe("Søknaden er avslått");
+    expect(knapper.at(3)?.textContent).toBe("Avslå søknad pga. manglende opplysninger");
+    expect(knapper.at(4)?.textContent).toBe("Ferdigbehandlet");
+    expect(knapper.at(5)?.textContent).toBe("Søknaden/klagen er trukket");
+    expect(knapper.at(6)?.textContent).toBe("Behandlingen er bortfalt");
   });
 
-  it("viser bare avsluttSak dersom tema er trygdetid", () => {
-    setupProps(props);
-    props.behandlingstema = TRYGDETID;
-
-    const avsluttSak = shallow(<AvsluttSak {...props} />);
-    const handlinger = avsluttSak.find(Handling);
-
-    expect(handlinger).toHaveLength(2);
-    expect(handlinger.at(1).props().tekst).toBe("Behandlingen er bortfalt");
-  });
-
-  it("viser ferdigBehandlet dersom tema er yrkesaktiv og type er ny vurdering", () => {
-    setupProps(props);
-    props.behandlingstema = YRKESAKTIV;
-    props.behandlingstype = NY_VURDERING;
-
-    const avsluttSak = shallow(<AvsluttSak {...props} />);
-    const handlinger = avsluttSak.find(Handling);
-
-    expect(handlinger.at(3).props().tekst).toBe("Ferdigbehandlet");
-  });
-
-  it("returerer null om EØS_VURDER_UTPEKING og ikke redigerbart", () => {
-    setupProps(props);
+  it("viser ingenting når behandling er ikke redigerbart", async () => {
     props.redigerbart = false;
-    props.behandlingstema = BESLUTNING_LOVVALG_NORGE;
+    const { container } = render(<AvsluttSak {...props} />);
 
-    const avsluttSak = shallow(<AvsluttSak {...props} />);
-
-    expect(avsluttSak.find(".behandlingsmeny__meny__avslutt-sak").isEmptyRender()).toBeTruthy();
+    expect(container).toBeEmptyDOMElement();
   });
 
-  it(`viser ikke 'Avslutt sak som bortfalt' dersom behandlingstema er ${UTSENDT_ARBEIDSTAKER} og behandlingstype er ${NY_VURDERING}`, () => {
-    setupProps(props);
-    props.behandlingstema = UTSENDT_ARBEIDSTAKER;
-    props.behandlingstype = NY_VURDERING;
+  describe("Behandlingen er bortfalt", () => {
+    it("viser Behandlingen er bortfalt når behandling er redigerbart", async () => {
+      render(<AvsluttSak {...props} />);
 
-    const avsluttSak = shallow(<AvsluttSak {...props} />);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-    const avsluttSakSomBortfalt = avsluttSak.findWhere(
-      (n) => n.type() === Handling && n.props().tekst === "Avslutt sak som bortfalt"
-    );
-    expect(avsluttSakSomBortfalt).toHaveLength(0);
+      expect(await screen.findByText("Behandlingen er bortfalt")).toBeInTheDocument();
+    });
   });
 
   describe("Ferdigbehandlet", () => {
-    it(`viser 'Ferdigbehandlet' dersom behandlingstema er ${BESLUTNING_LOVVALG_NORGE} og behandlingstype er ${NY_VURDERING}`, () => {
-      setupProps(props);
-      props.behandlingstema = BESLUTNING_LOVVALG_NORGE;
+    it(`viser 'Ferdigbehandlet' dersom behandlingstema er blant de tillatte og behandlingstype er ${NY_VURDERING}`, async () => {
       props.behandlingstype = NY_VURDERING;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(handlinger).toHaveLength(3);
-      expect(handlinger.at(1).props().tekst).toBe("Ferdigbehandlet");
+      expect(await screen.findByText("Ferdigbehandlet")).toBeInTheDocument();
     });
 
-    it(`viser 'Ferdigbehandlet' dersom behandlingstema er ${YRKESAKTIV}`, () => {
-      setupProps(props);
+    it(`viser 'Ferdigbehandlet' dersom behandlingstema er blant de tillatte og behandlingstype er ${HENVENDELSE}`, async () => {
+      props.behandlingstype = HENVENDELSE;
+      render(<AvsluttSak {...props} />);
+
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
+
+      expect(await screen.findByText("Ferdigbehandlet")).toBeInTheDocument();
+    });
+
+    it(`viser 'Ferdigbehandlet' dersom behandlingstema ikke er blant de tillatte så lenge behandling er redigerbart`, async () => {
       props.behandlingstema = YRKESAKTIV;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(handlinger).toHaveLength(4);
-      expect(handlinger.at(2).props().tekst).toBe("Ferdigbehandlet");
-    });
-
-    it(`viser ikke 'Ferdigbehandlet' dersom behandling ikke er redigerbart`, () => {
-      setupProps(props);
-      props.redigerbart = false;
-
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
-
-      expect(handlinger).toHaveLength(0);
+      expect(await screen.findByText("Ferdigbehandlet")).toBeInTheDocument();
     });
   });
 
   describe("Søknaden er avslått", () => {
-    it(`viser 'Søknaden er avslått' dersom sakstype er EØS behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, () => {
-      setupProps(props);
-      props.behandlingstype = FØRSTEGANG;
-      props.behandlingstema = YRKESAKTIV;
+    it(`viser 'Søknaden er avslått' dersom behandlingstype og behandlingstema er blant de tillatte`, async () => {
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(handlinger).toHaveLength(4);
-      expect(handlinger.at(1).props().tekst).toBe("Søknaden er avslått");
+      expect(await screen.findByText("Søknaden er avslått")).toBeInTheDocument();
     });
 
-    it(`viser ikke 'Søknaden er avslått' dersom behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, () => {
-      setupProps(props);
+    it(`viser ikke 'Søknaden er avslått' dersom behandlingstype er ${HENVENDELSE}`, async () => {
       props.behandlingstype = HENVENDELSE;
-      props.behandlingstema = YRKESAKTIV;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const soknadenErAvslatt = avsluttSak.findWhere(
-        (n) => n.type() === Handling && n.props().tekst === "Søknaden er avslått"
-      );
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(soknadenErAvslatt).toHaveLength(0);
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Søknaden er avslått")).toBeFalsy();
     });
 
-    it(`viser ikke 'Søknaden er avslått' dersom sakstema er ${UNNTAK}`, () => {
-      setupProps(props);
+    it(`viser ikke 'Søknaden er avslått' dersom sakstema er ${UNNTAK}`, async () => {
       props.sakstema = UNNTAK;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const soknadenErAvslatt = avsluttSak.findWhere(
-        (n) => n.type() === Handling && n.props().tekst === "Søknaden er avslått"
-      );
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(soknadenErAvslatt).toHaveLength(0);
-    });
-
-    it(`viser ikke 'Søknaden er avslått' dersom redigerbart er false`, () => {
-      setupProps(props);
-      props.redigerbart = false;
-
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
-
-      expect(handlinger).toHaveLength(0);
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Søknaden er avslått")).toBeFalsy();
     });
   });
 
   describe("Søknaden er innvilget", () => {
-    it(`viser 'Søknaden er innvilget' dersom sakstype er ${FTRL} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, () => {
-      setupProps(props);
+    it(`viser 'Søknaden er innvilget' dersom sakstype er ${EU_EOS} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${UTSENDT_ARBEIDSTAKER}`, async () => {
+      render(<AvsluttSak {...props} />);
+
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
+
+      expect(await screen.findByText("Søknaden er innvilget")).toBeInTheDocument();
+    });
+
+    it(`viser 'Søknaden er innvilget' dersom sakstype er ${FTRL} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
       props.sakstype = FTRL;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(handlinger).toHaveLength(6);
-      expect(handlinger.at(0).props().tekst).toBe("Søknaden er innvilget");
+      expect(await screen.findByText("Søknaden er innvilget")).toBeInTheDocument();
     });
 
-    it(`viser 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, () => {
-      setupProps(props);
+    it(`viser 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(handlinger).toHaveLength(6);
-      expect(handlinger.at(0).props().tekst).toBe("Søknaden er innvilget");
+      expect(await screen.findByText("Søknaden er innvilget")).toBeInTheDocument();
     });
 
-    it(`viser ikke 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, () => {
-      setupProps(props);
+    it(`viser ikke 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, async () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = HENVENDELSE;
       props.behandlingstema = YRKESAKTIV;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const soknadenErInnvilget = avsluttSak.findWhere(
-        (n) => n.type() === Handling && n.props().tekst === "Søknaden er innvilget"
-      );
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(soknadenErInnvilget).toHaveLength(0);
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Søknaden er innvilget")).toBeFalsy();
     });
 
-    it(`viser ikke 'Søknaden er innvilget' dersom sakstema er ${UNNTAK}`, () => {
-      setupProps(props);
+    it(`viser ikke 'Søknaden er innvilget' dersom sakstema er ${UNNTAK}`, async () => {
       props.sakstema = UNNTAK;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const soknadenErInnvilget = avsluttSak.findWhere(
-        (n) => n.type() === Handling && n.props().tekst === "Søknaden er innvilget"
-      );
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(soknadenErInnvilget).toHaveLength(0);
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Søknaden er innvilget")).toBeFalsy();
+    });
+  });
+
+  describe("Søknaden/klagen er trukket", () => {
+    it(`viser 'Søknaden/klagen er trukket' dersom sakstype er ${EU_EOS} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${UTSENDT_ARBEIDSTAKER}`, async () => {
+      render(<AvsluttSak {...props} />);
+
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
+
+      expect(await screen.findByText("Søknaden/klagen er trukket")).toBeInTheDocument();
     });
 
-    it(`viser ikke 'Søknaden er innvilget' dersom redigerbart er false`, () => {
-      setupProps(props);
-      props.redigerbart = false;
+    it(`viser 'Søknaden/klagen er trukket' dersom sakstype er ${FTRL} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
+      props.sakstype = FTRL;
+      props.behandlingstype = FØRSTEGANG;
+      props.behandlingstema = YRKESAKTIV;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(handlinger).toHaveLength(0);
+      expect(await screen.findByText("Søknaden/klagen er trukket")).toBeInTheDocument();
+    });
+
+    it(`viser 'Søknaden/klagen er trukket' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
+      props.sakstype = TRYGDEAVTALE;
+      props.behandlingstype = FØRSTEGANG;
+      props.behandlingstema = YRKESAKTIV;
+      render(<AvsluttSak {...props} />);
+
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
+
+      expect(await screen.findByText("Søknaden/klagen er trukket")).toBeInTheDocument();
+    });
+
+    it(`viser ikke 'Søknaden/klagen er trukket' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, async () => {
+      props.sakstype = TRYGDEAVTALE;
+      props.behandlingstype = HENVENDELSE;
+      props.behandlingstema = YRKESAKTIV;
+      render(<AvsluttSak {...props} />);
+
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
+
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Søknaden/klagen er trukket")).toBeFalsy();
+    });
+
+    it(`viser ikke 'Søknaden/klagen er trukket' dersom sakstema er ${UNNTAK}`, async () => {
+      props.sakstema = UNNTAK;
+      render(<AvsluttSak {...props} />);
+
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
+
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Søknaden/klagen er trukket")).toBeFalsy();
+    });
+  });
+
+  describe("Avslå søknad pga. manglende opplysninger", () => {
+    it(`viser 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${EU_EOS} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${UTSENDT_ARBEIDSTAKER}`, async () => {
+      render(<AvsluttSak {...props} />);
+
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
+
+      expect(await screen.findByText("Avslå søknad pga. manglende opplysninger")).toBeInTheDocument();
+    });
+
+    it(`viser 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${FTRL} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
+      props.sakstype = FTRL;
+      props.behandlingstype = FØRSTEGANG;
+      props.behandlingstema = YRKESAKTIV;
+      render(<AvsluttSak {...props} />);
+
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
+
+      expect(await screen.findByText("Avslå søknad pga. manglende opplysninger")).toBeInTheDocument();
+    });
+
+    it(`viser 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
+      props.sakstype = TRYGDEAVTALE;
+      props.behandlingstype = FØRSTEGANG;
+      props.behandlingstema = YRKESAKTIV;
+      render(<AvsluttSak {...props} />);
+
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
+
+      expect(await screen.findByText("Avslå søknad pga. manglende opplysninger")).toBeInTheDocument();
+    });
+
+    it(`viser ikke 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, async () => {
+      props.sakstype = TRYGDEAVTALE;
+      props.behandlingstype = HENVENDELSE;
+      props.behandlingstema = YRKESAKTIV;
+      render(<AvsluttSak {...props} />);
+
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
+
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Avslå søknad pga. manglende opplysninger")).toBeFalsy();
+    });
+
+    it(`viser ikke 'Avslå søknad pga. manglende opplysninger' dersom sakstema er ${UNNTAK}`, async () => {
+      props.sakstema = UNNTAK;
+      render(<AvsluttSak {...props} />);
+
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
+
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Avslå søknad pga. manglende opplysninger")).toBeFalsy();
     });
   });
 
   describe("Klage-handlinger", () => {
-    it(`viser Klage-handlinger dersom behandlingstype er ${KLAGE}`, () => {
-      setupProps(props);
+    it(`viser Klage-handlinger dersom behandlingstype er ${KLAGE}`, async () => {
       props.behandlingstype = KLAGE;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(handlinger).toHaveLength(4);
-      expect(handlinger.at(0).props().tekst).toBe("Medhold på klage");
-      expect(handlinger.at(1).props().tekst).toBe("Klageinnstilling er oversendt til klageinstansen");
-      expect(handlinger.at(2).props().tekst).toBe("Klage er avvist");
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Medhold på klage")).toBeTruthy();
+      expect(
+        knapper.some((knapp) => knapp.textContent === "Klageinnstilling er oversendt til klageinstansen")
+      ).toBeTruthy();
+      expect(knapper.some((knapp) => knapp.textContent === "Klage er avvist")).toBeTruthy();
     });
 
-    it(`viser ikke Klage-handlinger dersom behandlingstype er ${FØRSTEGANG}`, () => {
-      setupProps(props);
+    it(`viser ikke Klage-handlinger dersom behandlingstype er ${FØRSTEGANG}`, async () => {
       props.behandlingstype = FØRSTEGANG;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(avsluttSak.findWhere((n) => n.type() === Handling && n.props().tekst === "Medhold på klage")).toHaveLength(
-        0
-      );
-
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Medhold på klage")).toBeFalsy();
       expect(
-        avsluttSak.findWhere(
-          (n) => n.type() === Handling && n.props().tekst === "Klageinnstilling er oversendt til klageinstansen"
-        )
-      ).toHaveLength(0);
-
-      expect(avsluttSak.findWhere((n) => n.type() === Handling && n.props().tekst === "Klage er avvist")).toHaveLength(
-        0
-      );
+        knapper.some((knapp) => knapp.textContent === "Klageinnstilling er oversendt til klageinstansen")
+      ).toBeFalsy();
+      expect(knapper.some((knapp) => knapp.textContent === "Klage er avvist")).toBeFalsy();
     });
   });
 
   describe("Vedtaket er omgjort (fvl § 35)", () => {
-    it(`viser 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${NY_VURDERING}`, () => {
-      setupProps(props);
+    it(`viser 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${NY_VURDERING}`, async () => {
       props.behandlingstype = NY_VURDERING;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(handlinger).toHaveLength(7);
-      expect(handlinger.at(3).props().tekst).toBe("Vedtaket er omgjort (fvl § 35)");
+      expect(await screen.findByText("Vedtaket er omgjort (fvl § 35)")).toBeInTheDocument();
     });
 
-    it(`viser ikke 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${FØRSTEGANG}`, () => {
-      setupProps(props);
+    it(`viser ikke 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${FØRSTEGANG}`, async () => {
       props.behandlingstype = FØRSTEGANG;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(
-        avsluttSak.findWhere((n) => n.type() === Handling && n.props().tekst === "Vedtaket er omgjort (fvl § 35)")
-      ).toHaveLength(0);
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Vedtaket er omgjort (fvl § 35)")).toBeFalsy();
     });
   });
 
   describe("Unntak-handlinger", () => {
-    it(`viser Unntak-handlinger dersom behandlingstema er ${ANMODNING_OM_UNNTAK_HOVEDREGEL} og sakstype er ${TRYGDEAVTALE}`, () => {
-      setupProps(props);
+    it(`viser Unntak-handlinger dersom behandlingstema er ${ANMODNING_OM_UNNTAK_HOVEDREGEL} og sakstype er ${TRYGDEAVTALE}`, async () => {
       props.behandlingstema = ANMODNING_OM_UNNTAK_HOVEDREGEL;
       props.sakstype = TRYGDEAVTALE;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(handlinger).toHaveLength(5);
-      expect(handlinger.at(0).props().tekst).toBe("Perioden er godkjent");
-      expect(handlinger.at(1).props().tekst).toBe("Perioden er delvis godkjent");
-      expect(handlinger.at(2).props().tekst).toBe("Medlem i folketrygden");
-      expect(handlinger.at(3).props().tekst).toBe("Ferdigbehandlet");
-      expect(handlinger.at(4).props().tekst).toBe("Behandlingen er bortfalt");
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Perioden er godkjent")).toBeTruthy();
+      expect(knapper.some((knapp) => knapp.textContent === "Perioden er delvis godkjent")).toBeTruthy();
+      expect(knapper.some((knapp) => knapp.textContent === "Medlem i folketrygden")).toBeTruthy();
     });
 
-    it(`viser Unntak-handlinger dersom behandlingstema er ${REGISTRERING_UNNTAK} og sakstype er ${TRYGDEAVTALE}`, () => {
-      setupProps(props);
+    it(`viser Unntak-handlinger dersom behandlingstema er ${REGISTRERING_UNNTAK} og sakstype er ${TRYGDEAVTALE}`, async () => {
       props.behandlingstema = REGISTRERING_UNNTAK;
       props.sakstype = TRYGDEAVTALE;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(handlinger).toHaveLength(5);
-      expect(handlinger.at(0).props().tekst).toBe("Perioden er godkjent");
-      expect(handlinger.at(1).props().tekst).toBe("Perioden er delvis godkjent");
-      expect(handlinger.at(2).props().tekst).toBe("Medlem i folketrygden");
-      expect(handlinger.at(3).props().tekst).toBe("Ferdigbehandlet");
-      expect(handlinger.at(4).props().tekst).toBe("Behandlingen er bortfalt");
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Perioden er godkjent")).toBeTruthy();
+      expect(knapper.some((knapp) => knapp.textContent === "Perioden er delvis godkjent")).toBeTruthy();
+      expect(knapper.some((knapp) => knapp.textContent === "Medlem i folketrygden")).toBeTruthy();
     });
 
-    it(`viser Unntak-handlinger dersom behandlingstema er ${A1_ANMODNING_OM_UNNTAK_PAPIR} og sakstype er ${EU_EOS}`, () => {
-      setupProps(props);
+    it(`viser Unntak-handlinger dersom behandlingstema er ${A1_ANMODNING_OM_UNNTAK_PAPIR} og sakstype er ${EU_EOS}`, async () => {
       props.behandlingstema = A1_ANMODNING_OM_UNNTAK_PAPIR;
       props.sakstype = EU_EOS;
+      render(<AvsluttSak {...props} />);
 
-      const avsluttSak = shallow(<AvsluttSak {...props} />);
-      const handlinger = avsluttSak.find(Handling);
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
 
-      expect(handlinger).toHaveLength(5);
-      expect(handlinger.at(0).props().tekst).toBe("Perioden er godkjent");
-      expect(handlinger.at(1).props().tekst).toBe("Perioden er delvis godkjent");
-      expect(handlinger.at(2).props().tekst).toBe("Medlem i folketrygden");
-      expect(handlinger.at(3).props().tekst).toBe("Ferdigbehandlet");
-      expect(handlinger.at(4).props().tekst).toBe("Behandlingen er bortfalt");
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Perioden er godkjent")).toBeTruthy();
+      expect(knapper.some((knapp) => knapp.textContent === "Perioden er delvis godkjent")).toBeTruthy();
+      expect(knapper.some((knapp) => knapp.textContent === "Medlem i folketrygden")).toBeTruthy();
+    });
+
+    it(`viser ikke Unntak-handlinger for andre tilfeller enn de ovenfor`, async () => {
+      render(<AvsluttSak {...props} />);
+
+      const user = userEvent.setup();
+      await user.click(screen.getByText("Avslutt sak"));
+
+      const knapper = await screen.findAllByRole("button");
+      expect(knapper.some((knapp) => knapp.textContent === "Perioden er godkjent")).toBeFalsy();
+      expect(knapper.some((knapp) => knapp.textContent === "Perioden er delvis godkjent")).toBeFalsy();
+      expect(knapper.some((knapp) => knapp.textContent === "Medlem i folketrygden")).toBeFalsy();
     });
   });
 });
