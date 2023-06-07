@@ -38,7 +38,7 @@ import { MatchParams } from "../../@types";
 
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
-import { lovvalgsperioderOperations } from "../../ducks/lovvalgsperioder";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
 
 const mapStateToProps = (state: RootState) => ({
@@ -51,6 +51,7 @@ const mapStateToProps = (state: RootState) => ({
   mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeSelector(state).tom
   ),
+  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
@@ -97,6 +98,7 @@ const Saksbehandling = ({
   land,
   behandlingstype,
   behandlingOppfriskes,
+  lovvalgsperiode,
   mottatteOpplysninger,
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
@@ -222,8 +224,8 @@ const Saksbehandling = ({
               <Nav.Column xs="5">
                 <Oppsummering
                   arbeidsland={landkoder && landkoder.filter((landkodeObjekt) => land.includes(landkodeObjekt.kode))}
-                  lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom}
-                  lovvalgsperiodeTom={mottatteOpplysningerPeriodeTom}
+                  lovvalgsperiodeFom={lovvalgsperiode.fomDato}
+                  lovvalgsperiodeTom={lovvalgsperiode.tomDato}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />
