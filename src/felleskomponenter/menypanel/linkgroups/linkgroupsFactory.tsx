@@ -1,10 +1,9 @@
 import MKV from "../../../melosyskodeverk";
 
-import { harUnntakFlyt, skalViseTomFlyt } from "../../../routing";
+import { harUnntakFlyt, skalViseTomFlyt, harIkkeYrkesaktivFlyt } from "../../../routing";
 import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
-import { harIkkeYrkesaktivFlyt } from "../../../routing/url";
 
 const {
   UTSENDT_ARBEIDSTAKER,
