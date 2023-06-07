@@ -45,6 +45,7 @@ describe("syncErrorsTilFeilmelding", () => {
         },
       },
     };
+    // @ts-ignore
     render(syncErrorsTilFeilmelding(syncErrors));
 
     const items = screen.getAllByRole("listitem");
