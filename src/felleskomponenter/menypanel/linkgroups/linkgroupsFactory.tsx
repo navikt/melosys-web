@@ -75,19 +75,17 @@ class LinkGroupsFactory {
     }
 
     if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled || false)) {
-      if (sakstype === MKV.Koder.sakstyper.EU_EOS || sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) {
-        return new LinkgroupsBuilder()
-          .addFraRegister(
-            new LinksBuilder(contentProps)
-              .addPerson()
-              .addFamilieForhold()
-              .addMedlemskap()
-              .addArbeidsforholdOgInntekt()
-              .build()
-          )
-          .addFraBruker(new LinksBuilder(contentProps).addFullmektig().build())
-          .build();
-      }
+      return new LinkgroupsBuilder()
+        .addFraRegister(
+          new LinksBuilder(contentProps)
+            .addPerson()
+            .addFamilieForhold()
+            .addMedlemskap()
+            .addArbeidsforholdOgInntekt()
+            .build()
+        )
+        .addFraBruker(new LinksBuilder(contentProps).addFullmektig().build())
+        .build();
     }
 
     switch (behandlingstema) {
