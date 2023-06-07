@@ -231,7 +231,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         />
       </Nav.Fieldset>
 
-      {formValues.utfallRegistreringUnntak === GODKJENT && (
+      {formValues.utfallRegistreringUnntak === GODKJENT && !harErrorFeilmelding() && (
         <Nav.Fieldset legend="">
           <Nav.Row>
             <Nav.Column xs="8">
@@ -301,10 +301,12 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]}
       />
 
-      <Alertmeldinger
-        className="vurderingUnntakMedlemskap__alertmeldinger"
-        meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
-      />
+      {![IKKE_GODKJENT, DELVIS_GODKJENT].includes(formValues.utfallRegistreringUnntak) && (
+        <Alertmeldinger
+          className="vurderingUnntakMedlemskap__alertmeldinger"
+          meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
+        />
+      )}
 
       {manglerSluttdato && ![IKKE_GODKJENT, DELVIS_GODKJENT].includes(formValues.utfallRegistreringUnntak) && (
         <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
