@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
@@ -16,7 +16,7 @@ import * as Utils from "../../../utils";
 import * as Forms from "../../../felleskomponenter/forms";
 import bem from "../../../bemUtils";
 import * as Nav from "../../../navFrontend";
-import vurdering_unntak_medlemskap from "../../unntaksregistrering/vurderingUnntakMedlemskap/vurderingUnntakMedlemskapSchema";
+import vurdering_vedtak from "./vurderingVedtakSchema";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import "./vurderingVedtakIkkeYrkesaktiv.css";
@@ -48,9 +48,12 @@ export const VurderingVedtak = () => {
   } = useSelector(komponentState);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { control, watch, formState, setValue } = useForm({
-    resolver: yupResolver(vurdering_unntak_medlemskap),
-    context: { sluttDato: mottatteOpplysningerPeriode.tom },
+  const { control, watch, formState, setValue, trigger } = useForm({
+    resolver: yupResolver(vurdering_vedtak),
+    context: {
+      sluttDato: mottatteOpplysningerPeriode.tom,
+      soknadsperiode: mottatteOpplysningerPeriode,
+    },
     mode: "all",
     defaultValues: {
       fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato || mottatteOpplysningerPeriode.fom),
@@ -58,6 +61,14 @@ export const VurderingVedtak = () => {
     } as FieldValues,
   });
   const formValues = watch();
+
+  const lovvalgsperiodeErGyldig = useMemo(() => {
+    return !formState.errors.fom && !formState.errors.tom;
+  }, [formState.errors.fom, formState.errors.tom]);
+
+  useEffect(() => {
+    trigger("tom");
+  }, [formValues.fom, trigger]);
 
   const kontrollerFerdigbehandling = () =>
     dispatch(
@@ -94,10 +105,6 @@ export const VurderingVedtak = () => {
     debouncedLagreLovvalgsperiode();
   };
 
-  const lagreFom = (fom: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, fom });
-
-  const lagreTom = (tom: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, tom });
-
   const [visPeriodeEndringFelter, setVisPeriodeEndringFelter] = useState(false);
 
   const EndrePeriodeKnapp = () =>
@@ -124,10 +131,11 @@ export const VurderingVedtak = () => {
     );
 
   const handleLagrePeriodeEndring = async () => {
-    setVisPeriodeEndringFelter(false);
+    if (lovvalgsperiodeErGyldig) {
+      oppdaterOgLagreLovvalgsperiode({ fom: formValues.fom, tom: formValues.tom });
+      setVisPeriodeEndringFelter(false);
+    }
   };
-
-  const periodeIsValid = true;
 
   return (
     <div className={vurderingVedtakCls.block}>
@@ -155,23 +163,15 @@ export const VurderingVedtak = () => {
             {visPeriodeEndringFelter ? (
               <>
                 <span className={vurderingVedtakCls.element("datofelt")}>
-                  <Forms.Datovelger
-                    label="Fra og med"
-                    name="fom"
-                    disabled={!redigerbart}
-                    control={control}
-                    onChange={lagreFom}
-                  />
+                  <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
                 </span>
                 <span className={vurderingVedtakCls.element("datofelt")}>
-                  <Forms.Datovelger
-                    label="Til og med"
-                    name="tom"
-                    disabled={!redigerbart}
-                    control={control}
-                    onChange={lagreTom}
-                  />
-                  <Nav.Hovedknapp mini disabled={!redigerbart || !periodeIsValid} onClick={handleLagrePeriodeEndring}>
+                  <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />
+                  <Nav.Hovedknapp
+                    mini
+                    disabled={!redigerbart || !lovvalgsperiodeErGyldig}
+                    onClick={handleLagrePeriodeEndring}
+                  >
                     Lagre
                   </Nav.Hovedknapp>
                 </span>

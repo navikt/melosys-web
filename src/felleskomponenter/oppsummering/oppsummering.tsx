@@ -17,13 +17,16 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
 import { useFeatureToggle } from "../../featuretoggle";
-import { harUnntakFlyt } from "../../routing";
+import { harIkkeYrkesaktivFlyt, harUnntakFlyt } from "../../routing";
 import KopierbarTekst from "../kopierbarTekst";
 
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
 import EndreBehandlingModal from "./endreBehandlingModal";
 import "./oppsummering.css";
-import { MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP } from "../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
+  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+} from "../../featuretoggle/toggleNavn";
 
 const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
@@ -63,6 +66,7 @@ const Oppsummering = ({
   behandlingID,
 }: OppsummeringProps) => {
   const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
+  const ikkeYrkesaktivToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
   const [mottaksdato, setMottaksdato] = useState<string | undefined>();
 
@@ -158,6 +162,13 @@ const Oppsummering = ({
         behandlingstema.kode,
         registreringUnntakFraMedlemskapToggleEnabled
       );
+
+      const erIkkeYrkesaktiv = harIkkeYrkesaktivFlyt(
+        sakstype.kode,
+        behandlingstema.kode,
+        ikkeYrkesaktivToggleEnabled || false
+      );
+
       if (erUnntak && sakstype.kode === MKV.Koder.sakstyper.EU_EOS) {
         col1 = [
           ["Periode fra attest", mottatteOpplysningerperiode],
@@ -170,7 +181,7 @@ const Oppsummering = ({
         ];
       } else {
         col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", mottatteOpplysningerperiode]];
-        if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
+        if (erTrygdeavtale || erIkkeYrkesaktiv) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
         col1.push(["Land", erSed ? landStorBokstav(lovvalgsland) : landTilSetning(arbeidsland)]);
       }
 

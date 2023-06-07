@@ -224,8 +224,8 @@ const Saksbehandling = ({
               <Nav.Column xs="5">
                 <Oppsummering
                   arbeidsland={landkoder && landkoder.filter((landkodeObjekt) => land.includes(landkodeObjekt.kode))}
-                  lovvalgsperiodeFom={lovvalgsperiode.fomDato}
-                  lovvalgsperiodeTom={lovvalgsperiode.tomDato}
+                  lovvalgsperiodeFom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato, false, "")}
+                  lovvalgsperiodeTom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato, false, "")}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />
