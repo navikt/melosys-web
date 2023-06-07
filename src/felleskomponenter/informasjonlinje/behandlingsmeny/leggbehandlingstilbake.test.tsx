@@ -22,9 +22,10 @@ describe("LeggBehandlingTilbake", () => {
     const user = userEvent.setup();
     await user.click(screen.getByText("Legg behandling tilbake"));
 
-    expect(await screen.findAllByRole("button")).toHaveLength(3);
-    expect(screen.getByText("Til min oppgaveliste"));
-    expect(screen.getByText("Til felles oppgaveliste"));
+    const knapper = await screen.findAllByRole("button");
+    expect(knapper).toHaveLength(3);
+    expect(knapper.at(1)?.textContent).toBe("Til min oppgaveliste");
+    expect(knapper.at(2)?.textContent).toBe("Til felles oppgaveliste");
   });
 
   it("viser bare Til felles oppgaveliste som er en tekst om ikke redigerbart", async () => {
@@ -36,7 +37,9 @@ describe("LeggBehandlingTilbake", () => {
     const user = userEvent.setup();
     await user.click(screen.getByText("Legg behandling tilbake"));
 
-    expect(await screen.findAllByRole("button")).toHaveLength(1);
+    const knapper = await screen.findAllByRole("button");
+    expect(knapper).toHaveLength(1);
+    expect(knapper.at(1)?.textContent).not.toBe("Til felles oppgaveliste");
     expect(screen.getByText("Til felles oppgaveliste"));
   });
 });

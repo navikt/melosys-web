@@ -26,10 +26,6 @@ jest.mock("../../../featuretoggle", () => ({
 describe("AvsluttSak", () => {
   let props = instance(mockedProps);
 
-  beforeEach(() => {
-    props = instance(mockedProps);
-  });
-
   const setupProps = (initialProps: typeof mockedProps) => {
     initialProps.redigerbart = true;
     initialProps.sakstype = EU_EOS;
@@ -38,8 +34,11 @@ describe("AvsluttSak", () => {
     initialProps.behandlingstype = FØRSTEGANG;
   };
 
+  beforeEach(() => {
+    setupProps(instance(mockedProps));
+  });
+
   it("viser riktige valg for sakstype FTRL og behandlingstype FØRSTEGANG ", async () => {
-    setupProps(props);
     props.sakstype = FTRL;
     props.behandlingstema = YRKESAKTIV;
 
@@ -61,7 +60,6 @@ describe("AvsluttSak", () => {
   });
 
   it("viser ingenting når behandling er ikke redigerbart", async () => {
-    setupProps(props);
     props.redigerbart = false;
     const { container } = render(<AvsluttSak {...props} />);
 
@@ -70,7 +68,6 @@ describe("AvsluttSak", () => {
 
   describe("Behandlingen er bortfalt", () => {
     it("viser Behandlingen er bortfalt når behandling er redigerbart", async () => {
-      setupProps(props);
       render(<AvsluttSak {...props} />);
 
       const user = userEvent.setup();
@@ -82,7 +79,6 @@ describe("AvsluttSak", () => {
 
   describe("Ferdigbehandlet", () => {
     it(`viser 'Ferdigbehandlet' dersom behandlingstema er blant de tillatte og behandlingstype er ${NY_VURDERING}`, async () => {
-      setupProps(props);
       props.behandlingstype = NY_VURDERING;
       render(<AvsluttSak {...props} />);
 
@@ -93,7 +89,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser 'Ferdigbehandlet' dersom behandlingstema er blant de tillatte og behandlingstype er ${HENVENDELSE}`, async () => {
-      setupProps(props);
       props.behandlingstype = HENVENDELSE;
       render(<AvsluttSak {...props} />);
 
@@ -104,7 +99,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser 'Ferdigbehandlet' dersom behandlingstema ikke er blant de tillatte så lenge behandling er redigerbart`, async () => {
-      setupProps(props);
       props.behandlingstema = YRKESAKTIV;
       render(<AvsluttSak {...props} />);
 
@@ -117,7 +111,6 @@ describe("AvsluttSak", () => {
 
   describe("Søknaden er avslått", () => {
     it(`viser 'Søknaden er avslått' dersom behandlingstype og behandlingstema er blant de tillatte`, async () => {
-      setupProps(props);
       render(<AvsluttSak {...props} />);
 
       const user = userEvent.setup();
@@ -127,7 +120,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke 'Søknaden er avslått' dersom behandlingstype er ${HENVENDELSE}`, async () => {
-      setupProps(props);
       props.behandlingstype = HENVENDELSE;
       render(<AvsluttSak {...props} />);
 
@@ -139,7 +131,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke 'Søknaden er avslått' dersom sakstema er ${UNNTAK}`, async () => {
-      setupProps(props);
       props.sakstema = UNNTAK;
       render(<AvsluttSak {...props} />);
 
@@ -153,7 +144,6 @@ describe("AvsluttSak", () => {
 
   describe("Søknaden er innvilget", () => {
     it(`viser 'Søknaden er innvilget' dersom sakstype er ${EU_EOS} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${UTSENDT_ARBEIDSTAKER}`, async () => {
-      setupProps(props);
       render(<AvsluttSak {...props} />);
 
       const user = userEvent.setup();
@@ -163,7 +153,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser 'Søknaden er innvilget' dersom sakstype er ${FTRL} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
-      setupProps(props);
       props.sakstype = FTRL;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
@@ -176,7 +165,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
-      setupProps(props);
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
@@ -189,7 +177,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, async () => {
-      setupProps(props);
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = HENVENDELSE;
       props.behandlingstema = YRKESAKTIV;
@@ -203,7 +190,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke 'Søknaden er innvilget' dersom sakstema er ${UNNTAK}`, async () => {
-      setupProps(props);
       props.sakstema = UNNTAK;
       render(<AvsluttSak {...props} />);
 
@@ -217,7 +203,6 @@ describe("AvsluttSak", () => {
 
   describe("Søknaden/klagen er trukket", () => {
     it(`viser 'Søknaden/klagen er trukket' dersom sakstype er ${EU_EOS} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${UTSENDT_ARBEIDSTAKER}`, async () => {
-      setupProps(props);
       render(<AvsluttSak {...props} />);
 
       const user = userEvent.setup();
@@ -227,7 +212,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser 'Søknaden/klagen er trukket' dersom sakstype er ${FTRL} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
-      setupProps(props);
       props.sakstype = FTRL;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
@@ -240,7 +224,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser 'Søknaden/klagen er trukket' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
-      setupProps(props);
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
@@ -253,7 +236,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke 'Søknaden er innvilget' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, async () => {
-      setupProps(props);
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = HENVENDELSE;
       props.behandlingstema = YRKESAKTIV;
@@ -267,7 +249,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke 'Søknaden/klagen er trukket' dersom sakstema er ${UNNTAK}`, async () => {
-      setupProps(props);
       props.sakstema = UNNTAK;
       render(<AvsluttSak {...props} />);
 
@@ -281,7 +262,6 @@ describe("AvsluttSak", () => {
 
   describe("Avslå søknad pga. manglende opplysninger", () => {
     it(`viser 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${EU_EOS} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${UTSENDT_ARBEIDSTAKER}`, async () => {
-      setupProps(props);
       render(<AvsluttSak {...props} />);
 
       const user = userEvent.setup();
@@ -291,7 +271,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${FTRL} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
-      setupProps(props);
       props.sakstype = FTRL;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
@@ -304,7 +283,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${YRKESAKTIV}`, async () => {
-      setupProps(props);
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
@@ -317,7 +295,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${TRYGDEAVTALE} og behandlingstype er ${HENVENDELSE} og behandlingstema er ${YRKESAKTIV}`, async () => {
-      setupProps(props);
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = HENVENDELSE;
       props.behandlingstema = YRKESAKTIV;
@@ -331,7 +308,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke 'Avslå søknad pga. manglende opplysninger' dersom sakstema er ${UNNTAK}`, async () => {
-      setupProps(props);
       props.sakstema = UNNTAK;
       render(<AvsluttSak {...props} />);
 
@@ -345,7 +321,6 @@ describe("AvsluttSak", () => {
 
   describe("Klage-handlinger", () => {
     it(`viser Klage-handlinger dersom behandlingstype er ${KLAGE}`, async () => {
-      setupProps(props);
       props.behandlingstype = KLAGE;
       render(<AvsluttSak {...props} />);
 
@@ -361,7 +336,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke Klage-handlinger dersom behandlingstype er ${FØRSTEGANG}`, async () => {
-      setupProps(props);
       props.behandlingstype = FØRSTEGANG;
       render(<AvsluttSak {...props} />);
 
@@ -379,7 +353,6 @@ describe("AvsluttSak", () => {
 
   describe("Vedtaket er omgjort (fvl § 35)", () => {
     it(`viser 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${NY_VURDERING}`, async () => {
-      setupProps(props);
       props.behandlingstype = NY_VURDERING;
       render(<AvsluttSak {...props} />);
 
@@ -390,7 +363,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${FØRSTEGANG}`, async () => {
-      setupProps(props);
       props.behandlingstype = FØRSTEGANG;
       render(<AvsluttSak {...props} />);
 
@@ -404,7 +376,6 @@ describe("AvsluttSak", () => {
 
   describe("Unntak-handlinger", () => {
     it(`viser Unntak-handlinger dersom behandlingstema er ${ANMODNING_OM_UNNTAK_HOVEDREGEL} og sakstype er ${TRYGDEAVTALE}`, async () => {
-      setupProps(props);
       props.behandlingstema = ANMODNING_OM_UNNTAK_HOVEDREGEL;
       props.sakstype = TRYGDEAVTALE;
       render(<AvsluttSak {...props} />);
@@ -419,7 +390,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser Unntak-handlinger dersom behandlingstema er ${REGISTRERING_UNNTAK} og sakstype er ${TRYGDEAVTALE}`, async () => {
-      setupProps(props);
       props.behandlingstema = REGISTRERING_UNNTAK;
       props.sakstype = TRYGDEAVTALE;
       render(<AvsluttSak {...props} />);
@@ -434,7 +404,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser Unntak-handlinger dersom behandlingstema er ${A1_ANMODNING_OM_UNNTAK_PAPIR} og sakstype er ${EU_EOS}`, async () => {
-      setupProps(props);
       props.behandlingstema = A1_ANMODNING_OM_UNNTAK_PAPIR;
       props.sakstype = EU_EOS;
       render(<AvsluttSak {...props} />);
@@ -449,7 +418,6 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke Unntak-handlinger for andre tilfeller enn de ovenfor`, async () => {
-      setupProps(props);
       render(<AvsluttSak {...props} />);
 
       const user = userEvent.setup();
