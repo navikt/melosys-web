@@ -69,10 +69,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   hentFagsaker: (saksnummer: string) => dispatch(fagsakOperations.hent(saksnummer)),
   hentFolketrygdenKodeverk: () => dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden()),
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
-  hentMedlemskapsperioder: (behandlingId: number) =>
-    dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingId)),
   hentOppsummertFakta: (behandlingId: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingId)),
-  hentBestemmelse: (behandlingId: number) => dispatch(medlemskapsperioderOperations.hentBestemmelse(behandlingId)),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   resetVilkarState: () => dispatch(vilkarOperations.resetState()),
@@ -112,8 +109,6 @@ const Saksbehandling = ({
   hentFagsaker,
   hentFolketrygdenKodeverk,
   hentLandkoder,
-  hentMedlemskapsperioder,
-  hentBestemmelse,
   hentOppsummertFakta,
   landkoder,
   location,
@@ -165,8 +160,6 @@ const Saksbehandling = ({
         return false;
       }
 
-      await hentMedlemskapsperioder(behandlingId);
-      await hentBestemmelse(behandlingId);
       await hentMottatteOpplysninger(behandlingId);
       await hentDokumentOversikt(saksnr);
       await hentLovvalgsperiode(behandlingId);
