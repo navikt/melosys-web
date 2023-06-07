@@ -4,6 +4,7 @@ import { harUnntakFlyt, skalViseTomFlyt } from "../../../routing";
 import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
+import { harIkkeYrkesaktivFlyt } from "../../../routing/url";
 
 const {
   UTSENDT_ARBEIDSTAKER,
@@ -71,6 +72,41 @@ class LinkGroupsFactory {
             .build()
         )
         .build();
+    }
+
+    if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled || false)) {
+      if (sakstype === MKV.Koder.sakstyper.EU_EOS) {
+        return new LinkgroupsBuilder()
+          .addFraRegister(
+            new LinksBuilder(contentProps)
+              .addPerson()
+              .addFamilieForhold()
+              .addMedlemskap()
+              .addArbeidsforholdOgInntekt()
+              .addFullmektig()
+              .build()
+          )
+          .addFraBruker(
+            new LinksBuilder(contentProps)
+              .addArbeidsgiverEllerVirksomhet()
+              .addFullmektig()
+              .addPeriode()
+              .addLonnOgGodtgjorelser()
+              .addArbeidssteder()
+              .addOmVirksomhetenINorge()
+              .addOvrigOmArbeidstaker()
+              .build()
+          )
+          .build();
+      }
+      if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) {
+        return new LinkgroupsBuilder()
+          .addFraRegister(
+            new LinksBuilder(contentProps).addPerson().addFamilieForhold().addMedlemskap().addFullmektig().build()
+          )
+          .addFraBruker(new LinksBuilder(contentProps).addFullmektig().build())
+          .build();
+      }
     }
 
     switch (behandlingstema) {
