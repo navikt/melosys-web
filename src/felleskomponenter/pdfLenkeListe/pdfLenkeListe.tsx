@@ -7,6 +7,8 @@ import * as Nav from "../../navFrontend";
 
 import { dokumenterOperations } from "../../ducks/dokumenter";
 import { apnePdfINyFane } from "../../services/utils";
+import { MELOSYS_DOKUMENT_V2 } from "../../featuretoggle/toggleNavn";
+import { useFeatureToggle } from "../../featuretoggle";
 
 import "./pdfLenkeListe.css";
 
@@ -28,6 +30,7 @@ interface PdfLenkeListeProps {
 }
 
 const PdfLenkeListe = ({ behandlingID, dokumenter, vedKlikk, className }: PdfLenkeListeProps) => {
+  const brukDokumenterV2 = useFeatureToggle(MELOSYS_DOKUMENT_V2);
   const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
 
   const setGeneriskFeil = (erSed?: boolean) => {
@@ -48,8 +51,9 @@ const PdfLenkeListe = ({ behandlingID, dokumenter, vedKlikk, className }: PdfLen
     try {
       if (dokument.erSed) {
         fileURL = await dokumenterOperations.forhandsvisSed(behandlingID, dokument.type!!, dokument.data as SedPdfData);
-      } else if (dokument.sendesTilDokumenterV2) {
+      } else if (dokument.sendesTilDokumenterV2 || brukDokumenterV2) {
         const data = dokument.data as Api.DokumenterV2.OpprettBrevReqDto;
+        data.produserbardokument = data.produserbardokument || dokument.type!!;
         fileURL = await dokumenterOperations.forhandsvisBrevV2(behandlingID, data);
       } else {
         const data = dokument.data as BrevPdfData;
