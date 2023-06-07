@@ -6,6 +6,7 @@ import * as EKV from "eessi-kodeverk";
 
 import MKV from "../../../melosyskodeverk";
 
+import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
@@ -13,18 +14,15 @@ import * as KV from "../../../kodeverk";
 
 import { hentFaktaVerdi } from "../../../domeneUtils";
 import { konverterAvklartfaktaTilStegData } from "../../../felleskomponenter/stegvelger";
-
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Datovelger from "../../../felleskomponenter/datovelger";
 import * as Mui from "../../../felleskomponenter/ui";
 
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { mottatteOpplysningerOperations } from "../../../ducks/mottatteOpplysninger";
 
-import * as Api from "../../../services/api";
-
 import "./vurderingEndrePeriode.css";
-import Datovelger from "../../../felleskomponenter/datovelger";
 
 export class VurderingEndrePeriode extends React.Component {
   state = {
@@ -204,8 +202,9 @@ export class VurderingEndrePeriode extends React.Component {
     const pdfDokumenter = [
       {
         navn: "Forhåndsvis vedtaksbrev og A1",
-        type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+        type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, // Fjernes når toggle MELOSYS_DOKUMENT_V2 fjernes
         data: {
+          produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
           mottaker: MKV.Koder.mottakerroller.BRUKER,
           fritekst: null,
           begrunnelseKode: begrunnelse,
@@ -239,7 +238,12 @@ export class VurderingEndrePeriode extends React.Component {
         <Nav.Typo.Element className="mindreTittel">Ny lovvalgsperiode</Nav.Typo.Element>
         <Nav.Row>
           <Nav.Column xs="3">
-            <Datovelger label="Startdato" value={Utils.dato.norskStringTilDate(formattertOpprinneligFom)} disabled />
+            <Datovelger
+              label="Startdato"
+              value={Utils.dato.norskStringTilDate(formattertOpprinneligFom)}
+              disabled
+              onChange={null}
+            />
           </Nav.Column>
           <Nav.Column xs="3">
             <Datovelger
@@ -265,22 +269,6 @@ export class VurderingEndrePeriode extends React.Component {
             />
           </Nav.Column>
         </Nav.Row>
-        {/**
-         * Skjuler fritekstfelt inntil fritekst for endret periode støttes i brev.
-         * TODO: Vise når brev er klar.
-         */
-        /* <Nav.Row>
-            <Nav.Column xs="6">
-              <Nav.Textarea
-                label="Fritekst til vedtaksbrev"
-                placeholder="Skriv inn tekst til vedtaksbrevet..."
-                value={vedtaksbrevFritekst}
-                onChange={settVedtaksbrevFritekst}
-                maxLength={500}
-                disabled={!redigerbart}
-              />
-            </Nav.Column>
-          </Nav.Row> */}
         {redigerbart && (
           <Nav.Row className="fritekstSed">
             <Nav.Column xs="6">

@@ -17,9 +17,9 @@ const uuid = require("uuid/v4");
 interface DokumentMetadataProps {
   navn: ReactNode | string;
   type?: string;
-  data: Api.DokumenterV2.OpprettBrevReqDto | SedPdfData | BrevPdfData;
+  data: Api.DokumenterV2.OpprettBrevReqDto | SedPdfData | BrevPdfData; // BrevPdfData fjernes med toggle MELOSYS_DOKUMENT_V2
   erSed?: boolean;
-  sendesTilDokumenterV2?: boolean;
+  sendesTilDokumenterV2?: boolean; // Fjernes med toggle MELOSYS_DOKUMENT_V2
 }
 
 interface PdfLenkeListeProps {

@@ -4,12 +4,14 @@ import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 
+import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
 import * as Api from "../../../services/api";
 import * as StringUtils from "../../../utils/streng";
 
-import MKV from "../../../melosyskodeverk";
+import { MELOSYS_DOKUMENT_V2 } from "../../../featuretoggle/toggleNavn";
+import { useFeatureToggle } from "../../../featuretoggle";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Knapperad from "../../knapperad";
 import HtmlEditor from "../../htmlEditor";
@@ -54,6 +56,7 @@ export const DialogboksHenleggSak = ({
   const [feilmeldingSelect, setFeilmeldingSelect] = useState<string | null>(null);
   const [feilmeldingFritekst, setFeilmeldingFritekst] = useState<string | null>(null);
   const [fritekst, setFritekst] = useState<string>("");
+  const brukDokumentV2 = useFeatureToggle(MELOSYS_DOKUMENT_V2);
 
   useEffect(() => {
     (async () => {
@@ -109,17 +112,30 @@ export const DialogboksHenleggSak = ({
     });
   };
 
-  const pdfDokumenter = [
-    {
-      navn: "Forhåndsvis brev",
-      type: MKV.Koder.brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
-      data: {
-        begrunnelseKode,
-        fritekst,
-        mottaker: MKV.Koder.mottakerroller.BRUKER,
-      },
-    },
-  ];
+  const pdfDokumenter = brukDokumentV2
+    ? [
+        {
+          sendesTilDokumenterV2: true,
+          navn: "Forhåndsvis brev",
+          data: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            begrunnelseKode,
+            fritekst,
+          },
+        },
+      ]
+    : [
+        {
+          navn: "Forhåndsvis brev",
+          type: MKV.Koder.brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
+          data: {
+            begrunnelseKode,
+            fritekst,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+          },
+        },
+      ];
 
   const dialogboksHenleggClassName = bem("dialogboks-henlegg");
 

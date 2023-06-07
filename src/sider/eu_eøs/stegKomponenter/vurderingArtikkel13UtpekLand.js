@@ -16,6 +16,9 @@ import * as Mui from "../../../felleskomponenter/ui";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
+import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../felleskomponenter/stegvelger";
+import { MELOSYS_DOKUMENT_V2 } from "../../../featuretoggle/toggleNavn";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -26,7 +29,6 @@ import { flytSelectors } from "../../../ducks/flyt";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
-import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../felleskomponenter/stegvelger";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel13UtpekLandSchema from "./vurderingArtikkel13UtpekLandSchema";
 
@@ -56,6 +58,7 @@ export const VurderingArtikkel13UtpekLand = ({
   endreUtpekingsperiode,
 }) => {
   const [utpekingPending, setUtpekingPending] = useState(false);
+  const brukDokumentV2 = useFeatureToggle(MELOSYS_DOKUMENT_V2);
   const isMounted = Hooks.useIsMounted();
 
   useEffect(() => {
@@ -110,15 +113,26 @@ export const VurderingArtikkel13UtpekLand = ({
   };
 
   const pdfDokumenter = [
-    {
-      navn: "Forhåndsvis vedtaksbrev",
-      type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_UTPEKING_UTLAND,
-      data: {
-        begrunnelseKode: null,
-        fritekst: formValues.fritekstOrienteringsbrev,
-        mottaker: MKV.Koder.mottakerroller.BRUKER,
-      },
-    },
+    brukDokumentV2
+      ? {
+          sendesTilDokumenterV2: true,
+          navn: "Forhåndsvis vedtaksbrev",
+          data: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_UTPEKING_UTLAND,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            begrunnelseKode: null,
+            fritekst: formValues.fritekstOrienteringsbrev,
+          },
+        }
+      : {
+          navn: "Forhåndsvis vedtaksbrev",
+          type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_UTPEKING_UTLAND,
+          data: {
+            begrunnelseKode: null,
+            fritekst: formValues.fritekstOrienteringsbrev,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+          },
+        },
     {
       navn: "Forhåndsvis SED A003",
       type: EKV.Koder.sedtyper.A003,
