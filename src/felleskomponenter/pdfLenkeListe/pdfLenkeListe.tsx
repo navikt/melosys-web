@@ -53,7 +53,6 @@ const PdfLenkeListe = ({ behandlingID, dokumenter, vedKlikk, className }: PdfLen
         fileURL = await dokumenterOperations.forhandsvisSed(behandlingID, dokument.type!!, dokument.data as SedPdfData);
       } else if (dokument.sendesTilDokumenterV2 || brukDokumenterV2) {
         const data = dokument.data as Api.DokumenterV2.OpprettBrevReqDto;
-        data.produserbardokument = data.produserbardokument || dokument.type!!;
         fileURL = await dokumenterOperations.forhandsvisBrevV2(behandlingID, data);
       } else {
         const data = dokument.data as BrevPdfData;
