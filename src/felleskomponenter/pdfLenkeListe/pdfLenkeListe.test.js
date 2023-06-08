@@ -2,8 +2,8 @@ import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import MKV from "../../melosyskodeverk";
 import * as EKV from "eessi-kodeverk";
+import MKV from "../../melosyskodeverk";
 
 import PdfLenkeListe from "./pdfLenkeListe";
 
