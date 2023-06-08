@@ -14,12 +14,11 @@ import * as Forms from "../../../felleskomponenter/forms";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 import * as Api from "../../../services/api";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { mottatteOpplysningerSelectors, mottatteOpplysningerOperations } from "../../../ducks/mottatteOpplysninger";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { TomFlytMelding, UnntakHjelpetekst } from "../../../felleskomponenter/alertmeldinger";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import * as Utils from "../../../utils";
-import { kontrollOperations } from "../../../ducks/kontroll";
 import { Feilmeldinger } from "../../../felleskomponenter/feilmeldinger";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 
@@ -54,7 +53,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     soeknadsland,
     utfallRegistreringUnntak,
     ikkeYrkesaktivSituasjonstype,
-    vedtakstype,
     behandlingID,
     sakstype,
     sakstema,
@@ -79,9 +77,11 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   }, [formState?.isValid]);
 
   useEffect(() => {
-    Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, soeknadsland).then((res) =>
-      setMuligeBestemmelser(res)
-    );
+    if (aktivtSteg && soeknadsland) {
+      Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, soeknadsland).then((res) =>
+        setMuligeBestemmelser(res)
+      );
+    }
   }, [aktivtSteg, soeknadsland]);
 
   const lagreUtfallRegistrering = (utfall: string) => {
@@ -94,21 +94,11 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const lagreLovvalgsperiodeOgKontroller = async () => {
     await dispatch(lovvalgsperioderOperations.lagre());
-    kontrollerFerdigbehandling();
   };
 
   const lagreIkkeYrkesaktivSituasjontype = (ikkeYrkesaktivSituasjontype: string | null) => {
     dispatch(mottatteOpplysningerOperations.oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype));
   };
-
-  const kontrollerFerdigbehandling = (skalRegisteropplysningerOppdateres: boolean = false) =>
-    dispatch(
-      kontrollOperations.kontrollerFerdigbehandling({
-        behandlingID,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-        skalRegisteropplysningerOppdateres,
-      })
-    );
 
   const debouncedLagreLovvalgsperiode = useCallback(Utils._debounce(lagreLovvalgsperiodeOgKontroller, 500), []);
 

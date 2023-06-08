@@ -1,8 +1,5 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Action } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
@@ -13,39 +10,14 @@ import * as Utils from "../../../utils";
 
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
 import { FellesHandlersContext } from "../../../contexts";
-import { DialogboksOppfriskSak } from "../../../felleskomponenter/dialogboks";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../ducks/menypanel";
 import { landkoderSelectors } from "../../../ducks/landkoder";
-import { tilForsiden } from "../../../ducks/navigering/operations";
 
 import vurderingStartSchema from "./vurderingStartSchema";
-
-const komponentState = (state: RootState) => {
-  const initialSoknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(state);
-  const initialSoeknadsland = mottatteOpplysningerSelectors.SoknadslandkoderSelector(state);
-  return {
-    initialValues: {
-      fom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.fom),
-      tom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.tom),
-      land: initialSoeknadsland && initialSoeknadsland.toString(),
-    },
-    landkoder: landkoderSelectors.LandkoderFraSakstypeSelector(state),
-    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  };
-};
-
-const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
-  oppdaterPeriode: (periode: { fom: string; tom: string }) =>
-    dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
-  oppdaterSoeknadslandkoder: (landkoder: string[]) =>
-    dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(landkoder, false)),
-  oppdaterTrygdedekning: (trygdedekning: string | undefined) =>
-    dispatch(mottatteOpplysningerOperations.oppdaterTrygdedekning(trygdedekning)),
-});
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
 
 interface Props {
   bekreft: () => void;
@@ -55,59 +27,86 @@ interface Props {
 
 export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
-  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger, annenBehandlingOppfriskes } = useContext(
-    FellesHandlersContext
-  ) as any;
-  const { redigerbart, initialValues, landkoder } = useSelector(komponentState);
-  const { visMenypanel, oppdaterPeriode, oppdaterSoeknadslandkoder, oppdaterTrygdedekning } =
-    komponentDispatch(dispatch);
-  const [visOppfrisk, setVisOppfrisk] = useState(false);
 
-  const {
-    control,
-    watch,
-    formState: { isValid: formIsValid },
-  } = useForm({
+  const søknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
+  const søknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  const landkoder = useSelector(landkoderSelectors.LandkoderFraSakstypeSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
+
+  const { control, watch, formState } = useForm({
     resolver: yupResolver(vurderingStartSchema),
     mode: "all",
-    values: useMemo(() => initialValues as FieldValues, [initialValues]),
+    defaultValues: {
+      fom: søknadsperiode && Utils.dato.formatterDatoTilNorsk(søknadsperiode.fom),
+      tom: søknadsperiode && Utils.dato.formatterDatoTilNorsk(søknadsperiode.tom),
+      land: søknadsland && søknadsland.toString(),
+    } as FieldValues,
   });
   const formValues = watch();
+  const [initialValues, setInitialValues] = useState<FieldValues>({ ...formState.defaultValues });
+
+  const [visSpinner, setVisSpinner] = useState(false);
+  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
+
+  const skalHenteRegisteropplysninger =
+    !registeropplysningerHentet ||
+    formValues?.fom !== initialValues?.fom ||
+    formValues?.tom !== initialValues?.tom ||
+    formValues?.land !== initialValues?.land;
+
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner;
 
   useEffect(() => {
-    if (!Utils._isEmpty(initialValues.fom)) {
-      visMenypanel();
+    if (registeropplysningerHentet) {
+      dispatch(menypanelOperations.visMenypanel());
     }
   }, []);
 
   useEffect(() => {
-    oppdaterStatus(formIsValid);
-  }, [formIsValid]);
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
 
-  const oppdaterLokalMottatteOpplysninger = async () => {
-    await Promise.all([
-      oppdaterPeriode({
-        fom: Utils.dato.formatterDatoTilISO(formValues.fom, null, ""),
-        tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
-      }),
-      oppdaterSoeknadslandkoder(formValues.land ? [formValues.land] : []),
-      oppdaterTrygdedekning(formValues.trygdedekning),
-    ]);
+  const debouncedOppdaterPeriode = useCallback(
+    Utils._debounce(
+      (data: { fom: string; tom: string }) =>
+        dispatch(
+          mottatteOpplysningerOperations.oppdaterPeriode({
+            fom: Utils.dato.formatterDatoTilISO(data.fom, null, ""),
+            tom: Utils.dato.formatterDatoTilISO(data.tom, null, ""),
+          })
+        ),
+      500
+    ),
+    []
+  );
+
+  const lagreFom = (fom: string) => {
+    debouncedOppdaterPeriode({ fom, tom: formValues.tom });
   };
 
-  const fortsettHandle = () => {
-    const erSammeSomInitialVerdier =
-      formValues.fom === initialValues.fom &&
-      formValues.tom === initialValues.tom &&
-      formValues.land === initialValues.land;
+  const lagreTom = (tom: string) => {
+    debouncedOppdaterPeriode({ fom: formValues.fom, tom });
+  };
 
-    if (!erSammeSomInitialVerdier) {
-      oppdaterLokalMottatteOpplysninger().finally(() => {
-        setVisOppfrisk(true);
-      });
-    } else {
-      bekreft();
+  const lagreLand = (valgtLandkode: string) => {
+    dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland([valgtLandkode], false));
+  };
+
+  const bekreftHandle = async () => {
+    setInitialValues({
+      fom: formValues.fom,
+      tom: formValues.tom,
+      land: formValues.land,
+    });
+
+    if (skalHenteRegisteropplysninger) {
+      setVisSpinner(true);
+      await oppfriskOgLastInnSaksopplysninger();
+      setVisSpinner(false);
+      dispatch(menypanelOperations.visMenypanel());
     }
+    bekreft();
   };
 
   if (!aktivtSteg) return null;
@@ -119,10 +118,22 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
+            <Forms.Datovelger
+              label="Fra og med"
+              name="fom"
+              disabled={!redigerbart}
+              control={control}
+              onChange={lagreFom}
+            />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />
+            <Forms.Datovelger
+              label="Til og med"
+              name="tom"
+              disabled={!redigerbart}
+              control={control}
+              onChange={lagreTom}
+            />
           </Nav.Column>
           <Nav.Column xs="5">
             <Forms.Select
@@ -138,6 +149,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
               name="land"
               disabled={!redigerbart}
               control={control}
+              onChange={lagreLand}
             >
               {landkoder.map((item: KTObject) => (
                 <option key={item.kode} value={item.kode}>
@@ -151,29 +163,12 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
 
       <Mui.StegKnapper
         bekreftKnappProps={{
-          onClick: fortsettHandle,
-          disabled: !formIsValid || !redigerbart,
+          onClick: bekreftHandle,
+          disabled: !formState?.isValid || !redigerbart,
         }}
+        spinner={visSpinner}
         bekreftTekst="Bekreft og innhent registeropplysninger"
       />
-
-      {visOppfrisk && (
-        <DialogboksOppfriskSak
-          oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
-          avbryt={() => setVisOppfrisk(false)}
-          lukk={() => {
-            setVisOppfrisk(false);
-            visMenypanel();
-            bekreft();
-          }}
-          tilForsiden={() => {
-            setVisOppfrisk(false);
-            tilForsiden();
-          }}
-          behandlingOppfriskes
-          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-        />
-      )}
     </div>
   );
 };
