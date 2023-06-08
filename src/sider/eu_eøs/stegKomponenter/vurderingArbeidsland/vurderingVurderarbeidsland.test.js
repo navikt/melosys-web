@@ -1,11 +1,14 @@
-import React from "react";
+import renderer from "react-test-renderer";
+import * as uuid from "uuid";
 
-import * as Mui from "../../../felleskomponenter/ui";
+import MKV from "../../../../melosyskodeverk";
+import { VurderingVurderarbeidsland } from "./vurderingVurderarbeidsland";
 
-import MKV from "../../../melosyskodeverk";
-
-import { VurderingVurderarbeidsland } from "./vurderingArbeidsland/vurderingVurderarbeidsland";
-import SokkelSkipListe from "../../../felleskomponenter/sokkelskipliste";
+jest.mock("uuid");
+jest.mock("nav-frontend-js-utils", () => ({
+  ...jest.requireActual("nav-frontend-js-utils"),
+  guid: () => "123",
+}));
 
 describe("VurderingVurderarbeidsland", () => {
   let props = null;
@@ -47,15 +50,9 @@ describe("VurderingVurderarbeidsland", () => {
     };
   });
 
-  it("viser en Sokkelskipliste", () => {
-    const vurderingVurderarbeidsland = shallow(<VurderingVurderarbeidsland {...props} />);
-
-    expect(vurderingVurderarbeidsland.find(SokkelSkipListe)).toHaveLength(1);
-  });
-
-  it("viser to RedigerbarListe", () => {
-    const vurderingVurderarbeidsland = shallow(<VurderingVurderarbeidsland {...props} />);
-
-    expect(vurderingVurderarbeidsland.find(Mui.RedigerbarListe)).toHaveLength(2);
+  it("snapshot test", () => {
+    jest.spyOn(uuid, "v4").mockReturnValue("321");
+    const tree = renderer.create(<VurderingVurderarbeidsland {...props} />).toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });

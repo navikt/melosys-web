@@ -24,7 +24,7 @@ import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import MKV from "../../../../melosyskodeverk";
 import { BOOLSK_STRING } from "../../../../constants";
 
-import "../vurderingVurderarbeidsland.css";
+import "./vurderingVurderarbeidsland.css";
 import RedigerbarListe from "./redigerbarliste";
 
 const IngenSokkelSkipEllerHjemmebaser = ({ oppdaterData, slettData, redigerbart, arbeidUtforesIOppgittLandFakta }) => {
