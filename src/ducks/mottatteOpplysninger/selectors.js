@@ -40,9 +40,9 @@ export const ArbeidPaaLandSelector = createSelector(
 );
 
 export const IkkeYrkesaktivSituasjontypeSelector = createSelector(
-  (state) => MottatteOpplysningerSelector(state),
+  (state) => MottatteOpplysningerDataSelector(state),
   (mottatteOpplysningerData) => {
-    return mottatteOpplysningerData.data.ikkeYrkesaktivSituasjontype || null;
+    return mottatteOpplysningerData.ikkeYrkesaktivSituasjontype || null;
   }
 );
 
