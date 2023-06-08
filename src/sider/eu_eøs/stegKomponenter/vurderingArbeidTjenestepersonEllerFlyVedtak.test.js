@@ -12,6 +12,10 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 
 import MKV from "../../../melosyskodeverk";
 
+jest.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: jest.fn(),
+}));
+
 describe("VurderingArbeidTjenestepersonEllerFlyVedtak", () => {
   let props = null;
 

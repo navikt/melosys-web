@@ -8,6 +8,9 @@ import { VurderingGodkjennUtpekingAnnetLand } from "./vurderingGodkjennUtpekingA
 jest.mock("../../../services/modules/kontroll", () => ({
   erBucAapen: () => Promise.resolve(true),
 }));
+jest.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: jest.fn(),
+}));
 
 describe("vurderingGodkjennUtpekingAnnetLand", () => {
   let props = null;
