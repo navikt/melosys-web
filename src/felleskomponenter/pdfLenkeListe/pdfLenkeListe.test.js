@@ -1,17 +1,20 @@
 import React from "react";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+import MKV from "../../melosyskodeverk";
 import * as EKV from "eessi-kodeverk";
 
-import * as Nav from "../../navFrontend";
-import * as Utils from "../../utils";
+import PdfLenkeListe from "./pdfLenkeListe";
 
-import PdfLenkeListe from ".";
-import MKV from "../../melosyskodeverk";
+jest.mock("../../featuretoggle", () => ({
+  useFeatureToggle: jest.fn(),
+}));
 
 describe("PdfLenkeListe", () => {
-  const vedKlikk = jest.fn(() => true);
   let props = null;
 
-  const setup = () => {
+  beforeEach(() => {
     fetch.resetMocks();
     fetch.mockResponse(JSON.stringify({}));
     props = {
@@ -19,122 +22,112 @@ describe("PdfLenkeListe", () => {
       dokumenter: [
         {
           navn: "Forhåndsvis vedtaksbrev",
-          type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
           data: {
-            begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
-            fritekst: null,
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
             mottaker: MKV.Koder.mottakerroller.BRUKER,
+            begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
           },
         },
         {
           navn: "Forhåndsvis SED A003",
           type: EKV.Koder.sedtyper.A003,
           erSed: true,
+          data: {},
         },
       ],
-      vedKlikk,
+      vedKlikk: jest.fn(() => true),
     };
-  };
-
-  beforeEach(() => {
-    setup();
   });
 
   it("viser samme antall linker som antall dokumenter passet som props ", () => {
     props.dokumenter = [];
-    let liste = shallow(<PdfLenkeListe {...props} />);
-    expect(liste.find("button")).toHaveLength(props.dokumenter.length);
+    render(<PdfLenkeListe {...props} />);
+
+    expect(screen.queryAllByRole("button")).toHaveLength(props.dokumenter.length);
 
     props.dokumenter = [
-      { navn: "test", type: "type", data: {} },
-      { navn: "test", type: "type", data: {} },
-      { navn: "test", type: "type", data: {} },
+      { navn: "test", data: {} },
+      { navn: "test", data: {} },
+      { navn: "test", data: {} },
     ];
-    liste = shallow(<PdfLenkeListe {...props} />);
-    expect(liste.find("button")).toHaveLength(props.dokumenter.length);
+    render(<PdfLenkeListe {...props} />);
+
+    expect(screen.queryAllByRole("button")).toHaveLength(props.dokumenter.length);
   });
 
   describe("forhåndsvisning av brev", () => {
-    beforeEach(() => {
-      props.vedKlikk = jest.fn(() => true);
-    });
-
     it("viser feilmelding ved 400-feil fra backend", async () => {
-      const liste = shallow(<PdfLenkeListe {...props} />);
-
       const responseBody = {
         error: null,
         status: 400,
         message: "feilmelding",
       };
-      fetch.mockResponse(JSON.stringify(responseBody), { status: 400 });
+      fetch.mockResponse(JSON.stringify(responseBody), { status: responseBody.status });
 
-      const lenke = liste.find("button").first();
-      lenke.simulate("click");
-      await Utils.delay(0);
+      render(<PdfLenkeListe {...props} />);
+      const user = userEvent.setup();
 
-      const alertstripe = liste.find(Nav.AlertStripe);
-      expect(alertstripe.props().children).toBe(responseBody.message);
+      await act(async () => {
+        user.click(screen.getByText(props.dokumenter[0].navn));
+      });
+
+      expect(await screen.findByText(responseBody.message)).toBeInTheDocument();
     });
 
     it("viser feilmelding ved 500-feil fra backend", async () => {
-      const liste = shallow(<PdfLenkeListe {...props} />);
-
       const responseBody = {
         error: null,
         status: 500,
         message: "feilmelding",
       };
-      fetch.mockResponse(JSON.stringify(responseBody), { status: 500 });
+      fetch.mockResponse(JSON.stringify(responseBody), { status: responseBody.status });
 
-      const lenke = liste.find("button").first();
-      lenke.simulate("click");
-      await Utils.delay(0);
+      render(<PdfLenkeListe {...props} />);
+      const user = userEvent.setup();
 
-      const alertstripe = liste.find(Nav.AlertStripe);
-      expect(alertstripe.props().children).toBe("Det oppstod en feil da brevet skulle forhåndsvises!");
+      await act(async () => {
+        user.click(screen.getByText(props.dokumenter[0].navn));
+      });
+
+      expect(await screen.findByText("Det oppstod en feil da brevet skulle forhåndsvises!")).toBeInTheDocument();
     });
   });
 
   describe("forhåndsvisning av sed", () => {
-    beforeEach(() => {
-      props.vedKlikk = jest.fn(() => true);
-    });
-
     it("viser feilmelding ved 400-feil fra backend", async () => {
-      const liste = shallow(<PdfLenkeListe {...props} />);
-
       const responseBody = {
         error: null,
         status: 400,
         message: "feilmelding",
       };
-      fetch.mockResponse(JSON.stringify(responseBody), { status: 400 });
+      fetch.mockResponse(JSON.stringify(responseBody), { status: responseBody.status });
 
-      const lenke = liste.find("button").last();
-      lenke.simulate("click");
-      await Utils.delay(0);
+      render(<PdfLenkeListe {...props} />);
+      const user = userEvent.setup();
 
-      const alertstripe = liste.find(Nav.AlertStripe);
-      expect(alertstripe.props().children).toBe(responseBody.message);
+      await act(async () => {
+        user.click(screen.getByText(props.dokumenter[1].navn));
+      });
+
+      expect(await screen.findByText(responseBody.message)).toBeInTheDocument();
     });
 
     it("viser feilmelding ved 500-feil fra backend", async () => {
-      const liste = shallow(<PdfLenkeListe {...props} />);
-
-      const boresponseBody = {
+      const responseBody = {
         error: null,
         status: 500,
         message: "feilmelding",
       };
-      fetch.mockResponse(JSON.stringify(boresponseBody), { status: 500 });
+      fetch.mockResponse(JSON.stringify(responseBody), { status: responseBody.status });
 
-      const lenke = liste.find("button").last();
-      lenke.simulate("click");
-      await Utils.delay(0);
+      render(<PdfLenkeListe {...props} />);
+      const user = userEvent.setup();
 
-      const alertstripe = liste.find(Nav.AlertStripe);
-      expect(alertstripe.props().children).toBe("Det oppstod en feil da SED skulle forhåndsvises!");
+      await act(async () => {
+        user.click(screen.getByText(props.dokumenter[1].navn));
+      });
+
+      expect(await screen.findByText("Det oppstod en feil da SED skulle forhåndsvises!")).toBeInTheDocument();
     });
   });
 });
