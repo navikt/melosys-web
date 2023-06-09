@@ -34,7 +34,6 @@ export const Lovvalgsperiode = () => {
   const { control, watch, formState, trigger } = useForm({
     resolver: yupResolver(vurdering_vedtak),
     context: {
-      sluttDato: mottatteOpplysningerPeriode.tom,
       soknadsperiode: mottatteOpplysningerPeriode,
     },
     mode: "all",
