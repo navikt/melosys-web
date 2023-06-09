@@ -62,7 +62,7 @@ export const VurderingUtpekt = ({
   endreFelt,
   behandlingID,
 }) => {
-  const [kanSendeSed, setKanSendeSed] = useState(false);
+  const [kanSendeSed, setKanSendeSed] = useState(true);
 
   useEffect(() => {
     Api.Kontroll.erBucAapen(behandlingID).then((res) => {
