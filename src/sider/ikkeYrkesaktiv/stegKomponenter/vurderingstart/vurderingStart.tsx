@@ -29,7 +29,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
   const dispatch = useDispatch();
 
   const søknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
-  const søknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  const søknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandKTSelector);
   const landkoder = useSelector(landkoderSelectors.LandkoderFraSakstypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
@@ -38,9 +38,9 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
     resolver: yupResolver(vurderingStartSchema),
     mode: "all",
     defaultValues: {
-      fom: søknadsperiode && Utils.dato.formatterDatoTilNorsk(søknadsperiode.fom),
-      tom: søknadsperiode && Utils.dato.formatterDatoTilNorsk(søknadsperiode.tom),
-      land: søknadsland && søknadsland.toString(),
+      fom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.fom),
+      tom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.tom),
+      land: søknadsland[0].kode,
     } as FieldValues,
   });
   const formValues = watch();
