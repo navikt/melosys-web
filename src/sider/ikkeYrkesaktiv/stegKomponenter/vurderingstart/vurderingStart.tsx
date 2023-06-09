@@ -67,10 +67,6 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
-  useEffect(() => {
-    trigger("tom");
-  }, [formValues.fom, trigger]);
-
   const lagrePeriodeOgLand = () => {
     dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland([formValues.land], false));
 
@@ -107,7 +103,13 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
+            <Forms.Datovelger
+              label="Fra og med"
+              name="fom"
+              disabled={!redigerbart}
+              control={control}
+              onChange={() => trigger("tom")}
+            />
           </Nav.Column>
           <Nav.Column xs="3">
             <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />

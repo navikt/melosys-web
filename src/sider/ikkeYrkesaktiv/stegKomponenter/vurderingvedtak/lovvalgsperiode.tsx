@@ -49,10 +49,6 @@ export const Lovvalgsperiode = () => {
     return !formState.errors.fom && !formState.errors.tom;
   }, [formState.errors.fom, formState.errors.tom]);
 
-  useEffect(() => {
-    trigger("tom");
-  }, [formValues.fom, trigger]);
-
   const kontrollerFerdigbehandling = () =>
     dispatch(
       kontrollOperations.kontrollerFerdigbehandling({
@@ -134,7 +130,13 @@ export const Lovvalgsperiode = () => {
           {visPeriodeEndringFelter ? (
             <>
               <span className={vurderingVedtakCls.element("datofelt")}>
-                <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
+                <Forms.Datovelger
+                  label="Fra og med"
+                  name="fom"
+                  disabled={!redigerbart}
+                  control={control}
+                  onChange={() => trigger("tom")}
+                />
               </span>
               <span className={vurderingVedtakCls.element("datofelt")}>
                 <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />
