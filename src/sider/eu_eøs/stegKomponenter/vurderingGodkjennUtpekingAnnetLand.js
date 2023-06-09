@@ -26,7 +26,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
   const [varsleUtland, setVarsleUtland] = useState(false);
   const [godkjenningPending, setGodkjenningPending] = useState(false);
   const [fritekst, setFritekst] = useState("");
-  const [kanSendeSed, setKanSendeSed] = useState(false);
+  const [kanSendeSed, setKanSendeSed] = useState(true);
 
   const isMounted = Hooks.useIsMounted();
 
