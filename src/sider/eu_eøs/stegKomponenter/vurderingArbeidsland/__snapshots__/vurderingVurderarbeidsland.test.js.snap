@@ -1,0 +1,230 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VurderingVurderarbeidsland snapshot test 1`] = `
+<div
+  className="vurderingVurderArbeidsland"
+>
+  <h1
+    className="typo-innholdstittel stegvelgertittel overskrift"
+  >
+    Vurder arbeidsland
+  </h1>
+  <p
+    className="typo-element undertittel"
+  >
+    Vurdering sokkel/skip
+  </p>
+  <div
+    className="borderBottom"
+  >
+    <div
+      className="row sokkelSkip__liste__rad"
+    >
+      <div
+        className="col col-xs-3"
+      >
+        Dunfjæder
+      </div>
+      <div
+        className="col col-xs-2"
+      >
+        <div
+          className="skjemaelement"
+        >
+          <input
+            aria-invalid={false}
+            checked={false}
+            className="skjemaelement__input radioknapp"
+            disabled={false}
+            id="123"
+            name="SOKKEL_ELLER_SKIPDunfjæder"
+            onChange={[Function]}
+            type="radio"
+            value="SOKKEL"
+          />
+          <label
+            className="skjemaelement__label"
+            htmlFor="123"
+          >
+            Sokkel
+          </label>
+        </div>
+        <div
+          className="skjemaelement"
+        >
+          <input
+            aria-invalid={false}
+            checked={false}
+            className="skjemaelement__input radioknapp"
+            disabled={false}
+            id="123"
+            name="SOKKEL_ELLER_SKIPDunfjæder"
+            onChange={[Function]}
+            type="radio"
+            value="SKIP"
+          />
+          <label
+            className="skjemaelement__label"
+            htmlFor="123"
+          >
+            Skip
+          </label>
+        </div>
+      </div>
+      <div
+        className="col col-xs-4"
+      >
+        <fieldset
+          className="fieldset"
+          disabled={false}
+        >
+          <legend
+            className="fieldset__legend"
+          >
+            Velg arbeidsland
+          </legend>
+          <div
+            className="skjemaelement"
+          >
+            <input
+              aria-invalid={false}
+              checked={false}
+              className="skjemaelement__input radioknapp"
+              id="123"
+              name="321"
+              onChange={[Function]}
+              type="radio"
+              value={
+                Object {
+                  "kode": "GB",
+                  "term": "Flaggland",
+                }
+              }
+            />
+            <label
+              className="skjemaelement__label"
+              htmlFor="123"
+            >
+              Storbritannia - Flaggland
+            </label>
+          </div>
+          <div
+            className="skjemaelement"
+          >
+            <input
+              aria-invalid={false}
+              checked={false}
+              className="skjemaelement__input radioknapp"
+              id="123"
+              name="321"
+              onChange={[Function]}
+              type="radio"
+              value={
+                Object {
+                  "kode": "GB",
+                  "term": "Sokkelland",
+                }
+              }
+            />
+            <label
+              className="skjemaelement__label"
+              htmlFor="123"
+            >
+              Storbritannia - Sokkelland
+            </label>
+          </div>
+          <div
+            className="skjemaelement"
+          >
+            <input
+              aria-invalid={false}
+              checked={false}
+              className="skjemaelement__input radioknapp"
+              id="123"
+              name="321"
+              onChange={[Function]}
+              type="radio"
+              value={
+                Object {
+                  "kode": "GB",
+                  "term": "Territorialfarvannsland",
+                }
+              }
+            />
+            <label
+              className="skjemaelement__label"
+              htmlFor="123"
+            >
+              Storbritannia - Territorialfarvannsland
+            </label>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+  <div
+    className="row borderBottom"
+  >
+    <div
+      className="col col-xs-6"
+    >
+      <p
+        className="typo-element undertittel"
+      >
+        Hjemmebaser
+      </p>
+      <div>
+        <div
+          className="row redigerbarliste__element"
+        >
+          <div
+            className="col col-xs-6"
+          >
+            Tyskland (DE)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="col col-xs-6"
+    >
+      <p
+        className="typo-element undertittel"
+      >
+        Land fra inngangsvilkår:
+      </p>
+      <div />
+    </div>
+  </div>
+  <div
+    className="stegKnapper"
+  >
+    <button
+      className="knapp stegKnapper__bekreft knapp--hoved knapp--mini"
+      data-cy-nesteknapp="knapp_steg4"
+      disabled={false}
+      onClick={[MockFunction]}
+      type="button"
+    >
+      Bekreft og fortsett
+    </button>
+    <button
+      className="knapp stegKnapper__tilbake knapp--flat knapp--mini"
+      disabled={false}
+      onClick={[MockFunction]}
+      type="button"
+    >
+      <svg>
+        arrow-left-blue.svg
+      </svg>
+      <span>
+        Tilbake
+      </span>
+    </button>
+  </div>
+</div>
+`;

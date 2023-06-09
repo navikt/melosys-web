@@ -2,7 +2,9 @@ import React from "react";
 
 import * as Skjema from "../../../../skjema";
 import * as Nav from "../../../../../navFrontend";
-import * as Symboler from "../../symboler";
+import * as Ikoner from "../../../../../resources/images";
+
+import * as Mui from "../../../../ui";
 
 import Landvelger from "../../../../skjema/landvelger";
 
@@ -24,7 +26,7 @@ const EnkeltUtenlandskIdentSkjema = ({ overordnetFeltNavn, slett, redigerbart }:
         label="Utenlandsk ID"
       />
     </Nav.Column>
-    <Nav.Column xs="6">
+    <Nav.Column xs="5">
       <Landvelger
         disabled={!redigerbart}
         feltNavn={`${overordnetFeltNavn}.landkode`}
@@ -33,7 +35,9 @@ const EnkeltUtenlandskIdentSkjema = ({ overordnetFeltNavn, slett, redigerbart }:
         visAlleLandkoder
       />
     </Nav.Column>
-    <Symboler.Slett onClick={slett} className="slett__symbol" />
+    <Nav.Column xs="2" className="slett__symbol">
+      <Mui.IkonKnapp ariaLabel="Fjern utenlandsk ident" ikon={Ikoner.Bin} onClick={slett} />
+    </Nav.Column>
   </Nav.Row>
 );
 

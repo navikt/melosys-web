@@ -1,30 +1,31 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
 import { formValueSelector } from "redux-form";
 
-import * as Nav from "../../../navFrontend";
-import * as KV from "../../../kodeverk";
-import * as MPT from "../../../proptypes";
-import * as Utils from "../../../utils";
-import * as Mui from "../../../felleskomponenter/ui";
-import { hentFaktaVerdi } from "../../../domeneUtils";
+import * as Nav from "../../../../navFrontend";
+import * as KV from "../../../../kodeverk";
+import * as MPT from "../../../../proptypes";
+import * as Utils from "../../../../utils";
+import * as Mui from "../../../../felleskomponenter/ui";
+import { hentFaktaVerdi } from "../../../../domeneUtils";
 import {
   konverterAvklartfaktaTilStegData,
+  lagAvklartefaktaBegrunnelse,
   lagAvklartfakta,
   slettAvklartfakta,
-  lagAvklartefaktaBegrunnelse,
-} from "../../../felleskomponenter/stegvelger";
+} from "../../../../felleskomponenter/stegvelger";
 
-import SokkelSkipListe from "../../../felleskomponenter/sokkelskipliste";
+import SokkelSkipListe from "../../../../felleskomponenter/sokkelskipliste";
 
-import { formSelectors } from "../../../ducks/form";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
-import MKV from "../../../melosyskodeverk";
-import { BOOLSK_STRING } from "../../../constants";
+import { formSelectors } from "../../../../ducks/form";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
+import MKV from "../../../../melosyskodeverk";
+import { BOOLSK_STRING } from "../../../../constants";
 
 import "./vurderingVurderarbeidsland.css";
+import RedigerbarListe from "./redigerbarliste";
 
 const IngenSokkelSkipEllerHjemmebaser = ({ oppdaterData, slettData, redigerbart, arbeidUtforesIOppgittLandFakta }) => {
   useEffect(() => {
@@ -196,7 +197,7 @@ export const VurderingVurderarbeidsland = ({
         <Nav.Row className="borderBottom">
           <Nav.Column xs="6">
             <Nav.Typo.Element className="undertittel">Hjemmebaser</Nav.Typo.Element>
-            <Mui.RedigerbarListe
+            <RedigerbarListe
               elementer={hjemmebaser.map((base) => ({
                 kode: base,
                 term: `${KV.kodeTilTerm(base, MKV.KTObjects.landkoder)} (${base})`,
@@ -209,7 +210,7 @@ export const VurderingVurderarbeidsland = ({
       <Nav.Row>
         <Nav.Column xs="6">
           <Nav.Typo.Element className="undertittel">Land fra inngangsvilkår:</Nav.Typo.Element>
-          <Mui.RedigerbarListe
+          <RedigerbarListe
             elementer={soknadsland.map((kode) => ({
               kode,
               term: `${KV.kodeTilTerm(kode, MKV.KTObjects.landkoder)} (${kode})`,

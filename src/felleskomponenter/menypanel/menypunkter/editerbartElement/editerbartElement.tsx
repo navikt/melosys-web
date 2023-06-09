@@ -10,7 +10,7 @@ import { Status, SymbolsynlighetConfig } from "./types";
 import "./editerbartElement.css";
 
 interface EditerbartElementProps {
-  redigererRender: () => ReactNode;
+  redigererRender: (lukkRedigering: () => void) => ReactNode;
   ingenDataRender?: (apneRedigering: () => void) => ReactNode;
   redigeringUtfortRender: () => ReactNode;
   redigerbart: boolean;
@@ -83,7 +83,7 @@ const EditerbartElement = ({
 
   const hentAktivtInnhold = () => {
     if (status === Status.RedigeringUtfort) return redigeringUtfortRender();
-    if (status === Status.Redigerer) return redigererRender();
+    if (status === Status.Redigerer) return redigererRender(() => setStatus(Status.IngenData));
     if (status === Status.IngenData && ingenDataRender) {
       return ingenDataRender(() => setStatus(Status.Redigerer));
     }

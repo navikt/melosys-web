@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Redigerbarliste snapshot test 1`] = `
+<div>
+  <div
+    className="row redigerbarliste__element"
+  >
+    <div
+      className="col col-xs-6"
+    >
+      term
+    </div>
+    <div
+      className="col col-xs-6"
+    >
+      <button
+        className="knapp mui-knapp knapp knapp--standard"
+        disabled={false}
+        onClick={[Function]}
+        type="submit"
+      >
+        <svg
+          className="ikon"
+        >
+          filled-version-remove-1.svg
+        </svg>
+        FJERN
+      </button>
+    </div>
+  </div>
+  <div
+    className="row redigerbarliste__element"
+  >
+    <div
+      className="col col-xs-6"
+    >
+      term
+    </div>
+  </div>
+</div>
+`;

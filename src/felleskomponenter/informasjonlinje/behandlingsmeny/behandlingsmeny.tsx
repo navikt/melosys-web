@@ -71,7 +71,15 @@ export const Behandlingsmeny = ({
 
   return (
     <div className="behandlingsmeny">
-      <div className={knappCls} role="button" tabIndex={0} onClick={toggleBehandlingsmeny} onKeyPress={handleKeyPress}>
+      <div
+        className={knappCls}
+        role="button"
+        tabIndex={0}
+        onClick={toggleBehandlingsmeny}
+        onKeyPress={handleKeyPress}
+        aria-label="Behandlingsmeny"
+        title="Behandlingsmeny"
+      >
         <Ikon.Hamburger className={hamburgerCls} />
       </div>
       {visBehandlingsmeny && (

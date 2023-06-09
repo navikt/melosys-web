@@ -121,7 +121,11 @@ export const Soknadsperiode = ({
           <Nav.Typo.Element className="periode">
             {soknadsperiodeFom} - {soknadsperiodeTom}
           </Nav.Typo.Element>
-          {redigerbart && <Symboler.Rediger onClick={visEndrePeriode} />}
+          {redigerbart && (
+            <div>
+              <Symboler.Rediger onClick={visEndrePeriode} />
+            </div>
+          )}
         </div>
       )}
       {erEndrePeriodeSynlig && (

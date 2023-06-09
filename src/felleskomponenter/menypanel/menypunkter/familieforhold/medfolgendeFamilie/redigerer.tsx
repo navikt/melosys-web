@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Skjema from "../../../../skjema";
 import * as Utils from "../../../../../utils";
-import * as Symboler from "../../symboler";
+import * as Ikoner from "../../../../../resources/images";
+
+import * as Mui from "../../../../ui";
 
 import { EnRedigeringsknappListeRedigerer } from "../../editerbartElementListe";
 import { normalizeDate } from "../../../../../utils/normalisering";
@@ -80,7 +82,9 @@ const Redigerer = ({
         />
         {visNavnSpinner && <Nav.NavFrontendSpinner className="navn-spinner" />}
       </Nav.Column>
-      <Symboler.Slett onClick={slett} className="slett-symbol" />
+      <Nav.Column xs="2" className="slett__symbol">
+        <Mui.IkonKnapp ariaLabel="Slett barn" ikon={Ikoner.Bin} onClick={slett} />
+      </Nav.Column>
     </Nav.Row>
   );
 };

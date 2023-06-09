@@ -152,7 +152,12 @@ export const Inntektskilder = ({
 
             <Nav.Column xs="1">
               {redigerbart && formValues.inntektskilder.length > 1 && (
-                <Mui.Lenkeknapp ikon={Ikoner.Bin} onClick={() => remove(index)} className="slett" />
+                <Mui.IkonKnapp
+                  ariaLabel="Slett inntektskilde"
+                  ikon={Ikoner.Bin}
+                  onClick={() => remove(index)}
+                  className="slett"
+                />
               )}
             </Nav.Column>
           </Nav.Row>

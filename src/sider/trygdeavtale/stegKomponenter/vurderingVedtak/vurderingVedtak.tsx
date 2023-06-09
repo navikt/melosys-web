@@ -330,6 +330,7 @@ const VurderingVedtak = ({
     }
   };
 
+  // TODO: Skriv om til Mui.Knapp
   const EndreTom = () =>
     redigerbart ? (
       <div
