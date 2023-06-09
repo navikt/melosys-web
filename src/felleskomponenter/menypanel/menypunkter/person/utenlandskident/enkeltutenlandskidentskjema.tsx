@@ -36,7 +36,7 @@ const EnkeltUtenlandskIdentSkjema = ({ overordnetFeltNavn, slett, redigerbart }:
       />
     </Nav.Column>
     <Nav.Column xs="2" className="slett__symbol">
-      <Mui.IkonKnapp ariaLabel="Slett fødested og -land" ikon={Ikoner.Bin} onClick={slett} />
+      <Mui.IkonKnapp ariaLabel="Fjern utenlandsk ident" ikon={Ikoner.Bin} onClick={slett} />
     </Nav.Column>
   </Nav.Row>
 );
