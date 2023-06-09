@@ -132,7 +132,7 @@ export const harUnntakFlyt = (
 export const harIkkeYrkesaktivFlyt = (
   sakstype: string,
   behandlingstema: string,
-  ikkeYrkesaktivFlytToggleEnabled: boolean
+  ikkeYrkesaktivFlytToggleEnabled: boolean = false
 ) => {
   return (
     ikkeYrkesaktivFlytToggleEnabled &&

@@ -163,11 +163,7 @@ const Oppsummering = ({
         registreringUnntakFraMedlemskapToggleEnabled
       );
 
-      const erIkkeYrkesaktiv = harIkkeYrkesaktivFlyt(
-        sakstype.kode,
-        behandlingstema.kode,
-        ikkeYrkesaktivToggleEnabled || false
-      );
+      const erIkkeYrkesaktiv = harIkkeYrkesaktivFlyt(sakstype.kode, behandlingstema.kode, ikkeYrkesaktivToggleEnabled);
 
       if (erUnntak && sakstype.kode === MKV.Koder.sakstyper.EU_EOS) {
         col1 = [
