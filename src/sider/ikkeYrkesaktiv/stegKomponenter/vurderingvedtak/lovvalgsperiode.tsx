@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
@@ -43,10 +43,6 @@ export const Lovvalgsperiode = () => {
     } as FieldValues,
   });
   const formValues = watch();
-
-  const lovvalgsperiodeErGyldig = useMemo(() => {
-    return !formState.errors.fom && !formState.errors.tom;
-  }, [formState.errors.fom, formState.errors.tom]);
 
   const kontrollerFerdigbehandling = () =>
     dispatch(
@@ -109,7 +105,7 @@ export const Lovvalgsperiode = () => {
     );
 
   const handleLagrePeriodeEndring = async () => {
-    if (lovvalgsperiodeErGyldig) {
+    if (formState.isValid) {
       oppdaterOgLagreLovvalgsperiode({ fom: formValues.fom, tom: formValues.tom });
       setVisPeriodeEndringFelter(false);
     }
@@ -139,11 +135,7 @@ export const Lovvalgsperiode = () => {
               </span>
               <span className={vurderingVedtakCls.element("datofelt")}>
                 <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />
-                <Nav.Hovedknapp
-                  mini
-                  disabled={!redigerbart || !lovvalgsperiodeErGyldig}
-                  onClick={handleLagrePeriodeEndring}
-                >
+                <Nav.Hovedknapp mini disabled={!redigerbart || !formState.isValid} onClick={handleLagrePeriodeEndring}>
                   Lagre
                 </Nav.Hovedknapp>
               </span>
