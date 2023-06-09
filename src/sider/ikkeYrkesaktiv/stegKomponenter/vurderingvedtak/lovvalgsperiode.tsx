@@ -111,42 +111,40 @@ export const Lovvalgsperiode = () => {
   };
 
   return (
-    <Nav.Row className="infolinje">
-      <Nav.Column>
-        <Nav.Typo.Element className="info" tag="div">
-          <LabelMedHjelpetekst
-            label="Periode"
-            hjelpetekst={PERIODE_HJELPETEKST}
-            hjelpetekstClassName="vurderingVedtak__hjelpetekst"
-          />
-        </Nav.Typo.Element>
-        <Nav.Typo.Normaltekst className="datofelt_wrapper" tag="div">
-          {visPeriodeEndringFelter ? (
-            <>
-              <span className="datofelt">
-                <Forms.Datovelger
-                  label="Fra og med"
-                  name="fom"
-                  disabled={!redigerbart}
-                  control={control}
-                  onChange={() => trigger("tom")}
-                />
-              </span>
-              <span className="datofelt">
-                <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />
-                <Nav.Hovedknapp mini disabled={!redigerbart || !formState.isValid} onClick={handleLagrePeriodeEndring}>
-                  Lagre
-                </Nav.Hovedknapp>
-              </span>
-            </>
-          ) : (
-            `${Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-              lovvalgsperiode?.tomDato
-            )}`
-          )}
-          {!visPeriodeEndringFelter && <EndrePeriodeKnapp />}
-        </Nav.Typo.Normaltekst>
-      </Nav.Column>
-    </Nav.Row>
+    <Nav.Column>
+      <Nav.Typo.Element className="info" tag="div">
+        <LabelMedHjelpetekst
+          label="Periode"
+          hjelpetekst={PERIODE_HJELPETEKST}
+          hjelpetekstClassName="vurderingVedtak__hjelpetekst"
+        />
+      </Nav.Typo.Element>
+      <Nav.Typo.Normaltekst className="datofelt_wrapper" tag="div">
+        {visPeriodeEndringFelter ? (
+          <>
+            <span className="datofelt">
+              <Forms.Datovelger
+                label="Fra og med"
+                name="fom"
+                disabled={!redigerbart}
+                control={control}
+                onChange={() => trigger("tom")}
+              />
+            </span>
+            <span className="datofelt">
+              <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />
+              <Nav.Hovedknapp mini disabled={!redigerbart || !formState.isValid} onClick={handleLagrePeriodeEndring}>
+                Lagre
+              </Nav.Hovedknapp>
+            </span>
+          </>
+        ) : (
+          `${Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+            lovvalgsperiode?.tomDato
+          )}`
+        )}
+        {!visPeriodeEndringFelter && <EndrePeriodeKnapp />}
+      </Nav.Typo.Normaltekst>
+    </Nav.Column>
   );
 };
