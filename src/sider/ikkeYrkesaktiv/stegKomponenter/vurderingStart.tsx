@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -34,7 +34,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
 
-  const { control, watch, formState } = useForm({
+  const { control, watch, formState, trigger } = useForm({
     resolver: yupResolver(vurderingStartSchema),
     mode: "all",
     defaultValues: {
@@ -67,38 +67,27 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
-  const debouncedOppdaterPeriode = useCallback(
-    Utils._debounce(
-      (data: { fom: string; tom: string }) =>
-        dispatch(
-          mottatteOpplysningerOperations.oppdaterPeriode({
-            fom: Utils.dato.formatterDatoTilISO(data.fom, null, ""),
-            tom: Utils.dato.formatterDatoTilISO(data.tom, null, ""),
-          })
-        ),
-      500
-    ),
-    []
-  );
+  useEffect(() => {
+    trigger("tom");
+  }, [formValues.fom, trigger]);
 
-  const lagreFom = (fom: string) => {
-    debouncedOppdaterPeriode({ fom, tom: formValues.tom });
+  const lagrePeriodeOgLand = () => {
+    dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland([formValues.land], false));
+
+    dispatch(
+      mottatteOpplysningerOperations.oppdaterPeriode({
+        fom: Utils.dato.formatterDatoTilISO(formValues.fom, null, ""),
+        tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
+      })
+    );
   };
-
-  const lagreTom = (tom: string) => {
-    debouncedOppdaterPeriode({ fom: formValues.fom, tom });
-  };
-
-  const lagreLand = (valgtLandkode: string) => {
-    dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland([valgtLandkode], false));
-  };
-
   const bekreftHandle = async () => {
     setInitialValues({
       fom: formValues.fom,
       tom: formValues.tom,
       land: formValues.land,
     });
+    lagrePeriodeOgLand();
 
     if (skalHenteRegisteropplysninger) {
       setVisSpinner(true);
@@ -118,22 +107,10 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <Forms.Datovelger
-              label="Fra og med"
-              name="fom"
-              disabled={!redigerbart}
-              control={control}
-              onChange={lagreFom}
-            />
+            <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Forms.Datovelger
-              label="Til og med"
-              name="tom"
-              disabled={!redigerbart}
-              control={control}
-              onChange={lagreTom}
-            />
+            <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />
           </Nav.Column>
           <Nav.Column xs="5">
             <Forms.Select
@@ -149,7 +126,6 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
               name="land"
               disabled={!redigerbart}
               control={control}
-              onChange={lagreLand}
             >
               {landkoder.map((item: KTObject) => (
                 <option key={item.kode} value={item.kode}>
