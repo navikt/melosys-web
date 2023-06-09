@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 
 import { FieldValues, useForm } from "react-hook-form";
@@ -24,19 +23,6 @@ import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 
 const UNNTAK = "UNNTAK";
 const { GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
-const komponentState = (state: RootState) => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  soeknadsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  sakstema: fagsakSelectors.SakstemaKodeSelector(state),
-  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
-  utfallRegistreringUnntak: behandlingsresultatSelectors.UtfallRegistreringUnntakSelector(state),
-  vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
-  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
-  ikkeYrkesaktivSituasjonstype: mottatteOpplysningerSelectors.IkkeYrkesaktivSituasjontypeSelector(state),
-});
 
 interface Props {
   bekreft: () => void;
@@ -47,18 +33,18 @@ interface Props {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
-  const {
-    lovvalgsperiode,
-    redigerbart,
-    soeknadsland,
-    utfallRegistreringUnntak,
-    ikkeYrkesaktivSituasjonstype,
-    behandlingID,
-    sakstype,
-    sakstema,
-    behandlingstema,
-    feilmeldinger,
-  } = useSelector(komponentState);
+
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const soeknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+  const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
+  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const utfallRegistreringUnntak = useSelector(behandlingsresultatSelectors.UtfallRegistreringUnntakSelector);
+  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const ikkeYrkesaktivSituasjonstype = useSelector(mottatteOpplysningerSelectors.IkkeYrkesaktivSituasjontypeSelector);
+
   const [muligeBestemmelser, setMuligeBestemmelser] = useState<KTObject[]>([]);
 
   const { control, watch, formState, setValue } = useForm({
