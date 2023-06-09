@@ -3,21 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
-import * as Forms from "../../../felleskomponenter/forms";
-import * as Nav from "../../../navFrontend";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Utils from "../../../utils";
+import * as Forms from "../../../../felleskomponenter/forms";
+import * as Nav from "../../../../navFrontend";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Utils from "../../../../utils";
 
-import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
-import { FellesHandlersContext } from "../../../contexts";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { FellesHandlersContext } from "../../../../contexts";
 
-import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { menypanelOperations } from "../../../ducks/menypanel";
-import { landkoderSelectors } from "../../../ducks/landkoder";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import { menypanelOperations } from "../../../../ducks/menypanel";
+import { landkoderSelectors } from "../../../../ducks/landkoder";
 
 import vurderingStartSchema from "./vurderingStartSchema";
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
 interface Props {
   bekreft: () => void;

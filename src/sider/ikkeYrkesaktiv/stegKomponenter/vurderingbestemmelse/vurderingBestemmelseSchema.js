@@ -1,6 +1,6 @@
 import { object, string } from "yup";
-import * as KV from "../../../kodeverk";
-import MKV from "../../../melosyskodeverk";
+import * as KV from "../../../../kodeverk";
+import MKV from "../../../../melosyskodeverk";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
