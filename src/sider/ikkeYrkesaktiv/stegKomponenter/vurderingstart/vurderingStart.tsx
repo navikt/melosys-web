@@ -28,8 +28,9 @@ interface Props {
 export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
 
-  const søknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
-  const søknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandKTSelector);
+  const periodeFom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector));
+  const periodeTom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeTomSelector));
+  const søknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector)[0];
   const landkoder = useSelector(landkoderSelectors.LandkoderFraSakstypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
@@ -38,22 +39,22 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
     resolver: yupResolver(vurderingStartSchema),
     mode: "all",
     defaultValues: {
-      fom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.fom),
-      tom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.tom),
-      land: søknadsland[0].kode,
+      fom: periodeFom,
+      tom: periodeTom,
+      land: søknadsland,
     } as FieldValues,
   });
   const formValues = watch();
-  const [initialValues, setInitialValues] = useState<FieldValues>({ ...formState.defaultValues });
-
-  const [visSpinner, setVisSpinner] = useState(false);
-  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const skalHenteRegisteropplysninger =
     !registeropplysningerHentet ||
-    formValues?.fom !== initialValues?.fom ||
-    formValues?.tom !== initialValues?.tom ||
-    formValues?.land !== initialValues?.land;
+    formValues?.fom !== periodeFom ||
+    formValues?.tom !== periodeTom ||
+    formValues?.land !== søknadsland;
+
+  const [visSpinner, setVisSpinner] = useState(false);
+
+  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner;
 
@@ -78,16 +79,11 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
     );
   };
   const bekreftHandle = async () => {
-    setInitialValues({
-      fom: formValues.fom,
-      tom: formValues.tom,
-      land: formValues.land,
-    });
-    lagrePeriodeOgLand();
-
     if (skalHenteRegisteropplysninger) {
+      lagrePeriodeOgLand();
+
       setVisSpinner(true);
-      await oppfriskOgLastInnSaksopplysninger();
+      await lagreMottatteOpplysningerOgOppfriskSaksopplysninger();
       setVisSpinner(false);
       dispatch(menypanelOperations.visMenypanel());
     }
