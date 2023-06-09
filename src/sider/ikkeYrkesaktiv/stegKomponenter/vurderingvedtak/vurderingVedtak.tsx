@@ -1,10 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import MKV from "../../../../melosyskodeverk";
+
 import * as Nav from "../../../../navFrontend";
+import { Lovvalgsperiode } from "./lovvalgsperiode";
+
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import bem from "../../../../bemUtils";
-import { Lovvalgsperiode } from "./lovvalgsperiode";
 
 export const VurderingVedtak = () => {
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
