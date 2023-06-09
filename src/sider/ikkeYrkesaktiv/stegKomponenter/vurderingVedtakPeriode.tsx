@@ -121,40 +121,38 @@ export const VurderingVedtakPeriode = () => {
   };
 
   return (
-    <Nav.Row className={vurderingVedtakCls.element("infolinje")}>
-      <Nav.Column>
-        <Nav.Typo.Element className={vurderingVedtakCls.element("info")} tag="div">
-          <LabelMedHjelpetekst
-            label="Periode"
-            hjelpetekst={PERIODE_HJELPETEKST}
-            hjelpetekstClassName="vurderingVedtak__hjelpetekst"
-          />
-        </Nav.Typo.Element>
-        <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("datofelt_wrapper")} tag="div">
-          {visPeriodeEndringFelter ? (
-            <>
-              <span className={vurderingVedtakCls.element("datofelt")}>
-                <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
-              </span>
-              <span className={vurderingVedtakCls.element("datofelt")}>
-                <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />
-                <Nav.Hovedknapp
-                  mini
-                  disabled={!redigerbart || !lovvalgsperiodeErGyldig}
-                  onClick={handleLagrePeriodeEndring}
-                >
-                  Lagre
-                </Nav.Hovedknapp>
-              </span>
-            </>
-          ) : (
-            `${Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-              lovvalgsperiode?.tomDato
-            )}`
-          )}
-          {!visPeriodeEndringFelter && <EndrePeriodeKnapp />}
-        </Nav.Typo.Normaltekst>
-      </Nav.Column>
-    </Nav.Row>
+    <Nav.Column>
+      <Nav.Typo.Element className={vurderingVedtakCls.element("info")} tag="div">
+        <LabelMedHjelpetekst
+          label="Periode"
+          hjelpetekst={PERIODE_HJELPETEKST}
+          hjelpetekstClassName="vurderingVedtak__hjelpetekst"
+        />
+      </Nav.Typo.Element>
+      <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("datofelt_wrapper")} tag="div">
+        {visPeriodeEndringFelter ? (
+          <>
+            <span className={vurderingVedtakCls.element("datofelt")}>
+              <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
+            </span>
+            <span className={vurderingVedtakCls.element("datofelt")}>
+              <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />
+              <Nav.Hovedknapp
+                mini
+                disabled={!redigerbart || !lovvalgsperiodeErGyldig}
+                onClick={handleLagrePeriodeEndring}
+              >
+                Lagre
+              </Nav.Hovedknapp>
+            </span>
+          </>
+        ) : (
+          `${Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+            lovvalgsperiode?.tomDato
+          )}`
+        )}
+        {!visPeriodeEndringFelter && <EndrePeriodeKnapp />}
+      </Nav.Typo.Normaltekst>
+    </Nav.Column>
   );
 };
