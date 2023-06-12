@@ -6,14 +6,12 @@ import * as Nav from "../../../../navFrontend";
 import { Lovvalgsperiode } from "./lovvalgsperiode";
 
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
-import bem from "../../../../bemUtils";
 
 export const VurderingVedtak = () => {
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
-  const vurderingVedtakCls = bem("vurderingVedtakIkkeYrkesaktiv");
 
   return (
-    <div className={vurderingVedtakCls.block}>
+    <div className="vurderingVedtakIkkeYrkesaktiv">
       {sakstype === MKV.Koder.sakstyper.EU_EOS && (
         <Nav.Typo.Innholdstittel className="stegvelgertittel">
           Omfattet av norsk trygdelovgivning - trygdeforordning 883/2004

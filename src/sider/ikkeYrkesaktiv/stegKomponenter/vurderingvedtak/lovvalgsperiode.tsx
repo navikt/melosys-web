@@ -20,13 +20,10 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 
-import bem from "../../../../bemUtils";
 import "./vurderingVedtakIkkeYrkesaktiv.css";
 
 export const Lovvalgsperiode = () => {
   const dispatch = useDispatch();
-
-  const vurderingVedtakCls = bem("vurderingVedtakIkkeYrkesaktiv");
 
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -89,7 +86,7 @@ export const Lovvalgsperiode = () => {
     redigerbart ? (
       <div
         role="button"
-        className={vurderingVedtakCls.element("endrePeriode")}
+        className="endrePeriode"
         tabIndex={0}
         onClick={() => setVisPeriodeEndringFelter(true)}
         onKeyDown={(event) => {
@@ -99,12 +96,12 @@ export const Lovvalgsperiode = () => {
           }
         }}
       >
-        <Ikoner.BlyantActive className={vurderingVedtakCls.element("ikon")} />
-        <span className={vurderingVedtakCls.element("endrePeriodeTekst")}>Endre</span>
+        <Ikoner.BlyantActive className="ikon" />
+        <span className="endrePeriodeTekst">Endre</span>
       </div>
     ) : (
-      <div className={vurderingVedtakCls.elementWithModifier("endrePeriode", "disabled")}>
-        <Ikoner.BlyantDisabled className={vurderingVedtakCls.element("ikon")} />
+      <div className="endrePeriode--disabled">
+        <Ikoner.BlyantDisabled className="ikon" />
       </div>
     );
 
@@ -114,19 +111,19 @@ export const Lovvalgsperiode = () => {
   };
 
   return (
-    <Nav.Row className={vurderingVedtakCls.element("infolinje")}>
+    <Nav.Row className="infolinje">
       <Nav.Column>
-        <Nav.Typo.Element className={vurderingVedtakCls.element("info")} tag="div">
+        <Nav.Typo.Element className="info" tag="div">
           <LabelMedHjelpetekst
             label="Periode"
             hjelpetekst={PERIODE_HJELPETEKST}
             hjelpetekstClassName="vurderingVedtak__hjelpetekst"
           />
         </Nav.Typo.Element>
-        <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("datofelt_wrapper")} tag="div">
+        <Nav.Typo.Normaltekst className="datofelt_wrapper" tag="div">
           {visPeriodeEndringFelter ? (
             <>
-              <span className={vurderingVedtakCls.element("datofelt")}>
+              <span className="datofelt">
                 <Forms.Datovelger
                   label="Fra og med"
                   name="fom"
@@ -135,7 +132,7 @@ export const Lovvalgsperiode = () => {
                   onChange={() => trigger("tom")}
                 />
               </span>
-              <span className={vurderingVedtakCls.element("datofelt")}>
+              <span className="datofelt">
                 <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />
                 <Nav.Hovedknapp mini disabled={!redigerbart || !formState.isValid} onClick={handleLagrePeriodeEndring}>
                   Lagre
