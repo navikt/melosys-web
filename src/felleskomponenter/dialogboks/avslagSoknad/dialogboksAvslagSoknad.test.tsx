@@ -6,6 +6,10 @@ import * as Nav from "../../../navFrontend";
 import Knapperad from "../../knapperad";
 import { DialogboksAvslagSoknad } from "./dialogboksAvslagSoknad";
 
+jest.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: jest.fn(),
+}));
+
 describe("DialogboksAvslagSoknad", () => {
   const props = {
     avbryt: jest.fn(),

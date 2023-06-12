@@ -179,7 +179,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         data: {
           produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
           mottaker: muligMottaker.rolle,
-          kopiMottakere: [],
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
           orgNr: muligMottaker?.orgnr || null,

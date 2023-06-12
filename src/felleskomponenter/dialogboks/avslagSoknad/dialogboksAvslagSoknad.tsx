@@ -2,26 +2,28 @@ import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-
 import { RootState } from "AppTypes";
 
 import MKV from "../../../melosyskodeverk";
-
 import * as Nav from "../../../navFrontend";
 import * as Ikon from "../../../resources/images";
 import * as Utils from "../../../utils";
 import * as Api from "../../../services/api";
 
-import PdfLenkeListe from "../../pdfLenkeListe";
-import Knapperad from "../../knapperad";
+import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import "./dialogboksAvslagSoknad.css";
-import HtmlEditor from "../../htmlEditor";
-import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
-import { Feilmeldinger } from "../../feilmeldinger";
 import { kontrollOperations } from "../../../ducks/kontroll";
+
+import { MELOSYS_DOKUMENT_V2 } from "../../../featuretoggle/toggleNavn";
+import { useFeatureToggle } from "../../../featuretoggle";
+import { Feilmeldinger } from "../../feilmeldinger";
+import PdfLenkeListe from "../../pdfLenkeListe";
+import HtmlEditor from "../../htmlEditor";
+import Knapperad from "../../knapperad";
+
+import "./dialogboksAvslagSoknad.css";
 
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
@@ -48,6 +50,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & PropsFromRedux) => {
   const [brevFritekst, setBrevFritekst] = useState("");
   const [vedtakPending, setVedtakPending] = useState(true);
+  const brukDokumentV2 = useFeatureToggle(MELOSYS_DOKUMENT_V2);
 
   const {
     ariaHideApp,
@@ -72,17 +75,30 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
     })();
   }, []);
 
-  const pdfDokumenter = [
-    {
-      navn: "Forhåndsvis vedtaksbrev",
-      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
-      data: {
-        begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
-        fritekst: brevFritekst,
-        mottaker: MKV.Koder.mottakerroller.BRUKER,
-      },
-    },
-  ];
+  const pdfDokumenter = brukDokumentV2
+    ? [
+        {
+          sendesTilDokumenterV2: true,
+          navn: "Forhåndsvis vedtaksbrev",
+          data: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
+            fritekst: brevFritekst,
+          },
+        },
+      ]
+    : [
+        {
+          navn: "Forhåndsvis vedtaksbrev",
+          type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
+          data: {
+            begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
+            fritekst: brevFritekst,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+          },
+        },
+      ];
 
   const avslaaSoknad = () => {
     const data = {

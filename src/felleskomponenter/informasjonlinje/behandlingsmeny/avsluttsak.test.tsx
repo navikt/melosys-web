@@ -18,11 +18,6 @@ const { MEDLEMSKAP_LOVVALG, UNNTAK } = MKV.Koder.sakstemaer;
 
 const mockedProps = mock<ComponentProps<typeof AvsluttSak>>();
 
-jest.mock("../../../featuretoggle", () => ({
-  __esModule: true,
-  useFeatureToggle: () => "enabled",
-}));
-
 describe("AvsluttSak", () => {
   const props = instance(mockedProps);
 

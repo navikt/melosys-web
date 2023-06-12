@@ -14,6 +14,8 @@ import * as Utils from "../../../utils";
 import Begrunnelser from "../../../felleskomponenter/begrunnelser";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import DatoOmrade from "../../../felleskomponenter/datoOmrade/datoOmrade";
+import { MELOSYS_DOKUMENT_V2 } from "../../../featuretoggle/toggleNavn";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
@@ -21,12 +23,12 @@ import { anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiode
 import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { vilkarSelectors } from "../../../ducks/vilkar";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
+import { vedtakOperations } from "../../../ducks/vedtak";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel16VedtakSchema from "./vurderingArtikkel16VedtakSchema";
 
 import "./vurderingArtikkel16Vedtak.css";
-import { vedtakOperations } from "../../../ducks/vedtak";
 
 export const VurderingArtikkel16VedtakBegrunnelser = ({
   art12_1_begrunnelser,
@@ -81,26 +83,50 @@ export const Innvilgelse = ({
   formValues,
   vedKlikkForhandsvis,
   stegErGyldig,
+  brukDokumentV2,
 }) => {
-  const pdfDokumenter = [
-    {
-      navn: "Forhåndsvis vedtaksbrev og A1",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
-      data: {
-        fritekst: vedtaksbrevFritekst,
-        mottaker: MKV.Koder.mottakerroller.BRUKER,
-      },
-    },
-  ];
+  const pdfDokumenter = brukDokumentV2
+    ? [
+        {
+          sendesTilDokumenterV2: true,
+          navn: "Forhåndsvis vedtaksbrev og A1",
+          data: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            fritekst: vedtaksbrevFritekst,
+          },
+        },
+      ]
+    : [
+        {
+          navn: "Forhåndsvis vedtaksbrev og A1",
+          type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+          data: {
+            fritekst: vedtaksbrevFritekst,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+          },
+        },
+      ];
 
   if (visOrienteringsbrevArbeidsgiver) {
-    pdfDokumenter.push({
-      navn: "Brev til arbeidsgiver",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-      data: {
-        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-      },
-    });
+    pdfDokumenter.push(
+      brukDokumentV2
+        ? {
+            sendesTilDokumenterV2: true,
+            navn: "Brev til arbeidsgiver",
+            data: {
+              produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+            },
+          }
+        : {
+            navn: "Brev til arbeidsgiver",
+            type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+            data: {
+              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+            },
+          }
+    );
   }
 
   return (
@@ -155,10 +181,12 @@ Innvilgelse.propTypes = {
   formValues: PT.object.isRequired,
   vedKlikkForhandsvis: PT.func.isRequired,
   stegErGyldig: PT.bool.isRequired,
+  brukDokumentV2: PT.bool,
 };
 
 Innvilgelse.defaultProps = {
   vedtaksbrevFritekst: undefined,
+  brukDokumentV2: false,
 };
 
 export const DelvisInnvilgelse = ({
@@ -173,26 +201,50 @@ export const DelvisInnvilgelse = ({
   formValues,
   vedKlikkForhandsvis,
   stegErGyldig,
+  brukDokumentV2,
 }) => {
-  const pdfDokumenter = [
-    {
-      navn: "Forhåndsvis vedtaksbrev og A1",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
-      data: {
-        fritekst: vedtaksbrevFritekst,
-        mottaker: MKV.Koder.mottakerroller.BRUKER,
-      },
-    },
-  ];
+  const pdfDokumenter = brukDokumentV2
+    ? [
+        {
+          sendesTilDokumenterV2: true,
+          navn: "Forhåndsvis vedtaksbrev og A1",
+          data: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            fritekst: vedtaksbrevFritekst,
+          },
+        },
+      ]
+    : [
+        {
+          navn: "Forhåndsvis vedtaksbrev og A1",
+          type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+          data: {
+            fritekst: vedtaksbrevFritekst,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+          },
+        },
+      ];
 
   if (visOrienteringsbrevArbeidsgiver) {
-    pdfDokumenter.push({
-      navn: "Brev til arbeidsgiver",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-      data: {
-        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-      },
-    });
+    pdfDokumenter.push(
+      brukDokumentV2
+        ? {
+            sendesTilDokumenterV2: true,
+            navn: "Brev til arbeidsgiver",
+            data: {
+              produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+            },
+          }
+        : {
+            navn: "Brev til arbeidsgiver",
+            type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+            data: {
+              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+            },
+          }
+    );
   }
 
   return (
@@ -252,10 +304,12 @@ DelvisInnvilgelse.propTypes = {
   formValues: PT.object.isRequired,
   vedKlikkForhandsvis: PT.func.isRequired,
   stegErGyldig: PT.bool.isRequired,
+  brukDokumentV2: PT.bool,
 };
 
 DelvisInnvilgelse.defaultProps = {
   vedtaksbrevFritekst: undefined,
+  brukDokumentV2: false,
 };
 
 export const Avslag = ({
@@ -265,26 +319,50 @@ export const Avslag = ({
   renderFritekstFelt,
   renderBegrunnelser,
   visOrienteringsbrevArbeidsgiver,
+  brukDokumentV2,
 }) => {
-  const pdfDokumenter = [
-    {
-      navn: "Forhåndsvis vedtaksbrev",
-      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
-      data: {
-        fritekst: vedtaksbrevFritekst,
-        mottaker: MKV.Koder.mottakerroller.BRUKER,
-      },
-    },
-  ];
+  const pdfDokumenter = brukDokumentV2
+    ? [
+        {
+          sendesTilDokumenterV2: true,
+          navn: "Forhåndsvis vedtaksbrev",
+          data: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            fritekst: vedtaksbrevFritekst,
+          },
+        },
+      ]
+    : [
+        {
+          navn: "Forhåndsvis vedtaksbrev",
+          type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
+          data: {
+            fritekst: vedtaksbrevFritekst,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+          },
+        },
+      ];
 
   if (visOrienteringsbrevArbeidsgiver) {
-    pdfDokumenter.push({
-      navn: "Brev til arbeidsgiver",
-      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
-      data: {
-        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-      },
-    });
+    pdfDokumenter.push(
+      brukDokumentV2
+        ? {
+            sendesTilDokumenterV2: true,
+            navn: "Brev til arbeidsgiver",
+            data: {
+              produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
+              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+            },
+          }
+        : {
+            navn: "Brev til arbeidsgiver",
+            type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
+            data: {
+              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+            },
+          }
+    );
   }
 
   return (
@@ -312,10 +390,12 @@ Avslag.propTypes = {
   renderFritekstFelt: PT.func.isRequired,
   renderBegrunnelser: PT.func.isRequired,
   visOrienteringsbrevArbeidsgiver: PT.bool.isRequired,
+  brukDokumentV2: PT.bool,
 };
 
 Avslag.defaultProps = {
   vedtaksbrevFritekst: undefined,
+  brukDokumentV2: false,
 };
 
 const hentLovvalgsperiode = (anmodningsperiodesvar, anmodningsperiode) => {
@@ -365,6 +445,7 @@ export const VurderingArtikkel16Vedtak = ({
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const brukDokumentV2 = useFeatureToggle(MELOSYS_DOKUMENT_V2);
 
   useEffect(() => {
     /**
@@ -496,6 +577,7 @@ export const VurderingArtikkel16Vedtak = ({
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
             stegErGyldig={stegErGyldig}
+            brukDokumentV2={brukDokumentV2}
           />
         );
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
@@ -515,6 +597,7 @@ export const VurderingArtikkel16Vedtak = ({
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
             stegErGyldig={stegErGyldig}
+            brukDokumentV2={brukDokumentV2}
           />
         );
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
@@ -526,6 +609,7 @@ export const VurderingArtikkel16Vedtak = ({
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
             renderBegrunnelser={renderBegrunnelser}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
+            brukDokumentV2={brukDokumentV2}
           />
         );
       default:

@@ -19,8 +19,9 @@ class GodkjennUtpekingNorge extends Steg {
       const pdfDokumenter = [
         {
           navn: "Forhåndsvis vedtaksbrev og A1",
-          type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
+          type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND, // Fjernes når toggle MELOSYS_DOKUMENT_V2 fjernes
           data: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
             mottaker: MKV.Koder.mottakerroller.BRUKER,
             fritekst: formValues.vedtaksbrevFritekst,
           },

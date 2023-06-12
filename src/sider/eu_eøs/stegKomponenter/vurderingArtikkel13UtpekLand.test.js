@@ -4,6 +4,10 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 
 import { VurderingArtikkel13UtpekLand } from "./vurderingArtikkel13UtpekLand";
 
+jest.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: jest.fn(),
+}));
+
 /* eslint-disable react/jsx-pascal-case */
 describe("VurderingArtikkel13_1_UtpekLand", () => {
   let props = null;

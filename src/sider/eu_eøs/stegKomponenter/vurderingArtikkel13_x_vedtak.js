@@ -14,6 +14,9 @@ import * as MPT from "../../../proptypes";
 import * as Mui from "../../../felleskomponenter/ui";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
+import { MELOSYS_DOKUMENT_V2 } from "../../../featuretoggle/toggleNavn";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
@@ -22,12 +25,11 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { formOperations } from "../../../ducks/form";
-import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
+import { vedtakOperations } from "../../../ducks/vedtak";
+
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel13_x_vedtakSchema from "./vurderingArtikkel13_x_vedtakSchema";
-
 import "./vurderingArtikkel13_x_vedtak.css";
-import { vedtakOperations } from "../../../ducks/vedtak";
 
 export const VurderingArtikkel13_x_vedtak = ({
   redigerbart,
@@ -53,6 +55,7 @@ export const VurderingArtikkel13_x_vedtak = ({
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const brukDokumentV2 = useFeatureToggle(MELOSYS_DOKUMENT_V2);
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
@@ -106,16 +109,28 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   const skalViseSedAlternativer = redigerbart && harLandSomKreverSED;
 
-  const pdfDokumenter = [
-    {
-      navn: "Forhåndsvis vedtaksbrev og A1",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
-      data: {
-        mottaker: MKV.Koder.mottakerroller.BRUKER,
-        fritekst: formValues.vedtaksbrevFritekst,
-      },
-    },
-  ];
+  const pdfDokumenter = brukDokumentV2
+    ? [
+        {
+          sendesTilDokumenterV2: true,
+          navn: "Forhåndsvis vedtaksbrev og A1",
+          data: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            fritekst: formValues.vedtaksbrevFritekst,
+          },
+        },
+      ]
+    : [
+        {
+          navn: "Forhåndsvis vedtaksbrev og A1",
+          type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
+          data: {
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            fritekst: formValues.vedtaksbrevFritekst,
+          },
+        },
+      ];
 
   if (skalViseSedAlternativer) {
     pdfDokumenter.push({

@@ -18,15 +18,16 @@ import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
+import { vedtakOperations } from "../../../ducks/vedtak";
 import { formOperations } from "../../../ducks/form";
 
+import { MELOSYS_DOKUMENT_V2 } from "../../../featuretoggle/toggleNavn";
+import { useFeatureToggle } from "../../../featuretoggle";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Mottakerinstitusjonvelger, {
   MottakerinstitusjonvelgerFlervalg,
 } from "../../../felleskomponenter/mottakerinstitusjonvelger";
-import { BOOLSK_STRING } from "../../../constants";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
-import VurderingArbeidTjenestepersonEllerFlyVedtakSchema from "./vurderingArbeidTjenestepersonEllerFlyVedtakSchema";
 import {
   konverterAvklartfaktaTilStegData,
   konverterLovvalgsbestemmelseTilStegData,
@@ -37,10 +38,11 @@ import {
   slettAvklartfakta,
   slettTilleggBestemmelse,
 } from "../../../felleskomponenter/stegvelger";
+import { BOOLSK_STRING } from "../../../constants";
 
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArbeidTjenestepersonEllerFlyVedtakSchema from "./vurderingArbeidTjenestepersonEllerFlyVedtakSchema";
 import "./vurderingArbeidTjenestepersonEllerFlyVedtak.css";
-import { vedtakOperations } from "../../../ducks/vedtak";
-import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 const InformertMyndighetVelger = ({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) => {
   useEffect(() => {
@@ -135,6 +137,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const brukDokumentV2 = useFeatureToggle(MELOSYS_DOKUMENT_V2);
 
   useEffect(() => {
     if (lovvalgsbestemmelseSomSkalLagres) {
@@ -174,16 +177,28 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
     return formIsValid;
   };
 
-  let pdfDokumenter = [
-    {
-      navn: "Forhåndsvis vedtaksbrev og A1",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
-      data: {
-        mottaker: MKV.Koder.mottakerroller.BRUKER,
-        fritekst: formValues.vedtaksbrevFritekst,
-      },
-    },
-  ];
+  let pdfDokumenter = brukDokumentV2
+    ? [
+        {
+          sendesTilDokumenterV2: true,
+          navn: "Forhåndsvis vedtaksbrev og A1",
+          data: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            fritekst: formValues.vedtaksbrevFritekst,
+          },
+        },
+      ]
+    : [
+        {
+          navn: "Forhåndsvis vedtaksbrev og A1",
+          type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+          data: {
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            fritekst: formValues.vedtaksbrevFritekst,
+          },
+        },
+      ];
 
   if (skalSendeSed(formValues)) {
     pdfDokumenter = [
