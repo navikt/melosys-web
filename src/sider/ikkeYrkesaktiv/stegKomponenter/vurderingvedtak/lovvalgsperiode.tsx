@@ -3,20 +3,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import MKV from "../../../../melosyskodeverk";
+
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+
+import * as Ikoner from "../../../../resources/images";
+import * as Utils from "../../../../utils";
+import * as Forms from "../../../../felleskomponenter/forms";
+import * as Nav from "../../../../navFrontend";
+
 import { PERIODE_HJELPETEKST } from "./tekster";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import * as Ikoner from "../../../../resources/images";
-import * as Utils from "../../../../utils";
-import * as Forms from "../../../../felleskomponenter/forms";
-import bem from "../../../../bemUtils";
-import * as Nav from "../../../../navFrontend";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+
+import bem from "../../../../bemUtils";
 import "./vurderingVedtakIkkeYrkesaktiv.css";
 
 export const Lovvalgsperiode = () => {
