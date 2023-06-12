@@ -1,43 +1,28 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import MKV from "../../../melosyskodeverk";
-import * as Nav from "../../../navFrontend";
-import * as Mui from "../../../felleskomponenter/ui";
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import * as Forms from "../../../felleskomponenter/forms";
+import MKV from "../../../../melosyskodeverk";
+import * as Nav from "../../../../navFrontend";
+import * as Mui from "../../../../felleskomponenter/ui";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import * as Forms from "../../../../felleskomponenter/forms";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
-import * as Api from "../../../services/api";
-import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { mottatteOpplysningerSelectors, mottatteOpplysningerOperations } from "../../../ducks/mottatteOpplysninger";
-import { TomFlytMelding, UnntakHjelpetekst } from "../../../felleskomponenter/alertmeldinger";
-import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
-import * as Utils from "../../../utils";
-import { kontrollOperations } from "../../../ducks/kontroll";
-import { Feilmeldinger } from "../../../felleskomponenter/feilmeldinger";
-import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
+import * as Api from "../../../../services/api";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
+import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import * as Utils from "../../../../utils";
+import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
+import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
 const UNNTAK = "UNNTAK";
 const { GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
-const komponentState = (state: RootState) => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  soeknadsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  sakstema: fagsakSelectors.SakstemaKodeSelector(state),
-  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
-  utfallRegistreringUnntak: behandlingsresultatSelectors.UtfallRegistreringUnntakSelector(state),
-  vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
-  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
-  ikkeYrkesaktivSituasjonstype: mottatteOpplysningerSelectors.IkkeYrkesaktivSituasjontypeSelector(state),
-});
 
 interface Props {
   bekreft: () => void;
@@ -48,19 +33,18 @@ interface Props {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
-  const {
-    lovvalgsperiode,
-    redigerbart,
-    soeknadsland,
-    utfallRegistreringUnntak,
-    ikkeYrkesaktivSituasjonstype,
-    vedtakstype,
-    behandlingID,
-    sakstype,
-    sakstema,
-    behandlingstema,
-    feilmeldinger,
-  } = useSelector(komponentState);
+
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const soeknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+  const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
+  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const utfallRegistreringUnntak = useSelector(behandlingsresultatSelectors.UtfallRegistreringUnntakSelector);
+  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const ikkeYrkesaktivSituasjonstype = useSelector(mottatteOpplysningerSelectors.IkkeYrkesaktivSituasjontypeSelector);
+
   const [muligeBestemmelser, setMuligeBestemmelser] = useState<KTObject[]>([]);
 
   const { control, watch, formState, setValue } = useForm({
@@ -79,9 +63,11 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   }, [formState?.isValid]);
 
   useEffect(() => {
-    Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, soeknadsland).then((res) =>
-      setMuligeBestemmelser(res)
-    );
+    if (aktivtSteg && soeknadsland) {
+      Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, soeknadsland).then((res) =>
+        setMuligeBestemmelser(res)
+      );
+    }
   }, [aktivtSteg, soeknadsland]);
 
   const lagreUtfallRegistrering = (utfall: string) => {
@@ -94,21 +80,11 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const lagreLovvalgsperiodeOgKontroller = async () => {
     await dispatch(lovvalgsperioderOperations.lagre());
-    kontrollerFerdigbehandling();
   };
 
   const lagreIkkeYrkesaktivSituasjontype = (ikkeYrkesaktivSituasjontype: string | null) => {
     dispatch(mottatteOpplysningerOperations.oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype));
   };
-
-  const kontrollerFerdigbehandling = (skalRegisteropplysningerOppdateres: boolean = false) =>
-    dispatch(
-      kontrollOperations.kontrollerFerdigbehandling({
-        behandlingID,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-        skalRegisteropplysningerOppdateres,
-      })
-    );
 
   const debouncedLagreLovvalgsperiode = useCallback(Utils._debounce(lagreLovvalgsperiodeOgKontroller, 500), []);
 

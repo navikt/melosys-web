@@ -16,7 +16,7 @@ import { oppsummertfaktaOperations } from "../oppsummertfakta";
 import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 // noinspection ES6PreferShortImport
-import { harUnntakFlyt, skalViseTomFlyt } from "../../routing/url";
+import { harIkkeYrkesaktivFlyt, harUnntakFlyt, skalViseTomFlyt } from "../../routing/url";
 import {
   MELOSYS_FOLKETRYGDEN_MVP,
   MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
@@ -44,14 +44,18 @@ const harTomFlyt = async (sakstype, state) => {
     registreringUnntakFraMedlemskapToggleEnabled
   );
 };
-const harUnntaksregistreringFlyt = async (sakstype, state) => {
+const harUnntaksregistreringEllerIkkeYrkesaktivFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
   const registreringUnntakFraMedlemskapToggleEnabled = erFeatureToggleEnabled(
     MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
     state
   );
-  return harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled);
+  const ikkeYrkesaktivToggleEnabled = erFeatureToggleEnabled(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT, state);
+  return (
+    harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled) ||
+    harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivToggleEnabled)
+  );
 };
 
 export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => async (dispatch, getState) => {
@@ -64,7 +68,7 @@ export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => a
     ]);
   }
 
-  if (await harUnntaksregistreringFlyt(sakstype, getState())) {
+  if (await harUnntaksregistreringEllerIkkeYrkesaktivFlyt(sakstype, getState())) {
     return Promise.all([
       dispatch(fagsakOperations.hent(saksnummer)),
       dispatch(behandlingerOperations.hentBehandling(behandlingID)),

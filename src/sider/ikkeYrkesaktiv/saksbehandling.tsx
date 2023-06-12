@@ -1,94 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { connect, ConnectedProps } from "react-redux";
-import { RootState } from "AppTypes";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
+import { useDispatch, useSelector } from "react-redux";
 
+import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
-import * as Utils from "../../utils";
 
+import * as Utils from "../../utils";
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
-import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 
+import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
-import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
-import { folketrygdenkodeverkOperations } from "../../ducks/folketrygdenkodeverk";
-import { medlemskapsperioderOperations } from "../../ducks/medlemskapsperioder";
-import { oppsummertfaktaOperations } from "../../ducks/oppsummertfakta";
-import { avklartefaktaOperations } from "../../ducks/avklartefakta";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { dokumenterOperations } from "../../ducks/dokumenter";
 import { menypanelOperations } from "../../ducks/menypanel";
-import { vilkarOperations } from "../../ducks/vilkar";
 
+import { vilkarOperations } from "../../ducks/vilkar";
 import { useFeatureToggle } from "../../featuretoggle";
 import { formSelectors } from "../../ducks/form";
-import { MatchParams } from "../../@types";
 
+import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
-import { lovvalgsperioderOperations } from "../../ducks/lovvalgsperioder";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
-
-const mapStateToProps = (state: RootState) => ({
-  land: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
-  mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
-    mottatteOpplysningerSelectors.PeriodeSelector(state).fom
-  ),
-  mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
-    mottatteOpplysningerSelectors.PeriodeSelector(state).tom
-  ),
-  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
-  fagsak: fagsakSelectors.FagsakSelector(state),
-  fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
-  landkoder: landkoderSelectors.LandkoderFraSakstypeSelector(state),
-  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  skjema: formSelectors.SoknadenFormSelector(state).values,
-  soknadForm: formSelectors.SoknadenFormSelector(state),
-});
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  hentBehandling: (behandlingId: number) => dispatch(behandlingerOperations.hentBehandling(behandlingId)),
-  hentMottatteOpplysninger: (behandlingId: number) => dispatch(mottatteOpplysningerOperations.hent(behandlingId)),
-  hentBehandlingsresultat: (behandlingId: number) => dispatch(behandlingsresultatOperations.hent(behandlingId)),
-  hentDokumentOversikt: (saksnummer: string) => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
-  hentFagsaker: (saksnummer: string) => dispatch(fagsakOperations.hent(saksnummer)),
-  hentFolketrygdenKodeverk: () => dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden()),
-  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
-  hentMedlemskapsperioder: (behandlingId: number) =>
-    dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingId)),
-  hentOppsummertFakta: (behandlingId: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingId)),
-  hentBestemmelse: (behandlingId: number) => dispatch(medlemskapsperioderOperations.hentBestemmelse(behandlingId)),
-  lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
-  lagreVilkar: () => dispatch(vilkarOperations.lagre()),
-  resetVilkarState: () => dispatch(vilkarOperations.resetState()),
-  resetOppsummertFaktaState: () => dispatch(oppsummertfaktaOperations.resetOppsummertFakta()),
-  resetMedlemskapsperiodeState: () => dispatch(medlemskapsperioderOperations.resetMedlemskapsperioder()),
-  resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
-  resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
-  resetMottatteOpplysningerState: () => dispatch(mottatteOpplysningerOperations.resetState()),
-  skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
-  resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
-  hentLovvalgsperiode: (behandlingId: number) => dispatch(lovvalgsperioderOperations.hent(behandlingId)),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -97,44 +41,32 @@ interface Props extends RouteComponentProps<MatchParams> {
 }
 
 const Saksbehandling = ({
-  land,
-  behandlingstype,
   behandlingOppfriskes,
-  mottatteOpplysninger,
-  mottatteOpplysningerPeriodeFom,
-  mottatteOpplysningerPeriodeTom,
-  behandlingsresultat,
-  fagsakStatusKode,
-  hentBehandling,
-  hentMottatteOpplysninger,
-  hentBehandlingsresultat,
-  hentDokumentOversikt,
-  hentFagsaker,
-  hentFolketrygdenKodeverk,
-  hentLandkoder,
-  hentMedlemskapsperioder,
-  hentBestemmelse,
-  hentOppsummertFakta,
-  landkoder,
-  location,
-  match,
-  redigerbart,
-  resetBehandlingerState,
-  resetMottatteOpplysningerState,
-  resetFagsakState,
-  resetVilkarState,
-  resetOppsummertFaktaState,
-  resetMedlemskapsperiodeState,
-  skjulMenypanel,
-  soknadForm,
   startOgVisOppfriskModal,
   visOppfriskModal,
-  resetFeiletrespons,
-  hentLovvalgsperiode,
-}: Props & PropsFromRedux) => {
+  match,
+  location,
+}: Props) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const folketrygdenToggle = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+
+  const dispatch = useDispatch();
+
+  const land = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const mottatteOpplysninger = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector);
+  const mottatteOpplysningerPeriodeFom = useSelector((state) =>
+    Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).fom)
+  );
+  const mottatteOpplysningerPeriodeTom = useSelector((state) =>
+    Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).tom)
+  );
+  const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
+  const behandlingsresultat = useSelector(behandlingsresultatSelectors.BehandlingsresultatSelector);
+  const fagsakStatusKode = useSelector(fagsakSelectors.FagsakStatusSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const soknadForm = useSelector(formSelectors.SoknadenFormSelector);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -151,25 +83,22 @@ const Saksbehandling = ({
     try {
       const behandlingId = Utils._toInteger(behandlingIDFraParam);
       setBehandlingID(behandlingId);
-      await hentFagsaker(saksnr);
-      await hentFolketrygdenKodeverk();
-      await hentOppsummertFakta(behandlingId);
-      const response = await hentBehandling(behandlingId);
+      await dispatch(fagsakOperations.hent(saksnr));
+      const response = await dispatch(behandlingerOperations.hentBehandling(behandlingId));
+      // @ts-ignore
       const behandling = response.data;
       if (!behandling) return false;
 
-      await hentBehandlingsresultat(behandlingId);
+      await dispatch(behandlingsresultatOperations.hent(behandlingId));
 
       if (behandlingOppfriskes) {
         visOppfriskModal();
         return false;
       }
 
-      await hentMedlemskapsperioder(behandlingId);
-      await hentBestemmelse(behandlingId);
-      await hentMottatteOpplysninger(behandlingId);
-      await hentDokumentOversikt(saksnr);
-      await hentLovvalgsperiode(behandlingId);
+      await dispatch(mottatteOpplysningerOperations.hent(behandlingId));
+      await dispatch(dokumenterOperations.hentDokumentOversikt(saksnr));
+      await dispatch(lovvalgsperioderOperations.hent(behandlingId));
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
@@ -179,17 +108,15 @@ const Saksbehandling = ({
 
   useEffect(() => {
     lastInnSaksopplysninger();
-    hentLandkoder();
 
     return () => {
-      resetFagsakState();
-      resetVilkarState();
-      resetOppsummertFaktaState();
-      resetMedlemskapsperiodeState();
-      resetBehandlingerState();
-      resetMottatteOpplysningerState();
-      resetFeiletrespons();
-      skjulMenypanel();
+      dispatch(fagsakOperations.resetFagsakState());
+      dispatch(vilkarOperations.resetState());
+      dispatch(behandlingerOperations.resetBehandlingerState());
+      dispatch(behandlingsresultatOperations.resetBehandlingsresultatState());
+      dispatch(mottatteOpplysningerOperations.resetState());
+      dispatch(feiletResponsOperations.resetFeiletRespons());
+      dispatch(menypanelOperations.skjulMenypanel());
     };
   }, []);
 
@@ -228,9 +155,11 @@ const Saksbehandling = ({
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  arbeidsland={landkoder && landkoder.filter((landkodeObjekt) => land.includes(landkodeObjekt.kode))}
-                  lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom}
-                  lovvalgsperiodeTom={mottatteOpplysningerPeriodeTom}
+                  arbeidsland={MKV.KTObjects.land_iso2.filter((landkodeObjekt: KTObject) =>
+                    land.includes(landkodeObjekt.kode)
+                  )}
+                  lovvalgsperiodeFom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato, false, "")}
+                  lovvalgsperiodeTom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato, false, "")}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />
@@ -245,4 +174,4 @@ const Saksbehandling = ({
   );
 };
 
-export default connector(Saksbehandling);
+export default Saksbehandling;
