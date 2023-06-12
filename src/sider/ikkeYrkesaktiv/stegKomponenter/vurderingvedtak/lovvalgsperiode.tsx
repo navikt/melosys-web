@@ -105,10 +105,8 @@ export const Lovvalgsperiode = () => {
     );
 
   const handleLagrePeriodeEndring = async () => {
-    if (formState.isValid) {
-      oppdaterOgLagreLovvalgsperiode({ fom: formValues.fom, tom: formValues.tom });
-      setVisPeriodeEndringFelter(false);
-    }
+    oppdaterOgLagreLovvalgsperiode({ fom: formValues.fom, tom: formValues.tom });
+    setVisPeriodeEndringFelter(false);
   };
 
   return (
