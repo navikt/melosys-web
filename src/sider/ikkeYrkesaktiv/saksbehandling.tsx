@@ -20,7 +20,6 @@ import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behan
 import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { folketrygdenkodeverkOperations } from "../../ducks/folketrygdenkodeverk";
-import { medlemskapsperioderOperations } from "../../ducks/medlemskapsperioder";
 import { oppsummertfaktaOperations } from "../../ducks/oppsummertfakta";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
@@ -72,26 +71,6 @@ const Saksbehandling = ({
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const soknadForm = useSelector(formSelectors.SoknadenFormSelector);
 
-  const hentBehandling = (behandlingId: number) => dispatch(behandlingerOperations.hentBehandling(behandlingId));
-  const hentMottatteOpplysninger = (behandlingId: number) =>
-    dispatch(mottatteOpplysningerOperations.hent(behandlingId));
-  const hentBehandlingsresultat = (behandlingId: number) => dispatch(behandlingsresultatOperations.hent(behandlingId));
-  const hentDokumentOversikt = (saksnummer: string) => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
-  const hentFagsaker = (saksnummer: string) => dispatch(fagsakOperations.hent(saksnummer));
-  const hentFolketrygdenKodeverk = () => dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden());
-  const hentLandkoder = () => dispatch(landkoderOperations.hentLandkoder());
-  const hentOppsummertFakta = (behandlingId: number) =>
-    dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingId));
-  const resetVilkarState = () => dispatch(vilkarOperations.resetState());
-  const resetOppsummertFaktaState = () => dispatch(oppsummertfaktaOperations.resetOppsummertFakta());
-  const resetMedlemskapsperiodeState = () => dispatch(medlemskapsperioderOperations.resetMedlemskapsperioder());
-  const resetFagsakState = () => dispatch(fagsakOperations.resetFagsakState());
-  const resetBehandlingerState = () => dispatch(behandlingerOperations.resetBehandlingerState());
-  const resetMottatteOpplysningerState = () => dispatch(mottatteOpplysningerOperations.resetState());
-  const skjulMenypanel = () => dispatch(menypanelOperations.skjulMenypanel());
-  const resetFeiletrespons = () => dispatch(feiletResponsOperations.resetFeiletRespons());
-  const hentLovvalgsperiode = (behandlingId: number) => dispatch(lovvalgsperioderOperations.hent(behandlingId));
-
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
 
@@ -107,24 +86,24 @@ const Saksbehandling = ({
     try {
       const behandlingId = Utils._toInteger(behandlingIDFraParam);
       setBehandlingID(behandlingId);
-      await hentFagsaker(saksnr);
-      await hentFolketrygdenKodeverk();
-      await hentOppsummertFakta(behandlingId);
-      const response = await hentBehandling(behandlingId);
+      await dispatch(fagsakOperations.hent(saksnr));
+      await dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden());
+      await dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingId));
+      const response = await dispatch(behandlingerOperations.hentBehandling(behandlingId));
       // @ts-ignore
       const behandling = response.data;
       if (!behandling) return false;
 
-      await hentBehandlingsresultat(behandlingId);
+      await dispatch(behandlingsresultatOperations.hent(behandlingId));
 
       if (behandlingOppfriskes) {
         visOppfriskModal();
         return false;
       }
 
-      await hentMottatteOpplysninger(behandlingId);
-      await hentDokumentOversikt(saksnr);
-      await hentLovvalgsperiode(behandlingId);
+      await dispatch(mottatteOpplysningerOperations.hent(behandlingId));
+      await dispatch(dokumenterOperations.hentDokumentOversikt(saksnr));
+      await dispatch(lovvalgsperioderOperations.hent(behandlingId));
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
@@ -134,17 +113,16 @@ const Saksbehandling = ({
 
   useEffect(() => {
     lastInnSaksopplysninger();
-    hentLandkoder();
+    dispatch(landkoderOperations.hentLandkoder());
 
     return () => {
-      resetFagsakState();
-      resetVilkarState();
-      resetOppsummertFaktaState();
-      resetMedlemskapsperiodeState();
-      resetBehandlingerState();
-      resetMottatteOpplysningerState();
-      resetFeiletrespons();
-      skjulMenypanel();
+      dispatch(fagsakOperations.resetFagsakState());
+      dispatch(vilkarOperations.resetState());
+      dispatch(oppsummertfaktaOperations.resetOppsummertFakta());
+      dispatch(behandlingerOperations.resetBehandlingerState());
+      dispatch(mottatteOpplysningerOperations.resetState());
+      dispatch(feiletResponsOperations.resetFeiletRespons());
+      dispatch(menypanelOperations.skjulMenypanel());
     };
   }, []);
 
