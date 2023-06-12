@@ -72,7 +72,7 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
       <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" feilmeldinger={feilmeldinger} />
 
       <Nav.Row>
-        <Lovvalgsperiode />
+        <Lovvalgsperiode kontrollerFerdigbehandling={kontrollerFerdigbehandling} />
       </Nav.Row>
 
       <Nav.Row>
