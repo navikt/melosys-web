@@ -48,7 +48,7 @@ class Vedtak extends Steg {
       ) {
         pdfDokumenter.push({
           navn: "Orienteringsbrev til arbeidsgiver",
-          type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+          type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, // Fjernes når toggle MELOSYS_DOKUMENT_V2 fjernes
           data: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
             mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
