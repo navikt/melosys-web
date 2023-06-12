@@ -2,24 +2,19 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
 
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Forms from "../../../../felleskomponenter/forms";
-import * as Utils from "../../../../utils";
 
 import { Lovvalgsperiode } from "./lovvalgsperiode";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 
-import vurdering_vedtak from "./vurderingVedtakSchema";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
-import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
-import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
 import { INNLEDNING_FRITEKST_HJELPETEKST, BEGRUNNELSE_FRITEKST_HJELPETEKST } from "./tekster";
@@ -37,18 +32,10 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
-  const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
 
   const { control } = useForm({
-    resolver: yupResolver(vurdering_vedtak),
-    context: {
-      soknadsperiode: mottatteOpplysningerPeriode,
-    },
     mode: "all",
     values: {
-      fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato),
-      tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato),
       innledningFritekst: "",
       begrunnelseFritekst: "",
     } as FieldValues,

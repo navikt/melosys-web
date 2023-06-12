@@ -18,8 +18,6 @@ import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import * as Utils from "../../../../utils";
-import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
-import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
 const UNNTAK = "UNNTAK";
 const { GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
@@ -42,7 +40,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const utfallRegistreringUnntak = useSelector(behandlingsresultatSelectors.UtfallRegistreringUnntakSelector);
-  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const ikkeYrkesaktivSituasjonstype = useSelector(mottatteOpplysningerSelectors.IkkeYrkesaktivSituasjontypeSelector);
 
   const [muligeBestemmelser, setMuligeBestemmelser] = useState<KTObject[]>([]);
@@ -190,10 +187,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
                 />
               ))}
             </Nav.Fieldset>
-          )}
-
-          {formState.isValid && (
-            <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" feilmeldinger={feilmeldinger} />
           )}
         </>
       )}
