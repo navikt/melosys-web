@@ -215,13 +215,24 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   }
   const { kopiTilArbeidsgiver } = formValues;
   if (skalSendeOrienteringsbrev(selvstendigArbeid) && kopiTilArbeidsgiver) {
-    pdfDokumenter.push({
-      navn: "Orienteringsbrev til arbeidsgiver",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-      data: {
-        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-      },
-    });
+    pdfDokumenter.push(
+      brukDokumentV2
+        ? {
+            sendesTilDokumenterV2: true,
+            navn: "Orienteringsbrev til arbeidsgiver",
+            data: {
+              produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+            },
+          }
+        : {
+            navn: "Orienteringsbrev til arbeidsgiver",
+            type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+            data: {
+              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+            },
+          }
+    );
   }
 
   const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
