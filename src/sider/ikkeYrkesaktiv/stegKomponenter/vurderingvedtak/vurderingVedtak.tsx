@@ -32,12 +32,14 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const begrunnelseFritekst = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector);
+  const innledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
 
   const { control } = useForm({
     mode: "all",
-    values: {
-      innledningFritekst: "",
-      begrunnelseFritekst: "",
+    defaultValues: {
+      begrunnelseFritekst: begrunnelseFritekst || "",
+      innledningFritekst: innledningFritekst || "",
     } as FieldValues,
   });
 
