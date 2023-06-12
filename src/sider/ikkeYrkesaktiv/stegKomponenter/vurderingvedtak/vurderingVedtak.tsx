@@ -1,21 +1,28 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
+
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
-import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import * as Forms from "../../../../felleskomponenter/forms";
+import * as Utils from "../../../../utils";
+
 import { Lovvalgsperiode } from "./lovvalgsperiode";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import * as Forms from "../../../../felleskomponenter/forms";
+
 import vurdering_vedtak from "./vurderingVedtakSchema";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
-import * as Utils from "../../../../utils";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
+import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
+import { INNLEDNING_FRITEKST_HJELPETEKST, BEGRUNNELSE_FRITEKST_HJELPETEKST } from "./tekster";
 
 interface Props {
   aktivtSteg: boolean;
@@ -24,30 +31,28 @@ interface Props {
 export const VurderingVedtak = ({ aktivtSteg }: Props) => {
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
-  const innledningFritekstHjelpetekst = "Hei";
-  const begrunnelseFritekstHjelpetekst = "Hei";
-
   const dispatch = useDispatch();
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
+  const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
 
-  const { control, watch } = useForm({
+  const { control } = useForm({
     resolver: yupResolver(vurdering_vedtak),
     context: {
-      // sluttDato: mottatteOpplysningerPeriode.tom,
-      // soknadsperiode: mottatteOpplysningerPeriode,
+      soknadsperiode: mottatteOpplysningerPeriode,
     },
     mode: "all",
-    defaultValues: {
+    values: {
+      fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato),
+      tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato),
       innledningFritekst: "",
       begrunnelseFritekst: "",
     } as FieldValues,
   });
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const formValues = watch();
 
   const kontrollerFerdigbehandling = () =>
     dispatch(
@@ -63,14 +68,6 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
       kontrollerFerdigbehandling();
     }
   }, [aktivtSteg]);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const harErrorFeilmelding = () => {
-    if (typeof feilmeldinger === "string") {
-      return !Utils._isEmpty(feilmeldinger);
-    }
-    return feilmeldinger.length > 0;
-  };
 
   return (
     <div className="vurderingVedtakIkkeYrkesaktiv">
@@ -95,7 +92,7 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
         <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
           <LabelMedHjelpetekst
             label="Fritekst til innledning"
-            hjelpetekst={innledningFritekstHjelpetekst}
+            hjelpetekst={INNLEDNING_FRITEKST_HJELPETEKST}
             hjelpetekstClassName="hjelpetekst"
           />
         </Nav.Typo.Element>
@@ -110,7 +107,7 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
         <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
           <LabelMedHjelpetekst
             label="Fritekst til begrunnelse"
-            hjelpetekst={begrunnelseFritekstHjelpetekst}
+            hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST}
             hjelpetekstClassName="hjelpetekst"
           />
         </Nav.Typo.Element>
