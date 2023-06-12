@@ -4,7 +4,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import MKV from "../../../../melosyskodeverk";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { PERIODE_HJELPETEKST } from "../../../trygdeavtale/stegKomponenter/vurderingVedtak/tekster";
+import { PERIODE_HJELPETEKST } from "./tekster";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
@@ -37,9 +37,9 @@ export const Lovvalgsperiode = () => {
       soknadsperiode: mottatteOpplysningerPeriode,
     },
     mode: "all",
-    defaultValues: {
-      fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato || mottatteOpplysningerPeriode.fom),
-      tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato || mottatteOpplysningerPeriode.tom),
+    values: {
+      fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato),
+      tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato),
     } as FieldValues,
   });
   const formValues = watch();
