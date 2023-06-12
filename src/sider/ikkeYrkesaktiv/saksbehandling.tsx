@@ -2,35 +2,33 @@ import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
-import * as Utils from "../../utils";
 
+import * as Utils from "../../utils";
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
-import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 
+import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
-import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
-import { folketrygdenkodeverkOperations } from "../../ducks/folketrygdenkodeverk";
-import { oppsummertfaktaOperations } from "../../ducks/oppsummertfakta";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { dokumenterOperations } from "../../ducks/dokumenter";
 import { menypanelOperations } from "../../ducks/menypanel";
-import { vilkarOperations } from "../../ducks/vilkar";
 
+import { vilkarOperations } from "../../ducks/vilkar";
 import { useFeatureToggle } from "../../featuretoggle";
 import { formSelectors } from "../../ducks/form";
-import { MatchParams } from "../../@types";
 
+import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
@@ -67,7 +65,6 @@ const Saksbehandling = ({
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const behandlingsresultat = useSelector(behandlingsresultatSelectors.BehandlingsresultatSelector);
   const fagsakStatusKode = useSelector(fagsakSelectors.FagsakStatusSelector);
-  const landkoder = useSelector(landkoderSelectors.LandkoderFraSakstypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const soknadForm = useSelector(formSelectors.SoknadenFormSelector);
 
@@ -87,8 +84,6 @@ const Saksbehandling = ({
       const behandlingId = Utils._toInteger(behandlingIDFraParam);
       setBehandlingID(behandlingId);
       await dispatch(fagsakOperations.hent(saksnr));
-      await dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden());
-      await dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingId));
       const response = await dispatch(behandlingerOperations.hentBehandling(behandlingId));
       // @ts-ignore
       const behandling = response.data;
@@ -113,13 +108,12 @@ const Saksbehandling = ({
 
   useEffect(() => {
     lastInnSaksopplysninger();
-    dispatch(landkoderOperations.hentLandkoder());
 
     return () => {
       dispatch(fagsakOperations.resetFagsakState());
       dispatch(vilkarOperations.resetState());
-      dispatch(oppsummertfaktaOperations.resetOppsummertFakta());
       dispatch(behandlingerOperations.resetBehandlingerState());
+      dispatch(behandlingsresultatOperations.resetBehandlingsresultatState());
       dispatch(mottatteOpplysningerOperations.resetState());
       dispatch(feiletResponsOperations.resetFeiletRespons());
       dispatch(menypanelOperations.skjulMenypanel());
@@ -161,7 +155,9 @@ const Saksbehandling = ({
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  arbeidsland={landkoder && landkoder.filter((landkodeObjekt) => land.includes(landkodeObjekt.kode))}
+                  arbeidsland={MKV.KTObjects.land_iso2.filter((landkodeObjekt: KTObject) =>
+                    land.includes(landkodeObjekt.kode)
+                  )}
                   lovvalgsperiodeFom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato, false, "")}
                   lovvalgsperiodeTom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato, false, "")}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
