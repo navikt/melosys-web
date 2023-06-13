@@ -1,4 +1,4 @@
-export const OPPDATER_TILBAKEMELDING = "modaler/OPPDATER_TILBAKEMELDING";
+export const OPPDATER_TILBAKEMELDING = "tilbakemelding/OPPDATER_TILBAKEMELDING";
 
 export interface Data {
   synlig: boolean;
