@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AlertStripeType } from "nav-frontend-alertstriper";
+import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 
 import MKV from "../../melosyskodeverk";
@@ -7,6 +8,8 @@ import * as Ikoner from "../../resources/images";
 import * as KV from "../../kodeverk";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
+
+import { tilbakemeldingOperations, tilbakemeldingSelectors } from "../../ducks/tilbakemelding";
 
 import { Feilkode } from "../../@types";
 import "./alertmeldinger.css";
@@ -42,6 +45,31 @@ export const TomFlytMelding = ({ visBuc = false }) => (
     </Nav.AlertStripeAdvarsel>
   </div>
 );
+
+export const Tilbakemelding = () => {
+  const dispatch = useDispatch();
+  const skjulTilbakemelding = () => dispatch(tilbakemeldingOperations.skjulTilbakemelding());
+  const tekst = useSelector(tilbakemeldingSelectors.TilbakemeldingTekstSelector);
+  const VARIGHET_MELDING = 1200;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      skjulTilbakemelding();
+    }, VARIGHET_MELDING);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className="tilbakemelding">
+      <Nav.AlertStripe type="suksess">
+        <div className="fullBredde">
+          {tekst}
+          <Ikoner.Remove onClick={() => skjulTilbakemelding()} />
+        </div>
+      </Nav.AlertStripe>
+    </div>
+  );
+};
 
 interface StandardMeldingOverstProps {
   type: AlertStripeType;
