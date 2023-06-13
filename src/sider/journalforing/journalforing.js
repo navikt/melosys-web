@@ -23,6 +23,7 @@ import FeilmeldingDialog from "./komponenter/feilmeldingDialog";
 import { oppgaverOperations } from "../../ducks/oppgaver";
 import { landkoderOperations } from "../../ducks/landkoder";
 import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
+import { tilbakemeldingOperations } from "../../ducks/tilbakemelding";
 import { formSelectors } from "../../ducks/form";
 import { sokSelectors } from "../../ducks/sok";
 
@@ -253,7 +254,7 @@ class Journalforing extends Component {
     const {
       journalforingSkjemaVerdier: { behandlingstype },
       settJournalforingHensikt,
-      tilForsiden,
+      tilForsidenOgVisTilbakemelding,
     } = this.props;
 
     const hensikt = behandlingstype ? JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE : JOURNALFORING_HENSIKT.KNYTT;
@@ -278,7 +279,7 @@ class Journalforing extends Component {
         await Api.Journalforing.knytt(journalforingData);
       }
       this.setState({ visFeilmeldingDialog: false });
-      return tilForsiden();
+      return tilForsidenOgVisTilbakemelding("Ok. Saken ble journalført.");
     } catch (error) {
       this.sjekkErrorOgVisFeilmelding(error);
     }
@@ -289,7 +290,7 @@ class Journalforing extends Component {
    * @returns {boolean}
    */
   opprettFagsak = async () => {
-    const { settJournalforingHensikt, tilForsiden } = this.props;
+    const { settJournalforingHensikt, tilForsidenOgVisTilbakemelding } = this.props;
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.OPPRETT);
 
@@ -307,7 +308,7 @@ class Journalforing extends Component {
     try {
       await Api.Journalforing.opprett(journalforingData);
       this.setState({ visFeilmeldingDialog: false });
-      return tilForsiden();
+      return tilForsidenOgVisTilbakemelding("Ok. Saken ble journalført.");
     } catch (error) {
       this.sjekkErrorOgVisFeilmelding(error);
     }
@@ -367,7 +368,7 @@ class Journalforing extends Component {
 
   journalforSed = async () => {
     const {
-      tilForsiden,
+      tilForsidenOgVisTilbakemelding,
       journalforSEDSkjemaIsValid,
       journalforSEDSkjemaVerdier: { brukerID },
       journalforSEDSkjemaErrors,
@@ -388,7 +389,7 @@ class Journalforing extends Component {
     try {
       await Api.Journalforing.sed(data);
       this.setState({ visFeilmeldingDialog: false });
-      return tilForsiden();
+      return tilForsidenOgVisTilbakemelding("Ok. Saken ble journalført.");
     } catch (error) {
       this.sjekkErrorOgVisFeilmelding(error);
     }
@@ -505,6 +506,7 @@ Journalforing.propTypes = {
     PT.shape({ tittel: PT.string, dokumentID: PT.string, logiskeVedlegg: PT.arrayOf(PT.string) })
   ).isRequired,
   tilForsiden: PT.func.isRequired,
+  tilForsidenOgVisTilbakemelding: PT.func.isRequired,
   journalforSEDSkjemaIsValid: PT.bool.isRequired,
   journalforSEDSkjemaVerdier: PT.object,
   journalforSEDSkjemaErrors: PT.object.isRequired,
@@ -540,6 +542,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
+  tilForsidenOgVisTilbakemelding: (tekst) => dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding(tekst)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Journalforing));
