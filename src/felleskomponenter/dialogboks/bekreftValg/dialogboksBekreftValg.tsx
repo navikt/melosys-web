@@ -6,7 +6,7 @@ import * as Api from "../../../services/api";
 import * as Nav from "../../../navFrontend";
 
 import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
-import { navigeringOperations } from "../../../ducks/navigering";
+import { tilbakemeldingOperations } from "../../../ducks/tilbakemelding";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { modalerOperations, modalerSelectors } from "../../../ducks/modaler";
@@ -42,7 +42,7 @@ export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftV
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const bekreftValgType = useSelector(modalerSelectors.BekreftValgTypeSelector);
   const skjulModal = () => dispatch(modalerOperations.skjulBekreftValg());
-  const tilForsiden = () => dispatch(navigeringOperations.tilForsiden());
+  const tilForsidenOgVisTilbakemelding = () => dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding());
 
   const mapType = () => {
     switch (sakstype) {
@@ -59,19 +59,19 @@ export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftV
   const avsluttSakSomBortfalt = async () => {
     await Api.Fagsaker.fagsak.bortfall(saksnummer);
     skjulModal();
-    tilForsiden();
+    tilForsidenOgVisTilbakemelding();
   };
 
   const ferdigbehandleSak = async () => {
     await Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer);
     skjulModal();
-    tilForsiden();
+    tilForsidenOgVisTilbakemelding();
   };
 
   const angiBehandlingsresultattype = async (type: string) => {
     await Api.Behandlinger.resultat.angiBehandlingsresultattype(behandlingID, { type });
     skjulModal();
-    tilForsiden();
+    tilForsidenOgVisTilbakemelding();
   };
 
   const hentBekreftValgDialogDataFraType = () => {

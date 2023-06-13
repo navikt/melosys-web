@@ -7,16 +7,16 @@ import classNames from "classnames";
 
 import * as Ikon from "../../../resources/images";
 
-import LeggBehandlingTilbake from "./leggbehandlingtilbake";
-import AvsluttSak from "./avsluttsak";
-
 import { oppgaverOperations } from "../../../ducks/oppgaver";
-import { navigeringOperations } from "../../../ducks/navigering";
 import { modalerOperations } from "../../../ducks/modaler";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { tilbakemeldingOperations } from "../../../ducks/tilbakemelding";
 import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
+
+import LeggBehandlingTilbake from "./leggbehandlingtilbake";
+import AvsluttSak from "./avsluttsak";
 
 import "./behandlingsmeny.css";
 
@@ -29,7 +29,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
 });
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
-  tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
+  tilForsidenOgVisTilbakemelding: () => dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding()),
   tilbakeleggHandle: (oppgaveID: string, venterPaaDokumentasjon: boolean) =>
     oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
@@ -42,7 +42,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export const Behandlingsmeny = ({
-  tilForsiden,
+  tilForsidenOgVisTilbakemelding,
   tilbakeleggHandle,
   visAvslagSoknadDialogHandle,
   visHenleggDialogHandle,
@@ -85,14 +85,13 @@ export const Behandlingsmeny = ({
       {visBehandlingsmeny && (
         <div className="behandlingsmeny__meny">
           <LeggBehandlingTilbake
-            tilForsiden={tilForsiden}
+            tilForsidenOgVisTilbakemelding={tilForsidenOgVisTilbakemelding}
             tilbakeleggHandle={tilbakeleggHandle}
             behandlingID={behandlingID}
             redigerbart={redigerbart}
           />
           <AvsluttSak
             avslaaSoknad={visAvslagSoknadDialogHandle}
-            behandlingID={behandlingID}
             henleggSak={visHenleggDialogHandle}
             sakstema={sakstema}
             sakstype={sakstype}
@@ -100,7 +99,6 @@ export const Behandlingsmeny = ({
             behandlingstype={behandlingstype}
             redigerbart={redigerbart}
             apneBekreftValgModal={visBekreftValgDialogHandle}
-            tilForsiden={tilForsiden}
           />
         </div>
       )}

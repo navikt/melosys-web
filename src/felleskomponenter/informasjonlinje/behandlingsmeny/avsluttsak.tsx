@@ -25,7 +25,6 @@ const { MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
 
 type avsluttSakProps = {
   avslaaSoknad: () => void;
-  behandlingID: string;
   henleggSak: () => void;
   apneBekreftValgModal: (bekreftValgType: BekreftValgTypes) => void;
   sakstema: string;
@@ -33,7 +32,6 @@ type avsluttSakProps = {
   behandlingstema: string;
   behandlingstype: string;
   redigerbart: boolean;
-  tilForsiden: () => void;
 };
 
 const AvsluttSak = ({

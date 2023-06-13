@@ -3,14 +3,14 @@ import * as Nav from "../../../navFrontend";
 import Handling from "./handling";
 
 type leggBehandlingTilbakeProps = {
-  tilForsiden: () => void;
+  tilForsidenOgVisTilbakemelding: () => void;
   tilbakeleggHandle: (oppgaveID: string, venterPaaDokumentasjon: boolean) => Promise<void>;
   behandlingID: string;
   redigerbart: boolean;
 };
 
 const LeggBehandlingTilbake = ({
-  tilForsiden,
+  tilForsidenOgVisTilbakemelding,
   tilbakeleggHandle,
   behandlingID,
   redigerbart,
@@ -18,7 +18,7 @@ const LeggBehandlingTilbake = ({
   const tilbakeleggOppgave = async () => {
     const venterPaaDokumentasjon = true;
     await tilbakeleggHandle(behandlingID, venterPaaDokumentasjon);
-    tilForsiden();
+    tilForsidenOgVisTilbakemelding();
   };
 
   return (
@@ -26,7 +26,7 @@ const LeggBehandlingTilbake = ({
       className="behandlingsmeny__meny__legg-behandling-tilbake"
       tittel={<div className="title">Legg behandling tilbake</div>}
     >
-      {redigerbart && <Handling tekst="Til min oppgaveliste" onClick={tilForsiden} />}
+      {redigerbart && <Handling tekst="Til min oppgaveliste" onClick={tilForsidenOgVisTilbakemelding} />}
       <Handling tekst="Til felles oppgaveliste" onClick={tilbakeleggOppgave} disabled={!redigerbart} />
     </Nav.Ekspanderbartpanel>
   );
