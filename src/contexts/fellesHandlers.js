@@ -10,7 +10,6 @@ import * as Api from "../services/api";
 import { fagsakSelectors } from "../ducks/fagsaker";
 import { datalastingOperations } from "../ducks/datalasting";
 import { mottatteOpplysningerOperations } from "../ducks/mottatteOpplysninger";
-import { oppgaverOperations } from "../ducks/oppgaver";
 import { vedtakOperations } from "../ducks/vedtak";
 import { saksopplysningerOperations } from "../ducks/saksopplysninger";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
@@ -28,7 +27,6 @@ const FellesHandlersProviderUnconnected = ({
   location,
   history,
   lagreAllData,
-  tilbakeleggeOppgave,
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
   lagreMottatteOpplysninger,
@@ -91,18 +89,6 @@ const FellesHandlersProviderUnconnected = ({
     tilForsiden();
   };
 
-  const lagreOgLukk = async () => {
-    await lagreAllData();
-    tilForsiden();
-  };
-
-  const tilbakeleggOppgave = async () => {
-    const venterPaaDokumentasjon = true;
-
-    await tilbakeleggeOppgave(behandlingID, venterPaaDokumentasjon);
-    lagreOgLukk();
-  };
-
   const henleggSak = async (data) => Api.Fagsaker.fagsak.henlegg(saksnummer, data);
 
   const henleggHandle = async (data) => {
@@ -124,8 +110,6 @@ const FellesHandlersProviderUnconnected = ({
 
   const fellesHandlers = useMemo(
     () => ({
-      lagreOgLukk,
-      tilbakeleggOppgave,
       visHenleggDialogHandle,
       visAvslagSoknadDialogHandle,
       visOppfriskModal: visOppfriskDialogHandle,
@@ -141,8 +125,6 @@ const FellesHandlersProviderUnconnected = ({
       startOgVisOppfriskModal,
     }),
     [
-      lagreOgLukk,
-      tilbakeleggOppgave,
       visHenleggDialogHandle,
       visAvslagSoknadDialogHandle,
       visOppfriskDialogHandle,
@@ -167,7 +149,6 @@ FellesHandlersProviderUnconnected.propTypes = {
   history: PT.object.isRequired,
   location: PT.object.isRequired,
   lagreAllData: PT.func.isRequired,
-  tilbakeleggeOppgave: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
   lagreMottatteOpplysninger: PT.func.isRequired,
@@ -207,8 +188,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
-  tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) =>
-    oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   avslaaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaaSoknad(behandlingID, data)),
   lastInnSaksopplysninger: (sakstype, saksnummer, behandlingID) =>
     dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
