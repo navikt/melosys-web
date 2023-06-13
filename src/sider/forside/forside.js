@@ -5,9 +5,12 @@ import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 
 import withErrorHandling from "../../felleskomponenter/withErrorHandling";
+import { Tilbakemelding } from "../../felleskomponenter/alertmeldinger";
 import * as Nav from "../../navFrontend";
 
 import { oversikt } from "../../ducks/oppgaver/operations";
+import { featureToggleOperations } from "../../ducks/featuretoggle";
+import { tilbakemeldingSelectors } from "../../ducks/tilbakemelding";
 import Saksplukker from "./komponenter/saksplukker";
 import SokSkjema from "./komponenter/sokskjema";
 import JournalforingOppgaver from "./komponenter/mineoppgaver/jornualforingoppgaver";
@@ -16,11 +19,11 @@ import BehandlingOppgaver from "./komponenter/mineoppgaver/behandlingOppgaver";
 import OpprettNySakKnapp from "./komponenter/opprettnysakknapp";
 
 import "./forside.css";
-import { featureToggleOperations } from "../../ducks/featuretoggle";
 
 const Forside = (props) => {
   const { tilOpprettNySak } = props;
   const data = useSelector((state) => state.oppgaver.data);
+  const visTilbakemelding = useSelector(tilbakemeldingSelectors.ErTilbakemeldingSynligSelector);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,6 +46,7 @@ const Forside = (props) => {
         <OpprettNySakKnapp onClick={tilOpprettNySak} />
       </div>
       <Nav.Container className="forside__container" fluid>
+        {visTilbakemelding && <Tilbakemelding />}
         <Nav.Row>
           <Nav.Column xs="6" lg="5">
             <JournalforingOppgaver />
