@@ -43,7 +43,7 @@ export function lagNySak(body: Api.Fagsaker.fagsak.OpprettReqDto) {
     },
     {
       success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
-        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding("Handling vellykket!"));
+        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding("Ok. Saken ble opprettet."));
       },
     }
   );
@@ -60,7 +60,7 @@ export function lagNyBehandlingForSak(saksnummer: string, body: Api.Fagsaker.fag
     },
     {
       success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
-        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding("Handling vellykket!"));
+        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding("Ok. Behandlingen ble opprettet."));
       },
     }
   );
