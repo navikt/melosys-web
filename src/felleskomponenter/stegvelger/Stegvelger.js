@@ -33,6 +33,7 @@ import { oppsummertfaktaSelectors } from "../../ducks/oppsummertfakta";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { datalastingOperations } from "../../ducks/datalasting";
 import { kontrollOperations } from "../../ducks/kontroll";
+import { tilbakemeldingOperations } from "../../ducks/tilbakemelding";
 
 import MottatteOpplysningerFeilmeldinger from "../mottatteOpplysningerFeilmeldinger";
 import { Feilmeldinger } from "../feilmeldinger";
@@ -255,7 +256,7 @@ class Stegvelger extends Component {
   };
 
   godkjennUnntaksperioder = async (data) => {
-    const { behandlingID, tilForsiden } = this.props;
+    const { behandlingID, tilForsidenOgVisTilbakemelding } = this.props;
 
     await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, {
       varsleUtland: data.varsleUtland || false,
@@ -263,7 +264,7 @@ class Stegvelger extends Component {
       endretPeriode: data.endretPeriode,
       lovvalgsbestemmelse: data.lovvalgsbestemmelse,
     });
-    tilForsiden();
+    tilForsidenOgVisTilbakemelding();
   };
 
   lagreOgGodkjennUnntaksperioder = async (data) => {
@@ -585,6 +586,7 @@ Stegvelger.propTypes = {
   saksnummer: PT.string,
   erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,
   tilForsiden: PT.func.isRequired,
+  tilForsidenOgVisTilbakemelding: PT.func.isRequired,
   utpek: PT.func.isRequired,
   avvisUtpeking: PT.func.isRequired,
   hentUtpekingsperioder: PT.func.isRequired,
@@ -727,6 +729,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(anmodningunntakOperations.bestill(behandlingID, bestilling)),
   oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState()),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  tilForsidenOgVisTilbakemelding: () => dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

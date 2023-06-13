@@ -13,7 +13,7 @@ import * as Types from "./types";
 import MKV from "../../melosyskodeverk";
 
 import { modalerOperations } from "../modaler";
-import { navigeringOperations } from "../navigering";
+import { tilbakemeldingOperations } from "../tilbakemelding";
 
 export function fatt(behandlingID, body) {
   return doThenDispatch(
@@ -25,7 +25,7 @@ export function fatt(behandlingID, body) {
     },
     {
       success: (dispatch) => {
-        dispatch(navigeringOperations.tilForsiden());
+        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding());
       },
     }
   );
@@ -41,7 +41,7 @@ export function endre(behandlingID, body) {
     },
     {
       success: (dispatch) => {
-        dispatch(navigeringOperations.tilForsiden());
+        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding());
       },
     }
   );
@@ -67,7 +67,7 @@ export function avslaaSoknad(behandlingID, data) {
     {
       success: (dispatch) => {
         dispatch(modalerOperations.skjulAvslagSoknad());
-        dispatch(navigeringOperations.tilForsiden());
+        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding());
       },
     }
   );

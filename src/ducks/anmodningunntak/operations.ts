@@ -5,7 +5,7 @@ import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
 import * as Actions from "./actions";
-import { navigeringOperations } from "../navigering";
+import { tilbakemeldingOperations } from "../tilbakemelding";
 
 export function bestill(
   behandlingID: number,
@@ -20,7 +20,7 @@ export function bestill(
     },
     {
       success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
-        dispatch(navigeringOperations.tilForsiden());
+        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding());
       },
     }
   );
@@ -39,7 +39,7 @@ export function svar(
     },
     {
       success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
-        dispatch(navigeringOperations.tilForsiden());
+        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding());
       },
     }
   );

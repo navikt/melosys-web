@@ -18,7 +18,7 @@ import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysning
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { navigeringOperations } from "../../../ducks/navigering";
+import { tilbakemeldingOperations } from "../../../ducks/tilbakemelding";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
@@ -182,7 +182,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const handleBekreft = async () => {
     await dispatch(lovvalgsperioderOperations.lagre());
     await Api.Saksflyt.Unntaksregistrering.registrerUnntakFraMedlemskap(behandlingID);
-    dispatch(navigeringOperations.tilForsiden());
+    dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding());
   };
 
   const harErrorFeilmelding = () => {

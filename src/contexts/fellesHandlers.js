@@ -18,6 +18,7 @@ import { navigeringOperations } from "../ducks/navigering";
 import { lovvalgsperioderOperations } from "../ducks/lovvalgsperioder";
 import { anmodningsperioderOperations } from "../ducks/anmodningsperioder";
 import { utpekingsperioderOperations } from "../ducks/utpekingsperioder";
+import { tilbakemeldingOperations } from "../ducks/tilbakemelding";
 
 const FellesHandlersContext = React.createContext({});
 export default FellesHandlersContext;
@@ -43,6 +44,7 @@ const FellesHandlersProviderUnconnected = ({
   fjernBehandlingOppfriskes,
   behandlingUnderOppfriskning,
   tilForsiden,
+  tilForsidenOgVisTilbakemelding,
   resetLovvalgsperioder,
   resetAnmodningsperioder,
   resetUtpekingsperioder,
@@ -107,7 +109,7 @@ const FellesHandlersProviderUnconnected = ({
     await lagreAllData();
     await henleggSak(data);
     skjulHenleggDialogHandle();
-    tilForsiden();
+    tilForsidenOgVisTilbakemelding();
   };
 
   const avslaaSoknadHandle = async (data) => {
@@ -181,6 +183,7 @@ FellesHandlersProviderUnconnected.propTypes = {
   fjernBehandlingOppfriskes: PT.func.isRequired,
   behandlingUnderOppfriskning: PT.number,
   tilForsiden: PT.func.isRequired,
+  tilForsidenOgVisTilbakemelding: PT.func.isRequired,
   resetLovvalgsperioder: PT.func.isRequired,
   resetAnmodningsperioder: PT.func.isRequired,
   resetUtpekingsperioder: PT.func.isRequired,
@@ -218,6 +221,7 @@ const mapDispatchToProps = (dispatch) => ({
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
+  tilForsidenOgVisTilbakemelding: () => dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding()),
   resetLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   resetAnmodningsperioder: () => dispatch(anmodningsperioderOperations.resetAnmodningsperioderState()),
   resetUtpekingsperioder: () => dispatch(utpekingsperioderOperations.resetUtpekingsperioderState()),

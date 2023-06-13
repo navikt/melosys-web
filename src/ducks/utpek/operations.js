@@ -1,7 +1,7 @@
 import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
-import { navigeringOperations } from "../navigering";
+import { tilbakemeldingOperations } from "../tilbakemelding";
 
 export function utpek(saksnummer, body) {
   return doThenDispatch(
@@ -13,7 +13,7 @@ export function utpek(saksnummer, body) {
     },
     {
       success: (dispatch) => {
-        dispatch(navigeringOperations.tilForsiden());
+        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding());
       },
     }
   );
@@ -29,7 +29,7 @@ export function avvis(behandlingID, body) {
     },
     {
       success: (dispatch) => {
-        dispatch(navigeringOperations.tilForsiden());
+        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding());
       },
     }
   );
