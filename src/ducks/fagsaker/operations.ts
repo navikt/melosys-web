@@ -14,7 +14,7 @@ import { doThenDispatch } from "../../services/utils";
 import * as Actions from "./actions";
 import * as Api from "../../services/api";
 import * as Types from "./types";
-import { navigeringOperations } from "../navigering";
+import { tilbakemeldingOperations } from "../tilbakemelding";
 
 /**
  * Henter registerinformasjon som allerede er importert backend i forbindelse
@@ -43,7 +43,7 @@ export function lagNySak(body: Api.Fagsaker.fagsak.OpprettReqDto) {
     },
     {
       success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
-        dispatch(navigeringOperations.tilForsiden());
+        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding("Handling vellykket!"));
       },
     }
   );
@@ -60,7 +60,7 @@ export function lagNyBehandlingForSak(saksnummer: string, body: Api.Fagsaker.fag
     },
     {
       success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
-        dispatch(navigeringOperations.tilForsiden());
+        dispatch(tilbakemeldingOperations.tilForsidenOgVisTilbakemelding("Handling vellykket!"));
       },
     }
   );
