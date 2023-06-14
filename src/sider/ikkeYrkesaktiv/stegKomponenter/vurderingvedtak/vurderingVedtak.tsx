@@ -26,7 +26,7 @@ import { formSelectors } from "../../../../ducks/form";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import { BrevMottakereTabell } from "./mottakertabell/brevMottakereTabell";
 
-const { GENERELT_FRITEKSTBREV_BRUKER } = MKV.Koder.brev.produserbaredokumenter;
+const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 
 interface Props {
   tilbake: () => void;
@@ -110,32 +110,19 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
     }
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
 
-  // const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
-  //   return [
-  //     {
-  //       sendesTilDokumenterV2: true,
-  //       navn: ikon ? (
-  //         <>
-  //           <Ikoner.Forhandsvis />
-  //           <span className="sr-only">Forhåndsvis dokument {muligMottaker.dokumentNavn}</span>
-  //         </>
-  //       ) : (
-  //         muligMottaker.dokumentNavn
-  //       ),
-  //       data: {
-  //         produserbardokument: GENERELT_FRITEKSTBREV_BRUKER,
-  //         mottaker: muligMottaker.rolle,
-  //         innledningFritekst: formValues?.innledningFritekst || null,
-  //         begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-  //         orgNr: muligMottaker?.orgnr || null,
-  //       },
-  //     },
-  //   ];
-  // };
+  const lagDokumenterData: any = (mottakerRolle: string = "BRUKER") => {
+    return {
+      produserbardokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
+      mottaker: mottakerRolle,
+      innledningFritekst: formValues.innledningFritekst || null,
+      begrunnelseFritekst: formValues.begrunnelseFritekst || null,
+      orgNr: null,
+    };
+  };
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: GENERELT_FRITEKSTBREV_BRUKER, // TODO: Endre til ikke yrkesaktiv brev
+      produserbartdokument: IKKE_YRKESAKTIV_VEDTAKSBREV, // TODO: Endre til ikke yrkesaktiv brev
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -145,59 +132,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
     hentMuligeMottakere();
   }, []);
 
-  // const slettKopiMottaker = (kopiMottaker: Api.DokumenterV2.MuligMottaker) => {
-  //   if (!muligeMottakere) return;
-  //   setMuligeMottakere({
-  //     ...muligeMottakere,
-  //     kopiMottakere: muligeMottakere.kopiMottakere.filter((mottaker) => mottaker !== kopiMottaker),
-  //   });
-  // };
-
-  // const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker, kanSlettes: boolean) => {
-  //   const sletteknapp = (
-  //     <Nav.Knapp type="flat" form="kompakt" onClick={() => slettKopiMottaker(muligMottaker)}>
-  //       <Ikoner.Bin />
-  //       <span className="sr-only">Slett dokument {muligMottaker.dokumentNavn}</span>
-  //     </Nav.Knapp>
-  //   );
-  //
-  //   return [
-  //     {
-  //       verdi: (
-  //         <PdfLenkeListe
-  //           behandlingID={behandlingID}
-  //           dokumenter={lagDokumenterData(muligMottaker)}
-  //           vedKlikk={() => true}
-  //           className="forhåndsvisning"
-  //         />
-  //       ),
-  //     },
-  //     { verdi: muligMottaker.mottakerNavn },
-  //     {
-  //       verdi: (
-  //         <PdfLenkeListe
-  //           behandlingID={behandlingID}
-  //           dokumenter={lagDokumenterData(muligMottaker, true)}
-  //           vedKlikk={() => true}
-  //           className="forhåndsvisning"
-  //         />
-  //       ),
-  //       style: "midtstilt",
-  //     },
-  //     {
-  //       verdi: kanSlettes ? sletteknapp : null,
-  //       style: "slettKnapp",
-  //     },
-  //   ];
-  // };
-
-  // const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
-  //   return [
-  //     mapMottakerRad(mottakere.hovedMottaker, false),
-  //     ...mottakere.kopiMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker, true)),
-  //     ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker, false)),
-  //   ];
-  // };
   const lagFattVedtakFTRLReqDto = () => {
     return {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
@@ -276,19 +210,9 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       </Nav.Row>
 
       {stegErGyldig && (
-        // <MottakerTabell
-        //   rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
-        //   kolonner={[
-        //     { verdi: "Dokumenter", bredde: "60%" },
-        //     { verdi: "Mottaker", bredde: "20%" },
-        //     { verdi: "Forhåndsvis", bredde: "10%", style: "normal_font_weight midtstilt" },
-        //     { verdi: "Slett", bredde: "10%", style: "normal_font_weight midtstilt" },
-        //   ]}
-        // />
-
         <BrevMottakereTabell
           muligeMottakere={muligeMottakere}
-          hentBrevRequest={() => console.log("hentBrevRequest")}
+          hentBrevRequest={lagDokumenterData}
           formIsValid={stegErGyldig}
         />
       )}
