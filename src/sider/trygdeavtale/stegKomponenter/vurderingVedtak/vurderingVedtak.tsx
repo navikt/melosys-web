@@ -39,6 +39,7 @@ import {
   NY_VURDERING_BAKGRUNN_HJELPETEKST,
   PERIODE_HJELPETEKST,
 } from "./tekster";
+import { kontrollSelectors } from "../../../../ducks/kontroll";
 
 const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
@@ -89,6 +90,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
     periodeIsValid: formSelectors.TrygdeavtaleVedtakFormPeriodeValidSelector(state),
     erNyVurdering,
     feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+    kontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
   };
 };
 
@@ -140,6 +142,7 @@ const VurderingVedtak = ({
   hentLovvalgsperiode,
   formIsValid,
   feilmeldinger,
+  kontrollfeil,
   aktivtSteg,
 }: Props & PropsFromRedux) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
@@ -354,7 +357,12 @@ const VurderingVedtak = ({
       </div>
     );
 
-  const stegErGyldig = steg.status === StegStatus.FERDIG && formIsValid && redigerbart && Utils._isEmpty(feilmeldinger);
+  const stegErGyldig =
+    steg.status === StegStatus.FERDIG &&
+    formIsValid &&
+    redigerbart &&
+    Utils._isEmpty(feilmeldinger) &&
+    Utils._isEmpty(kontrollfeil);
 
   return (
     <div className={vurderingVedtakCls.block}>

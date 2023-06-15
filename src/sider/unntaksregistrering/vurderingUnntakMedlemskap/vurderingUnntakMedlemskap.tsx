@@ -20,7 +20,7 @@ import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { navigeringOperations } from "../../../ducks/navigering";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { kontrollOperations } from "../../../ducks/kontroll";
+import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
@@ -55,6 +55,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
@@ -299,6 +300,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         className="vurderingUnntakMedlemskap__feilmelding"
         feilmeldinger={feilmeldinger}
         exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]}
+        kontrollfeil={kontrollfeil}
       />
 
       {![IKKE_GODKJENT, DELVIS_GODKJENT].includes(formValues.utfallRegistreringUnntak) && (

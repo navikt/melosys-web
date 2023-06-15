@@ -32,7 +32,7 @@ import { videresendingOperations } from "../../ducks/videresending";
 import { oppsummertfaktaSelectors } from "../../ducks/oppsummertfakta";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { datalastingOperations } from "../../ducks/datalasting";
-import { kontrollOperations } from "../../ducks/kontroll";
+import { kontrollOperations, kontrollSelectors } from "../../ducks/kontroll";
 
 import MottatteOpplysningerFeilmeldinger from "../mottatteOpplysningerFeilmeldinger";
 import { Feilmeldinger } from "../feilmeldinger";
@@ -418,7 +418,7 @@ class Stegvelger extends Component {
       bestemmelser: props.bestemmelser,
       soknadsperiode: props.soknadsperiode,
       annenBehandlingOppfriskes: props.annenBehandlingOppfriskes,
-      harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger),
+      harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger) || !Utils._isEmpty(props.kontrollfeil),
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -522,7 +522,9 @@ class Stegvelger extends Component {
       <div className="stegvelger panelSeksjon">
         <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
         {!this.props.redigerbart && <Innsynsmelding />}
-        {this.erVedtakSteg(this.state.aktivtStegNummer) && <Feilmeldinger feilmeldinger={this.props.feilmeldinger} />}
+        {this.erVedtakSteg(this.state.aktivtStegNummer) && (
+          <Feilmeldinger feilmeldinger={this.props.feilmeldinger} kontrollfeil={this.props.kontrollfeil} />
+        )}
         {this.state.aktuelleSteg.map((item) => (
           <StegFane id={item.id} key={item.id} faneData={item} />
         ))}
@@ -620,6 +622,12 @@ Stegvelger.propTypes = {
     ),
     PT.string,
   ]),
+  kontrollfeil: PT.arrayOf(
+    PT.shape({
+      kode: PT.string.isRequired,
+      felter: PT.arrayOf(PT.string).isRequired,
+    })
+  ),
 };
 
 Stegvelger.defaultProps = {
@@ -650,6 +658,7 @@ Stegvelger.defaultProps = {
   oppdaterOgLagreBehandlingerHandler: () => {},
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger: () => {},
   feilmeldinger: [],
+  kontrollfeil: [],
 };
 
 const mapStateToProps = (state) => ({
@@ -695,6 +704,7 @@ const mapStateToProps = (state) => ({
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+  kontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
 });
 
 /* eslint no-alert:off */

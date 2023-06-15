@@ -24,6 +24,7 @@ import { datalastingOperations } from "../../ducks/datalasting";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { vedtakOperations } from "../../ducks/vedtak";
 import { formSelectors } from "../../ducks/form";
+import { kontrollSelectors } from "../../ducks/kontroll";
 
 import "./stegvelger.css";
 
@@ -59,6 +60,7 @@ const mapStateToProps = (state: RootState) => ({
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+  kontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -241,7 +243,7 @@ class Stegvelger extends Component<Props, State> {
   render() {
     const {
       state: { aktuelleSteg, visMottatteOpplysningerFeilmeldinger },
-      props: { behandlingstype, redigerbart, feilmeldinger },
+      props: { behandlingstype, redigerbart, feilmeldinger, kontrollfeil },
       oppdaterAktivtSteg,
     } = this;
 
@@ -255,7 +257,7 @@ class Stegvelger extends Component<Props, State> {
           <div>
             <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
             {!redigerbart && <Innsynsmelding />}
-            {vedtakStegErAktivt && <Feilmeldinger feilmeldinger={feilmeldinger} />}
+            {vedtakStegErAktivt && <Feilmeldinger feilmeldinger={feilmeldinger} kontrollfeil={kontrollfeil} />}
             {erNyVurdering && redigerbart && inngangStegErAktivt && (
               <Nav.AlertStripeAdvarsel className="varselstripe">
                 <Nav.Typo.Normaltekst className="varselstripe__overskrift">Ny behandling av sak</Nav.Typo.Normaltekst>

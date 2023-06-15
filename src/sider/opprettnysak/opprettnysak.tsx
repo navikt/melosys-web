@@ -32,6 +32,7 @@ import IdentOgNavn from "./komponenter/identOgNavn";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
 import "./opprettnysak.css";
+import { kontrollSelectors } from "../../ducks/kontroll";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -72,6 +73,7 @@ const mapStateToProps = (state: RootState) => ({
   },
   landkoderListe: landkoderSelectors.LandkoderSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+  kontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
@@ -105,6 +107,7 @@ const OpprettNySak = ({
   sokOrgnr,
   hentLandkoder,
   landkoderListe,
+  kontrollfeil,
 }: InjectedFormProps<OpprettNySakFormData, OpprettNySakProps> & OpprettNySakProps) => {
   const [oppgaver, setOppgaver] = useState<Api.Oppgaver.SokOppgaveResDto[]>([]);
   const [bekreftPending, setBekreftPending] = useState(false);
@@ -364,7 +367,7 @@ const OpprettNySak = ({
                   {Utils.feilmelding.syncErrorsTilFeilmelding(errors)}
                 </Nav.AlertStripeFeil>
               )}
-              <Feilmeldinger feilmeldinger={feilmeldinger} className="feilmelding" />
+              <Feilmeldinger feilmeldinger={feilmeldinger} className="feilmelding" kontrollfeil={kontrollfeil} />
               <Knapperad
                 bekreft={handleSubmit}
                 bekreftTekst="Opprett ny behandling"

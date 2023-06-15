@@ -11,7 +11,7 @@ import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetek
 
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import { kontrollOperations } from "../../../../ducks/kontroll";
+import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
@@ -41,6 +41,7 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const begrunnelseFritekst = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector);
   const innledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
 
   const { control, watch } = useForm({
     mode: "all",
@@ -95,7 +96,11 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
         </Nav.Typo.Innholdstittel>
       )}
 
-      <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" feilmeldinger={feilmeldinger} />
+      <Feilmeldinger
+        className="vurderingUnntakMedlemskap__feilmelding"
+        feilmeldinger={feilmeldinger}
+        kontrollfeil={kontrollfeil}
+      />
 
       <Nav.Row>
         <Lovvalgsperiode kontrollerFerdigbehandling={kontrollerFerdigbehandling} />

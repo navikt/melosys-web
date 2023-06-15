@@ -13,19 +13,28 @@ type feilmeldingerProps = {
   feilmeldinger: Feilkode[] | string;
   className?: string;
   exclude?: string[];
+  kontrollfeil: Feilkode[];
 };
 
-export default ({ feilmeldinger, className, exclude }: feilmeldingerProps) => {
-  if (Utils._isEmpty(feilmeldinger)) {
+export default ({ feilmeldinger, className, exclude, kontrollfeil }: feilmeldingerProps) => {
+  if (Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil)) {
     return null;
   }
 
+  /* Feilmeldinger settes gjennom error responses fra api, ingen kasting av exceptions i
+   * kontrollFerdigbehandling så disse vil ikke overlappe
+   */
   const renderInnhold = () => {
     if (typeof feilmeldinger === "string") {
       return feilmeldinger;
     }
 
-    const filtrerteFeilmeldinger = feilmeldinger.filter((value) => !exclude?.includes(value.kode));
+    let filtrerteFeilmeldinger;
+    if (!Utils._isEmpty(kontrollfeil)) {
+      filtrerteFeilmeldinger = kontrollfeil.filter((value) => !exclude?.includes(value.kode));
+    } else {
+      filtrerteFeilmeldinger = feilmeldinger.filter((value) => !exclude?.includes(value.kode));
+    }
 
     if (filtrerteFeilmeldinger.length === 0) {
       return null;
