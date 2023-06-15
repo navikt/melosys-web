@@ -53,10 +53,7 @@ export const BrevMottakereTabell = ({
   };
 
   const mapMottakerRader = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
-    return [
-      mapRad(muligeBrevMottakere.hovedMottaker),
-      // ...muligeBrevMottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker)),
-    ];
+    return [mapRad(muligeBrevMottakere.hovedMottaker)];
   };
 
   const mapMottakerRaderNorskeMyndigheter = (muligeBrevMottakere: Api.DokumenterV2.MuligMottaker[]) => {

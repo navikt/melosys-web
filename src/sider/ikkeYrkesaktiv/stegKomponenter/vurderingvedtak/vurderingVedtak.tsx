@@ -136,6 +136,15 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
     };
   };
 
+  useEffect(() => {
+    if (
+      formValues.innledningFritekst !== lagretInnledningFritekst ||
+      formValues.begrunnelseFritekst !== lagretBegrunnelseFritekst
+    ) {
+      debouncedOppdaterFritekster(formValues);
+    }
+  }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
+
   const onSubmit = async () => {
     const dispatchFattVedtak = dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakFTRLReqDto()));
     setKontrollPending(true);
@@ -183,7 +192,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
           className="fritekst_editor"
           placeholder="Skriv inn tilleggsinformasjon til innledning..."
           disabled={!redigerbart}
-          onChange={() => debouncedOppdaterFritekster(formValues)}
         />
 
         <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
@@ -199,7 +207,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
           className="fritekst_editor"
           placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
           disabled={!redigerbart}
-          onChange={() => debouncedOppdaterFritekster(formValues)}
         />
       </Nav.Row>
 
