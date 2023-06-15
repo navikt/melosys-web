@@ -51,10 +51,10 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
   });
   const formValues = watch();
 
-  const [vedtakPending, setVedtakPending] = useState(false);
+  const [kontrollPending, setKontrollPending] = useState(false);
 
   const kontrollerFerdigbehandling = async () => {
-    setVedtakPending(true);
+    setKontrollPending(true);
     await dispatch(
       kontrollOperations.kontrollerFerdigbehandling({
         behandlingID,
@@ -62,7 +62,7 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
         skalRegisteropplysningerOppdateres: false,
       })
     );
-    setVedtakPending(false);
+    setKontrollPending(false);
   };
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
   }, [aktivtSteg]);
 
   const oppdaterFritekster = (values: FormValuesProps) => {
-    if (values && redigerbart && !vedtakPending) {
+    if (values && redigerbart && !kontrollPending) {
       Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
         innledningFritekst: values.innledningFritekst,
         begrunnelseFritekst: values.begrunnelseFritekst,
