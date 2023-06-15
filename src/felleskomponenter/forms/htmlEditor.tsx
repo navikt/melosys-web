@@ -12,6 +12,7 @@ type HtmlEditorComponentProps = {
   disabled?: boolean;
   label?: ReactNode;
   feil?: string;
+  onChange?: any;
 };
 
 type InnerHtmlEditorComponentProps = HtmlEditorComponentProps & RegisterHookFormProps;
