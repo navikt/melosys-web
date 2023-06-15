@@ -65,15 +65,14 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const formValues = watch();
 
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
-
-  const [vedtakPending, setVedtakPending] = useState(false);
+  const [kontrollPending, setKontrollPending] = useState(false);
   const stegErGyldig: boolean = redigerbart && formIsValid;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
 
   const kontrollerFerdigbehandling = async () => {
-    setVedtakPending(true);
+    setKontrollPending(true);
     await dispatch(
       kontrollOperations.kontrollerFerdigbehandling({
         behandlingID,
@@ -81,17 +80,19 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
         skalRegisteropplysningerOppdateres: false,
       })
     );
-    setVedtakPending(false);
+    setKontrollPending(false);
   };
 
   useEffect(() => {
     if (aktivtSteg) {
+      // noinspection JSIgnoredPromiseFromCall
       kontrollerFerdigbehandling();
     }
   }, [aktivtSteg]);
 
   const oppdaterFritekster = (values: FormValuesProps) => {
-    if (values && redigerbart && !vedtakPending) {
+    // noinspection JSIgnoredPromiseFromCall
+    if (values && redigerbart && !kontrollPending) {
       Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
         innledningFritekst: values.innledningFritekst,
         begrunnelseFritekst: values.begrunnelseFritekst,
@@ -100,15 +101,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   };
 
   const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), []);
-
-  useEffect(() => {
-    if (
-      formValues.innledningFritekst !== lagretInnledningFritekst ||
-      formValues.begrunnelseFritekst !== lagretBegrunnelseFritekst
-    ) {
-      debouncedOppdaterFritekster(formValues);
-    }
-  }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
 
   const lagDokumenterData: any = (mottakerRolle: string = "BRUKER") => {
     return {
@@ -146,15 +138,15 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
   const onSubmit = async () => {
     const dispatchFattVedtak = dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakFTRLReqDto()));
-    setVedtakPending(true);
+    setKontrollPending(true);
     if (mottatteOpplysningerErGyldig()) {
       dispatchFattVedtak().then((res) => {
         if (res.data?.data?.error) {
-          setVedtakPending(false);
+          setKontrollPending(false);
         }
       });
     } else {
-      setVedtakPending(false);
+      setKontrollPending(false);
     }
   };
 
@@ -191,6 +183,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
           className="fritekst_editor"
           placeholder="Skriv inn tilleggsinformasjon til innledning..."
           disabled={!redigerbart}
+          onChange={() => debouncedOppdaterFritekster(formValues)}
         />
 
         <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
@@ -206,6 +199,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
           className="fritekst_editor"
           placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
           disabled={!redigerbart}
+          onChange={() => debouncedOppdaterFritekster(formValues)}
         />
       </Nav.Row>
 
@@ -222,7 +216,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
           onClick: onSubmit,
           disabled: !stegErGyldig || !formIsValid,
           autoDisableVedSpinner: true,
-          spinner: vedtakPending,
+          spinner: kontrollPending,
         }}
         bekreftTekst="Fatt vedtak"
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
