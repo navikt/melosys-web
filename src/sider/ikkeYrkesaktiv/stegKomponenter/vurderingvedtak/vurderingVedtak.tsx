@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
 
@@ -18,9 +18,16 @@ import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
 import { INNLEDNING_FRITEKST_HJELPETEKST, BEGRUNNELSE_FRITEKST_HJELPETEKST } from "./tekster";
+import * as Api from "../../../../services/api";
+import * as Utils from "../../../../utils";
 
 interface Props {
   aktivtSteg: boolean;
+}
+
+interface FormValuesProps {
+  innledningFritekst?: string;
+  begrunnelseFritekst?: string;
 }
 
 export const VurderingVedtak = ({ aktivtSteg }: Props) => {
@@ -35,28 +42,45 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
   const begrunnelseFritekst = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector);
   const innledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
 
-  const { control } = useForm({
+  const { control, watch } = useForm({
     mode: "all",
     defaultValues: {
       begrunnelseFritekst: begrunnelseFritekst || "",
       innledningFritekst: innledningFritekst || "",
     } as FieldValues,
   });
+  const formValues = watch();
 
-  const kontrollerFerdigbehandling = () =>
-    dispatch(
+  const [kontrollPending, setKontrollPending] = useState(false);
+
+  const kontrollerFerdigbehandling = async () => {
+    setKontrollPending(true);
+    await dispatch(
       kontrollOperations.kontrollerFerdigbehandling({
         behandlingID,
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         skalRegisteropplysningerOppdateres: false,
       })
     );
+    setKontrollPending(false);
+  };
 
   useEffect(() => {
     if (aktivtSteg) {
       kontrollerFerdigbehandling();
     }
   }, [aktivtSteg]);
+
+  const oppdaterFritekster = (values: FormValuesProps) => {
+    if (values && redigerbart && !kontrollPending) {
+      Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
+        innledningFritekst: values.innledningFritekst,
+        begrunnelseFritekst: values.begrunnelseFritekst,
+      });
+    }
+  };
+
+  const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), []);
 
   return (
     <div className="vurderingVedtakIkkeYrkesaktiv">
@@ -91,6 +115,7 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
           className="fritekst_editor"
           placeholder="Skriv inn tilleggsinformasjon til innledning..."
           disabled={!redigerbart}
+          onChange={() => debouncedOppdaterFritekster(formValues)}
         />
 
         <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
@@ -106,6 +131,7 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
           className="fritekst_editor"
           placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
           disabled={!redigerbart}
+          onChange={() => debouncedOppdaterFritekster(formValues)}
         />
       </Nav.Row>
     </div>
