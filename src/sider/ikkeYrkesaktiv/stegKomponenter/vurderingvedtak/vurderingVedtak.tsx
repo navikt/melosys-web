@@ -39,14 +39,14 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const lagretBegrunnelseFritekst = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector);
-  const lagretInnledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
+  const begrunnelseFritekst = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector);
+  const innledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
 
   const { control, watch } = useForm({
     mode: "all",
     defaultValues: {
-      begrunnelseFritekst: lagretBegrunnelseFritekst || "",
-      innledningFritekst: lagretInnledningFritekst || "",
+      begrunnelseFritekst: begrunnelseFritekst || "",
+      innledningFritekst: innledningFritekst || "",
     } as FieldValues,
   });
   const formValues = watch();
