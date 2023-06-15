@@ -58,6 +58,7 @@ const komponentState = (state: RootState) => ({
   },
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   alleLandkoder: landkoderSelectors.LandkoderSelector(state),
+  mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
 });
 
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -93,6 +94,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     initialValues,
     alleLandkoder,
     redigerbart,
+    mottatteOpplysningerStatus,
   } = useSelector(komponentState);
 
   const {
@@ -257,7 +259,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   useEffect(() => {
     async function kontroller() {
-      if (aktivtSteg && redigerbart) {
+      if (aktivtSteg && redigerbart && mottatteOpplysningerStatus === "OK") {
         setVedtakPending(true);
         await kontrollerFerdigbehandling(lagKontrollerFerdigbehandlingDto());
         setOppdaterFoerKontroll(false);
@@ -266,7 +268,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     }
 
     kontroller();
-  }, [aktivtSteg, redigerbart]);
+  }, [aktivtSteg, redigerbart, mottatteOpplysningerStatus]);
 
   const onSubmit = async () => {
     setVedtakPending(true);

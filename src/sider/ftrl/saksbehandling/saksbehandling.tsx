@@ -39,6 +39,7 @@ import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
 import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../featuretoggle/toggleNavn";
+import { kontrollOperations } from "../../../ducks/kontroll";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
@@ -83,6 +84,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   resetMottatteOpplysningerState: () => dispatch(mottatteOpplysningerOperations.resetState()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
+  resetKontroll: () => dispatch(kontrollOperations.resetKontroll()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -130,6 +132,7 @@ const Saksbehandling = ({
   startOgVisOppfriskModal,
   visOppfriskModal,
   resetFeiletrespons,
+  resetKontroll,
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
@@ -186,6 +189,7 @@ const Saksbehandling = ({
       resetBehandlingerState();
       resetMottatteOpplysningerState();
       resetFeiletrespons();
+      resetKontroll();
       skjulMenypanel();
     };
   }, []);

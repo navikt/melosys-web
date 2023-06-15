@@ -21,13 +21,14 @@ import "./dialogboksAvslagSoknad.css";
 import HtmlEditor from "../../htmlEditor";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../feilmeldinger";
-import { kontrollOperations } from "../../../ducks/kontroll";
+import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+  kontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -58,6 +59,7 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
     vedtakstype,
     kontrollerFerdigbehandling,
     feilmeldinger,
+    kontrollfeil,
   } = props;
 
   useEffect(() => {
@@ -110,7 +112,7 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
           <Nav.Typo.Systemtittel className="overskrift">
             Avslå søknaden på grunn av manglende opplysninger
           </Nav.Typo.Systemtittel>
-          <Feilmeldinger feilmeldinger={feilmeldinger} />
+          <Feilmeldinger feilmeldinger={feilmeldinger} kontrollfeil={kontrollfeil} />
           <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
           {bekreftRedigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           <div className="knapperadcontainer">

@@ -23,6 +23,7 @@ import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Sche
 import { vedtakOperations } from "../../../ducks/vedtak";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { kontrollerFerdigbehandling } from "../../../ducks/kontroll/operations";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
@@ -48,6 +49,8 @@ const VurderingAvslag12_x_og_16 = ({
   formValues,
   tilbake,
   validerMottatteOpplysninger,
+  mottatteOpplysningerStatus,
+  aktivtSteg,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const dispatch = useDispatch();
@@ -84,18 +87,20 @@ const VurderingAvslag12_x_og_16 = ({
   ];
 
   useEffect(() => {
-    dispatch(
-      kontrollerFerdigbehandling({
-        behandlingID,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-        kontrollerSomSkalIgnoreres: kopiTilArbeidsgiver
-          ? []
-          : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
-        skalRegisteropplysningerOppdateres: false,
-      })
-    );
-  }, [kopiTilArbeidsgiver]);
+    if (redigerbart && aktivtSteg && mottatteOpplysningerStatus === "OK") {
+      dispatch(
+        kontrollerFerdigbehandling({
+          behandlingID,
+          vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+          kontrollerSomSkalIgnoreres: kopiTilArbeidsgiver
+            ? []
+            : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
+          skalRegisteropplysningerOppdateres: false,
+        })
+      );
+    }
+  }, [kopiTilArbeidsgiver, mottatteOpplysningerStatus, aktivtSteg]);
 
   const validerForm = () => {
     touch("vedtakstype");
@@ -215,12 +220,15 @@ VurderingAvslag12_x_og_16.propTypes = {
   touch: PT.func.isRequired,
   formValues: PT.object,
   validerMottatteOpplysninger: PT.func.isRequired,
+  mottatteOpplysningerStatus: PT.string.isRequired,
+  aktivtSteg: PT.bool,
 };
 
 VurderingAvslag12_x_og_16.defaultProps = {
   art16_1_fritekst: "",
   redigerbart: true,
   formValues: {},
+  aktivtSteg: false,
 };
 
 const VurderingAvslagArtikkel12Og16Form = reduxForm({
@@ -254,6 +262,7 @@ const mapStateToProps = (state) => ({
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
   },
+  mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingAvslagArtikkel12Og16Form);

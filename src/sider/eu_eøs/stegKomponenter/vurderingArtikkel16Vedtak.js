@@ -27,6 +27,7 @@ import VurderingArtikkel16VedtakSchema from "./vurderingArtikkel16VedtakSchema";
 
 import "./vurderingArtikkel16Vedtak.css";
 import { vedtakOperations } from "../../../ducks/vedtak";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 export const VurderingArtikkel16VedtakBegrunnelser = ({
   art12_1_begrunnelser,
@@ -362,6 +363,7 @@ export const VurderingArtikkel16Vedtak = ({
   aktivtSteg,
   validerMottatteOpplysninger,
   fattVedtak,
+  mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
@@ -414,7 +416,7 @@ export const VurderingArtikkel16Vedtak = ({
 
   useEffect(() => {
     async function kontroller() {
-      if (aktivtSteg && formIsValid) {
+      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg && formIsValid) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling({
           behandlingID,
@@ -428,7 +430,7 @@ export const VurderingArtikkel16Vedtak = ({
     }
 
     kontroller();
-  }, [aktivtSteg, formIsValid]);
+  }, [aktivtSteg, formIsValid, mottatteOpplysningerStatus]);
 
   const vedKlikk = async () => {
     if (!validerForm()) return;
@@ -589,6 +591,7 @@ VurderingArtikkel16Vedtak.propTypes = {
   aktivtSteg: PT.bool,
   validerMottatteOpplysninger: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
+  mottatteOpplysningerStatus: PT.string.isRequired,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
@@ -663,6 +666,7 @@ const mapStateToProps = (state) => {
       vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
       vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
       vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+      mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     },
   };
 };

@@ -6,7 +6,9 @@ import Feilmeldinger from "./feilmeldinger";
 
 describe("Feilmeldinger", () => {
   it("Viser ingenting dersom det ikke finnes en mapping for feilkode", () => {
-    const feilmeldinger = shallow(<Feilmeldinger feilmeldinger={[{ kode: "tilfeldigString", felter: [] }]} />);
+    const feilmeldinger = shallow(
+      <Feilmeldinger feilmeldinger={[{ kode: "tilfeldigString", felter: [] }]} kontrollfeil={[]} />
+    );
     const varsel = feilmeldinger.find(".varselstripe");
 
     expect(varsel.children().length).toBe(0);
@@ -16,6 +18,7 @@ describe("Feilmeldinger", () => {
     const feilmeldinger = shallow(
       <Feilmeldinger
         feilmeldinger={[{ kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [] }]}
+        kontrollfeil={[]}
       />
     );
     const varsel = feilmeldinger.find(".varselstripe");
@@ -29,6 +32,7 @@ describe("Feilmeldinger", () => {
           { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [] },
           { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE, felter: [] },
         ]}
+        kontrollfeil={[]}
       />
     );
     const ul = feilmeldinger.find("ul");
