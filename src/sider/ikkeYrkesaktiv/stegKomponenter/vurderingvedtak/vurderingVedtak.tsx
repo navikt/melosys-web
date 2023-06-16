@@ -22,11 +22,7 @@ import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
 
 import { BEGRUNNELSE_FRITEKST_HJELPETEKST, INNLEDNING_FRITEKST_HJELPETEKST } from "./tekster";
-import { formSelectors } from "../../../../ducks/form";
-import { vedtakOperations } from "../../../../ducks/vedtak";
 import { BrevMottakereTabell } from "./mottakertabell/brevMottakereTabell";
-
-const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 
 interface Props {
   tilbake: () => void;
@@ -49,7 +45,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const lagretBegrunnelseFritekst = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector);
   const lagretInnledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
-  const mottatteOpplysningerFeilmeldinger = useSelector(formSelectors.SoknadErrorsSelector);
 
   const {
     control,
@@ -64,13 +59,9 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   });
   const formValues = watch();
 
-  const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [kontrollPending, setKontrollPending] = useState(false);
   const harIngenFeilmeldinger = !(feilmeldinger && feilmeldinger.length > 0);
   const stegErGyldig: boolean = redigerbart && formIsValid && harIngenFeilmeldinger;
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
 
   const kontrollerFerdigbehandling = async () => {
     setKontrollPending(true);
@@ -103,40 +94,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
   const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), []);
 
-  const lagDokumenterData: any = (mottakerRolle: string = "BRUKER") => {
-    return {
-      produserbardokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
-      mottaker: mottakerRolle,
-      innledningFritekst: formValues.innledningFritekst || null,
-      begrunnelseFritekst: formValues.begrunnelseFritekst || null,
-      orgNr: null,
-    };
-  };
-
-  const hentMuligeMottakere = async () => {
-    const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: IKKE_YRKESAKTIV_VEDTAKSBREV, // TODO: Endre til ikke yrkesaktiv brev
-      orgnr: null,
-    });
-    setMuligeMottakere(res);
-  };
-
-  useEffect(() => {
-    hentMuligeMottakere();
-  }, []);
-
-  const lagFattVedtakFTRLReqDto = () => {
-    return {
-      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
-      innledningFritekst: formValues?.innledningFritekst || null,
-      begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-      betalingsintervall: formValues?.betalingsintervall,
-      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
-      nyVurderingBakgrunn: null,
-    };
-  };
-
   useEffect(() => {
     if (
       formValues.innledningFritekst !== lagretInnledningFritekst ||
@@ -145,20 +102,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       debouncedOppdaterFritekster(formValues);
     }
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
-
-  const onSubmit = async () => {
-    const dispatchFattVedtak = dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakFTRLReqDto()));
-    setKontrollPending(true);
-    if (mottatteOpplysningerErGyldig()) {
-      dispatchFattVedtak().then((res) => {
-        if (res.data?.data?.error) {
-          setKontrollPending(false);
-        }
-      });
-    } else {
-      setKontrollPending(false);
-    }
-  };
 
   return (
     <div className="vurderingVedtakIkkeYrkesaktiv">
@@ -212,16 +155,16 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       </Nav.Row>
 
       {stegErGyldig && (
-        <BrevMottakereTabell
-          muligeMottakere={muligeMottakere}
-          hentBrevRequest={lagDokumenterData}
-          formIsValid={stegErGyldig}
-        />
+        <Nav.Row>
+          <BrevMottakereTabell formIsValid={stegErGyldig} />
+        </Nav.Row>
       )}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
-          onClick: onSubmit,
+          onClick: () => {
+            console.log("Implementeres i en annen PR.");
+          },
           disabled: !stegErGyldig || !formIsValid,
           autoDisableVedSpinner: true,
           spinner: kontrollPending,

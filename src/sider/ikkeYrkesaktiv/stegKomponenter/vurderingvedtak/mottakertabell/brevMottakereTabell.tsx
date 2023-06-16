@@ -1,28 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import * as Api from "../../../../../services/api";
-import * as Skjema from "../../../../../felleskomponenter/skjema";
-import * as Utils from "../../../../../utils";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import MottakerTabell from "../../../../../felleskomponenter/tabell/mottakerTabell";
 import PdfLenkeListe from "../../../../../felleskomponenter/pdfLenkeListe";
+import MKV from "../../../../../melosyskodeverk";
 
-interface BrevMottakereTabellProps {
-  muligeMottakere?: Api.DokumenterV2.HentMuligeMottakereResDto;
-  muligeMottakereNorskMyndighet?: Api.DokumenterV2.MuligMottaker[];
+interface IkkeYrkesaktiveMottakereTabellProps {
   formIsValid: boolean;
-  hentBrevRequest: any;
 }
 
-export const BrevMottakereTabell = ({
-  muligeMottakere,
-  muligeMottakereNorskMyndighet,
-  formIsValid,
-  hentBrevRequest,
-}: BrevMottakereTabellProps) => {
+export const BrevMottakereTabell = ({ formIsValid }: IkkeYrkesaktiveMottakereTabellProps) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+
+  const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
+
+  const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
+
+  const hentMuligeMottakere = async () => {
+    const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+      produserbartdokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
+      orgnr: null,
+    });
+    setMuligeMottakere(res);
+  };
+
+  useEffect(() => {
+    hentMuligeMottakere();
+  }, []);
+
+  const hentDokumentDataRequest: any = (mottakerrolle: string) => {
+    return {
+      produserbardokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
+      mottaker: mottakerrolle,
+      orgNr: null,
+    };
+  };
 
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return [
@@ -30,7 +45,7 @@ export const BrevMottakereTabell = ({
         sendesTilDokumenterV2: true,
         navn: muligMottaker.dokumentNavn,
         data: {
-          ...hentBrevRequest(muligMottaker.rolle),
+          ...hentDokumentDataRequest(muligMottaker.rolle),
         },
       },
     ];
@@ -56,34 +71,12 @@ export const BrevMottakereTabell = ({
     return [mapRad(muligeBrevMottakere.hovedMottaker)];
   };
 
-  const mapMottakerRaderNorskeMyndigheter = (muligeBrevMottakere: Api.DokumenterV2.MuligMottaker[]) => {
-    return muligeBrevMottakere.map((mottaker) => mapRad(mottaker));
-  };
-
   return (
     <>
-      {!Utils._isEmpty(muligeMottakere?.kopiMottakere) && (
-        <Skjema.Checkbox
-          className="kopiTilBrukerSjekkboks"
-          feltNavn="kopiTilBruker"
-          label="Send kopi til bruker/brukers fullmektig"
-        />
-      )}
-
       {muligeMottakere && (
         <MottakerTabell
           className="tabell"
           rader={mapMottakerRader(muligeMottakere)}
-          kolonner={[
-            { verdi: "Forhåndsvisning av brev", bredde: "60%" },
-            { verdi: "Mottaker", bredde: "40%" },
-          ]}
-        />
-      )}
-      {muligeMottakereNorskMyndighet && (
-        <MottakerTabell
-          className="tabell"
-          rader={mapMottakerRaderNorskeMyndigheter(muligeMottakereNorskMyndighet)}
           kolonner={[
             { verdi: "Forhåndsvisning av brev", bredde: "60%" },
             { verdi: "Mottaker", bredde: "40%" },
