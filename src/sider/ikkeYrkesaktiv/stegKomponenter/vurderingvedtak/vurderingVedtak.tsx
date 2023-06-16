@@ -66,7 +66,8 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [kontrollPending, setKontrollPending] = useState(false);
-  const stegErGyldig: boolean = redigerbart && formIsValid;
+  const harIngenFeilmeldinger = !(feilmeldinger && feilmeldinger.length > 0);
+  const stegErGyldig: boolean = redigerbart && formIsValid && harIngenFeilmeldinger;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);

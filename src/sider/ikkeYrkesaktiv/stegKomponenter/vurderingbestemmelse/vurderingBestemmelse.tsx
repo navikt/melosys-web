@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { FieldValues, useForm } from "react-hook-form";
@@ -43,6 +43,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const ikkeYrkesaktivSituasjonstype = useSelector(mottatteOpplysningerSelectors.IkkeYrkesaktivSituasjontypeSelector);
 
   const [muligeBestemmelser, setMuligeBestemmelser] = useState<KTObject[]>([]);
+  const [lagreLovvalgsperiodePending, setLagreLovvalgsperiodePending] = useState<boolean>(false);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_bestemmelse),
@@ -54,6 +55,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     } as FieldValues,
   });
   const formValues = watch();
+
+  const stegErGyldig =
+    formState?.isValid && redigerbart && formValues.utfall === GODKJENT && !lagreLovvalgsperiodePending;
 
   useEffect(() => {
     oppdaterStatus(formState.isValid && formValues.utfall && formValues.bestemmelse);
@@ -76,14 +80,14 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   };
 
   const lagreLovvalgsperiodeOgKontroller = async () => {
+    setLagreLovvalgsperiodePending(true);
     await dispatch(lovvalgsperioderOperations.lagre());
+    setLagreLovvalgsperiodePending(false);
   };
 
   const lagreIkkeYrkesaktivSituasjontype = (ikkeYrkesaktivSituasjontype: string | null) => {
     dispatch(mottatteOpplysningerOperations.oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype));
   };
-
-  const debouncedLagreLovvalgsperiode = useCallback(Utils._debounce(lagreLovvalgsperiodeOgKontroller, 500), []);
 
   const oppdaterOgLagreLovvalgsperiode = (values: FieldValues) => {
     dispatch(
@@ -100,8 +104,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING,
       })
     );
-
-    debouncedLagreLovvalgsperiode();
+    lagreLovvalgsperiodeOgKontroller();
   };
 
   const lagreBestemmelse = (bestemmelse: string) => {
@@ -223,8 +226,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreft,
-          disabled: !formState?.isValid || !redigerbart || formValues.utfall !== GODKJENT,
+          disabled: !stegErGyldig,
         }}
+        spinner={lagreLovvalgsperiodePending}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
