@@ -79,17 +79,11 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     dispatch(lovvalgsperioderOperations.send(behandlingID, []));
   };
 
-  const lagreLovvalgsperiodeOgKontroller = async () => {
-    await dispatch(lovvalgsperioderOperations.lagre());
-  };
-
   const lagreIkkeYrkesaktivSituasjontype = (ikkeYrkesaktivSituasjontype: string | null) => {
     dispatch(mottatteOpplysningerOperations.oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype));
   };
 
-  const oppdaterOgLagreLovvalgsperiode = async (values: FieldValues) => {
-    setLagreLovvalgsperiodePending(true);
-
+  const lagreLovvalgsperiodeOgKontroller = async (values: FieldValues) => {
     await dispatch(
       lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
         lovvalgsperiode: {
@@ -104,9 +98,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING,
       })
     );
-    await lagreLovvalgsperiodeOgKontroller();
-
-    setLagreLovvalgsperiodePending(false);
+    await dispatch(lovvalgsperioderOperations.lagre());
   };
 
   const lagreBestemmelse = (bestemmelse: string) => {
@@ -114,7 +106,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       setValue("ikkeYrkesaktivSituasjontype", null);
       lagreIkkeYrkesaktivSituasjontype(null);
     }
-    oppdaterOgLagreLovvalgsperiode({ ...formValues, bestemmelse });
+    setLagreLovvalgsperiodePending(true);
+    lagreLovvalgsperiodeOgKontroller({ ...formValues, bestemmelse }).then(() => setLagreLovvalgsperiodePending(false));
   };
 
   if (!aktivtSteg) return null;
