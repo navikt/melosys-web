@@ -23,6 +23,7 @@ import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
 
 import { BEGRUNNELSE_FRITEKST_HJELPETEKST, INNLEDNING_FRITEKST_HJELPETEKST } from "./tekster";
 import { BrevMottakereTabell } from "./mottakertabell/brevMottakereTabell";
+import { vedtakOperations } from "../../../../ducks/vedtak";
 
 interface Props {
   tilbake: () => void;
@@ -59,12 +60,12 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   });
   const formValues = watch();
 
-  const [kontrollPending, setKontrollPending] = useState(false);
+  const [kontrollEllerVedtakPending, setKontrollEllerVedtakPending] = useState(false);
   const harIngenFeilmeldinger = !(feilmeldinger && feilmeldinger.length > 0);
   const stegErGyldig: boolean = redigerbart && formIsValid && harIngenFeilmeldinger;
 
   const kontrollerFerdigbehandling = async () => {
-    setKontrollPending(true);
+    setKontrollEllerVedtakPending(true);
     await dispatch(
       kontrollOperations.kontrollerFerdigbehandling({
         behandlingID,
@@ -72,7 +73,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
         skalRegisteropplysningerOppdateres: false,
       })
     );
-    setKontrollPending(false);
+    setKontrollEllerVedtakPending(false);
   };
 
   useEffect(() => {
@@ -84,7 +85,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     // noinspection JSIgnoredPromiseFromCall
-    if (values && redigerbart && !kontrollPending) {
+    if (values && redigerbart && !kontrollEllerVedtakPending) {
       Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
         innledningFritekst: values.innledningFritekst,
         begrunnelseFritekst: values.begrunnelseFritekst,
@@ -102,6 +103,20 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       debouncedOppdaterFritekster(formValues);
     }
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
+
+  const fattVedtak = async () =>
+    dispatch(
+      await vedtakOperations.fatt(behandlingID, {
+        behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      })
+    );
+
+  const handleBekreft = async () => {
+    setKontrollEllerVedtakPending(true);
+    await fattVedtak();
+    setKontrollEllerVedtakPending(false);
+  };
 
   return (
     <div className="vurderingVedtakIkkeYrkesaktiv">
@@ -162,12 +177,10 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
       <Mui.StegKnapper
         bekreftKnappProps={{
-          onClick: () => {
-            console.log("Implementeres i en annen PR.");
-          },
+          onClick: handleBekreft,
           disabled: !stegErGyldig || !formIsValid,
           autoDisableVedSpinner: true,
-          spinner: kontrollPending,
+          spinner: kontrollEllerVedtakPending,
         }}
         bekreftTekst="Fatt vedtak"
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
