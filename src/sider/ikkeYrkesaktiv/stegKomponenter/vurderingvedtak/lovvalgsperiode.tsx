@@ -28,7 +28,6 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling }: LovvalgsperiodeP
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
-  const soeknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
 
   const { control, watch, formState, trigger } = useForm({
     resolver: yupResolver(vurdering_vedtak),
@@ -57,10 +56,9 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling }: LovvalgsperiodeP
           fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
           tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
         },
-        innvilgelsesResultat: "",
+        innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
         lovvalgsbestemmelse: lovvalgsperiode.lovvalgsbestemmelse,
-        lovvalgsland:
-          soeknadsland.join("") === MKV.Koder.land_iso2.CA_QC ? MKV.Koder.land_iso2.CA : soeknadsland.join(""),
+        lovvalgsland: MKV.Koder.land_iso2.NO,
         medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
         trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING,
       })

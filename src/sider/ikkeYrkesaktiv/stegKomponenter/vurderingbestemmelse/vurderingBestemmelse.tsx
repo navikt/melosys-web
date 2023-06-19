@@ -96,10 +96,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
           tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
         },
-        innvilgelsesResultat: "",
+        innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
         lovvalgsbestemmelse: values.bestemmelse,
-        lovvalgsland:
-          soeknadsland.join("") === MKV.Koder.land_iso2.CA_QC ? MKV.Koder.land_iso2.CA : soeknadsland.join(""),
+        lovvalgsland: MKV.Koder.land_iso2.NO,
         medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
         trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING,
       })
