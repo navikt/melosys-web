@@ -28,21 +28,15 @@ export const BrevMottakereTabell = () => {
     hentMuligeMottakere();
   }, []);
 
-  const hentDokumentDataRequest: any = (mottakerrolle: string) => {
-    return {
-      produserbardokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
-      mottaker: mottakerrolle,
-      orgNr: null,
-    };
-  };
-
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return [
       {
         sendesTilDokumenterV2: true,
         navn: muligMottaker.dokumentNavn,
         data: {
-          ...hentDokumentDataRequest(muligMottaker.rolle),
+          produserbardokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
+          mottaker: muligMottaker.rolle,
+          orgNr: null,
         },
       },
     ];
