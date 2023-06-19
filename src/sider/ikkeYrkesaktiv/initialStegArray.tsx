@@ -4,8 +4,8 @@ import { VurderingBestemmelse } from "./stegKomponenter/vurderingbestemmelse/vur
 import { VurderingVedtak } from "./stegKomponenter/vurderingvedtak/vurderingVedtak";
 
 const initialStartSteg = {
-  id: "Start",
-  tittel: "Start",
+  id: "Inngang",
+  tittel: "Inngang",
   stegPosisjon: 0,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: true,
