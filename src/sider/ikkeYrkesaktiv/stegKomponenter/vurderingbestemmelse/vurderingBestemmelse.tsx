@@ -56,9 +56,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   });
   const formValues = watch();
 
-  const stegErGyldig =
-    formState?.isValid && redigerbart && formValues.utfall === GODKJENT && !lagreLovvalgsperiodePending;
-
   useEffect(() => {
     oppdaterStatus(formState.isValid && formValues.utfall && formValues.bestemmelse);
   }, [formState?.isValid]);
@@ -221,7 +218,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreft,
-          disabled: !stegErGyldig,
+          disabled: !formState?.isValid || !redigerbart || formValues.utfall !== GODKJENT,
+          autoDisableVedSpinner: true,
         }}
         spinner={lagreLovvalgsperiodePending}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
