@@ -8,11 +8,7 @@ import MottakerTabell from "../../../../../felleskomponenter/tabell/mottakerTabe
 import PdfLenkeListe from "../../../../../felleskomponenter/pdfLenkeListe";
 import MKV from "../../../../../melosyskodeverk";
 
-interface IkkeYrkesaktiveMottakereTabellProps {
-  formIsValid: boolean;
-}
-
-export const BrevMottakereTabell = ({ formIsValid }: IkkeYrkesaktiveMottakereTabellProps) => {
+export const BrevMottakereTabell = () => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
 
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
@@ -59,7 +55,6 @@ export const BrevMottakereTabell = ({ formIsValid }: IkkeYrkesaktiveMottakereTab
           <PdfLenkeListe
             behandlingID={behandlingID}
             dokumenter={lagDokumenterData(muligMottaker)}
-            vedKlikk={() => formIsValid}
             className="forhåndsvisning"
           />
         ),

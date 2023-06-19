@@ -156,7 +156,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
       {stegErGyldig && (
         <Nav.Row>
-          <BrevMottakereTabell formIsValid={stegErGyldig} />
+          <BrevMottakereTabell />
         </Nav.Row>
       )}
 
