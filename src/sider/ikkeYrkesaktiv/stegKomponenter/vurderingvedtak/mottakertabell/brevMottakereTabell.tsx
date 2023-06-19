@@ -19,12 +19,13 @@ export const BrevMottakereTabell = ({ formIsValid }: IkkeYrkesaktiveMottakereTab
 
   const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 
-  const hentMuligeMottakere = async () => {
-    const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+  const hentMuligeMottakere = () => {
+    Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
       produserbartdokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
       orgnr: null,
+    }).then((res) => {
+      setMuligeMottakere(res);
     });
-    setMuligeMottakere(res);
   };
 
   useEffect(() => {

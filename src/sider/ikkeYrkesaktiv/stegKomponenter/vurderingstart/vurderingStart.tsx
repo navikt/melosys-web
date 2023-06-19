@@ -18,7 +18,6 @@ import { landkoderSelectors } from "../../../../ducks/landkoder";
 
 import vurderingStartSchema from "./vurderingStartSchema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import * as Api from "../../../../services/api";
 
 interface Props {
   bekreft: () => void;
@@ -34,7 +33,6 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
   const søknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector)[0];
   const landkoder = useSelector(landkoderSelectors.LandkoderFraSakstypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
 
   const { control, watch, formState, trigger } = useForm({
@@ -81,19 +79,11 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
     );
   };
 
-  const nullstillFritekster = async () => {
-    await Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
-      innledningFritekst: null,
-      begrunnelseFritekst: null,
-    });
-  };
-
   const bekreftHandle = async () => {
     if (skalHenteRegisteropplysninger) {
       lagrePeriodeOgLand();
 
       setVisSpinner(true);
-      await nullstillFritekster();
       await lagreMottatteOpplysningerOgOppfriskSaksopplysninger();
       setVisSpinner(false);
       dispatch(menypanelOperations.visMenypanel());
