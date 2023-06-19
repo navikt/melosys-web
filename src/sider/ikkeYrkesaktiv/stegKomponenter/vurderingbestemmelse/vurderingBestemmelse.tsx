@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { FieldValues, useForm } from "react-hook-form";
@@ -43,6 +43,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const ikkeYrkesaktivSituasjonstype = useSelector(mottatteOpplysningerSelectors.IkkeYrkesaktivSituasjontypeSelector);
 
   const [muligeBestemmelser, setMuligeBestemmelser] = useState<KTObject[]>([]);
+  const [lagreLovvalgsperiodePending, setLagreLovvalgsperiodePending] = useState<boolean>(false);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_bestemmelse),
@@ -75,18 +76,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     dispatch(lovvalgsperioderOperations.send(behandlingID, []));
   };
 
-  const lagreLovvalgsperiodeOgKontroller = async () => {
-    await dispatch(lovvalgsperioderOperations.lagre());
-  };
-
   const lagreIkkeYrkesaktivSituasjontype = (ikkeYrkesaktivSituasjontype: string | null) => {
     dispatch(mottatteOpplysningerOperations.oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype));
   };
 
-  const debouncedLagreLovvalgsperiode = useCallback(Utils._debounce(lagreLovvalgsperiodeOgKontroller, 500), []);
-
-  const oppdaterOgLagreLovvalgsperiode = (values: FieldValues) => {
-    dispatch(
+  const lagreLovvalgsperiodeOgKontroller = async (values: FieldValues) => {
+    await dispatch(
       lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
         lovvalgsperiode: {
           fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
@@ -100,8 +95,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING,
       })
     );
-
-    debouncedLagreLovvalgsperiode();
+    await dispatch(lovvalgsperioderOperations.lagre());
   };
 
   const lagreBestemmelse = (bestemmelse: string) => {
@@ -109,7 +103,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       setValue("ikkeYrkesaktivSituasjontype", null);
       lagreIkkeYrkesaktivSituasjontype(null);
     }
-    oppdaterOgLagreLovvalgsperiode({ ...formValues, bestemmelse });
+    setLagreLovvalgsperiodePending(true);
+    lagreLovvalgsperiodeOgKontroller({ ...formValues, bestemmelse }).then(() => setLagreLovvalgsperiodePending(false));
   };
 
   if (!aktivtSteg) return null;
@@ -224,7 +219,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         bekreftKnappProps={{
           onClick: bekreft,
           disabled: !formState?.isValid || !redigerbart || formValues.utfall !== GODKJENT,
+          autoDisableVedSpinner: true,
         }}
+        spinner={lagreLovvalgsperiodePending}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>

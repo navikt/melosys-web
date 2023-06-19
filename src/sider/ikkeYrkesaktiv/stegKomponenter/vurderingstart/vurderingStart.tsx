@@ -78,6 +78,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
       })
     );
   };
+
   const bekreftHandle = async () => {
     if (skalHenteRegisteropplysninger) {
       lagrePeriodeOgLand();

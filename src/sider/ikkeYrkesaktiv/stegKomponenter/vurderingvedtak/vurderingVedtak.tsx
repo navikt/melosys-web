@@ -5,23 +5,27 @@ import { FieldValues, useForm } from "react-hook-form";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Forms from "../../../../felleskomponenter/forms";
+import * as Api from "../../../../services/api";
+import * as Utils from "../../../../utils";
+import * as Mui from "../../../../felleskomponenter/ui";
 
 import { Lovvalgsperiode } from "./lovvalgsperiode";
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
+
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
-
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
-import { INNLEDNING_FRITEKST_HJELPETEKST, BEGRUNNELSE_FRITEKST_HJELPETEKST } from "./tekster";
-import * as Api from "../../../../services/api";
-import * as Utils from "../../../../utils";
+
+import { BEGRUNNELSE_FRITEKST_HJELPETEKST, INNLEDNING_FRITEKST_HJELPETEKST } from "./tekster";
+import { BrevMottakereTabell } from "./mottakertabell/brevMottakereTabell";
 
 interface Props {
+  tilbake: () => void;
   aktivtSteg: boolean;
 }
 
@@ -30,7 +34,7 @@ interface FormValuesProps {
   begrunnelseFritekst?: string;
 }
 
-export const VurderingVedtak = ({ aktivtSteg }: Props) => {
+export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
   const dispatch = useDispatch();
@@ -39,19 +43,25 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const begrunnelseFritekst = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector);
-  const innledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
+  const lagretBegrunnelseFritekst = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector);
+  const lagretInnledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
 
-  const { control, watch } = useForm({
+  const {
+    control,
+    watch,
+    formState: { isValid: formIsValid },
+  } = useForm({
     mode: "all",
     defaultValues: {
-      begrunnelseFritekst: begrunnelseFritekst || "",
-      innledningFritekst: innledningFritekst || "",
+      begrunnelseFritekst: lagretBegrunnelseFritekst || "",
+      innledningFritekst: lagretInnledningFritekst || "",
     } as FieldValues,
   });
   const formValues = watch();
 
   const [kontrollPending, setKontrollPending] = useState(false);
+  const harIngenFeilmeldinger = Utils._isEmpty(feilmeldinger);
+  const stegErGyldig: boolean = redigerbart && formIsValid && harIngenFeilmeldinger;
 
   const kontrollerFerdigbehandling = async () => {
     setKontrollPending(true);
@@ -81,6 +91,15 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
   };
 
   const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), []);
+
+  useEffect(() => {
+    if (
+      formValues.innledningFritekst !== lagretInnledningFritekst ||
+      formValues.begrunnelseFritekst !== lagretBegrunnelseFritekst
+    ) {
+      debouncedOppdaterFritekster(formValues);
+    }
+  }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
 
   return (
     <div className="vurderingVedtakIkkeYrkesaktiv">
@@ -115,7 +134,6 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
           className="fritekst_editor"
           placeholder="Skriv inn tilleggsinformasjon til innledning..."
           disabled={!redigerbart}
-          onChange={() => debouncedOppdaterFritekster(formValues)}
         />
 
         <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
@@ -131,9 +149,27 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
           className="fritekst_editor"
           placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
           disabled={!redigerbart}
-          onChange={() => debouncedOppdaterFritekster(formValues)}
         />
       </Nav.Row>
+
+      {stegErGyldig && (
+        <Nav.Row>
+          <BrevMottakereTabell />
+        </Nav.Row>
+      )}
+
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          onClick: () => {
+            // TODO: Implementeres i en annen PR.
+          },
+          disabled: !stegErGyldig || !formIsValid,
+          autoDisableVedSpinner: true,
+          spinner: kontrollPending,
+        }}
+        bekreftTekst="Fatt vedtak"
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };
