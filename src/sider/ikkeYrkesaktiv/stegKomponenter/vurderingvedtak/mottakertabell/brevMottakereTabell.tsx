@@ -8,12 +8,12 @@ import MottakerTabell from "../../../../../felleskomponenter/tabell/mottakerTabe
 import PdfLenkeListe from "../../../../../felleskomponenter/pdfLenkeListe";
 import MKV from "../../../../../melosyskodeverk";
 
+const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
+
 export const BrevMottakereTabell = () => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
 
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
-
-  const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 
   const hentMuligeMottakere = () => {
     Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
