@@ -163,6 +163,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: () => {
+            // eslint-disable-next-line no-console
             console.log("Implementeres i en annen PR.");
           },
           disabled: !stegErGyldig || !formIsValid,
