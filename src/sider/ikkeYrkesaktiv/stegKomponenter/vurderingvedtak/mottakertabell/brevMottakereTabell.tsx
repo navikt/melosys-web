@@ -60,7 +60,7 @@ export const BrevMottakereTabell = () => {
 
   return (
     <>
-      {Utils._isEmpty(muligeMottakere) && (
+      {!Utils._isEmpty(muligeMottakere) && (
         <MottakerTabell
           className="tabell"
           rader={mapMottakerRader(muligeMottakere)}

@@ -60,7 +60,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const formValues = watch();
 
   const [kontrollPending, setKontrollPending] = useState(false);
-  const harIngenFeilmeldinger = !(feilmeldinger && feilmeldinger.length > 0);
+  const harIngenFeilmeldinger = Utils._isEmpty(feilmeldinger);
   const stegErGyldig: boolean = redigerbart && formIsValid && harIngenFeilmeldinger;
 
   const kontrollerFerdigbehandling = async () => {
