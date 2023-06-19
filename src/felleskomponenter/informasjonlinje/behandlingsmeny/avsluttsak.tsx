@@ -1,8 +1,13 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
-import Handling from "./handling";
 import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
+import { modalerOperations } from "../../../ducks/modaler";
+import Handling from "./handling";
 
 const {
   YRKESAKTIV,
@@ -23,27 +28,16 @@ const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE } = MKV.Koder.behandlinger
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
 
-type avsluttSakProps = {
-  avslaaSoknad: () => void;
-  henleggSak: () => void;
-  apneBekreftValgModal: (bekreftValgType: BekreftValgTypes) => void;
-  sakstema: string;
-  sakstype: string;
-  behandlingstema: string;
-  behandlingstype: string;
-  redigerbart: boolean;
-};
+const AvsluttSak = () => {
+  const dispatch = useDispatch();
+  const apneBekreftValgModal = (type: BekreftValgTypes) => dispatch(modalerOperations.visBekreftValg(type));
 
-const AvsluttSak = ({
-  avslaaSoknad,
-  henleggSak,
-  sakstema,
-  sakstype,
-  behandlingstema,
-  behandlingstype,
-  apneBekreftValgModal,
-  redigerbart,
-}: avsluttSakProps) => {
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+
   const behandlingstypeErNyVurdering = behandlingstype === NY_VURDERING;
   const behandlingstypeErKlage = behandlingstype === KLAGE;
   const behandlingstemaErUnntak =
@@ -237,7 +231,10 @@ const AvsluttSak = ({
             />
           )}
           {skalViseAvslåPgaManglendeOpplysninger() && (
-            <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />
+            <Handling
+              tekst="Avslå søknad pga. manglende opplysninger"
+              onClick={() => dispatch(modalerOperations.visAvslagSoknad())}
+            />
           )}
           {skalViseVedtakOmgjort && (
             <Handling
@@ -267,7 +264,9 @@ const AvsluttSak = ({
       {skalViseFerdigbehandlet() && (
         <Handling tekst="Ferdigbehandlet" onClick={() => apneBekreftValgModal(BekreftValgTypes.FERDIGBEHANDLET)} />
       )}
-      {skalViseBehandlingenErHenlagt() && <Handling tekst="Søknaden/klagen er trukket" onClick={henleggSak} />}
+      {skalViseBehandlingenErHenlagt() && (
+        <Handling tekst="Søknaden/klagen er trukket" onClick={() => dispatch(modalerOperations.visHenlegg())} />
+      )}
       {skalViseBehandlingenErBortfalt() && (
         <Handling
           tekst="Behandlingen er bortfalt"
