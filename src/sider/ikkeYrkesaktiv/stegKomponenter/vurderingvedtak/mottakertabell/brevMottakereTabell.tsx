@@ -8,6 +8,7 @@ import MottakerTabell from "../../../../../felleskomponenter/tabell/mottakerTabe
 import PdfLenkeListe from "../../../../../felleskomponenter/pdfLenkeListe";
 import MKV from "../../../../../melosyskodeverk";
 import { useAsyncCallbackState } from "../../../../../hooks";
+import * as Utils from "../../../../../utils";
 
 const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -59,7 +60,7 @@ export const BrevMottakereTabell = () => {
 
   return (
     <>
-      {muligeMottakere && (
+      {Utils._isEmpty(muligeMottakere) && (
         <MottakerTabell
           className="tabell"
           rader={mapMottakerRader(muligeMottakere)}
