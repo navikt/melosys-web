@@ -52,15 +52,11 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling }: LovvalgsperiodeP
   const oppdaterOgLagreLovvalgsperiode = (values: FieldValues) => {
     dispatch(
       lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
+        ...lovvalgsperiode,
         lovvalgsperiode: {
           fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
           tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
         },
-        innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
-        lovvalgsbestemmelse: lovvalgsperiode.lovvalgsbestemmelse,
-        lovvalgsland: MKV.Koder.land_iso2.NO,
-        medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
-        trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING,
       })
     );
 
