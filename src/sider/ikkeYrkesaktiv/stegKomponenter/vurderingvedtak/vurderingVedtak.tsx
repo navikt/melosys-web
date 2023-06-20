@@ -104,7 +104,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
   const fattVedtak = async () =>
     dispatch(
-      await vedtakOperations.fatt(behandlingID, {
+      vedtakOperations.fatt(behandlingID, {
         behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       })
@@ -113,7 +113,9 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const handleBekreft = async () => {
     setKontrollEllerVedtakPending(true);
     fattVedtak().then(() => {
-      setKontrollEllerVedtakPending(false);
+      if (!Utils._isEmpty(feilmeldinger)) {
+        setKontrollEllerVedtakPending(false);
+      }
     });
   };
 
