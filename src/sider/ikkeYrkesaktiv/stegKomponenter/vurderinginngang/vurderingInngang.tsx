@@ -16,7 +16,7 @@ import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
 
-import vurderingStartSchema from "./vurderingStartSchema";
+import vurderingInngangSchema from "./vurderingInngangSchema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
 interface Props {
@@ -25,7 +25,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
+export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
 
   const periodeFom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector));
@@ -36,7 +36,7 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
 
   const { control, watch, formState, trigger } = useForm({
-    resolver: yupResolver(vurderingStartSchema),
+    resolver: yupResolver(vurderingInngangSchema),
     mode: "all",
     defaultValues: {
       fom: periodeFom,
