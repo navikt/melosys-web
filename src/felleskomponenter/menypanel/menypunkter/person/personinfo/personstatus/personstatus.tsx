@@ -17,16 +17,17 @@ interface PersonstatusProps {
       >
     | undefined;
   modalAriaHideApp?: boolean;
+  erLitenSkjerm: boolean;
 }
 
-const Personstatus = ({ status, modalAriaHideApp }: PersonstatusProps) => {
+const Personstatus = ({ status, modalAriaHideApp, erLitenSkjerm }: PersonstatusProps) => {
   const [visPersonstatusModal, setVisPersonstatusModal] = useState(false);
 
   const aktivePersonstatuser = status?.filter((s) => !s.erHistorisk) || [];
   const historiskePersonstatuser = status?.filter((s) => s.erHistorisk) || [];
 
   return (
-    <div className="personinfo__personstatus">
+    <>
       <PersonstatusModal
         aktivePersonstatuser={aktivePersonstatuser}
         historiskePersonstatuser={historiskePersonstatuser}
@@ -35,18 +36,18 @@ const Personstatus = ({ status, modalAriaHideApp }: PersonstatusProps) => {
         modalAriaHideApp={modalAriaHideApp}
       />
 
-      <Nav.Typo.EtikettLiten>Personstatus</Nav.Typo.EtikettLiten>
+      <Nav.Column xs={erLitenSkjerm ? "4" : "3"}>
+        <Nav.Typo.Element>Personstatus:</Nav.Typo.Element>
+      </Nav.Column>
       {status && (
-        <Nav.Typo.Element>
-          <span className="personinfo__personstatus">
-            {aktivePersonstatuser[0]?.tekst || "Ingen personstatus funnet"}
-          </span>
-          <Mui.Lenkeknapp className="personstatus__vis-detaljer-button" onClick={() => setVisPersonstatusModal(true)}>
+        <Nav.Column xs={erLitenSkjerm ? "8" : "9"}>
+          {aktivePersonstatuser[0]?.tekst || "Ingen personstatus funnet"}
+          <Mui.Lenkeknapp className="personinfo__vis-detaljer" onClick={() => setVisPersonstatusModal(true)}>
             Vis detaljer
           </Mui.Lenkeknapp>
-        </Nav.Typo.Element>
+        </Nav.Column>
       )}
-    </div>
+    </>
   );
 };
 
