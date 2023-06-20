@@ -35,7 +35,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
     undefined,
-    [behandlingID]
+    [behandlingID, aktivtSteg]
   );
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const {

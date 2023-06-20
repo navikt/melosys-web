@@ -6,6 +6,9 @@ const dependencyFinnes = (dependency: any) => {
   if (typeof dependency === "number") {
     return dependency !== 0;
   }
+  if (typeof dependency === "boolean") {
+    return true;
+  }
   return !Utils._isEmpty(dependency);
 };
 
