@@ -9,7 +9,6 @@ import "./stegKnapper.css";
 interface StegKnapperProps {
   bekreftKnappProps: ComponentProps<typeof Nav.Hovedknapp>;
   bekreftTekst?: string;
-  spinner?: boolean;
   tilbakeKnappProps?: ComponentProps<typeof Nav.Flatknapp>;
   className?: string;
 }
@@ -17,7 +16,6 @@ interface StegKnapperProps {
 const StegKnapper = ({
   bekreftKnappProps,
   bekreftTekst = "Bekreft og fortsett",
-  spinner,
   tilbakeKnappProps,
   className,
 }: StegKnapperProps) => {
@@ -30,7 +28,6 @@ const StegKnapper = ({
       <Nav.Hovedknapp
         mini
         {...bekreftKnappProps}
-        spinner={spinner}
         className={bekreftKnappCls}
         htmlType={bekreftKnappProps.htmlType || "button"}
       >
