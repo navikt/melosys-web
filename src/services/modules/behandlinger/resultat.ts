@@ -2,8 +2,8 @@ import { getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, BEHANDLINGER } from "../../api-constants";
 
 export interface OppdaterFritekster {
-  innledningFritekst?: string | null;
-  begrunnelseFritekst?: string | null;
+  innledningFritekst?: string;
+  begrunnelseFritekst?: string;
 }
 
 export interface AngiBehandlingsresultattype {

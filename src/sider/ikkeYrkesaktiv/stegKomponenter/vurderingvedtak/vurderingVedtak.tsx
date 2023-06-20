@@ -78,13 +78,11 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
   useEffect(() => {
     if (aktivtSteg) {
-      // noinspection JSIgnoredPromiseFromCall
       kontrollerFerdigbehandling();
     }
   }, [aktivtSteg]);
 
   const oppdaterFritekster = (values: FormValuesProps) => {
-    // noinspection JSIgnoredPromiseFromCall
     if (values && redigerbart && !kontrollEllerVedtakPending) {
       Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
         innledningFritekst: values.innledningFritekst,
