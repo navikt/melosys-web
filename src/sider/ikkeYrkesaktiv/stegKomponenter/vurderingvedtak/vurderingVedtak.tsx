@@ -61,7 +61,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const formValues = watch();
 
   const [kontrollEllerVedtakPending, setKontrollEllerVedtakPending] = useState(false);
-  const harIngenFeilmeldinger = !(feilmeldinger && feilmeldinger.length > 0);
+  const harIngenFeilmeldinger = Utils._isEmpty(feilmeldinger);
   const stegErGyldig: boolean = redigerbart && formIsValid && harIngenFeilmeldinger;
 
   const kontrollerFerdigbehandling = async () => {
@@ -171,7 +171,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
       {stegErGyldig && (
         <Nav.Row>
-          <BrevMottakereTabell formIsValid={stegErGyldig} />
+          <BrevMottakereTabell />
         </Nav.Row>
       )}
 

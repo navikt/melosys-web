@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 
 import * as Api from "../../../../../services/api";
@@ -7,37 +7,23 @@ import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import MottakerTabell from "../../../../../felleskomponenter/tabell/mottakerTabell";
 import PdfLenkeListe from "../../../../../felleskomponenter/pdfLenkeListe";
 import MKV from "../../../../../melosyskodeverk";
+import { useAsyncCallbackState } from "../../../../../hooks";
+import * as Utils from "../../../../../utils";
 
-interface IkkeYrkesaktiveMottakereTabellProps {
-  formIsValid: boolean;
-}
+const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 
-export const BrevMottakereTabell = ({ formIsValid }: IkkeYrkesaktiveMottakereTabellProps) => {
+export const BrevMottakereTabell = () => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
 
-  const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
-
-  const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
-
-  const hentMuligeMottakere = async () => {
-    const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
-      orgnr: null,
-    });
-    setMuligeMottakere(res);
-  };
-
-  useEffect(() => {
-    hentMuligeMottakere();
-  }, []);
-
-  const hentDokumentDataRequest: any = (mottakerrolle: string) => {
-    return {
-      produserbardokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
-      mottaker: mottakerrolle,
-      orgNr: null,
-    };
-  };
+  const [muligeMottakere] = useAsyncCallbackState(
+    () =>
+      Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+        produserbartdokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
+        orgnr: null,
+      }),
+    Api.DokumenterV2.tomHentMuligeMottakereResDto(),
+    []
+  );
 
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return [
@@ -45,7 +31,9 @@ export const BrevMottakereTabell = ({ formIsValid }: IkkeYrkesaktiveMottakereTab
         sendesTilDokumenterV2: true,
         navn: muligMottaker.dokumentNavn,
         data: {
-          ...hentDokumentDataRequest(muligMottaker.rolle),
+          produserbardokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
+          mottaker: muligMottaker.rolle,
+          orgNr: null,
         },
       },
     ];
@@ -58,7 +46,6 @@ export const BrevMottakereTabell = ({ formIsValid }: IkkeYrkesaktiveMottakereTab
           <PdfLenkeListe
             behandlingID={behandlingID}
             dokumenter={lagDokumenterData(muligMottaker)}
-            vedKlikk={() => formIsValid}
             className="forhåndsvisning"
           />
         ),
@@ -73,7 +60,7 @@ export const BrevMottakereTabell = ({ formIsValid }: IkkeYrkesaktiveMottakereTab
 
   return (
     <>
-      {muligeMottakere && (
+      {!Utils._isEmpty(muligeMottakere) && (
         <MottakerTabell
           className="tabell"
           rader={mapMottakerRader(muligeMottakere)}
