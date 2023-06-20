@@ -112,8 +112,9 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
   const handleBekreft = async () => {
     setKontrollEllerVedtakPending(true);
-    await fattVedtak();
-    setKontrollEllerVedtakPending(false);
+    fattVedtak().then(() => {
+      setKontrollEllerVedtakPending(false);
+    });
   };
 
   return (
