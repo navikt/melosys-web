@@ -140,8 +140,8 @@ export const VurderingStart = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) =
         bekreftKnappProps={{
           onClick: bekreftHandle,
           disabled: !formState?.isValid || !redigerbart,
+          spinner: visSpinner,
         }}
-        spinner={visSpinner}
         bekreftTekst="Bekreft og innhent registeropplysninger"
       />
     </div>

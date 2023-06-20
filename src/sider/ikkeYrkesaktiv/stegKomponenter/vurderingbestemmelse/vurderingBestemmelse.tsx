@@ -220,8 +220,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           onClick: bekreft,
           disabled: !formState?.isValid || !redigerbart || formValues.utfall !== GODKJENT,
           autoDisableVedSpinner: true,
+          spinner: lagreLovvalgsperiodePending,
         }}
-        spinner={lagreLovvalgsperiodePending}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
