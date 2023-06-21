@@ -2,10 +2,10 @@ import React, { useState } from "react";
 
 import * as Nav from "../../../../../../navFrontend";
 import * as Mui from "../../../../../ui";
-import SivilstandModal from "./sivilstandModal";
-
-import "../personinfo.css";
 import * as Types from "../../../../../../graphql/generated/types";
+
+import SivilstandModal from "./sivilstandModal";
+import "../personinfo.css";
 
 interface SivilstandProps {
   sivilstand:
@@ -26,8 +26,34 @@ const Sivilstand = ({ sivilstand, modalAriaHideApp, erLitenSkjerm }: SivilstandP
   const aktiveSivilstander = sivilstand?.filter((s) => !s.erHistorisk) || [];
   const historiskeSivilstander = sivilstand?.filter((s) => s.erHistorisk) || [];
 
+  const SivilstatusVisning = () => {
+    if (!sivilstand) {
+      return null;
+    }
+
+    if (erLitenSkjerm) {
+      return (
+        <Nav.Column xs="8">
+          {aktiveSivilstander[0]?.type || "Ingen sivilstand funnet"}
+          <Mui.Lenkeknapp className="personinfo__vis-detaljer" onClick={() => setVisSivilstandModal(true)}>
+            Vis detaljer
+          </Mui.Lenkeknapp>
+        </Nav.Column>
+      );
+    }
+
+    return (
+      <div>
+        <Nav.Column xs="5">{aktiveSivilstander[0]?.type || "Ingen sivilstand funnet"}</Nav.Column>
+        <Nav.Column xs="3">
+          <Mui.Lenkeknapp onClick={() => setVisSivilstandModal(true)}>Vis detaljer</Mui.Lenkeknapp>
+        </Nav.Column>
+      </div>
+    );
+  };
+
   return (
-    <>
+    <div className="sivilstand">
       <SivilstandModal
         aktiveSivilstander={aktiveSivilstander}
         historiskeSivilstander={historiskeSivilstander}
@@ -39,15 +65,8 @@ const Sivilstand = ({ sivilstand, modalAriaHideApp, erLitenSkjerm }: SivilstandP
       <Nav.Column xs={erLitenSkjerm ? "4" : "3"}>
         <Nav.Typo.Element>Sivilstand:</Nav.Typo.Element>
       </Nav.Column>
-      {sivilstand && (
-        <Nav.Column xs={erLitenSkjerm ? "8" : "9"}>
-          {aktiveSivilstander[0]?.type || "Ingen sivilstand funnet"}
-          <Mui.Lenkeknapp className="personinfo__vis-detaljer" onClick={() => setVisSivilstandModal(true)}>
-            Vis detaljer
-          </Mui.Lenkeknapp>
-        </Nav.Column>
-      )}
-    </>
+      <SivilstatusVisning />
+    </div>
   );
 };
 
