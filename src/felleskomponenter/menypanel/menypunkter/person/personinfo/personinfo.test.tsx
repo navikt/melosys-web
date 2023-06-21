@@ -11,6 +11,16 @@ import Personinfo from "./personinfo";
 import { HentPersonopplysningerDocument } from "../../../../informasjonlinje/hentpersonopplysninger.generated";
 
 describe("Personinfo", () => {
+  window.matchMedia =
+    window.matchMedia ||
+    function x() {
+      return {
+        matches: false,
+        addEventListener: function y() {},
+        removeEventListener: function z() {},
+      };
+    };
+
   const mockedProps = mock<ComponentProps<typeof Personinfo>>();
   let props = instance(mockedProps);
 
