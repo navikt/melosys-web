@@ -13,6 +13,6 @@ const KontrollDataSelector = createSelector(KontrollSelector, (kontroll) => kont
 
 export const KontrollfeilSelector = createSelector(KontrollDataSelector, (data) => data.kontrollfeilList || []);
 
-const ReduxStatusSelector = createSelector(KontrollSelector, (vedtak) => vedtak.status);
+const ReduxStatusSelector = createSelector(KontrollSelector, (kontroll) => kontroll.status);
 
 export const ErPendingSelector = createSelector(ReduxStatusSelector, (status) => status === STATUS.PENDING);

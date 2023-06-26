@@ -18,7 +18,6 @@ import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import * as Utils from "../../../../utils";
-import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
 
 const UNNTAK = "UNNTAK";
 const { GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
@@ -183,8 +182,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
               ))}
             </Nav.Fieldset>
           )}
-
-          {formState.isValid && <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" />}
         </>
       )}
 
