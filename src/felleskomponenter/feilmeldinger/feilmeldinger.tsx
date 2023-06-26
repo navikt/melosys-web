@@ -24,20 +24,12 @@ export default ({ className, exclude }: feilmeldingerProps) => {
     return null;
   }
 
-  /* Feilmeldinger settes gjennom error responses fra api, ingen kasting av exceptions i
-   * kontrollFerdigbehandling så disse vil ikke overlappe
-   */
   const renderInnhold = () => {
     if (typeof feilmeldinger === "string") {
       return feilmeldinger;
     }
 
-    let filtrerteFeilmeldinger;
-    if (!Utils._isEmpty(kontrollfeil)) {
-      filtrerteFeilmeldinger = kontrollfeil.filter((value) => !exclude?.includes(value.kode));
-    } else {
-      filtrerteFeilmeldinger = feilmeldinger.filter((value) => !exclude?.includes(value.kode));
-    }
+    const filtrerteFeilmeldinger = kontrollfeil.concat(feilmeldinger).filter((value) => !exclude?.includes(value.kode));
 
     if (filtrerteFeilmeldinger.length === 0) {
       return null;
