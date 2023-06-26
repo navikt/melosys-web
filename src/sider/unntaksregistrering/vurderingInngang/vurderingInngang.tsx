@@ -194,8 +194,8 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
           onClick: bekreftHandle,
           disabled: !formState?.isValid || !redigerbart,
           autoDisableVedSpinner: true,
+          spinner: visSpinner,
         }}
-        spinner={visSpinner}
         bekreftTekst="Bekreft og innhent registeropplysninger"
       />
     </div>

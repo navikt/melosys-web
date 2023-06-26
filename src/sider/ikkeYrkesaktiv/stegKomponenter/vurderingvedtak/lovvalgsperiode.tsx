@@ -2,7 +2,6 @@ import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
-import MKV from "../../../../melosyskodeverk";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 
@@ -28,7 +27,6 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling }: LovvalgsperiodeP
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
-  const soeknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
 
   const { control, watch, formState, trigger } = useForm({
     resolver: yupResolver(vurdering_vedtak),
@@ -53,16 +51,11 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling }: LovvalgsperiodeP
   const oppdaterOgLagreLovvalgsperiode = (values: FieldValues) => {
     dispatch(
       lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
+        ...lovvalgsperiode,
         lovvalgsperiode: {
           fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
           tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
         },
-        innvilgelsesResultat: "",
-        lovvalgsbestemmelse: lovvalgsperiode.lovvalgsbestemmelse,
-        lovvalgsland:
-          soeknadsland.join("") === MKV.Koder.land_iso2.CA_QC ? MKV.Koder.land_iso2.CA : soeknadsland.join(""),
-        medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
-        trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING,
       })
     );
 
