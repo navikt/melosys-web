@@ -11,13 +11,12 @@ import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetek
 
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
+import { kontrollOperations } from "../../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
-import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
-import { INNLEDNING_FRITEKST_HJELPETEKST, BEGRUNNELSE_FRITEKST_HJELPETEKST } from "./tekster";
+import { BEGRUNNELSE_FRITEKST_HJELPETEKST, INNLEDNING_FRITEKST_HJELPETEKST } from "./tekster";
 import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 
@@ -38,10 +37,8 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
-  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const begrunnelseFritekst = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector);
   const innledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
 
   const { control, watch } = useForm({
     mode: "all",
@@ -96,11 +93,7 @@ export const VurderingVedtak = ({ aktivtSteg }: Props) => {
         </Nav.Typo.Innholdstittel>
       )}
 
-      <Feilmeldinger
-        className="vurderingUnntakMedlemskap__feilmelding"
-        feilmeldinger={feilmeldinger}
-        kontrollfeil={kontrollfeil}
-      />
+      <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" />
 
       <Nav.Row>
         <Lovvalgsperiode kontrollerFerdigbehandling={kontrollerFerdigbehandling} />

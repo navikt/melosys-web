@@ -17,7 +17,7 @@ import Knapperad from "../../knapperad";
 import HtmlEditor from "../../htmlEditor";
 import bem from "../../../bemUtils";
 
-import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
+import { kontrollOperations } from "../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../feilmeldinger";
@@ -27,7 +27,6 @@ import "./dialogboksHenlegg.css";
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
-  kontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -52,7 +51,6 @@ export const DialogboksHenleggSak = ({
   avbryt,
   kontrollerFerdigbehandling,
   ariaHideApp = false,
-  kontrollfeil,
 }: DialogboksHenleggSakProps) => {
   const [begrunnelseKode, setBegrunnelseKode] = useState<string>("");
   const [feilmeldingSelect, setFeilmeldingSelect] = useState<string | null>(null);
@@ -155,11 +153,7 @@ export const DialogboksHenleggSak = ({
         <Nav.Typo.Systemtittel className={dialogboksHenleggClassName.element("overskrift")}>
           Henlegg saken
         </Nav.Typo.Systemtittel>
-        <Feilmeldinger
-          className={dialogboksHenleggClassName.element("feilmeldinger")}
-          feilmeldinger={feilmeldinger}
-          kontrollfeil={kontrollfeil}
-        />
+        <Feilmeldinger className={dialogboksHenleggClassName.element("feilmeldinger")} />
         <Mui.KodeTermSelect
           feil={feilmeldingSelect}
           onChange={velgBegrunnelseHandle}

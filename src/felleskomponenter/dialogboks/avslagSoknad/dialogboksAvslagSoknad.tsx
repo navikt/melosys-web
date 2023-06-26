@@ -62,7 +62,6 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
     vedtakstype,
     kontrollerFerdigbehandling,
     feilmeldinger,
-    kontrollfeil,
   } = props;
 
   useEffect(() => {
@@ -128,7 +127,7 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
           <Nav.Typo.Systemtittel className="overskrift">
             Avslå søknaden på grunn av manglende opplysninger
           </Nav.Typo.Systemtittel>
-          <Feilmeldinger feilmeldinger={feilmeldinger} kontrollfeil={kontrollfeil} />
+          <Feilmeldinger />
           <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
           {bekreftRedigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           <div className="knapperadcontainer">

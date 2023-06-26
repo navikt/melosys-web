@@ -4,7 +4,6 @@ import { STATUS } from "../../services";
 import * as Types from "./types";
 import { utpekTypes } from "../utpek";
 import { vedtakTypes } from "../vedtak";
-import { kontrollTypes } from "../kontroll";
 import { videresendingTypes } from "../videresending";
 import { anmodningunntakTypes } from "../anmodningunntak";
 import { fagsakTypes } from "../fagsaker";
@@ -24,13 +23,11 @@ export default function reducer(state = initialState, action: Types.Action): Sta
       return initialState;
     case utpekTypes.FEILET:
     case vedtakTypes.FEILET:
-    case kontrollTypes.FEILET:
     case videresendingTypes.FEILET:
     case anmodningunntakTypes.FEILET:
     case fagsakTypes.FEILET:
       return { ...state, status: STATUS.ERROR, data: { ...state.data, ...action.data } };
     case utpekTypes.OK:
-    case kontrollTypes.OK:
     case videresendingTypes.OK:
     case anmodningunntakTypes.OK:
     case fagsakTypes.OK:

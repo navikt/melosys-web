@@ -1,22 +1,25 @@
 import React from "react";
 import classNames from "classnames";
-import { Feilkode } from "../../@types";
+import { useSelector } from "react-redux";
 
 import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
-import * as Utils from "../../utils";
 
+import * as Utils from "../../utils";
 import "./feilmelding.css";
+import { feiletResponsSelectors } from "../../ducks/feiletRespons";
+import { kontrollSelectors } from "../../ducks/kontroll";
 
 type feilmeldingerProps = {
-  feilmeldinger: Feilkode[] | string;
   className?: string;
   exclude?: string[];
-  kontrollfeil: Feilkode[];
 };
 
-export default ({ feilmeldinger, className, exclude, kontrollfeil }: feilmeldingerProps) => {
+export default ({ className, exclude }: feilmeldingerProps) => {
+  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+
   if (Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil)) {
     return null;
   }

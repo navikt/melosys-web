@@ -99,7 +99,6 @@ const OpprettNySak = ({
   change,
   touch,
   errors,
-  feilmeldinger,
   lagNySak,
   lagNyBehandlingForSak,
   hentFagsakListe,
@@ -107,7 +106,6 @@ const OpprettNySak = ({
   sokOrgnr,
   hentLandkoder,
   landkoderListe,
-  kontrollfeil,
 }: InjectedFormProps<OpprettNySakFormData, OpprettNySakProps> & OpprettNySakProps) => {
   const [oppgaver, setOppgaver] = useState<Api.Oppgaver.SokOppgaveResDto[]>([]);
   const [bekreftPending, setBekreftPending] = useState(false);
@@ -367,7 +365,7 @@ const OpprettNySak = ({
                   {Utils.feilmelding.syncErrorsTilFeilmelding(errors)}
                 </Nav.AlertStripeFeil>
               )}
-              <Feilmeldinger feilmeldinger={feilmeldinger} className="feilmelding" kontrollfeil={kontrollfeil} />
+              <Feilmeldinger className="feilmelding" />
               <Knapperad
                 bekreft={handleSubmit}
                 bekreftTekst="Opprett ny behandling"
