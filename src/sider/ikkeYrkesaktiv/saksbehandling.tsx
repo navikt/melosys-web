@@ -33,6 +33,7 @@ import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
+import { kontrollOperations } from "../../ducks/kontroll";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -117,6 +118,7 @@ const Saksbehandling = ({
       dispatch(mottatteOpplysningerOperations.resetState());
       dispatch(feiletResponsOperations.resetFeiletRespons());
       dispatch(menypanelOperations.skjulMenypanel());
+      dispatch(kontrollOperations.resetKontroll());
     };
   }, []);
 

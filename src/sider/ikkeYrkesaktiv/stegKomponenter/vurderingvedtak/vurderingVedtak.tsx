@@ -15,9 +15,10 @@ import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetek
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import { kontrollOperations } from "../../../../ducks/kontroll";
+import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
 
@@ -44,6 +45,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
   const lagretBegrunnelseFritekst = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector);
   const lagretInnledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
 
@@ -61,7 +63,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const formValues = watch();
 
   const [kontrollEllerVedtakPending, setKontrollEllerVedtakPending] = useState(false);
-  const harIngenFeilmeldinger = Utils._isEmpty(feilmeldinger);
+  const harIngenFeilmeldinger = Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
   const stegErGyldig: boolean = redigerbart && formIsValid && harIngenFeilmeldinger;
 
   const kontrollerFerdigbehandling = async () => {
@@ -132,7 +134,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
         </Nav.Typo.Innholdstittel>
       )}
 
-      <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" feilmeldinger={feilmeldinger} />
+      <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" />
 
       <Nav.Row>
         <Lovvalgsperiode kontrollerFerdigbehandling={kontrollerFerdigbehandling} />

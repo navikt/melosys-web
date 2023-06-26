@@ -9,6 +9,10 @@ const KontrollSelector: Selector<RootState, StateSection<Types.Data>> = createSe
   (kontroller) => kontroller
 );
 
-const ReduxStatusSelector = createSelector(KontrollSelector, (vedtak) => vedtak.status);
+const KontrollDataSelector = createSelector(KontrollSelector, (kontroll) => kontroll.data || {});
+
+export const KontrollfeilSelector = createSelector(KontrollDataSelector, (data) => data.kontrollfeilList || []);
+
+const ReduxStatusSelector = createSelector(KontrollSelector, (kontroll) => kontroll.status);
 
 export const ErPendingSelector = createSelector(ReduxStatusSelector, (status) => status === STATUS.PENDING);

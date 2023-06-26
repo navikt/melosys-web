@@ -153,7 +153,7 @@ export const DialogboksHenleggSak = ({
         <Nav.Typo.Systemtittel className={dialogboksHenleggClassName.element("overskrift")}>
           Henlegg saken
         </Nav.Typo.Systemtittel>
-        <Feilmeldinger className={dialogboksHenleggClassName.element("feilmeldinger")} feilmeldinger={feilmeldinger} />
+        <Feilmeldinger className={dialogboksHenleggClassName.element("feilmeldinger")} />
         <Mui.KodeTermSelect
           feil={feilmeldingSelect}
           onChange={velgBegrunnelseHandle}

@@ -52,6 +52,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   aktivtSteg,
   validerMottatteOpplysninger,
   fattVedtak,
+  mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
@@ -63,7 +64,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
 
   const kontrollerBehandling = async (data) => {
-    if (data.aktivtSteg && data.formIsValid) {
+    if (redigerbart && data.mottatteOpplysningerStatus === "OK" && data.aktivtSteg && data.formIsValid) {
       setVedtakPending(true);
       await kontrollerFerdigbehandling({
         behandlingID,
@@ -80,8 +81,8 @@ export const VurderingArtikkel13_x_vedtak = ({
   ]);
 
   useEffect(() => {
-    debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues });
-  }, [aktivtSteg, formIsValid]);
+    debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues, mottatteOpplysningerStatus });
+  }, [aktivtSteg, formIsValid, mottatteOpplysningerStatus]);
 
   const oppdaterLovvalgsperiode = async (fomdato, tomdato) => {
     await endreLovvalgsPeriode(fomdato, tomdato);
@@ -285,6 +286,7 @@ VurderingArtikkel13_x_vedtak.propTypes = {
   aktivtSteg: PT.bool,
   validerMottatteOpplysninger: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
+  mottatteOpplysningerStatus: PT.string.isRequired,
 };
 
 VurderingArtikkel13_x_vedtak.defaultProps = {
@@ -321,6 +323,7 @@ const mapStateToProps = (state) => {
       mottakerinstitusjoner: avklartefaktaSelectors.LandSomKreverSEDKTSelector(state) || [],
       kreverMottakerinstitusjon: false,
       fritekstSed: null,
+      mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     },
   };
 };

@@ -126,6 +126,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   tilbake,
   mottatteOpplysningerFom,
   mottatteOpplysningerTom,
+  mottatteOpplysningerStatus,
   soknadsperiode,
   informertMyndighetFakta,
   kontrollerFerdigbehandling,
@@ -293,7 +294,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 
   useEffect(() => {
     async function kontroller() {
-      if (aktivtSteg && formIsValid) {
+      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg && formIsValid) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling({
           behandlingID,
@@ -309,7 +310,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       }
     }
     kontroller();
-  }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver]);
+  }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const onSubmit = async (values, dispatch, props) => {
     setVedtakPending(true);
@@ -503,6 +504,7 @@ VurderingArbeidTjenestepersonEllerFlyVedtak.propTypes = {
   validerMottatteOpplysninger: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
   selvstendigArbeid: PT.object.isRequired,
+  mottatteOpplysningerStatus: PT.string.isRequired,
 };
 
 VurderingArbeidTjenestepersonEllerFlyVedtak.defaultProps = {
@@ -530,6 +532,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     mottatteOpplysningerFom: mottatteOpplysningerSelectors.PeriodeFomSelector(state),
     mottatteOpplysningerTom: mottatteOpplysningerSelectors.PeriodeTomSelector(state),
+    mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
     sakstype: fagsakSelectors.SakstypeKodeSelector(state),

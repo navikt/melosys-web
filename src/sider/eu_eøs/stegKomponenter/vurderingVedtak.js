@@ -35,6 +35,7 @@ import {
   MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
   MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
 } from "../../../featuretoggle/toggleNavn";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) => {
   if (
@@ -120,6 +121,7 @@ const VurderingVedtak = ({
   harFeilmeldinger,
   aktivtSteg,
   validerMottatteOpplysninger,
+  mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
@@ -176,7 +178,7 @@ const VurderingVedtak = ({
 
   useEffect(() => {
     async function kontroller() {
-      if (aktivtSteg && formIsValid) {
+      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg && formIsValid) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling({
           behandlingID,
@@ -193,7 +195,7 @@ const VurderingVedtak = ({
     }
 
     kontroller();
-  }, [aktivtSteg, formIsValid, kopiTilArbeidsgiver]);
+  }, [aktivtSteg, formIsValid, kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const onSubmit = async () => {
     if (!validerForm()) return;
@@ -329,6 +331,7 @@ VurderingVedtak.propTypes = {
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
   validerMottatteOpplysninger: PT.func.isRequired,
+  mottatteOpplysningerStatus: PT.string.isRequired,
 };
 
 VurderingVedtak.defaultProps = {
@@ -358,6 +361,7 @@ const mapStateToProps = (state) => ({
     kreverMottakerinstitusjon: false,
     fritekstSed: null,
   },
+  mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
 });
 
 const VurderingVedtakForm = reduxForm({
