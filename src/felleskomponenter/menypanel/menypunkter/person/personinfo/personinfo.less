@@ -1,14 +1,16 @@
 .personinfo {
   display: flex;
   flex-wrap: wrap;
+  background: #efefef;
+  margin: 0.5rem 0;
+  padding: 1rem 0;
 
-  &__element {
-    width: 9.375em;
-    min-width: 25%;
+  .personstatus,
+  .sivilstand {
+    display: flow-root;
   }
 
-  &__sivilstand,
-  &__personstatus {
-    margin-right: 1rem;
+  &__vis-detaljer {
+    float: right;
   }
 }

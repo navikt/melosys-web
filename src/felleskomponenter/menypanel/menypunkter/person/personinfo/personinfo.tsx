@@ -44,18 +44,31 @@ const PersonInfo = ({ behandlingID, modalAriaHideApp, ...props }: PersonInfoProp
   );
   const personinfoErrorContent = <Nav.AlertStripeFeil>Feil ved henting av personinfo!</Nav.AlertStripeFeil>;
 
-  const Fødselsdato = () => {
-    const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
-    if (!foedsel) return null;
+  const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1680 });
+
+  const Fødselsnummer = () => {
     return (
       <>
-        {foedsel.foedselsdato ? (
-          <Nav.Typo.Element>
-            <EnkeltDato dato={foedsel.foedselsdato} />
-          </Nav.Typo.Element>
-        ) : (
-          foedsel.foedselsaar
-        )}
+        <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>
+          <Nav.Typo.Element>Fødselsnummer:</Nav.Typo.Element>
+        </Nav.Column>
+        <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{personopplysninger?.fnr || "-"}</Nav.Column>
+      </>
+    );
+  };
+
+  const Fødselsdato = () => {
+    const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
+    let fødselsdato = null;
+    if (foedsel) {
+      fødselsdato = foedsel.foedselsdato ? <EnkeltDato dato={foedsel.foedselsdato} /> : foedsel.foedselsaar;
+    }
+    return (
+      <>
+        <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>
+          <Nav.Typo.Element>Fødselsdato:</Nav.Typo.Element>
+        </Nav.Column>
+        <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{fødselsdato}</Nav.Column>
       </>
     );
   };
@@ -64,26 +77,22 @@ const PersonInfo = ({ behandlingID, modalAriaHideApp, ...props }: PersonInfoProp
     <div className={personinfoClassName.block}>
       {personinfoLoading && personinfoLoadingContent}
       {personinfoError && personinfoErrorContent}
-      <div className={personinfoClassName.element("element")}>
+      <Nav.Column xs={erLitenSkjerm ? "12" : "7"}>
         <Personstatus
           status={personinfoData?.hentSaksopplysninger.persondata.folkeregisterpersonstatuser}
           modalAriaHideApp={modalAriaHideApp}
+          erLitenSkjerm={erLitenSkjerm}
         />
-      </div>
-      <div className={personinfoClassName.element("element")}>
-        <Nav.Typo.EtikettLiten>Fødselsnummer</Nav.Typo.EtikettLiten>
-        <Nav.Typo.Element>{personopplysninger?.fnr || "-"}</Nav.Typo.Element>
-      </div>
-      <div className={personinfoClassName.element("element")}>
-        <Nav.Typo.EtikettLiten>Fødselsdato</Nav.Typo.EtikettLiten>
-        <Fødselsdato />
-      </div>
-      <div className={personinfoClassName.element("element")} aria-live="polite" aria-atomic>
         <Sivilstand
           sivilstand={personinfoData?.hentSaksopplysninger.persondata.sivilstand}
           modalAriaHideApp={modalAriaHideApp}
+          erLitenSkjerm={erLitenSkjerm}
         />
-      </div>
+      </Nav.Column>
+      <Nav.Column xs={erLitenSkjerm ? "12" : "5"}>
+        <Fødselsnummer />
+        <Fødselsdato />
+      </Nav.Column>
     </div>
   );
 };

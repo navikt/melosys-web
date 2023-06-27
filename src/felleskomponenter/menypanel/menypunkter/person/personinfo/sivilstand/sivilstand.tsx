@@ -2,10 +2,10 @@ import React, { useState } from "react";
 
 import * as Nav from "../../../../../../navFrontend";
 import * as Mui from "../../../../../ui";
-import SivilstandModal from "./sivilstandModal";
-
-import "../personinfo.css";
 import * as Types from "../../../../../../graphql/generated/types";
+
+import SivilstandModal from "./sivilstandModal";
+import "../personinfo.css";
 
 interface SivilstandProps {
   sivilstand:
@@ -17,16 +17,43 @@ interface SivilstandProps {
       >
     | undefined;
   modalAriaHideApp?: boolean;
+  erLitenSkjerm: boolean;
 }
 
-const Sivilstand = ({ sivilstand, modalAriaHideApp }: SivilstandProps) => {
+const Sivilstand = ({ sivilstand, modalAriaHideApp, erLitenSkjerm }: SivilstandProps) => {
   const [visSivilstandModal, setVisSivilstandModal] = useState(false);
 
   const aktiveSivilstander = sivilstand?.filter((s) => !s.erHistorisk) || [];
   const historiskeSivilstander = sivilstand?.filter((s) => s.erHistorisk) || [];
 
+  const SivilstatusVisning = () => {
+    if (!sivilstand) {
+      return null;
+    }
+
+    if (erLitenSkjerm) {
+      return (
+        <Nav.Column xs="8">
+          {aktiveSivilstander[0]?.type || "Ingen sivilstand funnet"}
+          <Mui.Lenkeknapp className="personinfo__vis-detaljer" onClick={() => setVisSivilstandModal(true)}>
+            Vis detaljer
+          </Mui.Lenkeknapp>
+        </Nav.Column>
+      );
+    }
+
+    return (
+      <div>
+        <Nav.Column xs="5">{aktiveSivilstander[0]?.type || "Ingen sivilstand funnet"}</Nav.Column>
+        <Nav.Column xs="3">
+          <Mui.Lenkeknapp onClick={() => setVisSivilstandModal(true)}>Vis detaljer</Mui.Lenkeknapp>
+        </Nav.Column>
+      </div>
+    );
+  };
+
   return (
-    <div className="personinfo__sivilstand">
+    <div className="sivilstand">
       <SivilstandModal
         aktiveSivilstander={aktiveSivilstander}
         historiskeSivilstander={historiskeSivilstander}
@@ -35,15 +62,10 @@ const Sivilstand = ({ sivilstand, modalAriaHideApp }: SivilstandProps) => {
         modalAriaHideApp={modalAriaHideApp}
       />
 
-      <Nav.Typo.EtikettLiten>Sivilstand</Nav.Typo.EtikettLiten>
-      {sivilstand && (
-        <Nav.Typo.Element>
-          <span className="personinfo__sivilstand">{aktiveSivilstander[0]?.type || "Ingen sivilstand funnet"}</span>
-          <Mui.Lenkeknapp className="sivilstand__vis-detaljer-button" onClick={() => setVisSivilstandModal(true)}>
-            Vis detaljer
-          </Mui.Lenkeknapp>
-        </Nav.Typo.Element>
-      )}
+      <Nav.Column xs={erLitenSkjerm ? "4" : "3"}>
+        <Nav.Typo.Element>Sivilstand:</Nav.Typo.Element>
+      </Nav.Column>
+      <SivilstatusVisning />
     </div>
   );
 };
