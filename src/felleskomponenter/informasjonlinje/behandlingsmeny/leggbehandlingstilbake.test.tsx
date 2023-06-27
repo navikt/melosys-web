@@ -1,31 +1,21 @@
 import React from "react";
-import { Provider } from "react-redux";
-import configureMockStore from "redux-mock-store";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { lagState } from "../../../ducks/test-utils";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
 
 describe("LeggBehandlingTilbake", () => {
-  const mockStore = configureMockStore();
-  const initiateStore = (redigerbart: boolean) =>
-    mockStore(
-      lagState({
-        behandlinger: {
-          status: "",
-          data: {
-            redigerbart,
-          },
-        },
-      })
-    );
+  const initialState = (redigerbart: boolean) => ({
+    behandlinger: {
+      status: "",
+      data: {
+        redigerbart,
+      },
+    },
+  });
 
   it("viser begge valg som knapper om redigerbart", async () => {
-    render(
-      <Provider store={initiateStore(true)}>
-        <LeggBehandlingTilbake />
-      </Provider>
-    );
+    renderWithProviders(<LeggBehandlingTilbake />, { preloadedState: initialState(true) });
 
     expect(screen.queryAllByRole("button")).toHaveLength(1);
 
@@ -39,11 +29,7 @@ describe("LeggBehandlingTilbake", () => {
   });
 
   it("viser bare Til felles oppgaveliste som er en tekst om ikke redigerbart", async () => {
-    render(
-      <Provider store={initiateStore(false)}>
-        <LeggBehandlingTilbake />
-      </Provider>
-    );
+    renderWithProviders(<LeggBehandlingTilbake />, { preloadedState: initialState(false) });
 
     expect(screen.queryAllByRole("button")).toHaveLength(1);
 
