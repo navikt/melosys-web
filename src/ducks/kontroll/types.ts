@@ -1,11 +1,19 @@
-import { ErrorResponse } from "melosys-api";
+import { videresendingTypes } from "../videresending";
+import { anmodningunntakTypes } from "../anmodningunntak";
+import { utpekTypes } from "../utpek";
+import { vedtakTypes } from "../vedtak";
+import { fagsakTypes } from "../fagsaker";
 
 export const OK = "kontroller/OK";
 export const FEILET = "kontroller/FEILET";
 export const PENDING = "kontroller/PENDING";
+export const RESET = "kontroller/RESET";
 
 export interface Data {
-  data?: ErrorResponse;
+  kontrollfeilList?: {
+    kode: string;
+    felter: string[];
+  }[];
 }
 
 interface FeiletAction {
@@ -22,4 +30,17 @@ interface OkAction {
   data: any;
 }
 
-export type Action = FeiletAction | PendingAction | OkAction;
+interface ResetAction {
+  type: typeof RESET;
+}
+
+export type Action =
+  | utpekTypes.Action
+  | vedtakTypes.Action
+  | videresendingTypes.Action
+  | anmodningunntakTypes.Action
+  | fagsakTypes.Action
+  | FeiletAction
+  | PendingAction
+  | OkAction
+  | ResetAction;

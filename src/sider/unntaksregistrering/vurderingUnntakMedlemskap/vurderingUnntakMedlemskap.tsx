@@ -297,7 +297,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
       <Feilmeldinger
         className="vurderingUnntakMedlemskap__feilmelding"
-        feilmeldinger={feilmeldinger}
         exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]}
       />
 

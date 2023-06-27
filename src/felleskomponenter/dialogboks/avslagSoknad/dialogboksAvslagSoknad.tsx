@@ -12,13 +12,13 @@ import * as Api from "../../../services/api";
 
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
+import { Feilmeldinger } from "../../feilmeldinger";
+import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { kontrollOperations } from "../../../ducks/kontroll";
 
 import { MELOSYS_DOKUMENT_V2 } from "../../../featuretoggle/toggleNavn";
 import { useFeatureToggle } from "../../../featuretoggle";
-import { Feilmeldinger } from "../../feilmeldinger";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import HtmlEditor from "../../htmlEditor";
 import Knapperad from "../../knapperad";
@@ -30,6 +30,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+  kontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -126,7 +127,7 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
           <Nav.Typo.Systemtittel className="overskrift">
             Avslå søknaden på grunn av manglende opplysninger
           </Nav.Typo.Systemtittel>
-          <Feilmeldinger feilmeldinger={feilmeldinger} />
+          <Feilmeldinger />
           <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
           {bekreftRedigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           <div className="knapperadcontainer">

@@ -26,6 +26,7 @@ import Oppsummering from "../../felleskomponenter/oppsummering";
 import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
+import { kontrollOperations } from "../../ducks/kontroll";
 
 interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
@@ -64,6 +65,7 @@ const Saksbehandling = ({
       dispatch(behandlingerOperations.resetBehandlingerState());
       dispatch(mottatteOpplysningerOperations.resetState());
       dispatch(feiletResponsOperations.resetFeiletRespons());
+      dispatch(kontrollOperations.resetKontroll());
     };
   }, []);
 

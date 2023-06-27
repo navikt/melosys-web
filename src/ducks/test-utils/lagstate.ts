@@ -5,6 +5,9 @@ import { STATUS } from "../../services";
 /**
  * Genererer default state for redux til testing, samt tillater å sette individuelle states.
  */
+/**
+ * @deprecated Bruk renderWithProviders for testing på redux komponenter
+ */
 function lagState({
   form = {
     testForm: {
