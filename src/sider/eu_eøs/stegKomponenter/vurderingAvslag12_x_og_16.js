@@ -21,8 +21,6 @@ import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysning
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Begrunnelser from "../../../felleskomponenter/begrunnelser";
-import { MELOSYS_DOKUMENT_V2 } from "../../../featuretoggle/toggleNavn";
-import { useFeatureToggle } from "../../../featuretoggle";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Schema";
@@ -55,55 +53,31 @@ const VurderingAvslag12_x_og_16 = ({
   aktivtSteg,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
-  const brukDokumentV2 = useFeatureToggle(MELOSYS_DOKUMENT_V2);
   const dispatch = useDispatch();
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
-  const pdfDokumenter = brukDokumentV2
-    ? [
-        {
-          sendesTilDokumenterV2: true,
-          navn: "Forhåndsvis vedtaksbrev",
-          data: {
-            produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
-            mottaker: MKV.Koder.mottakerroller.BRUKER,
-            fritekst: formValues.vedtaksbrevFritekst,
-          },
-        },
-      ]
-    : [
-        {
-          navn: "Forhåndsvis vedtaksbrev",
-          type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
-          data: {
-            mottaker: MKV.Koder.mottakerroller.BRUKER,
-            fritekst: formValues.vedtaksbrevFritekst,
-          },
-        },
-      ];
+  const pdfDokumenter = [
+    {
+      navn: "Forhåndsvis vedtaksbrev",
+      data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
+        fritekst: formValues.vedtaksbrevFritekst,
+      },
+    },
+  ];
 
   const { kopiTilArbeidsgiver, vedtakstype } = formValues;
 
   if (!erNyVurdering && kopiTilArbeidsgiver) {
-    pdfDokumenter.push(
-      brukDokumentV2
-        ? {
-            sendesTilDokumenterV2: true,
-            navn: "Orientering til arbeidsgiver om avslag",
-            data: {
-              produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
-              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-            },
-          }
-        : {
-            navn: "Orientering til arbeidsgiver om avslag",
-            type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
-            data: {
-              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-            },
-          }
-    );
+    pdfDokumenter.push({
+      navn: "Orientering til arbeidsgiver om avslag",
+      data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
+        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+      },
+    });
   }
 
   const muligeVirksomhetBegrunnelser = [

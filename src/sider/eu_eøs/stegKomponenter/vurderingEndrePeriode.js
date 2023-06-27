@@ -202,7 +202,6 @@ export class VurderingEndrePeriode extends React.Component {
     const pdfDokumenter = [
       {
         navn: "Forhåndsvis vedtaksbrev og A1",
-        type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, // Fjernes når toggle MELOSYS_DOKUMENT_V2 fjernes
         data: {
           produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
           mottaker: MKV.Koder.mottakerroller.BRUKER,

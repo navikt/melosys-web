@@ -22,8 +22,6 @@ import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { vedtakOperations } from "../../../ducks/vedtak";
 import { formOperations } from "../../../ducks/form";
 
-import { MELOSYS_DOKUMENT_V2 } from "../../../featuretoggle/toggleNavn";
-import { useFeatureToggle } from "../../../featuretoggle";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Mottakerinstitusjonvelger, {
   MottakerinstitusjonvelgerFlervalg,
@@ -138,7 +136,6 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
-  const brukDokumentV2 = useFeatureToggle(MELOSYS_DOKUMENT_V2);
 
   useEffect(() => {
     if (lovvalgsbestemmelseSomSkalLagres) {
@@ -178,28 +175,16 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
     return formIsValid;
   };
 
-  let pdfDokumenter = brukDokumentV2
-    ? [
-        {
-          sendesTilDokumenterV2: true,
-          navn: "Forhåndsvis vedtaksbrev og A1",
-          data: {
-            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
-            mottaker: MKV.Koder.mottakerroller.BRUKER,
-            fritekst: formValues.vedtaksbrevFritekst,
-          },
-        },
-      ]
-    : [
-        {
-          navn: "Forhåndsvis vedtaksbrev og A1",
-          type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
-          data: {
-            mottaker: MKV.Koder.mottakerroller.BRUKER,
-            fritekst: formValues.vedtaksbrevFritekst,
-          },
-        },
-      ];
+  let pdfDokumenter = [
+    {
+      navn: "Forhåndsvis vedtaksbrev og A1",
+      data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
+        fritekst: formValues.vedtaksbrevFritekst,
+      },
+    },
+  ];
 
   if (skalSendeSed(formValues)) {
     pdfDokumenter = [
@@ -216,24 +201,13 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   }
   const { kopiTilArbeidsgiver } = formValues;
   if (skalSendeOrienteringsbrev(selvstendigArbeid) && kopiTilArbeidsgiver) {
-    pdfDokumenter.push(
-      brukDokumentV2
-        ? {
-            sendesTilDokumenterV2: true,
-            navn: "Orienteringsbrev til arbeidsgiver",
-            data: {
-              produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-            },
-          }
-        : {
-            navn: "Orienteringsbrev til arbeidsgiver",
-            type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-            data: {
-              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-            },
-          }
-    );
+    pdfDokumenter.push({
+      navn: "Orienteringsbrev til arbeidsgiver",
+      data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+      },
+    });
   }
 
   const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);

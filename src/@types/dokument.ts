@@ -40,16 +40,6 @@ export interface DokumentOversikt {
 /**
  * @deprecated Typer fra Api flyttes til Api-modul
  */
-export interface BrevPdfData {
-  mottaker: string;
-  fritekst?: string | null;
-  begrunnelseKode?: string | null;
-  ytterligereInformasjon?: string | null;
-}
-
-/**
- * @deprecated Typer fra Api flyttes til Api-modul
- */
 export interface SedPdfData {
   begrunnelseUtenlandskMyndighet: string | null;
   vilSendeAnmodningOmMerInformasjon: boolean | null;
