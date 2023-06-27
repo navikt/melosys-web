@@ -57,8 +57,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const formValues = watch();
 
   useEffect(() => {
-    oppdaterStatus(formState.isValid && formValues.utfall && formValues.bestemmelse);
-  }, [formState?.isValid]);
+    oppdaterStatus(formState.isValid && formValues.utfall === GODKJENT && formValues.bestemmelse);
+  }, [formState?.isValid, formValues.utfall]);
 
   useEffect(() => {
     if (aktivtSteg && soeknadsland) {
