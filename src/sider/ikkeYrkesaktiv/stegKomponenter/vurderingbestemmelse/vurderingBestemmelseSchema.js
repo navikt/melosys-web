@@ -8,7 +8,7 @@ const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const vurdering_bestemmelse = object().shape({
   vurderingUtfall: string().required(MAA_FYLLES_UT),
   bestemmelse: string().when("vurderingUtfall", {
-    is: (vurderingUtfall) => vurderingUtfall === VurderingUtfall.INNVILGELSE,
+    is: (vurderingUtfall) => vurderingUtfall === MKV.Koder.innvilgelsesResultat.INNVILGET,
     then: string().required(MAA_FYLLES_UT),
   }),
   ikkeYrkesaktivSituasjontype: string()

@@ -17,16 +17,14 @@ import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from ".
 import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 
+const { INNVILGET, AVSLAATT } = MKV.Koder.innvilgelsesResultat;
+const UNNTAK = "UNNTAK";
+
 interface Props {
   bekreft: () => void;
   tilbake: () => void;
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
-}
-export enum VurderingUtfall {
-  INNVILGELSE = "INNVILGELSE",
-  UNNTAK = "UNNTAK",
-  AVSLÅTT = "AVSLÅTT",
 }
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
@@ -43,22 +41,14 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const periodeFom = useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector);
   const periodeTom = useSelector(mottatteOpplysningerSelectors.PeriodeTomSelector);
 
-  let initialVurderingUtfall = null;
-  if (lovvalgsperiode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET) {
-    initialVurderingUtfall = VurderingUtfall.INNVILGELSE;
-  } else if (lovvalgsperiode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT) {
-    initialVurderingUtfall = VurderingUtfall.AVSLÅTT;
-  }
-
   const [muligeBestemmelser, setMuligeBestemmelser] = useState<KTObject[]>([]);
   const [lagreLovvalgsperiodePending, setLagreLovvalgsperiodePending] = useState<boolean>(false);
-  const [vurderingUtfall, setVurderingUtfall] = useState<VurderingUtfall | null>(initialVurderingUtfall);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_bestemmelse),
     mode: "all",
     defaultValues: {
-      vurderingUtfall: initialVurderingUtfall,
+      vurderingUtfall: lovvalgsperiode.innvilgelsesResultat,
       bestemmelse: lovvalgsperiode.lovvalgsbestemmelse || "",
       ikkeYrkesaktivSituasjontype: ikkeYrkesaktivSituasjonstype,
     } as FieldValues,
@@ -66,8 +56,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const formValues = watch();
 
   useEffect(() => {
-    oppdaterStatus(formState.isValid && vurderingUtfall === VurderingUtfall.INNVILGELSE && formValues.bestemmelse);
-  }, [formState?.isValid, vurderingUtfall]);
+    oppdaterStatus(formState.isValid && formValues.vurderingUtfall === INNVILGET && formValues.bestemmelse);
+  }, [formState?.isValid, formValues.vurderingUtfall]);
 
   useEffect(() => {
     if (aktivtSteg && soeknadsland) {
@@ -79,17 +69,17 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   useEffect(() => {
     if (aktivtSteg) {
-      if (vurderingUtfall === VurderingUtfall.AVSLÅTT) {
+      if (formValues.vurderingUtfall === AVSLAATT) {
         setValue("bestemmelse", "");
-        lagreLovvalgsperiodeOgKontroller("", MKV.Koder.innvilgelsesResultat.AVSLAATT);
-      } else if (vurderingUtfall === VurderingUtfall.INNVILGELSE) {
+        lagreLovvalgsperiodeOgKontroller("", AVSLAATT);
+      } else if (formValues.vurderingUtfall === INNVILGET) {
         lagreLovvalgsperiodeOgKontroller("", MKV.Koder.innvilgelsesResultat.INNVILGELSE);
       } else {
         setValue("bestemmelse", "");
         dispatch(lovvalgsperioderOperations.send(behandlingID, []));
       }
     }
-  }, [vurderingUtfall]);
+  }, [formValues.vurderingUtfall]);
 
   const lagreIkkeYrkesaktivSituasjontype = (ikkeYrkesaktivSituasjontype: string | null) => {
     dispatch(mottatteOpplysningerOperations.oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype));
@@ -139,29 +129,26 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           name="vurderingUtfall"
           control={control}
           label="Jeg vil innvilge søknaden"
-          value={VurderingUtfall.INNVILGELSE}
-          onChange={setVurderingUtfall}
+          value={INNVILGET}
           disabled={!redigerbart}
         />
         <Forms.Radio
           name="vurderingUtfall"
           control={control}
           label="Jeg vil søke om unntak"
-          value={VurderingUtfall.UNNTAK}
-          onChange={setVurderingUtfall}
+          value={UNNTAK}
           disabled={!redigerbart}
         />
         <Forms.Radio
           name="vurderingUtfall"
           control={control}
           label="Jeg vil avslå søknaden"
-          value={VurderingUtfall.AVSLÅTT}
-          onChange={setVurderingUtfall}
+          value={AVSLAATT}
           disabled={!redigerbart}
         />
       </Nav.Fieldset>
 
-      {vurderingUtfall === VurderingUtfall.INNVILGELSE && (
+      {formValues.vurderingUtfall === INNVILGET && (
         <>
           <Nav.Fieldset className="select" legend="Velg bestemmelse">
             <Nav.Row>
@@ -202,7 +189,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </>
       )}
 
-      {vurderingUtfall === VurderingUtfall.UNNTAK && sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE && (
+      {formValues.vurderingUtfall === UNNTAK && sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <UnntakHjelpetekst />
@@ -210,7 +197,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       )}
 
-      {vurderingUtfall === VurderingUtfall.UNNTAK && sakstype === MKV.Koder.sakstyper.EU_EOS && (
+      {formValues.vurderingUtfall === UNNTAK && sakstype === MKV.Koder.sakstyper.EU_EOS && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <Nav.EtikettBase type="info">
@@ -228,12 +215,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           </Nav.Column>
         </Nav.Row>
       )}
-      {vurderingUtfall === VurderingUtfall.AVSLÅTT && <TomFlytMelding />}
+      {formValues.vurderingUtfall === AVSLAATT && <TomFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreft,
-          disabled: !formState?.isValid || !redigerbart || vurderingUtfall !== VurderingUtfall.INNVILGELSE,
+          disabled: !formState?.isValid || !redigerbart || formValues.vurderingUtfall !== INNVILGET,
           autoDisableVedSpinner: true,
           spinner: lagreLovvalgsperiodePending,
         }}
