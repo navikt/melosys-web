@@ -48,7 +48,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     resolver: yupResolver(vurdering_bestemmelse),
     mode: "all",
     defaultValues: {
-      vurderingUtfall: lovvalgsperiode.innvilgelsesResultat,
+      innvilgelsesResultat: lovvalgsperiode.innvilgelsesResultat,
       bestemmelse: lovvalgsperiode.lovvalgsbestemmelse || "",
       ikkeYrkesaktivSituasjontype: ikkeYrkesaktivSituasjonstype,
     } as FieldValues,
@@ -56,8 +56,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const formValues = watch();
 
   useEffect(() => {
-    oppdaterStatus(formState.isValid && formValues.vurderingUtfall === INNVILGET && formValues.bestemmelse);
-  }, [formState?.isValid, formValues.vurderingUtfall]);
+    oppdaterStatus(formState.isValid);
+  }, [formState?.isValid]);
 
   useEffect(() => {
     if (aktivtSteg && soeknadsland) {
@@ -69,30 +69,30 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   useEffect(() => {
     if (aktivtSteg) {
-      if (formValues.vurderingUtfall === AVSLAATT) {
+      if (formValues?.innvilgelsesResultat === AVSLAATT) {
         setValue("bestemmelse", "");
         lagreLovvalgsperiodeOgKontroller("", AVSLAATT);
-      } else if (formValues.vurderingUtfall === INNVILGET) {
-        lagreLovvalgsperiodeOgKontroller("", MKV.Koder.innvilgelsesResultat.INNVILGELSE);
+      } else if (formValues?.innvilgelsesResultat === INNVILGET) {
+        lagreLovvalgsperiodeOgKontroller("", INNVILGET);
       } else {
         setValue("bestemmelse", "");
         dispatch(lovvalgsperioderOperations.send(behandlingID, []));
       }
     }
-  }, [formValues.vurderingUtfall]);
+  }, [formValues?.innvilgelsesResultat]);
 
   const lagreIkkeYrkesaktivSituasjontype = (ikkeYrkesaktivSituasjontype: string | null) => {
     dispatch(mottatteOpplysningerOperations.oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype));
   };
 
-  const lagreLovvalgsperiodeOgKontroller = async (bestemmelse: string | null, innvilgelsesresultat: string) => {
+  const lagreLovvalgsperiodeOgKontroller = async (bestemmelse: string | null, innvilgelsesResultat: string) => {
     await dispatch(
       lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
         lovvalgsperiode: {
-          fomDato: innvilgelsesresultat === MKV.Koder.innvilgelsesResultat.INNVILGELSE ? periodeFom : null,
-          tomDato: innvilgelsesresultat === MKV.Koder.innvilgelsesResultat.INNVILGELSE ? periodeTom : null,
+          fomDato: innvilgelsesResultat === periodeFom,
+          tomDato: innvilgelsesResultat === periodeTom,
         },
-        innvilgelsesResultat: innvilgelsesresultat,
+        innvilgelsesResultat,
         lovvalgsbestemmelse: bestemmelse,
         lovvalgsland: MKV.Koder.land_iso2.NO,
         medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
@@ -108,9 +108,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       lagreIkkeYrkesaktivSituasjontype(null);
     }
     setLagreLovvalgsperiodePending(true);
-    lagreLovvalgsperiodeOgKontroller(bestemmelse, MKV.Koder.innvilgelsesResultat.INNVILGELSE).then(() =>
-      setLagreLovvalgsperiodePending(false)
-    );
+    lagreLovvalgsperiodeOgKontroller(bestemmelse, INNVILGET).finally(() => setLagreLovvalgsperiodePending(false));
   };
 
   if (!aktivtSteg) return null;
@@ -126,21 +124,21 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
       <Nav.Fieldset legend="Hva er din vurdering av søknaden?">
         <Forms.Radio
-          name="vurderingUtfall"
+          name="innvilgelsesResultat"
           control={control}
           label="Jeg vil innvilge søknaden"
           value={INNVILGET}
           disabled={!redigerbart}
         />
         <Forms.Radio
-          name="vurderingUtfall"
+          name="innvilgelsesResultat"
           control={control}
           label="Jeg vil søke om unntak"
           value={UNNTAK}
           disabled={!redigerbart}
         />
         <Forms.Radio
-          name="vurderingUtfall"
+          name="innvilgelsesResultat"
           control={control}
           label="Jeg vil avslå søknaden"
           value={AVSLAATT}
@@ -148,7 +146,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         />
       </Nav.Fieldset>
 
-      {formValues.vurderingUtfall === INNVILGET && (
+      {formValues?.innvilgelsesResultat === INNVILGET && (
         <>
           <Nav.Fieldset className="select" legend="Velg bestemmelse">
             <Nav.Row>
@@ -189,7 +187,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </>
       )}
 
-      {formValues.vurderingUtfall === UNNTAK && sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE && (
+      {formValues?.innvilgelsesResultat === UNNTAK && sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <UnntakHjelpetekst />
@@ -197,7 +195,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       )}
 
-      {formValues.vurderingUtfall === UNNTAK && sakstype === MKV.Koder.sakstyper.EU_EOS && (
+      {formValues?.innvilgelsesResultat === UNNTAK && sakstype === MKV.Koder.sakstyper.EU_EOS && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <Nav.EtikettBase type="info">
@@ -215,12 +213,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           </Nav.Column>
         </Nav.Row>
       )}
-      {formValues.vurderingUtfall === AVSLAATT && <TomFlytMelding />}
+      {formValues?.innvilgelsesResultat === AVSLAATT && <TomFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreft,
-          disabled: !formState?.isValid || !redigerbart || formValues.vurderingUtfall !== INNVILGET,
+          disabled: !formState?.isValid || !redigerbart || formValues?.innvilgelsesResultat !== INNVILGET,
           autoDisableVedSpinner: true,
           spinner: lagreLovvalgsperiodePending,
         }}

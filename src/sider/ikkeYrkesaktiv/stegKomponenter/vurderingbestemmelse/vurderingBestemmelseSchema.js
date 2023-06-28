@@ -1,14 +1,13 @@
 import { object, string } from "yup";
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
-import { VurderingUtfall } from "./vurderingBestemmelse";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 const vurdering_bestemmelse = object().shape({
-  vurderingUtfall: string().required(MAA_FYLLES_UT),
-  bestemmelse: string().when("vurderingUtfall", {
-    is: (vurderingUtfall) => vurderingUtfall === MKV.Koder.innvilgelsesResultat.INNVILGET,
+  innvilgelsesResultat: string().required(MAA_FYLLES_UT).oneOf([MKV.Koder.innvilgelsesResultat.INNVILGET], ""),
+  bestemmelse: string().when("innvilgelsesResultat", {
+    is: (innvilgelsesResultat) => innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
     then: string().required(MAA_FYLLES_UT),
   }),
   ikkeYrkesaktivSituasjontype: string()
