@@ -9,22 +9,22 @@ import { RootState } from "AppTypes";
 import { AlertStripeAdvarsel } from "nav-frontend-alertstriper";
 
 import * as KV from "../../../../kodeverk";
-import saksplukkerSchema from "./saksplukkerSchema";
 import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Api from "../../../../services/api";
-
-import { oppgaverOperations } from "../../../../ducks/oppgaver";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
-
-import "./saksplukker.css";
 import * as Routing from "../../../../routing";
+
 import { useFeatureToggle } from "../../../../featuretoggle";
+import { oppgaverOperations } from "../../../../ducks/oppgaver";
 import {
   MELOSYS_FOLKETRYGDEN_MVP,
   MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
   MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
 } from "../../../../featuretoggle/toggleNavn";
+
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import saksplukkerSchema from "./saksplukkerSchema";
+import "./saksplukker.css";
 
 const compareTerm = (a: KTObject, b: KTObject) => {
   if (!a.term) return 1;
