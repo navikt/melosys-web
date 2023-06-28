@@ -28,7 +28,6 @@ export const BrevMottakereTabell = () => {
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return [
       {
-        sendesTilDokumenterV2: true,
         navn: muligMottaker.dokumentNavn,
         data: {
           produserbardokument: IKKE_YRKESAKTIV_VEDTAKSBREV,

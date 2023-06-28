@@ -169,7 +169,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
     return [
       {
-        sendesTilDokumenterV2: true,
         navn: ikon ? (
           <>
             <Ikoner.Forhandsvis />

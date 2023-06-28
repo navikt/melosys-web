@@ -43,7 +43,6 @@ const BrevMottakereTabell = ({
     const rolle = erHovedMottaker ? formValues.valgtMottaker?.rolle : muligMottaker.rolle;
     return [
       {
-        sendesTilDokumenterV2: true,
         navn: muligMottaker.dokumentNavn,
         data: {
           ...hentBrevRequest(rolle),
