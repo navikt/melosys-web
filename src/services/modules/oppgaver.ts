@@ -10,7 +10,6 @@ export interface PlukkOppgaveReqDto {
 
 export interface TilbakeleggOppgaveReqDto {
   behandlingID: number;
-  begrunnelse: null;
   venterPaaDokumentasjon: boolean;
 }
 

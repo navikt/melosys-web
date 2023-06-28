@@ -1,8 +1,8 @@
-import React, { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
-import { render, screen } from "@testing-library/react";
+import React from "react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import MKV from "../../../melosyskodeverk";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import AvsluttSak from "./avsluttsak";
 
 const {
@@ -16,28 +16,55 @@ const { NY_VURDERING, FØRSTEGANG, HENVENDELSE, KLAGE } = MKV.Koder.behandlinger
 const { FTRL, TRYGDEAVTALE, EU_EOS } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG, UNNTAK } = MKV.Koder.sakstemaer;
 
-const mockedProps = mock<ComponentProps<typeof AvsluttSak>>();
-
 describe("AvsluttSak", () => {
-  const props = instance(mockedProps);
-
-  const setupProps = (initialProps: typeof mockedProps) => {
-    initialProps.redigerbart = true;
-    initialProps.sakstype = EU_EOS;
-    initialProps.sakstema = MEDLEMSKAP_LOVVALG;
-    initialProps.behandlingstema = UTSENDT_ARBEIDSTAKER;
-    initialProps.behandlingstype = FØRSTEGANG;
+  const props = {
+    redigerbart: true,
+    sakstype: "",
+    sakstema: "",
+    behandlingstema: "",
+    behandlingstype: "",
   };
 
   beforeEach(() => {
-    setupProps(instance(mockedProps));
+    props.redigerbart = true;
+    props.sakstype = EU_EOS;
+    props.sakstema = MEDLEMSKAP_LOVVALG;
+    props.behandlingstema = UTSENDT_ARBEIDSTAKER;
+    props.behandlingstype = FØRSTEGANG;
+  });
+
+  const initialState = () => ({
+    behandlinger: {
+      status: "",
+      data: {
+        redigerbart: props.redigerbart,
+        oppsummering: {
+          behandlingstema: {
+            kode: props.behandlingstema,
+          },
+          behandlingstype: {
+            kode: props.behandlingstype,
+          },
+        },
+      },
+    },
+    fagsaker: {
+      status: "",
+      data: {
+        sakstype: {
+          kode: props.sakstype,
+        },
+        sakstema: {
+          kode: props.sakstema,
+        },
+      },
+    },
   });
 
   it("viser riktige valg for sakstype FTRL og behandlingstype FØRSTEGANG ", async () => {
     props.sakstype = FTRL;
     props.behandlingstema = YRKESAKTIV;
-
-    render(<AvsluttSak {...props} />);
+    renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
     expect(screen.queryAllByRole("button")).toHaveLength(1);
 
@@ -56,14 +83,14 @@ describe("AvsluttSak", () => {
 
   it("viser ingenting når behandling er ikke redigerbart", async () => {
     props.redigerbart = false;
-    const { container } = render(<AvsluttSak {...props} />);
+    const { container } = renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
     expect(container).toBeEmptyDOMElement();
   });
 
   describe("Behandlingen er bortfalt", () => {
     it("viser Behandlingen er bortfalt når behandling er redigerbart", async () => {
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -75,7 +102,7 @@ describe("AvsluttSak", () => {
   describe("Ferdigbehandlet", () => {
     it(`viser 'Ferdigbehandlet' dersom behandlingstema er blant de tillatte og behandlingstype er ${NY_VURDERING}`, async () => {
       props.behandlingstype = NY_VURDERING;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -85,7 +112,7 @@ describe("AvsluttSak", () => {
 
     it(`viser 'Ferdigbehandlet' dersom behandlingstema er blant de tillatte og behandlingstype er ${HENVENDELSE}`, async () => {
       props.behandlingstype = HENVENDELSE;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -95,7 +122,7 @@ describe("AvsluttSak", () => {
 
     it(`viser 'Ferdigbehandlet' dersom behandlingstema ikke er blant de tillatte så lenge behandling er redigerbart`, async () => {
       props.behandlingstema = YRKESAKTIV;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -106,7 +133,7 @@ describe("AvsluttSak", () => {
 
   describe("Søknaden er avslått", () => {
     it(`viser 'Søknaden er avslått' dersom behandlingstype og behandlingstema er blant de tillatte`, async () => {
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -116,7 +143,7 @@ describe("AvsluttSak", () => {
 
     it(`viser ikke 'Søknaden er avslått' dersom behandlingstype er ${HENVENDELSE}`, async () => {
       props.behandlingstype = HENVENDELSE;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -127,7 +154,7 @@ describe("AvsluttSak", () => {
 
     it(`viser ikke 'Søknaden er avslått' dersom sakstema er ${UNNTAK}`, async () => {
       props.sakstema = UNNTAK;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -139,7 +166,7 @@ describe("AvsluttSak", () => {
 
   describe("Søknaden er innvilget", () => {
     it(`viser 'Søknaden er innvilget' dersom sakstype er ${EU_EOS} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${UTSENDT_ARBEIDSTAKER}`, async () => {
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -151,7 +178,7 @@ describe("AvsluttSak", () => {
       props.sakstype = FTRL;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -163,7 +190,7 @@ describe("AvsluttSak", () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -175,7 +202,7 @@ describe("AvsluttSak", () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = HENVENDELSE;
       props.behandlingstema = YRKESAKTIV;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -186,7 +213,7 @@ describe("AvsluttSak", () => {
 
     it(`viser ikke 'Søknaden er innvilget' dersom sakstema er ${UNNTAK}`, async () => {
       props.sakstema = UNNTAK;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -198,7 +225,7 @@ describe("AvsluttSak", () => {
 
   describe("Søknaden/klagen er trukket", () => {
     it(`viser 'Søknaden/klagen er trukket' dersom sakstype er ${EU_EOS} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${UTSENDT_ARBEIDSTAKER}`, async () => {
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -210,7 +237,7 @@ describe("AvsluttSak", () => {
       props.sakstype = FTRL;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -222,7 +249,7 @@ describe("AvsluttSak", () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -234,7 +261,7 @@ describe("AvsluttSak", () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = HENVENDELSE;
       props.behandlingstema = YRKESAKTIV;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -245,7 +272,7 @@ describe("AvsluttSak", () => {
 
     it(`viser ikke 'Søknaden/klagen er trukket' dersom sakstema er ${UNNTAK}`, async () => {
       props.sakstema = UNNTAK;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -257,7 +284,7 @@ describe("AvsluttSak", () => {
 
   describe("Avslå søknad pga. manglende opplysninger", () => {
     it(`viser 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${EU_EOS} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${UTSENDT_ARBEIDSTAKER}`, async () => {
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -269,7 +296,7 @@ describe("AvsluttSak", () => {
       props.sakstype = FTRL;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -281,7 +308,7 @@ describe("AvsluttSak", () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -293,7 +320,7 @@ describe("AvsluttSak", () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = HENVENDELSE;
       props.behandlingstema = YRKESAKTIV;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -304,7 +331,7 @@ describe("AvsluttSak", () => {
 
     it(`viser ikke 'Avslå søknad pga. manglende opplysninger' dersom sakstema er ${UNNTAK}`, async () => {
       props.sakstema = UNNTAK;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -317,7 +344,7 @@ describe("AvsluttSak", () => {
   describe("Klage-handlinger", () => {
     it(`viser Klage-handlinger dersom behandlingstype er ${KLAGE}`, async () => {
       props.behandlingstype = KLAGE;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -332,7 +359,7 @@ describe("AvsluttSak", () => {
 
     it(`viser ikke Klage-handlinger dersom behandlingstype er ${FØRSTEGANG}`, async () => {
       props.behandlingstype = FØRSTEGANG;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -349,7 +376,7 @@ describe("AvsluttSak", () => {
   describe("Vedtaket er omgjort (fvl § 35)", () => {
     it(`viser 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${NY_VURDERING}`, async () => {
       props.behandlingstype = NY_VURDERING;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -359,7 +386,7 @@ describe("AvsluttSak", () => {
 
     it(`viser ikke 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${FØRSTEGANG}`, async () => {
       props.behandlingstype = FØRSTEGANG;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -373,7 +400,7 @@ describe("AvsluttSak", () => {
     it(`viser Unntak-handlinger dersom behandlingstema er ${ANMODNING_OM_UNNTAK_HOVEDREGEL} og sakstype er ${TRYGDEAVTALE}`, async () => {
       props.behandlingstema = ANMODNING_OM_UNNTAK_HOVEDREGEL;
       props.sakstype = TRYGDEAVTALE;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -387,7 +414,7 @@ describe("AvsluttSak", () => {
     it(`viser Unntak-handlinger dersom behandlingstema er ${REGISTRERING_UNNTAK} og sakstype er ${TRYGDEAVTALE}`, async () => {
       props.behandlingstema = REGISTRERING_UNNTAK;
       props.sakstype = TRYGDEAVTALE;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -401,7 +428,7 @@ describe("AvsluttSak", () => {
     it(`viser Unntak-handlinger dersom behandlingstema er ${A1_ANMODNING_OM_UNNTAK_PAPIR} og sakstype er ${EU_EOS}`, async () => {
       props.behandlingstema = A1_ANMODNING_OM_UNNTAK_PAPIR;
       props.sakstype = EU_EOS;
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
@@ -413,7 +440,7 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke Unntak-handlinger for andre tilfeller enn de ovenfor`, async () => {
-      render(<AvsluttSak {...props} />);
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
       await user.click(screen.getByText("Avslutt sak"));
