@@ -353,9 +353,9 @@ const SendBrev = ({
       .finally(() => setSpinner(false));
   };
 
-  const slettUtkast = () => {
+  const slettUtkast = async () => {
     if (formValues?.aktivtUtkast?.utkastBrevID) {
-      return Api.Brevutkast.slettBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID)
+      await Api.Brevutkast.slettBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID)
         .then(() => {
           changeField("aktivtUtkast", null);
           hentUtkast();
