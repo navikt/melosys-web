@@ -1,0 +1,305 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VurderingArbeidsmonster snapshot test 1`] = `
+<div>
+  <div
+    class="vurderingArbeidsmonster"
+  >
+    <h1
+      class="typo-innholdstittel stegvelgertittel"
+    >
+      Vurder aktiviteten i de ulike landene
+    </h1>
+    <div
+      class="arbeidsmonster"
+    >
+      <fieldset
+        class="fieldset"
+      >
+        <legend
+          class="fieldset__legend"
+        >
+          Er det marginalt arbeid i noen av landene?
+        </legend>
+        <div
+          class="marginaltArbeid"
+        >
+          <div
+            class="landliste_innhold"
+          >
+            <div
+              class="land__enkeltlinje"
+            >
+              <p
+                class="typo-undertekst-bold"
+              >
+                Land
+              </p>
+              <p
+                class="typo-undertekst-bold marginaltArbeidCheckbox"
+              >
+                Marginalt arbeid? 
+                (&lt;5%)
+              </p>
+            </div>
+            <div
+              class="vurderingArbeidsmonster__landlinje"
+            >
+              <span>
+                Flere EØS-land/Sveits. Ikke kjent hvilke
+              </span>
+              <div
+                class="skjemaelement vurderingArbeidsmonster__landlinje__marginaltArbeidCheckbox"
+              >
+                <input
+                  aria-invalid="false"
+                  checked=""
+                  class="skjemaelement__input checkboks"
+                  disabled=""
+                  id="123"
+                  type="checkbox"
+                  value=""
+                />
+                <label
+                  class="skjemaelement__label"
+                  for="123"
+                >
+                  ja
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <div
+        class="enkeltAvklartfakta__skjemafelt"
+      >
+        <div
+          class="row"
+        >
+          <div
+            class="col col-xs-12"
+          >
+            <fieldset
+              class="fieldset"
+            >
+              <legend
+                class="fieldset__legend"
+              >
+                Vurder aktivitet
+              </legend>
+              <div
+                class="skjemaelement"
+              >
+                <input
+                  aria-invalid="false"
+                  class="skjemaelement__input radioknapp"
+                  id="123"
+                  name="LOENNET_ARBEID_ANTALL_LAND"
+                  type="radio"
+                  value="NORGE"
+                />
+                <label
+                  class="skjemaelement__label"
+                  for="123"
+                >
+                  Lønnet arbeid i Norge og selvstendig virksomhet (13.3)
+                </label>
+              </div>
+              <div
+                class="skjemaelement"
+              >
+                <input
+                  aria-invalid="false"
+                  class="skjemaelement__input radioknapp"
+                  id="123"
+                  name="LOENNET_ARBEID_ANTALL_LAND"
+                  type="radio"
+                  value="ETT_ANNET_LAND"
+                />
+                <label
+                  class="skjemaelement__label"
+                  for="123"
+                >
+                  Lønnet arbeid i et annet land og selvstendig virksomhet (13.3)
+                </label>
+              </div>
+              <div
+                class="skjemaelement"
+              >
+                <input
+                  aria-invalid="false"
+                  class="skjemaelement__input radioknapp"
+                  id="123"
+                  name="LOENNET_ARBEID_ANTALL_LAND"
+                  type="radio"
+                  value="FLERE_LAND"
+                />
+                <label
+                  class="skjemaelement__label"
+                  for="123"
+                >
+                  Lønnet arbeid i to eller flere land og selvstendig virksomhet (13.1)
+                </label>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        class="enkeltAvklartfakta__skjemafelt"
+      >
+        <div
+          class="row"
+        >
+          <div
+            class="col col-xs-12"
+          >
+            <fieldset
+              class="fieldset"
+            >
+              <legend
+                class="fieldset__legend"
+              >
+                Vurder aktivitet
+              </legend>
+              <div
+                class="skjemaelement"
+              >
+                <input
+                  aria-invalid="false"
+                  class="skjemaelement__input radioknapp"
+                  id="123"
+                  name="OFFENTLIG_ARBEID_ANTALL_LAND"
+                  type="radio"
+                  value="NORGE_OG_ANNEN_VIRKSOMHET"
+                />
+                <label
+                  class="skjemaelement__label"
+                  for="123"
+                >
+                  Offentlig tjeneste i Norge og annen virksomhet (13.4)
+                </label>
+              </div>
+              <div
+                class="skjemaelement"
+              >
+                <input
+                  aria-invalid="false"
+                  class="skjemaelement__input radioknapp"
+                  id="123"
+                  name="OFFENTLIG_ARBEID_ANTALL_LAND"
+                  type="radio"
+                  value="ANNET_LAND_OG_ANNEN_VIRKSOMHET"
+                />
+                <label
+                  class="skjemaelement__label"
+                  for="123"
+                >
+                  Offentlig tjeneste i et annet land og annen virksomhet (13.4)
+                </label>
+              </div>
+              <div
+                class="skjemaelement"
+              >
+                <input
+                  aria-invalid="false"
+                  class="skjemaelement__input radioknapp"
+                  id="123"
+                  name="OFFENTLIG_ARBEID_ANTALL_LAND"
+                  type="radio"
+                  value="FLERE_LAND_OG_ANNEN_VIRKSOMHET"
+                />
+                <label
+                  class="skjemaelement__label"
+                  for="123"
+                >
+                  Offentlig tjeneste i to eller flere land og annen virksomhet (13.1)
+                </label>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        class="enkeltAvklartfakta__skjemafelt"
+      >
+        <div
+          class="row"
+        >
+          <div
+            class="col col-xs-12"
+          >
+            <fieldset
+              class="fieldset"
+            >
+              <legend
+                class="fieldset__legend"
+              >
+                Vurdering av vesentlig aktivitet i Norge
+              </legend>
+              <div
+                class="skjemaelement"
+              >
+                <input
+                  aria-invalid="false"
+                  class="skjemaelement__input radioknapp"
+                  id="123"
+                  name="AKTIVITET_I_NORGE"
+                  type="radio"
+                  value="OVER_25_PROSENT"
+                />
+                <label
+                  class="skjemaelement__label"
+                  for="123"
+                >
+                  25% eller mer
+                </label>
+              </div>
+              <div
+                class="skjemaelement"
+              >
+                <input
+                  aria-invalid="false"
+                  class="skjemaelement__input radioknapp"
+                  id="123"
+                  name="AKTIVITET_I_NORGE"
+                  type="radio"
+                  value="UNDER_25_PROSENT"
+                />
+                <label
+                  class="skjemaelement__label"
+                  for="123"
+                >
+                  Mindre enn 25%
+                </label>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        class="stegKnapper"
+      >
+        <button
+          class="knapp stegKnapper__bekreft knapp--hoved knapp--mini"
+          type="button"
+        >
+          Bekreft og fortsett
+        </button>
+        <button
+          class="knapp stegKnapper__tilbake knapp--flat knapp--mini"
+          type="button"
+        >
+          <svg>
+            arrow-left-blue.svg
+          </svg>
+          <span>
+            Tilbake
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
