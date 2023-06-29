@@ -1,4 +1,4 @@
 import { uriPath, hent } from "./pdf";
-import { forhandsvisBrev, forhandsvisSed } from "./utkast";
+import { forhandsvisSed } from "./utkastSed";
 
-export { uriPath, hent, forhandsvisBrev, forhandsvisSed };
+export { uriPath, hent, forhandsvisSed };

@@ -17,8 +17,6 @@ import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
-import { MELOSYS_DOKUMENT_V2 } from "../../../featuretoggle/toggleNavn";
-import { useFeatureToggle } from "../../../featuretoggle";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import HtmlEditor from "../../htmlEditor";
 import Knapperad from "../../knapperad";
@@ -51,7 +49,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & PropsFromRedux) => {
   const [brevFritekst, setBrevFritekst] = useState("");
   const [vedtakPending, setVedtakPending] = useState(true);
-  const brukDokumentV2 = useFeatureToggle(MELOSYS_DOKUMENT_V2);
 
   const {
     ariaHideApp,
@@ -76,30 +73,17 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
     })();
   }, []);
 
-  const pdfDokumenter = brukDokumentV2
-    ? [
-        {
-          sendesTilDokumenterV2: true,
-          navn: "Forhåndsvis vedtaksbrev",
-          data: {
-            produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
-            mottaker: MKV.Koder.mottakerroller.BRUKER,
-            begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
-            fritekst: brevFritekst,
-          },
-        },
-      ]
-    : [
-        {
-          navn: "Forhåndsvis vedtaksbrev",
-          type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
-          data: {
-            begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
-            fritekst: brevFritekst,
-            mottaker: MKV.Koder.mottakerroller.BRUKER,
-          },
-        },
-      ];
+  const pdfDokumenter = [
+    {
+      navn: "Forhåndsvis vedtaksbrev",
+      data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
+        begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
+        fritekst: brevFritekst,
+      },
+    },
+  ];
 
   const avslaaSoknad = () => {
     const data = {

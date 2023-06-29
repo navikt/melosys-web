@@ -8,7 +8,7 @@
  */
 
 import { AppThunk } from "AppTypes";
-import { BrevPdfData, SedPdfData } from "Domene";
+import { SedPdfData } from "Domene";
 
 import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
@@ -19,23 +19,6 @@ async function getObjectURL(response: Response): Promise<string> {
   const arrayBuffer = await response.arrayBuffer();
   const file = new Blob([arrayBuffer], { type: "application/pdf" });
   return URL.createObjectURL(file);
-}
-
-export async function forhandsvisBrev(behandlingID: number, dokumenttypeKode: string, data: BrevPdfData) {
-  const utfyltdata = {
-    mottaker: data.mottaker ? data.mottaker : null,
-    fritekst: data.fritekst ? data.fritekst : null,
-    begrunnelseKode: data.begrunnelseKode ? data.begrunnelseKode : null,
-    ytterligereInformasjon: data.ytterligereInformasjon ? data.ytterligereInformasjon : null,
-    produserbardokument: dokumenttypeKode,
-  };
-
-  const response = await Api.Dokumenter.pdf.forhandsvisBrev(behandlingID, dokumenttypeKode, utfyltdata);
-
-  if (response.ok) {
-    return getObjectURL(response);
-  }
-  return false;
 }
 
 export async function forhandsvisBrevV2(behandlingID: number, data: Api.DokumenterV2.OpprettBrevReqDto) {
