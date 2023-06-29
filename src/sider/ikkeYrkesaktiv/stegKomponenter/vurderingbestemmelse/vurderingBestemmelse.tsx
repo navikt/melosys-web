@@ -69,13 +69,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   useEffect(() => {
     if (aktivtSteg) {
+      setValue("bestemmelse", "");
       if (formValues?.innvilgelsesResultat === AVSLAATT) {
-        setValue("bestemmelse", "");
         lagreLovvalgsperiodeOgKontroller("", AVSLAATT);
       } else if (formValues?.innvilgelsesResultat === INNVILGET) {
         lagreLovvalgsperiodeOgKontroller("", INNVILGET);
       } else {
-        setValue("bestemmelse", "");
         dispatch(lovvalgsperioderOperations.send(behandlingID, []));
       }
     }
