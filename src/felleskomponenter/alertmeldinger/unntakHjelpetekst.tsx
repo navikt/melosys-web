@@ -15,7 +15,7 @@ const UnntakHjelpetekst = () => {
       <p>
         <strong>
           Når du får svar fra utenlandsk trygdemyndighet, må du endre valget på dette steget, og fatte vedtak. Dersom du
-          skal vurdere frivillig medlemskap må du endre sakstype til &quot;Utenfor avtaleland&quot;
+          skal vurdere frivillig medlemskap må du endre sakstype til &quot;Utenfor avtaleland&quot;.
         </strong>
       </p>
     </Nav.EtikettBase>
