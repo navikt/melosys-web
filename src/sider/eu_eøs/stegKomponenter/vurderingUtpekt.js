@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import PT from "prop-types";
-import { connect } from "react-redux";
-import { getFormValues, reduxForm } from "redux-form";
+import { connect, useDispatch } from "react-redux";
+import { change, getFormValues, reduxForm } from "redux-form";
 
 import * as Api from "../../../services/api";
 import * as Nav from "../../../navFrontend";
@@ -62,10 +62,13 @@ export const VurderingUtpekt = ({
   behandlingID,
 }) => {
   const [erBucAapen, setErBucAapen] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     Api.Kontroll.erBucAapen(behandlingID).then((res) => {
       setErBucAapen(res);
+      if (!res)
+        dispatch(change(KV.Form.VURDER_UTPEKING, "utpekingVurdering", MKV.Koder.utfallregistreringunntak.GODKJENT));
     });
     if (lovvalgsland) {
       oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
@@ -216,7 +219,7 @@ export const VurderingUtpekt = ({
       </Nav.Row>
       <Mui.StegKnapper
         bekreftKnappProps={{
-          disabled: !((redigerbart && harAvklaring) || (redigerbart && !erBucAapen)),
+          disabled: !(redigerbart && harAvklaring),
           htmlType: "submit",
         }}
         tilbakeKnappProps={{
