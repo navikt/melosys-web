@@ -25,7 +25,6 @@ import { StandardMeldingOverst } from "../alertmeldinger";
 import { Spinner } from "../spinner";
 
 import "./endreBehandlingModal.css";
-import { harUnntakFlyt } from "../../routing";
 import {
   MELOSYS_FOLKETRYGDEN_MVP,
   MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
@@ -235,12 +234,8 @@ function EndreBehandlingModal({
 
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
           tilAnnenSide(nyGenerertLink);
-          if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) {
-            window.location.reload();
-          }
-        } else {
-          window.location.reload();
         }
+        window.location.reload();
       })
       .catch(() => {
         setGenerellFeil("Oppdateringen feilet!");
