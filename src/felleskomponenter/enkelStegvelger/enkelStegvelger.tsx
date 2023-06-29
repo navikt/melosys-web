@@ -6,6 +6,13 @@ import { Innsynsmelding } from "../alertmeldinger";
 import StegLinje from "../stegLinje/stegLinje";
 import StegFane from "../stegFane";
 import { FANE_STATUS } from "../stegvelger";
+import MKV from "../../melosyskodeverk";
+import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { NyVurderingMelding } from "../alertmeldinger/alertmeldinger";
+import { fagsakSelectors } from "../../ducks/fagsaker";
+import { useFeatureToggle } from "../../featuretoggle";
+import { MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT } from "../../featuretoggle/toggleNavn";
+import { harIkkeYrkesaktivFlyt } from "../../routing";
 
 interface AktueltSteg {
   id: string;
@@ -25,6 +32,14 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
   const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([alleSteg[0]]);
   const [aktivtStegIndex, setAktivtStegIndex] = useState(0);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+  const inngangStegErAktivt = aktivtStegIndex === 0;
+
+  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
+  const erIkkeYrkesaktivFlyt = harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled);
 
   const hentNesteSteg = (stegPosisjon: number) => alleSteg.find((steg) => steg.stegPosisjon === stegPosisjon + 1);
 
@@ -69,6 +84,8 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
         <div>
           <StegLinje steg={aktuelleSteg} stegKlikk={handleKlikk} />
           {!redigerbart && <Innsynsmelding />}
+
+          {erNyVurdering && redigerbart && inngangStegErAktivt && erIkkeYrkesaktivFlyt && <NyVurderingMelding />}
           {aktuelleSteg.map((steg) => (
             <StegFane
               faneData={steg}
