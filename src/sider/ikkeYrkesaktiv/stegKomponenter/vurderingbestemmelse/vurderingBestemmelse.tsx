@@ -89,8 +89,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     await dispatch(
       lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
         lovvalgsperiode: {
-          fomDato: innvilgelsesResultat === periodeFom,
-          tomDato: innvilgelsesResultat === periodeTom,
+          fomDato: periodeFom,
+          tomDato: periodeTom,
         },
         innvilgelsesResultat,
         lovvalgsbestemmelse: bestemmelse,
