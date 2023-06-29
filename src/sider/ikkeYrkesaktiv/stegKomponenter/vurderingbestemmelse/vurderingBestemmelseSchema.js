@@ -5,9 +5,9 @@ import MKV from "../../../../melosyskodeverk";
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 const vurdering_bestemmelse = object().shape({
-  utfall: string().required(MAA_FYLLES_UT),
-  bestemmelse: string().when("utfall", {
-    is: (utfall) => utfall === "GODKJENT",
+  innvilgelsesResultat: string().required(MAA_FYLLES_UT).oneOf([MKV.Koder.innvilgelsesResultat.INNVILGET], ""),
+  bestemmelse: string().when("innvilgelsesResultat", {
+    is: (innvilgelsesResultat) => innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
     then: string().required(MAA_FYLLES_UT),
   }),
   ikkeYrkesaktivSituasjontype: string()
