@@ -36,6 +36,7 @@ import {
   MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
 } from "../../../featuretoggle/toggleNavn";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import * as Api from "../../../services/api";
 
 const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) => {
   if (
@@ -125,6 +126,7 @@ const VurderingVedtak = ({
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const [erBucAapen, setErBucAapen] = useState(true);
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
   const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
@@ -177,6 +179,14 @@ const VurderingVedtak = ({
   const { kopiTilArbeidsgiver, vedtakstype } = formValues;
 
   useEffect(() => {
+    if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE) {
+      Api.Kontroll.erBucAapen(behandlingID).then((res) => {
+        setErBucAapen(res);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     async function kontroller() {
       if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg && formIsValid) {
         setVedtakPending(true);
@@ -218,6 +228,9 @@ const VurderingVedtak = ({
 
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !flereSoknadslandEnnTillatt;
 
+  const bucLukketOgLovvalgNorge =
+    !erBucAapen && behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE;
+
   return (
     <div className="vedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
@@ -248,7 +261,7 @@ const VurderingVedtak = ({
             />
           </Nav.Column>
         </Nav.Row>
-        {redigerbart && (
+        {redigerbart && !bucLukketOgLovvalgNorge && (
           <Nav.Row className="fritekstSed">
             <Nav.Column xs="7">
               <Skjema.Textarea
@@ -278,7 +291,9 @@ const VurderingVedtak = ({
         )}
         <Nav.Row>
           <Nav.Column xs="6">
-            {stegErGyldig && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+            {stegErGyldig && !bucLukketOgLovvalgNorge && (
+              <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />
+            )}
           </Nav.Column>
         </Nav.Row>
         {flereSoknadslandEnnTillatt && (

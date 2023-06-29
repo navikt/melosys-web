@@ -26,13 +26,13 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
   const [varsleUtland, setVarsleUtland] = useState(false);
   const [godkjenningPending, setGodkjenningPending] = useState(false);
   const [fritekst, setFritekst] = useState("");
-  const [kanSendeSed, setKanSendeSed] = useState(true);
+  const [erBucAapen, setErBucAapen] = useState(true);
 
   const isMounted = Hooks.useIsMounted();
 
   useEffect(() => {
     Api.Kontroll.erBucAapen(behandlingID).then((res) => {
-      setKanSendeSed(res);
+      setErBucAapen(res);
     });
   }, []);
 
@@ -77,11 +77,11 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
       data: { fritekst },
     },
   ];
-  const skjemaDisabled = !redigerbart || !kanSendeSed;
+  const skjemaDisabled = !redigerbart || !erBucAapen;
 
   return (
     <div className="vurderingGodkjennUtpeking">
-      {!kanSendeSed ? (
+      {!erBucAapen ? (
         <Nav.AlertStripe className="buc__varsel" type="advarsel">
           <strong>BUC er lukket</strong>
           <ul>
@@ -106,7 +106,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
               disabled={skjemaDisabled}
             />
           </Nav.Row>
-          <Nav.Row>{kanSendeSed && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}</Nav.Row>
+          <Nav.Row>{erBucAapen && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}</Nav.Row>
         </>
       )}
       <Nav.Row>
