@@ -94,8 +94,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   if (!aktivtSteg) return null;
 
   return (
-    <div className="vurderingStart">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi søknadsperiode og -land</Nav.Typo.Innholdstittel>
+    <div className="vurderingInngang">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
 
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
@@ -113,13 +113,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           </Nav.Column>
           <Nav.Column xs="5">
             <Forms.Select
-              label={
-                <LabelMedHjelpetekst
-                  label="Land"
-                  hjelpetekst="SETT INN HJELPETEKST"
-                  hjelpetekstClassName="hjelpetekst"
-                />
-              }
+              label={<LabelMedHjelpetekst label="Land" hjelpetekstClassName="hjelpetekst" />}
               emptyFieldText="Velg"
               emptyFieldDisabled={!!formValues.land}
               name="land"
