@@ -1,6 +1,4 @@
-import React from "react";
-
-import * as Nav from "../../navFrontend";
+import renderer from "react-test-renderer";
 
 import Begrunnelser from "./begrunnelser";
 
@@ -19,24 +17,8 @@ describe("Begrunnelser", () => {
     };
   });
 
-  it("viser label", () => {
-    const begrunnelser = shallow(<Begrunnelser {...props} />);
-
-    expect(begrunnelser.find(Nav.Typo.Element).children().text()).toBe(props.label);
-  });
-
-  it("viser fritekst", () => {
-    props.fritekst = "fritekst";
-    const begrunnelser = shallow(<Begrunnelser {...props} />);
-
-    expect(begrunnelser.find(".begrunnelse").last().children().text()).toBe(props.fritekst);
-  });
-
-  it("viser korrekte begrunnelser", () => {
-    const begrunnelser = shallow(<Begrunnelser {...props} />);
-
-    const visteBegrunnelser = begrunnelser.find(".begrunnelse").map((begrunnelse) => begrunnelse.text());
-    expect(visteBegrunnelser).toEqual(expect.arrayContaining(["Term1", "Term3"]));
-    expect(visteBegrunnelser).not.toEqual(expect.arrayContaining(["Term2"]));
+  it("snapshot test", () => {
+    const tree = renderer.create(<Begrunnelser {...props} />).toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });

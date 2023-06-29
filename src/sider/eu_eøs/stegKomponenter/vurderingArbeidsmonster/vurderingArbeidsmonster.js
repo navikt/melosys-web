@@ -1,6 +1,4 @@
 import React, { useEffect } from "react";
-import { reset, formValueSelector } from "redux-form";
-import { connect } from "react-redux";
 import PT from "prop-types";
 
 import MKV from "../../../../melosyskodeverk";
@@ -9,155 +7,20 @@ import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
-
-import LandLinje from "./landlinje";
 import EnkeltAvklartfakta from "../felles/enkeltAvklartfakta";
+import MarginaltArbeid from "./marginaltArbeid/marginaltArbeid";
 import { VurderingVesentligAktivitetINorgeTyper } from "../../../../kodeverk/koder";
+
 import {
-  konverterAvklartfaktaTilStegData,
-  lagAvklartfakta,
-  lagLovvalgsbestemmelse,
-  slettLovvalgsbestemmelse,
   konverterLovvalgsbestemmelseTilStegData,
-  lagTilleggBestemmelse,
-  slettTilleggBestemmelse,
   konverterTilleggBestemmelseTilStegData,
+  lagLovvalgsbestemmelse,
+  lagTilleggBestemmelse,
+  slettLovvalgsbestemmelse,
+  slettTilleggBestemmelse,
 } from "../../../../felleskomponenter/stegvelger";
 import { hentFaktaVerdi } from "../../../../domeneUtils";
-import { BOOLSK_STRING } from "../../../../constants";
-
 import "./vurderingArbeidsmonster.css";
-
-export const UkjenteEllerFlereEosLandLinje = () => (
-  <LandLinje land="Flere EØS-land/Sveits. Ikke kjent hvilke" checkbox={{ redigerbart: false, checked: true }} />
-);
-
-/**
- * Enkeltsjekkboks for marginalt arbeid i et land.
- *
- * @param props Objekt Diverse props (se propTypes)
- */
-export const CheckableLandLinje = (props) => {
-  const { landKode, avklartMarginaltArbeidILand, oppdaterData, redigerbart, resetForm } = props;
-
-  useEffect(() => {
-    if (avklartMarginaltArbeidILand) {
-      oppdaterData(
-        konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, avklartMarginaltArbeidILand)
-      );
-    }
-  }, []);
-
-  const erMarginaltArbeidIArbeidsland =
-    avklartMarginaltArbeidILand && avklartMarginaltArbeidILand.fakta.includes("TRUE");
-
-  const klikkHandler = () => {
-    const verdi = erMarginaltArbeidIArbeidsland ? BOOLSK_STRING.USANN : BOOLSK_STRING.SANN;
-    oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, landKode.kode, verdi));
-
-    /* Ved valg av marginale land(skal ikke ha SED), reinitialize former med mottakerinstitusjoner,
-    slik at mottakerinstitusjoner i vedtakssteget/utpekingssteg oppdateres.
-    Unngår at bruker må endre på radioknapp "Vurdering av vesentlig aktivitet i Norge" for å oppdatere de nevnte stegene. */
-    resetForm(KV.Form.ARTIKKEL_13_X_VEDTAK);
-    resetForm(KV.Form.ARTIKKEL_13_UTPEKLAND);
-  };
-
-  return (
-    <LandLinje
-      land={`${landKode.term} (${landKode.kode})`}
-      checkbox={{
-        redigerbart,
-        checked: erMarginaltArbeidIArbeidsland === true,
-        value: BOOLSK_STRING.SANN,
-        onCheck: klikkHandler,
-      }}
-    />
-  );
-};
-
-CheckableLandLinje.propTypes = {
-  oppdaterData: PT.func.isRequired,
-  landKode: MPT.Kodeverk.isRequired,
-  avklartMarginaltArbeidILand: PT.object,
-  redigerbart: PT.bool.isRequired,
-  resetForm: PT.func.isRequired,
-};
-
-CheckableLandLinje.defaultProps = {
-  avklartMarginaltArbeidILand: undefined,
-};
-
-const landLinjeMapDispatchToProps = (dispatch) => ({
-  resetForm: (form) => dispatch(reset(form)),
-});
-
-export const ConnectedCheckableLandLinje = connect(null, landLinjeMapDispatchToProps)(CheckableLandLinje);
-
-export const MarginaltArbeid = ({
-  arbeidsland,
-  redigerbart,
-  marginaltArbeid,
-  oppdaterData,
-  soknadsland: { erUkjenteEllerAlleEosLand },
-}) => {
-  const landlinjer = erUkjenteEllerAlleEosLand ? (
-    <UkjenteEllerFlereEosLandLinje />
-  ) : (
-    arbeidsland.map(({ land }) => {
-      const avklartMarginaltArbeidILand = marginaltArbeid.find(
-        (enkeltAvklaring) => enkeltAvklaring.subjektID === land.kode
-      );
-
-      const key = `marginaltArbeidslandListe${land.kode}`;
-      return (
-        <ConnectedCheckableLandLinje
-          landKode={land}
-          avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
-          key={key}
-          oppdaterData={oppdaterData}
-          redigerbart={redigerbart}
-        />
-      );
-    })
-  );
-
-  return (
-    <Nav.Fieldset legend="Er det marginalt arbeid i noen av landene?">
-      <div className="marginaltArbeid">
-        <div className="landliste_innhold">
-          <div className="land__enkeltlinje">
-            <Nav.Typo.UndertekstBold>Land</Nav.Typo.UndertekstBold>
-            <Nav.Typo.UndertekstBold className="marginaltArbeidCheckbox">
-              Marginalt arbeid? {"(<5%)"}
-            </Nav.Typo.UndertekstBold>
-          </div>
-          {landlinjer}
-        </div>
-      </div>
-    </Nav.Fieldset>
-  );
-};
-
-MarginaltArbeid.propTypes = {
-  arbeidsland: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet),
-  marginaltArbeid: PT.array,
-  redigerbart: PT.bool.isRequired,
-  oppdaterData: PT.func.isRequired,
-  soknadsland: PT.object.isRequired,
-};
-
-MarginaltArbeid.defaultProps = {
-  arbeidsland: [],
-  marginaltArbeid: [],
-};
-
-const soknadFormValueSelector = formValueSelector(KV.Form.SOKNAD);
-
-const marginaltArbeidMapStateToProps = (state) => ({
-  soknadsland: soknadFormValueSelector(state, "soknadsland"),
-});
-
-const ConnectedMarginaltArbeid = connect(marginaltArbeidMapStateToProps)(MarginaltArbeid);
 
 /**
  * Dette er hovedkomponenten for fanen "Arbeidsmønster". Denne trekker inn MarginaltArbeid som er utlistingen av sjekkbokser og håndtereren
@@ -343,7 +206,7 @@ export const VurderingArbeidsmonster = ({
         Vurder aktiviteten i de ulike landene
       </Nav.Typo.Innholdstittel>
       <div className="arbeidsmonster">
-        <ConnectedMarginaltArbeid
+        <MarginaltArbeid
           redigerbart={redigerbart}
           marginaltArbeid={marginaltArbeid}
           arbeidsland={arbeidsland}

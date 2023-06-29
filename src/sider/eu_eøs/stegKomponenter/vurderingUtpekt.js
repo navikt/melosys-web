@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
-import { change, getFormValues, reduxForm } from "redux-form";
+import { getFormValues, reduxForm } from "redux-form";
 
 import * as Api from "../../../services/api";
 import * as Nav from "../../../navFrontend";
@@ -59,15 +59,13 @@ export const VurderingUtpekt = ({
   lovvalgsperiode,
   ytterligereInformasjon,
   behandlingstema,
-  endreFelt,
   behandlingID,
 }) => {
-  const [kanSendeSed, setKanSendeSed] = useState(true);
+  const [erBucAapen, setErBucAapen] = useState(true);
 
   useEffect(() => {
     Api.Kontroll.erBucAapen(behandlingID).then((res) => {
-      setKanSendeSed(res);
-      if (!res) endreFelt(KV.Form.VURDER_UTPEKING, "utpekingVurdering", MKV.Koder.utfallregistreringunntak.GODKJENT);
+      setErBucAapen(res);
     });
     if (lovvalgsland) {
       oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
@@ -111,11 +109,9 @@ export const VurderingUtpekt = ({
       ? lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt
       : MKV.Kodekombinasjoner.alleLovvalg;
 
-  const skjemaDisabled = !redigerbart || !kanSendeSed;
-
   return (
     <form className="vurderingutpekt" onSubmit={handleSubmit}>
-      {!kanSendeSed ? (
+      {!erBucAapen ? (
         <Nav.AlertStripe className="buc__varsel" type="advarsel">
           <strong>BUC er lukket</strong>
           <ul>
@@ -149,7 +145,7 @@ export const VurderingUtpekt = ({
       <Nav.Row className="rad">
         <Nav.Column xs="5">
           <Nav.Typo.Element>Grunnlag</Nav.Typo.Element>
-          <Skjema.Select feltNavn="lovvalgsbestemmelse" label="" disabled={skjemaDisabled}>
+          <Skjema.Select feltNavn="lovvalgsbestemmelse" label="" disabled={!redigerbart}>
             <option disabled key="VELG" value="">
               Velg
             </option>
@@ -171,7 +167,7 @@ export const VurderingUtpekt = ({
                 label="Legg til ny overgangsregelbestemmelse:"
                 placeholder="(Velg bestemmelse)"
                 muligeValg={MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser}
-                disabled={skjemaDisabled}
+                disabled={!redigerbart}
                 gruppe
               />
             </Nav.Fieldset>
@@ -183,10 +179,10 @@ export const VurderingUtpekt = ({
           <Nav.Typo.Element>Lovvalgsperiode</Nav.Typo.Element>
           <Nav.Row>
             <Nav.Column xs="6">
-              <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={skjemaDisabled} />
+              <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
             </Nav.Column>
             <Nav.Column xs="6">
-              <Skjema.Datovelger label="Til og med" feltNavn="tom" disabled={skjemaDisabled} />
+              <Skjema.Datovelger label="Til og med" feltNavn="tom" disabled={!redigerbart} />
             </Nav.Column>
           </Nav.Row>
         </Nav.Column>
@@ -201,10 +197,10 @@ export const VurderingUtpekt = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="5">
-          <Nav.Fieldset legend="Skal lovvalget godkjennes?" disabled={skjemaDisabled}>
+          <Nav.Fieldset legend="Skal lovvalget godkjennes?" disabled={!redigerbart || !erBucAapen}>
             <Skjema.Radio
               label="Godkjenn"
-              forhandsvalgt={!kanSendeSed}
+              forhandsvalgt={!erBucAapen}
               value={MKV.Koder.utfallregistreringunntak.GODKJENT}
               name="godkjenn"
               feltNavn="utpekingVurdering"
@@ -249,7 +245,6 @@ VurderingUtpekt.propTypes = {
   lovvalgsperiode: MPT.Periode.isRequired,
   ytterligereInformasjon: PT.string,
   behandlingstema: PT.string.isRequired,
-  endreFelt: PT.func.isRequired,
   behandlingID: PT.number.isRequired,
 };
 
@@ -302,10 +297,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  endreFelt: (form, field, value) => dispatch(change(form, field, value)),
-});
-
 const nesteSteg = (values, dispatch, props) => {
   props.bekreftOgFortsett();
 };
@@ -320,4 +311,4 @@ const VurderingUtpektForm = reduxForm({
   validate: lagYupToReduxformErrorMapper(vurderingUtpektSchema),
 })(VurderingUtpekt);
 
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingUtpektForm);
+export default connect(mapStateToProps)(VurderingUtpektForm);
