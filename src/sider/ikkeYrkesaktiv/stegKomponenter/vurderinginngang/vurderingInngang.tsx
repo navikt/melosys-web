@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,6 +9,7 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
 import { FellesHandlersContext } from "../../../../contexts";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
@@ -18,6 +19,7 @@ import { landkoderSelectors } from "../../../../ducks/landkoder";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import MKV from "../../../../melosyskodeverk";
 
 interface Props {
   bekreft: () => void;
@@ -54,9 +56,11 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   const [visSpinner, setVisSpinner] = useState(false);
 
+  const landUtenStøtteValgt = formValues.land === MKV.Koder.landkoder.FR || formValues.land === MKV.Koder.landkoder.IT;
+
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
-  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner;
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner && !landUtenStøtteValgt;
 
   useEffect(() => {
     if (registeropplysningerHentet) {
@@ -130,10 +134,12 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         </Nav.Row>
       </Nav.Fieldset>
 
+      {landUtenStøtteValgt && <TomFlytMelding />}
+
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreftHandle,
-          disabled: !formState?.isValid || !redigerbart,
+          disabled: !formState?.isValid || !redigerbart || landUtenStøtteValgt,
           spinner: visSpinner,
         }}
         bekreftTekst="Bekreft og innhent registeropplysninger"
