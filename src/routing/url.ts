@@ -150,10 +150,6 @@ export const skalViseTomFlyt = (
   ikkeYrkesaktivFlytToggleEnabled: boolean = false,
   registreringUnntakFraMedlemskapToggleEnabled: boolean = false
 ) => {
-  if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) return false;
-
-  if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled)) return false;
-
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
   }
@@ -163,6 +159,10 @@ export const skalViseTomFlyt = (
   if (sakstype === FTRL && !folketrygdenToggleEnabled) {
     return true;
   }
+
+  if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) return false;
+  if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled)) return false;
+
   if (
     sakstype === TRYGDEAVTALE &&
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
