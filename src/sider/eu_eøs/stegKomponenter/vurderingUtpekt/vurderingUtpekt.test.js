@@ -1,4 +1,3 @@
-import * as Skjema from "../../../../felleskomponenter/skjema";
 import MKV from "../../../../melosyskodeverk";
 import VurderingUtpekt from "./vurderingUtpekt";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
