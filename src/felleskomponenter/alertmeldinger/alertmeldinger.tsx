@@ -43,6 +43,16 @@ export const TomFlytMelding = ({ visBuc = false }) => (
   </div>
 );
 
+export const NyVurderingMelding = () => (
+  <Nav.AlertStripeAdvarsel className="nyVurderingMelding">
+    <Nav.Typo.Normaltekst className="nyVurderingMelding__overskrift">Ny behandling av sak</Nav.Typo.Normaltekst>
+    <Nav.Typo.Normaltekst>
+      Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens opplysninger og
+      vurder videre behandling.
+    </Nav.Typo.Normaltekst>
+  </Nav.AlertStripeAdvarsel>
+);
+
 interface StandardMeldingOverstProps {
   type: AlertStripeType;
   actionEtterSynlighet: () => void;
