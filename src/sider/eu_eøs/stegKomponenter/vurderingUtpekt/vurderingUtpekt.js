@@ -3,22 +3,22 @@ import PT from "prop-types";
 import { connect, useDispatch } from "react-redux";
 import { change, getFormValues, reduxForm } from "redux-form";
 
-import * as Api from "../../../services/api";
-import * as Nav from "../../../navFrontend";
-import * as KV from "../../../kodeverk";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as MPT from "../../../proptypes";
-import * as Utils from "../../../utils";
+import * as Api from "../../../../services/api";
+import * as Nav from "../../../../navFrontend";
+import * as KV from "../../../../kodeverk";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as MPT from "../../../../proptypes";
+import * as Utils from "../../../../utils";
 
-import MKV, { MKVUtils } from "../../../melosyskodeverk";
-import RegisterKontrollTreff from "../../../felleskomponenter/registerkontrollTreff";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
+import RegisterKontrollTreff from "../../../../felleskomponenter/registerkontrollTreff";
 
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-import { flytSelectors } from "../../../ducks/flyt";
-import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { flytSelectors } from "../../../../ducks/flyt";
+import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 
 import {
   konverterLovvalgsbestemmelseTilStegData,
@@ -28,8 +28,8 @@ import {
   lagLovvalgsland,
   lagLovvalgsperiode,
   slettLovvalgsperiode,
-} from "../../../felleskomponenter/stegvelger";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+} from "../../../../felleskomponenter/stegvelger";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingUtpektSchema from "./vurderingUtpektSchema";
 
 import "./vurderingUtpekt.css";
@@ -304,7 +304,7 @@ const nesteSteg = (values, dispatch, props) => {
   props.bekreftOgFortsett();
 };
 
-const VurderingUtpektForm = reduxForm({
+export const VurderingUtpektForm = reduxForm({
   onSubmit: nesteSteg,
   form: KV.Form.VURDER_UTPEKING,
   enableReinitialize: false,

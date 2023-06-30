@@ -1,0 +1,345 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VurderingUtpekt snapshot test 1`] = `
+<div>
+  <form
+    class="vurderingutpekt"
+  >
+    <h1
+      class="typo-innholdstittel stegvelgertittel"
+    >
+      Vurder lovvalgsbeslutningen (A003)
+    </h1>
+    <div
+      class="row rad"
+    >
+      <div
+        class="col col-xs-5"
+      />
+    </div>
+    <div
+      class="row rad"
+    >
+      <div
+        class="col col-xs-5"
+      >
+        <p
+          class="typo-element"
+        >
+          Grunnlag
+        </p>
+        <div
+          class="skjemaelement"
+        >
+          
+          <div
+            class="selectContainer input--fullbredde"
+          >
+            <select
+              aria-invalid="false"
+              class="skjemaelement__input"
+              id="123"
+              name="lovvalgsbestemmelse"
+            >
+              <option
+                disabled=""
+                value=""
+              />
+              <option
+                disabled=""
+                value=""
+              >
+                Velg
+              </option>
+              <option
+                value="FO_883_2004_ART13_1A"
+              >
+                Rfo. 883/2004 art.13(1)(a)
+              </option>
+              <option
+                value="FO_883_2004_ART13_1B1"
+              >
+                Rfo. 883/2004 art.13(1)(b)(i)
+              </option>
+              <option
+                value="FO_883_2004_ART13_1B2"
+              >
+                Rfo. 883/2004 art.13(1)(b)(ii)
+              </option>
+              <option
+                value="FO_883_2004_ART13_1B3"
+              >
+                Rfo. 883/2004 art. 13(1)(b)(iii)
+              </option>
+              <option
+                value="FO_883_2004_ART13_1B4"
+              >
+                Rfo. 883/2004 art.13(1)(b)(iv)
+              </option>
+              <option
+                value="FO_883_2004_ART13_2A"
+              >
+                Rfo. 883/2004 art.13(2)(a)
+              </option>
+              <option
+                value="FO_883_2004_ART13_2B"
+              >
+                Rfo. 883/2004 art.13(2)(b)
+              </option>
+              <option
+                value="FO_883_2004_ART13_3"
+              >
+                Rfo. 883/2004 art.13(3)
+              </option>
+              <option
+                value="FO_883_2004_ART13_4"
+              >
+                Rfo. 883/2004 art.13(4)
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="row rad"
+    >
+      <div
+        class="col col-xs-5"
+      >
+        <p
+          class="typo-element"
+        >
+          Overgangsregler gjelder:
+        </p>
+        <fieldset
+          class="fieldset"
+        >
+          <legend
+            class="fieldset__legend"
+          />
+          <div
+            class="listevelger"
+          >
+            <div>
+              <div
+                class="listevelger__linje"
+              >
+                <div
+                  class="skjemaelement listevelger__linje__input"
+                >
+                  <label
+                    class="skjemaelement__label"
+                    for="listevelger-overgangsregelbestemmelser"
+                  >
+                    Legg til ny overgangsregelbestemmelse:
+                  </label>
+                  <input
+                    aria-invalid="false"
+                    class="skjemaelement__input input--fullbredde"
+                    id="listevelger-overgangsregelbestemmelser"
+                    list="dataliste-overgangsregelbestemmelser"
+                    placeholder="(Velg bestemmelse)"
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <button
+                  class="knapp listevelger__linje__knapp listevelger__linje__knapp--leggtil knapp--standard knapp--mini"
+                  type="submit"
+                >
+                  Legg til
+                </button>
+              </div>
+              <datalist
+                id="dataliste-overgangsregelbestemmelser"
+              >
+                <option
+                  label="Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a"
+                  value="Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a"
+                />
+                <option
+                  label="Rfo. 1408/1971 artikkel 14 nr. 2 bokstav b"
+                  value="Rfo. 1408/1971 artikkel 14 nr. 2 bokstav b"
+                />
+                <option
+                  label="Rfo. 1408/1971 artikkel 14a nr. 2"
+                  value="Rfo. 1408/1971 artikkel 14a nr. 2"
+                />
+                <option
+                  label="Rfo. 1408/1971 artikkel 14c bokstav a"
+                  value="Rfo. 1408/1971 artikkel 14c bokstav a"
+                />
+                <option
+                  label="Rfo. 1408/1971 artikkel 14c bokstav b"
+                  value="Rfo. 1408/1971 artikkel 14c bokstav b"
+                />
+              </datalist>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <div
+      class="row rad"
+    >
+      <div
+        class="col col-xs-5"
+      >
+        <p
+          class="typo-element"
+        >
+          Lovvalgsperiode
+        </p>
+        <div
+          class="row"
+        >
+          <div
+            class="col col-xs-6"
+          >
+            <div
+              class="skjemaelement__datovelger"
+              meta="[object Object]"
+            >
+              <div
+                class="datovelger"
+              >
+                <label
+                  class="datovelger__label"
+                  for="321"
+                >
+                  Fra og med
+                </label>
+                <div
+                  class="react-datepicker-wrapper"
+                >
+                  <div
+                    class="react-datepicker__input-container"
+                  >
+                    <input
+                      class="datovelger__input input--fullbredde"
+                      id="321"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col col-xs-6"
+          >
+            <div
+              class="skjemaelement__datovelger"
+              meta="[object Object]"
+            >
+              <div
+                class="datovelger"
+              >
+                <label
+                  class="datovelger__label"
+                  for="321"
+                >
+                  Til og med
+                </label>
+                <div
+                  class="react-datepicker-wrapper"
+                >
+                  <div
+                    class="react-datepicker__input-container"
+                  >
+                    <input
+                      class="datovelger__input input--fullbredde"
+                      id="321"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="row rad"
+    />
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-5"
+      >
+        <fieldset
+          class="fieldset"
+        >
+          <legend
+            class="fieldset__legend"
+          >
+            Skal lovvalget godkjennes?
+          </legend>
+          <div
+            class="skjemaelement"
+          >
+            <input
+              aria-invalid="false"
+              class="skjemaelement__input radioknapp"
+              id="321"
+              name="godkjenn"
+              type="radio"
+              value="GODKJENT"
+            />
+            <label
+              class="skjemaelement__label"
+              for="321"
+            >
+              Godkjenn
+            </label>
+          </div>
+          <div
+            class="skjemaelement"
+          >
+            <input
+              aria-invalid="false"
+              class="skjemaelement__input radioknapp"
+              id="321"
+              name="godkjenn"
+              type="radio"
+              value="IKKE_GODKJENT"
+            />
+            <label
+              class="skjemaelement__label"
+              for="321"
+            >
+              Ikke godkjenn
+            </label>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <div
+      class="stegKnapper"
+    >
+      <button
+        class="knapp stegKnapper__bekreft knapp--hoved knapp--mini"
+        type="submit"
+      >
+        Bekreft og fortsett
+      </button>
+      <button
+        class="knapp stegKnapper__tilbake knapp--flat knapp--mini"
+        type="button"
+      >
+        <svg>
+          arrow-left-blue.svg
+        </svg>
+        <span>
+          Tilbake
+        </span>
+      </button>
+    </div>
+  </form>
+</div>
+`;
