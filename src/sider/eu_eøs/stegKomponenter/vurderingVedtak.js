@@ -291,8 +291,15 @@ const VurderingVedtak = ({
         )}
         <Nav.Row>
           <Nav.Column xs="6">
-            {stegErGyldig && !bucLukketOgLovvalgNorge && (
-              <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />
+            {stegErGyldig && (
+              <PdfLenkeListe
+                behandlingID={behandlingID}
+                dokumenter={
+                  bucLukketOgLovvalgNorge
+                    ? pdfDokumenter.filter((dok) => dok.type !== EKV.Koder.sedtyper.A012)
+                    : pdfDokumenter
+                }
+              />
             )}
           </Nav.Column>
         </Nav.Row>
