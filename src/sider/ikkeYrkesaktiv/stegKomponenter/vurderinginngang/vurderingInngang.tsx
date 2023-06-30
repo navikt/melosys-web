@@ -61,7 +61,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
-  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner && !landUtenStøtteValgt;
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner;
 
   useEffect(() => {
     if (registeropplysningerHentet) {
@@ -140,7 +140,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreftHandle,
-          disabled: !formState?.isValid || !redigerbart || landUtenStøtteValgt,
+          disabled: !formState?.isValid || !redigerbart,
           spinner: visSpinner,
         }}
         bekreftTekst="Bekreft og innhent registeropplysninger"
