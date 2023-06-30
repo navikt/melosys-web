@@ -1,6 +1,6 @@
 import { string, object, array } from "yup";
-import * as KV from "../../../kodeverk";
-import MKV from "../../../melosyskodeverk";
+import * as KV from "../../../../kodeverk";
+import MKV from "../../../../melosyskodeverk";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const VELG_OVERGANGSREGEL_MINST_1 = "Du må velge en overgangsregel";
