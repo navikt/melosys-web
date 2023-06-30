@@ -152,7 +152,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
           name="innledningFritekst"
           control={control}
           className="fritekst_editor"
-          placeholder="Skriv inn tilleggsinformasjon til innledning..."
           disabled={!redigerbart}
         />
 
@@ -167,7 +166,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
           name="begrunnelseFritekst"
           control={control}
           className="fritekst_editor"
-          placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
           disabled={!redigerbart}
         />
       </Nav.Row>

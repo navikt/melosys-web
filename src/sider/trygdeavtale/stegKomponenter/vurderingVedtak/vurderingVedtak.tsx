@@ -445,7 +445,6 @@ const VurderingVedtak = ({
             <Skjema.HTMLEditor
               feltNavn="nyVurderingBakgrunnFritekst"
               className={vurderingVedtakCls.elementWithModifier("nyvurdering", "fritekst")}
-              placeholder={redigerbart ? "Skriv inn grunn for nytt vedtak..." : ""}
               disabled={!redigerbart}
             />
           )}
@@ -462,7 +461,6 @@ const VurderingVedtak = ({
       <Skjema.HTMLEditor
         feltNavn="innledningFritekst"
         className={vurderingVedtakCls.element("fritekst_editor")}
-        placeholder={redigerbart ? "Skriv inn tilleggsinformasjon til innledning..." : ""}
         disabled={!redigerbart}
       />
 
@@ -476,7 +474,6 @@ const VurderingVedtak = ({
       <Skjema.HTMLEditor
         feltNavn="begrunnelseFritekst"
         className={vurderingVedtakCls.element("fritekst_editor")}
-        placeholder={redigerbart ? "Skriv inn tilleggsinformasjon til begrunnelse..." : ""}
         disabled={!redigerbart}
       />
 
