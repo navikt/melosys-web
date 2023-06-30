@@ -19,7 +19,6 @@ import { landkoderSelectors } from "../../../../ducks/landkoder";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import MKV from "../../../../melosyskodeverk";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 
 interface Props {
@@ -40,7 +39,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
   const { control, watch, formState, trigger } = useForm({
-    resolver: yupResolver(vurderingInngangSchema),
+    resolver: yupResolver(vurderingInngangSchema(sakstype)),
     mode: "all",
     defaultValues: {
       fom: periodeFom,
@@ -58,9 +57,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   const [visSpinner, setVisSpinner] = useState(false);
 
-  const landUtenStøtteValgt =
-    sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
-    (formValues.land === MKV.Koder.landkoder.FR || formValues.land === MKV.Koder.landkoder.IT);
+  const landUtenStøtteValgt = formState?.errors?.land?.type === "landValidering";
 
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
