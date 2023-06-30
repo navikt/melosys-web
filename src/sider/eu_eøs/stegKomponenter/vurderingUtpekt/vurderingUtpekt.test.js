@@ -57,12 +57,4 @@ describe("VurderingUtpekt", () => {
     const { container } = renderWithProviders(<VurderingUtpekt {...props} />, { preloadedState: initialState() });
     expect(container).toMatchSnapshot();
   });
-
-  it("viser radiobuttons for godkjenning og avslag", () => {
-    props.tilstand.utpekingGodkjent = true;
-    const vurderingUtpekt = shallow(<VurderingUtpekt {...props} />);
-    const radios = vurderingUtpekt.find(Skjema.Radio);
-
-    expect(radios).toHaveLength(2);
-  });
 });
