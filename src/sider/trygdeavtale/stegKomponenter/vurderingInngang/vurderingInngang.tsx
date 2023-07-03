@@ -25,6 +25,8 @@ import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
 import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
+import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
+import { tilForsiden } from "../../../../ducks/navigering/operations";
 
 interface Periode {
   fom?: string | null;
@@ -78,9 +80,11 @@ interface Props {
   oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
   oppfriskFlyt: () => void;
   aktivtSteg: boolean;
+  bekreft: () => void;
 }
 
 const VurderingInngang = ({
+  annenBehandlingOppfriskes,
   data: { landValg, landValgUtenStøtte },
   formValues,
   formIsValid,
@@ -98,6 +102,7 @@ const VurderingInngang = ({
   oppfriskFlyt,
   visMenypanel,
   aktivtSteg,
+  bekreft,
 }: PropsFromRedux & Props) => {
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
   const [landUtenStøtteValgt, setLandUtenStøtteValgt] = useState(false);
@@ -194,10 +199,26 @@ const VurderingInngang = ({
         bekreftKnappProps={{
           onClick: bekreftHandle,
           disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || landUtenStøtteValgt,
-          spinner: visSpinner,
         }}
-        bekreftTekst="Bekreft og innhent registeropplysninger"
+        bekreftTekst="Bekreft og fortsett"
       />
+      {visSpinner && (
+        <DialogboksOppfriskSak
+          oppfrisk={oppfriskOgLastInnSaksopplysninger}
+          avbryt={() => setVisSpinner(false)}
+          lukk={() => {
+            setVisSpinner(false);
+            visMenypanel();
+            bekreft();
+          }}
+          tilForsiden={() => {
+            setVisSpinner(false);
+            tilForsiden();
+          }}
+          behandlingOppfriskes
+          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+        />
+      )}
     </div>
   );
 };

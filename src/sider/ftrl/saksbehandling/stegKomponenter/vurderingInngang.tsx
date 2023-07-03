@@ -197,13 +197,12 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       )}
 
       <Mui.StegKnapper
-        bekreftTekst="Bekreft og innhent registeropplysninger"
+        bekreftTekst="Bekreft og fortsett"
         bekreftKnappProps={{
           onClick: fortsettHandle,
           disabled: !formIsValid || !redigerbart,
         }}
       />
-
       {visOppfrisk && (
         <DialogboksOppfriskSak
           oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
