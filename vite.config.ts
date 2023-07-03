@@ -9,6 +9,9 @@ import reactRefresh from "@vitejs/plugin-react-refresh";
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/melosys",
+  esbuild: {
+    jsxInject: `import React from 'react'`,
+  },
   plugins: [
     {
       name: "vite-plugin-disable-import-analysis",
@@ -37,11 +40,6 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 3000,
   },
-  // esbuild: {
-  //   loader: "jsx",
-  //   include: /\.jsx?$/,
-  //   exclude: /node_modules/,
-  // },
   optimizeDeps: {
     esbuildOptions: {
       loader: {
