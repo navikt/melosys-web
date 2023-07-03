@@ -1,5 +1,3 @@
-import React from "react";
-
 import MKV from "../../../melosyskodeverk";
 
 import VurderingArtikkel13_2b from "./vurderingArtikkel13_2b";

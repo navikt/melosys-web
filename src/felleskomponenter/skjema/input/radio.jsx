@@ -1,4 +1,3 @@
-import React from "react";
 import PT from "prop-types";
 import { touch, Field } from "redux-form";
 

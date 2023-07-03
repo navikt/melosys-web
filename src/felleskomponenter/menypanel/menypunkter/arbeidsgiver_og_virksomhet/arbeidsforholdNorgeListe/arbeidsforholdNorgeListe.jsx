@@ -1,4 +1,3 @@
-import React from "react";
 import PT from "prop-types";
 import { FieldArray } from "redux-form";
 import classnames from "classnames";

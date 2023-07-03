@@ -1,5 +1,3 @@
-import React from "react";
-
 import Radio, { InnerInputComponent } from "./radio";
 
 describe("Radio", () => {

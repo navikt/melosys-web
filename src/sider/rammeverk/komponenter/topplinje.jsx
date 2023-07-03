@@ -1,4 +1,3 @@
-import React from "react";
 import { withRouter } from "react-router-dom";
 import { withMsal } from "@azure/msal-react";
 import PT from "prop-types";

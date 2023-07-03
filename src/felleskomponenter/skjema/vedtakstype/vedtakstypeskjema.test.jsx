@@ -1,4 +1,3 @@
-import React from "react";
 import * as MKV from "@navikt/melosys-kodeverk";
 
 import * as Skjema from "..";

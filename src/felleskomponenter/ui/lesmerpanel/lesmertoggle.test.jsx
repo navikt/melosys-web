@@ -1,4 +1,3 @@
-import React from "react";
 import LesMerToggle from "./lesmertoggle";
 
 describe("LesMerToggle", () => {

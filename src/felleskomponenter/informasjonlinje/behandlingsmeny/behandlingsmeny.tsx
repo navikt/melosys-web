@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import classNames from "classnames";
 import * as Ikon from "../../../resources/images";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";

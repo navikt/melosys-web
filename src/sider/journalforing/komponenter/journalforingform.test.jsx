@@ -1,5 +1,3 @@
-import React from "react";
-
 import MKV from "../../../melosyskodeverk";
 
 import { JournalforingForm } from "./journalforingform";

@@ -1,5 +1,3 @@
-import React from "react";
-
 import { CustomRadioPanelElement } from "./customRadioPanelGruppe";
 
 import * as Nav from "../../../navFrontend";

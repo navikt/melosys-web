@@ -1,5 +1,3 @@
-import React from "react";
-
 import IkkeEditerbareArbeidPaaLandSporsmal from "./ikkeEditerbareArbeidPaaLandSporsmal";
 
 import { EnRedigeringsknappListeRedigeringUtfortPreElementer } from "../../editerbartElementListe";

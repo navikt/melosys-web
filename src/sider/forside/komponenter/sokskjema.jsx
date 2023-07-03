@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { connect } from "react-redux";
 import { reduxForm, change } from "redux-form";
 import { withRouter } from "react-router-dom";

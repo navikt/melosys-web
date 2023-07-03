@@ -1,4 +1,3 @@
-import React from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 
 import * as Nav from "../../navFrontend";

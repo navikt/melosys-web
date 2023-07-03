@@ -1,5 +1,3 @@
-import React from "react";
-
 import Registrering from "../registrering";
 import Saksopplysninger from "./saksopplysninger";
 

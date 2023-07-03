@@ -1,4 +1,4 @@
-import React, { ComponentProps, useState } from "react";
+import { ComponentProps, useState } from "react";
 import * as Nav from "../../navFrontend";
 
 type InputProps = Omit<ComponentProps<typeof Nav.Input>, "onChange" | "onBlur">;

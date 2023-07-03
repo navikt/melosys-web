@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 
 import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";

@@ -1,4 +1,3 @@
-import React from "react";
 import { OpprettSak } from "./opprettSak";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import MultiSelect from "../../../felleskomponenter/skjema/input/multiselect";

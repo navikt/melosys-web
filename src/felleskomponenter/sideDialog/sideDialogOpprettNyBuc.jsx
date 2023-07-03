@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 

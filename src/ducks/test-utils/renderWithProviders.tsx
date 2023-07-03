@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 import type { RenderOptions } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import type { PreloadedState } from "@reduxjs/toolkit";

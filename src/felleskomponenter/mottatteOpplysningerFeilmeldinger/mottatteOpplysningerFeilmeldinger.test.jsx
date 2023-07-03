@@ -1,5 +1,3 @@
-import React from "react";
-
 import { MottatteOpplysningerFeilmeldinger } from "./mottatteOpplysningerFeilmeldinger";
 
 describe("MottatteOpplysningerFeilmeldinger", () => {

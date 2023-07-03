@@ -1,5 +1,3 @@
-import React from "react";
-
 import Knapperad from "../../../../knapperad";
 
 import SoknadsperiodeEndring from "./soknadsperiodeEndring";

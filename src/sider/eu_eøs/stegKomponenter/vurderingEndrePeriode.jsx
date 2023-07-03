@@ -1,4 +1,3 @@
-import React from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import * as UfiltrertMKV from "@navikt/melosys-kodeverk";

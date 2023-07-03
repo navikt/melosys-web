@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { arrayRemove, change } from "redux-form";
 import PT from "prop-types";

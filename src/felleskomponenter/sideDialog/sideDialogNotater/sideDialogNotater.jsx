@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useCallback } from "react";
+import { useState, useEffect, Fragment, useCallback } from "react";
 import PT from "prop-types";
 
 import * as Nav from "../../../navFrontend";

@@ -1,4 +1,3 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Api from "../../../services/api";
 import * as Nav from "../../../navFrontend";

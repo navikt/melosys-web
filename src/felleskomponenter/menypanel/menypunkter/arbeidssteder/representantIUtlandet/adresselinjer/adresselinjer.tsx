@@ -1,4 +1,3 @@
-import React from "react";
 import { FieldArray, WrappedFieldArrayProps } from "redux-form";
 
 import * as Skjema from "../../../../../skjema";

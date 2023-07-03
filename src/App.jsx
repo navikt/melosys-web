@@ -1,4 +1,3 @@
-import React from "react";
 import PT from "prop-types";
 import * as Sentry from "@sentry/react";
 import { MsalProvider } from "@azure/msal-react";

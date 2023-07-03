@@ -1,5 +1,3 @@
-import React from "react";
-
 import AvslaattSoknad from "./avslaattSoknad";
 import StegvelgerBase from "./stegerstatterBase";
 

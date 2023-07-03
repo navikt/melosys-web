@@ -1,5 +1,3 @@
-import React from "react";
-
 import Orgnrinput from "./orgnrinput";
 
 describe("Orgnrinput", () => {

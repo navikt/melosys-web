@@ -1,5 +1,3 @@
-import React from "react";
-
 import SokkelSkipEnkelt from "./sokkelskipenkelt";
 
 describe("SokkelSkipEnkelt", () => {

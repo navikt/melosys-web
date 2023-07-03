@@ -1,5 +1,3 @@
-import React from "react";
-
 import Lesmerpanel from "./lesmerpanel";
 
 describe("Lesmerpanel", () => {

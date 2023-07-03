@@ -1,5 +1,3 @@
-import React from "react";
-
 import Knapp from "./knapp";
 
 import * as Nav from "../../navFrontend";

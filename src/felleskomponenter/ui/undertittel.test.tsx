@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 import renderer from "react-test-renderer";
 import { instance, mock } from "ts-mockito";
 import * as Ikoner from "../../resources/images";

@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Link, ContentProps } from "./types";
 
 import {

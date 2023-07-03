@@ -1,5 +1,5 @@
 /* eslint react/no-multi-comp:off */
-import React, { Component } from "react";
+import { Component } from "react";
 import PT from "prop-types";
 import { Document, Page, pdfjs } from "react-pdf";
 import * as Utils from "../../../utils";

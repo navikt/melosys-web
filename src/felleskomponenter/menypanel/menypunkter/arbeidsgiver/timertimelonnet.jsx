@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";
 

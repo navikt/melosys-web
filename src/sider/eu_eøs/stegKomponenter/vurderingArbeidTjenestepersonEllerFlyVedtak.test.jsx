@@ -1,4 +1,3 @@
-import React from "react";
 import * as EKV from "eessi-kodeverk";
 
 import { VurderingArbeidTjenestepersonEllerFlyVedtak } from "./vurderingArbeidTjenestepersonEllerFlyVedtak";

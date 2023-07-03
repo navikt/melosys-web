@@ -1,5 +1,5 @@
 /* eslint react/no-array-index-key:off */
-import React, { Component } from "react";
+import { Component } from "react";
 import PT from "prop-types";
 
 import * as KV from "../../kodeverk";

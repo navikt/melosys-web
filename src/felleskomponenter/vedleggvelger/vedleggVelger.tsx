@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FysiskDokument } from "Domene";
 import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";

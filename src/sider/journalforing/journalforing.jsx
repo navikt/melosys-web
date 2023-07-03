@@ -1,5 +1,5 @@
 /* eslint no-alert:off, consistent-return:off */
-import React, { Component } from "react";
+import { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { autofill, change, getFormSyncErrors, touch, isValid, getFormValues, SubmissionError } from "redux-form";

@@ -1,4 +1,3 @@
-import React from "react";
 import EnkeltLandPure from "./enkeltLandPure";
 
 describe("EnkeltLandPure", () => {

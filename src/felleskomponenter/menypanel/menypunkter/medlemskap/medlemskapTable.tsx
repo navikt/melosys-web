@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";

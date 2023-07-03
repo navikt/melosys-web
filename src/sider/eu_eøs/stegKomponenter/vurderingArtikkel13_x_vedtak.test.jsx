@@ -1,4 +1,3 @@
-import React from "react";
 import { combineReducers, createStore } from "redux";
 import * as MKV from "@navikt/melosys-kodeverk";
 

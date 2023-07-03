@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import PT from "prop-types";
 import { UnmountClosed } from "react-collapse";
 import { guid, omit } from "nav-frontend-js-utils";

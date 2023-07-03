@@ -1,4 +1,3 @@
-import React from "react";
 import { useDispatch } from "react-redux";
 import { DokumentOversikt, Mottaksretning } from "Domene";
 import { change } from "redux-form";

@@ -1,5 +1,3 @@
-import React from "react";
-
 import Organisasjon from "./organisasjon";
 import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 

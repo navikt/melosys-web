@@ -1,4 +1,3 @@
-import React from "react";
 import { KnappBaseProps } from "nav-frontend-knapper";
 import classnames from "classnames";
 

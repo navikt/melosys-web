@@ -1,5 +1,4 @@
 import PT from "prop-types";
-import React from "react";
 
 import * as Nav from "../../navFrontend";
 

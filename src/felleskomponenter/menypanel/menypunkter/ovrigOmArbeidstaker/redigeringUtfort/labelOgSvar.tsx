@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";

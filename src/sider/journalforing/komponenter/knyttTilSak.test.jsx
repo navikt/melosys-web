@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as Skjema from "../../../felleskomponenter/skjema";
 import { JOURNALFORING_VALUES } from "../../../kodeverk/form";
 

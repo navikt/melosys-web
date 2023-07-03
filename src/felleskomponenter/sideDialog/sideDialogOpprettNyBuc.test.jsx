@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as EKV from "eessi-kodeverk";
 import * as Nav from "../../navFrontend";
 import MKV from "../../melosyskodeverk";

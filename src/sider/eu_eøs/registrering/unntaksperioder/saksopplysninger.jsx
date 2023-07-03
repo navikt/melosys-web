@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 import { connect } from "react-redux";

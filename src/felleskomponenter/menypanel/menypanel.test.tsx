@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { ComponentProps, ReactElement, ReactNode } from "react";
+import { ComponentProps, ReactElement, ReactNode } from "react";
 import { mock, instance } from "ts-mockito";
 import { shallow } from "enzyme";
 import each from "jest-each";

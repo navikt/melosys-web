@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 
 import * as Utils from "../../utils/dato";

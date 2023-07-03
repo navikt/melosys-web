@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as Mui from "../../../ui";
 
 import { ArbeidsgivereNorge, ArbeidsgivereEnkeltNorge } from "./arbeidsgivereNorge";

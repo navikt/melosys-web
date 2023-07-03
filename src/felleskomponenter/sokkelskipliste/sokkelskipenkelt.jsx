@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from "react";
+import { useEffect, Fragment } from "react";
 import PT from "prop-types";
 import uuid from "uuid";
 

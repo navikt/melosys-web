@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import HtmlEditor from "../htmlEditor";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";

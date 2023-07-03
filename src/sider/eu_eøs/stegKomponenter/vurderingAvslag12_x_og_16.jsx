@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";

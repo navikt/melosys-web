@@ -1,4 +1,3 @@
-import React from "react";
 import { shallow } from "enzyme";
 import * as redux from "react-redux";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";

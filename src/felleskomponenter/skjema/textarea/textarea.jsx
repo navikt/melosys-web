@@ -1,4 +1,3 @@
-import React from "react";
 import PT from "prop-types";
 import { Field } from "redux-form";
 import * as Nav from "../../../navFrontend";

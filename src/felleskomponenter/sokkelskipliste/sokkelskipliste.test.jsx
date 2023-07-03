@@ -1,5 +1,3 @@
-import React from "react";
-
 import SokkelSkipListe from "./sokkelskipliste";
 import SokkelSkipEnkelt from "./sokkelskipenkelt";
 

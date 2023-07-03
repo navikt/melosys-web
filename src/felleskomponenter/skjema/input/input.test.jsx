@@ -1,5 +1,3 @@
-import React from "react";
-
 import Input, { InnerInputComponent } from "./input";
 
 describe("Input", () => {

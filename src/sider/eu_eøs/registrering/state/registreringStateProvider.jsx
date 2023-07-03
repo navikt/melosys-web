@@ -1,4 +1,3 @@
-import React from "react";
 import PT from "prop-types";
 import * as RegistreringContext from "./registreringContext";
 import { initialState as registreringInitialState, reducer as registreringReducer } from "./reducer";

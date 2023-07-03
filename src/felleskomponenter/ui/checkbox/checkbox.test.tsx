@@ -1,4 +1,4 @@
-import React, { ComponentProps, KeyboardEvent, ChangeEvent } from "react";
+import { ComponentProps, KeyboardEvent, ChangeEvent } from "react";
 import { mount, shallow } from "enzyme";
 import { mock, instance } from "ts-mockito";
 

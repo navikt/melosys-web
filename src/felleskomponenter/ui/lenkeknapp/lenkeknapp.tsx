@@ -1,4 +1,4 @@
-import React, { ElementType, MouseEventHandler } from "react";
+import { ElementType, MouseEventHandler } from "react";
 import classNames from "classnames";
 
 import "./lenkeknapp.css";

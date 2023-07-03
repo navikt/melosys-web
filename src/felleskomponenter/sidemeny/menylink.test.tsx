@@ -1,4 +1,4 @@
-import React, { ComponentProps, MouseEvent } from "react";
+import { ComponentProps, MouseEvent } from "react";
 import { mock, instance } from "ts-mockito";
 import { shallow } from "enzyme";
 

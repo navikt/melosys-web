@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PT from "prop-types";
 import { getFormValues, change, clearFields } from "redux-form";
 import { connect } from "react-redux";

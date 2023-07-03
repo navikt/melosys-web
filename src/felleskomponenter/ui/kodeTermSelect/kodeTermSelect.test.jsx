@@ -1,5 +1,3 @@
-import React from "react";
-
 import KodeTermSelect from "./kodeTermSelect";
 
 describe("KodeTermSelect", () => {

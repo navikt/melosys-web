@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from "react";
+import { Suspense, useState } from "react";
 import usePromise from "react-promise-suspense";
 import PT from "prop-types";
 import classNames from "classnames";

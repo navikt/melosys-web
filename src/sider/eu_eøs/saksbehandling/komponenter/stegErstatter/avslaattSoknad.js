@@ -1,5 +1,3 @@
-import React from "react";
-
 import StegerstatterBase from "./stegerstatterBase";
 
 const AvslaattSoknad = () => (

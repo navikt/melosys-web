@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
 
 import { render, screen } from "@testing-library/react";

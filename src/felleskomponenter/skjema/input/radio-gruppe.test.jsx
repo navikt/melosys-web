@@ -1,5 +1,3 @@
-import React from "react";
-
 import RadioGruppe, { RadioGruppeWrappedComponent } from "./radio-gruppe";
 
 describe("RadioGruppe", () => {

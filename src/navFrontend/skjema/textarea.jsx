@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Textarea as NavFrontendTextarea } from "nav-frontend-skjema";
 
 // eslint-disable-next-line react/prop-types

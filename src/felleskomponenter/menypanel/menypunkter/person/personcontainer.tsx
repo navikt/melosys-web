@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";

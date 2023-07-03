@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import * as Nav from "../../../../navFrontend";

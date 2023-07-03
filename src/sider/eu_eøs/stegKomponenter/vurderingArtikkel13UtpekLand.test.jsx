@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as Skjema from "../../../felleskomponenter/skjema";
 
 import { VurderingArtikkel13UtpekLand } from "./vurderingArtikkel13UtpekLand";

@@ -1,5 +1,5 @@
 /* eslint react/jsx-pascal-case: 0 */
-import React from "react";
+
 import { Route, Switch } from "react-router-dom";
 import loadable from "@loadable/component";
 

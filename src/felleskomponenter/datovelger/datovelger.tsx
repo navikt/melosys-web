@@ -1,4 +1,4 @@
-import React, { ReactNode, FocusEventHandler } from "react";
+import { ReactNode, FocusEventHandler } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { nb } from "date-fns/locale";
 import classNames from "classnames";

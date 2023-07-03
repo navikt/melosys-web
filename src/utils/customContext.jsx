@@ -1,4 +1,3 @@
-import React from "react";
 import PT from "prop-types";
 
 export const useCustomContext = (context) => {

@@ -1,4 +1,3 @@
-import React from "react";
 import PT from "prop-types";
 import { reduxForm, getFormValues } from "redux-form";
 import { connect } from "react-redux";

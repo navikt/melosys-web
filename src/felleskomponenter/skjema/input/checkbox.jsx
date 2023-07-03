@@ -1,4 +1,3 @@
-import React from "react";
 import PT from "prop-types";
 import { submit, Field } from "redux-form";
 import { Checkbox as NavCheckbox } from "nav-frontend-skjema";
