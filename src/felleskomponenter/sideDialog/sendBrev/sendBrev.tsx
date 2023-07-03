@@ -115,6 +115,9 @@ const SendBrev = ({
   const [redigerFritekstvedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
   const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
   const [utkastPåBehandlingen, setUtkastPåBehandlingen] = useState<Api.Brevutkast.BrevutkastResDto[]>([]);
+  const [sendBrevSpinner, setSendBrevSpinner] = useState(false);
+  const [lagreUtkastSpinner, setLagreUtkastSpinner] = useState(false);
+  const [forkastBrevSpinner, setForkastBrevSpinner] = useState(false);
 
   const fritekstvedleggToggle = useFeatureToggle(MELOSYS_BREV_GENERELT_FRITEKSTVEDLEGG);
 
@@ -338,6 +341,7 @@ const SendBrev = ({
 
   const sendBrev = () => {
     if (!formValues?.valgtMottaker) return;
+    setSendBrevSpinner(true);
     setFeil(undefined);
 
     Api.DokumenterV2.opprettBrev(behandlingID, hentBrevRequest(formValues.valgtMottaker.rolle))
@@ -347,14 +351,13 @@ const SendBrev = ({
         slettUtkast();
         resetFormOgFritekstvedleggState();
       })
-      .catch(() => {
-        setFeil("Brevet er ikke sendt. Det skjedde en feil.");
-      });
+      .catch(() => setFeil("Brevet er ikke sendt. Det skjedde en feil."))
+      .finally(() => setSendBrevSpinner(false));
   };
 
-  const slettUtkast = () => {
+  const slettUtkast = async () => {
     if (formValues?.aktivtUtkast?.utkastBrevID) {
-      Api.Brevutkast.slettBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID)
+      await Api.Brevutkast.slettBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID)
         .then(() => {
           changeField("aktivtUtkast", null);
           hentUtkast();
@@ -363,12 +366,14 @@ const SendBrev = ({
     }
   };
 
-  const forkastBrev = () => {
+  const forkastBrev = async () => {
+    setForkastBrevSpinner(true);
     resetFormOgFritekstvedleggState();
     setBrevSendt(false);
     setFeil(undefined);
     setMuligeMottakereFeil(undefined);
-    slettUtkast();
+    await slettUtkast();
+    setForkastBrevSpinner(false);
   };
 
   const resetFormOgFritekstvedleggState = () => {
@@ -425,6 +430,7 @@ const SendBrev = ({
 
   const lagreUtkast = () => {
     if (!formValues?.valgtMottaker) return;
+    setLagreUtkastSpinner(true);
     setFeil(undefined);
 
     const requestData = hentBrevRequest(formValues.valgtMottaker.rolle);
@@ -437,7 +443,8 @@ const SendBrev = ({
         resetFormOgFritekstvedleggState();
         hentUtkast();
       })
-      .catch(() => setFeil("Utkastet ble ikke lagret. Det skjedde en feil."));
+      .catch(() => setFeil("Utkastet ble ikke lagret. Det skjedde en feil."))
+      .finally(() => setLagreUtkastSpinner(false));
   };
 
   const overstyrBlurEvent = (event: React.FocusEvent) => {
@@ -456,12 +463,15 @@ const SendBrev = ({
     (felt) => felt.kode === Api.DokumenterV2.FeltType.FRITEKSTVEDLEGG
   );
 
+  const spinnerAktiv = sendBrevSpinner || lagreUtkastSpinner || forkastBrevSpinner;
+
   const knappErDisabled =
     !redigerbart ||
     !formIsValid ||
     !!formValues.valgtMottaker?.feilmelding ||
     visFritekstvedleggSkjema ||
-    Boolean(muligeMottakereFeil);
+    Boolean(muligeMottakereFeil) ||
+    spinnerAktiv;
 
   return (
     <div className="send_brev">
@@ -580,13 +590,34 @@ const SendBrev = ({
         ))}
 
       <div>
-        <Nav.Hovedknapp mini disabled={knappErDisabled} className="brevknapp" onClick={sendBrev}>
+        <Nav.Hovedknapp
+          mini
+          disabled={knappErDisabled}
+          className="brevknapp"
+          onClick={sendBrev}
+          spinner={sendBrevSpinner}
+          autoDisableVedSpinner
+        >
           Send brev
         </Nav.Hovedknapp>
-        <Nav.Knapp mini disabled={knappErDisabled} className="brevknapp" onClick={lagreUtkast}>
+        <Nav.Knapp
+          mini
+          disabled={knappErDisabled}
+          className="brevknapp"
+          onClick={lagreUtkast}
+          spinner={lagreUtkastSpinner}
+          autoDisableVedSpinner
+        >
           Lagre utkast
         </Nav.Knapp>
-        <Nav.Knapp mini disabled={!formValues.mottaker || !redigerbart} className="brevknapp" onClick={forkastBrev}>
+        <Nav.Knapp
+          mini
+          disabled={!formValues.mottaker || !redigerbart || spinnerAktiv}
+          className="brevknapp"
+          onClick={forkastBrev}
+          spinner={forkastBrevSpinner}
+          autoDisableVedSpinner
+        >
           Forkast brev
         </Nav.Knapp>
       </div>
