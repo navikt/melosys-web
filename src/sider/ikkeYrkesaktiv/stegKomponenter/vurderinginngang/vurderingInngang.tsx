@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,6 +9,7 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
 import { FellesHandlersContext } from "../../../../contexts";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
@@ -18,6 +19,7 @@ import { landkoderSelectors } from "../../../../ducks/landkoder";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
 
 interface Props {
   bekreft: () => void;
@@ -34,9 +36,10 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const landkoder = useSelector(landkoderSelectors.LandkoderFraSakstypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
+  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
   const { control, watch, formState, trigger } = useForm({
-    resolver: yupResolver(vurderingInngangSchema),
+    resolver: yupResolver(vurderingInngangSchema(sakstype)),
     mode: "all",
     defaultValues: {
       fom: periodeFom,
@@ -53,6 +56,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     formValues?.land !== søknadsland;
 
   const [visSpinner, setVisSpinner] = useState(false);
+
+  const landUtenStøtteValgt = formState?.errors?.land?.type === "landValidering";
 
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
@@ -94,8 +99,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   if (!aktivtSteg) return null;
 
   return (
-    <div className="vurderingStart">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi søknadsperiode og -land</Nav.Typo.Innholdstittel>
+    <div className="vurderingInngang">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
 
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
@@ -113,13 +118,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           </Nav.Column>
           <Nav.Column xs="5">
             <Forms.Select
-              label={
-                <LabelMedHjelpetekst
-                  label="Land"
-                  hjelpetekst="SETT INN HJELPETEKST"
-                  hjelpetekstClassName="hjelpetekst"
-                />
-              }
+              label={<LabelMedHjelpetekst label="Land" hjelpetekstClassName="hjelpetekst" />}
               emptyFieldText="Velg"
               emptyFieldDisabled={!!formValues.land}
               name="land"
@@ -135,6 +134,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
+
+      {landUtenStøtteValgt && <TomFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{

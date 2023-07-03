@@ -15,8 +15,6 @@ import * as Mui from "../../../felleskomponenter/ui";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
-import { MELOSYS_DOKUMENT_V2 } from "../../../featuretoggle/toggleNavn";
-import { useFeatureToggle } from "../../../featuretoggle";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
@@ -56,7 +54,6 @@ export const VurderingArtikkel13_x_vedtak = ({
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
-  const brukDokumentV2 = useFeatureToggle(MELOSYS_DOKUMENT_V2);
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
@@ -110,28 +107,16 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   const skalViseSedAlternativer = redigerbart && harLandSomKreverSED;
 
-  const pdfDokumenter = brukDokumentV2
-    ? [
-        {
-          sendesTilDokumenterV2: true,
-          navn: "Forhåndsvis vedtaksbrev og A1",
-          data: {
-            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
-            mottaker: MKV.Koder.mottakerroller.BRUKER,
-            fritekst: formValues.vedtaksbrevFritekst,
-          },
-        },
-      ]
-    : [
-        {
-          navn: "Forhåndsvis vedtaksbrev og A1",
-          type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
-          data: {
-            mottaker: MKV.Koder.mottakerroller.BRUKER,
-            fritekst: formValues.vedtaksbrevFritekst,
-          },
-        },
-      ];
+  const pdfDokumenter = [
+    {
+      navn: "Forhåndsvis vedtaksbrev og A1",
+      data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
+        fritekst: formValues.vedtaksbrevFritekst,
+      },
+    },
+  ];
 
   if (skalViseSedAlternativer) {
     pdfDokumenter.push({

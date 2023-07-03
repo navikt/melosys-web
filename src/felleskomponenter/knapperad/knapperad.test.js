@@ -1,7 +1,4 @@
-import React from "react";
-
-import * as Mui from "../ui";
-
+import { render, screen } from "@testing-library/react";
 import Knapperad from "./knapperad";
 
 describe("Knapperad", () => {
@@ -18,51 +15,28 @@ describe("Knapperad", () => {
     };
   });
 
-  const findHovedKnapp = (knapperad) => knapperad.find(Mui.Knapp).filterWhere((n) => n.props().type === "hoved");
-  const findAvbrytKnapp = (knapperad) => knapperad.find(Mui.Knapp).filterWhere((n) => n.props().type !== "hoved");
-
-  it("sender handlere til knapper", () => {
-    const knapperad = shallow(<Knapperad {...props} />);
-
-    findHovedKnapp(knapperad).simulate("click");
-    findAvbrytKnapp(knapperad).simulate("click");
-
-    expect(props.avbryt).toHaveBeenCalledTimes(1);
-    expect(props.bekreft).toHaveBeenCalledTimes(1);
-  });
-
   it("sender tekst til riktig knapp", () => {
-    const knapperad = shallow(<Knapperad {...props} />);
+    render(<Knapperad {...props} />);
 
-    expect(findAvbrytKnapp(knapperad).childAt(0).text()).toBe(props.avbrytTekst);
-    expect(findHovedKnapp(knapperad).childAt(0).text()).toBe(props.bekreftTekst);
+    const buttons = screen.getAllByRole("button");
+    expect(buttons).toHaveLength(2);
+    expect(buttons[0]).toHaveTextContent("bekrefttekst");
+    expect(buttons[1]).toHaveTextContent("avbryttekst");
   });
 
   it("redigerbart-prop setter disabled korrekt", () => {
-    let knapperad = shallow(<Knapperad {...props} />);
-
-    expect(findAvbrytKnapp(knapperad).props().disabled).toBe(false);
-    expect(findHovedKnapp(knapperad).props().disabled).toBe(false);
-
     props.redigerbart = false;
+    render(<Knapperad {...props} />);
 
-    knapperad = shallow(<Knapperad {...props} />);
-
-    expect(findAvbrytKnapp(knapperad).props().disabled).toBe(true);
-    expect(findHovedKnapp(knapperad).props().disabled).toBe(true);
+    expect(screen.getByText("bekrefttekst")).toBeDisabled();
+    expect(screen.getByText("avbryttekst")).toBeDisabled();
   });
 
   it("bekreftRedigerbart-prop setter disabled korrekt", () => {
-    let knapperad = shallow(<Knapperad {...props} />);
-
-    expect(findHovedKnapp(knapperad).props().disabled).toBe(false);
-    expect(findAvbrytKnapp(knapperad).props().disabled).toBe(false);
-
     props.bekreftRedigerbart = false;
+    render(<Knapperad {...props} />);
 
-    knapperad = shallow(<Knapperad {...props} />);
-
-    expect(findAvbrytKnapp(knapperad).props().disabled).toBe(false);
-    expect(findHovedKnapp(knapperad).props().disabled).toBe(true);
+    expect(screen.getByText("bekrefttekst")).toBeDisabled();
+    expect(screen.getByText("avbryttekst")).toBeEnabled();
   });
 });

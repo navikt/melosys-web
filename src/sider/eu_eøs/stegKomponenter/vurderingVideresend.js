@@ -17,8 +17,6 @@ import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 import VedleggVelger from "../../../felleskomponenter/vedleggvelger";
 import VedleggTable from "../../../felleskomponenter/vedleggTable";
-import { MELOSYS_DOKUMENT_V2 } from "../../../featuretoggle/toggleNavn";
-import { useFeatureToggle } from "../../../featuretoggle";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
@@ -38,26 +36,15 @@ export const VurderingVideresend = ({
   formValues,
   tilbake,
 }) => {
-  const brukDokumentV2 = useFeatureToggle(MELOSYS_DOKUMENT_V2);
   const pdfDokumenter = [
-    brukDokumentV2
-      ? {
-          sendesTilDokumenterV2: true,
-          navn: "Forhåndsvis orienteringsbrev",
-          data: {
-            produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_VIDERESENDT_SOEKNAD,
-            mottaker: MKV.Koder.mottakerroller.BRUKER,
-            fritekst: formValues.orienteringsbrevFritekst,
-          },
-        }
-      : {
-          navn: "Forhåndsvis orienteringsbrev",
-          type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_VIDERESENDT_SOEKNAD,
-          data: {
-            mottaker: MKV.Koder.mottakerroller.BRUKER,
-            fritekst: formValues.orienteringsbrevFritekst,
-          },
-        },
+    {
+      navn: "Forhåndsvis orienteringsbrev",
+      data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_VIDERESENDT_SOEKNAD,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
+        fritekst: formValues.orienteringsbrevFritekst,
+      },
+    },
     {
       navn: "Forhåndsvis SED A008",
       type: EKV.Koder.sedtyper.A008,

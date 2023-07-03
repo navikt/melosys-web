@@ -328,7 +328,6 @@ class VurderingArtikkel16Anmodning extends Component {
       ? [
           {
             navn: "Forhåndsvis orienteringsbrev til bruker",
-            type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, // Fjernes når toggle MELOSYS_DOKUMENT_V2 fjernes
             data: {
               produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK,
               mottaker: MKV.Koder.mottakerroller.BRUKER,
@@ -346,7 +345,6 @@ class VurderingArtikkel16Anmodning extends Component {
       : [
           {
             navn: "Forhåndsvis orienteringsbrev til bruker",
-            type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, // Fjernes når toggle MELOSYS_DOKUMENT_V2 fjern
             data: {
               produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK,
               mottaker: MKV.Koder.mottakerroller.BRUKER,
@@ -354,7 +352,6 @@ class VurderingArtikkel16Anmodning extends Component {
           },
           {
             navn: "Forhåndsvis anmodning til utenlandsk myndighet",
-            type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, // Fjernes når toggle MELOSYS_DOKUMENT_V2 fjern
             data: {
               produserbardokument: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK,
               mottaker: MKV.Koder.mottakerroller.UTENLANDSK_TRYGDEMYNDIGHET,

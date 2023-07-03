@@ -1,44 +1,31 @@
-import React from "react";
+import renderer from "react-test-renderer";
 
-import Arbeidsforhold, { Arbeidsforholdet } from "./arbeidsforhold";
+import Arbeidsforhold from "./arbeidsforhold";
+
+jest.mock("../../../../utils", () => ({
+  ...jest.requireActual("../../../../utils"),
+  _uuid: () => "123",
+}));
 
 describe("arbeidsforhold", () => {
-  let props = null;
-
-  beforeEach(() => {
-    props = {
-      arbeidsforholdene: [
-        {
-          arbeidsforholdID: "1234",
+  const props = {
+    arbeidsforholdene: [
+      {
+        arbeidsforholdID: "1234",
+        ansettelsesPeriode: {
+          fom: "2023-06-26",
+          tom: "2023-08-01",
         },
-      ],
-    };
-  });
-
-  it("lister ut arbeidsforhold", () => {
-    const arbeidsforhold = shallow(<Arbeidsforhold {...props} />);
-    const arbeidsforholdene = arbeidsforhold.find(Arbeidsforholdet);
-
-    expect(arbeidsforholdene).toHaveLength(1);
-    expect(arbeidsforholdene.first().props().arbeidsforholdet).toBe(props.arbeidsforholdene[0]);
-  });
-});
-
-describe("arbeidsforholdet", () => {
-  let props = null;
-
-  beforeEach(() => {
-    props = {
-      arbeidsforholdet: {
-        ansettelsesPeriode: {},
         arbeidsgiver: {
           navn: "NAV",
+          orgnr: "123",
         },
       },
-    };
-  });
+    ],
+  };
 
-  it("vises uten å krasje", () => {
-    shallow(<Arbeidsforholdet {...props} />);
+  it("snapshot test", () => {
+    const tree = renderer.create(<Arbeidsforhold {...props} />).toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });
