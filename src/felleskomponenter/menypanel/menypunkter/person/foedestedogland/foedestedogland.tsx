@@ -10,9 +10,10 @@ import * as Utils from "../../../../../utils";
 
 import { formSelectors } from "../../../../../ducks/form";
 
-import EditerbartElement, { ikkeVisBinIngenDataSymbolsynlighet } from "../../editerbartElement";
+import EditerbartElement from "../../editerbartElement";
 import Enkeltfoedestedoglandskjema from "./enkeltfoedestedoglandskjema";
 import Utfyltfoedestedogland from "./utfyltfoedestedogland";
+import { visAldriBinSymbolsynlighet } from "../../editerbartElement/editerbartElement";
 
 const mapStateToProps = (state: RootState) => ({
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
@@ -37,11 +38,18 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
     <EditerbartElement
       tittel={KV.Menypunkter.Person.undertitler.foedestedOgLand}
       redigerbart={redigerbart}
-      onBinClick={slettFoedestedOgLand}
-      symbolsynlighet={ikkeVisBinIngenDataSymbolsynlighet}
+      symbolsynlighet={visAldriBinSymbolsynlighet}
       onLagreClick={() => Utils._isEmpty(mottatteOpplysningerFeilmeldinger?.foedestedOgLand)}
       harData={value.foedested && value.foedeland}
-      redigererRender={() => <Enkeltfoedestedoglandskjema redigerbart={redigerbart} />}
+      redigererRender={(lukkRedigering) => (
+        <Enkeltfoedestedoglandskjema
+          redigerbart={redigerbart}
+          onBinClick={() => {
+            slettFoedestedOgLand();
+            lukkRedigering();
+          }}
+        />
+      )}
       redigeringUtfortRender={() => <Utfyltfoedestedogland foedestedOgLand={value} />}
       ingenDataRender={(apneRedigering) =>
         redigerbart ? (

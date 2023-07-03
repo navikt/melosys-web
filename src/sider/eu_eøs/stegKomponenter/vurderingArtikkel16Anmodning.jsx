@@ -11,6 +11,7 @@ import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Mui from "../../../felleskomponenter/ui";
+import * as Skjema from "../../../felleskomponenter/skjema";
 
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -19,13 +20,11 @@ import { behandlingsperioderSelectors } from "../../../ducks/behandlingsperioder
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from "../../../utils/dato";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
-import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
 import DatoOmrade from "../../../felleskomponenter/datoOmrade";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 import VedleggVelger from "../../../felleskomponenter/vedleggvelger";
-
+import VedleggTable from "../../../felleskomponenter/vedleggTable";
 import {
   konverterVilkarTilStegData,
   lagVilkarbegrunnelse,
@@ -34,9 +33,10 @@ import {
   lagUnntakFraBestemmelse,
 } from "../../../felleskomponenter/stegvelger";
 
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
+
 import "./vurderingArtikkel16Anmodning.css";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import VedleggTable from "../../../felleskomponenter/vedleggTable";
 
 const uuid = import("uuid/v4");
 
@@ -328,8 +328,8 @@ class VurderingArtikkel16Anmodning extends Component {
       ? [
           {
             navn: "Forhåndsvis orienteringsbrev til bruker",
-            type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK,
             data: {
+              produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK,
               mottaker: MKV.Koder.mottakerroller.BRUKER,
             },
           },
@@ -345,15 +345,15 @@ class VurderingArtikkel16Anmodning extends Component {
       : [
           {
             navn: "Forhåndsvis orienteringsbrev til bruker",
-            type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK,
             data: {
+              produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK,
               mottaker: MKV.Koder.mottakerroller.BRUKER,
             },
           },
           {
             navn: "Forhåndsvis anmodning til utenlandsk myndighet",
-            type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK,
             data: {
+              produserbardokument: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK,
               mottaker: MKV.Koder.mottakerroller.UTENLANDSK_TRYGDEMYNDIGHET,
               ytterligereInformasjon: this.props.formValues.fritekstSed,
             },
@@ -388,7 +388,9 @@ class VurderingArtikkel16Anmodning extends Component {
     /* eslint-disable max-len */
     return (
       <div>
-        <Nav.Typo.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.Typo.Undertittel>
+        <Nav.Typo.Innholdstittel className="stegvelgertittel">
+          Anmodning om unntak etter artikkel 16.1
+        </Nav.Typo.Innholdstittel>
         <div className="artikkel16">
           {erIDirekteTilArtikkel16Flyt && (
             <Nav.Row className="vilAnmode">

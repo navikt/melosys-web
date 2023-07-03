@@ -93,7 +93,7 @@ class VurderingSokkelSkip extends React.Component {
     /* eslint-disable max-len */
     return (
       <div className="vurderingSokkelSkip">
-        <Nav.Typo.Undertittel>Vurdering av sokkel eller skip</Nav.Typo.Undertittel>
+        <Nav.Typo.Innholdstittel className="stegvelgertittel">Vurdering av sokkel eller skip</Nav.Typo.Innholdstittel>
         <SokkelSkipListe
           sokkelEllerSkipListe={sokkelEllerSkipListe}
           installasjonArbeidslandListe={installasjonArbeidslandListe}

@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useEffect, useState } from "react";
+import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -18,9 +18,9 @@ import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { BOOLSK_STRING } from "../../../../../constants";
 import { useAsyncCallbackState } from "../../../../../hooks";
 
-import { FlytFinnesIkke } from "../felles/flytFinnesIkke";
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import "./vurderingBestemmelse.css";
+import { TomFlytMelding } from "../../../../../felleskomponenter/alertmeldinger";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export interface Begrunnelse {
@@ -32,7 +32,7 @@ const komponentState = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  medlemskapsperiodeBestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
+  lagretBestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
   vilkårKodeverk: folketrygdenkodeverkSelectors.VilkaarSelector(state),
   begrunnelseKodeverk: folketrygdenkodeverkSelectors.BegrunnelserSelector(state),
 });
@@ -47,17 +47,11 @@ interface VurderingBestemmelseProps {
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) => {
   const dispatch = useDispatch();
   const oppdaterVilkår = (skjema: any) => dispatch(vilkarOperations.oppdaterState(skjema));
-  const {
-    behandlingID,
-    behandlingstema,
-    medlemskapsperiodeBestemmelse,
-    vilkårKodeverk,
-    begrunnelseKodeverk,
-    redigerbart,
-  } = useSelector(komponentState);
+  const { behandlingID, behandlingstema, lagretBestemmelse, vilkårKodeverk, begrunnelseKodeverk, redigerbart } =
+    useSelector(komponentState);
   const [{ støttedeBestemmelser, ikkeStøttedeBestemmelser }] =
-    useAsyncCallbackState<Api.Medlemskapsperioder.HentBestemmelserResponse>(
-      () => Api.Medlemskapsperioder.hentBestemmelser(behandlingstema),
+    useAsyncCallbackState<Api.Medlemskapsperioder.HentMuligeBestemmelserResponse>(
+      () => Api.Medlemskapsperioder.hentMuligeBestemmelser(behandlingstema),
       { støttedeBestemmelser: [], ikkeStøttedeBestemmelser: [] },
       [behandlingstema]
     );
@@ -76,7 +70,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     // @ts-ignore
     const response: { data: Api.Vilkar.Vilkaar[] } = await dispatch(vilkarOperations.hent(behandlingID));
 
-    handleEndreBestemmelse(medlemskapsperiodeBestemmelse);
+    handleEndreBestemmelse(lagretBestemmelse);
     response.data?.forEach((vilkar) => {
       valgteVilkår.set(vilkar.vilkaar, vilkar.oppfylt ? SANN : USANN);
       if (vilkar.begrunnelseKoder && vilkar.begrunnelseKoder.length === 1) {
@@ -235,9 +229,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   return (
     <div className="vurderingBestemmelse">
-      <Nav.Typo.Undertittel className="undertittel">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Hvilken bestemmelse skal søknaden vurderes etter?
-      </Nav.Typo.Undertittel>
+      </Nav.Typo.Innholdstittel>
 
       <Nav.Fieldset className="select" legend="Bestemmelse">
         <Nav.Row>
@@ -282,7 +276,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         />
       ))}
 
-      {bestemmelseIkkeStøttetValgt && <FlytFinnesIkke />}
+      {bestemmelseIkkeStøttetValgt && <TomFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{ onClick: handleBekreft, disabled: !formIsValid || !redigerbart }}

@@ -1,6 +1,6 @@
 import MKV from "../../../melosyskodeverk";
 
-import { harUnntakFlyt, skalViseTomFlyt } from "../../../routing";
+import { harUnntakFlyt, skalViseTomFlyt, harIkkeYrkesaktivFlyt } from "../../../routing";
 import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
@@ -29,9 +29,9 @@ interface LinkGroupsConfig {
   mottatteOpplysningerType: string;
   contentProps: ContentProps;
   sakstema: string;
-  folketrygdenToggleEnabled: boolean;
-  ikkeYrkesaktivFlytToggleEnabled: boolean;
-  registreringUnntakFraMedlemskapToggleEnabled: boolean;
+  folketrygdenToggleEnabled: boolean | undefined;
+  ikkeYrkesaktivFlytToggleEnabled: boolean | undefined;
+  registreringUnntakFraMedlemskapToggleEnabled: boolean | undefined;
 }
 
 class LinkGroupsFactory {
@@ -70,6 +70,20 @@ class LinkGroupsFactory {
             .addArbeidsforholdOgInntekt()
             .build()
         )
+        .build();
+    }
+
+    if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled || false)) {
+      return new LinkgroupsBuilder()
+        .addFraRegister(
+          new LinksBuilder(contentProps)
+            .addPerson()
+            .addFamilieForhold()
+            .addMedlemskap()
+            .addArbeidsforholdOgInntekt()
+            .build()
+        )
+        .addFraBruker(new LinksBuilder(contentProps).addFullmektig().build())
         .build();
     }
 

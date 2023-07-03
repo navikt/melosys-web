@@ -21,8 +21,9 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
 import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
-import UnntakHjelpetekst from "./unntakHjelpetekst/unntakHjelpetekst";
+import { UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
 import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_TRYGDEAVTALE_UNNTAK } from "../../../../featuretoggle/toggleNavn";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -77,7 +78,7 @@ const VurderingBestemmelse = ({
   aktivtSteg,
 }: PropsFromRedux & Props) => {
   const [updatePending, setUpdatePending] = useState(false);
-  const trygdeavtaleUnntakToggle = useFeatureToggle("melosys.trygdeavtale.unntak");
+  const trygdeavtaleUnntakToggle = useFeatureToggle(MELOSYS_TRYGDEAVTALE_UNNTAK);
 
   useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
@@ -98,7 +99,7 @@ const VurderingBestemmelse = ({
 
   return (
     <div className="vurderingBestemmelse">
-      <Nav.Typo.Undertittel className="undertittel">Bestemmelse og vurdering</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
 
       <Nav.Fieldset legend="Hva er din vurdering av søknaden?">
         {vedtakValg?.map((valg) => (

@@ -14,6 +14,7 @@ import * as MPT from "../../../proptypes";
 import * as Mui from "../../../felleskomponenter/ui";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
@@ -22,12 +23,11 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { formOperations } from "../../../ducks/form";
-import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
+import { vedtakOperations } from "../../../ducks/vedtak";
+
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel13_x_vedtakSchema from "./vurderingArtikkel13_x_vedtakSchema";
-
 import "./vurderingArtikkel13_x_vedtak.css";
-import { vedtakOperations } from "../../../ducks/vedtak";
 
 export const VurderingArtikkel13_x_vedtak = ({
   redigerbart,
@@ -50,6 +50,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   aktivtSteg,
   validerMottatteOpplysninger,
   fattVedtak,
+  mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
@@ -60,7 +61,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
 
   const kontrollerBehandling = async (data) => {
-    if (data.aktivtSteg && data.formIsValid) {
+    if (redigerbart && data.mottatteOpplysningerStatus === "OK" && data.aktivtSteg && data.formIsValid) {
       setVedtakPending(true);
       await kontrollerFerdigbehandling({
         behandlingID,
@@ -77,8 +78,8 @@ export const VurderingArtikkel13_x_vedtak = ({
   ]);
 
   useEffect(() => {
-    debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues });
-  }, [aktivtSteg, formIsValid]);
+    debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues, mottatteOpplysningerStatus });
+  }, [aktivtSteg, formIsValid, mottatteOpplysningerStatus]);
 
   const oppdaterLovvalgsperiode = async (fomdato, tomdato) => {
     await endreLovvalgsPeriode(fomdato, tomdato);
@@ -109,8 +110,8 @@ export const VurderingArtikkel13_x_vedtak = ({
   const pdfDokumenter = [
     {
       navn: "Forhåndsvis vedtaksbrev og A1",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
       data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: formValues.vedtaksbrevFritekst,
       },
@@ -159,7 +160,7 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingArtikkel13_x_vedtak">
-      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
       {redigerbart && (
         <Fragment>
           <Nav.Typo.Element className="undertittel">Søknadsperiode</Nav.Typo.Element>
@@ -270,6 +271,7 @@ VurderingArtikkel13_x_vedtak.propTypes = {
   aktivtSteg: PT.bool,
   validerMottatteOpplysninger: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
+  mottatteOpplysningerStatus: PT.string.isRequired,
 };
 
 VurderingArtikkel13_x_vedtak.defaultProps = {
@@ -306,6 +308,7 @@ const mapStateToProps = (state) => {
       mottakerinstitusjoner: avklartefaktaSelectors.LandSomKreverSEDKTSelector(state) || [],
       kreverMottakerinstitusjon: false,
       fritekstSed: null,
+      mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     },
   };
 };

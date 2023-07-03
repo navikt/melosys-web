@@ -16,6 +16,7 @@ import BehandlingOppgaver from "./komponenter/mineoppgaver/behandlingOppgaver";
 import OpprettNySakKnapp from "./komponenter/opprettnysakknapp";
 
 import "./forside.css";
+import { featureToggleOperations } from "../../ducks/featuretoggle";
 
 const Forside = (props) => {
   const { tilOpprettNySak } = props;
@@ -23,6 +24,7 @@ const Forside = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(featureToggleOperations.hent());
     dispatch(oversikt());
   }, []);
 
@@ -35,7 +37,7 @@ const Forside = (props) => {
     <div className="forside">
       <div className="forside__header">
         <div>
-          <Nav.Typo.Undertittel>Mine oppgaver</Nav.Typo.Undertittel>
+          <Nav.Typo.Innholdstittel>Mine oppgaver</Nav.Typo.Innholdstittel>
           <Nav.Typo.Normaltekst>{oppgaverTotalt} oppgaver</Nav.Typo.Normaltekst>
         </div>
         <OpprettNySakKnapp onClick={tilOpprettNySak} />

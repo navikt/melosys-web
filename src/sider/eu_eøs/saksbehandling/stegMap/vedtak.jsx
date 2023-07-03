@@ -28,8 +28,8 @@ class Vedtak extends Steg {
       const pdfDokumenter = [
         {
           navn: "Forhåndsvis vedtaksbrev og A1",
-          type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
           data: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
             mottaker: MKV.Koder.mottakerroller.BRUKER,
             fritekst: formValues.vedtaksbrevFritekst,
           },
@@ -47,8 +47,8 @@ class Vedtak extends Steg {
       ) {
         pdfDokumenter.push({
           navn: "Orienteringsbrev til arbeidsgiver",
-          type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
           data: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
             mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
           },
         });

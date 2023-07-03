@@ -30,6 +30,13 @@ import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstit
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
 import "./vurderingVedtak.css";
+import {
+  MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
+  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+} from "../../../featuretoggle/toggleNavn";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import * as Api from "../../../services/api";
 
 const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) => {
   if (
@@ -115,13 +122,14 @@ const VurderingVedtak = ({
   harFeilmeldinger,
   aktivtSteg,
   validerMottatteOpplysninger,
+  mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
-  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
-  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
-  const registreringUnntakFraMedlemskapToggleEnabled =
-    useFeatureToggle("melosys.registrering_unntak_fra_medlemskap") === "enabled";
+  const [erBucAapen, setErBucAapen] = useState(true);
+  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
+  const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
   const dispatch = useDispatch();
 
   const lovvalget = lovvalgsperioder[0] || {};
@@ -171,8 +179,16 @@ const VurderingVedtak = ({
   const { kopiTilArbeidsgiver, vedtakstype } = formValues;
 
   useEffect(() => {
+    if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE) {
+      Api.Kontroll.erBucAapen(behandlingID).then((res) => {
+        setErBucAapen(res);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     async function kontroller() {
-      if (aktivtSteg && formIsValid) {
+      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg && formIsValid) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling({
           behandlingID,
@@ -189,7 +205,7 @@ const VurderingVedtak = ({
     }
 
     kontroller();
-  }, [aktivtSteg, formIsValid, kopiTilArbeidsgiver]);
+  }, [aktivtSteg, formIsValid, kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const onSubmit = async () => {
     if (!validerForm()) return;
@@ -212,9 +228,14 @@ const VurderingVedtak = ({
 
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !flereSoknadslandEnnTillatt;
 
+  const bucLukketOgLovvalgNorge =
+    !erBucAapen && behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE;
+
   return (
     <div className="vedtak">
-      <Nav.Typo.Undertittel>Omfattet av norsk trygdelovgivning etter {lovvalgSomTerm}</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        Omfattet av norsk trygdelovgivning etter {lovvalgSomTerm}
+      </Nav.Typo.Innholdstittel>
       <div>
         <Nav.Row className="lovvalgsperiode">
           <Nav.Column xs="6">
@@ -240,7 +261,7 @@ const VurderingVedtak = ({
             />
           </Nav.Column>
         </Nav.Row>
-        {redigerbart && (
+        {redigerbart && !bucLukketOgLovvalgNorge && (
           <Nav.Row className="fritekstSed">
             <Nav.Column xs="7">
               <Skjema.Textarea
@@ -270,7 +291,16 @@ const VurderingVedtak = ({
         )}
         <Nav.Row>
           <Nav.Column xs="6">
-            {stegErGyldig && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+            {stegErGyldig && (
+              <PdfLenkeListe
+                behandlingID={behandlingID}
+                dokumenter={
+                  bucLukketOgLovvalgNorge
+                    ? pdfDokumenter.filter((dok) => dok.type !== EKV.Koder.sedtyper.A012)
+                    : pdfDokumenter
+                }
+              />
+            )}
           </Nav.Column>
         </Nav.Row>
         {flereSoknadslandEnnTillatt && (
@@ -323,6 +353,7 @@ VurderingVedtak.propTypes = {
   harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
   validerMottatteOpplysninger: PT.func.isRequired,
+  mottatteOpplysningerStatus: PT.string.isRequired,
 };
 
 VurderingVedtak.defaultProps = {
@@ -352,6 +383,7 @@ const mapStateToProps = (state) => ({
     kreverMottakerinstitusjon: false,
     fritekstSed: null,
   },
+  mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
 });
 
 const VurderingVedtakForm = reduxForm({

@@ -97,7 +97,6 @@ const OpprettNySak = ({
   change,
   touch,
   errors,
-  feilmeldinger,
   lagNySak,
   lagNyBehandlingForSak,
   hentFagsakListe,
@@ -364,7 +363,7 @@ const OpprettNySak = ({
                   {Utils.feilmelding.syncErrorsTilFeilmelding(errors)}
                 </Nav.AlertStripeFeil>
               )}
-              <Feilmeldinger feilmeldinger={feilmeldinger} className="feilmelding" />
+              <Feilmeldinger className="feilmelding" />
               <Knapperad
                 bekreft={handleSubmit}
                 bekreftTekst="Opprett ny behandling"

@@ -61,7 +61,9 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
   // @ts-ignore
   return (
     <div>
-      <Nav.Typo.Undertittel>Hva slags type yrkesaktivitet skal søkeren utøve?</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        Hva slags type yrkesaktivitet skal søkeren utøve?
+      </Nav.Typo.Innholdstittel>
       <Nav.Fieldset legend="">
         <Nav.Radio
           name="yrkesaktivitet"

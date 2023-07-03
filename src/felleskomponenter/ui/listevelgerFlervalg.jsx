@@ -5,7 +5,6 @@ import PT from "prop-types";
 import * as KV from "../../kodeverk";
 import * as Nav from "../../navFrontend";
 import * as MPT from "../../proptypes";
-import * as Ikoner from "../../resources/images";
 
 import "./listevelgerFlervalg.css";
 
@@ -32,10 +31,7 @@ const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatF
     <div className="listevelgerFlervalg__linje">
       <div className="listevelgerFlervalg__innhold">{element}</div>
       <Nav.Knapp mini disabled={disabled} className="listevelgerFlervalg__linje__knapp" onClick={slettElement}>
-        <div className="knapp__ikon">
-          <Ikoner.Minus className="ikon__minus" />
-        </div>
-        <div className="knapp__tittel">Fjern</div>
+        Fjern
       </Nav.Knapp>
     </div>
   );
@@ -214,10 +210,7 @@ class ListevelgerFlervalg extends Component {
             onClick={this.leggValgTilListe}
             disabled={disabled}
           >
-            <div className="knapp__ikon">
-              <Ikoner.Add className="ikon__add" />
-            </div>
-            <div className="knapp__tittel">Legg til</div>
+            Legg til
           </Nav.Knapp>
         </div>
         <datalist id={datalistID}>

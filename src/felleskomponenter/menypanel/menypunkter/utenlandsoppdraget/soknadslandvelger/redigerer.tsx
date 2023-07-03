@@ -1,31 +1,31 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { RootState } from "AppTypes";
-import { connect, ConnectedProps } from "react-redux";
+import { useSelector } from "react-redux";
 import { formValueSelector } from "redux-form";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Skjema from "../../../../skjema";
-import * as Nav from "../../../../../navFrontend";
 import * as KV from "../../../../../kodeverk";
+import * as Mui from "../../../../ui";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import LabelMedHjelpetekst from "../../../../labelMedHjelpetekst";
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 
-const mapStateToProps = (state: RootState) => ({
-  soknadsland: soknadFormValueSelector(state, "soknadsland"),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-});
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
+interface RedigererProps {
+  lagre: MouseEventHandler;
+}
 
-const Redigerer = ({ soknadsland: { erUkjenteEllerAlleEosLand, landkoder }, behandlingstema }: PropsFromRedux) => {
+const Redigerer = ({ lagre }: RedigererProps) => {
+  const { erUkjenteEllerAlleEosLand, landkoder } = useSelector((state) =>
+    soknadFormValueSelector(state, "soknadsland")
+  );
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const minstEttLandValgt = landkoder.length > 0;
 
   return (
-    <Nav.Fieldset legend="Land">
+    <>
       {behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
         <Skjema.Checkbox
           feltNavn="soknadsland.erUkjenteEllerAlleEosLand"
@@ -44,8 +44,11 @@ const Redigerer = ({ soknadsland: { erUkjenteEllerAlleEosLand, landkoder }, beha
         redigerbart={!erUkjenteEllerAlleEosLand}
         options={MKV.KTObjects.landkoder.map(({ kode, term }: KTObject) => ({ value: kode, label: term }))}
       />
-    </Nav.Fieldset>
+      <Mui.Knapp onClick={lagre} className="lagreknapp">
+        Lagre
+      </Mui.Knapp>
+    </>
   );
 };
 
-export default connector(Redigerer);
+export default Redigerer;

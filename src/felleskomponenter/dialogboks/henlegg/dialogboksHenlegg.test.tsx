@@ -8,6 +8,10 @@ import PdfLenkeListe from "../../pdfLenkeListe";
 import { DialogboksHenleggSak } from "./dialogboksHenlegg";
 import { KodeTermSelect } from "../../ui/kodeTermSelect";
 
+jest.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: jest.fn(),
+}));
+
 describe("Dialogbokshenlegg", () => {
   const mockedProps = mock<ComponentProps<typeof DialogboksHenleggSak>>();
   const props = instance(mockedProps);

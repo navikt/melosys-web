@@ -1,23 +1,55 @@
-import { AlertStripeType } from "nav-frontend-alertstriper";
 import React, { useEffect, useState } from "react";
-import * as Nav from "../../navFrontend";
-import "./alertmeldinger.css";
+import { AlertStripeType } from "nav-frontend-alertstriper";
+import classNames from "classnames";
+
+import MKV from "../../melosyskodeverk";
 import * as Ikoner from "../../resources/images";
+import * as KV from "../../kodeverk";
+import * as Nav from "../../navFrontend";
+import * as Utils from "../../utils";
+
+import { Feilkode } from "../../@types";
+import "./alertmeldinger.css";
+
+type alertmeldingerProps = {
+  meldinger: Feilkode[] | string;
+  className?: string;
+  exclude?: string;
+};
+
+export const Innsynsmelding = ({ className = "" }) => (
+  <Nav.AlertStripeInfo className={`innsynsmelding ${className}`}>Innsynsmodus</Nav.AlertStripeInfo>
+);
 
 export const VirksomhetMelding = () => (
   <Nav.AlertStripeInfo className="virksomhetMelding">Behandlingen er journalført på virksomhet</Nav.AlertStripeInfo>
 );
 
-export const TomFlytMelding = () => (
-  <Nav.AlertStripeAdvarsel className="tomFlytMelding">
-    <b>Det finnes ikke en stegvelger for behandlingstemaet du har valgt, men:</b>
-    <ul>
-      <li>
-        du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak og &quot;Opprett ny BUC&quot;-fanen for å
-        sende SED
-      </li>
-      <li>du kan avslutte saken og angi resultatet i behandlingsmenyen</li>
-    </ul>
+export const TomFlytMelding = ({ visBuc = false }) => (
+  <div className="tomFlytMelding">
+    <Nav.AlertStripeAdvarsel className="tomFlytMelding">
+      <b>Du kan ikke gå videre, men:</b>
+      <ul>
+        {visBuc && (
+          <li>
+            du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak og &quot;Opprett ny BUC&quot;-fanen for
+            å sende SED
+          </li>
+        )}
+        {!visBuc && <li>du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak</li>}
+        <li>du må avslutte behandlingen og angi resultatet i behandlingsmenyen</li>
+      </ul>
+    </Nav.AlertStripeAdvarsel>
+  </div>
+);
+
+export const NyVurderingMelding = () => (
+  <Nav.AlertStripeAdvarsel className="nyVurderingMelding">
+    <Nav.Typo.Normaltekst className="nyVurderingMelding__overskrift">Ny behandling av sak</Nav.Typo.Normaltekst>
+    <Nav.Typo.Normaltekst>
+      Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens opplysninger og
+      vurder videre behandling.
+    </Nav.Typo.Normaltekst>
   </Nav.AlertStripeAdvarsel>
 );
 
@@ -55,4 +87,45 @@ export const StandardMeldingOverst = ({ type, actionEtterSynlighet, melding }: S
       </Nav.AlertStripe>
     </div>
   ) : null;
+};
+
+export const Alertmeldinger = ({ meldinger, className, exclude }: alertmeldingerProps) => {
+  if (Utils._isEmpty(meldinger)) {
+    return null;
+  }
+
+  const renderInnhold = () => {
+    if (typeof meldinger === "string") {
+      return meldinger;
+    }
+
+    const filtrerteAlertmeldinger = meldinger.filter((value) => value.kode !== exclude);
+
+    if (filtrerteAlertmeldinger.length === 1) {
+      return KV.kodeTilTerm(filtrerteAlertmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+    }
+
+    if (filtrerteAlertmeldinger.length === 0) {
+      return null;
+    }
+
+    return (
+      <ul className="feilkoder__liste">
+        {filtrerteAlertmeldinger.map((feil) => (
+          <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
+        ))}
+      </ul>
+    );
+  };
+
+  const classNameAlertmeldinger = classNames("alertmeldinger", className);
+  const innhold = renderInnhold();
+  if (!innhold) {
+    return null;
+  }
+  return (
+    <div className={classNameAlertmeldinger}>
+      <Nav.AlertStripeAdvarsel className="varselstripe">{innhold}</Nav.AlertStripeAdvarsel>
+    </div>
+  );
 };

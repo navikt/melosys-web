@@ -1,10 +1,9 @@
 import React, { ComponentProps } from "react";
-import { shallow } from "enzyme";
-import { mock, instance } from "ts-mockito";
+import { instance, mock } from "ts-mockito";
 
-import * as Nav from "../../../../../../navFrontend";
+import { render, screen } from "@testing-library/react";
 
-import SivilstandModal, { SivilstandTabell } from "./sivilstandModal";
+import SivilstandModal from "./sivilstandModal";
 
 describe("SivilstandModal", () => {
   const mockedProps = mock<ComponentProps<typeof SivilstandModal>>();
@@ -14,6 +13,7 @@ describe("SivilstandModal", () => {
     props = instance(mockedProps);
     props.lukkModal = jest.fn();
     props.modalAriaHideApp = false;
+    props.skalViseModal = true;
     props.aktiveSivilstander = [
       {
         type: "Gift",
@@ -38,20 +38,12 @@ describe("SivilstandModal", () => {
     ];
   });
 
-  it("viser en Modal", () => {
-    const sivilstandModal = shallow(<SivilstandModal {...props} />);
-
-    const modal = sivilstandModal.find(Nav.Modal);
-    expect(modal).toHaveLength(1);
-    expect(modal.props().onRequestClose).toBe(props.lukkModal);
-  });
-
   it("viser tabell for aktiv sivilstand og historiske sivilstander", () => {
-    const sivilstandModal = shallow(<SivilstandModal {...props} />);
+    render(<SivilstandModal {...props} />);
 
-    const sivilstandTabeller = sivilstandModal.find(SivilstandTabell);
-    expect(sivilstandTabeller).toHaveLength(2);
-    expect(sivilstandTabeller.first().props().sivilstander).toEqual(props.aktiveSivilstander);
-    expect(sivilstandTabeller.last().props().sivilstander).toEqual(props.historiskeSivilstander);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.queryByText("Ingen historikk registrert i folkeregisteret.")).not.toBeInTheDocument();
+    expect(screen.getByText("Gift")).toBeInTheDocument();
+    expect(screen.getByText("Ugift")).toBeInTheDocument();
   });
 });

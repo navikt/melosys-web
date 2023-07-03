@@ -119,7 +119,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     oppdaterStatus(formIsValid);
   }, [formIsValid]);
 
-  const lagreMedlemskapsperiode = (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
+  const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato),
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato),
@@ -127,7 +127,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       innvilgelsesResultat: medlemskapsperiode.innvilgelsesResultat,
     };
 
-    (medlemskapsperiode.ny
+    await (medlemskapsperiode.ny
       ? Api.Medlemskapsperioder.postMedlemskapsperioder(behandlingID, periodeRequest)
       : Api.Medlemskapsperioder.putMedlemskapsperioder(behandlingID, medlemskapsperiode.periodeId, periodeRequest)
     )
@@ -141,11 +141,19 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(
-      (medlemskapsperioder, isValid, overskrevetIndex) =>
-        isValid &&
-        medlemskapsperioder.forEach((medlemskapsperiode: MedlemskapsperiodeProp, index: number) =>
-          lagreMedlemskapsperiode(medlemskapsperiode, overskrevetIndex !== undefined ? overskrevetIndex : index)
-        ),
+      async (medlemskapsperioder, isValid, overskrevetIndex) => {
+        if (isValid) {
+          // eslint-disable-next-line no-restricted-syntax
+          for (const [index, medlemskapsperiode] of medlemskapsperioder.entries()) {
+            // eslint-disable-next-line no-await-in-loop
+            await lagreMedlemskapsperiode(
+              medlemskapsperiode,
+              overskrevetIndex !== undefined ? overskrevetIndex : index
+            );
+          }
+        }
+      },
+
       500
     ),
     []
@@ -203,6 +211,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   };
 
   const visLeggTilNyPeriode =
+    redigerbart &&
     !ingenMedlemskapsperioder &&
     !formValues.medlemskapsperioder.some(
       (periode: MedlemskapsperiodeProp) =>
@@ -214,7 +223,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   return (
     <div className="vurderingPerioder">
-      <Nav.Typo.Undertittel className="undertittel">Kontroller medlemskapsperioder</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Kontroller medlemskapsperioder</Nav.Typo.Innholdstittel>
 
       <div>
         <Nav.Typo.Element className="info_element">Søknad mottatt: </Nav.Typo.Element>

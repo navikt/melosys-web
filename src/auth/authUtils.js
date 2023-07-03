@@ -5,7 +5,7 @@ import { faktureringskomponentenRequest, melosysRequest, trygdeavtaleRequest } f
 
 const originalFetch = window.fetch;
 
-export const setTokenInterceptor = (getAccessToken, accounts) => {
+export const setTokenInterceptor = async (getAccessToken, accounts) => {
   window.fetch = async (...args) => {
     const [url, options] = args;
     if (!options.headers) {
@@ -23,7 +23,7 @@ export const setTokenInterceptor = (getAccessToken, accounts) => {
   };
 };
 
-export const setTokenInterceptorForLocalDevelopment = () => {
+export const setTokenInterceptorForLocalDevelopment = async () => {
   window.fetch = async (...args) => {
     const [url, options] = args;
     if (!options.headers) {

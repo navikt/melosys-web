@@ -5,6 +5,9 @@ import { STATUS } from "../../services";
 /**
  * Genererer default state for redux til testing, samt tillater å sette individuelle states.
  */
+/**
+ * @deprecated Bruk renderWithProviders for testing på redux komponenter
+ */
 function lagState({
   form = {
     testForm: {
@@ -31,6 +34,7 @@ function lagState({
   behandlingsresultat = { status: STATUS.OK, data: {} },
   behandlingsstatus = { status: STATUS.OK, data: {} },
   dokumenter = { status: STATUS.OK, data: {} },
+  featureToggle = { status: STATUS.OK, data: {} },
   fagsaker = { status: STATUS.OK, data: {} },
   feiletRespons = { status: STATUS.OK, data: {} },
   folketrygdenkodeverk = { status: STATUS.OK, data: {} },
@@ -63,6 +67,7 @@ function lagState({
     behandlinger,
     mottatteOpplysninger,
     behandlingsperioder,
+    featureToggle,
     behandlingsresultat,
     behandlingsstatus,
     dokumenter,

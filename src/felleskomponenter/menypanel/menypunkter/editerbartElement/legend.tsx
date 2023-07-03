@@ -52,9 +52,9 @@ const Legend = ({
             <TittelIkon />
           </span>
         )}
-        <Nav.Typo.Undertittel className="editerbart-element__legend__tittel-container__tittel">
+        <Nav.Typo.UndertittelH3 className="editerbart-element__legend__tittel-container__tittel">
           {tittel}
-        </Nav.Typo.Undertittel>
+        </Nav.Typo.UndertittelH3>
       </span>
       {renderSymboler()}
     </div>

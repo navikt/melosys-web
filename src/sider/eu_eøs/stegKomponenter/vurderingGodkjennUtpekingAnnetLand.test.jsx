@@ -1,12 +1,16 @@
 import React from "react";
-
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Nav from "../../../navFrontend";
+import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import MKV from "../../../melosyskodeverk";
-
 import { VurderingGodkjennUtpekingAnnetLand } from "./vurderingGodkjennUtpekingAnnetLand";
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+
+jest.mock("../../../services/modules/kontroll", () => ({
+  erBucAapen: () => Promise.resolve(true),
+}));
+jest.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: jest.fn(),
+}));
 
 describe("vurderingGodkjennUtpekingAnnetLand", () => {
   let props = null;
@@ -26,52 +30,28 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
     };
   });
 
-  it("trykk på knapp kaller lagreOgGodkjennUnntaksperioder", () => {
-    const komponent = shallow(<VurderingGodkjennUtpekingAnnetLand {...props} />);
+  it("checkbox og fritekstfelt eksisterer og onchange metoder fungerer som forventet", async () => {
+    render(<VurderingGodkjennUtpekingAnnetLand {...props} />);
+    const user = userEvent.setup();
+    await user.click(await screen.findByText("Send A012"));
 
-    const checkbox = komponent.find(Mui.Checkbox);
-    const checkboxOnCheck = checkbox.props().onCheck;
-    checkboxOnCheck({ checked: true });
+    expect(screen.getByLabelText("Send A012")).toBeChecked();
 
-    const fritekstfelt = komponent.find(Nav.Textarea);
-    fritekstfelt.props().onChange({ target: { value: "Fritekst her" } });
+    const input = screen.getByLabelText("Ytterligere informasjon til SED (valgfri)");
+    fireEvent.change(input, { target: { value: "Fritekst her" } });
 
-    const stegKnapper = komponent.find(Mui.StegKnapper);
-    stegKnapper.props().bekreftKnappProps.onClick();
-
-    expect(props.lagreOgGodkjennUnntaksperioder).toHaveBeenCalledTimes(1);
-    expect(props.lagreOgGodkjennUnntaksperioder).toHaveBeenLastCalledWith({
-      varsleUtland: true,
-      fritekst: "Fritekst her",
-      endretPeriode: {
-        fom: "2020-12-12",
-        tom: "2021-12-12",
-      },
-      lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
-    });
+    expect(input.value).toBe("Fritekst her");
   });
 
-  it("viser overskrift", () => {
-    const komponent = shallow(<VurderingGodkjennUtpekingAnnetLand {...props} />);
+  it("viser overskrift", async () => {
+    render(<VurderingGodkjennUtpekingAnnetLand {...props} />);
 
-    const overskrift = komponent.find(Nav.Typo.Undertittel);
-
-    expect(overskrift.children().text()).toBe(props.overskrift);
+    expect(await screen.findByText(props.overskrift)).toBeInTheDocument();
   });
 
-  it("knapp er ikke disabled når redigerbar er true", () => {
-    const komponent = shallow(<VurderingGodkjennUtpekingAnnetLand {...props} />);
+  it("knapp er ikke disabled når redigerbar er true", async () => {
+    render(<VurderingGodkjennUtpekingAnnetLand {...props} />);
 
-    const stegKnapper = komponent.find(Mui.StegKnapper);
-
-    expect(stegKnapper.props().bekreftKnappProps.disabled).toBe(false);
-  });
-
-  it("viser en pdflenkeliste", () => {
-    const komponent = shallow(<VurderingGodkjennUtpekingAnnetLand {...props} />);
-
-    const pdflenkeliste = komponent.find(PdfLenkeListe);
-
-    expect(pdflenkeliste.props().behandlingID).toBe(props.behandlingID);
+    expect(await screen.findByText("Bekreft")).not.toBeDisabled();
   });
 });

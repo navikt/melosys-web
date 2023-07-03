@@ -14,15 +14,16 @@ import * as VilkarSelectors from "../../../ducks/vilkar/selectors";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { kontrollerFerdigbehandling } from "../../../ducks/kontroll/operations";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
+import { vedtakOperations } from "../../../ducks/vedtak";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Begrunnelser from "../../../felleskomponenter/begrunnelser";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Schema";
-import { vedtakOperations } from "../../../ducks/vedtak";
-import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { kontrollerFerdigbehandling } from "../../../ducks/kontroll/operations";
 
 const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
@@ -48,6 +49,8 @@ const VurderingAvslag12_x_og_16 = ({
   formValues,
   tilbake,
   validerMottatteOpplysninger,
+  mottatteOpplysningerStatus,
+  aktivtSteg,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const dispatch = useDispatch();
@@ -57,20 +60,21 @@ const VurderingAvslag12_x_og_16 = ({
   const pdfDokumenter = [
     {
       navn: "Forhåndsvis vedtaksbrev",
-      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
       data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: formValues.vedtaksbrevFritekst,
       },
     },
   ];
+
   const { kopiTilArbeidsgiver, vedtakstype } = formValues;
 
   if (!erNyVurdering && kopiTilArbeidsgiver) {
     pdfDokumenter.push({
       navn: "Orientering til arbeidsgiver om avslag",
-      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
       data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
@@ -84,18 +88,20 @@ const VurderingAvslag12_x_og_16 = ({
   ];
 
   useEffect(() => {
-    dispatch(
-      kontrollerFerdigbehandling({
-        behandlingID,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-        kontrollerSomSkalIgnoreres: kopiTilArbeidsgiver
-          ? []
-          : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
-        skalRegisteropplysningerOppdateres: false,
-      })
-    );
-  }, [kopiTilArbeidsgiver]);
+    if (redigerbart && aktivtSteg && mottatteOpplysningerStatus === "OK") {
+      dispatch(
+        kontrollerFerdigbehandling({
+          behandlingID,
+          vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+          kontrollerSomSkalIgnoreres: kopiTilArbeidsgiver
+            ? []
+            : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
+          skalRegisteropplysningerOppdateres: false,
+        })
+      );
+    }
+  }, [kopiTilArbeidsgiver, mottatteOpplysningerStatus, aktivtSteg]);
 
   const validerForm = () => {
     touch("vedtakstype");
@@ -140,7 +146,7 @@ const VurderingAvslag12_x_og_16 = ({
 
   return (
     <div>
-      <Nav.Typo.Undertittel>Avslag</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Avslag</Nav.Typo.Innholdstittel>
       {valgte_art_12_1_begrunnelser.length > 0 && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 12. nr. 1:"
@@ -215,12 +221,15 @@ VurderingAvslag12_x_og_16.propTypes = {
   touch: PT.func.isRequired,
   formValues: PT.object,
   validerMottatteOpplysninger: PT.func.isRequired,
+  mottatteOpplysningerStatus: PT.string.isRequired,
+  aktivtSteg: PT.bool,
 };
 
 VurderingAvslag12_x_og_16.defaultProps = {
   art16_1_fritekst: "",
   redigerbart: true,
   formValues: {},
+  aktivtSteg: false,
 };
 
 const VurderingAvslagArtikkel12Og16Form = reduxForm({
@@ -254,6 +263,7 @@ const mapStateToProps = (state) => ({
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
   },
+  mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingAvslagArtikkel12Og16Form);

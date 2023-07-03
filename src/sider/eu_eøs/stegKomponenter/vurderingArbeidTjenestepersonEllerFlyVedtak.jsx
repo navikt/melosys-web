@@ -18,15 +18,14 @@ import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
+import { vedtakOperations } from "../../../ducks/vedtak";
 import { formOperations } from "../../../ducks/form";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Mottakerinstitusjonvelger, {
   MottakerinstitusjonvelgerFlervalg,
 } from "../../../felleskomponenter/mottakerinstitusjonvelger";
-import { BOOLSK_STRING } from "../../../constants";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
-import VurderingArbeidTjenestepersonEllerFlyVedtakSchema from "./vurderingArbeidTjenestepersonEllerFlyVedtakSchema";
 import {
   konverterAvklartfaktaTilStegData,
   konverterLovvalgsbestemmelseTilStegData,
@@ -37,10 +36,11 @@ import {
   slettAvklartfakta,
   slettTilleggBestemmelse,
 } from "../../../felleskomponenter/stegvelger";
+import { BOOLSK_STRING } from "../../../constants";
 
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArbeidTjenestepersonEllerFlyVedtakSchema from "./vurderingArbeidTjenestepersonEllerFlyVedtakSchema";
 import "./vurderingArbeidTjenestepersonEllerFlyVedtak.css";
-import { vedtakOperations } from "../../../ducks/vedtak";
-import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 const InformertMyndighetVelger = ({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) => {
   useEffect(() => {
@@ -124,6 +124,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   tilbake,
   mottatteOpplysningerFom,
   mottatteOpplysningerTom,
+  mottatteOpplysningerStatus,
   soknadsperiode,
   informertMyndighetFakta,
   kontrollerFerdigbehandling,
@@ -177,8 +178,8 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   let pdfDokumenter = [
     {
       navn: "Forhåndsvis vedtaksbrev og A1",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: formValues.vedtaksbrevFritekst,
       },
@@ -202,8 +203,8 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   if (skalSendeOrienteringsbrev(selvstendigArbeid) && kopiTilArbeidsgiver) {
     pdfDokumenter.push({
       navn: "Orienteringsbrev til arbeidsgiver",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
       data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
@@ -267,7 +268,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 
   useEffect(() => {
     async function kontroller() {
-      if (aktivtSteg && formIsValid) {
+      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg && formIsValid) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling({
           behandlingID,
@@ -283,7 +284,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       }
     }
     kontroller();
-  }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver]);
+  }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const onSubmit = async (values, dispatch, props) => {
     setVedtakPending(true);
@@ -307,7 +308,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingArbeidTjenestepersonEllerFlyVedtak">
-      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
       <Nav.Row className="velgLovvalgsbestemmelse">
         <Nav.Column xs="7">
           <Skjema.Select label="Velg en lovvalgsbestemmelse" feltNavn="lovvalgsbestemmelse" disabled={!redigerbart}>
@@ -477,6 +478,7 @@ VurderingArbeidTjenestepersonEllerFlyVedtak.propTypes = {
   validerMottatteOpplysninger: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
   selvstendigArbeid: PT.object.isRequired,
+  mottatteOpplysningerStatus: PT.string.isRequired,
 };
 
 VurderingArbeidTjenestepersonEllerFlyVedtak.defaultProps = {
@@ -504,6 +506,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     mottatteOpplysningerFom: mottatteOpplysningerSelectors.PeriodeFomSelector(state),
     mottatteOpplysningerTom: mottatteOpplysningerSelectors.PeriodeTomSelector(state),
+    mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
     sakstype: fagsakSelectors.SakstypeKodeSelector(state),

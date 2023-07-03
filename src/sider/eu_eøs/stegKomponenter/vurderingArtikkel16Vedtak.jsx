@@ -21,12 +21,13 @@ import { anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiode
 import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { vilkarSelectors } from "../../../ducks/vilkar";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
+import { vedtakOperations } from "../../../ducks/vedtak";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel16VedtakSchema from "./vurderingArtikkel16VedtakSchema";
 
 import "./vurderingArtikkel16Vedtak.css";
-import { vedtakOperations } from "../../../ducks/vedtak";
 
 export const VurderingArtikkel16VedtakBegrunnelser = ({
   art12_1_begrunnelser,
@@ -85,10 +86,10 @@ export const Innvilgelse = ({
   const pdfDokumenter = [
     {
       navn: "Forhåndsvis vedtaksbrev og A1",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
-        fritekst: vedtaksbrevFritekst,
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
+        fritekst: vedtaksbrevFritekst,
       },
     },
   ];
@@ -96,8 +97,8 @@ export const Innvilgelse = ({
   if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
       navn: "Brev til arbeidsgiver",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
       data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
@@ -105,9 +106,9 @@ export const Innvilgelse = ({
 
   return (
     <Fragment>
-      <Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.
-      </Nav.Typo.Undertittel>
+      </Nav.Typo.Innholdstittel>
       <Nav.Row>
         <Nav.Column xs="7">
           <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
@@ -177,10 +178,10 @@ export const DelvisInnvilgelse = ({
   const pdfDokumenter = [
     {
       navn: "Forhåndsvis vedtaksbrev og A1",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
-        fritekst: vedtaksbrevFritekst,
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
+        fritekst: vedtaksbrevFritekst,
       },
     },
   ];
@@ -188,8 +189,8 @@ export const DelvisInnvilgelse = ({
   if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
       navn: "Brev til arbeidsgiver",
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
       data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
@@ -197,10 +198,10 @@ export const DelvisInnvilgelse = ({
 
   return (
     <Fragment>
-      <Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av
         søknadsperioden
-      </Nav.Typo.Undertittel>
+      </Nav.Typo.Innholdstittel>
       <Nav.Row>
         <Nav.Column xs="7">
           <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
@@ -269,10 +270,10 @@ export const Avslag = ({
   const pdfDokumenter = [
     {
       navn: "Forhåndsvis vedtaksbrev",
-      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
       data: {
-        fritekst: vedtaksbrevFritekst,
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
+        fritekst: vedtaksbrevFritekst,
       },
     },
   ];
@@ -280,8 +281,8 @@ export const Avslag = ({
   if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
       navn: "Brev til arbeidsgiver",
-      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
       data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
@@ -289,7 +290,7 @@ export const Avslag = ({
 
   return (
     <Fragment>
-      <Nav.Typo.Undertittel>Avslag</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Avslag</Nav.Typo.Innholdstittel>
       <Nav.Row>
         <Nav.Column xs="7">{renderBegrunnelser()}</Nav.Column>
       </Nav.Row>
@@ -362,6 +363,7 @@ export const VurderingArtikkel16Vedtak = ({
   aktivtSteg,
   validerMottatteOpplysninger,
   fattVedtak,
+  mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
@@ -414,7 +416,7 @@ export const VurderingArtikkel16Vedtak = ({
 
   useEffect(() => {
     async function kontroller() {
-      if (aktivtSteg && formIsValid) {
+      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg && formIsValid) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling({
           behandlingID,
@@ -428,7 +430,7 @@ export const VurderingArtikkel16Vedtak = ({
     }
 
     kontroller();
-  }, [aktivtSteg, formIsValid]);
+  }, [aktivtSteg, formIsValid, mottatteOpplysningerStatus]);
 
   const vedKlikk = async () => {
     if (!validerForm()) return;
@@ -589,6 +591,7 @@ VurderingArtikkel16Vedtak.propTypes = {
   aktivtSteg: PT.bool,
   validerMottatteOpplysninger: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
+  mottatteOpplysningerStatus: PT.string.isRequired,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
@@ -663,6 +666,7 @@ const mapStateToProps = (state) => {
       vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
       vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
       vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+      mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     },
   };
 };

@@ -4,6 +4,10 @@ import MKV from "../../../melosyskodeverk";
 
 import { VurderingArtikkel16Vedtak, Innvilgelse, DelvisInnvilgelse, Avslag } from "./vurderingArtikkel16Vedtak";
 
+jest.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: jest.fn(),
+}));
+
 describe("VurderingArtikkel16Vedtak", () => {
   let props = null;
 

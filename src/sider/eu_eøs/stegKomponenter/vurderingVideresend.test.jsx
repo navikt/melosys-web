@@ -8,6 +8,10 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import { VurderingVideresend } from "./vurderingVideresend";
 
+jest.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: jest.fn(),
+}));
+
 describe("Vurderingvideresend", () => {
   let props = null;
 

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 import { connect } from "react-redux";
@@ -13,6 +13,7 @@ import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import { formSelectors } from "../../../ducks/form";
 
 import "./vurderingGodkjennUtpekingAnnetLand.css";
+import * as Api from "../../../services/api";
 
 export const VurderingGodkjennUtpekingAnnetLand = ({
   lagreOgGodkjennUnntaksperioder,
@@ -25,7 +26,15 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
   const [varsleUtland, setVarsleUtland] = useState(false);
   const [godkjenningPending, setGodkjenningPending] = useState(false);
   const [fritekst, setFritekst] = useState("");
+  const [erBucAapen, setErBucAapen] = useState(true);
+
   const isMounted = Hooks.useIsMounted();
+
+  useEffect(() => {
+    Api.Kontroll.erBucAapen(behandlingID).then((res) => {
+      setErBucAapen(res);
+    });
+  }, []);
 
   const sendA012CheckHandler = ({ checked }) => {
     setVarsleUtland(checked);
@@ -68,15 +77,24 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
       data: { fritekst },
     },
   ];
+  const skjemaDisabled = !redigerbart || !erBucAapen;
 
   return (
-    <Fragment>
-      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
+    <div className="vurderingGodkjennUtpeking">
+      {!erBucAapen ? (
+        <Nav.AlertStripe className="buc__varsel" type="advarsel">
+          <strong>BUC er lukket</strong>
+          <ul>
+            <li>Det kan ikke sendes SED A012. Perioden blir likevel lagret i Melosys og overført til Medl.</li>
+          </ul>
+        </Nav.AlertStripe>
+      ) : null}
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
       {redigerbart && (
         <>
           <Nav.Row className="sendA012">
             <Nav.Column xs="12">
-              <Mui.Checkbox label="Send A012" onCheck={sendA012CheckHandler} />
+              <Mui.Checkbox disabled={skjemaDisabled} label="Send A012" onCheck={sendA012CheckHandler} />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
@@ -85,11 +103,10 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
               value={fritekst}
               onChange={(e) => setFritekst(e.target.value)}
               maxLength={500}
+              disabled={skjemaDisabled}
             />
           </Nav.Row>
-          <Nav.Row>
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
-          </Nav.Row>
+          <Nav.Row>{erBucAapen && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}</Nav.Row>
         </>
       )}
       <Nav.Row>
@@ -109,7 +126,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
           />
         </Nav.Column>
       </Nav.Row>
-    </Fragment>
+    </div>
   );
 };
 

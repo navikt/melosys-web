@@ -4,11 +4,12 @@ import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 
+import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
 import * as Api from "../../../services/api";
+import * as StringUtils from "../../../utils/streng";
 
-import MKV from "../../../melosyskodeverk";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Knapperad from "../../knapperad";
 import HtmlEditor from "../../htmlEditor";
@@ -20,7 +21,6 @@ import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../feilmeldinger";
 
 import "./dialogboksHenlegg.css";
-import * as StringUtils from "../../../utils/streng";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -109,19 +109,15 @@ export const DialogboksHenleggSak = ({
     });
   };
 
-  const data = erBegrunnelseValgt
-    ? {
-        begrunnelseKode,
-        fritekst,
-        mottaker: MKV.Koder.mottakerroller.BRUKER,
-      }
-    : {};
-
   const pdfDokumenter = [
     {
       navn: "Forhåndsvis brev",
-      type: MKV.Koder.brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
-      data,
+      data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
+        begrunnelseKode,
+        fritekst,
+      },
     },
   ];
 
@@ -141,7 +137,7 @@ export const DialogboksHenleggSak = ({
         <Nav.Typo.Systemtittel className={dialogboksHenleggClassName.element("overskrift")}>
           Henlegg saken
         </Nav.Typo.Systemtittel>
-        <Feilmeldinger className={dialogboksHenleggClassName.element("feilmeldinger")} feilmeldinger={feilmeldinger} />
+        <Feilmeldinger className={dialogboksHenleggClassName.element("feilmeldinger")} />
         <Mui.KodeTermSelect
           feil={feilmeldingSelect}
           onChange={velgBegrunnelseHandle}

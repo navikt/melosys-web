@@ -5,6 +5,10 @@ import * as MKV from "@navikt/melosys-kodeverk";
 import { reducer as formReducer } from "redux-form";
 import { VurderingArtikkel13_x_vedtak } from "./vurderingArtikkel13_x_vedtak";
 
+jest.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: jest.fn(),
+}));
+
 /* eslint-disable react/jsx-pascal-case */
 describe("VurderingArtikkel13_x_Vedtak", () => {
   let props = null;

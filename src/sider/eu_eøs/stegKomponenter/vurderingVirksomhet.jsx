@@ -16,6 +16,7 @@ import { BOOLSK_STRING } from "../../../constants";
 
 import "./vurderingArbeidsgiver.css";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
+import { kontrollOperations } from "../../../ducks/kontroll";
 
 /**
  * Enkeltsjekkboks for ett arbeidsgiver.
@@ -40,6 +41,7 @@ const VirksomheterLinje = (props) => {
   const virksomhetKlikkHandler = () => {
     const verdi = virksomhetErValgt ? BOOLSK_STRING.USANN : BOOLSK_STRING.SANN;
     dispatch(feiletResponsOperations.resetFeiletRespons());
+    dispatch(kontrollOperations.resetKontroll());
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.virksomhetId, verdi));
   };
 
@@ -140,7 +142,7 @@ const VurderingVirksomhet = (props) => {
 
   return (
     <div className="vurderingArbeidsgiver">
-      <Nav.Typo.Undertittel>Velg relevante virksomheter</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Velg relevante virksomheter</Nav.Typo.Innholdstittel>
       <div className="arbeidsgiver">
         <VirksomheterListe
           avklarteVirksomheter={virksomheter}

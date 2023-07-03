@@ -47,7 +47,7 @@ class PDFViser extends Component {
 }
 
 PDFViser.propTypes = {
-  pdfDokument: PT.object.isRequired,
+  pdfDokument: PT.string.isRequired,
   wrapperDivSize: PT.number,
 };
 

@@ -11,7 +11,7 @@ export interface BestemmelseMedVilkårOgBegrunnelser {
   vilkårOgBegrunnelser: VilkårOgBegrunnelser[];
 }
 
-export interface HentBestemmelserResponse {
+export interface HentMuligeBestemmelserResponse {
   støttedeBestemmelser: BestemmelseMedVilkårOgBegrunnelser[];
   ikkeStøttedeBestemmelser: string[];
 }
@@ -34,6 +34,10 @@ export type OppdaterMedlemskapsperiode = {
   trygdedekning: string;
 };
 
+export type HentBestemmelseResponse = {
+  bestemmelse: string;
+};
+
 export const getMedlemskapsperioder = (behandlingID: number) =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`);
 
@@ -46,8 +50,11 @@ export const putMedlemskapsperioder = (behandlingID: number, medlemskapsID: numb
 export const deleteMedlemskapsperioder = (behandlingID: number, medlemskapsID: number) =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/${medlemskapsID}`);
 
-export const hentBestemmelser = (behandlingstema: string): Promise<HentBestemmelserResponse> =>
+export const hentMuligeBestemmelser = (behandlingstema: string): Promise<HentMuligeBestemmelserResponse> =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${MEDLEMSKAPSPERIODER}/bestemmelser/${behandlingstema}`);
+
+export const getBestemmelse = (behandlingID: number): Promise<HentBestemmelseResponse> =>
+  getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/bestemmelser`);
 
 export const opprettMedlemskapsperioderFraBestemmelse = (behandlingID: number, bestemmelse: string) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/bestemmelser`, { bestemmelse });

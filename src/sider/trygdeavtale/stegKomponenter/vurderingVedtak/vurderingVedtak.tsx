@@ -39,6 +39,7 @@ import {
   NY_VURDERING_BAKGRUNN_HJELPETEKST,
   PERIODE_HJELPETEKST,
 } from "./tekster";
+import { kontrollSelectors } from "../../../../ducks/kontroll";
 
 const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
@@ -89,6 +90,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
     periodeIsValid: formSelectors.TrygdeavtaleVedtakFormPeriodeValidSelector(state),
     erNyVurdering,
     feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+    kontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
   };
 };
 
@@ -140,6 +142,7 @@ const VurderingVedtak = ({
   hentLovvalgsperiode,
   formIsValid,
   feilmeldinger,
+  kontrollfeil,
   aktivtSteg,
 }: Props & PropsFromRedux) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
@@ -278,7 +281,6 @@ const VurderingVedtak = ({
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return [
       {
-        sendesTilDokumenterV2: true,
         navn: muligMottaker.dokumentNavn,
         data: {
           produserbardokument: hentProduserbartDokument(),
@@ -330,6 +332,7 @@ const VurderingVedtak = ({
     }
   };
 
+  // TODO: Skriv om til Mui.Knapp
   const EndreTom = () =>
     redigerbart ? (
       <div
@@ -353,13 +356,18 @@ const VurderingVedtak = ({
       </div>
     );
 
-  const stegErGyldig = steg.status === StegStatus.FERDIG && formIsValid && redigerbart && Utils._isEmpty(feilmeldinger);
+  const stegErGyldig =
+    steg.status === StegStatus.FERDIG &&
+    formIsValid &&
+    redigerbart &&
+    Utils._isEmpty(feilmeldinger) &&
+    Utils._isEmpty(kontrollfeil);
 
   return (
     <div className={vurderingVedtakCls.block}>
-      <Nav.Typo.Undertittel className={vurderingVedtakCls.element("undertittel")}>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Omfattet av norsk trygdelovgivning - trygdeavtale
-      </Nav.Typo.Undertittel>
+      </Nav.Typo.Innholdstittel>
 
       <Nav.Row className={vurderingVedtakCls.element("infolinje")}>
         <Nav.Column xs="4">
@@ -437,7 +445,6 @@ const VurderingVedtak = ({
             <Skjema.HTMLEditor
               feltNavn="nyVurderingBakgrunnFritekst"
               className={vurderingVedtakCls.elementWithModifier("nyvurdering", "fritekst")}
-              placeholder={redigerbart ? "Skriv inn grunn for nytt vedtak..." : ""}
               disabled={!redigerbart}
             />
           )}
@@ -454,7 +461,6 @@ const VurderingVedtak = ({
       <Skjema.HTMLEditor
         feltNavn="innledningFritekst"
         className={vurderingVedtakCls.element("fritekst_editor")}
-        placeholder={redigerbart ? "Skriv inn tilleggsinformasjon til innledning..." : ""}
         disabled={!redigerbart}
       />
 
@@ -468,7 +474,6 @@ const VurderingVedtak = ({
       <Skjema.HTMLEditor
         feltNavn="begrunnelseFritekst"
         className={vurderingVedtakCls.element("fritekst_editor")}
-        placeholder={redigerbart ? "Skriv inn tilleggsinformasjon til begrunnelse..." : ""}
         disabled={!redigerbart}
       />
 

@@ -72,6 +72,9 @@ export const lagUrlFraSakstypeOgBehandlingstema = (
   return flytFinnesIkkeForBehandlingPath;
 };
 
+export const lagTomFlytUrl = (sakstypeKode: string, saksnummer: number | string, behandlingID: number) =>
+  `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
+
 export const lagUrl = (
   saksnummer: number | string,
   behandlingID: number,
@@ -79,9 +82,9 @@ export const lagUrl = (
   sakstemaKode: string,
   behandlingstemaKode: string,
   behandlingstypeKode: string,
-  folketrygdenToggleEnabled: boolean,
-  ikkeYrkesaktivToggleEnabled: boolean,
-  registreringUnntakFraMedlemskapToggleEnabled: boolean
+  folketrygdenToggleEnabled: boolean | undefined,
+  ikkeYrkesaktivToggleEnabled: boolean | undefined,
+  registreringUnntakFraMedlemskapToggleEnabled: boolean | undefined
 ) => {
   if (
     skalViseTomFlyt(
@@ -94,7 +97,7 @@ export const lagUrl = (
       registreringUnntakFraMedlemskapToggleEnabled
     )
   ) {
-    return `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
+    return lagTomFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
 };
@@ -126,7 +129,11 @@ export const harUnntakFlyt = (
   return false;
 };
 
-const harIkkeYrkesaktivFlyt = (sakstype: string, behandlingstema: string, ikkeYrkesaktivFlytToggleEnabled: boolean) => {
+export const harIkkeYrkesaktivFlyt = (
+  sakstype: string,
+  behandlingstema: string,
+  ikkeYrkesaktivFlytToggleEnabled: boolean = false
+) => {
   return (
     ikkeYrkesaktivFlytToggleEnabled &&
     sakstype !== FTRL &&
@@ -143,10 +150,6 @@ export const skalViseTomFlyt = (
   ikkeYrkesaktivFlytToggleEnabled: boolean = false,
   registreringUnntakFraMedlemskapToggleEnabled: boolean = false
 ) => {
-  if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) return false;
-
-  if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled)) return false;
-
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
   }
@@ -156,6 +159,10 @@ export const skalViseTomFlyt = (
   if (sakstype === FTRL && !folketrygdenToggleEnabled) {
     return true;
   }
+
+  if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) return false;
+  if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled)) return false;
+
   if (
     sakstype === TRYGDEAVTALE &&
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL

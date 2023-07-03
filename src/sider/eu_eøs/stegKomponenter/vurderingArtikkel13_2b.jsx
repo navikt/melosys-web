@@ -65,7 +65,9 @@ const VurderingArtikkel13_2b = ({
 
   return (
     <div>
-      <Nav.Typo.Undertittel>Vurdering av artikkel 13 nr. 2 bokstav b</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        Vurdering av artikkel 13 nr. 2 bokstav b
+      </Nav.Typo.Innholdstittel>
       <Nav.Fieldset legend="I hvilket land har virksomheten sitt interessesenter?">
         <Nav.Radio
           name="interessesenter"

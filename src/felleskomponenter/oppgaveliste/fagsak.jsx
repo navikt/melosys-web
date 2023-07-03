@@ -15,6 +15,11 @@ import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
 import { useFeatureToggle } from "../../featuretoggle";
+import {
+  MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
+  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
+} from "../../featuretoggle/toggleNavn";
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -22,10 +27,9 @@ import { useFeatureToggle } from "../../featuretoggle";
  * seg inn på den.
  */
 const Fagsak = ({ sak, landkoder }) => {
-  const folketrygdenToggleEnabled = useFeatureToggle("melosys.folketrygden.mvp") === "enabled";
-  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle("melosys.ikkeYrkesaktivForenkletFlyt") === "enabled";
-  const registreringUnntakFraMedlemskapToggleEnabled =
-    useFeatureToggle("melosys.registrering_unntak_fra_medlemskap") === "enabled";
+  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
+  const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
 
   const { land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};

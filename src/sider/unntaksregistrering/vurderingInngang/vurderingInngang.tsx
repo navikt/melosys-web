@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -16,6 +16,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../ducks/menypanel";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 
+import { FellesHandlersContext } from "../../../contexts";
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
 
@@ -26,10 +27,9 @@ const gyldigeLandkoder = (sakstype: string) =>
 interface VurderingInngangProps {
   oppdaterStatus: (isValid: boolean) => void;
   bekreft: () => void;
-  oppfriskOgLastInnSaksopplysninger: () => void;
 }
 
-const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplysninger }: VurderingInngangProps) => {
+const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) => {
   const dispatch = useDispatch();
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -37,6 +37,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
   const avsenderland = useSelector(mottatteOpplysningerSelectors.AvsenderlandSelector);
   const lovvalgsland = useSelector(mottatteOpplysningerSelectors.LovvalgslandSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
+  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const { control, watch, setValue, formState } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
@@ -126,7 +127,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
 
   return (
     <div className="vurderingInngang">
-      <Nav.Typo.Undertittel className="undertittel">Oppgi opplysninger fra attesten</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra attesten</Nav.Typo.Innholdstittel>
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="2">
@@ -193,8 +194,8 @@ const VurderingInngang = ({ bekreft, oppdaterStatus, oppfriskOgLastInnSaksopplys
           onClick: bekreftHandle,
           disabled: !formState?.isValid || !redigerbart,
           autoDisableVedSpinner: true,
+          spinner: visSpinner,
         }}
-        spinner={visSpinner}
         bekreftTekst="Bekreft og innhent registeropplysninger"
       />
     </div>

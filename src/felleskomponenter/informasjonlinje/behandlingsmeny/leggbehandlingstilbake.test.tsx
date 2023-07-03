@@ -1,37 +1,44 @@
-import React, { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
-import { shallow } from "enzyme";
-
+import React from "react";
+import { screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
-import Handling from "./handling";
-
-const mockedProps = mock<ComponentProps<typeof LeggBehandlingTilbake>>();
 
 describe("LeggBehandlingTilbake", () => {
-  let props = instance(mockedProps);
-
-  beforeEach(() => {
-    props = instance(mockedProps);
+  const initialState = (redigerbart: boolean) => ({
+    behandlinger: {
+      status: "",
+      data: {
+        redigerbart,
+      },
+    },
   });
 
-  it("viser begge valg om redigerbart", () => {
-    props.redigerbart = true;
-    const leggBehandlingTilbake = shallow(<LeggBehandlingTilbake {...props} />);
-    const handlinger = leggBehandlingTilbake.find(Handling);
+  it("viser begge valg som knapper om redigerbart", async () => {
+    renderWithProviders(<LeggBehandlingTilbake />, { preloadedState: initialState(true) });
 
-    expect(handlinger).toHaveLength(2);
-    expect(handlinger.at(0).props().tekst).toBe("Til min oppgaveliste");
-    expect(handlinger.at(1).props().tekst).toBe("Til felles oppgaveliste");
-    expect(handlinger.at(1).props().disabled).toBeFalsy();
+    expect(screen.queryAllByRole("button")).toHaveLength(1);
+
+    const user = userEvent.setup();
+    await user.click(screen.getByText("Legg behandling tilbake"));
+
+    const knapper = await screen.findAllByRole("button");
+    expect(knapper).toHaveLength(3);
+    expect(knapper.at(1)?.textContent).toBe("Til min oppgaveliste");
+    expect(knapper.at(2)?.textContent).toBe("Til felles oppgaveliste");
   });
 
-  it("viser bare tilFellesOppgaveListe som er disabled om ikke redigerbart", () => {
-    props.redigerbart = false;
-    const leggBehandlingTilbake = shallow(<LeggBehandlingTilbake {...props} />);
-    const handlinger = leggBehandlingTilbake.find(Handling);
+  it("viser bare Til felles oppgaveliste som er en tekst om ikke redigerbart", async () => {
+    renderWithProviders(<LeggBehandlingTilbake />, { preloadedState: initialState(false) });
 
-    expect(handlinger).toHaveLength(1);
-    expect(handlinger.props().tekst).toBe("Til felles oppgaveliste");
-    expect(handlinger.props().disabled).toBeTruthy();
+    expect(screen.queryAllByRole("button")).toHaveLength(1);
+
+    const user = userEvent.setup();
+    await user.click(screen.getByText("Legg behandling tilbake"));
+
+    const knapper = await screen.findAllByRole("button");
+    expect(knapper).toHaveLength(1);
+    expect(knapper.at(1)?.textContent).not.toBe("Til felles oppgaveliste");
+    expect(screen.getByText("Til felles oppgaveliste")).toBeInTheDocument();
   });
 });

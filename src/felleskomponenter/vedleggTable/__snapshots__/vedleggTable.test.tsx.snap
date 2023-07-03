@@ -29,27 +29,29 @@ Array [
             className="icon--cell"
           >
             <button
-              className="knapp mui-knapp knapp knapp--flat"
-              disabled={false}
+              aria-label="Rediger vedlegg"
+              className="ikon-knapp ikon-knapp-graa"
               onClick={[Function]}
+              title="Rediger vedlegg"
               type="button"
             >
               <svg
                 className="ikon"
               >
-                blyant-active-black.svg
+                pencil-2.svg
               </svg>
             </button>
             <button
-              className="knapp mui-knapp knapp knapp--flat"
-              disabled={false}
+              aria-label="Slett vedlegg"
+              className="ikon-knapp ikon-knapp-graa"
               onClick={[Function]}
+              title="Slett vedlegg"
               type="button"
             >
               <svg
                 className="ikon"
               >
-                bin-small-black.svg
+                bin-small.svg
               </svg>
             </button>
           </td>
@@ -75,15 +77,16 @@ Array [
             className="icon--cell"
           >
             <button
-              className="knapp mui-knapp knapp knapp--flat"
-              disabled={false}
+              aria-label="Fjern vedlegg"
+              className="ikon-knapp ikon-knapp-graa"
               onClick={[Function]}
+              title="Fjern vedlegg"
               type="button"
             >
               <svg
                 className="ikon"
               >
-                bin-small-black.svg
+                bin-small.svg
               </svg>
             </button>
           </td>

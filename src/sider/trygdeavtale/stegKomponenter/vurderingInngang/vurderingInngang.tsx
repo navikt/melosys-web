@@ -19,11 +19,12 @@ import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from ".
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
 
-import { FlytFinnesIkke, LandValgSomOptions } from "./vurderingInngangKomponenter";
+import { LandValgSomOptions } from "./vurderingInngangKomponenter";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
+import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
 
 interface Periode {
   fom?: string | null;
@@ -159,7 +160,7 @@ const VurderingInngang = ({
 
   return (
     <div className="vurderingInngang">
-      <Nav.Typo.Undertittel className="undertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
@@ -187,14 +188,14 @@ const VurderingInngang = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      {landUtenStøtteValgt && <FlytFinnesIkke />}
+      {landUtenStøtteValgt && <TomFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreftHandle,
           disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || landUtenStøtteValgt,
+          spinner: visSpinner,
         }}
-        spinner={visSpinner}
         bekreftTekst="Bekreft og innhent registeropplysninger"
       />
     </div>

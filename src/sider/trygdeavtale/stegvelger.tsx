@@ -7,7 +7,6 @@ import { get as getValueAtPath } from "lodash";
 
 import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
-import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 import * as Steg from "./stegKomponenter";
 
@@ -15,16 +14,17 @@ import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
 import MottatteOpplysningerFeilmeldinger from "../../felleskomponenter/mottatteOpplysningerFeilmeldinger";
+import { Innsynsmelding } from "../../felleskomponenter/alertmeldinger";
+import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 
 import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { datalastingOperations } from "../../ducks/datalasting";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { vedtakOperations } from "../../ducks/vedtak";
 import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
-import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
-import { feiletResponsSelectors } from "../../ducks/feiletRespons";
-import { vedtakOperations } from "../../ducks/vedtak";
+import { NyVurderingMelding } from "../../felleskomponenter/alertmeldinger/alertmeldinger";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -57,7 +57,6 @@ const mapStateToProps = (state: RootState) => ({
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
-  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -240,7 +239,7 @@ class Stegvelger extends Component<Props, State> {
   render() {
     const {
       state: { aktuelleSteg, visMottatteOpplysningerFeilmeldinger },
-      props: { behandlingstype, redigerbart, feilmeldinger },
+      props: { behandlingstype, redigerbart },
       oppdaterAktivtSteg,
     } = this;
 
@@ -253,16 +252,9 @@ class Stegvelger extends Component<Props, State> {
         {aktuelleSteg && (
           <div>
             <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
-            {vedtakStegErAktivt && <Feilmeldinger feilmeldinger={feilmeldinger} />}
-            {erNyVurdering && redigerbart && inngangStegErAktivt && (
-              <Nav.AlertStripeAdvarsel className="varselstripe">
-                <Nav.Typo.Normaltekst className="varselstripe__overskrift">Ny behandling av sak</Nav.Typo.Normaltekst>
-                <Nav.Typo.Normaltekst>
-                  Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens
-                  opplysninger og vurder videre behandling.
-                </Nav.Typo.Normaltekst>
-              </Nav.AlertStripeAdvarsel>
-            )}
+            {!redigerbart && <Innsynsmelding />}
+            {vedtakStegErAktivt && <Feilmeldinger />}
+            {erNyVurdering && redigerbart && inngangStegErAktivt && <NyVurderingMelding />}
             {aktuelleSteg.map((item: AktueltSteg) => (
               <StegFane id={item.id} key={item.id} faneData={item} />
             ))}

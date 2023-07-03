@@ -21,6 +21,7 @@ import { vilkarSelectors } from "../../ducks/vilkar";
 import { formSelectors } from "../../ducks/form";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { fagsakSelectors } from "../../ducks/fagsaker";
+import { flytSelectors } from "../../ducks/flyt";
 
 const mapStateToProps = (state: RootState) => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
@@ -28,9 +29,11 @@ const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
   sakstype: fagsakSelectors.SakstypeKodeSelector(state),
+  harUnntakFlyt: flytSelectors.HarUnntakFlytSelector(state),
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   formValues: getFormValues(KV.Form.SOKNAD)(state),
   initialValues: {
+    ikkeYrkesaktivSituasjontype: mottatteOpplysningerSelectors.IkkeYrkesaktivSituasjontypeSelector(state),
     utenlandskIdent: mottatteOpplysningerSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeBarn: mottatteOpplysningerSelectors.MedfolgendeBarnSelector(state),
     foedestedOgLand: mottatteOpplysningerSelectors.PersonOpplysningerSelector(state).foedestedOgLand,
@@ -251,12 +254,12 @@ const MenypanelForm = reduxForm<KV.Form.SoknadFormData, SoknadProps>({
         skalOppgittAdresseGateadresseValideres:
           props.oppgittAdresseHarVerdier &&
           props.behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
+        harUnntakFlyt: props.harUnntakFlyt,
         behandlingstema: props.behandlingstema,
         mottatteOpplysningerType: props.mottatteOpplysningerType,
         sakstype: props.sakstype,
       },
     };
-
     return lagYupToReduxformErrorMapper(soknadSchema, settings)(values);
   },
 })(Soknad);

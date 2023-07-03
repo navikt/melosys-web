@@ -216,7 +216,9 @@ export const VurderingArtikkel16MottaSvar = (props) => {
 
   return (
     <Fragment>
-      <Nav.Typo.Undertittel>Svar på anmodning om unntak, etter artikkel 16, nr. 1</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        Svar på anmodning om unntak, etter artikkel 16, nr. 1
+      </Nav.Typo.Innholdstittel>
       <Nav.Row>
         <Nav.Column xs="4">
           <Nav.Typo.Element>Land:</Nav.Typo.Element>

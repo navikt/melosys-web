@@ -38,6 +38,8 @@ import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
+import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../featuretoggle/toggleNavn";
+import { kontrollOperations } from "../../../ducks/kontroll";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
@@ -70,6 +72,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
   hentMedlemskapsperioder: (behandlingId: number) =>
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingId)),
+  hentBestemmelse: (behandlingId: number) => dispatch(medlemskapsperioderOperations.hentBestemmelse(behandlingId)),
   hentOppsummertFakta: (behandlingId: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingId)),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
@@ -81,6 +84,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   resetMottatteOpplysningerState: () => dispatch(mottatteOpplysningerOperations.resetState()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
+  resetKontroll: () => dispatch(kontrollOperations.resetKontroll()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -111,6 +115,7 @@ const Saksbehandling = ({
   hentFolketrygdenKodeverk,
   hentLandkoder,
   hentMedlemskapsperioder,
+  hentBestemmelse,
   hentOppsummertFakta,
   landkoder,
   location,
@@ -127,10 +132,11 @@ const Saksbehandling = ({
   startOgVisOppfriskModal,
   visOppfriskModal,
   resetFeiletrespons,
+  resetKontroll,
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
-  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+  const folketrygdenToggle = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -161,6 +167,7 @@ const Saksbehandling = ({
         return false;
       }
       await hentMedlemskapsperioder(behandlingId);
+      await hentBestemmelse(behandlingId);
       await hentMottatteOpplysninger(behandlingId);
       await hentDokumentOversikt(saksnr);
       setSaksopplysningerLastet(true);
@@ -182,6 +189,7 @@ const Saksbehandling = ({
       resetBehandlingerState();
       resetMottatteOpplysningerState();
       resetFeiletrespons();
+      resetKontroll();
       skjulMenypanel();
     };
   }, []);
@@ -193,7 +201,7 @@ const Saksbehandling = ({
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;
   if (!saksopplysningerLastet) return null;
-  if (folketrygdenToggle === "fetching" || folketrygdenToggle === "disabled") return null;
+  if (!folketrygdenToggle) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;

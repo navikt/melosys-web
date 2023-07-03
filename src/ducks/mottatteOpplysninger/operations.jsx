@@ -13,6 +13,9 @@ import { formSelectors } from "../form";
 import { behandlingerSelectors } from "../behandlinger";
 import { OrganisasjonOperations } from "../organisasjoner";
 import { fagsakSelectors } from "../fagsaker";
+import { navigeringOperations } from "../navigering";
+import { erFeatureToggleEnabled } from "../../featuretoggle";
+import { MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP } from "../../featuretoggle/toggleNavn";
 
 export function hent(behandlingID) {
   return async (dispatch, getState) => {
@@ -22,6 +25,14 @@ export function hent(behandlingID) {
       PENDING: Types.PENDING,
     });
     const dispatchedMottatteOpplysningerAction = await doThenDispatchResult(dispatch, getState);
+
+    if (
+      dispatchedMottatteOpplysningerAction.type === Types.FEILET &&
+      erFeatureToggleEnabled(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP, getState)
+    ) {
+      await dispatch(navigeringOperations.tilTomFlyt());
+      return dispatchedMottatteOpplysningerAction;
+    }
 
     const ekstraOrganisasjoner = [
       ...Selectors.EkstraArbeidsgivereSelector(getState()),
@@ -86,6 +97,7 @@ const lagMottatteOpplysningerFelter = (mottatteOpplysninger) => ({
   selvstendigArbeid: mottatteOpplysninger.selvstendigArbeid,
   soeknadsland: mottatteOpplysninger.soeknadsland,
   periode: mottatteOpplysninger.periode,
+  ikkeYrkesaktivSituasjontype: mottatteOpplysninger.ikkeYrkesaktivSituasjontype,
 });
 
 const lagArbeidsstederFelter = (mottatteOpplysninger) => ({
@@ -185,6 +197,10 @@ export function oppdaterLovvalgsland(lovvalgsland) {
 
 export function oppdaterTrygdedekning(trygdedekning) {
   return (dispatch) => dispatch(Actions.oppdaterTrygdedekning(trygdedekning));
+}
+
+export function oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype) {
+  return (dispatch) => dispatch(Actions.oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype));
 }
 
 export function resetState() {

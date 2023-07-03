@@ -16,6 +16,7 @@ import { lagYupToReduxformErrorMapper } from "../../yup";
 import { behandlingerSelectors } from "../behandlinger";
 import { mottatteOpplysningerSelectors } from "../mottatteOpplysninger";
 import { fagsakSelectors } from "../fagsaker";
+import { flytSelectors } from "../flyt";
 
 const getFormState = (state, formName, defaultValue = {}) =>
   state.form[formName] ? state.form[formName] : defaultValue;
@@ -50,84 +51,6 @@ export const VedtakArtikkel12FormSelector = createSelector(
 export const VedtakArtikkel12FormValuesSelector = createSelector(
   VedtakArtikkel12FormSelector,
   (vedtakArtikkel12Form) => vedtakArtikkel12Form.values
-);
-
-export const VurderStartFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.START, {}),
-  (start) => start
-);
-
-export const VurderStartFormValid = createSelector(
-  (state) => VurderStartFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
-);
-
-export const VurderVirksomhetFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.VIRKSOMHET, {}),
-  (start) => start
-);
-
-export const VurderVirksomhetFormValid = createSelector(
-  (state) => VurderVirksomhetFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
-);
-
-export const VurderPerioderFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.PERIODER, {}),
-  (perioder) => perioder
-);
-
-export const VurderPerioderFormValid = createSelector(
-  (state) => VurderPerioderFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
-);
-
-export const VurderPerioderErrors = createSelector(
-  (state) => VurderPerioderFormSelector(state).syncErrors || {},
-  (errors) => errors
-);
-
-export const VurderTrygdeavgiftFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.TRYGDEAVGIFT, {}),
-  (trygdeavgift) => trygdeavgift
-);
-
-export const VurderTrygdeavgiftFormValid = createSelector(
-  (state) => VurderTrygdeavgiftFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
-);
-export const VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagNorgeUgyldig = createSelector(
-  (state) => VurderTrygdeavgiftFormSelector(state).values,
-  (trygdeavgift) => {
-    if (!trygdeavgift || !trygdeavgift.avgiftsgrunnlag || !trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge)
-      return true;
-    return !(
-      (trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.erSkattepliktig ||
-        trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.erSkattepliktig === false) &&
-      (trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift ||
-        trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift === false) &&
-      (trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe === null ||
-        (!!trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe &&
-          trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe !== "TRUE"))
-    );
-  }
-);
-
-export const VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagUtlandUgyldig = createSelector(
-  (state) => VurderTrygdeavgiftFormSelector(state).values,
-  (trygdeavgift) => {
-    if (!trygdeavgift || !trygdeavgift.avgiftsgrunnlag || !trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland)
-      return true;
-    return !(
-      (trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.erSkattepliktig ||
-        trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.erSkattepliktig === false) &&
-      (trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift ||
-        trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift === false) &&
-      (trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe === null ||
-        (!!trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe &&
-          trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe !== "TRUE"))
-    );
-  }
 );
 
 export const VurderUtpekingFormSelector = createSelector(
@@ -283,6 +206,7 @@ export const SoknadErrorsSelector = createSelector(
   (state) => SoknadenFormSelector(state).values || {},
   (state) => ({
     skalOppgittAdresseValideres: SoknadOppgittAdresseHarVerdierSelector(state),
+    harUnntakFlyt: flytSelectors.HarUnntakFlytSelector(state),
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
     mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
     sakstype: fagsakSelectors.SakstypeKodeSelector(state),
@@ -331,6 +255,7 @@ const finnPanelFeil = (errors) => {
 
 export const PanelFeilSelector = createSelector(SoknadErrorsSelector, (soknadErrors) => finnPanelFeil(soknadErrors));
 
+/* Trygdeavtale-selectors start */
 export const TrygdeavtaleInngangFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.Trygdeavtale.INNGANG, {}),
   (inngang) => inngang
@@ -395,13 +320,4 @@ export const TrygdeavtaleVedtakFormPeriodeValidSelector = createSelector(
   (state) => TrygdeavtaleVedtakFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors.lovvalgsperiodeFom) && Utils._isEmpty(errors.lovvalgsperiodeTom)
 );
-
-export const FolketrygdlovenVedtakFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.FTRL_VEDTAK, {}),
-  (vedtak) => vedtak
-);
-
-export const FolketrygdlovenVedtakFormValidSelector = createSelector(
-  (state) => FolketrygdlovenVedtakFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
-);
+/* Trygdeavtale-selectors slutt */

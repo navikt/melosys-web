@@ -39,6 +39,13 @@ export const ArbeidPaaLandSelector = createSelector(
   (mottatteOpplysningerData) => mottatteOpplysningerData.arbeidPaaLand || {}
 );
 
+export const IkkeYrkesaktivSituasjontypeSelector = createSelector(
+  (state) => MottatteOpplysningerDataSelector(state),
+  (mottatteOpplysningerData) => {
+    return mottatteOpplysningerData.ikkeYrkesaktivSituasjontype || null;
+  }
+);
+
 export const FysiskeArbeidsstederSelector = createSelector(
   (state) => ArbeidPaaLandSelector(state),
   (arbeidPaaLand) => arbeidPaaLand.fysiskeArbeidssteder || []
@@ -287,7 +294,7 @@ export const MedfolgendeEktefelleSamboerSelector = createSelector(
 
 export const OvergangsregelbestemmelserSelector = createSelector(
   MottatteOpplysningerDataSelector,
-  (mottatteOpplysningerData) => mottatteOpplysningerData.overgangsregelbestemmelser
+  (mottatteOpplysningerData) => mottatteOpplysningerData.overgangsregelbestemmelser || []
 );
 
 export const YtterligereInformasjonSelector = createSelector(

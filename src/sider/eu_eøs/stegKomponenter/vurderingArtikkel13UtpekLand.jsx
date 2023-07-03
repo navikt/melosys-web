@@ -16,6 +16,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
+import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../felleskomponenter/stegvelger";
 
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -26,7 +27,6 @@ import { flytSelectors } from "../../../ducks/flyt";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
-import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../felleskomponenter/stegvelger";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel13UtpekLandSchema from "./vurderingArtikkel13UtpekLandSchema";
 
@@ -98,23 +98,25 @@ export const VurderingArtikkel13UtpekLand = ({
   };
 
   const endreLovvalgsland = (land) => {
-    oppdaterData(lagLovvalgsland(land));
+    if (land !== formValues.lovvalgsland) {
+      oppdaterData(lagLovvalgsland(land));
 
-    oppdaterMottakerinstitusjoner(
-      [...new Set([...landMedVesentligEllerRegistrertArbeid, land])].map((landkode) =>
-        KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder)
-      )
-    );
+      oppdaterMottakerinstitusjoner(
+        [...new Set([...landMedVesentligEllerRegistrertArbeid, land])].map((landkode) =>
+          KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder)
+        )
+      );
+    }
   };
 
   const pdfDokumenter = [
     {
       navn: "Forhåndsvis vedtaksbrev",
-      type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_UTPEKING_UTLAND,
       data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_UTPEKING_UTLAND,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
         begrunnelseKode: null,
         fritekst: formValues.fritekstOrienteringsbrev,
-        mottaker: MKV.Koder.mottakerroller.BRUKER,
       },
     },
     {
@@ -147,7 +149,7 @@ export const VurderingArtikkel13UtpekLand = ({
 
   return (
     <div className="vurderingArtikkel13UtpekLand">
-      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
       <Nav.Typo.Undertittel>
         <Nav.Typo.Element className="undertittel">{lovvalgslandTittel}</Nav.Typo.Element>
       </Nav.Typo.Undertittel>

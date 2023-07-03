@@ -17,12 +17,12 @@ const Personlinje = ({ behandlingID }: { behandlingID: number }) => {
       {personopplysninger ? (
         <div className="personlinje">
           <div className="personlinje__navn">
-            <Ikon.Kjoenn kjoenn={personopplysninger.kjoenn} className="ikon-navn" />
+            <Ikon.Kjoenn kjoenn={personopplysninger.kjoenn} className="ikon-navn" aria-hidden />
             {personopplysninger.navn}
           </div>
           {personopplysninger.erDoed && (
             <div className="personlinje_dod">
-              <span>(Død)</span> <Ikon.Kors className="ikon-doed" />
+              <span>(Død)</span> <Ikon.Kors className="ikon-doed" aria-hidden />
             </div>
           )}
           <div className="personlinje__separator">/</div>

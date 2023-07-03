@@ -8,6 +8,17 @@
   }
 }
 
+.nyVurderingMelding {
+  margin-top: -1.5rem;
+  margin-bottom: 0.5rem;
+  &__overskrift {
+    font-weight: bold;
+  }
+  .alertstripe__tekst {
+    max-width: none !important;
+  }
+}
+
 .standardMeldingOverst {
   position: fixed;
   width: 80%;
@@ -24,4 +35,27 @@
     align-items: center;
     justify-content: space-between;
   }
+}
+.alertmeldinger {
+  .varselstripe {
+    margin-top: -1.5rem;
+    margin-bottom: 0.5rem;
+
+    &__liste {
+      margin: 0 0 0 -1rem;
+    }
+
+    .alertstripe__tekst {
+      max-width: none !important;
+    }
+
+    .alertstripe__ikon {
+      align-self: center;
+    }
+  }
+}
+
+.innsynsmelding {
+  margin-bottom: 0.5rem;
+  margin-top: -1rem;
 }
