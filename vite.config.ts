@@ -16,7 +16,7 @@ export default defineConfig({
     {
       name: "vite-plugin-disable-import-analysis",
       enforce: "pre",
-      async transform(code, id) {
+      async transform(code) {
         return {
           code,
           map: null,
