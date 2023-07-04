@@ -25,7 +25,7 @@ import MKV from "../../../../melosyskodeverk";
 import { BOOLSK_STRING } from "../../../../constants";
 
 import "./vurderingVurderarbeidsland.css";
-import RedigerbarListe from "./redigerbarliste";
+import Redigerbarliste from "./redigerbarliste";
 
 const IngenSokkelSkipEllerHjemmebaser = ({ oppdaterData, slettData, redigerbart, arbeidUtforesIOppgittLandFakta }) => {
   useEffect(() => {
@@ -197,7 +197,7 @@ export const VurderingVurderarbeidsland = ({
         <Nav.Row className="borderBottom">
           <Nav.Column xs="6">
             <Nav.Typo.Element className="undertittel">Hjemmebaser</Nav.Typo.Element>
-            <RedigerbarListe
+            <Redigerbarliste
               elementer={hjemmebaser.map((base) => ({
                 kode: base,
                 term: `${KV.kodeTilTerm(base, MKV.KTObjects.landkoder)} (${base})`,
@@ -210,7 +210,7 @@ export const VurderingVurderarbeidsland = ({
       <Nav.Row>
         <Nav.Column xs="6">
           <Nav.Typo.Element className="undertittel">Land fra inngangsvilkår:</Nav.Typo.Element>
-          <RedigerbarListe
+          <Redigerbarliste
             elementer={soknadsland.map((kode) => ({
               kode,
               term: `${KV.kodeTilTerm(kode, MKV.KTObjects.landkoder)} (${kode})`,

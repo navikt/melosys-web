@@ -2,7 +2,7 @@ import PT from "prop-types";
 
 import Element from "./element";
 
-const RedigerbarListe = ({ elementer, onFjern, onAngreFjern, className, redigerbar }) => (
+const Redigerbarliste = ({ elementer, onFjern, onAngreFjern, className, redigerbar }) => (
   <div className={className}>
     {elementer.map(({ kode, term, fjernbar, defaultFjernet }) => (
       <Element
@@ -19,7 +19,7 @@ const RedigerbarListe = ({ elementer, onFjern, onAngreFjern, className, redigerb
   </div>
 );
 
-RedigerbarListe.propTypes = {
+Redigerbarliste.propTypes = {
   elementer: PT.arrayOf(
     PT.shape({
       kode: PT.string.isRequired,
@@ -34,11 +34,11 @@ RedigerbarListe.propTypes = {
   redigerbar: PT.bool,
 };
 
-RedigerbarListe.defaultProps = {
+Redigerbarliste.defaultProps = {
   className: undefined,
   onFjern: () => {},
   onAngreFjern: () => {},
   redigerbar: true,
 };
 
-export default RedigerbarListe;
+export default Redigerbarliste;

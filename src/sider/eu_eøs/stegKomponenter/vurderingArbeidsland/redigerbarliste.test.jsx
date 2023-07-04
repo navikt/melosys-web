@@ -1,6 +1,6 @@
 import renderer from "react-test-renderer";
 
-import RedigerbarListe from "./redigerbarliste";
+import Redigerbarliste from "./redigerbarliste";
 
 describe("Redigerbarliste", () => {
   const props = {
@@ -24,7 +24,7 @@ describe("Redigerbarliste", () => {
   };
 
   it("snapshot test", () => {
-    const tree = renderer.create(<RedigerbarListe {...props} />).toJSON();
+    const tree = renderer.create(<Redigerbarliste {...props} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });
