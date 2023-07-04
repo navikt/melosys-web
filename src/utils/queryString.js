@@ -1,8 +1,8 @@
-const qs = import("qs");
+import qs from "qs";
 
 export const getParam = (location, param) => {
-  return "hei";
+  const queryObject = qs.parse(location.search, { ignoreQueryPrefix: true });
+  return queryObject[param];
 };
-// TODO: Gjenoppliv denne filen
 
-// export const toObject = (location) => qs.parse(location.search, { ignoreQueryPrefix: true });
+export const toObject = (location) => qs.parse(location.search, { ignoreQueryPrefix: true });

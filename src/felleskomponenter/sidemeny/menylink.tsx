@@ -1,6 +1,5 @@
 import classnames from "classnames";
 import TypografiBase from "nav-frontend-typografi";
-import * as React from "react";
 
 import parse from "html-react-parser";
 import bem from "../../bemUtils";
