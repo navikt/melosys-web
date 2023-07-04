@@ -96,7 +96,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterPeriode: (periode: Periode) => dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
-  hentLovvalgsperiode: (behandlingID: string) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+  hentLovvalgsperiode: (behandlingID: number) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
