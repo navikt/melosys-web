@@ -1,10 +1,9 @@
 import PT from "prop-types";
+import { v4 as uuid } from "uuid";
 import { connect } from "react-redux";
 
 import StegIkon from "./stegIkon";
 import "./stegLinje.css";
-
-const uuid = import("uuid/v4");
 
 const StegLinje = (props) => {
   const { steg } = props;

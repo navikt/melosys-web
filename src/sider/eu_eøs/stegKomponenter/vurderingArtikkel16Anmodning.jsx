@@ -4,21 +4,19 @@ import { connect } from "react-redux";
 import { FieldArray, getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
+import { v4 as uuid } from "uuid";
 
 import MKV from "../../../melosyskodeverk";
-
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Skjema from "../../../felleskomponenter/skjema";
-
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { behandlingsperioderSelectors } from "../../../ducks/behandlingsperioder";
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
-
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from "../../../utils/dato";
 import DatoOmrade from "../../../felleskomponenter/datoOmrade";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
@@ -32,13 +30,10 @@ import {
   konverterUnntakFraBestemmelseTilStegData,
   lagUnntakFraBestemmelse,
 } from "../../../felleskomponenter/stegvelger";
-
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
 
 import "./vurderingArtikkel16Anmodning.css";
-
-const uuid = import("uuid/v4");
 
 const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked, redigerbart }) => {
   const { periodeID, periode } = perm;

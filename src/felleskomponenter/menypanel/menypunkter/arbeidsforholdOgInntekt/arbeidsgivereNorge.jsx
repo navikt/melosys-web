@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
 
+import { v4 as uuid } from "uuid";
 import * as MPT from "../../../../proptypes";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../ui";
@@ -14,8 +15,6 @@ import Arbeidsforholdene from "../arbeidsgiver/arbeidsforhold";
 import Inntekt from "../arbeidsgiver/inntekt";
 
 import "./arbeidsgivereNorge.css";
-
-const uuid = import("uuid/v4");
 
 export const ArbeidsgivereEnkeltNorge = (props) => {
   const { kilde, organisasjon, arbeidsforholdene, inntektListe, wrapIPanel } = props;

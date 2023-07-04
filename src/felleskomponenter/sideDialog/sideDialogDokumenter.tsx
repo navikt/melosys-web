@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { DokumentOversikt, Mottaksretning } from "Domene";
 import { change } from "redux-form";
+import { v4 as uuid } from "uuid";
 
 import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
@@ -15,8 +16,6 @@ import LagredeUtkast from "./sendBrev/brevutkast/lagredeUtkast";
 import { FaneNavn } from "./sideDialog";
 
 import "./sideDialogDokumenter.css";
-
-const uuid = import("uuid/v4");
 
 interface MottaksretningIkonProps {
   mottaksretning: Mottaksretning;

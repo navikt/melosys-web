@@ -1,10 +1,9 @@
 import { useState } from "react";
 import PT from "prop-types";
 import classnames from "classnames";
+import { v4 as uuid } from "uuid";
 
 import "./tabell.css";
-
-const uuid = import("uuid/v4");
 
 /** Lister en enkeltlinje i tabellen. Denne linjen må være en array som kan mappes direkte
  * siden innhold og typer er ukjent. Evt formattering eller komponenter må gjøres av

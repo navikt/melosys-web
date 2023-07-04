@@ -1,11 +1,10 @@
 import PT from "prop-types";
-import * as Nav from "../../../navFrontend";
+import { v4 as uuid } from "uuid";
 
+import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 
 import "./listevelger.css";
-
-const uuid = import("uuid/v4");
 
 /** Enkeltlisten representerer ETT listevalg hvor brukeren kan velge fra listen eller skrive
  * inn sin egen verdi.

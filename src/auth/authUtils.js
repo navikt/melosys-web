@@ -30,7 +30,7 @@ export const setTokenInterceptorForLocalDevelopment = async () => {
       options.headers = {};
     }
 
-    const accessToken = process.env.VITE_LOCAL_AUTH_TOKEN;
+    const accessToken = import.meta.env.VITE_LOCAL_AUTH_TOKEN;
     if (options.headers instanceof Headers) {
       options.headers.append("Authorization", `Bearer ${accessToken}`);
     } else {

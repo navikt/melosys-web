@@ -21,7 +21,7 @@ import { apolloClient } from "./graphql";
 
 const SideLoadingFailMessage = <p>Beklager, kunne ikke laste inn siden.</p>;
 
-const environment = process.env.VITE_ENVIRONMENT;
+const environment = import.meta.env.VITE_ENVIRONMENT;
 const isDevelopmentProfile = environment === "local";
 
 const sentryIntegrations = [

@@ -1,14 +1,12 @@
 import PT from "prop-types";
+import { v4 as uuid } from "uuid";
 
 import MKV from "../../../../../melosyskodeverk";
-
 import * as Utils from "../../../../../utils";
 import * as Nav from "../../../../../navFrontend";
 import * as MPT from "../../../../../proptypes";
-import "./endrePeriode.css";
 import Datovelger from "../../../../../felleskomponenter/datovelger";
-
-const uuid = import("uuid/v4");
+import "./endrePeriode.css";
 
 const EndrePeriode = ({
   endrePeriode,

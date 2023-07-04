@@ -20,7 +20,7 @@ const Topplinje = (props) => {
     props.msalContext.instance.logoutRedirect();
   };
 
-  const erProduksjonsmiljo = `${process.env.VITE_CLUSTER}`.startsWith("prod");
+  const erProduksjonsmiljo = `${import.meta.env.VITE_CLUSTER}`.startsWith("prod");
 
   return (
     <header className="topplinje">

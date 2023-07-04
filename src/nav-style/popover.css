@@ -1,0 +1,74 @@
+.popover {
+  position: relative;
+  z-index: 100;
+  min-width: 1rem;
+  min-height: 1rem;
+  background: white;
+  box-shadow: 0 0.05rem 0.25rem 0.125rem rgba(0, 0, 0, 0.08);
+  border: 1px solid #c9c9c9;
+  border-radius: 2px;
+  display: block;
+  will-change: transform;
+}
+.popover:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #00347d;
+}
+.popover--controlled {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+.popover__pil {
+  content: "";
+  display: block;
+  width: 0.8rem;
+  height: 0.8rem;
+  position: absolute;
+  background: white;
+  transform: rotate(45deg);
+  will-change: left, top;
+}
+.popover__content-inner {
+  position: relative;
+  z-index: 101;
+}
+.popover--hidden {
+  display: none;
+}
+.popover--over .popover__pil {
+  top: auto;
+  left: 50%;
+  bottom: -0.4rem;
+  margin-left: -0.4rem;
+  border: 0;
+  border-right: 1px solid #c9c9c9;
+  border-bottom: 1px solid #c9c9c9;
+}
+.popover--under .popover__pil {
+  top: -0.45rem;
+  left: 50%;
+  margin-left: -0.4rem;
+  border: 0;
+  border-top: 1px solid #c9c9c9;
+  border-left: 1px solid #c9c9c9;
+}
+.popover--hoyre .popover__pil {
+  top: 50%;
+  left: 0;
+  margin-top: -0.5rem;
+  margin-left: -0.45rem;
+  border: 0;
+  border-left: 1px solid #c9c9c9;
+  border-bottom: 1px solid #c9c9c9;
+}
+.popover--venstre .popover__pil {
+  top: 50%;
+  left: auto;
+  right: 0;
+  margin-top: -0.5rem;
+  margin-right: -0.4rem;
+  border: 0;
+  border-right: 1px solid #c9c9c9;
+  border-top: 1px solid #c9c9c9;
+}

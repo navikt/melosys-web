@@ -1,19 +1,19 @@
+import { v4 as uuid } from "uuid";
 import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
 import * as Mui from "../../../ui";
-import * as Ikoner from "../../../../resources/images";
 
+import * as Ikoner from "../../../../resources/images";
 import EnkeltDato from "../../../enkeltDato";
 import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 import Permisjoner from "./permisjoner";
 import TimerTimelonnet from "./timertimelonnet";
 import Utenlandsopphold from "./utenlandsopphold";
+
 import Arbeidsavtaler from "./arbeidsavtaler";
 
 import "./arbeidsforhold.css";
-
-const uuid = import("uuid/v4");
 
 export const Arbeidsforholdet = (props) => {
   const {

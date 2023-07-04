@@ -2,16 +2,15 @@ import { Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 import { connect } from "react-redux";
+import { v4 as uuid } from "uuid";
 
 import MKV from "../../../../melosyskodeverk";
-
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";
 import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
-
 import { RegistreringMenypanelForm } from "../../../../felleskomponenter/menypanelForm";
 import EndrePeriode from "./komponenter/endrePeriode";
 import RegisterkontrollTreff from "../../../../felleskomponenter/registerkontrollTreff";
@@ -22,12 +21,10 @@ import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresul
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from "./validering/unntaksperiodeSkjema";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
-
-import "../saksopplysninger.css";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
-const uuid = import("uuid/v4");
+import "../saksopplysninger.css";
 
 const Saksopplysninger = ({
   match,

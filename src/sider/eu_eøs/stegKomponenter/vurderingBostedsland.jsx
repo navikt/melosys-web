@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import PT from "prop-types";
 import classnames from "classnames";
+import { v4 as uuid } from "uuid";
 
 import MKV from "../../../melosyskodeverk";
-
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
@@ -21,8 +21,6 @@ import {
 import { hentFaktaVerdi } from "../../../domeneUtils";
 
 import "./vurderingBostedsland.css";
-
-const uuid = import("uuid/v4");
 
 const Avklaringer = ({ avklaringer }) => (
   <div>

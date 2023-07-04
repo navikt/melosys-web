@@ -92,7 +92,7 @@
   "homepage": "http://./melosys",
   "scripts": {
     "analyze": "source-map-explorer build/static/js/*.chunk.js",
-    "start:js": "vite -d",
+    "start:js": "vite",
     "serve:js": "vite preview",
     "build:js": "tsc && vite build",
     "build:watch": "cra-build-watch --public-path /melosys/",

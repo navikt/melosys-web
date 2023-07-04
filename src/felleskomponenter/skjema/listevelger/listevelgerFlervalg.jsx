@@ -1,14 +1,14 @@
 /* eslint react/no-array-index-key:off */
 import { Component } from "react";
+import { v4 as uuid } from "uuid";
 import PT from "prop-types";
 
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
+
 import * as Mui from "../../ui";
 
 import "./listevelger.css";
-
-const uuid = import("uuid/v4");
 
 /** Dette er komponent for ett enkeltvalg. Dersom tillatFritekst === true, vil Nav.Input brukes
  * slik at brukeren kan redigere innholdet i feltet også ETTER at det er lagt til.

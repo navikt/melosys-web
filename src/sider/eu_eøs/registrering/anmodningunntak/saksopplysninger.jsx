@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import * as EKV from "eessi-kodeverk";
+import { v4 as uuid } from "uuid";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -29,8 +30,6 @@ import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 import { anmodningunntakOperations } from "../../../../ducks/anmodningunntak";
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
-
-const uuid = import("uuid/v4");
 
 const LinkForhandsvisningSed = ({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst }) => {
   let pdfDokument = [];

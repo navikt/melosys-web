@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import PT from "prop-types";
+import { v4 as uuid } from "uuid";
 import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
 import * as Mui from "../../../../felleskomponenter/ui";
@@ -11,8 +12,6 @@ import {
   slettAvklartfakta,
   lagAvklartefaktaBegrunnelse,
 } from "../../../../felleskomponenter/stegvelger";
-
-const uuid = import("uuid/v4");
 
 const EnkeltAvklartfakta = (props) => {
   const {
