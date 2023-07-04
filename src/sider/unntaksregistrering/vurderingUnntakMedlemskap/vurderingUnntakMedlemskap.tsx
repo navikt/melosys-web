@@ -79,7 +79,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     );
 
   useEffect(() => {
-    if (aktivtSteg) {
+    if (aktivtSteg && redigerbart) {
       oppdaterOgLagreLovvalgsperiode(formValues, true);
     }
   }, [aktivtSteg]);
