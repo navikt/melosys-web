@@ -108,6 +108,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   useEffect(() => {
     oppdaterStatus(formState.isValid);
+    debouncedLagreLovvalgsperiodeOgKontroller(formValues, formState?.isValid);
   }, [formState?.isValid]);
 
   const lagreUtfallRegistreringUnntak = (utfall: string) => {
@@ -118,8 +119,24 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     dispatch(lovvalgsperioderOperations.send(behandlingID, []));
   };
 
-  const lagreLovvalgsperiodeOgKontroller = async (skalRegisteropplysningerOppdateres: boolean) => {
-    await dispatch(lovvalgsperioderOperations.lagre());
+  const lagreLovvalgsperiode = async (values: FieldValues) => {
+    return dispatch(
+      lovvalgsperioderOperations.opprettLovvalgsperiode(behandlingID, {
+        fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
+        tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
+        lovvalgsbestemmelse: values.bestemmelse,
+      })
+    );
+  };
+
+  const lagreLovvalgsperiodeOgKontroller = async (
+    values: FieldValues,
+    isValid: boolean,
+    skalRegisteropplysningerOppdateres: boolean = false
+  ) => {
+    if (isValid) {
+      await lagreLovvalgsperiode(values);
+    }
     kontrollerFerdigbehandling(skalRegisteropplysningerOppdateres);
   };
 
@@ -128,25 +145,16 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     []
   );
 
-  const oppdaterOgLagreLovvalgsperiode = (values: FieldValues, skalRegisteropplysningerOppdateres: boolean = false) => {
-    dispatch(
-      lovvalgsperioderOperations.opprettLovvalgsperiode(behandlingID, {
-        fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
-        tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
-        lovvalgsbestemmelse: values.bestemmelse,
-      })
-    );
-    debouncedLagreLovvalgsperiodeOgKontroller(skalRegisteropplysningerOppdateres);
-  };
+  const handleEndring = (values: FieldValues) => debouncedLagreLovvalgsperiodeOgKontroller(values, formState?.isValid);
 
-  const lagreFom = (fom: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, fom });
+  const lagreFom = (fom: string) => handleEndring({ ...formValues, fom });
 
-  const lagreTom = (tom: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, tom });
+  const lagreTom = (tom: string) => handleEndring({ ...formValues, tom });
 
-  const lagreBestemmelse = (bestemmelse: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, bestemmelse });
+  const lagreBestemmelse = (bestemmelse: string) => handleEndring({ ...formValues, bestemmelse });
 
   const handleBekreft = async () => {
-    await dispatch(lovvalgsperioderOperations.lagre());
+    await lagreLovvalgsperiode(formValues);
     await Api.Saksflyt.Unntaksregistrering.registrerUnntakFraMedlemskap(behandlingID);
     dispatch(navigeringOperations.tilForsiden());
   };

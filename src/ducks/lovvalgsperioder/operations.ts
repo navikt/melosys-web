@@ -7,7 +7,7 @@
  *
  */
 import { ThunkDispatch } from "redux-thunk";
-import { RootState } from "AppTypes";
+import { AppThunk, RootState } from "AppTypes";
 
 import * as Api from "../../services/api";
 import * as Types from "./types";
@@ -34,7 +34,10 @@ export function send(behandlingID: number, body: Api.Lovvalgsperioder.Lovvalgspe
   });
 }
 
-export function opprettLovvalgsperiode(behandlingID: number, body: Api.Lovvalgsperioder.OpprettLovvalgsperiode) {
+export function opprettLovvalgsperiode(
+  behandlingID: number,
+  body: Api.Lovvalgsperioder.OpprettLovvalgsperiode
+): AppThunk<Promise<Types.Action>, Types.Action> {
   return doThenDispatch(() => Api.Lovvalgsperioder.opprettLovvalgsperiode(behandlingID, body), {
     OK: Types.OK,
     FEILET: Types.FEILET,
