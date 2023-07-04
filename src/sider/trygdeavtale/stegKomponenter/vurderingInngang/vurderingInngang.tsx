@@ -164,10 +164,10 @@ const VurderingInngang = ({
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <Skjema.Datovelger label="Fra og med:" feltNavn="fom" disabled={!redigerbart} />
+            <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
+            <Skjema.Datovelger label="Til og med" feltNavn="tom" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="5">
             <Skjema.Select
