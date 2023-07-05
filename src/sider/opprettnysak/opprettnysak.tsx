@@ -16,7 +16,6 @@ import * as Utils from "../../utils";
 
 import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
-import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { sokOperations, sokSelectors } from "../../ducks/sok";
 import { fagsakOperations } from "../../ducks/fagsaker";
 
@@ -71,7 +70,6 @@ const mapStateToProps = (state: RootState) => ({
     oppretterOppgave: true,
   },
   landkoderListe: landkoderSelectors.LandkoderSelector(state),
-  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
