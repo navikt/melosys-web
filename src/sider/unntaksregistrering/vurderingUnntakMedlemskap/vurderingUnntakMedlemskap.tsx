@@ -20,14 +20,13 @@ import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { navigeringOperations } from "../../../ducks/navigering";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { kontrollOperations } from "../../../ducks/kontroll";
+import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 
 import "./vurderingUnntakMedlemskap.css";
 import { getLovvalgsbestemmelser } from "../../../services/modules/lovvalgsbestemmelser";
-import { Feilkode } from "../../../@types";
 
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
@@ -55,6 +54,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
@@ -185,19 +185,13 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     dispatch(navigeringOperations.tilForsiden());
   };
 
-  const harErrorFeilmelding = () => {
-    if (typeof feilmeldinger === "string") {
-      return !Utils._isEmpty(feilmeldinger);
-    }
-    return feilmeldinger.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER).length > 0;
-  };
+  const kontrollFeilOverlappendeUnntakperiode = kontrollfeil?.filter(
+    (value) => value.kode === OVERLAPPENDE_UNNTAK_PERIODER
+  );
 
-  const feilmeldingerKunUnntaksperioder = (feil: Feilkode[] | string) => {
-    if (typeof feil === "string") {
-      return "";
-    }
-    return feil.filter((value) => value.kode === OVERLAPPENDE_UNNTAK_PERIODER);
-  };
+  const harErrorFeilmelding =
+    !Utils._isEmpty(feilmeldinger) ||
+    !Utils._isEmpty(kontrollfeil?.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER));
 
   const manglerSluttdato = Utils._isEmpty(formValues.tom);
 
@@ -231,7 +225,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         />
       </Nav.Fieldset>
 
-      {formValues.utfallRegistreringUnntak === GODKJENT && !harErrorFeilmelding() && (
+      {formValues.utfallRegistreringUnntak === GODKJENT && !harErrorFeilmelding && (
         <Nav.Fieldset legend="">
           <Nav.Row>
             <Nav.Column xs="8">
@@ -303,7 +297,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       {![IKKE_GODKJENT, DELVIS_GODKJENT].includes(formValues.utfallRegistreringUnntak) && (
         <Alertmeldinger
           className="vurderingUnntakMedlemskap__alertmeldinger"
-          meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
+          meldinger={kontrollFeilOverlappendeUnntakperiode}
         />
       )}
 
@@ -325,7 +319,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           onClick: handleBekreft,
           disabled:
             !formState?.isValid ||
-            (harErrorFeilmelding() && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
+            (harErrorFeilmelding && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
             !redigerbart,
         }}
         bekreftTekst="Bekreft og avslutt"
