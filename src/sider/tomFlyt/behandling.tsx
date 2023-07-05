@@ -95,7 +95,7 @@ const Behandling = ({
                 <VirksomhetMelding />
               ) : (
                 <>
-                  <TomFlytMelding visBuc />
+                  <TomFlytMelding />
                   <SoknadMenypanelForm startOgVisOppfriskModal={() => null} visOppdaterRegisteropplysninger={false} />
                 </>
               )}
