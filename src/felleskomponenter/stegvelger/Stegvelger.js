@@ -522,9 +522,7 @@ class Stegvelger extends Component {
       <div className="stegvelger panelSeksjon">
         <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
         {!this.props.redigerbart && <Innsynsmelding />}
-        {this.erVedtakSteg(this.state.aktivtStegNummer) && (
-          <Feilmeldinger feilmeldinger={this.props.feilmeldinger} kontrollfeil={this.props.kontrollfeil} />
-        )}
+        {this.erVedtakSteg(this.state.aktivtStegNummer) && <Feilmeldinger />}
         {this.state.aktuelleSteg.map((item) => (
           <StegFane id={item.id} key={item.id} faneData={item} />
         ))}
