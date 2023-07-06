@@ -39,6 +39,7 @@ interface VurderingUnntakMedlemskapProps {
 
 const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: VurderingUnntakMedlemskapProps) => {
   const [bestemmelser, setBestemmelser] = useState<KTObject[] | undefined>(undefined);
+  const [skalOppdatereRegisteropplysninger, setSkalOppdatereRegisteropplysninger] = useState(true);
 
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -66,18 +67,22 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   });
   const formValues = watch();
 
-  const kontrollerFerdigbehandling = (skalRegisteropplysningerOppdateres: boolean) =>
-    dispatch(
-      kontrollOperations.kontrollerFerdigbehandling({
-        behandlingID,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-        skalRegisteropplysningerOppdateres,
-      })
-    );
+  const kontrollerFerdigbehandling = (lovvalgsperiodeErLagret: boolean = false) => {
+    if (lovvalgsperiodeErLagret || !Utils._isEmpty(lovvalgsperiode)) {
+      dispatch(
+        kontrollOperations.kontrollerFerdigbehandling({
+          behandlingID,
+          vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          skalRegisteropplysningerOppdateres: skalOppdatereRegisteropplysninger,
+        })
+      );
+      if (skalOppdatereRegisteropplysninger) setSkalOppdatereRegisteropplysninger(false);
+    }
+  };
 
   useEffect(() => {
     if (aktivtSteg && redigerbart) {
-      kontrollerFerdigbehandling(true);
+      kontrollerFerdigbehandling();
     }
   }, [aktivtSteg]);
 
@@ -108,7 +113,9 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   useEffect(() => {
     oppdaterStatus(formState.isValid);
-    debouncedLagreLovvalgsperiodeOgKontroller(formValues, formState?.isValid);
+    if (aktivtSteg && redigerbart) {
+      debouncedLagreLovvalgsperiodeOgKontroller(formValues, formState?.isValid);
+    }
   }, [formState?.isValid]);
 
   const lagreUtfallRegistreringUnntak = (utfall: string) => {
@@ -119,25 +126,22 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     dispatch(lovvalgsperioderOperations.send(behandlingID, []));
   };
 
-  const lagreLovvalgsperiode = async (values: FieldValues) => {
-    return dispatch(
+  const lagreLovvalgsperiode = (values: FieldValues) =>
+    dispatch(
       lovvalgsperioderOperations.opprettLovvalgsperiode(behandlingID, {
         fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
         tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
         lovvalgsbestemmelse: values.bestemmelse,
       })
     );
-  };
 
-  const lagreLovvalgsperiodeOgKontroller = async (
-    values: FieldValues,
-    isValid: boolean,
-    skalRegisteropplysningerOppdateres: boolean = false
-  ) => {
+  const lagreLovvalgsperiodeOgKontroller = async (values: FieldValues, isValid: boolean) => {
     if (isValid) {
       await lagreLovvalgsperiode(values);
+      kontrollerFerdigbehandling(true);
+    } else {
+      kontrollerFerdigbehandling();
     }
-    kontrollerFerdigbehandling(skalRegisteropplysningerOppdateres);
   };
 
   const debouncedLagreLovvalgsperiodeOgKontroller = useCallback(
@@ -175,6 +179,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   const manglerSluttdato = Utils._isEmpty(formValues.tom);
 
+  const utfallErGODKJENT = formValues?.utfallRegistreringUnntak === GODKJENT;
+
   return (
     <div className="vurderingUnntakMedlemskap">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Unntak medlemskap</Nav.Typo.Innholdstittel>
@@ -205,7 +211,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         />
       </Nav.Fieldset>
 
-      {formValues.utfallRegistreringUnntak === GODKJENT && !harErrorFeilmelding() && (
+      {utfallErGODKJENT && !harErrorFeilmelding() && (
         <Nav.Fieldset legend="">
           <Nav.Row>
             <Nav.Column xs="8">
@@ -274,14 +280,14 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]}
       />
 
-      {![IKKE_GODKJENT, DELVIS_GODKJENT].includes(formValues.utfallRegistreringUnntak) && (
+      {utfallErGODKJENT && (
         <Alertmeldinger
           className="vurderingUnntakMedlemskap__alertmeldinger"
           meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
         />
       )}
 
-      {manglerSluttdato && ![IKKE_GODKJENT, DELVIS_GODKJENT].includes(formValues.utfallRegistreringUnntak) && (
+      {manglerSluttdato && utfallErGODKJENT && (
         <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
           Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
         </Nav.AlertStripeAdvarsel>
