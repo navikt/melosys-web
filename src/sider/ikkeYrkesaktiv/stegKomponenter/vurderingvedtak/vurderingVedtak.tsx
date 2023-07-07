@@ -94,9 +94,10 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   });
   const formValues = watch();
 
+  const [lovvalgsperiodeErValid, setLovvalgsperiodeErValid] = useState(true);
   const [kontrollEllerVedtakPending, setKontrollEllerVedtakPending] = useState(false);
   const harIngenFeilmeldinger = Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
-  const stegErGyldig: boolean = redigerbart && formIsValid && harIngenFeilmeldinger;
+  const stegErGyldig: boolean = redigerbart && formIsValid && lovvalgsperiodeErValid && harIngenFeilmeldinger;
 
   const kontrollerFerdigbehandling = async () => {
     setKontrollEllerVedtakPending(true);
@@ -186,7 +187,10 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" />
 
       <Nav.Row>
-        <Lovvalgsperiode kontrollerFerdigbehandling={kontrollerFerdigbehandling} />
+        <Lovvalgsperiode
+          kontrollerFerdigbehandling={kontrollerFerdigbehandling}
+          onRedigeringErAktiv={setLovvalgsperiodeErValid}
+        />
       </Nav.Row>
 
       {erNyVurdering && (
