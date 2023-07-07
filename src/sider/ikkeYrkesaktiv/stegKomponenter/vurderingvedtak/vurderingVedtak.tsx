@@ -70,7 +70,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const initialNyVurderingBakgrunnValg =
     lagretNyVurderingBakgrunn && erNyVurderingBakgrunnValgFritekst(lagretNyVurderingBakgrunn)
       ? FRITEKST_VALG
-      : lagretNyVurderingBakgrunn;
+      : lagretNyVurderingBakgrunn || undefined;
   const initialNyVurderingBakgrunnFritekst =
     lagretNyVurderingBakgrunn && initialNyVurderingBakgrunnValg === FRITEKST_VALG ? lagretNyVurderingBakgrunn : "";
 
