@@ -221,7 +221,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const handleBekreft = async () => {
     await dispatch(vilkarOperations.lagre());
-    await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse());
+    await dispatch(
+      medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse(behandlingID, valgtBestemmelse)
+    );
     bekreft();
   };
 
