@@ -146,10 +146,10 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
     if (!erNyVurdering) {
       return;
     }
-    if (!erNyVurderingBakgrunnValgFritekst(nyVurderingBakgrunnValg)) {
-      debouncedOppdaterNyVurderingBakgrunn(nyVurderingBakgrunnValg);
-    } else {
+    if (nyVurderingBakgrunnValg === FRITEKST_VALG) {
       debouncedOppdaterNyVurderingBakgrunn(undefined);
+    } else {
+      debouncedOppdaterNyVurderingBakgrunn(nyVurderingBakgrunnValg);
     }
     setValue("nyVurderingBakgrunnFritekst", "");
   };
