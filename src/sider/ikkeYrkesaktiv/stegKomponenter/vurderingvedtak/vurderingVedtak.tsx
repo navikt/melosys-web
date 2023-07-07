@@ -62,11 +62,9 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
-    return (
-      MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.filter((bakgrunn: KTObject) => {
-        return bakgrunn.kode === nyVurderingBakgrunnValg;
-      }).length === 0
-    );
+    return !MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.some((bakgrunn: KTObject) => {
+      return bakgrunn.kode === nyVurderingBakgrunnValg;
+    });
   };
 
   const initialNyVurderingBakgrunnValg =
