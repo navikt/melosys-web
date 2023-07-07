@@ -33,7 +33,7 @@ import { BrevMottakereTabell } from "./mottakertabell/brevMottakereTabell";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import vurderingVedtakSchema from "./vurderingVedtakSchema";
 
-export const FRITEKST = "Fritekst";
+export const FRITEKST_VALG = "Fritekst";
 
 interface Props {
   tilbake: () => void;
@@ -69,10 +69,12 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
     );
   };
 
-  const initialNyVurderingBakgrunn =
+  const initialNyVurderingBakgrunnValg =
     lagretNyVurderingBakgrunn && erNyVurderingBakgrunnValgFritekst(lagretNyVurderingBakgrunn)
-      ? lagretNyVurderingBakgrunn
-      : "";
+      ? FRITEKST_VALG
+      : lagretNyVurderingBakgrunn;
+  const initialNyVurderingBakgrunn =
+    lagretNyVurderingBakgrunn && initialNyVurderingBakgrunnValg === FRITEKST_VALG ? lagretNyVurderingBakgrunn : "";
 
   const {
     control,
@@ -87,9 +89,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       erNyVurdering,
     },
     defaultValues: {
-      nyVurderingBakgrunnValg: erNyVurderingBakgrunnValgFritekst(lagretNyVurderingBakgrunn)
-        ? FRITEKST
-        : lagretNyVurderingBakgrunn,
+      nyVurderingBakgrunnValg: initialNyVurderingBakgrunnValg,
       begrunnelseFritekst: lagretBegrunnelseFritekst || "",
       innledningFritekst: lagretInnledningFritekst || "",
       nyVurderingBakgrunn: initialNyVurderingBakgrunn,
@@ -154,7 +154,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       debouncedOppdaterNyVurderingBakgrunn(nyVurderingBakgrunnValg);
     } else {
       setValue("nyVurderingBakgrunn", "");
-      debouncedOppdaterNyVurderingBakgrunn("");
+      debouncedOppdaterNyVurderingBakgrunn(undefined);
     }
   };
   const fattVedtak = async () =>
@@ -210,21 +210,21 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
                 emptyFieldText="Velg"
                 name="nyVurderingBakgrunnValg"
                 disabled={!redigerbart}
-                emptyFieldDisabled={!!formValues?.nyVurderingBakgrunn}
+                emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
                 control={control}
                 onChange={oppdaterNyVurderingBakgrunnValg}
               >
                 {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
                   <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
                 ))}
-                <option key={FRITEKST} value={FRITEKST} label={FRITEKST} />
+                <option key={FRITEKST_VALG} value={FRITEKST_VALG} label={FRITEKST_VALG} />
               </Forms.Select>
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
       )}
 
-      {erNyVurdering && erNyVurderingBakgrunnValgFritekst(formValues.nyVurderingBakgrunnValg) && (
+      {erNyVurdering && formValues.nyVurderingBakgrunnValg === FRITEKST_VALG && (
         <Nav.Row className="nyVurderingBakgrunnFritekstRad">
           <Forms.HtmlEditor
             name="nyVurderingBakgrunn"
