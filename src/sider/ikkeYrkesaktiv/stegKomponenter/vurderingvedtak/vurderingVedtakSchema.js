@@ -1,11 +1,30 @@
 import { object, string } from "yup";
 import * as KV from "../../../../kodeverk";
+import { FRITEKST } from "./vurderingVedtak";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
-const vurdering_vedtak = object().shape({
-  fom: string().erGyldigDato().erInnenforSoknadsperioden().required(MAA_FYLLES_UT),
-  tom: string().erGyldigDato().erInnenforSoknadsperioden().erEtterDatofelt("fom").required(MAA_FYLLES_UT),
+const vurderingVedtakSchema = object().shape({
+  nyVurderingBakgrunnValg: string()
+    .when("$erNyVurdering", {
+      is: true,
+      then: string().required(MAA_FYLLES_UT),
+      otherwise: string().nullable(),
+    })
+    .nullable(),
+  nyVurderingBakgrunn: string()
+    .when("$erNyVurdering", {
+      is: true,
+      then: string()
+        .when("nyVurderingBakgrunnValg", {
+          is: FRITEKST,
+          then: string().erIkkeBlankHtml().required(MAA_FYLLES_UT),
+          otherwise: string().nullable(),
+        })
+        .nullable(),
+      otherwise: string().nullable(),
+    })
+    .nullable(),
 });
 
-export default vurdering_vedtak;
+export default vurderingVedtakSchema;

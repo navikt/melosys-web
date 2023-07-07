@@ -14,7 +14,7 @@ import { PERIODE_HJELPETEKST } from "./tekster";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
-import vurdering_vedtak from "./vurderingVedtakSchema";
+import lovvalgsperioderSchema from "./lovvalgsperioderSchema";
 
 import "./vurderingVedtakIkkeYrkesaktiv.css";
 
@@ -29,7 +29,7 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling }: LovvalgsperiodeP
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
 
   const { control, watch, formState, trigger } = useForm({
-    resolver: yupResolver(vurdering_vedtak),
+    resolver: yupResolver(lovvalgsperioderSchema),
     context: {
       soknadsperiode: mottatteOpplysningerPeriode,
     },
