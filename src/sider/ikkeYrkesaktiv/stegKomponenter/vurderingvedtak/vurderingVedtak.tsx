@@ -84,7 +84,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   } = useForm({
     resolver: yupResolver(vurderingVedtakSchema),
     mode: "all",
-    shouldUseNativeValidation: true,
     context: {
       erNyVurdering,
     },
