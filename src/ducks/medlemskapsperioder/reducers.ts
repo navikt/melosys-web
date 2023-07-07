@@ -23,6 +23,29 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         },
       };
     }
+    case Types.OK_OPPRETT_MEDLEMSKAPSPERIODE: {
+      return {
+        ...state,
+        status: STATUS.OK,
+        data: {
+          ...state.data,
+          medlemskapsperioder: [...(state.data.medlemskapsperioder ?? []), action.data],
+        },
+      };
+    }
+    case Types.OK_OPPDATER_MEDLEMSKAPSPERIODE: {
+      const medlemskapsperioder = [...(state.data.medlemskapsperioder ?? [])];
+      const oppdatertPeriodeId = medlemskapsperioder?.findIndex((periode) => periode.id === action.data.id);
+      if (oppdatertPeriodeId && medlemskapsperioder) medlemskapsperioder[oppdatertPeriodeId] = action.data;
+      return {
+        ...state,
+        status: STATUS.OK,
+        data: {
+          ...state.data,
+          medlemskapsperioder,
+        },
+      };
+    }
     case Types.OK_BESTEMMELSE: {
       return {
         ...state,

@@ -14,6 +14,32 @@ export function hentMedlemskapsperioder(behandlingID: number) {
   });
 }
 
+export function opprettMedlemskapsperiode(
+  behandlingID: number,
+  medlemskapsperiode: Api.Medlemskapsperioder.OppdaterMedlemskapsperiode
+) {
+  return doThenDispatch(() => Api.Medlemskapsperioder.postMedlemskapsperioder(behandlingID, medlemskapsperiode), {
+    OK: Types.OK_OPPRETT_MEDLEMSKAPSPERIODE,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
+export function oppdaterMedlemskapsperiode(
+  behandlingID: number,
+  medlemskapsId: number,
+  medlemskapsperiode: Api.Medlemskapsperioder.OppdaterMedlemskapsperiode
+) {
+  return doThenDispatch(
+    () => Api.Medlemskapsperioder.putMedlemskapsperioder(behandlingID, medlemskapsId, medlemskapsperiode),
+    {
+      OK: Types.OK_OPPDATER_MEDLEMSKAPSPERIODE,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    }
+  );
+}
+
 export function hentBestemmelse(behandlingID: number) {
   return doThenDispatch(() => Api.Medlemskapsperioder.getBestemmelse(behandlingID), {
     OK: Types.OK_BESTEMMELSE,
