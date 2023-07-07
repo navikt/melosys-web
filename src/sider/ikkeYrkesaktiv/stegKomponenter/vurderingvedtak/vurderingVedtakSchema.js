@@ -11,7 +11,7 @@ const vurderingVedtakSchema = object().shape({
       otherwise: string().nullable(),
     })
     .nullable(),
-  nyVurderingBakgrunn: string()
+  nyVurderingBakgrunnFritekst: string()
     .when("$erNyVurdering", {
       is: true,
       then: string()

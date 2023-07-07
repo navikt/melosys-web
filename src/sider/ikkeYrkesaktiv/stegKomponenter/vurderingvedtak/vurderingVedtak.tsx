@@ -73,7 +73,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
     lagretNyVurderingBakgrunn && erNyVurderingBakgrunnValgFritekst(lagretNyVurderingBakgrunn)
       ? FRITEKST_VALG
       : lagretNyVurderingBakgrunn;
-  const initialNyVurderingBakgrunn =
+  const initialNyVurderingBakgrunnFritekst =
     lagretNyVurderingBakgrunn && initialNyVurderingBakgrunnValg === FRITEKST_VALG ? lagretNyVurderingBakgrunn : "";
 
   const {
@@ -92,7 +92,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       nyVurderingBakgrunnValg: initialNyVurderingBakgrunnValg,
       begrunnelseFritekst: lagretBegrunnelseFritekst || "",
       innledningFritekst: lagretInnledningFritekst || "",
-      nyVurderingBakgrunn: initialNyVurderingBakgrunn,
+      nyVurderingBakgrunnFritekst: initialNyVurderingBakgrunnFritekst,
     } as FieldValues,
   });
   const formValues = watch();
@@ -150,10 +150,10 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       return;
     }
     if (!erNyVurderingBakgrunnValgFritekst(nyVurderingBakgrunnValg)) {
-      setValue("nyVurderingBakgrunn", "");
+      setValue("nyVurderingBakgrunnFritekst", "");
       debouncedOppdaterNyVurderingBakgrunn(nyVurderingBakgrunnValg);
     } else {
-      setValue("nyVurderingBakgrunn", "");
+      setValue("nyVurderingBakgrunnFritekst", "");
       debouncedOppdaterNyVurderingBakgrunn(undefined);
     }
   };
@@ -227,7 +227,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       {erNyVurdering && formValues.nyVurderingBakgrunnValg === FRITEKST_VALG && (
         <Nav.Row className="nyVurderingBakgrunnFritekstRad">
           <Forms.HtmlEditor
-            name="nyVurderingBakgrunn"
+            name="nyVurderingBakgrunnFritekst"
             control={control}
             onChange={debouncedOppdaterNyVurderingBakgrunn}
             className="fritekst_editor"
