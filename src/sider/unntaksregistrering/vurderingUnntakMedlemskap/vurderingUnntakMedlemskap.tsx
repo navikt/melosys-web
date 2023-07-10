@@ -85,27 +85,10 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   }, [aktivtSteg]);
 
   useEffect(() => {
-    if (MKV.Koder.sakstyper.TRYGDEAVTALE === sakstype && lovvalgsland && aktivtSteg) {
-      getLovvalgsbestemmelser(MKV.Koder.sakstyper.TRYGDEAVTALE, sakstema, behandlingstema, lovvalgsland).then((res) => {
+    if (aktivtSteg) {
+      getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, lovvalgsland).then((res) => {
         setBestemmelser(res);
       });
-    }
-    if (MKV.Koder.sakstyper.EU_EOS === sakstype && aktivtSteg) {
-      const eos_bestemmelser = [
-        ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
-        ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
-        ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
-        ...MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser,
-      ].filter(
-        (kt: KTObject) =>
-          ![
-            MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1,
-            MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ANNET,
-            MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87_8,
-            MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87A,
-          ].includes(kt.kode)
-      );
-      setBestemmelser(eos_bestemmelser);
     }
   }, [lovvalgsland, aktivtSteg]);
 
