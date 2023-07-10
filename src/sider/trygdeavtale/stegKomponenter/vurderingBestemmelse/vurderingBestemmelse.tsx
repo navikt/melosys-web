@@ -25,6 +25,8 @@ import { UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger"
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_TRYGDEAVTALE_UNNTAK } from "../../../../featuretoggle/toggleNavn";
 
+const NEI_ANMODE_OM_UNNTAK = "NEI_ANMODE_OM_UNNTAK";
+
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
   formValues: getFormValues(KV.Form.Trygdeavtale.BESTEMMELSE)(state),
@@ -79,7 +81,6 @@ const VurderingBestemmelse = ({
 }: PropsFromRedux & Props) => {
   const [updatePending, setUpdatePending] = useState(false);
   const trygdeavtaleUnntakToggle = useFeatureToggle(MELOSYS_TRYGDEAVTALE_UNNTAK);
-  const NEI_ANMODE_OM_UNNTAK = "NEI_ANMODE_OM_UNNTAK";
 
   useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
