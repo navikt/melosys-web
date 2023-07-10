@@ -162,3 +162,5 @@ export enum StegNavn {
   FAMILIE = "FAMILIE",
   VEDTAK = "VEDTAK",
 }
+
+export const FRITEKST_VALG = "Fritekst";
