@@ -110,6 +110,10 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   });
   const formValues = watch();
 
+  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, soknadsperiode.fom);
+
+  const stegErGyldig = formIsValid && !aktivFeilmeldingType;
+
   useEffect(() => {
     if (aktivtSteg) {
       resetMedlemskapsperioder(mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
@@ -117,8 +121,8 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   }, [aktivtSteg]);
 
   useEffect(() => {
-    oppdaterStatus(formIsValid);
-  }, [formIsValid]);
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
@@ -162,17 +166,11 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     []
   );
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, soknadsperiode.fom);
-
   useEffect(() => {
     if (redigerbart && aktivtSteg) {
-      debouncedLagreMedlemskapsperioder(
-        formValues.medlemskapsperioder,
-        formIsValid && !aktivFeilmeldingType,
-        undefined
-      );
+      debouncedLagreMedlemskapsperioder(formValues.medlemskapsperioder, stegErGyldig, undefined);
     }
-  }, [formIsValid, aktivFeilmeldingType]);
+  }, [stegErGyldig]);
 
   const antallMedlemskapsperioder = formValues.medlemskapsperioder?.length;
 
@@ -248,7 +246,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         fields={fields}
         handleSlett={handleSlett}
         redigerbart={redigerbart}
-        formIsValid={formIsValid && !aktivFeilmeldingType}
+        formIsValid={stegErGyldig}
         handleChange={debouncedLagreMedlemskapsperioder}
       />
 
@@ -265,7 +263,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: handleBekreft,
-          disabled: !redigerbart || !formIsValid || !!aktivFeilmeldingType,
+          disabled: !redigerbart || !stegErGyldig,
         }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
