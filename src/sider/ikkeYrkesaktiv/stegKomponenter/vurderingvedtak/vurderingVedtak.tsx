@@ -32,8 +32,7 @@ import {
 import { BrevMottakereTabell } from "./mottakertabell/brevMottakereTabell";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import vurderingVedtakSchema from "./vurderingVedtakSchema";
-
-export const FRITEKST_VALG = "Fritekst";
+import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 
 interface Props {
   tilbake: () => void;

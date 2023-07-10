@@ -1,5 +1,6 @@
 import { object, string } from "yup";
 import * as KV from "../../../../kodeverk";
+import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
@@ -12,7 +13,7 @@ const vurderingVedtakSchema = object().shape({
   nyVurderingBakgrunnFritekst: string().when("$erNyVurdering", {
     is: true,
     then: string().when("nyVurderingBakgrunnValg", {
-      is: "Fritekst",
+      is: FRITEKST_VALG,
       then: string().erIkkeBlankHtml().required(MAA_FYLLES_UT),
       otherwise: string().nullable(),
     }),
