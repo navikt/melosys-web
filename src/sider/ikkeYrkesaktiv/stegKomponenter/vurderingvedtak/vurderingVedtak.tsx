@@ -11,28 +11,26 @@ import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 import * as Mui from "../../../../felleskomponenter/ui";
 
-import { Lovvalgsperiode } from "./lovvalgsperiode";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
+import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { vedtakOperations } from "../../../../ducks/vedtak";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { fagsakSelectors } from "../../../../ducks/fagsaker";
-
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
-
-import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
 
+import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 import {
   BEGRUNNELSE_FRITEKST_HJELPETEKST,
   INNLEDNING_FRITEKST_HJELPETEKST,
   NY_VURDERING_BAKGRUNN_HJELPETEKST,
 } from "./tekster";
 import { BrevMottakereTabell } from "./mottakertabell/brevMottakereTabell";
-import { vedtakOperations } from "../../../../ducks/vedtak";
+import { Lovvalgsperiode } from "./lovvalgsperiode";
 import vurderingVedtakSchema from "./vurderingVedtakSchema";
-import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 
 interface Props {
   tilbake: () => void;
@@ -164,7 +162,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const handleBekreft = async () => {
     setKontrollEllerVedtakPending(true);
     fattVedtak().then(() => {
-      if (!Utils._isEmpty(feilmeldinger)) {
+      if (!Utils._isEmpty(feilmeldinger) || !Utils._isEmpty(kontrollfeil)) {
         setKontrollEllerVedtakPending(false);
       }
     });
