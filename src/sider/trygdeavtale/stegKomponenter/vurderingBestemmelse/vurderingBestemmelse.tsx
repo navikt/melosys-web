@@ -21,11 +21,12 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
 import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
-import { UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
+import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_TRYGDEAVTALE_UNNTAK } from "../../../../featuretoggle/toggleNavn";
 
 const NEI_ANMODE_OM_UNNTAK = "NEI_ANMODE_OM_UNNTAK";
+const NEI_AVSLAG = "NEI_AVSLAG";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -82,13 +83,15 @@ const VurderingBestemmelse = ({
   const [updatePending, setUpdatePending] = useState(false);
   const trygdeavtaleUnntakToggle = useFeatureToggle(MELOSYS_TRYGDEAVTALE_UNNTAK);
 
+  const skalLagreVedtaksvalg = formValues?.vedtak !== NEI_ANMODE_OM_UNNTAK && formValues?.vedtak !== NEI_AVSLAG;
+
   useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
       setUpdatePending(true);
       oppdaterFlyt(
         {
           ...resultat,
-          vedtak: formValues?.vedtak === NEI_ANMODE_OM_UNNTAK ? undefined : formValues?.vedtak,
+          vedtak: skalLagreVedtaksvalg ? formValues?.vedtak : undefined,
           bestemmelse: formValues?.bestemmelse,
           tilleggsbestemmelse: formValues.tilleggsbestemmelse ? tilleggsbestemmelseValg?.kode : undefined,
         },
@@ -98,6 +101,15 @@ const VurderingBestemmelse = ({
   }, [formValues?.vedtak, formValues?.bestemmelse, formValues?.tilleggsbestemmelse]);
 
   if (!formValues) return null;
+
+  const skalValgVæreDisabled = (valg: KTObject) => {
+    const starterMedJa = valg.kode.startsWith("JA");
+    const erUnntakForespørselOgIkkeAustralia =
+      trygdeavtaleUnntakToggle && valg.kode === NEI_ANMODE_OM_UNNTAK && soeknadsland?.kode !== "AU";
+    const erAvslag = valg.kode === NEI_AVSLAG;
+
+    return (updatePending || !redigerbart || !(starterMedJa || erUnntakForespørselOgIkkeAustralia)) && !erAvslag;
+  };
 
   return (
     <div className="vurderingBestemmelse">
@@ -110,14 +122,7 @@ const VurderingBestemmelse = ({
             feltNavn="vedtak"
             label={valg.term}
             value={valg.kode}
-            disabled={
-              updatePending ||
-              !redigerbart ||
-              !(
-                valg.kode.startsWith("JA") ||
-                (trygdeavtaleUnntakToggle && valg.kode === NEI_ANMODE_OM_UNNTAK && soeknadsland?.kode !== "AU")
-              )
-            }
+            disabled={skalValgVæreDisabled(valg)}
             onChange={() => {
               resetField("tilleggsbestemmelse");
               resetField("bestemmelse");
@@ -164,6 +169,14 @@ const VurderingBestemmelse = ({
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <UnntakHjelpetekst />
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
+      {formValues?.vedtak === NEI_AVSLAG && (
+        <Nav.Row>
+          <Nav.Column xs="10">
+            <TomFlytMelding />
           </Nav.Column>
         </Nav.Row>
       )}
