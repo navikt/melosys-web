@@ -79,6 +79,7 @@ const VurderingBestemmelse = ({
 }: PropsFromRedux & Props) => {
   const [updatePending, setUpdatePending] = useState(false);
   const trygdeavtaleUnntakToggle = useFeatureToggle(MELOSYS_TRYGDEAVTALE_UNNTAK);
+  const NEI_ANMODE_OM_UNNTAK = "NEI_ANMODE_OM_UNNTAK";
 
   useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
@@ -86,7 +87,7 @@ const VurderingBestemmelse = ({
       oppdaterFlyt(
         {
           ...resultat,
-          vedtak: formValues?.vedtak,
+          vedtak: formValues?.vedtak === NEI_ANMODE_OM_UNNTAK ? undefined : formValues?.vedtak,
           bestemmelse: formValues?.bestemmelse,
           tilleggsbestemmelse: formValues.tilleggsbestemmelse ? tilleggsbestemmelseValg?.kode : undefined,
         },
@@ -113,7 +114,7 @@ const VurderingBestemmelse = ({
               !redigerbart ||
               !(
                 valg.kode.startsWith("JA") ||
-                (trygdeavtaleUnntakToggle && valg.kode === "NEI_ANMODE_OM_UNNTAK" && soeknadsland?.kode !== "AU")
+                (trygdeavtaleUnntakToggle && valg.kode === NEI_ANMODE_OM_UNNTAK && soeknadsland?.kode !== "AU")
               )
             }
             onChange={() => {
@@ -158,7 +159,7 @@ const VurderingBestemmelse = ({
         </Nav.Row>
       )}
 
-      {formValues?.vedtak === "NEI_ANMODE_OM_UNNTAK" && (
+      {formValues?.vedtak === NEI_ANMODE_OM_UNNTAK && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <UnntakHjelpetekst />
