@@ -73,7 +73,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     if (aktivtSteg && redigerbart && formValues) {
       setValue("bestemmelse", "");
       if (formValues.innvilgelsesResultat === UNNTAK) {
-        dispatch(lovvalgsperioderOperations.send(behandlingID, []));
+        if (lovvalgsperiode?.periodeID)
+          dispatch(lovvalgsperioderOperations.slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID));
       } else {
         lagreLovvalgsperiode(formValues.innvilgelsesResultat);
       }

@@ -1,7 +1,8 @@
-import { getAsJson, postAsJson } from "../utils";
-import { API_BASE_URL, LOVVALGSPERIODER } from "../api-constants";
+import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../utils";
+import { API_BASE_URL, BEHANDLINGER, LOVVALGSPERIODER } from "../api-constants";
 
 export interface Lovvalgsperiode {
+  periodeID?: string;
   fomDato: string;
   tomDato?: string;
   lovvalgsbestemmelse?: string;
@@ -32,4 +33,14 @@ export const hentOpprinnelig = (behandlingID: number) =>
 export const opprettLovvalgsperiode = (
   behandlingID: number,
   data: OpprettLovvalgsperiode
-): Promise<Lovvalgsperiode[]> => postAsJson(`${API_BASE_URL}${LOVVALGSPERIODER}/${behandlingID}/opprett`, data);
+): Promise<Lovvalgsperiode[]> => postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${LOVVALGSPERIODER}`, data);
+
+export const oppdaterLovvalgsperiode = (
+  behandlingID: number,
+  lovvalgsperiodeID: number,
+  data: Lovvalgsperiode
+): Promise<Lovvalgsperiode> =>
+  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${LOVVALGSPERIODER}/${lovvalgsperiodeID}`, data);
+
+export const slettLovvalgsperiode = (behandlingID: number, lovvalgsperiodeID: number): Promise<Lovvalgsperiode> =>
+  deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${LOVVALGSPERIODER}/${lovvalgsperiodeID}`);

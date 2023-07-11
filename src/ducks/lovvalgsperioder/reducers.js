@@ -5,7 +5,7 @@
  * action types som sendes inn sammen med dataene.
  */
 
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 
 import * as Types from "./types";
 
@@ -13,6 +13,9 @@ export const initialState = {
   data: [],
   status: STATUS.NOT_STARTED,
 };
+
+const finnIndexTilPeriode = (perioder, action) =>
+  perioder?.findIndex((periode) => periode.periodeID === action.data.periodeID);
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -32,6 +35,24 @@ export default function reducer(state = initialState, action = {}) {
       return {
         data: [...action.data],
         status: STATUS.OK,
+      };
+    }
+    case Types.OPPDATER_LOVVALGSPERIODE: {
+      const lovvalgsperioder = [...state.data];
+      const oppdatertPeriodeId = finnIndexTilPeriode(lovvalgsperioder, action);
+      if (oppdatertPeriodeId !== -1) lovvalgsperioder[oppdatertPeriodeId] = action.data;
+      return {
+        data: lovvalgsperioder,
+        status: STATUS.OK,
+      };
+    }
+    case Types.SLETT_LOVVALGSPERIODE: {
+      const lovvalgsperioder = [...state.data];
+      const slettetPeriodeId = finnIndexTilPeriode(lovvalgsperioder, action);
+      if (slettetPeriodeId !== -1) lovvalgsperioder.splice(slettetPeriodeId, 1);
+      return {
+        ...state,
+        data: lovvalgsperioder,
       };
     }
     case Types.ENDRE_PERIODE: {

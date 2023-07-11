@@ -45,6 +45,34 @@ export function opprettLovvalgsperiode(
   });
 }
 
+export function oppdaterLovvalgsperiode(
+  behandlingID: number,
+  lovvalgsperiodeID: number,
+  body: Api.Lovvalgsperioder.Lovvalgsperiode
+): AppThunk<Promise<Types.Action>, Types.Action> {
+  return doThenDispatch(() => Api.Lovvalgsperioder.oppdaterLovvalgsperiode(behandlingID, lovvalgsperiodeID, body), {
+    OK: Types.OPPDATER_LOVVALGSPERIODE,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
+export function slettLovvalgsperiode(behandlingID: number, lovvalgsperiodeID: number) {
+  return doThenDispatch(
+    () => Api.Lovvalgsperioder.slettLovvalgsperiode(behandlingID, lovvalgsperiodeID),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    {
+      success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
+        dispatch(Actions.slettLovvalgsperiode(lovvalgsperiodeID));
+      },
+    }
+  );
+}
+
 export function lagre() {
   return (dispatch: ThunkDispatch<RootState, unknown, Types.Action>, getState: () => RootState) => {
     const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
@@ -54,15 +82,11 @@ export function lagre() {
   };
 }
 
-export function oppdaterLovvalgsperioder(lovvalgsperioder: Api.Lovvalgsperioder.Lovvalgsperiode[]) {
-  return Actions.oppdaterLovvalgsperioderState(lovvalgsperioder);
-}
-
 export function resetLovvalgsperioderState() {
   return Actions.resetLovvalgsperioderState();
 }
 
-export function endreLovvalgsPeriode(fomdato: String, tomdato?: String) {
+export function endreLovvalgsPeriode(fomdato: string, tomdato?: string) {
   return Actions.endrePeriode(fomdato, tomdato);
 }
 
