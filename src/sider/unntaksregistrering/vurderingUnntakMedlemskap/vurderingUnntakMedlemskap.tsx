@@ -27,7 +27,6 @@ import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 
 import "./vurderingUnntakMedlemskap.css";
 import { getLovvalgsbestemmelser } from "../../../services/modules/lovvalgsbestemmelser";
-import { Feilkode } from "../../../@types";
 import { MELOSYS_LOVVALGSBESTEMMELSE_API_EOS_UNNTAK } from "../../../featuretoggle/toggleNavn";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 
