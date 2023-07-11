@@ -11,6 +11,7 @@ export const SKRIV_INN_GYLDIG_ORGNR = { melding: "Skriv inn gyldig org.nr." };
 export const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisasjonsnummeret" };
 export const VELG_MINST_ETT_LAND = { melding: "Velg minst ett land" };
 export const VELG_MINST_TO_LAND = { melding: "Velg minst to land" };
+export const VELG_LAND = { melding: "Velg et land" };
 
 export const DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN = "Du kan ikke skrive mer enn 500 tegn";
 export const DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN = "Du kan ikke skrive mer enn 4000 tegn";
