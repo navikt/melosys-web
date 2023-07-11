@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import { change, getFormValues, reduxForm } from "redux-form";
+import * as Api from "../../../services/api";
 
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as Ikoner from "../../../resources/images";
@@ -53,10 +54,21 @@ export const JournalforingForm = ({
   const visSkalTilordnes = !fagsakListe.find(
     (sak) => sak.saksnummer === formValues?.saksnummer && MKVUtils.erHenlagtEllerHenlagtBortfalt(sak.saksstatus.kode)
   );
+  const [harRegistrertAdresse, setHarRegistrertAdresse] = useState(undefined);
+
+  const { brukerID, avsenderType, representantID } = formValues;
 
   useEffect(() => {
     settFeltInnhold("ikkeSendForvaltingsmelding", !visForvaltningsmelding);
   }, [visForvaltningsmelding]);
+
+  useEffect(() => {
+    if (brukerID && avsenderType) {
+      Api.Kontroll.harRegistrertAdresse(avsenderType === KV.AvsenderTyper.FULLMEKTIG ? representantID : brukerID)
+        .then((harAdresse) => setHarRegistrertAdresse(harAdresse))
+        .catch(() => setHarRegistrertAdresse(false));
+    }
+  }, [brukerID, avsenderType, representantID]);
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
@@ -81,7 +93,13 @@ export const JournalforingForm = ({
         <Komponent
           ikon={Ikoner.Hourglass}
           tittel="Melding om saksbehandlingstid"
-          innhold={<SendForvaltningsMelding avsenderType={formValues.avsenderType} settFeltInnhold={settFeltInnhold} />}
+          innhold={
+            <SendForvaltningsMelding
+              avsenderType={formValues.avsenderType}
+              settFeltInnhold={settFeltInnhold}
+              harRegistrertAdresse={harRegistrertAdresse}
+            />
+          }
         />
       )}
 
@@ -112,6 +130,7 @@ JournalforingForm.propTypes = {
   submitFailed: PT.bool.isRequired,
   settFeltInnhold: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
+  harRegistrertAdresse: PT.func.isRequired,
   submitSpinner: PT.bool.isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
