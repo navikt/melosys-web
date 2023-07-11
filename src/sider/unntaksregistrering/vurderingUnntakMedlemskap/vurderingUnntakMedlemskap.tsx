@@ -27,6 +27,8 @@ import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 
 import "./vurderingUnntakMedlemskap.css";
 import { getLovvalgsbestemmelser } from "../../../services/modules/lovvalgsbestemmelser";
+import { MELOSYS_LOVVALGSBESTEMMELSE_API_EOS_UNNTAK } from "../../../featuretoggle/toggleNavn";
+import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
@@ -55,6 +57,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const lovvalgsApiAktivert = useFeatureToggle(MELOSYS_LOVVALGSBESTEMMELSE_API_EOS_UNNTAK);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
@@ -90,22 +93,29 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         setBestemmelser(res);
       });
     }
+
     if (MKV.Koder.sakstyper.EU_EOS === sakstype && aktivtSteg) {
-      const eos_bestemmelser = [
-        ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
-        ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
-        ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
-        ...MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser,
-      ].filter(
-        (kt: KTObject) =>
-          ![
-            MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1,
-            MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ANNET,
-            MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87_8,
-            MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87A,
-          ].includes(kt.kode)
-      );
-      setBestemmelser(eos_bestemmelser);
+      if (lovvalgsApiAktivert) {
+        getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, lovvalgsland).then((res) => {
+          setBestemmelser(res);
+        });
+      } else {
+        const eos_bestemmelser = [
+          ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
+          ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
+          ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
+          ...MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser,
+        ].filter(
+          (kt: KTObject) =>
+            ![
+              MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1,
+              MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ANNET,
+              MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87_8,
+              MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87A,
+            ].includes(kt.kode)
+        );
+        setBestemmelser(eos_bestemmelser);
+      }
     }
   }, [lovvalgsland, aktivtSteg]);
 
