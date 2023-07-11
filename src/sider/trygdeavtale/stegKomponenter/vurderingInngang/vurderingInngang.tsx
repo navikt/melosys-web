@@ -112,10 +112,10 @@ const VurderingInngang = ({
     formValues?.arbeidsland !== initialFomTomLand?.arbeidsland;
 
   useEffect(() => {
+    if (registeropplysningerHentet) {
+      visMenypanel();
+    }
     if (!Utils._isEmpty(initialValues.fom) && !Utils._isEmpty(initialValues.arbeidsland)) {
-      if (registeropplysningerHentet) {
-        visMenypanel();
-      }
       setInitialFomTomLand({ fom: initialValues.fom, tom: initialValues.tom, arbeidsland: initialValues.arbeidsland });
     }
   }, []);
@@ -162,7 +162,8 @@ const VurderingInngang = ({
       visMenypanel();
     }
   };
-  const bekreftOgInnhentRegisteropplysninger = async () => {
+
+  const bekreftOgInnhentRegisteropplysninger = () => {
     innhentRegisteropplysninger();
     fortsett();
   };
@@ -202,7 +203,7 @@ const VurderingInngang = ({
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: innhentRegisteropplysninger,
-            disabled: !formIsValid || !redigerbart,
+            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
             spinner: visSpinner,
           }}
           bekreftTekst="Innehent registeropplysninger"

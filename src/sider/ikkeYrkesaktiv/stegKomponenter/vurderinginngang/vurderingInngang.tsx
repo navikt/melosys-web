@@ -40,7 +40,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
   const { control, watch, formState, trigger } = useForm({
-    resolver: yupResolver(vurderingInngangSchema()),
+    resolver: yupResolver(vurderingInngangSchema),
     mode: "all",
     defaultValues: {
       fom: periodeFom,
@@ -98,7 +98,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     }
   };
 
-  const bekreftOgInnhentRegisteropplysningerHandle = async () => {
+  const bekreftOgInnhentRegisteropplysninger = () => {
     innhentRegisteropplysninger();
     bekreft();
   };
@@ -156,7 +156,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       ) : (
         <Mui.StegKnapper
           bekreftKnappProps={{
-            onClick: bekreftOgInnhentRegisteropplysningerHandle,
+            onClick: bekreftOgInnhentRegisteropplysninger,
             disabled: !formState?.isValid || landUtenStøtteValgt || !redigerbart,
             spinner: visSpinner,
           }}
