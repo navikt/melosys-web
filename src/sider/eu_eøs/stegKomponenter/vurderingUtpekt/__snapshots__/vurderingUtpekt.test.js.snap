@@ -208,10 +208,10 @@ exports[`VurderingUtpekt snapshot test 1`] = `
                   class="navds-date__wrapper"
                 >
                   <div
-                    class="datovelger__input input--fullbredde navds-form-field navds-form-field--medium navds-date__field"
+                    class="datovelger__input input--fullbredde navds-form-field navds-form-field--small navds-date__field"
                   >
                     <label
-                      class="navds-form-field__label navds-label"
+                      class="navds-form-field__label navds-label navds-label--small"
                       for="321"
                     >
                       Fra og med
@@ -223,7 +223,7 @@ exports[`VurderingUtpekt snapshot test 1`] = `
                         aria-controls="aksel-id-2"
                         aria-invalid="false"
                         autocomplete="off"
-                        class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                        class="navds-date__field-input navds-text-field__input navds-body-short navds-body-small"
                         id="321"
                         size="14"
                         value=""
@@ -283,10 +283,10 @@ exports[`VurderingUtpekt snapshot test 1`] = `
                   class="navds-date__wrapper"
                 >
                   <div
-                    class="datovelger__input input--fullbredde navds-form-field navds-form-field--medium navds-date__field"
+                    class="datovelger__input input--fullbredde navds-form-field navds-form-field--small navds-date__field"
                   >
                     <label
-                      class="navds-form-field__label navds-label"
+                      class="navds-form-field__label navds-label navds-label--small"
                       for="321"
                     >
                       Til og med
@@ -298,7 +298,7 @@ exports[`VurderingUtpekt snapshot test 1`] = `
                         aria-controls="aksel-id-4"
                         aria-invalid="false"
                         autocomplete="off"
-                        class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                        class="navds-date__field-input navds-text-field__input navds-body-short navds-body-small"
                         id="321"
                         size="14"
                         value=""

@@ -1,7 +1,6 @@
 import React, { ReactNode, FocusEventHandler } from "react";
 import classNames from "classnames";
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
-import "react-datepicker/dist/react-datepicker.css";
 import "./datovelger.css";
 import moment from "moment";
 
@@ -52,7 +51,7 @@ const Datovelger = ({
             datovelger__input_disabled: disabled,
             datovelger__input_feil: feil,
           })}
-          size="medium"
+          size="small"
           onBlur={onBlur}
           disabled={disabled}
         />
