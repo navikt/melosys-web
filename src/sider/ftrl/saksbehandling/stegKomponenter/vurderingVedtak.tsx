@@ -130,7 +130,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
-      Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
+      Api.Behandlinger.resultat.oppdaterFritekster(behandlingID, {
         innledningFritekst: values.innledningFritekst,
         begrunnelseFritekst: values.begrunnelseFritekst,
       });

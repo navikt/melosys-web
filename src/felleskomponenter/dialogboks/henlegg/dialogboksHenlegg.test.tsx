@@ -1,43 +1,32 @@
-import React, { ComponentProps } from "react";
-import { shallow } from "enzyme";
-import { instance, mock } from "ts-mockito";
-
-import * as Nav from "../../../navFrontend";
-
-import PdfLenkeListe from "../../pdfLenkeListe";
+import React from "react";
+import { screen } from "@testing-library/react";
+import * as redux from "react-redux";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import { DialogboksHenleggSak } from "./dialogboksHenlegg";
-import { KodeTermSelect } from "../../ui/kodeTermSelect";
-
-jest.mock("../../../featuretoggle", () => ({
-  useFeatureToggle: jest.fn(),
-}));
 
 describe("Dialogbokshenlegg", () => {
-  const mockedProps = mock<ComponentProps<typeof DialogboksHenleggSak>>();
-  const props = instance(mockedProps);
-
-  beforeEach(() => {
-    props.behandlingID = 1;
-    props.ariaHideApp = false;
-    props.avbryt = jest.fn();
-    props.henleggHandle = jest.fn();
-    props.feilmeldinger = [];
-  });
+  const props = {
+    ariaHideApp: false,
+    avbryt: jest.fn(),
+    henleggHandle: jest.fn(),
+  };
 
   it("viser en Nav Modal", () => {
-    const komponent = shallow(<DialogboksHenleggSak {...props} />);
-    expect(komponent.exists(Nav.Modal)).toBe(true);
+    renderWithProviders(<DialogboksHenleggSak {...props} />);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
-  describe("Modal", () => {
-    it("viser en dropdownliste", () => {
-      const komponent = shallow(<DialogboksHenleggSak {...props} />);
-      expect(komponent.exists(KodeTermSelect)).toBe(true);
-    });
+  it("viser forhåndsvisning når ingen feilmeldinger finnes", () => {
+    renderWithProviders(<DialogboksHenleggSak {...props} />);
+    expect(screen.getByText("Forhåndsvis brev")).toBeInTheDocument();
+  });
 
-    it("viser en pdflenkeliste", () => {
-      const komponent = shallow(<DialogboksHenleggSak {...props} />);
-      expect(komponent.exists(PdfLenkeListe)).toBe(true);
-    });
+  it("viser ikke forhåndsvisning når feilmeldinger finnes", () => {
+    const doNothing = jest.fn(() => null);
+    jest.spyOn(redux, "useDispatch").mockImplementation(() => doNothing as never);
+    const initialState = { kontroll: { status: "OK", data: { kontrollfeilList: [{ kode: "Kode", term: "term" }] } } };
+
+    renderWithProviders(<DialogboksHenleggSak {...props} />, { preloadedState: initialState });
+    expect(screen.queryAllByText("Forhåndsvis brev")).toHaveLength(0);
   });
 });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
@@ -16,13 +16,14 @@ import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysn
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
 import { PERIODE_HJELPETEKST } from "./tekster";
-import vurdering_vedtak from "./vurderingVedtakSchema";
+import lovvalgsperioderSchema from "./lovvalgsperioderSchema";
 import "./vurderingVedtakIkkeYrkesaktiv.css";
 
 interface LovvalgsperiodeProps {
   kontrollerFerdigbehandling: () => void;
+  onRedigeringErAktiv: (redigeringErAktiv: boolean) => void;
 }
-export const Lovvalgsperiode = ({ kontrollerFerdigbehandling }: LovvalgsperiodeProps) => {
+export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAktiv }: LovvalgsperiodeProps) => {
   const dispatch = useDispatch();
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
@@ -31,7 +32,7 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling }: LovvalgsperiodeP
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
 
   const { control, watch, formState, trigger } = useForm({
-    resolver: yupResolver(vurdering_vedtak),
+    resolver: yupResolver(lovvalgsperioderSchema),
     context: {
       soknadsperiode: mottatteOpplysningerPeriode,
     },
@@ -43,6 +44,12 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling }: LovvalgsperiodeP
   });
   const formValues = watch();
 
+  const [visPeriodeEndringFelter, setVisPeriodeEndringFelter] = useState(false);
+
+  useEffect(() => {
+    onRedigeringErAktiv(!visPeriodeEndringFelter);
+  }, [visPeriodeEndringFelter]);
+
   const lagreLovvalgsperiodeOgKontroller = async (values: FieldValues) => {
     await dispatch(
       lovvalgsperioderOperations.oppdaterLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID, {
@@ -53,8 +60,6 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling }: LovvalgsperiodeP
     );
     kontrollerFerdigbehandling();
   };
-
-  const [visPeriodeEndringFelter, setVisPeriodeEndringFelter] = useState(false);
 
   const EndrePeriodeKnapp = () =>
     redigerbart ? (

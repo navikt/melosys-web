@@ -20,10 +20,12 @@ import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { navigeringOperations } from "../../../ducks/navigering";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { kontrollOperations } from "../../../ducks/kontroll";
+import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 
-import { Feilkode } from "../../../@types";
+import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
+import { MELOSYS_LOVVALGSBESTEMMELSE_API_EOS_UNNTAK } from "../../../featuretoggle/toggleNavn";
+
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 import "./vurderingUnntakMedlemskap.css";
 
@@ -53,6 +55,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const lovvalgsApiAktivert = useFeatureToggle(MELOSYS_LOVVALGSBESTEMMELSE_API_EOS_UNNTAK);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
@@ -93,21 +97,27 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       );
     }
     if (EU_EOS === sakstype && aktivtSteg) {
-      const eos_bestemmelser = [
-        ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
-        ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
-        ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
-        ...MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser,
-      ].filter(
-        (kt: KTObject) =>
-          ![
-            MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1,
-            MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ANNET,
-            MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87_8,
-            MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87A,
-          ].includes(kt.kode)
-      );
-      setBestemmelser(eos_bestemmelser);
+      if (lovvalgsApiAktivert) {
+        Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, lovvalgsland).then(
+          (res) => setBestemmelser(res)
+        );
+      } else {
+        const eos_bestemmelser = [
+          ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
+          ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
+          ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
+          ...MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser,
+        ].filter(
+          (kt: KTObject) =>
+            ![
+              MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1,
+              MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ANNET,
+              MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87_8,
+              MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87A,
+            ].includes(kt.kode)
+        );
+        setBestemmelser(eos_bestemmelser);
+      }
     }
   }, [lovvalgsland, aktivtSteg]);
 
@@ -164,19 +174,13 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     dispatch(navigeringOperations.tilForsiden());
   };
 
-  const harErrorFeilmelding = () => {
-    if (typeof feilmeldinger === "string") {
-      return !Utils._isEmpty(feilmeldinger);
-    }
-    return feilmeldinger.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER).length > 0;
-  };
+  const kontrollFeilOverlappendeUnntakperiode = kontrollfeil?.filter(
+    (value) => value.kode === OVERLAPPENDE_UNNTAK_PERIODER
+  );
 
-  const feilmeldingerKunUnntaksperioder = (feil: Feilkode[] | string) => {
-    if (typeof feil === "string") {
-      return "";
-    }
-    return feil.filter((value) => value.kode === OVERLAPPENDE_UNNTAK_PERIODER);
-  };
+  const harErrorFeilmelding =
+    !Utils._isEmpty(feilmeldinger) ||
+    !Utils._isEmpty(kontrollfeil?.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER));
 
   const manglerSluttdato = Utils._isEmpty(formValues.tom);
 
@@ -212,7 +216,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         />
       </Nav.Fieldset>
 
-      {utfallErGODKJENT && !harErrorFeilmelding() && (
+      {utfallErGODKJENT && !harErrorFeilmelding && (
         <Nav.Fieldset legend="">
           <Nav.Row>
             <Nav.Column xs="8">
@@ -284,7 +288,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       {utfallErGODKJENT && (
         <Alertmeldinger
           className="vurderingUnntakMedlemskap__alertmeldinger"
-          meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
+          meldinger={kontrollFeilOverlappendeUnntakperiode}
         />
       )}
 
@@ -306,7 +310,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           onClick: handleBekreft,
           disabled:
             !formState?.isValid ||
-            (harErrorFeilmelding() && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
+            (harErrorFeilmelding && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
             !redigerbart,
         }}
         bekreftTekst="Bekreft og avslutt"

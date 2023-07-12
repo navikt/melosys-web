@@ -28,7 +28,7 @@ export function hent(behandlingID) {
 
     if (
       dispatchedMottatteOpplysningerAction.type === Types.FEILET &&
-      erFeatureToggleEnabled(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP, getState)
+      erFeatureToggleEnabled(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP, getState())
     ) {
       await dispatch(navigeringOperations.tilTomFlyt());
       return dispatchedMottatteOpplysningerAction;
