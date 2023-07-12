@@ -40,6 +40,22 @@ export function oppdaterMedlemskapsperiode(
   );
 }
 
+export function slettMedlemskapsperiode(behandlingID: number, medlemskapsId: number) {
+  return doThenDispatch(
+    () => Api.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, medlemskapsId),
+    {
+      OK: Types.OK_SLETT_MEDLEMSKAPSPERIODE,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    {
+      mapDispatchData: () => ({
+        id: medlemskapsId,
+      }),
+    }
+  );
+}
+
 export function hentBestemmelse(behandlingID: number) {
   return doThenDispatch(() => Api.Medlemskapsperioder.getBestemmelse(behandlingID), {
     OK: Types.OK_BESTEMMELSE,

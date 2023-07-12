@@ -178,19 +178,24 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   if (!aktivtSteg || !formValues) return null;
 
-  const handleSlett = (index: number) => {
+  const handleSlett = async (index: number) => {
     const medlemskapsperiode = formValues.medlemskapsperioder[index];
 
     if (medlemskapsperiode.ny) {
       remove(index);
     } else {
-      Api.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, medlemskapsperiode.periodeId)
-        .then(() => {
-          remove(index);
-        })
-        .catch((error) => {
-          update(index, { ...medlemskapsperiode, feil: error.body?.message || error });
+      // @ts-ignore
+      const response: Medlemskapsrespons = await dispatch(
+        medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId)
+      );
+      if (response?.type === medlemskapsperioderTypes.FEILET) {
+        update(index, {
+          ...medlemskapsperiode,
+          feil: (response.data as ResponsFeilet)?.data?.message || response.data,
         });
+      } else {
+        remove(index);
+      }
     }
   };
 
