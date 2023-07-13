@@ -98,12 +98,6 @@ const VurderingBestemmelse = ({
 
   if (!formValues) return null;
 
-  const erEnabled = (valgKode: string) => {
-    const erSendeTilDepartementet = valgKode === NEI_SENDE_TIL_DEPARTEMENTET;
-
-    return redigerbart && !updatePending && !erSendeTilDepartementet;
-  };
-
   return (
     <div className="vurderingBestemmelse">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
@@ -115,7 +109,7 @@ const VurderingBestemmelse = ({
             feltNavn="vedtak"
             label={valg.term}
             value={valg.kode}
-            disabled={!erEnabled(valg.kode)}
+            disabled={!redigerbart || updatePending || valg.kode === NEI_SENDE_TIL_DEPARTEMENTET}
             onChange={() => {
               resetField("tilleggsbestemmelse");
               resetField("bestemmelse");
