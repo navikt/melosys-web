@@ -12,7 +12,9 @@ import * as Utils from "../../../../../utils";
 
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { useAsyncCallbackState } from "../../../../../hooks";
+import { STATUS } from "../../../../../services";
 
 import { Inntektskilder } from "./komponenter/inntektskilder";
 import TrygdeavgiftsperioderTabell from "./komponenter/trygdeavgiftsperioderTabell";
@@ -32,10 +34,11 @@ interface Props {
 export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const medlemskapsperiodeStatus = useSelector(medlemskapsperioderSelectors.MedlemskapsperioderStatusSelector);
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
     undefined,
-    [behandlingID, aktivtSteg]
+    [behandlingID, medlemskapsperiodeStatus === STATUS.OK]
   );
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const {

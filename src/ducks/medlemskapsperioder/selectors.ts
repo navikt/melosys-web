@@ -7,6 +7,11 @@ export const MedlemskapsperioderSelector: Selector<RootState, StateSection<Types
   (medlemskapsperioder) => medlemskapsperioder
 );
 
+export const MedlemskapsperioderStatusSelector: Selector<RootState, string> = createSelector(
+  MedlemskapsperioderSelector,
+  (medlemskapsperioder) => medlemskapsperioder.status
+);
+
 export const MedlemskapsperioderDataSelector: Selector<RootState, Types.Data> = createSelector(
   MedlemskapsperioderSelector,
   (medlemskapsperioder) => medlemskapsperioder.data
