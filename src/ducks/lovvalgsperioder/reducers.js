@@ -37,7 +37,7 @@ export default function reducer(state = initialState, action = {}) {
         status: STATUS.OK,
       };
     }
-    case Types.OPPDATER_LOVVALGSPERIODE: {
+    case Types.OK_OPPDATER_LOVVALGSPERIODE: {
       const lovvalgsperioder = [...state.data];
       const oppdatertPeriodeId = finnIndexTilPeriode(lovvalgsperioder, action);
       if (oppdatertPeriodeId !== -1) lovvalgsperioder[oppdatertPeriodeId] = action.data;
@@ -46,7 +46,7 @@ export default function reducer(state = initialState, action = {}) {
         status: STATUS.OK,
       };
     }
-    case Types.SLETT_LOVVALGSPERIODE: {
+    case Types.OK_SLETT_LOVVALGSPERIODE: {
       const lovvalgsperioder = [...state.data];
       const slettetPeriodeId = finnIndexTilPeriode(lovvalgsperioder, action);
       if (slettetPeriodeId !== -1) lovvalgsperioder.splice(slettetPeriodeId, 1);

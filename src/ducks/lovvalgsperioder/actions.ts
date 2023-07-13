@@ -22,15 +22,6 @@ export function resetLovvalgsperioderState(): Types.Action {
   return { type: Types.RESET };
 }
 
-export function slettLovvalgsperiode(lovvalgsperiodeID: number): Types.Action {
-  return {
-    type: Types.SLETT_LOVVALGSPERIODE,
-    data: {
-      periodeID: lovvalgsperiodeID,
-    },
-  };
-}
-
 export function endrePeriode(fomDato: string, tomDato?: string): Types.Action {
   return {
     type: Types.ENDRE_PERIODE,

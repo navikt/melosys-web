@@ -4,8 +4,8 @@ export const OK = "lovvalgsperioder/OK";
 export const FEILET = "lovvalgsperioder/FEILET";
 export const PENDING = "lovvalgsperioder/PENDING";
 export const RESET = "lovvalgsperioder/RESET";
-export const OPPDATER_LOVVALGSPERIODE = "lovvalgsperioder/OPPDATER_LOVVALGSPERIODE";
-export const SLETT_LOVVALGSPERIODE = "lovvalgsperioder/SLETT_LOVVALGSPERIODE";
+export const OK_OPPDATER_LOVVALGSPERIODE = "lovvalgsperioder/OK_OPPDATER_LOVVALGSPERIODE";
+export const OK_SLETT_LOVVALGSPERIODE = "lovvalgsperioder/OK_SLETT_LOVVALGSPERIODE";
 export const OPPDATER_LOVVALGSPERIODER = "lovvalgsperioder/OPPDATER_LOVVALGSPERIODER";
 export const ENDRE_PERIODE = "lovvalgsperioder/ENDRE_PERIODE";
 
@@ -32,13 +32,13 @@ interface OppdaterLovvalgsperioderAction {
   data: Api.Lovvalgsperioder.Lovvalgsperiode[];
 }
 
-interface OppdaterLovvalgsperiodeAction {
-  type: typeof OPPDATER_LOVVALGSPERIODE;
+interface OkOppdaterLovvalgsperiodeAction {
+  type: typeof OK_OPPDATER_LOVVALGSPERIODE;
   data: Api.Lovvalgsperioder.Lovvalgsperiode;
 }
 
-interface SlettLovvalgsperiodeAction {
-  type: typeof SLETT_LOVVALGSPERIODE;
+interface OkSlettLovvalgsperiodeAction {
+  type: typeof OK_SLETT_LOVVALGSPERIODE;
   data: {
     periodeID: number;
   };
@@ -57,6 +57,6 @@ export type Action =
   | PendingAction
   | OkAction
   | EndrePeriodeAction
-  | OppdaterLovvalgsperiodeAction
-  | SlettLovvalgsperiodeAction
+  | OkOppdaterLovvalgsperiodeAction
+  | OkSlettLovvalgsperiodeAction
   | OppdaterLovvalgsperioderAction;
