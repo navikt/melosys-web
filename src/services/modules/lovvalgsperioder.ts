@@ -42,5 +42,5 @@ export const oppdaterLovvalgsperiode = (
 ): Promise<Lovvalgsperiode> =>
   putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${LOVVALGSPERIODER}/${lovvalgsperiodeID}`, data);
 
-export const slettLovvalgsperiode = (behandlingID: number, lovvalgsperiodeID: number): Promise<Lovvalgsperiode> =>
+export const slettLovvalgsperiode = (behandlingID: number, lovvalgsperiodeID: number) =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${LOVVALGSPERIODER}/${lovvalgsperiodeID}`);

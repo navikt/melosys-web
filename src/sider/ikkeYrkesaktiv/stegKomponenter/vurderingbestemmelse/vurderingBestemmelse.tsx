@@ -106,6 +106,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   };
 
   if (!aktivtSteg) return null;
+
+  const innvilgelsesResultatErUNNTAK = formValues?.innvilgelsesResultat === UNNTAK;
+
   return (
     <div className="vurderingBestemmelse">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
@@ -181,7 +184,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </>
       )}
 
-      {formValues?.innvilgelsesResultat === UNNTAK && sakstype === TRYGDEAVTALE && (
+      {innvilgelsesResultatErUNNTAK && sakstype === TRYGDEAVTALE && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <UnntakHjelpetekst />
@@ -189,7 +192,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       )}
 
-      {formValues?.innvilgelsesResultat === UNNTAK && sakstype === EU_EOS && (
+      {innvilgelsesResultatErUNNTAK && sakstype === EU_EOS && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <Nav.EtikettBase type="info">

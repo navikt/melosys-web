@@ -42,6 +42,7 @@ export default function reducer(state = initialState, action = {}) {
       const oppdatertPeriodeId = finnIndexTilPeriode(lovvalgsperioder, action);
       if (oppdatertPeriodeId !== -1) lovvalgsperioder[oppdatertPeriodeId] = action.data;
       return {
+        ...state,
         data: lovvalgsperioder,
         status: STATUS.OK,
       };
@@ -53,6 +54,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         data: lovvalgsperioder,
+        status: STATUS.OK,
       };
     }
     case Types.ENDRE_PERIODE: {
