@@ -4,8 +4,8 @@ import * as MKV from "@navikt/melosys-kodeverk";
 import { reducer as formReducer } from "redux-form";
 import { VurderingArtikkel13_x_vedtak } from "./vurderingArtikkel13_x_vedtak";
 
-jest.mock("../../../featuretoggle", () => ({
-  useFeatureToggle: jest.fn(),
+vi.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: vi.fn(),
 }));
 
 /* eslint-disable react/jsx-pascal-case */
@@ -22,21 +22,21 @@ describe("VurderingArtikkel13_x_Vedtak", () => {
       redigerbart: true,
       behandlingID: 4,
       lovvalgsperiode: {},
-      endreLovvalgsPeriode: jest.fn(),
-      tilbake: jest.fn(),
+      endreLovvalgsPeriode: vi.fn(),
+      tilbake: vi.fn(),
       formIsValid: true,
       formValues: {},
       form: "form",
-      touchAll: jest.fn(),
-      handleSubmit: jest.fn(),
-      byggLovvalgsperioder: jest.fn(),
-      lagreLovvalgsperioder: jest.fn(),
-      kontrollerFerdigbehandling: jest.fn(),
+      touchAll: vi.fn(),
+      handleSubmit: vi.fn(),
+      byggLovvalgsperioder: vi.fn(),
+      lagreLovvalgsperioder: vi.fn(),
+      kontrollerFerdigbehandling: vi.fn(),
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
       harLandSomKreverSED: true,
       soknadsperiode: { tom: "", fom: "" },
-      validerMottatteOpplysninger: jest.fn(),
-      fattVedtak: jest.fn(),
+      validerMottatteOpplysninger: vi.fn(),
+      fattVedtak: vi.fn(),
       harFeilmeldinger: false,
     };
 

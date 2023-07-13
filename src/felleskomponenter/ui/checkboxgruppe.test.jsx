@@ -11,7 +11,7 @@ describe("Checkboxgruppe", () => {
       legend: "Checkboxer",
       muligeValg: MKV.KTObjects.begrunnelser.arbeidsland,
       disabled: false,
-      onChange: jest.fn(),
+      onChange: vi.fn(),
       defaultValg: [MKV.Koder.begrunnelser.arbeidsland.BASELAND],
     };
   });

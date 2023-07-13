@@ -6,9 +6,9 @@ describe("Knapperad", () => {
 
   beforeEach(() => {
     props = {
-      bekreft: jest.fn(),
+      bekreft: vi.fn(),
       bekreftTekst: "bekrefttekst",
-      avbryt: jest.fn(),
+      avbryt: vi.fn(),
       avbrytTekst: "avbryttekst",
       redigerbart: true,
       bekreftRedigerbart: true,

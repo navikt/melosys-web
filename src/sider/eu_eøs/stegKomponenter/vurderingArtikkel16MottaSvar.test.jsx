@@ -10,8 +10,8 @@ describe("VurderingArtikkel16MottaSvar", () => {
 
   beforeEach(() => {
     props = {
-      bekreftOgFortsett: jest.fn(),
-      tilbake: jest.fn(),
+      bekreftOgFortsett: vi.fn(),
+      tilbake: vi.fn(),
       gyldigeSoknadsland: [],
       soknadsperiode: {
         periode: {
@@ -22,9 +22,9 @@ describe("VurderingArtikkel16MottaSvar", () => {
       redigerbart: true,
       lovvalgsperiodeFom: "lovfom",
       lovvalgsperiodeTom: "lovtom",
-      oppdaterData: jest.fn(),
-      slettData: jest.fn(),
-      hentAnmodningsperiodeSvar: jest.fn(),
+      oppdaterData: vi.fn(),
+      slettData: vi.fn(),
+      hentAnmodningsperiodeSvar: vi.fn(),
       tilstand: {},
       anmodningsperioderSvarStatus: Services.STATUS.OK,
     };
@@ -56,10 +56,10 @@ describe("FormKomponent", () => {
     const props = {
       redigerbart: true,
       soknadsperiode: {},
-      oppdaterData: jest.fn(),
+      oppdaterData: vi.fn(),
       formIsValid: true,
       anmodningsperiodeID: "1",
-      sendAnmodningsperiodeSvar: jest.fn(),
+      sendAnmodningsperiodeSvar: vi.fn(),
       formValues: {
         anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE,
       },

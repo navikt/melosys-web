@@ -41,10 +41,10 @@ describe("SokkelSkipEnkelt", () => {
       index: 1,
       begrunnelser: [],
       redigerbart: true,
-      avklartefaktaEndretHandler: jest.fn(),
-      avklartefaktaBegrunnelserEndretHandler: jest.fn(),
-      oppdaterData: jest.fn(),
-      slettData: jest.fn(),
+      avklartefaktaEndretHandler: vi.fn(),
+      avklartefaktaBegrunnelserEndretHandler: vi.fn(),
+      oppdaterData: vi.fn(),
+      slettData: vi.fn(),
     };
   });
 

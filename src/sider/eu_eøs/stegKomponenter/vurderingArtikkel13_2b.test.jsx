@@ -16,10 +16,10 @@ describe("VurderingArtikkel13_2b", () => {
         harAvklaring: true,
       },
       redigerbart: true,
-      oppdaterData: jest.fn(),
-      slettData: jest.fn(),
-      bekreftOgFortsett: jest.fn(),
-      tilbake: jest.fn(),
+      oppdaterData: vi.fn(),
+      slettData: vi.fn(),
+      bekreftOgFortsett: vi.fn(),
+      tilbake: vi.fn(),
     };
   });
 

@@ -1,4 +1,96 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
+<div
+  className="adresseTable menypanel__table-wrapper"
+>
+  <table
+    className="menypanel__table"
+  >
+    <tbody>
+      <tr
+        className="header"
+      >
+        <th
+          className="fixed-width "
+        >
+          Bostedsadresse
+        </th>
+        <th
+          className=""
+        >
+          Register
+        </th>
+        <th
+          className=""
+        >
+          Kilde
+        </th>
+        <th
+          className="fixed-width"
+        >
+          Gyldig f.o.m.
+        </th>
+      </tr>
+      <tr>
+        <td>
+          <address>
+            <div>
+              Co Yo 1
+            </div>
+            <div />
+            <div>
+              bosted gata 3
+               
+              42
+            </div>
+            <div>
+              0001
+               
+               
+            </div>
+            <div>
+               
+              STORBRITANNIA
+            </div>
+          </address>
+        </td>
+        <td>
+          Freg
+        </td>
+        <td>
+          Folkeregisteret
+        </td>
+        <td
+          className="gyldig-label"
+        >
+          03.11.2012
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`AdresseTable  > historisk AdresseTable renders correctly 1`] = `
+<div
+  className="adresseTable menypanel__table-wrapper"
+>
+  <div
+    className="chevronKnapp"
+  >
+    <button
+      onClick={[Function]}
+      type="button"
+    >
+      Åpne historikk
+      <span
+        className="nav-frontend-chevron chevronboks chevron--ned"
+      />
+    </button>
+  </div>
+</div>
+`;
 
 exports[`AdresseTable  aktiv AdresseTable renders correctly 1`] = `
 <div

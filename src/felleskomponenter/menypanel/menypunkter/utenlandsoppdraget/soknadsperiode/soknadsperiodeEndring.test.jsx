@@ -6,14 +6,14 @@ import * as Utils from "../../../../../utils";
 
 describe("SoknadsperiodeEndring", () => {
   const lagProps = () => ({
-    avbryt: jest.fn(),
-    lagre: jest.fn(),
+    avbryt: vi.fn(),
+    lagre: vi.fn(),
     soknadsperiodeFom: "11.12.2030",
     soknadsperiodeTom: "11.12.2035",
     soknadsperiodeFomErrors: undefined,
     soknadsperiodeTomErrors: undefined,
-    setSoknadsperiodeFom: jest.fn(),
-    setSoknadsperiodeTom: jest.fn(),
+    setSoknadsperiodeFom: vi.fn(),
+    setSoknadsperiodeTom: vi.fn(),
   });
 
   describe("fom inputfelt", () => {

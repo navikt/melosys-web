@@ -49,7 +49,7 @@ describe("InnerInputComponent", () => {
         error: "",
         touched: false,
         active: true,
-        dispatch: jest.fn(),
+        dispatch: vi.fn(),
       },
       forhandsvalgt: false,
       label: "",
@@ -62,59 +62,56 @@ describe("InnerInputComponent", () => {
     expect(innerInputComponent.find("Radio")).toHaveLength(1);
   });
 
-  describe("setter checked-prop korrekt", () => {
-    each([
+  it("setter checked-prop korrekt", () => {
+    const data = [
       [true, false, true, true],
       [false, false, false, true],
       [true, true, false, true],
       [false, true, false, false],
       [true, false, false, false],
-    ]).it(
-      "gitt props input.value = %p, value = %p, forhandsvalgt = %p, sett checked = %p",
-      (inputValue, value, forhandsvalgt, expectedChecked) => {
-        props.input.value = inputValue;
-        props.value = value;
-        props.forhandsvalgt = forhandsvalgt;
-        const innerInputComponent = shallow(<InnerInputComponent {...props} />);
+    ];
+    data.forEach((testdata) => {
+      /* eslint-disable prefer-destructuring */
+      props.input.value = testdata[0];
+      props.value = testdata[1];
+      props.forhandsvalgt = testdata[2];
+      /* eslint-enable prefer-destructuring */
+      const innerInputComponent = shallow(<InnerInputComponent {...props} />);
 
-        expect(innerInputComponent.props().checked).toBe(expectedChecked);
-      }
-    );
+      expect(innerInputComponent.props().checked).toBe(testdata[3]);
+    });
   });
 
-  describe("setter feil-prop korrekt", () => {
-    each([
+  it("setter feil-prop korrekt", () => {
+    const data = [
       ["error", false, true, undefined],
       ["error", true, true, undefined],
       ["", true, false, undefined],
-    ]).it(
-      "gitt props meta.error = %p, meta.touched = %p, meta.active = %p, sett feil = %p",
-      (metaError, metaTouched, metaActive, expectedError) => {
-        props.meta.error = metaError;
-        props.meta.touched = metaTouched;
-        props.meta.active = metaActive;
-        const innerInputComponent = shallow(<InnerInputComponent {...props} />);
+    ];
+    data.forEach((testdata) => {
+      /* eslint-disable prefer-destructuring */
+      props.meta.error = testdata[0];
+      props.meta.touched = testdata[1];
+      props.meta.active = testdata[2];
+      /* eslint-enable prefer-destructuring */
+      const innerInputComponent = shallow(<InnerInputComponent {...props} />);
 
-        expect(innerInputComponent.props().feil).toBe(expectedError);
-      }
-    );
+      expect(innerInputComponent.props().feil).toBe(testdata[3]);
+    });
+  });
 
-    each([["error", true, false, "error"]]).it(
-      "gitt props meta.error = %p, meta.touched = %p, meta.active = %p, sett feil = %p",
-      (metaError, metaTouched, metaActive, expectedError) => {
-        props.meta.error = metaError;
-        props.meta.touched = metaTouched;
-        props.meta.active = metaActive;
-        const innerInputComponent = shallow(<InnerInputComponent {...props} />);
+  it('gitt props meta.error = "error", meta.touched = true, meta.active = false, sett feil = "error"', () => {
+    props.meta.error = "error";
+    props.meta.touched = true;
+    props.meta.active = false;
+    const innerInputComponent = shallow(<InnerInputComponent {...props} />);
 
-        expect(innerInputComponent.props().feil).toBe(expectedError);
-      }
-    );
+    expect(innerInputComponent.props().feil).toBe("error");
   });
 
   describe("Radio-komponent", () => {
     it("ved blur, kall meta sin dispatch", () => {
-      props.meta.dispatch = jest.fn();
+      props.meta.dispatch = vi.fn();
       const innerInputComponent = shallow(<InnerInputComponent {...props} />);
 
       innerInputComponent.find("Radio").simulate("blur");

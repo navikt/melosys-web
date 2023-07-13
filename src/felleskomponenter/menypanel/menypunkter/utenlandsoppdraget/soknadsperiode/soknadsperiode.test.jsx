@@ -10,8 +10,8 @@ describe("Soknadsperiode", () => {
   beforeEach(() => {
     props = {
       redigerbart: true,
-      oppdaterPeriode: jest.fn(),
-      lagreSoknadOgOppfriskSaksopplysninger: jest.fn(),
+      oppdaterPeriode: vi.fn(),
+      lagreSoknadOgOppfriskSaksopplysninger: vi.fn(),
       soknadsperiodeFom: "12.12.2030",
       soknadsperiodeTom: "12.12.2033",
       tittel: "Tittel",

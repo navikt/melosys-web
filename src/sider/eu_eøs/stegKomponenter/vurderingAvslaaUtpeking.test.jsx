@@ -11,14 +11,14 @@ describe("VurderingAvslaaUtpeking", () => {
     props = {
       redigerbart: true,
       behandlingID: 4,
-      handleSubmit: jest.fn(),
-      avvisUtpeking: jest.fn(),
-      tilbake: jest.fn(),
+      handleSubmit: vi.fn(),
+      avvisUtpeking: vi.fn(),
+      tilbake: vi.fn(),
       fritekst: "",
       nyttLovvalgsland: "CZ",
       begrunnelseUtenlandskMyndighet: "Begrunnelse",
       vilSendeAnmodningOmMerInformasjon: true,
-      touchAll: jest.fn(),
+      touchAll: vi.fn(),
       formIsValid: true,
     };
   });

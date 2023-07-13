@@ -4,11 +4,11 @@ import userEvent from "@testing-library/user-event";
 import MKV from "../../../melosyskodeverk";
 import { VurderingGodkjennUtpekingAnnetLand } from "./vurderingGodkjennUtpekingAnnetLand";
 
-jest.mock("../../../services/modules/kontroll", () => ({
+vi.mock("../../../services/modules/kontroll", () => ({
   erBucAapen: () => Promise.resolve(true),
 }));
-jest.mock("../../../featuretoggle", () => ({
-  useFeatureToggle: jest.fn(),
+vi.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: vi.fn(),
 }));
 
 describe("vurderingGodkjennUtpekingAnnetLand", () => {
@@ -16,8 +16,8 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
 
   beforeEach(() => {
     props = {
-      lagreOgGodkjennUnntaksperioder: jest.fn(),
-      tilbake: jest.fn(),
+      lagreOgGodkjennUnntaksperioder: vi.fn(),
+      tilbake: vi.fn(),
       redigerbart: true,
       overskrift: "Godkjenn utpeking",
       behandlingID: 4,

@@ -41,7 +41,7 @@ describe("inntekt", () => {
     const inntekt = shallow(<Inntekt {...props} />);
     const knapp = inntekt.find(Nav.Knapp);
 
-    const event = { preventDefault: jest.fn() };
+    const event = { preventDefault: vi.fn() };
     knapp.simulate("click", event);
 
     expect(inntekt.find(Tabell)).toHaveLength(1);

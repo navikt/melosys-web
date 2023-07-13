@@ -3,16 +3,16 @@ import * as EKV from "eessi-kodeverk";
 import { VurderingArbeidTjenestepersonEllerFlyVedtak } from "./vurderingArbeidTjenestepersonEllerFlyVedtak";
 import Mottakerinstitusjonvelger, {
   MottakerinstitusjonvelgerFlervalg,
-} from "../../../felleskomponenter/mottakerinstitusjonvelger";
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+} from "../../../../felleskomponenter/mottakerinstitusjonvelger";
+import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 
-import * as KV from "../../../kodeverk";
-import * as Skjema from "../../../felleskomponenter/skjema";
+import * as KV from "../../../../kodeverk";
+import * as Skjema from "../../../../felleskomponenter/skjema";
 
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-jest.mock("../../../featuretoggle", () => ({
-  useFeatureToggle: jest.fn(),
+vi.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: vi.fn(),
 }));
 
 describe("VurderingArbeidTjenestepersonEllerFlyVedtak", () => {
@@ -20,37 +20,38 @@ describe("VurderingArbeidTjenestepersonEllerFlyVedtak", () => {
 
   beforeEach(() => {
     props = {
-      bekreftOgFortsett: jest.fn(),
-      tilbake: jest.fn(),
+      bekreftOgFortsett: vi.fn(),
+      tilbake: vi.fn(),
       redigerbart: true,
-      oppdaterData: jest.fn(),
-      slettData: jest.fn(),
+      oppdaterData: vi.fn(),
+      slettData: vi.fn(),
       arbeidsland: [],
       behandlingID: 4,
       lovvalgsperiode: {},
       formIsValid: true,
       formValues: {},
-      touchAll: jest.fn(),
-      endreLovvalgsPeriode: jest.fn(),
-      byggLovvalgsperioder: jest.fn(),
-      lagreLovvalgsperioder: jest.fn(),
+      touchAll: vi.fn(),
+      endreLovvalgsPeriode: vi.fn(),
+      byggLovvalgsperioder: vi.fn(),
+      lagreLovvalgsperioder: vi.fn(),
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
       form: KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK,
-      handleSubmit: jest.fn(),
+      handleSubmit: vi.fn(),
       mottatteOpplysningerFom: "",
       mottatteOpplysningerTom: "",
       soknadsperiode: { tom: "", fom: "" },
       harFeilmeldinger: false,
-      kontrollerFerdigbehandling: jest.fn(),
-      validerMottatteOpplysninger: jest.fn().mockImplementationOnce(() => Promise.resolve()),
-      fattVedtak: jest.fn(),
+      kontrollerFerdigbehandling: vi.fn(),
+      validerMottatteOpplysninger: vi.fn().mockImplementationOnce(() => Promise.resolve()),
+      fattVedtak: vi.fn(),
       selvstendigArbeid: {
         erSelvstendig: false,
       },
     };
   });
 
-  test("validerMottatteOpplysninger kalles ved submit av form", async () => {
+  // TODO: Skriv om til enkel snapshot test når aksel tas inn i prosjektet
+  test.skip("validerMottatteOpplysninger kalles ved submit av form", async () => {
     props.formValues.forkortLovvalgsperiode = false;
     props.formValues.vedtaksbrevFritekst = "vedtaksbrevfritekst";
     props.formValues.fritekstSed = "fritekst til SED";

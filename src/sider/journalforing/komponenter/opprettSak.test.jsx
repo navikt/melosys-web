@@ -22,11 +22,11 @@ describe("OpprettSak - journalføring", () => {
       journalpostID: "1234",
       hoveddokumentID: "12345",
       vedlegg: [],
-      hentOgVisAvsender: jest.fn(),
-      hentOgVisBruker: jest.fn(),
-      hentOgVisVirksomhet: jest.fn(),
+      hentOgVisAvsender: vi.fn(),
+      hentOgVisBruker: vi.fn(),
+      hentOgVisVirksomhet: vi.fn(),
       fagsakListe: [],
-      hentOgVisRepresentant: jest.fn(),
+      hentOgVisRepresentant: vi.fn(),
       behandlingstemaer: [],
       formValues: {
         saksnummer: "-1",
@@ -49,19 +49,19 @@ describe("OpprettSak - journalføring", () => {
         formNavn: "journalforing",
       },
       formErrors: {},
-      settFeltInnhold: jest.fn(),
-      settJournalforingHensikt: jest.fn(),
+      settFeltInnhold: vi.fn(),
+      settJournalforingHensikt: vi.fn(),
       submitFailed: false,
-      avbrytJournalforing: jest.fn(),
+      avbrytJournalforing: vi.fn(),
       kanSubmittes: true,
-      handleSubmit: jest.fn(),
-      submitJournalforing: jest.fn(),
+      handleSubmit: vi.fn(),
+      submitJournalforing: vi.fn(),
     };
   });
 
-  each([UTSENDT_SELVSTENDIG, UTSENDT_ARBEIDSTAKER, ARBEID_NORGE_BOSATT_ANNET_LAND]).it(
-    `Opprett Sak. Skal ha fra/til dato og liste over land`,
-    (behandlingstema) => {
+  it("Opprett Sak. Skal ha fra/til dato og liste over land", () => {
+    const behandlingstemaer = [UTSENDT_SELVSTENDIG, UTSENDT_ARBEIDSTAKER, ARBEID_NORGE_BOSATT_ANNET_LAND];
+    behandlingstemaer.forEach((behandlingstema) => {
       props.formValues.opprettnysak_behandlingstema = behandlingstema;
       props.formValues.opprettnysak_behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
       props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
@@ -78,26 +78,29 @@ describe("OpprettSak - journalføring", () => {
       expect(datovelger).toHaveLength(2);
       expect(radioKnapper).toHaveLength(0);
       expect(multiselect).toHaveLength(1);
-    }
-  );
-
-  each([ARBEID_I_UTLANDET, YRKESAKTIV]).it(`Opprett sak, skal ikke ha tilvalg`, (behandlingstema) => {
-    props.formValues.opprettnysak_behandlingstema = behandlingstema;
-    props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
-    props.formValues.sakstype = MKV.Koder.sakstyper.TRYGDEAVTALE;
-    props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
-
-    const opprettSak = shallow(<OpprettSak {...props} />);
-    const datovelger = opprettSak.find(Skjema.Datovelger);
-    const radioKnapper = opprettSak.find(Skjema.Radio);
-    const multiselect = opprettSak.find(MultiSelect);
-
-    expect(datovelger).toHaveLength(0);
-    expect(radioKnapper).toHaveLength(0);
-    expect(multiselect).toHaveLength(0);
+    });
   });
 
-  it(`Opprett sak. Skal ha fra/til dato, valg av land, radio knapper`, () => {
+  it("Opprett sak, skal ikke ha tilvalg", () => {
+    const behandlingstemaer = [ARBEID_I_UTLANDET, YRKESAKTIV];
+    behandlingstemaer.forEach((behandlingstema) => {
+      props.formValues.opprettnysak_behandlingstema = behandlingstema;
+      props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
+      props.formValues.sakstype = MKV.Koder.sakstyper.TRYGDEAVTALE;
+      props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
+
+      const opprettSak = shallow(<OpprettSak {...props} />);
+      const datovelger = opprettSak.find(Skjema.Datovelger);
+      const radioKnapper = opprettSak.find(Skjema.Radio);
+      const multiselect = opprettSak.find(MultiSelect);
+
+      expect(datovelger).toHaveLength(0);
+      expect(radioKnapper).toHaveLength(0);
+      expect(multiselect).toHaveLength(0);
+    });
+  });
+
+  it("Opprett sak. Skal ha fra/til dato, valg av land, radio knapper", () => {
     props.formValues.opprettnysak_behandlingstema = ARBEID_FLERE_LAND;
     props.formValues.opprettnysak_behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
     props.formValues.journalforingSoknadsland = ARBEID_FLERE_LAND;
@@ -124,11 +127,11 @@ describe("OpprettSak - opprett ny sak", () => {
       journalpostID: "1234",
       hoveddokumentID: "12345",
       vedlegg: [],
-      hentOgVisAvsender: jest.fn(),
-      hentOgVisBruker: jest.fn(),
-      hentOgVisVirksomhet: jest.fn(),
+      hentOgVisAvsender: vi.fn(),
+      hentOgVisBruker: vi.fn(),
+      hentOgVisVirksomhet: vi.fn(),
       fagsakListe: [],
-      hentOgVisRepresentant: jest.fn(),
+      hentOgVisRepresentant: vi.fn(),
       behandlingstemaer: [],
       formValues: {
         saksnummer: "-1",
@@ -151,19 +154,19 @@ describe("OpprettSak - opprett ny sak", () => {
         formNavn: "opprett_ny_sak",
       },
       formErrors: {},
-      settFeltInnhold: jest.fn(),
-      settJournalforingHensikt: jest.fn(),
+      settFeltInnhold: vi.fn(),
+      settJournalforingHensikt: vi.fn(),
       submitFailed: false,
-      avbrytJournalforing: jest.fn(),
+      avbrytJournalforing: vi.fn(),
       kanSubmittes: true,
-      handleSubmit: jest.fn(),
-      submitJournalforing: jest.fn(),
+      handleSubmit: vi.fn(),
+      submitJournalforing: vi.fn(),
     };
   });
 
-  each([UTSENDT_SELVSTENDIG, UTSENDT_ARBEIDSTAKER, ARBEID_NORGE_BOSATT_ANNET_LAND]).it(
-    `Opprett Sak. Skal ha fra/til dato og liste over land`,
-    (behandlingstema) => {
+  it("Opprett Sak. Skal ha fra/til dato og liste over land", () => {
+    const behandlingstemaer = [UTSENDT_SELVSTENDIG, UTSENDT_ARBEIDSTAKER, ARBEID_NORGE_BOSATT_ANNET_LAND];
+    behandlingstemaer.forEach((behandlingstema) => {
       props.formValues.behandlingstema = behandlingstema;
       props.formValues.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
       props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
@@ -180,26 +183,29 @@ describe("OpprettSak - opprett ny sak", () => {
       expect(datovelger).toHaveLength(2);
       expect(radioKnapper).toHaveLength(0);
       expect(multiselect).toHaveLength(1);
-    }
-  );
-
-  each([ARBEID_I_UTLANDET, YRKESAKTIV]).it(`Opprett sak, skal ikke ha tilvalg`, (behandlingstema) => {
-    props.formValues.behandlingstema = behandlingstema;
-    props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
-    props.formValues.sakstype = MKV.Koder.sakstyper.TRYGDEAVTALE;
-    props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
-
-    const opprettSak = shallow(<OpprettSak {...props} />);
-    const datovelger = opprettSak.find(Skjema.Datovelger);
-    const radioKnapper = opprettSak.find(Skjema.Radio);
-    const multiselect = opprettSak.find(MultiSelect);
-
-    expect(datovelger).toHaveLength(0);
-    expect(radioKnapper).toHaveLength(0);
-    expect(multiselect).toHaveLength(0);
+    });
   });
 
-  it(`Opprett sak. Skal ha fra/til dato, valg av land, radio knapper`, () => {
+  it("Opprett sak, skal ikke ha tilvalg", () => {
+    const behandlingstemaer = [ARBEID_I_UTLANDET, YRKESAKTIV];
+    behandlingstemaer.forEach((behandlingstema) => {
+      props.formValues.behandlingstema = behandlingstema;
+      props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
+      props.formValues.sakstype = MKV.Koder.sakstyper.TRYGDEAVTALE;
+      props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
+
+      const opprettSak = shallow(<OpprettSak {...props} />);
+      const datovelger = opprettSak.find(Skjema.Datovelger);
+      const radioKnapper = opprettSak.find(Skjema.Radio);
+      const multiselect = opprettSak.find(MultiSelect);
+
+      expect(datovelger).toHaveLength(0);
+      expect(radioKnapper).toHaveLength(0);
+      expect(multiselect).toHaveLength(0);
+    });
+  });
+
+  it("Opprett sak. Skal ha fra/til dato, valg av land, radio knapper", () => {
     props.formValues.behandlingstema = ARBEID_FLERE_LAND;
     props.formValues.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
     props.formValues.journalforingSoknadsland = ARBEID_FLERE_LAND;

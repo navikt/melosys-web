@@ -2,8 +2,8 @@ import MKV from "../../../melosyskodeverk";
 
 import { VurderingArtikkel16Vedtak, Innvilgelse, DelvisInnvilgelse, Avslag } from "./vurderingArtikkel16Vedtak";
 
-jest.mock("../../../featuretoggle", () => ({
-  useFeatureToggle: jest.fn(),
+vi.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: vi.fn(),
 }));
 
 describe("VurderingArtikkel16Vedtak", () => {
@@ -17,26 +17,26 @@ describe("VurderingArtikkel16Vedtak", () => {
         begrunnelseFritekst: "fritekst",
       },
       behandlingID: 1,
-      tilbake: jest.fn(),
+      tilbake: vi.fn(),
       redigerbart: true,
       vilkarBegrunnelser: [],
       art_12_1_begrunnelser: [],
       art_12_2_begrunnelser: [],
       formIsValid: true,
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-      touch: jest.fn(),
+      touch: vi.fn(),
       formValues: {
         vedtakstypebegrunnelse: MKV.Koder.begrunnelser.nyvurderingbakgrunner.FEIL_I_BEHANDLING,
         vedtakstype: MKV.Koder.vedtakstyper.KORRIGERINGSVEDTAK,
         vedtaksbrevFritekst: "Test",
       },
       harValgtNorskArbeidsgiver: true,
-      hentLovvalgsperioder: jest.fn(),
-      lagreLovvalgsperioder: jest.fn(),
-      endreLovvalgsperiode: jest.fn(),
-      kontrollerFerdigbehandling: jest.fn(),
-      validerMottatteOpplysninger: jest.fn().mockImplementation(() => Promise.resolve()),
-      fattVedtak: jest.fn(),
+      hentLovvalgsperioder: vi.fn(),
+      lagreLovvalgsperioder: vi.fn(),
+      endreLovvalgsperiode: vi.fn(),
+      kontrollerFerdigbehandling: vi.fn(),
+      validerMottatteOpplysninger: vi.fn().mockImplementation(() => Promise.resolve()),
+      fattVedtak: vi.fn(),
       harFeilmeldinger: false,
     };
   });

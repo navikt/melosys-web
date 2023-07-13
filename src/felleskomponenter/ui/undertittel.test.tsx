@@ -5,7 +5,7 @@ import * as Ikoner from "../../resources/images";
 
 import Undertittel from "./undertittel";
 
-jest.mock("../../utils", () => ({
+vi.mock("../../utils", () => ({
   _uuid: () => "123",
 }));
 

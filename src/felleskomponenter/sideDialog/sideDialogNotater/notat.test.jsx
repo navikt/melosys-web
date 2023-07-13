@@ -15,7 +15,7 @@ describe("Notat", () => {
       opprettetDato: "2019-04-23T10:02:52.031Z",
       endretDato: "2019-04-24T09:58:23.899Z",
       forfatter: "LILLA HEST",
-      onUpdate: jest.fn(),
+      onUpdate: vi.fn(),
       overskrift: "Søknad",
       maksTekstLengde: 500,
     };

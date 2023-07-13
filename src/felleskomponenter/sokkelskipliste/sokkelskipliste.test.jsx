@@ -27,10 +27,10 @@ describe("Sokkelskipliste", () => {
         },
       ],
       redigerbart: true,
-      avklartefaktaEndretHandler: jest.fn(),
-      avklartefaktaBegrunnelserEndretHandler: jest.fn(),
-      oppdaterData: jest.fn(),
-      slettData: jest.fn(),
+      avklartefaktaEndretHandler: vi.fn(),
+      avklartefaktaBegrunnelserEndretHandler: vi.fn(),
+      oppdaterData: vi.fn(),
+      slettData: vi.fn(),
     };
   });
 

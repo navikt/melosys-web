@@ -26,7 +26,7 @@ describe("stegKnapper", () => {
   });
 
   it("viser tilbake-knapp når tilbakeknappProps er definert", () => {
-    props.tilbakeKnappProps = { onClick: jest.fn() };
+    props.tilbakeKnappProps = { onClick: vi.fn() };
     const stegKnapper = shallow(<StegKnapper {...props} />);
 
     const bekreftKnapp = stegKnapper.find(Nav.Hovedknapp);

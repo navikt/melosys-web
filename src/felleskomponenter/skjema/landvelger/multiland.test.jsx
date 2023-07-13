@@ -69,7 +69,7 @@ describe.skip("EnkeltLand", () => {
       const multiLand = shallow(<InnerMultiLand {...props} />);
       const input = multiLand.find("Input");
 
-      const event = { keyCode: 13, preventDefault: jest.fn() };
+      const event = { keyCode: 13, preventDefault: vi.fn() };
       input.simulate("keyDown", event);
 
       expect(event.preventDefault).toHaveBeenCalled();

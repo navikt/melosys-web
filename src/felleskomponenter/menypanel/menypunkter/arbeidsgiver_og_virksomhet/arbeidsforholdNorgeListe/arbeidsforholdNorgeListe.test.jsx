@@ -17,9 +17,9 @@ describe("ArbeidsforholdNorgeListe", () => {
       slettTekst: "Sett",
       feltNavn: "feltnavn",
       redigerbart: true,
-      hentOrganisasjon: jest.fn(),
-      leggTil: jest.fn(),
-      findOrganisasjon: jest.fn(),
+      hentOrganisasjon: vi.fn(),
+      leggTil: vi.fn(),
+      findOrganisasjon: vi.fn(),
     };
   });
 
@@ -42,15 +42,15 @@ describe("InnerArbeidsforholdNorgeListe", () => {
       tittelTekst: "tittel",
       tittelIkon: () => <span />,
       fields: {
-        getAll: jest.fn(() => ["123123123"]),
+        getAll: vi.fn(() => ["123123123"]),
       },
       redigerbart: true,
-      hentOrganisasjon: jest.fn(),
-      leggTil: jest.fn(),
-      findOrganisasjon: jest.fn(() => ({ orgnr: "123123123" })),
-      transformerOrgTilElement: jest.fn(),
+      hentOrganisasjon: vi.fn(),
+      leggTil: vi.fn(),
+      findOrganisasjon: vi.fn(() => ({ orgnr: "123123123" })),
+      transformerOrgTilElement: vi.fn(),
       defaultElement: {},
-      elementerInneholderOrg: jest.fn(),
+      elementerInneholderOrg: vi.fn(),
       saksnummer: "13",
     };
   });
@@ -68,17 +68,17 @@ describe("EnkeltArbeidsforholdNorgeRedigerer", () => {
 
   beforeEach(() => {
     props = {
-      erstatt: jest.fn(),
+      erstatt: vi.fn(),
       valideringer: [],
       redigerbart: true,
-      hentOrganisasjon: jest.fn(),
+      hentOrganisasjon: vi.fn(),
       organisasjon: { orgnr: "123123123" },
-      slett: jest.fn(),
+      slett: vi.fn(),
       slettTekst: "Slett",
       kontaktopplysninger: {},
-      onKontaktopplysningerChange: jest.fn(),
-      onKontaktopplysningerInputBlur: jest.fn(),
-      onKontaktopplysningerSlettClick: jest.fn(),
+      onKontaktopplysningerChange: vi.fn(),
+      onKontaktopplysningerInputBlur: vi.fn(),
+      onKontaktopplysningerSlettClick: vi.fn(),
     };
   });
 

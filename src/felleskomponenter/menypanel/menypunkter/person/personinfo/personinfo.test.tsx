@@ -31,7 +31,7 @@ describe("Personinfo", () => {
   });
 
   afterAll(() => {
-    jest.resetModules();
+    vi.resetModules();
   });
 
   const personstatus = [

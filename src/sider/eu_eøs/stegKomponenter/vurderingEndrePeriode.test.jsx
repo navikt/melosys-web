@@ -12,17 +12,17 @@ describe("vurderingEndrePeriode", () => {
     props = {
       behandlingID: 1,
       lovvalgsPeriode: {},
-      endreLovvalgsperioderHandler: jest.fn(),
-      endreVedtak: jest.fn(),
-      tilForsiden: jest.fn(),
-      tilbake: jest.fn(),
+      endreLovvalgsperioderHandler: vi.fn(),
+      endreVedtak: vi.fn(),
+      tilForsiden: vi.fn(),
+      tilbake: vi.fn(),
       redigerbart: true,
       tilstand: {
         aarsakEndringPeriodeAvklartfakta: lagAvklartfakta("a", "b", "c", [], "fritekst"),
       },
-      oppdaterData: jest.fn(),
-      oppdaterPeriode: jest.fn(),
-      slettData: jest.fn(),
+      oppdaterData: vi.fn(),
+      oppdaterPeriode: vi.fn(),
+      slettData: vi.fn(),
       soknadsland: ["SE"],
     };
   });
@@ -41,7 +41,7 @@ describe("vurderingEndrePeriode", () => {
     it("endrer periode når den trykkes", () => {
       const component = shallow(<VurderingEndrePeriode {...props} />);
       const stegKnapper = component.find("StegKnapper");
-      component.instance().validerAlt = jest.fn(() => true);
+      component.instance().validerAlt = vi.fn(() => true);
       stegKnapper.props().bekreftKnappProps.onClick();
       expect(props.oppdaterPeriode).toHaveBeenCalled();
       expect(props.endreLovvalgsperioderHandler).toHaveBeenCalled();

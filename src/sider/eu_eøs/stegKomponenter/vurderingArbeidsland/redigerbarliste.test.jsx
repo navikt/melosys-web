@@ -18,8 +18,8 @@ describe("Redigerbarliste", () => {
         defaultFjernet: false,
       },
     ],
-    onFjern: jest.fn(),
-    onAngreFjern: jest.fn(),
+    onFjern: vi.fn(),
+    onAngreFjern: vi.fn(),
     redigerbar: true,
   };
 

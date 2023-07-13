@@ -20,9 +20,9 @@ describe("JournalforingForm", () => {
       journalpostID: "1234",
       hoveddokumentID: "12345",
       vedlegg: [],
-      hentOgVisAvsender: jest.fn(),
-      hentOgVisBruker: jest.fn(),
-      hentOgVisVirksomhet: jest.fn(),
+      hentOgVisAvsender: vi.fn(),
+      hentOgVisBruker: vi.fn(),
+      hentOgVisVirksomhet: vi.fn(),
       fagsakListe: [
         {
           saksnummer: "1",
@@ -43,7 +43,7 @@ describe("JournalforingForm", () => {
           },
         },
       ],
-      hentOgVisRepresentant: jest.fn(),
+      hentOgVisRepresentant: vi.fn(),
       behandlingstemaer: [],
       formValues: {
         saksnummer: "-1",
@@ -51,13 +51,13 @@ describe("JournalforingForm", () => {
         journalforingGjelder: BRUKER,
       },
       formErrors: {},
-      settFeltInnhold: jest.fn(),
-      settJournalforingHensikt: jest.fn(),
+      settFeltInnhold: vi.fn(),
+      settJournalforingHensikt: vi.fn(),
       submitFailed: false,
-      avbrytJournalforing: jest.fn(),
+      avbrytJournalforing: vi.fn(),
       kanSubmittes: true,
-      handleSubmit: jest.fn(),
-      submitJournalforing: jest.fn(),
+      handleSubmit: vi.fn(),
+      submitJournalforing: vi.fn(),
       submitSpinner: false,
       landkoder: [],
     };
@@ -73,9 +73,9 @@ describe("JournalforingForm", () => {
     expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(1);
   });
 
-  each([UNNTAK, TRYGDEAVGIFT]).it(
-    "sending av forvaltningsmelding vises IKKE for behandlingstema FØRSTEGANG og sakstema %s",
-    (sakstema) => {
+  it("sending av forvaltningsmelding vises IKKE for behandlingstema FØRSTEGANG og sakstema UNNTAK eller TRYGDEAVGIFT", () => {
+    const sakstemaer = [UNNTAK, TRYGDEAVGIFT];
+    sakstemaer.forEach((sakstema) => {
       props.formValues.sakstema = sakstema;
       props.formValues.opprettnysak_behandlingstema = FØRSTEGANG;
 
@@ -83,12 +83,12 @@ describe("JournalforingForm", () => {
       const komponenter = journalforingform.find(Komponent);
 
       expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(0);
-    }
-  );
+    });
+  });
 
-  each([SOEKNAD, SED, NY_VURDERING, HENVENDELSE, KLAGE, ANKE, ENDRET_PERIODE]).it(
-    "sending av forvaltningsmelding vises IKKE for sakstema MEDLEMSKAP_LOVVALG og behandlingstema %s",
-    (behandlingstema) => {
+  it("sending av forvaltningsmelding vises IKKE for sakstema MEDLEMSKAP_LOVVALG og gitte behandlingstema", () => {
+    const behandlingstemaer = [SOEKNAD, SED, NY_VURDERING, HENVENDELSE, KLAGE, ANKE, ENDRET_PERIODE];
+    behandlingstemaer.forEach((behandlingstema) => {
       props.formValues.sakstema = MEDLEMSKAP_LOVVALG;
       props.formValues.opprettnysak_behandlingstema = behandlingstema;
 
@@ -96,8 +96,8 @@ describe("JournalforingForm", () => {
       const komponenter = journalforingform.find(Komponent);
 
       expect(komponenter.findWhere((n) => n.props().innhold.type === SendForvaltningsMelding)).toHaveLength(0);
-    }
-  );
+    });
+  });
 
   test("sending av forvaltningsmelding vises ikke når man journalfører på virksomhet", () => {
     props.formValues.journalforingGjelder = VIRKSOMHET;

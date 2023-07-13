@@ -2,8 +2,8 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 
 import { VurderingArtikkel13UtpekLand } from "./vurderingArtikkel13UtpekLand";
 
-jest.mock("../../../featuretoggle", () => ({
-  useFeatureToggle: jest.fn(),
+vi.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: vi.fn(),
 }));
 
 /* eslint-disable react/jsx-pascal-case */
@@ -18,26 +18,26 @@ describe("VurderingArtikkel13_1_UtpekLand", () => {
       redigerbart: true,
       behandlingID: 3,
       lovvalgsland: "NO",
-      lagreOgUtpek: jest.fn(),
-      tilbake: jest.fn(),
+      lagreOgUtpek: vi.fn(),
+      tilbake: vi.fn(),
       formIsValid: true,
-      touch: jest.fn(),
+      touch: vi.fn(),
       form: "Form",
-      touchAll: jest.fn(),
+      touchAll: vi.fn(),
       erOffentligArbeidUtland: true,
       harLonnetArbeidAnnetLand: true,
-      oppdaterData: jest.fn(),
-      slettData: jest.fn(),
-      lagreUtpekingsperioder: jest.fn(),
+      oppdaterData: vi.fn(),
+      slettData: vi.fn(),
+      lagreUtpekingsperioder: vi.fn(),
       formValues: {
         forkortUtpekingsperiode: true,
       },
       utpekingsperiode: {},
-      byggUtpekingsperioder: jest.fn(),
-      endreUtpekingsperiode: jest.fn(),
+      byggUtpekingsperioder: vi.fn(),
+      endreUtpekingsperiode: vi.fn(),
       soknadsperiode: {},
       ikkeMarginaleArbeidsland: [],
-      oppdaterMottakerinstitusjoner: jest.fn(),
+      oppdaterMottakerinstitusjoner: vi.fn(),
       landMedVesentligEllerRegistrertArbeid: [],
     };
   });

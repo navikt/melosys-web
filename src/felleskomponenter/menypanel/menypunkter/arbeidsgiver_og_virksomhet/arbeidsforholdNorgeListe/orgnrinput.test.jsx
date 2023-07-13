@@ -6,8 +6,8 @@ describe("Orgnrinput", () => {
   beforeEach(() => {
     props = {
       redigerbart: true,
-      hentOrganisasjon: jest.fn(),
-      onOrgnrFunnet: jest.fn(),
+      hentOrganisasjon: vi.fn(),
+      onOrgnrFunnet: vi.fn(),
       defaultOrgnr: null,
       valideringer: [],
     };

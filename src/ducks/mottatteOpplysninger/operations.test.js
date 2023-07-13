@@ -75,92 +75,98 @@ describe("MottatteOpplysninger operations", () => {
   });
 
   describe("lagre", () => {
-    each([
-      MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-      MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
-      MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
-      MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
-      MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-      MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
-    ]).it("lagrer soeknadData ved behandlingstema %p", async (behandlingstema) => {
-      initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
+    it("lagrer soeknadData for ulike behandlingstema ", async () => {
+      const data = [
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
+      ];
+      data.forEach(async (behandlingstema) => {
+        initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
 
-      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+        const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 
-      const store = mockStore(initialState);
+        const store = mockStore(initialState);
 
-      await store.dispatch(operations.lagre());
+        await store.dispatch(operations.lagre());
 
-      expect(store.getActions()).toEqual(expectedActions);
-      expect(fetch).toHaveBeenLastCalledWith(
-        "/api/mottatteopplysninger/4",
-        expect.objectContaining({
-          body: JSON.stringify({
-            data: {
-              juridiskArbeidsgiverNorge: {},
-              personOpplysninger: {},
-              foretakUtland: {},
-              oppholdUtland: {},
-              bosted: {},
-              selvstendigArbeid: {},
-              soeknadsland: {},
-              periode: {},
-              arbeidPaaLand: {},
-              maritimtArbeid: [],
-              luftfartBaser: [],
-              loennOgGodtgjoerelse: {},
-              arbeidsgiversBekreftelse: {},
-              arbeidssituasjonOgOevrig: {},
-              utenlandsoppdraget: {},
-            },
-          }),
-        })
-      );
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(fetch).toHaveBeenLastCalledWith(
+          "/api/mottatteopplysninger/4",
+          expect.objectContaining({
+            body: JSON.stringify({
+              data: {
+                juridiskArbeidsgiverNorge: {},
+                personOpplysninger: {},
+                foretakUtland: {},
+                oppholdUtland: {},
+                bosted: {},
+                selvstendigArbeid: {},
+                soeknadsland: {},
+                periode: {},
+                arbeidPaaLand: {},
+                maritimtArbeid: [],
+                luftfartBaser: [],
+                loennOgGodtgjoerelse: {},
+                arbeidsgiversBekreftelse: {},
+                arbeidssituasjonOgOevrig: {},
+                utenlandsoppdraget: {},
+              },
+            }),
+          })
+        );
+      });
     });
 
-    each([
-      MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
-      MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
-    ]).it("lagrer SedGrunnlagData ved behandlingstema %p", async (behandlingstema) => {
-      initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
-
-      initialState.form[KV.Form.VURDER_UTPEKING].values = {
-        overgangsregelbestemmelser: [],
-      };
-
-      const expectedActions = [
-        { type: types.OPPDATER_MOTTATTE_OPPLYSNINGER, dokument: { overgangsregelbestemmelser: [] } },
-        { type: types.PENDING },
-        { type: types.OK, data: {} },
+    it("lagrer SedGrunnlagData ved behandlingstema", async () => {
+      const data = [
+        MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
+        MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
       ];
+      data.forEach(async (behandlingstema) => {
+        initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
 
-      const store = mockStore(initialState);
+        initialState.form[KV.Form.VURDER_UTPEKING].values = {
+          overgangsregelbestemmelser: [],
+        };
 
-      await store.dispatch(operations.lagre());
+        const expectedActions = [
+          { type: types.OPPDATER_MOTTATTE_OPPLYSNINGER, dokument: { overgangsregelbestemmelser: [] } },
+          { type: types.PENDING },
+          { type: types.OK, data: {} },
+        ];
 
-      expect(store.getActions()).toEqual(expectedActions);
-      expect(fetch).toHaveBeenLastCalledWith(
-        "/api/mottatteopplysninger/4",
-        expect.objectContaining({
-          body: JSON.stringify({
-            data: {
-              juridiskArbeidsgiverNorge: {},
-              personOpplysninger: {},
-              foretakUtland: {},
-              oppholdUtland: {},
-              bosted: {},
-              selvstendigArbeid: {},
-              soeknadsland: {},
-              periode: {},
-              arbeidPaaLand: {},
-              maritimtArbeid: [],
-              luftfartBaser: [],
-              overgangsregelbestemmelser: [],
-              ytterligereInformasjon: {},
-            },
-          }),
-        })
-      );
+        const store = mockStore(initialState);
+
+        await store.dispatch(operations.lagre());
+
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(fetch).toHaveBeenLastCalledWith(
+          "/api/mottatteopplysninger/4",
+          expect.objectContaining({
+            body: JSON.stringify({
+              data: {
+                juridiskArbeidsgiverNorge: {},
+                personOpplysninger: {},
+                foretakUtland: {},
+                oppholdUtland: {},
+                bosted: {},
+                selvstendigArbeid: {},
+                soeknadsland: {},
+                periode: {},
+                arbeidPaaLand: {},
+                maritimtArbeid: [],
+                luftfartBaser: [],
+                overgangsregelbestemmelser: [],
+                ytterligereInformasjon: {},
+              },
+            }),
+          })
+        );
+      });
     });
 
     it("lagrer FtrlGrunnlagData ved sakstype FTRL", async () => {

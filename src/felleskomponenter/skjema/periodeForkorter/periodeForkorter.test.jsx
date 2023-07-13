@@ -13,7 +13,7 @@ describe("PeriodeForkorter", () => {
       checkboxFeltnavn: "forkortlovvalgsperiode",
       forkortPeriode: true,
       checkboxLabel: "Forkort lovvalgsperiode",
-      onUncheck: jest.fn(),
+      onUncheck: vi.fn(),
       fomLabel: "Fra og med",
       fomFeltNavn: "fom",
       tomLabel: "Til og med",

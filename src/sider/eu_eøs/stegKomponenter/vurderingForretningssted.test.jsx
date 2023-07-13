@@ -8,8 +8,8 @@ import { VurderingForretningssted, Forretningssteder } from "./vurderingForretni
 
 describe("VurderingForretningssted", () => {
   const props = {
-    bekreftOgFortsett: jest.fn(),
-    tilbake: jest.fn(),
+    bekreftOgFortsett: vi.fn(),
+    tilbake: vi.fn(),
     tilstand: {
       omfattetINorge: {},
       omfattetILand: {},
@@ -24,8 +24,8 @@ describe("VurderingForretningssted", () => {
       },
     ],
     redigerbart: true,
-    oppdaterData: jest.fn(),
-    slettData: jest.fn(),
+    oppdaterData: vi.fn(),
+    slettData: vi.fn(),
   };
 
   describe("Forretningssteder", () => {

@@ -8,8 +8,8 @@ import PdfLenkeListe from "../../pdfLenkeListe";
 import { DialogboksHenleggSak } from "./dialogboksHenlegg";
 import { KodeTermSelect } from "../../ui/kodeTermSelect";
 
-jest.mock("../../../featuretoggle", () => ({
-  useFeatureToggle: jest.fn(),
+vi.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: vi.fn(),
 }));
 
 describe("Dialogbokshenlegg", () => {
@@ -19,8 +19,8 @@ describe("Dialogbokshenlegg", () => {
   beforeEach(() => {
     props.behandlingID = 1;
     props.ariaHideApp = false;
-    props.avbryt = jest.fn();
-    props.henleggHandle = jest.fn();
+    props.avbryt = vi.fn();
+    props.henleggHandle = vi.fn();
     props.feilmeldinger = [];
   });
 

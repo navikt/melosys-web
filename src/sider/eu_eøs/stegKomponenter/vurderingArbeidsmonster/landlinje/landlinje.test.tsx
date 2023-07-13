@@ -13,7 +13,7 @@ describe("LandLinje", () => {
   props.land = "DK";
   props.checkbox = {
     checked: true,
-    onCheck: jest.fn(),
+    onCheck: vi.fn(),
     redigerbart: true,
     value: "Testvalue",
   };

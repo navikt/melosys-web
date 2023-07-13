@@ -6,10 +6,10 @@ describe("DialogboksOppfrisk", () => {
 
   beforeEach(() => {
     props = {
-      oppfrisk: jest.fn(),
-      avbryt: jest.fn(),
-      lukk: jest.fn(),
-      tilForsiden: jest.fn(),
+      oppfrisk: vi.fn(),
+      avbryt: vi.fn(),
+      lukk: vi.fn(),
+      tilForsiden: vi.fn(),
       behandlingOppfriskes: false,
       annenBehandlingOppfriskes: false,
     };

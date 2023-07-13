@@ -7,7 +7,7 @@ import FeilmeldingDialog from "./feilmeldingDialog";
 
 describe("FeilmeldingDialog", () => {
   const props: ComponentProps<typeof FeilmeldingDialog> = {
-    avbryt: jest.fn(),
+    avbryt: vi.fn(),
     feilmeldinger: [],
   };
 

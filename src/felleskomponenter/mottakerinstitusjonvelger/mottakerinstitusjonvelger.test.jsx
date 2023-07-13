@@ -12,9 +12,9 @@ describe("MottakerinstutusjonvelgerFlervalg", () => {
 
     props = {
       feltnavn: "feltnavn",
-      oppdaterKreverMottakerinstitusjon: jest.fn(),
+      oppdaterKreverMottakerinstitusjon: vi.fn(),
       redigerbart: true,
-      hentFelt: jest.fn(),
+      hentFelt: vi.fn(),
       form: "form",
       fields: {},
       bucType: "buctype",

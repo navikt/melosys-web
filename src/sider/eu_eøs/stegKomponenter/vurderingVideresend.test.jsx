@@ -7,8 +7,8 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import { VurderingVideresend } from "./vurderingVideresend";
 
-jest.mock("../../../featuretoggle", () => ({
-  useFeatureToggle: jest.fn(),
+vi.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: vi.fn(),
 }));
 
 describe("Vurderingvideresend", () => {
@@ -18,10 +18,10 @@ describe("Vurderingvideresend", () => {
     props = {
       redigerbart: true,
       behandlingID: 4,
-      videresendSoknad: jest.fn(),
-      tilbake: jest.fn(),
+      videresendSoknad: vi.fn(),
+      tilbake: vi.fn(),
       bostedsland: { kode: "SE", term: "Sverige" },
-      handleSubmit: jest.fn(),
+      handleSubmit: vi.fn(),
       form: "form",
       fysiskeDokument: [],
     };

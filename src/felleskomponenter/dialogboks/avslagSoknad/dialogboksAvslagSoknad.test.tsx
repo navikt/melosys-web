@@ -4,19 +4,19 @@ import * as Nav from "../../../navFrontend";
 import Knapperad from "../../knapperad";
 import { DialogboksAvslagSoknad } from "./dialogboksAvslagSoknad";
 
-jest.mock("../../../featuretoggle", () => ({
-  useFeatureToggle: jest.fn(),
+vi.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: vi.fn(),
 }));
 
 describe("DialogboksAvslagSoknad", () => {
   const props = {
-    avbryt: jest.fn(),
-    avslaaSoknadHandle: jest.fn(),
+    avbryt: vi.fn(),
+    avslaaSoknadHandle: vi.fn(),
     ariaHideApp: false,
     redigerbart: true,
     behandlingID: 1,
-    dispatch: jest.fn(),
-    kontrollerFerdigbehandling: jest.fn(),
+    dispatch: vi.fn(),
+    kontrollerFerdigbehandling: vi.fn(),
     vedtakstype: null,
     feilmeldinger: [],
     kontrollfeil: [],

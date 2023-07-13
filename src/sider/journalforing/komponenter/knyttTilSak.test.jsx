@@ -39,7 +39,7 @@ describe("KnyttTilSak", () => {
       opprettBehandling: false,
       behandlingstema: "",
       behandlingstype: "",
-      changeField: jest.fn(),
+      changeField: vi.fn(),
     };
   });
 

@@ -35,9 +35,9 @@ describe("Innercheckboxcomponent", () => {
         error: "",
         touched: false,
         active: false,
-        dispatch: jest.fn(),
+        dispatch: vi.fn(),
       },
-      onClick: jest.fn(),
+      onClick: vi.fn(),
       disabled: false,
     };
   });
@@ -45,7 +45,7 @@ describe("Innercheckboxcomponent", () => {
   it("viser en NavCheckbox med korrekte props", () => {
     props.label = "test";
     props.input = { value: true };
-    props.onClick = jest.fn();
+    props.onClick = vi.fn();
     props.disabled = true;
     const innerCheckboxComponent = shallow(<InnerCheckboxComponent {...props} />);
     const navCheckbox = innerCheckboxComponent.find("Checkbox");
@@ -59,7 +59,7 @@ describe("Innercheckboxcomponent", () => {
 
   describe("ved endring av checkbox", () => {
     beforeEach(() => {
-      jest.useFakeTimers();
+      vi.useFakeTimers();
     });
 
     it("kall redux form dispatch dersom submitOnChange prop er true", () => {
@@ -67,7 +67,7 @@ describe("Innercheckboxcomponent", () => {
         error: "",
         touched: false,
         active: false,
-        dispatch: jest.fn(),
+        dispatch: vi.fn(),
       };
       props.submitOnChange = true;
       const innerCheckboxComponent = shallow(<InnerCheckboxComponent {...props} />);
@@ -75,7 +75,7 @@ describe("Innercheckboxcomponent", () => {
 
       navCheckbox.simulate("change");
 
-      jest.runAllTimers();
+      vi.runAllTimers();
 
       expect(props.meta.dispatch).toHaveBeenCalled();
     });
@@ -85,7 +85,7 @@ describe("Innercheckboxcomponent", () => {
         error: "",
         touched: false,
         active: false,
-        dispatch: jest.fn(),
+        dispatch: vi.fn(),
       };
       props.submitOnChange = false;
       const innerCheckboxComponent = shallow(<InnerCheckboxComponent {...props} />);
@@ -93,7 +93,7 @@ describe("Innercheckboxcomponent", () => {
 
       navCheckbox.simulate("change");
 
-      jest.runAllTimers();
+      vi.runAllTimers();
 
       expect(props.meta.dispatch).not.toHaveBeenCalled();
     });

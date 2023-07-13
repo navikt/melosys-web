@@ -17,7 +17,7 @@ describe("annenForelderModal", () => {
 
   beforeEach(() => {
     props = instance(mockedProps);
-    props.onRequestClose = jest.fn();
+    props.onRequestClose = vi.fn();
     props.contentLabel = "contentLabel";
     props.barnNavn = "barnNavn";
     props.forelderIdent = "123";

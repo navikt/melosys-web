@@ -7,7 +7,7 @@ describe("KodeTermSelect", () => {
     props = {
       koder: [],
       value: "",
-      onChange: jest.fn(),
+      onChange: vi.fn(),
       label: "",
       feil: undefined,
       disableForsteValg: false,

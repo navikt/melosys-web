@@ -13,9 +13,9 @@ interface SessionStorageMock {
   clear: () => void;
 }
 
-jest.mock("../featuretoggle", () => ({
+vi.mock("../featuretoggle", () => ({
   __esModule: true,
-  useFeatureToggle: jest.fn(),
+  useFeatureToggle: vi.fn(),
 }));
 
 const createSessionStorageMock = (data: Record<string, any> = {}): SessionStorageMock => {
@@ -49,7 +49,7 @@ describe("useFeatureToggle", () => {
   });
 
   it("henter featuretoggle som er sann", async () => {
-    jest.spyOn(featureToggleModule, "useFeatureToggle").mockResolvedValue(true as never);
+    vi.spyOn(featureToggleModule, "useFeatureToggle").mockResolvedValue(true as never);
     sessionStorageMock.setItem(FEATURE_TOGGLE, { testFeatureEnabled: true });
 
     const { result: enabledToggle } = renderHook(() => featureToggleModule.useFeatureToggle("testFeatureEnabled"));
@@ -61,7 +61,7 @@ describe("useFeatureToggle", () => {
   });
 
   it("henter featuretoggle som er usann", async () => {
-    jest.spyOn(featureToggleModule, "useFeatureToggle").mockResolvedValue(false as never);
+    vi.spyOn(featureToggleModule, "useFeatureToggle").mockResolvedValue(false as never);
     sessionStorageMock.setItem(FEATURE_TOGGLE, { testFeatureEnabled: true, testFeatureDisabled: false });
 
     const { result: disabledToggle } = renderHook(() => featureToggleModule.useFeatureToggle("testFeatureDisabled"));

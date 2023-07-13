@@ -4,28 +4,28 @@ import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-import * as Nav from "../../../navFrontend";
-import * as Utils from "../../../utils";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as KV from "../../../kodeverk";
-import * as MPT from "../../../proptypes";
-import * as Mui from "../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
+import * as Utils from "../../../../utils";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as KV from "../../../../kodeverk";
+import * as MPT from "../../../../proptypes";
+import * as Mui from "../../../../felleskomponenter/ui";
 
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
-import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { vedtakOperations } from "../../../ducks/vedtak";
-import { formOperations } from "../../../ducks/form";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { vedtakOperations } from "../../../../ducks/vedtak";
+import { formOperations } from "../../../../ducks/form";
 
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 import Mottakerinstitusjonvelger, {
   MottakerinstitusjonvelgerFlervalg,
-} from "../../../felleskomponenter/mottakerinstitusjonvelger";
+} from "../../../../felleskomponenter/mottakerinstitusjonvelger";
 import {
   konverterAvklartfaktaTilStegData,
   konverterLovvalgsbestemmelseTilStegData,
@@ -35,10 +35,10 @@ import {
   lagTilleggBestemmelse,
   slettAvklartfakta,
   slettTilleggBestemmelse,
-} from "../../../felleskomponenter/stegvelger";
-import { BOOLSK_STRING } from "../../../constants";
+} from "../../../../felleskomponenter/stegvelger";
+import { BOOLSK_STRING } from "../../../../constants";
 
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArbeidTjenestepersonEllerFlyVedtakSchema from "./vurderingArbeidTjenestepersonEllerFlyVedtakSchema";
 import "./vurderingArbeidTjenestepersonEllerFlyVedtak.css";
 

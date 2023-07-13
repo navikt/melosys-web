@@ -2,10 +2,13 @@ import renderer from "react-test-renderer";
 
 import Arbeidsforhold from "./arbeidsforhold";
 
-jest.mock("../../../../utils", () => ({
-  ...jest.requireActual("../../../../utils"),
-  _uuid: () => "123",
-}));
+vi.mock("../../../../utils", async () => {
+  const actual = await vi.importActual("../../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("arbeidsforhold", () => {
   const props = {

@@ -6,11 +6,16 @@ import { fileURLToPath, URL } from "node:url";
 import * as path from "path";
 import reactRefresh from "@vitejs/plugin-react-refresh";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   base: "/melosys",
+  // React JSX transform krever babel så i vite må man fortsatt importe
   esbuild: {
     jsxInject: `import React from 'react'`,
+  },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./src/setupTests.js",
   },
   plugins: [
     {
@@ -63,15 +68,10 @@ export default defineConfig({
       },
     },
   },
-  define: {
-    "import.meta.env": {},
-    module: {},
-  },
   resolve: {
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "~": fileURLToPath(new URL("./node_modules", import.meta.url)),
+      "~": fileURLToPath(new URL("./src", import.meta.url)),
       src: fileURLToPath(new URL("./src", import.meta.url)),
       "nav-frontend-alertstriper-style": fileURLToPath(new URL("./src/nav-style/alertstriper.css", import.meta.url)),
       "nav-frontend-chevron-style": fileURLToPath(new URL("./src/nav-style/chevron.css", import.meta.url)),

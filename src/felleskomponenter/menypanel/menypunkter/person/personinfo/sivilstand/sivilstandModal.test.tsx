@@ -11,7 +11,7 @@ describe("SivilstandModal", () => {
 
   beforeEach(() => {
     props = instance(mockedProps);
-    props.lukkModal = jest.fn();
+    props.lukkModal = vi.fn();
     props.modalAriaHideApp = false;
     props.skalViseModal = true;
     props.aktiveSivilstander = [

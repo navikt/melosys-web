@@ -1,5 +1,3 @@
-import each from "jest-each";
-
 import * as selectors from "./selectors";
 import MKV from "../../melosyskodeverk";
 
@@ -9,39 +7,35 @@ import { STATUS } from "../../services/utils";
 
 describe("FlytSelectors", () => {
   describe("UtpekingVurderingSelector", () => {
-    each([
-      [
-        MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
-        MKV.Koder.utfallregistreringunntak.GODKJENT,
-      ],
-      [
-        MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
-        MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT,
-      ],
-    ]).describe("UtpekingVurderingSelector med behandlingstema %p", (behandlingstema, forventet) => {
-      it(`returnerer ${forventet}`, () => {
-        const state = DucksTestUtils.lagState({
-          behandlinger: {
-            status: STATUS.OK,
-            data: {
-              oppsummering: {
-                behandlingstema: {
-                  kode: behandlingstema,
-                },
+    const lagState = (behandlingstema: string) =>
+      DucksTestUtils.lagState({
+        behandlinger: {
+          status: STATUS.OK,
+          data: {
+            oppsummering: {
+              behandlingstema: {
+                kode: behandlingstema,
               },
             },
           },
-          behandlingsresultat: {
-            status: STATUS.OK,
-            data: {
-              utfallRegistreringUnntak: MKV.Koder.utfallregistreringunntak.GODKJENT,
-              utfallUtpeking: MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT,
-            },
+        },
+        behandlingsresultat: {
+          status: STATUS.OK,
+          data: {
+            utfallRegistreringUnntak: MKV.Koder.utfallregistreringunntak.GODKJENT,
+            utfallUtpeking: MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT,
           },
-        });
-
-        expect(selectors.UtpekingVurderingSelector(state)).toBe(forventet);
+        },
       });
+
+    it("BESLUTNING_LOVVALG_ANNET_LAND returnerer utfall GODKJENT", () => {
+      const state = lagState(MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND);
+      expect(selectors.UtpekingVurderingSelector(state)).toBe(MKV.Koder.utfallregistreringunntak.GODKJENT);
+    });
+
+    it("BESLUTNING_LOVVALG_NORGE returnerer utfall IKKE_GODKJENT", () => {
+      const state = lagState(MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE);
+      expect(selectors.UtpekingVurderingSelector(state)).toBe(MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT);
     });
   });
 

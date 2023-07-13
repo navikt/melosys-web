@@ -6,8 +6,8 @@ import MKV from "../../melosyskodeverk";
 
 import PdfLenkeListe from "./pdfLenkeListe";
 
-jest.mock("../../featuretoggle", () => ({
-  useFeatureToggle: jest.fn(),
+vi.mock("../../featuretoggle", () => ({
+  useFeatureToggle: vi.fn(),
 }));
 
 describe("PdfLenkeListe", () => {
@@ -34,7 +34,7 @@ describe("PdfLenkeListe", () => {
           data: {},
         },
       ],
-      vedKlikk: jest.fn(() => true),
+      vedKlikk: vi.fn(() => true),
     };
   });
 

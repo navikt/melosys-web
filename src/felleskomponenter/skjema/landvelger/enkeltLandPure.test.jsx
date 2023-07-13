@@ -10,7 +10,7 @@ describe("EnkeltLandPure", () => {
         { kode: "SE", term: "Sverige" },
       ],
       value: "verdi",
-      onChange: jest.fn(),
+      onChange: vi.fn(),
     };
   });
 
@@ -49,7 +49,7 @@ describe("EnkeltLandPure", () => {
   describe("ved tastetrykk", () => {
     it("dersom tasten er enter, kaller preventDefault", () => {
       const enkeltLandPure = shallow(<EnkeltLandPure {...props} />);
-      const event = { keyCode: 13, preventDefault: jest.fn() };
+      const event = { keyCode: 13, preventDefault: vi.fn() };
       const input = enkeltLandPure.find("Input");
 
       input.simulate("keyDown", event);
@@ -61,7 +61,7 @@ describe("EnkeltLandPure", () => {
   describe("ved fokus på input", () => {
     it("kall event.target.select", () => {
       const enkeltLandPure = shallow(<EnkeltLandPure {...props} />);
-      const event = { target: { select: jest.fn() } };
+      const event = { target: { select: vi.fn() } };
       const input = enkeltLandPure.find("Input");
 
       input.simulate("focus", event);
