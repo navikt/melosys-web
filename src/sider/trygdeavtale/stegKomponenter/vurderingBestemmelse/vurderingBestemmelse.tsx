@@ -6,6 +6,7 @@ import { change, getFormValues, reduxForm, untouch } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
+import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
@@ -22,11 +23,7 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 import "./vurderingBestemmelse.css";
 import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
 import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_TRYGDEAVTALE_UNNTAK } from "../../../../featuretoggle/toggleNavn";
-
-const NEI_ANMODE_OM_UNNTAK = "NEI_ANMODE_OM_UNNTAK";
-const NEI_AVSLAG = "NEI_AVSLAG";
+import { AVTALELAND_UTFALL } from "../../../../kodeverk/koder";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -81,9 +78,10 @@ const VurderingBestemmelse = ({
   aktivtSteg,
 }: PropsFromRedux & Props) => {
   const [updatePending, setUpdatePending] = useState(false);
-  const trygdeavtaleUnntakToggle = useFeatureToggle(MELOSYS_TRYGDEAVTALE_UNNTAK);
 
-  const skalLagreVedtaksvalg = formValues?.vedtak !== NEI_ANMODE_OM_UNNTAK && formValues?.vedtak !== NEI_AVSLAG;
+  const skalLagreVedtaksvalg =
+    formValues?.vedtak !== AVTALELAND_UTFALL.NEI_ANMODE_OM_UNNTAK &&
+    formValues?.vedtak !== AVTALELAND_UTFALL.NEI_AVSLAG;
 
   useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
@@ -102,13 +100,15 @@ const VurderingBestemmelse = ({
 
   if (!formValues) return null;
 
-  const skalValgVæreDisabled = (valg: KTObject) => {
-    const starterMedJa = valg.kode.startsWith("JA");
-    const erUnntakForespørselOgIkkeAustralia =
-      trygdeavtaleUnntakToggle && valg.kode === NEI_ANMODE_OM_UNNTAK && soeknadsland?.kode !== "AU";
-    const erAvslag = valg.kode === NEI_AVSLAG;
+  const erEnabled = (valgKode: string) => {
+    if (!redigerbart || updatePending) return false;
 
-    return (updatePending || !redigerbart || !(starterMedJa || erUnntakForespørselOgIkkeAustralia)) && !erAvslag;
+    const erFatteVedtak = valgKode === AVTALELAND_UTFALL.JA_FATTE_VEDTAK;
+    const erAnmodeOmUnntakOgIkkeAustralia =
+      valgKode === AVTALELAND_UTFALL.NEI_ANMODE_OM_UNNTAK && soeknadsland?.kode !== MKV.Koder.land_iso2.AU;
+    const erAvslag = valgKode === AVTALELAND_UTFALL.NEI_AVSLAG;
+
+    return erAvslag || erFatteVedtak || erAnmodeOmUnntakOgIkkeAustralia;
   };
 
   return (
@@ -122,7 +122,7 @@ const VurderingBestemmelse = ({
             feltNavn="vedtak"
             label={valg.term}
             value={valg.kode}
-            disabled={skalValgVæreDisabled(valg)}
+            disabled={!erEnabled(valg.kode)}
             onChange={() => {
               resetField("tilleggsbestemmelse");
               resetField("bestemmelse");
@@ -165,7 +165,7 @@ const VurderingBestemmelse = ({
         </Nav.Row>
       )}
 
-      {formValues?.vedtak === NEI_ANMODE_OM_UNNTAK && (
+      {formValues?.vedtak === AVTALELAND_UTFALL.NEI_ANMODE_OM_UNNTAK && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <UnntakHjelpetekst />
@@ -173,7 +173,7 @@ const VurderingBestemmelse = ({
         </Nav.Row>
       )}
 
-      {formValues?.vedtak === NEI_AVSLAG && (
+      {formValues?.vedtak === AVTALELAND_UTFALL.NEI_AVSLAG && (
         <Nav.Row>
           <Nav.Column xs="10">
             <TomFlytMelding />
