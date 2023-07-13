@@ -25,6 +25,8 @@ import { UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger"
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_TRYGDEAVTALE_UNNTAK } from "../../../../featuretoggle/toggleNavn";
 
+const NEI_ANMODE_OM_UNNTAK = "NEI_ANMODE_OM_UNNTAK";
+
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
   formValues: getFormValues(KV.Form.Trygdeavtale.BESTEMMELSE)(state),
@@ -86,7 +88,7 @@ const VurderingBestemmelse = ({
       oppdaterFlyt(
         {
           ...resultat,
-          vedtak: formValues?.vedtak,
+          vedtak: formValues?.vedtak === NEI_ANMODE_OM_UNNTAK ? undefined : formValues?.vedtak,
           bestemmelse: formValues?.bestemmelse,
           tilleggsbestemmelse: formValues.tilleggsbestemmelse ? tilleggsbestemmelseValg?.kode : undefined,
         },
@@ -113,7 +115,7 @@ const VurderingBestemmelse = ({
               !redigerbart ||
               !(
                 valg.kode.startsWith("JA") ||
-                (trygdeavtaleUnntakToggle && valg.kode === "NEI_ANMODE_OM_UNNTAK" && soeknadsland?.kode !== "AU")
+                (trygdeavtaleUnntakToggle && valg.kode === NEI_ANMODE_OM_UNNTAK && soeknadsland?.kode !== "AU")
               )
             }
             onChange={() => {
@@ -158,7 +160,7 @@ const VurderingBestemmelse = ({
         </Nav.Row>
       )}
 
-      {formValues?.vedtak === "NEI_ANMODE_OM_UNNTAK" && (
+      {formValues?.vedtak === NEI_ANMODE_OM_UNNTAK && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <UnntakHjelpetekst />

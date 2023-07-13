@@ -20,12 +20,11 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../../duc
 import { datalastingOperations } from "../../../../ducks/datalasting";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
 import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from "./validering/unntaksperiodeSkjema";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
 
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "../saksopplysninger.css";
-import { kontrollOperations } from "../../../../ducks/kontroll";
-import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
 const uuid = require("uuid/v4");
 
@@ -46,7 +45,7 @@ const Saksopplysninger = ({
   startOgVisOppfriskModal,
   behandlingsresultatErHentet,
   kontrollerUnntaksperiode,
-  unntaksperiodeFeilmeldinger,
+  unntaksperiodeKontrollfeil,
 }) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.AVSLAG);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState("");
@@ -79,9 +78,9 @@ const Saksopplysninger = ({
   const [kanIkkeGodkjenneUtenÅEndrePerioden, setKanIkkeGodkjenneUtenÅEndrePerioden] = React.useState(false);
 
   React.useEffect(() => {
-    setHarUnntaksperiodefeil(!Utils._isEmpty(unntaksperiodeFeilmeldinger));
+    setHarUnntaksperiodefeil(!Utils._isEmpty(unntaksperiodeKontrollfeil));
     setHarValgtIkkeGodkjenn(KV.Koder.Unntaksperiode.AVSLAG === unntaksperiodeVurdering);
-  }, [unntaksperiodeVurdering, unntaksperiodeFeilmeldinger]);
+  }, [unntaksperiodeVurdering, unntaksperiodeKontrollfeil]);
 
   React.useEffect(() => {
     if (!kanIkkeGodkjenneUtenÅEndrePerioden && !endrePeriodeTom && !endrePeriodeFom) {
@@ -473,7 +472,7 @@ Saksopplysninger.propTypes = {
   startOgVisOppfriskModal: PT.func.isRequired,
   behandlingsresultatErHentet: PT.bool.isRequired,
   kontrollerUnntaksperiode: PT.func.isRequired,
-  unntaksperiodeFeilmeldinger: PT.arrayOf(PT.object).isRequired,
+  unntaksperiodeKontrollfeil: PT.arrayOf(PT.object).isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -490,7 +489,7 @@ const mapStateToProps = (state) => ({
   sedLovvalgsbestemmelse: behandlingerSelectors.SEDSelector(state).lovvalgsbestemmelse,
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingsresultatErHentet: behandlingsresultatSelectors.BehandlingsresultatStatusErOkSelector(state),
-  unntaksperiodeFeilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+  unntaksperiodeKontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

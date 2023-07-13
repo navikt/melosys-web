@@ -44,6 +44,11 @@ export const InnledningFritekstSelector = createSelector(
   (behandlingsresultat) => behandlingsresultat.innledningFritekst
 );
 
+export const NyVurderingBakgrunnSelector = createSelector(
+  (state) => BehandlingsresultatSelector(state),
+  (behandlingsresultat) => behandlingsresultat.nyVurderingBakgrunn
+);
+
 export const KontrollresultatBegrunnelseKoderSelector = createSelector(
   BehandlingsresultatSelector,
   (behandlingsresultat) => behandlingsresultat.kontrollresultatBegrunnelseKoder

@@ -22,6 +22,7 @@ import { lovvalgsperioderOperations } from "../../../../ducks/lovvalgsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { kontrollerFerdigbehandling } from "../../../../ducks/kontroll/operations";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
+import { kontrollSelectors } from "../../../../ducks/kontroll";
 import { formSelectors } from "../../../../ducks/form";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
@@ -39,7 +40,6 @@ import {
   NY_VURDERING_BAKGRUNN_HJELPETEKST,
   PERIODE_HJELPETEKST,
 } from "./tekster";
-import { kontrollSelectors } from "../../../../ducks/kontroll";
 
 const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
@@ -96,7 +96,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterPeriode: (periode: Periode) => dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
-  hentLovvalgsperiode: (behandlingID: string) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+  hentLovvalgsperiode: (behandlingID: number) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

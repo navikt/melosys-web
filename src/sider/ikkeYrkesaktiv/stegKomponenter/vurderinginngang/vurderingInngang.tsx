@@ -20,6 +20,7 @@ import { landkoderSelectors } from "../../../../ducks/landkoder";
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import MKV from "../../../../melosyskodeverk";
 
 interface Props {
   bekreft: () => void;
@@ -39,7 +40,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
   const { control, watch, formState, trigger } = useForm({
-    resolver: yupResolver(vurderingInngangSchema(sakstype)),
+    resolver: yupResolver(vurderingInngangSchema),
     mode: "all",
     defaultValues: {
       fom: periodeFom,
@@ -57,11 +58,13 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   const [visSpinner, setVisSpinner] = useState(false);
 
-  const landUtenStøtteValgt = formState?.errors?.land?.type === "landValidering";
+  const landUtenStøtteValgt =
+    sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
+    (formValues.land === MKV.Koder.landkoder.FR || formValues.land === MKV.Koder.landkoder.IT);
 
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
-  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner;
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner && !landUtenStøtteValgt;
 
   useEffect(() => {
     if (registeropplysningerHentet) {
@@ -84,7 +87,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     );
   };
 
-  const bekreftHandle = async () => {
+  const innhentRegisteropplysninger = async () => {
     if (skalHenteRegisteropplysninger) {
       lagrePeriodeOgLand();
 
@@ -93,6 +96,10 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       setVisSpinner(false);
       dispatch(menypanelOperations.visMenypanel());
     }
+  };
+
+  const bekreftOgInnhentRegisteropplysninger = () => {
+    innhentRegisteropplysninger();
     bekreft();
   };
 
@@ -137,14 +144,25 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
       {landUtenStøtteValgt && <TomFlytMelding />}
 
-      <Mui.StegKnapper
-        bekreftKnappProps={{
-          onClick: bekreftHandle,
-          disabled: !formState?.isValid || !redigerbart,
-          spinner: visSpinner,
-        }}
-        bekreftTekst="Bekreft og innhent registeropplysninger"
-      />
+      {landUtenStøtteValgt && skalHenteRegisteropplysninger ? (
+        <Mui.StegKnapper
+          bekreftKnappProps={{
+            onClick: innhentRegisteropplysninger,
+            disabled: !formState?.isValid || !redigerbart,
+            spinner: visSpinner,
+          }}
+          bekreftTekst="Innehent registeropplysninger"
+        />
+      ) : (
+        <Mui.StegKnapper
+          bekreftKnappProps={{
+            onClick: bekreftOgInnhentRegisteropplysninger,
+            disabled: !formState?.isValid || landUtenStøtteValgt || !redigerbart,
+            spinner: visSpinner,
+          }}
+          bekreftTekst="Bekreft og innhent registeropplysninger"
+        />
+      )}
     </div>
   );
 };

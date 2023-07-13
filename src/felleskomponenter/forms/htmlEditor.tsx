@@ -39,13 +39,21 @@ const InnerHTMLEditorComponent = React.forwardRef<HTMLEditorProps, InnerHtmlEdit
 type HTMLEditorProps = HtmlEditorComponentProps & UseControllerProps;
 
 const HTMLEditor = React.forwardRef<HTMLEditorProps, HTMLEditorProps>(
-  ({ name, control, ...rest }: HTMLEditorProps, _ref: any) => {
+  ({ name, control, className, onChange }: HTMLEditorProps, _ref: any) => {
     return (
       <Controller
         name={name}
         control={control}
         render={({ field, formState }) => (
-          <InnerHTMLEditorComponent {...field} {...rest} feil={getErrorMessage(field, formState)} />
+          <InnerHTMLEditorComponent
+            {...field}
+            className={className}
+            onChange={(event: any) => {
+              field.onChange(event);
+              if (onChange) onChange(event);
+            }}
+            feil={getErrorMessage(field, formState)}
+          />
         )}
       />
     );
