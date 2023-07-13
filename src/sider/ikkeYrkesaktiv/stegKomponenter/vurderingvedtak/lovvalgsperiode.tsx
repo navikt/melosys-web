@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
@@ -10,12 +10,13 @@ import * as Utils from "../../../../utils";
 import * as Forms from "../../../../felleskomponenter/forms";
 import * as Nav from "../../../../navFrontend";
 
-import { PERIODE_HJELPETEKST } from "./tekster";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
-import lovvalgsperioderSchema from "./lovvalgsperioderSchema";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
+import { PERIODE_HJELPETEKST } from "./tekster";
+import lovvalgsperioderSchema from "./lovvalgsperioderSchema";
 import "./vurderingVedtakIkkeYrkesaktiv.css";
 
 interface LovvalgsperiodeProps {
@@ -25,6 +26,7 @@ interface LovvalgsperiodeProps {
 export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAktiv }: LovvalgsperiodeProps) => {
   const dispatch = useDispatch();
 
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
@@ -47,25 +49,16 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
   useEffect(() => {
     onRedigeringErAktiv(!visPeriodeEndringFelter);
   }, [visPeriodeEndringFelter]);
-  const lagreLovvalgsperiodeOgKontroller = async () => {
-    await dispatch(lovvalgsperioderOperations.lagre());
-    kontrollerFerdigbehandling();
-  };
 
-  const debouncedLagreLovvalgsperiode = useCallback(Utils._debounce(lagreLovvalgsperiodeOgKontroller, 500), []);
-
-  const oppdaterOgLagreLovvalgsperiode = (values: FieldValues) => {
-    dispatch(
-      lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
+  const lagreLovvalgsperiodeOgKontroller = async (values: FieldValues) => {
+    await dispatch(
+      lovvalgsperioderOperations.oppdaterLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID, {
         ...lovvalgsperiode,
-        lovvalgsperiode: {
-          fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
-          tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
-        },
+        fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
+        tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
       })
     );
-
-    debouncedLagreLovvalgsperiode();
+    kontrollerFerdigbehandling();
   };
 
   const EndrePeriodeKnapp = () =>
@@ -92,7 +85,7 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
     );
 
   const handleLagrePeriodeEndring = async () => {
-    oppdaterOgLagreLovvalgsperiode({ fom: formValues.fom, tom: formValues.tom });
+    await lagreLovvalgsperiodeOgKontroller({ fom: formValues.fom, tom: formValues.tom });
     setVisPeriodeEndringFelter(false);
   };
 
