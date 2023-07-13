@@ -6,7 +6,6 @@ import { change, getFormValues, reduxForm, untouch } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
@@ -23,7 +22,8 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 import "./vurderingBestemmelse.css";
 import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
 import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
-import { AVTALELAND_UTFALL } from "../../../../kodeverk/koder";
+
+const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, NEI_SENDE_TIL_DEPARTEMENTET } = KV.Koder.AVTALELAND_UTFALL;
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -65,7 +65,7 @@ interface Props {
 }
 
 const VurderingBestemmelse = ({
-  data: { vedtakValg, bestemmelseValg, tilleggsbestemmelseValg, soeknadsland },
+  data: { vedtakValg, bestemmelseValg, tilleggsbestemmelseValg },
   formIsValid,
   formValues,
   fortsett,
@@ -79,9 +79,7 @@ const VurderingBestemmelse = ({
 }: PropsFromRedux & Props) => {
   const [updatePending, setUpdatePending] = useState(false);
 
-  const skalLagreVedtaksvalg =
-    formValues?.vedtak !== AVTALELAND_UTFALL.NEI_ANMODE_OM_UNNTAK &&
-    formValues?.vedtak !== AVTALELAND_UTFALL.NEI_AVSLAG;
+  const skalLagreVedtaksvalg = formValues?.vedtak !== NEI_ANMODE_OM_UNNTAK && formValues?.vedtak !== NEI_AVSLAG;
 
   useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
@@ -101,14 +99,9 @@ const VurderingBestemmelse = ({
   if (!formValues) return null;
 
   const erEnabled = (valgKode: string) => {
-    if (!redigerbart || updatePending) return false;
+    const erSendeTilDepartementet = valgKode === NEI_SENDE_TIL_DEPARTEMENTET;
 
-    const erFatteVedtak = valgKode === AVTALELAND_UTFALL.JA_FATTE_VEDTAK;
-    const erAnmodeOmUnntakOgIkkeAustralia =
-      valgKode === AVTALELAND_UTFALL.NEI_ANMODE_OM_UNNTAK && soeknadsland?.kode !== MKV.Koder.land_iso2.AU;
-    const erAvslag = valgKode === AVTALELAND_UTFALL.NEI_AVSLAG;
-
-    return erAvslag || erFatteVedtak || erAnmodeOmUnntakOgIkkeAustralia;
+    return redigerbart && !updatePending && !erSendeTilDepartementet;
   };
 
   return (
@@ -165,7 +158,7 @@ const VurderingBestemmelse = ({
         </Nav.Row>
       )}
 
-      {formValues?.vedtak === AVTALELAND_UTFALL.NEI_ANMODE_OM_UNNTAK && (
+      {formValues?.vedtak === NEI_ANMODE_OM_UNNTAK && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <UnntakHjelpetekst />
@@ -173,7 +166,7 @@ const VurderingBestemmelse = ({
         </Nav.Row>
       )}
 
-      {formValues?.vedtak === AVTALELAND_UTFALL.NEI_AVSLAG && (
+      {formValues?.vedtak === NEI_AVSLAG && (
         <Nav.Row>
           <Nav.Column xs="10">
             <TomFlytMelding />
