@@ -69,9 +69,15 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     }
   }, [aktivtSteg, soeknadsland]);
 
+  const resetBestemmelseOgIkkeYrkesaktivSituasjonstype = () => {
+    setValue("bestemmelse", "");
+    setValue("ikkeYrkesaktivSituasjontype", "");
+    lagreIkkeYrkesaktivSituasjontype(null);
+  };
+
   useEffect(() => {
     if (aktivtSteg && redigerbart && formValues) {
-      setValue("bestemmelse", "");
+      resetBestemmelseOgIkkeYrkesaktivSituasjonstype();
       if (formValues.innvilgelsesResultat === UNNTAK) {
         if (lovvalgsperiode?.periodeID)
           dispatch(lovvalgsperioderOperations.slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID));
