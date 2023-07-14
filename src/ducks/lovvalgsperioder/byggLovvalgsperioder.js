@@ -11,13 +11,6 @@ import { lovvalgsperioderSelectors } from "./index";
 import { behandlingerSelectors } from "../behandlinger";
 import { flytSelectors } from "../flyt";
 import { formSelectors } from "../form";
-import { fagsakSelectors } from "../fagsaker";
-import { harIkkeYrkesaktivFlyt, harUnntakFlyt } from "../../routing/url";
-import { erFeatureToggleEnabled } from "../../featuretoggle";
-import {
-  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
-  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-} from "../../featuretoggle/toggleNavn";
 
 /* Hjelpefunksjoner
  * Disse eksponeres ikke utad, men er kun ment for å bryte opp komplisert logikk og gjøre
@@ -202,26 +195,8 @@ const bestemLovvalgsland = (lovvalgsbestemmelse, reduxState) => {
   }
 };
 
-const erUnntakEllerIkkeYrkesaktivFlyt = async (reduxState) => {
-  const sakstype = fagsakSelectors.SakstypeKodeSelector(reduxState);
-  const sakstema = fagsakSelectors.SakstemaKodeSelector(reduxState);
-  const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(reduxState);
-  const registreringUnntakFraMedlemskapToggleEnabled = erFeatureToggleEnabled(
-    MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-    reduxState
-  );
-
-  const ikkeYrkesaktivToggleEnabled = erFeatureToggleEnabled(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT, reduxState);
-
-  return (
-    harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled) ||
-    harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivToggleEnabled)
-  );
-};
-
-const lovvalgsperiodeSkalVaereTom = async (lovvalgsbestemmelse, reduxState) =>
-  (lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 &&
-    !(await erUnntakEllerIkkeYrkesaktivFlyt(reduxState))) ||
+const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) =>
+  lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 ||
   avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState) ||
   flytSelectors.HarOffentligTjenesteAnnetLandSelector(reduxState) ||
   flytSelectors.HarLonnetArbeidAnnetLand(reduxState) ||
@@ -236,8 +211,8 @@ const bestemPeriode = (reduxState) => {
 
 const norgeErLovvalgsland = (lovvalgsland) => lovvalgsland === MKV.Koder.landkoder.NO;
 
-const byggLovvalgsPerioder = async (stegState, reduxState) => {
-  if (await lovvalgsperiodeSkalVaereTom(stegState.lovvalgsbestemmelse, reduxState)) return [];
+const byggLovvalgsPerioder = (stegState, reduxState) => {
+  if (lovvalgsperiodeSkalVaereTom(stegState.lovvalgsbestemmelse, reduxState)) return [];
 
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const lovvalgsland = stegState.lovvalgsland || bestemLovvalgsland(stegState.lovvalgsbestemmelse, reduxState);
@@ -245,12 +220,6 @@ const byggLovvalgsPerioder = async (stegState, reduxState) => {
   const periode = bestemPeriode(reduxState);
   const fomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.fomDato : null) || periode.fom;
   const tomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.tomDato : null) || periode.tom;
-  const defaultTrygdeDekning = norgeErLovvalgsland(lovvalgsland)
-    ? MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO
-    : MKV.Koder.trygdedekninger.UTEN_DEKNING;
-  const defaultMedlemskapstype = norgeErLovvalgsland(lovvalgsland)
-    ? MKV.Koder.medlemskapstyper.PLIKTIG
-    : MKV.Koder.medlemskapstyper.UNNTATT;
 
   return [
     {
@@ -261,16 +230,20 @@ const byggLovvalgsPerioder = async (stegState, reduxState) => {
       tilleggBestemmelse: stegState.tilleggbestemmelse || null,
       unntakFraBestemmelse: unntakFraBestemmelse || null,
       unntakFraLovvalgsland: null,
-      innvilgelsesResultat: stegState.innvilgelsesResultat || MKV.Koder.innvilgelsesResultat.INNVILGET,
+      innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland,
-      trygdeDekning: stegState.trygdeDekning || defaultTrygdeDekning,
-      medlemskapstype: stegState.medlemskapstype || defaultMedlemskapstype,
+      trygdeDekning: norgeErLovvalgsland(lovvalgsland)
+        ? MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO
+        : MKV.Koder.trygdedekninger.UTEN_DEKNING,
+      medlemskapstype: norgeErLovvalgsland(lovvalgsland)
+        ? MKV.Koder.medlemskapstyper.PLIKTIG
+        : MKV.Koder.medlemskapstyper.UNNTATT,
     },
   ];
 };
 
 export function oppdaterLovvalgsperioderState(stegState) {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     const reduxState = getState();
     const alleLovvalgsvilkar = vilkarSelectors.valgteLovvalgsVilkar(reduxState);
 
@@ -283,12 +256,9 @@ export function oppdaterLovvalgsperioderState(stegState) {
       stegState.tilleggbestemmelse ||
       stegState.unntakfrabestemmelse ||
       stegState.lovvalgsland ||
-      stegState.lovvalgsperiode ||
-      stegState.trygdeDekning ||
-      stegState.medlemskapstype ||
-      stegState.innvilgelsesResultat
+      stegState.lovvalgsperiode
     ) {
-      const lovvalgsPerioder = await byggLovvalgsPerioder(stegState, reduxState);
+      const lovvalgsPerioder = byggLovvalgsPerioder(stegState, reduxState);
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
     } else {
       dispatch(Actions.resetLovvalgsperioderState());
