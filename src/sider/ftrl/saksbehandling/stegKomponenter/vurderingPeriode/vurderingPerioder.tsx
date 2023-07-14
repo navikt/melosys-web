@@ -202,6 +202,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       innvilgelsesResultat: "",
       trygdedekning: "",
     };
+    // @ts-ignore
     append(nyMedlemskapsperiode);
   };
 

@@ -1,4 +1,5 @@
 import { Controller, UseControllerProps } from "react-hook-form";
+import { forwardRef } from "react";
 
 import * as Nav from "../../navFrontend";
 
@@ -17,7 +18,7 @@ interface RadioComponentProps {
 
 type RadioInnerComponentProps = RadioComponentProps & RegisterHookFormProps;
 
-const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerComponentProps>(
+const InnerRadioComponent = forwardRef<HTMLSelectElement, RadioInnerComponentProps>(
   ({ disabled, ...rest }: RadioInnerComponentProps, _ref: any) => {
     return (
       <Nav.Radio
@@ -38,7 +39,7 @@ const InnerRadioComponent = React.forwardRef<HTMLSelectElement, RadioInnerCompon
 
 type RadioProps = RadioComponentProps & UseControllerProps;
 
-const Radio = React.forwardRef<HTMLSelectElement, RadioProps>(
+const Radio = forwardRef<HTMLSelectElement, RadioProps>(
   ({ name, control, checked, ...rest }: RadioProps, _ref: any) => {
     return (
       <Controller

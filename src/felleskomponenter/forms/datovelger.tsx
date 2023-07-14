@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, forwardRef } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 
 import * as Utils from "../../utils/dato";
@@ -20,7 +20,7 @@ interface DatovelgerComponentProps {
 
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;
 
-const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatovelgerComponentProps>(
+const InnerDatovelgerComponent = forwardRef<HTMLSelectElement, InnerDatovelgerComponentProps>(
   (
     { label, disabled, bredde, minDate, maxDate, feil, onChange, ...rest }: InnerDatovelgerComponentProps,
     _ref: any
@@ -45,7 +45,7 @@ const InnerDatovelgerComponent = React.forwardRef<HTMLSelectElement, InnerDatove
 
 type DatovelgerProps = DatovelgerComponentProps & UseControllerProps;
 
-const Datovelger = React.forwardRef<HTMLSelectElement, DatovelgerProps>(
+const Datovelger = forwardRef<HTMLSelectElement, DatovelgerProps>(
   ({ name, control, ...rest }: DatovelgerProps, _ref: any) => {
     return (
       <Controller

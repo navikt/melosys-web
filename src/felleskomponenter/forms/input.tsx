@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, forwardRef } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import * as Nav from "../../navFrontend";
 
@@ -13,7 +13,7 @@ interface InputComponentProps extends Nav.InputProps {
 
 type InputInnerComponentProps = InputComponentProps & RegisterHookFormProps;
 
-const InputInnerComponent = React.forwardRef<HTMLInputElement, InputInnerComponentProps>(
+const InputInnerComponent = forwardRef<HTMLInputElement, InputInnerComponentProps>(
   ({ label, disabled, ...rest }: InputProps, _ref: any) => {
     return (
       <Nav.Input
@@ -31,7 +31,7 @@ const InputInnerComponent = React.forwardRef<HTMLInputElement, InputInnerCompone
 
 type InputProps = InputComponentProps & UseControllerProps;
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(({ name, control, ...rest }: InputProps, _ref: any) => {
+const Input = forwardRef<HTMLInputElement, InputProps>(({ name, control, ...rest }: InputProps, _ref: any) => {
   return (
     <Controller
       name={name}

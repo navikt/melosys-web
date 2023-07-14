@@ -1,3 +1,11 @@
 export { default as EtikettLiten } from "./etikettLiten";
 export { default as UndertittelH3 } from "./undertittelH3";
-export { Element, Undertittel, Normaltekst, Innholdstittel, Systemtittel } from "nav-frontend-typografi";
+export {
+  Element,
+  Undertittel,
+  Normaltekst,
+  Innholdstittel,
+  Systemtittel,
+  Feilmelding,
+  Undertekst,
+} from "nav-frontend-typografi";

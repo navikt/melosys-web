@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, forwardRef } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import HtmlEditor from "../htmlEditor";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -17,7 +17,7 @@ type HtmlEditorComponentProps = {
 
 type InnerHtmlEditorComponentProps = HtmlEditorComponentProps & RegisterHookFormProps;
 
-const InnerHTMLEditorComponent = React.forwardRef<HTMLEditorProps, InnerHtmlEditorComponentProps>(
+const InnerHTMLEditorComponent = forwardRef<HTMLEditorProps, InnerHtmlEditorComponentProps>(
   ({ spellcheck = true, ...rest }: InnerHtmlEditorComponentProps, _ref: any) => {
     return (
       <div className={`${rest.className} editor_content`}>
@@ -38,7 +38,7 @@ const InnerHTMLEditorComponent = React.forwardRef<HTMLEditorProps, InnerHtmlEdit
 
 type HTMLEditorProps = HtmlEditorComponentProps & UseControllerProps;
 
-const HTMLEditor = React.forwardRef<HTMLEditorProps, HTMLEditorProps>(
+const HTMLEditor = forwardRef<HTMLEditorProps, HTMLEditorProps>(
   ({ name, control, ...rest }: HTMLEditorProps, _ref: any) => {
     return (
       <Controller

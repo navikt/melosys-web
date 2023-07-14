@@ -3,8 +3,10 @@
 import Enzyme, { shallow, mount } from "enzyme";
 import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 import createFetchMock from "vitest-fetch-mock";
-import { vi } from "vitest";
-import "@testing-library/jest-dom/extend-expect";
+import matchers from "@testing-library/jest-dom/matchers";
+import { vi, expect } from "vitest";
+
+expect.extend(matchers);
 
 // Oppsettfilen for Yup kjøres ikke uten videre av vi. Derfor er det nødvendig å importere den manuelt her.
 import "./setupYup";
