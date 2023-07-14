@@ -26,8 +26,6 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { formSelectors } from "../../../ducks/form";
 
-import { MELOSYS_BREV_GENERELT_FRITEKSTVEDLEGG } from "../../../featuretoggle/toggleNavn";
-import { useFeatureToggle } from "../../../featuretoggle";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 
@@ -118,8 +116,6 @@ const SendBrev = ({
   const [sendBrevSpinner, setSendBrevSpinner] = useState(false);
   const [lagreUtkastSpinner, setLagreUtkastSpinner] = useState(false);
   const [forkastBrevSpinner, setForkastBrevSpinner] = useState(false);
-
-  const fritekstvedleggToggle = useFeatureToggle(MELOSYS_BREV_GENERELT_FRITEKSTVEDLEGG);
 
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
@@ -573,8 +569,7 @@ const SendBrev = ({
         <VedleggVelger dokumenter={dokumenter} valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} />
       )}
 
-      {fritekstvedleggToggle &&
-        fritekstvedleggFelt &&
+      {fritekstvedleggFelt &&
         (visFritekstvedleggSkjema ? (
           <FritekstvedleggSkjema
             felt={fritekstvedleggFelt}
