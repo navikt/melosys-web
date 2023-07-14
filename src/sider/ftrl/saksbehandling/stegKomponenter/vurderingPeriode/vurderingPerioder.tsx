@@ -26,16 +26,13 @@ import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { PeriodeElementer } from "./komponenter/periodeElementer";
 import { Feilmelding, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
-import {
-  FieldArrayProps,
-  FormValuesProps,
-  MedlemskapsperiodeProp,
-  Medlemskapsrespons,
-  ResponsFeilet,
-  VurderingPerioderProps,
-} from "./komponenter/types";
+import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
+
+const kallFeilet = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
+
+const mapFeil = (response: any) => response?.data?.message || response.data;
 
 const mapTilMedlemskapsperiodeProps = (
   medlemskapsperiode: Api.Medlemskapsperioder.Medlemskapsperiode
@@ -132,8 +129,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       innvilgelsesResultat: medlemskapsperiode.innvilgelsesResultat,
     };
 
-    // @ts-ignore
-    const response: Medlemskapsrespons = await (medlemskapsperiode.ny
+    const response: any = await (medlemskapsperiode.ny
       ? dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest))
       : dispatch(
           medlemskapsperioderOperations.oppdaterMedlemskapsperiode(
@@ -143,13 +139,10 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
           )
         ));
 
-    if (response?.type === medlemskapsperioderTypes.FEILET) {
-      update(index, {
-        ...formValues.medlemskapsperioder[index],
-        feil: (response.data as ResponsFeilet)?.data?.message || response.data,
-      });
+    if (kallFeilet(response)) {
+      update(index, { ...formValues.medlemskapsperioder[index], feil: mapFeil(response) });
     } else {
-      update(index, mapTilMedlemskapsperiodeProps(response.data as Api.Medlemskapsperioder.Medlemskapsperiode));
+      update(index, mapTilMedlemskapsperiodeProps(response.data));
     }
   };
 
@@ -157,9 +150,9 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     Utils._debounce(async (medlemskapsperioder, isValid, overskrevetIndex) => {
       if (isValid) {
         // eslint-disable-next-line no-restricted-syntax
-        for (const [index, medlemskapsperiode] of medlemskapsperioder.entries()) {
-          // eslint-disable-next-line no-await-in-loop
-          await lagreMedlemskapsperiode(medlemskapsperiode, overskrevetIndex !== undefined ? overskrevetIndex : index);
+        for (const periode of medlemskapsperioder) {
+          const index = overskrevetIndex !== undefined ? overskrevetIndex : medlemskapsperioder.indexOf(periode);
+          await lagreMedlemskapsperiode(periode, index);
         }
       }
     }, 500),
@@ -184,15 +177,11 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     if (medlemskapsperiode.ny) {
       remove(index);
     } else {
-      // @ts-ignore
-      const response: Medlemskapsrespons = await dispatch(
+      const response = await dispatch(
         medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId)
       );
-      if (response?.type === medlemskapsperioderTypes.FEILET) {
-        update(index, {
-          ...medlemskapsperiode,
-          feil: (response.data as ResponsFeilet)?.data?.message || response.data,
-        });
+      if (kallFeilet(response)) {
+        update(index, { ...medlemskapsperiode, feil: mapFeil(response) });
       } else {
         remove(index);
       }
