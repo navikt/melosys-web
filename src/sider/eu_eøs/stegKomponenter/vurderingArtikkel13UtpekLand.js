@@ -179,6 +179,7 @@ export const VurderingArtikkel13UtpekLand = ({
         forkortPeriode={formValues.forkortUtpekingsperiode}
         fomLabel="Startdato"
         fomFeltNavn="fomDato"
+        tom={Utils.dato.norskStringTilDate(soknadsperiode.fom)}
         tomLabel="Sluttdato"
         tomFeltNavn="tomDato"
       />

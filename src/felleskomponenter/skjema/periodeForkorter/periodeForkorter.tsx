@@ -16,6 +16,7 @@ interface PeriodeForkorterProps {
   fomFeltNavn: string;
   tomLabel?: ReactNode;
   tomFeltNavn: string;
+  tom: Date;
 }
 
 const PeriodeForkorter = ({
@@ -31,6 +32,7 @@ const PeriodeForkorter = ({
   fomFeltNavn,
   tomLabel = "",
   tomFeltNavn,
+  tom,
 }: PeriodeForkorterProps) => {
   const onCheckboxClick: MouseEventHandler<HTMLInputElement> = (e) => {
     if (!e.currentTarget.checked) {
@@ -56,7 +58,7 @@ const PeriodeForkorter = ({
             <Skjema.Datovelger label={fomLabel} feltNavn={fomFeltNavn} disabled={!redigerbart || !fomRedigerbar} />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Skjema.Datovelger label={tomLabel} feltNavn={tomFeltNavn} disabled={!redigerbart} />
+            <Skjema.Datovelger label={tomLabel} feltNavn={tomFeltNavn} disabled={!redigerbart} minDate={tom} />
           </Nav.Column>
         </Nav.Row>
       )}

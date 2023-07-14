@@ -37,7 +37,6 @@ const Datovelger = ({
     defaultSelected: value,
     onDateChange: (nyDato?: Date) => nyDato && onChange(nyDato),
   });
-
   const datovelgerID = _uuid();
   return (
     <div className="datovelger">
@@ -48,7 +47,6 @@ const Datovelger = ({
           label={label}
           error={!!feil}
           className={classNames("datovelger__input", `input--${bredde?.toLowerCase()}`, {
-            datovelger__input_disabled: disabled,
             datovelger__input_feil: feil,
           })}
           size="small"
