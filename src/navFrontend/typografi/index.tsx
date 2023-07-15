@@ -8,4 +8,5 @@ export {
   Systemtittel,
   Feilmelding,
   Undertekst,
+  UndertekstBold,
 } from "nav-frontend-typografi";
