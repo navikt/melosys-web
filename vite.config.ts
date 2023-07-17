@@ -7,7 +7,7 @@ import * as path from "path";
 import reactRefresh from "@vitejs/plugin-react-refresh";
 
 export default defineConfig({
-  base: "/melosys",
+  base: "./",
   // React JSX transform krever babel så i vite må man fortsatt importe
   esbuild: {
     jsxInject: `import React from 'react'`,
@@ -101,7 +101,6 @@ export default defineConfig({
       AppTypes: path.resolve(__dirname, "./src/globalmodules/AppTypes.ts"),
       Domene: path.resolve(__dirname, "./src/globalmodules/Domene.ts"),
       "melosys-api": path.resolve(__dirname, "./src/globalmodules/melosys-api.ts"),
-      // "nav-frontend-grid": path.resolve(__dirname, "src/globalmodules/nav-frontend-grid.ts"),
     },
   },
 });
