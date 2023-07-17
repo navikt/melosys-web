@@ -1,4 +1,4 @@
-import { ReactNode, FocusEventHandler } from "react";
+import { ReactNode, FocusEventHandler, SyntheticEvent } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { nb } from "date-fns/locale";
 import classNames from "classnames";
@@ -52,7 +52,7 @@ const Datovelger = ({
   const dateRegex = /^[0-3]+[1-9]*[.\-/]?\d{0,2}[.\-/]?\d{0,4}$/; // dd(separator?)MM(separator?)yy(yy?)
 
   // Stopper skriving av ugyldige tegn (ikke blant dateFormat over)
-  const handleOnChangeRaw = (e: React.SyntheticEvent<HTMLInputElement>) => {
+  const handleOnChangeRaw = (e: SyntheticEvent<HTMLInputElement>) => {
     const val = e.currentTarget.value;
     if (val !== "" && !dateRegex.test(val)) {
       e.preventDefault();

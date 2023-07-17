@@ -1,74 +1,53 @@
 import { ChangeEventHandler, useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { RootState } from "AppTypes";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
-import * as Api from "../../../services/api";
-import * as StringUtils from "../../../utils/streng";
+import * as Utils from "../../../utils";
 
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Knapperad from "../../knapperad";
 import HtmlEditor from "../../htmlEditor";
 import bem from "../../../bemUtils";
 
-import { kontrollOperations } from "../../../ducks/kontroll";
+import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../feilmeldinger";
 
 import "./dialogboksHenlegg.css";
 
-const mapStateToProps = (state: RootState) => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
-});
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
-    dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type DialogboksHenleggSakProps = PropsFromRedux & {
+type DialogboksHenleggSakProps = {
   henleggHandle: (data: { begrunnelseKode: string; fritekst: string }) => void;
   avbryt: () => void;
   ariaHideApp?: boolean;
 };
 
-export const DialogboksHenleggSak = ({
-  behandlingID,
-  feilmeldinger,
-  henleggHandle,
-  avbryt,
-  kontrollerFerdigbehandling,
-  ariaHideApp = false,
-}: DialogboksHenleggSakProps) => {
+export const DialogboksHenleggSak = ({ henleggHandle, avbryt, ariaHideApp = false }: DialogboksHenleggSakProps) => {
+  const dispatch = useDispatch();
+
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+
   const [begrunnelseKode, setBegrunnelseKode] = useState<string>("");
   const [feilmeldingSelect, setFeilmeldingSelect] = useState<string | null>(null);
   const [feilmeldingFritekst, setFeilmeldingFritekst] = useState<string | null>(null);
   const [fritekst, setFritekst] = useState<string>("");
 
   useEffect(() => {
-    (async () => {
-      await kontrollerFerdigbehandling({
+    dispatch(
+      kontrollOperations.kontrollerFerdigbehandling({
         behandlingID,
         vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.HENLEGGELSE,
         skalRegisteropplysningerOppdateres: false,
-      });
-    })();
+      })
+    );
   }, []);
 
   const erBegrunnelseValgt = begrunnelseKode !== "";
   const erFritekstValgt = begrunnelseKode === MKV.Koder.begrunnelser.henleggelsesgrunner.ANNET;
-  const harIngenFeilmeldinger = !(feilmeldinger && feilmeldinger.length > 0);
+  const harIngenFeilmeldinger = Utils._isEmpty(kontrollfeil);
 
   const validerBegrunnelse = () => {
     if (!erBegrunnelseValgt) {
@@ -78,7 +57,7 @@ export const DialogboksHenleggSak = ({
   };
 
   const validerFritekst = () => {
-    const fritekstValideringPassert = !(erFritekstValgt && !StringUtils.harStrengInnhold(fritekst));
+    const fritekstValideringPassert = !(erFritekstValgt && !Utils.streng.harStrengInnhold(fritekst));
     if (!fritekstValideringPassert) {
       setFeilmeldingFritekst("Mangler fritekst");
     }
@@ -172,4 +151,4 @@ export const DialogboksHenleggSak = ({
   );
 };
 
-export default connector(DialogboksHenleggSak);
+export default DialogboksHenleggSak;

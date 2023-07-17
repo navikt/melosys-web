@@ -1,4 +1,4 @@
-import { ReactElement, forwardRef } from "react";
+import { ReactElement, forwardRef, ReactNode } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import * as Nav from "../../navFrontend";
 
@@ -10,7 +10,7 @@ interface SelectComponentProps extends Nav.SelectProps {
   emptyFieldDisabled?: boolean;
   emptyFieldText?: string;
   disabled?: boolean;
-  children: React.ReactNode | React.ReactNode[];
+  children: ReactNode | ReactNode[];
   onChange?: (value: any) => void;
 }
 

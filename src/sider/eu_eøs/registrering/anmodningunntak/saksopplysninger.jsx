@@ -14,22 +14,22 @@ import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 
-import { RegistreringMenypanelForm } from "../../../../felleskomponenter/menypanelForm";
-import RegisterkontrollTreff from "../../../../felleskomponenter/registerkontrollTreff";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { datalastingOperations } from "../../../../ducks/datalasting";
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
 import { anmodningsperiodesvarSelectors } from "../../../../ducks/anmodningsperiodesvar";
 import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
-
-import "../saksopplysninger.css";
-import { DatoOmradeMedVarighet } from "../../../../felleskomponenter/datoOmrade";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
-import { delvisInnvilgelseSkjema, avslagSkjema } from "./validering/anmodningunntakSkjema";
-import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 import { anmodningunntakOperations } from "../../../../ducks/anmodningunntak";
+
+import { RegistreringMenypanelForm } from "../../../../felleskomponenter/menypanelForm";
+import RegisterkontrollTreff from "../../../../felleskomponenter/registerkontrollTreff";
+import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
-import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
+import { DatoOmradeMedVarighet } from "../../../../felleskomponenter/datoOmrade";
+
+import { delvisInnvilgelseSkjema, avslagSkjema } from "./validering/anmodningunntakSkjema";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import "../saksopplysninger.css";
 
 const LinkForhandsvisningSed = ({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst }) => {
   let pdfDokument = [];
@@ -69,7 +69,6 @@ const Saksopplysninger = ({
   startOgVisOppfriskModal,
   saksnummer,
   sendAnmodningUnntakSvar,
-  feilmeldinger,
 }) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(
     MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE
@@ -364,7 +363,7 @@ const Saksopplysninger = ({
 
   return (
     <div>
-      <Feilmeldinger className="anmodningunntak_feilmelding" feilmeldinger={feilmeldinger} />
+      <Feilmeldinger className="anmodningunntak_feilmelding" />
       <form name="anmodningunntak" id="anmodningunntak" onSubmit={overstyrSubmit}>
         <div className="stegvelger panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
@@ -477,22 +476,12 @@ Saksopplysninger.propTypes = {
   startOgVisOppfriskModal: PT.func.isRequired,
   saksnummer: PT.string.isRequired,
   sendAnmodningUnntakSvar: PT.func.isRequired,
-  feilmeldinger: PT.oneOfType([
-    PT.arrayOf(
-      PT.shape({
-        kode: PT.string.isRequired,
-        felter: PT.arrayOf(PT.string).isRequired,
-      })
-    ),
-    PT.string,
-  ]),
 };
 
 Saksopplysninger.defaultProps = {
   sed: {},
   skjema: {},
   anmodningsperiodeID: undefined,
-  feilmeldinger: [],
 };
 
 const mapStateToProps = (state) => ({
@@ -500,7 +489,6 @@ const mapStateToProps = (state) => ({
   anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
   anmodningsperiodeSvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

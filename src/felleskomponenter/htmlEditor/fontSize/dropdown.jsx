@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Component } from "react";
+import { Component, Children, cloneElement } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -66,10 +66,10 @@ export default class Dropdown extends Component {
             className={classNames("rdw-dropdown-optionwrapper", optionWrapperClassName)}
             onClick={this.stopPropagation}
           >
-            {React.Children.map(options, (option, index) => {
+            {Children.map(options, (option, index) => {
               return (
                 option &&
-                React.cloneElement(option, {
+                cloneElement(option, {
                   onSelect: this.onChange,
                   highlighted: highlighted === index,
                   setHighlighted: this.setHighlighted,

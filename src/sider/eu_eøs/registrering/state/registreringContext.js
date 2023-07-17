@@ -1,6 +1,7 @@
+import { createContext } from "react";
 import { connectCustomContext, useCustomContext } from "../../../../utils/customContext";
 
-const RegistreringContext = React.createContext({});
+const RegistreringContext = createContext({});
 
 const useRegistreringContext = () => useCustomContext(RegistreringContext);
 

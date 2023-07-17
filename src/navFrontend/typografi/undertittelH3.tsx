@@ -1,8 +1,9 @@
 import classNames from "classnames";
+import { ReactNode } from "react";
 
 interface UndertittelH3Props {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
   id?: string;
 }
 

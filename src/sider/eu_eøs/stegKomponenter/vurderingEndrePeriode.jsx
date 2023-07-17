@@ -1,29 +1,30 @@
+import { Component } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import * as UfiltrertMKV from "@navikt/melosys-kodeverk";
+
 import * as EKV from "eessi-kodeverk";
 
 import MKV from "../../../melosyskodeverk";
-
 import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
-import * as KV from "../../../kodeverk";
 
+import * as KV from "../../../kodeverk";
 import { hentFaktaVerdi } from "../../../domeneUtils";
 import { konverterAvklartfaktaTilStegData } from "../../../felleskomponenter/stegvelger";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Datovelger from "../../../felleskomponenter/datovelger";
-import * as Mui from "../../../felleskomponenter/ui";
 
+import * as Mui from "../../../felleskomponenter/ui";
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { mottatteOpplysningerOperations } from "../../../ducks/mottatteOpplysninger";
 
+import { mottatteOpplysningerOperations } from "../../../ducks/mottatteOpplysninger";
 import "./vurderingEndrePeriode.css";
 
-export class VurderingEndrePeriode extends React.Component {
+export class VurderingEndrePeriode extends Component {
   state = {
     nyTomDato: "",
     nyTomDatoFeilmelding: undefined,

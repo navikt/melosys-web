@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, createContext } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
@@ -18,7 +18,7 @@ import { lovvalgsperioderOperations } from "../ducks/lovvalgsperioder";
 import { anmodningsperioderOperations } from "../ducks/anmodningsperioder";
 import { utpekingsperioderOperations } from "../ducks/utpekingsperioder";
 
-const FellesHandlersContext = React.createContext({});
+const FellesHandlersContext = createContext({});
 export default FellesHandlersContext;
 
 const FellesHandlersProviderUnconnected = ({

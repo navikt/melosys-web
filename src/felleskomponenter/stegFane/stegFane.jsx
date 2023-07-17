@@ -1,3 +1,4 @@
+import { createElement } from "react";
 import PT from "prop-types";
 import classnames from "classnames";
 
@@ -21,7 +22,7 @@ const StegFane = (props) => {
   });
   return (
     <Nav.Panel className={stegFaneKlasse}>
-      <div id={id}>{React.createElement(faneData.komponent, componentProps)}</div>
+      <div id={id}>{createElement(faneData.komponent, componentProps)}</div>
     </Nav.Panel>
   );
 };

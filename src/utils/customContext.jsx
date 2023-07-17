@@ -1,7 +1,8 @@
+import { useContext } from "react";
 import PT from "prop-types";
 
 export const useCustomContext = (context) => {
-  const [state, dispatch] = React.useContext(context);
+  const [state, dispatch] = useContext(context);
   return [state, (arg) => (typeof arg === "function" ? arg(dispatch) : dispatch(arg))];
 };
 

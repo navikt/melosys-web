@@ -25,6 +25,7 @@ import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
 import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
 interface Periode {
   fom?: string | null;
@@ -44,6 +45,7 @@ const mapStateToProps = (state: RootState) => ({
     mottatteOpplysningerSelectors.SoknadslandkoderSelector(state)
   ),
   formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
+  registeropplysningerHentet: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -98,18 +100,22 @@ const VurderingInngang = ({
   oppfriskFlyt,
   visMenypanel,
   aktivtSteg,
+  registeropplysningerHentet,
 }: PropsFromRedux & Props) => {
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
   const [landUtenStøtteValgt, setLandUtenStøtteValgt] = useState(false);
   const [visSpinner, setVisSpinner] = useState(false);
   const skalHenteRegisteropplysninger =
+    !registeropplysningerHentet ||
     formValues?.fom !== initialFomTomLand?.fom ||
     formValues?.tom !== initialFomTomLand?.tom ||
     formValues?.arbeidsland !== initialFomTomLand?.arbeidsland;
 
   useEffect(() => {
-    if (!Utils._isEmpty(initialValues.fom) && !Utils._isEmpty(initialValues.arbeidsland)) {
+    if (registeropplysningerHentet) {
       visMenypanel();
+    }
+    if (!Utils._isEmpty(initialValues.fom) && !Utils._isEmpty(initialValues.arbeidsland)) {
       setInitialFomTomLand({ fom: initialValues.fom, tom: initialValues.tom, arbeidsland: initialValues.arbeidsland });
     }
   }, []);
@@ -146,7 +152,7 @@ const VurderingInngang = ({
     }
   }, [formValues?.arbeidsland]);
 
-  const bekreftHandle = async () => {
+  const innhentRegisteropplysninger = async () => {
     setInitialFomTomLand({ fom: formValues.fom, tom: formValues.tom, arbeidsland: formValues.arbeidsland });
     if (skalHenteRegisteropplysninger) {
       setVisSpinner(true);
@@ -155,6 +161,10 @@ const VurderingInngang = ({
       oppfriskFlyt();
       visMenypanel();
     }
+  };
+
+  const bekreftOgInnhentRegisteropplysninger = () => {
+    innhentRegisteropplysninger();
     fortsett();
   };
 
@@ -189,15 +199,25 @@ const VurderingInngang = ({
       </Nav.Fieldset>
 
       {landUtenStøtteValgt && <TomFlytMelding />}
-
-      <Mui.StegKnapper
-        bekreftKnappProps={{
-          onClick: bekreftHandle,
-          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || landUtenStøtteValgt,
-          spinner: visSpinner,
-        }}
-        bekreftTekst="Bekreft og innhent registeropplysninger"
-      />
+      {landUtenStøtteValgt && skalHenteRegisteropplysninger ? (
+        <Mui.StegKnapper
+          bekreftKnappProps={{
+            onClick: innhentRegisteropplysninger,
+            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
+            spinner: visSpinner,
+          }}
+          bekreftTekst="Innehent registeropplysninger"
+        />
+      ) : (
+        <Mui.StegKnapper
+          bekreftKnappProps={{
+            onClick: bekreftOgInnhentRegisteropplysninger,
+            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || landUtenStøtteValgt,
+            spinner: visSpinner,
+          }}
+          bekreftTekst="Bekreft og innhent registeropplysninger"
+        />
+      )}
     </div>
   );
 };

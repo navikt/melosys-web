@@ -5,6 +5,7 @@ import parse from "html-react-parser";
 import bem from "../../bemUtils";
 
 import "./menylink.css";
+import { FormEvent } from "react";
 
 interface MenyLinkProps {
   label: string;
@@ -20,7 +21,7 @@ const menyLinkCls = bem("meny-link");
 const brukWbrTagVedSlash = (label: string) => parse(label.replace("/", "/<wbr>"));
 
 const MenyLink = ({ label, active, onClick, iconSrc, iconAltText }: MenyLinkProps) => {
-  const handleOnClick = (event: React.FormEvent<HTMLButtonElement>): void => {
+  const handleOnClick = (event: FormEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     onClick();
   };

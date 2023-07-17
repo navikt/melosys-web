@@ -47,7 +47,7 @@ export const Registrering = ({
 }) => {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
   const dispatch = useDispatch();
-  const [saksopplysningerErHentet, setSaksopplysningerErHentet] = React.useState(false);
+  const [saksopplysningerErHentet, setSaksopplysningerErHentet] = useState(false);
 
   const lastInnSaksopplysninger = async () => {
     await Promise.all([

@@ -1,16 +1,17 @@
-import { Fragment } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 import { connect } from "react-redux";
-import { v4 as uuid } from "uuid";
 
 import MKV from "../../../../melosyskodeverk";
+
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";
 import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
+
 import { RegistreringMenypanelForm } from "../../../../felleskomponenter/menypanelForm";
 import EndrePeriode from "./komponenter/endrePeriode";
 import RegisterkontrollTreff from "../../../../felleskomponenter/registerkontrollTreff";
@@ -19,12 +20,13 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../../duc
 import { datalastingOperations } from "../../../../ducks/datalasting";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
 import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from "./validering/unntaksperiodeSkjema";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
-import { kontrollOperations } from "../../../../ducks/kontroll";
-import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "../saksopplysninger.css";
+
+const uuid = require("uuid/v4");
 
 const Saksopplysninger = ({
   match,
@@ -43,50 +45,50 @@ const Saksopplysninger = ({
   startOgVisOppfriskModal,
   behandlingsresultatErHentet,
   kontrollerUnntaksperiode,
-  unntaksperiodeFeilmeldinger,
+  unntaksperiodeKontrollfeil,
 }) => {
-  const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.AVSLAG);
-  const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState("");
-  const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = React.useState([]);
-  const [ikkeGodkjentFeilmeldinger, setIkkeGodkjentFeilmeldinger] = React.useState({
+  const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = useState(KV.Koder.Unntaksperiode.AVSLAG);
+  const [begrunnelseFritekst, setBegrunnelseFritekst] = useState("");
+  const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = useState([]);
+  const [ikkeGodkjentFeilmeldinger, setIkkeGodkjentFeilmeldinger] = useState({
     begrunnelseKoder: undefined,
     begrunnelseFritekst: undefined,
   });
-  const [endrePeriodeFeilmeldinger, setEndrePeriodeFeilmeldinger] = React.useState({
+  const [endrePeriodeFeilmeldinger, setEndrePeriodeFeilmeldinger] = useState({
     fom: undefined,
     tom: undefined,
     fritekst: undefined,
   });
-  const [endrePeriodeFom, setEndrePeriodeFom] = React.useState("");
-  const [endrePeriodeTom, setEndrePeriodeTom] = React.useState("");
-  const [endrePeriodeBegrunnelse, setEndrePeriodeBegrunnelse] = React.useState(
+  const [endrePeriodeFom, setEndrePeriodeFom] = useState("");
+  const [endrePeriodeTom, setEndrePeriodeTom] = useState("");
+  const [endrePeriodeBegrunnelse, setEndrePeriodeBegrunnelse] = useState(
     MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.PERIODE_FEILREGISTRERT
   );
-  const [endrePeriodeFritekst, setEndrePeriodeFritekst] = React.useState("");
-  const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = React.useState(false);
-  const [durationWarningMessage, setDurationWarningMessage] = React.useState(null);
-  const [registreringPending, setRegistreringPending] = React.useState(false);
+  const [endrePeriodeFritekst, setEndrePeriodeFritekst] = useState("");
+  const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = useState(false);
+  const [durationWarningMessage, setDurationWarningMessage] = useState(null);
+  const [registreringPending, setRegistreringPending] = useState(false);
 
   const {
     params: { saksnr: saksnummer },
   } = match;
 
-  const [harValgtIkkeGodkjenn, setHarValgtIkkeGodkjenn] = React.useState(false);
-  const [harUnntaksperiodefeil, setHarUnntaksperiodefeil] = React.useState(false);
-  const [kanIkkeGodkjenneUtenÅEndrePerioden, setKanIkkeGodkjenneUtenÅEndrePerioden] = React.useState(false);
+  const [harValgtIkkeGodkjenn, setHarValgtIkkeGodkjenn] = useState(false);
+  const [harUnntaksperiodefeil, setHarUnntaksperiodefeil] = useState(false);
+  const [kanIkkeGodkjenneUtenÅEndrePerioden, setKanIkkeGodkjenneUtenÅEndrePerioden] = useState(false);
 
-  React.useEffect(() => {
-    setHarUnntaksperiodefeil(!Utils._isEmpty(unntaksperiodeFeilmeldinger));
+  useEffect(() => {
+    setHarUnntaksperiodefeil(!Utils._isEmpty(unntaksperiodeKontrollfeil));
     setHarValgtIkkeGodkjenn(KV.Koder.Unntaksperiode.AVSLAG === unntaksperiodeVurdering);
-  }, [unntaksperiodeVurdering, unntaksperiodeFeilmeldinger]);
+  }, [unntaksperiodeVurdering, unntaksperiodeKontrollfeil]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!kanIkkeGodkjenneUtenÅEndrePerioden && !endrePeriodeTom && !endrePeriodeFom) {
       setKanIkkeGodkjenneUtenÅEndrePerioden(harUnntaksperiodefeil);
     }
   }, [harUnntaksperiodefeil]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (endrePeriodeFom && endrePeriodeTom) {
       kontrollerUnntaksperiode(
         behandlingID,
@@ -96,7 +98,7 @@ const Saksopplysninger = ({
     }
   }, [endrePeriodeFom, endrePeriodeTom]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
     kontrollerUnntaksperiode(behandlingID, sedLovvalgsperiode.fom, sedLovvalgsperiode.tom);
   }, []);
@@ -144,7 +146,7 @@ const Saksopplysninger = ({
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     initialiserSkjema();
   }, [avklartefakta, behandlingsresultat, lovvalgsperiode]);
 
@@ -470,7 +472,7 @@ Saksopplysninger.propTypes = {
   startOgVisOppfriskModal: PT.func.isRequired,
   behandlingsresultatErHentet: PT.bool.isRequired,
   kontrollerUnntaksperiode: PT.func.isRequired,
-  unntaksperiodeFeilmeldinger: PT.arrayOf(PT.object).isRequired,
+  unntaksperiodeKontrollfeil: PT.arrayOf(PT.object).isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -487,7 +489,7 @@ const mapStateToProps = (state) => ({
   sedLovvalgsbestemmelse: behandlingerSelectors.SEDSelector(state).lovvalgsbestemmelse,
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingsresultatErHentet: behandlingsresultatSelectors.BehandlingsresultatStatusErOkSelector(state),
-  unntaksperiodeFeilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+  unntaksperiodeKontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,18 +1,5 @@
-/**
- * Operations
- * ----------------------------------------------------------------------------------
- * Dette er Thunk-operasjoner som muliggjør asynkrone kall mot Redux
- * ved å returnere en action-generatoren som en egen funksjon. Denne kjøres deretter
- * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
- *
- */
 import MKV from "../../melosyskodeverk";
-
-import * as Api from "../../services/api";
-import { doThenDispatch } from "../../services/utils";
 import * as KV from "../../kodeverk";
-
-import * as Types from "./types";
 import * as Actions from "./actions";
 import * as Selectors from "./selectors";
 
@@ -31,26 +18,6 @@ import {
   MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
   MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
 } from "../../featuretoggle/toggleNavn";
-
-/** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
- * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
- * søknader vil resultere i flere lovvalg, feks arbeid i flere land. Derfor leveres
- * lovvalgsperioder som en array tilbake til backend, på lik linje som vilkar og avklartefakta.
- *
- * Eksempel på modell for et enkelt lovvalg:
- * {
- *  "fomDato": "2019-01-01",
- *  "tomDato": "2020-01-01",
- *  "lovvalgsbestemmelse": "ART12_1",
- *  "unntakFraBestemmelse": "ART12_1",
- *  "innvilgelsesResultat": "INNVILGET",
- *  "lovvalgsland": "NO",
- *  "unntakFraLovvalgsland": "NO",
- *  "trygdeDekning": "FULL",
- *  "medlemskapstype": "PLIKTIG"
- * }
- *
- */
 
 /* Hjelpefunksjoner
  * Disse eksponeres ikke utad, men er kun ment for å bryte opp komplisert logikk og gjøre
@@ -302,31 +269,6 @@ const byggLovvalgsPerioder = async (stegState, reduxState) => {
   ];
 };
 
-export function hent(behandlingID) {
-  return doThenDispatch(() => Api.Lovvalgsperioder.hent(behandlingID), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
-
-export function send(behandlingID, body) {
-  return doThenDispatch(() => Api.Lovvalgsperioder.send(behandlingID, body), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
-
-export function lagre() {
-  return (dispatch, getState) => {
-    const lovvalgsperioder = Selectors.LovvalgsperioderSelector(getState());
-    const bid = behandlingerSelectors.BehandlingIDSelector(getState());
-
-    return dispatch(send(bid, lovvalgsperioder));
-  };
-}
-
 export function oppdaterLovvalgsperioderState(stegState) {
   return async (dispatch, getState) => {
     const reduxState = getState();
@@ -352,12 +294,4 @@ export function oppdaterLovvalgsperioderState(stegState) {
       dispatch(Actions.resetLovvalgsperioderState());
     }
   };
-}
-
-export function resetLovvalgsperioderState() {
-  return Actions.resetLovvalgsperioderState();
-}
-
-export function endreLovvalgsPeriode(fomdato, tomdato) {
-  return Actions.endrePeriode(fomdato, tomdato);
 }

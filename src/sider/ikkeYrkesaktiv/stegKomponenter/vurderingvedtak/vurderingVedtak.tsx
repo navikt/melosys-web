@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 
+import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Forms from "../../../../felleskomponenter/forms";
@@ -9,22 +11,26 @@ import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 import * as Mui from "../../../../felleskomponenter/ui";
 
-import { Lovvalgsperiode } from "./lovvalgsperiode";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
+import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { vedtakOperations } from "../../../../ducks/vedtak";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { fagsakSelectors } from "../../../../ducks/fagsaker";
-
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
-
-import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
 
-import { BEGRUNNELSE_FRITEKST_HJELPETEKST, INNLEDNING_FRITEKST_HJELPETEKST } from "./tekster";
+import { FRITEKST_VALG } from "../../../../kodeverk/koder";
+import {
+  BEGRUNNELSE_FRITEKST_HJELPETEKST,
+  INNLEDNING_FRITEKST_HJELPETEKST,
+  NY_VURDERING_BAKGRUNN_HJELPETEKST,
+} from "./tekster";
 import { BrevMottakereTabell } from "./mottakertabell/brevMottakereTabell";
-import { vedtakOperations } from "../../../../ducks/vedtak";
+import { Lovvalgsperiode } from "./lovvalgsperiode";
+import vurderingVedtakSchema from "./vurderingVedtakSchema";
 
 interface Props {
   tilbake: () => void;
@@ -43,28 +49,52 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
   const lagretBegrunnelseFritekst = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector);
   const lagretInnledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
+  const lagretNyVurderingBakgrunn = useSelector(behandlingsresultatSelectors.NyVurderingBakgrunnSelector);
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+
+  const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
+    return !MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.some((bakgrunn: KTObject) => {
+      return bakgrunn.kode === nyVurderingBakgrunnValg;
+    });
+  };
+
+  const initialNyVurderingBakgrunnValg =
+    lagretNyVurderingBakgrunn && erNyVurderingBakgrunnValgFritekst(lagretNyVurderingBakgrunn)
+      ? FRITEKST_VALG
+      : lagretNyVurderingBakgrunn || undefined;
+  const initialNyVurderingBakgrunnFritekst =
+    initialNyVurderingBakgrunnValg === FRITEKST_VALG ? lagretNyVurderingBakgrunn : "";
 
   const {
     control,
     watch,
     formState: { isValid: formIsValid },
+    setValue,
   } = useForm({
+    resolver: yupResolver(vurderingVedtakSchema),
     mode: "all",
+    context: {
+      erNyVurdering,
+    },
     defaultValues: {
+      nyVurderingBakgrunnValg: initialNyVurderingBakgrunnValg,
       begrunnelseFritekst: lagretBegrunnelseFritekst || "",
       innledningFritekst: lagretInnledningFritekst || "",
+      nyVurderingBakgrunnFritekst: initialNyVurderingBakgrunnFritekst,
     } as FieldValues,
   });
   const formValues = watch();
 
+  const [lovvalgsperiodeErValid, setLovvalgsperiodeErValid] = useState(true);
   const [kontrollEllerVedtakPending, setKontrollEllerVedtakPending] = useState(false);
   const harIngenFeilmeldinger = Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
-  const stegErGyldig: boolean = redigerbart && formIsValid && harIngenFeilmeldinger;
+  const stegErGyldig: boolean = redigerbart && formIsValid && lovvalgsperiodeErValid && harIngenFeilmeldinger;
 
   const kontrollerFerdigbehandling = async () => {
     setKontrollEllerVedtakPending(true);
@@ -86,7 +116,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !kontrollEllerVedtakPending) {
-      Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
+      Api.Behandlinger.resultat.oppdaterFritekster(behandlingID, {
         innledningFritekst: values.innledningFritekst,
         begrunnelseFritekst: values.begrunnelseFritekst,
       });
@@ -104,6 +134,23 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
     }
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
 
+  const oppdaterNyVurderingBakgrunn = (nyVurderingBakgrunn?: string) => {
+    Api.Behandlinger.resultat.oppdaterNyVurderingBakgrunn(behandlingID, nyVurderingBakgrunn);
+  };
+
+  const debouncedOppdaterNyVurderingBakgrunn = useCallback(Utils._debounce(oppdaterNyVurderingBakgrunn, 500), []);
+
+  const oppdaterNyVurderingBakgrunnValg = (nyVurderingBakgrunnValg: string) => {
+    if (!erNyVurdering) {
+      return;
+    }
+    if (nyVurderingBakgrunnValg === FRITEKST_VALG) {
+      debouncedOppdaterNyVurderingBakgrunn(undefined);
+    } else {
+      debouncedOppdaterNyVurderingBakgrunn(nyVurderingBakgrunnValg);
+    }
+    setValue("nyVurderingBakgrunnFritekst", "");
+  };
   const fattVedtak = async () =>
     dispatch(
       vedtakOperations.fatt(behandlingID, {
@@ -115,7 +162,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const handleBekreft = async () => {
     setKontrollEllerVedtakPending(true);
     fattVedtak().then(() => {
-      if (!Utils._isEmpty(feilmeldinger)) {
+      if (!Utils._isEmpty(feilmeldinger) || !Utils._isEmpty(kontrollfeil)) {
         setKontrollEllerVedtakPending(false);
       }
     });
@@ -137,8 +184,54 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" />
 
       <Nav.Row>
-        <Lovvalgsperiode kontrollerFerdigbehandling={kontrollerFerdigbehandling} />
+        <Lovvalgsperiode
+          kontrollerFerdigbehandling={kontrollerFerdigbehandling}
+          onRedigeringErAktiv={setLovvalgsperiodeErValid}
+        />
       </Nav.Row>
+
+      {erNyVurdering && (
+        <Nav.Fieldset
+          className="nyVurderingBakgrunn"
+          legend={
+            <LabelMedHjelpetekst
+              label="Oppgi grunn for nytt vedtak (Obligatorisk)"
+              hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
+              hjelpetekstClassName="nyVurderingBakgrunn__hjelpetekst"
+            />
+          }
+        >
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Forms.Select
+                emptyFieldText="Velg"
+                name="nyVurderingBakgrunnValg"
+                disabled={!redigerbart}
+                emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
+                control={control}
+                onChange={oppdaterNyVurderingBakgrunnValg}
+              >
+                {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
+                  <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
+                ))}
+                <option key={FRITEKST_VALG} value={FRITEKST_VALG} label={FRITEKST_VALG} />
+              </Forms.Select>
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Fieldset>
+      )}
+
+      {erNyVurdering && formValues.nyVurderingBakgrunnValg === FRITEKST_VALG && (
+        <Nav.Row className="nyVurderingBakgrunnFritekstRad">
+          <Forms.HtmlEditor
+            name="nyVurderingBakgrunnFritekst"
+            control={control}
+            onChange={debouncedOppdaterNyVurderingBakgrunn}
+            className="fritekst_editor"
+            disabled={!redigerbart}
+          />
+        </Nav.Row>
+      )}
 
       <Nav.Row>
         <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
@@ -154,7 +247,9 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
           className="fritekst_editor"
           disabled={!redigerbart}
         />
+      </Nav.Row>
 
+      <Nav.Row>
         <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
           <LabelMedHjelpetekst
             label="Fritekst til begrunnelse"

@@ -1,13 +1,12 @@
 import { connect } from "react-redux";
 import PT from "prop-types";
-
+import { Component } from "react";
 import MKV from "@navikt/melosys-kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
 import * as Mui from "../../../felleskomponenter/ui";
-
 import SokkelSkipListe from "../../../felleskomponenter/sokkelskipliste";
 import {
   lagVilkaar,
@@ -19,10 +18,9 @@ import {
 import { hentFaktaVerdi } from "../../../domeneUtils";
 
 import { formSelectors } from "../../../ducks/form";
-
 import "./vurderingSokkelSkip.css";
 
-class VurderingSokkelSkip extends React.Component {
+class VurderingSokkelSkip extends Component {
   componentDidMount() {
     const { tilstand, oppdaterData } = this.props;
     const { sokkelSkipKonklusjon } = tilstand;

@@ -7,6 +7,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as MPT from "../../../../../proptypes";
 import Datovelger from "../../../../../felleskomponenter/datovelger";
 import "./endrePeriode.css";
+import { useEffect } from "react";
 
 const EndrePeriode = ({
   endrePeriode,
@@ -31,7 +32,7 @@ const EndrePeriode = ({
       ? tilPeriode(props.lovvalgsperiode.fomDato, props.lovvalgsperiode.tomDato)
       : tilPeriode(props.sedLovvalgsperiode.fom, props.sedLovvalgsperiode.tom);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const periode = hentLovvalgsperiode({ lovvalgsperiode, sedLovvalgsperiode });
     oppdaterFom(periode.fom);
     oppdaterTom(periode.tom);

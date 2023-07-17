@@ -1,11 +1,11 @@
-import { ElementType, MouseEventHandler } from "react";
+import { ElementType, MouseEventHandler, ReactNode } from "react";
 import classNames from "classnames";
 
 import "./lenkeknapp.css";
 
 interface LenkeknappProps {
   onClick: MouseEventHandler<HTMLButtonElement>;
-  children?: React.ReactNode;
+  children?: ReactNode;
   className?: string;
   ikon?: ElementType;
   value?: string;

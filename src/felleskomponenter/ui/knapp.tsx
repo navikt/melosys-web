@@ -1,12 +1,12 @@
 import { KnappBaseProps } from "nav-frontend-knapper";
 import classnames from "classnames";
+import { ElementType } from "react";
 
 import * as Nav from "../../navFrontend";
-
 import "./knapp.css";
 
 type KnappProps = KnappBaseProps & {
-  ikon?: React.ElementType;
+  ikon?: ElementType;
   capitalCase?: boolean;
   noTextTransform?: boolean;
 };
