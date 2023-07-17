@@ -12,6 +12,10 @@ export default defineConfig({
   esbuild: {
     jsxInject: `import React from 'react'`,
   },
+  build: {
+    outDir: "./build",
+    emptyOutDir: true,
+  },
   test: {
     globals: true,
     environment: "jsdom",
