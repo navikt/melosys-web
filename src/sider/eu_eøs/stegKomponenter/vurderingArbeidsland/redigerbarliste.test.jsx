@@ -12,7 +12,7 @@ describe("Redigerbarliste", () => {
         defaultFjernet: false,
       },
       {
-        kode: "kode",
+        kode: "kode2",
         term: "term",
         fjernbar: false,
         defaultFjernet: false,
