@@ -37,12 +37,12 @@ const SendForvaltningsMelding = ({
           disabled={!harRegistrertAdresse}
           feltNavn="ikkeSendForvaltingsmelding"
           label="Ja, melding skal sendes automatisk"
-          value={!harRegistrertAdresse}
+          value
         />
         <Skjema.Radio
           feltNavn="ikkeSendForvaltingsmelding"
           label="Nei, jeg vil sende melding senere eller behandle saken innen kort tid"
-          value={!!harRegistrertAdresse}
+          value={false}
         />
         {avsenderErFullmelktig && (
           <Fragment>

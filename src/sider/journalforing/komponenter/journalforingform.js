@@ -130,7 +130,6 @@ JournalforingForm.propTypes = {
   submitFailed: PT.bool.isRequired,
   settFeltInnhold: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
-  harRegistrertAdresse: PT.func.isRequired,
   submitSpinner: PT.bool.isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,

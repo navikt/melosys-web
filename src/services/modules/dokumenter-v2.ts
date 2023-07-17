@@ -50,7 +50,7 @@ export interface Felt {
 
 export type FeilmeldingProps = {
   tittel: string;
-  underpunkter?: [];
+  underpunkter?: string[];
 };
 
 export type TilgjengeligMottaker = {
@@ -58,7 +58,7 @@ export type TilgjengeligMottaker = {
   type: string;
   rolle: string;
   adresser: MottakerAdresse[] | null;
-  feilmelding: FeilmeldingProps | null;
+  feilmelding: FeilmeldingProps | undefined;
   trygdemyndighet: string[] | null;
 };
 

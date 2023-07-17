@@ -12,8 +12,8 @@ export type FerdigbehandlingKontrollData = {
 export const kontrollerFerdigbehandling = (data: FerdigbehandlingKontrollData) =>
   postAsJson(`${API_BASE_URL}${KONTROLL}/ferdigbehandling`, data);
 
-export const harRegistrertAdresse = (fnr: String) =>
-  getAsJson(`${API_BASE_URL}${KONTROLL}/${fnr}/harRegistrertAdresse`);
+export const harRegistrertAdresse = (brukerID: String) =>
+  postAsJson(`${API_BASE_URL}${KONTROLL}/harRegistrertAdresse`, { brukerID });
 
 export const erBucAapen = (behandlingID: number) => getAsJson(`${API_BASE_URL}${KONTROLL}/${behandlingID}/erBucAapen`);
 

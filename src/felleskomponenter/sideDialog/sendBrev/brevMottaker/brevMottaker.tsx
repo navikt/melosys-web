@@ -58,7 +58,7 @@ const BrevMottaker = ({
   changeField,
   overstyrBlurEvent,
 }: Props & PropsFromRedux) => {
-  const [feil, setFeil] = useState<FeilmeldingProps>();
+  const [feil, setFeil] = useState<FeilmeldingProps | undefined>(undefined);
   const [adresse, setAdresse] = useState<{
     mottakerAdresse?: DokumenterV2.MottakerAdresse;
     organisasjonsAdresse?: Organisasjon;
@@ -100,8 +100,8 @@ const BrevMottaker = ({
     changeField("valgtMottaker", valgtMottaker);
     if (!valgtMottaker) return;
 
-    if (valgtMottaker.feilmelding) {
-      setFeil({ ...valgtMottaker.feilmelding });
+    if (!Utils._isEmpty(valgtMottaker.feilmelding)) {
+      setFeil(valgtMottaker.feilmelding);
 
       return;
     }
@@ -157,10 +157,10 @@ const BrevMottaker = ({
             {feil && (
               <Nav.AlertStripeFeil className="alertstripe_feil">
                 {feil.tittel}
-                {feil.underpunkter && (
+                {!Utils._isEmpty(feil.underpunkter) && (
                   <ul>
-                    {feil.underpunkter.map((item: any) => (
-                      <li key={item.underpunkt}>{item.underpunkt}</li>
+                    {feil.underpunkter?.map((underpunkt: string) => (
+                      <li key={underpunkt}>{underpunkt}</li>
                     ))}
                   </ul>
                 )}
