@@ -50,7 +50,7 @@ describe("VurderingArbeidTjenestepersonEllerFlyVedtak", () => {
     };
   });
 
-  // TODO: Skriv om til enkel snapshot test når aksel tas inn i prosjektet
+  // TODO: Skriv om til enkel snapshot test når aksel tas inn i prosjektet. MELOSYS-6021
   test.skip("validerMottatteOpplysninger kalles ved submit av form", async () => {
     props.formValues.forkortLovvalgsperiode = false;
     props.formValues.vedtaksbrevFritekst = "vedtaksbrevfritekst";

@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 import classNames from "classnames";
 
 import { SedPdfData } from "Domene";
@@ -67,7 +67,7 @@ const PdfLenkeListe = ({ behandlingID, dokumenter, vedKlikk, className }: PdfLen
 
   const lagDokumentLenke = (dokument: DokumentMetadataProps) => {
     return (
-      <button onClick={() => klikk(dokument)} key={uuid.v4()} type="button">
+      <button onClick={() => klikk(dokument)} key={uuid()} type="button">
         {dokument.navn}
       </button>
     );

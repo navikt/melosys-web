@@ -2,7 +2,7 @@ import { Fragment, useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 import { connect } from "react-redux";
-
+import { v4 as uuid } from "uuid";
 import MKV from "../../../../melosyskodeverk";
 
 import * as KV from "../../../../kodeverk";
@@ -25,8 +25,6 @@ import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from "./validering/
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "../saksopplysninger.css";
-
-const uuid = require("uuid/v4");
 
 const Saksopplysninger = ({
   match,

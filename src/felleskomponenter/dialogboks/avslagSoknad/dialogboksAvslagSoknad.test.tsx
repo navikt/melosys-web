@@ -5,13 +5,13 @@ import { DialogboksAvslagSoknad } from "./dialogboksAvslagSoknad";
 
 describe("DialogboksAvslagSoknad", () => {
   const props = {
-    avbryt: jest.fn(),
-    avslaaSoknadHandle: jest.fn(),
+    avbryt: vi.fn(),
+    avslaaSoknadHandle: vi.fn(),
     ariaHideApp: false,
     redigerbart: true,
     behandlingID: 1,
-    dispatch: jest.fn(),
-    kontrollerFerdigbehandling: jest.fn(),
+    dispatch: vi.fn(),
+    kontrollerFerdigbehandling: vi.fn(),
     vedtakstype: null,
     feilmeldinger: [],
     kontrollfeil: [],
@@ -29,8 +29,8 @@ describe("DialogboksAvslagSoknad", () => {
   });
 
   it("viser ikke forhåndsvisning når feilmeldinger finnes", async () => {
-    const doNothing = jest.fn(() => null);
-    jest.spyOn(redux, "useDispatch").mockImplementation(() => doNothing as never);
+    const doNothing = vi.fn(() => null);
+    vi.spyOn(redux, "useDispatch").mockImplementation(() => doNothing as never);
     const initialState = {
       behandlinger: { status: "", data: { redigerbart: true } },
       kontroll: { status: "OK", data: { kontrollfeilList: [{ kode: "Kode", term: "term" }] } },

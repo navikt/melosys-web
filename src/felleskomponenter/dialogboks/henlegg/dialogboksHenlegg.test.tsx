@@ -6,8 +6,8 @@ import { DialogboksHenleggSak } from "./dialogboksHenlegg";
 describe("Dialogbokshenlegg", () => {
   const props = {
     ariaHideApp: false,
-    avbryt: jest.fn(),
-    henleggHandle: jest.fn(),
+    avbryt: vi.fn(),
+    henleggHandle: vi.fn(),
   };
 
   it("viser en Nav Modal", () => {
@@ -21,8 +21,8 @@ describe("Dialogbokshenlegg", () => {
   });
 
   it("viser ikke forhåndsvisning når feilmeldinger finnes", () => {
-    const doNothing = jest.fn(() => null);
-    jest.spyOn(redux, "useDispatch").mockImplementation(() => doNothing as never);
+    const doNothing = vi.fn(() => null);
+    vi.spyOn(redux, "useDispatch").mockImplementation(() => doNothing as never);
     const initialState = { kontroll: { status: "OK", data: { kontrollfeilList: [{ kode: "Kode", term: "term" }] } } };
 
     renderWithProviders(<DialogboksHenleggSak {...props} />, { preloadedState: initialState });

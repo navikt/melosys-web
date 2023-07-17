@@ -14,7 +14,7 @@ vi.mock("nav-frontend-js-utils", async () => {
   };
 });
 
-// TODO: Skriv om når aksel tas inn i prosjektet.
+// TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
 describe.skip("VurderingVurderarbeidsland", () => {
   let props = null;
 

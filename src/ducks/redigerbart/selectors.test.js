@@ -23,7 +23,7 @@ describe("Redigerbartselectors", () => {
   });
 
   describe("PanelerRedigerbartSelector", () => {
-    it("returnerer %p dersom behandlingsstatus er %p, redigerbart er %p, og behandlingstype er %p", () => {
+    it("returnerer riktig boolsk verdi for gitte verdier av behandlingsstatus, redigerbart og behandlingstype", () => {
       const data = [
         [
           false,

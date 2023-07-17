@@ -45,30 +45,3 @@ exports[`undertittel > snapshot test 1`] = `
   </h3>
 </div>
 `;
-
-exports[`undertittel snapshot test 1`] = `
-<div
-  className="undertittel"
->
-  <h3
-    className="typo-undertittel undertittel__navUndertittel"
-    id="123"
-  >
-    <svg
-      aria-labelledby="123"
-      className="undertittel__ikon"
-      focusable="false"
-      role="img"
-      title="Tekst - undefined"
-    >
-      line-version-paragraph-two-columns.svg
-    </svg>
-    <span
-      className="undertittel__tekst"
-    >
-      Tekst
-    </span>
-    <span />
-  </h3>
-</div>
-`;

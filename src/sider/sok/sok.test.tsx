@@ -5,7 +5,7 @@ import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders"
 
 import { Sok, SokProps } from "./sok";
 
-// TODO: Skriv om når aksel tas inn i prosjektet.
+// TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
 describe.skip("Sok", () => {
   let props: SokProps;
 
