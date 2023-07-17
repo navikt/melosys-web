@@ -126,6 +126,7 @@ export const Innvilgelse = ({
             forkortPeriode={formValues.forkortLovvalgsperiode}
             fomLabel="Startdato"
             fomFeltNavn="fomDato"
+            fom={Utils.dato.norskStringTilDate(formValues.fomDato)}
             tomLabel="Sluttdato"
             tomFeltNavn="tomDato"
           />
@@ -219,6 +220,7 @@ export const DelvisInnvilgelse = ({
             forkortPeriode={formValues.forkortLovvalgsperiode}
             fomLabel="Startdato"
             fomFeltNavn="fomDato"
+            fom={Utils.dato.norskStringTilDate(formValues.fomDato)}
             tomLabel="Sluttdato"
             tomFeltNavn="tomDato"
           />

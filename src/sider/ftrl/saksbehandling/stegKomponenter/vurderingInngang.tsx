@@ -143,6 +143,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
                 />
               }
               name="tom"
+              minDate={Utils.dato.norskStringTilDate(formValues.fom)}
               disabled={!redigerbart}
               control={control}
             />

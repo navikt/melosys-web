@@ -31,7 +31,7 @@ const SoknadsperiodeEndring = (props) => {
       <Nav.Row>
         <Nav.Column xs="12" className="soknadsperiode-endring__datofelt-container">
           <Datovelger
-            label="Fra og med:"
+            label="Fra og med"
             value={Utils.norskStringTilDate(soknadsperiodeFom)}
             onChange={vedFomEndring}
             bredde="S"
@@ -39,7 +39,7 @@ const SoknadsperiodeEndring = (props) => {
             feil={soknadsperiodeFomErrors}
           />
           <Datovelger
-            label="Til og med:"
+            label="Til og med"
             value={Utils.norskStringTilDate(soknadsperiodeTom)}
             onChange={vedTomEndring}
             bredde="S"
