@@ -185,7 +185,12 @@ export const VurderingUtpekt = ({
               <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
             </Nav.Column>
             <Nav.Column xs="6">
-              <Skjema.Datovelger label="Til og med" feltNavn="tom" disabled={!redigerbart} />
+              <Skjema.Datovelger
+                label="Til og med"
+                feltNavn="tom"
+                disabled={!redigerbart}
+                minDate={Utils.dato.norskStringTilDate(formValues.fom)}
+              />
             </Nav.Column>
           </Nav.Row>
         </Nav.Column>

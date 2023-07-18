@@ -53,6 +53,7 @@ export const OpprettSak = (props) => {
     soknadsland,
     ukjentEllerAlleEosLand,
     hovedpart,
+    periodeFraOgMed,
   } = {
     valgtSakstype: formValues[feltNavn.sakstype],
     valgtSakstema: formValues[feltNavn.sakstema],
@@ -61,6 +62,7 @@ export const OpprettSak = (props) => {
     soknadsland: formValues[feltNavn.soknadsland],
     ukjentEllerAlleEosLand: formValues[feltNavn.soknadslandUkjenteEllerAlleEosLand],
     hovedpart: formValues[feltNavn.hovedpart],
+    periodeFraOgMed: formValues[feltNavn.periodeFraOgMed],
   };
 
   const [sakstyper, setSakstyper] = useState([]);
@@ -184,7 +186,11 @@ export const OpprettSak = (props) => {
                 <Skjema.Datovelger label="Fra" feltNavn={feltNavn.periodeFraOgMed} />
               </Nav.Column>
               <Nav.Column xs="6">
-                <Skjema.Datovelger label="Til" feltNavn={feltNavn.periodeTilOgMed} />
+                <Skjema.Datovelger
+                  label="Til"
+                  feltNavn={feltNavn.periodeTilOgMed}
+                  minDate={Utils.dato.norskStringTilDate(periodeFraOgMed)}
+                />
               </Nav.Column>
             </Nav.Row>
           </Nav.Fieldset>

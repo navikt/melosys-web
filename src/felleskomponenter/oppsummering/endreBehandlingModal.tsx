@@ -320,7 +320,11 @@ function EndreBehandlingModal({
               feil={skalViseFeilmeldinger ? behandlingstypeFeilmelding : null}
               disableForsteValg
             />
-            <Datovelger onChange={setMottaksdato} label="Mottaksdato" value={mottaksdato} calendarPlacement="top" />
+            <Datovelger
+              onChange={setMottaksdato}
+              label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>}
+              value={mottaksdato}
+            />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingsstatus(e.target.value)}
               label="Behandlingsstatus"

@@ -10,6 +10,7 @@ import App from "./App";
 
 import "./setupYup";
 import "./index.css";
+import "@navikt/ds-css";
 
 import createStore from "./store";
 import routerHistory from "./history";
