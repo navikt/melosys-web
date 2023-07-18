@@ -143,6 +143,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
             <Forms.Datovelger
               label="Til og med"
               name="tom"
+              minDate={Utils.dato.norskStringTilDate(formValues.fom)}
               disabled={!redigerbart}
               control={control}
               onChange={lagreTom}

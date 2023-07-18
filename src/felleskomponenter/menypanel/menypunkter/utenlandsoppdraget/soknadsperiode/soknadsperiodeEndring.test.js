@@ -22,7 +22,7 @@ describe("SoknadsperiodeEndring", () => {
     const props = lagProps();
     const soknadsperiodeEndring = shallow(<SoknadsperiodeEndring {...props} />);
     const fomInput = soknadsperiodeEndring.findWhere(
-      (n) => n.type() === Datovelger && n.props().label === "Fra og med:"
+      (n) => n.type() === Datovelger && n.props().label === "Fra og med"
     );
     const fomInputProps = fomInput.props();
 
@@ -44,7 +44,7 @@ describe("SoknadsperiodeEndring", () => {
     const props = lagProps();
     const soknadsperiodeEndring = shallow(<SoknadsperiodeEndring {...props} />);
     const tomInput = soknadsperiodeEndring.findWhere(
-      (n) => n.type() === Datovelger && n.props().label === "Til og med:"
+      (n) => n.type() === Datovelger && n.props().label === "Til og med"
     );
     const tomInputProps = tomInput.props();
 

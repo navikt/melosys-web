@@ -181,6 +181,7 @@ export const VurderingArtikkel13_x_vedtak = ({
         forkortPeriode={formValues.forkortLovvalgsperiode}
         fomLabel="Startdato"
         fomFeltNavn="fomDato"
+        fom={Utils.dato.norskStringTilDate(soknadsperiode.fom)}
         tomLabel="Sluttdato"
         tomFeltNavn="tomDato"
       />
