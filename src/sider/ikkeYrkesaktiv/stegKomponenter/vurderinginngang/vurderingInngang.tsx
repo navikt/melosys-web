@@ -98,8 +98,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     }
   };
 
-  const bekreftOgInnhentRegisteropplysninger = () => {
-    innhentRegisteropplysninger();
+  const bekreftOgInnhentRegisteropplysninger = async () => {
+    await innhentRegisteropplysninger();
     bekreft();
   };
 
