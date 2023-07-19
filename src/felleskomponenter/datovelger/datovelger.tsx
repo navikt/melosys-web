@@ -1,10 +1,11 @@
-import React, { ReactNode, FocusEventHandler } from "react";
+import React, { ReactNode, FocusEventHandler, useState } from "react";
 import classNames from "classnames";
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
 import "./datovelger.css";
 import moment from "moment";
 
 import { _uuid } from "../../utils";
+import { SKRIV_INN_GYLDIG_DATO } from "../../kodeverk/feilmeldinger";
 
 interface DatovelgerProps {
   onChange: (nyDato: Date) => void;
@@ -30,13 +31,27 @@ const Datovelger = ({
   maxDate,
   onBlur,
 }: DatovelgerProps) => {
+  const [datoFeil, setDatoFeil] = useState<string | undefined>(undefined);
   const { datepickerProps, inputProps } = useDatepicker({
     fromDate: minDate ?? new Date(moment(moment.now()).subtract(5, "years").toDate()),
     toDate: maxDate ?? new Date(moment(moment.now()).add(5, "years").toDate()),
     locale: "nb",
     defaultSelected: value,
+    defaultMonth: minDate ?? value,
     onDateChange: (nyDato?: Date) => nyDato && onChange(nyDato),
+    onValidate: (err) => {
+      if (err.isBefore || err.isAfter) {
+        setDatoFeil(undefined);
+        return;
+      }
+      if (!err.isValidDate) {
+        setDatoFeil(SKRIV_INN_GYLDIG_DATO.melding);
+      } else {
+        setDatoFeil(undefined);
+      }
+    },
   });
+
   const datovelgerID = _uuid();
   return (
     <div className="datovelger">
@@ -45,18 +60,18 @@ const Datovelger = ({
           {...inputProps}
           id={datovelgerID}
           label={label}
-          error={!!feil}
+          error={!!feil || !!datoFeil}
           className={classNames("datovelger__input", `input--${bredde?.toLowerCase()}`, {
-            datovelger__input_feil: feil,
+            datovelger__input_feil: feil || datoFeil,
           })}
           size="small"
           onBlur={onBlur}
           disabled={disabled}
         />
       </DatePicker>
-      {feil && (
+      {(feil || datoFeil) && (
         <div role="alert" aria-live="assertive" className="datovelger__feilmelding">
-          {feil}
+          {feil ?? datoFeil}
         </div>
       )}
     </div>
