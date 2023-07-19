@@ -180,7 +180,7 @@ const VurderingInngang = ({
             <Skjema.Datovelger
               label="Til og med"
               feltNavn="tom"
-              minDate={Utils.dato.norskStringTilDate(formValues.fom)}
+              minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
               disabled={!redigerbart}
             />
           </Nav.Column>

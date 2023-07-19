@@ -123,7 +123,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           <Nav.Column xs="3">
             <Forms.Datovelger
               label="Til og med"
-              minDate={Utils.dato.norskStringTilDate(formValues.fom)}
+              minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
               name="tom"
               disabled={!redigerbart}
               control={control}
