@@ -26,7 +26,18 @@ describe("annenForelderModal", () => {
 
   it("viser en Modal", () => {
     render(
-      <MockedProvider>
+      <MockedProvider
+        mocks={[
+          {
+            request: {
+              query: HentBostedsadresseForPersonDocument,
+              variables: {
+                ident: "123",
+              },
+            },
+          },
+        ]}
+      >
         <AnnenForelderModal {...props} />
       </MockedProvider>
     );
@@ -36,7 +47,18 @@ describe("annenForelderModal", () => {
 
   it("viser melding ved henting av bostedsadresse", () => {
     render(
-      <MockedProvider>
+      <MockedProvider
+        mocks={[
+          {
+            request: {
+              query: HentBostedsadresseForPersonDocument,
+              variables: {
+                ident: "123",
+              },
+            },
+          },
+        ]}
+      >
         <AnnenForelderModal {...props} />
       </MockedProvider>
     );

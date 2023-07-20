@@ -1,5 +1,5 @@
-import * as Nav from "../../../navFrontend";
 import DialogboksOppfriskBehandling from "./dialogboksOppfrisk";
+import { render, screen } from "@testing-library/react";
 
 describe("DialogboksOppfrisk", () => {
   let props = null;
@@ -12,17 +12,33 @@ describe("DialogboksOppfrisk", () => {
       tilForsiden: vi.fn(),
       behandlingOppfriskes: false,
       annenBehandlingOppfriskes: false,
+      ariaHideApp: false,
     };
   });
 
-  it("viser en nav modal med korrekte props", () => {
-    const dialogboksOppfriskBehandling = shallow(<DialogboksOppfriskBehandling {...props} />);
-    const modal = dialogboksOppfriskBehandling.find(Nav.Modal);
-    const modalProps = modal.props();
+  it("viser en nav modal", () => {
+    render(<DialogboksOppfriskBehandling {...props} />);
 
-    expect(modal).toHaveLength(1);
-    expect(modalProps.onRequestClose).toBe(props.tilForsiden);
-    expect(modalProps.closeButton).toBe(false);
-    expect(modalProps.shouldCloseOnOverlayClick).toBe(false);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
+
+  it("viser ikke oppfrisk knapp når en annen behandling oppfriskes", () => {
+    props.annenBehandlingOppfriskes = true;
+
+    render(<DialogboksOppfriskBehandling {...props} />);
+
+    expect(screen.getByRole("heading")).toHaveTextContent("Kan ikke oppdatere registeropplysninger");
+    expect(screen.getByRole("button")).toHaveTextContent("Lukk");
+    expect(screen.queryByText("Fortsett oppdatering")).not.toBeInTheDocument();
+  });
+
+  it("viser forventet heading, oppfrisk og avbryt oppfriskning knapper", () => {
+    render(<DialogboksOppfriskBehandling {...props} />);
+
+    expect(screen.getByRole("heading")).toHaveTextContent("Vil du oppdatere registeropplysninger?");
+    const buttons = screen.getAllByRole("button");
+    expect(buttons).toHaveLength(2);
+    expect(buttons[0]).toHaveTextContent("Fortsett oppdatering");
+    expect(buttons[1]).toHaveTextContent("Avbryt oppdatering");
   });
 });
