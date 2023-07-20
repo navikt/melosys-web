@@ -221,7 +221,6 @@ exports[`VurderingUtpekt snapshot test 1`] = `
                     >
                       <input
                         aria-controls="aksel-id-2"
-                        aria-invalid="false"
                         autocomplete="off"
                         class="navds-date__field-input navds-text-field__input navds-body-short navds-body-small"
                         id="321"
@@ -296,7 +295,6 @@ exports[`VurderingUtpekt snapshot test 1`] = `
                     >
                       <input
                         aria-controls="aksel-id-4"
-                        aria-invalid="false"
                         autocomplete="off"
                         class="navds-date__field-input navds-text-field__input navds-body-short navds-body-small"
                         id="321"
