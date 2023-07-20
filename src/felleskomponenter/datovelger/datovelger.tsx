@@ -31,7 +31,7 @@ const Datovelger = ({
   maxDate,
   onBlur,
 }: DatovelgerProps) => {
-  const [datoFeil, setDatoFeil] = useState<string | undefined>(undefined);
+  const [erUgyldigDato, setErUgyldigDato] = useState<boolean>(false);
   const { datepickerProps, inputProps } = useDatepicker({
     fromDate: minDate ?? new Date(moment(moment.now()).subtract(5, "years").toDate()),
     toDate: maxDate ?? new Date(moment(moment.now()).add(5, "years").toDate()),
@@ -41,13 +41,13 @@ const Datovelger = ({
     onDateChange: (nyDato?: Date) => nyDato && onChange(nyDato),
     onValidate: (err) => {
       if (err.isBefore || err.isAfter) {
-        setDatoFeil(undefined);
+        setErUgyldigDato(false);
         return;
       }
       if (!err.isValidDate) {
-        setDatoFeil(SKRIV_INN_GYLDIG_DATO.melding);
+        setErUgyldigDato(true);
       } else {
-        setDatoFeil(undefined);
+        setErUgyldigDato(false);
       }
     },
   });
@@ -60,18 +60,18 @@ const Datovelger = ({
           {...inputProps}
           id={datovelgerID}
           label={label}
-          error={!!feil || !!datoFeil}
+          error={!!feil || erUgyldigDato}
           className={classNames("datovelger__input", `input--${bredde?.toLowerCase()}`, {
-            datovelger__input_feil: feil || datoFeil,
+            datovelger__input_feil: feil || erUgyldigDato,
           })}
           size="small"
           onBlur={onBlur}
           disabled={disabled}
         />
       </DatePicker>
-      {(feil || datoFeil) && (
+      {(feil || erUgyldigDato) && (
         <div role="alert" aria-live="assertive" className="datovelger__feilmelding">
-          {feil ?? datoFeil}
+          {feil ?? SKRIV_INN_GYLDIG_DATO.melding}
         </div>
       )}
     </div>
