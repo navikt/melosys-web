@@ -20,6 +20,7 @@ import MottakerAdresse from "../mottakerAdresse";
 import FeltBeskrivelse from "../feltBeskrivelse";
 import { SendBrevFormValues } from "../types";
 import BrevMottakerNorskMyndighet from "./brevMottakerNorskMyndighet";
+import { FeilmeldingProps } from "../../../../services/modules/dokumenter-v2";
 
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
 
@@ -57,7 +58,7 @@ const BrevMottaker = ({
   changeField,
   overstyrBlurEvent,
 }: Props & PropsFromRedux) => {
-  const [feil, setFeil] = useState<string>();
+  const [feil, setFeil] = useState<FeilmeldingProps | undefined>(undefined);
   const [adresse, setAdresse] = useState<{
     mottakerAdresse?: DokumenterV2.MottakerAdresse;
     organisasjonsAdresse?: Organisasjon;
@@ -79,9 +80,10 @@ const BrevMottaker = ({
     if (!data.valid || !data.orgnr) return;
     const response = await hentOrganisasjon(data.orgnr);
     if (response.data.response) {
-      setFeil(
-        response.data.response.status === 404 ? "Kunne ikke finne organisasjon" : "Feil ved henting av organisasjon"
-      );
+      setFeil({
+        tittel:
+          response.data.response.status === 404 ? "Kunne ikke finne organisasjon" : "Feil ved henting av organisasjon",
+      });
     } else {
       setAdresse({ organisasjonsAdresse: response.data });
     }
@@ -98,8 +100,9 @@ const BrevMottaker = ({
     changeField("valgtMottaker", valgtMottaker);
     if (!valgtMottaker) return;
 
-    if (valgtMottaker.feilmelding) {
+    if (!Utils._isEmpty(valgtMottaker.feilmelding)) {
       setFeil(valgtMottaker.feilmelding);
+
       return;
     }
 
@@ -151,7 +154,18 @@ const BrevMottaker = ({
       {(mottakerErBruker || mottakerErVirksomhet) && (
         <Nav.Row>
           <Nav.Column xs="12">
-            {feil && <Nav.AlertStripeFeil className="alertstripe_feil">{feil}</Nav.AlertStripeFeil>}
+            {feil && (
+              <Nav.AlertStripeFeil className="alertstripe_feil">
+                {feil.tittel}
+                {!Utils._isEmpty(feil.underpunkter) && (
+                  <ul>
+                    {feil.underpunkter?.map((underpunkt: string) => (
+                      <li key={underpunkt}>{underpunkt}</li>
+                    ))}
+                  </ul>
+                )}
+              </Nav.AlertStripeFeil>
+            )}
             {adresse?.mottakerAdresse && (
               <MottakerAdresse {...adresse?.mottakerAdresse} className="brukeradresse" visNavn />
             )}
@@ -163,7 +177,7 @@ const BrevMottaker = ({
         <Nav.Row>
           {feil ? (
             <Nav.Column xs="12">
-              <Nav.AlertStripeFeil className="alertstripe_feil">{feil}</Nav.AlertStripeFeil>
+              <Nav.AlertStripeFeil className="alertstripe_feil">{feil.tittel}</Nav.AlertStripeFeil>
             </Nav.Column>
           ) : (
             <Nav.Column xs="12" className="arbeidsgiver">
@@ -229,7 +243,7 @@ const BrevMottaker = ({
           </Nav.Column>
           {feil && (
             <Nav.Column xs="12">
-              <Nav.AlertStripeFeil className="alertstripe_feil">{feil}</Nav.AlertStripeFeil>
+              <Nav.AlertStripeFeil className="alertstripe_feil">{feil.tittel}</Nav.AlertStripeFeil>
             </Nav.Column>
           )}
         </Nav.Row>

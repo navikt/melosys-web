@@ -1,5 +1,4 @@
 import { Fragment, useEffect } from "react";
-import PT from "prop-types";
 
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
@@ -7,7 +6,17 @@ import * as KV from "../../../kodeverk";
 
 import "./sendForvaltningsMelding.css";
 
-const SendForvaltningsMelding = ({ avsenderType, settFeltInnhold }) => {
+interface SendForvaltningsMeldingProps {
+  avsenderType: string;
+  settFeltInnhold: (felt: string, value: string) => void;
+  harRegistrertAdresse?: boolean;
+}
+
+const SendForvaltningsMelding = ({
+  avsenderType,
+  settFeltInnhold,
+  harRegistrertAdresse,
+}: SendForvaltningsMeldingProps) => {
   const avsenderErFullmelktig = avsenderType === KV.AvsenderTyper.FULLMEKTIG;
 
   useEffect(
@@ -24,11 +33,16 @@ const SendForvaltningsMelding = ({ avsenderType, settFeltInnhold }) => {
       <Nav.Typo.Element>Skal melding om saksbehandlingtid sendes automatisk?</Nav.Typo.Element>
 
       <Skjema.RadioGruppe feltNavn="ikkeSendForvaltingsmelding" label="">
-        <Skjema.Radio feltNavn="ikkeSendForvaltingsmelding" label="Ja, melding skal sendes automatisk" value={false} />
+        <Skjema.Radio
+          disabled={!harRegistrertAdresse}
+          feltNavn="ikkeSendForvaltingsmelding"
+          label="Ja, melding skal sendes automatisk"
+          value
+        />
         <Skjema.Radio
           feltNavn="ikkeSendForvaltingsmelding"
           label="Nei, jeg vil sende melding senere eller behandle saken innen kort tid"
-          value
+          value={false}
         />
         {avsenderErFullmelktig && (
           <Fragment>
@@ -39,13 +53,20 @@ const SendForvaltningsMelding = ({ avsenderType, settFeltInnhold }) => {
           </Fragment>
         )}
       </Skjema.RadioGruppe>
+
+      {!harRegistrertAdresse && (
+        <Nav.AlertStripe className="feilmelding" type="advarsel">
+          Melding kan ikke sendes automatisk pga. manglende eller ugyldig adresse
+          <ul>
+            <li>
+              {avsenderType === KV.AvsenderTyper.FULLMEKTIG ? "Fullmektig" : "Bruker"} må enten registrere adresse i
+              Folkeregisteret eller kontaktadresse via nav.no.
+            </li>
+          </ul>
+        </Nav.AlertStripe>
+      )}
     </div>
   );
-};
-
-SendForvaltningsMelding.propTypes = {
-  avsenderType: PT.string.isRequired,
-  settFeltInnhold: PT.func.isRequired,
 };
 
 export default SendForvaltningsMelding;
