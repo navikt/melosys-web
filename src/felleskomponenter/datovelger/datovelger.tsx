@@ -38,6 +38,7 @@ const Datovelger = ({
     locale: "nb",
     defaultSelected: value,
     defaultMonth: minDate ?? value,
+    openOnFocus: false,
     onDateChange: (nyDato?: Date) => nyDato && onChange(nyDato),
     onValidate: (err) => {
       if (err.isBefore || err.isAfter) {
