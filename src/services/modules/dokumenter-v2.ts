@@ -50,7 +50,11 @@ export interface Felt {
 
 export type FeilmeldingProps = {
   tittel: string;
-  underpunkter?: string[];
+  underpunkter?: Underpunkt[];
+};
+
+export type Underpunkt = {
+  underpunkt: string;
 };
 
 export type TilgjengeligMottaker = {
