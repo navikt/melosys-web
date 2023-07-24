@@ -63,7 +63,16 @@ export const JournalforingForm = ({
   }, [visForvaltningsmelding]);
 
   useEffect(() => {
-    if (brukerID && avsenderType) {
+    if ((brukerID || representantID) && avsenderType) {
+      const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
+      const gyldigFullmektigFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(representantID);
+
+      if (avsenderType === KV.AvsenderTyper.FULLMEKTIG && !gyldigFullmektigFnrEllerDnr) {
+        return;
+      }
+      if (avsenderType === KV.AvsenderTyper.PERSON && !gyldigBrukerFnrEllerDnr) {
+        return;
+      }
       Api.Kontroll.harRegistrertAdresse(avsenderType === KV.AvsenderTyper.FULLMEKTIG ? representantID : brukerID)
         .then((harAdresse) => setHarRegistrertAdresse(harAdresse))
         .catch(() => setHarRegistrertAdresse(false));
