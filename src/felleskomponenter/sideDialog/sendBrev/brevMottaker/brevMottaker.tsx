@@ -20,7 +20,7 @@ import MottakerAdresse from "../mottakerAdresse";
 import FeltBeskrivelse from "../feltBeskrivelse";
 import { SendBrevFormValues } from "../types";
 import BrevMottakerNorskMyndighet from "./brevMottakerNorskMyndighet";
-import { FeilmeldingProps } from "../../../../services/modules/dokumenter-v2";
+import { FeilmeldingProps, Underpunkt } from "../../../../services/modules/dokumenter-v2";
 
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
 
@@ -127,7 +127,6 @@ const BrevMottaker = ({
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid });
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid, formValues?.arbeidsgiver]);
-
   return (
     <>
       <Skjema.Select
@@ -159,8 +158,8 @@ const BrevMottaker = ({
                 {feil.tittel}
                 {!Utils._isEmpty(feil.underpunkter) && (
                   <ul>
-                    {feil.underpunkter?.map((underpunkt: string) => (
-                      <li key={underpunkt}>{underpunkt}</li>
+                    {feil.underpunkter?.map((item: Underpunkt) => (
+                      <li key={item.underpunkt}>{item.underpunkt}</li>
                     ))}
                   </ul>
                 )}
