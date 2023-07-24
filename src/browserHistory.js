@@ -1,7 +1,7 @@
 import { createBrowserHistory } from "history";
 import * as Constants from "./constants";
 
-const routerHistory = createBrowserHistory({
+const browserHistory = createBrowserHistory({
   basename: Constants.URL_BASENAME,
 });
-export default routerHistory;
+export default browserHistory;

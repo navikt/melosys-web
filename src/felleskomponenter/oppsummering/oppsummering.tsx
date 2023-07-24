@@ -17,7 +17,7 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
 import { useFeatureToggle } from "../../featuretoggle";
-import { harIkkeYrkesaktivFlyt, harUnntakFlyt } from "../../routing";
+import { harIkkeYrkesaktivFlyt, harUnntakFlyt } from "../../url";
 import KopierbarTekst from "../kopierbarTekst";
 
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";

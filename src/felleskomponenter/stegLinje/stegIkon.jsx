@@ -1,7 +1,7 @@
 import PT from "prop-types";
 import classnames from "classnames";
 
-import { FANE_STATUS } from "../stegvelger";
+import { FANE_STATUS } from "../stegvelger/stegMotor";
 
 import * as Ikoner from "../../resources/images";
 

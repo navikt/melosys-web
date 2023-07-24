@@ -61,13 +61,13 @@ export function send(bid, mottatteOpplysninger) {
   );
 }
 
-const hentOvergangsregelbestemmelser = (values) => (values ? values.overgangsregelbestemmelser : []);
-
 const temaForSedGrunnlag = (behandlingstema) =>
   [
     MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
     MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
   ].includes(behandlingstema);
+
+const hentOvergangsregelbestemmelser = (values) => (values ? values.overgangsregelbestemmelser : []);
 
 export function oppdaterState() {
   return (dispatch, getState) => {

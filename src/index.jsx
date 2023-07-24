@@ -13,12 +13,12 @@ import "./index.css";
 import "@navikt/ds-css";
 
 import createStore from "./store";
-import routerHistory from "./history";
-import Routing from "./routing";
+import browserHistory from "./browserHistory";
 import { unregister } from "./registerServiceWorker";
 import { FellesHandlersProvider } from "./contexts";
 import Modals from "./modals";
 import { apolloClient } from "./graphql";
+import Routing from "~/routing";
 
 const SideLoadingFailMessage = <p>Beklager, kunne ikke laste inn siden.</p>;
 
@@ -27,7 +27,7 @@ const isDevelopmentProfile = environment === "local";
 
 const sentryIntegrations = [
   new BrowserTracing({
-    routingInstrumentation: Sentry.reactRouterV5Instrumentation(routerHistory),
+    routingInstrumentation: Sentry.reactRouterV5Instrumentation(browserHistory),
   }),
   new CaptureConsole({
     levels: ["error", "warn"],
@@ -48,11 +48,11 @@ Sentry.init({
   },
 });
 
-const store = createStore(routerHistory);
+const store = createStore(browserHistory);
 
 ReactDOM.render(
   <ReduxProvider store={store}>
-    <ConnectedRouter history={routerHistory}>
+    <ConnectedRouter history={browserHistory}>
       <ApolloProvider client={apolloClient}>
         <App isDevelopmentProfile={isDevelopmentProfile}>
           <Sentry.ErrorBoundary fallback={SideLoadingFailMessage}>

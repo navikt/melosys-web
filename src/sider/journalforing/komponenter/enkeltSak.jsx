@@ -11,7 +11,7 @@ import { URL_BASENAME } from "../../../constants";
 
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import Soknadsland from "../../../felleskomponenter/soknadsland";
-import { lagUrl } from "../../../routing";
+import { lagUrl } from "../../../url";
 import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behandlingsstatus";
 
 import "./enkeltSak.css";

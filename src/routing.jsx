@@ -1,23 +1,23 @@
 import { Route, Switch } from "react-router-dom";
 import * as Sentry from "@sentry/react";
 import * as MKV from "@navikt/melosys-kodeverk";
-import Forside from "../sider/forside";
-import Unntaksperioder from "../sider/eu_eøs/registrering/unntaksperioder";
-import Anmodningsunntak from "../sider/eu_eøs/registrering/anmodningunntak";
-import Sok from "../sider/sok";
-import EuEøsSaksbehandling from "../sider/eu_eøs/saksbehandling";
-import FtrlSaksbehandling from "../sider/ftrl/saksbehandling";
-import TrygdeavtaleSaksbehandling from "../sider/trygdeavtale/saksbehandling";
-import TomFlytBehandling from "../sider/tomFlyt/behandling";
-import Journalforing from "../sider/journalforing";
-import OpprettNySak from "../sider/opprettnysak";
-import VurderUtpeking from "../sider/eu_eøs/vurderutpeking";
-import Sendbrev from "../sider/sendbrev";
-import IkkeYrkesaktiv from "../sider/ikkeYrkesaktiv/saksbehandling";
-import Unntaksregistrering from "../sider/unntaksregistrering";
-import UkjentSide from "../sider/ukjentSide";
+import Forside from "./sider/forside";
+import Unntaksperioder from "./sider/eu_eøs/registrering/unntaksperioder";
+import Anmodningsunntak from "./sider/eu_eøs/registrering/anmodningunntak";
+import Sok from "./sider/sok";
+import EuEøsSaksbehandling from "./sider/eu_eøs/saksbehandling";
+import FtrlSaksbehandling from "./sider/ftrl/saksbehandling";
+import TrygdeavtaleSaksbehandling from "./sider/trygdeavtale/saksbehandling";
+import TomFlytBehandling from "./sider/tomFlyt/behandling";
+import Journalforing from "./sider/journalforing";
+import OpprettNySak from "./sider/opprettnysak";
+import VurderUtpeking from "./sider/eu_eøs/vurderutpeking";
+import Sendbrev from "./sider/sendbrev";
+import IkkeYrkesaktiv from "./sider/ikkeYrkesaktiv/saksbehandling";
+import Unntaksregistrering from "./sider/unntaksregistrering";
+import UkjentSide from "./sider/ukjentSide";
 
-import { FellesHandlersContext } from "../contexts";
+import { FellesHandlersContext } from "./contexts";
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 

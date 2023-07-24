@@ -9,7 +9,7 @@ import { avklartefaktaSelectors } from "../avklartefakta";
 import { vilkarSelectors } from "../vilkar";
 import { behandlingerSelectors } from "../behandlinger";
 import { behandlingsresultatSelectors } from "../behandlingsresultat";
-import { harUnntakFlyt } from "../../routing/url";
+import { harUnntakFlyt } from "../../url/url";
 import { fagsakSelectors } from "../fagsaker";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 import { MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP } from "../../featuretoggle/toggleNavn";

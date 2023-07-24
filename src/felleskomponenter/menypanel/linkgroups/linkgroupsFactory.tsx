@@ -1,6 +1,6 @@
 import MKV from "../../../melosyskodeverk";
 
-import { harUnntakFlyt, skalViseTomFlyt, harIkkeYrkesaktivFlyt } from "../../../routing";
+import { harUnntakFlyt, skalViseTomFlyt, harIkkeYrkesaktivFlyt } from "../../../url";
 import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";

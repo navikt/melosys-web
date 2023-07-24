@@ -20,13 +20,13 @@ export const MottatteOpplysningerStatusSelector = createSelector(
 );
 
 export const MottatteOpplysningerSelector = createSelector(
-  (state) => state.mottatteOpplysninger.data,
+  (state) => state.mottatteOpplysninger.data || {},
   (mottatteOpplysninger) => mottatteOpplysninger
 );
 
 export const MottatteOpplysningerTypeSelector = createSelector(
   (state) => MottatteOpplysningerSelector(state),
-  (mottatteOpplysninger) => mottatteOpplysninger.type
+  (mottatteOpplysninger) => mottatteOpplysninger.type || {}
 );
 
 export const MottatteOpplysningerDataSelector = createSelector(
@@ -133,10 +133,6 @@ export const OppholdUtlandSelector = createSelector(
 export const OppholdsLandSelector = createSelector(
   OppholdUtlandSelector,
   (oppholdUtland) => oppholdUtland.oppholdslandkoder || []
-);
-
-export const OppholdsLandKTSelector = createSelector(OppholdsLandSelector, (oppholdsLand) =>
-  MKV.KTObjects.landkoder.filter((landkodeObjekt) => oppholdsLand.includes(landkodeObjekt.kode))
 );
 
 export const OppholdUtlandPeriodeSelector = createSelector(
@@ -300,11 +296,6 @@ export const OvergangsregelbestemmelserSelector = createSelector(
 export const YtterligereInformasjonSelector = createSelector(
   MottatteOpplysningerDataSelector,
   (mottatteOpplysningerData) => mottatteOpplysningerData.ytterligereInformasjon
-);
-
-export const MottaksdatoSelector = createSelector(
-  (state) => MottatteOpplysningerSelector(state),
-  (mottatteOpplysningerData) => mottatteOpplysningerData.mottaksdato || ""
 );
 
 export const LonnOgGodtgjorelseSelector = createSelector(

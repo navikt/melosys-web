@@ -7,7 +7,7 @@ import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
 import { useFeatureToggle } from "../../featuretoggle";
-import { skalViseTomFlyt } from "../../routing";
+import { skalViseTomFlyt } from "../../url";
 import Sidemeny from "../sidemeny";
 
 import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";

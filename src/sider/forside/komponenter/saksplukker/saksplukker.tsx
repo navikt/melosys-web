@@ -12,7 +12,7 @@ import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Api from "../../../../services/api";
-import * as Routing from "../../../../routing";
+import * as Routing from "../../../../url";
 
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { oppgaverOperations } from "../../../../ducks/oppgaver";

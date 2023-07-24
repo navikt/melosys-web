@@ -3,7 +3,7 @@ import PT from "prop-types";
 
 import * as Nav from "../../navFrontend";
 import * as MPT from "../../proptypes";
-import * as Mui from ".";
+import Checkbox from "~/felleskomponenter/ui/checkbox";
 
 const Checkboxgruppe = ({ legend, muligeValg, defaultValg, onChange, disabled }) => {
   const [valgteCheckboxer, setValgteCheckboxer] = useState(
@@ -28,7 +28,7 @@ const Checkboxgruppe = ({ legend, muligeValg, defaultValg, onChange, disabled })
   return (
     <Nav.Fieldset legend={legend}>
       {muligeValg.map((valg) => (
-        <Mui.Checkbox
+        <Checkbox
           key={valg.kode}
           name="annetBostedsland"
           label={valg.term}

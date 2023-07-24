@@ -16,7 +16,6 @@ import * as Selectors from "./selectors";
 
 import { mottatteOpplysningerSelectors } from "../mottatteOpplysninger";
 import { lovvalgsperioderSelectors } from "../lovvalgsperioder";
-import { anmodningsperioderSelectors } from ".";
 import { behandlingerSelectors } from "../behandlinger";
 
 export function hent(behandlingID) {
@@ -39,9 +38,7 @@ export function lagre() {
   return (dispatch, getState) => {
     const anmodningsperioder = Selectors.AnmodningsperioderSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
-    const anmodningsperioderErSendtUtlandet = anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(
-      getState()
-    );
+    const anmodningsperioderErSendtUtlandet = Selectors.AnmodningsperioderErSendtUtlandetSelector(getState());
 
     if (anmodningsperioderErSendtUtlandet) return null;
 
@@ -90,9 +87,7 @@ const byggAnmodningsperioder = (stegState, reduxState) => {
 
 export function oppdaterAnmodningsperioderState(stegState) {
   return (dispatch, getState) => {
-    const anmodningsperioderErSendtUtland = anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(
-      getState()
-    );
+    const anmodningsperioderErSendtUtland = Selectors.AnmodningsperioderErSendtUtlandetSelector(getState());
     if (anmodningsperioderErSendtUtland) return;
 
     if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse || stegState.unntakfrabestemmelse) {

@@ -21,7 +21,7 @@ import { vedtakOperations } from "../../../ducks/vedtak";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { flytSelectors } from "../../../ducks/flyt";
 
-import { skalViseTomFlyt } from "../../../routing";
+import { skalViseTomFlyt } from "../../../url";
 import { useFeatureToggle } from "../../../featuretoggle";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import DatoOmrade from "../../../felleskomponenter/datoOmrade";

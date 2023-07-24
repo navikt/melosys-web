@@ -11,7 +11,7 @@ import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
-import { skalViseTomFlyt } from "../../../routing";
+import { skalViseTomFlyt } from "../../../url";
 
 import "./opprettSak.css";
 

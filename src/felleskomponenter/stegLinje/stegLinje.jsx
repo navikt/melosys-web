@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import StegIkon from "./stegIkon";
 import "./stegLinje.css";
 
+// TODO: Skrives om i MELOSYS-6023, hvorfor er Steglinje en <ul> ???
 const StegLinje = (props) => {
   const { steg } = props;
 

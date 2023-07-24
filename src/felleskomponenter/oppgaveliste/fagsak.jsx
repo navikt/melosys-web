@@ -3,7 +3,7 @@ import PT from "prop-types";
 import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
-import * as Routing from "../../routing";
+import * as Routing from "../../url";
 
 import Behandling from "./behandling";
 import PanelHeader from "../panelHeader";

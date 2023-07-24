@@ -5,7 +5,7 @@ import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
 import * as Ikon from "../../resources/images";
 import * as Nav from "../../navFrontend";
-import * as Routing from "../../routing";
+import * as Routing from "../../url";
 
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { fagsakSelectors } from "../../ducks/fagsaker";
