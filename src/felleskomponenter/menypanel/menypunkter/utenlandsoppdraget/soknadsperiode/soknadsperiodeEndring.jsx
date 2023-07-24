@@ -33,7 +33,6 @@ const SoknadsperiodeEndring = (props) => {
             value={Utils.norskStringTilDate(soknadsperiodeFom)}
             onChange={vedFomEndring}
             bredde="S"
-            maxDate={Utils.norskStringTilDate(soknadsperiodeTom)}
             feil={soknadsperiodeFomErrors}
           />
           <Datovelger
