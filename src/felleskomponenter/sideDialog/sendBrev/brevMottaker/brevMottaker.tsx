@@ -155,7 +155,7 @@ const BrevMottaker = ({
           <Nav.Column xs="12">
             {feil && (
               <Nav.AlertStripeFeil className="alertstripe_feil">
-                {feil.tittel}
+                <Nav.Typo.Element>{feil.tittel}</Nav.Typo.Element>
                 {!Utils._isEmpty(feil.underpunkter) && (
                   <ul>
                     {feil.underpunkter?.map((item: Underpunkt) => (

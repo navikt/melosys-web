@@ -62,7 +62,7 @@ const SendForvaltningsMelding = ({
 
       {!harRegistrertAdresse && (
         <Nav.AlertStripe className="feilmelding" type="advarsel">
-          Melding kan ikke sendes automatisk pga. manglende eller ugyldig adresse
+          <Nav.Typo.Element>Melding kan ikke sendes automatisk pga. manglende eller ugyldig adresse</Nav.Typo.Element>
           <ul>
             <li>
               {avsenderErFullmelktig && representererBruker ? "Fullmektig" : "Bruker"} må enten registrere adresse i
