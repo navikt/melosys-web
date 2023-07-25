@@ -56,7 +56,7 @@ export const JournalforingForm = ({
   );
   const [harRegistrertAdresse, setHarRegistrertAdresse] = useState(undefined);
 
-  const { brukerID, avsenderType, representantID } = formValues;
+  const { brukerID, avsenderType, representantID, representantRepresenterer } = formValues;
 
   useEffect(() => {
     settFeltInnhold("ikkeSendForvaltingsmelding", !visForvaltningsmelding);
@@ -66,18 +66,34 @@ export const JournalforingForm = ({
     if ((brukerID || representantID) && avsenderType) {
       const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
       const gyldigFullmektigFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(representantID);
+      const gyldigOrganisasjonsNummer = Utils.organisasjon.erOrgnrGyldig(representantID);
+      const representererBruker = [MKV.Koder.representerer.BRUKER, MKV.Koder.representerer.BEGGE].includes(
+        representantRepresenterer
+      );
+      let brukerIDPerson = "";
+      let orgnr = "";
 
-      if (avsenderType === KV.AvsenderTyper.FULLMEKTIG && !gyldigFullmektigFnrEllerDnr) {
+      if (avsenderType === KV.AvsenderTyper.PERSON && gyldigBrukerFnrEllerDnr) {
+        brukerIDPerson = brukerID;
+      } else if (
+        avsenderType === KV.AvsenderTyper.FULLMEKTIG &&
+        (gyldigFullmektigFnrEllerDnr || gyldigOrganisasjonsNummer)
+      ) {
+        if (gyldigFullmektigFnrEllerDnr) brukerIDPerson = representantID;
+        if (gyldigOrganisasjonsNummer && representererBruker) orgnr = representantID;
+        if (gyldigOrganisasjonsNummer && !representererBruker) brukerIDPerson = brukerID;
+      } else {
         return;
       }
-      if (avsenderType === KV.AvsenderTyper.PERSON && !gyldigBrukerFnrEllerDnr) {
-        return;
-      }
-      Api.Kontroll.harRegistrertAdresse(avsenderType === KV.AvsenderTyper.FULLMEKTIG ? representantID : brukerID)
+
+      Api.Kontroll.harRegistrertAdresse({
+        brukerID: brukerIDPerson,
+        orgnr,
+      })
         .then((harAdresse) => setHarRegistrertAdresse(harAdresse))
         .catch(() => setHarRegistrertAdresse(false));
     }
-  }, [brukerID, avsenderType, representantID]);
+  }, [brukerID, avsenderType, representantID, representantRepresenterer]);
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
@@ -107,6 +123,7 @@ export const JournalforingForm = ({
               avsenderType={formValues.avsenderType}
               settFeltInnhold={settFeltInnhold}
               harRegistrertAdresse={harRegistrertAdresse}
+              representantRepresenterer={formValues.representantRepresenterer}
             />
           }
         />
