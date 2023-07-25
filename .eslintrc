@@ -9,6 +9,7 @@
       }
     ],
     "space-before-function-paren": "off",
+    "import/named": "off",
     "import/no-unresolved": "off",
     "import/order": "off",
     "no-underscore-dangle": "off",

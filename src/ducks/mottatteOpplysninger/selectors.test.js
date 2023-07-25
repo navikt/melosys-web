@@ -1,6 +1,4 @@
 import * as selectors from "./selectors";
-import * as DucksTestUtils from "~/ducks/test-utils";
-import * as KV from "~/kodeverk";
 
 describe("MottatteOpplysninger selectors", () => {
   describe("SkipArbeidSelector", () => {
