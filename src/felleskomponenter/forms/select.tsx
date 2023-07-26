@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import { ReactElement, forwardRef, ReactNode } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import * as Nav from "../../navFrontend";
 
@@ -10,13 +10,13 @@ interface SelectComponentProps extends Nav.SelectProps {
   emptyFieldDisabled?: boolean;
   emptyFieldText?: string;
   disabled?: boolean;
-  children: React.ReactNode | React.ReactNode[];
+  children: ReactNode | ReactNode[];
   onChange?: (value: any) => void;
 }
 
 type SelectInnerComponentProps = SelectComponentProps & RegisterHookFormProps;
 
-const SelectInnerComponent = React.forwardRef<HTMLSelectElement, SelectInnerComponentProps>(
+const SelectInnerComponent = forwardRef<HTMLSelectElement, SelectInnerComponentProps>(
   ({ label, emptyFieldDisabled, emptyFieldText = "Velg...", disabled, children, ...rest }: SelectProps, _ref: any) => {
     return (
       <Nav.Select
@@ -40,31 +40,29 @@ const SelectInnerComponent = React.forwardRef<HTMLSelectElement, SelectInnerComp
 
 type SelectProps = SelectComponentProps & UseControllerProps;
 
-const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ name, control, ...rest }: SelectProps, _ref: any) => {
-    return (
-      <Controller
-        name={name}
-        control={control}
-        render={({ field, formState }) => (
-          <SelectInnerComponent
-            {...field}
-            label={rest.label}
-            emptyFieldText={rest.emptyFieldText}
-            emptyFieldDisabled={rest.emptyFieldDisabled}
-            disabled={rest.disabled}
-            onChange={(event: any) => {
-              field.onChange(event);
-              if (rest.onChange) rest.onChange(event?.target?.value);
-            }}
-            feil={getErrorMessage(field, formState)}
-          >
-            {rest.children}
-          </SelectInnerComponent>
-        )}
-      />
-    );
-  }
-);
+const Select = forwardRef<HTMLSelectElement, SelectProps>(({ name, control, ...rest }: SelectProps, _ref: any) => {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, formState }) => (
+        <SelectInnerComponent
+          {...field}
+          label={rest.label}
+          emptyFieldText={rest.emptyFieldText}
+          emptyFieldDisabled={rest.emptyFieldDisabled}
+          disabled={rest.disabled}
+          onChange={(event: any) => {
+            field.onChange(event);
+            if (rest.onChange) rest.onChange(event?.target?.value);
+          }}
+          feil={getErrorMessage(field, formState)}
+        >
+          {rest.children}
+        </SelectInnerComponent>
+      )}
+    />
+  );
+});
 
 export default Select;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -12,7 +12,7 @@ import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Api from "../../../../services/api";
-import * as Routing from "../../../../routing";
+import * as Routing from "../../../../url";
 
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { oppgaverOperations } from "../../../../ducks/oppgaver";

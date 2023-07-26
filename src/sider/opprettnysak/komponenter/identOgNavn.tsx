@@ -1,4 +1,3 @@
-import React from "react";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Ikoner from "../../../resources/images";

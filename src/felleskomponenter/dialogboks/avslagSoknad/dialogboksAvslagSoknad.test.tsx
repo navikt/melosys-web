@@ -1,49 +1,50 @@
-import React from "react";
-import { screen } from "@testing-library/react";
 import * as redux from "react-redux";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import { DialogboksAvslagSoknad } from "./dialogboksAvslagSoknad";
 
 describe("DialogboksAvslagSoknad", () => {
   const props = {
-    avbryt: jest.fn(),
-    avslaaSoknadHandle: jest.fn(),
+    avbryt: vi.fn(),
+    avslaaSoknadHandle: vi.fn(),
     ariaHideApp: false,
     redigerbart: true,
     behandlingID: 1,
-    dispatch: jest.fn(),
-    kontrollerFerdigbehandling: jest.fn(),
+    dispatch: vi.fn(),
+    kontrollerFerdigbehandling: vi.fn(),
     vedtakstype: null,
     feilmeldinger: [],
     kontrollfeil: [],
   };
+  const doNothing = vi.fn(() => null);
+
+  beforeAll(() => {
+    vi.spyOn(redux, "useDispatch").mockImplementation(() => doNothing as never);
+  });
+
+  afterAll(() => {
+    vi.clearAllMocks();
+  });
 
   it("viser en Nav Modal", () => {
-    renderWithProviders(<DialogboksAvslagSoknad {...props} />);
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    const { getByRole } = renderWithProviders(<DialogboksAvslagSoknad {...props} />);
+    expect(getByRole("dialog")).toBeInTheDocument();
   });
 
   it("viser forhåndsvisning når ingen feilmeldinger finnes", async () => {
     const initialState = { behandlinger: { status: "", data: { redigerbart: true } } };
-    renderWithProviders(<DialogboksAvslagSoknad {...props} />, { preloadedState: initialState });
-    expect(await screen.findByText("Forhåndsvis vedtaksbrev")).toBeInTheDocument();
+    const { findByText } = renderWithProviders(<DialogboksAvslagSoknad {...props} />, { preloadedState: initialState });
+    expect(await findByText("Forhåndsvis vedtaksbrev")).toBeInTheDocument();
   });
 
   it("viser ikke forhåndsvisning når feilmeldinger finnes", async () => {
-    const doNothing = jest.fn(() => null);
-    jest.spyOn(redux, "useDispatch").mockImplementation(() => doNothing as never);
     const initialState = {
       behandlinger: { status: "", data: { redigerbart: true } },
       kontroll: { status: "OK", data: { kontrollfeilList: [{ kode: "Kode", term: "term" }] } },
     };
 
-    renderWithProviders(<DialogboksAvslagSoknad {...props} />, { preloadedState: initialState });
-    let error = null;
-    try {
-      await screen.findAllByText("Forhåndsvis vedtaksbrev");
-    } catch (e) {
-      error = e;
-    }
-    expect(error).not.toBeNull();
+    const { queryByText } = renderWithProviders(<DialogboksAvslagSoknad {...props} />, {
+      preloadedState: initialState,
+    });
+    expect(queryByText("Forhåndsvis vedtaksbrev")).not.toBeInTheDocument();
   });
 });

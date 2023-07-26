@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactNode } from "react";
+import { ChangeEvent, ReactNode } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { formValueSelector } from "redux-form";
 import { RootState } from "AppTypes";

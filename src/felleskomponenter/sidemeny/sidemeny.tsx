@@ -1,4 +1,3 @@
-import * as React from "react";
 import classnames from "classnames";
 
 import * as Utils from "../../utils";
@@ -31,7 +30,7 @@ const SideMeny = ({ linkGroups, heading, onClick }: SideMenyProps): JSX.Element 
         <ul className={sideMenyCls.element("link-list")}>
           {linkGroups.map(({ label, links }, index) => (
             <LinkGroup
-              key={label || Utils._uuid}
+              key={label || Utils._uuid()}
               label={label}
               links={links}
               onClick={(linkIndex) => onClick(index, linkIndex)}

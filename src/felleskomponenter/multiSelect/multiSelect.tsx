@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
 import Select, { Styles } from "react-select";
 
 import * as Utils from "../../utils";

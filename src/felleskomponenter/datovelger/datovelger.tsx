@@ -1,4 +1,4 @@
-import React, { ReactNode, FocusEventHandler, useState } from "react";
+import { ReactNode, FocusEventHandler, useState } from "react";
 import classNames from "classnames";
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
 import "./datovelger.css";

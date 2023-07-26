@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, FocusEvent, useCallback, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -46,7 +46,7 @@ interface Props {
   redigerbart: boolean;
   tilgjengeligeMottakere: DokumenterV2.TilgjengeligMottaker[];
   changeField: (felt: string, data: any) => void;
-  overstyrBlurEvent: (event: React.FocusEvent) => void;
+  overstyrBlurEvent: (event: FocusEvent) => void;
 }
 
 const BrevMottaker = ({

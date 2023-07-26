@@ -1,0 +1,281 @@
+.knappmini-mixin {
+  padding: calc(0.25rem - 1px) 1.5rem calc(0.25rem - 1px) 1.5rem;
+  min-height: 2rem;
+}
+.knappdisabled-mixin:disabled,
+.knappdisabled-mixin--disabled {
+  background-color: #a0a0a0;
+  border-color: #a0a0a0;
+  color: #fff;
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+.knappdisabled-mixin:disabled::after,
+.knappdisabled-mixin--disabled::after {
+  display: none;
+}
+.knappdisabled-mixin:disabled:hover,
+.knappdisabled-mixin--disabled:hover,
+.knappdisabled-mixin:disabled:focus,
+.knappdisabled-mixin--disabled:focus {
+  box-shadow: none;
+  background-color: #a0a0a0;
+  border-color: #a0a0a0;
+  color: #fff;
+}
+/* Beholdes i kode for å unngå breaking change */
+.knapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-family: "Source Sans Pro", Arial, sans-serif;
+  font-size: 1em;
+  white-space: nowrap;
+  border-radius: 0.125em;
+  cursor: pointer;
+  user-select: none;
+  letter-spacing: 0.0625em;
+  line-height: 1.375rem;
+  text-decoration: none;
+  background-color: #fff;
+  padding: calc(0.475rem - 1px) 2.5rem calc(0.525rem - 1px) 2.5rem;
+  min-height: 2.5rem;
+  vertical-align: middle;
+  border: 2px solid #0067c5;
+  color: #0067c5;
+}
+.knapp:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #00347d;
+}
+.knapp:hover {
+  background-color: #0067c5;
+  color: #fff;
+}
+.knapp:active {
+  background-color: #005b82;
+  border-color: #005b82;
+  color: #fff;
+}
+.knapp:disabled,
+.knapp--disabled {
+  background-color: #a0a0a0;
+  border-color: #a0a0a0;
+  color: #fff;
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+.knapp:disabled::after,
+.knapp--disabled::after {
+  display: none;
+}
+.knapp:disabled:hover,
+.knapp--disabled:hover,
+.knapp:disabled:focus,
+.knapp--disabled:focus {
+  box-shadow: none;
+  background-color: #a0a0a0;
+  border-color: #a0a0a0;
+  color: #fff;
+}
+.knapp .knapp__spinner {
+  border: 2px solid #0067c5;
+  border-left-color: #99c3ff;
+  border-bottom-color: #99c3ff;
+}
+.knapp:hover .knapp__spinner {
+  border-top-color: #fff;
+  border-right-color: #fff;
+}
+.knapp.knapp--hoved:focus .knapp__spinner {
+  border-top-color: #0067c5;
+  border-right-color: #0067c5;
+}
+.knapp.knapp--hoved .knapp__spinner,
+.knapp.knapp--hoved:hover .knapp__spinner {
+  border-top-color: #fff;
+  border-right-color: #fff;
+}
+.knapp.knapp--fare:focus .knapp__spinner {
+  border-top-color: #ba3a26;
+  border-right-color: #ba3a26;
+}
+.knapp.knapp--fare .knapp__spinner,
+.knapp.knapp--fare:hover .knapp__spinner {
+  border: 2px solid #fff;
+  border-left-color: #efa89d;
+  border-bottom-color: #efa89d;
+}
+.knapp.knapp--flat:hover .knapp__spinner {
+  border-top-color: #0067c5;
+  border-right-color: #0067c5;
+}
+.knapp:disabled .knapp__spinner,
+.knapp--disabled .knapp__spinner {
+  border: 2px solid #fff;
+  border-top-color: #f1f1f1;
+  border-right-color: #f1f1f1;
+}
+.knapp svg {
+  width: 1rem;
+  height: 1rem;
+  fill: #0067c5;
+}
+.knapp .nav-frontend-chevron + span:not(.sr-only),
+.knapp span:not(.sr-only) + .nav-frontend-chevron {
+  margin-left: 0.33333rem;
+}
+.knapp svg + span:not(.sr-only),
+.knapp span:not(.sr-only) + svg {
+  margin-left: 0.5rem;
+}
+.knapp > span {
+  display: inline-block;
+}
+.knapp:hover svg {
+  fill: white;
+}
+.knapp.knapp--flat:hover svg {
+  fill: #0067c5;
+}
+.knapp.knapp--fare:focus svg {
+  fill: #ba3a26;
+}
+.knapp:disabled:not(:focus) svg,
+.knapp.knapp--disabled:not(:focus) svg,
+.knapp.knapp--hoved:not(:focus) svg,
+.knapp.knapp--fare:not(:focus) svg {
+  fill: white;
+}
+.knapp:disabled:active svg,
+.knapp.knapp--disabled:active svg,
+.knapp.knapp--hoved:active svg,
+.knapp.knapp--fare:active svg,
+.knapp:disabled:hover svg,
+.knapp.knapp--disabled:hover svg,
+.knapp.knapp--hoved:hover svg,
+.knapp.knapp--fare:hover svg {
+  fill: white;
+}
+.knapp--hoved {
+  color: white;
+  border-color: #0067c5;
+  background-color: #0067c5;
+  position: relative;
+  border-width: 1px;
+}
+.knapp--hoved:hover {
+  background-color: #0056b4;
+  border-color: #0056b4;
+}
+.knapp--hoved:hover.knapp--hoved:focus {
+  background-color: #0056b4;
+  border-color: #0056b4;
+  border-color: white;
+}
+.knapp--hoved:focus {
+  outline: none;
+  border-color: white;
+  box-shadow: 0 0 0 3px #00347d;
+}
+.knapp--hoved:active {
+  background-color: #005b82;
+  border-color: transparent;
+  border-color: white;
+}
+.knapp--hoved:hover.knapp--hoved:focus.knapp--hoved:active {
+  background-color: #005b82;
+  border-color: #005b82;
+  border-color: white;
+}
+.knapp--fare {
+  color: white;
+  border-color: #ba3a26;
+  background-color: #ba3a26;
+  position: relative;
+  border-width: 1px;
+}
+.knapp--fare:hover {
+  background-color: #a32a17;
+  border-color: #a32a17;
+}
+.knapp--fare:hover.knapp--fare:focus {
+  background-color: #a32a17;
+  border-color: #a32a17;
+  border-color: white;
+}
+.knapp--fare:focus {
+  outline: none;
+  border-color: white;
+  box-shadow: 0 0 0 3px #00347d;
+}
+.knapp--fare:active {
+  background-color: #881d0c;
+  border-color: transparent;
+  border-color: white;
+}
+.knapp--fare:hover.knapp--fare:focus.knapp--fare:active {
+  background-color: #881d0c;
+  border-color: #881d0c;
+  border-color: white;
+}
+.knapp--flat {
+  color: #0067c5;
+  border: 2px solid transparent;
+  background: transparent;
+}
+.knapp--flat:hover:not(:disabled),
+.knapp--flat:focus:not(:disabled) {
+  background-color: transparent;
+  border: 2px solid #0067c5;
+  color: #0067c5;
+}
+.knapp--flat.knapp--flat:active {
+  background-color: #005b82;
+  border: 2px solid transparent;
+  color: #fff;
+}
+.knapp--mini {
+  padding: calc(0.25rem - 1px) 1.5rem calc(0.25rem - 1px) 1.5rem;
+  min-height: 2rem;
+}
+.knapp--kompakt {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+.knapp--kompakt.knapp--mini {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.knapp__spinner {
+  width: 0.8em;
+  height: 0.8em;
+  display: inline-block;
+  border-radius: 100%;
+  animation: knapp__spinner 1s infinite linear;
+  position: relative;
+  margin-left: 0.5em;
+  top: 0.1em;
+}
+@keyframes knapp__spinner {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  white-space: nowrap;
+}

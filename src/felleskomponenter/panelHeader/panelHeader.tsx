@@ -1,4 +1,4 @@
-import React, { ElementType, ReactNode } from "react";
+import { ElementType, ReactNode } from "react";
 import * as Nav from "../../navFrontend";
 import "./panelHeader.css";
 

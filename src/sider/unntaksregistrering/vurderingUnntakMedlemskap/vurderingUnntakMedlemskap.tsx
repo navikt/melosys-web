@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";

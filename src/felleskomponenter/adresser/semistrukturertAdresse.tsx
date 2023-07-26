@@ -1,5 +1,3 @@
-import React from "react";
-
 import { SemistrukturertAdresseformat } from "../../graphql";
 
 type PostnrStedLandLinjeProps = Pick<SemistrukturertAdresseProps["adresse"], "land" | "postnummer" | "poststed">;

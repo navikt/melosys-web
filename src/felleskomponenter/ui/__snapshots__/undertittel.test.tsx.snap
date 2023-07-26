@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`undertittel snapshot test 1`] = `
+exports[`undertittel > snapshot test 1`] = `
 <div
   className="undertittel"
 >
@@ -11,11 +11,30 @@ exports[`undertittel snapshot test 1`] = `
     <svg
       aria-labelledby="123"
       className="undertittel__ikon"
+      contentScriptType="text/ecmascript"
+      contentStyleType="text/css"
       focusable="false"
+      height={24}
+      preserveAspectRatio="xMidYMid meet"
       role="img"
       title="Tekst - undefined"
+      viewBox="0 0 24 24"
+      width={24}
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      zoomAndPan="magnify"
     >
-      line-version-paragraph-two-columns.svg
+      <g
+        fill="none"
+        stroke="#3e3832"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit={10}
+      >
+        <path
+          d="M.513.5h23v23h-23zM6.513 5.5h4M3.513 8.5h7M3.513 11.5h7M3.513 14.5h7M3.513 17.5h7M13.513 5.5h7M13.513 8.5h7M13.513 11.5h7M13.513 14.5h7M13.513 17.5h5"
+        />
+      </g>
     </svg>
     <span
       className="undertittel__tekst"

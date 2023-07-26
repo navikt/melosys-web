@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import { Fragment, useEffect } from "react";
 
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";

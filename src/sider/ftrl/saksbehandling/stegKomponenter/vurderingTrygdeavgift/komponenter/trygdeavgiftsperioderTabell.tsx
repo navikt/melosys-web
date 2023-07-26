@@ -1,4 +1,3 @@
-import React from "react";
 import MKV from "../../../../../../melosyskodeverk";
 import * as KV from "../../../../../../kodeverk";
 import * as Utils from "../../../../../../utils";

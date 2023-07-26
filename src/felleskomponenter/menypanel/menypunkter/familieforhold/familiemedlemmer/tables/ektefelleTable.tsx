@@ -1,4 +1,3 @@
-import React from "react";
 import * as Utils from "../../../../../../utils";
 
 import { Familiemedlem } from "../../../../../../graphql";

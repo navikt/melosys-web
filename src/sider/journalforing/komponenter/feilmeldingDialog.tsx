@@ -1,4 +1,4 @@
-import React, { KeyboardEvent } from "react";
+import { KeyboardEvent } from "react";
 
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";

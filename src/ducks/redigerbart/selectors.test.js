@@ -23,44 +23,45 @@ describe("Redigerbartselectors", () => {
   });
 
   describe("PanelerRedigerbartSelector", () => {
-    each([
-      [
-        false,
-        MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-        true,
-        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        true,
-      ],
-      [
-        false,
-        MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-        false,
-        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false,
-      ],
-      [
-        false,
-        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-        true,
-        MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
-        false,
-      ],
-      [
-        true,
-        MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-        true,
-        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false,
-      ],
-    ]).it(
-      "returnerer %p dersom behandlingsstatus er %p, redigerbart er %p, og behandlingstype er %p",
-      (forventetResultat, behandlingsstatus, redigerbart, behandlingstype, sendtUtland) => {
-        const state = lagState(redigerbart, behandlingsstatus, behandlingstype);
+    it("returnerer riktig boolsk verdi for gitte verdier av behandlingsstatus, redigerbart og behandlingstype", () => {
+      const data = [
+        [
+          false,
+          MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
+          true,
+          MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+          true,
+        ],
+        [
+          false,
+          MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
+          false,
+          MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+          false,
+        ],
+        [
+          false,
+          MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+          true,
+          MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
+          false,
+        ],
+        [
+          true,
+          MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+          true,
+          MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+          false,
+        ],
+      ];
+
+      data.forEach((testdata) => {
+        const state = lagState(testdata[2], testdata[1], testdata[3]);
         state.anmodningsperioder = {
-          data: [{ sendtUtland }],
+          data: [{ sendtUtland: testdata[4] }],
         };
-        expect(selectors.PanelerRedigerbartSelector(state)).toBe(forventetResultat);
-      }
-    );
+        expect(selectors.PanelerRedigerbartSelector(state)).toBe(testdata[0]);
+      });
+    });
   });
 });

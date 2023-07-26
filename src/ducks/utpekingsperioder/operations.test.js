@@ -71,18 +71,18 @@ describe("utpekingsperioder operations", () => {
   });
 
   describe("OppdaterUtpekingsperioderState", () => {
-    each([
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1,
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B2,
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B3,
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4,
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11,
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B,
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3,
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
-    ]).it(
-      "bygger utpekingsperiode dersom avklartfakta OMFATTES_I_LAND er annet land enn Norge og lovvalgsbestemmelse er %p",
-      (lovvalgsbestemmelse) => {
+    it("bygger utpekingsperiode dersom avklartfakta OMFATTES_I_LAND er annet land enn Norge for gitte lovvalgsbestemmelser", () => {
+      const lovvalgsbestemmelser = [
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B2,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B3,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
+      ];
+      lovvalgsbestemmelser.forEach((lovvalgsbestemmelse) => {
         const avklartfakta = {
           avklartefaktaKode: null,
           referanse: KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND,
@@ -119,8 +119,8 @@ describe("utpekingsperioder operations", () => {
         store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
 
         expect(store.getActions()).toEqual(expectedActions);
-      }
-    );
+      });
+    });
 
     it("bygger tom utpekingsperiode dersom avklartfakta OMFATTES_I_LAND er Norge", () => {
       const avklartfakta = {

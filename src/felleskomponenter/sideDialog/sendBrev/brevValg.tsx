@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import * as Api from "../../../services/api";

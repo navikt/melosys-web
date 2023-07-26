@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
 import { MockedProvider } from "@apollo/client/testing";
 import { act } from "react-dom/test-utils";
@@ -17,7 +17,7 @@ describe("annenForelderModal", () => {
 
   beforeEach(() => {
     props = instance(mockedProps);
-    props.onRequestClose = jest.fn();
+    props.onRequestClose = vi.fn();
     props.contentLabel = "contentLabel";
     props.barnNavn = "barnNavn";
     props.forelderIdent = "123";
@@ -26,7 +26,18 @@ describe("annenForelderModal", () => {
 
   it("viser en Modal", () => {
     render(
-      <MockedProvider>
+      <MockedProvider
+        mocks={[
+          {
+            request: {
+              query: HentBostedsadresseForPersonDocument,
+              variables: {
+                ident: "123",
+              },
+            },
+          },
+        ]}
+      >
         <AnnenForelderModal {...props} />
       </MockedProvider>
     );
@@ -36,7 +47,18 @@ describe("annenForelderModal", () => {
 
   it("viser melding ved henting av bostedsadresse", () => {
     render(
-      <MockedProvider>
+      <MockedProvider
+        mocks={[
+          {
+            request: {
+              query: HentBostedsadresseForPersonDocument,
+              variables: {
+                ident: "123",
+              },
+            },
+          },
+        ]}
+      >
         <AnnenForelderModal {...props} />
       </MockedProvider>
     );

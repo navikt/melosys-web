@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { FocusEvent, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -443,7 +443,7 @@ const SendBrev = ({
       .finally(() => setLagreUtkastSpinner(false));
   };
 
-  const overstyrBlurEvent = (event: React.FocusEvent) => {
+  const overstyrBlurEvent = (event: FocusEvent) => {
     event.preventDefault();
   };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { KeyboardEvent, useState } from "react";
 import classNames from "classnames";
 import * as Ikon from "../../../resources/images";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
@@ -10,7 +10,7 @@ export const Behandlingsmeny = () => {
 
   const toggleBehandlingsmeny = () => setVisBehandlingsmeny(!visBehandlingsmeny);
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter") {
       toggleBehandlingsmeny();
     }

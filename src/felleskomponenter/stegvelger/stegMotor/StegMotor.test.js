@@ -10,8 +10,8 @@ describe("Stegmotor", () => {
         super(propslight, posisjon);
 
         this.id = STEG.INNGANG;
-        this._samleRelevanteData = jest.fn();
-        this._beregnRelevantUI = jest.fn();
+        this._samleRelevanteData = vi.fn();
+        this._beregnRelevantUI = vi.fn();
         this._kriterier = [{ exec: () => true, nesteSteg: STEG.YRKESAKTIVITET }];
       }
     }
@@ -21,8 +21,8 @@ describe("Stegmotor", () => {
         super(propslight, posisjon);
 
         this.id = STEG.ENDRET_PERIODE;
-        this._samleRelevanteData = jest.fn();
-        this._beregnRelevantUI = jest.fn();
+        this._samleRelevanteData = vi.fn();
+        this._beregnRelevantUI = vi.fn();
         this._kriterier = [];
       }
     }
@@ -32,8 +32,8 @@ describe("Stegmotor", () => {
         super(propslight, posisjon);
 
         this.id = STEG.YRKESAKTIVITET;
-        this._samleRelevanteData = jest.fn();
-        this._beregnRelevantUI = jest.fn();
+        this._samleRelevanteData = vi.fn();
+        this._beregnRelevantUI = vi.fn();
         this._kriterier = [{ exec: () => true, nesteSteg: STEG.ENDRET_PERIODE }];
       }
     }
@@ -55,15 +55,15 @@ describe("Stegmotor", () => {
       expect(alleSteg[2].id).toBe(STEG.ENDRET_PERIODE);
     });
 
-    each([STEG.INNGANG, STEG.ENDRET_PERIODE, STEG.YRKESAKTIVITET]).it(
-      "Starter med det oppgitte første steget %p",
-      (forsteSteg) => {
+    it("Starter med det oppgitte første steget", () => {
+      const steg = [STEG.INNGANG, STEG.ENDRET_PERIODE, STEG.YRKESAKTIVITET];
+      steg.forEach((forsteSteg) => {
         const props = {};
         const stegmotor = new StegMotor(props, stegMap, forsteSteg);
         const alleSteg = stegmotor.beregnAlleSteg();
 
         expect(alleSteg[0].id).toBe(forsteSteg);
-      }
-    );
+      });
+    });
   });
 });

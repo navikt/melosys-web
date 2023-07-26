@@ -1,4 +1,4 @@
-import React, { FormEventHandler } from "react";
+import { FormEventHandler } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { reduxForm, InjectedFormProps } from "redux-form";
 import { RootState } from "AppTypes";

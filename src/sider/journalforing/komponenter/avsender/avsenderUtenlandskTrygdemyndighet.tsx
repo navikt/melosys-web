@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
