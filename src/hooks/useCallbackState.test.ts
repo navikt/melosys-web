@@ -30,7 +30,7 @@ describe("useAsyncCallbackState", () => {
     const rejectionReason = new Error();
     const rejected = () => Promise.reject(rejectionReason);
 
-    const errorHandler = jest.fn();
+    const errorHandler = vi.fn();
 
     renderHook(() => useAsyncCallbackState(rejected, null, [], errorHandler));
 

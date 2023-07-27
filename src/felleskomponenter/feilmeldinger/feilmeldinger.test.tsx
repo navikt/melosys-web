@@ -1,4 +1,3 @@
-import React from "react";
 import Feilmeldinger from "./feilmeldinger";
 import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
 import { STATUS } from "../../services";

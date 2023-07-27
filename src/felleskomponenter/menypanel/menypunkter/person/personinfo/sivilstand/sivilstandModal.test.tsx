@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
 
 import { render, screen } from "@testing-library/react";
@@ -11,7 +11,7 @@ describe("SivilstandModal", () => {
 
   beforeEach(() => {
     props = instance(mockedProps);
-    props.lukkModal = jest.fn();
+    props.lukkModal = vi.fn();
     props.modalAriaHideApp = false;
     props.skalViseModal = true;
     props.aktiveSivilstander = [

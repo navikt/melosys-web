@@ -1,5 +1,5 @@
 import { Editor, SyntheticKeyboardEvent } from "react-draft-wysiwyg";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ContentState, convertToRaw, EditorState, RichUtils } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";

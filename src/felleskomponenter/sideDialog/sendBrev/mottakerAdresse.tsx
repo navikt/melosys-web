@@ -1,4 +1,3 @@
-import React from "react";
 import { DokumenterV2 } from "../../../services/api";
 import * as Utils from "../../../utils";
 

@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { RootState } from "AppTypes";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import classnames from "classnames";
 
 import * as Nav from "../../../../../navFrontend";
@@ -18,13 +17,8 @@ import "./familiemedlemmer.css";
 import BarnTable from "./tables/barnTable";
 import EktefelleTable from "./tables/ektefelleTable";
 
-const mapStateToProps = (state: RootState) => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-});
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-export const Familiemedlemmer = ({ behandlingID }: PropsFromRedux) => {
+const Familiemedlemmer = () => {
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const [barnValgtForMerInformasjon, setBarnValgtForMerInformasjon] = useState<Familiemedlem | null>(null);
   const { loading, error, data } = useHentFamiliemedlemmerQuery({ variables: { behandlingID } });
 
@@ -93,4 +87,4 @@ export const Familiemedlemmer = ({ behandlingID }: PropsFromRedux) => {
   );
 };
 
-export default connector(Familiemedlemmer);
+export default Familiemedlemmer;

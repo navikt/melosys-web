@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from "react";
+import { ChangeEventHandler } from "react";
 import PT from "prop-types";
 import { Field, WrappedFieldProps } from "redux-form";
 import * as Nav from "../../../navFrontend";

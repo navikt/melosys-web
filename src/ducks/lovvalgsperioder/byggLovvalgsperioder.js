@@ -12,7 +12,7 @@ import { behandlingerSelectors } from "../behandlinger";
 import { flytSelectors } from "../flyt";
 import { formSelectors } from "../form";
 import { fagsakSelectors } from "../fagsaker";
-import { harIkkeYrkesaktivFlyt, harUnntakFlyt } from "../../routing/url";
+import { harIkkeYrkesaktivFlyt, harUnntakFlyt } from "~/url/url";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 import {
   MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,

@@ -2,8 +2,8 @@
 
 "use strict";
 
-const chalk = require("chalk");
-const table = require("text-table");
+const chalk = import("chalk");
+const table = import("text-table");
 
 const tableConfig = {
   align: ["l", ":", "l", "l"],

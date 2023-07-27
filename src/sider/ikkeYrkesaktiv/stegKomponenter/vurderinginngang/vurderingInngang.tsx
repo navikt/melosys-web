@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -98,8 +98,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     }
   };
 
-  const bekreftOgInnhentRegisteropplysninger = () => {
-    innhentRegisteropplysninger();
+  const bekreftOgInnhentRegisteropplysninger = async () => {
+    await innhentRegisteropplysninger();
     bekreft();
   };
 
@@ -121,7 +121,13 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
             />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />
+            <Forms.Datovelger
+              label="Til og med"
+              minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
+              name="tom"
+              disabled={!redigerbart}
+              control={control}
+            />
           </Nav.Column>
           <Nav.Column xs="5">
             <Forms.Select

@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Familiemedlem } from "../../../../../../graphql";
 
 import Ident from "../ident";

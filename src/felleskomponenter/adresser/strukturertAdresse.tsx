@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as Api from "../../services/api";
 
 interface StrukturertAdresseProps {

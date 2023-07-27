@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as Ikoner from "../../../../../resources/images";
 import * as Mui from "../../../../ui";
 

@@ -16,7 +16,7 @@ import { oppsummertfaktaOperations } from "../oppsummertfakta";
 import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 // noinspection ES6PreferShortImport
-import { harIkkeYrkesaktivFlyt, harUnntakFlyt, skalViseTomFlyt } from "../../routing/url";
+import { harIkkeYrkesaktivFlyt, harUnntakFlyt, skalViseTomFlyt } from "../../url/url";
 import {
   MELOSYS_FOLKETRYGDEN_MVP,
   MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,

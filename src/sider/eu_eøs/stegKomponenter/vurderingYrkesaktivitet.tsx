@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, useEffect } from "react";
 
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";

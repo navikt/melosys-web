@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import PT from "prop-types";
 
 import classNames from "classnames";

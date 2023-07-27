@@ -20,6 +20,7 @@ import {
   isEqual,
   throttle,
 } from "lodash";
+import { v4 as uuid } from "uuid";
 
 import * as adresse from "./adresse";
 import * as dato from "./dato";
@@ -35,8 +36,6 @@ import * as mediaQuery from "./mediaQuery";
 import * as navigasjon from "./navigasjon";
 
 import { delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from "./utils";
-
-const uuid = require("uuid/v4");
 
 export {
   delay,

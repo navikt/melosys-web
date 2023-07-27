@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, Fragment } from "react";
+import { ChangeEventHandler, Fragment } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../../melosyskodeverk";

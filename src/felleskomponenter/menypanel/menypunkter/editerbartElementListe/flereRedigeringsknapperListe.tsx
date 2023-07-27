@@ -1,4 +1,4 @@
-import React, { ElementType, MouseEvent } from "react";
+import { ElementType, MouseEvent } from "react";
 import { FieldArrayFieldsProps } from "redux-form";
 import classNames from "classnames";
 

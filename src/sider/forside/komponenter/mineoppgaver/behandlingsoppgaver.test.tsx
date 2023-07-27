@@ -1,4 +1,3 @@
-import React from "react";
 import { shallow } from "enzyme";
 import * as redux from "react-redux";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
@@ -6,14 +5,14 @@ import { BehandlingOppgaver } from "./behandlingOppgaver";
 import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
 import * as featureToggleModule from "../../../../featuretoggle";
 
-jest.mock("../../../../featuretoggle", () => ({
+vi.mock("../../../../featuretoggle", () => ({
   __esModule: true,
-  useFeatureToggle: jest.fn(),
+  useFeatureToggle: vi.fn(),
 }));
 
 describe("Behandlingsoppgaver", () => {
   beforeEach(() => {
-    jest.spyOn(featureToggleModule, "useFeatureToggle").mockResolvedValue(true as never);
+    vi.spyOn(featureToggleModule, "useFeatureToggle").mockResolvedValue(true as never);
   });
 
   const saksbehandling = [
@@ -64,8 +63,8 @@ describe("Behandlingsoppgaver", () => {
   };
 
   it("viser en OppgaverMedSortering for journalføringsoppgaver", () => {
-    const useDispatchSpy = jest.spyOn(redux, "useDispatch");
-    const mockDispatchFn = jest.fn();
+    const useDispatchSpy = vi.spyOn(redux, "useDispatch");
+    const mockDispatchFn = vi.fn();
     useDispatchSpy.mockReturnValue(mockDispatchFn);
 
     // @ts-ignore

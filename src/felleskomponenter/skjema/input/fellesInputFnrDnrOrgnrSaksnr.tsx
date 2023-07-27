@@ -1,4 +1,3 @@
-import React from "react";
 import { Field, WrappedFieldProps } from "redux-form";
 import {
   EnkelFellesInputFnrDnrOrgnrSaksnr,

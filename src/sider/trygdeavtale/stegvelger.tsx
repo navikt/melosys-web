@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";

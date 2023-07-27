@@ -1,9 +1,11 @@
-@import (reference) "~nav-frontend-lenker-style/src/lenker-mixins";
+@import "../../../constants";
 
 .lenkeknapp,
 .lenkeknapp__ikon {
-  .lenke-mixin();
-  .lenkemedikon-mixin();
+  color: @blue-nav;
+  background: none;
+  text-decoration: underline;
+  cursor: pointer;
   text-align: left;
   border: none;
   padding: 0;
@@ -14,6 +16,44 @@
     width: 1.4rem;
     overflow: visible;
     padding-right: 0.4rem;
+    fill: @blue-nav-focus;
+    stroke: @blue-nav-focus;
+    vertical-align: middle;
+  }
+
+  &:hover,
+  &--hover {
+    text-decoration: none;
+  }
+
+  &:focus,
+  &--focus {
+    outline: none;
+    color: white;
+    text-decoration: none;
+    background-color: @blue-nav-focus;
+    box-shadow: 0 0 0 2px @blue-nav-focus;
+  }
+
+  &:active,
+  &--active {
+    outline: none;
+    color: white;
+    text-decoration: none;
+    background-color: @blue-nav-focus;
+    box-shadow: 0 0 0 2px @blue-nav-focus;
+  }
+
+  svg + span:not(.sr-only),
+  span:not(.sr-only) + svg {
+    margin-left: 0.25em;
+  }
+
+  &:focus {
+    svg {
+      fill: white;
+      stroke: white;
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -69,9 +69,15 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     }
   }, [aktivtSteg, soeknadsland]);
 
+  const resetBestemmelseOgIkkeYrkesaktivSituasjonstype = () => {
+    setValue("bestemmelse", "");
+    setValue("ikkeYrkesaktivSituasjontype", "");
+    lagreIkkeYrkesaktivSituasjontype(null);
+  };
+
   useEffect(() => {
     if (aktivtSteg && redigerbart && formValues) {
-      setValue("bestemmelse", "");
+      resetBestemmelseOgIkkeYrkesaktivSituasjonstype();
       if (formValues.innvilgelsesResultat === UNNTAK) {
         if (lovvalgsperiode?.periodeID)
           dispatch(lovvalgsperioderOperations.slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID));
