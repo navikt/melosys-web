@@ -36,7 +36,7 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 
 const { trygdeavtale_myndighetsland } = MKV.Koder;
-const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
+const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
 const betalingsintervaller: KTObject[] = [
   { kode: "MANEDLIG", term: "Månedlig" },
@@ -118,7 +118,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
+      produserbartdokument: INNVILGELSE_FOLKETRYGDLOVEN,
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -179,7 +179,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           muligMottaker.dokumentNavn
         ),
         data: {
-          produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
+          produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN,
           mottaker: muligMottaker.rolle,
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
