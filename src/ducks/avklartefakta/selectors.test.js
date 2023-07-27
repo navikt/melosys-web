@@ -1,8 +1,7 @@
 import * as selectors from "./selectors";
-import * as KV from "../../kodeverk";
-
-import MKV from "../../melosyskodeverk";
-import { BOOLSK_STRING } from "../../constants";
+import * as KV from "~/kodeverk";
+import MKV from "~/melosyskodeverk";
+import { BOOLSK_STRING } from "~/constants";
 
 describe("Avklartefaktaselectors", () => {
   const lagState = ({
@@ -77,56 +76,59 @@ describe("Avklartefaktaselectors", () => {
       expect(selectors.ArbeidslandKTSelector(state)).toEqual(forventetResultat);
     });
 
-    each([
-      [
-        [KV.kodeTilObjekt(MKV.Koder.landkoder.GB, MKV.KTObjects.landkoder)],
+    it("returnerer korrekt verdi", () => {
+      const data = [
         [
+          [KV.kodeTilObjekt(MKV.Koder.landkoder.GB, MKV.KTObjects.landkoder)],
+          [
+            {
+              referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
+              subjektID: MKV.Koder.landkoder.DE,
+              fakta: ["TRUE"],
+            },
+            {
+              referanse: KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND,
+              fakta: [MKV.Koder.landkoder.GB],
+            },
+            {
+              referanse: KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP,
+              fakta: [],
+            },
+          ],
+          MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
           {
-            referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
-            subjektID: MKV.Koder.landkoder.DE,
-            fakta: ["TRUE"],
-          },
-          {
-            referanse: KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND,
-            fakta: [MKV.Koder.landkoder.GB],
-          },
-          {
-            referanse: KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP,
-            fakta: [],
+            soeknadsland: {
+              landkoder: [MKV.Koder.landkoder.DE],
+            },
+            luftfartBaser: [],
           },
         ],
-        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-        {
-          soeknadsland: {
-            landkoder: [MKV.Koder.landkoder.DE],
-          },
-          luftfartBaser: [],
-        },
-      ],
-      [
-        [KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder)],
         [
+          [KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder)],
+          [
+            {
+              referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
+              subjektID: MKV.Koder.landkoder.DE,
+              fakta: ["TRUE"],
+            },
+          ],
+          MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
           {
-            referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
-            subjektID: MKV.Koder.landkoder.DE,
-            fakta: ["TRUE"],
+            soeknadsland: {
+              landkoder: [MKV.Koder.landkoder.DE],
+            },
+            luftfartBaser: [],
           },
         ],
-        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-        {
-          soeknadsland: {
-            landkoder: [MKV.Koder.landkoder.DE],
-          },
-          luftfartBaser: [],
-        },
-      ],
-    ]).it("returnerer korrekt verdi", (forventetResultat, avklartefakta, behandlingstema, mottatteOpplysningerData) => {
-      const state = lagState({
-        avklartefakta,
-        behandlingstema,
-        mottatteOpplysningerData,
+      ];
+      data.forEach((testdata) => {
+        const state = lagState({
+          avklartefakta: testdata[1],
+          behandlingstema: testdata[2],
+          mottatteOpplysningerData: testdata[3],
+        });
+        expect(selectors.ArbeidslandKTSelector(state)).toEqual(testdata[0]);
       });
-      expect(selectors.ArbeidslandKTSelector(state)).toEqual(forventetResultat);
     });
   });
 
@@ -138,282 +140,287 @@ describe("Avklartefaktaselectors", () => {
       fakta: [BOOLSK_STRING.SANN],
     });
 
-    each([
-      [
+    it("returnerer korrekt verdi for arbeidsland som ikke er Norge", () => {
+      const data = [
         [
-          {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
-            erLonnetArbeid: true,
-            erSelvstendigNaeringsvirksomhet: true,
-          },
-        ],
-        {
-          foretakUtland: [
+          [
             {
-              selvstendigNaeringsvirksomhet: true,
-              adresse: {
-                landkode: MKV.Koder.landkoder.DE,
-              },
+              land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
+              erLonnetArbeid: true,
+              erSelvstendigNaeringsvirksomhet: true,
             },
           ],
-          soeknadsland: {
-            landkoder: [MKV.Koder.landkoder.DE],
-          },
-          luftfartBaser: [],
-          arbeidPaaLand: {
-            fysiskeArbeidssteder: [
+          {
+            foretakUtland: [
               {
+                selvstendigNaeringsvirksomhet: true,
                 adresse: {
                   landkode: MKV.Koder.landkoder.DE,
                 },
               },
             ],
-          },
-        },
-      ],
-      [
-        [
-          {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
-            erLonnetArbeid: true,
-            erSelvstendigNaeringsvirksomhet: false,
+            soeknadsland: {
+              landkoder: [MKV.Koder.landkoder.DE],
+            },
+            luftfartBaser: [],
+            arbeidPaaLand: {
+              fysiskeArbeidssteder: [
+                {
+                  adresse: {
+                    landkode: MKV.Koder.landkoder.DE,
+                  },
+                },
+              ],
+            },
           },
         ],
-        {
-          foretakUtland: [
+        [
+          [
             {
-              selvstendigNaeringsvirksomhet: false,
-              adresse: {
-                landkode: MKV.Koder.landkoder.DE,
-              },
+              land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
+              erLonnetArbeid: true,
+              erSelvstendigNaeringsvirksomhet: false,
             },
           ],
-          soeknadsland: {
-            landkoder: [MKV.Koder.landkoder.DE],
-          },
-          luftfartBaser: [],
-          arbeidPaaLand: {
-            fysiskeArbeidssteder: [],
-          },
-        },
-      ],
-      [
-        [
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
-            erLonnetArbeid: false,
-            erSelvstendigNaeringsvirksomhet: false,
-          },
-        ],
-        {
-          foretakUtland: [],
-          soeknadsland: {
-            landkoder: [MKV.Koder.landkoder.DE],
-          },
-          luftfartBaser: [],
-          arbeidPaaLand: {
-            fysiskeArbeidssteder: [],
-          },
-        },
-      ],
-      [
-        [
-          {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
-            erLonnetArbeid: false,
-            erSelvstendigNaeringsvirksomhet: true,
-          },
-        ],
-        {
-          foretakUtland: [
-            {
-              selvstendigNaeringsvirksomhet: true,
-              adresse: {
-                landkode: MKV.Koder.landkoder.DE,
+            foretakUtland: [
+              {
+                selvstendigNaeringsvirksomhet: false,
+                adresse: {
+                  landkode: MKV.Koder.landkoder.DE,
+                },
               },
+            ],
+            soeknadsland: {
+              landkoder: [MKV.Koder.landkoder.DE],
+            },
+            luftfartBaser: [],
+            arbeidPaaLand: {
+              fysiskeArbeidssteder: [],
+            },
+          },
+        ],
+        [
+          [
+            {
+              land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
+              erLonnetArbeid: false,
+              erSelvstendigNaeringsvirksomhet: false,
             },
           ],
-          soeknadsland: {
-            landkoder: [MKV.Koder.landkoder.DE],
+          {
+            foretakUtland: [],
+            soeknadsland: {
+              landkoder: [MKV.Koder.landkoder.DE],
+            },
+            luftfartBaser: [],
+            arbeidPaaLand: {
+              fysiskeArbeidssteder: [],
+            },
           },
-          luftfartBaser: [],
-          arbeidPaaLand: {
-            fysiskeArbeidssteder: [],
+        ],
+        [
+          [
+            {
+              land: KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder),
+              erLonnetArbeid: false,
+              erSelvstendigNaeringsvirksomhet: true,
+            },
+          ],
+          {
+            foretakUtland: [
+              {
+                selvstendigNaeringsvirksomhet: true,
+                adresse: {
+                  landkode: MKV.Koder.landkoder.DE,
+                },
+              },
+            ],
+            soeknadsland: {
+              landkoder: [MKV.Koder.landkoder.DE],
+            },
+            luftfartBaser: [],
+            arbeidPaaLand: {
+              fysiskeArbeidssteder: [],
+            },
           },
-        },
-      ],
-    ]).it(
-      "returnerer korrekt verdi for arbeidsland som ikke er Norge",
-      (forventetResultat, mottatteOpplysningerData) => {
+        ],
+      ];
+
+      data.forEach((testdata) => {
         const arbeidsland = MKV.Koder.landkoder.DE;
         const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
         const state = lagState({
           avklartefakta,
           behandlingstype,
-          mottatteOpplysningerData,
+          mottatteOpplysningerData: testdata[1],
         });
 
-        expect(selectors.ArbeidslandMedYrkesAktivitetSelector(state)).toEqual(forventetResultat);
-      }
-    );
+        expect(selectors.ArbeidslandMedYrkesAktivitetSelector(state)).toEqual(testdata[0]);
+      });
+    });
 
-    each([
-      [
+    it("returner korrekt verdi for arbeidsland lik Norge", () => {
+      const data = [
         [
+          [
+            {
+              land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+              erLonnetArbeid: false,
+              erSelvstendigNaeringsvirksomhet: false,
+            },
+          ],
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
-            erLonnetArbeid: false,
-            erSelvstendigNaeringsvirksomhet: false,
+            selvstendigArbeid: {
+              erSelvstendig: false,
+            },
+            soeknadsland: {
+              landkoder: [MKV.Koder.landkoder.NO],
+            },
+            luftfartBaser: [],
           },
         ],
-        {
-          selvstendigArbeid: {
-            erSelvstendig: false,
-          },
-          soeknadsland: {
-            landkoder: [MKV.Koder.landkoder.NO],
-          },
-          luftfartBaser: [],
-        },
-      ],
-      [
         [
+          [
+            {
+              land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+              erLonnetArbeid: false,
+              erSelvstendigNaeringsvirksomhet: true,
+            },
+          ],
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
-            erLonnetArbeid: false,
-            erSelvstendigNaeringsvirksomhet: true,
+            selvstendigArbeid: {
+              erSelvstendig: true,
+              selvstendigForetak: [{}],
+            },
+            soeknadsland: {
+              landkoder: [MKV.Koder.landkoder.NO],
+            },
+            luftfartBaser: [],
           },
         ],
-        {
-          selvstendigArbeid: {
-            erSelvstendig: true,
-            selvstendigForetak: [{}],
-          },
-          soeknadsland: {
-            landkoder: [MKV.Koder.landkoder.NO],
-          },
-          luftfartBaser: [],
-        },
-      ],
-      [
         [
+          [
+            {
+              land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+              erLonnetArbeid: true,
+              erSelvstendigNaeringsvirksomhet: false,
+            },
+          ],
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
-            erLonnetArbeid: true,
-            erSelvstendigNaeringsvirksomhet: false,
+            selvstendigArbeid: {
+              erSelvstendig: false,
+            },
+            soeknadsland: {
+              landkoder: [MKV.Koder.landkoder.NO],
+            },
+            luftfartBaser: [],
+            periode: { fom: "2020-02-02", tom: "2020-06-02" },
           },
         ],
-        {
-          selvstendigArbeid: {
-            erSelvstendig: false,
-          },
-          soeknadsland: {
-            landkoder: [MKV.Koder.landkoder.NO],
-          },
-          luftfartBaser: [],
-          periode: { fom: "2020-02-02", tom: "2020-06-02" },
-        },
-      ],
-      [
         [
+          [
+            {
+              land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+              erLonnetArbeid: true,
+              erSelvstendigNaeringsvirksomhet: true,
+            },
+          ],
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
-            erLonnetArbeid: true,
-            erSelvstendigNaeringsvirksomhet: true,
+            selvstendigArbeid: {
+              erSelvstendig: true,
+              selvstendigForetak: [{}],
+            },
+            soeknadsland: {
+              landkoder: [MKV.Koder.landkoder.NO],
+            },
+            luftfartBaser: [],
+            periode: { fom: "2020-02-02", tom: "2020-06-02" },
           },
         ],
-        {
-          selvstendigArbeid: {
-            erSelvstendig: true,
-            selvstendigForetak: [{}],
-          },
-          soeknadsland: {
-            landkoder: [MKV.Koder.landkoder.NO],
-          },
-          luftfartBaser: [],
-          periode: { fom: "2020-02-02", tom: "2020-06-02" },
-        },
-      ],
-      [
         [
+          [
+            {
+              land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+              erLonnetArbeid: true,
+              erSelvstendigNaeringsvirksomhet: false,
+            },
+          ],
           {
-            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
-            erLonnetArbeid: true,
-            erSelvstendigNaeringsvirksomhet: false,
-          },
-        ],
-        {
-          selvstendigArbeid: {
-            erSelvstendig: false,
-          },
-          soeknadsland: {
-            landkoder: [MKV.Koder.landkoder.NO],
-          },
-          arbeidPaaLand: {
-            fysiskeArbeidssteder: [
-              {
-                adresse: {
-                  landkode: MKV.Koder.landkoder.NO,
+            selvstendigArbeid: {
+              erSelvstendig: false,
+            },
+            soeknadsland: {
+              landkoder: [MKV.Koder.landkoder.NO],
+            },
+            arbeidPaaLand: {
+              fysiskeArbeidssteder: [
+                {
+                  adresse: {
+                    landkode: MKV.Koder.landkoder.NO,
+                  },
                 },
+              ],
+            },
+          },
+        ],
+      ];
+
+      data.forEach((testdata) => {
+        const arbeidsland = MKV.Koder.landkoder.NO;
+        const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
+        const behandlingerSaksopplysninger = {
+          arbeidsforhold: [
+            {
+              arbeidsgiverID: "12345",
+              opplysningspliktigID: "12345",
+            },
+          ],
+          organisasjoner: [
+            {
+              orgnr: "12345",
+              navn: "Organisasjon",
+            },
+          ],
+          sed: {
+            fom: "2020-02-02",
+            tom: "2020-06-02",
+          },
+          inntekt: {
+            arbeidsInntektMaanedListe: [
+              {
+                aarMaaned: "2019-10",
+                arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
+              },
+              {
+                aarMaaned: "2019-11",
+                arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
+              },
+              {
+                aarMaaned: "2019-12",
+                arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
+              },
+              {
+                aarMaaned: "2020-01",
+                arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
+              },
+              {
+                aarMaaned: "2020-02",
+                arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
               },
             ],
           },
-        },
-      ],
-    ]).it("returner korrekt verdi for arbeidsland lik Norge", (forventetResultat, mottatteOpplysningerData) => {
-      const arbeidsland = MKV.Koder.landkoder.NO;
-      const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
-      const behandlingerSaksopplysninger = {
-        arbeidsforhold: [
-          {
-            arbeidsgiverID: "12345",
-            opplysningspliktigID: "12345",
-          },
-        ],
-        organisasjoner: [
-          {
-            orgnr: "12345",
-            navn: "Organisasjon",
-          },
-        ],
-        sed: {
-          fom: "2020-02-02",
-          tom: "2020-06-02",
-        },
-        inntekt: {
-          arbeidsInntektMaanedListe: [
-            {
-              aarMaaned: "2019-10",
-              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
-            },
-            {
-              aarMaaned: "2019-11",
-              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
-            },
-            {
-              aarMaaned: "2019-12",
-              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
-            },
-            {
-              aarMaaned: "2020-01",
-              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
-            },
-            {
-              aarMaaned: "2020-02",
-              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
-            },
-          ],
-        },
-      };
+        };
 
-      const state = lagState({
-        avklartefakta,
-        behandlingstype,
-        mottatteOpplysningerData,
-        behandlingerSaksopplysninger,
+        const state = lagState({
+          avklartefakta,
+          behandlingstype,
+          mottatteOpplysningerData: testdata[1],
+          behandlingerSaksopplysninger,
+        });
+
+        expect(selectors.ArbeidslandMedYrkesAktivitetSelector(state)).toEqual(testdata[0]);
       });
-
-      expect(selectors.ArbeidslandMedYrkesAktivitetSelector(state)).toEqual(forventetResultat);
     });
   });
 

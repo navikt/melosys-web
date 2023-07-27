@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertStripeType } from "nav-frontend-alertstriper";
 import classNames from "classnames";
 
@@ -25,22 +25,30 @@ export const VirksomhetMelding = () => (
   <Nav.AlertStripeInfo className="virksomhetMelding">Behandlingen er journalført på virksomhet</Nav.AlertStripeInfo>
 );
 
-export const TomFlytMelding = ({ visBuc = false }) => (
+export const TomFlytMelding = () => (
   <div className="tomFlytMelding">
     <Nav.AlertStripeAdvarsel className="tomFlytMelding">
       <b>Du kan ikke gå videre, men:</b>
       <ul>
-        {visBuc && (
-          <li>
-            du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak og &quot;Opprett ny BUC&quot;-fanen for
-            å sende SED
-          </li>
-        )}
-        {!visBuc && <li>du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak</li>}
+        <li>
+          du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak, og &quot;Opprett ny BUC&quot;-fanen for å
+          sende SED
+        </li>
         <li>du må avslutte behandlingen og angi resultatet i behandlingsmenyen</li>
+        <li>periode i MEDL og eventuelt avgiftssystemet må registreres manuelt</li>
       </ul>
     </Nav.AlertStripeAdvarsel>
   </div>
+);
+
+export const NyVurderingMelding = () => (
+  <Nav.AlertStripeAdvarsel className="nyVurderingMelding">
+    <Nav.Typo.Normaltekst className="nyVurderingMelding__overskrift">Ny behandling av sak</Nav.Typo.Normaltekst>
+    <Nav.Typo.Normaltekst>
+      Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens opplysninger og
+      vurder videre behandling.
+    </Nav.Typo.Normaltekst>
+  </Nav.AlertStripeAdvarsel>
 );
 
 interface StandardMeldingOverstProps {

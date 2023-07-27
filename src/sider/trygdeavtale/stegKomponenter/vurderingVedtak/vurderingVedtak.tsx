@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { RootState } from "AppTypes";
@@ -22,6 +22,7 @@ import { lovvalgsperioderOperations } from "../../../../ducks/lovvalgsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { kontrollerFerdigbehandling } from "../../../../ducks/kontroll/operations";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
+import { kontrollSelectors } from "../../../../ducks/kontroll";
 import { formSelectors } from "../../../../ducks/form";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
@@ -39,7 +40,6 @@ import {
   NY_VURDERING_BAKGRUNN_HJELPETEKST,
   PERIODE_HJELPETEKST,
 } from "./tekster";
-import { kontrollSelectors } from "../../../../ducks/kontroll";
 
 const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
@@ -96,7 +96,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterPeriode: (periode: Periode) => dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
-  hentLovvalgsperiode: (behandlingID: string) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+  hentLovvalgsperiode: (behandlingID: number) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -281,7 +281,6 @@ const VurderingVedtak = ({
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return [
       {
-        sendesTilDokumenterV2: true,
         navn: muligMottaker.dokumentNavn,
         data: {
           produserbardokument: hentProduserbartDokument(),
@@ -446,7 +445,6 @@ const VurderingVedtak = ({
             <Skjema.HTMLEditor
               feltNavn="nyVurderingBakgrunnFritekst"
               className={vurderingVedtakCls.elementWithModifier("nyvurdering", "fritekst")}
-              placeholder={redigerbart ? "Skriv inn grunn for nytt vedtak..." : ""}
               disabled={!redigerbart}
             />
           )}
@@ -463,7 +461,6 @@ const VurderingVedtak = ({
       <Skjema.HTMLEditor
         feltNavn="innledningFritekst"
         className={vurderingVedtakCls.element("fritekst_editor")}
-        placeholder={redigerbart ? "Skriv inn tilleggsinformasjon til innledning..." : ""}
         disabled={!redigerbart}
       />
 
@@ -477,7 +474,6 @@ const VurderingVedtak = ({
       <Skjema.HTMLEditor
         feltNavn="begrunnelseFritekst"
         className={vurderingVedtakCls.element("fritekst_editor")}
-        placeholder={redigerbart ? "Skriv inn tilleggsinformasjon til begrunnelse..." : ""}
         disabled={!redigerbart}
       />
 

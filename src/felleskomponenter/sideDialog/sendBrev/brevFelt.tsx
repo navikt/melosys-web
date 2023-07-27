@@ -1,4 +1,3 @@
-import React from "react";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import * as Nav from "../../../navFrontend";

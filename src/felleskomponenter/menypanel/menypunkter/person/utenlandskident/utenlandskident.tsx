@@ -1,5 +1,3 @@
-import React from "react";
-
 import { FieldArray, WrappedFieldArrayProps } from "redux-form";
 
 import * as Nav from "../../../../../navFrontend";

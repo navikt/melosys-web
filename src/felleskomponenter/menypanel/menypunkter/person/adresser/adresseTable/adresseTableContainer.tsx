@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Bostedsadresse, Kontaktadresse, Oppholdsadresse } from "../../../../../../graphql";
 import AdresseTable from "./adresseTable";
 

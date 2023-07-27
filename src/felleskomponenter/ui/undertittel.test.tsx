@@ -1,11 +1,11 @@
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 import renderer from "react-test-renderer";
 import { instance, mock } from "ts-mockito";
 import * as Ikoner from "../../resources/images";
 
 import Undertittel from "./undertittel";
 
-jest.mock("../../utils", () => ({
+vi.mock("../../utils", () => ({
   _uuid: () => "123",
 }));
 

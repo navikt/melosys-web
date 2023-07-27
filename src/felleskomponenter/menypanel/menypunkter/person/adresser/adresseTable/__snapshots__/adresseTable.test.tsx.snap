@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AdresseTable  aktiv AdresseTable renders correctly 1`] = `
+exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
 <div
   className="adresseTable menypanel__table-wrapper"
 >
@@ -72,7 +72,7 @@ exports[`AdresseTable  aktiv AdresseTable renders correctly 1`] = `
 </div>
 `;
 
-exports[`AdresseTable  historisk AdresseTable renders correctly 1`] = `
+exports[`AdresseTable  > historisk AdresseTable renders correctly 1`] = `
 <div
   className="adresseTable menypanel__table-wrapper"
 >

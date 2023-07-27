@@ -1,4 +1,3 @@
-import React from "react";
 import { shallow } from "enzyme";
 
 import { FaneViser, FaneViserProps } from "./sideDialog";
@@ -19,7 +18,7 @@ describe("SideDialog", () => {
         saksnummer: "4",
         sakstype: "TRYGDEAVTALE",
         behandlingstema: "YRKESAKTIV",
-        endreFane: jest.fn(),
+        endreFane: vi.fn(),
         redigerbart: true,
         dokumentOversikt: [
           {

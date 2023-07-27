@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from "react";
+import { HTMLAttributes, ReactNode } from "react";
 import classNames from "classnames";
 
 import bem from "../../bemUtils";
@@ -6,9 +6,9 @@ import bem from "../../bemUtils";
 import "./fieldset.css";
 
 interface FieldsetProps extends HTMLAttributes<HTMLFieldSetElement> {
-  children: React.ReactNode | React.ReactNode[];
+  children: ReactNode | ReactNode[];
   className?: string;
-  legend: React.ReactNode;
+  legend: ReactNode;
 }
 
 const Fieldset = ({ className, children, legend, ...other }: FieldsetProps) => {

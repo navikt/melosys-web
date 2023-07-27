@@ -1,5 +1,4 @@
 import { FysiskDokument } from "Domene";
-import React from "react";
 
 import PdfLink from "../pdfLink";
 import * as Utils from "../../utils";

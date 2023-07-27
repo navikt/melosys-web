@@ -1,4 +1,4 @@
-import React, { ElementType, ReactNode, SVGProps } from "react";
+import { ElementType, ReactNode, SVGProps } from "react";
 import classNames from "classnames";
 
 import * as Nav from "../../navFrontend";

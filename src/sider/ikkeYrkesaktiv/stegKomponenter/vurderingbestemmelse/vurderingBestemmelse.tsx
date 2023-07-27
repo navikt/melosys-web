@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KTObject } from "@navikt/melosys-kodeverk";
+
 import MKV from "../../../../melosyskodeverk";
+import * as Api from "../../../../services/api";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
+import * as Forms from "../../../../felleskomponenter/forms";
+
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import * as Forms from "../../../../felleskomponenter/forms";
-import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
-import * as Api from "../../../../services/api";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
-import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
-import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
-import * as Utils from "../../../../utils";
 
+import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
+
+import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
+
+const { INNVILGET, AVSLAATT } = MKV.Koder.innvilgelsesResultat;
+const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const UNNTAK = "UNNTAK";
-const { GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
 
 interface Props {
   bekreft: () => void;
@@ -39,7 +41,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
-  const utfallRegistreringUnntak = useSelector(behandlingsresultatSelectors.UtfallRegistreringUnntakSelector);
   const ikkeYrkesaktivSituasjonstype = useSelector(mottatteOpplysningerSelectors.IkkeYrkesaktivSituasjontypeSelector);
 
   const [muligeBestemmelser, setMuligeBestemmelser] = useState<KTObject[]>([]);
@@ -49,15 +50,15 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     resolver: yupResolver(vurdering_bestemmelse),
     mode: "all",
     defaultValues: {
-      utfall: utfallRegistreringUnntak,
-      bestemmelse: lovvalgsperiode.lovvalgsbestemmelse || "",
+      innvilgelsesResultat: lovvalgsperiode.innvilgelsesResultat,
+      bestemmelse: lovvalgsperiode.lovvalgsbestemmelse,
       ikkeYrkesaktivSituasjontype: ikkeYrkesaktivSituasjonstype,
     } as FieldValues,
   });
   const formValues = watch();
 
   useEffect(() => {
-    oppdaterStatus(formState.isValid && formValues.utfall && formValues.bestemmelse);
+    oppdaterStatus(formState.isValid);
   }, [formState?.isValid]);
 
   useEffect(() => {
@@ -68,33 +69,35 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     }
   }, [aktivtSteg, soeknadsland]);
 
-  const lagreUtfallRegistrering = (utfall: string) => {
-    dispatch(
-      behandlingsresultatOperations.oppdaterUtfallRegistreringUnntak(behandlingID, utfall !== UNNTAK ? utfall : null)
-    );
+  const resetBestemmelseOgIkkeYrkesaktivSituasjonstype = () => {
     setValue("bestemmelse", "");
-    dispatch(lovvalgsperioderOperations.send(behandlingID, []));
+    setValue("ikkeYrkesaktivSituasjontype", "");
+    lagreIkkeYrkesaktivSituasjontype(null);
   };
+
+  useEffect(() => {
+    if (aktivtSteg && redigerbart && formValues) {
+      resetBestemmelseOgIkkeYrkesaktivSituasjonstype();
+      if (formValues.innvilgelsesResultat === UNNTAK) {
+        if (lovvalgsperiode?.periodeID)
+          dispatch(lovvalgsperioderOperations.slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID));
+      } else {
+        lagreLovvalgsperiode(formValues.innvilgelsesResultat);
+      }
+    }
+  }, [formValues?.innvilgelsesResultat]);
 
   const lagreIkkeYrkesaktivSituasjontype = (ikkeYrkesaktivSituasjontype: string | null) => {
     dispatch(mottatteOpplysningerOperations.oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype));
   };
 
-  const lagreLovvalgsperiodeOgKontroller = async (values: FieldValues) => {
+  const lagreLovvalgsperiode = async (innvilgelsesResultat: string, lovvalgsbestemmelse?: string) => {
     await dispatch(
-      lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
-        lovvalgsperiode: {
-          fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
-          tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
-        },
-        innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
-        lovvalgsbestemmelse: values.bestemmelse,
-        lovvalgsland: MKV.Koder.land_iso2.NO,
-        medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
-        trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING,
+      lovvalgsperioderOperations.opprettLovvalgsperiode(behandlingID, {
+        innvilgelsesResultat,
+        lovvalgsbestemmelse,
       })
     );
-    await dispatch(lovvalgsperioderOperations.lagre());
   };
 
   const lagreBestemmelse = (bestemmelse: string) => {
@@ -103,15 +106,20 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       lagreIkkeYrkesaktivSituasjontype(null);
     }
     setLagreLovvalgsperiodePending(true);
-    lagreLovvalgsperiodeOgKontroller({ ...formValues, bestemmelse }).then(() => setLagreLovvalgsperiodePending(false));
+    lagreLovvalgsperiode(formValues.innvilgelsesResultat, bestemmelse).finally(() =>
+      setLagreLovvalgsperiodePending(false)
+    );
   };
 
   if (!aktivtSteg) return null;
+
+  const innvilgelsesResultatErUNNTAK = formValues?.innvilgelsesResultat === UNNTAK;
+
   return (
     <div className="vurderingBestemmelse">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
 
-      {sakstype === MKV.Koder.sakstyper.EU_EOS && (
+      {sakstype === EU_EOS && (
         <Nav.AlertStripeInfo>
           Du må vurdere om søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004
         </Nav.AlertStripeInfo>
@@ -119,32 +127,29 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
       <Nav.Fieldset legend="Hva er din vurdering av søknaden?">
         <Forms.Radio
-          name="utfall"
+          name="innvilgelsesResultat"
           control={control}
           label="Jeg vil innvilge søknaden"
-          value={GODKJENT}
-          onChange={lagreUtfallRegistrering}
+          value={INNVILGET}
           disabled={!redigerbart}
         />
         <Forms.Radio
-          name="utfall"
+          name="innvilgelsesResultat"
           control={control}
           label="Jeg vil søke om unntak"
           value={UNNTAK}
-          onChange={lagreUtfallRegistrering}
           disabled={!redigerbart}
         />
         <Forms.Radio
-          name="utfall"
+          name="innvilgelsesResultat"
           control={control}
           label="Jeg vil avslå søknaden"
-          value={IKKE_GODKJENT}
-          onChange={lagreUtfallRegistrering}
+          value={AVSLAATT}
           disabled={!redigerbart}
         />
       </Nav.Fieldset>
 
-      {formValues.utfall === GODKJENT && (
+      {formValues?.innvilgelsesResultat === INNVILGET && (
         <>
           <Nav.Fieldset className="select" legend="Velg bestemmelse">
             <Nav.Row>
@@ -168,7 +173,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           </Nav.Fieldset>
           {formValues.bestemmelse ===
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3E && (
-            <Nav.Fieldset legend="Velg brukers situasjon ">
+            <Nav.Fieldset legend="Velg brukers situasjon">
               {MKV.KTObjects.begrunnelser.ikkeyrkesaktivsituasjontype.map((value: KTObject) => (
                 <Forms.Radio
                   name="ikkeYrkesaktivSituasjontype"
@@ -185,7 +190,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </>
       )}
 
-      {formValues.utfall === UNNTAK && sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE && (
+      {innvilgelsesResultatErUNNTAK && sakstype === TRYGDEAVTALE && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <UnntakHjelpetekst />
@@ -193,7 +198,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       )}
 
-      {formValues.utfall === UNNTAK && sakstype === MKV.Koder.sakstyper.EU_EOS && (
+      {innvilgelsesResultatErUNNTAK && sakstype === EU_EOS && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakTekst">
             <Nav.EtikettBase type="info">
@@ -212,12 +217,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       )}
 
-      {formValues.utfall === IKKE_GODKJENT && <TomFlytMelding />}
+      {formValues?.innvilgelsesResultat === AVSLAATT && <TomFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreft,
-          disabled: !formState?.isValid || !redigerbart || formValues.utfall !== GODKJENT,
+          disabled: !formState?.isValid || !redigerbart || formValues?.innvilgelsesResultat !== INNVILGET,
           autoDisableVedSpinner: true,
           spinner: lagreLovvalgsperiodePending,
         }}

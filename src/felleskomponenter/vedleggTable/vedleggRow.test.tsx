@@ -12,7 +12,9 @@ const dokument = {
   avsenderEllerMottaker: "a",
 };
 
-it("vedleggRow renders correctly ", () => {
-  const tree = renderer.create(<VedleggRow slettVedlegg={jest.fn()} vedlegg={dokument} />).toJSON();
-  expect(tree).toMatchSnapshot();
+describe("vedleggRow", () => {
+  it("snapshot test", () => {
+    const tree = renderer.create(<VedleggRow slettVedlegg={vi.fn()} vedlegg={dokument} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

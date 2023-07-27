@@ -1,4 +1,3 @@
-import React from "react";
 import MKV from "../../../../../melosyskodeverk";
 import * as Hjelpetekster from "./hjelpetekster";
 

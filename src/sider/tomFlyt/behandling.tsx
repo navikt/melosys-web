@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
@@ -95,7 +95,7 @@ const Behandling = ({
                 <VirksomhetMelding />
               ) : (
                 <>
-                  <TomFlytMelding visBuc />
+                  <TomFlytMelding />
                   <SoknadMenypanelForm startOgVisOppfriskModal={() => null} visOppdaterRegisteropplysninger={false} />
                 </>
               )}

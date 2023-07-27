@@ -9,6 +9,7 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
 import { FellesHandlersContext } from "../../../../contexts";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
@@ -18,6 +19,8 @@ import { landkoderSelectors } from "../../../../ducks/landkoder";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import MKV from "../../../../melosyskodeverk";
 
 interface Props {
   bekreft: () => void;
@@ -34,6 +37,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const landkoder = useSelector(landkoderSelectors.LandkoderFraSakstypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
+  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
   const { control, watch, formState, trigger } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
@@ -54,9 +58,13 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   const [visSpinner, setVisSpinner] = useState(false);
 
+  const landUtenStøtteValgt =
+    sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
+    (formValues.land === MKV.Koder.landkoder.FR || formValues.land === MKV.Koder.landkoder.IT);
+
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
-  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner;
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner && !landUtenStøtteValgt;
 
   useEffect(() => {
     if (registeropplysningerHentet) {
@@ -79,7 +87,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     );
   };
 
-  const bekreftHandle = async () => {
+  const innhentRegisteropplysninger = async () => {
     if (skalHenteRegisteropplysninger) {
       lagrePeriodeOgLand();
 
@@ -88,14 +96,18 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       setVisSpinner(false);
       dispatch(menypanelOperations.visMenypanel());
     }
+  };
+
+  const bekreftOgInnhentRegisteropplysninger = async () => {
+    await innhentRegisteropplysninger();
     bekreft();
   };
 
   if (!aktivtSteg) return null;
 
   return (
-    <div className="vurderingStart">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi søknadsperiode og -land</Nav.Typo.Innholdstittel>
+    <div className="vurderingInngang">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
 
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
@@ -109,17 +121,17 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
             />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Forms.Datovelger label="Til og med" name="tom" disabled={!redigerbart} control={control} />
+            <Forms.Datovelger
+              label="Til og med"
+              minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
+              name="tom"
+              disabled={!redigerbart}
+              control={control}
+            />
           </Nav.Column>
           <Nav.Column xs="5">
             <Forms.Select
-              label={
-                <LabelMedHjelpetekst
-                  label="Land"
-                  hjelpetekst="SETT INN HJELPETEKST"
-                  hjelpetekstClassName="hjelpetekst"
-                />
-              }
+              label={<LabelMedHjelpetekst label="Land" hjelpetekstClassName="hjelpetekst" />}
               emptyFieldText="Velg"
               emptyFieldDisabled={!!formValues.land}
               name="land"
@@ -136,14 +148,27 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         </Nav.Row>
       </Nav.Fieldset>
 
-      <Mui.StegKnapper
-        bekreftKnappProps={{
-          onClick: bekreftHandle,
-          disabled: !formState?.isValid || !redigerbart,
-          spinner: visSpinner,
-        }}
-        bekreftTekst="Bekreft og innhent registeropplysninger"
-      />
+      {landUtenStøtteValgt && <TomFlytMelding />}
+
+      {landUtenStøtteValgt && skalHenteRegisteropplysninger ? (
+        <Mui.StegKnapper
+          bekreftKnappProps={{
+            onClick: innhentRegisteropplysninger,
+            disabled: !formState?.isValid || !redigerbart,
+            spinner: visSpinner,
+          }}
+          bekreftTekst="Innehent registeropplysninger"
+        />
+      ) : (
+        <Mui.StegKnapper
+          bekreftKnappProps={{
+            onClick: bekreftOgInnhentRegisteropplysninger,
+            disabled: !formState?.isValid || landUtenStøtteValgt || !redigerbart,
+            spinner: visSpinner,
+          }}
+          bekreftTekst="Bekreft og innhent registeropplysninger"
+        />
+      )}
     </div>
   );
 };

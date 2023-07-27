@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import classNames from "classnames";
 import { RootState } from "AppTypes";
@@ -11,7 +11,7 @@ import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as Mui from "../ui";
 import * as Api from "../../services/api";
 import * as Nav from "../../navFrontend";
-import * as Routing from "../../routing";
+import * as Routing from "../../url";
 import * as Datoutils from "../../utils/dato";
 
 import { behandlingsstatusOperations, behandlingsstatusSelectors } from "../../ducks/behandlingsstatus";
@@ -25,7 +25,6 @@ import { StandardMeldingOverst } from "../alertmeldinger";
 import { Spinner } from "../spinner";
 
 import "./endreBehandlingModal.css";
-import { harUnntakFlyt } from "../../routing";
 import {
   MELOSYS_FOLKETRYGDEN_MVP,
   MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
@@ -235,12 +234,8 @@ function EndreBehandlingModal({
 
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
           tilAnnenSide(nyGenerertLink);
-          if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) {
-            window.location.reload();
-          }
-        } else {
-          window.location.reload();
         }
+        window.location.reload();
       })
       .catch(() => {
         setGenerellFeil("Oppdateringen feilet!");
@@ -325,7 +320,11 @@ function EndreBehandlingModal({
               feil={skalViseFeilmeldinger ? behandlingstypeFeilmelding : null}
               disableForsteValg
             />
-            <Datovelger onChange={setMottaksdato} label="Mottaksdato" value={mottaksdato} calendarPlacement="top" />
+            <Datovelger
+              onChange={setMottaksdato}
+              label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>}
+              value={mottaksdato}
+            />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingsstatus(e.target.value)}
               label="Behandlingsstatus"

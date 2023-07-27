@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
 import { MockedProvider } from "@apollo/client/testing";
 import { act } from "react-dom/test-utils";
@@ -31,7 +31,7 @@ describe("Personinfo", () => {
   });
 
   afterAll(() => {
-    jest.resetModules();
+    vi.resetModules();
   });
 
   const personstatus = [

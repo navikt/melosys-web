@@ -1,4 +1,4 @@
-import React, { ComponentProps, useState } from "react";
+import { ChangeEvent, ComponentProps, useState } from "react";
 import * as Nav from "../../navFrontend";
 
 type InputProps = Omit<ComponentProps<typeof Nav.Input>, "onChange" | "onBlur">;
@@ -18,20 +18,20 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
 }: FellesInputFnrDnrOrgnrSaksnrProps) => {
   const [inputVerdi, setInputVerdi] = useState<string>(props?.value || "");
 
-  const hentTrimmetStrengFraEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const hentTrimmetStrengFraEvent = (event: ChangeEvent<HTMLInputElement>) => {
     const trimmetStreng = event.target.value.toUpperCase().replaceAll(" ", "") || "";
     setInputVerdi(trimmetStreng);
     return trimmetStreng;
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = hentTrimmetStrengFraEvent(event);
     if (onChange) {
       onChange(value);
     }
   };
 
-  const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBlur = (event: ChangeEvent<HTMLInputElement>) => {
     const value = hentTrimmetStrengFraEvent(event);
     if (onBlur) {
       onBlur(value);

@@ -1,9 +1,9 @@
 import { FysiskDokument } from "Domene";
-import React from "react";
 
 import PdfLink from "../pdfLink";
 import * as Utils from "../../utils";
 import * as Nav from "../../navFrontend";
+import { ChangeEvent } from "react";
 
 interface VedleggVelgerRowProps {
   vedlegg: FysiskDokument;
@@ -13,7 +13,7 @@ interface VedleggVelgerRowProps {
 }
 
 const VedleggVelgerRow = ({ vedlegg, leggTilVedlegg, slettVedlegg, vedleggErMarkert }: VedleggVelgerRowProps) => {
-  const checkboxChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const checkboxChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       leggTilVedlegg();
     } else {

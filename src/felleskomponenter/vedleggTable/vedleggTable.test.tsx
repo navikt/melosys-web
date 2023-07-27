@@ -16,18 +16,20 @@ const fritekstvedlegg = {
   fritekst: "abc",
 };
 
-it("vedleggTable renders correctly", () => {
-  const tree = renderer
-    .create(
-      <VedleggTable
-        valgteVedlegg={[dokument]}
-        fritekstvedlegg={[fritekstvedlegg]}
-        setValgteVedlegg={jest.fn()}
-        redigerFritekstvedlegg={jest.fn()}
-        slettFritekstvedlegg={jest.fn()}
-        label="a"
-      />
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+describe("vedleggTable", () => {
+  it("snapshot test", () => {
+    const tree = renderer
+      .create(
+        <VedleggTable
+          valgteVedlegg={[dokument]}
+          fritekstvedlegg={[fritekstvedlegg]}
+          setValgteVedlegg={vi.fn()}
+          redigerFritekstvedlegg={vi.fn()}
+          slettFritekstvedlegg={vi.fn()}
+          label="a"
+        />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

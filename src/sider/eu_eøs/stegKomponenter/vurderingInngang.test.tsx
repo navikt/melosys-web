@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
 
 import { render, screen } from "@testing-library/react";
@@ -134,7 +134,7 @@ describe("VurderingInngang", () => {
 
   beforeEach(() => {
     props = {
-      bekreftOgFortsett: jest.fn(),
+      bekreftOgFortsett: vi.fn(),
       redigerbart: true,
       inngangsvilkaar: {
         vilkaar: MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR,
@@ -145,7 +145,7 @@ describe("VurderingInngang", () => {
       },
       oppfyllerInngangsvilkar: true,
       behandlingID: 1,
-      hentVilkar: jest.fn(),
+      hentVilkar: vi.fn(),
       landkoder: ["DK"],
       behandlingstema: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND.kode,
       behandlingHarPeriodeOgLand: true,

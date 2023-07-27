@@ -48,12 +48,21 @@ export interface Felt {
   valg: null | Valg;
 }
 
+export type FeilmeldingProps = {
+  tittel: string;
+  underpunkter?: Underpunkt[];
+};
+
+export type Underpunkt = {
+  underpunkt: string;
+};
+
 export type TilgjengeligMottaker = {
   uuid: string;
   type: string;
   rolle: string;
   adresser: MottakerAdresse[] | null;
-  feilmelding: string | null;
+  feilmelding: FeilmeldingProps | undefined;
   trygdemyndighet: string[] | null;
 };
 

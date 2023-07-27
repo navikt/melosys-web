@@ -1,43 +1,39 @@
-import React, { ComponentProps } from "react";
-import { shallow } from "enzyme";
-import { instance, mock } from "ts-mockito";
-
-import * as Nav from "../../../navFrontend";
-
-import PdfLenkeListe from "../../pdfLenkeListe";
+import * as redux from "react-redux";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import { DialogboksHenleggSak } from "./dialogboksHenlegg";
-import { KodeTermSelect } from "../../ui/kodeTermSelect";
-
-jest.mock("../../../featuretoggle", () => ({
-  useFeatureToggle: jest.fn(),
-}));
 
 describe("Dialogbokshenlegg", () => {
-  const mockedProps = mock<ComponentProps<typeof DialogboksHenleggSak>>();
-  const props = instance(mockedProps);
+  const props = {
+    ariaHideApp: false,
+    avbryt: vi.fn(),
+    henleggHandle: vi.fn(),
+  };
+  const doNothing = vi.fn(() => null);
 
-  beforeEach(() => {
-    props.behandlingID = 1;
-    props.ariaHideApp = false;
-    props.avbryt = jest.fn();
-    props.henleggHandle = jest.fn();
-    props.feilmeldinger = [];
+  beforeAll(() => {
+    vi.spyOn(redux, "useDispatch").mockImplementation(() => doNothing as never);
+  });
+
+  afterAll(() => {
+    vi.clearAllMocks();
   });
 
   it("viser en Nav Modal", () => {
-    const komponent = shallow(<DialogboksHenleggSak {...props} />);
-    expect(komponent.exists(Nav.Modal)).toBe(true);
+    const { getByRole } = renderWithProviders(<DialogboksHenleggSak {...props} />);
+    expect(getByRole("dialog")).toBeInTheDocument();
   });
 
-  describe("Modal", () => {
-    it("viser en dropdownliste", () => {
-      const komponent = shallow(<DialogboksHenleggSak {...props} />);
-      expect(komponent.exists(KodeTermSelect)).toBe(true);
-    });
+  it("viser forhåndsvisning når ingen feilmeldinger finnes", () => {
+    const { getByText } = renderWithProviders(<DialogboksHenleggSak {...props} />);
+    expect(getByText("Forhåndsvis brev")).toBeInTheDocument();
+  });
 
-    it("viser en pdflenkeliste", () => {
-      const komponent = shallow(<DialogboksHenleggSak {...props} />);
-      expect(komponent.exists(PdfLenkeListe)).toBe(true);
+  it("viser ikke forhåndsvisning når feilmeldinger finnes", () => {
+    const initialState = { kontroll: { status: "OK", data: { kontrollfeilList: [{ kode: "Kode", term: "term" }] } } };
+
+    const { queryAllByText } = renderWithProviders(<DialogboksHenleggSak {...props} />, {
+      preloadedState: initialState,
     });
+    expect(queryAllByText("Forhåndsvis brev")).toHaveLength(0);
   });
 });

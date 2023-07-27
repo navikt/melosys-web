@@ -1,4 +1,4 @@
-import React, { ComponentProps, MouseEvent } from "react";
+import { ComponentProps, MouseEvent } from "react";
 import { mock, instance } from "ts-mockito";
 import { shallow } from "enzyme";
 
@@ -9,7 +9,7 @@ describe("MenyLink", () => {
   const props = instance(mockedProps);
 
   it("kaller onClick ved klikk på button", () => {
-    props.onClick = jest.fn();
+    props.onClick = vi.fn();
     props.label = "test";
 
     const menyLink = shallow(<MenyLink {...props} />);

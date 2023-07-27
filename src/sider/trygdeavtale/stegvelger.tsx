@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -7,7 +7,6 @@ import { get as getValueAtPath } from "lodash";
 
 import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
-import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 import * as Steg from "./stegKomponenter";
 
@@ -25,6 +24,7 @@ import { vedtakOperations } from "../../ducks/vedtak";
 import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
+import { NyVurderingMelding } from "../../felleskomponenter/alertmeldinger/alertmeldinger";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -254,15 +254,7 @@ class Stegvelger extends Component<Props, State> {
             <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
             {!redigerbart && <Innsynsmelding />}
             {vedtakStegErAktivt && <Feilmeldinger />}
-            {erNyVurdering && redigerbart && inngangStegErAktivt && (
-              <Nav.AlertStripeAdvarsel className="varselstripe">
-                <Nav.Typo.Normaltekst className="varselstripe__overskrift">Ny behandling av sak</Nav.Typo.Normaltekst>
-                <Nav.Typo.Normaltekst>
-                  Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens
-                  opplysninger og vurder videre behandling.
-                </Nav.Typo.Normaltekst>
-              </Nav.AlertStripeAdvarsel>
-            )}
+            {erNyVurdering && redigerbart && inngangStegErAktivt && <NyVurderingMelding />}
             {aktuelleSteg.map((item: AktueltSteg) => (
               <StegFane id={item.id} key={item.id} faneData={item} />
             ))}

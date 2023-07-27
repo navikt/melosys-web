@@ -1,5 +1,5 @@
 import { FysiskDokument } from "Domene";
-import React from "react";
+
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
 import FritekstvedleggRow from "./fritekstvedleggRow";
 import * as Nav from "../../navFrontend";

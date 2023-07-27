@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,18 +20,17 @@ import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { navigeringOperations } from "../../../ducks/navigering";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { kontrollOperations } from "../../../ducks/kontroll";
+import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 
+import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
+import { MELOSYS_LOVVALGSBESTEMMELSE_API_EOS_UNNTAK } from "../../../featuretoggle/toggleNavn";
+
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
-
 import "./vurderingUnntakMedlemskap.css";
-import { getLovvalgsbestemmelser } from "../../../services/modules/lovvalgsbestemmelser";
-import { Feilkode } from "../../../@types";
 
+const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
-const { UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
-const { UTEN_DEKNING, UNNTATT_CAN_7_5_B, UNNTATT_USA_5_2_G } = MKV.Koder.trygdedekninger;
 const { OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO } = MKV.Koder.begrunnelser.kontroll_begrunnelser;
 
 interface VurderingUnntakMedlemskapProps {
@@ -42,6 +41,7 @@ interface VurderingUnntakMedlemskapProps {
 
 const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: VurderingUnntakMedlemskapProps) => {
   const [bestemmelser, setBestemmelser] = useState<KTObject[] | undefined>(undefined);
+  const [skalOppdatereRegisteropplysninger, setSkalOppdatereRegisteropplysninger] = useState(true);
 
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -55,6 +55,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const lovvalgsApiAktivert = useFeatureToggle(MELOSYS_LOVVALGSBESTEMMELSE_API_EOS_UNNTAK);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
@@ -69,48 +71,61 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   });
   const formValues = watch();
 
-  const kontrollerFerdigbehandling = (skalRegisteropplysningerOppdateres: boolean) =>
-    dispatch(
-      kontrollOperations.kontrollerFerdigbehandling({
-        behandlingID,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-        skalRegisteropplysningerOppdateres,
-      })
-    );
+  const kontrollerFerdigbehandling = (lovvalgsperiodeErLagret: boolean = false) => {
+    if (lovvalgsperiodeErLagret || !Utils._isEmpty(lovvalgsperiode)) {
+      dispatch(
+        kontrollOperations.kontrollerFerdigbehandling({
+          behandlingID,
+          vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          skalRegisteropplysningerOppdateres: skalOppdatereRegisteropplysninger,
+        })
+      );
+      if (skalOppdatereRegisteropplysninger) setSkalOppdatereRegisteropplysninger(false);
+    }
+  };
 
   useEffect(() => {
-    if (aktivtSteg) {
-      oppdaterOgLagreLovvalgsperiode(formValues, true);
+    if (aktivtSteg && redigerbart) {
+      kontrollerFerdigbehandling();
     }
   }, [aktivtSteg]);
 
   useEffect(() => {
-    if (MKV.Koder.sakstyper.TRYGDEAVTALE === sakstype && lovvalgsland && aktivtSteg) {
-      getLovvalgsbestemmelser(MKV.Koder.sakstyper.TRYGDEAVTALE, sakstema, behandlingstema, lovvalgsland).then((res) => {
-        setBestemmelser(res);
-      });
-    }
-    if (MKV.Koder.sakstyper.EU_EOS === sakstype && aktivtSteg) {
-      const eos_bestemmelser = [
-        ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
-        ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
-        ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
-        ...MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser,
-      ].filter(
-        (kt: KTObject) =>
-          ![
-            MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1,
-            MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ANNET,
-            MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87_8,
-            MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87A,
-          ].includes(kt.kode)
+    if (TRYGDEAVTALE === sakstype && lovvalgsland && aktivtSteg) {
+      Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(TRYGDEAVTALE, sakstema, behandlingstema, lovvalgsland).then(
+        (res) => setBestemmelser(res)
       );
-      setBestemmelser(eos_bestemmelser);
+    }
+    if (EU_EOS === sakstype && aktivtSteg) {
+      if (lovvalgsApiAktivert) {
+        Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, lovvalgsland).then(
+          (res) => setBestemmelser(res)
+        );
+      } else {
+        const eos_bestemmelser = [
+          ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
+          ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
+          ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
+          ...MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser,
+        ].filter(
+          (kt: KTObject) =>
+            ![
+              MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1,
+              MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ANNET,
+              MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87_8,
+              MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87A,
+            ].includes(kt.kode)
+        );
+        setBestemmelser(eos_bestemmelser);
+      }
     }
   }, [lovvalgsland, aktivtSteg]);
 
   useEffect(() => {
     oppdaterStatus(formState.isValid);
+    if (aktivtSteg && redigerbart) {
+      debouncedLagreLovvalgsperiodeOgKontroller(formValues, formState?.isValid);
+    }
   }, [formState?.isValid]);
 
   const lagreUtfallRegistreringUnntak = (utfall: string) => {
@@ -118,88 +133,58 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     setValue("fom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.fom));
     setValue("tom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.tom));
     setValue("bestemmelse", "");
-    dispatch(lovvalgsperioderOperations.send(behandlingID, []));
+    if (lovvalgsperiode?.periodeID)
+      dispatch(lovvalgsperioderOperations.slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID));
   };
 
-  const lagreLovvalgsperiodeOgKontroller = async (skalRegisteropplysningerOppdateres: boolean) => {
-    await dispatch(lovvalgsperioderOperations.lagre());
-    kontrollerFerdigbehandling(skalRegisteropplysningerOppdateres);
+  const lagreLovvalgsperiode = (values: FieldValues) =>
+    dispatch(
+      lovvalgsperioderOperations.opprettLovvalgsperiode(behandlingID, {
+        fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
+        tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
+        lovvalgsbestemmelse: values.bestemmelse,
+      })
+    );
+
+  const lagreLovvalgsperiodeOgKontroller = async (values: FieldValues, isValid: boolean) => {
+    if (isValid) {
+      await lagreLovvalgsperiode(values);
+      kontrollerFerdigbehandling(true);
+    } else {
+      kontrollerFerdigbehandling();
+    }
   };
 
-  const debouncedLagreLovvalgsperiode = useCallback(
-    Utils._debounce(
-      (skalRegisteropplysningerOppdateres) => lagreLovvalgsperiodeOgKontroller(skalRegisteropplysningerOppdateres),
-      500
-    ),
+  const debouncedLagreLovvalgsperiodeOgKontroller = useCallback(
+    Utils._debounce(lagreLovvalgsperiodeOgKontroller, 500),
     []
   );
 
-  const oppdaterOgLagreLovvalgsperiode = (values: FieldValues, skalRegisteropplysningerOppdateres: boolean = false) => {
-    const harMedlemskapstypeDelvisUnntatt =
-      sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
-      [
-        MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART7,
-        MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART11,
-        MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us.USA_ART5_2,
-        MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us.USA_ART5_9,
-      ].includes(values.bestemmelse);
+  const handleEndring = (values: FieldValues) => debouncedLagreLovvalgsperiodeOgKontroller(values, formState?.isValid);
 
-    const trygdedekningUnntatt = () => {
-      switch (values.bestemmelse) {
-        case MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART7:
-        case MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca.CAN_ART11:
-          return UNNTATT_CAN_7_5_B;
-        case MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us.USA_ART5_2:
-        case MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us.USA_ART5_9:
-          return UNNTATT_USA_5_2_G;
-        default:
-          return null;
-      }
-    };
+  const lagreFom = (fom: string) => handleEndring({ ...formValues, fom });
 
-    dispatch(
-      lovvalgsperioderOperations.oppdaterLovvalgsperioderState({
-        lovvalgsperiode: {
-          fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
-          tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
-        },
-        innvilgelsesResultat: "",
-        lovvalgsbestemmelse: values.bestemmelse,
-        lovvalgsland: lovvalgsland === MKV.Koder.land_iso2.CA_QC ? MKV.Koder.land_iso2.CA : lovvalgsland,
-        medlemskapstype: harMedlemskapstypeDelvisUnntatt ? DELVIS_UNNTATT : UNNTATT,
-        trygdeDekning: harMedlemskapstypeDelvisUnntatt ? trygdedekningUnntatt() : UTEN_DEKNING,
-      })
-    );
-    debouncedLagreLovvalgsperiode(skalRegisteropplysningerOppdateres);
-  };
+  const lagreTom = (tom: string) => handleEndring({ ...formValues, tom });
 
-  const lagreFom = (fom: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, fom });
-
-  const lagreTom = (tom: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, tom });
-
-  const lagreBestemmelse = (bestemmelse: string) => oppdaterOgLagreLovvalgsperiode({ ...formValues, bestemmelse });
+  const lagreBestemmelse = (bestemmelse: string) => handleEndring({ ...formValues, bestemmelse });
 
   const handleBekreft = async () => {
-    await dispatch(lovvalgsperioderOperations.lagre());
+    await lagreLovvalgsperiode(formValues);
     await Api.Saksflyt.Unntaksregistrering.registrerUnntakFraMedlemskap(behandlingID);
     dispatch(navigeringOperations.tilForsiden());
   };
 
-  const harErrorFeilmelding = () => {
-    if (typeof feilmeldinger === "string") {
-      return !Utils._isEmpty(feilmeldinger);
-    }
-    return feilmeldinger.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER).length > 0;
-  };
+  const kontrollFeilOverlappendeUnntakperiode = kontrollfeil?.filter(
+    (value) => value.kode === OVERLAPPENDE_UNNTAK_PERIODER
+  );
 
-  const feilmeldingerKunUnntaksperioder = (feil: Feilkode[] | string) => {
-    if (typeof feil === "string") {
-      return "";
-    }
-    return feil.filter((value) => value.kode === OVERLAPPENDE_UNNTAK_PERIODER);
-  };
+  const harErrorFeilmelding =
+    !Utils._isEmpty(feilmeldinger) ||
+    !Utils._isEmpty(kontrollfeil?.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER));
 
   const manglerSluttdato = Utils._isEmpty(formValues.tom);
+
+  const utfallErGODKJENT = formValues?.utfallRegistreringUnntak === GODKJENT;
 
   return (
     <div className="vurderingUnntakMedlemskap">
@@ -231,7 +216,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         />
       </Nav.Fieldset>
 
-      {formValues.utfallRegistreringUnntak === GODKJENT && !harErrorFeilmelding() && (
+      {utfallErGODKJENT && !harErrorFeilmelding && (
         <Nav.Fieldset legend="">
           <Nav.Row>
             <Nav.Column xs="8">
@@ -271,6 +256,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
                 label="Til og med"
                 name="tom"
                 disabled={!redigerbart}
+                minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
                 control={control}
                 onChange={lagreTom}
               />
@@ -300,14 +286,14 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]}
       />
 
-      {![IKKE_GODKJENT, DELVIS_GODKJENT].includes(formValues.utfallRegistreringUnntak) && (
+      {utfallErGODKJENT && (
         <Alertmeldinger
           className="vurderingUnntakMedlemskap__alertmeldinger"
-          meldinger={feilmeldingerKunUnntaksperioder(feilmeldinger)}
+          meldinger={kontrollFeilOverlappendeUnntakperiode}
         />
       )}
 
-      {manglerSluttdato && ![IKKE_GODKJENT, DELVIS_GODKJENT].includes(formValues.utfallRegistreringUnntak) && (
+      {manglerSluttdato && utfallErGODKJENT && (
         <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
           Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
         </Nav.AlertStripeAdvarsel>
@@ -325,7 +311,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           onClick: handleBekreft,
           disabled:
             !formState?.isValid ||
-            (harErrorFeilmelding() && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
+            (harErrorFeilmelding && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
             !redigerbart,
         }}
         bekreftTekst="Bekreft og avslutt"

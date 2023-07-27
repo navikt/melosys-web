@@ -9,6 +9,9 @@
       }
     ],
     "space-before-function-paren": "off",
+    "import/named": "off",
+    "import/no-unresolved": "off",
+    "import/order": "off",
     "no-underscore-dangle": "off",
     "camelcase": "off",
     "react/jsx-uses-react": "off",
@@ -60,6 +63,7 @@
       "error",
       "ignorePackages",
       {
+        "": "never",
         "js": "never",
         "jsx": "never",
         "ts": "never",
@@ -69,7 +73,6 @@
     "import/no-extraneous-dependencies": [0],
     "import/prefer-default-export": 0,
     "import/no-named-as-default": 0,
-    "import/no-unresolved": [2, { "ignore": ["AppTypes", "Domene", "melosys-api"] }],
     "import/no-cycle": 0,
     "jsx-a11y/aria-props": 2,
     "jsx-a11y/aria-proptypes": 2,
@@ -141,24 +144,17 @@
     "plugin:@typescript-eslint/eslint-recommended",
     "prettier",
     "prettier/@typescript-eslint",
-    "prettier/react"
+    "prettier/react",
+    "plugin:vitest-globals/recommended"
   ],
-  "plugins": ["jsx-a11y", "jest", "@typescript-eslint"],
+  "plugins": ["jsx-a11y", "@typescript-eslint"],
   "env": {
     "browser": true,
-    "jest/globals": true
+    "vitest-globals/env": true
   },
   "globals": {
     "shallow": true,
-    "mount": true,
-    "each": true
-  },
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
-      }
-    }
+    "mount": true
   },
   "ignorePatterns": ["**/*generated.tsx"]
 }

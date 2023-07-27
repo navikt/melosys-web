@@ -1,5 +1,3 @@
-import React from "react";
-
 import { StrukturertAdresse } from "../../../../../services/api";
 
 import StrukturertAdresseKomponent from "../../../../adresser/strukturertAdresse";

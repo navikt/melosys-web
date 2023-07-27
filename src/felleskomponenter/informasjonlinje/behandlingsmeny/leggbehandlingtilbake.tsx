@@ -1,23 +1,23 @@
-import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import * as Api from "../../../services/api";
 import * as Nav from "../../../navFrontend";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { navigeringOperations } from "../../../ducks/navigering";
 import Handling from "./handling";
 
-type leggBehandlingTilbakeProps = {
-  tilForsiden: () => void;
-  tilbakeleggHandle: (oppgaveID: string, venterPaaDokumentasjon: boolean) => Promise<void>;
-  behandlingID: string;
-  redigerbart: boolean;
-};
+const LeggBehandlingTilbake = () => {
+  const dispatch = useDispatch();
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const tilForsiden = () => dispatch(navigeringOperations.tilForsiden());
 
-const LeggBehandlingTilbake = ({
-  tilForsiden,
-  tilbakeleggHandle,
-  behandlingID,
-  redigerbart,
-}: leggBehandlingTilbakeProps) => {
   const tilbakeleggOppgave = async () => {
-    const venterPaaDokumentasjon = true;
-    await tilbakeleggHandle(behandlingID, venterPaaDokumentasjon);
+    const data = {
+      behandlingID,
+      venterPaaDokumentasjon: true,
+    };
+    await Api.Oppgaver.tilbakelegg(data).catch((error) => error);
     tilForsiden();
   };
 

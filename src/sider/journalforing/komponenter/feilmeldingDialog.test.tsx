@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 import { shallow } from "enzyme";
 
 import * as Nav from "../../../navFrontend";
@@ -7,7 +7,7 @@ import FeilmeldingDialog from "./feilmeldingDialog";
 
 describe("FeilmeldingDialog", () => {
   const props: ComponentProps<typeof FeilmeldingDialog> = {
-    avbryt: jest.fn(),
+    avbryt: vi.fn(),
     feilmeldinger: [],
   };
 

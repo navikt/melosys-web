@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import MKV from "../../../../../melosyskodeverk";
@@ -42,15 +42,11 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
     }
   };
 
-  const soknadslandTekst = soknadslandErUkjenteEllerAlleEosLand ? (
-    "Flere EØS-land/Sveits. Ikke kjent hvilke."
-  ) : (
-    <Nav.Typo.Element className="element">
-      {Utils.streng.arrayTilKonjunksjon(
+  const soknadslandTekst = soknadslandErUkjenteEllerAlleEosLand
+    ? "Flere EØS-land/Sveits. Ikke kjent hvilke."
+    : Utils.streng.arrayTilKonjunksjon(
         soknadsland.map((land: string) => KV.kodeTilTerm(land, MKV.KTObjects.landkoder))
-      ) || "Ingen land valgt"}
-    </Nav.Typo.Element>
-  );
+      ) || "Ingen land valgt";
 
   return (
     <div className="soknadslandvelger">

@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as Nav from "../../../../../navFrontend";
 
 import "./beskrivelse.css";

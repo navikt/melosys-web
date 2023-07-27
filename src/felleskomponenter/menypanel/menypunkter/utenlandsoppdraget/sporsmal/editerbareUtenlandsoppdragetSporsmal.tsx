@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import * as Nav from "../../../../../navFrontend";
@@ -25,8 +25,8 @@ interface PeriodeSvarProps {
 
 const PeriodeSvar = ({ fomFeltNavn, tomFeltNavn }: PeriodeSvarProps) => (
   <>
-    <Skjema.Datovelger feltNavn={fomFeltNavn} label="Fra og med:" />
-    <Skjema.Datovelger feltNavn={tomFeltNavn} label="Til og med:" />
+    <Skjema.Datovelger feltNavn={fomFeltNavn} label="Fra og med" />
+    <Skjema.Datovelger feltNavn={tomFeltNavn} label="Til og med" />
   </>
 );
 

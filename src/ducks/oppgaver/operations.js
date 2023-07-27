@@ -22,17 +22,6 @@ export const oversikt = () =>
     PENDING: Types.PENDING,
   });
 
-export const tilbakelegg = (behandlingID, venterPaaDokumentasjon) => {
-  const oppgaveObjekt = {
-    behandlingID,
-    begrunnelse: null, // Ingen begrunnelse i Melosys 1.0
-    venterPaaDokumentasjon,
-  };
-
-  // TODO legge på logging
-  return Api.Oppgaver.tilbakelegg(oppgaveObjekt).catch((error) => error);
-};
-
 export const plukkSak = async (data) => {
   const oppgave = {
     sakstype: data.sakstype,

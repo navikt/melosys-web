@@ -1,4 +1,3 @@
-import React from "react";
 import { change, formValueSelector } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";

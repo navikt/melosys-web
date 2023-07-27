@@ -266,25 +266,23 @@ describe("dato.js:", () => {
   });
 
   describe("erGyldigPeriode", () => {
-    each([
-      ["", "", false],
-      ["20.10.2010", "20.10.2020", true],
-      ["20.10.2020", "20.10.2010", false],
-      ["20.10.2010", "20.10.2010", true],
-      ["20.10.2010", "19.10.2010", false],
-    ]).describe("fra %p til %p", (fom, tom, forventetResultat) => {
-      it(`returnerer ${forventetResultat}`, () => {
-        expect(erGyldigPeriode(fom, tom)).toBe(forventetResultat);
-      });
+    it(`returnerer forventet resultat for ulike perioder`, () => {
+      [
+        { fom: "", tom: "", forventetResultat: false },
+        { fom: "20.10.2010", tom: "20.10.2020", forventetResultat: true },
+        { fom: "20.10.2020", tom: "20.10.2010", forventetResultat: false },
+        { fom: "20.10.2010", tom: "20.10.2010", forventetResultat: true },
+        { fom: "20.10.2010", tom: "19.10.2010", forventetResultat: false },
+      ].forEach((periode) => expect(erGyldigPeriode(periode.fom, periode.tom)).toBe(periode.forventetResultat));
     });
   });
 
   describe("erLike", () => {
-    each([
-      [true, "2019-04-23T10:02:52.031Z", "2019-04-23T10:02:52.031Z"],
-      [false, "2019-04-23T10:02:52.031Z", "2019-04-23T10:02:59.031Z"],
-    ]).it("returnerer %p for %p og %p", (forventetResultat, datoEn, datoTo) => {
-      expect(erLike(datoEn, datoTo)).toBe(forventetResultat);
+    it("returnerer forventet resultat", () => {
+      [
+        { fom: "2019-04-23T10:02:52.031Z", tom: "2019-04-23T10:02:52.031Z", forventetResultat: true },
+        { fom: "2019-04-23T10:02:52.031Z", tom: "2019-04-23T10:02:59.031Z", forventetResultat: false },
+      ].forEach((periode) => expect(erLike(periode.fom, periode.tom)).toBe(periode.forventetResultat));
     });
   });
 

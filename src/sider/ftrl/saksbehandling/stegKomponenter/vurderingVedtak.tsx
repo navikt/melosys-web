@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -130,7 +130,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
-      Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
+      Api.Behandlinger.resultat.oppdaterFritekster(behandlingID, {
         innledningFritekst: values.innledningFritekst,
         begrunnelseFritekst: values.begrunnelseFritekst,
       });
@@ -169,7 +169,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
     return [
       {
-        sendesTilDokumenterV2: true,
         navn: ikon ? (
           <>
             <Ikoner.Forhandsvis />

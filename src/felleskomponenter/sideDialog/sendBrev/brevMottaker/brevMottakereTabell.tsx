@@ -1,4 +1,3 @@
-import React from "react";
 import { RootState } from "AppTypes";
 import { getFormValues } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
@@ -43,7 +42,6 @@ const BrevMottakereTabell = ({
     const rolle = erHovedMottaker ? formValues.valgtMottaker?.rolle : muligMottaker.rolle;
     return [
       {
-        sendesTilDokumenterV2: true,
         navn: muligMottaker.dokumentNavn,
         data: {
           ...hentBrevRequest(rolle),

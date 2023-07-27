@@ -20,6 +20,8 @@ const Fakturainformasjon = () => {
     dispatch(fakturainformasjonOperations.hentFakturaserie(vedtaksId));
   }, [behandlingID, saksnummer]);
 
+  if (!fakturainformasjon?.data) return null;
+
   const {
     faktura: fakturaer,
     fakturaGjelder,

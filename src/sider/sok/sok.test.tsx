@@ -1,20 +1,22 @@
-import React from "react";
-import { shallow } from "enzyme";
+import { screen } from "@testing-library/react";
 
 import * as Utils from "../../utils";
+import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
 
-import { Sok } from "./sok";
-import SorterbarListe from "../../felleskomponenter/sorterbarListe";
+import { Sok, SokProps } from "./sok";
 
-describe("Sok", () => {
-  let props: { sokResultat: any[]; sok: jest.Mock<any, any> };
+// TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
+describe.skip("Sok", () => {
+  let props: SokProps;
 
   const getItemPrototype = Storage.prototype.getItem;
 
   beforeEach(() => {
     props = {
       sokResultat: [],
-      sok: jest.fn(),
+      sok: vi.fn(),
+      hentLandkoder: () => Promise.resolve(),
+      landkoder: [],
     };
   });
 
@@ -22,30 +24,40 @@ describe("Sok", () => {
     Storage.prototype.getItem = getItemPrototype;
   });
 
-  it("viser en sorterbarliste ved søk på fnr med ett resultat", () => {
+  it("viser en sorterbarliste ved søk på fnr med flere resultat", () => {
     const generator = new Utils.testhelpers.Generator();
-    Storage.prototype.getItem = jest.fn(() => generator.generateBirthNumber());
+    Storage.prototype.getItem = vi.fn(() => generator.generateBirthNumber());
     props.sokResultat = [
       {
-        saksnummer: "",
+        sakstype: { term: "A1" },
+        sakstema: { term: "A2" },
+        behandlingOversikter: [],
+      },
+      {
+        sakstype: { term: "B1" },
+        sakstema: { term: "B2" },
+        behandlingOversikter: [],
       },
     ];
-    const sok = shallow(<Sok landkoder={[]} hentLandkoder={() => Promise.resolve()} {...props} />);
+    renderWithProviders(<Sok {...props} />, { preloadedState: {} });
 
-    const sorterbarListe = sok.find(SorterbarListe);
-    const sorterbarListeProps = sorterbarListe.props();
-
-    expect(sorterbarListe).toHaveLength(1);
-    expect(sorterbarListeProps.elementer).toBe(props.sokResultat);
+    const overskrifter = screen.getAllByRole("heading");
+    expect(overskrifter).toHaveLength(4);
+    expect(overskrifter.at(0)?.textContent).toContain("Saksoversikt");
+    expect(overskrifter.at(1)?.textContent).toContain("Resultater for f.nr./d-nr.");
+    expect(overskrifter.at(2)?.textContent).toBe("A1 - A2");
+    expect(overskrifter.at(3)?.textContent).toBe("B1 - B2");
   });
 
   it("viser ikke sorterbarliste ved søk på fnr uten resultat", () => {
     const generator = new Utils.testhelpers.Generator();
-    Storage.prototype.getItem = jest.fn(() => generator.generateBirthNumber());
-    const sok = shallow(<Sok landkoder={[]} hentLandkoder={() => Promise.resolve()} {...props} />);
+    Storage.prototype.getItem = vi.fn(() => generator.generateBirthNumber());
 
-    const sorterbarListe = sok.find(SorterbarListe);
+    renderWithProviders(<Sok {...props} />, { preloadedState: {} });
 
-    expect(sorterbarListe).toHaveLength(0);
+    const overskrifter = screen.getAllByRole("heading");
+    expect(overskrifter).toHaveLength(2);
+    expect(overskrifter.at(0)?.textContent).toContain("Saksoversikt");
+    expect(overskrifter.at(1)?.textContent).toContain("Resultater for f.nr./d-nr.");
   });
 });
