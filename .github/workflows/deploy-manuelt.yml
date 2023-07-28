@@ -13,27 +13,8 @@ env:
   IMAGE_MANIFEST: https://docker.pkg.github.com/v2/${{ github.repository }}/melosys-web/manifests/${{ github.sha }}
 
 jobs:
-  check_docker_image_exists:
-    name: Check if docker image exists in registry
-    runs-on: ubuntu-latest-8-cores
-    steps:
-      - run: |
-          echo "DOCKER_IMAGE_EXISTS_HTTP_STATUS=$(curl -X GET -s -o /dev/null -w "%{http_code}" ${{ env.IMAGE_MANIFEST }} -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }})" >> $GITHUB_ENV
-
-      - id: set_output
-        run: |
-          if [ ${{ env.DOCKER_IMAGE_EXISTS_HTTP_STATUS }} -eq 200 ]
-          then
-            echo "::set-output name=exists::true"
-          else
-            echo "::set-output name=exists::false"
-          fi
-    outputs:
-      exists: ${{ steps.set_output.outputs.exists }}
-
   build:
     name: Build
-    needs: check_docker_image_exists
     runs-on: ubuntu-latest-8-cores
     steps:
       - name: Checkout
