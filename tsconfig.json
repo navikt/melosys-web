@@ -17,7 +17,6 @@
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
     "downlevelIteration": true,
-    "baseUrl": ".",
     "paths": {
       "~": ["./src"]
     }
