@@ -1,6 +1,6 @@
 import PT from "prop-types";
 import * as MKV from "@navikt/melosys-kodeverk";
-import Select from "../../skjema/input/select";
+import Select from "../input/select";
 
 const VedtakstypebegrunnelseSkjema = ({ className, redigerbart, feltNavn, label }) => (
   <Select feltNavn={feltNavn} label={label} className={className} disabled={!redigerbart}>
