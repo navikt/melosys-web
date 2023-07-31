@@ -1,5 +1,3 @@
-import React from "react";
-
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 

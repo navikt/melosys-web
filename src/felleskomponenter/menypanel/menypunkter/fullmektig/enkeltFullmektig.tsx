@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import classNames from "classnames";
 
 import * as Api from "../../../../services/api";

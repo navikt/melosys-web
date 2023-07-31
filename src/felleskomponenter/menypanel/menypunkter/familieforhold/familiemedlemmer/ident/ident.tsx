@@ -1,5 +1,3 @@
-import React from "react";
-
 import KopierbarTekst from "../../../../../kopierbarTekst";
 
 interface IdentProps {

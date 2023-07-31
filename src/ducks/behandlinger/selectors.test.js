@@ -79,19 +79,20 @@ describe("Behandlingerselectors", () => {
       expect(selectors.ArbeidsgivereNorgeSelector(state)).toEqual([]);
     });
 
-    each([
-      [{ fom: "2020-02-02", tom: "2020-06-02" }, {}],
-      [{}, { fom: "2020-02-02", tom: "2020-06-02" }],
-      [
-        { fom: "2020-02-02", tom: "2020-06-02" },
-        { fom: "2020-02-02", tom: "2020-06-02" },
-      ],
-    ]).it(
-      "returnerer samme resultat så lenge lovvalgsperiode eller søknadsperiode er satt",
-      (lovvalgsperiode, soknadsperiode) => {
+    it("returnerer samme resultat så lenge lovvalgsperiode eller søknadsperiode er satt", () => {
+      const data = [
+        [{ fom: "2020-02-02", tom: "2020-06-02" }, {}],
+        [{}, { fom: "2020-02-02", tom: "2020-06-02" }],
+        [
+          { fom: "2020-02-02", tom: "2020-06-02" },
+          { fom: "2020-02-02", tom: "2020-06-02" },
+        ],
+      ];
+
+      data.forEach((el) => {
         const state = lagState({
-          lovvalgsperiode,
-          soknadsperiode,
+          lovvalgsperiode: el[0],
+          soknadsperiode: el[1],
         });
         const resultat = selectors.ArbeidsgivereNorgeSelector(state);
 
@@ -119,66 +120,79 @@ describe("Behandlingerselectors", () => {
             .filter((inntekt) => !["2019-08", "2019-09"].includes(inntekt.aarMaaned))
             .map((inntekt) => inntekt.beloep)
         ).toEqual(expect.arrayContaining([30000, 30000, 30000, 30000, 30000, 30000]));
-      }
-    );
+      });
+    });
   });
 
   describe("ErAnmodningOmUnntakHovedRegelOgHarFlytSelector", () => {
-    each([
-      [true, MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL, MKV.Koder.sakstyper.EU_EOS],
-      [true, MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL, MKV.Koder.sakstyper.FTRL],
-      [false, MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL, MKV.Koder.sakstyper.TRYGDEAVTALE],
-      [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG, MKV.Koder.sakstyper.EU_EOS],
-      [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG, MKV.Koder.sakstyper.FTRL],
-    ]).it(
-      "returnerer korrekte verdier (%s) for behandlingstema %s og sakstype %s",
-      (forventetResultat, behandlingstema, sakstype) => {
+    it("returnerer korrekte verdier for ulike behandlingstema og sakstyper", () => {
+      const data = [
+        [true, MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL, MKV.Koder.sakstyper.EU_EOS],
+        [true, MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL, MKV.Koder.sakstyper.FTRL],
+        [
+          false,
+          MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL,
+          MKV.Koder.sakstyper.TRYGDEAVTALE,
+        ],
+        [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG, MKV.Koder.sakstyper.EU_EOS],
+        [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG, MKV.Koder.sakstyper.FTRL],
+      ];
+      data.forEach((el) => {
         const state = lagState({
-          behandlingstema,
-          sakstype,
+          behandlingstema: el[1],
+          sakstype: el[2],
         });
 
-        expect(selectors.ErAnmodningOmUnntakHovedRegelOgHarFlytSelector(state)).toBe(forventetResultat);
-      }
-    );
+        expect(selectors.ErAnmodningOmUnntakHovedRegelOgHarFlytSelector(state)).toBe(el[0]);
+      });
+    });
   });
 
   describe("ErRegistreringUnntakNorskTrygdUtstasjoneringSelector", () => {
-    each([
-      [true, MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING],
-      [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG],
-    ]).it("returnerer korrekte verdier", (forventetResultat, behandlingstema) => {
-      const state = lagState({
-        behandlingstema,
-      });
+    it("returnerer korrekte verdier", () => {
+      const data = [
+        [true, MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING],
+        [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG],
+      ];
+      data.forEach((el) => {
+        const state = lagState({
+          behandlingstema: el[1],
+        });
 
-      expect(selectors.ErRegistreringUnntakNorskTrygdUtstasjoneringSelector(state)).toBe(forventetResultat);
+        expect(selectors.ErRegistreringUnntakNorskTrygdUtstasjoneringSelector(state)).toBe(el[0]);
+      });
     });
   });
 
   describe("ErRegistreringUnntakNorskTrygdOvrigeSelector", () => {
-    each([
-      [true, MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE],
-      [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG],
-    ]).it("returnerer korrekte verdier", (forventetResultat, behandlingstema) => {
-      const state = lagState({
-        behandlingstema,
-      });
+    it("returnerer korrekte verdier", () => {
+      const data = [
+        [true, MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE],
+        [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG],
+      ];
+      data.forEach((el) => {
+        const state = lagState({
+          behandlingstema: el[1],
+        });
 
-      expect(selectors.ErRegistreringUnntakNorskTrygdOvrigeSelector(state)).toBe(forventetResultat);
+        expect(selectors.ErRegistreringUnntakNorskTrygdOvrigeSelector(state)).toBe(el[0]);
+      });
     });
   });
 
   describe("ErUtlMyndUtpektSegSelvSelector", () => {
-    each([
-      [true, MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND],
-      [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG],
-    ]).it("returnerer korrekte verdier", (forventetResultat, behandlingstema) => {
-      const state = lagState({
-        behandlingstema,
-      });
+    it("returnerer korrekte verdier", () => {
+      const data = [
+        [true, MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND],
+        [false, MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG],
+      ];
+      data.forEach((el) => {
+        const state = lagState({
+          behandlingstema: el[1],
+        });
 
-      expect(selectors.ErUtlMyndUtpektSegSelvSelector(state)).toBe(forventetResultat);
+        expect(selectors.ErUtlMyndUtpektSegSelvSelector(state)).toBe(el[0]);
+      });
     });
   });
 });

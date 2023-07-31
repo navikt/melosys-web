@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from "react";
+import { MouseEventHandler } from "react";
 import * as Api from "../../../../services/api";
 import * as Ikoner from "../../../../resources/images";
 import * as Mui from "../../../ui";

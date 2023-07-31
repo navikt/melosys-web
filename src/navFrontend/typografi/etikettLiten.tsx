@@ -1,11 +1,11 @@
-import React from "react";
 import classNames from "classnames";
+import { ReactNode } from "react";
 
 import "./etikettLiten.css";
 
 interface EtikettLitenProps {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const EtikettLiten = (props: EtikettLitenProps) => {

@@ -1,4 +1,4 @@
-import React, {
+import {
   FocusEventHandler,
   MouseEventHandler,
   ChangeEventHandler,

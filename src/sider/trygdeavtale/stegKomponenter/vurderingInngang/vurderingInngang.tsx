@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -180,7 +180,7 @@ const VurderingInngang = ({
             <Skjema.Datovelger
               label="Til og med"
               feltNavn="tom"
-              minDate={Utils.dato.norskStringTilDate(formValues.fom)}
+              minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
               disabled={!redigerbart}
             />
           </Nav.Column>

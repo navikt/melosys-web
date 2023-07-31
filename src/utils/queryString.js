@@ -1,4 +1,4 @@
-const qs = require("qs");
+import qs from "qs";
 
 export const getParam = (location, param) => {
   const queryObject = qs.parse(location.search, { ignoreQueryPrefix: true });

@@ -94,37 +94,40 @@ describe("Lovvalgsperioder operations", () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
 
-    each([
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2,
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
-    ]).it("lager OPPDATER_LOVVALGSPERIODER dersom lovvalgsvilkar %p er valgt", (lovvalgsvilkarBestemmelse) => {
-      const lovvalgsvilkar = [
-        {
-          vilkaar: lovvalgsvilkarBestemmelse,
-          oppfylt: true,
-          begrunnelseKoder: [],
-          begrunnelseFritekst: null,
-        },
+    it("lager OPPDATER_LOVVALGSPERIODER dersom riktige lovvalgsvilkar er valgt", async () => {
+      const data = [
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
       ];
+      data.forEach(async (lovvalgsvilkarBestemmelse) => {
+        const lovvalgsvilkar = [
+          {
+            vilkaar: lovvalgsvilkarBestemmelse,
+            oppfylt: true,
+            begrunnelseKoder: [],
+            begrunnelseFritekst: null,
+          },
+        ];
 
-      const expectedActions = [
-        { type: types.OPPDATER_LOVVALGSPERIODER, data: [{ lovvalgsbestemmelse: lovvalgsvilkarBestemmelse }] },
-      ];
+        const expectedActions = [
+          { type: types.OPPDATER_LOVVALGSPERIODER, data: [{ lovvalgsbestemmelse: lovvalgsvilkarBestemmelse }] },
+        ];
 
-      const store = mockStore({
-        ...initialState,
-        vilkar: {
-          data: [...lovvalgsvilkar],
-        },
+        const store = mockStore({
+          ...initialState,
+          vilkar: {
+            data: [...lovvalgsvilkar],
+          },
+        });
+
+        const stegState = {};
+
+        store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+
+        expect(store.getActions()).toMatchObject(expectedActions);
       });
-
-      const stegState = {};
-
-      store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
-
-      expect(store.getActions()).toMatchObject(expectedActions);
     });
 
     it("lager OPPDATER_LOVVALGSPERIODER dersom tilleggbestemmelse er valgt", () => {
@@ -361,15 +364,15 @@ describe("Lovvalgsperioder operations", () => {
     expect(store.getActions()).toMatchObject(expectedActions);
   });
 
-  each([
-    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A,
-    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B,
-    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3,
-    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
-    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B,
-  ]).it(
-    "lager OPPDATER_LOVVALGSPERIODER med Norge som lovvalgsland dersom lovvalgsbestemmelse er %p",
-    (lovvalgsbestemmelse) => {
+  it("lager OPPDATER_LOVVALGSPERIODER med Norge som lovvalgsland dersom riktig lovvalgsbestemmelse er valgt", async () => {
+    const data = [
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A,
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B,
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3,
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B,
+    ];
+    data.forEach(async (lovvalgsbestemmelse) => {
       const expectedActions = [
         {
           type: types.OPPDATER_LOVVALGSPERIODER,
@@ -390,8 +393,8 @@ describe("Lovvalgsperioder operations", () => {
       store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
       expect(store.getActions()).toMatchObject(expectedActions);
-    }
-  );
+    });
+  });
 
   it("lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom søker har lønnet arbeid i ett annet land", () => {
     const expectedActions = [{ type: types.OPPDATER_LOVVALGSPERIODER, data: [] }];

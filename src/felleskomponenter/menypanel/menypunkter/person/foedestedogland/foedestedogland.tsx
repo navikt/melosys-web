@@ -1,4 +1,3 @@
-import React from "react";
 import { Field, WrappedFieldProps } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";

@@ -14,17 +14,12 @@ import soknadSchema from "./soknadSchema";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 
 import { behandlingerSelectors } from "../behandlinger";
-import { mottatteOpplysningerSelectors } from "../mottatteOpplysninger";
+import { MottatteOpplysningerTypeSelector } from "../mottatteOpplysninger/selectors";
 import { fagsakSelectors } from "../fagsaker";
 import { flytSelectors } from "../flyt";
 
 const getFormState = (state, formName, defaultValue = {}) =>
   state.form[formName] ? state.form[formName] : defaultValue;
-
-export const FormSelector = createSelector(
-  (state) => state,
-  (state) => state.form
-);
 
 export const RegisteredFieldsSelector = Utils._memoize((formName) =>
   createSelector(
@@ -92,19 +87,9 @@ export const Artikkel16MottaSvarFormSelector = createSelector(
   (artikkel16MottaSvar) => artikkel16MottaSvar
 );
 
-export const RegistreringPanelerFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.REGISTRERING_PANELER, {}),
-  (soknaden) => soknaden
-);
-
 export const JournalforingFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.JOURNALFORING, {}),
   (journalforing) => journalforing
-);
-
-export const ForretningsValideringSelector = createSelector(
-  (state) => (state.form.forretningsValidering ? state.form.forretningsValidering : {}),
-  (skjemaValidering) => skjemaValidering.regler
 );
 
 export const SendBrevFormSelector = createSelector(
@@ -125,36 +110,6 @@ export const SendBrevOrgnummerValidSelector = createSelector(
 export const MaritimtArbeidSelector = createSelector(
   (state) => SoknadenFormSelector(state).values,
   (skjemaverdier) => [...skjemaverdier.arbeidsstedOffshore, ...skjemaverdier.arbeidsstedSkip]
-);
-
-export const FartsomradeKodeSelector = createSelector(
-  MaritimtArbeidSelector,
-  (maritimeArbeid) => maritimeArbeid.map((maritimtArbeid) => maritimtArbeid.fartsomradeKode) || undefined
-);
-
-export const Art16BegrunnelserSelector = createSelector(
-  (state) => SoknadenFormSelector(state).values,
-  (skjemaverdier) => skjemaverdier.vilkar.art16_1_begrunnelser || []
-);
-
-export const TidligereMedlemskapSelector = createSelector(
-  (state) => Artikkel16AnmodningFormSelector(state).values,
-  (skjemaverdier) => skjemaverdier.tidligeremedlemskap || []
-);
-
-export const UnntakFraBestemmelseSelector = createSelector(
-  (state) => Artikkel16AnmodningFormSelector(state).values,
-  (skjemaverdier) => (skjemaverdier ? skjemaverdier.unntakFraBestemmelse : null)
-);
-
-export const Art16BegrunnelseFritekstSelector = createSelector(
-  (state) => SoknadenFormSelector(state).values,
-  (skjemaverdier) => skjemaverdier.vilkar.art16_1_begrunnelser_fritekst
-);
-
-export const SokkelEllerSkipSelector = createSelector(
-  (state) => SoknadenFormSelector(state).values,
-  (skjemaverdier) => skjemaverdier.avklartefakta.sokkelEllerSkip
 );
 
 export const Artikkel16MottaSvarSyncErrorsSelector = createSelector(
@@ -182,25 +137,6 @@ export const SoknadOppgittAdresseHarVerdierSelector = createSelector(
   (oppgittadresse) => !Object.values(oppgittadresse).every((felt) => Utils._isNil(felt) || felt === "")
 );
 
-export const RegistreringPanelerOppgittAdresseSelector = createSelector(
-  (state) => RegistreringPanelerFormSelector(state).values || {},
-  (registrering) => ({
-    husnummerEtasjeLeilighet: registrering.oppgittAdresseHusnummerEtasjeLeilighet,
-    gatenavn: registrering.oppgittAdresseGatenavn,
-    region: registrering.oppgittAdresseRegion,
-    postnummer: registrering.oppgittAdressePostnummer,
-    poststed: registrering.oppgittAdressePoststed,
-    landkode: registrering.oppgittAdresseLand,
-    tilleggsnavn: registrering.oppgittAdresseTilleggsnavn,
-    postboks: registrering.oppgittAdressePostboks,
-  })
-);
-
-export const RegistreringPanelerOppgittAdresseHarVerdierSelector = createSelector(
-  RegistreringPanelerOppgittAdresseSelector,
-  (oppgittadresse) => !Object.values(oppgittadresse).every((felt) => Utils._isNil(felt) || felt === "")
-);
-
 export const SoknadErrorsSelector = createSelector(
   (state) => SoknadenFormSelector(state).syncErrors || {},
   (state) => SoknadenFormSelector(state).values || {},
@@ -208,7 +144,7 @@ export const SoknadErrorsSelector = createSelector(
     skalOppgittAdresseValideres: SoknadOppgittAdresseHarVerdierSelector(state),
     harUnntakFlyt: flytSelectors.HarUnntakFlytSelector(state),
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-    mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
+    mottatteOpplysningerType: MottatteOpplysningerTypeSelector(state),
     sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   }),
   (soknadformSyncErrors, soknadformValues, context) => {
@@ -263,16 +199,6 @@ export const TrygdeavtaleInngangFormSelector = createSelector(
 
 export const TrygdeavtaleInngangFormValidSelector = createSelector(
   (state) => TrygdeavtaleInngangFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
-);
-
-export const IkkeYrkesaktivInngangFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.IkkeYrkesaktiv.INNGANG, {}),
-  (inngang) => inngang
-);
-
-export const IkkeYrkesaktivInngangFormValidSelector = createSelector(
-  (state) => IkkeYrkesaktivInngangFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors)
 );
 

@@ -1,5 +1,3 @@
-import React from "react";
-
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
 interface EnkeltDatoProps {

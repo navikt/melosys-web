@@ -1,4 +1,4 @@
-import React, { ComponentProps, InputHTMLAttributes } from "react";
+import { ComponentProps, InputHTMLAttributes } from "react";
 
 import * as Mui from "../../../../../felleskomponenter/ui";
 

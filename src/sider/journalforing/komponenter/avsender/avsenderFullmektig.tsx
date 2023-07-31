@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { formValueSelector } from "redux-form";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";

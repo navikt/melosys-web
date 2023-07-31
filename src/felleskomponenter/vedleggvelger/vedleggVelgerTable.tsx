@@ -1,5 +1,5 @@
 import { FysiskDokument } from "Domene";
-import React from "react";
+
 import VedleggVelgerRow from "./vedleggVelgerRow";
 
 interface VedleggTableProps {

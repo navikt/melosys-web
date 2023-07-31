@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactElement } from "react";
 import type { RenderOptions } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import type { PreloadedState } from "@reduxjs/toolkit";
@@ -16,7 +16,7 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
 }
 
 export function renderWithProviders(
-  ui: React.ReactElement,
+  ui: ReactElement,
   {
     preloadedState = {},
     // Automatically create a store instance if no store was passed in

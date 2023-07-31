@@ -52,13 +52,6 @@ export const IkkeArbeidslandSoknadslandSelector = createSelector(IkkeArbeidsland
   faktaer.map((fakta) => fakta.subjektID)
 );
 
-export const VurderingUnntakPeriode = createSelector(
-  (state) => AvklartefaktaSelector(state) || [],
-  (alleAvklartefakta) =>
-    alleAvklartefakta.find(
-      (avklaring) => avklaring.avklartefaktaKode === KV.Koder.avklartefaktaKoder.VURDERING_UNNTAK_PERIODE
-    ) || {}
-);
 /* Soknadsland hentes fra selve søknaden (se soknad-duck), men avklaringen rundt hvorvidt
  * territoriet som søkeren skal til faktisk er med i forordningen gjøres i avklartefakta.
  * Derfor må både avklartefakta og soknad settes inn slik at disse kan flettes til avklart fakta.
@@ -334,12 +327,6 @@ const MarginaleArbeidslandSelector = createSelector(
   (marginaleArbeidslandFaktaer) => marginaleArbeidslandFaktaer.map((fakta) => fakta.subjektID)
 );
 
-export const MarginaleArbeidslandKTSelector = createSelector(
-  (state) => MarginaleArbeidslandSelector(state) || [],
-  (marginaleArbeidsland) =>
-    MKV.KTObjects.landkoder.filter((landkodeObjekt) => marginaleArbeidsland.includes(landkodeObjekt.kode))
-);
-
 export const IkkeMarginaleArbeidslandSelector = createSelector(
   (state) => ArbeidslandSelector(state) || [],
   (state) => MarginaleArbeidslandSelector(state) || [],
@@ -379,11 +366,6 @@ export const LandSomKreverSEDSelector = createSelector(
 export const LandSomKreverSEDKTSelector = createSelector(
   (state) => LandSomKreverSEDSelector(state),
   (arbeidsland) => MKV.KTObjects.landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
-);
-
-export const IkkeMarginaleArbeidslandAntallSelector = createSelector(
-  IkkeMarginaleArbeidslandSelector,
-  (ikkeMarginaleArbeidsland) => ikkeMarginaleArbeidsland.length
 );
 
 const AlleOrganisasjonerSelector = createSelector(

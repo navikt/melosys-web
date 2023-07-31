@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 import classNames from "classnames";
 
 import * as Nav from "../../../navFrontend";

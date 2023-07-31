@@ -1,4 +1,3 @@
-import React from "react";
 import { Control, FieldArrayWithId } from "react-hook-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
 

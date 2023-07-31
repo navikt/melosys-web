@@ -1,4 +1,4 @@
-import React, { Component, ComponentProps, ChangeEvent, KeyboardEvent } from "react";
+import { Component, ComponentProps, ChangeEvent, KeyboardEvent } from "react";
 
 import * as Nav from "../../../navFrontend";
 

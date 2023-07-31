@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import * as Nav from "../../../../../navFrontend";

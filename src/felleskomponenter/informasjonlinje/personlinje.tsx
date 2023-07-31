@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as StringUtils from "../../utils/streng";
 import * as Ikon from "../../resources/images";
 

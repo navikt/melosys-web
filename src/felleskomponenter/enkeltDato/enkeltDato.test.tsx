@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 import { shallow } from "enzyme";
 
 import EnkeltDato from "./enkeltDato";

@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from "react";
+import { MouseEventHandler } from "react";
 
 import * as Skjema from "../../../../skjema";
 import * as Nav from "../../../../../navFrontend";

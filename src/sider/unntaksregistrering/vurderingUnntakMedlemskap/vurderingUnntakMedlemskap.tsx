@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -256,7 +256,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
                 label="Til og med"
                 name="tom"
                 disabled={!redigerbart}
-                minDate={Utils.dato.norskStringTilDate(formValues.fom)}
+                minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
                 control={control}
                 onChange={lagreTom}
               />

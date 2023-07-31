@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertStripeType } from "nav-frontend-alertstriper";
 import classNames from "classnames";
 

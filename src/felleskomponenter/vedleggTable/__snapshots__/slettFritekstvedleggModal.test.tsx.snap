@@ -1,11 +1,11 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`slettFritekstvedleggModal renders correctly 1`] = `
+exports[`slettFritekstvedleggModal > snapshot test 1`] = `
 <div
   className="ReactModal__Overlay modal__overlay"
   onClick={[Function]}
   onMouseDown={[Function]}
-  style={Object {}}
+  style={{}}
 >
   <div
     aria-label="Slett fritekstvedlegg?"
@@ -16,7 +16,7 @@ exports[`slettFritekstvedleggModal renders correctly 1`] = `
     onMouseDown={[Function]}
     onMouseUp={[Function]}
     role="dialog"
-    style={Object {}}
+    style={{}}
     tabIndex="-1"
   >
     <section>
@@ -42,7 +42,7 @@ exports[`slettFritekstvedleggModal renders correctly 1`] = `
         <button
           className="knapp knapp--hoved knapp--mini"
           disabled={false}
-          onClick={[MockFunction]}
+          onClick={[MockFunction spy]}
           type="submit"
         >
           Ja, slett
@@ -50,7 +50,7 @@ exports[`slettFritekstvedleggModal renders correctly 1`] = `
         <button
           className="knapp knapp--flat knapp--mini"
           disabled={false}
-          onClick={[MockFunction]}
+          onClick={[MockFunction spy]}
           type="submit"
         >
           Avbryt
@@ -60,7 +60,7 @@ exports[`slettFritekstvedleggModal renders correctly 1`] = `
     <button
       aria-label="Lukk"
       className="lukknapp lukknapp--overstHjorne modal__lukkknapp--shake"
-      onClick={[MockFunction]}
+      onClick={[MockFunction spy]}
     >
       <span
         className="text-hide"

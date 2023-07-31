@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import classNames from "classnames";
 import { RootState } from "AppTypes";
@@ -11,7 +11,7 @@ import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as Mui from "../ui";
 import * as Api from "../../services/api";
 import * as Nav from "../../navFrontend";
-import * as Routing from "../../routing";
+import * as Routing from "../../url";
 import * as Datoutils from "../../utils/dato";
 
 import { behandlingsstatusOperations, behandlingsstatusSelectors } from "../../ducks/behandlingsstatus";
