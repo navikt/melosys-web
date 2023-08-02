@@ -18,6 +18,7 @@ import Unntaksregistrering from "./sider/unntaksregistrering";
 import UkjentSide from "./sider/ukjentSide";
 
 import { FellesHandlersContext } from "./contexts";
+import ErrorBoundary from "./felleskomponenter/errorBoundary";
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -27,8 +28,36 @@ const Routing = () => (
   <FellesHandlersContext.Consumer>
     {(fellesHandlers) => (
       <Switch>
-        <SentryRoute exact path="/" render={(props) => <Forside {...props} {...fellesHandlers} />} />
-        <SentryRoute exact path="/sok" component={Sok} />
+        <SentryRoute
+          exact
+          path="/"
+          render={(props) => (
+            <ErrorBoundary
+              kontekster={[
+                {
+                  slice: "fagsaker",
+                  varselTekst: "Det har oppstått en feil: Kunne ikke hente fagsaker",
+                },
+              ]}
+            >
+              <Forside {...props} {...fellesHandlers} />
+            </ErrorBoundary>
+          )}
+        />
+        <SentryRoute
+          exact
+          path="/sok"
+          render={(props) => (
+            <ErrorBoundary
+              kontekster={[
+                { slice: "fagsaker", varselTekst: "Det har oppstått en feil: Kunne ikke hente fagsaker" },
+                { slice: "oppgaver", varselTekst: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" },
+              ]}
+            >
+              <Sok {...props} />
+            </ErrorBoundary>
+          )}
+        />
         <SentryRoute
           exact
           path={`/${EU_EOS}/registrering/:saksnr/unntaksperioder`}

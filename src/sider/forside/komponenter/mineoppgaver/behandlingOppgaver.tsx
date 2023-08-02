@@ -2,7 +2,6 @@ import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
 import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
-import withErrorHandling from "../../../../felleskomponenter/withErrorHandling";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 
 import { oppgaverSelectors } from "../../../../ducks/oppgaver";
@@ -52,6 +51,4 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
   );
 };
 
-const kontekster = [{ navn: "oppgaver", melding: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" }];
-
-export default withErrorHandling(kontekster, connector(BehandlingOppgaver));
+export default connector(BehandlingOppgaver);

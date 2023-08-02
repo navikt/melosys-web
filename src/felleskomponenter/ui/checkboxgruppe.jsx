@@ -3,7 +3,7 @@ import PT from "prop-types";
 
 import * as Nav from "../../navFrontend";
 import * as MPT from "../../proptypes";
-import Checkbox from "~/felleskomponenter/ui/checkbox";
+import Checkbox from "./checkbox";
 
 const Checkboxgruppe = ({ legend, muligeValg, defaultValg, onChange, disabled }) => {
   const [valgteCheckboxer, setValgteCheckboxer] = useState(
