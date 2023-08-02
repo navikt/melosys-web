@@ -149,11 +149,11 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(async (medlemskapsperioder, isValid, overskrevetIndex) => {
       if (isValid) {
-        const promises = medlemskapsperioder.map((periode: MedlemskapsperiodeProp) => {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const periode of medlemskapsperioder) {
           const index = overskrevetIndex !== undefined ? overskrevetIndex : medlemskapsperioder.indexOf(periode);
-          return lagreMedlemskapsperiode(periode, index);
-        });
-        await Promise.all(promises);
+          await lagreMedlemskapsperiode(periode, index);
+        }
       }
     }, 500),
     []

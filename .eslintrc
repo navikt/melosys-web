@@ -12,6 +12,7 @@
     "import/named": "off",
     "import/order": "off",
     "no-underscore-dangle": "off",
+    "no-await-in-loop": "off",
     "camelcase": "off",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
