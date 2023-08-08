@@ -1,7 +1,7 @@
 import * as selectors from "./selectors";
-import * as KV from "~/kodeverk";
-import MKV from "~/melosyskodeverk";
-import { BOOLSK_STRING } from "~/constants";
+import * as KV from "../../kodeverk";
+import MKV from "../../melosyskodeverk";
+import { BOOLSK_STRING } from "../../constants";
 
 describe("Avklartefaktaselectors", () => {
   const lagState = ({

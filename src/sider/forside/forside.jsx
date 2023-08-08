@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
-
-import withErrorHandling from "../../felleskomponenter/withErrorHandling";
 import * as Nav from "../../navFrontend";
 
 import { oversikt } from "../../ducks/oppgaver/operations";
@@ -17,6 +15,7 @@ import OpprettNySakKnapp from "./komponenter/opprettnysakknapp";
 
 import "./forside.css";
 import { featureToggleOperations } from "../../ducks/featuretoggle";
+import ErrorBoundary from "../../felleskomponenter/errorBoundary";
 
 const Forside = (props) => {
   const { tilOpprettNySak } = props;
@@ -45,7 +44,13 @@ const Forside = (props) => {
       <Nav.Container className="forside__container" fluid>
         <Nav.Row>
           <Nav.Column xs="6" lg="5">
-            <JournalforingOppgaver />
+            <ErrorBoundary
+              kontekster={[
+                { slice: "oppgaver", varselTekst: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" },
+              ]}
+            >
+              <JournalforingOppgaver />
+            </ErrorBoundary>
           </Nav.Column>
           <Nav.Column xs="6" lg="7">
             <SokSkjema />
@@ -53,7 +58,13 @@ const Forside = (props) => {
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <BehandlingOppgaver />
+          <ErrorBoundary
+            kontekster={[
+              { slice: "oppgaver", varselTekst: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" },
+            ]}
+          >
+            <BehandlingOppgaver />
+          </ErrorBoundary>
         </Nav.Row>
       </Nav.Container>
     </div>
@@ -70,7 +81,4 @@ Forside.propTypes = {
 Forside.defaultProps = {
   children: null,
 };
-
-const kontekster = [{ navn: "fagsaker", melding: "Det har oppstått en feil: Kunne ikke hente fagsaker" }];
-
-export default withErrorHandling(kontekster, withRouter(Forside));
+export default withRouter(Forside);
