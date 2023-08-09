@@ -1,7 +1,7 @@
 import PT from "prop-types";
 import * as MKV from "@navikt/melosys-kodeverk";
-import Radio from "~/felleskomponenter/skjema/input/radio";
-import RadioGruppe from "~/felleskomponenter/skjema/input/radio-gruppe";
+import Radio from "../input/radio";
+import RadioGruppe from "../input/radio-gruppe";
 
 const VedtakstypeSkjema = ({ className, redigerbart, feltNavn, label }) => (
   <RadioGruppe className={className} feltNavn={feltNavn} label={label}>

@@ -18,7 +18,7 @@ import { unregister } from "./registerServiceWorker";
 import { FellesHandlersProvider } from "./contexts";
 import Modals from "./modals";
 import { apolloClient } from "./graphql";
-import Routing from "~/routing";
+import Routing from "./routing";
 
 const SideLoadingFailMessage = <p>Beklager, kunne ikke laste inn siden.</p>;
 
