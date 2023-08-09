@@ -157,7 +157,6 @@ export const VurderingArtikkel13_x_vedtak = ({
   };
 
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingArtikkel13_x_vedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
@@ -181,7 +180,8 @@ export const VurderingArtikkel13_x_vedtak = ({
         forkortPeriode={formValues.forkortLovvalgsperiode}
         fomLabel="Startdato"
         fomFeltNavn="fomDato"
-        fom={Utils.dato.norskStringTilDate(soknadsperiode.fom)}
+        minDate={Utils.dato.isoStringTilDate(soknadsperiode.fom)}
+        maxDate={Utils.dato.isoStringTilDate(soknadsperiode.tom)}
         tomLabel="Sluttdato"
         tomFeltNavn="tomDato"
       />

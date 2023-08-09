@@ -179,7 +179,8 @@ export const VurderingArtikkel13UtpekLand = ({
         forkortPeriode={formValues.forkortUtpekingsperiode}
         fomLabel="Startdato"
         fomFeltNavn="fomDato"
-        fom={Utils.dato.norskStringTilDate(soknadsperiode.fom)}
+        minDate={Utils.dato.norskStringTilDate(soknadsperiode.fom)}
+        maxDate={Utils.dato.norskStringTilDate(soknadsperiode.tom)}
         tomLabel="Sluttdato"
         tomFeltNavn="tomDato"
       />
