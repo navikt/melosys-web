@@ -63,8 +63,8 @@ export default function reducer(state = initialState, action = {}) {
         data: [
           {
             ...state.data[0],
-            fomDato: action.data.fomdato,
-            tomDato: action.data.tomdato,
+            fomDato: action.data.fomDato,
+            tomDato: action.data.tomDato,
           },
         ],
       };
