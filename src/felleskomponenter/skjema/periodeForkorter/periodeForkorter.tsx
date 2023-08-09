@@ -16,7 +16,8 @@ interface PeriodeForkorterProps {
   fomFeltNavn: string;
   tomLabel?: ReactNode;
   tomFeltNavn: string;
-  fom: Date;
+  minDate: Date;
+  maxDate?: Date;
 }
 
 const PeriodeForkorter = ({
@@ -30,7 +31,8 @@ const PeriodeForkorter = ({
   onUncheck,
   fomLabel = "",
   fomFeltNavn,
-  fom,
+  minDate,
+  maxDate,
   tomLabel = "",
   tomFeltNavn,
 }: PeriodeForkorterProps) => {
@@ -58,7 +60,13 @@ const PeriodeForkorter = ({
             <Skjema.Datovelger label={fomLabel} feltNavn={fomFeltNavn} disabled={!redigerbart || !fomRedigerbar} />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Skjema.Datovelger label={tomLabel} feltNavn={tomFeltNavn} disabled={!redigerbart} minDate={fom} />
+            <Skjema.Datovelger
+              label={tomLabel}
+              feltNavn={tomFeltNavn}
+              disabled={!redigerbart}
+              minDate={minDate}
+              maxDate={maxDate}
+            />
           </Nav.Column>
         </Nav.Row>
       )}

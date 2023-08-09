@@ -343,7 +343,8 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
         fomFeltNavn="fomDato"
         tomLabel="Sluttdato"
         tomFeltNavn="tomDato"
-        fom={Utils.dato.norskStringTilDate(soknadsperiode.fom)}
+        minDate={Utils.dato.isoStringTilDate(soknadsperiode.fom)}
+        maxDate={Utils.dato.isoStringTilDate(soknadsperiode.tom)}
       />
       {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       <Nav.Row className="fritekst">
