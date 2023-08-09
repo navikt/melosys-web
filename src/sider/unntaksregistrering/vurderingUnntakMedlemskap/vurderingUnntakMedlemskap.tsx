@@ -182,65 +182,68 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     !Utils._isEmpty(feilmeldinger) ||
     !Utils._isEmpty(kontrollfeil?.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER));
 
-  const manglerSluttdato = Utils._isEmpty(formValues.tom);
+  const harSluttdato = !Utils._isEmpty(formValues.tom);
 
   const utfallErGODKJENT = formValues?.utfallRegistreringUnntak === GODKJENT;
+  const utfallErDelvisGodkjent = formValues?.utfallRegistreringUnntak === DELVIS_GODKJENT;
+  const utfallValgt = formValues?.utfallRegistreringUnntak;
 
   return (
     <div className="vurderingUnntakMedlemskap">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Unntak medlemskap</Nav.Typo.Innholdstittel>
-      <Nav.Fieldset legend="Vurder unntaksperiode">
-        <Forms.Radio
-          name="utfallRegistreringUnntak"
-          control={control}
-          label="Godkjenn"
-          value={GODKJENT}
-          onChange={lagreUtfallRegistreringUnntak}
-          disabled={!redigerbart || manglerSluttdato}
-        />
-        <Forms.Radio
-          name="utfallRegistreringUnntak"
-          control={control}
-          label="Godkjenn, men endre periode"
-          value={DELVIS_GODKJENT}
-          onChange={lagreUtfallRegistreringUnntak}
-          disabled={!redigerbart}
-        />
-        <Forms.Radio
-          name="utfallRegistreringUnntak"
-          control={control}
-          label="Ikke godkjenn"
-          value={IKKE_GODKJENT}
-          onChange={lagreUtfallRegistreringUnntak}
-          disabled={!redigerbart}
-        />
-      </Nav.Fieldset>
+      <Nav.Row>
+        <Nav.Column xs="8">
+          <Nav.Typo.Normaltekst className="formLabel">Vurder unntaksperiode</Nav.Typo.Normaltekst>
+          <Forms.Radio
+            name="utfallRegistreringUnntak"
+            control={control}
+            label="Godkjenn"
+            value={GODKJENT}
+            onChange={lagreUtfallRegistreringUnntak}
+            disabled={!redigerbart || !harSluttdato}
+          />
+          <Forms.Radio
+            name="utfallRegistreringUnntak"
+            control={control}
+            label="Godkjenn, men endre periode"
+            value={DELVIS_GODKJENT}
+            onChange={lagreUtfallRegistreringUnntak}
+            disabled={!redigerbart}
+          />
+          <Forms.Radio
+            name="utfallRegistreringUnntak"
+            control={control}
+            label="Ikke godkjenn"
+            value={IKKE_GODKJENT}
+            onChange={lagreUtfallRegistreringUnntak}
+            disabled={!redigerbart}
+          />
+        </Nav.Column>
+      </Nav.Row>
 
       {utfallErGODKJENT && !harErrorFeilmelding && (
-        <Nav.Fieldset legend="">
-          <Nav.Row>
-            <Nav.Column xs="8">
-              <Forms.Select
-                name="bestemmelse"
-                control={control}
-                label="Bestemmelse"
-                emptyFieldDisabled={!!formValues.bestemmelse}
-                disabled={!redigerbart}
-                onChange={lagreBestemmelse}
-              >
-                {bestemmelser?.map((item: KTObject) => (
-                  <option key={item.kode} value={item.kode}>
-                    {item.term}
-                  </option>
-                ))}
-              </Forms.Select>
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Fieldset>
+        <Nav.Row>
+          <Nav.Column xs="8">
+            <Forms.Select
+              name="bestemmelse"
+              control={control}
+              label="Bestemmelse"
+              emptyFieldDisabled={!!formValues.bestemmelse}
+              disabled={!redigerbart}
+              onChange={lagreBestemmelse}
+            >
+              {bestemmelser?.map((item: KTObject) => (
+                <option key={item.kode} value={item.kode}>
+                  {item.term}
+                </option>
+              ))}
+            </Forms.Select>
+          </Nav.Column>
+        </Nav.Row>
       )}
 
       {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && (
-        <Nav.Fieldset legend="Lovvalgsperiode">
+        <>
           <Nav.Row>
             <Nav.Column xs="2">
               <Forms.Datovelger
@@ -261,24 +264,28 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
                 onChange={lagreTom}
               />
             </Nav.Column>
-            <Nav.Column xs="8">
-              <Forms.Select
-                name="bestemmelse"
-                control={control}
-                label="Bestemmelse"
-                emptyFieldDisabled={!!formValues.bestemmelse}
-                disabled={!redigerbart}
-                onChange={lagreBestemmelse}
-              >
-                {bestemmelser?.map((item: KTObject) => (
-                  <option key={item.kode} value={item.kode}>
-                    {item.term}
-                  </option>
-                ))}
-              </Forms.Select>
-            </Nav.Column>
           </Nav.Row>
-        </Nav.Fieldset>
+          {harSluttdato && !harErrorFeilmelding && (
+            <Nav.Row>
+              <Nav.Column xs="8">
+                <Forms.Select
+                  name="bestemmelse"
+                  control={control}
+                  label="Bestemmelse"
+                  emptyFieldDisabled={!!formValues.bestemmelse}
+                  disabled={!redigerbart}
+                  onChange={lagreBestemmelse}
+                >
+                  {bestemmelser?.map((item: KTObject) => (
+                    <option key={item.kode} value={item.kode}>
+                      {item.term}
+                    </option>
+                  ))}
+                </Forms.Select>
+              </Nav.Column>
+            </Nav.Row>
+          )}
+        </>
       )}
 
       <Feilmeldinger
@@ -286,20 +293,20 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]}
       />
 
-      {utfallErGODKJENT && (
+      {(utfallErGODKJENT || utfallErDelvisGodkjent) && !harErrorFeilmelding && (
         <Alertmeldinger
           className="vurderingUnntakMedlemskap__alertmeldinger"
           meldinger={kontrollFeilOverlappendeUnntakperiode}
         />
       )}
 
-      {manglerSluttdato && utfallErGODKJENT && (
+      {!harSluttdato && !utfallValgt && (
         <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
           Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
         </Nav.AlertStripeAdvarsel>
       )}
 
-      {[DELVIS_GODKJENT, IKKE_GODKJENT].includes(formValues.utfallRegistreringUnntak) && (
+      {[DELVIS_GODKJENT, IKKE_GODKJENT].includes(formValues.utfallRegistreringUnntak) && !harErrorFeilmelding && (
         <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__alertstripe">
           Ved endring/ikke godkjenning av unntaksperiode bør det sendes informasjon til utenlandsk trygdemyndighet.
         </Nav.AlertStripeInfo>
