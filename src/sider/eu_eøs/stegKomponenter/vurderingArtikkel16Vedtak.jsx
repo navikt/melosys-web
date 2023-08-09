@@ -222,6 +222,7 @@ export const DelvisInnvilgelse = ({
             fomLabel="Startdato"
             fomFeltNavn="fomDato"
             minDate={Utils.dato.norskStringTilDate(formValues.fomDato)}
+            maxDate={Utils.dato.norskStringTilDate(formValues.tomDato)}
             tomLabel="Sluttdato"
             tomFeltNavn="tomDato"
           />
