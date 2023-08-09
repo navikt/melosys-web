@@ -186,7 +186,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   const utfallErGODKJENT = formValues?.utfallRegistreringUnntak === GODKJENT;
   const utfallErDelvisGodkjent = formValues?.utfallRegistreringUnntak === DELVIS_GODKJENT;
-  const utfallRegistrert = formValues?.utfallRegistreringUnntak;
+  const utfallValgt = formValues?.utfallRegistreringUnntak;
 
   return (
     <div className="vurderingUnntakMedlemskap">
@@ -300,7 +300,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         />
       )}
 
-      {!harSluttdato && !utfallRegistrert && (
+      {!harSluttdato && !utfallValgt && (
         <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
           Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
         </Nav.AlertStripeAdvarsel>
