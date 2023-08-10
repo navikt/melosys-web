@@ -74,7 +74,6 @@
     "react-draft-wysiwyg": "^1.14.6",
     "react-hook-form": "^7.43.1",
     "react-modal": "^3.11.1",
-    "react-pdf": "5.7.2",
     "react-promise-suspense": "0.3.3",
     "react-redux": "^7.2.8",
     "react-router-dom": "^5.1.2",
