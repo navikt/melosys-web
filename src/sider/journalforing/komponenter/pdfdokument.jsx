@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import * as Api from "../../../services/api";
-import { fetchAsPDFBlob } from "~/services/utils";
+import { fetchAsPDFBlob } from "../../../services/utils";
 
 import "./pdfdokument.css";
 
