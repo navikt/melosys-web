@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as Utils from "../../utils";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { Innsynsmelding } from "../alertmeldinger";
@@ -9,6 +9,9 @@ import { FANE_STATUS } from "../stegvelger";
 import MKV from "../../melosyskodeverk";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { NyVurderingMelding } from "../alertmeldinger/alertmeldinger";
+import { Feilmeldinger } from "../feilmeldinger";
+import { kontrollOperations } from "../../ducks/kontroll";
+import { feiletResponsOperations } from "../../ducks/feiletRespons";
 
 interface AktueltSteg {
   id: string;
@@ -27,6 +30,7 @@ interface EnkelStegvelgerProps {
 export default ({ alleSteg }: EnkelStegvelgerProps) => {
   const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([alleSteg[0]]);
   const [aktivtStegIndex, setAktivtStegIndex] = useState(0);
+  const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
@@ -38,6 +42,8 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
     setAktuellesteg(
       aktuelleSteg?.map((steg: AktueltSteg) => ({ ...steg, aktivtSteg: steg.stegPosisjon === aktivtStegIndex }))
     );
+    dispatch(kontrollOperations.resetKontroll());
+    dispatch(feiletResponsOperations.resetFeiletRespons());
   }, [aktivtStegIndex]);
 
   const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean) => {
@@ -75,6 +81,7 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
         <div>
           <StegLinje steg={aktuelleSteg} stegKlikk={handleKlikk} />
           {!redigerbart && <Innsynsmelding />}
+          <Feilmeldinger />
 
           {erNyVurdering && redigerbart && inngangStegErAktivt && <NyVurderingMelding />}
           {aktuelleSteg.map((steg) => (

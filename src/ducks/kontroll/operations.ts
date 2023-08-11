@@ -7,6 +7,10 @@ export function resetKontroll() {
   return Actions.resetKontroll();
 }
 
+export function kontrollFeil(feilData: any) {
+  return Actions.kontrollFeil(feilData);
+}
+
 export function kontrollerFerdigbehandling(data: Api.Kontroll.FerdigbehandlingKontrollData) {
   return doThenDispatch(() => Api.Kontroll.kontrollerFerdigbehandling(data), {
     OK: Types.OK,

@@ -295,6 +295,7 @@ const mapStateToProps = (state) => {
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
     harLandSomKreverSED: avklartefaktaSelectors.LandSomKreverSEDSelector(state).length > 0,
     soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
+    mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     formIsValid: isValid(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
     initialValues: {
@@ -309,7 +310,6 @@ const mapStateToProps = (state) => {
       mottakerinstitusjoner: avklartefaktaSelectors.LandSomKreverSEDKTSelector(state) || [],
       kreverMottakerinstitusjon: false,
       fritekstSed: null,
-      mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     },
   };
 };

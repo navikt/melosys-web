@@ -657,6 +657,7 @@ const mapStateToProps = (state) => {
     vilkarBegrunnelser: vilkarSelectors.vilkarBegrunnelserSelector(state),
     art_12_1_begrunnelser: vilkarSelectors.art12_1_begrunnelserSelector(state),
     art_12_2_begrunnelser: vilkarSelectors.art12_2_begrunnelserSelector(state),
+    mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     formIsValid: isValid(KV.Form.ARTIKKEL_16_1_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARTIKKEL_16_1_VEDTAK)(state),
     initialValues: {
@@ -670,7 +671,6 @@ const mapStateToProps = (state) => {
       vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
       vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
       vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-      mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     },
   };
 };

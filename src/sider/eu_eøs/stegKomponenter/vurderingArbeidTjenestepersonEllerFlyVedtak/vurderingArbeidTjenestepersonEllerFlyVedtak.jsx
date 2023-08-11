@@ -268,7 +268,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 
   useEffect(() => {
     async function kontroller() {
-      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg && formIsValid) {
+      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling({
           behandlingID,

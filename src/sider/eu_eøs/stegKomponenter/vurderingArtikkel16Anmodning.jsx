@@ -5,6 +5,7 @@ import { FieldArray, getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 import { v4 as uuid } from "uuid";
+import * as Api from "../../../services/api";
 
 import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
@@ -34,6 +35,8 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
 
 import "./vurderingArtikkel16Anmodning.css";
+import { kontrollOperations } from "../../../ducks/kontroll";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked, redigerbart }) => {
   const { periodeID, periode } = perm;
@@ -115,8 +118,17 @@ class VurderingArtikkel16Anmodning extends Component {
     sendBrevFeilmelding: undefined,
     anmodningPending: false,
     valgteVedlegg: [],
+    harFeil: false,
+    sjekkerAdresse: false,
   };
 
+  componentDidUpdate(prevProps) {
+    const { sjekkerAdresse } = this.state;
+    const { mottatteOpplysningerStatus } = this.props;
+    if (mottatteOpplysningerStatus === "OK" && !sjekkerAdresse && prevProps.mottatteOpplysningerStatus !== "OK") {
+      this.kontroller();
+    }
+  }
   componentDidMount() {
     const {
       oppdaterData,
@@ -277,6 +289,47 @@ class VurderingArtikkel16Anmodning extends Component {
         this.setState({ anmodningPending: false });
       }
     }
+  };
+
+  kontroller = async () => {
+    const { kontrollFeil, resetKontroll, behandlingID } = this.props;
+    this.setState({ sjekkerAdresse: true });
+    Api.Kontroll.harRegistrertAdresse({
+      brukerID: "",
+      orgnr: "",
+      behandlingID,
+    })
+      .then((res) => {
+        if (!res.harRegistrertAdresse) {
+          this.setState({ harFeil: true, sjekkerAdresse: false });
+          const kontrollfeilList = [
+            {
+              felter: [],
+              kode:
+                res.rolle === MKV.Koder.aktoersroller.BRUKER
+                  ? MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_REGISTRERTE_ADRESSE_BRUKER
+                  : MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_REGISTRERTE_ADRESSE_REPRESENTANT,
+            },
+          ];
+          kontrollFeil({
+            kontrollfeilList,
+          });
+        } else {
+          resetKontroll();
+          this.setState({ harFeil: false, sjekkerAdresse: false });
+        }
+      })
+      .catch(() => {
+        this.setState({ harFeil: true, sjekkerAdresse: false });
+
+        const kontrollfeilList = [
+          {
+            felter: [],
+            kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_REGISTRERTE_ADRESSE_BRUKER,
+          },
+        ];
+        kontrollFeil(kontrollfeilList);
+      });
   };
 
   render() {
@@ -550,7 +603,7 @@ class VurderingArtikkel16Anmodning extends Component {
               bekreftKnappProps={{
                 spinner: anmodningPending,
                 autoDisableVedSpinner: true,
-                disabled: !redigerbart,
+                disabled: !redigerbart || this.state.harFeil,
                 onClick: validerOgLagreBehandling,
               }}
               tilbakeKnappProps={{
@@ -589,8 +642,11 @@ VurderingArtikkel16Anmodning.propTypes = {
   touch: PT.func.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
+  mottatteOpplysningerStatus: PT.string.isRequired,
   form: PT.string.isRequired,
   fysiskeDokument: PT.arrayOf(PT.object).isRequired,
+  kontrollFeil: PT.func.isRequired,
+  resetKontroll: PT.func.isRequired,
   valgteVirksomheter: PT.array,
 };
 
@@ -612,6 +668,7 @@ const mapStateToProps = (state) => ({
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_16_ANMODNING)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_16_ANMODNING)(state),
+  mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
   initialValues: {
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
     mottakerinstitusjon: "",
@@ -629,4 +686,9 @@ const VurderingArtikkel16AnmodningForm = reduxForm({
   validate: (values) => lagYupToReduxformErrorMapper(VurderingArtikkel16AnmodningSchema)(values),
 })(VurderingArtikkel16Anmodning);
 
-export default connect(mapStateToProps)(VurderingArtikkel16AnmodningForm);
+const mapDispatchToProps = (dispatch) => ({
+  kontrollFeil: (kontrollBegrunnelse) => dispatch(kontrollOperations.kontrollFeil(kontrollBegrunnelse)),
+  resetKontroll: () => dispatch(kontrollOperations.resetKontroll()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16AnmodningForm);

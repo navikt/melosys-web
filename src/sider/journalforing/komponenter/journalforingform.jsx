@@ -91,9 +91,9 @@ export const JournalforingForm = ({
         brukerID: brukerIDPerson,
         orgnr,
       })
-        .then((harAdresse) => {
-          setHarRegistrertAdresse(harAdresse);
-          settFeltInnhold("ikkeSendForvaltingsmelding", !harAdresse);
+        .then((res) => {
+          setHarRegistrertAdresse(res.harRegistrertAdresse);
+          settFeltInnhold("ikkeSendForvaltingsmelding", !res.harRegistrertAdresse);
         })
         .catch(() => setHarRegistrertAdresse(false));
     }

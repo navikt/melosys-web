@@ -24,7 +24,7 @@ import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresul
 import { oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
-import { kontrollOperations } from "../../../../ducks/kontroll";
+import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import { formSelectors } from "../../../../ducks/form";
 
@@ -34,6 +34,7 @@ import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
+import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
 const { trygdeavtale_myndighetsland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
@@ -81,6 +82,8 @@ interface Props {
 
 export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const dispatch = useDispatch();
+  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
 
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
   const {
@@ -112,7 +115,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
-  const stegErGyldig = redigerbart && formIsValid;
+  const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
 
   const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
 
