@@ -1,114 +1,46 @@
-/* eslint react/no-multi-comp:off */
-import { Component } from "react";
-import PT from "prop-types";
-import { Document, Page, pdfjs } from "react-pdf";
-import { v4 as uuid } from "uuid";
-
-import * as Utils from "../../../utils";
+import { useState, useEffect, useCallback } from "react";
+import PropTypes from "prop-types";
 import * as Api from "../../../services/api";
+import { fetchAsPDFBlob } from "../../../services/utils";
 
 import "./pdfdokument.css";
 
-const pdfjsWorker = import("react-pdf/dist/esm/pdf.worker.entry");
+const PDFDokument = ({ journalpostID, dokumentID }) => {
+  const [pdfDokumentBlob, setPdfDokumentBlob] = useState(null);
 
-pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+  const fetchPDFBlob = useCallback(async () => {
+    try {
+      const result = await fetchAsPDFBlob(Api.Dokumenter.pdf.uriPath(journalpostID, dokumentID));
+      const blobUrl = `${URL.createObjectURL(result)}`;
+      setPdfDokumentBlob(blobUrl);
+    } catch (error) {
+      console.error("Error fetching PDF blob:", error);
+    }
+  }, [journalpostID, dokumentID]);
 
-/** For å oppnå full bredde innenfor div-kontainer må
- * vi plassere PDF-komponenten(pdf-js) i en wrapper siden pdf-js ikke støtter prosentvis bredde (kun px).
- * Parent vil da kunne finne bredden i sin egen div og sende den inn til PDFViser.
- */
-class PDFViser extends Component {
-  state = {};
+  useEffect(() => {
+    fetchPDFBlob();
+  }, [fetchPDFBlob]);
 
-  onLoadSuccess = ({ numPages }) => {
-    this.setState({ numPages });
-  };
-
-  render() {
-    const { numPages } = this.state;
-    const { pdfDokument } = this.props;
-    const pageArray = new Array(numPages).fill(null);
-
-    return (
+  return (
+    <div id="row" className="pdfdokument">
       <div className="pdfviser">
-        <Document file={pdfDokument} onLoadSuccess={this.onLoadSuccess}>
-          {pageArray.map((item, index) => (
-            <div key={uuid()} id={`section-${index + 1}`} className="pdfviser__side">
-              <Page width={this.props.wrapperDivSize} pageNumber={index + 1} />
-              <div className="pdfviser__sideinfo">
-                side {index + 1} av {pageArray.length}
-              </div>
-            </div>
-          ))}
-        </Document>
-      </div>
-    );
-  }
-}
-
-PDFViser.propTypes = {
-  pdfDokument: PT.string.isRequired,
-  wrapperDivSize: PT.number,
-};
-
-PDFViser.defaultProps = {
-  wrapperDivSize: 0,
-};
-
-/**
- * Dette er hovedkomponenten som eksponeres utenfor pakken. Den wrapper inn
- * PDFLeser lenger opp, men sørger også for å finne korrekt bredde av containeren
- * via eventlisteners ved mount.
- */
-class PDFDokument extends Component {
-  state = { width: null };
-
-  componentDidMount() {
-    this.setDivSize();
-    window.addEventListener("resize", this.setDivSizeThrottled);
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    const { journalpostID, dokumentID } = this.props;
-    const { width } = this.state;
-    return (
-      journalpostID !== nextProps.journalpostID || dokumentID !== nextProps.dokumentID || width !== nextState.width
-    );
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.setDivSizeThrottled);
-  }
-
-  setDivSize = () => {
-    const width = this.pdfWrapper && this.pdfWrapper.getBoundingClientRect().width;
-    this.setState({ width });
-  };
-
-  setDivSizeThrottled = Utils._throttle(this.setDivSize, 500);
-
-  render() {
-    const { journalpostID, dokumentID } = this.props;
-    const pdfDokumentURI = Api.Dokumenter.pdf.uriPath(journalpostID, dokumentID);
-    return (
-      <div id="row" className="pdfdokument">
-        <div
-          id="pdfWrapper"
+        <iframe
+          title="Dokument"
           className="dokument__pdfwrapper"
-          ref={(ref) => {
-            this.pdfWrapper = ref;
-          }}
-        >
-          <PDFViser wrapperDivSize={this.state.width} pdfDokument={pdfDokumentURI} />
-        </div>
+          src={`${pdfDokumentBlob}`}
+          type="application/pdf"
+          width="100%"
+          height="100%" // You can adjust the height as needed
+        />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 PDFDokument.propTypes = {
-  journalpostID: PT.string.isRequired,
-  dokumentID: PT.string.isRequired,
+  journalpostID: PropTypes.string.isRequired,
+  dokumentID: PropTypes.string.isRequired,
 };
 
 export default PDFDokument;
