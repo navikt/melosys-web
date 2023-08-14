@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "AppTypes";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FieldValue, FieldValues, useFieldArray, useForm } from "react-hook-form";
+import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
@@ -14,7 +14,11 @@ import * as Utils from "../../../../../utils";
 
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
-import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
+import {
+  medlemskapsperioderOperations,
+  medlemskapsperioderSelectors,
+  medlemskapsperioderTypes,
+} from "../../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 
@@ -22,24 +26,13 @@ import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { PeriodeElementer } from "./komponenter/periodeElementer";
 import { Feilmelding, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
+import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 
-export type MedlemskapsperiodeProp = {
-  ny: boolean;
-  feil?: string;
-  periodeId: number;
-  fomDato: string;
-  tomDato: string;
-  innvilgelsesResultat: string;
-  trygdedekning: string;
-};
+const kallFeilet = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
 
-export interface FieldArrayProps {
-  medlemskapsperioder: MedlemskapsperiodeProp[];
-}
-
-export type FormValuesProps = FieldValues & FieldArrayProps;
+const mapFeil = (response: any) => response?.data?.message || response.data;
 
 const mapTilMedlemskapsperiodeProps = (
   medlemskapsperiode: Api.Medlemskapsperioder.Medlemskapsperiode
@@ -75,13 +68,6 @@ const komponentState = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
-interface VurderingPerioderProps {
-  bekreft: () => void;
-  tilbake: () => void;
-  aktivtSteg: boolean;
-  oppdaterStatus: (isValid: boolean) => void;
-}
-
 export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) => {
   const dispatch = useDispatch();
   const {
@@ -105,19 +91,35 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     resolver: yupResolver(vurderingPerioderSchema),
     mode: "all",
     context: { soknadsperiode },
-    values: {
+    defaultValues: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder),
     } as FieldValue<FormValuesProps>,
   });
-  const { fields, append, remove, update } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({
+  const {
+    fields,
+    append,
+    remove,
+    update,
+    replace: resetMedlemskapsperioder,
+  } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({
     control,
     name: "medlemskapsperioder",
   });
   const formValues = watch();
 
+  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, soknadsperiode.fom);
+
+  const stegErGyldig = formIsValid && !aktivFeilmeldingType;
+
   useEffect(() => {
-    oppdaterStatus(formIsValid);
-  }, [formIsValid]);
+    if (aktivtSteg) {
+      resetMedlemskapsperioder(mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
+    }
+  }, [aktivtSteg]);
+
+  useEffect(() => {
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
@@ -127,49 +129,41 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       innvilgelsesResultat: medlemskapsperiode.innvilgelsesResultat,
     };
 
-    await (medlemskapsperiode.ny
-      ? Api.Medlemskapsperioder.postMedlemskapsperioder(behandlingID, periodeRequest)
-      : Api.Medlemskapsperioder.putMedlemskapsperioder(behandlingID, medlemskapsperiode.periodeId, periodeRequest)
-    )
-      .then((response) => {
-        update(index, mapTilMedlemskapsperiodeProps(response));
-      })
-      .catch((error) => {
-        update(index, { ...formValues.medlemskapsperioder[index], feil: error.body?.message || error });
-      });
+    const response: any = await (medlemskapsperiode.ny
+      ? dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest))
+      : dispatch(
+          medlemskapsperioderOperations.oppdaterMedlemskapsperiode(
+            behandlingID,
+            medlemskapsperiode.periodeId,
+            periodeRequest
+          )
+        ));
+
+    if (kallFeilet(response)) {
+      update(index, { ...formValues.medlemskapsperioder[index], feil: mapFeil(response) });
+    } else {
+      update(index, mapTilMedlemskapsperiodeProps(response.data));
+    }
   };
 
   const debouncedLagreMedlemskapsperioder = useCallback(
-    Utils._debounce(
-      async (medlemskapsperioder, isValid, overskrevetIndex) => {
-        if (isValid) {
-          // eslint-disable-next-line no-restricted-syntax
-          for (const [index, medlemskapsperiode] of medlemskapsperioder.entries()) {
-            // eslint-disable-next-line no-await-in-loop
-            await lagreMedlemskapsperiode(
-              medlemskapsperiode,
-              overskrevetIndex !== undefined ? overskrevetIndex : index
-            );
-          }
+    Utils._debounce(async (medlemskapsperioder, isValid, overskrevetIndex) => {
+      if (isValid) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const periode of medlemskapsperioder) {
+          const index = overskrevetIndex !== undefined ? overskrevetIndex : medlemskapsperioder.indexOf(periode);
+          await lagreMedlemskapsperiode(periode, index);
         }
-      },
-
-      500
-    ),
+      }
+    }, 500),
     []
   );
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, soknadsperiode.fom);
-
   useEffect(() => {
     if (redigerbart && aktivtSteg) {
-      debouncedLagreMedlemskapsperioder(
-        formValues.medlemskapsperioder,
-        formIsValid && !aktivFeilmeldingType,
-        undefined
-      );
+      debouncedLagreMedlemskapsperioder(formValues.medlemskapsperioder, stegErGyldig, undefined);
     }
-  }, [formIsValid, aktivFeilmeldingType]);
+  }, [stegErGyldig]);
 
   const antallMedlemskapsperioder = formValues.medlemskapsperioder?.length;
 
@@ -177,19 +171,20 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   if (!aktivtSteg || !formValues) return null;
 
-  const handleSlett = (index: number) => {
+  const handleSlett = async (index: number) => {
     const medlemskapsperiode = formValues.medlemskapsperioder[index];
 
     if (medlemskapsperiode.ny) {
       remove(index);
     } else {
-      Api.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, medlemskapsperiode.periodeId)
-        .then(() => {
-          remove(index);
-        })
-        .catch((error) => {
-          update(index, { ...medlemskapsperiode, feil: error.body?.message || error });
-        });
+      const response = await dispatch(
+        medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId)
+      );
+      if (kallFeilet(response)) {
+        update(index, { ...medlemskapsperiode, feil: mapFeil(response) });
+      } else {
+        remove(index);
+      }
     }
   };
 
@@ -246,7 +241,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         fields={fields}
         handleSlett={handleSlett}
         redigerbart={redigerbart}
-        formIsValid={formIsValid && !aktivFeilmeldingType}
+        formIsValid={stegErGyldig}
         handleChange={debouncedLagreMedlemskapsperioder}
       />
 
@@ -263,7 +258,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: handleBekreft,
-          disabled: !redigerbart || !formIsValid || !!aktivFeilmeldingType,
+          disabled: !redigerbart || !stegErGyldig,
         }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />

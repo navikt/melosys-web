@@ -9,7 +9,7 @@ import "./sendForvaltningsMelding.css";
 
 interface SendForvaltningsMeldingProps {
   avsenderType: string;
-  settFeltInnhold: (felt: string, value: string) => void;
+  settFeltInnhold: (felt: string, value: string | boolean) => void;
   harRegistrertAdresse?: boolean;
   representantRepresenterer?: string;
 }
@@ -43,12 +43,12 @@ const SendForvaltningsMelding = ({
           disabled={!harRegistrertAdresse}
           feltNavn="ikkeSendForvaltingsmelding"
           label="Ja, melding skal sendes automatisk"
-          value
+          value={false}
         />
         <Skjema.Radio
           feltNavn="ikkeSendForvaltingsmelding"
           label="Nei, jeg vil sende melding senere eller behandle saken innen kort tid"
-          value={false}
+          value
         />
         {avsenderErFullmelktig && (
           <Fragment>

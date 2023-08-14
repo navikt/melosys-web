@@ -10,9 +10,9 @@
     ],
     "space-before-function-paren": "off",
     "import/named": "off",
-    "import/no-unresolved": "off",
     "import/order": "off",
     "no-underscore-dangle": "off",
+    "no-await-in-loop": "off",
     "camelcase": "off",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
@@ -73,6 +73,7 @@
     "import/no-extraneous-dependencies": [0],
     "import/prefer-default-export": 0,
     "import/no-named-as-default": 0,
+    "import/no-unresolved": [2, { "ignore": ["AppTypes", "Domene", "melosys-api"] }],
     "import/no-cycle": 0,
     "jsx-a11y/aria-props": 2,
     "jsx-a11y/aria-proptypes": 2,
@@ -155,6 +156,14 @@
   "globals": {
     "shallow": true,
     "mount": true
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {}
+    }
   },
   "ignorePatterns": ["**/*generated.tsx"]
 }
