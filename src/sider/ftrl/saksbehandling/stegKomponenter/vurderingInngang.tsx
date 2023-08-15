@@ -1,8 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Action } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
@@ -23,37 +20,10 @@ import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkod
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
-import { tilForsiden } from "../../../../ducks/navigering/operations";
+import { navigeringOperations } from "../../../../ducks/navigering";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
-
-const komponentState = (state: RootState) => {
-  const initialSoknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(state);
-  const initialSoeknadsland = mottatteOpplysningerSelectors.SoknadslandkoderSelector(state);
-  const initialTrygdedekning = mottatteOpplysningerSelectors.TrygdedekningSelector(state);
-  return {
-    initialValues: {
-      fom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.fom),
-      tom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.tom),
-      land: initialSoeknadsland && initialSoeknadsland.toString(),
-      trygdedekning: initialTrygdedekning,
-    },
-    trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
-    alleLandkoder: landkoderSelectors.LandkoderSelector(state),
-    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  };
-};
-
-const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
-  oppdaterPeriode: (periode: { fom: string; tom: string }) =>
-    dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
-  oppdaterSoeknadslandkoder: (landkoder: string[]) =>
-    dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(landkoder, false)),
-  oppdaterTrygdedekning: (trygdedekning: string | undefined) =>
-    dispatch(mottatteOpplysningerOperations.oppdaterTrygdedekning(trygdedekning)),
-});
 
 interface Props {
   bekreft: () => void;
@@ -63,12 +33,20 @@ interface Props {
 
 export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
-  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
-  const { redigerbart, trygdedekninger, initialValues, alleLandkoder } = useSelector(komponentState);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const trygdedekninger = useSelector(folketrygdenkodeverkSelectors.TrygdedekningerSelector);
+  const alleLandkoder = useSelector(landkoderSelectors.LandkoderSelector);
+  const søknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
+  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
-  const { visMenypanel, oppdaterPeriode, oppdaterSoeknadslandkoder, oppdaterTrygdedekning } =
-    komponentDispatch(dispatch);
+  const initialValues = {
+    fom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.fom, false, undefined),
+    tom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.tom, false, undefined),
+    land: useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector).toString(),
+    trygdedekning: useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector),
+  };
+
   const [visOppfrisk, setVisOppfrisk] = useState(false);
 
   const {
@@ -84,7 +62,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   useEffect(() => {
     if (registeropplysningerHentet) {
-      visMenypanel();
+      dispatch(menypanelOperations.visMenypanel());
     }
   }, []);
 
@@ -94,12 +72,14 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   const oppdaterLokalMottatteOpplysninger = async () => {
     await Promise.all([
-      oppdaterPeriode({
-        fom: Utils.dato.formatterDatoTilISO(formValues.fom, null, ""),
-        tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
-      }),
-      oppdaterSoeknadslandkoder(formValues.land ? [formValues.land] : []),
-      oppdaterTrygdedekning(formValues.trygdedekning),
+      dispatch(
+        mottatteOpplysningerOperations.oppdaterPeriode({
+          fom: Utils.dato.formatterDatoTilISO(formValues.fom, null, ""),
+          tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
+        })
+      ),
+      dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(formValues.land ? [formValues.land] : [], false)),
+      dispatch(mottatteOpplysningerOperations.oppdaterTrygdedekning(formValues.trygdedekning)),
     ]);
   };
 
@@ -212,12 +192,12 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
             setVisOppfrisk(false);
-            visMenypanel();
+            dispatch(menypanelOperations.visMenypanel());
             bekreft();
           }}
           tilForsiden={() => {
             setVisOppfrisk(false);
-            tilForsiden();
+            dispatch(navigeringOperations.tilForsiden());
           }}
           bekreftetFraStart
         />
