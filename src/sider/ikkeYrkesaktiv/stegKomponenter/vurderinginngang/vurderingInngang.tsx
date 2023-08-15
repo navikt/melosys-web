@@ -16,11 +16,13 @@ import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from ".
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
+import { navigeringOperations } from "../../../../ducks/navigering";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import MKV from "../../../../melosyskodeverk";
+import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
 
 interface Props {
   bekreft: () => void;
@@ -30,6 +32,9 @@ interface Props {
 
 export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
+  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger, annenBehandlingOppfriskes } = useContext(
+    FellesHandlersContext
+  ) as any;
 
   const periodeFom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector));
   const periodeTom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeTomSelector));
@@ -38,6 +43,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
 
   const { control, watch, formState, trigger } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
@@ -56,15 +63,11 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     formValues?.tom !== periodeTom ||
     formValues?.land !== søknadsland;
 
-  const [visSpinner, setVisSpinner] = useState(false);
-
   const landUtenStøtteValgt =
     sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
     (formValues.land === MKV.Koder.landkoder.FR || formValues.land === MKV.Koder.landkoder.IT);
 
-  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
-
-  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner && !landUtenStøtteValgt;
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visOppfrisk && !landUtenStøtteValgt;
 
   useEffect(() => {
     if (registeropplysningerHentet) {
@@ -76,31 +79,28 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
-  const lagrePeriodeOgLand = () => {
-    dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland([formValues.land], false));
-
-    dispatch(
-      mottatteOpplysningerOperations.oppdaterPeriode({
-        fom: Utils.dato.formatterDatoTilISO(formValues.fom, null, ""),
-        tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
-      })
-    );
+  const lagrePeriodeOgLand = async () => {
+    await Promise.all([
+      dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland([formValues.land], false)),
+      dispatch(
+        mottatteOpplysningerOperations.oppdaterPeriode({
+          fom: Utils.dato.formatterDatoTilISO(formValues.fom, null, ""),
+          tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
+        })
+      ),
+    ]);
   };
 
-  const innhentRegisteropplysninger = async () => {
+  const innhentRegisteropplysninger = () => {
+    lagrePeriodeOgLand().finally(() => setVisOppfrisk(true));
+  };
+
+  const bekreftOgFortsett = () => {
     if (skalHenteRegisteropplysninger) {
-      lagrePeriodeOgLand();
-
-      setVisSpinner(true);
-      await lagreMottatteOpplysningerOgOppfriskSaksopplysninger();
-      setVisSpinner(false);
-      dispatch(menypanelOperations.visMenypanel());
+      innhentRegisteropplysninger();
+    } else {
+      bekreft();
     }
-  };
-
-  const bekreftOgInnhentRegisteropplysninger = async () => {
-    await innhentRegisteropplysninger();
-    bekreft();
   };
 
   if (!aktivtSteg) return null;
@@ -150,23 +150,40 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
       {landUtenStøtteValgt && <TomFlytMelding />}
 
-      {landUtenStøtteValgt && skalHenteRegisteropplysninger ? (
+      {landUtenStøtteValgt ? (
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: innhentRegisteropplysninger,
-            disabled: !formState?.isValid || !redigerbart,
-            spinner: visSpinner,
+            disabled: !skalHenteRegisteropplysninger || !formState?.isValid || !redigerbart,
           }}
-          bekreftTekst="Innehent registeropplysninger"
+          bekreftTekst={skalHenteRegisteropplysninger ? "Innhent registeropplysninger" : undefined}
         />
       ) : (
         <Mui.StegKnapper
           bekreftKnappProps={{
-            onClick: bekreftOgInnhentRegisteropplysninger,
-            disabled: !formState?.isValid || landUtenStøtteValgt || !redigerbart,
-            spinner: visSpinner,
+            onClick: bekreftOgFortsett,
+            disabled: !formState?.isValid || !redigerbart,
           }}
-          bekreftTekst="Bekreft og innhent registeropplysninger"
+        />
+      )}
+
+      {visOppfrisk && (
+        <DialogboksOppfriskSak
+          oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
+          avbryt={() => setVisOppfrisk(false)}
+          lukk={() => {
+            setVisOppfrisk(false);
+            dispatch(menypanelOperations.visMenypanel());
+            if (!landUtenStøtteValgt) {
+              bekreft();
+            }
+          }}
+          tilForsiden={() => {
+            setVisOppfrisk(false);
+            dispatch(navigeringOperations.tilForsiden());
+          }}
+          behandlingOppfriskes
+          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
         />
       )}
     </div>

@@ -18,6 +18,7 @@ import { FellesHandlersContext } from "../../../../contexts";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../../ducks/menypanel";
@@ -66,6 +67,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     FellesHandlersContext
   ) as any;
   const { redigerbart, trygdedekninger, initialValues, alleLandkoder } = useSelector(komponentState);
+  const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
+
   const { visMenypanel, oppdaterPeriode, oppdaterSoeknadslandkoder, oppdaterTrygdedekning } =
     komponentDispatch(dispatch);
   const [visOppfrisk, setVisOppfrisk] = useState(false);
@@ -82,7 +85,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const formValues = watch();
 
   useEffect(() => {
-    if (!Utils._isEmpty(initialValues.fom)) {
+    if (registeropplysningerHentet) {
       visMenypanel();
     }
   }, []);
@@ -102,14 +105,15 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     ]);
   };
 
-  const fortsettHandle = () => {
-    const erSammeSomInitialVerdier =
-      formValues.fom === initialValues.fom &&
-      formValues.tom === initialValues.tom &&
-      formValues.land === initialValues.land &&
-      formValues.trygdedekning === initialValues.trygdedekning;
+  const bekreftOgFortsett = () => {
+    const skalHenteRegisteropplysninger =
+      !registeropplysningerHentet ||
+      formValues.fom !== initialValues.fom ||
+      formValues.tom !== initialValues.tom ||
+      formValues.land !== initialValues.land ||
+      formValues.trygdedekning !== initialValues.trygdedekning;
 
-    if (!erSammeSomInitialVerdier) {
+    if (skalHenteRegisteropplysninger) {
       oppdaterLokalMottatteOpplysninger().finally(() => {
         setVisOppfrisk(true);
       });
@@ -128,7 +132,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     <div className="vurderingInngang">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
 
-      <Nav.Fieldset legend="Søknadsperiode">
+      <Nav.Fieldset legend={<Nav.Typo.Undertittel>Søknadsperiode</Nav.Typo.Undertittel>}>
         <Nav.Row>
           <Nav.Column xs="2">
             <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
@@ -198,9 +202,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       )}
 
       <Mui.StegKnapper
-        bekreftTekst="Bekreft og innhent registeropplysninger"
         bekreftKnappProps={{
-          onClick: fortsettHandle,
+          onClick: bekreftOgFortsett,
           disabled: !formIsValid || !redigerbart,
         }}
       />
