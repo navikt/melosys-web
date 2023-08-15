@@ -36,8 +36,8 @@ interface Periode {
 }
 
 const initializeValues = (periode: Periode, landkoder: string[]) => ({
-  fom: periode.fom ? Utils.dato.formatterDatoTilNorsk(periode.fom) : undefined,
-  tom: periode.tom ? Utils.dato.formatterDatoTilNorsk(periode.tom) : undefined,
+  fom: Utils.dato.formatterDatoTilNorsk(periode.fom, false, undefined),
+  tom: Utils.dato.formatterDatoTilNorsk(periode.tom, false, undefined),
   arbeidsland: landkoder[0],
 });
 
@@ -134,11 +134,9 @@ const VurderingInngang = ({
 
   useEffect(() => {
     if (redigerbart && formValues && formIsValid && aktivtSteg) {
-      const isoFom = Utils.dato.formatterDatoTilISO(formValues.fom);
-      const isoTom = Utils.dato.formatterDatoTilISO(formValues.tom);
       oppdaterPeriode({
-        fom: isoFom === "Invalid date" ? null : isoFom,
-        tom: isoTom === "Invalid date" ? null : isoTom,
+        fom: Utils.dato.formatterDatoTilISO(formValues.fom, false, undefined),
+        tom: Utils.dato.formatterDatoTilISO(formValues.tom, false, undefined),
       });
       oppdaterSoeknadsland(formValues?.arbeidsland ? [formValues.arbeidsland] : []);
 
