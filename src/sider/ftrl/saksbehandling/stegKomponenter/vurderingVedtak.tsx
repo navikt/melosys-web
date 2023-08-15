@@ -3,7 +3,6 @@ import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -21,30 +20,21 @@ import { medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperio
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
-import { oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import { formSelectors } from "../../../../ducks/form";
-
-import MottakerTabell from "../../../../felleskomponenter/tabell/mottakerTabell";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
-const { trygdeavtale_myndighetsland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
 
-const betalingsintervaller: KTObject[] = [
-  { kode: "MANEDLIG", term: "Månedlig" },
-  { kode: "KVARTAL", term: "Kvartal" },
-];
-
 const komponentState = (state: RootState) => ({
-  medfolgendeFamilie: oppsummertfaktaSelectors.MedfolgendeFamilieSelector(state) || [],
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
@@ -54,7 +44,7 @@ const komponentState = (state: RootState) => ({
   initialValues: {
     begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state) || "",
     innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state) || "",
-    betalingsintervall: "MANEDLIG",
+    trygdeavgiftFritekst: "",
   },
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   alleLandkoder: landkoderSelectors.LandkoderSelector(state),
@@ -70,8 +60,8 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 
 interface FormValuesProps {
   innledningFritekst?: string;
-  betalingsintervall?: undefined;
   begrunnelseFritekst?: string;
+  trygdeavgiftFritekst?: string;
 }
 
 interface Props {
@@ -84,7 +74,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
   const {
-    medfolgendeFamilie,
     behandlingID,
     medlemskapsperioder,
     innvilgelsesResultater,
@@ -110,6 +99,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const formValues = watch();
 
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
+  const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
   const stegErGyldig = redigerbart && formIsValid;
@@ -128,11 +118,20 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     hentMuligeMottakere();
   }, []);
 
+  useEffect(() => {
+    if (aktivtSteg) {
+      Api.Trygdeavgift.hentTrygdeavgiftMottaker(behandlingID).then((dto) => {
+        setTrygdeavgiftMottaker(dto.trygdeavgiftMottaker);
+      });
+    }
+  }, [aktivtSteg]);
+
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
       Api.Behandlinger.resultat.oppdaterFritekster(behandlingID, {
         innledningFritekst: values.innledningFritekst,
         begrunnelseFritekst: values.begrunnelseFritekst,
+        trygdeavgiftFritekst: values.trygdeavgiftFritekst,
       });
     }
   };
@@ -142,29 +141,22 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   useEffect(() => {
     debouncedOppdaterFritekster(formValues);
     return debouncedOppdaterFritekster.cancel();
-  }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
+  }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst, formValues?.trygdeavgiftFritekst]);
 
   function mapPeriodeRader(perioder: Api.Medlemskapsperioder.Medlemskapsperiode[] | undefined) {
-    return perioder
-      ? perioder.map((medlemskapsperiode) => [
-          {
-            verdi: `Fra. ${Utils.dato.formatterDatoTilNorsk(
-              medlemskapsperiode.fomDato
-            )} Til. ${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato)}`,
-          },
-          { verdi: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, medlemskapsperiode.trygdedekning) },
-          { verdi: KV.finnTermFraListe(innvilgelsesResultater, medlemskapsperiode.innvilgelsesResultat) },
-        ])
+    const sortertePerioder = perioder
+      ? [...perioder].sort((p1, p2) => Date.parse(p1.fomDato) - Date.parse(p2.fomDato))
       : [];
-  }
-
-  const slettKopiMottaker = (kopiMottaker: Api.DokumenterV2.MuligMottaker) => {
-    if (!muligeMottakere) return;
-    setMuligeMottakere({
-      ...muligeMottakere,
-      kopiMottakere: muligeMottakere.kopiMottakere.filter((mottaker) => mottaker !== kopiMottaker),
+    return sortertePerioder.map((medlemskapsperiode) => {
+      return {
+        periode: `${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+          medlemskapsperiode.tomDato
+        )}`,
+        dekning: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, medlemskapsperiode.trygdedekning),
+        resultat: KV.finnTermFraListe(innvilgelsesResultater, medlemskapsperiode.innvilgelsesResultat),
+      };
     });
-  };
+  }
 
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
     return [
@@ -182,55 +174,32 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           mottaker: muligMottaker.rolle,
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+          trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
           orgNr: muligMottaker?.orgnr || null,
         },
       },
     ];
   };
 
-  const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker, kanSlettes: boolean) => {
-    const sletteknapp = (
-      <Nav.Knapp type="flat" form="kompakt" onClick={() => slettKopiMottaker(muligMottaker)}>
-        <Ikoner.Bin />
-        <span className="sr-only">Slett dokument {muligMottaker.dokumentNavn}</span>
-      </Nav.Knapp>
-    );
-
-    return [
-      {
-        verdi: (
-          <PdfLenkeListe
-            behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker)}
-            vedKlikk={() => true}
-            className="forhåndsvisning"
-          />
-        ),
-      },
-      { verdi: muligMottaker.mottakerNavn },
-      {
-        verdi: (
-          <PdfLenkeListe
-            behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker, true)}
-            vedKlikk={() => true}
-            className="forhåndsvisning"
-          />
-        ),
-        style: "midtstilt",
-      },
-      {
-        verdi: kanSlettes ? sletteknapp : null,
-        style: "slettKnapp",
-      },
-    ];
+  const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
+    return {
+      dokument: (
+        <PdfLenkeListe
+          behandlingID={behandlingID}
+          dokumenter={lagDokumenterData(muligMottaker)}
+          vedKlikk={() => true}
+          className="forhåndsvisning"
+        />
+      ),
+      navn: muligMottaker.mottakerNavn,
+    };
   };
 
   const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
     return [
-      mapMottakerRad(mottakere.hovedMottaker, false),
-      ...mottakere.kopiMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker, true)),
-      ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker, false)),
+      mapMottakerRad(mottakere.hovedMottaker),
+      ...mottakere.kopiMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
+      ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
     ];
   };
 
@@ -239,7 +208,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
       innledningFritekst: formValues?.innledningFritekst || null,
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-      betalingsintervall: formValues?.betalingsintervall,
+      trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
       vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
       nyVurderingBakgrunn: null,
@@ -281,8 +250,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     }
   };
 
-  const soknadslandErEtAvtaleland = trygdeavtale_myndighetsland[soknadsland?.toString()] !== undefined;
-
   const innledningFritekstHjelpetekst =
     "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: \n\n" +
     '"Du er medlem i folketrygden fra 1. september 2022 til 31. desember 2024. Medlemskapet omfatter trygdedekning i folketrygdens helse- og pensjonsdel."\n\n' +
@@ -291,23 +258,37 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.  Eksempel: \n\n" +
     '"Du har opplyst at du arbeider for Equinor ASA i Brasil. Vi har lagt til grunn at du er ansatt i en virksomhet med hovedsete i Norge."\n\n' +
     "Friteksten kommer her.";
+  const trygdeavgiftFritekstHjelpetekst =
+    "Teksten du skriver her vil vises etter standard informasjon om trygdeavgiften. Eksempel: \n\n" +
+    '"Ved kalenderårets slutt vil vi be om endelige inntektsopplysninger. Ut fra disse opplysningene vil vi beregne endelig trygdeavgift for året."' +
+    "Friteksten kommer her.";
 
   if (!aktivtSteg) return null;
 
   return (
     <div className="vurderingVedtak">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Frivillig medlemskap etter paragraf 2.8
-      </Nav.Typo.Innholdstittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Frivillig medlemskap etter § 2-8</Nav.Typo.Innholdstittel>
 
-      <MottakerTabell
-        rader={mapPeriodeRader(medlemskapsperioder)}
-        kolonner={[
-          { verdi: "Periode", bredde: "42%" },
-          { verdi: "Dekning", bredde: "33%" },
-          { verdi: "Resultat", bredde: "23%" },
-        ]}
-      />
+      <div className="melosys__table-wrapper">
+        <table className="melosys__table">
+          <tbody>
+            <tr className="header">
+              <th>Periode</th>
+              <th>Dekning</th>
+              <th>Resultat</th>
+            </tr>
+            {mapPeriodeRader(medlemskapsperioder).map((periode) => {
+              return (
+                <tr>
+                  <td>{periode.periode}</td>
+                  <td>{periode.dekning}</td>
+                  <td>{periode.resultat}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
 
       <Nav.Row className="margin_bottom">
         <Nav.Column xs="5">
@@ -316,34 +297,15 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
             {alleLandkoder ? KV.finnTermFraListe(alleLandkoder, soknadsland[0]) : "Finner ikke arbeidsland"}
           </Nav.Typo.Normaltekst>
         </Nav.Column>
-        <Nav.Column xs="4">
-          <Nav.Typo.Element className="info">Arbeid utføres i avtaleland</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info">{soknadslandErEtAvtaleland ? "Ja" : "Nei"}</Nav.Typo.Normaltekst>
-        </Nav.Column>
-        <Nav.Column xs="3">
-          <Nav.Typo.Element className="info">Familiemedlemmer</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info">{medfolgendeFamilie.length > 0 ? "Ja" : "Nei"}</Nav.Typo.Normaltekst>
-        </Nav.Column>
       </Nav.Row>
 
-      <div style={{ marginTop: "0.5rem", marginLeft: "0.5rem", marginBottom: "0.5rem" }}>
-        <Nav.Row>
-          <Nav.Column xs="4">
-            <Forms.Select
-              label="Betalingsintervall"
-              name="betalingsintervall"
-              control={control}
-              disabled={!redigerbart}
-            >
-              {betalingsintervaller.map((item: KTObject) => (
-                <option key={item.kode} value={item.kode}>
-                  {item.term}
-                </option>
-              ))}
-            </Forms.Select>
+      {trygdeavgiftMottaker ? (
+        <Nav.Row className="margin_bottom">
+          <Nav.Column xs="12">
+            <Nav.Typo.Normaltekst className="info">{trygdeavgiftMottaker.term}</Nav.Typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
-      </div>
+      ) : null}
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         <LabelMedHjelpetekst
@@ -356,7 +318,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         name="innledningFritekst"
         control={control}
         className="fritekst_editor"
-        placeholder="Skriv inn tilleggsinformasjon til innledning..."
         disabled={!redigerbart}
       />
 
@@ -371,20 +332,42 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         name="begrunnelseFritekst"
         control={control}
         className="fritekst_editor"
-        placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
+        disabled={!redigerbart}
+      />
+
+      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+        <LabelMedHjelpetekst
+          label="Fritekst til avsnitt om trygdeavgift"
+          hjelpetekst={trygdeavgiftFritekstHjelpetekst}
+          hjelpetekstClassName="hjelpetekst"
+        />
+      </Nav.Typo.Element>
+      <Forms.HtmlEditor
+        name="trygdeavgiftFritekst"
+        control={control}
+        className="fritekst_editor"
         disabled={!redigerbart}
       />
 
       {stegErGyldig && (
-        <MottakerTabell
-          rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
-          kolonner={[
-            { verdi: "Dokumenter", bredde: "60%" },
-            { verdi: "Mottaker", bredde: "20%" },
-            { verdi: "Forhåndsvis", bredde: "10%", style: "normal_font_weight midtstilt" },
-            { verdi: "Slett", bredde: "10%", style: "normal_font_weight midtstilt" },
-          ]}
-        />
+        <div className="melosys__table-wrapper">
+          <table className="melosys__table">
+            <tbody>
+              <tr className="header">
+                <th>Dokument</th>
+                <th>Mottaker</th>
+              </tr>
+              {mapMottakerRader(muligeMottakere).map((mottaker) => {
+                return (
+                  <tr>
+                    <td>{mottaker.dokument}</td>
+                    <td>{mottaker.navn}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
 
       <Mui.StegKnapper

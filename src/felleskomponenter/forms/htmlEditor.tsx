@@ -39,7 +39,7 @@ const InnerHTMLEditorComponent = forwardRef<HTMLEditorProps, InnerHtmlEditorComp
 type HTMLEditorProps = HtmlEditorComponentProps & UseControllerProps;
 
 const HTMLEditor = forwardRef<HTMLEditorProps, HTMLEditorProps>(
-  ({ name, control, className, onChange }: HTMLEditorProps, _ref: any) => {
+  ({ name, control, className, onChange, disabled }: HTMLEditorProps, _ref: any) => {
     return (
       <Controller
         name={name}
@@ -53,6 +53,7 @@ const HTMLEditor = forwardRef<HTMLEditorProps, HTMLEditorProps>(
               if (onChange) onChange(event);
             }}
             feil={getErrorMessage(field, formState)}
+            disabled={disabled}
           />
         )}
       />

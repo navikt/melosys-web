@@ -41,3 +41,43 @@ section {
   font-size: 1.125rem;
   line-height: 1.25rem;
 }
+
+.melosys__table-wrapper {
+  overflow-x: auto;
+}
+
+.melosys__table {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  text-align: left;
+  width: 100%;
+  border-spacing: 0;
+
+  .header {
+    margin: 0.3em 0;
+  }
+
+  th {
+    font-weight: 600;
+    border-width: 0 0 2px 0;
+  }
+
+  td {
+    border-width: 0 0 1px 0;
+  }
+
+  th,
+  td {
+    border-style: solid;
+    border-color: @gray-dark;
+    padding: 0.5rem 0.5rem 0.5rem 0;
+  }
+
+  th.transparent {
+    color: rgba(0, 0, 0, 0);
+  }
+
+  th.fixed-width {
+    width: 20%;
+  }
+}
