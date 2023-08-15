@@ -9,7 +9,7 @@ import Knapperad from "../../knapperad";
 import "./dialogboksOppfrisk.css";
 import { StandardMeldingOverst } from "../../alertmeldinger";
 import { Spinner } from "../../spinner";
-import { FellesHandlersContext } from "~/contexts";
+import { FellesHandlersContext } from "../../../contexts";
 
 const OppfriskBekreft = ({ bekreft, avbryt }) => (
   <div>
