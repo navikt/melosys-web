@@ -32,9 +32,7 @@ interface Props {
 
 export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
-  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger, annenBehandlingOppfriskes } = useContext(
-    FellesHandlersContext
-  ) as any;
+  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const periodeFom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector));
   const periodeTom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeTomSelector));
@@ -186,8 +184,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
             setVisOppfrisk(false);
             dispatch(navigeringOperations.tilForsiden());
           }}
-          behandlingOppfriskes
-          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+          bekreftetFraStart
         />
       )}
     </div>

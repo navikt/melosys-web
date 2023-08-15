@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -27,6 +27,8 @@ import "./vurderingInngang.css";
 import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
+import { FellesHandlersContext } from "../../../../contexts";
+import { navigeringOperations } from "../../../../ducks/navigering";
 
 interface Periode {
   fom?: string | null;
@@ -55,6 +57,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   oppdaterSoeknadsland: (landkoder: string[]) =>
     dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(landkoder, false)),
   lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
+  tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -68,7 +71,6 @@ interface FormValuesProps {
 }
 
 interface Props {
-  annenBehandlingOppfriskes: boolean;
   data: Api.Trygdeavtale.StegData;
   fortsett: () => void;
   formValues: FormValuesProps;
@@ -76,8 +78,6 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  tilForsiden: () => void;
-  oppfriskOgLastInnSaksopplysninger: () => void;
   oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
   oppfriskFlyt: () => void;
   aktivtSteg: boolean;
@@ -96,18 +96,18 @@ const VurderingInngang = ({
   steg,
   oppdaterPeriode,
   oppdaterSoeknadsland,
-  oppfriskOgLastInnSaksopplysninger,
   oppdaterFlyt,
   oppfriskFlyt,
   visMenypanel,
   aktivtSteg,
   registeropplysningerHentet,
   tilForsiden,
-  annenBehandlingOppfriskes,
 }: PropsFromRedux & Props) => {
+  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
   const [landUtenStøtteValgt, setLandUtenStøtteValgt] = useState(false);
   const [visOppfrisk, setVisOppfrisk] = useState(false);
+
   const skalHenteRegisteropplysninger =
     !registeropplysningerHentet ||
     formValues?.fom !== initialFomTomLand?.fom ||
@@ -245,8 +245,7 @@ const VurderingInngang = ({
             setVisOppfrisk(false);
             tilForsiden();
           }}
-          behandlingOppfriskes
-          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+          bekreftetFraStart
         />
       )}
     </div>

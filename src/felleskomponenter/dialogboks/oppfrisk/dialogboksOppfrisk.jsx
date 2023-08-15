@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { Suspense, useContext, useState } from "react";
 import usePromise from "react-promise-suspense";
 import PT from "prop-types";
 import classNames from "classnames";
@@ -9,6 +9,7 @@ import Knapperad from "../../knapperad";
 import "./dialogboksOppfrisk.css";
 import { StandardMeldingOverst } from "../../alertmeldinger";
 import { Spinner } from "../../spinner";
+import { FellesHandlersContext } from "~/contexts";
 
 const OppfriskBekreft = ({ bekreft, avbryt }) => (
   <div>
@@ -125,16 +126,10 @@ AnnenBehandlingOppfriskes.propTypes = {
   avbryt: PT.func.isRequired,
 };
 
-const DialogboksOppfriskBehandling = ({
-  avbryt,
-  lukk,
-  tilForsiden,
-  oppfrisk,
-  behandlingOppfriskes,
-  annenBehandlingOppfriskes,
-  ariaHideApp,
-}) => {
-  const [bekreftet, setBekreftet] = useState(behandlingOppfriskes);
+const DialogboksOppfriskBehandling = ({ avbryt, lukk, tilForsiden, oppfrisk, ariaHideApp, bekreftetFraStart }) => {
+  const { behandlingOppfriskes, annenBehandlingOppfriskes } = useContext(FellesHandlersContext);
+  const [bekreftet, setBekreftet] = useState(bekreftetFraStart || behandlingOppfriskes);
+
   return (
     <Nav.Modal
       isOpen
@@ -166,13 +161,13 @@ DialogboksOppfriskBehandling.propTypes = {
   avbryt: PT.func.isRequired,
   lukk: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
-  behandlingOppfriskes: PT.bool.isRequired,
-  annenBehandlingOppfriskes: PT.bool.isRequired,
+  bekreftetFraStart: PT.bool,
   ariaHideApp: PT.bool,
 };
 
 DialogboksOppfriskBehandling.defaultProps = {
   ariaHideApp: true,
+  bekreftetFraStart: false,
 };
 
 export default DialogboksOppfriskBehandling;

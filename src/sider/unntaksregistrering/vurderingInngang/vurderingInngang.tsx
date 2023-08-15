@@ -39,7 +39,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
   const avsenderland = useSelector(mottatteOpplysningerSelectors.AvsenderlandSelector);
   const lovvalgsland = useSelector(mottatteOpplysningerSelectors.LovvalgslandSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
-  const { oppfriskOgLastInnSaksopplysninger, annenBehandlingOppfriskes } = useContext(FellesHandlersContext) as any;
+  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const { control, watch, setValue, formState } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
@@ -209,8 +209,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
             setVisOppfrisk(false);
             dispatch(navigeringOperations.tilForsiden());
           }}
-          behandlingOppfriskes
-          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+          bekreftetFraStart
         />
       )}
     </div>
