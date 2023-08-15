@@ -60,6 +60,15 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   });
   const formValues = watch();
 
+  const skalHenteRegisteropplysninger =
+    !registeropplysningerHentet ||
+    formValues.fom !== initialValues.fom ||
+    formValues.tom !== initialValues.tom ||
+    formValues.land !== initialValues.land ||
+    formValues.trygdedekning !== initialValues.trygdedekning;
+
+  const stegErGyldig = formIsValid && !skalHenteRegisteropplysninger && !visOppfrisk;
+
   useEffect(() => {
     if (registeropplysningerHentet) {
       dispatch(menypanelOperations.visMenypanel());
@@ -67,8 +76,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   }, []);
 
   useEffect(() => {
-    oppdaterStatus(formIsValid);
-  }, [formIsValid]);
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
 
   const oppdaterLokalMottatteOpplysninger = async () => {
     await Promise.all([
@@ -84,13 +93,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   };
 
   const bekreftOgFortsett = () => {
-    const skalHenteRegisteropplysninger =
-      !registeropplysningerHentet ||
-      formValues.fom !== initialValues.fom ||
-      formValues.tom !== initialValues.tom ||
-      formValues.land !== initialValues.land ||
-      formValues.trygdedekning !== initialValues.trygdedekning;
-
     if (skalHenteRegisteropplysninger) {
       oppdaterLokalMottatteOpplysninger().finally(() => {
         setVisOppfrisk(true);
