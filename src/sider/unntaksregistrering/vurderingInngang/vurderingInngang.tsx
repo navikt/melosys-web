@@ -127,7 +127,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
   return (
     <div className="vurderingInngang">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra attesten</Nav.Typo.Innholdstittel>
-      <Nav.Fieldset legend="Periode">
+      <Nav.Fieldset legend={<Nav.Typo.Undertittel>Periode</Nav.Typo.Undertittel>}>
         <Nav.Row>
           <Nav.Column xs="2">
             <Forms.Datovelger

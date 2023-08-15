@@ -171,14 +171,19 @@ const VurderingInngang = ({
   return (
     <div className="vurderingInngang">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
-      <Nav.Fieldset legend="Periode">
+      <Nav.Fieldset legend={<Nav.Typo.Undertittel>Periode</Nav.Typo.Undertittel>}>
         <Nav.Row>
           <Nav.Column xs="3">
             <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="3">
             <Skjema.Datovelger
-              label="Til og med"
+              label={
+                <LabelMedHjelpetekst
+                  label="Til og med"
+                  hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Lovvalgsperiode registreres senere.`}
+                />
+              }
               feltNavn="tom"
               minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
               disabled={!redigerbart}
@@ -194,6 +199,7 @@ const VurderingInngang = ({
               }
               feltNavn="arbeidsland"
               disabled={!redigerbart}
+              emptyFieldDisabled={!!formValues?.arbeidsland}
             >
               <LandValgSomOptions landValg={landValg} />
               {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}

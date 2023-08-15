@@ -109,7 +109,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     <div className="vurderingInngang">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
 
-      <Nav.Fieldset legend="Periode">
+      <Nav.Fieldset legend={<Nav.Typo.Undertittel>Periode</Nav.Typo.Undertittel>}>
         <Nav.Row>
           <Nav.Column xs="3">
             <Forms.Datovelger
@@ -122,7 +122,12 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           </Nav.Column>
           <Nav.Column xs="3">
             <Forms.Datovelger
-              label="Til og med"
+              label={
+                <LabelMedHjelpetekst
+                  label="Til og med"
+                  hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Lovvalgsperiode registreres senere.`}
+                />
+              }
               minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
               name="tom"
               disabled={!redigerbart}
@@ -131,8 +136,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           </Nav.Column>
           <Nav.Column xs="5">
             <Forms.Select
-              label={<LabelMedHjelpetekst label="Land" hjelpetekstClassName="hjelpetekst" />}
-              emptyFieldText="Velg"
+              label="Land"
               emptyFieldDisabled={!!formValues.land}
               name="land"
               disabled={!redigerbart}
