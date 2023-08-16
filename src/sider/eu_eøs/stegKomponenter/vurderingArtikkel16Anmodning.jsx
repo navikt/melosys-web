@@ -292,7 +292,7 @@ class VurderingArtikkel16Anmodning extends Component {
   };
 
   kontroller = async () => {
-    const { kontrollFeil, resetKontroll, behandlingID } = this.props;
+    const { oppdaterKontrollFeil, resetKontrollFeil, behandlingID } = this.props;
     this.setState({ sjekkerAdresse: true });
     Api.Kontroll.harRegistrertAdresse({
       behandlingID,
@@ -309,11 +309,11 @@ class VurderingArtikkel16Anmodning extends Component {
                   : MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_REGISTRERTE_ADRESSE_REPRESENTANT,
             },
           ];
-          kontrollFeil({
+          oppdaterKontrollFeil({
             kontrollfeilList,
           });
         } else {
-          resetKontroll();
+          resetKontrollFeil();
           this.setState({ harFeil: false, sjekkerAdresse: false });
         }
       })
@@ -326,7 +326,7 @@ class VurderingArtikkel16Anmodning extends Component {
             kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_REGISTRERTE_ADRESSE_BRUKER,
           },
         ];
-        kontrollFeil(kontrollfeilList);
+        oppdaterKontrollFeil(kontrollfeilList);
       });
   };
 
@@ -643,8 +643,8 @@ VurderingArtikkel16Anmodning.propTypes = {
   mottatteOpplysningerStatus: PT.string.isRequired,
   form: PT.string.isRequired,
   fysiskeDokument: PT.arrayOf(PT.object).isRequired,
-  kontrollFeil: PT.func.isRequired,
-  resetKontroll: PT.func.isRequired,
+  oppdaterKontrollFeil: PT.func.isRequired,
+  resetKontrollFeil: PT.func.isRequired,
   valgteVirksomheter: PT.array,
 };
 
