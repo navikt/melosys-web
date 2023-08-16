@@ -32,7 +32,6 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-const { trygdeavtale_myndighetsland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
 const komponentState = (state: RootState) => ({
