@@ -10,9 +10,9 @@ export type FerdigbehandlingKontrollData = {
 };
 
 export type RegistrertAdresseData = {
-  brukerID: string | null;
-  orgnr: string | null;
-  behandlingID: number | null;
+  brukerID?: string | null;
+  orgnr?: string | null;
+  behandlingID?: number | null;
 };
 
 export const kontrollerFerdigbehandling = (data: FerdigbehandlingKontrollData) =>

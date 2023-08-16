@@ -295,8 +295,6 @@ class VurderingArtikkel16Anmodning extends Component {
     const { kontrollFeil, resetKontroll, behandlingID } = this.props;
     this.setState({ sjekkerAdresse: true });
     Api.Kontroll.harRegistrertAdresse({
-      brukerID: "",
-      orgnr: "",
       behandlingID,
     })
       .then((res) => {
