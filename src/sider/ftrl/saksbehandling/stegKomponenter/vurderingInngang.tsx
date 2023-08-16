@@ -34,6 +34,7 @@ interface Props {
 export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const trygdedekninger = useSelector(folketrygdenkodeverkSelectors.TrygdedekningerSelector);
   const alleLandkoder = useSelector(landkoderSelectors.LandkoderSelector);
   const søknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
@@ -102,74 +103,78 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     }
   };
 
+  if (!aktivtSteg) return null;
+
   const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = formValues.land
     ? MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(formValues.land)
     : false;
-
-  if (!aktivtSteg) return null;
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+  const nyVurderingPeriodetekst =
+    "Du skal kun endre søknadsperiode dersom det er mottatt informasjon om ny start og/eller sluttdato for oppholdet";
 
   return (
     <div className="vurderingInngang">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
-
-      <Nav.Fieldset legend={<Nav.Typo.Undertittel>Søknadsperiode</Nav.Typo.Undertittel>}>
-        <Nav.Row>
-          <Nav.Column xs="2">
-            <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
-          </Nav.Column>
-          <Nav.Column xs="2">
-            <Forms.Datovelger
-              label={
-                <LabelMedHjelpetekst
-                  label="Til og med"
-                  hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Medlemskapsperiode(r) registreres senere.`}
-                  hjelpetekstClassName="hjelpetekst"
-                />
-              }
-              name="tom"
-              minDate={Utils.dato.norskStringTilDate(formValues.fom)}
-              disabled={!redigerbart}
-              control={control}
-            />
-          </Nav.Column>
-          <Nav.Column xs="3">
-            <Forms.Select
-              label={
-                <LabelMedHjelpetekst
-                  label="Arbeidsland"
-                  hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                  hjelpetekstClassName="hjelpetekst"
-                />
-              }
-              emptyFieldDisabled={!!formValues.land}
-              name="land"
-              disabled={!redigerbart}
-              control={control}
-            >
-              {alleLandkoder.map((item: KTObject) => (
-                <option key={item.kode} value={item.kode}>
-                  {item.term}
-                </option>
-              ))}
-            </Forms.Select>
-          </Nav.Column>
-          <Nav.Column xs="5">
-            <Forms.Select
-              name="trygdedekning"
-              control={control}
-              label="Trygdedekning"
-              emptyFieldDisabled={!!formValues.trygdedekning}
-              disabled={!redigerbart}
-            >
-              {trygdedekninger.map((item: KTObject) => (
-                <option key={item.kode} value={item.kode}>
-                  {item.term}
-                </option>
-              ))}
-            </Forms.Select>
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Fieldset>
+      <div className="label__container">
+        <Nav.Typo.Undertittel>Søknadsperiode</Nav.Typo.Undertittel>
+        {erNyVurdering && <Nav.Typo.Undertekst>{nyVurderingPeriodetekst}</Nav.Typo.Undertekst>}
+      </div>
+      <Nav.Row>
+        <Nav.Column xs="2">
+          <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
+        </Nav.Column>
+        <Nav.Column xs="2">
+          <Forms.Datovelger
+            label={
+              <LabelMedHjelpetekst
+                label="Til og med"
+                hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Medlemskapsperiode(r) registreres senere.`}
+                hjelpetekstClassName="hjelpetekst"
+              />
+            }
+            name="tom"
+            minDate={Utils.dato.norskStringTilDate(formValues.fom)}
+            disabled={!redigerbart}
+            control={control}
+          />
+        </Nav.Column>
+        <Nav.Column xs="3">
+          <Forms.Select
+            label={
+              <LabelMedHjelpetekst
+                label="Arbeidsland"
+                hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
+                hjelpetekstClassName="hjelpetekst"
+              />
+            }
+            emptyFieldDisabled={!!formValues.land}
+            name="land"
+            disabled={!redigerbart}
+            control={control}
+          >
+            {alleLandkoder.map((item: KTObject) => (
+              <option key={item.kode} value={item.kode}>
+                {item.term}
+              </option>
+            ))}
+          </Forms.Select>
+        </Nav.Column>
+        <Nav.Column xs="5">
+          <Forms.Select
+            name="trygdedekning"
+            control={control}
+            label="Trygdedekning"
+            emptyFieldDisabled={!!formValues.trygdedekning}
+            disabled={!redigerbart}
+          >
+            {trygdedekninger.map((item: KTObject) => (
+              <option key={item.kode} value={item.kode}>
+                {item.term}
+              </option>
+            ))}
+          </Forms.Select>
+        </Nav.Column>
+      </Nav.Row>
       {valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand && (
         <Nav.Row>
           <Nav.Column xs="4" />
