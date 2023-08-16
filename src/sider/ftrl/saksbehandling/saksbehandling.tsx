@@ -84,7 +84,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   resetMottatteOpplysningerState: () => dispatch(mottatteOpplysningerOperations.resetState()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
-  resetKontroll: () => dispatch(kontrollOperations.resetKontroll()),
+  resetKontroll: () => dispatch(kontrollOperations.resetKontrollFeil()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

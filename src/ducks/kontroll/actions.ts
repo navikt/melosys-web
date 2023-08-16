@@ -1,9 +1,9 @@
 import * as Types from "./types";
 
-export function resetKontroll() {
+export function resetKontrollFeil() {
   return { type: Types.RESET };
 }
 
-export function kontrollFeil(feilData: any) {
+export function oppdaterKontrollFeil(feilData: any) {
   return { type: Types.OK, data: feilData };
 }

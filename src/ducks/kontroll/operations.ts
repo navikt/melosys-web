@@ -3,12 +3,12 @@ import * as Types from "./types";
 import * as Api from "../../services/api";
 import * as Actions from "./actions";
 
-export function resetKontroll() {
-  return Actions.resetKontroll();
+export function resetKontrollFeil() {
+  return Actions.resetKontrollFeil();
 }
 
-export function kontrollFeil(feilData: any) {
-  return Actions.kontrollFeil(feilData);
+export function oppdaterKontrollFeil(feilData: any) {
+  return Actions.oppdaterKontrollFeil(feilData);
 }
 
 export function kontrollerFerdigbehandling(data: Api.Kontroll.FerdigbehandlingKontrollData) {

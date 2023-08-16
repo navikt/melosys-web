@@ -65,7 +65,7 @@ const Saksbehandling = ({
       dispatch(behandlingerOperations.resetBehandlingerState());
       dispatch(mottatteOpplysningerOperations.resetState());
       dispatch(feiletResponsOperations.resetFeiletRespons());
-      dispatch(kontrollOperations.resetKontroll());
+      dispatch(kontrollOperations.resetKontrollFeil());
     };
   }, []);
 

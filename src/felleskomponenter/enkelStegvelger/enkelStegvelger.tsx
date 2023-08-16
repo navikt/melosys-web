@@ -42,7 +42,7 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
     setAktuellesteg(
       aktuelleSteg?.map((steg: AktueltSteg) => ({ ...steg, aktivtSteg: steg.stegPosisjon === aktivtStegIndex }))
     );
-    dispatch(kontrollOperations.resetKontroll());
+    dispatch(kontrollOperations.resetKontrollFeil());
     dispatch(feiletResponsOperations.resetFeiletRespons());
   }, [aktivtStegIndex]);
 

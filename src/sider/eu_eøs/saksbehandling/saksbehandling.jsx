@@ -332,7 +332,7 @@ const mapDispatchToProps = (dispatch) => ({
   hentAnmodningsperiodesvar: (anmodningsperiodeID) =>
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
-  resetKontroll: () => dispatch(kontrollOperations.resetKontroll()),
+  resetKontroll: () => dispatch(kontrollOperations.resetKontrollFeil()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

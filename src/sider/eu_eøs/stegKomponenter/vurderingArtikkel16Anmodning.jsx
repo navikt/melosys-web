@@ -687,8 +687,8 @@ const VurderingArtikkel16AnmodningForm = reduxForm({
 })(VurderingArtikkel16Anmodning);
 
 const mapDispatchToProps = (dispatch) => ({
-  kontrollFeil: (kontrollBegrunnelse) => dispatch(kontrollOperations.kontrollFeil(kontrollBegrunnelse)),
-  resetKontroll: () => dispatch(kontrollOperations.resetKontroll()),
+  kontrollFeil: (kontrollBegrunnelse) => dispatch(kontrollOperations.oppdaterKontrollFeil(kontrollBegrunnelse)),
+  resetKontroll: () => dispatch(kontrollOperations.resetKontrollFeil()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16AnmodningForm);
