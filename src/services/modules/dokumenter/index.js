@@ -1,4 +1,4 @@
 import * as pdf from "./pdf";
-import * as dokument from "./dokument";
+import * as dokumentOversikt from "./oversikt";
 
-export { dokument, pdf };
+export { dokumentOversikt, pdf };

@@ -55,7 +55,7 @@ export function resetDokument(): AppThunk<Types.Action, Types.Action> {
 
 export function hentDokumentOversikt(saksnummer: string): AppThunk<Promise<Types.Action>, Types.Action> {
   return doThenDispatch(
-    () => Api.Dokumenter.dokument.hentOversikt(saksnummer),
+    () => Api.Dokumenter.dokumentOversikt.hentOversikt(saksnummer),
     {
       OK: Types.OK,
       FEILET: Types.FEILET,

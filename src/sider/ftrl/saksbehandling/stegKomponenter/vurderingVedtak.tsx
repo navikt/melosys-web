@@ -32,7 +32,8 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
+const { trygdeavtale_myndighetsland } = MKV.Koder;
+const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
 const komponentState = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -108,7 +109,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
+      produserbartdokument: INNVILGELSE_FOLKETRYGDLOVEN,
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -170,7 +171,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           muligMottaker.dokumentNavn
         ),
         data: {
-          produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
+          produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN,
           mottaker: muligMottaker.rolle,
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
