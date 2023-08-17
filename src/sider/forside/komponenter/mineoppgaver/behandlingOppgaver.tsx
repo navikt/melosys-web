@@ -23,7 +23,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
  * Lister ut behandlingsoppgaver som saksbehandleren har opprettet
  */
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
-  const folketrygdenToggle = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
 
   const { saksbehandling } = mineSaker as any;
@@ -37,7 +37,7 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
         sortingLegend="Sorter behandlinger etter frist:"
         sortingPath="behandling.registrertDato"
         radioGroupName="behandlingsortering"
-        folketrygdenToggleEnabled={folketrygdenToggle}
+        folketrygdenToggleEnabled={folketrygdenToggleEnabled}
         ikkeYrkesaktivFlytToggleEnabled={ikkeYrkesaktivFlytToggleEnabled}
         landkoder={landkoder}
       />
