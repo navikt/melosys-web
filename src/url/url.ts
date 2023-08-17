@@ -83,8 +83,7 @@ export const lagUrl = (
   behandlingstemaKode: string,
   behandlingstypeKode: string,
   folketrygdenToggleEnabled: boolean | undefined,
-  ikkeYrkesaktivToggleEnabled: boolean | undefined,
-  registreringUnntakFraMedlemskapToggleEnabled: boolean | undefined
+  ikkeYrkesaktivToggleEnabled: boolean | undefined
 ) => {
   if (
     skalViseTomFlyt(
@@ -93,8 +92,7 @@ export const lagUrl = (
       behandlingstemaKode,
       behandlingstypeKode,
       folketrygdenToggleEnabled,
-      ikkeYrkesaktivToggleEnabled,
-      registreringUnntakFraMedlemskapToggleEnabled
+      ikkeYrkesaktivToggleEnabled
     )
   ) {
     return lagTomFlytUrl(sakstypeKode, saksnummer, behandlingID);
@@ -102,13 +100,8 @@ export const lagUrl = (
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
 };
 
-export const harUnntakFlyt = (
-  sakstype: string,
-  sakstema: string,
-  behandlingstema: string,
-  registreringUnntakFraMedlemskapToggleEnabled: boolean = false
-) => {
-  if (sakstema !== MKV.Koder.sakstemaer.UNNTAK || !registreringUnntakFraMedlemskapToggleEnabled) {
+export const harUnntakFlyt = (sakstype: string, sakstema: string, behandlingstema: string) => {
+  if (sakstema !== MKV.Koder.sakstemaer.UNNTAK) {
     return false;
   }
 
@@ -147,8 +140,7 @@ export const skalViseTomFlyt = (
   behandlingstema: string,
   behandlingstype: string,
   folketrygdenToggleEnabled: boolean = false,
-  ikkeYrkesaktivFlytToggleEnabled: boolean = false,
-  registreringUnntakFraMedlemskapToggleEnabled: boolean = false
+  ikkeYrkesaktivFlytToggleEnabled: boolean = false
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
@@ -160,7 +152,7 @@ export const skalViseTomFlyt = (
     return true;
   }
 
-  if (harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)) return false;
+  if (harUnntakFlyt(sakstype, sakstema, behandlingstema)) return false;
   if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled)) return false;
 
   if (

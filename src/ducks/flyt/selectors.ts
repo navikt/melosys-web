@@ -11,8 +11,6 @@ import { behandlingerSelectors } from "../behandlinger";
 import { behandlingsresultatSelectors } from "../behandlingsresultat";
 import { harUnntakFlyt } from "../../url/url";
 import { fagsakSelectors } from "../fagsaker";
-import { erFeatureToggleEnabled } from "../../featuretoggle";
-import { MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP } from "../../featuretoggle/toggleNavn";
 
 export const ErIArtikkel11_4Selector = createSelector(
   (state: RootState) => vilkarSelectors.art11_4_1(state),
@@ -65,7 +63,5 @@ export const HarUnntakFlytSelector = createSelector(
   (state: RootState) => fagsakSelectors.SakstypeKodeSelector(state),
   (state: RootState) => fagsakSelectors.SakstemaKodeSelector(state),
   (state: RootState) => behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  (state: RootState) => erFeatureToggleEnabled(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP, state),
-  async (sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled) =>
-    harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled)
+  async (sakstype, sakstema, behandlingstema) => harUnntakFlyt(sakstype, sakstema, behandlingstema)
 );

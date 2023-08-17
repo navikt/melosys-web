@@ -126,8 +126,7 @@ describe("url", () => {
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
         true,
-        false,
-        true
+        false
       );
 
       expect(url).toContain("/EU_EOS/behandling/");
@@ -141,7 +140,6 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        true,
         true,
         true
       );
@@ -158,7 +156,6 @@ describe("url", () => {
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
         true,
-        true,
         true
       );
 
@@ -173,7 +170,6 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        true,
         true,
         true
       );
@@ -190,7 +186,6 @@ describe("url", () => {
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
         true,
-        true,
         true
       );
 
@@ -206,7 +201,6 @@ describe("url", () => {
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
         false,
-        true,
         true
       );
 
@@ -222,27 +216,10 @@ describe("url", () => {
         MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
         true,
-        true,
         true
       );
 
       expect(url).toContain("/TRYGDEAVTALE/unntaksregistrering/");
-    });
-
-    it("Kombinasjoner som har unntaksregistrering-flyt får ikke tom flyt med toggle av", () => {
-      const url = lagUrl(
-        "MEL-1",
-        1,
-        TRYGDEAVTALE,
-        MKV.Koder.sakstemaer.UNNTAK,
-        MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
-        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        true,
-        true,
-        false
-      );
-
-      expect(url).toContain("/TRYGDEAVTALE/behandling/");
     });
   });
 });
