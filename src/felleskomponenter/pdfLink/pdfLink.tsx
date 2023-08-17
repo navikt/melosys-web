@@ -1,10 +1,9 @@
-import React from "react";
 import PT from "prop-types";
 import { apnePdfINyFane } from "../../services/utils";
 import * as Nav from "../../navFrontend";
 
 export const lagPdfUrl = (journalpostID: string, dokumentID: string) =>
-  `/api/dokumenter/pdf/${journalpostID}/${dokumentID}`;
+  `/api/dokumenter/${journalpostID}/${dokumentID}`;
 
 interface PdfLinkProps {
   journalpostID: string;

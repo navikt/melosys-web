@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { Action } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-import { RootState } from "AppTypes";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Ikon from "../../../resources/images";
 import * as Utils from "../../../utils";
-import * as Api from "../../../services/api";
 
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
-import { Feilmeldinger } from "../../feilmeldinger";
 import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { Feilmeldinger } from "../../feilmeldinger";
 
 import PdfLenkeListe from "../../pdfLenkeListe";
 import HtmlEditor from "../../htmlEditor";
@@ -23,53 +18,34 @@ import Knapperad from "../../knapperad";
 
 import "./dialogboksAvslagSoknad.css";
 
-const mapStateToProps = (state: RootState) => ({
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
-  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
-  kontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
-});
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
-    dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
 interface DialogboksAvslagSoknadProps {
   avslaaSoknadHandle: (data: { fritekst?: string }) => void;
   avbryt: () => void;
   ariaHideApp: boolean;
 }
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
+export const DialogboksAvslagSoknad = ({ ariaHideApp, avbryt, avslaaSoknadHandle }: DialogboksAvslagSoknadProps) => {
+  const dispatch = useDispatch();
 
-export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & PropsFromRedux) => {
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+
   const [brevFritekst, setBrevFritekst] = useState("");
-  const [vedtakPending, setVedtakPending] = useState(true);
-
-  const {
-    ariaHideApp,
-    avbryt,
-    behandlingID,
-    redigerbart,
-    avslaaSoknadHandle,
-    vedtakstype,
-    kontrollerFerdigbehandling,
-    feilmeldinger,
-  } = props;
+  const [utførerKontroll, setUtførerKontroll] = useState(true);
 
   useEffect(() => {
     (async () => {
-      await kontrollerFerdigbehandling({
-        behandlingID,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
-        skalRegisteropplysningerOppdateres: false,
-      });
-      setVedtakPending(false);
+      await dispatch(
+        kontrollOperations.kontrollerFerdigbehandling({
+          behandlingID,
+          vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
+          skalRegisteropplysningerOppdateres: false,
+        })
+      );
+      setUtførerKontroll(false);
     })();
   }, []);
 
@@ -93,7 +69,7 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
   };
   const brevFritekstMaxLength = 500;
   const bekreftRedigerbart =
-    redigerbart && Utils._isEmpty(feilmeldinger) && brevFritekst.length <= brevFritekstMaxLength && !vedtakPending;
+    redigerbart && Utils._isEmpty(kontrollfeil) && brevFritekst.length <= brevFritekstMaxLength && !utførerKontroll;
 
   return (
     <Nav.Modal
@@ -130,4 +106,4 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
   );
 };
 
-export default connector(DialogboksAvslagSoknad);
+export default DialogboksAvslagSoknad;

@@ -1,5 +1,3 @@
-import each from "jest-each";
-
 import MKV from "../../melosyskodeverk";
 import * as DucksTestUtils from "../test-utils";
 
@@ -11,7 +9,7 @@ describe("LandkoderFraSakstypeSelector", () => {
     { kode: "kode 1", term: "term 1" },
     { kode: "kode 2", term: "term 2" },
   ];
-  const lagState = (sakstypeKode: string) =>
+  const lagState = (sakstypeKode: string | undefined) =>
     DucksTestUtils.lagState({
       landkoder: {
         status: STATUS.OK,
@@ -27,16 +25,19 @@ describe("LandkoderFraSakstypeSelector", () => {
       },
     });
 
-  describe("LandkoderFraSakstypeSelector", () => {
-    each([
-      [MKV.Koder.sakstyper.FTRL, landkoderFraFellesKodeverk],
-      [MKV.Koder.sakstyper.EU_EOS, MKV.KTObjects.landkoder],
-      [MKV.Koder.sakstyper.TRYGDEAVTALE, MKV.KTObjects.trygdeavtale_myndighetsland],
-      [null, MKV.KTObjects.landkoder],
-    ]).it("returnerer rett landkodeliste for sakstype %s", (sakstypeKode, forventetKodeListe) => {
-      const state = lagState(sakstypeKode);
+  it("returnerer rett landkodeliste for ulike sakstyper", () => {
+    let state;
 
-      expect(LandkoderFraSakstypeSelector(state)).toBe(forventetKodeListe);
-    });
+    state = lagState(MKV.Koder.sakstyper.FTRL);
+    expect(LandkoderFraSakstypeSelector(state)).toBe(landkoderFraFellesKodeverk);
+
+    state = lagState(MKV.Koder.sakstyper.EU_EOS);
+    expect(LandkoderFraSakstypeSelector(state)).toBe(MKV.KTObjects.landkoder);
+
+    state = lagState(MKV.Koder.sakstyper.TRYGDEAVTALE);
+    expect(LandkoderFraSakstypeSelector(state)).toBe(MKV.KTObjects.trygdeavtale_myndighetsland);
+
+    state = lagState(undefined);
+    expect(LandkoderFraSakstypeSelector(state)).toBe(MKV.KTObjects.landkoder);
   });
 });

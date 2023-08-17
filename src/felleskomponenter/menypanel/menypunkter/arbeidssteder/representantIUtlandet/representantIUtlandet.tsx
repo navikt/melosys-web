@@ -1,4 +1,3 @@
-import React from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";

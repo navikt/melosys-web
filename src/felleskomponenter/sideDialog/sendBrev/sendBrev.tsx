@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { FocusEvent, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -26,8 +26,6 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { formSelectors } from "../../../ducks/form";
 
-import { MELOSYS_BREV_GENERELT_FRITEKSTVEDLEGG } from "../../../featuretoggle/toggleNavn";
-import { useFeatureToggle } from "../../../featuretoggle";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 
@@ -118,8 +116,6 @@ const SendBrev = ({
   const [sendBrevSpinner, setSendBrevSpinner] = useState(false);
   const [lagreUtkastSpinner, setLagreUtkastSpinner] = useState(false);
   const [forkastBrevSpinner, setForkastBrevSpinner] = useState(false);
-
-  const fritekstvedleggToggle = useFeatureToggle(MELOSYS_BREV_GENERELT_FRITEKSTVEDLEGG);
 
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
@@ -447,7 +443,7 @@ const SendBrev = ({
       .finally(() => setLagreUtkastSpinner(false));
   };
 
-  const overstyrBlurEvent = (event: React.FocusEvent) => {
+  const overstyrBlurEvent = (event: FocusEvent) => {
     event.preventDefault();
   };
 
@@ -511,7 +507,7 @@ const SendBrev = ({
             <Skjema.Select
               feltNavn="type"
               label={<Nav.Typo.Element>Velg brev</Nav.Typo.Element>}
-              disabled={!redigerbart || tilgjengeligeBrevtyper.length === 1}
+              disabled={!redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues.valgtMottaker?.feilmelding}
               emptyFieldDisabled={!!formValues.type}
               onBlur={overstyrBlurEvent}
             >
@@ -573,8 +569,7 @@ const SendBrev = ({
         <VedleggVelger dokumenter={dokumenter} valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} />
       )}
 
-      {fritekstvedleggToggle &&
-        fritekstvedleggFelt &&
+      {fritekstvedleggFelt &&
         (visFritekstvedleggSkjema ? (
           <FritekstvedleggSkjema
             felt={fritekstvedleggFelt}

@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as Skjema from "../../../skjema";
 import { normalizeDecimal, normalizeInt } from "../../../../utils/normalisering";
 

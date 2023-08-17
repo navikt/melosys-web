@@ -1,16 +1,16 @@
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
+import { v4 as uuid } from "uuid";
 import classNames from "classnames";
+
 import { SedPdfData } from "Domene";
-
 import * as Api from "../../services/api";
-import * as Nav from "../../navFrontend";
 
+import * as Nav from "../../navFrontend";
 import { dokumenterOperations } from "../../ducks/dokumenter";
+
 import { apnePdfINyFane } from "../../services/utils";
 
 import "./pdfLenkeListe.css";
-
-const uuid = require("uuid/v4");
 
 interface DokumentMetadataProps {
   navn: ReactNode | string;

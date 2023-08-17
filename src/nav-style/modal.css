@@ -1,0 +1,41 @@
+.ReactModal__Body--open {
+  overflow: hidden;
+}
+.modal {
+  background-color: #fff;
+  display: block;
+  padding: 1rem 1rem 1rem 1rem;
+  border-radius: 4px;
+  position: relative;
+  flex-grow: 0;
+  overflow: auto;
+  max-height: 100%;
+  margin-bottom: 0;
+  z-index: 1010;
+}
+.modal:focus,
+.modal--focus {
+  box-shadow: 0 0 0 3px #00347d;
+  outline: none;
+}
+.modal__overlay {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(61, 56, 49, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+.modal__overlay:active .modal:not(:active) .modal__lukkknapp--shake {
+  transform: rotate(10deg);
+  transition: transform 100ms cubic-bezier(0.82, -2, 1, 0.3);
+}
+.modal__lukkknapp--shake {
+  transform: rotate(0deg);
+  transition: transform 100ms cubic-bezier(0.82, 2, 1, 0.3);
+}

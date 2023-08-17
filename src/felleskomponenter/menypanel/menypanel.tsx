@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
@@ -7,7 +7,7 @@ import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
 import { useFeatureToggle } from "../../featuretoggle";
-import { skalViseTomFlyt } from "../../routing";
+import { skalViseTomFlyt } from "../../url";
 import Sidemeny from "../sidemeny";
 
 import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
@@ -19,11 +19,7 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
-import {
-  MELOSYS_FOLKETRYGDEN_MVP,
-  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
-  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-} from "../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT } from "../../featuretoggle/toggleNavn";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
@@ -63,7 +59,6 @@ export const Menypanel = ({
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
-  const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
 
   const visMottatteOpplysningerData = !(
     MKVUtils.erBehandlingAvSed(sakstype, behandlingstema) &&
@@ -89,7 +84,6 @@ export const Menypanel = ({
     sakstema,
     folketrygdenToggleEnabled,
     ikkeYrkesaktivFlytToggleEnabled,
-    registreringUnntakFraMedlemskapToggleEnabled,
   });
 
   const linkGroups = linkGroupsWithContent.map((linkGroup, groupIndex) => ({
@@ -126,8 +120,7 @@ export const Menypanel = ({
       behandlingstema,
       behandlingstype,
       folketrygdenToggleEnabled,
-      ikkeYrkesaktivFlytToggleEnabled,
-      registreringUnntakFraMedlemskapToggleEnabled
+      ikkeYrkesaktivFlytToggleEnabled
     );
 
   if (!visMenypanel) return null;

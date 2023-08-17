@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode, KeyboardEvent } from "react";
 import "./handling.css";
 
 type handlingProps = {
@@ -9,7 +9,7 @@ type handlingProps = {
 };
 
 const Handling = ({ ikon, tekst, onClick, disabled = false }: handlingProps) => {
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter") {
       onClick();
     }

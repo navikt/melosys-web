@@ -18,15 +18,15 @@ describe("Steg", () => {
       ];
 
       this.id = STEG.INNGANG;
-      this._samleRelevanteData = jest.fn();
-      this._beregnRelevantUI = jest.fn();
+      this._samleRelevanteData = vi.fn();
+      this._beregnRelevantUI = vi.fn();
     }
   }
 
   describe("byggSteg", () => {
     it("setter status FEIL dersom beregnRelevantUI returnerer null", () => {
       const inngangssteg = new Inngangssteg({}, 1);
-      inngangssteg.beregnRelevantUI = jest.fn(() => null);
+      inngangssteg.beregnRelevantUI = vi.fn(() => null);
       const byggetSteg = inngangssteg.byggSteg();
 
       expect(byggetSteg.status).toBe(FANE_STATUS.FEIL);
@@ -34,7 +34,7 @@ describe("Steg", () => {
 
     it("setter status OK dersom steget har avklaring", () => {
       const inngangssteg = new Inngangssteg({}, 1);
-      inngangssteg.beregnRelevantUI = jest.fn(() => ({ harAvklaring: true }));
+      inngangssteg.beregnRelevantUI = vi.fn(() => ({ harAvklaring: true }));
       const byggetSteg = inngangssteg.byggSteg();
 
       expect(byggetSteg.status).toBe(FANE_STATUS.OK);
@@ -42,7 +42,7 @@ describe("Steg", () => {
 
     it("setter status UBEHANDLET dersom steget ikke har avklaring", () => {
       const inngangssteg = new Inngangssteg({}, 1);
-      inngangssteg.beregnRelevantUI = jest.fn(() => ({ harAvklaring: false }));
+      inngangssteg.beregnRelevantUI = vi.fn(() => ({ harAvklaring: false }));
       const byggetSteg = inngangssteg.byggSteg();
 
       expect(byggetSteg.status).toBe(FANE_STATUS.UBEHANDLET);

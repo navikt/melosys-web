@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
@@ -6,12 +6,10 @@ import { Action } from "redux";
 
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
-
-import withErrorHandling from "../../felleskomponenter/withErrorHandling";
 import Fagsak from "../../felleskomponenter/oppgaveliste/fagsak";
 import SorterbarListe from "../../felleskomponenter/sorterbarListe";
 import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
-import { sokSelectors, sokOperations } from "../../ducks/sok";
+import { sokOperations, sokSelectors } from "../../ducks/sok";
 
 import "./sok.css";
 
@@ -91,9 +89,4 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
   );
 };
 
-const kontekster = [
-  { navn: "fagsaker", melding: "Det har oppstått en feil: Kunne ikke hente fagsaker" },
-  { navn: "oppgaver", melding: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" },
-];
-
-export default withErrorHandling(kontekster, connector(Sok));
+export default connector(Sok);

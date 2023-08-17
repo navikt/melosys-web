@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as Nav from "../../../../../navFrontend";
 
 import { useHentStatsborgerskapQuery } from "./hentStatsborgerskap.generated";

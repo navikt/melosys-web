@@ -1,4 +1,3 @@
-import React from "react";
 import { formValueSelector } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";

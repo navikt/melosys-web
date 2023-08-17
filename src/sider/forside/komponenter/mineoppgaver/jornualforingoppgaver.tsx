@@ -1,11 +1,8 @@
-import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 
 import { RootState } from "AppTypes";
 
 import * as Nav from "../../../../navFrontend";
-
-import withErrorHandling from "../../../../felleskomponenter/withErrorHandling";
 import JournalforingOppgave from "../../../../felleskomponenter/oppgaveliste/journalforingOppgave";
 import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 
@@ -47,6 +44,4 @@ export const JournalforingsOppgaver = ({ mineSaker }: PropsFromRedux) => {
   );
 };
 
-const kontekster = [{ navn: "oppgaver", melding: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" }];
-
-export default withErrorHandling(kontekster, connector(JournalforingsOppgaver));
+export default connector(JournalforingsOppgaver);

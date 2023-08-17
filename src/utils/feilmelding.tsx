@@ -1,4 +1,3 @@
-import React from "react";
 import { FormErrors } from "redux-form";
 import * as Utils from "./index";
 

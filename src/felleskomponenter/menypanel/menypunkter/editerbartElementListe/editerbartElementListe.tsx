@@ -1,4 +1,4 @@
-import React, { ElementType } from "react";
+import { ElementType } from "react";
 import PT from "prop-types";
 import { connect, ConnectedProps } from "react-redux";
 import { FieldArray, change, WrappedFieldArrayProps } from "redux-form";

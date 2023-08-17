@@ -17,24 +17,30 @@ describe("Skjema utils", () => {
       expect(SkjemaUtils.mapReduxFormFeilTilNavFeil(meta)).toEqual(meta.error.melding);
     });
 
-    each(["submitFailed", "touched", "active"]).it("config %p kan tillate feilmelding å vises", (property) => {
-      const meta = {
-        error: { melding: "Manglende felt" },
-        [property]: true,
-      };
-      const errorConfig = { [property]: true };
+    it("config submitFailed, touched, active kan tillate feilmelding å vises", () => {
+      const configs = ["submitFailed", "touched", "active"];
+      configs.forEach((config) => {
+        const meta = {
+          error: { melding: "Manglende felt" },
+          [config]: true,
+        };
+        const errorConfig = { [config]: true };
 
-      expect(SkjemaUtils.mapReduxFormFeilTilNavFeil(meta, errorConfig)).toEqual(meta.error.melding);
+        expect(SkjemaUtils.mapReduxFormFeilTilNavFeil(meta, errorConfig)).toEqual(meta.error.melding);
+      });
     });
 
-    each(["submitFailed", "touched", "active"]).it("config %p kan hindre feilmelding i å vises", (property) => {
-      const meta = {
-        error: { melding: "Manglende felt" },
-        [property]: true,
-      };
-      const errorConfig = { [property]: false };
+    it("config submitFailed, touched, active kan hindre feilmelding i å vises", () => {
+      const configs = ["submitFailed", "touched", "active"];
+      configs.forEach((config) => {
+        const meta = {
+          error: { melding: "Manglende felt" },
+          [config]: true,
+        };
+        const errorConfig = { [config]: false };
 
-      expect(SkjemaUtils.mapReduxFormFeilTilNavFeil(meta, errorConfig)).toBeUndefined();
+        expect(SkjemaUtils.mapReduxFormFeilTilNavFeil(meta, errorConfig)).toBeUndefined();
+      });
     });
   });
 });

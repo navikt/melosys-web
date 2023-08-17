@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, useEffect, useState } from "react";
+import { ChangeEventHandler, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -221,7 +221,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const handleBekreft = async () => {
     await dispatch(vilkarOperations.lagre());
-    await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse());
+    await dispatch(
+      medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse(behandlingID, valgtBestemmelse)
+    );
     bekreft();
   };
 

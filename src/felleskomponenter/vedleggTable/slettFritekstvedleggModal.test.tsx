@@ -4,13 +4,15 @@ import { ReactNode, ReactPortal } from "react";
 
 import SlettFritekstvedleggModal from "./slettFritekstvedleggModal";
 
-beforeAll(() => {
-  ReactDOM.createPortal = (node: ReactNode): ReactPortal => node as ReactPortal;
-});
+describe("slettFritekstvedleggModal", () => {
+  beforeAll(() => {
+    ReactDOM.createPortal = (node: ReactNode): ReactPortal => node as ReactPortal;
+  });
 
-it("slettFritekstvedleggModal renders correctly", () => {
-  const tree = renderer
-    .create(<SlettFritekstvedleggModal slettVedlegg={jest.fn()} onRequestClose={jest.fn()} ariaHideApp={false} />)
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+  it("snapshot test", () => {
+    const tree = renderer
+      .create(<SlettFritekstvedleggModal slettVedlegg={vi.fn()} onRequestClose={vi.fn()} ariaHideApp={false} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

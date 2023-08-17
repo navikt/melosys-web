@@ -1,4 +1,4 @@
-import React, { ReactNode, MouseEventHandler } from "react";
+import { ReactNode, MouseEventHandler } from "react";
 
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../index";
@@ -16,6 +16,8 @@ interface PeriodeForkorterProps {
   fomFeltNavn: string;
   tomLabel?: ReactNode;
   tomFeltNavn: string;
+  minDate: Date;
+  maxDate?: Date;
 }
 
 const PeriodeForkorter = ({
@@ -29,6 +31,8 @@ const PeriodeForkorter = ({
   onUncheck,
   fomLabel = "",
   fomFeltNavn,
+  minDate,
+  maxDate,
   tomLabel = "",
   tomFeltNavn,
 }: PeriodeForkorterProps) => {
@@ -56,7 +60,13 @@ const PeriodeForkorter = ({
             <Skjema.Datovelger label={fomLabel} feltNavn={fomFeltNavn} disabled={!redigerbart || !fomRedigerbar} />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Skjema.Datovelger label={tomLabel} feltNavn={tomFeltNavn} disabled={!redigerbart} />
+            <Skjema.Datovelger
+              label={tomLabel}
+              feltNavn={tomFeltNavn}
+              disabled={!redigerbart}
+              minDate={minDate}
+              maxDate={maxDate}
+            />
           </Nav.Column>
         </Nav.Row>
       )}

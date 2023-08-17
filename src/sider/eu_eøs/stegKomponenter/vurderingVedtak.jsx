@@ -1,0 +1,395 @@
+import { useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import { getFormValues, isValid, reduxForm } from "redux-form";
+import PT from "prop-types";
+import * as EKV from "eessi-kodeverk";
+
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
+
+import * as KV from "../../../kodeverk";
+import * as Nav from "../../../navFrontend";
+import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Mui from "../../../felleskomponenter/ui";
+import * as Utils from "../../../utils";
+import * as MPT from "../../../proptypes";
+
+import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
+import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { vedtakOperations } from "../../../ducks/vedtak";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
+import { flytSelectors } from "../../../ducks/flyt";
+
+import { skalViseTomFlyt } from "../../../url";
+import { useFeatureToggle } from "../../../featuretoggle";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import DatoOmrade from "../../../felleskomponenter/datoOmrade";
+import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
+
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
+import "./vurderingVedtak.css";
+import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT } from "../../../featuretoggle/toggleNavn";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import * as Api from "../../../services/api";
+
+const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) => {
+  if (
+    lovvalgsbestemmelse.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A &&
+    tilleggsbestemmelse.kode === MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1
+  ) {
+    return `${KV.objektTilTerm(tilleggsbestemmelse)} og ${KV.objektTilTerm(lovvalgsbestemmelse)}`;
+  }
+
+  return KV.objektTilTerm(lovvalgsbestemmelse);
+};
+
+const finnSedMottakerLand = (arbeidsland, bostedsland, lovvalgsperiode) => {
+  const bostedslandKode = bostedsland.kode;
+
+  if (
+    lovvalgsperiode.lovvalgsbestemmelse ===
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A &&
+    lovvalgsperiode.tilleggBestemmelse ===
+      MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1
+  ) {
+    return bostedslandKode;
+  }
+
+  return arbeidsland[0]?.kode;
+};
+
+const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
+  sakstype === MKV.Koder.sakstyper.EU_EOS &&
+  [
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+  ].includes(behandlingstema);
+
+const skalViseMottakerinstitusjoner = (
+  sakstype,
+  sakstema,
+  behandlingstema,
+  behandlingstype,
+  folketrygdenToggleEnabled,
+  ikkeYrkesaktivFlytToggleEnabled
+) => {
+  return (
+    sakstype === MKV.Koder.sakstyper.EU_EOS &&
+    [
+      MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+      MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+      MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+      MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+    ].includes(behandlingstema) &&
+    !skalViseTomFlyt(
+      sakstype,
+      sakstema,
+      behandlingstema,
+      behandlingstype,
+      folketrygdenToggleEnabled,
+      ikkeYrkesaktivFlytToggleEnabled
+    )
+  );
+};
+
+const VurderingVedtak = ({
+  lovvalgsperioder,
+  arbeidsland,
+  bostedsland,
+  redigerbart,
+  behandlingID,
+  tilbake,
+  sakstype,
+  sakstema,
+  behandlingstema,
+  behandlingstype,
+  touch,
+  formIsValid,
+  formValues,
+  form,
+  visAntallManederUtland,
+  pdfDokumenter,
+  erArtikkel11_4,
+  kontrollerFerdigbehandling,
+  harFeilmeldinger,
+  aktivtSteg,
+  validerMottatteOpplysninger,
+  mottatteOpplysningerStatus,
+}) => {
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const [erBucAapen, setErBucAapen] = useState(true);
+  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
+  const dispatch = useDispatch();
+
+  const lovvalget = lovvalgsperioder[0] || {};
+
+  const { fomDato, tomDato, lovvalgsbestemmelse, tilleggBestemmelse } = lovvalget;
+
+  const antallManederMenneskelig = Utils.dato.datoDiffMenneskelig(fomDato, tomDato);
+  const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
+  const tilleggBestemmelseSomKodeTerm = KV.finnEnkeltKodeFraListe(
+    tilleggBestemmelse,
+    MKV.Kodekombinasjoner.alleLovvalg
+  );
+  const lovvalgSomTerm = finnLovvalgSomTerm(lovvalgSomKodeTerm, tilleggBestemmelseSomKodeTerm);
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+  const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(
+    sakstype,
+    sakstema,
+    behandlingstema,
+    behandlingstype,
+    folketrygdenToggleEnabled,
+    ikkeYrkesaktivFlytToggleEnabled
+  );
+  const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
+
+  const validerForm = () => {
+    touch("tomDato");
+    touch("vedtakstype");
+    touch("vedtakstypebegrunnelse");
+    touch("mottakerinstitusjon");
+    touch("fritekstSed");
+    return formIsValid;
+  };
+
+  const lagFattVedtakEOSReqDto = () => {
+    return {
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      fritekst: formValues.vedtaksbrevFritekst,
+      fritekstSed: formValues.fritekstSed,
+      kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
+      mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
+      nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
+    };
+  };
+
+  const { kopiTilArbeidsgiver, vedtakstype } = formValues;
+
+  useEffect(() => {
+    if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE) {
+      Api.Kontroll.erBucAapen(behandlingID).then((res) => {
+        setErBucAapen(res);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    async function kontroller() {
+      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg && formIsValid) {
+        setVedtakPending(true);
+        await kontrollerFerdigbehandling({
+          behandlingID,
+          vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+          kontrollerSomSkalIgnoreres: kopiTilArbeidsgiver
+            ? []
+            : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
+          skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
+        });
+        setOppdaterFoerKontroll(false);
+        setVedtakPending(false);
+      }
+    }
+
+    kontroller();
+  }, [aktivtSteg, formIsValid, kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
+
+  const onSubmit = async () => {
+    if (!validerForm()) return;
+
+    setVedtakPending(true);
+
+    validerMottatteOpplysninger()
+      .then(() => {
+        dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakEOSReqDto())).then((res) => {
+          if (res.data?.data?.error) {
+            setVedtakPending(false);
+          }
+        });
+      })
+      .catch(() => setVedtakPending(false));
+  };
+
+  const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalget);
+  const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
+
+  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !flereSoknadslandEnnTillatt;
+
+  const bucLukketOgLovvalgNorge =
+    !erBucAapen && behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE;
+
+  return (
+    <div className="vedtak">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        Omfattet av norsk trygdelovgivning etter {lovvalgSomTerm}
+      </Nav.Typo.Innholdstittel>
+      <div>
+        <Nav.Row className="lovvalgsperiode">
+          <Nav.Column xs="6">
+            <DatoOmrade periode={{ fom: lovvalget.fomDato, tom: lovvalget.tomDato }} label="Lovvalgsperiode" />
+          </Nav.Column>
+        </Nav.Row>
+        {visAntallManederUtland && (
+          <Nav.Row className="vedtak__oppsummering">
+            <Nav.Column xs="6">
+              <Nav.Typo.Element type="element">Antall måneder i utlandet</Nav.Typo.Element>
+              <Nav.Typo.Normaltekst>{antallManederMenneskelig}</Nav.Typo.Normaltekst>
+            </Nav.Column>
+          </Nav.Row>
+        )}
+        {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
+        <Nav.Row className="fritekst">
+          <Nav.Column xs="7">
+            <Skjema.Textarea
+              feltNavn="vedtaksbrevFritekst"
+              label="Fritekst til vedtaksbrev"
+              placeholder="Skriv inn tekst til vedtaksbrevet..."
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+        </Nav.Row>
+        {redigerbart && !bucLukketOgLovvalgNorge && (
+          <Nav.Row className="fritekstSed">
+            <Nav.Column xs="7">
+              <Skjema.Textarea
+                label="Ytterligere informasjon til SED (valgfri)"
+                feltNavn="fritekstSed"
+                disabled={!redigerbart}
+                visTellerFra={500}
+                maxLength={500}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        )}
+        {visMottakerinstitusjoner && sedMottakerLand && (
+          <Nav.Row className="mottakerinstitusjoner">
+            <Nav.Column xs="7">
+              <Mottakerinstitusjonvelger
+                form={form}
+                redigerbart={redigerbart}
+                landkode={sedMottakerLand}
+                bucType={bucType}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        )}
+        {redigerbart && skalViseSendOrienteringsbrev(sakstype, behandlingstema) && (
+          <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
+        )}
+        <Nav.Row>
+          <Nav.Column xs="6">
+            {stegErGyldig && (
+              <PdfLenkeListe
+                behandlingID={behandlingID}
+                dokumenter={
+                  bucLukketOgLovvalgNorge
+                    ? pdfDokumenter.filter((dok) => dok.type !== EKV.Koder.sedtyper.A012)
+                    : pdfDokumenter
+                }
+              />
+            )}
+          </Nav.Column>
+        </Nav.Row>
+        {flereSoknadslandEnnTillatt && (
+          <Nav.AlertStripe type="feil">Det er kun tillat med ett arbeidsland i vedtaket.</Nav.AlertStripe>
+        )}
+        {erNyVurdering && redigerbart && (
+          <Nav.AlertStripeInfo>{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.AlertStripeInfo>
+        )}
+        <Nav.Row>
+          <Nav.Column xs="6" className="fane__fot">
+            <Mui.StegKnapper
+              bekreftKnappProps={{
+                spinner: vedtakPending,
+                autoDisableVedSpinner: true,
+                disabled: !stegErGyldig,
+                onClick: onSubmit,
+              }}
+              bekreftTekst="Fatt vedtak"
+              tilbakeKnappProps={{
+                onClick: tilbake,
+                disabled: !redigerbart,
+              }}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      </div>
+    </div>
+  );
+};
+
+VurderingVedtak.propTypes = {
+  tilbake: PT.func.isRequired,
+  lovvalgsperioder: PT.array.isRequired,
+  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
+  bostedsland: MPT.Kodeverk,
+  behandlingID: PT.number.isRequired,
+  redigerbart: PT.bool.isRequired,
+  sakstype: PT.string.isRequired,
+  sakstema: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
+  behandlingstype: PT.string.isRequired,
+  formIsValid: PT.bool.isRequired,
+  formValues: PT.object,
+  touch: PT.func.isRequired,
+  form: PT.string.isRequired,
+  visAntallManederUtland: PT.bool,
+  pdfDokumenter: MPT.DokumentMetadataListe.isRequired,
+  erArtikkel11_4: PT.bool.isRequired,
+  kontrollerFerdigbehandling: PT.func.isRequired,
+  harFeilmeldinger: PT.bool.isRequired,
+  aktivtSteg: PT.bool,
+  validerMottatteOpplysninger: PT.func.isRequired,
+  mottatteOpplysningerStatus: PT.string.isRequired,
+};
+
+VurderingVedtak.defaultProps = {
+  formValues: {},
+  visAntallManederUtland: true,
+  bostedsland: {},
+  aktivtSteg: false,
+};
+
+const mapStateToProps = (state) => ({
+  lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
+  arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
+  sakstema: fagsakSelectors.SakstemaKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),
+  formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
+  erArtikkel11_4: flytSelectors.ErIArtikkel11_4Selector(state),
+  initialValues: {
+    vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
+    vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    kopiTilArbeidsgiver: true,
+    mottakerinstitusjon: "",
+    kreverMottakerinstitusjon: false,
+    fritekstSed: null,
+  },
+  mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
+});
+
+const VurderingVedtakForm = reduxForm({
+  form: KV.Form.ARTIKKEL_12_VEDTAK,
+  enableReinitialize: true,
+  destroyOnUnmount: true,
+  keepDirtyOnReinitialize: true,
+  updateUnregisteredFields: true,
+  validate: (values, props) =>
+    lagYupToReduxformErrorMapper(VurderingArtikkel12VedtakSchema, {
+      context: {
+        behandlingstype: props.behandlingstype,
+      },
+    })(values),
+})(VurderingVedtak);
+
+export default connect(mapStateToProps)(VurderingVedtakForm);

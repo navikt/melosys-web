@@ -1,4 +1,3 @@
-import React from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as KV from "../../../../../kodeverk";

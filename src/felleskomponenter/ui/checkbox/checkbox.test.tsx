@@ -1,4 +1,4 @@
-import React, { ComponentProps, KeyboardEvent, ChangeEvent } from "react";
+import { ComponentProps, KeyboardEvent, ChangeEvent } from "react";
 import { mount, shallow } from "enzyme";
 import { mock, instance } from "ts-mockito";
 
@@ -13,7 +13,7 @@ describe("Checkbox", () => {
   props.value = "Arbeidsgiver";
 
   beforeEach(() => {
-    props.onCheck = jest.fn();
+    props.onCheck = vi.fn();
   });
 
   it("kaller onCheck med checkbox-verdi og checkbox-value ved change event", () => {

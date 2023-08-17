@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from "react";
+import { MouseEventHandler } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { useSelector } from "react-redux";
 import { formValueSelector } from "redux-form";

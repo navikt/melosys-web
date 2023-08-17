@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../../melosyskodeverk";

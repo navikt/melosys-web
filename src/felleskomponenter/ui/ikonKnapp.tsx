@@ -1,10 +1,10 @@
-import React, { MouseEventHandler } from "react";
+import { ElementType, MouseEventHandler } from "react";
 import classnames from "classnames";
 
 import "./ikonKnapp.css";
 
 type IkonKnappProps = {
-  ikon: React.ElementType;
+  ikon: ElementType;
   onClick: MouseEventHandler<HTMLButtonElement>;
   ariaLabel: string;
   className?: string;

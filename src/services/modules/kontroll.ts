@@ -9,8 +9,16 @@ export type FerdigbehandlingKontrollData = {
   skalRegisteropplysningerOppdateres: boolean;
 };
 
+export type RegistrertAdresseData = {
+  brukerID: string | null;
+  orgnr: string | null;
+};
+
 export const kontrollerFerdigbehandling = (data: FerdigbehandlingKontrollData) =>
   postAsJson(`${API_BASE_URL}${KONTROLL}/ferdigbehandling`, data);
+
+export const harRegistrertAdresse = (data: RegistrertAdresseData) =>
+  postAsJson(`${API_BASE_URL}${KONTROLL}/harRegistrertAdresse`, data);
 
 export const erBucAapen = (behandlingID: number) => getAsJson(`${API_BASE_URL}${KONTROLL}/${behandlingID}/erBucAapen`);
 

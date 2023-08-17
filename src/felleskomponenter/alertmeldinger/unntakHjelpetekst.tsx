@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as Nav from "../../navFrontend";
 
 const UnntakHjelpetekst = () => {
@@ -13,10 +11,8 @@ const UnntakHjelpetekst = () => {
         <li>Registrer perioden i MEDL som uavklart</li>
       </ul>
       <p>
-        <strong>
-          Når du får svar fra utenlandsk trygdemyndighet, må du endre valget på dette steget, og fatte vedtak. Dersom du
-          skal vurdere frivillig medlemskap må du endre sakstype til &quot;Utenfor avtaleland&quot;.
-        </strong>
+        Når du får svar fra utenlandsk trygdemyndighet, må du endre valget på dette steget, og fatte vedtak. Dersom du
+        skal vurdere frivillig medlemskap må du endre sakstype til &quot;Utenfor avtaleland&quot;.
       </p>
     </Nav.EtikettBase>
   );
