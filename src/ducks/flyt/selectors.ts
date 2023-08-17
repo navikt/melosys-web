@@ -63,5 +63,5 @@ export const HarUnntakFlytSelector = createSelector(
   (state: RootState) => fagsakSelectors.SakstypeKodeSelector(state),
   (state: RootState) => fagsakSelectors.SakstemaKodeSelector(state),
   (state: RootState) => behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  async (sakstype, sakstema, behandlingstema) => harUnntakFlyt(sakstype, sakstema, behandlingstema)
+  (sakstype, sakstema, behandlingstema) => harUnntakFlyt(sakstype, sakstema, behandlingstema)
 );
