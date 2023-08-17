@@ -28,8 +28,6 @@ const Modals = ({
   skjulAvslagSoknadDialogHandle,
   avslaaSoknadHandle,
   visBekreftValgDialog,
-  behandlingOppfriskes,
-  annenBehandlingOppfriskes,
 }) => (
   <Fragment>
     {visOppfriskDialog && (
@@ -38,8 +36,6 @@ const Modals = ({
         avbryt={skjulOppfriskModal}
         lukk={lukkOppfriskModal}
         tilForsiden={skjulOppfriskModalOgNavigerTilForside}
-        behandlingOppfriskes={behandlingOppfriskes}
-        annenBehandlingOppfriskes={annenBehandlingOppfriskes}
       />
     )}
     {visHenleggDialog && <DialogboksHenleggSak avbryt={skjulHenleggDialogHandle} henleggHandle={henleggHandle} />}
@@ -63,8 +59,6 @@ Modals.propTypes = {
   skjulAvslagSoknadDialogHandle: PT.func.isRequired,
   avslaaSoknadHandle: PT.func.isRequired,
   visBekreftValgDialog: PT.bool.isRequired,
-  behandlingOppfriskes: PT.bool.isRequired,
-  annenBehandlingOppfriskes: PT.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({

@@ -8,7 +8,6 @@ import { getErrorMessage } from "./misc/mapFeilmelding";
 interface SelectComponentProps extends Nav.SelectProps {
   label?: string | ReactElement;
   emptyFieldDisabled?: boolean;
-  emptyFieldText?: string;
   disabled?: boolean;
   children: ReactNode | ReactNode[];
   onChange?: (value: any) => void;
@@ -17,7 +16,7 @@ interface SelectComponentProps extends Nav.SelectProps {
 type SelectInnerComponentProps = SelectComponentProps & RegisterHookFormProps;
 
 const SelectInnerComponent = forwardRef<HTMLSelectElement, SelectInnerComponentProps>(
-  ({ label, emptyFieldDisabled, emptyFieldText = "Velg...", disabled, children, ...rest }: SelectProps, _ref: any) => {
+  ({ label, emptyFieldDisabled, disabled, children, ...rest }: SelectProps, _ref: any) => {
     return (
       <Nav.Select
         label={label}
@@ -30,7 +29,7 @@ const SelectInnerComponent = forwardRef<HTMLSelectElement, SelectInnerComponentP
         feil={rest.feil}
       >
         <option disabled={emptyFieldDisabled} value="">
-          {emptyFieldText}
+          Velg...
         </option>
         {children}
       </Nav.Select>
@@ -49,7 +48,6 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(({ name, control, ...r
         <SelectInnerComponent
           {...field}
           label={rest.label}
-          emptyFieldText={rest.emptyFieldText}
           emptyFieldDisabled={rest.emptyFieldDisabled}
           disabled={rest.disabled}
           onChange={(event: any) => {

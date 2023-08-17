@@ -44,13 +44,7 @@ export const MottakerinstitusjonvelgerSchema = ({
   }
 
   return (
-    <SelectWrappedComponent
-      label={label}
-      emptyFieldDisabled={false}
-      emptyFieldText="Velg..."
-      data-cy={data_cy}
-      {...rest}
-    >
+    <SelectWrappedComponent label={label} emptyFieldDisabled={false} data-cy={data_cy} {...rest}>
       {mottakerinstitusjoner.map((institusjon) => (
         <option key={institusjon.id} value={institusjon.id}>
           {institusjon.navn}

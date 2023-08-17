@@ -16,11 +16,14 @@ import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from ".
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
+import { navigeringOperations } from "../../../../ducks/navigering";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import MKV from "../../../../melosyskodeverk";
+import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
+import "./vurderingInngang.css";
 
 interface Props {
   bekreft: () => void;
@@ -29,6 +32,7 @@ interface Props {
 }
 
 export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
   const dispatch = useDispatch();
 
   const periodeFom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector));
@@ -38,6 +42,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const { control, watch, formState, trigger } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
@@ -56,15 +61,11 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     formValues?.tom !== periodeTom ||
     formValues?.land !== søknadsland;
 
-  const [visSpinner, setVisSpinner] = useState(false);
-
   const landUtenStøtteValgt =
     sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
     (formValues.land === MKV.Koder.landkoder.FR || formValues.land === MKV.Koder.landkoder.IT);
 
-  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
-
-  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner && !landUtenStøtteValgt;
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visOppfrisk && !landUtenStøtteValgt;
 
   useEffect(() => {
     if (registeropplysningerHentet) {
@@ -76,97 +77,113 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
-  const lagrePeriodeOgLand = () => {
-    dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland([formValues.land], false));
-
-    dispatch(
-      mottatteOpplysningerOperations.oppdaterPeriode({
-        fom: Utils.dato.formatterDatoTilISO(formValues.fom, null, ""),
-        tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
-      })
-    );
+  const lagrePeriodeOgLand = async () => {
+    await Promise.all([
+      dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland([formValues.land], false)),
+      dispatch(
+        mottatteOpplysningerOperations.oppdaterPeriode({
+          fom: Utils.dato.formatterDatoTilISO(formValues.fom, null, ""),
+          tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
+        })
+      ),
+    ]);
   };
 
-  const innhentRegisteropplysninger = async () => {
+  const innhentRegisteropplysninger = () => {
+    lagrePeriodeOgLand().finally(() => setVisOppfrisk(true));
+  };
+
+  const bekreftOgFortsett = () => {
     if (skalHenteRegisteropplysninger) {
-      lagrePeriodeOgLand();
-
-      setVisSpinner(true);
-      await lagreMottatteOpplysningerOgOppfriskSaksopplysninger();
-      setVisSpinner(false);
-      dispatch(menypanelOperations.visMenypanel());
+      innhentRegisteropplysninger();
+    } else {
+      bekreft();
     }
-  };
-
-  const bekreftOgInnhentRegisteropplysninger = async () => {
-    await innhentRegisteropplysninger();
-    bekreft();
   };
 
   if (!aktivtSteg) return null;
 
   return (
-    <div className="vurderingInngang">
+    <div className="vurderingInngang_ikkeYrkesaktiv">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
 
-      <Nav.Fieldset legend="Periode">
-        <Nav.Row>
-          <Nav.Column xs="3">
-            <Forms.Datovelger
-              label="Fra og med"
-              name="fom"
-              disabled={!redigerbart}
-              control={control}
-              onChange={() => trigger("tom")}
-            />
-          </Nav.Column>
-          <Nav.Column xs="3">
-            <Forms.Datovelger
-              label="Til og med"
-              minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
-              name="tom"
-              disabled={!redigerbart}
-              control={control}
-            />
-          </Nav.Column>
-          <Nav.Column xs="5">
-            <Forms.Select
-              label={<LabelMedHjelpetekst label="Land" hjelpetekstClassName="hjelpetekst" />}
-              emptyFieldText="Velg"
-              emptyFieldDisabled={!!formValues.land}
-              name="land"
-              disabled={!redigerbart}
-              control={control}
-            >
-              {landkoder.map((item: KTObject) => (
-                <option key={item.kode} value={item.kode}>
-                  {item.term}
-                </option>
-              ))}
-            </Forms.Select>
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Fieldset>
+      <Nav.Typo.Undertittel className="periode_label">Periode</Nav.Typo.Undertittel>
+      <Nav.Row>
+        <Nav.Column xs="3">
+          <Forms.Datovelger
+            label="Fra og med"
+            name="fom"
+            disabled={!redigerbart}
+            control={control}
+            onChange={() => trigger("tom")}
+          />
+        </Nav.Column>
+        <Nav.Column xs="3">
+          <Forms.Datovelger
+            label={
+              <LabelMedHjelpetekst
+                label="Til og med"
+                hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Lovvalgsperiode registreres senere.`}
+              />
+            }
+            minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
+            name="tom"
+            disabled={!redigerbart}
+            control={control}
+          />
+        </Nav.Column>
+        <Nav.Column xs="5">
+          <Forms.Select
+            label="Land"
+            emptyFieldDisabled={!!formValues.land}
+            name="land"
+            disabled={!redigerbart}
+            control={control}
+          >
+            {landkoder.map((item: KTObject) => (
+              <option key={item.kode} value={item.kode}>
+                {item.term}
+              </option>
+            ))}
+          </Forms.Select>
+        </Nav.Column>
+      </Nav.Row>
 
       {landUtenStøtteValgt && <TomFlytMelding />}
 
-      {landUtenStøtteValgt && skalHenteRegisteropplysninger ? (
+      {landUtenStøtteValgt ? (
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: innhentRegisteropplysninger,
-            disabled: !formState?.isValid || !redigerbart,
-            spinner: visSpinner,
+            disabled: !skalHenteRegisteropplysninger || !formState?.isValid || !redigerbart,
           }}
-          bekreftTekst="Innehent registeropplysninger"
+          bekreftTekst={skalHenteRegisteropplysninger ? "Innhent registeropplysninger" : undefined}
         />
       ) : (
         <Mui.StegKnapper
           bekreftKnappProps={{
-            onClick: bekreftOgInnhentRegisteropplysninger,
-            disabled: !formState?.isValid || landUtenStøtteValgt || !redigerbart,
-            spinner: visSpinner,
+            onClick: bekreftOgFortsett,
+            disabled: !formState?.isValid || !redigerbart,
           }}
-          bekreftTekst="Bekreft og innhent registeropplysninger"
+        />
+      )}
+
+      {visOppfrisk && (
+        <DialogboksOppfriskSak
+          oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
+          avbryt={() => setVisOppfrisk(false)}
+          lukk={() => {
+            setVisOppfrisk(false);
+            dispatch(menypanelOperations.visMenypanel());
+            if (!landUtenStøtteValgt) {
+              bekreft();
+            }
+          }}
+          tilForsiden={() => {
+            setVisOppfrisk(false);
+            dispatch(navigeringOperations.tilForsiden());
+          }}
+          bekreftetFraStart
         />
       )}
     </div>

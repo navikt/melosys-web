@@ -1,5 +1,4 @@
 import { ChangeEventHandler } from "react";
-import PT from "prop-types";
 import { Field, WrappedFieldProps } from "redux-form";
 import * as Nav from "../../../navFrontend";
 import * as SkjemaUtils from "../utils";
@@ -8,7 +7,6 @@ import "../skjema.css";
 
 interface SelectWrappedComponentBaseProps extends Nav.SelectProps {
   emptyFieldDisabled?: boolean;
-  emptyFieldText?: string;
   onChange?: ChangeEventHandler<HTMLSelectElement>;
 }
 
@@ -17,10 +15,13 @@ type SelectWrappedComponentProps = SelectWrappedComponentBaseProps & WrappedFiel
 function SelectWrappedComponent({
   input,
   label,
-  children,
+  children = (
+    <option disabled value="0">
+      ingen valg tilgjengelig
+    </option>
+  ),
   meta,
-  emptyFieldDisabled,
-  emptyFieldText = "Velg...",
+  emptyFieldDisabled = true,
   onChange,
   ...rest
 }: SelectWrappedComponentProps) {
@@ -40,35 +41,12 @@ function SelectWrappedComponent({
   return (
     <Nav.Select label={label} feil={feil} {...inputProps}>
       <option disabled={emptyFieldDisabled} value="">
-        {emptyFieldText}
+        Velg...
       </option>
       {children}
     </Nav.Select>
   );
 }
-
-SelectWrappedComponent.defaultProps = {
-  children: (
-    <option disabled value="0">
-      ingen valg tilgjengelig
-    </option>
-  ),
-  input: undefined,
-  meta: undefined,
-  emptyFieldDisabled: true,
-  emptyFieldText: "",
-  onChange: () => {},
-};
-
-SelectWrappedComponent.propTypes = {
-  label: PT.node.isRequired,
-  children: PT.node,
-  input: PT.object, // eslint-disable-line react/forbid-prop-types
-  meta: PT.object, // eslint-disable-line react/forbid-prop-types
-  emptyFieldDisabled: PT.bool,
-  emptyFieldText: PT.string,
-  onChange: PT.func,
-};
 
 interface SelectProps extends SelectWrappedComponentBaseProps {
   id?: string;
@@ -79,17 +57,6 @@ interface SelectProps extends SelectWrappedComponentBaseProps {
 function Select({ id, feltNavn, className, ...rest }: SelectProps) {
   return <Field name={feltNavn} className={className} id={id} component={SelectWrappedComponent} props={rest} />;
 }
-
-Select.defaultProps = {
-  className: "",
-  id: undefined,
-};
-
-Select.propTypes = {
-  feltNavn: PT.string.isRequired,
-  id: PT.string,
-  className: PT.string,
-};
 
 export { SelectWrappedComponent };
 export default Select;

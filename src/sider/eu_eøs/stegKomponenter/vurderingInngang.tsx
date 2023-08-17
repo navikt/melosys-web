@@ -78,7 +78,7 @@ export const Varsler = ({
   const flereSoknadslandEnnTillatt = landkoder.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
 
   return (
-    <div className="vurderinginngang">
+    <div className="vurderinginngang_eu_eos">
       <ul className="betingelser__liste">
         <li className={oppfyllerInngangsvilkarCl}>{oppfyltTekst}</li>
         {inngangsvilkaarErOverstyrtEllerIkkeOppfylt &&
@@ -95,7 +95,7 @@ export const Varsler = ({
         </Nav.AlertStripeAdvarsel>
       )}
       {inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
-        <Nav.AlertStripe type="info" className="vurderinginngang__inngangsvilkaar-ikke-oppfylt-alertstripe">
+        <Nav.AlertStripe type="info" className="vurderinginngang_eu_eos__inngangsvilkaar-ikke-oppfylt-alertstripe">
           Du har to valg:
           <ul>
             <li>Hvis inngangsvilkår ikke er oppfylt, må du henlegge saken som bortfalt (i behandlingsmenyen).</li>
@@ -151,7 +151,7 @@ export const VurderingInngang = ({
   };
 
   return (
-    <div className="vurderingInngang">
+    <div className="vurderinginngang_eu_eos">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Kontroller inngangsvilkår</Nav.Typo.Innholdstittel>
       <Varsler
         oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}

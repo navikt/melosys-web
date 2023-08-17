@@ -30,7 +30,6 @@ import Stegvelger from "./stegvelger";
 import "./saksbehandling.css";
 
 const Saksbehandling = ({
-  annenBehandlingOppfriskes,
   arbeidsland,
   behandlingstype,
   hovedpartRolle,
@@ -49,7 +48,6 @@ const Saksbehandling = ({
   hentFagsaker,
   location,
   match,
-  oppfriskOgLastInnSaksopplysninger,
   redigerbart,
   resetBehandlingerState,
   resetMottatteOpplysningerState,
@@ -57,7 +55,6 @@ const Saksbehandling = ({
   skjulMenypanel,
   startOgVisOppfriskModal,
   soknadForm,
-  tilForsiden,
   visOppfriskModal,
   lovvalgsperiodeTom,
 }) => {
@@ -147,14 +144,7 @@ const Saksbehandling = ({
                   <>
                     {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
                     {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
-                    {visStegVelger && (
-                      <Stegvelger
-                        redigerbart={redigerbart}
-                        annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-                        oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger}
-                        tilForsiden={tilForsiden}
-                      />
-                    )}
+                    {visStegVelger && <Stegvelger />}
                     <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
                   </>
                 ) : (
@@ -181,7 +171,6 @@ const Saksbehandling = ({
 };
 
 Saksbehandling.propTypes = {
-  annenBehandlingOppfriskes: PT.bool.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingstype: PT.string.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
@@ -203,8 +192,6 @@ Saksbehandling.propTypes = {
   hentLandkoder: PT.func.isRequired,
   hentLovvalgsperiode: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
-  oppfriskOgLastInnSaksopplysninger: PT.func.isRequired,
-  tilForsiden: PT.func.isRequired,
   resetBehandlingerState: PT.func.isRequired,
   resetMottatteOpplysningerState: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
