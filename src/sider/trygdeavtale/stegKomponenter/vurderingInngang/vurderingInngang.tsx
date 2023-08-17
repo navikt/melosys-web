@@ -167,45 +167,45 @@ const VurderingInngang = ({
   };
 
   return (
-    <div className="vurderingInngang">
+    <div className="vurderingInngang_trygdeavtale">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
-      <Nav.Fieldset legend={<Nav.Typo.Undertittel>Periode</Nav.Typo.Undertittel>}>
-        <Nav.Row>
-          <Nav.Column xs="3">
-            <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
-          </Nav.Column>
-          <Nav.Column xs="3">
-            <Skjema.Datovelger
-              label={
-                <LabelMedHjelpetekst
-                  label="Til og med"
-                  hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Lovvalgsperiode registreres senere.`}
-                />
-              }
-              feltNavn="tom"
-              minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
-          <Nav.Column xs="5">
-            <Skjema.Select
-              label={
-                <LabelMedHjelpetekst
-                  label="Arbeidsland"
-                  hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet."
-                />
-              }
-              feltNavn="arbeidsland"
-              disabled={!redigerbart}
-              emptyFieldDisabled={!!formValues?.arbeidsland}
-            >
-              <LandValgSomOptions landValg={landValg} />
-              {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}
-              <LandValgSomOptions landValg={landValgUtenStøtte} />
-            </Skjema.Select>
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Fieldset>
+
+      <Nav.Typo.Undertittel className="periode_label">Periode</Nav.Typo.Undertittel>
+      <Nav.Row>
+        <Nav.Column xs="3">
+          <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
+        </Nav.Column>
+        <Nav.Column xs="3">
+          <Skjema.Datovelger
+            label={
+              <LabelMedHjelpetekst
+                label="Til og med"
+                hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Lovvalgsperiode registreres senere.`}
+              />
+            }
+            feltNavn="tom"
+            minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
+            disabled={!redigerbart}
+          />
+        </Nav.Column>
+        <Nav.Column xs="5">
+          <Skjema.Select
+            label={
+              <LabelMedHjelpetekst
+                label="Arbeidsland"
+                hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet."
+              />
+            }
+            feltNavn="arbeidsland"
+            disabled={!redigerbart}
+            emptyFieldDisabled={!!formValues?.arbeidsland}
+          >
+            <LandValgSomOptions landValg={landValg} />
+            {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}
+            <LandValgSomOptions landValg={landValgUtenStøtte} />
+          </Skjema.Select>
+        </Nav.Column>
+      </Nav.Row>
 
       {landUtenStøtteValgt && <TomFlytMelding />}
 

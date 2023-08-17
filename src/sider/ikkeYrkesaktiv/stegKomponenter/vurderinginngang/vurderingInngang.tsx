@@ -23,6 +23,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import MKV from "../../../../melosyskodeverk";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
+import "./vurderingInngang.css";
 
 interface Props {
   bekreft: () => void;
@@ -31,8 +32,8 @@ interface Props {
 }
 
 export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
   const dispatch = useDispatch();
-  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const periodeFom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector));
   const periodeTom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeTomSelector));
@@ -41,8 +42,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
-
-  const [visOppfrisk, setVisOppfrisk] = useState(false);
+  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const { control, watch, formState, trigger } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
@@ -104,51 +104,50 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   if (!aktivtSteg) return null;
 
   return (
-    <div className="vurderingInngang">
+    <div className="vurderingInngang_ikkeYrkesaktiv">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
 
-      <Nav.Fieldset legend={<Nav.Typo.Undertittel>Periode</Nav.Typo.Undertittel>}>
-        <Nav.Row>
-          <Nav.Column xs="3">
-            <Forms.Datovelger
-              label="Fra og med"
-              name="fom"
-              disabled={!redigerbart}
-              control={control}
-              onChange={() => trigger("tom")}
-            />
-          </Nav.Column>
-          <Nav.Column xs="3">
-            <Forms.Datovelger
-              label={
-                <LabelMedHjelpetekst
-                  label="Til og med"
-                  hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Lovvalgsperiode registreres senere.`}
-                />
-              }
-              minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
-              name="tom"
-              disabled={!redigerbart}
-              control={control}
-            />
-          </Nav.Column>
-          <Nav.Column xs="5">
-            <Forms.Select
-              label="Land"
-              emptyFieldDisabled={!!formValues.land}
-              name="land"
-              disabled={!redigerbart}
-              control={control}
-            >
-              {landkoder.map((item: KTObject) => (
-                <option key={item.kode} value={item.kode}>
-                  {item.term}
-                </option>
-              ))}
-            </Forms.Select>
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Fieldset>
+      <Nav.Typo.Undertittel className="periode_label">Periode</Nav.Typo.Undertittel>
+      <Nav.Row>
+        <Nav.Column xs="3">
+          <Forms.Datovelger
+            label="Fra og med"
+            name="fom"
+            disabled={!redigerbart}
+            control={control}
+            onChange={() => trigger("tom")}
+          />
+        </Nav.Column>
+        <Nav.Column xs="3">
+          <Forms.Datovelger
+            label={
+              <LabelMedHjelpetekst
+                label="Til og med"
+                hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Lovvalgsperiode registreres senere.`}
+              />
+            }
+            minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
+            name="tom"
+            disabled={!redigerbart}
+            control={control}
+          />
+        </Nav.Column>
+        <Nav.Column xs="5">
+          <Forms.Select
+            label="Land"
+            emptyFieldDisabled={!!formValues.land}
+            name="land"
+            disabled={!redigerbart}
+            control={control}
+          >
+            {landkoder.map((item: KTObject) => (
+              <option key={item.kode} value={item.kode}>
+                {item.term}
+              </option>
+            ))}
+          </Forms.Select>
+        </Nav.Column>
+      </Nav.Row>
 
       {landUtenStøtteValgt && <TomFlytMelding />}
 

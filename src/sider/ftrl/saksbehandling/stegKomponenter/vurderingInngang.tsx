@@ -32,7 +32,9 @@ interface Props {
 }
 
 export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
   const dispatch = useDispatch();
+
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const trygdedekninger = useSelector(folketrygdenkodeverkSelectors.TrygdedekningerSelector);
@@ -47,8 +49,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     land: useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector).toString(),
     trygdedekning: useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector),
   };
-
-  const [visOppfrisk, setVisOppfrisk] = useState(false);
 
   const {
     control,
@@ -113,12 +113,14 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     "Du skal kun endre søknadsperiode dersom det er mottatt informasjon om ny start og/eller sluttdato for oppholdet";
 
   return (
-    <div className="vurderingInngang">
+    <div className="vurderingInngang_ftrl">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
+
       <div className="label__container">
         <Nav.Typo.Undertittel>Søknadsperiode</Nav.Typo.Undertittel>
         {erNyVurdering && <Nav.Typo.Undertekst>{nyVurderingPeriodetekst}</Nav.Typo.Undertekst>}
       </div>
+
       <Nav.Row>
         <Nav.Column xs="2">
           <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
