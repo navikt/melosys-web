@@ -58,11 +58,11 @@ Oppfrisk.propTypes = {
   oppfrisk: PT.func.isRequired,
 };
 
-const OppfriskFeilmelding = ({ lukk, resetErrorBoundary }) => (
+const OppfriskFeilmelding = ({ avbryt, resetErrorBoundary }) => (
   <StandardMeldingOverst
     type="feil"
     actionEtterSynlighet={() => {
-      lukk();
+      avbryt();
       resetErrorBoundary();
     }}
     melding="Oppdateringen feilet!"
@@ -71,14 +71,14 @@ const OppfriskFeilmelding = ({ lukk, resetErrorBoundary }) => (
 
 OppfriskFeilmelding.propTypes = {
   resetErrorBoundary: PT.func.isRequired,
-  lukk: PT.func.isRequired,
+  avbryt: PT.func.isRequired,
 };
 
 // Returnerer OppfriskVenter mens behandlingen oppfriskes og OppfriskFeilmelding dersom oppfrisk() returnerer != 2xx
-const OppfriskBehandling = ({ oppfrisk, lukk, tilForsiden }) => {
+const OppfriskBehandling = ({ oppfrisk, lukk, tilForsiden, avbryt }) => {
   return (
     <Sentry.ErrorBoundary
-      fallback={({ resetError }) => <OppfriskFeilmelding resetErrorBoundary={resetError} lukk={lukk} />}
+      fallback={({ resetError }) => <OppfriskFeilmelding resetErrorBoundary={resetError} avbryt={avbryt} />}
     >
       <Suspense fallback={<OppfriskVenter tilForsiden={tilForsiden} />}>
         <Oppfrisk oppfrisk={oppfrisk} lukk={lukk} />
@@ -91,11 +91,12 @@ OppfriskBehandling.propTypes = {
   lukk: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   oppfrisk: PT.func.isRequired,
+  avbryt: PT.func.isRequired,
 };
 
 const BekreftEllerOppfrisk = ({ bekreftet, settBekreftet, oppfrisk, avbryt, lukk, tilForsiden }) =>
   bekreftet ? (
-    <OppfriskBehandling oppfrisk={oppfrisk} lukk={lukk} tilForsiden={tilForsiden} />
+    <OppfriskBehandling oppfrisk={oppfrisk} lukk={lukk} tilForsiden={tilForsiden} avbryt={avbryt} />
   ) : (
     <OppfriskBekreft bekreft={settBekreftet} avbryt={avbryt} />
   );
