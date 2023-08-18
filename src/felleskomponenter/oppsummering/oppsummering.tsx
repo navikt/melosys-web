@@ -23,10 +23,7 @@ import KopierbarTekst from "../kopierbarTekst";
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
 import EndreBehandlingModal from "./endreBehandlingModal";
 import "./oppsummering.css";
-import {
-  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
-  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-} from "../../featuretoggle/toggleNavn";
+import { MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT } from "../../featuretoggle/toggleNavn";
 
 const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
@@ -65,7 +62,6 @@ const Oppsummering = ({
   className,
   behandlingID,
 }: OppsummeringProps) => {
-  const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
   const ikkeYrkesaktivToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
   const [mottaksdato, setMottaksdato] = useState<string | undefined>();
@@ -156,12 +152,7 @@ const Oppsummering = ({
       const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
       const mottatteOpplysningerperiode = `${mottatteOpplysningerPeriodeFom} - ${mottatteOpplysningerPeriodeTom}`;
 
-      const erUnntak = harUnntakFlyt(
-        sakstype.kode,
-        sakstema.kode,
-        behandlingstema.kode,
-        registreringUnntakFraMedlemskapToggleEnabled
-      );
+      const erUnntak = harUnntakFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode);
 
       const erIkkeYrkesaktiv = harIkkeYrkesaktivFlyt(sakstype.kode, behandlingstema.kode, ikkeYrkesaktivToggleEnabled);
 

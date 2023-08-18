@@ -66,6 +66,7 @@ export const PeriodeElementer = ({
               <Forms.Datovelger
                 control={control}
                 name={`medlemskapsperioder[${index}].fomDato`}
+                aria-label={`Fra og med periode ${index + 1}`}
                 disabled={!redigerbart}
                 onChange={(value) => handleChange([{ ...field, fomDato: value }], formIsValid, index)}
               />
@@ -74,6 +75,7 @@ export const PeriodeElementer = ({
               <Forms.Datovelger
                 control={control}
                 name={`medlemskapsperioder[${index}].tomDato`}
+                aria-label={`Til og med periode ${index + 1}`}
                 disabled={!redigerbart}
                 onChange={(value) => handleChange([{ ...field, tomDato: value }], formIsValid, index)}
               />
@@ -81,6 +83,7 @@ export const PeriodeElementer = ({
             <Nav.Column xs="4">
               <Forms.Select
                 name={`medlemskapsperioder[${index}].trygdedekning`}
+                aria-label={`Trygdedekning periode ${index + 1}`}
                 control={control}
                 disabled={!redigerbart}
                 emptyFieldDisabled={!!field.trygdedekning}
@@ -96,6 +99,7 @@ export const PeriodeElementer = ({
             <Nav.Column xs="2">
               <Forms.Select
                 name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
+                aria-label={`Resultat periode ${index + 1}`}
                 control={control}
                 disabled={!redigerbart}
                 emptyFieldDisabled={!!field.innvilgelsesResultat}

@@ -17,11 +17,7 @@ import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 // noinspection ES6PreferShortImport
 import { harIkkeYrkesaktivFlyt, harUnntakFlyt, skalViseTomFlyt } from "../../url/url";
-import {
-  MELOSYS_FOLKETRYGDEN_MVP,
-  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
-  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-} from "../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT } from "../../featuretoggle/toggleNavn";
 
 const harTomFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
@@ -29,10 +25,6 @@ const harTomFlyt = async (sakstype, state) => {
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
   const folketrygdenToggleEnabled = erFeatureToggleEnabled(MELOSYS_FOLKETRYGDEN_MVP, state);
   const ikkeYrkesaktivFlytToggleEnabled = erFeatureToggleEnabled(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT, state);
-  const registreringUnntakFraMedlemskapToggleEnabled = erFeatureToggleEnabled(
-    MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-    state
-  );
 
   return skalViseTomFlyt(
     sakstype,
@@ -40,20 +32,16 @@ const harTomFlyt = async (sakstype, state) => {
     behandlingstema,
     behandlingstype,
     folketrygdenToggleEnabled,
-    ikkeYrkesaktivFlytToggleEnabled,
-    registreringUnntakFraMedlemskapToggleEnabled
+    ikkeYrkesaktivFlytToggleEnabled
   );
 };
 const harUnntaksregistreringEllerIkkeYrkesaktivFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
-  const registreringUnntakFraMedlemskapToggleEnabled = erFeatureToggleEnabled(
-    MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-    state
-  );
+
   const ikkeYrkesaktivToggleEnabled = erFeatureToggleEnabled(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT, state);
   return (
-    harUnntakFlyt(sakstype, sakstema, behandlingstema, registreringUnntakFraMedlemskapToggleEnabled) ||
+    harUnntakFlyt(sakstype, sakstema, behandlingstema) ||
     harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivToggleEnabled)
   );
 };

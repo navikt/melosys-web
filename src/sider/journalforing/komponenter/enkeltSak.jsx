@@ -16,18 +16,13 @@ import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behand
 
 import "./enkeltSak.css";
 import { useFeatureToggle } from "../../../featuretoggle";
-import {
-  MELOSYS_FOLKETRYGDEN_MVP,
-  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
-  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-} from "../../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT } from "../../../featuretoggle/toggleNavn";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = (props) => {
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
-  const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
 
   const { landkoder } = props;
   const { behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
@@ -46,8 +41,7 @@ const EnkeltSak = (props) => {
     behandlingstema.kode,
     behandlingstype.kode,
     folketrygdenToggleEnabled,
-    ikkeYrkesaktivFlytToggleEnabled,
-    registreringUnntakFraMedlemskapToggleEnabled
+    ikkeYrkesaktivFlytToggleEnabled
   );
 
   const periode = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus?.kode)
