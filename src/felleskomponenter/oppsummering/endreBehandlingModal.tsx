@@ -25,11 +25,7 @@ import { StandardMeldingOverst } from "../alertmeldinger";
 import { Spinner } from "../spinner";
 
 import "./endreBehandlingModal.css";
-import {
-  MELOSYS_FOLKETRYGDEN_MVP,
-  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
-  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-} from "../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT } from "../../featuretoggle/toggleNavn";
 
 enum FeltVerdier {
   sakstype = "sakstype",
@@ -91,7 +87,6 @@ function EndreBehandlingModal({
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
-  const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
   const typeTemaKanEndres = !anmodningsperioderSendtTilUtlandet;
   const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
 
@@ -161,8 +156,7 @@ function EndreBehandlingModal({
         behandlingstema,
         behandlingstype,
         folketrygdenToggleEnabled,
-        ikkeYrkesaktivFlytToggleEnabled,
-        registreringUnntakFraMedlemskapToggleEnabled
+        ikkeYrkesaktivFlytToggleEnabled
       )
     ) {
       await Api.Trygdeavtale.slettFlyt(behandlingID);
@@ -228,8 +222,7 @@ function EndreBehandlingModal({
           behandlingstema,
           behandlingstype,
           folketrygdenToggleEnabled,
-          ikkeYrkesaktivFlytToggleEnabled,
-          registreringUnntakFraMedlemskapToggleEnabled
+          ikkeYrkesaktivFlytToggleEnabled
         );
 
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {

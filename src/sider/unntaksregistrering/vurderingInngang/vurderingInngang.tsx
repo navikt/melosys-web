@@ -19,6 +19,8 @@ import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { FellesHandlersContext } from "../../../contexts";
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
+import { DialogboksOppfriskSak } from "../../../felleskomponenter/dialogboks";
+import { navigeringOperations } from "../../../ducks/navigering";
 
 const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const gyldigeLandkoder = (sakstype: string) =>
@@ -53,7 +55,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
   const formValues = watch();
 
   const [initialValues, setInitialValues] = useState<FieldValues>({ ...formState.defaultValues });
-  const [visSpinner, setVisSpinner] = useState(false);
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
 
   const skalHenteRegisteropplysninger =
     !registeropplysningerHentet ||
@@ -62,7 +64,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
     formValues?.avsenderland !== initialValues?.avsenderland ||
     formValues?.lovvalgsland !== initialValues?.lovvalgsland;
 
-  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visSpinner;
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visOppfrisk;
 
   useEffect(() => {
     if (registeropplysningerHentet) {
@@ -108,55 +110,70 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
     dispatch(mottatteOpplysningerOperations.oppdaterLovvalgsland(valgtLand));
   };
 
-  const bekreftHandle = async () => {
-    setInitialValues({
-      fom: formValues.fom,
-      tom: formValues.tom,
-      avsenderland: formValues.avsenderland,
-      lovvalgsland: formValues.lovvalgsland,
-    });
-
+  const bekreftOgFortsett = () => {
     if (skalHenteRegisteropplysninger) {
-      setVisSpinner(true);
-      await oppfriskOgLastInnSaksopplysninger();
-      setVisSpinner(false);
-      dispatch(menypanelOperations.visMenypanel());
+      setInitialValues({
+        fom: formValues.fom,
+        tom: formValues.tom,
+        avsenderland: formValues.avsenderland,
+        lovvalgsland: formValues.lovvalgsland,
+      });
+      setVisOppfrisk(true);
+    } else {
+      bekreft();
     }
-    bekreft();
   };
 
   return (
-    <div className="vurderingInngang">
+    <div className="vurderingInngang_unntaksregistrering">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra attesten</Nav.Typo.Innholdstittel>
-      <Nav.Fieldset legend="Periode">
-        <Nav.Row>
-          <Nav.Column xs="2">
-            <Forms.Datovelger
-              label="Fra og med"
-              name="fom"
-              disabled={!redigerbart}
-              control={control}
-              onChange={lagreFom}
-            />
-          </Nav.Column>
-          <Nav.Column xs="2">
-            <Forms.Datovelger
-              label="Til og med"
-              name="tom"
-              minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
-              disabled={!redigerbart}
-              control={control}
-              onChange={lagreTom}
-            />
-          </Nav.Column>
+
+      <Nav.Typo.Undertittel className="periode_label">Periode</Nav.Typo.Undertittel>
+      <Nav.Row>
+        <Nav.Column xs="2">
+          <Forms.Datovelger
+            label="Fra og med"
+            name="fom"
+            disabled={!redigerbart}
+            control={control}
+            onChange={lagreFom}
+          />
+        </Nav.Column>
+        <Nav.Column xs="2">
+          <Forms.Datovelger
+            label="Til og med"
+            name="tom"
+            minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
+            disabled={!redigerbart}
+            control={control}
+            onChange={lagreTom}
+          />
+        </Nav.Column>
+        <Nav.Column xs="4">
+          <Forms.Select
+            name="avsenderland"
+            control={control}
+            label="Avsenderland"
+            emptyFieldDisabled={!!formValues.avsenderland}
+            disabled={!redigerbart}
+            onChange={lagreAvsenderland}
+          >
+            {gyldigeLandkoder(sakstype).map((item: KTObject) => (
+              <option key={item.kode} value={item.kode}>
+                {item.term}
+              </option>
+            ))}
+          </Forms.Select>
+        </Nav.Column>
+        {sakstype === EU_EOS && (
           <Nav.Column xs="4">
             <Forms.Select
-              name="avsenderland"
+              name="lovvalgsland"
               control={control}
-              label="Avsenderland"
-              emptyFieldDisabled={!!formValues.avsenderland}
+              label="Lovvalgsland"
+              emptyFieldDisabled={!!formValues.lovvalgsland}
               disabled={!redigerbart}
-              onChange={lagreAvsenderland}
+              onChange={lagreLovvalgsland}
             >
               {gyldigeLandkoder(sakstype).map((item: KTObject) => (
                 <option key={item.kode} value={item.kode}>
@@ -165,40 +182,38 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
               ))}
             </Forms.Select>
           </Nav.Column>
-          {sakstype === EU_EOS && (
-            <Nav.Column xs="4">
-              <Forms.Select
-                name="lovvalgsland"
-                control={control}
-                label="Lovvalgsland"
-                emptyFieldDisabled={!!formValues.lovvalgsland}
-                disabled={!redigerbart}
-                onChange={lagreLovvalgsland}
-              >
-                {gyldigeLandkoder(sakstype).map((item: KTObject) => (
-                  <option key={item.kode} value={item.kode}>
-                    {item.term}
-                  </option>
-                ))}
-              </Forms.Select>
-            </Nav.Column>
-          )}
-        </Nav.Row>
-      </Nav.Fieldset>
+        )}
+      </Nav.Row>
+
       {sakstype === EU_EOS && (
-        <Nav.AlertStripeInfo className="vurderingInngang__alertstripe">
+        <Nav.AlertStripeInfo className="vurderingInngang_unntaksregistrering__alertstripe">
           Hvis avsenderlandet ikke er lovvalgsland, må du endre lovvalgsland.
         </Nav.AlertStripeInfo>
       )}
+
       <Mui.StegKnapper
         bekreftKnappProps={{
-          onClick: bekreftHandle,
+          onClick: bekreftOgFortsett,
           disabled: !formState?.isValid || !redigerbart,
-          autoDisableVedSpinner: true,
-          spinner: visSpinner,
         }}
-        bekreftTekst="Bekreft og innhent registeropplysninger"
       />
+
+      {visOppfrisk && (
+        <DialogboksOppfriskSak
+          oppfrisk={oppfriskOgLastInnSaksopplysninger}
+          avbryt={() => setVisOppfrisk(false)}
+          lukk={() => {
+            setVisOppfrisk(false);
+            dispatch(menypanelOperations.visMenypanel());
+            bekreft();
+          }}
+          tilForsiden={() => {
+            setVisOppfrisk(false);
+            dispatch(navigeringOperations.tilForsiden());
+          }}
+          bekreftetFraStart
+        />
+      )}
     </div>
   );
 };

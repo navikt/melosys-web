@@ -1,5 +1,6 @@
 import DialogboksOppfriskBehandling from "./dialogboksOppfrisk";
 import { render, screen } from "@testing-library/react";
+import { FellesHandlersContext } from "../../../contexts";
 
 describe("DialogboksOppfrisk", () => {
   let props = null;
@@ -10,9 +11,8 @@ describe("DialogboksOppfrisk", () => {
       avbryt: vi.fn(),
       lukk: vi.fn(),
       tilForsiden: vi.fn(),
-      behandlingOppfriskes: false,
-      annenBehandlingOppfriskes: false,
       ariaHideApp: false,
+      bekreftetFraStart: false,
     };
   });
 
@@ -23,13 +23,41 @@ describe("DialogboksOppfrisk", () => {
   });
 
   it("viser ikke oppfrisk knapp når en annen behandling oppfriskes", () => {
-    props.annenBehandlingOppfriskes = true;
-
-    render(<DialogboksOppfriskBehandling {...props} />);
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
+    const context = { annenBehandlingOppfriskes: true };
+    render(
+      <FellesHandlersContext.Provider value={context}>
+        <DialogboksOppfriskBehandling {...props} />
+      </FellesHandlersContext.Provider>
+    );
 
     expect(screen.getByRole("heading")).toHaveTextContent("Kan ikke oppdatere registeropplysninger");
     expect(screen.getByRole("button")).toHaveTextContent("Lukk");
     expect(screen.queryByText("Fortsett oppdatering")).not.toBeInTheDocument();
+  });
+
+  it("starter med oppfriskning med en gang når bekreftetFraStart er true", () => {
+    props.bekreftetFraStart = true;
+
+    render(<DialogboksOppfriskBehandling {...props} />);
+
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.queryByRole("heading")).toBeNull();
+    expect(screen.queryAllByRole("button")).toHaveLength(0);
+  });
+
+  it("starter med oppfriskning med en gang når behandlingOppfriskes er true", () => {
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
+    const context = { behandlingOppfriskes: true };
+    render(
+      <FellesHandlersContext.Provider value={context}>
+        <DialogboksOppfriskBehandling {...props} />
+      </FellesHandlersContext.Provider>
+    );
+
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.queryByRole("heading")).toBeNull();
+    expect(screen.queryAllByRole("button")).toHaveLength(0);
   });
 
   it("viser forventet heading, oppfrisk og avbryt oppfriskning knapper", () => {
