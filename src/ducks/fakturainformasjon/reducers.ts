@@ -9,7 +9,10 @@ import * as Types from "./types";
 
 const initialState = {
   status: STATUS.NOT_STARTED,
-  data: [],
+  data: {
+    fakturaserie: [],
+    fakturainfo: [],
+  },
 };
 
 export default function reducer(state = initialState, action: Types.Action) {
@@ -18,8 +21,10 @@ export default function reducer(state = initialState, action: Types.Action) {
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data.data };
-    case Types.OK:
-      return { ...state, status: STATUS.OK, data: action.data };
+    case Types.OKFakturaserie:
+      return { ...state, status: STATUS.OK, data: { ...state.data, fakturaserie: action.data } };
+    case Types.OKFakturainfo:
+      return { ...state, status: STATUS.OK, data: { ...state.data, fakturainfo: action.data } };
     default:
       return state;
   }

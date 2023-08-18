@@ -43,7 +43,11 @@ class LinkGroupsFactory {
     folketrygdenToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
     if (skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)) {
-      return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
+      return new LinkgroupsBuilder()
+        .addUtenLabel(
+          new LinksBuilder(contentProps).addFullmektig().addFaktureringskomponenten(folketrygdenToggleEnabled).build()
+        )
+        .build();
     }
 
     if (harUnntakFlyt(sakstype, sakstema, behandlingstema)) {
