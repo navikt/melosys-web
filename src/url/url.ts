@@ -82,18 +82,10 @@ export const lagUrl = (
   sakstemaKode: string,
   behandlingstemaKode: string,
   behandlingstypeKode: string,
-  folketrygdenToggleEnabled: boolean | undefined,
-  ikkeYrkesaktivToggleEnabled: boolean | undefined
+  folketrygdenToggleEnabled: boolean | undefined
 ) => {
   if (
-    skalViseTomFlyt(
-      sakstypeKode,
-      sakstemaKode,
-      behandlingstemaKode,
-      behandlingstypeKode,
-      folketrygdenToggleEnabled,
-      ikkeYrkesaktivToggleEnabled
-    )
+    skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, folketrygdenToggleEnabled)
   ) {
     return lagTomFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
@@ -122,16 +114,8 @@ export const harUnntakFlyt = (sakstype: string, sakstema: string, behandlingstem
   return false;
 };
 
-export const harIkkeYrkesaktivFlyt = (
-  sakstype: string,
-  behandlingstema: string,
-  ikkeYrkesaktivFlytToggleEnabled: boolean = false
-) => {
-  return (
-    ikkeYrkesaktivFlytToggleEnabled &&
-    sakstype !== FTRL &&
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV
-  );
+export const harIkkeYrkesaktivFlyt = (sakstype: string, behandlingstema: string) => {
+  return sakstype !== FTRL && behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
 };
 
 export const skalViseTomFlyt = (
@@ -139,8 +123,7 @@ export const skalViseTomFlyt = (
   sakstema: string,
   behandlingstema: string,
   behandlingstype: string,
-  folketrygdenToggleEnabled: boolean = false,
-  ikkeYrkesaktivFlytToggleEnabled: boolean = false
+  folketrygdenToggleEnabled: boolean = false
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
@@ -153,7 +136,7 @@ export const skalViseTomFlyt = (
   }
 
   if (harUnntakFlyt(sakstype, sakstema, behandlingstema)) return false;
-  if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled)) return false;
+  if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema)) return false;
 
   if (
     sakstype === TRYGDEAVTALE &&

@@ -14,7 +14,7 @@ import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
 import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT } from "../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -23,7 +23,6 @@ import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT } from "
  */
 const Fagsak = ({ sak, landkoder }) => {
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
-  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
 
   const { land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
@@ -37,8 +36,7 @@ const Fagsak = ({ sak, landkoder }) => {
       sakstema.kode,
       behandling.behandlingstema.kode,
       behandling.behandlingstype.kode,
-      folketrygdenToggleEnabled,
-      ikkeYrkesaktivFlytToggleEnabled
+      folketrygdenToggleEnabled
     );
 
   const customMargin = { marginLeft: "1em" };
