@@ -30,7 +30,6 @@ interface LinkGroupsConfig {
   contentProps: ContentProps;
   sakstema: string;
   folketrygdenToggleEnabled: boolean | undefined;
-  ikkeYrkesaktivFlytToggleEnabled: boolean | undefined;
 }
 
 class LinkGroupsFactory {
@@ -42,18 +41,8 @@ class LinkGroupsFactory {
     behandlingstype,
     sakstema,
     folketrygdenToggleEnabled,
-    ikkeYrkesaktivFlytToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (
-      skalViseTomFlyt(
-        sakstype,
-        sakstema,
-        behandlingstema,
-        behandlingstype,
-        folketrygdenToggleEnabled,
-        ikkeYrkesaktivFlytToggleEnabled
-      )
-    ) {
+    if (skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)) {
       return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
     }
 
@@ -70,7 +59,7 @@ class LinkGroupsFactory {
         .build();
     }
 
-    if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled || false)) {
+    if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema)) {
       return new LinkgroupsBuilder()
         .addFraRegister(
           new LinksBuilder(contentProps)

@@ -17,33 +17,21 @@ import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 // noinspection ES6PreferShortImport
 import { harIkkeYrkesaktivFlyt, harUnntakFlyt, skalViseTomFlyt } from "../../url/url";
-import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT } from "../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
 
 const harTomFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
   const folketrygdenToggleEnabled = erFeatureToggleEnabled(MELOSYS_FOLKETRYGDEN_MVP, state);
-  const ikkeYrkesaktivFlytToggleEnabled = erFeatureToggleEnabled(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT, state);
 
-  return skalViseTomFlyt(
-    sakstype,
-    sakstema,
-    behandlingstema,
-    behandlingstype,
-    folketrygdenToggleEnabled,
-    ikkeYrkesaktivFlytToggleEnabled
-  );
+  return skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled);
 };
 const harUnntaksregistreringEllerIkkeYrkesaktivFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
 
-  const ikkeYrkesaktivToggleEnabled = erFeatureToggleEnabled(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT, state);
-  return (
-    harUnntakFlyt(sakstype, sakstema, behandlingstema) ||
-    harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivToggleEnabled)
-  );
+  return harUnntakFlyt(sakstype, sakstema, behandlingstema) || harIkkeYrkesaktivFlyt(sakstype, behandlingstema);
 };
 
 export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => async (dispatch, getState) => {
