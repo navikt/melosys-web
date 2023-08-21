@@ -27,7 +27,7 @@ const harTomFlyt = async (sakstype, state) => {
 
   return skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled);
 };
-const harUnntaksregistreringEllerIkkeYrkesaktivFlyt = async (sakstype, state) => {
+const harUnntaksregistreringEllerIkkeYrkesaktivFlyt = (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
 
@@ -44,7 +44,7 @@ export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => a
     ]);
   }
 
-  if (await harUnntaksregistreringEllerIkkeYrkesaktivFlyt(sakstype, getState())) {
+  if (harUnntaksregistreringEllerIkkeYrkesaktivFlyt(sakstype, getState())) {
     return Promise.all([
       dispatch(fagsakOperations.hent(saksnummer)),
       dispatch(behandlingerOperations.hentBehandling(behandlingID)),
