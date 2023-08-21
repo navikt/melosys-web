@@ -162,6 +162,7 @@ const VurderingInngang = ({
     if (skalHenteRegisteropplysninger) {
       innhentRegisteropplysninger();
     } else {
+      hentFlytOgOppdaterAktuelleSteg();
       fortsett();
     }
   };
