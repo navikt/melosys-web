@@ -97,7 +97,6 @@ const VurderingInngang = ({
   oppdaterPeriode,
   oppdaterSoeknadsland,
   oppdaterFlyt,
-  oppfriskFlyt,
   visMenypanel,
   aktivtSteg,
   registeropplysningerHentet,
