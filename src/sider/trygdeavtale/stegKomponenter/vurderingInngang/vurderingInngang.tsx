@@ -234,10 +234,6 @@ const VurderingInngang = ({
           lukk={() => {
             setVisOppfrisk(false);
             visMenypanel();
-            oppfriskFlyt();
-            if (!landUtenStøtteValgt) {
-              fortsett();
-            }
           }}
           tilForsiden={() => {
             setVisOppfrisk(false);
