@@ -30,6 +30,7 @@ import { ReactComponent as ExternalLink } from "./external-link.svg";
 import { ReactComponent as Familie } from "./familie.svg";
 import { ReactComponent as Forhandsvis } from "./forhandsvis.svg";
 import { ReactComponent as Ferdig } from "./ikon-steg-ferdig.svg";
+import { ReactComponent as FerdigFilled } from "./ikon-steg-ferdig-filled.svg";
 import { ReactComponent as Feil } from "./ikon-steg-feil.svg";
 import { ReactComponent as Filenew } from "./line-version-file-new-1.svg";
 import { ReactComponent as Files } from "./files.svg";
@@ -70,9 +71,11 @@ import { ReactComponent as Ring } from "./ring.svg";
 import { ReactComponent as Skip } from "./skip.svg";
 import { ReactComponent as Svar } from "./reply.svg";
 import { ReactComponent as Ubehandlet } from "./ikon-steg-ubehandlet.svg";
+import { ReactComponent as UbehandletFilled } from "./ikon-steg-ubehandlet-filled.svg";
 import { ReactComponent as Up } from "./up.svg";
 import { ReactComponent as VedtakAvslatt } from "./ikon-vedtak-avslatt.svg";
 import { ReactComponent as VedtakGodkjent } from "./ikon-vedtak-godkjent.svg";
+import { ReactComponent as VedtakGodkjentIkkeAktiv } from "./ikon-vedtak-godkjent-ikke-aktiv.svg";
 import { ReactComponent as VedakUbehandlet } from "./ikon-vedtak-ubehandlet.svg";
 import { ReactComponent as Ukjentkjoenn } from "./ikon-ukjentkjonn.svg";
 import { ReactComponent as Kopier } from "./file-copy.svg";
@@ -160,4 +163,7 @@ export {
   VedtakGodkjent,
   VedakUbehandlet,
   Ukjentkjoenn,
+  FerdigFilled,
+  UbehandletFilled,
+  VedtakGodkjentIkkeAktiv,
 };

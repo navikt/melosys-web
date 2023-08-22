@@ -11,13 +11,16 @@ const ikonVelger = (status, vedtakSteg) => {
   const IKONER = {
     STEG: {
       UBEHANDLET: Ikoner.Ubehandlet,
+      UBEHANDLET_AKTIV: Ikoner.UbehandletFilled,
       OK: Ikoner.Ferdig,
+      AKTIV: Ikoner.FerdigFilled,
       ADVARSEL: Ikoner.Varsel,
       FEIL: Ikoner.Feil,
     },
     VEDTAK: {
       UBEHANDLET: Ikoner.VedakUbehandlet,
-      OK: Ikoner.VedtakGodkjent,
+      OK: Ikoner.VedtakGodkjentIkkeAktiv,
+      AKTIV: Ikoner.VedtakGodkjent,
       ADVARSEL: Ikoner.VedtakAvslatt,
       FEIL: Ikoner.VedtakAvslatt,
     },
@@ -30,7 +33,14 @@ const StegIkon = (props) => {
   const { aktivtSteg, status, tittel, onClick, tilgjengelig, vedtakSteg } = props;
 
   const erTilgjengelig = status !== FANE_STATUS.UBEHANDLET;
-  const Ikon = ikonVelger(status, vedtakSteg);
+  let currentStatus = status;
+  if (aktivtSteg === true && status === FANE_STATUS.OK) {
+    currentStatus = FANE_STATUS.AKTIV;
+  } else if (aktivtSteg === true && status === FANE_STATUS.UBEHANDLET) {
+    currentStatus = FANE_STATUS.UBEHANDLET_AKTIV;
+  }
+
+  const Ikon = ikonVelger(currentStatus, vedtakSteg);
 
   const cl = classnames(
     "stegIkon",
@@ -43,7 +53,6 @@ const StegIkon = (props) => {
     stegIkon__enkeltSteg: !vedtakSteg,
     stegIkon__vedtak: vedtakSteg,
   });
-
   /* eslint-disable react/no-danger */
   return (
     <li className={cl}>
