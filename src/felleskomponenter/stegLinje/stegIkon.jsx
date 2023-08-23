@@ -42,14 +42,6 @@ const StegIkon = (props) => {
   const { aktivtSteg, status, tittel, onClick, tilgjengelig, vedtakSteg } = props;
 
   const erTilgjengelig = status !== FANE_STATUS.UBEHANDLET;
-  let currentStatus = status;
-  /*if (aktivtSteg === true && status === FANE_STATUS.OK) {
-    currentStatus = FANE_STATUS.AKTIV;
-  } else if (aktivtSteg === true && status === FANE_STATUS.UBEHANDLET) {
-    currentStatus = FANE_STATUS.UBEHANDLET_AKTIV;
-  } else if (aktivtSteg === true && status === FANE_STATUS.UBEHANDLET) {
-    currentStatus = FANE_STATUS.UBEHANDLET_AKTIV;
-  }*/
 
   const Ikon = ikonVelger(status, vedtakSteg, aktivtSteg);
 
