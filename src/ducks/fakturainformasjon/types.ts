@@ -1,5 +1,5 @@
-export const OKFakturaserie = "fakturaserie/OK";
-export const OKFakturainfo = "fakturainfo/OK";
+export const OKFakturaserie = "fakturainformasjon/OKFakturaserie";
+export const OKFakturainfo = "fakturainformasjon/OKFakturainfo";
 export const FEILET = "fakturainformasjon/FEILET";
 export const PENDING = "fakturainformasjon/PENDING";
 
