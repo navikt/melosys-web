@@ -97,7 +97,6 @@ const VurderingInngang = ({
   oppdaterPeriode,
   oppdaterSoeknadsland,
   oppdaterFlyt,
-  oppfriskFlyt,
   visMenypanel,
   aktivtSteg,
   registeropplysningerHentet,
@@ -236,10 +235,6 @@ const VurderingInngang = ({
           lukk={() => {
             setVisOppfrisk(false);
             visMenypanel();
-            oppfriskFlyt();
-            if (!landUtenStøtteValgt) {
-              fortsett();
-            }
           }}
           tilForsiden={() => {
             setVisOppfrisk(false);
