@@ -157,7 +157,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
             onClick: innhentRegisteropplysninger,
             disabled: !formState?.isValid || !redigerbart,
           }}
-          bekreftTekst={"Innhent registeropplysninger"}
+          bekreftTekst="Innhent registeropplysninger"
         />
       )}
 

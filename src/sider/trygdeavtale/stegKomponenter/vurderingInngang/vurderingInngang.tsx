@@ -216,7 +216,7 @@ const VurderingInngang = ({
             onClick: innhentRegisteropplysninger,
             disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
           }}
-          bekreftTekst={"Innhent registeropplysninger"}
+          bekreftTekst="Innhent registeropplysninger"
         />
       )}
 
