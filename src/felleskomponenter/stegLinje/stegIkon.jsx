@@ -7,7 +7,7 @@ import * as Ikoner from "../../resources/images";
 
 import "./stegIkon.css";
 
-const ikonVelger = (status, vedtakSteg) => {
+const ikonVelger = (status, vedtakSteg, aktivtSteg) => {
   const IKONER = {
     STEG: {
       UBEHANDLET: Ikoner.Ubehandlet,
@@ -20,13 +20,22 @@ const ikonVelger = (status, vedtakSteg) => {
     VEDTAK: {
       UBEHANDLET: Ikoner.VedakUbehandlet,
       OK: Ikoner.VedtakGodkjentIkkeAktiv,
-      AKTIV: Ikoner.VedtakGodkjent,
+      AKTIV: Ikoner.VedtakGodkjentAktiv,
       ADVARSEL: Ikoner.VedtakAvslatt,
       FEIL: Ikoner.VedtakAvslatt,
     },
   };
 
-  return vedtakSteg ? IKONER.VEDTAK.OK : IKONER.STEG[status];
+  if (aktivtSteg) {
+    if (vedtakSteg) {
+      return aktivtSteg ? IKONER.VEDTAK.UBEHANDLET_AKTIV : IKONER.STEG.UBEHANDLET_AKTIV;
+    } else {
+      return status === FANE_STATUS.UBEHANDLET ? IKONER.STEG.UBEHANDLET_AKTIV : IKONER.STEG.UBEHANDLET;
+    }
+    return vedtakSteg ? IKONER.VEDTAK.AKTIV : IKONER.STEG.AKTIV;
+  } else {
+    return vedtakSteg ? IKONER.VEDTAK[status] : IKONER.STEG[status];
+  }
 };
 
 const StegIkon = (props) => {
@@ -34,13 +43,15 @@ const StegIkon = (props) => {
 
   const erTilgjengelig = status !== FANE_STATUS.UBEHANDLET;
   let currentStatus = status;
-  if (aktivtSteg === true && status === FANE_STATUS.OK) {
+  /*if (aktivtSteg === true && status === FANE_STATUS.OK) {
     currentStatus = FANE_STATUS.AKTIV;
   } else if (aktivtSteg === true && status === FANE_STATUS.UBEHANDLET) {
     currentStatus = FANE_STATUS.UBEHANDLET_AKTIV;
-  }
+  } else if (aktivtSteg === true && status === FANE_STATUS.UBEHANDLET) {
+    currentStatus = FANE_STATUS.UBEHANDLET_AKTIV;
+  }*/
 
-  const Ikon = ikonVelger(currentStatus, vedtakSteg);
+  const Ikon = ikonVelger(status, vedtakSteg, aktivtSteg);
 
   const cl = classnames(
     "stegIkon",
