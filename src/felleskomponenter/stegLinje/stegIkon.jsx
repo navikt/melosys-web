@@ -11,16 +11,15 @@ const ikonVelger = (status, vedtakSteg, aktivtSteg) => {
   if (aktivtSteg) {
     if (vedtakSteg) {
       return Ikoner.VedtakGodkjentAktiv;
-    } else {
-      return status === FANE_STATUS.UBEHANDLET ? Ikoner.UbehandletFilled : Ikoner.FerdigFilled;
     }
-  } else {
-    if (vedtakSteg) {
-      return status === FANE_STATUS.UBEHANDLET ? Ikoner.VedakUbehandlet : Ikoner.VedtakGodkjentIkkeAktiv;
-    } else {
-      return status === FANE_STATUS.UBEHANDLET ? Ikoner.Ubehandlet : Ikoner.Ferdig;
-    }
+    return status === FANE_STATUS.UBEHANDLET ? Ikoner.UbehandletFilled : Ikoner.FerdigFilled;
   }
+
+  if (vedtakSteg) {
+    return status === FANE_STATUS.UBEHANDLET ? Ikoner.VedakUbehandlet : Ikoner.VedtakGodkjentIkkeAktiv;
+  }
+
+  return status === FANE_STATUS.UBEHANDLET ? Ikoner.Ubehandlet : Ikoner.Ferdig;
 };
 
 const StegIkon = (props) => {
