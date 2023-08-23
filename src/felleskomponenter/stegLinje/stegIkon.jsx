@@ -8,33 +8,18 @@ import * as Ikoner from "../../resources/images";
 import "./stegIkon.css";
 
 const ikonVelger = (status, vedtakSteg, aktivtSteg) => {
-  const IKONER = {
-    STEG: {
-      UBEHANDLET: Ikoner.Ubehandlet,
-      UBEHANDLET_AKTIV: Ikoner.UbehandletFilled,
-      OK: Ikoner.Ferdig,
-      AKTIV: Ikoner.FerdigFilled,
-      ADVARSEL: Ikoner.Varsel,
-      FEIL: Ikoner.Feil,
-    },
-    VEDTAK: {
-      UBEHANDLET: Ikoner.VedakUbehandlet,
-      OK: Ikoner.VedtakGodkjentIkkeAktiv,
-      AKTIV: Ikoner.VedtakGodkjentAktiv,
-      ADVARSEL: Ikoner.VedtakAvslatt,
-      FEIL: Ikoner.VedtakAvslatt,
-    },
-  };
-
   if (aktivtSteg) {
     if (vedtakSteg) {
-      return aktivtSteg ? IKONER.VEDTAK.UBEHANDLET_AKTIV : IKONER.STEG.UBEHANDLET_AKTIV;
+      return Ikoner.VedtakGodkjentAktiv;
     } else {
-      return status === FANE_STATUS.UBEHANDLET ? IKONER.STEG.UBEHANDLET_AKTIV : IKONER.STEG.UBEHANDLET;
+      return status === FANE_STATUS.UBEHANDLET ? Ikoner.UbehandletFilled : Ikoner.FerdigFilled;
     }
-    return vedtakSteg ? IKONER.VEDTAK.AKTIV : IKONER.STEG.AKTIV;
   } else {
-    return vedtakSteg ? IKONER.VEDTAK[status] : IKONER.STEG[status];
+    if (vedtakSteg) {
+      return status === FANE_STATUS.UBEHANDLET ? Ikoner.VedakUbehandlet : Ikoner.VedtakGodkjentIkkeAktiv;
+    } else {
+      return status === FANE_STATUS.UBEHANDLET ? Ikoner.Ubehandlet : Ikoner.Ferdig;
+    }
   }
 };
 
