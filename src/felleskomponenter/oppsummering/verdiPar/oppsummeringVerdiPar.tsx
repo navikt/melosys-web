@@ -7,7 +7,7 @@ import "./oppsummeringVerdiPar.css";
 interface OppsummeringVerdiParProps {
   className: string;
   nokkel: string;
-  verdi: string;
+  verdi: string | number | null;
   ekstrafelt: ReactNode;
 }
 

@@ -12,7 +12,15 @@ import * as Types from "./types";
 
 export function hentFakturaserie(vedtaksId: string) {
   return doThenDispatch(() => Api.Faktureringskomponenten.hentFakturaserie(vedtaksId), {
-    OK: Types.OK,
+    OK: Types.OKFakturaserie,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
+export function hentFakturainformasjon(fakturaNr: string) {
+  return doThenDispatch(() => Api.Faktureringskomponenten.hentFakturainfo(fakturaNr), {
+    OK: Types.OKFakturainfo,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });

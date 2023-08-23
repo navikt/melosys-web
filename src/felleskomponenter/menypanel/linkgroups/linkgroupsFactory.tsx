@@ -5,6 +5,8 @@ import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
 
+const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
+
 const {
   UTSENDT_ARBEIDSTAKER,
   UTSENDT_SELVSTENDIG,
@@ -43,7 +45,13 @@ class LinkGroupsFactory {
     folketrygdenToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
     if (skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)) {
-      return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
+      const linkBuilder = new LinksBuilder(contentProps).addFullmektig();
+
+      if (behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
+        linkBuilder.addFaktureringskomponenten(folketrygdenToggleEnabled);
+      }
+
+      return new LinkgroupsBuilder().addUtenLabel(linkBuilder.build()).build();
     }
 
     if (harUnntakFlyt(sakstype, sakstema, behandlingstema)) {
