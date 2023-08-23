@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 
 import StegIkon from "./stegIkon";
 import "./stegLinje.css";
-import * as Ikoner from "../../resources/images";
-import { FANE_STATUS } from "../stegvelger";
 
 // TODO: Skrives om i MELOSYS-6023, hvorfor er Steglinje en <ul> ???
 const StegLinje = (props) => {
