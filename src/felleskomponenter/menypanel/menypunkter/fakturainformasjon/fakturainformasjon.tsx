@@ -8,6 +8,7 @@ import { fakturainformasjonOperations } from "../../../../ducks/fakturainformasj
 import "./fakturainformasjon.css";
 import { _isEmpty, _toInteger } from "../../../../utils";
 import { Faktura } from "./faktura";
+import { STATUS } from "../../../../services";
 
 const Fakturainformasjon = () => {
   const dispatch = useDispatch();
@@ -20,7 +21,8 @@ const Fakturainformasjon = () => {
     dispatch(fakturainformasjonOperations.hentFakturaserie(vedtaksId));
   }, [behandlingID, saksnummer]);
 
-  if (!fakturainformasjon?.data) return null;
+  if (!fakturainformasjon?.data.fakturaserie && fakturainformasjon.status === STATUS.ERROR) return null;
+
   const {
     faktura: fakturaer,
     fakturaGjelder,
@@ -44,9 +46,10 @@ const Fakturainformasjon = () => {
     Status: status,
   };
 
-  if (_isEmpty(fakturainformasjon.data)) {
+  if (_isEmpty(fakturainformasjon.data.fakturaserie)) {
     return null;
   }
+
   if (fakturainformasjon.data.violations) {
     return fakturainformasjon.data.violations.map((violation: any) => (
       <Nav.Row key={violation}>{violation.message}</Nav.Row>
