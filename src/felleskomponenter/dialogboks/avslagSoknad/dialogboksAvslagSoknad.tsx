@@ -82,7 +82,7 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp, avbryt, avslaaSoknadHandle
       ariaHideApp={ariaHideApp}
     >
       <div className="avslagsoknadcontainer">
-        <Ikon.VedtakGodkjent className="vedtakIkon" />
+        <Ikon.VedakUbehandlet />
         <div>
           <Nav.Typo.Systemtittel className="overskrift">
             Avslå søknaden på grunn av manglende opplysninger
