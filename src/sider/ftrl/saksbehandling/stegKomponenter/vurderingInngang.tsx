@@ -68,7 +68,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     formValues.land !== initialValues.land ||
     formValues.trygdedekning !== initialValues.trygdedekning;
 
-  const stegErGyldig = formIsValid && !skalHenteRegisteropplysninger && !visOppfrisk;
+  const stegErGyldig = formIsValid && !skalHenteRegisteropplysninger;
 
   useEffect(() => {
     if (registeropplysningerHentet) {

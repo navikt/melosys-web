@@ -64,7 +64,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
     formValues?.avsenderland !== initialValues?.avsenderland ||
     formValues?.lovvalgsland !== initialValues?.lovvalgsland;
 
-  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visOppfrisk;
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger;
 
   useEffect(() => {
     if (registeropplysningerHentet) {

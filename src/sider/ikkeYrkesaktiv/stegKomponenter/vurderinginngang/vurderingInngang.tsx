@@ -65,7 +65,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
     (formValues.land === MKV.Koder.landkoder.FR || formValues.land === MKV.Koder.landkoder.IT);
 
-  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visOppfrisk && !landUtenStøtteValgt;
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !landUtenStøtteValgt;
 
   useEffect(() => {
     if (registeropplysningerHentet) {
