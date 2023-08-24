@@ -113,6 +113,8 @@ const Oppsummering = ({
     return rows;
   };
 
+  console.log(redigerbart);
+
   const tabellToKolonner = (col1: string[][], col2: string[][]) => {
     const rows = [];
     for (let i = 0; i < Math.max(col1.length, col2.length); i += 1) {
