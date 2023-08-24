@@ -45,6 +45,7 @@ type OppsummeringProps = PropsFromRedux & {
   mottatteOpplysningerPeriodeFom: string;
   mottatteOpplysningerPeriodeTom: string;
   className?: string;
+  redigerbart?: boolean;
 };
 
 const Oppsummering = ({
@@ -59,6 +60,7 @@ const Oppsummering = ({
   mottatteOpplysningerPeriodeTom,
   className,
   behandlingID,
+  redigerbart,
 }: OppsummeringProps) => {
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
   const [mottaksdato, setMottaksdato] = useState<string | undefined>();
@@ -75,7 +77,8 @@ const Oppsummering = ({
     behandlingsresultattype,
   } = oppsummering;
 
-  const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode);
+  const disableEndreKnapp =
+    behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode) || redigerbart === false;
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
   const erSed = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, behandlingstema?.kode);
