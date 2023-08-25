@@ -151,15 +151,17 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
       {landUtenStøtteValgt && <TomFlytMelding />}
 
-      {landUtenStøtteValgt ? (
+      {landUtenStøtteValgt && skalHenteRegisteropplysninger && (
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: innhentRegisteropplysninger,
-            disabled: !skalHenteRegisteropplysninger || !formState?.isValid || !redigerbart,
+            disabled: !formState?.isValid || !redigerbart,
           }}
-          bekreftTekst={skalHenteRegisteropplysninger ? "Innhent registeropplysninger" : undefined}
+          bekreftTekst="Innhent registeropplysninger"
         />
-      ) : (
+      )}
+
+      {!landUtenStøtteValgt && (
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: bekreftOgFortsett,

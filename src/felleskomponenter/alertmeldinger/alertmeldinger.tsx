@@ -29,7 +29,7 @@ export const TomFlytMelding = () => (
   <div className="tomFlytMelding">
     <Nav.AlertStripeAdvarsel className="tomFlytMelding">
       <b>Du kan ikke gå videre, men:</b>
-      <ul>
+      <ul className="listePadding">
         <li>
           du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak, og &quot;Opprett ny BUC&quot;-fanen for å
           sende SED
