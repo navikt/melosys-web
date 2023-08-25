@@ -294,39 +294,30 @@ class VurderingArtikkel16Anmodning extends Component {
   kontroller = async () => {
     const { oppdaterKontrollFeil, resetKontrollFeil, behandlingID } = this.props;
     this.setState({ sjekkerAdresse: true });
-    Api.Kontroll.harRegistrertAdresse({
+    Api.Kontroll.kontrollerAdresse({
       behandlingID,
     })
       .then((res) => {
-        if (!res.harRegistrertAdresse) {
+        if (res.kontrollfeilList && res.kontrollfeilList.length > 0) {
           this.setState({ harFeil: true, sjekkerAdresse: false });
-          const kontrollfeilList = [
-            {
-              felter: [],
-              kode:
-                res.rolle === MKV.Koder.aktoersroller.BRUKER
-                  ? MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_REGISTRERTE_ADRESSE_BRUKER
-                  : MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_REGISTRERTE_ADRESSE_REPRESENTANT,
-            },
-          ];
           oppdaterKontrollFeil({
-            kontrollfeilList,
+            kontrollfeilList: res.kontrollfeilList,
           });
         } else {
           resetKontrollFeil();
           this.setState({ harFeil: false, sjekkerAdresse: false });
         }
       })
-      .catch(() => {
+      .catch((error) => {
         this.setState({ harFeil: true, sjekkerAdresse: false });
 
         const kontrollfeilList = [
           {
-            felter: [],
-            kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_REGISTRERTE_ADRESSE_BRUKER,
+            kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.ANNET, //FIXME hva fungerer her?
+            felter: ["Hjelp, har du et forslag?"],
           },
         ];
-        oppdaterKontrollFeil(kontrollfeilList);
+        oppdaterKontrollFeil({ kontrollfeilList });
       });
   };
 
@@ -685,8 +676,8 @@ const VurderingArtikkel16AnmodningForm = reduxForm({
 })(VurderingArtikkel16Anmodning);
 
 const mapDispatchToProps = (dispatch) => ({
-  kontrollFeil: (kontrollBegrunnelse) => dispatch(kontrollOperations.oppdaterKontrollFeil(kontrollBegrunnelse)),
-  resetKontroll: () => dispatch(kontrollOperations.resetKontrollFeil()),
+  oppdaterKontrollFeil: (kontrollBegrunnelse) => dispatch(kontrollOperations.oppdaterKontrollFeil(kontrollBegrunnelse)),
+  resetKontrollFeil: () => dispatch(kontrollOperations.resetKontrollFeil()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16AnmodningForm);
