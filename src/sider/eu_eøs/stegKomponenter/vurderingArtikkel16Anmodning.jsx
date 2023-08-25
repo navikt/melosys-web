@@ -308,12 +308,12 @@ class VurderingArtikkel16Anmodning extends Component {
           this.setState({ harFeil: false, sjekkerAdresse: false });
         }
       })
-      .catch((error) => {
+      .catch(() => {
         this.setState({ harFeil: true, sjekkerAdresse: false });
 
         const kontrollfeilList = [
           {
-            kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.ANNET, //FIXME hva fungerer her?
+            kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.ANNET, // FIXME hva fungerer her?
             felter: ["Hjelp, har du et forslag?"],
           },
         ];

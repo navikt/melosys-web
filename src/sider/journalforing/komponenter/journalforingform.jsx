@@ -92,9 +92,9 @@ export const JournalforingForm = ({
         orgnr,
       })
         .then((res) => {
-          const harRegistrertAdresse = !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
-          setHarRegistrertAdresse(harRegistrertAdresse);
-          settFeltInnhold("ikkeSendForvaltingsmelding", !harRegistrertAdresse);
+          const adresseFunnet = !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
+          setHarRegistrertAdresse(adresseFunnet);
+          settFeltInnhold("ikkeSendForvaltingsmelding", !adresseFunnet);
         })
         .catch(() => setHarRegistrertAdresse(false));
     }
