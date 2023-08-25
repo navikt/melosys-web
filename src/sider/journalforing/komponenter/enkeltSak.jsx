@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import PT from "prop-types";
 
-import { MKVUtils } from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
@@ -31,6 +31,8 @@ const EnkeltSak = (props) => {
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
   const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
+  const { medlemskapsperiode } =
+    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.medlemskapsperiode != null) ?? {};
 
   const link = lagUrl(
     saksnummer,
@@ -42,8 +44,9 @@ const EnkeltSak = (props) => {
     folketrygdenToggleEnabled
   );
 
+  const avsluttendePeriode = sakstype.kode === MKV.Koder.sakstyper.FTRL ? medlemskapsperiode : lovvalgsperiode;
   const periode = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus?.kode)
-    ? lovvalgsperiode
+    ? avsluttendePeriode
     : soknadsperiode;
   return (
     <div className="enkeltSak">
