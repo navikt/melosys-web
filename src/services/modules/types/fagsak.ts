@@ -25,7 +25,8 @@ export type FagsakOppsummering = {
     behandlingsstatus: KTObject;
     behandlingstype: KTObject;
     behandlingstema: KTObject;
-    periode: Periode;
+    lovvalgsperiode?: Periode;
+    medlemskapsperioder?: Periode;
     land: Soeknadsland;
     opprettetDato: string;
     behandlingsresultattype: KTObject;

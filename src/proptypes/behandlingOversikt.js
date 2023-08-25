@@ -13,6 +13,7 @@ const BehandligOversiktPropType = PT.shape({
   opprettetDato: PT.string,
   soknadsperiode: Periode,
   lovvalgsperiode: Periode,
+  medlemskapsperiode: Periode,
 });
 const BehandligOversikterPropType = PT.arrayOf(BehandligOversiktPropType);
 export { BehandligOversiktPropType as BehandligOversikt, BehandligOversikterPropType as BehandligOversikter };
