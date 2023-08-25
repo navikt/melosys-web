@@ -83,8 +83,6 @@ const Behandling = ({
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
-  console.log(redigerbart);
-
   return (
     <>
       <Informasjonlinje />
