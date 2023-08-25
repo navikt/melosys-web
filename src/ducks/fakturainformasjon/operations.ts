@@ -10,17 +10,9 @@ import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
 
-export function hentFakturaserie(vedtaksId: string) {
-  return doThenDispatch(() => Api.Faktureringskomponenten.hentFakturaserie(vedtaksId), {
-    OK: Types.OKFakturaserie,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
-
-export function hentFakturainformasjon(fakturaNr: string) {
-  return doThenDispatch(() => Api.Faktureringskomponenten.hentFakturainfo(fakturaNr), {
-    OK: Types.OKFakturainfo,
+export function hentFakturaserier(saksnummer: string, queries: string[]) {
+  return doThenDispatch(() => Api.Faktureringskomponenten.hentFakturaserier(saksnummer, queries), {
+    OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
