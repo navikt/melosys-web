@@ -41,7 +41,7 @@ const VirksomheterLinje = (props) => {
   const virksomhetKlikkHandler = () => {
     const verdi = virksomhetErValgt ? BOOLSK_STRING.USANN : BOOLSK_STRING.SANN;
     dispatch(feiletResponsOperations.resetFeiletRespons());
-    dispatch(kontrollOperations.resetKontroll());
+    dispatch(kontrollOperations.resetKontrollFeil());
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.virksomhetId, verdi));
   };
 

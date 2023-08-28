@@ -170,7 +170,7 @@ const VurderingVedtak = ({
 
   useEffect(() => {
     async function kontroller() {
-      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg && formIsValid) {
+      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg) {
         setVedtakPending(true);
         await kontrollerFerdigbehandling({
           behandlingID,
@@ -187,7 +187,7 @@ const VurderingVedtak = ({
     }
 
     kontroller();
-  }, [aktivtSteg, formIsValid, kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
+  }, [redigerbart, formIsValid, aktivtSteg, kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const onSubmit = async () => {
     if (!validerForm()) return;

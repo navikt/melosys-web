@@ -5,6 +5,7 @@ import { vedtakTypes } from "../vedtak";
 import { fagsakTypes } from "../fagsaker";
 
 export const OK = "kontroller/OK";
+export const OPPDATER_KONTROLLFEIL = "kontroller/OPPDATER_KONTROLLFEIL";
 export const FEILET = "kontroller/FEILET";
 export const PENDING = "kontroller/PENDING";
 export const RESET = "kontroller/RESET";
@@ -30,6 +31,11 @@ interface OkAction {
   data: any;
 }
 
+interface OppdaterKontrollFeilAction {
+  type: typeof OPPDATER_KONTROLLFEIL;
+  data: Data;
+}
+
 interface ResetAction {
   type: typeof RESET;
 }
@@ -43,4 +49,5 @@ export type Action =
   | FeiletAction
   | PendingAction
   | OkAction
+  | OppdaterKontrollFeilAction
   | ResetAction;

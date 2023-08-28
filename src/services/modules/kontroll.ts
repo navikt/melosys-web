@@ -10,15 +10,16 @@ export type FerdigbehandlingKontrollData = {
 };
 
 export type RegistrertAdresseData = {
-  brukerID: string | null;
-  orgnr: string | null;
+  brukerID?: string | null;
+  orgnr?: string | null;
+  behandlingID?: number | null;
 };
 
 export const kontrollerFerdigbehandling = (data: FerdigbehandlingKontrollData) =>
   postAsJson(`${API_BASE_URL}${KONTROLL}/ferdigbehandling`, data);
 
-export const harRegistrertAdresse = (data: RegistrertAdresseData) =>
-  postAsJson(`${API_BASE_URL}${KONTROLL}/harRegistrertAdresse`, data);
+export const kontrollerAdresse = (data: RegistrertAdresseData) =>
+  postAsJson(`${API_BASE_URL}${KONTROLL}/adresse`, data);
 
 export const erBucAapen = (behandlingID: number) => getAsJson(`${API_BASE_URL}${KONTROLL}/${behandlingID}/erBucAapen`);
 

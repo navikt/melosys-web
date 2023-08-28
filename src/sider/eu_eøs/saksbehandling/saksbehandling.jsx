@@ -55,7 +55,7 @@ class Saksbehandling extends Component {
   componentWillUnmount() {
     this.props.resetSaksopplysninger();
     this.props.resetFeiletrespons();
-    this.props.resetKontroll();
+    this.props.resetKontrollFeil();
   }
 
   setSaksopplysningerLastet(lastet) {
@@ -265,7 +265,7 @@ Saksbehandling.propTypes = {
   hentDokumentOversikt: PT.func.isRequired,
   hentAnmodningsperiodesvar: PT.func.isRequired,
   resetFeiletrespons: PT.func.isRequired,
-  resetKontroll: PT.func.isRequired,
+  resetKontrollFeil: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -332,7 +332,7 @@ const mapDispatchToProps = (dispatch) => ({
   hentAnmodningsperiodesvar: (anmodningsperiodeID) =>
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
-  resetKontroll: () => dispatch(kontrollOperations.resetKontroll()),
+  resetKontrollFeil: () => dispatch(kontrollOperations.resetKontrollFeil()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

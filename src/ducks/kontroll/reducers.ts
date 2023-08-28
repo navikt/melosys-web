@@ -21,6 +21,8 @@ export default function reducer(state = initialState, action: Types.Action) {
       return { ...state, status: STATUS.ERROR, data: action.data };
     case Types.OK:
       return { ...state, status: STATUS.OK, data: action.data };
+    case Types.OPPDATER_KONTROLLFEIL:
+      return { ...state, data: action.data };
     case Types.RESET:
       return initialState;
     default:

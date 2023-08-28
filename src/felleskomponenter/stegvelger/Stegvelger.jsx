@@ -10,7 +10,7 @@ import * as Api from "../../services/api";
 import * as Utils from "../../utils";
 import StegLinje from "../stegLinje";
 import StegFane from "../stegFane";
-import StegMotor from "./stegMotor";
+import StegMotor, { STEG } from "./stegMotor";
 
 import { anmodningunntakOperations } from "../../ducks/anmodningunntak";
 import { anmodningsperioderOperations, anmodningsperioderSelectors } from "../../ducks/anmodningsperioder";
@@ -515,13 +515,16 @@ class Stegvelger extends Component {
   };
 
   render() {
+    const visFeilmeldinger =
+      this.erVedtakSteg(this.state.aktivtStegNummer) ||
+      this.state.aktuelleSteg[this.state.aktivtStegNummer]?.id === STEG.ARTIKKEL_16_ANMODNING;
     const { visMottatteOpplysningerFeilmeldinger } = this.state;
 
     return (
       <div className="stegvelger panelSeksjon">
         <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
         {!this.props.redigerbart && <Innsynsmelding />}
-        {this.erVedtakSteg(this.state.aktivtStegNummer) && <Feilmeldinger />}
+        {visFeilmeldinger && <Feilmeldinger />}
         {this.state.aktuelleSteg.map((item) => (
           <StegFane id={item.id} key={item.id} faneData={item} />
         ))}

@@ -115,7 +115,7 @@ const Saksbehandling = ({
       dispatch(mottatteOpplysningerOperations.resetState());
       dispatch(feiletResponsOperations.resetFeiletRespons());
       dispatch(menypanelOperations.skjulMenypanel());
-      dispatch(kontrollOperations.resetKontroll());
+      dispatch(kontrollOperations.resetKontrollFeil());
     };
   }, []);
 

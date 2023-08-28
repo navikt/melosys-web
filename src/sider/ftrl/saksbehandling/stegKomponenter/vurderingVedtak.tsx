@@ -22,7 +22,7 @@ import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysn
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
-import { kontrollOperations } from "../../../../ducks/kontroll";
+import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import { formSelectors } from "../../../../ducks/form";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
@@ -31,6 +31,7 @@ import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 
 const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -72,6 +73,8 @@ interface Props {
 // TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const dispatch = useDispatch();
+  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
 
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
   const {
@@ -103,7 +106,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
-  const stegErGyldig = redigerbart && formIsValid;
+  const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
 
   const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
 
