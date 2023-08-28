@@ -577,7 +577,7 @@ class VurderingArtikkel16Anmodning extends Component {
             </Nav.Row>
           )}
           {sendBrevFeilmelding && (
-            <Nav.AlertStripe type="advarsel" className="varsel">
+            <Nav.AlertStripe type={harFeil ? "feil" : "advarsel"} className="varsel">
               {sendBrevFeilmelding}
             </Nav.AlertStripe>
           )}
