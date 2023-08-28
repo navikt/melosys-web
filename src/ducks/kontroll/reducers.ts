@@ -22,7 +22,7 @@ export default function reducer(state = initialState, action: Types.Action) {
     case Types.OK:
       return { ...state, status: STATUS.OK, data: action.data };
     case Types.OPPDATER_KONTROLLFEIL:
-      return { ...state, status: STATUS.OK, data: action.data };
+      return { ...state, data: action.data };
     case Types.RESET:
       return initialState;
     default:
