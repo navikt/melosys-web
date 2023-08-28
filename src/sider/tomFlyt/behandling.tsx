@@ -105,7 +105,6 @@ const Behandling = ({
                 arbeidsland={arbeidsland}
                 mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                 mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
-                redigerbart={redigerbart}
               />
               <SaksoversiktLenke />
               <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
