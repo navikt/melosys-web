@@ -349,6 +349,7 @@ class VurderingArtikkel16Anmodning extends Component {
       sendBrevFeilmelding,
       anmodningPending,
       valgteVedlegg,
+      harFeil,
     } = this.state;
 
     const antallManeder = datoDiffMenneskelig(anmodningsperiode.fomDato, anmodningsperiode.tomDato);
@@ -586,7 +587,7 @@ class VurderingArtikkel16Anmodning extends Component {
               bekreftKnappProps={{
                 spinner: anmodningPending,
                 autoDisableVedSpinner: true,
-                disabled: !redigerbart || this.state.harFeil,
+                disabled: !redigerbart || harFeil,
                 onClick: validerOgLagreBehandling,
               }}
               tilbakeKnappProps={{
