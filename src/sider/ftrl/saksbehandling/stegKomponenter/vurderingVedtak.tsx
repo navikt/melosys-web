@@ -350,7 +350,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         disabled={!redigerbart}
       />
 
-      {stegErGyldig && (
+      {stegErGyldig && muligeMottakere && (
         <div className="melosys__table-wrapper">
           <table className="melosys__table">
             <tbody>
