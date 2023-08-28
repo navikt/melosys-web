@@ -10,8 +10,6 @@ import MKV from "../../melosyskodeverk";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { NyVurderingMelding } from "../alertmeldinger/alertmeldinger";
 import { Feilmeldinger } from "../feilmeldinger";
-import { kontrollOperations } from "../../ducks/kontroll";
-import { feiletResponsOperations } from "../../ducks/feiletRespons";
 
 interface AktueltSteg {
   id: string;
@@ -42,8 +40,6 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
     setAktuellesteg(
       aktuelleSteg?.map((steg: AktueltSteg) => ({ ...steg, aktivtSteg: steg.stegPosisjon === aktivtStegIndex }))
     );
-    dispatch(kontrollOperations.resetKontrollFeil());
-    dispatch(feiletResponsOperations.resetFeiletRespons());
   }, [aktivtStegIndex]);
 
   const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean) => {
