@@ -37,6 +37,7 @@ import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSc
 import "./vurderingArtikkel16Anmodning.css";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import { AlertStripeFeil } from "nav-frontend-alertstriper";
 
 const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked, redigerbart }) => {
   const { periodeID, periode } = perm;
@@ -299,25 +300,19 @@ class VurderingArtikkel16Anmodning extends Component {
     })
       .then((res) => {
         if (res.kontrollfeilList && res.kontrollfeilList.length > 0) {
-          this.setState({ harFeil: true, sjekkerAdresse: false });
+          this.setState({ harFeil: true, sendBrevFeilmelding: undefined, sjekkerAdresse: false });
           oppdaterKontrollFeil({
             kontrollfeilList: res.kontrollfeilList,
           });
         } else {
           resetKontrollFeil();
-          this.setState({ harFeil: false, sjekkerAdresse: false });
+          this.setState({ harFeil: false, sendBrevFeilmelding: undefined, sjekkerAdresse: false });
         }
       })
       .catch(() => {
-        this.setState({ harFeil: true, sjekkerAdresse: false });
-
-        const kontrollfeilList = [
-          {
-            kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.ANNET, // FIXME hva fungerer her?
-            felter: ["Hjelp, har du et forslag?"],
-          },
-        ];
-        oppdaterKontrollFeil({ kontrollfeilList });
+        const feilmelding =
+          "En teknisk feil skjedde da adresser skulle sjekkes. Prøv igjen eller kontakt brukerstøtte hvis problemet vedvarer.";
+        this.setState({ harFeil: true, sendBrevFeilmelding: feilmelding, sjekkerAdresse: false });
       });
   };
 
