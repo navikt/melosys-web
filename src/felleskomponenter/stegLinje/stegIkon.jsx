@@ -12,11 +12,11 @@ const ikonVelger = (status, vedtakSteg, aktivtSteg) => {
     if (vedtakSteg) {
       return Ikoner.VedtakGodkjentAktiv;
     }
-    return status === FANE_STATUS.UBEHANDLET ? Ikoner.UbehandletFilled : Ikoner.FerdigFilled;
+    return status === FANE_STATUS.UBEHANDLET ? Ikoner.UbehandletAktiv : Ikoner.FerdigAktiv;
   }
 
   if (vedtakSteg) {
-    return status === FANE_STATUS.UBEHANDLET ? Ikoner.VedakUbehandlet : Ikoner.VedtakGodkjentIkkeAktiv;
+    return status === FANE_STATUS.UBEHANDLET ? Ikoner.VedtakUbehandlet : Ikoner.VedtakGodkjentIkkeAktiv;
   }
 
   return status === FANE_STATUS.UBEHANDLET ? Ikoner.Ubehandlet : Ikoner.Ferdig;
