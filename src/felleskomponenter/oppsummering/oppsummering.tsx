@@ -14,6 +14,7 @@ import * as Mui from "../ui";
 
 import { fagsakSelectors } from "../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../ducks/redigerbart";
 
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
 import { harIkkeYrkesaktivFlyt, harUnntakFlyt } from "../../url";
@@ -30,6 +31,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -58,6 +60,7 @@ const Oppsummering = ({
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
   className,
+  redigerbart,
   behandlingID,
 }: OppsummeringProps) => {
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
@@ -75,7 +78,8 @@ const Oppsummering = ({
     behandlingsresultattype,
   } = oppsummering;
 
-  const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode);
+  const disableEndreKnapp =
+    behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode) || !redigerbart;
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
   const erSed = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, behandlingstema?.kode);
