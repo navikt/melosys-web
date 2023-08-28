@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import PT from "prop-types";
 
-import { MKVUtils } from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
@@ -16,18 +16,12 @@ import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behand
 
 import "./enkeltSak.css";
 import { useFeatureToggle } from "../../../featuretoggle";
-import {
-  MELOSYS_FOLKETRYGDEN_MVP,
-  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
-  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-} from "../../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../featuretoggle/toggleNavn";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = (props) => {
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
-  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
-  const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
 
   const { landkoder } = props;
   const { behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
@@ -37,6 +31,8 @@ const EnkeltSak = (props) => {
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
   const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
+  const { medlemskapsperiode } =
+    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.medlemskapsperiode != null) ?? {};
 
   const link = lagUrl(
     saksnummer,
@@ -45,13 +41,12 @@ const EnkeltSak = (props) => {
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    folketrygdenToggleEnabled,
-    ikkeYrkesaktivFlytToggleEnabled,
-    registreringUnntakFraMedlemskapToggleEnabled
+    folketrygdenToggleEnabled
   );
 
+  const avsluttendePeriode = sakstype.kode === MKV.Koder.sakstyper.FTRL ? medlemskapsperiode : lovvalgsperiode;
   const periode = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus?.kode)
-    ? lovvalgsperiode
+    ? avsluttendePeriode
     : soknadsperiode;
   return (
     <div className="enkeltSak">

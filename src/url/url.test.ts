@@ -117,22 +117,6 @@ describe("url", () => {
   });
 
   describe("tom flyt", () => {
-    it("IKKE_YRKESAKTIV får tom flyt med toggle av", () => {
-      const url = lagUrl(
-        "MEL-1",
-        1,
-        EU_EOS,
-        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
-        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
-        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        true,
-        false,
-        true
-      );
-
-      expect(url).toContain("/EU_EOS/behandling/");
-    });
-
     it("Sakstype FTRL med IKKE_YRKESAKTIV får tom flyt med toggle på", () => {
       const url = lagUrl(
         "MEL-1",
@@ -141,15 +125,13 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        true,
-        true,
         true
       );
 
       expect(url).toContain("/FTRL/behandling/");
     });
 
-    it("IKKE_YRKESAKTIV får ikke tom flyt med toggle på", () => {
+    it("IKKE_YRKESAKTIV får ikke tom flyt", () => {
       const url = lagUrl(
         "MEL-1",
         1,
@@ -157,8 +139,6 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        true,
-        true,
         true
       );
 
@@ -173,8 +153,6 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        true,
-        true,
         true
       );
 
@@ -189,8 +167,6 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        true,
-        true,
         true
       );
 
@@ -205,9 +181,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false,
-        true,
-        true
+        false
       );
 
       expect(url).toContain("/FTRL/behandling/");
@@ -221,28 +195,10 @@ describe("url", () => {
         MKV.Koder.sakstemaer.UNNTAK,
         MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        true,
-        true,
         true
       );
 
       expect(url).toContain("/TRYGDEAVTALE/unntaksregistrering/");
-    });
-
-    it("Kombinasjoner som har unntaksregistrering-flyt får ikke tom flyt med toggle av", () => {
-      const url = lagUrl(
-        "MEL-1",
-        1,
-        TRYGDEAVTALE,
-        MKV.Koder.sakstemaer.UNNTAK,
-        MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
-        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        true,
-        true,
-        false
-      );
-
-      expect(url).toContain("/TRYGDEAVTALE/behandling/");
     });
   });
 });

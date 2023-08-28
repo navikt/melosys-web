@@ -25,14 +25,12 @@ import { dokumenterOperations } from "../../ducks/dokumenter";
 import { menypanelOperations } from "../../ducks/menypanel";
 
 import { vilkarOperations } from "../../ducks/vilkar";
-import { useFeatureToggle } from "../../featuretoggle";
 import { formSelectors } from "../../ducks/form";
 
 import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
-import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
 import { kontrollOperations } from "../../ducks/kontroll";
 
 interface Props extends RouteComponentProps<MatchParams> {
@@ -50,7 +48,6 @@ const Saksbehandling = ({
 }: Props) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
-  const folketrygdenToggle = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
 
   const dispatch = useDispatch();
 
@@ -129,7 +126,6 @@ const Saksbehandling = ({
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;
   if (!saksopplysningerLastet) return null;
-  if (!folketrygdenToggle) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;

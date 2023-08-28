@@ -61,6 +61,7 @@ const Datovelger = ({
           {...inputProps}
           id={datovelgerID}
           label={label}
+          hideLabel={!label}
           error={!!feil || erUgyldigDato}
           className={classNames("datovelger__input", `input--${bredde?.toLowerCase()}`, {
             datovelger__input_feil: feil || erUgyldigDato,

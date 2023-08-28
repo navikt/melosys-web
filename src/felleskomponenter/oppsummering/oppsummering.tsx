@@ -14,19 +14,15 @@ import * as Mui from "../ui";
 
 import { fagsakSelectors } from "../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../ducks/redigerbart";
 
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
-import { useFeatureToggle } from "../../featuretoggle";
 import { harIkkeYrkesaktivFlyt, harUnntakFlyt } from "../../url";
 import KopierbarTekst from "../kopierbarTekst";
 
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
 import EndreBehandlingModal from "./endreBehandlingModal";
 import "./oppsummering.css";
-import {
-  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
-  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-} from "../../featuretoggle/toggleNavn";
 
 const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
@@ -35,6 +31,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -63,10 +60,9 @@ const Oppsummering = ({
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
   className,
+  redigerbart,
   behandlingID,
 }: OppsummeringProps) => {
-  const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
-  const ikkeYrkesaktivToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
   const [mottaksdato, setMottaksdato] = useState<string | undefined>();
 
@@ -82,7 +78,8 @@ const Oppsummering = ({
     behandlingsresultattype,
   } = oppsummering;
 
-  const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode);
+  const disableEndreKnapp =
+    behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode) || !redigerbart;
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
   const erSed = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, behandlingstema?.kode);
@@ -156,14 +153,9 @@ const Oppsummering = ({
       const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
       const mottatteOpplysningerperiode = `${mottatteOpplysningerPeriodeFom} - ${mottatteOpplysningerPeriodeTom}`;
 
-      const erUnntak = harUnntakFlyt(
-        sakstype.kode,
-        sakstema.kode,
-        behandlingstema.kode,
-        registreringUnntakFraMedlemskapToggleEnabled
-      );
+      const erUnntak = harUnntakFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode);
 
-      const erIkkeYrkesaktiv = harIkkeYrkesaktivFlyt(sakstype.kode, behandlingstema.kode, ikkeYrkesaktivToggleEnabled);
+      const erIkkeYrkesaktiv = harIkkeYrkesaktivFlyt(sakstype.kode, behandlingstema.kode);
 
       if (erUnntak && sakstype.kode === MKV.Koder.sakstyper.EU_EOS) {
         col1 = [

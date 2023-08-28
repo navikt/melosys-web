@@ -15,6 +15,7 @@ interface MottakerTabellProps {
   className?: string;
 }
 
+// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const MottakerTabell = ({ rader, kolonner, className = "" }: MottakerTabellProps) => {
   if (!rader || !kolonner) return null;
   const cls = classnames("mottakerTabell", className);

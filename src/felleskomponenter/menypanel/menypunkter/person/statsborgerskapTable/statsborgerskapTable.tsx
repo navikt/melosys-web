@@ -18,6 +18,7 @@ const renderPeriode = (statsborgerskap: Statsborgerskap, historisk?: boolean) =>
   return statsborgerskap.gyldigFraOgMed ? Utils.dato.formatterDatoTilNorsk(statsborgerskap.gyldigFraOgMed) : "";
 };
 
+// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const StatsborgerskapTable = ({ statsborgerskapList, historisk }: StatsborgerskapTableProps) => {
   const [expanded, setExpanded] = useState(false);
   const periodetekst = `Gyldig f.o.m.${historisk ? " - t.o.m." : ""}`;

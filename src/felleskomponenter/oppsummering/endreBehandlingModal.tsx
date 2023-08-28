@@ -25,11 +25,7 @@ import { StandardMeldingOverst } from "../alertmeldinger";
 import { Spinner } from "../spinner";
 
 import "./endreBehandlingModal.css";
-import {
-  MELOSYS_FOLKETRYGDEN_MVP,
-  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
-  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-} from "../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
 
 enum FeltVerdier {
   sakstype = "sakstype",
@@ -90,8 +86,6 @@ function EndreBehandlingModal({
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
-  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
-  const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
   const typeTemaKanEndres = !anmodningsperioderSendtTilUtlandet;
   const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
 
@@ -155,15 +149,7 @@ function EndreBehandlingModal({
 
     if (
       sakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE ||
-      Routing.skalViseTomFlyt(
-        sakstype,
-        sakstema,
-        behandlingstema,
-        behandlingstype,
-        folketrygdenToggleEnabled,
-        ikkeYrkesaktivFlytToggleEnabled,
-        registreringUnntakFraMedlemskapToggleEnabled
-      )
+      Routing.skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)
     ) {
       await Api.Trygdeavtale.slettFlyt(behandlingID);
     } else {
@@ -227,9 +213,7 @@ function EndreBehandlingModal({
           sakstema,
           behandlingstema,
           behandlingstype,
-          folketrygdenToggleEnabled,
-          ikkeYrkesaktivFlytToggleEnabled,
-          registreringUnntakFraMedlemskapToggleEnabled
+          folketrygdenToggleEnabled
         );
 
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {

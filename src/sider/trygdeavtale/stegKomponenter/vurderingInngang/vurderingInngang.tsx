@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -26,6 +26,9 @@ import vurdering_inngang from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
 import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
+import { FellesHandlersContext } from "../../../../contexts";
+import { navigeringOperations } from "../../../../ducks/navigering";
 
 interface Periode {
   fom?: string | null;
@@ -33,8 +36,8 @@ interface Periode {
 }
 
 const initializeValues = (periode: Periode, landkoder: string[]) => ({
-  fom: periode.fom ? Utils.dato.formatterDatoTilNorsk(periode.fom) : undefined,
-  tom: periode.tom ? Utils.dato.formatterDatoTilNorsk(periode.tom) : undefined,
+  fom: Utils.dato.formatterDatoTilNorsk(periode.fom, false, undefined),
+  tom: Utils.dato.formatterDatoTilNorsk(periode.tom, false, undefined),
   arbeidsland: landkoder[0],
 });
 
@@ -54,6 +57,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   oppdaterSoeknadsland: (landkoder: string[]) =>
     dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(landkoder, false)),
   lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
+  tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -67,7 +71,6 @@ interface FormValuesProps {
 }
 
 interface Props {
-  annenBehandlingOppfriskes: boolean;
   data: Api.Trygdeavtale.StegData;
   fortsett: () => void;
   formValues: FormValuesProps;
@@ -75,8 +78,6 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  tilForsiden: () => void;
-  oppfriskOgLastInnSaksopplysninger: () => void;
   oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
   oppfriskFlyt: () => void;
   aktivtSteg: boolean;
@@ -95,16 +96,17 @@ const VurderingInngang = ({
   steg,
   oppdaterPeriode,
   oppdaterSoeknadsland,
-  oppfriskOgLastInnSaksopplysninger,
   oppdaterFlyt,
-  oppfriskFlyt,
   visMenypanel,
   aktivtSteg,
   registeropplysningerHentet,
+  tilForsiden,
 }: PropsFromRedux & Props) => {
+  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
   const [landUtenStøtteValgt, setLandUtenStøtteValgt] = useState(false);
-  const [visSpinner, setVisSpinner] = useState(false);
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
+
   const skalHenteRegisteropplysninger =
     !registeropplysningerHentet ||
     formValues?.fom !== initialFomTomLand?.fom ||
@@ -131,11 +133,9 @@ const VurderingInngang = ({
 
   useEffect(() => {
     if (redigerbart && formValues && formIsValid && aktivtSteg) {
-      const isoFom = Utils.dato.formatterDatoTilISO(formValues.fom);
-      const isoTom = Utils.dato.formatterDatoTilISO(formValues.tom);
       oppdaterPeriode({
-        fom: isoFom === "Invalid date" ? null : isoFom,
-        tom: isoTom === "Invalid date" ? null : isoTom,
+        fom: Utils.dato.formatterDatoTilISO(formValues.fom, false, undefined),
+        tom: Utils.dato.formatterDatoTilISO(formValues.tom, false, undefined),
       });
       oppdaterSoeknadsland(formValues?.arbeidsland ? [formValues.arbeidsland] : []);
 
@@ -152,75 +152,95 @@ const VurderingInngang = ({
     }
   }, [formValues?.arbeidsland]);
 
-  const innhentRegisteropplysninger = async () => {
+  const innhentRegisteropplysninger = () => {
     setInitialFomTomLand({ fom: formValues.fom, tom: formValues.tom, arbeidsland: formValues.arbeidsland });
+    setVisOppfrisk(true);
+  };
+
+  const bekreftOgFortsett = () => {
     if (skalHenteRegisteropplysninger) {
-      setVisSpinner(true);
-      await oppfriskOgLastInnSaksopplysninger();
-      setVisSpinner(false);
-      oppfriskFlyt();
-      visMenypanel();
+      innhentRegisteropplysninger();
+    } else {
+      hentFlytOgOppdaterAktuelleSteg();
+      fortsett();
     }
   };
 
-  const bekreftOgInnhentRegisteropplysninger = () => {
-    innhentRegisteropplysninger();
-    fortsett();
-  };
-
   return (
-    <div className="vurderingInngang">
+    <div className="vurderingInngang_trygdeavtale">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
-      <Nav.Fieldset legend="Periode">
-        <Nav.Row>
-          <Nav.Column xs="3">
-            <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
-          </Nav.Column>
-          <Nav.Column xs="3">
-            <Skjema.Datovelger
-              label="Til og med"
-              feltNavn="tom"
-              minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
-          <Nav.Column xs="5">
-            <Skjema.Select
-              label={
-                <LabelMedHjelpetekst
-                  label="Arbeidsland"
-                  hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet."
-                />
-              }
-              feltNavn="arbeidsland"
-              disabled={!redigerbart}
-            >
-              <LandValgSomOptions landValg={landValg} />
-              {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}
-              <LandValgSomOptions landValg={landValgUtenStøtte} />
-            </Skjema.Select>
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Fieldset>
+
+      <Nav.Typo.Undertittel className="periode_label">Periode</Nav.Typo.Undertittel>
+      <Nav.Row>
+        <Nav.Column xs="3">
+          <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
+        </Nav.Column>
+        <Nav.Column xs="3">
+          <Skjema.Datovelger
+            label={
+              <LabelMedHjelpetekst
+                label="Til og med"
+                hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Lovvalgsperiode registreres senere.`}
+              />
+            }
+            feltNavn="tom"
+            minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
+            disabled={!redigerbart}
+          />
+        </Nav.Column>
+        <Nav.Column xs="5">
+          <Skjema.Select
+            label={
+              <LabelMedHjelpetekst
+                label="Arbeidsland"
+                hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet."
+              />
+            }
+            feltNavn="arbeidsland"
+            disabled={!redigerbart}
+            emptyFieldDisabled={!!formValues?.arbeidsland}
+          >
+            <LandValgSomOptions landValg={landValg} />
+            {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}
+            <LandValgSomOptions landValg={landValgUtenStøtte} />
+          </Skjema.Select>
+        </Nav.Column>
+      </Nav.Row>
 
       {landUtenStøtteValgt && <TomFlytMelding />}
-      {landUtenStøtteValgt && skalHenteRegisteropplysninger ? (
+
+      {landUtenStøtteValgt && skalHenteRegisteropplysninger && (
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: innhentRegisteropplysninger,
             disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
-            spinner: visSpinner,
           }}
-          bekreftTekst="Innehent registeropplysninger"
+          bekreftTekst="Innhent registeropplysninger"
         />
-      ) : (
+      )}
+
+      {!landUtenStøtteValgt && (
         <Mui.StegKnapper
           bekreftKnappProps={{
-            onClick: bekreftOgInnhentRegisteropplysninger,
-            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || landUtenStøtteValgt,
-            spinner: visSpinner,
+            onClick: bekreftOgFortsett,
+            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
           }}
-          bekreftTekst="Bekreft og innhent registeropplysninger"
+        />
+      )}
+
+      {visOppfrisk && (
+        <DialogboksOppfriskSak
+          oppfrisk={oppfriskOgLastInnSaksopplysninger}
+          avbryt={() => setVisOppfrisk(false)}
+          lukk={() => {
+            setVisOppfrisk(false);
+            visMenypanel();
+          }}
+          tilForsiden={() => {
+            setVisOppfrisk(false);
+            tilForsiden();
+          }}
+          bekreftetFraStart
         />
       )}
     </div>

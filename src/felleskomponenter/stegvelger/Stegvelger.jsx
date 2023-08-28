@@ -417,7 +417,6 @@ class Stegvelger extends Component {
       lagredeVirksomheter: props.lagredeVirksomheter,
       bestemmelser: props.bestemmelser,
       soknadsperiode: props.soknadsperiode,
-      annenBehandlingOppfriskes: props.annenBehandlingOppfriskes,
       harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger) || !Utils._isEmpty(props.kontrollfeil),
     };
 
@@ -537,7 +536,6 @@ class Stegvelger extends Component {
 
 Stegvelger.propTypes = {
   anmodningsperiodesvar: MPT.AnmodningsperioderSvar.isRequired,
-  annenBehandlingOppfriskes: PT.bool,
   behandlingID: PT.number.isRequired,
   bestemmelser: PT.array,
   arbeidsgivereIPerioden: PT.array,
@@ -632,7 +630,6 @@ Stegvelger.propTypes = {
 };
 
 Stegvelger.defaultProps = {
-  annenBehandlingOppfriskes: undefined,
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
   bostedsland: null,

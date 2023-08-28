@@ -56,6 +56,8 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
     }
 
     setAktuellesteg(nyeSteg);
+    const normalisertAktivtSteg = Math.min(aktivtStegIndex, nyeSteg.length - 1);
+    setAktivtStegIndex(normalisertAktivtSteg);
   };
 
   const bekreft = () => {

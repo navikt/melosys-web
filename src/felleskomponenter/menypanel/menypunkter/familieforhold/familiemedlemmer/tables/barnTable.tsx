@@ -9,6 +9,7 @@ interface BarnTableProps {
   barnListe: Familiemedlem[];
 }
 
+// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 function BarnTable({ barnListe }: BarnTableProps) {
   return (
     <div className="menypanel__table-wrapper">

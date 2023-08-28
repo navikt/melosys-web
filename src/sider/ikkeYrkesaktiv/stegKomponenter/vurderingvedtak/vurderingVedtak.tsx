@@ -204,7 +204,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
           <Nav.Row>
             <Nav.Column xs="6">
               <Forms.Select
-                emptyFieldText="Velg"
                 name="nyVurderingBakgrunnValg"
                 disabled={!redigerbart}
                 emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}

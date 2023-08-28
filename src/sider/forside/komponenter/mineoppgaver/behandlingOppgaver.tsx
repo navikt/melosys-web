@@ -9,11 +9,7 @@ import { landkoderSelectors } from "../../../../ducks/landkoder";
 
 import { useFeatureToggle } from "../../../../featuretoggle";
 import "./behandlingsoppgaver.css";
-import {
-  MELOSYS_FOLKETRYGDEN_MVP,
-  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
-  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-} from "../../../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../../featuretoggle/toggleNavn";
 
 const mapStateToProps = (state: RootState) => ({
   mineSaker: oppgaverSelectors.MineSakerSelector(state),
@@ -27,9 +23,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
  * Lister ut behandlingsoppgaver som saksbehandleren har opprettet
  */
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
-  const folketrygdenToggle = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
-  const ikkeYrkesaktivFlytToggle = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
-  const registreringUnntakFraMedlemskapToggle = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
+  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
 
   const { saksbehandling } = mineSaker as any;
 
@@ -42,9 +36,7 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
         sortingLegend="Sorter behandlinger etter frist:"
         sortingPath="behandling.registrertDato"
         radioGroupName="behandlingsortering"
-        folketrygdenToggleEnabled={folketrygdenToggle}
-        ikkeYrkesaktivFlytToggleEnabled={ikkeYrkesaktivFlytToggle}
-        registreringUnntakFraMedlemskapToggleEnabled={registreringUnntakFraMedlemskapToggle}
+        folketrygdenToggleEnabled={folketrygdenToggleEnabled}
         landkoder={landkoder}
       />
     </div>

@@ -22,9 +22,11 @@ import { datalastingOperations } from "../../ducks/datalasting";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { vedtakOperations } from "../../ducks/vedtak";
 import { formSelectors } from "../../ducks/form";
+import { redigerbartSelectors } from "../../ducks/redigerbart";
 
 import "./stegvelger.css";
 import { NyVurderingMelding } from "../../felleskomponenter/alertmeldinger/alertmeldinger";
+import { modalerSelectors } from "../../ducks/modaler";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -57,6 +59,8 @@ const mapStateToProps = (state: RootState) => ({
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  behandlingUnderOppfriskning: modalerSelectors.BehandlingUnderOppfriskningSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -69,13 +73,6 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface Props extends PropsFromRedux {
-  annenBehandlingOppfriskes: boolean;
-  oppfriskOgLastInnSaksopplysninger: () => void;
-  tilForsiden: () => void;
-  redigerbart: boolean;
-}
-
 interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
@@ -83,7 +80,7 @@ interface State {
   endreFokus: boolean;
 }
 
-class Stegvelger extends Component<Props, State> {
+class Stegvelger extends Component<PropsFromRedux, State> {
   state = {
     aktivtStegIndex: 0,
     aktuelleSteg: [],
@@ -95,7 +92,7 @@ class Stegvelger extends Component<Props, State> {
     this.hentFlytOgOppdaterAktuelleSteg();
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>) {
+  componentDidUpdate(prevProps: Readonly<PropsFromRedux>) {
     const soknadValues = this.props.soknadForm?.values;
     const prevSoknadValues = prevProps.soknadForm?.values;
 
@@ -108,6 +105,10 @@ class Stegvelger extends Component<Props, State> {
       this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
     ) {
       this.debouncedOppdaterSteg();
+    }
+
+    if (prevProps.behandlingUnderOppfriskning && !this.props.behandlingUnderOppfriskning) {
+      this.oppfriskFlyt();
     }
 
     if (this.state.endreFokus) {
@@ -131,9 +132,11 @@ class Stegvelger extends Component<Props, State> {
   };
 
   oppfriskFlyt = () => {
-    return Api.Trygdeavtale.oppfriskFlyt(this.props.behandlingID).then((response) =>
-      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
-    );
+    Api.Trygdeavtale.oppfriskFlyt(this.props.behandlingID).then((response) => {
+      const nyeSteg = this.mapFlytResDtoOmTilAktuelleSteg(response);
+      this.setState({ aktuelleSteg: nyeSteg });
+      this.oppdaterAktivtSteg(nyeSteg.length - 1);
+    });
   };
 
   oppdaterFlyt = (resultat: Api.Trygdeavtale.Resultat, callBack?: () => void) => {
@@ -149,7 +152,6 @@ class Stegvelger extends Component<Props, State> {
       data: response.data,
       resultat: response.resultat,
       redigerbart: this.props.redigerbart,
-      annenBehandlingOppfriskes: this.props.annenBehandlingOppfriskes,
     };
 
     const handlers = {
@@ -157,8 +159,6 @@ class Stegvelger extends Component<Props, State> {
       tilbake: this.tilbake,
       oppdaterFlyt: this.debouncedOppdaterFlyt,
       oppfriskFlyt: this.oppfriskFlyt,
-      tilForsiden: this.props.tilForsiden,
-      oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
       hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
     };

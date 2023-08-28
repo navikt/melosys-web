@@ -1,5 +1,6 @@
 import { getAsJson, putAsJson } from "../utils";
 import { API_BASE_URL, TRYGDEAVGIFT } from "../api-constants";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 export type Inntektskilde = {
   type: string;
@@ -12,8 +13,15 @@ export type TrygdeavgiftsgrunnlagDto = {
   inntektskilder: Inntektskilde[];
 };
 
+export type TrygdeavgiftMottakerDto = {
+  trygdeavgiftMottaker: KTObject;
+};
+
 export const hentTrygdeavgiftsgrunnlaget = (behandlingID: number): Promise<TrygdeavgiftsgrunnlagDto> =>
   getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/grunnlag`);
+
+export const hentTrygdeavgiftMottaker = (behandlingID: number): Promise<TrygdeavgiftMottakerDto> =>
+  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/mottaker`);
 
 export const oppdaterTrygdeavgiftsgrunnlag = (
   behandlingID: number,

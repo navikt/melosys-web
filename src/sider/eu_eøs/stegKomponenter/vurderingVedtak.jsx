@@ -30,11 +30,7 @@ import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstit
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
 import "./vurderingVedtak.css";
-import {
-  MELOSYS_FOLKETRYGDEN_MVP,
-  MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT,
-  MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP,
-} from "../../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../featuretoggle/toggleNavn";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import * as Api from "../../../services/api";
 
@@ -76,9 +72,7 @@ const skalViseMottakerinstitusjoner = (
   sakstema,
   behandlingstema,
   behandlingstype,
-  folketrygdenToggleEnabled,
-  ikkeYrkesaktivFlytToggleEnabled,
-  registreringUnntakFraMedlemskapToggleEnabled
+  folketrygdenToggleEnabled
 ) => {
   return (
     sakstype === MKV.Koder.sakstyper.EU_EOS &&
@@ -88,15 +82,7 @@ const skalViseMottakerinstitusjoner = (
       MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
       MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
     ].includes(behandlingstema) &&
-    !skalViseTomFlyt(
-      sakstype,
-      sakstema,
-      behandlingstema,
-      behandlingstype,
-      folketrygdenToggleEnabled,
-      ikkeYrkesaktivFlytToggleEnabled,
-      registreringUnntakFraMedlemskapToggleEnabled
-    )
+    !skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)
   );
 };
 
@@ -128,8 +114,6 @@ const VurderingVedtak = ({
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [erBucAapen, setErBucAapen] = useState(true);
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
-  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
-  const registreringUnntakFraMedlemskapToggleEnabled = useFeatureToggle(MELOSYS_REGISTRERING_UNNTAK_FRA_MEDLEMSKAP);
   const dispatch = useDispatch();
 
   const lovvalget = lovvalgsperioder[0] || {};
@@ -149,9 +133,7 @@ const VurderingVedtak = ({
     sakstema,
     behandlingstema,
     behandlingstype,
-    folketrygdenToggleEnabled,
-    ikkeYrkesaktivFlytToggleEnabled,
-    registreringUnntakFraMedlemskapToggleEnabled
+    folketrygdenToggleEnabled
   );
   const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
 
