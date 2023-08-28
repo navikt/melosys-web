@@ -4,6 +4,8 @@ export interface Inntekstskilde {
   kildetype?: string;
   arbAvgBetales?: string;
   bruttoInntekt?: number;
+  fomDato?: string;
+  tomDato?: string;
 }
 
 export interface FieldArrayProps {

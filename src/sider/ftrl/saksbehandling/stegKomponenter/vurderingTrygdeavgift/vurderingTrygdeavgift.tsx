@@ -21,6 +21,7 @@ import TrygdeavgiftsperioderTabell from "./komponenter/trygdeavgiftsperioderTabe
 import { FieldArrayProps, FormValuesProps, Inntekstskilde } from "./komponenter/types";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
+import { Feilmelding, finnAktivFeilmelding } from "./komponenter/meldinger";
 
 const { SKATTEPLIKTIG, IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
@@ -35,6 +36,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const medlemskapsperiodeStatus = useSelector(medlemskapsperioderSelectors.MedlemskapsperioderStatusSelector);
+  const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.InnvilgedeMedlemskapsperioderSelector);
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
     undefined,
@@ -62,6 +64,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
+
+  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.inntektskilder, medlemskapsperioder!);
 
   useEffect(() => {
     Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
@@ -195,6 +199,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
           Beregn foreløpig trygdeavgift
         </Nav.Knapp>
       )}
+
+      <Feilmelding type={aktivFeilmeldingType} />
 
       {trygdeavgiftErIkkeTom && formIsValid && (
         <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />

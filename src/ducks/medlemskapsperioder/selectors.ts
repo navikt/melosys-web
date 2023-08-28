@@ -1,6 +1,7 @@
 import { RootState, StateSection } from "AppTypes";
 import { createSelector, Selector } from "reselect";
 import * as Types from "./types";
+import MKV from "../../melosyskodeverk";
 
 export const MedlemskapsperioderSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   (state: RootState) => state.medlemskapsperioder,
@@ -20,6 +21,14 @@ export const MedlemskapsperioderDataSelector: Selector<RootState, Types.Data> = 
 export const AlleMedlemskapsperioderSelector = createSelector(
   MedlemskapsperioderDataSelector,
   (medlemskapsperioder) => medlemskapsperioder.medlemskapsperioder
+);
+
+export const InnvilgedeMedlemskapsperioderSelector = createSelector(
+  MedlemskapsperioderDataSelector,
+  (medlemskapsperioder) =>
+    medlemskapsperioder.medlemskapsperioder?.filter(
+      (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET
+    )
 );
 
 export const BestemmelseSelector = createSelector(MedlemskapsperioderDataSelector, (medlemskapsperioderData) =>
