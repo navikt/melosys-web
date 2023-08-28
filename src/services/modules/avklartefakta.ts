@@ -37,13 +37,3 @@ export type MedfolgendeFamiliemedlem = {
   begrunnelseKode: string | null;
   begrunnelseFritekst: string | null;
 };
-
-export type MedfolgendeFamilie = {
-  medfolgendeFamilie: MedfolgendeFamiliemedlem[];
-};
-
-export const sendMedfolgendeFamilie = (
-  behandlingID: number,
-  medfolgendeFamilie: MedfolgendeFamilie
-): Promise<Oppsummering> =>
-  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/medfolgendeFamilie`, medfolgendeFamilie);
