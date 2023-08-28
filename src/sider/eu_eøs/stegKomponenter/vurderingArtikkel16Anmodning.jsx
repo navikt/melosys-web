@@ -37,7 +37,6 @@ import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSc
 import "./vurderingArtikkel16Anmodning.css";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-import { AlertStripeFeil } from "nav-frontend-alertstriper";
 
 const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked, redigerbart }) => {
   const { periodeID, periode } = perm;
