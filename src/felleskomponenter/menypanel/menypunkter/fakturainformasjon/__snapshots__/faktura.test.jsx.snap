@@ -1,0 +1,117 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Faktura > snapshot test 1`] = `
+<div>
+  <div
+    class="fakturaseksjon"
+  >
+    <div
+      class="headerseksjon"
+    >
+      <dl
+        class="oppsummering_verdi_par"
+      >
+        <dt
+          class="nokkel"
+        >
+          Faktura id: 
+        </dt>
+        <dd>
+          1
+        </dd>
+      </dl>
+      <dl
+        class="oppsummering_verdi_par"
+      >
+        <dt
+          class="nokkel"
+        >
+          Dato bestilt: 
+        </dt>
+        <dd>
+          2023-08-24
+        </dd>
+      </dl>
+      <dl
+        class="oppsummering_verdi_par"
+      >
+        <dt
+          class="nokkel"
+        >
+          Periode fra: 
+        </dt>
+        <dd>
+          01.04.2023
+        </dd>
+      </dl>
+      <dl
+        class="oppsummering_verdi_par"
+      >
+        <dt
+          class="nokkel"
+        >
+          Periode til: 
+        </dt>
+        <dd>
+          31.08.2023
+        </dd>
+      </dl>
+      <dl
+        class="oppsummering_verdi_par"
+      >
+        <dt
+          class="nokkel"
+        >
+          Status: 
+        </dt>
+        <dd>
+          BESTILLT
+        </dd>
+      </dl>
+    </div>
+    <br />
+    <br />
+    <br />
+    <div
+      class="row header"
+    >
+      <div
+        class="col col-xs-2"
+      >
+        Periode fra
+      </div>
+      <div
+        class="col col-xs-2"
+      >
+        Periode til
+      </div>
+      <div
+        class="col col-xs-6"
+      >
+        Beskrivelse
+      </div>
+      <div
+        class="col col-xs-2"
+      >
+        Beløp
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-9"
+      />
+      <div
+        class="col col-xs-1"
+      >
+        <p
+          class="typo-element"
+        >
+          Totalbeløp
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;

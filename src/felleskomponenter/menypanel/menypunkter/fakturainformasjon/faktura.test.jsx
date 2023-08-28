@@ -1,5 +1,13 @@
-import renderer from "react-test-renderer";
 import { Faktura } from "./faktura";
+import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+
+vi.mock("../../../../utils", async () => {
+  const actual = await vi.importActual("../../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("Faktura", () => {
   let props = null;
@@ -18,7 +26,8 @@ describe("Faktura", () => {
   });
 
   it("snapshot test", () => {
-    const tree = renderer.create(<Faktura {...props} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = renderWithProviders(<Faktura {...props} />);
+
+    expect(container).toMatchSnapshot();
   });
 });

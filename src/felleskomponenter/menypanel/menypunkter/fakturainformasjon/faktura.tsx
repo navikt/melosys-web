@@ -68,12 +68,14 @@ export const Faktura = ({ faktura }: FakturaProps) => {
         <Nav.Column xs="1">
           <Nav.Typo.Element>Totalbeløp</Nav.Typo.Element>
         </Nav.Column>
-        <Nav.Column xs="2">
-          {faktura.fakturaLinje
-            .map((linje: any) => linje.belop)
-            .reduce((a: any, b: any) => a + b)
-            .toFixed(2)}
-        </Nav.Column>
+        {!_isEmpty(faktura.fakturaLinje) && (
+          <Nav.Column xs="2">
+            {faktura.fakturaLinje
+              .map((linje: any) => linje.belop)
+              .reduce((a: any, b: any) => a + b)
+              .toFixed(2)}
+          </Nav.Column>
+        )}
       </Nav.Row>
     </div>
   );
