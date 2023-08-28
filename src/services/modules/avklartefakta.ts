@@ -18,7 +18,6 @@ export const send = (behandlingID: number, avklartefakta: Avklartfakta[]): Promi
 
 interface Oppsummering {
   virksomheter: string[];
-  medfolgendeFamilie: MedfolgendeFamiliemedlem[];
 }
 
 export const hentOppsummering = (behandlingID: number): Promise<Oppsummering> =>
@@ -30,20 +29,3 @@ export type Virksomheter = {
 
 export const sendVirksomheter = (behandlingID: number, virksomheter: Virksomheter): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/virksomheter`, virksomheter);
-
-export type MedfolgendeFamiliemedlem = {
-  uuid: string;
-  omfattet: boolean;
-  begrunnelseKode: string | null;
-  begrunnelseFritekst: string | null;
-};
-
-export type MedfolgendeFamilie = {
-  medfolgendeFamilie: MedfolgendeFamiliemedlem[];
-};
-
-export const sendMedfolgendeFamilie = (
-  behandlingID: number,
-  medfolgendeFamilie: MedfolgendeFamilie
-): Promise<Oppsummering> =>
-  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/medfolgendeFamilie`, medfolgendeFamilie);

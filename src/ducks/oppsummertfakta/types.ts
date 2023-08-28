@@ -10,7 +10,6 @@ export const RESET = "oppsummertfakta/RESET";
 
 export type Data = {
   virksomheter?: Api.Avklartefakta.Virksomheter;
-  medfolgendeFamilie?: Api.Avklartefakta.MedfolgendeFamiliemedlem[];
 };
 
 export interface FeiletAction {

@@ -9,6 +9,7 @@ interface VedleggTableProps {
   leggTilVedlegg: (vedlegg: FysiskDokument) => void;
 }
 
+// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const VedleggVelgerTable = ({ valgteVedlegg, alleVedlegg, slettVedlegg, leggTilVedlegg }: VedleggTableProps) => {
   const vedleggErMarkert = (vedleggID: string) => Boolean(valgteVedlegg.find((vedlegg) => vedlegg.id === vedleggID));
 

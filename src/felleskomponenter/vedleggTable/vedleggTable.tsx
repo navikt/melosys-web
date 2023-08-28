@@ -16,6 +16,7 @@ interface VedleggTableProps {
   lagFritekstPdfUrl?: (index: number) => Promise<string | false>;
 }
 
+// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const VedleggTable = ({
   valgteVedlegg,
   setValgteVedlegg,
