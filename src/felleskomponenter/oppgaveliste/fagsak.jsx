@@ -1,5 +1,6 @@
 import PT from "prop-types";
 
+import MKV from "../../melosyskodeverk";
 import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
@@ -28,6 +29,8 @@ const Fagsak = ({ sak, landkoder }) => {
   const { land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
   const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
+  const { medlemskapsperiode } =
+    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.medlemskapsperiode != null) ?? {};
   const link = (behandling) =>
     Routing.lagUrl(
       saksnummer,
@@ -60,7 +63,11 @@ const Fagsak = ({ sak, landkoder }) => {
           </Nav.Column>
           <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
-              <DatoOmradeDescription label="Lovvalgsperiode: " periode={lovvalgsperiode} />
+              {sakstype?.kode === MKV.Koder.sakstyper.FTRL ? (
+                <DatoOmradeDescription label="Medlemskapsperiode: " periode={medlemskapsperiode} />
+              ) : (
+                <DatoOmradeDescription label="Lovvalgsperiode: " periode={lovvalgsperiode} />
+              )}
               <dt>Land:</dt>
               <dd>
                 <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
