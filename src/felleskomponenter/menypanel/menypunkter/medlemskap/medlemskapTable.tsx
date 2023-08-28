@@ -9,6 +9,7 @@ interface MedlemskapTableProps {
   perioder: Api.Behandlinger.behandling.Medlemsperiode[];
 }
 
+// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const MedlemskapTable = ({ perioder }: MedlemskapTableProps) => {
   const [expanded, setExpanded] = useState(false);
 

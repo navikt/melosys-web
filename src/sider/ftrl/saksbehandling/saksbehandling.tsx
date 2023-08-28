@@ -84,7 +84,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   resetMottatteOpplysningerState: () => dispatch(mottatteOpplysningerOperations.resetState()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
-  resetKontroll: () => dispatch(kontrollOperations.resetKontroll()),
+  resetKontrollFeil: () => dispatch(kontrollOperations.resetKontrollFeil()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -132,7 +132,7 @@ const Saksbehandling = ({
   startOgVisOppfriskModal,
   visOppfriskModal,
   resetFeiletrespons,
-  resetKontroll,
+  resetKontrollFeil,
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
@@ -189,7 +189,7 @@ const Saksbehandling = ({
       resetBehandlingerState();
       resetMottatteOpplysningerState();
       resetFeiletrespons();
-      resetKontroll();
+      resetKontrollFeil();
       skjulMenypanel();
     };
   }, []);

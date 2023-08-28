@@ -65,7 +65,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
     (formValues.land === MKV.Koder.landkoder.FR || formValues.land === MKV.Koder.landkoder.IT);
 
-  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !visOppfrisk && !landUtenStøtteValgt;
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !landUtenStøtteValgt;
 
   useEffect(() => {
     if (registeropplysningerHentet) {
@@ -151,15 +151,17 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
       {landUtenStøtteValgt && <TomFlytMelding />}
 
-      {landUtenStøtteValgt ? (
+      {landUtenStøtteValgt && skalHenteRegisteropplysninger && (
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: innhentRegisteropplysninger,
-            disabled: !skalHenteRegisteropplysninger || !formState?.isValid || !redigerbart,
+            disabled: !formState?.isValid || !redigerbart,
           }}
-          bekreftTekst={skalHenteRegisteropplysninger ? "Innhent registeropplysninger" : undefined}
+          bekreftTekst="Innhent registeropplysninger"
         />
-      ) : (
+      )}
+
+      {!landUtenStøtteValgt && (
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: bekreftOgFortsett,

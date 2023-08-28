@@ -1,4 +1,3 @@
-import { AppThunk } from "AppTypes";
 import { doThenDispatch } from "../../services/utils";
 
 import * as Api from "../../services/api";
@@ -19,20 +18,6 @@ export function sendVirksomheter(behandlingID: number, virksomheter: Api.Avklart
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
-}
-
-export function sendMedfolgendeFamilie(behandlingID: number, medfolgendeFamilie: Api.Avklartefakta.MedfolgendeFamilie) {
-  return doThenDispatch(() => Api.Avklartefakta.sendMedfolgendeFamilie(behandlingID, medfolgendeFamilie), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
-
-export function oppdaterVirksomheterState(
-  virksomheter: Api.Avklartefakta.Virksomheter
-): AppThunk<Types.Action, Types.Action> {
-  return (dispatch) => dispatch(Actions.oppdaterVirksomheter(virksomheter));
 }
 
 export function resetOppsummertFakta() {

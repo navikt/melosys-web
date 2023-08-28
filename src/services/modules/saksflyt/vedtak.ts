@@ -18,6 +18,7 @@ export interface FattVedtakFTRLReqDto {
   vedtakstype: string | null;
   innledningFritekst: string | null;
   begrunnelseFritekst: string | null;
+  trygdeavgiftFritekst: string | null;
   kopiMottakere: KopiMottaker[];
   nyVurderingBakgrunn: string | null | undefined;
 }

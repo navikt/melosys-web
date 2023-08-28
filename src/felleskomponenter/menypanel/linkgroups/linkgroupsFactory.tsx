@@ -5,6 +5,8 @@ import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
 
+const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
+
 const {
   UTSENDT_ARBEIDSTAKER,
   UTSENDT_SELVSTENDIG,
@@ -30,7 +32,6 @@ interface LinkGroupsConfig {
   contentProps: ContentProps;
   sakstema: string;
   folketrygdenToggleEnabled: boolean | undefined;
-  ikkeYrkesaktivFlytToggleEnabled: boolean | undefined;
 }
 
 class LinkGroupsFactory {
@@ -42,19 +43,15 @@ class LinkGroupsFactory {
     behandlingstype,
     sakstema,
     folketrygdenToggleEnabled,
-    ikkeYrkesaktivFlytToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (
-      skalViseTomFlyt(
-        sakstype,
-        sakstema,
-        behandlingstema,
-        behandlingstype,
-        folketrygdenToggleEnabled,
-        ikkeYrkesaktivFlytToggleEnabled
-      )
-    ) {
-      return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
+    if (skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)) {
+      const linkBuilder = new LinksBuilder(contentProps).addFullmektig();
+
+      if (behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
+        linkBuilder.addFaktureringskomponenten(folketrygdenToggleEnabled);
+      }
+
+      return new LinkgroupsBuilder().addUtenLabel(linkBuilder.build()).build();
     }
 
     if (harUnntakFlyt(sakstype, sakstema, behandlingstema)) {
@@ -70,7 +67,7 @@ class LinkGroupsFactory {
         .build();
     }
 
-    if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema, ikkeYrkesaktivFlytToggleEnabled || false)) {
+    if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema)) {
       return new LinkgroupsBuilder()
         .addFraRegister(
           new LinksBuilder(contentProps)

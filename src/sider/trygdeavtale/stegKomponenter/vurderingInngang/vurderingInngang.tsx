@@ -97,7 +97,6 @@ const VurderingInngang = ({
   oppdaterPeriode,
   oppdaterSoeknadsland,
   oppdaterFlyt,
-  oppfriskFlyt,
   visMenypanel,
   aktivtSteg,
   registeropplysningerHentet,
@@ -162,6 +161,7 @@ const VurderingInngang = ({
     if (skalHenteRegisteropplysninger) {
       innhentRegisteropplysninger();
     } else {
+      hentFlytOgOppdaterAktuelleSteg();
       fortsett();
     }
   };
@@ -209,16 +209,17 @@ const VurderingInngang = ({
 
       {landUtenStøtteValgt && <TomFlytMelding />}
 
-      {landUtenStøtteValgt ? (
+      {landUtenStøtteValgt && skalHenteRegisteropplysninger && (
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: innhentRegisteropplysninger,
-            disabled:
-              !skalHenteRegisteropplysninger || steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
+            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
           }}
-          bekreftTekst={skalHenteRegisteropplysninger ? "Innhent registeropplysninger" : undefined}
+          bekreftTekst="Innhent registeropplysninger"
         />
-      ) : (
+      )}
+
+      {!landUtenStøtteValgt && (
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: bekreftOgFortsett,
@@ -234,10 +235,6 @@ const VurderingInngang = ({
           lukk={() => {
             setVisOppfrisk(false);
             visMenypanel();
-            oppfriskFlyt();
-            if (!landUtenStøtteValgt) {
-              fortsett();
-            }
           }}
           tilForsiden={() => {
             setVisOppfrisk(false);

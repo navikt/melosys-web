@@ -9,6 +9,7 @@ import { FANE_STATUS } from "../stegvelger";
 import MKV from "../../melosyskodeverk";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { NyVurderingMelding } from "../alertmeldinger/alertmeldinger";
+import { Feilmeldinger } from "../feilmeldinger";
 
 interface AktueltSteg {
   id: string;
@@ -55,6 +56,8 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
     }
 
     setAktuellesteg(nyeSteg);
+    const normalisertAktivtSteg = Math.min(aktivtStegIndex, nyeSteg.length - 1);
+    setAktivtStegIndex(normalisertAktivtSteg);
   };
 
   const bekreft = () => {
@@ -75,6 +78,7 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
         <div>
           <StegLinje steg={aktuelleSteg} stegKlikk={handleKlikk} />
           {!redigerbart && <Innsynsmelding />}
+          <Feilmeldinger />
 
           {erNyVurdering && redigerbart && inngangStegErAktivt && <NyVurderingMelding />}
           {aktuelleSteg.map((steg) => (

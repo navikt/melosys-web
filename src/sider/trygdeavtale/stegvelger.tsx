@@ -26,6 +26,7 @@ import { redigerbartSelectors } from "../../ducks/redigerbart";
 
 import "./stegvelger.css";
 import { NyVurderingMelding } from "../../felleskomponenter/alertmeldinger/alertmeldinger";
+import { modalerSelectors } from "../../ducks/modaler";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -59,6 +60,7 @@ const mapStateToProps = (state: RootState) => ({
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  behandlingUnderOppfriskning: modalerSelectors.BehandlingUnderOppfriskningSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -105,6 +107,10 @@ class Stegvelger extends Component<PropsFromRedux, State> {
       this.debouncedOppdaterSteg();
     }
 
+    if (prevProps.behandlingUnderOppfriskning && !this.props.behandlingUnderOppfriskning) {
+      this.oppfriskFlyt();
+    }
+
     if (this.state.endreFokus) {
       // @ts-ignore
       const aktueltStegId = this.state.aktuelleSteg[this.state.aktivtStegIndex].id;
@@ -126,9 +132,11 @@ class Stegvelger extends Component<PropsFromRedux, State> {
   };
 
   oppfriskFlyt = () => {
-    return Api.Trygdeavtale.oppfriskFlyt(this.props.behandlingID).then((response) =>
-      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
-    );
+    Api.Trygdeavtale.oppfriskFlyt(this.props.behandlingID).then((response) => {
+      const nyeSteg = this.mapFlytResDtoOmTilAktuelleSteg(response);
+      this.setState({ aktuelleSteg: nyeSteg });
+      this.oppdaterAktivtSteg(nyeSteg.length - 1);
+    });
   };
 
   oppdaterFlyt = (resultat: Api.Trygdeavtale.Resultat, callBack?: () => void) => {

@@ -3,6 +3,7 @@ import * as KV from "../../../../../../kodeverk";
 import * as Utils from "../../../../../../utils";
 import { Trygdeavgiftsperiode } from "../../../../../../services/modules/trygdeavgift";
 
+// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const TrygdeavgiftsperioderTabell = ({ perioder }: { perioder: Trygdeavgiftsperiode[] }) => {
   if (!perioder) return null;
   return (

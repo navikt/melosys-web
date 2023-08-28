@@ -10,6 +10,7 @@ import "./redigeringUtfort.css";
 
 const cls = classNames("tabell", "arbeidssted__utland__redigeringutfort");
 
+// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.ArbeidsstedSkip>) => (
   <div className="arbeidssted__utland__redigeringutfort-wrapper">
     <table className={cls}>

@@ -87,13 +87,14 @@ export const JournalforingForm = ({
         return;
       }
 
-      Api.Kontroll.harRegistrertAdresse({
+      Api.Kontroll.kontrollerAdresse({
         brukerID: brukerIDPerson,
         orgnr,
       })
-        .then((harAdresse) => {
-          setHarRegistrertAdresse(harAdresse);
-          settFeltInnhold("ikkeSendForvaltingsmelding", !harAdresse);
+        .then((res) => {
+          const adresseFunnet = !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
+          setHarRegistrertAdresse(adresseFunnet);
+          settFeltInnhold("ikkeSendForvaltingsmelding", !adresseFunnet);
         })
         .catch(() => setHarRegistrertAdresse(false));
     }

@@ -4,6 +4,7 @@ import { API_BASE_URL, BEHANDLINGER } from "../../api-constants";
 export interface OppdaterFritekster {
   innledningFritekst?: string;
   begrunnelseFritekst?: string;
+  trygdeavgiftFritekst?: string;
 }
 
 export interface AngiBehandlingsresultattype {

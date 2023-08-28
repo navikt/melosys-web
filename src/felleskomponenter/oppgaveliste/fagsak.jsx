@@ -1,5 +1,6 @@
 import PT from "prop-types";
 
+import MKV from "../../melosyskodeverk";
 import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
@@ -14,7 +15,7 @@ import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
 import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT } from "../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -23,12 +24,13 @@ import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT } from "
  */
 const Fagsak = ({ sak, landkoder }) => {
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
-  const ikkeYrkesaktivFlytToggleEnabled = useFeatureToggle(MELOSYS_IKKEYRKESAKTIV_FORENKLETFLYT);
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
 
   const { land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
   const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
+  const { medlemskapsperiode } =
+    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.medlemskapsperiode != null) ?? {};
   const link = (behandling) =>
     Routing.lagUrl(
       saksnummer,
@@ -37,8 +39,7 @@ const Fagsak = ({ sak, landkoder }) => {
       sakstema.kode,
       behandling.behandlingstema.kode,
       behandling.behandlingstype.kode,
-      folketrygdenToggleEnabled,
-      ikkeYrkesaktivFlytToggleEnabled
+      folketrygdenToggleEnabled
     );
 
   const customMargin = { marginLeft: "1em" };
@@ -62,7 +63,11 @@ const Fagsak = ({ sak, landkoder }) => {
           </Nav.Column>
           <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
-              <DatoOmradeDescription label="Lovvalgsperiode: " periode={lovvalgsperiode} />
+              {sakstype?.kode === MKV.Koder.sakstyper.FTRL ? (
+                <DatoOmradeDescription label="Medlemskapsperiode: " periode={medlemskapsperiode} />
+              ) : (
+                <DatoOmradeDescription label="Lovvalgsperiode: " periode={lovvalgsperiode} />
+              )}
               <dt>Land:</dt>
               <dd>
                 <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />

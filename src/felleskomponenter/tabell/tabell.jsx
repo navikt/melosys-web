@@ -23,6 +23,7 @@ TabellLinje.propTypes = {
   linjeData: PT.array.isRequired,
 };
 
+// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 /** Setter opp en tabell med paginering, avhengig av om linjerPerSide er > 0.
  *
  * @param props. Se prop types for detaljer.
