@@ -1,7 +1,7 @@
 import PT from "prop-types";
 import classnames from "classnames";
 
-import { FANE_STATUS } from "../stegvelger/stegMotor";
+import { FANE_STATUS } from "../stegvelger";
 
 import * as Ikoner from "../../resources/images";
 
@@ -25,16 +25,7 @@ const ikonVelger = (status, vedtakSteg, aktivtSteg) => {
 const StegIkon = (props) => {
   const { aktivtSteg, status, tittel, onClick, tilgjengelig, vedtakSteg } = props;
 
-  const erTilgjengelig = status !== FANE_STATUS.UBEHANDLET;
-
   const Ikon = ikonVelger(status, vedtakSteg, aktivtSteg);
-
-  const cl = classnames(
-    "stegIkon",
-    !erTilgjengelig ? "stegIkon-utilgjengelig" : "",
-    aktivtSteg && "stegIkon--aktiv",
-    aktivtSteg && !erTilgjengelig && "stegIkon--aktiv--utilgjengelig"
-  );
 
   const knappKlasser = classnames({
     stegIkon__enkeltSteg: !vedtakSteg,
@@ -42,7 +33,7 @@ const StegIkon = (props) => {
   });
   /* eslint-disable react/no-danger */
   return (
-    <li className={cl}>
+    <li className="stegIkon">
       <button onClick={onClick} className="stegIkon__knapp" type="button">
         <Ikon className={knappKlasser} aria-disabled={!tilgjengelig} />
         <div className="stegIkon__tittel" dangerouslySetInnerHTML={{ __html: tittel }} />
