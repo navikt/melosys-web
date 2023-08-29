@@ -32,6 +32,7 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
+import useHentPersonopplysninger from "../../../../felleskomponenter/informasjonlinje/useHentpersonopplysninger";
 
 const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -75,8 +76,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const dispatch = useDispatch();
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
-
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
+
   const {
     behandlingID,
     medlemskapsperioder,
@@ -89,6 +90,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     redigerbart,
     mottatteOpplysningerStatus,
   } = useSelector(komponentState);
+
+  const personopplysninger = useHentPersonopplysninger(behandlingID, false);
 
   const {
     watch,
@@ -264,7 +267,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     "Friteksten kommer her.";
   const trygdeavgiftFritekstHjelpetekst =
     "Teksten du skriver her vil vises etter standard informasjon om trygdeavgiften. Eksempel: \n\n" +
-    '"Ved kalenderårets slutt vil vi be om endelige inntektsopplysninger. Ut fra disse opplysningene vil vi beregne endelig trygdeavgift for året."' +
+    '"Ved kalenderårets slutt vil vi be om endelige inntektsopplysninger. Ut fra disse opplysningene vil vi beregne endelig trygdeavgift for året."\n\n' +
     "Friteksten kommer her.";
 
   if (!aktivtSteg) return null;
@@ -283,7 +286,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
             </tr>
             {mapPeriodeRader(medlemskapsperioder).map((periode) => {
               return (
-                <tr>
+                <tr key={Utils._uuid()}>
                   <td>{periode.periode}</td>
                   <td>{periode.dekning}</td>
                   <td>{periode.resultat}</td>
@@ -304,9 +307,19 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       </Nav.Row>
 
       {trygdeavgiftMottaker ? (
-        <Nav.Row className="margin_bottom">
+        <Nav.Row className="trygdeavgift__row">
           <Nav.Column xs="12">
             <Nav.Typo.Normaltekst className="info">{trygdeavgiftMottaker.term}</Nav.Typo.Normaltekst>
+          </Nav.Column>
+        </Nav.Row>
+      ) : null}
+
+      {personopplysninger ? (
+        <Nav.Row className="margin_bottom">
+          <Nav.Column xs="12" className="fakturamottaker">
+            <Nav.Typo.Normaltekst className="info">Faktura sendes til:</Nav.Typo.Normaltekst>
+            &nbsp;
+            <Nav.Typo.Normaltekst className="bold">{personopplysninger.navn}</Nav.Typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
       ) : null}
@@ -363,7 +376,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
               </tr>
               {mapMottakerRader(muligeMottakere).map((mottaker) => {
                 return (
-                  <tr>
+                  <tr key={Utils._uuid()}>
                     <td>{mottaker.dokument}</td>
                     <td>{mottaker.navn}</td>
                   </tr>
