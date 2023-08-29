@@ -1,5 +1,4 @@
-export const OKFakturaserie = "fakturainformasjon/OKFakturaserie";
-export const OKFakturainfo = "fakturainformasjon/OKFakturainfo";
+export const OK = "fakturainformasjon/OK";
 export const FEILET = "fakturainformasjon/FEILET";
 export const PENDING = "fakturainformasjon/PENDING";
 
@@ -17,14 +16,9 @@ interface PendingAction {
   type: typeof PENDING;
 }
 
-interface OkActionFakturaserie {
-  type: typeof OKFakturaserie;
+interface OkAction {
+  type: typeof OK;
   data: any;
 }
 
-interface OkActionFakturainfo {
-  type: typeof OKFakturainfo;
-  data: any;
-}
-
-export type Action = FeiletAction | PendingAction | OkActionFakturaserie | OkActionFakturainfo;
+export type Action = FeiletAction | PendingAction | OkAction;
