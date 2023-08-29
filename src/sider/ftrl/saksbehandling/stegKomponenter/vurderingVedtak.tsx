@@ -317,7 +317,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       {personopplysninger ? (
         <Nav.Row className="margin_bottom">
           <Nav.Column xs="12" className="fakturamottaker">
-            <Nav.Typo.Normaltekst className="info">Faktura sendes til: </Nav.Typo.Normaltekst>
+            <Nav.Typo.Normaltekst className="info">Faktura sendes til:</Nav.Typo.Normaltekst>
             &nbsp;
             <Nav.Typo.Normaltekst className="bold">{personopplysninger.navn}</Nav.Typo.Normaltekst>
           </Nav.Column>
