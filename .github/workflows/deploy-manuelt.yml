@@ -8,6 +8,9 @@ on:
         required: true
         default: 'q2'
 
+permissions:
+  contents: write
+
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/melosys-web:${{ github.sha }}
   IMAGE_MANIFEST: https://docker.pkg.github.com/v2/${{ github.repository }}/melosys-web/manifests/${{ github.sha }}
