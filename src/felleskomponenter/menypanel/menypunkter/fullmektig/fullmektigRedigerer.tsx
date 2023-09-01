@@ -93,7 +93,7 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
               <Nav.Radio
                 onChange={rolleChangeHandler}
                 checked={representererKode === MKV.Koder.representerer.BRUKER}
-                label="Arbeidstaker"
+                label="Bruker"
                 value={MKV.Koder.representerer.BRUKER}
                 name={databaseIDString}
                 disabled={!redigerbart}
@@ -101,7 +101,7 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
               <Nav.Radio
                 onChange={rolleChangeHandler}
                 checked={representererKode === MKV.Koder.representerer.BEGGE}
-                label="Både arbeidstaker og arbeidsgiver"
+                label="Både bruker og arbeidsgiver"
                 value={MKV.Koder.representerer.BEGGE}
                 name={databaseIDString}
                 disabled={!redigerbart}
