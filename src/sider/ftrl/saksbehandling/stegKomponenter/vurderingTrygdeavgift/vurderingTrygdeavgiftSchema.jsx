@@ -43,6 +43,8 @@ const vurdering_trygdeavgift = object().shape({
       kildetype: string().required(MAA_FYLLES_UT),
       arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
       bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
+      fomDato: string().erGyldigDato().required(MAA_FYLLES_UT),
+      tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").required(MAA_FYLLES_UT),
     })
   ),
 });
