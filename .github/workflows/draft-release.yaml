@@ -10,6 +10,7 @@ on:
       - master
 permissions:
   contents: write
+  packages: write
 env:
   docker_image: docker.pkg.github.com/${{ github.repository }}/melosys-web:${{ github.sha }}
 jobs:

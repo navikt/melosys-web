@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: write
+  packages: write
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/melosys-web:${{ github.sha }}
