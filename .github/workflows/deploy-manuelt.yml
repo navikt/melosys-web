@@ -9,7 +9,6 @@ on:
         default: 'q2'
 
 permissions:
-  contents: write
   packages: write
 
 env:
