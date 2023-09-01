@@ -23,7 +23,7 @@ exports[`vedleggRow > snapshot test 1`] = `
   >
     <button
       aria-label="Fjern vedlegg"
-      className="ikon-knapp ikon-knapp-graa"
+      className="ikon-knapp"
       onClick={[MockFunction spy]}
       title="Fjern vedlegg"
       type="button"

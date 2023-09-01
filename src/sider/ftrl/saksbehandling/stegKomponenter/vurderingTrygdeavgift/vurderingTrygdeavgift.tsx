@@ -18,7 +18,7 @@ import { STATUS } from "../../../../../services";
 
 import { Inntektskilder } from "./komponenter/inntektskilder";
 import TrygdeavgiftsperioderTabell from "./komponenter/trygdeavgiftsperioderTabell";
-import { FieldArrayProps, FormValuesProps, Inntekstskilde } from "./komponenter/types";
+import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./komponenter/types";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
 import { Feilmelding, finnAktivFeilmelding } from "./komponenter/meldinger";
@@ -76,6 +76,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
               kildetype: kilde.type,
               arbAvgBetales: Utils.streng.boolTilUppercaseStreng(kilde.arbeidsgiversavgiftBetales),
               bruttoInntekt: kilde.avgiftspliktigInntektMnd,
+              fomDato: Utils.dato.formatterDatoTilNorsk(kilde.fomDato),
+              tomDato: Utils.dato.formatterDatoTilNorsk(kilde.tomDato),
             }))
           : [{}]
       );
@@ -83,7 +85,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   }, []);
 
   const skalBeregneForeløpigTrygdeavgift = formValues.inntektskilder.some(
-    (inntekstskilde: Inntekstskilde) => inntekstskilde.bruttoInntekt && inntekstskilde.bruttoInntekt !== 0
+    (inntektskilde: Inntektskilde) => inntektskilde.bruttoInntekt && inntektskilde.bruttoInntekt !== 0
   );
 
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
@@ -101,6 +103,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         type: kilde.kildetype,
         arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(kilde.arbAvgBetales) || false,
         avgiftspliktigInntektMnd: kilde.bruttoInntekt,
+        fomDato: Utils.dato.formatterDatoTilISO(kilde.fomDato),
+        tomDato: Utils.dato.formatterDatoTilISO(kilde.tomDato),
       })),
     })
       .then(() => {
@@ -155,25 +159,24 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Trygdeavgift</Nav.Typo.Innholdstittel>
 
       <Nav.Row>
-        <Nav.Column xs="12">
-          <Nav.Fieldset legend="Er bruker skattepliktig?">
-            <Forms.Radio
-              label="Ja"
-              name="skattepliktig"
-              control={control}
-              value={SKATTEPLIKTIG}
-              disabled={!redigerbart}
-              onChange={handleEndreSkattepliktig}
-            />
-            <Forms.Radio
-              label="Nei"
-              name="skattepliktig"
-              control={control}
-              value={IKKE_SKATTEPLIKTIG}
-              disabled={!redigerbart}
-              onChange={handleEndreSkattepliktig}
-            />
-          </Nav.Fieldset>
+        <Nav.Typo.Undertittel className="radio-gruppe__label">Er bruker skattepliktig?</Nav.Typo.Undertittel>
+        <Nav.Column xs="12" className="radio-gruppe__container">
+          <Forms.Radio
+            label="Ja"
+            name="skattepliktig"
+            control={control}
+            value={SKATTEPLIKTIG}
+            disabled={!redigerbart}
+            onChange={handleEndreSkattepliktig}
+          />
+          <Forms.Radio
+            label="Nei"
+            name="skattepliktig"
+            control={control}
+            value={IKKE_SKATTEPLIKTIG}
+            disabled={!redigerbart}
+            onChange={handleEndreSkattepliktig}
+          />
         </Nav.Column>
       </Nav.Row>
 

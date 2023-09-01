@@ -5,6 +5,20 @@
     margin-bottom: 1.5rem;
   }
 
+  .radio-gruppe__container {
+    display: flex;
+    margin-bottom: 1rem;
+
+    > :first-child {
+      margin-right: 1rem;
+    }
+  }
+
+  .radio-gruppe__label {
+    margin: 0 0 0.5rem 0.5rem;
+    font-size: 1rem;
+  }
+
   .hjelpetekst {
     vertical-align: bottom;
     margin-left: 0.75rem;
@@ -16,20 +30,32 @@
   }
 
   .inntektskilder {
-    padding: 0 1rem 1rem;
-    margin-top: 2rem;
+    padding: 1rem;
     background: @navLysGra;
-    position: relative;
 
-    &__legend {
-      margin-left: -1rem;
-      margin-top: -2rem;
-      position: absolute;
+    &__label {
+      margin-bottom: 0.5rem;
       font-size: 18px;
+      font-weight: 600;
     }
 
     &__overskriftrad {
       margin-bottom: 0.5rem;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .flex__kolonne {
+      display: flex;
+
+      > :first-child {
+        width: 50%;
+        margin-right: 0.5rem;
+      }
+      > :last-child {
+        width: 50%;
+        margin-left: 0.5rem;
+      }
     }
 
     .ikkeRelevant {
@@ -41,10 +67,6 @@
       min-height: 1px;
       padding-left: 0.5rem;
       padding-right: 0.5rem;
-      margin-top: 0.5rem;
-    }
-
-    .slett {
       margin-top: 0.5rem;
     }
 

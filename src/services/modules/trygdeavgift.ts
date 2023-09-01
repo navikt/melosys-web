@@ -6,6 +6,8 @@ export type Inntektskilde = {
   type: string;
   arbeidsgiversavgiftBetales: boolean;
   avgiftspliktigInntektMnd?: number;
+  fomDato: string;
+  tomDato: string;
 };
 
 export type TrygdeavgiftsgrunnlagDto = {

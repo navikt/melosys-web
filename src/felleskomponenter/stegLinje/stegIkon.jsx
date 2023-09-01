@@ -1,52 +1,39 @@
 import PT from "prop-types";
 import classnames from "classnames";
 
-import { FANE_STATUS } from "../stegvelger/stegMotor";
+import { FANE_STATUS } from "../stegvelger";
 
 import * as Ikoner from "../../resources/images";
 
 import "./stegIkon.css";
 
-const ikonVelger = (status, vedtakSteg) => {
-  const IKONER = {
-    STEG: {
-      UBEHANDLET: Ikoner.Ubehandlet,
-      OK: Ikoner.Ferdig,
-      ADVARSEL: Ikoner.Varsel,
-      FEIL: Ikoner.Feil,
-    },
-    VEDTAK: {
-      UBEHANDLET: Ikoner.VedakUbehandlet,
-      OK: Ikoner.VedtakGodkjent,
-      ADVARSEL: Ikoner.VedtakAvslatt,
-      FEIL: Ikoner.VedtakAvslatt,
-    },
-  };
+const ikonVelger = (status, vedtakSteg, aktivtSteg) => {
+  if (aktivtSteg) {
+    if (vedtakSteg) {
+      return Ikoner.VedtakGodkjentAktiv;
+    }
+    return status === FANE_STATUS.UBEHANDLET ? Ikoner.UbehandletAktiv : Ikoner.FerdigAktiv;
+  }
 
-  return vedtakSteg ? IKONER.VEDTAK.OK : IKONER.STEG[status];
+  if (vedtakSteg) {
+    return status === FANE_STATUS.UBEHANDLET ? Ikoner.VedtakUbehandlet : Ikoner.VedtakGodkjentIkkeAktiv;
+  }
+
+  return status === FANE_STATUS.UBEHANDLET ? Ikoner.Ubehandlet : Ikoner.Ferdig;
 };
 
 const StegIkon = (props) => {
   const { aktivtSteg, status, tittel, onClick, tilgjengelig, vedtakSteg } = props;
 
-  const erTilgjengelig = status !== FANE_STATUS.UBEHANDLET;
-  const Ikon = ikonVelger(status, vedtakSteg);
-
-  const cl = classnames(
-    "stegIkon",
-    !erTilgjengelig ? "stegIkon-utilgjengelig" : "",
-    aktivtSteg && "stegIkon--aktiv",
-    aktivtSteg && !erTilgjengelig && "stegIkon--aktiv--utilgjengelig"
-  );
+  const Ikon = ikonVelger(status, vedtakSteg, aktivtSteg);
 
   const knappKlasser = classnames({
     stegIkon__enkeltSteg: !vedtakSteg,
     stegIkon__vedtak: vedtakSteg,
   });
-
   /* eslint-disable react/no-danger */
   return (
-    <li className={cl}>
+    <li className="stegIkon">
       <button onClick={onClick} className="stegIkon__knapp" type="button">
         <Ikon className={knappKlasser} aria-disabled={!tilgjengelig} />
         <div className="stegIkon__tittel" dangerouslySetInnerHTML={{ __html: tittel }} />

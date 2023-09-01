@@ -20,12 +20,6 @@ const OverlappIInnvilgedePerioder = (
   <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">Innvilgede perioder overlapper.</Nav.AlertStripeAdvarsel>
 );
 
-const OverlappMenIkkeLikPeriode = (
-  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
-    Innvilget og avslått periode som overlapper må ha lik periode.
-  </Nav.AlertStripeAdvarsel>
-);
-
 const IngenSluttdato = (
   <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
     Du må oppgi sluttdato for å kunne angi resultat. Dette blir sluttdatoen på vedtaket.
@@ -66,34 +60,6 @@ const finnesOverlappIInnvilgedePerioder = (medlemskapsperioder: Medlemskapsperio
     );
 };
 
-const finnesInnvilgetOgAvslåttPeriodeSomOverlapperMenIkkeHarLikPeriode = (
-  medlemskapsperioder: MedlemskapsperiodeProp[]
-) => {
-  const sortertePerioder = [...medlemskapsperioder].sort(sorterPerioder);
-
-  if (!sortertePerioder?.length || sortertePerioder.length < 2) return false;
-
-  for (let i = 0; i < sortertePerioder.length - 1; i += 1) {
-    const periode = sortertePerioder[i];
-    const nestePeriode = sortertePerioder[i + 1];
-
-    const periodeneOverlapper = Utils.dato.perioderOverlapper(
-      periode.fomDato,
-      periode.tomDato,
-      nestePeriode.fomDato,
-      nestePeriode.tomDato
-    );
-    const innvilgelsesResultater = [periode.innvilgelsesResultat, nestePeriode.innvilgelsesResultat];
-    const énAvslåttÉnInnvilget =
-      innvilgelsesResultater.includes(AVSLAATT) && innvilgelsesResultater.includes(INNVILGET);
-
-    if (periodeneOverlapper && énAvslåttÉnInnvilget && !perioderErLike(periode, nestePeriode)) {
-      return true;
-    }
-  }
-  return false;
-};
-
 const finnesOppholdIPerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
   const sortertePerioder = [...medlemskapsperioder].sort(sorterPerioder);
 
@@ -116,7 +82,6 @@ enum TypeFeilmelding {
   IKKE_STØTTET_I_MELOSYS = "IKKE_STØTTET_I_MELOSYS",
   INGEN_SLUTTDATO = "INGEN_SLUTTDATO",
   OVERLAPP_I_INNVILGEDE_PERIODER = "OVERLAPP_I_INNVILGEDE_PERIODER",
-  OVERLAPP_MEN_FORSKJELLIG_PERIODE = "OVERLAPP_MEN_FORSKJELLIG_PERIODE",
   OPPHOLD_I_PERIODENE = "OPPHOLD_I_PERIODENE",
   MÅ_STARTE_PÅ_SØKNADSFOM = "MÅ_STARTE_PÅ_SØKNADSFOM",
 }
@@ -147,10 +112,6 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER;
   }
 
-  if (finnesInnvilgetOgAvslåttPeriodeSomOverlapperMenIkkeHarLikPeriode(medlemskapsperioder)) {
-    return TypeFeilmelding.OVERLAPP_MEN_FORSKJELLIG_PERIODE;
-  }
-
   if (finnesOppholdIPerioder(medlemskapsperioder)) {
     return TypeFeilmelding.OPPHOLD_I_PERIODENE;
   }
@@ -170,8 +131,6 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return MåStartePåSøknadsperiodeFom;
     case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
       return OverlappIInnvilgedePerioder;
-    case TypeFeilmelding.OVERLAPP_MEN_FORSKJELLIG_PERIODE:
-      return OverlappMenIkkeLikPeriode;
     case TypeFeilmelding.OPPHOLD_I_PERIODENE:
       return OppholdIPeriodene;
     default:
