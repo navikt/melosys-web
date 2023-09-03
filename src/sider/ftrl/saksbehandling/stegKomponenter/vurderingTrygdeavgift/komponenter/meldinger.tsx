@@ -1,4 +1,4 @@
-import { Inntekstskilde } from "./types";
+import { Inntektskilde } from "./types";
 import * as Nav from "../../../../../../navFrontend";
 import { Medlemskapsperiode } from "../../../../../../services/modules/medlemskapsperioder";
 import * as Utils from "../../../../../../utils";
@@ -20,7 +20,7 @@ enum TypeFeilmelding {
 }
 
 export function finnAktivFeilmelding(
-  inntektskilder: Inntekstskilde[],
+  inntektskilder: Inntektskilde[],
   medlemskapsperioder: Medlemskapsperiode[]
 ): string | undefined {
   if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
@@ -33,11 +33,11 @@ export function finnAktivFeilmelding(
   return undefined;
 }
 
-const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntekstskilde[]) =>
+const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntektskilde[]) =>
   inntektskilder.some((periode) => periode.bruttoInntekt! > 250000);
 
 const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
-  inntektskilder: Inntekstskilde[],
+  inntektskilder: Inntektskilde[],
   medlemskapsperioder: Medlemskapsperiode[]
 ) => {
   if (inntektskilder.length === 0) return false;
