@@ -58,7 +58,7 @@ const FamilieforholdContainer = ({
           <Nav.Row>
             <Nav.Column xs="12" className="etikett-container">
               <Etiketter.FraBruker />
-              {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel style={{ marginLeft: "0.3em" }} />}
+              {visArbeidsforholdRolleEtiketter && <Etiketter.BrukersDel style={{ marginLeft: "0.3em" }} />}
             </Nav.Column>
           </Nav.Row>
           {behandlingstema === ARBEID_I_UTLANDET || behandlingstema === YRKESAKTIV ? (
