@@ -52,7 +52,6 @@ const Saksbehandling = ({
   const dispatch = useDispatch();
 
   const land = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
-  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const mottatteOpplysninger = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector);
   const mottatteOpplysningerPeriodeFom = useSelector((state) =>
     Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).fom)
@@ -128,10 +127,9 @@ const Saksbehandling = ({
   if (!saksopplysningerLastet) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const erAvslaattSoknad =
     behandlingsresultat.behandlingsresultatTypeKode ===
-      MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL && !erNyVurdering;
+    MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
   const mottatteOpplysningerErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(mottatteOpplysninger).length === 0
@@ -146,7 +144,7 @@ const Saksbehandling = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
+                {erHenlagtSak && <HenlagtSak />}
                 {visAvslaattSoknad && <AvslaattSoknad />}
                 {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />

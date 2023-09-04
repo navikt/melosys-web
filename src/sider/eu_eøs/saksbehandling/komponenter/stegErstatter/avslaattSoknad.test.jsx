@@ -1,10 +1,11 @@
+import { screen } from "@testing-library/react";
 import AvslaattSoknad from "./avslaattSoknad";
-import StegvelgerBase from "./stegerstatterBase";
+import { renderWithProviders } from "~/ducks/test-utils/renderWithProviders";
 
 describe("AvslattSoknad", () => {
-  it("viser en StegvelgerBase", () => {
-    const avslaattSoknad = shallow(<AvslaattSoknad />);
+  it("Viser AvslaattSoknad", () => {
+    renderWithProviders(<AvslaattSoknad />);
 
-    expect(avslaattSoknad.find(StegvelgerBase)).toHaveLength(1);
+    expect(screen.getByText("Søknaden er avslått")).toBeInTheDocument();
   });
 });

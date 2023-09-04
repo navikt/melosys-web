@@ -52,7 +52,7 @@ const mapStateToProps = (state: RootState) => ({
   mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeSelector(state).tom
   ),
-  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
+  behandlingsresultatType: behandlingsresultatSelectors.BehandlingsresultatTypeSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   landkoder: landkoderSelectors.LandkoderFraSakstypeSelector(state),
@@ -99,13 +99,12 @@ interface Props extends RouteComponentProps<MatchParams> {
 
 const Saksbehandling = ({
   arbeidsland,
-  behandlingstype,
   hovedpartRolle,
   behandlingOppfriskes,
   mottatteOpplysninger,
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
-  behandlingsresultat,
+  behandlingsresultatType,
   fagsakStatusKode,
   hentBehandling,
   hentMottatteOpplysninger,
@@ -204,10 +203,8 @@ const Saksbehandling = ({
   if (!folketrygdenToggle) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const erAvslaattSoknad =
-    behandlingsresultat.behandlingsresultatTypeKode ===
-      MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL && !erNyVurdering;
+    behandlingsresultatType === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
   const mottatteOpplysningerErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(mottatteOpplysninger).length === 0
@@ -226,7 +223,7 @@ const Saksbehandling = ({
               <Nav.Column xs="7">
                 {!hovedpartErVirksomhet ? (
                   <>
-                    {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
+                    {erHenlagtSak && <HenlagtSak />}
                     {visAvslaattSoknad && <AvslaattSoknad />}
                     {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
                   </>
