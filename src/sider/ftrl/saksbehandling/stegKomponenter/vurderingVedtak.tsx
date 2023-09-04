@@ -46,7 +46,7 @@ const komponentState = (state: RootState) => ({
   initialValues: {
     begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state) || "",
     innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state) || "",
-    trygdeavgiftFritekst: "", // TODO: MELOSYS-6084
+    trygdeavgiftFritekst: behandlingsresultatSelectors.TrygdeavgiftFritekstSelector(state) || "",
   },
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   alleLandkoder: landkoderSelectors.LandkoderSelector(state),

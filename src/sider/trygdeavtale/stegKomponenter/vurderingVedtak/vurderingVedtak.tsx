@@ -78,6 +78,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
     initialValues: {
       innledningFritekst: ownProps.resultat.innledningFritekst,
       begrunnelseFritekst: ownProps.resultat.begrunnelseFritekst,
+      trygdeavgiftFritekst: ownProps.resultat.trygdeavgiftFritekst,
       lovvalgsperiodeFom:
         ownProps.resultat.lovvalgsperiodeFom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeFom),
       lovvalgsperiodeTom:
@@ -116,6 +117,7 @@ interface Props {
     lovvalgsperiodeTom?: string;
     innledningFritekst?: string;
     begrunnelseFritekst?: string;
+    trygdeavgiftFritekst?: string;
     kopiTilArbeidsgiver?: boolean;
     nyVurderingBakgrunn?: string;
     nyVurderingBakgrunnFritekst?: string;
@@ -177,6 +179,7 @@ const VurderingVedtak = ({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
     innledningFritekst: formValues?.innledningFritekst || null,
     begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+    trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
     ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
     barnFritekst: familieFormValues?.barn?.fritekst || null,
     vedtakstype: erNyVurdering
@@ -250,6 +253,7 @@ const VurderingVedtak = ({
         ...resultat,
         innledningFritekst: formValues.innledningFritekst,
         begrunnelseFritekst: formValues.begrunnelseFritekst,
+        trygdeavgiftFritekst: formValues.trygdeavgiftFritekst,
         nyVurderingBakgrunn: getNyVurderingBakgrunn(),
       });
     } else {
@@ -258,6 +262,7 @@ const VurderingVedtak = ({
   }, [
     formValues?.innledningFritekst,
     formValues?.begrunnelseFritekst,
+    formValues?.trygdeavgiftFritekst,
     formValues?.nyVurderingBakgrunn,
     formValues?.nyVurderingBakgrunnFritekst,
   ]);
@@ -288,6 +293,7 @@ const VurderingVedtak = ({
           kopiMottakere: getKopiMottakere(),
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+          trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
           orgNr: muligMottaker?.orgnr || null,
           institusjonId: muligMottaker?.institusjonId || null,
           ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
