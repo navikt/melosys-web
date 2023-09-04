@@ -30,7 +30,6 @@ export type FattVedtakTrygdeavtaleReqDto = {
   begrunnelseFritekst: string | null;
   ektefelleFritekst: string | null;
   barnFritekst: string | null;
-  trygdeavgiftFritekst: string | null;
   kopiMottakere: KopiMottaker[];
   nyVurderingBakgrunn: string | null | undefined;
 };
