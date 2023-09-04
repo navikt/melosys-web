@@ -12,7 +12,6 @@ import { doThenDispatch } from "../../services/utils";
 import { formSelectors } from "../form";
 import { behandlingerSelectors } from "../behandlinger";
 import { OrganisasjonOperations } from "../organisasjoner";
-import { fagsakSelectors } from "../fagsaker";
 import { navigeringOperations } from "../navigering";
 
 export function hent(behandlingID) {
@@ -56,12 +55,6 @@ export function send(bid, mottatteOpplysninger) {
   );
 }
 
-const temaForSedGrunnlag = (behandlingstema) =>
-  [
-    MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
-    MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
-  ].includes(behandlingstema);
-
 const hentOvergangsregelbestemmelser = (values) => (values ? values.overgangsregelbestemmelser : []);
 
 export function oppdaterState() {
@@ -70,8 +63,9 @@ export function oppdaterState() {
       ...formSelectors.SoknadenFormSelector(getState()).values,
     };
 
-    const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
-    if (temaForSedGrunnlag(behandlingstema)) {
+    const mottatteOpplysningerType = Selectors.MottatteOpplysningerTypeSelector(getState());
+
+    if (mottatteOpplysningerType === MKV.Koder.mottatteopplysningertyper.SED) {
       mottatteOpplysningerData.overgangsregelbestemmelser = hentOvergangsregelbestemmelser(
         formSelectors.VurderUtpekingFormSelector(getState()).values
       );
@@ -83,7 +77,7 @@ export function oppdaterState() {
   };
 }
 
-const lagMottatteOpplysningerFelter = (mottatteOpplysninger) => ({
+const lagMottatteOpplysningerDataFellesFelter = (mottatteOpplysninger) => ({
   juridiskArbeidsgiverNorge: mottatteOpplysninger.juridiskArbeidsgiverNorge,
   personOpplysninger: mottatteOpplysninger.personOpplysninger,
   foretakUtland: mottatteOpplysninger.foretakUtland,
@@ -92,69 +86,57 @@ const lagMottatteOpplysningerFelter = (mottatteOpplysninger) => ({
   selvstendigArbeid: mottatteOpplysninger.selvstendigArbeid,
   soeknadsland: mottatteOpplysninger.soeknadsland,
   periode: mottatteOpplysninger.periode,
-  ikkeYrkesaktivSituasjontype: mottatteOpplysninger.ikkeYrkesaktivSituasjontype,
-});
-
-const lagArbeidsstederFelter = (mottatteOpplysninger) => ({
   arbeidPaaLand: mottatteOpplysninger.arbeidPaaLand,
   maritimtArbeid: mottatteOpplysninger.maritimtArbeid,
   luftfartBaser: mottatteOpplysninger.luftfartBaser,
 });
 
-const lagEØSFelter = (mottatteOpplysninger) => ({
-  ...lagMottatteOpplysningerFelter(mottatteOpplysninger),
-  ...lagArbeidsstederFelter(mottatteOpplysninger),
+const lagSøknadEØSFelter = (mottatteOpplysninger) => ({
+  ...lagMottatteOpplysningerDataFellesFelter(mottatteOpplysninger),
   loennOgGodtgjoerelse: mottatteOpplysninger.loennOgGodtgjoerelse,
   arbeidsgiversBekreftelse: mottatteOpplysninger.arbeidsgiversBekreftelse,
   arbeidssituasjonOgOevrig: mottatteOpplysninger.arbeidssituasjonOgOevrig,
   utenlandsoppdraget: mottatteOpplysninger.utenlandsoppdraget,
 });
 
-const lagFTRLFelter = (mottatteOpplysninger) => ({
-  ...lagMottatteOpplysningerFelter(mottatteOpplysninger),
-  ...lagArbeidsstederFelter(mottatteOpplysninger),
-  loennOgGodtgjoerelse: mottatteOpplysninger.loennOgGodtgjoerelse,
-  arbeidsgiversBekreftelse: mottatteOpplysninger.arbeidsgiversBekreftelse,
+const lagSøknadYrkesaktiveNorgeEllerUtenforEØSFelter = (mottatteOpplysninger) => ({
+  ...lagMottatteOpplysningerDataFellesFelter(mottatteOpplysninger),
   trygdedekning: mottatteOpplysninger.trygdedekning,
-});
-
-const lagTrygdeavtaleFelter = (mottatteOpplysninger) => ({
-  ...lagMottatteOpplysningerFelter(mottatteOpplysninger),
-  loennOgGodtgjoerelse: mottatteOpplysninger.loennOgGodtgjoerelse,
-  arbeidsgiversBekreftelse: mottatteOpplysninger.arbeidsgiversBekreftelse,
   representantIUtlandet: mottatteOpplysninger.representantIUtlandet,
 });
 
+const lagSøknadIkkeYrkesaktivFelter = (mottatteOpplysninger) => ({
+  ...lagMottatteOpplysningerDataFellesFelter(mottatteOpplysninger),
+  ikkeYrkesaktivSituasjontype: mottatteOpplysninger.ikkeYrkesaktivSituasjontype,
+});
+
 const lagSedGrunnlagFelter = (mottatteOpplysninger) => ({
-  ...lagMottatteOpplysningerFelter(mottatteOpplysninger),
-  ...lagArbeidsstederFelter(mottatteOpplysninger),
+  ...lagMottatteOpplysningerDataFellesFelter(mottatteOpplysninger),
   overgangsregelbestemmelser: mottatteOpplysninger.overgangsregelbestemmelser,
   ytterligereInformasjon: mottatteOpplysninger.ytterligereInformasjon || null,
 });
 
 const lagAnmodningEllerAttestFelter = (mottatteOpplysninger) => ({
-  ...lagMottatteOpplysningerFelter(mottatteOpplysninger),
+  ...lagMottatteOpplysningerDataFellesFelter(mottatteOpplysninger),
   avsenderland: mottatteOpplysninger.avsenderland,
   lovvalgsland: mottatteOpplysninger.lovvalgsland,
 });
 
-const lagMottatteOpplysningerData = (sakstype, behandlingstema, mottatteOpplysninger, mottatteOpplysningerType) => {
-  if (mottatteOpplysningerType === MKV.Koder.mottatteopplysningertyper.ANMODNING_ELLER_ATTEST) {
-    return lagAnmodningEllerAttestFelter(mottatteOpplysninger);
-  }
-
-  if (temaForSedGrunnlag(behandlingstema)) {
-    return lagSedGrunnlagFelter(mottatteOpplysninger);
-  }
-  switch (sakstype) {
-    case MKV.Koder.sakstyper.EU_EOS:
-      return lagEØSFelter(mottatteOpplysninger);
-    case MKV.Koder.sakstyper.FTRL:
-      return lagFTRLFelter(mottatteOpplysninger);
-    case MKV.Koder.sakstyper.TRYGDEAVTALE:
-      return lagTrygdeavtaleFelter(mottatteOpplysninger);
+const lagMottatteOpplysningerData = (mottatteOpplysninger, mottatteOpplysningerType) => {
+  switch (mottatteOpplysningerType) {
+    case MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS:
+    case MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_YRKESAKTIVE_EØS:
+      return lagSøknadEØSFelter(mottatteOpplysninger);
+    case MKV.Koder.mottatteopplysningertyper.SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS:
+      return lagSøknadYrkesaktiveNorgeEllerUtenforEØSFelter(mottatteOpplysninger);
+    case MKV.Koder.mottatteopplysningertyper.SØKNAD_IKKE_YRKESAKTIV:
+      return lagSøknadIkkeYrkesaktivFelter(mottatteOpplysninger);
+    case MKV.Koder.mottatteopplysningertyper.ANMODNING_ELLER_ATTEST:
+      return lagAnmodningEllerAttestFelter(mottatteOpplysninger);
+    case MKV.Koder.mottatteopplysningertyper.SED:
+      return lagSedGrunnlagFelter(mottatteOpplysninger);
     default:
-      throw new Error(`Vi støtter ikke sakstype: ${sakstype}`);
+      throw new Error(`Vi støtter ikke mottatteopplysningertype: ${mottatteOpplysningerType}`);
   }
 };
 
@@ -165,10 +147,8 @@ export function lagre() {
     const mottatteOpplysninger = Selectors.MottatteOpplysningerDataSelector(getState());
     const mottatteOpplysningerType = Selectors.MottatteOpplysningerTypeSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
-    const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
-    const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
 
-    const data = lagMottatteOpplysningerData(sakstype, behandlingstema, mottatteOpplysninger, mottatteOpplysningerType);
+    const data = lagMottatteOpplysningerData(mottatteOpplysninger, mottatteOpplysningerType);
 
     return dispatch(send(bid, { data }));
   };
