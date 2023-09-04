@@ -13,25 +13,28 @@ const InntektskildeUtenforMedlemskapsperiode = (
   </Nav.AlertStripeFeil>
 );
 
-enum TypeFeilmelding {
+enum TypeMelding {
   INNTEKTSKILDE_UTENFOR_MELDEMSKAPSPERIODE = "INNTEKTSKILDE UTENFOR MELDEMSKAPSPERIODE",
-  INNTEKTSKILDE_DEKKER_IKKE_MEDLPERIODE = "INNTEKTSKILDE_DEKKER_IKKE_MEDLPERIODE",
   BRUTTOINNTEKT_OVER_250K = "BRUTTOINNTEKT_OVER_250K",
 }
 
-export function finnAktivFeilmelding(
+export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
   medlemskapsperioder: Medlemskapsperiode[]
-): string | undefined {
-  if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
-    return TypeFeilmelding.BRUTTOINNTEKT_OVER_250K;
-  }
+): string | undefined => {
   if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, medlemskapsperioder)) {
-    return TypeFeilmelding.INNTEKTSKILDE_UTENFOR_MELDEMSKAPSPERIODE;
+    return TypeMelding.INNTEKTSKILDE_UTENFOR_MELDEMSKAPSPERIODE;
   }
 
   return undefined;
-}
+};
+
+export const finnAktivAdvarselmelding = (inntektskilder: Inntektskilde[]): string | undefined => {
+  if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
+    return TypeMelding.BRUTTOINNTEKT_OVER_250K;
+  }
+  return undefined;
+};
 
 const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntektskilde[]) =>
   inntektskilder.some((periode) => periode.bruttoInntekt! > 250000);
@@ -58,10 +61,19 @@ const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
 
 export const Feilmelding = ({ type }: { type?: string }) => {
   switch (type) {
-    case TypeFeilmelding.BRUTTOINNTEKT_OVER_250K:
+    case TypeMelding.BRUTTOINNTEKT_OVER_250K:
       return HoyManedinntekt;
-    case TypeFeilmelding.INNTEKTSKILDE_UTENFOR_MELDEMSKAPSPERIODE:
+    case TypeMelding.INNTEKTSKILDE_UTENFOR_MELDEMSKAPSPERIODE:
       return InntektskildeUtenforMedlemskapsperiode;
+    default:
+      return null;
+  }
+};
+
+export const AdvarselMelding = ({ type }: { type?: string }) => {
+  switch (type) {
+    case TypeMelding.BRUTTOINNTEKT_OVER_250K:
+      return HoyManedinntekt;
     default:
       return null;
   }

@@ -21,7 +21,7 @@ import TrygdeavgiftsperioderTabell from "./komponenter/trygdeavgiftsperioderTabe
 import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./komponenter/types";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
-import { Feilmelding, finnAktivFeilmelding } from "./komponenter/meldinger";
+import { AdvarselMelding, Feilmelding, finnAktivAdvarselmelding, finnAktivFeilmelding } from "./komponenter/meldinger";
 
 const { SKATTEPLIKTIG, IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
@@ -66,6 +66,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const formValues = watch();
 
   const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.inntektskilder, medlemskapsperioder!);
+  const aktiveAdvarselmelding = finnAktivAdvarselmelding(formValues?.inntektskilder);
+
+  const stegErGyldig = formIsValid && !aktivFeilmeldingType;
 
   useEffect(() => {
     Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
@@ -93,8 +96,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const harBeregnetForeløpigTrygdeavgift = !skalBeregneForeløpigTrygdeavgift || trygdeavgiftErIkkeTom;
 
   useEffect(() => {
-    oppdaterStatus(formIsValid && harBeregnetForeløpigTrygdeavgift);
-  }, [formIsValid, harBeregnetForeløpigTrygdeavgift]);
+    oppdaterStatus(stegErGyldig && harBeregnetForeløpigTrygdeavgift);
+  }, [stegErGyldig, harBeregnetForeløpigTrygdeavgift]);
 
   const lagreTrygdeavgiftsgrunnlag = (formVerdier: FieldValue<FormValuesProps>) => {
     Api.Trygdeavgift.oppdaterTrygdeavgiftsgrunnlag(behandlingID, {
@@ -126,9 +129,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   useEffect(() => {
     if (redigerbart && aktivtSteg && !isValidating) {
-      debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid);
+      debouncedLagreTrygdeavgiftsgrunnlag(formValues, stegErGyldig);
     }
-  }, [formIsValid, isValidating, formValues?.inntektskilder?.length]);
+  }, [stegErGyldig, isValidating, formValues?.inntektskilder?.length]);
 
   if (!aktivtSteg) return null;
 
@@ -195,7 +198,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       {skalBeregneForeløpigTrygdeavgift && (
         <Nav.Knapp
           className="beregnKnapp"
-          disabled={!redigerbart || !formIsValid || isValidating}
+          disabled={!redigerbart || !stegErGyldig || isValidating}
           onClick={handleBeregnTrygdeavgift}
           mini
         >
@@ -204,21 +207,22 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       )}
 
       <Feilmelding type={aktivFeilmeldingType} />
+      <AdvarselMelding type={aktiveAdvarselmelding} />
 
-      {trygdeavgiftErIkkeTom && formIsValid && (
+      {trygdeavgiftErIkkeTom && stegErGyldig && (
         <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />
       )}
 
       {feil && <Nav.AlertStripeFeil className="infomelding">{feil}</Nav.AlertStripeFeil>}
 
-      {!skalBeregneForeløpigTrygdeavgift && formIsValid && (
+      {!skalBeregneForeløpigTrygdeavgift && stegErGyldig && (
         <Nav.AlertStripeInfo className="infomelding">Trygdeavgift skal ikke betales til NAV</Nav.AlertStripeInfo>
       )}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreft,
-          disabled: !redigerbart || !formIsValid || !harBeregnetForeløpigTrygdeavgift,
+          disabled: !redigerbart || !stegErGyldig || !harBeregnetForeløpigTrygdeavgift,
         }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
