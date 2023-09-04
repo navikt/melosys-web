@@ -58,15 +58,8 @@ function LenkeListeVelger(props) {
         <div className="dokumentvisning">
           <span>{dokumentTittel}</span>
           <div className="ikon-wrapper">
-            {visSlett && (
-              <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={slettTittel} ariaLabel="Slett" className="ikon-knapp-graa" />
-            )}
-            <Mui.IkonKnapp
-              ikon={Ikoner.Pencil}
-              onClick={tittelEndres}
-              ariaLabel="Rediger"
-              className="ikon-knapp-graa"
-            />
+            {visSlett && <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={slettTittel} ariaLabel="Slett" />}
+            <Mui.IkonKnapp ikon={Ikoner.Pencil} onClick={tittelEndres} ariaLabel="Rediger" />
           </div>
         </div>
       )}

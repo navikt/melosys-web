@@ -5,14 +5,8 @@ import MultiSelect from "../../../felleskomponenter/skjema/input/multiselect";
 import MKV from "../../../melosyskodeverk";
 
 const { BRUKER } = MKV.Koder.aktoersroller;
-const {
-  UTSENDT_ARBEIDSTAKER,
-  UTSENDT_SELVSTENDIG,
-  ARBEID_FLERE_LAND,
-  ARBEID_NORGE_BOSATT_ANNET_LAND,
-  ARBEID_I_UTLANDET,
-  YRKESAKTIV,
-} = MKV.Koder.behandlinger.behandlingstema;
+const { UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG, ARBEID_FLERE_LAND, ARBEID_NORGE_BOSATT_ANNET_LAND, YRKESAKTIV } =
+  MKV.Koder.behandlinger.behandlingstema;
 
 describe("OpprettSak - journalføring", () => {
   let props = null;
@@ -82,7 +76,7 @@ describe("OpprettSak - journalføring", () => {
   });
 
   it("Opprett sak, skal ikke ha tilvalg", () => {
-    const behandlingstemaer = [ARBEID_I_UTLANDET, YRKESAKTIV];
+    const behandlingstemaer = [YRKESAKTIV];
     behandlingstemaer.forEach((behandlingstema) => {
       props.formValues.opprettnysak_behandlingstema = behandlingstema;
       props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
@@ -187,7 +181,7 @@ describe("OpprettSak - opprett ny sak", () => {
   });
 
   it("Opprett sak, skal ikke ha tilvalg", () => {
-    const behandlingstemaer = [ARBEID_I_UTLANDET, YRKESAKTIV];
+    const behandlingstemaer = [YRKESAKTIV];
     behandlingstemaer.forEach((behandlingstema) => {
       props.formValues.behandlingstema = behandlingstema;
       props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;

@@ -18,7 +18,6 @@ const {
   ANMODNING_OM_UNNTAK_HOVEDREGEL,
   BESLUTNING_LOVVALG_NORGE,
   BESLUTNING_LOVVALG_ANNET_LAND,
-  ARBEID_I_UTLANDET,
   YRKESAKTIV,
 } = MKV.Koder.behandlinger.behandlingstema;
 
@@ -138,6 +137,7 @@ class LinkGroupsFactory {
           .build();
       }
       case YRKESAKTIV: {
+        // Vær litt forsiktig med denne da den er i bruk av trygdeavtale i prod
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(
@@ -150,13 +150,6 @@ class LinkGroupsFactory {
           .addFraBruker(
             new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().addArbeidssteder().build()
           )
-          .build();
-      }
-      case ARBEID_I_UTLANDET: {
-        return new LinkgroupsBuilder()
-          .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
-          .addFraRegister(new LinksBuilder(contentProps).addMedlemskap().addArbeidsforholdOgInntekt().build())
-          .addFraBruker(new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().build())
           .build();
       }
       default:

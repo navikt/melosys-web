@@ -15,6 +15,20 @@ const mockStore = configureMockStore(middlewares);
 describe("MottatteOpplysninger operations", () => {
   let initialState = null;
 
+  const fellesFelt = {
+    juridiskArbeidsgiverNorge: {},
+    personOpplysninger: {},
+    foretakUtland: {},
+    oppholdUtland: {},
+    bosted: {},
+    selvstendigArbeid: {},
+    soeknadsland: {},
+    periode: {},
+    arbeidPaaLand: {},
+    maritimtArbeid: [],
+    luftfartBaser: [],
+  };
+
   beforeEach(() => {
     fetch.resetMocks();
     fetch.mockResponse(JSON.stringify({}));
@@ -57,11 +71,15 @@ describe("MottatteOpplysninger operations", () => {
             arbeidsgiversBekreftelse: {},
             arbeidssituasjonOgOevrig: {},
             utenlandsoppdraget: {},
-            trygdedekning: {},
+            trygdedekning: null,
             representantIUtlandet: {},
             overgangsregelbestemmelser: [],
             ytterligereInformasjon: {},
+            ikkeYrkesaktivSituasjontype: null,
+            avsenderland: null,
+            lovvalgsland: null,
           },
+          type: MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_YRKESAKTIVE_EØS,
         },
       },
       fagsaker: {
@@ -75,161 +93,142 @@ describe("MottatteOpplysninger operations", () => {
   });
 
   describe("lagre", () => {
-    it("lagrer soeknadData for ulike behandlingstema ", async () => {
-      const data = [
-        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-        MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
-        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
-        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
-        MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-        MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
-      ];
-      data.forEach(async (behandlingstema) => {
-        initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
-
-        const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
-
-        const store = mockStore(initialState);
-
-        await store.dispatch(operations.lagre());
-
-        expect(store.getActions()).toEqual(expectedActions);
-        expect(fetch).toHaveBeenLastCalledWith(
-          "/api/mottatteopplysninger/4",
-          expect.objectContaining({
-            body: JSON.stringify({
-              data: {
-                juridiskArbeidsgiverNorge: {},
-                personOpplysninger: {},
-                foretakUtland: {},
-                oppholdUtland: {},
-                bosted: {},
-                selvstendigArbeid: {},
-                soeknadsland: {},
-                periode: {},
-                arbeidPaaLand: {},
-                maritimtArbeid: [],
-                luftfartBaser: [],
-                loennOgGodtgjoerelse: {},
-                arbeidsgiversBekreftelse: {},
-                arbeidssituasjonOgOevrig: {},
-                utenlandsoppdraget: {},
-              },
-            }),
-          })
-        );
-      });
-    });
-
-    it("lagrer SedGrunnlagData ved behandlingstema", async () => {
-      const data = [
-        MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
-        MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
-      ];
-      data.forEach(async (behandlingstema) => {
-        initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
-
-        initialState.form[KV.Form.VURDER_UTPEKING].values = {
-          overgangsregelbestemmelser: [],
-        };
-
-        const expectedActions = [
-          { type: types.OPPDATER_MOTTATTE_OPPLYSNINGER, dokument: { overgangsregelbestemmelser: [] } },
-          { type: types.PENDING },
-          { type: types.OK, data: {} },
-        ];
-
-        const store = mockStore(initialState);
-
-        await store.dispatch(operations.lagre());
-
-        expect(store.getActions()).toEqual(expectedActions);
-        expect(fetch).toHaveBeenLastCalledWith(
-          "/api/mottatteopplysninger/4",
-          expect.objectContaining({
-            body: JSON.stringify({
-              data: {
-                juridiskArbeidsgiverNorge: {},
-                personOpplysninger: {},
-                foretakUtland: {},
-                oppholdUtland: {},
-                bosted: {},
-                selvstendigArbeid: {},
-                soeknadsland: {},
-                periode: {},
-                arbeidPaaLand: {},
-                maritimtArbeid: [],
-                luftfartBaser: [],
-                overgangsregelbestemmelser: [],
-                ytterligereInformasjon: {},
-              },
-            }),
-          })
-        );
-      });
-    });
-
-    it("lagrer FtrlGrunnlagData ved sakstype FTRL", async () => {
-      initialState.fagsaker.data.sakstype.kode = "FTRL";
-
-      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+    it("lagrer soeknad eøs felt for mottatteopplysninger SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS", async () => {
+      initialState.mottatteOpplysninger.data.type =
+        MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
       const store = mockStore(initialState);
-
       await store.dispatch(operations.lagre());
 
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
       expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
         "/api/mottatteopplysninger/4",
         expect.objectContaining({
           body: JSON.stringify({
             data: {
-              juridiskArbeidsgiverNorge: {},
-              personOpplysninger: {},
-              foretakUtland: {},
-              oppholdUtland: {},
-              bosted: {},
-              selvstendigArbeid: {},
-              soeknadsland: {},
-              periode: {},
-              arbeidPaaLand: {},
-              maritimtArbeid: [],
-              luftfartBaser: [],
+              ...fellesFelt,
               loennOgGodtgjoerelse: {},
               arbeidsgiversBekreftelse: {},
-              trygdedekning: {},
+              arbeidssituasjonOgOevrig: {},
+              utenlandsoppdraget: {},
             },
           }),
         })
       );
     });
 
-    it("lagrer TrygdeavtaleGrunnlagData ved sakstype TRYGDEAVTALE", async () => {
-      initialState.fagsaker.data.sakstype.kode = "TRYGDEAVTALE";
-
-      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+    it("lagrer soeknad eøs felt for mottatteopplysninger SØKNAD_A1_YRKESAKTIVE_EØS", async () => {
+      initialState.mottatteOpplysninger.data.type = MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_YRKESAKTIVE_EØS;
 
       const store = mockStore(initialState);
-
       await store.dispatch(operations.lagre());
 
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
       expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
         "/api/mottatteopplysninger/4",
         expect.objectContaining({
           body: JSON.stringify({
             data: {
-              juridiskArbeidsgiverNorge: {},
-              personOpplysninger: {},
-              foretakUtland: {},
-              oppholdUtland: {},
-              bosted: {},
-              selvstendigArbeid: {},
-              soeknadsland: {},
-              periode: {},
+              ...fellesFelt,
               loennOgGodtgjoerelse: {},
               arbeidsgiversBekreftelse: {},
+              arbeidssituasjonOgOevrig: {},
+              utenlandsoppdraget: {},
+            },
+          }),
+        })
+      );
+    });
+
+    it("lagrer SedGrunnlagData ved mottatteopplysningertype SED", async () => {
+      initialState.mottatteOpplysninger.data.type = MKV.Koder.mottatteopplysningertyper.SED;
+      initialState.form[KV.Form.VURDER_UTPEKING].values = { overgangsregelbestemmelser: [] };
+
+      const store = mockStore(initialState);
+      await store.dispatch(operations.lagre());
+
+      const expectedActions = [
+        { type: types.OPPDATER_MOTTATTE_OPPLYSNINGER, dokument: { overgangsregelbestemmelser: [] } },
+        { type: types.PENDING },
+        { type: types.OK, data: {} },
+      ];
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(fetch).toHaveBeenLastCalledWith(
+        "/api/mottatteopplysninger/4",
+        expect.objectContaining({
+          body: JSON.stringify({
+            data: {
+              ...fellesFelt,
+              overgangsregelbestemmelser: [],
+              ytterligereInformasjon: {},
+            },
+          }),
+        })
+      );
+    });
+
+    it("lagrer SøknadYrkesaktiveNorgeEllerUtenforEØS ved mottatteopplysnignertype SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS", async () => {
+      initialState.mottatteOpplysninger.data.type =
+        MKV.Koder.mottatteopplysningertyper.SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS;
+
+      const store = mockStore(initialState);
+      await store.dispatch(operations.lagre());
+
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(fetch).toHaveBeenLastCalledWith(
+        "/api/mottatteopplysninger/4",
+        expect.objectContaining({
+          body: JSON.stringify({
+            data: {
+              ...fellesFelt,
+              trygdedekning: null,
               representantIUtlandet: {},
+            },
+          }),
+        })
+      );
+    });
+
+    it("lagrer SøknadIkkeYrkesaktive ved mottatteopplysnignertype SØKNAD_IKKE_YRKESAKTIV", async () => {
+      initialState.mottatteOpplysninger.data.type = MKV.Koder.mottatteopplysningertyper.SØKNAD_IKKE_YRKESAKTIV;
+
+      const store = mockStore(initialState);
+      await store.dispatch(operations.lagre());
+
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(fetch).toHaveBeenLastCalledWith(
+        "/api/mottatteopplysninger/4",
+        expect.objectContaining({
+          body: JSON.stringify({
+            data: {
+              ...fellesFelt,
+              ikkeYrkesaktivSituasjontype: null,
+            },
+          }),
+        })
+      );
+    });
+
+    it("lagrer AnmodningEllerAttest ved mottatteopplysnignertype ANMODNING_ELLER_ATTEST", async () => {
+      initialState.mottatteOpplysninger.data.type = MKV.Koder.mottatteopplysningertyper.ANMODNING_ELLER_ATTEST;
+
+      const store = mockStore(initialState);
+      await store.dispatch(operations.lagre());
+
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(fetch).toHaveBeenLastCalledWith(
+        "/api/mottatteopplysninger/4",
+        expect.objectContaining({
+          body: JSON.stringify({
+            data: {
+              ...fellesFelt,
+              avsenderland: null,
+              lovvalgsland: null,
             },
           }),
         })

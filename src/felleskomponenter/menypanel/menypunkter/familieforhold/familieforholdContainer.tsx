@@ -16,7 +16,7 @@ import "./familieforholdContainer.css";
 import { visAldriBinSymbolsynlighet } from "../editerbartElement/editerbartElement";
 import VisFamilieMedlemmerFraRegisterKnapp from "./familiemedlemmer/visFamilieMedlemmerFraRegisterKnapp";
 
-const { ARBEID_I_UTLANDET, YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
+const { YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 
 interface FamilieforholdContainerProps {
   redigerbart: boolean;
@@ -61,7 +61,7 @@ const FamilieforholdContainer = ({
               {visArbeidsforholdRolleEtiketter && <Etiketter.BrukersDel style={{ marginLeft: "0.3em" }} />}
             </Nav.Column>
           </Nav.Row>
-          {behandlingstema === ARBEID_I_UTLANDET || behandlingstema === YRKESAKTIV ? (
+          {behandlingstema === YRKESAKTIV ? (
             <div>
               <Mui.Undertittel
                 tekst={KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen}
