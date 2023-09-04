@@ -61,8 +61,6 @@ const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
 
 export const Feilmelding = ({ type }: { type?: string }) => {
   switch (type) {
-    case TypeMelding.BRUTTOINNTEKT_OVER_250K:
-      return HoyManedinntekt;
     case TypeMelding.INNTEKTSKILDE_UTENFOR_MELDEMSKAPSPERIODE:
       return InntektskildeUtenforMedlemskapsperiode;
     default:

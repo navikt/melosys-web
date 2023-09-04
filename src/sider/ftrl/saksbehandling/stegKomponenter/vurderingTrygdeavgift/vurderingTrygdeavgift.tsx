@@ -66,7 +66,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const formValues = watch();
 
   const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.inntektskilder, medlemskapsperioder!);
-  const aktiveAdvarselmelding = finnAktivAdvarselmelding(formValues?.inntektskilder);
+  const aktivAdvarselmeldingType = finnAktivAdvarselmelding(formValues?.inntektskilder);
 
   const stegErGyldig = formIsValid && !aktivFeilmeldingType;
 
@@ -207,7 +207,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       )}
 
       <Feilmelding type={aktivFeilmeldingType} />
-      <AdvarselMelding type={aktiveAdvarselmelding} />
+      <AdvarselMelding type={aktivAdvarselmeldingType} />
 
       {trygdeavgiftErIkkeTom && stegErGyldig && (
         <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />
