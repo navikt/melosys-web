@@ -31,10 +31,10 @@ import "./dialogboksAvslagSoknad.css";
 
 interface DialogboksAvslagSoknadProps {
   avbryt: () => void;
-  ariaHideApp: boolean;
+  ariaHideApp?: boolean;
 }
 
-export const DialogboksAvslagSoknad = ({ ariaHideApp, avbryt }: DialogboksAvslagSoknadProps) => {
+export const DialogboksAvslagSoknad = ({ ariaHideApp = false, avbryt }: DialogboksAvslagSoknadProps) => {
   const dispatch = useDispatch();
   const [feil, setFeil] = useState<undefined | string>(undefined);
 
