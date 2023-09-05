@@ -73,7 +73,7 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp, avbryt }: DialogboksAvslag
     },
   ];
 
-  const avslaaSoknad = async () => {
+  const avslåSøknad = async () => {
     // Hvis perioden er blitt opprettet må den fjernes før avslag.
     await Promise.all([
       dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
@@ -118,14 +118,15 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp, avbryt }: DialogboksAvslag
           <Nav.Typo.Systemtittel className="overskrift">
             Avslå søknaden på grunn av manglende opplysninger
           </Nav.Typo.Systemtittel>
-          {brukNyttEndepunkt ? <>{feil && <AlertStripeFeil>{feil}</AlertStripeFeil>}</> : <Feilmeldinger />}
+          <Feilmeldinger />
+          {brukNyttEndepunkt && feil && <AlertStripeFeil>{feil}</AlertStripeFeil>}
           <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
           {bekreftRedigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           <div className="knapperadcontainer">
             <Knapperad
               avbryt={avbryt}
               avbrytTekst="Avbryt"
-              bekreft={avslaaSoknad}
+              bekreft={avslåSøknad}
               bekreftTekst="Avslå søknad"
               redigerbart={redigerbart}
               bekreftRedigerbart={bekreftRedigerbart}
