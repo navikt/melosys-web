@@ -5,7 +5,6 @@ import PT from "prop-types";
 import { apolloClient } from "../graphql";
 
 import * as Utils from "../utils";
-import * as Api from "../services/api";
 
 import { fagsakSelectors } from "../ducks/fagsaker";
 import { datalastingOperations } from "../ducks/datalasting";
@@ -21,14 +20,12 @@ const FellesHandlersProviderUnconnected = ({
   children,
   location,
   history,
-  lagreAllData,
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
   lagreMottatteOpplysninger,
   saksnummer,
   sakstype,
   skjulOppfriskDialogHandle,
-  skjulHenleggDialogHandle,
   visOppfriskDialogHandle,
   visHenleggDialogHandle,
   visAvslagSoknadDialogHandle,
@@ -79,15 +76,6 @@ const FellesHandlersProviderUnconnected = ({
     tilForsiden();
   };
 
-  const henleggSak = async (data) => Api.Fagsaker.fagsak.henlegg(saksnummer, data);
-
-  const henleggHandle = async (data) => {
-    await lagreAllData();
-    await henleggSak(data);
-    skjulHenleggDialogHandle();
-    tilForsiden();
-  };
-
   const fellesHandlers = useMemo(
     () => ({
       visHenleggDialogHandle,
@@ -96,7 +84,6 @@ const FellesHandlersProviderUnconnected = ({
       skjulOppfriskModalOgNavigerTilForside,
       tilForsiden,
       tilOpprettNySak,
-      henleggHandle,
       lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
       behandlingOppfriskes,
@@ -110,7 +97,6 @@ const FellesHandlersProviderUnconnected = ({
       skjulOppfriskModalOgNavigerTilForside,
       tilForsiden,
       tilOpprettNySak,
-      henleggHandle,
       lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
       behandlingOppfriskes,
@@ -126,14 +112,12 @@ FellesHandlersProviderUnconnected.propTypes = {
   children: PT.node.isRequired,
   history: PT.object.isRequired,
   location: PT.object.isRequired,
-  lagreAllData: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
   lagreMottatteOpplysninger: PT.func.isRequired,
   saksnummer: PT.string,
   sakstype: PT.string,
   skjulOppfriskDialogHandle: PT.func.isRequired,
-  skjulHenleggDialogHandle: PT.func.isRequired,
   visOppfriskDialogHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
@@ -159,7 +143,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
   lastInnSaksopplysninger: (sakstype, saksnummer, behandlingID) =>
     dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
@@ -167,7 +150,6 @@ const mapDispatchToProps = (dispatch) => ({
   leggTilBehandlingOppfriskes: (behandlingID) => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
-  skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   visOppfriskDialogHandle: () => dispatch(modalerOperations.visOppfrisk()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
