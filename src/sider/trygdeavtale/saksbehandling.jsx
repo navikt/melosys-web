@@ -17,7 +17,7 @@ import { VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
-import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
+import { behandlingerOperations } from "../../ducks/behandlinger";
 import { dokumenterOperations } from "../../ducks/dokumenter";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";

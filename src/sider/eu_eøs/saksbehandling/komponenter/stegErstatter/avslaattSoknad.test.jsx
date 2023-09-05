@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import AvslaattSoknad from "./avslaattSoknad";
-import { renderWithProviders } from "~/ducks/test-utils/renderWithProviders";
+import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
 
 describe("AvslattSoknad", () => {
   it("Viser AvslaattSoknad", () => {

@@ -17,7 +17,7 @@ import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
-import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
+import { behandlingerOperations } from "../../ducks/behandlinger";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
