@@ -26,7 +26,6 @@ const Modals = ({
   henleggHandle,
   visAvslagSoknadDialog,
   skjulAvslagSoknadDialogHandle,
-  avslaaSoknadHandle,
   visBekreftValgDialog,
 }) => (
   <Fragment>
@@ -39,9 +38,7 @@ const Modals = ({
       />
     )}
     {visHenleggDialog && <DialogboksHenleggSak avbryt={skjulHenleggDialogHandle} henleggHandle={henleggHandle} />}
-    {visAvslagSoknadDialog && (
-      <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} avslaaSoknadHandle={avslaaSoknadHandle} />
-    )}
+    {visAvslagSoknadDialog && <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} />}
     {visBekreftValgDialog && <DialogboksBekreftValg />}
   </Fragment>
 );
@@ -57,7 +54,6 @@ Modals.propTypes = {
   henleggHandle: PT.func.isRequired,
   visAvslagSoknadDialog: PT.bool.isRequired,
   skjulAvslagSoknadDialogHandle: PT.func.isRequired,
-  avslaaSoknadHandle: PT.func.isRequired,
   visBekreftValgDialog: PT.bool.isRequired,
 };
 

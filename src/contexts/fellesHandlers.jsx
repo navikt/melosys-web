@@ -1,4 +1,4 @@
-import { useMemo, createContext } from "react";
+import { createContext, useMemo } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
@@ -10,13 +10,9 @@ import * as Api from "../services/api";
 import { fagsakSelectors } from "../ducks/fagsaker";
 import { datalastingOperations } from "../ducks/datalasting";
 import { mottatteOpplysningerOperations } from "../ducks/mottatteOpplysninger";
-import { vedtakOperations } from "../ducks/vedtak";
 import { saksopplysningerOperations } from "../ducks/saksopplysninger";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import { navigeringOperations } from "../ducks/navigering";
-import { lovvalgsperioderOperations } from "../ducks/lovvalgsperioder";
-import { anmodningsperioderOperations } from "../ducks/anmodningsperioder";
-import { utpekingsperioderOperations } from "../ducks/utpekingsperioder";
 
 const FellesHandlersContext = createContext({});
 export default FellesHandlersContext;
@@ -31,7 +27,6 @@ const FellesHandlersProviderUnconnected = ({
   lagreMottatteOpplysninger,
   saksnummer,
   sakstype,
-  avslaaSoknad,
   skjulOppfriskDialogHandle,
   skjulHenleggDialogHandle,
   visOppfriskDialogHandle,
@@ -41,9 +36,6 @@ const FellesHandlersProviderUnconnected = ({
   fjernBehandlingOppfriskes,
   behandlingUnderOppfriskning,
   tilForsiden,
-  resetLovvalgsperioder,
-  resetAnmodningsperioder,
-  resetUtpekingsperioder,
 }) => {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
@@ -96,16 +88,6 @@ const FellesHandlersProviderUnconnected = ({
     tilForsiden();
   };
 
-  const avslaaSoknadHandle = async (data) => {
-    // Hvis perioden er blitt opprettet må den fjernes før avslag.
-    await resetLovvalgsperioder();
-    await resetAnmodningsperioder();
-    await resetUtpekingsperioder();
-
-    await lagreAllData();
-    avslaaSoknad(behandlingID, data);
-  };
-
   const fellesHandlers = useMemo(
     () => ({
       visHenleggDialogHandle,
@@ -115,7 +97,6 @@ const FellesHandlersProviderUnconnected = ({
       tilForsiden,
       tilOpprettNySak,
       henleggHandle,
-      avslaaSoknadHandle,
       lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
       behandlingOppfriskes,
@@ -130,7 +111,6 @@ const FellesHandlersProviderUnconnected = ({
       tilForsiden,
       tilOpprettNySak,
       henleggHandle,
-      avslaaSoknadHandle,
       lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
       behandlingOppfriskes,
@@ -152,7 +132,6 @@ FellesHandlersProviderUnconnected.propTypes = {
   lagreMottatteOpplysninger: PT.func.isRequired,
   saksnummer: PT.string,
   sakstype: PT.string,
-  avslaaSoknad: PT.func.isRequired,
   skjulOppfriskDialogHandle: PT.func.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
   visOppfriskDialogHandle: PT.func.isRequired,
@@ -162,9 +141,6 @@ FellesHandlersProviderUnconnected.propTypes = {
   fjernBehandlingOppfriskes: PT.func.isRequired,
   behandlingUnderOppfriskning: PT.number,
   tilForsiden: PT.func.isRequired,
-  resetLovvalgsperioder: PT.func.isRequired,
-  resetAnmodningsperioder: PT.func.isRequired,
-  resetUtpekingsperioder: PT.func.isRequired,
 };
 
 FellesHandlersProviderUnconnected.defaultProps = {
@@ -185,7 +161,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
-  avslaaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaaSoknad(behandlingID, data)),
   lastInnSaksopplysninger: (sakstype, saksnummer, behandlingID) =>
     dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
   oppfriskSaksopplysninger: (behandlingID) => saksopplysningerOperations.oppfrisk(behandlingID),
@@ -197,9 +172,6 @@ const mapDispatchToProps = (dispatch) => ({
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
-  resetLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
-  resetAnmodningsperioder: () => dispatch(anmodningsperioderOperations.resetAnmodningsperioderState()),
-  resetUtpekingsperioder: () => dispatch(utpekingsperioderOperations.resetUtpekingsperioderState()),
 });
 
 export const FellesHandlersProvider = withRouter(
