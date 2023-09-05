@@ -22,13 +22,15 @@ import { SendBrevFormValues } from "../types";
 import BrevMottakerNorskMyndighet from "./brevMottakerNorskMyndighet";
 import { FeilmeldingProps, Underpunkt } from "../../../../services/modules/dokumenter-v2";
 
-const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
+const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
+  MKV.Koder.mottakerroller;
 
 export const erBruker = (rolle: string | undefined) => rolle === BRUKER;
 export const erVirksomhet = (rolle: string | undefined) => rolle === VIRKSOMHET;
 export const erArbeidsgiver = (rolle: string | undefined) => rolle === ARBEIDSGIVER;
 export const erAnnenOrganisasjon = (rolle: string | undefined) => rolle === ANNEN_ORGANISASJON;
 export const erNorskMyndighet = (rolle: string | undefined) => rolle === NORSK_MYNDIGHET;
+export const erUtenlandskMyndighet = (rolle: string | undefined) => rolle === UTENLANDSK_TRYGDEMYNDIGHET;
 
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,

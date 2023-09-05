@@ -29,7 +29,11 @@ import { formSelectors } from "../../../ducks/form";
 import VedleggVelger from "../../vedleggvelger";
 import VedleggTable from "../../vedleggTable";
 
-import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet } from "./brevMottaker/brevMottaker";
+import BrevMottaker, {
+  erAnnenOrganisasjon,
+  erNorskMyndighet,
+  erUtenlandskMyndighet,
+} from "./brevMottaker/brevMottaker";
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
 import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
 import Brevutkast from "./brevutkast/brevutkast";
@@ -121,6 +125,7 @@ const SendBrev = ({
   const tilgjengeligeBrevtyper =
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
+  const mottakerErUtenlandskMyndighet = erUtenlandskMyndighet(formValues?.valgtMottaker?.rolle);
   const { accounts } = useMsal();
 
   const hentUtkast = () =>
@@ -312,7 +317,9 @@ const SendBrev = ({
 
   const lagFritekstPdfUrl = async (index: number) => {
     const data = {
-      produserbardokument: MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTVEDLEGG,
+      produserbardokument: mottakerErUtenlandskMyndighet
+        ? MKV.Koder.brev.produserbaredokumenter.UTENLANDSK_TRYGDEMYNDIGHET_FRITEKSTBREV
+        : MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTVEDLEGG,
       mottaker: mottakerErNorskMyndighet
         ? MKV.Koder.mottakerroller.NORSK_MYNDIGHET
         : muligeMottakere?.hovedMottaker.rolle || "",
