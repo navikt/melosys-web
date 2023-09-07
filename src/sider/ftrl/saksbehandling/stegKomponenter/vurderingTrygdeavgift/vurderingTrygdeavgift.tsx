@@ -77,7 +77,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       const tomDatoer = medlemskapsperioder.map((medlemskapsperiode) => new Date(medlemskapsperiode.tomDato).getTime());
 
       const fomDato = Utils.dato.formatterDatoTilNorsk(new Date(Math.min(...fomDatoer)).toISOString());
-      const tomDato = Utils.dato.formatterDatoTilNorsk(new Date(Math.min(...tomDatoer)).toISOString());
+      const tomDato = Utils.dato.formatterDatoTilNorsk(new Date(Math.max(...tomDatoer)).toISOString());
       return { fomDato, tomDato };
     }
     return undefined;
