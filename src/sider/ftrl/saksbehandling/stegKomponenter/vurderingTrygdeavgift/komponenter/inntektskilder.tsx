@@ -23,6 +23,7 @@ interface InntektskilderProps {
   remove: (index: number) => void;
   append: (inntektskilde: Inntektskilde) => void;
   redigerbart: boolean;
+  defaultPeriode?: { fomDato: string; tomDato: string };
 }
 
 export const Inntektskilder = ({
@@ -33,6 +34,7 @@ export const Inntektskilder = ({
   remove,
   append,
   redigerbart,
+  defaultPeriode,
 }: InntektskilderProps) => {
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
@@ -45,7 +47,7 @@ export const Inntektskilder = ({
   };
 
   const handleEndreArbAvgBetales = (index: number, arbAvgBetales: string) => {
-    update(index, { ...formValues.inntektskilder[index], arbAvgBetales });
+    update(index, { ...formValues.inntektskilder[index], arbAvgBetales, bruttoInntekt: undefined });
   };
 
   const handleEndreFom = (index: number, fomDato: string) => {
@@ -184,7 +186,7 @@ export const Inntektskilder = ({
 
         {redigerbart && (
           <Nav.Row className="skillestrek">
-            <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append({})}>
+            <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append(defaultPeriode || {})}>
               Legg til inntekt
             </Mui.Lenkeknapp>
           </Nav.Row>

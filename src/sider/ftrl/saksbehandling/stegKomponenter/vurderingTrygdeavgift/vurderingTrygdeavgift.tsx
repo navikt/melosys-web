@@ -42,6 +42,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     undefined,
     [behandlingID, medlemskapsperiodeStatus === STATUS.OK]
   );
+  const [defaultPeriode, setDefaultPeriode] = useState<{ fomDato: string; tomDato: string } | undefined>(undefined);
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const {
     control,
@@ -70,7 +71,22 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const stegErGyldig = formIsValid && !aktivFeilmeldingType;
 
+  const finnInnvilgetMedlemskapsperiode = () => {
+    if (medlemskapsperioder) {
+      const fomDatoer = medlemskapsperioder.map((medlemskapsperiode) => new Date(medlemskapsperiode.fomDato).getTime());
+      const tomDatoer = medlemskapsperioder.map((medlemskapsperiode) => new Date(medlemskapsperiode.tomDato).getTime());
+
+      const fomDato = Utils.dato.formatterDatoTilNorsk(new Date(Math.min(...fomDatoer)).toISOString());
+      const tomDato = Utils.dato.formatterDatoTilNorsk(new Date(Math.max(...tomDatoer)).toISOString());
+      return { fomDato, tomDato };
+    }
+    return undefined;
+  };
+
   useEffect(() => {
+    const innvilgetPeriode = finnInnvilgetMedlemskapsperiode();
+
+    setDefaultPeriode(innvilgetPeriode);
     Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
       setValue("skattepliktig", lagretTrygdeavgiftsgrunnlag.skatteplikttype);
       resetInntektskilder(
@@ -82,7 +98,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
               fomDato: Utils.dato.formatterDatoTilNorsk(kilde.fomDato),
               tomDato: Utils.dato.formatterDatoTilNorsk(kilde.tomDato),
             }))
-          : [{}]
+          : [innvilgetPeriode || {}]
       );
     });
   }, []);
@@ -143,7 +159,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       .then(() => setFeil(undefined))
       .catch((error) => setFeil(error.body?.message || error));
 
-    resetInntektskilder([{}]);
+    resetInntektskilder([defaultPeriode || {}]);
     setTrygdeavgift(undefined);
   };
 
@@ -192,6 +208,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
           remove={remove}
           append={append}
           control={control}
+          defaultPeriode={defaultPeriode}
         />
       )}
 
