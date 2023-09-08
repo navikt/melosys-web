@@ -19,18 +19,21 @@ const Fakturainformasjon = () => {
   const { saksnummer } = fagsaker.data;
   const {
     behandlingID,
-    oppsummering: { behandlingstype },
+    oppsummering: { behandlingstype, fakturaserieId },
   } = behandlinger.data;
 
   const skalHenteFraForrigeBehandling =
     KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT;
-
   useEffect(() => {
     const queries = [`&fakturaStatus=${FakturaStatus.BESTILLT}`];
-    dispatch(fakturainformasjonOperations.hentFakturaserier(saksnummer, queries));
-  }, [behandlingID, saksnummer, skalHenteFraForrigeBehandling]);
+    dispatch(fakturainformasjonOperations.hentFakturaserier(fakturaserieId, queries));
+  }, [behandlingID, saksnummer, skalHenteFraForrigeBehandling, fakturaserieId]);
 
-  if (_isEmpty(fakturainformasjon.data) || fakturainformasjon.status === STATUS.ERROR) {
+  if (
+    _isEmpty(fakturainformasjon.data) ||
+    fakturainformasjon.status === STATUS.ERROR ||
+    fakturainformasjon.data.status === 500
+  ) {
     return null;
   }
 
@@ -40,19 +43,12 @@ const Fakturainformasjon = () => {
     ));
   }
 
-  const splitVedtaksId = (vedtaksId: string) => {
-    const parts = vedtaksId.split("-");
-    const lastPart = parts.pop();
-
-    const prefix = parts.join("-");
-    return [prefix, lastPart];
-  };
-
   return (
     <Nav.Container fluid className="fakturainformasjon">
-      {fakturainformasjon.data.map((data: any) => {
+      {fakturainformasjon.data?.map((data: any) => {
         const {
           faktura: fakturaer,
+          referanseId,
           fakturaGjelder,
           fodselsnummer,
           intervall,
@@ -61,7 +57,6 @@ const Fakturainformasjon = () => {
           sluttdato,
           startdato,
           status,
-          vedtaksId,
         } = data;
 
         const overordnetInfoPar = {
@@ -75,14 +70,12 @@ const Fakturainformasjon = () => {
           Status: status,
         };
 
-        const [saksnummerForFakturaserie, behandlingsIdForFakturaserie] = splitVedtaksId(vedtaksId);
-
         return (
-          <div key={vedtaksId}>
+          <div key={referanseId}>
             <Nav.Row>
               <Nav.Column xs="12">
                 <Mui.Undertittel
-                  tekst={`Fakturaserie med saksnummer: ${saksnummerForFakturaserie} behandlingid: ${behandlingsIdForFakturaserie} `}
+                  tekst={`Fakturaserie med fakuraserieId: ${referanseId}`}
                   className="persontabell-row__tittel"
                 />
                 {Object.keys(overordnetInfoPar).map((key) => (
