@@ -1,38 +1,59 @@
-import { ComponentProps } from "react";
-import { mock, instance } from "ts-mockito";
-import { shallow } from "enzyme";
-
-import { Utenlandsoppdraget } from "./utenlandsoppdraget";
-import Soknadslandvelger from "./soknadslandvelger";
-
+import { expect } from "vitest";
+import { screen } from "@testing-library/react";
 import MKV from "../../../../melosyskodeverk";
-
-const { SØKNAD_FOLKETRYGDEN } = MKV.Koder.mottatteopplysningertyper;
+import * as KV from "../../../../kodeverk";
+import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+import { Utenlandsoppdraget } from "./utenlandsoppdraget";
 
 describe("Utenlandsoppdraget", () => {
-  let mockedProps = mock<ComponentProps<typeof Utenlandsoppdraget>>();
-  let props = instance(mockedProps);
-
-  beforeEach(() => {
-    mockedProps = mock<ComponentProps<typeof Utenlandsoppdraget>>();
-    props = instance(mockedProps);
+  const props = {
+    redigerbart: true,
+    visArbeidsforholdRolleEtiketter: true,
+    lagreSoknadOgOppfriskSaksopplysninger: () => null,
+  };
+  const initialState = (sakstype: string) => ({
+    fagsaker: {
+      status: "",
+      data: {
+        sakstype: {
+          kode: sakstype,
+        },
+      },
+    },
+    mottatteOpplysninger: {
+      status: "",
+      data: {
+        data: {
+          utenlandsoppdraget: {},
+        },
+      },
+    },
+    form: {
+      [KV.Form.SOKNAD]: {
+        values: {
+          utenlandsoppdraget: {
+            samletUtsendingsperiode: {},
+          },
+        },
+      },
+    },
   });
 
-  it("viser ikke soknadslandvelger dersom mottatteOpplysningerType er SØKNAD_FOLKETRYGDEN", () => {
-    props.mottatteOpplysningerType = SØKNAD_FOLKETRYGDEN;
+  it("viser ikke soknadslandvelger dersom sakstype er FTRL", () => {
+    renderWithProviders(<Utenlandsoppdraget {...props} />, {
+      // @ts-ignore
+      preloadedState: initialState(MKV.Koder.sakstyper.FTRL),
+    });
 
-    const utenlandsoppdraget = shallow(<Utenlandsoppdraget {...props} />);
-
-    const soknadslandvelger = utenlandsoppdraget.find(Soknadslandvelger);
-
-    expect(soknadslandvelger).toHaveLength(0);
+    expect(screen.queryAllByText("Land")).toHaveLength(0);
   });
 
-  it("viser soknadslandvelger dersom mottatteOpplysningerType ikke er SØKNAD_FOLKETRYGDEN", () => {
-    const utenlandsoppdraget = shallow(<Utenlandsoppdraget {...props} />);
+  it("viser soknadslandvelger dersom sakstype ikke er FTRL", () => {
+    renderWithProviders(<Utenlandsoppdraget {...props} />, {
+      // @ts-ignore
+      preloadedState: initialState(MKV.Koder.sakstyper.EU_EOS),
+    });
 
-    const soknadslandvelger = utenlandsoppdraget.find(Soknadslandvelger);
-
-    expect(soknadslandvelger).toHaveLength(1);
+    expect(screen.getByText("Land")).toBeInTheDocument();
   });
 });
