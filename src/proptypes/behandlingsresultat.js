@@ -5,6 +5,7 @@ const BehandlingsresultatPropType = PT.shape({
   begrunnelseKoder: PT.arrayOf(PT.string),
   begrunnelseFritekst: PT.string,
   innledningFritekst: PT.string,
+  trygdeavgiftFritekst: PT.string,
   nyVurderingBakgrunn: PT.string,
 });
 
