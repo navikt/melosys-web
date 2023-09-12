@@ -114,7 +114,6 @@ const Saksbehandling = ({
                 {erHenlagtSak && <HenlagtSak />}
                 {visAvslaattSoknad && <AvslaattSoknad />}
                 {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
-                <EnkelStegvelger alleSteg={alleSteg} />
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">
