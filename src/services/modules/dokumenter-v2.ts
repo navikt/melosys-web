@@ -103,6 +103,7 @@ export type OpprettBrevReqDto = {
   orgnrNorskMyndighet?: string[];
   innledningFritekst?: string | null;
   begrunnelseFritekst?: string | null;
+  trygdeavgiftFritekst?: string | null;
   manglerFritekst?: string | null;
   fritekstTittel?: string | null;
   fritekst?: string | null;
