@@ -12,22 +12,29 @@ import { _isEmpty, _toInteger } from "../../../../utils";
 import { Faktura } from "./faktura";
 import { STATUS } from "../../../../services";
 import { FakturaStatus } from "../../../../services/modules/faktureringskomponenten/fakturainformasjon";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 
 const Fakturainformasjon = () => {
   const dispatch = useDispatch();
   const { fakturainformasjon, fagsaker, behandlinger } = useSelector((state) => state) as any;
+  const fakturaserieReferanse = useSelector((state) =>
+    behandlingsresultatSelectors.fakturaserieReferanseSelector(state)
+  );
   const { saksnummer } = fagsaker.data;
   const {
     behandlingID,
-    oppsummering: { behandlingstype, fakturaserieId },
+    oppsummering: { behandlingstype },
   } = behandlinger.data;
 
   const skalHenteFraForrigeBehandling =
     KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT;
+
   useEffect(() => {
-    const queries = [`&fakturaStatus=${FakturaStatus.BESTILLT}`];
-    dispatch(fakturainformasjonOperations.hentFakturaserier(fakturaserieId, queries));
-  }, [behandlingID, saksnummer, skalHenteFraForrigeBehandling, fakturaserieId]);
+    if (fakturaserieReferanse) {
+      const queries = [`&fakturaStatus=${FakturaStatus.BESTILLT}`];
+      dispatch(fakturainformasjonOperations.hentFakturaserier(fakturaserieReferanse, queries));
+    }
+  }, [behandlingID, saksnummer, skalHenteFraForrigeBehandling, fakturaserieReferanse]);
 
   if (
     _isEmpty(fakturainformasjon.data) ||
@@ -48,7 +55,7 @@ const Fakturainformasjon = () => {
       {fakturainformasjon.data?.map((data: any) => {
         const {
           faktura: fakturaer,
-          referanseId,
+          fakturaserieReferanse: referanse,
           fakturaGjelder,
           fodselsnummer,
           intervall,
@@ -71,11 +78,11 @@ const Fakturainformasjon = () => {
         };
 
         return (
-          <div key={referanseId}>
+          <div key={referanse}>
             <Nav.Row>
               <Nav.Column xs="12">
                 <Mui.Undertittel
-                  tekst={`Fakturaserie med fakuraserieId: ${referanseId}`}
+                  tekst={`Fakturaserie med fakuraserie referanse: ${referanse}`}
                   className="persontabell-row__tittel"
                 />
                 {Object.keys(overordnetInfoPar).map((key) => (
