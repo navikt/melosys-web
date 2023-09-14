@@ -68,3 +68,8 @@ export const UtfallUtpekingSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
   (behandlingsresultat) => behandlingsresultat.utfallUtpeking
 );
+
+export const fakturaserieReferanseSelector = createSelector(
+  (state) => BehandlingsresultatSelector(state),
+  (behandlingsresultat) => behandlingsresultat.fakturaserieReferanse
+);
