@@ -9,7 +9,7 @@ import { _uuid } from "../../utils";
 import { SKRIV_INN_GYLDIG_DATO } from "../../kodeverk/feilmeldinger";
 
 interface DatovelgerProps {
-  onChange: (nyDato: string) => void;
+  onChange: (norskStringDato: string) => void;
   value?: Date;
   label?: ReactNode;
   disabled?: boolean;
