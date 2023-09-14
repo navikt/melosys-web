@@ -49,11 +49,9 @@ const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
     const fomB = Utils.dato.formatterDatoTilISO(b.fomDato);
     return new Date(fomA).getTime() - new Date(fomB).getTime();
   });
-  const sortertMedlemskapsperioder = [...medlemskapsperioder].sort((a, b) => {
-    const fomA = Utils.dato.formatterDatoTilISO(a.fomDato);
-    const fomB = Utils.dato.formatterDatoTilISO(b.fomDato);
-    return new Date(fomA!).getTime() - new Date(fomB!).getTime();
-  });
+  const sortertMedlemskapsperioder = [...medlemskapsperioder].sort(
+    (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
+  );
   return (
     Utils.dato.erFør(sortertInntekstkilder[0].fomDato, sortertMedlemskapsperioder[0].fomDato) ||
     Utils.dato.erEtter(
