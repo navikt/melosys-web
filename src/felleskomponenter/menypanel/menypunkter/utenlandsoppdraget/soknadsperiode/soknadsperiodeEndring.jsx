@@ -21,9 +21,6 @@ const SoknadsperiodeEndring = (props) => {
     lagre,
   } = props;
 
-  const vedFomEndring = (nyDato) => setSoknadsperiodeFom(Utils.dateTilNorskString(nyDato));
-  const vedTomEndring = (nyDato) => setSoknadsperiodeTom(Utils.dateTilNorskString(nyDato));
-
   return (
     <Nav.Fieldset legend="" className="soknadsperiode-endring">
       <Nav.Row>
@@ -31,17 +28,19 @@ const SoknadsperiodeEndring = (props) => {
           <Datovelger
             label="Fra og med"
             value={Utils.norskStringTilDate(soknadsperiodeFom)}
-            onChange={vedFomEndring}
+            onChange={setSoknadsperiodeFom}
             bredde="S"
             feil={soknadsperiodeFomErrors}
+            brukInternValidering
           />
           <Datovelger
             label="Til og med"
             value={Utils.norskStringTilDate(soknadsperiodeTom)}
-            onChange={vedTomEndring}
+            onChange={setSoknadsperiodeTom}
             bredde="S"
             minDate={Utils.norskStringTilDate(soknadsperiodeFom)}
             feil={soknadsperiodeTomErrors}
+            brukInternValidering
           />
         </Nav.Column>
       </Nav.Row>

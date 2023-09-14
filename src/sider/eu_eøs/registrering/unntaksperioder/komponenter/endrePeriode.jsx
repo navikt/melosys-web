@@ -45,16 +45,13 @@ const EndrePeriode = ({
     oppdater(event.target.value);
   };
 
-  const fomChange = (nyDato) => oppdaterFom(Utils.dato.dateTilNorskString(nyDato));
-  const tomChange = (nyDato) => oppdaterTom(Utils.dato.dateTilNorskString(nyDato));
-
   return (
     <div className="endre_periode">
       <Nav.Column xs="3">
         <Datovelger
           label="Startdato"
           value={Utils.dato.norskStringTilDate(fom)}
-          onChange={fomChange}
+          onChange={oppdaterFom}
           feil={feilmeldinger.fom}
           disabled={!redigerbart}
         />
@@ -63,7 +60,7 @@ const EndrePeriode = ({
         <Datovelger
           label="Sluttdato"
           value={Utils.dato.norskStringTilDate(tom)}
-          onChange={tomChange}
+          onChange={oppdaterTom}
           feil={feilmeldinger.tom}
           disabled={!redigerbart}
         />

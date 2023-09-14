@@ -1,6 +1,7 @@
 import { ChangeEvent, FocusEventHandler, ReactNode, useState } from "react";
 import classNames from "classnames";
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
+import * as Utils from "../../utils";
 import "./datovelger.css";
 import moment from "moment";
 
@@ -18,6 +19,7 @@ interface DatovelgerProps {
   maxDate?: Date;
   onBlur?: FocusEventHandler;
   onCalendarClose?: () => void;
+  brukInternValidering?: boolean;
 }
 
 const Datovelger = ({
@@ -30,6 +32,7 @@ const Datovelger = ({
   minDate,
   maxDate,
   onBlur,
+  brukInternValidering = false,
 }: DatovelgerProps) => {
   const [erUgyldigDato, setErUgyldigDato] = useState<boolean>(false);
   const { datepickerProps, inputProps } = useDatepicker({
@@ -39,6 +42,17 @@ const Datovelger = ({
     defaultSelected: value,
     defaultMonth: minDate ?? value,
     openOnFocus: false,
+    onDateChange: (nyValgtDatoFraDatePicker?: Date) =>
+      onChange(Utils.dato.formatterDatoTilNorsk(nyValgtDatoFraDatePicker, false, undefined)),
+    onValidate: (err) => {
+      if (!brukInternValidering) return;
+
+      if (err.isBefore || err.isAfter || err.isEmpty) {
+        setErUgyldigDato(false);
+      } else {
+        setErUgyldigDato(!err.isValidDate);
+      }
+    },
   });
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {

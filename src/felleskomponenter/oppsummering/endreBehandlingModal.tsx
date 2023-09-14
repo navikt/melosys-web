@@ -305,9 +305,10 @@ function EndreBehandlingModal({
               disableForsteValg
             />
             <Datovelger
-              onChange={setMottaksdato}
+              onChange={(dato) => setMottaksdato(Datoutils.norskStringTilDate(dato))}
               label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>}
               value={mottaksdato}
+              brukInternValidering
             />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingsstatus(e.target.value)}
