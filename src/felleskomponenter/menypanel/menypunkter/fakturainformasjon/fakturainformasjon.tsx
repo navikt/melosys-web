@@ -17,7 +17,7 @@ import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresul
 const Fakturainformasjon = () => {
   const dispatch = useDispatch();
   const { fakturainformasjon, fagsaker, behandlinger } = useSelector((state) => state) as any;
-  const fakturaserieReferanse = useSelector((state) =>
+  const fakturaserieReferanseFraBehandling = useSelector((state) =>
     behandlingsresultatSelectors.fakturaserieReferanseSelector(state)
   );
   const { saksnummer } = fagsaker.data;
@@ -30,11 +30,11 @@ const Fakturainformasjon = () => {
     KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT;
 
   useEffect(() => {
-    if (fakturaserieReferanse) {
+    if (fakturaserieReferanseFraBehandling) {
       const queries = [`&fakturaStatus=${FakturaStatus.BESTILLT}`];
-      dispatch(fakturainformasjonOperations.hentFakturaserier(fakturaserieReferanse, queries));
+      dispatch(fakturainformasjonOperations.hentFakturaserier(fakturaserieReferanseFraBehandling, queries));
     }
-  }, [behandlingID, saksnummer, skalHenteFraForrigeBehandling, fakturaserieReferanse]);
+  }, [behandlingID, saksnummer, skalHenteFraForrigeBehandling, fakturaserieReferanseFraBehandling]);
 
   if (
     _isEmpty(fakturainformasjon.data) ||
@@ -55,7 +55,7 @@ const Fakturainformasjon = () => {
       {fakturainformasjon.data?.map((data: any) => {
         const {
           faktura: fakturaer,
-          fakturaserieReferanse: referanse,
+          fakturaserieReferanse,
           fakturaGjelder,
           fodselsnummer,
           intervall,
@@ -78,11 +78,11 @@ const Fakturainformasjon = () => {
         };
 
         return (
-          <div key={referanse}>
+          <div key={fakturaserieReferanse}>
             <Nav.Row>
               <Nav.Column xs="12">
                 <Mui.Undertittel
-                  tekst={`Fakturaserie med fakuraserie referanse: ${referanse}`}
+                  tekst={`Fakturaserie med fakuraserie referanse: ${fakturaserieReferanse}`}
                   className="persontabell-row__tittel"
                 />
                 {Object.keys(overordnetInfoPar).map((key) => (

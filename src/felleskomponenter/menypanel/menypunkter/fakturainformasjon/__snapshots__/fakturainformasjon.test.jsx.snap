@@ -22,7 +22,7 @@ exports[`Fakturainformasjon > snapshot test 1`] = `
               <span
                 class="undertittel__tekst"
               >
-                Fakturaserie med fakuraserieId: undefined
+                Fakturaserie med fakuraserie referanse: undefined
               </span>
               <span />
             </h3>
