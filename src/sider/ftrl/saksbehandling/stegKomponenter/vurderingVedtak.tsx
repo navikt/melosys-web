@@ -351,45 +351,46 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       ) : null}
 
       {erNyVurdering && (
-        <Nav.Fieldset
-          className="nyVurderingBakgrunn"
-          legend={
-            <LabelMedHjelpetekst
-              label="Oppgi grunn for nytt vedtak (Obligatorisk)"
-              hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
-              hjelpetekstClassName="nyVurderingBakgrunn__hjelpetekst"
-            />
-          }
-        >
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <Forms.Select
-                name="nyVurderingBakgrunnValg"
-                disabled={!redigerbart}
-                emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
+        <div className="nyVurderingBakgrunn--container">
+          <Nav.Fieldset
+            className="nyVurderingBakgrunn"
+            legend={
+              <LabelMedHjelpetekst
+                label="Oppgi grunn for nytt vedtak (Obligatorisk)"
+                hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
+                hjelpetekstClassName="nyVurderingBakgrunn__hjelpetekst"
+              />
+            }
+          >
+            <Nav.Row>
+              <Nav.Column xs="6">
+                <Forms.Select
+                  name="nyVurderingBakgrunnValg"
+                  disabled={!redigerbart}
+                  emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
+                  control={control}
+                  onChange={oppdaterNyVurderingBakgrunnValg}
+                >
+                  {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
+                    <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
+                  ))}
+                  <option key={FRITEKST_VALG} value={FRITEKST_VALG} label={FRITEKST_VALG} />
+                </Forms.Select>
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Fieldset>
+          {formValues.nyVurderingBakgrunnValg === FRITEKST_VALG && (
+            <Nav.Row className="nyVurderingBakgrunnFritekstRad">
+              <Forms.HtmlEditor
+                name="nyVurderingBakgrunnFritekst"
                 control={control}
-                onChange={oppdaterNyVurderingBakgrunnValg}
-              >
-                {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
-                  <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
-                ))}
-                <option key={FRITEKST_VALG} value={FRITEKST_VALG} label={FRITEKST_VALG} />
-              </Forms.Select>
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Fieldset>
-      )}
-
-      {erNyVurdering && formValues.nyVurderingBakgrunnValg === FRITEKST_VALG && (
-        <Nav.Row className="nyVurderingBakgrunnFritekstRad">
-          <Forms.HtmlEditor
-            name="nyVurderingBakgrunnFritekst"
-            control={control}
-            onChange={debouncedOppdaterNyVurderingBakgrunn}
-            className="fritekst_editor"
-            disabled={!redigerbart}
-          />
-        </Nav.Row>
+                onChange={debouncedOppdaterNyVurderingBakgrunn}
+                className="nyVurderingBakgrunn--fritekst_editor"
+                disabled={!redigerbart}
+              />
+            </Nav.Row>
+          )}
+        </div>
       )}
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
