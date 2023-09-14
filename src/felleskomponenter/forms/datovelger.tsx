@@ -29,7 +29,7 @@ const InnerDatovelgerComponent = forwardRef<HTMLSelectElement, InnerDatovelgerCo
       <div {...rest}>
         <PlainDatovelger
           label={label && <b>{label}</b>}
-          onChange={(nyDato) => onChange(Utils.dateTilNorskString(nyDato))}
+          onChange={onChange}
           onBlur={rest.onBlur}
           value={Utils.norskStringTilDate(rest.value)}
           feil={feil}

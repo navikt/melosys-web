@@ -1,4 +1,4 @@
-import { ReactNode, FocusEventHandler, useState } from "react";
+import { ChangeEvent, FocusEventHandler, ReactNode, useState } from "react";
 import classNames from "classnames";
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
 import "./datovelger.css";
@@ -8,7 +8,7 @@ import { _uuid } from "../../utils";
 import { SKRIV_INN_GYLDIG_DATO } from "../../kodeverk/feilmeldinger";
 
 interface DatovelgerProps {
-  onChange: (nyDato: Date) => void;
+  onChange: (nyDato: string) => void;
   value?: Date;
   label?: ReactNode;
   disabled?: boolean;
@@ -39,19 +39,14 @@ const Datovelger = ({
     defaultSelected: value,
     defaultMonth: minDate ?? value,
     openOnFocus: false,
-    onDateChange: (nyDato?: Date) => nyDato && onChange(nyDato),
-    onValidate: (err) => {
-      if (err.isBefore || err.isAfter) {
-        setErUgyldigDato(false);
-        return;
-      }
-      if (!err.isValidDate) {
-        setErUgyldigDato(true);
-      } else {
-        setErUgyldigDato(false);
-      }
-    },
   });
+
+  const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (inputProps?.onChange) {
+      inputProps.onChange(event);
+    }
+    onChange(event.target.value);
+  };
 
   const datovelgerID = _uuid();
   return (
@@ -69,6 +64,7 @@ const Datovelger = ({
           size="small"
           onBlur={onBlur}
           disabled={disabled}
+          onChange={handleOnChange}
         />
       </DatePicker>
       {(feil || erUgyldigDato) && (
