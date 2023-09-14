@@ -31,7 +31,7 @@ describe("SoknadsperiodeEndring", () => {
 
     it("kaller vedFeltEndring ved change", () => {
       const nyDato = "01.01.2011";
-      fomInput.simulate("change", Utils.dato.norskStringTilDate(nyDato));
+      fomInput.simulate("change", nyDato);
 
       expect(props.setSoknadsperiodeFom).toHaveBeenCalledTimes(1);
       expect(props.setSoknadsperiodeFom).toHaveBeenLastCalledWith(nyDato);
@@ -53,7 +53,7 @@ describe("SoknadsperiodeEndring", () => {
 
     it("kaller vedFeltEndring ved change", () => {
       const nyDato = "02.02.2012";
-      tomInput.simulate("change", Utils.dato.norskStringTilDate(nyDato));
+      tomInput.simulate("change", nyDato);
 
       expect(props.setSoknadsperiodeTom).toHaveBeenCalledTimes(1);
       expect(props.setSoknadsperiodeTom).toHaveBeenLastCalledWith(nyDato);
