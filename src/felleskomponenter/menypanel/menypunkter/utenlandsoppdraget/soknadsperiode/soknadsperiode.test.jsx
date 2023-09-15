@@ -1,44 +1,42 @@
-import * as Nav from "../../../../../navFrontend";
-import * as Symboler from "../../symboler";
-
-import SoknadsperiodeEndring from "./soknadsperiodeEndring";
 import { Soknadsperiode } from "./soknadsperiode";
+import { renderWithProviders } from "~/ducks/test-utils/renderWithProviders";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/react";
 
 describe("Soknadsperiode", () => {
-  let props = null;
+  const props = {
+    redigerbart: true,
+    lagreSoknadOgOppfriskSaksopplysninger: vi.fn(),
+    tittel: "Tittel",
+  };
 
-  beforeEach(() => {
-    props = {
-      redigerbart: true,
-      oppdaterPeriode: vi.fn(),
-      lagreSoknadOgOppfriskSaksopplysninger: vi.fn(),
-      soknadsperiodeFom: "12.12.2030",
-      soknadsperiodeTom: "12.12.2033",
-      tittel: "Tittel",
-    };
+  const initialState = {
+    mottatteOpplysninger: {
+      status: "",
+      data: {
+        data: {
+          periode: {
+            fom: "2023-01-01",
+            tom: "2023-04-01",
+          },
+        },
+      },
+    },
+  };
+
+  it("snapshot test", () => {
+    const { container } = renderWithProviders(<Soknadsperiode {...props} />, { preloadedState: initialState });
+    expect(container).toMatchSnapshot();
   });
 
-  it("viser nåværende søknadsperiode", () => {
-    const soknadsperiode = shallow(<Soknadsperiode {...props} />);
-    const element = soknadsperiode.find(Nav.Typo.Element);
+  it("snapshot test når periode endres", async () => {
+    const { container } = renderWithProviders(<Soknadsperiode {...props} />, { preloadedState: initialState });
 
-    expect(element.children().first()).not.toBeNull();
-  });
+    expect(screen.queryAllByRole("button")).toHaveLength(1);
 
-  it("viser symbol for å vise dialog for endring av periode, og dialog åpnes ved klikk", () => {
-    const soknadsperiode = shallow(<Soknadsperiode {...props} />);
-    const symbol = soknadsperiode.find(Symboler.Rediger);
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button"));
 
-    expect(symbol).toHaveLength(1);
-
-    symbol.simulate("click");
-
-    const soknadsperiodeEndring = soknadsperiode.find(SoknadsperiodeEndring);
-    const soknadsperiodeEndringProps = soknadsperiodeEndring.props();
-
-    expect(soknadsperiodeEndring).toHaveLength(1);
-
-    expect(soknadsperiodeEndringProps.soknadsperiodeFom).toBe(props.soknadsperiodeFom);
-    expect(soknadsperiodeEndringProps.soknadsperiodeTom).toBe(props.soknadsperiodeTom);
+    expect(container).toMatchSnapshot();
   });
 });
