@@ -1,37 +1,21 @@
-import { connect, ConnectedProps } from "react-redux";
-import { Action } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-import { RootState } from "AppTypes";
+import { useDispatch, useSelector } from "react-redux";
 
+import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 
+import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
+
+import EditerbartElement, { Status } from "../editerbartElement";
 import Soknadsperiode from "./soknadsperiode";
 import Soknadslandvelger from "./soknadslandvelger";
-import EditerbartElement, { Status } from "../editerbartElement";
 import { EditerbareUtenlandsoppdragetSporsmal, IkkeEditerbareUtenlandsoppdragetSporsmal } from "./sporsmal";
 import Tittellinje from "./tittellinje";
 
-import { mottatteOpplysningerSelectors, mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
-
-import MKV from "../../../../melosyskodeverk";
-
 import "./utenlandsoppdraget.css";
 
-const { SØKNAD_FOLKETRYGDEN } = MKV.Koder.mottatteopplysningertyper;
-
-const mapStateToProps = (state: RootState) => ({
-  mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
-});
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState()),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type UtenlandsoppdragetProps = PropsFromRedux & {
+type UtenlandsoppdragetProps = {
   visArbeidsforholdRolleEtiketter: boolean;
   redigerbart: boolean;
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
@@ -41,11 +25,12 @@ export const Utenlandsoppdraget = ({
   visArbeidsforholdRolleEtiketter,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
-  oppdaterMottatteOpplysninger,
-  mottatteOpplysningerType,
 }: UtenlandsoppdragetProps) => {
+  const dispatch = useDispatch();
+  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+
   const lagreHandler = () => {
-    oppdaterMottatteOpplysninger();
+    dispatch(mottatteOpplysningerOperations.oppdaterState());
     return true;
   };
 
@@ -63,7 +48,7 @@ export const Utenlandsoppdraget = ({
             tittel={KV.Menypunkter.Utenlandsoppdraget.undertitler.periode}
           />
         </Nav.Column>
-        {mottatteOpplysningerType !== SØKNAD_FOLKETRYGDEN && (
+        {sakstype !== MKV.Koder.sakstyper.FTRL && (
           <Nav.Column xs="6">
             <Soknadslandvelger
               redigerbart={redigerbart}
@@ -92,4 +77,4 @@ export const Utenlandsoppdraget = ({
   );
 };
 
-export default connector(Utenlandsoppdraget);
+export default Utenlandsoppdraget;

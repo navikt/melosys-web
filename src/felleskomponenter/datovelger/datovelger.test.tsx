@@ -1,12 +1,13 @@
 import { ComponentProps } from "react";
 import { render, screen } from "@testing-library/react";
+import * as Utils from "../../utils";
 
 import Datovelger from ".";
 
 describe("Datovelger", () => {
-  let dato = new Date();
+  let dato: Date | undefined = new Date();
   const props: ComponentProps<typeof Datovelger> = {
-    onChange: (nyDato: Date) => (dato = nyDato),
+    onChange: (nyDatoString: string) => (dato = Utils.dato.norskStringTilDate(nyDatoString)),
     value: dato,
     label: "Dato",
     disabled: false,
