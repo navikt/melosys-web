@@ -8,18 +8,15 @@ import * as Ikoner from "../../resources/images";
 import "./stegIkon.css";
 
 const ikonVelger = (status, vedtakSteg, aktivtSteg) => {
-  if (aktivtSteg) {
-    if (vedtakSteg) {
-      return Ikoner.VedtakGodkjentAktiv;
-    }
-    return status === FANE_STATUS.UBEHANDLET ? Ikoner.UbehandletAktiv : Ikoner.FerdigAktiv;
-  }
-
   if (vedtakSteg) {
-    return status === FANE_STATUS.UBEHANDLET ? Ikoner.VedtakUbehandlet : Ikoner.VedtakGodkjentIkkeAktiv;
+    return aktivtSteg ? Ikoner.VedtakGodkjentAktiv : Ikoner.VedtakGodkjentIkkeAktiv;
   }
 
-  return status === FANE_STATUS.UBEHANDLET ? Ikoner.Ubehandlet : Ikoner.Ferdig;
+  if (aktivtSteg) {
+    return status === FANE_STATUS.UBEHANDLET ? Ikoner.UbehandletAktiv : Ikoner.FerdigAktiv;
+  } else {
+    return status === FANE_STATUS.UBEHANDLET ? Ikoner.Ubehandlet : Ikoner.Ferdig;
+  }
 };
 
 const StegIkon = (props) => {
