@@ -87,9 +87,9 @@ export const Soknadsperiode = ({ redigerbart, tittel, lagreSoknadOgOppfriskSakso
       {erEndrePeriodeSynlig && (
         <Nav.Row>
           <Nav.Column xs="12" className="endring__container">
-            <Forms.Datovelger name={"fom"} control={control} label="Fra og med" bredde="S" />
+            <Forms.Datovelger name="fom" control={control} label="Fra og med" bredde="S" />
             <Forms.Datovelger
-              name={"tom"}
+              name="tom"
               control={control}
               label="Til og med"
               bredde="S"

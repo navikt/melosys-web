@@ -1,5 +1,5 @@
 import { Soknadsperiode } from "./soknadsperiode";
-import { renderWithProviders } from "~/ducks/test-utils/renderWithProviders";
+import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/react";
 
