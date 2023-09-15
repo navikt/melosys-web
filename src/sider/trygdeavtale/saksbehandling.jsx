@@ -9,7 +9,7 @@ import * as Utils from "../../utils";
 
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog";
-import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
+import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
@@ -119,13 +119,13 @@ const Saksbehandling = ({
   if (!saksopplysningerLastet) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-  const erAvslaattSoknad =
+  const erAvslåttPgaManglendeOpplysninger =
     behandlingsresultatType === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
-  const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
+  const visAvslåttPgaManglendeOpplysninger = erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
   const mottatteOpplysningerErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(mottatteOpplysninger).length === 0
   );
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
+  const visStegVelger = !erHenlagtSak && !erAvslåttPgaManglendeOpplysninger && mottatteOpplysningerErKlart;
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
@@ -140,7 +140,7 @@ const Saksbehandling = ({
                 {!hovedpartErVirksomhet ? (
                   <>
                     {erHenlagtSak && <HenlagtSak />}
-                    {visAvslaattSoknad && <AvslaattSoknad />}
+                    {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
                     {visStegVelger && <Stegvelger />}
                     <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
                   </>

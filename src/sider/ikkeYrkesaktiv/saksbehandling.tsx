@@ -8,7 +8,7 @@ import * as Nav from "../../navFrontend";
 
 import * as Utils from "../../utils";
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
-import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
+import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
@@ -127,14 +127,14 @@ const Saksbehandling = ({
   if (!saksopplysningerLastet) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-  const erAvslaattSoknad =
+  const erAvslåttPgaManglendeOpplysninger =
     behandlingsresultat.behandlingsresultatTypeKode ===
     MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
-  const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
+  const visAvslåttPgaManglendeOpplysninger = erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
   const mottatteOpplysningerErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(mottatteOpplysninger).length === 0
   );
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
+  const visStegVelger = !erHenlagtSak && !erAvslåttPgaManglendeOpplysninger && mottatteOpplysningerErKlart;
 
   return (
     <>
@@ -145,7 +145,7 @@ const Saksbehandling = ({
             <Nav.Row>
               <Nav.Column xs="7">
                 {erHenlagtSak && <HenlagtSak />}
-                {visAvslaattSoknad && <AvslaattSoknad />}
+                {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
                 {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>

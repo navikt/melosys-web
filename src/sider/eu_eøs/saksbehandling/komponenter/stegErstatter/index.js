@@ -1,4 +1,4 @@
 import HenlagtSak from "./henlagtSak";
-import AvslaattSoknad from "./avslaattSoknad";
+import AvslaattPgaManglendeOpplysninger from "./avslaattPgaManglendeOpplysninger";
 
-export { HenlagtSak, AvslaattSoknad };
+export { HenlagtSak, AvslaattPgaManglendeOpplysninger };

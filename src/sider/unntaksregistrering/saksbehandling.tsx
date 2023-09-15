@@ -27,7 +27,7 @@ import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
 import { kontrollOperations } from "../../ducks/kontroll";
-import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
+import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 
 interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
@@ -98,10 +98,10 @@ const Saksbehandling = ({
   if (!saksopplysningerLastet) return null;
 
   const erHenlagtSak = fagstatus === MKV.Koder.saksstatuser.HENLAGT;
-  const erAvslaattSoknad =
+  const erAvslåttPgaManglendeOpplysninger =
     behandlingsresultattype === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
-  const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad;
+  const visAvslåttPgaManglendeOpplysninger = erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
+  const visStegVelger = !erHenlagtSak && !erAvslåttPgaManglendeOpplysninger;
 
   return (
     <>
@@ -112,7 +112,7 @@ const Saksbehandling = ({
             <Nav.Row>
               <Nav.Column xs="7">
                 {erHenlagtSak && <HenlagtSak />}
-                {visAvslaattSoknad && <AvslaattSoknad />}
+                {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
                 {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
