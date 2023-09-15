@@ -3,6 +3,14 @@ import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithP
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/react";
 
+vi.mock("../../../../../utils", async () => {
+  const actual = await vi.importActual("../../../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
+
 describe("Soknadsperiode", () => {
   const props = {
     redigerbart: true,

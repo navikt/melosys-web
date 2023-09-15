@@ -80,7 +80,7 @@ exports[`Soknadsperiode > snapshot test når periode endres 1`] = `
               >
                 <label
                   class="navds-form-field__label navds-label navds-label--small"
-                  for="c8e497ea-7a75-4aa0-9da3-a3808710b033"
+                  for="123"
                 >
                   <b>
                     Fra og med
@@ -93,7 +93,7 @@ exports[`Soknadsperiode > snapshot test når periode endres 1`] = `
                     aria-controls="aksel-id-2"
                     autocomplete="off"
                     class="navds-date__field-input navds-text-field__input navds-body-short navds-body-small"
-                    id="c8e497ea-7a75-4aa0-9da3-a3808710b033"
+                    id="123"
                     size="14"
                     value="01.01.2023"
                   />
@@ -152,7 +152,7 @@ exports[`Soknadsperiode > snapshot test når periode endres 1`] = `
               >
                 <label
                   class="navds-form-field__label navds-label navds-label--small"
-                  for="09729feb-5a6a-4bc6-aed3-a6116d5062a7"
+                  for="123"
                 >
                   <b>
                     Til og med
@@ -165,7 +165,7 @@ exports[`Soknadsperiode > snapshot test når periode endres 1`] = `
                     aria-controls="aksel-id-4"
                     autocomplete="off"
                     class="navds-date__field-input navds-text-field__input navds-body-short navds-body-small"
-                    id="09729feb-5a6a-4bc6-aed3-a6116d5062a7"
+                    id="123"
                     size="14"
                     value="01.04.2023"
                   />
