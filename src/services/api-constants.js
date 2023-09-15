@@ -6,6 +6,7 @@ export const TRYGDEAVTALE_FLYT_BASE_URL = `${import.meta.env.VITE_TRYGDEAVTALE_F
 export const FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL = `${import.meta.env.VITE_FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL}`;
 
 export const ANMODNINGSPERIODER = "anmodningsperioder";
+export const AVSLAG = "avslag";
 export const AVKLARTEFAKTA = "avklartefakta";
 export const BEHANDLINGER = "behandlinger";
 export const MOTTATTE_OPPLYSNINGER = "mottatteopplysninger";

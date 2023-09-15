@@ -36,7 +36,7 @@ export const opprettNySak = (body: OpprettReqDto) => postAsJson(`${API_BASE_URL}
 export const opprettNyBehandlingForSak = (saksnummer: string, body: OpprettReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/behandlinger`, body);
 
-interface HenleggReqDto {
+export interface HenleggReqDto {
   begrunnelseKode: string;
   fritekst: string | null;
 }

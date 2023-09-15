@@ -5,32 +5,44 @@ import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Ikon from "../../../resources/images";
 import * as Utils from "../../../utils";
+import * as Api from "../../../services/api";
 
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { Feilmeldinger } from "../../feilmeldinger";
+import { utpekingsperioderOperations } from "../../../ducks/utpekingsperioder";
+import { anmodningsperioderOperations } from "../../../ducks/anmodningsperioder";
+import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
+import { datalastingOperations } from "../../../ducks/datalasting";
+import { navigeringOperations } from "../../../ducks/navigering";
+import { modalerOperations } from "../../../ducks/modaler";
+import { vedtakOperations } from "../../../ducks/vedtak";
 
+import { useFeatureToggle } from "../../../featuretoggle";
+import { AlertStripeFeil } from "nav-frontend-alertstriper";
+import { Feilmeldinger } from "../../feilmeldinger";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import HtmlEditor from "../../htmlEditor";
 import Knapperad from "../../knapperad";
+import { MELOSYS_NY_AVSLAGMANGLENDEOPPLYSNINGER } from "../../../featuretoggle/toggleNavn";
 
 import "./dialogboksAvslagSoknad.css";
 
 interface DialogboksAvslagSoknadProps {
-  avslaaSoknadHandle: (data: { fritekst?: string }) => void;
   avbryt: () => void;
-  ariaHideApp: boolean;
+  ariaHideApp?: boolean;
 }
 
-export const DialogboksAvslagSoknad = ({ ariaHideApp, avbryt, avslaaSoknadHandle }: DialogboksAvslagSoknadProps) => {
+export const DialogboksAvslagSoknad = ({ ariaHideApp = false, avbryt }: DialogboksAvslagSoknadProps) => {
   const dispatch = useDispatch();
+  const [feil, setFeil] = useState<undefined | string>(undefined);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const brukNyttEndepunkt = useFeatureToggle(MELOSYS_NY_AVSLAGMANGLENDEOPPLYSNINGER);
 
   const [brevFritekst, setBrevFritekst] = useState("");
   const [utførerKontroll, setUtførerKontroll] = useState(true);
@@ -61,12 +73,31 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp, avbryt, avslaaSoknadHandle
     },
   ];
 
-  const avslaaSoknad = () => {
-    const data = {
-      fritekst: brevFritekst,
-    };
-    avslaaSoknadHandle(data);
+  const avslåSøknad = async () => {
+    // Hvis perioden er blitt opprettet må den fjernes før avslag.
+    await Promise.all([
+      dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
+      dispatch(anmodningsperioderOperations.resetAnmodningsperioderState()),
+      dispatch(utpekingsperioderOperations.resetUtpekingsperioderState()),
+    ]);
+    await dispatch(datalastingOperations.lagreAllData());
+
+    if (brukNyttEndepunkt) {
+      Api.Saksflyt.Avslag.avslåPgaManglendeOpplysninger(behandlingID, { fritekst: brevFritekst })
+        .then(() => {
+          dispatch(modalerOperations.skjulAvslagSoknad());
+          dispatch(navigeringOperations.tilForsiden());
+        })
+        .catch((error: any) => setFeil(error.body?.message || error));
+    } else {
+      dispatch(
+        vedtakOperations.avslaaSoknad(behandlingID, {
+          fritekst: brevFritekst,
+        })
+      );
+    }
   };
+
   const brevFritekstMaxLength = 500;
   const bekreftRedigerbart =
     redigerbart && Utils._isEmpty(kontrollfeil) && brevFritekst.length <= brevFritekstMaxLength && !utførerKontroll;
@@ -88,13 +119,14 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp, avbryt, avslaaSoknadHandle
             Avslå søknaden på grunn av manglende opplysninger
           </Nav.Typo.Systemtittel>
           <Feilmeldinger />
+          {brukNyttEndepunkt && feil && <AlertStripeFeil>{feil}</AlertStripeFeil>}
           <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
           {bekreftRedigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           <div className="knapperadcontainer">
             <Knapperad
               avbryt={avbryt}
               avbrytTekst="Avbryt"
-              bekreft={avslaaSoknad}
+              bekreft={avslåSøknad}
               bekreftTekst="Avslå søknad"
               redigerbart={redigerbart}
               bekreftRedigerbart={bekreftRedigerbart}
