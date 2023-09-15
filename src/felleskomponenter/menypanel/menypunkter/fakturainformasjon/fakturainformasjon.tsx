@@ -12,10 +12,14 @@ import { _isEmpty, _toInteger } from "../../../../utils";
 import { Faktura } from "./faktura";
 import { STATUS } from "../../../../services";
 import { FakturaStatus } from "../../../../services/modules/faktureringskomponenten/fakturainformasjon";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 
 const Fakturainformasjon = () => {
   const dispatch = useDispatch();
   const { fakturainformasjon, fagsaker, behandlinger } = useSelector((state) => state) as any;
+  const fakturaserieReferanseFraBehandling = useSelector((state) =>
+    behandlingsresultatSelectors.fakturaserieReferanseSelector(state)
+  );
   const { saksnummer } = fagsaker.data;
   const {
     behandlingID,
@@ -26,11 +30,17 @@ const Fakturainformasjon = () => {
     KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT;
 
   useEffect(() => {
-    const queries = [`&fakturaStatus=${FakturaStatus.BESTILLT}`];
-    dispatch(fakturainformasjonOperations.hentFakturaserier(saksnummer, queries));
-  }, [behandlingID, saksnummer, skalHenteFraForrigeBehandling]);
+    if (fakturaserieReferanseFraBehandling) {
+      const queries = [`&fakturaStatus=${FakturaStatus.BESTILLT}`];
+      dispatch(fakturainformasjonOperations.hentFakturaserier(fakturaserieReferanseFraBehandling, queries));
+    }
+  }, [behandlingID, saksnummer, skalHenteFraForrigeBehandling, fakturaserieReferanseFraBehandling]);
 
-  if (_isEmpty(fakturainformasjon.data) || fakturainformasjon.status === STATUS.ERROR) {
+  if (
+    _isEmpty(fakturainformasjon.data) ||
+    fakturainformasjon.status === STATUS.ERROR ||
+    fakturainformasjon.data.status === 500
+  ) {
     return null;
   }
 
@@ -40,19 +50,12 @@ const Fakturainformasjon = () => {
     ));
   }
 
-  const splitVedtaksId = (vedtaksId: string) => {
-    const parts = vedtaksId.split("-");
-    const lastPart = parts.pop();
-
-    const prefix = parts.join("-");
-    return [prefix, lastPart];
-  };
-
   return (
     <Nav.Container fluid className="fakturainformasjon">
-      {fakturainformasjon.data.map((data: any) => {
+      {fakturainformasjon.data?.map((data: any) => {
         const {
           faktura: fakturaer,
+          fakturaserieReferanse,
           fakturaGjelder,
           fodselsnummer,
           intervall,
@@ -61,7 +64,6 @@ const Fakturainformasjon = () => {
           sluttdato,
           startdato,
           status,
-          vedtaksId,
         } = data;
 
         const overordnetInfoPar = {
@@ -75,14 +77,12 @@ const Fakturainformasjon = () => {
           Status: status,
         };
 
-        const [saksnummerForFakturaserie, behandlingsIdForFakturaserie] = splitVedtaksId(vedtaksId);
-
         return (
-          <div key={vedtaksId}>
+          <div key={fakturaserieReferanse}>
             <Nav.Row>
               <Nav.Column xs="12">
                 <Mui.Undertittel
-                  tekst={`Fakturaserie med saksnummer: ${saksnummerForFakturaserie} behandlingid: ${behandlingsIdForFakturaserie} `}
+                  tekst={`Fakturaserie med fakuraserie referanse: ${fakturaserieReferanse}`}
                   className="persontabell-row__tittel"
                 />
                 {Object.keys(overordnetInfoPar).map((key) => (

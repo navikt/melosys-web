@@ -36,8 +36,8 @@ const Datovelger = ({
 }: DatovelgerProps) => {
   const [erUgyldigDato, setErUgyldigDato] = useState<boolean>(false);
   const { datepickerProps, inputProps } = useDatepicker({
-    fromDate: minDate ?? new Date(moment(moment.now()).subtract(5, "years").toDate()),
-    toDate: maxDate ?? new Date(moment(moment.now()).add(5, "years").toDate()),
+    fromDate: minDate ?? new Date(moment(moment.now()).subtract(25, "years").toDate()),
+    toDate: maxDate ?? new Date(moment(moment.now()).add(15, "years").toDate()),
     locale: "nb",
     defaultSelected: value,
     defaultMonth: minDate ?? value,
