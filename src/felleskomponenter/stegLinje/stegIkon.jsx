@@ -14,9 +14,9 @@ const ikonVelger = (status, vedtakSteg, aktivtSteg) => {
 
   if (aktivtSteg) {
     return status === FANE_STATUS.UBEHANDLET ? Ikoner.UbehandletAktiv : Ikoner.FerdigAktiv;
-  } else {
-    return status === FANE_STATUS.UBEHANDLET ? Ikoner.Ubehandlet : Ikoner.Ferdig;
   }
+
+  return status === FANE_STATUS.UBEHANDLET ? Ikoner.Ubehandlet : Ikoner.Ferdig;
 };
 
 const StegIkon = (props) => {
