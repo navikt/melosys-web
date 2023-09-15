@@ -1,3 +1,55 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Soknadsperiode > snapshot test 1`] = `
+<div>
+  <div
+    class="soknadsperiode"
+  >
+    <p
+      class="typo-normal soknadsperiode__etikett"
+    >
+      Tittel
+    </p>
+    <div
+      class="periode__container"
+    >
+      <p
+        class="typo-element periode"
+      >
+        01.01.2023
+         - 
+        01.04.2023
+      </p>
+      <div>
+        <button
+          aria-label="Rediger"
+          class="ikon-knapp"
+          title="Rediger"
+          type="button"
+        >
+          <svg
+            class="ikon"
+            fill="none"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M22.8353 1.16464C24.3882 2.7175 24.3882 5.23518 22.8353 6.78804L8.07288 21.5494L0.682007 24L0 23.318L2.44911 15.926L17.2115 1.16464C18.7645 -0.388214 21.2823 -0.388214 22.8353 1.16464ZM18.6175 8.19388L15.8056 5.38219L4.18826 16.9987L2.79497 21.2036L7.00155 19.809L18.6175 8.19388ZM21.4293 2.57049C20.6882 1.82935 19.5074 1.79567 18.7262 2.46943L18.6175 2.57049L17.2115 3.97634L20.0234 6.78804L21.4293 5.38219C22.1705 4.64105 22.2042 3.46036 21.5304 2.67927L21.4293 2.57049Z"
+              fill="#0067C5"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Soknadsperiode > snapshot test når periode endres 1`] = `
 <div>
   <div
     class="soknadsperiode"
@@ -28,7 +80,7 @@
               >
                 <label
                   class="navds-form-field__label navds-label navds-label--small"
-                  for="cdafebf1-203a-4a83-a41c-0b0c17907d58"
+                  for="c8e497ea-7a75-4aa0-9da3-a3808710b033"
                 >
                   <b>
                     Fra og med
@@ -41,7 +93,7 @@
                     aria-controls="aksel-id-2"
                     autocomplete="off"
                     class="navds-date__field-input navds-text-field__input navds-body-short navds-body-small"
-                    id="cdafebf1-203a-4a83-a41c-0b0c17907d58"
+                    id="c8e497ea-7a75-4aa0-9da3-a3808710b033"
                     size="14"
                     value="01.01.2023"
                   />
@@ -100,7 +152,7 @@
               >
                 <label
                   class="navds-form-field__label navds-label navds-label--small"
-                  for="0be4281c-3364-4959-8123-3b7f510cf586"
+                  for="09729feb-5a6a-4bc6-aed3-a6116d5062a7"
                 >
                   <b>
                     Til og med
@@ -113,7 +165,7 @@
                     aria-controls="aksel-id-4"
                     autocomplete="off"
                     class="navds-date__field-input navds-text-field__input navds-body-short navds-body-small"
-                    id="0be4281c-3364-4959-8123-3b7f510cf586"
+                    id="09729feb-5a6a-4bc6-aed3-a6116d5062a7"
                     size="14"
                     value="01.04.2023"
                   />
@@ -181,3 +233,4 @@
     </div>
   </div>
 </div>
+`;
