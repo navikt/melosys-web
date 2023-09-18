@@ -1,8 +1,6 @@
 import { ComponentProps } from "react";
-import { shallow } from "enzyme";
-
-import * as Nav from "../../../navFrontend";
-
+import { screen } from "@testing-library/react";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import FeilmeldingDialog from "./feilmeldingDialog";
 
 describe("FeilmeldingDialog", () => {
@@ -12,9 +10,8 @@ describe("FeilmeldingDialog", () => {
   };
 
   it("Viser en modal", () => {
-    const feilmeldingDialog = shallow(<FeilmeldingDialog {...props} />);
-
-    expect(feilmeldingDialog.find(Nav.Modal)).toHaveLength(1);
+    const { getByRole } = renderWithProviders(<FeilmeldingDialog {...props} />);
+    expect(getByRole("dialog")).toBeInTheDocument();
   });
 
   it("Viser en liste over feilmeldinger for feilmeldinger", () => {
@@ -22,10 +19,9 @@ describe("FeilmeldingDialog", () => {
       { tittel: "tittel1", innhold: "innhold1" },
       { tittel: "tittel2", innhold: "innhold2" },
     ];
+    renderWithProviders(<FeilmeldingDialog {...props} />);
 
-    const feilmeldingDialog = shallow(<FeilmeldingDialog {...props} />);
-    const feilmeldinger = feilmeldingDialog.find("div.validering");
-
-    expect(feilmeldinger).toHaveLength(2);
+    expect(screen.getByText("tittel1")).toBeInTheDocument();
+    expect(screen.getByText("tittel2")).toBeInTheDocument();
   });
 });

@@ -6,7 +6,6 @@ describe("Dialogbokshenlegg", () => {
   const props = {
     ariaHideApp: false,
     avbryt: vi.fn(),
-    henleggHandle: vi.fn(),
   };
   const doNothing = vi.fn(() => null);
 

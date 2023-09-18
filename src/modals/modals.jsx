@@ -23,10 +23,8 @@ const Modals = ({
   lukkOppfriskModal,
   visHenleggDialog,
   skjulHenleggDialogHandle,
-  henleggHandle,
   visAvslagSoknadDialog,
   skjulAvslagSoknadDialogHandle,
-  avslaaSoknadHandle,
   visBekreftValgDialog,
 }) => (
   <Fragment>
@@ -38,10 +36,8 @@ const Modals = ({
         tilForsiden={skjulOppfriskModalOgNavigerTilForside}
       />
     )}
-    {visHenleggDialog && <DialogboksHenleggSak avbryt={skjulHenleggDialogHandle} henleggHandle={henleggHandle} />}
-    {visAvslagSoknadDialog && (
-      <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} avslaaSoknadHandle={avslaaSoknadHandle} />
-    )}
+    {visHenleggDialog && <DialogboksHenleggSak avbryt={skjulHenleggDialogHandle} />}
+    {visAvslagSoknadDialog && <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} />}
     {visBekreftValgDialog && <DialogboksBekreftValg />}
   </Fragment>
 );
@@ -54,10 +50,8 @@ Modals.propTypes = {
   lukkOppfriskModal: PT.func.isRequired,
   visHenleggDialog: PT.bool.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
-  henleggHandle: PT.func.isRequired,
   visAvslagSoknadDialog: PT.bool.isRequired,
   skjulAvslagSoknadDialogHandle: PT.func.isRequired,
-  avslaaSoknadHandle: PT.func.isRequired,
   visBekreftValgDialog: PT.bool.isRequired,
 };
 
