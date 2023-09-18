@@ -1,13 +1,12 @@
-import { shallow } from "enzyme";
-import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
-import JournalforingOppgave from "../../../../felleskomponenter/oppgaveliste/journalforingOppgave";
 import { JournalforingsOppgaver } from "./jornualforingoppgaver";
-import * as Nav from "../../../../navFrontend";
+import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+import { screen, within } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 
 describe("Journalføringsoppgaver", () => {
   const journalforing = [
     {
-      aktivTil: "2016-02-21",
+      aktivTil: "2019-01-01",
       ansvarligID: "Z991111",
       fnr: "28106600300",
       journalpostID: "DOK_3789",
@@ -15,9 +14,10 @@ describe("Journalføringsoppgaver", () => {
       prioritet: "HOY",
       sammensattNavn: "KAKE ARTIG",
       versjon: 1,
+      navn: "Navn 1",
     },
     {
-      aktivTil: "2016-02-20",
+      aktivTil: "2016-01-01",
       ansvarligID: "Z992222",
       fnr: "28106600300",
       journalpostID: "DOK_3789",
@@ -25,6 +25,7 @@ describe("Journalføringsoppgaver", () => {
       prioritet: "HOY",
       sammensattNavn: "KAKE ARTIG",
       versjon: 1,
+      navn: "Navn 2",
     },
   ];
 
@@ -33,26 +34,30 @@ describe("Journalføringsoppgaver", () => {
       journalforing,
     },
     landkoder: [],
+    dispatch: vi.fn(),
   };
 
-  it("viser en OppgaverMedSortering for journalføringsoppgaver", () => {
-    // @ts-ignore
-    const mineSaker = shallow(<JournalforingsOppgaver {...props} />);
-    const journalforingsOppgaver = mineSaker.find(SorterbarListe).first();
+  it("viser journalføringsoppgavene sortert etter aktivTil", () => {
+    renderWithProviders(
+      // Trenger en Router på toppnivå her siden vi bruker Link lengre ned.
+      <MemoryRouter>
+        <JournalforingsOppgaver {...props} />
+      </MemoryRouter>
+    );
 
-    const journalforingOppgaverProps = journalforingsOppgaver.props();
-    expect(journalforingOppgaverProps.component).toBe(JournalforingOppgave);
-    expect(journalforingOppgaverProps.elementer).toBe(props.mineSaker.journalforing);
+    const linker = screen.queryAllByRole("link");
+    expect(linker).toHaveLength(2);
+    expect(within(linker[0]).getByText("Navn 2")).toBeInTheDocument();
+    expect(within(linker[1]).getByText("Navn 1")).toBeInTheDocument();
   });
 
-  it("viser en melding dersom det ikke er noen journalføringsoppgaver eller behandlinger", () => {
+  it("viser en melding dersom det ikke er noen journalføringsoppgaver", () => {
     props.mineSaker = {
       journalforing: [],
     };
 
-    // @ts-ignore
-    const mineSaker = shallow(<JournalforingsOppgaver {...props} />);
-    const info = mineSaker.find(Nav.AlertStripeInfo);
-    expect(info).toHaveLength(1);
+    renderWithProviders(<JournalforingsOppgaver {...props} />);
+
+    expect(screen.getByText("Det er ingen journalføringsoppgaver på arbeidsbenken din")).toBeInTheDocument();
   });
 });
