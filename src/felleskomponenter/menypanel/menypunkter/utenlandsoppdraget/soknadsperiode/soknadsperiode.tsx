@@ -65,7 +65,10 @@ export const Soknadsperiode = ({ redigerbart, tittel, lagreSoknadOgOppfriskSakso
   };
 
   const avbryt = () => {
-    reset();
+    reset({
+      fom: soknadsperiodeFom,
+      tom: soknadsperiodeTom,
+    });
     skjulEndrePeriode();
   };
 
