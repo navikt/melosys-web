@@ -23,9 +23,9 @@ const OPPRETT = "Opprett ny sak";
 const { JOURNALFORING_VALUES: FormValuesJournalforing, OPPRETT_NY_SAK_VALUES: FormValuesOpprettNySak } = KV.Form;
 
 const FagsakVelger = (props) => {
-  const { fagsakListe, settJournalforingHensikt, landkoder, formValues, erOpprettNySak, nullstillFormVerdier } = props;
+  const { fagsakListe, settJournalforingHensikt, landkoder, formValues, erJournalføring, nullstillFormVerdier } = props;
   const [valgtVisning, setValgtVisning] = useState(EKSISTERENDE);
-  const feltNavn = erOpprettNySak ? FormValuesOpprettNySak : FormValuesJournalforing;
+  const feltNavn = !erJournalføring ? FormValuesOpprettNySak : FormValuesJournalforing;
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
 
@@ -44,7 +44,7 @@ const FagsakVelger = (props) => {
   }, [ingenSakerFinnes, valgtVisning]);
 
   const notifier = async (saksnummer) => {
-    if (settJournalforingHensikt && !erOpprettNySak) {
+    if (settJournalforingHensikt && erJournalføring) {
       const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
       await settJournalforingHensikt(hensikt);
     }
@@ -56,7 +56,7 @@ const FagsakVelger = (props) => {
       {
         value: sak.saksnummer,
         innhold: <EnkeltSak sak={sak} landkoder={landkoder} />,
-        footer: <KnyttTilSak sak={sak} erOpprettNySak={erOpprettNySak} feltNavn={feltNavn} formValues={formValues} />,
+        footer: <KnyttTilSak sak={sak} erJournalføring={erJournalføring} feltNavn={feltNavn} formValues={formValues} />,
       },
     ],
     []
@@ -110,12 +110,11 @@ FagsakVelger.propTypes = {
   settJournalforingHensikt: PT.func,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   formValues: PT.object.isRequired,
-  erOpprettNySak: PT.bool,
+  erJournalføring: PT.bool.isRequired,
   nullstillFormVerdier: PT.func,
 };
 
 FagsakVelger.defaultProps = {
-  erOpprettNySak: false,
   nullstillFormVerdier: undefined,
   settJournalforingHensikt: undefined,
 };

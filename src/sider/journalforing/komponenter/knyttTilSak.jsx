@@ -15,7 +15,7 @@ import * as Utils from "../../../utils";
 import "./knyttTilSak.css";
 
 export const KnyttTilSak = (props) => {
-  const { sak, erOpprettNySak, changeField, feltNavn, formValues } = props;
+  const { sak, erJournalføring, changeField, feltNavn, formValues } = props;
   const { behandlingstema, behandlingstype, journalforingGjelder, opprettBehandling } = {
     opprettBehandling: formValues[feltNavn.opprettBehandling],
     behandlingstema: formValues[feltNavn.behandlingstema],
@@ -30,7 +30,7 @@ export const KnyttTilSak = (props) => {
 
   useEffect(() => {
     return () => {
-      if (!erOpprettNySak) changeField(feltNavn.formNavn, "vurderDokument", undefined);
+      if (erJournalføring) changeField(feltNavn.formNavn, "vurderDokument", undefined);
       changeField(feltNavn.formNavn, feltNavn.opprettBehandling, undefined);
       changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
       changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
@@ -49,7 +49,7 @@ export const KnyttTilSak = (props) => {
     const kanOppretteAndregangsbehandling =
       sisteBehandlingKanOpprettesAndregangsbehandlingPå && !sakErHenlagtEllerBortfalt;
     changeField(feltNavn.formNavn, feltNavn.opprettBehandling, kanOppretteAndregangsbehandling);
-    if (!erOpprettNySak) {
+    if (erJournalføring) {
       const skalIkkeVurdereDokument = sisteBehandlingKanOpprettesAndregangsbehandlingPå || sakErHenlagtEllerBortfalt;
       changeField(feltNavn.formNavn, "vurderDokument", !skalIkkeVurdereDokument);
     }
@@ -106,7 +106,7 @@ export const KnyttTilSak = (props) => {
   if (sakErHenlagtEllerBortfalt) {
     return (
       <div className="knyttTilSak__behandlingspanel">
-        {erOpprettNySak ? (
+        {!erJournalføring ? (
           <Nav.AlertStripeAdvarsel className="feilmelding_innrykk">
             Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt i Melosys
           </Nav.AlertStripeAdvarsel>
@@ -123,7 +123,7 @@ export const KnyttTilSak = (props) => {
   if (sisteBehandlingKanOpprettesAndregangsbehandlingPå) {
     return (
       <div className="knyttTilSak__panelramme">
-        {!erOpprettNySak && (
+        {erJournalføring && (
           <>
             <Mui.Elementskrift
               tekst="Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet"
@@ -144,7 +144,7 @@ export const KnyttTilSak = (props) => {
         {opprettBehandling && (
           <div className="panelElement">
             <Nav.Typo.Undertittel className="temaTypeOverskrift">
-              {erOpprettNySak
+              {!erJournalføring
                 ? "Tidligere behandling er avsluttet. Velg behandlingstema og -type for den nye behandlingen"
                 : "Velg tema og type for ny behandling"}
             </Nav.Typo.Undertittel>
@@ -171,7 +171,7 @@ export const KnyttTilSak = (props) => {
 
   return (
     <div className="knyttTilSak__behandlingspanel">
-      {erOpprettNySak ? (
+      {!erJournalføring ? (
         <Nav.AlertStripeAdvarsel className="feilmelding_innrykk">
           Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
         </Nav.AlertStripeAdvarsel>
@@ -183,13 +183,10 @@ export const KnyttTilSak = (props) => {
 };
 KnyttTilSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
-  erOpprettNySak: PT.bool,
+  erJournalføring: PT.bool.isRequired,
   changeField: PT.func.isRequired,
   feltNavn: PT.object.isRequired,
   formValues: PT.object.isRequired,
-};
-KnyttTilSak.defaultProps = {
-  erOpprettNySak: false,
 };
 
 const mapDispatchToProps = (dispatch) => ({

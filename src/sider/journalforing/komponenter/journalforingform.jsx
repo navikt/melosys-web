@@ -110,6 +110,7 @@ export const JournalforingForm = ({
           tittel="Knytt til eksisterende sak eller opprett ny sak"
           innhold={
             <FagsakVelger
+              erJournalføring
               fagsakListe={fagsakListe}
               settJournalforingHensikt={settJournalforingHensikt}
               landkoder={landkoder}
