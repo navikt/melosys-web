@@ -1,115 +1,74 @@
-import { useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { RootState } from "AppTypes";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
+import { FieldValues, useForm } from "react-hook-form";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Utils from "../../../../../utils";
 import * as Nav from "../../../../../navFrontend";
 import * as Symboler from "../../symboler";
-import * as Hooks from "../../../../../hooks";
-
-import { Periode } from "../../../../../services/modules/mottatteOpplysninger/types";
+import * as Forms from "../../../../forms";
 import {
   mottatteOpplysningerOperations,
   mottatteOpplysningerSelectors,
 } from "../../../../../ducks/mottatteOpplysninger";
-import { formSelectors } from "../../../../../ducks/form";
+import Knapperad from "../../../../knapperad";
 
-import SoknadsperiodeEndring from "./soknadsperiodeEndring";
-
+import soknadsperiodeSchema from "./soknadsperiodeSchema";
 import "./soknadsperiode.css";
 
-const mapStateToProps = (state: RootState) => ({
-  soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).fom),
-  soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).tom),
-  soknadsperiodeFomErrors: formSelectors.SoknadsperiodeFomErrorsSelector(state),
-  soknadsperiodeTomErrors: formSelectors.SoknadsperiodeTomErrorsSelector(state),
-  behandlingHarLand: mottatteOpplysningerSelectors.HarLandSelector(state),
-});
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterPeriode: (periode: Periode) => dispatch(mottatteOpplysningerOperations.oppdaterPeriode(periode)),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type SoknadsperiodeProps = PropsFromRedux & {
+type SoknadsperiodeProps = {
   redigerbart: boolean;
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
   tittel: string;
 };
 
-export const Soknadsperiode = ({
-  redigerbart,
-  tittel,
-  soknadsperiodeFomErrors,
-  soknadsperiodeTomErrors,
-  lagreSoknadOgOppfriskSaksopplysninger,
-  behandlingHarLand,
-  ...props
-}: SoknadsperiodeProps) => {
+export const Soknadsperiode = ({ redigerbart, tittel, lagreSoknadOgOppfriskSaksopplysninger }: SoknadsperiodeProps) => {
+  const dispatch = useDispatch();
   const [erEndrePeriodeSynlig, setErEndrePeriodeSynlig] = useState(false);
-  const [soknadsperiodeFom, setSoknadsperiodeFom] = useState(props.soknadsperiodeFom);
-  const [soknadsperiodeTom, setSoknadsperiodeTom] = useState(props.soknadsperiodeTom);
-  const [soknadsperiodeGammelFom, setSoknadsperiodeGammelFom] = useState(props.soknadsperiodeFom);
-  const [soknadsperiodeGammelTom, setSoknadsperiodeGammelTom] = useState(props.soknadsperiodeTom);
-  const isMounted = Hooks.useIsMounted();
+  const behandlingHarLand = useSelector(mottatteOpplysningerSelectors.HarLandSelector);
+  const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
+  const soknadsperiodeFom = Utils.dato.formatterDatoTilNorsk(soknadsperiode?.fom, false, "");
+  const soknadsperiodeTom = Utils.dato.formatterDatoTilNorsk(soknadsperiode?.tom, false, "");
 
-  const oppdaterPeriode = (fom: string, tom: string) => {
-    props.oppdaterPeriode({
-      fom: fom ? Utils.dato.formatterDatoTilISO(fom) : "",
-      tom: tom ? Utils.dato.formatterDatoTilISO(tom) : "",
-    });
-  };
-
-  useEffect(() => {
-    return () => {
-      if (!isMounted.current) oppdaterPeriode(soknadsperiodeGammelFom, soknadsperiodeGammelTom);
-    };
-  }, [soknadsperiodeGammelFom, soknadsperiodeGammelTom]);
-
-  useEffect(() => {
-    oppdaterPeriode(soknadsperiodeFom, soknadsperiodeTom);
-  }, [soknadsperiodeFom, soknadsperiodeTom]);
+  const { control, watch, formState, reset } = useForm({
+    resolver: yupResolver(soknadsperiodeSchema),
+    mode: "all",
+    defaultValues: {
+      fom: soknadsperiodeFom,
+      tom: soknadsperiodeTom,
+    } as FieldValues,
+  });
+  const formValues = watch();
 
   const visEndrePeriode = () => setErEndrePeriodeSynlig(true);
-
   const skjulEndrePeriode = () => setErEndrePeriodeSynlig(false);
 
-  const resetLokalPeriode = () => {
-    setSoknadsperiodeFom(soknadsperiodeGammelFom);
-    setSoknadsperiodeTom(soknadsperiodeGammelTom);
-  };
-
-  const oppfriskSaksopplysingerVedLagre = async () => {
+  const skalOppfriskeSaksopplysninger = () => {
     const flytMedInngangsvilkår =
       window.location.pathname.indexOf(`${MKV.Koder.sakstyper.EU_EOS}/saksbehandling/`) > -1;
 
-    if (!behandlingHarLand && flytMedInngangsvilkår) {
-      skjulEndrePeriode();
-    } else {
-      // Todo: Denne er hacky. Bakgrunn: oppdatert soknad rekker ikke å re-propagate til parent før
-      // funksjonen nedenfor kalles. Vurder å skrive om til en async await-aktig løsning.
-      setTimeout(() => {
-        lagreSoknadOgOppfriskSaksopplysninger();
-        skjulEndrePeriode();
-      }, 0);
-    }
+    return behandlingHarLand || !flytMedInngangsvilkår;
   };
 
-  const lagre = () => {
-    oppdaterPeriode(soknadsperiodeFom, soknadsperiodeTom);
-    setSoknadsperiodeGammelFom(soknadsperiodeFom);
-    setSoknadsperiodeGammelTom(soknadsperiodeTom);
-    oppfriskSaksopplysingerVedLagre();
+  const lagre = async () => {
+    await dispatch(
+      mottatteOpplysningerOperations.oppdaterPeriode({
+        fom: Utils.dato.formatterDatoTilISO(formValues.fom, false, ""),
+        tom: Utils.dato.formatterDatoTilISO(formValues.tom, false, ""),
+      })
+    );
+    if (skalOppfriskeSaksopplysninger()) {
+      lagreSoknadOgOppfriskSaksopplysninger();
+    }
+    skjulEndrePeriode();
   };
 
   const avbryt = () => {
-    resetLokalPeriode();
+    reset({
+      fom: soknadsperiodeFom,
+      tom: soknadsperiodeTom,
+    });
     skjulEndrePeriode();
   };
 
@@ -129,19 +88,32 @@ export const Soknadsperiode = ({
         </div>
       )}
       {erEndrePeriodeSynlig && (
-        <SoknadsperiodeEndring
-          soknadsperiodeFom={soknadsperiodeFom}
-          soknadsperiodeTom={soknadsperiodeTom}
-          soknadsperiodeFomErrors={soknadsperiodeFomErrors}
-          soknadsperiodeTomErrors={soknadsperiodeTomErrors}
-          lagre={lagre}
-          setSoknadsperiodeFom={setSoknadsperiodeFom}
-          setSoknadsperiodeTom={setSoknadsperiodeTom}
-          avbryt={avbryt}
-        />
+        <Nav.Row>
+          <Nav.Column xs="12" className="endring__container">
+            <Forms.Datovelger name="fom" control={control} label="Fra og med" bredde="S" />
+            <Forms.Datovelger
+              name="tom"
+              control={control}
+              label="Til og med"
+              bredde="S"
+              minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
+            />
+          </Nav.Column>
+          <Nav.Column xs="12">
+            <Knapperad
+              capitalCase
+              avbryt={avbryt}
+              avbrytTekst="Avbryt"
+              bekreft={lagre}
+              bekreftTekst="Lagre"
+              redigerbart
+              bekreftRedigerbart={formState?.isValid}
+            />
+          </Nav.Column>
+        </Nav.Row>
       )}
     </div>
   );
 };
 
-export default connector(Soknadsperiode);
+export default Soknadsperiode;

@@ -1,6 +1,7 @@
-import { ReactNode, FocusEventHandler, useState } from "react";
+import { ChangeEvent, FocusEventHandler, ReactNode, useState } from "react";
 import classNames from "classnames";
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
+import * as Utils from "../../utils";
 import "./datovelger.css";
 import moment from "moment";
 
@@ -8,7 +9,7 @@ import { _uuid } from "../../utils";
 import { SKRIV_INN_GYLDIG_DATO } from "../../kodeverk/feilmeldinger";
 
 interface DatovelgerProps {
-  onChange: (nyDato: Date) => void;
+  onChange: (norskStringDato: string) => void;
   value?: Date;
   label?: ReactNode;
   disabled?: boolean;
@@ -18,6 +19,7 @@ interface DatovelgerProps {
   maxDate?: Date;
   onBlur?: FocusEventHandler;
   onCalendarClose?: () => void;
+  brukInternValidering?: boolean;
 }
 
 const Datovelger = ({
@@ -30,6 +32,7 @@ const Datovelger = ({
   minDate,
   maxDate,
   onBlur,
+  brukInternValidering = false,
 }: DatovelgerProps) => {
   const [erUgyldigDato, setErUgyldigDato] = useState<boolean>(false);
   const { datepickerProps, inputProps } = useDatepicker({
@@ -39,19 +42,25 @@ const Datovelger = ({
     defaultSelected: value,
     defaultMonth: minDate ?? value,
     openOnFocus: false,
-    onDateChange: (nyDato?: Date) => nyDato && onChange(nyDato),
+    onDateChange: (nyValgtDatoFraDatePicker?: Date) =>
+      onChange(Utils.dato.formatterDatoTilNorsk(nyValgtDatoFraDatePicker, false, undefined)),
     onValidate: (err) => {
-      if (err.isBefore || err.isAfter) {
+      if (!brukInternValidering) return;
+
+      if (err.isBefore || err.isAfter || err.isEmpty) {
         setErUgyldigDato(false);
-        return;
-      }
-      if (!err.isValidDate) {
-        setErUgyldigDato(true);
       } else {
-        setErUgyldigDato(false);
+        setErUgyldigDato(!err.isValidDate);
       }
     },
   });
+
+  const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (inputProps?.onChange) {
+      inputProps.onChange(event);
+    }
+    onChange(event.target.value);
+  };
 
   const datovelgerID = _uuid();
   return (
@@ -69,6 +78,7 @@ const Datovelger = ({
           size="small"
           onBlur={onBlur}
           disabled={disabled}
+          onChange={handleOnChange}
         />
       </DatePicker>
       {(feil || erUgyldigDato) && (

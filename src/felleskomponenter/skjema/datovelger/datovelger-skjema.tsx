@@ -31,15 +31,11 @@ function InnerDatovelgerComponent({
 
   const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(rest.meta) : undefined;
 
-  const onDatoChange = (nyDato: Date) => {
-    input.onChange(Utils.dateTilNorskString(nyDato));
-  };
-
   return (
     <div className="skjemaelement__datovelger" {...rest}>
       <Datovelger
         label={label}
-        onChange={onDatoChange}
+        onChange={input.onChange}
         onBlur={input.onBlur}
         value={Utils.norskStringTilDate(input.value)}
         feil={feil}
