@@ -25,7 +25,7 @@ const { JOURNALFORING_VALUES: FormValuesJournalforing, OPPRETT_NY_SAK_VALUES: Fo
 const FagsakVelger = (props) => {
   const { fagsakListe, settJournalforingHensikt, landkoder, formValues, erJournalføring, nullstillFormVerdier } = props;
   const [valgtVisning, setValgtVisning] = useState(EKSISTERENDE);
-  const feltNavn = !erJournalføring ? FormValuesOpprettNySak : FormValuesJournalforing;
+  const feltNavn = erJournalføring ? FormValuesJournalforing : FormValuesOpprettNySak;
   const dispatch = useDispatch();
   const ingenSakerFinnes = fagsakListe.length === 0;
 
@@ -44,7 +44,7 @@ const FagsakVelger = (props) => {
   }, [ingenSakerFinnes, valgtVisning]);
 
   const notifier = async (saksnummer) => {
-    if (settJournalforingHensikt && erJournalføring) {
+    if (erJournalføring && settJournalforingHensikt) {
       const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
       await settJournalforingHensikt(hensikt);
     }

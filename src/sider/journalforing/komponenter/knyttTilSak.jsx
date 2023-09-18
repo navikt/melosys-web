@@ -106,15 +106,15 @@ export const KnyttTilSak = (props) => {
   if (sakErHenlagtEllerBortfalt) {
     return (
       <div className="knyttTilSak__behandlingspanel">
-        {!erJournalføring ? (
-          <Nav.AlertStripeAdvarsel className="feilmelding_innrykk">
-            Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt i Melosys
-          </Nav.AlertStripeAdvarsel>
-        ) : (
+        {erJournalføring ? (
           <Nav.AlertStripeInfo className="feilmelding_innrykk">
             Du kan ikke opprette en ny behandling på en eksisterende sak som er henlagt/bortfalt i Melosys, men du kan
             knytte dokumentet til den avsluttede behandlingen
           </Nav.AlertStripeInfo>
+        ) : (
+          <Nav.AlertStripeAdvarsel className="feilmelding_innrykk">
+            Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt i Melosys
+          </Nav.AlertStripeAdvarsel>
         )}
       </div>
     );
@@ -144,9 +144,9 @@ export const KnyttTilSak = (props) => {
         {opprettBehandling && (
           <div className="panelElement">
             <Nav.Typo.Undertittel className="temaTypeOverskrift">
-              {!erJournalføring
-                ? "Tidligere behandling er avsluttet. Velg behandlingstema og -type for den nye behandlingen"
-                : "Velg tema og type for ny behandling"}
+              {erJournalføring
+                ? "Velg tema og type for ny behandling"
+                : "Tidligere behandling er avsluttet. Velg behandlingstema og -type for den nye behandlingen"}
             </Nav.Typo.Undertittel>
             <Skjema.Select
               feltNavn={feltNavn.behandlingstema}
@@ -171,12 +171,12 @@ export const KnyttTilSak = (props) => {
 
   return (
     <div className="knyttTilSak__behandlingspanel">
-      {!erJournalføring ? (
+      {erJournalføring ? (
+        <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />
+      ) : (
         <Nav.AlertStripeAdvarsel className="feilmelding_innrykk">
           Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
         </Nav.AlertStripeAdvarsel>
-      ) : (
-        <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />
       )}
     </div>
   );
