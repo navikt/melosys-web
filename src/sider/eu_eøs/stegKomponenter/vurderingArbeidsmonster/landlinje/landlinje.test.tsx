@@ -1,6 +1,5 @@
 import LandLinje from "./landlinje";
 import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
-import { expect } from "vitest";
 import { screen } from "@testing-library/react";
 
 describe("LandLinje", () => {

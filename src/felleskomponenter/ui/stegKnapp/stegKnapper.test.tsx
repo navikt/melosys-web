@@ -2,7 +2,6 @@ import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
 import StegKnapper from "./stegKnapper";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
-import { expect } from "vitest";
 import { screen, within } from "@testing-library/react";
 
 describe("stegKnapper", () => {
