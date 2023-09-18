@@ -8,7 +8,7 @@ import * as Utils from "../../../../../utils";
 import * as MPT from "../../../../../proptypes";
 
 import Stegvelger, { STEG } from "../../../../../felleskomponenter/stegvelger";
-import { AvslaattSoknad, HenlagtSak } from "../stegErstatter";
+import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../stegErstatter";
 import { SoknadMenypanelForm } from "../../../../../felleskomponenter/menypanelForm";
 
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
@@ -41,7 +41,7 @@ const Saksopplysninger = ({
   behandlingID,
   soknadForm,
   mottatteOpplysninger,
-  behandlingsresultat,
+  behandlingsresultatType,
   fagsakStatusKode,
   tilForsiden,
   lagreVilkarHandler,
@@ -59,15 +59,13 @@ const Saksopplysninger = ({
   }
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const erAvslaattSoknad =
-    behandlingsresultat.behandlingsresultatTypeKode ===
-      MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL && !erNyVurdering;
-  const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
+  const erAvslåttPgaManglendeOpplysninger =
+    behandlingsresultatType === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+  const visAvslåttPgaManglendeOpplysninger = erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
   const mottatteOpplysningerErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(mottatteOpplysninger).length === 0
   );
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
+  const visStegVelger = !erHenlagtSak && !erAvslåttPgaManglendeOpplysninger && mottatteOpplysningerErKlart;
   const forsteSteg = hentForsteSteg(behandlingstype);
 
   const visOppdaterRegisteropplysninger =
@@ -75,8 +73,8 @@ const Saksopplysninger = ({
 
   return (
     <Fragment>
-      {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
-      {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
+      {erHenlagtSak && <HenlagtSak />}
+      {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
       {visStegVelger && (
         <Stegvelger
           behandlingID={behandlingID}
@@ -105,7 +103,7 @@ Saksopplysninger.propTypes = {
   redigerbart: PT.bool,
   behandlingID: PT.number.isRequired,
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
-  behandlingsresultat: MPT.Behandlingsresultat.isRequired,
+  behandlingsresultatType: PT.string.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   match: PT.object.isRequired,
   sendMottatteOpplysninger: PT.func.isRequired,
@@ -137,7 +135,7 @@ const mapStateToProps = (state) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
-  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
+  behandlingsresultatType: behandlingsresultatSelectors.BehandlingsresultatTypeSelector(state),
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),

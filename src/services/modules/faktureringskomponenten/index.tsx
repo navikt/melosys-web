@@ -1,3 +1,3 @@
-import { hentFakturaserier, hentFakturainfo } from "./fakturainformasjon";
+import { hentFakturaserier, hentFakturainfo, hentFakturaserie } from "./fakturainformasjon";
 
-export { hentFakturaserier, hentFakturainfo };
+export { hentFakturaserier, hentFakturainfo, hentFakturaserie };

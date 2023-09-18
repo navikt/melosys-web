@@ -5,7 +5,6 @@ import { DialogboksAvslagSoknad } from "./dialogboksAvslagSoknad";
 describe("DialogboksAvslagSoknad", () => {
   const props = {
     avbryt: vi.fn(),
-    avslaaSoknadHandle: vi.fn(),
     ariaHideApp: false,
     redigerbart: true,
     behandlingID: 1,

@@ -1,9 +1,8 @@
 import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
-import { shallow } from "enzyme";
-
-import * as Nav from "../../../navFrontend";
 import StegKnapper from "./stegKnapper";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+import { screen, within } from "@testing-library/react";
 
 describe("stegKnapper", () => {
   const mockedProps = mock<ComponentProps<typeof StegKnapper>>();
@@ -16,23 +15,21 @@ describe("stegKnapper", () => {
 
   it("viser ikke tilbake-knapp når tilbakeknappProps er undefined", () => {
     props.tilbakeKnappProps = undefined;
-    const stegKnapper = shallow(<StegKnapper {...props} />);
 
-    const bekreftKnapp = stegKnapper.find(Nav.Hovedknapp);
-    const tilbakeKnapp = stegKnapper.find(Nav.Flatknapp);
+    renderWithProviders(<StegKnapper {...props} />);
 
-    expect(bekreftKnapp).toHaveLength(1);
-    expect(tilbakeKnapp).toHaveLength(0);
+    const knapper = screen.queryAllByRole("button");
+    expect(knapper).toHaveLength(1);
+    expect(within(knapper[0]).getByText("Bekreft og fortsett")).toBeInTheDocument();
   });
 
   it("viser tilbake-knapp når tilbakeknappProps er definert", () => {
     props.tilbakeKnappProps = { onClick: vi.fn() };
-    const stegKnapper = shallow(<StegKnapper {...props} />);
+    renderWithProviders(<StegKnapper {...props} />);
 
-    const bekreftKnapp = stegKnapper.find(Nav.Hovedknapp);
-    const tilbakeKnapp = stegKnapper.find(Nav.Flatknapp);
-
-    expect(bekreftKnapp).toHaveLength(1);
-    expect(tilbakeKnapp).toHaveLength(1);
+    const knapper = screen.queryAllByRole("button");
+    expect(knapper).toHaveLength(2);
+    expect(within(knapper[0]).getByText("Bekreft og fortsett")).toBeInTheDocument();
+    expect(within(knapper[1]).getByText("Tilbake")).toBeInTheDocument();
   });
 });

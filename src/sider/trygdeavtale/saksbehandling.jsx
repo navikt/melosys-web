@@ -9,7 +9,7 @@ import * as Utils from "../../utils";
 
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog";
-import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
+import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
@@ -17,7 +17,7 @@ import { VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
-import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
+import { behandlingerOperations } from "../../ducks/behandlinger";
 import { dokumenterOperations } from "../../ducks/dokumenter";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
@@ -31,13 +31,12 @@ import "./saksbehandling.css";
 
 const Saksbehandling = ({
   arbeidsland,
-  behandlingstype,
   hovedpartRolle,
   behandlingOppfriskes,
   mottatteOpplysninger,
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
-  behandlingsresultat,
+  behandlingsresultatType,
   fagsakStatusKode,
   hentBehandling,
   hentMottatteOpplysninger,
@@ -120,15 +119,13 @@ const Saksbehandling = ({
   if (!saksopplysningerLastet) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const erAvslaattSoknad =
-    behandlingsresultat.behandlingsresultatTypeKode ===
-      MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL && !erNyVurdering;
-  const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
+  const erAvslåttPgaManglendeOpplysninger =
+    behandlingsresultatType === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+  const visAvslåttPgaManglendeOpplysninger = erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
   const mottatteOpplysningerErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(mottatteOpplysninger).length === 0
   );
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
+  const visStegVelger = !erHenlagtSak && !erAvslåttPgaManglendeOpplysninger && mottatteOpplysningerErKlart;
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
@@ -142,8 +139,8 @@ const Saksbehandling = ({
               <Nav.Column xs="7">
                 {!hovedpartErVirksomhet ? (
                   <>
-                    {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
-                    {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
+                    {erHenlagtSak && <HenlagtSak />}
+                    {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
                     {visStegVelger && <Stegvelger />}
                     <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
                   </>
@@ -172,12 +169,11 @@ const Saksbehandling = ({
 
 Saksbehandling.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
-  behandlingstype: PT.string.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   mottatteOpplysninger: MPT.MottatteOpplysninger,
   mottatteOpplysningerPeriodeFom: PT.string.isRequired,
   mottatteOpplysningerPeriodeTom: PT.string.isRequired,
-  behandlingsresultat: MPT.Behandlingsresultat.isRequired,
+  behandlingsresultatType: PT.string.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   hovedpartRolle: PT.string.isRequired,
   location: PT.object.isRequired,
@@ -209,7 +205,6 @@ Saksbehandling.defaultProps = {
 const mapStateToProps = (state) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandKTSelector(state),
   hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeSelector(state).fom
@@ -217,7 +212,7 @@ const mapStateToProps = (state) => ({
   mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeSelector(state).tom
   ),
-  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
+  behandlingsresultatType: behandlingsresultatSelectors.BehandlingsresultatTypeSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
