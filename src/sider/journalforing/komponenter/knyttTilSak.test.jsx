@@ -1,10 +1,16 @@
-import * as Skjema from "../../../felleskomponenter/skjema";
 import { JOURNALFORING_VALUES } from "../../../kodeverk/form";
-
 import MKV from "../../../melosyskodeverk";
-
 import { KnyttTilSak } from "./knyttTilSak";
+import { renderWithProviders } from "~/ducks/test-utils/renderWithProviders";
+import { screen, within } from "@testing-library/react";
+import { reduxForm } from "redux-form";
 
+vi.mock("../../../services/modules/anmodningsperioder", () => ({
+  hent: () => Promise.resolve([]),
+}));
+vi.mock("../../../services/modules/lovligekombinasjoner", () => ({
+  hentBehandlingstemaer: () => Promise.resolve([]),
+}));
 describe("KnyttTilSak", () => {
   let props = null;
 
@@ -24,6 +30,7 @@ describe("KnyttTilSak", () => {
           {
             behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET },
             behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG },
+            behandlingstema: { kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV },
           },
         ],
       },
@@ -40,21 +47,24 @@ describe("KnyttTilSak", () => {
       behandlingstema: "",
       behandlingstype: "",
       changeField: vi.fn(),
+      erJournalføring: true,
     };
   });
+
+  const WrappedKnyttTilSak = reduxForm({ form: "test" })(KnyttTilSak);
 
   it(`Vis komponent for knytte til eksisterende sak komponent og knapper for å opprette ny behandling dersom siste behandling er inaktiv`, () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET };
 
-    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
-    const knyttTilEksisterendeSakKomponent = knyttTilSak.find(".knyttTilSak__panelramme");
+    renderWithProviders(<WrappedKnyttTilSak {...props} />);
 
-    expect(knyttTilEksisterendeSakKomponent).toHaveLength(1);
-
-    const radios = knyttTilEksisterendeSakKomponent.find(Skjema.Radio);
-
-    expect(radios).toHaveLength(2);
-    expect(radios.first().props().label).toBe("Opprett ny behandling");
+    expect(
+      screen.getByText("Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet")
+    ).toBeInTheDocument();
+    const radiogruppe = screen.getByRole("group");
+    expect(radiogruppe).toBeInTheDocument();
+    expect(within(radiogruppe).queryAllByRole("radio")).toHaveLength(2);
+    expect(within(radiogruppe).getByLabelText("Opprett ny behandling")).toBeInTheDocument();
   });
 
   it(`Ikke vis knytt til eksisterende sak komponent dersom siste behandling er aktiv`, () => {
@@ -62,60 +72,48 @@ describe("KnyttTilSak", () => {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
 
-    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
-    const knyttTilEksisterendeSakKomponent = knyttTilSak.find(".knyttTilSak__panelramme");
+    renderWithProviders(<WrappedKnyttTilSak {...props} />);
 
-    expect(knyttTilEksisterendeSakKomponent).toHaveLength(0);
+    expect(screen.queryByText("Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet")).toBeNull();
+    expect(screen.queryByRole("group")).toBeNull();
   });
 
   it(`Ikke vis knytt til eksisterende sak komponent dersom status er henlagt`, () => {
     props.sak.saksstatus.kode = MKV.Koder.saksstatuser.HENLAGT;
+    props.erJournalføring = false;
 
-    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
-    const knyttTilEksisterendeSakKomponent = knyttTilSak.find(".knyttTilSak__panelramme");
+    renderWithProviders(<WrappedKnyttTilSak {...props} />);
 
-    expect(knyttTilEksisterendeSakKomponent).toHaveLength(0);
+    expect(screen.queryByText("Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet")).toBeNull();
+    expect(screen.queryByRole("group")).toBeNull();
+    const henlagtTekst = "Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt i Melosys";
+    expect(screen.getByText(henlagtTekst)).toBeInTheDocument();
   });
 
-  it(`Vis journalfør uten videre behandling dersom saktype er EØS`, () => {
+  it(`Vis vurder dokument dersom man er i journalføring-kontekst`, () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
-    props.sak.sakstype.kode = MKV.Koder.sakstyper.EU_EOS;
+    props.erJournalføring = true;
 
-    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+    renderWithProviders(<WrappedKnyttTilSak {...props} />);
 
-    const checkbox = knyttTilSak.find(Skjema.Checkbox);
-
-    expect(checkbox).toHaveLength(1);
-    expect(checkbox.first().props().label).toBe(`Oppdater behandlingsstatus til "Vurder dokument"`);
+    expect(screen.getByRole("checkbox")).toBeInTheDocument();
+    expect(screen.getByText(`Oppdater behandlingsstatus til "Vurder dokument"`)).toBeInTheDocument();
   });
 
-  it(`Vis journalfør uten videre behandling dersom saktype er FTRL`, () => {
+  it(`Ikke vis vurder dokument dersom man er i opprett ny sak/behandling-kontekst`, () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
-    props.sak.sakstype.kode = MKV.Koder.sakstyper.FTRL;
+    props.erJournalføring = false;
 
-    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
+    renderWithProviders(<WrappedKnyttTilSak {...props} />);
 
-    const checkbox = knyttTilSak.find(Skjema.Checkbox);
-
-    expect(checkbox).toHaveLength(1);
-    expect(checkbox.first().props().label).toBe(`Oppdater behandlingsstatus til "Vurder dokument"`);
-  });
-
-  it(`Vis journalfør uten videre behandling dersom saktype er TRYGDEAVTALE`, () => {
-    props.sak.behandlingOversikter[0].behandlingsstatus = {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    };
-    props.sak.sakstype.kode = MKV.Koder.sakstyper.TRYGDEAVTALE;
-
-    const knyttTilSak = shallow(<KnyttTilSak {...props} />);
-
-    const checkbox = knyttTilSak.find(Skjema.Checkbox);
-
-    expect(checkbox).toHaveLength(1);
-    expect(checkbox.first().props().label).toBe(`Oppdater behandlingsstatus til "Vurder dokument"`);
+    expect(screen.queryByRole("checkbox")).toBeNull();
+    expect(screen.queryByText(`Oppdater behandlingsstatus til "Vurder dokument"`)).toBeNull();
+    expect(
+      screen.getByText("Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling")
+    ).toBeInTheDocument();
   });
 });
