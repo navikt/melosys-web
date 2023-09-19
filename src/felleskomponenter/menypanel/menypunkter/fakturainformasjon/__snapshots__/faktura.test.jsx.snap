@@ -2,116 +2,172 @@
 
 exports[`Faktura > snapshot test 1`] = `
 <div>
-  <div
-    class="fakturaseksjon"
+  <tr
+    class="navds-table__row navds-table__expandable-row navds-table__row--shade-on-hover"
   >
-    <div
-      class="headerseksjon"
+    <td
+      class="navds-table__data-cell navds-table__toggle-expand-cell navds-body-short"
     >
-      <dl
-        class="oppsummering_verdi_par"
+      <button
+        aria-controls="aksel-id-1"
+        aria-expanded="false"
+        class="navds-table__toggle-expand-button"
+        type="button"
       >
-        <dt
-          class="nokkel"
+        <svg
+          aria-labelledby="title-aksel-icon-1"
+          class="navds-table__expandable-icon"
+          fill="none"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          Faktura id: 
-        </dt>
-        <dd>
-          1
-        </dd>
-      </dl>
-      <dl
-        class="oppsummering_verdi_par"
-      >
-        <dt
-          class="nokkel"
-        >
-          Dato bestilt: 
-        </dt>
-        <dd>
-          2023-08-24
-        </dd>
-      </dl>
-      <dl
-        class="oppsummering_verdi_par"
-      >
-        <dt
-          class="nokkel"
-        >
-          Periode fra: 
-        </dt>
-        <dd>
-          01.04.2023
-        </dd>
-      </dl>
-      <dl
-        class="oppsummering_verdi_par"
-      >
-        <dt
-          class="nokkel"
-        >
-          Periode til: 
-        </dt>
-        <dd>
-          31.08.2023
-        </dd>
-      </dl>
-      <dl
-        class="oppsummering_verdi_par"
-      >
-        <dt
-          class="nokkel"
-        >
-          Status: 
-        </dt>
-        <dd>
-          BESTILLT
-        </dd>
-      </dl>
-    </div>
-    <br />
-    <br />
-    <br />
-    <div
-      class="row header"
+          <title
+            id="title-aksel-icon-1"
+          >
+            Vis mer
+          </title>
+          <path
+            clip-rule="evenodd"
+            d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
+            fill="currentColor"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </td>
+    <td
+      class="navds-table__data-cell navds-body-short"
+    >
+      2023-08-24
+    </td>
+    <td
+      class="navds-table__data-cell navds-body-short"
+    >
+      2/23
+    </td>
+    <td
+      class="navds-table__data-cell navds-body-short"
     >
       <div
-        class="col col-xs-2"
-      >
-        Periode fra
-      </div>
-      <div
-        class="col col-xs-2"
-      >
-        Periode til
-      </div>
-      <div
-        class="col col-xs-6"
-      >
-        Beskrivelse
-      </div>
-      <div
-        class="col col-xs-2"
-      >
-        Beløp
-      </div>
-    </div>
-    <div
-      class="row"
-    >
-      <div
-        class="col col-xs-9"
+        class="faktura_status_wrapper"
       />
+    </td>
+    <td
+      class="navds-table__data-cell navds-body-short"
+    >
+      -
+    </td>
+  </tr>
+  <tr
+    aria-hidden="true"
+    class="navds-table__expanded-row"
+    id="aksel-id-1"
+  >
+    <td
+      class="navds-table__expanded-row-cell"
+      colspan="999"
+    >
       <div
-        class="col col-xs-1"
+        class="navds-table__expanded-row-collapse"
+        style="height: 0px; overflow: hidden;"
       >
-        <p
-          class="typo-element"
+        <div
+          aria-hidden="true"
+          class="navds-table__expanded-row-content"
+          style="display: none;"
         >
-          Totalbeløp
-        </p>
+          <div
+            class="fakturalinje"
+          >
+            <div
+              class="fakturanr_wrapper"
+            >
+              Fakturanr: 
+              <span
+                class="kopierbar-tekst"
+              >
+                
+                <span
+                  class="kopierbar-tekst__container"
+                >
+                  <button
+                    type="button"
+                  >
+                    1
+                    <svg
+                      class="kopierbar-tekst__kopier-ikon"
+                      fill="none"
+                      height="21"
+                      viewBox="0 0 18 21"
+                      width="18"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M1 20.1729V5.51123H11.1504V20.1729H1Z"
+                        fill-rule="evenodd"
+                        stroke="#3E3832"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                      />
+                      <path
+                        d="M6.63904 3.19925V1H16.7894V15.6617H14.2518"
+                        stroke="#3E3832"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                      />
+                    </svg>
+                  </button>
+                </span>
+              </span>
+            </div>
+            <table
+              class="navds-table navds-table--medium"
+            >
+              <thead
+                class="navds-table__header"
+              >
+                <tr
+                  class="navds-table__row"
+                >
+                  <th
+                    class="navds-table__header-cell navds-label"
+                    scope="col"
+                  />
+                  <th
+                    class="navds-table__header-cell navds-label"
+                    scope="col"
+                  >
+                    Antall
+                  </th>
+                  <th
+                    class="navds-table__header-cell navds-label"
+                    scope="col"
+                  >
+                    Enhetspris
+                  </th>
+                  <th
+                    class="navds-table__header-cell navds-label"
+                    scope="col"
+                  >
+                    Beløp
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                class="navds-table__body"
+              />
+            </table>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    </td>
+  </tr>
 </div>
 `;

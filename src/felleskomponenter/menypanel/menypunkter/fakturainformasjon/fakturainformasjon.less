@@ -30,4 +30,43 @@
       }
     }
   }
+
+  .fakturanr_wrapper {
+    flex-direction: row;
+    display: flex;
+  }
+
+  .faktura_status_wrapper {
+    flex-direction: row;
+    display: flex;
+    align-items: center;
+    .dott {
+      height: 8px;
+      width: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+
+      &.red {
+        background-color: #d0021b;
+      }
+
+      &.green {
+        background-color: #006a23;
+      }
+    }
+  }
+
+  .navds-table__expandable-row--open {
+    background-color: #f1f1f1;
+  }
+
+  .navds-table__expanded-row-collapse {
+    background-color: #f1f1f1;
+  }
+
+  .fakturalinje {
+    .uten-border {
+      border-bottom: 0px;
+    }
+  }
 }
