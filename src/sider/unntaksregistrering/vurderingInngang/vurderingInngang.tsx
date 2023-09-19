@@ -59,8 +59,8 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
 
   const skalHenteRegisteropplysninger =
     !registeropplysningerHentet ||
-    formValues?.fom !== initialValues?.fom ||
-    formValues?.tom !== initialValues?.tom ||
+    !Utils.dato.erLikeISODatoer(formValues?.fom, initialValues?.fom) ||
+    !Utils.dato.erLikeISODatoer(formValues?.tom, initialValues?.tom) ||
     formValues?.avsenderland !== initialValues?.avsenderland ||
     formValues?.lovvalgsland !== initialValues?.lovvalgsland;
 

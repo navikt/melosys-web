@@ -145,6 +145,10 @@ function erLike(datoEn, datoTo) {
   return moment(datoEn).isSame(datoTo);
 }
 
+function erLikeISODatoer(datoEn, datoTo) {
+  return erLike(formatterDatoTilISO(datoEn, false, datoEn), formatterDatoTilISO(datoTo, false, datoTo));
+}
+
 function plussEnDag(dato) {
   return moment(dato, "DD.MM.YYYY").add(1, "days").format("DD.MM.YYYY");
 }
@@ -219,6 +223,7 @@ export {
   erGyldigPeriode,
   erIPeriode,
   erLike,
+  erLikeISODatoer,
   plussEnDag,
   norskStringTilDate,
   isoStringTilDate,
