@@ -5,10 +5,8 @@ import PT from "prop-types";
 
 import { MKVUtils } from "../../../melosyskodeverk";
 import * as MPT from "../../../proptypes";
-import * as Ikoner from "../../../resources/images";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
-import * as Mui from "../../../felleskomponenter/ui";
 import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 
@@ -42,18 +40,30 @@ export const KnyttTilSak = (props) => {
   );
   const sakErHenlagtEllerBortfalt = MKVUtils.erHenlagtEllerHenlagtBortfalt(sak.saksstatus.kode);
 
+  const sisteBehandlingErPågåendeArtikkel16Sak =
+    sisteBehandlingHarSendtAnmodningUnntakTilUtland && !sisteBehandlingErInaktiv;
+
   const sisteBehandlingKanOpprettesAndregangsbehandlingPå =
-    sisteBehandlingErInaktiv || sisteBehandlingHarSendtAnmodningUnntakTilUtland;
+    sisteBehandlingErInaktiv || sisteBehandlingErPågåendeArtikkel16Sak;
 
   useEffect(() => {
-    const kanOppretteAndregangsbehandling =
-      sisteBehandlingKanOpprettesAndregangsbehandlingPå && !sakErHenlagtEllerBortfalt;
-    changeField(feltNavn.formNavn, feltNavn.opprettBehandling, kanOppretteAndregangsbehandling);
+    if (sisteBehandlingErPågåendeArtikkel16Sak && erJournalføring) {
+      changeField(feltNavn.formNavn, feltNavn.opprettBehandling, undefined);
+    } else {
+      const kanOppretteAndregangsbehandling =
+        sisteBehandlingKanOpprettesAndregangsbehandlingPå && !sakErHenlagtEllerBortfalt;
+      changeField(feltNavn.formNavn, feltNavn.opprettBehandling, kanOppretteAndregangsbehandling);
+    }
+
     if (erJournalføring) {
       const skalIkkeVurdereDokument = sisteBehandlingKanOpprettesAndregangsbehandlingPå || sakErHenlagtEllerBortfalt;
       changeField(feltNavn.formNavn, "vurderDokument", !skalIkkeVurdereDokument);
     }
-  }, [sisteBehandlingKanOpprettesAndregangsbehandlingPå, sakErHenlagtEllerBortfalt]);
+  }, [
+    sisteBehandlingKanOpprettesAndregangsbehandlingPå,
+    sakErHenlagtEllerBortfalt,
+    sisteBehandlingErPågåendeArtikkel16Sak,
+  ]);
 
   useEffect(() => {
     const erAnmodningsperiodeSendt = (anmodningsperiode) => anmodningsperiode.sendtUtland;
@@ -123,30 +133,29 @@ export const KnyttTilSak = (props) => {
   if (sisteBehandlingKanOpprettesAndregangsbehandlingPå) {
     return (
       <div className="knyttTilSak__panelramme">
+        {sisteBehandlingErPågåendeArtikkel16Sak ? (
+          <Nav.AlertStripeAdvarsel className="anmodningSvarSendt">
+            Hvis du har mottatt svar på anmodning om unntak skal du <b>ikke</b> opprette en ny behandling.
+          </Nav.AlertStripeAdvarsel>
+        ) : (
+          <Nav.AlertStripeInfo className="tidligereBehandlingAvsluttet">
+            Tidligere behandling er avsluttet.
+          </Nav.AlertStripeInfo>
+        )}
         {erJournalføring && (
-          <>
-            <Mui.Elementskrift
-              tekst="Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet"
-              ikon={Ikoner.InformationCircle}
-              className="elementTittel oversteUndertittel"
-              style={{ "border-bottom": "none" }}
-            />
-            <Skjema.RadioGruppe
-              feltNavn="opprettBehandling"
-              label=""
-              className="panelElement nyBehandling-utenBehandling"
-            >
-              <Skjema.Radio feltNavn={feltNavn.opprettBehandling} value label="Opprett ny behandling" />
-              <Skjema.Radio feltNavn={feltNavn.opprettBehandling} value={false} label="Uten å opprette behandling" />
-            </Skjema.RadioGruppe>
-          </>
+          <Skjema.RadioGruppe
+            feltNavn="opprettBehandling"
+            label={<Nav.Typo.Undertittel>Velg hva du vil gjøre med dokumentet</Nav.Typo.Undertittel>}
+            className="panelElement nyBehandlingEllerUtenBehandling"
+          >
+            <Skjema.Radio feltNavn={feltNavn.opprettBehandling} value label="Opprett ny behandling" />
+            <Skjema.Radio feltNavn={feltNavn.opprettBehandling} value={false} label="Uten å opprette behandling" />
+          </Skjema.RadioGruppe>
         )}
         {opprettBehandling && (
           <div className="panelElement">
             <Nav.Typo.Undertittel className="temaTypeOverskrift">
-              {erJournalføring
-                ? "Velg tema og type for ny behandling"
-                : "Tidligere behandling er avsluttet. Velg behandlingstema og -type for den nye behandlingen"}
+              Velg tema og type for ny behandling
             </Nav.Typo.Undertittel>
             <Skjema.Select
               feltNavn={feltNavn.behandlingstema}
