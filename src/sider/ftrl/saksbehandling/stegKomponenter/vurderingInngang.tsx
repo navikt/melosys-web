@@ -63,8 +63,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   const skalHenteRegisteropplysninger =
     !registeropplysningerHentet ||
-    !Utils.dato.erLikeISODatoer(formValues.fom, initialValues.fom) ||
-    !Utils.dato.erLikeISODatoer(formValues.tom, initialValues.tom) ||
+    !Utils.dato.erLikeDatoer(formValues.fom, initialValues.fom) ||
+    !Utils.dato.erLikeDatoer(formValues.tom, initialValues.tom) ||
     formValues.land !== initialValues.land ||
     formValues.trygdedekning !== initialValues.trygdedekning;
 
