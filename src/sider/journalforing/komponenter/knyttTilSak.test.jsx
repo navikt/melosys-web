@@ -1,12 +1,17 @@
 import { JOURNALFORING_VALUES } from "../../../kodeverk/form";
 import MKV from "../../../melosyskodeverk";
 import { KnyttTilSak } from "./knyttTilSak";
-import { renderWithProviders } from "~/ducks/test-utils/renderWithProviders";
-import { screen, within } from "@testing-library/react";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+import { screen, waitFor, within } from "@testing-library/react";
 import { reduxForm } from "redux-form";
 
+const mocks = vi.hoisted(() => {
+  return {
+    hent: vi.fn(),
+  };
+});
 vi.mock("../../../services/modules/anmodningsperioder", () => ({
-  hent: () => Promise.resolve([]),
+  hent: () => Promise.resolve(mocks.hent()),
 }));
 vi.mock("../../../services/modules/lovligekombinasjoner", () => ({
   hentBehandlingstemaer: () => Promise.resolve([]),
@@ -49,6 +54,7 @@ describe("KnyttTilSak", () => {
       changeField: vi.fn(),
       erJournalføring: true,
     };
+    mocks.hent.mockReset();
   });
 
   const WrappedKnyttTilSak = reduxForm({ form: "test" })(KnyttTilSak);
@@ -58,9 +64,8 @@ describe("KnyttTilSak", () => {
 
     renderWithProviders(<WrappedKnyttTilSak {...props} />);
 
-    expect(
-      screen.getByText("Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet")
-    ).toBeInTheDocument();
+    expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
+    expect(screen.getByText("Velg hva du vil gjøre med dokumentet")).toBeInTheDocument();
     const radiogruppe = screen.getByRole("group");
     expect(radiogruppe).toBeInTheDocument();
     expect(within(radiogruppe).queryAllByRole("radio")).toHaveLength(2);
@@ -74,7 +79,7 @@ describe("KnyttTilSak", () => {
 
     renderWithProviders(<WrappedKnyttTilSak {...props} />);
 
-    expect(screen.queryByText("Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet")).toBeNull();
+    expect(screen.queryByText("Velg hva du vil gjøre med dokumentet")).toBeNull();
     expect(screen.queryByRole("group")).toBeNull();
   });
 
@@ -84,10 +89,9 @@ describe("KnyttTilSak", () => {
 
     renderWithProviders(<WrappedKnyttTilSak {...props} />);
 
-    expect(screen.queryByText("Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet")).toBeNull();
+    expect(screen.queryByText("Velg hva du vil gjøre med dokumentet")).toBeNull();
     expect(screen.queryByRole("group")).toBeNull();
-    const henlagtTekst = "Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt i Melosys";
-    expect(screen.getByText(henlagtTekst)).toBeInTheDocument();
+    expect(screen.getByText(/Du kan ikke opprette en ny behandling/i)).toBeInTheDocument();
   });
 
   it(`Vis vurder dokument dersom man er i journalføring-kontekst`, () => {
@@ -112,8 +116,29 @@ describe("KnyttTilSak", () => {
 
     expect(screen.queryByRole("checkbox")).toBeNull();
     expect(screen.queryByText(`Oppdater behandlingsstatus til "Vurder dokument"`)).toBeNull();
-    expect(
-      screen.getByText("Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling")
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Du kan ikke opprette en ny behandling/i)).toBeInTheDocument();
+  });
+
+  it(`Vis varselmelding om anmodning om unntak dersom siste behandling er pågående artikkel 16 sak`, async () => {
+    mocks.hent.mockReturnValueOnce({ anmodningsperioder: [{ sendtUtland: true }] });
+    props.sak.behandlingOversikter[0].behandlingsstatus = {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    };
+
+    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+
+    await waitFor(() => expect(mocks.hent).toHaveBeenCalledOnce());
+    expect(screen.getByText(/Hvis du har mottatt svar på anmodning om unntak skal du/i)).toBeInTheDocument();
+  });
+
+  it(`Ikke vis varselmelding om anmodning om unntak dersom siste behandling er avsluttet artikkel 16 sak`, async () => {
+    mocks.hent.mockReturnValueOnce({ anmodningsperioder: [{ sendtUtland: true }] });
+    props.sak.behandlingOversikter[0].behandlingsstatus = { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET };
+
+    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+
+    await waitFor(() => expect(mocks.hent).toHaveBeenCalledOnce());
+    expect(screen.queryByText(/Hvis du har mottatt svar på anmodning om unntak skal du/i)).toBeNull();
+    expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
   });
 });
