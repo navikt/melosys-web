@@ -57,8 +57,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   const skalHenteRegisteropplysninger =
     !registeropplysningerHentet ||
-    formValues?.fom !== periodeFom ||
-    formValues?.tom !== periodeTom ||
+    !Utils.dato.erLikeDatoer(formValues?.fom, periodeFom) ||
+    !Utils.dato.erLikeDatoer(formValues?.tom, periodeTom) ||
     formValues?.land !== søknadsland;
 
   const landUtenStøtteValgt =

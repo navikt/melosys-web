@@ -109,8 +109,8 @@ const VurderingInngang = ({
 
   const skalHenteRegisteropplysninger =
     !registeropplysningerHentet ||
-    formValues?.fom !== initialFomTomLand?.fom ||
-    formValues?.tom !== initialFomTomLand?.tom ||
+    !Utils.dato.erLikeDatoer(formValues?.fom, initialFomTomLand?.fom) ||
+    !Utils.dato.erLikeDatoer(formValues?.tom, initialFomTomLand?.tom) ||
     formValues?.arbeidsland !== initialFomTomLand?.arbeidsland;
 
   useEffect(() => {
