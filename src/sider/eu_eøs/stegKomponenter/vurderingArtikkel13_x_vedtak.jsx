@@ -87,8 +87,9 @@ export const VurderingArtikkel13_x_vedtak = ({
   };
 
   useEffect(() => {
-    if (!Utils._isEmpty(formValues?.tomDato)) {
-      oppdaterLovvalgsperiode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+    const isoTomDato = Utils.dato.formatterDatoTilISO(formValues.tomDato, false, null);
+    if (isoTomDato) {
+      oppdaterLovvalgsperiode(lovvalgsperiode.fomDato, isoTomDato);
     }
     debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues });
   }, [formValues?.tomDato]);
