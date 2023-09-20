@@ -46,6 +46,11 @@ export const SisteOpplysningerHentetDatoSelector = createSelector(
   (oppsummering) => oppsummering.sisteOpplysningerHentetDato || null
 );
 
+export const RegisteropplysningerHentetSelector = createSelector(
+  (state) => SisteOpplysningerHentetDatoSelector(state),
+  (sisteOpplysningerHentetDato) => Boolean(sisteOpplysningerHentetDato)
+);
+
 export const SaksopplysningerSelector = createSelector(
   (state) => BehandlingerSelector(state).saksopplysninger || {},
   (saksopplysninger) => saksopplysninger

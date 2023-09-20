@@ -17,12 +17,12 @@ import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
-import { behandlingerOperations } from "../../ducks/behandlinger";
+import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { dokumenterOperations } from "../../ducks/dokumenter";
-import { menypanelOperations } from "../../ducks/menypanel";
+import { menypanelOperations, menypanelSelectors } from "../../ducks/menypanel";
 
 import { vilkarOperations } from "../../ducks/vilkar";
 import { formSelectors } from "../../ducks/form";
@@ -64,6 +64,8 @@ const Saksbehandling = ({
   const fagsakStatusKode = useSelector(fagsakSelectors.FagsakStatusSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const soknadForm = useSelector(formSelectors.SoknadenFormSelector);
+  const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
+  const menypanelSynlig = useSelector(menypanelSelectors.MenypanelSynligSelector);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -121,6 +123,12 @@ const Saksbehandling = ({
   useEffect(() => {
     oppdaterBehandlingIDState();
   });
+
+  useEffect(() => {
+    if (registeropplysningerHentet && !menypanelSynlig) {
+      dispatch(menypanelOperations.visMenypanel());
+    }
+  }, [registeropplysningerHentet]);
 
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;

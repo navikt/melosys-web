@@ -33,7 +33,7 @@ import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperiode
 import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 import { avklartefaktaOperations } from "../../../ducks/avklartefakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
-import { menypanelOperations } from "../../../ducks/menypanel";
+import { menypanelOperations, menypanelSelectors } from "../../../ducks/menypanel";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 import { alleSteg } from "./initialStegArray";
@@ -60,6 +60,8 @@ const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  registeropplysningerHentet: behandlingerSelectors.RegisteropplysningerHentetSelector(state),
+  menypanelSynlig: menypanelSelectors.MenypanelSynligSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -82,6 +84,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetMottatteOpplysningerState: () => dispatch(mottatteOpplysningerOperations.resetState()),
+  visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
   resetKontrollFeil: () => dispatch(kontrollOperations.resetKontrollFeil()),
@@ -126,12 +129,15 @@ const Saksbehandling = ({
   resetVilkarState,
   resetOppsummertFaktaState,
   resetMedlemskapsperiodeState,
+  visMenypanel,
   skjulMenypanel,
   soknadForm,
   startOgVisOppfriskModal,
   visOppfriskModal,
   resetFeiletrespons,
   resetKontrollFeil,
+  registeropplysningerHentet,
+  menypanelSynlig,
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
@@ -196,6 +202,12 @@ const Saksbehandling = ({
   useEffect(() => {
     oppdaterBehandlingIDState();
   });
+
+  useEffect(() => {
+    if (registeropplysningerHentet && !menypanelSynlig) {
+      visMenypanel();
+    }
+  }, [registeropplysningerHentet]);
 
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;

@@ -114,9 +114,6 @@ const VurderingInngang = ({
     formValues?.arbeidsland !== initialFomTomLand?.arbeidsland;
 
   useEffect(() => {
-    if (registeropplysningerHentet) {
-      visMenypanel();
-    }
     if (!Utils._isEmpty(initialValues.fom) && !Utils._isEmpty(initialValues.arbeidsland)) {
       setInitialFomTomLand({ fom: initialValues.fom, tom: initialValues.tom, arbeidsland: initialValues.arbeidsland });
     }
