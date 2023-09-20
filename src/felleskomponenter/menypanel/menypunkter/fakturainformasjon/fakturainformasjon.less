@@ -1,4 +1,5 @@
 @import (reference) "~nav-frontend-core/less/_variabler";
+@import "../../../../constants";
 
 .fakturainformasjon {
   .fakturainformasjon-tabell {
@@ -41,27 +42,27 @@
     display: flex;
     align-items: center;
     .dott {
-      height: 8px;
-      width: 8px;
+      height: 0.5rem;
+      width: 0.5rem;
       border-radius: 50%;
-      margin-right: 8px;
+      margin-right: 0.5rem;
 
       &.red {
-        background-color: #d0021b;
+        background-color: @red;
       }
 
       &.green {
-        background-color: #006a23;
+        background-color: @green-dark;
       }
     }
   }
 
   .navds-table__expandable-row--open {
-    background-color: #f1f1f1;
+    background-color: @white-dark;
   }
 
   .navds-table__expanded-row-collapse {
-    background-color: #f1f1f1;
+    background-color: @white-dark;
   }
 
   .fakturalinje {

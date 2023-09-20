@@ -17,7 +17,6 @@ exports[`Fakturainformasjon > snapshot test 1`] = `
           >
             Fakturainformasjon
           </h2>
-          <br />
           <table
             class="navds-table navds-table--medium"
           >

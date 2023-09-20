@@ -46,7 +46,7 @@ const FakturaStatusMapper = {
   },
 };
 
-const finnKvartal = (periodeFra: string, periodeTil: string) => {
+const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
   const fraDato = new Date(periodeFra);
   const tilDato = new Date(periodeTil);
 
@@ -65,10 +65,8 @@ export const Faktura = ({ faktura }: FakturaProps) => {
   useEffect(() => {
     if (faktura.id) {
       Api.Faktureringskomponenten.hentFakturainfo(faktura.id).then((res: Fakturainfo[]) => {
-        if (Array.isArray(res)) {
-          const nyesteMelding = res.sort((a, b) => moment(a.dato).diff(moment(b.dato)))[0];
-          setFakturainfo(nyesteMelding);
-        }
+        const nyesteMelding = res.sort((a, b) => moment(a.dato).diff(moment(b.dato)))[0];
+        setFakturainfo(nyesteMelding);
       });
     }
   }, [faktura]);
@@ -121,19 +119,12 @@ export const Faktura = ({ faktura }: FakturaProps) => {
   return (
     <Table.ExpandableRow key={faktura.id} content={renderFakturaLinjer()}>
       <Table.DataCell>{faktura.datoBestilt}</Table.DataCell>
-      <Table.DataCell>{finnKvartal(faktura.periodeFra, faktura.periodeTil)}</Table.DataCell>
+      <Table.DataCell>{mapPeriodeTilKvartalString(faktura.periodeFra, faktura.periodeTil)}</Table.DataCell>
       <Table.DataCell>
-        {fakturainfo ? (
-          <div className="faktura_status_wrapper">
-            {FakturaStatusMapper[fakturainfo.status as FakturaStatus]?.icon}
-            {FakturaStatusMapper[fakturainfo.status as FakturaStatus]?.beskrivelse}
-          </div>
-        ) : (
-          <div className="faktura_status_wrapper">
-            {FakturaStatusMapper[faktura.status as FakturaStatus]?.icon}
-            {FakturaStatusMapper[faktura.status as FakturaStatus]?.beskrivelse}
-          </div>
-        )}
+        <div className="faktura_status_wrapper">
+          {FakturaStatusMapper[(fakturainfo ? fakturainfo.status : faktura.status) as FakturaStatus]?.icon}
+          {FakturaStatusMapper[(fakturainfo ? fakturainfo.status : faktura.status) as FakturaStatus]?.beskrivelse}
+        </div>
       </Table.DataCell>
       <Table.DataCell>{fakturainfo?.ubetaltBelop?.toFixed(2) || "-"}</Table.DataCell>
     </Table.ExpandableRow>

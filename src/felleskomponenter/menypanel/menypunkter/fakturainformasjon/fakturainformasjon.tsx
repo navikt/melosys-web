@@ -60,7 +60,6 @@ const Fakturainformasjon = () => {
             <Nav.Row>
               <Nav.Column xs="12">
                 <Nav.Typo.Systemtittel>Fakturainformasjon</Nav.Typo.Systemtittel>
-                <br />
                 <Table>
                   <Table.Header>
                     <Table.Row shadeOnHover={false}>
