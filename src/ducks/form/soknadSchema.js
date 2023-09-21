@@ -246,7 +246,7 @@ const soknad = object().when(["$behandlingstema"], {
         )
     ),
     representantIUtlandet: object()
-      .when(["harUnntaksregistreringFlyt", "$sakstype"], {
+      .when(["$harUnntaksregistreringFlyt", "$sakstype"], {
         is: skalValidereRepresentantIUtlandet,
         then: object()
           .shape({
@@ -363,7 +363,7 @@ const soknad = object().when(["$behandlingstema"], {
           ),
       }),
     }),
-    soknadsland: object().when("harUnntaksregistreringFlyt", {
+    soknadsland: object().when("$harUnntaksregistreringFlyt", {
       is: (harUnntaksregistreringFlyt) => !harUnntaksregistreringFlyt,
       then: object().shape({
         landkoder: array().when("erUkjenteEllerAlleEosLand", {
