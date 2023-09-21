@@ -7,7 +7,7 @@ import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
 import { useFeatureToggle } from "../../featuretoggle";
-import { skalViseTomFlyt } from "../../url";
+import { skalViseIngenFlyt } from "../../url";
 import Sidemeny from "../sidemeny";
 
 import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
@@ -112,7 +112,7 @@ export const Menypanel = ({
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) ||
     menypanel?.synlig ||
-    skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled);
+    skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled);
 
   if (!visMenypanel) return null;
   return (

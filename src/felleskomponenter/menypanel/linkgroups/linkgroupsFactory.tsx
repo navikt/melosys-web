@@ -1,6 +1,6 @@
 import MKV from "../../../melosyskodeverk";
 
-import { harUnntakFlyt, skalViseTomFlyt, harIkkeYrkesaktivFlyt } from "../../../url";
+import { harUnntakFlyt, skalViseIngenFlyt, harIkkeYrkesaktivFlyt } from "../../../url";
 import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
@@ -43,7 +43,7 @@ class LinkGroupsFactory {
     sakstema,
     folketrygdenToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)) {
+    if (skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)) {
       const linkBuilder = new LinksBuilder(contentProps).addFullmektig();
 
       if (behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {

@@ -8,7 +8,7 @@ import Sok from "./sider/sok";
 import EuEøsSaksbehandling from "./sider/eu_eøs/saksbehandling";
 import FtrlSaksbehandling from "./sider/ftrl/saksbehandling";
 import TrygdeavtaleSaksbehandling from "./sider/trygdeavtale/saksbehandling";
-import TomFlytBehandling from "./sider/tomFlyt/behandling";
+import IngenFlytBehandling from "./sider/ingenFlyt/behandling";
 import Journalforing from "./sider/journalforing";
 import OpprettNySak from "./sider/opprettnysak";
 import VurderUtpeking from "./sider/eu_eøs/vurderutpeking";
@@ -86,7 +86,7 @@ const Routing = () => (
         />
         <SentryRoute
           path="/:sakstype/behandling/:saksnr"
-          render={(props) => <TomFlytBehandling {...props} {...fellesHandlers} />}
+          render={(props) => <IngenFlytBehandling {...props} {...fellesHandlers} />}
         />
         <SentryRoute
           path="/journalforing/:journalpostID/:oppgaveID"

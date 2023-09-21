@@ -11,7 +11,7 @@ import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHje
 import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
 import { BOOLSK_STRING } from "../../../../../../constants";
 import { Begrunnelse } from "../vurderingBestemmelse";
-import { TomFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 
 const { SANN, USANN } = BOOLSK_STRING;
 const hjelpetekster = new Map([
@@ -90,7 +90,7 @@ export const VilkaarOgBegrunnelser = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      {valgtVilkår === USANN && <TomFlytMelding />}
+      {valgtVilkår === USANN && <IngenFlytMelding />}
       {valgtVilkår === SANN && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
           className="select"

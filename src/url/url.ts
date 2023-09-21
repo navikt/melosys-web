@@ -72,7 +72,7 @@ export const lagUrlFraSakstypeOgBehandlingstema = (
   return flytFinnesIkkeForBehandlingPath;
 };
 
-export const lagTomFlytUrl = (sakstypeKode: string, saksnummer: number | string, behandlingID: number) =>
+export const lagIngenFlytUrl = (sakstypeKode: string, saksnummer: number | string, behandlingID: number) =>
   `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
 
 export const lagUrl = (
@@ -85,9 +85,9 @@ export const lagUrl = (
   folketrygdenToggleEnabled: boolean | undefined
 ) => {
   if (
-    skalViseTomFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, folketrygdenToggleEnabled)
+    skalViseIngenFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, folketrygdenToggleEnabled)
   ) {
-    return lagTomFlytUrl(sakstypeKode, saksnummer, behandlingID);
+    return lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
 };
@@ -118,7 +118,7 @@ export const harIkkeYrkesaktivFlyt = (sakstype: string, behandlingstema: string)
   return sakstype !== FTRL && behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
 };
 
-export const skalViseTomFlyt = (
+export const skalViseIngenFlyt = (
   sakstype: string,
   sakstema: string,
   behandlingstema: string,

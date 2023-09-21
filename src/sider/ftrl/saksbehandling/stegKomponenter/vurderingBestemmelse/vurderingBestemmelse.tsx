@@ -20,7 +20,7 @@ import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import "./vurderingBestemmelse.css";
-import { TomFlytMelding } from "../../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding } from "../../../../../felleskomponenter/alertmeldinger";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export interface Begrunnelse {
@@ -278,7 +278,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         />
       ))}
 
-      {bestemmelseIkkeStøttetValgt && <TomFlytMelding />}
+      {bestemmelseIkkeStøttetValgt && <IngenFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{ onClick: handleBekreft, disabled: !formIsValid || !redigerbart }}

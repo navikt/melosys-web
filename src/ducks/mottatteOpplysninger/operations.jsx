@@ -24,7 +24,7 @@ export function hent(behandlingID) {
     const dispatchedMottatteOpplysningerAction = await doThenDispatchResult(dispatch, getState);
 
     if (dispatchedMottatteOpplysningerAction.type === Types.FEILET) {
-      await dispatch(navigeringOperations.tilTomFlyt());
+      await dispatch(navigeringOperations.tilIngenFlyt());
       return dispatchedMottatteOpplysningerAction;
     }
 

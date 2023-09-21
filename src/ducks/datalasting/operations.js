@@ -16,16 +16,16 @@ import { oppsummertfaktaOperations } from "../oppsummertfakta";
 import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 // noinspection ES6PreferShortImport
-import { harIkkeYrkesaktivFlyt, harUnntakFlyt, skalViseTomFlyt } from "../../url/url";
+import { harIkkeYrkesaktivFlyt, harUnntakFlyt, skalViseIngenFlyt } from "../../url/url";
 import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
 
-const harTomFlyt = async (sakstype, state) => {
+const harIngenFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
   const folketrygdenToggleEnabled = erFeatureToggleEnabled(MELOSYS_FOLKETRYGDEN_MVP, state);
 
-  return skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled);
+  return skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled);
 };
 const harUnntaksregistreringEllerIkkeYrkesaktivFlyt = (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
@@ -35,7 +35,7 @@ const harUnntaksregistreringEllerIkkeYrkesaktivFlyt = (sakstype, state) => {
 };
 
 export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => async (dispatch, getState) => {
-  if (await harTomFlyt(sakstype, getState())) {
+  if (await harIngenFlyt(sakstype, getState())) {
     return Promise.all([
       dispatch(fagsakOperations.hent(saksnummer)),
       dispatch(behandlingerOperations.hentBehandling(behandlingID)),
@@ -94,7 +94,7 @@ export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => a
   ]);
 };
 
-export const lastInnSaksopplysningerTomFlyt = (saksnummer, behandlingID) => (dispatch) => {
+export const lastInnSaksopplysningerIngenFlyt = (saksnummer, behandlingID) => (dispatch) => {
   dispatch(fagsakOperations.hent(saksnummer));
   dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
   dispatch(behandlingerOperations.hentBehandling(behandlingID));
@@ -139,7 +139,7 @@ export const resetSaksopplysninger = () => (dispatch) => {
 
 export const lagreAllData = () => async (dispatch, getState) => {
   const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
-  const skalLagreMottatteOpplysninger = !(await harTomFlyt(sakstype, getState()));
+  const skalLagreMottatteOpplysninger = !(await harIngenFlyt(sakstype, getState()));
 
   switch (sakstype) {
     case MKV.Koder.sakstyper.FTRL:

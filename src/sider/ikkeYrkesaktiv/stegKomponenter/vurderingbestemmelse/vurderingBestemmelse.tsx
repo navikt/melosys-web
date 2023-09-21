@@ -16,7 +16,7 @@ import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 
-import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
 
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
@@ -217,7 +217,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       )}
 
-      {formValues?.innvilgelsesResultat === AVSLAATT && <TomFlytMelding />}
+      {formValues?.innvilgelsesResultat === AVSLAATT && <IngenFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
