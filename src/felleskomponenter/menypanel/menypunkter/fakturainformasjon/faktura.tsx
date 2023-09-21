@@ -1,82 +1,88 @@
-import OppsummeringVerdiPar from "../../../oppsummering/verdiPar/oppsummeringVerdiPar";
-import * as Nav from "../../../../navFrontend";
+/* eslint-disable */
 import { useEffect, useState } from "react";
-import { formatterDatoTilNorsk } from "../../../../utils/dato";
 import * as Api from "../../../../services/api";
-import * as Mui from "../../../ui";
 import { _isEmpty, _uuid } from "../../../../utils";
+import { Table } from "@navikt/ds-react";
+import moment from "moment";
+import KopierbarTekst from "../../../kopierbarTekst";
+import { FakturaLinjeContainer } from "./fakturalinjecontainer";
 
 interface FakturaProps {
   faktura: any;
 }
 
+enum FakturaStatus {
+  BESTILLT = "BESTILLT",
+  INNE_I_OEBS = "INNE_I_OEBS",
+  MANGLENDE_INNBETALING = "MANGLENDE_INNBETALING",
+  FEIL = "FEIL",
+}
+
 interface Fakturainfo {
   dato: string;
-  status: "MANGLENDE_INNBETALING" | "INNE_I_OEBS" | "FEIL";
+  status: FakturaStatus;
   fakturaBelop: number | null;
   ubetaltBelop: number | null;
   feilmelding: string | null;
 }
 
-export const Faktura = ({ faktura }: FakturaProps) => {
-  const [fakturainfo, setFakturainfo] = useState([]);
+const Dott = ({ farge }: { farge: string }) => <div className={`dott ${farge}`} />;
 
+const FakturaStatusMapper = {
+  [FakturaStatus.BESTILLT]: {
+    icon: <Dott farge="green" />,
+    beskrivelse: "Bestilt",
+  },
+  [FakturaStatus.INNE_I_OEBS]: {
+    icon: <Dott farge="green" />,
+    beskrivelse: "Inne i oebs",
+  },
+  [FakturaStatus.MANGLENDE_INNBETALING]: {
+    icon: <Dott farge="red" />,
+    beskrivelse: "Manglende innbetaling",
+  },
+  [FakturaStatus.FEIL]: {
+    icon: <Dott farge="red" />,
+    beskrivelse: "FEIL",
+  },
+};
+
+const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
+  const fraDato = new Date(periodeFra);
+  const tilDato = new Date(periodeTil);
+
+  if (isNaN(fraDato.getTime()) || isNaN(tilDato.getTime())) {
+    return "Ugyldig dato";
+  }
+
+  const kvartal = Math.ceil((fraDato.getMonth() + 1) / 3);
+  const år = fraDato.getFullYear().toString().slice(-2);
+
+  return `${kvartal}/${år}`;
+};
+
+export const Faktura = ({ faktura }: FakturaProps) => {
+  const [fakturainfo, setFakturainfo] = useState<Fakturainfo | undefined>({} as Fakturainfo);
   useEffect(() => {
     if (faktura.id) {
-      Api.Faktureringskomponenten.hentFakturainfo(faktura.id).then((res) => setFakturainfo(res));
+      Api.Faktureringskomponenten.hentFakturainfo(faktura.id).then((res: Fakturainfo[]) => {
+        const nyesteMelding = res.sort((a, b) => moment(a.dato).diff(moment(b.dato)))[0];
+        setFakturainfo(nyesteMelding);
+      });
     }
   }, [faktura]);
 
   return (
-    <div className="fakturaseksjon" key={faktura.id}>
-      <div className="headerseksjon">
-        <OppsummeringVerdiPar nokkel="Faktura id" verdi={`${faktura.id}`} />
-        <OppsummeringVerdiPar nokkel="Dato bestilt" verdi={faktura.datoBestilt} />
-        <OppsummeringVerdiPar nokkel="Periode fra" verdi={formatterDatoTilNorsk(faktura.periodeFra)} />
-        <OppsummeringVerdiPar nokkel="Periode til" verdi={formatterDatoTilNorsk(faktura.periodeTil)} />
-        <OppsummeringVerdiPar nokkel="Status" verdi={faktura.status} />
-      </div>
-      <br />
-      <br />
-      {!_isEmpty(fakturainfo) && <Mui.Undertittel tekst="Meldinger fra OEBS" />}
-      {fakturainfo.map((info: Fakturainfo) => (
-        <Nav.Row key={_uuid()}>
-          <OppsummeringVerdiPar nokkel="Dato mottatt" verdi={formatterDatoTilNorsk(info.dato)} />
-          <OppsummeringVerdiPar nokkel="Faktura beløp" verdi={info.fakturaBelop} />
-          <OppsummeringVerdiPar nokkel="Ubetalt beløp" verdi={info.ubetaltBelop} />
-          <OppsummeringVerdiPar nokkel="Status" verdi={info.status} />
-          <OppsummeringVerdiPar nokkel="Feilmelding" verdi={info.feilmelding} />
-        </Nav.Row>
-      ))}
-      <br />
-      <Nav.Row className="header">
-        <Nav.Column xs="2">Periode fra</Nav.Column>
-        <Nav.Column xs="2">Periode til</Nav.Column>
-        <Nav.Column xs="6">Beskrivelse</Nav.Column>
-        <Nav.Column xs="2">Beløp</Nav.Column>
-      </Nav.Row>
-      {faktura.fakturaLinje.map((fakturalinje: any) => (
-        <Nav.Row key={_uuid()}>
-          <Nav.Column xs="2">{fakturalinje.periodeFra} </Nav.Column>
-          <Nav.Column xs="2">{fakturalinje.periodeTil} </Nav.Column>
-          <Nav.Column xs="6">{fakturalinje.beskrivelse} </Nav.Column>
-          <Nav.Column xs="2">{fakturalinje.belop} </Nav.Column>
-        </Nav.Row>
-      ))}
-      <Nav.Row>
-        <Nav.Column xs="9" />
-        <Nav.Column xs="1">
-          <Nav.Typo.Element>Totalbeløp</Nav.Typo.Element>
-        </Nav.Column>
-        {!_isEmpty(faktura.fakturaLinje) && (
-          <Nav.Column xs="2">
-            {faktura.fakturaLinje
-              .map((linje: any) => linje.belop)
-              .reduce((a: any, b: any) => a + b)
-              .toFixed(2)}
-          </Nav.Column>
-        )}
-      </Nav.Row>
-    </div>
+    <Table.ExpandableRow key={faktura.id} content={<FakturaLinjeContainer faktura={faktura} />}>
+      <Table.DataCell>{faktura.datoBestilt}</Table.DataCell>
+      <Table.DataCell>{mapPeriodeTilKvartalString(faktura.periodeFra, faktura.periodeTil)}</Table.DataCell>
+      <Table.DataCell>
+        <div className="faktura_status_wrapper">
+          {FakturaStatusMapper[(fakturainfo ? fakturainfo.status : faktura.status) as FakturaStatus]?.icon}
+          {FakturaStatusMapper[(fakturainfo ? fakturainfo.status : faktura.status) as FakturaStatus]?.beskrivelse}
+        </div>
+      </Table.DataCell>
+      <Table.DataCell>{fakturainfo?.ubetaltBelop?.toFixed(2) || "-"}</Table.DataCell>
+    </Table.ExpandableRow>
   );
 };

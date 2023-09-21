@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import * as Mui from "../../../ui";
 
 import * as Nav from "../../../../navFrontend";
 import MKV from "../../../../melosyskodeverk";
@@ -13,6 +12,7 @@ import { Faktura } from "./faktura";
 import { STATUS } from "../../../../services";
 import { FakturaStatus } from "../../../../services/modules/faktureringskomponenten/fakturainformasjon";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { Table } from "@navikt/ds-react";
 
 const Fakturainformasjon = () => {
   const dispatch = useDispatch();
@@ -38,8 +38,8 @@ const Fakturainformasjon = () => {
 
   if (
     _isEmpty(fakturainformasjon.data) ||
-    fakturainformasjon.status === STATUS.ERROR ||
-    fakturainformasjon.data.status === 500
+    fakturainformasjon.status !== STATUS.OK ||
+    fakturainformasjon.data.status !== undefined
   ) {
     return null;
   }
@@ -53,55 +53,29 @@ const Fakturainformasjon = () => {
   return (
     <Nav.Container fluid className="fakturainformasjon">
       {fakturainformasjon.data?.map((data: any) => {
-        const {
-          faktura: fakturaer,
-          fakturaserieReferanse,
-          fakturaGjelder,
-          fodselsnummer,
-          intervall,
-          referanseBruker,
-          referanseNAV,
-          sluttdato,
-          startdato,
-          status,
-        } = data;
-
-        const overordnetInfoPar = {
-          "Faktura gjelder": fakturaGjelder,
-          Fødselsnummer: fodselsnummer,
-          Intervall: intervall,
-          "Referanse for bruker": referanseBruker,
-          "Referanse for NAV": referanseNAV,
-          Startdato: startdato,
-          Sluttdato: sluttdato,
-          Status: status,
-        };
+        const { faktura: fakturaer, fakturaserieReferanse } = data;
 
         return (
           <div key={fakturaserieReferanse}>
             <Nav.Row>
               <Nav.Column xs="12">
-                <Mui.Undertittel
-                  tekst={`Fakturaserie med fakuraserie referanse: ${fakturaserieReferanse}`}
-                  className="persontabell-row__tittel"
-                />
-                {Object.keys(overordnetInfoPar).map((key) => (
-                  <Nav.Row key={key}>
-                    <Nav.Column xs="4">{key}</Nav.Column>
-                    <Nav.Column xs="4">{overordnetInfoPar[key as keyof typeof overordnetInfoPar]}</Nav.Column>
-                  </Nav.Row>
-                ))}
-              </Nav.Column>
-            </Nav.Row>
-            <br />
-            <Nav.Row>
-              <Nav.Column xs="12">
-                <Mui.Undertittel tekst="Fakturaer" className="persontabell-row__tittel" />
-                <div className="fakturainformasjon-tabell">
-                  {fakturaer?.map((faktura: any) => (
-                    <Faktura key={faktura.id} faktura={faktura} />
-                  ))}
-                </div>
+                <Nav.Typo.Systemtittel>Fakturainformasjon</Nav.Typo.Systemtittel>
+                <Table>
+                  <Table.Header>
+                    <Table.Row shadeOnHover={false}>
+                      <Table.HeaderCell />
+                      <Table.HeaderCell scope="col">Dato</Table.HeaderCell>
+                      <Table.HeaderCell scope="col">Kvartal</Table.HeaderCell>
+                      <Table.HeaderCell scope="col">Status</Table.HeaderCell>
+                      <Table.HeaderCell scope="col">Uteststående betaling</Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
+                    {fakturaer?.map((faktura: any) => (
+                      <Faktura key={faktura.id} faktura={faktura} />
+                    ))}
+                  </Table.Body>
+                </Table>
               </Nav.Column>
             </Nav.Row>
           </div>

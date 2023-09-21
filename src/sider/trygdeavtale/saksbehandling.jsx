@@ -17,12 +17,12 @@ import { VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
-import { behandlingerOperations } from "../../ducks/behandlinger";
+import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { dokumenterOperations } from "../../ducks/dokumenter";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
-import { menypanelOperations } from "../../ducks/menypanel";
+import { menypanelOperations, menypanelSelectors } from "../../ducks/menypanel";
 import { landkoderOperations } from "../../ducks/landkoder";
 import { formSelectors } from "../../ducks/form";
 
@@ -51,11 +51,14 @@ const Saksbehandling = ({
   resetBehandlingerState,
   resetMottatteOpplysningerState,
   resetFagsakState,
+  visMenypanel,
   skjulMenypanel,
   startOgVisOppfriskModal,
   soknadForm,
   visOppfriskModal,
   lovvalgsperiodeTom,
+  registeropplysningerHentet,
+  menypanelSynlig,
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
@@ -113,6 +116,12 @@ const Saksbehandling = ({
       skjulMenypanel();
     };
   }, []);
+
+  useEffect(() => {
+    if (registeropplysningerHentet && !menypanelSynlig) {
+      visMenypanel();
+    }
+  }, [registeropplysningerHentet]);
 
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;
@@ -191,10 +200,13 @@ Saksbehandling.propTypes = {
   resetBehandlingerState: PT.func.isRequired,
   resetMottatteOpplysningerState: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
+  visMenypanel: PT.func.isRequired,
   skjulMenypanel: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   visOppfriskModal: PT.func.isRequired,
   lovvalgsperiodeTom: PT.string.isRequired,
+  registeropplysningerHentet: PT.bool.isRequired,
+  menypanelSynlig: PT.bool.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -217,6 +229,8 @@ const mapStateToProps = (state) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
+  registeropplysningerHentet: behandlingerSelectors.RegisteropplysningerHentetSelector(state),
+  menypanelSynlig: menypanelSelectors.MenypanelSynligSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -230,6 +244,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetMottatteOpplysningerState: () => dispatch(mottatteOpplysningerOperations.resetState()),
+  visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
 });
 

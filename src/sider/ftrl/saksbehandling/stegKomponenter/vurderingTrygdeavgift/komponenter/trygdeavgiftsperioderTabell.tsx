@@ -2,53 +2,44 @@ import MKV from "../../../../../../melosyskodeverk";
 import * as KV from "../../../../../../kodeverk";
 import * as Utils from "../../../../../../utils";
 import { Trygdeavgiftsperiode } from "../../../../../../services/modules/trygdeavgift";
+import { Table } from "@navikt/ds-react";
 
-// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const TrygdeavgiftsperioderTabell = ({ perioder }: { perioder: Trygdeavgiftsperiode[] }) => {
   if (!perioder) return null;
+
   return (
-    <div className="periode_tabell-wrapper">
-      <table className="periode_tabell">
-        <tbody>
-          <tr>
-            <th key="periode" style={{ width: "25%" }} scope="col">
-              Periode
-            </th>
-            <th key="dekning" style={{ width: "45%" }} scope="col">
-              Dekning
-            </th>
-            <th key="inntektskilde" style={{ width: "10%" }} scope="col">
-              Inntektskilde
-            </th>
-            <th key="sats" style={{ width: "10%" }} scope="col">
-              Sats
-            </th>
-            <th key="avgift" style={{ width: "20%" }} scope="col">
-              Avgift per md.
-            </th>
-          </tr>
-          {perioder.map((trygdeavgiftsperiode) => (
-            <tr className="border_top" key={Utils._uuid()}>
-              <td key={Utils._uuid()}>
-                {`${Utils.dato.formatterDatoTilNorsk(trygdeavgiftsperiode.fom)} - ${Utils.dato.formatterDatoTilNorsk(
-                  trygdeavgiftsperiode.tom
-                )}`}
-              </td>
-              <td key={Utils._uuid()}>
-                {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, trygdeavgiftsperiode.trygdedekning)}
-              </td>
-              <td key={Utils._uuid()}>
-                {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, trygdeavgiftsperiode.inntektskildetype)}
-              </td>
-              <td key={Utils._uuid()}>{trygdeavgiftsperiode.avgiftssats}</td>
-              <td key={Utils._uuid()}>
-                <b>{trygdeavgiftsperiode.avgiftPerMd}</b> nkr
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Table size="small" className="periode_tabell">
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
+          <Table.HeaderCell scope="col">Dekning</Table.HeaderCell>
+          <Table.HeaderCell scope="col">Inntektskilde</Table.HeaderCell>
+          <Table.HeaderCell scope="col">Sats</Table.HeaderCell>
+          <Table.HeaderCell scope="col">Avgift per md.</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {perioder.map((trygdeavgiftsperiode) => (
+          <Table.Row className="border_top" key={Utils._uuid()}>
+            <Table.DataCell key={Utils._uuid()}>
+              {`${Utils.dato.formatterDatoTilNorsk(trygdeavgiftsperiode.fom)} - ${Utils.dato.formatterDatoTilNorsk(
+                trygdeavgiftsperiode.tom
+              )}`}
+            </Table.DataCell>
+            <Table.DataCell key={Utils._uuid()}>
+              {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, trygdeavgiftsperiode.trygdedekning)}
+            </Table.DataCell>
+            <Table.DataCell key={Utils._uuid()}>
+              {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, trygdeavgiftsperiode.inntektskildetype)}
+            </Table.DataCell>
+            <Table.DataCell key={Utils._uuid()}>{trygdeavgiftsperiode.avgiftssats}</Table.DataCell>
+            <Table.DataCell key={Utils._uuid()}>
+              <b>{trygdeavgiftsperiode.avgiftPerMd}</b> nkr
+            </Table.DataCell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
   );
 };
 

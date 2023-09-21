@@ -35,6 +35,7 @@ import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 import useHentPersonopplysninger from "../../../../felleskomponenter/informasjonlinje/useHentpersonopplysninger";
 import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingvedtak/tekster";
 import { FRITEKST_VALG } from "../../../../kodeverk/koder";
+import { Table } from "@navikt/ds-react";
 
 const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -302,26 +303,26 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     <div className="vurderingVedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Frivillig medlemskap etter § 2-8</Nav.Typo.Innholdstittel>
 
-      <div className="melosys__table-wrapper">
-        <table className="melosys__table">
-          <tbody>
-            <tr className="header">
-              <th>Periode</th>
-              <th>Dekning</th>
-              <th>Resultat</th>
-            </tr>
-            {mapPeriodeRader(medlemskapsperioder).map((periode) => {
-              return (
-                <tr key={Utils._uuid()}>
-                  <td>{periode.periode}</td>
-                  <td>{periode.dekning}</td>
-                  <td>{periode.resultat}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      <Table size="small" className="melosys__table">
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
+            <Table.HeaderCell scope="col">Dekning</Table.HeaderCell>
+            <Table.HeaderCell scope="col">Resultat</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {mapPeriodeRader(medlemskapsperioder).map((medlemskapsperiode) => {
+            return (
+              <Table.Row key={Utils._uuid()}>
+                <Table.DataCell>{medlemskapsperiode.periode}</Table.DataCell>
+                <Table.DataCell>{medlemskapsperiode.dekning}</Table.DataCell>
+                <Table.DataCell>{medlemskapsperiode.resultat}</Table.DataCell>
+              </Table.Row>
+            );
+          })}
+        </Table.Body>
+      </Table>
 
       <Nav.Row className="margin_bottom">
         <Nav.Column xs="5">

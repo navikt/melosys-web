@@ -24,10 +24,14 @@ import { Innsynsmelding, IngenFlytMelding, VirksomhetMelding } from "../../felle
 import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog";
 
 import "./behandling.css";
+import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
+import { behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandKTSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingsresultatType: behandlingsresultatSelectors.BehandlingsresultatTypeSelector(state),
+  fagsakStatus: fagsakSelectors.FagsakStatusSelector(state),
   hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeFomSelector(state)
@@ -53,6 +57,8 @@ interface Props extends RouteComponentProps<MatchParams> {}
 const Behandling = ({
   arbeidsland,
   behandlingstema,
+  behandlingsresultatType,
+  fagsakStatus,
   hovedpartRolle,
   lastInnSaksopplysninger,
   location,
@@ -82,6 +88,11 @@ const Behandling = ({
   if (!saksopplysningerErLastet) return null;
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const erHenlagtSak = fagsakStatus === MKV.Koder.saksstatuser.HENLAGT;
+  const erAvslåttPgaManglendeOpplysninger =
+    behandlingsresultatType === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+  const visAvslåttPgaManglendeOpplysninger = erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
+  const visTomFlytMelding = !erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
 
   return (
     <>
@@ -95,7 +106,9 @@ const Behandling = ({
                 <VirksomhetMelding />
               ) : (
                 <>
-                  <IngenFlytMelding />
+                  {erHenlagtSak && <HenlagtSak />}
+                  {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
+                  {visTomFlytMelding && <IngenFlytMelding />}
                   <SoknadMenypanelForm startOgVisOppfriskModal={() => null} visOppdaterRegisteropplysninger={false} />
                 </>
               )}
