@@ -29,7 +29,7 @@ const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
   sakstype: fagsakSelectors.SakstypeKodeSelector(state),
-  harUnntakFlyt: flytSelectors.HarUnntakFlytSelector(state),
+  harUnntaksregistreringFlyt: flytSelectors.HarUnntaksregistreringFlytSelector(state),
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   formValues: getFormValues(KV.Form.SOKNAD)(state),
   initialValues: {
@@ -254,7 +254,7 @@ const MenypanelForm = reduxForm<KV.Form.SoknadFormData, SoknadProps>({
         skalOppgittAdresseGateadresseValideres:
           props.oppgittAdresseHarVerdier &&
           props.behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
-        harUnntakFlyt: props.harUnntakFlyt,
+        harUnntaksregistreringFlyt: props.harUnntaksregistreringFlyt,
         behandlingstema: props.behandlingstema,
         mottatteOpplysningerType: props.mottatteOpplysningerType,
         sakstype: props.sakstype,

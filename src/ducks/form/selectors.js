@@ -142,7 +142,7 @@ export const SoknadErrorsSelector = createSelector(
   (state) => SoknadenFormSelector(state).values || {},
   (state) => ({
     skalOppgittAdresseValideres: SoknadOppgittAdresseHarVerdierSelector(state),
-    harUnntakFlyt: flytSelectors.HarUnntakFlytSelector(state),
+    harUnntaksregistreringFlyt: flytSelectors.HarUnntaksregistreringFlytSelector(state),
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
     mottatteOpplysningerType: MottatteOpplysningerTypeSelector(state),
     sakstype: fagsakSelectors.SakstypeKodeSelector(state),
@@ -158,16 +158,6 @@ export const SoknadErrorsSelector = createSelector(
 
     return Utils._merge(soknadformErrors, soknadformSyncErrors);
   }
-);
-
-export const SoknadsperiodeTomErrorsSelector = createSelector(
-  (state) => SoknadenFormSelector(state).syncErrors || {},
-  (errors) => errors?.soknadsperiodeTom?.melding
-);
-
-export const SoknadsperiodeFomErrorsSelector = createSelector(
-  (state) => SoknadenFormSelector(state).syncErrors || {},
-  (errors) => errors?.soknadsperiodeFom?.melding
 );
 
 const finnPanelFeil = (errors) => {

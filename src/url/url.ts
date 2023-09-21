@@ -92,7 +92,7 @@ export const lagUrl = (
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
 };
 
-export const harUnntakFlyt = (sakstype: string, sakstema: string, behandlingstema: string) => {
+export const harUnntaksregistreringFlyt = (sakstype: string, sakstema: string, behandlingstema: string) => {
   if (sakstema !== MKV.Koder.sakstemaer.UNNTAK) {
     return false;
   }
@@ -136,7 +136,7 @@ export const skalViseIngenFlyt = (
     return true;
   }
 
-  if (harUnntakFlyt(sakstype, sakstema, behandlingstema)) return false;
+  if (harUnntaksregistreringFlyt(sakstype, sakstema, behandlingstema)) return false;
   if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema)) return false;
 
   if (

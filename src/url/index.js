@@ -1,3 +1,10 @@
-import { nyFane, lagUrl, lagIngenFlytUrl, skalViseIngenFlyt, harUnntakFlyt, harIkkeYrkesaktivFlyt } from "./url";
+import {
+  nyFane,
+  lagUrl,
+  lagIngenFlytUrl,
+  skalViseIngenFlyt,
+  harUnntaksregistreringFlyt,
+  harIkkeYrkesaktivFlyt,
+} from "./url";
 
-export { nyFane, lagUrl, lagIngenFlytUrl, skalViseIngenFlyt, harUnntakFlyt, harIkkeYrkesaktivFlyt };
+export { nyFane, lagUrl, lagIngenFlytUrl, skalViseIngenFlyt, harUnntaksregistreringFlyt, harIkkeYrkesaktivFlyt };

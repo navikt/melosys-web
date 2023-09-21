@@ -17,7 +17,7 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
-import { harIkkeYrkesaktivFlyt, harUnntakFlyt } from "../../url";
+import { harIkkeYrkesaktivFlyt, harUnntaksregistreringFlyt } from "../../url";
 import KopierbarTekst from "../kopierbarTekst";
 
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
@@ -153,7 +153,7 @@ const Oppsummering = ({
       const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
       const mottatteOpplysningerperiode = `${mottatteOpplysningerPeriodeFom} - ${mottatteOpplysningerPeriodeTom}`;
 
-      const erUnntak = harUnntakFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode);
+      const erUnntak = harUnntaksregistreringFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode);
 
       const erIkkeYrkesaktiv = harIkkeYrkesaktivFlyt(sakstype.kode, behandlingstema.kode);
 

@@ -16,7 +16,7 @@ import { oppsummertfaktaOperations } from "../oppsummertfakta";
 import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 // noinspection ES6PreferShortImport
-import { harIkkeYrkesaktivFlyt, harUnntakFlyt, skalViseIngenFlyt } from "../../url/url";
+import { harIkkeYrkesaktivFlyt, harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../url/url";
 import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
 
 const harIngenFlyt = async (sakstype, state) => {
@@ -31,7 +31,9 @@ const harUnntaksregistreringEllerIkkeYrkesaktivFlyt = (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
 
-  return harUnntakFlyt(sakstype, sakstema, behandlingstema) || harIkkeYrkesaktivFlyt(sakstype, behandlingstema);
+  return (
+    harUnntaksregistreringFlyt(sakstype, sakstema, behandlingstema) || harIkkeYrkesaktivFlyt(sakstype, behandlingstema)
+  );
 };
 
 export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => async (dispatch, getState) => {

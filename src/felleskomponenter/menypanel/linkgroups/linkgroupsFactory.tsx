@@ -1,6 +1,6 @@
 import MKV from "../../../melosyskodeverk";
 
-import { harUnntakFlyt, skalViseIngenFlyt, harIkkeYrkesaktivFlyt } from "../../../url";
+import { harUnntaksregistreringFlyt, skalViseIngenFlyt, harIkkeYrkesaktivFlyt } from "../../../url";
 import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
@@ -53,7 +53,7 @@ class LinkGroupsFactory {
       return new LinkgroupsBuilder().addUtenLabel(linkBuilder.build()).build();
     }
 
-    if (harUnntakFlyt(sakstype, sakstema, behandlingstema)) {
+    if (harUnntaksregistreringFlyt(sakstype, sakstema, behandlingstema)) {
       return new LinkgroupsBuilder()
         .addFraRegister(
           new LinksBuilder(contentProps)
