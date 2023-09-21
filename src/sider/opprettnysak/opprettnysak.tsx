@@ -327,7 +327,7 @@ const OpprettNySak = ({
                   />
                   <div className="innrykk">
                     <FagsakVelger
-                      erOpprettNySak
+                      erJournalføring={false}
                       fagsakListe={fagsakListe}
                       landkoder={landkoderListe}
                       nullstillFormVerdier={nullstillFormVerdier}

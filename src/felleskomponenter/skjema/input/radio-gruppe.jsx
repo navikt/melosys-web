@@ -32,7 +32,7 @@ RadioGruppeWrappedComponent.propTypes = {
   children: PT.node.isRequired,
   meta: PT.object.isRequired,
   legend: PT.string.isRequired,
-  label: PT.string.isRequired,
+  label: PT.node.isRequired,
   className: PT.string,
 };
 RadioGruppeWrappedComponent.defaultProps = {
@@ -46,7 +46,7 @@ function RadioGruppe({ feltNavn, ...rest }) {
 RadioGruppe.propTypes = {
   feltNavn: PT.string.isRequired,
   legend: PT.string,
-  label: PT.string,
+  label: PT.node,
   children: PT.node,
 };
 
