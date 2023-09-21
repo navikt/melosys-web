@@ -57,7 +57,8 @@ export const KnyttTilSak = (props) => {
 
     if (erJournalføring) {
       const skalIkkeVurdereDokument = sisteBehandlingKanOpprettesAndregangsbehandlingPå || sakErHenlagtEllerBortfalt;
-      changeField(feltNavn.formNavn, "vurderDokument", !skalIkkeVurdereDokument);
+      const defaultVurderDokument = !skalIkkeVurdereDokument || sisteBehandlingErPågåendeArtikkel16Sak;
+      changeField(feltNavn.formNavn, "vurderDokument", defaultVurderDokument);
     }
   }, [
     sisteBehandlingKanOpprettesAndregangsbehandlingPå,
@@ -112,6 +113,10 @@ export const KnyttTilSak = (props) => {
       changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     }
   }, [opprettBehandling, behandlingstema, behandlingstype, sisteBehandling?.behandlingstema?.kode]);
+
+  const VurderDokumentCheckbox = () => (
+    <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />
+  );
 
   if (sakErHenlagtEllerBortfalt) {
     return (
@@ -174,6 +179,11 @@ export const KnyttTilSak = (props) => {
             </Skjema.RadioGruppe>
           </div>
         )}
+        {opprettBehandling === false && sisteBehandlingErPågåendeArtikkel16Sak && (
+          <div className="panelElement vurderDokument">
+            <VurderDokumentCheckbox />
+          </div>
+        )}
       </div>
     );
   }
@@ -181,7 +191,7 @@ export const KnyttTilSak = (props) => {
   return (
     <div className="knyttTilSak__behandlingspanel">
       {erJournalføring ? (
-        <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />
+        <VurderDokumentCheckbox />
       ) : (
         <Nav.AlertStripeAdvarsel className="feilmelding_innrykk">
           Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
