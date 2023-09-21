@@ -71,12 +71,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const stegErGyldig = formIsValid && !skalHenteRegisteropplysninger;
 
   useEffect(() => {
-    if (registeropplysningerHentet) {
-      dispatch(menypanelOperations.visMenypanel());
-    }
-  }, []);
-
-  useEffect(() => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 

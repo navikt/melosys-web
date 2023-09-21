@@ -10,11 +10,11 @@ import * as Utils from "../../utils";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
-import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
+import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { dokumenterOperations } from "../../ducks/dokumenter";
-import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
+import { fagsakOperations } from "../../ducks/fagsaker";
 
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
@@ -27,7 +27,7 @@ import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
 import { kontrollOperations } from "../../ducks/kontroll";
-import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
+import { menypanelOperations, menypanelSelectors } from "../../ducks/menypanel";
 
 interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
@@ -47,11 +47,11 @@ const Saksbehandling = ({
   const saksnummer = match?.params?.saksnr;
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const fagstatus = useSelector(fagsakSelectors.FagsakStatusSelector);
-  const behandlingsresultattype = useSelector(behandlingsresultatSelectors.BehandlingsresultatTypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const avsenderland = useSelector(mottatteOpplysningerSelectors.AvsenderlandSelector);
   const lovvalgsland = useSelector(mottatteOpplysningerSelectors.LovvalgslandSelector);
+  const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
+  const menypanelSynlig = useSelector(menypanelSelectors.MenypanelSynligSelector);
 
   const formatterDato = (dato: string | null) => Utils.dato.formatterDatoTilNorsk(dato, false, undefined);
   const mottatteOpplysningerFom = formatterDato(useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector));
@@ -69,8 +69,15 @@ const Saksbehandling = ({
       dispatch(mottatteOpplysningerOperations.resetState());
       dispatch(feiletResponsOperations.resetFeiletRespons());
       dispatch(kontrollOperations.resetKontrollFeil());
+      dispatch(menypanelOperations.skjulMenypanel());
     };
   }, []);
+
+  useEffect(() => {
+    if (registeropplysningerHentet && !menypanelSynlig) {
+      dispatch(menypanelOperations.visMenypanel());
+    }
+  }, [registeropplysningerHentet]);
 
   const lastInnSaksopplysninger = async () => {
     if (behandlingOppfriskes) {
@@ -97,12 +104,6 @@ const Saksbehandling = ({
   if (!behandlingID) return null;
   if (!saksopplysningerLastet) return null;
 
-  const erHenlagtSak = fagstatus === MKV.Koder.saksstatuser.HENLAGT;
-  const erAvslåttPgaManglendeOpplysninger =
-    behandlingsresultattype === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
-  const visAvslåttPgaManglendeOpplysninger = erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
-  const visStegVelger = !erHenlagtSak && !erAvslåttPgaManglendeOpplysninger;
-
   return (
     <>
       <Informasjonlinje />
@@ -111,9 +112,7 @@ const Saksbehandling = ({
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {erHenlagtSak && <HenlagtSak />}
-                {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
-                {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
+                <EnkelStegvelger alleSteg={alleSteg} />
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">
