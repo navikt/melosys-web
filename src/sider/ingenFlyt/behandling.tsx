@@ -20,7 +20,7 @@ import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
-import { Innsynsmelding, TomFlytMelding, VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
+import { Innsynsmelding, IngenFlytMelding, VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
 import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog";
 
 import "./behandling.css";
@@ -44,7 +44,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   lastInnSaksopplysninger: (saksnummer: string, behandlingID: number) =>
-    dispatch(datalastingOperations.lastInnSaksopplysningerTomFlyt(saksnummer, behandlingID)),
+    dispatch(datalastingOperations.lastInnSaksopplysningerIngenFlyt(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
 });
 
@@ -98,17 +98,17 @@ const Behandling = ({
     <>
       <Informasjonlinje />
       <div id="main-container" className="main-container">
-        <Nav.Container fluid className="tomFlyt_behandling">
+        <Nav.Container fluid className="ingenFlyt_behandling">
           <Nav.Row>
             <Nav.Column xs="7">
-              {!redigerbart && <Innsynsmelding className="tomFlyt_behandling__innsynsmelding" />}
+              {!redigerbart && <Innsynsmelding className="ingenFlyt_behandling__innsynsmelding" />}
               {hovedpartErVirksomhet ? (
                 <VirksomhetMelding />
               ) : (
                 <>
                   {erHenlagtSak && <HenlagtSak />}
                   {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
-                  {visTomFlytMelding && <TomFlytMelding />}
+                  {visTomFlytMelding && <IngenFlytMelding />}
                   <SoknadMenypanelForm startOgVisOppfriskModal={() => null} visOppdaterRegisteropplysninger={false} />
                 </>
               )}

@@ -24,7 +24,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
-import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
 import { FellesHandlersContext } from "../../../../contexts";
@@ -204,7 +204,7 @@ const VurderingInngang = ({
         </Nav.Column>
       </Nav.Row>
 
-      {landUtenStøtteValgt && <TomFlytMelding />}
+      {landUtenStøtteValgt && <IngenFlytMelding />}
 
       {landUtenStøtteValgt && skalHenteRegisteropplysninger && (
         <Mui.StegKnapper

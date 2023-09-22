@@ -21,7 +21,7 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
 import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
-import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
 
 const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, NEI_SENDE_TIL_DEPARTEMENTET } = KV.Koder.AVTALELAND_UTFALL;
 
@@ -163,7 +163,7 @@ const VurderingBestemmelse = ({
       {formValues?.vedtak === NEI_AVSLAG && (
         <Nav.Row>
           <Nav.Column xs="10">
-            <TomFlytMelding />
+            <IngenFlytMelding />
           </Nav.Column>
         </Nav.Row>
       )}

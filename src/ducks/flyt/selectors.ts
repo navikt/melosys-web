@@ -9,7 +9,7 @@ import { avklartefaktaSelectors } from "../avklartefakta";
 import { vilkarSelectors } from "../vilkar";
 import { behandlingerSelectors } from "../behandlinger";
 import { behandlingsresultatSelectors } from "../behandlingsresultat";
-import { harUnntakFlyt } from "../../url/url";
+import { harUnntaksregistreringFlyt } from "../../url/url";
 import { fagsakSelectors } from "../fagsaker";
 
 export const ErIArtikkel11_4Selector = createSelector(
@@ -59,9 +59,9 @@ export const HarValgtNorskArbeidsgiverSelector = createSelector(
   (avklarteNorskeVirksomheter) => avklarteNorskeVirksomheter.length > 0
 );
 
-export const HarUnntakFlytSelector = createSelector(
+export const HarUnntaksregistreringFlytSelector = createSelector(
   (state: RootState) => fagsakSelectors.SakstypeKodeSelector(state),
   (state: RootState) => fagsakSelectors.SakstemaKodeSelector(state),
   (state: RootState) => behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  (sakstype, sakstema, behandlingstema) => harUnntakFlyt(sakstype, sakstema, behandlingstema)
+  (sakstype, sakstema, behandlingstema) => harUnntaksregistreringFlyt(sakstype, sakstema, behandlingstema)
 );

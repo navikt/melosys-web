@@ -11,7 +11,7 @@ import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
-import { skalViseTomFlyt } from "../../../url";
+import { skalViseIngenFlyt } from "../../../url";
 
 import "./opprettSak.css";
 
@@ -42,7 +42,7 @@ export const skalViseSoknadsperiodeOgLand = (sakstype, sakstema, behandlingstema
   behandlingstype &&
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV &&
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
-  !skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype);
+  !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype);
 
 export const OpprettSak = (props) => {
   const { settFeltInnhold, formValues, feltNavn } = props;

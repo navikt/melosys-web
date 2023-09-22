@@ -9,7 +9,7 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
 import { FellesHandlersContext } from "../../../../contexts";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
@@ -143,7 +143,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         </Nav.Column>
       </Nav.Row>
 
-      {landUtenStøtteValgt && <TomFlytMelding />}
+      {landUtenStøtteValgt && <IngenFlytMelding />}
 
       {landUtenStøtteValgt && skalHenteRegisteropplysninger && (
         <Mui.StegKnapper
