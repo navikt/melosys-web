@@ -13,9 +13,12 @@ import { STATUS } from "../../../../services";
 import { FakturaStatus } from "../../../../services/modules/faktureringskomponenten/fakturainformasjon";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { Table } from "@navikt/ds-react";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE } from "../../../../featuretoggle/toggleNavn";
 
 const Fakturainformasjon = () => {
   const dispatch = useDispatch();
+  const visReferanseEnabled = useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE);
   const { fakturainformasjon, fagsaker, behandlinger } = useSelector((state) => state) as any;
   const fakturaserieReferanseFraBehandling = useSelector((state) =>
     behandlingsresultatSelectors.fakturaserieReferanseSelector(state)
@@ -52,6 +55,7 @@ const Fakturainformasjon = () => {
 
   return (
     <Nav.Container fluid className="fakturainformasjon">
+      {visReferanseEnabled && <Nav.Row>Fakturaseriereferanse: {fakturaserieReferanseFraBehandling}</Nav.Row>}
       {fakturainformasjon.data?.map((data: any) => {
         const { faktura: fakturaer, fakturaserieReferanse } = data;
 
