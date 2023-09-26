@@ -37,7 +37,15 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
 };
 
 const vurdering_trygdeavgift = object().shape({
-  skattepliktig: string().required(MAA_FYLLES_UT),
+  skatteforholdList: array()
+    .of(
+      object().shape({
+        fomDato: string().erGyldigDato().erInnenforSoknadsperioden().required(MAA_FYLLES_UT),
+        tomDato: string().erGyldigDato().erInnenforSoknadsperioden().erEtterDatofelt("fomDato").required(MAA_FYLLES_UT),
+        skatteplikttype: string().required(MAA_FYLLES_UT),
+      })
+    )
+    .min(1),
   inntektskilder: array().of(
     object().shape({
       kildetype: string().required(MAA_FYLLES_UT),

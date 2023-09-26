@@ -8,10 +8,15 @@ export interface Inntektskilde {
   tomDato?: string;
 }
 
-export interface FieldArrayProps {
-  inntektskilder: Inntektskilde[];
+export interface Skatteforhold {
+  fomDato?: string;
+  tomDato?: string;
+  skatteplikttype?: string;
 }
 
-export type FormValuesProps = FieldValues & {
-  skattepliktig?: string;
-} & FieldArrayProps;
+export interface FieldArrayProps {
+  inntektskilder: Inntektskilde[];
+  skatteforholdList: Skatteforhold[];
+}
+
+export type FormValuesProps = FieldValues & FieldArrayProps;

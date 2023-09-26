@@ -10,8 +10,14 @@ export type Inntektskilde = {
   tomDato: string;
 };
 
-export type TrygdeavgiftsgrunnlagDto = {
+export type Skatteforhold = {
+  fomDato: string;
+  tomDato: string;
   skatteplikttype: string;
+};
+
+export type TrygdeavgiftsgrunnlagDto = {
+  skatteforholdList: Skatteforhold[];
   inntektskilder: Inntektskilde[];
 };
 
