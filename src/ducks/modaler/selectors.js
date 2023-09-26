@@ -23,6 +23,8 @@ export const OppfriskSelector = createSelector(ModalerSelector, (modaler) => mod
 
 export const ErOppfriskSynligSelector = createSelector(OppfriskSelector, (oppfrisk) => oppfrisk.synlig);
 
+export const InkluderSiste5AarSelector = createSelector(OppfriskSelector, (oppfrisk) => oppfrisk.inkluderSiste5aar);
+
 export const BehandlingUnderOppfriskningSelector = createSelector(
   OppfriskSelector,
   (oppfrisk) => oppfrisk.behandlingUnderOppfriskning
