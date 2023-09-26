@@ -2,7 +2,7 @@ import HighchartsReact from "highcharts-react-official";
 
 import * as Nav from "../../../../navFrontend";
 
-import Tabell from "../../../tabell/tabell";
+import TabellArbeidsgiver from "./tabellArbeidsgiver";
 import Inntekt from "./inntekt";
 
 describe("inntekt", () => {
@@ -44,6 +44,6 @@ describe("inntekt", () => {
     const event = { preventDefault: vi.fn() };
     knapp.simulate("click", event);
 
-    expect(inntekt.find(Tabell)).toHaveLength(1);
+    expect(inntekt.find(TabellArbeidsgiver)).toHaveLength(1);
   });
 });
