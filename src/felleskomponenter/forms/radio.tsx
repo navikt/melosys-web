@@ -2,6 +2,7 @@ import { Controller, UseControllerProps } from "react-hook-form";
 import { forwardRef } from "react";
 
 import * as Nav from "../../navFrontend";
+import * as Utils from "../../utils";
 
 import { RegisterHookFormProps } from "./misc/reacthookProps";
 import { getErrorMessage } from "./misc/mapFeilmelding";
@@ -19,19 +20,20 @@ interface RadioComponentProps {
 type RadioInnerComponentProps = RadioComponentProps & RegisterHookFormProps;
 
 const InnerRadioComponent = forwardRef<HTMLSelectElement, RadioInnerComponentProps>(
-  ({ disabled, ...rest }: RadioInnerComponentProps, _ref: any) => {
+  ({ ...props }: RadioInnerComponentProps, _ref: any) => {
     return (
       <Nav.Radio
-        className={rest.className}
-        label={rest.label}
-        onChange={rest.onChange}
-        onBlur={rest.onBlur}
-        value={rest.value}
-        name={rest.name}
-        radioRef={rest.ref}
-        feil={rest.feil}
-        checked={rest.checked}
-        disabled={disabled}
+        className={props.className}
+        label={props.label}
+        onChange={props.onChange}
+        onBlur={props.onBlur}
+        value={props.value}
+        name={props.name}
+        radioRef={props.ref}
+        feil={props.feil}
+        checked={props.checked}
+        disabled={props.disabled}
+        id={Utils._uuid()}
       />
     );
   }
