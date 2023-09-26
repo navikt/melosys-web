@@ -2,7 +2,7 @@ import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";
 
 import EnkeltDato from "../../../enkeltDato";
-import Tabell from "../../../tabell/tabell";
+import TabellArbeidsgiver from "./tabellArbeidsgiver";
 
 const Utenlandsopphold = ({ utenlandsopphold }) => {
   if (!utenlandsopphold) return null;
@@ -17,7 +17,7 @@ const Utenlandsopphold = ({ utenlandsopphold }) => {
   return utenlandsopphold.length > 0 ? (
     <div>
       <Nav.Typo.Undertittel>Lønn opptjent i utlandet</Nav.Typo.Undertittel>
-      <Tabell
+      <TabellArbeidsgiver
         kolonneNavn={["Startdato", "Sluttdato", "Rapporteringsperiode", "Land"]}
         tabellData={utenlandsoppholdArrayed}
         linjerPerSide={5}

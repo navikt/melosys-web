@@ -4,8 +4,8 @@ import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 
-import Tabell from "../../../tabell/tabell";
 import EnkeltDato from "../../../enkeltDato";
+import TabellArbeidsgiver from "./tabellArbeidsgiver";
 
 import "./arbeidsavtaler.css";
 
@@ -73,7 +73,7 @@ class Arbeidsavtaler extends Component {
         <Nav.Typo.Undertittel className="arbeidsavtaler__historisk__overskrift">
           Tidligere arbeidsavtaler
         </Nav.Typo.Undertittel>
-        <Tabell
+        <TabellArbeidsgiver
           tabellData={tabellTilpassetArbeidsavtaler}
           kolonneNavn={[
             "Gyldig til",

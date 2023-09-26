@@ -2,7 +2,7 @@ import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";
 
 import EnkeltDato from "../../../enkeltDato";
-import Tabell from "../../../tabell/tabell";
+import TabellArbeidsgiver from "./tabellArbeidsgiver";
 
 const Permisjoner = ({ permisjoner }) => {
   if (!permisjoner) return null;
@@ -23,7 +23,7 @@ const Permisjoner = ({ permisjoner }) => {
   return permisjoner.length > 0 ? (
     <div className="permisjoner">
       <Nav.Typo.Undertittel>Permisjoner</Nav.Typo.Undertittel>
-      <Tabell
+      <TabellArbeidsgiver
         kolonneNavn={["Startdato", "Sluttdato", "Type", "Prosent"]}
         tabellData={permisjonerArrayed}
         linjerPerSide={5}

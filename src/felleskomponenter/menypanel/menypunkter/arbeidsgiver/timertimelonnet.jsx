@@ -2,7 +2,7 @@ import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";
 
 import EnkeltDato from "../../../enkeltDato";
-import Tabell from "../../../tabell/tabell";
+import TabellArbeidsgiver from "./tabellArbeidsgiver";
 
 const TimerTimelonnet = ({ timerTimelonnet }) => {
   if (!timerTimelonnet) return null;
@@ -17,7 +17,7 @@ const TimerTimelonnet = ({ timerTimelonnet }) => {
   return timerTimelonnet.length > 0 ? (
     <div>
       <Nav.Typo.Undertittel>Antall timer timelønnet</Nav.Typo.Undertittel>
-      <Tabell
+      <TabellArbeidsgiver
         kolonneNavn={["Startdato", "Sluttdato", "Rapporteringsperiode", "Antall timer"]}
         tabellData={timelonnetArrayed}
         linjerPerSide={5}
