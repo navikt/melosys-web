@@ -16,6 +16,7 @@ interface DatovelgerComponentProps {
   maxDate?: Date;
   feil?: string;
   onChange?: (dato: string) => void;
+  className?: string;
 }
 
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;

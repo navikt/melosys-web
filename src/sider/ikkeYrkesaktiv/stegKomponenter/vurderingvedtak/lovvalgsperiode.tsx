@@ -17,7 +17,6 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
 import { PERIODE_HJELPETEKST } from "./tekster";
 import lovvalgsperioderSchema from "./lovvalgsperioderSchema";
-import "./vurderingVedtakIkkeYrkesaktiv.css";
 
 interface LovvalgsperiodeProps {
   kontrollerFerdigbehandling: () => void;
@@ -79,7 +78,7 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
         <span className="endrePeriodeTekst">Endre</span>
       </div>
     ) : (
-      <div className="endrePeriode--disabled">
+      <div className="endrePeriodeTekst--disabled">
         <Ikoner.BlyantDisabled className="ikon" />
       </div>
     );
@@ -98,38 +97,41 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
           hjelpetekstClassName="vurderingVedtak__hjelpetekst"
         />
       </Nav.Typo.Element>
-      <Nav.Typo.Normaltekst className="datofelt_wrapper" tag="div">
-        {visPeriodeEndringFelter ? (
-          <>
-            <span className="datofelt">
-              <Forms.Datovelger
-                label="Fra og med"
-                name="fom"
-                disabled={!redigerbart}
-                control={control}
-                onChange={() => trigger("tom")}
-              />
-            </span>
-            <span className="datofelt">
-              <Forms.Datovelger
-                label="Til og med"
-                name="tom"
-                minDate={Utils.dato.norskStringTilDate(formValues.fom)}
-                disabled={!redigerbart}
-                control={control}
-              />
-              <Nav.Hovedknapp mini disabled={!redigerbart || !formState.isValid} onClick={handleLagrePeriodeEndring}>
-                Lagre
-              </Nav.Hovedknapp>
-            </span>
-          </>
-        ) : (
-          `${Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-            lovvalgsperiode?.tomDato
-          )}`
-        )}
-        {!visPeriodeEndringFelter && <EndrePeriodeKnapp />}
-      </Nav.Typo.Normaltekst>
+
+      {visPeriodeEndringFelter ? (
+        <>
+          <div className="datofelt_wrapper">
+            <Forms.Datovelger
+              label="Fra og med"
+              name="fom"
+              disabled={!redigerbart}
+              control={control}
+              onChange={() => trigger("tom")}
+            />
+            <Forms.Datovelger
+              label="Til og med"
+              name="tom"
+              minDate={Utils.dato.norskStringTilDate(formValues.fom)}
+              disabled={!redigerbart}
+              control={control}
+            />
+          </div>
+          <div className="datofelt_knapper">
+            <Nav.Hovedknapp mini disabled={!redigerbart || !formState.isValid} onClick={handleLagrePeriodeEndring}>
+              Lagre
+            </Nav.Hovedknapp>
+            <Nav.Flatknapp mini onClick={() => setVisPeriodeEndringFelter(false)}>
+              Avbryt
+            </Nav.Flatknapp>
+          </div>
+        </>
+      ) : (
+        <Nav.Typo.Normaltekst className="periode" tag="div">
+          {Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.fomDato)} -{" "}
+          {Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.tomDato)}
+          <EndrePeriodeKnapp />
+        </Nav.Typo.Normaltekst>
+      )}
     </Nav.Column>
   );
 };
