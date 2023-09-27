@@ -5,6 +5,7 @@ import FritekstvedleggRow from "./fritekstvedleggRow";
 import * as Nav from "../../navFrontend";
 import VedleggRow from "./vedleggRow";
 import "./vedleggTable.css";
+import { Table } from "@navikt/ds-react";
 
 interface VedleggTableProps {
   valgteVedlegg: FysiskDokument[];
@@ -16,7 +17,6 @@ interface VedleggTableProps {
   lagFritekstPdfUrl?: (index: number) => Promise<string | false>;
 }
 
-// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const VedleggTable = ({
   valgteVedlegg,
   setValgteVedlegg,
@@ -34,29 +34,27 @@ const VedleggTable = ({
     <>
       <Nav.Typo.Element className="vedleggtable-label">{label}</Nav.Typo.Element>
       {(valgteVedlegg.length > 0 || (fritekstvedlegg && fritekstvedlegg.length > 0)) && (
-        <div className="vedleggtable">
-          <table>
-            <tbody>
-              {fritekstvedlegg?.map((vedlegg, index) => (
-                <FritekstvedleggRow
-                  fritekstvedlegg={vedlegg}
-                  redigerFritekstvedlegg={redigerFritekstvedlegg}
-                  slettFritekstvedlegg={slettFritekstvedlegg}
-                  key={vedlegg.tittel}
-                  index={index}
-                  lagFritekstPdfUrl={lagFritekstPdfUrl}
-                />
-              ))}
-              {valgteVedlegg.map((enkeltVedlegg) => (
-                <VedleggRow
-                  key={enkeltVedlegg.id}
-                  vedlegg={enkeltVedlegg}
-                  slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table>
+          <Table.Body>
+            {fritekstvedlegg?.map((vedlegg, index) => (
+              <FritekstvedleggRow
+                fritekstvedlegg={vedlegg}
+                redigerFritekstvedlegg={redigerFritekstvedlegg}
+                slettFritekstvedlegg={slettFritekstvedlegg}
+                key={vedlegg.tittel}
+                index={index}
+                lagFritekstPdfUrl={lagFritekstPdfUrl}
+              />
+            ))}
+            {valgteVedlegg.map((enkeltVedlegg) => (
+              <VedleggRow
+                key={enkeltVedlegg.id}
+                vedlegg={enkeltVedlegg}
+                slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
+              />
+            ))}
+          </Table.Body>
+        </Table>
       )}
     </>
   );
