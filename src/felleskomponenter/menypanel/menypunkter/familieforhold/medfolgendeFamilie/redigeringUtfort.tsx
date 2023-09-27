@@ -4,7 +4,6 @@ import * as Utils from "../../../../../utils";
 import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
 import { Table } from "@navikt/ds-react";
 
-// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.MedfolgendeFamilie>) => (
   <div className="menypanel__table-wrapper">
     <Table className="menypanel__table">
