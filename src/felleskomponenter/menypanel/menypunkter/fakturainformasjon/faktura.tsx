@@ -66,7 +66,7 @@ export const Faktura = ({ faktura }: FakturaProps) => {
   useEffect(() => {
     if (faktura.id) {
       Api.Faktureringskomponenten.hentFakturainfo(faktura.id).then((res: Fakturainfo[]) => {
-        const nyesteMelding = res.sort((a, b) => moment(a.dato).diff(moment(b.dato)))[0];
+        const nyesteMelding = res.sort((a, b) => moment(b.dato).diff(moment(a.dato)))[0];
         setFakturainfo(nyesteMelding);
       });
     }
