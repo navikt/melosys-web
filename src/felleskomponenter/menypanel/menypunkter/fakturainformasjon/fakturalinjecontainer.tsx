@@ -1,17 +1,28 @@
 import { Table } from "@navikt/ds-react";
 import KopierbarTekst from "../../../kopierbarTekst";
 import { _isEmpty, _uuid } from "../../../../utils";
+import { MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE } from "../../../../featuretoggle/toggleNavn";
+import { useFeatureToggle } from "../../../../featuretoggle";
 
 interface FakturaLinjeProps {
   faktura: any;
+  fakturaNummer: string | undefined | null;
 }
 
-export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeProps) => {
+export const FakturaLinjeContainer = ({ faktura, fakturaNummer }: FakturaLinjeProps) => {
+  const visReferanseEnabled = useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE);
+
   return (
     <div className="fakturalinje">
+      {visReferanseEnabled && (
+        <div className="fakturanr_wrapper">
+          FakturaID:&nbsp;
+          <KopierbarTekst hovertekst="">{faktura.id}</KopierbarTekst>
+        </div>
+      )}
       <div className="fakturanr_wrapper">
         Fakturanr:&nbsp;
-        <KopierbarTekst hovertekst="">{faktura.id}</KopierbarTekst>
+        <KopierbarTekst hovertekst="">{fakturaNummer ?? "Ikke generert enda"}</KopierbarTekst>
       </div>
 
       <Table>
