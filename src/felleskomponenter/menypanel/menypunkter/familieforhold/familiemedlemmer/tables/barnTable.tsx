@@ -4,37 +4,37 @@ import Ident from "../ident";
 import * as StringUtils from "../../../../../../utils/streng";
 import * as Etiketter from "../../../../etiketter";
 import * as Utils from "../../../../../../utils";
+import { Table } from "@navikt/ds-react";
 
 interface BarnTableProps {
   barnListe: Familiemedlem[];
 }
 
-// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 function BarnTable({ barnListe }: BarnTableProps) {
   return (
     <div className="menypanel__table-wrapper">
-      <table className="menypanel__table">
-        <tbody>
-          <tr className="header">
-            <th>Navn</th>
-            <th>F.nr./d-nr.</th>
-            <th>Foreldreansvar</th>
-            <th>F.nr. annen forelder</th>
-            <th>&nbsp;</th>
-          </tr>
+      <Table className="menypanel__table">
+        <Table.Header className="header">
+          <Table.HeaderCell>Navn</Table.HeaderCell>
+          <Table.HeaderCell>F.nr./d-nr.</Table.HeaderCell>
+          <Table.HeaderCell>Foreldreansvar</Table.HeaderCell>
+          <Table.HeaderCell>F.nr. annen forelder</Table.HeaderCell>
+          <Table.HeaderCell>&nbsp;</Table.HeaderCell>
+        </Table.Header>
+        <Table.Body>
           {barnListe.map((barn) => (
-            <tr key={Utils._uuid()}>
-              <td>{barn.navn}</td>
-              <td>
+            <Table.Row key={Utils._uuid()}>
+              <Table.DataCell>{barn.navn}</Table.DataCell>
+              <Table.DataCell>
                 <Ident ident={barn.ident} />
-              </td>
-              <td>{StringUtils.storeForbokstaver(barn.foreldreansvar)}</td>
-              <td>{barn.fnrAnnenForelder}</td>
-              <td>{barn.alder && barn.alder < 18 ? <Etiketter.Under18Aar /> : ""}</td>
-            </tr>
+              </Table.DataCell>
+              <Table.DataCell>{StringUtils.storeForbokstaver(barn.foreldreansvar)}</Table.DataCell>
+              <Table.DataCell>{barn.fnrAnnenForelder}</Table.DataCell>
+              <Table.DataCell>{barn.alder && barn.alder < 18 ? <Etiketter.Under18Aar /> : ""}</Table.DataCell>
+            </Table.Row>
           ))}
-        </tbody>
-      </table>
+        </Table.Body>
+      </Table>
     </div>
   );
 }
