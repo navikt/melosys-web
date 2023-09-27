@@ -266,10 +266,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         </>
       )}
 
-      <Feilmeldinger
-        className="vurderingUnntakMedlemskap__feilmelding"
-        exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]}
-      />
+      <Feilmeldinger exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]} />
 
       {(utfallErGODKJENT || utfallErDelvisGodkjent) && !harErrorFeilmelding && (
         <Alertmeldinger
