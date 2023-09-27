@@ -1,6 +1,5 @@
-import classnames from "classnames";
 import * as Utils from "../../utils";
-import "./mottakerTabell.css";
+import { Table } from "@navikt/ds-react";
 
 interface MottakerTabellProps {
   rader: {
@@ -12,36 +11,29 @@ interface MottakerTabellProps {
     bredde: string;
     style?: string;
   }[];
-  className?: string;
 }
 
-// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
-const MottakerTabell = ({ rader, kolonner, className = "" }: MottakerTabellProps) => {
+const MottakerTabell = ({ rader, kolonner }: MottakerTabellProps) => {
   if (!rader || !kolonner) return null;
-  const cls = classnames("mottakerTabell", className);
   return (
-    <div className="mottakerTabell-wrapper">
-      <table className={cls}>
-        <tbody>
-          <tr>
-            {kolonner.map((kolonne) => (
-              <th key={Utils._uuid()} className={`${kolonne.style}`} style={{ width: kolonne.bredde }}>
-                {kolonne.verdi}
-              </th>
+    <Table>
+      <Table.Header>
+        {kolonner.map((kolonne) => (
+          <Table.HeaderCell key={Utils._uuid()} style={{ width: kolonne.bredde }}>
+            {kolonne.verdi}
+          </Table.HeaderCell>
+        ))}
+      </Table.Header>
+      <Table.Body>
+        {rader.map((rad) => (
+          <Table.Row key={Utils._uuid()}>
+            {rad.map((radElement) => (
+              <Table.DataCell key={Utils._uuid()}>{radElement.verdi}</Table.DataCell>
             ))}
-          </tr>
-          {rader.map((rad) => (
-            <tr key={Utils._uuid()}>
-              {rad.map((radElement) => (
-                <td key={Utils._uuid()} className={`${radElement.style}`}>
-                  {radElement.verdi}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
   );
 };
 
