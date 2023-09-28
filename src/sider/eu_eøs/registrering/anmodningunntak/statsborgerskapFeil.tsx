@@ -21,7 +21,7 @@ const StatsborgerskapFeil = () => {
 
   return (
     <Nav.AlertStripeAdvarsel className="anmodningunntak_statsborgerskapmelding">
-      Statsborgerskapet er utgått eller ukjent
+      Statsborgerskapet er ukjent
     </Nav.AlertStripeAdvarsel>
   );
 };
