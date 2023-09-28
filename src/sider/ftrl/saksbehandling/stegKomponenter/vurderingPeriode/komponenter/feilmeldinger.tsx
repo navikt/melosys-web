@@ -28,7 +28,7 @@ const IngenSluttdato = (
 
 const MåStartePåSøknadsperiodeFom = (
   <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
-    Minst én periode må starte samme dato som søknadsperioden .
+    Minst én periode må starte samme dato som søknadsperioden.
   </Nav.AlertStripeAdvarsel>
 );
 
@@ -38,7 +38,7 @@ const erIkkeStøttetIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
 const finnesPeriodeSomStarterSamtidigSomSøknadsperioden = (
   medlemskapsperioder: MedlemskapsperiodeProp[],
   søknadsperiodeFomDato: string
-) => medlemskapsperioder.some((periode) => periode.fomDato === Utils.dato.formatterDatoTilNorsk(søknadsperiodeFomDato));
+) => medlemskapsperioder.some((periode) => Utils.dato.formatterDatoTilISO(periode.fomDato) === søknadsperiodeFomDato);
 
 const perioderErLike = (periode1: MedlemskapsperiodeProp, periode2: MedlemskapsperiodeProp) =>
   periode1.fomDato === periode2.fomDato && periode1.tomDato === periode2.tomDato;
