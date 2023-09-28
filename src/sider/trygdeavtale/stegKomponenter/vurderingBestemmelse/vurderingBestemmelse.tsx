@@ -99,7 +99,7 @@ const VurderingBestemmelse = ({
   if (!formValues) return null;
 
   return (
-    <div className="vurderingBestemmelse">
+    <div className="vurderingBestemmelse_trygdeavtale">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
 
       <Nav.Fieldset legend="Hva er din vurdering av søknaden?">
@@ -154,7 +154,7 @@ const VurderingBestemmelse = ({
 
       {formValues?.vedtak === NEI_ANMODE_OM_UNNTAK && (
         <Nav.Row>
-          <Nav.Column xs="10" className="unntakTekst">
+          <Nav.Column xs="10" className="unntakHjelpetektsWrapper">
             <UnntakHjelpetekst />
           </Nav.Column>
         </Nav.Row>
@@ -169,7 +169,7 @@ const VurderingBestemmelse = ({
       )}
 
       <Nav.Row>
-        <Nav.Column xs="10" className="bestemmelseTekst">
+        <Nav.Column xs="10" className="bestemmelseHjelptetekst">
           <BestemmelseHjelpetekst bestemmelse={formValues.bestemmelse} />
         </Nav.Column>
       </Nav.Row>
