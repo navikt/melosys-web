@@ -10,7 +10,7 @@ import * as Ikoner from "../../../../../../resources/images";
 
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import { BOOLSK_STRING } from "../../../../../../constants";
-import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./types";
+import { FieldArrayProps, FormValuesProps, Inntektskilde, Skatteforhold } from "./types";
 import { arbAvgBetalesKreves, bruttoInntektKreves } from "../vurderingTrygdeavgiftSchema";
 
 const { ARBEIDSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR } = MKV.Koder.inntektskildetype;
@@ -28,13 +28,13 @@ interface InntektskilderProps {
 
 export const Inntektskilder = ({
   formValues,
-  fields,
   control,
   update,
   remove,
   append,
   redigerbart,
   defaultPeriode,
+  fields,
 }: InntektskilderProps) => {
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
@@ -48,14 +48,6 @@ export const Inntektskilder = ({
 
   const handleEndreArbAvgBetales = (index: number, arbAvgBetales: string) => {
     update(index, { ...formValues.inntektskilder[index], arbAvgBetales, bruttoInntekt: undefined });
-  };
-
-  const handleEndreFom = (index: number, fomDato: string) => {
-    update(index, { ...formValues.inntektskilder[index], fomDato });
-  };
-
-  const handleEndreTom = (index: number, tomDato: string) => {
-    update(index, { ...formValues.inntektskilder[index], tomDato });
   };
 
   return (
@@ -83,31 +75,29 @@ export const Inntektskilder = ({
           </Nav.Column>
         </Nav.Row>
 
-        {fields.map((field, index) => {
-          const visArbAvgBetales = !Utils._isEmpty(field.kildetype);
-          const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(field.kildetype);
-          const visBruttoInntekt = Boolean(field.arbAvgBetales) || !skalFylleInnArbAvgBetales;
-          const skalFylleInnBruttoInntekt = bruttoInntektKreves(
-            formValues.skattepliktig,
-            field.kildetype,
-            field.arbAvgBetales
+        {formValues.inntektskilder.map((inntektskilder, index) => {
+          const erBrukerSkattepliktigIHelePerioden = !formValues.skatteforholdList.some(
+            (skatteforhold: Skatteforhold) =>
+              skatteforhold.skatteplikttype === MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG
           );
 
+          const visArbAvgBetales = !Utils._isEmpty(inntektskilder.kildetype);
+          const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(inntektskilder.kildetype);
+          const visBruttoInntekt = Boolean(inntektskilder.arbAvgBetales) || !skalFylleInnArbAvgBetales;
+          const skalFylleInnBruttoInntekt = bruttoInntektKreves(
+            erBrukerSkattepliktigIHelePerioden,
+            inntektskilder.kildetype,
+            inntektskilder.arbAvgBetales
+          );
+          if (!skalFylleInnBruttoInntekt && inntektskilder.bruttoInntekt) {
+            update(index, { ...formValues.inntektskilder[index], bruttoInntekt: undefined });
+          }
+
           return (
-            <Nav.Row key={field.id}>
+            <Nav.Row key={fields[index].id}>
               <Nav.Column xs="3" className="flex__kolonne">
-                <Forms.Datovelger
-                  name={`inntektskilder.${index}.fomDato`}
-                  disabled={!redigerbart}
-                  control={control}
-                  onChange={(value) => handleEndreFom(index, value)}
-                />
-                <Forms.Datovelger
-                  name={`inntektskilder.${index}.tomDato`}
-                  disabled={!redigerbart}
-                  control={control}
-                  onChange={(value) => handleEndreTom(index, value)}
-                />
+                <Forms.Datovelger name={`inntektskilder.${index}.fomDato`} disabled={!redigerbart} control={control} />
+                <Forms.Datovelger name={`inntektskilder.${index}.tomDato`} disabled={!redigerbart} control={control} />
               </Nav.Column>
 
               <Nav.Column xs="4">
@@ -137,7 +127,7 @@ export const Inntektskilder = ({
                           name={`inntektskilder.${index}.arbAvgBetales`}
                           control={control}
                           value={BOOLSK_STRING.SANN}
-                          disabled={!redigerbart || settesDefaultArbAvgBetales(field.kildetype)}
+                          disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilder.kildetype)}
                           className="radioknapp_vertikal"
                           onChange={(value) => handleEndreArbAvgBetales(index, value)}
                         />
@@ -146,7 +136,7 @@ export const Inntektskilder = ({
                           name={`inntektskilder.${index}.arbAvgBetales`}
                           control={control}
                           value={BOOLSK_STRING.USANN}
-                          disabled={!redigerbart || settesDefaultArbAvgBetales(field.kildetype)}
+                          disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilder.kildetype)}
                           className="radioknapp_vertikal"
                           onChange={(value) => handleEndreArbAvgBetales(index, value)}
                         />

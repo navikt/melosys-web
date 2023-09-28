@@ -13,7 +13,6 @@ interface SkatteforholdsperioderProps {
   formValues: FormValuesProps;
   fields: FieldArrayWithId<FieldArrayProps, "skatteforholdList">[];
   control: Control;
-  update: (index: number, skatteforhold: Skatteforhold) => void;
   remove: (index: number) => void;
   append: (skatteforhold: Skatteforhold) => void;
   redigerbart: boolean;
@@ -22,26 +21,13 @@ interface SkatteforholdsperioderProps {
 
 export const Skatteforholdsperioder = ({
   formValues,
-  fields,
   control,
-  update,
   remove,
   append,
   redigerbart,
   defaultPeriode,
+  fields,
 }: SkatteforholdsperioderProps) => {
-  const handleEndreSkatteplikt = (index: number, skatteplikttype: string) => {
-    update(index, { ...formValues.skatteforholdList[index], skatteplikttype });
-  };
-
-  const handleEndreFom = (index: number, fomDato: string) => {
-    update(index, { ...formValues.skatteforholdList[index], fomDato });
-  };
-
-  const handleEndreTom = (index: number, tomDato: string) => {
-    update(index, { ...formValues.skatteforholdList[index], tomDato });
-  };
-
   return (
     <>
       <LabelMedHjelpetekst
@@ -62,15 +48,14 @@ export const Skatteforholdsperioder = ({
           </Nav.Column>
         </Nav.Row>
 
-        {fields.map((field, index) => {
+        {formValues.skatteforholdList.map((skatteforhold, index) => {
           return (
-            <Nav.Row key={field.id}>
+            <Nav.Row key={fields[index].id}>
               <Nav.Column xs="3">
                 <Forms.Datovelger
                   name={`skatteforholdList.${index}.fomDato`}
                   disabled={!redigerbart}
                   control={control}
-                  onChange={(value) => handleEndreFom(index, value)}
                 />
               </Nav.Column>
 
@@ -79,7 +64,6 @@ export const Skatteforholdsperioder = ({
                   name={`skatteforholdList.${index}.tomDato`}
                   disabled={!redigerbart}
                   control={control}
-                  onChange={(value) => handleEndreTom(index, value)}
                 />
               </Nav.Column>
 
@@ -91,7 +75,6 @@ export const Skatteforholdsperioder = ({
                   value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}
                   disabled={!redigerbart}
                   className="radioknapp_vertikal"
-                  onChange={(value) => handleEndreSkatteplikt(index, value)}
                 />
                 <Forms.Radio
                   label="Nei"
@@ -100,7 +83,6 @@ export const Skatteforholdsperioder = ({
                   value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}
                   disabled={!redigerbart}
                   className="radioknapp_vertikal"
-                  onChange={(value) => handleEndreSkatteplikt(index, value)}
                 />
               </Nav.Column>
 
