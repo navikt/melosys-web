@@ -22,11 +22,14 @@ interface LovvalgsperiodeProps {
   kontrollerFerdigbehandling: () => void;
   onRedigeringErAktiv: (redigeringErAktiv: boolean) => void;
 }
+
 export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAktiv }: LovvalgsperiodeProps) => {
   const dispatch = useDispatch();
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
+  const lovvalgsperiodeFom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.fomDato);
+  const lovvalgsperiodeTom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.tomDato);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
 
@@ -37,8 +40,8 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
     },
     mode: "all",
     values: {
-      fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato),
-      tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato),
+      fom: lovvalgsperiodeFom,
+      tom: lovvalgsperiodeTom,
     } as FieldValues,
   });
   const formValues = watch();
@@ -127,8 +130,7 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
         </>
       ) : (
         <Nav.Typo.Normaltekst className="periode" tag="div">
-          {Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.fomDato)} -{" "}
-          {Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.tomDato)}
+          {lovvalgsperiodeFom} - {lovvalgsperiodeTom}
           <EndrePeriodeKnapp />
         </Nav.Typo.Normaltekst>
       )}
