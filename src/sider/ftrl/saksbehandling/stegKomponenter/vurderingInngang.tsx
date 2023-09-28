@@ -24,6 +24,8 @@ import { navigeringOperations } from "../../../../ducks/navigering";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import Checkbox from "../../../../felleskomponenter/forms/checkbox";
 
 interface Props {
   bekreft: () => void;
@@ -170,6 +172,15 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
             ))}
           </Forms.Select>
         </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Forms.Checkbox
+          name="inkluderSiste5Aar"
+          control={control}
+          label={"Hent registeropplysninger for 5 år"}
+          value={"Inkluder siste 5 år"}
+          disabled={!redigerbart}
+        />
       </Nav.Row>
       {valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand && (
         <Nav.Row>

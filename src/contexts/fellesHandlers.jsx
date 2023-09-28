@@ -136,6 +136,7 @@ FellesHandlersProviderUnconnected.defaultProps = {
 FellesHandlersProviderUnconnected.defaultProps = {
   saksnummer: undefined,
   sakstype: undefined,
+  inkluderSiste5Aar: false,
 };
 
 const mapStateToProps = (state) => ({
