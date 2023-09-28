@@ -24,8 +24,10 @@ import { navigeringOperations } from "../../../../ducks/navigering";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
-import * as Skjema from "../../../../felleskomponenter/skjema";
-import Checkbox from "../../../../felleskomponenter/forms/checkbox";
+import * as Actions from "../../../../ducks/modaler/actions";
+import { oppdaterInkluderSiste5Aar } from "../../../../ducks/mottatteOpplysninger/operations";
+import { modalerOperations } from "../../../../ducks/modaler";
+import { leggTilInkluderSiste5Aar } from "../../../../ducks/modaler/operations";
 
 interface Props {
   bekreft: () => void;
@@ -50,6 +52,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     tom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.tom, false, undefined),
     land: useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector).toString(),
     trygdedekning: useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector),
+    inkluderSiste5Aar: false,
   };
 
   const {
@@ -86,6 +89,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       ),
       dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(formValues.land ? [formValues.land] : [], false)),
       dispatch(mottatteOpplysningerOperations.oppdaterTrygdedekning(formValues.trygdedekning)),
+      dispatch(modalerOperations.leggTilInkluderSiste5Aar(formValues.inkluderSiste5Aar)),
     ]);
   };
 
@@ -175,6 +179,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       </Nav.Row>
       <Nav.Row>
         <Forms.Checkbox
+          className={"inkluderSiste5Aar"}
           name="inkluderSiste5Aar"
           control={control}
           label={"Hent registeropplysninger for 5 år"}

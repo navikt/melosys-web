@@ -30,10 +30,11 @@ export const OppdaterRegisteropplysninger = ({
   return (
     <Nav.Panel className="oppdater-registeropplysninger" border>
       <Nav.Checkbox
+        className={"oppdater-registeropplysninger__checkbox"}
         name="InkluderSiste5aar"
         checked={inkluderSiste5aar}
         onChange={checkboxChangeHandler}
-        label="Inkluder siste 5 år"
+        label="Inkl siste 5 år"
       />
       <span
         className="oppdater-registeropplysninger__oppdateringsknapp"
@@ -45,7 +46,9 @@ export const OppdaterRegisteropplysninger = ({
         <Refresh />
         Oppdater registeropplysninger
       </span>
-      <span>{` (sist oppdatert ${sistOppdatert || "- "})`}</span>
+      <span className="oppdater-registeropplysninger__sistOppdatert">
+        {` (sist oppdatert ${sistOppdatert || "- "})`}
+      </span>
     </Nav.Panel>
   );
 };
