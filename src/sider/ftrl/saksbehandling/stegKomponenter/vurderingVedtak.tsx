@@ -454,7 +454,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           </Table.Body>
         </Table>
       )}
-
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: onSubmit,
