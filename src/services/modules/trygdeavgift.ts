@@ -17,7 +17,7 @@ export type Skatteforhold = {
 };
 
 export type TrygdeavgiftsgrunnlagDto = {
-  skatteforholdList: Skatteforhold[];
+  skatteforholdsperioder: Skatteforhold[];
   inntektskilder: Inntektskilde[];
 };
 
