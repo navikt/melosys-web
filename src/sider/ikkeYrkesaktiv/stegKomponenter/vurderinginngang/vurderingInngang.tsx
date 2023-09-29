@@ -9,7 +9,7 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
 import { FellesHandlersContext } from "../../../../contexts";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
@@ -57,8 +57,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   const skalHenteRegisteropplysninger =
     !registeropplysningerHentet ||
-    formValues?.fom !== periodeFom ||
-    formValues?.tom !== periodeTom ||
+    !Utils.dato.erLikeDatoer(formValues?.fom, periodeFom) ||
+    !Utils.dato.erLikeDatoer(formValues?.tom, periodeTom) ||
     formValues?.land !== søknadsland;
 
   const landUtenStøtteValgt =
@@ -66,12 +66,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     (formValues.land === MKV.Koder.landkoder.FR || formValues.land === MKV.Koder.landkoder.IT);
 
   const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !landUtenStøtteValgt;
-
-  useEffect(() => {
-    if (registeropplysningerHentet) {
-      dispatch(menypanelOperations.visMenypanel());
-    }
-  }, []);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -149,7 +143,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         </Nav.Column>
       </Nav.Row>
 
-      {landUtenStøtteValgt && <TomFlytMelding />}
+      {landUtenStøtteValgt && <IngenFlytMelding />}
 
       {landUtenStøtteValgt && skalHenteRegisteropplysninger && (
         <Mui.StegKnapper

@@ -1,0 +1,236 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Soknadsperiode > snapshot test 1`] = `
+<div>
+  <div
+    class="soknadsperiode"
+  >
+    <p
+      class="typo-normal soknadsperiode__etikett"
+    >
+      Tittel
+    </p>
+    <div
+      class="periode__container"
+    >
+      <p
+        class="typo-element periode"
+      >
+        01.01.2023
+         - 
+        01.04.2023
+      </p>
+      <div>
+        <button
+          aria-label="Rediger"
+          class="ikon-knapp"
+          title="Rediger"
+          type="button"
+        >
+          <svg
+            class="ikon"
+            fill="none"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M22.8353 1.16464C24.3882 2.7175 24.3882 5.23518 22.8353 6.78804L8.07288 21.5494L0.682007 24L0 23.318L2.44911 15.926L17.2115 1.16464C18.7645 -0.388214 21.2823 -0.388214 22.8353 1.16464ZM18.6175 8.19388L15.8056 5.38219L4.18826 16.9987L2.79497 21.2036L7.00155 19.809L18.6175 8.19388ZM21.4293 2.57049C20.6882 1.82935 19.5074 1.79567 18.7262 2.46943L18.6175 2.57049L17.2115 3.97634L20.0234 6.78804L21.4293 5.38219C22.1705 4.64105 22.2042 3.46036 21.5304 2.67927L21.4293 2.57049Z"
+              fill="#0067C5"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Soknadsperiode > snapshot test når periode endres 1`] = `
+<div>
+  <div
+    class="soknadsperiode"
+  >
+    <p
+      class="typo-normal soknadsperiode__etikett"
+    >
+      Tittel
+    </p>
+    <div
+      class="row"
+    >
+      <div
+        class="col endring__container col-xs-12"
+      >
+        <div
+          name="fom"
+          value="01.01.2023"
+        >
+          <div
+            class="datovelger"
+          >
+            <div
+              class="navds-date__wrapper"
+            >
+              <div
+                class="datovelger__input input--s navds-form-field navds-form-field--small navds-date__field"
+              >
+                <label
+                  class="navds-form-field__label navds-label navds-label--small"
+                  for="123"
+                >
+                  <b>
+                    Fra og med
+                  </b>
+                </label>
+                <div
+                  class="navds-date__field-wrapper"
+                >
+                  <input
+                    aria-controls="aksel-id-2"
+                    autocomplete="off"
+                    class="navds-date__field-input navds-text-field__input navds-body-short navds-body-small"
+                    id="123"
+                    size="14"
+                    value="01.01.2023"
+                  />
+                  <button
+                    class="navds-date__field-button"
+                    tabindex="0"
+                    type="button"
+                  >
+                    <svg
+                      aria-labelledby="title-aksel-icon-1"
+                      fill="none"
+                      focusable="false"
+                      height="1em"
+                      pointer-events="none"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title
+                        id="title-aksel-icon-1"
+                      >
+                        Åpne datovelger
+                      </title>
+                      <path
+                        clip-rule="evenodd"
+                        d="M9.75 3a.75.75 0 0 0-1.5 0v1.25H4.5c-.69 0-1.25.56-1.25 1.25v13c0 .69.56 1.25 1.25 1.25h15c.69 0 1.25-.56 1.25-1.25v-13c0-.69-.56-1.25-1.25-1.25h-3.75V3a.75.75 0 0 0-1.5 0v1.25h-4.5V3Zm-5 2.75h3.5V7a.75.75 0 0 0 1.5 0V5.75h4.5V7a.75.75 0 0 0 1.5 0V5.75h3.5v3.5H4.75v-3.5Zm0 5v7.5h14.5v-7.5H4.75Zm2 2.25a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm4.75-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-3.25 2.25a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-7.25-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div
+                  aria-live="polite"
+                  aria-relevant="additions removals"
+                  class="navds-form-field__error"
+                  id="datepicker-input-error-aksel-id-1"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          name="tom"
+          value="01.04.2023"
+        >
+          <div
+            class="datovelger"
+          >
+            <div
+              class="navds-date__wrapper"
+            >
+              <div
+                class="datovelger__input input--s navds-form-field navds-form-field--small navds-date__field"
+              >
+                <label
+                  class="navds-form-field__label navds-label navds-label--small"
+                  for="123"
+                >
+                  <b>
+                    Til og med
+                  </b>
+                </label>
+                <div
+                  class="navds-date__field-wrapper"
+                >
+                  <input
+                    aria-controls="aksel-id-4"
+                    autocomplete="off"
+                    class="navds-date__field-input navds-text-field__input navds-body-short navds-body-small"
+                    id="123"
+                    size="14"
+                    value="01.04.2023"
+                  />
+                  <button
+                    class="navds-date__field-button"
+                    tabindex="0"
+                    type="button"
+                  >
+                    <svg
+                      aria-labelledby="title-aksel-icon-2"
+                      fill="none"
+                      focusable="false"
+                      height="1em"
+                      pointer-events="none"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title
+                        id="title-aksel-icon-2"
+                      >
+                        Åpne datovelger
+                      </title>
+                      <path
+                        clip-rule="evenodd"
+                        d="M9.75 3a.75.75 0 0 0-1.5 0v1.25H4.5c-.69 0-1.25.56-1.25 1.25v13c0 .69.56 1.25 1.25 1.25h15c.69 0 1.25-.56 1.25-1.25v-13c0-.69-.56-1.25-1.25-1.25h-3.75V3a.75.75 0 0 0-1.5 0v1.25h-4.5V3Zm-5 2.75h3.5V7a.75.75 0 0 0 1.5 0V5.75h4.5V7a.75.75 0 0 0 1.5 0V5.75h3.5v3.5H4.75v-3.5Zm0 5v7.5h14.5v-7.5H4.75Zm2 2.25a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm4.75-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-3.25 2.25a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-7.25-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div
+                  aria-live="polite"
+                  aria-relevant="additions removals"
+                  class="navds-form-field__error"
+                  id="datepicker-input-error-aksel-id-3"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="col col-xs-12"
+      >
+        <div
+          class="container__knapperad"
+        >
+          <button
+            class="knapp mui-knapp knapp capitalCase knapp--hoved"
+            type="submit"
+          >
+            Lagre
+          </button>
+          <button
+            class="knapp mui-knapp knapp capitalCase knapp--standard"
+            type="submit"
+          >
+            Avbryt
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

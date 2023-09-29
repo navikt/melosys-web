@@ -92,9 +92,13 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
 
   const finnPeriodeFraInnvilgedeMedlemskapsperioder = () => {
-    if (medlemskapsperioder) {
-      const fomDatoer = medlemskapsperioder.map((medlemskapsperiode) => new Date(medlemskapsperiode.fomDato).getTime());
-      const tomDatoer = medlemskapsperioder.map((medlemskapsperiode) => new Date(medlemskapsperiode.tomDato).getTime());
+    if (!Utils._isEmpty(medlemskapsperioder)) {
+      const fomDatoer = medlemskapsperioder!.map((medlemskapsperiode) =>
+        new Date(medlemskapsperiode.fomDato).getTime()
+      );
+      const tomDatoer = medlemskapsperioder!.map((medlemskapsperiode) =>
+        new Date(medlemskapsperiode.tomDato).getTime()
+      );
 
       const fomDato = Utils.dato.formatterDatoTilNorsk(new Date(Math.min(...fomDatoer)).toISOString());
       const tomDato = Utils.dato.formatterDatoTilNorsk(new Date(Math.max(...tomDatoer)).toISOString());

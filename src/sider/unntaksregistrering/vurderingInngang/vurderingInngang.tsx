@@ -59,18 +59,12 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
 
   const skalHenteRegisteropplysninger =
     !registeropplysningerHentet ||
-    formValues?.fom !== initialValues?.fom ||
-    formValues?.tom !== initialValues?.tom ||
+    !Utils.dato.erLikeDatoer(formValues?.fom, initialValues?.fom) ||
+    !Utils.dato.erLikeDatoer(formValues?.tom, initialValues?.tom) ||
     formValues?.avsenderland !== initialValues?.avsenderland ||
     formValues?.lovvalgsland !== initialValues?.lovvalgsland;
 
   const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger;
-
-  useEffect(() => {
-    if (registeropplysningerHentet) {
-      dispatch(menypanelOperations.visMenypanel());
-    }
-  }, []);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);

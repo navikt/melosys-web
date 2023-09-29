@@ -11,7 +11,7 @@ import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHje
 import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
 import { BOOLSK_STRING } from "../../../../../../constants";
 import { Begrunnelse } from "../vurderingBestemmelse";
-import { TomFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 
 const { SANN, USANN } = BOOLSK_STRING;
 const hjelpetekster = new Map([
@@ -26,7 +26,9 @@ interface VilkaarOgBegrunnelserProps {
   alleValgteVilkår: Map<string, string>;
   alleValgteBegrunnelser: Map<string, Begrunnelse>;
   vilkårKodeverk: KTObject[];
-  begrunnelseKodeverk: { [key: string]: KTObject[] };
+  begrunnelseKodeverk: {
+    [key: string]: KTObject[];
+  };
   handleEndreVilkår: ChangeEventHandler<HTMLInputElement>;
   handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement>;
   handleEndreBegrunnelseFritekst: (vilkår: string, fritekst: string) => void;
@@ -56,7 +58,6 @@ export const VilkaarOgBegrunnelser = ({
   return (
     <Fragment>
       <Nav.Fieldset
-        className="radio"
         legend={
           <LabelMedHjelpetekst
             label={KV.finnTermFraListe(vilkårKodeverk, vilkår)}
@@ -67,6 +68,7 @@ export const VilkaarOgBegrunnelser = ({
         <Nav.Row>
           <Nav.Column xs="1">
             <Nav.Radio
+              className="radio"
               label="Ja"
               name={vilkår}
               onChange={handleEndreVilkår}
@@ -78,6 +80,7 @@ export const VilkaarOgBegrunnelser = ({
           </Nav.Column>
           <Nav.Column xs="1">
             <Nav.Radio
+              className="radio"
               label="Nei"
               name={vilkår}
               onChange={handleEndreVilkår}
@@ -90,7 +93,7 @@ export const VilkaarOgBegrunnelser = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      {valgtVilkår === USANN && <TomFlytMelding />}
+      {valgtVilkår === USANN && <IngenFlytMelding />}
       {valgtVilkår === SANN && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
           className="select"

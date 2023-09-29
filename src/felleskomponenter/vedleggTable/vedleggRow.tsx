@@ -4,6 +4,7 @@ import PdfLink from "../pdfLink";
 import * as Utils from "../../utils";
 import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
+import { Table } from "@navikt/ds-react";
 
 interface VedleggRowProps {
   vedlegg: FysiskDokument;
@@ -12,17 +13,17 @@ interface VedleggRowProps {
 
 const VedleggRow = ({ vedlegg, slettVedlegg }: VedleggRowProps) => {
   return (
-    <tr className="vedlegg">
-      <td>
+    <Table.Row className="vedlegg">
+      <Table.DataCell>
         <PdfLink journalpostID={vedlegg.journalpostID} dokumentID={vedlegg.dokumentID} tittel={vedlegg.tittel} />
-      </td>
-      <td>
+      </Table.DataCell>
+      <Table.DataCell>
         <span>{Utils.dato.formatterDatoTilNorsk(vedlegg.dato)}</span>
-      </td>
-      <td className="icon--cell">
+      </Table.DataCell>
+      <Table.DataCell className="icon--cell">
         <Mui.IkonKnapp ariaLabel="Fjern vedlegg" ikon={Ikoner.Bin} onClick={slettVedlegg} />
-      </td>
-    </tr>
+      </Table.DataCell>
+    </Table.Row>
   );
 };
 

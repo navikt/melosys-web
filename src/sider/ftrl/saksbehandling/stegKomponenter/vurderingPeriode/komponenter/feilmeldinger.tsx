@@ -1,7 +1,7 @@
 import MKV from "../../../../../../melosyskodeverk";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
-import { TomFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 import { MedlemskapsperiodeProp } from "./types";
 
 const { AVSLAATT, INNVILGET } = MKV.Koder.innvilgelsesResultat;
@@ -28,7 +28,7 @@ const IngenSluttdato = (
 
 const MåStartePåSøknadsperiodeFom = (
   <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
-    Minst én periode må starte samme dato som søknadsperioden .
+    Minst én periode må starte samme dato som søknadsperioden.
   </Nav.AlertStripeAdvarsel>
 );
 
@@ -38,7 +38,7 @@ const erIkkeStøttetIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
 const finnesPeriodeSomStarterSamtidigSomSøknadsperioden = (
   medlemskapsperioder: MedlemskapsperiodeProp[],
   søknadsperiodeFomDato: string
-) => medlemskapsperioder.some((periode) => periode.fomDato === Utils.dato.formatterDatoTilNorsk(søknadsperiodeFomDato));
+) => medlemskapsperioder.some((periode) => Utils.dato.formatterDatoTilISO(periode.fomDato) === søknadsperiodeFomDato);
 
 const perioderErLike = (periode1: MedlemskapsperiodeProp, periode2: MedlemskapsperiodeProp) =>
   periode1.fomDato === periode2.fomDato && periode1.tomDato === periode2.tomDato;
@@ -124,7 +124,7 @@ export const Feilmelding = ({ type }: { type?: string }) => {
     case TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER:
       return IngenMedlemskapsperioder;
     case TypeFeilmelding.IKKE_STØTTET_I_MELOSYS:
-      return <TomFlytMelding />;
+      return <IngenFlytMelding />;
     case TypeFeilmelding.INGEN_SLUTTDATO:
       return IngenSluttdato;
     case TypeFeilmelding.MÅ_STARTE_PÅ_SØKNADSFOM:

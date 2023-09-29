@@ -6,6 +6,7 @@ import * as Ikoner from "../../resources/images";
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
 import { apnePdfINyFane } from "../../services/utils";
 import SlettFritekstvedleggModal from "./slettFritekstvedleggModal";
+import { Table } from "@navikt/ds-react";
 
 interface FritekstvedleggRowProps {
   fritekstvedlegg: Fritekstvedlegg;
@@ -32,28 +33,28 @@ const FritekstvedleggRow = ({
   };
 
   return (
-    <tr className="vedlegg">
-      <td>
+    <Table.Row>
+      <Table.DataCell>
         <Nav.Lenker href="#" onClick={aapnePdf}>
           {fritekstvedlegg.tittel}
         </Nav.Lenker>
-      </td>
-      <td />
-      <td className="icon--cell">
+      </Table.DataCell>
+      <Table.DataCell />
+      <Table.DataCell className="icon--cell">
         <Mui.IkonKnapp
           ikon={Ikoner.Pencil}
           onClick={() => redigerFritekstvedlegg && redigerFritekstvedlegg(index)}
           ariaLabel="Rediger vedlegg"
         />
         <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => setVisBekreftelseModal(true)} ariaLabel="Slett vedlegg" />
-      </td>
+      </Table.DataCell>
       {visBekreftelseModal ? (
         <SlettFritekstvedleggModal
           onRequestClose={() => setVisBekreftelseModal(false)}
           slettVedlegg={() => slettFritekstvedlegg && slettFritekstvedlegg(index)}
         />
       ) : null}
-    </tr>
+    </Table.Row>
   );
 };
 

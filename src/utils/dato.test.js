@@ -11,6 +11,7 @@ import {
   beregnAlder,
   erGyldigPeriode,
   erLike,
+  erLikeDatoer,
   plussEnDag,
 } from "./dato";
 
@@ -283,6 +284,18 @@ describe("dato.js:", () => {
         { fom: "2019-04-23T10:02:52.031Z", tom: "2019-04-23T10:02:52.031Z", forventetResultat: true },
         { fom: "2019-04-23T10:02:52.031Z", tom: "2019-04-23T10:02:59.031Z", forventetResultat: false },
       ].forEach((periode) => expect(erLike(periode.fom, periode.tom)).toBe(periode.forventetResultat));
+    });
+  });
+
+  describe("erLikeDatoer", () => {
+    it("returnerer forventet resultat", () => {
+      [
+        { fom: "2022-01-23", tom: "23.01.2022", forventetResultat: true },
+        { fom: "2022-01-23", tom: "2022-02-23", forventetResultat: false },
+        { fom: "2022-01-23", tom: "23012022", forventetResultat: true },
+        { fom: "23.01.2022", tom: "23012022", forventetResultat: true },
+        { fom: "2022-01-23", tom: "23.01.2022", forventetResultat: true },
+      ].forEach((periode) => expect(erLikeDatoer(periode.fom, periode.tom)).toBe(periode.forventetResultat));
     });
   });
 

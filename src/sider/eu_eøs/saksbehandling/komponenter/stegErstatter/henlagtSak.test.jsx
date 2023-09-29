@@ -1,36 +1,46 @@
+import { screen } from "@testing-library/react";
+import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
 import MKV from "../../../../../melosyskodeverk";
+import HenlagtSak from "./henlagtSak";
 
-import * as KV from "../../../../../kodeverk";
-
-import Henlagtsak from "./henlagtSak";
-import StegerstatterBase from "./stegerstatterBase";
-
-describe("Henlagtsak", () => {
+describe("HenlagtSak", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      behandlingsresultat: {
-        behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.HENLEGGELSE,
-        begrunnelseFritekst: null,
-        begrunnelseKoder: [MKV.Koder.begrunnelser.henleggelsesgrunner.SOEKNADEN_TRUKKET],
-      },
+      begrunnelseFritekst: null,
+      begrunnelseKoder: [MKV.Koder.begrunnelser.henleggelsesgrunner.SOEKNADEN_TRUKKET],
     };
   });
 
-  it("Bruker begrunnelseKoder som beskrivelse hvis ingen fritekst er oppgitt", () => {
-    const henlagtsak = shallow(<Henlagtsak {...props} />);
-
-    const beskrivelseTerm = henlagtsak.find(StegerstatterBase).props().beskrivelse;
-    const beskrivelseKode = KV.termTilKode(beskrivelseTerm, MKV.KTObjects.begrunnelser.henleggelsesgrunner);
-
-    expect(props.behandlingsresultat.begrunnelseKoder).toContain(beskrivelseKode);
+  const initialState = () => ({
+    behandlingsresultat: {
+      status: "",
+      data: {
+        begrunnelseFritekst: props.begrunnelseFritekst,
+        begrunnelseKoder: props.begrunnelseKoder,
+      },
+    },
   });
 
-  it("Bruker fritekst som beskrivelse hvis fritekst er oppgitt", () => {
-    props.behandlingsresultat.begrunnelseFritekst = "Fritekst";
-    const henlagtsak = shallow(<Henlagtsak {...props} />);
+  it("Bruker begrunnelseFritekst dersom den er oppgitt", () => {
+    props.begrunnelseFritekst = "begrunnelse-fritekst for hennleggelse";
 
-    expect(henlagtsak.find(StegerstatterBase).props().beskrivelse).toBe(props.behandlingsresultat.begrunnelseFritekst);
+    renderWithProviders(<HenlagtSak />, { preloadedState: initialState() });
+
+    expect(screen.getByText(props.begrunnelseFritekst)).toBeInTheDocument();
+  });
+
+  it("Bruker begrunnelseKode dersom fritekst ikke er oppgitt", () => {
+    renderWithProviders(<HenlagtSak />, { preloadedState: initialState() });
+
+    expect(screen.getByText("Søknaden er trukket")).toBeInTheDocument();
+  });
+
+  it("Bruker default setning dersom verken kode eller fritekst er oppgitt", () => {
+    props.begrunnelseKoder = [];
+    renderWithProviders(<HenlagtSak />, { preloadedState: initialState() });
+
+    expect(screen.getByText("Ukjent grunn")).toBeInTheDocument();
   });
 });

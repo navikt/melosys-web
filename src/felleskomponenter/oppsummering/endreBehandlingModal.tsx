@@ -149,7 +149,7 @@ function EndreBehandlingModal({
 
     if (
       sakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE ||
-      Routing.skalViseTomFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)
+      Routing.skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)
     ) {
       await Api.Trygdeavtale.slettFlyt(behandlingID);
     } else {
@@ -305,9 +305,10 @@ function EndreBehandlingModal({
               disableForsteValg
             />
             <Datovelger
-              onChange={setMottaksdato}
+              onChange={(dato) => setMottaksdato(Datoutils.norskStringTilDate(dato))}
               label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>}
               value={mottaksdato}
+              brukInternValidering
             />
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingsstatus(e.target.value)}

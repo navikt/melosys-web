@@ -33,25 +33,11 @@ import "./vurderingVedtak.css";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 import useHentPersonopplysninger from "../../../../felleskomponenter/informasjonlinje/useHentpersonopplysninger";
+import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingvedtak/tekster";
+import { FRITEKST_VALG } from "../../../../kodeverk/koder";
+import { Table } from "@navikt/ds-react";
 
 const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
-
-const komponentState = (state: RootState) => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  medlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
-  innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
-  soknadsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
-  mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
-  vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
-  initialValues: {
-    begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state) || "",
-    innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state) || "",
-    trygdeavgiftFritekst: "", // TODO: MELOSYS-6084
-  },
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  alleLandkoder: landkoderSelectors.LandkoderSelector(state),
-  mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
-});
 
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
@@ -73,23 +59,34 @@ interface Props {
 
 // TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
-  const dispatch = useDispatch();
+  const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
+    return !MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.some((bakgrunn: KTObject) => {
+      return bakgrunn.kode === nyVurderingBakgrunnValg;
+    });
+  };
+
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
+  const innvilgelsesResultater = useSelector(folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector);
+  const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  const mottatteOpplysningerFeilmeldinger = useSelector(formSelectors.SoknadErrorsSelector);
+  const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const alleLandkoder = useSelector(landkoderSelectors.LandkoderSelector);
+  const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
+  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const lagretNyVurderingBakgrunn = useSelector(behandlingsresultatSelectors.NyVurderingBakgrunnSelector);
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+  const initialNyVurderingBakgrunnValg =
+    lagretNyVurderingBakgrunn && erNyVurderingBakgrunnValgFritekst(lagretNyVurderingBakgrunn)
+      ? FRITEKST_VALG
+      : lagretNyVurderingBakgrunn || undefined;
+  const initialNyVurderingBakgrunnFritekst =
+    initialNyVurderingBakgrunnValg === FRITEKST_VALG ? lagretNyVurderingBakgrunn : "";
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const dispatch = useDispatch();
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
-
-  const {
-    behandlingID,
-    medlemskapsperioder,
-    innvilgelsesResultater,
-    soknadsland,
-    mottatteOpplysningerFeilmeldinger,
-    vedtakstype,
-    initialValues,
-    alleLandkoder,
-    redigerbart,
-    mottatteOpplysningerStatus,
-  } = useSelector(komponentState);
 
   const personopplysninger = useHentPersonopplysninger(behandlingID, false);
 
@@ -97,10 +94,15 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     watch,
     control,
     formState: { isValid: formIsValid },
+    setValue,
   } = useForm({
     resolver: yupResolver(vurdering_vedtak),
     defaultValues: {
-      ...initialValues,
+      begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
+      innledningFritekst: useSelector(behandlingsresultatSelectors.InnledningFritekstSelector) || "",
+      trygdeavgiftFritekst: "", // TODO: MELOSYS-6084
+      nyVurderingBakgrunnValg: initialNyVurderingBakgrunnValg,
+      nyVurderingBakgrunnFritekst: initialNyVurderingBakgrunnFritekst,
     } as FieldValues,
   });
   const formValues = watch();
@@ -110,6 +112,24 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
   const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
+
+  const oppdaterNyVurderingBakgrunn = (nyVurderingBakgrunn?: string) => {
+    Api.Behandlinger.resultat.oppdaterNyVurderingBakgrunn(behandlingID, nyVurderingBakgrunn);
+  };
+
+  const debouncedOppdaterNyVurderingBakgrunn = useCallback(Utils._debounce(oppdaterNyVurderingBakgrunn, 500), []);
+
+  const oppdaterNyVurderingBakgrunnValg = (nyVurderingBakgrunnValg: string) => {
+    if (!erNyVurdering) {
+      return;
+    }
+    if (nyVurderingBakgrunnValg === FRITEKST_VALG) {
+      debouncedOppdaterNyVurderingBakgrunn(undefined);
+    } else {
+      debouncedOppdaterNyVurderingBakgrunn(nyVurderingBakgrunnValg);
+    }
+    setValue("nyVurderingBakgrunnFritekst", "");
+  };
 
   const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
 
@@ -182,6 +202,10 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
           trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
+          nyVurderingBakgrunn:
+            formValues?.nyVurderingBakgrunnValg === FRITEKST_VALG
+              ? formValues?.nyVurderingBakgrunnFritekst
+              : formValues?.nyVurderingBakgrunnValg,
           orgNr: muligMottaker?.orgnr || null,
         },
       },
@@ -218,7 +242,10 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
       vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
-      nyVurderingBakgrunn: null,
+      nyVurderingBakgrunn:
+        formValues?.nyVurderingBakgrunnValg === FRITEKST_VALG
+          ? formValues?.nyVurderingBakgrunnFritekst
+          : formValues?.nyVurderingBakgrunnValg,
     };
   };
 
@@ -276,26 +303,26 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     <div className="vurderingVedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Frivillig medlemskap etter § 2-8</Nav.Typo.Innholdstittel>
 
-      <div className="melosys__table-wrapper">
-        <table className="melosys__table">
-          <tbody>
-            <tr className="header">
-              <th>Periode</th>
-              <th>Dekning</th>
-              <th>Resultat</th>
-            </tr>
-            {mapPeriodeRader(medlemskapsperioder).map((periode) => {
-              return (
-                <tr key={Utils._uuid()}>
-                  <td>{periode.periode}</td>
-                  <td>{periode.dekning}</td>
-                  <td>{periode.resultat}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      <Table size="small" className="melosys__table">
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
+            <Table.HeaderCell scope="col">Dekning</Table.HeaderCell>
+            <Table.HeaderCell scope="col">Resultat</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {mapPeriodeRader(medlemskapsperioder).map((medlemskapsperiode) => {
+            return (
+              <Table.Row key={Utils._uuid()}>
+                <Table.DataCell>{medlemskapsperiode.periode}</Table.DataCell>
+                <Table.DataCell>{medlemskapsperiode.dekning}</Table.DataCell>
+                <Table.DataCell>{medlemskapsperiode.resultat}</Table.DataCell>
+              </Table.Row>
+            );
+          })}
+        </Table.Body>
+      </Table>
 
       <Nav.Row className="margin_bottom">
         <Nav.Column xs="5">
@@ -323,6 +350,49 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           </Nav.Column>
         </Nav.Row>
       ) : null}
+
+      {erNyVurdering && (
+        <div className="nyVurderingBakgrunn--container">
+          <Nav.Fieldset
+            className="nyVurderingBakgrunn"
+            legend={
+              <LabelMedHjelpetekst
+                label="Oppgi grunn for nytt vedtak (Obligatorisk)"
+                hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
+                hjelpetekstClassName="nyVurderingBakgrunn__hjelpetekst"
+              />
+            }
+          >
+            <Nav.Row>
+              <Nav.Column xs="6">
+                <Forms.Select
+                  name="nyVurderingBakgrunnValg"
+                  disabled={!redigerbart}
+                  emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
+                  control={control}
+                  onChange={oppdaterNyVurderingBakgrunnValg}
+                >
+                  {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
+                    <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
+                  ))}
+                  <option key={FRITEKST_VALG} value={FRITEKST_VALG} label={FRITEKST_VALG} />
+                </Forms.Select>
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Fieldset>
+          {formValues.nyVurderingBakgrunnValg === FRITEKST_VALG && (
+            <Nav.Row className="nyVurderingBakgrunnFritekstRad">
+              <Forms.HtmlEditor
+                name="nyVurderingBakgrunnFritekst"
+                control={control}
+                onChange={debouncedOppdaterNyVurderingBakgrunn}
+                className="nyVurderingBakgrunn--fritekst_editor"
+                disabled={!redigerbart}
+              />
+            </Nav.Row>
+          )}
+        </div>
+      )}
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         <LabelMedHjelpetekst
@@ -367,26 +437,23 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       />
 
       {stegErGyldig && muligeMottakere && (
-        <div className="melosys__table-wrapper">
-          <table className="melosys__table">
-            <tbody>
-              <tr className="header">
-                <th>Dokument</th>
-                <th>Mottaker</th>
-              </tr>
-              {mapMottakerRader(muligeMottakere).map((mottaker) => {
-                return (
-                  <tr key={Utils._uuid()}>
-                    <td>{mottaker.dokument}</td>
-                    <td>{mottaker.navn}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <Table>
+          <Table.Header>
+            <Table.HeaderCell>Dokument</Table.HeaderCell>
+            <Table.HeaderCell>Mottaker</Table.HeaderCell>
+          </Table.Header>
+          <Table.Body>
+            {mapMottakerRader(muligeMottakere).map((mottaker) => {
+              return (
+                <Table.Row key={Utils._uuid()}>
+                  <Table.DataCell>{mottaker.dokument}</Table.DataCell>
+                  <Table.DataCell>{mottaker.navn}</Table.DataCell>
+                </Table.Row>
+              );
+            })}
+          </Table.Body>
+        </Table>
       )}
-
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: onSubmit,

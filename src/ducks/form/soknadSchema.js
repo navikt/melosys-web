@@ -33,7 +33,8 @@ const erTrygdeavtaleEllerFtrl = (sakstype) => erTrygdeavtaleSak(sakstype) || erF
 const erAltinnsøknad = (mottatteOpplysningerType) =>
   mottatteOpplysningerType === MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
-const skalValidereRepresentantIUtlandet = (harUnntakFlyt, sakstype) => !harUnntakFlyt && erTrygdeavtaleSak(sakstype);
+const skalValidereRepresentantIUtlandet = (harUnntaksregistreringFlyt, sakstype) =>
+  !harUnntaksregistreringFlyt && erTrygdeavtaleSak(sakstype);
 
 const hentSoknadsperiodeMeldingtekst = (mottatteOpplysningerType) => {
   const menypunkt = erAltinnsøknad(mottatteOpplysningerType)
@@ -245,7 +246,7 @@ const soknad = object().when(["$behandlingstema"], {
         )
     ),
     representantIUtlandet: object()
-      .when(["$harUnntakFlyt", "$sakstype"], {
+      .when(["$harUnntaksregistreringFlyt", "$sakstype"], {
         is: skalValidereRepresentantIUtlandet,
         then: object()
           .shape({
@@ -362,8 +363,8 @@ const soknad = object().when(["$behandlingstema"], {
           ),
       }),
     }),
-    soknadsland: object().when("$harUnntakFlyt", {
-      is: (harUnntakFlyt) => !harUnntakFlyt,
+    soknadsland: object().when("$harUnntaksregistreringFlyt", {
+      is: (harUnntaksregistreringFlyt) => !harUnntaksregistreringFlyt,
       then: object().shape({
         landkoder: array().when("erUkjenteEllerAlleEosLand", {
           is: (erUkjenteEllerAlleEosLand) => !erUkjenteEllerAlleEosLand,

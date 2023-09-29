@@ -4,37 +4,37 @@ import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 import * as Api from "../../../../services/api";
 import ChevronKnapp from "../../../chevronKnapp/chevronKnapp";
+import { Table } from "@navikt/ds-react";
 
 interface MedlemskapTableProps {
   perioder: Api.Behandlinger.behandling.Medlemsperiode[];
 }
 
-// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const MedlemskapTable = ({ perioder }: MedlemskapTableProps) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
     <div className="menypanel__table-wrapper">
-      <table className="menypanel__table">
-        <tbody>
-          <tr className="header">
-            <th>Fra og med</th>
-            <th>Til og med</th>
-            <th>Land</th>
-            <th>Status</th>
-            <th>Hjemmel</th>
-          </tr>
+      <Table>
+        <Table.Header>
+          <Table.HeaderCell>Fra og med</Table.HeaderCell>
+          <Table.HeaderCell>Til og med</Table.HeaderCell>
+          <Table.HeaderCell>Land</Table.HeaderCell>
+          <Table.HeaderCell>Status</Table.HeaderCell>
+          <Table.HeaderCell>Hjemmel</Table.HeaderCell>
+        </Table.Header>
+        <Table.Body>
           {(expanded ? perioder : perioder.slice(0, 2)).map((periode) => (
-            <tr key={Utils._uuid()}>
-              <td>{Utils.dato.formatterDatoTilNorsk(periode.periode.fom)}</td>
-              <td>{Utils.dato.formatterDatoTilNorsk(periode.periode.tom)}</td>
-              <td>{KV.objektTilTerm(periode.land)}</td>
-              <td>{KV.objektTilTerm(periode.status)}</td>
-              <td>{KV.objektTilTerm(periode.grunnlagstype)}</td>
-            </tr>
+            <Table.Row key={Utils._uuid()}>
+              <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(periode.periode.fom)}</Table.DataCell>
+              <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(periode.periode.tom)}</Table.DataCell>
+              <Table.DataCell>{KV.objektTilTerm(periode.land)}</Table.DataCell>
+              <Table.DataCell>{KV.objektTilTerm(periode.status)}</Table.DataCell>
+              <Table.DataCell>{KV.objektTilTerm(periode.grunnlagstype)}</Table.DataCell>
+            </Table.Row>
           ))}
-        </tbody>
-      </table>
+        </Table.Body>
+      </Table>
       {perioder.length > 2 && (
         <ChevronKnapp
           expanded={expanded}

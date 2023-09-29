@@ -1,11 +1,15 @@
-import PT from "prop-types";
 import parse from "html-react-parser";
 
 import * as Nav from "../../../../../navFrontend";
 
 import "./stegerstatterBase.css";
 
-const StegerstatterBase = ({ tittel, beskrivelse }) => (
+interface StegerstatterBaseProps {
+  tittel: string;
+  beskrivelse: string;
+}
+
+const StegerstatterBase = ({ tittel, beskrivelse }: StegerstatterBaseProps) => (
   <section className="panelSeksjon stegerstatter">
     <Nav.Panel>
       <Nav.Row>
@@ -15,10 +19,5 @@ const StegerstatterBase = ({ tittel, beskrivelse }) => (
     </Nav.Panel>
   </section>
 );
-
-StegerstatterBase.propTypes = {
-  tittel: PT.string.isRequired,
-  beskrivelse: PT.string.isRequired,
-};
 
 export default StegerstatterBase;

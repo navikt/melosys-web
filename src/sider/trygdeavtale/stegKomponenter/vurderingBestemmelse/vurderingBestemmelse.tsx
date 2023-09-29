@@ -21,7 +21,7 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
 import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
-import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
 
 const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, NEI_SENDE_TIL_DEPARTEMENTET } = KV.Koder.AVTALELAND_UTFALL;
 
@@ -99,7 +99,7 @@ const VurderingBestemmelse = ({
   if (!formValues) return null;
 
   return (
-    <div className="vurderingBestemmelse">
+    <div className="vurderingBestemmelse_trygdeavtale">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
 
       <Nav.Fieldset legend="Hva er din vurdering av søknaden?">
@@ -154,7 +154,7 @@ const VurderingBestemmelse = ({
 
       {formValues?.vedtak === NEI_ANMODE_OM_UNNTAK && (
         <Nav.Row>
-          <Nav.Column xs="10" className="unntakTekst">
+          <Nav.Column xs="10" className="unntakHjelpetektsWrapper">
             <UnntakHjelpetekst />
           </Nav.Column>
         </Nav.Row>
@@ -163,13 +163,13 @@ const VurderingBestemmelse = ({
       {formValues?.vedtak === NEI_AVSLAG && (
         <Nav.Row>
           <Nav.Column xs="10">
-            <TomFlytMelding />
+            <IngenFlytMelding />
           </Nav.Column>
         </Nav.Row>
       )}
 
       <Nav.Row>
-        <Nav.Column xs="10" className="bestemmelseTekst">
+        <Nav.Column xs="10" className="bestemmelseHjelptetekst">
           <BestemmelseHjelpetekst bestemmelse={formValues.bestemmelse} />
         </Nav.Column>
       </Nav.Row>

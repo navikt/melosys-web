@@ -1,22 +1,17 @@
-import { shallow } from "enzyme";
-import * as redux from "react-redux";
-import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 import { BehandlingOppgaver } from "./behandlingOppgaver";
-import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
-import * as featureToggleModule from "../../../../featuretoggle";
+import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+import { MemoryRouter } from "react-router-dom";
 
 vi.mock("../../../../featuretoggle", () => ({
   __esModule: true,
-  useFeatureToggle: vi.fn(),
+  useFeatureToggle: () => true,
 }));
 
 describe("Behandlingsoppgaver", () => {
-  beforeEach(() => {
-    vi.spyOn(featureToggleModule, "useFeatureToggle").mockResolvedValue(true as never);
-  });
-
-  const saksbehandling = [
+  const saker = [
     {
+      navn: "Peter Petersen",
+      hovedpartIdent: "Z123456",
       oppgaveID: "174562068",
       sammensattNavn: "GLITRENDE HATT",
       fnr: "28106600300",
@@ -25,11 +20,19 @@ describe("Behandlingsoppgaver", () => {
         kode: "TRYGDEAVTALE",
         term: "Avtaleland",
       },
+      sakstema: {
+        kode: "MEDLEMDKAP_LOVVALG",
+        term: "Medlemskap lovvalg",
+      },
       behandling: {
         behandlingID: 4,
+        behandlingstema: {
+          kode: "YRKESAKTIV",
+          term: "Yrkesaktiv",
+        },
         behandlingstype: {
-          kode: "SOEKNAD",
-          term: "Søknad",
+          kode: "FØRSTEGANG",
+          term: "Førstegang",
         },
         behandlingsstatus: {
           kode: "UBEH",
@@ -57,24 +60,20 @@ describe("Behandlingsoppgaver", () => {
 
   const props = {
     mineSaker: {
-      saksbehandling,
+      saksbehandling: saker,
     },
+    dispatch: vi.fn(),
     landkoder: [],
   };
 
-  it("viser en OppgaverMedSortering for journalføringsoppgaver", () => {
-    const useDispatchSpy = vi.spyOn(redux, "useDispatch");
-    const mockDispatchFn = vi.fn();
-    useDispatchSpy.mockReturnValue(mockDispatchFn);
+  it("viser behandlingsoppgave", () => {
+    const { container } = renderWithProviders(
+      // Trenger en Router på toppnivå her siden vi bruker Link lengre ned.
+      <MemoryRouter>
+        <BehandlingOppgaver {...props} />
+      </MemoryRouter>
+    );
 
-    // @ts-ignore
-    const saksbehandlingsOppgaver = shallow(<BehandlingOppgaver dispatch={mockDispatchFn} {...props} />);
-    const behandlingsOppgaver = saksbehandlingsOppgaver.find(SorterbarListe).first();
-
-    const journalforingOppgaverProps = behandlingsOppgaver.props();
-    expect(journalforingOppgaverProps.component).toBe(BehandlingOppgave);
-    expect(journalforingOppgaverProps.elementer).toBe(props.mineSaker.saksbehandling);
-
-    useDispatchSpy.mockClear();
+    expect(container).toMatchSnapshot();
   });
 });

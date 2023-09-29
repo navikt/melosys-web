@@ -3,6 +3,7 @@ import { useState } from "react";
 import * as Utils from "../../../../../utils";
 import ChevronKnapp from "../../../../chevronKnapp/chevronKnapp";
 import { Statsborgerskap } from "../../../../../graphql";
+import { Table } from "@navikt/ds-react";
 
 interface StatsborgerskapTableProps {
   statsborgerskapList: Statsborgerskap[];
@@ -18,7 +19,6 @@ const renderPeriode = (statsborgerskap: Statsborgerskap, historisk?: boolean) =>
   return statsborgerskap.gyldigFraOgMed ? Utils.dato.formatterDatoTilNorsk(statsborgerskap.gyldigFraOgMed) : "";
 };
 
-// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const StatsborgerskapTable = ({ statsborgerskapList, historisk }: StatsborgerskapTableProps) => {
   const [expanded, setExpanded] = useState(false);
   const periodetekst = `Gyldig f.o.m.${historisk ? " - t.o.m." : ""}`;
@@ -26,28 +26,28 @@ const StatsborgerskapTable = ({ statsborgerskapList, historisk }: Statsborgerska
   return (
     <div className="menypanel__table-wrapper">
       {!historisk || expanded ? (
-        <table className="menypanel__table">
-          <tbody>
-            <tr className="header">
-              <th className={historisk ? "transparent" : ""}>Land</th>
-              <th className={historisk ? "transparent" : ""}>Register</th>
-              <th className={historisk ? "transparent" : ""}>Kilde</th>
-              <th className={historisk ? "transparent" : ""}>Bekreftelsesdato</th>
-              <th className="fixed-width">{periodetekst}</th>
-            </tr>
+        <Table className="menypanel__table">
+          <Table.Header>
+            <Table.HeaderCell className={historisk ? "transparent" : ""}>Land</Table.HeaderCell>
+            <Table.HeaderCell className={historisk ? "transparent" : ""}>Register</Table.HeaderCell>
+            <Table.HeaderCell className={historisk ? "transparent" : ""}>Kilde</Table.HeaderCell>
+            <Table.HeaderCell className={historisk ? "transparent" : ""}>Bekreftelsesdato</Table.HeaderCell>
+            <Table.HeaderCell className="fixed-width">{periodetekst}</Table.HeaderCell>
+          </Table.Header>
+          <Table.Body>
             {statsborgerskapList.map((statsborgerskap) => (
-              <tr key={Utils._uuid()}>
-                <td>{statsborgerskap.land}</td>
-                <td>{statsborgerskap.master}</td>
-                <td>{statsborgerskap.kilde}</td>
-                <td>{Utils.dato.formatterDatoTilNorsk(statsborgerskap.bekreftelsesdato)}</td>
-                <td className={historisk ? "historisk-label" : "gyldig-label"}>
+              <Table.Row key={Utils._uuid()}>
+                <Table.DataCell>{statsborgerskap.land}</Table.DataCell>
+                <Table.DataCell>{statsborgerskap.master}</Table.DataCell>
+                <Table.DataCell>{statsborgerskap.kilde}</Table.DataCell>
+                <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(statsborgerskap.bekreftelsesdato)}</Table.DataCell>
+                <Table.DataCell className={historisk ? "historisk-label" : "gyldig-label"}>
                   {renderPeriode(statsborgerskap, historisk)}
-                </td>
-              </tr>
+                </Table.DataCell>
+              </Table.Row>
             ))}
-          </tbody>
-        </table>
+          </Table.Body>
+        </Table>
       ) : null}
       {historisk && (
         <ChevronKnapp

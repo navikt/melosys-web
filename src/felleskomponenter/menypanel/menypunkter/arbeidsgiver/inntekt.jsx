@@ -4,7 +4,7 @@ import HighchartsReact from "highcharts-react-official";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import * as MPT from "../../../../proptypes";
-import Tabell from "../../../tabell/tabell";
+import TabellArbeidsgiver from "./tabellArbeidsgiver";
 
 import "./inntekt.css";
 
@@ -73,7 +73,7 @@ class Inntekt extends Component {
     const uuTabell = this.state.visInntektTabell ? (
       <div>
         <Nav.Typo.Undertittel>Inntekt</Nav.Typo.Undertittel>
-        <Tabell kolonneNavn={["Periode", "Samlet inntekt"]} tabellData={inntektArrayed} linjerPerSide={6} />
+        <TabellArbeidsgiver kolonneNavn={["Periode", "Samlet inntekt"]} tabellData={inntektArrayed} linjerPerSide={6} />
       </div>
     ) : null;
 

@@ -4,89 +4,73 @@
   .stegvelgertittel {
     margin-bottom: 1.5rem;
   }
-
   .info {
     padding-left: 0.5em;
   }
-
   .hjelpetekst {
     white-space: pre-wrap;
     margin-bottom: 0.25rem;
   }
-
   .ikon {
     width: 20px;
     height: 20px;
     margin-bottom: 0.25rem;
   }
-
   .datofelt_wrapper {
     display: inline-flex;
-    padding-left: 0.5em;
+    margin-left: 0.5rem;
+    .datovelger {
+      padding-bottom: 0.5rem;
+    }
+    > * {
+      margin-top: 1rem;
+      margin-right: 1rem;
+    }
   }
-
-  .datofelt {
-    margin-left: 1rem;
-    margin-top: 1rem;
+  .datofelt_knapper > * {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.75rem;
   }
-
+  .periode {
+    display: inline-flex;
+    margin-left: 0.5rem;
+    margin-top: 0.5rem;
+  }
   .endrePeriode {
     cursor: pointer;
     margin-left: 0.5rem;
   }
-
   .endrePeriodeTekst {
     vertical-align: top;
     margin-left: 0.25rem;
     color: @navBla;
   }
-
-  .endrePeriode--disabled {
+  .endrePeriodeTekst--disabled {
+    vertical-align: top;
+    margin-left: 0.25rem;
     cursor: auto;
   }
-
   .fritekst_editor {
     margin-left: 0.5rem;
   }
-
   .kopiCheckbox {
     margin: 2rem 0 -1rem 0.5rem;
   }
-
   .forhåndsvisning {
     margin: 0;
     display: inline-block;
   }
-
-  .nyvurdering {
-    margin-left: 0.5rem;
-    margin-bottom: -1rem;
-    .skjema__legend {
-      margin-bottom: 0;
-    }
-    &--fritekst {
-      margin-top: 0.5rem;
-      margin-bottom: 0;
-    }
+  .nyvurdering_info {
+    margin-top: 1rem;
+    padding-bottom: 1rem;
   }
-
   .nyVurderingBakgrunn {
-    margin-top: 2rem;
     margin-bottom: -1rem;
-
-    .fieldset__legend {
-      margin-bottom: 0.5rem;
-    }
   }
-
   .nyVurderingBakgrunnFritekstRad {
     margin-top: 0.5rem;
   }
-
-  .alertstripe {
-    margin: -1rem auto;
-  }
-
   .fritekst_overskrift {
     margin-top: 2rem;
     margin-left: 0.5rem;
@@ -96,13 +80,7 @@
       height: 20px;
     }
   }
-
   .fritekst_editor {
     margin-left: 0.5rem;
-  }
-
-  .feilmelding {
-    margin-top: 1rem;
-    padding-bottom: 1rem;
   }
 }

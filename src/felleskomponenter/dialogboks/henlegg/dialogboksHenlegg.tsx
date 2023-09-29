@@ -2,10 +2,13 @@ import { ChangeEventHandler, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import MKV from "../../../melosyskodeverk";
+import * as Api from "../../../services/api";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
 import * as Utils from "../../../utils";
 
+import { Feilmeldinger } from "../../feilmeldinger";
+import { AlertStripeFeil } from "nav-frontend-alertstriper";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Knapperad from "../../knapperad";
 import HtmlEditor from "../../htmlEditor";
@@ -13,20 +16,24 @@ import bem from "../../../bemUtils";
 
 import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { Feilmeldinger } from "../../feilmeldinger";
+import { navigeringOperations } from "../../../ducks/navigering";
+import { datalastingOperations } from "../../../ducks/datalasting";
+import { modalerOperations } from "../../../ducks/modaler";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 import "./dialogboksHenlegg.css";
 
 type DialogboksHenleggSakProps = {
-  henleggHandle: (data: { begrunnelseKode: string; fritekst: string }) => void;
   avbryt: () => void;
   ariaHideApp?: boolean;
 };
 
-export const DialogboksHenleggSak = ({ henleggHandle, avbryt, ariaHideApp = false }: DialogboksHenleggSakProps) => {
+export const DialogboksHenleggSak = ({ avbryt, ariaHideApp = false }: DialogboksHenleggSakProps) => {
   const dispatch = useDispatch();
+  const [feil, setFeil] = useState<undefined | string>(undefined);
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
 
   const [begrunnelseKode, setBegrunnelseKode] = useState<string>("");
@@ -74,18 +81,27 @@ export const DialogboksHenleggSak = ({ henleggHandle, avbryt, ariaHideApp = fals
     setFeilmeldingSelect(null);
   };
 
-  const handleForhandsvisBrev = async () => {
+  const erValgGyldig = () => {
     const begrunnelsePassertValidering = validerBegrunnelse();
     const fritekstPassertValidering = validerFritekst();
     return begrunnelsePassertValidering && fritekstPassertValidering;
   };
 
+  const henleggHandle = async (data: Api.Fagsaker.fagsak.HenleggReqDto) => {
+    await dispatch(datalastingOperations.lagreAllData());
+
+    Api.Fagsaker.fagsak
+      .henlegg(saksnummer, data)
+      .then(() => {
+        dispatch(modalerOperations.skjulHenlegg());
+        dispatch(navigeringOperations.tilForsiden());
+      })
+      .catch((error) => setFeil(error.body?.message || error));
+  };
+
   const handleHenlegg = () => {
-    if (!(validerBegrunnelse() && validerFritekst())) return;
-    henleggHandle({
-      begrunnelseKode,
-      fritekst,
-    });
+    if (!erValgGyldig()) return;
+    henleggHandle({ begrunnelseKode, fritekst });
   };
 
   const pdfDokumenter = [
@@ -116,7 +132,10 @@ export const DialogboksHenleggSak = ({ henleggHandle, avbryt, ariaHideApp = fals
         <Nav.Typo.Systemtittel className={dialogboksHenleggClassName.element("overskrift")}>
           Henlegg saken
         </Nav.Typo.Systemtittel>
-        <Feilmeldinger className={dialogboksHenleggClassName.element("feilmeldinger")} />
+        <Feilmeldinger className={dialogboksHenleggClassName.element("kontrollfeil")} />
+        {feil && (
+          <AlertStripeFeil className={dialogboksHenleggClassName.element("feilmeldinger")}>{feil}</AlertStripeFeil>
+        )}
         <Mui.KodeTermSelect
           feil={feilmeldingSelect}
           onChange={velgBegrunnelseHandle}
@@ -136,7 +155,7 @@ export const DialogboksHenleggSak = ({ henleggHandle, avbryt, ariaHideApp = fals
           />
         )}
         {harIngenFeilmeldinger && (
-          <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={handleForhandsvisBrev} />
+          <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={erValgGyldig} />
         )}
         <Knapperad
           bekreft={handleHenlegg}

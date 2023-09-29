@@ -66,7 +66,7 @@ export const Person = ({
         <Nav.Row>
           <Nav.Column className="etikett__container">
             <Etiketter.FraBruker />
-            {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel style={{ marginLeft: "0.3em" }} />}
+            {visArbeidsforholdRolleEtiketter && <Etiketter.BrukersDel style={{ marginLeft: "0.3em" }} />}
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>

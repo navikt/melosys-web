@@ -83,7 +83,7 @@ export class VurderingEndrePeriode extends Component {
   };
 
   vedTomDatoEndring = (dato) => {
-    this.setState({ nyTomDato: Utils.dato.dateTilNorskString(dato), nyTomDatoFeilmelding: undefined });
+    this.setState({ nyTomDato: dato, nyTomDatoFeilmelding: undefined });
   };
 
   lagrePeriodeForForhandsvisning = () => {

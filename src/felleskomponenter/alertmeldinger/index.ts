@@ -1,10 +1,17 @@
 import {
   Alertmeldinger,
   StandardMeldingOverst,
-  TomFlytMelding,
+  IngenFlytMelding,
   VirksomhetMelding,
   Innsynsmelding,
 } from "./alertmeldinger";
 import UnntakHjelpetekst from "./unntakHjelpetekst";
 
-export { VirksomhetMelding, TomFlytMelding, StandardMeldingOverst, Alertmeldinger, UnntakHjelpetekst, Innsynsmelding };
+export {
+  VirksomhetMelding,
+  IngenFlytMelding,
+  StandardMeldingOverst,
+  Alertmeldinger,
+  UnntakHjelpetekst,
+  Innsynsmelding,
+};

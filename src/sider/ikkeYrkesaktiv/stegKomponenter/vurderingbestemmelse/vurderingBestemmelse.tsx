@@ -16,9 +16,10 @@ import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 
-import { TomFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
 
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
+import "./vurderingBestemmelse.css";
 
 const { INNVILGET, AVSLAATT } = MKV.Koder.innvilgelsesResultat;
 const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
@@ -116,16 +117,16 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const innvilgelsesResultatErUNNTAK = formValues?.innvilgelsesResultat === UNNTAK;
 
   return (
-    <div className="vurderingBestemmelse">
+    <div className="vurderingBestemmelse_ikkeyrkesaktiv">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
 
       {sakstype === EU_EOS && (
-        <Nav.AlertStripeInfo>
+        <Nav.AlertStripeInfo className="infomelding">
           Du må vurdere om søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004
         </Nav.AlertStripeInfo>
       )}
 
-      <Nav.Fieldset legend="Hva er din vurdering av søknaden?">
+      <Nav.Fieldset legend="Hva er din vurdering av søknaden?" className="innvilgelsesresultat">
         <Forms.Radio
           name="innvilgelsesResultat"
           control={control}
@@ -151,7 +152,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
       {formValues?.innvilgelsesResultat === INNVILGET && (
         <>
-          <Nav.Fieldset className="select" legend="Velg bestemmelse">
+          <Nav.Fieldset legend="Velg bestemmelse">
             <Nav.Row>
               <Nav.Column xs="7">
                 <Forms.Select
@@ -192,7 +193,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
       {innvilgelsesResultatErUNNTAK && sakstype === TRYGDEAVTALE && (
         <Nav.Row>
-          <Nav.Column xs="10" className="unntakTekst">
+          <Nav.Column xs="10">
             <UnntakHjelpetekst />
           </Nav.Column>
         </Nav.Row>
@@ -200,7 +201,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
       {innvilgelsesResultatErUNNTAK && sakstype === EU_EOS && (
         <Nav.Row>
-          <Nav.Column xs="10" className="unntakTekst">
+          <Nav.Column xs="10" className="unntakHjelpetekst">
             <Nav.EtikettBase type="info">
               <ul>
                 <li>Opprett LA_BUC_01 i &quot;Opprett ny BUC&quot;-menyen</li>
@@ -217,7 +218,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       )}
 
-      {formValues?.innvilgelsesResultat === AVSLAATT && <TomFlytMelding />}
+      {formValues?.innvilgelsesResultat === AVSLAATT && <IngenFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{

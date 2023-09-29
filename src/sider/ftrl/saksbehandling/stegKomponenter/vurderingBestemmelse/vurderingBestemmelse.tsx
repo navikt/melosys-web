@@ -20,7 +20,7 @@ import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import "./vurderingBestemmelse.css";
-import { TomFlytMelding } from "../../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding } from "../../../../../felleskomponenter/alertmeldinger";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export interface Begrunnelse {
@@ -230,12 +230,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   if (!aktivtSteg) return null;
 
   return (
-    <div className="vurderingBestemmelse">
+    <div className="vurderingBestemmelse_ftrl">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Hvilken bestemmelse skal søknaden vurderes etter?
       </Nav.Typo.Innholdstittel>
 
-      <Nav.Fieldset className="select" legend="Bestemmelse">
+      <Nav.Fieldset className="bestemmelse" legend="Bestemmelse">
         <Nav.Row>
           <Nav.Column xs="7">
             <Nav.Select
@@ -278,7 +278,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         />
       ))}
 
-      {bestemmelseIkkeStøttetValgt && <TomFlytMelding />}
+      {bestemmelseIkkeStøttetValgt && <IngenFlytMelding />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{ onClick: handleBekreft, disabled: !formIsValid || !redigerbart }}

@@ -32,6 +32,7 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const inngangStegErAktivt = aktivtStegIndex === 0;
+  const vedtakStegErAktivt = aktuelleSteg[aktivtStegIndex]?.vedtakSteg;
 
   const hentNesteSteg = (stegPosisjon: number) => alleSteg.find((steg) => steg.stegPosisjon === stegPosisjon + 1);
 
@@ -78,8 +79,7 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
         <div>
           <StegLinje steg={aktuelleSteg} stegKlikk={handleKlikk} />
           {!redigerbart && <Innsynsmelding />}
-          <Feilmeldinger />
-
+          {vedtakStegErAktivt && <Feilmeldinger />}
           {erNyVurdering && redigerbart && inngangStegErAktivt && <NyVurderingMelding />}
           {aktuelleSteg.map((steg) => (
             <StegFane

@@ -54,10 +54,12 @@ const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
   inntektskilder: Inntektskilde[],
   medlemskapsperioder: Medlemskapsperiode[]
 ) => {
-  if (inntektskilder.length === 0) return false;
-  const sortertInntekstkilder = [...inntektskilder].sort(
-    (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
-  );
+  if (Utils._isEmpty(inntektskilder) || Utils._isEmpty(medlemskapsperioder)) return false;
+  const sortertInntekstkilder = [...inntektskilder].sort((a, b) => {
+    const fomA = Utils.dato.formatterDatoTilISO(a.fomDato);
+    const fomB = Utils.dato.formatterDatoTilISO(b.fomDato);
+    return new Date(fomA).getTime() - new Date(fomB).getTime();
+  });
   const sortertMedlemskapsperioder = [...medlemskapsperioder].sort(
     (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
   );
@@ -75,9 +77,11 @@ const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
   medlemskapsperioder: Medlemskapsperiode[]
 ) => {
   if (Utils._isEmpty(skatteforholdsperioder) || Utils._isEmpty(medlemskapsperioder)) return false;
-  const sorterteSkatteforhold = [...skatteforholdsperioder].sort(
-    (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
-  );
+  const sorterteSkatteforhold = [...skatteforholdsperioder].sort((a, b) => {
+    const fomA = Utils.dato.formatterDatoTilISO(a.fomDato);
+    const fomB = Utils.dato.formatterDatoTilISO(b.fomDato);
+    return new Date(fomA).getTime() - new Date(fomB).getTime();
+  });
   const sortertMedlemskapsperioder = [...medlemskapsperioder].sort(
     (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
   );

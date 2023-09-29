@@ -1,5 +1,5 @@
 import { push } from "connected-react-router";
-import { lagTomFlytUrl } from "../../url";
+import { lagIngenFlytUrl } from "../../url";
 import { fagsakSelectors } from "../fagsaker";
 import { behandlingerSelectors } from "../behandlinger";
 
@@ -11,9 +11,9 @@ export const tilAnnenSide = (link) => (dispatch) => {
   dispatch(push(link));
 };
 
-export const tilTomFlyt = () => async (dispatch, getState) => {
+export const tilIngenFlyt = () => async (dispatch, getState) => {
   const sakstypeKode = await fagsakSelectors.SakstypeKodeSelector(getState());
   const saksnummer = await fagsakSelectors.SaksnummerSelector(getState());
   const behandlingID = await behandlingerSelectors.BehandlingIDSelector(getState());
-  return dispatch(push(lagTomFlytUrl(sakstypeKode, saksnummer, behandlingID)));
+  return dispatch(push(lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID)));
 };

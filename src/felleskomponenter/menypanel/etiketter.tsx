@@ -21,6 +21,12 @@ export const FraBruker = (props: EtikettProps) => (
   </Nav.EtikettBase>
 );
 
+export const BrukersDel = (props: EtikettProps) => (
+  <Nav.EtikettBase {...props} type="fokus">
+    Brukers del
+  </Nav.EtikettBase>
+);
+
 export const ArbeidstakersDel = (props: EtikettProps) => (
   <Nav.EtikettBase {...props} type="fokus">
     Arbeidstakers del

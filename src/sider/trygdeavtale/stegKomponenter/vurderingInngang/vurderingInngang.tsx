@@ -24,7 +24,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
-import { TomFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
+import { IngenFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
 import { FellesHandlersContext } from "../../../../contexts";
@@ -109,14 +109,11 @@ const VurderingInngang = ({
 
   const skalHenteRegisteropplysninger =
     !registeropplysningerHentet ||
-    formValues?.fom !== initialFomTomLand?.fom ||
-    formValues?.tom !== initialFomTomLand?.tom ||
+    !Utils.dato.erLikeDatoer(formValues?.fom, initialFomTomLand?.fom) ||
+    !Utils.dato.erLikeDatoer(formValues?.tom, initialFomTomLand?.tom) ||
     formValues?.arbeidsland !== initialFomTomLand?.arbeidsland;
 
   useEffect(() => {
-    if (registeropplysningerHentet) {
-      visMenypanel();
-    }
     if (!Utils._isEmpty(initialValues.fom) && !Utils._isEmpty(initialValues.arbeidsland)) {
       setInitialFomTomLand({ fom: initialValues.fom, tom: initialValues.tom, arbeidsland: initialValues.arbeidsland });
     }
@@ -207,7 +204,7 @@ const VurderingInngang = ({
         </Nav.Column>
       </Nav.Row>
 
-      {landUtenStøtteValgt && <TomFlytMelding />}
+      {landUtenStøtteValgt && <IngenFlytMelding />}
 
       {landUtenStøtteValgt && skalHenteRegisteropplysninger && (
         <Mui.StegKnapper

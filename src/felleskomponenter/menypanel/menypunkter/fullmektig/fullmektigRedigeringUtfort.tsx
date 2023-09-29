@@ -17,11 +17,11 @@ import { Personopplysninger } from "../../../../graphql";
 const hentRepresentererTekst = (representererKode: string) => {
   switch (representererKode) {
     case MKV.Koder.representerer.BRUKER:
-      return "Arbeidstaker";
+      return "Bruker";
     case MKV.Koder.representerer.ARBEIDSGIVER:
       return "Arbeidsgiver";
     case MKV.Koder.representerer.BEGGE:
-      return "Både arbeidstaker og arbeidsgiver";
+      return "Både bruker og arbeidsgiver";
     default:
       return "";
   }

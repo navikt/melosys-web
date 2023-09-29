@@ -5,6 +5,7 @@ import * as Utils from "../../../../../../utils";
 import { Bostedsadresse, Kontaktadresse, Oppholdsadresse } from "../../../../../../graphql";
 import { SemistrukturertAdresse, StrukturertAdresse } from "../../../../../adresser";
 import ChevronKnapp from "../../../../../chevronKnapp/chevronKnapp";
+import { Table } from "@navikt/ds-react";
 
 type Adresse = Bostedsadresse | Oppholdsadresse | Kontaktadresse;
 
@@ -50,7 +51,6 @@ interface AdresseTableProps {
   historisk?: boolean;
 }
 
-// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const AdresseTable = ({ adressetype, adresser, historisk }: AdresseTableProps) => {
   const [expanded, setExpanded] = useState(false);
   const periodetekst = `Gyldig f.o.m.${historisk ? " - t.o.m." : ""}`;
@@ -58,24 +58,28 @@ const AdresseTable = ({ adressetype, adresser, historisk }: AdresseTableProps) =
   return (
     <div className="adresseTable menypanel__table-wrapper">
       {!historisk || expanded ? (
-        <table className="menypanel__table">
-          <tbody>
-            <tr className="header">
-              <th className={`fixed-width ${historisk ? "transparent" : ""}`}>{adressetype}</th>
-              <th className={historisk ? "transparent" : ""}>Register</th>
-              <th className={historisk ? "transparent" : ""}>Kilde</th>
-              <th className="fixed-width">{periodetekst}</th>
-            </tr>
+        <Table className="menypanel__table">
+          <Table.Header>
+            <Table.HeaderCell className={`fixed-width ${historisk ? "transparent" : ""}`}>
+              {adressetype}
+            </Table.HeaderCell>
+            <Table.HeaderCell className={historisk ? "transparent" : ""}>Register</Table.HeaderCell>
+            <Table.HeaderCell className={historisk ? "transparent" : ""}>Kilde</Table.HeaderCell>
+            <Table.HeaderCell className="fixed-width">{periodetekst}</Table.HeaderCell>
+          </Table.Header>
+          <Table.Body>
             {adresser.map((adresse) => (
-              <tr key={Utils._uuid()}>
-                <td>{renderAdressekomponent(adresse)}</td>
-                <td>{adresse.master}</td>
-                <td>{adresse.kilde}</td>
-                <td className={historisk ? "historisk-label" : "gyldig-label"}>{renderPeriode(adresse, historisk)}</td>
-              </tr>
+              <Table.Row key={Utils._uuid()}>
+                <Table.DataCell>{renderAdressekomponent(adresse)}</Table.DataCell>
+                <Table.DataCell>{adresse.master}</Table.DataCell>
+                <Table.DataCell>{adresse.kilde}</Table.DataCell>
+                <Table.DataCell className={historisk ? "historisk-label" : "gyldig-label"}>
+                  {renderPeriode(adresse, historisk)}
+                </Table.DataCell>
+              </Table.Row>
             ))}
-          </tbody>
-        </table>
+          </Table.Body>
+        </Table>
       ) : null}
       {historisk && (
         <ChevronKnapp

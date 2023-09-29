@@ -24,6 +24,11 @@ export const BehandlingsresultatStatusErOkSelector = createSelector(
   (behandlingsresultatStatus) => behandlingsresultatStatus === Utils.STATUS.OK
 );
 
+export const BehandlingsresultatTypeSelector = createSelector(
+  (state) => BehandlingsresultatSelector(state),
+  (behandlingsresultat) => behandlingsresultat.behandlingsresultatTypeKode
+);
+
 export const VedtakstypeSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
   (behandlingsresultat) => behandlingsresultat.vedtakstype
@@ -44,6 +49,11 @@ export const InnledningFritekstSelector = createSelector(
   (behandlingsresultat) => behandlingsresultat.innledningFritekst
 );
 
+export const TrygdeavgiftFritekstSelector = createSelector(
+  (state) => BehandlingsresultatSelector(state),
+  (behandlingsresultat) => behandlingsresultat.trygdeavgiftFritekst
+);
+
 export const NyVurderingBakgrunnSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
   (behandlingsresultat) => behandlingsresultat.nyVurderingBakgrunn
@@ -62,4 +72,9 @@ export const UtfallRegistreringUnntakSelector = createSelector(
 export const UtfallUtpekingSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
   (behandlingsresultat) => behandlingsresultat.utfallUtpeking
+);
+
+export const fakturaserieReferanseSelector = createSelector(
+  (state) => BehandlingsresultatSelector(state),
+  (behandlingsresultat) => behandlingsresultat.fakturaserieReferanse
 );

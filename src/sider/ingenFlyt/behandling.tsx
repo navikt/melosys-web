@@ -20,14 +20,18 @@ import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
-import { Innsynsmelding, TomFlytMelding, VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
+import { Innsynsmelding, IngenFlytMelding, VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
 import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog";
 
 import "./behandling.css";
+import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
+import { behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandKTSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingsresultatType: behandlingsresultatSelectors.BehandlingsresultatTypeSelector(state),
+  fagsakStatus: fagsakSelectors.FagsakStatusSelector(state),
   hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeFomSelector(state)
@@ -40,7 +44,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   lastInnSaksopplysninger: (saksnummer: string, behandlingID: number) =>
-    dispatch(datalastingOperations.lastInnSaksopplysningerTomFlyt(saksnummer, behandlingID)),
+    dispatch(datalastingOperations.lastInnSaksopplysningerIngenFlyt(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
 });
 
@@ -53,6 +57,8 @@ interface Props extends RouteComponentProps<MatchParams> {}
 const Behandling = ({
   arbeidsland,
   behandlingstema,
+  behandlingsresultatType,
+  fagsakStatus,
   hovedpartRolle,
   lastInnSaksopplysninger,
   location,
@@ -82,20 +88,27 @@ const Behandling = ({
   if (!saksopplysningerErLastet) return null;
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
+  const erHenlagtSak = fagsakStatus === MKV.Koder.saksstatuser.HENLAGT;
+  const erAvslåttPgaManglendeOpplysninger =
+    behandlingsresultatType === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+  const visAvslåttPgaManglendeOpplysninger = erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
+  const visTomFlytMelding = !erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
 
   return (
     <>
       <Informasjonlinje />
       <div id="main-container" className="main-container">
-        <Nav.Container fluid className="tomFlyt_behandling">
+        <Nav.Container fluid className="ingenFlyt_behandling">
           <Nav.Row>
             <Nav.Column xs="7">
-              {!redigerbart && <Innsynsmelding className="tomFlyt_behandling__innsynsmelding" />}
+              {!redigerbart && <Innsynsmelding className="ingenFlyt_behandling__innsynsmelding" />}
               {hovedpartErVirksomhet ? (
                 <VirksomhetMelding />
               ) : (
                 <>
-                  <TomFlytMelding />
+                  {erHenlagtSak && <HenlagtSak />}
+                  {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
+                  {visTomFlytMelding && <IngenFlytMelding />}
                   <SoknadMenypanelForm startOgVisOppfriskModal={() => null} visOppdaterRegisteropplysninger={false} />
                 </>
               )}

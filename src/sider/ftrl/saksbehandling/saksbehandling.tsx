@@ -17,7 +17,7 @@ import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
 import { EnkelStegvelger } from "../../../felleskomponenter/enkelStegvelger";
-import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
+import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { MatchParams } from "../../../@types";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
@@ -33,7 +33,7 @@ import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperiode
 import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 import { avklartefaktaOperations } from "../../../ducks/avklartefakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
-import { menypanelOperations } from "../../../ducks/menypanel";
+import { menypanelOperations, menypanelSelectors } from "../../../ducks/menypanel";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 import { alleSteg } from "./initialStegArray";
@@ -52,7 +52,7 @@ const mapStateToProps = (state: RootState) => ({
   mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeSelector(state).tom
   ),
-  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
+  behandlingsresultatType: behandlingsresultatSelectors.BehandlingsresultatTypeSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   landkoder: landkoderSelectors.LandkoderFraSakstypeSelector(state),
@@ -60,6 +60,8 @@ const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  registeropplysningerHentet: behandlingerSelectors.RegisteropplysningerHentetSelector(state),
+  menypanelSynlig: menypanelSelectors.MenypanelSynligSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -82,6 +84,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetMottatteOpplysningerState: () => dispatch(mottatteOpplysningerOperations.resetState()),
+  visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
   resetKontrollFeil: () => dispatch(kontrollOperations.resetKontrollFeil()),
@@ -99,13 +102,12 @@ interface Props extends RouteComponentProps<MatchParams> {
 
 const Saksbehandling = ({
   arbeidsland,
-  behandlingstype,
   hovedpartRolle,
   behandlingOppfriskes,
   mottatteOpplysninger,
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
-  behandlingsresultat,
+  behandlingsresultatType,
   fagsakStatusKode,
   hentBehandling,
   hentMottatteOpplysninger,
@@ -127,12 +129,15 @@ const Saksbehandling = ({
   resetVilkarState,
   resetOppsummertFaktaState,
   resetMedlemskapsperiodeState,
+  visMenypanel,
   skjulMenypanel,
   soknadForm,
   startOgVisOppfriskModal,
   visOppfriskModal,
   resetFeiletrespons,
   resetKontrollFeil,
+  registeropplysningerHentet,
+  menypanelSynlig,
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
@@ -198,21 +203,25 @@ const Saksbehandling = ({
     oppdaterBehandlingIDState();
   });
 
+  useEffect(() => {
+    if (registeropplysningerHentet && !menypanelSynlig) {
+      visMenypanel();
+    }
+  }, [registeropplysningerHentet]);
+
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;
   if (!saksopplysningerLastet) return null;
   if (!folketrygdenToggle) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const erAvslaattSoknad =
-    behandlingsresultat.behandlingsresultatTypeKode ===
-      MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL && !erNyVurdering;
-  const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
+  const erAvslåttPgaManglendeOpplysninger =
+    behandlingsresultatType === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+  const visAvslåttPgaManglendeOpplysninger = erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
   const mottatteOpplysningerErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(mottatteOpplysninger).length === 0
   );
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
+  const visStegVelger = !erHenlagtSak && !erAvslåttPgaManglendeOpplysninger && mottatteOpplysningerErKlart;
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
@@ -226,8 +235,8 @@ const Saksbehandling = ({
               <Nav.Column xs="7">
                 {!hovedpartErVirksomhet ? (
                   <>
-                    {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
-                    {visAvslaattSoknad && <AvslaattSoknad />}
+                    {erHenlagtSak && <HenlagtSak />}
+                    {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
                     {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
                   </>
                 ) : (

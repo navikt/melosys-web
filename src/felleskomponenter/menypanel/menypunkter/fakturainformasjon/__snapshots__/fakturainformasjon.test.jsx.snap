@@ -12,160 +12,53 @@ exports[`Fakturainformasjon > snapshot test 1`] = `
         <div
           class="col col-xs-12"
         >
-          <div
-            class="undertittel persontabell-row__tittel"
+          <h2
+            class="typo-systemtittel"
           >
-            <h3
-              class="typo-undertittel undertittel__navUndertittel"
-              id="123"
+            Fakturainformasjon
+          </h2>
+          <table
+            class="navds-table navds-table--medium"
+          >
+            <thead
+              class="navds-table__header"
             >
-              <span
-                class="undertittel__tekst"
+              <tr
+                class="navds-table__row"
               >
-                Fakturaserie med saksnummer: MEL-123 behandlingid: 56 
-              </span>
-              <span />
-            </h3>
-          </div>
-          <div
-            class="row"
-          >
-            <div
-              class="col col-xs-4"
-            >
-              Faktura gjelder
-            </div>
-            <div
-              class="col col-xs-4"
-            >
-              NAV
-            </div>
-          </div>
-          <div
-            class="row"
-          >
-            <div
-              class="col col-xs-4"
-            >
-              Fødselsnummer
-            </div>
-            <div
-              class="col col-xs-4"
-            >
-              12345612345
-            </div>
-          </div>
-          <div
-            class="row"
-          >
-            <div
-              class="col col-xs-4"
-            >
-              Intervall
-            </div>
-            <div
-              class="col col-xs-4"
-            >
-              MANEDLIG
-            </div>
-          </div>
-          <div
-            class="row"
-          >
-            <div
-              class="col col-xs-4"
-            >
-              Referanse for bruker
-            </div>
-            <div
-              class="col col-xs-4"
-            >
-              Ref. bruker
-            </div>
-          </div>
-          <div
-            class="row"
-          >
-            <div
-              class="col col-xs-4"
-            >
-              Referanse for NAV
-            </div>
-            <div
-              class="col col-xs-4"
-            >
-              Ref. NAV
-            </div>
-          </div>
-          <div
-            class="row"
-          >
-            <div
-              class="col col-xs-4"
-            >
-              Startdato
-            </div>
-            <div
-              class="col col-xs-4"
-            >
-              01.06.2023
-            </div>
-          </div>
-          <div
-            class="row"
-          >
-            <div
-              class="col col-xs-4"
-            >
-              Sluttdato
-            </div>
-            <div
-              class="col col-xs-4"
-            >
-              20.07.2023
-            </div>
-          </div>
-          <div
-            class="row"
-          >
-            <div
-              class="col col-xs-4"
-            >
-              Status
-            </div>
-            <div
-              class="col col-xs-4"
-            >
-              UNDER_BEHANDLING
-            </div>
-          </div>
-        </div>
-      </div>
-      <br />
-      <div
-        class="row"
-      >
-        <div
-          class="col col-xs-12"
-        >
-          <div
-            class="undertittel persontabell-row__tittel"
-          >
-            <h3
-              class="typo-undertittel undertittel__navUndertittel"
-              id="123"
-            >
-              <span
-                class="undertittel__tekst"
-              >
-                Fakturaer
-              </span>
-              <span />
-            </h3>
-          </div>
-          <div
-            class="fakturainformasjon-tabell"
-          />
+                <th
+                  class="navds-table__header-cell navds-label"
+                />
+                <th
+                  class="navds-table__header-cell navds-label"
+                  scope="col"
+                >
+                  Dato
+                </th>
+                <th
+                  class="navds-table__header-cell navds-label"
+                  scope="col"
+                >
+                  Kvartal
+                </th>
+                <th
+                  class="navds-table__header-cell navds-label"
+                  scope="col"
+                >
+                  Status
+                </th>
+                <th
+                  class="navds-table__header-cell navds-label"
+                  scope="col"
+                >
+                  Uteststående betaling
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              class="navds-table__body"
+            />
+          </table>
         </div>
       </div>
     </div>

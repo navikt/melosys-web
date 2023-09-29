@@ -3,35 +3,35 @@ import * as Utils from "../../../../../../utils";
 import { Familiemedlem } from "../../../../../../graphql";
 
 import Ident from "../ident";
+import { Table } from "@navikt/ds-react";
 
 interface EktefelleTableProps {
   ektefelleListe: Familiemedlem[];
 }
 
-// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 function EktefelleTable({ ektefelleListe }: EktefelleTableProps) {
   return (
     <div className="menypanel__table-wrapper">
-      <table className="menypanel__table">
-        <tbody>
-          <tr className="header">
-            <th>Navn</th>
-            <th>F.nr./d-nr.</th>
-            <th>Fra og med</th>
-            <th>Relasjon</th>
-          </tr>
+      <Table>
+        <Table.Header>
+          <Table.HeaderCell>Navn</Table.HeaderCell>
+          <Table.HeaderCell>F.nr./d-nr.</Table.HeaderCell>
+          <Table.HeaderCell>Fra og med</Table.HeaderCell>
+          <Table.HeaderCell>Relasjon</Table.HeaderCell>
+        </Table.Header>
+        <Table.Body>
           {ektefelleListe.map((ektefelle) => (
-            <tr key={Utils._uuid()}>
-              <td>{ektefelle.navn}</td>
-              <td>
+            <Table.Row key={Utils._uuid()}>
+              <Table.DataCell>{ektefelle.navn}</Table.DataCell>
+              <Table.DataCell>
                 <Ident ident={ektefelle.ident} />
-              </td>
-              <td>{Utils.dato.formatterDatoTilNorsk(ektefelle.sivilstand?.gyldigFraOgMed)}</td>
-              <td>{ektefelle.sivilstand?.type}</td>
-            </tr>
+              </Table.DataCell>
+              <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(ektefelle.sivilstand?.gyldigFraOgMed)}</Table.DataCell>
+              <Table.DataCell>{ektefelle.sivilstand?.type}</Table.DataCell>
+            </Table.Row>
           ))}
-        </tbody>
-      </table>
+        </Table.Body>
+      </Table>
     </div>
   );
 }

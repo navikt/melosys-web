@@ -23,9 +23,6 @@ import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 
-import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
-import { MELOSYS_LOVVALGSBESTEMMELSE_API_EOS_UNNTAK } from "../../../featuretoggle/toggleNavn";
-
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 import "./vurderingUnntakMedlemskap.css";
 
@@ -56,7 +53,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
-  const lovvalgsApiAktivert = useFeatureToggle(MELOSYS_LOVVALGSBESTEMMELSE_API_EOS_UNNTAK);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
@@ -97,27 +93,9 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       );
     }
     if (EU_EOS === sakstype && aktivtSteg) {
-      if (lovvalgsApiAktivert) {
-        Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, lovvalgsland).then(
-          (res) => setBestemmelser(res)
-        );
-      } else {
-        const eos_bestemmelser = [
-          ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
-          ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
-          ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
-          ...MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser,
-        ].filter(
-          (kt: KTObject) =>
-            ![
-              MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1,
-              MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ANNET,
-              MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87_8,
-              MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART87A,
-            ].includes(kt.kode)
-        );
-        setBestemmelser(eos_bestemmelser);
-      }
+      Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, lovvalgsland).then((res) =>
+        setBestemmelser(res)
+      );
     }
   }, [lovvalgsland, aktivtSteg]);
 
@@ -288,10 +266,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         </>
       )}
 
-      <Feilmeldinger
-        className="vurderingUnntakMedlemskap__feilmelding"
-        exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]}
-      />
+      <Feilmeldinger exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]} />
 
       {(utfallErGODKJENT || utfallErDelvisGodkjent) && !harErrorFeilmelding && (
         <Alertmeldinger

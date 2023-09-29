@@ -17,7 +17,7 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
-import { harIkkeYrkesaktivFlyt, harUnntakFlyt } from "../../url";
+import { harIkkeYrkesaktivFlyt, harUnntaksregistreringFlyt } from "../../url";
 import KopierbarTekst from "../kopierbarTekst";
 
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
@@ -55,8 +55,8 @@ const Oppsummering = ({
   arbeidsland,
   avsenderland,
   lovvalgsland,
-  lovvalgsperiodeFom,
-  lovvalgsperiodeTom,
+  lovvalgsperiodeFom = "",
+  lovvalgsperiodeTom = "",
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
   className,
@@ -78,8 +78,7 @@ const Oppsummering = ({
     behandlingsresultattype,
   } = oppsummering;
 
-  const disableEndreKnapp =
-    behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode) || !redigerbart;
+  const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(behandlingsstatus?.kode) || !redigerbart;
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
   const erSed = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, behandlingstema?.kode);
@@ -153,7 +152,7 @@ const Oppsummering = ({
       const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
       const mottatteOpplysningerperiode = `${mottatteOpplysningerPeriodeFom} - ${mottatteOpplysningerPeriodeTom}`;
 
-      const erUnntak = harUnntakFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode);
+      const erUnntak = harUnntaksregistreringFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode);
 
       const erIkkeYrkesaktiv = harIkkeYrkesaktivFlyt(sakstype.kode, behandlingstema.kode);
 

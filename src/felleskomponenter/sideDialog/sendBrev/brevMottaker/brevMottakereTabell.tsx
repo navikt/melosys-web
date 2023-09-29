@@ -97,7 +97,6 @@ const BrevMottakereTabell = ({
 
       {muligeMottakere && (
         <MottakerTabell
-          className="tabell"
           rader={mapMottakerRader(muligeMottakere)}
           kolonner={[
             { verdi: "Forhåndsvisning av brev", bredde: "60%" },
@@ -107,7 +106,6 @@ const BrevMottakereTabell = ({
       )}
       {muligeMottakereNorskMyndighet && (
         <MottakerTabell
-          className="tabell"
           rader={mapMottakerRaderNorskeMyndigheter(muligeMottakereNorskMyndighet)}
           kolonner={[
             { verdi: "Forhåndsvisning av brev", bredde: "60%" },

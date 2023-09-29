@@ -5,23 +5,23 @@ import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 
 import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../../../melosyskodeverk";
+import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Forms from "../../../../felleskomponenter/forms";
 import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
-import * as Mui from "../../../../felleskomponenter/ui";
 
+import * as Mui from "../../../../felleskomponenter/ui";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+
 import { vedtakOperations } from "../../../../ducks/vedtak";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
-
 import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 import {
   BEGRUNNELSE_FRITEKST_HJELPETEKST,
@@ -31,6 +31,7 @@ import {
 import { BrevMottakereTabell } from "./mottakertabell/brevMottakereTabell";
 import { Lovvalgsperiode } from "./lovvalgsperiode";
 import vurderingVedtakSchema from "./vurderingVedtakSchema";
+import "./vurderingVedtak.css";
 
 interface Props {
   tilbake: () => void;
@@ -181,8 +182,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
         </Nav.Typo.Innholdstittel>
       )}
 
-      <Feilmeldinger className="vurderingUnntakMedlemskap__feilmelding" />
-
       <Nav.Row>
         <Lovvalgsperiode
           kontrollerFerdigbehandling={kontrollerFerdigbehandling}
@@ -190,34 +189,36 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
         />
       </Nav.Row>
 
+      {erNyVurdering && redigerbart && (
+        <Nav.AlertStripeInfo className="nyvurdering_info">
+          {KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}
+        </Nav.AlertStripeInfo>
+      )}
+
       {erNyVurdering && (
-        <Nav.Fieldset
-          className="nyVurderingBakgrunn"
-          legend={
+        <Nav.Row className="nyVurderingBakgrunn">
+          <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
             <LabelMedHjelpetekst
               label="Oppgi grunn for nytt vedtak (Obligatorisk)"
               hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
-              hjelpetekstClassName="nyVurderingBakgrunn__hjelpetekst"
+              hjelpetekstClassName="hjelpetekst"
             />
-          }
-        >
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <Forms.Select
-                name="nyVurderingBakgrunnValg"
-                disabled={!redigerbart}
-                emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
-                control={control}
-                onChange={oppdaterNyVurderingBakgrunnValg}
-              >
-                {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
-                  <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
-                ))}
-                <option key={FRITEKST_VALG} value={FRITEKST_VALG} label={FRITEKST_VALG} />
-              </Forms.Select>
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Fieldset>
+          </Nav.Typo.Element>
+          <Nav.Column xs="6">
+            <Forms.Select
+              name="nyVurderingBakgrunnValg"
+              disabled={!redigerbart}
+              emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
+              control={control}
+              onChange={oppdaterNyVurderingBakgrunnValg}
+            >
+              {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
+                <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
+              ))}
+              <option key={FRITEKST_VALG} value={FRITEKST_VALG} label={FRITEKST_VALG} />
+            </Forms.Select>
+          </Nav.Column>
+        </Nav.Row>
       )}
 
       {erNyVurdering && formValues.nyVurderingBakgrunnValg === FRITEKST_VALG && (

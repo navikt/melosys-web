@@ -8,7 +8,7 @@ import * as Nav from "../../navFrontend";
 
 import * as Utils from "../../utils";
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
-import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
+import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
@@ -22,7 +22,7 @@ import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { dokumenterOperations } from "../../ducks/dokumenter";
-import { menypanelOperations } from "../../ducks/menypanel";
+import { menypanelOperations, menypanelSelectors } from "../../ducks/menypanel";
 
 import { vilkarOperations } from "../../ducks/vilkar";
 import { formSelectors } from "../../ducks/form";
@@ -52,7 +52,6 @@ const Saksbehandling = ({
   const dispatch = useDispatch();
 
   const land = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
-  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const mottatteOpplysninger = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector);
   const mottatteOpplysningerPeriodeFom = useSelector((state) =>
     Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).fom)
@@ -65,6 +64,8 @@ const Saksbehandling = ({
   const fagsakStatusKode = useSelector(fagsakSelectors.FagsakStatusSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const soknadForm = useSelector(formSelectors.SoknadenFormSelector);
+  const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
+  const menypanelSynlig = useSelector(menypanelSelectors.MenypanelSynligSelector);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -123,31 +124,36 @@ const Saksbehandling = ({
     oppdaterBehandlingIDState();
   });
 
+  useEffect(() => {
+    if (registeropplysningerHentet && !menypanelSynlig) {
+      dispatch(menypanelOperations.visMenypanel());
+    }
+  }, [registeropplysningerHentet]);
+
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;
   if (!saksopplysningerLastet) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const erAvslaattSoknad =
+  const erAvslåttPgaManglendeOpplysninger =
     behandlingsresultat.behandlingsresultatTypeKode ===
-      MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL && !erNyVurdering;
-  const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
+    MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+  const visAvslåttPgaManglendeOpplysninger = erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
   const mottatteOpplysningerErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(mottatteOpplysninger).length === 0
   );
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && mottatteOpplysningerErKlart;
+  const visStegVelger = !erHenlagtSak && !erAvslåttPgaManglendeOpplysninger && mottatteOpplysningerErKlart;
 
   return (
     <>
       <Informasjonlinje />
       <div id="main-container" className="main-container">
-        <div className="saksbehandling">
+        <div className="ikke_yrkesaktiv_saksbehandling">
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
-                {visAvslaattSoknad && <AvslaattSoknad />}
+                {erHenlagtSak && <HenlagtSak />}
+                {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
                 {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>

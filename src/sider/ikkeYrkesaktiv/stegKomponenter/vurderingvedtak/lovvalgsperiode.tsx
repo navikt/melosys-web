@@ -17,17 +17,19 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
 import { PERIODE_HJELPETEKST } from "./tekster";
 import lovvalgsperioderSchema from "./lovvalgsperioderSchema";
-import "./vurderingVedtakIkkeYrkesaktiv.css";
 
 interface LovvalgsperiodeProps {
   kontrollerFerdigbehandling: () => void;
   onRedigeringErAktiv: (redigeringErAktiv: boolean) => void;
 }
+
 export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAktiv }: LovvalgsperiodeProps) => {
   const dispatch = useDispatch();
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
+  const lovvalgsperiodeFom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.fomDato);
+  const lovvalgsperiodeTom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.tomDato);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const mottatteOpplysningerPeriode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
 
@@ -38,8 +40,8 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
     },
     mode: "all",
     values: {
-      fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato),
-      tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato),
+      fom: lovvalgsperiodeFom,
+      tom: lovvalgsperiodeTom,
     } as FieldValues,
   });
   const formValues = watch();
@@ -79,7 +81,7 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
         <span className="endrePeriodeTekst">Endre</span>
       </div>
     ) : (
-      <div className="endrePeriode--disabled">
+      <div className="endrePeriodeTekst--disabled">
         <Ikoner.BlyantDisabled className="ikon" />
       </div>
     );
@@ -98,38 +100,40 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
           hjelpetekstClassName="vurderingVedtak__hjelpetekst"
         />
       </Nav.Typo.Element>
-      <Nav.Typo.Normaltekst className="datofelt_wrapper" tag="div">
-        {visPeriodeEndringFelter ? (
-          <>
-            <span className="datofelt">
-              <Forms.Datovelger
-                label="Fra og med"
-                name="fom"
-                disabled={!redigerbart}
-                control={control}
-                onChange={() => trigger("tom")}
-              />
-            </span>
-            <span className="datofelt">
-              <Forms.Datovelger
-                label="Til og med"
-                name="tom"
-                minDate={Utils.dato.norskStringTilDate(formValues.fom)}
-                disabled={!redigerbart}
-                control={control}
-              />
-              <Nav.Hovedknapp mini disabled={!redigerbart || !formState.isValid} onClick={handleLagrePeriodeEndring}>
-                Lagre
-              </Nav.Hovedknapp>
-            </span>
-          </>
-        ) : (
-          `${Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-            lovvalgsperiode?.tomDato
-          )}`
-        )}
-        {!visPeriodeEndringFelter && <EndrePeriodeKnapp />}
-      </Nav.Typo.Normaltekst>
+
+      {visPeriodeEndringFelter ? (
+        <>
+          <div className="datofelt_wrapper">
+            <Forms.Datovelger
+              label="Fra og med"
+              name="fom"
+              disabled={!redigerbart}
+              control={control}
+              onChange={() => trigger("tom")}
+            />
+            <Forms.Datovelger
+              label="Til og med"
+              name="tom"
+              minDate={Utils.dato.norskStringTilDate(formValues.fom)}
+              disabled={!redigerbart}
+              control={control}
+            />
+          </div>
+          <div className="datofelt_knapper">
+            <Nav.Hovedknapp mini disabled={!redigerbart || !formState.isValid} onClick={handleLagrePeriodeEndring}>
+              Lagre
+            </Nav.Hovedknapp>
+            <Nav.Flatknapp mini onClick={() => setVisPeriodeEndringFelter(false)}>
+              Avbryt
+            </Nav.Flatknapp>
+          </div>
+        </>
+      ) : (
+        <Nav.Typo.Normaltekst className="periode" tag="div">
+          {lovvalgsperiodeFom} - {lovvalgsperiodeTom}
+          <EndrePeriodeKnapp />
+        </Nav.Typo.Normaltekst>
+      )}
     </Nav.Column>
   );
 };
