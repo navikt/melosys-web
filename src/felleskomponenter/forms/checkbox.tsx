@@ -49,7 +49,7 @@ const Checkbox = forwardRef<HTMLSelectElement, CheckboxProps>(
           <InnerCheckboxComponent
             {...field}
             {...rest}
-            checked={checked}
+            checked={checked !== undefined ? checked : field.value}
             onChange={(event: any) => {
               field.onChange(event);
               if (rest.onChange) rest.onChange(event?.target?.value);

@@ -1,8 +1,12 @@
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useMemo, useState } from "react";
 
 import "./oppdaterRegisteropplysninger.css";
 import * as Nav from "../../navFrontend";
 import { Refresh } from "../../resources/images";
+import * as Forms from "../forms";
+import { FieldValues, useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { modalerSelectors } from "../../ducks/modaler";
 
 type OppdaterRegisteroppslysningerProps = {
   sistOppdatert: string;
@@ -15,32 +19,40 @@ export const OppdaterRegisteropplysninger = ({
 }: OppdaterRegisteroppslysningerProps) => {
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
-      oppdaterRegisteropplysninger(inkluderSiste5aar);
-    }
-  };
-  const [inkluderSiste5aar, setInkluderSiste5aarVarslet] = useState(false);
-  const checkboxChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setInkluderSiste5aarVarslet(true);
-    } else {
-      setInkluderSiste5aarVarslet(false);
+      oppdaterRegisteropplysninger(formValues.inkluderSiste5Aar);
     }
   };
 
+  const initialValues = {
+    inkluderSiste5Aar: useSelector(modalerSelectors.InkluderSiste5AarSelector),
+  };
+
+  console.log(initialValues);
+
+  const {
+    control,
+    watch,
+    formState: { isValid: formIsValid },
+  } = useForm({
+    mode: "all",
+    values: useMemo(() => initialValues as FieldValues, [initialValues]),
+  });
+  const formValues = watch();
+
   return (
     <Nav.Panel className="oppdater-registeropplysninger" border>
-      <Nav.Checkbox
-        className="oppdater-registeropplysninger__checkbox"
-        name="InkluderSiste5aar"
-        checked={inkluderSiste5aar}
-        onChange={checkboxChangeHandler}
-        label="Inkl siste 5 år"
+      <Forms.Checkbox
+        className="inkluderSiste5Aar"
+        name="inkluderSiste5Aar"
+        control={control}
+        label="Hent registeropplysninger for 5 år"
+        value="Inkl siste 5 år"
       />
       <span
         className="oppdater-registeropplysninger__oppdateringsknapp"
         role="button"
         tabIndex={0}
-        onClick={() => oppdaterRegisteropplysninger(inkluderSiste5aar)}
+        onClick={() => oppdaterRegisteropplysninger(formValues.inkluderSiste5Aar)}
         onKeyPress={handleKeyPress}
       >
         <Refresh />

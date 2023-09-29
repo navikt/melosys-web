@@ -24,7 +24,7 @@ import { navigeringOperations } from "../../../../ducks/navigering";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
-import { modalerOperations } from "../../../../ducks/modaler";
+import { modalerOperations, modalerSelectors } from "../../../../ducks/modaler";
 
 interface Props {
   bekreft: () => void;
@@ -49,8 +49,10 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     tom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.tom, false, undefined),
     land: useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector).toString(),
     trygdedekning: useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector),
-    inkluderSiste5Aar: false,
+    inkluderSiste5Aar: useSelector(modalerSelectors.InkluderSiste5AarSelector),
   };
+
+  console.log(initialValues);
 
   const {
     control,
