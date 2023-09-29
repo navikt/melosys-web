@@ -60,7 +60,6 @@ export const BrevMottakereTabell = () => {
     <>
       {!Utils._isEmpty(muligeMottakere) && (
         <MottakerTabell
-          className="tabell"
           rader={mapMottakerRader(muligeMottakere)}
           kolonner={[
             { verdi: "Forhåndsvisning av brev", bredde: "60%" },

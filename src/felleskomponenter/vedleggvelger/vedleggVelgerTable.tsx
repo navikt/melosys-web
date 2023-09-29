@@ -1,6 +1,7 @@
 import { FysiskDokument } from "Domene";
 
 import VedleggVelgerRow from "./vedleggVelgerRow";
+import { Table } from "@navikt/ds-react";
 
 interface VedleggTableProps {
   valgteVedlegg: FysiskDokument[];
@@ -9,26 +10,23 @@ interface VedleggTableProps {
   leggTilVedlegg: (vedlegg: FysiskDokument) => void;
 }
 
-// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const VedleggVelgerTable = ({ valgteVedlegg, alleVedlegg, slettVedlegg, leggTilVedlegg }: VedleggTableProps) => {
   const vedleggErMarkert = (vedleggID: string) => Boolean(valgteVedlegg.find((vedlegg) => vedlegg.id === vedleggID));
 
   return (
-    <div className="vedleggvelger-table-wrapper">
-      <table className="vedleggvelger-table">
-        <tbody>
-          {alleVedlegg.map((enkeltVedlegg) => (
-            <VedleggVelgerRow
-              key={enkeltVedlegg.id}
-              vedlegg={enkeltVedlegg}
-              leggTilVedlegg={() => leggTilVedlegg(enkeltVedlegg)}
-              slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
-              vedleggErMarkert={vedleggErMarkert(enkeltVedlegg.id)}
-            />
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Table>
+      <Table.Body>
+        {alleVedlegg.map((enkeltVedlegg) => (
+          <VedleggVelgerRow
+            key={enkeltVedlegg.id}
+            vedlegg={enkeltVedlegg}
+            leggTilVedlegg={() => leggTilVedlegg(enkeltVedlegg)}
+            slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
+            vedleggErMarkert={vedleggErMarkert(enkeltVedlegg.id)}
+          />
+        ))}
+      </Table.Body>
+    </Table>
   );
 };
 

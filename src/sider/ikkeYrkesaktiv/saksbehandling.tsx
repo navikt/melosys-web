@@ -148,7 +148,7 @@ const Saksbehandling = ({
     <>
       <Informasjonlinje />
       <div id="main-container" className="main-container">
-        <div className="saksbehandling">
+        <div className="ikke_yrkesaktiv_saksbehandling">
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">

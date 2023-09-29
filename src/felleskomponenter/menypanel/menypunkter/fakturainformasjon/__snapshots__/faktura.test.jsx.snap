@@ -97,7 +97,7 @@ exports[`Faktura > snapshot test 1`] = `
                   <button
                     type="button"
                   >
-                    1
+                    Ikke generert enda
                     <svg
                       class="kopierbar-tekst__kopier-ikon"
                       fill="none"

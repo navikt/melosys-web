@@ -1,37 +1,31 @@
-import classNames from "classnames";
-
 import * as KV from "../../../../../kodeverk";
 
 import MKV from "../../../../../melosyskodeverk";
 
 import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
 
-import "./redigeringUtfort.css";
+import { Table } from "@navikt/ds-react";
 
-const cls = classNames("tabell", "arbeidssted__fly__redigeringutfort");
-
-// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.ArbeidsstedFly>) => (
   <div className="arbeidssted__fly__redigeringutfort-wrapper">
-    <table className={cls}>
-      <thead>
-        <tr>
-          <th>Navn på hjemmebase</th>
-          <th>Type flyvninger</th>
-          <th>Hjemmebasens land</th>
-        </tr>
-      </thead>
-      <tbody>
-        {verdier.map((element, index) => (
-          /* eslint-disable-next-line react/no-array-index-key */
-          <tr key={index}>
-            <td>{element.hjemmebaseNavn}</td>
-            <td>{KV.kodeTilTerm(element.typeFlyvninger, MKV.KTObjects.flyvningstyper)}</td>
-            <td>{KV.kodeTilTerm(element.hjemmebaseLand, MKV.KTObjects.landkoder)}</td>
-          </tr>
+    <Table>
+      <Table.Header>
+        <Table.HeaderCell>Navn på hjemmebase</Table.HeaderCell>
+        <Table.HeaderCell>Type flyvninger</Table.HeaderCell>
+        <Table.HeaderCell>Hjemmebasens land</Table.HeaderCell>
+      </Table.Header>
+      <Table.Body>
+        {verdier.map((arbeidsstedFly) => (
+          <Table.Row key={arbeidsstedFly.hjemmebaseNavn}>
+            <Table.DataCell>{arbeidsstedFly.hjemmebaseNavn}</Table.DataCell>
+            <Table.DataCell>
+              {KV.kodeTilTerm(arbeidsstedFly.typeFlyvninger, MKV.KTObjects.flyvningstyper)}
+            </Table.DataCell>
+            <Table.DataCell>{KV.kodeTilTerm(arbeidsstedFly.hjemmebaseLand, MKV.KTObjects.landkoder)}</Table.DataCell>
+          </Table.Row>
         ))}
-      </tbody>
-    </table>
+      </Table.Body>
+    </Table>
   </div>
 );
 

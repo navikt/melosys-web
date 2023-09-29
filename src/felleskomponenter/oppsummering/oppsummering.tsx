@@ -78,8 +78,7 @@ const Oppsummering = ({
     behandlingsresultattype,
   } = oppsummering;
 
-  const disableEndreKnapp =
-    behandlingsStatusMedBegrensetRettigheter.includes(oppsummering.behandlingsstatus.kode) || !redigerbart;
+  const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(behandlingsstatus?.kode) || !redigerbart;
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
   const erSed = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, behandlingstema?.kode);

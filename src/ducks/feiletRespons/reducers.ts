@@ -7,6 +7,7 @@ import { vedtakTypes } from "../vedtak";
 import { videresendingTypes } from "../videresending";
 import { anmodningunntakTypes } from "../anmodningunntak";
 import { fagsakTypes } from "../fagsaker";
+import { kontrollTypes } from "../kontroll";
 
 const initialState: StateSection<Types.Data> = {
   status: STATUS.NOT_STARTED,
@@ -26,11 +27,14 @@ export default function reducer(state = initialState, action: Types.Action): Sta
     case videresendingTypes.FEILET:
     case anmodningunntakTypes.FEILET:
     case fagsakTypes.FEILET:
+    case kontrollTypes.FEILET:
       return { ...state, status: STATUS.ERROR, data: { ...state.data, ...action.data } };
     case utpekTypes.OK:
+    case vedtakTypes.OK:
     case videresendingTypes.OK:
     case anmodningunntakTypes.OK:
     case fagsakTypes.OK:
+    case kontrollTypes.OK:
       return { ...initialState, status: STATUS.OK };
     default:
       return state;

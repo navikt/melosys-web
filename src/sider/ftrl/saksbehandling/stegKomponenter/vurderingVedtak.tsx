@@ -437,27 +437,23 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       />
 
       {stegErGyldig && muligeMottakere && (
-        <div className="melosys__table-wrapper">
-          {/* TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys) */}
-          <table className="melosys__table">
-            <tbody>
-              <tr className="header">
-                <th>Dokument</th>
-                <th>Mottaker</th>
-              </tr>
-              {mapMottakerRader(muligeMottakere).map((mottaker) => {
-                return (
-                  <tr key={Utils._uuid()}>
-                    <td>{mottaker.dokument}</td>
-                    <td>{mottaker.navn}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <Table>
+          <Table.Header>
+            <Table.HeaderCell>Dokument</Table.HeaderCell>
+            <Table.HeaderCell>Mottaker</Table.HeaderCell>
+          </Table.Header>
+          <Table.Body>
+            {mapMottakerRader(muligeMottakere).map((mottaker) => {
+              return (
+                <Table.Row key={Utils._uuid()}>
+                  <Table.DataCell>{mottaker.dokument}</Table.DataCell>
+                  <Table.DataCell>{mottaker.navn}</Table.DataCell>
+                </Table.Row>
+              );
+            })}
+          </Table.Body>
+        </Table>
       )}
-
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: onSubmit,

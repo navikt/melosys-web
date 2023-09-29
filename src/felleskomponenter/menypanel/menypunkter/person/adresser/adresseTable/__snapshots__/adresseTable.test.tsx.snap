@@ -5,35 +5,41 @@ exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
   className="adresseTable menypanel__table-wrapper"
 >
   <table
-    className="menypanel__table"
+    className="navds-table navds-table--medium menypanel__table"
   >
-    <tbody>
-      <tr
-        className="header"
+    <thead
+      className="navds-table__header"
+    >
+      <th
+        className="navds-table__header-cell navds-label fixed-width "
       >
-        <th
-          className="fixed-width "
+        Bostedsadresse
+      </th>
+      <th
+        className="navds-table__header-cell navds-label"
+      >
+        Register
+      </th>
+      <th
+        className="navds-table__header-cell navds-label"
+      >
+        Kilde
+      </th>
+      <th
+        className="navds-table__header-cell navds-label fixed-width"
+      >
+        Gyldig f.o.m.
+      </th>
+    </thead>
+    <tbody
+      className="navds-table__body"
+    >
+      <tr
+        className="navds-table__row navds-table__row--shade-on-hover"
+      >
+        <td
+          className="navds-table__data-cell navds-body-short"
         >
-          Bostedsadresse
-        </th>
-        <th
-          className=""
-        >
-          Register
-        </th>
-        <th
-          className=""
-        >
-          Kilde
-        </th>
-        <th
-          className="fixed-width"
-        >
-          Gyldig f.o.m.
-        </th>
-      </tr>
-      <tr>
-        <td>
           <address>
             <div>
               Co Yo 1
@@ -55,14 +61,18 @@ exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
             </div>
           </address>
         </td>
-        <td>
+        <td
+          className="navds-table__data-cell navds-body-short"
+        >
           Freg
         </td>
-        <td>
+        <td
+          className="navds-table__data-cell navds-body-short"
+        >
           Folkeregisteret
         </td>
         <td
-          className="gyldig-label"
+          className="navds-table__data-cell gyldig-label navds-body-short"
         >
           03.11.2012
         </td>

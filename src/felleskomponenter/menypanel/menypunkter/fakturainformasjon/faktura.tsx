@@ -24,6 +24,7 @@ interface Fakturainfo {
   fakturaBelop: number | null;
   ubetaltBelop: number | null;
   feilmelding: string | null;
+  fakturaNummer: string | null;
 }
 
 const Dott = ({ farge }: { farge: string }) => <div className={`dott ${farge}`} />;
@@ -66,14 +67,17 @@ export const Faktura = ({ faktura }: FakturaProps) => {
   useEffect(() => {
     if (faktura.id) {
       Api.Faktureringskomponenten.hentFakturainfo(faktura.id).then((res: Fakturainfo[]) => {
-        const nyesteMelding = res.sort((a, b) => moment(a.dato).diff(moment(b.dato)))[0];
+        const nyesteMelding = res.sort((a, b) => moment(b.dato).diff(moment(a.dato)))[0];
         setFakturainfo(nyesteMelding);
       });
     }
   }, [faktura]);
 
   return (
-    <Table.ExpandableRow key={faktura.id} content={<FakturaLinjeContainer faktura={faktura} />}>
+    <Table.ExpandableRow
+      key={faktura.id}
+      content={<FakturaLinjeContainer faktura={{ ...faktura }} fakturaNummer={fakturainfo?.fakturaNummer} />}
+    >
       <Table.DataCell>{faktura.datoBestilt}</Table.DataCell>
       <Table.DataCell>{mapPeriodeTilKvartalString(faktura.periodeFra, faktura.periodeTil)}</Table.DataCell>
       <Table.DataCell>

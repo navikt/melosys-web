@@ -43,7 +43,7 @@ const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
   inntektskilder: Inntektskilde[],
   medlemskapsperioder: Medlemskapsperiode[]
 ) => {
-  if (inntektskilder.length === 0) return false;
+  if (Utils._isEmpty(inntektskilder) || Utils._isEmpty(medlemskapsperioder)) return false;
   const sortertInntekstkilder = [...inntektskilder].sort((a, b) => {
     const fomA = Utils.dato.formatterDatoTilISO(a.fomDato);
     const fomB = Utils.dato.formatterDatoTilISO(b.fomDato);

@@ -16,6 +16,7 @@ import LagredeUtkast from "./sendBrev/brevutkast/lagredeUtkast";
 import { FaneNavn } from "./sideDialog";
 
 import "./sideDialogDokumenter.css";
+import { Table } from "@navikt/ds-react";
 
 interface MottaksretningIkonProps {
   mottaksretning: Mottaksretning;
@@ -65,11 +66,11 @@ const OversiktRad = ({
     vedlegg,
   },
 }: OversiktradProps) => (
-  <tr>
-    <td>
+  <Table.Row>
+    <Table.DataCell>
       <MottaksretningIkon mottaksretning={mottaksretning} />
-    </td>
-    <td>
+    </Table.DataCell>
+    <Table.DataCell>
       <span>
         <PdfLink journalpostID={journalpostID} dokumentID={hoveddokument.dokumentID} tittel={hoveddokument.tittel} />
         {hoveddokument.logiskeVedlegg.map((logiskVedlegg) => (
@@ -79,10 +80,10 @@ const OversiktRad = ({
           <VedleggLink key={uuid()} journalpostID={journalpostID} dokument={vedleggDokument} />
         ))}
       </span>
-    </td>
-    <td>{avsenderEllerMottaker}</td>
-    <td>{formatterDatoTilNorsk(hentDato(mottaksretning, mottattDato, journalforingDato))}</td>
-  </tr>
+    </Table.DataCell>
+    <Table.DataCell>{avsenderEllerMottaker}</Table.DataCell>
+    <Table.DataCell>{formatterDatoTilNorsk(hentDato(mottaksretning, mottattDato, journalforingDato))}</Table.DataCell>
+  </Table.Row>
 );
 interface SideDialogDokumenterProps {
   behandlingID: number;
@@ -90,7 +91,6 @@ interface SideDialogDokumenterProps {
   endreFane: (fanenavn: FaneNavn) => void;
 }
 
-// TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, endreFane }: SideDialogDokumenterProps) => {
   const [utkast] = useAsyncCallbackState(() => Api.Brevutkast.hentBrevutkast(behandlingID), [], []);
   const dispatch = useDispatch();
@@ -101,21 +101,19 @@ const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, endreFane }: Sid
   return (
     <div className="sideDialogDokumenter">
       <LagredeUtkast alleUtkast={utkast} settAktivtUtkast={handleValgtUtkast} />
-      <table width="100%" className="dokumentTabell" aria-label="Liste over dokumenter knyttet til saken">
-        <thead>
-          <tr>
-            <th aria-label="Mottaksretning" />
-            <th>Dokument</th>
-            <th>Avsender/mottaker</th>
-            <th>Dato</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table aria-label="Liste over dokumenter knyttet til saken">
+        <Table.Header>
+          <Table.HeaderCell aria-label="Mottaksretning" />
+          <Table.HeaderCell>Dokument</Table.HeaderCell>
+          <Table.HeaderCell>Avsender/mottaker</Table.HeaderCell>
+          <Table.HeaderCell>Dato</Table.HeaderCell>
+        </Table.Header>
+        <Table.Body>
           {dokumentOversikt.map((oversikt) => (
             <OversiktRad key={uuid()} dokumentOversikt={oversikt} />
           ))}
-        </tbody>
-      </table>
+        </Table.Body>
+      </Table>
     </div>
   );
 };

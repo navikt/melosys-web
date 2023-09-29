@@ -59,7 +59,7 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
   if (hjelpetekster.length === 0) return null;
 
   return (
-    <div className="bestemmelse-hjelpetekst">
+    <div>
       <b>Følgende vilkår må være oppfylt</b>
       <ul>
         {hjelpetekster.map((hjelpetekst) => (
