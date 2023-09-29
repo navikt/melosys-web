@@ -43,6 +43,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const [defaultPeriode, setDefaultPeriode] = useState<{ fomDato: string; tomDato: string } | undefined>(undefined);
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
+  const [harHentetGrunnlag, setHarHentetGrunnlag] = useState(false);
   const {
     control,
     watch,
@@ -60,7 +61,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     fields: skattFields,
     append: skattAppend,
     remove: skattRemove,
-    replace: resetskatteforholdsperioder,
+    replace: resetSkatteforholdsperioder,
   } = useFieldArray<FieldArrayProps, "skatteforholdsperioder", "id">({ control, name: "skatteforholdsperioder" });
   const {
     fields: inntektFields,
@@ -90,7 +91,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
 
-  const finnInnvilgetMedlemskapsperiode = () => {
+  const finnPeriodeFraInnvilgedeMedlemskapsperioder = () => {
     if (medlemskapsperioder) {
       const fomDatoer = medlemskapsperioder.map((medlemskapsperiode) => new Date(medlemskapsperiode.fomDato).getTime());
       const tomDatoer = medlemskapsperioder.map((medlemskapsperiode) => new Date(medlemskapsperiode.tomDato).getTime());
@@ -103,9 +104,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   };
 
   useEffect(() => {
-    const innvilgetPeriode = finnInnvilgetMedlemskapsperiode();
+    const periode = finnPeriodeFraInnvilgedeMedlemskapsperioder();
 
-    setDefaultPeriode(innvilgetPeriode);
+    setDefaultPeriode(periode);
 
     Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
       const { inntektskilder, skatteforholdsperioder } = lagretTrygdeavgiftsgrunnlag;
@@ -115,14 +116,14 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       const sorterteSkatteforhold = skatteforholdsperioder?.sort(
         (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
       );
-      resetskatteforholdsperioder(
+      resetSkatteforholdsperioder(
         !Utils._isEmpty(sorterteSkatteforhold)
           ? sorterteSkatteforhold.map((skatteforhold) => ({
               fomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.fomDato),
               tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
               skatteplikttype: skatteforhold.skatteplikttype,
             }))
-          : [innvilgetPeriode || {}]
+          : [periode || {}]
       );
       resetInntektskilder(
         !Utils._isEmpty(sorterteInntekstkilder)
@@ -133,8 +134,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
               fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
               tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
             }))
-          : [innvilgetPeriode || {}]
+          : [periode || {}]
       );
+      setHarHentetGrunnlag(true);
     });
   }, []);
 
@@ -172,11 +174,11 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   useEffect(() => {
-    if (redigerbart) setTrygdeavgift(undefined);
+    if (redigerbart && harHentetGrunnlag) setTrygdeavgift(undefined);
     if (redigerbart && aktivtSteg && !isValidating) {
       debouncedLagreTrygdeavgiftsgrunnlag(formValues, stegErGyldig);
     }
-  }, [stegErGyldig, isValidating]);
+  }, [stegErGyldig, isValidating, formValues?.inntektskilder?.length, formValues?.skatteforholdsperioder?.length]);
 
   const handleBeregnTrygdeavgift = () => {
     setTrygdeavgift(undefined);

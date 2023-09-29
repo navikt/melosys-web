@@ -10,8 +10,12 @@ import * as Ikoner from "../../../../../../resources/images";
 
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import { BOOLSK_STRING } from "../../../../../../constants";
-import { FieldArrayProps, FormValuesProps, Inntektskilde, Skatteforhold } from "./types";
-import { arbAvgBetalesKreves, bruttoInntektKreves } from "../vurderingTrygdeavgiftSchema";
+import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./types";
+import {
+  arbAvgBetalesKreves,
+  bruttoInntektKreves,
+  erBrukerSkattepliktigIHelePerioden,
+} from "../vurderingTrygdeavgiftSchema";
 
 const { ARBEIDSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR } = MKV.Koder.inntektskildetype;
 
@@ -76,16 +80,15 @@ export const Inntektskilder = ({
         </Nav.Row>
 
         {formValues.inntektskilder.map((inntektskilder, index) => {
-          const erBrukerSkattepliktigIHelePerioden = !formValues.skatteforholdsperioder.some(
-            (skatteforhold: Skatteforhold) =>
-              skatteforhold.skatteplikttype === MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG
+          const brukerSkattepliktigIHelePerioden = erBrukerSkattepliktigIHelePerioden(
+            formValues.skatteforholdsperioder
           );
 
           const visArbAvgBetales = !Utils._isEmpty(inntektskilder.kildetype);
           const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(inntektskilder.kildetype);
           const visBruttoInntekt = Boolean(inntektskilder.arbAvgBetales) || !skalFylleInnArbAvgBetales;
           const skalFylleInnBruttoInntekt = bruttoInntektKreves(
-            erBrukerSkattepliktigIHelePerioden,
+            brukerSkattepliktigIHelePerioden,
             inntektskilder.kildetype,
             inntektskilder.arbAvgBetales
           );

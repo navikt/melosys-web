@@ -55,10 +55,10 @@ const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
   medlemskapsperioder: Medlemskapsperiode[]
 ) => {
   if (inntektskilder.length === 0) return false;
-  const sortertInntekstkilder = inntektskilder.sort(
+  const sortertInntekstkilder = [...inntektskilder].sort(
     (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
   );
-  const sortertMedlemskapsperioder = medlemskapsperioder.sort(
+  const sortertMedlemskapsperioder = [...medlemskapsperioder].sort(
     (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
   );
   return (
@@ -74,11 +74,11 @@ const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
   skatteforholdsperioder: Skatteforhold[],
   medlemskapsperioder: Medlemskapsperiode[]
 ) => {
-  if (skatteforholdsperioder.length === 0) return false;
-  const sorterteSkatteforhold = skatteforholdsperioder.sort(
+  if (Utils._isEmpty(skatteforholdsperioder) || Utils._isEmpty(medlemskapsperioder)) return false;
+  const sorterteSkatteforhold = [...skatteforholdsperioder].sort(
     (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
   );
-  const sortertMedlemskapsperioder = medlemskapsperioder.sort(
+  const sortertMedlemskapsperioder = [...medlemskapsperioder].sort(
     (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
   );
   return (

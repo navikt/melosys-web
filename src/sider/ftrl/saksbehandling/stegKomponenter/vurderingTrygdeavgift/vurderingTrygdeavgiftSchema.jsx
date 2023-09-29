@@ -20,8 +20,12 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
   },
 };
 
-export const bruttoInntektKreves = (erBrukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) =>
-  !erBrukerSkattepliktigIHelePerioden ||
+export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder) => {
+  return !skatteforholdsperioder.some((skatteforhold) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
+};
+
+export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) =>
+  !brukerSkattepliktigIHelePerioden ||
   [NÆRINGSINNTEKT_FRA_NORGE, FN_SKATTEFRITAK].includes(kildetype) ||
   (kildetype === INNTEKT_FRA_UTLANDET && arbAvgBetales === BOOLSK_STRING.USANN);
 
@@ -32,12 +36,10 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
     const { skatteforholdsperioder } = schema.from[1].value;
     const { kildetype, arbAvgBetales } = schema.from[0].value;
 
-    const erBrukerSkattepliktigIHelePerioden = !skatteforholdsperioder.some(
-      (skatteforhold) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG
-    );
+    const brukerSkattepliktigIHelePerioden = erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
 
     return !(
-      bruttoInntektKreves(erBrukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) && Utils._isEmpty(bruttoInntekt)
+      bruttoInntektKreves(brukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) && Utils._isEmpty(bruttoInntekt)
     );
   },
 };
