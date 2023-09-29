@@ -30,7 +30,7 @@ export const OppdaterRegisteropplysninger = ({
   return (
     <Nav.Panel className="oppdater-registeropplysninger" border>
       <Nav.Checkbox
-        className={"oppdater-registeropplysninger__checkbox"}
+        className="oppdater-registeropplysninger__checkbox"
         name="InkluderSiste5aar"
         checked={inkluderSiste5aar}
         onChange={checkboxChangeHandler}
