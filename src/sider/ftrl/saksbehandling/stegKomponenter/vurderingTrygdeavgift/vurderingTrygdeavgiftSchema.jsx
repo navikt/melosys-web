@@ -20,8 +20,12 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
   },
 };
 
-export const bruttoInntektKreves = (skattepliktig, kildetype, arbAvgBetales) =>
-  skattepliktig === IKKE_SKATTEPLIKTIG ||
+export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder) => {
+  return !skatteforholdsperioder.some((skatteforhold) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
+};
+
+export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) =>
+  !brukerSkattepliktigIHelePerioden ||
   [NÆRINGSINNTEKT_FRA_NORGE, FN_SKATTEFRITAK].includes(kildetype) ||
   (kildetype === INNTEKT_FRA_UTLANDET && arbAvgBetales === BOOLSK_STRING.USANN);
 
@@ -29,15 +33,27 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
   name: "Fyll inn brutto inntekt når det kreves",
   message: { message: "Fyll inn brutto inntekt" },
   test: (bruttoInntekt, schema) => {
-    const { skattepliktig } = schema.from[1].value;
+    const { skatteforholdsperioder } = schema.from[1].value;
     const { kildetype, arbAvgBetales } = schema.from[0].value;
 
-    return !(bruttoInntektKreves(skattepliktig, kildetype, arbAvgBetales) && Utils._isEmpty(bruttoInntekt));
+    const brukerSkattepliktigIHelePerioden = erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
+
+    return !(
+      bruttoInntektKreves(brukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) && Utils._isEmpty(bruttoInntekt)
+    );
   },
 };
 
 const vurdering_trygdeavgift = object().shape({
-  skattepliktig: string().required(MAA_FYLLES_UT),
+  skatteforholdsperioder: array()
+    .of(
+      object().shape({
+        fomDato: string().erGyldigDato().erInnenforSoknadsperioden().required(MAA_FYLLES_UT),
+        tomDato: string().erGyldigDato().erInnenforSoknadsperioden().erEtterDatofelt("fomDato").required(MAA_FYLLES_UT),
+        skatteplikttype: string().required(MAA_FYLLES_UT),
+      })
+    )
+    .min(1),
   inntektskilder: array().of(
     object().shape({
       kildetype: string().required(MAA_FYLLES_UT),

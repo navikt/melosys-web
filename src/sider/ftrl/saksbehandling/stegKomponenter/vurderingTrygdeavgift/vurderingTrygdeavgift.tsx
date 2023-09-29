@@ -2,10 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
-
-import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
-import * as Forms from "../../../../../felleskomponenter/forms";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
@@ -18,12 +15,12 @@ import { STATUS } from "../../../../../services";
 
 import { Inntektskilder } from "./komponenter/inntektskilder";
 import TrygdeavgiftsperioderTabell from "./komponenter/trygdeavgiftsperioderTabell";
-import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./komponenter/types";
+import { FieldArrayProps, FormValuesProps, Inntektskilde, Skatteforhold } from "./komponenter/types";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
 import { AdvarselMelding, Feilmelding, finnAktivAdvarselmelding, finnAktivFeilmelding } from "./komponenter/meldinger";
-
-const { SKATTEPLIKTIG, IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
+import { Skatteforholdsperioder } from "./komponenter/skatteforholdsperioder";
+import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 
 interface Props {
   bekreft: () => void;
@@ -36,6 +33,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const medlemskapsperiodeStatus = useSelector(medlemskapsperioderSelectors.MedlemskapsperioderStatusSelector);
+  const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.InnvilgedeMedlemskapsperioderSelector);
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
@@ -44,34 +42,56 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
   const [defaultPeriode, setDefaultPeriode] = useState<{ fomDato: string; tomDato: string } | undefined>(undefined);
   const [feil, setFeil] = useState<string | undefined>(undefined);
+  const [lagrePending, setLagrePending] = useState(false);
+  const [harHentetGrunnlag, setHarHentetGrunnlag] = useState(false);
   const {
     control,
     watch,
-    setValue,
     formState: { isValid: formIsValid, isValidating },
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
+    context: { soknadsperiode },
     mode: "onChange",
     defaultValues: {
-      skattepliktig: "",
+      skatteforholdsperioder: [{}],
       inntektskilder: [{}],
     } as FieldValue<FormValuesProps>,
   });
   const {
-    fields,
-    append,
-    remove,
-    update,
+    fields: skattFields,
+    append: skattAppend,
+    remove: skattRemove,
+    replace: resetSkatteforholdsperioder,
+  } = useFieldArray<FieldArrayProps, "skatteforholdsperioder", "id">({ control, name: "skatteforholdsperioder" });
+  const {
+    fields: inntektFields,
+    append: inntektAppend,
+    remove: inntektRemove,
+    update: inntektUpdate,
     replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.inntektskilder, medlemskapsperioder!);
+  const aktivFeilmeldingType = finnAktivFeilmelding(
+    formValues?.inntektskilder,
+    medlemskapsperioder!,
+    formValues?.skatteforholdsperioder
+  );
   const aktivAdvarselmeldingType = finnAktivAdvarselmelding(formValues?.inntektskilder);
 
   const stegErGyldig = formIsValid && !aktivFeilmeldingType;
 
-  const finnInnvilgetMedlemskapsperiode = () => {
+  const skalBeregneForelopigTrygdeavgift =
+    stegErGyldig &&
+    formValues?.inntektskilder.some(
+      (inntektskilde: Inntektskilde) => inntektskilde.bruttoInntekt && inntektskilde.bruttoInntekt !== 0
+    );
+
+  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
+
+  const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
+
+  const finnPeriodeFraInnvilgedeMedlemskapsperioder = () => {
     if (!Utils._isEmpty(medlemskapsperioder)) {
       const fomDatoer = medlemskapsperioder!.map((medlemskapsperiode) =>
         new Date(medlemskapsperiode.fomDato).getTime()
@@ -88,58 +108,68 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   };
 
   useEffect(() => {
-    const innvilgetPeriode = finnInnvilgetMedlemskapsperiode();
+    const periode = finnPeriodeFraInnvilgedeMedlemskapsperioder();
 
-    setDefaultPeriode(innvilgetPeriode);
+    setDefaultPeriode(periode);
+
     Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
-      setValue("skattepliktig", lagretTrygdeavgiftsgrunnlag.skatteplikttype);
-      resetInntektskilder(
-        !Utils._isEmpty(lagretTrygdeavgiftsgrunnlag?.inntektskilder)
-          ? [...lagretTrygdeavgiftsgrunnlag.inntektskilder].map((kilde) => ({
-              kildetype: kilde.type,
-              arbAvgBetales: Utils.streng.boolTilUppercaseStreng(kilde.arbeidsgiversavgiftBetales),
-              bruttoInntekt: kilde.avgiftspliktigInntektMnd,
-              fomDato: Utils.dato.formatterDatoTilNorsk(kilde.fomDato),
-              tomDato: Utils.dato.formatterDatoTilNorsk(kilde.tomDato),
-            }))
-          : [innvilgetPeriode || {}]
+      const { inntektskilder, skatteforholdsperioder } = lagretTrygdeavgiftsgrunnlag;
+      const sorterteInntekstkilder = inntektskilder?.sort(
+        (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
       );
+      const sorterteSkatteforhold = skatteforholdsperioder?.sort(
+        (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
+      );
+      resetSkatteforholdsperioder(
+        !Utils._isEmpty(sorterteSkatteforhold)
+          ? sorterteSkatteforhold.map((skatteforhold) => ({
+              fomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.fomDato),
+              tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
+              skatteplikttype: skatteforhold.skatteplikttype,
+            }))
+          : [periode || {}]
+      );
+      resetInntektskilder(
+        !Utils._isEmpty(sorterteInntekstkilder)
+          ? sorterteInntekstkilder.map((inntektskilde) => ({
+              kildetype: inntektskilde.type,
+              arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
+              bruttoInntekt: inntektskilde.avgiftspliktigInntektMnd,
+              fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
+              tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
+            }))
+          : [periode || {}]
+      );
+      setHarHentetGrunnlag(true);
     });
   }, []);
-
-  const skalBeregneForeløpigTrygdeavgift = formValues.inntektskilder.some(
-    (inntektskilde: Inntektskilde) => inntektskilde.bruttoInntekt && inntektskilde.bruttoInntekt !== 0
-  );
-
-  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
-
-  const harBeregnetForeløpigTrygdeavgift = !skalBeregneForeløpigTrygdeavgift || trygdeavgiftErIkkeTom;
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig && harBeregnetForeløpigTrygdeavgift);
   }, [stegErGyldig, harBeregnetForeløpigTrygdeavgift]);
 
   const lagreTrygdeavgiftsgrunnlag = (formVerdier: FieldValue<FormValuesProps>) => {
+    setLagrePending(true);
+
     Api.Trygdeavgift.oppdaterTrygdeavgiftsgrunnlag(behandlingID, {
-      skatteplikttype: formVerdier.skattepliktig,
-      inntektskilder: [...formVerdier.inntektskilder]?.map((kilde) => ({
-        type: kilde.kildetype,
-        arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(kilde.arbAvgBetales) || false,
-        avgiftspliktigInntektMnd: kilde.bruttoInntekt,
-        fomDato: Utils.dato.formatterDatoTilISO(kilde.fomDato),
-        tomDato: Utils.dato.formatterDatoTilISO(kilde.tomDato),
+      skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
+        fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
+        tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato),
+        skatteplikttype: skatteforhold.skatteplikttype,
+      })),
+      inntektskilder: formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
+        type: inntektskilde.kildetype,
+        arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
+        avgiftspliktigInntektMnd: inntektskilde.bruttoInntekt,
+        fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
+        tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato),
       })),
     })
       .then(() => {
         setFeil(undefined);
-        Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID)
-          .then((response) => {
-            setFeil(undefined);
-            setTrygdeavgift(response);
-          })
-          .catch((error) => setFeil(error.body?.message || error));
       })
-      .catch((error) => setFeil(error.body?.message || error));
+      .catch((error) => setFeil(error.body?.message || error))
+      .finally(() => setLagrePending(false));
   };
 
   const debouncedLagreTrygdeavgiftsgrunnlag = useCallback(
@@ -148,24 +178,11 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   useEffect(() => {
+    if (redigerbart && harHentetGrunnlag) setTrygdeavgift(undefined);
     if (redigerbart && aktivtSteg && !isValidating) {
       debouncedLagreTrygdeavgiftsgrunnlag(formValues, stegErGyldig);
     }
-  }, [stegErGyldig, isValidating, formValues?.inntektskilder?.length]);
-
-  if (!aktivtSteg) return null;
-
-  const handleEndreSkattepliktig = (skattepliktig: string) => {
-    Api.Trygdeavgift.oppdaterTrygdeavgiftsgrunnlag(behandlingID, {
-      skatteplikttype: skattepliktig,
-      inntektskilder: [],
-    })
-      .then(() => setFeil(undefined))
-      .catch((error) => setFeil(error.body?.message || error));
-
-    resetInntektskilder([defaultPeriode || {}]);
-    setTrygdeavgift(undefined);
-  };
+  }, [stegErGyldig, isValidating, formValues?.inntektskilder?.length, formValues?.skatteforholdsperioder?.length]);
 
   const handleBeregnTrygdeavgift = () => {
     setTrygdeavgift(undefined);
@@ -177,49 +194,41 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       .catch((error) => setFeil(error.body?.message || error));
   };
 
+  if (!aktivtSteg) return null;
+
   return (
     <div className="vurderingTrygdeavgift">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Trygdeavgift</Nav.Typo.Innholdstittel>
 
       <Nav.Row>
-        <Nav.Typo.Undertittel className="radio-gruppe__label">Er bruker skattepliktig?</Nav.Typo.Undertittel>
-        <Nav.Column xs="12" className="radio-gruppe__container">
-          <Forms.Radio
-            label="Ja"
-            name="skattepliktig"
+        <Nav.Column xs="9">
+          <Skatteforholdsperioder
+            formValues={formValues}
+            redigerbart={redigerbart}
+            remove={skattRemove}
+            append={skattAppend}
             control={control}
-            value={SKATTEPLIKTIG}
-            disabled={!redigerbart}
-            onChange={handleEndreSkattepliktig}
-          />
-          <Forms.Radio
-            label="Nei"
-            name="skattepliktig"
-            control={control}
-            value={IKKE_SKATTEPLIKTIG}
-            disabled={!redigerbart}
-            onChange={handleEndreSkattepliktig}
+            defaultPeriode={defaultPeriode}
+            fields={skattFields}
           />
         </Nav.Column>
       </Nav.Row>
 
-      {formValues?.skattepliktig && (
-        <Inntektskilder
-          formValues={formValues}
-          fields={fields}
-          redigerbart={redigerbart}
-          update={update}
-          remove={remove}
-          append={append}
-          control={control}
-          defaultPeriode={defaultPeriode}
-        />
-      )}
+      <Inntektskilder
+        formValues={formValues}
+        redigerbart={redigerbart}
+        update={inntektUpdate}
+        remove={inntektRemove}
+        append={inntektAppend}
+        control={control}
+        defaultPeriode={defaultPeriode}
+        fields={inntektFields}
+      />
 
-      {skalBeregneForeløpigTrygdeavgift && (
+      {skalBeregneForelopigTrygdeavgift && (
         <Nav.Knapp
           className="beregnKnapp"
-          disabled={!redigerbart || !stegErGyldig || isValidating}
+          disabled={lagrePending || !redigerbart || !stegErGyldig || isValidating}
           onClick={handleBeregnTrygdeavgift}
           mini
         >
@@ -236,7 +245,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
       {feil && <Nav.AlertStripeFeil className="infomelding">{feil}</Nav.AlertStripeFeil>}
 
-      {!skalBeregneForeløpigTrygdeavgift && stegErGyldig && (
+      {!skalBeregneForelopigTrygdeavgift && stegErGyldig && (
         <Nav.AlertStripeInfo className="infomelding">Trygdeavgift skal ikke betales til NAV</Nav.AlertStripeInfo>
       )}
 
