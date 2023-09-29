@@ -18,7 +18,7 @@ const SkatteforholdsperioderInjectedProps = (props: any) => {
 describe("Skatteforholdsperioder", () => {
   const props = {
     formValues: {
-      skatteforholdList: [
+      skatteforholdsperioder: [
         {
           fomDato: "01.10.2023",
           tomDato: "31.12.2023",

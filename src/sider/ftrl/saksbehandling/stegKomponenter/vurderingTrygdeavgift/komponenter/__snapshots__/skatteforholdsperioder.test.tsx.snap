@@ -48,7 +48,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         className="col col-xs-3"
       >
         <div
-          name="skatteforholdList.0.fomDato"
+          name="skatteforholdsperioder.0.fomDato"
           onBlur={[Function]}
         >
           <div
@@ -125,7 +125,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         className="col col-xs-3"
       >
         <div
-          name="skatteforholdList.0.tomDato"
+          name="skatteforholdsperioder.0.tomDato"
           onBlur={[Function]}
         >
           <div
@@ -210,7 +210,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
             className="skjemaelement__input radioknapp"
             disabled={false}
             id="123"
-            name="skatteforholdList.0.skatteplikttype"
+            name="skatteforholdsperioder.0.skatteplikttype"
             onBlur={[Function]}
             onChange={[Function]}
             type="radio"
@@ -232,7 +232,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
             className="skjemaelement__input radioknapp"
             disabled={false}
             id="123"
-            name="skatteforholdList.0.skatteplikttype"
+            name="skatteforholdsperioder.0.skatteplikttype"
             onBlur={[Function]}
             onChange={[Function]}
             type="radio"
@@ -281,7 +281,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         className="col col-xs-3"
       >
         <div
-          name="skatteforholdList.1.fomDato"
+          name="skatteforholdsperioder.1.fomDato"
           onBlur={[Function]}
         >
           <div
@@ -358,7 +358,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         className="col col-xs-3"
       >
         <div
-          name="skatteforholdList.1.tomDato"
+          name="skatteforholdsperioder.1.tomDato"
           onBlur={[Function]}
         >
           <div
@@ -443,7 +443,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
             className="skjemaelement__input radioknapp"
             disabled={false}
             id="123"
-            name="skatteforholdList.1.skatteplikttype"
+            name="skatteforholdsperioder.1.skatteplikttype"
             onBlur={[Function]}
             onChange={[Function]}
             type="radio"
@@ -465,7 +465,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
             className="skjemaelement__input radioknapp"
             disabled={false}
             id="123"
-            name="skatteforholdList.1.skatteplikttype"
+            name="skatteforholdsperioder.1.skatteplikttype"
             onBlur={[Function]}
             onChange={[Function]}
             type="radio"

@@ -28,9 +28,9 @@ enum TypeMelding {
 export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
   medlemskapsperioder: Medlemskapsperiode[],
-  skatteforholdList: Skatteforhold[]
+  skatteforholdsperioder: Skatteforhold[]
 ): string | undefined => {
-  if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdList, medlemskapsperioder)) {
+  if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, medlemskapsperioder)) {
     return TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE;
   }
   if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, medlemskapsperioder)) {
@@ -71,11 +71,11 @@ const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
 };
 
 const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
-  skatteforholdList: Skatteforhold[],
+  skatteforholdsperioder: Skatteforhold[],
   medlemskapsperioder: Medlemskapsperiode[]
 ) => {
-  if (skatteforholdList.length === 0) return false;
-  const sorterteSkatteforhold = skatteforholdList.sort(
+  if (skatteforholdsperioder.length === 0) return false;
+  const sorterteSkatteforhold = skatteforholdsperioder.sort(
     (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
   );
   const sortertMedlemskapsperioder = medlemskapsperioder.sort(

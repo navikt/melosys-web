@@ -29,10 +29,10 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
   name: "Fyll inn brutto inntekt når det kreves",
   message: { message: "Fyll inn brutto inntekt" },
   test: (bruttoInntekt, schema) => {
-    const { skatteforholdList } = schema.from[1].value;
+    const { skatteforholdsperioder } = schema.from[1].value;
     const { kildetype, arbAvgBetales } = schema.from[0].value;
 
-    const erBrukerSkattepliktigIHelePerioden = !skatteforholdList.some(
+    const erBrukerSkattepliktigIHelePerioden = !skatteforholdsperioder.some(
       (skatteforhold) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG
     );
 
@@ -43,7 +43,7 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
 };
 
 const vurdering_trygdeavgift = object().shape({
-  skatteforholdList: array()
+  skatteforholdsperioder: array()
     .of(
       object().shape({
         fomDato: string().erGyldigDato().erInnenforSoknadsperioden().required(MAA_FYLLES_UT),

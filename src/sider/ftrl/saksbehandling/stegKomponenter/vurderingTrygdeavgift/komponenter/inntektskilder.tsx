@@ -76,7 +76,7 @@ export const Inntektskilder = ({
         </Nav.Row>
 
         {formValues.inntektskilder.map((inntektskilder, index) => {
-          const erBrukerSkattepliktigIHelePerioden = !formValues.skatteforholdList.some(
+          const erBrukerSkattepliktigIHelePerioden = !formValues.skatteforholdsperioder.some(
             (skatteforhold: Skatteforhold) =>
               skatteforhold.skatteplikttype === MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG
           );
@@ -97,7 +97,12 @@ export const Inntektskilder = ({
             <Nav.Row key={fields[index].id}>
               <Nav.Column xs="3" className="flex__kolonne">
                 <Forms.Datovelger name={`inntektskilder.${index}.fomDato`} disabled={!redigerbart} control={control} />
-                <Forms.Datovelger name={`inntektskilder.${index}.tomDato`} disabled={!redigerbart} control={control} />
+                <Forms.Datovelger
+                  name={`inntektskilder.${index}.tomDato`}
+                  disabled={!redigerbart}
+                  control={control}
+                  minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
+                />
               </Nav.Column>
 
               <Nav.Column xs="4">

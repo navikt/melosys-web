@@ -8,10 +8,11 @@ import * as Ikoner from "../../../../../../resources/images";
 
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import { FieldArrayProps, FormValuesProps, Skatteforhold } from "./types";
+import * as Utils from "../../../../../../utils";
 
 interface SkatteforholdsperioderProps {
   formValues: FormValuesProps;
-  fields: FieldArrayWithId<FieldArrayProps, "skatteforholdList">[];
+  fields: FieldArrayWithId<FieldArrayProps, "skatteforholdsperioder">[];
   control: Control;
   remove: (index: number) => void;
   append: (skatteforhold: Skatteforhold) => void;
@@ -48,12 +49,12 @@ export const Skatteforholdsperioder = ({
           </Nav.Column>
         </Nav.Row>
 
-        {formValues.skatteforholdList.map((skatteforhold, index) => {
+        {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
           return (
             <Nav.Row key={fields[index].id}>
               <Nav.Column xs="3">
                 <Forms.Datovelger
-                  name={`skatteforholdList.${index}.fomDato`}
+                  name={`skatteforholdsperioder.${index}.fomDato`}
                   disabled={!redigerbart}
                   control={control}
                 />
@@ -61,16 +62,17 @@ export const Skatteforholdsperioder = ({
 
               <Nav.Column xs="3">
                 <Forms.Datovelger
-                  name={`skatteforholdList.${index}.tomDato`}
+                  name={`skatteforholdsperioder.${index}.tomDato`}
                   disabled={!redigerbart}
                   control={control}
+                  minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato)}
                 />
               </Nav.Column>
 
               <Nav.Column xs="5">
                 <Forms.Radio
                   label="Ja"
-                  name={`skatteforholdList.${index}.skatteplikttype`}
+                  name={`skatteforholdsperioder.${index}.skatteplikttype`}
                   control={control}
                   value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}
                   disabled={!redigerbart}
@@ -78,7 +80,7 @@ export const Skatteforholdsperioder = ({
                 />
                 <Forms.Radio
                   label="Nei"
-                  name={`skatteforholdList.${index}.skatteplikttype`}
+                  name={`skatteforholdsperioder.${index}.skatteplikttype`}
                   control={control}
                   value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}
                   disabled={!redigerbart}
@@ -87,7 +89,7 @@ export const Skatteforholdsperioder = ({
               </Nav.Column>
 
               <Nav.Column xs="1">
-                {redigerbart && formValues.skatteforholdList.length > 1 && (
+                {redigerbart && formValues.skatteforholdsperioder.length > 1 && (
                   <Mui.IkonKnapp ariaLabel="Slett skatteforhold" ikon={Ikoner.Bin} onClick={() => remove(index)} />
                 )}
               </Nav.Column>

@@ -52,7 +52,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     context: { soknadsperiode },
     mode: "onChange",
     defaultValues: {
-      skatteforholdList: [{}],
+      skatteforholdsperioder: [{}],
       inntektskilder: [{}],
     } as FieldValue<FormValuesProps>,
   });
@@ -60,8 +60,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     fields: skattFields,
     append: skattAppend,
     remove: skattRemove,
-    replace: resetSkatteforholdList,
-  } = useFieldArray<FieldArrayProps, "skatteforholdList", "id">({ control, name: "skatteforholdList" });
+    replace: resetskatteforholdsperioder,
+  } = useFieldArray<FieldArrayProps, "skatteforholdsperioder", "id">({ control, name: "skatteforholdsperioder" });
   const {
     fields: inntektFields,
     append: inntektAppend,
@@ -74,7 +74,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.inntektskilder,
     medlemskapsperioder!,
-    formValues?.skatteforholdList
+    formValues?.skatteforholdsperioder
   );
   const aktivAdvarselmeldingType = finnAktivAdvarselmelding(formValues?.inntektskilder);
 
@@ -108,14 +108,14 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     setDefaultPeriode(innvilgetPeriode);
 
     Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
-      const { inntektskilder, skatteforholdList } = lagretTrygdeavgiftsgrunnlag;
+      const { inntektskilder, skatteforholdsperioder } = lagretTrygdeavgiftsgrunnlag;
       const sorterteInntekstkilder = inntektskilder?.sort(
         (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
       );
-      const sorterteSkatteforhold = skatteforholdList?.sort(
+      const sorterteSkatteforhold = skatteforholdsperioder?.sort(
         (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
       );
-      resetSkatteforholdList(
+      resetskatteforholdsperioder(
         !Utils._isEmpty(sorterteSkatteforhold)
           ? sorterteSkatteforhold.map((skatteforhold) => ({
               fomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.fomDato),
@@ -146,7 +146,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     setLagrePending(true);
 
     Api.Trygdeavgift.oppdaterTrygdeavgiftsgrunnlag(behandlingID, {
-      skatteforholdList: formVerdier.skatteforholdList.map((skatteforhold: Skatteforhold) => ({
+      skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
         fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
         tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato),
         skatteplikttype: skatteforhold.skatteplikttype,

@@ -16,7 +16,7 @@ export interface Skatteforhold {
 
 export interface FieldArrayProps {
   inntektskilder: Inntektskilde[];
-  skatteforholdList: Skatteforhold[];
+  skatteforholdsperioder: Skatteforhold[];
 }
 
 export type FormValuesProps = FieldValues & FieldArrayProps;
