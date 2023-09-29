@@ -24,10 +24,7 @@ import { navigeringOperations } from "../../../../ducks/navigering";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
-import * as Actions from "../../../../ducks/modaler/actions";
-import { oppdaterInkluderSiste5Aar } from "../../../../ducks/mottatteOpplysninger/operations";
 import { modalerOperations } from "../../../../ducks/modaler";
-import { leggTilInkluderSiste5Aar } from "../../../../ducks/modaler/operations";
 
 interface Props {
   bekreft: () => void;
@@ -179,11 +176,11 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       </Nav.Row>
       <Nav.Row>
         <Forms.Checkbox
-          className={"inkluderSiste5Aar"}
+          className="inkluderSiste5Aar"
           name="inkluderSiste5Aar"
           control={control}
-          label={"Hent registeropplysninger for 5 år"}
-          value={"Inkluder siste 5 år"}
+          label="Hent registeropplysninger for 5 år"
+          value="Inkluder siste 5 år"
           disabled={!redigerbart}
         />
       </Nav.Row>
