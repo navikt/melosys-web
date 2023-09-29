@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, useMemo, useState } from "react";
+import { KeyboardEvent, useMemo } from "react";
 
 import "./oppdaterRegisteropplysninger.css";
 import * as Nav from "../../navFrontend";
@@ -29,11 +29,7 @@ export const OppdaterRegisteropplysninger = ({
 
   console.log(initialValues);
 
-  const {
-    control,
-    watch,
-    formState: { isValid: formIsValid },
-  } = useForm({
+  const { control, watch } = useForm({
     mode: "all",
     values: useMemo(() => initialValues as FieldValues, [initialValues]),
   });
@@ -42,10 +38,10 @@ export const OppdaterRegisteropplysninger = ({
   return (
     <Nav.Panel className="oppdater-registeropplysninger" border>
       <Forms.Checkbox
-        className="inkluderSiste5Aar"
+        className="oppdater-registeropplysninger__checkbox"
         name="inkluderSiste5Aar"
         control={control}
-        label="Hent registeropplysninger for 5 år"
+        label="Inkl siste 5 år"
         value="Inkl siste 5 år"
       />
       <span
