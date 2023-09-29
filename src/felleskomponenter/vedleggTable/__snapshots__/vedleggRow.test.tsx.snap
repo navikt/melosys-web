@@ -2,9 +2,11 @@
 
 exports[`vedleggRow > snapshot test 1`] = `
 <tr
-  className="vedlegg"
+  className="navds-table__row vedlegg navds-table__row--shade-on-hover"
 >
-  <td>
+  <td
+    className="navds-table__data-cell navds-body-short"
+  >
     <a
       className="lenke"
       href="#"
@@ -13,13 +15,15 @@ exports[`vedleggRow > snapshot test 1`] = `
       test
     </a>
   </td>
-  <td>
+  <td
+    className="navds-table__data-cell navds-body-short"
+  >
     <span>
       
     </span>
   </td>
   <td
-    className="icon--cell"
+    className="navds-table__data-cell icon--cell navds-body-short"
   >
     <button
       aria-label="Fjern vedlegg"
