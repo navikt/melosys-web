@@ -13,6 +13,8 @@ export const visOppfrisk = (inkluderSiste5aar) => (dispatch) =>
   dispatch(Actions.oppdaterOppfrisk({ synlig: true, inkluderSiste5aar }));
 export const leggTilInkluderSiste5Aar = (inkluderSiste5aar) => (dispatch) =>
   dispatch(Actions.oppdaterOppfrisk({ inkluderSiste5aar }));
+export const resetInkluderSiste5Aar = () => (dispatch) =>
+  dispatch(Actions.oppdaterOppfrisk({ inkluderSiste5aar: false }));
 export const skjulOppfrisk = () => (dispatch) =>
   dispatch(Actions.oppdaterOppfrisk({ synlig: false, inkluderSiste5Aar: undefined }));
 
