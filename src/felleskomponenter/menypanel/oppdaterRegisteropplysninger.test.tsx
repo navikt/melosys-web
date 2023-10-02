@@ -1,7 +1,5 @@
-import renderer from "react-test-renderer";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
-import { guid } from "nav-frontend-js-utils";
 
 const mocks = vi.hoisted(() => {
   return {
