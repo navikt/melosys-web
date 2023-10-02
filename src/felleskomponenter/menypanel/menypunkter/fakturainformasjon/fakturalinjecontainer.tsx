@@ -3,6 +3,7 @@ import KopierbarTekst from "../../../kopierbarTekst";
 import { _isEmpty, _uuid } from "../../../../utils";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE } from "../../../../featuretoggle/toggleNavn";
 import { useFeatureToggle } from "../../../../featuretoggle";
+import { formatterDatoTilNorsk } from "../../../../utils/dato";
 
 interface FakturaLinjeProps {
   faktura: any;
@@ -37,7 +38,9 @@ export const FakturaLinjeContainer = ({ faktura, fakturaNummer }: FakturaLinjePr
         <Table.Body>
           {faktura.fakturaLinje.map((fakturaLinje: any) => (
             <Table.Row key={_uuid()} shadeOnHover={false}>
-              <Table.DataCell>{fakturaLinje.beskrivelse}</Table.DataCell>
+              <Table.DataCell>{`Periode: ${formatterDatoTilNorsk(fakturaLinje.periodeFra)} - ${formatterDatoTilNorsk(
+                fakturaLinje.periodeTil
+              )}, ${fakturaLinje.beskrivelse}`}</Table.DataCell>
               <Table.DataCell>1</Table.DataCell>
               <Table.DataCell>{fakturaLinje.belop.toFixed(2)}</Table.DataCell>
               <Table.DataCell>{fakturaLinje.belop.toFixed(2)}</Table.DataCell>
