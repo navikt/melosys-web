@@ -131,7 +131,6 @@ const Saksbehandling = ({
   resetVilkarState,
   resetOppsummertFaktaState,
   resetMedlemskapsperiodeState,
-  resetInkluderSiste5Aar,
   visMenypanel,
   skjulMenypanel,
   soknadForm,
