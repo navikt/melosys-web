@@ -5,6 +5,7 @@ import * as Nav from "../../navFrontend";
 
 import { RegisterHookFormProps } from "./misc/reacthookProps";
 import { getErrorMessage } from "./misc/mapFeilmelding";
+import { _uuid } from "../../utils";
 
 interface CheckboxComponentProps {
   className?: string;
@@ -32,6 +33,7 @@ const InnerCheckboxComponent = forwardRef<HTMLSelectElement, CheckboxInnerCompon
         feil={rest.feil}
         checked={rest.checked}
         disabled={disabled}
+        id={_uuid()}
       />
     );
   }

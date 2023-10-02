@@ -52,8 +52,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     inkluderSiste5Aar: useSelector(modalerSelectors.InkluderSiste5AarSelector),
   };
 
-  console.log(initialValues);
-
   const {
     control,
     watch,

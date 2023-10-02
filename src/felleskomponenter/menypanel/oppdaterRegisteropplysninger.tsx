@@ -17,23 +17,22 @@ export const OppdaterRegisteropplysninger = ({
   sistOppdatert,
   oppdaterRegisteropplysninger,
 }: OppdaterRegisteroppslysningerProps) => {
-  const handleKeyPress = (e: KeyboardEvent) => {
-    if (e.key === "Enter") {
-      oppdaterRegisteropplysninger(formValues.inkluderSiste5Aar);
-    }
-  };
-
   const initialValues = {
     inkluderSiste5Aar: useSelector(modalerSelectors.InkluderSiste5AarSelector),
   };
-
-  console.log(initialValues);
 
   const { control, watch } = useForm({
     mode: "all",
     values: useMemo(() => initialValues as FieldValues, [initialValues]),
   });
   const formValues = watch();
+  const { inkluderSiste5Aar } = formValues;
+
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      oppdaterRegisteropplysninger(inkluderSiste5Aar);
+    }
+  };
 
   return (
     <Nav.Panel className="oppdater-registeropplysninger" border>
@@ -48,7 +47,7 @@ export const OppdaterRegisteropplysninger = ({
         className="oppdater-registeropplysninger__oppdateringsknapp"
         role="button"
         tabIndex={0}
-        onClick={() => oppdaterRegisteropplysninger(formValues.inkluderSiste5Aar)}
+        onClick={() => oppdaterRegisteropplysninger(inkluderSiste5Aar)}
         onKeyPress={handleKeyPress}
       >
         <Refresh />

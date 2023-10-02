@@ -1,11 +1,25 @@
 import renderer from "react-test-renderer";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
+import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
+import { guid } from "nav-frontend-js-utils";
+
+const mocks = vi.hoisted(() => {
+  return {
+    _memoize: vi.fn(),
+  };
+});
+
+vi.mock("../../utils", () => ({
+  _uuid: () => "123",
+  _memoize: mocks._memoize,
+}));
 
 describe("oppdaterRegisteropplysninger", () => {
   it("snapshot test", () => {
-    const tree = renderer
-      .create(<OppdaterRegisteropplysninger oppdaterRegisteropplysninger={vi.fn()} sistOppdatert="2020-08-23" />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = renderWithProviders(
+      <OppdaterRegisteropplysninger oppdaterRegisteropplysninger={vi.fn()} sistOppdatert="2020-08-23" />,
+      {}
+    );
+    expect(container).toMatchSnapshot();
   });
 });
