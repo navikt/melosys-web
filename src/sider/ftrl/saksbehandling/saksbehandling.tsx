@@ -40,6 +40,7 @@ import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
 import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../featuretoggle/toggleNavn";
 import { kontrollOperations } from "../../../ducks/kontroll";
+import { resetInkluderSiste5Aar } from "../../../ducks/modaler/operations";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
@@ -84,6 +85,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetMottatteOpplysningerState: () => dispatch(mottatteOpplysningerOperations.resetState()),
+  resetInkluderSiste5Aar: () => dispatch(resetInkluderSiste5Aar()),
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
@@ -195,6 +197,7 @@ const Saksbehandling = ({
       resetMottatteOpplysningerState();
       resetFeiletrespons();
       resetKontrollFeil();
+      resetInkluderSiste5Aar();
       skjulMenypanel();
     };
   }, []);

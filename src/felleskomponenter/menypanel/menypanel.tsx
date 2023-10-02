@@ -38,7 +38,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type MenypanelProps = PropsFromRedux & {
-  lagreSoknadOgOppfriskSaksopplysninger: () => void;
+  lagreSoknadOgOppfriskSaksopplysninger: (inkluderSiste5aar?: boolean) => void;
   visOppdaterRegisteropplysninger?: boolean;
 };
 

@@ -33,6 +33,7 @@ const FellesHandlersProviderUnconnected = ({
   fjernBehandlingOppfriskes,
   behandlingUnderOppfriskning,
   tilForsiden,
+  inkluderSiste5Aar,
 }) => {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
@@ -43,7 +44,7 @@ const FellesHandlersProviderUnconnected = ({
   const lagreMottatteOpplysningerOgOppfriskSaksopplysninger = async () => {
     await leggTilBehandlingOppfriskes(behandlingID);
     await lagreMottatteOpplysninger();
-    await oppfriskSaksopplysninger(behandlingID);
+    await oppfriskSaksopplysninger(behandlingID, inkluderSiste5Aar);
     await oppfriskGraphQLSaksopplysninger();
     await fjernBehandlingOppfriskes();
     await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
@@ -56,9 +57,9 @@ const FellesHandlersProviderUnconnected = ({
     await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
   };
 
-  const startOgVisOppfriskModal = async () => {
+  const startOgVisOppfriskModal = async (inkluderSiste5aar) => {
     await leggTilBehandlingOppfriskes(behandlingID);
-    visOppfriskDialogHandle();
+    visOppfriskDialogHandle(inkluderSiste5aar);
     await fjernBehandlingOppfriskes();
     await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
   };
@@ -125,6 +126,7 @@ FellesHandlersProviderUnconnected.propTypes = {
   fjernBehandlingOppfriskes: PT.func.isRequired,
   behandlingUnderOppfriskning: PT.number,
   tilForsiden: PT.func.isRequired,
+  inkluderSiste5Aar: PT.bool.isRequired,
 };
 
 FellesHandlersProviderUnconnected.defaultProps = {
@@ -139,6 +141,7 @@ FellesHandlersProviderUnconnected.defaultProps = {
 const mapStateToProps = (state) => ({
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
   sakstype: fagsakSelectors.SakstypeKodeSelector(state),
+  inkluderSiste5Aar: modalerSelectors.InkluderSiste5AarSelector(state),
   behandlingUnderOppfriskning: modalerSelectors.BehandlingUnderOppfriskningSelector(state),
 });
 
@@ -146,11 +149,12 @@ const mapDispatchToProps = (dispatch) => ({
   lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
   lastInnSaksopplysninger: (sakstype, saksnummer, behandlingID) =>
     dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
-  oppfriskSaksopplysninger: (behandlingID) => saksopplysningerOperations.oppfrisk(behandlingID),
+  oppfriskSaksopplysninger: (behandlingID, inkluderSiste5Aar) =>
+    saksopplysningerOperations.oppfrisk(behandlingID, inkluderSiste5Aar),
   leggTilBehandlingOppfriskes: (behandlingID) => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
-  visOppfriskDialogHandle: () => dispatch(modalerOperations.visOppfrisk()),
+  visOppfriskDialogHandle: (inkluderSiste5Aar) => dispatch(modalerOperations.visOppfrisk(inkluderSiste5Aar)),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),

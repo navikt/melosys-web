@@ -14,6 +14,6 @@ import * as Api from "../../services/api";
  * @param behandlingID
  * @returns {*}
  */
-export function oppfrisk(behandlingID) {
-  return Api.Saksopplysninger.oppfrisk(behandlingID);
+export function oppfrisk(behandlingID, inkluderSiste5Aar) {
+  return Api.Saksopplysninger.oppfrisk(behandlingID, { inkluderSiste5Aar });
 }

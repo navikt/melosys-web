@@ -202,7 +202,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SoknadProps = PropsFromRedux & {
-  startOgVisOppfriskModal: () => void;
+  startOgVisOppfriskModal: (inkluderSiste5aar?: boolean) => void;
   visOppdaterRegisteropplysninger?: boolean;
 };
 
@@ -226,9 +226,9 @@ const Soknad = ({
     event.preventDefault();
   };
 
-  const lagreSoknadOgOppfriskSaksopplysninger = async () => {
+  const lagreSoknadOgOppfriskSaksopplysninger = async (inkluderSiste5aar?: boolean) => {
     await lagreMottatteOpplysninger();
-    startOgVisOppfriskModal();
+    startOgVisOppfriskModal(inkluderSiste5aar);
   };
 
   return (
