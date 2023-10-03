@@ -9,6 +9,8 @@ import { useSelector } from "react-redux";
 import { modalerSelectors } from "../../ducks/modaler";
 import MKV from "../../melosyskodeverk";
 
+const { FTRL } = MKV.Koder.sakstyper;
+
 type OppdaterRegisteroppslysningerProps = {
   sistOppdatert: string;
   oppdaterRegisteropplysninger: (isSiste5aar: boolean) => void;
@@ -30,7 +32,6 @@ export const OppdaterRegisteropplysninger = ({
   });
   const formValues = watch();
   const { inkluderSiste5Aar } = formValues;
-  const { FTRL } = MKV.Koder.sakstyper;
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
