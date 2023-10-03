@@ -196,15 +196,14 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     bekreft();
   };
 
-  const visLeggTilNyPeriode =
-    redigerbart &&
-    !formValues.medlemskapsperioder.some(
-      (periode: MedlemskapsperiodeProp) =>
-        Utils._isEmpty(periode.fomDato) ||
-        Utils._isEmpty(periode.tomDato) ||
-        Utils._isEmpty(periode.trygdedekning) ||
-        Utils._isEmpty(periode.innvilgelsesResultat)
-    );
+  const feltErFyltInn = !formValues.medlemskapsperioder.some(
+    (periode: MedlemskapsperiodeProp) =>
+      Utils._isEmpty(periode.fomDato) ||
+      Utils._isEmpty(periode.trygdedekning) ||
+      Utils._isEmpty(periode.innvilgelsesResultat)
+  );
+
+  const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
 
   return (
     <div className="vurderingPerioder">
@@ -235,7 +234,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         </div>
       )}
 
-      <Feilmelding type={aktivFeilmeldingType} />
+      {feltErFyltInn && <Feilmelding type={aktivFeilmeldingType} />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
