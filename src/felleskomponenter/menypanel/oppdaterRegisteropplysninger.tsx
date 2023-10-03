@@ -30,13 +30,13 @@ export const OppdaterRegisteropplysninger = ({
   });
   const formValues = watch();
   const { inkluderSiste5Aar } = formValues;
+  const { FTRL } = MKV.Koder.sakstyper;
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       oppdaterRegisteropplysninger(inkluderSiste5Aar);
     }
   };
-  const { FTRL } = MKV.Koder.sakstyper;
 
   return (
     <Nav.Panel className="oppdater-registeropplysninger" border>
