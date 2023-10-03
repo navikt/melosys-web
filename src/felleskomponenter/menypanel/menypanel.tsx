@@ -134,6 +134,7 @@ export const Menypanel = ({
         <OppdaterRegisteropplysninger
           sistOppdatert={Utils.dato.formatterDatoTilNorsk(sisteOpplysningerHentetDato)}
           oppdaterRegisteropplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+          sakstype={sakstype}
         />
       )}
       <div className="menypanel">

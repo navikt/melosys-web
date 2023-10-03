@@ -1,5 +1,8 @@
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
+import MKV from "../../melosyskodeverk";
+
+const { FTRL, EU_EOS } = MKV.Koder.sakstyper;
 
 const mocks = vi.hoisted(() => {
   return {
@@ -13,9 +16,25 @@ vi.mock("../../utils", () => ({
 }));
 
 describe("oppdaterRegisteropplysninger", () => {
-  it("snapshot test", () => {
+  it("Skal vise alternativ for å se registeropplysninger 5 ekstra år tilbake i tid", () => {
     const { container } = renderWithProviders(
-      <OppdaterRegisteropplysninger oppdaterRegisteropplysninger={vi.fn()} sistOppdatert="2020-08-23" />,
+      <OppdaterRegisteropplysninger
+        sakstype={FTRL}
+        oppdaterRegisteropplysninger={vi.fn()}
+        sistOppdatert="2020-08-23"
+      />,
+      {}
+    );
+    expect(container).toMatchSnapshot();
+  });
+
+  it("Skal ikke vise alternativ for å se registeropplysninger 5 ekstra år tilbake i tid", () => {
+    const { container } = renderWithProviders(
+      <OppdaterRegisteropplysninger
+        sakstype={EU_EOS}
+        oppdaterRegisteropplysninger={vi.fn()}
+        sistOppdatert="2020-08-23"
+      />,
       {}
     );
     expect(container).toMatchSnapshot();
