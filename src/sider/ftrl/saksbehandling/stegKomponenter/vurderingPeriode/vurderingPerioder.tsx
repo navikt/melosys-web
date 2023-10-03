@@ -7,7 +7,6 @@ import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
 import * as Ikoner from "../../../../../resources/images";
-import * as KV from "../../../../../kodeverk";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
@@ -21,8 +20,6 @@ import {
 } from "../../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-
-import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { PeriodeElementer } from "./komponenter/periodeElementer";
 import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
@@ -59,7 +56,6 @@ const mapInitialMedlemskapsperioder = (
     : [];
 
 const komponentState = (state: RootState) => ({
-  valgtTrygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
   lagredeMedlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
   trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -72,16 +68,12 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const dispatch = useDispatch();
   const {
     redigerbart,
-    valgtTrygdedekning,
     lagredeMedlemskapsperioder,
     trygdedekninger,
     behandlingID,
     innvilgelsesResultater,
     soknadsperiode,
   } = useSelector(komponentState);
-  const [{ mottaksdato }] = useAsyncCallbackState(() => Api.Behandlinger.aarsak.hentMottaksdato(behandlingID), {}, [
-    behandlingID,
-  ]);
 
   const {
     control,
@@ -215,19 +207,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   return (
     <div className="vurderingPerioder">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Kontroller medlemskapsperioder</Nav.Typo.Innholdstittel>
-
-      <div>
-        <Nav.Typo.Element className="info_element">Søknad mottatt: </Nav.Typo.Element>
-        <Nav.Typo.Normaltekst className="info_element">
-          {Utils.dato.formatterDatoTilNorsk(mottaksdato)}
-        </Nav.Typo.Normaltekst>
-      </div>
-      <div style={{ marginBottom: "1rem" }}>
-        <Nav.Typo.Element className="info_element">Trygdedekning fra søknad: </Nav.Typo.Element>
-        <Nav.Typo.Normaltekst className="info_element">
-          {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, valgtTrygdedekning)}
-        </Nav.Typo.Normaltekst>
-      </div>
 
       <PeriodeElementer
         trygdedekninger={trygdedekninger}

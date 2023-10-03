@@ -17,12 +17,16 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 
 import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
-import { harIkkeYrkesaktivFlyt, harUnntaksregistreringFlyt } from "../../url";
+import { harIkkeYrkesaktivFlyt, harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../url";
 import KopierbarTekst from "../kopierbarTekst";
 
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
 import EndreBehandlingModal from "./endreBehandlingModal";
 import "./oppsummering.css";
+import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
+import { useAsyncCallbackState } from "../../hooks";
+import { useFeatureToggle } from "../../featuretoggle";
+import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
 
 const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
@@ -32,6 +36,7 @@ const mapStateToProps = (state: RootState) => ({
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  trygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -62,9 +67,15 @@ const Oppsummering = ({
   className,
   redigerbart,
   behandlingID,
+  trygdedekning,
 }: OppsummeringProps) => {
+  const [{ mottaksdato }] = useAsyncCallbackState(() => Api.Behandlinger.aarsak.hentMottaksdato(behandlingID), {}, [
+    behandlingID,
+  ]);
+  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
-  const [mottaksdato, setMottaksdato] = useState<string | undefined>();
+
+  if (Utils._isEmpty(fagsak) || Utils._isEmpty(oppsummering)) return <div />;
 
   const { saksnummer, sakstype, sakstema, registrertDato, hovedpartRolle } = fagsak;
   const {
@@ -78,18 +89,22 @@ const Oppsummering = ({
     behandlingsresultattype,
   } = oppsummering;
 
-  const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(behandlingsstatus?.kode) || !redigerbart;
+  const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(behandlingsstatus.kode) || !redigerbart;
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
-  const erSed = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, behandlingstema?.kode);
-  const erTrygdeavtale = sakstype?.kode === MKV.Koder.sakstyper.TRYGDEAVTALE;
+  const erSed = MKVUtils.erBehandlingAvSed(sakstype.kode, behandlingstema.kode);
+  const erTrygdeavtale = sakstype.kode === MKV.Koder.sakstyper.TRYGDEAVTALE;
+  const erFTRL = sakstype.kode === MKV.Koder.sakstyper.FTRL;
+  const erUnntaksregistrering = harUnntaksregistreringFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode);
+  const erIkkeYrkesaktiv = harIkkeYrkesaktivFlyt(sakstype.kode, behandlingstema.kode);
+  const erIngenFlyt = skalViseIngenFlyt(
+    sakstype.kode,
+    sakstema.kode,
+    behandlingstema.kode,
+    behandlingstype.kode,
+    folketrygdenToggleEnabled
+  );
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
-
-  useEffect(() => {
-    Api.Behandlinger.aarsak
-      .hentMottaksdato(behandlingID)
-      .then((response) => setMottaksdato(Utils.dato.formatterDatoTilNorsk(response.mottaksdato)));
-  }, []);
 
   const landStorBokstav = (land?: KTObject) =>
     land?.term ? Utils.streng.storeForbokstaverForLand(land.term) : "Ukjent";
@@ -142,6 +157,39 @@ const Oppsummering = ({
     return rows;
   };
 
+  const lagCol1 = () => {
+    const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
+    const mottatteOpplysningerperiode = `${mottatteOpplysningerPeriodeFom} - ${mottatteOpplysningerPeriodeTom}`;
+
+    if (erUnntaksregistrering) {
+      return erTrygdeavtale
+        ? [
+            ["Lovvalgsperiode", lovvalgsperiode],
+            ["Land", landStorBokstav(avsenderland)],
+          ]
+        : [
+            ["Periode fra attest", mottatteOpplysningerperiode],
+            ["Lovvalgsland fra attest", landStorBokstav(lovvalgsland)],
+          ];
+    }
+
+    if (erSed) {
+      return [
+        ["Periode fra SED", lovvalgsperiode],
+        ["Land", landStorBokstav(lovvalgsland)],
+      ];
+    }
+
+    const col1 = [["Søknadsperiode", mottatteOpplysningerperiode]];
+    if (erTrygdeavtale || erIkkeYrkesaktiv) {
+      col1.push(["Lovvalgsperiode", lovvalgsperiode]);
+    }
+    col1.push(["Land", landTilSetning(arbeidsland)]);
+    if (erFTRL && !erIngenFlyt) {
+      col1.push(["Trygdedekning", KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, trygdedekning)]);
+    }
+    return col1;
+  };
   const renderTabell = () => {
     let col1;
     let col2;
@@ -149,29 +197,7 @@ const Oppsummering = ({
       col1 = [["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(registrertDato)]];
       col2 = [["Sist oppdatert", Utils.dato.formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`]];
     } else {
-      const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
-      const mottatteOpplysningerperiode = `${mottatteOpplysningerPeriodeFom} - ${mottatteOpplysningerPeriodeTom}`;
-
-      const erUnntak = harUnntaksregistreringFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode);
-
-      const erIkkeYrkesaktiv = harIkkeYrkesaktivFlyt(sakstype.kode, behandlingstema.kode);
-
-      if (erUnntak && sakstype.kode === MKV.Koder.sakstyper.EU_EOS) {
-        col1 = [
-          ["Periode fra attest", mottatteOpplysningerperiode],
-          ["Lovvalgsland fra attest", landStorBokstav(lovvalgsland)],
-        ];
-      } else if (erUnntak && erTrygdeavtale) {
-        col1 = [
-          ["Lovvalgsperiode", lovvalgsperiode],
-          ["Land", landStorBokstav(avsenderland)],
-        ];
-      } else {
-        col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", mottatteOpplysningerperiode]];
-        if (erTrygdeavtale || erIkkeYrkesaktiv) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
-        col1.push(["Land", erSed ? landStorBokstav(lovvalgsland) : landTilSetning(arbeidsland)]);
-      }
-
+      col1 = lagCol1();
       col2 = [
         ["Frist", Utils.dato.formatterDatoTilNorsk(behandlingsfrist) || "-"],
         ["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(registrertDato)],
@@ -181,8 +207,6 @@ const Oppsummering = ({
 
     return erLitenSkjerm ? tabellEnKolonne(col1.concat(col2)) : tabellToKolonner(col1, col2);
   };
-
-  if (!fagsak?.sakstype) return <div />;
 
   return (
     <section aria-label="oppsummeringer" className="oppsummering panelSeksjon">

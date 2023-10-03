@@ -4,7 +4,7 @@ import * as Utils from "../utils";
 
 const dependencyFinnes = (dependency: any) => {
   if (typeof dependency === "number") {
-    return dependency !== 0;
+    return dependency > 0;
   }
   if (typeof dependency === "boolean") {
     return dependency;
