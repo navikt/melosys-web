@@ -5,24 +5,6 @@ exports[`oppdaterRegisteropplysninger > snapshot test 1`] = `
   <div
     class="panel oppdater-registeropplysninger panel--border"
   >
-    <div
-      class="skjemaelement oppdater-registeropplysninger__checkbox"
-    >
-      <input
-        aria-invalid="false"
-        class="skjemaelement__input checkboks"
-        id="123"
-        name="inkluderSiste5Aar"
-        type="checkbox"
-        value="Inkl siste 5 år"
-      />
-      <label
-        class="skjemaelement__label"
-        for="123"
-      >
-        Inkl siste 5 år
-      </label>
-    </div>
     <span
       class="oppdater-registeropplysninger__oppdateringsknapp"
       role="button"
