@@ -12,8 +12,10 @@ const IngenMedlemskapsperioder = (
   </Nav.AlertStripeFeil>
 );
 
-const OppholdIPeriodene = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">Det er opphold mellom perioder.</Nav.AlertStripeFeil>
+const OppholdIInnvilgedePerioder = (
+  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+    Det er opphold mellom innvilgede perioder.
+  </Nav.AlertStripeFeil>
 );
 
 const OverlappIInnvilgedePerioder = (
@@ -147,7 +149,7 @@ export const Feilmelding = ({ type }: { type?: string }) => {
     case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
       return OverlappIInnvilgedePerioder;
     case TypeFeilmelding.OPPHOLD_I_INNVILGEDE_PERIODER:
-      return OppholdIPeriodene;
+      return OppholdIInnvilgedePerioder;
     case TypeFeilmelding.OPPHOLD_MELLOM_SØKNADFOM_PERIODEFOM:
       return OppholdMellomSøknadFomOgMedlemskapsFom;
     default:
