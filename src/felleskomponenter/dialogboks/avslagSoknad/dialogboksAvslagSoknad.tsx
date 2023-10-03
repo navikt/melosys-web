@@ -17,15 +17,12 @@ import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 import { datalastingOperations } from "../../../ducks/datalasting";
 import { navigeringOperations } from "../../../ducks/navigering";
 import { modalerOperations } from "../../../ducks/modaler";
-import { vedtakOperations } from "../../../ducks/vedtak";
 
-import { useFeatureToggle } from "../../../featuretoggle";
 import { AlertStripeFeil } from "nav-frontend-alertstriper";
 import { Feilmeldinger } from "../../feilmeldinger";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import HtmlEditor from "../../htmlEditor";
 import Knapperad from "../../knapperad";
-import { MELOSYS_NY_AVSLAGMANGLENDEOPPLYSNINGER } from "../../../featuretoggle/toggleNavn";
 
 import "./dialogboksAvslagSoknad.css";
 
@@ -42,7 +39,6 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp = false, avbryt }: Dialogbo
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
-  const brukNyttEndepunkt = useFeatureToggle(MELOSYS_NY_AVSLAGMANGLENDEOPPLYSNINGER);
 
   const [brevFritekst, setBrevFritekst] = useState("");
   const [utførerKontroll, setUtførerKontroll] = useState(true);
@@ -82,20 +78,12 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp = false, avbryt }: Dialogbo
     ]);
     await dispatch(datalastingOperations.lagreAllData());
 
-    if (brukNyttEndepunkt) {
-      Api.Saksflyt.Avslag.avslåPgaManglendeOpplysninger(behandlingID, { fritekst: brevFritekst })
-        .then(() => {
-          dispatch(modalerOperations.skjulAvslagSoknad());
-          dispatch(navigeringOperations.tilForsiden());
-        })
-        .catch((error: any) => setFeil(error.body?.message || error));
-    } else {
-      dispatch(
-        vedtakOperations.avslaaSoknad(behandlingID, {
-          fritekst: brevFritekst,
-        })
-      );
-    }
+    Api.Saksflyt.Avslag.avslåPgaManglendeOpplysninger(behandlingID, { fritekst: brevFritekst })
+      .then(() => {
+        dispatch(modalerOperations.skjulAvslagSoknad());
+        dispatch(navigeringOperations.tilForsiden());
+      })
+      .catch((error: any) => setFeil(error.body?.message || error));
   };
 
   const brevFritekstMaxLength = 500;
@@ -119,7 +107,7 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp = false, avbryt }: Dialogbo
             Avslå søknaden på grunn av manglende opplysninger
           </Nav.Typo.Systemtittel>
           <Feilmeldinger />
-          {brukNyttEndepunkt && feil && <AlertStripeFeil>{feil}</AlertStripeFeil>}
+          {feil && <AlertStripeFeil>{feil}</AlertStripeFeil>}
           <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
           {bekreftRedigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           <div className="knapperadcontainer">
