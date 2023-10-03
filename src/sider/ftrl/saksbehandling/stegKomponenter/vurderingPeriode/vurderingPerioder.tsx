@@ -59,6 +59,7 @@ const komponentState = (state: RootState) => ({
   lagredeMedlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
   trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
@@ -73,6 +74,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     behandlingID,
     innvilgelsesResultater,
     soknadsperiode,
+    behandlingstype,
   } = useSelector(komponentState);
 
   const {
@@ -207,6 +209,12 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   return (
     <div className="vurderingPerioder">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Kontroller medlemskapsperioder</Nav.Typo.Innholdstittel>
+
+      <Nav.Typo.Normaltekst>
+        {behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
+          ? "Ved ny vurdering vises tidligere innvilgede medlemskapsperioder. Gjør nødvendige endringer eller legg til en ny periode."
+          : "Vurder og eventuelt juster de foreslåtte medlemskapsperioden(e)."}
+      </Nav.Typo.Normaltekst>
 
       <PeriodeElementer
         trygdedekninger={trygdedekninger}
