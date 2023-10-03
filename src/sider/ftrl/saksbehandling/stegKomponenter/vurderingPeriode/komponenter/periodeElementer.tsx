@@ -7,8 +7,6 @@ import * as Ikoner from "../../../../../../resources/images";
 import * as Nav from "../../../../../../navFrontend";
 import * as Mui from "../../../../../../felleskomponenter/ui";
 
-import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
-
 import { FieldArrayProps, MedlemskapsperiodeProp } from "./types";
 
 export interface PeriodeElementerProps {

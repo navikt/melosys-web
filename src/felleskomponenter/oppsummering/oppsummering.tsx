@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import classNames from "classnames";
