@@ -25,7 +25,7 @@ import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { PeriodeElementer } from "./komponenter/periodeElementer";
-import { Feilmelding, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
+import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
 import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
@@ -109,7 +109,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, soknadsperiode.fom);
 
-  const stegErGyldig = formIsValid && !aktivFeilmeldingType;
+  const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
 
   useEffect(() => {
     if (aktivtSteg) {
@@ -165,10 +165,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     }
   }, [stegErGyldig]);
 
-  const antallMedlemskapsperioder = formValues.medlemskapsperioder?.length;
-
-  const ingenMedlemskapsperioder = antallMedlemskapsperioder === undefined || antallMedlemskapsperioder === 0;
-
   if (!aktivtSteg || !formValues) return null;
 
   const handleSlett = async (index: number) => {
@@ -208,7 +204,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const visLeggTilNyPeriode =
     redigerbart &&
-    !ingenMedlemskapsperioder &&
     !formValues.medlemskapsperioder.some(
       (periode: MedlemskapsperiodeProp) =>
         Utils._isEmpty(periode.fomDato) ||
