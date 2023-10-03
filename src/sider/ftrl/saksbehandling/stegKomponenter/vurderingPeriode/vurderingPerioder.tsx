@@ -208,7 +208,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   return (
     <div className="vurderingPerioder">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Kontroller medlemskapsperioder</Nav.Typo.Innholdstittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Medlemskapsperioder</Nav.Typo.Innholdstittel>
 
       <Nav.Typo.Normaltekst>
         {behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
