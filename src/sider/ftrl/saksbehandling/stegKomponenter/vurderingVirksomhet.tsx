@@ -19,6 +19,7 @@ import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
 import "./vurderingVirksomhet.css";
+import { INGEN_VIRKSOMHETER_TEKST } from "../../../trygdeavtale/stegKomponenter/vurderingAvklarVirksomhet/tekster";
 
 const komponentState = (state: RootState) => {
   const lagredeValgtevirksomheter = oppsummertfaktaSelectors.VirksomhetIDerSelector(state);
@@ -101,15 +102,18 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={hjelpetekst} hjelpetekstClassName="hjelpetekst" />
       </Nav.Typo.Innholdstittel>
-
-      <Mui.Checkboxgruppe
-        muligeValg={virksomheterListe}
-        onChange={(checkedVirksomheter) =>
-          setValue("valgteVirksomheter", checkedVirksomheter, { shouldValidate: true })
-        }
-        disabled={!redigerbart}
-        defaultValg={lagredeValgtevirksomheter}
-      />
+      {virksomheterListe?.length !== 0 ? (
+        <Mui.Checkboxgruppe
+          muligeValg={virksomheterListe}
+          onChange={(checkedVirksomheter) =>
+            setValue("valgteVirksomheter", checkedVirksomheter, { shouldValidate: true })
+          }
+          disabled={!redigerbart}
+          defaultValg={lagredeValgtevirksomheter}
+        />
+      ) : (
+        <Nav.AlertStripeFeil className="alertstripe">{INGEN_VIRKSOMHETER_TEKST}</Nav.AlertStripeFeil>
+      )}
 
       <Mui.StegKnapper
         bekreftKnappProps={{ onClick: handleFortsett, disabled: !formIsValid || !redigerbart }}
