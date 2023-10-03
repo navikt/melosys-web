@@ -7,15 +7,18 @@ import * as Forms from "../forms";
 import { FieldValues, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { modalerSelectors } from "../../ducks/modaler";
+import MKV from "../../melosyskodeverk";
 
 type OppdaterRegisteroppslysningerProps = {
   sistOppdatert: string;
   oppdaterRegisteropplysninger: (isSiste5aar: boolean) => void;
+  sakstype: string;
 };
 
 export const OppdaterRegisteropplysninger = ({
   sistOppdatert,
   oppdaterRegisteropplysninger,
+  sakstype,
 }: OppdaterRegisteroppslysningerProps) => {
   const initialValues = {
     inkluderSiste5Aar: useSelector(modalerSelectors.InkluderSiste5AarSelector),
@@ -33,16 +36,19 @@ export const OppdaterRegisteropplysninger = ({
       oppdaterRegisteropplysninger(inkluderSiste5Aar);
     }
   };
+  const { FTRL } = MKV.Koder.sakstyper;
 
   return (
     <Nav.Panel className="oppdater-registeropplysninger" border>
-      <Forms.Checkbox
-        className="oppdater-registeropplysninger__checkbox"
-        name="inkluderSiste5Aar"
-        control={control}
-        label="Inkl siste 5 år"
-        value="Inkl siste 5 år"
-      />
+      {sakstype === FTRL && (
+        <Forms.Checkbox
+          className="oppdater-registeropplysninger__checkbox"
+          name="inkluderSiste5Aar"
+          control={control}
+          label="Inkl siste 5 år"
+          value="Inkl siste 5 år"
+        />
+      )}
       <span
         className="oppdater-registeropplysninger__oppdateringsknapp"
         role="button"
