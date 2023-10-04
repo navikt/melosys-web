@@ -7,7 +7,6 @@ import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
 import * as Ikoner from "../../../../../resources/images";
-import * as KV from "../../../../../kodeverk";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
@@ -22,10 +21,8 @@ import {
 import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 
-import { useAsyncCallbackState } from "../../../../../hooks";
-
 import { PeriodeElementer } from "./komponenter/periodeElementer";
-import { Feilmelding, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
+import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
 import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
@@ -59,10 +56,10 @@ const mapInitialMedlemskapsperioder = (
     : [];
 
 const komponentState = (state: RootState) => ({
-  valgtTrygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
   lagredeMedlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
   trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
@@ -72,16 +69,13 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const dispatch = useDispatch();
   const {
     redigerbart,
-    valgtTrygdedekning,
     lagredeMedlemskapsperioder,
     trygdedekninger,
     behandlingID,
     innvilgelsesResultater,
     soknadsperiode,
+    behandlingstype,
   } = useSelector(komponentState);
-  const [{ mottaksdato }] = useAsyncCallbackState(() => Api.Behandlinger.aarsak.hentMottaksdato(behandlingID), {}, [
-    behandlingID,
-  ]);
 
   const {
     control,
@@ -109,7 +103,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, soknadsperiode.fom);
 
-  const stegErGyldig = formIsValid && !aktivFeilmeldingType;
+  const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
 
   useEffect(() => {
     if (aktivtSteg) {
@@ -165,10 +159,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     }
   }, [stegErGyldig]);
 
-  const antallMedlemskapsperioder = formValues.medlemskapsperioder?.length;
-
-  const ingenMedlemskapsperioder = antallMedlemskapsperioder === undefined || antallMedlemskapsperioder === 0;
-
   if (!aktivtSteg || !formValues) return null;
 
   const handleSlett = async (index: number) => {
@@ -206,33 +196,24 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     bekreft();
   };
 
-  const visLeggTilNyPeriode =
-    redigerbart &&
-    !ingenMedlemskapsperioder &&
-    !formValues.medlemskapsperioder.some(
-      (periode: MedlemskapsperiodeProp) =>
-        Utils._isEmpty(periode.fomDato) ||
-        Utils._isEmpty(periode.tomDato) ||
-        Utils._isEmpty(periode.trygdedekning) ||
-        Utils._isEmpty(periode.innvilgelsesResultat)
-    );
+  const feltErFyltInn = !formValues.medlemskapsperioder.some(
+    (periode: MedlemskapsperiodeProp) =>
+      Utils._isEmpty(periode.fomDato) ||
+      Utils._isEmpty(periode.trygdedekning) ||
+      Utils._isEmpty(periode.innvilgelsesResultat)
+  );
+
+  const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
 
   return (
     <div className="vurderingPerioder">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Kontroller medlemskapsperioder</Nav.Typo.Innholdstittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Medlemskapsperioder</Nav.Typo.Innholdstittel>
 
-      <div>
-        <Nav.Typo.Element className="info_element">Søknad mottatt: </Nav.Typo.Element>
-        <Nav.Typo.Normaltekst className="info_element">
-          {Utils.dato.formatterDatoTilNorsk(mottaksdato)}
-        </Nav.Typo.Normaltekst>
-      </div>
-      <div style={{ marginBottom: "1rem" }}>
-        <Nav.Typo.Element className="info_element">Trygdedekning fra søknad: </Nav.Typo.Element>
-        <Nav.Typo.Normaltekst className="info_element">
-          {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, valgtTrygdedekning)}
-        </Nav.Typo.Normaltekst>
-      </div>
+      <Nav.Typo.Normaltekst>
+        {behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
+          ? "Ved ny vurdering vises tidligere innvilgede medlemskapsperioder. Gjør nødvendige endringer eller legg til en ny periode."
+          : "Vurder og eventuelt juster de foreslåtte medlemskapsperioden(e)."}
+      </Nav.Typo.Normaltekst>
 
       <PeriodeElementer
         trygdedekninger={trygdedekninger}
@@ -253,7 +234,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         </div>
       )}
 
-      <Feilmelding type={aktivFeilmeldingType} />
+      {feltErFyltInn && <Feilmelding type={aktivFeilmeldingType} />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{

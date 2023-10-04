@@ -187,15 +187,15 @@ function perioderOverlapper(periode1Fom, periode1Tom, periode2Fom, periode2Tom) 
   if (!erGyldigPeriode(periode1Fom, periode1Tom)) return false;
   if (!erGyldigPeriode(periode2Fom, periode2Tom)) return false;
 
-  const intervalLeft = {
-    start: norskStringTilDate(periode1Fom),
-    end: norskStringTilDate(periode1Tom),
-  };
-  const intervalRight = {
-    start: norskStringTilDate(periode2Fom),
-    end: norskStringTilDate(periode2Tom),
-  };
-  if (!intervalLeft || !intervalRight) return false;
+  const periode1FomDate = norskStringTilDate(periode1Fom);
+  const periode1TomDate = norskStringTilDate(periode1Tom);
+  const periode2FomDate = norskStringTilDate(periode2Fom);
+  const periode2TomDate = norskStringTilDate(periode2Tom);
+
+  if (!periode1FomDate || !periode1TomDate || !periode2FomDate || !periode2TomDate) return false;
+
+  const intervalLeft = { start: periode1FomDate, end: periode1TomDate };
+  const intervalRight = { start: periode2FomDate, end: periode2TomDate };
 
   return areIntervalsOverlapping(intervalLeft, intervalRight, { inclusive: true });
 }
