@@ -1,12 +1,12 @@
-import { KeyboardEvent, useMemo } from "react";
+import { KeyboardEvent, useEffect, useMemo } from "react";
 
 import "./oppdaterRegisteropplysninger.css";
 import * as Nav from "../../navFrontend";
 import { Refresh } from "../../resources/images";
 import * as Forms from "../forms";
 import { FieldValues, useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import { modalerSelectors } from "../../ducks/modaler";
+import { useDispatch, useSelector } from "react-redux";
+import { modalerOperations, modalerSelectors } from "../../ducks/modaler";
 import MKV from "../../melosyskodeverk";
 
 const { FTRL } = MKV.Koder.sakstyper;
@@ -32,6 +32,11 @@ export const OppdaterRegisteropplysninger = ({
   });
   const formValues = watch();
   const { inkluderSiste5Aar } = formValues;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(modalerOperations.leggTilInkluderSiste5Aar(formValues.inkluderSiste5Aar));
+  }, [formValues.inkluderSiste5Aar]);
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === "Enter") {

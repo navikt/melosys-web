@@ -41,6 +41,7 @@ const lagNyState = (state, action, stateNavn) => ({
 });
 
 export default function reducer(state = initialState, action = {}) {
+  console.log("reducer", action.type, action.data);
   switch (action.type) {
     case Types.OPPDATER_AVSLAG_SOKNAD: {
       return lagNyState(state, action, modaler.avslagSoknad);
