@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Api from "../../../../services/api";
+import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 
@@ -57,6 +58,8 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
   const hjelpetekst =
     "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. " +
     'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
+  const INGEN_VIRKSOMHETER_TEKST =
+    'Det er ingen virksomhet registrert. Du må legge til virksomhet under "Arbeidsgiver/virksomhet".';
 
   const {
     setValue,
@@ -101,15 +104,18 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={hjelpetekst} hjelpetekstClassName="hjelpetekst" />
       </Nav.Typo.Innholdstittel>
-
-      <Mui.Checkboxgruppe
-        muligeValg={virksomheterListe}
-        onChange={(checkedVirksomheter) =>
-          setValue("valgteVirksomheter", checkedVirksomheter, { shouldValidate: true })
-        }
-        disabled={!redigerbart}
-        defaultValg={lagredeValgtevirksomheter}
-      />
+      {Utils._isEmpty(virksomheterListe) ? (
+        <Mui.Checkboxgruppe
+          muligeValg={virksomheterListe}
+          onChange={(checkedVirksomheter) =>
+            setValue("valgteVirksomheter", checkedVirksomheter, { shouldValidate: true })
+          }
+          disabled={!redigerbart}
+          defaultValg={lagredeValgtevirksomheter}
+        />
+      ) : (
+        <Nav.AlertStripeFeil className="alertstripe">{INGEN_VIRKSOMHETER_TEKST}</Nav.AlertStripeFeil>
+      )}
 
       <Mui.StegKnapper
         bekreftKnappProps={{ onClick: handleFortsett, disabled: !formIsValid || !redigerbart }}
