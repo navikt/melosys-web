@@ -104,7 +104,7 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={hjelpetekst} hjelpetekstClassName="hjelpetekst" />
       </Nav.Typo.Innholdstittel>
-      {Utils._isEmpty(virksomheterListe) ? (
+      {!Utils._isEmpty(virksomheterListe) ? (
         <Mui.Checkboxgruppe
           muligeValg={virksomheterListe}
           onChange={(checkedVirksomheter) =>
