@@ -80,3 +80,12 @@ function finnVerdierMedKeyHjelper(obj, key, list, finnParent) {
 export function finnVerdierMedKey(obj, key, finnParent = false) {
   return finnVerdierMedKeyHjelper(obj, key, [], finnParent);
 }
+
+export const formaterTilNorskBelop = (belop) => {
+  if (!belop) return undefined;
+
+  return belop.toLocaleString("nb-NO", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};

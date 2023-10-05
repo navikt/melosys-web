@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useEffect, useState } from "react";
 import * as Api from "../../../../services/api";
-import { _isEmpty, _uuid } from "../../../../utils";
+import { _isEmpty, _uuid, formaterTilNorskBelop } from "../../../../utils";
 import { Table } from "@navikt/ds-react";
 import moment from "moment";
 import KopierbarTekst from "../../../kopierbarTekst";
@@ -44,7 +44,7 @@ const FakturaStatusMapper = {
   },
   [FakturaStatus.FEIL]: {
     icon: <Dott farge="red" />,
-    beskrivelse: "FEIL",
+    beskrivelse: "Feil",
   },
 };
 
@@ -63,15 +63,9 @@ const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
 };
 
 export const Faktura = ({ faktura }: FakturaProps) => {
-  const [fakturainfo, setFakturainfo] = useState<Fakturainfo | undefined>({} as Fakturainfo);
-  useEffect(() => {
-    if (faktura.id) {
-      Api.Faktureringskomponenten.hentFakturainfo(faktura.id).then((res: Fakturainfo[]) => {
-        const nyesteMelding = res.sort((a, b) => moment(b.dato).diff(moment(a.dato)))[0];
-        setFakturainfo(nyesteMelding);
-      });
-    }
-  }, [faktura]);
+  const [fakturainfo, setFakturainfo] = useState<Fakturainfo | undefined>(
+    faktura.fakturaMottat?.slice().sort((a: any, b: any) => moment(b.dato).diff(moment(a.dato)))[0]
+  );
 
   return (
     <Table.ExpandableRow
@@ -86,7 +80,7 @@ export const Faktura = ({ faktura }: FakturaProps) => {
           {FakturaStatusMapper[(fakturainfo ? fakturainfo.status : faktura.status) as FakturaStatus]?.beskrivelse}
         </div>
       </Table.DataCell>
-      <Table.DataCell>{fakturainfo?.ubetaltBelop?.toFixed(2) || "-"}</Table.DataCell>
+      <Table.DataCell>{formaterTilNorskBelop(fakturainfo?.ubetaltBelop) || "-"}</Table.DataCell>
     </Table.ExpandableRow>
   );
 };

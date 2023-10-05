@@ -15,6 +15,9 @@ import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresul
 import { Table } from "@navikt/ds-react";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE } from "../../../../featuretoggle/toggleNavn";
+import moment from "moment";
+
+const gyldigeFakturaStatuser = [FakturaStatus.BESTILLT];
 
 const Fakturainformasjon = () => {
   const dispatch = useDispatch();
@@ -34,8 +37,7 @@ const Fakturainformasjon = () => {
 
   useEffect(() => {
     if (fakturaserieReferanseFraBehandling) {
-      const queries = [`&fakturaStatus=${FakturaStatus.BESTILLT}`];
-      dispatch(fakturainformasjonOperations.hentFakturaserier(fakturaserieReferanseFraBehandling, queries));
+      dispatch(fakturainformasjonOperations.hentFakturaserier(fakturaserieReferanseFraBehandling));
     }
   }, [behandlingID, saksnummer, skalHenteFraForrigeBehandling, fakturaserieReferanseFraBehandling]);
 
@@ -53,38 +55,46 @@ const Fakturainformasjon = () => {
     ));
   }
 
+  const alleFakturaer = fakturainformasjon.data
+    .reduce((acc: any, item: any) => {
+      if (item.faktura && item.faktura.length > 0) {
+        acc.push(...item.faktura);
+      }
+      return acc;
+    }, [])
+    .filter((f: any) => gyldigeFakturaStatuser.includes(f.status))
+    .sort((a: any, b: any) =>
+      moment(
+        b.fakturaMottat?.slice().sort((c: any, d: any) => moment(d.dato).diff(moment(c.dato)))[0] ?? b.periodeFra
+      ).diff(moment(a.periodeFra))
+    );
+
   return (
     <Nav.Container fluid className="fakturainformasjon">
       {visReferanseEnabled && <Nav.Row>Fakturaseriereferanse: {fakturaserieReferanseFraBehandling}</Nav.Row>}
-      {fakturainformasjon.data?.map((data: any) => {
-        const { faktura: fakturaer, fakturaserieReferanse } = data;
-
-        return (
-          <div key={fakturaserieReferanse}>
-            <Nav.Row>
-              <Nav.Column xs="12">
-                <Nav.Typo.Systemtittel>Fakturainformasjon</Nav.Typo.Systemtittel>
-                <Table>
-                  <Table.Header>
-                    <Table.Row shadeOnHover={false}>
-                      <Table.HeaderCell />
-                      <Table.HeaderCell scope="col">Dato</Table.HeaderCell>
-                      <Table.HeaderCell scope="col">Kvartal</Table.HeaderCell>
-                      <Table.HeaderCell scope="col">Status</Table.HeaderCell>
-                      <Table.HeaderCell scope="col">Uteststående betaling</Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {fakturaer?.map((faktura: any) => (
-                      <Faktura key={faktura.id} faktura={faktura} />
-                    ))}
-                  </Table.Body>
-                </Table>
-              </Nav.Column>
-            </Nav.Row>
-          </div>
-        );
-      })}
+      <div key={fakturaserieReferanseFraBehandling}>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Nav.Typo.Systemtittel>Fakturainformasjon</Nav.Typo.Systemtittel>
+            <Table>
+              <Table.Header>
+                <Table.Row shadeOnHover={false}>
+                  <Table.HeaderCell />
+                  <Table.HeaderCell scope="col">Dato</Table.HeaderCell>
+                  <Table.HeaderCell scope="col">Kvartal</Table.HeaderCell>
+                  <Table.HeaderCell scope="col">Status</Table.HeaderCell>
+                  <Table.HeaderCell scope="col">Utestående betaling</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {alleFakturaer.map((faktura: any) => (
+                  <Faktura key={faktura.id} faktura={faktura} />
+                ))}
+              </Table.Body>
+            </Table>
+          </Nav.Column>
+        </Nav.Row>
+      </div>
     </Nav.Container>
   );
 };

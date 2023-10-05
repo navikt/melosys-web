@@ -35,11 +35,21 @@ import * as feilmelding from "./feilmelding";
 import * as mediaQuery from "./mediaQuery";
 import * as navigasjon from "./navigasjon";
 
-import { delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from "./utils";
+import {
+  delay,
+  fn,
+  isJSON,
+  formaterTilNorskBelop,
+  verdiSomNullable,
+  queryParamsTilObjekt,
+  erPropertyUnik,
+  finnVerdierMedKey,
+} from "./utils";
 
 export {
   delay,
   fn,
+  formaterTilNorskBelop,
   isJSON,
   verdiSomNullable,
   queryParamsTilObjekt,

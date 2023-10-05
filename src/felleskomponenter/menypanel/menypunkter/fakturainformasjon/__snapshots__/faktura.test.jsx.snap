@@ -54,7 +54,12 @@ exports[`Faktura > snapshot test 1`] = `
     >
       <div
         class="faktura_status_wrapper"
-      />
+      >
+        <div
+          class="dott green"
+        />
+        Bestilt
+      </div>
     </td>
     <td
       class="navds-table__data-cell navds-body-short"

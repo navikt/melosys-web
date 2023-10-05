@@ -51,7 +51,7 @@ exports[`Fakturainformasjon > snapshot test 1`] = `
                   class="navds-table__header-cell navds-label"
                   scope="col"
                 >
-                  Uteststående betaling
+                  Utestående betaling
                 </th>
               </tr>
             </thead>

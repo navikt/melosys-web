@@ -1,6 +1,6 @@
 import { Table } from "@navikt/ds-react";
 import KopierbarTekst from "../../../kopierbarTekst";
-import { _isEmpty, _uuid } from "../../../../utils";
+import { _isEmpty, _uuid, formaterTilNorskBelop } from "../../../../utils";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE } from "../../../../featuretoggle/toggleNavn";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { formatterDatoTilNorsk } from "../../../../utils/dato";
@@ -42,8 +42,8 @@ export const FakturaLinjeContainer = ({ faktura, fakturaNummer }: FakturaLinjePr
                 fakturaLinje.periodeTil
               )}, ${fakturaLinje.beskrivelse}`}</Table.DataCell>
               <Table.DataCell>1</Table.DataCell>
-              <Table.DataCell>{fakturaLinje.belop.toFixed(2)}</Table.DataCell>
-              <Table.DataCell>{fakturaLinje.belop.toFixed(2)}</Table.DataCell>
+              <Table.DataCell>{formaterTilNorskBelop(fakturaLinje.belop)}</Table.DataCell>
+              <Table.DataCell>{formaterTilNorskBelop(fakturaLinje.belop)}</Table.DataCell>
             </Table.Row>
           ))}
           {!_isEmpty(faktura.fakturaLinje) && (
@@ -52,10 +52,9 @@ export const FakturaLinjeContainer = ({ faktura, fakturaNummer }: FakturaLinjePr
               <Table.HeaderCell className="uten-border" />
               <Table.HeaderCell className="uten-border">Totalt</Table.HeaderCell>
               <Table.DataCell className="uten-border">
-                {faktura.fakturaLinje
-                  .map((linje: any) => linje.belop)
-                  .reduce((a: any, b: any) => a + b)
-                  .toFixed(2)}
+                {formaterTilNorskBelop(
+                  faktura.fakturaLinje.map((linje: any) => linje.belop).reduce((a: any, b: any) => a + b)
+                )}
               </Table.DataCell>
             </Table.Row>
           )}
