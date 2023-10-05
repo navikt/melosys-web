@@ -15,7 +15,7 @@ import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
-import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
+import { VirksomhetMelding, StatsborgerskapFeil } from "../../../felleskomponenter/alertmeldinger";
 
 import { formSelectors } from "../../../ducks/form";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
@@ -111,6 +111,7 @@ const Vurderutpeking = ({
                   <VirksomhetMelding />
                 ) : (
                   <>
+                    <StatsborgerskapFeil className="statsborgerskapfeil" />
                     {mottatteOpplysningerErKlart && (
                       <Stegvelger
                         behandlingID={behandlingID}

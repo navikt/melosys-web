@@ -1,10 +1,10 @@
-import useHentPersonopplysninger from "../../../../felleskomponenter/informasjonlinje/useHentpersonopplysninger";
+import useHentPersonopplysninger from "../informasjonlinje/useHentpersonopplysninger";
 import { useSelector } from "react-redux";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import * as Utils from "../../../../utils";
-import * as Nav from "../../../../navFrontend";
+import { behandlingerSelectors } from "../../ducks/behandlinger";
+import * as Utils from "../../utils";
+import * as Nav from "../../navFrontend";
 
-const StatsborgerskapFeil = () => {
+const StatsborgerskapFeil = ({ className }: { className: string }) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const personopplysninger = useHentPersonopplysninger(behandlingID, false);
 
@@ -19,11 +19,7 @@ const StatsborgerskapFeil = () => {
 
   if (!statsborgerskapErUoppgittUkjent) return null;
 
-  return (
-    <Nav.AlertStripeAdvarsel className="anmodningunntak_statsborgerskapmelding">
-      Statsborgerskapet er ukjent
-    </Nav.AlertStripeAdvarsel>
-  );
+  return <Nav.AlertStripeAdvarsel className={className}>Statsborgerskapet er ukjent</Nav.AlertStripeAdvarsel>;
 };
 
 export default StatsborgerskapFeil;
