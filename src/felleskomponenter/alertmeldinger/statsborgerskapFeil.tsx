@@ -19,7 +19,11 @@ const StatsborgerskapFeil = ({ className }: { className: string }) => {
 
   if (!statsborgerskapErUoppgittUkjent) return null;
 
-  return <Nav.AlertStripeAdvarsel className={className}>Statsborgerskapet er ukjent</Nav.AlertStripeAdvarsel>;
+  return (
+    <Nav.AlertStripeAdvarsel className={className}>
+      Statsborgerskapet er ukjent. Hvis du skal sende SED må statsborgerskap registreres i PDL.
+    </Nav.AlertStripeAdvarsel>
+  );
 };
 
 export default StatsborgerskapFeil;
