@@ -30,7 +30,7 @@ import { DatoOmradeMedVarighet } from "../../../../felleskomponenter/datoOmrade"
 import { delvisInnvilgelseSkjema, avslagSkjema } from "./validering/anmodningunntakSkjema";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "../saksopplysninger.css";
-import StatsborgerskapFeil from "./statsborgerskapFeil";
+import { StatsborgerskapFeil } from "../../../../felleskomponenter/alertmeldinger";
 
 const LinkForhandsvisningSed = ({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst }) => {
   let pdfDokument = [];
@@ -365,7 +365,7 @@ const Saksopplysninger = ({
   return (
     <div>
       <Feilmeldinger />
-      <StatsborgerskapFeil />
+      <StatsborgerskapFeil className="anmodningunntak_statsborgerskapmelding" />
       <form name="anmodningunntak" id="anmodningunntak" onSubmit={overstyrSubmit}>
         <div className="panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">

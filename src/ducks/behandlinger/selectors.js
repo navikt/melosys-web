@@ -294,23 +294,6 @@ export const AlleVirksomheterSelector = createSelector(
   }
 );
 
-/** Finner alle organisasjonsnummer som er listet i arbeidsforhold.
- * Det er range i arbeidsforhold som avgjør hvilke organisasjoner som selectoren
- * regner som relevante å vise.
- */
-export const OrganisasjonSelector = createSelector(
-  (state) => OrganisasjonerSelector(state),
-  (state) => ArbeidsforholdeneSelector(state),
-  (organisasjoner, arbeidsforholdene) => {
-    // Lag en array med orgnummer (arbeidsgiverID)
-    const alleRelevanteOrgnummer = arbeidsforholdene.reduce(
-      (samling, element) => [...samling, element.arbeidsgiverID],
-      []
-    );
-    // Filter organisasjoner hvis orgnr er inkludert i arrayen alleRelevanteOrgnummer.
-    return organisasjoner.filter((item) => alleRelevanteOrgnummer.includes(item.orgnr));
-  }
-);
 /** Hjelpefunksjon for ArbeidsgivereNorgeSelector. Funksjonen bygger en ny gruppe av et arbeidsforhold
  * med arbeidsforholdene (array), inntekter (array) og organisasjonen (objekt)
  * @param arbeidsforholdet
@@ -426,17 +409,4 @@ export const ErArbeidEttLand = createSelector(BehandlingstemaKodeSelector, (beha
     MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
   ].includes(behandlingstema)
-);
-
-export const ErRegistreringAvUnntaksperioderSelector = createSelector(
-  ErRegistreringUnntakNorskTrygdUtstasjoneringSelector,
-  ErRegistreringUnntakNorskTrygdOvrigeSelector,
-  ErUtlMyndUtpektSegSelvSelector,
-  (ErRegistreringUnntakNorskTrygdUtstasjonering, ErRegistreringUnntakNorskTrygdOvrige, ErUtlMyndUtpektSegSelv) =>
-    ErRegistreringUnntakNorskTrygdUtstasjonering || ErRegistreringUnntakNorskTrygdOvrige || ErUtlMyndUtpektSegSelv
-);
-
-export const ErStatusAnmodningUnntakSendtSelector = createSelector(
-  BehandlingsstatusKodeSelector,
-  (behandlingsstatus) => behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT
 );
