@@ -10,8 +10,8 @@ import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
 
-export function hentFakturaserier(fakturaserieReferanse: string, queries: string[]) {
-  return doThenDispatch(() => Api.Faktureringskomponenten.hentFakturaserier(fakturaserieReferanse, queries), {
+export function hentFakturaserier(fakturaserieReferanse: string) {
+  return doThenDispatch(() => Api.Faktureringskomponenten.hentFakturaserier(fakturaserieReferanse), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

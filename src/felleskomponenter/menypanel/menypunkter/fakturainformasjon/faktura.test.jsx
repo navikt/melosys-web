@@ -1,10 +1,6 @@
 import { Faktura } from "./faktura";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
-vi.mock("../../../../services/modules/faktureringskomponenten", () => ({
-  hentFakturainfo: () => Promise.resolve([]),
-}));
-
 vi.mock("../../../../utils", async () => {
   const actual = await vi.importActual("../../../../utils");
   return {
