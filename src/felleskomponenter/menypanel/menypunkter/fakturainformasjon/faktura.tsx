@@ -58,13 +58,6 @@ const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
   const fraKvartal = Math.ceil((fraDato.getMonth() + 1) / 3);
   const tilKvartal = Math.ceil((tilDato.getMonth() + 1) / 3);
 
-  const fra = `${fraKvartal}/${fraAar % 100}`;
-  const til = `${tilKvartal}/${tilAar % 100}`;
-
-  if (fra === til) {
-    return fra;
-  }
-
   return `${fraKvartal}/${fraAar % 100} - ${tilKvartal}/${tilAar % 100}`;
 };
 
