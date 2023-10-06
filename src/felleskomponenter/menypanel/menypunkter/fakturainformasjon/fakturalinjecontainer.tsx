@@ -41,8 +41,8 @@ export const FakturaLinjeContainer = ({ faktura, fakturaNummer }: FakturaLinjePr
               <Table.DataCell>{`Periode: ${formatterDatoTilNorsk(fakturaLinje.periodeFra)} - ${formatterDatoTilNorsk(
                 fakturaLinje.periodeTil
               )}, ${fakturaLinje.beskrivelse}`}</Table.DataCell>
-              <Table.DataCell>1</Table.DataCell>
-              <Table.DataCell>{formaterTilNorskBelop(fakturaLinje.belop)}</Table.DataCell>
+              <Table.DataCell>{fakturaLinje.antall}</Table.DataCell>
+              <Table.DataCell>{formaterTilNorskBelop(fakturaLinje.enhetsprisPerManed)}</Table.DataCell>
               <Table.DataCell>{formaterTilNorskBelop(fakturaLinje.belop)}</Table.DataCell>
             </Table.Row>
           ))}

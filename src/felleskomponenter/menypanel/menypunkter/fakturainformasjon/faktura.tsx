@@ -52,14 +52,20 @@ const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
   const fraDato = new Date(periodeFra);
   const tilDato = new Date(periodeTil);
 
-  if (isNaN(fraDato.getTime()) || isNaN(tilDato.getTime())) {
-    return "Ugyldig dato";
+  const fraAar = fraDato.getFullYear();
+  const tilAar = tilDato.getFullYear();
+
+  const fraKvartal = Math.ceil((fraDato.getMonth() + 1) / 3);
+  const tilKvartal = Math.ceil((tilDato.getMonth() + 1) / 3);
+
+  const fra = `${fraKvartal}/${fraAar % 100}`;
+  const til = `${tilKvartal}/${tilAar % 100}`;
+
+  if (fra === til) {
+    return fra;
   }
 
-  const kvartal = Math.ceil((fraDato.getMonth() + 1) / 3);
-  const år = fraDato.getFullYear().toString().slice(-2);
-
-  return `${kvartal}/${år}`;
+  return `${fraKvartal}/${fraAar % 100} - ${tilKvartal}/${tilAar % 100}`;
 };
 
 export const Faktura = ({ faktura }: FakturaProps) => {
