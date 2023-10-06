@@ -21,10 +21,9 @@ import { useAsyncCallbackState } from "../../../../../hooks";
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import "./vurderingBestemmelse.css";
 import { IngenFlytMelding } from "../../../../../felleskomponenter/alertmeldinger";
-import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_BESTEMMELSE_ENDEPUNKT } from "../../../../../featuretoggle/toggleNavn";
 
 const { SANN, USANN } = BOOLSK_STRING;
+
 export interface Begrunnelse {
   begrunnelseKode: string;
   begrunnelseFritekst?: string | null;
@@ -48,16 +47,12 @@ interface VurderingBestemmelseProps {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) => {
   const dispatch = useDispatch();
-  const bruktNyttBestemmelseEndepunkt = useFeatureToggle(MELOSYS_BESTEMMELSE_ENDEPUNKT);
   const oppdaterVilkår = (skjema: any) => dispatch(vilkarOperations.oppdaterState(skjema));
   const { behandlingID, behandlingstema, lagretBestemmelse, vilkårKodeverk, begrunnelseKodeverk, redigerbart } =
     useSelector(komponentState);
   const [{ støttedeBestemmelser, ikkeStøttedeBestemmelser }] =
     useAsyncCallbackState<Api.MedlemAvFolketrygden.Bestemmelser.HentMuligeBestemmelserResponse>(
-      () =>
-        bruktNyttBestemmelseEndepunkt
-          ? Api.MedlemAvFolketrygden.Bestemmelser.hentMuligeBestemmelser(behandlingstema)
-          : Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMuligeBestemmelser(behandlingstema),
+      () => Api.MedlemAvFolketrygden.Bestemmelser.hentMuligeBestemmelser(behandlingstema),
       { støttedeBestemmelser: [], ikkeStøttedeBestemmelser: [] },
       [behandlingstema]
     );
@@ -190,11 +185,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const handleEndreBestemmelse = (nyBestemmelse: string) => {
     setValgtBestemmelse(nyBestemmelse);
-    if (bruktNyttBestemmelseEndepunkt) {
-      dispatch(medlemskapsperioderOperations.lagreBestemmelse(behandlingID, nyBestemmelse));
-    } else {
-      dispatch(medlemskapsperioderOperations.oppdaterBestemmelse(nyBestemmelse));
-    }
+    dispatch(medlemskapsperioderOperations.lagreBestemmelse(behandlingID, nyBestemmelse));
   };
 
   const handleEndreVilkår: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -230,13 +221,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const handleBekreft = async () => {
     await dispatch(vilkarOperations.lagre());
-    if (bruktNyttBestemmelseEndepunkt) {
-      await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperioderForslag(behandlingID));
-    } else {
-      await dispatch(
-        medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse(behandlingID, valgtBestemmelse)
-      );
-    }
+    await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperioderForslag(behandlingID));
 
     bekreft();
   };

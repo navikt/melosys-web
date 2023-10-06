@@ -75,14 +75,6 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         },
       };
     }
-    case Types.OPPDATER_BESTEMMELSE:
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          bestemmelse: action.data,
-        },
-      };
     case Types.RESET:
       return { ...initialState };
     default:

@@ -8,8 +8,6 @@ export const FEILET = "medlemskapsperioder/FEILET";
 export const PENDING = "medlemskapsperioder/PENDING";
 export const RESET = "medlemskapsperioder/RESET";
 
-export const OPPDATER_BESTEMMELSE = "medlemskapsperioder/OPPDATER_BESTEMMELSE";
-
 export type Data = {
   bestemmelse?: string;
   medlemskapsperioder?: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[];
@@ -55,11 +53,6 @@ export interface OkBestemmelseAction {
   data: Api.MedlemAvFolketrygden.Bestemmelser.HentBestemmelseResponse;
 }
 
-export interface OppdaterBestemmelseAction {
-  type: typeof OPPDATER_BESTEMMELSE;
-  data: string;
-}
-
 export type Action =
   | FeiletAction
   | PendingAction
@@ -68,5 +61,4 @@ export type Action =
   | OkOpprettMedlemskapsperiodeAction
   | OkOppdaterMedlemskapsperiodeAction
   | OkSlettMedlemskapsperiodeAction
-  | OkBestemmelseAction
-  | OppdaterBestemmelseAction;
+  | OkBestemmelseAction;
