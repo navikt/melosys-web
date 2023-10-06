@@ -22,7 +22,7 @@ const hjelpetekster = new Map([
 ]);
 
 interface VilkaarOgBegrunnelserProps {
-  vilkårOgBegrunnelser: Api.Medlemskapsperioder.VilkårOgBegrunnelser;
+  vilkårOgBegrunnelser: Api.MedlemAvFolketrygden.Bestemmelser.VilkårOgBegrunnelser;
   alleValgteVilkår: Map<string, string>;
   alleValgteBegrunnelser: Map<string, Begrunnelse>;
   vilkårKodeverk: KTObject[];

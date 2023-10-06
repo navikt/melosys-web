@@ -1,5 +1,4 @@
-import { HentBestemmelseResponse, Medlemskapsperiode } from "../../services/modules/medlemskapsperioder";
-
+import * as Api from "../../services/api";
 export const OK_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK";
 export const OK_OPPRETT_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK_OPPRETT";
 export const OK_OPPDATER_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK_OPPDATER";
@@ -13,7 +12,7 @@ export const OPPDATER_BESTEMMELSE = "medlemskapsperioder/OPPDATER_BESTEMMELSE";
 
 export type Data = {
   bestemmelse?: string;
-  medlemskapsperioder?: Medlemskapsperiode[];
+  medlemskapsperioder?: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[];
 };
 
 export interface FeiletAction {
@@ -31,17 +30,17 @@ export interface ResetAction {
 
 export interface OkMedlemskapsperiodeAction {
   type: typeof OK_MEDLEMSKAPSPERIODE;
-  data: Medlemskapsperiode[];
+  data: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[];
 }
 
 export interface OkOpprettMedlemskapsperiodeAction {
   type: typeof OK_OPPRETT_MEDLEMSKAPSPERIODE;
-  data: Medlemskapsperiode;
+  data: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode;
 }
 
 export interface OkOppdaterMedlemskapsperiodeAction {
   type: typeof OK_OPPDATER_MEDLEMSKAPSPERIODE;
-  data: Medlemskapsperiode;
+  data: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode;
 }
 
 export interface OkSlettMedlemskapsperiodeAction {
@@ -53,7 +52,7 @@ export interface OkSlettMedlemskapsperiodeAction {
 
 export interface OkBestemmelseAction {
   type: typeof OK_BESTEMMELSE;
-  data: HentBestemmelseResponse;
+  data: Api.MedlemAvFolketrygden.Bestemmelser.HentBestemmelseResponse;
 }
 
 export interface OppdaterBestemmelseAction {

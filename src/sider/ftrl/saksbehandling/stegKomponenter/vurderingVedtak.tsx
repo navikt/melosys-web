@@ -170,7 +170,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     return debouncedOppdaterFritekster.cancel();
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst, formValues?.trygdeavgiftFritekst]);
 
-  function mapPeriodeRader(perioder: Api.Medlemskapsperioder.Medlemskapsperiode[] | undefined) {
+  function mapPeriodeRader(perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[] | undefined) {
     const sortertePerioder = perioder
       ? [...perioder].sort((p1, p2) => Date.parse(p1.fomDato) - Date.parse(p2.fomDato))
       : [];

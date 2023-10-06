@@ -50,8 +50,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const { behandlingID, behandlingstema, lagretBestemmelse, vilkårKodeverk, begrunnelseKodeverk, redigerbart } =
     useSelector(komponentState);
   const [{ støttedeBestemmelser, ikkeStøttedeBestemmelser }] =
-    useAsyncCallbackState<Api.Medlemskapsperioder.HentMuligeBestemmelserResponse>(
-      () => Api.Medlemskapsperioder.hentMuligeBestemmelser(behandlingstema),
+    useAsyncCallbackState<Api.MedlemAvFolketrygden.Bestemmelser.HentMuligeBestemmelserResponse>(
+      () => Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMuligeBestemmelser(behandlingstema),
       { støttedeBestemmelser: [], ikkeStøttedeBestemmelser: [] },
       [behandlingstema]
     );
@@ -60,7 +60,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const [valgteVilkår, setValgteVilkår] = useState<Map<string, string>>(new Map());
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, Begrunnelse>>(new Map());
   const [valgtBestemmelsesSynligeVilkår, setValgtBestemmelsesSynligeVilkår] = useState<
-    Api.Medlemskapsperioder.VilkårOgBegrunnelser[]
+    Api.MedlemAvFolketrygden.Bestemmelser.VilkårOgBegrunnelser[]
   >([]);
   const [formIsValid, setFormIsValid] = useState(false);
 
@@ -135,7 +135,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       setValgtBestemmelsesSynligeVilkår([]);
       return;
     }
-    const vilkårSomSkalVises: Api.Medlemskapsperioder.VilkårOgBegrunnelser[] = [];
+    const vilkårSomSkalVises: Api.MedlemAvFolketrygden.Bestemmelser.VilkårOgBegrunnelser[] = [];
 
     valgtBestemmelsesVilkårOgBegrunnelser?.forEach((vilkårOgMuligeBegrunnelser) => {
       if (Utils._isEmpty(vilkårSomSkalVises)) {
