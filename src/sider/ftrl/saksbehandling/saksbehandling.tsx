@@ -38,7 +38,7 @@ import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
-import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../featuretoggle/toggleNavn";
+import { MELOSYS_BESTEMMELSE_ENDEPUNKT, MELOSYS_FOLKETRYGDEN_MVP } from "../../../featuretoggle/toggleNavn";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { resetInkluderSiste5Aar } from "../../../ducks/modaler/operations";
 
@@ -76,6 +76,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   hentMedlemskapsperioder: (behandlingId: number) =>
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingId)),
   hentBestemmelse: (behandlingId: number) => dispatch(medlemskapsperioderOperations.hentBestemmelse(behandlingId)),
+  hentBestemmelseGammel: (behandlingId: number) =>
+    dispatch(medlemskapsperioderOperations.hentBestemmelseGammel(behandlingId)),
   hentOppsummertFakta: (behandlingId: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingId)),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
@@ -120,6 +122,7 @@ const Saksbehandling = ({
   hentLandkoder,
   hentMedlemskapsperioder,
   hentBestemmelse,
+  hentBestemmelseGammel,
   hentOppsummertFakta,
   landkoder,
   location,
@@ -144,6 +147,7 @@ const Saksbehandling = ({
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const folketrygdenToggle = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+  const bruktNyttBestemmelseEndepunkt = useFeatureToggle(MELOSYS_BESTEMMELSE_ENDEPUNKT);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -174,7 +178,11 @@ const Saksbehandling = ({
         return false;
       }
       await hentMedlemskapsperioder(behandlingId);
-      await hentBestemmelse(behandlingId);
+      if (bruktNyttBestemmelseEndepunkt) {
+        await hentBestemmelse(behandlingId);
+      } else {
+        await hentBestemmelseGammel(behandlingId);
+      }
       await hentMottatteOpplysninger(behandlingId);
       await hentDokumentOversikt(saksnr);
       setSaksopplysningerLastet(true);

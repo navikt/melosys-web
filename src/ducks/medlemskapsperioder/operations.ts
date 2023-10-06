@@ -64,7 +64,12 @@ export function slettMedlemskapsperiode(behandlingID: number, medlemskapsId: num
   );
 }
 
-export function hentBestemmelse(behandlingID: number) {
+export function resetMedlemskapsperioder() {
+  return Actions.resetMedlemskapsperioder();
+}
+
+// Deprecated
+export function hentBestemmelseGammel(behandlingID: number) {
   return doThenDispatch(() => Api.MedlemAvFolketrygden.Medlemskapsperioder.getBestemmelse(behandlingID), {
     OK: Types.OK_BESTEMMELSE,
     FEILET: Types.FEILET,
@@ -72,6 +77,23 @@ export function hentBestemmelse(behandlingID: number) {
   });
 }
 
+export function hentBestemmelse(behandlingID: number) {
+  return doThenDispatch(() => Api.MedlemAvFolketrygden.Bestemmelser.getBestemmelse(behandlingID), {
+    OK: Types.OK_BESTEMMELSE,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
+export function lagreBestemmelse(behandlingID: number, bestemmelse: string) {
+  return doThenDispatch(() => Api.MedlemAvFolketrygden.Bestemmelser.postBestemmelse(behandlingID, bestemmelse), {
+    OK: Types.OK_BESTEMMELSE,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
+// Deprecated
 export function opprettMedlemskapsperiodeFraBestemmelse(behandlingID: number, bestemmelse: string) {
   return doThenDispatch(
     () =>
@@ -84,11 +106,18 @@ export function opprettMedlemskapsperiodeFraBestemmelse(behandlingID: number, be
   );
 }
 
+export function opprettMedlemskapsperioderForslag(behandlingID: number) {
+  return doThenDispatch(
+    () => Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettForeslåtteMedlemskapsperioder(behandlingID),
+    {
+      OK: Types.OK_MEDLEMSKAPSPERIODE,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    }
+  );
+}
+
 export function oppdaterBestemmelse(bestemmelse: string) {
   return (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) =>
     dispatch(Actions.oppdaterBestemmelse(bestemmelse));
-}
-
-export function resetMedlemskapsperioder() {
-  return Actions.resetMedlemskapsperioder();
 }

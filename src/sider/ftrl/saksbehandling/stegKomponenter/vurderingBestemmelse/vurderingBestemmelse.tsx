@@ -21,6 +21,8 @@ import { useAsyncCallbackState } from "../../../../../hooks";
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import "./vurderingBestemmelse.css";
 import { IngenFlytMelding } from "../../../../../felleskomponenter/alertmeldinger";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { MELOSYS_BESTEMMELSE_ENDEPUNKT } from "../../../../../featuretoggle/toggleNavn";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export interface Begrunnelse {
@@ -46,17 +48,21 @@ interface VurderingBestemmelseProps {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) => {
   const dispatch = useDispatch();
+  const bruktNyttBestemmelseEndepunkt = useFeatureToggle(MELOSYS_BESTEMMELSE_ENDEPUNKT);
   const oppdaterVilkår = (skjema: any) => dispatch(vilkarOperations.oppdaterState(skjema));
   const { behandlingID, behandlingstema, lagretBestemmelse, vilkårKodeverk, begrunnelseKodeverk, redigerbart } =
     useSelector(komponentState);
   const [{ støttedeBestemmelser, ikkeStøttedeBestemmelser }] =
     useAsyncCallbackState<Api.MedlemAvFolketrygden.Bestemmelser.HentMuligeBestemmelserResponse>(
-      () => Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMuligeBestemmelser(behandlingstema),
+      () =>
+        bruktNyttBestemmelseEndepunkt
+          ? Api.MedlemAvFolketrygden.Bestemmelser.hentMuligeBestemmelser(behandlingstema)
+          : Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMuligeBestemmelser(behandlingstema),
       { støttedeBestemmelser: [], ikkeStøttedeBestemmelser: [] },
       [behandlingstema]
     );
 
-  const [valgtBestemmelse, setValgtBestemmelse] = useState("");
+  const [valgtBestemmelse, setValgtBestemmelse] = useState(lagretBestemmelse);
   const [valgteVilkår, setValgteVilkår] = useState<Map<string, string>>(new Map());
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, Begrunnelse>>(new Map());
   const [valgtBestemmelsesSynligeVilkår, setValgtBestemmelsesSynligeVilkår] = useState<
@@ -70,7 +76,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     // @ts-ignore
     const response: { data: Api.Vilkar.Vilkaar[] } = await dispatch(vilkarOperations.hent(behandlingID));
 
-    handleEndreBestemmelse(lagretBestemmelse);
     response.data?.forEach((vilkar) => {
       valgteVilkår.set(vilkar.vilkaar, vilkar.oppfylt ? SANN : USANN);
       if (vilkar.begrunnelseKoder && vilkar.begrunnelseKoder.length === 1) {
@@ -185,7 +190,11 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const handleEndreBestemmelse = (nyBestemmelse: string) => {
     setValgtBestemmelse(nyBestemmelse);
-    dispatch(medlemskapsperioderOperations.oppdaterBestemmelse(nyBestemmelse));
+    if (bruktNyttBestemmelseEndepunkt) {
+      dispatch(medlemskapsperioderOperations.lagreBestemmelse(behandlingID, nyBestemmelse));
+    } else {
+      dispatch(medlemskapsperioderOperations.oppdaterBestemmelse(nyBestemmelse));
+    }
   };
 
   const handleEndreVilkår: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -221,9 +230,14 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const handleBekreft = async () => {
     await dispatch(vilkarOperations.lagre());
-    await dispatch(
-      medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse(behandlingID, valgtBestemmelse)
-    );
+    if (bruktNyttBestemmelseEndepunkt) {
+      await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperioderForslag(behandlingID));
+    } else {
+      await dispatch(
+        medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse(behandlingID, valgtBestemmelse)
+      );
+    }
+
     bekreft();
   };
 
