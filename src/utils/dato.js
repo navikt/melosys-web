@@ -201,13 +201,13 @@ function perioderOverlapper(periode1Fom, periode1Tom, periode2Fom, periode2Tom) 
 }
 
 function erFør(dato1, dato2) {
-  const inputFormat = ["DD.MM.YYYY HH:mm", "DD.MM.YYYY"];
-  return moment(dato1, inputFormat).isBefore(dato2, inputFormat);
+  const inputFormat = ["YYYY-MM-DD"];
+  return moment(dato1, inputFormat).isBefore(moment(dato2, inputFormat));
 }
 
 function erEtter(dato1, dato2) {
-  const inputFormat = ["DD.MM.YYYY HH:mm", "DD.MM.YYYY"];
-  return moment(dato1, inputFormat).isAfter(dato2, inputFormat);
+  const inputFormat = ["YYYY-MM-DD"];
+  return moment(dato1, inputFormat).isAfter(moment(dato2, inputFormat));
 }
 
 export {

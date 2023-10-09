@@ -13,6 +13,8 @@ import {
   erLike,
   erLikeDatoer,
   plussEnDag,
+  erFør,
+  erEtter,
 } from "./dato";
 
 import MockDate from "mockdate";
@@ -172,6 +174,46 @@ describe("dato.js:", () => {
         const formattertDato = formatterKortDatoTilNorsk(datoTest.test);
         expect(formattertDato).toEqual(datoTest.forvent);
       });
+    });
+  });
+
+  describe("erFør", () => {
+    test("dato1 er den samme som dato2 gir false", () => {
+      const dato1 = "2018-01-01";
+      const dato2 = "2018-01-01";
+      expect(erFør(dato1, dato2)).toBeFalsy();
+    });
+
+    test("dato1 er før dato2 gir true", () => {
+      const dato1 = "2018-01-01";
+      const dato2 = "2020-01-01";
+      expect(erFør(dato1, dato2)).toBeTruthy();
+    });
+
+    test("dato1 er etter dato2 gir false", () => {
+      const dato1 = "2020-01-01";
+      const dato2 = "2018-01-01";
+      expect(erFør(dato1, dato2)).toBeFalsy();
+    });
+  });
+
+  describe("erEtter", () => {
+    test("dato1 er den samme som dato2 gir false", () => {
+      const dato1 = "2018-01-01";
+      const dato2 = "2018-01-01";
+      expect(erEtter(dato1, dato2)).toBeFalsy();
+    });
+
+    test("dato1 er før dato2 gir false", () => {
+      const dato1 = "2018-01-01";
+      const dato2 = "2020-01-01";
+      expect(erEtter(dato1, dato2)).toBeFalsy();
+    });
+
+    test("dato1 er etter dato2 gir true", () => {
+      const dato1 = "2020-01-01";
+      const dato2 = "2018-01-01";
+      expect(erEtter(dato1, dato2)).toBeTruthy();
     });
   });
 

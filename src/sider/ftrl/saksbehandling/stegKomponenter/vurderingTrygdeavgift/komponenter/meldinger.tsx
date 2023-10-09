@@ -50,24 +50,27 @@ export const finnAktivAdvarselmelding = (inntektskilder: Inntektskilde[]): strin
 const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntektskilde[]) =>
   inntektskilder.some((periode) => periode.bruttoInntekt! > 250000);
 
+const sorterPerioder = (a: { fomDato: string; tomDato: string }, b: { fomDato: string; tomDato: string }) =>
+  new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime();
+
 const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
   inntektskilder: Inntektskilde[],
   medlemskapsperioder: Medlemskapsperiode[]
 ) => {
   if (Utils._isEmpty(inntektskilder) || Utils._isEmpty(medlemskapsperioder)) return false;
-  const sortertInntekstkilder = [...inntektskilder].sort((a, b) => {
-    const fomA = Utils.dato.formatterDatoTilISO(a.fomDato);
-    const fomB = Utils.dato.formatterDatoTilISO(b.fomDato);
-    return new Date(fomA).getTime() - new Date(fomB).getTime();
-  });
-  const sortertMedlemskapsperioder = [...medlemskapsperioder].sort(
-    (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
-  );
+  const sorterteInntektskilder = [...inntektskilder]
+    .map((p) => ({
+      fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
+      tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
+    }))
+    .sort(sorterPerioder);
+  const sorterteMedlemskapsperioder = [...medlemskapsperioder].sort(sorterPerioder);
+
   return (
-    Utils.dato.erFør(sortertInntekstkilder[0].fomDato, sortertMedlemskapsperioder[0].fomDato) ||
+    Utils.dato.erFør(sorterteInntektskilder[0].fomDato, sorterteMedlemskapsperioder[0].fomDato) ||
     Utils.dato.erEtter(
-      sortertInntekstkilder[sortertInntekstkilder.length - 1].tomDato,
-      sortertMedlemskapsperioder[sortertMedlemskapsperioder.length - 1].tomDato
+      sorterteInntektskilder[sorterteInntektskilder.length - 1].tomDato,
+      sorterteMedlemskapsperioder[sorterteMedlemskapsperioder.length - 1].tomDato
     )
   );
 };
@@ -77,14 +80,14 @@ const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
   medlemskapsperioder: Medlemskapsperiode[]
 ) => {
   if (Utils._isEmpty(skatteforholdsperioder) || Utils._isEmpty(medlemskapsperioder)) return false;
-  const sorterteSkatteforhold = [...skatteforholdsperioder].sort((a, b) => {
-    const fomA = Utils.dato.formatterDatoTilISO(a.fomDato);
-    const fomB = Utils.dato.formatterDatoTilISO(b.fomDato);
-    return new Date(fomA).getTime() - new Date(fomB).getTime();
-  });
-  const sortertMedlemskapsperioder = [...medlemskapsperioder].sort(
-    (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
-  );
+  const sorterteSkatteforhold = [...skatteforholdsperioder]
+    .map((p) => ({
+      fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
+      tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
+    }))
+    .sort(sorterPerioder);
+  const sortertMedlemskapsperioder = [...medlemskapsperioder].sort(sorterPerioder);
+
   return (
     Utils.dato.erFør(sorterteSkatteforhold[0].fomDato, sortertMedlemskapsperioder[0].fomDato) ||
     Utils.dato.erEtter(

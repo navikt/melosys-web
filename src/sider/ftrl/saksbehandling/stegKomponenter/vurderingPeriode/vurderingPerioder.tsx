@@ -102,7 +102,11 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   });
   const formValues = watch();
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, soknadsperiode.fom);
+  const aktivFeilmeldingType = finnAktivFeilmelding(
+    formValues?.medlemskapsperioder,
+    soknadsperiode.fom,
+    soknadsperiode.tom
+  );
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
 
