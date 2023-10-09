@@ -131,7 +131,9 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
                   <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
                 </dd>
                 <dt className="infoTerm">Opprettelsesdato:</dt>
-                <dd className="infoDetalj">{<EnkeltDato dato={registrertDato} /> || "(ukjent)"}</dd>
+                <dd className="infoDetalj">
+                  <EnkeltDato dato={registrertDato} defaultValue="(ukjent)" />
+                </dd>
                 <dt className="infoTerm">Sist oppdatert:</dt>
                 <dd className="infoDetalj">{oppdateringStatus || formatterDatoTilNorsk(endretDato)}</dd>
               </dl>
