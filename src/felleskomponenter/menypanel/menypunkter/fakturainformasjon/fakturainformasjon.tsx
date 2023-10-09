@@ -63,11 +63,7 @@ const Fakturainformasjon = () => {
       return acc;
     }, [])
     .filter((f: any) => gyldigeFakturaStatuser.includes(f.status))
-    .sort((a: any, b: any) =>
-      moment(
-        b.fakturaMottat?.slice().sort((c: any, d: any) => moment(d.dato).diff(moment(c.dato)))[0] ?? b.periodeFra
-      ).diff(moment(a.periodeFra))
-    );
+    .sort((a: any, b: any) => moment(b.datoBestilt).diff(moment(a.datoBestilt)));
 
   return (
     <Nav.Container fluid className="fakturainformasjon">
