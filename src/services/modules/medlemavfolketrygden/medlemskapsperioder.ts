@@ -1,6 +1,5 @@
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../../api-constants";
-import { HentBestemmelseResponse, HentMuligeBestemmelserResponse } from "./bestemmelser";
 
 export type Medlemskapsperiode = {
   id: number;

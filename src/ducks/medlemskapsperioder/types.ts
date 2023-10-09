@@ -1,4 +1,5 @@
 import * as Api from "../../services/api";
+
 export const OK_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK";
 export const OK_OPPRETT_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK_OPPRETT";
 export const OK_OPPDATER_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK_OPPDATER";

@@ -131,9 +131,6 @@ FellesHandlersProviderUnconnected.propTypes = {
 
 FellesHandlersProviderUnconnected.defaultProps = {
   behandlingUnderOppfriskning: null,
-};
-
-FellesHandlersProviderUnconnected.defaultProps = {
   saksnummer: undefined,
   sakstype: undefined,
   inkluderSiste5Aar: false,

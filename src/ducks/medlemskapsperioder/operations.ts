@@ -1,6 +1,3 @@
-import { ThunkDispatch } from "redux-thunk";
-import { RootState } from "AppTypes";
-
 import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
