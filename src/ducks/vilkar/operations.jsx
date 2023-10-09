@@ -25,7 +25,7 @@ export function hent(behandlingID) {
   });
 }
 
-function send(behandlingID, body) {
+export function send(behandlingID, body) {
   return doThenDispatch(() => Api.Vilkar.send(behandlingID, body), {
     OK: Types.OK,
     FEILET: Types.FEILET,
@@ -33,7 +33,7 @@ function send(behandlingID, body) {
   });
 }
 
-const filtrerVilkar = (vilkar) =>
+const vilkårUtenInngangsvilkår = (vilkar) =>
   vilkar.filter((enkeltVilkar) => !Constants.VILKAAR_FRONTEND_MANGLER_SKRIVETILGANG_TIL.includes(enkeltVilkar.vilkaar));
 
 export function lagre() {
@@ -41,7 +41,7 @@ export function lagre() {
     const vilkar = Selectors.VilkarSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
 
-    const filtrerteVilkar = filtrerVilkar(vilkar);
+    const filtrerteVilkar = vilkårUtenInngangsvilkår(vilkar);
 
     return dispatch(send(bid, filtrerteVilkar));
   };

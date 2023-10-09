@@ -10,7 +10,7 @@ import * as Utils from "../../../../../../utils";
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
 import { BOOLSK_STRING } from "../../../../../../constants";
-import { Begrunnelse } from "../vurderingBestemmelse";
+import { Begrunnelse, kodeInkludererFritekst } from "../vurderingBestemmelse";
 import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 
 const { SANN, USANN } = BOOLSK_STRING;
@@ -49,11 +49,10 @@ export const VilkaarOgBegrunnelser = ({
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
   const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
   const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}_begrunnelser`);
-
-  const visBegrunnelseFritekst = KV.termFraNestedKTObject(
+  const visBegrunnelseFritekst = kodeInkludererFritekst(
     begrunnelseKodeverk,
     valgtBegrunnelseForVilkår?.begrunnelseKode
-  )?.includes("(fritekst)");
+  );
 
   return (
     <Fragment>
