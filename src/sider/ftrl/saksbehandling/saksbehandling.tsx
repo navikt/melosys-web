@@ -249,11 +249,7 @@ const Saksbehandling = ({
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  arbeidsland={
-                    landkoder && landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
-                  }
-                  lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom}
-                  lovvalgsperiodeTom={mottatteOpplysningerPeriodeTom}
+                  arbeidsland={landkoder?.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />

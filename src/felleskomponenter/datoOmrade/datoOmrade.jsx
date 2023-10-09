@@ -83,7 +83,7 @@ export const DatoOmradeDescription = ({ periode, label }) =>
     <Fragment>
       <dt>{label}</dt>
       <dd>
-        <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} />
+        <EnkeltDato dato={periode.fom} defaultValue="" /> - <EnkeltDato dato={periode.tom} defaultValue="" />
       </dd>
     </Fragment>
   ) : null;

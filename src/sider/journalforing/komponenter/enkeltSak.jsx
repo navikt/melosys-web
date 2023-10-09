@@ -71,7 +71,7 @@ const EnkeltSak = (props) => {
             term: "Periode:",
             description: periode ? (
               <Fragment>
-                <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} />
+                <EnkeltDato dato={periode.fom} defaultValue="" /> - <EnkeltDato dato={periode.tom} defaultValue="" />
               </Fragment>
             ) : null,
           },
