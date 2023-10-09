@@ -10,17 +10,20 @@ import * as Utils from "../../../../../utils";
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
-import { vilkarOperations } from "../../../../../ducks/vilkar";
+import { vilkarOperations, vilkarSelectors } from "../../../../../ducks/vilkar";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 
 import { BOOLSK_STRING } from "../../../../../constants";
-import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import "./vurderingBestemmelse.css";
 import { IngenFlytMelding } from "../../../../../felleskomponenter/alertmeldinger";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import {
+  BestemmelseMedVilkårOgBegrunnelser,
+  VilkårOgBegrunnelser,
+} from "../../../../../services/modules/medlemavfolketrygden/bestemmelser";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export const kodeInkludererFritekst = (nestedKtObject: { [key: string]: KTObject[] }, kode?: string) =>
@@ -44,29 +47,28 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
+  const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector);
   const vilkårKodeverk = useSelector(folketrygdenkodeverkSelectors.VilkaarSelector);
   const begrunnelseKodeverk = useSelector(folketrygdenkodeverkSelectors.BegrunnelserSelector);
 
-  const [{ støttedeBestemmelser, ikkeStøttedeBestemmelser }] =
-    useAsyncCallbackState<Api.MedlemAvFolketrygden.Bestemmelser.HentMuligeBestemmelserResponse>(
-      () => Api.MedlemAvFolketrygden.Bestemmelser.hentMuligeBestemmelser(behandlingstema),
-      { støttedeBestemmelser: [], ikkeStøttedeBestemmelser: [] },
-      [behandlingstema]
-    );
+  const [støttedeBestemmelser, setStøttedeBestemmelser] = useState<BestemmelseMedVilkårOgBegrunnelser[]>([]);
+  const [ikkeStøttedeBestemmelser, setIkkeStøttedeBestemmelser] = useState<string[]>([]);
 
   const [valgtBestemmelse, setValgtBestemmelse] = useState(lagretBestemmelse);
   const [valgteVilkår, setValgteVilkår] = useState<Map<string, string>>(new Map());
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, Begrunnelse>>(new Map());
-  const [muligeVilkår, setMuligeVilkår] = useState<Api.MedlemAvFolketrygden.Bestemmelser.VilkårOgBegrunnelser[]>([]);
+  const [muligeVilkår, setMuligeVilkår] = useState<VilkårOgBegrunnelser[]>([]);
   const [formIsValid, setFormIsValid] = useState(false);
 
   const bestemmelseIkkeStøttetValgt = ikkeStøttedeBestemmelser?.some((bestemmelse) => bestemmelse === valgtBestemmelse);
 
-  const hentEksisterendeVilkår = async () => {
-    // @ts-ignore
-    const response: { data: Api.Vilkar.Vilkaar[] } = await dispatch(vilkarOperations.hent(behandlingID));
+  const initialiserSteg = async () => {
+    await Api.MedlemAvFolketrygden.Bestemmelser.hentMuligeBestemmelser(behandlingstema).then((response) => {
+      setStøttedeBestemmelser(response.støttedeBestemmelser);
+      setIkkeStøttedeBestemmelser(response.ikkeStøttedeBestemmelser);
+    });
 
-    response.data?.forEach((vilkår) => {
+    lagredeVilkår.forEach((vilkår: Api.Vilkar.Vilkaar) => {
       valgteVilkår.set(vilkår.vilkaar, vilkår.oppfylt ? SANN : USANN);
       if (vilkår.begrunnelseKoder?.length === 1) {
         valgteBegrunnelser.set(`${vilkår.vilkaar}_begrunnelser`, {
@@ -75,12 +77,13 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         });
       }
     });
+
     setValgteVilkår(new Map(valgteVilkår));
     setValgteBegrunnelser(new Map(valgteBegrunnelser));
   };
 
   useEffect(() => {
-    hentEksisterendeVilkår();
+    initialiserSteg();
   }, []);
 
   const validerForm = () => {
