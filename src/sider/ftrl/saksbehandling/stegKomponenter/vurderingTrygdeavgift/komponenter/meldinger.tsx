@@ -18,36 +18,6 @@ const SkatteforholdUtenforMedlemskapsperiode = (
   </Nav.AlertStripeFeil>
 );
 
-enum TypeMelding {
-  INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE = "INNTEKTSKILDE UTENFOR MEDLEMSKAPSPERIODE",
-  SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE = "SKATTEFORHOLD UTENFOR MEDLEMSKAPSPERIODE",
-  BRUTTOINNTEKT_OVER_250K = "BRUTTOINNTEKT_OVER_250K",
-}
-
-export const finnAktivFeilmelding = (
-  inntektskilder: Inntektskilde[],
-  skatteforholdsperioder: Skatteforhold[],
-  innvilgetMedlemskapsperiode?: { fom: string; tom: string }
-): string | undefined => {
-  if (!innvilgetMedlemskapsperiode) return undefined;
-
-  if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, innvilgetMedlemskapsperiode)) {
-    return TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE;
-  }
-  if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, innvilgetMedlemskapsperiode)) {
-    return TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE;
-  }
-
-  return undefined;
-};
-
-export const finnAktivAdvarselmelding = (inntektskilder: Inntektskilde[]): string | undefined => {
-  if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
-    return TypeMelding.BRUTTOINNTEKT_OVER_250K;
-  }
-  return undefined;
-};
-
 const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntektskilde[]) =>
   inntektskilder.some((periode) => periode.bruttoInntekt! > 250000);
 
@@ -90,19 +60,49 @@ const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
   );
 };
 
+enum TypeMelding {
+  INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE = "INNTEKTSKILDE UTENFOR MEDLEMSKAPSPERIODE",
+  SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE = "SKATTEFORHOLD UTENFOR MEDLEMSKAPSPERIODE",
+  BRUTTOINNTEKT_OVER_250K = "BRUTTOINNTEKT_OVER_250K",
+}
+
+export const finnAktivFeilmelding = (
+  inntektskilder: Inntektskilde[],
+  skatteforholdsperioder: Skatteforhold[],
+  innvilgetMedlemskapsperiode?: { fom: string; tom: string }
+): string | undefined => {
+  if (!innvilgetMedlemskapsperiode) return undefined;
+
+  if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, innvilgetMedlemskapsperiode)) {
+    return TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE;
+  }
+  if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, innvilgetMedlemskapsperiode)) {
+    return TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE;
+  }
+  if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
+    return TypeMelding.BRUTTOINNTEKT_OVER_250K;
+  }
+
+  return undefined;
+};
+
+export function feilMeldingBlokkerer(type?: string): boolean {
+  switch (type) {
+    case TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE:
+    case TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE:
+      return true;
+    case TypeMelding.BRUTTOINNTEKT_OVER_250K:
+    default:
+      return false;
+  }
+}
+
 export const Feilmelding = ({ type }: { type?: string }) => {
   switch (type) {
     case TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE:
       return InntektskildeUtenforMedlemskapsperiode;
     case TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE:
       return SkatteforholdUtenforMedlemskapsperiode;
-    default:
-      return null;
-  }
-};
-
-export const AdvarselMelding = ({ type }: { type?: string }) => {
-  switch (type) {
     case TypeMelding.BRUTTOINNTEKT_OVER_250K:
       return HoyManedinntekt;
     default:

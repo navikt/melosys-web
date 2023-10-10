@@ -18,7 +18,7 @@ import TrygdeavgiftsperioderTabell from "./komponenter/trygdeavgiftsperioderTabe
 import { FieldArrayProps, FormValuesProps, Inntektskilde, Skatteforhold } from "./komponenter/types";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
-import { AdvarselMelding, Feilmelding, finnAktivAdvarselmelding, finnAktivFeilmelding } from "./komponenter/meldinger";
+import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/meldinger";
 import { Skatteforholdsperioder } from "./komponenter/skatteforholdsperioder";
 
 interface Props {
@@ -76,9 +76,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     formValues?.skatteforholdsperioder,
     innvilgetMedlemskapsperiode
   );
-  const aktivAdvarselmeldingType = finnAktivAdvarselmelding(formValues?.inntektskilder);
 
-  const stegErGyldig = formIsValid && !aktivFeilmeldingType;
+  const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
 
   const skalBeregneForelopigTrygdeavgift =
     stegErGyldig &&
@@ -221,7 +220,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       )}
 
       <Feilmelding type={aktivFeilmeldingType} />
-      <AdvarselMelding type={aktivAdvarselmeldingType} />
 
       {trygdeavgiftErIkkeTom && stegErGyldig && (
         <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />
