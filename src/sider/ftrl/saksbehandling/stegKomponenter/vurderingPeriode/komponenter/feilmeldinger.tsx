@@ -43,7 +43,7 @@ const søknadsperiodeStarterFørEllerSlutterEtterPeriodene = (
   søknadsperiodeTomDato?: string
 ) => {
   if (Utils._isEmpty(medlemskapsperioder)) return false;
-  const sortertePerioder = [...medlemskapsperioder].sort(sorterPerioder).map((p) => ({
+  const sortertePerioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato).map((p) => ({
     fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
     tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
   }));
@@ -57,17 +57,13 @@ const søknadsperiodeStarterFørEllerSlutterEtterPeriodene = (
 const perioderErLike = (periode1: MedlemskapsperiodeProp, periode2: MedlemskapsperiodeProp) =>
   periode1.fomDato === periode2.fomDato && periode1.tomDato === periode2.tomDato;
 
-const sorterPerioder = (a: MedlemskapsperiodeProp, b: MedlemskapsperiodeProp) =>
-  (Utils.dato.norskStringTilDate(a.fomDato)?.getTime() ?? 0) -
-  (Utils.dato.norskStringTilDate(b.fomDato)?.getTime() ?? 0);
-
 const filtrerInnvilgedePerioder = (periode: { innvilgelsesResultat: any }) =>
   periode.innvilgelsesResultat === INNVILGET;
 
 const finnesOverlappIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
   return [...medlemskapsperioder]
     ?.filter(filtrerInnvilgedePerioder)
-    .sort(sorterPerioder)
+    .sort(Utils.dato.sorterEtterNorskFomDato)
     .some((periode, index, perioder) =>
       perioder
         .slice(index + 1)

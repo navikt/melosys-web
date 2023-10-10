@@ -210,6 +210,12 @@ function erEtter(dato1, dato2) {
   return moment(dato1, inputFormat).isAfter(moment(dato2, inputFormat));
 }
 
+function sorterEtterNorskFomDato(periode1, periode2) {
+  return (
+    (norskStringTilDate(periode1.fomDato)?.getTime() ?? 0) - (norskStringTilDate(periode2.fomDato)?.getTime() ?? 0)
+  );
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
@@ -233,4 +239,5 @@ export {
   MAX_AR_FREM_I_TID,
   erFør,
   erEtter,
+  sorterEtterNorskFomDato,
 };
