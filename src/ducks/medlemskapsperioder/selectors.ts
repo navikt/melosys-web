@@ -23,12 +23,20 @@ export const AlleMedlemskapsperioderSelector = createSelector(
   (medlemskapsperioder) => medlemskapsperioder.medlemskapsperioder
 );
 
-export const InnvilgedeMedlemskapsperioderSelector = createSelector(
-  MedlemskapsperioderDataSelector,
-  (medlemskapsperioder) =>
-    medlemskapsperioder.medlemskapsperioder?.filter(
-      (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET
-    )
+export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
+  AlleMedlemskapsperioderSelector,
+  (medlemskapsperioder) => {
+    const sorterteInnvilgedePerioder = [...(medlemskapsperioder || [])]
+      .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
+      .sort((a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime());
+
+    if (sorterteInnvilgedePerioder.length === 0) return undefined;
+
+    return {
+      fom: sorterteInnvilgedePerioder[0].fomDato,
+      tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
+    };
+  }
 );
 
 export const BestemmelseSelector = createSelector(MedlemskapsperioderDataSelector, (medlemskapsperioderData) =>

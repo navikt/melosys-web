@@ -48,8 +48,8 @@ const vurdering_trygdeavgift = object().shape({
   skatteforholdsperioder: array()
     .of(
       object().shape({
-        fomDato: string().erGyldigDato().erInnenforSoknadsperioden().required(MAA_FYLLES_UT),
-        tomDato: string().erGyldigDato().erInnenforSoknadsperioden().erEtterDatofelt("fomDato").required(MAA_FYLLES_UT),
+        fomDato: string().erGyldigDato().required(MAA_FYLLES_UT),
+        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").required(MAA_FYLLES_UT),
         skatteplikttype: string().required(MAA_FYLLES_UT),
       })
     )

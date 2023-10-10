@@ -1,6 +1,5 @@
 import { Inntektskilde, Skatteforhold } from "./types";
 import * as Nav from "../../../../../../navFrontend";
-import { Medlemskapsperiode } from "../../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../../utils";
 
 const HoyManedinntekt = (
@@ -27,13 +26,15 @@ enum TypeMelding {
 
 export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
-  medlemskapsperioder: Medlemskapsperiode[],
-  skatteforholdsperioder: Skatteforhold[]
+  skatteforholdsperioder: Skatteforhold[],
+  innvilgetMedlemskapsperiode?: { fom: string; tom: string }
 ): string | undefined => {
-  if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, medlemskapsperioder)) {
+  if (!innvilgetMedlemskapsperiode) return undefined;
+
+  if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, innvilgetMedlemskapsperiode)) {
     return TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE;
   }
-  if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, medlemskapsperioder)) {
+  if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, innvilgetMedlemskapsperiode)) {
     return TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE;
   }
 
@@ -52,45 +53,40 @@ const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntektskil
 
 const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
   inntektskilder: Inntektskilde[],
-  medlemskapsperioder: Medlemskapsperiode[]
+  innvilgetMedlemskapsperiode: { fom: string; tom: string }
 ) => {
-  if (Utils._isEmpty(inntektskilder) || Utils._isEmpty(medlemskapsperioder)) return false;
+  if (Utils._isEmpty(inntektskilder)) return false;
   const sorterteInntektskilder = [...inntektskilder]
     .map((p) => ({
       fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
       tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
     }))
     .sort(Utils.dato.sorterEtterISOFomDato);
-  const sorterteMedlemskapsperioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterISOFomDato);
 
   return (
-    Utils.dato.erFør(sorterteInntektskilder[0].fomDato, sorterteMedlemskapsperioder[0].fomDato) ||
+    Utils.dato.erFør(sorterteInntektskilder[0].fomDato, innvilgetMedlemskapsperiode.fom) ||
     Utils.dato.erEtter(
       sorterteInntektskilder[sorterteInntektskilder.length - 1].tomDato,
-      sorterteMedlemskapsperioder[sorterteMedlemskapsperioder.length - 1].tomDato
+      innvilgetMedlemskapsperiode.tom
     )
   );
 };
 
 const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
   skatteforholdsperioder: Skatteforhold[],
-  medlemskapsperioder: Medlemskapsperiode[]
+  innvilgetMedlemskapsperiode: { fom: string; tom: string }
 ) => {
-  if (Utils._isEmpty(skatteforholdsperioder) || Utils._isEmpty(medlemskapsperioder)) return false;
+  if (Utils._isEmpty(skatteforholdsperioder)) return false;
   const sorterteSkatteforhold = [...skatteforholdsperioder]
     .map((p) => ({
       fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
       tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
     }))
     .sort(Utils.dato.sorterEtterISOFomDato);
-  const sortertMedlemskapsperioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterISOFomDato);
 
   return (
-    Utils.dato.erFør(sorterteSkatteforhold[0].fomDato, sortertMedlemskapsperioder[0].fomDato) ||
-    Utils.dato.erEtter(
-      sorterteSkatteforhold[sorterteSkatteforhold.length - 1].tomDato,
-      sortertMedlemskapsperioder[sortertMedlemskapsperioder.length - 1].tomDato
-    )
+    Utils.dato.erFør(sorterteSkatteforhold[0].fomDato, innvilgetMedlemskapsperiode.fom) ||
+    Utils.dato.erEtter(sorterteSkatteforhold[sorterteSkatteforhold.length - 1].tomDato, innvilgetMedlemskapsperiode.tom)
   );
 };
 
