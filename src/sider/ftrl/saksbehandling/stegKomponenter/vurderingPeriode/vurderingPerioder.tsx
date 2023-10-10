@@ -114,7 +114,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     if (aktivtSteg) {
       resetMedlemskapsperioder(mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
       if (!formIsValid) {
-        fields?.forEach((_field, index) => {
+        lagredeMedlemskapsperioder?.forEach((_periode, index) => {
           trigger(`medlemskapsperioder[${index}].fomDato`);
           trigger(`medlemskapsperioder[${index}].tomDato`);
         });
