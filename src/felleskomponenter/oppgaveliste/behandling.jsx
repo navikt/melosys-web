@@ -22,7 +22,9 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
               <dt>{KV.objektTilTerm(behandlingstema, "(ukjent)")}</dt>
               <dt>{KV.objektTilTerm(behandlingstype, "(ukjent)")}</dt>
               <dt>Opprettet:</dt>
-              <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
+              <dd>
+                <EnkeltDato dato={opprettetDato} defaultValue="(ukjent)" />
+              </dd>
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="4">

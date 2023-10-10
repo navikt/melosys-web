@@ -58,7 +58,9 @@ const Fagsak = ({ sak, landkoder }) => {
               <dt>Saksstatus:</dt>
               <dd>{KV.objektTilTerm(saksstatus, "(ukjent)")}</dd>
               <dt>Sak opprettet:</dt>
-              <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
+              <dd>
+                <EnkeltDato dato={opprettetDato} defaultValue="(ukjent)" />
+              </dd>
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="4">

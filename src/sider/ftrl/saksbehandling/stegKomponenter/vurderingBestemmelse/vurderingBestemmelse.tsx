@@ -1,5 +1,4 @@
-import { ChangeEventHandler, useEffect, useState } from "react";
-import { RootState } from "AppTypes";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import MKV from "../../../../../melosyskodeverk";
@@ -11,31 +10,29 @@ import * as Utils from "../../../../../utils";
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
-import { vilkarOperations } from "../../../../../ducks/vilkar";
+import { vilkarOperations, vilkarSelectors } from "../../../../../ducks/vilkar";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 
 import { BOOLSK_STRING } from "../../../../../constants";
-import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import "./vurderingBestemmelse.css";
 import { IngenFlytMelding } from "../../../../../felleskomponenter/alertmeldinger";
+import { KTObject } from "@navikt/melosys-kodeverk";
+import {
+  BestemmelseMedVilkårOgBegrunnelser,
+  VilkårOgBegrunnelser,
+} from "../../../../../services/modules/medlemavfolketrygden/bestemmelser";
 
 const { SANN, USANN } = BOOLSK_STRING;
+export const kodeInkludererFritekst = (nestedKtObject: { [key: string]: KTObject[] }, kode?: string) =>
+  KV.termFraNestedKTObject(nestedKtObject, kode)?.includes("(fritekst)");
+
 export interface Begrunnelse {
   begrunnelseKode: string;
   begrunnelseFritekst?: string | null;
 }
-
-const komponentState = (state: RootState) => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  lagretBestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
-  vilkårKodeverk: folketrygdenkodeverkSelectors.VilkaarSelector(state),
-  begrunnelseKodeverk: folketrygdenkodeverkSelectors.BegrunnelserSelector(state),
-});
 
 interface VurderingBestemmelseProps {
   bekreft: () => void;
@@ -46,46 +43,47 @@ interface VurderingBestemmelseProps {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) => {
   const dispatch = useDispatch();
-  const oppdaterVilkår = (skjema: any) => dispatch(vilkarOperations.oppdaterState(skjema));
-  const { behandlingID, behandlingstema, lagretBestemmelse, vilkårKodeverk, begrunnelseKodeverk, redigerbart } =
-    useSelector(komponentState);
-  const [{ støttedeBestemmelser, ikkeStøttedeBestemmelser }] =
-    useAsyncCallbackState<Api.Medlemskapsperioder.HentMuligeBestemmelserResponse>(
-      () => Api.Medlemskapsperioder.hentMuligeBestemmelser(behandlingstema),
-      { støttedeBestemmelser: [], ikkeStøttedeBestemmelser: [] },
-      [behandlingstema]
-    );
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
+  const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector);
+  const vilkårKodeverk = useSelector(folketrygdenkodeverkSelectors.VilkaarSelector);
+  const begrunnelseKodeverk = useSelector(folketrygdenkodeverkSelectors.BegrunnelserSelector);
 
-  const [valgtBestemmelse, setValgtBestemmelse] = useState("");
+  const [støttedeBestemmelser, setStøttedeBestemmelser] = useState<BestemmelseMedVilkårOgBegrunnelser[]>([]);
+  const [ikkeStøttedeBestemmelser, setIkkeStøttedeBestemmelser] = useState<string[]>([]);
+
+  const [valgtBestemmelse, setValgtBestemmelse] = useState(lagretBestemmelse);
   const [valgteVilkår, setValgteVilkår] = useState<Map<string, string>>(new Map());
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, Begrunnelse>>(new Map());
-  const [valgtBestemmelsesSynligeVilkår, setValgtBestemmelsesSynligeVilkår] = useState<
-    Api.Medlemskapsperioder.VilkårOgBegrunnelser[]
-  >([]);
+  const [muligeVilkår, setMuligeVilkår] = useState<VilkårOgBegrunnelser[]>([]);
   const [formIsValid, setFormIsValid] = useState(false);
 
   const bestemmelseIkkeStøttetValgt = ikkeStøttedeBestemmelser?.some((bestemmelse) => bestemmelse === valgtBestemmelse);
 
-  const hentEksisterendeVilkår = async () => {
-    // @ts-ignore
-    const response: { data: Api.Vilkar.Vilkaar[] } = await dispatch(vilkarOperations.hent(behandlingID));
+  const initialiserSteg = async () => {
+    await Api.MedlemAvFolketrygden.Bestemmelser.hentMuligeBestemmelser(behandlingstema).then((response) => {
+      setStøttedeBestemmelser(response.støttedeBestemmelser);
+      setIkkeStøttedeBestemmelser(response.ikkeStøttedeBestemmelser);
+    });
 
-    handleEndreBestemmelse(lagretBestemmelse);
-    response.data?.forEach((vilkar) => {
-      valgteVilkår.set(vilkar.vilkaar, vilkar.oppfylt ? SANN : USANN);
-      if (vilkar.begrunnelseKoder && vilkar.begrunnelseKoder.length === 1) {
-        valgteBegrunnelser.set(`${vilkar.vilkaar}_begrunnelser`, {
-          begrunnelseKode: vilkar.begrunnelseKoder[0],
-          begrunnelseFritekst: vilkar.begrunnelseFritekst,
+    lagredeVilkår.forEach((vilkår: Api.Vilkar.Vilkaar) => {
+      valgteVilkår.set(vilkår.vilkaar, vilkår.oppfylt ? SANN : USANN);
+      if (vilkår.begrunnelseKoder?.length === 1) {
+        valgteBegrunnelser.set(`${vilkår.vilkaar}_begrunnelser`, {
+          begrunnelseKode: vilkår.begrunnelseKoder[0],
+          begrunnelseFritekst: vilkår.begrunnelseFritekst,
         });
       }
     });
+
     setValgteVilkår(new Map(valgteVilkår));
     setValgteBegrunnelser(new Map(valgteBegrunnelser));
   };
 
   useEffect(() => {
-    hentEksisterendeVilkår();
+    initialiserSteg();
   }, []);
 
   const validerForm = () => {
@@ -95,72 +93,59 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
     const alleVilkårHarSvarJaOgValgtBegrunnelse = valgtBestemmelseMedVilkårOgBegrunnelser?.vilkårOgBegrunnelser.every(
       (element) => {
-        const harVilkår = valgteVilkår.get(element.vilkår) === SANN;
+        const svartJaPåVilkår = valgteVilkår.get(element.vilkår) === SANN;
 
         if (Utils._isEmpty(element.muligeBegrunnelser)) {
-          return harVilkår;
+          return svartJaPåVilkår;
         }
 
         const valgtBegrunnelseForVilkår = valgteBegrunnelser.get(`${element.vilkår}_begrunnelser`);
-        const begrunnelseInneholderFritekst = KV.termFraNestedKTObject(
-          begrunnelseKodeverk,
-          valgtBegrunnelseForVilkår?.begrunnelseKode
-        )?.includes("(fritekst)");
 
-        if (!begrunnelseInneholderFritekst) {
-          return harVilkår && valgtBegrunnelseForVilkår;
+        if (kodeInkludererFritekst(begrunnelseKodeverk, valgtBegrunnelseForVilkår?.begrunnelseKode)) {
+          const begrunnelseFritekstErForLang = (valgtBegrunnelseForVilkår?.begrunnelseFritekst?.length ?? 0) >= 3000;
+
+          return (
+            svartJaPåVilkår &&
+            Utils.streng.harStrengInnhold(valgtBegrunnelseForVilkår?.begrunnelseFritekst) &&
+            !begrunnelseFritekstErForLang
+          );
         }
 
-        const maksLengdeTillatt = 3000;
-        const begrunnelseFritekstErForLang =
-          (valgtBegrunnelseForVilkår?.begrunnelseFritekst?.length ?? 0) >= maksLengdeTillatt;
-
-        return (
-          harVilkår &&
-          Utils.streng.harStrengInnhold(valgtBegrunnelseForVilkår?.begrunnelseFritekst) &&
-          !begrunnelseFritekstErForLang
-        );
+        return svartJaPåVilkår && valgtBegrunnelseForVilkår;
       }
     );
 
     setFormIsValid(Boolean(alleVilkårHarSvarJaOgValgtBegrunnelse));
   };
 
-  const oppdaterValgtBestemmelsesSynligeVilkår = () => {
+  const oppdaterMuligeVilkår = () => {
     const valgtBestemmelsesVilkårOgBegrunnelser = støttedeBestemmelser.find(
-      (bestemmelseMedVilkårOgBegrunnelser) => bestemmelseMedVilkårOgBegrunnelser.bestemmelse === valgtBestemmelse
+      (it) => it.bestemmelse === valgtBestemmelse
     )?.vilkårOgBegrunnelser;
 
     if (Utils._isEmpty(valgtBestemmelsesVilkårOgBegrunnelser)) {
-      setValgtBestemmelsesSynligeVilkår([]);
+      setMuligeVilkår([]);
       return;
     }
-    const vilkårSomSkalVises: Api.Medlemskapsperioder.VilkårOgBegrunnelser[] = [];
+    const vilkårSomSkalVises: Api.MedlemAvFolketrygden.Bestemmelser.VilkårOgBegrunnelser[] = [];
 
-    valgtBestemmelsesVilkårOgBegrunnelser?.forEach((vilkårOgMuligeBegrunnelser) => {
+    valgtBestemmelsesVilkårOgBegrunnelser?.forEach((vilkårOgBegrunnelser) => {
       if (Utils._isEmpty(vilkårSomSkalVises)) {
-        vilkårSomSkalVises.push(vilkårOgMuligeBegrunnelser);
+        vilkårSomSkalVises.push(vilkårOgBegrunnelser);
         return;
       }
       const [forrigeVilkår] = vilkårSomSkalVises.slice(-1);
       if (valgteVilkår.get(forrigeVilkår.vilkår) === SANN) {
-        vilkårSomSkalVises.push(vilkårOgMuligeBegrunnelser);
+        vilkårSomSkalVises.push(vilkårOgBegrunnelser);
       }
     });
-    setValgtBestemmelsesSynligeVilkår(vilkårSomSkalVises);
+    setMuligeVilkår(vilkårSomSkalVises);
   };
 
   useEffect(() => {
-    setValgteBegrunnelser(new Map());
-    setValgteVilkår(new Map());
-    oppdaterValgtBestemmelsesSynligeVilkår();
+    oppdaterMuligeVilkår();
     validerForm();
-  }, [valgtBestemmelse]);
-
-  useEffect(() => {
-    oppdaterValgtBestemmelsesSynligeVilkår();
-    validerForm();
-  }, [valgteVilkår]);
+  }, [valgtBestemmelse, valgteVilkår]);
 
   useEffect(() => {
     validerForm();
@@ -170,60 +155,61 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     oppdaterStatus(formIsValid);
   }, [formIsValid]);
 
-  const oppdaterVilkårState = () => {
-    const alleVilkår: { [key: string]: boolean } = {};
-    valgteVilkår.forEach((value: string, key: string) => {
-      alleVilkår[key] = value === SANN;
-    });
-    const alleBegrunnelser: { [key: string]: string[] | string } = {};
-    valgteBegrunnelser.forEach((value: Begrunnelse, key: string) => {
-      alleBegrunnelser[key] = [value.begrunnelseKode];
-      if (value.begrunnelseFritekst) alleBegrunnelser[`${key}_fritekst`] = value.begrunnelseFritekst;
-    });
-    oppdaterVilkår({ ...alleBegrunnelser, ...alleVilkår });
+  const debouncedOppdaterOgLagreVilkår = useCallback(
+    Utils._debounce((vilkår) => dispatch(vilkarOperations.send(behandlingID, vilkår)), 500),
+    []
+  );
+  const oppdaterOgLagreVilkår = () => {
+    debouncedOppdaterOgLagreVilkår(
+      Array.from(valgteVilkår, ([vilkår, verdi]) => {
+        const valgtBegrunnelse = valgteBegrunnelser.get(`${vilkår}_begrunnelser`);
+        return {
+          vilkaar: vilkår,
+          oppfylt: verdi === SANN,
+          begrunnelseKoder: valgtBegrunnelse?.begrunnelseKode ? [valgtBegrunnelse.begrunnelseKode] : [],
+          begrunnelseFritekst: valgtBegrunnelse?.begrunnelseFritekst,
+        };
+      })
+    );
   };
 
   const handleEndreBestemmelse = (nyBestemmelse: string) => {
     setValgtBestemmelse(nyBestemmelse);
-    dispatch(medlemskapsperioderOperations.oppdaterBestemmelse(nyBestemmelse));
+    setValgteVilkår(new Map());
+    setValgteBegrunnelser(new Map());
+    dispatch(medlemskapsperioderOperations.lagreBestemmelse(behandlingID, nyBestemmelse));
   };
 
-  const handleEndreVilkår: ChangeEventHandler<HTMLInputElement> = (event) => {
+  const handleEndreVilkår = (event: ChangeEvent<HTMLInputElement>) => {
     const vilkårKode = event.target.name;
     const vilkårSvar = event.target.value;
     setValgteVilkår(new Map(valgteVilkår.set(vilkårKode, vilkårSvar)));
     if (vilkårSvar === USANN && valgteBegrunnelser.get(`${vilkårKode}_begrunnelser`)) {
       valgteBegrunnelser.delete(`${vilkårKode}_begrunnelser`);
       setValgteBegrunnelser(new Map(valgteBegrunnelser));
-      oppdaterVilkårState();
-    } else {
-      oppdaterVilkårState();
     }
+    oppdaterOgLagreVilkår();
   };
 
-  const handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement> = (event) => {
+  const handleEndreBegrunnelseKode = (event: ChangeEvent<HTMLSelectElement>) => {
     setValgteBegrunnelser(new Map(valgteBegrunnelser.set(event.target.name, { begrunnelseKode: event.target.value })));
-    oppdaterVilkårState();
+    oppdaterOgLagreVilkår();
   };
 
   const handleEndreBegrunnelseFritekst = (valgtBegrunnelse: string, begrunnelseFritekst: string) => {
-    const valgtBegrunnelseKode = valgteBegrunnelser.get(valgtBegrunnelse)!!.begrunnelseKode;
     setValgteBegrunnelser(
       new Map(
         valgteBegrunnelser.set(valgtBegrunnelse, {
-          begrunnelseKode: valgtBegrunnelseKode,
+          begrunnelseKode: valgteBegrunnelser.get(valgtBegrunnelse)!!.begrunnelseKode,
           begrunnelseFritekst,
         })
       )
     );
-    oppdaterVilkårState();
+    oppdaterOgLagreVilkår();
   };
 
   const handleBekreft = async () => {
-    await dispatch(vilkarOperations.lagre());
-    await dispatch(
-      medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse(behandlingID, valgtBestemmelse)
-    );
+    await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperioderForslag(behandlingID));
     bekreft();
   };
 
@@ -263,7 +249,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       </Nav.Fieldset>
 
-      {valgtBestemmelsesSynligeVilkår.map((vilkårOgBegrunnelser) => (
+      {muligeVilkår.map((vilkårOgBegrunnelser) => (
         <VilkaarOgBegrunnelser
           key={vilkårOgBegrunnelser.vilkår}
           vilkårOgBegrunnelser={vilkårOgBegrunnelser}

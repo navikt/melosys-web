@@ -126,16 +126,14 @@ FellesHandlersProviderUnconnected.propTypes = {
   fjernBehandlingOppfriskes: PT.func.isRequired,
   behandlingUnderOppfriskning: PT.number,
   tilForsiden: PT.func.isRequired,
-  inkluderSiste5Aar: PT.bool.isRequired,
+  inkluderSiste5Aar: PT.bool,
 };
 
 FellesHandlersProviderUnconnected.defaultProps = {
   behandlingUnderOppfriskning: null,
-};
-
-FellesHandlersProviderUnconnected.defaultProps = {
   saksnummer: undefined,
   sakstype: undefined,
+  inkluderSiste5Aar: false,
 };
 
 const mapStateToProps = (state) => ({

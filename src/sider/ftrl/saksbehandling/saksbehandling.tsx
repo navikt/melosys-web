@@ -77,6 +77,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingId)),
   hentBestemmelse: (behandlingId: number) => dispatch(medlemskapsperioderOperations.hentBestemmelse(behandlingId)),
   hentOppsummertFakta: (behandlingId: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingId)),
+  hentVilkår: (behandlingId: number) => dispatch(vilkarOperations.hent(behandlingId)),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   resetVilkarState: () => dispatch(vilkarOperations.resetState()),
@@ -121,6 +122,7 @@ const Saksbehandling = ({
   hentMedlemskapsperioder,
   hentBestemmelse,
   hentOppsummertFakta,
+  hentVilkår,
   landkoder,
   location,
   match,
@@ -175,6 +177,7 @@ const Saksbehandling = ({
       }
       await hentMedlemskapsperioder(behandlingId);
       await hentBestemmelse(behandlingId);
+      await hentVilkår(behandlingId);
       await hentMottatteOpplysninger(behandlingId);
       await hentDokumentOversikt(saksnr);
       setSaksopplysningerLastet(true);
@@ -249,11 +252,7 @@ const Saksbehandling = ({
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
-                  arbeidsland={
-                    landkoder && landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
-                  }
-                  lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom}
-                  lovvalgsperiodeTom={mottatteOpplysningerPeriodeTom}
+                  arbeidsland={landkoder?.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />
