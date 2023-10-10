@@ -13,6 +13,10 @@ import {
   erLike,
   erLikeDatoer,
   plussEnDag,
+  erFør,
+  erEtter,
+  sorterEtterNorskFomDato,
+  sorterEtterISOFomDato,
 } from "./dato";
 
 import MockDate from "mockdate";
@@ -172,6 +176,86 @@ describe("dato.js:", () => {
         const formattertDato = formatterKortDatoTilNorsk(datoTest.test);
         expect(formattertDato).toEqual(datoTest.forvent);
       });
+    });
+  });
+
+  describe("erFør", () => {
+    test("dato1 er den samme som dato2 gir false", () => {
+      const dato1 = "2018-01-01";
+      const dato2 = "2018-01-01";
+      expect(erFør(dato1, dato2)).toBeFalsy();
+    });
+
+    test("dato1 er før dato2 gir true", () => {
+      const dato1 = "2018-01-01";
+      const dato2 = "2020-01-01";
+      expect(erFør(dato1, dato2)).toBeTruthy();
+    });
+
+    test("dato1 er etter dato2 gir false", () => {
+      const dato1 = "2020-01-01";
+      const dato2 = "2018-01-01";
+      expect(erFør(dato1, dato2)).toBeFalsy();
+    });
+  });
+
+  describe("erEtter", () => {
+    test("dato1 er den samme som dato2 gir false", () => {
+      const dato1 = "2018-01-01";
+      const dato2 = "2018-01-01";
+      expect(erEtter(dato1, dato2)).toBeFalsy();
+    });
+
+    test("dato1 er før dato2 gir false", () => {
+      const dato1 = "2018-01-01";
+      const dato2 = "2020-01-01";
+      expect(erEtter(dato1, dato2)).toBeFalsy();
+    });
+
+    test("dato1 er etter dato2 gir true", () => {
+      const dato1 = "2020-01-01";
+      const dato2 = "2018-01-01";
+      expect(erEtter(dato1, dato2)).toBeTruthy();
+    });
+  });
+
+  describe("sorterEtterNorskFomDato", () => {
+    test("dato1 er den samme som dato2 gir 0", () => {
+      const dato1 = "01.01.2018";
+      const dato2 = "01.01.2018";
+      expect(sorterEtterNorskFomDato({ fomDato: dato1 }, { fomDato: dato2 })).toBe(0);
+    });
+
+    test("dato1 er før dato2 gir positivt tall", () => {
+      const dato1 = "01.01.2018";
+      const dato2 = "01.01.2020";
+      expect(sorterEtterNorskFomDato({ fomDato: dato1 }, { fomDato: dato2 })).toBeLessThan(0);
+    });
+
+    test("dato1 er etter dato2 gir omvendt rekkefølge ut", () => {
+      const dato1 = "01.01.2020";
+      const dato2 = "01.01.2018";
+      expect(sorterEtterNorskFomDato({ fomDato: dato1 }, { fomDato: dato2 })).toBeGreaterThan(0);
+    });
+  });
+
+  describe("sorterEtterISOFomDato", () => {
+    test("dato1 er den samme som dato2 gir 0", () => {
+      const dato1 = "2018-01-01";
+      const dato2 = "2018-01-01";
+      expect(sorterEtterISOFomDato({ fomDato: dato1 }, { fomDato: dato2 })).toBe(0);
+    });
+
+    test("dato1 er før dato2 gir positivt tall", () => {
+      const dato1 = "2018-01-01";
+      const dato2 = "2020-01-01";
+      expect(sorterEtterISOFomDato({ fomDato: dato1 }, { fomDato: dato2 })).toBeLessThan(0);
+    });
+
+    test("dato1 er etter dato2 gir omvendt rekkefølge ut", () => {
+      const dato1 = "2020-01-01";
+      const dato2 = "2018-01-01";
+      expect(sorterEtterISOFomDato({ fomDato: dato1 }, { fomDato: dato2 })).toBeGreaterThan(0);
     });
   });
 

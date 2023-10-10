@@ -28,26 +28,34 @@ const IngenSluttdato = (
   </Nav.AlertStripeFeil>
 );
 
-const OppholdMellomSøknadFomOgMedlemskapsFom = (
+const SøknadsperiodenStarterFørEllerSlutterEtter = (
   <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
-    Det er opphold mellom startdato for søknadsperiode og startdato for medlemskapsperiode.
+    Søknadsperioden starter før og/eller slutter etter medlemskapsperioden(e).
   </Nav.AlertStripeAdvarsel>
 );
 
 const erIkkeStøttetIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>
   medlemskapsperioder.every((periode) => periode.innvilgelsesResultat === AVSLAATT);
 
-const finnesPeriodeSomStarterSamtidigSomSøknadsperioden = (
+const søknadsperiodeStarterFørEllerSlutterEtterPeriodene = (
   medlemskapsperioder: MedlemskapsperiodeProp[],
-  søknadsperiodeFomDato: string
-) => medlemskapsperioder.some((periode) => Utils.dato.formatterDatoTilISO(periode.fomDato) === søknadsperiodeFomDato);
+  søknadsperiodeFomDato: string,
+  søknadsperiodeTomDato?: string
+) => {
+  if (Utils._isEmpty(medlemskapsperioder)) return false;
+  const sortertePerioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato).map((p) => ({
+    fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
+    tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
+  }));
+  const søknadsperiodeStarterFør = Utils.dato.erFør(søknadsperiodeFomDato, sortertePerioder[0].fomDato);
+  const søknadsperiodeSlutterEtter =
+    søknadsperiodeTomDato &&
+    Utils.dato.erEtter(søknadsperiodeTomDato, sortertePerioder[sortertePerioder.length - 1].tomDato);
+  return søknadsperiodeStarterFør || søknadsperiodeSlutterEtter;
+};
 
 const perioderErLike = (periode1: MedlemskapsperiodeProp, periode2: MedlemskapsperiodeProp) =>
   periode1.fomDato === periode2.fomDato && periode1.tomDato === periode2.tomDato;
-
-const sorterPerioder = (a: MedlemskapsperiodeProp, b: MedlemskapsperiodeProp) =>
-  (Utils.dato.norskStringTilDate(a.fomDato)?.getTime() ?? 0) -
-  (Utils.dato.norskStringTilDate(b.fomDato)?.getTime() ?? 0);
 
 const filtrerInnvilgedePerioder = (periode: { innvilgelsesResultat: any }) =>
   periode.innvilgelsesResultat === INNVILGET;
@@ -55,7 +63,7 @@ const filtrerInnvilgedePerioder = (periode: { innvilgelsesResultat: any }) =>
 const finnesOverlappIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
   return [...medlemskapsperioder]
     ?.filter(filtrerInnvilgedePerioder)
-    .sort(sorterPerioder)
+    .sort(Utils.dato.sorterEtterNorskFomDato)
     .some((periode, index, perioder) =>
       perioder
         .slice(index + 1)
@@ -66,7 +74,9 @@ const finnesOverlappIInnvilgedePerioder = (medlemskapsperioder: Medlemskapsperio
 };
 
 const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
-  const sorterteInnvilgedePerioder = [...medlemskapsperioder]?.filter(filtrerInnvilgedePerioder).sort(sorterPerioder);
+  const sorterteInnvilgedePerioder = [...medlemskapsperioder]
+    ?.filter(filtrerInnvilgedePerioder)
+    .sort(Utils.dato.sorterEtterNorskFomDato);
 
   if (Utils._isEmpty(sorterteInnvilgedePerioder) || sorterteInnvilgedePerioder.length === 1) return false;
 
@@ -88,12 +98,13 @@ enum TypeFeilmelding {
   INGEN_SLUTTDATO = "INGEN_SLUTTDATO",
   OVERLAPP_I_INNVILGEDE_PERIODER = "OVERLAPP_I_INNVILGEDE_PERIODER",
   OPPHOLD_I_INNVILGEDE_PERIODER = "OPPHOLD_I_INNVILGEDE_PERIODER",
-  OPPHOLD_MELLOM_SØKNADFOM_PERIODEFOM = "OPPHOLD_MELLOM_SØKNADFOM_PERIODEFOM",
+  SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER = "SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER",
 }
 
 export function finnAktivFeilmelding(
   medlemskapsperioder: MedlemskapsperiodeProp[],
-  søknadsperiodeFomDato: string
+  søknadsperiodeFomDato: string,
+  søknadsperiodeTomDato?: string
 ): string | undefined {
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
   if (ingenMedlemskapsperioder) {
@@ -117,8 +128,14 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.OPPHOLD_I_INNVILGEDE_PERIODER;
   }
 
-  if (!finnesPeriodeSomStarterSamtidigSomSøknadsperioden(medlemskapsperioder, søknadsperiodeFomDato)) {
-    return TypeFeilmelding.OPPHOLD_MELLOM_SØKNADFOM_PERIODEFOM;
+  if (
+    søknadsperiodeStarterFørEllerSlutterEtterPeriodene(
+      medlemskapsperioder,
+      søknadsperiodeFomDato,
+      søknadsperiodeTomDato
+    )
+  ) {
+    return TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER;
   }
 
   return undefined;
@@ -132,7 +149,7 @@ export function feilMeldingBlokkerer(type?: string): boolean {
     case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
     case TypeFeilmelding.OPPHOLD_I_INNVILGEDE_PERIODER:
       return true;
-    case TypeFeilmelding.OPPHOLD_MELLOM_SØKNADFOM_PERIODEFOM:
+    case TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER:
     default:
       return false;
   }
@@ -150,8 +167,8 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return OverlappIInnvilgedePerioder;
     case TypeFeilmelding.OPPHOLD_I_INNVILGEDE_PERIODER:
       return OppholdIInnvilgedePerioder;
-    case TypeFeilmelding.OPPHOLD_MELLOM_SØKNADFOM_PERIODEFOM:
-      return OppholdMellomSøknadFomOgMedlemskapsFom;
+    case TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER:
+      return SøknadsperiodenStarterFørEllerSlutterEtter;
     default:
       return null;
   }

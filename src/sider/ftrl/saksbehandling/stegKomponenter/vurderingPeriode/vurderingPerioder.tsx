@@ -49,7 +49,7 @@ const mapInitialMedlemskapsperioder = (
     ? [...medlemskapsperioder]
         .sort(
           (a, b) =>
-            new Date(a.fomDato).getTime() - new Date(b.fomDato).getTime() ||
+            Utils.dato.sorterEtterISOFomDato(a, b) ||
             (a.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT ? -1 : 1)
         )
         .map(mapTilMedlemskapsperiodeProps)
@@ -81,6 +81,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     control,
     watch,
     formState: { isValid: formIsValid },
+    trigger,
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
     mode: "all",
@@ -101,13 +102,23 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   });
   const formValues = watch();
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(formValues?.medlemskapsperioder, soknadsperiode.fom);
+  const aktivFeilmeldingType = finnAktivFeilmelding(
+    formValues?.medlemskapsperioder,
+    soknadsperiode.fom,
+    soknadsperiode.tom
+  );
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
 
   useEffect(() => {
     if (aktivtSteg) {
       resetMedlemskapsperioder(mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
+      if (!formIsValid) {
+        lagredeMedlemskapsperioder?.forEach((_periode, index) => {
+          trigger(`medlemskapsperioder[${index}].fomDato`);
+          trigger(`medlemskapsperioder[${index}].tomDato`);
+        });
+      }
     }
   }, [aktivtSteg]);
 
