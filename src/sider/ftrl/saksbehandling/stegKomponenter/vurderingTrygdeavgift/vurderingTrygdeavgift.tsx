@@ -18,9 +18,8 @@ import TrygdeavgiftsperioderTabell from "./komponenter/trygdeavgiftsperioderTabe
 import { FieldArrayProps, FormValuesProps, Inntektskilde, Skatteforhold } from "./komponenter/types";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
-import { AdvarselMelding, Feilmelding, finnAktivAdvarselmelding, finnAktivFeilmelding } from "./komponenter/meldinger";
+import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/meldinger";
 import { Skatteforholdsperioder } from "./komponenter/skatteforholdsperioder";
-import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 
 interface Props {
   bekreft: () => void;
@@ -33,8 +32,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const medlemskapsperiodeStatus = useSelector(medlemskapsperioderSelectors.MedlemskapsperioderStatusSelector);
-  const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
-  const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.InnvilgedeMedlemskapsperioderSelector);
+  const innvilgetMedlemskapsperiode = useSelector(
+    medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector
+  );
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
     undefined,
@@ -50,7 +50,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     formState: { isValid: formIsValid, isValidating },
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
-    context: { soknadsperiode },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
@@ -74,12 +73,11 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.inntektskilder,
-    medlemskapsperioder!,
-    formValues?.skatteforholdsperioder
+    formValues?.skatteforholdsperioder,
+    innvilgetMedlemskapsperiode
   );
-  const aktivAdvarselmeldingType = finnAktivAdvarselmelding(formValues?.inntektskilder);
 
-  const stegErGyldig = formIsValid && !aktivFeilmeldingType;
+  const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
 
   const skalBeregneForelopigTrygdeavgift =
     stegErGyldig &&
@@ -91,24 +89,13 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
 
-  const finnPeriodeFraInnvilgedeMedlemskapsperioder = () => {
-    if (!Utils._isEmpty(medlemskapsperioder)) {
-      const fomDatoer = medlemskapsperioder!.map((medlemskapsperiode) =>
-        new Date(medlemskapsperiode.fomDato).getTime()
-      );
-      const tomDatoer = medlemskapsperioder!.map((medlemskapsperiode) =>
-        new Date(medlemskapsperiode.tomDato).getTime()
-      );
-
-      const fomDato = Utils.dato.formatterDatoTilNorsk(new Date(Math.min(...fomDatoer)).toISOString());
-      const tomDato = Utils.dato.formatterDatoTilNorsk(new Date(Math.max(...tomDatoer)).toISOString());
-      return { fomDato, tomDato };
-    }
-    return undefined;
-  };
-
   useEffect(() => {
-    const periode = finnPeriodeFraInnvilgedeMedlemskapsperioder();
+    const periode = innvilgetMedlemskapsperiode
+      ? {
+          fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode.fom),
+          tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode.tom),
+        }
+      : undefined;
 
     setDefaultPeriode(periode);
 
@@ -233,7 +220,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       )}
 
       <Feilmelding type={aktivFeilmeldingType} />
-      <AdvarselMelding type={aktivAdvarselmeldingType} />
 
       {trygdeavgiftErIkkeTom && stegErGyldig && (
         <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />

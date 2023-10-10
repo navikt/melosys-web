@@ -1,6 +1,5 @@
 import { Inntektskilde, Skatteforhold } from "./types";
 import * as Nav from "../../../../../../navFrontend";
-import { Medlemskapsperiode } from "../../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../../utils";
 
 const HoyManedinntekt = (
@@ -19,6 +18,48 @@ const SkatteforholdUtenforMedlemskapsperiode = (
   </Nav.AlertStripeFeil>
 );
 
+const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntektskilde[]) =>
+  inntektskilder.some((periode) => periode.bruttoInntekt! > 250000);
+
+const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
+  inntektskilder: Inntektskilde[],
+  innvilgetMedlemskapsperiode: { fom: string; tom: string }
+) => {
+  if (Utils._isEmpty(inntektskilder)) return false;
+  const sorterteInntektskilder = [...inntektskilder]
+    .map((p) => ({
+      fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
+      tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
+    }))
+    .sort(Utils.dato.sorterEtterISOFomDato);
+
+  return (
+    Utils.dato.erFør(sorterteInntektskilder[0].fomDato, innvilgetMedlemskapsperiode.fom) ||
+    Utils.dato.erEtter(
+      sorterteInntektskilder[sorterteInntektskilder.length - 1].tomDato,
+      innvilgetMedlemskapsperiode.tom
+    )
+  );
+};
+
+const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
+  skatteforholdsperioder: Skatteforhold[],
+  innvilgetMedlemskapsperiode: { fom: string; tom: string }
+) => {
+  if (Utils._isEmpty(skatteforholdsperioder)) return false;
+  const sorterteSkatteforhold = [...skatteforholdsperioder]
+    .map((p) => ({
+      fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
+      tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
+    }))
+    .sort(Utils.dato.sorterEtterISOFomDato);
+
+  return (
+    Utils.dato.erFør(sorterteSkatteforhold[0].fomDato, innvilgetMedlemskapsperiode.fom) ||
+    Utils.dato.erEtter(sorterteSkatteforhold[sorterteSkatteforhold.length - 1].tomDato, innvilgetMedlemskapsperiode.tom)
+  );
+};
+
 enum TypeMelding {
   INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE = "INNTEKTSKILDE UTENFOR MEDLEMSKAPSPERIODE",
   SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE = "SKATTEFORHOLD UTENFOR MEDLEMSKAPSPERIODE",
@@ -27,72 +68,34 @@ enum TypeMelding {
 
 export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
-  medlemskapsperioder: Medlemskapsperiode[],
-  skatteforholdsperioder: Skatteforhold[]
+  skatteforholdsperioder: Skatteforhold[],
+  innvilgetMedlemskapsperiode?: { fom: string; tom: string }
 ): string | undefined => {
-  if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, medlemskapsperioder)) {
+  if (!innvilgetMedlemskapsperiode) return undefined;
+
+  if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, innvilgetMedlemskapsperiode)) {
     return TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE;
   }
-  if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, medlemskapsperioder)) {
+  if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, innvilgetMedlemskapsperiode)) {
     return TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE;
   }
-
-  return undefined;
-};
-
-export const finnAktivAdvarselmelding = (inntektskilder: Inntektskilde[]): string | undefined => {
   if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
     return TypeMelding.BRUTTOINNTEKT_OVER_250K;
   }
+
   return undefined;
 };
 
-const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntektskilde[]) =>
-  inntektskilder.some((periode) => periode.bruttoInntekt! > 250000);
-
-const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
-  inntektskilder: Inntektskilde[],
-  medlemskapsperioder: Medlemskapsperiode[]
-) => {
-  if (Utils._isEmpty(inntektskilder) || Utils._isEmpty(medlemskapsperioder)) return false;
-  const sorterteInntektskilder = [...inntektskilder]
-    .map((p) => ({
-      fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
-      tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
-    }))
-    .sort(Utils.dato.sorterEtterISOFomDato);
-  const sorterteMedlemskapsperioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterISOFomDato);
-
-  return (
-    Utils.dato.erFør(sorterteInntektskilder[0].fomDato, sorterteMedlemskapsperioder[0].fomDato) ||
-    Utils.dato.erEtter(
-      sorterteInntektskilder[sorterteInntektskilder.length - 1].tomDato,
-      sorterteMedlemskapsperioder[sorterteMedlemskapsperioder.length - 1].tomDato
-    )
-  );
-};
-
-const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
-  skatteforholdsperioder: Skatteforhold[],
-  medlemskapsperioder: Medlemskapsperiode[]
-) => {
-  if (Utils._isEmpty(skatteforholdsperioder) || Utils._isEmpty(medlemskapsperioder)) return false;
-  const sorterteSkatteforhold = [...skatteforholdsperioder]
-    .map((p) => ({
-      fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
-      tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
-    }))
-    .sort(Utils.dato.sorterEtterISOFomDato);
-  const sortertMedlemskapsperioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterISOFomDato);
-
-  return (
-    Utils.dato.erFør(sorterteSkatteforhold[0].fomDato, sortertMedlemskapsperioder[0].fomDato) ||
-    Utils.dato.erEtter(
-      sorterteSkatteforhold[sorterteSkatteforhold.length - 1].tomDato,
-      sortertMedlemskapsperioder[sortertMedlemskapsperioder.length - 1].tomDato
-    )
-  );
-};
+export function feilMeldingBlokkerer(type?: string): boolean {
+  switch (type) {
+    case TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE:
+    case TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE:
+      return true;
+    case TypeMelding.BRUTTOINNTEKT_OVER_250K:
+    default:
+      return false;
+  }
+}
 
 export const Feilmelding = ({ type }: { type?: string }) => {
   switch (type) {
@@ -100,13 +103,6 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return InntektskildeUtenforMedlemskapsperiode;
     case TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE:
       return SkatteforholdUtenforMedlemskapsperiode;
-    default:
-      return null;
-  }
-};
-
-export const AdvarselMelding = ({ type }: { type?: string }) => {
-  switch (type) {
     case TypeMelding.BRUTTOINNTEKT_OVER_250K:
       return HoyManedinntekt;
     default:
