@@ -216,6 +216,10 @@ function sorterEtterNorskFomDato(periode1, periode2) {
   );
 }
 
+function sorterEtterISOFomDato(periode1, periode2) {
+  return (new Date(periode1.fomDato)?.getTime() ?? 0) - (new Date(periode2.fomDato)?.getTime() ?? 0);
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
@@ -240,4 +244,5 @@ export {
   erFør,
   erEtter,
   sorterEtterNorskFomDato,
+  sorterEtterISOFomDato,
 };

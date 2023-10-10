@@ -50,9 +50,6 @@ export const finnAktivAdvarselmelding = (inntektskilder: Inntektskilde[]): strin
 const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntektskilde[]) =>
   inntektskilder.some((periode) => periode.bruttoInntekt! > 250000);
 
-const sorterPerioder = (a: { fomDato: string; tomDato: string }, b: { fomDato: string; tomDato: string }) =>
-  new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime();
-
 const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
   inntektskilder: Inntektskilde[],
   medlemskapsperioder: Medlemskapsperiode[]
@@ -63,8 +60,8 @@ const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
       fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
       tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
     }))
-    .sort(sorterPerioder);
-  const sorterteMedlemskapsperioder = [...medlemskapsperioder].sort(sorterPerioder);
+    .sort(Utils.dato.sorterEtterISOFomDato);
+  const sorterteMedlemskapsperioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterISOFomDato);
 
   return (
     Utils.dato.erFør(sorterteInntektskilder[0].fomDato, sorterteMedlemskapsperioder[0].fomDato) ||
@@ -85,8 +82,8 @@ const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
       fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
       tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
     }))
-    .sort(sorterPerioder);
-  const sortertMedlemskapsperioder = [...medlemskapsperioder].sort(sorterPerioder);
+    .sort(Utils.dato.sorterEtterISOFomDato);
+  const sortertMedlemskapsperioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterISOFomDato);
 
   return (
     Utils.dato.erFør(sorterteSkatteforhold[0].fomDato, sortertMedlemskapsperioder[0].fomDato) ||

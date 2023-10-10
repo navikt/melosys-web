@@ -114,12 +114,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
     Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
       const { inntektskilder, skatteforholdsperioder } = lagretTrygdeavgiftsgrunnlag;
-      const sorterteInntekstkilder = inntektskilder?.sort(
-        (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
-      );
-      const sorterteSkatteforhold = skatteforholdsperioder?.sort(
-        (a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime()
-      );
+      const sorterteInntekstkilder = inntektskilder?.sort(Utils.dato.sorterEtterISOFomDato);
+      const sorterteSkatteforhold = skatteforholdsperioder?.sort(Utils.dato.sorterEtterISOFomDato);
       resetSkatteforholdsperioder(
         !Utils._isEmpty(sorterteSkatteforhold)
           ? sorterteSkatteforhold.map((skatteforhold) => ({

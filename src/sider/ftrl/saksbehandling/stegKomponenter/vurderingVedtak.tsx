@@ -171,9 +171,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst, formValues?.trygdeavgiftFritekst]);
 
   function mapPeriodeRader(perioder: Api.Medlemskapsperioder.Medlemskapsperiode[] | undefined) {
-    const sortertePerioder = perioder
-      ? [...perioder].sort((p1, p2) => Date.parse(p1.fomDato) - Date.parse(p2.fomDato))
-      : [];
+    const sortertePerioder = perioder ? [...perioder].sort(Utils.dato.sorterEtterISOFomDato) : [];
     return sortertePerioder.map((medlemskapsperiode) => {
       return {
         periode: `${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
