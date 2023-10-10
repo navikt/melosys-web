@@ -1,6 +1,6 @@
 import { Inntektskilde, Skatteforhold } from "./types";
 import * as Nav from "../../../../../../navFrontend";
-import { Medlemskapsperiode } from "../../../../../../services/modules/medlemskapsperioder";
+import { Medlemskapsperiode } from "../../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../../utils";
 
 const HoyManedinntekt = (

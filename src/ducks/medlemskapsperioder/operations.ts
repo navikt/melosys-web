@@ -1,13 +1,10 @@
-import { ThunkDispatch } from "redux-thunk";
-import { RootState } from "AppTypes";
-
 import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
 import * as Actions from "./actions";
 
 export function hentMedlemskapsperioder(behandlingID: number) {
-  return doThenDispatch(() => Api.Medlemskapsperioder.getMedlemskapsperioder(behandlingID), {
+  return doThenDispatch(() => Api.MedlemAvFolketrygden.Medlemskapsperioder.getMedlemskapsperioder(behandlingID), {
     OK: Types.OK_MEDLEMSKAPSPERIODE,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -16,22 +13,30 @@ export function hentMedlemskapsperioder(behandlingID: number) {
 
 export function opprettMedlemskapsperiode(
   behandlingID: number,
-  medlemskapsperiode: Api.Medlemskapsperioder.OppdaterMedlemskapsperiode
+  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.OppdaterMedlemskapsperiode
 ) {
-  return doThenDispatch(() => Api.Medlemskapsperioder.postMedlemskapsperioder(behandlingID, medlemskapsperiode), {
-    OK: Types.OK_OPPRETT_MEDLEMSKAPSPERIODE,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.MedlemAvFolketrygden.Medlemskapsperioder.postMedlemskapsperioder(behandlingID, medlemskapsperiode),
+    {
+      OK: Types.OK_OPPRETT_MEDLEMSKAPSPERIODE,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    }
+  );
 }
 
 export function oppdaterMedlemskapsperiode(
   behandlingID: number,
   medlemskapsId: number,
-  medlemskapsperiode: Api.Medlemskapsperioder.OppdaterMedlemskapsperiode
+  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.OppdaterMedlemskapsperiode
 ) {
   return doThenDispatch(
-    () => Api.Medlemskapsperioder.putMedlemskapsperioder(behandlingID, medlemskapsId, medlemskapsperiode),
+    () =>
+      Api.MedlemAvFolketrygden.Medlemskapsperioder.putMedlemskapsperioder(
+        behandlingID,
+        medlemskapsId,
+        medlemskapsperiode
+      ),
     {
       OK: Types.OK_OPPDATER_MEDLEMSKAPSPERIODE,
       FEILET: Types.FEILET,
@@ -42,7 +47,7 @@ export function oppdaterMedlemskapsperiode(
 
 export function slettMedlemskapsperiode(behandlingID: number, medlemskapsId: number) {
   return doThenDispatch(
-    () => Api.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, medlemskapsId),
+    () => Api.MedlemAvFolketrygden.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, medlemskapsId),
     {
       OK: Types.OK_SLETT_MEDLEMSKAPSPERIODE,
       FEILET: Types.FEILET,
@@ -56,30 +61,33 @@ export function slettMedlemskapsperiode(behandlingID: number, medlemskapsId: num
   );
 }
 
+export function resetMedlemskapsperioder() {
+  return Actions.resetMedlemskapsperioder();
+}
+
 export function hentBestemmelse(behandlingID: number) {
-  return doThenDispatch(() => Api.Medlemskapsperioder.getBestemmelse(behandlingID), {
+  return doThenDispatch(() => Api.MedlemAvFolketrygden.Bestemmelser.getBestemmelse(behandlingID), {
     OK: Types.OK_BESTEMMELSE,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function opprettMedlemskapsperiodeFraBestemmelse(behandlingID: number, bestemmelse: string) {
+export function lagreBestemmelse(behandlingID: number, bestemmelse: string) {
+  return doThenDispatch(() => Api.MedlemAvFolketrygden.Bestemmelser.postBestemmelse(behandlingID, bestemmelse), {
+    OK: Types.OK_BESTEMMELSE,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
+export function opprettMedlemskapsperioderForslag(behandlingID: number) {
   return doThenDispatch(
-    () => Api.Medlemskapsperioder.opprettMedlemskapsperioderFraBestemmelse(behandlingID, bestemmelse),
+    () => Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettForeslåtteMedlemskapsperioder(behandlingID),
     {
       OK: Types.OK_MEDLEMSKAPSPERIODE,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,
     }
   );
-}
-
-export function oppdaterBestemmelse(bestemmelse: string) {
-  return (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) =>
-    dispatch(Actions.oppdaterBestemmelse(bestemmelse));
-}
-
-export function resetMedlemskapsperioder() {
-  return Actions.resetMedlemskapsperioder();
 }

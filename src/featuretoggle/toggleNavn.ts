@@ -1,6 +1,5 @@
 const MELOSYS_FOLKETRYGDEN_MVP = "melosys.folketrygden.mvp";
 const MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE = "melosys.faktureringskomponent.vis_referanse";
-
 const FEATURE_TOGGLE = "feature-toggle";
 
 const alleToggleNavn = [MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE];
