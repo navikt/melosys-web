@@ -42,14 +42,15 @@ const søknadsperiodeStarterFørEllerSlutterEtterPeriodene = (
   søknadsperiodeFomDato: string,
   søknadsperiodeTomDato?: string
 ) => {
-  const sortertePerioder = [...medlemskapsperioder]?.sort(sorterPerioder).map((p) => ({
+  if (Utils._isEmpty(medlemskapsperioder)) return false;
+  const sortertePerioder = [...medlemskapsperioder].sort(sorterPerioder).map((p) => ({
     fomDato: Utils.dato.formatterDatoTilISO(p.fomDato),
     tomDato: Utils.dato.formatterDatoTilISO(p.tomDato),
   }));
   const søknadsperiodeStarterFør = Utils.dato.erFør(søknadsperiodeFomDato, sortertePerioder[0].fomDato);
   const søknadsperiodeSlutterEtter =
     søknadsperiodeTomDato &&
-    Utils.dato.erEtter(søknadsperiodeTomDato, sortertePerioder[sortertePerioder?.length - 1].tomDato);
+    Utils.dato.erEtter(søknadsperiodeTomDato, sortertePerioder[sortertePerioder.length - 1].tomDato);
   return søknadsperiodeStarterFør || søknadsperiodeSlutterEtter;
 };
 
