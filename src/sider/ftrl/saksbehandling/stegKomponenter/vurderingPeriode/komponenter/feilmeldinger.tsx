@@ -74,7 +74,9 @@ const finnesOverlappIInnvilgedePerioder = (medlemskapsperioder: Medlemskapsperio
 };
 
 const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
-  const sorterteInnvilgedePerioder = [...medlemskapsperioder]?.filter(filtrerInnvilgedePerioder).sort(sorterPerioder);
+  const sorterteInnvilgedePerioder = [...medlemskapsperioder]
+    ?.filter(filtrerInnvilgedePerioder)
+    .sort(Utils.dato.sorterEtterNorskFomDato);
 
   if (Utils._isEmpty(sorterteInnvilgedePerioder) || sorterteInnvilgedePerioder.length === 1) return false;
 
