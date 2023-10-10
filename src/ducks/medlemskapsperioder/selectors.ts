@@ -2,6 +2,7 @@ import { RootState, StateSection } from "AppTypes";
 import { createSelector, Selector } from "reselect";
 import * as Types from "./types";
 import MKV from "../../melosyskodeverk";
+import { sorterEtterISOFomDato } from "../../utils/dato";
 
 export const MedlemskapsperioderSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   (state: RootState) => state.medlemskapsperioder,
@@ -28,7 +29,7 @@ export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
   (medlemskapsperioder) => {
     const sorterteInnvilgedePerioder = [...(medlemskapsperioder || [])]
       .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
-      .sort((a, b) => new Date(a.fomDato!).getTime() - new Date(b.fomDato!).getTime());
+      .sort(sorterEtterISOFomDato);
 
     if (sorterteInnvilgedePerioder.length === 0) return undefined;
 
