@@ -42,7 +42,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     undefined,
     [behandlingID, medlemskapsperiodeStatus === STATUS.OK]
   );
-  const [defaultPeriode, setDefaultPeriode] = useState<{ fomDato: string; tomDato: string } | undefined>(undefined);
+  const defaultPeriode = {
+    fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
+    tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
+  };
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
   const [harHentetGrunnlag, setHarHentetGrunnlag] = useState(false);
@@ -92,15 +95,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
 
   useEffect(() => {
-    const periode = innvilgetMedlemskapsperiode
-      ? {
-          fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode.fom),
-          tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode.tom),
-        }
-      : undefined;
-
-    setDefaultPeriode(periode);
-
     Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
       const { inntektskilder, skatteforholdsperioder } = lagretTrygdeavgiftsgrunnlag;
       const sorterteInntekstkilder = inntektskilder?.sort(Utils.dato.sorterEtterISOFomDato);
@@ -112,7 +106,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
               tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
               skatteplikttype: skatteforhold.skatteplikttype,
             }))
-          : [periode || {}]
+          : [defaultPeriode]
       );
       resetInntektskilder(
         !Utils._isEmpty(sorterteInntekstkilder)
@@ -123,7 +117,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
               fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
               tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
             }))
-          : [periode || {}]
+          : [defaultPeriode]
       );
       setHarHentetGrunnlag(true);
     });
