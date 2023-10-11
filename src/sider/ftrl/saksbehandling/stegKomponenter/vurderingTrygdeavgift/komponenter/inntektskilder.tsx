@@ -93,7 +93,7 @@ export const Inntektskilder = ({
             inntektskilde.arbAvgBetales
           );
           if (!skalFylleInnBruttoInntekt && inntektskilde.bruttoInntekt) {
-            update(index, { ...formValues.inntektskilder[index], bruttoInntekt: undefined });
+            update(index, { ...inntektskilde, bruttoInntekt: undefined });
           }
 
           return (
