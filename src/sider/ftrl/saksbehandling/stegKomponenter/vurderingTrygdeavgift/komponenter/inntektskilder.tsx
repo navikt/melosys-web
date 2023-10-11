@@ -79,29 +79,29 @@ export const Inntektskilder = ({
           </Nav.Column>
         </Nav.Row>
 
-        {formValues.inntektskilder.map((inntektskilder, index) => {
+        {formValues.inntektskilder.map((inntektskilde, index) => {
           const brukerSkattepliktigIHelePerioden = erBrukerSkattepliktigIHelePerioden(
             formValues.skatteforholdsperioder
           );
 
-          const visArbAvgBetales = !Utils._isEmpty(inntektskilder.kildetype);
-          const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(inntektskilder.kildetype);
-          const visBruttoInntekt = Boolean(inntektskilder.arbAvgBetales) || !skalFylleInnArbAvgBetales;
+          const visArbAvgBetales = !Utils._isEmpty(inntektskilde.kildetype);
+          const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(inntektskilde.kildetype);
+          const visBruttoInntekt = Boolean(inntektskilde.arbAvgBetales) || !skalFylleInnArbAvgBetales;
           const skalFylleInnBruttoInntekt = bruttoInntektKreves(
             brukerSkattepliktigIHelePerioden,
-            inntektskilder.kildetype,
-            inntektskilder.arbAvgBetales
+            inntektskilde.kildetype,
+            inntektskilde.arbAvgBetales
           );
-          if (!skalFylleInnBruttoInntekt && inntektskilder.bruttoInntekt) {
+          if (!skalFylleInnBruttoInntekt && inntektskilde.bruttoInntekt) {
             update(index, { ...formValues.inntektskilder[index], bruttoInntekt: undefined });
           }
 
           return (
             <Nav.Row key={fields[index].id}>
               <Nav.Column xs="3" className="flex__kolonne">
-                <Forms.Datovelger name={`inntektskilder.${index}.fomDato`} disabled={!redigerbart} control={control} />
+                <Forms.Datovelger name={`inntektskilder[${index}].fomDato`} disabled={!redigerbart} control={control} />
                 <Forms.Datovelger
-                  name={`inntektskilder.${index}.tomDato`}
+                  name={`inntektskilder[${index}].tomDato`}
                   disabled={!redigerbart}
                   control={control}
                   minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
@@ -111,7 +111,7 @@ export const Inntektskilder = ({
               <Nav.Column xs="4">
                 <Forms.Select
                   label=""
-                  name={`inntektskilder.${index}.kildetype`}
+                  name={`inntektskilder[${index}].kildetype`}
                   control={control}
                   disabled={!redigerbart}
                   emptyFieldDisabled={visArbAvgBetales}
@@ -132,19 +132,19 @@ export const Inntektskilder = ({
                       <>
                         <Forms.Radio
                           label="Ja"
-                          name={`inntektskilder.${index}.arbAvgBetales`}
+                          name={`inntektskilder[${index}].arbAvgBetales`}
                           control={control}
                           value={BOOLSK_STRING.SANN}
-                          disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilder.kildetype)}
+                          disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
                           className="radioknapp_vertikal"
                           onChange={(value) => handleEndreArbAvgBetales(index, value)}
                         />
                         <Forms.Radio
                           label="Nei"
-                          name={`inntektskilder.${index}.arbAvgBetales`}
+                          name={`inntektskilder[${index}].arbAvgBetales`}
                           control={control}
                           value={BOOLSK_STRING.USANN}
-                          disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilder.kildetype)}
+                          disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
                           className="radioknapp_vertikal"
                           onChange={(value) => handleEndreArbAvgBetales(index, value)}
                         />
@@ -162,7 +162,7 @@ export const Inntektskilder = ({
                     {skalFylleInnBruttoInntekt ? (
                       <Forms.Input
                         label=""
-                        name={`inntektskilder.${index}.bruttoInntekt`}
+                        name={`inntektskilder[${index}].bruttoInntekt`}
                         control={control}
                         disabled={!redigerbart}
                       />

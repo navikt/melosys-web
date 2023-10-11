@@ -55,6 +55,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     formState: { isValid: formIsValid, isValidating },
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
+    context: { medlemskapsperiode: innvilgetMedlemskapsperiode },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],

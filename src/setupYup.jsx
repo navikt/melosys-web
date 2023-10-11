@@ -55,6 +55,16 @@ addMethod(string, "erInnenforSoknadsperioden", function (message = UTENFOR_SOKNA
   });
 });
 
+addMethod(string, "erInnenforPeriode", function (periodeNavn, message) {
+  return this.test("dato er innenfor periode", message, function (value) {
+    const periode = this.options.context[periodeNavn];
+
+    if (Utils._isEmpty(value) || !Utils.dato.vaskInputDato(value)) return true;
+
+    return Utils.dato.erIPeriode(periode.fom, periode.tom, Utils.dato.formatterDatoTilISO(value, false), "[]");
+  });
+});
+
 addMethod(string, "erEtterDatofelt", function (felt = "fomDato", message = TIDLIGERE_ENN_FOM) {
   return this.test("er etter dato", message, function (value) {
     const { [felt]: fomDato } = this.parent;
