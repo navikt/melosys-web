@@ -159,18 +159,21 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     Utils._debounce((vilkår) => dispatch(vilkarOperations.send(behandlingID, vilkår)), 500),
     []
   );
-  const oppdaterOgLagreVilkår = () => {
-    debouncedOppdaterOgLagreVilkår(
-      Array.from(valgteVilkår, ([vilkår, verdi]) => {
-        const valgtBegrunnelse = valgteBegrunnelser.get(`${vilkår}_begrunnelser`);
-        return {
-          vilkaar: vilkår,
-          oppfylt: verdi === SANN,
-          begrunnelseKoder: valgtBegrunnelse?.begrunnelseKode ? [valgtBegrunnelse.begrunnelseKode] : [],
-          begrunnelseFritekst: valgtBegrunnelse?.begrunnelseFritekst,
-        };
-      })
-    );
+  const oppdaterOgLagreVilkår = (debounce: boolean = false) => {
+    const data = Array.from(valgteVilkår, ([vilkår, verdi]) => {
+      const valgtBegrunnelse = valgteBegrunnelser.get(`${vilkår}_begrunnelser`);
+      return {
+        vilkaar: vilkår,
+        oppfylt: verdi === SANN,
+        begrunnelseKoder: valgtBegrunnelse?.begrunnelseKode ? [valgtBegrunnelse.begrunnelseKode] : [],
+        begrunnelseFritekst: valgtBegrunnelse?.begrunnelseFritekst,
+      };
+    });
+    if (debounce) {
+      debouncedOppdaterOgLagreVilkår(data);
+    } else {
+      dispatch(vilkarOperations.send(behandlingID, data));
+    }
   };
 
   const handleEndreBestemmelse = (nyBestemmelse: string) => {
@@ -205,7 +208,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         })
       )
     );
-    oppdaterOgLagreVilkår();
+    oppdaterOgLagreVilkår(true);
   };
 
   const handleBekreft = async () => {
