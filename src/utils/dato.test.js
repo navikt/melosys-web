@@ -379,6 +379,9 @@ describe("dato.js:", () => {
         { fom: "2022-01-23", tom: "23012022", forventetResultat: true },
         { fom: "23.01.2022", tom: "23012022", forventetResultat: true },
         { fom: "2022-01-23", tom: "23.01.2022", forventetResultat: true },
+        { fom: "2022-01-23", tom: undefined, forventetResultat: false },
+        { fom: undefined, tom: "23.01.2022", forventetResultat: false },
+        { fom: undefined, tom: undefined, forventetResultat: true },
       ].forEach((periode) => expect(erLikeDatoer(periode.fom, periode.tom)).toBe(periode.forventetResultat));
     });
   });

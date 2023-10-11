@@ -146,6 +146,7 @@ function erLike(datoEn, datoTo) {
 }
 
 function erLikeDatoer(datoEn, datoTo) {
+  if (datoEn === datoTo) return true;
   return erLike(formatterDatoTilISO(datoEn, false, datoEn), formatterDatoTilISO(datoTo, false, datoTo));
 }
 
