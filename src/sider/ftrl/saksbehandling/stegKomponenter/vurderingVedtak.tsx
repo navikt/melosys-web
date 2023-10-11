@@ -97,6 +97,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     setValue,
   } = useForm({
     resolver: yupResolver(vurdering_vedtak),
+    context: {
+      erNyVurdering,
+    },
     defaultValues: {
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
       innledningFritekst: useSelector(behandlingsresultatSelectors.InnledningFritekstSelector) || "",
