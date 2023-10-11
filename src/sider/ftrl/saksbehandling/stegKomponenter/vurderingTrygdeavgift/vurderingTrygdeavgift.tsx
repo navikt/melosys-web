@@ -20,6 +20,7 @@ import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
 import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/meldinger";
 import { Skatteforholdsperioder } from "./komponenter/skatteforholdsperioder";
+import MKV from "../../../../../melosyskodeverk";
 
 interface Props {
   bekreft: () => void;
@@ -31,6 +32,7 @@ interface Props {
 export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const medlemskapsperiodeStatus = useSelector(medlemskapsperioderSelectors.MedlemskapsperioderStatusSelector);
   const innvilgetMedlemskapsperiode = useSelector(
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector
@@ -40,7 +42,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     undefined,
     [behandlingID, medlemskapsperiodeStatus === STATUS.OK]
   );
-  const [defaultPeriode, setDefaultPeriode] = useState<{ fomDato: string; tomDato: string } | undefined>(undefined);
+  const defaultPeriode = {
+    fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
+    tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
+  };
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
   const [harHentetGrunnlag, setHarHentetGrunnlag] = useState(false);
@@ -48,8 +53,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     control,
     watch,
     formState: { isValid: formIsValid, isValidating },
+    trigger,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
+    context: { medlemskapsperiode: innvilgetMedlemskapsperiode },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
@@ -77,7 +84,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     innvilgetMedlemskapsperiode
   );
 
-  const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
+  const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
 
   const skalBeregneForelopigTrygdeavgift =
     stegErGyldig &&
@@ -90,15 +97,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
 
   useEffect(() => {
-    const periode = innvilgetMedlemskapsperiode
-      ? {
-          fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode.fom),
-          tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode.tom),
-        }
-      : undefined;
-
-    setDefaultPeriode(periode);
-
     Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
       const { inntektskilder, skatteforholdsperioder } = lagretTrygdeavgiftsgrunnlag;
       const sorterteInntekstkilder = inntektskilder?.sort(Utils.dato.sorterEtterISOFomDato);
@@ -110,7 +108,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
               tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
               skatteplikttype: skatteforhold.skatteplikttype,
             }))
-          : [periode || {}]
+          : [defaultPeriode]
       );
       resetInntektskilder(
         !Utils._isEmpty(sorterteInntekstkilder)
@@ -121,7 +119,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
               fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
               tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
             }))
-          : [periode || {}]
+          : [defaultPeriode]
       );
       setHarHentetGrunnlag(true);
     });
@@ -167,6 +165,23 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     }
   }, [stegErGyldig, isValidating, formValues?.inntektskilder?.length, formValues?.skatteforholdsperioder?.length]);
 
+  useEffect(() => {
+    if (aktivtSteg) {
+      if (redigerbart && formIsValid) {
+        debouncedLagreTrygdeavgiftsgrunnlag(formValues, stegErGyldig);
+      } else {
+        formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
+          trigger(`skatteforholdsperioder[${index}].fomDato`);
+          trigger(`skatteforholdsperioder[${index}].tomDato`);
+        });
+        formValues?.inntektskilder?.forEach((_periode: any, index: number) => {
+          trigger(`inntektskilder[${index}].fomDato`);
+          trigger(`inntektskilder[${index}].tomDato`);
+        });
+      }
+    }
+  }, [aktivtSteg, innvilgetMedlemskapsperiode]);
+
   const handleBeregnTrygdeavgift = () => {
     setTrygdeavgift(undefined);
     Api.Trygdeavgift.beregnTrygdeavgift(behandlingID)
@@ -182,6 +197,13 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   return (
     <div className="vurderingTrygdeavgift">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Trygdeavgift</Nav.Typo.Innholdstittel>
+
+      {behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING && (
+        <Nav.Typo.Normaltekst className="nyVurderingTekst">
+          Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt. Gjør nødvendige endringer eller legg
+          til en ny periode.
+        </Nav.Typo.Normaltekst>
+      )}
 
       <Nav.Row>
         <Nav.Column xs="9">

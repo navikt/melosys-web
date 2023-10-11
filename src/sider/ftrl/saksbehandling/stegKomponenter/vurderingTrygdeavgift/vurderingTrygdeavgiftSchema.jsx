@@ -7,6 +7,7 @@ import { BOOLSK_STRING } from "../../../../../constants";
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const { NÆRINGSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, FN_SKATTEFRITAK, MISJONÆR } = MKV.Koder.inntektskildetype;
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
+const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperioden" };
 
 export const arbAvgBetalesKreves = (kildetype) => kildetype !== MISJONÆR;
 
@@ -48,8 +49,15 @@ const vurdering_trygdeavgift = object().shape({
   skatteforholdsperioder: array()
     .of(
       object().shape({
-        fomDato: string().erGyldigDato().required(MAA_FYLLES_UT),
-        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").required(MAA_FYLLES_UT),
+        fomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .required(MAA_FYLLES_UT),
+        tomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .erEtterDatofelt("fomDato")
+          .required(MAA_FYLLES_UT),
         skatteplikttype: string().required(MAA_FYLLES_UT),
       })
     )
@@ -59,8 +67,15 @@ const vurdering_trygdeavgift = object().shape({
       kildetype: string().required(MAA_FYLLES_UT),
       arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
       bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
-      fomDato: string().erGyldigDato().required(MAA_FYLLES_UT),
-      tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").required(MAA_FYLLES_UT),
+      fomDato: string()
+        .erGyldigDato()
+        .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+        .required(MAA_FYLLES_UT),
+      tomDato: string()
+        .erGyldigDato()
+        .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+        .erEtterDatofelt("fomDato")
+        .required(MAA_FYLLES_UT),
     })
   ),
 });
