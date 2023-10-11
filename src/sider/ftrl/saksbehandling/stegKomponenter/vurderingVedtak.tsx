@@ -100,7 +100,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     defaultValues: {
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
       innledningFritekst: useSelector(behandlingsresultatSelectors.InnledningFritekstSelector) || "",
-      trygdeavgiftFritekst: "", // TODO: MELOSYS-6084
+      trygdeavgiftFritekst: useSelector(behandlingsresultatSelectors.TrygdeavgiftFritekstSelector) || "",
       nyVurderingBakgrunnValg: initialNyVurderingBakgrunnValg,
       nyVurderingBakgrunnFritekst: initialNyVurderingBakgrunnFritekst,
     } as FieldValues,
@@ -143,6 +143,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   useEffect(() => {
     hentMuligeMottakere();
+    return () => debouncedOppdaterFritekster.cancel();
   }, []);
 
   useEffect(() => {
@@ -167,7 +168,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   useEffect(() => {
     debouncedOppdaterFritekster(formValues);
-    return debouncedOppdaterFritekster.cancel();
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst, formValues?.trygdeavgiftFritekst]);
 
   function mapPeriodeRader(perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[] | undefined) {
