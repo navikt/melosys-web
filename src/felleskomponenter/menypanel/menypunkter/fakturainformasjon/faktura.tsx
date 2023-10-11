@@ -18,7 +18,7 @@ enum FakturaStatus {
   FEIL = "FEIL",
 }
 
-interface Fakturainfo {
+interface EksternFakturaStatus {
   dato: string;
   status: FakturaStatus;
   fakturaBelop: number | null;
@@ -62,12 +62,14 @@ const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
 };
 
 export const Faktura = ({ faktura }: FakturaProps) => {
+  const [nyesteFakturaStatus] = useState<EksternFakturaStatus | undefined>(
+    faktura.eksternFakturaStatus?.slice().sort((a: any, b: any) => moment(b.dato).diff(moment(a.dato)))[0]
+  );
+  console.log({ faktura, nyesteFakturaStatus });
   return (
     <Table.ExpandableRow
       key={faktura.id}
-      content={
-        <FakturaLinjeContainer faktura={{ ...faktura }} fakturaNummer={faktura.nyesteFakturaStatus?.fakturaNummer} />
-      }
+      content={<FakturaLinjeContainer faktura={{ ...faktura }} fakturaNummer={nyesteFakturaStatus?.fakturaNummer} />}
     >
       <Table.DataCell>{faktura.sistOppdatert}</Table.DataCell>
       <Table.DataCell>{mapPeriodeTilKvartalString(faktura.periodeFra, faktura.periodeTil)}</Table.DataCell>
@@ -77,7 +79,7 @@ export const Faktura = ({ faktura }: FakturaProps) => {
           {FakturaStatusMapper[faktura.status as FakturaStatus]?.beskrivelse}
         </div>
       </Table.DataCell>
-      <Table.DataCell>{formaterTilNorskBelop(faktura.nyesteFakturaStatus?.ubetaltBelop) || "-"}</Table.DataCell>
+      <Table.DataCell>{formaterTilNorskBelop(nyesteFakturaStatus?.ubetaltBelop) || "-"}</Table.DataCell>
     </Table.ExpandableRow>
   );
 };
