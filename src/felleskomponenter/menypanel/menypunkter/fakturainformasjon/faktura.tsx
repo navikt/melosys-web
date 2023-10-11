@@ -65,7 +65,7 @@ export const Faktura = ({ faktura }: FakturaProps) => {
   const [nyesteFakturaStatus] = useState<EksternFakturaStatus | undefined>(
     faktura.eksternFakturaStatus?.slice().sort((a: any, b: any) => moment(b.dato).diff(moment(a.dato)))[0]
   );
-  console.log({ faktura, nyesteFakturaStatus });
+
   return (
     <Table.ExpandableRow
       key={faktura.id}
