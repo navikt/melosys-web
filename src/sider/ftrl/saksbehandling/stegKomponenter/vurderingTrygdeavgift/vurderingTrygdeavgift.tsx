@@ -161,7 +161,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   useEffect(() => {
     if (redigerbart && harHentetGrunnlag) setTrygdeavgift(undefined);
     if (redigerbart && aktivtSteg && !isValidating) {
-      debouncedLagreTrygdeavgiftsgrunnlag(formValues, stegErGyldig);
+      debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
     }
   }, [stegErGyldig, isValidating, formValues?.inntektskilder?.length, formValues?.skatteforholdsperioder?.length]);
 
