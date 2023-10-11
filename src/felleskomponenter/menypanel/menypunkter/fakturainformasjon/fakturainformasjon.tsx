@@ -17,7 +17,12 @@ import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE } from "../../../../featuretoggle/toggleNavn";
 import moment from "moment";
 
-const gyldigeFakturaStatuser = [FakturaStatus.BESTILLT];
+const gyldigeFakturaStatuser = [
+  FakturaStatus.BESTILLT,
+  FakturaStatus.FEIL,
+  FakturaStatus.MANGLENDE_INNBETALING,
+  FakturaStatus.INNE_I_OEBS,
+];
 
 const Fakturainformasjon = () => {
   const dispatch = useDispatch();
@@ -63,7 +68,7 @@ const Fakturainformasjon = () => {
       return acc;
     }, [])
     .filter((f: any) => gyldigeFakturaStatuser.includes(f.status))
-    .sort((a: any, b: any) => moment(b.datoBestilt).diff(moment(a.datoBestilt)));
+    .sort((a: any, b: any) => moment(b.sistOppdatert).diff(moment(a.sistOppdatert)));
 
   return (
     <Nav.Container fluid className="fakturainformasjon">

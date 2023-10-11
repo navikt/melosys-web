@@ -41,9 +41,7 @@ exports[`Faktura > snapshot test 1`] = `
     </td>
     <td
       class="navds-table__data-cell navds-body-short"
-    >
-      2023-08-24
-    </td>
+    />
     <td
       class="navds-table__data-cell navds-body-short"
     >

@@ -7,6 +7,9 @@ export enum FakturaStatus {
   "KANSELLERT" = "KANSELLERT",
   "BETALT" = "BETALT",
   "DELVIS_BETALT" = "DELVIS_BETALT",
+  "FEIL" = "FEIL",
+  "INNE_I_OEBS" = "INNE_I_OEBS",
+  "MANGLENDE_INNBETALING" = "MANGLENDE_INNBETALING",
 }
 
 export const hentFakturaserier = (referanse: string) =>
