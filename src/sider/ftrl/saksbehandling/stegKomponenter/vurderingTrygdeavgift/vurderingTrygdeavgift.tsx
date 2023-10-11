@@ -84,7 +84,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     innvilgetMedlemskapsperiode
   );
 
-  const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
+  const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
 
   const skalBeregneForelopigTrygdeavgift =
     stegErGyldig &&
