@@ -74,17 +74,18 @@ export const JournalforingForm = ({
       let brukerIDPerson = "";
       let orgnr = "";
 
-      if (avsenderType === KV.AvsenderTyper.PERSON && gyldigBrukerFnrEllerDnr) {
-        brukerIDPerson = brukerID;
-      } else if (
-        avsenderType === KV.AvsenderTyper.FULLMEKTIG &&
-        (gyldigFullmektigFnrEllerDnr || gyldigOrganisasjonsNummer)
-      ) {
+      if (avsenderType === KV.AvsenderTyper.FULLMEKTIG) {
         if (gyldigFullmektigFnrEllerDnr) brukerIDPerson = representantID;
-        if (gyldigOrganisasjonsNummer && representererBruker) orgnr = representantID;
-        if (gyldigOrganisasjonsNummer && !representererBruker) brukerIDPerson = brukerID;
+        else if (gyldigOrganisasjonsNummer && representererBruker) orgnr = representantID;
+        else if (gyldigOrganisasjonsNummer && !representererBruker) brukerIDPerson = brukerID;
+        else {
+          return;
+        }
       } else {
-        return;
+        if (!gyldigBrukerFnrEllerDnr) {
+          return;
+        }
+        brukerIDPerson = brukerID;
       }
 
       Api.Kontroll.kontrollerAdresse({
