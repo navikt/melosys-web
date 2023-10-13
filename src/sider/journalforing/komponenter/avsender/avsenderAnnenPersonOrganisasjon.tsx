@@ -36,6 +36,11 @@ const AvsenderAnnenPersonOrganisasjon = ({
   annenPersonOrgErFullmektig,
   fullmakter = [],
 }: AvsenderAnnenOrganisasjonPersonProps) => {
+  const avsenderErPerson = Utils.person.erGyldigFnrEllerDnr(avsenderID);
+  const avsenderErOrganisasjon = Utils.organisasjon.erOrgnrGyldig(avsenderID);
+  const kanHaKontaktperson =
+    avsenderErOrganisasjon && (fullmakter.includes(FULLMEKTIG_SØKNAD) || fullmakter.includes(FULLMEKTIG_ARBEIDSGIVER));
+
   useEffect(() => {
     settFeltInnhold("annenPersonOrgErFullmektig", null);
     settFeltInnhold("annenOrgErArbeidsgiver", null);
@@ -49,6 +54,13 @@ const AvsenderAnnenPersonOrganisasjon = ({
       settFeltInnhold("fullmektigID", null);
     }
   }, [annenPersonOrgErFullmektig]);
+
+  useEffect(() => {
+    if (!kanHaKontaktperson) {
+      settFeltInnhold("fullmektigKontaktperson", null);
+      settFeltInnhold("fullmektigKontaktOrgnr", null);
+    }
+  }, [kanHaKontaktperson]);
 
   const IDFeltTastOppHandler = async (sokStreng: string) => {
     if (Utils.organisasjon.erOrgnrGyldig(sokStreng) || Utils.person.erGyldigFnrEllerDnr(sokStreng)) {
@@ -80,7 +92,7 @@ const AvsenderAnnenPersonOrganisasjon = ({
         <Nav.Typo.Normaltekst>{avsenderNavn || ""}</Nav.Typo.Normaltekst>
       </div>
 
-      {(Utils.organisasjon.erOrgnrGyldig(avsenderID) || Utils.person.erGyldigFnrEllerDnr(avsenderID)) && (
+      {(avsenderErOrganisasjon || avsenderErPerson) && (
         <Skjema.Checkbox feltNavn="annenPersonOrgErFullmektig" label="Person/organisasjon er fullmektig" />
       )}
 
@@ -94,7 +106,7 @@ const AvsenderAnnenPersonOrganisasjon = ({
             onChange={() => handleEndreFullmakt(FULLMEKTIG_SØKNAD)}
             label={<Nav.Typo.Normaltekst>Fullmektig for søknad</Nav.Typo.Normaltekst>}
           />
-          {Utils.organisasjon.erOrgnrGyldig(avsenderID) && (
+          {avsenderErOrganisasjon && (
             <Nav.Checkbox
               className="fullmakt"
               onChange={() => handleEndreFullmakt(FULLMEKTIG_ARBEIDSGIVER)}
@@ -109,7 +121,7 @@ const AvsenderAnnenPersonOrganisasjon = ({
         </>
       )}
 
-      {(fullmakter.includes(FULLMEKTIG_SØKNAD) || fullmakter.includes(FULLMEKTIG_ARBEIDSGIVER)) && (
+      {kanHaKontaktperson && (
         <div>
           <Skjema.Input
             feltNavn="fullmektigKontaktperson"
