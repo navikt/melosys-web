@@ -16,6 +16,7 @@ import { Table } from "@navikt/ds-react";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE } from "../../../../featuretoggle/toggleNavn";
 import moment from "moment";
+import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
 
 const gyldigeFakturaStatuser = [
   FakturaStatus.BESTILLT,
@@ -81,7 +82,13 @@ const Fakturainformasjon = () => {
               <Table.Header>
                 <Table.Row shadeOnHover={false}>
                   <Table.HeaderCell />
-                  <Table.HeaderCell scope="col">Dato</Table.HeaderCell>
+                  <Table.HeaderCell scope="col">
+                    <LabelMedHjelpetekst
+                      className="hjelpetekst_wrapper"
+                      label="Dato"
+                      hjelpetekst="Viser når status sist ble oppdatert, for eksempel når faktura ble bestilt."
+                    />
+                  </Table.HeaderCell>
                   <Table.HeaderCell scope="col">Kvartal</Table.HeaderCell>
                   <Table.HeaderCell scope="col">Status</Table.HeaderCell>
                   <Table.HeaderCell scope="col">Utestående betaling</Table.HeaderCell>
