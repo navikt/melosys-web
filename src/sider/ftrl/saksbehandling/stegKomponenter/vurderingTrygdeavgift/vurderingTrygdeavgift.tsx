@@ -166,19 +166,16 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   }, [stegErGyldig, isValidating, formValues?.inntektskilder?.length, formValues?.skatteforholdsperioder?.length]);
 
   useEffect(() => {
-    if (aktivtSteg) {
-      if (redigerbart && formIsValid) {
-        debouncedLagreTrygdeavgiftsgrunnlag(formValues, stegErGyldig);
-      } else {
-        formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
-          trigger(`skatteforholdsperioder[${index}].fomDato`);
-          trigger(`skatteforholdsperioder[${index}].tomDato`);
-        });
-        formValues?.inntektskilder?.forEach((_periode: any, index: number) => {
-          trigger(`inntektskilder[${index}].fomDato`);
-          trigger(`inntektskilder[${index}].tomDato`);
-        });
-      }
+    if (redigerbart && aktivtSteg) {
+      debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
+      formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
+        trigger(`skatteforholdsperioder[${index}].fomDato`);
+        trigger(`skatteforholdsperioder[${index}].tomDato`);
+      });
+      formValues?.inntektskilder?.forEach((_periode: any, index: number) => {
+        trigger(`inntektskilder[${index}].fomDato`);
+        trigger(`inntektskilder[${index}].tomDato`);
+      });
     }
   }, [aktivtSteg, innvilgetMedlemskapsperiode]);
 
