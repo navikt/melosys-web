@@ -14,6 +14,8 @@ interface SendForvaltningsMeldingProps {
   representantRepresenterer?: string;
 }
 
+// TODO etter merging av 6035: Fiks fullmektig-logikk
+
 const SendForvaltningsMelding = ({
   avsenderType,
   settFeltInnhold,
