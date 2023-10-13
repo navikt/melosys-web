@@ -4,6 +4,7 @@ import { Folkeregisterpersonstatus } from "../../../../../../graphql";
 import { GyldighetshistorikkInfo } from "../../historikk/gyldighetshistorikkInfo";
 import bem from "../../../../../../bemUtils";
 import "./personstatusModal.css";
+import { Table } from "@navikt/ds-react";
 
 interface PersonstatusTabellProps {
   personstatuser: Folkeregisterpersonstatus[];
@@ -18,25 +19,25 @@ export const PersonstatusTabell = ({ personstatuser }: PersonstatusTabellProps) 
     );
   }
 
-  const personstatusTabellCls = bem("personstatus-tabell");
-
   return (
-    <div className={personstatusTabellCls.block}>
-      <Nav.Row className={personstatusTabellCls.element("header")}>
-        <Nav.Column xs="5">Personstatus</Nav.Column>
-        <Nav.Column xs="2">Kilde</Nav.Column>
-        <Nav.Column xs="2">Register</Nav.Column>
-        <Nav.Column xs="3">Gyldighetsdato</Nav.Column>
-      </Nav.Row>
-      {personstatuser.map((status) => (
-        <Nav.Row className={personstatusTabellCls.element("row")} key={Utils._uuid()}>
-          <Nav.Column xs="5">{status.tekst}</Nav.Column>
-          <Nav.Column xs="2">{status.kilde}</Nav.Column>
-          <Nav.Column xs="2">{status.master}</Nav.Column>
-          <Nav.Column xs="3">{Utils.dato.formatterDatoTilNorsk(status.fregGyldighetstidspunkt)}</Nav.Column>
-        </Nav.Row>
-      ))}
-    </div>
+    <Table className="personstatus-tabell">
+      <Table.Header>
+        <Table.HeaderCell>Personstatus</Table.HeaderCell>
+        <Table.HeaderCell>Kilde</Table.HeaderCell>
+        <Table.HeaderCell>Register</Table.HeaderCell>
+        <Table.HeaderCell>Gyldighetsdato</Table.HeaderCell>
+      </Table.Header>
+      <Table.Body>
+        {personstatuser.map((status) => (
+          <Table.Row key={Utils._uuid()}>
+            <Table.DataCell>{status.tekst}</Table.DataCell>
+            <Table.DataCell>{status.kilde}</Table.DataCell>
+            <Table.DataCell>{status.master}</Table.DataCell>
+            <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(status.fregGyldighetstidspunkt)}</Table.DataCell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
   );
 };
 
@@ -69,7 +70,7 @@ const PersonstatusModal = ({
       <Nav.Typo.Innholdstittel>Personstatus</Nav.Typo.Innholdstittel>
       <PersonstatusTabell personstatuser={aktivePersonstatuser} />
 
-      <Nav.Typo.Undertittel>Historikk</Nav.Typo.Undertittel>
+      <Nav.Typo.Undertittel className={personstatusModalCls.element("historikk")}>Historikk</Nav.Typo.Undertittel>
       <GyldighetshistorikkInfo />
       <PersonstatusTabell personstatuser={historiskePersonstatuser} />
     </Nav.Modal>
