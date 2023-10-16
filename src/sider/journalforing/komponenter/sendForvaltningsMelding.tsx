@@ -60,7 +60,7 @@ const SendForvaltningsMelding = ({
         )}
       </Skjema.RadioGruppe>
 
-      {harRegistrertAdresse && (
+      {!harRegistrertAdresse && (
         <Nav.AlertStripe className="feilmelding" type="advarsel">
           <Nav.Typo.Element>Melding kan ikke sendes automatisk pga. manglende eller ugyldig adresse</Nav.Typo.Element>
           <ul>
