@@ -58,11 +58,7 @@ export const JournalforingForm = ({
 
   const { brukerID, avsenderType, representantID, representantRepresenterer } = formValues;
 
-  useEffect(() => {
-    settFeltInnhold("ikkeSendForvaltingsmelding", !visForvaltningsmelding);
-  }, [visForvaltningsmelding]);
-
-  useEffect(() => {
+  const sjekkAdresse = () => {
     if (!visForvaltningsmelding) return;
     if ((brukerID || representantID) && avsenderType) {
       const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
@@ -74,17 +70,12 @@ export const JournalforingForm = ({
       let brukerIDPerson = "";
       let orgnr = "";
 
-      if (avsenderType === KV.AvsenderTyper.PERSON && gyldigBrukerFnrEllerDnr) {
-        brukerIDPerson = brukerID;
-      } else if (
-        avsenderType === KV.AvsenderTyper.FULLMEKTIG &&
-        (gyldigFullmektigFnrEllerDnr || gyldigOrganisasjonsNummer)
-      ) {
+      if (avsenderType === KV.AvsenderTyper.FULLMEKTIG) {
         if (gyldigFullmektigFnrEllerDnr) brukerIDPerson = representantID;
-        if (gyldigOrganisasjonsNummer && representererBruker) orgnr = representantID;
-        if (gyldigOrganisasjonsNummer && !representererBruker) brukerIDPerson = brukerID;
-      } else {
-        return;
+        else if (gyldigOrganisasjonsNummer && representererBruker) orgnr = representantID;
+        else if (gyldigOrganisasjonsNummer && !representererBruker) brukerIDPerson = brukerID;
+      } else if (gyldigBrukerFnrEllerDnr) {
+        brukerIDPerson = brukerID;
       }
 
       Api.Kontroll.kontrollerAdresse({
@@ -98,6 +89,14 @@ export const JournalforingForm = ({
         })
         .catch(() => setHarRegistrertAdresse(false));
     }
+  };
+
+  useEffect(() => {
+    settFeltInnhold("ikkeSendForvaltingsmelding", !visForvaltningsmelding);
+  }, [visForvaltningsmelding]);
+
+  useEffect(() => {
+    sjekkAdresse();
   }, [brukerID, avsenderType, representantID, representantRepresenterer, visForvaltningsmelding]);
 
   return (
