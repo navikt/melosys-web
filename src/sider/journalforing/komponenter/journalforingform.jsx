@@ -58,11 +58,7 @@ export const JournalforingForm = ({
 
   const { brukerID, avsenderType, representantID, representantRepresenterer } = formValues;
 
-  useEffect(() => {
-    settFeltInnhold("ikkeSendForvaltingsmelding", !visForvaltningsmelding);
-  }, [visForvaltningsmelding]);
-
-  useEffect(() => {
+  const sjekkAdresse = () => {
     if (!visForvaltningsmelding) return;
     if ((brukerID || representantID) && avsenderType) {
       const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
@@ -78,13 +74,7 @@ export const JournalforingForm = ({
         if (gyldigFullmektigFnrEllerDnr) brukerIDPerson = representantID;
         else if (gyldigOrganisasjonsNummer && representererBruker) orgnr = representantID;
         else if (gyldigOrganisasjonsNummer && !representererBruker) brukerIDPerson = brukerID;
-        else {
-          return;
-        }
-      } else {
-        if (!gyldigBrukerFnrEllerDnr) {
-          return;
-        }
+      } else if (gyldigBrukerFnrEllerDnr) {
         brukerIDPerson = brukerID;
       }
 
@@ -99,6 +89,14 @@ export const JournalforingForm = ({
         })
         .catch(() => setHarRegistrertAdresse(false));
     }
+  };
+
+  useEffect(() => {
+    settFeltInnhold("ikkeSendForvaltingsmelding", !visForvaltningsmelding);
+  }, [visForvaltningsmelding]);
+
+  useEffect(() => {
+    sjekkAdresse();
   }, [brukerID, avsenderType, representantID, representantRepresenterer, visForvaltningsmelding]);
 
   return (
