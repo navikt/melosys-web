@@ -163,19 +163,29 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     if (redigerbart && aktivtSteg && !isValidating) {
       debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
     }
-  }, [stegErGyldig, isValidating, formValues?.inntektskilder?.length, formValues?.skatteforholdsperioder?.length]);
+  }, [
+    formIsValid,
+    aktivFeilmeldingType,
+    isValidating,
+    formValues?.inntektskilder?.length,
+    formValues?.skatteforholdsperioder?.length,
+  ]);
 
   useEffect(() => {
     if (redigerbart && aktivtSteg) {
-      debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
-      formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
-        trigger(`skatteforholdsperioder[${index}].fomDato`);
-        trigger(`skatteforholdsperioder[${index}].tomDato`);
-      });
-      formValues?.inntektskilder?.forEach((_periode: any, index: number) => {
-        trigger(`inntektskilder[${index}].fomDato`);
-        trigger(`inntektskilder[${index}].tomDato`);
-      });
+      if (!formIsValid) {
+        formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
+          trigger(`skatteforholdsperioder[${index}].fomDato`);
+          trigger(`skatteforholdsperioder[${index}].tomDato`);
+        });
+        formValues?.inntektskilder?.forEach((_periode: any, index: number) => {
+          trigger(`inntektskilder[${index}].fomDato`);
+          trigger(`inntektskilder[${index}].tomDato`);
+        });
+      }
+      if (feil) {
+        debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
+      }
     }
   }, [aktivtSteg, innvilgetMedlemskapsperiode]);
 

@@ -62,22 +62,24 @@ const vurdering_trygdeavgift = object().shape({
       })
     )
     .min(1),
-  inntektskilder: array().of(
-    object().shape({
-      kildetype: string().required(MAA_FYLLES_UT),
-      arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
-      bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
-      fomDato: string()
-        .erGyldigDato()
-        .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-        .required(MAA_FYLLES_UT),
-      tomDato: string()
-        .erGyldigDato()
-        .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-        .erEtterDatofelt("fomDato")
-        .required(MAA_FYLLES_UT),
-    })
-  ),
+  inntektskilder: array()
+    .of(
+      object().shape({
+        kildetype: string().required(MAA_FYLLES_UT),
+        arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
+        bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
+        fomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .required(MAA_FYLLES_UT),
+        tomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .erEtterDatofelt("fomDato")
+          .required(MAA_FYLLES_UT),
+      })
+    )
+    .min(1),
 });
 
 export default vurdering_trygdeavgift;
