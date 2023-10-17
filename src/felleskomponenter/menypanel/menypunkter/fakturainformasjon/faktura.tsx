@@ -6,6 +6,7 @@ import { Table } from "@navikt/ds-react";
 import moment from "moment";
 import KopierbarTekst from "../../../kopierbarTekst";
 import { FakturaLinjeContainer } from "./fakturalinjecontainer";
+import { formatterDatoTilNorsk } from "../../../../utils/dato";
 
 interface FakturaProps {
   faktura: any;
@@ -71,7 +72,7 @@ export const Faktura = ({ faktura }: FakturaProps) => {
       key={faktura.id}
       content={<FakturaLinjeContainer faktura={{ ...faktura }} fakturaNummer={nyesteFakturaStatus?.fakturaNummer} />}
     >
-      <Table.DataCell>{faktura.sistOppdatert}</Table.DataCell>
+      <Table.DataCell>{formatterDatoTilNorsk(faktura.sistOppdatert)}</Table.DataCell>
       <Table.DataCell>{mapPeriodeTilKvartalString(faktura.periodeFra, faktura.periodeTil)}</Table.DataCell>
       <Table.DataCell>
         <div className="faktura_status_wrapper">

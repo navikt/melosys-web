@@ -163,13 +163,17 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     if (redigerbart && aktivtSteg && !isValidating) {
       debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
     }
-  }, [stegErGyldig, isValidating, formValues?.inntektskilder?.length, formValues?.skatteforholdsperioder?.length]);
+  }, [
+    formIsValid,
+    aktivFeilmeldingType,
+    isValidating,
+    formValues?.inntektskilder?.length,
+    formValues?.skatteforholdsperioder?.length,
+  ]);
 
   useEffect(() => {
-    if (aktivtSteg) {
-      if (redigerbart && formIsValid) {
-        debouncedLagreTrygdeavgiftsgrunnlag(formValues, stegErGyldig);
-      } else {
+    if (redigerbart && aktivtSteg) {
+      if (!formIsValid) {
         formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
           trigger(`skatteforholdsperioder[${index}].fomDato`);
           trigger(`skatteforholdsperioder[${index}].tomDato`);
@@ -178,6 +182,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
           trigger(`inntektskilder[${index}].fomDato`);
           trigger(`inntektskilder[${index}].tomDato`);
         });
+      }
+      if (feil) {
+        debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
       }
     }
   }, [aktivtSteg, innvilgetMedlemskapsperiode]);
@@ -193,6 +200,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   };
 
   if (!aktivtSteg) return null;
+
+  const visFeilFraLagring = feil && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
 
   return (
     <div className="vurderingTrygdeavgift">
@@ -247,7 +256,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />
       )}
 
-      {feil && <Nav.AlertStripeFeil className="infomelding">{feil}</Nav.AlertStripeFeil>}
+      {visFeilFraLagring && <Nav.AlertStripeFeil className="infomelding">{feil}</Nav.AlertStripeFeil>}
 
       {!skalBeregneForelopigTrygdeavgift && stegErGyldig && (
         <Nav.AlertStripeInfo className="infomelding">Trygdeavgift skal ikke betales til NAV</Nav.AlertStripeInfo>
