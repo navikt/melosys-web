@@ -51,8 +51,8 @@ export const OppdaterRegisteropplysninger = ({
           className="oppdater-registeropplysninger__checkbox"
           name="inkluderSiste5Aar"
           control={control}
-          label="Inkl siste 5 år"
-          value="Inkl siste 5 år"
+          label="Inkl. siste 5 år"
+          value="Inkl. siste 5 år"
         />
       )}
       <span
