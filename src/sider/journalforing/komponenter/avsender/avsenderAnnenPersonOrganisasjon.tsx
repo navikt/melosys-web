@@ -105,18 +105,21 @@ const AvsenderAnnenPersonOrganisasjon = ({
             className="fullmakt"
             onChange={() => handleEndreFullmakt(FULLMEKTIG_SØKNAD)}
             label={<Nav.Typo.Normaltekst>Fullmektig for søknad</Nav.Typo.Normaltekst>}
+            checked={fullmakter?.includes(FULLMEKTIG_SØKNAD)}
           />
           {avsenderErOrganisasjon && (
             <Nav.Checkbox
               className="fullmakt"
               onChange={() => handleEndreFullmakt(FULLMEKTIG_ARBEIDSGIVER)}
               label={<Nav.Typo.Normaltekst>Fullmektig for arbeidsgiver</Nav.Typo.Normaltekst>}
+              checked={fullmakter?.includes(FULLMEKTIG_ARBEIDSGIVER)}
             />
           )}
           <Nav.Checkbox
             className="fullmakt"
             onChange={() => handleEndreFullmakt(FULLMEKTIG_TRYGDEAVGIFT)}
             label={<Nav.Typo.Normaltekst>Fullmektig for betaling av trygdeavgift</Nav.Typo.Normaltekst>}
+            checked={fullmakter?.includes(FULLMEKTIG_TRYGDEAVGIFT)}
           />
         </>
       )}
