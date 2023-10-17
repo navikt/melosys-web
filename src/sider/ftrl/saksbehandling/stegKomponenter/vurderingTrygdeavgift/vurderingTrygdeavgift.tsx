@@ -149,8 +149,20 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       .then(() => {
         setFeil(undefined);
       })
-      .catch((error) => setFeil(error.body?.message || error))
+      .catch((error) => setFeil(mapFeilmelding(error)))
       .finally(() => setLagrePending(false));
+  };
+
+  const mapFeilmelding = (error: any) => {
+    const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
+
+    const ingenGjeldendeSats = error.body?.feilkoder?.some((feilkode: string) =>
+      feilkode.startsWith("Ingen gjeldende sats finnes for perioden")
+    );
+
+    if (ingenGjeldendeSats) return feilmelding;
+
+    return error.body?.message || error;
   };
 
   const debouncedLagreTrygdeavgiftsgrunnlag = useCallback(
@@ -196,7 +208,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         setFeil(undefined);
         setTrygdeavgift(response);
       })
-      .catch((error) => setFeil(error.body?.message || error));
+      .catch((error) => setFeil(mapFeilmelding(error)));
   };
 
   if (!aktivtSteg) return null;
