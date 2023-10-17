@@ -122,26 +122,30 @@ const AvsenderAnnenPersonOrganisasjon = ({
       )}
 
       {kanHaKontaktperson && (
-        <div>
-          <Skjema.Input
-            feltNavn="fullmektigKontaktperson"
-            label={
-              <>
-                <Nav.Typo.Element>Kontaktperson</Nav.Typo.Element>
-                <Nav.Typo.Normaltekst>(valgfritt)</Nav.Typo.Normaltekst>
-              </>
-            }
-          />
-          <Skjema.Input
-            feltNavn="fullmektigKontaktOrgnr"
-            label={
-              <>
-                <Nav.Typo.Element>Org.nr.</Nav.Typo.Element>
-                <Nav.Typo.Normaltekst>(valgfritt)</Nav.Typo.Normaltekst>
-              </>
-            }
-          />
-        </div>
+        <Nav.Row className="kontaktperson_wrapper">
+          <Nav.Column xs="8">
+            <Skjema.Input
+              feltNavn="fullmektigKontaktperson"
+              label={
+                <>
+                  <Nav.Typo.Element>Kontaktperson</Nav.Typo.Element>
+                  <Nav.Typo.Normaltekst>(valgfritt)</Nav.Typo.Normaltekst>
+                </>
+              }
+            />
+          </Nav.Column>
+          <Nav.Column xs="4">
+            <Skjema.Input
+              feltNavn="fullmektigKontaktOrgnr"
+              label={
+                <>
+                  <Nav.Typo.Element>Org.nr.</Nav.Typo.Element>
+                  <Nav.Typo.Normaltekst>(valgfritt)</Nav.Typo.Normaltekst>
+                </>
+              }
+            />
+          </Nav.Column>
+        </Nav.Row>
       )}
     </div>
   );
