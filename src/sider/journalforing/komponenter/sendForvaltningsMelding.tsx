@@ -12,6 +12,8 @@ interface SendForvaltningsMeldingProps {
   settFeltInnhold: (felt: string, value: string | boolean) => void;
   harRegistrertAdresse?: boolean;
   representantRepresenterer?: string;
+  annenPersonOrgErFullmektig?: boolean;
+  fullmakter?: string[];
 }
 
 const SendForvaltningsMelding = ({
@@ -19,15 +21,20 @@ const SendForvaltningsMelding = ({
   settFeltInnhold,
   harRegistrertAdresse,
   representantRepresenterer,
+  annenPersonOrgErFullmektig,
+  fullmakter,
 }: SendForvaltningsMeldingProps) => {
-  const avsenderErFullmelktig = avsenderType === KV.AvsenderTyper.FULLMEKTIG;
   const representererBruker = [MKV.Koder.representerer.BRUKER, MKV.Koder.representerer.BEGGE].includes(
     representantRepresenterer
   );
+  const fullmektigForBruker = fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD);
+  const avsenderErFullmektigForBruker =
+    (avsenderType === KV.AvsenderTyper.FULLMEKTIG && representererBruker) ||
+    (avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ORG && annenPersonOrgErFullmektig && fullmektigForBruker);
 
   useEffect(
     () => () => {
-      if (!avsenderErFullmelktig) {
+      if (avsenderType !== KV.AvsenderTyper.FULLMEKTIG) {
         settFeltInnhold("representantKontaktPerson", "");
       }
     },
@@ -50,7 +57,7 @@ const SendForvaltningsMelding = ({
           label="Nei, jeg vil sende melding senere eller behandle saken innen kort tid"
           value
         />
-        {avsenderErFullmelktig && (
+        {avsenderType === KV.AvsenderTyper.FULLMEKTIG && (
           <Fragment>
             <Nav.Typo.Element>
               Oppgi kontaktperson hos fullmektig som skal motta meldingen hvis dette er oppgitt
@@ -65,8 +72,8 @@ const SendForvaltningsMelding = ({
           <Nav.Typo.Element>Melding kan ikke sendes automatisk pga. manglende eller ugyldig adresse</Nav.Typo.Element>
           <ul>
             <li>
-              {avsenderErFullmelktig && representererBruker ? "Fullmektig" : "Bruker"} må enten registrere adresse i
-              Folkeregisteret eller kontaktadresse via nav.no.
+              {avsenderErFullmektigForBruker ? "Fullmektig" : "Bruker"} må enten registrere adresse i Folkeregisteret
+              eller kontaktadresse via nav.no.
             </li>
           </ul>
         </Nav.AlertStripe>
