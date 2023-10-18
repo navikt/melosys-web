@@ -19,7 +19,7 @@ import moment from "moment";
 import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
 
 const gyldigeFakturaStatuser = [
-  FakturaStatus.BESTILLT,
+  FakturaStatus.BESTILT,
   FakturaStatus.FEIL,
   FakturaStatus.MANGLENDE_INNBETALING,
   FakturaStatus.INNE_I_OEBS,
