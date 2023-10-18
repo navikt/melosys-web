@@ -33,6 +33,14 @@
     padding: 1rem;
     border-radius: 2px;
     background: @navLysGra;
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+
+    & > * {
+      min-width: 7em;
+      white-space: break-spaces;
+    }
 
     &__label {
       margin-bottom: 0.5rem;
@@ -50,11 +58,11 @@
       display: flex;
 
       > :first-child {
-        width: 50%;
+        min-width: 7rem;
         margin-right: 0.5rem;
       }
       > :last-child {
-        width: 50%;
+        min-width: 7rem;
         margin-left: 0.5rem;
       }
     }
@@ -85,6 +93,18 @@
   }
   .periode_tabell {
     margin: 1em 0;
+    overflow-x: auto;
+    display: block;
+
+    .header_row {
+      white-space: nowrap;
+    }
+
+    .border_top {
+      > :first-child {
+        white-space: nowrap;
+      }
+    }
   }
   .alertstripe_feilmelding,
   .infomelding {

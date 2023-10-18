@@ -9,7 +9,7 @@ const TrygdeavgiftsperioderTabell = ({ perioder }: { perioder: Trygdeavgiftsperi
 
   return (
     <Table size="small" className="periode_tabell">
-      <Table.Header>
+      <Table.Header className={"header_row"}>
         <Table.Row>
           <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
           <Table.HeaderCell scope="col">Dekning</Table.HeaderCell>

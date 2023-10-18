@@ -64,11 +64,13 @@ export const Inntektskilder = ({
       />
       <div className="inntektskilder">
         <Nav.Row className="inntektskilder__overskriftrad">
-          <Nav.Column xs="3" className="flex__kolonne">
+          <Nav.Column xs="2">
             <Nav.Typo.Element>Fra og med</Nav.Typo.Element>
+          </Nav.Column>
+          <Nav.Column xs="2">
             <Nav.Typo.Element>Til og med</Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column xs="4">
+          <Nav.Column xs="3">
             <Nav.Typo.Element>Inntektskilde</Nav.Typo.Element>
           </Nav.Column>
           <Nav.Column xs="2">
@@ -98,8 +100,10 @@ export const Inntektskilder = ({
 
           return (
             <Nav.Row key={fields[index].id}>
-              <Nav.Column xs="3" className="flex__kolonne">
+              <Nav.Column xs="2">
                 <Forms.Datovelger name={`inntektskilder[${index}].fomDato`} disabled={!redigerbart} control={control} />
+              </Nav.Column>
+              <Nav.Column xs="2">
                 <Forms.Datovelger
                   name={`inntektskilder[${index}].tomDato`}
                   disabled={!redigerbart}
@@ -108,7 +112,7 @@ export const Inntektskilder = ({
                 />
               </Nav.Column>
 
-              <Nav.Column xs="4">
+              <Nav.Column xs="3">
                 <Forms.Select
                   label=""
                   name={`inntektskilder[${index}].kildetype`}
@@ -125,7 +129,7 @@ export const Inntektskilder = ({
                 </Forms.Select>
               </Nav.Column>
 
-              <Nav.Column xs="2">
+              <Nav.Column className={"radioKnapper"} xs="2">
                 {visArbAvgBetales && (
                   <>
                     {skalFylleInnArbAvgBetales ? (
