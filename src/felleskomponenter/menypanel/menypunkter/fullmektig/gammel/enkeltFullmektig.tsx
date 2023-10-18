@@ -1,17 +1,17 @@
 import { MouseEvent, useEffect, useState } from "react";
 import classNames from "classnames";
 
-import * as Api from "../../../../services/api";
-import * as Nav from "../../../../navFrontend";
+import * as Api from "../../../../../services/api";
+import * as Nav from "../../../../../navFrontend";
 
-import * as Utils from "../../../../utils";
+import * as Utils from "../../../../../utils";
 import FullmektigRedigerer from "./fullmektigRedigerer";
 import FullmektigRedigeringUtfort from "./fullmektigRedigeringUtfort";
-import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../editerbartElement";
-import { useKontaktOpplysninger } from "../kontaktopplysninger";
+import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../../editerbartElement";
+import { useKontaktOpplysninger } from "../../kontaktopplysninger";
 
-import { hentBostedsadresseForPerson } from "../../../../graphql/adresse";
-import { Personopplysninger } from "../../../../graphql";
+import { hentBostedsadresseForPerson } from "../../../../../graphql/adresse";
+import { Personopplysninger } from "../../../../../graphql";
 
 interface EnkeltFullmektigProps {
   className?: string;

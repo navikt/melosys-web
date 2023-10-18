@@ -2,17 +2,17 @@ import { useState, useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
-import MKV from "../../../../melosyskodeverk";
+import MKV from "../../../../../melosyskodeverk";
 
-import * as Mui from "../../../ui";
-import * as Api from "../../../../services/api";
-import * as Hooks from "../../../../hooks";
-import * as Ikoner from "../../../../resources/images";
+import * as Mui from "../../../../ui";
+import * as Api from "../../../../../services/api";
+import * as Hooks from "../../../../../hooks";
+import * as Ikoner from "../../../../../resources/images";
 
-import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 
 import EnkeltFullmektig from "./enkeltFullmektig";
-import { isApiError } from "../../../../services";
+import { isApiError } from "../../../../../services";
 
 import "./fullmektige.css";
 

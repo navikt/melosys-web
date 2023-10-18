@@ -2,7 +2,7 @@ import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Etiketter from "../../etiketter";
 
-import Fullmektige from "./fullmektige";
+import FullmektigeGammel from "./gammel/fullmektige";
 
 import "./fullmektigcontainer.css";
 
@@ -19,7 +19,7 @@ const Fullmektig = ({ redigerbart, visArbeidsforholdRolleEtiketter }: Fullmektig
       </Nav.Typo.Systemtittel>
       {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
     </div>
-    <Fullmektige redigerbart={redigerbart} />
+    <FullmektigeGammel redigerbart={redigerbart} />
   </div>
 );
 

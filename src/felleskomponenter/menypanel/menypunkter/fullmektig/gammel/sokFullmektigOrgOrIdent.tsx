@@ -1,12 +1,12 @@
 import { useCallback, useState } from "react";
 
-import * as Utils from "../../../../utils";
-import * as Nav from "../../../../navFrontend";
-import * as Api from "../../../../services/api";
+import * as Utils from "../../../../../utils";
+import * as Nav from "../../../../../navFrontend";
+import * as Api from "../../../../../services/api";
 
-import { isApiError } from "../../../../services";
-import { hentBostedsadresseForPerson } from "../../../../graphql/adresse";
-import { EnkelFellesInputFnrDnrOrgnrSaksnr } from "../../../enkelFellesInputFnrDnrOrgnrSaksnr";
+import { isApiError } from "../../../../../services";
+import { hentBostedsadresseForPerson } from "../../../../../graphql/adresse";
+import { EnkelFellesInputFnrDnrOrgnrSaksnr } from "../../../../enkelFellesInputFnrDnrOrgnrSaksnr";
 
 interface SokFullmektigOrgProps {
   onIdentFunnet: (orgnr: string, personIdent: string) => Promise<any>;
