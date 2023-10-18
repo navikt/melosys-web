@@ -49,6 +49,8 @@ type OppsummeringProps = PropsFromRedux & {
   lovvalgsland?: KTObject;
   lovvalgsperiodeFom?: string;
   lovvalgsperiodeTom?: string;
+  medlemskapsperiodeFom?: string;
+  medlemskapsperiodeTom?: string;
   mottatteOpplysningerPeriodeFom: string;
   mottatteOpplysningerPeriodeTom: string;
   className?: string;
@@ -62,6 +64,8 @@ const Oppsummering = ({
   lovvalgsland,
   lovvalgsperiodeFom = "",
   lovvalgsperiodeTom = "",
+  medlemskapsperiodeFom = "",
+  medlemskapsperiodeTom = "",
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
   className,
@@ -187,6 +191,9 @@ const Oppsummering = ({
     col1.push(["Land", landTilSetning(arbeidsland)]);
     if (erFTRL && !erIngenFlyt) {
       col1.push(["Trygdedekning", KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, trygdedekning)]);
+      if (medlemskapsperiodeFom || medlemskapsperiodeTom) {
+        col1.push(["Medlemskapsperiode", `${medlemskapsperiodeFom} - ${medlemskapsperiodeTom}`]);
+      }
     }
     return col1;
   };
