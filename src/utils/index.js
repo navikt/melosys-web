@@ -2,7 +2,6 @@ import {
   capitalize,
   isFunction,
   isNil,
-  isNumber,
   isUndefined,
   isString,
   isEmpty,
@@ -18,7 +17,6 @@ import {
   has,
   merge,
   isEqual,
-  throttle,
 } from "lodash";
 import { v4 as uuid } from "uuid";
 
