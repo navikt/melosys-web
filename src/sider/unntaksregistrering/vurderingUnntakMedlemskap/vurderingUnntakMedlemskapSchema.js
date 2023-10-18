@@ -4,6 +4,8 @@ import * as Utils from "../../../utils";
 import MKV from "../../../melosyskodeverk";
 
 const { MAA_FYLLES_UT, TIDLIGERE_ENN_FOM } = KV.Feilmeldinger;
+const { USA_ART5_9 } = MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us;
+const { CAN_ART11 } = MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca;
 
 const erIkkeInnvilgetMedÅpenSluttDatoGodkjentUtfall = {
   name: "Ikke godkjenn åpen sluttdato for GODKJENT utfall",
@@ -29,6 +31,10 @@ const vurdering_unntak_medlemskap = object().shape({
     is: (utfall) =>
       utfall === MKV.Koder.utfallregistreringunntak.GODKJENT ||
       utfall === MKV.Koder.utfallregistreringunntak.DELVIS_GODKJENT,
+    then: string().required(MAA_FYLLES_UT),
+  }),
+  trygdedekning: string().when("bestemmelse", {
+    is: (bestemmelse) => bestemmelse === CAN_ART11 || bestemmelse === USA_ART5_9,
     then: string().required(MAA_FYLLES_UT),
   }),
 });
