@@ -186,9 +186,7 @@ const Oppsummering = ({
       col1.push(["Lovvalgsperiode", lovvalgsperiode]);
     }
     if (erFTRL && !erIngenFlyt) {
-      if (medlemskapsperiodeFom || medlemskapsperiodeTom) {
-        col1.push(["Medlemskapsperiode", `${medlemskapsperiodeFom} - ${medlemskapsperiodeTom}`]);
-      }
+      col1.push(["Medlemskapsperiode", `${medlemskapsperiodeFom} - ${medlemskapsperiodeTom}`]);
     }
     col1.push(["Land", landTilSetning(arbeidsland)]);
     return col1;
