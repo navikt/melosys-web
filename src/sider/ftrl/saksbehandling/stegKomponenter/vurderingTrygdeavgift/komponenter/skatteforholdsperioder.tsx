@@ -9,6 +9,7 @@ import * as Ikoner from "../../../../../../resources/images";
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import { FieldArrayProps, FormValuesProps, Skatteforhold } from "./types";
 import * as Utils from "../../../../../../utils";
+import "./skatteforholdsperioder.css";
 
 interface SkatteforholdsperioderProps {
   formValues: FormValuesProps;
@@ -54,6 +55,7 @@ export const Skatteforholdsperioder = ({
             <Nav.Row key={fields[index].id}>
               <Nav.Column xs="3">
                 <Forms.Datovelger
+                  className={"skatteforholdsperioder__datovelger"}
                   name={`skatteforholdsperioder[${index}].fomDato`}
                   disabled={!redigerbart}
                   control={control}
@@ -62,6 +64,7 @@ export const Skatteforholdsperioder = ({
 
               <Nav.Column xs="3">
                 <Forms.Datovelger
+                  className={"skatteforholdsperioder__datovelger"}
                   name={`skatteforholdsperioder[${index}].tomDato`}
                   disabled={!redigerbart}
                   control={control}
