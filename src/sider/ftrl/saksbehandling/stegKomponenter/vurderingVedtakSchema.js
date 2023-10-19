@@ -3,9 +3,8 @@
 import { object, string } from "yup";
 import * as KV from "../../../../kodeverk";
 import { FRITEKST_VALG } from "../../../../kodeverk/koder";
-import { MAA_FYLLES_UT } from "../../../../kodeverk/feilmeldinger";
 
-const { DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN } = KV.Feilmeldinger;
+const { DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN, MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 const vurdering_vedtak = object().shape({
   begrunnelseFritekst: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),

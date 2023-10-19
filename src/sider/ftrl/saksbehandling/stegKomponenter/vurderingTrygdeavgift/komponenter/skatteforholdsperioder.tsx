@@ -54,7 +54,7 @@ export const Skatteforholdsperioder = ({
             <Nav.Row key={fields[index].id}>
               <Nav.Column xs="3">
                 <Forms.Datovelger
-                  name={`skatteforholdsperioder.${index}.fomDato`}
+                  name={`skatteforholdsperioder[${index}].fomDato`}
                   disabled={!redigerbart}
                   control={control}
                 />
@@ -62,7 +62,7 @@ export const Skatteforholdsperioder = ({
 
               <Nav.Column xs="3">
                 <Forms.Datovelger
-                  name={`skatteforholdsperioder.${index}.tomDato`}
+                  name={`skatteforholdsperioder[${index}].tomDato`}
                   disabled={!redigerbart}
                   control={control}
                   minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato)}
@@ -72,7 +72,7 @@ export const Skatteforholdsperioder = ({
               <Nav.Column xs="5">
                 <Forms.Radio
                   label="Ja"
-                  name={`skatteforholdsperioder.${index}.skatteplikttype`}
+                  name={`skatteforholdsperioder[${index}].skatteplikttype`}
                   control={control}
                   value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}
                   disabled={!redigerbart}
@@ -80,7 +80,7 @@ export const Skatteforholdsperioder = ({
                 />
                 <Forms.Radio
                   label="Nei"
-                  name={`skatteforholdsperioder.${index}.skatteplikttype`}
+                  name={`skatteforholdsperioder[${index}].skatteplikttype`}
                   control={control}
                   value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}
                   disabled={!redigerbart}

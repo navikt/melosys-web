@@ -2,7 +2,7 @@
 import { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { autofill, change, getFormSyncErrors, touch, isValid, getFormValues, SubmissionError } from "redux-form";
+import { autofill, change, getFormSyncErrors, getFormValues, isValid, SubmissionError, touch } from "redux-form";
 import PT from "prop-types";
 
 import MKV from "../../melosyskodeverk";
@@ -35,6 +35,7 @@ class Journalforing extends Component {
     feilmeldinger: [],
     submitSpinner: false,
   };
+
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
     await this.props.hentJournalOppgave(journalpostID);
@@ -69,10 +70,19 @@ class Journalforing extends Component {
     });
   };
 
-  mapAvsenderType = (avsenderType) => {
-    if (avsenderType === KV.AvsenderTyper.ANNEN) {
+  mapAvsenderType = (avsenderType, avsenderID) => {
+    if (avsenderType === KV.AvsenderTyper.ANNEN || avsenderType === KV.AvsenderTyper.FRITEKST) {
       return null;
     }
+    if (avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ORG) {
+      if (Utils.organisasjon.erOrgnrGyldig(avsenderID)) {
+        return MKV.Koder.avsendertyper.ORGANISASJON;
+      }
+      if (Utils.person.erGyldigFnrEllerDnr(avsenderID)) {
+        return MKV.Koder.avsendertyper.PERSON;
+      }
+    }
+
     return this.organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType;
   };
 
@@ -123,7 +133,7 @@ class Journalforing extends Component {
       vedlegg,
       skalTilordnes,
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
-      avsenderType: this.mapAvsenderType(avsenderType),
+      avsenderType: this.mapAvsenderType(avsenderType, avsenderID),
     };
 
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT) {
@@ -172,6 +182,10 @@ class Journalforing extends Component {
       representantID,
       representantKontaktPerson,
       representantRepresenterer,
+      fullmektigID,
+      fullmektigKontaktperson,
+      fullmektigKontaktOrgnr,
+      fullmakter,
       sakstype,
       sakstema,
       opprettnysak_behandlingstema,
@@ -204,6 +218,10 @@ class Journalforing extends Component {
       representantID,
       representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
       representererKode: representantRepresenterer,
+      fullmektigID,
+      fullmektigKontaktperson,
+      fullmektigKontaktOrgnr,
+      fullmakter,
       ikkeSendForvaltingsmelding,
       fagsak,
     };

@@ -67,68 +67,15 @@ exports[`oppdaterRegisteropplysninger > Skal vise alternativ for å se registero
         id="123"
         name="inkluderSiste5Aar"
         type="checkbox"
-        value="Inkl siste 5 år"
+        value="Inkl. siste 5 år"
       />
       <label
         class="skjemaelement__label"
         for="123"
       >
-        Inkl siste 5 år
+        Inkl. siste 5 år
       </label>
     </div>
-    <span
-      class="oppdater-registeropplysninger__oppdateringsknapp"
-      role="button"
-      tabindex="0"
-    >
-      <svg
-        fill="none"
-        height="18"
-        viewBox="0 0 18 18"
-        width="18"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M1 7.45312L2.97548 11.3578L5.24725 7.74669"
-          stroke="#0067C5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M17.0002 11.5004L15.0254 7.5957L12.7529 11.2059"
-          stroke="#0067C5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M15.0003 7.62988C15.5914 11.7774 13.3891 15.843 10.3866 16.7839C8.29272 17.4416 6.19319 16.5581 4.76562 14.6904"
-          stroke="#0067C5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M2.97953 11.3342C2.04814 6.73983 4.37591 2.23199 7.6138 1.21676C9.85084 0.513914 12.0907 1.56678 13.514 3.70168"
-          stroke="#0067C5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-      Oppdater registeropplysninger
-    </span>
-    <span
-      class="oppdater-registeropplysninger__sistOppdatert"
-    >
-       (sist oppdatert 2020-08-23)
-    </span>
-  </div>
-</div>
-`;
-
-exports[`oppdaterRegisteropplysninger > snapshot test 1`] = `
-<div>
-  <div
-    class="panel oppdater-registeropplysninger panel--border"
-  >
     <span
       class="oppdater-registeropplysninger__oppdateringsknapp"
       role="button"

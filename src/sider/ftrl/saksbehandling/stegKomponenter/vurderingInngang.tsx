@@ -179,8 +179,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           className="inkluderSiste5Aar"
           name="inkluderSiste5Aar"
           control={control}
-          label="Hent registeropplysninger for 5 år"
-          value="Inkluder siste 5 år"
+          label="Hent registeropplysninger for siste 5 år"
+          value="Hent registeropplysninger for siste 5 år"
           disabled={!redigerbart}
         />
       </Nav.Row>

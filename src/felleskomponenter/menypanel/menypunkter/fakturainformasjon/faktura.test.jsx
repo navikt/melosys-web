@@ -20,7 +20,7 @@ describe("Faktura", () => {
         id: 1,
         periodeFra: "2023-04-01",
         periodeTil: "2023-08-31",
-        status: "BESTILLT",
+        status: "BESTILT",
       },
     };
   });

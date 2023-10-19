@@ -27,6 +27,7 @@ import JournalforingSchema from "./journalforingSchema";
 import "./journalforingform.css";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
+const { FULLMEKTIG, ANNEN_PERSON_ORG } = KV.AvsenderTyper;
 
 const skalViseForvaltningsmelding = (formValues) =>
   formValues.saksnummer === "-1" &&
@@ -56,49 +57,84 @@ export const JournalforingForm = ({
   );
   const [harRegistrertAdresse, setHarRegistrertAdresse] = useState(undefined);
 
-  const { brukerID, avsenderType, representantID, representantRepresenterer } = formValues;
+  const {
+    brukerID,
+    avsenderType,
+    representantID,
+    representantRepresenterer,
+    fullmektigID,
+    fullmakter,
+    annenPersonOrgErFullmektig,
+  } = formValues;
+
+  const sjekkAdresse = () => {
+    if (!visForvaltningsmelding || !avsenderType || (!brukerID && !representantID && !fullmektigID)) return;
+
+    let brukerIDPerson = "";
+    let orgnr = "";
+
+    const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
+    const representererBruker = [MKV.Koder.representerer.BRUKER, MKV.Koder.representerer.BEGGE].includes(
+      representantRepresenterer
+    );
+    const fullmektigForBruker = fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD);
+
+    if (avsenderType === FULLMEKTIG && representererBruker) {
+      const fullmektigErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(representantID);
+      const fullmektigErGyldigOrgnr = Utils.organisasjon.erOrgnrGyldig(representantID);
+
+      if (fullmektigErGyldigFnrDnr) {
+        brukerIDPerson = representantID;
+      } else if (fullmektigErGyldigOrgnr) {
+        orgnr = representantID;
+      } else {
+        return;
+      }
+    } else if (avsenderType === ANNEN_PERSON_ORG && annenPersonOrgErFullmektig && fullmektigForBruker) {
+      const fullmektigErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(fullmektigID);
+      const fullmektigErGyldigOrgnr = Utils.organisasjon.erOrgnrGyldig(fullmektigID);
+
+      if (fullmektigErGyldigFnrDnr) {
+        brukerIDPerson = fullmektigID;
+      } else if (fullmektigErGyldigOrgnr) {
+        orgnr = fullmektigID;
+      } else {
+        return;
+      }
+    } else if (gyldigBrukerFnrEllerDnr) {
+      brukerIDPerson = brukerID;
+    } else {
+      return;
+    }
+
+    Api.Kontroll.kontrollerAdresse({
+      brukerID: brukerIDPerson,
+      orgnr,
+    })
+      .then((res) => {
+        const adresseFunnet = !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
+        setHarRegistrertAdresse(adresseFunnet);
+        settFeltInnhold("ikkeSendForvaltingsmelding", !adresseFunnet);
+      })
+      .catch(() => setHarRegistrertAdresse(false));
+  };
 
   useEffect(() => {
     settFeltInnhold("ikkeSendForvaltingsmelding", !visForvaltningsmelding);
   }, [visForvaltningsmelding]);
 
   useEffect(() => {
-    if (!visForvaltningsmelding) return;
-    if ((brukerID || representantID) && avsenderType) {
-      const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
-      const gyldigFullmektigFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(representantID);
-      const gyldigOrganisasjonsNummer = Utils.organisasjon.erOrgnrGyldig(representantID);
-      const representererBruker = [MKV.Koder.representerer.BRUKER, MKV.Koder.representerer.BEGGE].includes(
-        representantRepresenterer
-      );
-      let brukerIDPerson = "";
-      let orgnr = "";
-
-      if (avsenderType === KV.AvsenderTyper.PERSON && gyldigBrukerFnrEllerDnr) {
-        brukerIDPerson = brukerID;
-      } else if (
-        avsenderType === KV.AvsenderTyper.FULLMEKTIG &&
-        (gyldigFullmektigFnrEllerDnr || gyldigOrganisasjonsNummer)
-      ) {
-        if (gyldigFullmektigFnrEllerDnr) brukerIDPerson = representantID;
-        if (gyldigOrganisasjonsNummer && representererBruker) orgnr = representantID;
-        if (gyldigOrganisasjonsNummer && !representererBruker) brukerIDPerson = brukerID;
-      } else {
-        return;
-      }
-
-      Api.Kontroll.kontrollerAdresse({
-        brukerID: brukerIDPerson,
-        orgnr,
-      })
-        .then((res) => {
-          const adresseFunnet = !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
-          setHarRegistrertAdresse(adresseFunnet);
-          settFeltInnhold("ikkeSendForvaltingsmelding", !adresseFunnet);
-        })
-        .catch(() => setHarRegistrertAdresse(false));
-    }
-  }, [brukerID, avsenderType, representantID, representantRepresenterer, visForvaltningsmelding]);
+    sjekkAdresse();
+  }, [
+    brukerID,
+    avsenderType,
+    representantID,
+    representantRepresenterer,
+    visForvaltningsmelding,
+    fullmektigID,
+    fullmakter,
+    annenPersonOrgErFullmektig,
+  ]);
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
@@ -126,10 +162,12 @@ export const JournalforingForm = ({
           tittel="Melding om saksbehandlingstid"
           innhold={
             <SendForvaltningsMelding
-              avsenderType={formValues.avsenderType}
+              avsenderType={avsenderType}
               settFeltInnhold={settFeltInnhold}
               harRegistrertAdresse={harRegistrertAdresse}
-              representantRepresenterer={formValues.representantRepresenterer}
+              representantRepresenterer={representantRepresenterer}
+              fullmakter={fullmakter}
+              annenPersonOrgErFullmektig={annenPersonOrgErFullmektig}
             />
           }
         />
@@ -200,6 +238,11 @@ const mapStateToProps = (state) => ({
     arbeidsgiverID: null,
     representantID: null,
     representantRepresenterer: null,
+    fullmektigID: null,
+    fullmektigKontaktperson: null,
+    fullmektigKontaktOrgnr: null,
+    fullmakter: [],
+    annenPersonOrgErFullmektig: false,
     mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
     hoveddokument: {
       tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || "Uten tittel",

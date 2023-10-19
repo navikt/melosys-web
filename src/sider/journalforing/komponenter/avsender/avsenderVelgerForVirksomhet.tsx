@@ -34,11 +34,11 @@ export const AvsenderVelgerForVirksomhet = ({
       />
       <Skjema.Radio
         feltNavn="avsenderType"
-        label="Annen"
-        value={KV.AvsenderTyper.ANNEN}
+        label="Fritekst"
+        value={KV.AvsenderTyper.FRITEKST}
         className="avsendervelger__radio"
       />
-      {formValues.avsenderType === KV.AvsenderTyper.ANNEN && (
+      {formValues.avsenderType === KV.AvsenderTyper.FRITEKST && (
         <Skjema.Input label="" feltNavn="avsenderNavn" bredde="fullbredde" />
       )}
     </Skjema.RadioGruppe>

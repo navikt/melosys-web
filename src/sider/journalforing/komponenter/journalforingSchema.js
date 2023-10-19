@@ -31,8 +31,9 @@ const DU_MA_LAGRE_TITTEL_VEDLEGG = { melding: "Du må lagre tittel på vedlegg" 
 const DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT = { melding: "Du må lagre tittel på hoveddokument" };
 const VELG_ETT_LAND_UTENLANDSK_TRYGDEMYNDIGHET = { melding: "Velg land til avsender: utenlandsk trygdemyndighet" };
 const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
-const OPPGI_ANNEN_AVSENDER = { melding: "Oppgi avsender" };
+const OPPGI_AVSENDER = { melding: "Oppgi avsender" };
 const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
+const VELG_MINST_EN_FULLMAKT = { melding: "Velg minst én fullmakt for fullmektig" };
 
 const lagMelding = (felt) => ({ melding: `${felt} må fylles ut` });
 
@@ -54,11 +55,12 @@ const arbeidsgiverOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) 
   return avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && !erAvsenderPreutfylt;
 };
 
-const fullmektigOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
-  return avsenderType === KV.AvsenderTyper.FULLMEKTIG && !erAvsenderPreutfylt;
+const fullmektigOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt, annenPersonOrgErFullmektig) => {
+  return (avsenderType === KV.AvsenderTyper.FULLMEKTIG || annenPersonOrgErFullmektig) && !erAvsenderPreutfylt;
 };
 
-const erAnnenAvsender = (avsenderType) => avsenderType === KV.AvsenderTyper.ANNEN;
+const erFritekstEllerAnnenAvsender = (avsenderType) =>
+  avsenderType === KV.AvsenderTyper.ANNEN || avsenderType === KV.AvsenderTyper.FRITEKST;
 
 const erIkkeUnderRedigering = (feilmelding) => ({
   name: "erIkkeUnderRedigering",
@@ -110,6 +112,7 @@ const journalforing = object().shape({
     })
     .nullable(),
   virksomhetNavn: string().nullable(),
+
   avsenderID: string()
     .nullable()
     .when(["avsenderType", "$erAvsenderPreutfylt"], {
@@ -123,7 +126,7 @@ const journalforing = object().shape({
           then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR).nullable(),
         }),
     })
-    .when(["avsenderType", "$erAvsenderPreutfylt"], {
+    .when(["avsenderType", "$erAvsenderPreutfylt", "annenPersonOrgErFullmektig"], {
       is: fullmektigOgIkkePreutfyltAvsender,
       then: string()
         .nullable()
@@ -137,16 +140,20 @@ const journalforing = object().shape({
         }),
     })
     .when(["journalforingGjelder", "avsenderType"], {
-      is: (journalføringGjelder, avsenderType) => erVirksomhet(journalføringGjelder) && !erAnnenAvsender(avsenderType),
+      is: (journalføringGjelder, avsenderType) =>
+        erVirksomhet(journalføringGjelder) && !erFritekstEllerAnnenAvsender(avsenderType),
       then: string().required().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .nullable(),
   avsenderNavn: string().when("avsenderType", {
-    is: erAnnenAvsender,
-    then: string().required(OPPGI_ANNEN_AVSENDER).nullable(),
+    is: erFritekstEllerAnnenAvsender,
+    then: string().required(OPPGI_AVSENDER).nullable(),
     otherwise: string().required(FINNER_IKKE_NAVN_PA_AVSENDER).nullable(),
   }),
-  hoveddokument,
+  avsenderType: string().when("$erAvsenderPreutfylt", {
+    is: false,
+    then: string().ensure().required(VELG_EN_AVSENDER),
+  }),
   representantID: lazy((value) =>
     Utils._isEmpty(value)
       ? string().nullable()
@@ -161,59 +168,6 @@ const journalforing = object().shape({
           })
           .nullable()
   ),
-  saksnummer: string().when("journalforingHensikt", {
-    is: (hensikt) =>
-      hensikt === Konstanter.JOURNALFORING_HENSIKT.KNYTT ||
-      hensikt === Konstanter.JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE,
-    then: string().required(VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT),
-  }),
-  journalforingPeriodeFraOgMed: string()
-    .when(
-      ["journalforingHensikt", "sakstype", "sakstema", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
-      {
-        is: kreverPeriode,
-        then: string().erGyldigDato().required(MAA_FYLLES_UT).nullable(),
-      }
-    )
-    .nullable(),
-  journalforingPeriodeTilOgMed: lazy((value) =>
-    !value
-      ? string().ensure()
-      : string().when(
-          ["journalforingHensikt", "sakstype", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
-          {
-            is: kreverPeriode,
-            then: string().erGyldigDato().required(MAA_FYLLES_UT),
-          }
-        )
-  ),
-  journalforingSoknadsland: array()
-    .of(string())
-    .ensure()
-    .when(
-      [
-        "journalforingHensikt",
-        "sakstype",
-        "sakstema",
-        "opprettnysak_behandlingstema",
-        "opprettnysak_behandlingstype",
-        "journalforingSoknadslandUkjenteEllerAlleEosLand",
-      ],
-      {
-        is: kreverLand,
-        then: array().when("opprettnysak_behandlingstema", {
-          is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-          then: array().min(2, { _error: VELG_MINST_TO_LAND }),
-          otherwise: array().min(1, { _error: VELG_MINST_ETT_LAND }),
-        }),
-      }
-    ),
-  utenlandskTrygdemyndighetLandkode: string()
-    .when("avsenderType", {
-      is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
-      then: string().required(VELG_ETT_LAND_UTENLANDSK_TRYGDEMYNDIGHET).nullable(),
-    })
-    .nullable(),
   representantRepresenterer: string()
     .when(["avsenderType", "representantNavn"], {
       is: (avsenderType, representantNavn) =>
@@ -221,11 +175,38 @@ const journalforing = object().shape({
       then: string().required(VELG_REPRESENTERER).nullable(),
     })
     .nullable(),
-  avsenderType: string().when("$erAvsenderPreutfylt", {
-    is: false,
-    then: string().ensure().required(VELG_EN_AVSENDER),
-  }),
+  fullmektigID: string().nullable(),
+  fullmektigKontaktperson: string().nullable(),
+  fullmektigKontaktOrgnr: string()
+    .nullable()
+    .test(
+      "gyldig orgnr hvis den er fylt inn",
+      SKRIV_INN_GYLDIG_ORGNR,
+      (orgnr) => Utils._isEmpty(orgnr) || Utils.organisasjon.erOrgnrGyldig(orgnr)
+    ),
+  fullmakter: array()
+    .of(string())
+    .ensure()
+    .when(["annenPersonOrgErFullmektig"], {
+      is: true,
+      then: array().min(1, { _error: VELG_MINST_EN_FULLMAKT }),
+    }),
+  annenPersonOrgErFullmektig: boolean().nullable(),
+  utenlandskTrygdemyndighetLandkode: string()
+    .when("avsenderType", {
+      is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
+      then: string().required(VELG_ETT_LAND_UTENLANDSK_TRYGDEMYNDIGHET).nullable(),
+    })
+    .nullable(),
+
   mottattDato: string().erGyldigDato().required(MAA_FYLLES_UT),
+
+  saksnummer: string().when("journalforingHensikt", {
+    is: (hensikt) =>
+      hensikt === Konstanter.JOURNALFORING_HENSIKT.KNYTT ||
+      hensikt === Konstanter.JOURNALFORING_HENSIKT.ANDREGANGSBEHANDLE,
+    then: string().required(VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT),
+  }),
   sakstype: string()
     .nullable()
     .when("journalforingHensikt", {
@@ -268,8 +249,50 @@ const journalforing = object().shape({
         opprettBehandling,
       then: string().required(lagMelding("Behandlingstype")).nullable(),
     }),
+  journalforingPeriodeFraOgMed: string()
+    .when(
+      ["journalforingHensikt", "sakstype", "sakstema", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
+      {
+        is: kreverPeriode,
+        then: string().erGyldigDato().required(MAA_FYLLES_UT).nullable(),
+      }
+    )
+    .nullable(),
+  journalforingPeriodeTilOgMed: lazy((value) =>
+    !value
+      ? string().ensure()
+      : string().when(
+          ["journalforingHensikt", "sakstype", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
+          {
+            is: kreverPeriode,
+            then: string().erGyldigDato().required(MAA_FYLLES_UT),
+          }
+        )
+  ),
+  journalforingSoknadsland: array()
+    .of(string())
+    .ensure()
+    .when(
+      [
+        "journalforingHensikt",
+        "sakstype",
+        "sakstema",
+        "opprettnysak_behandlingstema",
+        "opprettnysak_behandlingstype",
+        "journalforingSoknadslandUkjenteEllerAlleEosLand",
+      ],
+      {
+        is: kreverLand,
+        then: array().when("opprettnysak_behandlingstema", {
+          is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+          then: array().min(2, { _error: VELG_MINST_TO_LAND }),
+          otherwise: array().min(1, { _error: VELG_MINST_ETT_LAND }),
+        }),
+      }
+    ),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
+  hoveddokument,
   journalforingHensikt: string(),
   representantNavn: string().nullable(),
   journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),

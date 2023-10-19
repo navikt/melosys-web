@@ -11,7 +11,7 @@ import * as MPT from "../../../proptypes";
 import * as Ikoner from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 
-import AvsenderVelgerForBruker, { AvsenderVelgerForVirksomhet } from "./avsender";
+import { AvsenderVelgerForBruker, AvsenderVelgerForBrukerGammel, AvsenderVelgerForVirksomhet } from "./avsender";
 import LenkeListeVelger from "./lenkelistevelger";
 import JournalforingGjelder from "./journalforingGjelder";
 import Komponent from "./komponent";
@@ -22,6 +22,8 @@ import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 
 import "./informasjon.css";
+import { FeatureToggle } from "../../../featuretoggle";
+import { MELOSYS_FULLMAKT_TRYGDEAVGIFT } from "../../../featuretoggle/toggleNavn";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -249,7 +251,6 @@ class Informasjon extends Component {
       virksomhetNavn,
       journalforingGjelder,
     } = journalforingSkjemaVerdier;
-    const { hentOgVisRepresentant } = this;
 
     const InformasjonOmBrukerEllerVirksomhet =
       journalforingGjelder === VIRKSOMHET ? (
@@ -301,12 +302,25 @@ class Informasjon extends Component {
                 kopierVirksomhetTilAvsender={this.kopierVirksomhetTilAvsender}
               />
             ) : (
-              <AvsenderVelgerForBruker
-                kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
-                tomAvsender={this.tomAvsender}
-                settFeltInnhold={settFeltInnhold}
-                hentOgVisRepresentant={hentOgVisRepresentant}
-              />
+              <FeatureToggle togglename={MELOSYS_FULLMAKT_TRYGDEAVGIFT}>
+                {(enabled) =>
+                  enabled ? (
+                    <AvsenderVelgerForBruker
+                      kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
+                      tomAvsender={this.tomAvsender}
+                      settFeltInnhold={settFeltInnhold}
+                      hentOgVisAvsender={this.hentOgVisAvsender}
+                    />
+                  ) : (
+                    <AvsenderVelgerForBrukerGammel
+                      kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
+                      tomAvsender={this.tomAvsender}
+                      settFeltInnhold={settFeltInnhold}
+                      hentOgVisRepresentant={this.hentOgVisRepresentant}
+                    />
+                  )
+                }
+              </FeatureToggle>
             )
           }
         />
