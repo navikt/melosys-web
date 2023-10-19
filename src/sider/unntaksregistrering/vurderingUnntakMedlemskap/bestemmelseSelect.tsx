@@ -61,6 +61,7 @@ export const BestemmelseSelect = ({
               name="trygdedekning"
               control={control}
               label="Dekning"
+              emptyFieldDisabled={!!formValues.trygdedekning}
               disabled={!redigerbart}
               onChange={lagreTrygdedekning}
             >
