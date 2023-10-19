@@ -28,64 +28,14 @@
     margin-bottom: 2rem;
   }
 
-  .inntektskilder,
   .skatteforholdsperioder {
-    padding: 1rem;
+    padding-top: 1rem;
     border-radius: 2px;
     background: @navLysGra;
-    overflow-x: auto;
-    display: block;
-    white-space: nowrap;
-
-    & > * {
-      min-width: 7em;
-      white-space: break-spaces;
-    }
-
-    &__label {
-      margin-bottom: 0.5rem;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    &__overskriftrad {
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: flex-end;
-    }
-
-    .flex__kolonne {
-      display: flex;
-
-      > :first-child {
-        min-width: 7rem;
-        margin-right: 0.5rem;
-      }
-      > :last-child {
-        min-width: 7rem;
-        margin-left: 0.5rem;
-      }
-    }
-
-    .ikkeRelevant {
-      margin-top: 0.5rem;
-    }
-
-    .radioknapp_vertikal {
-      float: left;
-      min-height: 1px;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-      margin-top: 0.5rem;
-    }
-
-    .skillestrek {
-      border-top: 1px solid #d8d8d8;
-      padding-top: 0.5rem;
-      margin-left: 0.25rem;
-      margin-right: 0.25rem;
-    }
+    display: flex;
+    align-items: center;
   }
+
   .periode_tabell-wrapper {
     overflow-x: auto;
     display: block;
@@ -110,5 +60,8 @@
   .infomelding {
     margin-top: 1rem;
     margin-bottom: 1rem;
+  }
+  .skillestrek {
+    margin-left: 1rem;
   }
 }

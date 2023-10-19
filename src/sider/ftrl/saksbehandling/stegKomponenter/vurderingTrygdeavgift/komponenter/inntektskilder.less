@@ -1,0 +1,49 @@
+@import (reference) "~nav-frontend-core/less/_variabler";
+
+.wrapper_inntektskilder {
+  overflow-x: auto; /* Enable horizontal scrolling when content overflows */
+  overflow-y: hidden;
+  white-space: nowrap; /* Prevent content from wrapping to the next line */
+  background: @navLysGra;
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .inntektskilder {
+    display: flex; /* Use flexbox to align the child elements */
+    align-items: center; /* Align the child elements vertically in the middle */
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+
+    .radioknapp_vertikal {
+      display: flex;
+      min-width: 120px;
+      flex-direction: row;
+      gap: 10px;
+    }
+
+    .radioknapp_tittel {
+      gap: 10px;
+      white-space: break-spaces;
+      max-width: 120px;
+    }
+
+    .inntektskilde {
+      min-width: 15rem;
+      max-width: 15rem;
+      flex: 2;
+    }
+
+    > * {
+      min-width: 7.5rem;
+      margin-left: 0.5rem;
+    }
+
+    .dato {
+      max-width: 7.5rem;
+    }
+  }
+}
