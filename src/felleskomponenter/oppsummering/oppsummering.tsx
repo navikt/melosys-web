@@ -36,7 +36,6 @@ const mapStateToProps = (state: RootState) => ({
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  trygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -71,7 +70,6 @@ const Oppsummering = ({
   className,
   redigerbart,
   behandlingID,
-  trygdedekning,
 }: OppsummeringProps) => {
   const [{ mottaksdato }] = useAsyncCallbackState(() => Api.Behandlinger.aarsak.hentMottaksdato(behandlingID), {}, [
     behandlingID,
@@ -192,7 +190,6 @@ const Oppsummering = ({
       if (medlemskapsperiodeFom || medlemskapsperiodeTom) {
         col1.push(["Medlemskapsperiode", `${medlemskapsperiodeFom} - ${medlemskapsperiodeTom}`]);
       }
-      col1.push(["Trygdedekning", KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, trygdedekning)]);
     }
     col1.push(["Land", landTilSetning(arbeidsland)]);
     return col1;
