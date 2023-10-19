@@ -25,6 +25,7 @@ import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 import "./vurderingUnntakMedlemskap.css";
+import { BestemmelseSelect } from "./bestemmelseSelect";
 
 const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
@@ -63,25 +64,24 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato || mottatteOpplysningerPeriode.fom),
       tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato || mottatteOpplysningerPeriode.tom),
       bestemmelse: lovvalgsperiode.lovvalgsbestemmelse || "",
+      trygdedekning: lovvalgsperiode.trygdedekning,
     } as FieldValues,
   });
   const formValues = watch();
 
-  const kontrollerFerdigbehandling = (lovvalgsperiodeErLagret: boolean = false) => {
-    if (lovvalgsperiodeErLagret || !Utils._isEmpty(lovvalgsperiode)) {
-      dispatch(
-        kontrollOperations.kontrollerFerdigbehandling({
-          behandlingID,
-          vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-          skalRegisteropplysningerOppdateres: skalOppdatereRegisteropplysninger,
-        })
-      );
-      if (skalOppdatereRegisteropplysninger) setSkalOppdatereRegisteropplysninger(false);
-    }
+  const kontrollerFerdigbehandling = () => {
+    dispatch(
+      kontrollOperations.kontrollerFerdigbehandling({
+        behandlingID,
+        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        skalRegisteropplysningerOppdateres: skalOppdatereRegisteropplysninger,
+      })
+    );
+    if (skalOppdatereRegisteropplysninger) setSkalOppdatereRegisteropplysninger(false);
   };
 
   useEffect(() => {
-    if (aktivtSteg && redigerbart) {
+    if (aktivtSteg && redigerbart && !Utils._isEmpty(lovvalgsperiode)) {
       kontrollerFerdigbehandling();
     }
   }, [aktivtSteg]);
@@ -111,24 +111,26 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     setValue("fom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.fom));
     setValue("tom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.tom));
     setValue("bestemmelse", "");
+    setValue("trygdedekning", undefined);
     if (lovvalgsperiode?.periodeID)
       dispatch(lovvalgsperioderOperations.slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID));
   };
 
-  const lagreLovvalgsperiode = (values: FieldValues) =>
-    dispatch(
+  const lagreLovvalgsperiode = (values: FieldValues) => {
+    const { fom, tom, bestemmelse, trygdedekning } = values;
+    return dispatch(
       lovvalgsperioderOperations.opprettLovvalgsperiode(behandlingID, {
-        fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
-        tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
-        lovvalgsbestemmelse: values.bestemmelse,
+        fomDato: Utils.dato.formatterDatoTilISO(fom, null, ""),
+        tomDato: Utils.dato.formatterDatoTilISO(tom, null, ""),
+        lovvalgsbestemmelse: bestemmelse,
+        trygdedekning,
       })
     );
+  };
 
   const lagreLovvalgsperiodeOgKontroller = async (values: FieldValues, isValid: boolean) => {
     if (isValid) {
       await lagreLovvalgsperiode(values);
-      kontrollerFerdigbehandling(true);
-    } else {
       kontrollerFerdigbehandling();
     }
   };
@@ -144,7 +146,14 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   const lagreTom = (tom: string) => handleEndring({ ...formValues, tom });
 
-  const lagreBestemmelse = (bestemmelse: string) => handleEndring({ ...formValues, bestemmelse });
+  const lagreBestemmelse = (bestemmelse: string) =>
+    handleEndring({
+      ...formValues,
+      bestemmelse,
+      trygdedekning: undefined,
+    });
+
+  const lagreTrygdedekning = (trygdedekning: string) => handleEndring({ ...formValues, trygdedekning });
 
   const handleBekreft = async () => {
     await lagreLovvalgsperiode(formValues);
@@ -200,24 +209,14 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       </Nav.Row>
 
       {utfallErGODKJENT && !harErrorFeilmelding && (
-        <Nav.Row>
-          <Nav.Column xs="8">
-            <Forms.Select
-              name="bestemmelse"
-              control={control}
-              label="Bestemmelse"
-              emptyFieldDisabled={!!formValues.bestemmelse}
-              disabled={!redigerbart}
-              onChange={lagreBestemmelse}
-            >
-              {bestemmelser?.map((item: KTObject) => (
-                <option key={item.kode} value={item.kode}>
-                  {item.term}
-                </option>
-              ))}
-            </Forms.Select>
-          </Nav.Column>
-        </Nav.Row>
+        <BestemmelseSelect
+          formValues={formValues}
+          control={control}
+          bestemmelser={bestemmelser}
+          lagreBestemmelse={lagreBestemmelse}
+          lagreTrygdedekning={lagreTrygdedekning}
+          redigerbart={redigerbart}
+        />
       )}
 
       {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && (
@@ -244,24 +243,14 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
             </Nav.Column>
           </Nav.Row>
           {harSluttdato && !harErrorFeilmelding && (
-            <Nav.Row>
-              <Nav.Column xs="8">
-                <Forms.Select
-                  name="bestemmelse"
-                  control={control}
-                  label="Bestemmelse"
-                  emptyFieldDisabled={!!formValues.bestemmelse}
-                  disabled={!redigerbart}
-                  onChange={lagreBestemmelse}
-                >
-                  {bestemmelser?.map((item: KTObject) => (
-                    <option key={item.kode} value={item.kode}>
-                      {item.term}
-                    </option>
-                  ))}
-                </Forms.Select>
-              </Nav.Column>
-            </Nav.Row>
+            <BestemmelseSelect
+              formValues={formValues}
+              control={control}
+              bestemmelser={bestemmelser}
+              lagreBestemmelse={lagreBestemmelse}
+              lagreTrygdedekning={lagreTrygdedekning}
+              redigerbart={redigerbart}
+            />
           )}
         </>
       )}

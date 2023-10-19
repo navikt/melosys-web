@@ -2,7 +2,6 @@ import {
   capitalize,
   isFunction,
   isNil,
-  isNumber,
   isUndefined,
   isString,
   isEmpty,
@@ -18,7 +17,6 @@ import {
   has,
   merge,
   isEqual,
-  throttle,
 } from "lodash";
 import { v4 as uuid } from "uuid";
 
@@ -72,9 +70,7 @@ export {
   isEqual as _isEqual,
   isFunction as _isFunction,
   isNil as _isNil,
-  isNumber as _isNumber,
   isString as _isString,
-  throttle as _throttle,
   // Merk at isEmpty returnerer true for alle numbers
   isEmpty as _isEmpty,
   isObject as _isObject,
