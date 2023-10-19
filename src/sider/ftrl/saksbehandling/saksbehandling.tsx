@@ -259,8 +259,8 @@ const Saksbehandling = ({
                   arbeidsland={landkoder?.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
-                  medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(medlemskapsperiodeFom)}
-                  medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(medlemskapsperiodeTom)}
+                  medlemskapsperiodeFom={medlemskapsperiodeFom}
+                  medlemskapsperiodeTom={medlemskapsperiodeTom}
                 />
                 <SaksoversiktLenke />
                 <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
