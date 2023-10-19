@@ -188,13 +188,13 @@ const Oppsummering = ({
     if (erTrygdeavtale || erIkkeYrkesaktiv) {
       col1.push(["Lovvalgsperiode", lovvalgsperiode]);
     }
-    col1.push(["Land", landTilSetning(arbeidsland)]);
     if (erFTRL && !erIngenFlyt) {
-      col1.push(["Trygdedekning", KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, trygdedekning)]);
       if (medlemskapsperiodeFom || medlemskapsperiodeTom) {
         col1.push(["Medlemskapsperiode", `${medlemskapsperiodeFom} - ${medlemskapsperiodeTom}`]);
       }
+      col1.push(["Trygdedekning", KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, trygdedekning)]);
     }
+    col1.push(["Land", landTilSetning(arbeidsland)]);
     return col1;
   };
   const renderTabell = () => {
