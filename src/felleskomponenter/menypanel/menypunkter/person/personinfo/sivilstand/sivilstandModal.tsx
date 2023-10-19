@@ -8,6 +8,7 @@ import { Sivilstand } from "../../../../../../graphql";
 import { GyldighetshistorikkInfo } from "../../historikk/gyldighetshistorikkInfo";
 
 import "./sivilstandModal.css";
+import { Table } from "@navikt/ds-react";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
@@ -16,33 +17,33 @@ interface SivilstandTabellProps {
 }
 
 export const SivilstandTabell = ({ sivilstander }: SivilstandTabellProps) => {
-  const sivilstandTabellCls = bem("sivilstand-tabell");
-
   return (
-    <div className={sivilstandTabellCls.block}>
-      <Nav.Row className={sivilstandTabellCls.element("header")}>
-        <Nav.Column xs="2">Sivilstand</Nav.Column>
-        <Nav.Column xs="2">Relasjon til</Nav.Column>
-        <Nav.Column xs="2">Kilde</Nav.Column>
-        <Nav.Column xs="2">Register</Nav.Column>
-        <Nav.Column xs="2">Bekreftelsesdato</Nav.Column>
-        <Nav.Column xs="2">Gyldig f.o.m</Nav.Column>
-      </Nav.Row>
-      {sivilstander.map((sivilstand) => (
-        <Nav.Row className={sivilstandTabellCls.element("row")} key={Utils._uuid()}>
-          <Nav.Column xs="2">{sivilstand.type}</Nav.Column>
-          <Nav.Column xs="2">
-            {sivilstand.relatertVedSivilstand && (
-              <KopierbarTekst hovertekst="Kopier fødselsnummer">{sivilstand.relatertVedSivilstand}</KopierbarTekst>
-            )}
-          </Nav.Column>
-          <Nav.Column xs="2">{sivilstand.kilde}</Nav.Column>
-          <Nav.Column xs="2">{sivilstand.master}</Nav.Column>
-          <Nav.Column xs="2">{Utils.dato.formatterDatoTilNorsk(sivilstand.bekreftelsesdato)}</Nav.Column>
-          <Nav.Column xs="2">{Utils.dato.formatterDatoTilNorsk(sivilstand.gyldigFraOgMed)}</Nav.Column>
-        </Nav.Row>
-      ))}
-    </div>
+    <Table>
+      <Table.Header>
+        <Table.HeaderCell>Sivilstand</Table.HeaderCell>
+        <Table.HeaderCell>Relasjon til</Table.HeaderCell>
+        <Table.HeaderCell>Kilde</Table.HeaderCell>
+        <Table.HeaderCell>Register</Table.HeaderCell>
+        <Table.HeaderCell>Bekreftelsesdato</Table.HeaderCell>
+        <Table.HeaderCell>Gyldig f.o.m</Table.HeaderCell>
+      </Table.Header>
+      <Table.Body>
+        {sivilstander.map((sivilstand) => (
+          <Table.Row key={Utils._uuid()}>
+            <Table.DataCell>{sivilstand.type}</Table.DataCell>
+            <Table.DataCell>
+              {sivilstand.relatertVedSivilstand && (
+                <KopierbarTekst hovertekst="Kopier fødselsnummer">{sivilstand.relatertVedSivilstand}</KopierbarTekst>
+              )}
+            </Table.DataCell>
+            <Table.DataCell>{sivilstand.kilde}</Table.DataCell>
+            <Table.DataCell>{sivilstand.master}</Table.DataCell>
+            <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(sivilstand.bekreftelsesdato)}</Table.DataCell>
+            <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(sivilstand.gyldigFraOgMed)}</Table.DataCell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
   );
 };
 
@@ -76,7 +77,7 @@ const SivilstandModal = ({
       <Mui.Undertittel tekst="Sivilstand" />
       <div className={sivilstandModalCls.element("main-content")}>
         {aktiveSivilstander.length > 0 && <SivilstandTabell sivilstander={aktiveSivilstander} />}
-        <Nav.Typo.Element>Historikk</Nav.Typo.Element>
+        <Nav.Typo.Element className={sivilstandModalCls.element("historikk")}>Historikk</Nav.Typo.Element>
         <GyldighetshistorikkInfo />
         {historiskeSivilstander.length > 0 ? (
           <SivilstandTabell sivilstander={historiskeSivilstander} />
