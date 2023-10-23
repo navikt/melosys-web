@@ -102,7 +102,8 @@ const RedigererFullmektig = ({
               />
             </span>
             <Nav.Knapp className="slett_knapp" mini onClick={() => handleSlett(index)}>
-              Slett Fullmektig
+              <Ikoner.Bin aria-hidden className="slett_ikon" />
+              Slett fullmektig
             </Nav.Knapp>
 
             <Adresse type={type} person={person} organisasjon={org} className="adresse" />

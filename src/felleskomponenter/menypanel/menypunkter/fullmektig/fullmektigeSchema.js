@@ -11,6 +11,9 @@ const fullmektige_schema = object().shape({
       type: string().required(MAA_FYLLES_UT),
       kontaktperson: string().nullable(),
       kontaktOrgnr: string().nullable(),
+      feil: string()
+        .test("Kan ikke ha aktiv feil", { message: "Kan ikke ha aktiv feil" }, (feil) => !Boolean(feil))
+        .nullable(),
     })
   ),
 });
