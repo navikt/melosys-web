@@ -7,7 +7,7 @@ import * as Mui from "../../../ui";
 import * as Api from "../../../../services/api";
 import { Organisasjon } from "../../../../services/api";
 import * as Ikoner from "../../../../resources/images";
-import * as Utils from ".././../../../utils";
+import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
 
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
@@ -96,7 +96,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       })) ?? [];
     resetFullmektige(mappedFullmektige);
     mappedFullmektige.forEach((fullmektig, index) => {
-      if (fullmektig.type == Type.PERSON) {
+      if (fullmektig.type === Type.PERSON) {
         finnPersonAdresse(fullmektig.id).then((personOgFeil) =>
           update(index, { ...fullmektig, person: personOgFeil.person, feil: personOgFeil.feil })
         );
@@ -146,6 +146,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       return;
     }
     setPending(true);
+    // eslint-disable-next-line no-restricted-syntax
     for (const fullmektig of formValues.fullmektige) {
       await Api.Fagsaker.aktoer.send(saksnummer, {
         databaseID: fullmektig.databaseID,
@@ -168,7 +169,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
   };
 
   const handleSlett = (index: number) => {
-    const fullmektige = formValues.fullmektige;
+    const { fullmektige } = formValues;
     if (fullmektige[index].databaseID) {
       Api.Fagsaker.aktoer.slett(fullmektige[index].databaseID);
     }

@@ -1,5 +1,6 @@
 import { object, string, array } from "yup";
 import * as KV from "../../../../kodeverk";
+
 const { MAA_FYLLES_UT, SKRIV_INN_GYLDIG_ORGNR_FNR_DNR } = KV.Feilmeldinger;
 
 const fullmektige_schema = object().shape({

@@ -1,3 +1,4 @@
+/* eslint-disable prefer-template */
 import { Personopplysninger } from "../../../../graphql";
 import { Organisasjon } from "../../../../services/modules/types";
 import * as Utils from "../../../../utils";
@@ -17,15 +18,14 @@ const Adresse = ({
   visNavn?: boolean;
   className?: string;
 }) => {
-  const felt = (felt?: any) => felt ?? "";
+  const feltEllerTomString = (felt?: any) => felt ?? "";
   const feltPlussKomma = (felt?: any) => (felt ? felt + ", " : "");
-
   function samleFelt(...felt: any[]) {
     return felt?.filter((f) => f).join(" ");
   }
 
   if (type === Type.PERSON && person) {
-    const adresse = person.bostedsadresser[0].adresse;
+    const { adresse } = person.bostedsadresser[0];
     const coAdresse = `${
       person.bostedsadresser[0].coAdressenavn ? " C/O " + person.bostedsadresser[0].coAdressenavn : ""
     }`;
@@ -60,7 +60,7 @@ const Adresse = ({
             samleFelt(
               adresse?.gateadresse.gatenavn,
               adresse?.gateadresse.gatenummer,
-              felt(adresse?.gateadresse.husnummer) + felt(adresse?.gateadresse.husbokstav)
+              feltEllerTomString(adresse?.gateadresse.husnummer) + feltEllerTomString(adresse?.gateadresse.husbokstav)
             )
           )}
           {feltPlussKomma(samleFelt(adresse?.postnr, adresse?.poststed))}
