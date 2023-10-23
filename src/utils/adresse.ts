@@ -2,7 +2,8 @@ import { RegisterAdresse, StrukturertAdresse } from "../services/api";
 
 import * as Utils from "./index";
 
-const erRegisterAdresseObjektTomt = (adresse: Partial<RegisterAdresse>) =>
+const erRegisterAdresseObjektTomt = (adresse?: Partial<RegisterAdresse>) =>
+  adresse &&
   Object.values(adresse).every((value) => Utils._isNil(value) || Utils._isObject(value)) &&
   adresse.gateadresse &&
   Object.values(adresse.gateadresse).every(Utils._isNil);

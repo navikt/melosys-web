@@ -102,8 +102,8 @@ const EnkeltFullmektig = ({
         symbolsynlighet={visAlltidBinSymbolsynlighet}
         redigererRender={() => (
           <FullmektigRedigerer
-            databaseID={fullmektig.databaseID}
-            representererKode={fullmektig.representererKode}
+            databaseID={fullmektig.databaseID ?? -1}
+            representererKode={fullmektig.representererKode ?? null}
             org={org}
             redigerbart={redigerbart}
             onIdentFunnet={onOrgnrEllerIdentFunnet}
@@ -118,7 +118,7 @@ const EnkeltFullmektig = ({
         )}
         redigeringUtfortRender={() => (
           <FullmektigRedigeringUtfort
-            representererKode={fullmektig.representererKode}
+            representererKode={fullmektig.representererKode ?? null}
             kontaktopplysninger={kontaktopplysninger}
             org={org}
             person={person}

@@ -36,6 +36,7 @@ import { ReactComponent as Filenew } from "./line-version-file-new-1.svg";
 import { ReactComponent as Files } from "./files.svg";
 import { ReactComponent as FindAccount } from "./account-find.svg";
 import { ReactComponent as Fly } from "./fly.svg";
+import { ReactComponent as Fullmakt } from "./fullmakt.svg";
 import { ReactComponent as Varsel } from "./ikon-steg-varsel.svg";
 import { ReactComponent as Globe } from "./line-version-globe-1.svg";
 import { ReactComponent as GreenCheckmark } from "./green-checkmark.svg";
@@ -120,6 +121,7 @@ export {
   Files,
   FindAccount,
   Fly,
+  Fullmakt,
   Globe,
   GreenCheckmark,
   Hamburger,

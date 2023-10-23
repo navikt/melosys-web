@@ -113,7 +113,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     setDisableLeggTilFullmektig(true);
   };
 
-  const slettFullmektigLokalt = (databaseID: number) => {
+  const slettFullmektigLokalt = (databaseID?: number) => {
     const nyFullmektige = fullmektige.filter((fullmektig) => fullmektig.databaseID !== databaseID);
     setFullmektige(nyFullmektige);
     setDisableLeggTilFullmektig(false);
@@ -127,7 +127,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
         const slettFullmektig = async () => {
           try {
             if (fullmektig.databaseID !== aktoerTemplate.databaseID) {
-              await Api.Fagsaker.aktoer.slett(fullmektig.databaseID);
+              await Api.Fagsaker.aktoer.slett(fullmektig.databaseID!!);
             }
             slettFullmektigLokalt(fullmektig.databaseID);
           } catch (e) {

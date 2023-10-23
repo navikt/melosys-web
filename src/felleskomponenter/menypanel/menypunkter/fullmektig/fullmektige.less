@@ -1,0 +1,91 @@
+@import (reference) "~nav-frontend-core/less/_variabler";
+@import "../../../../constants";
+
+.fullmektige {
+  margin-top: 2rem;
+
+  .legg__til__knapp {
+    margin-top: 1rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .lagre_knapp {
+    margin-right: 1rem;
+  }
+
+  .endre_knapp {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+  }
+
+  .slett_knapp {
+    float: right;
+  }
+
+  .ingenFullmektigRegistrert {
+    border-bottom: solid 1px @navGra20;
+    color: @navGra60;
+    padding-bottom: 0.5rem;
+  }
+
+  .lagretFullmektig_container {
+    background: #efefef;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    .inline_felt {
+      display: inline;
+    }
+    .kontaktperson {
+      margin-top: 0.75rem;
+    }
+    .brev_sendes {
+      margin-top: 1rem;
+    }
+    .overskrift {
+      margin-bottom: 0.5rem;
+    }
+    .ikon {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .redigererFullmektig_container {
+    border: solid 1px @navGra20;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .id_label,
+  .id_input {
+    display: inline;
+  }
+
+  .id_input {
+    margin-left: 0.5rem;
+  }
+
+  .adresse {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .overskrift_fullmakt,
+  .fullmakt {
+    margin-bottom: 0.5rem;
+  }
+
+  .kontaktperson_container {
+    //display: flex;
+    margin-top: 1.5rem;
+
+    > :first-child {
+      margin-right: 1rem;
+    }
+
+    .kontaktperson_labels > * {
+      display: inline;
+    }
+  }
+}
