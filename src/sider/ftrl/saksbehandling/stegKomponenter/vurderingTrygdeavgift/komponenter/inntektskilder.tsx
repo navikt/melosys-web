@@ -75,7 +75,9 @@ export const Inntektskilder = ({
             <Nav.Typo.Element>Inntektskilde</Nav.Typo.Element>
           </Nav.Column>
           <Nav.Column className={"radioknapp_tittel"}>
-            <Nav.Typo.Element>Betales arb.avg. til skatt?</Nav.Typo.Element>
+            <Nav.Typo.Element>
+              Betales arb.avg. <br /> til skatt?
+            </Nav.Typo.Element>
           </Nav.Column>
           <Nav.Column className={"brutto_inntekt"}>
             <Nav.Typo.Element>Brutto inntekt per md.</Nav.Typo.Element>
