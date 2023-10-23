@@ -15,33 +15,31 @@
     display: flex;
     align-items: center;
     flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
+    gap: 0.75rem;
 
     .radioknapp_gruppe {
       display: flex;
       flex-direction: row;
       gap: 0.75rem;
       max-width: 9rem;
-      justify-content: left;
+      justify-content: center;
       flex: 2;
-      margin-left: 2%;
     }
 
     .radioknapp_tittel {
-      max-width: 9rem;
-      justify-content: left;
-      margin-left: 2%;
+      display: flex;
+      flex-direction: row;
+      max-width: 8rem;
+      justify-content: flex-start;
     }
 
     .inntektskilde {
-      min-width: 17rem;
-      max-width: 17rem;
+      min-width: 12rem;
+      width: 23rem;
     }
 
     > * {
       min-width: 7.5rem;
-      margin-left: 0.5rem;
     }
 
     .dato {
@@ -49,7 +47,8 @@
     }
 
     .slett {
-      padding: 0 1rem 1rem 1rem;
+      margin-bottom: 1rem;
+      min-width: 2rem;
     }
   }
 
@@ -63,6 +62,6 @@
   .brutto_inntekt {
     white-space: break-spaces;
     max-width: 7.5rem;
-    margin-left: 2.5%;
+    justify-content: left;
   }
 }

@@ -82,6 +82,7 @@ export const Inntektskilder = ({
           <Nav.Column className={"brutto_inntekt"}>
             <Nav.Typo.Element>Brutto inntekt per md.</Nav.Typo.Element>
           </Nav.Column>
+          <Nav.Column className={"slett"}></Nav.Column>
         </Nav.Row>
 
         {formValues.inntektskilder.map((inntektskilde, index) => {
