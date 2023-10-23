@@ -12,7 +12,7 @@ const fullmektige_schema = object().shape({
       kontaktperson: string().nullable(),
       kontaktOrgnr: string().nullable(),
       feil: string()
-        .test("Kan ikke ha aktiv feil", { message: "Kan ikke ha aktiv feil" }, (feil) => !Boolean(feil))
+        .test("Kan ikke ha aktiv feil", { message: "Kan ikke ha aktiv feil" }, (feil) => !feil)
         .nullable(),
     })
   ),
