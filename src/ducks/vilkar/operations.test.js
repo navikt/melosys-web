@@ -32,12 +32,12 @@ describe("vilkar operations", () => {
       const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 
       const store = mockStore(initialState);
-      const bid = 5;
+      const behandlingID = 5;
 
-      await store.dispatch(operations.hent(bid));
+      await store.dispatch(operations.hent(behandlingID));
 
       expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenLastCalledWith(`/api/vilkaar/${bid}`, expect.anything());
+      expect(fetch).toHaveBeenLastCalledWith(`/api/vilkaar/${behandlingID}`, expect.anything());
       expect(store.getActions()).toEqual(expectedActions);
     });
 
@@ -48,12 +48,12 @@ describe("vilkar operations", () => {
       const expectedActions = [{ type: types.PENDING }, { type: types.FEILET, data: error.toString() }];
 
       const store = mockStore(initialState);
-      const bid = 5;
+      const behandlingID = 5;
 
-      await store.dispatch(operations.hent(bid));
+      await store.dispatch(operations.hent(behandlingID));
 
       expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenLastCalledWith(`/api/vilkaar/${bid}`, expect.anything());
+      expect(fetch).toHaveBeenLastCalledWith(`/api/vilkaar/${behandlingID}`, expect.anything());
       expect(store.getActions()).toEqual(expectedActions);
     });
   });

@@ -13,7 +13,7 @@ interface FakturaProps {
 }
 
 enum FakturaStatus {
-  BESTILLT = "BESTILLT",
+  BESTILT = "BESTILT",
   INNE_I_OEBS = "INNE_I_OEBS",
   MANGLENDE_INNBETALING = "MANGLENDE_INNBETALING",
   FEIL = "FEIL",
@@ -31,7 +31,7 @@ interface EksternFakturaStatus {
 const Dott = ({ farge }: { farge: string }) => <div className={`dott ${farge}`} />;
 
 const FakturaStatusMapper = {
-  [FakturaStatus.BESTILLT]: {
+  [FakturaStatus.BESTILT]: {
     icon: <Dott farge="green" />,
     beskrivelse: "Bestilt",
   },

@@ -39,11 +39,11 @@ const vilkårUtenInngangsvilkår = (vilkar) =>
 export function lagre() {
   return (dispatch, getState) => {
     const vilkar = Selectors.VilkarSelector(getState());
-    const bid = behandlingerSelectors.BehandlingIDSelector(getState());
+    const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
 
     const filtrerteVilkar = vilkårUtenInngangsvilkår(vilkar);
 
-    return dispatch(send(bid, filtrerteVilkar));
+    return dispatch(send(behandlingID, filtrerteVilkar));
   };
 }
 

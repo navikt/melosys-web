@@ -19,6 +19,7 @@ export interface OpprettLovvalgsperiode {
   tomDato?: string;
   lovvalgsbestemmelse?: string;
   innvilgelsesResultat?: string;
+  trygdedekning?: string;
 }
 
 export const hent = (behandlingID: number): Promise<Lovvalgsperiode[]> =>

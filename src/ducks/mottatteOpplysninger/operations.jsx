@@ -146,11 +146,11 @@ export function lagre() {
 
     const mottatteOpplysninger = Selectors.MottatteOpplysningerDataSelector(getState());
     const mottatteOpplysningerType = Selectors.MottatteOpplysningerTypeSelector(getState());
-    const bid = behandlingerSelectors.BehandlingIDSelector(getState());
+    const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
 
     const data = lagMottatteOpplysningerData(mottatteOpplysninger, mottatteOpplysningerType);
 
-    return dispatch(send(bid, { data }));
+    return dispatch(send(behandlingID, { data }));
   };
 }
 

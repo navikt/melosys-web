@@ -29,7 +29,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { formSelectors } from "../../../ducks/form";
 import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { folketrygdenkodeverkOperations } from "../../../ducks/folketrygdenkodeverk";
-import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperioder";
+import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../ducks/medlemskapsperioder";
 import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 import { avklartefaktaOperations } from "../../../ducks/avklartefakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
@@ -63,6 +63,7 @@ const mapStateToProps = (state: RootState) => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   registeropplysningerHentet: behandlingerSelectors.RegisteropplysningerHentetSelector(state),
   menypanelSynlig: menypanelSelectors.MenypanelSynligSelector(state),
+  samletMedlemskapsperiodeSelector: medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -142,6 +143,7 @@ const Saksbehandling = ({
   resetKontrollFeil,
   registeropplysningerHentet,
   menypanelSynlig,
+  samletMedlemskapsperiodeSelector,
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
@@ -231,6 +233,8 @@ const Saksbehandling = ({
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
+  const medlemskapsperiodeFom = Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.fom);
+  const medlemskapsperiodeTom = Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.tom);
   return (
     <>
       <Informasjonlinje />
@@ -255,6 +259,8 @@ const Saksbehandling = ({
                   arbeidsland={landkoder?.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
+                  medlemskapsperiodeFom={medlemskapsperiodeFom}
+                  medlemskapsperiodeTom={medlemskapsperiodeTom}
                 />
                 <SaksoversiktLenke />
                 <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />

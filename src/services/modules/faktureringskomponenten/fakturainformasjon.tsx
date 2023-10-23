@@ -3,7 +3,7 @@ import { FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL } from "../../api-constants";
 
 export enum FakturaStatus {
   "OPPRETTET" = "OPPRETTET",
-  "BESTILLT" = "BESTILLT",
+  "BESTILT" = "BESTILT",
   "KANSELLERT" = "KANSELLERT",
   "BETALT" = "BETALT",
   "DELVIS_BETALT" = "DELVIS_BETALT",

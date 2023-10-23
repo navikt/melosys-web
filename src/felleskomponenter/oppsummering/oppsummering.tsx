@@ -23,7 +23,6 @@ import KopierbarTekst from "../kopierbarTekst";
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
 import EndreBehandlingModal from "./endreBehandlingModal";
 import "./oppsummering.css";
-import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { useAsyncCallbackState } from "../../hooks";
 import { useFeatureToggle } from "../../featuretoggle";
 import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
@@ -36,7 +35,6 @@ const mapStateToProps = (state: RootState) => ({
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  trygdedekning: mottatteOpplysningerSelectors.TrygdedekningSelector(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -49,6 +47,8 @@ type OppsummeringProps = PropsFromRedux & {
   lovvalgsland?: KTObject;
   lovvalgsperiodeFom?: string;
   lovvalgsperiodeTom?: string;
+  medlemskapsperiodeFom?: string;
+  medlemskapsperiodeTom?: string;
   mottatteOpplysningerPeriodeFom: string;
   mottatteOpplysningerPeriodeTom: string;
   className?: string;
@@ -62,12 +62,13 @@ const Oppsummering = ({
   lovvalgsland,
   lovvalgsperiodeFom = "",
   lovvalgsperiodeTom = "",
+  medlemskapsperiodeFom = "",
+  medlemskapsperiodeTom = "",
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
   className,
   redigerbart,
   behandlingID,
-  trygdedekning,
 }: OppsummeringProps) => {
   const [{ mottaksdato }] = useAsyncCallbackState(() => Api.Behandlinger.aarsak.hentMottaksdato(behandlingID), {}, [
     behandlingID,
@@ -184,10 +185,10 @@ const Oppsummering = ({
     if (erTrygdeavtale || erIkkeYrkesaktiv) {
       col1.push(["Lovvalgsperiode", lovvalgsperiode]);
     }
-    col1.push(["Land", landTilSetning(arbeidsland)]);
     if (erFTRL && !erIngenFlyt) {
-      col1.push(["Trygdedekning", KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, trygdedekning)]);
+      col1.push(["Medlemskapsperiode", `${medlemskapsperiodeFom} - ${medlemskapsperiodeTom}`]);
     }
+    col1.push(["Land", landTilSetning(arbeidsland)]);
     return col1;
   };
   const renderTabell = () => {

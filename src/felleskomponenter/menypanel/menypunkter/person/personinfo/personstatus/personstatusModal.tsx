@@ -12,15 +12,11 @@ interface PersonstatusTabellProps {
 
 export const PersonstatusTabell = ({ personstatuser }: PersonstatusTabellProps) => {
   if (personstatuser.length < 1) {
-    return (
-      <Nav.Typo.Normaltekst className="personstatus-tabell-tom">
-        Ingen historikk registrert i folkeregisteret.
-      </Nav.Typo.Normaltekst>
-    );
+    return <Nav.Typo.Normaltekst>Ingen historikk registrert i folkeregisteret.</Nav.Typo.Normaltekst>;
   }
 
   return (
-    <Table className="personstatus-tabell">
+    <Table>
       <Table.Header>
         <Table.HeaderCell>Personstatus</Table.HeaderCell>
         <Table.HeaderCell>Kilde</Table.HeaderCell>
