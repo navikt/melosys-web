@@ -131,7 +131,7 @@ export const Inntektskilder = ({
               </Nav.Column>
 
               {visArbAvgBetales && (
-                <Nav.Column className="radioknapp_vertikal">
+                <Nav.Column className="radioknapp_gruppe">
                   {skalFylleInnArbAvgBetales ? (
                     <>
                       <Forms.Radio
@@ -173,12 +173,9 @@ export const Inntektskilder = ({
               )}
 
               {redigerbart && formValues.inntektskilder.length > 1 && (
-                <Mui.IkonKnapp
-                  className={"slett"}
-                  ariaLabel="Slett inntektskilde"
-                  ikon={Ikoner.Bin}
-                  onClick={() => remove(index)}
-                />
+                <Nav.Column className={"slett"}>
+                  <Mui.IkonKnapp ariaLabel="Slett inntektskilde" ikon={Ikoner.Bin} onClick={() => remove(index)} />
+                </Nav.Column>
               )}
             </Nav.Row>
           );
