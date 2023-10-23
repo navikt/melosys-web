@@ -16,11 +16,12 @@ import "./fullmektige.css";
 import { useEffect, useState } from "react";
 import { FieldValue, FieldValues, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
-import vurderingPerioderSchema from "../../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingPeriode/vurderingPerioderSchema";
-import RedigererFullmektig, { Fullmektig, Type } from "./redigererFullmektig";
+import fullmektig_schema from "./fullmektigeSchema";
+import RedigererFullmektig from "./redigererFullmektig";
 import { hentBostedsadresseForPerson } from "../../../../graphql/adresse";
 import { Personopplysninger } from "../../../../graphql";
 import LagretFullmektig from "./lagretFullmektig";
+import { FieldArrayProps, Fullmektig, Type } from "./types";
 
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 
@@ -35,15 +36,17 @@ type FullmektigeProps = PropsFromRedux & {
   redigerbart: boolean;
 };
 
-interface FieldArrayProps {
-  fullmektige: Fullmektig[];
-}
-
 const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
   const [redigerer, setRedigerer] = useState(false);
+  const [pending, setPending] = useState(false);
 
-  const { control, watch } = useForm({
-    resolver: yupResolver(vurderingPerioderSchema),
+  const {
+    control,
+    watch,
+    trigger,
+    formState: { errors, isValid },
+  } = useForm({
+    resolver: yupResolver(fullmektig_schema),
     mode: "all",
     defaultValues: {
       fullmektige: [],
@@ -70,10 +73,14 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     let data: { person?: Personopplysninger; feil?: string } = {};
     try {
       await hentBostedsadresseForPerson(personident).then((person) => {
-        data = { ...data, person };
+        if (person == null) {
+          data = { ...data, feil: "Kunne ikke finne personen" };
+        } else {
+          data = { ...data, person };
+        }
       });
     } catch (e) {
-      data = { ...data, feil: "Kunne ikke finne personen" };
+      data = { ...data, feil: "Ukjent feil ved søk på f.nr. eller d-nr." };
     }
     return data;
   };
@@ -132,6 +139,13 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
   };
 
   const handleLagre = async () => {
+    if (!isValid) {
+      formValues.fullmektige.forEach((_it: Fullmektig, index: number) => {
+        trigger(`fullmektige[${index}].fullmakter`);
+      });
+      return;
+    }
+    setPending(true);
     for (const fullmektig of formValues.fullmektige) {
       await Api.Fagsaker.aktoer.send(saksnummer, {
         databaseID: fullmektig.databaseID,
@@ -147,8 +161,10 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
         });
       }
     }
-    initializeFullmektige();
-    setRedigerer(false);
+    initializeFullmektige().then(() => {
+      setPending(false);
+      setRedigerer(false);
+    });
   };
 
   const handleSlett = (index: number) => {
@@ -180,6 +196,8 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
           fullmektige={formValues.fullmektige}
           control={control}
           update={update}
+          errors={errors}
+          trigger={trigger}
           handleSlett={handleSlett}
           handleLeggTil={handleLeggTil}
           finnOrganisasjonAdresse={finnOrganisasjonAdresse}
@@ -202,7 +220,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       )}
       {redigerer && (
         <div>
-          <Nav.Hovedknapp onClick={handleLagre} className="lagre_knapp">
+          <Nav.Hovedknapp onClick={handleLagre} className="lagre_knapp" spinner={pending} autoDisableVedSpinner>
             Lagre
           </Nav.Hovedknapp>
           <Nav.Flatknapp

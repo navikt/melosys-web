@@ -1,7 +1,7 @@
 import * as Forms from "../../../forms";
 import { Organisasjon } from "../../../../services/modules/types";
 import { Personopplysninger } from "../../../../graphql";
-import { Control } from "react-hook-form";
+import { Control, FieldErrors, FieldValue, FieldValues } from "react-hook-form";
 import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
 import Adresse from "./adresse";
@@ -9,26 +9,10 @@ import MKV from "../../../../melosyskodeverk";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import * as Ikoner from "../../../../resources/images";
 import * as Mui from "../../../ui";
+import { FieldArrayProps, Fullmektig, Type } from "./types";
+import { SkjemaelementFeilmelding } from "nav-frontend-skjema";
 
 const { FULLMEKTIG_SØKNAD, FULLMEKTIG_ARBEIDSGIVER } = MKV.Koder.fullmaktstype;
-
-export enum Type {
-  PERSON = "PERSON",
-  ORGANISASJON = "ORGANISASJON",
-}
-
-export type Fullmektig = {
-  id: string;
-  databaseID?: number;
-  fullmakter: string[];
-  type?: Type;
-  org?: Partial<Organisasjon>;
-  person?: Personopplysninger;
-  feil?: string;
-  kontaktperson?: string | null;
-  kontaktOrgnr?: string | null;
-  kontaktOrg?: Partial<Organisasjon>;
-};
 
 interface RedigererFullmektigProps {
   fullmektige: Fullmektig[];
@@ -38,6 +22,8 @@ interface RedigererFullmektigProps {
   handleLeggTil: () => void;
   finnOrganisasjonAdresse: (orgnr: string) => Promise<{ org?: Organisasjon; feil?: string }>;
   finnPersonAdresse: (personIdent: string) => Promise<{ person?: Personopplysninger; feil?: string }>;
+  errors: FieldErrors<FieldValue<FieldValues & FieldArrayProps>>;
+  trigger: (field: string) => void;
 }
 
 const RedigererFullmektig = ({
@@ -48,6 +34,8 @@ const RedigererFullmektig = ({
   handleLeggTil,
   finnOrganisasjonAdresse,
   finnPersonAdresse,
+  errors,
+  trigger,
 }: RedigererFullmektigProps) => {
   const handleIdChange = (id: string, index: number) => {
     if (Utils.organisasjon.erOrgnrGyldig(id)) {
@@ -63,7 +51,7 @@ const RedigererFullmektig = ({
     }
   };
 
-  const handleFullmaktChange = (fullmakt: string, index: number) => {
+  const handleFullmaktChange = (fullmakt: string, index: number, triggerValidation: boolean) => {
     const nyeFullmakter = [...fullmektige[index].fullmakter];
     if (nyeFullmakter.includes(fullmakt)) {
       nyeFullmakter.splice(nyeFullmakter.indexOf(fullmakt), 1);
@@ -71,6 +59,9 @@ const RedigererFullmektig = ({
       nyeFullmakter.push(fullmakt);
     }
     update(index, { ...fullmektige[index], fullmakter: nyeFullmakter });
+    if (triggerValidation) {
+      trigger(`fullmektige[${index}].fullmakter`);
+    }
   };
 
   const fullmaktErDisabled = (index: number, kode: string) => {
@@ -94,19 +85,22 @@ const RedigererFullmektig = ({
         const kanHaKontaktperson =
           type === Type.ORGANISASJON &&
           (fullmakter.includes(FULLMEKTIG_SØKNAD) || fullmakter.includes(FULLMEKTIG_ARBEIDSGIVER));
+        // @ts-ignore
+        const manglerFullmakt = errors?.fullmektige?.[index]?.fullmakter?.message;
 
         return (
           <div className="redigererFullmektig_container">
-            <Nav.Typo.Element className="id_label">Org.nr. eller f.nr./d.nr.:</Nav.Typo.Element>
-            <Forms.Input
-              name={`fullmektige[${index}].id`}
-              label=""
-              control={control}
-              onChange={(id) => handleIdChange(id, index)}
-              bredde="S"
-              feil={feil} // TODO: Visning av feil funker ikke enda.
-              className="id_input"
-            />
+            <Nav.Typo.Element className="id_label">Org.nr. eller f.nr./d-nr.:</Nav.Typo.Element>
+            <span className="id_input">
+              <Forms.Input
+                name={`fullmektige[${index}].id`}
+                label=""
+                control={control}
+                onChange={(id) => handleIdChange(id, index)}
+                bredde="S"
+                feil={feil}
+              />
+            </span>
             <Nav.Knapp className="slett_knapp" mini onClick={() => handleSlett(index)}>
               Slett Fullmektig
             </Nav.Knapp>
@@ -124,12 +118,15 @@ const RedigererFullmektig = ({
                     value={fullmakt.kode}
                     label={fullmakt.term}
                     checked={fullmakter.includes(fullmakt.kode)}
-                    onChange={(event) => handleFullmaktChange(event.target.value, index)}
+                    onChange={(event) => handleFullmaktChange(event.target.value, index, Boolean(manglerFullmakt))}
                     disabled={fullmaktErDisabled(index, fullmakt.kode)}
+                    feil={Boolean(manglerFullmakt)}
                   />
                 ))}
+                {manglerFullmakt && <SkjemaelementFeilmelding>{manglerFullmakt}</SkjemaelementFeilmelding>}
               </>
             )}
+
             {adresseErGyldig && kanHaKontaktperson && (
               <Nav.Row className="kontaktperson_container">
                 <Nav.Column xs="5">

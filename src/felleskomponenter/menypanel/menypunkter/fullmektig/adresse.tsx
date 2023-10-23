@@ -2,7 +2,7 @@ import { Personopplysninger } from "../../../../graphql";
 import { Organisasjon } from "../../../../services/modules/types";
 import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
-import { Type } from "./redigererFullmektig";
+import { Type } from "./types";
 
 const Adresse = ({
   type,

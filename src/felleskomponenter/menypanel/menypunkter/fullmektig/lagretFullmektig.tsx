@@ -1,5 +1,5 @@
 import * as Nav from "../../../../navFrontend";
-import { Fullmektig, Type } from "./redigererFullmektig";
+import { Fullmektig, Type } from "./types";
 import Adresse from "./adresse";
 import * as Utils from "../../../../utils";
 import * as Ikon from "../../../../resources/images";
@@ -45,7 +45,7 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
             </div>
             <Nav.Row>
               <Nav.Column xs="6">
-                <Nav.Typo.Element className="inline_felt">F.nr./d.nr.: </Nav.Typo.Element>
+                <Nav.Typo.Element className="inline_felt">F.nr./d-nr.: </Nav.Typo.Element>
                 <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.id}</Nav.Typo.Normaltekst>
                 <Adresse type={Type.PERSON} person={fullmektig.person} visNavn={false} />
               </Nav.Column>
