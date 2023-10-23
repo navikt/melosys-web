@@ -23,8 +23,8 @@ export function hent(behandlingID) {
   });
 }
 
-export function send(bid, dokument) {
-  return doThenDispatch(() => Api.Avklartefakta.send(bid, dokument), {
+export function send(behandlingID, dokument) {
+  return doThenDispatch(() => Api.Avklartefakta.send(behandlingID, dokument), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -34,8 +34,8 @@ export function send(bid, dokument) {
 export function lagre() {
   return (dispatch, getState) => {
     const avklartefakta = Selectors.AvklartefaktaSelector(getState());
-    const bid = behandlingerSelectors.BehandlingIDSelector(getState());
-    dispatch(send(bid, avklartefakta));
+    const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
+    dispatch(send(behandlingID, avklartefakta));
   };
 }
 

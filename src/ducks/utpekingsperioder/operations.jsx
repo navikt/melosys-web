@@ -30,9 +30,9 @@ export function send(behandlingID, utpekingsperioder) {
 export function lagre() {
   return (dispatch, getState) => {
     const utpekingsperioder = Selectors.UtpekingsperioderSelector(getState());
-    const bid = behandlingerSelectors.BehandlingIDSelector(getState());
+    const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
 
-    return dispatch(send(bid, { utpekingsperioder }));
+    return dispatch(send(behandlingID, { utpekingsperioder }));
   };
 }
 

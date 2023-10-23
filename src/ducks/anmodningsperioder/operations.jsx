@@ -37,14 +37,13 @@ export function send(behandlingID, anmodningsperioder) {
 export function lagre() {
   return (dispatch, getState) => {
     const anmodningsperioder = Selectors.AnmodningsperioderSelector(getState());
-    const bid = behandlingerSelectors.BehandlingIDSelector(getState());
+    const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
     const anmodningsperioderErSendtUtlandet = Selectors.AnmodningsperioderErSendtUtlandetSelector(getState());
 
     if (anmodningsperioderErSendtUtlandet) return null;
 
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     return dispatch(
-      send(bid, {
+      send(behandlingID, {
         anmodningsperioder: anmodningsperioder.map(({ sendtUtland, ...beholdProperties }) => beholdProperties),
       })
     );
