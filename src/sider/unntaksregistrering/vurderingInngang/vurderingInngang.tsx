@@ -21,6 +21,7 @@ import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
 import { DialogboksOppfriskSak } from "../../../felleskomponenter/dialogboks";
 import { navigeringOperations } from "../../../ducks/navigering";
+import { BehandlingUnderOppfriskningSelector } from "../../../ducks/modaler/selectors";
 
 const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const gyldigeLandkoder = (sakstype: string) =>
@@ -40,6 +41,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
   const lovvalgsland = useSelector(mottatteOpplysningerSelectors.LovvalgslandSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
   const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
+  const behandlingUnderOppfriskning = useSelector(BehandlingUnderOppfriskningSelector);
 
   const { control, watch, setValue, formState } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
@@ -64,7 +66,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
     formValues?.avsenderland !== initialValues?.avsenderland ||
     formValues?.lovvalgsland !== initialValues?.lovvalgsland;
 
-  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger;
+  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !behandlingUnderOppfriskning;
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
