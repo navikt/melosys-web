@@ -41,6 +41,9 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
               <Ikon.Fullmakt className="inline_felt ikon" aria-hidden />
               <Nav.Typo.Systemtittel className="inline_felt">
                 {Utils.person.tilSammensattNavnFraObjekt(fullmektig.person?.navn)}
+                {fullmektig.person?.bostedsadresser[0].coAdressenavn
+                  ? ` C/O ${fullmektig.person.bostedsadresser[0].coAdressenavn}`
+                  : ""}
               </Nav.Typo.Systemtittel>
             </div>
             <Nav.Row>
