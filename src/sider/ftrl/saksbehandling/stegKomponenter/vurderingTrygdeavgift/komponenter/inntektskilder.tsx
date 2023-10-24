@@ -59,7 +59,7 @@ export const Inntektskilder = ({
     <>
       <LabelMedHjelpetekst
         label="Oppgi informasjon om brukers inntekt"
-        className="inntektskilder__label"
+        className="inntektskilder_label"
         hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
         hjelpetekstClassName="hjelpetekst"
       />
