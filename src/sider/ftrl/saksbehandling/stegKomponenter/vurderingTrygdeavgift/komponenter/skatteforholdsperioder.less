@@ -1,58 +1,62 @@
 @import (reference) "~nav-frontend-core/less/_variabler";
 
 .skatteforholdsperioder {
-  padding: 1rem;
-  border-radius: 2px;
   background: @navLysGra;
   margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  overflow-y: hidden;
 
-  &__label {
-    margin-bottom: 0.5rem;
-    font-size: 18px;
-    font-weight: 600;
-  }
+  .row {
+    margin-left: 0;
+    margin-right: 0;
 
-  &__overskriftrad {
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: flex-end;
-  }
-
-  &__overskriftrad {
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: flex-end;
-  }
-
-  .flex__kolonne {
-    display: flex;
-
-    > :first-child {
-      width: 50%;
-      margin-right: 0.5rem;
-    }
-    > :last-child {
-      width: 50%;
-      margin-left: 0.5rem;
+    > * {
+      min-width: 7.5rem;
     }
   }
 
-  .ikkeRelevant {
-    margin-top: 0.5rem;
+  .dato {
+    max-width: 7.5rem;
   }
 
-  .radioknapp_vertikal {
-    float: left;
-    min-height: 1px;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    margin-top: 0.5rem;
+  .overskriftrad {
+    margin: 0.75rem 0 0.75rem 0;
+  }
+
+  .inntektskilder_label {
+    font-weight: bold;
+  }
+
+  .skatteforholdsperiode {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 0.75rem;
+
+    .radioknapp_gruppe {
+      display: flex;
+      flex-direction: row;
+      justify-content: left;
+      white-space: nowrap;
+      gap: 0.5rem;
+    }
+
+    .slett {
+      padding-bottom: 1rem;
+      min-width: 2rem;
+    }
+  }
+
+  .overskriftrad {
+    display: flex;
+    flex-direction: row;
+    gap: 0.75rem;
   }
 
   .skillestrek {
     border-top: 1px solid #d8d8d8;
-    padding-top: 0.5rem;
-    margin-left: 0.25rem;
-    margin-right: 0.25rem;
+    padding: 0.75rem;
   }
 }

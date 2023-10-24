@@ -34,37 +34,35 @@ export const Skatteforholdsperioder = ({
     <>
       <LabelMedHjelpetekst
         label="Oppgi informasjon om brukers skatteforhold"
-        className="skatteforholdsperioder__label"
+        className="inntektskilder_label"
         hjelpetekstClassName="hjelpetekst"
       />
       <div className="skatteforholdsperioder">
-        <Nav.Row className="skatteforholdsperioder__overskriftrad">
-          <Nav.Column xs="3">
+        <Nav.Row className="overskriftrad">
+          <Nav.Column className="dato">
             <Nav.Typo.Element>Fra og med</Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column xs="3">
+          <Nav.Column className="dato">
             <Nav.Typo.Element>Til og med</Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column xs="6">
+          <Nav.Column>
             <Nav.Typo.Element>Er bruker skattepliktig?</Nav.Typo.Element>
           </Nav.Column>
         </Nav.Row>
 
         {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
           return (
-            <Nav.Row key={fields[index].id}>
-              <Nav.Column xs="3">
+            <Nav.Row className="skatteforholdsperiode" key={fields[index].id}>
+              <Nav.Column className="dato">
                 <Forms.Datovelger
-                  className={"skatteforholdsperioder__datovelger"}
                   name={`skatteforholdsperioder[${index}].fomDato`}
                   disabled={!redigerbart}
                   control={control}
                 />
               </Nav.Column>
 
-              <Nav.Column xs="3">
+              <Nav.Column className="dato">
                 <Forms.Datovelger
-                  className={"skatteforholdsperioder__datovelger"}
                   name={`skatteforholdsperioder[${index}].tomDato`}
                   disabled={!redigerbart}
                   control={control}
@@ -72,14 +70,13 @@ export const Skatteforholdsperioder = ({
                 />
               </Nav.Column>
 
-              <Nav.Column xs="5">
+              <Nav.Column className="radioknapp_gruppe">
                 <Forms.Radio
                   label="Ja"
                   name={`skatteforholdsperioder[${index}].skatteplikttype`}
                   control={control}
                   value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}
                   disabled={!redigerbart}
-                  className="radioknapp_vertikal"
                 />
                 <Forms.Radio
                   label="Nei"
@@ -87,11 +84,10 @@ export const Skatteforholdsperioder = ({
                   control={control}
                   value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}
                   disabled={!redigerbart}
-                  className="radioknapp_vertikal"
                 />
               </Nav.Column>
 
-              <Nav.Column xs="1">
+              <Nav.Column className="slett">
                 {redigerbart && formValues.skatteforholdsperioder.length > 1 && (
                   <Mui.IkonKnapp ariaLabel="Slett skatteforhold" ikon={Ikoner.Bin} onClick={() => remove(index)} />
                 )}
