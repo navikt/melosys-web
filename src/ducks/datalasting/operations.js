@@ -62,7 +62,6 @@ export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => a
       dispatch(fagsakOperations.hent(saksnummer)),
       dispatch(behandlingerOperations.hentBehandling(behandlingID)),
       dispatch(behandlingsresultatOperations.hent(behandlingID)),
-      dispatch(avklartefaktaOperations.hent(behandlingID)),
       dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
       dispatch(vilkarOperations.hent(behandlingID)),
       dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
