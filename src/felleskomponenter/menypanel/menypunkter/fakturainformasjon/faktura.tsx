@@ -68,10 +68,7 @@ export const Faktura = ({ faktura }: FakturaProps) => {
   );
 
   return (
-    <Table.ExpandableRow
-      key={faktura.id}
-      content={<FakturaLinjeContainer faktura={{ ...faktura }} fakturaNummer={nyesteFakturaStatus?.fakturaNummer} />}
-    >
+    <Table.ExpandableRow key={faktura.id} content={<FakturaLinjeContainer faktura={{ ...faktura }} />}>
       <Table.DataCell>{formatterDatoTilNorsk(faktura.sistOppdatert)}</Table.DataCell>
       <Table.DataCell>{mapPeriodeTilKvartalString(faktura.periodeFra, faktura.periodeTil)}</Table.DataCell>
       <Table.DataCell>

@@ -1,19 +1,21 @@
 import { Table } from "@navikt/ds-react";
 import KopierbarTekst from "../../../kopierbarTekst";
-import { _isEmpty, _uuid, formaterTilNorskBelop } from "../../../../utils";
-import { formatterDatoTilNorsk } from "../../../../utils/dato";
+import { _isEmpty, _isNil, _uuid, formaterTilNorskBelop } from "../../../../utils";
 
 interface FakturaLinjeProps {
   faktura: any;
-  fakturaNummer: string | undefined | null;
 }
 
-export const FakturaLinjeContainer = ({ faktura, fakturaNummer }: FakturaLinjeProps) => {
+export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeProps) => {
   return (
     <div className="fakturalinje">
       <div className="fakturanr_wrapper">
         Fakturanr:&nbsp;
-        <KopierbarTekst hovertekst="">{fakturaNummer ?? "Ikke generert enda"}</KopierbarTekst>
+        <KopierbarTekst hovertekst="">
+          {_isEmpty(faktura.eksternFakturaNummer) || _isNil(faktura.eksternFakturaNummer)
+            ? "Ikke generert enda"
+            : faktura.eksternFakturaNummer}
+        </KopierbarTekst>
       </div>
 
       <Table>
@@ -28,9 +30,11 @@ export const FakturaLinjeContainer = ({ faktura, fakturaNummer }: FakturaLinjePr
         <Table.Body>
           {faktura.fakturaLinje.map((fakturaLinje: any) => (
             <Table.Row key={_uuid()} shadeOnHover={false}>
-              <Table.DataCell>{`Periode: ${formatterDatoTilNorsk(fakturaLinje.periodeFra)} - ${formatterDatoTilNorsk(
-                fakturaLinje.periodeTil
-              )}, ${fakturaLinje.beskrivelse}`}</Table.DataCell>
+              <Table.DataCell>
+                {fakturaLinje.beskrivelse.split("\n").map((line: string) => {
+                  return <div key={_uuid()}>{line}</div>;
+                })}
+              </Table.DataCell>
               <Table.DataCell>{fakturaLinje.antall}</Table.DataCell>
               <Table.DataCell>{formaterTilNorskBelop(fakturaLinje.enhetsprisPerManed)}</Table.DataCell>
               <Table.DataCell>{formaterTilNorskBelop(fakturaLinje.belop)}</Table.DataCell>
