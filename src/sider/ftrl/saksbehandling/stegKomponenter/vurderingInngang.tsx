@@ -25,6 +25,7 @@ import { navigeringOperations } from "../../../../ducks/navigering";
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
 import { modalerOperations, modalerSelectors } from "../../../../ducks/modaler";
+import { oppsummertfaktaOperations } from "../../../../ducks/oppsummertfakta";
 
 interface Props {
   bekreft: () => void;
@@ -36,6 +37,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const dispatch = useDispatch();
 
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const trygdedekninger = useSelector(folketrygdenkodeverkSelectors.TrygdedekningerSelector);
@@ -86,15 +88,18 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       ),
       dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(formValues.land ? [formValues.land] : [], false)),
       dispatch(mottatteOpplysningerOperations.oppdaterTrygdedekning(formValues.trygdedekning)),
-      dispatch(modalerOperations.leggTilInkluderSiste5Aar(formValues.inkluderSiste5Aar)),
     ]);
   };
 
   const bekreftOgFortsett = () => {
     if (skalHenteRegisteropplysninger) {
-      oppdaterLokalMottatteOpplysninger().finally(() => {
-        setVisOppfrisk(true);
-      });
+      oppdaterLokalMottatteOpplysninger()
+        .then(() => {
+          dispatch(modalerOperations.leggTilInkluderSiste5Aar(formValues.inkluderSiste5Aar));
+        })
+        .finally(() => {
+          setVisOppfrisk(true);
+        });
     } else {
       bekreft();
     }
@@ -204,7 +209,10 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
       {visOppfrisk && (
         <DialogboksOppfriskSak
-          oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
+          oppfrisk={async () => {
+            await lagreMottatteOpplysningerOgOppfriskSaksopplysninger();
+            dispatch(oppsummertfaktaOperations.sendArbeidsland(behandlingID, { arbeidsland: [formValues.land] }));
+          }}
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
             setVisOppfrisk(false);
