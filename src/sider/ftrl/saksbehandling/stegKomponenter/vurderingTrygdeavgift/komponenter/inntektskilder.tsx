@@ -63,26 +63,26 @@ export const Inntektskilder = ({
         hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
         hjelpetekstClassName="hjelpetekst"
       />
-      <div className={"wrapper_inntektskilder"}>
+      <div className="wrapper_inntektskilder">
         <Nav.Row className="inntektskilder">
-          <Nav.Column className={"dato"}>
+          <Nav.Column className="dato">
             <Nav.Typo.Element>Fra og med</Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column className={"dato"}>
+          <Nav.Column className="dato">
             <Nav.Typo.Element>Til og med</Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column className={"inntektskilde"}>
+          <Nav.Column className="inntektskilde">
             <Nav.Typo.Element>Inntektskilde</Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column className={"radioknapp_tittel"}>
+          <Nav.Column className="radioknapp_tittel">
             <Nav.Typo.Element>
               Betales arb.avg. <br /> til skatt?
             </Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column className={"brutto_inntekt"}>
+          <Nav.Column className="brutto_inntekt">
             <Nav.Typo.Element>Brutto inntekt per md.</Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column className={"slett"}></Nav.Column>
+          <Nav.Column className="slett"></Nav.Column>
         </Nav.Row>
 
         {formValues.inntektskilder.map((inntektskilde, index) => {
@@ -103,11 +103,11 @@ export const Inntektskilder = ({
           }
 
           return (
-            <Nav.Row className={"inntektskilder"} key={fields[index].id}>
-              <Nav.Column className={"dato"}>
+            <Nav.Row className="inntektskilder" key={fields[index].id}>
+              <Nav.Column className="dato">
                 <Forms.Datovelger name={`inntektskilder[${index}].fomDato`} disabled={!redigerbart} control={control} />
               </Nav.Column>
-              <Nav.Column className={"dato"}>
+              <Nav.Column className="dato">
                 <Forms.Datovelger
                   name={`inntektskilder[${index}].tomDato`}
                   disabled={!redigerbart}
@@ -116,7 +116,7 @@ export const Inntektskilder = ({
                 />
               </Nav.Column>
 
-              <Nav.Column className={"inntektskilde"}>
+              <Nav.Column className="inntektskilde">
                 <Forms.Select
                   label=""
                   name={`inntektskilder[${index}].kildetype`}
@@ -161,7 +161,7 @@ export const Inntektskilder = ({
               )}
 
               {visBruttoInntekt && (
-                <Nav.Column className={"brutto_inntekt"}>
+                <Nav.Column className="brutto_inntekt">
                   {skalFylleInnBruttoInntekt ? (
                     <Forms.Input
                       label=""
@@ -176,7 +176,7 @@ export const Inntektskilder = ({
               )}
 
               {redigerbart && formValues.inntektskilder.length > 1 && (
-                <Nav.Column className={"slett"}>
+                <Nav.Column className="slett">
                   <Mui.IkonKnapp ariaLabel="Slett inntektskilde" ikon={Ikoner.Bin} onClick={() => remove(index)} />
                 </Nav.Column>
               )}
