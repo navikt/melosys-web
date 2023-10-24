@@ -69,6 +69,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   hentBehandling: (behandlingId: number) => dispatch(behandlingerOperations.hentBehandling(behandlingId)),
   hentMottatteOpplysninger: (behandlingId: number) => dispatch(mottatteOpplysningerOperations.hent(behandlingId)),
+  hentAvklartefakta: (behandlingId: number) => dispatch(avklartefaktaOperations.hent(behandlingId)),
   hentBehandlingsresultat: (behandlingId: number) => dispatch(behandlingsresultatOperations.hent(behandlingId)),
   hentDokumentOversikt: (saksnummer: string) => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
   hentFagsaker: (saksnummer: string) => dispatch(fagsakOperations.hent(saksnummer)),
@@ -115,6 +116,7 @@ const Saksbehandling = ({
   fagsakStatusKode,
   hentBehandling,
   hentMottatteOpplysninger,
+  hentAvklartefakta,
   hentBehandlingsresultat,
   hentDokumentOversikt,
   hentFagsaker,
@@ -179,6 +181,7 @@ const Saksbehandling = ({
       }
       await hentMedlemskapsperioder(behandlingId);
       await hentBestemmelse(behandlingId);
+      await hentAvklartefakta(behandlingId);
       await hentVilkår(behandlingId);
       await hentMottatteOpplysninger(behandlingId);
       await hentDokumentOversikt(saksnr);
