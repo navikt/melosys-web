@@ -74,6 +74,9 @@ const RedigererFullmektig = ({
     }
   };
 
+  const fullmaktStøtterKontaktperson = (fullmakter: String[]) =>
+    fullmakter.includes(FULLMEKTIG_SØKNAD) || fullmakter.includes(FULLMEKTIG_ARBEIDSGIVER);
+
   const handleFullmaktChange = (fullmakt: string, index: number, triggerValidation: boolean) => {
     const nyeFullmakter = [...fullmektige[index].fullmakter];
     if (nyeFullmakter.includes(fullmakt)) {
@@ -81,7 +84,20 @@ const RedigererFullmektig = ({
     } else {
       nyeFullmakter.push(fullmakt);
     }
-    update(index, { ...fullmektige[index], fullmakter: nyeFullmakter });
+
+    if (fullmaktStøtterKontaktperson(nyeFullmakter)) {
+      update(index, { ...fullmektige[index], fullmakter: nyeFullmakter });
+    } else {
+      update(index, {
+        ...fullmektige[index],
+        fullmakter: nyeFullmakter,
+        kontaktperson: undefined,
+        kontaktOrgnr: undefined,
+        kontaktTelefon: undefined,
+        kontaktOrg: undefined,
+      });
+    }
+
     if (triggerValidation) {
       trigger(`fullmektige[${index}].fullmakter`);
     }
@@ -107,9 +123,7 @@ const RedigererFullmektig = ({
     <>
       {fullmektige.map(({ type, fullmakter, feil, person, org, kontaktOrg }: Fullmektig, index) => {
         const adresseErGyldig = !feil && (person || org);
-        const kanHaKontaktperson =
-          type === Type.ORGANISASJON &&
-          (fullmakter.includes(FULLMEKTIG_SØKNAD) || fullmakter.includes(FULLMEKTIG_ARBEIDSGIVER));
+        const kanHaKontaktperson = type === Type.ORGANISASJON && fullmaktStøtterKontaktperson(fullmakter);
         // @ts-ignore
         const manglerFullmakt = errors?.fullmektige?.[index]?.fullmakter?.message?.melding;
 
