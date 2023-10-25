@@ -1,19 +1,21 @@
 import { Table } from "@navikt/ds-react";
 import KopierbarTekst from "../../../kopierbarTekst";
-import { _isEmpty, _uuid, formaterTilNorskBelop } from "../../../../utils";
-import { formatterDatoTilNorsk } from "../../../../utils/dato";
+import * as Utils from "../../../../utils";
 
 interface FakturaLinjeProps {
   faktura: any;
-  fakturaNummer: string | undefined | null;
 }
 
-export const FakturaLinjeContainer = ({ faktura, fakturaNummer }: FakturaLinjeProps) => {
+export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeProps) => {
   return (
     <div className="fakturalinje">
       <div className="fakturanr_wrapper">
         Fakturanr:&nbsp;
-        <KopierbarTekst hovertekst="">{fakturaNummer ?? "Ikke generert enda"}</KopierbarTekst>
+        <KopierbarTekst hovertekst="">
+          {Utils._isEmpty(faktura.eksternFakturaNummer) || Utils._isNil(faktura.eksternFakturaNummer)
+            ? "Ikke generert enda"
+            : faktura.eksternFakturaNummer}
+        </KopierbarTekst>
       </div>
 
       <Table>
@@ -27,22 +29,24 @@ export const FakturaLinjeContainer = ({ faktura, fakturaNummer }: FakturaLinjePr
         </Table.Header>
         <Table.Body>
           {faktura.fakturaLinje.map((fakturaLinje: any) => (
-            <Table.Row key={_uuid()} shadeOnHover={false}>
-              <Table.DataCell>{`Periode: ${formatterDatoTilNorsk(fakturaLinje.periodeFra)} - ${formatterDatoTilNorsk(
-                fakturaLinje.periodeTil
-              )}, ${fakturaLinje.beskrivelse}`}</Table.DataCell>
+            <Table.Row key={Utils._uuid()} shadeOnHover={false}>
+              <Table.DataCell>
+                {fakturaLinje.beskrivelse.split("\n").map((line: string) => {
+                  return <div key={Utils._uuid()}>{line}</div>;
+                })}
+              </Table.DataCell>
               <Table.DataCell>{fakturaLinje.antall}</Table.DataCell>
-              <Table.DataCell>{formaterTilNorskBelop(fakturaLinje.enhetsprisPerManed)}</Table.DataCell>
-              <Table.DataCell>{formaterTilNorskBelop(fakturaLinje.belop)}</Table.DataCell>
+              <Table.DataCell>{Utils.formaterTilNorskBelop(fakturaLinje.enhetsprisPerManed)}</Table.DataCell>
+              <Table.DataCell>{Utils.formaterTilNorskBelop(fakturaLinje.belop)}</Table.DataCell>
             </Table.Row>
           ))}
-          {!_isEmpty(faktura.fakturaLinje) && (
+          {!Utils._isEmpty(faktura.fakturaLinje) && (
             <Table.Row shadeOnHover={false}>
               <Table.HeaderCell className="uten-border" />
               <Table.HeaderCell className="uten-border" />
               <Table.HeaderCell className="uten-border">Totalt</Table.HeaderCell>
               <Table.DataCell className="uten-border">
-                {formaterTilNorskBelop(
+                {Utils.formaterTilNorskBelop(
                   faktura.fakturaLinje.map((linje: any) => linje.belop).reduce((a: any, b: any) => a + b)
                 )}
               </Table.DataCell>
