@@ -142,6 +142,7 @@ addMethod(string, "erFnrEllerDnr", function (message) {
 
 addMethod(string, "erOrgnr", function (message) {
   return this.test("er orgnr", message, function (value) {
+    if (!value) return true;
     return Utils.organisasjon.erOrgnrGyldig(value);
   });
 });

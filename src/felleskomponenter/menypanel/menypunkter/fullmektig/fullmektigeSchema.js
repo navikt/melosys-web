@@ -1,7 +1,7 @@
 import { object, string, array } from "yup";
 import * as KV from "../../../../kodeverk";
 
-const { MAA_FYLLES_UT, SKRIV_INN_GYLDIG_ORGNR_FNR_DNR } = KV.Feilmeldinger;
+const { MAA_FYLLES_UT, SKRIV_INN_GYLDIG_ORGNR_FNR_DNR, SKRIV_INN_GYLDIG_ORGNR } = KV.Feilmeldinger;
 const KAN_IKKE_HA_AKTIV_FEIL = { melding: "Kan ikke ha aktiv feil" };
 const UNIKE_IDENTER = { melding: "Org.nr. eller f.nr./d-nr. kan ikke være identiske" };
 
@@ -27,6 +27,7 @@ const fullmektige_schema = object().shape({
       feil: string()
         .test("Kan ikke ha aktiv feil", { message: KAN_IKKE_HA_AKTIV_FEIL }, (feil) => !feil)
         .nullable(),
+      kontaktOrgnr: string().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
   ),
 });
