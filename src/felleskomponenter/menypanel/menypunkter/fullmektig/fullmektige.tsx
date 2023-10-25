@@ -53,6 +53,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     } as FieldValue<FieldValues & FieldArrayProps>,
   });
   const {
+    fields,
     append,
     update,
     remove,
@@ -90,7 +91,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     const mappedFullmektige =
       lagredeFullmektige?.map((aktør) => ({
         databaseID: aktør.databaseID,
-        id: aktør.orgnr ? aktør.orgnr : aktør.personIdent!!,
+        ident: aktør.orgnr ? aktør.orgnr : aktør.personIdent!!,
         type: aktør.orgnr ? Type.ORGANISASJON : Type.PERSON,
         fullmakter: aktør.fullmakter ?? [],
         originalAktør: aktør,
@@ -98,17 +99,17 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     resetFullmektige(mappedFullmektige);
     mappedFullmektige.forEach((fullmektig, index) => {
       if (fullmektig.type === Type.PERSON) {
-        finnPersonAdresse(fullmektig.id).then((personOgFeil) =>
+        finnPersonAdresse(fullmektig.ident).then((personOgFeil) =>
           update(index, { ...fullmektig, person: personOgFeil.person, feil: personOgFeil.feil })
         );
       } else {
         let oppdatertFullmektig: Fullmektig = { ...fullmektig };
-        finnOrganisasjonAdresse(fullmektig.id).then((orgOgFeil) => {
+        finnOrganisasjonAdresse(fullmektig.ident).then((orgOgFeil) => {
           oppdatertFullmektig = { ...fullmektig, org: orgOgFeil.org, feil: orgOgFeil.feil };
           update(index, oppdatertFullmektig);
         });
         Api.Fagsaker.kontaktopplysninger
-          .hent(saksnummer, fullmektig.id)
+          .hent(saksnummer, fullmektig.ident)
           .then((kontaktopplysning) => {
             oppdatertFullmektig = {
               ...oppdatertFullmektig,
@@ -136,7 +137,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
 
   const handleLeggTil = () => {
     append({
-      id: "",
+      ident: "",
       fullmakter: [],
     });
   };
@@ -153,19 +154,19 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     for (const fullmektig of formValues.fullmektige) {
       await Api.Fagsaker.aktoer.send(saksnummer, {
         databaseID: fullmektig.databaseID,
-        orgnr: fullmektig.type === Type.ORGANISASJON ? fullmektig.id : null,
-        personIdent: fullmektig.type === Type.PERSON ? fullmektig.id : null,
+        orgnr: fullmektig.type === Type.ORGANISASJON ? fullmektig.ident : null,
+        personIdent: fullmektig.type === Type.PERSON ? fullmektig.ident : null,
         rolleKode: FULLMEKTIG,
         fullmakter: fullmektig.fullmakter ?? [],
       });
 
       if (fullmektig.kontaktperson || fullmektig.kontaktOrgnr || fullmektig.kontaktTelefon) {
-        await Api.Fagsaker.kontaktopplysninger.send(saksnummer, fullmektig.id, {
+        await Api.Fagsaker.kontaktopplysninger.send(saksnummer, fullmektig.ident, {
           kontaktorgnr: fullmektig.kontaktOrgnr,
           kontaktnavn: fullmektig.kontaktperson,
           kontakttelefon: fullmektig.kontaktTelefon,
         });
-        if (fullmektig.harLagretKontaktperson && fullmektig.id !== fullmektig.originalAktør?.orgnr) {
+        if (fullmektig.harLagretKontaktperson && fullmektig.ident !== fullmektig.originalAktør?.orgnr) {
           await Api.Fagsaker.kontaktopplysninger.slett(saksnummer, fullmektig.originalAktør?.orgnr);
         }
       } else if (fullmektig.harLagretKontaktperson) {
@@ -208,6 +209,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       {redigerer ? (
         <RedigererFullmektig
           fullmektige={formValues.fullmektige}
+          fields={fields}
           control={control}
           update={update}
           errors={errors}

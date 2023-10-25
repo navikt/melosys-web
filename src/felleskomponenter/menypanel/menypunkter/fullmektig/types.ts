@@ -8,7 +8,7 @@ export enum Type {
 }
 
 export type Fullmektig = {
-  id: string;
+  ident: string;
   databaseID?: number;
   fullmakter: string[];
   type?: Type;

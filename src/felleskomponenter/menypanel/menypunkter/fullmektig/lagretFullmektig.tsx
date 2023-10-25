@@ -16,7 +16,7 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
       {fullmektige.map((fullmektig: Fullmektig) => {
         if (fullmektig.type === Type.ORGANISASJON) {
           return (
-            <div className="lagretFullmektig_container">
+            <div className="lagretFullmektig_container" key={fullmektig.ident}>
               <div className="overskrift">
                 <Ikon.Fullmakt className="inline_felt ikon" aria-hidden />
                 <Nav.Typo.Systemtittel className="inline_felt">{fullmektig.org?.navn}</Nav.Typo.Systemtittel>
@@ -24,7 +24,7 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
               <Nav.Row>
                 <Nav.Column xs="6">
                   <Nav.Typo.Element className="inline_felt">Org.nr.: </Nav.Typo.Element>
-                  <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.id}</Nav.Typo.Normaltekst>
+                  <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.ident}</Nav.Typo.Normaltekst>
                   <Adresse type={Type.ORGANISASJON} organisasjon={fullmektig.org} visNavn={false} />
                   <Kontaktperson fullmektig={fullmektig} />
                 </Nav.Column>
@@ -36,7 +36,7 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
           );
         }
         return (
-          <div className="lagretFullmektig_container">
+          <div className="lagretFullmektig_container" key={fullmektig.ident}>
             <div className="overskrift">
               <Ikon.Fullmakt className="inline_felt ikon" aria-hidden />
               <Nav.Typo.Systemtittel className="inline_felt">
@@ -49,7 +49,7 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
             <Nav.Row>
               <Nav.Column xs="6">
                 <Nav.Typo.Element className="inline_felt">F.nr./d-nr.: </Nav.Typo.Element>
-                <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.id}</Nav.Typo.Normaltekst>
+                <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.ident}</Nav.Typo.Normaltekst>
                 <Adresse type={Type.PERSON} person={fullmektig.person} visNavn={false} />
               </Nav.Column>
               <Nav.Column xs="6">
@@ -67,7 +67,7 @@ const Fullmakter = ({ fullmakter }: { fullmakter: string[] }) => {
   return (
     <>
       {fullmakter.map((fullmakt) => (
-        <div>
+        <div key={fullmakt}>
           <Ikon.GreenCheckmark className="inline_felt ikon" />
           <Nav.Typo.Element className="inline_felt">
             {KV.kodeTilTerm(fullmakt, MKV.KTObjects.fullmaktstype)}

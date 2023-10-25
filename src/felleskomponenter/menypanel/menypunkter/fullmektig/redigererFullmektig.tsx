@@ -1,7 +1,7 @@
 import * as Forms from "../../../forms";
 import { Organisasjon } from "../../../../services/modules/types";
 import { Personopplysninger } from "../../../../graphql";
-import { Control, FieldErrors, FieldValue, FieldValues } from "react-hook-form";
+import { Control, FieldArrayWithId, FieldErrors, FieldValue, FieldValues } from "react-hook-form";
 import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
 import Adresse from "./adresse";
@@ -24,6 +24,7 @@ interface RedigererFullmektigProps {
   finnPersonAdresse: (personIdent: string) => Promise<{ person?: Personopplysninger; feil?: string }>;
   errors: FieldErrors<FieldValue<FieldValues & FieldArrayProps>>;
   trigger: (field: string) => void;
+  fields: FieldArrayWithId<FieldArrayProps, "fullmektige">[];
 }
 
 const RedigererFullmektig = ({
@@ -36,17 +37,18 @@ const RedigererFullmektig = ({
   finnPersonAdresse,
   errors,
   trigger,
+  fields,
 }: RedigererFullmektigProps) => {
-  const handleIdChange = (id: string, index: number) => {
-    if (Utils.organisasjon.erOrgnrGyldig(id)) {
-      finnOrganisasjonAdresse(id).then((response) =>
+  const handleIdChange = (ident: string, index: number) => {
+    if (Utils.organisasjon.erOrgnrGyldig(ident)) {
+      finnOrganisasjonAdresse(ident).then((response) =>
         update(index, { ...fullmektige[index], type: Type.ORGANISASJON, feil: response.feil, org: response.org })
       );
-    } else if (Utils.person.erGyldigFnrEllerDnr(id)) {
-      finnPersonAdresse(id).then((response) =>
+    } else if (Utils.person.erGyldigFnrEllerDnr(ident)) {
+      finnPersonAdresse(ident).then((response) =>
         update(index, { ...fullmektige[index], type: Type.PERSON, feil: response.feil, person: response.person })
       );
-    } else {
+    } else if (fullmektige[index].type) {
       update(index, {
         ...fullmektige[index],
         type: undefined,
@@ -67,7 +69,7 @@ const RedigererFullmektig = ({
       finnOrganisasjonAdresse(orgnr).then((response) =>
         update(index, { ...fullmektige[index], kontaktOrg: response.org })
       );
-    } else {
+    } else if (fullmektige[index].kontaktOrg) {
       update(index, { ...fullmektige[index], kontaktOrg: undefined });
     }
   };
@@ -110,14 +112,14 @@ const RedigererFullmektig = ({
         const manglerFullmakt = errors?.fullmektige?.[index]?.fullmakter?.message;
 
         return (
-          <div className="redigererFullmektig_container">
-            <Nav.Typo.Element className="id_label">Org.nr. eller f.nr./d-nr.:</Nav.Typo.Element>
-            <span className="id_input">
+          <div className="redigererFullmektig_container" key={fields[index].id}>
+            <Nav.Typo.Element className="ident_label">Org.nr. eller f.nr./d-nr.:</Nav.Typo.Element>
+            <span className="ident_input">
               <Forms.Input
-                name={`fullmektige[${index}].id`}
+                name={`fullmektige[${index}].ident`}
                 label=""
                 control={control}
-                onChange={(id) => handleIdChange(id, index)}
+                onChange={(ident) => handleIdChange(ident, index)}
                 bredde="S"
                 feil={feil}
               />
@@ -137,6 +139,7 @@ const RedigererFullmektig = ({
                 {gyldigeFullmakter(type).map((fullmakt: KTObject) => (
                   <Nav.Checkbox
                     className="fullmakt"
+                    key={fullmakt.kode}
                     value={fullmakt.kode}
                     label={fullmakt.term}
                     checked={fullmakter.includes(fullmakt.kode)}
