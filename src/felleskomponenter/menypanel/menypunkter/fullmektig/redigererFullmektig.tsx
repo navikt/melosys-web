@@ -47,7 +47,28 @@ const RedigererFullmektig = ({
         update(index, { ...fullmektige[index], type: Type.PERSON, feil: response.feil, person: response.person })
       );
     } else {
-      update(index, { ...fullmektige[index], type: undefined, feil: undefined, person: undefined, org: undefined });
+      update(index, {
+        ...fullmektige[index],
+        type: undefined,
+        feil: undefined,
+        person: undefined,
+        org: undefined,
+        kontaktperson: undefined,
+        kontaktOrgnr: undefined,
+        kontaktTelefon: undefined,
+        kontaktOrg: undefined,
+        fullmakter: [],
+      });
+    }
+  };
+
+  const handleKontaktOrgnrChange = (orgnr: string, index: number) => {
+    if (Utils.organisasjon.erOrgnrGyldig(orgnr)) {
+      finnOrganisasjonAdresse(orgnr).then((response) =>
+        update(index, { ...fullmektige[index], kontaktOrg: response.org })
+      );
+    } else {
+      update(index, { ...fullmektige[index], kontaktOrg: undefined });
     }
   };
 
@@ -80,7 +101,7 @@ const RedigererFullmektig = ({
   const visLeggTilKnapp = fullmektige.length < 3 && fullmektige.every((it) => it.type);
   return (
     <>
-      {fullmektige.map(({ type, fullmakter, feil, person, org }: Fullmektig, index) => {
+      {fullmektige.map(({ type, fullmakter, feil, person, org, kontaktOrg }: Fullmektig, index) => {
         const adresseErGyldig = !feil && (person || org);
         const kanHaKontaktperson =
           type === Type.ORGANISASJON &&
@@ -129,32 +150,32 @@ const RedigererFullmektig = ({
             )}
 
             {adresseErGyldig && kanHaKontaktperson && (
-              <Nav.Row className="kontaktperson_container">
-                <Nav.Column xs="5">
-                  <Forms.Input
-                    name={`fullmektige[${index}].kontaktperson`}
-                    control={control}
-                    label={
-                      <span className="kontaktperson_labels">
-                        <Nav.Typo.Element>Kontaktperson </Nav.Typo.Element>
-                        <Nav.Typo.Normaltekst>(valgfritt)</Nav.Typo.Normaltekst>
-                      </span>
-                    }
-                  />
-                </Nav.Column>
-                <Nav.Column xs="3">
-                  <Forms.Input
-                    name={`fullmektige[${index}].kontaktOrgnr`}
-                    control={control}
-                    label={
-                      <span className="kontaktperson_labels">
-                        <Nav.Typo.Element>Org.nr. </Nav.Typo.Element>
-                        <Nav.Typo.Normaltekst>(valgfritt)</Nav.Typo.Normaltekst>
-                      </span>
-                    }
-                  />
-                </Nav.Column>
-              </Nav.Row>
+              <div className="kontaktperson_container">
+                <span className="kontaktperson_labels">
+                  <Nav.Typo.Element>Kontaktopplysninger </Nav.Typo.Element>
+                  <Nav.Typo.Normaltekst>(valgfritt)</Nav.Typo.Normaltekst>
+                </span>
+                <Nav.Typo.EtikettLiten className="kontaktperson_info">
+                  Brev sendes til denne personen/adressen.
+                </Nav.Typo.EtikettLiten>
+                <Nav.Row>
+                  <Nav.Column xs="5">
+                    <Forms.Input name={`fullmektige[${index}].kontaktperson`} control={control} label="Kontaktperson" />
+                  </Nav.Column>
+                  <Nav.Column xs="3">
+                    <Forms.Input
+                      name={`fullmektige[${index}].kontaktOrgnr`}
+                      control={control}
+                      label="Org.nr."
+                      onChange={(orgnr) => handleKontaktOrgnrChange(orgnr, index)}
+                    />
+                  </Nav.Column>
+                  <Nav.Column xs="3">
+                    <Forms.Input name={`fullmektige[${index}].kontaktTelefon`} control={control} label="Telefon" />
+                  </Nav.Column>
+                </Nav.Row>
+                {kontaktOrg && <Adresse type={Type.ORGANISASJON} organisasjon={kontaktOrg} visNavn />}
+              </div>
             )}
           </div>
         );

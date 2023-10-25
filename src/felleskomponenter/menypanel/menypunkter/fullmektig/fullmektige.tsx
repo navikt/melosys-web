@@ -93,6 +93,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
         id: aktør.orgnr ? aktør.orgnr : aktør.personIdent!!,
         type: aktør.orgnr ? Type.ORGANISASJON : Type.PERSON,
         fullmakter: aktør.fullmakter ?? [],
+        originalAktør: aktør,
       })) ?? [];
     resetFullmektige(mappedFullmektige);
     mappedFullmektige.forEach((fullmektig, index) => {
@@ -111,8 +112,10 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
           .then((kontaktopplysning) => {
             oppdatertFullmektig = {
               ...oppdatertFullmektig,
+              harLagretKontaktperson: true,
               kontaktperson: kontaktopplysning.kontaktnavn,
               kontaktOrgnr: kontaktopplysning.kontaktorgnr,
+              kontaktTelefon: kontaktopplysning.kontakttelefon,
             };
             if (kontaktopplysning.kontaktorgnr) {
               finnOrganisasjonAdresse(kontaktopplysning.kontaktorgnr).then((orgOgFeil) =>
@@ -155,11 +158,18 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
         rolleKode: FULLMEKTIG,
         fullmakter: fullmektig.fullmakter ?? [],
       });
-      if (fullmektig.kontaktperson || fullmektig.kontaktOrgnr) {
+
+      if (fullmektig.kontaktperson || fullmektig.kontaktOrgnr || fullmektig.kontaktTelefon) {
         await Api.Fagsaker.kontaktopplysninger.send(saksnummer, fullmektig.id, {
           kontaktorgnr: fullmektig.kontaktOrgnr,
           kontaktnavn: fullmektig.kontaktperson,
+          kontakttelefon: fullmektig.kontaktTelefon,
         });
+        if (fullmektig.harLagretKontaktperson && fullmektig.id !== fullmektig.originalAktør?.orgnr) {
+          await Api.Fagsaker.kontaktopplysninger.slett(saksnummer, fullmektig.originalAktør?.orgnr);
+        }
+      } else if (fullmektig.harLagretKontaktperson) {
+        await Api.Fagsaker.kontaktopplysninger.slett(saksnummer, fullmektig.originalAktør?.orgnr);
       }
     }
     initializeFullmektige().then(() => {
@@ -172,6 +182,9 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     const { fullmektige } = formValues;
     if (fullmektige[index].databaseID) {
       Api.Fagsaker.aktoer.slett(fullmektige[index].databaseID);
+    }
+    if (fullmektige[index].harLagretKontaktperson) {
+      Api.Fagsaker.kontaktopplysninger.slett(saksnummer, fullmektige[index].originalAktør?.orgnr);
     }
     if (fullmektige.length === 1) {
       setRedigerer(false);

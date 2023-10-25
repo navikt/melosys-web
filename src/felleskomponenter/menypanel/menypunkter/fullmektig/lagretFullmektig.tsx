@@ -63,7 +63,6 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
   );
 };
 
-// TODO: kontaktnavn == null
 const Fullmakter = ({ fullmakter }: { fullmakter: string[] }) => {
   return (
     <>
@@ -80,24 +79,29 @@ const Fullmakter = ({ fullmakter }: { fullmakter: string[] }) => {
 };
 
 const Kontaktperson = ({ fullmektig }: { fullmektig: Fullmektig }) => {
-  if (!fullmektig.kontaktperson && !fullmektig.kontaktOrgnr) return null;
-
   return (
     <div className="kontaktperson">
+      <Nav.Typo.Element>Kontaktopplysninger</Nav.Typo.Element>
       <div>
         <Nav.Typo.Element className="inline_felt">Kontaktperson: </Nav.Typo.Element>
-        <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktperson}</Nav.Typo.Normaltekst>
+        <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktperson ?? "-"}</Nav.Typo.Normaltekst>
       </div>
-      <div>
-        <Nav.Typo.Element className="inline_felt">Org.nr.: </Nav.Typo.Element>
-        <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktOrgnr}</Nav.Typo.Normaltekst>
-      </div>
-      {fullmektig.kontaktOrg && (
+      {fullmektig.kontaktTelefon && (
+        <div>
+          <Nav.Typo.Element className="inline_felt">Telefon: </Nav.Typo.Element>
+          <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktTelefon}</Nav.Typo.Normaltekst>
+        </div>
+      )}
+      {fullmektig.kontaktOrgnr && (
+        <div>
+          <Nav.Typo.Element className="inline_felt">Org.nr.: </Nav.Typo.Element>
+          <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktOrgnr}</Nav.Typo.Normaltekst>
+        </div>
+      )}
+      {fullmektig.kontaktOrgnr && fullmektig.kontaktOrg && (
         <>
           <Adresse type={Type.ORGANISASJON} organisasjon={fullmektig.kontaktOrg} visNavn={false} />
-          <Nav.Typo.EtikettLiten className="brev_sendes">
-            Brev sendes til kontaktpersonens adresse
-          </Nav.Typo.EtikettLiten>
+          <Nav.Typo.EtikettLiten className="brev_sendes">(Brev sendes til denne adressen)</Nav.Typo.EtikettLiten>
         </>
       )}
     </div>

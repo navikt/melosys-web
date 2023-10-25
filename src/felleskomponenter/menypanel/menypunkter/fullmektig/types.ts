@@ -1,5 +1,6 @@
 import { Organisasjon } from "../../../../services/modules/types";
 import { Personopplysninger } from "../../../../graphql";
+import { Aktoer } from "../../../../services/modules/fagsaker/aktoer";
 
 export enum Type {
   PERSON = "PERSON",
@@ -14,8 +15,11 @@ export type Fullmektig = {
   org?: Partial<Organisasjon>;
   person?: Personopplysninger;
   feil?: string;
+  originalAktør?: Aktoer;
+  harLagretKontaktperson?: boolean;
   kontaktperson?: string | null;
   kontaktOrgnr?: string | null;
+  kontaktTelefon?: string | null;
   kontaktOrg?: Partial<Organisasjon>;
 };
 
