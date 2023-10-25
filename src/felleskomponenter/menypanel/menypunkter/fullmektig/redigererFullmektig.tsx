@@ -87,20 +87,19 @@ const RedigererFullmektig = ({
     }
   };
 
-  const fullmaktErDisabled = (index: number, kode: string) => {
-    const andreFullmektigesFullmakter = [...fullmektige]
-      .filter((it, itIndex) => index !== itIndex)
-      .flatMap((it) => it.fullmakter);
-    return andreFullmektigesFullmakter.includes(kode);
-  };
+  const andreFullmektigesFullmakter = (index: number) =>
+    [...fullmektige].filter((it, itIndex) => index !== itIndex).flatMap((it) => it.fullmakter);
 
-  const gyldigeFullmakter = (type?: Type) => {
-    return type === Type.PERSON
+  const fullmaktErDisabled = (index: number, kode: string) => andreFullmektigesFullmakter(index).includes(kode);
+
+  const gyldigeFullmakter = (type?: Type) =>
+    type === Type.PERSON
       ? MKV.KTObjects.fullmaktstype.filter((it: KTObject) => it.kode !== FULLMEKTIG_ARBEIDSGIVER)
       : MKV.KTObjects.fullmaktstype;
-  };
 
-  const visLeggTilKnapp = fullmektige.length < 3 && fullmektige.every((it) => it.type);
+  const visLeggTilKnapp =
+    fullmektige.length < 3 && fullmektige.every((it) => it.type) && andreFullmektigesFullmakter(-1).length !== 3;
+
   return (
     <>
       {fullmektige.map(({ type, fullmakter, feil, person, org, kontaktOrg }: Fullmektig, index) => {
