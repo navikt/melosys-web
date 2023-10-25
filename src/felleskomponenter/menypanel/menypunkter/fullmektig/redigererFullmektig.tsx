@@ -109,7 +109,7 @@ const RedigererFullmektig = ({
           type === Type.ORGANISASJON &&
           (fullmakter.includes(FULLMEKTIG_SØKNAD) || fullmakter.includes(FULLMEKTIG_ARBEIDSGIVER));
         // @ts-ignore
-        const manglerFullmakt = errors?.fullmektige?.[index]?.fullmakter?.message;
+        const manglerFullmakt = errors?.fullmektige?.[index]?.fullmakter?.message?.melding;
 
         return (
           <div className="redigererFullmektig_container" key={fields[index].id}>
