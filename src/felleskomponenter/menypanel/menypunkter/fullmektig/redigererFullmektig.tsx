@@ -126,7 +126,7 @@ const RedigererFullmektig = ({
                 feil={feil}
               />
             </span>
-            <Nav.Knapp className="slett_knapp" mini onClick={() => handleSlett(index)}>
+            <Nav.Knapp className="slett_knapp" mini onClick={() => handleSlett(index)} htmlType="button">
               <Ikoner.Bin aria-hidden className="slett_ikon" />
               Slett fullmektig
             </Nav.Knapp>
