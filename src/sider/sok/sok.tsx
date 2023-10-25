@@ -12,6 +12,8 @@ import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
 import { sokOperations, sokSelectors } from "../../ducks/sok";
 
 import "./sok.css";
+import { useFeatureToggle } from "../../featuretoggle";
+import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
 
 const mapStateToProps = (state: RootState) => ({
   sokResultat: sokSelectors.FagsakSokSelector(state),
@@ -32,6 +34,7 @@ export type SokProps = PropsFromRedux & {
 };
 
 export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: SokProps) => {
+  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const sokefrase = sessionStorage.getItem("sokefrase");
 
   useEffect(() => {
@@ -78,6 +81,7 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
                 sortingLegend="Sorter fagsaker etter opprettelsesdato:"
                 sortingPath="opprettetDato"
                 radioGroupName="fagsaksortering"
+                folketrygdenToggleEnabled={folketrygdenToggleEnabled}
                 landkoder={landkoder}
               />
             )}
