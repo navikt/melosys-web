@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Nav from "../../../../navFrontend";
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
 
 import { fakturainformasjonOperations } from "../../../../ducks/fakturainformasjon";
 import "./fakturainformasjon.css";
-import { _isEmpty, _toInteger } from "../../../../utils";
 import { Faktura } from "./faktura";
 import { STATUS } from "../../../../services";
 import { FakturaStatus } from "../../../../services/modules/faktureringskomponenten/fakturainformasjon";
@@ -48,7 +48,7 @@ const Fakturainformasjon = () => {
   }, [behandlingID, saksnummer, skalHenteFraForrigeBehandling, fakturaserieReferanseFraBehandling]);
 
   if (
-    _isEmpty(fakturainformasjon.data) ||
+    Utils._isEmpty(fakturainformasjon.data) ||
     fakturainformasjon.status !== STATUS.OK ||
     fakturainformasjon.data.status !== undefined
   ) {

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useEffect, useState } from "react";
 import * as Api from "../../../../services/api";
-import { _isEmpty, _uuid, formaterTilNorskBelop } from "../../../../utils";
+import * as Utils from "../../../../utils";
 import { Table } from "@navikt/ds-react";
 import moment from "moment";
 import KopierbarTekst from "../../../kopierbarTekst";
@@ -77,7 +77,7 @@ export const Faktura = ({ faktura }: FakturaProps) => {
           {FakturaStatusMapper[faktura.status as FakturaStatus]?.beskrivelse}
         </div>
       </Table.DataCell>
-      <Table.DataCell>{formaterTilNorskBelop(nyesteFakturaStatus?.ubetaltBelop) || "-"}</Table.DataCell>
+      <Table.DataCell>{Utils.formaterTilNorskBelop(nyesteFakturaStatus?.ubetaltBelop) || "-"}</Table.DataCell>
     </Table.ExpandableRow>
   );
 };
