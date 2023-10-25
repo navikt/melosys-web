@@ -14,16 +14,13 @@ import { sorterElementerEtterDato } from "../sorterbarListe";
 import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
-import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
  * for å gi saksbehandler oversikt over sakens innhold før hun klikker
  * seg inn på den.
  */
-const Fagsak = ({ sak, landkoder }) => {
-  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+const Fagsak = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
 
   const { land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
@@ -97,11 +94,13 @@ const Fagsak = ({ sak, landkoder }) => {
 
 Fagsak.propTypes = {
   sak: MPT.BehandligOversikt,
+  folketrygdenToggleEnabled: PT.bool,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 Fagsak.defaultProps = {
   sak: {},
+  folketrygdenToggleEnabled: undefined,
 };
 
 export default Fagsak;
