@@ -105,7 +105,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       } else {
         let oppdatertFullmektig: Fullmektig = { ...fullmektig };
         finnOrganisasjonAdresse(fullmektig.ident).then((orgOgFeil) => {
-          oppdatertFullmektig = { ...fullmektig, org: orgOgFeil.org, feil: orgOgFeil.feil };
+          oppdatertFullmektig = { ...oppdatertFullmektig, org: orgOgFeil.org, feil: orgOgFeil.feil };
           update(index, oppdatertFullmektig);
         });
         Api.Fagsaker.kontaktopplysninger
