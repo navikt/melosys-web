@@ -97,8 +97,11 @@ const RedigererFullmektig = ({
       ? MKV.KTObjects.fullmaktstype.filter((it: KTObject) => it.kode !== FULLMEKTIG_ARBEIDSGIVER)
       : MKV.KTObjects.fullmaktstype;
 
+  const maksAntallFullmakter = fullmektige.every((f) => f.type === Type.PERSON) ? 2 : 3;
   const visLeggTilKnapp =
-    fullmektige.length < 3 && fullmektige.every((it) => it.type) && andreFullmektigesFullmakter(-1).length !== 3;
+    fullmektige.length < 3 &&
+    fullmektige.every((it) => it.type) &&
+    andreFullmektigesFullmakter(-1).length !== maksAntallFullmakter;
 
   return (
     <>
