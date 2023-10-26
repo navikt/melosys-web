@@ -16,6 +16,7 @@ import {
   bruttoInntektKreves,
   erBrukerSkattepliktigIHelePerioden,
 } from "../vurderingTrygdeavgiftSchema";
+import "./inntektskilder.css";
 
 const { ARBEIDSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR } = MKV.Koder.inntektskildetype;
 
@@ -58,25 +59,30 @@ export const Inntektskilder = ({
     <>
       <LabelMedHjelpetekst
         label="Oppgi informasjon om brukers inntekt"
-        className="inntektskilder__label"
+        className="inntektskilder_label"
         hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
         hjelpetekstClassName="hjelpetekst"
       />
-      <div className="inntektskilder">
-        <Nav.Row className="inntektskilder__overskriftrad">
-          <Nav.Column xs="3" className="flex__kolonne">
+      <div className="wrapper_inntektskilder">
+        <Nav.Row className="inntektskilder">
+          <Nav.Column className="dato">
             <Nav.Typo.Element>Fra og med</Nav.Typo.Element>
+          </Nav.Column>
+          <Nav.Column className="dato">
             <Nav.Typo.Element>Til og med</Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column xs="4">
+          <Nav.Column className="inntektskilde">
             <Nav.Typo.Element>Inntektskilde</Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column xs="2">
-            <Nav.Typo.Element>Betales arb.avg. til skatt?</Nav.Typo.Element>
+          <Nav.Column className="radioknapp_tittel">
+            <Nav.Typo.Element>
+              Betales arb.avg. <br /> til skatt?
+            </Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column xs="2">
+          <Nav.Column className="brutto_inntekt">
             <Nav.Typo.Element>Brutto inntekt per md.</Nav.Typo.Element>
           </Nav.Column>
+          <Nav.Column className="slett" />
         </Nav.Row>
 
         {formValues.inntektskilder.map((inntektskilde, index) => {
@@ -97,9 +103,11 @@ export const Inntektskilder = ({
           }
 
           return (
-            <Nav.Row key={fields[index].id}>
-              <Nav.Column xs="3" className="flex__kolonne">
+            <Nav.Row className="inntektskilder" key={fields[index].id}>
+              <Nav.Column className="dato">
                 <Forms.Datovelger name={`inntektskilder[${index}].fomDato`} disabled={!redigerbart} control={control} />
+              </Nav.Column>
+              <Nav.Column className="dato">
                 <Forms.Datovelger
                   name={`inntektskilder[${index}].tomDato`}
                   disabled={!redigerbart}
@@ -108,7 +116,7 @@ export const Inntektskilder = ({
                 />
               </Nav.Column>
 
-              <Nav.Column xs="4">
+              <Nav.Column className="inntektskilde">
                 <Forms.Select
                   label=""
                   name={`inntektskilder[${index}].kildetype`}
@@ -125,59 +133,53 @@ export const Inntektskilder = ({
                 </Forms.Select>
               </Nav.Column>
 
-              <Nav.Column xs="2">
-                {visArbAvgBetales && (
-                  <>
-                    {skalFylleInnArbAvgBetales ? (
-                      <>
-                        <Forms.Radio
-                          label="Ja"
-                          name={`inntektskilder[${index}].arbAvgBetales`}
-                          control={control}
-                          value={BOOLSK_STRING.SANN}
-                          disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
-                          className="radioknapp_vertikal"
-                          onChange={(value) => handleEndreArbAvgBetales(index, value)}
-                        />
-                        <Forms.Radio
-                          label="Nei"
-                          name={`inntektskilder[${index}].arbAvgBetales`}
-                          control={control}
-                          value={BOOLSK_STRING.USANN}
-                          disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
-                          className="radioknapp_vertikal"
-                          onChange={(value) => handleEndreArbAvgBetales(index, value)}
-                        />
-                      </>
-                    ) : (
-                      <p className="ikkeRelevant">Ikke relevant</p>
-                    )}
-                  </>
-                )}
-              </Nav.Column>
-
-              <Nav.Column xs="2">
-                {visBruttoInntekt && (
-                  <>
-                    {skalFylleInnBruttoInntekt ? (
-                      <Forms.Input
-                        label=""
-                        name={`inntektskilder[${index}].bruttoInntekt`}
+              {visArbAvgBetales && (
+                <Nav.Column className="radioknapp_gruppe">
+                  {skalFylleInnArbAvgBetales ? (
+                    <>
+                      <Forms.Radio
+                        label="Ja"
+                        name={`inntektskilder[${index}].arbAvgBetales`}
                         control={control}
-                        disabled={!redigerbart}
+                        value={BOOLSK_STRING.SANN}
+                        disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+                        onChange={(value) => handleEndreArbAvgBetales(index, value)}
                       />
-                    ) : (
-                      <p className="ikkeRelevant">Ikke relevant</p>
-                    )}
-                  </>
-                )}
-              </Nav.Column>
+                      <Forms.Radio
+                        label="Nei"
+                        name={`inntektskilder[${index}].arbAvgBetales`}
+                        control={control}
+                        value={BOOLSK_STRING.USANN}
+                        disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+                        onChange={(value) => handleEndreArbAvgBetales(index, value)}
+                      />
+                    </>
+                  ) : (
+                    <p className="ikkeRelevant">Ikke relevant</p>
+                  )}
+                </Nav.Column>
+              )}
 
-              <Nav.Column xs="1">
-                {redigerbart && formValues.inntektskilder.length > 1 && (
+              {visBruttoInntekt && (
+                <Nav.Column className="brutto_inntekt">
+                  {skalFylleInnBruttoInntekt ? (
+                    <Forms.Input
+                      label=""
+                      name={`inntektskilder[${index}].bruttoInntekt`}
+                      control={control}
+                      disabled={!redigerbart}
+                    />
+                  ) : (
+                    <p className="ikkeRelevant">Ikke relevant</p>
+                  )}
+                </Nav.Column>
+              )}
+
+              {redigerbart && formValues.inntektskilder.length > 1 && (
+                <Nav.Column className="slett">
                   <Mui.IkonKnapp ariaLabel="Slett inntektskilde" ikon={Ikoner.Bin} onClick={() => remove(index)} />
-                )}
-              </Nav.Column>
+                </Nav.Column>
+              )}
             </Nav.Row>
           );
         })}

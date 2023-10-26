@@ -1,94 +1,57 @@
 @import (reference) "~nav-frontend-core/less/_variabler";
 
-.vurderingTrygdeavgift {
-  .stegvelgertittel {
-    margin-bottom: 1.5rem;
-  }
-
-  .radio-gruppe__container,
-  .nyVurderingTekst {
-    margin-bottom: 1rem;
-  }
-
-  .form__label {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .hjelpetekst {
-    vertical-align: bottom;
-    margin-left: 0.75rem;
-  }
-
-  .beregnKnapp {
-    margin-top: 1rem;
-  }
-
-  .skatteforholdsperioder {
-    margin-bottom: 2rem;
-  }
-
-  .inntektskilder,
-  .skatteforholdsperioder {
-    padding: 1rem;
-    border-radius: 2px;
-    background: @navLysGra;
-
-    &__label {
-      margin-bottom: 0.5rem;
-      font-size: 18px;
-      font-weight: 600;
+.inntektskilder_komponent {
+  .vurderingTrygdeavgift {
+    .stegvelgertittel {
+      margin-bottom: 1.5rem;
     }
 
-    &__overskriftrad {
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: flex-end;
+    .radio-gruppe__container,
+    .nyVurderingTekst {
+      margin-bottom: 1rem;
     }
 
-    .flex__kolonne {
-      display: flex;
+    .form__label {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
 
-      > :first-child {
-        width: 50%;
-        margin-right: 0.5rem;
+    .hjelpetekst {
+      vertical-align: bottom;
+      margin-left: 0.75rem;
+    }
+
+    .beregnKnapp {
+      margin-top: 1rem;
+    }
+
+    .periode_tabell-wrapper {
+      overflow-x: auto;
+      display: block;
+      white-space: nowrap;
+    }
+    .periode_tabell {
+      margin: 1em 0;
+      overflow-x: auto;
+      display: block;
+
+      .header_row {
+        white-space: nowrap;
       }
-      > :last-child {
-        width: 50%;
-        margin-left: 0.5rem;
+
+      .border_top {
+        > :first-child {
+          white-space: nowrap;
+        }
       }
     }
-
-    .ikkeRelevant {
-      margin-top: 0.5rem;
+    .alertstripe_feilmelding,
+    .infomelding {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
     }
-
-    .radioknapp_vertikal {
-      float: left;
-      min-height: 1px;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-      margin-top: 0.5rem;
-    }
-
     .skillestrek {
-      border-top: 1px solid #d8d8d8;
-      padding-top: 0.5rem;
-      margin-left: 0.25rem;
-      margin-right: 0.25rem;
+      margin-left: 1rem;
     }
-  }
-  .periode_tabell-wrapper {
-    overflow-x: auto;
-    display: block;
-    white-space: nowrap;
-  }
-  .periode_tabell {
-    margin: 1em 0;
-  }
-  .alertstripe_feilmelding,
-  .infomelding {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
   }
 }

@@ -1,20 +1,22 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Skatteforholdsperioder > snapshot test 1`] = `
-[
+<div
+  className="inntektskilder_komponent"
+>
   <div
-    className="skatteforholdsperioder__label"
+    className="skatteforhold_label"
   >
     Oppgi informasjon om brukers skatteforhold
-  </div>,
+  </div>
   <div
     className="skatteforholdsperioder"
   >
     <div
-      className="row skatteforholdsperioder__overskriftrad"
+      className="row overskriftrad"
     >
       <div
-        className="col col-xs-3"
+        className="col dato"
       >
         <p
           className="typo-element"
@@ -23,7 +25,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         </p>
       </div>
       <div
-        className="col col-xs-3"
+        className="col dato"
       >
         <p
           className="typo-element"
@@ -32,7 +34,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         </p>
       </div>
       <div
-        className="col col-xs-6"
+        className="col"
       >
         <p
           className="typo-element"
@@ -42,10 +44,10 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
       </div>
     </div>
     <div
-      className="row"
+      className="row skatteforholdsperiode"
     >
       <div
-        className="col col-xs-3"
+        className="col dato"
       >
         <div
           name="skatteforholdsperioder[0].fomDato"
@@ -122,7 +124,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         </div>
       </div>
       <div
-        className="col col-xs-3"
+        className="col dato"
       >
         <div
           name="skatteforholdsperioder[0].tomDato"
@@ -199,10 +201,10 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         </div>
       </div>
       <div
-        className="col col-xs-5"
+        className="col radioknapp_gruppe"
       >
         <div
-          className="skjemaelement radioknapp_vertikal"
+          className="skjemaelement"
         >
           <input
             aria-invalid={false}
@@ -224,7 +226,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
           </label>
         </div>
         <div
-          className="skjemaelement radioknapp_vertikal"
+          className="skjemaelement"
         >
           <input
             aria-invalid={false}
@@ -247,7 +249,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         </div>
       </div>
       <div
-        className="col col-xs-1"
+        className="col slett"
       >
         <button
           aria-label="Slett skatteforhold"
@@ -275,10 +277,10 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
       </div>
     </div>
     <div
-      className="row"
+      className="row skatteforholdsperiode"
     >
       <div
-        className="col col-xs-3"
+        className="col dato"
       >
         <div
           name="skatteforholdsperioder[1].fomDato"
@@ -355,7 +357,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         </div>
       </div>
       <div
-        className="col col-xs-3"
+        className="col dato"
       >
         <div
           name="skatteforholdsperioder[1].tomDato"
@@ -432,10 +434,10 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         </div>
       </div>
       <div
-        className="col col-xs-5"
+        className="col radioknapp_gruppe"
       >
         <div
-          className="skjemaelement radioknapp_vertikal"
+          className="skjemaelement"
         >
           <input
             aria-invalid={false}
@@ -457,7 +459,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
           </label>
         </div>
         <div
-          className="skjemaelement radioknapp_vertikal"
+          className="skjemaelement"
         >
           <input
             aria-invalid={false}
@@ -480,7 +482,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         </div>
       </div>
       <div
-        className="col col-xs-1"
+        className="col slett"
       >
         <button
           aria-label="Slett skatteforhold"
@@ -533,6 +535,6 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         Legg til skatteforhold
       </button>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
