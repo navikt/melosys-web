@@ -222,7 +222,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
       <Nav.Typo.Normaltekst>
         {behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
-          ? "Ved ny vurdering vises tidligere innvilgede medlemskapsperioder. Gjør nødvendige endringer eller legg til en ny periode."
+          ? "Ved ny vurdering vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer eller legg til en ny periode."
           : "Vurder og eventuelt juster de foreslåtte medlemskapsperioden(e)."}
       </Nav.Typo.Normaltekst>
 
