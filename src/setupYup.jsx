@@ -142,12 +142,14 @@ addMethod(string, "erFnrEllerDnr", function (message) {
 
 addMethod(string, "erOrgnr", function (message) {
   return this.test("er orgnr", message, function (value) {
+    if (!value) return true;
     return Utils.organisasjon.erOrgnrGyldig(value);
   });
 });
 
 addMethod(string, "erFnrEllerDnrEllerOrgnrTolererEttMellomrom", function (message) {
   return this.test("er et Fnr, Dnr eller Orgnr", message, function (value) {
+    if (!value) return true;
     return (
       Utils.person.erGyldigFnr(value?.replace(" ", "")) ||
       Utils.person.erGyldigDnr(value?.replace(" ", "")) ||

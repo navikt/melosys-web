@@ -8,18 +8,18 @@ import { skalViseSoknadsperiodeOgLand } from "./opprettSak";
 
 const {
   MAA_FYLLES_UT,
+  SKRIV_INN_GYLDIG_ORGNR_FNR_DNR,
   SKRIV_INN_GYLDIG_FNR_ELLER_DNR,
   FANT_INGEN_NAVN_PA_FNR_ELLER_DNR,
   SKRIV_INN_GYLDIG_ORGNR,
   FANT_INGEN_NAVN_PA_ORGNR,
   VELG_MINST_ETT_LAND,
   VELG_MINST_TO_LAND,
+  SKRIV_INN_KUN_NUMMER,
 } = KV.Feilmeldinger;
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
-const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer" };
 const FINNER_IKKE_NAVN_PA_AVSENDER = { melding: "Finner ikke navn på avsender" };
-const SKRIV_INN_GYLDIG_ORGNR_FNR_DNR = { melding: "Du må skrive et gyldig org.nr. eller f.nr./d-nr." };
 const FANT_INGEN_NAVN_PA_ORGNR_FNR_ELLER_DNR = { melding: "Fant ingen navn på oppgitt org.nr., f.nr. eller d-nr." };
 const VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN = {
   melding: "Velg dokumenttittel fra listen eller skriv din egen",

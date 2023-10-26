@@ -11,9 +11,9 @@ export const hent = (saksnr: string, juridiskorgnr: string): Promise<HentResDto>
   getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnr}/kontaktopplysninger/${juridiskorgnr}`);
 
 export interface SendReqDto {
-  kontaktorgnr: string | null;
-  kontaktnavn: string | null;
-  kontakttelefon: string | null;
+  kontaktorgnr?: string | null;
+  kontaktnavn?: string | null;
+  kontakttelefon?: string | null;
 }
 
 export const send = (saksnr: string, juridiskorgnr: string, data: SendReqDto) =>

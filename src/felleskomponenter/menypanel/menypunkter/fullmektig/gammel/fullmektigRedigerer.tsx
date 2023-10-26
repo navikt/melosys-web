@@ -1,19 +1,19 @@
 import { ChangeEventHandler, FocusEventHandler, MouseEventHandler, useState } from "react";
 
-import MKV from "../../../../melosyskodeverk";
+import MKV from "../../../../../melosyskodeverk";
 
-import * as Nav from "../../../../navFrontend";
+import * as Nav from "../../../../../navFrontend";
 
-import { Organisasjon } from "../../../../services/api";
+import { Organisasjon } from "../../../../../services/api";
 
-import Kontaktopplysninger, { KontaktOpplysning } from "../kontaktopplysninger";
+import Kontaktopplysninger, { KontaktOpplysning } from "../../kontaktopplysninger";
 import SokFullmektigOrgOrIdent from "./sokFullmektigOrgOrIdent";
 
 import "./fullmektigRedigerer.css";
-import StrukturertAdresse from "../../../adresser/strukturertAdresse";
-import * as Utils from "../../../../utils";
-import * as Api from "../../../../services/api";
-import { Personopplysninger } from "../../../../graphql";
+import StrukturertAdresse from "../../../../adresser/strukturertAdresse";
+import * as Utils from "../../../../../utils";
+import * as Api from "../../../../../services/api";
+import { Personopplysninger } from "../../../../../graphql";
 
 interface FullmektigRedigererProps {
   onRolleChange: (rolle: string, org?: string, personIdent?: string) => Promise<any>;

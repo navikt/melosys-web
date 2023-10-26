@@ -130,10 +130,10 @@ const AvsenderAnnenPersonOrganisasjon = ({
             <Skjema.Input
               feltNavn="fullmektigKontaktperson"
               label={
-                <>
-                  <Nav.Typo.Element>Kontaktperson</Nav.Typo.Element>
+                <span className="kontaktperson_labels">
+                  <Nav.Typo.Element>Kontaktperson </Nav.Typo.Element>
                   <Nav.Typo.Normaltekst>(valgfritt)</Nav.Typo.Normaltekst>
-                </>
+                </span>
               }
             />
           </Nav.Column>
@@ -141,10 +141,10 @@ const AvsenderAnnenPersonOrganisasjon = ({
             <Skjema.Input
               feltNavn="fullmektigKontaktOrgnr"
               label={
-                <>
-                  <Nav.Typo.Element>Org.nr.</Nav.Typo.Element>
+                <span className="kontaktperson_labels">
+                  <Nav.Typo.Element>Org.nr. </Nav.Typo.Element>
                   <Nav.Typo.Normaltekst>(valgfritt)</Nav.Typo.Normaltekst>
-                </>
+                </span>
               }
             />
           </Nav.Column>

@@ -304,7 +304,7 @@ const OpprettNySak = ({
                 <IdentOgNavn
                   tittel="Informasjon om bruker"
                   feltNavn="brukerID"
-                  label="Brukers f.nr eller d.nr:"
+                  label="Brukers f.nr. eller d-nr.:"
                   navn={brukerNavn}
                 />
               ) : (

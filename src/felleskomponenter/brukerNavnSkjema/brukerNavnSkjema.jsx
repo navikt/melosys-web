@@ -60,7 +60,7 @@ export const BrukerNavnSkjema = ({
       <Skjema.Input
         onBlur={hentBrukerMedID}
         className={cls.element("fetTekst")}
-        label="Brukers f.nr eller d.nr"
+        label="Brukers f.nr. eller d-nr."
         feltNavn="brukerID"
         onChange={onChange}
       />
