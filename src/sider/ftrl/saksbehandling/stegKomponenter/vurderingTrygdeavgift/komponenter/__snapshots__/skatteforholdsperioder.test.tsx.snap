@@ -1,12 +1,14 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Skatteforholdsperioder > snapshot test 1`] = `
-[
+<div
+  className="inntektskilder_komponent"
+>
   <div
     className="skatteforhold_label"
   >
     Oppgi informasjon om brukers skatteforhold
-  </div>,
+  </div>
   <div
     className="skatteforholdsperioder"
   >
@@ -533,6 +535,6 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         Legg til skatteforhold
       </button>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
