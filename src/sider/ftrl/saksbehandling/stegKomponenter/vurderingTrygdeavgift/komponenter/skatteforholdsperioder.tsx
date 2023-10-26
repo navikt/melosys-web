@@ -34,7 +34,7 @@ export const Skatteforholdsperioder = ({
     <>
       <LabelMedHjelpetekst
         label="Oppgi informasjon om brukers skatteforhold"
-        className="inntektskilder_label"
+        className="skatteforhold_label"
         hjelpetekstClassName="hjelpetekst"
       />
       <div className="skatteforholdsperioder">

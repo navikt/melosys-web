@@ -3,7 +3,7 @@
 exports[`Skatteforholdsperioder > snapshot test 1`] = `
 [
   <div
-    className="inntektskilder_label"
+    className="skatteforhold_label"
   >
     Oppgi informasjon om brukers skatteforhold
   </div>,
