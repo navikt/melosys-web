@@ -47,6 +47,7 @@ export type Trygdeavgiftsperiode = {
 };
 
 export type BeregnetTrygdeavgift = {
+  fakturamottaker: string;
   trygdeavgiftsperioder: Trygdeavgiftsperiode[];
 };
 

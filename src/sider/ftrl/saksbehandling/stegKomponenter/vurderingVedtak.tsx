@@ -36,6 +36,7 @@ import useHentPersonopplysninger from "../../../../felleskomponenter/informasjon
 import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingvedtak/tekster";
 import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
+import { trygdeavgiftSelectors } from "../../../../ducks/trygdeavgift";
 
 const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -76,6 +77,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const lagretNyVurderingBakgrunn = useSelector(behandlingsresultatSelectors.NyVurderingBakgrunnSelector);
+  const fakturamottaker = useSelector(trygdeavgiftSelectors.FakturamottakerSelector);
+
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const initialNyVurderingBakgrunnValg =
     lagretNyVurderingBakgrunn && erNyVurderingBakgrunnValgFritekst(lagretNyVurderingBakgrunn)
@@ -342,12 +345,12 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </Nav.Row>
       ) : null}
 
-      {personopplysninger ? (
+      {fakturamottaker ? (
         <Nav.Row className="margin_bottom">
           <Nav.Column xs="12" className="fakturamottaker">
             <Nav.Typo.Normaltekst className="info">Faktura sendes til:</Nav.Typo.Normaltekst>
             &nbsp;
-            <Nav.Typo.Normaltekst className="bold">{personopplysninger.navn}</Nav.Typo.Normaltekst>
+            <Nav.Typo.Normaltekst className="bold">{fakturamottaker}</Nav.Typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
       ) : null}

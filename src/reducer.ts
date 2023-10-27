@@ -27,6 +27,7 @@ import oppsummertfaktaReducer from "./ducks/oppsummertfakta";
 import organisasjonerReducer from "./ducks/organisasjoner";
 import saksopplysningerReducer from "./ducks/saksopplysninger";
 import sokReducer from "./ducks/sok";
+import trygdeavgiftReducer from "./ducks/trygdeavgift";
 import menypanelReducer from "./ducks/menypanel";
 import utpekReducer from "./ducks/utpek";
 import utpekingsperioderReducer from "./ducks/utpekingsperioder";
@@ -72,6 +73,7 @@ export const rootReducer = {
   organisasjoner: organisasjonerReducer,
   saksopplysninger: saksopplysningerReducer,
   sok: sokReducer,
+  trygdeavgift: trygdeavgiftReducer,
   menypanel: menypanelReducer,
   utpek: utpekReducer,
   utpekingsperioder: utpekingsperioderReducer,

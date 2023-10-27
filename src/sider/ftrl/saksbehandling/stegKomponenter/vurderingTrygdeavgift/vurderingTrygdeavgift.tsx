@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import * as Api from "../../../../../services/api";
@@ -21,6 +21,7 @@ import "./vurderingTrygdeavgift.css";
 import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/meldinger";
 import { Skatteforholdsperioder } from "./komponenter/skatteforholdsperioder";
 import MKV from "../../../../../melosyskodeverk";
+import { trygdeavgiftOperations, trygdeavgiftSelectors } from "../../../../../ducks/trygdeavgift";
 
 interface Props {
   bekreft: () => void;
@@ -30,18 +31,15 @@ interface Props {
 }
 
 export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
+  const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
-  const medlemskapsperiodeStatus = useSelector(medlemskapsperioderSelectors.MedlemskapsperioderStatusSelector);
   const innvilgetMedlemskapsperiode = useSelector(
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector
   );
-  const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
-    () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
-    undefined,
-    [behandlingID, medlemskapsperiodeStatus === STATUS.OK]
-  );
+  const trygdeavgiftsperioder = useSelector(trygdeavgiftSelectors.TrygdeavgiftsperioderSelector);
+
   const defaultPeriode = {
     fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
     tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
@@ -92,7 +90,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       (inntektskilde: Inntektskilde) => inntektskilde.bruttoInntekt && inntektskilde.bruttoInntekt !== 0
     );
 
-  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
+  const trygdeavgiftErIkkeTom = !Utils._isEmpty(trygdeavgiftsperioder);
 
   const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
 
@@ -171,7 +169,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   useEffect(() => {
-    if (redigerbart && harHentetGrunnlag) setTrygdeavgift(undefined);
+    if (redigerbart && harHentetGrunnlag) dispatch(trygdeavgiftOperations.resetTrygdeavgiftState());
     if (redigerbart && aktivtSteg && !isValidating) {
       debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
     }
@@ -202,13 +200,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   }, [aktivtSteg, innvilgetMedlemskapsperiode]);
 
   const handleBeregnTrygdeavgift = () => {
-    setTrygdeavgift(undefined);
-    Api.Trygdeavgift.beregnTrygdeavgift(behandlingID)
-      .then((response) => {
-        setFeil(undefined);
-        setTrygdeavgift(response);
-      })
-      .catch((error) => setFeil(mapFeilmelding(error)));
+    dispatch(trygdeavgiftOperations.resetTrygdeavgiftState());
+    dispatch(trygdeavgiftOperations.beregnTrygdeavgift(behandlingID));
   };
 
   if (!aktivtSteg) return null;
@@ -263,10 +256,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       )}
 
       <Feilmelding type={aktivFeilmeldingType} />
-
-      {trygdeavgiftErIkkeTom && stegErGyldig && (
-        <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />
-      )}
+      {trygdeavgiftErIkkeTom && stegErGyldig && <TrygdeavgiftsperioderTabell perioder={trygdeavgiftsperioder!!} />}
 
       {visFeilFraLagring && <Nav.AlertStripeFeil className="infomelding">{feil}</Nav.AlertStripeFeil>}
 
