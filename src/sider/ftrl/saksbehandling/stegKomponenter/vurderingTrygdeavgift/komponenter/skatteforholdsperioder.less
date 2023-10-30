@@ -1,62 +1,67 @@
 @import (reference) "~nav-frontend-core/less/_variabler";
 
-.skatteforholdsperioder {
-  background: @navLysGra;
-  margin-bottom: 2rem;
-  display: flex;
-  flex-direction: column;
-  overflow-x: auto;
-  overflow-y: hidden;
+.skatteforholdsperioder_komponent {
+  max-width: 662px;
+  margin-left: 8px;
 
-  .row {
-    margin-left: 0;
-    margin-right: 0;
-
-    > * {
-      min-width: 7.5rem;
-    }
-  }
-
-  .dato {
-    max-width: 7.5rem;
-  }
-
-  .overskriftrad {
-    margin: 0.75rem 0 0.75rem 0;
-  }
-
-  .skatteforhold_label {
-    font-weight: bold;
-  }
-
-  .skatteforholdsperiode {
+  .skatteforholdsperioder {
+    background: @navLysGra;
+    margin-bottom: 2rem;
     display: flex;
-    align-items: center;
-    flex-direction: row;
-    gap: 0.75rem;
+    flex-direction: column;
+    overflow-x: auto;
+    overflow-y: hidden;
 
-    .radioknapp_gruppe {
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+
+      > * {
+        min-width: 7.5rem;
+        margin-left: 8px;
+      }
+    }
+
+    .dato {
+      max-width: 7.5rem;
+    }
+
+    .overskriftrad {
+      margin: 0.75rem 0 0.75rem 0;
+    }
+
+    .skatteforhold_label {
+      font-weight: bold;
+    }
+
+    .skatteforholdsperiode {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+
+      .radioknapp_gruppe {
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        white-space: nowrap;
+        gap: 0.5rem;
+      }
+
+      .slett {
+        padding-bottom: 1rem;
+        min-width: 2rem;
+        margin-left: 2.5rem;
+      }
+    }
+
+    .overskriftrad {
       display: flex;
       flex-direction: row;
-      justify-content: left;
-      white-space: nowrap;
-      gap: 0.5rem;
     }
 
-    .slett {
-      padding-bottom: 1rem;
-      min-width: 2rem;
+    .skillestrek {
+      border-top: 1px solid #d8d8d8;
+      padding: 0.75rem;
     }
-  }
-
-  .overskriftrad {
-    display: flex;
-    flex-direction: row;
-    gap: 0.75rem;
-  }
-
-  .skillestrek {
-    border-top: 1px solid #d8d8d8;
-    padding: 0.75rem;
   }
 }

@@ -79,8 +79,10 @@ export const Inntektskilder = ({
               Betales arb.avg. <br /> til skatt?
             </Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column className="brutto_inntekt">
-            <Nav.Typo.Element>Brutto inntekt per md.</Nav.Typo.Element>
+          <Nav.Column>
+            <Nav.Typo.Element>
+              Brutto inntekt <br /> per md.
+            </Nav.Typo.Element>
           </Nav.Column>
           <Nav.Column className="slett" />
         </Nav.Row>
@@ -92,7 +94,6 @@ export const Inntektskilder = ({
 
           const visArbAvgBetales = !Utils._isEmpty(inntektskilde.kildetype);
           const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(inntektskilde.kildetype);
-          const visBruttoInntekt = Boolean(inntektskilde.arbAvgBetales) || !skalFylleInnArbAvgBetales;
           const skalFylleInnBruttoInntekt = bruttoInntektKreves(
             brukerSkattepliktigIHelePerioden,
             inntektskilde.kildetype,
@@ -133,47 +134,43 @@ export const Inntektskilder = ({
                 </Forms.Select>
               </Nav.Column>
 
-              {visArbAvgBetales && (
-                <Nav.Column className="radioknapp_gruppe">
-                  {skalFylleInnArbAvgBetales ? (
-                    <>
-                      <Forms.Radio
-                        label="Ja"
-                        name={`inntektskilder[${index}].arbAvgBetales`}
-                        control={control}
-                        value={BOOLSK_STRING.SANN}
-                        disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
-                        onChange={(value) => handleEndreArbAvgBetales(index, value)}
-                      />
-                      <Forms.Radio
-                        label="Nei"
-                        name={`inntektskilder[${index}].arbAvgBetales`}
-                        control={control}
-                        value={BOOLSK_STRING.USANN}
-                        disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
-                        onChange={(value) => handleEndreArbAvgBetales(index, value)}
-                      />
-                    </>
-                  ) : (
-                    <p className="ikkeRelevant">Ikke relevant</p>
-                  )}
-                </Nav.Column>
-              )}
-
-              {visBruttoInntekt && (
-                <Nav.Column className="brutto_inntekt">
-                  {skalFylleInnBruttoInntekt ? (
-                    <Forms.Input
-                      label=""
-                      name={`inntektskilder[${index}].bruttoInntekt`}
+              <Nav.Column className="radioknapp_gruppe">
+                {skalFylleInnArbAvgBetales ? (
+                  <>
+                    <Forms.Radio
+                      label="Ja"
+                      name={`inntektskilder[${index}].arbAvgBetales`}
                       control={control}
-                      disabled={!redigerbart}
+                      value={BOOLSK_STRING.SANN}
+                      disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+                      onChange={(value) => handleEndreArbAvgBetales(index, value)}
                     />
-                  ) : (
-                    <p className="ikkeRelevant">Ikke relevant</p>
-                  )}
-                </Nav.Column>
-              )}
+                    <Forms.Radio
+                      label="Nei"
+                      name={`inntektskilder[${index}].arbAvgBetales`}
+                      control={control}
+                      value={BOOLSK_STRING.USANN}
+                      disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+                      onChange={(value) => handleEndreArbAvgBetales(index, value)}
+                    />
+                  </>
+                ) : (
+                  <p className="ikkeRelevant">Ikke relevant</p>
+                )}
+              </Nav.Column>
+
+              <Nav.Column className="brutto_inntekt">
+                {skalFylleInnBruttoInntekt ? (
+                  <Forms.Input
+                    label=""
+                    name={`inntektskilder[${index}].bruttoInntekt`}
+                    control={control}
+                    disabled={!redigerbart}
+                  />
+                ) : (
+                  <p className="ikkeRelevant">Ikke relevant</p>
+                )}
+              </Nav.Column>
 
               {redigerbart && formValues.inntektskilder.length > 1 && (
                 <Nav.Column className="slett">

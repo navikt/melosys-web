@@ -31,7 +31,7 @@ export const Skatteforholdsperioder = ({
   fields,
 }: SkatteforholdsperioderProps) => {
   return (
-    <div className="inntektskilder_komponent">
+    <div className="skatteforholdsperioder_komponent">
       <LabelMedHjelpetekst
         label="Oppgi informasjon om brukers skatteforhold"
         className="skatteforhold_label"
