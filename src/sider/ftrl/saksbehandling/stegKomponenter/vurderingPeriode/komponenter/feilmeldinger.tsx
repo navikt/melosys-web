@@ -84,7 +84,10 @@ const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: Medlemskapsperiod
     const periode = sorterteInnvilgedePerioder[i];
     const nestePeriode = sorterteInnvilgedePerioder[i + 1];
 
-    const nestePeriodeErPåfølgende = nestePeriode.fomDato === Utils.dato.plussEnDag(periode.tomDato);
+    const nestePeriodeErPåfølgende = Utils.dato.erLikeDatoer(
+      nestePeriode.fomDato,
+      Utils.dato.plussEnDag(periode.tomDato)
+    );
     if (!(nestePeriodeErPåfølgende || perioderErLike(periode, nestePeriode))) {
       return true;
     }
