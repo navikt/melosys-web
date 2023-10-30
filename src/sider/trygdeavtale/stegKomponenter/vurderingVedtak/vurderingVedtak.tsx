@@ -262,6 +262,8 @@ const VurderingVedtak = ({
     formValues?.nyVurderingBakgrunnFritekst,
   ]);
 
+  // Refresher verdien av lovvalgsperiode i redux da denne lagres gjennom kall fra melosys-trygdeavtale til melosys-api
+  // når vedtakssteget legges til i flyten.
   useEffect(() => {
     hentLovvalgsperiode(behandlingID);
   }, []);
