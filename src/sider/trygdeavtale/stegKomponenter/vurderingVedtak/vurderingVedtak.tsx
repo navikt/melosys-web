@@ -262,6 +262,10 @@ const VurderingVedtak = ({
     formValues?.nyVurderingBakgrunnFritekst,
   ]);
 
+  useEffect(() => {
+    hentLovvalgsperiode(behandlingID);
+  }, []);
+
   const handleLagreTomEndring = async () => {
     if (redigerbart && formValues) {
       const isoFom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeFom);
