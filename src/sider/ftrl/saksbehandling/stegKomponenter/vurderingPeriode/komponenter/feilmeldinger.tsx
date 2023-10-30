@@ -55,7 +55,8 @@ const søknadsperiodeStarterFørEllerSlutterEtterPeriodene = (
 };
 
 const perioderErLike = (periode1: MedlemskapsperiodeProp, periode2: MedlemskapsperiodeProp) =>
-  periode1.fomDato === periode2.fomDato && periode1.tomDato === periode2.tomDato;
+  Utils.dato.erLikeDatoer(periode1.fomDato, periode2.fomDato) &&
+  Utils.dato.erLikeDatoer(periode1.tomDato, periode2.tomDato);
 
 const filtrerInnvilgedePerioder = (periode: { innvilgelsesResultat: any }) =>
   periode.innvilgelsesResultat === INNVILGET;
