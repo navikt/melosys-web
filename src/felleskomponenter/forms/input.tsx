@@ -31,7 +31,7 @@ const InputInnerComponent = forwardRef<HTMLInputElement, InputInnerComponentProp
 
 type InputProps = InputComponentProps & UseControllerProps;
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({ name, control, ...rest }: InputProps, _ref: any) => {
+const Input = forwardRef<HTMLInputElement, InputProps>(({ name, control, feil, ...rest }: InputProps, _ref: any) => {
   return (
     <Controller
       name={name}
@@ -39,13 +39,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ name, control, ...rest
       render={({ field, formState }) => (
         <InputInnerComponent
           {...field}
+          {...rest}
           label={rest.label}
           disabled={rest.disabled}
           onChange={(event: any) => {
             field.onChange(event);
             if (rest.onChange) rest.onChange(event?.target?.value);
           }}
-          feil={getErrorMessage(field, formState)}
+          feil={feil ?? getErrorMessage(field, formState)}
         />
       )}
     />

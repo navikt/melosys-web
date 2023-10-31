@@ -1,18 +1,18 @@
-import * as Nav from "../../../../navFrontend";
-import * as Ikoner from "../../../../resources/images";
-import * as Utils from "../../../../utils";
-import * as Api from "../../../../services/api";
+import * as Nav from "../../../../../navFrontend";
+import * as Ikoner from "../../../../../resources/images";
+import * as Utils from "../../../../../utils";
+import * as Api from "../../../../../services/api";
 
-import MKV from "../../../../melosyskodeverk";
+import MKV from "../../../../../melosyskodeverk";
 
-import { useAsyncCallbackState } from "../../../../hooks";
+import { useAsyncCallbackState } from "../../../../../hooks";
 
-import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
-import { KontaktOpplysning } from "../kontaktopplysninger";
+import OrganisasjonsAdresse from "../../../../adresser/organisasjonsAdresse";
+import { KontaktOpplysning } from "../../kontaktopplysninger";
 
 import "./fullmektigRedigeringUtfort.css";
-import StrukturertAdresse from "../../../adresser/strukturertAdresse";
-import { Personopplysninger } from "../../../../graphql";
+import StrukturertAdresse from "../../../../adresser/strukturertAdresse";
+import { Personopplysninger } from "../../../../../graphql";
 
 const hentRepresentererTekst = (representererKode: string) => {
   switch (representererKode) {

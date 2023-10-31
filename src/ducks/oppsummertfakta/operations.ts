@@ -20,6 +20,14 @@ export function sendVirksomheter(behandlingID: number, virksomheter: Api.Avklart
   });
 }
 
+export function sendArbeidsland(behandlingID: number, arbeidsland: Api.Avklartefakta.Arbeidsland) {
+  return doThenDispatch(() => Api.Avklartefakta.sendArbeidsland(behandlingID, arbeidsland), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
 export function resetOppsummertFakta() {
   return Actions.resetOppsummertFakta();
 }

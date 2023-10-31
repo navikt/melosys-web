@@ -46,22 +46,22 @@ const FellesHandlersProviderUnconnected = ({
     await lagreMottatteOpplysninger();
     await oppfriskSaksopplysninger(behandlingID, inkluderSiste5Aar);
     await oppfriskGraphQLSaksopplysninger();
-    await fjernBehandlingOppfriskes();
     await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
+    await fjernBehandlingOppfriskes();
   };
 
   const oppfriskOgLastInnSaksopplysninger = async () => {
     await leggTilBehandlingOppfriskes(behandlingID);
     await oppfriskSaksopplysninger(behandlingID);
-    await fjernBehandlingOppfriskes();
     await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
+    await fjernBehandlingOppfriskes();
   };
 
   const startOgVisOppfriskModal = async (inkluderSiste5aar) => {
     await leggTilBehandlingOppfriskes(behandlingID);
     visOppfriskDialogHandle(inkluderSiste5aar);
-    await fjernBehandlingOppfriskes();
     await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
+    await fjernBehandlingOppfriskes();
   };
 
   const behandlingOppfriskes = behandlingUnderOppfriskning === behandlingID;
