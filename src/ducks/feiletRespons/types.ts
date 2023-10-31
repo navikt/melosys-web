@@ -6,6 +6,7 @@ import { videresendingTypes } from "../videresending";
 import { anmodningunntakTypes } from "../anmodningunntak";
 import { kontrollTypes } from "../kontroll";
 import { fagsakTypes } from "../fagsaker";
+import { trygdeavgiftTypes } from "../trygdeavgift";
 
 export const RESET = "feiletRespons/RESET";
 
@@ -23,4 +24,5 @@ export type Action =
   | videresendingTypes.Action
   | anmodningunntakTypes.Action
   | fagsakTypes.Action
+  | trygdeavgiftTypes.Action
   | ResetAction;

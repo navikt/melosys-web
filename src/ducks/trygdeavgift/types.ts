@@ -7,6 +7,7 @@ export const RESET = "trygdeavgift/RESET";
 
 export interface Data {
   beregnetTrygdeavgift?: Api.Trygdeavgift.BeregnetTrygdeavgift;
+  feilmelding?: string;
 }
 
 export interface FeiletAction {

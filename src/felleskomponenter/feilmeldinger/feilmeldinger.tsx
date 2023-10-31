@@ -9,6 +9,7 @@ import * as Utils from "../../utils";
 import "./feilmelding.css";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { kontrollSelectors } from "../../ducks/kontroll";
+import { Feilkode } from "melosys-api";
 
 type feilmeldingerProps = {
   className?: string;
@@ -23,6 +24,11 @@ export default ({ className, exclude }: feilmeldingerProps) => {
     return null;
   }
 
+  const mapFeilmelding = (feilmelding: string | Feilkode) =>
+    typeof feilmelding === "string"
+      ? feilmelding
+      : KV.kodeTilTerm(feilmelding.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+
   const renderInnhold = () => {
     if (typeof feilmeldinger === "string") {
       return feilmeldinger;
@@ -35,12 +41,12 @@ export default ({ className, exclude }: feilmeldingerProps) => {
     }
 
     if (filtrerteFeilmeldinger.length === 1) {
-      return KV.kodeTilTerm(filtrerteFeilmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+      return mapFeilmelding(filtrerteFeilmeldinger[0]);
     }
     return (
       <ul className="feilkoder__liste">
         {filtrerteFeilmeldinger.map((feil) => (
-          <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
+          <li key={feil.kode}>{mapFeilmelding(feil)}</li>
         ))}
       </ul>
     );

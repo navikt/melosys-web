@@ -10,8 +10,6 @@ import * as Utils from "../../../../../utils";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
-import { useAsyncCallbackState } from "../../../../../hooks";
-import { STATUS } from "../../../../../services";
 
 import { Inntektskilder } from "./komponenter/inntektskilder";
 import TrygdeavgiftsperioderTabell from "./komponenter/trygdeavgiftsperioderTabell";
@@ -22,6 +20,7 @@ import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./kompo
 import { Skatteforholdsperioder } from "./komponenter/skatteforholdsperioder";
 import MKV from "../../../../../melosyskodeverk";
 import { trygdeavgiftOperations, trygdeavgiftSelectors } from "../../../../../ducks/trygdeavgift";
+import { Feilmeldinger } from "../../../../../felleskomponenter/feilmeldinger";
 
 interface Props {
   bekreft: () => void;
@@ -206,8 +205,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   if (!aktivtSteg) return null;
 
-  const visFeilFraLagring = feil && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
-
   return (
     <div className="vurderingTrygdeavgift">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Trygdeavgift</Nav.Typo.Innholdstittel>
@@ -258,7 +255,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       <Feilmelding type={aktivFeilmeldingType} />
       {trygdeavgiftErIkkeTom && stegErGyldig && <TrygdeavgiftsperioderTabell perioder={trygdeavgiftsperioder!!} />}
 
-      {visFeilFraLagring && <Nav.AlertStripeFeil className="infomelding">{feil}</Nav.AlertStripeFeil>}
+      <Feilmeldinger />
 
       {!skalBeregneForelopigTrygdeavgift && stegErGyldig && (
         <Nav.AlertStripeInfo className="infomelding">Trygdeavgift skal ikke betales til NAV</Nav.AlertStripeInfo>
