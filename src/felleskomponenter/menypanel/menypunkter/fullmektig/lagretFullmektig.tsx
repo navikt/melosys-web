@@ -5,6 +5,7 @@ import * as Utils from "../../../../utils";
 import * as Ikon from "../../../../resources/images";
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
+import { fullmaktStøtterKontaktperson } from "./redigererFullmektig";
 
 interface LagretFullmektigProps {
   fullmektige: Fullmektig[];
@@ -79,13 +80,18 @@ const Fullmakter = ({ fullmakter }: { fullmakter: string[] }) => {
 };
 
 const Kontaktperson = ({ fullmektig }: { fullmektig: Fullmektig }) => {
+  if (!fullmaktStøtterKontaktperson(fullmektig.fullmakter)) return null;
   return (
     <div className="kontaktperson">
       <Nav.Typo.Element>Kontaktopplysninger</Nav.Typo.Element>
-      <div>
-        <Nav.Typo.Element className="inline_felt">Kontaktperson: </Nav.Typo.Element>
-        <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktperson ?? "-"}</Nav.Typo.Normaltekst>
-      </div>
+      {fullmektig.kontaktperson ? (
+        <div>
+          <Nav.Typo.Element className="inline_felt">Kontaktperson: </Nav.Typo.Element>
+          <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktperson}</Nav.Typo.Normaltekst>
+        </div>
+      ) : (
+        <Nav.Typo.Normaltekst>Ingen registrert</Nav.Typo.Normaltekst>
+      )}
       {fullmektig.kontaktTelefon && (
         <div>
           <Nav.Typo.Element className="inline_felt">Telefon: </Nav.Typo.Element>
