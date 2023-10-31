@@ -21,6 +21,7 @@ import { Skatteforholdsperioder } from "./komponenter/skatteforholdsperioder";
 import MKV from "../../../../../melosyskodeverk";
 import { trygdeavgiftOperations, trygdeavgiftSelectors } from "../../../../../ducks/trygdeavgift";
 import { Feilmeldinger } from "../../../../../felleskomponenter/feilmeldinger";
+import { STATUS } from "../../../../../services";
 
 interface Props {
   bekreft: () => void;
@@ -34,6 +35,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const medlemskapsperiodeStatus = useSelector(medlemskapsperioderSelectors.MedlemskapsperioderStatusSelector);
   const innvilgetMedlemskapsperiode = useSelector(
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector
   );
@@ -126,6 +128,12 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     oppdaterStatus(stegErGyldig && harBeregnetForeløpigTrygdeavgift);
   }, [stegErGyldig, harBeregnetForeløpigTrygdeavgift]);
 
+  useEffect(() => {
+    if (medlemskapsperiodeStatus === STATUS.OK) {
+      trygdeavgiftOperations.hentBeregnetTrygdeavgift(behandlingID);
+    }
+  }, [behandlingID, medlemskapsperiodeStatus]);
+
   const lagreTrygdeavgiftsgrunnlag = (formVerdier: FieldValue<FormValuesProps>) => {
     setLagrePending(true);
 
@@ -198,12 +206,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     }
   }, [aktivtSteg, innvilgetMedlemskapsperiode]);
 
-  const handleBeregnTrygdeavgift = () => {
-    dispatch(trygdeavgiftOperations.resetTrygdeavgiftState());
-    dispatch(trygdeavgiftOperations.beregnTrygdeavgift(behandlingID));
-  };
-
   if (!aktivtSteg) return null;
+
+  const visFeilFraLagring = feil && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
 
   return (
     <div className="vurderingTrygdeavgift">
@@ -245,7 +250,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         <Nav.Knapp
           className="beregnKnapp"
           disabled={lagrePending || !redigerbart || !stegErGyldig || isValidating}
-          onClick={handleBeregnTrygdeavgift}
+          onClick={() => dispatch(trygdeavgiftOperations.beregnTrygdeavgift(behandlingID))}
           mini
         >
           Beregn foreløpig trygdeavgift
@@ -255,6 +260,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       <Feilmelding type={aktivFeilmeldingType} />
       {trygdeavgiftErIkkeTom && stegErGyldig && <TrygdeavgiftsperioderTabell perioder={trygdeavgiftsperioder!!} />}
 
+      {visFeilFraLagring && <Nav.AlertStripeFeil className="infomelding">{feil}</Nav.AlertStripeFeil>}
       <Feilmeldinger />
 
       {!skalBeregneForelopigTrygdeavgift && stegErGyldig && (
