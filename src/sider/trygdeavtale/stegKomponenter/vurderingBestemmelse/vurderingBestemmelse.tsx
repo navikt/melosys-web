@@ -100,11 +100,13 @@ const VurderingBestemmelse = ({
           bestemmelse: formValues?.bestemmelse,
           tilleggsbestemmelse: formValues.tilleggsbestemmelse ? tilleggsbestemmelseValg?.kode : undefined,
         },
-        () => setUpdatePending(false)
+        () => {
+          setUpdatePending(false);
+          if (formValues?.vedtak && formValues.vedtak !== JA_FATTE_VEDTAK && lovvalgsperiode?.periodeID) {
+            slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID);
+          }
+        }
       );
-      if (formValues?.vedtak !== JA_FATTE_VEDTAK) {
-        if (lovvalgsperiode?.periodeID) slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID);
-      }
     }
   }, [formValues?.vedtak, formValues?.bestemmelse, formValues?.tilleggsbestemmelse]);
 
