@@ -14,6 +14,9 @@ import { SkjemaelementFeilmelding } from "nav-frontend-skjema";
 
 const { FULLMEKTIG_SØKNAD, FULLMEKTIG_ARBEIDSGIVER } = MKV.Koder.fullmaktstype;
 
+export const fullmaktStøtterKontaktperson = (fullmakter: String[]) =>
+  fullmakter.includes(FULLMEKTIG_SØKNAD) || fullmakter.includes(FULLMEKTIG_ARBEIDSGIVER);
+
 interface RedigererFullmektigProps {
   fullmektige: Fullmektig[];
   control: Control;
@@ -74,8 +77,8 @@ const RedigererFullmektig = ({
     }
   };
 
-  const fullmaktStøtterKontaktperson = (fullmakter: String[]) =>
-    fullmakter.includes(FULLMEKTIG_SØKNAD) || fullmakter.includes(FULLMEKTIG_ARBEIDSGIVER);
+  const kanHaKontaktperson = (fullmakter: string[], type?: Type) =>
+    type === Type.ORGANISASJON && fullmaktStøtterKontaktperson(fullmakter);
 
   const handleFullmaktChange = (fullmakt: string, index: number, triggerValidation: boolean) => {
     const nyeFullmakter = [...fullmektige[index].fullmakter];
@@ -85,12 +88,13 @@ const RedigererFullmektig = ({
       nyeFullmakter.push(fullmakt);
     }
 
-    if (fullmaktStøtterKontaktperson(nyeFullmakter)) {
-      update(index, { ...fullmektige[index], fullmakter: nyeFullmakter });
+    const oppdatertFullmektig = { ...fullmektige[index], fullmakter: nyeFullmakter };
+
+    if (kanHaKontaktperson(nyeFullmakter, oppdatertFullmektig.type)) {
+      update(index, oppdatertFullmektig);
     } else {
       update(index, {
-        ...fullmektige[index],
-        fullmakter: nyeFullmakter,
+        ...oppdatertFullmektig,
         kontaktperson: undefined,
         kontaktOrgnr: undefined,
         kontaktTelefon: undefined,
@@ -113,17 +117,13 @@ const RedigererFullmektig = ({
       ? MKV.KTObjects.fullmaktstype.filter((it: KTObject) => it.kode !== FULLMEKTIG_ARBEIDSGIVER)
       : MKV.KTObjects.fullmaktstype;
 
-  const maksAntallFullmakter = fullmektige.every((f) => f.type === Type.PERSON) ? 2 : 3;
   const visLeggTilKnapp =
-    fullmektige.length < 3 &&
-    fullmektige.every((it) => it.type) &&
-    andreFullmektigesFullmakter(-1).length !== maksAntallFullmakter;
+    fullmektige.length < 3 && fullmektige.every((it) => it.type) && andreFullmektigesFullmakter(-1).length !== 3;
 
   return (
     <>
       {fullmektige.map(({ type, fullmakter, feil, person, org, kontaktOrg }: Fullmektig, index) => {
         const adresseErGyldig = !feil && (person || org);
-        const kanHaKontaktperson = type === Type.ORGANISASJON && fullmaktStøtterKontaktperson(fullmakter);
         // @ts-ignore
         const manglerFullmakt = errors?.fullmektige?.[index]?.fullmakter?.message?.melding;
 
@@ -168,7 +168,7 @@ const RedigererFullmektig = ({
               </>
             )}
 
-            {adresseErGyldig && kanHaKontaktperson && (
+            {adresseErGyldig && kanHaKontaktperson(fullmakter, type) && (
               <div className="kontaktperson_container">
                 <span className="kontaktperson_labels">
                   <Nav.Typo.Element>Kontaktopplysninger </Nav.Typo.Element>
