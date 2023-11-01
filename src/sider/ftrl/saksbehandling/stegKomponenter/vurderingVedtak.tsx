@@ -35,6 +35,8 @@ import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
 import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingvedtak/tekster";
 import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
+import { menypanelOperations, menypanelSelectors } from "../../../../ducks/menypanel";
+import { MenypanelFullmektigEndretSelector } from "../../../../ducks/menypanel/selectors";
 
 const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -75,6 +77,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const lagretNyVurderingBakgrunn = useSelector(behandlingsresultatSelectors.NyVurderingBakgrunnSelector);
+  const fullmektigEndret = useSelector(menypanelSelectors.MenypanelFullmektigEndretSelector);
+
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const initialNyVurderingBakgrunnValg =
     lagretNyVurderingBakgrunn && erNyVurderingBakgrunnValgFritekst(lagretNyVurderingBakgrunn)
@@ -157,6 +161,16 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       });
     }
   }, [aktivtSteg]);
+
+  useEffect(() => {
+    console.log(fullmektigEndret);
+    if (fullmektigEndret) {
+      Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((mottaker) => {
+        setFakturamottaker(mottaker.navn);
+      });
+      dispatch(menypanelOperations.fullmektigEndretFalse());
+    }
+  }, [fullmektigEndret]);
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
