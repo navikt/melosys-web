@@ -32,11 +32,10 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
-import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingvedtak/tekster";
+import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingVedtak/tekster";
 import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../ducks/menypanel";
-import { MenypanelFullmektigEndretSelector } from "../../../../ducks/menypanel/selectors";
 
 const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
