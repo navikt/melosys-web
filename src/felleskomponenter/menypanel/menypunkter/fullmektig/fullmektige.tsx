@@ -145,7 +145,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
   const oppdaterTrygdeavgift = () => {
     if (trygdeavgiftStatus === STATUS.OK) {
       // Fakturamottaker til trygdeavgift kan nå være endret så henter på nytt
-      dispatch(trygdeavgiftOperations.beregnTrygdeavgift(behandlingID));
+      dispatch(trygdeavgiftOperations.hentBeregnetTrygdeavgift(behandlingID));
     }
   };
 
