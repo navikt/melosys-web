@@ -10,7 +10,7 @@ export const MenypanelSynligSelector = createSelector(
   (menypanel) => menypanel?.synlig
 );
 
-export const MenypanelFullmektigEndretSelector = createSelector(
+export const MenypanelErFullmektigEndretSelector = createSelector(
   (state) => MenypanelSelector(state),
-  (menypanel) => menypanel?.fullmektig?.fullmektigEndret
+  (menypanel) => menypanel?.fullmektig?.erFullmektigEndret
 );

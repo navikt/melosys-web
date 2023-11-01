@@ -36,6 +36,7 @@ import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegK
 import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../ducks/menypanel";
+import { MenypanelErFullmektigEndretSelector } from "../../../../ducks/menypanel/selectors";
 
 const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -76,7 +77,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const lagretNyVurderingBakgrunn = useSelector(behandlingsresultatSelectors.NyVurderingBakgrunnSelector);
-  const fullmektigEndret = useSelector(menypanelSelectors.MenypanelFullmektigEndretSelector);
+  const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector);
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const initialNyVurderingBakgrunnValg =
@@ -162,13 +163,13 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   }, [aktivtSteg]);
 
   useEffect(() => {
-    if (fullmektigEndret && aktivtSteg) {
+    if (erFullmektigEndret && aktivtSteg) {
       Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((mottaker) => {
         setFakturamottaker(mottaker.navn);
       });
-      dispatch(menypanelOperations.fullmektigEndretFalse());
+      dispatch(menypanelOperations.setErFullmektigEndret(false));
     }
-  }, [fullmektigEndret]);
+  }, [erFullmektigEndret]);
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {

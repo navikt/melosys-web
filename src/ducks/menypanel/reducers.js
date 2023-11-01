@@ -20,7 +20,7 @@ export default function reducer(state = initialState, action = {}) {
         },
       };
     }
-    case Types.TOGGLE_FULLMEKTIG_ENDRET: {
+    case Types.SET_ER_FULLMEKTIG_ENDRET: {
       return {
         ...state,
         status: STATUS.OK,

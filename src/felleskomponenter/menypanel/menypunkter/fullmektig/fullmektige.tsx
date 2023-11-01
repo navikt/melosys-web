@@ -23,6 +23,7 @@ import { Personopplysninger } from "../../../../graphql";
 import LagretFullmektig from "./lagretFullmektig";
 import { FieldArrayProps, Fullmektig, Type } from "./types";
 import { menypanelOperations } from "../../../../ducks/menypanel";
+import { fullmektigEndret } from "../../../../ducks/menypanel/operations";
 
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 
@@ -178,7 +179,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     initializeFullmektige().then(() => {
       setPending(false);
       setRedigerer(false);
-      dispatch(menypanelOperations.fullmektigEndretTrue());
+      dispatch(menypanelOperations.setErFullmektigEndret(true));
     });
   };
 
@@ -187,12 +188,12 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     if (fullmektige[index].databaseID) {
       Api.Fagsaker.aktoer
         .slett(fullmektige[index].databaseID)
-        .then(() => dispatch(menypanelOperations.fullmektigEndretTrue()));
+        .then(() => dispatch(menypanelOperations.setErFullmektigEndret(true)));
     }
     if (fullmektige[index].harLagretKontaktperson) {
       Api.Fagsaker.kontaktopplysninger
         .slett(saksnummer, fullmektige[index].originalAktør?.orgnr)
-        .then(() => dispatch(menypanelOperations.fullmektigEndretTrue()));
+        .then(() => dispatch(menypanelOperations.setErFullmektigEndret(true)));
     }
     if (fullmektige.length === 1) {
       setRedigerer(false);

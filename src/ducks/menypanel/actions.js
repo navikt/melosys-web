@@ -5,7 +5,7 @@ export const oppdaterVisMenypanel = (data) => ({
   data,
 });
 
-export const toggleFullmektigEndret = (data) => ({
-  type: Types.TOGGLE_FULLMEKTIG_ENDRET,
+export const setErFullmektigEndret = (data) => ({
+  type: Types.SET_ER_FULLMEKTIG_ENDRET,
   data,
 });
