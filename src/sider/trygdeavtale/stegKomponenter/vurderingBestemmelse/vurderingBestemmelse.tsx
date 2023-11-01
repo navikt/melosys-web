@@ -22,8 +22,10 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 import "./vurderingBestemmelse.css";
 import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
 import { IngenFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
-const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, NEI_SENDE_TIL_DEPARTEMENTET } = KV.Koder.AVTALELAND_UTFALL;
+const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, NEI_SENDE_TIL_DEPARTEMENTET, JA_FATTE_VEDTAK } = KV.Koder.AVTALELAND_UTFALL;
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -33,6 +35,8 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
     bestemmelse: ownProps.resultat?.bestemmelse,
     tilleggsbestemmelse: Boolean(ownProps.resultat?.tilleggsbestemmelse),
   },
+  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -40,6 +44,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
     dispatch(change(KV.Form.Trygdeavtale.BESTEMMELSE, field, null));
     dispatch(untouch(KV.Form.Trygdeavtale.BESTEMMELSE, field));
   },
+  slettLovvalgsperiode: (behandlingID: number, lovvalgsperiodeID: number) =>
+    dispatch(lovvalgsperioderOperations.slettLovvalgsperiode(behandlingID, lovvalgsperiodeID)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -76,6 +82,9 @@ const VurderingBestemmelse = ({
   steg,
   oppdaterFlyt,
   aktivtSteg,
+  lovvalgsperiode,
+  slettLovvalgsperiode,
+  behandlingID,
 }: PropsFromRedux & Props) => {
   const [updatePending, setUpdatePending] = useState(false);
 
@@ -91,7 +100,12 @@ const VurderingBestemmelse = ({
           bestemmelse: formValues?.bestemmelse,
           tilleggsbestemmelse: formValues.tilleggsbestemmelse ? tilleggsbestemmelseValg?.kode : undefined,
         },
-        () => setUpdatePending(false)
+        () => {
+          setUpdatePending(false);
+          if (formValues?.vedtak && formValues.vedtak !== JA_FATTE_VEDTAK && lovvalgsperiode?.periodeID) {
+            slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID);
+          }
+        }
       );
     }
   }, [formValues?.vedtak, formValues?.bestemmelse, formValues?.tilleggsbestemmelse]);

@@ -56,6 +56,7 @@ const Saksbehandling = ({
   startOgVisOppfriskModal,
   soknadForm,
   visOppfriskModal,
+  lovvalgsperiodeFom,
   lovvalgsperiodeTom,
   registeropplysningerHentet,
   menypanelSynlig,
@@ -160,8 +161,8 @@ const Saksbehandling = ({
               <Nav.Column xs="5">
                 <Oppsummering
                   arbeidsland={arbeidsland}
-                  lovvalgsperiodeFom={mottatteOpplysningerPeriodeFom}
-                  lovvalgsperiodeTom={lovvalgsperiodeTom || mottatteOpplysningerPeriodeTom}
+                  lovvalgsperiodeFom={lovvalgsperiodeFom}
+                  lovvalgsperiodeTom={lovvalgsperiodeTom}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />
@@ -204,6 +205,7 @@ Saksbehandling.propTypes = {
   skjulMenypanel: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   visOppfriskModal: PT.func.isRequired,
+  lovvalgsperiodeFom: PT.string.isRequired,
   lovvalgsperiodeTom: PT.string.isRequired,
   registeropplysningerHentet: PT.bool.isRequired,
   menypanelSynlig: PT.bool.isRequired,
@@ -228,6 +230,7 @@ const mapStateToProps = (state) => ({
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
   registeropplysningerHentet: behandlingerSelectors.RegisteropplysningerHentetSelector(state),
   menypanelSynlig: menypanelSelectors.MenypanelSynligSelector(state),
