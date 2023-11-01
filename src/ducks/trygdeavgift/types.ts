@@ -1,14 +1,7 @@
-import * as Api from "../../services/api";
-
 export const OK = "trygdeavgift/OK";
 export const FEILET = "trygdeavgift/FEILET";
 export const PENDING = "trygdeavgift/PENDING";
 export const RESET = "trygdeavgift/RESET";
-
-export interface Data {
-  beregnetTrygdeavgift?: Api.Trygdeavgift.BeregnetTrygdeavgift;
-  feilmelding?: string;
-}
 
 export interface FeiletAction {
   type: typeof FEILET;

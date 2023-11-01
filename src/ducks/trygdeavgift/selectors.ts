@@ -1,30 +1,28 @@
 import { createSelector, Selector } from "reselect";
 import { RootState, StateSection } from "AppTypes";
-import * as Types from "./types";
+import * as Api from "../../services/api";
 
-export const TrygdeavgiftSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
+export const TrygdeavgiftSelector: Selector<
+  RootState,
+  StateSection<Api.Trygdeavgift.BeregnetTrygdeavgift>
+> = createSelector(
   (state: RootState) => state.trygdeavgift,
   (trygdeavgift) => trygdeavgift
 );
 
 export const TrygdeavgiftStatusSelector = createSelector(TrygdeavgiftSelector, (trygdeavgift) => trygdeavgift.status);
 
-export const TrygdeavgiftDataSelector: Selector<RootState, Types.Data> = createSelector(
+export const TrygdeavgiftDataSelector: Selector<RootState, Api.Trygdeavgift.BeregnetTrygdeavgift> = createSelector(
   TrygdeavgiftSelector,
   (trygdeavgift) => trygdeavgift.data || {}
 );
 
-export const BeregnetTrygdeavgiftSelector = createSelector(
-  TrygdeavgiftDataSelector,
-  (trygdeavgiftData) => trygdeavgiftData.beregnetTrygdeavgift || null
-);
-
 export const FakturamottakerSelector = createSelector(
-  BeregnetTrygdeavgiftSelector,
+  TrygdeavgiftDataSelector,
   (beregnetTrygdeavgift) => beregnetTrygdeavgift?.fakturamottaker
 );
 
 export const TrygdeavgiftsperioderSelector = createSelector(
-  BeregnetTrygdeavgiftSelector,
+  TrygdeavgiftDataSelector,
   (beregnetTrygdeavgift) => beregnetTrygdeavgift?.trygdeavgiftsperioder
 );
