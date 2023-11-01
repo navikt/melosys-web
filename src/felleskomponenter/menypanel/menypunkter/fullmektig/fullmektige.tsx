@@ -1,4 +1,4 @@
-import { connect, ConnectedProps } from "react-redux";
+import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import { RootState } from "AppTypes";
 
 import MKV from "../../../../melosyskodeverk";
@@ -22,6 +22,9 @@ import { hentBostedsadresseForPerson } from "../../../../graphql/adresse";
 import { Personopplysninger } from "../../../../graphql";
 import LagretFullmektig from "./lagretFullmektig";
 import { FieldArrayProps, Fullmektig, Type } from "./types";
+import { trygdeavgiftOperations, trygdeavgiftSelectors } from "../../../../ducks/trygdeavgift";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { STATUS } from "../../../../services";
 
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 
@@ -37,6 +40,10 @@ type FullmektigeProps = PropsFromRedux & {
 };
 
 const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
+  const dispatch = useDispatch();
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const trygdeavgiftStatus = useSelector(trygdeavgiftSelectors.TrygdeavgiftStatusSelector);
+
   const [redigerer, setRedigerer] = useState(false);
   const [pending, setPending] = useState(false);
 
@@ -135,6 +142,13 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     initializeFullmektige();
   }, []);
 
+  const oppdaterTrygdeavgift = () => {
+    if (trygdeavgiftStatus === STATUS.OK) {
+      // Fakturamottaker til trygdeavgift kan nå være endret så henter på nytt
+      dispatch(trygdeavgiftOperations.beregnTrygdeavgift(behandlingID));
+    }
+  };
+
   const handleLeggTil = () => {
     append({
       ident: "",
@@ -173,6 +187,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
         await Api.Fagsaker.kontaktopplysninger.slett(saksnummer, fullmektig.originalAktør?.orgnr);
       }
     }
+    oppdaterTrygdeavgift();
     initializeFullmektige().then(() => {
       setPending(false);
       setRedigerer(false);
@@ -190,6 +205,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     if (fullmektige.length === 1) {
       setRedigerer(false);
     }
+    oppdaterTrygdeavgift();
     remove(index);
   };
 

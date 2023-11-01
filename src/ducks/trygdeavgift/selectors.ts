@@ -7,6 +7,8 @@ export const TrygdeavgiftSelector: Selector<RootState, StateSection<Types.Data>>
   (trygdeavgift) => trygdeavgift
 );
 
+export const TrygdeavgiftStatusSelector = createSelector(TrygdeavgiftSelector, (trygdeavgift) => trygdeavgift.status);
+
 export const TrygdeavgiftDataSelector: Selector<RootState, Types.Data> = createSelector(
   TrygdeavgiftSelector,
   (trygdeavgift) => trygdeavgift.data || {}
