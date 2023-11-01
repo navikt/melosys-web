@@ -163,8 +163,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   }, [aktivtSteg]);
 
   useEffect(() => {
-    console.log(fullmektigEndret);
-    if (fullmektigEndret) {
+    if (fullmektigEndret && aktivtSteg) {
       Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((mottaker) => {
         setFakturamottaker(mottaker.navn);
       });
