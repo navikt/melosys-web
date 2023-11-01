@@ -32,8 +32,7 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
-import useHentPersonopplysninger from "../../../../felleskomponenter/informasjonlinje/useHentpersonopplysninger";
-import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingVedtak/tekster";
+import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingvedtak/tekster";
 import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
 
@@ -88,8 +87,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const dispatch = useDispatch();
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
 
-  const personopplysninger = useHentPersonopplysninger(behandlingID, false);
-
   const {
     watch,
     control,
@@ -112,6 +109,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
+  const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
   const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
@@ -153,6 +151,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     if (aktivtSteg) {
       Api.Trygdeavgift.hentTrygdeavgiftMottaker(behandlingID).then((dto) => {
         setTrygdeavgiftMottaker(dto.trygdeavgiftMottaker);
+      });
+      Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((mottaker) => {
+        setFakturamottaker(mottaker.navn);
       });
     }
   }, [aktivtSteg]);
@@ -342,12 +343,12 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </Nav.Row>
       ) : null}
 
-      {personopplysninger ? (
+      {fakturamottaker ? (
         <Nav.Row className="margin_bottom">
           <Nav.Column xs="12" className="fakturamottaker">
             <Nav.Typo.Normaltekst className="info">Faktura sendes til:</Nav.Typo.Normaltekst>
             &nbsp;
-            <Nav.Typo.Normaltekst className="bold">{personopplysninger.navn}</Nav.Typo.Normaltekst>
+            <Nav.Typo.Normaltekst className="bold">{fakturamottaker}</Nav.Typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
       ) : null}

@@ -50,8 +50,15 @@ export type BeregnetTrygdeavgift = {
   trygdeavgiftsperioder: Trygdeavgiftsperiode[];
 };
 
+export type Fakturamottaker = {
+  navn: string;
+};
+
 export const hentBeregnetTrygdeavgift = (behandlingID: number): Promise<BeregnetTrygdeavgift> =>
   getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`);
 
 export const beregnTrygdeavgift = (behandlingID: number): Promise<BeregnetTrygdeavgift> =>
   putAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`);
+
+export const hentFakturamottaker = (behandlingID: number): Promise<Fakturamottaker> =>
+  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/fakturamottaker`);
