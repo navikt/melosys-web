@@ -23,7 +23,6 @@ import { Personopplysninger } from "../../../../graphql";
 import LagretFullmektig from "./lagretFullmektig";
 import { FieldArrayProps, Fullmektig, Type } from "./types";
 import { menypanelOperations } from "../../../../ducks/menypanel";
-import { fullmektigEndret } from "../../../../ducks/menypanel/operations";
 
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 
