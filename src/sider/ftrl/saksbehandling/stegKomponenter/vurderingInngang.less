@@ -1,4 +1,22 @@
 .vurderingInngang_ftrl {
+  .søknads_periode_wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+
+    .søknads_periode {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      gap: 8px;
+      min-width: 640px;
+
+      > * {
+        min-width: 7.5rem;
+      }
+    }
+  }
+
   .stegvelgertittel {
     margin-bottom: 2rem;
   }

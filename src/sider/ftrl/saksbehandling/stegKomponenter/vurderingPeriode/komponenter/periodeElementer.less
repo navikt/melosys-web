@@ -1,0 +1,53 @@
+.wrapper_periodeelementer {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .periodeelementer {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+
+    .radioknapp_gruppe {
+      display: flex;
+      flex-direction: row;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .inntektskilde {
+      min-width: 12rem;
+      width: 23rem;
+    }
+
+    > * {
+      min-width: 7.5rem;
+      margin-left: 8px;
+    }
+
+    .dato {
+      max-width: 7.5rem;
+    }
+
+    .slett {
+      margin-bottom: 1rem;
+      min-width: 2rem;
+    }
+  }
+
+  .skillestrek {
+    border-top: 1px solid #d8d8d8;
+    margin: 0.5rem 0.25rem 0.5rem 0.25rem;
+  }
+
+  .brutto_inntekt {
+    white-space: break-spaces;
+    max-width: 7.5rem;
+    justify-content: left;
+  }
+}
