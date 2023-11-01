@@ -36,7 +36,6 @@ import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegK
 import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../ducks/menypanel";
-import { MenypanelErFullmektigEndretSelector } from "../../../../ducks/menypanel/selectors";
 
 const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
