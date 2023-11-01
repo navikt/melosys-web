@@ -6,6 +6,6 @@ export const oppdaterVisMenypanel = (data) => ({
 });
 
 export const setErFullmektigEndret = (data) => ({
-  type: Types.SET_ER_FULLMEKTIG_ENDRET,
+  type: Types.OPPDATER_ER_FULLMEKTIG_ENDRET,
   data,
 });
