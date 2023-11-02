@@ -155,20 +155,19 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       Api.Trygdeavgift.hentTrygdeavgiftMottaker(behandlingID).then((dto) => {
         setTrygdeavgiftMottaker(dto.trygdeavgiftMottaker);
       });
-      Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((mottaker) => {
-        setFakturamottaker(mottaker.navn);
-      });
     }
   }, [aktivtSteg]);
 
   useEffect(() => {
-    if (erFullmektigEndret && aktivtSteg) {
+    if (aktivtSteg && (erFullmektigEndret || !fakturamottaker)) {
       Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((mottaker) => {
         setFakturamottaker(mottaker.navn);
       });
-      dispatch(menypanelOperations.setErFullmektigEndret(false));
+      if (erFullmektigEndret) {
+        dispatch(menypanelOperations.setErFullmektigEndret(false));
+      }
     }
-  }, [erFullmektigEndret]);
+  }, [aktivtSteg, erFullmektigEndret]);
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {

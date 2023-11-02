@@ -190,9 +190,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
         .then(() => dispatch(menypanelOperations.setErFullmektigEndret(true)));
     }
     if (fullmektige[index].harLagretKontaktperson) {
-      Api.Fagsaker.kontaktopplysninger
-        .slett(saksnummer, fullmektige[index].originalAktør?.orgnr)
-        .then(() => dispatch(menypanelOperations.setErFullmektigEndret(true)));
+      Api.Fagsaker.kontaktopplysninger.slett(saksnummer, fullmektige[index].originalAktør?.orgnr);
     }
     if (fullmektige.length === 1) {
       setRedigerer(false);
