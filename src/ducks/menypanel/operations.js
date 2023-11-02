@@ -5,4 +5,4 @@ export const visMenypanel = () => async (dispatch) => dispatch(Actions.oppdaterV
 export const skjulMenypanel = () => async (dispatch) => dispatch(Actions.oppdaterVisMenypanel({ synlig: false }));
 
 export const setErFullmektigEndret = (value) => async (dispatch) =>
-  dispatch(Actions.setErFullmektigEndret({ fullmektig: { erFullmektigEndret: value } }));
+  dispatch(Actions.oppdaterErFullmektigEndret({ fullmektig: { erFullmektigEndret: value } }));
