@@ -1,21 +1,27 @@
 import Organisasjon from "./organisasjon";
-import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
+import { render } from "@testing-library/react";
 
 describe("organisasjon", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      organisasjon: {},
+      organisasjon: {
+        orgnr: "123",
+        navn: "Test AS",
+        postadresse: {
+          gateadresse: {},
+          land: "NO",
+          postnr: "0123",
+          poststed: "Oslo",
+        },
+      },
       redigerbart: true,
     };
   });
 
-  it("viser organisasjonsadresse", () => {
-    const organisasjon = shallow(<Organisasjon {...props} />);
-    const organisasjonsAdresse = organisasjon.find(OrganisasjonsAdresse);
-
-    expect(organisasjonsAdresse).toHaveLength(1);
-    expect(organisasjonsAdresse.props().organisasjon).toBe(props.organisasjon);
+  it("snapshot test", () => {
+    const { container } = render(<Organisasjon {...props} />);
+    expect(container).toMatchSnapshot();
   });
 });

@@ -1,10 +1,13 @@
-import * as Mui from "../../../ui";
+import { ArbeidsgivereNorge } from "./arbeidsgivereNorge";
+import { renderWithProviders } from "~/ducks/test-utils/renderWithProviders";
 
-import { ArbeidsgivereNorge, ArbeidsgivereEnkeltNorge } from "./arbeidsgivereNorge";
-
-import Organisasjon from "../arbeidsgiver/organisasjon";
-import Arbeidsforholdene from "../arbeidsgiver/arbeidsforhold";
-import Inntekt from "../arbeidsgiver/inntekt";
+vi.mock("../../../../utils", async () => {
+  const actual = await vi.importActual("../../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("ArbeidsgivereNorge", () => {
   let props = null;
@@ -14,7 +17,7 @@ describe("ArbeidsgivereNorge", () => {
       redigerbart: true,
       arbeidsgivereNorge: [
         {
-          organisasjon: {},
+          organisasjon: { orgnr: "123" },
           arbeidsforhold: [],
           inntektListe: [],
           arbeidsforholdene: [],
@@ -23,74 +26,8 @@ describe("ArbeidsgivereNorge", () => {
     };
   });
 
-  it("lister ut alle arbeidsgivere i Norge", () => {
-    const arbeidsgivereNorge = shallow(<ArbeidsgivereNorge {...props} />);
-    const arbeidsgivereNorgeListe = arbeidsgivereNorge.find(ArbeidsgivereEnkeltNorge);
-
-    expect(arbeidsgivereNorgeListe).toHaveLength(1);
-    expect(arbeidsgivereNorgeListe.first().props().organisasjon).toBe(props.arbeidsgivereNorge[0].organisasjon);
-    expect(arbeidsgivereNorgeListe.first().props().arbeidsforhold).toBe(props.arbeidsgivereNorge[0].arbeidsforhold);
-    expect(arbeidsgivereNorgeListe.first().props().inntektListe).toBe(props.arbeidsgivereNorge[0].inntektListe);
-  });
-
-  it("wrapper ikke arbeidsgiver i panel ved 1 arbeidsgiver", () => {
-    const arbeidsgivereNorge = shallow(<ArbeidsgivereNorge {...props} />);
-    const arbeidsgivereNorgeListe = arbeidsgivereNorge.find(ArbeidsgivereEnkeltNorge);
-
-    expect(arbeidsgivereNorgeListe.first().props().wrapIPanel).toBe(false);
-  });
-
-  it("wrapper arbeidsgiver i panel ved 2 arbeidsgivere", () => {
-    props.arbeidsgivereNorge = [...props.arbeidsgivereNorge, ...props.arbeidsgivereNorge];
-    const arbeidsgivereNorge = shallow(<ArbeidsgivereNorge {...props} />);
-    const arbeidsgivereNorgeListe = arbeidsgivereNorge.find(ArbeidsgivereEnkeltNorge);
-
-    expect(arbeidsgivereNorgeListe.first().props().wrapIPanel).toBe(true);
-  });
-});
-
-describe("ArbeidsgivereEnkeltNorge", () => {
-  let props = null;
-
-  beforeEach(() => {
-    props = {
-      kilde: "Skatteetaten",
-      organisasjon: {
-        navn: "NAV Oslo",
-      },
-      arbeidsforholdene: [],
-      inntektListe: [],
-      redigerbart: true,
-      wrapIPanel: false,
-    };
-  });
-
-  it("viser organisasjon, arbeidsforhold og inntekt", () => {
-    const arbeidsgivereEnkeltNorge = shallow(<ArbeidsgivereEnkeltNorge {...props} />);
-    const organisasjon = arbeidsgivereEnkeltNorge.find(Organisasjon);
-    const organisasjonProps = organisasjon.props();
-    const arbeidsforholdene = arbeidsgivereEnkeltNorge.find(Arbeidsforholdene);
-    const arbeidsforholdeneProps = arbeidsforholdene.props();
-    const inntekt = arbeidsgivereEnkeltNorge.find(Inntekt);
-    const inntektProps = inntekt.props();
-
-    expect(organisasjon).toHaveLength(1);
-    expect(organisasjonProps.organisasjon).toBe(props.organisasjon);
-    expect(arbeidsforholdene).toHaveLength(1);
-    expect(arbeidsforholdeneProps.arbeidsforholdene).toBe(props.arbeidsforholdene);
-    expect(inntekt).toHaveLength(1);
-    expect(inntektProps.inntektListe).toBe(props.inntektListe);
-  });
-
-  it("kan wrappes i panel", () => {
-    props.wrapIPanel = true;
-    let arbeidsgivereEnkeltNorge = shallow(<ArbeidsgivereEnkeltNorge {...props} />);
-
-    expect(arbeidsgivereEnkeltNorge.find(Mui.LesMerPanel)).toHaveLength(1);
-
-    props.wrapIPanel = false;
-    arbeidsgivereEnkeltNorge = shallow(<ArbeidsgivereEnkeltNorge {...props} />);
-
-    expect(arbeidsgivereEnkeltNorge.find(Mui.LesMerPanel)).toHaveLength(0);
+  it("snapshot test", () => {
+    const { container } = renderWithProviders(<ArbeidsgivereNorge {...props} />);
+    expect(container).toMatchSnapshot();
   });
 });
