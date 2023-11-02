@@ -1,4 +1,4 @@
-import { connect, ConnectedProps } from "react-redux";
+import { connect, ConnectedProps, useDispatch } from "react-redux";
 import { RootState } from "AppTypes";
 
 import MKV from "../../../../melosyskodeverk";
@@ -22,6 +22,7 @@ import { hentBostedsadresseForPerson } from "../../../../graphql/adresse";
 import { Personopplysninger } from "../../../../graphql";
 import LagretFullmektig from "./lagretFullmektig";
 import { FieldArrayProps, Fullmektig, Type } from "./types";
+import { menypanelOperations } from "../../../../ducks/menypanel";
 
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 
@@ -37,6 +38,7 @@ type FullmektigeProps = PropsFromRedux & {
 };
 
 const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
+  const dispatch = useDispatch();
   const [redigerer, setRedigerer] = useState(false);
   const [pending, setPending] = useState(false);
 
@@ -176,13 +178,16 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     initializeFullmektige().then(() => {
       setPending(false);
       setRedigerer(false);
+      dispatch(menypanelOperations.setErFullmektigEndret(true));
     });
   };
 
   const handleSlett = (index: number) => {
     const { fullmektige } = formValues;
     if (fullmektige[index].databaseID) {
-      Api.Fagsaker.aktoer.slett(fullmektige[index].databaseID);
+      Api.Fagsaker.aktoer
+        .slett(fullmektige[index].databaseID)
+        .then(() => dispatch(menypanelOperations.setErFullmektigEndret(true)));
     }
     if (fullmektige[index].harLagretKontaktperson) {
       Api.Fagsaker.kontaktopplysninger.slett(saksnummer, fullmektige[index].originalAktør?.orgnr);

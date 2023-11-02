@@ -41,6 +41,7 @@ import "./saksbehandling.css";
 import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../featuretoggle/toggleNavn";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { resetInkluderSiste5Aar } from "../../../ducks/modaler/operations";
+import { setErFullmektigEndret } from "../../../ducks/menypanel/operations";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
@@ -204,6 +205,7 @@ const Saksbehandling = ({
       resetKontrollFeil();
       resetInkluderSiste5Aar();
       skjulMenypanel();
+      setErFullmektigEndret(false);
     };
   }, []);
 

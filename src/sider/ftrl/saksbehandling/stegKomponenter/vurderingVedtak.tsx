@@ -32,10 +32,10 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
-import useHentPersonopplysninger from "../../../../felleskomponenter/informasjonlinje/useHentpersonopplysninger";
 import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingVedtak/tekster";
 import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
+import { menypanelOperations, menypanelSelectors } from "../../../../ducks/menypanel";
 
 const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -76,6 +76,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const lagretNyVurderingBakgrunn = useSelector(behandlingsresultatSelectors.NyVurderingBakgrunnSelector);
+  const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector);
+
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const initialNyVurderingBakgrunnValg =
     lagretNyVurderingBakgrunn && erNyVurderingBakgrunnValgFritekst(lagretNyVurderingBakgrunn)
@@ -87,8 +89,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
   const dispatch = useDispatch();
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
-
-  const personopplysninger = useHentPersonopplysninger(behandlingID, false);
 
   const {
     watch,
@@ -112,6 +112,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
+  const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
   const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
@@ -156,6 +157,17 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       });
     }
   }, [aktivtSteg]);
+
+  useEffect(() => {
+    if (aktivtSteg && (erFullmektigEndret || !fakturamottaker)) {
+      Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((mottaker) => {
+        setFakturamottaker(mottaker.navn);
+      });
+      if (erFullmektigEndret) {
+        dispatch(menypanelOperations.setErFullmektigEndret(false));
+      }
+    }
+  }, [aktivtSteg, erFullmektigEndret]);
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
@@ -342,12 +354,12 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </Nav.Row>
       ) : null}
 
-      {personopplysninger ? (
+      {fakturamottaker ? (
         <Nav.Row className="margin_bottom">
           <Nav.Column xs="12" className="fakturamottaker">
             <Nav.Typo.Normaltekst className="info">Faktura sendes til:</Nav.Typo.Normaltekst>
             &nbsp;
-            <Nav.Typo.Normaltekst className="bold">{personopplysninger.navn}</Nav.Typo.Normaltekst>
+            <Nav.Typo.Normaltekst className="bold">{fakturamottaker}</Nav.Typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
       ) : null}

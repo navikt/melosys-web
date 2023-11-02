@@ -9,3 +9,8 @@ export const MenypanelSynligSelector = createSelector(
   (state) => MenypanelSelector(state),
   (menypanel) => menypanel?.synlig
 );
+
+export const MenypanelErFullmektigEndretSelector = createSelector(
+  (state) => MenypanelSelector(state),
+  (menypanel) => menypanel?.fullmektig?.erFullmektigEndret
+);

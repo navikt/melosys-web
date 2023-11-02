@@ -15,7 +15,18 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         status: STATUS.OK,
         data: {
+          ...state.data,
           synlig: action.data.synlig,
+        },
+      };
+    }
+    case Types.OPPDATER_ER_FULLMEKTIG_ENDRET: {
+      return {
+        ...state,
+        status: STATUS.OK,
+        data: {
+          ...state.data,
+          ...action.data,
         },
       };
     }

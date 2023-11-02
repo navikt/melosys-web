@@ -3,3 +3,6 @@ import * as Actions from "./actions";
 export const visMenypanel = () => async (dispatch) => dispatch(Actions.oppdaterVisMenypanel({ synlig: true }));
 
 export const skjulMenypanel = () => async (dispatch) => dispatch(Actions.oppdaterVisMenypanel({ synlig: false }));
+
+export const setErFullmektigEndret = (value) => async (dispatch) =>
+  dispatch(Actions.oppdaterErFullmektigEndret({ fullmektig: { erFullmektigEndret: value } }));
