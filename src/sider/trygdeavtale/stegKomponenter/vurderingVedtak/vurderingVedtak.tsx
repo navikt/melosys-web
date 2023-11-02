@@ -149,6 +149,7 @@ const VurderingVedtak = ({
   const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const [harOppfrisketLovvalgsperiode, setHarOppfrisketLovvalgsperiode] = useState(false);
   const isMounted = Hooks.useIsMounted();
   const dispatch = useDispatch();
 
@@ -263,10 +264,13 @@ const VurderingVedtak = ({
   ]);
 
   // Refresher verdien av lovvalgsperiode i redux da denne lagres gjennom kall fra melosys-trygdeavtale til melosys-api
-  // når vedtakssteget legges til i flyten.
   useEffect(() => {
-    hentLovvalgsperiode(behandlingID);
-  }, []);
+    if (!harOppfrisketLovvalgsperiode && aktivtSteg) {
+      hentLovvalgsperiode(behandlingID).then(() => {
+        setHarOppfrisketLovvalgsperiode(true);
+      });
+    }
+  }, [aktivtSteg]);
 
   const handleLagreTomEndring = async () => {
     if (redigerbart && formValues) {
