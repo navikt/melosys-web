@@ -4,15 +4,24 @@
     overflow-y: hidden;
     white-space: nowrap;
 
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
     .søknads_periode {
       display: flex;
       align-items: center;
       flex-direction: row;
-      gap: 8px;
       min-width: 640px;
 
+      .fomDato {
+        margin-left: 0;
+      }
+
       > * {
-        min-width: 7.5rem;
+        min-width: 7rem;
+        margin-left: 0.5rem;
       }
     }
   }

@@ -125,7 +125,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
       <div className={"søknads_periode_wrapper"}>
         <Nav.Row className={"søknads_periode"}>
-          <Nav.Column>
+          <Nav.Column className={"fomDato"}>
             <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
           </Nav.Column>
           <Nav.Column>
