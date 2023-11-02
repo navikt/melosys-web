@@ -42,6 +42,8 @@ import {
 } from "./tekster";
 
 const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU } = MKV.Koder.brev.produserbaredokumenter;
+const { CAN_ART6_2 } = MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca;
+const { USA_ART5_4 } = MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_us;
 export const FRITEKST = "Fritekst";
 
 const vurderingVedtakCls = bem("vurderingVedtak");
@@ -82,7 +84,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
         ownProps.resultat.lovvalgsperiodeFom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeFom),
       lovvalgsperiodeTom:
         ownProps.resultat.lovvalgsperiodeTom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeTom),
-      kopiTilArbeidsgiver: true,
+      kopiTilArbeidsgiver: ![CAN_ART6_2, USA_ART5_4].includes(ownProps.resultat.bestemmelse),
       nyVurderingBakgrunn: initialNyVurderingBakgrunn,
       nyVurderingBakgrunnFritekst: initialNyVurderingBakgrunnFritekst,
     },
@@ -151,6 +153,8 @@ const VurderingVedtak = ({
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const isMounted = Hooks.useIsMounted();
   const dispatch = useDispatch();
+
+  const skalViseKopiTilArbeidsgiverCheckbox = ![CAN_ART6_2, USA_ART5_4].includes(resultat.bestemmelse);
 
   const getNyVurderingBakgrunn = () =>
     formValues?.nyVurderingBakgrunn === FRITEKST
@@ -483,7 +487,7 @@ const VurderingVedtak = ({
         disabled={!redigerbart}
       />
 
-      {redigerbart && (
+      {redigerbart && skalViseKopiTilArbeidsgiverCheckbox && (
         <Skjema.Checkbox
           feltNavn="kopiTilArbeidsgiver"
           label="Send kopi til arbeidsgiver/virksomhet"
