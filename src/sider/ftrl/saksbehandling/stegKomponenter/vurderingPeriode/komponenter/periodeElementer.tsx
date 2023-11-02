@@ -35,89 +35,91 @@ export const PeriodeElementer = ({
 
   return (
     <div className={"wrapper_periodeelementer"}>
-      <Nav.Row className="periodeelementer">
-        <Nav.Column className={"fomDato"}>
-          <Nav.Typo.Element>Fra og med</Nav.Typo.Element>
-        </Nav.Column>
-        <Nav.Column>
-          <Nav.Typo.Element>Til og med</Nav.Typo.Element>
-        </Nav.Column>
-        <Nav.Column className={"trygdedekning"}>
-          <Nav.Typo.Element>Trygdedekning</Nav.Typo.Element>
-        </Nav.Column>
-        <Nav.Column>
-          <Nav.Typo.Element>Resultat</Nav.Typo.Element>
-        </Nav.Column>
-      </Nav.Row>
+      <Nav.Fieldset legend="">
+        <Nav.Row className="periodeelementer">
+          <Nav.Column className={"fomDato"}>
+            <Nav.Typo.Element>Fra og med</Nav.Typo.Element>
+          </Nav.Column>
+          <Nav.Column>
+            <Nav.Typo.Element>Til og med</Nav.Typo.Element>
+          </Nav.Column>
+          <Nav.Column className={"trygdedekning"}>
+            <Nav.Typo.Element>Trygdedekning</Nav.Typo.Element>
+          </Nav.Column>
+          <Nav.Column>
+            <Nav.Typo.Element>Resultat</Nav.Typo.Element>
+          </Nav.Column>
+        </Nav.Row>
 
-      {fields?.map((field, index) => (
-        <div key={field.id}>
-          <Nav.Row className={"periodeelementer"}>
-            <Nav.Column className={"fomDato"}>
-              <Forms.Datovelger
-                control={control}
-                name={`medlemskapsperioder[${index}].fomDato`}
-                aria-label={`Fra og med periode ${index + 1}`}
-                disabled={!redigerbart}
-                onChange={(value) => handleChange([{ ...field, fomDato: value }], formIsValid, index)}
-              />
-            </Nav.Column>
-            <Nav.Column>
-              <Forms.Datovelger
-                control={control}
-                name={`medlemskapsperioder[${index}].tomDato`}
-                aria-label={`Til og med periode ${index + 1}`}
-                disabled={!redigerbart}
-                onChange={(value) => handleChange([{ ...field, tomDato: value }], formIsValid, index)}
-              />
-            </Nav.Column>
-            <Nav.Column className={"trygdedekning"}>
-              <Forms.Select
-                name={`medlemskapsperioder[${index}].trygdedekning`}
-                aria-label={`Trygdedekning periode ${index + 1}`}
-                control={control}
-                disabled={!redigerbart}
-                emptyFieldDisabled={!!field.trygdedekning}
-                onChange={(value) => handleChange([{ ...field, trygdedekning: value }], formIsValid, index)}
-              >
-                {trygdedekninger.map((item: KTObject) => (
-                  <option key={item.kode} value={item.kode}>
-                    {item.term}
-                  </option>
-                ))}
-              </Forms.Select>
-            </Nav.Column>
-            <Nav.Column>
-              <Forms.Select
-                name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
-                aria-label={`Resultat periode ${index + 1}`}
-                control={control}
-                disabled={!redigerbart}
-                emptyFieldDisabled={!!field.innvilgelsesResultat}
-                onChange={(value) => handleChange([{ ...field, innvilgelsesResultat: value }], formIsValid, index)}
-              >
-                {innvilgelsesResultater
-                  .filter((item: KTObject) => item.kode !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET)
-                  .map((item: KTObject) => (
+        {fields?.map((field, index) => (
+          <div key={field.id}>
+            <Nav.Row className={"periodeelementer"}>
+              <Nav.Column className={"fomDato"}>
+                <Forms.Datovelger
+                  control={control}
+                  name={`medlemskapsperioder[${index}].fomDato`}
+                  aria-label={`Fra og med periode ${index + 1}`}
+                  disabled={!redigerbart}
+                  onChange={(value) => handleChange([{ ...field, fomDato: value }], formIsValid, index)}
+                />
+              </Nav.Column>
+              <Nav.Column>
+                <Forms.Datovelger
+                  control={control}
+                  name={`medlemskapsperioder[${index}].tomDato`}
+                  aria-label={`Til og med periode ${index + 1}`}
+                  disabled={!redigerbart}
+                  onChange={(value) => handleChange([{ ...field, tomDato: value }], formIsValid, index)}
+                />
+              </Nav.Column>
+              <Nav.Column className={"trygdedekning"}>
+                <Forms.Select
+                  name={`medlemskapsperioder[${index}].trygdedekning`}
+                  aria-label={`Trygdedekning periode ${index + 1}`}
+                  control={control}
+                  disabled={!redigerbart}
+                  emptyFieldDisabled={!!field.trygdedekning}
+                  onChange={(value) => handleChange([{ ...field, trygdedekning: value }], formIsValid, index)}
+                >
+                  {trygdedekninger.map((item: KTObject) => (
                     <option key={item.kode} value={item.kode}>
                       {item.term}
                     </option>
                   ))}
-              </Forms.Select>
-            </Nav.Column>
-            <Nav.Column className={"slett"}>
-              {kanSlettePeriode && (
-                <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => handleSlett(index)} ariaLabel={"Slett periode"} />
-              )}
-            </Nav.Column>
-          </Nav.Row>
-          {field.feil && (
-            <Nav.AlertStripe type="feil" className="medlemskapsperiodeFeil">
-              {field.feil}
-            </Nav.AlertStripe>
-          )}
-        </div>
-      ))}
+                </Forms.Select>
+              </Nav.Column>
+              <Nav.Column>
+                <Forms.Select
+                  name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
+                  aria-label={`Resultat periode ${index + 1}`}
+                  control={control}
+                  disabled={!redigerbart}
+                  emptyFieldDisabled={!!field.innvilgelsesResultat}
+                  onChange={(value) => handleChange([{ ...field, innvilgelsesResultat: value }], formIsValid, index)}
+                >
+                  {innvilgelsesResultater
+                    .filter((item: KTObject) => item.kode !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET)
+                    .map((item: KTObject) => (
+                      <option key={item.kode} value={item.kode}>
+                        {item.term}
+                      </option>
+                    ))}
+                </Forms.Select>
+              </Nav.Column>
+              <Nav.Column className={"slett"}>
+                {kanSlettePeriode && (
+                  <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => handleSlett(index)} ariaLabel={"Slett periode"} />
+                )}
+              </Nav.Column>
+            </Nav.Row>
+            {field.feil && (
+              <Nav.AlertStripe type="feil" className="medlemskapsperiodeFeil">
+                {field.feil}
+              </Nav.AlertStripe>
+            )}
+          </div>
+        ))}
+      </Nav.Fieldset>
     </div>
   );
 };
