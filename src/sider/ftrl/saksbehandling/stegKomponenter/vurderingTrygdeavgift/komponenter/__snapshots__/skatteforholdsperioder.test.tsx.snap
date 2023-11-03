@@ -2,7 +2,7 @@
 
 exports[`Skatteforholdsperioder > snapshot test 1`] = `
 <div
-  className="inntektskilder_komponent"
+  className="skatteforholdsperioder_komponent"
 >
   <div
     className="skatteforhold_label"
