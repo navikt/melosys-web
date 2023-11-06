@@ -56,11 +56,11 @@ describe("Notat", () => {
     const user = userEvent.setup();
 
     await user.click(screen.getByText("Endre"));
-    expect(screen.getByText(props.tekst)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(props.tekst)).toBeInTheDocument();
   });
 
   it("resetter tekst i tekstfelt dersom man avbryter en endring", async () => {
-    const { container } = render(<Notat {...props} />);
+    render(<Notat {...props} />);
     const user = userEvent.setup();
 
     await user.click(screen.getByText("Endre"));
