@@ -23,8 +23,7 @@ const {
   ARBEID_FLERE_LAND,
   A1_ANMODNING_OM_UNNTAK_PAPIR,
 } = MKV.Koder.behandlinger.behandlingstema;
-const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE, MANGLENDE_INNBETALING_TRYGDEAVGIFT } =
-  MKV.Koder.behandlinger.behandlingstyper;
+const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE } = MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
 
