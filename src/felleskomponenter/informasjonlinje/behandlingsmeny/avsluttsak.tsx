@@ -94,7 +94,7 @@ const AvsluttSak = () => {
     }
     if (sakstype === FTRL) {
       return (
-        ![HENVENDELSE, KLAGE].includes(behandlingstype) &&
+        [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
         [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, UNNTAK_MEDLEMSKAP].includes(behandlingstema)
       );
     }
