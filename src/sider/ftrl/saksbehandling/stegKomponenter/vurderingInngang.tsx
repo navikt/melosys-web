@@ -123,62 +123,64 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         {erNyVurdering && <Nav.Typo.Undertekst>{nyVurderingPeriodetekst}</Nav.Typo.Undertekst>}
       </div>
 
-      <Nav.Row>
-        <Nav.Column xs="2">
-          <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
-        </Nav.Column>
-        <Nav.Column xs="2">
-          <Forms.Datovelger
-            label={
-              <LabelMedHjelpetekst
-                label="Til og med"
-                hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Medlemskapsperiode(r) registreres senere.`}
-                hjelpetekstClassName="hjelpetekst"
-              />
-            }
-            name="tom"
-            minDate={Utils.dato.norskStringTilDate(formValues.fom)}
-            disabled={!redigerbart}
-            control={control}
-          />
-        </Nav.Column>
-        <Nav.Column xs="3">
-          <Forms.Select
-            label={
-              <LabelMedHjelpetekst
-                label="Arbeidsland"
-                hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                hjelpetekstClassName="hjelpetekst"
-              />
-            }
-            emptyFieldDisabled={!!formValues.land}
-            name="land"
-            disabled={!redigerbart}
-            control={control}
-          >
-            {alleLandkoder.map((item: KTObject) => (
-              <option key={item.kode} value={item.kode}>
-                {item.term}
-              </option>
-            ))}
-          </Forms.Select>
-        </Nav.Column>
-        <Nav.Column xs="5">
-          <Forms.Select
-            name="trygdedekning"
-            control={control}
-            label="Trygdedekning"
-            emptyFieldDisabled={!!formValues.trygdedekning}
-            disabled={!redigerbart}
-          >
-            {trygdedekninger.map((item: KTObject) => (
-              <option key={item.kode} value={item.kode}>
-                {item.term}
-              </option>
-            ))}
-          </Forms.Select>
-        </Nav.Column>
-      </Nav.Row>
+      <div className="søknads_periode_wrapper">
+        <Nav.Row className="søknads_periode">
+          <Nav.Column className="fomDato">
+            <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
+          </Nav.Column>
+          <Nav.Column>
+            <Forms.Datovelger
+              label={
+                <LabelMedHjelpetekst
+                  label="Til og med"
+                  hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Medlemskapsperiode(r) registreres senere.`}
+                  hjelpetekstClassName="hjelpetekst"
+                />
+              }
+              name="tom"
+              minDate={Utils.dato.norskStringTilDate(formValues.fom)}
+              disabled={!redigerbart}
+              control={control}
+            />
+          </Nav.Column>
+          <Nav.Column>
+            <Forms.Select
+              label={
+                <LabelMedHjelpetekst
+                  label="Arbeidsland"
+                  hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
+                  hjelpetekstClassName="hjelpetekst"
+                />
+              }
+              emptyFieldDisabled={!!formValues.land}
+              name="land"
+              disabled={!redigerbart}
+              control={control}
+            >
+              {alleLandkoder.map((item: KTObject) => (
+                <option key={item.kode} value={item.kode}>
+                  {item.term}
+                </option>
+              ))}
+            </Forms.Select>
+          </Nav.Column>
+          <Nav.Column>
+            <Forms.Select
+              name="trygdedekning"
+              control={control}
+              label="Trygdedekning"
+              emptyFieldDisabled={!!formValues.trygdedekning}
+              disabled={!redigerbart}
+            >
+              {trygdedekninger.map((item: KTObject) => (
+                <option key={item.kode} value={item.kode}>
+                  {item.term}
+                </option>
+              ))}
+            </Forms.Select>
+          </Nav.Column>
+        </Nav.Row>
+      </div>
       <Nav.Row>
         <Forms.Checkbox
           className="inkluderSiste5Aar"

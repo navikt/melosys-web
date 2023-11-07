@@ -227,7 +227,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       )}
 
       <Nav.Row>
-        <Nav.Column xs="9">
+        <Nav.Column>
           <Skatteforholdsperioder
             formValues={formValues}
             redigerbart={redigerbart}
