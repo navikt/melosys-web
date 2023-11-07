@@ -51,7 +51,7 @@ const Brevutkast = ({
         changeField(
           "mottaker",
           tilgjengeligeMottakere.find((mottaker) =>
-            mottaker.adresser?.find((adresse) => adresse.tittel.orgnr === valgtUtkast.orgNr)
+            mottaker.adresser?.find((adresse) => adresse.orgnr === valgtUtkast.orgNr)
           )?.uuid
         );
         changeField("arbeidsgiver", valgtUtkast.orgNr);
