@@ -5,7 +5,6 @@ import MKV from "../../../../melosyskodeverk";
 
 import * as Mui from "../../../ui";
 import * as Api from "../../../../services/api";
-import { Organisasjon } from "../../../../services/api";
 import * as Ikoner from "../../../../resources/images";
 import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
@@ -18,10 +17,8 @@ import { FieldValue, FieldValues, useFieldArray, useForm } from "react-hook-form
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import fullmektig_schema from "./fullmektigeSchema";
 import RedigererFullmektig from "./redigererFullmektig";
-import { hentBostedsadresseForPerson } from "../../../../graphql/adresse";
-import { Personopplysninger } from "../../../../graphql";
 import LagretFullmektig from "./lagretFullmektig";
-import { FieldArrayProps, Fullmektig, Type } from "./types";
+import { AdresseOgFeil, FieldArrayProps, Fullmektig, Type } from "./types";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
@@ -66,26 +63,16 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
   });
   const formValues = watch();
 
-  const finnOrganisasjonAdresse = (orgnr: string): Promise<{ org?: Organisasjon; feil?: string }> => {
-    return Api.Organisasjoner.hentOrganisasjon(orgnr)
-      .then((org) => ({ org, feil: undefined }))
-      .catch(() => ({ org: undefined, feil: "Kunne ikke finne organisasjon" }));
+  const finnOrganisasjonAdresse = (orgnr: string): Promise<AdresseOgFeil> => {
+    return Api.Adresser.hentOrganisasjonAdresse(orgnr)
+      .then((adresse) => ({ adresse, feil: undefined }))
+      .catch(() => ({ adresse: undefined, feil: "Kunne ikke finne organisasjon" }));
   };
 
-  const finnPersonAdresse = async (personident: string): Promise<{ person?: Personopplysninger; feil?: string }> => {
-    let data: { person?: Personopplysninger; feil?: string } = {};
-    try {
-      await hentBostedsadresseForPerson(personident).then((person) => {
-        if (person == null) {
-          data = { ...data, feil: "Kunne ikke finne personen" };
-        } else {
-          data = { ...data, person };
-        }
-      });
-    } catch (e) {
-      data = { ...data, feil: "Ukjent feil ved søk på f.nr. eller d-nr." };
-    }
-    return data;
+  const finnPersonAdresse = (personIdent: string): Promise<AdresseOgFeil> => {
+    return Api.Adresser.hentPersonAdresse(personIdent)
+      .then((adresse) => ({ adresse, feil: undefined }))
+      .catch(() => ({ adresse: undefined, feil: "Kunne ikke finne personen" }));
   };
 
   const initializeFullmektige = async () => {
@@ -101,13 +88,21 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     resetFullmektige(mappedFullmektige);
     mappedFullmektige.forEach((fullmektig, index) => {
       if (fullmektig.type === Type.PERSON) {
-        finnPersonAdresse(fullmektig.ident).then((personOgFeil) =>
-          update(index, { ...fullmektig, person: personOgFeil.person, feil: personOgFeil.feil })
+        finnPersonAdresse(fullmektig.ident).then((adresseOgFeil) =>
+          update(index, {
+            ...fullmektig,
+            adresse: adresseOgFeil.adresse,
+            feil: adresseOgFeil.feil,
+          })
         );
       } else {
         let oppdatertFullmektig: Fullmektig = { ...fullmektig };
-        finnOrganisasjonAdresse(fullmektig.ident).then((orgOgFeil) => {
-          oppdatertFullmektig = { ...oppdatertFullmektig, org: orgOgFeil.org, feil: orgOgFeil.feil };
+        finnOrganisasjonAdresse(fullmektig.ident).then((adresseOgFeil) => {
+          oppdatertFullmektig = {
+            ...oppdatertFullmektig,
+            adresse: adresseOgFeil.adresse,
+            feil: adresseOgFeil.feil,
+          };
           update(index, oppdatertFullmektig);
         });
         Api.Fagsaker.kontaktopplysninger
@@ -121,8 +116,8 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
               kontaktTelefon: kontaktopplysning.kontakttelefon,
             };
             if (kontaktopplysning.kontaktorgnr) {
-              finnOrganisasjonAdresse(kontaktopplysning.kontaktorgnr).then((orgOgFeil) =>
-                update(index, { ...oppdatertFullmektig, kontaktOrg: orgOgFeil.org })
+              finnOrganisasjonAdresse(kontaktopplysning.kontaktorgnr).then((adresseOgFeil) =>
+                update(index, { ...oppdatertFullmektig, kontaktOrgAdresse: adresseOgFeil.adresse })
               );
             } else {
               update(index, oppdatertFullmektig);

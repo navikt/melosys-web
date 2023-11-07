@@ -1,11 +1,11 @@
 import * as Nav from "../../../../navFrontend";
 import { Fullmektig, Type } from "./types";
-import Adresse from "./adresse";
 import * as Utils from "../../../../utils";
 import * as Ikon from "../../../../resources/images";
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
 import { fullmaktStøtterKontaktperson } from "./redigererFullmektig";
+import BrevAdresse from "../../../adresser/brevAdresse";
 
 interface LagretFullmektigProps {
   fullmektige: Fullmektig[];
@@ -20,13 +20,15 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
             <div className="lagretFullmektig_container" key={fullmektig.ident}>
               <div className="overskrift">
                 <Ikon.Fullmakt className="inline_felt ikon" aria-hidden />
-                <Nav.Typo.Systemtittel className="inline_felt">{fullmektig.org?.navn}</Nav.Typo.Systemtittel>
+                <Nav.Typo.Systemtittel className="inline_felt">
+                  {fullmektig.adresse?.mottakerNavn}
+                </Nav.Typo.Systemtittel>
               </div>
               <Nav.Row>
                 <Nav.Column xs="6">
                   <Nav.Typo.Element className="inline_felt">Org.nr.: </Nav.Typo.Element>
                   <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.ident}</Nav.Typo.Normaltekst>
-                  <Adresse type={Type.ORGANISASJON} organisasjon={fullmektig.org} visNavn={false} />
+                  {fullmektig.adresse && <BrevAdresse {...fullmektig.adresse} visNavn={false} />}
                   <Kontaktperson fullmektig={fullmektig} />
                 </Nav.Column>
                 <Nav.Column xs="6">
@@ -41,17 +43,14 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
             <div className="overskrift">
               <Ikon.Fullmakt className="inline_felt ikon" aria-hidden />
               <Nav.Typo.Systemtittel className="inline_felt">
-                {Utils.person.tilSammensattNavnFraObjekt(fullmektig.person?.navn)}
-                {fullmektig.person?.bostedsadresser[0].coAdressenavn
-                  ? ` C/O ${fullmektig.person.bostedsadresser[0].coAdressenavn}`
-                  : ""}
+                {Utils.person.tilSammensattNavnFraObjekt(fullmektig.adresse?.mottakerNavn)}
               </Nav.Typo.Systemtittel>
             </div>
             <Nav.Row>
               <Nav.Column xs="6">
                 <Nav.Typo.Element className="inline_felt">F.nr./d-nr.: </Nav.Typo.Element>
                 <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.ident}</Nav.Typo.Normaltekst>
-                <Adresse type={Type.PERSON} person={fullmektig.person} visNavn={false} />
+                {fullmektig.adresse && <BrevAdresse {...fullmektig.adresse} visNavn={false} />}
               </Nav.Column>
               <Nav.Column xs="6">
                 <Fullmakter fullmakter={fullmektig.fullmakter} />
@@ -104,9 +103,9 @@ const Kontaktperson = ({ fullmektig }: { fullmektig: Fullmektig }) => {
           <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktOrgnr}</Nav.Typo.Normaltekst>
         </div>
       )}
-      {fullmektig.kontaktOrgnr && fullmektig.kontaktOrg && (
+      {fullmektig.kontaktOrgnr && fullmektig.kontaktOrgAdresse && (
         <>
-          <Adresse type={Type.ORGANISASJON} organisasjon={fullmektig.kontaktOrg} visNavn={false} />
+          <BrevAdresse visNavn={false} {...fullmektig.kontaktOrgAdresse} />
           <Nav.Typo.EtikettLiten className="brev_sendes">(Brev sendes til denne adressen)</Nav.Typo.EtikettLiten>
         </>
       )}

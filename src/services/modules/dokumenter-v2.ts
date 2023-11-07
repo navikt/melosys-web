@@ -2,11 +2,9 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { getAsJson, postAsJson, postAsJsonReceiveAsPDF } from "../utils";
 import { API_BASE_URL, DOKUMENTER } from "../api-constants";
 
-export type MottakerAdresse = {
-  tittel: {
-    mottakerNavn: string;
-    orgnr: string | null;
-  };
+export type BrevAdresse = {
+  mottakerNavn: string;
+  orgnr: string | null;
   adresselinjer: string[];
   postnr: string;
   poststed: string;
@@ -61,7 +59,7 @@ export type TilgjengeligMottaker = {
   uuid: string;
   type: string;
   rolle: string;
-  adresser: MottakerAdresse[] | null;
+  adresser: BrevAdresse[] | null;
   feilmelding: FeilmeldingProps | undefined;
   trygdemyndighet: string[] | null;
 };

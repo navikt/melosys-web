@@ -16,7 +16,7 @@ import { formSelectors } from "../../../../ducks/form";
 
 import { DokumenterV2, Organisasjon } from "../../../../services/api";
 import { OrganisasjonsAdresse } from "../../../adresser";
-import MottakerAdresse from "../mottakerAdresse";
+import BrevAdresse from "../../../adresser/brevAdresse";
 import FeltBeskrivelse from "../feltBeskrivelse";
 import { SendBrevFormValues } from "../types";
 import BrevMottakerNorskMyndighet from "./brevMottakerNorskMyndighet";
@@ -60,7 +60,7 @@ const BrevMottaker = ({
 }: Props & PropsFromRedux) => {
   const [feil, setFeil] = useState<FeilmeldingProps | undefined>(undefined);
   const [adresse, setAdresse] = useState<{
-    mottakerAdresse?: DokumenterV2.MottakerAdresse;
+    mottakerAdresse?: DokumenterV2.BrevAdresse;
     organisasjonsAdresse?: Organisasjon;
   }>();
 
@@ -112,13 +112,13 @@ const BrevMottaker = ({
 
     if (erVirksomhet(valgtMottaker.rolle)) {
       setAdresse({ mottakerAdresse: valgtMottaker.adresser ? valgtMottaker.adresser[0] : undefined });
-      changeField("arbeidsgiver", valgtMottaker.adresser && valgtMottaker.adresser[0].tittel.orgnr);
+      changeField("arbeidsgiver", valgtMottaker.adresser && valgtMottaker.adresser[0].orgnr);
     }
 
     if (erArbeidsgiver(valgtMottaker.rolle)) {
       setAdresse({
         mottakerAdresse: valgtMottaker.adresser?.find(
-          (mottakerAdresse: DokumenterV2.MottakerAdresse) => mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
+          (mottakerAdresse: DokumenterV2.BrevAdresse) => mottakerAdresse.orgnr === formValues.arbeidsgiver
         ),
       });
     }
@@ -166,7 +166,7 @@ const BrevMottaker = ({
               </Nav.AlertStripeFeil>
             )}
             {adresse?.mottakerAdresse && (
-              <MottakerAdresse {...adresse?.mottakerAdresse} className="brukeradresse" visNavn />
+              <BrevAdresse {...adresse?.mottakerAdresse} className="brukeradresse" visNavn />
             )}
           </Nav.Column>
         </Nav.Row>
@@ -192,19 +192,19 @@ const BrevMottaker = ({
                   </Nav.Hjelpetekst>
                 )}
               </Nav.Typo.Normaltekst>
-              {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.MottakerAdresse) => (
+              {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.BrevAdresse) => (
                 <Fragment key={Utils._uuid()}>
                   <Skjema.Radio
                     className="arbeidsgiver__radio"
                     feltNavn="arbeidsgiver"
-                    label={`${virksomhet.tittel.mottakerNavn} (org.nr. ${virksomhet.tittel.orgnr})`}
-                    id={`arbeidsgiver.${virksomhet.tittel.orgnr}`}
-                    key={`arbeidsgiver.${virksomhet.tittel.orgnr}`}
-                    value={virksomhet.tittel.orgnr}
+                    label={`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
+                    id={`arbeidsgiver.${virksomhet.orgnr}`}
+                    key={`arbeidsgiver.${virksomhet.orgnr}`}
+                    value={virksomhet.orgnr}
                     disabled={!redigerbart}
                   />
-                  {formValues.arbeidsgiver === virksomhet.tittel.orgnr && adresse?.mottakerAdresse && (
-                    <MottakerAdresse {...adresse?.mottakerAdresse} className="arbeidsgiver__adresse" />
+                  {formValues.arbeidsgiver === virksomhet.orgnr && adresse?.mottakerAdresse && (
+                    <BrevAdresse {...adresse?.mottakerAdresse} className="arbeidsgiver__adresse" />
                   )}
                 </Fragment>
               ))}

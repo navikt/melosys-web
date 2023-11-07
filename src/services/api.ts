@@ -1,4 +1,5 @@
 import * as Anmodningsperioder from "./modules/anmodningsperioder";
+import * as Adresser from "./modules/adresser";
 import * as Avklartefakta from "./modules/avklartefakta";
 import * as Behandlinger from "./modules/behandlinger";
 import * as MottatteOpplysninger from "./modules/mottatteOpplysninger";
@@ -37,6 +38,7 @@ import {
 
 export {
   Anmodningsperioder,
+  Adresser,
   Avklartefakta,
   Behandlinger,
   MottatteOpplysninger,
