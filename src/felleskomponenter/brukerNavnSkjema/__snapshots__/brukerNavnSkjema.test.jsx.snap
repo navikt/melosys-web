@@ -1,0 +1,30 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`brukernavnskjema > snapshot test 1`] = `
+<div>
+  <div
+    class="brukerNavnSkjema"
+  >
+    <div
+      class="skjemaelement brukerNavnSkjema__fetTekst"
+    >
+      <label
+        class="skjemaelement__label"
+        for="123"
+      >
+        Brukers f.nr. eller d-nr.
+      </label>
+      <input
+        aria-invalid="false"
+        class="skjemaelement__input input--fullbredde"
+        id="123"
+        meta="[object Object]"
+        name="brukerID"
+        type="text"
+        value=""
+      />
+    </div>
+    
+  </div>
+</div>
+`;

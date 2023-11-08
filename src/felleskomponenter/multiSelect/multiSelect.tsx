@@ -77,7 +77,7 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
         isMulti
         isDisabled={!redigerbart}
         noOptionsMessage={() => ""}
-        value={options.filter((option) => values.indexOf(option.value) >= 0)}
+        value={options.filter((option) => values?.indexOf(option.value) >= 0)}
       />
       <div role="alert" aria-live="assertive">
         {feil && <div className="skjemaelement__feilmelding">{feil}</div>}

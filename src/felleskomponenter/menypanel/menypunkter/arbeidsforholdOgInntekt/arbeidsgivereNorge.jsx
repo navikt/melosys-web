@@ -2,11 +2,11 @@ import { Fragment } from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
 
-import { v4 as uuid } from "uuid";
 import * as MPT from "../../../../proptypes";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
+import * as Utils from "../../../../utils";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
@@ -16,7 +16,7 @@ import Inntekt from "../arbeidsgiver/inntekt";
 
 import "./arbeidsgivereNorge.css";
 
-export const ArbeidsgivereEnkeltNorge = (props) => {
+const ArbeidsgivereEnkeltNorge = (props) => {
   const { kilde, organisasjon, arbeidsforholdene, inntektListe, wrapIPanel } = props;
 
   const seksjoner = (
@@ -76,7 +76,7 @@ export const ArbeidsgivereNorge = (props) => {
   return (
     <div className="arbeidsgivereNorge panelSeksjon">
       {arbeidsgivereNorge.map((arbeidsgiver) => (
-        <ArbeidsgivereEnkeltNorge key={uuid()} {...arbeidsgiver} wrapIPanel={wrapIPanel} />
+        <ArbeidsgivereEnkeltNorge key={Utils._uuid()} {...arbeidsgiver} wrapIPanel={wrapIPanel} />
       ))}
     </div>
   );

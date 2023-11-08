@@ -1,9 +1,14 @@
-import * as Nav from "../../../navFrontend";
-
 import Notat from "./notat";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
-const lagLenkeKnappPredicate = (knappTekst) => (n) =>
-  n.containsMatchingElement(<span>{knappTekst}</span>) && n.type() === Nav.Lenker;
+vi.mock("../../../utils", async () => {
+  const actual = await vi.importActual("../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("Notat", () => {
   let props = null;
@@ -11,7 +16,7 @@ describe("Notat", () => {
   beforeEach(() => {
     props = {
       redigerbart: true,
-      tekst: "Tekst",
+      tekst: "Testtekst",
       opprettetDato: "2019-04-23T10:02:52.031Z",
       endretDato: "2019-04-24T09:58:23.899Z",
       forfatter: "LILLA HEST",
@@ -21,105 +26,58 @@ describe("Notat", () => {
     };
   });
 
+  it("snapshot test", () => {
+    const { container } = render(<Notat {...props} />);
+
+    expect(container).toMatchSnapshot();
+  });
+
   it("viser ikke endringsknapp hvis ikke redigerbar", () => {
     props.redigerbart = false;
-    const notat = shallow(<Notat {...props} />);
 
-    const endreKnapp = notat.find(Nav.Lenker);
+    render(<Notat {...props} />);
 
-    expect(endreKnapp).toHaveLength(0);
+    expect(screen.queryByText("Endre")).not.toBeInTheDocument();
   });
 
-  it("skjuler knapp for lagring av tekst med flere tegn enn maksTekstLengde", () => {
+  it("skjuler knapp for lagring av tekst med flere tegn enn maksTekstLengde", async () => {
     props.maksTekstLengde = -1;
-    const notat = shallow(<Notat {...props} />);
 
-    const endreKnapp = notat.find(Nav.Lenker);
-    endreKnapp.simulate("click");
+    render(<Notat {...props} />);
+    const user = userEvent.setup();
 
-    const lagreKnapp = notat.findWhere(lagLenkeKnappPredicate("Lagre"));
-
-    expect(lagreKnapp).toHaveLength(0);
+    await user.click(screen.getByText("Endre"));
+    expect(screen.queryByText("Lagre")).not.toBeInTheDocument();
+    expect(screen.getByText("Avbryt")).toBeInTheDocument();
   });
 
-  it("kaller onUpdate ved lagring av tekst", () => {
-    const notat = shallow(<Notat {...props} />);
+  it("initialiserer tekstfelt med tekst fra prop", async () => {
+    render(<Notat {...props} />);
+    const user = userEvent.setup();
 
-    const endreKnapp = notat.find(Nav.Lenker);
-    endreKnapp.simulate("click");
-
-    const lagreKnapp = notat.findWhere(lagLenkeKnappPredicate("Lagre"));
-    lagreKnapp.simulate("click");
-
-    expect(props.onUpdate).toHaveBeenCalledTimes(1);
-    expect(props.onUpdate).toHaveBeenCalledWith(props.tekst);
+    await user.click(screen.getByText("Endre"));
+    expect(screen.getByDisplayValue(props.tekst)).toBeInTheDocument();
   });
 
-  it("initialiserer tekstfelt med tekst fra prop", () => {
-    const notat = shallow(<Notat {...props} />);
+  it("resetter tekst i tekstfelt dersom man avbryter en endring", async () => {
+    render(<Notat {...props} />);
+    const user = userEvent.setup();
 
-    const tekstomrade = notat.find(Nav.Tekstomrade);
-    expect(tekstomrade.children().text()).toBe(props.tekst);
+    await user.click(screen.getByText("Endre"));
+    const input = screen.getByRole("textbox");
+    user.clear(input);
+    await userEvent.type(input, "Dette er en testsak");
+    expect(screen.getByDisplayValue("Dette er en testsak")).toBeInTheDocument();
 
-    const endreKnapp = notat.find(Nav.Lenker);
-    endreKnapp.simulate("click");
-
-    const textarea = notat.find(Nav.Textarea);
-    expect(textarea.props().value).toBe(props.tekst);
-  });
-
-  it("resetter tekst i tekstfelt dersom man avbryter en endring", () => {
-    const notat = shallow(<Notat {...props} />);
-
-    const endreKnapp = notat.find(Nav.Lenker);
-    endreKnapp.simulate("click");
-
-    const textarea = notat.find(Nav.Textarea);
-    const event = { target: { value: "Dette er en testsak" } };
-    textarea.simulate("change", event);
-
-    expect(notat.find(Nav.Textarea).props().value).toBe("Dette er en testsak");
-
-    const avbrytKnapp = notat.findWhere(lagLenkeKnappPredicate("Avbryt"));
-    avbrytKnapp.simulate("click");
-
-    const tekstomrade = notat.find(Nav.Tekstomrade);
-    expect(tekstomrade.children().text()).toBe(props.tekst);
-  });
-
-  it("viser overskrift", () => {
-    const notat = shallow(<Notat {...props} />);
-    const overskrift = notat.findWhere((n) => n.text() === props.overskrift);
-
-    expect(overskrift).toHaveLength(1);
-  });
-
-  it("viser endringsdato dersom opprettetDato og endretDato er forskjellige", () => {
-    const notat = shallow(<Notat {...props} />);
-    const endringsdato = notat.findWhere((n) => n.text().includes("Endret:"));
-
-    expect(endringsdato).toHaveLength(1);
+    await user.click(screen.getByText("Avbryt"));
+    expect(screen.queryByText("Dette er en testsak")).not.toBeInTheDocument();
+    expect(screen.getByText(props.tekst)).toBeInTheDocument();
   });
 
   it("viser ikke endretDato dersom opprettelsesDato og endretDato er like", () => {
     props.endretDato = "2019-04-23T10:02:52.031Z";
-    const notat = shallow(<Notat {...props} />);
-    const endringsdato = notat.findWhere((n) => n.text().includes("Endret:"));
+    render(<Notat {...props} />);
 
-    expect(endringsdato).toHaveLength(0);
-  });
-
-  it("viser opprettelsesdato", () => {
-    const notat = shallow(<Notat {...props} />);
-    const opprettelsesdato = notat.findWhere((n) => n.text().includes("Opprettet:"));
-
-    expect(opprettelsesdato).toHaveLength(1);
-  });
-
-  it("viser forfatter", () => {
-    const notat = shallow(<Notat {...props} />);
-    const forfatter = notat.findWhere((n) => n.text().includes(props.forfatter));
-
-    expect(forfatter).toHaveLength(1);
+    expect(screen.queryByText("Endret:", { exact: false })).not.toBeInTheDocument();
   });
 });

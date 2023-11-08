@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Input > snapshot test 1`] = `
+<div>
+  <div
+    class="skjemaelement"
+  >
+    <label
+      class="skjemaelement__label"
+      for="123"
+    >
+      test
+    </label>
+    <input
+      aria-invalid="false"
+      array="[object Object]"
+      class="skjemaelement__input input--m"
+      form="test"
+      id="123"
+      meta="[object Object]"
+      type="text"
+    />
+  </div>
+</div>
+`;

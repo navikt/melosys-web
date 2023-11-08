@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`knapp > viser en NAV knapp 1`] = `
+<div>
+  <button
+    class="knapp mui-knapp knapp knapp--standard"
+    type="submit"
+  >
+    <pencil
+      class="ikon"
+    />
+    child
+  </button>
+</div>
+`;

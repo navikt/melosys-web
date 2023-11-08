@@ -1,12 +1,41 @@
-import { OpprettSak } from "./opprettSak";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import MultiSelect from "../../../felleskomponenter/skjema/input/multiselect";
-
+import OpprettSak from "./opprettSak";
 import MKV from "../../../melosyskodeverk";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+import { reduxForm } from "redux-form";
+import { cleanup } from "@testing-library/react";
+
+vi.mock("../../../services/modules/lovligekombinasjoner", async () => {
+  const actual = await vi.importActual("../../../services/modules/lovligekombinasjoner");
+  return {
+    ...actual,
+    hentSakstyper: () =>
+      Promise.resolve([
+        { kode: "EU_EOS", term: "EU/EØS-land" },
+        { kode: "TRYGDEAVTALE", term: "Avtaleland" },
+      ]),
+    hentSakstemaer: () =>
+      Promise.resolve([
+        { kode: "MEDLEMSKAP_LOVVALG", term: "Medlemskap og lovvalg" },
+        { kode: "UNNTAK", term: "Unntak" },
+      ]),
+    hentBehandlingstemaer: () =>
+      Promise.resolve([
+        { kode: "YRKESAKTIV", term: "Yrkesaktiv" },
+        { kode: "ANMODNING_OM_UNNTAK_HOVEDREGEL", term: "Anmodning om unntak" },
+      ]),
+    hentBehandlingstyper: () =>
+      Promise.resolve([
+        { kode: "FØRSTEGANG", term: "Førstegangsbehandling" },
+        { kode: "NY_VURDERING", term: "Ny vurdering" },
+      ]),
+  };
+});
 
 const { BRUKER } = MKV.Koder.aktoersroller;
 const { UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG, ARBEID_FLERE_LAND, ARBEID_NORGE_BOSATT_ANNET_LAND, YRKESAKTIV } =
   MKV.Koder.behandlinger.behandlingstema;
+
+const WrappedOpprettSak = reduxForm({ form: "journalforing" })(OpprettSak);
 
 describe("OpprettSak - journalføring", () => {
   let props = null;
@@ -61,17 +90,16 @@ describe("OpprettSak - journalføring", () => {
       props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
       props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
       props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
-
       props.formValues.journalforingSoknadsland = behandlingstema;
-      const opprettSak = shallow(<OpprettSak {...props} />);
 
-      const datovelger = opprettSak.find(Skjema.Datovelger);
-      const radioKnapper = opprettSak.find(Skjema.Radio);
-      const multiselect = opprettSak.find(MultiSelect);
+      const { getByLabelText, queryByRole, getByRole } = renderWithProviders(<WrappedOpprettSak {...props} />);
 
-      expect(datovelger).toHaveLength(2);
-      expect(radioKnapper).toHaveLength(0);
-      expect(multiselect).toHaveLength(1);
+      expect(getByLabelText("Fra")).toBeInTheDocument();
+      expect(getByLabelText("Til")).toBeInTheDocument();
+      expect(getByRole("textbox", { name: "" })).toBeInTheDocument(); // MultiSelect har tom label
+      expect(queryByRole("radio")).not.toBeInTheDocument();
+
+      cleanup(); // Må gjøre cleanup pga. flere render kall i en testmetode
     });
   });
 
@@ -83,14 +111,14 @@ describe("OpprettSak - journalføring", () => {
       props.formValues.sakstype = MKV.Koder.sakstyper.TRYGDEAVTALE;
       props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
-      const opprettSak = shallow(<OpprettSak {...props} />);
-      const datovelger = opprettSak.find(Skjema.Datovelger);
-      const radioKnapper = opprettSak.find(Skjema.Radio);
-      const multiselect = opprettSak.find(MultiSelect);
+      const { queryByLabelText, queryByRole } = renderWithProviders(<WrappedOpprettSak {...props} />);
 
-      expect(datovelger).toHaveLength(0);
-      expect(radioKnapper).toHaveLength(0);
-      expect(multiselect).toHaveLength(0);
+      expect(queryByLabelText("Fra")).not.toBeInTheDocument();
+      expect(queryByLabelText("Til")).not.toBeInTheDocument();
+      expect(queryByRole("textbox", { name: "" })).not.toBeInTheDocument();
+      expect(queryByRole("radio")).not.toBeInTheDocument();
+
+      cleanup(); // Må gjøre cleanup pga. flere render kall i en testmetode
     });
   });
 
@@ -102,14 +130,12 @@ describe("OpprettSak - journalføring", () => {
     props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
     props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
-    const opprettSak = shallow(<OpprettSak {...props} />);
-    const datovelger = opprettSak.find(Skjema.Datovelger);
-    const radioKnapper = opprettSak.find(Skjema.Radio);
-    const multiselect = opprettSak.find(MultiSelect);
+    const { getByLabelText, getAllByRole, getByRole } = renderWithProviders(<WrappedOpprettSak {...props} />);
 
-    expect(datovelger).toHaveLength(2);
-    expect(radioKnapper).toHaveLength(2);
-    expect(multiselect).toHaveLength(1);
+    expect(getByLabelText("Fra")).toBeInTheDocument();
+    expect(getByLabelText("Til")).toBeInTheDocument();
+    expect(getByRole("textbox", { name: "" })).toBeInTheDocument(); // MultiSelect har tom label
+    expect(getAllByRole("radio")).toHaveLength(2);
   });
 });
 
@@ -166,17 +192,16 @@ describe("OpprettSak - opprett ny sak", () => {
       props.formValues.sakstema = MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG;
       props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
       props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
-
       props.formValues.journalforingSoknadsland = behandlingstema;
-      const opprettSak = shallow(<OpprettSak {...props} />);
 
-      const datovelger = opprettSak.find(Skjema.Datovelger);
-      const radioKnapper = opprettSak.find(Skjema.Radio);
-      const multiselect = opprettSak.find(MultiSelect);
+      const { getByLabelText, queryByRole, getByRole } = renderWithProviders(<WrappedOpprettSak {...props} />);
 
-      expect(datovelger).toHaveLength(2);
-      expect(radioKnapper).toHaveLength(0);
-      expect(multiselect).toHaveLength(1);
+      expect(getByLabelText("Fra")).toBeInTheDocument();
+      expect(getByLabelText("Til")).toBeInTheDocument();
+      expect(getByRole("textbox", { name: "" })).toBeInTheDocument(); // MultiSelect har tom label
+      expect(queryByRole("radio")).not.toBeInTheDocument();
+
+      cleanup(); // Må gjøre cleanup pga. flere render kall i en testmetode
     });
   });
 
@@ -188,14 +213,14 @@ describe("OpprettSak - opprett ny sak", () => {
       props.formValues.sakstype = MKV.Koder.sakstyper.TRYGDEAVTALE;
       props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
-      const opprettSak = shallow(<OpprettSak {...props} />);
-      const datovelger = opprettSak.find(Skjema.Datovelger);
-      const radioKnapper = opprettSak.find(Skjema.Radio);
-      const multiselect = opprettSak.find(MultiSelect);
+      const { queryByLabelText, queryByRole } = renderWithProviders(<WrappedOpprettSak {...props} />);
 
-      expect(datovelger).toHaveLength(0);
-      expect(radioKnapper).toHaveLength(0);
-      expect(multiselect).toHaveLength(0);
+      expect(queryByLabelText("Fra")).not.toBeInTheDocument();
+      expect(queryByLabelText("Til")).not.toBeInTheDocument();
+      expect(queryByRole("textbox", { name: "" })).not.toBeInTheDocument();
+      expect(queryByRole("radio")).not.toBeInTheDocument();
+
+      cleanup(); // Må gjøre cleanup pga. flere render kall i en testmetode
     });
   });
 
@@ -207,13 +232,11 @@ describe("OpprettSak - opprett ny sak", () => {
     props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
     props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
-    const opprettSak = shallow(<OpprettSak {...props} />);
-    const datovelger = opprettSak.find(Skjema.Datovelger);
-    const radioKnapper = opprettSak.find(Skjema.Radio);
-    const multiselect = opprettSak.find(MultiSelect);
+    const { getByLabelText, getAllByRole, getByRole } = renderWithProviders(<WrappedOpprettSak {...props} />);
 
-    expect(datovelger).toHaveLength(2);
-    expect(radioKnapper).toHaveLength(2);
-    expect(multiselect).toHaveLength(1);
+    expect(getByLabelText("Fra")).toBeInTheDocument();
+    expect(getByLabelText("Til")).toBeInTheDocument();
+    expect(getByRole("textbox", { name: "" })).toBeInTheDocument(); // MultiSelect har tom label
+    expect(getAllByRole("radio")).toHaveLength(2);
   });
 });

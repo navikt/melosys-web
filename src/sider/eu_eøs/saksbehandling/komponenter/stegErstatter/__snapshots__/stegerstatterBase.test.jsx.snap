@@ -1,0 +1,26 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`StegerstatterBase > snapshot test 1`] = `
+<div>
+  <section
+    class="panelSeksjon stegerstatter"
+  >
+    <div
+      class="panel"
+    >
+      <div
+        class="row"
+      >
+        <h2
+          class="typo-systemtittel"
+        >
+          Tittel
+        </h2>
+      </div>
+      <p>
+        Beskrivelse
+      </p>
+    </div>
+  </section>
+</div>
+`;

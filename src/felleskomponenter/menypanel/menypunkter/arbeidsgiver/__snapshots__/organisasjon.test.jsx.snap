@@ -1,0 +1,43 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`organisasjon > snapshot test 1`] = `
+<div>
+  <div
+    class=""
+  >
+    <div
+      class="container-fluid"
+    >
+      <div
+        class="row"
+      >
+        <div
+          class="col col-xs-6"
+        >
+          <div
+            class="organisasjonsAdresse"
+          >
+            <div
+              class="tittel"
+            >
+              Postadresse
+            </div>
+            <address
+              class="registeradresse"
+            >
+              <div>
+                0123
+                 
+                Oslo
+              </div>
+              <div>
+                NO
+              </div>
+            </address>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -3,6 +3,7 @@ import { Field } from "redux-form";
 
 import * as Nav from "../../../navFrontend";
 import * as SkjemaUtils from "../utils";
+import * as Utils from "../../../utils";
 
 import "../skjema.css";
 
@@ -32,6 +33,7 @@ function InnerInputComponent({ input, label, onBlur, onChange, ...rest }) {
     ...rest,
     onBlur: innerBlur,
     onChange: innerChange,
+    id: Utils._uuid(),
   };
 
   return !rest.hidden && <Nav.Input label={label} feil={feil || undefined} {...inputProps} />;

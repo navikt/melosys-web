@@ -1,5 +1,5 @@
-import * as Nav from "../../../../../navFrontend";
 import StegerstatterBase from "./stegerstatterBase";
+import { render } from "@testing-library/react";
 
 describe("StegerstatterBase", () => {
   let props = null;
@@ -11,15 +11,8 @@ describe("StegerstatterBase", () => {
     };
   });
 
-  it("viser tittel-prop", () => {
-    const stegerstatterBase = shallow(<StegerstatterBase {...props} />);
-
-    expect(stegerstatterBase.find(Nav.Typo.Systemtittel).childAt(0).text()).toBe(props.tittel);
-  });
-
-  it("Viser beskrivelse-prop", () => {
-    const stegerstatterBase = shallow(<StegerstatterBase {...props} />);
-
-    expect(stegerstatterBase.find("p").text()).toBe(props.beskrivelse);
+  it("snapshot test", () => {
+    const { container } = render(<StegerstatterBase {...props} />);
+    expect(container).toMatchSnapshot();
   });
 });

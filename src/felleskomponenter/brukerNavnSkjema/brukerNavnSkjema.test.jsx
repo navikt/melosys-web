@@ -1,6 +1,14 @@
-import * as Skjema from "../skjema";
-
 import { BrukerNavnSkjema } from "./brukerNavnSkjema";
+import { reduxForm } from "redux-form";
+import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
+
+vi.mock("../../utils", async () => {
+  const actual = await vi.importActual("../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("brukernavnskjema", () => {
   let props = null;
@@ -16,9 +24,10 @@ describe("brukernavnskjema", () => {
     };
   });
 
-  it("viser en skjema.input", () => {
-    const brukernavnskjema = shallow(<BrukerNavnSkjema {...props} />);
+  const WrappedBrukerNavnSkjema = reduxForm({ form: "test" })(BrukerNavnSkjema);
 
-    expect(brukernavnskjema.find(Skjema.Input)).toHaveLength(1);
+  it("snapshot test", () => {
+    const { container } = renderWithProviders(<WrappedBrukerNavnSkjema {...props} />);
+    expect(container).toMatchSnapshot();
   });
 });

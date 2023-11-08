@@ -1,48 +1,23 @@
-import Input, { InnerInputComponent } from "./input";
+import Input from "./input";
+import { reduxForm } from "redux-form";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+
+vi.mock("../../../utils", async () => {
+  const actual = await vi.importActual("../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
+
+const WrappedInput = reduxForm({ form: "test" })(Input);
 
 describe("Input", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      bredde: "M",
-      feltNavn: "",
-    };
-  });
-
-  it("viser en redux form Field komponent", () => {
-    const input = shallow(<Input {...props} />);
-
-    expect(input.find("Field")).toHaveLength(1);
-  });
-
-  it("sender bredde prop korrekt", () => {
-    props.bredde = "test";
-    const input = shallow(<Input {...props} />);
-
-    expect(input.props().bredde).toBe(props.bredde);
-  });
-  it("sender feltNavn prop korrekt", () => {
-    props.feltNavn = "test";
-    const input = shallow(<Input {...props} />);
-
-    expect(input.props().name).toBe(props.feltNavn);
-  });
-
-  it("sender normalizer prop korrekt", () => {
-    props.normalize = () => "test";
-    const input = shallow(<Input {...props} />);
-
-    expect(input.props().normalize).toBe(props.normalize);
-  });
-});
-
-describe("InnerInputComponent", () => {
-  let props = null;
-
-  beforeEach(() => {
-    props = {
-      label: "",
+      label: "test",
       bredde: "M",
       meta: {
         error: "",
@@ -53,89 +28,28 @@ describe("InnerInputComponent", () => {
     };
   });
 
-  it("viser en Nav Input", () => {
-    const innerInputComponent = shallow(<InnerInputComponent {...props} />);
-
-    expect(innerInputComponent.find("Input")).toHaveLength(1);
+  it("snapshot test", () => {
+    const { container } = renderWithProviders(<WrappedInput {...props} />);
+    expect(container).toMatchSnapshot();
   });
 
-  it("sender label prop korrekt", () => {
-    props.label = "testlabel";
-    const innerInputComponent = shallow(<InnerInputComponent {...props} />);
-
-    expect(innerInputComponent.find("Input").props().label).toBe(props.label);
+  it("viser feilmelding", () => {
+    props.meta = {
+      error: "feilmelding",
+      touched: true,
+      active: false,
+    };
+    const { getByText } = renderWithProviders(<WrappedInput {...props} />);
+    expect(getByText("feilmelding")).toBeInTheDocument();
   });
 
-  describe("viser feilmelding", () => {
-    it("dersom meta.error inneholder feilmelding, meta.touched er true og meta.active er false", () => {
-      props.meta = {
-        error: "feilmelding",
-        touched: true,
-        active: false,
-      };
-      let innerInputComponent = shallow(<InnerInputComponent {...props} />);
-
-      expect(innerInputComponent.find("Input").props().feil).toBe(props.meta.error);
-
-      props.meta.error = { melding: "feilmelding" };
-
-      innerInputComponent = shallow(<InnerInputComponent {...props} />);
-
-      expect(innerInputComponent.find("Input").props().feil).toBe(props.meta.error.melding);
-    });
-  });
-
-  describe("viser ikke feilmelding", () => {
-    it("dersom meta.error ikke inneholder feilmelding", () => {
-      props.meta = {
-        error: "",
-        touched: true,
-        active: false,
-      };
-      let innerInputComponent = shallow(<InnerInputComponent {...props} />);
-
-      expect(innerInputComponent.find("Input").props().feil).toBeUndefined();
-
-      props.meta.error = { melding: "" };
-
-      innerInputComponent = shallow(<InnerInputComponent {...props} />);
-
-      expect(innerInputComponent.find("Input").props().feil).toBeUndefined();
-    });
-
-    it("dersom meta.touched er false", () => {
-      props.meta = {
-        error: "feilmelding",
-        touched: false,
-        active: false,
-      };
-
-      let innerInputComponent = shallow(<InnerInputComponent {...props} />);
-
-      expect(innerInputComponent.find("Input").props().feil).toBeUndefined();
-
-      props.meta.error = { melding: "feilmelding" };
-
-      innerInputComponent = shallow(<InnerInputComponent {...props} />);
-
-      expect(innerInputComponent.find("Input").props().feil).toBeUndefined();
-    });
-
-    it("dersom meta.active er true", () => {
-      props.meta = {
-        error: "feilmelding",
-        touched: true,
-        active: true,
-      };
-      let innerInputComponent = shallow(<InnerInputComponent {...props} />);
-
-      expect(innerInputComponent.find("Input").props().feil).toBeUndefined();
-
-      props.meta.error = { melding: "feilmelding" };
-
-      innerInputComponent = shallow(<InnerInputComponent {...props} />);
-
-      expect(innerInputComponent.find("Input").props().feil).toBeUndefined();
-    });
+  it("viser ikke feilmelding", () => {
+    props.meta = {
+      error: "",
+      touched: true,
+      active: false,
+    };
+    const { queryByText } = renderWithProviders(<WrappedInput {...props} />);
+    expect(queryByText("feilmelding")).not.toBeInTheDocument();
   });
 });

@@ -79,7 +79,7 @@ class Inntekt extends Component {
 
     const harMinstEnInntekt = inntektListe.some((inntekt) => inntekt.beloep > 0);
 
-    const inntektInnhold = harMinstEnInntekt && (
+    return harMinstEnInntekt ? (
       <div className="inntekt">
         <div className="inntekt__graf">
           <HighchartsReact highcharts={Highcharts} options={options} />
@@ -89,9 +89,7 @@ class Inntekt extends Component {
         </div>
         {uuTabell}
       </div>
-    );
-
-    return inntektInnhold;
+    ) : null;
   }
 }
 
