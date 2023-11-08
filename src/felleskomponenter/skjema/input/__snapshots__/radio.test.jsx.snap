@@ -1,0 +1,26 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Radio > snapshot test 1`] = `
+<div>
+  <div
+    class="skjemaelement"
+  >
+    <input
+      aria-invalid="false"
+      array="[object Object]"
+      class="skjemaelement__input radioknapp"
+      form="test"
+      id="1"
+      name=""
+      type="radio"
+      value=""
+    />
+    <label
+      class="skjemaelement__label"
+      for="1"
+    >
+      Test
+    </label>
+  </div>
+</div>
+`;
