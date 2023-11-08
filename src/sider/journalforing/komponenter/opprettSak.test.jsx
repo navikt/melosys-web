@@ -111,7 +111,7 @@ describe("OpprettSak - journalføring", () => {
       props.formValues.sakstype = MKV.Koder.sakstyper.TRYGDEAVTALE;
       props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
-      const { queryByLabelText, queryByRole, getByRole } = renderWithProviders(<WrappedOpprettSak {...props} />);
+      const { queryByLabelText, queryByRole } = renderWithProviders(<WrappedOpprettSak {...props} />);
 
       expect(queryByLabelText("Fra")).not.toBeInTheDocument();
       expect(queryByLabelText("Til")).not.toBeInTheDocument();
@@ -213,7 +213,7 @@ describe("OpprettSak - opprett ny sak", () => {
       props.formValues.sakstype = MKV.Koder.sakstyper.TRYGDEAVTALE;
       props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
-      const { queryByLabelText, queryByRole, getByRole } = renderWithProviders(<WrappedOpprettSak {...props} />);
+      const { queryByLabelText, queryByRole } = renderWithProviders(<WrappedOpprettSak {...props} />);
 
       expect(queryByLabelText("Fra")).not.toBeInTheDocument();
       expect(queryByLabelText("Til")).not.toBeInTheDocument();
