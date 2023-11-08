@@ -11,7 +11,7 @@ exports[`Radio > snapshot test 1`] = `
       class="skjemaelement__input radioknapp"
       form="test"
       id="1"
-      name=""
+      name="Testname"
       type="radio"
       value=""
     />
