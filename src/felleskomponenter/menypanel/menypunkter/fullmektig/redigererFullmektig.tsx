@@ -1,20 +1,18 @@
 import * as Forms from "../../../forms";
-import { Organisasjon } from "../../../../services/modules/types";
-import { Personopplysninger } from "../../../../graphql";
 import { Control, FieldArrayWithId, FieldErrors, FieldValue, FieldValues } from "react-hook-form";
 import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
-import Adresse from "./adresse";
 import MKV from "../../../../melosyskodeverk";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import * as Ikoner from "../../../../resources/images";
 import * as Mui from "../../../ui";
-import { FieldArrayProps, Fullmektig, Type } from "./types";
+import { AdresseOgFeil, FieldArrayProps, Fullmektig, Type } from "./types";
 import { SkjemaelementFeilmelding } from "nav-frontend-skjema";
+import BrevAdresse from "../../../adresser/brevAdresse";
 
 const { FULLMEKTIG_SØKNAD, FULLMEKTIG_ARBEIDSGIVER } = MKV.Koder.fullmaktstype;
 
-export const fullmaktStøtterKontaktperson = (fullmakter: String[]) =>
+export const fullmaktStøtterKontaktperson = (fullmakter: string[]) =>
   fullmakter.includes(FULLMEKTIG_SØKNAD) || fullmakter.includes(FULLMEKTIG_ARBEIDSGIVER);
 
 interface RedigererFullmektigProps {
@@ -23,8 +21,8 @@ interface RedigererFullmektigProps {
   update: (index: number, fullmektig: Fullmektig) => void;
   handleSlett: (index: number) => void;
   handleLeggTil: () => void;
-  finnOrganisasjonAdresse: (orgnr: string) => Promise<{ org?: Organisasjon; feil?: string }>;
-  finnPersonAdresse: (personIdent: string) => Promise<{ person?: Personopplysninger; feil?: string }>;
+  finnOrganisasjonAdresse: (orgnr: string) => Promise<AdresseOgFeil>;
+  finnPersonAdresse: (personIdent: string) => Promise<AdresseOgFeil>;
   errors: FieldErrors<FieldValue<FieldValues & FieldArrayProps>>;
   trigger: (field: string) => void;
   fields: FieldArrayWithId<FieldArrayProps, "fullmektige">[];
@@ -45,23 +43,32 @@ const RedigererFullmektig = ({
   const handleIdChange = (ident: string, index: number) => {
     if (Utils.organisasjon.erOrgnrGyldig(ident)) {
       finnOrganisasjonAdresse(ident).then((response) =>
-        update(index, { ...fullmektige[index], type: Type.ORGANISASJON, feil: response.feil, org: response.org })
+        update(index, {
+          ...fullmektige[index],
+          type: Type.ORGANISASJON,
+          feil: response.feil,
+          adresse: response.adresse,
+        })
       );
     } else if (Utils.person.erGyldigFnrEllerDnr(ident)) {
       finnPersonAdresse(ident).then((response) =>
-        update(index, { ...fullmektige[index], type: Type.PERSON, feil: response.feil, person: response.person })
+        update(index, {
+          ...fullmektige[index],
+          type: Type.PERSON,
+          feil: response.feil,
+          adresse: response.adresse,
+        })
       );
     } else if (fullmektige[index].type) {
       update(index, {
         ...fullmektige[index],
         type: undefined,
         feil: undefined,
-        person: undefined,
-        org: undefined,
+        adresse: undefined,
         kontaktperson: undefined,
         kontaktOrgnr: undefined,
         kontaktTelefon: undefined,
-        kontaktOrg: undefined,
+        kontaktOrgAdresse: undefined,
         fullmakter: [],
       });
     }
@@ -70,10 +77,10 @@ const RedigererFullmektig = ({
   const handleKontaktOrgnrChange = (orgnr: string, index: number) => {
     if (Utils.organisasjon.erOrgnrGyldig(orgnr)) {
       finnOrganisasjonAdresse(orgnr).then((response) =>
-        update(index, { ...fullmektige[index], kontaktOrg: response.org })
+        update(index, { ...fullmektige[index], kontaktOrgAdresse: response.adresse })
       );
-    } else if (fullmektige[index].kontaktOrg) {
-      update(index, { ...fullmektige[index], kontaktOrg: undefined });
+    } else if (fullmektige[index].kontaktOrgAdresse) {
+      update(index, { ...fullmektige[index], kontaktOrgAdresse: undefined });
     }
   };
 
@@ -98,7 +105,7 @@ const RedigererFullmektig = ({
         kontaktperson: undefined,
         kontaktOrgnr: undefined,
         kontaktTelefon: undefined,
-        kontaktOrg: undefined,
+        kontaktOrgAdresse: undefined,
       });
     }
 
@@ -122,8 +129,8 @@ const RedigererFullmektig = ({
 
   return (
     <>
-      {fullmektige.map(({ type, fullmakter, feil, person, org, kontaktOrg }: Fullmektig, index) => {
-        const adresseErGyldig = !feil && (person || org);
+      {fullmektige.map(({ type, fullmakter, feil, adresse, kontaktOrgAdresse }: Fullmektig, index) => {
+        const adresseErGyldig = !feil && adresse;
         // @ts-ignore
         const manglerFullmakt = errors?.fullmektige?.[index]?.fullmakter?.message?.melding;
 
@@ -145,7 +152,7 @@ const RedigererFullmektig = ({
               Slett fullmektig
             </Nav.Knapp>
 
-            <Adresse type={type} person={person} organisasjon={org} className="adresse" />
+            {adresse && <BrevAdresse className="adresse" {...adresse} visNavn />}
 
             {adresseErGyldig && (
               <>
@@ -193,7 +200,7 @@ const RedigererFullmektig = ({
                     <Forms.Input name={`fullmektige[${index}].kontaktTelefon`} control={control} label="Telefon" />
                   </Nav.Column>
                 </Nav.Row>
-                {kontaktOrg && <Adresse type={Type.ORGANISASJON} organisasjon={kontaktOrg} visNavn />}
+                {kontaktOrgAdresse && <BrevAdresse {...kontaktOrgAdresse} visNavn />}
               </div>
             )}
           </div>

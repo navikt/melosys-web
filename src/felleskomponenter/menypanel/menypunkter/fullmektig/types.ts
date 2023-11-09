@@ -1,26 +1,25 @@
-import { Organisasjon } from "../../../../services/modules/types";
-import { Personopplysninger } from "../../../../graphql";
 import { Aktoer } from "../../../../services/modules/fagsaker/aktoer";
+import { BrevAdresse } from "../../../../services/modules/dokumenter-v2";
 
 export enum Type {
   PERSON = "PERSON",
   ORGANISASJON = "ORGANISASJON",
 }
+export type AdresseOgFeil = { adresse?: BrevAdresse; feil?: string };
 
 export type Fullmektig = {
   ident: string;
   databaseID?: number;
   fullmakter: string[];
   type?: Type;
-  org?: Partial<Organisasjon>;
-  person?: Personopplysninger;
+  adresse?: BrevAdresse;
   feil?: string;
   originalAktør?: Aktoer;
   harLagretKontaktperson?: boolean;
   kontaktperson?: string | null;
   kontaktOrgnr?: string | null;
   kontaktTelefon?: string | null;
-  kontaktOrg?: Partial<Organisasjon>;
+  kontaktOrgAdresse?: BrevAdresse;
 };
 
 export interface FieldArrayProps {
