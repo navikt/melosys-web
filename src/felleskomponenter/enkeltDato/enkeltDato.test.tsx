@@ -1,5 +1,3 @@
-import { ComponentProps } from "react";
-
 import EnkeltDato from "./enkeltDato";
 import { render, screen } from "@testing-library/react";
 
