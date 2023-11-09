@@ -1,35 +1,37 @@
 import { ComponentProps } from "react";
-import { shallow } from "enzyme";
 
 import EnkeltDato from "./enkeltDato";
+import { render, screen } from "@testing-library/react";
 
 describe("EnkeltDato", () => {
-  const props: ComponentProps<typeof EnkeltDato> = {
-    dato: "2016-12-31",
-    visTidspunkt: true,
-  };
-
   it("viser en dato med klokkeslett dersom dato er oppgitt og vistidspunkt er true", () => {
-    const enkeltDato = shallow(<EnkeltDato {...props} />);
-    const time = enkeltDato.find("time");
-
-    expect(time).toHaveLength(1);
-    expect(time.children().text()).toBe("31.12.2016 01:00");
+    const props = {
+      dato: "2016-12-31",
+      visTidspunkt: true,
+    };
+    render(<EnkeltDato {...props} />);
+    const timeElement = screen.getByText(/31\.12\.2016 01:00/);
+    expect(timeElement).toBeInTheDocument();
   });
 
   it("viser en dato uten klokkeslett dersom dato er oppgitt og vistidspunkt er false", () => {
-    props.visTidspunkt = false;
-    const enkeltDato = shallow(<EnkeltDato {...props} />);
-    const time = enkeltDato.find("time");
-
-    expect(time).toHaveLength(1);
-    expect(time.children().text()).toBe("31.12.2016");
+    const props = {
+      dato: "2016-12-31",
+      visTidspunkt: false,
+    };
+    render(<EnkeltDato {...props} />);
+    const timeElement = screen.getByText(/31\.12\.2016/);
+    expect(timeElement).toBeInTheDocument();
+    expect(screen.queryByText(/01:00/)).not.toBeInTheDocument();
   });
 
   it("viser bindestrek dersom dato ikke er oppgitt", () => {
-    props.dato = undefined;
-    const enkeltDato = shallow(<EnkeltDato {...props} />);
-
-    expect(enkeltDato.children().text()).toBe("-");
+    const props = {
+      dato: undefined,
+      visTidspunkt: true, // or false, depending on how component should behave
+    };
+    render(<EnkeltDato {...props} />);
+    const dashElement = screen.getByText("-");
+    expect(dashElement).toBeInTheDocument();
   });
 });
