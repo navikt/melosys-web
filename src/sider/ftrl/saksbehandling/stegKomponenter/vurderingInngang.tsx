@@ -26,6 +26,7 @@ import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
 import { modalerOperations, modalerSelectors } from "../../../../ducks/modaler";
 import { oppsummertfaktaOperations } from "../../../../ducks/oppsummertfakta";
+import { BehandlingUnderOppfriskningSelector } from "../../../../ducks/modaler/selectors";
 
 interface Props {
   bekreft: () => void;
@@ -45,6 +46,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const søknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
+  const behandlingUnderOppfriskning = useSelector(BehandlingUnderOppfriskningSelector);
 
   const initialValues = {
     fom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.fom, false, undefined),
@@ -72,7 +74,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     formValues.land !== initialValues.land ||
     formValues.trygdedekning !== initialValues.trygdedekning;
 
-  const stegErGyldig = formIsValid && !skalHenteRegisteropplysninger;
+  const stegErGyldig = formIsValid && !skalHenteRegisteropplysninger && !behandlingUnderOppfriskning;
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
