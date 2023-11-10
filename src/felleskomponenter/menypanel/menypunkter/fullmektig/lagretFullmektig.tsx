@@ -1,6 +1,5 @@
 import * as Nav from "../../../../navFrontend";
 import { Fullmektig, Type } from "./types";
-import * as Utils from "../../../../utils";
 import * as Ikon from "../../../../resources/images";
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
@@ -42,9 +41,7 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
           <div className="lagretFullmektig_container" key={fullmektig.ident}>
             <div className="overskrift">
               <Ikon.Fullmakt className="inline_felt ikon" aria-hidden />
-              <Nav.Typo.Systemtittel className="inline_felt">
-                {Utils.person.tilSammensattNavnFraObjekt(fullmektig.adresse?.mottakerNavn)}
-              </Nav.Typo.Systemtittel>
+              <Nav.Typo.Systemtittel className="inline_felt">{fullmektig.adresse?.mottakerNavn}</Nav.Typo.Systemtittel>
             </div>
             <Nav.Row>
               <Nav.Column xs="6">
