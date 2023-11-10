@@ -26,7 +26,7 @@ describe("EnkeltDato", () => {
   it("viser bindestrek dersom dato ikke er oppgitt", () => {
     const props = {
       dato: undefined,
-      visTidspunkt: true, // or false, depending on how component should behave
+      visTidspunkt: true,
     };
     render(<EnkeltDato {...props} />);
     const dashElement = screen.getByText("-");
