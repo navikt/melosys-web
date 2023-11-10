@@ -65,13 +65,29 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
 
   const finnOrganisasjonAdresse = (orgnr: string): Promise<AdresseOgFeil> => {
     return Api.Adresser.hentOrganisasjonAdresse(orgnr)
-      .then((adresse) => ({ adresse, feil: undefined }))
-      .catch(() => ({ adresse: undefined, feil: "Kunne ikke finne organisasjon" }));
+      .then((adresse) => {
+        if (!adresse.mottakerNavn) {
+          return { adresse: undefined, feil: "Kunne ikke finne organisasjonen" };
+        } else if (adresse.ugyldig) {
+          return { adresse: undefined, feil: "Kunne ikke finne adresse til organisasjonen" };
+        } else {
+          return { adresse, feil: undefined };
+        }
+      })
+      .catch(() => ({ adresse: undefined, feil: "Kunne ikke finne organisasjonen" }));
   };
 
   const finnPersonAdresse = (personIdent: string): Promise<AdresseOgFeil> => {
     return Api.Adresser.hentPersonAdresse(personIdent)
-      .then((adresse) => ({ adresse, feil: undefined }))
+      .then((adresse) => {
+        if (!adresse.mottakerNavn) {
+          return { adresse: undefined, feil: "Kunne ikke finne personen" };
+        } else if (adresse.ugyldig) {
+          return { adresse: undefined, feil: "Kunne ikke finne adresse til personen" };
+        } else {
+          return { adresse, feil: undefined };
+        }
+      })
       .catch(() => ({ adresse: undefined, feil: "Kunne ikke finne personen" }));
   };
 
