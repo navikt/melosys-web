@@ -24,6 +24,7 @@ import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import MKV from "../../../../melosyskodeverk";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
 import "./vurderingInngang.css";
+import { BehandlingUnderOppfriskningSelector } from "../../../../ducks/modaler/selectors";
 
 interface Props {
   bekreft: () => void;
@@ -42,6 +43,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const behandlingUnderOppfriskning = useSelector(BehandlingUnderOppfriskningSelector);
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const { control, watch, formState, trigger } = useForm({
@@ -65,7 +67,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
     (formValues.land === MKV.Koder.landkoder.FR || formValues.land === MKV.Koder.landkoder.IT);
 
-  const stegErGyldig = formState?.isValid && !skalHenteRegisteropplysninger && !landUtenStøtteValgt;
+  const stegErGyldig =
+    formState?.isValid && !skalHenteRegisteropplysninger && !landUtenStøtteValgt && !behandlingUnderOppfriskning;
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
