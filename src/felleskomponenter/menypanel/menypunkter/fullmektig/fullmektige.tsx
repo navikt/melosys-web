@@ -68,11 +68,11 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       .then((adresse) => {
         if (!adresse.mottakerNavn) {
           return { adresse: undefined, feil: "Kunne ikke finne organisasjonen" };
-        } else if (adresse.ugyldig) {
-          return { adresse: undefined, feil: "Kunne ikke finne adresse til organisasjonen" };
-        } else {
-          return { adresse, feil: undefined };
         }
+        if (adresse.ugyldig) {
+          return { adresse: undefined, feil: "Kunne ikke finne adresse til organisasjonen" };
+        }
+        return { adresse, feil: undefined };
       })
       .catch(() => ({ adresse: undefined, feil: "Kunne ikke finne organisasjonen" }));
   };
@@ -82,11 +82,11 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       .then((adresse) => {
         if (!adresse.mottakerNavn) {
           return { adresse: undefined, feil: "Kunne ikke finne personen" };
-        } else if (adresse.ugyldig) {
-          return { adresse: undefined, feil: "Kunne ikke finne adresse til personen" };
-        } else {
-          return { adresse, feil: undefined };
         }
+        if (adresse.ugyldig) {
+          return { adresse: undefined, feil: "Kunne ikke finne adresse til personen" };
+        }
+        return { adresse, feil: undefined };
       })
       .catch(() => ({ adresse: undefined, feil: "Kunne ikke finne personen" }));
   };
