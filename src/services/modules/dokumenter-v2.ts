@@ -10,6 +10,7 @@ export type BrevAdresse = {
   poststed: string;
   region: string;
   land: string;
+  ugyldig: boolean;
 };
 
 export enum ValgType {
