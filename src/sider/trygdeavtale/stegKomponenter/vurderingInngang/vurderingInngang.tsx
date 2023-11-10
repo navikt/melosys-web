@@ -29,6 +29,8 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
 import { FellesHandlersContext } from "../../../../contexts";
 import { navigeringOperations } from "../../../../ducks/navigering";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import { modalerSelectors } from "../../../../ducks/modaler";
 
 interface Periode {
   fom?: string | null;
@@ -49,6 +51,9 @@ const mapStateToProps = (state: RootState) => ({
   ),
   formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
   registeropplysningerHentet: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+  behandlingUnderOppfriskning: modalerSelectors.BehandlingUnderOppfriskningSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -58,6 +63,9 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
     dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(landkoder, false)),
   lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
+  hentLovvalgsperiode: (behandlingID: number) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+  slettLovvalgsperiode: (behandlingID: number, lovvalgsperiodeID: number) =>
+    dispatch(lovvalgsperioderOperations.slettLovvalgsperiode(behandlingID, lovvalgsperiodeID)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -101,6 +109,11 @@ const VurderingInngang = ({
   aktivtSteg,
   registeropplysningerHentet,
   tilForsiden,
+  hentLovvalgsperiode,
+  behandlingID,
+  slettLovvalgsperiode,
+  lovvalgsperiode,
+  behandlingUnderOppfriskning,
 }: PropsFromRedux & Props) => {
   const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
@@ -135,7 +148,6 @@ const VurderingInngang = ({
         tom: Utils.dato.formatterDatoTilISO(formValues.tom, false, undefined),
       });
       oppdaterSoeknadsland(formValues?.arbeidsland ? [formValues.arbeidsland] : []);
-
       debouncedLagremottatteOpplysningerOgOppdaterFlyt();
     }
   }, [formValues?.fom, formValues?.tom, formValues?.arbeidsland, formIsValid]);
@@ -148,6 +160,18 @@ const VurderingInngang = ({
       oppdaterFlyt(resultat);
     }
   }, [formValues?.arbeidsland]);
+
+  useEffect(() => {
+    if (landUtenStøtteValgt && lovvalgsperiode?.periodeID) {
+      slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID);
+    }
+  }, [landUtenStøtteValgt]);
+
+  useEffect(() => {
+    if (!behandlingUnderOppfriskning && lovvalgsperiode?.periodeID) {
+      hentLovvalgsperiode(behandlingID);
+    }
+  }, [behandlingUnderOppfriskning]);
 
   const innhentRegisteropplysninger = () => {
     setInitialFomTomLand({ fom: formValues.fom, tom: formValues.tom, arbeidsland: formValues.arbeidsland });
