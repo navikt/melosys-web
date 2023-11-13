@@ -30,7 +30,6 @@ import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks"
 import { FellesHandlersContext } from "../../../../contexts";
 import { navigeringOperations } from "../../../../ducks/navigering";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
-import { modalerSelectors } from "../../../../ducks/modaler";
 
 interface Periode {
   fom?: string | null;
@@ -53,7 +52,6 @@ const mapStateToProps = (state: RootState) => ({
   registeropplysningerHentet: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  behandlingUnderOppfriskning: modalerSelectors.BehandlingUnderOppfriskningSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
