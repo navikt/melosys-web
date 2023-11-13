@@ -78,7 +78,7 @@ const Oppsummering = ({
 
   if (Utils._isEmpty(fagsak) || Utils._isEmpty(oppsummering)) return <div />;
 
-  const { saksnummer, sakstype, sakstema, registrertDato, hovedpartRolle } = fagsak;
+  const { saksnummer, sakstype, sakstema, hovedpartRolle, registrertDato: sakRegistrertDato } = fagsak;
   const {
     endretDato,
     endretAvNavn,
@@ -88,6 +88,7 @@ const Oppsummering = ({
     behandlingstema,
     behandlingsstatus,
     behandlingsresultattype,
+    registrertDato: behRegistrertDato,
   } = oppsummering;
 
   const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(behandlingsstatus.kode) || !redigerbart;
@@ -195,13 +196,17 @@ const Oppsummering = ({
     let col1;
     let col2;
     if (hovedpartErVirksomhet) {
-      col1 = [["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(registrertDato)]];
+      col1 = [
+        ["Sak opprettet", Utils.dato.formatterDatoTilNorsk(sakRegistrertDato)],
+        ["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(behRegistrertDato)],
+      ];
       col2 = [["Sist oppdatert", Utils.dato.formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`]];
     } else {
       col1 = lagCol1();
       col2 = [
         ["Frist", Utils.dato.formatterDatoTilNorsk(behandlingsfrist) || "-"],
-        ["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(registrertDato)],
+        ["Sak opprettet", Utils.dato.formatterDatoTilNorsk(sakRegistrertDato)],
+        ["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(behRegistrertDato)],
         ["Sist oppdatert", Utils.dato.formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`],
       ];
     }
@@ -264,7 +269,10 @@ const Oppsummering = ({
                 </Nav.Row>
                 <Nav.Row>
                   <Nav.Column xs="12">
-                    <OppsummeringVerdiPar nokkel="Mottaksdato" verdi={mottaksdato || "-"} />
+                    <OppsummeringVerdiPar
+                      nokkel="Mottaksdato"
+                      verdi={Utils.dato.formatterDatoTilNorsk(mottaksdato, false, mottaksdato || "-")}
+                    />
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>
