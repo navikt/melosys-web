@@ -63,7 +63,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
     dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(landkoder, false)),
   lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
-  hentLovvalgsperiode: (behandlingID: number) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   slettLovvalgsperiode: (behandlingID: number, lovvalgsperiodeID: number) =>
     dispatch(lovvalgsperioderOperations.slettLovvalgsperiode(behandlingID, lovvalgsperiodeID)),
 });
@@ -109,11 +108,9 @@ const VurderingInngang = ({
   aktivtSteg,
   registeropplysningerHentet,
   tilForsiden,
-  hentLovvalgsperiode,
   behandlingID,
   slettLovvalgsperiode,
   lovvalgsperiode,
-  behandlingUnderOppfriskning,
 }: PropsFromRedux & Props) => {
   const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
@@ -166,12 +163,6 @@ const VurderingInngang = ({
       slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID);
     }
   }, [landUtenStøtteValgt]);
-
-  useEffect(() => {
-    if (!behandlingUnderOppfriskning && lovvalgsperiode?.periodeID) {
-      hentLovvalgsperiode(behandlingID);
-    }
-  }, [behandlingUnderOppfriskning]);
 
   const innhentRegisteropplysninger = () => {
     setInitialFomTomLand({ fom: formValues.fom, tom: formValues.tom, arbeidsland: formValues.arbeidsland });
