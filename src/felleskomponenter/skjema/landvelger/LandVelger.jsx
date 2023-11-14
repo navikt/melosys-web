@@ -81,6 +81,7 @@ LandVelger.defaultProps = {
   visAlleLandkoder: false,
   className: "",
   errorConfig: undefined,
+  dataTestId: undefined,
 };
 
 export default connector(LandVelger);
