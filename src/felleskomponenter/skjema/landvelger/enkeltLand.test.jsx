@@ -61,9 +61,7 @@ describe("EnkeltLand", () => {
         { kode: "NO", term: "Norge" },
         { kode: "SE", term: "Sverige" },
       ];
-      const { getByRole, getByText, getByDisplayValue, queryByText } = renderWithProviders(
-        <WrappedEnkeltLand {...props} />
-      );
+      const { getByRole, getByDisplayValue, queryByText } = renderWithProviders(<WrappedEnkeltLand {...props} />);
       const user = userEvent.setup();
 
       const input = getByRole("combobox");
