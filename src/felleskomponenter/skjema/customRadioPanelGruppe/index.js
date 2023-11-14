@@ -1,4 +1,4 @@
-import CustomRadioPanelGruppe, { CustomRadioPanelElement } from "./customRadioPanelGruppe";
+import CustomRadioPanelGruppe from "./customRadioPanelGruppe";
+import CustomRadioPanelElement from "./customRadioPanelElement";
 
-export { CustomRadioPanelElement };
-export default CustomRadioPanelGruppe;
+export { CustomRadioPanelGruppe, CustomRadioPanelElement };

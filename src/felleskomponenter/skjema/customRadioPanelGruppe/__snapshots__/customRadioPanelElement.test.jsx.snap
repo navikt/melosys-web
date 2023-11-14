@@ -1,0 +1,33 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CustomRadioPanelElement > snapshot test 1`] = `
+<div>
+  <div
+    class="customRadioPanelElement"
+  >
+    <div
+      class="customRadioPanelTittel"
+    >
+      <h2
+        class="typo-undertittel"
+      >
+        test
+      </h2>
+    </div>
+    <dl>
+      <dt>
+        term1
+      </dt>
+      <dd>
+        description1
+      </dd>
+      <dt>
+        term2
+      </dt>
+      <dd>
+        description2
+      </dd>
+    </dl>
+  </div>
+</div>
+`;

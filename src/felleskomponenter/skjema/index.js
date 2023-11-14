@@ -13,7 +13,7 @@ import Textarea from "./textarea/textarea";
 import Vedtakstype from "./vedtakstype";
 import FellesInputFnrDnrOrgnrSaksnr from "./input/fellesInputFnrDnrOrgnrSaksnr";
 
-import CustomRadioPanelGruppe, { CustomRadioPanelElement } from "./customRadioPanelGruppe";
+import { CustomRadioPanelGruppe, CustomRadioPanelElement } from "./customRadioPanelGruppe";
 import { Fieldset } from "../../navFrontend";
 
 import * as Validering from "./validering";
