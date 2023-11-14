@@ -14,7 +14,7 @@ import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
 import MottatteOpplysningerFeilmeldinger from "../../felleskomponenter/mottatteOpplysningerFeilmeldinger";
-import { Innsynsmelding } from "../../felleskomponenter/alertmeldinger";
+import { Innsynsmelding, NyVurderingMelding } from "../../felleskomponenter/alertmeldinger";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 
 import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
@@ -25,7 +25,6 @@ import { formSelectors } from "../../ducks/form";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 
 import "./stegvelger.css";
-import { NyVurderingMelding } from "../../felleskomponenter/alertmeldinger/alertmeldinger";
 import { modalerSelectors } from "../../ducks/modaler";
 
 export enum StegStatus {

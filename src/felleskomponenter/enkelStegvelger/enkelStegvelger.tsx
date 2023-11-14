@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import * as Utils from "../../utils";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
-import { Innsynsmelding } from "../alertmeldinger";
+import { Innsynsmelding, NyVurderingMelding } from "../alertmeldinger";
 import StegLinje from "../stegLinje/stegLinje";
 import StegFane from "../stegFane";
 import { FANE_STATUS } from "../stegvelger";
 import MKV from "../../melosyskodeverk";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
-import { NyVurderingMelding } from "../alertmeldinger/alertmeldinger";
 import { Feilmeldinger } from "../feilmeldinger";
 
 interface AktueltSteg {

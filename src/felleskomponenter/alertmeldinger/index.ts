@@ -4,6 +4,7 @@ import {
   IngenFlytMelding,
   VirksomhetMelding,
   Innsynsmelding,
+  NyVurderingMelding,
 } from "./alertmeldinger";
 import UnntakHjelpetekst from "./unntakHjelpetekst";
 import StatsborgerskapFeil from "./statsborgerskapFeil";
@@ -16,4 +17,5 @@ export {
   UnntakHjelpetekst,
   Innsynsmelding,
   StatsborgerskapFeil,
+  NyVurderingMelding,
 };
