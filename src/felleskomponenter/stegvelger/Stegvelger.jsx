@@ -36,7 +36,7 @@ import { kontrollOperations, kontrollSelectors } from "../../ducks/kontroll";
 
 import MottatteOpplysningerFeilmeldinger from "../mottatteOpplysningerFeilmeldinger";
 import { Feilmeldinger } from "../feilmeldinger";
-import { Innsynsmelding } from "../alertmeldinger";
+import { Innsynsmelding, NyVurderingMelding } from "../alertmeldinger";
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.css";
 
@@ -510,22 +510,29 @@ class Stegvelger extends Component {
     return this.state.aktuelleSteg[stegNummer]?.vedtakSteg;
   }
 
+  erInngangsteg(stegNummer) {
+    return this.state.aktuelleSteg[stegNummer]?.stegPosisjon === 0;
+  }
+
   kontrollerFerdigbehandling = (data) => {
     return this.props.kontrollerFerdigbehandling(data);
   };
 
   render() {
+    const { visMottatteOpplysningerFeilmeldinger, aktivtStegNummer, aktuelleSteg } = this.state;
+    const { redigerbart, oppsummering } = this.props;
     const visFeilmeldinger =
-      this.erVedtakSteg(this.state.aktivtStegNummer) ||
-      this.state.aktuelleSteg[this.state.aktivtStegNummer]?.id === STEG.ARTIKKEL_16_ANMODNING;
-    const { visMottatteOpplysningerFeilmeldinger } = this.state;
+      this.erVedtakSteg(aktivtStegNummer) || aktuelleSteg[aktivtStegNummer]?.id === STEG.ARTIKKEL_16_ANMODNING;
+    const inngangStegErAktivt = this.erInngangsteg(aktivtStegNummer);
+    const erNyVurdering = oppsummering.behandlingstype?.kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
     return (
       <div className="stegvelger panelSeksjon">
-        <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
-        {!this.props.redigerbart && <Innsynsmelding />}
+        <StegLinje steg={aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
+        {!redigerbart && <Innsynsmelding />}
         {visFeilmeldinger && <Feilmeldinger />}
-        {this.state.aktuelleSteg.map((item) => (
+        {erNyVurdering && redigerbart && inngangStegErAktivt && <NyVurderingMelding />}
+        {aktuelleSteg.map((item) => (
           <StegFane id={item.id} key={item.id} faneData={item} />
         ))}
         {visMottatteOpplysningerFeilmeldinger && <MottatteOpplysningerFeilmeldinger />}
