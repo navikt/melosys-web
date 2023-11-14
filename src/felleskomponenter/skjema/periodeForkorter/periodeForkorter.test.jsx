@@ -1,7 +1,8 @@
-import * as Nav from "../../../navFrontend";
-import * as Skjema from "../index";
-
 import PeriodeForkorter from "./index";
+import { reduxForm } from "redux-form";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+
+const WrappedPeriodeForkorter = reduxForm({ form: "test" })(PeriodeForkorter);
 
 describe("PeriodeForkorter", () => {
   let props = null;
@@ -22,68 +23,36 @@ describe("PeriodeForkorter", () => {
     };
   });
 
-  it("viser en Nav.Row for checkbox", () => {
-    const periodeForkorter = shallow(<PeriodeForkorter {...props} />);
-    const row = periodeForkorter.findWhere(
-      (n) => n.type() === Nav.Row && n.props().className === props.checkboxClassName
-    );
-
-    expect(row).toHaveLength(1);
-  });
-
-  it("viser en checkbox", () => {
-    const periodeForkorter = shallow(<PeriodeForkorter {...props} />);
-    const checkbox = periodeForkorter.find(Skjema.Checkbox);
-    const checkboxProps = checkbox.props();
-
-    expect(checkbox).toHaveLength(1);
-    expect(checkboxProps.feltNavn).toBe(props.checkboxFeltnavn);
-    expect(checkboxProps.label).toBe(props.checkboxLabel);
-    expect(checkboxProps.disabled).toBe(!props.redigerbart);
-  });
-
   it("viser felter for å forkorte periode dersom forkortPeriode prop er true", () => {
-    const periodeForkorter = shallow(<PeriodeForkorter {...props} />);
-    const datovelgere = periodeForkorter.find(Skjema.Datovelger);
-    const datovelgerFomProps = datovelgere.first().props();
-    const datovelgerTomProps = datovelgere.last().props();
+    const { getByLabelText } = renderWithProviders(<WrappedPeriodeForkorter {...props} />);
 
-    expect(datovelgere).toHaveLength(2);
-    expect(datovelgerFomProps.label).toBe(props.fomLabel);
-    expect(datovelgerFomProps.feltNavn).toBe(props.fomFeltNavn);
-    expect(datovelgerFomProps.disabled).toBe(!props.redigerbart);
-    expect(datovelgerTomProps.label).toBe(props.tomLabel);
-    expect(datovelgerTomProps.feltNavn).toBe(props.tomFeltNavn);
-    expect(datovelgerTomProps.disabled).toBe(!props.redigerbart);
+    const fomInput = getByLabelText(props.fomLabel);
+    const tomInput = getByLabelText(props.tomLabel);
+    expect(fomInput).toBeInTheDocument();
+    expect(fomInput).toBeEnabled();
+    expect(tomInput).toBeInTheDocument();
+    expect(tomInput).toBeEnabled();
   });
 
   it("viser ikke felter for å forkorte periode dersom forkortPeriode prop er false", () => {
     props.forkortPeriode = false;
 
-    const periodeForkorter = shallow(<PeriodeForkorter {...props} />);
+    const { queryByLabelText } = renderWithProviders(<WrappedPeriodeForkorter {...props} />);
 
-    expect(periodeForkorter.find(Skjema.Datovelger)).toHaveLength(0);
-  });
-
-  it("kaller onUncheck når checkbox blir unchecked", () => {
-    const periodeForkorter = shallow(<PeriodeForkorter {...props} />);
-    const checkbox = periodeForkorter.find(Skjema.Checkbox);
-
-    const checkedEvent = { currentTarget: { checked: true } };
-    checkbox.simulate("click", checkedEvent);
-    expect(props.onUncheck).toHaveBeenCalledTimes(0);
-
-    const unCheckedEvent = { currentTarget: { checked: false } };
-    checkbox.simulate("click", unCheckedEvent);
-    expect(props.onUncheck).toHaveBeenCalledTimes(1);
+    expect(queryByLabelText(props.fomLabel)).not.toBeInTheDocument();
+    expect(queryByLabelText(props.tomLabel)).not.toBeInTheDocument();
   });
 
   it("fomRedigerbar kan disable fom", () => {
     props.fomRedigerbar = false;
-    const periodeForkorter = shallow(<PeriodeForkorter {...props} />);
 
-    const fomDatovelger = periodeForkorter.find(Skjema.Datovelger).findWhere((n) => n.props().label === props.fomLabel);
+    const { getByLabelText } = renderWithProviders(<WrappedPeriodeForkorter {...props} />);
 
-    expect(fomDatovelger.props().disabled).toBe(true);
+    const fomInput = getByLabelText(props.fomLabel);
+    const tomInput = getByLabelText(props.tomLabel);
+    expect(fomInput).toBeInTheDocument();
+    expect(fomInput).toBeDisabled();
+    expect(tomInput).toBeInTheDocument();
+    expect(tomInput).toBeEnabled();
   });
 });

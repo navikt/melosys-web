@@ -22,8 +22,16 @@ const connector = connect(mapStateToProps);
  * prop-type multiLand som er subkomponenter i landvelgeren.
  * @param props
  */
-export const LandVelger = (props) => {
-  const { multiLand, className = "", landkoder, landkoderFraSakstype, alleLandkoder, visAlleLandkoder } = props;
+const LandVelger = (props) => {
+  const {
+    multiLand,
+    className = "",
+    landkoder,
+    landkoderFraSakstype,
+    alleLandkoder,
+    visAlleLandkoder,
+    dataTestId,
+  } = props;
   const dataListID = lagDatalistID();
   const landkodeliste = landkoder || (visAlleLandkoder ? alleLandkoder : landkoderFraSakstype);
 
@@ -37,7 +45,7 @@ export const LandVelger = (props) => {
       <div className="landliste__dataliste">
         <datalist id={dataListID}>
           {landkodeliste.map((item) => (
-            <option key={item.kode} value={Utils.land.landTekstFormat(item)}>
+            <option key={item.kode} value={Utils.land.landTekstFormat(item)} data-testid={dataTestId}>
               {Utils.land.landTekstFormat(item)}
             </option>
           ))}
@@ -60,6 +68,7 @@ LandVelger.propTypes = {
   visAlleLandkoder: PT.bool,
   className: PT.string,
   errorConfig: PT.object,
+  dataTestId: PT.string,
 };
 
 LandVelger.defaultProps = {
