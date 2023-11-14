@@ -1,5 +1,6 @@
 import { ChangeEvent, ComponentProps, useState } from "react";
 import * as Nav from "../../navFrontend";
+import * as Utils from "../../utils";
 
 type InputProps = Omit<ComponentProps<typeof Nav.Input>, "onChange" | "onBlur">;
 
@@ -39,7 +40,15 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
   };
 
   return (
-    <Nav.Input label={label} value={inputVerdi} feil={feil} onChange={handleChange} onBlur={handleBlur} {...props} />
+    <Nav.Input
+      label={label}
+      value={inputVerdi}
+      feil={feil}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      id={Utils._uuid()}
+      {...props}
+    />
   );
 };
 
