@@ -131,6 +131,7 @@ class EnkeltLandPure extends Component {
           onChange={inputEndringHandler}
           onKeyDown={inputTastNedHandler}
           disabled={disabled}
+          id={Utils._uuid()}
         />
         <div className="landliste__dataliste">
           <datalist id={dataListID}>

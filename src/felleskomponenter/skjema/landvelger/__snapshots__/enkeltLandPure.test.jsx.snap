@@ -1,0 +1,178 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EnkeltLandPure > snapshot test 1`] = `
+<div>
+  <div>
+    <div
+      class="skjemaelement landliste__linje__input "
+    >
+      <label
+        class="skjemaelement__label"
+        for="123"
+      >
+        Test
+      </label>
+      <input
+        aria-invalid="false"
+        class="skjemaelement__input input--fullbredde"
+        id="123"
+        list="datalist-123"
+        type="text"
+        value="Norge (NO)"
+      />
+    </div>
+    <div
+      class="landliste__dataliste"
+    >
+      <datalist
+        id="datalist-123"
+      >
+        <option
+          label="Belgia (BE)"
+          value="Belgia (BE)"
+        />
+        <option
+          label="Bulgaria (BG)"
+          value="Bulgaria (BG)"
+        />
+        <option
+          label="Danmark (DK)"
+          value="Danmark (DK)"
+        />
+        <option
+          label="Estland (EE)"
+          value="Estland (EE)"
+        />
+        <option
+          label="Finland (FI)"
+          value="Finland (FI)"
+        />
+        <option
+          label="Frankrike (FR)"
+          value="Frankrike (FR)"
+        />
+        <option
+          label="Færøyene (FO)"
+          value="Færøyene (FO)"
+        />
+        <option
+          label="Grønland (GL)"
+          value="Grønland (GL)"
+        />
+        <option
+          label="Hellas (GR)"
+          value="Hellas (GR)"
+        />
+        <option
+          label="Irland (IE)"
+          value="Irland (IE)"
+        />
+        <option
+          label="Island (IS)"
+          value="Island (IS)"
+        />
+        <option
+          label="Italia (IT)"
+          value="Italia (IT)"
+        />
+        <option
+          label="Kroatia (HR)"
+          value="Kroatia (HR)"
+        />
+        <option
+          label="Kypros (CY)"
+          value="Kypros (CY)"
+        />
+        <option
+          label="Latvia (LV)"
+          value="Latvia (LV)"
+        />
+        <option
+          label="Liechtenstein (LI)"
+          value="Liechtenstein (LI)"
+        />
+        <option
+          label="Litauen (LT)"
+          value="Litauen (LT)"
+        />
+        <option
+          label="Luxembourg (LU)"
+          value="Luxembourg (LU)"
+        />
+        <option
+          label="Malta (MT)"
+          value="Malta (MT)"
+        />
+        <option
+          label="Nederland (NL)"
+          value="Nederland (NL)"
+        />
+        <option
+          label="Norge (NO)"
+          value="Norge (NO)"
+        />
+        <option
+          label="Polen (PL)"
+          value="Polen (PL)"
+        />
+        <option
+          label="Portugal (PT)"
+          value="Portugal (PT)"
+        />
+        <option
+          label="Romania (RO)"
+          value="Romania (RO)"
+        />
+        <option
+          label="Slovakia (SK)"
+          value="Slovakia (SK)"
+        />
+        <option
+          label="Slovenia (SI)"
+          value="Slovenia (SI)"
+        />
+        <option
+          label="Spania (ES)"
+          value="Spania (ES)"
+        />
+        <option
+          label="Storbritannia (GB)"
+          value="Storbritannia (GB)"
+        />
+        <option
+          label="Svalbard og Jan Mayen (SJ)"
+          value="Svalbard og Jan Mayen (SJ)"
+        />
+        <option
+          label="Sveits (CH)"
+          value="Sveits (CH)"
+        />
+        <option
+          label="Sverige (SE)"
+          value="Sverige (SE)"
+        />
+        <option
+          label="Tsjekkia (CZ)"
+          value="Tsjekkia (CZ)"
+        />
+        <option
+          label="Tyskland (DE)"
+          value="Tyskland (DE)"
+        />
+        <option
+          label="Ungarn (HU)"
+          value="Ungarn (HU)"
+        />
+        <option
+          label="Østerrike (AT)"
+          value="Østerrike (AT)"
+        />
+        <option
+          label="Åland (AX)"
+          value="Åland (AX)"
+        />
+      </datalist>
+    </div>
+  </div>
+</div>
+`;
