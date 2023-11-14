@@ -1,4 +1,13 @@
 import KodeTermSelect from "./kodeTermSelect";
+import { render, screen } from "@testing-library/react";
+
+vi.mock("../../../utils", async () => {
+  const actual = await vi.importActual("../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("KodeTermSelect", () => {
   let props = null;
@@ -15,46 +24,38 @@ describe("KodeTermSelect", () => {
     };
   });
 
-  it("viser en Nav Select først", () => {
-    const komponent = shallow(<KodeTermSelect {...props} />);
-    expect(komponent.first().is("Select")).toBe(true);
+  it("snapshot test", () => {
+    const { container } = render(<KodeTermSelect {...props} />);
+    expect(container).toMatchSnapshot();
   });
 
-  describe("Nav Select", () => {
-    it("har ett valg når koder prop er tom", () => {
-      props.koder = [];
-      const komponent = shallow(<KodeTermSelect {...props} />);
-      expect(komponent.find("option")).toHaveLength(1);
-    });
+  it("har ett valg når koder prop er tom", () => {
+    props.koder = [];
+    render(<KodeTermSelect {...props} />);
+    expect(screen.getByRole("option")).toBeInTheDocument();
+  });
 
-    it("mapper koder prop til valg i dropdownlist", () => {
-      props.koder = [
-        { kode: "", term: "" },
-        { kode: "", term: "" },
-      ];
-      const komponent = shallow(<KodeTermSelect {...props} />);
-      expect(komponent.find("option")).toHaveLength(3);
-    });
+  it("mapper koder prop til valg i dropdownlist", () => {
+    props.koder = [
+      { kode: "kode1", term: "valg 1" },
+      { kode: "kode2", term: "valg 2" },
+    ];
+    render(<KodeTermSelect {...props} />);
+    expect(screen.getAllByRole("option")).toHaveLength(3);
+    expect(screen.getByRole("option", { name: "valg 1" })).toBeInTheDocument();
+  });
 
-    it("setter disabled til det motsatte av redigerbar prop", () => {
+  describe("redigerbart prop", () => {
+    it("true enabler select", () => {
       props.redigerbart = true;
-      let komponent = shallow(<KodeTermSelect {...props} />);
-      expect(komponent.props().disabled).toBe(false);
-
-      props.redigerbart = false;
-      komponent = shallow(<KodeTermSelect {...props} />);
-      expect(komponent.props().disabled).toBe(true);
+      render(<KodeTermSelect {...props} />);
+      expect(screen.getByRole("combobox")).toBeEnabled();
     });
 
-    describe("valg", () => {
-      it("tekst er hentet fra term fra kode prop", () => {
-        props.koder = [
-          { kode: "", term: "" },
-          { kode: "", term: "testterm" },
-        ];
-        const komponent = shallow(<KodeTermSelect {...props} />);
-        expect(komponent.find("option").last().text()).toBe("testterm");
-      });
+    it("false disabler select", () => {
+      props.redigerbart = false;
+      render(<KodeTermSelect {...props} />);
+      expect(screen.getByRole("combobox")).toBeDisabled();
     });
   });
 });
