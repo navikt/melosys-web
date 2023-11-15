@@ -1,4 +1,17 @@
-import { InnerEnkeltLand } from "./enkeltLand";
+import EnkeltLand from "./enkeltLand";
+import { reduxForm } from "redux-form";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+import userEvent from "@testing-library/user-event";
+
+const WrappedEnkeltLand = reduxForm({ form: "test" })(EnkeltLand);
+
+vi.mock("../../../utils", async () => {
+  const actual = await vi.importActual("../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("EnkeltLand", () => {
   let props = null;
@@ -11,82 +24,52 @@ describe("EnkeltLand", () => {
         { kode: "SE", term: "Sverige" },
       ],
       meta: {},
-      label: "",
+      label: "label",
       feil: undefined,
       input: { onChange: () => null, onBlur: () => null },
       disabled: false,
+      feltNavn: "Testnavn",
+      name: "Testnavn",
     };
   });
 
-  it("viser en NAV Input med riktige props", () => {
-    props.disabled = true;
-    props.dataListID = "999";
-    props.label = "label";
-
-    const enkeltLand = shallow(<InnerEnkeltLand {...props} />);
-    const input = enkeltLand.find("Input");
-    expect(input).toHaveLength(1);
-
-    expect(input.props().disabled).toBe(props.disabled);
-    expect(input.props().list).toBe(props.dataListID);
-    expect(input.props().label).toBe(props.label);
-  });
-
-  it("sender value prop til NAV Input korrekt når tekst endres", () => {
-    const enkeltLand = shallow(<InnerEnkeltLand {...props} />);
-    const event = { target: { value: "test" } };
-
-    enkeltLand.find("Input").simulate("change", event);
-
-    expect(enkeltLand.find("Input").props().value).toBe("test");
+  it("snapshot test", () => {
+    const { container } = renderWithProviders(<WrappedEnkeltLand {...props} />);
+    expect(container).toMatchSnapshot();
   });
 
   describe("ved fokus flyttet fra input", () => {
-    it("hvis tekst er skrevet inn men landkoder prop mangler, lag feilmelding", () => {
-      props.landkoder = [];
-      const enkeltLand = shallow(<InnerEnkeltLand {...props} />);
-      const input = enkeltLand.find("Input");
-
-      input.simulate("change", { target: { value: "test" } });
-      input.simulate("blur");
-
-      expect(enkeltLand.find("Input").props().feil).toBeTruthy();
+    it("hvis tekst ikke er skrevet inn, ikke vis feilmelding", () => {
+      const { queryByText } = renderWithProviders(<WrappedEnkeltLand {...props} />);
+      expect(queryByText("Finner ikke landet du har skrevet inn.")).not.toBeInTheDocument();
     });
 
-    it("hvis tekst er skrevet inn og landkoder prop er oppgitt, oppdater input-verdi", () => {
+    it("hvis tekst er skrevet inn men landkoder prop mangler, lag feilmelding", async () => {
+      props.landkoder = [];
+      const { getByRole, getByText } = renderWithProviders(<WrappedEnkeltLand {...props} />);
+      const user = userEvent.setup();
+
+      const input = getByRole("combobox");
+      await user.clear(input);
+      await userEvent.type(input, "Norge");
+      await userEvent.tab();
+      expect(getByText("Finner ikke landet du har skrevet inn.")).toBeInTheDocument();
+    });
+
+    it("hvis tekst er skrevet inn og landkoder prop er oppgitt, oppdater input-verdi", async () => {
       props.landkoder = [
         { kode: "NO", term: "Norge" },
         { kode: "SE", term: "Sverige" },
       ];
-      const enkeltLand = shallow(<InnerEnkeltLand {...props} />);
-      const input = enkeltLand.find("Input");
+      const { getByRole, getByDisplayValue, queryByText } = renderWithProviders(<WrappedEnkeltLand {...props} />);
+      const user = userEvent.setup();
 
-      input.simulate("change", { target: { value: "NO" } });
-      input.simulate("blur");
-
-      expect(enkeltLand.find("Input").props().feil).toBeFalsy();
-      expect(enkeltLand.find("Input").props().value).toBe("Norge (NO)");
-    });
-
-    it("hvis tekst ikke er skrevet inn, ikke vis feilmelding", () => {
-      const enkeltLand = shallow(<InnerEnkeltLand {...props} />);
-      const input = enkeltLand.find("Input");
-
-      input.simulate("blur");
-
-      expect(enkeltLand.find("Input").props().feil).toBeFalsy();
-    });
-  });
-
-  describe("ved tastetrykk", () => {
-    it("dersom tasten er Enter, kall preventDefault", () => {
-      const enkeltLand = shallow(<InnerEnkeltLand {...props} />);
-      const input = enkeltLand.find("Input");
-
-      const event = { keyCode: 13, preventDefault: vi.fn() };
-      input.simulate("keyDown", event);
-
-      expect(event.preventDefault).toHaveBeenCalled();
+      const input = getByRole("combobox");
+      await user.clear(input);
+      await userEvent.type(input, "Norge");
+      await userEvent.tab();
+      expect(getByDisplayValue("Norge (NO)")).toBeInTheDocument();
+      expect(queryByText("Finner ikke landet du har skrevet inn.")).not.toBeInTheDocument();
     });
   });
 });

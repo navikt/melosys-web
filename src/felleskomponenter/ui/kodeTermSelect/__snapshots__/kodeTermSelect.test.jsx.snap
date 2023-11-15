@@ -1,0 +1,26 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`KodeTermSelect > snapshot test 1`] = `
+<div>
+  <div
+    class="skjemaelement"
+  >
+    
+    <div
+      class="selectContainer input--fullbredde"
+    >
+      <select
+        aria-invalid="false"
+        class="skjemaelement__input"
+        id="123"
+      >
+        <option
+          value=""
+        >
+          Velg...
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
+`;

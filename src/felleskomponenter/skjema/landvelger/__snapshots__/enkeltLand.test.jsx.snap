@@ -1,0 +1,26 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EnkeltLand > snapshot test 1`] = `
+<div>
+  <div>
+    <div
+      class="skjemaelement landliste__linje__input"
+    >
+      <label
+        class="skjemaelement__label"
+        for="123"
+      >
+        label
+      </label>
+      <input
+        aria-invalid="false"
+        class="skjemaelement__input input--xl"
+        id="123"
+        list="1"
+        type="text"
+        value=""
+      />
+    </div>
+  </div>
+</div>
+`;

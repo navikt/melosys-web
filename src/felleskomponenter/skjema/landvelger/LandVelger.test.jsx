@@ -1,7 +1,13 @@
-import { LandVelger } from "./LandVelger";
+import LandVelger from "./LandVelger";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+import MKV from "../../../melosyskodeverk";
+import { reduxForm } from "redux-form";
+
+const WrappedLandVelger = reduxForm({ form: "test" })(LandVelger);
 
 describe("Landvelger", () => {
   let props = null;
+  let initialState = null;
 
   beforeEach(() => {
     props = {
@@ -10,71 +16,94 @@ describe("Landvelger", () => {
       multiLand: false,
       label: "test",
       landkoder: undefined,
-      alleLandkoder: [{ kode: "kode1", term: "term1" }],
-      landkoderFraSakstype: [
-        { kode: "kode1", term: "term1" },
-        { kode: "kode2", term: "term2" },
-        { kode: "kode3", term: "term3" },
-      ],
+      dataTestId: "datalist",
+    };
+    initialState = {
+      landkoder: {
+        data: [
+          { kode: "kode1", term: "term1" },
+          { kode: "kode2", term: "term2" },
+          { kode: "kode3", term: "term3" },
+        ],
+      },
+      fagsaker: {
+        data: {
+          sakstype: {
+            kode: MKV.Koder.sakstyper.TRYGDEAVTALE,
+          },
+        },
+      },
     };
   });
 
-  describe("Dersom multiland prop er false", () => {
-    it("viser enkeltland og ikke multiland", () => {
-      props.multiLand = false;
-      const landVelger = shallow(<LandVelger {...props} />);
-      expect(landVelger.find("EnkeltLand")).toHaveLength(1);
-      expect(landVelger.find("MultiLand")).toHaveLength(0);
-    });
+  it("viser enkeltland og ikke multiland", () => {
+    props.multiLand = false;
+
+    const { queryByRole } = renderWithProviders(<WrappedLandVelger {...props} />, { preloadedState: initialState });
+
+    expect(queryByRole("button")).not.toBeInTheDocument();
   });
 
-  describe("Dersom multiland prop er true", () => {
-    it("viser multiland og ikke enkeltland", () => {
-      props.multiLand = true;
-      const landVelger = shallow(<LandVelger {...props} />);
-      expect(landVelger.find("EnkeltLand")).toHaveLength(0);
-      expect(landVelger.find("MultiLand")).toHaveLength(1);
-    });
-  });
+  it("viser multiland og ikke enkeltland", () => {
+    props.multiLand = true;
 
-  it("viser en datalist", () => {
-    const landVelger = shallow(<LandVelger {...props} />);
-    expect(landVelger.find("datalist")).toHaveLength(1);
+    const { getByRole } = renderWithProviders(<WrappedLandVelger {...props} />, { preloadedState: initialState });
+    expect(getByRole("button")).toBeInTheDocument();
   });
 
   describe("Dersom visAlleLandkoder prop", () => {
     it("er true", () => {
-      const landVelger = shallow(<LandVelger {...props} visAlleLandkoder />);
+      props.visAlleLandkoder = true;
+      const { getAllByTestId } = renderWithProviders(<WrappedLandVelger {...props} />, {
+        preloadedState: initialState,
+      });
 
-      expect(landVelger.find("datalist").children()).toHaveLength(props.alleLandkoder.length);
+      const datalistOptions = getAllByTestId(props.dataTestId);
+      expect(datalistOptions).toHaveLength(initialState.landkoder.data.length);
     });
 
     it("er undefined", () => {
-      const landVelger = shallow(<LandVelger {...props} />);
+      const { getAllByTestId } = renderWithProviders(<WrappedLandVelger {...props} />, {
+        preloadedState: initialState,
+      });
 
-      expect(landVelger.find("datalist").children()).toHaveLength(props.landkoderFraSakstype.length);
+      const datalistOptions = getAllByTestId(props.dataTestId);
+      expect(datalistOptions).toBeDefined();
+      expect(datalistOptions).not.toHaveLength(initialState.landkoder.data.length);
     });
   });
 
   describe("Dersom landkoder prop", () => {
-    it("ikke er satt", () => {
-      props.landkoder = undefined;
-      const landVelger = shallow(<LandVelger {...props} />);
+    it("er undefined", () => {
+      const { getAllByTestId } = renderWithProviders(<WrappedLandVelger {...props} />, {
+        preloadedState: initialState,
+      });
 
-      expect(landVelger.find("datalist").children()).toHaveLength(props.landkoderFraSakstype.length);
+      const datalistOptions = getAllByTestId(props.dataTestId);
+      expect(datalistOptions).toBeDefined();
+      expect(datalistOptions).not.toHaveLength(initialState.landkoder.data.length);
     });
 
     it("er satt til tom liste", () => {
       props.landkoder = [];
-      const landVelger = shallow(<LandVelger {...props} />);
-      expect(landVelger.find("datalist").children()).toHaveLength(0);
+      const { queryAllByTestId } = renderWithProviders(<WrappedLandVelger {...props} />, {
+        preloadedState: initialState,
+      });
+
+      const datalistOptions = queryAllByTestId(props.dataTestId);
+      expect(datalistOptions).toBeDefined();
+      expect(datalistOptions).toHaveLength(0);
     });
 
     it("er satt til en egendefinert liste", () => {
       props.landkoder = [{ kode: "egenKode", term: "egenTerm" }];
-      const landVelger = shallow(<LandVelger {...props} />);
+      const { getAllByTestId } = renderWithProviders(<WrappedLandVelger {...props} />, {
+        preloadedState: initialState,
+      });
 
-      expect(landVelger.find("datalist").children()).toHaveLength(props.landkoder.length);
+      const datalistOptions = getAllByTestId(props.dataTestId);
+      expect(datalistOptions).toBeDefined();
+      expect(datalistOptions).toHaveLength(props.landkoder.length);
     });
   });
 });

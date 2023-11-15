@@ -1,4 +1,13 @@
 import Orgnrinput from "./orgnrinput";
+import { render } from "@testing-library/react";
+
+vi.mock("../../../../../utils", async () => {
+  const actual = await vi.importActual("../../../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("Orgnrinput", () => {
   let props = null;
@@ -13,7 +22,8 @@ describe("Orgnrinput", () => {
     };
   });
 
-  it("vises uten å krasje", () => {
-    shallow(<Orgnrinput {...props} />);
+  it("snapshot test", () => {
+    const { container } = render(<Orgnrinput {...props} />);
+    expect(container).toMatchSnapshot();
   });
 });

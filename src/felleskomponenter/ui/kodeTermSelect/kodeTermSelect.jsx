@@ -1,11 +1,20 @@
 import PT from "prop-types";
 import * as Nav from "../../../navFrontend";
+import * as Utils from "../../../utils";
 
 const kodeTermSelect = ({ koder, value, onChange, label, feil, disableForsteValg, redigerbart, onBlur }) => {
   const visValueIkkeOppgittIKoder = !redigerbart && !koder.includes(value);
 
   return (
-    <Nav.Select value={value} onChange={onChange} label={label} feil={feil} disabled={!redigerbart} onBlur={onBlur}>
+    <Nav.Select
+      value={value}
+      onChange={onChange}
+      label={label}
+      feil={feil}
+      disabled={!redigerbart}
+      onBlur={onBlur}
+      id={Utils._uuid()}
+    >
       <option key="VELG" value="" disabled={disableForsteValg}>
         Velg...
       </option>

@@ -4,48 +4,10 @@ import classNames from "classnames";
 import { Field } from "redux-form";
 
 import * as Nav from "../../../navFrontend";
-import * as Utils from "../../../utils";
 import * as SkjemaUtils from "../utils";
 import * as Ikoner from "../../../resources/images";
 
 import "./customRadioPanelGruppe.css";
-
-export const CustomRadioPanelElement = ({ tittel, hoyreSideTittel, data }) => (
-  <div className="customRadioPanelElement">
-    <div className="customRadioPanelTittel">
-      <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>
-      {hoyreSideTittel && <>{hoyreSideTittel}</>}
-    </div>
-    <dl>
-      {data.map(({ term, description }) => {
-        if (!description) return null;
-
-        return (
-          <Fragment key={Utils._uuid()}>
-            <dt>{term}</dt>
-            <dd>{description}</dd>
-          </Fragment>
-        );
-      })}
-    </dl>
-  </div>
-);
-
-CustomRadioPanelElement.propTypes = {
-  tittel: PT.node,
-  hoyreSideTittel: PT.node,
-  data: PT.arrayOf(
-    PT.shape({
-      term: PT.string,
-      description: PT.node,
-    })
-  ).isRequired,
-};
-
-CustomRadioPanelElement.defaultProps = {
-  tittel: undefined,
-  hoyreSideTittel: undefined,
-};
 
 /**
  * Radiopanelet tar imot en hel react-komponent via "innhold"-prop

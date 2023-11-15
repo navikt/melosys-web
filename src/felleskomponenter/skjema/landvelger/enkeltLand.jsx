@@ -10,7 +10,7 @@ import * as SkjemaUtils from "../utils";
 
 import "./landvelger.css";
 
-export class InnerEnkeltLand extends Component {
+class InnerEnkeltLand extends Component {
   state = {
     inputVerdi: "",
     error: null,
@@ -160,6 +160,7 @@ export class InnerEnkeltLand extends Component {
           onChange={inputEndringHandler}
           onKeyDown={inputTastNedHandler}
           placeholder={placeholder}
+          id={Utils._uuid()}
         />
       </div>
     );

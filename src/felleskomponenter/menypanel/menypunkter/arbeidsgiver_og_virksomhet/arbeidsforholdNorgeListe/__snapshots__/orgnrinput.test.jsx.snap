@@ -1,0 +1,30 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Orgnrinput > snapshot test 1`] = `
+<div>
+  <div>
+    <div
+      class="skjemaelement"
+    >
+      <label
+        class="skjemaelement__label"
+        for="123"
+      >
+        <p
+          class="typo-element"
+        >
+          Organisasjonsnummer
+        </p>
+      </label>
+      <input
+        aria-invalid="false"
+        class="skjemaelement__input input--fullbredde"
+        id="123"
+        placeholder="Skriv inn..."
+        type="text"
+        value=""
+      />
+    </div>
+  </div>
+</div>
+`;
