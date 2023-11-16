@@ -30,7 +30,6 @@ import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks"
 import { FellesHandlersContext } from "../../../../contexts";
 import { navigeringOperations } from "../../../../ducks/navigering";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
-import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 interface Periode {
   fom?: string | null;
