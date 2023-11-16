@@ -113,7 +113,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
   const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
-  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
   const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
 
@@ -265,13 +265,14 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   async function kontroller(data: any) {
     if (data.aktivtSteg && redigerbart && data.mottatteOpplysningerStatus === "OK") {
       setVedtakPending(true);
-      await kontrollerFerdigbehandling({
+      const request = {
         behandlingID,
         vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
-        skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
-      });
-      setOppdaterFoerKontroll(false);
+        skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
+      };
+      setOppdaterFørKontroll(false);
+      await kontrollerFerdigbehandling(request);
       setVedtakPending(false);
     }
   }

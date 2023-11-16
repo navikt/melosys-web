@@ -111,7 +111,7 @@ const VurderingVedtak = ({
   mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const [erBucAapen, setErBucAapen] = useState(true);
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const dispatch = useDispatch();
@@ -169,16 +169,17 @@ const VurderingVedtak = ({
   async function kontroller(data) {
     if (redigerbart && data.mottatteOpplysningerStatus === "OK" && data.aktivtSteg) {
       setVedtakPending(true);
-      await kontrollerFerdigbehandling({
+      const request = {
         behandlingID,
         vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
         kontrollerSomSkalIgnoreres: data.formValues.kopiTilArbeidsgiver
           ? []
           : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
-        skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
-      });
-      setOppdaterFoerKontroll(false);
+        skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
+      };
+      setOppdaterFørKontroll(false);
+      await kontrollerFerdigbehandling(request);
       setVedtakPending(false);
     }
   }
