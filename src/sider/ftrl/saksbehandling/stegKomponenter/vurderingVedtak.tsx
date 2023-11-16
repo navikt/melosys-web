@@ -262,26 +262,23 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     };
   };
 
-  const lagKontrollerFerdigbehandlingDto = () => {
-    return {
-      behandlingID,
-      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
-      skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
-    };
-  };
+  async function kontroller(data: any) {
+    if (data.aktivtSteg && redigerbart && data.mottatteOpplysningerStatus === "OK") {
+      setVedtakPending(true);
+      await kontrollerFerdigbehandling({
+        behandlingID,
+        vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
+        skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
+      });
+      setOppdaterFoerKontroll(false);
+      setVedtakPending(false);
+    }
+  }
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 250), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
-    async function kontroller() {
-      if (aktivtSteg && redigerbart && mottatteOpplysningerStatus === "OK") {
-        setVedtakPending(true);
-        await kontrollerFerdigbehandling(lagKontrollerFerdigbehandlingDto());
-        setOppdaterFoerKontroll(false);
-        setVedtakPending(false);
-      }
-    }
-
-    kontroller();
+    debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, formValues });
   }, [aktivtSteg, redigerbart, mottatteOpplysningerStatus]);
 
   const onSubmit = async () => {
