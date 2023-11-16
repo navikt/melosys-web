@@ -1,3 +1,5 @@
+@import (reference) "~nav-frontend-core/less/_variabler";
+
 .skjema__horisontalefelter {
   display: flex;
   flex-direction: row;
@@ -13,4 +15,62 @@
 
 .skjema__legend {
   font-size: 1em;
+}
+
+.skjema__panel {
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: @navLysGra;
+  margin-bottom: 2rem;
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+
+    > * {
+      min-width: 7.5rem;
+      margin-left: 0.75rem;
+    }
+  }
+
+  .skillestrek {
+    border-top: 1px solid #d8d8d8;
+    padding: 0.75rem 0;
+  }
+
+  .skjema__panel__rad {
+    display: flex;
+    flex-direction: row;
+
+    .typo-element {
+      margin: 0.75rem 0;
+    }
+
+    .radioknapp_gruppe {
+      display: flex;
+      flex-direction: row;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+      height: 2.5rem;
+      align-items: center;
+
+      .skjemaelement {
+        margin-bottom: 0;
+      }
+    }
+
+    .dato {
+      max-width: 7.5rem;
+    }
+
+    .slett {
+      margin-bottom: 1rem;
+      margin-right: 0.75rem;
+      min-width: 2rem;
+    }
+    .slett__first {
+      align-self: self-end;
+    }
+  }
 }
