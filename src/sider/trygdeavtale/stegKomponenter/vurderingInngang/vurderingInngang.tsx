@@ -220,11 +220,11 @@ const VurderingInngang = ({
 
       {landUtenStøtteValgt && <IngenFlytMelding />}
 
-      {landUtenStøtteValgt && skalHenteRegisteropplysninger && !registeropplysningerHentet && (
+      {landUtenStøtteValgt && skalHenteRegisteropplysninger && (
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: innhentRegisteropplysninger,
-            disabled: (steg.navn !== STEG.INNGANG && steg.status !== StegStatus.FERDIG) || !formIsValid || !redigerbart,
+            disabled: !formIsValid || !redigerbart,
           }}
           bekreftTekst="Innhent registeropplysninger"
         />
