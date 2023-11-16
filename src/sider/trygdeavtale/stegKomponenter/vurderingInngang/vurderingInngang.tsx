@@ -223,7 +223,7 @@ const VurderingInngang = ({
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: innhentRegisteropplysninger,
-            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
+            disabled: !formIsValid || !redigerbart,
           }}
           bekreftTekst="Innhent registeropplysninger"
         />
