@@ -30,6 +30,7 @@ import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks"
 import { FellesHandlersContext } from "../../../../contexts";
 import { navigeringOperations } from "../../../../ducks/navigering";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 interface Periode {
   fom?: string | null;
@@ -219,11 +220,11 @@ const VurderingInngang = ({
 
       {landUtenStøtteValgt && <IngenFlytMelding />}
 
-      {landUtenStøtteValgt && skalHenteRegisteropplysninger && (
+      {landUtenStøtteValgt && skalHenteRegisteropplysninger && !registeropplysningerHentet && (
         <Mui.StegKnapper
           bekreftKnappProps={{
             onClick: innhentRegisteropplysninger,
-            disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
+            disabled: (steg.navn !== STEG.INNGANG && steg.status !== StegStatus.FERDIG) || !formIsValid || !redigerbart,
           }}
           bekreftTekst="Innhent registeropplysninger"
         />
