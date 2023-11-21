@@ -20,7 +20,7 @@ import "./fagsak.css";
  * for å gi saksbehandler oversikt over sakens innhold før hun klikker
  * seg inn på den.
  */
-const Fagsak = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
+const Fagsak = ({ sak, folketrygdenToggleEnabled, manglendeInnbetalingToggleEnabled, landkoder }) => {
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
 
   const { land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
@@ -36,7 +36,8 @@ const Fagsak = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
       sakstema.kode,
       behandling.behandlingstema.kode,
       behandling.behandlingstype.kode,
-      folketrygdenToggleEnabled
+      folketrygdenToggleEnabled,
+      manglendeInnbetalingToggleEnabled
     );
 
   const customMargin = { marginLeft: "1em" };

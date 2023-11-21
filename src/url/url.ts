@@ -138,14 +138,12 @@ export const skalViseIngenFlyt = (
     return true;
   }
 
-  if (manglendeInnbetalingToggleEnabled) {
-    if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
-      return true;
-    }
-  } else {
-    if ([HENVENDELSE, KLAGE, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)) {
-      return true;
-    }
+  if (manglendeInnbetalingToggleEnabled && behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
+    return false;
+  }
+
+  if ([HENVENDELSE, KLAGE, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)) {
+    return true;
   }
   if (sakstype === FTRL && !folketrygdenToggleEnabled) {
     return true;
