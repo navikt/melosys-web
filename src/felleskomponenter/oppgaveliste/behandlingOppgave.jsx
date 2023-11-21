@@ -36,7 +36,7 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
  * for å gi saksbehandler en hent over sakens innhold før hun klikker
  * seg inn på den.
  */
-const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
+const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, manglendeInnbetalingToggleEnabled, landkoder }) => {
   const {
     navn,
     sakstype,
@@ -66,7 +66,8 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, landkoder }) => {
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    folketrygdenToggleEnabled
+    folketrygdenToggleEnabled,
+    manglendeInnbetalingToggleEnabled
   );
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 
