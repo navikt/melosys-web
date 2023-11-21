@@ -150,7 +150,7 @@ const VurderingVedtak = ({
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const [harOppfrisketLovvalgsperiode, setHarOppfrisketLovvalgsperiode] = useState(false);
   const isMounted = Hooks.useIsMounted();
   const dispatch = useDispatch();
@@ -191,26 +191,26 @@ const VurderingVedtak = ({
     nyVurderingBakgrunn: getNyVurderingBakgrunn(),
   });
 
-  useEffect(() => {
-    async function kontroller() {
-      if (mottatteOpplysningerStatus === "OK" && aktivtSteg && redigerbart) {
-        setVedtakPending(true);
-        await dispatch(
-          kontrollerFerdigbehandling({
-            behandlingID,
-            vedtakstype: erNyVurdering
-              ? MKV.Koder.vedtakstyper.ENDRINGSVEDTAK
-              : vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-            behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-            skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
-          })
-        );
-        setOppdaterFoerKontroll(false);
-        setVedtakPending(false);
-      }
+  async function kontroller(data: any) {
+    if (data.mottatteOpplysningerStatus === "OK" && data.aktivtSteg && redigerbart) {
+      setVedtakPending(true);
+      const request = {
+        behandlingID,
+        vedtakstype: erNyVurdering
+          ? MKV.Koder.vedtakstyper.ENDRINGSVEDTAK
+          : vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+        skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
+      };
+      setOppdaterFørKontroll(false);
+      await dispatch(kontrollerFerdigbehandling(request));
+      setVedtakPending(false);
     }
+  }
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 250), [kontrollerFerdigbehandling]);
 
-    kontroller();
+  useEffect(() => {
+    debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus });
   }, [aktivtSteg, resultat.lovvalgsperiodeTom, mottatteOpplysningerStatus]);
 
   const hentProduserbartDokument = (): string => {

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
@@ -135,7 +135,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   selvstendigArbeid,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
 
   useEffect(() => {
     if (lovvalgsbestemmelseSomSkalLagres) {
@@ -266,24 +266,27 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
     };
   };
 
-  useEffect(() => {
-    async function kontroller() {
-      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg) {
-        setVedtakPending(true);
-        await kontrollerFerdigbehandling({
-          behandlingID,
-          vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-          behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-          kontrollerSomSkalIgnoreres: formValues.kopiTilArbeidsgiver
-            ? []
-            : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
-          skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
-        });
-        setOppdaterFoerKontroll(false);
-        setVedtakPending(false);
-      }
+  async function kontroller(data) {
+    if (redigerbart && data.mottatteOpplysningerStatus === "OK" && data.aktivtSteg) {
+      setVedtakPending(true);
+      const request = {
+        behandlingID,
+        vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+        kontrollerSomSkalIgnoreres: data.formValues.kopiTilArbeidsgiver
+          ? []
+          : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
+        skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
+      };
+      setOppdaterFørKontroll(false);
+      await kontrollerFerdigbehandling(request);
+      setVedtakPending(false);
     }
-    kontroller();
+  }
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 250), [kontrollerFerdigbehandling]);
+
+  useEffect(() => {
+    debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, formValues });
   }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const onSubmit = async (values, dispatch, props) => {

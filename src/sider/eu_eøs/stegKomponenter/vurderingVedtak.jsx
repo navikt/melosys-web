@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
@@ -111,7 +111,7 @@ const VurderingVedtak = ({
   mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const [erBucAapen, setErBucAapen] = useState(true);
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const dispatch = useDispatch();
@@ -158,8 +158,6 @@ const VurderingVedtak = ({
     };
   };
 
-  const { kopiTilArbeidsgiver, vedtakstype } = formValues;
-
   useEffect(() => {
     if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE) {
       Api.Kontroll.erBucAapen(behandlingID).then((res) => {
@@ -168,26 +166,28 @@ const VurderingVedtak = ({
     }
   }, []);
 
-  useEffect(() => {
-    async function kontroller() {
-      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg) {
-        setVedtakPending(true);
-        await kontrollerFerdigbehandling({
-          behandlingID,
-          vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-          behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-          kontrollerSomSkalIgnoreres: kopiTilArbeidsgiver
-            ? []
-            : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
-          skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
-        });
-        setOppdaterFoerKontroll(false);
-        setVedtakPending(false);
-      }
+  async function kontroller(data) {
+    if (redigerbart && data.mottatteOpplysningerStatus === "OK" && data.aktivtSteg) {
+      setVedtakPending(true);
+      const request = {
+        behandlingID,
+        vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+        kontrollerSomSkalIgnoreres: data.formValues.kopiTilArbeidsgiver
+          ? []
+          : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
+        skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
+      };
+      setOppdaterFørKontroll(false);
+      await kontrollerFerdigbehandling(request);
+      setVedtakPending(false);
     }
+  }
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 250), [kontrollerFerdigbehandling]);
 
-    kontroller();
-  }, [redigerbart, formIsValid, aktivtSteg, kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
+  useEffect(() => {
+    debouncedKontrollerBehandling({ aktivtSteg, formValues, mottatteOpplysningerStatus });
+  }, [redigerbart, formIsValid, aktivtSteg, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const onSubmit = async () => {
     if (!validerForm()) return;
