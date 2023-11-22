@@ -21,6 +21,7 @@ import { AdresseOgFeil, FieldArrayProps, Fullmektig, Type } from "./types";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import Knapperad from "../../../knapperad";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { useAsyncCallbackState } from "../../../../hooks";
 
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
@@ -34,12 +35,11 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
   const dispatch = useDispatch();
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
-  // const { harBehandlingMedTrygdeavgift } = useAsyncCallbackState(
-  //   () => Api.Fagsaker.fagsak.hentTrygdeavgiftOppsummering(saksnummer),
-  //   { harBehandlingMedTrygdeavgift: false },
-  //   []
-  // );
-  const harBehandlingMedTrygdeavgift = true;
+  const [{ harBehandlingMedTrygdeavgift }] = useAsyncCallbackState(
+    () => Api.Fagsaker.fagsak.hentTrygdeavgiftOppsummering(saksnummer),
+    { harBehandlingMedTrygdeavgift: false },
+    [saksnummer]
+  );
 
   const [redigerer, setRedigerer] = useState(false);
   const [pending, setPending] = useState(false);
@@ -315,7 +315,7 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
         </div>
       )}
 
-      {visModal && (
+      {visModal && ( // TODO: Design på modal
         <Nav.Modal
           isOpen
           contentLabel="Er du sikker?"
