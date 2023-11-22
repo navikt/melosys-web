@@ -2,18 +2,18 @@
 
 exports[`Skatteforholdsperioder > snapshot test 1`] = `
 <div
-  className="skatteforholdsperioder_komponent"
+  className="skatteforholdsperioder"
 >
   <div
-    className="skatteforhold_label"
+    className="skatteforhold__label"
   >
     Oppgi informasjon om brukers skatteforhold
   </div>
   <div
-    className="skatteforholdsperioder"
+    className="skjema__panel"
   >
     <div
-      className="row overskriftrad"
+      className="row skjema__panel__rad"
     >
       <div
         className="col dato"
@@ -23,32 +23,6 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         >
           Fra og med
         </p>
-      </div>
-      <div
-        className="col dato"
-      >
-        <p
-          className="typo-element"
-        >
-          Til og med
-        </p>
-      </div>
-      <div
-        className="col"
-      >
-        <p
-          className="typo-element"
-        >
-          Er bruker skattepliktig?
-        </p>
-      </div>
-    </div>
-    <div
-      className="row skatteforholdsperiode"
-    >
-      <div
-        className="col dato"
-      >
         <div
           name="skatteforholdsperioder[0].fomDato"
           onBlur={[Function]}
@@ -126,6 +100,11 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
       <div
         className="col dato"
       >
+        <p
+          className="typo-element"
+        >
+          Til og med
+        </p>
         <div
           name="skatteforholdsperioder[0].tomDato"
           onBlur={[Function]}
@@ -201,55 +180,64 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         </div>
       </div>
       <div
-        className="col radioknapp_gruppe"
+        className="col"
       >
-        <div
-          className="skjemaelement"
+        <p
+          className="typo-element"
         >
-          <input
-            aria-invalid={false}
-            checked={false}
-            className="skjemaelement__input radioknapp"
-            disabled={false}
-            id="123"
-            name="skatteforholdsperioder[0].skatteplikttype"
-            onBlur={[Function]}
-            onChange={[Function]}
-            type="radio"
-            value="SKATTEPLIKTIG"
-          />
-          <label
-            className="skjemaelement__label"
-            htmlFor="123"
-          >
-            Ja
-          </label>
-        </div>
+          Er bruker skattepliktig?
+        </p>
         <div
-          className="skjemaelement"
+          className="radioknapp_gruppe"
         >
-          <input
-            aria-invalid={false}
-            checked={false}
-            className="skjemaelement__input radioknapp"
-            disabled={false}
-            id="123"
-            name="skatteforholdsperioder[0].skatteplikttype"
-            onBlur={[Function]}
-            onChange={[Function]}
-            type="radio"
-            value="IKKE_SKATTEPLIKTIG"
-          />
-          <label
-            className="skjemaelement__label"
-            htmlFor="123"
+          <div
+            className="skjemaelement"
           >
-            Nei
-          </label>
+            <input
+              aria-invalid={false}
+              checked={false}
+              className="skjemaelement__input radioknapp"
+              disabled={false}
+              id="123"
+              name="skatteforholdsperioder[0].skatteplikttype"
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="radio"
+              value="SKATTEPLIKTIG"
+            />
+            <label
+              className="skjemaelement__label"
+              htmlFor="123"
+            >
+              Ja
+            </label>
+          </div>
+          <div
+            className="skjemaelement"
+          >
+            <input
+              aria-invalid={false}
+              checked={false}
+              className="skjemaelement__input radioknapp"
+              disabled={false}
+              id="123"
+              name="skatteforholdsperioder[0].skatteplikttype"
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="radio"
+              value="IKKE_SKATTEPLIKTIG"
+            />
+            <label
+              className="skjemaelement__label"
+              htmlFor="123"
+            >
+              Nei
+            </label>
+          </div>
         </div>
       </div>
       <div
-        className="col slett"
+        className="col slett slett__first"
       >
         <button
           aria-label="Slett skatteforhold"
@@ -277,7 +265,7 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
       </div>
     </div>
     <div
-      className="row skatteforholdsperiode"
+      className="row skjema__panel__rad"
     >
       <div
         className="col dato"
@@ -434,51 +422,55 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
         </div>
       </div>
       <div
-        className="col radioknapp_gruppe"
+        className="col"
       >
         <div
-          className="skjemaelement"
+          className="radioknapp_gruppe"
         >
-          <input
-            aria-invalid={false}
-            checked={false}
-            className="skjemaelement__input radioknapp"
-            disabled={false}
-            id="123"
-            name="skatteforholdsperioder[1].skatteplikttype"
-            onBlur={[Function]}
-            onChange={[Function]}
-            type="radio"
-            value="SKATTEPLIKTIG"
-          />
-          <label
-            className="skjemaelement__label"
-            htmlFor="123"
+          <div
+            className="skjemaelement"
           >
-            Ja
-          </label>
-        </div>
-        <div
-          className="skjemaelement"
-        >
-          <input
-            aria-invalid={false}
-            checked={false}
-            className="skjemaelement__input radioknapp"
-            disabled={false}
-            id="123"
-            name="skatteforholdsperioder[1].skatteplikttype"
-            onBlur={[Function]}
-            onChange={[Function]}
-            type="radio"
-            value="IKKE_SKATTEPLIKTIG"
-          />
-          <label
-            className="skjemaelement__label"
-            htmlFor="123"
+            <input
+              aria-invalid={false}
+              checked={false}
+              className="skjemaelement__input radioknapp"
+              disabled={false}
+              id="123"
+              name="skatteforholdsperioder[1].skatteplikttype"
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="radio"
+              value="SKATTEPLIKTIG"
+            />
+            <label
+              className="skjemaelement__label"
+              htmlFor="123"
+            >
+              Ja
+            </label>
+          </div>
+          <div
+            className="skjemaelement"
           >
-            Nei
-          </label>
+            <input
+              aria-invalid={false}
+              checked={false}
+              className="skjemaelement__input radioknapp"
+              disabled={false}
+              id="123"
+              name="skatteforholdsperioder[1].skatteplikttype"
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="radio"
+              value="IKKE_SKATTEPLIKTIG"
+            />
+            <label
+              className="skjemaelement__label"
+              htmlFor="123"
+            >
+              Nei
+            </label>
+          </div>
         </div>
       </div>
       <div
