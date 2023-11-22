@@ -315,9 +315,10 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
         </div>
       )}
 
-      {visModal && ( // TODO: Design på modal
+      {visModal && (
         <Nav.Modal
           isOpen
+          className="er_du_sikker_modal"
           contentLabel="Er du sikker?"
           onRequestClose={lukkModal}
           closeButton={false}
@@ -325,7 +326,7 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
           ariaHideApp
         >
           <Nav.Typo.Systemtittel>Er du sikker?</Nav.Typo.Systemtittel>
-          <Nav.Typo.Normaltekst>
+          <Nav.Typo.Normaltekst className="modalTekst">
             Er du sikker på at du vil fjerne fullmektig for betaling av trygdeavgift? I så fall endres mottaker av
             eventuelle nye fakturaer når du avslutter denne behandlingen.
           </Nav.Typo.Normaltekst>
