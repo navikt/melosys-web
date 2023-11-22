@@ -1,5 +1,4 @@
-import { connect, ConnectedProps, useDispatch } from "react-redux";
-import { RootState } from "AppTypes";
+import { useDispatch, useSelector } from "react-redux";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -20,24 +19,35 @@ import RedigererFullmektig from "./redigererFullmektig";
 import LagretFullmektig from "./lagretFullmektig";
 import { AdresseOgFeil, FieldArrayProps, Fullmektig, Type } from "./types";
 import { menypanelOperations } from "../../../../ducks/menypanel";
+import Knapperad from "../../../knapperad";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
+const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
+const { HENVENDELSE, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 
-const mapStateToProps = (state: RootState) => ({
-  saksnummer: fagsakSelectors.SaksnummerSelector(state),
-});
-
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type FullmektigeProps = PropsFromRedux & {
+type FullmektigeProps = {
   redigerbart: boolean;
 };
 
-const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
+const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
   const dispatch = useDispatch();
+  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
+  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  // const { harBehandlingMedTrygdeavgift } = useAsyncCallbackState(
+  //   () => Api.Fagsaker.fagsak.hentTrygdeavgiftOppsummering(saksnummer),
+  //   { harBehandlingMedTrygdeavgift: false },
+  //   []
+  // );
+  const harBehandlingMedTrygdeavgift = true;
+
   const [redigerer, setRedigerer] = useState(false);
   const [pending, setPending] = useState(false);
+  const [visModal, setVisModal] = useState(false);
+  const [modalFunksjon, setModalFunksjon] = useState<(sjekk: boolean) => void>(() => () => {});
+  const harBehandlingstypeSomSkalSjekkes = [HENVENDELSE, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(
+    behandlingstype
+  );
 
   const {
     control,
@@ -155,13 +165,33 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     });
   };
 
-  const handleLagre = async () => {
+  const originalAktørHarFullmaktTrygdeavgift = (fullmektig: Fullmektig): boolean => {
+    return fullmektig.originalAktør?.fullmakter?.includes(FULLMEKTIG_TRYGDEAVGIFT) ?? false;
+  };
+
+  const handleLagre = async (sjekkEndretFullmakt: boolean = true) => {
     if (!isValid) {
       formValues.fullmektige.forEach((_it: Fullmektig, index: number) => {
         trigger(`fullmektige[${index}].fullmakter`);
       });
       return;
     }
+
+    const fullmektigMedBetalingHarForsvunnet = formValues.fullmektige.some(
+      (fullmektig: Fullmektig) =>
+        originalAktørHarFullmaktTrygdeavgift(fullmektig) && !fullmektig.fullmakter?.includes(FULLMEKTIG_TRYGDEAVGIFT)
+    );
+    const skalViseErDuSikkerModal =
+      sjekkEndretFullmakt &&
+      harBehandlingMedTrygdeavgift &&
+      harBehandlingstypeSomSkalSjekkes &&
+      fullmektigMedBetalingHarForsvunnet;
+    if (skalViseErDuSikkerModal) {
+      setModalFunksjon(() => () => handleLagre());
+      setVisModal(true);
+      return;
+    }
+
     setPending(true);
     // eslint-disable-next-line no-restricted-syntax
     for (const fullmektig of formValues.fullmektige) {
@@ -191,22 +221,41 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       setRedigerer(false);
       dispatch(menypanelOperations.setErFullmektigEndret(true));
     });
+    setVisModal(false);
   };
 
-  const handleSlett = (index: number) => {
-    const { fullmektige } = formValues;
-    if (fullmektige[index].databaseID) {
+  const handleSlett = (index: number, sjekkEndretFullmakt: boolean = true) => {
+    const fullmektigSomSkalSlettes = formValues.fullmektige[index];
+
+    const skalViseErDuSikkerModal =
+      sjekkEndretFullmakt &&
+      harBehandlingMedTrygdeavgift &&
+      harBehandlingstypeSomSkalSjekkes &&
+      originalAktørHarFullmaktTrygdeavgift(fullmektigSomSkalSlettes);
+    if (skalViseErDuSikkerModal) {
+      setModalFunksjon(() => (sjekk: boolean) => handleSlett(index, sjekk));
+      setVisModal(true);
+      return;
+    }
+
+    if (fullmektigSomSkalSlettes.databaseID) {
       Api.Fagsaker.aktoer
-        .slett(fullmektige[index].databaseID)
+        .slett(fullmektigSomSkalSlettes.databaseID)
         .then(() => dispatch(menypanelOperations.setErFullmektigEndret(true)));
     }
-    if (fullmektige[index].harLagretKontaktperson) {
-      Api.Fagsaker.kontaktopplysninger.slett(saksnummer, fullmektige[index].originalAktør?.orgnr);
+    if (fullmektigSomSkalSlettes.harLagretKontaktperson) {
+      Api.Fagsaker.kontaktopplysninger.slett(saksnummer, fullmektigSomSkalSlettes.originalAktør?.orgnr);
     }
-    if (fullmektige.length === 1) {
+    if (formValues.fullmektige.length === 1) {
       setRedigerer(false);
     }
     remove(index);
+    setVisModal(false);
+  };
+
+  const lukkModal = () => {
+    setModalFunksjon(() => () => {});
+    setVisModal(false);
   };
 
   const visLeggTilKnapp = redigerbart && !redigerer && Utils._isEmpty(formValues?.fullmektige);
@@ -252,7 +301,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       )}
       {redigerer && (
         <div>
-          <Nav.Hovedknapp onClick={handleLagre} className="lagre_knapp" spinner={pending} autoDisableVedSpinner>
+          <Nav.Hovedknapp onClick={() => handleLagre()} className="lagre_knapp" spinner={pending} autoDisableVedSpinner>
             Lagre
           </Nav.Hovedknapp>
           <Nav.Flatknapp
@@ -265,8 +314,32 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
           </Nav.Flatknapp>
         </div>
       )}
+
+      {visModal && (
+        <Nav.Modal
+          isOpen
+          contentLabel="Er du sikker?"
+          onRequestClose={lukkModal}
+          closeButton={false}
+          shouldCloseOnOverlayClick
+          ariaHideApp
+        >
+          <Nav.Typo.Systemtittel>Er du sikker?</Nav.Typo.Systemtittel>
+          <Nav.Typo.Normaltekst>
+            Er du sikker på at du vil fjerne fullmektig for betaling av trygdeavgift? I så fall endres mottaker av
+            eventuelle nye fakturaer når du avslutter denne behandlingen.
+          </Nav.Typo.Normaltekst>
+          <Knapperad
+            bekreft={() => modalFunksjon(false)}
+            bekreftTekst="Bekreft"
+            avbryt={lukkModal}
+            avbrytTekst="Avbryt"
+            redigerbart
+          />
+        </Nav.Modal>
+      )}
     </div>
   );
 };
 
-export default connector(Fullmektige);
+export default Fullmektige;
