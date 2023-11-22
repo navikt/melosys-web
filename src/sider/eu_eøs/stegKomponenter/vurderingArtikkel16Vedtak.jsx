@@ -370,7 +370,7 @@ export const VurderingArtikkel16Vedtak = ({
   mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
 
   useEffect(() => {
     /**
@@ -418,22 +418,24 @@ export const VurderingArtikkel16Vedtak = ({
     };
   };
 
-  useEffect(() => {
-    async function kontroller() {
-      if (redigerbart && mottatteOpplysningerStatus === "OK" && aktivtSteg && formIsValid) {
-        setVedtakPending(true);
-        await kontrollerFerdigbehandling({
-          behandlingID,
-          vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-          behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-          skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
-        });
-        setOppdaterFoerKontroll(false);
-        setVedtakPending(false);
-      }
+  async function kontroller(data) {
+    if (redigerbart && data.mottatteOpplysningerStatus === "OK" && data.aktivtSteg && data.formIsValid) {
+      setVedtakPending(true);
+      const request = {
+        behandlingID,
+        vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+        skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
+      };
+      setOppdaterFørKontroll(false);
+      await kontrollerFerdigbehandling(request);
+      setVedtakPending(false);
     }
+  }
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 250), [kontrollerFerdigbehandling]);
 
-    kontroller();
+  useEffect(() => {
+    debouncedKontrollerBehandling({ aktivtSteg, formValues, mottatteOpplysningerStatus, formIsValid });
   }, [aktivtSteg, formIsValid, mottatteOpplysningerStatus]);
 
   const vedKlikk = async () => {

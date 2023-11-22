@@ -53,7 +53,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
@@ -63,13 +63,14 @@ export const VurderingArtikkel13_x_vedtak = ({
   const kontrollerBehandling = async (data) => {
     if (redigerbart && data.mottatteOpplysningerStatus === "OK" && data.aktivtSteg && data.formIsValid) {
       setVedtakPending(true);
-      await kontrollerFerdigbehandling({
+      const request = {
         behandlingID,
         vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
-        skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
-      });
-      setOppdaterFoerKontroll(false);
+        skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
+      };
+      setOppdaterFørKontroll(false);
+      await kontrollerFerdigbehandling(request);
       setVedtakPending(false);
     }
   };
@@ -91,7 +92,7 @@ export const VurderingArtikkel13_x_vedtak = ({
     if (isoTomDato) {
       oppdaterLovvalgsperiode(lovvalgsperiode.fomDato, isoTomDato);
     }
-    debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues });
+    debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues, mottatteOpplysningerStatus });
   }, [formValues?.tomDato]);
 
   const gjenopprettOpprinneligLovvalgsperiode = () => {

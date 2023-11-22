@@ -113,7 +113,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
   const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
-  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
+  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
   const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
 
@@ -262,26 +262,24 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     };
   };
 
-  const lagKontrollerFerdigbehandlingDto = () => {
-    return {
-      behandlingID,
-      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
-      skalRegisteropplysningerOppdateres: oppdaterFoerKontroll,
-    };
-  };
+  async function kontroller(data: any) {
+    if (data.aktivtSteg && redigerbart && data.mottatteOpplysningerStatus === "OK") {
+      setVedtakPending(true);
+      const request = {
+        behandlingID,
+        vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
+        skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
+      };
+      setOppdaterFørKontroll(false);
+      await kontrollerFerdigbehandling(request);
+      setVedtakPending(false);
+    }
+  }
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 250), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
-    async function kontroller() {
-      if (aktivtSteg && redigerbart && mottatteOpplysningerStatus === "OK") {
-        setVedtakPending(true);
-        await kontrollerFerdigbehandling(lagKontrollerFerdigbehandlingDto());
-        setOppdaterFoerKontroll(false);
-        setVedtakPending(false);
-      }
-    }
-
-    kontroller();
+    debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, formValues });
   }, [aktivtSteg, redigerbart, mottatteOpplysningerStatus]);
 
   const onSubmit = async () => {
