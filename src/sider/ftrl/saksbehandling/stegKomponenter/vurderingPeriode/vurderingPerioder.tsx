@@ -6,7 +6,6 @@ import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
-import * as Ikoner from "../../../../../resources/images";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
@@ -21,7 +20,7 @@ import {
 import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 
-import { PeriodeElementer } from "./komponenter/periodeElementer";
+import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
 import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
 import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
@@ -220,13 +219,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     <div className="vurderingPerioder">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Medlemskapsperioder</Nav.Typo.Innholdstittel>
 
-      <Nav.Typo.Normaltekst>
-        {behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
-          ? "Ved ny vurdering vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer eller legg til en ny periode."
-          : "Vurder og eventuelt juster de foreslåtte medlemskapsperioden(e)."}
-      </Nav.Typo.Normaltekst>
-
-      <PeriodeElementer
+      <Medlemskapsperioder
         trygdedekninger={trygdedekninger}
         innvilgelsesResultater={innvilgelsesResultater}
         control={control}
@@ -235,15 +228,10 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         redigerbart={redigerbart}
         formIsValid={stegErGyldig}
         handleChange={debouncedLagreMedlemskapsperioder}
+        handleLeggTil={handleLeggTil}
+        visLeggTil={visLeggTilNyPeriode}
+        behandlingstype={behandlingstype}
       />
-
-      {visLeggTilNyPeriode && (
-        <div className="leggTilKnapp" title="Legg til ny periode">
-          <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add}>
-            Legg til periode
-          </Mui.Lenkeknapp>
-        </div>
-      )}
 
       {feltErFyltInn && <Feilmelding type={aktivFeilmeldingType} />}
 

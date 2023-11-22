@@ -8,7 +8,8 @@ import * as Nav from "../../../../../../navFrontend";
 import * as Mui from "../../../../../../felleskomponenter/ui";
 
 import { FieldArrayProps, MedlemskapsperiodeProp } from "./types";
-import "./periodeElementer.css";
+import "./medlemskapsperioder.css";
+import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
@@ -19,9 +20,12 @@ export interface PeriodeElementerProps {
   handleSlett: (index: number) => void;
   handleChange: (medlemskapsperiode: MedlemskapsperiodeProp[], isValid: boolean, index: number) => void;
   formIsValid: boolean;
+  handleLeggTil: () => void;
+  visLeggTil: boolean;
+  behandlingstype: string;
 }
 
-export const PeriodeElementer = ({
+export const Medlemskapsperioder = ({
   redigerbart,
   trygdedekninger,
   innvilgelsesResultater,
@@ -30,31 +34,28 @@ export const PeriodeElementer = ({
   handleSlett,
   formIsValid,
   handleChange,
+  handleLeggTil,
+  visLeggTil,
+  behandlingstype,
 }: PeriodeElementerProps) => {
   const kanSlettePeriode = redigerbart && fields.length !== 1;
 
   return (
-    <div className="wrapper_periodeelementer">
-      <Nav.Fieldset legend="">
-        <Nav.Row className="periodeelementer">
-          <Nav.Column className="fomDato">
-            <Nav.Typo.Element>Fra og med</Nav.Typo.Element>
-          </Nav.Column>
-          <Nav.Column>
-            <Nav.Typo.Element>Til og med</Nav.Typo.Element>
-          </Nav.Column>
-          <Nav.Column className="trygdedekning">
-            <Nav.Typo.Element>Trygdedekning</Nav.Typo.Element>
-          </Nav.Column>
-          <Nav.Column>
-            <Nav.Typo.Element>Resultat</Nav.Typo.Element>
-          </Nav.Column>
-        </Nav.Row>
-
+    <div className="medlemskapsperioder">
+      <LabelMedHjelpetekst
+        className="medlemskapsperioder__label"
+        label={
+          behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
+            ? "Ved ny vurdering vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer eller legg til en ny periode."
+            : "Vurder og eventuelt juster de foreslåtte medlemskapsperioden(e)."
+        }
+      />
+      <div className="skjema__panel">
         {fields?.map((field, index) => (
           <div key={field.id}>
-            <Nav.Row className="periodeelementer">
-              <Nav.Column className="fomDato">
+            <Nav.Row className="skjema__panel__rad">
+              <Nav.Column className="dato">
+                {index === 0 ? <Nav.Typo.Element>Fra og med</Nav.Typo.Element> : null}
                 <Forms.Datovelger
                   control={control}
                   name={`medlemskapsperioder[${index}].fomDato`}
@@ -63,7 +64,8 @@ export const PeriodeElementer = ({
                   onChange={(value) => handleChange([{ ...field, fomDato: value }], formIsValid, index)}
                 />
               </Nav.Column>
-              <Nav.Column>
+              <Nav.Column className="dato">
+                {index === 0 ? <Nav.Typo.Element>Til og med</Nav.Typo.Element> : null}
                 <Forms.Datovelger
                   control={control}
                   name={`medlemskapsperioder[${index}].tomDato`}
@@ -73,6 +75,7 @@ export const PeriodeElementer = ({
                 />
               </Nav.Column>
               <Nav.Column className="trygdedekning">
+                {index === 0 ? <Nav.Typo.Element>Trygdedekning</Nav.Typo.Element> : null}
                 <Forms.Select
                   name={`medlemskapsperioder[${index}].trygdedekning`}
                   aria-label={`Trygdedekning periode ${index + 1}`}
@@ -89,6 +92,7 @@ export const PeriodeElementer = ({
                 </Forms.Select>
               </Nav.Column>
               <Nav.Column>
+                {index === 0 ? <Nav.Typo.Element>Resultat</Nav.Typo.Element> : null}
                 <Forms.Select
                   name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
                   aria-label={`Resultat periode ${index + 1}`}
@@ -106,11 +110,11 @@ export const PeriodeElementer = ({
                     ))}
                 </Forms.Select>
               </Nav.Column>
-              <Nav.Column className="slett">
-                {kanSlettePeriode && (
+              {kanSlettePeriode && (
+                <Nav.Column className={index === 0 ? "slett slett__first" : "slett"}>
                   <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => handleSlett(index)} ariaLabel="Slett periode" />
-                )}
-              </Nav.Column>
+                </Nav.Column>
+              )}
             </Nav.Row>
             {field.feil && (
               <Nav.AlertStripe type="feil" className="medlemskapsperiodeFeil">
@@ -119,7 +123,14 @@ export const PeriodeElementer = ({
             )}
           </div>
         ))}
-      </Nav.Fieldset>
+        {visLeggTil && (
+          <Nav.Row className="skillestrek">
+            <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add}>
+              Legg til periode
+            </Mui.Lenkeknapp>
+          </Nav.Row>
+        )}
+      </div>
     </div>
   );
 };
