@@ -327,7 +327,7 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
         >
           <Nav.Typo.Systemtittel>Er du sikker?</Nav.Typo.Systemtittel>
           <Nav.Typo.Normaltekst className="modalTekst">
-            Er du sikker på at du vil fjerne fullmektig for betaling av trygdeavgift? I så fall endres mottaker av
+            Er du sikker på at du vil fjerne/endre fullmektig for betaling av trygdeavgift? I så fall endres mottaker av
             eventuelle nye fakturaer når du avslutter denne behandlingen.
           </Nav.Typo.Normaltekst>
           <Knapperad
