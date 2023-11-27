@@ -97,11 +97,13 @@ Fagsak.propTypes = {
   sak: MPT.BehandligOversikt,
   folketrygdenToggleEnabled: PT.bool,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  manglendeInnbetalingToggleEnabled: PT.bool,
 };
 
 Fagsak.defaultProps = {
   sak: {},
   folketrygdenToggleEnabled: undefined,
+  manglendeInnbetalingToggleEnabled: undefined,
 };
 
 export default Fagsak;

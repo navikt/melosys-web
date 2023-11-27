@@ -161,11 +161,13 @@ BehandlingOppgave.propTypes = {
   sak: MPT.SaksbehandlingOppgave,
   folketrygdenToggleEnabled: PT.bool,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  manglendeInnbetalingToggleEnabled: PT.bool,
 };
 
 BehandlingOppgave.defaultProps = {
   sak: {},
   folketrygdenToggleEnabled: undefined,
+  manglendeInnbetalingToggleEnabled: undefined,
 };
 
 export default BehandlingOppgave;

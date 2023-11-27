@@ -18,6 +18,8 @@ export const send = (behandlingID: number, avklartefakta: Avklartfakta[]): Promi
 
 interface Oppsummering {
   virksomheter: string[];
+  arbeidsland: string[];
+  fullstendingManglendeInnbetaling: boolean;
 }
 
 export const hentOppsummering = (behandlingID: number): Promise<Oppsummering> =>
@@ -31,8 +33,18 @@ export type Arbeidsland = {
   arbeidsland: string[];
 };
 
+export type FullstendigManglendeInnbetaling = {
+  fullstendigManglendeInnbetaling?: boolean;
+};
+
 export const sendVirksomheter = (behandlingID: number, virksomheter: Virksomheter): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/virksomheter`, virksomheter);
 
 export const sendArbeidsland = (behandlingID: number, arbeidsland: Arbeidsland): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/arbeidsland`, arbeidsland);
+
+export const sendInnbetalingsstatus = (
+  behandlingID: number,
+  fullstendigManglendeInnbetaling?: boolean
+): Promise<Oppsummering> =>
+  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/innbetalingsstatus`, fullstendigManglendeInnbetaling);

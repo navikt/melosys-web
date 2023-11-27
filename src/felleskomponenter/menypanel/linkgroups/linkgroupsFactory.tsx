@@ -31,6 +31,7 @@ interface LinkGroupsConfig {
   contentProps: ContentProps;
   sakstema: string;
   folketrygdenToggleEnabled: boolean | undefined;
+  manglendeInnbetalingToggleEnabled: boolean | undefined;
 }
 
 class LinkGroupsFactory {
@@ -42,8 +43,18 @@ class LinkGroupsFactory {
     behandlingstype,
     sakstema,
     folketrygdenToggleEnabled,
+    manglendeInnbetalingToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)) {
+    if (
+      skalViseIngenFlyt(
+        sakstype,
+        sakstema,
+        behandlingstema,
+        behandlingstype,
+        folketrygdenToggleEnabled,
+        manglendeInnbetalingToggleEnabled
+      )
+    ) {
       const linkBuilder = new LinksBuilder(contentProps).addFullmektig();
 
       if (behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {

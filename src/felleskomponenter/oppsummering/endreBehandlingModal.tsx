@@ -150,7 +150,14 @@ function EndreBehandlingModal({
 
     if (
       sakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE ||
-      Routing.skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)
+      Routing.skalViseIngenFlyt(
+        sakstype,
+        sakstema,
+        behandlingstema,
+        behandlingstype,
+        folketrygdenToggleEnabled,
+        manglendeInnbetalingToggleEnabled
+      )
     ) {
       await Api.Trygdeavtale.slettFlyt(behandlingID);
     } else {

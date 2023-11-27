@@ -26,6 +26,16 @@ import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPeri
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 
+const hentLabelTekst = (behandlingstype: string) => {
+  if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING) {
+    return "Ved ny vurdering vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer eller legg til en ny periode.";
+  }
+  if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
+    return "Ved manglende innbetaling vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer og forkort medlemskapsperioden(e).";
+  }
+  return "Vurder og eventuelt juster de foreslåtte medlemskapsperioden(e).";
+};
+
 const kallFeilet = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
 
 const mapFeil = (response: any) => response?.data?.message || response.data;
@@ -219,6 +229,8 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     <div className="vurderingPerioder">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Medlemskapsperioder</Nav.Typo.Innholdstittel>
 
+      <Nav.Typo.Normaltekst>{hentLabelTekst(behandlingstype)}</Nav.Typo.Normaltekst>
+
       <Medlemskapsperioder
         trygdedekninger={trygdedekninger}
         innvilgelsesResultater={innvilgelsesResultater}
@@ -230,7 +242,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         handleChange={debouncedLagreMedlemskapsperioder}
         handleLeggTil={handleLeggTil}
         visLeggTil={visLeggTilNyPeriode}
-        behandlingstype={behandlingstype}
       />
 
       {feltErFyltInn && <Feilmelding type={aktivFeilmeldingType} />}
