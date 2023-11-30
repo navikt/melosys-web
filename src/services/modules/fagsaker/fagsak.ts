@@ -76,6 +76,10 @@ export interface EndreSakDto {
   mottaksdato?: string | null;
 }
 
+export interface TrygdeavgiftOppsummering {
+  harBehandlingMedTrygdeavgift: boolean;
+}
+
 export const hentMuligeSakstemaer = (saksnummer: string) =>
   getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstemaer`);
 
@@ -87,3 +91,6 @@ export const endreFagsak = (saksnummer: string, body: EndreSakDto) =>
 
 export const ferdigbehandleSak = (saksnummer: string) =>
   putAsText(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/ferdigbehandle`);
+
+export const hentTrygdeavgiftOppsummering = (saksnummer: string): Promise<TrygdeavgiftOppsummering> =>
+  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/trygdeavgift/oppsummering`);
