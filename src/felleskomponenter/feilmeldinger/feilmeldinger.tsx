@@ -9,51 +9,65 @@ import * as Utils from "../../utils";
 import "./feilmelding.css";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { kontrollSelectors } from "../../ducks/kontroll";
+import { useMemo } from "react";
 
-type feilmeldingerProps = {
+interface FeilmeldingerProps {
   className?: string;
   exclude?: string[];
-};
+}
 
-export default ({ className, exclude }: feilmeldingerProps) => {
-  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+interface Feilkode {
+  kode: string;
+  type: string;
+}
 
-  if (Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil)) {
+const Feilmeldinger = ({ className, exclude = [] }: FeilmeldingerProps) => {
+  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector); // inferred as (string | Feilkode)[]
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector); // inferred as (string | Feilkode)[]
+
+  const { filteredErrors, warnings } = useMemo(() => {
+    if (Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil)) {
+      return { filteredErrors: [], warnings: [] };
+    }
+
+    const filteredErrors = kontrollfeil
+      .concat(feilmeldinger)
+      .filter((value) => !exclude?.includes(value.kode))
+      .filter((value) => value.type !== "ADVARSEL");
+    const warnings = kontrollfeil
+      .concat(feilmeldinger)
+      .filter((value) => !exclude?.includes(value.kode))
+      .filter((value) => value.type === "ADVARSEL");
+
+    return { filteredErrors, warnings };
+  }, [feilmeldinger, kontrollfeil, exclude]);
+
+  if (Utils._isEmpty(filteredErrors) && Utils._isEmpty(warnings)) {
     return null;
   }
 
-  const renderInnhold = () => {
-    if (typeof feilmeldinger === "string") {
-      return feilmeldinger;
-    }
-
-    const filtrerteFeilmeldinger = kontrollfeil.concat(feilmeldinger).filter((value) => !exclude?.includes(value.kode));
-
-    if (filtrerteFeilmeldinger.length === 0) {
-      return null;
-    }
-
-    if (filtrerteFeilmeldinger.length === 1) {
-      return KV.kodeTilTerm(filtrerteFeilmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
-    }
-    return (
-      <ul className="feilkoder__liste">
-        {filtrerteFeilmeldinger.map((feil) => (
-          <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
-        ))}
-      </ul>
-    );
-  };
+  const renderErrorList = (errors: (string | Feilkode)[]) => (
+    <ul className="feilkoder__liste">
+      {errors.map((feil, index) => {
+        const key = typeof feil === "string" ? index : feil.kode;
+        const displayText =
+          typeof feil === "string" ? feil : KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+        return <li key={key}>{displayText}</li>;
+      })}
+    </ul>
+  );
 
   const classNameFeilmeldinger = classNames("feilmelding", className);
-  const innhold = renderInnhold();
-  if (!innhold) {
-    return null;
-  }
   return (
     <div className={classNameFeilmeldinger}>
-      <Nav.AlertStripeFeil className="varselstripe">{innhold}</Nav.AlertStripeFeil>
+      {filteredErrors.length > 0 && (
+        <Nav.AlertStripeFeil className="varselstripe">{renderErrorList(filteredErrors)}</Nav.AlertStripeFeil>
+      )}
+      {warnings.length > 0 && (
+        <Nav.AlertStripeAdvarsel className="varselstripe">{renderErrorList(warnings)}</Nav.AlertStripeAdvarsel>
+      )}
     </div>
   );
 };
+
+export default Feilmeldinger;
