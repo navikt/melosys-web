@@ -23,12 +23,15 @@ export default ({ className, exclude }: feilmeldingerProps) => {
     return null;
   }
 
-  const renderInnhold = () => {
+  const renderFiltrerteFeilmeldinger = () => {
     if (typeof feilmeldinger === "string") {
       return feilmeldinger;
     }
 
-    const filtrerteFeilmeldinger = kontrollfeil.concat(feilmeldinger).filter((value) => !exclude?.includes(value.kode));
+    const filtrerteFeilmeldinger = kontrollfeil
+      .concat(feilmeldinger)
+      .filter((value) => !exclude?.includes(value.kode))
+      .filter((value) => value.type !== "ADVARSEL");
 
     if (filtrerteFeilmeldinger.length === 0) {
       return null;
@@ -46,14 +49,45 @@ export default ({ className, exclude }: feilmeldingerProps) => {
     );
   };
 
+  const renderAdvarsler = () => {
+    if (typeof feilmeldinger === "string") {
+      return feilmeldinger;
+    }
+
+    const advarsler = kontrollfeil
+      .concat(feilmeldinger)
+      .filter((value) => !exclude?.includes(value.kode))
+      .filter((value) => value.type === "ADVARSEL");
+
+    if (advarsler.length === 0) {
+      return null;
+    }
+
+    return (
+      <ul className="advarsler__liste">
+        {advarsler.map((adv) => (
+          <li key={adv.kode}>{KV.kodeTilTerm(adv.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
+        ))}
+      </ul>
+    );
+  };
+
   const classNameFeilmeldinger = classNames("feilmelding", className);
-  const innhold = renderInnhold();
-  if (!innhold) {
+  const filtrerteFeilmeldingerContent = renderFiltrerteFeilmeldinger();
+  const advarslerContent = renderAdvarsler();
+
+  if (!filtrerteFeilmeldingerContent && !advarslerContent) {
     return null;
   }
+
   return (
     <div className={classNameFeilmeldinger}>
-      <Nav.AlertStripeFeil className="varselstripe">{innhold}</Nav.AlertStripeFeil>
+      {filtrerteFeilmeldingerContent && (
+        <Nav.AlertStripeFeil className="varselstripe">{filtrerteFeilmeldingerContent}</Nav.AlertStripeFeil>
+      )}
+      {advarslerContent && (
+        <Nav.AlertStripeAdvarsel className="advarsler-container">{advarslerContent}</Nav.AlertStripeAdvarsel>
+      )}
     </div>
   );
 };
