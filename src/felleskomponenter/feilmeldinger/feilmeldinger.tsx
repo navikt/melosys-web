@@ -63,6 +63,10 @@ export default ({ className, exclude }: feilmeldingerProps) => {
       return null;
     }
 
+    if (advarsler.length === 1) {
+      return KV.kodeTilTerm(advarsler[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+    }
+
     return (
       <ul className="advarsler__liste">
         {advarsler.map((adv) => (
