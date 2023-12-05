@@ -131,14 +131,11 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
 
   const onSubmit = async () => {
     setVedtakPending(true);
-    // @ts-ignore
-    dispatch(
-      vedtakOperations.fatt(behandlingID, lagFattVedtakFTRLReqDto()).then((res) => {
-        if (res.data?.data?.error) {
-          setVedtakPending(false);
-        }
-      })
-    );
+    dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakFTRLReqDto()));
+    /* TODO: Fiks typescript issue med useDispatch og thunks og flytt settVedtakPending(false) inn dersom api kallet feiler
+    https://stackoverflow.com/questions/66486348/dispatch-is-not-returning-a-promise-using-redux-thunk-with-typescript
+    */
+    setVedtakPending(false);
   };
 
   const stegErGyldig = redigerbart && formIsValid;
@@ -148,7 +145,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
   return (
     <div className="vurderingVedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Opphøer av frivillig medlemskap etter § 2-15
+        Opphør av frivillig medlemskap etter § 2-15
       </Nav.Typo.Innholdstittel>
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         <LabelMedHjelpetekst

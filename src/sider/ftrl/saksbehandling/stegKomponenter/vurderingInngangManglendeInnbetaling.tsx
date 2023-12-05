@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
@@ -38,7 +38,7 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
   } = useForm({
     resolver: yupResolver(vurdering_inngang_manglende_innbetaling),
     mode: "all",
-    values: useMemo(() => initialValues as FieldValues, [initialValues]),
+    defaultValues: initialValues as FieldValues,
   });
   const formValues = watch();
 
