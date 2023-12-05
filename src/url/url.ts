@@ -82,10 +82,18 @@ export const lagUrl = (
   sakstemaKode: string,
   behandlingstemaKode: string,
   behandlingstypeKode: string,
-  folketrygdenToggleEnabled: boolean | undefined
+  folketrygdenToggleEnabled: boolean | undefined,
+  manglendeInnbetalingToggleEnabled: boolean | undefined
 ) => {
   if (
-    skalViseIngenFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, folketrygdenToggleEnabled)
+    skalViseIngenFlyt(
+      sakstypeKode,
+      sakstemaKode,
+      behandlingstemaKode,
+      behandlingstypeKode,
+      folketrygdenToggleEnabled,
+      manglendeInnbetalingToggleEnabled
+    )
   ) {
     return lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
@@ -123,10 +131,15 @@ export const skalViseIngenFlyt = (
   sakstema: string,
   behandlingstema: string,
   behandlingstype: string,
-  folketrygdenToggleEnabled: boolean = false
+  folketrygdenToggleEnabled: boolean = false,
+  manglendeInnbetalingToggleEnabled: boolean = false
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
+  }
+
+  if (manglendeInnbetalingToggleEnabled && behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
+    return false;
   }
 
   if ([HENVENDELSE, KLAGE, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)) {

@@ -16,7 +16,10 @@ import * as Routing from "../../../../url";
 
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { oppgaverOperations } from "../../../../ducks/oppgaver";
-import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
+} from "../../../../featuretoggle/toggleNavn";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import saksplukkerSchema from "./saksplukkerSchema";
@@ -66,6 +69,7 @@ export const Saksplukker = ({
   const { sakstype, sakstema } = formValues || {};
 
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
 
   useEffect(() => {
     Api.LovligeKombinasjoner.hentSakstyper().then((lovligeSakstyper) => {
@@ -113,7 +117,8 @@ export const Saksplukker = ({
       formValues.sakstema,
       behandlingstema,
       behandlingstype,
-      folketrygdenToggleEnabled
+      folketrygdenToggleEnabled,
+      manglendeInnbetalingToggleEnabled
     );
 
     history.push(redirectURL);

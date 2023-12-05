@@ -33,7 +33,12 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
   const inngangStegErAktivt = aktivtStegIndex === 0;
   const vedtakStegErAktivt = aktuelleSteg[aktivtStegIndex]?.vedtakSteg;
 
-  const hentNesteSteg = (stegPosisjon: number) => alleSteg.find((steg) => steg.stegPosisjon === stegPosisjon + 1);
+  const hentNesteSteg = (stegPosisjon: number, nesteStegId?: string) => {
+    if (nesteStegId) {
+      return alleSteg.find((steg) => steg.id === nesteStegId);
+    }
+    return alleSteg.find((steg) => steg.stegPosisjon === stegPosisjon + 1);
+  };
 
   useEffect(() => {
     setAktuellesteg(
@@ -41,17 +46,19 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
     );
   }, [aktivtStegIndex]);
 
-  const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean) => {
-    const nyeSteg = aktuelleSteg?.map((steg: AktueltSteg) =>
+  // Optional param nesteStegId overstyrer vanlig flyt.
+  const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean, nesteStegId?: string) => {
+    const stegIndex = aktuelleSteg.findIndex((steg) => steg.id === stegId);
+    // Fjerner stegene etter steget som oppdaterer dersom nesteStegId er satt
+    const nyeSteg = (nesteStegId ? aktuelleSteg.slice(0, stegIndex + 1) : aktuelleSteg).map((steg) =>
       steg.id === stegId ? { ...steg, status: isSchemaValid ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET } : steg
     );
-
     const førsteUgyldigeSteg = nyeSteg.find((steg) => steg.status === FANE_STATUS.UBEHANDLET);
 
     if (førsteUgyldigeSteg) {
       nyeSteg.length = førsteUgyldigeSteg.stegPosisjon + 1;
     } else {
-      const nesteSteg = hentNesteSteg(nyeSteg[nyeSteg.length - 1].stegPosisjon);
+      const nesteSteg = hentNesteSteg(nyeSteg[nyeSteg.length - 1].stegPosisjon, nesteStegId);
       if (nesteSteg) nyeSteg.push(nesteSteg);
     }
 

@@ -9,7 +9,10 @@ import { landkoderSelectors } from "../../../../ducks/landkoder";
 
 import { useFeatureToggle } from "../../../../featuretoggle";
 import "./behandlingsoppgaver.css";
-import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
+} from "../../../../featuretoggle/toggleNavn";
 
 const mapStateToProps = (state: RootState) => ({
   mineSaker: oppgaverSelectors.MineSakerSelector(state),
@@ -24,6 +27,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
  */
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
 
   const { saksbehandling } = mineSaker as any;
 
@@ -37,6 +41,7 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
         sortingPath="behandling.registrertDato"
         radioGroupName="behandlingsortering"
         folketrygdenToggleEnabled={folketrygdenToggleEnabled}
+        manglendeInnbetalingToggleEnabled={manglendeInnbetalingToggleEnabled}
         landkoder={landkoder}
       />
     </div>

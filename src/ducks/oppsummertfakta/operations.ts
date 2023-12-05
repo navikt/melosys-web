@@ -20,6 +20,14 @@ export function sendVirksomheter(behandlingID: number, virksomheter: Api.Avklart
   });
 }
 
+export function sendInnbetalingsstatus(behandlingID: number, fullstendigManglendeInnbetaling?: boolean) {
+  return doThenDispatch(() => Api.Avklartefakta.sendInnbetalingsstatus(behandlingID, fullstendigManglendeInnbetaling), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
 export function sendArbeidsland(behandlingID: number, arbeidsland: Api.Avklartefakta.Arbeidsland) {
   return doThenDispatch(() => Api.Avklartefakta.sendArbeidsland(behandlingID, arbeidsland), {
     OK: Types.OK,
