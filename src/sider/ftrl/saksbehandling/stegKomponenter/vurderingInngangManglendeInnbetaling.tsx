@@ -17,7 +17,7 @@ import { inngangSteg, vedtakOpphoerSteg } from "../initialStegArrayManglendeInnb
 interface Props {
   bekreft: () => void;
   aktivtSteg: boolean;
-  oppdaterStatus: (isValid: boolean, nyttStegId?: string) => void;
+  oppdaterStatus: (isValid: boolean, nesteStegId?: string) => void;
 }
 
 export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {

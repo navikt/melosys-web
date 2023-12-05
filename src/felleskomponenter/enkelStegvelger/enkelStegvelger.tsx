@@ -33,9 +33,9 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
   const inngangStegErAktivt = aktivtStegIndex === 0;
   const vedtakStegErAktivt = aktuelleSteg[aktivtStegIndex]?.vedtakSteg;
 
-  const hentNesteSteg = (stegPosisjon: number, nyttStegId?: string) => {
-    if (nyttStegId) {
-      return alleSteg.find((steg) => steg.id === nyttStegId);
+  const hentNesteSteg = (stegPosisjon: number, nesteStegId?: string) => {
+    if (nesteStegId) {
+      return alleSteg.find((steg) => steg.id === nesteStegId);
     }
     return alleSteg.find((steg) => steg.stegPosisjon === stegPosisjon + 1);
   };
@@ -46,10 +46,11 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
     );
   }, [aktivtStegIndex]);
 
-  // Optional param nyttStegId overstyrer vanlig flyt.
-  const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean, nyttStegId?: string) => {
+  // Optional param nesteStegId overstyrer vanlig flyt.
+  const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean, nesteStegId?: string) => {
     const stegIndex = aktuelleSteg.findIndex((steg) => steg.id === stegId);
-    const nyeSteg = (nyttStegId ? aktuelleSteg.slice(0, stegIndex + 1) : aktuelleSteg).map((steg) =>
+    // Fjerner stegene etter steget som oppdaterer dersom nesteStegId er satt
+    const nyeSteg = (nesteStegId ? aktuelleSteg.slice(0, stegIndex + 1) : aktuelleSteg).map((steg) =>
       steg.id === stegId ? { ...steg, status: isSchemaValid ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET } : steg
     );
     const førsteUgyldigeSteg = nyeSteg.find((steg) => steg.status === FANE_STATUS.UBEHANDLET);
@@ -57,7 +58,7 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
     if (førsteUgyldigeSteg) {
       nyeSteg.length = førsteUgyldigeSteg.stegPosisjon + 1;
     } else {
-      const nesteSteg = hentNesteSteg(nyeSteg[nyeSteg.length - 1].stegPosisjon, nyttStegId);
+      const nesteSteg = hentNesteSteg(nyeSteg[nyeSteg.length - 1].stegPosisjon, nesteStegId);
       if (nesteSteg) nyeSteg.push(nesteSteg);
     }
 
