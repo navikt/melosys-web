@@ -81,7 +81,7 @@ const vedtakSteg = {
 export const vedtakOpphoerSteg = {
   id: "VedtakOpphoer",
   tittel: "Vedtak",
-  stegPosisjon: 7,
+  stegPosisjon: 1,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: false,
   vedtakSteg: true,
