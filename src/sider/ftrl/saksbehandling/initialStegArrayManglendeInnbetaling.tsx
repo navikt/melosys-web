@@ -18,6 +18,7 @@ const inngangManglendeInnbetalingSteg = {
   komponent: VurderingInngangManglendeInnbetaling,
 };
 
+// Steg 2 dersom delvis manglende innbetaling
 export const inngangSteg = {
   id: "Inngang",
   tittel: "Inngang",
@@ -26,6 +27,17 @@ export const inngangSteg = {
   aktivtSteg: false,
   vedtakSteg: false,
   komponent: VurderingInngang,
+};
+
+// Steg 2 dersom fullstendig manglende innbetaling
+export const vedtakOpphoerSteg = {
+  id: "VedtakOpphoer",
+  tittel: "Vedtak",
+  stegPosisjon: 1,
+  status: FANE_STATUS.UBEHANDLET,
+  aktivtSteg: false,
+  vedtakSteg: true,
+  komponent: VurderingVedtakOpphoer,
 };
 
 const virksomhetSteg = {
@@ -78,23 +90,13 @@ const vedtakSteg = {
   komponent: VurderingVedtak,
 };
 
-export const vedtakOpphoerSteg = {
-  id: "VedtakOpphoer",
-  tittel: "Vedtak",
-  stegPosisjon: 1,
-  status: FANE_STATUS.UBEHANDLET,
-  aktivtSteg: false,
-  vedtakSteg: true,
-  komponent: VurderingVedtakOpphoer,
-};
-
 export const alleStegManglendeInnbetaling = [
   inngangManglendeInnbetalingSteg,
   inngangSteg,
+  vedtakOpphoerSteg,
   virksomhetSteg,
   bestemmelseSteg,
   periodeSteg,
   trygdeavgiftSteg,
   vedtakSteg,
-  vedtakOpphoerSteg,
 ];
