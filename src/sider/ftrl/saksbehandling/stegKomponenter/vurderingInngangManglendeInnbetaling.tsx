@@ -6,7 +6,7 @@ import * as Forms from "../../../../felleskomponenter/forms";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import "./vurderingInngang.css";
+import "./vurderingInngangManglendeInnbetaling.css";
 import vurdering_inngang_manglende_innbetaling from "./vurderingInngangManglendeInnbetalingSchema";
 import { BOOLSK_STRING } from "../../../../constants";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
@@ -61,12 +61,12 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
   if (!aktivtSteg) return null;
 
   return (
-    <div className="vurderingInngang_ftrl">
+    <div className="vurderingInngangManglendeInnbetaling">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Manglende innbetaling</Nav.Typo.Innholdstittel>
 
       <div className="label__container">
         <Nav.Typo.Normaltekst>
-          Vurder konsekvens av manglende innbetaling. Du må sjekke OEBS for å se om betaling er mottatt innen fristen.
+          Vurder konsekvens av manglende innbetaling. Du må sjekke OeBS for å se om betaling er mottatt innen fristen.
           <br /> Hvis betaling er mottatt og du ikke skal fatte nytt vedtak kan du ferdigstille denne behandlingen.
         </Nav.Typo.Normaltekst>
       </div>
@@ -74,7 +74,11 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
       <Nav.Row className="radioknapp_gruppe__wrapper">
         <Nav.Column className="radioknapp_gruppe">
           <Forms.Radio
-            label="Innbetaling mangler for hele medlemskapsperioden."
+            label={
+              <>
+                Innbetaling mangler for <b>hele</b> medlemskapsperioden.
+              </>
+            }
             name="fullstendigManglendeInnbetaling"
             control={control}
             value={BOOLSK_STRING.SANN}
@@ -82,7 +86,11 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
             onChange={handleChange}
           />
           <Forms.Radio
-            label="Innbetaling mangler for deler av medlemskapsperioden"
+            label={
+              <>
+                Innbetaling mangler for <b>deler</b> av medlemskapsperioden.
+              </>
+            }
             name="fullstendigManglendeInnbetaling"
             control={control}
             value={BOOLSK_STRING.USANN}
