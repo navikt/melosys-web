@@ -1,12 +1,9 @@
 import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
-import { shallow } from "enzyme";
-
-import { Lenkeknapp } from "../ui";
-import * as Nav from "../../navFrontend";
 
 import VedleggVelger from "./vedleggVelger";
 import VedleggVelgerModal from "./vedleggVelgerModal";
+import { render, screen } from "@testing-library/react";
 
 describe("VedleggVelger", () => {
   const mockedProps = mock<ComponentProps<typeof VedleggVelger>>();
@@ -18,18 +15,21 @@ describe("VedleggVelger", () => {
 
   it("rendrer en knapp med tekst 'Legg til vedlegg'", () => {
     props.valgteVedlegg = [];
-    const vedleggVelger = shallow(<VedleggVelger {...props} />);
-
-    expect(vedleggVelger.find(Lenkeknapp).contains("Legg til vedlegg")).toBe(true);
+    render(<VedleggVelger {...props} />);
+    expect(screen.getByRole("button", { name: /legg til vedlegg/i })).toBeInTheDocument();
   });
 });
 
 describe("VedleggVelgerModal", () => {
   const mockedProps = mock<ComponentProps<typeof VedleggVelgerModal>>();
   const props = instance(mockedProps);
+  props.ariaHideApp = false;
+  props.contentLabel = "test";
+  props.valgteVedlegg = [];
+  props.alleVedlegg = [];
 
   it("viser en Nav Modal", () => {
-    const vedleggVelgerModal = shallow(<VedleggVelgerModal {...props} />);
-    expect(vedleggVelgerModal.exists(Nav.Modal)).toBe(true);
+    render(<VedleggVelgerModal {...props} />);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 });

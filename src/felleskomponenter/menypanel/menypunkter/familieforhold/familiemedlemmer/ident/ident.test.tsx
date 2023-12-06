@@ -1,23 +1,14 @@
-import { ComponentProps } from "react";
-import { shallow } from "enzyme";
-import { mock, instance } from "ts-mockito";
-
-import KopierbarTekst from "../../../../../kopierbarTekst";
+import { render, screen } from "@testing-library/react";
 import Ident from "./ident";
 
 describe("Ident", () => {
-  const mockedProps = mock<ComponentProps<typeof Ident>>();
-  let props = instance(mockedProps);
-
-  beforeEach(() => {
-    props = instance(mockedProps);
-  });
-
   it("viser kopierbar ident", () => {
-    props.ident = "fødselsnummer";
+    const props = {
+      ident: "11111111111",
+    };
+    render(<Ident {...props} />);
 
-    const ident = shallow(<Ident {...props} />);
-
-    expect(ident.find(KopierbarTekst).children().text()).toContain("fødselsnummer");
+    const kopierbarTekst = screen.getByText(/11111111111/);
+    expect(kopierbarTekst).toBeInTheDocument();
   });
 });
