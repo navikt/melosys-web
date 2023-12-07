@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp */
 import { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { FieldArray, getFormValues, isValid, reduxForm } from "redux-form";
@@ -21,16 +20,15 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from "../../../utils/dato";
 import DatoOmrade from "../../../felleskomponenter/datoOmrade";
 import Dokumentliste from "../../../felleskomponenter/dokumentliste";
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 import VedleggVelger from "../../../felleskomponenter/vedleggvelger";
 import VedleggTable from "../../../felleskomponenter/vedleggTable";
 import {
-  konverterVilkarTilStegData,
-  lagVilkarbegrunnelse,
   konverterLovvalgsbestemmelseTilStegData,
   konverterUnntakFraBestemmelseTilStegData,
+  konverterVilkarTilStegData,
   lagUnntakFraBestemmelse,
+  lagVilkarbegrunnelse,
 } from "../../../felleskomponenter/stegvelger";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
