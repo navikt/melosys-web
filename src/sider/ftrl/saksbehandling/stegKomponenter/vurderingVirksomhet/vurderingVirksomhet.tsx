@@ -6,17 +6,17 @@ import { Action } from "redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 
-import * as Nav from "../../../../navFrontend";
-import * as Mui from "../../../../felleskomponenter/ui";
-import * as Api from "../../../../services/api";
-import * as Utils from "../../../../utils";
+import * as Nav from "../../../../../navFrontend";
+import * as Mui from "../../../../../felleskomponenter/ui";
+import * as Api from "../../../../../services/api";
+import * as Utils from "../../../../../utils";
 
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 
-import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { mottatteOpplysningerOperations } from "../../../../../ducks/mottatteOpplysninger";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
 import "./vurderingVirksomhet.css";

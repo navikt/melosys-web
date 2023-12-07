@@ -4,29 +4,32 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
 
-import MKV from "../../../../melosyskodeverk";
-import * as Forms from "../../../../felleskomponenter/forms";
-import * as Nav from "../../../../navFrontend";
-import * as Mui from "../../../../felleskomponenter/ui";
-import * as Utils from "../../../../utils";
+import MKV from "../../../../../melosyskodeverk";
+import * as Forms from "../../../../../felleskomponenter/forms";
+import * as Nav from "../../../../../navFrontend";
+import * as Mui from "../../../../../felleskomponenter/ui";
+import * as Utils from "../../../../../utils";
 
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { FellesHandlersContext } from "../../../../contexts";
-import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
+import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
+import { FellesHandlersContext } from "../../../../../contexts";
+import { DialogboksOppfriskSak } from "../../../../../felleskomponenter/dialogboks";
 
-import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import { menypanelOperations } from "../../../../ducks/menypanel";
-import { landkoderSelectors } from "../../../../ducks/landkoder";
-import { navigeringOperations } from "../../../../ducks/navigering";
+import {
+  mottatteOpplysningerOperations,
+  mottatteOpplysningerSelectors,
+} from "../../../../../ducks/mottatteOpplysninger";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import { menypanelOperations } from "../../../../../ducks/menypanel";
+import { landkoderSelectors } from "../../../../../ducks/landkoder";
+import { navigeringOperations } from "../../../../../ducks/navigering";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
-import { modalerOperations, modalerSelectors } from "../../../../ducks/modaler";
-import { oppsummertfaktaOperations } from "../../../../ducks/oppsummertfakta";
-import { BehandlingUnderOppfriskningSelector } from "../../../../ducks/modaler/selectors";
+import { modalerOperations, modalerSelectors } from "../../../../../ducks/modaler";
+import { oppsummertfaktaOperations } from "../../../../../ducks/oppsummertfakta";
+import { BehandlingUnderOppfriskningSelector } from "../../../../../ducks/modaler/selectors";
 
 interface Props {
   bekreft: () => void;

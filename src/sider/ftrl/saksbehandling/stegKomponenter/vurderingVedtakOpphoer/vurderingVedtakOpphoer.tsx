@@ -1,22 +1,21 @@
-import * as Nav from "../../../../navFrontend";
-import "./vurderingVedtak.css";
+import * as Nav from "../../../../../navFrontend";
+import "./vurderingVedtakOpphoer.css";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import { useDispatch, useSelector } from "react-redux";
-import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import vurdering_vedtak_opphoer from "./vurderingVedtakOpphoerSchema";
-import * as Api from "../../../../services/api";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import * as Api from "../../../../../services/api";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useCallback, useEffect, useState } from "react";
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import * as Forms from "../../../../felleskomponenter/forms";
-import * as Utils from "../../../../utils";
-import * as Mui from "../../../../felleskomponenter/ui";
-import MKV from "../../../../melosyskodeverk";
-import { vedtakOperations } from "../../../../ducks/vedtak";
-import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
-import * as Ikoner from "../../../../resources/images";
+import * as Forms from "../../../../../felleskomponenter/forms";
+import * as Utils from "../../../../../utils";
+import * as Mui from "../../../../../felleskomponenter/ui";
+import MKV from "../../../../../melosyskodeverk";
+import { vedtakOperations } from "../../../../../ducks/vedtak";
+import PdfLenkeListe from "../../../../../felleskomponenter/pdfLenkeListe";
+import * as Ikoner from "../../../../../resources/images";
 import { Table } from "@navikt/ds-react";
 
 const { OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
@@ -143,16 +142,12 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
   if (!aktivtSteg) return null;
 
   return (
-    <div className="vurderingVedtak">
+    <div className="vurderingVedtakOpphoer">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Opphør av frivillig medlemskap etter § 2-15
       </Nav.Typo.Innholdstittel>
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-        <LabelMedHjelpetekst
-          label="Fritekst til begrunnelse"
-          hjelpetekst="begrunnelseFritekstHjelpetekst"
-          hjelpetekstClassName="hjelpetekst"
-        />
+        Fritekst til begrunnelse
       </Nav.Typo.Element>
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
