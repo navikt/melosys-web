@@ -30,7 +30,7 @@ import { formSelectors } from "../../../ducks/form";
 import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { folketrygdenkodeverkOperations } from "../../../ducks/folketrygdenkodeverk";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../ducks/medlemskapsperioder";
-import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../ducks/oppsummertfakta";
 import { avklartefaktaOperations } from "../../../ducks/avklartefakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
 import { menypanelOperations, menypanelSelectors } from "../../../ducks/menypanel";
@@ -60,6 +60,7 @@ const mapStateToProps = (state: RootState) => ({
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   landkoder: landkoderSelectors.LandkoderFraSakstypeSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+  fullstendigManglendeInnbetaling: oppsummertfaktaSelectors.FullstendigManglendeInnbetalingSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
   soknadForm: formSelectors.SoknadenFormSelector(state),
@@ -115,6 +116,7 @@ const Saksbehandling = ({
   mottatteOpplysningerPeriodeTom,
   behandlingsresultatType,
   fagsakStatusKode,
+  fullstendigManglendeInnbetaling,
   hentBehandling,
   hentMottatteOpplysninger,
   hentBehandlingsresultat,
@@ -244,8 +246,6 @@ const Saksbehandling = ({
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
-  const medlemskapsperiodeFom = Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.fom);
-  const medlemskapsperiodeTom = Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.tom);
   return (
     <>
       <Informasjonlinje />
@@ -263,15 +263,18 @@ const Saksbehandling = ({
                 ) : (
                   <VirksomhetMelding />
                 )}
-                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+                <SoknadMenypanelForm
+                  startOgVisOppfriskModal={startOgVisOppfriskModal}
+                  visOppdaterRegisteropplysninger={fullstendigManglendeInnbetaling === false}
+                />
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
                   arbeidsland={landkoder?.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
-                  medlemskapsperiodeFom={medlemskapsperiodeFom}
-                  medlemskapsperiodeTom={medlemskapsperiodeTom}
+                  medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.fom)}
+                  medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.tom)}
                 />
                 <SaksoversiktLenke />
                 <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
