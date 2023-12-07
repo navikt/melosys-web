@@ -14,23 +14,24 @@ import { Table } from "@navikt/ds-react";
 import * as KV from "../../kodeverk";
 import MKV from "../../melosyskodeverk";
 
-interface DokumentMetadataProps {
-  navn: string;
+export interface DokumentMetadataType {
+  dokumentNavn?: string;
+  mottakerNavn?: string;
   dokumentData?: Api.DokumenterV2.OpprettBrevReqDto;
   sedData?: SedPdfData;
   type?: string;
 }
 
-interface PdfLenkeListeProps {
+interface DokumentlisteType {
   behandlingID: number;
-  dokumenter: DokumentMetadataProps[];
+  dokumenter: DokumentMetadataType[];
   validateOnClick?: () => Promise<unknown> | {};
 }
 
-const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: PdfLenkeListeProps) => {
+const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: DokumentlisteType) => {
   const [feilmelding, setFeilmelding] = useState<string | null>(null);
 
-  const klikk = async (dokument: DokumentMetadataProps) => {
+  const klikk = async (dokument: DokumentMetadataType) => {
     if (validateOnClick) {
       // Avbryt forespørsel hvis validator er oppgitt og returnerer false
       const validert = await validateOnClick();
@@ -60,7 +61,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: PdfLenkeLi
     }
   };
 
-  const mapDokument = (dokument: DokumentMetadataProps) => {
+  const mapDokument = (dokument: DokumentMetadataType) => {
     if (dokument.sedData) return mapSED(dokument);
     return (
       <Table.Row>
@@ -71,16 +72,16 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: PdfLenkeLi
             key={uuid()}
             type="button"
           >
-            {dokument.navn ||
+            {dokument.dokumentNavn ||
               KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)}
           </button>
         </Table.DataCell>
-        <Table.DataCell>{dokument.dokumentData?.mottaker}</Table.DataCell>
+        <Table.DataCell>{dokument.mottakerNavn || dokument.dokumentData?.mottaker}</Table.DataCell>
       </Table.Row>
     );
   };
 
-  const mapSED = (dokument: DokumentMetadataProps) => (
+  const mapSED = (dokument: DokumentMetadataType) => (
     <Table.Row>
       <Table.DataCell>
         <button
@@ -89,10 +90,10 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: PdfLenkeLi
           key={uuid()}
           type="button"
         >
-          {dokument.navn}
+          {dokument.dokumentNavn}
         </button>
       </Table.DataCell>
-      <Table.DataCell>{dokument.dokumentData?.mottaker}</Table.DataCell>
+      <Table.DataCell>{dokument.mottakerNavn}</Table.DataCell>
     </Table.Row>
   );
 
