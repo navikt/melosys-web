@@ -1,5 +1,5 @@
 import * as Nav from "../../../../../navFrontend";
-import "../vurderingVedtak/vurderingVedtak.css";
+import "./vurderingVedtakOpphoer.css";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -143,7 +143,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
   if (!aktivtSteg) return null;
 
   return (
-    <div className="vurderingVedtak">
+    <div className="vurderingVedtakOpphoer">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Opphør av frivillig medlemskap etter § 2-15
       </Nav.Typo.Innholdstittel>
