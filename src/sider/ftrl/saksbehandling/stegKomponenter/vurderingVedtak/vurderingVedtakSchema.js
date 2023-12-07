@@ -3,7 +3,7 @@
 import { object, string } from "yup";
 import * as KV from "../../../../../kodeverk";
 import { FRITEKST_VALG } from "../../../../../kodeverk/koder";
-import { VEDTAK_ENDRET } from "~/sider/ftrl/saksbehandling/stegKomponenter/vurderingVedtak/vurderingVedtak";
+import { VEDTAK_ENDRET } from "./vurderingVedtak";
 
 const { DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN, MAA_FYLLES_UT } = KV.Feilmeldinger;
 
