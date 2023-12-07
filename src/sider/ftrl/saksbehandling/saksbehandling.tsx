@@ -30,7 +30,7 @@ import { formSelectors } from "../../../ducks/form";
 import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { folketrygdenkodeverkOperations } from "../../../ducks/folketrygdenkodeverk";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../ducks/medlemskapsperioder";
-import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../ducks/oppsummertfakta";
+import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 import { avklartefaktaOperations } from "../../../ducks/avklartefakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
 import { menypanelOperations, menypanelSelectors } from "../../../ducks/menypanel";
@@ -60,7 +60,6 @@ const mapStateToProps = (state: RootState) => ({
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   landkoder: landkoderSelectors.LandkoderFraSakstypeSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
-  fullstendigManglendeInnbetaling: oppsummertfaktaSelectors.FullstendigManglendeInnbetalingSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
   soknadForm: formSelectors.SoknadenFormSelector(state),
@@ -116,7 +115,6 @@ const Saksbehandling = ({
   mottatteOpplysningerPeriodeTom,
   behandlingsresultatType,
   fagsakStatusKode,
-  fullstendigManglendeInnbetaling,
   hentBehandling,
   hentMottatteOpplysninger,
   hentBehandlingsresultat,
@@ -263,10 +261,7 @@ const Saksbehandling = ({
                 ) : (
                   <VirksomhetMelding />
                 )}
-                <SoknadMenypanelForm
-                  startOgVisOppfriskModal={startOgVisOppfriskModal}
-                  visOppdaterRegisteropplysninger={fullstendigManglendeInnbetaling === false}
-                />
+                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">
                 <Oppsummering
