@@ -9,7 +9,6 @@ import * as Api from "../../../../../services/api";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useCallback, useEffect, useState } from "react";
-import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import * as Utils from "../../../../../utils";
 import * as Mui from "../../../../../felleskomponenter/ui";
