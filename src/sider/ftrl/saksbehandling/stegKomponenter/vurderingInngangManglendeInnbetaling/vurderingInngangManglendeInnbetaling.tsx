@@ -2,17 +2,17 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
-import * as Forms from "../../../../felleskomponenter/forms";
-import * as Nav from "../../../../navFrontend";
-import * as Mui from "../../../../felleskomponenter/ui";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import * as Forms from "../../../../../felleskomponenter/forms";
+import * as Nav from "../../../../../navFrontend";
+import * as Mui from "../../../../../felleskomponenter/ui";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import "./vurderingInngangManglendeInnbetaling.css";
 import vurdering_inngang_manglende_innbetaling from "./vurderingInngangManglendeInnbetalingSchema";
-import { BOOLSK_STRING } from "../../../../constants";
-import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import * as Utils from "../../../../utils";
-import { inngangSteg, vedtakOpphoerSteg } from "../initialStegArrayManglendeInnbetaling";
+import { BOOLSK_STRING } from "../../../../../constants";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import * as Utils from "../../../../../utils";
+import { inngangSteg, vedtakOpphoerSteg } from "../../initialStegArrayManglendeInnbetaling";
 
 interface Props {
   bekreft: () => void;

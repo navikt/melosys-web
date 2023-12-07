@@ -1,10 +1,10 @@
 import { FANE_STATUS } from "../../../felleskomponenter/stegvelger";
-import { VurderingInngang } from "./stegKomponenter/vurderingInngang";
-import { VurderingVirksomhet } from "./stegKomponenter/vurderingVirksomhet";
+import { VurderingInngang } from "./stegKomponenter/vurderingInngang/vurderingInngang";
+import { VurderingVirksomhet } from "./stegKomponenter/vurderingVirksomhet/vurderingVirksomhet";
 import { VurderingPerioder } from "./stegKomponenter/vurderingPeriode/vurderingPerioder";
 import { VurderingBestemmelse } from "./stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
 import { VurderingTrygdeavgift } from "./stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
-import { VurderingVedtak } from "./stegKomponenter/vurderingVedtak";
+import { VurderingVedtak } from "./stegKomponenter/vurderingVedtak/vurderingVedtak";
 
 const initialInngangSteg = {
   id: "Inngang",
