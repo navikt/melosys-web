@@ -2,8 +2,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as Nav from "../../../../navFrontend";
-import MKV from "../../../../melosyskodeverk";
-import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 
 import { fakturainformasjonOperations } from "../../../../ducks/fakturainformasjon";
@@ -28,24 +26,16 @@ const gyldigeFakturaStatuser = [
 const Fakturainformasjon = () => {
   const dispatch = useDispatch();
   const visReferanseEnabled = useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE);
-  const { fakturainformasjon, fagsaker, behandlinger } = useSelector((state) => state) as any;
+  const { fakturainformasjon } = useSelector((state) => state) as any;
   const fakturaserieReferanseFraBehandling = useSelector((state) =>
     behandlingsresultatSelectors.fakturaserieReferanseSelector(state)
   );
-  const { saksnummer } = fagsaker.data;
-  const {
-    behandlingID,
-    oppsummering: { behandlingstype },
-  } = behandlinger.data;
-
-  const skalHenteFraForrigeBehandling =
-    KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT;
 
   useEffect(() => {
     if (fakturaserieReferanseFraBehandling) {
       dispatch(fakturainformasjonOperations.hentFakturaserier(fakturaserieReferanseFraBehandling));
     }
-  }, [behandlingID, saksnummer, skalHenteFraForrigeBehandling, fakturaserieReferanseFraBehandling]);
+  }, [fakturaserieReferanseFraBehandling]);
 
   if (
     Utils._isEmpty(fakturainformasjon.data) ||
