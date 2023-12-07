@@ -148,11 +148,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
         Opphør av frivillig medlemskap etter § 2-15
       </Nav.Typo.Innholdstittel>
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-        <LabelMedHjelpetekst
-          label="Fritekst til begrunnelse"
-          hjelpetekst="begrunnelseFritekstHjelpetekst"
-          hjelpetekstClassName="hjelpetekst"
-        />
+        Fritekst til begrunnelse
       </Nav.Typo.Element>
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
