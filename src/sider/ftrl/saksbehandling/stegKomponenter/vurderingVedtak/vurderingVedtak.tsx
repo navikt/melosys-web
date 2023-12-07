@@ -223,7 +223,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           muligMottaker.dokumentNavn
         ),
         data: {
-          produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN,
+          produserbardokument: vedtakOpphøres ? OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
           mottaker: muligMottaker.rolle,
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
