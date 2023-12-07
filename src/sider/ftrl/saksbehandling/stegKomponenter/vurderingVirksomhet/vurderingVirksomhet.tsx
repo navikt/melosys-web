@@ -35,7 +35,6 @@ const komponentState = (state: RootState) => {
 };
 
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  hentOppsummertFakta: (behandlingID: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
   sendVirksomheter: (behandlingID: number, virksomheter: Api.Avklartefakta.Virksomheter) =>
     dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
   hentMottatteOpplysninger: (behandlingID: number) => dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
@@ -51,7 +50,7 @@ interface Props {
 export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
 
-  const { hentOppsummertFakta, sendVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
+  const { sendVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
   const { redigerbart, virksomheterListe, behandlingID, initialValues, lagredeValgtevirksomheter } =
     useSelector(komponentState);
   const [erMottatteOpplysningerLastetInn, setErMottatteOpplysningerLastetInn] = useState(false);
@@ -80,9 +79,6 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
 
   useEffect(() => {
     lastInnMottatteOpplysninger();
-    return () => {
-      hentOppsummertFakta(behandlingID);
-    };
   }, []);
 
   useEffect(() => {
