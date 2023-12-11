@@ -24,11 +24,10 @@ export const OpprettNyOppgave = () => {
     // TODO: MELOSYS-6312 medfører bedre logikk. Kanskje også samtidig legge dette i lovligeKombonasjoner i backend?
     if (manglendeInnbetalingToggleEnabled) {
       return MKV.KTObjects.behandlinger.behandlingsaarsaktyper;
-    } else {
-      return MKV.KTObjects.behandlinger.behandlingsaarsaktyper.filter(
-        (kt: KTObject) => kt.kode !== MELDING_OM_MANGLENDE_INNBETALING
-      );
     }
+    return MKV.KTObjects.behandlinger.behandlingsaarsaktyper.filter(
+      (kt: KTObject) => kt.kode !== MELDING_OM_MANGLENDE_INNBETALING
+    );
   };
 
   return (
