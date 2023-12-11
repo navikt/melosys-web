@@ -37,7 +37,9 @@ import { FRITEKST_VALG } from "../../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/menypanel";
 
-const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
+const { INNVILGELSE_FOLKETRYGDLOVEN, OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
+const VEDTAK_OPPHOER = "Vedtak om opphør av frivillig medlemskap";
+export const VEDTAK_ENDRET = "Endret vedtak om frivillig medlemskap";
 
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
@@ -79,6 +81,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector);
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+  const erManglendeInnbetalingTrygdeavgift =
+    behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT;
   const initialNyVurderingBakgrunnValg =
     lagretNyVurderingBakgrunn && erNyVurderingBakgrunnValgFritekst(lagretNyVurderingBakgrunn)
       ? FRITEKST_VALG
@@ -99,6 +103,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     resolver: yupResolver(vurdering_vedtak),
     context: {
       erNyVurdering,
+      erManglendeInnbetalingTrygdeavgift,
     },
     defaultValues: {
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
@@ -106,6 +111,10 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       trygdeavgiftFritekst: useSelector(behandlingsresultatSelectors.TrygdeavgiftFritekstSelector) || "",
       nyVurderingBakgrunnValg: initialNyVurderingBakgrunnValg,
       nyVurderingBakgrunnFritekst: initialNyVurderingBakgrunnFritekst,
+      // TODO: Må vente til MELOSYS-6217 da nytt behandlingsresultattype kommer
+      // vedtakValg settes til VEDTAK_OPPHOER dersom behandlingsresultattype == DELVIS_OPPHØRT og behandlingstype er MANGLENDE_INNBETALING_TRYGDEAVGIFT
+      // vedtakValg settes til VEDTAK_ENDRET dersom behandlingsresultattype == MEDLEM_I_FOLKETRYGDEN og behandlingstype er MANGLENDE_INNBETALING_TRYGDEAVGIFT
+      vedtakValg: "",
     } as FieldValues,
   });
   const formValues = watch();
@@ -116,6 +125,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
   const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
+  const vedtakOpphøres = formValues?.vedtakValg === VEDTAK_OPPHOER;
 
   const oppdaterNyVurderingBakgrunn = (nyVurderingBakgrunn?: string) => {
     Api.Behandlinger.resultat.oppdaterNyVurderingBakgrunn(behandlingID, nyVurderingBakgrunn);
@@ -137,9 +147,13 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
 
+  useEffect(() => {
+    return () => debouncedOppdaterFritekster.cancel();
+  }, []);
+
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: INNVILGELSE_FOLKETRYGDLOVEN,
+      produserbartdokument: vedtakOpphøres ? OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -147,8 +161,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   useEffect(() => {
     hentMuligeMottakere();
-    return () => debouncedOppdaterFritekster.cancel();
-  }, []);
+  }, [vedtakOpphøres]);
 
   useEffect(() => {
     if (aktivtSteg) {
@@ -210,7 +223,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           muligMottaker.dokumentNavn
         ),
         data: {
-          produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN,
+          produserbardokument: vedtakOpphøres ? OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
           mottaker: muligMottaker.rolle,
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
@@ -335,7 +348,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </Table.Body>
       </Table>
 
-      <Nav.Row className="margin_bottom">
+      <Nav.Row className="arbeidsland">
         <Nav.Column xs="5">
           <Nav.Typo.Element className="info">Arbeidsland</Nav.Typo.Element>
           <Nav.Typo.Normaltekst className="info">
@@ -345,7 +358,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       </Nav.Row>
 
       {trygdeavgiftMottaker ? (
-        <Nav.Row className="trygdeavgift__row">
+        <Nav.Row className="trygdeavgift">
           <Nav.Column xs="12">
             <Nav.Typo.Normaltekst className="info">{trygdeavgiftMottaker.term}</Nav.Typo.Normaltekst>
           </Nav.Column>
@@ -353,7 +366,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       ) : null}
 
       {fakturamottaker ? (
-        <Nav.Row className="margin_bottom">
+        <Nav.Row>
           <Nav.Column xs="12" className="fakturamottaker">
             <Nav.Typo.Normaltekst className="info">Faktura sendes til:</Nav.Typo.Normaltekst>
             &nbsp;
@@ -362,35 +375,52 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </Nav.Row>
       ) : null}
 
-      {erNyVurdering && (
-        <div className="nyVurderingBakgrunn--container">
-          <Nav.Fieldset
-            className="nyVurderingBakgrunn"
-            legend={
-              <LabelMedHjelpetekst
-                label="Oppgi grunn for nytt vedtak (Obligatorisk)"
-                hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
-                hjelpetekstClassName="nyVurderingBakgrunn__hjelpetekst"
-              />
-            }
-          >
-            <Nav.Row>
-              <Nav.Column xs="6">
-                <Forms.Select
-                  name="nyVurderingBakgrunnValg"
-                  disabled={!redigerbart}
-                  emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
-                  control={control}
-                  onChange={oppdaterNyVurderingBakgrunnValg}
-                >
-                  {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
-                    <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
-                  ))}
-                  <option key={FRITEKST_VALG} value={FRITEKST_VALG} label={FRITEKST_VALG} />
-                </Forms.Select>
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Fieldset>
+      {erManglendeInnbetalingTrygdeavgift && (
+        <Nav.Row className="vedtak_valg">
+          <Nav.Column xs="6">
+            <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+              Oppgi hvilket vedtak du vil sende
+            </Nav.Typo.Element>
+            <Forms.Select
+              name="vedtakValg"
+              disabled={!redigerbart}
+              emptyFieldDisabled={!!formValues?.vedtakValg}
+              control={control}
+              className="vedtak_valg_select"
+            >
+              <option key={VEDTAK_OPPHOER} value={VEDTAK_OPPHOER} label={VEDTAK_OPPHOER} />
+              <option key={VEDTAK_ENDRET} value={VEDTAK_ENDRET} label={VEDTAK_ENDRET} />
+            </Forms.Select>
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
+      {(erNyVurdering || (erManglendeInnbetalingTrygdeavgift && formValues?.vedtakValg === VEDTAK_ENDRET)) && (
+        <div className="nyVurderingBakgrunn">
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+                <LabelMedHjelpetekst
+                  label="Oppgi grunn for nytt vedtak (Obligatorisk)"
+                  hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
+                  hjelpetekstClassName="nyVurderingBakgrunn__hjelpetekst"
+                />
+              </Nav.Typo.Element>
+              <Forms.Select
+                name="nyVurderingBakgrunnValg"
+                disabled={!redigerbart}
+                emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
+                control={control}
+                onChange={oppdaterNyVurderingBakgrunnValg}
+                className="nyVurderingBakgrunn_select"
+              >
+                {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
+                  <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
+                ))}
+                <option key={FRITEKST_VALG} value={FRITEKST_VALG} label={FRITEKST_VALG} />
+              </Forms.Select>
+            </Nav.Column>
+          </Nav.Row>
           {formValues.nyVurderingBakgrunnValg === FRITEKST_VALG && (
             <Nav.Row className="nyVurderingBakgrunnFritekstRad">
               <Forms.HtmlEditor
@@ -405,19 +435,23 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </div>
       )}
 
-      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-        <LabelMedHjelpetekst
-          label="Fritekst til innledning"
-          hjelpetekst={innledningFritekstHjelpetekst}
-          hjelpetekstClassName="hjelpetekst"
-        />
-      </Nav.Typo.Element>
-      <Forms.HtmlEditor
-        name="innledningFritekst"
-        control={control}
-        className="fritekst_editor"
-        disabled={!redigerbart}
-      />
+      {!vedtakOpphøres && (
+        <>
+          <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+            <LabelMedHjelpetekst
+              label="Fritekst til innledning"
+              hjelpetekst={innledningFritekstHjelpetekst}
+              hjelpetekstClassName="hjelpetekst"
+            />
+          </Nav.Typo.Element>
+          <Forms.HtmlEditor
+            name="innledningFritekst"
+            control={control}
+            className="fritekst_editor"
+            disabled={!redigerbart}
+          />
+        </>
+      )}
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         <LabelMedHjelpetekst
@@ -433,19 +467,23 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         disabled={!redigerbart}
       />
 
-      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-        <LabelMedHjelpetekst
-          label="Fritekst til avsnitt om trygdeavgift"
-          hjelpetekst={trygdeavgiftFritekstHjelpetekst}
-          hjelpetekstClassName="hjelpetekst"
-        />
-      </Nav.Typo.Element>
-      <Forms.HtmlEditor
-        name="trygdeavgiftFritekst"
-        control={control}
-        className="fritekst_editor"
-        disabled={!redigerbart}
-      />
+      {!vedtakOpphøres && (
+        <>
+          <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+            <LabelMedHjelpetekst
+              label="Fritekst til avsnitt om trygdeavgift"
+              hjelpetekst={trygdeavgiftFritekstHjelpetekst}
+              hjelpetekstClassName="hjelpetekst"
+            />
+          </Nav.Typo.Element>
+          <Forms.HtmlEditor
+            name="trygdeavgiftFritekst"
+            control={control}
+            className="fritekst_editor"
+            disabled={!redigerbart}
+          />
+        </>
+      )}
 
       {stegErGyldig && muligeMottakere && (
         <Table>
