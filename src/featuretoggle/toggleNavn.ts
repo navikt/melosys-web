@@ -2,6 +2,7 @@ const MELOSYS_FOLKETRYGDEN_MVP = "melosys.folketrygden.mvp";
 const MELOSYS_FULLMAKT_TRYGDEAVGIFT = "melosys.fullmakt.trygdeavgift";
 const MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE = "melosys.faktureringskomponent.vis_referanse";
 const MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING = "melosys.saksbehandling.manglende_innbetaling";
+const MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK = "melosys.ftrl.begrense_periode_vedtak";
 const FEATURE_TOGGLE = "feature-toggle";
 
 const alleToggleNavn = [
@@ -9,6 +10,7 @@ const alleToggleNavn = [
   MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE,
   MELOSYS_FULLMAKT_TRYGDEAVGIFT,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
+  MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
 ];
 
 export {
@@ -17,5 +19,6 @@ export {
   MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE,
   MELOSYS_FULLMAKT_TRYGDEAVGIFT,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
+  MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
   alleToggleNavn,
 };
