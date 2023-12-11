@@ -12,8 +12,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Mui from "../../../felleskomponenter/ui";
-
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -111,8 +110,7 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   const pdfDokumenter = [
     {
-      navn: "Forhåndsvis vedtaksbrev og A1",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: formValues.vedtaksbrevFritekst,
@@ -122,10 +120,9 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   if (skalViseSedAlternativer) {
     pdfDokumenter.push({
-      navn: "Forhåndsvis SED A003",
-      type: EKV.Koder.sedtyper.A003,
-      erSed: true,
-      data: {
+      dokumentNavn: "SED A003",
+      sedType: EKV.Koder.sedtyper.A003,
+      sedData: {
         fritekst: formValues.fritekstSed,
       },
     });
@@ -224,7 +221,11 @@ export const VurderingArtikkel13_x_vedtak = ({
       <Nav.Row>
         <Nav.Column xs="6">
           {stegErGyldig && (
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
+            <Dokumentliste
+              behandlingID={behandlingID}
+              dokumenter={pdfDokumenter}
+              validateOnClick={vedKlikkForhandsvis}
+            />
           )}
         </Nav.Column>
       </Nav.Row>

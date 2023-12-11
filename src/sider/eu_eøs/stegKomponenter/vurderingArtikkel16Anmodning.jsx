@@ -365,7 +365,7 @@ class VurderingArtikkel16Anmodning extends Component {
           },
           {
             dokumentNavn: "SED A001",
-            type: EKV.Koder.sedtyper.A001,
+            sedType: EKV.Koder.sedtyper.A001,
             sedData: {
               fritekst: this.props.formValues.fritekstSed,
             },
