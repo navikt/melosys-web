@@ -255,7 +255,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         </>
       )}
 
-      <Feilmeldinger exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]} />
+      <Feilmeldinger />
 
       {(utfallErGODKJENT || utfallErDelvisGodkjent) && !harErrorFeilmelding && (
         <Alertmeldinger

@@ -14,7 +14,6 @@ import "./alertmeldinger.css";
 type alertmeldingerProps = {
   meldinger: Feilkode[] | string;
   className?: string;
-  exclude?: string;
 };
 
 export const Innsynsmelding = ({ className = "" }) => (
@@ -85,7 +84,7 @@ export const StandardMeldingOverst = ({ type, actionEtterSynlighet, melding }: S
   ) : null;
 };
 
-export const Alertmeldinger = ({ meldinger, className, exclude }: alertmeldingerProps) => {
+export const Alertmeldinger = ({ meldinger, className }: alertmeldingerProps) => {
   if (Utils._isEmpty(meldinger)) {
     return null;
   }
@@ -95,19 +94,17 @@ export const Alertmeldinger = ({ meldinger, className, exclude }: alertmeldinger
       return meldinger;
     }
 
-    const filtrerteAlertmeldinger = meldinger.filter((value) => value.kode !== exclude);
-
-    if (filtrerteAlertmeldinger.length === 1) {
-      return KV.kodeTilTerm(filtrerteAlertmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+    if (meldinger.length === 1) {
+      return KV.kodeTilTerm(meldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
     }
 
-    if (filtrerteAlertmeldinger.length === 0) {
+    if (meldinger.length === 0) {
       return null;
     }
 
     return (
       <ul className="feilkoder__liste">
-        {filtrerteAlertmeldinger.map((feil) => (
+        {meldinger.map((feil) => (
           <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
         ))}
       </ul>

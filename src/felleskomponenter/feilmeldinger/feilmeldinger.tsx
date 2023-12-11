@@ -12,10 +12,9 @@ import { kontrollSelectors } from "../../ducks/kontroll";
 
 type feilmeldingerProps = {
   className?: string;
-  exclude?: string[];
 };
 
-export default ({ className, exclude }: feilmeldingerProps) => {
+export default ({ className }: feilmeldingerProps) => {
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
 
@@ -28,10 +27,7 @@ export default ({ className, exclude }: feilmeldingerProps) => {
       return feilmeldinger;
     }
 
-    const filtrerteFeilmeldinger = kontrollfeil
-      .concat(feilmeldinger)
-      .filter((value) => !exclude?.includes(value.kode))
-      .filter((value) => value.type !== "ADVARSEL");
+    const filtrerteFeilmeldinger = kontrollfeil.concat(feilmeldinger).filter((value) => value.type !== "ADVARSEL");
 
     if (filtrerteFeilmeldinger.length === 0) {
       return null;
@@ -54,10 +50,7 @@ export default ({ className, exclude }: feilmeldingerProps) => {
       return feilmeldinger;
     }
 
-    const advarsler = kontrollfeil
-      .concat(feilmeldinger)
-      .filter((value) => !exclude?.includes(value.kode))
-      .filter((value) => value.type === "ADVARSEL");
+    const advarsler = kontrollfeil.concat(feilmeldinger).filter((value) => value.type === "ADVARSEL");
 
     if (advarsler.length === 0) {
       return null;
