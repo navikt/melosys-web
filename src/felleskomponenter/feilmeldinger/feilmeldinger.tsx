@@ -24,7 +24,7 @@ export default ({ className }: feilmeldingerProps) => {
 
   const renderFiltrerteFeilmeldinger = () => {
     if (typeof feilmeldinger === "string") {
-      return feilmeldinger;
+      return `Teknisk feil: ${feilmeldinger}`;
     }
 
     const filtrerteFeilmeldinger = kontrollfeil.concat(feilmeldinger).filter((value) => value.type !== "ADVARSEL");
@@ -46,11 +46,7 @@ export default ({ className }: feilmeldingerProps) => {
   };
 
   const renderAdvarsler = () => {
-    if (typeof feilmeldinger === "string") {
-      return feilmeldinger;
-    }
-
-    const advarsler = kontrollfeil.concat(feilmeldinger).filter((value) => value.type === "ADVARSEL");
+    const advarsler = kontrollfeil.filter((value) => value.type === "ADVARSEL");
 
     if (advarsler.length === 0) {
       return null;
