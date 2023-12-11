@@ -25,6 +25,8 @@ import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./kompo
 import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK } from "../../../../../featuretoggle/toggleNavn";
 
 const hentLabelTekst = (behandlingstype: string) => {
   if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING) {
@@ -111,9 +113,11 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   });
   const formValues = watch();
 
+  const begrensePeriodeVedtakToggle = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.medlemskapsperioder,
     soknadsperiode.fom,
+    begrensePeriodeVedtakToggle,
     soknadsperiode.tom
   );
 

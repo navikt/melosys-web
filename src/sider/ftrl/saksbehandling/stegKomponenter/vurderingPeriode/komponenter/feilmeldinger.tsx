@@ -3,9 +3,6 @@ import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
 import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 import { MedlemskapsperiodeProp } from "./types";
-import { useFeatureToggle } from "../../../../../../featuretoggle";
-import { MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK } from "../../../../../../featuretoggle/toggleNavn";
-import medlemskapsperioder from "../../../../../../ducks/medlemskapsperioder";
 
 const { AVSLAATT, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
@@ -39,8 +36,8 @@ const SøknadsperiodenStarterFørEllerSlutterEtter = (
 
 const MedlemskapsperiodenStarterFør2023 = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">
-    Du kan ikke fatte vedtak i stegvelgeren for årene før 2023. Du kan fatte fritekstvedtak i "Send brev"-fanen. Du må
-    også vurdere om perioden skal registreres i avgiftssystemet.
+    Du kan ikke fatte vedtak i stegvelgeren for årene før 2023. Du kan fatte fritekstvedtak i &quot;Send
+    brev&quot;-fanen. Du må også vurdere om perioden skal registreres i avgiftssystemet.
   </Nav.AlertStripeFeil>
 );
 
@@ -134,10 +131,9 @@ enum TypeFeilmelding {
 export function finnAktivFeilmelding(
   medlemskapsperioder: MedlemskapsperiodeProp[],
   søknadsperiodeFomDato: string,
+  begrensePeriodeVedtakToggle: boolean | undefined,
   søknadsperiodeTomDato?: string
 ): string | undefined {
-  const begrensePeriodeVedtakToggle = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
-
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
   if (ingenMedlemskapsperioder) {
     return TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER;
