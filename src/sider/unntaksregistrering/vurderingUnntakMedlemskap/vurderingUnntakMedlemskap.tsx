@@ -4,7 +4,6 @@ import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Feilmeldinger } from "../../../felleskomponenter/feilmeldinger";
-import { Alertmeldinger } from "../../../felleskomponenter/alertmeldinger";
 
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
