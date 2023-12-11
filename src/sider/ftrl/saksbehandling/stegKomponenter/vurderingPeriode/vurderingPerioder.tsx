@@ -113,11 +113,11 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   });
   const formValues = watch();
 
-  const begrensePeriodeVedtakToggle = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
+  const begrensePeriodeVedtakToggleEnabled = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.medlemskapsperioder,
     soknadsperiode.fom,
-    begrensePeriodeVedtakToggle,
+    begrensePeriodeVedtakToggleEnabled,
     soknadsperiode.tom
   );
 

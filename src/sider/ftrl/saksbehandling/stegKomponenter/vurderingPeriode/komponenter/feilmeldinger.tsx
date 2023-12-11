@@ -108,7 +108,7 @@ const periodeStarterFoer2023 = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
 
   if (Utils._isEmpty(perioder)) return false;
 
-  if (perioder?.length > 0) {
+  if (perioder.length > 0) {
     const dateObj = Utils.dato.norskStringTilDate(perioder[0].fomDato);
     if (dateObj && dateObj.getFullYear() < 2023) {
       return true;
@@ -131,7 +131,7 @@ enum TypeFeilmelding {
 export function finnAktivFeilmelding(
   medlemskapsperioder: MedlemskapsperiodeProp[],
   søknadsperiodeFomDato: string,
-  begrensePeriodeVedtakToggle: boolean | undefined,
+  begrensePeriodeVedtakToggleEnabled: boolean | undefined,
   søknadsperiodeTomDato?: string
 ): string | undefined {
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
@@ -166,7 +166,7 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER;
   }
 
-  if (begrensePeriodeVedtakToggle && periodeStarterFoer2023(medlemskapsperioder)) {
+  if (begrensePeriodeVedtakToggleEnabled && periodeStarterFoer2023(medlemskapsperioder)) {
     return TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023;
   }
 
