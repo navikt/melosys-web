@@ -29,7 +29,7 @@ import { BestemmelseSelect } from "./bestemmelseSelect";
 
 const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
-const { OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO } = MKV.Koder.begrunnelser.kontroll_begrunnelser;
+const { OVERLAPPENDE_UNNTAK_PERIODER } = MKV.Koder.begrunnelser.kontroll_begrunnelser;
 
 interface VurderingUnntakMedlemskapProps {
   oppdaterStatus: (isValid: boolean) => void;
@@ -161,10 +161,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     dispatch(navigeringOperations.tilForsiden());
   };
 
-  const kontrollFeilOverlappendeUnntakperiode = kontrollfeil?.filter(
-    (value) => value.kode === OVERLAPPENDE_UNNTAK_PERIODER
-  );
-
   const harErrorFeilmelding =
     !Utils._isEmpty(feilmeldinger) ||
     !Utils._isEmpty(kontrollfeil?.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER));
@@ -219,7 +215,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         />
       )}
 
-      {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && (
+      {utfallErDelvisGodkjent && (
         <>
           <Nav.Row>
             <Nav.Column xs="2">
@@ -256,13 +252,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       )}
 
       <Feilmeldinger />
-
-      {(utfallErGODKJENT || utfallErDelvisGodkjent) && !harErrorFeilmelding && (
-        <Alertmeldinger
-          className="vurderingUnntakMedlemskap__alertmeldinger"
-          meldinger={kontrollFeilOverlappendeUnntakperiode}
-        />
-      )}
 
       {!harSluttdato && !utfallValgt && (
         <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
