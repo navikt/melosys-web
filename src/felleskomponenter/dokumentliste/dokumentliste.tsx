@@ -19,7 +19,7 @@ export interface DokumentMetadataType {
   mottakerNavn?: string;
   dokumentData?: Api.DokumenterV2.OpprettBrevReqDto;
   sedData?: SedPdfData;
-  type?: string;
+  sedType?: string;
 }
 
 interface DokumentlisteType {
@@ -40,8 +40,8 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
 
     let fileURL;
     try {
-      if (dokument.sedData && dokument.type) {
-        fileURL = await dokumenterOperations.forhandsvisSed(behandlingID, dokument.type, dokument.sedData);
+      if (dokument.sedData && dokument.sedType) {
+        fileURL = await dokumenterOperations.forhandsvisSed(behandlingID, dokument.sedType, dokument.sedData);
       } else if (dokument.dokumentData) {
         fileURL = await dokumenterOperations.forhandsvisBrevV2(behandlingID, dokument.dokumentData);
       } else {
@@ -90,7 +90,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
           key={uuid()}
           type="button"
         >
-          {dokument.dokumentNavn}
+          {dokument.dokumentNavn || dokument.sedType ? `SED ${dokument.sedType}` : ""}
         </button>
       </Table.DataCell>
       <Table.DataCell>{dokument.mottakerNavn}</Table.DataCell>
