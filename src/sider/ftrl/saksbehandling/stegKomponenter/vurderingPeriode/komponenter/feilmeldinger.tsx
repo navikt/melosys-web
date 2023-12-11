@@ -105,14 +105,11 @@ const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: Medlemskapsperiod
 
 const periodeStarterFoer2023 = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
   const perioder = [...medlemskapsperioder]?.sort(Utils.dato.sorterEtterNorskFomDato);
-
   if (Utils._isEmpty(perioder)) return false;
 
-  if (perioder.length > 0) {
-    const dateObj = Utils.dato.norskStringTilDate(perioder[0].fomDato);
-    if (dateObj && dateObj.getFullYear() < 2023) {
-      return true;
-    }
+  const dateObj = Utils.dato.norskStringTilDate(perioder[0].fomDato);
+  if (dateObj && dateObj.getFullYear() < 2023) {
+    return true;
   }
 
   return false;
