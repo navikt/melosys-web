@@ -168,7 +168,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   const utfallErGODKJENT = formValues?.utfallRegistreringUnntak === GODKJENT;
   const utfallErDelvisGodkjent = formValues?.utfallRegistreringUnntak === DELVIS_GODKJENT;
-  const utfallValgt = formValues?.utfallRegistreringUnntak;
 
   return (
     <div className="vurderingUnntakMedlemskap">
