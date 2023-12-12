@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`oppdaterRegisteropplysninger > Skal ikke kaste feilmelding 1`] = `<div />`;
+
+exports[`oppdaterRegisteropplysninger > Skal ikke vise alternativ for å se registeropplysninger 5 ekstra år tilbake i tid 1`] = `<div />`;
+
+exports[`oppdaterRegisteropplysninger > Skal kaste feilmelding 1`] = `<div />`;
+
+exports[`oppdaterRegisteropplysninger > Skal vise alternativ for å se registeropplysninger 5 ekstra år tilbake i tid 1`] = `<div />`;
+
+exports[`vurderingVirksomhet > Skal ikke kaste feilmelding 1`] = `<div />`;
+
+exports[`vurderingVirksomhet > Skal kaste feilmelding 1`] = `<div />`;
