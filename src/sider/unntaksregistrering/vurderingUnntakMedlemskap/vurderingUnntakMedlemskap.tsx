@@ -252,12 +252,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
       <Feilmeldinger />
 
-      {!harSluttdato && !utfallValgt && (
-        <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
-          Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
-        </Nav.AlertStripeAdvarsel>
-      )}
-
       {[DELVIS_GODKJENT, IKKE_GODKJENT].includes(formValues.utfallRegistreringUnntak) && !harErrorFeilmelding && (
         <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__alertstripe">
           Ved endring/ikke godkjenning av unntaksperiode bør det sendes informasjon til utenlandsk trygdemyndighet.
