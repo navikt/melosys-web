@@ -3,7 +3,10 @@ import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders"
 import { STATUS } from "../../services";
 import MKV from "../../melosyskodeverk";
 
-const getPreloadedState = (feilkoder: { kode: string; felter: string[]; type: string }[]) => {
+const getPreloadedState = (
+  feilkoder: { kode: string; felter: string[] }[],
+  kontrollFeil: { kode: string; felter: string[]; type: string }[]
+) => {
   return {
     feiletRespons: {
       status: STATUS.ERROR,
@@ -16,13 +19,14 @@ const getPreloadedState = (feilkoder: { kode: string; felter: string[]; type: st
         },
       },
     },
+    kontroll: { status: "OK", data: { kontrollfeilList: kontrollFeil } },
   };
 };
 
 describe("Feilmeldinger", () => {
   it("Viser ingenting dersom det ikke finnes en mapping for feilkode", () => {
     const { queryByText } = renderWithProviders(<Feilmeldinger />, {
-      preloadedState: getPreloadedState([{ kode: "tilfeldigString", felter: [], type: "FEIL" }]),
+      preloadedState: getPreloadedState([{ kode: "tilfeldigString", felter: [] }], []),
     });
 
     expect(queryByText("tilfeldigString")).not.toBeInTheDocument();
@@ -30,9 +34,10 @@ describe("Feilmeldinger", () => {
 
   it("Viser feilmelding fra kodeverk dersom mapping for feilkode finnes", () => {
     const { getByText, queryByRole } = renderWithProviders(<Feilmeldinger />, {
-      preloadedState: getPreloadedState([
-        { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [], type: "FEIL" },
-      ]),
+      preloadedState: getPreloadedState(
+        [],
+        [{ kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [], type: "FEIL" }]
+      ),
     });
 
     expect(getByText("Det finnes overlappende periode i MEDL")).toBeInTheDocument();
@@ -41,9 +46,16 @@ describe("Feilmeldinger", () => {
 
   it("Viser advarsel fra kodeverk dersom mapping for feilkode finnes", () => {
     const { getByText, queryByRole } = renderWithProviders(<Feilmeldinger />, {
-      preloadedState: getPreloadedState([
-        { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [], type: "ADVARSEL" },
-      ]),
+      preloadedState: getPreloadedState(
+        [],
+        [
+          {
+            kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER,
+            felter: [],
+            type: "ADVARSEL",
+          },
+        ]
+      ),
     });
 
     expect(getByText("Det finnes overlappende periode i MEDL")).toBeInTheDocument();
@@ -51,10 +63,13 @@ describe("Feilmeldinger", () => {
   });
   it("Viser punktliste med feilmeldinger dersom mer enn en feilkode sendes inn", () => {
     const { getAllByRole } = renderWithProviders(<Feilmeldinger />, {
-      preloadedState: getPreloadedState([
-        { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [], type: "FEIL" },
-        { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE, felter: [], type: "FEIL" },
-      ]),
+      preloadedState: getPreloadedState(
+        [],
+        [
+          { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [], type: "FEIL" },
+          { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE, felter: [], type: "FEIL" },
+        ]
+      ),
     });
 
     expect(getAllByRole("listitem")).toHaveLength(2);
@@ -62,10 +77,17 @@ describe("Feilmeldinger", () => {
 
   it("Viser både feilmelding og advarsel seperat. Skal ikke være liste", () => {
     const { getByText, queryByRole } = renderWithProviders(<Feilmeldinger />, {
-      preloadedState: getPreloadedState([
-        { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [], type: "ADVARSEL" },
-        { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE, felter: [], type: "FEIL" },
-      ]),
+      preloadedState: getPreloadedState(
+        [],
+        [
+          {
+            kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER,
+            felter: [],
+            type: "ADVARSEL",
+          },
+          { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE, felter: [], type: "FEIL" },
+        ]
+      ),
     });
 
     expect(getByText("Det finnes overlappende periode i MEDL")).toBeInTheDocument();
