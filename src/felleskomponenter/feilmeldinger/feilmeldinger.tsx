@@ -15,30 +15,30 @@ type feilmeldingerProps = {
 };
 
 export default ({ className }: feilmeldingerProps) => {
-  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const exceptionFeilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const kontrollFeil = useSelector(kontrollSelectors.KontrollfeilSelector);
 
-  if (Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil)) {
+  if (Utils._isEmpty(exceptionFeilmeldinger) && Utils._isEmpty(kontrollFeil)) {
     return null;
   }
 
   const renderFiltrerteFeilmeldinger = () => {
-    if (typeof feilmeldinger === "string") {
-      return `Teknisk feil: ${feilmeldinger}`;
+    if (typeof exceptionFeilmeldinger === "string") {
+      return `Teknisk feil: ${exceptionFeilmeldinger}`;
     }
 
-    const filtrerteFeilmeldinger = kontrollfeil.concat(feilmeldinger).filter((value) => value.type !== "ADVARSEL");
+    const feilmeldinger = kontrollFeil.concat(exceptionFeilmeldinger).filter((value) => value.type === "FEIL");
 
-    if (filtrerteFeilmeldinger.length === 0) {
+    if (feilmeldinger.length === 0) {
       return null;
     }
 
-    if (filtrerteFeilmeldinger.length === 1) {
-      return KV.kodeTilTerm(filtrerteFeilmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+    if (feilmeldinger.length === 1) {
+      return KV.kodeTilTerm(feilmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
     }
     return (
       <ul className="feilkoder__liste">
-        {filtrerteFeilmeldinger.map((feil) => (
+        {feilmeldinger.map((feil) => (
           <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
         ))}
       </ul>
@@ -46,7 +46,7 @@ export default ({ className }: feilmeldingerProps) => {
   };
 
   const renderAdvarsler = () => {
-    const advarsler = kontrollfeil.filter((value) => value.type === "ADVARSEL");
+    const advarsler = kontrollFeil.filter((value) => value.type === "ADVARSEL");
 
     if (advarsler.length === 0) {
       return null;
@@ -66,17 +66,17 @@ export default ({ className }: feilmeldingerProps) => {
   };
 
   const classNameFeilmeldinger = classNames("feilmelding", className);
-  const filtrerteFeilmeldingerContent = renderFiltrerteFeilmeldinger();
+  const feilmeldingerContent = renderFiltrerteFeilmeldinger();
   const advarslerContent = renderAdvarsler();
 
-  if (!filtrerteFeilmeldingerContent && !advarslerContent) {
+  if (!feilmeldingerContent && !advarslerContent) {
     return null;
   }
 
   return (
     <div className={classNameFeilmeldinger}>
-      {filtrerteFeilmeldingerContent && (
-        <Nav.AlertStripeFeil className="varselstripe">{filtrerteFeilmeldingerContent}</Nav.AlertStripeFeil>
+      {feilmeldingerContent && (
+        <Nav.AlertStripeFeil className="varselstripe">{feilmeldingerContent}</Nav.AlertStripeFeil>
       )}
       {advarslerContent && (
         <Nav.AlertStripeAdvarsel className="advarsler-container">{advarslerContent}</Nav.AlertStripeAdvarsel>

@@ -11,11 +11,6 @@ import * as Utils from "../../utils";
 import { Feilkode } from "../../@types";
 import "./alertmeldinger.css";
 
-type alertmeldingerProps = {
-  meldinger: Feilkode[] | string;
-  className?: string;
-};
-
 export const Innsynsmelding = ({ className = "" }) => (
   <Nav.AlertStripeInfo className={`innsynsmelding ${className}`}>Innsynsmodus</Nav.AlertStripeInfo>
 );
@@ -82,43 +77,4 @@ export const StandardMeldingOverst = ({ type, actionEtterSynlighet, melding }: S
       </Nav.AlertStripe>
     </div>
   ) : null;
-};
-
-export const Alertmeldinger = ({ meldinger, className }: alertmeldingerProps) => {
-  if (Utils._isEmpty(meldinger)) {
-    return null;
-  }
-
-  const renderInnhold = () => {
-    if (typeof meldinger === "string") {
-      return meldinger;
-    }
-
-    if (meldinger.length === 1) {
-      return KV.kodeTilTerm(meldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
-    }
-
-    if (meldinger.length === 0) {
-      return null;
-    }
-
-    return (
-      <ul className="feilkoder__liste">
-        {meldinger.map((feil) => (
-          <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
-        ))}
-      </ul>
-    );
-  };
-
-  const classNameAlertmeldinger = classNames("alertmeldinger", className);
-  const innhold = renderInnhold();
-  if (!innhold) {
-    return null;
-  }
-  return (
-    <div className={classNameAlertmeldinger}>
-      <Nav.AlertStripeAdvarsel className="varselstripe">{innhold}</Nav.AlertStripeAdvarsel>
-    </div>
-  );
 };

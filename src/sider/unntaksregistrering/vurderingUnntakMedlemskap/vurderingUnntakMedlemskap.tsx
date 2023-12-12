@@ -28,7 +28,6 @@ import { BestemmelseSelect } from "./bestemmelseSelect";
 
 const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
-const { OVERLAPPENDE_UNNTAK_PERIODER } = MKV.Koder.begrunnelser.kontroll_begrunnelser;
 
 interface VurderingUnntakMedlemskapProps {
   oppdaterStatus: (isValid: boolean) => void;
@@ -52,7 +51,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const kontrollFeil = useSelector(kontrollSelectors.KontrollfeilSelector);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
@@ -161,8 +160,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   };
 
   const harErrorFeilmelding =
-    !Utils._isEmpty(feilmeldinger) ||
-    !Utils._isEmpty(kontrollfeil?.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER));
+    !Utils._isEmpty(feilmeldinger) || !Utils._isEmpty(kontrollFeil.filter((value) => value.type === "FEIL"));
 
   const harSluttdato = !Utils._isEmpty(formValues.tom);
 
