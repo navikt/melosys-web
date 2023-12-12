@@ -37,7 +37,7 @@ import { FRITEKST_VALG } from "../../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/menypanel";
 
-const { INNVILGELSE_FOLKETRYGDLOVEN, OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
+const { INNVILGELSE_FOLKETRYGDLOVEN, VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
 const VEDTAK_OPPHOER = "Vedtak om opphør av frivillig medlemskap";
 export const VEDTAK_ENDRET = "Endret vedtak om frivillig medlemskap";
 
@@ -153,7 +153,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: vedtakOpphøres ? OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
+      produserbartdokument: vedtakOpphøres ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -223,7 +223,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           muligMottaker.dokumentNavn
         ),
         data: {
-          produserbardokument: vedtakOpphøres ? OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
+          produserbardokument: vedtakOpphøres ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
           mottaker: muligMottaker.rolle,
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
