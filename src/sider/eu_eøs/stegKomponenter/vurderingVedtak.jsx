@@ -23,7 +23,7 @@ import { flytSelectors } from "../../../ducks/flyt";
 
 import { skalViseIngenFlyt } from "../../../url";
 import { useFeatureToggle } from "../../../featuretoggle";
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 import DatoOmrade from "../../../felleskomponenter/datoOmrade";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 
@@ -274,11 +274,11 @@ const VurderingVedtak = ({
         <Nav.Row>
           <Nav.Column xs="6">
             {stegErGyldig && (
-              <PdfLenkeListe
+              <Dokumentliste
                 behandlingID={behandlingID}
                 dokumenter={
                   bucLukketOgLovvalgNorge
-                    ? pdfDokumenter.filter((dok) => dok.type !== EKV.Koder.sedtyper.A012)
+                    ? pdfDokumenter.filter((dok) => dok.sedType !== EKV.Koder.sedtyper.A012)
                     : pdfDokumenter
                 }
               />

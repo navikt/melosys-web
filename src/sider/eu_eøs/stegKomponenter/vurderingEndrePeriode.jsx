@@ -14,7 +14,7 @@ import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import { hentFaktaVerdi } from "../../../domeneUtils";
 import { konverterAvklartfaktaTilStegData } from "../../../felleskomponenter/stegvelger";
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 import Datovelger from "../../../felleskomponenter/datovelger";
 
 import * as Mui from "../../../felleskomponenter/ui";
@@ -201,8 +201,7 @@ export class VurderingEndrePeriode extends Component {
 
     const pdfDokumenter = [
       {
-        navn: "Forhåndsvis vedtaksbrev og A1",
-        data: {
+        dokumentData: {
           produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
           mottaker: MKV.Koder.mottakerroller.BRUKER,
           fritekst: null,
@@ -210,10 +209,8 @@ export class VurderingEndrePeriode extends Component {
         },
       },
       {
-        navn: "Forhåndsvis SED A009 ",
         type: EKV.Koder.sedtyper.A009,
-        erSed: true,
-        data: {
+        sedData: {
           fritekst: fritekstSed,
         },
       },
@@ -281,7 +278,9 @@ export class VurderingEndrePeriode extends Component {
             </Nav.Column>
           </Nav.Row>
         )}
-        {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkPdf} />}
+        {redigerbart && (
+          <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={vedKlikkPdf} />
+        )}
         {vedtakFeilmelding && (
           <Nav.AlertStripe className="vedtakfeilmelding" type="feil">
             {vedtakFeilmelding}

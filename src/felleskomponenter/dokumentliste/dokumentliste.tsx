@@ -90,7 +90,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
           key={uuid()}
           type="button"
         >
-          {dokument.dokumentNavn || dokument.sedType ? `SED ${dokument.sedType}` : ""}
+          {dokument.dokumentNavn || `SED ${dokument.sedType}`}
         </button>
       </Table.DataCell>
       <Table.DataCell>{dokument.mottakerNavn}</Table.DataCell>

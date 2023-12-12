@@ -18,12 +18,11 @@ import { kontrollerFerdigbehandling } from "../../../ducks/kontroll/operations";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { vedtakOperations } from "../../../ducks/vedtak";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Begrunnelser from "../../../felleskomponenter/begrunnelser";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Schema";
+import Dokumentliste from "~/felleskomponenter/dokumentliste";
 
 const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
@@ -59,8 +58,7 @@ const VurderingAvslag12_x_og_16 = ({
 
   const pdfDokumenter = [
     {
-      navn: "Forhåndsvis vedtaksbrev",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: formValues.vedtaksbrevFritekst,
@@ -183,7 +181,7 @@ const VurderingAvslag12_x_og_16 = ({
         <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
       )}
       {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
-      {stegErGyldig && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+      {stegErGyldig && <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
       {erNyVurdering && redigerbart && (
         <Nav.AlertStripeInfo>{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.AlertStripeInfo>
       )}

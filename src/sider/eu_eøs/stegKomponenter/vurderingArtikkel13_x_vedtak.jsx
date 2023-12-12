@@ -120,7 +120,6 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   if (skalViseSedAlternativer) {
     pdfDokumenter.push({
-      dokumentNavn: "SED A003",
       sedType: EKV.Koder.sedtyper.A003,
       sedData: {
         fritekst: formValues.fritekstSed,
