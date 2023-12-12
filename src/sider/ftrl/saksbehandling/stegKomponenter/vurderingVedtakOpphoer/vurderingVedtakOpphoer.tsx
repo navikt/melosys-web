@@ -18,7 +18,7 @@ import PdfLenkeListe from "../../../../../felleskomponenter/pdfLenkeListe";
 import * as Ikoner from "../../../../../resources/images";
 import { Table } from "@navikt/ds-react";
 
-const { OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
+const { VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
 
 interface FormValuesProps {
   begrunnelseFritekst?: string;
@@ -47,7 +47,6 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
     } as FieldValues,
   });
-
   const formValues = watch();
 
   const oppdaterFritekster = (values: FormValuesProps) => {
@@ -65,7 +64,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: OPPHOERT_MEDLEMSKAP,
+      produserbartdokument: VEDTAK_OPPHOERT_MEDLEMSKAP,
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -97,7 +96,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
           muligMottaker.dokumentNavn
         ),
         data: {
-          produserbardokument: OPPHOERT_MEDLEMSKAP,
+          produserbardokument: VEDTAK_OPPHOERT_MEDLEMSKAP,
           mottaker: muligMottaker.rolle,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
           orgNr: muligMottaker?.orgnr || null,
@@ -146,6 +145,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Opphør av frivillig medlemskap etter § 2-15
       </Nav.Typo.Innholdstittel>
+
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         Fritekst til begrunnelse
       </Nav.Typo.Element>
@@ -155,6 +155,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
         className="fritekst_editor"
         disabled={!redigerbart}
       />
+
       {stegErGyldig && muligeMottakere && (
         <Table>
           <Table.Header>
@@ -173,6 +174,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
           </Table.Body>
         </Table>
       )}
+
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: onSubmit,
