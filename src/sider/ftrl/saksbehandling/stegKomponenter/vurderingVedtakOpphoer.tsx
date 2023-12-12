@@ -9,15 +9,13 @@ import * as Api from "../../../../services/api";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { useCallback, useEffect, useState } from "react";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import * as Forms from "../../../../felleskomponenter/forms";
 import * as Utils from "../../../../utils";
 import * as Mui from "../../../../felleskomponenter/ui";
 import MKV from "../../../../melosyskodeverk";
 import { vedtakOperations } from "../../../../ducks/vedtak";
-import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
-import * as Ikoner from "../../../../resources/images";
-import { Table } from "@navikt/ds-react";
 
 const { OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -86,38 +84,15 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
     };
   };
 
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
-    return [
-      {
-        navn: ikon ? (
-          <>
-            <Ikoner.Forhandsvis />
-            <span className="sr-only">Forhåndsvis dokument {muligMottaker.dokumentNavn}</span>
-          </>
-        ) : (
-          muligMottaker.dokumentNavn
-        ),
-        data: {
-          produserbardokument: OPPHOERT_MEDLEMSKAP,
-          mottaker: muligMottaker.rolle,
-          begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-          orgNr: muligMottaker?.orgnr || null,
-        },
-      },
-    ];
-  };
-
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
-      dokument: (
-        <PdfLenkeListe
-          behandlingID={behandlingID}
-          dokumenter={lagDokumenterData(muligMottaker)}
-          vedKlikk={() => true}
-          className="forhåndsvisning"
-        />
-      ),
-      navn: muligMottaker.mottakerNavn,
+      dokumentData: {
+        produserbardokument: OPPHOERT_MEDLEMSKAP,
+        mottaker: muligMottaker.rolle,
+        begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+        orgNr: muligMottaker?.orgnr || null,
+      },
+      mottakerNavn: muligMottaker.mottakerNavn,
     };
   };
 
@@ -161,22 +136,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
         disabled={!redigerbart}
       />
       {stegErGyldig && muligeMottakere && (
-        <Table>
-          <Table.Header>
-            <Table.HeaderCell>Dokument</Table.HeaderCell>
-            <Table.HeaderCell>Mottaker</Table.HeaderCell>
-          </Table.Header>
-          <Table.Body>
-            {mapMottakerRader(muligeMottakere).map((mottaker) => {
-              return (
-                <Table.Row key={Utils._uuid()}>
-                  <Table.DataCell>{mottaker.dokument}</Table.DataCell>
-                  <Table.DataCell>{mottaker.navn}</Table.DataCell>
-                </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table>
+        <Dokumentliste behandlingID={behandlingID} dokumenter={mapMottakerRader(muligeMottakere)} />
       )}
       <Mui.StegKnapper
         bekreftKnappProps={{

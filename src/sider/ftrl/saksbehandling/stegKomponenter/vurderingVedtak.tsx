@@ -36,6 +36,7 @@ import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegK
 import { FRITEKST_VALG } from "../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../ducks/menypanel";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 
 const { INNVILGELSE_FOLKETRYGDLOVEN } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -198,44 +199,21 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     });
   }
 
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
-    return [
-      {
-        navn: ikon ? (
-          <>
-            <Ikoner.Forhandsvis />
-            <span className="sr-only">Forhåndsvis dokument {muligMottaker.dokumentNavn}</span>
-          </>
-        ) : (
-          muligMottaker.dokumentNavn
-        ),
-        data: {
-          produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN,
-          mottaker: muligMottaker.rolle,
-          innledningFritekst: formValues?.innledningFritekst || null,
-          begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-          trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
-          nyVurderingBakgrunn:
-            formValues?.nyVurderingBakgrunnValg === FRITEKST_VALG
-              ? formValues?.nyVurderingBakgrunnFritekst
-              : formValues?.nyVurderingBakgrunnValg,
-          orgNr: muligMottaker?.orgnr || null,
-        },
-      },
-    ];
-  };
-
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
-      dokument: (
-        <PdfLenkeListe
-          behandlingID={behandlingID}
-          dokumenter={lagDokumenterData(muligMottaker)}
-          vedKlikk={() => true}
-          className="forhåndsvisning"
-        />
-      ),
-      navn: muligMottaker.mottakerNavn,
+      dokumentData: {
+        produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN,
+        mottaker: muligMottaker.rolle,
+        innledningFritekst: formValues?.innledningFritekst || null,
+        begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+        trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
+        nyVurderingBakgrunn:
+          formValues?.nyVurderingBakgrunnValg === FRITEKST_VALG
+            ? formValues?.nyVurderingBakgrunnFritekst
+            : formValues?.nyVurderingBakgrunnValg,
+        orgNr: muligMottaker?.orgnr || null,
+      },
+      mottakerNavn: muligMottaker.mottakerNavn,
     };
   };
 
@@ -448,22 +426,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       />
 
       {stegErGyldig && muligeMottakere && (
-        <Table>
-          <Table.Header>
-            <Table.HeaderCell>Dokument</Table.HeaderCell>
-            <Table.HeaderCell>Mottaker</Table.HeaderCell>
-          </Table.Header>
-          <Table.Body>
-            {mapMottakerRader(muligeMottakere).map((mottaker) => {
-              return (
-                <Table.Row key={Utils._uuid()}>
-                  <Table.DataCell>{mottaker.dokument}</Table.DataCell>
-                  <Table.DataCell>{mottaker.navn}</Table.DataCell>
-                </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table>
+        <Dokumentliste behandlingID={behandlingID} dokumenter={mapMottakerRader(muligeMottakere)} />
       )}
       <Mui.StegKnapper
         bekreftKnappProps={{
