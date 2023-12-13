@@ -19,6 +19,20 @@ const { MEDLEMSKAP_LOVVALG, UNNTAK, TRYGDEAVGIFT } = MKV.Terms.sakstemaer;
 const { YRKESAKTIV, ANMODNING_OM_UNNTAK_HOVEDREGEL, PENSJONIST, IKKE_YRKESAKTIV } =
   MKV.Terms.behandlinger.behandlingstema;
 const { FØRSTEGANG, NY_VURDERING, HENVENDELSE, KLAGE } = MKV.Terms.behandlinger.behandlingstyper;
+
+vi.mock("../../../../services/modules/anmodningsperioder", async () => ({
+  send: () => Promise.resolve(),
+  hent: () => Promise.resolve(),
+}));
+
+vi.mock("../../../../services/modules/kontroll", async () => {
+  const actual = await vi.importActual("../../../../services/modules/kontroll");
+  return {
+    ...actual,
+    kontrollerAdresse: () => Promise.resolve({ kontrollfeilList: [] }),
+  };
+});
+
 vi.mock("../../../../graphql/navn", () => ({
   hentSammensattNavn: () => Promise.resolve("KARAFFEL TRIVIELL"),
 }));
@@ -115,7 +129,7 @@ describe("JournalforingForm", () => {
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Opprett ny sak"));
-    await userEvent.selectOptions(getByLabelText("Sakstype"), FTRL);
+    await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
     await userEvent.selectOptions(getByLabelText("Sakstema"), MEDLEMSKAP_LOVVALG);
     await userEvent.selectOptions(getByLabelText("Behandlingstema"), YRKESAKTIV);
     await userEvent.selectOptions(getByLabelText("Behandlingstype"), FØRSTEGANG);
@@ -132,7 +146,7 @@ describe("JournalforingForm", () => {
       const user = userEvent.setup();
 
       await user.click(await findByLabelText("Opprett ny sak"));
-      await userEvent.selectOptions(getByLabelText("Sakstype"), FTRL);
+      await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
       await userEvent.selectOptions(getByLabelText("Sakstema"), sakstema);
       await userEvent.selectOptions(getByLabelText("Behandlingstema"), YRKESAKTIV);
       await userEvent.selectOptions(getByLabelText("Behandlingstype"), FØRSTEGANG);
@@ -153,7 +167,7 @@ describe("JournalforingForm", () => {
     fireEvent.change(orgnrInput, { target: { value: "999999999" } });
     expect(await findByText("Ståles Stål AS")).toBeInTheDocument();
     await user.click(getByLabelText("Opprett ny sak"));
-    await userEvent.selectOptions(getByLabelText("Sakstype"), FTRL);
+    await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
     await userEvent.selectOptions(getByLabelText("Sakstema"), MEDLEMSKAP_LOVVALG);
     await userEvent.selectOptions(getByLabelText("Behandlingstema"), YRKESAKTIV);
     await userEvent.selectOptions(getByLabelText("Behandlingstype"), FØRSTEGANG);
