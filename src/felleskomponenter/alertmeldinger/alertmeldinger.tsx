@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import { AlertStripeType } from "nav-frontend-alertstriper";
-import classNames from "classnames";
 
-import MKV from "../../melosyskodeverk";
 import * as Ikoner from "../../resources/images";
-import * as KV from "../../kodeverk";
 import * as Nav from "../../navFrontend";
-import * as Utils from "../../utils";
 
-import { Feilkode } from "../../@types";
 import "./alertmeldinger.css";
 
 export const Innsynsmelding = ({ className = "" }) => (
