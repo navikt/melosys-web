@@ -22,7 +22,7 @@ export interface DokumentMetadataType {
   sedType?: string;
 }
 
-interface DokumentlisteType {
+export interface DokumentlisteType {
   behandlingID: number;
   dokumenter: DokumentMetadataType[];
   validateOnClick?: () => Promise<unknown> | {};
@@ -40,8 +40,17 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
 
     let fileURL;
     try {
-      if (dokument.sedData && dokument.sedType) {
-        fileURL = await dokumenterOperations.forhandsvisSed(behandlingID, dokument.sedType, dokument.sedData);
+      if (dokument.sedType) {
+        fileURL = await dokumenterOperations.forhandsvisSed(
+          behandlingID,
+          dokument.sedType,
+          dokument.sedData || {
+            begrunnelseUtenlandskMyndighet: null,
+            fritekst: null,
+            nyttLovvalgsland: null,
+            vilSendeAnmodningOmMerInformasjon: null,
+          }
+        );
       } else if (dokument.dokumentData) {
         fileURL = await dokumenterOperations.forhandsvisBrevV2(behandlingID, dokument.dokumentData);
       } else {
@@ -49,7 +58,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
       }
     } catch (error: any) {
       if (error?.status >= 500) {
-        setFeilmelding(`Det oppstod en feil da ${dokument.sedData ? "SED" : "brevet"} skulle forhåndsvises!`);
+        setFeilmelding(`Det oppstod en feil da ${dokument.sedType ? "SED" : "brevet"} skulle forhåndsvises!`);
       } else if (error?.status >= 400) {
         setFeilmelding(error?.body?.message);
       }
@@ -62,7 +71,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   };
 
   const mapDokument = (dokument: DokumentMetadataType) => {
-    if (dokument.sedData) return mapSED(dokument);
+    if (dokument.sedType) return mapSED(dokument);
     return (
       <Table.Row>
         <Table.DataCell>

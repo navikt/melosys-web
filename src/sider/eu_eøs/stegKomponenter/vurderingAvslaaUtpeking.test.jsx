@@ -2,7 +2,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
 
 import { VurderingAvslaaUtpeking } from "./vurderingAvslaaUtpeking";
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 
 describe("VurderingAvslaaUtpeking", () => {
   let props = null;
@@ -42,12 +42,12 @@ describe("VurderingAvslaaUtpeking", () => {
     expect(vurderingAvslaaUtpeking.find(Skjema.LandVelger)).toHaveLength(1);
   });
 
-  it("viser en pdflenkeliste", () => {
+  it("viser en dokumentliste", () => {
     const vurderingAvslaaUtpeking = shallow(<VurderingAvslaaUtpeking {...props} />);
-    const pdfLenkeListe = vurderingAvslaaUtpeking.find(PdfLenkeListe);
+    const dokumentliste = vurderingAvslaaUtpeking.find(Dokumentliste);
 
-    expect(pdfLenkeListe).toHaveLength(1);
-    expect(pdfLenkeListe.props().behandlingID).toBe(props.behandlingID);
+    expect(dokumentliste).toHaveLength(1);
+    expect(dokumentliste.props().behandlingID).toBe(props.behandlingID);
   });
 
   it("viser en knapp for å avslutte behandling", () => {

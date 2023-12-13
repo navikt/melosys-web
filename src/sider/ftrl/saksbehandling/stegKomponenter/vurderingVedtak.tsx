@@ -26,7 +26,6 @@ import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontrol
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import { formSelectors } from "../../../../ducks/form";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";

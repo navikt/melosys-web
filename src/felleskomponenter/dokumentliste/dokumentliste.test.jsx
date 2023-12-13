@@ -4,13 +4,14 @@ import userEvent from "@testing-library/user-event";
 import * as EKV from "eessi-kodeverk";
 import MKV from "../../melosyskodeverk";
 
-import PdfLenkeListe from "./pdfLenkeListe";
+import Dokumentliste from "./dokumentliste";
+import * as KV from "../../kodeverk";
 
 vi.mock("../../featuretoggle", () => ({
   useFeatureToggle: vi.fn(),
 }));
 
-describe("PdfLenkeListe", () => {
+describe("Dokumentliste", () => {
   let props = null;
 
   beforeEach(() => {
@@ -20,36 +21,32 @@ describe("PdfLenkeListe", () => {
       behandlingID: 1,
       dokumenter: [
         {
-          navn: "Forhåndsvis vedtaksbrev",
-          data: {
+          dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
             mottaker: MKV.Koder.mottakerroller.BRUKER,
             begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
           },
         },
         {
-          navn: "Forhåndsvis SED A003",
-          type: EKV.Koder.sedtyper.A003,
-          erSed: true,
-          data: {},
+          sedType: EKV.Koder.sedtyper.A003,
         },
       ],
-      vedKlikk: vi.fn(() => true),
+      validateOnClick: vi.fn(() => true),
     };
   });
 
   it("viser samme antall linker som antall dokumenter passet som props ", () => {
     props.dokumenter = [];
-    render(<PdfLenkeListe {...props} />);
+    render(<Dokumentliste {...props} />);
 
     expect(screen.queryAllByRole("button")).toHaveLength(props.dokumenter.length);
 
     props.dokumenter = [
-      { navn: "test", data: {} },
-      { navn: "test", data: {} },
-      { navn: "test", data: {} },
+      { dokumentData: { produserbardokument: "", mottaker: "" } },
+      { dokumentData: { produserbardokument: "", mottaker: "" } },
+      { dokumentData: { produserbardokument: "", mottaker: "" } },
     ];
-    render(<PdfLenkeListe {...props} />);
+    render(<Dokumentliste {...props} />);
 
     expect(screen.queryAllByRole("button")).toHaveLength(props.dokumenter.length);
   });
@@ -63,11 +60,18 @@ describe("PdfLenkeListe", () => {
       };
       fetch.mockResponse(JSON.stringify(responseBody), { status: responseBody.status });
 
-      render(<PdfLenkeListe {...props} />);
+      render(<Dokumentliste {...props} />);
       const user = userEvent.setup();
 
       await act(async () => {
-        user.click(screen.getByText(props.dokumenter[0].navn));
+        user.click(
+          screen.getByText(
+            KV.kodeTilTerm(
+              props.dokumenter[0].dokumentData?.produserbardokument,
+              MKV.KTObjects.brev.produserbaredokumenter
+            )
+          )
+        );
       });
 
       expect(await screen.findByText(responseBody.message)).toBeInTheDocument();
@@ -81,11 +85,18 @@ describe("PdfLenkeListe", () => {
       };
       fetch.mockResponse(JSON.stringify(responseBody), { status: responseBody.status });
 
-      render(<PdfLenkeListe {...props} />);
+      render(<Dokumentliste {...props} />);
       const user = userEvent.setup();
 
       await act(async () => {
-        user.click(screen.getByText(props.dokumenter[0].navn));
+        user.click(
+          screen.getByText(
+            KV.kodeTilTerm(
+              props.dokumenter[0].dokumentData?.produserbardokument,
+              MKV.KTObjects.brev.produserbaredokumenter
+            )
+          )
+        );
       });
 
       expect(await screen.findByText("Det oppstod en feil da brevet skulle forhåndsvises!")).toBeInTheDocument();
@@ -101,11 +112,11 @@ describe("PdfLenkeListe", () => {
       };
       fetch.mockResponse(JSON.stringify(responseBody), { status: responseBody.status });
 
-      render(<PdfLenkeListe {...props} />);
+      render(<Dokumentliste {...props} />);
       const user = userEvent.setup();
 
       await act(async () => {
-        user.click(screen.getByText(props.dokumenter[1].navn));
+        user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
       });
 
       expect(await screen.findByText(responseBody.message)).toBeInTheDocument();
@@ -119,11 +130,11 @@ describe("PdfLenkeListe", () => {
       };
       fetch.mockResponse(JSON.stringify(responseBody), { status: responseBody.status });
 
-      render(<PdfLenkeListe {...props} />);
+      render(<Dokumentliste {...props} />);
       const user = userEvent.setup();
 
       await act(async () => {
-        user.click(screen.getByText(props.dokumenter[1].navn));
+        user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
       });
 
       expect(await screen.findByText("Det oppstod en feil da SED skulle forhåndsvises!")).toBeInTheDocument();
