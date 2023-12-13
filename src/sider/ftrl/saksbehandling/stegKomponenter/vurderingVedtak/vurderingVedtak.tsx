@@ -38,6 +38,7 @@ import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/menypanel";
 
 const { INNVILGELSE_FOLKETRYGDLOVEN, VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
+const { MEDLEM_I_FOLKETRYGDEN, DELVIS_OPPHØRT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const VEDTAK_OPPHOER = "Vedtak om opphør av frivillig medlemskap";
 export const VEDTAK_ENDRET = "Endret vedtak om frivillig medlemskap";
 
@@ -73,6 +74,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const mottatteOpplysningerFeilmeldinger = useSelector(formSelectors.SoknadErrorsSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
+  const behandlingsresultatType = useSelector(behandlingsresultatSelectors.BehandlingsresultatTypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const alleLandkoder = useSelector(landkoderSelectors.LandkoderSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
@@ -94,6 +96,17 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const dispatch = useDispatch();
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
 
+  const mapVedtakValg = () => {
+    if (erManglendeInnbetalingTrygdeavgift) {
+      if (behandlingsresultatType === DELVIS_OPPHØRT) {
+        return VEDTAK_OPPHOER;
+      }
+      if (behandlingsresultatType === MEDLEM_I_FOLKETRYGDEN) {
+        return VEDTAK_ENDRET;
+      }
+    }
+    return "";
+  };
   const {
     watch,
     control,
@@ -111,10 +124,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       trygdeavgiftFritekst: useSelector(behandlingsresultatSelectors.TrygdeavgiftFritekstSelector) || "",
       nyVurderingBakgrunnValg: initialNyVurderingBakgrunnValg,
       nyVurderingBakgrunnFritekst: initialNyVurderingBakgrunnFritekst,
-      // TODO: Må vente til MELOSYS-6217 da nytt behandlingsresultattype kommer
-      // vedtakValg settes til VEDTAK_OPPHOER dersom behandlingsresultattype == DELVIS_OPPHØRT og behandlingstype er MANGLENDE_INNBETALING_TRYGDEAVGIFT
-      // vedtakValg settes til VEDTAK_ENDRET dersom behandlingsresultattype == MEDLEM_I_FOLKETRYGDEN og behandlingstype er MANGLENDE_INNBETALING_TRYGDEAVGIFT
-      vedtakValg: "",
+      vedtakValg: mapVedtakValg(),
     } as FieldValues,
   });
   const formValues = watch();
@@ -262,7 +272,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const lagFattVedtakFTRLReqDto = () => {
     return {
-      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
+      behandlingsresultatTypeKode: vedtakOpphøres ? DELVIS_OPPHØRT : MEDLEM_I_FOLKETRYGDEN,
       innledningFritekst: formValues?.innledningFritekst || null,
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
       trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
@@ -281,7 +291,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       const request = {
         behandlingID,
         vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-        behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
+        behandlingsresultattype: vedtakOpphøres ? DELVIS_OPPHØRT : MEDLEM_I_FOLKETRYGDEN,
         skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
       };
       setOppdaterFørKontroll(false);
