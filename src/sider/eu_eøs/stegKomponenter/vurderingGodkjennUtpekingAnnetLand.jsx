@@ -71,7 +71,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
 
   const dokumenter = [
     {
-      type: EKV.Koder.sedtyper.A012,
+      sedType: EKV.Koder.sedtyper.A012,
       sedData: { fritekst },
     },
   ];

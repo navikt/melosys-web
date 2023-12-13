@@ -209,7 +209,7 @@ export class VurderingEndrePeriode extends Component {
         },
       },
       {
-        type: EKV.Koder.sedtyper.A009,
+        sedType: EKV.Koder.sedtyper.A009,
         sedData: {
           fritekst: fritekstSed,
         },

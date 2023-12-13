@@ -18,8 +18,8 @@ export interface DokumentMetadataType {
   dokumentNavn?: string;
   mottakerNavn?: string;
   dokumentData?: Api.DokumenterV2.OpprettBrevReqDto;
-  sedData?: SedPdfData;
   sedType?: string;
+  sedData?: SedPdfData;
 }
 
 export interface DokumentlisteType {
