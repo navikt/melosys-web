@@ -15,17 +15,17 @@ import * as MPT from "../../../../proptypes";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
 import { journalforingSelectors } from "../../../../ducks/journalforing";
 import { formSelectors } from "../../../../ducks/form";
+import { sokSelectors } from "../../../../ducks/sok";
 
 import Informasjon from "../informasjon";
 import FagsakVelger from "../fagsakVelger";
 import SendForvaltningsMelding from "../sendForvaltningsMelding";
 import Komponent, { KomponentUtenOverskrift } from "../komponent";
-import Fotknapper from "../fotknapper";
 
+import Fotknapper from "../fotknapper";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import JournalforingSchema from "../journalforingSchema";
 import "./journalforingform.css";
-import { sokSelectors } from "~/ducks/sok";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 const { FULLMEKTIG, ANNEN_PERSON_ORG } = KV.AvsenderTyper;
@@ -43,7 +43,7 @@ const skalViseForvaltningsmelding = (formValues, fagsakListe) => {
   }
   if (saksnummer && !Utils._isEmpty(fagsakListe)) {
     // Eksisterende sak
-    const fagsak = fagsakListe.find((fagsak) => fagsak.saksnummer === saksnummer);
+    const fagsak = fagsakListe.find((sak) => sak.saksnummer === saksnummer);
     return (
       journalforingGjelder === BRUKER &&
       fagsak?.sakstema?.kode === MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG &&
@@ -53,7 +53,7 @@ const skalViseForvaltningsmelding = (formValues, fagsakListe) => {
   return false;
 };
 
-export const JournalforingForm = ({
+const JournalforingForm = ({
   journalpostID,
   hoveddokumentID,
   vedlegg,
