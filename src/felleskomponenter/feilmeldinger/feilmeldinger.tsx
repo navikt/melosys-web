@@ -22,7 +22,7 @@ export default ({ className }: feilmeldingerProps) => {
     return null;
   }
 
-  const renderFiltrerteFeilmeldinger = () => {
+  const renderFeilmeldinger = () => {
     if (typeof exceptionFeilmeldinger === "string") {
       return `Teknisk feil: ${exceptionFeilmeldinger}`;
     }
@@ -66,7 +66,7 @@ export default ({ className }: feilmeldingerProps) => {
   };
 
   const classNameFeilmeldinger = classNames("feilmelding", className);
-  const feilmeldingerContent = renderFiltrerteFeilmeldinger();
+  const feilmeldingerContent = renderFeilmeldinger();
   const advarslerContent = renderAdvarsler();
 
   if (!feilmeldingerContent && !advarslerContent) {
