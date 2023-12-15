@@ -272,7 +272,7 @@ const VurderingVedtak = ({
           <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
         )}
         <Nav.Row>
-          <Nav.Column xs="6">
+          <Nav.Column xs="7">
             {stegErGyldig && (
               <Dokumentliste
                 behandlingID={behandlingID}

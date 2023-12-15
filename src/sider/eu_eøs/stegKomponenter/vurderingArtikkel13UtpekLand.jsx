@@ -215,7 +215,7 @@ export const VurderingArtikkel13UtpekLand = ({
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
-        <Nav.Column xs="6">
+        <Nav.Column xs="7">
           {redigerbart && (
             <Dokumentliste
               behandlingID={behandlingID}

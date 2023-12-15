@@ -89,7 +89,7 @@ export const VurderingVideresend = ({
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs="7">
+          <Nav.Column xs="8">
             {redigerbart && <Dokumentliste dokumenter={pdfDokumenter} behandlingID={behandlingID} />}
           </Nav.Column>
         </Nav.Row>

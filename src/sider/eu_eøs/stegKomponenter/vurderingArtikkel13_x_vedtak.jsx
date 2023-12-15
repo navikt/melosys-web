@@ -218,7 +218,7 @@ export const VurderingArtikkel13_x_vedtak = ({
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
-        <Nav.Column xs="6">
+        <Nav.Column xs="8">
           {stegErGyldig && (
             <Dokumentliste
               behandlingID={behandlingID}
