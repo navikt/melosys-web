@@ -244,8 +244,6 @@ const Saksbehandling = ({
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
-  const medlemskapsperiodeFom = Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.fom);
-  const medlemskapsperiodeTom = Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.tom);
   return (
     <>
       <Informasjonlinje />
@@ -270,8 +268,8 @@ const Saksbehandling = ({
                   arbeidsland={landkoder?.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
-                  medlemskapsperiodeFom={medlemskapsperiodeFom}
-                  medlemskapsperiodeTom={medlemskapsperiodeTom}
+                  medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.fom)}
+                  medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.tom)}
                 />
                 <SaksoversiktLenke />
                 <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />

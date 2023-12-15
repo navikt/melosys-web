@@ -33,7 +33,8 @@ const skalViseForvaltningsmelding = (formValues) =>
   formValues.saksnummer === "-1" &&
   formValues.journalforingGjelder === BRUKER &&
   formValues.sakstema === MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG &&
-  formValues.opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
+  (formValues.opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG ||
+    formValues.opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING);
 
 export const JournalforingForm = ({
   journalpostID,

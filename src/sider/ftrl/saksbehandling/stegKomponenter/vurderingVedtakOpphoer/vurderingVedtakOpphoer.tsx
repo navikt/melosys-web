@@ -1,23 +1,22 @@
-import * as Nav from "../../../../navFrontend";
-import "./vurderingVedtak.css";
+import * as Nav from "../../../../../navFrontend";
+import "./vurderingVedtakOpphoer.css";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import { useDispatch, useSelector } from "react-redux";
-import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import vurdering_vedtak_opphoer from "./vurderingVedtakOpphoerSchema";
-import * as Api from "../../../../services/api";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import * as Api from "../../../../../services/api";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useCallback, useEffect, useState } from "react";
-import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import * as Forms from "../../../../felleskomponenter/forms";
-import * as Utils from "../../../../utils";
-import * as Mui from "../../../../felleskomponenter/ui";
-import MKV from "../../../../melosyskodeverk";
-import { vedtakOperations } from "../../../../ducks/vedtak";
+import * as Forms from "../../../../../felleskomponenter/forms";
+import * as Utils from "../../../../../utils";
+import * as Mui from "../../../../../felleskomponenter/ui";
+import MKV from "../../../../../melosyskodeverk";
+import { vedtakOperations } from "../../../../../ducks/vedtak";
+import Dokumentliste from "../../../../../felleskomponenter/dokumentliste";
 
-const { OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
+const { VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
 
 interface FormValuesProps {
   begrunnelseFritekst?: string;
@@ -46,7 +45,6 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
     } as FieldValues,
   });
-
   const formValues = watch();
 
   const oppdaterFritekster = (values: FormValuesProps) => {
@@ -64,7 +62,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: OPPHOERT_MEDLEMSKAP,
+      produserbartdokument: VEDTAK_OPPHOERT_MEDLEMSKAP,
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -77,17 +75,16 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
 
   const lagFattVedtakFTRLReqDto = () => {
     return {
-      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.HENLEGGELSE,
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.OPPHØRT,
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
       vedtakstype,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
     };
   };
-
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
       dokumentData: {
-        produserbardokument: OPPHOERT_MEDLEMSKAP,
+        produserbardokument: VEDTAK_OPPHOERT_MEDLEMSKAP,
         mottaker: muligMottaker.rolle,
         begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
         orgNr: muligMottaker?.orgnr || null,
@@ -118,16 +115,13 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
   if (!aktivtSteg) return null;
 
   return (
-    <div className="vurderingVedtak">
+    <div className="vurderingVedtakOpphoer">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Opphør av frivillig medlemskap etter § 2-15
       </Nav.Typo.Innholdstittel>
+
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-        <LabelMedHjelpetekst
-          label="Fritekst til begrunnelse"
-          hjelpetekst="begrunnelseFritekstHjelpetekst"
-          hjelpetekstClassName="hjelpetekst"
-        />
+        Fritekst til begrunnelse
       </Nav.Typo.Element>
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
@@ -135,9 +129,11 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
         className="fritekst_editor"
         disabled={!redigerbart}
       />
+
       {stegErGyldig && muligeMottakere && (
         <Dokumentliste behandlingID={behandlingID} dokumenter={mapMottakerRader(muligeMottakere)} />
       )}
+
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: onSubmit,
