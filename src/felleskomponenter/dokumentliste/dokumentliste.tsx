@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
 
-import { SedPdfData } from "Domene";
-import * as Api from "../../services/api";
-
 import * as Nav from "../../navFrontend";
 import { dokumenterOperations } from "../../ducks/dokumenter";
 
@@ -13,25 +10,18 @@ import "./dokumentliste.css";
 import { Table } from "@navikt/ds-react";
 import * as KV from "../../kodeverk";
 import MKV from "../../melosyskodeverk";
-
-export interface DokumentMetadataType {
-  dokumentNavn?: string;
-  mottakerNavn?: string;
-  dokumentData?: Api.DokumenterV2.OpprettBrevReqDto;
-  sedType?: string;
-  sedData?: SedPdfData;
-}
-
-export interface DokumentlisteType {
-  behandlingID: number;
-  dokumenter: DokumentMetadataType[];
-  validateOnClick?: () => Promise<unknown> | {};
-}
+import {
+  BrevDokumentMetadataType,
+  DokumentlisteType,
+  isBrev,
+  isSed,
+  SedDokumentMetadataType,
+} from "./dokumentlisteTyper";
 
 const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: DokumentlisteType) => {
   const [feilmelding, setFeilmelding] = useState<string | null>(null);
 
-  const klikk = async (dokument: DokumentMetadataType) => {
+  const klikk = async (dokument: BrevDokumentMetadataType | SedDokumentMetadataType) => {
     if (validateOnClick) {
       // Avbryt forespørsel hvis validator er oppgitt og returnerer false
       const validert = await validateOnClick();
@@ -40,7 +30,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
 
     let fileURL;
     try {
-      if (dokument.sedType) {
+      if (isSed(dokument)) {
         fileURL = await dokumenterOperations.forhandsvisSed(
           behandlingID,
           dokument.sedType,
@@ -51,14 +41,18 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
             vilSendeAnmodningOmMerInformasjon: null,
           }
         );
-      } else if (dokument.dokumentData) {
+      } else if (isBrev(dokument)) {
         fileURL = await dokumenterOperations.forhandsvisBrevV2(behandlingID, dokument.dokumentData);
       } else {
         setFeilmelding("Det oppsto en feil i forhåndsvisning av brev. Mangler data");
       }
     } catch (error: any) {
       if (error?.status >= 500) {
-        setFeilmelding(`Det oppstod en feil da ${dokument.sedType ? "SED" : "brevet"} skulle forhåndsvises!`);
+        if (isSed(dokument)) {
+          setFeilmelding("Det oppstod en feil da SED skulle forhåndsvises!");
+        } else {
+          setFeilmelding("Det oppstod en feil da brevet skulle forhåndsvises!");
+        }
       } else if (error?.status >= 400) {
         setFeilmelding(error?.body?.message);
       }
@@ -70,27 +64,24 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
     }
   };
 
-  const mapDokument = (dokument: DokumentMetadataType) => {
-    if (dokument.sedType) return mapSED(dokument);
-    return (
-      <Table.Row>
-        <Table.DataCell>
-          <button
-            className="dokumentliste__vis_dokument_knapp"
-            onClick={() => klikk(dokument)}
-            key={uuid()}
-            type="button"
-          >
-            {dokument.dokumentNavn ||
-              KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)}
-          </button>
-        </Table.DataCell>
-        <Table.DataCell>{dokument.mottakerNavn || dokument.dokumentData?.mottaker}</Table.DataCell>
-      </Table.Row>
-    );
-  };
+  const mapBrev = (dokument: BrevDokumentMetadataType) => (
+    <Table.Row>
+      <Table.DataCell>
+        <button
+          className="dokumentliste__vis_dokument_knapp"
+          onClick={() => klikk(dokument)}
+          key={uuid()}
+          type="button"
+        >
+          {dokument.dokumentNavn ||
+            KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)}
+        </button>
+      </Table.DataCell>
+      <Table.DataCell>{dokument.mottakerNavn || dokument.dokumentData?.mottaker}</Table.DataCell>
+    </Table.Row>
+  );
 
-  const mapSED = (dokument: DokumentMetadataType) => (
+  const mapSED = (dokument: SedDokumentMetadataType) => (
     <Table.Row>
       <Table.DataCell>
         <button
@@ -105,6 +96,12 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
       <Table.DataCell>{dokument.mottakerNavn}</Table.DataCell>
     </Table.Row>
   );
+
+  const mapDokument = (dokument: BrevDokumentMetadataType | SedDokumentMetadataType) => {
+    if (isSed(dokument)) return mapSED(dokument);
+    if (isBrev(dokument)) return mapBrev(dokument);
+    return null;
+  };
 
   return (
     <div>

@@ -1,4 +1,5 @@
-import Dokumentliste, { DokumentMetadataType } from "./dokumentliste";
+import Dokumentliste from "./dokumentliste";
+import { DokumentlisteType, BrevDokumentMetadataType, SedDokumentMetadataType } from "./dokumentlisteTyper";
 
-export type { DokumentMetadataType };
+export type { DokumentlisteType, BrevDokumentMetadataType, SedDokumentMetadataType };
 export default Dokumentliste;

@@ -11,7 +11,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
 import { SendBrevFormValues } from "../types";
 import { erBruker } from "./brevMottaker";
-import Dokumentliste, { DokumentMetadataType } from "../../../dokumentliste";
+import Dokumentliste, { BrevDokumentMetadataType } from "../../../dokumentliste";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -39,7 +39,7 @@ const BrevMottakereTabell = ({
 }: BrevMottakereTabellProps & PropsFromRedux) => {
   const mapKopiMottakere = (
     muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto
-  ): DokumentMetadataType[] => {
+  ): BrevDokumentMetadataType[] => {
     return formValues?.kopiTilBruker
       ? muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapDokument(muligMottaker))
       : [];
@@ -48,7 +48,7 @@ const BrevMottakereTabell = ({
   const mapDokument = (
     muligMottaker: Api.DokumenterV2.MuligMottaker,
     erHovedMottaker = false
-  ): DokumentMetadataType => {
+  ): BrevDokumentMetadataType => {
     const rolle = erHovedMottaker ? formValues.valgtMottaker?.rolle : muligMottaker.rolle;
     return {
       mottakerNavn: muligMottaker.mottakerNavn,
@@ -61,7 +61,7 @@ const BrevMottakereTabell = ({
 
   const mapMottakerRader = (
     muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto
-  ): DokumentMetadataType[] => {
+  ): BrevDokumentMetadataType[] => {
     return [
       mapDokument(muligeBrevMottakere.hovedMottaker, true),
       ...mapKopiMottakere(muligeBrevMottakere),
