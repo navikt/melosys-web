@@ -474,7 +474,7 @@ const VurderingVedtak = ({
         disabled={!redigerbart}
       />
 
-      {redigerbart && skalViseKopiTilArbeidsgiverCheckbox && (
+      {stegErGyldig && skalViseKopiTilArbeidsgiverCheckbox && (
         <Skjema.Checkbox
           feltNavn="kopiTilArbeidsgiver"
           label="Send kopi til arbeidsgiver/virksomhet"
