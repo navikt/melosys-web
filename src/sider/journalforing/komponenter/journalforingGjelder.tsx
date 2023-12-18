@@ -18,6 +18,7 @@ import "./journalforingGjelder.css";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 const { JOURNALFORING_VALUES: FormValues } = KV.Form;
+const { SEND_BRUKER, IKKE_SEND } = KV.Koder.FORVALTNINGSMELDING_MOTTAKER;
 
 const mapStateToProps = (state: RootState) => ({
   journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
@@ -48,12 +49,12 @@ const JournalforingGjelder = ({
     oppdaterFelt(FormValues.opprettnysak_behandlingstema, null);
     oppdaterFelt(FormValues.opprettnysak_behandlingstype, null);
     if (value === BRUKER) {
-      oppdaterFelt("ikkeSendForvaltingsmelding", false);
+      oppdaterFelt("mottakerForvaltingsmelding", SEND_BRUKER);
       oppdaterFelt("brukerID", journalpostBrukerID);
       oppdaterFelt("virksomhetOrgnr", null);
       oppdaterFelt("virksomhetNavn", null);
     } else {
-      oppdaterFelt("ikkeSendForvaltingsmelding", true);
+      oppdaterFelt("mottakerForvaltingsmelding", IKKE_SEND);
       oppdaterFelt("virksomhetOrgnr", journalpostVirksomhetOrgnr);
       oppdaterFelt("brukerID", null);
       oppdaterFelt("brukerNavn", null);

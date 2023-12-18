@@ -18,7 +18,6 @@ export const testReduxState = {
         fullmektigKontaktperson: null,
         fullmektigKontaktOrgnr: null,
         fullmakter: [],
-        annenPersonOrgErFullmektig: false,
         mottattDato: "11.12.2023",
         hoveddokument: {
           tittel: "Tittel til Dokument",
@@ -29,7 +28,7 @@ export const testReduxState = {
         },
         journalforingSoknadsland: [],
         journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-        ikkeSendForvaltingsmelding: false,
+        mottakerForvaltingsmelding: "SEND_BRUKER",
         skalTilordnes: false,
         submittable: false,
         sakstype: null,
@@ -58,7 +57,6 @@ export const testReduxState = {
         fullmektigKontaktperson: null,
         fullmektigKontaktOrgnr: null,
         fullmakter: [],
-        annenPersonOrgErFullmektig: false,
         mottattDato: "11.12.2023",
         hoveddokument: {
           tittel: "Tittel til Dokument",
@@ -69,7 +67,7 @@ export const testReduxState = {
         },
         journalforingSoknadsland: [],
         journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-        ikkeSendForvaltingsmelding: false,
+        mottakerForvaltingsmelding: "SEND_BRUKER",
         skalTilordnes: false,
         submittable: false,
       },
@@ -119,14 +117,14 @@ export const testReduxState = {
           type: "Field",
           count: 4,
         },
-        ikkeSendForvaltingsmelding: {
-          name: "ikkeSendForvaltingsmelding",
+        mottakerForvaltingsmelding: {
+          name: "mottakerForvaltingsmelding",
           type: "Field",
           count: 3,
         },
       },
       fields: {
-        ikkeSendForvaltingsmelding: {
+        mottakerForvaltingsmelding: {
           autofilled: true,
         },
         behandlingstype: {

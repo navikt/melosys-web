@@ -4,7 +4,7 @@ import { AvsenderVelgerForVirksomhet } from "./avsenderVelgerForVirksomhet";
 import AvsenderArbeidsgiver from "./avsenderArbeidsgiver";
 import AvsenderFullmektig from "./avsenderFullmektig";
 import AvsenderUtenlandskTrygdemyndighet from "./avsenderUtenlandskTrygdemyndighet";
-import AvsenderAnnenPersonOrganisasjon from "./avsenderAnnenPersonOrganisasjon";
+import AvsenderAnnenPersonEllerVirksomhet from "./avsenderAnnenPersonEllerVirksomhet";
 
 export {
   AvsenderArbeidsgiver,
@@ -13,5 +13,5 @@ export {
   AvsenderVelgerForVirksomhet,
   AvsenderVelgerForBruker,
   AvsenderVelgerForBrukerGammel,
-  AvsenderAnnenPersonOrganisasjon,
+  AvsenderAnnenPersonEllerVirksomhet,
 };

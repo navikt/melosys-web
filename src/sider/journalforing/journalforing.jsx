@@ -73,7 +73,7 @@ class Journalforing extends Component {
     if (avsenderType === KV.AvsenderTyper.ANNEN || avsenderType === KV.AvsenderTyper.FRITEKST) {
       return null;
     }
-    if (avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ORG) {
+    if (avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET) {
       if (Utils.organisasjon.erOrgnrGyldig(avsenderID)) {
         return MKV.Koder.avsendertyper.ORGANISASJON;
       }
@@ -193,7 +193,7 @@ class Journalforing extends Component {
       journalforingSoknadslandUkjenteEllerAlleEosLand,
       journalforingPeriodeFraOgMed,
       journalforingPeriodeTilOgMed,
-      ikkeSendForvaltingsmelding,
+      mottakerForvaltingsmelding,
     } = this.props.journalforingSkjemaVerdier;
 
     const fagsak = {
@@ -221,7 +221,7 @@ class Journalforing extends Component {
       fullmektigKontaktperson,
       fullmektigKontaktOrgnr,
       fullmakter,
-      ikkeSendForvaltingsmelding,
+      ikkeSendForvaltingsmelding: mottakerForvaltingsmelding !== KV.Koder.FORVALTNINGSMELDING_MOTTAKER.IKKE_SEND,
       fagsak,
     };
   };

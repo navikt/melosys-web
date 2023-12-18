@@ -7,13 +7,13 @@ import MKV from "../../../melosyskodeverk";
 
 import "./sendForvaltningsMelding.css";
 
+const { SEND_AVSENDER, SEND_BRUKER, IKKE_SEND } = KV.Koder.FORVALTNINGSMELDING_MOTTAKER;
+
 interface SendForvaltningsMeldingProps {
   avsenderType: string;
   settFeltInnhold: (felt: string, value: string | boolean) => void;
   harRegistrertAdresse?: boolean;
   representantRepresenterer?: string;
-  annenPersonOrgErFullmektig?: boolean;
-  fullmakter?: string[];
 }
 
 const SendForvaltningsMelding = ({
@@ -21,16 +21,11 @@ const SendForvaltningsMelding = ({
   settFeltInnhold,
   harRegistrertAdresse,
   representantRepresenterer,
-  annenPersonOrgErFullmektig,
-  fullmakter,
 }: SendForvaltningsMeldingProps) => {
   const representererBruker = [MKV.Koder.representerer.BRUKER, MKV.Koder.representerer.BEGGE].includes(
     representantRepresenterer
   );
-  const fullmektigForBruker = fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD);
-  const avsenderErFullmektigForBruker =
-    (avsenderType === KV.AvsenderTyper.FULLMEKTIG && representererBruker) ||
-    (avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ORG && annenPersonOrgErFullmektig && fullmektigForBruker);
+  const avsenderErFullmektigForBruker = avsenderType === KV.AvsenderTyper.FULLMEKTIG && representererBruker;
 
   useEffect(
     () => () => {
@@ -45,17 +40,33 @@ const SendForvaltningsMelding = ({
     <div className="sendForvaltningsmelding">
       <Nav.Typo.Element>Skal melding om saksbehandlingtid sendes automatisk?</Nav.Typo.Element>
 
-      <Skjema.RadioGruppe feltNavn="ikkeSendForvaltingsmelding" label="">
+      <Skjema.RadioGruppe feltNavn="mottakerForvaltingsmelding" label="">
         <Skjema.Radio
           disabled={!harRegistrertAdresse}
-          feltNavn="ikkeSendForvaltingsmelding"
-          label="Ja, melding skal sendes automatisk"
-          value={false}
+          feltNavn="mottakerForvaltingsmelding"
+          label={
+            <>
+              Ja, melding skal sendes automatisk til <b>bruker</b>
+            </>
+          }
+          value={SEND_BRUKER}
         />
+        {avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET ? (
+          <Skjema.Radio
+            disabled={!harRegistrertAdresse}
+            feltNavn="mottakerForvaltingsmelding"
+            label={
+              <>
+                Ja, melding skal sendes automatisk til <b>avsender</b>
+              </>
+            }
+            value={SEND_AVSENDER}
+          />
+        ) : null}
         <Skjema.Radio
-          feltNavn="ikkeSendForvaltingsmelding"
+          feltNavn="mottakerForvaltingsmelding"
           label="Nei, jeg vil sende melding senere eller behandle saken innen kort tid"
-          value
+          value={IKKE_SEND}
         />
         {avsenderType === KV.AvsenderTyper.FULLMEKTIG && (
           <Fragment>

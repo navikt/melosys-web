@@ -33,7 +33,6 @@ const VELG_ETT_LAND_UTENLANDSK_TRYGDEMYNDIGHET = { melding: "Velg land til avsen
 const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
 const OPPGI_AVSENDER = { melding: "Oppgi avsender" };
 const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
-const VELG_MINST_EN_FULLMAKT = { melding: "Velg minst én fullmakt for fullmektig" };
 
 const lagMelding = (felt) => ({ melding: `${felt} må fylles ut` });
 
@@ -55,8 +54,8 @@ const arbeidsgiverOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) 
   return avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && !erAvsenderPreutfylt;
 };
 
-const fullmektigOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt, annenPersonOrgErFullmektig) => {
-  return (avsenderType === KV.AvsenderTyper.FULLMEKTIG || annenPersonOrgErFullmektig) && !erAvsenderPreutfylt;
+const annenPersonEllerVirksomhetOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
+  return avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET && !erAvsenderPreutfylt;
 };
 
 const erFritekstEllerAnnenAvsender = (avsenderType) =>
@@ -126,8 +125,8 @@ const journalforing = object().shape({
           then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR).nullable(),
         }),
     })
-    .when(["avsenderType", "$erAvsenderPreutfylt", "annenPersonOrgErFullmektig"], {
-      is: fullmektigOgIkkePreutfyltAvsender,
+    .when(["avsenderType", "$erAvsenderPreutfylt"], {
+      is: annenPersonEllerVirksomhetOgIkkePreutfyltAvsender,
       then: string()
         .nullable()
         .erNummerTolerererEttMellomrom(SKRIV_INN_KUN_NUMMER)
@@ -175,23 +174,6 @@ const journalforing = object().shape({
       then: string().required(VELG_REPRESENTERER).nullable(),
     })
     .nullable(),
-  fullmektigID: string().nullable(),
-  fullmektigKontaktperson: string().nullable(),
-  fullmektigKontaktOrgnr: string()
-    .nullable()
-    .test(
-      "gyldig orgnr hvis den er fylt inn",
-      SKRIV_INN_GYLDIG_ORGNR,
-      (orgnr) => Utils._isEmpty(orgnr) || Utils.organisasjon.erOrgnrGyldig(orgnr)
-    ),
-  fullmakter: array()
-    .of(string())
-    .ensure()
-    .when(["annenPersonOrgErFullmektig"], {
-      is: true,
-      then: array().min(1, { _error: VELG_MINST_EN_FULLMAKT }),
-    }),
-  annenPersonOrgErFullmektig: boolean().nullable(),
   utenlandskTrygdemyndighetLandkode: string()
     .when("avsenderType", {
       is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
