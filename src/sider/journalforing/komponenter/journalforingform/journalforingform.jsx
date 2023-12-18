@@ -43,10 +43,10 @@ const skalViseForvaltningsmelding = (formValues, fagsakListe) => {
   }
   if (saksnummer && !Utils._isEmpty(fagsakListe)) {
     // Eksisterende sak
-    const fagsak = fagsakListe.find((sak) => sak.saksnummer === saksnummer);
+    const valgtFagsak = fagsakListe.find((sak) => sak.saksnummer === saksnummer);
     return (
       journalforingGjelder === BRUKER &&
-      fagsak?.sakstema?.kode === MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG &&
+      valgtFagsak?.sakstema?.kode === MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG &&
       behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
     );
   }

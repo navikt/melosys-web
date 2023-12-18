@@ -2,7 +2,7 @@ import MKV from "../../../../melosyskodeverk";
 
 import Journalforingform from "./journalforingform";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
-import { initialState } from "./initialState";
+import { testReduxState } from "./testReduxState";
 import userEvent from "@testing-library/user-event";
 import { fireEvent } from "@testing-library/react";
 
@@ -38,7 +38,7 @@ vi.mock("../../../../graphql/navn", () => ({
 }));
 
 vi.mock("../../../../services/modules/fagsaker/sok", () => ({
-  send: () => Promise.resolve(initialState.sok.data.fagsakListe),
+  send: () => Promise.resolve(testReduxState.sok.data.fagsakListe),
 }));
 
 vi.mock("../../../../services/modules/organisasjoner", () => ({
@@ -124,7 +124,7 @@ describe("JournalforingForm", () => {
 
   it("sending av forvaltningsmelding vises for sakstema MEDLEMSKAP_LOVVALG og behandlingstype FØRSTEGANG", async () => {
     const { findByLabelText, getByLabelText, getByText } = renderWithProviders(<Journalforingform {...props} />, {
-      preloadedState: initialState,
+      preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
@@ -141,7 +141,7 @@ describe("JournalforingForm", () => {
     const sakstemaer = [UNNTAK, TRYGDEAVGIFT];
     sakstemaer.forEach(async (sakstema) => {
       const { findByLabelText, getByLabelText, queryByText } = renderWithProviders(<Journalforingform {...props} />, {
-        preloadedState: initialState,
+        preloadedState: testReduxState,
       });
       const user = userEvent.setup();
 
@@ -158,7 +158,7 @@ describe("JournalforingForm", () => {
   it("sending av forvaltningsmelding vises ikke når man journalfører på virksomhet", async () => {
     const { findByLabelText, getByLabelText, queryByText, findByText } = renderWithProviders(
       <Journalforingform {...props} />,
-      { preloadedState: initialState }
+      { preloadedState: testReduxState }
     );
     const user = userEvent.setup();
 
@@ -177,7 +177,7 @@ describe("JournalforingForm", () => {
 
   it("skalTilordnes vises når vi oppretter sak", async () => {
     const { findByLabelText, getByLabelText } = renderWithProviders(<Journalforingform {...props} />, {
-      preloadedState: initialState,
+      preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
@@ -187,7 +187,7 @@ describe("JournalforingForm", () => {
 
   it("skalTilordnes vises før vi velger sak", async () => {
     const { getByLabelText } = renderWithProviders(<Journalforingform {...props} />, {
-      preloadedState: initialState,
+      preloadedState: testReduxState,
     });
 
     expect(getByLabelText("Legg behandlingen i mine oppgaver")).toBeInTheDocument();
@@ -195,7 +195,7 @@ describe("JournalforingForm", () => {
 
   it("skalTilordnes vises ikke når sak har saksstatus HENLAGT", async () => {
     const { findByLabelText, queryByLabelText, getByRole } = renderWithProviders(<Journalforingform {...props} />, {
-      preloadedState: initialState,
+      preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
@@ -206,7 +206,7 @@ describe("JournalforingForm", () => {
 
   it("skalTilordnes vises ikke når sak har saksstatus HENLAGT_BORFALT", async () => {
     const { findByLabelText, queryByLabelText, getByRole } = renderWithProviders(<Journalforingform {...props} />, {
-      preloadedState: initialState,
+      preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
@@ -217,7 +217,7 @@ describe("JournalforingForm", () => {
 
   it("sending av forvaltningsmelding vises når man knytter til sak sakstema MEDLEMSKAP_LOVVALG og behandling NY_VURDERING", async () => {
     const { findByLabelText, getByText, getByRole } = renderWithProviders(<Journalforingform {...props} />, {
-      preloadedState: initialState,
+      preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
@@ -229,7 +229,7 @@ describe("JournalforingForm", () => {
 
   it("sending av forvaltningsmelding vises ikke når man knytter til sak sakstema MEDLEMSKAP_LOVVALG og behandlingstype KLAGE", async () => {
     const { findByLabelText, queryByText, getByRole } = renderWithProviders(<Journalforingform {...props} />, {
-      preloadedState: initialState,
+      preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
