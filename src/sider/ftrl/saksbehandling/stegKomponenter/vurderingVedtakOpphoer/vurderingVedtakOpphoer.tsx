@@ -79,7 +79,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
     return {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.OPPHØRT,
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-      vedtakstype,
+      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
     };
   };
