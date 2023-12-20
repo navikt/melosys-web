@@ -9,7 +9,6 @@ export interface Aktoer {
   orgnr?: string | null;
   rolleKode: string;
   utenlandskPersonID?: string | null;
-  representererKode?: string | null;
   personIdent?: string | null;
   fullmakter?: string[] | null;
 }

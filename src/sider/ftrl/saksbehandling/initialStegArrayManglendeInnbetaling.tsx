@@ -5,72 +5,102 @@ import { VurderingPerioder } from "./stegKomponenter/vurderingPeriode/vurderingP
 import { VurderingBestemmelse } from "./stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
 import { VurderingTrygdeavgift } from "./stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
 import { VurderingVedtak } from "./stegKomponenter/vurderingVedtak/vurderingVedtak";
+import { VurderingInngangManglendeInnbetaling } from "./stegKomponenter/vurderingInngangManglendeInnbetaling/vurderingInngangManglendeInnbetaling";
+import { VurderingVedtakOpphoer } from "./stegKomponenter/vurderingVedtakOpphoer/vurderingVedtakOpphoer";
 
-const initialInngangSteg = {
-  id: "Inngang",
-  tittel: "Inngang",
+const inngangManglendeInnbetalingSteg = {
+  id: "ManglendeInnbetalingInngang",
+  tittel: "Manglende innbetaling",
   stegPosisjon: 0,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: true,
   vedtakSteg: false,
+  komponent: VurderingInngangManglendeInnbetaling,
+};
+
+export const inngangSteg = {
+  id: "Inngang",
+  tittel: "Inngang",
+  stegPosisjon: 1,
+  status: FANE_STATUS.UBEHANDLET,
+  aktivtSteg: false,
+  vedtakSteg: false,
   komponent: VurderingInngang,
 };
 
-const initialVirksomhetSteg = {
+const virksomhetSteg = {
   id: "Virksomhet",
   tittel: "Virksomhet",
-  stegPosisjon: 1,
+  stegPosisjon: 2,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: false,
   vedtakSteg: false,
   komponent: VurderingVirksomhet,
 };
 
-const initialBestemmelseSteg = {
+const bestemmelseSteg = {
   id: "Bestemmelse",
   tittel: "Bestemmelse",
-  stegPosisjon: 2,
+  stegPosisjon: 3,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: false,
   vedtakSteg: false,
   komponent: VurderingBestemmelse,
 };
 
-const initialPeriodeSteg = {
+const periodeSteg = {
   id: "Perioder",
   tittel: "Perioder",
-  stegPosisjon: 3,
+  stegPosisjon: 4,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: false,
   vedtakSteg: false,
   komponent: VurderingPerioder,
 };
 
-const initialTrygdeavgiftSteg = {
+const trygdeavgiftSteg = {
   id: "Trygdeavgift",
   tittel: "Trygdeavgift",
-  stegPosisjon: 4,
+  stegPosisjon: 5,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: false,
   vedtakSteg: false,
   komponent: VurderingTrygdeavgift,
 };
 
-const initialVedtakSteg = {
+const vedtakSteg = {
   id: "Vedtak",
   tittel: "Vedtak",
-  stegPosisjon: 5,
+  stegPosisjon: 6,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: false,
   vedtakSteg: true,
   komponent: VurderingVedtak,
 };
 
-export const alleSteg = [
-  initialInngangSteg,
-  initialVirksomhetSteg,
-  initialBestemmelseSteg,
-  initialPeriodeSteg,
-  initialTrygdeavgiftSteg,
-  initialVedtakSteg,
+const stegDelvisManglendeInnbetaling = [
+  inngangSteg,
+  virksomhetSteg,
+  bestemmelseSteg,
+  periodeSteg,
+  trygdeavgiftSteg,
+  vedtakSteg,
+];
+
+export const vedtakOpphoerSteg = {
+  id: "VedtakOpphoer",
+  tittel: "Vedtak",
+  stegPosisjon: 1,
+  status: FANE_STATUS.UBEHANDLET,
+  aktivtSteg: false,
+  vedtakSteg: true,
+  komponent: VurderingVedtakOpphoer,
+};
+
+const stegFullstendigManglendeInnbetaling = [vedtakOpphoerSteg];
+
+export const alleStegManglendeInnbetaling = [
+  inngangManglendeInnbetalingSteg,
+  ...stegDelvisManglendeInnbetaling,
+  ...stegFullstendigManglendeInnbetaling,
 ];

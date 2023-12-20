@@ -3,27 +3,27 @@ import { connect } from "react-redux";
 import { arrayRemove, change } from "redux-form";
 import PT from "prop-types";
 
-import MKV from "../../../melosyskodeverk";
-import * as Utils from "../../../utils";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Nav from "../../../navFrontend";
-import * as MPT from "../../../proptypes";
-import * as Ikoner from "../../../resources/images";
-import * as KV from "../../../kodeverk";
+import MKV from "../../../../melosyskodeverk";
+import * as Utils from "../../../../utils";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Nav from "../../../../navFrontend";
+import * as MPT from "../../../../proptypes";
+import * as Ikoner from "../../../../resources/images";
+import * as KV from "../../../../kodeverk";
 
-import { AvsenderVelgerForBruker, AvsenderVelgerForBrukerGammel, AvsenderVelgerForVirksomhet } from "./avsender";
-import LenkeListeVelger from "./lenkelistevelger";
-import JournalforingGjelder from "./journalforingGjelder";
-import Komponent from "./komponent";
-import { hentSammensattNavn } from "../../../graphql/navn";
+import { AvsenderVelgerForBruker, AvsenderVelgerForBrukerGammel, AvsenderVelgerForVirksomhet } from "../avsender";
+import LenkeListeVelger from "../lenkelistevelger";
+import JournalforingGjelder from "../journalforingGjelder";
+import Komponent from "../komponent";
+import { hentSammensattNavn } from "../../../../graphql/navn";
 
-import { sokOperations } from "../../../ducks/sok";
-import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
-import { formSelectors } from "../../../ducks/form";
+import { sokOperations } from "../../../../ducks/sok";
+import { OrganisasjonOperations } from "../../../../ducks/organisasjoner";
+import { formSelectors } from "../../../../ducks/form";
 
 import "./informasjon.css";
-import { FeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_FULLMAKT_TRYGDEAVGIFT } from "../../../featuretoggle/toggleNavn";
+import { FeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_FULLMAKT_TRYGDEAVGIFT } from "../../../../featuretoggle/toggleNavn";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 

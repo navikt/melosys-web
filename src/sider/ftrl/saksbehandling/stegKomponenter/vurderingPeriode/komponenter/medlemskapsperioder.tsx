@@ -9,7 +9,6 @@ import * as Mui from "../../../../../../felleskomponenter/ui";
 
 import { FieldArrayProps, MedlemskapsperiodeProp } from "./types";
 import "./medlemskapsperioder.css";
-import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
@@ -22,7 +21,6 @@ export interface PeriodeElementerProps {
   formIsValid: boolean;
   handleLeggTil: () => void;
   visLeggTil: boolean;
-  behandlingstype: string;
 }
 
 export const Medlemskapsperioder = ({
@@ -36,20 +34,11 @@ export const Medlemskapsperioder = ({
   handleChange,
   handleLeggTil,
   visLeggTil,
-  behandlingstype,
 }: PeriodeElementerProps) => {
   const kanSlettePeriode = redigerbart && fields.length !== 1;
 
   return (
     <div className="medlemskapsperioder">
-      <LabelMedHjelpetekst
-        className="medlemskapsperioder__label"
-        label={
-          behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
-            ? "Ved ny vurdering vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer eller legg til en ny periode."
-            : "Vurder og eventuelt juster de foreslåtte medlemskapsperioden(e)."
-        }
-      />
       <div className="skjema__panel">
         {fields?.map((field, index) => (
           <div key={field.id}>

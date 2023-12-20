@@ -2,40 +2,58 @@ import { useEffect, useState } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import { change, getFormValues, reduxForm } from "redux-form";
-import * as Api from "../../../services/api";
+import * as Api from "../../../../services/api";
 
-import MKV, { MKVUtils } from "../../../melosyskodeverk";
-import * as Ikoner from "../../../resources/images";
-import * as KV from "../../../kodeverk";
-import * as Utils from "../../../utils";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Nav from "../../../navFrontend";
-import * as MPT from "../../../proptypes";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
+import * as Ikoner from "../../../../resources/images";
+import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Nav from "../../../../navFrontend";
+import * as MPT from "../../../../proptypes";
 
-import { landkoderSelectors } from "../../../ducks/landkoder";
-import { journalforingSelectors } from "../../../ducks/journalforing";
-import { formSelectors } from "../../../ducks/form";
+import { landkoderSelectors } from "../../../../ducks/landkoder";
+import { journalforingSelectors } from "../../../../ducks/journalforing";
+import { formSelectors } from "../../../../ducks/form";
+import { sokSelectors } from "../../../../ducks/sok";
 
 import Informasjon from "./informasjon";
-import FagsakVelger from "./fagsakVelger";
-import SendForvaltningsMelding from "./sendForvaltningsMelding";
-import Komponent, { KomponentUtenOverskrift } from "./komponent";
-import Fotknapper from "./fotknapper";
+import FagsakVelger from "../fagsakVelger";
+import SendForvaltningsMelding from "../sendForvaltningsMelding";
+import Komponent, { KomponentUtenOverskrift } from "../komponent";
 
-import { lagYupToReduxformErrorMapper } from "../../../yup";
-import JournalforingSchema from "./journalforingSchema";
+import Fotknapper from "../fotknapper";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import JournalforingSchema from "../journalforingSchema";
 import "./journalforingform.css";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 const { FULLMEKTIG, ANNEN_PERSON_ORG } = KV.AvsenderTyper;
 
-const skalViseForvaltningsmelding = (formValues) =>
-  formValues.saksnummer === "-1" &&
-  formValues.journalforingGjelder === BRUKER &&
-  formValues.sakstema === MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG &&
-  formValues.opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
+const skalViseForvaltningsmelding = (formValues, fagsakListe) => {
+  const { saksnummer, journalforingGjelder, sakstema, opprettnysak_behandlingstype, behandlingstype } = formValues;
+  if (saksnummer === "-1") {
+    // Opprett ny sak
+    return (
+      journalforingGjelder === BRUKER &&
+      sakstema === MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG &&
+      (opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG ||
+        opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING)
+    );
+  }
+  if (saksnummer && !Utils._isEmpty(fagsakListe)) {
+    // Eksisterende sak
+    const valgtFagsak = fagsakListe.find((sak) => sak.saksnummer === saksnummer);
+    return (
+      journalforingGjelder === BRUKER &&
+      valgtFagsak?.sakstema?.kode === MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG &&
+      behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
+    );
+  }
+  return false;
+};
 
-export const JournalforingForm = ({
+const JournalforingForm = ({
   journalpostID,
   hoveddokumentID,
   vedlegg,
@@ -50,7 +68,7 @@ export const JournalforingForm = ({
   handleSubmit,
   landkoder,
 }) => {
-  const visForvaltningsmelding = skalViseForvaltningsmelding(formValues);
+  const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, fagsakListe);
   const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
   const visSkalTilordnes = !fagsakListe.find(
     (sak) => sak.saksnummer === formValues?.saksnummer && MKVUtils.erHenlagtEllerHenlagtBortfalt(sak.saksstatus.kode)
@@ -194,7 +212,7 @@ JournalforingForm.propTypes = {
   journalpostID: PT.string.isRequired,
   hoveddokumentID: PT.string,
   vedlegg: PT.array.isRequired,
-  fagsakListe: PT.array.isRequired,
+  fagsakListe: PT.array,
   formValues: PT.object,
   formErrors: PT.object,
   submitFailed: PT.bool.isRequired,
@@ -211,6 +229,7 @@ JournalforingForm.defaultProps = {
   formValues: {},
   formErrors: {},
   hoveddokumentID: "",
+  fagsakListe: [],
 };
 
 const toVedleggMedProps = (vedlegg) =>
@@ -257,6 +276,7 @@ const mapStateToProps = (state) => ({
     skalTilordnes: false,
     submittable: false,
   },
+  fagsakListe: sokSelectors.FagsakSokSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

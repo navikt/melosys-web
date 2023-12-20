@@ -17,14 +17,13 @@ import { JOURNALFORING_HENSIKT } from "../../constants";
 import Sticky from "../../felleskomponenter/sticky";
 import PDFDokument from "./komponenter/pdfdokument";
 import JournalforingSED from "./komponenter/journalforingsed";
-import JournalforingForm from "./komponenter/journalforingform";
+import JournalforingForm from "./komponenter/journalforingform/journalforingform";
 import FeilmeldingDialog from "./komponenter/feilmeldingDialog";
 
 import { oppgaverOperations } from "../../ducks/oppgaver";
 import { landkoderOperations } from "../../ducks/landkoder";
 import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
 import { formSelectors } from "../../ducks/form";
-import { sokSelectors } from "../../ducks/sok";
 
 import "./journalforing.css";
 
@@ -421,7 +420,6 @@ class Journalforing extends Component {
   render() {
     const {
       journalforing: { vedlegg = [], hoveddokument = {}, behandlingsInformasjon, avsenderID, avsenderNavn },
-      fagsakListe,
       settFeltInnhold,
     } = this.props;
 
@@ -459,7 +457,6 @@ class Journalforing extends Component {
                           hoveddokumentID={hoveddokumentID}
                           hoveddokumentTittel={hoveddokumentTittel}
                           vedlegg={vedlegg}
-                          fagsakListe={fagsakListe}
                           submitSpinner={submitSpinner}
                           submitJournalforing={this.submitJournalforingNormal}
                           avbrytJournalforing={this.avbrytJournalforing}
@@ -516,7 +513,6 @@ Journalforing.propTypes = {
   settJournalforingHensikt: PT.func.isRequired,
   journalforing: MPT.Journalforing,
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
-  fagsakListe: PT.array,
   errors: PT.object.isRequired,
   touch: PT.func.isRequired,
   vedleggsdokumenter: PT.arrayOf(
@@ -533,7 +529,6 @@ Journalforing.propTypes = {
 
 Journalforing.defaultProps = {
   journalforing: {},
-  fagsakListe: [],
   journalforingSkjemaVerdier: {},
   journalforSEDSkjemaVerdier: {},
 };
@@ -541,7 +536,6 @@ Journalforing.defaultProps = {
 const mapStateToProps = (state) => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
-  fagsakListe: sokSelectors.FagsakSokSelector(state),
   vedleggsdokumenter: journalforingSelectors.JournalforingVedleggsDokumenter(state),
   errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
   journalforSEDSkjemaIsValid: isValid(KV.Form.JOURNALFORING_SED)(state),

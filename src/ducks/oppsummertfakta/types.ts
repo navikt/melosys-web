@@ -7,6 +7,7 @@ export const RESET = "oppsummertfakta/RESET";
 
 export type Data = {
   virksomheter?: Api.Avklartefakta.Virksomheter;
+  fullstendigManglendeInnbetaling?: boolean;
 };
 
 export interface FeiletAction {

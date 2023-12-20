@@ -25,7 +25,7 @@ import EndreBehandlingModal from "./endreBehandlingModal";
 import "./oppsummering.css";
 import { useAsyncCallbackState } from "../../hooks";
 import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_FOLKETRYGDEN_MVP } from "../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING } from "../../featuretoggle/toggleNavn";
 
 const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
@@ -74,6 +74,7 @@ const Oppsummering = ({
     behandlingID,
   ]);
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
   if (Utils._isEmpty(fagsak) || Utils._isEmpty(oppsummering)) return <div />;
@@ -104,7 +105,8 @@ const Oppsummering = ({
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    folketrygdenToggleEnabled
+    folketrygdenToggleEnabled,
+    manglendeInnbetalingToggleEnabled
   );
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 

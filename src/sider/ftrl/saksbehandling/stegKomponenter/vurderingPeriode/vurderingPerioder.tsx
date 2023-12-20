@@ -25,6 +25,18 @@ import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./kompo
 import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK } from "../../../../../featuretoggle/toggleNavn";
+
+const hentLabelTekst = (behandlingstype: string) => {
+  if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING) {
+    return "Ved ny vurdering vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer eller legg til en ny periode.";
+  }
+  if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
+    return "Ved manglende innbetaling vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer og forkort medlemskapsperioden(e).";
+  }
+  return "Vurder og eventuelt juster de foreslåtte medlemskapsperioden(e).";
+};
 
 const kallFeilet = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
 
@@ -101,9 +113,11 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   });
   const formValues = watch();
 
+  const begrensePeriodeVedtakToggleEnabled = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.medlemskapsperioder,
     soknadsperiode.fom,
+    begrensePeriodeVedtakToggleEnabled,
     soknadsperiode.tom
   );
 
@@ -219,6 +233,8 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     <div className="vurderingPerioder">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Medlemskapsperioder</Nav.Typo.Innholdstittel>
 
+      <Nav.Typo.Normaltekst>{hentLabelTekst(behandlingstype)}</Nav.Typo.Normaltekst>
+
       <Medlemskapsperioder
         trygdedekninger={trygdedekninger}
         innvilgelsesResultater={innvilgelsesResultater}
@@ -230,7 +246,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         handleChange={debouncedLagreMedlemskapsperioder}
         handleLeggTil={handleLeggTil}
         visLeggTil={visLeggTilNyPeriode}
-        behandlingstype={behandlingstype}
       />
 
       {feltErFyltInn && <Feilmelding type={aktivFeilmeldingType} />}

@@ -6,17 +6,17 @@ import { Action } from "redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 
-import * as Nav from "../../../../navFrontend";
-import * as Mui from "../../../../felleskomponenter/ui";
-import * as Api from "../../../../services/api";
-import * as Utils from "../../../../utils";
+import * as Nav from "../../../../../navFrontend";
+import * as Mui from "../../../../../felleskomponenter/ui";
+import * as Api from "../../../../../services/api";
+import * as Utils from "../../../../../utils";
 
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 
-import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { mottatteOpplysningerOperations } from "../../../../../ducks/mottatteOpplysninger";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
 import "./vurderingVirksomhet.css";
@@ -35,7 +35,6 @@ const komponentState = (state: RootState) => {
 };
 
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  hentOppsummertFakta: (behandlingID: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
   sendVirksomheter: (behandlingID: number, virksomheter: Api.Avklartefakta.Virksomheter) =>
     dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
   hentMottatteOpplysninger: (behandlingID: number) => dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
@@ -51,7 +50,7 @@ interface Props {
 export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
   const dispatch = useDispatch();
 
-  const { hentOppsummertFakta, sendVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
+  const { sendVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
   const { redigerbart, virksomheterListe, behandlingID, initialValues, lagredeValgtevirksomheter } =
     useSelector(komponentState);
   const [erMottatteOpplysningerLastetInn, setErMottatteOpplysningerLastetInn] = useState(false);
@@ -80,9 +79,6 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
 
   useEffect(() => {
     lastInnMottatteOpplysninger();
-    return () => {
-      hentOppsummertFakta(behandlingID);
-    };
   }, []);
 
   useEffect(() => {

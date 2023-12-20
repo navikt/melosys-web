@@ -20,3 +20,8 @@ export const VirksomheterSelector = createSelector(
 export const VirksomhetIDerSelector = createSelector(VirksomheterSelector, (virksomheter) =>
   virksomheter ? virksomheter.virksomhetIDer : []
 );
+
+export const FullstendigManglendeInnbetalingSelector = createSelector(
+  OppsummertFaktaDataSelector,
+  (oppsummertfakta) => oppsummertfakta.fullstendigManglendeInnbetaling
+);

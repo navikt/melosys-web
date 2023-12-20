@@ -42,6 +42,7 @@ import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../featuretoggle/toggleNavn";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { resetInkluderSiste5Aar } from "../../../ducks/modaler/operations";
 import { setErFullmektigEndret } from "../../../ducks/menypanel/operations";
+import { alleStegManglendeInnbetaling } from "./initialStegArrayManglendeInnbetaling";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
@@ -145,6 +146,7 @@ const Saksbehandling = ({
   registeropplysningerHentet,
   menypanelSynlig,
   samletMedlemskapsperiodeSelector,
+  behandlingstype,
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
@@ -224,6 +226,13 @@ const Saksbehandling = ({
   if (!saksopplysningerLastet) return null;
   if (!folketrygdenToggle) return null;
 
+  const hentStegArray = () => {
+    if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
+      return alleStegManglendeInnbetaling;
+    }
+    return alleSteg;
+  };
+
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
   const erAvslåttPgaManglendeOpplysninger =
     behandlingsresultatType === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
@@ -235,8 +244,6 @@ const Saksbehandling = ({
 
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
-  const medlemskapsperiodeFom = Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.fom);
-  const medlemskapsperiodeTom = Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.tom);
   return (
     <>
       <Informasjonlinje />
@@ -249,7 +256,7 @@ const Saksbehandling = ({
                   <>
                     {erHenlagtSak && <HenlagtSak />}
                     {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
-                    {visStegVelger && <EnkelStegvelger alleSteg={alleSteg} />}
+                    {visStegVelger && <EnkelStegvelger alleSteg={hentStegArray()} />}
                   </>
                 ) : (
                   <VirksomhetMelding />
@@ -261,8 +268,8 @@ const Saksbehandling = ({
                   arbeidsland={landkoder?.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
-                  medlemskapsperiodeFom={medlemskapsperiodeFom}
-                  medlemskapsperiodeTom={medlemskapsperiodeTom}
+                  medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.fom)}
+                  medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.tom)}
                 />
                 <SaksoversiktLenke />
                 <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />

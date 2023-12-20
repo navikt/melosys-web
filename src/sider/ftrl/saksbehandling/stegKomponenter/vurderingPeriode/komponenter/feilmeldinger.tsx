@@ -34,6 +34,13 @@ const SøknadsperiodenStarterFørEllerSlutterEtter = (
   </Nav.AlertStripeAdvarsel>
 );
 
+const MedlemskapsperiodenStarterFør2023 = (
+  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+    Du kan ikke fatte vedtak i stegvelgeren for årene før 2023. Du kan fatte fritekstvedtak i &quot;Send
+    brev&quot;-fanen. Du må også vurdere om perioden skal registreres i avgiftssystemet.
+  </Nav.AlertStripeFeil>
+);
+
 const erIkkeStøttetIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>
   medlemskapsperioder.every((periode) => periode.innvilgelsesResultat === AVSLAATT);
 
@@ -96,6 +103,18 @@ const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: Medlemskapsperiod
   return false;
 };
 
+const periodeStarterFoer2023 = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
+  const perioder = [...medlemskapsperioder]?.sort(Utils.dato.sorterEtterNorskFomDato);
+  if (Utils._isEmpty(perioder)) return false;
+
+  const dateObj = Utils.dato.norskStringTilDate(perioder[0].fomDato);
+  if (dateObj && dateObj.getFullYear() < 2023) {
+    return true;
+  }
+
+  return false;
+};
+
 enum TypeFeilmelding {
   INGEN_MEDLEMSKAPSPERIODER = "INGEN_MEDLEMSKAPSPERIODER",
   IKKE_STØTTET_I_MELOSYS = "IKKE_STØTTET_I_MELOSYS",
@@ -103,11 +122,13 @@ enum TypeFeilmelding {
   OVERLAPP_I_INNVILGEDE_PERIODER = "OVERLAPP_I_INNVILGEDE_PERIODER",
   OPPHOLD_I_INNVILGEDE_PERIODER = "OPPHOLD_I_INNVILGEDE_PERIODER",
   SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER = "SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER",
+  MEDLEMSKAPSPERIODE_STARTER_FØR_2023 = "MEDLEMSKAPSPERIODE_STARTER_FØR_2023",
 }
 
 export function finnAktivFeilmelding(
   medlemskapsperioder: MedlemskapsperiodeProp[],
   søknadsperiodeFomDato: string,
+  begrensePeriodeVedtakToggleEnabled: boolean | undefined,
   søknadsperiodeTomDato?: string
 ): string | undefined {
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
@@ -142,6 +163,10 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER;
   }
 
+  if (begrensePeriodeVedtakToggleEnabled && periodeStarterFoer2023(medlemskapsperioder)) {
+    return TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023;
+  }
+
   return undefined;
 }
 
@@ -152,6 +177,7 @@ export function feilMeldingBlokkerer(type?: string): boolean {
     case TypeFeilmelding.INGEN_SLUTTDATO:
     case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
     case TypeFeilmelding.OPPHOLD_I_INNVILGEDE_PERIODER:
+    case TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023:
       return true;
     case TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER:
     default:
@@ -173,6 +199,8 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return OppholdIInnvilgedePerioder;
     case TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER:
       return SøknadsperiodenStarterFørEllerSlutterEtter;
+    case TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023:
+      return MedlemskapsperiodenStarterFør2023;
     default:
       return null;
   }
