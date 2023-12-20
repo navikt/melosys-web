@@ -11,11 +11,11 @@ const KontrollSelector: Selector<RootState, StateSection<Types.Data>> = createSe
 
 const KontrollDataSelector = createSelector(KontrollSelector, (kontroll) => kontroll.data || {});
 
-export const KontrollfeilSelector = createSelector(KontrollDataSelector, (data) => {
+export const KontrollFeilSelector = createSelector(KontrollDataSelector, (data) => {
   return data.kontrollfeilList ? data.kontrollfeilList.filter((feil) => feil.type === "FEIL") : [];
 });
 
-export const KontrolladvarslerSelector = createSelector(KontrollDataSelector, (data) => {
+export const KontrollAdvarslerSelector = createSelector(KontrollDataSelector, (data) => {
   return data.kontrollfeilList ? data.kontrollfeilList.filter((feil) => feil.type === "ADVARSEL") : [];
 });
 

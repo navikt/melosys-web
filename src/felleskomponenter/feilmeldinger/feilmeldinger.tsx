@@ -16,8 +16,8 @@ type feilmeldingerProps = {
 
 export default ({ className }: feilmeldingerProps) => {
   const exceptionFeilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const kontrollFeil = useSelector(kontrollSelectors.KontrollfeilSelector);
-  const kontrollAdvarsler = useSelector(kontrollSelectors.KontrolladvarslerSelector);
+  const kontrollFeil = useSelector(kontrollSelectors.KontrollFeilSelector);
+  const kontrollAdvarsler = useSelector(kontrollSelectors.KontrollAdvarslerSelector);
 
   if (Utils._isEmpty(exceptionFeilmeldinger) && Utils._isEmpty(kontrollFeil) && Utils._isEmpty(kontrollAdvarsler)) {
     return null;

@@ -38,7 +38,7 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp = false, avbryt }: Dialogbo
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
 
   const [brevFritekst, setBrevFritekst] = useState("");
   const [utførerKontroll, setUtførerKontroll] = useState(true);

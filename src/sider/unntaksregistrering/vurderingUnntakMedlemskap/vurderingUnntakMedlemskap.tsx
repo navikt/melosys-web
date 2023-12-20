@@ -51,7 +51,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const kontrollFeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const kontrollFeil = useSelector(kontrollSelectors.KontrollFeilSelector);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
