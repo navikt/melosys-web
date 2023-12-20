@@ -17,8 +17,9 @@ type feilmeldingerProps = {
 export default ({ className }: feilmeldingerProps) => {
   const exceptionFeilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollFeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const kontrollAdvarsler = useSelector(kontrollSelectors.KontrolladvarslerSelector);
 
-  if (Utils._isEmpty(exceptionFeilmeldinger) && Utils._isEmpty(kontrollFeil)) {
+  if (Utils._isEmpty(exceptionFeilmeldinger) && Utils._isEmpty(kontrollFeil) && Utils._isEmpty(kontrollAdvarsler)) {
     return null;
   }
 
@@ -27,7 +28,7 @@ export default ({ className }: feilmeldingerProps) => {
       return `Teknisk feil: ${exceptionFeilmeldinger}`;
     }
 
-    const feilmeldinger = kontrollFeil.concat(exceptionFeilmeldinger).filter((value) => value.type === "FEIL");
+    const feilmeldinger = kontrollFeil.concat(exceptionFeilmeldinger);
 
     if (feilmeldinger.length === 0) {
       return null;
@@ -46,7 +47,7 @@ export default ({ className }: feilmeldingerProps) => {
   };
 
   const renderAdvarsler = () => {
-    const advarsler = kontrollFeil.filter((value) => value.type === "ADVARSEL");
+    const advarsler = kontrollAdvarsler;
 
     if (advarsler.length === 0) {
       return null;
