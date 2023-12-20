@@ -53,7 +53,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
   const lagretBegrunnelseFritekst = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector);
   const lagretInnledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
   const lagretNyVurderingBakgrunn = useSelector(behandlingsresultatSelectors.NyVurderingBakgrunnSelector);
