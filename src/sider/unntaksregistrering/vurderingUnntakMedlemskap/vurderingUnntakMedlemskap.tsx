@@ -159,8 +159,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     dispatch(navigeringOperations.tilForsiden());
   };
 
-  const harErrorFeilmelding =
-    !Utils._isEmpty(feilmeldinger) || !Utils._isEmpty(kontrollFeil.filter((value) => value.type === "FEIL"));
+  const harErrorFeilmelding = !Utils._isEmpty(feilmeldinger) || !Utils._isEmpty(kontrollFeil);
 
   const harSluttdato = !Utils._isEmpty(formValues.tom);
 
