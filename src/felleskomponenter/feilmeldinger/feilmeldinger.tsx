@@ -12,48 +12,76 @@ import { kontrollSelectors } from "../../ducks/kontroll";
 
 type feilmeldingerProps = {
   className?: string;
-  exclude?: string[];
 };
 
-export default ({ className, exclude }: feilmeldingerProps) => {
-  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+export default ({ className }: feilmeldingerProps) => {
+  const exceptionFeilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const kontrollFeil = useSelector(kontrollSelectors.KontrollFeilSelector);
+  const kontrollAdvarsler = useSelector(kontrollSelectors.KontrollAdvarslerSelector);
 
-  if (Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil)) {
+  if (Utils._isEmpty(exceptionFeilmeldinger) && Utils._isEmpty(kontrollFeil) && Utils._isEmpty(kontrollAdvarsler)) {
     return null;
   }
 
-  const renderInnhold = () => {
-    if (typeof feilmeldinger === "string") {
-      return feilmeldinger;
+  const renderFeilmeldinger = () => {
+    if (typeof exceptionFeilmeldinger === "string") {
+      return `Teknisk feil: ${exceptionFeilmeldinger}`;
     }
 
-    const filtrerteFeilmeldinger = kontrollfeil.concat(feilmeldinger).filter((value) => !exclude?.includes(value.kode));
+    const feilmeldinger = kontrollFeil.concat(exceptionFeilmeldinger);
 
-    if (filtrerteFeilmeldinger.length === 0) {
+    if (feilmeldinger.length === 0) {
       return null;
     }
 
-    if (filtrerteFeilmeldinger.length === 1) {
-      return KV.kodeTilTerm(filtrerteFeilmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+    if (feilmeldinger.length === 1) {
+      return KV.kodeTilTerm(feilmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
     }
     return (
       <ul className="feilkoder__liste">
-        {filtrerteFeilmeldinger.map((feil) => (
+        {feilmeldinger.map((feil) => (
           <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
         ))}
       </ul>
     );
   };
 
+  const renderAdvarsler = () => {
+    const advarsler = kontrollAdvarsler;
+
+    if (advarsler.length === 0) {
+      return null;
+    }
+
+    if (advarsler.length === 1) {
+      return KV.kodeTilTerm(advarsler[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+    }
+
+    return (
+      <ul className="advarsler__liste">
+        {advarsler.map((adv) => (
+          <li key={adv.kode}>{KV.kodeTilTerm(adv.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
+        ))}
+      </ul>
+    );
+  };
+
   const classNameFeilmeldinger = classNames("feilmelding", className);
-  const innhold = renderInnhold();
-  if (!innhold) {
+  const feilmeldingerContent = renderFeilmeldinger();
+  const advarslerContent = renderAdvarsler();
+
+  if (!feilmeldingerContent && !advarslerContent) {
     return null;
   }
+
   return (
     <div className={classNameFeilmeldinger}>
-      <Nav.AlertStripeFeil className="varselstripe">{innhold}</Nav.AlertStripeFeil>
+      {feilmeldingerContent && (
+        <Nav.AlertStripeFeil className="varselstripe">{feilmeldingerContent}</Nav.AlertStripeFeil>
+      )}
+      {advarslerContent && (
+        <Nav.AlertStripeAdvarsel className="advarsler-container">{advarslerContent}</Nav.AlertStripeAdvarsel>
+      )}
     </div>
   );
 };

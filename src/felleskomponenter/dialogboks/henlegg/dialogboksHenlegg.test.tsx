@@ -28,7 +28,9 @@ describe("Dialogbokshenlegg", () => {
   });
 
   it("viser ikke forhåndsvisning når feilmeldinger finnes", () => {
-    const initialState = { kontroll: { status: "OK", data: { kontrollfeilList: [{ kode: "Kode", term: "term" }] } } };
+    const initialState = {
+      kontroll: { status: "OK", data: { kontrollfeilList: [{ kode: "Kode", term: "term", type: "FEIL" }] } },
+    };
 
     const { queryAllByText } = renderWithProviders(<DialogboksHenleggSak {...props} />, {
       preloadedState: initialState,

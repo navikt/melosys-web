@@ -92,7 +92,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const initialNyVurderingBakgrunnFritekst =
     initialNyVurderingBakgrunnValg === FRITEKST_VALG ? lagretNyVurderingBakgrunn : "";
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
   const dispatch = useDispatch();
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
 

@@ -4,7 +4,6 @@ import { FieldValues, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Feilmeldinger } from "../../../felleskomponenter/feilmeldinger";
-import { Alertmeldinger } from "../../../felleskomponenter/alertmeldinger";
 
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
@@ -29,7 +28,6 @@ import { BestemmelseSelect } from "./bestemmelseSelect";
 
 const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
-const { OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO } = MKV.Koder.begrunnelser.kontroll_begrunnelser;
 
 interface VurderingUnntakMedlemskapProps {
   oppdaterStatus: (isValid: boolean) => void;
@@ -53,7 +51,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const kontrollFeil = useSelector(kontrollSelectors.KontrollFeilSelector);
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver(vurdering_unntak_medlemskap),
@@ -161,19 +159,12 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     dispatch(navigeringOperations.tilForsiden());
   };
 
-  const kontrollFeilOverlappendeUnntakperiode = kontrollfeil?.filter(
-    (value) => value.kode === OVERLAPPENDE_UNNTAK_PERIODER
-  );
-
-  const harErrorFeilmelding =
-    !Utils._isEmpty(feilmeldinger) ||
-    !Utils._isEmpty(kontrollfeil?.filter((value) => value.kode !== OVERLAPPENDE_UNNTAK_PERIODER));
+  const harErrorFeilmelding = !Utils._isEmpty(feilmeldinger) || !Utils._isEmpty(kontrollFeil);
 
   const harSluttdato = !Utils._isEmpty(formValues.tom);
 
   const utfallErGODKJENT = formValues?.utfallRegistreringUnntak === GODKJENT;
   const utfallErDelvisGodkjent = formValues?.utfallRegistreringUnntak === DELVIS_GODKJENT;
-  const utfallValgt = formValues?.utfallRegistreringUnntak;
 
   return (
     <div className="vurderingUnntakMedlemskap">
@@ -219,7 +210,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         />
       )}
 
-      {formValues.utfallRegistreringUnntak === DELVIS_GODKJENT && (
+      {utfallErDelvisGodkjent && (
         <>
           <Nav.Row>
             <Nav.Column xs="2">
@@ -255,20 +246,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         </>
       )}
 
-      <Feilmeldinger exclude={[OVERLAPPENDE_UNNTAK_PERIODER, INGEN_SLUTTDATO]} />
-
-      {(utfallErGODKJENT || utfallErDelvisGodkjent) && !harErrorFeilmelding && (
-        <Alertmeldinger
-          className="vurderingUnntakMedlemskap__alertmeldinger"
-          meldinger={kontrollFeilOverlappendeUnntakperiode}
-        />
-      )}
-
-      {!harSluttdato && !utfallValgt && (
-        <Nav.AlertStripeAdvarsel className="vurderingUnntakMedlemskap__ikke_godkjent_advarsel">
-          Du kan ikke godkjenne en unntaksperiode med åpen sluttdato
-        </Nav.AlertStripeAdvarsel>
-      )}
+      <Feilmeldinger />
 
       {[DELVIS_GODKJENT, IKKE_GODKJENT].includes(formValues.utfallRegistreringUnntak) && !harErrorFeilmelding && (
         <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__alertstripe">

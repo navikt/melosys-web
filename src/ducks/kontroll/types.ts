@@ -14,6 +14,7 @@ export interface Data {
   kontrollfeilList?: {
     kode: string;
     felter: string[];
+    type?: string;
   }[];
 }
 

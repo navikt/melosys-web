@@ -34,7 +34,7 @@ export const DialogboksHenleggSak = ({ avbryt, ariaHideApp = false }: Dialogboks
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
 
   const [begrunnelseKode, setBegrunnelseKode] = useState<string>("");
   const [feilmeldingSelect, setFeilmeldingSelect] = useState<string | null>(null);

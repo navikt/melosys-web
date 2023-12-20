@@ -1,5 +1,4 @@
 import {
-  Alertmeldinger,
   StandardMeldingOverst,
   IngenFlytMelding,
   VirksomhetMelding,
@@ -13,7 +12,6 @@ export {
   VirksomhetMelding,
   IngenFlytMelding,
   StandardMeldingOverst,
-  Alertmeldinger,
   UnntakHjelpetekst,
   Innsynsmelding,
   StatsborgerskapFeil,

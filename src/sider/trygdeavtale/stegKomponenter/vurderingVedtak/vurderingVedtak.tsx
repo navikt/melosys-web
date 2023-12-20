@@ -92,7 +92,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
     periodeIsValid: formSelectors.TrygdeavtaleVedtakFormPeriodeValidSelector(state),
     erNyVurdering,
     feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
-    kontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
+    kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
   };
 };
 
