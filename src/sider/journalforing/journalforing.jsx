@@ -153,11 +153,11 @@ class Journalforing extends Component {
   ];
 
   dataSpesifiktTilKnytt = (fellesData) => {
-    const { saksnummer, vurderDokument } = this.props.journalforingSkjemaVerdier;
+    const { saksnummer, vurderDokument, ikkeSendForvaltingsmelding } = this.props.journalforingSkjemaVerdier;
 
     return {
       ...fellesData,
-      ikkeSendForvaltingsmelding: null,
+      ikkeSendForvaltingsmelding,
       saksnummer,
       ingenVurdering: !vurderDokument,
     };
