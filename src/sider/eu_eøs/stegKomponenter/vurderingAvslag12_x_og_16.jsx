@@ -19,10 +19,10 @@ import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { vedtakOperations } from "../../../ducks/vedtak";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import Begrunnelser from "../../../felleskomponenter/begrunnelser";
+import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Schema";
-import Dokumentliste from "~/felleskomponenter/dokumentliste";
 
 const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
