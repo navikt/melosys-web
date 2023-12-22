@@ -12,8 +12,7 @@ import * as KV from "../../../kodeverk";
 import * as Hooks from "../../../hooks";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Skjema from "../../../felleskomponenter/skjema";
-
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 import VedleggVelger from "../../../felleskomponenter/vedleggvelger";
 import VedleggTable from "../../../felleskomponenter/vedleggTable";
@@ -38,17 +37,14 @@ export const VurderingVideresend = ({
 }) => {
   const pdfDokumenter = [
     {
-      navn: "Forhåndsvis orienteringsbrev",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_VIDERESENDT_SOEKNAD,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: formValues.orienteringsbrevFritekst,
       },
     },
     {
-      navn: "Forhåndsvis SED A008",
-      type: EKV.Koder.sedtyper.A008,
-      erSed: true,
+      sedType: EKV.Koder.sedtyper.A008,
     },
   ];
 
@@ -93,8 +89,8 @@ export const VurderingVideresend = ({
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs="6">
-            {redigerbart && <PdfLenkeListe dokumenter={pdfDokumenter} behandlingID={behandlingID} />}
+          <Nav.Column xs="8">
+            {redigerbart && <Dokumentliste dokumenter={pdfDokumenter} behandlingID={behandlingID} />}
           </Nav.Column>
         </Nav.Row>
         {redigerbart && (

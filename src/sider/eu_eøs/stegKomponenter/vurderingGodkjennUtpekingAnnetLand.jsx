@@ -8,7 +8,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 import * as Hooks from "../../../hooks";
 import * as Utils from "../../../utils";
 
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 
 import { formSelectors } from "../../../ducks/form";
 
@@ -71,10 +71,8 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
 
   const dokumenter = [
     {
-      navn: "Forhåndsvis SED A012",
-      type: EKV.Koder.sedtyper.A012,
-      erSed: true,
-      data: { fritekst },
+      sedType: EKV.Koder.sedtyper.A012,
+      sedData: { fritekst },
     },
   ];
   const skjemaDisabled = !redigerbart || !erBucAapen;
@@ -106,7 +104,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
               disabled={skjemaDisabled}
             />
           </Nav.Row>
-          <Nav.Row>{erBucAapen && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}</Nav.Row>
+          <Nav.Row>{erBucAapen && <Dokumentliste behandlingID={behandlingID} dokumenter={dokumenter} />}</Nav.Row>
         </>
       )}
       <Nav.Row>

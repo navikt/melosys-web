@@ -22,7 +22,7 @@ import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import { formOperations } from "../../../../ducks/form";
 
-import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 import Mottakerinstitusjonvelger, {
   MottakerinstitusjonvelgerFlervalg,
 } from "../../../../felleskomponenter/mottakerinstitusjonvelger";
@@ -177,8 +177,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 
   let pdfDokumenter = [
     {
-      navn: "Forhåndsvis vedtaksbrev og A1",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: formValues.vedtaksbrevFritekst,
@@ -190,10 +189,8 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
     pdfDokumenter = [
       ...pdfDokumenter,
       {
-        navn: "Forhåndsvis SED A010",
-        type: EKV.Koder.sedtyper.A010,
-        erSed: true,
-        data: {
+        sedType: EKV.Koder.sedtyper.A010,
+        sedData: {
           fritekst: formValues.fritekstSed,
         },
       },
@@ -202,8 +199,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   const { kopiTilArbeidsgiver } = formValues;
   if (skalSendeOrienteringsbrev(selvstendigArbeid) && kopiTilArbeidsgiver) {
     pdfDokumenter.push({
-      navn: "Orienteringsbrev til arbeidsgiver",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
@@ -427,9 +423,13 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
         <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
       )}
       <Nav.Row>
-        <Nav.Column xs="6">
+        <Nav.Column xs="8">
           {stegErGyldig && (
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
+            <Dokumentliste
+              behandlingID={behandlingID}
+              dokumenter={pdfDokumenter}
+              validateOnClick={vedKlikkForhandsvis}
+            />
           )}
         </Nav.Column>
       </Nav.Row>

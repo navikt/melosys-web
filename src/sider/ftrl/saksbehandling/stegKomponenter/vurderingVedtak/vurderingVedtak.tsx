@@ -13,7 +13,6 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import * as KV from "../../../../../kodeverk";
-import * as Ikoner from "../../../../../resources/images";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
@@ -26,7 +25,7 @@ import { kontrollOperations, kontrollSelectors } from "../../../../../ducks/kont
 import { vedtakOperations } from "../../../../../ducks/vedtak";
 import { formSelectors } from "../../../../../ducks/form";
 import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
-import PdfLenkeListe from "../../../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../../../felleskomponenter/dokumentliste";
 
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
@@ -221,44 +220,21 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     });
   }
 
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
-    return [
-      {
-        navn: ikon ? (
-          <>
-            <Ikoner.Forhandsvis />
-            <span className="sr-only">Forhåndsvis dokument {muligMottaker.dokumentNavn}</span>
-          </>
-        ) : (
-          muligMottaker.dokumentNavn
-        ),
-        data: {
-          produserbardokument: vedtakOpphøres ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
-          mottaker: muligMottaker.rolle,
-          innledningFritekst: formValues?.innledningFritekst || null,
-          begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-          trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
-          nyVurderingBakgrunn:
-            formValues?.nyVurderingBakgrunnValg === FRITEKST_VALG
-              ? formValues?.nyVurderingBakgrunnFritekst
-              : formValues?.nyVurderingBakgrunnValg,
-          orgNr: muligMottaker?.orgnr || null,
-        },
-      },
-    ];
-  };
-
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
-      dokument: (
-        <PdfLenkeListe
-          behandlingID={behandlingID}
-          dokumenter={lagDokumenterData(muligMottaker)}
-          vedKlikk={() => true}
-          className="forhåndsvisning"
-        />
-      ),
-      navn: muligMottaker.mottakerNavn,
+      dokumentData: {
+        produserbardokument: vedtakOpphøres ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
+        mottaker: muligMottaker.rolle,
+        innledningFritekst: formValues?.innledningFritekst || null,
+        begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+        trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
+        nyVurderingBakgrunn:
+          formValues?.nyVurderingBakgrunnValg === FRITEKST_VALG
+            ? formValues?.nyVurderingBakgrunnFritekst
+            : formValues?.nyVurderingBakgrunnValg,
+        orgNr: muligMottaker?.orgnr || null,
+      },
+      mottakerNavn: muligMottaker.mottakerNavn,
     };
   };
 
@@ -496,22 +472,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       )}
 
       {stegErGyldig && muligeMottakere && (
-        <Table>
-          <Table.Header>
-            <Table.HeaderCell>Dokument</Table.HeaderCell>
-            <Table.HeaderCell>Mottaker</Table.HeaderCell>
-          </Table.Header>
-          <Table.Body>
-            {mapMottakerRader(muligeMottakere).map((mottaker) => {
-              return (
-                <Table.Row key={Utils._uuid()}>
-                  <Table.DataCell>{mottaker.dokument}</Table.DataCell>
-                  <Table.DataCell>{mottaker.navn}</Table.DataCell>
-                </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table>
+        <Dokumentliste behandlingID={behandlingID} dokumenter={mapMottakerRader(muligeMottakere)} />
       )}
 
       <Mui.StegKnapper

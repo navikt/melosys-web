@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { reduxForm, isValid, getFormValues, change } from "redux-form";
+import { change, getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
@@ -14,13 +14,13 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Hooks from "../../../hooks";
 import * as Mui from "../../../felleskomponenter/ui";
 
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../felleskomponenter/stegvelger";
 
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { utpekingsperioderSelectors, utpekingsperioderOperations } from "../../../ducks/utpekingsperioder";
+import { utpekingsperioderOperations, utpekingsperioderSelectors } from "../../../ducks/utpekingsperioder";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { formOperations } from "../../../ducks/form";
 import { flytSelectors } from "../../../ducks/flyt";
@@ -111,8 +111,7 @@ export const VurderingArtikkel13UtpekLand = ({
 
   const pdfDokumenter = [
     {
-      navn: "Forhåndsvis vedtaksbrev",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_UTPEKING_UTLAND,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         begrunnelseKode: null,
@@ -120,10 +119,8 @@ export const VurderingArtikkel13UtpekLand = ({
       },
     },
     {
-      navn: "Forhåndsvis SED A003",
-      type: EKV.Koder.sedtyper.A003,
-      erSed: true,
-      data: {
+      sedType: EKV.Koder.sedtyper.A003,
+      sedData: {
         fritekst: formValues.fritekstSed,
       },
     },
@@ -218,9 +215,13 @@ export const VurderingArtikkel13UtpekLand = ({
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
-        <Nav.Column xs="6">
+        <Nav.Column xs="7">
           {redigerbart && (
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
+            <Dokumentliste
+              behandlingID={behandlingID}
+              dokumenter={pdfDokumenter}
+              validateOnClick={vedKlikkForhandsvis}
+            />
           )}
         </Nav.Column>
       </Nav.Row>

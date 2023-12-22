@@ -3,11 +3,10 @@ import { useSelector } from "react-redux";
 import * as Api from "../../../../../services/api";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import MottakerTabell from "../../../../../felleskomponenter/tabell/mottakerTabell";
-import PdfLenkeListe from "../../../../../felleskomponenter/pdfLenkeListe";
 import MKV from "../../../../../melosyskodeverk";
 import { useAsyncCallbackState } from "../../../../../hooks";
 import * as Utils from "../../../../../utils";
+import Dokumentliste from "../../../../../felleskomponenter/dokumentliste";
 
 const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -24,49 +23,19 @@ export const BrevMottakereTabell = () => {
     []
   );
 
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
+  const mapDokumenter = (muligmottaker: Api.DokumenterV2.HentMuligeMottakereResDto) => {
     return [
       {
-        navn: muligMottaker.dokumentNavn,
-        data: {
+        mottakerNavn: muligmottaker.hovedMottaker.mottakerNavn,
+        dokumentData: {
           produserbardokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
-          mottaker: muligMottaker.rolle,
-          orgNr: null,
+          mottaker: muligmottaker.hovedMottaker.rolle,
         },
       },
     ];
   };
 
-  const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    return [
-      {
-        verdi: (
-          <PdfLenkeListe
-            behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker)}
-            className="forhåndsvisning"
-          />
-        ),
-      },
-      { verdi: muligMottaker.mottakerNavn },
-    ];
-  };
+  if (Utils._isEmpty(muligeMottakere)) return null;
 
-  const mapMottakerRader = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
-    return [mapRad(muligeBrevMottakere.hovedMottaker)];
-  };
-
-  return (
-    <>
-      {!Utils._isEmpty(muligeMottakere) && (
-        <MottakerTabell
-          rader={mapMottakerRader(muligeMottakere)}
-          kolonner={[
-            { verdi: "Forhåndsvisning av brev", bredde: "60%" },
-            { verdi: "Mottaker", bredde: "40%" },
-          ]}
-        />
-      )}
-    </>
-  );
+  return <Dokumentliste behandlingID={behandlingID} dokumenter={mapDokumenter(muligeMottakere)} />;
 };

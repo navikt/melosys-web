@@ -23,7 +23,7 @@ import { anmodningunntakOperations } from "../../../../ducks/anmodningunntak";
 
 import { RegistreringMenypanelForm } from "../../../../felleskomponenter/menypanelForm";
 import RegisterkontrollTreff from "../../../../felleskomponenter/registerkontrollTreff";
-import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste/dokumentliste";
 import { Feilmeldinger } from "../../../../felleskomponenter/feilmeldinger";
 import { DatoOmradeMedVarighet } from "../../../../felleskomponenter/datoOmrade";
 
@@ -35,15 +35,17 @@ import { StatsborgerskapFeil } from "../../../../felleskomponenter/alertmeldinge
 const LinkForhandsvisningSed = ({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst }) => {
   let pdfDokument = [];
   if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE) {
-    pdfDokument = [{ navn: "Forhåndsvis SED A011", type: EKV.Koder.sedtyper.A011, erSed: true, data: { fritekst } }];
+    pdfDokument = [{ sedType: EKV.Koder.sedtyper.A011, sedData: { fritekst } }];
   } else if (
     anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE ||
     anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG
   ) {
-    pdfDokument = [{ navn: "Forhåndsvis SED A002", type: EKV.Koder.sedtyper.A002, erSed: true, data: { fritekst } }];
+    pdfDokument = [{ sedType: EKV.Koder.sedtyper.A002, sedData: { fritekst } }];
   }
 
-  return redigerbart && <PdfLenkeListe vedKlikk={vedKlikk} behandlingID={behandlingID} dokumenter={pdfDokument} />;
+  return (
+    redigerbart && <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokument} validateOnClick={vedKlikk} />
+  );
 };
 
 LinkForhandsvisningSed.propTypes = {

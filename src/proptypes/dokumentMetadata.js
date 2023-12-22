@@ -1,10 +1,11 @@
 import PT from "prop-types";
 
 const DokumentMetadataPropType = PT.shape({
-  navn: PT.node,
-  type: PT.string,
-  data: PT.object,
-  erSed: PT.bool,
+  dokumentNavn: PT.node,
+  mottakerNavn: PT.node,
+  dokumentData: PT.object,
+  sedData: PT.object,
+  sedType: PT.string,
 });
 
 const DokumenterPropType = PT.arrayOf(DokumentMetadataPropType);

@@ -27,9 +27,9 @@ describe("vurderingEndrePeriode", () => {
     };
   });
 
-  it("viser en pdfLenkeListe", () => {
+  it("viser en dokumentliste", () => {
     const component = shallow(<VurderingEndrePeriode {...props} />);
-    expect(component.find("PdfLenkeListe")).toHaveLength(1);
+    expect(component.find("Dokumentliste")).toHaveLength(1);
   });
 
   it("viser StegKnapper", () => {
