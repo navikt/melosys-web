@@ -127,7 +127,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   };
 
   const lagreLovvalgsperiodeOgKontroller = async (values: FieldValues, isValid: boolean) => {
-    if (isValid) {
+    if (isValid && values.utfallRegistreringUnntak !== IKKE_GODKJENT) {
       await lagreLovvalgsperiode(values);
       kontrollerFerdigbehandling();
     }
