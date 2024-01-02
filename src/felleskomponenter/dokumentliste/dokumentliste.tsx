@@ -98,7 +98,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
 
   return (
     <div>
-      <Table>
+      <Table size="small">
         <Table.Header>
           <Table.HeaderCell>Forhåndsvisning av brev</Table.HeaderCell>
           <Table.HeaderCell>Mottaker</Table.HeaderCell>

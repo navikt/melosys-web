@@ -101,7 +101,7 @@ const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, endreFane }: Sid
   return (
     <div className="sideDialogDokumenter">
       <LagredeUtkast alleUtkast={utkast} settAktivtUtkast={handleValgtUtkast} />
-      <Table aria-label="Liste over dokumenter knyttet til saken">
+      <Table size="small" aria-label="Liste over dokumenter knyttet til saken">
         <Table.Header>
           <Table.HeaderCell aria-label="Mottaksretning" />
           <Table.HeaderCell>Dokument</Table.HeaderCell>
