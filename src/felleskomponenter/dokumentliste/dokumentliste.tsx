@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { v4 as uuid } from "uuid";
 
 import * as Nav from "../../navFrontend";
 import { dokumenterOperations } from "../../ducks/dokumenter";
@@ -64,18 +63,17 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
     }
   };
 
+  const tittel = (dokumentnavn: string) => `${dokumentnavn} (åpnes i ny fane)`;
+
   const mapBrev = (dokument: BrevDokumentMetadataType) => (
     <Table.Row>
       <Table.DataCell>
-        <button
-          className="dokumentliste__vis_dokument_knapp"
-          onClick={() => klikk(dokument)}
-          key={uuid()}
-          type="button"
-        >
-          {dokument.dokumentNavn ||
-            KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)}
-        </button>
+        <Nav.Lenker href="#" onClick={() => klikk(dokument)}>
+          {tittel(
+            dokument.dokumentNavn ||
+              KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)
+          )}
+        </Nav.Lenker>
       </Table.DataCell>
       <Table.DataCell>{dokument.mottakerNavn || dokument.dokumentData?.mottaker}</Table.DataCell>
     </Table.Row>
@@ -84,14 +82,9 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   const mapSED = (dokument: SedDokumentMetadataType) => (
     <Table.Row>
       <Table.DataCell>
-        <button
-          className="dokumentliste__vis_dokument_knapp"
-          onClick={() => klikk(dokument)}
-          key={uuid()}
-          type="button"
-        >
-          {dokument.dokumentNavn || `SED ${dokument.sedType}`}
-        </button>
+        <Nav.Lenker href="#" onClick={() => klikk(dokument)}>
+          {tittel(dokument.dokumentNavn || `SED ${dokument.sedType}`)}
+        </Nav.Lenker>
       </Table.DataCell>
       <Table.DataCell>{dokument.mottakerNavn}</Table.DataCell>
     </Table.Row>
