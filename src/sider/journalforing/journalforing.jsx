@@ -111,6 +111,7 @@ class Journalforing extends Component {
       skalTilordnes,
       mottattDato,
       avsenderType,
+      ikkeSendForvaltingsmelding,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -133,6 +134,7 @@ class Journalforing extends Component {
       skalTilordnes,
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
       avsenderType: this.mapAvsenderType(avsenderType, avsenderID),
+      ikkeSendForvaltingsmelding,
     };
 
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT) {
@@ -153,11 +155,9 @@ class Journalforing extends Component {
   ];
 
   dataSpesifiktTilKnytt = (fellesData) => {
-    const { saksnummer, vurderDokument, ikkeSendForvaltingsmelding } = this.props.journalforingSkjemaVerdier;
-
+    const { saksnummer, vurderDokument } = this.props.journalforingSkjemaVerdier;
     return {
       ...fellesData,
-      ikkeSendForvaltingsmelding,
       saksnummer,
       ingenVurdering: !vurderDokument,
     };
@@ -168,7 +168,6 @@ class Journalforing extends Component {
 
     return {
       ...fellesData,
-      ikkeSendForvaltingsmelding: null,
       behandlingstemaKode: behandlingstema,
       behandlingstypeKode: behandlingstype,
       saksnummer,
@@ -193,7 +192,6 @@ class Journalforing extends Component {
       journalforingSoknadslandUkjenteEllerAlleEosLand,
       journalforingPeriodeFraOgMed,
       journalforingPeriodeTilOgMed,
-      ikkeSendForvaltingsmelding,
     } = this.props.journalforingSkjemaVerdier;
 
     const fagsak = {
@@ -221,7 +219,6 @@ class Journalforing extends Component {
       fullmektigKontaktperson,
       fullmektigKontaktOrgnr,
       fullmakter,
-      ikkeSendForvaltingsmelding,
       fagsak,
     };
   };
