@@ -372,7 +372,7 @@ export const VurderingArtikkel16Vedtak = ({
   mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
+  let oppdaterFørKontroll = true;
 
   useEffect(() => {
     /**
@@ -429,12 +429,12 @@ export const VurderingArtikkel16Vedtak = ({
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
         skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
       };
-      setOppdaterFørKontroll(false);
+      oppdaterFørKontroll = false;
       await kontrollerFerdigbehandling(request);
       setVedtakPending(false);
     }
   }
-  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 250), [kontrollerFerdigbehandling]);
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, formValues, mottatteOpplysningerStatus, formIsValid });
