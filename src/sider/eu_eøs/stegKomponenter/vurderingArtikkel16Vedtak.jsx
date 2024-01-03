@@ -12,7 +12,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 import * as Utils from "../../../utils";
 
 import Begrunnelser from "../../../felleskomponenter/begrunnelser";
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 import DatoOmrade from "../../../felleskomponenter/datoOmrade/datoOmrade";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -85,8 +85,7 @@ export const Innvilgelse = ({
 }) => {
   const pdfDokumenter = [
     {
-      navn: "Forhåndsvis vedtaksbrev og A1",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: vedtaksbrevFritekst,
@@ -96,8 +95,7 @@ export const Innvilgelse = ({
 
   if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
-      navn: "Brev til arbeidsgiver",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
@@ -139,7 +137,11 @@ export const Innvilgelse = ({
       <Nav.Row>
         <Nav.Column xs="7">
           {stegErGyldig && (
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
+            <Dokumentliste
+              behandlingID={behandlingID}
+              dokumenter={pdfDokumenter}
+              validateOnClick={vedKlikkForhandsvis}
+            />
           )}
         </Nav.Column>
       </Nav.Row>
@@ -179,8 +181,7 @@ export const DelvisInnvilgelse = ({
 }) => {
   const pdfDokumenter = [
     {
-      navn: "Forhåndsvis vedtaksbrev og A1",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: vedtaksbrevFritekst,
@@ -190,8 +191,7 @@ export const DelvisInnvilgelse = ({
 
   if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
-      navn: "Brev til arbeidsgiver",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
@@ -237,7 +237,11 @@ export const DelvisInnvilgelse = ({
       <Nav.Row>
         <Nav.Column xs="7">
           {stegErGyldig && (
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
+            <Dokumentliste
+              behandlingID={behandlingID}
+              dokumenter={pdfDokumenter}
+              validateOnClick={vedKlikkForhandsvis}
+            />
           )}
         </Nav.Column>
       </Nav.Row>
@@ -273,8 +277,7 @@ export const Avslag = ({
 }) => {
   const pdfDokumenter = [
     {
-      navn: "Forhåndsvis vedtaksbrev",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: vedtaksbrevFritekst,
@@ -284,8 +287,7 @@ export const Avslag = ({
 
   if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
-      navn: "Brev til arbeidsgiver",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
@@ -303,7 +305,7 @@ export const Avslag = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+          {redigerbart && <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
         </Nav.Column>
       </Nav.Row>
     </Fragment>
@@ -370,7 +372,7 @@ export const VurderingArtikkel16Vedtak = ({
   mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
+  let oppdaterFørKontroll = true;
 
   useEffect(() => {
     /**
@@ -427,12 +429,12 @@ export const VurderingArtikkel16Vedtak = ({
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
         skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
       };
-      setOppdaterFørKontroll(false);
+      oppdaterFørKontroll = false;
       await kontrollerFerdigbehandling(request);
       setVedtakPending(false);
     }
   }
-  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 250), [kontrollerFerdigbehandling]);
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, formValues, mottatteOpplysningerStatus, formIsValid });

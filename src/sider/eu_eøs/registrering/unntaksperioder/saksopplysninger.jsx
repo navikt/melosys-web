@@ -487,7 +487,7 @@ const mapStateToProps = (state) => ({
   sedLovvalgsbestemmelse: behandlingerSelectors.SEDSelector(state).lovvalgsbestemmelse,
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingsresultatErHentet: behandlingsresultatSelectors.BehandlingsresultatStatusErOkSelector(state),
-  unntaksperiodeKontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
+  unntaksperiodeKontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

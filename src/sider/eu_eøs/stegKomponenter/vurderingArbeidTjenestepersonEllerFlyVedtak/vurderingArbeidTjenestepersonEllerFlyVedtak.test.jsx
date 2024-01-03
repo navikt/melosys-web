@@ -4,7 +4,7 @@ import { VurderingArbeidTjenestepersonEllerFlyVedtak } from "./vurderingArbeidTj
 import Mottakerinstitusjonvelger, {
   MottakerinstitusjonvelgerFlervalg,
 } from "../../../../felleskomponenter/mottakerinstitusjonvelger";
-import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 
 import * as KV from "../../../../kodeverk";
 import * as Skjema from "../../../../felleskomponenter/skjema";
@@ -96,14 +96,14 @@ describe("VurderingArbeidTjenestepersonEllerFlyVedtak", () => {
         const ytterligereInformasjon = vurderingArbeidEttLandOvrigVedtak.findWhere(
           (n) => n.type() === Skjema.Textarea && n.props().label === "Ytterligere informasjon til SED (valgfri)"
         );
-        const pdfLenkeListe = vurderingArbeidEttLandOvrigVedtak.find(PdfLenkeListe);
+        const dokumentliste = vurderingArbeidEttLandOvrigVedtak.find(Dokumentliste);
 
         expect(mottakerinstitusjoner).toHaveLength(1);
         expect(ytterligereInformasjon).toHaveLength(1);
-        expect(pdfLenkeListe.props().dokumenter).toEqual(
+        expect(dokumentliste.props().dokumenter).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              type: EKV.Koder.sedtyper.A010,
+              sedType: EKV.Koder.sedtyper.A010,
             }),
           ])
         );
@@ -120,14 +120,14 @@ describe("VurderingArbeidTjenestepersonEllerFlyVedtak", () => {
         const ytterligereInformasjon = vurderingArbeidEttLandOvrigVedtak.findWhere(
           (n) => n.type() === Skjema.Textarea && n.props().label === "Ytterligere informasjon til SED (valgfri)"
         );
-        const pdfLenkeListe = vurderingArbeidEttLandOvrigVedtak.find(PdfLenkeListe);
+        const dokumentliste = vurderingArbeidEttLandOvrigVedtak.find(Dokumentliste);
 
         expect(mottakerinstitusjoner).toHaveLength(0);
         expect(ytterligereInformasjon).toHaveLength(0);
-        expect(pdfLenkeListe.props().dokumenter).not.toEqual(
+        expect(dokumentliste.props().dokumenter).not.toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              type: EKV.Koder.sedtyper.A010,
+              sedType: EKV.Koder.sedtyper.A010,
             }),
           ])
         );
@@ -141,14 +141,14 @@ describe("VurderingArbeidTjenestepersonEllerFlyVedtak", () => {
         const ytterligereInformasjon = vurderingArbeidEttLandOvrigVedtak.findWhere(
           (n) => n.type() === Skjema.Textarea && n.props().label === "Ytterligere informasjon til SED (valgfri)"
         );
-        const pdfLenkeListe = vurderingArbeidEttLandOvrigVedtak.find(PdfLenkeListe);
+        const dokumentliste = vurderingArbeidEttLandOvrigVedtak.find(Dokumentliste);
 
         expect(mottakerinstitusjoner).toHaveLength(0);
         expect(ytterligereInformasjon).toHaveLength(0);
-        expect(pdfLenkeListe.props().dokumenter).not.toEqual(
+        expect(dokumentliste.props().dokumenter).not.toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              type: EKV.Koder.sedtyper.A010,
+              sedType: EKV.Koder.sedtyper.A010,
             }),
           ])
         );

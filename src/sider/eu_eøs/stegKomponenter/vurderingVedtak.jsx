@@ -23,7 +23,7 @@ import { flytSelectors } from "../../../ducks/flyt";
 
 import { skalViseIngenFlyt } from "../../../url";
 import { useFeatureToggle } from "../../../featuretoggle";
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 import DatoOmrade from "../../../felleskomponenter/datoOmrade";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 
@@ -111,10 +111,10 @@ const VurderingVedtak = ({
   mottatteOpplysningerStatus,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const [erBucAapen, setErBucAapen] = useState(true);
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const dispatch = useDispatch();
+  let oppdaterFørKontroll = true;
 
   const lovvalget = lovvalgsperioder[0] || {};
 
@@ -178,12 +178,12 @@ const VurderingVedtak = ({
           : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
         skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
       };
-      setOppdaterFørKontroll(false);
+      oppdaterFørKontroll = false;
       await kontrollerFerdigbehandling(request);
       setVedtakPending(false);
     }
   }
-  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 250), [kontrollerFerdigbehandling]);
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, formValues, mottatteOpplysningerStatus });
@@ -272,13 +272,13 @@ const VurderingVedtak = ({
           <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
         )}
         <Nav.Row>
-          <Nav.Column xs="6">
+          <Nav.Column xs="7">
             {stegErGyldig && (
-              <PdfLenkeListe
+              <Dokumentliste
                 behandlingID={behandlingID}
                 dokumenter={
                   bucLukketOgLovvalgNorge
-                    ? pdfDokumenter.filter((dok) => dok.type !== EKV.Koder.sedtyper.A012)
+                    ? pdfDokumenter.filter((dok) => dok.sedType !== EKV.Koder.sedtyper.A012)
                     : pdfDokumenter
                 }
               />

@@ -9,7 +9,6 @@ import * as Utils from "../../../utils";
 
 import { Feilmeldinger } from "../../feilmeldinger";
 import { AlertStripeFeil } from "nav-frontend-alertstriper";
-import PdfLenkeListe from "../../pdfLenkeListe";
 import Knapperad from "../../knapperad";
 import HtmlEditor from "../../htmlEditor";
 import bem from "../../../bemUtils";
@@ -22,6 +21,7 @@ import { modalerOperations } from "../../../ducks/modaler";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 import "./dialogboksHenlegg.css";
+import Dokumentliste from "../../dokumentliste";
 
 type DialogboksHenleggSakProps = {
   avbryt: () => void;
@@ -34,7 +34,7 @@ export const DialogboksHenleggSak = ({ avbryt, ariaHideApp = false }: Dialogboks
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
 
   const [begrunnelseKode, setBegrunnelseKode] = useState<string>("");
   const [feilmeldingSelect, setFeilmeldingSelect] = useState<string | null>(null);
@@ -106,8 +106,7 @@ export const DialogboksHenleggSak = ({ avbryt, ariaHideApp = false }: Dialogboks
 
   const pdfDokumenter = [
     {
-      navn: "Forhåndsvis brev",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         begrunnelseKode,
@@ -155,7 +154,7 @@ export const DialogboksHenleggSak = ({ avbryt, ariaHideApp = false }: Dialogboks
           />
         )}
         {harIngenFeilmeldinger && (
-          <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={erValgGyldig} />
+          <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={erValgGyldig} />
         )}
         <Knapperad
           bekreft={handleHenlegg}

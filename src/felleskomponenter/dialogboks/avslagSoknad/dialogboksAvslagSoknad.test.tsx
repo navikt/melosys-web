@@ -32,7 +32,7 @@ describe("DialogboksAvslagSoknad", () => {
   it("viser forhåndsvisning når ingen feilmeldinger finnes", async () => {
     const initialState = { behandlinger: { status: "", data: { redigerbart: true } } };
     const { findByText } = renderWithProviders(<DialogboksAvslagSoknad {...props} />, { preloadedState: initialState });
-    expect(await findByText("Forhåndsvis vedtaksbrev")).toBeInTheDocument();
+    expect(await findByText("Forhåndsvisning av brev")).toBeInTheDocument();
   });
 
   it("viser ikke forhåndsvisning når feilmeldinger finnes", async () => {
@@ -44,6 +44,6 @@ describe("DialogboksAvslagSoknad", () => {
     const { queryByText } = renderWithProviders(<DialogboksAvslagSoknad {...props} />, {
       preloadedState: initialState,
     });
-    expect(queryByText("Forhåndsvis vedtaksbrev")).not.toBeInTheDocument();
+    expect(queryByText("Forhåndsvisning av brev")).not.toBeInTheDocument();
   });
 });

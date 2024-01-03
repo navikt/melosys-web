@@ -27,8 +27,7 @@ class Vedtak extends Steg {
 
       const pdfDokumenter = [
         {
-          navn: "Forhåndsvis vedtaksbrev og A1",
-          data: {
+          dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
             mottaker: MKV.Koder.mottakerroller.BRUKER,
             fritekst: formValues.vedtaksbrevFritekst,
@@ -46,8 +45,7 @@ class Vedtak extends Steg {
         formValues?.kopiTilArbeidsgiver
       ) {
         pdfDokumenter.push({
-          navn: "Orienteringsbrev til arbeidsgiver",
-          data: {
+          dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
             mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
           },
@@ -66,19 +64,15 @@ class Vedtak extends Steg {
       if (formValues.kreverMottakerinstitusjon) {
         if (erArtikkel12Lovvalgsbestemmelse(lovvalgSomKodeTerm)) {
           pdfDokumenter.push({
-            navn: "Forhåndsvis SED A009",
-            type: EKV.Koder.sedtyper.A009,
-            erSed: true,
-            data: {
+            sedType: EKV.Koder.sedtyper.A009,
+            sedData: {
               fritekst: formValues.fritekstSed,
             },
           });
         } else {
           pdfDokumenter.push({
-            navn: "Forhåndsvis SED A010",
-            type: EKV.Koder.sedtyper.A010,
-            erSed: true,
-            data: {
+            sedType: EKV.Koder.sedtyper.A010,
+            sedData: {
               fritekst: formValues.fritekstSed,
             },
           });

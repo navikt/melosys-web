@@ -26,8 +26,6 @@ import { kontrollSelectors } from "../../../../ducks/kontroll";
 import { formSelectors } from "../../../../ducks/form";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import MottakerTabell from "../../../../felleskomponenter/tabell/mottakerTabell";
-import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 import { StegStatus } from "../../stegvelger";
 import bem from "../../../../bemUtils";
 
@@ -40,6 +38,7 @@ import {
   NY_VURDERING_BAKGRUNN_HJELPETEKST,
   PERIODE_HJELPETEKST,
 } from "./tekster";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 
 const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU } = MKV.Koder.brev.produserbaredokumenter;
 const { CAN_ART6_2 } = MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca;
@@ -92,7 +91,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
     periodeIsValid: formSelectors.TrygdeavtaleVedtakFormPeriodeValidSelector(state),
     erNyVurdering,
     feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
-    kontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
+    kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
   };
 };
 
@@ -150,10 +149,10 @@ const VurderingVedtak = ({
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const [harOppfrisketLovvalgsperiode, setHarOppfrisketLovvalgsperiode] = useState(false);
   const isMounted = Hooks.useIsMounted();
   const dispatch = useDispatch();
+  let oppdaterFørKontroll = true;
 
   const skalViseKopiTilArbeidsgiverCheckbox = ![CAN_ART6_2, USA_ART5_4].includes(resultat.bestemmelse);
 
@@ -202,12 +201,12 @@ const VurderingVedtak = ({
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
         skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
       };
-      setOppdaterFørKontroll(false);
+      oppdaterFørKontroll = false;
       await dispatch(kontrollerFerdigbehandling(request));
       setVedtakPending(false);
     }
   }
-  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 250), [kontrollerFerdigbehandling]);
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus });
@@ -292,47 +291,31 @@ const VurderingVedtak = ({
     }
   };
 
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    return [
-      {
-        navn: muligMottaker.dokumentNavn,
-        data: {
-          produserbardokument: hentProduserbartDokument(),
-          mottaker: muligMottaker.rolle,
-          kopiMottakere: getKopiMottakere(),
-          innledningFritekst: formValues?.innledningFritekst || null,
-          begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-          orgNr: muligMottaker?.orgnr || null,
-          institusjonId: muligMottaker?.institusjonId || null,
-          ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
-          barnFritekst: familieFormValues?.barn?.fritekst || null,
-          nyVurderingBakgrunn: getNyVurderingBakgrunn(),
-        },
+  const mapMottaker = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
+    return {
+      mottakerNavn: muligMottaker.mottakerNavn,
+      dokumentData: {
+        produserbardokument: hentProduserbartDokument(),
+        mottaker: muligMottaker.rolle,
+        kopiMottakere: getKopiMottakere(),
+        innledningFritekst: formValues?.innledningFritekst || null,
+        begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+        orgNr: muligMottaker?.orgnr || null,
+        institusjonId: muligMottaker?.institusjonId || null,
+        ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
+        barnFritekst: familieFormValues?.barn?.fritekst || null,
+        nyVurderingBakgrunn: getNyVurderingBakgrunn(),
       },
-    ];
+    };
   };
 
-  const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    return [
-      {
-        verdi: (
-          <PdfLenkeListe
-            behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker)}
-            vedKlikk={() => true}
-            className={vurderingVedtakCls.element("forhåndsvisning")}
-          />
-        ),
-      },
-      { verdi: muligMottaker.mottakerNavn },
-    ];
-  };
+  const mapDokumenter = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
+    if (!mottakere) return [];
 
-  const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
     return [
-      mapMottakerRad(mottakere.hovedMottaker),
-      ...mottakere.kopiMottakere.filter(filterKopiMottakere).map((muligMottaker) => mapMottakerRad(muligMottaker)),
-      ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
+      mapMottaker(mottakere.hovedMottaker),
+      ...mottakere.kopiMottakere.filter(filterKopiMottakere).map(mapMottaker),
+      ...mottakere.fasteMottakere.map(mapMottaker),
     ];
   };
 
@@ -491,7 +474,7 @@ const VurderingVedtak = ({
         disabled={!redigerbart}
       />
 
-      {redigerbart && skalViseKopiTilArbeidsgiverCheckbox && (
+      {stegErGyldig && skalViseKopiTilArbeidsgiverCheckbox && (
         <Skjema.Checkbox
           feltNavn="kopiTilArbeidsgiver"
           label="Send kopi til arbeidsgiver/virksomhet"
@@ -500,15 +483,7 @@ const VurderingVedtak = ({
         />
       )}
 
-      {stegErGyldig && (
-        <MottakerTabell
-          rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
-          kolonner={[
-            { verdi: "Dokumenter", bredde: "60%" },
-            { verdi: "Mottaker", bredde: "40%" },
-          ]}
-        />
-      )}
+      {stegErGyldig && <Dokumentliste behandlingID={behandlingID} dokumenter={mapDokumenter(muligeMottakere)} />}
 
       {redigerbart && erNyVurdering && (
         <Nav.AlertStripeInfo className={vurderingVedtakCls.element("alertstripe")}>

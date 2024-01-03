@@ -18,18 +18,15 @@ class GodkjennUtpekingNorge extends Steg {
 
       const pdfDokumenter = [
         {
-          navn: "Forhåndsvis vedtaksbrev og A1",
-          data: {
+          dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
             mottaker: MKV.Koder.mottakerroller.BRUKER,
             fritekst: formValues.vedtaksbrevFritekst,
           },
         },
         {
-          navn: "Forhåndsvis SED A012",
-          type: EKV.Koder.sedtyper.A012,
-          erSed: true,
-          data: {
+          sedType: EKV.Koder.sedtyper.A012,
+          sedData: {
             fritekst: formValues.fritekstSed,
           },
         },

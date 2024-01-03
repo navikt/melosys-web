@@ -709,7 +709,7 @@ const mapStateToProps = (state) => ({
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
-  kontrollfeil: kontrollSelectors.KontrollfeilSelector(state),
+  kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
 });
 
 /* eslint no-alert:off */

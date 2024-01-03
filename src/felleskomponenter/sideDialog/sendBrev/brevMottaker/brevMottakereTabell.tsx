@@ -9,10 +9,9 @@ import * as Utils from "../../../../utils";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
-import MottakerTabell from "../../../tabell/mottakerTabell";
-import PdfLenkeListe from "../../../pdfLenkeListe";
 import { SendBrevFormValues } from "../types";
 import { erBruker } from "./brevMottaker";
+import Dokumentliste, { BrevDokumentMetadataType } from "../../../dokumentliste";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -38,51 +37,36 @@ const BrevMottakereTabell = ({
   formIsValid,
   hentBrevRequest,
 }: BrevMottakereTabellProps & PropsFromRedux) => {
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, erHovedMottaker: boolean) => {
-    const rolle = erHovedMottaker ? formValues.valgtMottaker?.rolle : muligMottaker.rolle;
-    return [
-      {
-        navn: muligMottaker.dokumentNavn,
-        data: {
-          ...hentBrevRequest(rolle),
-          ...(!erBruker(rolle) && muligMottaker.orgnr ? { orgNr: muligMottaker.orgnr } : {}),
-        },
-      },
-    ];
-  };
-
-  const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker, erHovedMottaker: boolean = false) => {
-    return [
-      {
-        verdi: (
-          <PdfLenkeListe
-            behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker, erHovedMottaker)}
-            vedKlikk={() => formIsValid}
-            className="forhåndsvisning"
-          />
-        ),
-      },
-      { verdi: muligMottaker.mottakerNavn },
-    ];
-  };
-
-  const mapKopiMottakere = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
+  const mapKopiMottakere = (
+    muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto
+  ): BrevDokumentMetadataType[] => {
     return formValues?.kopiTilBruker
-      ? muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker))
+      ? muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapDokument(muligMottaker))
       : [];
   };
 
-  const mapMottakerRader = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
-    return [
-      mapRad(muligeBrevMottakere.hovedMottaker, true),
-      ...mapKopiMottakere(muligeBrevMottakere),
-      ...muligeBrevMottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker)),
-    ];
+  const mapDokument = (
+    muligMottaker: Api.DokumenterV2.MuligMottaker,
+    erHovedMottaker = false
+  ): BrevDokumentMetadataType => {
+    const rolle = erHovedMottaker ? formValues.valgtMottaker?.rolle : muligMottaker.rolle;
+    return {
+      mottakerNavn: muligMottaker.mottakerNavn,
+      dokumentData: {
+        ...hentBrevRequest(rolle),
+        ...(!erBruker(rolle) && muligMottaker.orgnr ? { orgNr: muligMottaker.orgnr } : {}),
+      },
+    };
   };
 
-  const mapMottakerRaderNorskeMyndigheter = (muligeBrevMottakere: Api.DokumenterV2.MuligMottaker[]) => {
-    return muligeBrevMottakere.map((mottaker) => mapRad(mottaker));
+  const mapMottakerRader = (
+    muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto
+  ): BrevDokumentMetadataType[] => {
+    return [
+      mapDokument(muligeBrevMottakere.hovedMottaker, true),
+      ...mapKopiMottakere(muligeBrevMottakere),
+      ...muligeBrevMottakere.fasteMottakere.map((fastMottaker) => mapDokument(fastMottaker)),
+    ];
   };
 
   return (
@@ -96,21 +80,16 @@ const BrevMottakereTabell = ({
       )}
 
       {muligeMottakere && (
-        <MottakerTabell
-          rader={mapMottakerRader(muligeMottakere)}
-          kolonner={[
-            { verdi: "Forhåndsvisning av brev", bredde: "60%" },
-            { verdi: "Mottaker", bredde: "40%" },
-          ]}
+        <Dokumentliste
+          behandlingID={behandlingID}
+          dokumenter={mapMottakerRader(muligeMottakere)}
+          validateOnClick={() => formIsValid}
         />
       )}
       {muligeMottakereNorskMyndighet && (
-        <MottakerTabell
-          rader={mapMottakerRaderNorskeMyndigheter(muligeMottakereNorskMyndighet)}
-          kolonner={[
-            { verdi: "Forhåndsvisning av brev", bredde: "60%" },
-            { verdi: "Mottaker", bredde: "40%" },
-          ]}
+        <Dokumentliste
+          behandlingID={behandlingID}
+          dokumenter={muligeMottakereNorskMyndighet.map((muligMottaker) => mapDokument(muligMottaker))}
         />
       )}
     </>

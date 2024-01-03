@@ -24,15 +24,17 @@ describe("Dialogbokshenlegg", () => {
 
   it("viser forhåndsvisning når ingen feilmeldinger finnes", () => {
     const { getByText } = renderWithProviders(<DialogboksHenleggSak {...props} />);
-    expect(getByText("Forhåndsvis brev")).toBeInTheDocument();
+    expect(getByText("Forhåndsvisning av brev")).toBeInTheDocument();
   });
 
   it("viser ikke forhåndsvisning når feilmeldinger finnes", () => {
-    const initialState = { kontroll: { status: "OK", data: { kontrollfeilList: [{ kode: "Kode", term: "term" }] } } };
+    const initialState = {
+      kontroll: { status: "OK", data: { kontrollfeilList: [{ kode: "Kode", term: "term", type: "FEIL" }] } },
+    };
 
     const { queryAllByText } = renderWithProviders(<DialogboksHenleggSak {...props} />, {
       preloadedState: initialState,
     });
-    expect(queryAllByText("Forhåndsvis brev")).toHaveLength(0);
+    expect(queryAllByText("Forhåndsvisning av brev")).toHaveLength(0);
   });
 });

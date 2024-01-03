@@ -20,11 +20,11 @@ import { modalerOperations } from "../../../ducks/modaler";
 
 import { AlertStripeFeil } from "nav-frontend-alertstriper";
 import { Feilmeldinger } from "../../feilmeldinger";
-import PdfLenkeListe from "../../pdfLenkeListe";
 import HtmlEditor from "../../htmlEditor";
 import Knapperad from "../../knapperad";
 
 import "./dialogboksAvslagSoknad.css";
+import Dokumentliste from "../../dokumentliste";
 
 interface DialogboksAvslagSoknadProps {
   avbryt: () => void;
@@ -38,7 +38,7 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp = false, avbryt }: Dialogbo
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollfeilSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
 
   const [brevFritekst, setBrevFritekst] = useState("");
   const [utførerKontroll, setUtførerKontroll] = useState(true);
@@ -59,8 +59,7 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp = false, avbryt }: Dialogbo
 
   const pdfDokumenter = [
     {
-      navn: "Forhåndsvis vedtaksbrev",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
@@ -109,7 +108,7 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp = false, avbryt }: Dialogbo
           <Feilmeldinger />
           {feil && <AlertStripeFeil>{feil}</AlertStripeFeil>}
           <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
-          {bekreftRedigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+          {bekreftRedigerbart && <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           <div className="knapperadcontainer">
             <Knapperad
               avbryt={avbryt}

@@ -1,10 +1,10 @@
 @import (reference) "~nav-frontend-core/less/_variabler";
 @import "../../constants";
 
-.pdfLenkeListe {
+.dokumentliste {
   margin: 1em 0;
 
-  button {
+  &__vis_dokument_knapp {
     display: block;
     border: 0;
     padding: 2px;
@@ -12,6 +12,7 @@
     background: transparent;
     color: @blue-nav;
     cursor: pointer;
+    text-align: left;
 
     &:focus,
     &:hover {
@@ -20,10 +21,6 @@
 
     &:focus {
       box-shadow: 0 0 0 3px @fokusFarge;
-    }
-
-    &:hover {
-      box-shadow: 0 0 0 3px @navBla;
     }
   }
 

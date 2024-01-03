@@ -11,7 +11,13 @@ const KontrollSelector: Selector<RootState, StateSection<Types.Data>> = createSe
 
 const KontrollDataSelector = createSelector(KontrollSelector, (kontroll) => kontroll.data || {});
 
-export const KontrollfeilSelector = createSelector(KontrollDataSelector, (data) => data.kontrollfeilList || []);
+export const KontrollFeilSelector = createSelector(KontrollDataSelector, (data) => {
+  return data.kontrollfeilList ? data.kontrollfeilList.filter((feil) => feil.type === "FEIL") : [];
+});
+
+export const KontrollAdvarslerSelector = createSelector(KontrollDataSelector, (data) => {
+  return data.kontrollfeilList ? data.kontrollfeilList.filter((feil) => feil.type === "ADVARSEL") : [];
+});
 
 const ReduxStatusSelector = createSelector(KontrollSelector, (kontroll) => kontroll.status);
 

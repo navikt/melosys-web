@@ -10,7 +10,7 @@ import * as KV from "../../../kodeverk";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Hooks from "../../../hooks";
 
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { formOperations } from "../../../ducks/form";
@@ -35,10 +35,8 @@ export const VurderingAvslaaUtpeking = ({
 
   const pdfDokumenter = [
     {
-      navn: "Forhåndsvis SED A004",
-      type: EKV.Koder.sedtyper.A004,
-      erSed: true,
-      data: {
+      sedType: EKV.Koder.sedtyper.A004,
+      sedData: {
         fritekst,
         nyttLovvalgsland,
         begrunnelseUtenlandskMyndighet,
@@ -112,7 +110,7 @@ export const VurderingAvslaaUtpeking = ({
             visTellerFra={500}
             maxLength={500}
           />
-          <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
+          <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={vedKlikkForhandsvis} />
         </Fragment>
       )}
       <Mui.StegKnapper

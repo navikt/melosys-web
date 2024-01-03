@@ -4,7 +4,7 @@ import { reducer as formReducer } from "redux-form";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Skjema from "../../../felleskomponenter/skjema";
 
-import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 import { VurderingVideresend } from "./vurderingVideresend";
 
 vi.mock("../../../featuretoggle", () => ({
@@ -37,21 +37,21 @@ describe("Vurderingvideresend", () => {
     ).toHaveLength(1);
   });
 
-  it("viser en PdfLenkeListe med korrekte props", () => {
+  it("viser en dokumentliste med korrekte props", () => {
     const vurderingVideresend = shallow(<VurderingVideresend {...props} />);
 
-    const pdfLenkeListe = vurderingVideresend.find(PdfLenkeListe);
-    const pdfLenkeListeProps = pdfLenkeListe.props();
+    const dokumentliste = vurderingVideresend.find(Dokumentliste);
+    const dokumentlisteProps = dokumentliste.props();
 
-    expect(pdfLenkeListe).toHaveLength(1);
-    expect(pdfLenkeListeProps.behandlingID).toBe(props.behandlingID);
+    expect(dokumentliste).toHaveLength(1);
+    expect(dokumentlisteProps.behandlingID).toBe(props.behandlingID);
   });
 
-  it("viser ikke pdfLenkeListe dersom ikke redigerbart", () => {
+  it("viser ikke dokumentliste dersom ikke redigerbart", () => {
     props.redigerbart = false;
     const vurderingVideresend = shallow(<VurderingVideresend {...props} />);
 
-    expect(vurderingVideresend.find(PdfLenkeListe)).toHaveLength(0);
+    expect(vurderingVideresend.find(Dokumentliste)).toHaveLength(0);
   });
 
   it("setter korrekte props for bekreftKnapp", () => {
