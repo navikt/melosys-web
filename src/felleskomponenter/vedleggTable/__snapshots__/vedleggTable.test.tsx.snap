@@ -94,7 +94,7 @@ exports[`vedleggTable > snapshot test 1`] = `
             href="#"
             onClick={[Function]}
           >
-            test
+            test (åpnes i ny fane)
           </a>
         </td>
         <td
