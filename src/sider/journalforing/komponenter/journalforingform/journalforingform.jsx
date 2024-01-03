@@ -28,7 +28,7 @@ import JournalforingSchema from "../journalforingSchema";
 import "./journalforingform.css";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
-const { FULLMEKTIG, ANNEN_PERSON_ELLER_VIRKSOMHET } = KV.AvsenderTyper;
+const { ANNEN_PERSON_ELLER_VIRKSOMHET } = KV.AvsenderTyper;
 const { SEND_BRUKER, IKKE_SEND } = KV.Koder.FORVALTNINGSMELDING_MOTTAKER;
 
 const skalViseForvaltningsmelding = (formValues, fagsakListe) => {
@@ -76,31 +76,17 @@ const JournalforingForm = ({
   );
   const [harRegistrertAdresse, setHarRegistrertAdresse] = useState(undefined);
 
-  const { brukerID, avsenderType, representantID, representantRepresenterer, avsenderID } = formValues;
+  const { brukerID, avsenderType, avsenderID } = formValues;
 
   const sjekkAdresse = () => {
-    if (!visForvaltningsmelding || !avsenderType || (!brukerID && !representantID && !fullmektigID)) return;
+    if (!visForvaltningsmelding || !avsenderType || !brukerID) return;
 
     let brukerIDPerson = "";
     let orgnr = "";
 
     const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
-    const representererBruker = [MKV.Koder.representerer.BRUKER, MKV.Koder.representerer.BEGGE].includes(
-      representantRepresenterer
-    );
 
-    if (avsenderType === FULLMEKTIG && representererBruker) {
-      const fullmektigErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(representantID);
-      const fullmektigErGyldigOrgnr = Utils.organisasjon.erOrgnrGyldig(representantID);
-
-      if (fullmektigErGyldigFnrDnr) {
-        brukerIDPerson = representantID;
-      } else if (fullmektigErGyldigOrgnr) {
-        orgnr = representantID;
-      } else {
-        return;
-      }
-    } else if (avsenderType === ANNEN_PERSON_ELLER_VIRKSOMHET) {
+    if (avsenderType === ANNEN_PERSON_ELLER_VIRKSOMHET) {
       const avsenderErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(avsenderID);
       const avsenderErGyldigOrgNr = Utils.organisasjon.erOrgnrGyldig(avsenderID);
 
@@ -135,7 +121,7 @@ const JournalforingForm = ({
 
   useEffect(() => {
     sjekkAdresse();
-  }, [brukerID, avsenderType, representantID, representantRepresenterer, visForvaltningsmelding, avsenderID]);
+  }, [brukerID, avsenderType, visForvaltningsmelding, avsenderID]);
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
@@ -166,7 +152,6 @@ const JournalforingForm = ({
               avsenderType={avsenderType}
               settFeltInnhold={settFeltInnhold}
               harRegistrertAdresse={harRegistrertAdresse}
-              representantRepresenterer={representantRepresenterer}
             />
           }
         />
@@ -235,12 +220,6 @@ const mapStateToProps = (state) => ({
     erHovedpartAvsender: journalforingSelectors.ErHovedpartAvsenderSelector(state),
     avsenderID: journalforingSelectors.AvsenderIDSelector(state),
     avsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
-    arbeidsgiverID: null,
-    representantID: null,
-    representantRepresenterer: null,
-    fullmektigID: null,
-    fullmektigKontaktperson: null,
-    fullmektigKontaktOrgnr: null,
     mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
     hoveddokument: {
       tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || "Uten tittel",

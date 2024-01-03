@@ -49,7 +49,6 @@ describe("OpprettSak - journalføring", () => {
       hentOgVisBruker: vi.fn(),
       hentOgVisVirksomhet: vi.fn(),
       fagsakListe: [],
-      hentOgVisRepresentant: vi.fn(),
       behandlingstemaer: [],
       formValues: {
         saksnummer: "-1",
@@ -151,7 +150,6 @@ describe("OpprettSak - opprett ny sak", () => {
       hentOgVisBruker: vi.fn(),
       hentOgVisVirksomhet: vi.fn(),
       fagsakListe: [],
-      hentOgVisRepresentant: vi.fn(),
       behandlingstemaer: [],
       formValues: {
         saksnummer: "-1",

@@ -32,7 +32,6 @@ const DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT = { melding: "Du må lagre tittel på hov
 const VELG_ETT_LAND_UTENLANDSK_TRYGDEMYNDIGHET = { melding: "Velg land til avsender: utenlandsk trygdemyndighet" };
 const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
 const OPPGI_AVSENDER = { melding: "Oppgi avsender" };
-const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
 
 const lagMelding = (felt) => ({ melding: `${felt} må fylles ut` });
 
@@ -153,27 +152,6 @@ const journalforing = object().shape({
     is: false,
     then: string().ensure().required(VELG_EN_AVSENDER),
   }),
-  representantID: lazy((value) =>
-    Utils._isEmpty(value)
-      ? string().nullable()
-      : string()
-          .erFnrEllerDnrEllerOrgnrTolererEttMellomrom(SKRIV_INN_GYLDIG_ORGNR_FNR_DNR)
-          .when("representantNavn", {
-            is: Utils._isEmpty,
-            then: string()
-              .harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR)
-              .harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR)
-              .nullable(),
-          })
-          .nullable()
-  ),
-  representantRepresenterer: string()
-    .when(["avsenderType", "representantNavn"], {
-      is: (avsenderType, representantNavn) =>
-        avsenderType === KV.AvsenderTyper.FULLMEKTIG && !Utils._isEmpty(representantNavn),
-      then: string().required(VELG_REPRESENTERER).nullable(),
-    })
-    .nullable(),
   utenlandskTrygdemyndighetLandkode: string()
     .when("avsenderType", {
       is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
@@ -276,7 +254,6 @@ const journalforing = object().shape({
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   hoveddokument,
   journalforingHensikt: string(),
-  representantNavn: string().nullable(),
   journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
   opprettBehandling: boolean().nullable(),
 });

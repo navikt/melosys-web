@@ -148,11 +148,7 @@ class Journalforing extends Component {
     }
   };
 
-  organisasjonAliaser = [
-    KV.AvsenderTyper.FULLMEKTIG,
-    KV.AvsenderTyper.ARBEIDSGIVER,
-    MKV.Koder.avsendertyper.ORGANISASJON,
-  ];
+  organisasjonAliaser = [KV.AvsenderTyper.ARBEIDSGIVER, MKV.Koder.avsendertyper.ORGANISASJON];
 
   dataSpesifiktTilKnytt = (fellesData) => {
     const { saksnummer, vurderDokument } = this.props.journalforingSkjemaVerdier;
@@ -176,14 +172,6 @@ class Journalforing extends Component {
 
   dataSpesifiktTilOpprett = (fellesData) => {
     const {
-      arbeidsgiverID,
-      representantID,
-      representantKontaktPerson,
-      representantRepresenterer,
-      fullmektigID,
-      fullmektigKontaktperson,
-      fullmektigKontaktOrgnr,
-      fullmakter,
       sakstype,
       sakstema,
       opprettnysak_behandlingstema,
@@ -209,16 +197,8 @@ class Journalforing extends Component {
 
     return {
       ...fellesData,
-      arbeidsgiverID,
       behandlingstemaKode: opprettnysak_behandlingstema,
       behandlingstypeKode: opprettnysak_behandlingstype,
-      representantID,
-      representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
-      representererKode: representantRepresenterer,
-      fullmektigID,
-      fullmektigKontaktperson,
-      fullmektigKontaktOrgnr,
-      fullmakter,
       fagsak,
     };
   };
@@ -339,10 +319,6 @@ class Journalforing extends Component {
     settFeltInnhold("opprettnysak_behandlingstype", null);
     settFeltInnhold("journalforingPeriodeFraOgMed", null);
     settFeltInnhold("journalforingPeriodeTilOgMed", null);
-    settFeltInnhold("representantID", null);
-    settFeltInnhold("representantKontaktPerson", null);
-    settFeltInnhold("representantRepresenterer", null);
-    settFeltInnhold("representantNavn", null);
     settFeltInnhold("journalforingSoknadsland", []);
     settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
   };
