@@ -135,7 +135,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   selvstendigArbeid,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
+  let oppdaterFørKontroll = true;
 
   useEffect(() => {
     if (lovvalgsbestemmelseSomSkalLagres) {
@@ -274,12 +274,12 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
           : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
         skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
       };
-      setOppdaterFørKontroll(false);
+      oppdaterFørKontroll = false;
       await kontrollerFerdigbehandling(request);
       setVedtakPending(false);
     }
   }
-  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 250), [kontrollerFerdigbehandling]);
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, formValues });
