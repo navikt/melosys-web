@@ -128,7 +128,7 @@ export const VurderingUtpekt = ({
       ) : null}
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Vurder lovvalgsbeslutningen (A003)</Nav.Typo.Innholdstittel>
       <Nav.Row className="rad">
-        <Nav.Column xs="5">
+        <Nav.Column xs="7">
           {vurderingBegrunnelser.length > 0 && (
             <Fragment>
               <Nav.Typo.Element>Treff ved automatisk kontroll</Nav.Typo.Element>
