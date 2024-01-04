@@ -13,7 +13,7 @@ interface PdfLinkProps {
 
 const PdfLink = ({ journalpostID, dokumentID, tittel }: PdfLinkProps) => (
   <Nav.Lenker href="#" onClick={() => apnePdfINyFane(lagPdfUrl(journalpostID, dokumentID))}>
-    {tittel}
+    {`${tittel} (åpnes i ny fane)`}
   </Nav.Lenker>
 );
 

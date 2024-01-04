@@ -39,7 +39,7 @@ describe("Dokumentliste", () => {
     props.dokumenter = [];
     render(<Dokumentliste {...props} />);
 
-    expect(screen.queryAllByRole("button")).toHaveLength(props.dokumenter.length);
+    expect(screen.queryAllByRole("link")).toHaveLength(props.dokumenter.length);
 
     props.dokumenter = [
       { dokumentData: { produserbardokument: "", mottaker: "" } },
@@ -48,7 +48,7 @@ describe("Dokumentliste", () => {
     ];
     render(<Dokumentliste {...props} />);
 
-    expect(screen.queryAllByRole("button")).toHaveLength(props.dokumenter.length);
+    expect(screen.queryAllByRole("link")).toHaveLength(props.dokumenter.length);
   });
 
   describe("forhåndsvisning av brev", () => {
@@ -66,10 +66,10 @@ describe("Dokumentliste", () => {
       await act(async () => {
         user.click(
           screen.getByText(
-            KV.kodeTilTerm(
+            `${KV.kodeTilTerm(
               props.dokumenter[0].dokumentData?.produserbardokument,
               MKV.KTObjects.brev.produserbaredokumenter
-            )
+            )} (åpnes i ny fane)`
           )
         );
       });
@@ -91,10 +91,10 @@ describe("Dokumentliste", () => {
       await act(async () => {
         user.click(
           screen.getByText(
-            KV.kodeTilTerm(
+            `${KV.kodeTilTerm(
               props.dokumenter[0].dokumentData?.produserbardokument,
               MKV.KTObjects.brev.produserbaredokumenter
-            )
+            )} (åpnes i ny fane)`
           )
         );
       });
@@ -116,7 +116,7 @@ describe("Dokumentliste", () => {
       const user = userEvent.setup();
 
       await act(async () => {
-        user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
+        user.click(screen.getByText(`SED ${props.dokumenter[1].sedType} (åpnes i ny fane)`));
       });
 
       expect(await screen.findByText(responseBody.message)).toBeInTheDocument();
@@ -134,7 +134,7 @@ describe("Dokumentliste", () => {
       const user = userEvent.setup();
 
       await act(async () => {
-        user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
+        user.click(screen.getByText(`SED ${props.dokumenter[1].sedType} (åpnes i ny fane)`));
       });
 
       expect(await screen.findByText("Det oppstod en feil da SED skulle forhåndsvises!")).toBeInTheDocument();
