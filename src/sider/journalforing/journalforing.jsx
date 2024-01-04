@@ -134,7 +134,7 @@ class Journalforing extends Component {
       skalTilordnes,
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
       avsenderType: this.mapAvsenderType(avsenderType, avsenderID),
-      forvaltningsmeldingMottaker: forvaltningsmeldingMottaker,
+      forvaltningsmeldingMottaker,
     };
 
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT) {
