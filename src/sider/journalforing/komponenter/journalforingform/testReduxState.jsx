@@ -21,7 +21,7 @@ export const testReduxState = {
         },
         journalforingSoknadsland: [],
         journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-        mottakerForvaltingsmelding: "SEND_BRUKER",
+        forvaltningsmeldingMottaker: "SEND_BRUKER",
         skalTilordnes: false,
         submittable: false,
         sakstype: null,
@@ -53,7 +53,7 @@ export const testReduxState = {
         },
         journalforingSoknadsland: [],
         journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-        mottakerForvaltingsmelding: "SEND_BRUKER",
+        forvaltningsmeldingMottaker: "SEND_BRUKER",
         skalTilordnes: false,
         submittable: false,
       },
@@ -103,14 +103,14 @@ export const testReduxState = {
           type: "Field",
           count: 4,
         },
-        mottakerForvaltingsmelding: {
-          name: "mottakerForvaltingsmelding",
+        forvaltningsmeldingMottaker: {
+          name: "forvaltningsmeldingMottaker",
           type: "Field",
           count: 3,
         },
       },
       fields: {
-        mottakerForvaltingsmelding: {
+        forvaltningsmeldingMottaker: {
           autofilled: true,
         },
         behandlingstype: {

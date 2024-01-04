@@ -29,7 +29,6 @@ import "./journalforingform.css";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 const { ANNEN_PERSON_ELLER_VIRKSOMHET } = KV.AvsenderTyper;
-const { SEND_BRUKER, IKKE_SEND } = KV.Koder.FORVALTNINGSMELDING_MOTTAKER;
 
 const skalViseForvaltningsmelding = (formValues, fagsakListe) => {
   const { saksnummer, journalforingGjelder, sakstema, opprettnysak_behandlingstype, behandlingstype } = formValues;
@@ -110,13 +109,21 @@ const JournalforingForm = ({
       .then((res) => {
         const adresseFunnet = !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
         setHarRegistrertAdresse(adresseFunnet);
-        settFeltInnhold("mottakerForvaltingsmelding", adresseFunnet ? SEND_BRUKER : IKKE_SEND);
+        settFeltInnhold(
+          "forvaltningsmeldingMottaker",
+          adresseFunnet ? MKV.Koder.forvaltningsmeldingMottaker.BRUKER : MKV.Koder.forvaltningsmeldingMottaker.INGEN
+        );
       })
       .catch(() => setHarRegistrertAdresse(false));
   };
 
   useEffect(() => {
-    settFeltInnhold("mottakerForvaltingsmelding", visForvaltningsmelding ? SEND_BRUKER : IKKE_SEND);
+    settFeltInnhold(
+      "forvaltningsmeldingMottaker",
+      visForvaltningsmelding
+        ? MKV.Koder.forvaltningsmeldingMottaker.BRUKER
+        : MKV.Koder.forvaltningsmeldingMottaker.INGEN
+    );
   }, [visForvaltningsmelding]);
 
   useEffect(() => {
@@ -230,9 +237,9 @@ const mapStateToProps = (state) => ({
     },
     journalforingSoknadsland: [],
     journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-    mottakerForvaltingsmelding: false,
     skalTilordnes: false,
     submittable: false,
+    forvaltningsmeldingMottaker: null,
   },
   fagsakListe: sokSelectors.FagsakSokSelector(state),
 });

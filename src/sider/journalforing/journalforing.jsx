@@ -111,7 +111,7 @@ class Journalforing extends Component {
       skalTilordnes,
       mottattDato,
       avsenderType,
-      mottakerForvaltingsmelding,
+      forvaltningsmeldingMottaker,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -134,7 +134,7 @@ class Journalforing extends Component {
       skalTilordnes,
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
       avsenderType: this.mapAvsenderType(avsenderType, avsenderID),
-      ikkeSendForvaltingsmelding: mottakerForvaltingsmelding !== KV.Koder.FORVALTNINGSMELDING_MOTTAKER.IKKE_SEND,
+      forvaltningsmeldingMottaker: forvaltningsmeldingMottaker,
     };
 
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT) {

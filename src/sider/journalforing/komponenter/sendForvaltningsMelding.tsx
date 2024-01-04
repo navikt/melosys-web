@@ -1,10 +1,11 @@
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
+import MKV from "../../../melosyskodeverk";
 
 import "./sendForvaltningsMelding.css";
 
-const { SEND_AVSENDER, SEND_BRUKER, IKKE_SEND } = KV.Koder.FORVALTNINGSMELDING_MOTTAKER;
+const { BRUKER, AVSENDER, INGEN } = MKV.Koder.forvaltningsmeldingMottaker;
 
 interface SendForvaltningsMeldingProps {
   avsenderType: string;
@@ -16,33 +17,33 @@ const SendForvaltningsMelding = ({ avsenderType, harRegistrertAdresse }: SendFor
     <div className="sendForvaltningsmelding">
       <Nav.Typo.Element>Skal melding om saksbehandlingtid sendes automatisk?</Nav.Typo.Element>
 
-      <Skjema.RadioGruppe feltNavn="mottakerForvaltingsmelding" label="">
+      <Skjema.RadioGruppe feltNavn="forvaltningsmeldingMottaker" label="">
         <Skjema.Radio
           disabled={!harRegistrertAdresse}
-          feltNavn="mottakerForvaltingsmelding"
+          feltNavn="forvaltningsmeldingMottaker"
           label={
             <>
               Ja, melding skal sendes automatisk til <b>bruker</b>
             </>
           }
-          value={SEND_BRUKER}
+          value={BRUKER}
         />
         {avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET ? (
           <Skjema.Radio
             disabled={!harRegistrertAdresse}
-            feltNavn="mottakerForvaltingsmelding"
+            feltNavn="forvaltningsmeldingMottaker"
             label={
               <>
                 Ja, melding skal sendes automatisk til <b>avsender</b>
               </>
             }
-            value={SEND_AVSENDER}
+            value={AVSENDER}
           />
         ) : null}
         <Skjema.Radio
-          feltNavn="mottakerForvaltingsmelding"
+          feltNavn="forvaltningsmeldingMottaker"
           label="Nei, jeg vil sende melding senere eller behandle saken innen kort tid"
-          value={IKKE_SEND}
+          value={INGEN}
         />
       </Skjema.RadioGruppe>
 
