@@ -78,7 +78,7 @@ const JournalforingForm = ({
   const { brukerID, avsenderType, avsenderID } = formValues;
 
   const sjekkAdresse = () => {
-    if (!visForvaltningsmelding || !avsenderType || !brukerID) return;
+    if (!visForvaltningsmelding || !avsenderType || (!brukerID && !avsenderID)) return;
 
     let brukerIDPerson = "";
     let orgnr = "";

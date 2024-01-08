@@ -70,7 +70,7 @@ class Journalforing extends Component {
   };
 
   mapAvsenderType = (avsenderType, avsenderID) => {
-    if (avsenderType === KV.AvsenderTyper.ANNEN || avsenderType === KV.AvsenderTyper.FRITEKST) {
+    if (avsenderType === KV.AvsenderTyper.FRITEKST) {
       return null;
     }
     if (avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET) {
@@ -82,7 +82,7 @@ class Journalforing extends Component {
       }
     }
 
-    return this.organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType;
+    return avsenderType;
   };
 
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
@@ -147,8 +147,6 @@ class Journalforing extends Component {
       return this.dataSpesifiktTilOpprett(journalPostData);
     }
   };
-
-  organisasjonAliaser = [KV.AvsenderTyper.ARBEIDSGIVER, MKV.Koder.avsendertyper.ORGANISASJON];
 
   dataSpesifiktTilKnytt = (fellesData) => {
     const { saksnummer, vurderDokument } = this.props.journalforingSkjemaVerdier;

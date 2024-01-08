@@ -49,16 +49,11 @@ const kreverLand = (
 ) =>
   !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, sakstype, sakstema, behandlingstema, behandlingstype);
 
-const arbeidsgiverOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
-  return avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && !erAvsenderPreutfylt;
-};
-
 const annenPersonEllerVirksomhetOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
   return avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET && !erAvsenderPreutfylt;
 };
 
-const erFritekstEllerAnnenAvsender = (avsenderType) =>
-  avsenderType === KV.AvsenderTyper.ANNEN || avsenderType === KV.AvsenderTyper.FRITEKST;
+const erFritekst = (avsenderType) => avsenderType === KV.AvsenderTyper.FRITEKST;
 
 const erIkkeUnderRedigering = (feilmelding) => ({
   name: "erIkkeUnderRedigering",
@@ -114,17 +109,6 @@ const journalforing = object().shape({
   avsenderID: string()
     .nullable()
     .when(["avsenderType", "$erAvsenderPreutfylt"], {
-      is: arbeidsgiverOgIkkePreutfyltAvsender,
-      then: string()
-        .nullable()
-        .erNummer(SKRIV_INN_KUN_NUMMER)
-        .erOrgnr(SKRIV_INN_GYLDIG_ORGNR)
-        .when("avsenderNavn", {
-          is: Utils._isEmpty,
-          then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR).nullable(),
-        }),
-    })
-    .when(["avsenderType", "$erAvsenderPreutfylt"], {
       is: annenPersonEllerVirksomhetOgIkkePreutfyltAvsender,
       then: string()
         .nullable()
@@ -138,13 +122,12 @@ const journalforing = object().shape({
         }),
     })
     .when(["journalforingGjelder", "avsenderType"], {
-      is: (journalføringGjelder, avsenderType) =>
-        erVirksomhet(journalføringGjelder) && !erFritekstEllerAnnenAvsender(avsenderType),
+      is: (journalføringGjelder, avsenderType) => erVirksomhet(journalføringGjelder) && !erFritekst(avsenderType),
       then: string().required().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .nullable(),
   avsenderNavn: string().when("avsenderType", {
-    is: erFritekstEllerAnnenAvsender,
+    is: erFritekst,
     then: string().required(OPPGI_AVSENDER).nullable(),
     otherwise: string().required(FINNER_IKKE_NAVN_PA_AVSENDER).nullable(),
   }),
