@@ -36,3 +36,8 @@ export const hentBehandlingstyper = (
   });
   return getAsJson(`${URI_PATH}/behandlingstyper/hent-lovlige-kombinasjoner/?${params}`);
 };
+
+export const hentBehandlingsårsaktyper = (behandlingstype) => {
+  const params = QS.stringify({ behandlingstype });
+  return getAsJson(`${URI_PATH}/behandlingsaarsaker/hent-lovlige-kombinasjoner/?${params}`);
+};
