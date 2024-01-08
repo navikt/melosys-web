@@ -74,7 +74,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   hentBehandlingsresultat: (behandlingId: number) => dispatch(behandlingsresultatOperations.hent(behandlingId)),
   hentDokumentOversikt: (saksnummer: string) => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
   hentFagsaker: (saksnummer: string) => dispatch(fagsakOperations.hent(saksnummer)),
-  hentFolketrygdenKodeverk: () => dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden()),
+  hentFolketrygdenKodeverk: (behandlingId: number) =>
+    dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden(behandlingId)),
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
   hentMedlemskapsperioder: (behandlingId: number) =>
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingId)),
@@ -168,7 +169,7 @@ const Saksbehandling = ({
       const behandlingId = Utils._toInteger(behandlingIDFraParam);
       setBehandlingID(behandlingId);
       await hentFagsaker(saksnr);
-      await hentFolketrygdenKodeverk();
+      await hentFolketrygdenKodeverk(behandlingId);
       await hentOppsummertFakta(behandlingId);
       const response = await hentBehandling(behandlingId);
       const behandling = response.data;
