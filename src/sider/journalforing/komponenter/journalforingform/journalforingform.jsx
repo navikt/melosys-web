@@ -75,17 +75,21 @@ const JournalforingForm = ({
   );
   const [harRegistrertAdresse, setHarRegistrertAdresse] = useState(undefined);
 
-  const { brukerID, avsenderType, avsenderID } = formValues;
+  const { brukerID, avsenderType, avsenderID, forvaltningsmeldingMottaker } = formValues;
 
   const sjekkAdresse = () => {
     if (!visForvaltningsmelding || !avsenderType || (!brukerID && !avsenderID)) return;
+    if (forvaltningsmeldingMottaker === MKV.Koder.forvaltningsmeldingMottaker.INGEN) return;
 
     let brukerIDPerson = "";
     let orgnr = "";
 
     const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
 
-    if (avsenderType === ANNEN_PERSON_ELLER_VIRKSOMHET) {
+    if (
+      avsenderType === ANNEN_PERSON_ELLER_VIRKSOMHET &&
+      forvaltningsmeldingMottaker === MKV.Koder.forvaltningsmeldingMottaker.AVSENDER
+    ) {
       const avsenderErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(avsenderID);
       const avsenderErGyldigOrgNr = Utils.organisasjon.erOrgnrGyldig(avsenderID);
 
@@ -109,10 +113,6 @@ const JournalforingForm = ({
       .then((res) => {
         const adresseFunnet = !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
         setHarRegistrertAdresse(adresseFunnet);
-        settFeltInnhold(
-          "forvaltningsmeldingMottaker",
-          adresseFunnet ? MKV.Koder.forvaltningsmeldingMottaker.BRUKER : MKV.Koder.forvaltningsmeldingMottaker.INGEN
-        );
       })
       .catch(() => setHarRegistrertAdresse(false));
   };
@@ -128,7 +128,7 @@ const JournalforingForm = ({
 
   useEffect(() => {
     sjekkAdresse();
-  }, [brukerID, avsenderType, visForvaltningsmelding, avsenderID]);
+  }, [brukerID, avsenderType, avsenderID, forvaltningsmeldingMottaker]);
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
