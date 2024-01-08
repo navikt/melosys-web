@@ -24,7 +24,7 @@ const StrukturertAdresse = ({
       {gatenavn} {husnummerEtasjeLeilighet}
     </div>
     <div>
-      {postnummer} {poststed} {postboks}
+      {postboks} {postnummer} {poststed}
     </div>
     <div>
       {region} {landkode}
