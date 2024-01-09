@@ -48,12 +48,12 @@ const JournalforingGjelder = ({
     oppdaterFelt(FormValues.opprettnysak_behandlingstema, null);
     oppdaterFelt(FormValues.opprettnysak_behandlingstype, null);
     if (value === BRUKER) {
-      oppdaterFelt("ikkeSendForvaltingsmelding", false);
+      oppdaterFelt("forvaltningsmeldingMottaker", MKV.Koder.forvaltningsmeldingMottaker.BRUKER);
       oppdaterFelt("brukerID", journalpostBrukerID);
       oppdaterFelt("virksomhetOrgnr", null);
       oppdaterFelt("virksomhetNavn", null);
     } else {
-      oppdaterFelt("ikkeSendForvaltingsmelding", true);
+      oppdaterFelt("forvaltningsmeldingMottaker", MKV.Koder.forvaltningsmeldingMottaker.INGEN);
       oppdaterFelt("virksomhetOrgnr", journalpostVirksomhetOrgnr);
       oppdaterFelt("brukerID", null);
       oppdaterFelt("brukerNavn", null);
