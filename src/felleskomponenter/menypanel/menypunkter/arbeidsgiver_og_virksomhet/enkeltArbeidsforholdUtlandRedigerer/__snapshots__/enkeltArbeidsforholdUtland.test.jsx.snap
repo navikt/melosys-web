@@ -1,0 +1,457 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
+<div>
+  <div
+    class="cssklasse"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-6"
+      >
+        <div
+          class="skjemaelement"
+        >
+          <label
+            class="skjemaelement__label"
+            for="123"
+          >
+            Navn på virksomheten
+          </label>
+          <input
+            aria-invalid="false"
+            class="skjemaelement__input input--fullbredde"
+            id="123"
+            meta="[object Object]"
+            name="feltnavn.navn"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="col col-xs-6"
+      >
+        <div
+          class="skjemaelement"
+        >
+          <label
+            class="skjemaelement__label"
+            for="123"
+          >
+            Registreringsnummer
+          </label>
+          <input
+            aria-invalid="false"
+            class="skjemaelement__input input--fullbredde"
+            id="123"
+            meta="[object Object]"
+            name="feltnavn.orgnr"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-12"
+      >
+        <div
+          class="skjemaelement"
+        >
+          <label
+            class="skjemaelement__label"
+            for="123"
+          >
+            Adressetilleggsnavn
+          </label>
+          <input
+            aria-invalid="false"
+            class="skjemaelement__input input--fullbredde"
+            id="123"
+            meta="[object Object]"
+            name="feltnavn.adresse.tilleggsnavn"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-6"
+      >
+        <div
+          class="skjemaelement"
+        >
+          <label
+            class="skjemaelement__label"
+            for="123"
+          >
+            Adresse til arbeidsgiver
+          </label>
+          <input
+            aria-invalid="false"
+            class="skjemaelement__input input--fullbredde"
+            id="123"
+            meta="[object Object]"
+            name="feltnavn.adresse.gatenavn"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="col col-xs-6"
+      >
+        <div
+          class="skjemaelement"
+        >
+          <label
+            class="skjemaelement__label"
+            for="123"
+          >
+            Husnummer
+          </label>
+          <input
+            aria-invalid="false"
+            class="skjemaelement__input input--fullbredde"
+            id="123"
+            meta="[object Object]"
+            name="feltnavn.adresse.husnummerEtasjeLeilighet"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-6"
+      >
+        <div
+          class="skjemaelement"
+        >
+          <label
+            class="skjemaelement__label"
+            for="123"
+          >
+            Poststed
+          </label>
+          <input
+            aria-invalid="false"
+            class="skjemaelement__input input--fullbredde"
+            id="123"
+            meta="[object Object]"
+            name="feltnavn.adresse.poststed"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="col col-xs-6"
+      >
+        <div
+          class="skjemaelement"
+        >
+          <label
+            class="skjemaelement__label"
+            for="123"
+          >
+            Postnummer
+          </label>
+          <input
+            aria-invalid="false"
+            class="skjemaelement__input input--fullbredde"
+            id="123"
+            meta="[object Object]"
+            name="feltnavn.adresse.postnummer"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-12"
+      >
+        <div
+          class="skjemaelement"
+        >
+          <label
+            class="skjemaelement__label"
+            for="123"
+          >
+            Postboks
+          </label>
+          <input
+            aria-invalid="false"
+            class="skjemaelement__input input--fullbredde"
+            id="123"
+            meta="[object Object]"
+            name="feltnavn.adresse.postboks"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-6"
+      >
+        <div
+          class="skjemaelement"
+        >
+          <label
+            class="skjemaelement__label"
+            for="123"
+          >
+            Region
+          </label>
+          <input
+            aria-invalid="false"
+            class="skjemaelement__input input--fullbredde"
+            id="123"
+            meta="[object Object]"
+            name="feltnavn.adresse.region"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="col col-xs-6"
+      >
+        <div
+          class=""
+        >
+          <div>
+            <div
+              class="skjemaelement landliste__linje__input"
+            >
+              <label
+                class="skjemaelement__label"
+                for="123"
+              >
+                Land
+              </label>
+              <input
+                aria-invalid="false"
+                class="skjemaelement__input input--fullbredde"
+                id="123"
+                list="datalist-123"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            class="landliste__dataliste"
+          >
+            <datalist
+              id="datalist-123"
+            >
+              <option
+                value="Belgia (BE)"
+              >
+                Belgia (BE)
+              </option>
+              <option
+                value="Bulgaria (BG)"
+              >
+                Bulgaria (BG)
+              </option>
+              <option
+                value="Danmark (DK)"
+              >
+                Danmark (DK)
+              </option>
+              <option
+                value="Estland (EE)"
+              >
+                Estland (EE)
+              </option>
+              <option
+                value="Finland (FI)"
+              >
+                Finland (FI)
+              </option>
+              <option
+                value="Frankrike (FR)"
+              >
+                Frankrike (FR)
+              </option>
+              <option
+                value="Færøyene (FO)"
+              >
+                Færøyene (FO)
+              </option>
+              <option
+                value="Grønland (GL)"
+              >
+                Grønland (GL)
+              </option>
+              <option
+                value="Hellas (GR)"
+              >
+                Hellas (GR)
+              </option>
+              <option
+                value="Irland (IE)"
+              >
+                Irland (IE)
+              </option>
+              <option
+                value="Island (IS)"
+              >
+                Island (IS)
+              </option>
+              <option
+                value="Italia (IT)"
+              >
+                Italia (IT)
+              </option>
+              <option
+                value="Kroatia (HR)"
+              >
+                Kroatia (HR)
+              </option>
+              <option
+                value="Kypros (CY)"
+              >
+                Kypros (CY)
+              </option>
+              <option
+                value="Latvia (LV)"
+              >
+                Latvia (LV)
+              </option>
+              <option
+                value="Liechtenstein (LI)"
+              >
+                Liechtenstein (LI)
+              </option>
+              <option
+                value="Litauen (LT)"
+              >
+                Litauen (LT)
+              </option>
+              <option
+                value="Luxembourg (LU)"
+              >
+                Luxembourg (LU)
+              </option>
+              <option
+                value="Malta (MT)"
+              >
+                Malta (MT)
+              </option>
+              <option
+                value="Nederland (NL)"
+              >
+                Nederland (NL)
+              </option>
+              <option
+                value="Norge (NO)"
+              >
+                Norge (NO)
+              </option>
+              <option
+                value="Polen (PL)"
+              >
+                Polen (PL)
+              </option>
+              <option
+                value="Portugal (PT)"
+              >
+                Portugal (PT)
+              </option>
+              <option
+                value="Romania (RO)"
+              >
+                Romania (RO)
+              </option>
+              <option
+                value="Slovakia (SK)"
+              >
+                Slovakia (SK)
+              </option>
+              <option
+                value="Slovenia (SI)"
+              >
+                Slovenia (SI)
+              </option>
+              <option
+                value="Spania (ES)"
+              >
+                Spania (ES)
+              </option>
+              <option
+                value="Storbritannia (GB)"
+              >
+                Storbritannia (GB)
+              </option>
+              <option
+                value="Svalbard og Jan Mayen (SJ)"
+              >
+                Svalbard og Jan Mayen (SJ)
+              </option>
+              <option
+                value="Sveits (CH)"
+              >
+                Sveits (CH)
+              </option>
+              <option
+                value="Sverige (SE)"
+              >
+                Sverige (SE)
+              </option>
+              <option
+                value="Tsjekkia (CZ)"
+              >
+                Tsjekkia (CZ)
+              </option>
+              <option
+                value="Tyskland (DE)"
+              >
+                Tyskland (DE)
+              </option>
+              <option
+                value="Ungarn (HU)"
+              >
+                Ungarn (HU)
+              </option>
+              <option
+                value="Østerrike (AT)"
+              >
+                Østerrike (AT)
+              </option>
+              <option
+                value="Åland (AX)"
+              >
+                Åland (AX)
+              </option>
+            </datalist>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
