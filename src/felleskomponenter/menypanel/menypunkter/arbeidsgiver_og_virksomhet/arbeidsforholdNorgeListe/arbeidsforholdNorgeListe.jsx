@@ -16,7 +16,7 @@ import EnkeltArbeidsforholdNorgeRedigeringUtfort from "./enkeltArbeidsforholdNor
 import "./arbeidsforholdNorgeListe.css";
 import Orgnrinput from "./orgnrinput";
 
-export const EnkeltArbeidsforholdNorgeRedigerer = ({
+const EnkeltArbeidsforholdNorgeRedigerer = ({
   erstatt,
   valideringer,
   hentVedMount,
@@ -99,7 +99,7 @@ EnkeltArbeidsforholdNorgeRedigerer.defaultProps = {
   orgFeilVedHentingTekst: undefined,
 };
 
-export const EnkeltArbeidsforholdNorge = ({
+const EnkeltArbeidsforholdNorge = ({
   fields,
   redigerbart,
   hentOrganisasjon,
@@ -186,7 +186,7 @@ EnkeltArbeidsforholdNorge.defaultProps = {
   element: {},
 };
 
-export const InnerArbeidsforholdNorgeListe = ({
+const InnerArbeidsforholdNorgeListe = ({
   leggTilTekst,
   fields,
   redigerbart,
