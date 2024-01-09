@@ -123,16 +123,16 @@ describe("JournalforingForm", () => {
   });
 
   it("sending av forvaltningsmelding vises for sakstema MEDLEMSKAP_LOVVALG og behandlingstype FØRSTEGANG", async () => {
-    const { findByLabelText, getByLabelText, getByText } = renderWithProviders(<Journalforingform {...props} />, {
+    const { findByLabelText, getByText } = renderWithProviders(<Journalforingform {...props} />, {
       preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Opprett ny sak"));
     await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
-    await userEvent.selectOptions(getByLabelText("Sakstema"), MEDLEMSKAP_LOVVALG);
-    await userEvent.selectOptions(getByLabelText("Behandlingstema"), YRKESAKTIV);
-    await userEvent.selectOptions(getByLabelText("Behandlingstype"), FØRSTEGANG);
+    await userEvent.selectOptions(await findByLabelText("Sakstema"), MEDLEMSKAP_LOVVALG);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstema"), YRKESAKTIV);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstype"), FØRSTEGANG);
 
     expect(getByText("Melding om saksbehandlingstid")).toBeInTheDocument();
   });
@@ -140,16 +140,16 @@ describe("JournalforingForm", () => {
   it("sending av forvaltningsmelding vises IKKE for behandlingstype FØRSTEGANG og sakstema UNNTAK eller TRYGDEAVGIFT", () => {
     const sakstemaer = [UNNTAK, TRYGDEAVGIFT];
     sakstemaer.forEach(async (sakstema) => {
-      const { findByLabelText, getByLabelText, queryByText } = renderWithProviders(<Journalforingform {...props} />, {
+      const { findByLabelText, queryByText } = renderWithProviders(<Journalforingform {...props} />, {
         preloadedState: testReduxState,
       });
       const user = userEvent.setup();
 
       await user.click(await findByLabelText("Opprett ny sak"));
       await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
-      await userEvent.selectOptions(getByLabelText("Sakstema"), sakstema);
-      await userEvent.selectOptions(getByLabelText("Behandlingstema"), YRKESAKTIV);
-      await userEvent.selectOptions(getByLabelText("Behandlingstype"), FØRSTEGANG);
+      await userEvent.selectOptions(await findByLabelText("Sakstema"), sakstema);
+      await userEvent.selectOptions(await findByLabelText("Behandlingstema"), YRKESAKTIV);
+      await userEvent.selectOptions(await findByLabelText("Behandlingstype"), FØRSTEGANG);
 
       expect(queryByText("Melding om saksbehandlingstid")).not.toBeInTheDocument();
     });
@@ -168,9 +168,9 @@ describe("JournalforingForm", () => {
     expect(await findByText("Ståles Stål AS")).toBeInTheDocument();
     await user.click(getByLabelText("Opprett ny sak"));
     await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
-    await userEvent.selectOptions(getByLabelText("Sakstema"), MEDLEMSKAP_LOVVALG);
-    await userEvent.selectOptions(getByLabelText("Behandlingstema"), YRKESAKTIV);
-    await userEvent.selectOptions(getByLabelText("Behandlingstype"), FØRSTEGANG);
+    await userEvent.selectOptions(await findByLabelText("Sakstema"), MEDLEMSKAP_LOVVALG);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstema"), YRKESAKTIV);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstype"), FØRSTEGANG);
 
     expect(queryByText("Melding om saksbehandlingstid")).not.toBeInTheDocument();
   });
