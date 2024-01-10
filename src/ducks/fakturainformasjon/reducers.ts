@@ -20,6 +20,8 @@ export default function reducer(state = initialState, action: Types.Action) {
       return { ...state, status: STATUS.ERROR, data: action.data.data };
     case Types.OK:
       return { ...state, status: STATUS.OK, data: action.data };
+    case Types.RESET:
+      return initialState;
     default:
       return state;
   }
