@@ -15,8 +15,12 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import MKV from "../../../../../melosyskodeverk";
 import { vedtakOperations } from "../../../../../ducks/vedtak";
 import Dokumentliste from "../../../../../felleskomponenter/dokumentliste";
+import { Table } from "@navikt/ds-react";
+import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
+import * as KV from "../../../../../kodeverk";
 
 const { VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
+const { OPPHØRT, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
 interface FormValuesProps {
   begrunnelseFritekst?: string;
@@ -31,6 +35,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
+  const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
@@ -112,6 +117,22 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
 
   const stegErGyldig = redigerbart && formIsValid;
 
+  function mapPeriodeRader(perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[] | undefined) {
+    const sortertePerioder = perioder
+      ? [...perioder]
+          .filter((periode) => periode.innvilgelsesResultat === INNVILGET)
+          .sort(Utils.dato.sorterEtterISOFomDato)
+      : [];
+    return sortertePerioder.map((medlemskapsperiode) => {
+      return {
+        periode: `${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+          medlemskapsperiode.tomDato
+        )}`,
+        resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, OPPHØRT),
+      };
+    });
+  }
+
   if (!aktivtSteg) return null;
 
   return (
@@ -119,6 +140,25 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Opphør av frivillig medlemskap etter § 2-15
       </Nav.Typo.Innholdstittel>
+
+      <Table size="small" className="melosys__table">
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
+            <Table.HeaderCell scope="col">Resultat</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {mapPeriodeRader(medlemskapsperioder).map((rad) => {
+            return (
+              <Table.Row key={Utils._uuid()}>
+                <Table.DataCell>{rad.periode}</Table.DataCell>
+                <Table.DataCell>{rad.resultat}</Table.DataCell>
+              </Table.Row>
+            );
+          })}
+        </Table.Body>
+      </Table>
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         Fritekst til begrunnelse

@@ -4,7 +4,7 @@ import * as Utils from "../../../../../../utils";
 import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 import { MedlemskapsperiodeProp } from "./types";
 
-const { AVSLAATT, INNVILGET } = MKV.Koder.innvilgelsesResultat;
+const { AVSLAATT, INNVILGET, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 
 const IngenMedlemskapsperioder = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">
@@ -120,9 +120,7 @@ function finnesBareOpphørtePerioder(medlemskapsperioder: MedlemskapsperiodeProp
     return false;
   }
 
-  const finnesInnvilgetPeriode = medlemskapsperioder.some(
-    (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET
-  );
+  const finnesInnvilgetPeriode = medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === INNVILGET);
   return !finnesInnvilgetPeriode;
 }
 
@@ -131,9 +129,7 @@ function finnesIkkeOpphørtePerioder(medlemskapsperioder: MedlemskapsperiodeProp
     return false;
   }
 
-  const finnesOpphørtePerioder = medlemskapsperioder.some(
-    (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.OPPHØRT
-  );
+  const finnesOpphørtePerioder = medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === OPPHØRT);
   return !finnesOpphørtePerioder;
 }
 
