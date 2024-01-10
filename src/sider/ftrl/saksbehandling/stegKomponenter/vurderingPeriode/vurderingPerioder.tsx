@@ -33,7 +33,7 @@ const hentLabelTekst = (behandlingstype: string) => {
     return "Ved ny vurdering vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer eller legg til en ny periode.";
   }
   if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
-    return "Ved manglende innbetaling vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer og forkort medlemskapsperioden(e).";
+    return "Ved manglende innbetaling vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer og opphør eller forkort medlemskapsperiode(r).";
   }
   return "Vurder og eventuelt juster de foreslåtte medlemskapsperioden(e).";
 };
