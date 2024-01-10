@@ -9,6 +9,7 @@
 import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
+import * as Actions from "./actions";
 
 export function hentFakturaserier(fakturaserieReferanse: string) {
   return doThenDispatch(() => Api.Faktureringskomponenten.hentFakturaserier(fakturaserieReferanse), {
@@ -16,4 +17,8 @@ export function hentFakturaserier(fakturaserieReferanse: string) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function resetFakturaInformasjon() {
+  return Actions.resetFakturaInformasjon();
 }
