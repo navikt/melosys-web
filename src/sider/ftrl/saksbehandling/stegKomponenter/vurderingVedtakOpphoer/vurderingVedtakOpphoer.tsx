@@ -118,17 +118,16 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
   const stegErGyldig = redigerbart && formIsValid;
 
   function mapPeriodeRader(perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[] | undefined) {
-    const sortertePerioder = perioder
-      ? [...perioder]
-          .filter((periode) => periode.innvilgelsesResultat === INNVILGET)
-          .sort(Utils.dato.sorterEtterISOFomDato)
-      : [];
+    const sortertePerioder = perioder ? [...perioder].sort(Utils.dato.sorterEtterISOFomDato) : [];
     return sortertePerioder.map((medlemskapsperiode) => {
       return {
         periode: `${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
           medlemskapsperiode.tomDato
         )}`,
-        resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, OPPHØRT),
+        resultat: KV.finnTermFraListe(
+          MKV.KTObjects.innvilgelsesResultat,
+          medlemskapsperiode.innvilgelsesResultat === INNVILGET ? OPPHØRT : medlemskapsperiode.innvilgelsesResultat
+        ),
       };
     });
   }
