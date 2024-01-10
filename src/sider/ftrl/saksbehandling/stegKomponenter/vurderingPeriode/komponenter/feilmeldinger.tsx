@@ -35,6 +35,12 @@ const MedlemskapsperiodenStarterFør2023 = (
   </Nav.AlertStripeFeil>
 );
 
+const BareOpphørtePerioder = (
+  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+    Hvis hele perioden skal opphøres, gå tilbake til steg 1 og oppgi at betaling mangler for hele perioden
+  </Nav.AlertStripeFeil>
+);
+
 const SøknadsperiodenStarterFørEllerSlutterEtter = (
   <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
     Søknadsperioden starter før og/eller slutter etter medlemskapsperioden(e).
@@ -109,6 +115,17 @@ const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: Medlemskapsperiod
   return false;
 };
 
+function finnesBareOpphørtePerioder(medlemskapsperioder: MedlemskapsperiodeProp[], behandlingstype: string) {
+  if (behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
+    return false;
+  }
+
+  const finnesInnvilgetPeriode = medlemskapsperioder.some(
+    (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET
+  );
+  return !finnesInnvilgetPeriode;
+}
+
 function finnesIkkeOpphørtePerioder(medlemskapsperioder: MedlemskapsperiodeProp[], behandlingstype: string) {
   if (behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
     return false;
@@ -141,6 +158,7 @@ enum TypeFeilmelding {
   SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER = "SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER",
   MEDLEMSKAPSPERIODE_STARTER_FØR_2023 = "MEDLEMSKAPSPERIODE_STARTER_FØR_2023",
   INGEN_OPPHØRTE_PERIODER = "INGEN_OPPHØRTE_PERIODER",
+  BARE_OPPHØRTE_PERIODER = "BARE_OPPHØRTE_PERIODER",
 }
 
 export function finnAktivFeilmelding(
@@ -178,6 +196,10 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023;
   }
 
+  if (manglendeInnbetalingToggleEnabled && finnesBareOpphørtePerioder(medlemskapsperioder, behandlingstype)) {
+    return TypeFeilmelding.BARE_OPPHØRTE_PERIODER;
+  }
+
   // Sjekk advarsler
   if (manglendeInnbetalingToggleEnabled && finnesIkkeOpphørtePerioder(medlemskapsperioder, behandlingstype)) {
     return TypeFeilmelding.INGEN_OPPHØRTE_PERIODER;
@@ -204,6 +226,7 @@ export function feilMeldingBlokkerer(type?: string): boolean {
     case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
     case TypeFeilmelding.OPPHOLD_I_INNVILGEDE_PERIODER:
     case TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023:
+    case TypeFeilmelding.BARE_OPPHØRTE_PERIODER:
       return true;
     case TypeFeilmelding.INGEN_OPPHØRTE_PERIODER:
     case TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER:
@@ -226,6 +249,8 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return OppholdIInnvilgedePerioder;
     case TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023:
       return MedlemskapsperiodenStarterFør2023;
+    case TypeFeilmelding.BARE_OPPHØRTE_PERIODER:
+      return BareOpphørtePerioder;
     case TypeFeilmelding.INGEN_OPPHØRTE_PERIODER:
       return IngenOpphørtePerioder;
     case TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER:
