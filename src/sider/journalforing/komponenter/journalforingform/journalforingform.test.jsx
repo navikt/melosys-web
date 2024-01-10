@@ -137,22 +137,34 @@ describe("JournalforingForm", () => {
     expect(getByText("Melding om saksbehandlingstid")).toBeInTheDocument();
   });
 
-  it("sending av forvaltningsmelding vises IKKE for behandlingstype FØRSTEGANG og sakstema UNNTAK eller TRYGDEAVGIFT", () => {
-    const sakstemaer = [UNNTAK, TRYGDEAVGIFT];
-    sakstemaer.forEach(async (sakstema) => {
-      const { findByLabelText, queryByText } = renderWithProviders(<Journalforingform {...props} />, {
-        preloadedState: testReduxState,
-      });
-      const user = userEvent.setup();
-
-      await user.click(await findByLabelText("Opprett ny sak"));
-      await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
-      await userEvent.selectOptions(await findByLabelText("Sakstema"), sakstema);
-      await userEvent.selectOptions(await findByLabelText("Behandlingstema"), YRKESAKTIV);
-      await userEvent.selectOptions(await findByLabelText("Behandlingstype"), FØRSTEGANG);
-
-      expect(queryByText("Melding om saksbehandlingstid")).not.toBeInTheDocument();
+  it("sending av forvaltningsmelding vises IKKE for behandlingstype FØRSTEGANG og sakstema TRYGDEAVGIFT", async () => {
+    const { findByLabelText, queryByText } = renderWithProviders(<Journalforingform {...props} />, {
+      preloadedState: testReduxState,
     });
+    const user = userEvent.setup();
+
+    await user.click(await findByLabelText("Opprett ny sak"));
+    await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
+    await userEvent.selectOptions(await findByLabelText("Sakstema"), TRYGDEAVGIFT);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstema"), YRKESAKTIV);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstype"), FØRSTEGANG);
+
+    expect(queryByText("Melding om saksbehandlingstid")).not.toBeInTheDocument();
+  });
+
+  it("sending av forvaltningsmelding vises IKKE for behandlingstype FØRSTEGANG og sakstema UNNTAK", async () => {
+    const { findByLabelText, queryByText } = renderWithProviders(<Journalforingform {...props} />, {
+      preloadedState: testReduxState,
+    });
+    const user = userEvent.setup();
+
+    await user.click(await findByLabelText("Opprett ny sak"));
+    await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
+    await userEvent.selectOptions(await findByLabelText("Sakstema"), UNNTAK);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstema"), YRKESAKTIV);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstype"), FØRSTEGANG);
+
+    expect(queryByText("Melding om saksbehandlingstid")).not.toBeInTheDocument();
   });
 
   it("sending av forvaltningsmelding vises ikke når man journalfører på virksomhet", async () => {
