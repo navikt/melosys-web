@@ -39,5 +39,5 @@ export const hentBehandlingstyper = (
 
 export const hentBehandlingsårsaktyper = (behandlingstype) => {
   const params = QS.stringify({ behandlingstype });
-  return getAsJson(`${URI_PATH}/behandlingsaarsaker/hent-lovlige-kombinasjoner/?${params}`);
+  return getAsJson(`${URI_PATH}/behandlingsaarsaktyper/hent-lovlige-kombinasjoner/?${params}`);
 };
