@@ -364,8 +364,6 @@ const Saksopplysninger = ({
 
   const unikRadioButtonGruppeID = uuid();
 
-  console.log(lovvalgsperiode?.lovvalgsland);
-
   return (
     <div>
       <Feilmeldinger />
