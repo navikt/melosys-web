@@ -26,7 +26,10 @@ import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPeri
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK } from "../../../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
+  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
+} from "../../../../../featuretoggle/toggleNavn";
 
 const hentLabelTekst = (behandlingstype: string) => {
   if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING) {
@@ -87,6 +90,8 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     soknadsperiode,
     behandlingstype,
   } = useSelector(komponentState);
+  const begrensePeriodeVedtakToggleEnabled = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
+  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
 
   const {
     control,
@@ -113,11 +118,12 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   });
   const formValues = watch();
 
-  const begrensePeriodeVedtakToggleEnabled = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.medlemskapsperioder,
-    soknadsperiode.fom,
+    behandlingstype,
     begrensePeriodeVedtakToggleEnabled,
+    manglendeInnbetalingToggleEnabled,
+    soknadsperiode.fom,
     soknadsperiode.tom
   );
 
