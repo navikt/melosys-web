@@ -31,11 +31,14 @@ import {
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../../../../featuretoggle/toggleNavn";
 
+const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
+const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
+
 const hentLabelTekst = (behandlingstype: string) => {
-  if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING) {
+  if (behandlingstype === NY_VURDERING) {
     return "Ved ny vurdering vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer eller legg til en ny periode.";
   }
-  if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
+  if (behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
     return "Ved manglende innbetaling vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer og opphør eller forkort medlemskapsperiode(r).";
   }
   return "Vurder og eventuelt juster de foreslåtte medlemskapsperioden(e).";
@@ -61,11 +64,7 @@ const mapInitialMedlemskapsperioder = (
 ): MedlemskapsperiodeProp[] =>
   medlemskapsperioder
     ? [...medlemskapsperioder]
-        .sort(
-          (a, b) =>
-            Utils.dato.sorterEtterISOFomDato(a, b) ||
-            (a.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT ? -1 : 1)
-        )
+        .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b) || (a.innvilgelsesResultat === AVSLAATT ? -1 : 1))
         .map(mapTilMedlemskapsperiodeProps)
     : [];
 
@@ -118,6 +117,11 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   });
   const formValues = watch();
 
+  const gyldigeInnvilgelsesResultat = innvilgelsesResultater.filter(
+    (kt) =>
+      kt.kode !== OPPHØRT ||
+      (manglendeInnbetalingToggleEnabled && behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT)
+  );
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.medlemskapsperioder,
     behandlingstype,
@@ -243,7 +247,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
       <Medlemskapsperioder
         trygdedekninger={trygdedekninger}
-        innvilgelsesResultater={innvilgelsesResultater}
+        innvilgelsesResultater={gyldigeInnvilgelsesResultat}
         control={control}
         fields={fields}
         handleSlett={handleSlett}
