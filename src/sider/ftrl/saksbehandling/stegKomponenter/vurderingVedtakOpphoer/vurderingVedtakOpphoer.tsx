@@ -34,7 +34,7 @@ interface Props {
 export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
-  const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
+  const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -82,7 +82,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
     return {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.OPPHØRT,
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      vedtakstype: lagretVedtakstype || MKV.Koder.vedtakstyper.OPPHØRSVEDTAK,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
     };
   };

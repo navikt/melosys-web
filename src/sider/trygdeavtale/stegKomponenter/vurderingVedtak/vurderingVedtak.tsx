@@ -73,7 +73,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     soknadsland: mottatteOpplysningerSelectors.SoknadslandKTSelector(state),
-    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+    lagretVedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
     formValues: getFormValues(KV.Form.Trygdeavtale.VEDTAK)(state),
     initialValues: {
@@ -139,7 +139,7 @@ const VurderingVedtak = ({
   oppdaterFlyt,
   soknadsland,
   lagreOgFatteVedtak,
-  vedtakstype,
+  lagretVedtakstype,
   hentLovvalgsperiode,
   formIsValid,
   feilmeldinger,
@@ -177,15 +177,19 @@ const VurderingVedtak = ({
     ];
   };
 
+  const getVedtakstype = () => {
+    if (lagretVedtakstype) return lagretVedtakstype;
+    if (erNyVurdering) return MKV.Koder.vedtakstyper.ENDRINGSVEDTAK;
+    return MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK;
+  };
+
   const lagFattVedtakTrygdeavtaleReqDto = (): Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto => ({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
     innledningFritekst: formValues?.innledningFritekst || null,
     begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
     ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
     barnFritekst: familieFormValues?.barn?.fritekst || null,
-    vedtakstype: erNyVurdering
-      ? MKV.Koder.vedtakstyper.ENDRINGSVEDTAK
-      : vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+    vedtakstype: getVedtakstype(),
     kopiMottakere: getKopiMottakere(),
     nyVurderingBakgrunn: getNyVurderingBakgrunn(),
   });
@@ -195,9 +199,7 @@ const VurderingVedtak = ({
       setVedtakPending(true);
       const request = {
         behandlingID,
-        vedtakstype: erNyVurdering
-          ? MKV.Koder.vedtakstyper.ENDRINGSVEDTAK
-          : vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        vedtakstype: getVedtakstype(),
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
         skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
       };

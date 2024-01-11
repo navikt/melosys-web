@@ -72,7 +72,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const innvilgelsesResultater = useSelector(folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const mottatteOpplysningerFeilmeldinger = useSelector(formSelectors.SoknadErrorsSelector);
-  const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
+  const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const behandlingsresultatType = useSelector(behandlingsresultatSelectors.BehandlingsresultatTypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const alleLandkoder = useSelector(landkoderSelectors.LandkoderSelector);
@@ -246,13 +246,19 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     ];
   };
 
+  const getVedtakstype = () => {
+    if (lagretVedtakstype) return lagretVedtakstype;
+    if (erNyVurdering || erManglendeInnbetalingTrygdeavgift) return MKV.Koder.vedtakstyper.ENDRINGSVEDTAK;
+    return MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK;
+  };
+
   const lagFattVedtakFTRLReqDto = () => {
     return {
       behandlingsresultatTypeKode: vedtakOpphøres ? DELVIS_OPPHØRT : MEDLEM_I_FOLKETRYGDEN,
       innledningFritekst: formValues?.innledningFritekst || null,
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
       trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
-      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      vedtakstype: getVedtakstype(),
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
       nyVurderingBakgrunn:
         formValues?.nyVurderingBakgrunnValg === FRITEKST_VALG
@@ -266,7 +272,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       setVedtakPending(true);
       const request = {
         behandlingID,
-        vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        vedtakstype: getVedtakstype(),
         behandlingsresultattype: vedtakOpphøres ? DELVIS_OPPHØRT : MEDLEM_I_FOLKETRYGDEN,
         skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
       };
