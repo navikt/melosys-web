@@ -37,8 +37,6 @@ import BrevVedlegg from "./brevVedlegg/brevVedlegg";
 
 const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
 
-const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
-
 const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.SendBrevValidSelector(state),
   formValues: getFormValues(KV.Form.SEND_BREV)(state),

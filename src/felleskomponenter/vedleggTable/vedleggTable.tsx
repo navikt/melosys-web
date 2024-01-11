@@ -2,7 +2,6 @@ import { FysiskDokument } from "Domene";
 
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
 import FritekstvedleggRow from "./fritekstvedleggRow";
-import * as Nav from "../../navFrontend";
 import VedleggRow from "./vedleggRow";
 import "./vedleggTable.css";
 import { Table } from "@navikt/ds-react";
@@ -34,8 +33,8 @@ const VedleggTable = ({
     <Table className="vedleggtable" size="small">
       <Table.Header>
         <Table.HeaderCell>{label}</Table.HeaderCell>
-        <Table.HeaderCell></Table.HeaderCell>
-        <Table.HeaderCell></Table.HeaderCell>
+        <Table.HeaderCell />
+        <Table.HeaderCell />
       </Table.Header>
       {(valgteVedlegg.length > 0 || (fritekstvedlegg && fritekstvedlegg.length > 0)) && (
         <Table.Body>
