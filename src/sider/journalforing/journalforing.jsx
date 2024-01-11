@@ -70,10 +70,10 @@ class Journalforing extends Component {
   };
 
   mapAvsenderType = (avsenderType, avsenderID) => {
-    if (avsenderType === KV.AvsenderTyper.ANNEN || avsenderType === KV.AvsenderTyper.FRITEKST) {
+    if (avsenderType === KV.AvsenderTyper.FRITEKST) {
       return null;
     }
-    if (avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ORG) {
+    if (avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET) {
       if (Utils.organisasjon.erOrgnrGyldig(avsenderID)) {
         return MKV.Koder.avsendertyper.ORGANISASJON;
       }
@@ -82,7 +82,7 @@ class Journalforing extends Component {
       }
     }
 
-    return this.organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType;
+    return avsenderType;
   };
 
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
@@ -111,7 +111,7 @@ class Journalforing extends Component {
       skalTilordnes,
       mottattDato,
       avsenderType,
-      ikkeSendForvaltingsmelding,
+      forvaltningsmeldingMottaker,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -134,7 +134,7 @@ class Journalforing extends Component {
       skalTilordnes,
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
       avsenderType: this.mapAvsenderType(avsenderType, avsenderID),
-      ikkeSendForvaltingsmelding,
+      forvaltningsmeldingMottaker,
     };
 
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT) {
@@ -147,12 +147,6 @@ class Journalforing extends Component {
       return this.dataSpesifiktTilOpprett(journalPostData);
     }
   };
-
-  organisasjonAliaser = [
-    KV.AvsenderTyper.FULLMEKTIG,
-    KV.AvsenderTyper.ARBEIDSGIVER,
-    MKV.Koder.avsendertyper.ORGANISASJON,
-  ];
 
   dataSpesifiktTilKnytt = (fellesData) => {
     const { saksnummer, vurderDokument } = this.props.journalforingSkjemaVerdier;
@@ -176,14 +170,6 @@ class Journalforing extends Component {
 
   dataSpesifiktTilOpprett = (fellesData) => {
     const {
-      arbeidsgiverID,
-      representantID,
-      representantKontaktPerson,
-      representantRepresenterer,
-      fullmektigID,
-      fullmektigKontaktperson,
-      fullmektigKontaktOrgnr,
-      fullmakter,
       sakstype,
       sakstema,
       opprettnysak_behandlingstema,
@@ -209,16 +195,8 @@ class Journalforing extends Component {
 
     return {
       ...fellesData,
-      arbeidsgiverID,
       behandlingstemaKode: opprettnysak_behandlingstema,
       behandlingstypeKode: opprettnysak_behandlingstype,
-      representantID,
-      representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
-      representererKode: representantRepresenterer,
-      fullmektigID,
-      fullmektigKontaktperson,
-      fullmektigKontaktOrgnr,
-      fullmakter,
       fagsak,
     };
   };
@@ -339,10 +317,6 @@ class Journalforing extends Component {
     settFeltInnhold("opprettnysak_behandlingstype", null);
     settFeltInnhold("journalforingPeriodeFraOgMed", null);
     settFeltInnhold("journalforingPeriodeTilOgMed", null);
-    settFeltInnhold("representantID", null);
-    settFeltInnhold("representantKontaktPerson", null);
-    settFeltInnhold("representantRepresenterer", null);
-    settFeltInnhold("representantNavn", null);
     settFeltInnhold("journalforingSoknadsland", []);
     settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
   };

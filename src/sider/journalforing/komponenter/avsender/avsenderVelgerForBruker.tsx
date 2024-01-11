@@ -7,7 +7,7 @@ import MKV from "../../../../melosyskodeverk";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as KV from "../../../../kodeverk";
 
-import { AvsenderUtenlandskTrygdemyndighet, AvsenderAnnenPersonOrganisasjon } from "./index";
+import { AvsenderUtenlandskTrygdemyndighet, AvsenderAnnenPersonEllerVirksomhet } from "./index";
 
 import "./avsender.css";
 
@@ -49,7 +49,7 @@ const AvsenderVelgerForBruker = ({
         kopierBrukerTilAvsender();
         break;
       }
-      case KV.AvsenderTyper.ANNEN_PERSON_ORG:
+      case KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET:
       case MKV.Koder.avsendertyper.ORGANISASJON:
       case KV.AvsenderTyper.FRITEKST:
       case MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET: {
@@ -97,12 +97,12 @@ const AvsenderVelgerForBruker = ({
         />
         <Skjema.Radio
           feltNavn="avsenderType"
-          label="Annen person/organisasjon"
-          value={KV.AvsenderTyper.ANNEN_PERSON_ORG}
+          label="Annen person eller virksomhet"
+          value={KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET}
           className="avsendervelger__radio"
         />
-        {formValues.avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ORG && (
-          <AvsenderAnnenPersonOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisAvsender={hentOgVisAvsender} />
+        {formValues.avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET && (
+          <AvsenderAnnenPersonEllerVirksomhet hentOgVisAvsender={hentOgVisAvsender} />
         )}
         <Skjema.Radio
           feltNavn="avsenderType"

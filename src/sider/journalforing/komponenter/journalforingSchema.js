@@ -32,8 +32,6 @@ const DU_MA_LAGRE_TITTEL_HOVEDDOKUMENT = { melding: "Du må lagre tittel på hov
 const VELG_ETT_LAND_UTENLANDSK_TRYGDEMYNDIGHET = { melding: "Velg land til avsender: utenlandsk trygdemyndighet" };
 const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
 const OPPGI_AVSENDER = { melding: "Oppgi avsender" };
-const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
-const VELG_MINST_EN_FULLMAKT = { melding: "Velg minst én fullmakt for fullmektig" };
 
 const lagMelding = (felt) => ({ melding: `${felt} må fylles ut` });
 
@@ -51,16 +49,11 @@ const kreverLand = (
 ) =>
   !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, sakstype, sakstema, behandlingstema, behandlingstype);
 
-const arbeidsgiverOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
-  return avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && !erAvsenderPreutfylt;
+const annenPersonEllerVirksomhetOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
+  return avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET && !erAvsenderPreutfylt;
 };
 
-const fullmektigOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt, annenPersonOrgErFullmektig) => {
-  return (avsenderType === KV.AvsenderTyper.FULLMEKTIG || annenPersonOrgErFullmektig) && !erAvsenderPreutfylt;
-};
-
-const erFritekstEllerAnnenAvsender = (avsenderType) =>
-  avsenderType === KV.AvsenderTyper.ANNEN || avsenderType === KV.AvsenderTyper.FRITEKST;
+const erFritekst = (avsenderType) => avsenderType === KV.AvsenderTyper.FRITEKST;
 
 const erIkkeUnderRedigering = (feilmelding) => ({
   name: "erIkkeUnderRedigering",
@@ -116,18 +109,7 @@ const journalforing = object().shape({
   avsenderID: string()
     .nullable()
     .when(["avsenderType", "$erAvsenderPreutfylt"], {
-      is: arbeidsgiverOgIkkePreutfyltAvsender,
-      then: string()
-        .nullable()
-        .erNummer(SKRIV_INN_KUN_NUMMER)
-        .erOrgnr(SKRIV_INN_GYLDIG_ORGNR)
-        .when("avsenderNavn", {
-          is: Utils._isEmpty,
-          then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR).nullable(),
-        }),
-    })
-    .when(["avsenderType", "$erAvsenderPreutfylt", "annenPersonOrgErFullmektig"], {
-      is: fullmektigOgIkkePreutfyltAvsender,
+      is: annenPersonEllerVirksomhetOgIkkePreutfyltAvsender,
       then: string()
         .nullable()
         .erNummerTolerererEttMellomrom(SKRIV_INN_KUN_NUMMER)
@@ -140,13 +122,12 @@ const journalforing = object().shape({
         }),
     })
     .when(["journalforingGjelder", "avsenderType"], {
-      is: (journalføringGjelder, avsenderType) =>
-        erVirksomhet(journalføringGjelder) && !erFritekstEllerAnnenAvsender(avsenderType),
+      is: (journalføringGjelder, avsenderType) => erVirksomhet(journalføringGjelder) && !erFritekst(avsenderType),
       then: string().required().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .nullable(),
   avsenderNavn: string().when("avsenderType", {
-    is: erFritekstEllerAnnenAvsender,
+    is: erFritekst,
     then: string().required(OPPGI_AVSENDER).nullable(),
     otherwise: string().required(FINNER_IKKE_NAVN_PA_AVSENDER).nullable(),
   }),
@@ -154,44 +135,6 @@ const journalforing = object().shape({
     is: false,
     then: string().ensure().required(VELG_EN_AVSENDER),
   }),
-  representantID: lazy((value) =>
-    Utils._isEmpty(value)
-      ? string().nullable()
-      : string()
-          .erFnrEllerDnrEllerOrgnrTolererEttMellomrom(SKRIV_INN_GYLDIG_ORGNR_FNR_DNR)
-          .when("representantNavn", {
-            is: Utils._isEmpty,
-            then: string()
-              .harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR)
-              .harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR)
-              .nullable(),
-          })
-          .nullable()
-  ),
-  representantRepresenterer: string()
-    .when(["avsenderType", "representantNavn"], {
-      is: (avsenderType, representantNavn) =>
-        avsenderType === KV.AvsenderTyper.FULLMEKTIG && !Utils._isEmpty(representantNavn),
-      then: string().required(VELG_REPRESENTERER).nullable(),
-    })
-    .nullable(),
-  fullmektigID: string().nullable(),
-  fullmektigKontaktperson: string().nullable(),
-  fullmektigKontaktOrgnr: string()
-    .nullable()
-    .test(
-      "gyldig orgnr hvis den er fylt inn",
-      SKRIV_INN_GYLDIG_ORGNR,
-      (orgnr) => Utils._isEmpty(orgnr) || Utils.organisasjon.erOrgnrGyldig(orgnr)
-    ),
-  fullmakter: array()
-    .of(string())
-    .ensure()
-    .when(["annenPersonOrgErFullmektig"], {
-      is: true,
-      then: array().min(1, { _error: VELG_MINST_EN_FULLMAKT }),
-    }),
-  annenPersonOrgErFullmektig: boolean().nullable(),
   utenlandskTrygdemyndighetLandkode: string()
     .when("avsenderType", {
       is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
@@ -294,7 +237,6 @@ const journalforing = object().shape({
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   hoveddokument,
   journalforingHensikt: string(),
-  representantNavn: string().nullable(),
   journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
   opprettBehandling: boolean().nullable(),
 });

@@ -4,14 +4,21 @@ import MKV from "../../../melosyskodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import { formSelectors } from "../../../ducks/form";
-import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING } from "../../../featuretoggle/toggleNavn";
+import { useEffect, useState } from "react";
+import * as Api from "../../../services/api";
 
-const { FRITEKST, MELDING_OM_MANGLENDE_INNBETALING } = MKV.Koder.behandlinger.behandlingsaarsaktyper;
+const { FRITEKST } = MKV.Koder.behandlinger.behandlingsaarsaktyper;
 
 export const OpprettNyOppgave = () => {
+  const [muligeBehandlingsårsaker, setMuligeBehandlingsårsaker] = useState<KTObject[]>([]);
   const { behandlingsaarsakType } = useSelector(formSelectors.OpprettNySakFormValuesSelector);
-  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
+  const { behandlingstype: valgtBehandlingstype } = useSelector(formSelectors.OpprettNySakFormValuesSelector);
+
+  useEffect(() => {
+    if (valgtBehandlingstype) {
+      Api.LovligeKombinasjoner.hentBehandlingsårsaktyper(valgtBehandlingstype).then(setMuligeBehandlingsårsaker);
+    }
+  }, [valgtBehandlingstype]);
 
   const labelTilÅrsak = (aarsak: KTObject) => {
     if (aarsak.kode === FRITEKST) {
@@ -20,21 +27,11 @@ export const OpprettNyOppgave = () => {
     return aarsak.term || "";
   };
 
-  const gyldigeBehandlingsårsaker = () => {
-    // TODO: MELOSYS-6312 medfører bedre logikk. Kanskje også samtidig legge dette i lovligeKombonasjoner i backend?
-    if (manglendeInnbetalingToggleEnabled) {
-      return MKV.KTObjects.behandlinger.behandlingsaarsaktyper;
-    }
-    return MKV.KTObjects.behandlinger.behandlingsaarsaktyper.filter(
-      (kt: KTObject) => kt.kode !== MELDING_OM_MANGLENDE_INNBETALING
-    );
-  };
-
   return (
     <div className="opprettnyoppgave">
       <Skjema.Datovelger feltNavn="mottaksdato" label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>} />
       <Skjema.Select feltNavn="behandlingsaarsakType" label="Årsak" className="aarsakfelt">
-        {gyldigeBehandlingsårsaker().map((aarsak: KTObject) => (
+        {muligeBehandlingsårsaker.map((aarsak: KTObject) => (
           <option key={aarsak.kode} value={aarsak.kode} label={labelTilÅrsak(aarsak)} />
         ))}
       </Skjema.Select>

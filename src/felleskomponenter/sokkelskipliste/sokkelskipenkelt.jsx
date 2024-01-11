@@ -1,12 +1,12 @@
 import { useEffect, Fragment } from "react";
 import PT from "prop-types";
-import uuid from "uuid";
 
 import MKV from "../../melosyskodeverk";
 
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 import * as MPT from "../../proptypes";
+import * as Utils from "../../utils";
 
 import { konverterAvklartfaktaTilStegData, slettAvklartfakta } from "../stegvelger";
 import { hentFaktaVerdi } from "../../domeneUtils";
@@ -20,10 +20,11 @@ const ArbeidslandRadioButtons = (props) => {
 
   const utfylteLand = landliste.filter((land) => land.kode);
 
-  const unikRadioButtonGruppeID = uuid();
+  const unikRadioButtonGruppeID = Utils._uuid();
 
   return utfylteLand.map((land) => (
     <Nav.Radio
+      id={Utils._uuid()}
       onChange={() => onChange(land)}
       checked={arbeidslandType === land.term}
       key={land.term}
@@ -120,6 +121,7 @@ const SokkelSkipEnkelt = (props) => {
           value={SOKKEL}
           checked={installasjonsType === SOKKEL}
           label="Sokkel"
+          id={Utils._uuid()}
         />
         <Nav.Radio
           name={key}
@@ -128,6 +130,7 @@ const SokkelSkipEnkelt = (props) => {
           checked={installasjonsType === SKIP}
           value={SKIP}
           label="Skip"
+          id={Utils._uuid()}
         />
       </Nav.Column>
       {installasjonsType === SOKKEL && (

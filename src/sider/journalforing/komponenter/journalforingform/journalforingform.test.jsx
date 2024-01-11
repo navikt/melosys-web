@@ -123,36 +123,48 @@ describe("JournalforingForm", () => {
   });
 
   it("sending av forvaltningsmelding vises for sakstema MEDLEMSKAP_LOVVALG og behandlingstype FØRSTEGANG", async () => {
-    const { findByLabelText, getByLabelText, getByText } = renderWithProviders(<Journalforingform {...props} />, {
+    const { findByLabelText, getByText } = renderWithProviders(<Journalforingform {...props} />, {
       preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Opprett ny sak"));
     await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
-    await userEvent.selectOptions(getByLabelText("Sakstema"), MEDLEMSKAP_LOVVALG);
-    await userEvent.selectOptions(getByLabelText("Behandlingstema"), YRKESAKTIV);
-    await userEvent.selectOptions(getByLabelText("Behandlingstype"), FØRSTEGANG);
+    await userEvent.selectOptions(await findByLabelText("Sakstema"), MEDLEMSKAP_LOVVALG);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstema"), YRKESAKTIV);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstype"), FØRSTEGANG);
 
     expect(getByText("Melding om saksbehandlingstid")).toBeInTheDocument();
   });
 
-  it("sending av forvaltningsmelding vises IKKE for behandlingstype FØRSTEGANG og sakstema UNNTAK eller TRYGDEAVGIFT", () => {
-    const sakstemaer = [UNNTAK, TRYGDEAVGIFT];
-    sakstemaer.forEach(async (sakstema) => {
-      const { findByLabelText, getByLabelText, queryByText } = renderWithProviders(<Journalforingform {...props} />, {
-        preloadedState: testReduxState,
-      });
-      const user = userEvent.setup();
-
-      await user.click(await findByLabelText("Opprett ny sak"));
-      await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
-      await userEvent.selectOptions(getByLabelText("Sakstema"), sakstema);
-      await userEvent.selectOptions(getByLabelText("Behandlingstema"), YRKESAKTIV);
-      await userEvent.selectOptions(getByLabelText("Behandlingstype"), FØRSTEGANG);
-
-      expect(queryByText("Melding om saksbehandlingstid")).not.toBeInTheDocument();
+  it("sending av forvaltningsmelding vises IKKE for behandlingstype FØRSTEGANG og sakstema TRYGDEAVGIFT", async () => {
+    const { findByLabelText, queryByText } = renderWithProviders(<Journalforingform {...props} />, {
+      preloadedState: testReduxState,
     });
+    const user = userEvent.setup();
+
+    await user.click(await findByLabelText("Opprett ny sak"));
+    await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
+    await userEvent.selectOptions(await findByLabelText("Sakstema"), TRYGDEAVGIFT);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstema"), YRKESAKTIV);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstype"), FØRSTEGANG);
+
+    expect(queryByText("Melding om saksbehandlingstid")).not.toBeInTheDocument();
+  });
+
+  it("sending av forvaltningsmelding vises IKKE for behandlingstype FØRSTEGANG og sakstema UNNTAK", async () => {
+    const { findByLabelText, queryByText } = renderWithProviders(<Journalforingform {...props} />, {
+      preloadedState: testReduxState,
+    });
+    const user = userEvent.setup();
+
+    await user.click(await findByLabelText("Opprett ny sak"));
+    await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
+    await userEvent.selectOptions(await findByLabelText("Sakstema"), UNNTAK);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstema"), YRKESAKTIV);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstype"), FØRSTEGANG);
+
+    expect(queryByText("Melding om saksbehandlingstid")).not.toBeInTheDocument();
   });
 
   it("sending av forvaltningsmelding vises ikke når man journalfører på virksomhet", async () => {
@@ -168,9 +180,9 @@ describe("JournalforingForm", () => {
     expect(await findByText("Ståles Stål AS")).toBeInTheDocument();
     await user.click(getByLabelText("Opprett ny sak"));
     await userEvent.selectOptions(await findByLabelText("Sakstype"), FTRL);
-    await userEvent.selectOptions(getByLabelText("Sakstema"), MEDLEMSKAP_LOVVALG);
-    await userEvent.selectOptions(getByLabelText("Behandlingstema"), YRKESAKTIV);
-    await userEvent.selectOptions(getByLabelText("Behandlingstype"), FØRSTEGANG);
+    await userEvent.selectOptions(await findByLabelText("Sakstema"), MEDLEMSKAP_LOVVALG);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstema"), YRKESAKTIV);
+    await userEvent.selectOptions(await findByLabelText("Behandlingstype"), FØRSTEGANG);
 
     expect(queryByText("Melding om saksbehandlingstid")).not.toBeInTheDocument();
   });
@@ -194,47 +206,47 @@ describe("JournalforingForm", () => {
   });
 
   it("skalTilordnes vises ikke når sak har saksstatus HENLAGT", async () => {
-    const { findByLabelText, queryByLabelText, getByRole } = renderWithProviders(<Journalforingform {...props} />, {
+    const { findByLabelText, queryByLabelText, findByRole } = renderWithProviders(<Journalforingform {...props} />, {
       preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Eksisterende sak"));
-    await user.click(getByRole("radio", { name: HENLAGT_SAK_RADIO_NAME }));
+    await user.click(await findByRole("radio", { name: HENLAGT_SAK_RADIO_NAME }));
     expect(queryByLabelText("Legg behandlingen i mine oppgaver")).not.toBeInTheDocument();
   });
 
   it("skalTilordnes vises ikke når sak har saksstatus HENLAGT_BORFALT", async () => {
-    const { findByLabelText, queryByLabelText, getByRole } = renderWithProviders(<Journalforingform {...props} />, {
+    const { findByLabelText, queryByLabelText, findByRole } = renderWithProviders(<Journalforingform {...props} />, {
       preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Eksisterende sak"));
-    await user.click(getByRole("radio", { name: HENLAGT_BORTFALT_SAK_RADIO_NAME }));
+    await user.click(await findByRole("radio", { name: HENLAGT_BORTFALT_SAK_RADIO_NAME }));
     expect(queryByLabelText("Legg behandlingen i mine oppgaver")).not.toBeInTheDocument();
   });
 
   it("sending av forvaltningsmelding vises når man knytter til sak sakstema MEDLEMSKAP_LOVVALG og behandling NY_VURDERING", async () => {
-    const { findByLabelText, getByText, getByRole } = renderWithProviders(<Journalforingform {...props} />, {
+    const { findByLabelText, getByText, findByRole } = renderWithProviders(<Journalforingform {...props} />, {
       preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Eksisterende sak"));
-    await user.click(getByRole("radio", { name: OPPRETTET_SAK_RADIO_NAME }));
+    await user.click(await findByRole("radio", { name: OPPRETTET_SAK_RADIO_NAME }));
     await user.click(await findByLabelText(NY_VURDERING));
     expect(getByText("Melding om saksbehandlingstid")).toBeInTheDocument();
   });
 
   it("sending av forvaltningsmelding vises ikke når man knytter til sak sakstema MEDLEMSKAP_LOVVALG og behandlingstype KLAGE", async () => {
-    const { findByLabelText, queryByText, getByRole } = renderWithProviders(<Journalforingform {...props} />, {
+    const { findByLabelText, queryByText, findByRole } = renderWithProviders(<Journalforingform {...props} />, {
       preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Eksisterende sak"));
-    await user.click(getByRole("radio", { name: OPPRETTET_SAK_RADIO_NAME }));
+    await user.click(await findByRole("radio", { name: OPPRETTET_SAK_RADIO_NAME }));
     await user.click(await findByLabelText(KLAGE));
     expect(queryByText("Melding om saksbehandlingstid")).not.toBeInTheDocument();
   });

@@ -11,14 +11,6 @@ export const testReduxState = {
         erHovedpartAvsender: true,
         avsenderID: "30056928150",
         avsenderNavn: "KARAFFEL TRIVIELL",
-        arbeidsgiverID: null,
-        representantID: null,
-        representantRepresenterer: null,
-        fullmektigID: null,
-        fullmektigKontaktperson: null,
-        fullmektigKontaktOrgnr: null,
-        fullmakter: [],
-        annenPersonOrgErFullmektig: false,
         mottattDato: "11.12.2023",
         hoveddokument: {
           tittel: "Tittel til Dokument",
@@ -29,7 +21,7 @@ export const testReduxState = {
         },
         journalforingSoknadsland: [],
         journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-        ikkeSendForvaltingsmelding: false,
+        forvaltningsmeldingMottaker: "BRUKER",
         skalTilordnes: false,
         submittable: false,
         sakstype: null,
@@ -51,14 +43,6 @@ export const testReduxState = {
         erHovedpartAvsender: true,
         avsenderID: "30056928150",
         avsenderNavn: null,
-        arbeidsgiverID: null,
-        representantID: null,
-        representantRepresenterer: null,
-        fullmektigID: null,
-        fullmektigKontaktperson: null,
-        fullmektigKontaktOrgnr: null,
-        fullmakter: [],
-        annenPersonOrgErFullmektig: false,
         mottattDato: "11.12.2023",
         hoveddokument: {
           tittel: "Tittel til Dokument",
@@ -69,7 +53,7 @@ export const testReduxState = {
         },
         journalforingSoknadsland: [],
         journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-        ikkeSendForvaltingsmelding: false,
+        forvaltningsmeldingMottaker: "BRUKER",
         skalTilordnes: false,
         submittable: false,
       },
@@ -119,14 +103,14 @@ export const testReduxState = {
           type: "Field",
           count: 4,
         },
-        ikkeSendForvaltingsmelding: {
-          name: "ikkeSendForvaltingsmelding",
+        forvaltningsmeldingMottaker: {
+          name: "forvaltningsmeldingMottaker",
           type: "Field",
           count: 3,
         },
       },
       fields: {
-        ikkeSendForvaltingsmelding: {
+        forvaltningsmeldingMottaker: {
           autofilled: true,
         },
         behandlingstype: {

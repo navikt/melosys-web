@@ -108,7 +108,7 @@ function EndreBehandlingModal({
 
   useEffect(() => {
     if (sakstype && sakstema) {
-      Api.LovligeKombinasjoner.hentBehandlingstemaer(fagsak.hovedpartRolle, sakstype, sakstema).then(
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(fagsak.hovedpartRolle, sakstype, sakstema, behandlingID).then(
         (alleMuligeBehandlingstemaer) => {
           setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);
         }

@@ -1,10 +1,18 @@
-import * as Nav from "../../../../../navFrontend";
-import * as Skjema from "../../../../skjema";
-
 import { EnkeltArbeidsforholdUtland } from "./enkeltArbeidsforholdUtland";
+import { reduxForm } from "redux-form";
+import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
+
+vi.mock("../../../../../utils", async () => {
+  const actual = await vi.importActual("../../../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("EnkeltArbeidsforholdUtland", () => {
   let props = null;
+  const WrappedEnkeltArbeidsforholdUtland = reduxForm({ form: "test" })(EnkeltArbeidsforholdUtland);
 
   beforeEach(() => {
     props = {
@@ -15,16 +23,8 @@ describe("EnkeltArbeidsforholdUtland", () => {
     };
   });
 
-  describe("alle inputs som vises", () => {
-    it("har disabled satt basert på redigerbart", () => {
-      const enkeltArbeidsforholdUtland = shallow(<EnkeltArbeidsforholdUtland {...props} />);
-      const inputs = enkeltArbeidsforholdUtland.find(Nav.Input);
-      const landvelger = enkeltArbeidsforholdUtland.find(Skjema.LandVelger);
-
-      inputs.forEach((n) => {
-        expect(n.props().disabled).toBe(!props.redigerbart);
-      });
-      expect(landvelger.props().disabled).toBe(!props.redigerbart);
-    });
+  it("snapshot test", () => {
+    const { container } = renderWithProviders(<WrappedEnkeltArbeidsforholdUtland {...props} />);
+    expect(container).toMatchSnapshot();
   });
 });

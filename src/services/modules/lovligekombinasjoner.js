@@ -14,8 +14,8 @@ export const hentSakstemaer = (hovedpart, sakstype, saksnummer) => {
   return getAsJson(`${URI_PATH}/sakstemaer/hent-lovlige-kombinasjoner/?${params}`);
 };
 
-export const hentBehandlingstemaer = (hovedpart, sakstype, sakstema, sistBehandlingstema) => {
-  const params = QS.stringify({ hovedpart, sakstype, sakstema, sistBehandlingstema });
+export const hentBehandlingstemaer = (hovedpart, sakstype, sakstema, aktivBehandlingID, sistBehandlingstema) => {
+  const params = QS.stringify({ hovedpart, sakstype, sakstema, aktivBehandlingID, sistBehandlingstema });
   return getAsJson(`${URI_PATH}/behandlingstemaer/hent-lovlige-kombinasjoner/?${params}`);
 };
 export const hentBehandlingstyper = (
@@ -35,4 +35,9 @@ export const hentBehandlingstyper = (
     sisteBehandlingsID,
   });
   return getAsJson(`${URI_PATH}/behandlingstyper/hent-lovlige-kombinasjoner/?${params}`);
+};
+
+export const hentBehandlingsårsaktyper = (behandlingstype) => {
+  const params = QS.stringify({ behandlingstype });
+  return getAsJson(`${URI_PATH}/behandlingsaarsaktyper/hent-lovlige-kombinasjoner/?${params}`);
 };

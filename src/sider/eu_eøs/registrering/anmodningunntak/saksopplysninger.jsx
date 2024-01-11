@@ -381,6 +381,13 @@ const Saksopplysninger = ({
                     {KV.kodeTilTerm(sed.lovvalgslandKode, MKV.KTObjects.landkoder)}&nbsp;({sed.lovvalgslandKode})
                   </Nav.Typo.Normaltekst>
                 </Nav.Column>
+                {sed.lovvalgslandKode === MKV.Koder.landkoder.NO ? (
+                  <Nav.Column xs="12">
+                    <Nav.AlertStripeAdvarsel className="lovvalgsland__varsel">
+                      NB: Norge er angitt som lovvalgsland.
+                    </Nav.AlertStripeAdvarsel>
+                  </Nav.Column>
+                ) : null}
               </Nav.Row>
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">

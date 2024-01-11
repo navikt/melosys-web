@@ -1,10 +1,12 @@
-import * as EKV from "eessi-kodeverk";
-import * as Nav from "../../navFrontend";
 import MKV from "../../melosyskodeverk";
 
 import SideDialogOpprettNyBuc from "./sideDialogOpprettNyBuc";
+import { reduxForm } from "redux-form";
+import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
 
 describe("SideDialogOpprettNyBuc", () => {
+  const WrappedSideDialogOpprettNyBuc = reduxForm({ form: "test" })(SideDialogOpprettNyBuc);
+
   describe("Tilgjengelige BUC", () => {
     let props;
 
@@ -19,54 +21,44 @@ describe("SideDialogOpprettNyBuc", () => {
 
     it("LA_BUC_01 vises for behandlingstema UTSENDT_ARBEIDSGIVER", () => {
       props.behandlingstema = MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER;
-      const sideDialogOpprettNyBuc = shallow(<SideDialogOpprettNyBuc {...props} />);
 
-      const tilgjengeligeBuc = sideDialogOpprettNyBuc.find(Nav.Select).get(1).props.children[1];
+      const { getByRole } = renderWithProviders(<WrappedSideDialogOpprettNyBuc {...props} />);
 
-      expect(tilgjengeligeBuc).toHaveLength(6);
-      expect(tilgjengeligeBuc[0].props.value).toBe(EKV.Koder.buctyper.legislation.LA_BUC_01);
+      expect(getByRole("option", { name: "LA_BUC_01 - Anmodning om unntak" })).toBeInTheDocument();
     });
 
     it("LA_BUC_01 vises for behandlingstema UTSENDT_SELVSTENDIG", () => {
       props.behandlingstema = MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG;
-      const sideDialogOpprettNyBuc = shallow(<SideDialogOpprettNyBuc {...props} />);
 
-      const tilgjengeligeBuc = sideDialogOpprettNyBuc.find(Nav.Select).get(1).props.children[1];
+      const { getByRole } = renderWithProviders(<WrappedSideDialogOpprettNyBuc {...props} />);
 
-      expect(tilgjengeligeBuc).toHaveLength(6);
-      expect(tilgjengeligeBuc[0].props.value).toBe(EKV.Koder.buctyper.legislation.LA_BUC_01);
+      expect(getByRole("option", { name: "LA_BUC_01 - Anmodning om unntak" })).toBeInTheDocument();
     });
 
     it("LA_BUC_01 vises for behandlingstema IKKE_YRKESAKTIV og sakstype EU_EØS", () => {
       props.behandlingstema = MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
       props.sakstype = MKV.Koder.sakstyper.EU_EOS;
-      const sideDialogOpprettNyBuc = shallow(<SideDialogOpprettNyBuc {...props} />);
 
-      const tilgjengeligeBuc = sideDialogOpprettNyBuc.find(Nav.Select).get(1).props.children[1];
+      const { getByRole } = renderWithProviders(<WrappedSideDialogOpprettNyBuc {...props} />);
 
-      expect(tilgjengeligeBuc).toHaveLength(6);
-      expect(tilgjengeligeBuc[0].props.value).toBe(EKV.Koder.buctyper.legislation.LA_BUC_01);
+      expect(getByRole("option", { name: "LA_BUC_01 - Anmodning om unntak" })).toBeInTheDocument();
     });
 
     it("LA_BUC_01 vises ikke for behandlingstema YRKESAKTIV", () => {
       props.behandlingstema = MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
-      const sideDialogOpprettNyBuc = shallow(<SideDialogOpprettNyBuc {...props} />);
 
-      const tilgjengeligeBuc = sideDialogOpprettNyBuc.find(Nav.Select).get(1).props.children[1];
+      const { queryByRole } = renderWithProviders(<WrappedSideDialogOpprettNyBuc {...props} />);
 
-      expect(tilgjengeligeBuc).toHaveLength(5);
-      expect(tilgjengeligeBuc[0].props.value).not.toBe(EKV.Koder.buctyper.legislation.LA_BUC_01);
+      expect(queryByRole("option", { name: "LA_BUC_01 - Anmodning om unntak" })).not.toBeInTheDocument();
     });
 
     it("LA_BUC_01 vises ikke for behandlingstema IKKE_YRKESAKTIV og sakstype FTRL", () => {
       props.behandlingstema = MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
       props.sakstype = MKV.Koder.sakstyper.FTRL;
-      const sideDialogOpprettNyBuc = shallow(<SideDialogOpprettNyBuc {...props} />);
 
-      const tilgjengeligeBuc = sideDialogOpprettNyBuc.find(Nav.Select).get(1).props.children[1];
+      const { queryByRole } = renderWithProviders(<WrappedSideDialogOpprettNyBuc {...props} />);
 
-      expect(tilgjengeligeBuc).toHaveLength(5);
-      expect(tilgjengeligeBuc[0].props.value).not.toBe(EKV.Koder.buctyper.legislation.LA_BUC_01);
+      expect(queryByRole("option", { name: "LA_BUC_01 - Anmodning om unntak" })).not.toBeInTheDocument();
     });
   });
 });

@@ -25,6 +25,7 @@ import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 import "./vurderingUnntakMedlemskap.css";
 import { BestemmelseSelect } from "./bestemmelseSelect";
+import { resetKontrollFeil } from "../../../ducks/kontroll/actions";
 
 const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
@@ -67,12 +68,13 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   });
   const formValues = watch();
 
-  const kontrollerFerdigbehandling = () => {
+  const kontrollerFerdigbehandling = (kontrollerSomSkalIgnoreres: string[] = []) => {
     dispatch(
       kontrollOperations.kontrollerFerdigbehandling({
         behandlingID,
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         skalRegisteropplysningerOppdateres: skalOppdatereRegisteropplysninger,
+        kontrollerSomSkalIgnoreres,
       })
     );
     if (skalOppdatereRegisteropplysninger) setSkalOppdatereRegisteropplysninger(false);
@@ -100,11 +102,12 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   useEffect(() => {
     oppdaterStatus(formState.isValid);
     if (aktivtSteg && redigerbart) {
-      debouncedLagreLovvalgsperiodeOgKontroller(formValues, formState?.isValid);
+      debouncedLagreLovvalgsperiodeOgKontroller(formValues, formState?.isValid, []);
     }
   }, [formState?.isValid]);
 
   const lagreUtfallRegistreringUnntak = (utfall: string) => {
+    dispatch(resetKontrollFeil());
     dispatch(behandlingsresultatOperations.oppdaterUtfallRegistreringUnntak(behandlingID, utfall));
     setValue("fom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.fom));
     setValue("tom", Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerPeriode.tom));
@@ -126,10 +129,14 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     );
   };
 
-  const lagreLovvalgsperiodeOgKontroller = async (values: FieldValues, isValid: boolean) => {
+  const lagreLovvalgsperiodeOgKontroller = async (
+    values: FieldValues,
+    isValid: boolean,
+    kontrollerSomSkalIgnoreres: string[]
+  ) => {
     if (isValid && values.utfallRegistreringUnntak !== IKKE_GODKJENT) {
       await lagreLovvalgsperiode(values);
-      kontrollerFerdigbehandling();
+      kontrollerFerdigbehandling(kontrollerSomSkalIgnoreres);
     }
   };
 
@@ -138,7 +145,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     []
   );
 
-  const handleEndring = (values: FieldValues) => debouncedLagreLovvalgsperiodeOgKontroller(values, formState?.isValid);
+  const handleEndring = (values: FieldValues) =>
+    debouncedLagreLovvalgsperiodeOgKontroller(values, formState?.isValid, []);
 
   const lagreFom = (fom: string) => handleEndring({ ...formValues, fom });
 

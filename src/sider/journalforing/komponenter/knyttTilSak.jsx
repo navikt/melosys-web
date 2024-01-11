@@ -80,6 +80,7 @@ export const KnyttTilSak = (props) => {
         journalforingGjelder,
         sakstype.kode,
         sakstema.kode,
+        null,
         sisteBehandling.behandlingstema.kode
       ).then((alleMuligeBehandlingstemaer) => {
         setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);

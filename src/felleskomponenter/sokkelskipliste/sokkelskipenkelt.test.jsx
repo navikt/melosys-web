@@ -1,4 +1,13 @@
 import SokkelSkipEnkelt from "./sokkelskipenkelt";
+import { render } from "@testing-library/react";
+
+vi.mock("../../utils", async () => {
+  const actual = await vi.importActual("../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("SokkelSkipEnkelt", () => {
   let props = null;
@@ -48,7 +57,8 @@ describe("SokkelSkipEnkelt", () => {
     };
   });
 
-  it("vises uten å krasje", () => {
-    shallow(<SokkelSkipEnkelt {...props} />);
+  it("snapshot test", () => {
+    const { container } = render(<SokkelSkipEnkelt {...props} />);
+    expect(container).toMatchSnapshot();
   });
 });

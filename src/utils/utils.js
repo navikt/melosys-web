@@ -26,9 +26,6 @@ export function isJSON(str) {
     return false;
   }
 }
-export function verdiSomNullable(verdi) {
-  return _isUndefined(verdi) ? null : verdi;
-}
 /**
  * Dekonstruerer querystring til object med props fra querystring
  * @param sporreStreng
