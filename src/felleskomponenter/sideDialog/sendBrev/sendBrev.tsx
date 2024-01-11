@@ -18,20 +18,14 @@ import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
-import * as Mui from "../../ui";
 
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerOperations } from "../../../ducks/behandlinger";
-import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { formSelectors } from "../../../ducks/form";
 
-import VedleggVelger from "../../vedleggvelger";
-import VedleggTable from "../../vedleggTable";
-
 import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet } from "./brevMottaker/brevMottaker";
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
-import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
 import Brevutkast from "./brevutkast/brevutkast";
 import BrevValg from "./brevValg";
 import { SendBrevFormValues } from "./types";
@@ -39,6 +33,7 @@ import { SendBrevFormValues } from "./types";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
+import BrevVedlegg from "./brevVedlegg/brevVedlegg";
 
 const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
 
@@ -109,14 +104,12 @@ const SendBrev = ({
   const [feil, setFeil] = useState<string | undefined>();
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
   const [visFritekstvedleggSkjema, setVisFritekstvedleggSkjema] = useState(false);
+  const [redigerFritekstVedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
   const [fritekstvedlegg, setFritekstvedlegg] = useState<Fritekstvedlegg[]>([]);
-  const [redigerFritekstvedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
-  const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
   const [utkastPåBehandlingen, setUtkastPåBehandlingen] = useState<Api.Brevutkast.BrevutkastResDto[]>([]);
   const [sendBrevSpinner, setSendBrevSpinner] = useState(false);
   const [lagreUtkastSpinner, setLagreUtkastSpinner] = useState(false);
   const [forkastBrevSpinner, setForkastBrevSpinner] = useState(false);
-
   const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
   const tilgjengeligeBrevtyper =
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
@@ -310,31 +303,6 @@ const SendBrev = ({
     saksbehandlerNrToIdent: finnSaksbehandlerIdentForDobbelSignatur(),
   });
 
-  const lagFritekstPdfUrl = async (index: number) => {
-    const data = {
-      produserbardokument: MKV.Koder.brev.produserbaredokumenter.GENERELT_FRITEKSTVEDLEGG,
-      mottaker: mottakerErNorskMyndighet
-        ? MKV.Koder.mottakerroller.NORSK_MYNDIGHET
-        : muligeMottakere?.hovedMottaker.rolle || "",
-      fritekstTittel:
-        redigerFritekstvedleggIndex === index
-          ? formValues.felt?.FRITEKSTVEDLEGG_TITTEL?.feltVerdi
-          : fritekstvedlegg[index].tittel,
-      fritekst:
-        redigerFritekstvedleggIndex === index
-          ? formValues.felt?.FRITEKSTVEDLEGG_FRITEKST?.feltVerdi
-          : fritekstvedlegg[index].fritekst,
-      kontaktopplysninger: false,
-    };
-    try {
-      setForhandsvisFritekstvedleggError(false);
-      return await dokumenterOperations.forhandsvisBrevV2(behandlingID, data);
-    } catch (e) {
-      setForhandsvisFritekstvedleggError(true);
-      return "";
-    }
-  };
-
   const sendBrev = () => {
     if (!formValues?.valgtMottaker) return;
     setSendBrevSpinner(true);
@@ -379,51 +347,6 @@ const SendBrev = ({
     setRedigerFritekstvedleggIndex(undefined);
   };
 
-  const resetFritekstvedlegg = () => {
-    changeField("felt.FRITEKSTVEDLEGG_TITTEL.feltVerdi", "");
-    changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", "");
-    setVisFritekstvedleggSkjema(false);
-    setRedigerFritekstvedleggIndex(undefined);
-  };
-
-  const leggTilFritekstvedlegg = () => {
-    const tittel = formValues.felt?.FRITEKSTVEDLEGG_TITTEL?.feltVerdi;
-    const fritekst = formValues.felt?.FRITEKSTVEDLEGG_FRITEKST?.feltVerdi;
-    if (tittel && fritekst && fritekst !== "<p></p>\n") {
-      const newFritekstvedlegg = [...fritekstvedlegg];
-      if (redigerFritekstvedleggIndex !== undefined) {
-        newFritekstvedlegg[redigerFritekstvedleggIndex] = { tittel, fritekst };
-      } else {
-        newFritekstvedlegg.push({ tittel, fritekst });
-      }
-      setFritekstvedlegg(newFritekstvedlegg);
-      changeField("felt.FRITEKSTVEDLEGG_TITTEL.feltVerdi", "");
-      changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", "");
-      setVisFritekstvedleggSkjema(false);
-      setRedigerFritekstvedleggIndex(undefined);
-    }
-  };
-
-  const redigerFritekstvedlegg = (index: number) => {
-    const vedlegg = fritekstvedlegg[index];
-    changeField("felt.FRITEKSTVEDLEGG_TITTEL.feltVerdi", vedlegg.tittel);
-    changeField("felt.FRITEKSTVEDLEGG_FRITEKST.feltVerdi", vedlegg.fritekst);
-    setRedigerFritekstvedleggIndex(index);
-    setVisFritekstvedleggSkjema(true);
-  };
-
-  const slettFritekstvedlegg = (index: number) => {
-    const newFritekstvedlegg = [...fritekstvedlegg];
-    newFritekstvedlegg.splice(index, 1);
-    setFritekstvedlegg(newFritekstvedlegg);
-    if (index === redigerFritekstvedleggIndex) {
-      setRedigerFritekstvedleggIndex(undefined);
-    }
-    if (redigerFritekstvedleggIndex && index < redigerFritekstvedleggIndex) {
-      setRedigerFritekstvedleggIndex(redigerFritekstvedleggIndex - 1);
-    }
-  };
-
   const lagreUtkast = () => {
     if (!formValues?.valgtMottaker) return;
     setLagreUtkastSpinner(true);
@@ -454,10 +377,6 @@ const SendBrev = ({
   const brevtypeErValgt = formValues.valgtBrev;
 
   const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}/${saksnummer}`;
-  const vedleggFelt = formValues.valgtBrev?.felter?.find((felt) => felt.kode === Api.DokumenterV2.FeltType.VEDLEGG);
-  const fritekstvedleggFelt = formValues.valgtBrev?.felter?.find(
-    (felt) => felt.kode === Api.DokumenterV2.FeltType.FRITEKSTVEDLEGG
-  );
 
   const spinnerAktiv = sendBrevSpinner || lagreUtkastSpinner || forkastBrevSpinner;
 
@@ -547,42 +466,22 @@ const SendBrev = ({
         </Nav.AlertStripe>
       )}
 
-      {forhandsvisFritekstvedleggError && (
-        <Nav.AlertStripe type="advarsel" className="varsel">
-          {FORHANDSVIS_ERROR_MESSAGE}
-        </Nav.AlertStripe>
-      )}
-
-      {(vedleggFelt || fritekstvedleggFelt) && (
-        <VedleggTable
-          valgteVedlegg={valgteVedlegg}
-          fritekstvedlegg={fritekstvedlegg}
-          redigerFritekstvedlegg={redigerFritekstvedlegg}
-          slettFritekstvedlegg={slettFritekstvedlegg}
-          lagFritekstPdfUrl={lagFritekstPdfUrl}
-          setValgteVedlegg={setValgteVedlegg}
-          label="Vedlegg"
-        />
-      )}
-
-      {vedleggFelt && (
-        <VedleggVelger dokumenter={dokumenter} valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} />
-      )}
-
-      {fritekstvedleggFelt &&
-        (visFritekstvedleggSkjema ? (
-          <FritekstvedleggSkjema
-            felt={fritekstvedleggFelt}
-            index={redigerFritekstvedleggIndex}
-            resetFritekstvedlegg={resetFritekstvedlegg}
-            leggTilFritekstvedlegg={leggTilFritekstvedlegg}
-            width={felterWidth}
-          />
-        ) : (
-          <Mui.Lenkeknapp onClick={() => setVisFritekstvedleggSkjema(true)} ikon={Ikoner.Add}>
-            {fritekstvedleggFelt.beskrivelse}
-          </Mui.Lenkeknapp>
-        ))}
+      <BrevVedlegg
+        fritekstvedlegg={fritekstvedlegg}
+        setFritekstvedlegg={setFritekstvedlegg}
+        valgteVedlegg={valgteVedlegg}
+        setValgteVedlegg={setValgteVedlegg}
+        changeField={changeField}
+        formValues={formValues}
+        redigerbart={redigerbart}
+        behandlingID={behandlingID}
+        dokumenter={dokumenter}
+        mottakerErNorskMyndighet={mottakerErNorskMyndighet}
+        visFritekstvedleggSkjema={visFritekstvedleggSkjema}
+        setVisFritekstvedleggSkjema={setVisFritekstvedleggSkjema}
+        redigerFritekstvedleggIndex={redigerFritekstVedleggIndex}
+        setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
+      />
 
       <div>
         <Nav.Hovedknapp

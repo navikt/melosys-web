@@ -31,32 +31,34 @@ const VedleggTable = ({
   };
 
   return (
-    <>
-      <Nav.Typo.Element className="vedleggtable-label">{label}</Nav.Typo.Element>
+    <Table className="vedleggtable" size="small">
+      <Table.Header>
+        <Table.HeaderCell>{label}</Table.HeaderCell>
+        <Table.HeaderCell></Table.HeaderCell>
+        <Table.HeaderCell></Table.HeaderCell>
+      </Table.Header>
       {(valgteVedlegg.length > 0 || (fritekstvedlegg && fritekstvedlegg.length > 0)) && (
-        <Table>
-          <Table.Body>
-            {fritekstvedlegg?.map((vedlegg, index) => (
-              <FritekstvedleggRow
-                fritekstvedlegg={vedlegg}
-                redigerFritekstvedlegg={redigerFritekstvedlegg}
-                slettFritekstvedlegg={slettFritekstvedlegg}
-                key={vedlegg.tittel}
-                index={index}
-                lagFritekstPdfUrl={lagFritekstPdfUrl}
-              />
-            ))}
-            {valgteVedlegg.map((enkeltVedlegg) => (
-              <VedleggRow
-                key={enkeltVedlegg.id}
-                vedlegg={enkeltVedlegg}
-                slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
-              />
-            ))}
-          </Table.Body>
-        </Table>
+        <Table.Body>
+          {fritekstvedlegg?.map((vedlegg, index) => (
+            <FritekstvedleggRow
+              fritekstvedlegg={vedlegg}
+              redigerFritekstvedlegg={redigerFritekstvedlegg}
+              slettFritekstvedlegg={slettFritekstvedlegg}
+              key={vedlegg.tittel}
+              index={index}
+              lagFritekstPdfUrl={lagFritekstPdfUrl}
+            />
+          ))}
+          {valgteVedlegg.map((enkeltVedlegg) => (
+            <VedleggRow
+              key={enkeltVedlegg.id}
+              vedlegg={enkeltVedlegg}
+              slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
+            />
+          ))}
+        </Table.Body>
       )}
-    </>
+    </Table>
   );
 };
 
