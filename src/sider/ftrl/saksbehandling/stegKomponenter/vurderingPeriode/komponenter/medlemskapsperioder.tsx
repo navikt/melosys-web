@@ -1,7 +1,5 @@
 import { Control, FieldArrayWithId } from "react-hook-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
-
-import MKV from "../../../../../../melosyskodeverk";
 import * as Forms from "../../../../../../felleskomponenter/forms";
 import * as Ikoner from "../../../../../../resources/images";
 import * as Nav from "../../../../../../navFrontend";
@@ -90,13 +88,11 @@ export const Medlemskapsperioder = ({
                   emptyFieldDisabled={!!field.innvilgelsesResultat}
                   onChange={(value) => handleChange([{ ...field, innvilgelsesResultat: value }], formIsValid, index)}
                 >
-                  {innvilgelsesResultater
-                    .filter((item: KTObject) => item.kode !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET)
-                    .map((item: KTObject) => (
-                      <option key={item.kode} value={item.kode}>
-                        {item.term}
-                      </option>
-                    ))}
+                  {innvilgelsesResultater.map((item: KTObject) => (
+                    <option key={item.kode} value={item.kode}>
+                      {item.term}
+                    </option>
+                  ))}
                 </Forms.Select>
               </Nav.Column>
               {kanSlettePeriode && (
