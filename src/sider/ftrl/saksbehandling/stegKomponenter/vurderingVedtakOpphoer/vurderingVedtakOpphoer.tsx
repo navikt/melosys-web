@@ -21,6 +21,7 @@ import * as KV from "../../../../../kodeverk";
 
 const { VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
 const { OPPHØRT, INNVILGET } = MKV.Koder.innvilgelsesResultat;
+const { FTRL_KAP2_2_15_ANDRE_LEDD } = MKV.Koder.folketrygdloven_kap2_bestemmelser;
 
 interface FormValuesProps {
   begrunnelseFritekst?: string;
@@ -120,13 +121,18 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
   function mapPeriodeRader(perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[] | undefined) {
     const sortertePerioder = perioder ? [...perioder].sort(Utils.dato.sorterEtterISOFomDato) : [];
     return sortertePerioder.map((medlemskapsperiode) => {
+      const erInnvilget = medlemskapsperiode.innvilgelsesResultat === INNVILGET;
       return {
         periode: `${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
           medlemskapsperiode.tomDato
         )}`,
+        bestemmelse: KV.finnTermFraListe(
+          MKV.KTObjects.folketrygdloven_kap2_bestemmelser,
+          erInnvilget ? FTRL_KAP2_2_15_ANDRE_LEDD : medlemskapsperiode.bestemmelse
+        ),
         resultat: KV.finnTermFraListe(
           MKV.KTObjects.innvilgelsesResultat,
-          medlemskapsperiode.innvilgelsesResultat === INNVILGET ? OPPHØRT : medlemskapsperiode.innvilgelsesResultat
+          erInnvilget ? OPPHØRT : medlemskapsperiode.innvilgelsesResultat
         ),
       };
     });
@@ -144,6 +150,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
+            <Table.HeaderCell scope="col">Bestemmelse</Table.HeaderCell>
             <Table.HeaderCell scope="col">Resultat</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -152,6 +159,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
             return (
               <Table.Row key={Utils._uuid()}>
                 <Table.DataCell>{rad.periode}</Table.DataCell>
+                <Table.DataCell>{rad.bestemmelse}</Table.DataCell>
                 <Table.DataCell>{rad.resultat}</Table.DataCell>
               </Table.Row>
             );

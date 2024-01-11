@@ -214,6 +214,10 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         periode: `${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
           medlemskapsperiode.tomDato
         )}`,
+        bestemmelse: KV.finnTermFraListe(
+          MKV.KTObjects.folketrygdloven_kap2_bestemmelser,
+          medlemskapsperiode.bestemmelse
+        ),
         dekning: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, medlemskapsperiode.trygdedekning),
         resultat: KV.finnTermFraListe(innvilgelsesResultater, medlemskapsperiode.innvilgelsesResultat),
       };
@@ -317,6 +321,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
+            <Table.HeaderCell scope="col">Bestemmelse</Table.HeaderCell>
             <Table.HeaderCell scope="col">Dekning</Table.HeaderCell>
             <Table.HeaderCell scope="col">Resultat</Table.HeaderCell>
           </Table.Row>
@@ -326,6 +331,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
             return (
               <Table.Row key={Utils._uuid()}>
                 <Table.DataCell>{medlemskapsperiode.periode}</Table.DataCell>
+                <Table.DataCell>{medlemskapsperiode.bestemmelse}</Table.DataCell>
                 <Table.DataCell>{medlemskapsperiode.dekning}</Table.DataCell>
                 <Table.DataCell>{medlemskapsperiode.resultat}</Table.DataCell>
               </Table.Row>
