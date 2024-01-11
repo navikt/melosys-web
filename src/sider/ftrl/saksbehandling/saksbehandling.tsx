@@ -43,6 +43,7 @@ import { kontrollOperations } from "../../../ducks/kontroll";
 import { resetInkluderSiste5Aar } from "../../../ducks/modaler/operations";
 import { setErFullmektigEndret } from "../../../ducks/menypanel/operations";
 import { alleStegManglendeInnbetaling } from "./initialStegArrayManglendeInnbetaling";
+import { fakturainformasjonOperations } from "../../../ducks/fakturainformasjon";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
@@ -94,6 +95,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
   resetKontrollFeil: () => dispatch(kontrollOperations.resetKontrollFeil()),
+  resetFakturaInformasjon: () => dispatch(fakturainformasjonOperations.resetFakturaInformasjon()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -147,6 +149,7 @@ const Saksbehandling = ({
   menypanelSynlig,
   samletMedlemskapsperiodeSelector,
   behandlingstype,
+  resetFakturaInformasjon,
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
@@ -206,6 +209,7 @@ const Saksbehandling = ({
       resetFeiletrespons();
       resetKontrollFeil();
       resetInkluderSiste5Aar();
+      resetFakturaInformasjon();
       skjulMenypanel();
       setErFullmektigEndret(false);
     };
