@@ -136,6 +136,7 @@ function andrePerioderEtterOpphørtPeriode(medlemskapsperioder: Medlemskapsperio
 
   const perioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
   const tidligsteOpphørtePeriode = perioder.findIndex(opphørtePerioder);
+  if (tidligsteOpphørtePeriode === -1) return false;
   const alleEtterfølgendePerioderErOpphørt = perioder.slice(tidligsteOpphørtePeriode).every(opphørtePerioder);
 
   return !alleEtterfølgendePerioderErOpphørt;
