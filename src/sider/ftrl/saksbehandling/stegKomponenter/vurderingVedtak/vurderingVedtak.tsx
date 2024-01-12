@@ -69,7 +69,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
-  const innvilgelsesResultater = useSelector(folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const mottatteOpplysningerFeilmeldinger = useSelector(formSelectors.SoknadErrorsSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
@@ -207,22 +206,15 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     debouncedOppdaterFritekster(formValues);
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst, formValues?.trygdeavgiftFritekst]);
 
-  function mapPeriodeRader(perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[] | undefined) {
-    const sortertePerioder = perioder ? [...perioder].sort(Utils.dato.sorterEtterISOFomDato) : [];
-    return sortertePerioder.map((medlemskapsperiode) => {
+  const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]) =>
+    [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
       return {
-        periode: `${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-          medlemskapsperiode.tomDato
-        )}`,
-        bestemmelse: KV.finnTermFraListe(
-          MKV.KTObjects.folketrygdloven_kap2_bestemmelser,
-          medlemskapsperiode.bestemmelse
-        ),
-        dekning: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, medlemskapsperiode.trygdedekning),
-        resultat: KV.finnTermFraListe(innvilgelsesResultater, medlemskapsperiode.innvilgelsesResultat),
+        periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
+        bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),
+        dekning: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, it.trygdedekning),
+        resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
       };
     });
-  }
 
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
