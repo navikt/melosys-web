@@ -16,7 +16,6 @@ import * as KV from "../../../../../kodeverk";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
-import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
