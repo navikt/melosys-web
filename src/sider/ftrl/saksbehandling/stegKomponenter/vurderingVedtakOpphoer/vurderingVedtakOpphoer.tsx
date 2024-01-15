@@ -54,6 +54,20 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
     } as FieldValues,
   });
   const formValues = watch();
+  const stegErGyldig = redigerbart && formIsValid;
+
+  const hentMuligeMottakere = async () => {
+    const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+      produserbartdokument: VEDTAK_OPPHOERT_MEDLEMSKAP,
+      orgnr: null,
+    });
+    setMuligeMottakere(res);
+  };
+
+  useEffect(() => {
+    hentMuligeMottakere();
+    return () => debouncedOppdaterFritekster.cancel();
+  }, []);
 
   const forventetOpphørteMedlemskapsperioder = () =>
     behandlingErAvsluttet
@@ -77,27 +91,32 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
     debouncedOppdaterFritekster(formValues);
   }, [formValues?.begrunnelseFritekst]);
 
-  const hentMuligeMottakere = async () => {
-    const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: VEDTAK_OPPHOERT_MEDLEMSKAP,
-      orgnr: null,
-    });
-    setMuligeMottakere(res);
-  };
+  const getOpphørsdato = () =>
+    [...forventetOpphørteMedlemskapsperioder()]
+      .sort(Utils.dato.sorterEtterISOFomDato)
+      .find((periode) => periode.innvilgelsesResultat === OPPHØRT)?.fomDato;
 
-  useEffect(() => {
-    hentMuligeMottakere();
-    return () => debouncedOppdaterFritekster.cancel();
-  }, []);
-
-  const lagFattVedtakFTRLReqDto = () => {
+  const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
     return {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.OPPHØRT,
-      begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
       vedtakstype: lagretVedtakstype || MKV.Koder.vedtakstyper.OPPHØRSVEDTAK,
+      begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+      opphoerDato: getOpphørsdato(),
     };
   };
+
+  const onSubmit = async () => {
+    setVedtakPending(true);
+    dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakFTRLReqDto()));
+    /* TODO: Fiks typescript issue med useDispatch og thunks og flytt settVedtakPending(false) inn dersom api kallet feiler
+    https://stackoverflow.com/questions/66486348/dispatch-is-not-returning-a-promise-using-redux-thunk-with-typescript
+    */
+    setVedtakPending(false);
+  };
+
+  if (!aktivtSteg) return null;
+
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
       dokumentData: {
@@ -105,6 +124,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
         mottaker: muligMottaker.rolle,
         begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
         orgNr: muligMottaker?.orgnr || null,
+        opphoerDato: getOpphørsdato(),
       },
       mottakerNavn: muligMottaker.mottakerNavn,
     };
@@ -118,17 +138,6 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
     ];
   };
 
-  const onSubmit = async () => {
-    setVedtakPending(true);
-    dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakFTRLReqDto()));
-    /* TODO: Fiks typescript issue med useDispatch og thunks og flytt settVedtakPending(false) inn dersom api kallet feiler
-    https://stackoverflow.com/questions/66486348/dispatch-is-not-returning-a-promise-using-redux-thunk-with-typescript
-    */
-    setVedtakPending(false);
-  };
-
-  const stegErGyldig = redigerbart && formIsValid;
-
   const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]) =>
     [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
       return {
@@ -137,8 +146,6 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
         resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
       };
     });
-
-  if (!aktivtSteg) return null;
 
   return (
     <div className="vurderingVedtakOpphoer">

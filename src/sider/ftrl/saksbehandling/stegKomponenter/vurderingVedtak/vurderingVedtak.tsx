@@ -35,10 +35,25 @@ import { FRITEKST_VALG } from "../../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/menypanel";
 
+const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
+const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { INNVILGELSE_FOLKETRYGDLOVEN, VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
 const { MEDLEM_I_FOLKETRYGDEN, DELVIS_OPPHØRT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const VEDTAK_OPPHOER = "Vedtak om opphør av frivillig medlemskap";
 export const VEDTAK_ENDRET = "Endret vedtak om frivillig medlemskap";
+
+const innledningFritekstHjelpetekst =
+  "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: \n\n" +
+  '"Du er medlem i folketrygden fra 1. september 2022 til 31. desember 2024. Medlemskapet omfatter trygdedekning i folketrygdens helse- og pensjonsdel."\n\n' +
+  "Friteksten kommer her.";
+const begrunnelseFritekstHjelpetekst =
+  "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.  Eksempel: \n\n" +
+  '"Du har opplyst at du arbeider for Equinor ASA i Brasil. Vi har lagt til grunn at du er ansatt i en virksomhet med hovedsete i Norge."\n\n' +
+  "Friteksten kommer her.";
+const trygdeavgiftFritekstHjelpetekst =
+  "Teksten du skriver her vil vises etter standard informasjon om trygdeavgiften. Eksempel: \n\n" +
+  '"Ved kalenderårets slutt vil vi be om endelige inntektsopplysninger. Ut fra disse opplysningene vil vi beregne endelig trygdeavgift for året."\n\n' +
+  "Friteksten kommer her.";
 
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
@@ -60,12 +75,7 @@ interface Props {
 
 // TODO: Erstattes med tabell fra Aksel i MELOSYS-6082 (Ideelt sett 1 standardkomponent på tvers av melosys)
 export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
-  const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
-    return !MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.some((bakgrunn: KTObject) => {
-      return bakgrunn.kode === nyVurderingBakgrunnValg;
-    });
-  };
-
+  const dispatch = useDispatch();
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
@@ -78,22 +88,25 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const lagretNyVurderingBakgrunn = useSelector(behandlingsresultatSelectors.NyVurderingBakgrunnSelector);
   const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector);
+  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
+  const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
 
-  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const erManglendeInnbetalingTrygdeavgift =
-    behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT;
+  const erNyVurdering = behandlingstype === NY_VURDERING;
+  const erManglendeInnbetalingTrygdeavgift = behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
+  const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
+    return !MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.some((bakgrunn: KTObject) => {
+      return bakgrunn.kode === nyVurderingBakgrunnValg;
+    });
+  };
   const initialNyVurderingBakgrunnValg =
     lagretNyVurderingBakgrunn && erNyVurderingBakgrunnValgFritekst(lagretNyVurderingBakgrunn)
       ? FRITEKST_VALG
       : lagretNyVurderingBakgrunn || undefined;
   const initialNyVurderingBakgrunnFritekst =
     initialNyVurderingBakgrunnValg === FRITEKST_VALG ? lagretNyVurderingBakgrunn : "";
-  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
-  const dispatch = useDispatch();
-  const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
 
-  const mapVedtakValg = () => {
+  const initialVedtakValg = () => {
     if (erManglendeInnbetalingTrygdeavgift) {
       if (behandlingsresultatType === DELVIS_OPPHØRT) {
         return VEDTAK_OPPHOER;
@@ -121,7 +134,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       trygdeavgiftFritekst: useSelector(behandlingsresultatSelectors.TrygdeavgiftFritekstSelector) || "",
       nyVurderingBakgrunnValg: initialNyVurderingBakgrunnValg,
       nyVurderingBakgrunnFritekst: initialNyVurderingBakgrunnFritekst,
-      vedtakValg: mapVedtakValg(),
+      vedtakValg: initialVedtakValg(),
     } as FieldValues,
   });
   const formValues = watch();
@@ -129,15 +142,15 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
   const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
-  let oppdaterFørKontroll = true;
   const [vedtakPending, setVedtakPending] = useState(false);
   const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
   const vedtakOpphøres = formValues?.vedtakValg === VEDTAK_OPPHOER;
+  const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
+  let oppdaterFørKontroll = true;
 
   const oppdaterNyVurderingBakgrunn = (nyVurderingBakgrunn?: string) => {
     Api.Behandlinger.resultat.oppdaterNyVurderingBakgrunn(behandlingID, nyVurderingBakgrunn);
   };
-
   const debouncedOppdaterNyVurderingBakgrunn = useCallback(Utils._debounce(oppdaterNyVurderingBakgrunn, 500), []);
 
   const oppdaterNyVurderingBakgrunnValg = (nyVurderingBakgrunnValg: string) => {
@@ -151,8 +164,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     }
     setValue("nyVurderingBakgrunnFritekst", "");
   };
-
-  const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
 
   useEffect(() => {
     return () => debouncedOppdaterFritekster.cancel();
@@ -198,48 +209,16 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       });
     }
   };
-
   const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), []);
 
   useEffect(() => {
     debouncedOppdaterFritekster(formValues);
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst, formValues?.trygdeavgiftFritekst]);
 
-  const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]) =>
-    [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
-      return {
-        periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
-        bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),
-        dekning: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, it.trygdedekning),
-        resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
-      };
-    });
-
-  const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    return {
-      dokumentData: {
-        produserbardokument: vedtakOpphøres ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
-        mottaker: muligMottaker.rolle,
-        innledningFritekst: formValues?.innledningFritekst || null,
-        begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-        trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
-        nyVurderingBakgrunn:
-          formValues?.nyVurderingBakgrunnValg === FRITEKST_VALG
-            ? formValues?.nyVurderingBakgrunnFritekst
-            : formValues?.nyVurderingBakgrunnValg,
-        orgNr: muligMottaker?.orgnr || null,
-      },
-      mottakerNavn: muligMottaker.mottakerNavn,
-    };
-  };
-
-  const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
-    return [
-      mapMottakerRad(mottakere.hovedMottaker),
-      ...mottakere.kopiMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
-      ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
-    ];
-  };
+  const getOpphørsdato = () =>
+    [...medlemskapsperioder]
+      .sort(Utils.dato.sorterEtterISOFomDato)
+      .find((periode) => periode.innvilgelsesResultat === OPPHØRT)?.fomDato;
 
   const getVedtakstype = () => {
     if (lagretVedtakstype) return lagretVedtakstype;
@@ -247,7 +226,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     return MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK;
   };
 
-  const lagFattVedtakFTRLReqDto = () => {
+  const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
     return {
       behandlingsresultatTypeKode: vedtakOpphøres ? DELVIS_OPPHØRT : MEDLEM_I_FOLKETRYGDEN,
       innledningFritekst: formValues?.innledningFritekst || null,
@@ -259,6 +238,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         formValues?.nyVurderingBakgrunnValg === FRITEKST_VALG
           ? formValues?.nyVurderingBakgrunnFritekst
           : formValues?.nyVurderingBakgrunnValg,
+      opphoerDato: vedtakOpphøres ? getOpphørsdato() : null,
     };
   };
 
@@ -295,20 +275,44 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     }
   };
 
-  const innledningFritekstHjelpetekst =
-    "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: \n\n" +
-    '"Du er medlem i folketrygden fra 1. september 2022 til 31. desember 2024. Medlemskapet omfatter trygdedekning i folketrygdens helse- og pensjonsdel."\n\n' +
-    "Friteksten kommer her.";
-  const begrunnelseFritekstHjelpetekst =
-    "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.  Eksempel: \n\n" +
-    '"Du har opplyst at du arbeider for Equinor ASA i Brasil. Vi har lagt til grunn at du er ansatt i en virksomhet med hovedsete i Norge."\n\n' +
-    "Friteksten kommer her.";
-  const trygdeavgiftFritekstHjelpetekst =
-    "Teksten du skriver her vil vises etter standard informasjon om trygdeavgiften. Eksempel: \n\n" +
-    '"Ved kalenderårets slutt vil vi be om endelige inntektsopplysninger. Ut fra disse opplysningene vil vi beregne endelig trygdeavgift for året."\n\n' +
-    "Friteksten kommer her.";
-
   if (!aktivtSteg) return null;
+
+  const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]) =>
+    [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
+      return {
+        periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
+        bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),
+        dekning: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, it.trygdedekning),
+        resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
+      };
+    });
+
+  const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
+    return {
+      dokumentData: {
+        produserbardokument: vedtakOpphøres ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
+        mottaker: muligMottaker.rolle,
+        innledningFritekst: formValues?.innledningFritekst || null,
+        begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+        trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
+        nyVurderingBakgrunn:
+          formValues?.nyVurderingBakgrunnValg === FRITEKST_VALG
+            ? formValues?.nyVurderingBakgrunnFritekst
+            : formValues?.nyVurderingBakgrunnValg,
+        orgNr: muligMottaker?.orgnr || null,
+        opphoerDato: vedtakOpphøres ? getOpphørsdato() : null,
+      },
+      mottakerNavn: muligMottaker.mottakerNavn,
+    };
+  };
+
+  const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
+    return [
+      mapMottakerRad(mottakere.hovedMottaker),
+      ...mottakere.kopiMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
+      ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
+    ];
+  };
 
   return (
     <div className="vurderingVedtak">

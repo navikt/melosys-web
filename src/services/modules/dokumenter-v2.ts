@@ -119,6 +119,7 @@ export type OpprettBrevReqDto = {
   saksbehandlerNrToIdent?: string | null;
   begrunnelseKode?: string | null;
   ytterligereInformasjon?: string | null;
+  opphoerDato?: string | null;
 };
 
 export type MuligMottaker = {
