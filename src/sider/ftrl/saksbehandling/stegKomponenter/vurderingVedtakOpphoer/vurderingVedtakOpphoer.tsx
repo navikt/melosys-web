@@ -21,6 +21,8 @@ import * as KV from "../../../../../kodeverk";
 
 const { VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
 const { OPPHØRT, INNVILGET } = MKV.Koder.innvilgelsesResultat;
+const { FTRL_KAP2_2_15_ANDRE_LEDD } = MKV.Koder.folketrygdloven_kap2_bestemmelser;
+const { AVSLUTTET } = MKV.Koder.behandlinger.behandlingsstatus;
 
 interface FormValuesProps {
   begrunnelseFritekst?: string;
@@ -36,6 +38,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
+  const behandlingErAvsluttet = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector) === AVSLUTTET;
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
@@ -51,6 +54,15 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
     } as FieldValues,
   });
   const formValues = watch();
+
+  const forventetOpphørteMedlemskapsperioder = () =>
+    behandlingErAvsluttet
+      ? medlemskapsperioder
+      : [...medlemskapsperioder]
+          .filter((it) => [INNVILGET, OPPHØRT].includes(it.innvilgelsesResultat))
+          .map((it) => {
+            return { ...it, innvilgelsesResultat: OPPHØRT, bestemmelse: FTRL_KAP2_2_15_ANDRE_LEDD };
+          });
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
@@ -117,20 +129,14 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
 
   const stegErGyldig = redigerbart && formIsValid;
 
-  function mapPeriodeRader(perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[] | undefined) {
-    const sortertePerioder = perioder ? [...perioder].sort(Utils.dato.sorterEtterISOFomDato) : [];
-    return sortertePerioder.map((medlemskapsperiode) => {
+  const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]) =>
+    [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
       return {
-        periode: `${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-          medlemskapsperiode.tomDato
-        )}`,
-        resultat: KV.finnTermFraListe(
-          MKV.KTObjects.innvilgelsesResultat,
-          medlemskapsperiode.innvilgelsesResultat === INNVILGET ? OPPHØRT : medlemskapsperiode.innvilgelsesResultat
-        ),
+        periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
+        bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),
+        resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
       };
     });
-  }
 
   if (!aktivtSteg) return null;
 
@@ -144,14 +150,16 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
+            <Table.HeaderCell scope="col">Bestemmelse</Table.HeaderCell>
             <Table.HeaderCell scope="col">Resultat</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {mapPeriodeRader(medlemskapsperioder).map((rad) => {
+          {mapPeriodeRader(forventetOpphørteMedlemskapsperioder()).map((rad) => {
             return (
               <Table.Row key={Utils._uuid()}>
                 <Table.DataCell>{rad.periode}</Table.DataCell>
+                <Table.DataCell>{rad.bestemmelse}</Table.DataCell>
                 <Table.DataCell>{rad.resultat}</Table.DataCell>
               </Table.Row>
             );
