@@ -71,7 +71,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
 
   const forventetOpphørteMedlemskapsperioder = () =>
     behandlingErAvsluttet
-      ? medlemskapsperioder
+      ? [...medlemskapsperioder]
       : [...medlemskapsperioder]
           .filter((it) => [INNVILGET, OPPHØRT].includes(it.innvilgelsesResultat))
           .map((it) => {
@@ -92,7 +92,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
   }, [formValues?.begrunnelseFritekst]);
 
   const getOpphørsdato = () =>
-    [...forventetOpphørteMedlemskapsperioder()]
+    forventetOpphørteMedlemskapsperioder()
       .sort(Utils.dato.sorterEtterISOFomDato)
       .find((periode) => periode.innvilgelsesResultat === OPPHØRT)?.fomDato;
 
@@ -139,7 +139,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
   };
 
   const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]) =>
-    [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
+    perioder.sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
       return {
         periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
         bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),
