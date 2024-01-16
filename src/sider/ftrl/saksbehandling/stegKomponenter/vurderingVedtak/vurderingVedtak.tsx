@@ -16,7 +16,6 @@ import * as KV from "../../../../../kodeverk";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
-import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
@@ -69,7 +68,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
-  const innvilgelsesResultater = useSelector(folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const mottatteOpplysningerFeilmeldinger = useSelector(formSelectors.SoknadErrorsSelector);
   const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
@@ -207,18 +205,15 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     debouncedOppdaterFritekster(formValues);
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst, formValues?.trygdeavgiftFritekst]);
 
-  function mapPeriodeRader(perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[] | undefined) {
-    const sortertePerioder = perioder ? [...perioder].sort(Utils.dato.sorterEtterISOFomDato) : [];
-    return sortertePerioder.map((medlemskapsperiode) => {
+  const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]) =>
+    [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
       return {
-        periode: `${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-          medlemskapsperiode.tomDato
-        )}`,
-        dekning: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, medlemskapsperiode.trygdedekning),
-        resultat: KV.finnTermFraListe(innvilgelsesResultater, medlemskapsperiode.innvilgelsesResultat),
+        periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
+        bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),
+        dekning: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, it.trygdedekning),
+        resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
       };
     });
-  }
 
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
@@ -323,6 +318,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
+            <Table.HeaderCell scope="col">Bestemmelse</Table.HeaderCell>
             <Table.HeaderCell scope="col">Dekning</Table.HeaderCell>
             <Table.HeaderCell scope="col">Resultat</Table.HeaderCell>
           </Table.Row>
@@ -332,6 +328,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
             return (
               <Table.Row key={Utils._uuid()}>
                 <Table.DataCell>{medlemskapsperiode.periode}</Table.DataCell>
+                <Table.DataCell>{medlemskapsperiode.bestemmelse}</Table.DataCell>
                 <Table.DataCell>{medlemskapsperiode.dekning}</Table.DataCell>
                 <Table.DataCell>{medlemskapsperiode.resultat}</Table.DataCell>
               </Table.Row>

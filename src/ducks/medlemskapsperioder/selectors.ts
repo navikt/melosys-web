@@ -21,7 +21,7 @@ export const MedlemskapsperioderDataSelector: Selector<RootState, Types.Data> = 
 
 export const AlleMedlemskapsperioderSelector = createSelector(
   MedlemskapsperioderDataSelector,
-  (medlemskapsperioder) => medlemskapsperioder.medlemskapsperioder
+  (medlemskapsperioder) => medlemskapsperioder.medlemskapsperioder || []
 );
 
 export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
