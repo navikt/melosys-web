@@ -4,11 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 
-import { fakturainformasjonOperations } from "../../../../ducks/fakturainformasjon";
+import { fakturaserierOperations, fakturaserierSelectors, fakturaserierTypes } from "../../../../ducks/fakturaserier";
 import "./fakturainformasjon.css";
 import { Faktura } from "./faktura";
 import { STATUS } from "../../../../services";
-import { FakturaStatus } from "../../../../services/modules/faktureringskomponenten/fakturainformasjon";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { Table } from "@navikt/ds-react";
 import { useFeatureToggle } from "../../../../featuretoggle";
@@ -17,49 +16,39 @@ import moment from "moment";
 import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
 
 const gyldigeFakturaStatuser = [
-  FakturaStatus.BESTILT,
-  FakturaStatus.FEIL,
-  FakturaStatus.MANGLENDE_INNBETALING,
-  FakturaStatus.INNE_I_OEBS,
+  fakturaserierTypes.FakturaStatus.BESTILT,
+  fakturaserierTypes.FakturaStatus.FEIL,
+  fakturaserierTypes.FakturaStatus.MANGLENDE_INNBETALING,
+  fakturaserierTypes.FakturaStatus.INNE_I_OEBS,
 ];
 
 const Fakturainformasjon = () => {
   const dispatch = useDispatch();
   const visReferanseEnabled = useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE);
-  const { fakturainformasjon } = useSelector((state) => state) as any;
+  const fakturaserier = useSelector(fakturaserierSelectors.FakturaserierSelector);
   const fakturaserieReferanseFraBehandling = useSelector((state) =>
     behandlingsresultatSelectors.fakturaserieReferanseSelector(state)
   );
 
   useEffect(() => {
     if (fakturaserieReferanseFraBehandling) {
-      dispatch(fakturainformasjonOperations.hentFakturaserier(fakturaserieReferanseFraBehandling));
+      dispatch(fakturaserierOperations.hentFakturaserier(fakturaserieReferanseFraBehandling));
     }
   }, [fakturaserieReferanseFraBehandling]);
 
-  if (
-    Utils._isEmpty(fakturainformasjon.data) ||
-    fakturainformasjon.status !== STATUS.OK ||
-    fakturainformasjon.data.status !== undefined
-  ) {
+  if (Utils._isEmpty(fakturaserier.data) || fakturaserier.status !== STATUS.OK) {
     return null;
   }
 
-  if (fakturainformasjon.data.violations) {
-    return fakturainformasjon.data.violations.map((violation: any) => (
-      <Nav.Row key={violation}>{violation.message}</Nav.Row>
-    ));
-  }
-
-  const alleFakturaer = fakturainformasjon.data
-    .reduce((acc: any, item: any) => {
-      if (item.faktura && item.faktura.length > 0) {
-        acc.push(...item.faktura);
+  const alleFakturaer = fakturaserier.data
+    .reduce((fakturaer: fakturaserierTypes.Faktura[], fakturaserie) => {
+      if (fakturaserie.faktura && fakturaserie.faktura.length > 0) {
+        fakturaer.push(...fakturaserie.faktura);
       }
-      return acc;
+      return fakturaer;
     }, [])
-    .filter((f: any) => gyldigeFakturaStatuser.includes(f.status))
-    .sort((a: any, b: any) => moment(b.sistOppdatert).diff(moment(a.sistOppdatert)));
+    .filter((faktura) => gyldigeFakturaStatuser.includes(faktura.status))
+    .sort((a, b) => moment(b.sistOppdatert).diff(moment(a.sistOppdatert)));
 
   return (
     <Nav.Container fluid className="fakturainformasjon">
@@ -86,8 +75,8 @@ const Fakturainformasjon = () => {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {alleFakturaer.map((faktura: any) => (
-                  <Faktura key={faktura.id} faktura={faktura} />
+                {alleFakturaer.map((faktura) => (
+                  <Faktura key={faktura.fakturaReferanse} faktura={faktura} />
                 ))}
               </Table.Body>
             </Table>
