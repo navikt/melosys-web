@@ -15,12 +15,13 @@ export interface FattVedtakEOSReqDto {
 
 export interface FattVedtakFTRLReqDto {
   behandlingsresultatTypeKode: string;
-  vedtakstype: string | null;
-  innledningFritekst: string | null;
-  begrunnelseFritekst: string | null;
-  trygdeavgiftFritekst: string | null;
-  kopiMottakere: KopiMottaker[];
-  nyVurderingBakgrunn: string | null | undefined;
+  vedtakstype: string;
+  innledningFritekst?: string | null;
+  begrunnelseFritekst?: string | null;
+  trygdeavgiftFritekst?: string | null;
+  kopiMottakere?: KopiMottaker[];
+  nyVurderingBakgrunn?: string | null;
+  opphoerDato?: string | null;
 }
 
 export type FattVedtakTrygdeavtaleReqDto = {
