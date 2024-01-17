@@ -42,7 +42,7 @@ const Fakturainformasjon = () => {
 
   const alleFakturaer = fakturaserier.data
     .reduce((fakturaer: fakturaserierTypes.Faktura[], fakturaserie) => {
-      if (fakturaserie.faktura && fakturaserie.faktura.length > 0) {
+      if (!Utils._isEmpty(fakturaserie.faktura && fakturaserie.faktura.length > 0)) {
         fakturaer.push(...fakturaserie.faktura);
       }
       return fakturaer;

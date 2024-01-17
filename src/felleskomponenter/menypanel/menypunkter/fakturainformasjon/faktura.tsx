@@ -13,7 +13,7 @@ interface FakturaProps {
 
 const fakturastatusMap = new Map<fakturaserierTypes.FakturaStatus, { farge: string; beskrivelse: string }>([
   [fakturaserierTypes.FakturaStatus.BESTILT, { farge: "green", beskrivelse: "Bestilt" }],
-  [fakturaserierTypes.FakturaStatus.INNE_I_OEBS, { farge: "green", beskrivelse: "Inne i oebs" }],
+  [fakturaserierTypes.FakturaStatus.INNE_I_OEBS, { farge: "green", beskrivelse: "Inne i OeBS" }],
   [fakturaserierTypes.FakturaStatus.MANGLENDE_INNBETALING, { farge: "red", beskrivelse: "Manglende innbetaling" }],
   [fakturaserierTypes.FakturaStatus.FEIL, { farge: "red", beskrivelse: "Feil" }],
 ]);
