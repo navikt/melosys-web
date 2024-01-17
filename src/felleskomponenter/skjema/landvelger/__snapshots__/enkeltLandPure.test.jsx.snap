@@ -4,7 +4,7 @@ exports[`EnkeltLandPure > snapshot test 1`] = `
 <div>
   <div>
     <div
-      class="skjemaelement landliste__linje__input"
+      class="skjemaelement landliste__linje__input "
     >
       <label
         class="skjemaelement__label"
