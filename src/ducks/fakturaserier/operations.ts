@@ -19,6 +19,6 @@ export function hentFakturaserier(fakturaserieReferanse: string) {
   });
 }
 
-export function resetFakturaInformasjon() {
-  return Actions.resetFakturaInformasjon();
+export function resetFakturaserier() {
+  return Actions.resetFakturaserier();
 }

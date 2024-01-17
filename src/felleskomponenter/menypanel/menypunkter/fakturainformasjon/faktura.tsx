@@ -1,53 +1,22 @@
 /* eslint-disable */
-import { useEffect, useState } from "react";
-import * as Api from "../../../../services/api";
+import { useState } from "react";
 import * as Utils from "../../../../utils";
 import { Table } from "@navikt/ds-react";
 import moment from "moment";
-import KopierbarTekst from "../../../kopierbarTekst";
 import { FakturaLinjeContainer } from "./fakturalinjecontainer";
 import { formatterDatoTilNorsk } from "../../../../utils/dato";
+import { fakturaserierTypes } from "../../../../ducks/fakturaserier";
 
 interface FakturaProps {
-  faktura: any;
+  faktura: fakturaserierTypes.Faktura;
 }
 
-enum FakturaStatus {
-  BESTILT = "BESTILT",
-  INNE_I_OEBS = "INNE_I_OEBS",
-  MANGLENDE_INNBETALING = "MANGLENDE_INNBETALING",
-  FEIL = "FEIL",
-}
-
-interface EksternFakturaStatus {
-  dato: string;
-  status: FakturaStatus;
-  fakturaBelop: number | null;
-  ubetaltBelop: number | null;
-  feilmelding: string | null;
-  fakturaNummer: string | null;
-}
-
-const Dott = ({ farge }: { farge: string }) => <div className={`dott ${farge}`} />;
-
-const FakturaStatusMapper = {
-  [FakturaStatus.BESTILT]: {
-    icon: <Dott farge="green" />,
-    beskrivelse: "Bestilt",
-  },
-  [FakturaStatus.INNE_I_OEBS]: {
-    icon: <Dott farge="green" />,
-    beskrivelse: "Inne i oebs",
-  },
-  [FakturaStatus.MANGLENDE_INNBETALING]: {
-    icon: <Dott farge="red" />,
-    beskrivelse: "Manglende innbetaling",
-  },
-  [FakturaStatus.FEIL]: {
-    icon: <Dott farge="red" />,
-    beskrivelse: "Feil",
-  },
-};
+const fakturastatusMap = new Map<fakturaserierTypes.FakturaStatus, { farge: string; beskrivelse: string }>([
+  [fakturaserierTypes.FakturaStatus.BESTILT, { farge: "green", beskrivelse: "Bestilt" }],
+  [fakturaserierTypes.FakturaStatus.INNE_I_OEBS, { farge: "green", beskrivelse: "Inne i OeBS" }],
+  [fakturaserierTypes.FakturaStatus.MANGLENDE_INNBETALING, { farge: "red", beskrivelse: "Manglende innbetaling" }],
+  [fakturaserierTypes.FakturaStatus.FEIL, { farge: "red", beskrivelse: "Feil" }],
+]);
 
 const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
   const fraDato = new Date(periodeFra);
@@ -63,18 +32,20 @@ const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
 };
 
 export const Faktura = ({ faktura }: FakturaProps) => {
-  const [nyesteFakturaStatus] = useState<EksternFakturaStatus | undefined>(
-    faktura.eksternFakturaStatus?.slice().sort((a: any, b: any) => moment(b.dato).diff(moment(a.dato)))[0]
+  const [nyesteFakturaStatus] = useState<fakturaserierTypes.FakturaTilbakemelding | undefined>(
+    faktura.eksternFakturaStatus?.slice().sort((a, b) => moment(b.dato).diff(moment(a.dato)))[0]
   );
 
+  const fakturastatus = fakturastatusMap.get(faktura.status);
+
   return (
-    <Table.ExpandableRow key={faktura.id} content={<FakturaLinjeContainer faktura={{ ...faktura }} />}>
+    <Table.ExpandableRow key={faktura.fakturaReferanse} content={<FakturaLinjeContainer faktura={faktura} />}>
       <Table.DataCell>{formatterDatoTilNorsk(faktura.sistOppdatert)}</Table.DataCell>
       <Table.DataCell>{mapPeriodeTilKvartalString(faktura.periodeFra, faktura.periodeTil)}</Table.DataCell>
       <Table.DataCell>
         <div className="faktura_status_wrapper">
-          {FakturaStatusMapper[faktura.status as FakturaStatus]?.icon}
-          {FakturaStatusMapper[faktura.status as FakturaStatus]?.beskrivelse}
+          <div className={`dott ${fakturastatus?.farge || ""}`} />
+          {fakturastatus?.beskrivelse}
         </div>
       </Table.DataCell>
       <Table.DataCell>{Utils.formaterTilNorskBelop(nyesteFakturaStatus?.ubetaltBelop) || "-"}</Table.DataCell>

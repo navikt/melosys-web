@@ -1,12 +1,13 @@
 import { Table } from "@navikt/ds-react";
 import KopierbarTekst from "../../../kopierbarTekst";
 import * as Utils from "../../../../utils";
+import { fakturaserierTypes } from "../../../../ducks/fakturaserier";
 
-interface FakturaLinjeProps {
-  faktura: any;
+interface FakturaLinjeContainerProps {
+  faktura: fakturaserierTypes.Faktura;
 }
 
-export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeProps) => {
+export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeContainerProps) => {
   return (
     <div className="fakturalinje">
       <div className="fakturanr_wrapper">
@@ -28,7 +29,7 @@ export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeProps) => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {faktura.fakturaLinje.map((fakturaLinje: any) => (
+          {faktura.fakturaLinje.map((fakturaLinje) => (
             <Table.Row key={Utils._uuid()} shadeOnHover={false}>
               <Table.DataCell>
                 {fakturaLinje.beskrivelse.split("\n").map((line: string) => {
@@ -46,9 +47,7 @@ export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeProps) => {
               <Table.HeaderCell className="uten-border" />
               <Table.HeaderCell className="uten-border">Totalt</Table.HeaderCell>
               <Table.DataCell className="uten-border">
-                {Utils.formaterTilNorskBelop(
-                  faktura.fakturaLinje.map((linje: any) => linje.belop).reduce((a: any, b: any) => a + b)
-                )}
+                {Utils.formaterTilNorskBelop(faktura.fakturaLinje.map((linje) => linje.belop).reduce((a, b) => a + b))}
               </Table.DataCell>
             </Table.Row>
           )}

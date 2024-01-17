@@ -38,13 +38,7 @@ function lagState({
   fagsaker = { status: STATUS.OK, data: {} },
   feiletRespons = { status: STATUS.OK, data: {} },
   folketrygdenkodeverk = { status: STATUS.OK, data: {} },
-  fakturainformasjon = {
-    status: STATUS.OK,
-    data: {
-      fakturaserie: {},
-      fakturainfo: {},
-    },
-  },
+  fakturaserier = { status: STATUS.OK, data: {} },
   journalforing = { status: STATUS.OK, data: {} },
   kontroll = { status: STATUS.OK, data: {} },
   landkoder = { status: STATUS.OK, data: [] },
@@ -80,7 +74,7 @@ function lagState({
     fagsaker,
     feiletRespons,
     folketrygdenkodeverk,
-    fakturainformasjon,
+    fakturaserier,
     kontroll,
     journalforing,
     landkoder,
