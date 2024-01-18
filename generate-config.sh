@@ -16,7 +16,7 @@ while IFS='=' read -r key value
 do
   # Hopp over tomme linjer og linjer som starter med #
   if [ ! -z "$key" ] && [ "${key#\#}" = "$key" ]; then
-    # Legg til miljøvariabelen til config.js
+    # Legg til miljøvariabelen til env-config.js
     echo "  $key: '$value'," >> /usr/share/nginx/html/env-config.js
   fi
 done < "$ENV_FILE"

@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const dotenv = require("dotenv");
 
-const envFileName = process.argv[2] || ".env.local";
+const envFileName = process.argv[2] || ".local.env";
 const envPath = path.resolve(process.cwd(), envFileName);
 
 const envConfig = dotenv.parse(fs.readFileSync(envPath));
