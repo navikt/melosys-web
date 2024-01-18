@@ -23,7 +23,7 @@ export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeContainerProps) =
         {(Utils._isEmpty(faktura.eksternFakturaNummer) || Utils._isNil(faktura.eksternFakturaNummer)) && (
           <Nav.AlertStripeInfo>
             Fakturanummer er bare kjent i Melosys når det gjelder en manglende innbetaling, du kan likevel finne faktura
-            i OeBS ved å søke på bruker"
+            i OeBS ved å søke på bruker
           </Nav.AlertStripeInfo>
         )}
       </div>
