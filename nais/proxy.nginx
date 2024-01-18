@@ -55,6 +55,6 @@ server {
   }
 
   location = / {
-    rewrite ^.+ http://$host/melosys/ permanent;
+    rewrite ^.+ https://$host/melosys/ permanent;
   }
 }
