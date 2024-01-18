@@ -49,10 +49,10 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 3000,
     proxy: {
-      "/api": `http://localhost:${process.env.VITE_LOCAL_API_PORT}`,
-      "/graphql": `http://localhost:${process.env.VITE_LOCAL_API_PORT}`,
+      "/api": `http://localhost:${process.env.LOCAL_API_PORT}`,
+      "/graphql": `http://localhost:${process.env.LOCAL_API_PORT}`,
       "/melosys/api": {
-        target: `http://localhost:${process.env.VITE_LOCAL_API_PORT}`,
+        target: `http://localhost:${process.env.LOCAL_API_PORT}`,
         rewrite: (urlpath) => urlpath.replace(/^\/melosys/, ""),
       },
       "/trygdeavtale-flyt": {
