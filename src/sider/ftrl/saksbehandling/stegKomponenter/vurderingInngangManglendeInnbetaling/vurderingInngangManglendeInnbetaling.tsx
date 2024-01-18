@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
@@ -13,6 +13,7 @@ import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../..
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import * as Utils from "../../../../../utils";
 import { inngangSteg, vedtakOpphoerSteg } from "../../initialStegArrayManglendeInnbetaling";
+import { FellesHandlersContext } from "../../../../../contexts";
 
 interface Props {
   bekreft: () => void;
@@ -24,12 +25,7 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-
-  const initialValues = {
-    fullstendigManglendeInnbetaling: Utils.streng.boolTilUppercaseStreng(
-      useSelector(oppsummertfaktaSelectors.FullstendigManglendeInnbetalingSelector)
-    ),
-  };
+  const { behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
   const {
     control,
@@ -38,7 +34,11 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
   } = useForm({
     resolver: yupResolver(vurdering_inngang_manglende_innbetaling),
     mode: "all",
-    defaultValues: initialValues as FieldValues,
+    defaultValues: {
+      fullstendigManglendeInnbetaling: Utils.streng.boolTilUppercaseStreng(
+        useSelector(oppsummertfaktaSelectors.FullstendigManglendeInnbetalingSelector)
+      ),
+    } as FieldValues,
   });
   const formValues = watch();
 
@@ -57,6 +57,17 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
       );
     }
   }, [formIsValid]);
+
+  useEffect(() => {
+    if (!behandlingOppfriskes && formIsValid) {
+      dispatch(
+        oppsummertfaktaOperations.sendInnbetalingsstatus(
+          behandlingID,
+          Utils.streng.uppercaseStrengTilBool(formValues.fullstendigManglendeInnbetaling)
+        )
+      );
+    }
+  }, [behandlingOppfriskes]);
 
   if (!aktivtSteg) return null;
 

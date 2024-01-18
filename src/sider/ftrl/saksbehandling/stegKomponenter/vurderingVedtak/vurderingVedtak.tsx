@@ -37,6 +37,7 @@ import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/me
 
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
+const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
 const { INNVILGELSE_FOLKETRYGDLOVEN, VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
 const { MEDLEM_I_FOLKETRYGDEN, DELVIS_OPPHØRT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const VEDTAK_OPPHOER = "Vedtak om opphør av frivillig medlemskap";
@@ -221,8 +222,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const getVedtakstype = () => {
     if (lagretVedtakstype) return lagretVedtakstype;
-    if (erNyVurdering || erManglendeInnbetalingTrygdeavgift) return MKV.Koder.vedtakstyper.ENDRINGSVEDTAK;
-    return MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK;
+    if (erManglendeInnbetalingTrygdeavgift) return vedtakOpphøres ? OPPHØRSVEDTAK : ENDRINGSVEDTAK;
+    if (erNyVurdering) return ENDRINGSVEDTAK;
+    return FØRSTEGANGSVEDTAK;
   };
 
   const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
@@ -380,8 +382,11 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
               control={control}
               className="vedtak_valg_select"
             >
-              <option key={VEDTAK_OPPHOER} value={VEDTAK_OPPHOER} label={VEDTAK_OPPHOER} />
-              <option key={VEDTAK_ENDRET} value={VEDTAK_ENDRET} label={VEDTAK_ENDRET} />
+              {medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === OPPHØRT) ? (
+                <option key={VEDTAK_OPPHOER} value={VEDTAK_OPPHOER} label={VEDTAK_OPPHOER} />
+              ) : (
+                <option key={VEDTAK_ENDRET} value={VEDTAK_ENDRET} label={VEDTAK_ENDRET} />
+              )}
             </Forms.Select>
           </Nav.Column>
         </Nav.Row>
