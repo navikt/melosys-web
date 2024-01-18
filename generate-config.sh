@@ -1,4 +1,5 @@
 #!/bin/sh
+# Bygg opp en env-config.js-fil basert på miljøvariabler fra .env-filen
 
 ENV_FILE="/app/.${ENVIRONMENT_NAME:-prod}.env"
 

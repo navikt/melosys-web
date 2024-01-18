@@ -1,3 +1,4 @@
+// Bygg opp en env-config.js-fil basert på miljøvariabler fra .env-filen
 const fs = require("fs");
 const path = require("path");
 const dotenv = require("dotenv");
