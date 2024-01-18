@@ -40,6 +40,9 @@ server {
   }
 
   location /melosys/env-config.js {
+    add_header Cache-Control 'no-store';
+    add_header Cache-Control 'no-cache';
+    expires 0;
     try_files $uri /env-config.js;
   }
 
