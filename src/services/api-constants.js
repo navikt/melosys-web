@@ -1,9 +1,9 @@
 // from .env or .env.local
 
-export const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}`;
+export const API_BASE_URL = `${window.env.VITE_API_BASE_URL}`;
 
-export const TRYGDEAVTALE_FLYT_BASE_URL = `${import.meta.env.VITE_TRYGDEAVTALE_FLYT_BASE_URL}`;
-export const FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL = `${import.meta.env.VITE_FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL}`;
+export const TRYGDEAVTALE_FLYT_BASE_URL = `${window.env.VITE_TRYGDEAVTALE_FLYT_BASE_URL}`;
+export const FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL = `${window.env.VITE_FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL}`;
 
 export const ANMODNINGSPERIODER = "anmodningsperioder";
 export const AVSLAG = "avslag";

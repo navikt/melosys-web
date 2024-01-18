@@ -1,7 +1,7 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
-const GRAPHQL_BASE_URL = `${import.meta.env.VITE_GRAPHQL_URL}`;
+const GRAPHQL_BASE_URL = `${window.env.VITE_GRAPHQL_URL}`;
 
 const httpLink = createHttpLink({
   uri: GRAPHQL_BASE_URL,

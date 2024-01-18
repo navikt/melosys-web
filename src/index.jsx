@@ -22,7 +22,7 @@ import Routing from "./routing";
 
 const SideLoadingFailMessage = <p>Beklager, kunne ikke laste inn siden.</p>;
 
-const environment = import.meta.env.VITE_ENVIRONMENT;
+const environment = window.env.VITE_ENVIRONMENT;
 const isDevelopmentProfile = environment === "local";
 
 const sentryIntegrations = [
