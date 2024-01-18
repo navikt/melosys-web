@@ -15,6 +15,12 @@ declare module "AppTypes" {
   }
 }
 
+interface Window {
+  env: {
+    [key: string]: string;
+  };
+}
+
 declare module "Domene" {
   export type Periode = import("./@types").Periode;
   export type DokumentOversikt = import("./@types").DokumentOversikt;
