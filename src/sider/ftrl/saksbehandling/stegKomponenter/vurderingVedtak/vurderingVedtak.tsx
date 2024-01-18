@@ -382,8 +382,11 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
               control={control}
               className="vedtak_valg_select"
             >
-              <option key={VEDTAK_OPPHOER} value={VEDTAK_OPPHOER} label={VEDTAK_OPPHOER} />
-              <option key={VEDTAK_ENDRET} value={VEDTAK_ENDRET} label={VEDTAK_ENDRET} />
+              {medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === OPPHØRT) ? (
+                <option key={VEDTAK_OPPHOER} value={VEDTAK_OPPHOER} label={VEDTAK_OPPHOER} />
+              ) : (
+                <option key={VEDTAK_ENDRET} value={VEDTAK_ENDRET} label={VEDTAK_ENDRET} />
+              )}
             </Forms.Select>
           </Nav.Column>
         </Nav.Row>
