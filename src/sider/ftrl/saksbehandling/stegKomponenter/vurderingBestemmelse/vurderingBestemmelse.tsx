@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import MKV from "../../../../../melosyskodeverk";
@@ -59,13 +59,20 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, Begrunnelse>>(new Map());
   const [muligeVilkår, setMuligeVilkår] = useState<VilkårOgBegrunnelser[]>([]);
   const [formIsValid, setFormIsValid] = useState(false);
+  const [harSkjeddEndringer, setHarSkjeddEndringer] = useState(false);
 
   const bestemmelseIkkeStøttetValgt = ikkeStøttedeBestemmelser?.some((bestemmelse) => bestemmelse === valgtBestemmelse);
+  const stegErGyldig = formIsValid && !harSkjeddEndringer;
 
   const initialiserSteg = async () => {
     await Api.MedlemAvFolketrygden.Bestemmelser.hentMuligeBestemmelser(behandlingstema).then((response) => {
       setStøttedeBestemmelser(response.støttedeBestemmelser);
       setIkkeStøttedeBestemmelser(response.ikkeStøttedeBestemmelser);
+      setValgtBestemmelse(
+        response.støttedeBestemmelser.some((element) => element.bestemmelse === lagretBestemmelse)
+          ? lagretBestemmelse
+          : ""
+      );
     });
 
     lagredeVilkår.forEach((vilkår: Api.Vilkar.Vilkaar) => {
@@ -152,14 +159,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   }, [valgteBegrunnelser]);
 
   useEffect(() => {
-    oppdaterStatus(formIsValid);
-  }, [formIsValid]);
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
 
-  const debouncedOppdaterOgLagreVilkår = useCallback(
-    Utils._debounce((vilkår) => dispatch(vilkarOperations.send(behandlingID, vilkår)), 500),
-    []
-  );
-  const oppdaterOgLagreVilkår = (debounce: boolean = false) => {
+  const oppdaterOgLagreVilkår = () => {
     const data = Array.from(valgteVilkår, ([vilkår, verdi]) => {
       const valgtBegrunnelse = valgteBegrunnelser.get(`${vilkår}_begrunnelser`);
       return {
@@ -169,21 +172,19 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         begrunnelseFritekst: valgtBegrunnelse?.begrunnelseFritekst,
       };
     });
-    if (debounce) {
-      debouncedOppdaterOgLagreVilkår(data);
-    } else {
-      dispatch(vilkarOperations.send(behandlingID, data));
-    }
+    return dispatch(vilkarOperations.send(behandlingID, data));
   };
 
   const handleEndreBestemmelse = (nyBestemmelse: string) => {
+    setHarSkjeddEndringer(true);
     setValgtBestemmelse(nyBestemmelse);
     setValgteVilkår(new Map());
     setValgteBegrunnelser(new Map());
-    dispatch(medlemskapsperioderOperations.lagreBestemmelse(behandlingID, nyBestemmelse));
+    if (!Utils._isEmpty(lagredeVilkår)) dispatch(vilkarOperations.send(behandlingID, []));
   };
 
   const handleEndreVilkår = (event: ChangeEvent<HTMLInputElement>) => {
+    setHarSkjeddEndringer(true);
     const vilkårKode = event.target.name;
     const vilkårSvar = event.target.value;
     setValgteVilkår(new Map(valgteVilkår.set(vilkårKode, vilkårSvar)));
@@ -191,15 +192,16 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       valgteBegrunnelser.delete(`${vilkårKode}_begrunnelser`);
       setValgteBegrunnelser(new Map(valgteBegrunnelser));
     }
-    oppdaterOgLagreVilkår();
   };
 
   const handleEndreBegrunnelseKode = (event: ChangeEvent<HTMLSelectElement>) => {
+    setHarSkjeddEndringer(true);
     setValgteBegrunnelser(new Map(valgteBegrunnelser.set(event.target.name, { begrunnelseKode: event.target.value })));
-    oppdaterOgLagreVilkår();
   };
 
   const handleEndreBegrunnelseFritekst = (valgtBegrunnelse: string, begrunnelseFritekst: string) => {
+    // TODO: denne trigges med en gang du går inn i fritekstfeltet
+    setHarSkjeddEndringer(true);
     setValgteBegrunnelser(
       new Map(
         valgteBegrunnelser.set(valgtBegrunnelse, {
@@ -208,11 +210,13 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         })
       )
     );
-    oppdaterOgLagreVilkår(true);
   };
 
   const handleBekreft = async () => {
-    await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperioderForslag(behandlingID));
+    await oppdaterOgLagreVilkår();
+    await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperioderForslag(behandlingID, valgtBestemmelse));
+    setHarSkjeddEndringer(false);
+    oppdaterStatus(true);
     bekreft();
   };
 

@@ -65,16 +65,6 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         },
       };
     }
-    case Types.OK_BESTEMMELSE: {
-      return {
-        ...state,
-        status: STATUS.OK,
-        data: {
-          ...state.data,
-          bestemmelse: action.data?.bestemmelse || "",
-        },
-      };
-    }
     case Types.RESET:
       return { ...initialState };
     default:

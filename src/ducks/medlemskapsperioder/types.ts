@@ -4,13 +4,11 @@ export const OK_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK";
 export const OK_OPPRETT_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK_OPPRETT";
 export const OK_OPPDATER_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK_OPPDATER";
 export const OK_SLETT_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK_SLETT";
-export const OK_BESTEMMELSE = "medlemskapsperioder/bestemmelse/OK";
 export const FEILET = "medlemskapsperioder/FEILET";
 export const PENDING = "medlemskapsperioder/PENDING";
 export const RESET = "medlemskapsperioder/RESET";
 
 export type Data = {
-  bestemmelse?: string;
   medlemskapsperioder?: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[];
 };
 
@@ -49,11 +47,6 @@ export interface OkSlettMedlemskapsperiodeAction {
   };
 }
 
-export interface OkBestemmelseAction {
-  type: typeof OK_BESTEMMELSE;
-  data: Api.MedlemAvFolketrygden.Bestemmelser.HentBestemmelseResponse;
-}
-
 export type Action =
   | FeiletAction
   | PendingAction
@@ -61,5 +54,4 @@ export type Action =
   | OkMedlemskapsperiodeAction
   | OkOpprettMedlemskapsperiodeAction
   | OkOppdaterMedlemskapsperiodeAction
-  | OkSlettMedlemskapsperiodeAction
-  | OkBestemmelseAction;
+  | OkSlettMedlemskapsperiodeAction;
