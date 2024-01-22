@@ -161,7 +161,7 @@ export const tomHentMuligeMottakereResDto = (): HentMuligeMottakereResDto => ({
 export type HentMuligeMottakereReqDto = {
   produserbartdokument: string;
   orgnr: string | null;
-  institusjonID: string | undefined | null;
+  institusjonID?: string | null;
 };
 
 export type HentMuligeMottakereNorskMyndighetReqDto = {
