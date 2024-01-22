@@ -131,14 +131,14 @@ function bareOpphørtePerioder(medlemskapsperioder: MedlemskapsperiodeProp[], be
   return !finnesInnvilgetPeriode;
 }
 
-function andrePerioderEtterOpphørtPeriode(medlemskapsperioder: MedlemskapsperiodeProp[], behandlingstype: string) {
+function harAndrePerioderEtterOpphørtPeriode(medlemskapsperioder: MedlemskapsperiodeProp[], behandlingstype: string) {
   if (!erManglendeInnbetaling(behandlingstype)) return false;
 
-  const perioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
-  const tidligsteOpphørtePeriode = perioder.findIndex(opphørtePerioder);
-  const alleEtterfølgendePerioderErOpphørt = perioder.slice(tidligsteOpphørtePeriode).every(opphørtePerioder);
+  const sortertePerioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
+  const førsteOpphørtePeriodeIndeks = sortertePerioder.findIndex(opphørtePerioder);
+  if (førsteOpphørtePeriodeIndeks === -1) return false;
 
-  return !alleEtterfølgendePerioderErOpphørt;
+  return sortertePerioder.slice(førsteOpphørtePeriodeIndeks).some((periode) => !opphørtePerioder(periode));
 }
 
 function finnesIkkeOpphørtePerioder(medlemskapsperioder: MedlemskapsperiodeProp[], behandlingstype: string) {
@@ -213,7 +213,7 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.BARE_OPPHØRTE_PERIODER;
   }
 
-  if (manglendeInnbetalingToggleEnabled && andrePerioderEtterOpphørtPeriode(medlemskapsperioder, behandlingstype)) {
+  if (manglendeInnbetalingToggleEnabled && harAndrePerioderEtterOpphørtPeriode(medlemskapsperioder, behandlingstype)) {
     return TypeFeilmelding.OPPHØRT_PERIODE_FØR_ANNEN_PERIODE;
   }
 

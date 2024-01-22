@@ -60,13 +60,11 @@ const mapTilMedlemskapsperiodeProps = (
 });
 
 const mapInitialMedlemskapsperioder = (
-  medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[] | undefined
+  medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]
 ): MedlemskapsperiodeProp[] =>
-  medlemskapsperioder
-    ? [...medlemskapsperioder]
-        .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b) || (a.innvilgelsesResultat === AVSLAATT ? -1 : 1))
-        .map(mapTilMedlemskapsperiodeProps)
-    : [];
+  [...medlemskapsperioder]
+    .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b) || (a.innvilgelsesResultat === AVSLAATT ? -1 : 1))
+    .map(mapTilMedlemskapsperiodeProps);
 
 const komponentState = (state: RootState) => ({
   lagredeMedlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
@@ -137,7 +135,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     if (aktivtSteg) {
       resetMedlemskapsperioder(mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
       if (!formIsValid) {
-        lagredeMedlemskapsperioder?.forEach((_periode, index) => {
+        lagredeMedlemskapsperioder.forEach((_periode, index) => {
           trigger(`medlemskapsperioder[${index}].fomDato`);
           trigger(`medlemskapsperioder[${index}].tomDato`);
         });
@@ -243,7 +241,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     <div className="vurderingPerioder">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Medlemskapsperioder</Nav.Typo.Innholdstittel>
 
-      <Nav.Typo.Normaltekst>{hentLabelTekst(behandlingstype)}</Nav.Typo.Normaltekst>
+      <Nav.Typo.Normaltekst className="labelTekst">{hentLabelTekst(behandlingstype)}</Nav.Typo.Normaltekst>
 
       <Medlemskapsperioder
         trygdedekninger={trygdedekninger}

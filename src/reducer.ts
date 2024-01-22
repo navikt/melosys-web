@@ -35,7 +35,7 @@ import vilkarReducer from "./ducks/vilkar";
 import vedtakReducer from "./ducks/vedtak";
 
 import customFormReducer from "./ducks/form";
-import fakturainformasjonReducer from "./ducks/fakturainformasjon";
+import fakturaserierReducers from "./ducks/fakturaserier";
 import featureToggleReducers from "./ducks/featuretoggle";
 
 const createRootReducer = (history: History) =>
@@ -60,7 +60,7 @@ export const rootReducer = {
   fagsaker: fagsakerReducer,
   feiletRespons: feiletResponseReducer,
   folketrygdenkodeverk: folketrygdenkodeverkReducer,
-  fakturainformasjon: fakturainformasjonReducer,
+  fakturaserier: fakturaserierReducers,
   journalforing: journalforingReducer,
   kontroll: kontrollReducer,
   landkoder: landkoderReducer,
