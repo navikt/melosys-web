@@ -38,6 +38,7 @@ jobs:
   build:
     name: Build
     needs: check_docker_image_exists
+    if: needs.check_docker_image_exists.outputs.exists != 'true'
     runs-on: ubuntu-latest-8-cores
     steps:
       - name: Checkout
