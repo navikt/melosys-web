@@ -17,8 +17,8 @@ describe("Legend", () => {
     props.redigerbart = false;
     renderWithProviders(<Legend {...props} />);
 
-    expect(screen.queryByRole("button", { name: /rediger/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /slett/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "rediger" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "slett" })).not.toBeInTheDocument();
   });
 
   it("symbolsynlighet-prop satt til true viser rediger og slett knapp", () => {
@@ -26,16 +26,16 @@ describe("Legend", () => {
     props.redigerbart = true;
     renderWithProviders(<Legend {...props} />);
 
-    expect(screen.getByRole("button", { name: /rediger/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /slett/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Rediger" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Slett" })).toBeInTheDocument();
   });
 
   it("symbolsynlighet-prop satt til false viser rediger og slett knapp", () => {
     props.symbolsynlighet = { pencil: false, bin: false };
     renderWithProviders(<Legend {...props} />);
 
-    expect(screen.queryByRole("button", { name: /rediger/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /slett/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Rediger" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Slett" })).not.toBeInTheDocument();
   });
 
   it("rendrer TittelIkon når oppgitt", () => {
