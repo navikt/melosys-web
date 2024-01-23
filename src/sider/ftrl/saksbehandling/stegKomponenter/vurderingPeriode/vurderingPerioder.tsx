@@ -122,7 +122,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   );
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.medlemskapsperioder,
-    lagredeMedlemskapsperioder.map(mapTilMedlemskapsperiodeProps),
     behandlingstype,
     begrensePeriodeVedtakToggleEnabled,
     manglendeInnbetalingToggleEnabled,

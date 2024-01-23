@@ -108,41 +108,30 @@ const finnesOverlappIInnvilgedePerioder = (medlemskapsperioder: Medlemskapsperio
         )
     );
 };
-
-const opphørtPeriodeOverlapperInnvilgetPeriode = (
-  medlemskapsperioder: MedlemskapsperiodeProp[],
-  lagredeMedlemskapsperioder: MedlemskapsperiodeProp[]
-) =>
-  medlemskapsperioder
+const finnesOverlappIOpphørtePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>
+  [...medlemskapsperioder]
     ?.filter(opphørtePerioder)
-    .some((opphørtPeriode) =>
-      lagredeMedlemskapsperioder
-        ?.filter(innvilgedePerioder)
-        .some((lagretInnvilgetPeriode) =>
-          Utils.dato.perioderOverlapper(
-            opphørtPeriode.fomDato,
-            opphørtPeriode.tomDato,
-            lagretInnvilgetPeriode.fomDato,
-            lagretInnvilgetPeriode.tomDato
-          )
+    .sort(Utils.dato.sorterEtterNorskFomDato)
+    .some((periode, index, perioder) =>
+      perioder
+        .slice(index + 1)
+        .some((nestePeriode) =>
+          Utils.dato.perioderOverlapper(periode.fomDato, periode.tomDato, nestePeriode.fomDato, nestePeriode.tomDato)
         )
     );
 
-const opphørtPeriodeOverlapperOpphørtPeriode = (
-  medlemskapsperioder: MedlemskapsperiodeProp[],
-  lagredeMedlemskapsperioder: MedlemskapsperiodeProp[]
-) =>
+const opphørtPeriodeOverlapperInnvilgetPeriode = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>
   medlemskapsperioder
     ?.filter(opphørtePerioder)
     .some((opphørtPeriode) =>
-      lagredeMedlemskapsperioder
-        ?.filter(opphørtePerioder)
-        .some((lagretOpphørtPeriode) =>
+      medlemskapsperioder
+        ?.filter(innvilgedePerioder)
+        .some((innvilgetPeriode) =>
           Utils.dato.perioderOverlapper(
             opphørtPeriode.fomDato,
             opphørtPeriode.tomDato,
-            lagretOpphørtPeriode.fomDato,
-            lagretOpphørtPeriode.tomDato
+            innvilgetPeriode.fomDato,
+            innvilgetPeriode.tomDato
           )
         )
     );
@@ -213,8 +202,8 @@ enum TypeFeilmelding {
   IKKE_STØTTET_I_MELOSYS = "IKKE_STØTTET_I_MELOSYS",
   INGEN_SLUTTDATO = "INGEN_SLUTTDATO",
   OVERLAPP_I_INNVILGEDE_PERIODER = "OVERLAPP_I_INNVILGEDE_PERIODER",
+  OVERLAPP_I_OPPHØRTE_PERIODER = "OVERLAPP_I_OPPHØRTE_PERIODER",
   OVERLAPP_OPPHØRT_INNVILGET = "OVERLAPP_OPPHØRT_INNVILGET",
-  OVERLAPP_OPPHØRT_OPPHØRT = "OVERLAPP_OPPHØRT_OPPHØRT",
   OPPHOLD_I_INNVILGEDE_PERIODER = "OPPHOLD_I_INNVILGEDE_PERIODER",
   SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER = "SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER",
   MEDLEMSKAPSPERIODE_STARTER_FØR_2023 = "MEDLEMSKAPSPERIODE_STARTER_FØR_2023",
@@ -225,7 +214,6 @@ enum TypeFeilmelding {
 
 export function finnAktivFeilmelding(
   medlemskapsperioder: MedlemskapsperiodeProp[],
-  lagredeMedlemskapsperioder: MedlemskapsperiodeProp[],
   behandlingstype: string,
   begrensePeriodeVedtakToggleEnabled: boolean | undefined,
   manglendeInnbetalingToggleEnabled: boolean | undefined,
@@ -252,12 +240,12 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER;
   }
 
-  if (opphørtPeriodeOverlapperInnvilgetPeriode(medlemskapsperioder, lagredeMedlemskapsperioder)) {
-    return TypeFeilmelding.OVERLAPP_OPPHØRT_INNVILGET;
+  if (finnesOverlappIOpphørtePerioder(medlemskapsperioder)) {
+    return TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER;
   }
 
-  if (opphørtPeriodeOverlapperOpphørtPeriode(medlemskapsperioder, lagredeMedlemskapsperioder)) {
-    return TypeFeilmelding.OVERLAPP_OPPHØRT_OPPHØRT;
+  if (opphørtPeriodeOverlapperInnvilgetPeriode(medlemskapsperioder)) {
+    return TypeFeilmelding.OVERLAPP_OPPHØRT_INNVILGET;
   }
 
   if (finnesOppholdIInnvilgedePerioder(medlemskapsperioder)) {
@@ -301,7 +289,7 @@ export function feilMeldingBlokkerer(type?: string): boolean {
     case TypeFeilmelding.INGEN_SLUTTDATO:
     case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
     case TypeFeilmelding.OVERLAPP_OPPHØRT_INNVILGET:
-    case TypeFeilmelding.OVERLAPP_OPPHØRT_OPPHØRT:
+    case TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER:
     case TypeFeilmelding.OPPHOLD_I_INNVILGEDE_PERIODER:
     case TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023:
     case TypeFeilmelding.BARE_OPPHØRTE_PERIODER:
@@ -326,7 +314,7 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return OverlappIInnvilgedePerioder;
     case TypeFeilmelding.OVERLAPP_OPPHØRT_INNVILGET:
       return OverlappOpphørtInnvilgetPeriode;
-    case TypeFeilmelding.OVERLAPP_OPPHØRT_OPPHØRT:
+    case TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER:
       return OverlappOpphørtOpphørtPeriode;
     case TypeFeilmelding.OPPHOLD_I_INNVILGEDE_PERIODER:
       return OppholdIInnvilgedePerioder;
