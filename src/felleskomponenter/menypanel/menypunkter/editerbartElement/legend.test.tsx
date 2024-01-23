@@ -30,7 +30,7 @@ describe("Legend", () => {
     expect(screen.getByRole("button", { name: "Slett" })).toBeInTheDocument();
   });
 
-  it("symbolsynlighet-prop satt til false viser rediger og slett knapp", () => {
+  it("symbolsynlighet-prop satt til false viser ikke rediger og slett knapp", () => {
     props.symbolsynlighet = { pencil: false, bin: false };
     renderWithProviders(<Legend {...props} />);
 
