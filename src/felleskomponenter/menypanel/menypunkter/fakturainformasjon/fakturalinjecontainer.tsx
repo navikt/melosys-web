@@ -14,13 +14,11 @@ export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeContainerProps) =
       <div className="fakturanr_wrapper">
         Fakturanr:&nbsp;
         <KopierbarTekst hovertekst="">
-          {Utils._isEmpty(faktura.eksternFakturaNummer) || Utils._isNil(faktura.eksternFakturaNummer)
-            ? " - "
-            : faktura.eksternFakturaNummer}
+          {!faktura.eksternFakturaNummer ? " - " : faktura.eksternFakturaNummer}
         </KopierbarTekst>
       </div>
       <div className="fakturalinje">
-        {(Utils._isEmpty(faktura.eksternFakturaNummer) || Utils._isNil(faktura.eksternFakturaNummer)) && (
+        {!faktura.eksternFakturaNummer && (
           <Nav.AlertStripeInfo>
             Fakturanummer er bare kjent i Melosys når det gjelder en manglende innbetaling, du kan likevel finne faktura
             i OeBS ved å søke på bruker
