@@ -6,6 +6,10 @@ import { fileURLToPath, URL } from "node:url";
 import * as path from "path";
 import reactRefresh from "@vitejs/plugin-react-refresh";
 
+const LOCAL_API_PORT = 8080;
+const LOCAL_TRYGDEAVTALE_FLYT_PORT = 8088;
+const LOCAL_FAKTURERINGSKOMPONENTEN_PORT = 8084;
+
 export default defineConfig({
   base: "/melosys",
   // React JSX transform krever babel så i vite må man fortsatt importe
@@ -49,18 +53,18 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 3000,
     proxy: {
-      "/api": `http://localhost:${process.env.VITE_LOCAL_API_PORT}`,
-      "/graphql": `http://localhost:${process.env.VITE_LOCAL_API_PORT}`,
+      "/api": `http://localhost:${LOCAL_API_PORT}`,
+      "/graphql": `http://localhost:${LOCAL_API_PORT}`,
       "/melosys/api": {
-        target: `http://localhost:${process.env.VITE_LOCAL_API_PORT}`,
+        target: `http://localhost:${LOCAL_API_PORT}`,
         rewrite: (urlpath) => urlpath.replace(/^\/melosys/, ""),
       },
       "/trygdeavtale-flyt": {
-        target: "http://localhost:8088",
+        target: `http://localhost:${LOCAL_TRYGDEAVTALE_FLYT_PORT}`,
         rewrite: (urlpath) => urlpath.replace(/^\/trygdeavtale-flyt/, "/flyt"),
       },
       "/faktureringskomponenten": {
-        target: "http://localhost:8084",
+        target: `http://localhost:${LOCAL_FAKTURERINGSKOMPONENTEN_PORT}`,
         rewrite: (urlpath) => urlpath.replace(/^\/faktureringskomponenten/, ""),
       },
     },

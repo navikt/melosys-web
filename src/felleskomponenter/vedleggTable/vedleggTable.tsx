@@ -2,7 +2,6 @@ import { FysiskDokument } from "Domene";
 
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
 import FritekstvedleggRow from "./fritekstvedleggRow";
-import * as Nav from "../../navFrontend";
 import VedleggRow from "./vedleggRow";
 import "./vedleggTable.css";
 import { Table } from "@navikt/ds-react";
@@ -31,32 +30,34 @@ const VedleggTable = ({
   };
 
   return (
-    <>
-      <Nav.Typo.Element className="vedleggtable-label">{label}</Nav.Typo.Element>
+    <Table className="vedleggtable" size="small">
+      <Table.Header>
+        <Table.HeaderCell>{label}</Table.HeaderCell>
+        <Table.HeaderCell />
+        <Table.HeaderCell />
+      </Table.Header>
       {(valgteVedlegg.length > 0 || (fritekstvedlegg && fritekstvedlegg.length > 0)) && (
-        <Table>
-          <Table.Body>
-            {fritekstvedlegg?.map((vedlegg, index) => (
-              <FritekstvedleggRow
-                fritekstvedlegg={vedlegg}
-                redigerFritekstvedlegg={redigerFritekstvedlegg}
-                slettFritekstvedlegg={slettFritekstvedlegg}
-                key={vedlegg.tittel}
-                index={index}
-                lagFritekstPdfUrl={lagFritekstPdfUrl}
-              />
-            ))}
-            {valgteVedlegg.map((enkeltVedlegg) => (
-              <VedleggRow
-                key={enkeltVedlegg.id}
-                vedlegg={enkeltVedlegg}
-                slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
-              />
-            ))}
-          </Table.Body>
-        </Table>
+        <Table.Body>
+          {fritekstvedlegg?.map((vedlegg, index) => (
+            <FritekstvedleggRow
+              fritekstvedlegg={vedlegg}
+              redigerFritekstvedlegg={redigerFritekstvedlegg}
+              slettFritekstvedlegg={slettFritekstvedlegg}
+              key={vedlegg.tittel}
+              index={index}
+              lagFritekstPdfUrl={lagFritekstPdfUrl}
+            />
+          ))}
+          {valgteVedlegg.map((enkeltVedlegg) => (
+            <VedleggRow
+              key={enkeltVedlegg.id}
+              vedlegg={enkeltVedlegg}
+              slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
+            />
+          ))}
+        </Table.Body>
       )}
-    </>
+    </Table>
   );
 };
 

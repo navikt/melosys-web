@@ -9,4 +9,4 @@ export const BOOLSK_STRING = {
   USANN: "FALSE",
 };
 
-export const URL_BASENAME = import.meta.env.APP_PATH_PREFIX || "/melosys";
+export const URL_BASENAME = window.env.APP_PATH_PREFIX || "/melosys";

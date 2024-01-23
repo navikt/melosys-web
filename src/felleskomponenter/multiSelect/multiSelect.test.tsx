@@ -1,7 +1,6 @@
-import { shallow } from "enzyme";
-import Select from "react-select";
-
+import { fireEvent, screen } from "@testing-library/react";
 import MultiSelect from "./multiSelect";
+import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
 
 const props = {
   label: "Label",
@@ -15,36 +14,35 @@ const props = {
 };
 
 describe("MultiSelect", () => {
-  it("Props blir satt", () => {
-    const multiSelect = shallow(<MultiSelect {...props} />);
+  it("Props er satt", async () => {
+    renderWithProviders(<MultiSelect {...props} />);
 
-    const select = multiSelect.find(Select);
-    expect(select).toBeDefined();
-    expect(select.props().options).toMatchObject(props.options);
+    const select = screen.getByRole("textbox");
+    fireEvent.mouseDown(select);
+
+    for (let i = 0; i < props.options.length; i += 1) {
+      const option = props.options[i];
+      const optionElement = await screen.findByText(option.label);
+      expect(optionElement).toBeInTheDocument();
+    }
   });
 
-  it("Value blir satt", () => {
-    const multiSelect = shallow(<MultiSelect {...props} values={["DK"]} />);
+  it("Value er satt", () => {
+    renderWithProviders(<MultiSelect {...props} values={["DK"]} />);
 
-    const select = multiSelect.find(Select);
-    expect(select).toBeDefined();
-    expect(select.props().value).toMatchObject([{ value: "DK", label: "Danmark" }]);
+    expect(screen.getByText("Danmark")).toBeInTheDocument();
   });
 
-  it("Label vises", () => {
-    const multiSelect = shallow(<MultiSelect {...props} />);
+  it("Label er vist", () => {
+    renderWithProviders(<MultiSelect {...props} />);
 
-    const label = multiSelect.find("label");
-    expect(label).toBeDefined();
-    expect(label.render().html()).toEqual(props.label);
+    expect(screen.getByText(props.label)).toBeInTheDocument();
   });
 
   it("Feilmelding vises", () => {
-    const feilmelding = "Feil!";
-    const multiSelect = shallow(<MultiSelect {...props} feil={feilmelding} />);
+    const errorMessage = "Error!";
+    renderWithProviders(<MultiSelect {...props} feil={errorMessage} />);
 
-    const feilContainer = multiSelect.find(".skjemaelement__feilmelding");
-    expect(feilContainer).toBeDefined();
-    expect(feilContainer.render().html()).toEqual(feilmelding);
+    expect(screen.getByText(errorMessage)).toBeInTheDocument();
   });
 });

@@ -40,7 +40,7 @@ const FritekstvedleggRow = ({
         </Nav.Lenker>
       </Table.DataCell>
       <Table.DataCell />
-      <Table.DataCell className="icon--cell">
+      <Table.DataCell className="icon__cell">
         <Mui.IkonKnapp
           ikon={Ikoner.Pencil}
           onClick={() => redigerFritekstvedlegg && redigerFritekstvedlegg(index)}

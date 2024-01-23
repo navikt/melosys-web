@@ -21,7 +21,7 @@ exports[`fritekstvedleggRow > snapshot test 1`] = `
     
   </td>
   <td
-    className="navds-table__data-cell icon--cell navds-body-short"
+    className="navds-table__data-cell icon__cell navds-body-short"
   >
     <button
       aria-label="Rediger vedlegg"

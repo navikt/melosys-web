@@ -40,7 +40,7 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
     { harBehandlingMedTrygdeavgift: false },
     [saksnummer]
   );
-
+  const [visFeilFullmektigHarIkkeFullmakter, setVisFeilFullmektigHarIkkeFullmakter] = useState(false);
   const [redigerer, setRedigerer] = useState(false);
   const [pending, setPending] = useState(false);
   const [visModal, setVisModal] = useState(false);
@@ -72,6 +72,11 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
     name: "fullmektige",
   });
   const formValues = watch();
+  const fullmektige = watch("fullmektige");
+
+  useEffect(() => {
+    setVisFeilFullmektigHarIkkeFullmakter(false);
+  }, [fullmektige]);
 
   const finnOrganisasjonAdresse = (orgnr: string): Promise<AdresseOgFeil> => {
     return Api.Adresser.hentOrganisasjonAdresse(orgnr)
@@ -169,7 +174,12 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
     return fullmektig.originalAktør?.fullmakter?.includes(FULLMEKTIG_TRYGDEAVGIFT) ?? false;
   };
 
-  const handleLagre = async (sjekkEndretFullmakt: boolean = true) => {
+  const handleLagre = async (sjekkEndretFullmakt: boolean) => {
+    if (formValues.fullmektige.some((a: any) => a.fullmakter.length === 0)) {
+      setVisFeilFullmektigHarIkkeFullmakter(true);
+      return;
+    }
+    setVisFeilFullmektigHarIkkeFullmakter(false);
     if (!isValid) {
       formValues.fullmektige.forEach((_it: Fullmektig, index: number) => {
         trigger(`fullmektige[${index}].fullmakter`);
@@ -187,7 +197,7 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
       harBehandlingstypeSomSkalSjekkes &&
       fullmektigMedBetalingHarForsvunnet;
     if (skalViseErDuSikkerModal) {
-      setModalFunksjon(() => () => handleLagre());
+      setModalFunksjon(() => (sjekk: boolean) => handleLagre(sjekk));
       setVisModal(true);
       return;
     }
@@ -224,7 +234,7 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
     setVisModal(false);
   };
 
-  const handleSlett = (index: number, sjekkEndretFullmakt: boolean = true) => {
+  const handleSlett = (index: number, sjekkEndretFullmakt: boolean) => {
     const fullmektigSomSkalSlettes = formValues.fullmektige[index];
 
     const skalViseErDuSikkerModal =
@@ -279,7 +289,7 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
           update={update}
           errors={errors}
           trigger={trigger}
-          handleSlett={handleSlett}
+          handleSlett={(index) => handleSlett(index, true)}
           handleLeggTil={handleLeggTil}
           finnOrganisasjonAdresse={finnOrganisasjonAdresse}
           finnPersonAdresse={finnPersonAdresse}
@@ -299,9 +309,17 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
           Legg til ny fullmektig
         </Mui.Lenkeknapp>
       )}
+      {visFeilFullmektigHarIkkeFullmakter && (
+        <Nav.AlertStripeFeil className="varselstripe">Du kan ikke ha en fullmektig uten fullmakt.</Nav.AlertStripeFeil>
+      )}
       {redigerer && (
         <div>
-          <Nav.Hovedknapp onClick={() => handleLagre()} className="lagre_knapp" spinner={pending} autoDisableVedSpinner>
+          <Nav.Hovedknapp
+            onClick={() => handleLagre(true)}
+            className="lagre_knapp"
+            spinner={pending}
+            autoDisableVedSpinner
+          >
             Lagre
           </Nav.Hovedknapp>
           <Nav.Flatknapp

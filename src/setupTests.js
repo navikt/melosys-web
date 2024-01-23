@@ -20,6 +20,26 @@ Enzyme.configure({ adapter: new Adapter() });
 global.shallow = shallow;
 global.mount = mount;
 
+global.window.env = {
+  APP_NAME: "IKKE_VIKTIG",
+  API_BASE_URL: "/api/",
+  TRYGDEAVTALE_FLYT_BASE_URL: "/trygdeavtale-flyt/",
+  FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL: "/faktureringskomponenten/",
+  GRAPHQL_URL: "/graphql/",
+  LOCAL_CONTEXT: "/melosys",
+  LOCAL_API_PORT: "8080",
+  REACT_PUBLIC_URL: "IKKE_VIKTIG",
+  AZURE_APP_TENANT_ID: "IKKE_VIKTIG",
+  AZURE_CLIENT_ID: "IKKE_VIKTIG",
+  CLUSTER: "IKKE_VIKTIG",
+  FAKTURERINGSKOMPONENTEN_CLUSTER: "IKKE_VIKTIG",
+  FAKTURERINGSKOMPONENTEN_APP_NAME: "IKKE_VIKTIG",
+  TRYGDEAVTALE_APP_NAME: "IKKE_VIKTIG",
+  MELOSYS_API_APP_NAME: "IKKE_VIKTIG",
+  LOCAL_AUTH_TOKEN: "IKKE_VIKTIG",
+  ENVIRONMENT: "IKKE_VIKTIG",
+};
+
 // Mocker frontendlogger
 global.frontendlogger = {
   info: vi.fn(),

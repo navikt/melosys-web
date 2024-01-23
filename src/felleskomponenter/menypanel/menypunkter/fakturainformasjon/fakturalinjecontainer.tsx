@@ -2,6 +2,7 @@ import { Table } from "@navikt/ds-react";
 import KopierbarTekst from "../../../kopierbarTekst";
 import * as Utils from "../../../../utils";
 import { fakturaserierTypes } from "../../../../ducks/fakturaserier";
+import * as Nav from "../../../../navFrontend";
 
 interface FakturaLinjeContainerProps {
   faktura: fakturaserierTypes.Faktura;
@@ -13,10 +14,16 @@ export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeContainerProps) =
       <div className="fakturanr_wrapper">
         Fakturanr:&nbsp;
         <KopierbarTekst hovertekst="">
-          {Utils._isEmpty(faktura.eksternFakturaNummer) || Utils._isNil(faktura.eksternFakturaNummer)
-            ? "Ikke generert enda"
-            : faktura.eksternFakturaNummer}
+          {!faktura.eksternFakturaNummer ? " - " : faktura.eksternFakturaNummer}
         </KopierbarTekst>
+      </div>
+      <div className="fakturalinje">
+        {!faktura.eksternFakturaNummer && (
+          <Nav.AlertStripeInfo>
+            Fakturanummer er bare kjent i Melosys når det gjelder en manglende innbetaling, du kan likevel finne faktura
+            i OeBS ved å søke på bruker
+          </Nav.AlertStripeInfo>
+        )}
       </div>
 
       <Table>

@@ -7,5 +7,7 @@
   "GROUP_MELOSYS_INNLOGGING": "0d7c7755-fd5d-46ee-bbb9-975484cfb5b1",
   "APP_NAME_API": "melosys",
   "APP_NAME_TRYGDEAVTALE_API": "melosys-trygdeavtale",
-  "APP_NAME_FAKTURERINGSKOMPONENTEN_API": "faktureringskomponenten"
+  "APP_NAME_FAKTURERINGSKOMPONENTEN_API": "faktureringskomponenten",
+  "ENVIRONMENT_NAME": "prod",
+  "TENANT_URL":"nav.no"
 }

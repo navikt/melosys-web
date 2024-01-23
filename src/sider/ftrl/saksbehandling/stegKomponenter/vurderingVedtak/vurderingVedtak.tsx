@@ -37,10 +37,9 @@ import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/me
 
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
+const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
 const { INNVILGELSE_FOLKETRYGDLOVEN, VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
 const { MEDLEM_I_FOLKETRYGDEN, DELVIS_OPPHØRT } = MKV.Koder.behandlinger.behandlingsresultattyper;
-const VEDTAK_OPPHOER = "Vedtak om opphør av frivillig medlemskap";
-export const VEDTAK_ENDRET = "Endret vedtak om frivillig medlemskap";
 
 const innledningFritekstHjelpetekst =
   "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: \n\n" +
@@ -80,7 +79,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const mottatteOpplysningerFeilmeldinger = useSelector(formSelectors.SoknadErrorsSelector);
   const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
-  const behandlingsresultatType = useSelector(behandlingsresultatSelectors.BehandlingsresultatTypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const alleLandkoder = useSelector(landkoderSelectors.LandkoderSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
@@ -93,6 +91,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const erNyVurdering = behandlingstype === NY_VURDERING;
   const erManglendeInnbetalingTrygdeavgift = behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
+  const erDelvisOpphør = medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === OPPHØRT);
   const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
     return !MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.some((bakgrunn: KTObject) => {
       return bakgrunn.kode === nyVurderingBakgrunnValg;
@@ -105,17 +104,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const initialNyVurderingBakgrunnFritekst =
     initialNyVurderingBakgrunnValg === FRITEKST_VALG ? lagretNyVurderingBakgrunn : "";
 
-  const initialVedtakValg = () => {
-    if (erManglendeInnbetalingTrygdeavgift) {
-      if (behandlingsresultatType === DELVIS_OPPHØRT) {
-        return VEDTAK_OPPHOER;
-      }
-      if (behandlingsresultatType === MEDLEM_I_FOLKETRYGDEN) {
-        return VEDTAK_ENDRET;
-      }
-    }
-    return "";
-  };
   const {
     watch,
     control,
@@ -126,6 +114,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     context: {
       erNyVurdering,
       erManglendeInnbetalingTrygdeavgift,
+      erDelvisOpphør,
     },
     defaultValues: {
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
@@ -133,7 +122,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       trygdeavgiftFritekst: useSelector(behandlingsresultatSelectors.TrygdeavgiftFritekstSelector) || "",
       nyVurderingBakgrunnValg: initialNyVurderingBakgrunnValg,
       nyVurderingBakgrunnFritekst: initialNyVurderingBakgrunnFritekst,
-      vedtakValg: initialVedtakValg(),
     } as FieldValues,
   });
   const formValues = watch();
@@ -143,7 +131,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
   const [vedtakPending, setVedtakPending] = useState(false);
   const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
-  const vedtakOpphøres = formValues?.vedtakValg === VEDTAK_OPPHOER;
   const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
   let oppdaterFørKontroll = true;
 
@@ -170,7 +157,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: vedtakOpphøres ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
+      produserbartdokument: erDelvisOpphør ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -178,7 +165,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   useEffect(() => {
     hentMuligeMottakere();
-  }, [vedtakOpphøres]);
+  }, [erDelvisOpphør]);
 
   useEffect(() => {
     if (aktivtSteg) {
@@ -221,13 +208,14 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const getVedtakstype = () => {
     if (lagretVedtakstype) return lagretVedtakstype;
-    if (erNyVurdering || erManglendeInnbetalingTrygdeavgift) return MKV.Koder.vedtakstyper.ENDRINGSVEDTAK;
-    return MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK;
+    if (erManglendeInnbetalingTrygdeavgift) return erDelvisOpphør ? OPPHØRSVEDTAK : ENDRINGSVEDTAK;
+    if (erNyVurdering) return ENDRINGSVEDTAK;
+    return FØRSTEGANGSVEDTAK;
   };
 
   const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
     return {
-      behandlingsresultatTypeKode: vedtakOpphøres ? DELVIS_OPPHØRT : MEDLEM_I_FOLKETRYGDEN,
+      behandlingsresultatTypeKode: erDelvisOpphør ? DELVIS_OPPHØRT : MEDLEM_I_FOLKETRYGDEN,
       innledningFritekst: formValues?.innledningFritekst || null,
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
       trygdeavgiftFritekst: formValues?.trygdeavgiftFritekst || null,
@@ -237,7 +225,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         formValues?.nyVurderingBakgrunnValg === FRITEKST_VALG
           ? formValues?.nyVurderingBakgrunnFritekst
           : formValues?.nyVurderingBakgrunnValg,
-      opphoerDato: vedtakOpphøres ? getOpphørsdato() : null,
+      opphoerDato: erDelvisOpphør ? getOpphørsdato() : null,
     };
   };
 
@@ -247,7 +235,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       const request = {
         behandlingID,
         vedtakstype: getVedtakstype(),
-        behandlingsresultattype: vedtakOpphøres ? DELVIS_OPPHØRT : MEDLEM_I_FOLKETRYGDEN,
+        behandlingsresultattype: erDelvisOpphør ? DELVIS_OPPHØRT : MEDLEM_I_FOLKETRYGDEN,
         skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
       };
       oppdaterFørKontroll = false;
@@ -289,7 +277,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
       dokumentData: {
-        produserbardokument: vedtakOpphøres ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
+        produserbardokument: erDelvisOpphør ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
         mottaker: muligMottaker.rolle,
         innledningFritekst: formValues?.innledningFritekst || null,
         begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
@@ -299,7 +287,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
             ? formValues?.nyVurderingBakgrunnFritekst
             : formValues?.nyVurderingBakgrunnValg,
         orgNr: muligMottaker?.orgnr || null,
-        opphoerDato: vedtakOpphøres ? getOpphørsdato() : null,
+        opphoerDato: erDelvisOpphør ? getOpphørsdato() : null,
       },
       mottakerNavn: muligMottaker.mottakerNavn,
     };
@@ -367,27 +355,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </Nav.Row>
       ) : null}
 
-      {erManglendeInnbetalingTrygdeavgift && (
-        <Nav.Row className="vedtak_valg">
-          <Nav.Column xs="6">
-            <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-              Oppgi hvilket vedtak du vil sende
-            </Nav.Typo.Element>
-            <Forms.Select
-              name="vedtakValg"
-              disabled={!redigerbart}
-              emptyFieldDisabled={!!formValues?.vedtakValg}
-              control={control}
-              className="vedtak_valg_select"
-            >
-              <option key={VEDTAK_OPPHOER} value={VEDTAK_OPPHOER} label={VEDTAK_OPPHOER} />
-              <option key={VEDTAK_ENDRET} value={VEDTAK_ENDRET} label={VEDTAK_ENDRET} />
-            </Forms.Select>
-          </Nav.Column>
-        </Nav.Row>
-      )}
-
-      {(erNyVurdering || (erManglendeInnbetalingTrygdeavgift && formValues?.vedtakValg === VEDTAK_ENDRET)) && (
+      {(erNyVurdering || (erManglendeInnbetalingTrygdeavgift && !erDelvisOpphør)) && (
         <div className="nyVurderingBakgrunn">
           <Nav.Row>
             <Nav.Column xs="6">
@@ -427,7 +395,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </div>
       )}
 
-      {!vedtakOpphøres && (
+      {!erDelvisOpphør && (
         <>
           <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
             <LabelMedHjelpetekst
@@ -459,7 +427,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         disabled={!redigerbart}
       />
 
-      {!vedtakOpphøres && (
+      {!erDelvisOpphør && (
         <>
           <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
             <LabelMedHjelpetekst
