@@ -40,7 +40,7 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
     { harBehandlingMedTrygdeavgift: false },
     [saksnummer]
   );
-
+  const [visFeilFullmektigHarIkkeFullmakter, setVisFeilFullmektigHarIkkeFullmakter] = useState(false);
   const [redigerer, setRedigerer] = useState(false);
   const [pending, setPending] = useState(false);
   const [visModal, setVisModal] = useState(false);
@@ -72,6 +72,11 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
     name: "fullmektige",
   });
   const formValues = watch();
+  const fullmektige = watch("fullmektige");
+
+  useEffect(() => {
+    setVisFeilFullmektigHarIkkeFullmakter(false);
+  }, [fullmektige]);
 
   const finnOrganisasjonAdresse = (orgnr: string): Promise<AdresseOgFeil> => {
     return Api.Adresser.hentOrganisasjonAdresse(orgnr)
@@ -170,6 +175,11 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
   };
 
   const handleLagre = async (sjekkEndretFullmakt: boolean = true) => {
+    if (formValues.fullmektige.some((a: any) => a.fullmakter.length === 0)) {
+      setVisFeilFullmektigHarIkkeFullmakter(true);
+      return;
+    }
+    setVisFeilFullmektigHarIkkeFullmakter(false);
     if (!isValid) {
       formValues.fullmektige.forEach((_it: Fullmektig, index: number) => {
         trigger(`fullmektige[${index}].fullmakter`);
@@ -298,6 +308,9 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
         >
           Legg til ny fullmektig
         </Mui.Lenkeknapp>
+      )}
+      {visFeilFullmektigHarIkkeFullmakter && (
+        <Nav.AlertStripeFeil className="varselstripe">Du kan ikke ha en fullmektig uten fullmakt.</Nav.AlertStripeFeil>
       )}
       {redigerer && (
         <div>
