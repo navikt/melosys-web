@@ -3,7 +3,7 @@ import { render, fireEvent } from "@testing-library/react";
 import MenyLink from "./menylink";
 
 describe("MenyLink", () => {
-  let props = { onClick: vi.fn(), label: "test" };
+  const props = { onClick: vi.fn(), label: "test" };
 
   it("kaller onClick ved klikk på button", () => {
     const { getByText } = render(<MenyLink {...props} />);
