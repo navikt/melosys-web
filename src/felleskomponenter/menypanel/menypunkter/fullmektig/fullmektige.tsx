@@ -174,7 +174,7 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
     return fullmektig.originalAktør?.fullmakter?.includes(FULLMEKTIG_TRYGDEAVGIFT) ?? false;
   };
 
-  const handleLagre = async (sjekkEndretFullmakt: boolean = true) => {
+  const handleLagre = async (sjekkEndretFullmakt: boolean) => {
     if (formValues.fullmektige.some((a: any) => a.fullmakter.length === 0)) {
       setVisFeilFullmektigHarIkkeFullmakter(true);
       return;
@@ -197,7 +197,7 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
       harBehandlingstypeSomSkalSjekkes &&
       fullmektigMedBetalingHarForsvunnet;
     if (skalViseErDuSikkerModal) {
-      setModalFunksjon(() => () => handleLagre());
+      setModalFunksjon(() => (sjekk: boolean) => handleLagre(sjekk));
       setVisModal(true);
       return;
     }
@@ -234,7 +234,7 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
     setVisModal(false);
   };
 
-  const handleSlett = (index: number, sjekkEndretFullmakt: boolean = true) => {
+  const handleSlett = (index: number, sjekkEndretFullmakt: boolean) => {
     const fullmektigSomSkalSlettes = formValues.fullmektige[index];
 
     const skalViseErDuSikkerModal =
@@ -289,7 +289,7 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
           update={update}
           errors={errors}
           trigger={trigger}
-          handleSlett={handleSlett}
+          handleSlett={(index) => handleSlett(index, true)}
           handleLeggTil={handleLeggTil}
           finnOrganisasjonAdresse={finnOrganisasjonAdresse}
           finnPersonAdresse={finnPersonAdresse}
@@ -314,7 +314,12 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
       )}
       {redigerer && (
         <div>
-          <Nav.Hovedknapp onClick={() => handleLagre()} className="lagre_knapp" spinner={pending} autoDisableVedSpinner>
+          <Nav.Hovedknapp
+            onClick={() => handleLagre(true)}
+            className="lagre_knapp"
+            spinner={pending}
+            autoDisableVedSpinner
+          >
             Lagre
           </Nav.Hovedknapp>
           <Nav.Flatknapp
