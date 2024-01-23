@@ -200,8 +200,11 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   };
 
   const handleEndreBegrunnelseFritekst = (valgtBegrunnelse: string, begrunnelseFritekst: string) => {
-    // TODO: denne trigges med en gang du går inn i fritekstfeltet
-    setHarSkjeddEndringer(true);
+    const forrigeBegrunnelseFritekst = valgteBegrunnelser.get(valgtBegrunnelse)?.begrunnelseFritekst;
+    if (forrigeBegrunnelseFritekst !== begrunnelseFritekst) {
+      setHarSkjeddEndringer(true);
+    }
+
     setValgteBegrunnelser(
       new Map(
         valgteBegrunnelser.set(valgtBegrunnelse, {
