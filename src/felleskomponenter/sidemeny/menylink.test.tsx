@@ -1,24 +1,15 @@
-import { ComponentProps, MouseEvent } from "react";
-import { mock, instance } from "ts-mockito";
-import { shallow } from "enzyme";
+import { render, fireEvent } from "@testing-library/react";
 
 import MenyLink from "./menylink";
 
 describe("MenyLink", () => {
-  const mockedProps = mock<ComponentProps<typeof MenyLink>>();
-  const props = instance(mockedProps);
+  let props = { onClick: vi.fn(), label: "test" };
 
   it("kaller onClick ved klikk på button", () => {
-    props.onClick = vi.fn();
-    props.label = "test";
+    const { getByText } = render(<MenyLink {...props} />);
+    const button = getByText(props.label);
 
-    const menyLink = shallow(<MenyLink {...props} />);
-    const button = menyLink.find("button");
-    const buttonOnClick = button.props().onClick;
-
-    const mockedMouseEvent = mock<MouseEvent>();
-    const mouseEvent = instance(mockedMouseEvent);
-    if (buttonOnClick) buttonOnClick(mouseEvent);
+    fireEvent.click(button);
 
     expect(props.onClick).toHaveBeenCalledTimes(1);
   });
