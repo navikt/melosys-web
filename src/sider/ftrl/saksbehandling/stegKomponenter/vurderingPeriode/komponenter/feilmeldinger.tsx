@@ -22,14 +22,14 @@ const OverlappIInnvilgedePerioder = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">Innvilgede perioder overlapper.</Nav.AlertStripeFeil>
 );
 
+const OverlappIOpphørtePerioder = (
+  <Nav.AlertStripeFeil className="alertstripe_feilmelding">Opphørte perioder overlapper.</Nav.AlertStripeFeil>
+);
+
 const OverlappOpphørtInnvilgetPeriode = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">
     Opphørt periode overlapper med innvilget periode.
   </Nav.AlertStripeFeil>
-);
-
-const OverlappOpphørtOpphørtPeriode = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">Opphørte perioder overlapper</Nav.AlertStripeFeil>
 );
 
 const IngenSluttdato = (
@@ -240,11 +240,11 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER;
   }
 
-  if (finnesOverlappIOpphørtePerioder(medlemskapsperioder)) {
+  if (manglendeInnbetalingToggleEnabled && finnesOverlappIOpphørtePerioder(medlemskapsperioder)) {
     return TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER;
   }
 
-  if (opphørtPeriodeOverlapperInnvilgetPeriode(medlemskapsperioder)) {
+  if (manglendeInnbetalingToggleEnabled && opphørtPeriodeOverlapperInnvilgetPeriode(medlemskapsperioder)) {
     return TypeFeilmelding.OVERLAPP_OPPHØRT_INNVILGET;
   }
 
@@ -312,10 +312,10 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return IngenSluttdato;
     case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
       return OverlappIInnvilgedePerioder;
+    case TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER:
+      return OverlappIOpphørtePerioder;
     case TypeFeilmelding.OVERLAPP_OPPHØRT_INNVILGET:
       return OverlappOpphørtInnvilgetPeriode;
-    case TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER:
-      return OverlappOpphørtOpphørtPeriode;
     case TypeFeilmelding.OPPHOLD_I_INNVILGEDE_PERIODER:
       return OppholdIInnvilgedePerioder;
     case TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023:
