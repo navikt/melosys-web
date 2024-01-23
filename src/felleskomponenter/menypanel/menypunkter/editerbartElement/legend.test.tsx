@@ -1,8 +1,7 @@
 import { ComponentProps } from "react";
 import { mock, instance } from "ts-mockito";
-import { shallow } from "enzyme";
-
-import * as Symboler from "../symboler";
+import { screen } from "@testing-library/react";
+import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
 import Legend from "./legend";
 
@@ -16,24 +15,41 @@ describe("Legend", () => {
 
   it("Viser ingen symboler hvis ikke redigerbart", () => {
     props.redigerbart = false;
-    const legend = shallow(<Legend {...props} />);
+    renderWithProviders(<Legend {...props} />);
 
-    expect(legend.find(Symboler.Rediger)).toHaveLength(0);
-    expect(legend.find(Symboler.Slett)).toHaveLength(0);
+    expect(screen.queryByRole("button", { name: /rediger/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /slett/i })).not.toBeInTheDocument();
   });
 
-  it("symbolsynlighet-prop styrer visning av symboler", () => {
+  it("symbolsynlighet-prop satt til true viser rediger og slett knapp", () => {
     props.symbolsynlighet = { pencil: true, bin: true };
     props.redigerbart = true;
-    let legend = shallow(<Legend {...props} />);
+    renderWithProviders(<Legend {...props} />);
 
-    expect(legend.find(Symboler.Rediger)).toHaveLength(1);
-    expect(legend.find(Symboler.Slett)).toHaveLength(1);
+    expect(screen.getByRole("button", { name: /rediger/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /slett/i })).toBeInTheDocument();
+  });
 
+  it("symbolsynlighet-prop satt til false viser rediger og slett knapp", () => {
     props.symbolsynlighet = { pencil: false, bin: false };
-    legend = shallow(<Legend {...props} />);
+    renderWithProviders(<Legend {...props} />);
 
-    expect(legend.find(Symboler.Rediger)).toHaveLength(0);
-    expect(legend.find(Symboler.Slett)).toHaveLength(0);
+    expect(screen.queryByRole("button", { name: /rediger/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /slett/i })).not.toBeInTheDocument();
+  });
+
+  it("rendrer TittelIkon når oppgitt", () => {
+    props.tittelIkon = () => <div>tittel-ikon</div>;
+    renderWithProviders(<Legend {...props} />);
+
+    expect(screen.queryByText("tittel-ikon")).toBeInTheDocument();
+  });
+
+  it("rendrer UndertittelH3 med korrekt tekst", () => {
+    props.tittel = "Test Title";
+    renderWithProviders(<Legend {...props} />);
+
+    const undertittelH3 = screen.queryByText("Test Title");
+    expect(undertittelH3).toBeInTheDocument();
   });
 });
