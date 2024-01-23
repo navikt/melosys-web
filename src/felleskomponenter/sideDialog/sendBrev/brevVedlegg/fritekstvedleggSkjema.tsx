@@ -1,10 +1,10 @@
-import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../skjema";
-import { DokumenterV2 } from "../../../services/api";
-import bem from "../../../bemUtils";
+import * as Nav from "../../../../navFrontend";
+import * as Skjema from "../../../skjema";
+import { DokumenterV2 } from "../../../../services/api";
+import bem from "../../../../bemUtils";
 
 import "./fritekstvedleggSkjema.css";
-import { begrensAntallTegn } from "../../../utils/normalisering";
+import { begrensAntallTegn } from "../../../../utils/normalisering";
 
 interface FritekstvedleggSkjemaProps {
   felt: DokumenterV2.Felt;

@@ -20,7 +20,7 @@ const VedleggRow = ({ vedlegg, slettVedlegg }: VedleggRowProps) => {
       <Table.DataCell>
         <span>{Utils.dato.formatterDatoTilNorsk(vedlegg.dato)}</span>
       </Table.DataCell>
-      <Table.DataCell className="icon--cell">
+      <Table.DataCell className="icon__cell">
         <Mui.IkonKnapp ariaLabel="Fjern vedlegg" ikon={Ikoner.Bin} onClick={slettVedlegg} />
       </Table.DataCell>
     </Table.Row>

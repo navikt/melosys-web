@@ -87,7 +87,7 @@ export type KopiMottaker = {
   rolle: string;
   orgnr: string | null;
   aktørId: string;
-  institusjonId: string | null;
+  institusjonID: string | null;
 };
 
 export type Saksvedlegg = {
@@ -120,6 +120,7 @@ export type OpprettBrevReqDto = {
   begrunnelseKode?: string | null;
   ytterligereInformasjon?: string | null;
   opphoerDato?: string | null;
+  institusjonID?: string | null;
 };
 
 export type MuligMottaker = {
@@ -128,14 +129,14 @@ export type MuligMottaker = {
   rolle: string;
   orgnr: string | null;
   aktørId: string | null;
-  institusjonId: string | null;
+  institusjonID: string | null;
 };
 
 export const konverterMuligMottakerTilKopiMottaker = (muligMottaker: MuligMottaker): KopiMottaker => ({
   rolle: muligMottaker.rolle,
   orgnr: muligMottaker.orgnr,
   aktørId: muligMottaker.aktørId || "",
-  institusjonId: muligMottaker.institusjonId,
+  institusjonID: muligMottaker.institusjonID,
 });
 
 export type HentMuligeMottakereResDto = {
@@ -151,7 +152,7 @@ export const tomHentMuligeMottakereResDto = (): HentMuligeMottakereResDto => ({
     rolle: "",
     orgnr: null,
     aktørId: null,
-    institusjonId: null,
+    institusjonID: null,
   },
   kopiMottakere: [],
   fasteMottakere: [],
@@ -160,6 +161,7 @@ export const tomHentMuligeMottakereResDto = (): HentMuligeMottakereResDto => ({
 export type HentMuligeMottakereReqDto = {
   produserbartdokument: string;
   orgnr: string | null;
+  institusjonID?: string | null;
 };
 
 export type HentMuligeMottakereNorskMyndighetReqDto = {
