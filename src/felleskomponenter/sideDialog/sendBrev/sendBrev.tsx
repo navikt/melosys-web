@@ -236,7 +236,7 @@ const SendBrev = ({
         if (valgtMottakerHarFeilmelding) {
           hentTilgjengeligeMaler();
           resetForm();
-        } else {
+        } else if (kanHenteMuligeMottakere(formValues)) {
           hentMuligeMottakere();
         }
       }, 500);
