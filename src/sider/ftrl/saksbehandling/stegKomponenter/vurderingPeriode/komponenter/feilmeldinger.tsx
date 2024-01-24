@@ -22,6 +22,16 @@ const OverlappIInnvilgedePerioder = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">Innvilgede perioder overlapper.</Nav.AlertStripeFeil>
 );
 
+const OverlappIOpphørtePerioder = (
+  <Nav.AlertStripeFeil className="alertstripe_feilmelding">Opphørte perioder overlapper.</Nav.AlertStripeFeil>
+);
+
+const OverlappOpphørtInnvilgetPeriode = (
+  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+    Opphørt periode overlapper med innvilget periode.
+  </Nav.AlertStripeFeil>
+);
+
 const IngenSluttdato = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">
     Du må oppgi sluttdato for å kunne angi resultat. Dette blir sluttdatoen på vedtaket.
@@ -98,6 +108,33 @@ const finnesOverlappIInnvilgedePerioder = (medlemskapsperioder: Medlemskapsperio
         )
     );
 };
+const finnesOverlappIOpphørtePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>
+  [...medlemskapsperioder]
+    ?.filter(opphørtePerioder)
+    .sort(Utils.dato.sorterEtterNorskFomDato)
+    .some((periode, index, perioder) =>
+      perioder
+        .slice(index + 1)
+        .some((nestePeriode) =>
+          Utils.dato.perioderOverlapper(periode.fomDato, periode.tomDato, nestePeriode.fomDato, nestePeriode.tomDato)
+        )
+    );
+
+const opphørtPeriodeOverlapperInnvilgetPeriode = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>
+  medlemskapsperioder
+    ?.filter(opphørtePerioder)
+    .some((opphørtPeriode) =>
+      medlemskapsperioder
+        ?.filter(innvilgedePerioder)
+        .some((innvilgetPeriode) =>
+          Utils.dato.perioderOverlapper(
+            opphørtPeriode.fomDato,
+            opphørtPeriode.tomDato,
+            innvilgetPeriode.fomDato,
+            innvilgetPeriode.tomDato
+          )
+        )
+    );
 
 const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
   const sorterteInnvilgedePerioder = [...medlemskapsperioder]
@@ -165,6 +202,8 @@ enum TypeFeilmelding {
   IKKE_STØTTET_I_MELOSYS = "IKKE_STØTTET_I_MELOSYS",
   INGEN_SLUTTDATO = "INGEN_SLUTTDATO",
   OVERLAPP_I_INNVILGEDE_PERIODER = "OVERLAPP_I_INNVILGEDE_PERIODER",
+  OVERLAPP_I_OPPHØRTE_PERIODER = "OVERLAPP_I_OPPHØRTE_PERIODER",
+  OVERLAPP_OPPHØRT_INNVILGET = "OVERLAPP_OPPHØRT_INNVILGET",
   OPPHOLD_I_INNVILGEDE_PERIODER = "OPPHOLD_I_INNVILGEDE_PERIODER",
   SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER = "SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER",
   MEDLEMSKAPSPERIODE_STARTER_FØR_2023 = "MEDLEMSKAPSPERIODE_STARTER_FØR_2023",
@@ -199,6 +238,14 @@ export function finnAktivFeilmelding(
 
   if (finnesOverlappIInnvilgedePerioder(medlemskapsperioder)) {
     return TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER;
+  }
+
+  if (manglendeInnbetalingToggleEnabled && finnesOverlappIOpphørtePerioder(medlemskapsperioder)) {
+    return TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER;
+  }
+
+  if (manglendeInnbetalingToggleEnabled && opphørtPeriodeOverlapperInnvilgetPeriode(medlemskapsperioder)) {
+    return TypeFeilmelding.OVERLAPP_OPPHØRT_INNVILGET;
   }
 
   if (finnesOppholdIInnvilgedePerioder(medlemskapsperioder)) {
@@ -241,6 +288,8 @@ export function feilMeldingBlokkerer(type?: string): boolean {
     case TypeFeilmelding.IKKE_STØTTET_I_MELOSYS:
     case TypeFeilmelding.INGEN_SLUTTDATO:
     case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
+    case TypeFeilmelding.OVERLAPP_OPPHØRT_INNVILGET:
+    case TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER:
     case TypeFeilmelding.OPPHOLD_I_INNVILGEDE_PERIODER:
     case TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023:
     case TypeFeilmelding.BARE_OPPHØRTE_PERIODER:
@@ -263,6 +312,10 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return IngenSluttdato;
     case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
       return OverlappIInnvilgedePerioder;
+    case TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER:
+      return OverlappIOpphørtePerioder;
+    case TypeFeilmelding.OVERLAPP_OPPHØRT_INNVILGET:
+      return OverlappOpphørtInnvilgetPeriode;
     case TypeFeilmelding.OPPHOLD_I_INNVILGEDE_PERIODER:
       return OppholdIInnvilgedePerioder;
     case TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023:
