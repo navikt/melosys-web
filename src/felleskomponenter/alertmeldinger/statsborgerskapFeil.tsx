@@ -21,7 +21,7 @@ const StatsborgerskapFeil = ({ className }: { className: string }) => {
 
   return (
     <Nav.AlertStripeAdvarsel className={className}>
-      Statsborgerskapet er ukjent, eller en landkode som ikke kan overføres til SED. Hvis du skal sende SED må du
+      Statsborgerskapet er ukjent, eller er en landkode som ikke kan overføres til SED. Hvis du skal sende SED må du
       vurdere om du skal/kan registrere statsborgerskap i PDL, eller gi informasjon i fritekstfelt i SED.
     </Nav.AlertStripeAdvarsel>
   );
