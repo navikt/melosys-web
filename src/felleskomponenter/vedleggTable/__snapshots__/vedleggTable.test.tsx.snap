@@ -1,138 +1,146 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`vedleggTable > snapshot test 1`] = `
-[
-  <p
-    className="typo-element vedleggtable-label"
+<table
+  className="navds-table navds-table--small vedleggtable"
+>
+  <thead
+    className="navds-table__header"
   >
-    a
-  </p>,
-  <table
-    className="navds-table navds-table--medium"
-  >
-    <tbody
-      className="navds-table__body"
+    <th
+      className="navds-table__header-cell navds-label navds-label--small"
     >
-      <tr
-        className="navds-table__row navds-table__row--shade-on-hover"
+      a
+    </th>
+    <th
+      className="navds-table__header-cell navds-label navds-label--small"
+    />
+    <th
+      className="navds-table__header-cell navds-label navds-label--small"
+    />
+  </thead>
+  <tbody
+    className="navds-table__body"
+  >
+    <tr
+      className="navds-table__row navds-table__row--shade-on-hover"
+    >
+      <td
+        className="navds-table__data-cell navds-body-short navds-body-short--small"
       >
-        <td
-          className="navds-table__data-cell navds-body-short"
+        <a
+          className="lenke"
+          href="#"
+          onClick={[Function]}
         >
-          <a
-            className="lenke"
-            href="#"
-            onClick={[Function]}
+          123
+        </a>
+      </td>
+      <td
+        className="navds-table__data-cell navds-body-short navds-body-short--small"
+      >
+        
+      </td>
+      <td
+        className="navds-table__data-cell icon__cell navds-body-short navds-body-short--small"
+      >
+        <button
+          aria-label="Rediger vedlegg"
+          className="ikon-knapp"
+          onClick={[Function]}
+          title="Rediger vedlegg"
+          type="button"
+        >
+          <svg
+            className="ikon"
+            fill="none"
+            height={24}
+            viewBox="0 0 24 24"
+            width={24}
+            xmlns="http://www.w3.org/2000/svg"
           >
-            123
-          </a>
-        </td>
-        <td
-          className="navds-table__data-cell navds-body-short"
+            <path
+              clipRule="evenodd"
+              d="M22.8353 1.16464C24.3882 2.7175 24.3882 5.23518 22.8353 6.78804L8.07288 21.5494L0.682007 24L0 23.318L2.44911 15.926L17.2115 1.16464C18.7645 -0.388214 21.2823 -0.388214 22.8353 1.16464ZM18.6175 8.19388L15.8056 5.38219L4.18826 16.9987L2.79497 21.2036L7.00155 19.809L18.6175 8.19388ZM21.4293 2.57049C20.6882 1.82935 19.5074 1.79567 18.7262 2.46943L18.6175 2.57049L17.2115 3.97634L20.0234 6.78804L21.4293 5.38219C22.1705 4.64105 22.2042 3.46036 21.5304 2.67927L21.4293 2.57049Z"
+              fill="#0067C5"
+              fillRule="evenodd"
+            />
+          </svg>
+        </button>
+        <button
+          aria-label="Slett vedlegg"
+          className="ikon-knapp"
+          onClick={[Function]}
+          title="Slett vedlegg"
+          type="button"
         >
+          <svg
+            className="ikon"
+            fill="none"
+            height={24}
+            viewBox="0 0 22 24"
+            width={22}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              clipRule="evenodd"
+              d="M11 0C13.4189 0 15.4366 1.71767 15.8999 3.99981L22 4V6H20V20C20 22.2091 18.2091 24 16 24H6C3.79086 24 2 22.2091 2 20V6H0V4L6.10006 3.99981C6.5634 1.71767 8.58111 0 11 0ZM8.17004 4H8.66856H8.70601H9.26735H12.7327H13.2598H13.3079H13.829L13.7533 3.80669C13.6245 3.50979 13.449 3.23782 13.2362 3C12.7661 2.47481 12.1137 2.11621 11.3786 2.02365L11.1763 2.00509L11 2C10.1115 2 9.31326 2.38625 8.76394 3C8.54865 3.24054 8.3716 3.51603 8.24235 3.8169L8.17004 4ZM4 6H18V20L17.9945 20.1493C17.9182 21.1841 17.0544 22 16 22H6L5.85074 21.9945C4.81588 21.9182 4 21.0544 4 20V6ZM9 9V19H7V9H9ZM15 9V19H13V9H15Z"
+              fill="#0067C5"
+              fillRule="evenodd"
+            />
+          </svg>
+        </button>
+      </td>
+    </tr>
+    <tr
+      className="navds-table__row vedlegg navds-table__row--shade-on-hover"
+    >
+      <td
+        className="navds-table__data-cell navds-body-short navds-body-short--small"
+      >
+        <a
+          className="lenke"
+          href="#"
+          onClick={[Function]}
+        >
+          test (åpnes i ny fane)
+        </a>
+      </td>
+      <td
+        className="navds-table__data-cell navds-body-short navds-body-short--small"
+      >
+        <span>
           
-        </td>
-        <td
-          className="navds-table__data-cell icon--cell navds-body-short"
-        >
-          <button
-            aria-label="Rediger vedlegg"
-            className="ikon-knapp"
-            onClick={[Function]}
-            title="Rediger vedlegg"
-            type="button"
-          >
-            <svg
-              className="ikon"
-              fill="none"
-              height={24}
-              viewBox="0 0 24 24"
-              width={24}
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clipRule="evenodd"
-                d="M22.8353 1.16464C24.3882 2.7175 24.3882 5.23518 22.8353 6.78804L8.07288 21.5494L0.682007 24L0 23.318L2.44911 15.926L17.2115 1.16464C18.7645 -0.388214 21.2823 -0.388214 22.8353 1.16464ZM18.6175 8.19388L15.8056 5.38219L4.18826 16.9987L2.79497 21.2036L7.00155 19.809L18.6175 8.19388ZM21.4293 2.57049C20.6882 1.82935 19.5074 1.79567 18.7262 2.46943L18.6175 2.57049L17.2115 3.97634L20.0234 6.78804L21.4293 5.38219C22.1705 4.64105 22.2042 3.46036 21.5304 2.67927L21.4293 2.57049Z"
-                fill="#0067C5"
-                fillRule="evenodd"
-              />
-            </svg>
-          </button>
-          <button
-            aria-label="Slett vedlegg"
-            className="ikon-knapp"
-            onClick={[Function]}
-            title="Slett vedlegg"
-            type="button"
-          >
-            <svg
-              className="ikon"
-              fill="none"
-              height={24}
-              viewBox="0 0 22 24"
-              width={22}
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clipRule="evenodd"
-                d="M11 0C13.4189 0 15.4366 1.71767 15.8999 3.99981L22 4V6H20V20C20 22.2091 18.2091 24 16 24H6C3.79086 24 2 22.2091 2 20V6H0V4L6.10006 3.99981C6.5634 1.71767 8.58111 0 11 0ZM8.17004 4H8.66856H8.70601H9.26735H12.7327H13.2598H13.3079H13.829L13.7533 3.80669C13.6245 3.50979 13.449 3.23782 13.2362 3C12.7661 2.47481 12.1137 2.11621 11.3786 2.02365L11.1763 2.00509L11 2C10.1115 2 9.31326 2.38625 8.76394 3C8.54865 3.24054 8.3716 3.51603 8.24235 3.8169L8.17004 4ZM4 6H18V20L17.9945 20.1493C17.9182 21.1841 17.0544 22 16 22H6L5.85074 21.9945C4.81588 21.9182 4 21.0544 4 20V6ZM9 9V19H7V9H9ZM15 9V19H13V9H15Z"
-                fill="#0067C5"
-                fillRule="evenodd"
-              />
-            </svg>
-          </button>
-        </td>
-      </tr>
-      <tr
-        className="navds-table__row vedlegg navds-table__row--shade-on-hover"
+        </span>
+      </td>
+      <td
+        className="navds-table__data-cell icon__cell navds-body-short navds-body-short--small"
       >
-        <td
-          className="navds-table__data-cell navds-body-short"
+        <button
+          aria-label="Fjern vedlegg"
+          className="ikon-knapp"
+          onClick={[Function]}
+          title="Fjern vedlegg"
+          type="button"
         >
-          <a
-            className="lenke"
-            href="#"
-            onClick={[Function]}
+          <svg
+            className="ikon"
+            fill="none"
+            height={24}
+            viewBox="0 0 22 24"
+            width={22}
+            xmlns="http://www.w3.org/2000/svg"
           >
-            test (åpnes i ny fane)
-          </a>
-        </td>
-        <td
-          className="navds-table__data-cell navds-body-short"
-        >
-          <span>
-            
-          </span>
-        </td>
-        <td
-          className="navds-table__data-cell icon--cell navds-body-short"
-        >
-          <button
-            aria-label="Fjern vedlegg"
-            className="ikon-knapp"
-            onClick={[Function]}
-            title="Fjern vedlegg"
-            type="button"
-          >
-            <svg
-              className="ikon"
-              fill="none"
-              height={24}
-              viewBox="0 0 22 24"
-              width={22}
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clipRule="evenodd"
-                d="M11 0C13.4189 0 15.4366 1.71767 15.8999 3.99981L22 4V6H20V20C20 22.2091 18.2091 24 16 24H6C3.79086 24 2 22.2091 2 20V6H0V4L6.10006 3.99981C6.5634 1.71767 8.58111 0 11 0ZM8.17004 4H8.66856H8.70601H9.26735H12.7327H13.2598H13.3079H13.829L13.7533 3.80669C13.6245 3.50979 13.449 3.23782 13.2362 3C12.7661 2.47481 12.1137 2.11621 11.3786 2.02365L11.1763 2.00509L11 2C10.1115 2 9.31326 2.38625 8.76394 3C8.54865 3.24054 8.3716 3.51603 8.24235 3.8169L8.17004 4ZM4 6H18V20L17.9945 20.1493C17.9182 21.1841 17.0544 22 16 22H6L5.85074 21.9945C4.81588 21.9182 4 21.0544 4 20V6ZM9 9V19H7V9H9ZM15 9V19H13V9H15Z"
-                fill="#0067C5"
-                fillRule="evenodd"
-              />
-            </svg>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>,
-]
+            <path
+              clipRule="evenodd"
+              d="M11 0C13.4189 0 15.4366 1.71767 15.8999 3.99981L22 4V6H20V20C20 22.2091 18.2091 24 16 24H6C3.79086 24 2 22.2091 2 20V6H0V4L6.10006 3.99981C6.5634 1.71767 8.58111 0 11 0ZM8.17004 4H8.66856H8.70601H9.26735H12.7327H13.2598H13.3079H13.829L13.7533 3.80669C13.6245 3.50979 13.449 3.23782 13.2362 3C12.7661 2.47481 12.1137 2.11621 11.3786 2.02365L11.1763 2.00509L11 2C10.1115 2 9.31326 2.38625 8.76394 3C8.54865 3.24054 8.3716 3.51603 8.24235 3.8169L8.17004 4ZM4 6H18V20L17.9945 20.1493C17.9182 21.1841 17.0544 22 16 22H6L5.85074 21.9945C4.81588 21.9182 4 21.0544 4 20V6ZM9 9V19H7V9H9ZM15 9V19H13V9H15Z"
+              fill="#0067C5"
+              fillRule="evenodd"
+            />
+          </svg>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;

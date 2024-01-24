@@ -9,6 +9,7 @@ interface LenkeknappProps {
   className?: string;
   ikon?: ElementType;
   value?: string;
+  disabled?: boolean;
 }
 
 const Lenkeknapp = ({ onClick, children, className, ikon: Ikon, ...rest }: LenkeknappProps) => {

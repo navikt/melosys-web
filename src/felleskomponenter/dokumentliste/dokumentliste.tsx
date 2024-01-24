@@ -8,6 +8,7 @@ import { apnePdfINyFane } from "../../services/utils";
 import "./dokumentliste.css";
 import { Table } from "@navikt/ds-react";
 import * as KV from "../../kodeverk";
+import * as Utils from "../../utils";
 import MKV from "../../melosyskodeverk";
 import {
   BrevDokumentMetadataType,
@@ -66,7 +67,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   const tittel = (dokumentnavn: string) => `${dokumentnavn} (åpnes i ny fane)`;
 
   const mapBrev = (dokument: BrevDokumentMetadataType) => (
-    <Table.Row>
+    <Table.Row key={Utils._uuid()}>
       <Table.DataCell>
         <Nav.Lenker href="#" onClick={() => klikk(dokument)}>
           {tittel(
@@ -80,7 +81,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   );
 
   const mapSED = (dokument: SedDokumentMetadataType) => (
-    <Table.Row>
+    <Table.Row key={Utils._uuid()}>
       <Table.DataCell>
         <Nav.Lenker href="#" onClick={() => klikk(dokument)}>
           {tittel(dokument.dokumentNavn || `SED ${dokument.sedType}`)}

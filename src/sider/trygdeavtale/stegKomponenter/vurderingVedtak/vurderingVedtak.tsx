@@ -303,7 +303,7 @@ const VurderingVedtak = ({
         innledningFritekst: formValues?.innledningFritekst || null,
         begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
         orgNr: muligMottaker?.orgnr || null,
-        institusjonId: muligMottaker?.institusjonId || null,
+        institusjonID: muligMottaker?.institusjonID || null,
         ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
         barnFritekst: familieFormValues?.barn?.fritekst || null,
         nyVurderingBakgrunn: getNyVurderingBakgrunn(),

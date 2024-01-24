@@ -28,7 +28,11 @@ const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
   const fraKvartal = Math.ceil((fraDato.getMonth() + 1) / 3);
   const tilKvartal = Math.ceil((tilDato.getMonth() + 1) / 3);
 
-  return `${fraKvartal}/${fraAar % 100} - ${tilKvartal}/${tilAar % 100}`;
+  if (fraKvartal === tilKvartal) {
+    return `Q${fraKvartal} ${fraAar}`;
+  } else {
+    return `Q${fraKvartal} - Q${tilKvartal} ${tilAar}`;
+  }
 };
 
 export const Faktura = ({ faktura }: FakturaProps) => {

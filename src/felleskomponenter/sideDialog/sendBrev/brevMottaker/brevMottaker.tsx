@@ -22,13 +22,15 @@ import { SendBrevFormValues } from "../types";
 import BrevMottakerNorskMyndighet from "./brevMottakerNorskMyndighet";
 import { FeilmeldingProps, Underpunkt } from "../../../../services/modules/dokumenter-v2";
 
-const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
+const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
+  MKV.Koder.mottakerroller;
 
 export const erBruker = (rolle: string | undefined) => rolle === BRUKER;
 export const erVirksomhet = (rolle: string | undefined) => rolle === VIRKSOMHET;
 export const erArbeidsgiver = (rolle: string | undefined) => rolle === ARBEIDSGIVER;
 export const erAnnenOrganisasjon = (rolle: string | undefined) => rolle === ANNEN_ORGANISASJON;
 export const erNorskMyndighet = (rolle: string | undefined) => rolle === NORSK_MYNDIGHET;
+export const erUtenlandskTrygdemyndighet = (rolle: string | undefined) => rolle === UTENLANDSK_TRYGDEMYNDIGHET;
 
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
@@ -69,6 +71,7 @@ const BrevMottaker = ({
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
   const mottakerErArbeidsgiver = erArbeidsgiver(formValues?.valgtMottaker?.rolle);
   const mottakerErAnnenOrganisasjon = erAnnenOrganisasjon(formValues?.valgtMottaker?.rolle);
+  const mottakerErUtenlandskTrygdemyndighet = erUtenlandskTrygdemyndighet(formValues?.valgtMottaker?.rolle);
 
   const mottakerHjelpetekst =
     "Hvis bruker eller arbeidsgiver har fullmektig som er lagt inn i sidemenyen, vil brevet automatisk bli sendt til denne.";
@@ -249,6 +252,14 @@ const BrevMottaker = ({
       )}
 
       {mottakerErNorskMyndighet && <BrevMottakerNorskMyndighet />}
+
+      {mottakerErUtenlandskTrygdemyndighet && feil && (
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Nav.AlertStripeFeil className="alertstripe_feil">{feil.tittel}</Nav.AlertStripeFeil>
+          </Nav.Column>
+        </Nav.Row>
+      )}
     </>
   );
 };

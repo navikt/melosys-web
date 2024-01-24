@@ -4,25 +4,25 @@ import { connect } from "react-redux";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-import * as Nav from "../../../navFrontend";
-import * as MPT from "../../../proptypes";
-import * as KV from "../../../kodeverk";
-import * as Hooks from "../../../hooks";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import Dokumentliste from "../../../felleskomponenter/dokumentliste";
-import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
-import VedleggVelger from "../../../felleskomponenter/vedleggvelger";
-import VedleggTable from "../../../felleskomponenter/vedleggTable";
+import * as Nav from "../../../../navFrontend";
+import * as MPT from "../../../../proptypes";
+import * as KV from "../../../../kodeverk";
+import * as Hooks from "../../../../hooks";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
+import Mottakerinstitusjonvelger from "../../../../felleskomponenter/mottakerinstitusjonvelger";
+import VedleggVelger from "../../../../felleskomponenter/vedleggvelger";
+import VedleggTable from "../../../../felleskomponenter/vedleggTable";
 
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
-import { dokumenterSelectors } from "../../../ducks/dokumenter";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
+import { dokumenterSelectors } from "../../../../ducks/dokumenter";
 
-import { lagYupToReduxformErrorMapper } from "../../../yup";
-import vurderingVideresendSchema from "./vurderingVideresendSchema";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import vurderingVideresendSchema from "../vurderingVideresendSchema";
 import "./vurderingVideresend.css";
 
 export const VurderingVideresend = ({
