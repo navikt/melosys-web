@@ -3,7 +3,6 @@ import { instance, mock } from "ts-mockito";
 import { render, screen } from "@testing-library/react";
 
 import { Medlemskap } from "./medlemskap";
-import MedlemskapTable from "./medlemskapTable";
 
 const periode = {
   periodeID: 1,
