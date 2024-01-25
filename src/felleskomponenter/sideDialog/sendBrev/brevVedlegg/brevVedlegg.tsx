@@ -56,7 +56,6 @@ const BrevVedlegg = ({
   setVisFritekstvedleggSkjema,
   redigerFritekstvedleggIndex,
   setRedigerFritekstvedleggIndex,
-  hentFormVerdi,
 }: BrevVedleggProps) => {
   const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
 
@@ -75,7 +74,7 @@ const BrevVedlegg = ({
           ? formValues.felt?.FRITEKSTVEDLEGG_FRITEKST?.feltVerdi
           : fritekstvedlegg[index].fritekst,
       kontaktopplysninger: false,
-      institusjonID: hentFormVerdi("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", true, true),
+      institusjonID: formValues.felt?.UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER?.valg,
     };
     try {
       setForhandsvisFritekstvedleggError(false);

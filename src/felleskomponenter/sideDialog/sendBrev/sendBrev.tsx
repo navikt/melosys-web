@@ -128,18 +128,6 @@ const SendBrev = ({
       setTilgjengeligeMaler(response);
     });
 
-  useEffect(() => {
-    hentTilgjengeligeMaler();
-    hentUtkast();
-  }, []);
-
-  useEffect(() => {
-    changeField(
-      "valgtBrev",
-      tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === formValues.type)
-    );
-  }, [formValues?.type]);
-
   const krevesLandForUtenlandskTrygdemyndighetMottaker = () => {
     return Boolean(
       tilgjengeligeBrevtyper.find((brevType) =>
@@ -170,31 +158,12 @@ const SendBrev = ({
     }
   };
 
-  useEffect(() => {
-    if (
-      tilgjengeligeBrevtyper?.length === 1 &&
-      (krevesLandForUtenlandskTrygdemyndighetMottaker() || erMottakerGyldig(formValues))
-    ) {
-      changeField("type", tilgjengeligeBrevtyper[0].type.kode);
-    } else if (tilgjengeligeBrevtyper?.length === 1 && !erMottakerGyldig(formValues)) {
-      changeField("type", undefined);
-    }
-  }, [
-    tilgjengeligeBrevtyper,
-    formValues?.valgtMottaker,
-    formValues?.organisasjonsnummer,
-    formValues?.arbeidsgiver,
-    formValues?.norskeMyndigheter,
-  ]);
-
   const kanHenteMuligeMottakere = (values: SendBrevFormValues) => {
     if (!values || !values.valgtMottaker || !values.type || values.valgtMottaker?.feilmelding) return false;
     return erMottakerGyldig(values);
   };
 
   const hentMuligeMottakere = () => {
-    setMuligeMottakereFeil(undefined);
-
     if (mottakerErNorskMyndighet) {
       Api.DokumenterV2.hentMuligeMottakereNorskMyndighet(behandlingID, {
         produserbartdokument: formValues?.type || "",
@@ -220,21 +189,58 @@ const SendBrev = ({
   };
 
   useEffect(() => {
+    hentTilgjengeligeMaler();
+    hentUtkast();
+  }, []);
+
+  useEffect(() => {
+    if (
+      tilgjengeligeBrevtyper?.length === 1 &&
+      (krevesLandForUtenlandskTrygdemyndighetMottaker() || erMottakerGyldig(formValues))
+    ) {
+      changeField("type", tilgjengeligeBrevtyper[0].type.kode);
+      changeField(
+        "valgtBrev",
+        tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === tilgjengeligeBrevtyper[0].type.kode)
+      );
+    } else if (tilgjengeligeBrevtyper?.length === 1 && !erMottakerGyldig(formValues)) {
+      changeField("type", undefined);
+      changeField("valgtBrev", undefined);
+    }
+  }, [
+    tilgjengeligeBrevtyper,
+    formValues?.valgtMottaker,
+    formValues?.organisasjonsnummer,
+    formValues?.arbeidsgiver,
+    formValues?.norskeMyndigheter,
+  ]);
+
+  useEffect(() => {
+    if (tilgjengeligeBrevtyper?.length > 1) {
+      changeField("type", undefined);
+      changeField("valgtBrev", undefined);
+    }
+  }, [formValues?.valgtMottaker]);
+
+  useEffect(() => {
+    changeField(
+      "valgtBrev",
+      tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === formValues.type)
+    );
+  }, [formValues?.type]);
+
+  useEffect(() => {
+    setMuligeMottakereFeil(undefined);
     if (kanHenteMuligeMottakere(formValues)) {
       hentMuligeMottakere();
     }
   }, [
     formValues?.type,
-    formValues?.valgtMottaker,
     formValues?.organisasjonsnummer,
     formValues?.arbeidsgiver,
     formValues?.norskeMyndigheter,
     formValues?.felt?.UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER,
   ]);
-
-  useEffect(() => {
-    setMuligeMottakereFeil(undefined);
-  }, [formValues?.valgtMottaker]);
 
   useEffect(() => {
     if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) {
