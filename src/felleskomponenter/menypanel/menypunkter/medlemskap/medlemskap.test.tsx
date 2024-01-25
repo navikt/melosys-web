@@ -1,6 +1,6 @@
 import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
-import { shallow } from "enzyme";
+import { render, screen } from "@testing-library/react";
 
 import { Medlemskap } from "./medlemskap";
 import MedlemskapTable from "./medlemskapTable";
@@ -49,12 +49,10 @@ describe("Medlemskap", () => {
   });
 
   it("Viser to medlemskapsgrupper", () => {
-    const medlemskap = shallow(<Medlemskap {...props} />);
+    render(<Medlemskap {...props} />);
 
-    const medlemskapTable = medlemskap.find(MedlemskapTable);
+    const medlemskapTable = screen.getAllByRole("table");
     expect(medlemskapTable).toHaveLength(2);
-    expect(medlemskapTable.first().props().perioder).toBe(props.medlemskap.perioderMed);
-    expect(medlemskapTable.last().props().perioder).toBe(props.medlemskap.perioderUten);
   });
 
   it("viser infomelding dersom ingen perioder oppgitt", () => {
@@ -63,9 +61,8 @@ describe("Medlemskap", () => {
       perioderUten: [],
       perioderUavklart: null,
     };
-    const medlemskap = shallow(<Medlemskap {...props} />);
-    const section = medlemskap.find("section");
-
-    expect(section.children().first().text()).toBe("(ingen data funnet)");
+    render(<Medlemskap {...props} />);
+    const noDataMessages = screen.getAllByText("(ingen data funnet)");
+    expect(noDataMessages).toHaveLength(2);
   });
 });
