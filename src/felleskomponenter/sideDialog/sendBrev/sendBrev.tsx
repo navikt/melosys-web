@@ -115,6 +115,8 @@ const SendBrev = ({
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
   const { accounts } = useMsal();
 
+  const valgtMottakerHarFeilmelding = formValues?.valgtMottaker?.feilmelding;
+
   const hentUtkast = () =>
     Api.Brevutkast.hentBrevutkast(behandlingID).then((response) => setUtkastPåBehandlingen(response));
 
@@ -229,6 +231,10 @@ const SendBrev = ({
     formValues?.norskeMyndigheter,
     formValues?.felt?.UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER,
   ]);
+
+  useEffect(() => {
+    setMuligeMottakereFeil(undefined);
+  }, [formValues?.valgtMottaker]);
 
   useEffect(() => {
     if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) {
@@ -411,8 +417,6 @@ const SendBrev = ({
 
   const spinnerAktiv = sendBrevSpinner || lagreUtkastSpinner || forkastBrevSpinner;
 
-  const valgtMottakerHarFeilmelding = formValues.valgtMottaker?.feilmelding;
-
   const knappErDisabled =
     !redigerbart ||
     !formIsValid ||
@@ -517,6 +521,8 @@ const SendBrev = ({
           setVisFritekstvedleggSkjema={setVisFritekstvedleggSkjema}
           redigerFritekstvedleggIndex={redigerFritekstVedleggIndex}
           setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
+          muligeMottakere={muligeMottakere}
+          hentFormVerdi={hentFormVerdi}
         />
       )}
 

@@ -9,7 +9,8 @@ import { SendBrevFormValues } from "../types";
 import { Fritekstvedlegg } from "../sendBrev";
 import LagredeUtkast from "./lagredeUtkast";
 
-const { BRUKER, VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET } = MKV.Koder.mottakerroller;
+const { BRUKER, VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
+  MKV.Koder.mottakerroller;
 
 interface BrevutkastProps {
   changeField: (field: string, data: any) => void;
@@ -39,6 +40,7 @@ const Brevutkast = ({
   const settMottaker = (valgtUtkast: Api.DokumenterV2.OpprettBrevReqDto) => {
     const mottakerFraRolle = (rolle: string) =>
       tilgjengeligeMottakere.find((mottaker) => mottaker.rolle === rolle)?.uuid;
+
     switch (valgtUtkast.mottaker) {
       case BRUKER:
         changeField("mottaker", mottakerFraRolle(BRUKER));
@@ -64,6 +66,9 @@ const Brevutkast = ({
       case NORSK_MYNDIGHET:
         changeField("mottaker", mottakerFraRolle(NORSK_MYNDIGHET));
         changeField("norskeMyndigheter", valgtUtkast.orgnrNorskMyndighet);
+        break;
+      case UTENLANDSK_TRYGDEMYNDIGHET:
+        changeField("mottaker", mottakerFraRolle(UTENLANDSK_TRYGDEMYNDIGHET));
         break;
       default:
         break;
@@ -143,6 +148,7 @@ const Brevutkast = ({
       setFritekstvedlegg(utkast.fritekstvedlegg || []);
       settFeltForSaksvedlegg(utkast.saksvedlegg || []);
       settKopiTilBruker(utkast.kopiMottakere || []);
+      settFeltValg("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", utkast.institusjonID);
     }
   }, [formValues?.valgtBrev?.type, aktivtUtkastTittel]);
 
