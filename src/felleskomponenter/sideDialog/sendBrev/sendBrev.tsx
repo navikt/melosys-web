@@ -199,13 +199,8 @@ const SendBrev = ({
       (krevesLandForUtenlandskTrygdemyndighetMottaker() || erMottakerGyldig(formValues))
     ) {
       changeField("type", tilgjengeligeBrevtyper[0].type.kode);
-      changeField(
-        "valgtBrev",
-        tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === tilgjengeligeBrevtyper[0].type.kode)
-      );
     } else if (tilgjengeligeBrevtyper?.length === 1 && !erMottakerGyldig(formValues)) {
       changeField("type", undefined);
-      changeField("valgtBrev", undefined);
     }
   }, [
     tilgjengeligeBrevtyper,
@@ -235,7 +230,7 @@ const SendBrev = ({
       hentMuligeMottakere();
     }
   }, [
-    formValues?.type,
+    formValues?.valgtBrev,
     formValues?.organisasjonsnummer,
     formValues?.arbeidsgiver,
     formValues?.norskeMyndigheter,
