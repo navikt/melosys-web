@@ -25,7 +25,7 @@ import * as Trygdeavtale from "./modules/trygdeavtale/flyt";
 import * as Brevutkast from "./modules/brevutkast";
 import * as Utpekingsperioder from "./modules/utpekingsperioder";
 import * as Vilkar from "./modules/vilkar";
-import * as LovligeKombinasjoner from "./modules/lovligekombinasjoner/lovligekombinasjoner";
+import * as LovligeKombinasjoner from "./modules/lovligekombinasjoner";
 import {
   Fagsak,
   RegisterAdresse,
