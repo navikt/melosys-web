@@ -33,6 +33,7 @@ import {
 
 const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
+const { FTRL_KAP2_2_15_ANDRE_LEDD } = MKV.Koder.folketrygdloven_kap2_bestemmelser;
 
 const hentLabelTekst = (behandlingstype: string) => {
   if (behandlingstype === NY_VURDERING) {
@@ -152,6 +153,10 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato),
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato),
       trygdedekning: medlemskapsperiode.trygdedekning,
+      bestemmelse:
+        medlemskapsperiode.innvilgelsesResultat === OPPHØRT
+          ? FTRL_KAP2_2_15_ANDRE_LEDD
+          : medlemskapsperiode.bestemmelse,
       innvilgelsesResultat: medlemskapsperiode.innvilgelsesResultat,
     };
 

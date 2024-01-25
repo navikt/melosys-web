@@ -16,6 +16,7 @@ export type OppdaterMedlemskapsperiode = {
   fomDato: string;
   tomDato?: string | null;
   innvilgelsesResultat: string;
+  bestemmelse: string;
   trygdedekning: string;
 };
 
@@ -31,5 +32,5 @@ export const putMedlemskapsperioder = (behandlingID: number, medlemskapsID: numb
 export const deleteMedlemskapsperioder = (behandlingID: number, medlemskapsID: number) =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/${medlemskapsID}`);
 
-export const opprettForeslåtteMedlemskapsperioder = (behandlingID: number) =>
-  postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/forslag`);
+export const opprettForeslåtteMedlemskapsperioder = (behandlingID: number, bestemmelse: string) =>
+  postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/forslag`, { bestemmelse });

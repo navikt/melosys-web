@@ -65,25 +65,9 @@ export function resetMedlemskapsperioder() {
   return Actions.resetMedlemskapsperioder();
 }
 
-export function hentBestemmelse(behandlingID: number) {
-  return doThenDispatch(() => Api.MedlemAvFolketrygden.Bestemmelser.getBestemmelse(behandlingID), {
-    OK: Types.OK_BESTEMMELSE,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
-
-export function lagreBestemmelse(behandlingID: number, bestemmelse: string) {
-  return doThenDispatch(() => Api.MedlemAvFolketrygden.Bestemmelser.postBestemmelse(behandlingID, bestemmelse), {
-    OK: Types.OK_BESTEMMELSE,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
-
-export function opprettMedlemskapsperioderForslag(behandlingID: number) {
+export function opprettMedlemskapsperioderForslag(behandlingID: number, bestemmelse: string) {
   return doThenDispatch(
-    () => Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettForeslåtteMedlemskapsperioder(behandlingID),
+    () => Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettForeslåtteMedlemskapsperioder(behandlingID, bestemmelse),
     {
       OK: Types.OK_MEDLEMSKAPSPERIODE,
       FEILET: Types.FEILET,

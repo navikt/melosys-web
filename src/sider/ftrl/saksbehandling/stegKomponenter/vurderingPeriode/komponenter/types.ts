@@ -7,6 +7,7 @@ export type MedlemskapsperiodeProp = {
   fomDato: string;
   tomDato: string;
   innvilgelsesResultat: string;
+  bestemmelse: string;
   trygdedekning: string;
 };
 
