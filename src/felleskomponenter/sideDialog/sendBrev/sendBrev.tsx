@@ -522,7 +522,6 @@ const SendBrev = ({
           redigerFritekstvedleggIndex={redigerFritekstVedleggIndex}
           setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
           muligeMottakere={muligeMottakere}
-          hentFormVerdi={hentFormVerdi}
         />
       )}
 

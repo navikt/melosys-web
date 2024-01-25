@@ -36,7 +36,6 @@ interface BrevVedleggProps {
   setVisFritekstvedleggSkjema: (value: boolean) => void;
   redigerFritekstvedleggIndex?: number;
   setRedigerFritekstvedleggIndex: (value: number | undefined) => void;
-  hentFormVerdi: (feltNavn: string, hentValgverdi: boolean, hentKode: boolean) => any;
 }
 
 const BrevVedlegg = ({
