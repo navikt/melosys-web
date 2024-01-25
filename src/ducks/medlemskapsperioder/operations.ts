@@ -47,7 +47,7 @@ export function oppdaterMedlemskapsperiode(
 
 export function slettMedlemskapsperiode(behandlingID: number, medlemskapsId: number) {
   return doThenDispatch(
-    () => Api.MedlemAvFolketrygden.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, medlemskapsId),
+    () => Api.MedlemAvFolketrygden.Medlemskapsperioder.deleteMedlemskapsperiode(behandlingID, medlemskapsId),
     {
       OK: Types.OK_SLETT_MEDLEMSKAPSPERIODE,
       FEILET: Types.FEILET,
@@ -59,6 +59,14 @@ export function slettMedlemskapsperiode(behandlingID: number, medlemskapsId: num
       }),
     }
   );
+}
+
+export function slettMedlemskapsperioder(behandlingID: number) {
+  return doThenDispatch(() => Api.MedlemAvFolketrygden.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID), {
+    OK: Types.OK_SLETT_ALLE_MEDLEMSKAPSPERIODER,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
 }
 
 export function resetMedlemskapsperioder() {
