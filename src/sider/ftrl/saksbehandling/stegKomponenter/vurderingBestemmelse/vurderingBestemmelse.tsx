@@ -60,6 +60,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const [muligeVilkår, setMuligeVilkår] = useState<VilkårOgBegrunnelser[]>([]);
   const [formIsValid, setFormIsValid] = useState(false);
   const [harSkjeddEndringer, setHarSkjeddEndringer] = useState(false);
+  const [lovligeBestemmelser, setLovligeBestemmelser] = useState<string[]>([]);
+  const ulovligBestemmelseValgt = valgtBestemmelse && !lovligeBestemmelser.includes(valgtBestemmelse);
 
   const bestemmelseIkkeStøttetValgt = ikkeStøttedeBestemmelser?.some((bestemmelse) => bestemmelse === valgtBestemmelse);
   const stegErGyldig = formIsValid && !harSkjeddEndringer;
@@ -74,6 +76,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           : ""
       );
     });
+
+    Api.LovligeKombinasjoner.hentBestemmelser(behandlingID).then(setLovligeBestemmelser);
 
     lagredeVilkår.forEach((vilkår: Api.Vilkar.Vilkaar) => {
       valgteVilkår.set(vilkår.vilkaar, vilkår.oppfylt ? SANN : USANN);
@@ -259,20 +263,29 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       </Nav.Fieldset>
 
-      {muligeVilkår.map((vilkårOgBegrunnelser) => (
-        <VilkaarOgBegrunnelser
-          key={vilkårOgBegrunnelser.vilkår}
-          vilkårOgBegrunnelser={vilkårOgBegrunnelser}
-          alleValgteVilkår={valgteVilkår}
-          alleValgteBegrunnelser={valgteBegrunnelser}
-          vilkårKodeverk={vilkårKodeverk}
-          begrunnelseKodeverk={begrunnelseKodeverk}
-          handleEndreVilkår={handleEndreVilkår}
-          handleEndreBegrunnelseKode={handleEndreBegrunnelseKode}
-          handleEndreBegrunnelseFritekst={handleEndreBegrunnelseFritekst}
-          redigerbart={redigerbart}
-        />
-      ))}
+      {ulovligBestemmelseValgt && !bestemmelseIkkeStøttetValgt && (
+        <Nav.AlertStripeFeil>
+          <Nav.Typo.Normaltekst>
+            Dekning på steg 1 kan ikke gis i kombinasjon med denne bestemmelsen.
+          </Nav.Typo.Normaltekst>
+        </Nav.AlertStripeFeil>
+      )}
+
+      {!ulovligBestemmelseValgt &&
+        muligeVilkår.map((vilkårOgBegrunnelser) => (
+          <VilkaarOgBegrunnelser
+            key={vilkårOgBegrunnelser.vilkår}
+            vilkårOgBegrunnelser={vilkårOgBegrunnelser}
+            alleValgteVilkår={valgteVilkår}
+            alleValgteBegrunnelser={valgteBegrunnelser}
+            vilkårKodeverk={vilkårKodeverk}
+            begrunnelseKodeverk={begrunnelseKodeverk}
+            handleEndreVilkår={handleEndreVilkår}
+            handleEndreBegrunnelseKode={handleEndreBegrunnelseKode}
+            handleEndreBegrunnelseFritekst={handleEndreBegrunnelseFritekst}
+            redigerbart={redigerbart}
+          />
+        ))}
 
       {bestemmelseIkkeStøttetValgt && <IngenFlytMelding />}
 
