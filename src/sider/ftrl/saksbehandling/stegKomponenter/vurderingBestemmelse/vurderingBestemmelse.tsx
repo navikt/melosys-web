@@ -24,6 +24,7 @@ import {
   BestemmelseMedVilkårOgBegrunnelser,
   VilkårOgBegrunnelser,
 } from "../../../../../services/modules/medlemavfolketrygden/bestemmelser";
+import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export const kodeInkludererFritekst = (nestedKtObject: { [key: string]: KTObject[] }, kode?: string) =>
@@ -50,6 +51,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector);
   const vilkårKodeverk = useSelector(folketrygdenkodeverkSelectors.VilkaarSelector);
   const begrunnelseKodeverk = useSelector(folketrygdenkodeverkSelectors.BegrunnelserSelector);
+  const valgtTrygdedekning = useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector);
 
   const [støttedeBestemmelser, setStøttedeBestemmelser] = useState<BestemmelseMedVilkårOgBegrunnelser[]>([]);
   const [ikkeStøttedeBestemmelser, setIkkeStøttedeBestemmelser] = useState<string[]>([]);
@@ -77,7 +79,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       );
     });
 
-    Api.LovligeKombinasjoner.hentBestemmelser(behandlingID).then(setLovligeBestemmelser);
+    Api.LovligeKombinasjoner.hentBestemmelser(valgtTrygdedekning).then(setLovligeBestemmelser);
 
     lagredeVilkår.forEach((vilkår: Api.Vilkar.Vilkaar) => {
       valgteVilkår.set(vilkår.vilkaar, vilkår.oppfylt ? SANN : USANN);
