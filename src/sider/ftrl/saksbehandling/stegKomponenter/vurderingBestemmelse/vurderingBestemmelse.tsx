@@ -25,6 +25,8 @@ import {
   VilkårOgBegrunnelser,
 } from "../../../../../services/modules/medlemavfolketrygden/bestemmelser";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { MELOSYS_FOLKETRYGDEN_2_7 } from "../../../../../featuretoggle/toggleNavn";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export const kodeInkludererFritekst = (nestedKtObject: { [key: string]: KTObject[] }, kode?: string) =>
@@ -44,6 +46,8 @@ interface VurderingBestemmelseProps {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) => {
   const dispatch = useDispatch();
+  const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
+
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -63,7 +67,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const [formIsValid, setFormIsValid] = useState(false);
   const [harSkjeddEndringer, setHarSkjeddEndringer] = useState(false);
   const [lovligeBestemmelser, setLovligeBestemmelser] = useState<string[]>([]);
-  const ulovligBestemmelseValgt = valgtBestemmelse && !lovligeBestemmelser.includes(valgtBestemmelse);
+  const ulovligBestemmelseValgt =
+    valgtBestemmelse && folketrygden2_7ToggleEnabled && !lovligeBestemmelser.includes(valgtBestemmelse);
 
   const bestemmelseIkkeStøttetValgt = ikkeStøttedeBestemmelser?.some((bestemmelse) => bestemmelse === valgtBestemmelse);
   const stegErGyldig = formIsValid && !harSkjeddEndringer;

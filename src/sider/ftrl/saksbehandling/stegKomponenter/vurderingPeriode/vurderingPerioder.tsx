@@ -27,6 +27,7 @@ import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import {
+  MELOSYS_FOLKETRYGDEN_2_7,
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../../../../featuretoggle/toggleNavn";
@@ -81,9 +82,12 @@ const komponentState = (state: RootState) => ({
 
 export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) => {
   const dispatch = useDispatch();
+  const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
+
   const {
     redigerbart,
     lagredeMedlemskapsperioder,
+    trygdedekninger,
     behandlingID,
     innvilgelsesResultater,
     soknadsperiode,
@@ -153,8 +157,10 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   }, [stegErGyldig]);
 
   useEffect(() => {
-    Api.LovligeKombinasjoner.hentTrygdedekninger(lagretBestemmelse).then((trygdedekninger) =>
-      setGyldigeDekninger(MKV.KTObjects.trygdedekninger.filter((kt: KTObject) => trygdedekninger.includes(kt.kode)))
+    Api.LovligeKombinasjoner.hentTrygdedekninger(lagretBestemmelse).then((trygdedekningerFraResponse) =>
+      setGyldigeDekninger(
+        MKV.KTObjects.trygdedekninger.filter((kt: KTObject) => trygdedekningerFraResponse.includes(kt.kode))
+      )
     );
   }, [lagretBestemmelse]);
 
@@ -259,7 +265,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       <Nav.Typo.Normaltekst className="labelTekst">{hentLabelTekst(behandlingstype)}</Nav.Typo.Normaltekst>
 
       <Medlemskapsperioder
-        trygdedekninger={gyldigeDekninger}
+        trygdedekninger={folketrygden2_7ToggleEnabled ? gyldigeDekninger : trygdedekninger}
         innvilgelsesResultater={gyldigeInnvilgelsesResultat}
         control={control}
         fields={fields}
