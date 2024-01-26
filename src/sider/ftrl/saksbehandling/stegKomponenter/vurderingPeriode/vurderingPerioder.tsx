@@ -158,9 +158,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     );
   }, [lagretBestemmelse]);
 
-  console.log(MKV.KTObjects.trygdedekninger);
-  console.log(gyldigeDekninger);
-
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato),
