@@ -73,6 +73,7 @@ const BrevVedlegg = ({
           ? formValues.felt?.FRITEKSTVEDLEGG_FRITEKST?.feltVerdi
           : fritekstvedlegg[index].fritekst,
       kontaktopplysninger: false,
+      institusjonID: formValues.felt?.UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER?.valg,
     };
     try {
       setForhandsvisFritekstvedleggError(false);

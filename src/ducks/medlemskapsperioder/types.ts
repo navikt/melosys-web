@@ -4,6 +4,7 @@ export const OK_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK";
 export const OK_OPPRETT_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK_OPPRETT";
 export const OK_OPPDATER_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK_OPPDATER";
 export const OK_SLETT_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK_SLETT";
+export const OK_SLETT_ALLE_MEDLEMSKAPSPERIODER = "medlemskapsperioder/OK_SLETT_ALLE";
 export const FEILET = "medlemskapsperioder/FEILET";
 export const PENDING = "medlemskapsperioder/PENDING";
 export const RESET = "medlemskapsperioder/RESET";
@@ -47,6 +48,10 @@ export interface OkSlettMedlemskapsperiodeAction {
   };
 }
 
+export interface OkSlettAlleMedlemskapsperioderAction {
+  type: typeof OK_SLETT_ALLE_MEDLEMSKAPSPERIODER;
+}
+
 export type Action =
   | FeiletAction
   | PendingAction
@@ -54,4 +59,5 @@ export type Action =
   | OkMedlemskapsperiodeAction
   | OkOpprettMedlemskapsperiodeAction
   | OkOppdaterMedlemskapsperiodeAction
-  | OkSlettMedlemskapsperiodeAction;
+  | OkSlettMedlemskapsperiodeAction
+  | OkSlettAlleMedlemskapsperioderAction;

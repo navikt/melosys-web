@@ -71,6 +71,7 @@ const mapInitialMedlemskapsperioder = (
 
 const komponentState = (state: RootState) => ({
   lagredeMedlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
+  lagretBestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
   trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
@@ -87,6 +88,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const {
     redigerbart,
     lagredeMedlemskapsperioder,
+    lagretBestemmelse,
     trygdedekninger,
     behandlingID,
     innvilgelsesResultater,
@@ -239,6 +241,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       tomDato: "",
       innvilgelsesResultat: "",
       trygdedekning: "",
+      bestemmelse: lagretBestemmelse,
     };
     // @ts-ignore
     append(nyMedlemskapsperiode);

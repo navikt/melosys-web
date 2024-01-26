@@ -192,6 +192,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     setValgteVilkår(new Map());
     setValgteBegrunnelser(new Map());
     if (!Utils._isEmpty(lagredeVilkår)) dispatch(vilkarOperations.send(behandlingID, []));
+    if (lagretBestemmelse) dispatch(medlemskapsperioderOperations.slettMedlemskapsperioder(behandlingID));
   };
 
   const handleEndreVilkår = (event: ChangeEvent<HTMLInputElement>) => {
