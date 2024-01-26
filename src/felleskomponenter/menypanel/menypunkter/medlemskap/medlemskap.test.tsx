@@ -52,6 +52,8 @@ describe("Medlemskap", () => {
 
     const medlemskapTable = screen.getAllByRole("table");
     expect(medlemskapTable).toHaveLength(2);
+    expect(medlemskapTable[0]).toHaveTextContent(props.medlemskap.perioderMed.periode.fom);
+    //expect(medlemskapTable[1]).toHaveTextContent(props.medlemskap.perioderMed.periode.fom);
   });
 
   it("viser infomelding dersom ingen perioder oppgitt", () => {
