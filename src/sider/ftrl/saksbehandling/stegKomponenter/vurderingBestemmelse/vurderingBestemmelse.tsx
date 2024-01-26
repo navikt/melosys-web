@@ -51,7 +51,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector);
   const vilkårKodeverk = useSelector(folketrygdenkodeverkSelectors.VilkaarSelector);
   const begrunnelseKodeverk = useSelector(folketrygdenkodeverkSelectors.BegrunnelserSelector);
-  const valgtTrygdedekning = useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector);
+  const trygdedekning = useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector);
 
   const [støttedeBestemmelser, setStøttedeBestemmelser] = useState<BestemmelseMedVilkårOgBegrunnelser[]>([]);
   const [ikkeStøttedeBestemmelser, setIkkeStøttedeBestemmelser] = useState<string[]>([]);
@@ -79,7 +79,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       );
     });
 
-    Api.LovligeKombinasjoner.hentBestemmelser(valgtTrygdedekning).then(setLovligeBestemmelser);
+    Api.LovligeKombinasjoner.hentBestemmelser(trygdedekning).then(setLovligeBestemmelser);
 
     lagredeVilkår.forEach((vilkår: Api.Vilkar.Vilkaar) => {
       valgteVilkår.set(vilkår.vilkaar, vilkår.oppfylt ? SANN : USANN);
