@@ -27,7 +27,6 @@ import {
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_FOLKETRYGDEN_2_7 } from "../../../../../featuretoggle/toggleNavn";
-import { erAvsluttetEllerMidlertidigBeslutning } from "../../../../../melosyskodeverk/utils";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export const kodeInkludererFritekst = (nestedKtObject: { [key: string]: KTObject[] }, kode?: string) =>
@@ -74,7 +73,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const bestemmelseIkkeStøttetValgt = ikkeStøttedeBestemmelser?.some((bestemmelse) => bestemmelse === valgtBestemmelse);
 
-  const stegErGyldig = (formIsValid || erAvsluttetEllerMidlertidigBeslutning(behandlingstatus)) && !harSkjeddEndringer;
+  const behandlingErAvsluttetMedLagretBestemmelse =
+    Boolean(lagretBestemmelse) && behandlingstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET;
+  const stegErGyldig = (formIsValid || behandlingErAvsluttetMedLagretBestemmelse) && !harSkjeddEndringer;
 
   const initialiserSteg = async () => {
     await Api.MedlemAvFolketrygden.Bestemmelser.hentMuligeBestemmelser(behandlingstema).then((response) => {
@@ -151,6 +152,14 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     const vilkårSomSkalVises: Api.MedlemAvFolketrygden.Bestemmelser.VilkårOgBegrunnelser[] = [];
 
     valgtBestemmelsesVilkårOgBegrunnelser?.forEach((vilkårOgBegrunnelser) => {
+      if (behandlingErAvsluttetMedLagretBestemmelse) {
+        // Filtrer bort vilkår som ikke var med behandlingen på avslutningstidspunktet
+        if (valgteVilkår.get(vilkårOgBegrunnelser.vilkår) === SANN) {
+          vilkårSomSkalVises.push(vilkårOgBegrunnelser);
+        }
+        return;
+      }
+
       if (Utils._isEmpty(vilkårSomSkalVises)) {
         vilkårSomSkalVises.push(vilkårOgBegrunnelser);
         return;
