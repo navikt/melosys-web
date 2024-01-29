@@ -49,6 +49,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
@@ -71,7 +72,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     folketrygden2_7ToggleEnabled && Boolean(valgtBestemmelse) && !lovligeBestemmelser.includes(valgtBestemmelse);
 
   const bestemmelseIkkeStøttetValgt = ikkeStøttedeBestemmelser?.some((bestemmelse) => bestemmelse === valgtBestemmelse);
-  const stegErGyldig = formIsValid && !harSkjeddEndringer;
+
+  const behandlingErAvsluttetMedLagretBestemmelse =
+    Boolean(lagretBestemmelse) && behandlingstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET;
+  const stegErGyldig = (formIsValid || behandlingErAvsluttetMedLagretBestemmelse) && !harSkjeddEndringer;
 
   const initialiserSteg = async () => {
     await Api.MedlemAvFolketrygden.Bestemmelser.hentMuligeBestemmelser(behandlingstema).then((response) => {
@@ -148,6 +152,14 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     const vilkårSomSkalVises: Api.MedlemAvFolketrygden.Bestemmelser.VilkårOgBegrunnelser[] = [];
 
     valgtBestemmelsesVilkårOgBegrunnelser?.forEach((vilkårOgBegrunnelser) => {
+      if (behandlingErAvsluttetMedLagretBestemmelse) {
+        // Filtrer bort vilkår som ikke var med behandlingen på avslutningstidspunktet
+        if (valgteVilkår.get(vilkårOgBegrunnelser.vilkår) === SANN) {
+          vilkårSomSkalVises.push(vilkårOgBegrunnelser);
+        }
+        return;
+      }
+
       if (Utils._isEmpty(vilkårSomSkalVises)) {
         vilkårSomSkalVises.push(vilkårOgBegrunnelser);
         return;
