@@ -27,7 +27,6 @@ import {
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_FOLKETRYGDEN_2_7 } from "../../../../../featuretoggle/toggleNavn";
-import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import { erAvsluttetEllerMidlertidigBeslutning } from "../../../../../melosyskodeverk/utils";
 
 const { SANN, USANN } = BOOLSK_STRING;
