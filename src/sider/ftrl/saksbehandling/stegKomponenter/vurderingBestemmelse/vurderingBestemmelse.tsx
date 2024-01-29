@@ -68,7 +68,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const [harSkjeddEndringer, setHarSkjeddEndringer] = useState(false);
   const [lovligeBestemmelser, setLovligeBestemmelser] = useState<string[]>([]);
   const ulovligBestemmelseValgt =
-    valgtBestemmelse && folketrygden2_7ToggleEnabled && !lovligeBestemmelser.includes(valgtBestemmelse);
+    folketrygden2_7ToggleEnabled && Boolean(valgtBestemmelse) && !lovligeBestemmelser.includes(valgtBestemmelse);
 
   const bestemmelseIkkeStøttetValgt = ikkeStøttedeBestemmelser?.some((bestemmelse) => bestemmelse === valgtBestemmelse);
   const stegErGyldig = formIsValid && !harSkjeddEndringer;
@@ -298,7 +298,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       {bestemmelseIkkeStøttetValgt && <IngenFlytMelding />}
 
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: handleBekreft, disabled: !formIsValid || !redigerbart }}
+        bekreftKnappProps={{
+          onClick: handleBekreft,
+          disabled: !formIsValid || !redigerbart || ulovligBestemmelseValgt,
+        }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
