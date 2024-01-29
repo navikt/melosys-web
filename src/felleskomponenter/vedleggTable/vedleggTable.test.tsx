@@ -27,7 +27,7 @@ describe("vedleggTable", () => {
           redigerFritekstvedlegg={vi.fn()}
           slettFritekstvedlegg={vi.fn()}
           label="a"
-          redigerbart={true}
+          redigerbart
         />
       )
       .toJSON();
