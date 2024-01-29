@@ -1,6 +1,6 @@
 import * as QS from "qs";
-import { getAsJson } from "../utils";
-import { API_BASE_URL, SAKSBEHANDLING } from "../api-constants";
+import { getAsJson } from "../../utils";
+import { API_BASE_URL, SAKSBEHANDLING } from "../../api-constants";
 
 const URI_PATH = `${API_BASE_URL}${SAKSBEHANDLING}`;
 

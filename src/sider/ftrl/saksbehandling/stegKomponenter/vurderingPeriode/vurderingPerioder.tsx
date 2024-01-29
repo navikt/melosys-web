@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "AppTypes";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -27,9 +27,11 @@ import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import {
+  MELOSYS_FOLKETRYGDEN_2_7,
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../../../../featuretoggle/toggleNavn";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -69,26 +71,28 @@ const mapInitialMedlemskapsperioder = (
 
 const komponentState = (state: RootState) => ({
   lagredeMedlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
-  lagretBestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
   trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  lagretBestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
 });
 
 export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) => {
   const dispatch = useDispatch();
+  const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
+
   const {
     redigerbart,
     lagredeMedlemskapsperioder,
-    lagretBestemmelse,
     trygdedekninger,
     behandlingID,
     innvilgelsesResultater,
     soknadsperiode,
     behandlingstype,
+    lagretBestemmelse,
   } = useSelector(komponentState);
   const begrensePeriodeVedtakToggleEnabled = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
@@ -117,6 +121,8 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     name: "medlemskapsperioder",
   });
   const formValues = watch();
+
+  const [gyldigeDekninger, setGyldigeDekninger] = useState<KTObject[]>([]);
 
   const gyldigeInnvilgelsesResultat = innvilgelsesResultater.filter(
     (kt) =>
@@ -149,6 +155,14 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
+
+  useEffect(() => {
+    Api.LovligeKombinasjoner.hentTrygdedekninger(lagretBestemmelse).then((trygdedekningerFraResponse) =>
+      setGyldigeDekninger(
+        MKV.KTObjects.trygdedekninger.filter((kt: KTObject) => trygdedekningerFraResponse.includes(kt.kode))
+      )
+    );
+  }, [lagretBestemmelse]);
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
@@ -252,7 +266,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       <Nav.Typo.Normaltekst className="labelTekst">{hentLabelTekst(behandlingstype)}</Nav.Typo.Normaltekst>
 
       <Medlemskapsperioder
-        trygdedekninger={trygdedekninger}
+        trygdedekninger={folketrygden2_7ToggleEnabled ? gyldigeDekninger : trygdedekninger}
         innvilgelsesResultater={gyldigeInnvilgelsesResultat}
         control={control}
         fields={fields}
