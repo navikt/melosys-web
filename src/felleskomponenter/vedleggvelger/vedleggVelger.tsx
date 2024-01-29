@@ -10,9 +10,10 @@ interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];
   valgteVedlegg: FysiskDokument[];
   onChange: (valgteVedlegg: FysiskDokument[]) => void;
+  redigerbart: boolean;
 }
 
-const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange }: VedleggVelgerProps) => {
+const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, redigerbart }: VedleggVelgerProps) => {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
@@ -26,7 +27,7 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange }: VedleggVelgerPro
 
   return (
     <>
-      <Mui.Lenkeknapp className="vedleggvelger" onClick={toggleRedigerer} ikon={Ikoner.Add}>
+      <Mui.Lenkeknapp className="vedleggvelger" onClick={toggleRedigerer} ikon={Ikoner.Add} disabled={!redigerbart}>
         Legg til vedlegg
       </Mui.Lenkeknapp>
       {redigerer && (

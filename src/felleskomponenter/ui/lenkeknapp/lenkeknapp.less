@@ -35,7 +35,7 @@
     box-shadow: 0 0 0 2px @blue-nav-focus;
   }
 
-  &:active,
+  &:active:not([disabled]),
   &--active {
     outline: none;
     color: white;
@@ -53,6 +53,15 @@
     svg {
       fill: white;
       stroke: white;
+    }
+  }
+
+  &:disabled {
+    color: @gray-dark;
+    cursor: not-allowed;
+
+    svg {
+      stroke: @gray-dark;
     }
   }
 }

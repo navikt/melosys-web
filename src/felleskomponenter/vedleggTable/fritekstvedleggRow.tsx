@@ -14,6 +14,7 @@ interface FritekstvedleggRowProps {
   slettFritekstvedlegg?: (index: number) => void;
   index: number;
   lagFritekstPdfUrl?: (index: number) => Promise<string | false>;
+  redigerbart: boolean;
 }
 
 const FritekstvedleggRow = ({
@@ -22,6 +23,7 @@ const FritekstvedleggRow = ({
   slettFritekstvedlegg,
   index,
   lagFritekstPdfUrl,
+  redigerbart,
 }: FritekstvedleggRowProps) => {
   const [visBekreftelseModal, setVisBekreftelseModal] = useState<boolean>(false);
 
@@ -45,8 +47,14 @@ const FritekstvedleggRow = ({
           ikon={Ikoner.Pencil}
           onClick={() => redigerFritekstvedlegg && redigerFritekstvedlegg(index)}
           ariaLabel="Rediger vedlegg"
+          disabled={!redigerbart}
         />
-        <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => setVisBekreftelseModal(true)} ariaLabel="Slett vedlegg" />
+        <Mui.IkonKnapp
+          ikon={Ikoner.Bin}
+          onClick={() => setVisBekreftelseModal(true)}
+          ariaLabel="Slett vedlegg"
+          disabled={!redigerbart}
+        />
       </Table.DataCell>
       {visBekreftelseModal ? (
         <SlettFritekstvedleggModal
