@@ -211,7 +211,7 @@ const SendBrev = ({
   ]);
 
   useEffect(() => {
-    if (tilgjengeligeBrevtyper?.length > 1) {
+    if (tilgjengeligeBrevtyper?.length > 1 && formValues?.type) {
       changeField("type", undefined);
     }
   }, [formValues?.valgtMottaker]);
