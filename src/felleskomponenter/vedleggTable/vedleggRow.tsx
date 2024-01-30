@@ -9,9 +9,10 @@ import { Table } from "@navikt/ds-react";
 interface VedleggRowProps {
   vedlegg: FysiskDokument;
   slettVedlegg: () => void;
+  redigerbart: boolean;
 }
 
-const VedleggRow = ({ vedlegg, slettVedlegg }: VedleggRowProps) => {
+const VedleggRow = ({ vedlegg, slettVedlegg, redigerbart }: VedleggRowProps) => {
   return (
     <Table.Row className="vedlegg">
       <Table.DataCell>
@@ -21,7 +22,7 @@ const VedleggRow = ({ vedlegg, slettVedlegg }: VedleggRowProps) => {
         <span>{Utils.dato.formatterDatoTilNorsk(vedlegg.dato)}</span>
       </Table.DataCell>
       <Table.DataCell className="icon__cell">
-        <Mui.IkonKnapp ariaLabel="Fjern vedlegg" ikon={Ikoner.Bin} onClick={slettVedlegg} />
+        <Mui.IkonKnapp ariaLabel="Fjern vedlegg" ikon={Ikoner.Bin} onClick={slettVedlegg} disabled={!redigerbart} />
       </Table.DataCell>
     </Table.Row>
   );

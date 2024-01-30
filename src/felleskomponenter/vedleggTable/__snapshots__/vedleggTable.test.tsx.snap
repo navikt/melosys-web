@@ -47,6 +47,7 @@ exports[`vedleggTable > snapshot test 1`] = `
         <button
           aria-label="Rediger vedlegg"
           className="ikon-knapp"
+          disabled={false}
           onClick={[Function]}
           title="Rediger vedlegg"
           type="button"
@@ -70,6 +71,7 @@ exports[`vedleggTable > snapshot test 1`] = `
         <button
           aria-label="Slett vedlegg"
           className="ikon-knapp"
+          disabled={false}
           onClick={[Function]}
           title="Slett vedlegg"
           type="button"
@@ -119,6 +121,7 @@ exports[`vedleggTable > snapshot test 1`] = `
         <button
           aria-label="Fjern vedlegg"
           className="ikon-knapp"
+          disabled={false}
           onClick={[Function]}
           title="Fjern vedlegg"
           type="button"

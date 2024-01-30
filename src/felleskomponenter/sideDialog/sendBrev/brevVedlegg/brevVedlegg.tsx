@@ -153,11 +153,17 @@ const BrevVedlegg = ({
           lagFritekstPdfUrl={lagFritekstPdfUrl}
           setValgteVedlegg={setValgteVedlegg}
           label="Vedlegg"
+          redigerbart={redigerbart}
         />
       )}
 
       {vedleggFelt && (
-        <VedleggVelger dokumenter={dokumenter} valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} />
+        <VedleggVelger
+          dokumenter={dokumenter}
+          valgteVedlegg={valgteVedlegg}
+          onChange={setValgteVedlegg}
+          redigerbart={redigerbart}
+        />
       )}
 
       {fritekstvedleggFelt &&

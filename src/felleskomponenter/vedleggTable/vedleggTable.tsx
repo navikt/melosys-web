@@ -14,6 +14,7 @@ interface VedleggTableProps {
   redigerFritekstvedlegg?: (index: number) => void;
   slettFritekstvedlegg?: (index: number) => void;
   lagFritekstPdfUrl?: (index: number) => Promise<string | false>;
+  redigerbart: boolean;
 }
 
 const VedleggTable = ({
@@ -24,6 +25,7 @@ const VedleggTable = ({
   redigerFritekstvedlegg,
   slettFritekstvedlegg,
   lagFritekstPdfUrl,
+  redigerbart,
 }: VedleggTableProps) => {
   const slettVedlegg = (vedleggID: string) => {
     setValgteVedlegg(valgteVedlegg.filter(({ id }) => id !== vedleggID));
@@ -46,6 +48,7 @@ const VedleggTable = ({
               key={vedlegg.tittel}
               index={index}
               lagFritekstPdfUrl={lagFritekstPdfUrl}
+              redigerbart={redigerbart}
             />
           ))}
           {valgteVedlegg.map((enkeltVedlegg) => (
@@ -53,6 +56,7 @@ const VedleggTable = ({
               key={enkeltVedlegg.id}
               vedlegg={enkeltVedlegg}
               slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
+              redigerbart={redigerbart}
             />
           ))}
         </Table.Body>
