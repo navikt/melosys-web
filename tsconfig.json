@@ -16,10 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
-    "downlevelIteration": true,
-    "paths": {
-      "~": ["./src"]
-    }
+    "downlevelIteration": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/global.d.ts"],
   "exclude": ["node_modules"]
