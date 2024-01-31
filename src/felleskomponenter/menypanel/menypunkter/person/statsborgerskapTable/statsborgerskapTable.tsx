@@ -28,11 +28,13 @@ const StatsborgerskapTable = ({ statsborgerskapList, historisk }: Statsborgerska
       {!historisk || expanded ? (
         <Table className="menypanel__table">
           <Table.Header>
-            <Table.HeaderCell className={historisk ? "transparent" : ""}>Land</Table.HeaderCell>
-            <Table.HeaderCell className={historisk ? "transparent" : ""}>Register</Table.HeaderCell>
-            <Table.HeaderCell className={historisk ? "transparent" : ""}>Kilde</Table.HeaderCell>
-            <Table.HeaderCell className={historisk ? "transparent" : ""}>Bekreftelsesdato</Table.HeaderCell>
-            <Table.HeaderCell className="fixed-width">{periodetekst}</Table.HeaderCell>
+            <Table.Row>
+              <Table.HeaderCell className={historisk ? "transparent" : ""}>Land</Table.HeaderCell>
+              <Table.HeaderCell className={historisk ? "transparent" : ""}>Register</Table.HeaderCell>
+              <Table.HeaderCell className={historisk ? "transparent" : ""}>Kilde</Table.HeaderCell>
+              <Table.HeaderCell className={historisk ? "transparent" : ""}>Bekreftelsesdato</Table.HeaderCell>
+              <Table.HeaderCell className="fixed-width">{periodetekst}</Table.HeaderCell>
+            </Table.Row>
           </Table.Header>
           <Table.Body>
             {statsborgerskapList.map((statsborgerskap) => (

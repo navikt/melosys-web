@@ -10,9 +10,11 @@ const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<K
   <div className="arbeidssted__fly__redigeringutfort-wrapper">
     <Table>
       <Table.Header>
-        <Table.HeaderCell>Navn på hjemmebase</Table.HeaderCell>
-        <Table.HeaderCell>Type flyvninger</Table.HeaderCell>
-        <Table.HeaderCell>Hjemmebasens land</Table.HeaderCell>
+        <Table.Row>
+          <Table.HeaderCell>Navn på hjemmebase</Table.HeaderCell>
+          <Table.HeaderCell>Type flyvninger</Table.HeaderCell>
+          <Table.HeaderCell>Hjemmebasens land</Table.HeaderCell>
+        </Table.Row>
       </Table.Header>
       <Table.Body>
         {verdier.map((arbeidsstedFly) => (

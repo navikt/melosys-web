@@ -15,11 +15,13 @@ function BarnTable({ barnListe }: BarnTableProps) {
     <div className="menypanel__table-wrapper">
       <Table>
         <Table.Header>
-          <Table.HeaderCell>Navn</Table.HeaderCell>
-          <Table.HeaderCell>F.nr./d-nr.</Table.HeaderCell>
-          <Table.HeaderCell>Foreldreansvar</Table.HeaderCell>
-          <Table.HeaderCell>F.nr. annen forelder</Table.HeaderCell>
-          <Table.HeaderCell>&nbsp;</Table.HeaderCell>
+          <Table.Row>
+            <Table.HeaderCell>Navn</Table.HeaderCell>
+            <Table.HeaderCell>F.nr./d-nr.</Table.HeaderCell>
+            <Table.HeaderCell>Foreldreansvar</Table.HeaderCell>
+            <Table.HeaderCell>F.nr. annen forelder</Table.HeaderCell>
+            <Table.HeaderCell>&nbsp;</Table.HeaderCell>
+          </Table.Row>
         </Table.Header>
         <Table.Body>
           {barnListe.map((barn) => (

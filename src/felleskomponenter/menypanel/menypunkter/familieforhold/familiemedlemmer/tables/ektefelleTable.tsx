@@ -14,10 +14,12 @@ function EktefelleTable({ ektefelleListe }: EktefelleTableProps) {
     <div className="menypanel__table-wrapper">
       <Table>
         <Table.Header>
-          <Table.HeaderCell>Navn</Table.HeaderCell>
-          <Table.HeaderCell>F.nr./d-nr.</Table.HeaderCell>
-          <Table.HeaderCell>Fra og med</Table.HeaderCell>
-          <Table.HeaderCell>Relasjon</Table.HeaderCell>
+          <Table.Row>
+            <Table.HeaderCell>Navn</Table.HeaderCell>
+            <Table.HeaderCell>F.nr./d-nr.</Table.HeaderCell>
+            <Table.HeaderCell>Fra og med</Table.HeaderCell>
+            <Table.HeaderCell>Relasjon</Table.HeaderCell>
+          </Table.Row>
         </Table.Header>
         <Table.Body>
           {ektefelleListe.map((ektefelle) => (

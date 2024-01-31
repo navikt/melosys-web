@@ -18,10 +18,12 @@ export const PersonstatusTabell = ({ personstatuser }: PersonstatusTabellProps) 
   return (
     <Table>
       <Table.Header>
-        <Table.HeaderCell>Personstatus</Table.HeaderCell>
-        <Table.HeaderCell>Kilde</Table.HeaderCell>
-        <Table.HeaderCell>Register</Table.HeaderCell>
-        <Table.HeaderCell>Gyldighetsdato</Table.HeaderCell>
+        <Table.Row>
+          <Table.HeaderCell>Personstatus</Table.HeaderCell>
+          <Table.HeaderCell>Kilde</Table.HeaderCell>
+          <Table.HeaderCell>Register</Table.HeaderCell>
+          <Table.HeaderCell>Gyldighetsdato</Table.HeaderCell>
+        </Table.Row>
       </Table.Header>
       <Table.Body>
         {personstatuser.map((status) => (

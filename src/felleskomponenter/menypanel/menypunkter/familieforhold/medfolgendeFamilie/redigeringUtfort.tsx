@@ -8,8 +8,10 @@ const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<K
   <div className="menypanel__table-wrapper">
     <Table className="menypanel__table">
       <Table.Header className="header">
-        <Table.HeaderCell>F.nr./d-nr.</Table.HeaderCell>
-        <Table.HeaderCell>Navn</Table.HeaderCell>
+        <Table.Row>
+          <Table.HeaderCell>F.nr./d-nr.</Table.HeaderCell>
+          <Table.HeaderCell>Navn</Table.HeaderCell>
+        </Table.Row>
       </Table.Header>
       <Table.Body>
         {verdier.map((familiemedlem) => (
