@@ -79,8 +79,6 @@ export default defineConfig({
   resolve: {
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
-      "~": fileURLToPath(new URL("./src", import.meta.url)),
-      src: fileURLToPath(new URL("./src", import.meta.url)),
       "nav-frontend-alertstriper-style": fileURLToPath(new URL("./src/nav-style/alertstriper.css", import.meta.url)),
       "nav-frontend-chevron-style": fileURLToPath(new URL("./src/nav-style/chevron.css", import.meta.url)),
       "nav-frontend-ekspanderbartpanel-style": fileURLToPath(
