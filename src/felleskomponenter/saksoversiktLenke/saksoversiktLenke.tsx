@@ -1,3 +1,4 @@
+import { MouseEvent } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
@@ -27,7 +28,8 @@ const SaksoversiktLenke = ({ behandlingID, saksnummer, hovedpartRolle }: PropsFr
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
   const personopplysninger = useHentPersonopplysninger(behandlingID, hovedpartErVirksomhet);
 
-  const hentSaksoversikt = async () => {
+  const hentSaksoversikt = async (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
     if (hovedpartErVirksomhet) {
       const org = await Api.Fagsaker.aktoer
         .hent(saksnummer, MKV.Koder.aktoersroller.VIRKSOMHET)
@@ -52,7 +54,7 @@ const SaksoversiktLenke = ({ behandlingID, saksnummer, hovedpartRolle }: PropsFr
     <div className="saksoversiktLenke">
       <Nav.Panel>
         Vis saksoversikt:
-        <Nav.Lenker href="#" onClick={() => hentSaksoversikt()}>
+        <Nav.Lenker href="#" onClick={hentSaksoversikt}>
           <Ikon.ExternalLink className="ikon" />
           Åpnes i nytt vindu
         </Nav.Lenker>

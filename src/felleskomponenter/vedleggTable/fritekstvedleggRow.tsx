@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 
 import * as Nav from "../../navFrontend";
 import * as Mui from "../ui";
@@ -27,7 +27,8 @@ const FritekstvedleggRow = ({
 }: FritekstvedleggRowProps) => {
   const [visBekreftelseModal, setVisBekreftelseModal] = useState<boolean>(false);
 
-  const aapnePdf = async () => {
+  const aapnePdf = async (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
     const url = lagFritekstPdfUrl ? await lagFritekstPdfUrl(index) : null;
     if (url) {
       apnePdfINyFane(url);
