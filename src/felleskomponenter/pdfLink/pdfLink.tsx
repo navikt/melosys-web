@@ -16,7 +16,6 @@ const PdfLink = ({ journalpostID, dokumentID, tittel }: PdfLinkProps) => (
     href="#"
     onClick={(event) => {
       event.preventDefault();
-      console.log("hei");
       apnePdfINyFane(lagPdfUrl(journalpostID, dokumentID));
     }}
   >
