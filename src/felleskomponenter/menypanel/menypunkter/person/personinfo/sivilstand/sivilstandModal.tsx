@@ -20,12 +20,14 @@ export const SivilstandTabell = ({ sivilstander }: SivilstandTabellProps) => {
   return (
     <Table>
       <Table.Header>
-        <Table.HeaderCell>Sivilstand</Table.HeaderCell>
-        <Table.HeaderCell>Relasjon til</Table.HeaderCell>
-        <Table.HeaderCell>Kilde</Table.HeaderCell>
-        <Table.HeaderCell>Register</Table.HeaderCell>
-        <Table.HeaderCell>Bekreftelsesdato</Table.HeaderCell>
-        <Table.HeaderCell>Gyldig f.o.m</Table.HeaderCell>
+        <Table.Row>
+          <Table.HeaderCell>Sivilstand</Table.HeaderCell>
+          <Table.HeaderCell>Relasjon til</Table.HeaderCell>
+          <Table.HeaderCell>Kilde</Table.HeaderCell>
+          <Table.HeaderCell>Register</Table.HeaderCell>
+          <Table.HeaderCell>Bekreftelsesdato</Table.HeaderCell>
+          <Table.HeaderCell>Gyldig f.o.m</Table.HeaderCell>
+        </Table.Row>
       </Table.Header>
       <Table.Body>
         {sivilstander.map((sivilstand) => (

@@ -105,8 +105,10 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
     <div>
       <Table size="small">
         <Table.Header>
-          <Table.HeaderCell>Forhåndsvisning av brev</Table.HeaderCell>
-          <Table.HeaderCell>Mottaker</Table.HeaderCell>
+          <Table.Row>
+            <Table.HeaderCell>Forhåndsvisning av brev</Table.HeaderCell>
+            <Table.HeaderCell>Mottaker</Table.HeaderCell>
+          </Table.Row>
         </Table.Header>
         <Table.Body>{dokumenter.map(mapDokument)}</Table.Body>
       </Table>

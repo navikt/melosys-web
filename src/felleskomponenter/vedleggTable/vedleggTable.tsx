@@ -34,9 +34,11 @@ const VedleggTable = ({
   return (
     <Table className="vedleggtable" size="small">
       <Table.Header>
-        <Table.HeaderCell>{label}</Table.HeaderCell>
-        <Table.HeaderCell />
-        <Table.HeaderCell />
+        <Table.Row>
+          <Table.HeaderCell>{label}</Table.HeaderCell>
+          <Table.HeaderCell />
+          <Table.HeaderCell />
+        </Table.Row>
       </Table.Header>
       {(valgteVedlegg.length > 0 || (fritekstvedlegg && fritekstvedlegg.length > 0)) && (
         <Table.Body>

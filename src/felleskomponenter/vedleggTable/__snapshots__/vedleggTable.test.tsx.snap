@@ -7,17 +7,21 @@ exports[`vedleggTable > snapshot test 1`] = `
   <thead
     className="navds-table__header"
   >
-    <th
-      className="navds-table__header-cell navds-label navds-label--small"
+    <tr
+      className="navds-table__row navds-table__row--shade-on-hover"
     >
-      a
-    </th>
-    <th
-      className="navds-table__header-cell navds-label navds-label--small"
-    />
-    <th
-      className="navds-table__header-cell navds-label navds-label--small"
-    />
+      <th
+        className="navds-table__header-cell navds-label navds-label--small"
+      >
+        a
+      </th>
+      <th
+        className="navds-table__header-cell navds-label navds-label--small"
+      />
+      <th
+        className="navds-table__header-cell navds-label navds-label--small"
+      />
+    </tr>
   </thead>
   <tbody
     className="navds-table__body"
