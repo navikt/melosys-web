@@ -34,7 +34,6 @@ import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../../ikkeYrkesaktiv/st
 import { FRITEKST_VALG } from "../../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/menypanel";
-import { array } from "yup";
 
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
