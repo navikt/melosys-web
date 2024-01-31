@@ -34,6 +34,7 @@ import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../../ikkeYrkesaktiv/st
 import { FRITEKST_VALG } from "../../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/menypanel";
+import { array } from "yup";
 
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
@@ -94,18 +95,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const erManglendeInnbetalingTrygdeavgift = behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
   const erDelvisOpphør = medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === OPPHØRT);
 
-  const erFrivilligMedlemskap = [
-    MKV.Koder.folketrygdloven_kap2_bestemmelser.FTRL_KAP2_2_8_FOERSTE_LEDD_A,
-    MKV.Koder.folketrygdloven_kap2_bestemmelser.FTRL_KAP2_2_8_FOERSTE_LEDD_B,
-    MKV.Koder.folketrygdloven_kap2_bestemmelser.FTRL_KAP2_2_8_FOERSTE_LEDD_C,
-    MKV.Koder.folketrygdloven_kap2_bestemmelser.FTRL_KAP2_2_8_FOERSTE_LEDD_D,
-    MKV.Koder.folketrygdloven_kap2_bestemmelser.FTRL_KAP2_2_8_ANDRE_LEDD,
-    MKV.Koder.folketrygdloven_kap2_bestemmelser.FTRL_KAP2_2_8_FJERDE_LEDD,
-    MKV.Koder.folketrygdloven_kap2_bestemmelser.FTRL_KAP2_2_7A,
-    MKV.Koder.folketrygdloven_kap2_bestemmelser.FTRL_KAP2_2_7_FØRSTE_LEDD,
-    MKV.Koder.folketrygdloven_kap2_bestemmelser.FTRL_KAP2_2_7_FJERDE_LEDD,
-  ].includes(lagretBestemmelse);
-
   const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
     return !MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.some((bakgrunn: KTObject) => {
       return bakgrunn.kode === nyVurderingBakgrunnValg;
@@ -145,6 +134,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
   const [vedtakPending, setVedtakPending] = useState(false);
   const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
+  const [pliktigeBestemmelser, setPliktigeBestemmelser] = useState<string[]>([]);
+
+  const erPliktigBestemmelse = pliktigeBestemmelser.includes(lagretBestemmelse);
   const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
   let oppdaterFørKontroll = true;
 
@@ -166,6 +158,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   };
 
   useEffect(() => {
+    Api.MedlemAvFolketrygden.Bestemmelser.hentPliktigeBestemmelser().then(setPliktigeBestemmelser);
+
     return () => debouncedOppdaterFritekster.cancel();
   }, []);
 
@@ -318,8 +312,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   return (
     <div className="vurderingVedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        {erFrivilligMedlemskap && "Frivillig medlemskap etter § 2-8"}
-        {!erFrivilligMedlemskap && "Pliktig medlemskap etter folketrygdloven"}
+        {erPliktigBestemmelse ? "Pliktig medlemskap etter folketrygdloven" : "Frivillig medlemskap etter § 2-8"}
       </Nav.Typo.Innholdstittel>
 
       <Table size="small" className="melosys__table">
