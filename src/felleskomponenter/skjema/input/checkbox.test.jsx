@@ -1,101 +1,39 @@
-import Checkbox, { InnerCheckboxComponent } from "./checkbox";
+import Checkbox from "./checkbox";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+import { reduxForm } from "redux-form";
+import userEvent from "@testing-library/user-event";
+
+vi.mock("../../../utils", async () => {
+  const actual = await vi.importActual("../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("Checkbox", () => {
   let props = null;
+  const WrappedCheckbox = reduxForm({ form: "test" })(Checkbox);
 
   beforeEach(() => {
     props = {
-      feltNavn: "",
+      feltNavn: "test",
       className: "",
+      label: "Label",
     };
   });
 
-  it("viser en Field komponent med korrekte props", () => {
-    props.feltNavn = "test";
-    props.className = "testclass";
-    const checkbox = shallow(<Checkbox {...props} />);
-    const field = checkbox.find("Field");
-
-    expect(field).toHaveLength(1);
-    expect(field.props().name).toBe(props.feltNavn);
-    expect(field.props().className).toBe(props.className);
-  });
-});
-
-describe("Innercheckboxcomponent", () => {
-  let props = null;
-
-  beforeEach(() => {
-    props = {
-      label: "",
-      errorMessage: [""],
-      submitOnChange: false,
-      input: { value: false },
-      meta: {
-        error: "",
-        touched: false,
-        active: false,
-        dispatch: vi.fn(),
-      },
-      onClick: vi.fn(),
-      disabled: false,
-    };
+  it("snapshot test", () => {
+    const { container } = renderWithProviders(<WrappedCheckbox {...props} />);
+    expect(container).toMatchSnapshot();
   });
 
-  it("viser en NavCheckbox med korrekte props", () => {
-    props.label = "test";
-    props.input = { value: true };
-    props.onClick = vi.fn();
-    props.disabled = true;
-    const innerCheckboxComponent = shallow(<InnerCheckboxComponent {...props} />);
-    const navCheckbox = innerCheckboxComponent.find("Checkbox");
+  it("setter checked ved klikk", async () => {
+    const { findByLabelText } = renderWithProviders(<WrappedCheckbox {...props} />);
 
-    expect(navCheckbox.find("Checkbox")).toHaveLength(1);
-    expect(navCheckbox.props().label).toBe(props.label);
-    expect(navCheckbox.props().checked).toBe(props.input.value);
-    expect(navCheckbox.props().onClick).toBe(props.onClick);
-    expect(navCheckbox.props().disabled).toBe(props.disabled);
-  });
-
-  describe("ved endring av checkbox", () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-    });
-
-    it("kall redux form dispatch dersom submitOnChange prop er true", () => {
-      props.meta = {
-        error: "",
-        touched: false,
-        active: false,
-        dispatch: vi.fn(),
-      };
-      props.submitOnChange = true;
-      const innerCheckboxComponent = shallow(<InnerCheckboxComponent {...props} />);
-      const navCheckbox = innerCheckboxComponent.find("Checkbox");
-
-      navCheckbox.simulate("change");
-
-      vi.runAllTimers();
-
-      expect(props.meta.dispatch).toHaveBeenCalled();
-    });
-
-    it("ikke kall redux form dispatch dersom submitOnChange prop er false", () => {
-      props.meta = {
-        error: "",
-        touched: false,
-        active: false,
-        dispatch: vi.fn(),
-      };
-      props.submitOnChange = false;
-      const innerCheckboxComponent = shallow(<InnerCheckboxComponent {...props} />);
-      const navCheckbox = innerCheckboxComponent.find("Checkbox");
-
-      navCheckbox.simulate("change");
-
-      vi.runAllTimers();
-
-      expect(props.meta.dispatch).not.toHaveBeenCalled();
-    });
+    expect(await findByLabelText(props.label)).not.toBeChecked();
+    const user = userEvent.setup();
+    await user.click(await findByLabelText(props.label));
+    expect(await findByLabelText(props.label)).toBeChecked();
   });
 });
