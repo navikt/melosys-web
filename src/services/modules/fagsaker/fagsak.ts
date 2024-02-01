@@ -1,6 +1,6 @@
 import { Fagsak } from "../types";
 
-import { getAsJson, postAsJson, putAsText } from "../../utils";
+import { deleteAsJson, getAsJson, postAsJson, putAsText } from "../../utils";
 import { API_BASE_URL, FAGSAKER } from "../../api-constants";
 
 export const hent = (saksnummer: string): Promise<Fagsak> => getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}`);
@@ -94,3 +94,6 @@ export const ferdigbehandleSak = (saksnummer: string) =>
 
 export const hentTrygdeavgiftOppsummering = (saksnummer: string): Promise<TrygdeavgiftOppsummering> =>
   getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/trygdeavgift/oppsummering`);
+
+export const annullerFagsak = (saksnummer: string) =>
+  deleteAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/annullering`);

@@ -7,6 +7,7 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { modalerOperations } from "../../../ducks/modaler";
 import Handling from "./handling";
+import { MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING } from "../../../featuretoggle/toggleNavn";
 
 const {
   YRKESAKTIV,
@@ -23,7 +24,8 @@ const {
   ARBEID_FLERE_LAND,
   A1_ANMODNING_OM_UNNTAK_PAPIR,
 } = MKV.Koder.behandlinger.behandlingstema;
-const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE } = MKV.Koder.behandlinger.behandlingstyper;
+const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE, MANGLENDE_INNBETALING_TRYGDEAVGIFT } =
+  MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
 
@@ -184,6 +186,15 @@ const AvsluttSak = () => {
     );
   };
 
+  const skalViseAnnullerSak = () => {
+    return !!(
+      redigerbart &&
+      sakstype === FTRL &&
+      sakstema === MEDLEMSKAP_LOVVALG &&
+      [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)
+    );
+  };
+
   const skalKunneAngiBehandlingsresultat =
     skalViseSøknadenErInnvilget() ||
     skalViseSøknadenErAvslått() ||
@@ -256,6 +267,12 @@ const AvsluttSak = () => {
                 onClick={() => apneBekreftValgModal(BekreftValgTypes.MEDLEM_I_FOLKETRYGDEN)}
               />
             </>
+          )}
+          {skalViseAnnullerSak() && (
+            <Handling
+              tekst="Saken er annullert"
+              onClick={() => apneBekreftValgModal(BekreftValgTypes.SAKEN_ER_ANNULLERT)}
+            />
           )}
         </div>
       )}
