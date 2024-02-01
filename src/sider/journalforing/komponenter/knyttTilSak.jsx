@@ -11,7 +11,6 @@ import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 
 import "./knyttTilSak.css";
-import { erAnnullertSak } from "~/melosyskodeverk/utils";
 
 export const KnyttTilSak = (props) => {
   const { sak, erJournalføring, changeField, feltNavn, formValues } = props;
@@ -40,7 +39,7 @@ export const KnyttTilSak = (props) => {
     sisteBehandling.behandlingsstatus.kode
   );
   const sakErHenlagtEllerBortfaltEllerAnnullert =
-    MKVUtils.erHenlagtEllerHenlagtBortfalt(sak.saksstatus.kode) || erAnnullertSak(sak.saksstatus.kode);
+    MKVUtils.erHenlagtEllerHenlagtBortfalt(sak.saksstatus.kode) || MKVUtils.erAnnullertSak(sak.saksstatus.kode);
 
   const sisteBehandlingErPågåendeArtikkel16Sak =
     sisteBehandlingHarSendtAnmodningUnntakTilUtland && !sisteBehandlingErInaktiv;
