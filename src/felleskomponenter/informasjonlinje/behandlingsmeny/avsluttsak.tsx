@@ -7,7 +7,6 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { modalerOperations } from "../../../ducks/modaler";
 import Handling from "./handling";
-import { MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING } from "../../../featuretoggle/toggleNavn";
 
 const {
   YRKESAKTIV,
