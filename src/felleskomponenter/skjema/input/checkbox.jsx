@@ -72,5 +72,4 @@ Checkbox.defaultProps = {
   className: undefined,
 };
 
-export { InnerCheckboxComponent };
 export default Checkbox;
