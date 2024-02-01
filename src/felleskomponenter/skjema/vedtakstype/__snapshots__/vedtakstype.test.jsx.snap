@@ -1,0 +1,111 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Vedtakstype > snapshot test 1`] = `
+<div>
+  <div
+    class="row artikkel"
+  >
+    <div
+      class="col col-xs-6"
+    >
+      <fieldset
+        class="fieldset radio-gruppe"
+      >
+        <legend
+          class="fieldset__legend"
+        >
+          vedtakstypeLabel
+        </legend>
+        <div
+          class=""
+        >
+          <label
+            class="skjemaelement__label"
+            for="vedtakstypeFeltNavn"
+          >
+            <div
+              class="skjemaelement"
+            >
+              <input
+                aria-invalid="false"
+                class="skjemaelement__input radioknapp"
+                id="123"
+                name="vedtakstypeFeltNavn"
+                type="radio"
+                value="KORRIGERT_VEDTAK"
+              />
+              <label
+                class="skjemaelement__label"
+                for="123"
+              >
+                Korrigert vedtak
+              </label>
+            </div>
+            <div
+              class="skjemaelement"
+            >
+              <input
+                aria-invalid="false"
+                class="skjemaelement__input radioknapp"
+                disabled=""
+                id="123"
+                name="vedtakstypeFeltNavn"
+                type="radio"
+                value="OMGJØRINGSVEDTAK"
+              />
+              <label
+                class="skjemaelement__label"
+                for="123"
+              >
+                Omgjøringsvedtak
+              </label>
+            </div>
+            <div
+              aria-live="assertive"
+              class="radio-gruppe__skjemaelement-feilmelding"
+              role="alert"
+            />
+          </label>
+        </div>
+      </fieldset>
+      <div
+        class="skjemaelement"
+      >
+        <label
+          class="skjemaelement__label"
+          for="123"
+        >
+          vedtakstypebegrunnelseLabel
+        </label>
+        <div
+          class="selectContainer input--fullbredde"
+        >
+          <select
+            aria-invalid="false"
+            class="skjemaelement__input"
+            id="123"
+            name="vedtakstypebegrunnelseFeltNavn"
+          >
+            <option
+              disabled=""
+              value=""
+            >
+              Velg...
+            </option>
+            <option
+              value="FEIL_I_BEHANDLING"
+            >
+              Det ble gjort feil i tidligere behandling
+            </option>
+            <option
+              value="NYE_OPPLYSNINGER"
+            >
+              Det er mottatt nye opplysninger i saken
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
