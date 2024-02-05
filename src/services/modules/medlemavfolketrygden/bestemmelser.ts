@@ -18,6 +18,3 @@ export interface HentMuligeBestemmelserResponse {
 
 export const hentMuligeBestemmelser = (behandlingstema: string): Promise<HentMuligeBestemmelserResponse> =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${MEDLEM_AV_FOLKETRYGDEN}/${BESTEMMELSER}/${behandlingstema}`);
-
-export const hentPliktigeBestemmelser = (): Promise<string[]> =>
-  getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${MEDLEM_AV_FOLKETRYGDEN}/${BESTEMMELSER}/pliktige`);
