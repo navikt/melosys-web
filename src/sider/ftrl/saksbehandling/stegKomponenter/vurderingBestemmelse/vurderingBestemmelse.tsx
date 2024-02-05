@@ -24,6 +24,9 @@ import {
   BestemmelseMedVilkårOgBegrunnelser,
   VilkårOgBegrunnelser,
 } from "../../../../../services/modules/medlemavfolketrygden/bestemmelser";
+import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { MELOSYS_FOLKETRYGDEN_2_7 } from "../../../../../featuretoggle/toggleNavn";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export const kodeInkludererFritekst = (nestedKtObject: { [key: string]: KTObject[] }, kode?: string) =>
@@ -43,13 +46,17 @@ interface VurderingBestemmelseProps {
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) => {
   const dispatch = useDispatch();
+  const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
+
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector);
   const vilkårKodeverk = useSelector(folketrygdenkodeverkSelectors.VilkaarSelector);
   const begrunnelseKodeverk = useSelector(folketrygdenkodeverkSelectors.BegrunnelserSelector);
+  const trygdedekning = useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector);
 
   const [støttedeBestemmelser, setStøttedeBestemmelser] = useState<BestemmelseMedVilkårOgBegrunnelser[]>([]);
   const [ikkeStøttedeBestemmelser, setIkkeStøttedeBestemmelser] = useState<string[]>([]);
@@ -60,9 +67,15 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const [muligeVilkår, setMuligeVilkår] = useState<VilkårOgBegrunnelser[]>([]);
   const [formIsValid, setFormIsValid] = useState(false);
   const [harSkjeddEndringer, setHarSkjeddEndringer] = useState(false);
+  const [lovligeBestemmelser, setLovligeBestemmelser] = useState<string[]>([]);
+  const ulovligBestemmelseValgt =
+    folketrygden2_7ToggleEnabled && Boolean(valgtBestemmelse) && !lovligeBestemmelser.includes(valgtBestemmelse);
 
   const bestemmelseIkkeStøttetValgt = ikkeStøttedeBestemmelser?.some((bestemmelse) => bestemmelse === valgtBestemmelse);
-  const stegErGyldig = formIsValid && !harSkjeddEndringer;
+
+  const behandlingErAvsluttetMedLagretBestemmelse =
+    Boolean(lagretBestemmelse) && behandlingstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET;
+  const stegErGyldig = (formIsValid || behandlingErAvsluttetMedLagretBestemmelse) && !harSkjeddEndringer;
 
   const initialiserSteg = async () => {
     await Api.MedlemAvFolketrygden.Bestemmelser.hentMuligeBestemmelser(behandlingstema).then((response) => {
@@ -74,6 +87,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           : ""
       );
     });
+
+    Api.LovligeKombinasjoner.hentBestemmelser(trygdedekning).then(setLovligeBestemmelser);
 
     lagredeVilkår.forEach((vilkår: Api.Vilkar.Vilkaar) => {
       valgteVilkår.set(vilkår.vilkaar, vilkår.oppfylt ? SANN : USANN);
@@ -137,6 +152,14 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     const vilkårSomSkalVises: Api.MedlemAvFolketrygden.Bestemmelser.VilkårOgBegrunnelser[] = [];
 
     valgtBestemmelsesVilkårOgBegrunnelser?.forEach((vilkårOgBegrunnelser) => {
+      if (behandlingErAvsluttetMedLagretBestemmelse) {
+        // Filtrer bort vilkår som ikke var med behandlingen på avslutningstidspunktet
+        if (valgteVilkår.get(vilkårOgBegrunnelser.vilkår) === SANN) {
+          vilkårSomSkalVises.push(vilkårOgBegrunnelser);
+        }
+        return;
+      }
+
       if (Utils._isEmpty(vilkårSomSkalVises)) {
         vilkårSomSkalVises.push(vilkårOgBegrunnelser);
         return;
@@ -181,6 +204,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     setValgteVilkår(new Map());
     setValgteBegrunnelser(new Map());
     if (!Utils._isEmpty(lagredeVilkår)) dispatch(vilkarOperations.send(behandlingID, []));
+    if (lagretBestemmelse) dispatch(medlemskapsperioderOperations.slettMedlemskapsperioder(behandlingID));
   };
 
   const handleEndreVilkår = (event: ChangeEvent<HTMLInputElement>) => {
@@ -227,11 +251,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   return (
     <div className="vurderingBestemmelse_ftrl">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Hvilken bestemmelse skal søknaden vurderes etter?
-      </Nav.Typo.Innholdstittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse</Nav.Typo.Innholdstittel>
 
-      <Nav.Fieldset className="bestemmelse" legend="Bestemmelse">
+      <Nav.Fieldset className="bestemmelse" legend="Hvilken bestemmelse skal søknaden vurderes etter?">
         <Nav.Row>
           <Nav.Column xs="7">
             <Nav.Select
@@ -259,25 +281,37 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Row>
       </Nav.Fieldset>
 
-      {muligeVilkår.map((vilkårOgBegrunnelser) => (
-        <VilkaarOgBegrunnelser
-          key={vilkårOgBegrunnelser.vilkår}
-          vilkårOgBegrunnelser={vilkårOgBegrunnelser}
-          alleValgteVilkår={valgteVilkår}
-          alleValgteBegrunnelser={valgteBegrunnelser}
-          vilkårKodeverk={vilkårKodeverk}
-          begrunnelseKodeverk={begrunnelseKodeverk}
-          handleEndreVilkår={handleEndreVilkår}
-          handleEndreBegrunnelseKode={handleEndreBegrunnelseKode}
-          handleEndreBegrunnelseFritekst={handleEndreBegrunnelseFritekst}
-          redigerbart={redigerbart}
-        />
-      ))}
+      {ulovligBestemmelseValgt && !bestemmelseIkkeStøttetValgt && (
+        <Nav.AlertStripeFeil>
+          <Nav.Typo.Normaltekst>
+            Dekning på steg 1 kan ikke gis i kombinasjon med denne bestemmelsen.
+          </Nav.Typo.Normaltekst>
+        </Nav.AlertStripeFeil>
+      )}
+
+      {!ulovligBestemmelseValgt &&
+        muligeVilkår.map((vilkårOgBegrunnelser) => (
+          <VilkaarOgBegrunnelser
+            key={vilkårOgBegrunnelser.vilkår}
+            vilkårOgBegrunnelser={vilkårOgBegrunnelser}
+            alleValgteVilkår={valgteVilkår}
+            alleValgteBegrunnelser={valgteBegrunnelser}
+            vilkårKodeverk={vilkårKodeverk}
+            begrunnelseKodeverk={begrunnelseKodeverk}
+            handleEndreVilkår={handleEndreVilkår}
+            handleEndreBegrunnelseKode={handleEndreBegrunnelseKode}
+            handleEndreBegrunnelseFritekst={handleEndreBegrunnelseFritekst}
+            redigerbart={redigerbart}
+          />
+        ))}
 
       {bestemmelseIkkeStøttetValgt && <IngenFlytMelding />}
 
       <Mui.StegKnapper
-        bekreftKnappProps={{ onClick: handleBekreft, disabled: !formIsValid || !redigerbart }}
+        bekreftKnappProps={{
+          onClick: handleBekreft,
+          disabled: !formIsValid || !redigerbart || ulovligBestemmelseValgt,
+        }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>

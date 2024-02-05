@@ -11,14 +11,19 @@ interface BrevFeltProps {
   felt: DokumenterV2.Felt;
   visFeltBeskrivelse: boolean;
   width: ColumnWidth;
+  redigerbart: boolean;
 }
-const BrevFelt = ({ felt, visFeltBeskrivelse, width }: BrevFeltProps) => {
+const BrevFelt = ({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProps) => {
   switch (felt?.feltType) {
     case DokumenterV2.FeltType.FRITEKST:
       return (
         <>
           {visFeltBeskrivelse && <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />}
-          <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}.feltVerdi`} className="brevfelt__fritekst" />
+          <Skjema.HTMLEditor
+            feltNavn={`felt.${felt.kode}.feltVerdi`}
+            className="brevfelt__fritekst"
+            disabled={!redigerbart}
+          />
         </>
       );
     case DokumenterV2.FeltType.TEKST: {
@@ -38,6 +43,7 @@ const BrevFelt = ({ felt, visFeltBeskrivelse, width }: BrevFeltProps) => {
                 )
               }
               placeholder={`${placeholder}${placeholderMaksAntallTegn}`}
+              disabled={!redigerbart}
             />
           </Nav.Column>
         </Nav.Row>
@@ -51,6 +57,7 @@ const BrevFelt = ({ felt, visFeltBeskrivelse, width }: BrevFeltProps) => {
               feltNavn={`felt.${felt.kode}.feltVerdi`}
               label={felt.beskrivelse}
               className="brevfelt__sjekkboks"
+              disabled={!redigerbart}
             />
           </Nav.Column>
         </Nav.Row>

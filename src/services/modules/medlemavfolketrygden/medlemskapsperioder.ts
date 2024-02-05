@@ -20,17 +20,23 @@ export type OppdaterMedlemskapsperiode = {
   trygdedekning: string;
 };
 
-export const getMedlemskapsperioder = (behandlingID: number) =>
+export const hentMedlemskapsperioder = (behandlingID: number) =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`);
 
-export const postMedlemskapsperioder = (behandlingID: number, data: OppdaterMedlemskapsperiode) =>
+export const opprettMedlemskapsperioder = (behandlingID: number, data: OppdaterMedlemskapsperiode) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`, data);
 
-export const putMedlemskapsperioder = (behandlingID: number, medlemskapsID: number, data: OppdaterMedlemskapsperiode) =>
-  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/${medlemskapsID}`, data);
+export const oppdaterMedlemskapsperioder = (
+  behandlingID: number,
+  medlemskapsID: number,
+  data: OppdaterMedlemskapsperiode
+) => putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/${medlemskapsID}`, data);
 
-export const deleteMedlemskapsperioder = (behandlingID: number, medlemskapsID: number) =>
+export const slettMedlemskapsperiode = (behandlingID: number, medlemskapsID: number) =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/${medlemskapsID}`);
+
+export const slettMedlemskapsperioder = (behandlingID: number) =>
+  deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`);
 
 export const opprettForeslåtteMedlemskapsperioder = (behandlingID: number, bestemmelse: string) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/forslag`, { bestemmelse });

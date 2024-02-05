@@ -11,6 +11,7 @@ describe("fritekstvedleggRow", () => {
           redigerFritekstvedlegg={vi.fn()}
           index={1}
           lagFritekstPdfUrl={vi.fn()}
+          redigerbart
         />
       )
       .toJSON();

@@ -10,9 +10,11 @@ const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<K
   <div className="arbeidssted__utland__redigeringutfort-wrapper">
     <Table>
       <Table.Header>
-        <Table.HeaderCell>Navn på skip</Table.HeaderCell>
-        <Table.HeaderCell>Fartsområde</Table.HeaderCell>
-        <Table.HeaderCell>Flaggstat/lands territorialfarvann</Table.HeaderCell>
+        <Table.Row>
+          <Table.HeaderCell>Navn på skip</Table.HeaderCell>
+          <Table.HeaderCell>Fartsområde</Table.HeaderCell>
+          <Table.HeaderCell>Flaggstat/lands territorialfarvann</Table.HeaderCell>
+        </Table.Row>
       </Table.Header>
       <Table.Body>
         {verdier.map((arbeidsstedSkip) => (

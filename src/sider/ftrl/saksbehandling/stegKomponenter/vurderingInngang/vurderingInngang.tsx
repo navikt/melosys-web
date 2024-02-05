@@ -55,7 +55,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     fom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.fom, false, undefined),
     tom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.tom, false, undefined),
     land: useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector).toString(),
-    trygdedekning: useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector),
+    trygdedekning: useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector) ?? "",
     inkluderSiste5Aar: useSelector(modalerSelectors.InkluderSiste5AarSelector),
   };
 

@@ -14,7 +14,7 @@ const dokument = {
 
 describe("vedleggRow", () => {
   it("snapshot test", () => {
-    const tree = renderer.create(<VedleggRow slettVedlegg={vi.fn()} vedlegg={dokument} />).toJSON();
+    const tree = renderer.create(<VedleggRow slettVedlegg={vi.fn()} vedlegg={dokument} redigerbart />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

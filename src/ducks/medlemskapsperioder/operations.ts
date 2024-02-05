@@ -4,7 +4,7 @@ import * as Types from "./types";
 import * as Actions from "./actions";
 
 export function hentMedlemskapsperioder(behandlingID: number) {
-  return doThenDispatch(() => Api.MedlemAvFolketrygden.Medlemskapsperioder.getMedlemskapsperioder(behandlingID), {
+  return doThenDispatch(() => Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID), {
     OK: Types.OK_MEDLEMSKAPSPERIODE,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -16,7 +16,7 @@ export function opprettMedlemskapsperiode(
   medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.OppdaterMedlemskapsperiode
 ) {
   return doThenDispatch(
-    () => Api.MedlemAvFolketrygden.Medlemskapsperioder.postMedlemskapsperioder(behandlingID, medlemskapsperiode),
+    () => Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettMedlemskapsperioder(behandlingID, medlemskapsperiode),
     {
       OK: Types.OK_OPPRETT_MEDLEMSKAPSPERIODE,
       FEILET: Types.FEILET,
@@ -32,7 +32,7 @@ export function oppdaterMedlemskapsperiode(
 ) {
   return doThenDispatch(
     () =>
-      Api.MedlemAvFolketrygden.Medlemskapsperioder.putMedlemskapsperioder(
+      Api.MedlemAvFolketrygden.Medlemskapsperioder.oppdaterMedlemskapsperioder(
         behandlingID,
         medlemskapsId,
         medlemskapsperiode
@@ -47,7 +47,7 @@ export function oppdaterMedlemskapsperiode(
 
 export function slettMedlemskapsperiode(behandlingID: number, medlemskapsId: number) {
   return doThenDispatch(
-    () => Api.MedlemAvFolketrygden.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, medlemskapsId),
+    () => Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperiode(behandlingID, medlemskapsId),
     {
       OK: Types.OK_SLETT_MEDLEMSKAPSPERIODE,
       FEILET: Types.FEILET,
@@ -59,6 +59,14 @@ export function slettMedlemskapsperiode(behandlingID: number, medlemskapsId: num
       }),
     }
   );
+}
+
+export function slettMedlemskapsperioder(behandlingID: number) {
+  return doThenDispatch(() => Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID), {
+    OK: Types.OK_SLETT_ALLE_MEDLEMSKAPSPERIODER,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
 }
 
 export function resetMedlemskapsperioder() {

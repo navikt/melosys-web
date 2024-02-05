@@ -37,7 +37,7 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
       return null;
     }
     return (
-      <Skjema.Select feltNavn={`felt.${feltKode}.valg`} label="">
+      <Skjema.Select feltNavn={`felt.${feltKode}.valg`} label="" disabled={!redigerbart}>
         {valg.valgAlternativer.map((alternativ) => (
           <option key={alternativ.kode} value={alternativ.kode}>
             {alternativ.beskrivelse}

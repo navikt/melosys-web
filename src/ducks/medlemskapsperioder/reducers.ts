@@ -65,6 +65,16 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         },
       };
     }
+    case Types.OK_SLETT_ALLE_MEDLEMSKAPSPERIODER: {
+      return {
+        ...state,
+        status: STATUS.OK,
+        data: {
+          ...state.data,
+          medlemskapsperioder: [],
+        },
+      };
+    }
     case Types.RESET:
       return { ...initialState };
     default:

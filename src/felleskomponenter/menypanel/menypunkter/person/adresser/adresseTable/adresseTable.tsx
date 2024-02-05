@@ -60,12 +60,14 @@ const AdresseTable = ({ adressetype, adresser, historisk }: AdresseTableProps) =
       {!historisk || expanded ? (
         <Table className="menypanel__table">
           <Table.Header>
-            <Table.HeaderCell className={`fixed-width ${historisk ? "transparent" : ""}`}>
-              {adressetype}
-            </Table.HeaderCell>
-            <Table.HeaderCell className={historisk ? "transparent" : ""}>Register</Table.HeaderCell>
-            <Table.HeaderCell className={historisk ? "transparent" : ""}>Kilde</Table.HeaderCell>
-            <Table.HeaderCell className="fixed-width">{periodetekst}</Table.HeaderCell>
+            <Table.Row>
+              <Table.HeaderCell className={`fixed-width ${historisk ? "transparent" : ""}`}>
+                {adressetype}
+              </Table.HeaderCell>
+              <Table.HeaderCell className={historisk ? "transparent" : ""}>Register</Table.HeaderCell>
+              <Table.HeaderCell className={historisk ? "transparent" : ""}>Kilde</Table.HeaderCell>
+              <Table.HeaderCell className="fixed-width">{periodetekst}</Table.HeaderCell>
+            </Table.Row>
           </Table.Header>
           <Table.Body>
             {adresser.map((adresse) => (

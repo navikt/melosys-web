@@ -10,26 +10,30 @@ exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
     <thead
       className="navds-table__header"
     >
-      <th
-        className="navds-table__header-cell navds-label fixed-width "
+      <tr
+        className="navds-table__row navds-table__row--shade-on-hover"
       >
-        Bostedsadresse
-      </th>
-      <th
-        className="navds-table__header-cell navds-label"
-      >
-        Register
-      </th>
-      <th
-        className="navds-table__header-cell navds-label"
-      >
-        Kilde
-      </th>
-      <th
-        className="navds-table__header-cell navds-label fixed-width"
-      >
-        Gyldig f.o.m.
-      </th>
+        <th
+          className="navds-table__header-cell navds-label fixed-width "
+        >
+          Bostedsadresse
+        </th>
+        <th
+          className="navds-table__header-cell navds-label"
+        >
+          Register
+        </th>
+        <th
+          className="navds-table__header-cell navds-label"
+        >
+          Kilde
+        </th>
+        <th
+          className="navds-table__header-cell navds-label fixed-width"
+        >
+          Gyldig f.o.m.
+        </th>
+      </tr>
     </thead>
     <tbody
       className="navds-table__body"

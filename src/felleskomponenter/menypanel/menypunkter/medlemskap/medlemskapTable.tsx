@@ -17,11 +17,13 @@ const MedlemskapTable = ({ perioder }: MedlemskapTableProps) => {
     <div className="menypanel__table-wrapper">
       <Table>
         <Table.Header>
-          <Table.HeaderCell>Fra og med</Table.HeaderCell>
-          <Table.HeaderCell>Til og med</Table.HeaderCell>
-          <Table.HeaderCell>Land</Table.HeaderCell>
-          <Table.HeaderCell>Status</Table.HeaderCell>
-          <Table.HeaderCell>Hjemmel</Table.HeaderCell>
+          <Table.Row>
+            <Table.HeaderCell>Fra og med</Table.HeaderCell>
+            <Table.HeaderCell>Til og med</Table.HeaderCell>
+            <Table.HeaderCell>Land</Table.HeaderCell>
+            <Table.HeaderCell>Status</Table.HeaderCell>
+            <Table.HeaderCell>Hjemmel</Table.HeaderCell>
+          </Table.Row>
         </Table.Header>
         <Table.Body>
           {(expanded ? perioder : perioder.slice(0, 2)).map((periode) => (

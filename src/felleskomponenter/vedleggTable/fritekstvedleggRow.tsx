@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 
 import * as Nav from "../../navFrontend";
 import * as Mui from "../ui";
@@ -14,6 +14,7 @@ interface FritekstvedleggRowProps {
   slettFritekstvedlegg?: (index: number) => void;
   index: number;
   lagFritekstPdfUrl?: (index: number) => Promise<string | false>;
+  redigerbart: boolean;
 }
 
 const FritekstvedleggRow = ({
@@ -22,10 +23,12 @@ const FritekstvedleggRow = ({
   slettFritekstvedlegg,
   index,
   lagFritekstPdfUrl,
+  redigerbart,
 }: FritekstvedleggRowProps) => {
   const [visBekreftelseModal, setVisBekreftelseModal] = useState<boolean>(false);
 
-  const aapnePdf = async () => {
+  const aapnePdf = async (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
     const url = lagFritekstPdfUrl ? await lagFritekstPdfUrl(index) : null;
     if (url) {
       apnePdfINyFane(url);
@@ -45,8 +48,14 @@ const FritekstvedleggRow = ({
           ikon={Ikoner.Pencil}
           onClick={() => redigerFritekstvedlegg && redigerFritekstvedlegg(index)}
           ariaLabel="Rediger vedlegg"
+          disabled={!redigerbart}
         />
-        <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => setVisBekreftelseModal(true)} ariaLabel="Slett vedlegg" />
+        <Mui.IkonKnapp
+          ikon={Ikoner.Bin}
+          onClick={() => setVisBekreftelseModal(true)}
+          ariaLabel="Slett vedlegg"
+          disabled={!redigerbart}
+        />
       </Table.DataCell>
       {visBekreftelseModal ? (
         <SlettFritekstvedleggModal

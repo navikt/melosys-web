@@ -37,7 +37,9 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
               </Nav.Column>
             </Nav.Row>
           )}
-          {skalViseBrevFelt(felt) && <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={width} />}
+          {skalViseBrevFelt(felt) && (
+            <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={width} redigerbart={redigerbart} />
+          )}
         </Fragment>
       ))}
     </>

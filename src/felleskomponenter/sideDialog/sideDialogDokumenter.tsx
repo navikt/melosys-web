@@ -103,10 +103,12 @@ const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, endreFane }: Sid
       <LagredeUtkast alleUtkast={utkast} settAktivtUtkast={handleValgtUtkast} />
       <Table size="small" aria-label="Liste over dokumenter knyttet til saken">
         <Table.Header>
-          <Table.HeaderCell aria-label="Mottaksretning" />
-          <Table.HeaderCell>Dokument</Table.HeaderCell>
-          <Table.HeaderCell>Avsender/mottaker</Table.HeaderCell>
-          <Table.HeaderCell>Dato</Table.HeaderCell>
+          <Table.Row>
+            <Table.HeaderCell aria-label="Mottaksretning" />
+            <Table.HeaderCell>Dokument</Table.HeaderCell>
+            <Table.HeaderCell>Avsender/mottaker</Table.HeaderCell>
+            <Table.HeaderCell>Dato</Table.HeaderCell>
+          </Table.Row>
         </Table.Header>
         <Table.Body>
           {dokumentOversikt.map((oversikt) => (

@@ -73,6 +73,7 @@ const BrevVedlegg = ({
           ? formValues.felt?.FRITEKSTVEDLEGG_FRITEKST?.feltVerdi
           : fritekstvedlegg[index].fritekst,
       kontaktopplysninger: false,
+      institusjonID: formValues.felt?.UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER?.valg,
     };
     try {
       setForhandsvisFritekstvedleggError(false);
@@ -152,11 +153,17 @@ const BrevVedlegg = ({
           lagFritekstPdfUrl={lagFritekstPdfUrl}
           setValgteVedlegg={setValgteVedlegg}
           label="Vedlegg"
+          redigerbart={redigerbart}
         />
       )}
 
       {vedleggFelt && (
-        <VedleggVelger dokumenter={dokumenter} valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} />
+        <VedleggVelger
+          dokumenter={dokumenter}
+          valgteVedlegg={valgteVedlegg}
+          onChange={setValgteVedlegg}
+          redigerbart={redigerbart}
+        />
       )}
 
       {fritekstvedleggFelt &&
