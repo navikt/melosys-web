@@ -36,19 +36,25 @@ import { vilkarOperations } from "../../../ducks/vilkar";
 import { menypanelOperations, menypanelSelectors } from "../../../ducks/menypanel";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
-import { alleSteg } from "./initialStegArray";
+import { alleStegYrkesaktivFlyt } from "./stegLister/stegListeYrkesaktivFlyt";
 import "./saksbehandling.css";
-import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_FTRL_IKKE_YRKESAKTIV,
+  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
+} from "../../../featuretoggle/toggleNavn";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { resetInkluderSiste5Aar } from "../../../ducks/modaler/operations";
 import { setErFullmektigEndret } from "../../../ducks/menypanel/operations";
-import { alleStegManglendeInnbetaling } from "./initialStegArrayManglendeInnbetaling";
+import { alleStegManglendeInnbetalingFlyt } from "./stegLister/stegListeManglendeInnbetalingFlyt";
 import { fakturaserierOperations } from "../../../ducks/fakturaserier";
+import { alleStegIkkeYrkesaktivFlyt } from "./stegLister/stegListeIkkeYrkesaktivFlyt";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
   hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
     mottatteOpplysningerSelectors.PeriodeSelector(state).fom
@@ -147,11 +153,14 @@ const Saksbehandling = ({
   menypanelSynlig,
   samletMedlemskapsperiodeSelector,
   behandlingstype,
+  behandlingstema,
   resetFakturaInformasjon,
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const folketrygdenToggle = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
+  const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -228,10 +237,16 @@ const Saksbehandling = ({
   if (!folketrygdenToggle) return null;
 
   const hentStegArray = () => {
-    if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
-      return alleStegManglendeInnbetaling;
+    if (ikkeYrkesaktivFtrlToggleEnabled && behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
+      return alleStegIkkeYrkesaktivFlyt;
     }
-    return alleSteg;
+    if (
+      manglendeInnbetalingToggleEnabled &&
+      behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT
+    ) {
+      return alleStegManglendeInnbetalingFlyt;
+    }
+    return alleStegYrkesaktivFlyt;
   };
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;

@@ -36,7 +36,13 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
  * for å gi saksbehandler en hent over sakens innhold før hun klikker
  * seg inn på den.
  */
-const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, manglendeInnbetalingToggleEnabled, landkoder }) => {
+const BehandlingOppgave = ({
+  sak,
+  folketrygdenToggleEnabled,
+  manglendeInnbetalingToggleEnabled,
+  ikkeYrkesaktivFtrlToggleEnabled,
+  landkoder,
+}) => {
   const {
     navn,
     sakstype,
@@ -67,7 +73,8 @@ const BehandlingOppgave = ({ sak, folketrygdenToggleEnabled, manglendeInnbetalin
     behandlingstema.kode,
     behandlingstype.kode,
     folketrygdenToggleEnabled,
-    manglendeInnbetalingToggleEnabled
+    manglendeInnbetalingToggleEnabled,
+    ikkeYrkesaktivFtrlToggleEnabled
   );
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 
@@ -162,12 +169,14 @@ BehandlingOppgave.propTypes = {
   folketrygdenToggleEnabled: PT.bool,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   manglendeInnbetalingToggleEnabled: PT.bool,
+  ikkeYrkesaktivFtrlToggleEnabled: PT.bool,
 };
 
 BehandlingOppgave.defaultProps = {
   sak: {},
   folketrygdenToggleEnabled: undefined,
   manglendeInnbetalingToggleEnabled: undefined,
+  ikkeYrkesaktivFtrlToggleEnabled: undefined,
 };
 
 export default BehandlingOppgave;

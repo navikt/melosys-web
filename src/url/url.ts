@@ -34,6 +34,7 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
 const lagUrlForFtrlFlyt = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV:
+    case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
       return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
       return flytFinnesIkkeForBehandlingPath;
@@ -83,7 +84,8 @@ export const lagUrl = (
   behandlingstemaKode: string,
   behandlingstypeKode: string,
   folketrygdenToggleEnabled: boolean | undefined,
-  manglendeInnbetalingToggleEnabled: boolean | undefined
+  manglendeInnbetalingToggleEnabled: boolean | undefined,
+  ikkeYrkesaktivFtrlToggleEnabled: boolean | undefined
 ) => {
   if (
     skalViseIngenFlyt(
@@ -92,7 +94,8 @@ export const lagUrl = (
       behandlingstemaKode,
       behandlingstypeKode,
       folketrygdenToggleEnabled,
-      manglendeInnbetalingToggleEnabled
+      manglendeInnbetalingToggleEnabled,
+      ikkeYrkesaktivFtrlToggleEnabled
     )
   ) {
     return lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID);
@@ -132,7 +135,8 @@ export const skalViseIngenFlyt = (
   behandlingstema: string,
   behandlingstype: string,
   folketrygdenToggleEnabled: boolean = false,
-  manglendeInnbetalingToggleEnabled: boolean = false
+  manglendeInnbetalingToggleEnabled: boolean = false,
+  ikkeYrkesaktivFtrlToggleEnabled: boolean = false
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
@@ -151,6 +155,13 @@ export const skalViseIngenFlyt = (
 
   if (harUnntaksregistreringFlyt(sakstype, sakstema, behandlingstema)) return false;
   if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema)) return false;
+
+  if (
+    sakstype === FTRL &&
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV &&
+    ikkeYrkesaktivFtrlToggleEnabled
+  )
+    return false;
 
   if (
     sakstype === TRYGDEAVTALE &&
