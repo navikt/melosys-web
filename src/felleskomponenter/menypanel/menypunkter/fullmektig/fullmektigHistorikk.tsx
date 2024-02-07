@@ -10,9 +10,9 @@ import { formatterDatoTilNorsk } from "../../../../utils/dato";
 import { AdresseOgFeil } from "./types";
 import * as Api from "../../../../services/api";
 import { HentResDto } from "../../../../services/modules/fagsaker/kontaktopplysninger";
-import type { FullmektigHistorikk } from "../../../../services/modules/types/fagsak";
+import { FullmektigHistorikk as FullmektigHistorikkType } from "../../../../services/modules/types/fagsak";
 
-type FullmektigHistorikkInfo = FullmektigHistorikk & {
+type FullmektigHistorikkInfo = FullmektigHistorikkType & {
   brevadresse: AdresseOgFeil | undefined;
   kontaktinfo: HentResDto | undefined;
 };
