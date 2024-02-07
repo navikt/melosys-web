@@ -18,6 +18,7 @@ import "./enkeltSak.css";
 import { useFeatureToggle } from "../../../featuretoggle";
 import {
   MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../../featuretoggle/toggleNavn";
 
@@ -26,6 +27,7 @@ import {
 const EnkeltSak = (props) => {
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
+  const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
   const { landkoder } = props;
   const { behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
@@ -46,7 +48,8 @@ const EnkeltSak = (props) => {
     behandlingstema.kode,
     behandlingstype.kode,
     folketrygdenToggleEnabled,
-    manglendeInnbetalingToggleEnabled
+    manglendeInnbetalingToggleEnabled,
+    ikkeYrkesaktivFtrlToggleEnabled
   );
 
   const avsluttendePeriode = sakstype.kode === MKV.Koder.sakstyper.FTRL ? medlemskapsperiode : lovvalgsperiode;

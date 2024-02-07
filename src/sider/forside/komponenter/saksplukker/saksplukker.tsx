@@ -18,6 +18,7 @@ import { useFeatureToggle } from "../../../../featuretoggle";
 import { oppgaverOperations } from "../../../../ducks/oppgaver";
 import {
   MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../../../featuretoggle/toggleNavn";
 
@@ -70,6 +71,7 @@ export const Saksplukker = ({
 
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
+  const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
   useEffect(() => {
     Api.LovligeKombinasjoner.hentSakstyper().then((lovligeSakstyper) => {
@@ -118,7 +120,8 @@ export const Saksplukker = ({
       behandlingstema,
       behandlingstype,
       folketrygdenToggleEnabled,
-      manglendeInnbetalingToggleEnabled
+      manglendeInnbetalingToggleEnabled,
+      ikkeYrkesaktivFtrlToggleEnabled
     );
 
     history.push(redirectURL);

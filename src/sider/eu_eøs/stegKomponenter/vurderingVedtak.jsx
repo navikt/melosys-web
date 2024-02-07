@@ -30,7 +30,11 @@ import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstit
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
 import "./vurderingVedtak.css";
-import { MELOSYS_FOLKETRYGDEN_MVP } from "../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_FTRL_IKKE_YRKESAKTIV,
+  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
+} from "../../../featuretoggle/toggleNavn";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import * as Api from "../../../services/api";
 
@@ -72,7 +76,9 @@ const skalViseMottakerinstitusjoner = (
   sakstema,
   behandlingstema,
   behandlingstype,
-  folketrygdenToggleEnabled
+  folketrygdenToggleEnabled,
+  manglendeInnbetalingToggleEnabled,
+  ikkeYrkesaktivFtrlToggleEnabled
 ) => {
   return (
     sakstype === MKV.Koder.sakstyper.EU_EOS &&
@@ -82,7 +88,15 @@ const skalViseMottakerinstitusjoner = (
       MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
       MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
     ].includes(behandlingstema) &&
-    !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, folketrygdenToggleEnabled)
+    !skalViseIngenFlyt(
+      sakstype,
+      sakstema,
+      behandlingstema,
+      behandlingstype,
+      folketrygdenToggleEnabled,
+      manglendeInnbetalingToggleEnabled,
+      ikkeYrkesaktivFtrlToggleEnabled
+    )
   );
 };
 
@@ -113,6 +127,8 @@ const VurderingVedtak = ({
   const [vedtakPending, setVedtakPending] = useState(false);
   const [erBucAapen, setErBucAapen] = useState(true);
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
+  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
+  const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const dispatch = useDispatch();
   let oppdaterFørKontroll = true;
 
@@ -133,7 +149,9 @@ const VurderingVedtak = ({
     sakstema,
     behandlingstema,
     behandlingstype,
-    folketrygdenToggleEnabled
+    folketrygdenToggleEnabled,
+    manglendeInnbetalingToggleEnabled,
+    ikkeYrkesaktivFtrlToggleEnabled
   );
   const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
 

@@ -19,6 +19,7 @@ const {
   BESLUTNING_LOVVALG_NORGE,
   BESLUTNING_LOVVALG_ANNET_LAND,
   YRKESAKTIV,
+  IKKE_YRKESAKTIV,
 } = MKV.Koder.behandlinger.behandlingstema;
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
@@ -32,6 +33,7 @@ interface LinkGroupsConfig {
   sakstema: string;
   folketrygdenToggleEnabled: boolean | undefined;
   manglendeInnbetalingToggleEnabled: boolean | undefined;
+  ikkeYrkesaktivFtrlToggleEnabled: boolean | undefined;
 }
 
 class LinkGroupsFactory {
@@ -44,6 +46,7 @@ class LinkGroupsFactory {
     sakstema,
     folketrygdenToggleEnabled,
     manglendeInnbetalingToggleEnabled,
+    ikkeYrkesaktivFtrlToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
     if (
       skalViseIngenFlyt(
@@ -52,7 +55,8 @@ class LinkGroupsFactory {
         behandlingstema,
         behandlingstype,
         folketrygdenToggleEnabled,
-        manglendeInnbetalingToggleEnabled
+        manglendeInnbetalingToggleEnabled,
+        ikkeYrkesaktivFtrlToggleEnabled
       )
     ) {
       const linkBuilder = new LinksBuilder(contentProps).addFullmektig();
@@ -77,7 +81,10 @@ class LinkGroupsFactory {
         .build();
     }
 
-    if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema)) {
+    if (
+      harIkkeYrkesaktivFlyt(sakstype, behandlingstema) ||
+      (ikkeYrkesaktivFtrlToggleEnabled && behandlingstema === IKKE_YRKESAKTIV)
+    ) {
       return new LinkgroupsBuilder()
         .addFraRegister(
           new LinksBuilder(contentProps)

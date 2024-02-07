@@ -19,7 +19,11 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
-import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING } from "../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_FTRL_IKKE_YRKESAKTIV,
+  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
+} from "../../featuretoggle/toggleNavn";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
@@ -59,6 +63,7 @@ export const Menypanel = ({
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
   const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
+  const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
   const visMottatteOpplysningerData = !(
     MKVUtils.erBehandlingAvSed(sakstype, behandlingstema) &&
@@ -84,6 +89,7 @@ export const Menypanel = ({
     sakstema,
     folketrygdenToggleEnabled,
     manglendeInnbetalingToggleEnabled,
+    ikkeYrkesaktivFtrlToggleEnabled,
   });
 
   const linkGroups = linkGroupsWithContent.map((linkGroup, groupIndex) => ({
@@ -120,7 +126,8 @@ export const Menypanel = ({
       behandlingstema,
       behandlingstype,
       folketrygdenToggleEnabled,
-      manglendeInnbetalingToggleEnabled
+      manglendeInnbetalingToggleEnabled,
+      ikkeYrkesaktivFtrlToggleEnabled
     );
 
   if (!visMenypanel) return null;
