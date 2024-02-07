@@ -94,3 +94,6 @@ export const ferdigbehandleSak = (saksnummer: string) =>
 
 export const hentTrygdeavgiftOppsummering = (saksnummer: string): Promise<TrygdeavgiftOppsummering> =>
   getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/trygdeavgift/oppsummering`);
+
+export const hentFullmektigHistorikk = (saksnummer: string, rolle: string | undefined = "FULLMEKTIG") =>
+  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/aktoerer/${rolle}/historikk`);

@@ -82,6 +82,14 @@ export function hentMuligeSakstyper(saksnummer: string) {
   });
 }
 
+export function hentFullmektigHistorikk(saksnummer: string) {
+  return doThenDispatch(() => Api.Fagsaker.fagsak.hentFullmektigHistorikk(saksnummer), {
+    OK: Types.HENT_FULLMEKTIG_HISTORIKK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
 export function resetFagsakState() {
   return Actions.resetFagsakState();
 }

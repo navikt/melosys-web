@@ -14,6 +14,8 @@ export const RESET = "fagsaker/RESET";
 export const HENT_MULIGE_SAKSTEMA = "fagsaker/HENT_MULIGE_SAKSTEMA";
 export const HENT_MULIGE_SAKSTYPE = "fagsaker/HENT_MULIGE_SAKSTYPE";
 
+export const HENT_FULLMEKTIG_HISTORIKK = "fagsaker/HENT_FULLMEKTIG_HISTORIKK";
+
 interface FeiletAction {
   type: typeof FEILET;
   data: any;
@@ -38,4 +40,15 @@ interface HentMuligeSakstypeAction {
   data: any;
 }
 
-export type Action = HentMuligeSakstemaAction | HentMuligeSakstypeAction | FeiletAction | PendingAction | OkAction;
+interface HentFullmektigHistorikkAction {
+  type: typeof HENT_FULLMEKTIG_HISTORIKK;
+  data: any;
+}
+
+export type Action =
+  | HentMuligeSakstemaAction
+  | HentMuligeSakstypeAction
+  | FeiletAction
+  | PendingAction
+  | OkAction
+  | HentFullmektigHistorikkAction;

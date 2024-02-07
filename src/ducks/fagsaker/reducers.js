@@ -44,6 +44,11 @@ export default function reducer(state = initialState, action = {}) {
       if (!muligeSakstyper) return { ...state };
       return { ...state, data: { ...state.data, muligeSakstyper } };
     }
+    case Types.HENT_FULLMEKTIG_HISTORIKK: {
+      const fullmektigHistorikk = action.data;
+      if (!fullmektigHistorikk) return { ...state };
+      return { ...state, data: { ...state.data, fullmektigHistorikk } };
+    }
     default:
       return state;
   }
