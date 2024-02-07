@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
 
 import MKV from "../../../../../melosyskodeverk";
+import * as Api from "../../../../../services/api";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import * as Nav from "../../../../../navFrontend";
 import * as Mui from "../../../../../felleskomponenter/ui";
@@ -19,7 +20,6 @@ import {
   mottatteOpplysningerSelectors,
 } from "../../../../../ducks/mottatteOpplysninger";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../../../ducks/menypanel";
 import { landkoderSelectors } from "../../../../../ducks/landkoder";
@@ -30,6 +30,7 @@ import "./vurderingInngang.css";
 import { modalerOperations, modalerSelectors } from "../../../../../ducks/modaler";
 import { oppsummertfaktaOperations } from "../../../../../ducks/oppsummertfakta";
 import { BehandlingUnderOppfriskningSelector } from "../../../../../ducks/modaler/selectors";
+import * as KV from "../../../../../kodeverk";
 
 interface Props {
   bekreft: () => void;
@@ -39,17 +40,17 @@ interface Props {
 
 export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
   const [visOppfrisk, setVisOppfrisk] = useState(false);
+  const [gyldigeTrygdedekninger, setGyldigeTrygdedekninger] = useState<string[]>([]);
   const dispatch = useDispatch();
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
-  const trygdedekninger = useSelector(folketrygdenkodeverkSelectors.TrygdedekningerSelector);
   const alleLandkoder = useSelector(landkoderSelectors.LandkoderSelector);
   const søknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
-  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
   const behandlingUnderOppfriskning = useSelector(BehandlingUnderOppfriskningSelector);
+  const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const initialValues = {
     fom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.fom, false, undefined),
@@ -76,6 +77,10 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     !Utils.dato.erLikeDatoer(formValues.tom, initialValues.tom) ||
     formValues.land !== initialValues.land ||
     formValues.trygdedekning !== initialValues.trygdedekning;
+
+  useEffect(() => {
+    Api.Ftrl.hentGyldigeTrygdedekninger(behandlingID).then(setGyldigeTrygdedekninger);
+  }, []);
 
   const stegErGyldig = formIsValid && !skalHenteRegisteropplysninger && !behandlingUnderOppfriskning;
 
@@ -177,9 +182,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
               emptyFieldDisabled={!!formValues.trygdedekning}
               disabled={!redigerbart}
             >
-              {trygdedekninger.map((item: KTObject) => (
-                <option key={item.kode} value={item.kode}>
-                  {item.term}
+              {gyldigeTrygdedekninger.map((dekning) => (
+                <option key={dekning} value={dekning}>
+                  {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
                 </option>
               ))}
             </Forms.Select>
