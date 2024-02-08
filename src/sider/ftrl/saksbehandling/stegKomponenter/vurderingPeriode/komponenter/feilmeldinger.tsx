@@ -4,6 +4,9 @@ import * as Utils from "../../../../../../utils";
 import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 import { MedlemskapsperiodeProp } from "./types";
 
+const { FTRL_KAP2_2_1_FØRSTE_LEDD, FTRL_KAP2_2_1_FJERDE_LEDD, FTRL_KAP2_2_7_FJERDE_LEDD, FTRL_KAP2_2_8_FJERDE_LEDD } =
+  MKV.Koder.folketrygdloven_kap2_bestemmelser;
+
 const { AVSLAATT, INNVILGET, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 
 const IngenMedlemskapsperioder = (
@@ -47,7 +50,7 @@ const MedlemskapsperiodenStarterFør2023 = (
 
 const BareOpphørtePerioder = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">
-    Hvis hele perioden skal opphøres, gå tilbake til steg 1 og oppgi at betaling mangler for hele perioden.
+    Hvis hele perioden skal opphøres, gå tilbake til inngangssteget og oppgi at betaling mangler for hele perioden.
   </Nav.AlertStripeFeil>
 );
 
@@ -55,6 +58,10 @@ const OpphørtPeriodeFørAnnenPeriode = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">
     Opphørt periode kan ikke være før innvilget eller avslått periode.
   </Nav.AlertStripeFeil>
+);
+
+const PeriodeOverstiger12Mnd = (
+  <Nav.AlertStripeFeil className="alertstripe_feilmelding">Perioden overstiger 12 måneder.</Nav.AlertStripeFeil>
 );
 
 const SøknadsperiodenStarterFørEllerSlutterEtter = (
@@ -66,6 +73,12 @@ const SøknadsperiodenStarterFørEllerSlutterEtter = (
 const IngenOpphørtePerioder = (
   <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
     Ingen periode(r) er opphørt. Hvis det er riktig kan du likevel gå videre.
+  </Nav.AlertStripeAdvarsel>
+);
+
+const BestemmelseForFamiliemedlemmerErValgt = (
+  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
+    Husk at søkeren må få dekning som er i samsvar med forsørgerens vedtak.
   </Nav.AlertStripeAdvarsel>
 );
 
@@ -197,6 +210,28 @@ const periodeStarterFoer2023 = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
   return false;
 };
 
+const periodeOverstiger12Mnd = (fraOgMedDato: string, tilOgMedDato?: string) => {
+  console.log(
+    "12mnd",
+    Utils.dato
+      .datoDiff(Utils.dato.isoStringTilDate(fraOgMedDato), Utils.dato.isoStringTilDate(tilOgMedDato), "months")
+      .valueOf()
+  );
+  return (
+    Utils.dato
+      .datoDiff(Utils.dato.isoStringTilDate(fraOgMedDato), Utils.dato.isoStringTilDate(tilOgMedDato), "months")
+      .valueOf() > 12
+  );
+};
+
+export const bestemmelseErEnAv2_2_1 = (bestemmelse: string) => {
+  return bestemmelse === FTRL_KAP2_2_1_FØRSTE_LEDD || bestemmelse === FTRL_KAP2_2_1_FJERDE_LEDD;
+};
+
+export const landErKunNorge = (land: string[]) => {
+  return land.length === 1 && land[0] === MKV.Koder.landkoder.NO;
+};
+
 enum TypeFeilmelding {
   INGEN_MEDLEMSKAPSPERIODER = "INGEN_MEDLEMSKAPSPERIODER",
   IKKE_STØTTET_I_MELOSYS = "IKKE_STØTTET_I_MELOSYS",
@@ -210,11 +245,15 @@ enum TypeFeilmelding {
   INGEN_OPPHØRTE_PERIODER = "INGEN_OPPHØRTE_PERIODER",
   BARE_OPPHØRTE_PERIODER = "BARE_OPPHØRTE_PERIODER",
   OPPHØRT_PERIODE_FØR_ANNEN_PERIODE = "OPPHØRT_PERIODE_FØR_ANNEN_PERIODE",
+  PERIODE_OVERSTIGER_12_MND = "PERIODE_OVERSTIGER_12_MND",
+  BESTEMMELSE_FOR_FAMILIEMEDLEMMER = "BESTEMMELSE_FOR_FAMILIEMEDLEMMER",
 }
 
 export function finnAktivFeilmelding(
   medlemskapsperioder: MedlemskapsperiodeProp[],
   behandlingstype: string,
+  bestemmelse: string,
+  land: string[],
   begrensePeriodeVedtakToggleEnabled: boolean | undefined,
   manglendeInnbetalingToggleEnabled: boolean | undefined,
   søknadsperiodeFomDato: string,
@@ -232,7 +271,8 @@ export function finnAktivFeilmelding(
   }
 
   const manglerSluttdato = Utils._isEmpty(medlemskapsperioder[medlemskapsperioder.length - 1].tomDato);
-  if (manglerSluttdato) {
+
+  if (manglerSluttdato && !(landErKunNorge(land) && bestemmelseErEnAv2_2_1(bestemmelse))) {
     return TypeFeilmelding.INGEN_SLUTTDATO;
   }
 
@@ -264,11 +304,11 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.OPPHØRT_PERIODE_FØR_ANNEN_PERIODE;
   }
 
-  // Sjekk advarsler
-  if (manglendeInnbetalingToggleEnabled && finnesIkkeOpphørtePerioder(medlemskapsperioder, behandlingstype)) {
-    return TypeFeilmelding.INGEN_OPPHØRTE_PERIODER;
+  if (bestemmelseErEnAv2_2_1(bestemmelse) && periodeOverstiger12Mnd(søknadsperiodeFomDato, søknadsperiodeTomDato)) {
+    return TypeFeilmelding.PERIODE_OVERSTIGER_12_MND;
   }
 
+  // Sjekk advarsler
   if (
     søknadsperiodeStarterFørEllerSlutterEtterPeriodene(
       medlemskapsperioder,
@@ -277,6 +317,14 @@ export function finnAktivFeilmelding(
     )
   ) {
     return TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER;
+  }
+
+  if (bestemmelse === FTRL_KAP2_2_7_FJERDE_LEDD || bestemmelse === FTRL_KAP2_2_8_FJERDE_LEDD) {
+    return TypeFeilmelding.BESTEMMELSE_FOR_FAMILIEMEDLEMMER;
+  }
+
+  if (manglendeInnbetalingToggleEnabled && finnesIkkeOpphørtePerioder(medlemskapsperioder, behandlingstype)) {
+    return TypeFeilmelding.INGEN_OPPHØRTE_PERIODER;
   }
 
   return undefined;
@@ -294,9 +342,11 @@ export function feilMeldingBlokkerer(type?: string): boolean {
     case TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023:
     case TypeFeilmelding.BARE_OPPHØRTE_PERIODER:
     case TypeFeilmelding.OPPHØRT_PERIODE_FØR_ANNEN_PERIODE:
+    case TypeFeilmelding.PERIODE_OVERSTIGER_12_MND:
       return true;
     case TypeFeilmelding.INGEN_OPPHØRTE_PERIODER:
     case TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER:
+    case TypeFeilmelding.BESTEMMELSE_FOR_FAMILIEMEDLEMMER:
     default:
       return false;
   }
@@ -328,6 +378,10 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return IngenOpphørtePerioder;
     case TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER:
       return SøknadsperiodenStarterFørEllerSlutterEtter;
+    case TypeFeilmelding.PERIODE_OVERSTIGER_12_MND:
+      return PeriodeOverstiger12Mnd;
+    case TypeFeilmelding.BESTEMMELSE_FOR_FAMILIEMEDLEMMER:
+      return BestemmelseForFamiliemedlemmerErValgt;
     default:
       return null;
   }
