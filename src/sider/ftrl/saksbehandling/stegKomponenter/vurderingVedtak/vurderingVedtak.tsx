@@ -30,10 +30,10 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { feiletResponsSelectors } from "../../../../../ducks/feiletRespons";
-import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../../ikkeYrkesaktiv/stegKomponenter/vurderingVedtak/tekster";
 import { FRITEKST_VALG } from "../../../../../kodeverk/koder";
 import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/menypanel";
+import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../../ikkeYrkesaktiv/stegKomponenter/vurderingvedtak/tekster";
 
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 const { IKKE_YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
@@ -76,7 +76,7 @@ interface Props {
 
 export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const dispatch = useDispatch();
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const mottatteOpplysningerFeilmeldinger = useSelector(formSelectors.SoknadErrorsSelector);
@@ -183,10 +183,14 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   }, [aktivtSteg]);
 
   useEffect(() => {
+    if (erFullmektigEndret) {
+      hentMuligeMottakere();
+    }
     if (aktivtSteg && (erFullmektigEndret || !fakturamottaker)) {
       Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((mottaker) => {
         setFakturamottaker(mottaker.navn);
       });
+
       if (erFullmektigEndret) {
         dispatch(menypanelOperations.setErFullmektigEndret(false));
       }
@@ -405,7 +409,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           )}
         </div>
       )}
-      {!erIkkeYrkesaktiv && !erDelvisOpphør && (
+      {!erDelvisOpphør && (
         <>
           <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
             <LabelMedHjelpetekst
@@ -437,7 +441,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         disabled={!redigerbart}
       />
 
-      {!erDelvisOpphør && (
+      {!erIkkeYrkesaktiv && !erDelvisOpphør && (
         <>
           <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
             <LabelMedHjelpetekst
