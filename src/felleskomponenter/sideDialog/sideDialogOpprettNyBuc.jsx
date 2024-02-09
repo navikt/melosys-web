@@ -299,7 +299,7 @@ SideDialogOpprettNyBuc.propTypes = {
   behandlingstema: PT.string.isRequired,
   sakstype: PT.string.isRequired,
   dokumenter: PT.arrayOf(PT.object).isRequired,
-  redigerbart: PT.bool,
+  redigerbart: PT.bool.isRequired,
 };
 
 export default SideDialogOpprettNyBuc;
