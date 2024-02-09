@@ -26,7 +26,7 @@ TomtFelt.defaultProps = {
   tekst: "Velg...",
 };
 
-const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokumenter }) => {
+const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokumenter, redigerbart }) => {
   const [tilgjengeligeMottakerinstitusjoner, setTilgjengeligeMottakerinstitusjoner] = useState([]);
 
   const [valgtFagomrade, setValgtFagomrade] = useState(EKV.Koder.sektor.LA);
@@ -263,7 +263,12 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
           className="multiselect"
         />
         <VedleggTable valgteVedlegg={valgteVedlegg} label="Vedlegg" setValgteVedlegg={setValgteVedlegg} />
-        <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={dokumenter} />
+        <VedleggVelger
+          valgteVedlegg={valgteVedlegg}
+          onChange={setValgteVedlegg}
+          dokumenter={dokumenter}
+          redigerbart={redigerbart}
+        />
         <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>
           Opprett ny BUC
         </Nav.Hovedknapp>
@@ -294,6 +299,7 @@ SideDialogOpprettNyBuc.propTypes = {
   behandlingstema: PT.string.isRequired,
   sakstype: PT.string.isRequired,
   dokumenter: PT.arrayOf(PT.object).isRequired,
+  redigerbart: PT.bool,
 };
 
 export default SideDialogOpprettNyBuc;
