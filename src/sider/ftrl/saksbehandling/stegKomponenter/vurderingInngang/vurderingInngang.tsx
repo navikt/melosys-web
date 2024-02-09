@@ -31,6 +31,7 @@ import { modalerOperations, modalerSelectors } from "../../../../../ducks/modale
 import { oppsummertfaktaOperations } from "../../../../../ducks/oppsummertfakta";
 import { BehandlingUnderOppfriskningSelector } from "../../../../../ducks/modaler/selectors";
 import * as KV from "../../../../../kodeverk";
+import { BOOLSK_STRING } from "../../../../../constants";
 
 interface Props {
   bekreft: () => void;
@@ -44,10 +45,13 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const dispatch = useDispatch();
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+  const erIkkeYrkesaktiv = behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const alleLandkoder = useSelector(landkoderSelectors.LandkoderSelector);
   const søknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
+  const søknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
   const behandlingUnderOppfriskning = useSelector(BehandlingUnderOppfriskningSelector);
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
@@ -55,7 +59,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const initialValues = {
     fom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.fom, false, undefined),
     tom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.tom, false, undefined),
-    land: useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector).toString(),
+    arbeidsland: søknadsland.landkoder.toString(),
+    land: søknadsland.landkoder || [],
+    flereLandUkjentHvilke: Utils.streng.boolTilUppercaseStreng(søknadsland.erUkjenteEllerAlleEosLand ?? false),
     trygdedekning: useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector) ?? "",
     inkluderSiste5Aar: useSelector(modalerSelectors.InkluderSiste5AarSelector),
   };
@@ -63,9 +69,11 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const {
     control,
     watch,
+    setValue,
     formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
+    context: { erIkkeYrkesaktiv },
     mode: "all",
     values: useMemo(() => initialValues as FieldValues, [initialValues]),
   });
@@ -75,7 +83,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     !registeropplysningerHentet ||
     !Utils.dato.erLikeDatoer(formValues.fom, initialValues.fom) ||
     !Utils.dato.erLikeDatoer(formValues.tom, initialValues.tom) ||
-    formValues.land !== initialValues.land ||
+    !Utils._isEqual(formValues.land, initialValues.land) ||
+    formValues.arbeidsland !== initialValues.arbeidsland ||
+    formValues.flereLandUkjentHvilke !== initialValues.flereLandUkjentHvilke ||
     formValues.trygdedekning !== initialValues.trygdedekning;
 
   useEffect(() => {
@@ -88,6 +98,16 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
+  const mapLandkoder = () => {
+    if (erIkkeYrkesaktiv) {
+      return Utils.streng.uppercaseStrengTilBool(formValues.flereLandUkjentHvilke) ? [] : formValues.land;
+    }
+    return formValues.arbeidsland ? [formValues.arbeidsland] : [];
+  };
+
+  const mapErUkjenteEllerAlleEosLand = () =>
+    erIkkeYrkesaktiv ? Utils.streng.uppercaseStrengTilBool(formValues.flereLandUkjentHvilke) : false;
+
   const oppdaterLokalMottatteOpplysninger = async () => {
     await Promise.all([
       dispatch(
@@ -96,7 +116,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
         })
       ),
-      dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(formValues.land ? [formValues.land] : [], false)),
+      dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(mapLandkoder(), mapErUkjenteEllerAlleEosLand())),
       dispatch(mottatteOpplysningerOperations.oppdaterTrygdedekning(formValues.trygdedekning)),
     ]);
   };
@@ -120,6 +140,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = formValues.land
     ? MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(formValues.land)
     : false;
+  const flereLandUkjentHvilkeErUSANN = formValues.flereLandUkjentHvilke === BOOLSK_STRING.USANN;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const nyVurderingPeriodetekst =
     "Du skal kun endre søknadsperiode dersom det er mottatt informasjon om ny start og/eller sluttdato for oppholdet";
@@ -153,27 +174,62 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
               control={control}
             />
           </Nav.Column>
-          <Nav.Column>
-            <Forms.Select
-              label={
-                <LabelMedHjelpetekst
-                  label="Arbeidsland"
-                  hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                  hjelpetekstClassName="hjelpetekst"
+
+          {erIkkeYrkesaktiv ? (
+            <Nav.Column className="land_wrapper">
+              <Nav.Typo.Element className="land">Land</Nav.Typo.Element>
+              <Forms.Radio
+                label="Flere land, ikke kjent hvilke"
+                name="flereLandUkjentHvilke"
+                control={control}
+                value={BOOLSK_STRING.SANN}
+                disabled={!redigerbart}
+                className="flereLandUkjente"
+                onChange={() => setValue("land", [])}
+              />
+              <Forms.Radio
+                label="Velg land fra liste"
+                name="flereLandUkjentHvilke"
+                control={control}
+                value={BOOLSK_STRING.USANN}
+                disabled={!redigerbart}
+                className={flereLandUkjentHvilkeErUSANN ? "flereLandUkjentHvilke flereLand" : "flereLandUkjentHvilke"}
+              />
+              {flereLandUkjentHvilkeErUSANN && (
+                <Forms.MultiSelect
+                  label=""
+                  name="land"
+                  className="land_multiselect"
+                  redigerbart={redigerbart}
+                  control={control}
+                  options={alleLandkoder.map((kt) => ({ value: kt.kode, label: kt.term!! }))}
                 />
-              }
-              emptyFieldDisabled={!!formValues.land}
-              name="land"
-              disabled={!redigerbart}
-              control={control}
-            >
-              {alleLandkoder.map((item: KTObject) => (
-                <option key={item.kode} value={item.kode}>
-                  {item.term}
-                </option>
-              ))}
-            </Forms.Select>
-          </Nav.Column>
+              )}
+            </Nav.Column>
+          ) : (
+            <Nav.Column>
+              <Forms.Select
+                label={
+                  <LabelMedHjelpetekst
+                    label="Arbeidsland"
+                    hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
+                    hjelpetekstClassName="hjelpetekst"
+                  />
+                }
+                emptyFieldDisabled={!!formValues.arbeidsland}
+                name="arbeidsland"
+                disabled={!redigerbart}
+                control={control}
+              >
+                {alleLandkoder.map((item: KTObject) => (
+                  <option key={item.kode} value={item.kode}>
+                    {item.term}
+                  </option>
+                ))}
+              </Forms.Select>
+            </Nav.Column>
+          )}
+
           <Nav.Column>
             <Forms.Select
               name="trygdedekning"
@@ -191,6 +247,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           </Nav.Column>
         </Nav.Row>
       </div>
+
       <Nav.Row>
         <Forms.Checkbox
           className="inkluderSiste5Aar"
@@ -223,7 +280,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         <DialogboksOppfriskSak
           oppfrisk={async () => {
             await lagreMottatteOpplysningerOgOppfriskSaksopplysninger();
-            dispatch(oppsummertfaktaOperations.sendArbeidsland(behandlingID, { arbeidsland: [formValues.land] }));
+            dispatch(oppsummertfaktaOperations.sendArbeidsland(behandlingID, { arbeidsland: mapLandkoder() }));
           }}
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {

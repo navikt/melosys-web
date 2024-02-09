@@ -7,7 +7,6 @@ import MultiSelectPlain from "../multiSelect";
 type MultiSelectComponentProps = Omit<ComponentProps<typeof MultiSelectPlain>, "onChange"> & {
   redigerbart: boolean;
   onChange: (selectedOptions: string[]) => void;
-  itemRef: string;
   values: string[];
 };
 
