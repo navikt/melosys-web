@@ -211,12 +211,6 @@ const periodeStarterFoer2023 = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
 };
 
 const periodeOverstiger12Mnd = (fraOgMedDato: string, tilOgMedDato?: string) => {
-  console.log(
-    "12mnd",
-    Utils.dato
-      .datoDiff(Utils.dato.isoStringTilDate(fraOgMedDato), Utils.dato.isoStringTilDate(tilOgMedDato), "months")
-      .valueOf()
-  );
   return (
     Utils.dato
       .datoDiff(Utils.dato.isoStringTilDate(fraOgMedDato), Utils.dato.isoStringTilDate(tilOgMedDato), "months")
