@@ -72,6 +72,7 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
         id={selectId}
         styles={styles}
         onChange={(selectedOptions) => onChange(selectedOptions || [])}
+        menuPortalTarget={document.body}
         options={options}
         placeholder="Velg..."
         isMulti
