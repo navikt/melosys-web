@@ -67,6 +67,7 @@ export const FaneViser = ({
           behandlingstema={behandlingstema}
           sakstype={sakstype}
           dokumenter={dokumenter}
+          redigerbart={redigerbart}
         />
       );
     case "besvarsed":

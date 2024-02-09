@@ -566,7 +566,12 @@ class VurderingArtikkel16Anmodning extends Component {
                   label="Vedlegg til SED"
                   setValgteVedlegg={setValgteVedlegg}
                 />
-                <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={fysiskeDokument} />
+                <VedleggVelger
+                  valgteVedlegg={valgteVedlegg}
+                  onChange={setValgteVedlegg}
+                  dokumenter={fysiskeDokument}
+                  redigerbart={redigerbart}
+                />
               </Nav.Column>
             </Nav.Row>
           )}
