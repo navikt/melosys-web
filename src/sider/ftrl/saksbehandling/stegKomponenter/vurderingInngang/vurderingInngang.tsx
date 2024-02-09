@@ -89,7 +89,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     formValues.trygdedekning !== initialValues.trygdedekning;
 
   useEffect(() => {
-    Api.Ftrl.hentGyldigeTrygdedekninger(behandlingID).then(setGyldigeTrygdedekninger);
+    Api.Ftrl.hentGyldigeTrygdedekninger(behandlingstema).then(setGyldigeTrygdedekninger);
   }, []);
 
   const stegErGyldig = formIsValid && !skalHenteRegisteropplysninger && !behandlingUnderOppfriskning;
