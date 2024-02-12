@@ -210,12 +210,17 @@ const periodeStarterFoer2023 = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
   return false;
 };
 
-const periodeOverstiger12Mnd = (fraOgMedDato: string, tilOgMedDato?: string) => {
-  return (
-    Utils.dato
-      .datoDiff(Utils.dato.isoStringTilDate(fraOgMedDato), Utils.dato.isoStringTilDate(tilOgMedDato), "months")
-      .valueOf() > 12
-  );
+const periodeOverstiger12Mnd = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
+  const minFomDato = medlemskapsperioder.reduce((min, periode) => {
+    return periode.fomDato < min ? periode.fomDato : min;
+  }, medlemskapsperioder[0].fomDato);
+  const maxTomDato = medlemskapsperioder.reduce((max, periode) => {
+    return periode.tomDato > max ? periode.tomDato : max;
+  }, medlemskapsperioder[0].tomDato);
+
+  const ettArEtterFomDato = new Date(minFomDato);
+  ettArEtterFomDato.setFullYear(ettArEtterFomDato.getFullYear() + 1);
+  return new Date(maxTomDato).getTime() > ettArEtterFomDato.getTime();
 };
 
 export const bestemmelseErEnAv2_2_1 = (bestemmelse: string) => {
@@ -270,12 +275,12 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.INGEN_SLUTTDATO;
   }
 
-  if (finnesOverlappIInnvilgedePerioder(medlemskapsperioder)) {
-    return TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER;
-  }
-
   if (manglendeInnbetalingToggleEnabled && finnesOverlappIOpphørtePerioder(medlemskapsperioder)) {
     return TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER;
+  }
+
+  if (finnesOverlappIInnvilgedePerioder(medlemskapsperioder)) {
+    return TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER;
   }
 
   if (manglendeInnbetalingToggleEnabled && opphørtPeriodeOverlapperInnvilgetPeriode(medlemskapsperioder)) {
@@ -298,7 +303,7 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.OPPHØRT_PERIODE_FØR_ANNEN_PERIODE;
   }
 
-  if (bestemmelseErEnAv2_2_1(bestemmelse) && periodeOverstiger12Mnd(søknadsperiodeFomDato, søknadsperiodeTomDato)) {
+  if (bestemmelseErEnAv2_2_1(bestemmelse) && periodeOverstiger12Mnd(medlemskapsperioder)) {
     return TypeFeilmelding.PERIODE_OVERSTIGER_12_MND;
   }
 
