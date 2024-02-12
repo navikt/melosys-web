@@ -1,7 +1,7 @@
 import { array, object, string } from "yup";
 import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
-import { bestemmelseErEnAv2_2_1, harIkkeLovligSluttDato, landErKunNorge } from "./komponenter/feilmeldinger";
+import { harIkkeLovligSluttDato } from "./komponenter/feilmeldinger";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const INNGILGELSESRESULTAT_FELT_KREVES = { melding: "Du må velge innvilgelsesresultat" };

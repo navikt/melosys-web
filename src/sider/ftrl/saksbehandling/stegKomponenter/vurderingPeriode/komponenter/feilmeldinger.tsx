@@ -223,11 +223,11 @@ const periodeOverstiger12Mnd = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
   return new Date(maxTomDato).getTime() > ettArEtterFomDato.getTime();
 };
 
-export const bestemmelseErEnAv2_2_1 = (bestemmelse: string) => {
+const bestemmelseErEnAv2_2_1 = (bestemmelse: string) => {
   return bestemmelse === FTRL_KAP2_2_1_FØRSTE_LEDD || bestemmelse === FTRL_KAP2_2_1_FJERDE_LEDD;
 };
 
-export const landErKunNorge = (land: string[]) => {
+const landErKunNorge = (land: string[]) => {
   return land.length === 1 && land[0] === MKV.Koder.landkoder.NO;
 };
 
