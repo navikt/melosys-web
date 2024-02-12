@@ -93,7 +93,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
     mode: "all",
-    context: { soknadsperiode, soknadsland, lagretBestemmelse },
+    context: { soknadsperiode, soknadsland },
     defaultValues: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder),
     } as FieldValue<FormValuesProps>,

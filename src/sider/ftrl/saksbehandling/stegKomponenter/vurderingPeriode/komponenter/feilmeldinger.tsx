@@ -231,7 +231,7 @@ export const landErKunNorge = (land: string[]) => {
   return land.length === 1 && land[0] === MKV.Koder.landkoder.NO;
 };
 
-const harIkkeLovligSluttDato = (medlemskapsperioder: MedlemskapsperiodeProp[], land: string[]) => {
+export const harIkkeLovligSluttDato = (medlemskapsperioder: MedlemskapsperiodeProp[], land: string[]) => {
   const manglerSluttdato = Utils._isEmpty(medlemskapsperioder[medlemskapsperioder.length - 1].tomDato);
   return manglerSluttdato && !(landErKunNorge(land) && bestemmelseErEnAv2_2_1(medlemskapsperioder[0].bestemmelse));
 };

@@ -1,7 +1,7 @@
 import { array, object, string } from "yup";
 import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
-import { bestemmelseErEnAv2_2_1, landErKunNorge } from "./komponenter/feilmeldinger";
+import { bestemmelseErEnAv2_2_1, harIkkeLovligSluttDato, landErKunNorge } from "./komponenter/feilmeldinger";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const INNGILGELSESRESULTAT_FELT_KREVES = { melding: "Du må velge innvilgelsesresultat" };
@@ -41,8 +41,8 @@ const tomDatoPåkrevd = {
   name: "Påkrevd felt",
   message: { ...MAA_FYLLES_UT },
   test: (tomDato, schema) => {
-    const { soknadsland, lagretBestemmelse } = schema.options.context;
-    return !Utils._isEmpty(tomDato) || (landErKunNorge(soknadsland) && bestemmelseErEnAv2_2_1(lagretBestemmelse));
+    const { soknadsland } = schema.options.context;
+    return !harIkkeLovligSluttDato(schema.from[1].value.medlemskapsperioder, soknadsland);
   },
 };
 
