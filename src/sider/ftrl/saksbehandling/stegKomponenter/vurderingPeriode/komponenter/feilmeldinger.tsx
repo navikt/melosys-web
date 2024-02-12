@@ -231,6 +231,11 @@ export const landErKunNorge = (land: string[]) => {
   return land.length === 1 && land[0] === MKV.Koder.landkoder.NO;
 };
 
+const harIkkeLovligSluttDato = (medlemskapsperioder: MedlemskapsperiodeProp[], land: string[]) => {
+  const manglerSluttdato = Utils._isEmpty(medlemskapsperioder[medlemskapsperioder.length - 1].tomDato);
+  return manglerSluttdato && !(landErKunNorge(land) && bestemmelseErEnAv2_2_1(medlemskapsperioder[0].bestemmelse));
+};
+
 enum TypeFeilmelding {
   INGEN_MEDLEMSKAPSPERIODER = "INGEN_MEDLEMSKAPSPERIODER",
   IKKE_STØTTET_I_MELOSYS = "IKKE_STØTTET_I_MELOSYS",
@@ -268,9 +273,7 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.IKKE_STØTTET_I_MELOSYS;
   }
 
-  const manglerSluttdato = Utils._isEmpty(medlemskapsperioder[medlemskapsperioder.length - 1].tomDato);
-
-  if (manglerSluttdato && !(landErKunNorge(land) && bestemmelseErEnAv2_2_1(bestemmelse))) {
+  if (harIkkeLovligSluttDato(medlemskapsperioder, land)) {
     return TypeFeilmelding.INGEN_SLUTTDATO;
   }
 
