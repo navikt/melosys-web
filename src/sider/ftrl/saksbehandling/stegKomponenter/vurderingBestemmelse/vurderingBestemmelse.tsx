@@ -27,6 +27,7 @@ import {
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_FOLKETRYGDEN_2_7 } from "../../../../../featuretoggle/toggleNavn";
+import { BrukersSituasjon } from "./komponenter/brukersSituasjon";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export const kodeInkludererFritekst = (nestedKtObject: { [key: string]: KTObject[] }, kode?: string) =>
@@ -48,12 +49,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const dispatch = useDispatch();
   const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
 
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
-  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
-  const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector);
+  const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector) as any;
   const vilkårKodeverk = useSelector(folketrygdenkodeverkSelectors.VilkaarSelector);
   const begrunnelseKodeverk = useSelector(folketrygdenkodeverkSelectors.BegrunnelserSelector);
   const trygdedekning = useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector);
@@ -280,6 +281,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
+
+      <BrukersSituasjon muligeSituasjoner={undefined} alleSituasjoner={undefined} redigerbart={redigerbart} />
 
       {ulovligBestemmelseValgt && !bestemmelseIkkeStøttetValgt && (
         <Nav.AlertStripeFeil>
