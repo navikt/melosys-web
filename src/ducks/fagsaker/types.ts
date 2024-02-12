@@ -5,6 +5,8 @@
  * eller oppdateres.
  */
 
+import { FullmektigHistorikk } from "../../services/modules/types/fagsak";
+
 export const OK = "fagsaker/OK";
 export const FEILET = "fagsaker/FEILET";
 export const PENDING = "fagsaker/PENDING";
@@ -42,7 +44,7 @@ interface HentMuligeSakstypeAction {
 
 interface HentFullmektigHistorikkAction {
   type: typeof HENT_FULLMEKTIG_HISTORIKK;
-  data: any;
+  data: FullmektigHistorikk;
 }
 
 export type Action =

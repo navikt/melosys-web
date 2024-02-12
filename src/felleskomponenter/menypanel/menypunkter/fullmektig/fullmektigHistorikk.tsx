@@ -1,38 +1,40 @@
 import { Table } from "@navikt/ds-react";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { hentFullmektigHistorikk } from "../../../../ducks/fagsaker/operations";
+import { useSelector } from "react-redux";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
-import { Fagsak } from "../../../../services/api";
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
 import { formatterDatoTilNorsk } from "../../../../utils/dato";
 import { AdresseOgFeil } from "./types";
-import * as Api from "../../../../services/api";
-import { HentResDto } from "../../../../services/modules/fagsaker/kontaktopplysninger";
+import { HentKontaktopplysningerResponse } from "../../../../services/modules/fagsaker/kontaktopplysninger";
 import { FullmektigHistorikk as FullmektigHistorikkType } from "../../../../services/modules/types/fagsak";
+import { hentFullmektigHistorikk } from "../../../../services/modules/fagsaker/fagsak";
 
 type FullmektigHistorikkInfo = FullmektigHistorikkType & {
   brevadresse: AdresseOgFeil | undefined;
-  kontaktinfo: HentResDto | undefined;
+  kontaktinfo: HentKontaktopplysningerResponse | undefined;
 };
 
-const FullmektigHistorikk = () => {
-  const rootState = useSelector((state: any) => fagsakSelectors.FagsakSelector(state));
-  const dispatch = useDispatch();
-  const [fullmektigeMedAlt, setFullmektigeMedAlt] = useState<FullmektigHistorikkInfo[]>([]);
-  const { saksnummer, fullmektigHistorikk } = rootState as Fagsak;
+type FullmektigHistorikkProps = {
+  finnOrganisasjonAdresse: (orgnr: string) => Promise<AdresseOgFeil>;
+  finnPersonAdresse: (personIdent: string) => Promise<AdresseOgFeil>;
+};
+
+const FullmektigHistorikk = ({ finnOrganisasjonAdresse, finnPersonAdresse }: FullmektigHistorikkProps) => {
+  const [fullmektigHistorikk, setFullmektigHistorikk] = useState<FullmektigHistorikkType[]>([]);
+  const saksnummer = useSelector((state: any) => fagsakSelectors.SaksnummerSelector(state)) as string;
+  const [fullmektige, setFullmektige] = useState<FullmektigHistorikkInfo[]>([]);
 
   useEffect(() => {
-    dispatch(hentFullmektigHistorikk(saksnummer));
+    hentFullmektigHistorikk(saksnummer).then(setFullmektigHistorikk);
   }, [saksnummer]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const updatedFullmektigeMedAlt = await Promise.all(
+      const updatedFullmektige = await Promise.all(
         (fullmektigHistorikk || []).map(async (fullmektig) => {
           let brevAdresse: AdresseOgFeil | undefined;
-          let kontaktInfo: HentResDto | undefined;
+          let kontaktInfo: HentKontaktopplysningerResponse | undefined;
 
           if (fullmektig.orgnr) {
             const [adresse] = await Promise.all([
@@ -44,7 +46,7 @@ const FullmektigHistorikk = () => {
           }
 
           if (fullmektig.personIdent) {
-            const [adresse] = await Promise.all([finnPersonAdresse(fullmektig.personIdent)]);
+            const adresse = await finnPersonAdresse(fullmektig.personIdent);
             brevAdresse = adresse;
           }
 
@@ -55,7 +57,7 @@ const FullmektigHistorikk = () => {
           } as FullmektigHistorikkInfo;
         })
       );
-      setFullmektigeMedAlt(updatedFullmektigeMedAlt);
+      setFullmektige(updatedFullmektige);
     };
 
     fetchData();
@@ -66,34 +68,6 @@ const FullmektigHistorikk = () => {
   //   return Api.Fagsaker.kontaktopplysninger.hent(saksnummer, orgnr).then((res) => res);
   // };
 
-  const finnOrganisasjonAdresse = (orgnr: string): Promise<AdresseOgFeil> => {
-    return Api.Adresser.hentOrganisasjonAdresse(orgnr)
-      .then((adresse) => {
-        if (!adresse.mottakerNavn) {
-          return { adresse: undefined, feil: "Kunne ikke finne organisasjonen" };
-        }
-        if (adresse.ugyldig) {
-          return { adresse: undefined, feil: "Kunne ikke finne adresse til organisasjonen" };
-        }
-        return { adresse, feil: undefined };
-      })
-      .catch(() => ({ adresse: undefined, feil: "Kunne ikke finne organisasjonen" }));
-  };
-
-  const finnPersonAdresse = (personIdent: string): Promise<AdresseOgFeil> => {
-    return Api.Adresser.hentPersonAdresse(personIdent)
-      .then((adresse) => {
-        if (!adresse.mottakerNavn) {
-          return { adresse: undefined, feil: "Kunne ikke finne personen" };
-        }
-        if (adresse.ugyldig) {
-          return { adresse: undefined, feil: "Kunne ikke finne adresse til personen" };
-        }
-        return { adresse, feil: undefined };
-      })
-      .catch(() => ({ adresse: undefined, feil: "Kunne ikke finne personen" }));
-  };
-
   return (
     <Table>
       <Table.Header>
@@ -101,11 +75,11 @@ const FullmektigHistorikk = () => {
           <Table.HeaderCell scope="col">Registrert fra</Table.HeaderCell>
           <Table.HeaderCell scope="col">Registrert til</Table.HeaderCell>
           <Table.HeaderCell scope="col">Fullmakt</Table.HeaderCell>
-          <Table.HeaderCell scope="col">Fullmektig Org.nr/F.nr.</Table.HeaderCell>
+          <Table.HeaderCell scope="col">Fullmektig Org.nr./F.nr.</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {fullmektigeMedAlt?.map((fullmektig) => (
+        {fullmektige?.map((fullmektig) => (
           <Table.Row>
             <Table.DataCell>{formatterDatoTilNorsk(fullmektig.registrertFra)}</Table.DataCell>
             <Table.DataCell>{formatterDatoTilNorsk(fullmektig.registrertTil)}</Table.DataCell>
