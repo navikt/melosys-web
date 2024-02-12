@@ -251,7 +251,6 @@ enum TypeFeilmelding {
 export function finnAktivFeilmelding(
   medlemskapsperioder: MedlemskapsperiodeProp[],
   behandlingstype: string,
-  bestemmelse: string,
   land: string[],
   begrensePeriodeVedtakToggleEnabled: boolean | undefined,
   manglendeInnbetalingToggleEnabled: boolean | undefined,
@@ -259,7 +258,7 @@ export function finnAktivFeilmelding(
   søknadsperiodeTomDato?: string
 ): string | undefined {
   // Sjekk feil
-
+  const { bestemmelse } = medlemskapsperioder[0];
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
   if (ingenMedlemskapsperioder) {
     return TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER;
