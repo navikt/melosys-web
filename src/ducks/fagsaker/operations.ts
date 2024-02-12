@@ -66,30 +66,6 @@ export function lagNyBehandlingForSak(saksnummer: string, body: Api.Fagsaker.fag
   );
 }
 
-export function hentMuligeSakstemaer(saksnummer: string) {
-  return doThenDispatch(() => Api.Fagsaker.fagsak.hentMuligeSakstemaer(saksnummer), {
-    OK: Types.HENT_MULIGE_SAKSTEMA,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
-
-export function hentMuligeSakstyper(saksnummer: string) {
-  return doThenDispatch(() => Api.Fagsaker.fagsak.hentMuligeSakstyper(saksnummer), {
-    OK: Types.HENT_MULIGE_SAKSTYPE,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
-
-export function hentFullmektigHistorikk(saksnummer: string) {
-  return doThenDispatch(() => Api.Fagsaker.fagsak.hentFullmektigHistorikk(saksnummer), {
-    OK: Types.HENT_FULLMEKTIG_HISTORIKK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
-
 export function resetFagsakState() {
   return Actions.resetFagsakState();
 }
