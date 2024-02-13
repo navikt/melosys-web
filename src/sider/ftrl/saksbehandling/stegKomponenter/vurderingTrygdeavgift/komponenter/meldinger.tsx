@@ -107,11 +107,12 @@ export const finnAktivFeilmelding = (
   if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, innvilgetMedlemskapsperiode)) {
     return TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE;
   }
-  if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
-    return TypeMelding.BRUTTOINNTEKT_OVER_250K;
-  }
   if (erSkattepliktigOgPensjonUforeMedKildeskatt(skatteforholdsperioder, inntektskilder)) {
     return TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT;
+  }
+
+  if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
+    return TypeMelding.BRUTTOINNTEKT_OVER_250K;
   }
 
   return undefined;
