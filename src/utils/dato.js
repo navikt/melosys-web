@@ -115,6 +115,13 @@ function datoDiff(fom, tom, enhet = "months", presis = true) {
   return moment(momentTom).diff(fom, enhet, presis);
 }
 
+function datoDiffNorskFormat(fom, tom, enhet = "months", presis = true) {
+  if (!moment(fom, "DD.MM.YYYY").isValid() || !moment(tom, "DD.MM.YYYY").isValid()) return false;
+  const momentFom = moment(fom, "DD.MM.YYYY");
+  const momentTom = moment(tom, "DD.MM.YYYY").add(1, "day");
+  return moment(momentTom).diff(momentFom, enhet, presis);
+}
+
 function datoDiffPure(fom, tom, enhet = "months", presis = true) {
   if (!moment(fom, "YYYY-MM-DD").isValid() || !moment(tom, "YYYY-MM-DD").isValid()) return false;
   return moment(fom).diff(tom, enhet, presis);
@@ -228,6 +235,7 @@ export {
   formatterDatoTilISO,
   formatterKortDatoTilNorsk,
   datoDiff,
+  datoDiffNorskFormat,
   datoDiffPure,
   datoDiffMenneskelig,
   beregnAlder,

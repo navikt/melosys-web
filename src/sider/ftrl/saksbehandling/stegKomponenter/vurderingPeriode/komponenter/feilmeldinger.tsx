@@ -211,16 +211,7 @@ const periodeStarterFoer2023 = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
 };
 
 const periodeOverstiger12Mnd = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
-  const minFomDato = medlemskapsperioder.reduce((min, periode) => {
-    return periode.fomDato < min ? periode.fomDato : min;
-  }, medlemskapsperioder[0].fomDato);
-  const maxTomDato = medlemskapsperioder.reduce((max, periode) => {
-    return periode.tomDato > max ? periode.tomDato : max;
-  }, medlemskapsperioder[0].tomDato);
-
-  const ettArEtterFomDato = new Date(minFomDato);
-  ettArEtterFomDato.setFullYear(ettArEtterFomDato.getFullYear() + 1);
-  return new Date(maxTomDato).getTime() > ettArEtterFomDato.getTime();
+  return Utils.dato.datoDiffNorskFormat(medlemskapsperioder[0].fomDato, medlemskapsperioder[0].tomDato, "years") > 1;
 };
 
 const bestemmelseErEnAv2_2_1 = (bestemmelse: string) => {
@@ -232,8 +223,10 @@ const landErKunNorge = (land: string[]) => {
 };
 
 export const harIkkeLovligSluttDato = (medlemskapsperioder: MedlemskapsperiodeProp[], land: string[]) => {
-  const manglerSluttdato = Utils._isEmpty(medlemskapsperioder[medlemskapsperioder.length - 1].tomDato);
-  return manglerSluttdato && !(landErKunNorge(land) && bestemmelseErEnAv2_2_1(medlemskapsperioder[0].bestemmelse));
+  const sortertePerioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
+  const manglerSluttdato = Utils._isEmpty(sortertePerioder[sortertePerioder.length - 1].tomDato);
+  const tillattMedManglendeSluttDato = landErKunNorge(land) && bestemmelseErEnAv2_2_1(sortertePerioder[0].bestemmelse);
+  return manglerSluttdato && !tillattMedManglendeSluttDato;
 };
 
 enum TypeFeilmelding {
@@ -263,7 +256,6 @@ export function finnAktivFeilmelding(
   søknadsperiodeTomDato?: string
 ): string | undefined {
   // Sjekk feil
-  const { bestemmelse } = medlemskapsperioder[0];
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
   if (ingenMedlemskapsperioder) {
     return TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER;
@@ -277,12 +269,12 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.INGEN_SLUTTDATO;
   }
 
-  if (manglendeInnbetalingToggleEnabled && finnesOverlappIOpphørtePerioder(medlemskapsperioder)) {
-    return TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER;
-  }
-
   if (finnesOverlappIInnvilgedePerioder(medlemskapsperioder)) {
     return TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER;
+  }
+
+  if (manglendeInnbetalingToggleEnabled && finnesOverlappIOpphørtePerioder(medlemskapsperioder)) {
+    return TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER;
   }
 
   if (manglendeInnbetalingToggleEnabled && opphørtPeriodeOverlapperInnvilgetPeriode(medlemskapsperioder)) {
@@ -305,11 +297,20 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.OPPHØRT_PERIODE_FØR_ANNEN_PERIODE;
   }
 
+  const { bestemmelse } = medlemskapsperioder[0];
   if (bestemmelseErEnAv2_2_1(bestemmelse) && periodeOverstiger12Mnd(medlemskapsperioder)) {
     return TypeFeilmelding.PERIODE_OVERSTIGER_12_MND;
   }
 
   // Sjekk advarsler
+  if (manglendeInnbetalingToggleEnabled && finnesIkkeOpphørtePerioder(medlemskapsperioder, behandlingstype)) {
+    return TypeFeilmelding.INGEN_OPPHØRTE_PERIODER;
+  }
+
+  if (bestemmelse === FTRL_KAP2_2_7_FJERDE_LEDD || bestemmelse === FTRL_KAP2_2_8_FJERDE_LEDD) {
+    return TypeFeilmelding.BESTEMMELSE_FOR_FAMILIEMEDLEMMER;
+  }
+
   if (
     søknadsperiodeStarterFørEllerSlutterEtterPeriodene(
       medlemskapsperioder,
@@ -318,14 +319,6 @@ export function finnAktivFeilmelding(
     )
   ) {
     return TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER;
-  }
-
-  if (bestemmelse === FTRL_KAP2_2_7_FJERDE_LEDD || bestemmelse === FTRL_KAP2_2_8_FJERDE_LEDD) {
-    return TypeFeilmelding.BESTEMMELSE_FOR_FAMILIEMEDLEMMER;
-  }
-
-  if (manglendeInnbetalingToggleEnabled && finnesIkkeOpphørtePerioder(medlemskapsperioder, behandlingstype)) {
-    return TypeFeilmelding.INGEN_OPPHØRTE_PERIODER;
   }
 
   return undefined;
