@@ -17,6 +17,8 @@ import {
   erBrukerSkattepliktigIHelePerioden,
 } from "../vurderingTrygdeavgiftSchema";
 import "./inntektskilder.css";
+import { useFeatureToggle } from "../../../../../../featuretoggle";
+import { MELOSYS_INNTEKTSTYPE_PENSJON_UFØRETRYGD } from "../../../../../../featuretoggle/toggleNavn";
 
 const { ARBEIDSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR } = MKV.Koder.inntektskildetype;
 
@@ -41,6 +43,8 @@ export const Inntektskilder = ({
   defaultPeriode,
   fields,
 }: InntektskilderProps) => {
+  const inntektstypePensjonUføretrygdEnabled = useFeatureToggle(MELOSYS_INNTEKTSTYPE_PENSJON_UFØRETRYGD);
+
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
   const handleEndreKildetype = (index: number, kildetype: string) => {
@@ -106,11 +110,23 @@ export const Inntektskilder = ({
                   emptyFieldDisabled={visArbAvgBetales}
                   onChange={(value) => handleEndreKildetype(index, value)}
                 >
-                  {MKV.KTObjects.inntektskildetype.map((kt: KTObject) => (
-                    <option key={kt.kode} value={kt.kode}>
-                      {kt.term}
-                    </option>
-                  ))}
+                  {MKV.KTObjects.inntektskildetype
+                    .filter(
+                      (kt: KTObject) =>
+                        inntektstypePensjonUføretrygdEnabled ||
+                        [
+                          "ARBEIDSINNTEKT_FRA_NORGE",
+                          "NÆRINGSINNTEKT_FRA_NORGE",
+                          "INNTEKT_FRA_UTLANDET",
+                          "FN_SKATTEFRITAK",
+                          "MISJONÆR",
+                        ].includes(kt.kode)
+                    )
+                    .map((kt: KTObject) => (
+                      <option key={kt.kode} value={kt.kode}>
+                        {kt.term}
+                      </option>
+                    ))}
                 </Forms.Select>
               </Nav.Column>
 
