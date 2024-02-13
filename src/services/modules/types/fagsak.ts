@@ -19,7 +19,6 @@ type Fagsak = {
   sakstype: KTObject;
   sakstema: KTObject;
   saksstatus: KTObject;
-  fullmektigHistorikk: FullmektigHistorikk[] | undefined;
   registrertDato: string;
   endretDato: string;
   hovedpartRolle: string;

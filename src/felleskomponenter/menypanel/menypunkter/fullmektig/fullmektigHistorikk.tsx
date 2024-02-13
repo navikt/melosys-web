@@ -22,7 +22,7 @@ type FullmektigHistorikkProps = {
 
 const FullmektigHistorikk = ({ finnOrganisasjonAdresse, finnPersonAdresse }: FullmektigHistorikkProps) => {
   const [fullmektigHistorikk, setFullmektigHistorikk] = useState<FullmektigHistorikkType[]>([]);
-  const saksnummer = useSelector((state: any) => fagsakSelectors.SaksnummerSelector(state)) as string;
+  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const [fullmektige, setFullmektige] = useState<FullmektigHistorikkInfo[]>([]);
 
   useEffect(() => {
