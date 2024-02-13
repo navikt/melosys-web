@@ -186,6 +186,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     if (erFullmektigEndret) {
       hentMuligeMottakere();
     }
+  }, [erFullmektigEndret]);
+
+  useEffect(() => {
     if (aktivtSteg && (erFullmektigEndret || !fakturamottaker)) {
       Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((mottaker) => {
         setFakturamottaker(mottaker.navn);
@@ -409,6 +412,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           )}
         </div>
       )}
+
       {!erDelvisOpphør && (
         <>
           <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
