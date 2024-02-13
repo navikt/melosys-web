@@ -1,13 +1,13 @@
 import { getAsJson, deleteAsJson, postAsJson } from "../../utils";
 import { API_BASE_URL, FAGSAKER } from "../../api-constants";
 
-export interface HentResDto {
+export interface HentKontaktopplysningerResponse {
   kontaktorgnr: string | null;
   kontaktnavn: string | null;
   kontakttelefon: string | null;
 }
 
-export const hent = (saksnr: string, juridiskorgnr: string): Promise<HentResDto> =>
+export const hent = (saksnr: string, juridiskorgnr: string): Promise<HentKontaktopplysningerResponse> =>
   getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnr}/kontaktopplysninger/${juridiskorgnr}`);
 
 export interface SendReqDto {
