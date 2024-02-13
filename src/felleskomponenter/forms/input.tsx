@@ -14,7 +14,7 @@ interface InputComponentProps extends Nav.InputProps {
 type InputInnerComponentProps = InputComponentProps & RegisterHookFormProps;
 
 const InputInnerComponent = forwardRef<HTMLInputElement, InputInnerComponentProps>(
-  ({ label, disabled, ...rest }: InputProps, _ref: any) => {
+  ({ label, disabled, ...rest }: InputInnerComponentProps, _ref: any) => {
     return (
       <Nav.Input
         {...rest}

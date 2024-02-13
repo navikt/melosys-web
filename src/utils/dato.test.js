@@ -7,6 +7,7 @@ import {
   formatterDatoTilISO,
   formatterKortDatoTilNorsk,
   datoDiff,
+  datoDiffNorskFormat,
   datoDiffMenneskelig,
   beregnAlder,
   erGyldigPeriode,
@@ -294,6 +295,20 @@ describe("dato.js:", () => {
       const dato1 = "2016-02-26";
       const dato2 = "2016-08-25";
       expect(datoDiff(dato1, dato2, "months")).toBe(6);
+    });
+  });
+
+  describe("datoDiffNorskFormat", () => {
+    test("Feil format gir false", () => {
+      const dato1 = "01.0.2021";
+      const dato2 = "31.12.2021";
+      expect(datoDiffNorskFormat(dato1, dato2)).toBe(false);
+    });
+
+    test("Nøyaktig 1 år", () => {
+      const dato1 = "01.01.2021";
+      const dato2 = "31.12.2021";
+      expect(datoDiffNorskFormat(dato1, dato2, "years")).toBe(1);
     });
   });
 

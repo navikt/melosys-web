@@ -2,6 +2,7 @@ import { Fagsak } from "../types";
 
 import { getAsJson, postAsJson, putAsText } from "../../utils";
 import { API_BASE_URL, FAGSAKER } from "../../api-constants";
+import { FullmektigHistorikk } from "../types/fagsak";
 
 export const hent = (saksnummer: string): Promise<Fagsak> => getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}`);
 
@@ -79,13 +80,6 @@ export interface EndreSakDto {
 export interface TrygdeavgiftOppsummering {
   harBehandlingMedTrygdeavgift: boolean;
 }
-
-export const hentMuligeSakstemaer = (saksnummer: string) =>
-  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstemaer`);
-
-export const hentMuligeSakstyper = (saksnummer: string) =>
-  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstyper`);
-
 export const endreFagsak = (saksnummer: string, body: EndreSakDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/endre`, body);
 
@@ -94,3 +88,6 @@ export const ferdigbehandleSak = (saksnummer: string) =>
 
 export const hentTrygdeavgiftOppsummering = (saksnummer: string): Promise<TrygdeavgiftOppsummering> =>
   getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/trygdeavgift/oppsummering`);
+
+export const hentFullmektigHistorikk = (saksnummer: string): Promise<FullmektigHistorikk[]> =>
+  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/aktoerer/FULLMEKTIG/historikk`);

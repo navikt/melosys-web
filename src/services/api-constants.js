@@ -17,6 +17,7 @@ export const DOKUMENTER = "dokumenter";
 export const EESSI = "eessi";
 export const FAGSAKER = "fagsaker";
 export const FEATURETOGGLE = "featuretoggle";
+export const FTRL = "ftrl";
 export const JOURNALFORING = "journalforing";
 export const KODEVERK = "kodeverk";
 export const KONTROLL = "kontroll";

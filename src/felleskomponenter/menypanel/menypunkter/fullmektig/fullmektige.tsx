@@ -29,9 +29,11 @@ const { HENVENDELSE, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Ko
 
 type FullmektigeProps = {
   redigerbart: boolean;
+  finnOrganisasjonAdresse: (orgnr: string) => Promise<AdresseOgFeil>;
+  finnPersonAdresse: (personIdent: string) => Promise<AdresseOgFeil>;
 };
 
-const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
+const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }: FullmektigeProps) => {
   const dispatch = useDispatch();
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
@@ -77,34 +79,6 @@ const Fullmektige = ({ redigerbart }: FullmektigeProps) => {
   useEffect(() => {
     setVisFeilFullmektigHarIkkeFullmakter(false);
   }, [fullmektige]);
-
-  const finnOrganisasjonAdresse = (orgnr: string): Promise<AdresseOgFeil> => {
-    return Api.Adresser.hentOrganisasjonAdresse(orgnr)
-      .then((adresse) => {
-        if (!adresse.mottakerNavn) {
-          return { adresse: undefined, feil: "Kunne ikke finne organisasjonen" };
-        }
-        if (adresse.ugyldig) {
-          return { adresse: undefined, feil: "Kunne ikke finne adresse til organisasjonen" };
-        }
-        return { adresse, feil: undefined };
-      })
-      .catch(() => ({ adresse: undefined, feil: "Kunne ikke finne organisasjonen" }));
-  };
-
-  const finnPersonAdresse = (personIdent: string): Promise<AdresseOgFeil> => {
-    return Api.Adresser.hentPersonAdresse(personIdent)
-      .then((adresse) => {
-        if (!adresse.mottakerNavn) {
-          return { adresse: undefined, feil: "Kunne ikke finne personen" };
-        }
-        if (adresse.ugyldig) {
-          return { adresse: undefined, feil: "Kunne ikke finne adresse til personen" };
-        }
-        return { adresse, feil: undefined };
-      })
-      .catch(() => ({ adresse: undefined, feil: "Kunne ikke finne personen" }));
-  };
 
   const initializeFullmektige = async () => {
     const lagredeFullmektige = await Api.Fagsaker.aktoer.hent(saksnummer, FULLMEKTIG);
