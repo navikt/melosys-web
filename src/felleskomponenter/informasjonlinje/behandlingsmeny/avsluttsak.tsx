@@ -116,7 +116,7 @@ const AvsluttSak = () => {
         return (
           redigerbart &&
           sakstype === EU_EOS &&
-          [NY_VURDERING, HENVENDELSE, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstema)
+          [NY_VURDERING, HENVENDELSE, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)
         );
       default:
         return redigerbart;
