@@ -101,6 +101,7 @@ export const finnAktivFeilmelding = (
 ): string | undefined => {
   if (!innvilgetMedlemskapsperiode) return undefined;
 
+  // Feil
   if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, innvilgetMedlemskapsperiode)) {
     return TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE;
   }
@@ -111,6 +112,7 @@ export const finnAktivFeilmelding = (
     return TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT;
   }
 
+  // Advarsler
   if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
     return TypeMelding.BRUTTOINNTEKT_OVER_250K;
   }
