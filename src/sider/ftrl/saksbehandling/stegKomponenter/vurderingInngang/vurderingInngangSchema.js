@@ -16,7 +16,7 @@ const vurdering_inngang = object().shape({
   }),
   land: array().when(["$erIkkeYrkesaktiv", "flereLandUkjentHvilke"], {
     is: (erIkkeYrkesaktiv, flereLandUkjentHvilke) => erIkkeYrkesaktiv && !flereLandUkjentHvilke,
-    then: array().of(string()).min(1).required(LAND_FELT_KREVES),
+    then: array().of(string()).min(1, LAND_FELT_KREVES).required(LAND_FELT_KREVES),
     otherwise: array().nullable(),
   }),
   flereLandUkjentHvilke: boolean().when("$erIkkeYrkesaktiv", {
