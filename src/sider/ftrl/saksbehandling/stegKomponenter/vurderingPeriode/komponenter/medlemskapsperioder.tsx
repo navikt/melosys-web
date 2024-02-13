@@ -7,15 +7,16 @@ import * as Mui from "../../../../../../felleskomponenter/ui";
 
 import { FieldArrayProps, MedlemskapsperiodeProp } from "./types";
 import "./medlemskapsperioder.css";
+import * as KV from "../../../../../../kodeverk";
+import MKV from "../../../../../../melosyskodeverk";
 import { useSelector } from "react-redux";
 import { medlemskapsperioderSelectors } from "../../../../../../ducks/medlemskapsperioder";
-import MKV from "../../../../../../melosyskodeverk";
 
 const { PLIKTIG } = MKV.Koder.medlemskapstyper;
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
-  trygdedekninger: KTObject[];
+  trygdedekninger: string[];
   innvilgelsesResultater: KTObject[];
   control: Control;
   fields: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">[];
@@ -78,9 +79,9 @@ export const Medlemskapsperioder = ({
                   emptyFieldDisabled={!!field.trygdedekning}
                   onChange={(value) => handleChange([{ ...field, trygdedekning: value }], formIsValid, index)}
                 >
-                  {trygdedekninger.map((item: KTObject) => (
-                    <option key={item.kode} value={item.kode}>
-                      {item.term}
+                  {trygdedekninger.map((dekning) => (
+                    <option key={dekning} value={dekning}>
+                      {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
                     </option>
                   ))}
                 </Forms.Select>
