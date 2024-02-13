@@ -36,6 +36,7 @@ import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/menypanel";
 
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
+const { IKKE_YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
 const { INNVILGELSE_FOLKETRYGDLOVEN, VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
@@ -84,6 +85,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const alleLandkoder = useSelector(landkoderSelectors.LandkoderSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const lagretNyVurderingBakgrunn = useSelector(behandlingsresultatSelectors.NyVurderingBakgrunnSelector);
   const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
@@ -93,6 +95,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const erNyVurdering = behandlingstype === NY_VURDERING;
   const erManglendeInnbetalingTrygdeavgift = behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
   const erDelvisOpphør = medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === OPPHØRT);
+  const erIkkeYrkesaktiv = behandlingstema === IKKE_YRKESAKTIV;
   const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
 
   const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
@@ -180,10 +183,17 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   }, [aktivtSteg]);
 
   useEffect(() => {
+    if (erFullmektigEndret) {
+      hentMuligeMottakere();
+    }
+  }, [erFullmektigEndret]);
+
+  useEffect(() => {
     if (aktivtSteg && (erFullmektigEndret || !fakturamottaker)) {
       Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((mottaker) => {
         setFakturamottaker(mottaker.navn);
       });
+
       if (erFullmektigEndret) {
         dispatch(menypanelOperations.setErFullmektigEndret(false));
       }
@@ -435,7 +445,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         disabled={!redigerbart}
       />
 
-      {!erDelvisOpphør && (
+      {!erIkkeYrkesaktiv && !erDelvisOpphør && (
         <>
           <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
             <LabelMedHjelpetekst
