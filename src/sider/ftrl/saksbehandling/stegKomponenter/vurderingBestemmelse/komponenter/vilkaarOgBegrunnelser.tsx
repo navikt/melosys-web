@@ -25,7 +25,6 @@ interface VilkaarOgBegrunnelserProps {
   vilkårOgBegrunnelser: Api.MedlemAvFolketrygden.Bestemmelser.VilkårOgBegrunnelser;
   alleValgteVilkår: Map<string, string>;
   alleValgteBegrunnelser: Map<string, Begrunnelse>;
-  vilkårKodeverk: KTObject[];
   begrunnelseKodeverk: {
     [key: string]: KTObject[];
   };
@@ -39,7 +38,6 @@ export const VilkaarOgBegrunnelser = ({
   vilkårOgBegrunnelser: { vilkår, muligeBegrunnelser },
   alleValgteVilkår,
   alleValgteBegrunnelser,
-  vilkårKodeverk,
   begrunnelseKodeverk,
   handleEndreVilkår,
   handleEndreBegrunnelseKode,
@@ -59,7 +57,7 @@ export const VilkaarOgBegrunnelser = ({
       <Nav.Fieldset
         legend={
           <LabelMedHjelpetekst
-            label={KV.finnTermFraListe(vilkårKodeverk, vilkår)}
+            label={KV.finnTermFraListe(MKV.KTObjects.vilkaar, vilkår)}
             hjelpetekst={hjelpetekstForVilkaar}
           />
         }

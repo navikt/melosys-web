@@ -54,7 +54,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector);
-  const vilkårKodeverk = useSelector(folketrygdenkodeverkSelectors.VilkaarSelector);
   const begrunnelseKodeverk = useSelector(folketrygdenkodeverkSelectors.BegrunnelserSelector);
   const trygdedekning = useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector);
 
@@ -296,7 +295,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
             vilkårOgBegrunnelser={vilkårOgBegrunnelser}
             alleValgteVilkår={valgteVilkår}
             alleValgteBegrunnelser={valgteBegrunnelser}
-            vilkårKodeverk={vilkårKodeverk}
             begrunnelseKodeverk={begrunnelseKodeverk}
             handleEndreVilkår={handleEndreVilkår}
             handleEndreBegrunnelseKode={handleEndreBegrunnelseKode}
