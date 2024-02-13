@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "AppTypes";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 
@@ -69,33 +68,22 @@ const mapInitialMedlemskapsperioder = (
     .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b) || (a.innvilgelsesResultat === AVSLAATT ? -1 : 1))
     .map(mapTilMedlemskapsperiodeProps);
 
-const komponentState = (state: RootState) => ({
-  lagredeMedlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
-  trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
-  soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  lagretBestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
-});
-
 export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) => {
   const dispatch = useDispatch();
   const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
 
-  const {
-    redigerbart,
-    lagredeMedlemskapsperioder,
-    trygdedekninger,
-    behandlingID,
-    innvilgelsesResultater,
-    soknadsperiode,
-    behandlingstype,
-    lagretBestemmelse,
-  } = useSelector(komponentState);
   const begrensePeriodeVedtakToggleEnabled = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
+
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const lagredeMedlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
+  const trygdedekninger = useSelector(folketrygdenkodeverkSelectors.TrygdedekningerSelector);
+  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const innvilgelsesResultater = useSelector(folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector);
+  const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
+  const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
 
   const {
     control,
@@ -105,7 +93,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
     mode: "all",
-    context: { soknadsperiode },
+    context: { soknadsperiode, soknadsland },
     defaultValues: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder),
     } as FieldValue<FormValuesProps>,
@@ -132,6 +120,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.medlemskapsperioder,
     behandlingstype,
+    soknadsland,
     begrensePeriodeVedtakToggleEnabled,
     manglendeInnbetalingToggleEnabled,
     soknadsperiode.fom,

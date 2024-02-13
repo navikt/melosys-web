@@ -7,6 +7,11 @@ import * as Mui from "../../../../../../felleskomponenter/ui";
 
 import { FieldArrayProps, MedlemskapsperiodeProp } from "./types";
 import "./medlemskapsperioder.css";
+import { useSelector } from "react-redux";
+import { medlemskapsperioderSelectors } from "../../../../../../ducks/medlemskapsperioder";
+import MKV from "../../../../../../melosyskodeverk";
+
+const { PLIKTIG } = MKV.Koder.medlemskapstyper;
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
@@ -34,6 +39,8 @@ export const Medlemskapsperioder = ({
   visLeggTil,
 }: PeriodeElementerProps) => {
   const kanSlettePeriode = redigerbart && fields.length !== 1;
+  const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
+  const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
 
   return (
     <div className="medlemskapsperioder">
@@ -108,7 +115,7 @@ export const Medlemskapsperioder = ({
             )}
           </div>
         ))}
-        {visLeggTil && (
+        {visLeggTil && !medlemskapsTypeErPliktig && (
           <Nav.Row className="skillestrek">
             <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add}>
               Legg til periode
