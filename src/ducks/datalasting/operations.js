@@ -17,7 +17,11 @@ import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 // noinspection ES6PreferShortImport
 import { harIkkeYrkesaktivFlyt, harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../url/url";
-import { MELOSYS_FOLKETRYGDEN_MVP, MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING } from "../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_FTRL_IKKE_YRKESAKTIV,
+  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
+} from "../../featuretoggle/toggleNavn";
 
 const harIngenFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
@@ -25,6 +29,7 @@ const harIngenFlyt = async (sakstype, state) => {
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
   const folketrygdenToggleEnabled = erFeatureToggleEnabled(MELOSYS_FOLKETRYGDEN_MVP, state);
   const manglendeInnbetalingToggleEnabled = erFeatureToggleEnabled(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING, state);
+  const ikkeYrkesaktivFtrlToggleEnabled = erFeatureToggleEnabled(MELOSYS_FTRL_IKKE_YRKESAKTIV, state);
 
   return skalViseIngenFlyt(
     sakstype,
@@ -32,7 +37,8 @@ const harIngenFlyt = async (sakstype, state) => {
     behandlingstema,
     behandlingstype,
     folketrygdenToggleEnabled,
-    manglendeInnbetalingToggleEnabled
+    manglendeInnbetalingToggleEnabled,
+    ikkeYrkesaktivFtrlToggleEnabled
   );
 };
 const harUnntaksregistreringEllerIkkeYrkesaktivFlyt = (sakstype, state) => {

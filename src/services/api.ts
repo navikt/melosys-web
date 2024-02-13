@@ -9,6 +9,7 @@ import * as Eessi from "./modules/eessi";
 import * as Fagsaker from "./modules/fagsaker";
 import * as Faktureringskomponenten from "./modules/faktureringskomponenten";
 import * as Featuretoggle from "./modules/featuretoggle";
+import * as Ftrl from "./modules/ftrl";
 import * as Journalforing from "./modules/journalforing";
 import * as Kodeverk from "./modules/kodeverk";
 import * as Kontroll from "./modules/kontroll";
@@ -47,6 +48,7 @@ export {
   Eessi,
   Fagsaker,
   Featuretoggle,
+  Ftrl,
   Journalforing,
   Kodeverk,
   Kontroll,

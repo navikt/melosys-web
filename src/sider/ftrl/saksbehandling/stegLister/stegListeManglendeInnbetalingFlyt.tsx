@@ -1,12 +1,12 @@
-import { FANE_STATUS } from "../../../felleskomponenter/stegvelger";
-import { VurderingInngang } from "./stegKomponenter/vurderingInngang/vurderingInngang";
-import { VurderingVirksomhet } from "./stegKomponenter/vurderingVirksomhet/vurderingVirksomhet";
-import { VurderingPerioder } from "./stegKomponenter/vurderingPeriode/vurderingPerioder";
-import { VurderingBestemmelse } from "./stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
-import { VurderingTrygdeavgift } from "./stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
-import { VurderingVedtak } from "./stegKomponenter/vurderingVedtak/vurderingVedtak";
-import { VurderingInngangManglendeInnbetaling } from "./stegKomponenter/vurderingInngangManglendeInnbetaling/vurderingInngangManglendeInnbetaling";
-import { VurderingVedtakOpphoer } from "./stegKomponenter/vurderingVedtakOpphoer/vurderingVedtakOpphoer";
+import { FANE_STATUS } from "../../../../felleskomponenter/stegvelger";
+import { VurderingInngang } from "../stegKomponenter/vurderingInngang/vurderingInngang";
+import { VurderingVirksomhet } from "../stegKomponenter/vurderingVirksomhet/vurderingVirksomhet";
+import { VurderingPerioder } from "../stegKomponenter/vurderingPeriode/vurderingPerioder";
+import { VurderingBestemmelse } from "../stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
+import { VurderingTrygdeavgift } from "../stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
+import { VurderingVedtak } from "../stegKomponenter/vurderingVedtak/vurderingVedtak";
+import { VurderingInngangManglendeInnbetaling } from "../stegKomponenter/vurderingInngangManglendeInnbetaling/vurderingInngangManglendeInnbetaling";
+import { VurderingVedtakOpphoer } from "../stegKomponenter/vurderingVedtakOpphoer/vurderingVedtakOpphoer";
 
 const inngangManglendeInnbetalingSteg = {
   id: "ManglendeInnbetalingInngang",
@@ -99,7 +99,7 @@ export const vedtakOpphoerSteg = {
 
 const stegFullstendigManglendeInnbetaling = [vedtakOpphoerSteg];
 
-export const alleStegManglendeInnbetaling = [
+export const alleStegManglendeInnbetalingFlyt = [
   inngangManglendeInnbetalingSteg,
   ...stegDelvisManglendeInnbetaling,
   ...stegFullstendigManglendeInnbetaling,

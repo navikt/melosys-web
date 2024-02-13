@@ -40,6 +40,7 @@ const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
 const { INNVILGELSE_FOLKETRYGDLOVEN, VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
 const { MEDLEM_I_FOLKETRYGDEN, DELVIS_OPPHØRT } = MKV.Koder.behandlinger.behandlingsresultattyper;
+const { PLIKTIG } = MKV.Koder.medlemskapstyper;
 
 const innledningFritekstHjelpetekst =
   "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: \n\n" +
@@ -78,7 +79,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const mottatteOpplysningerFeilmeldinger = useSelector(formSelectors.SoknadErrorsSelector);
-  const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const alleLandkoder = useSelector(landkoderSelectors.LandkoderSelector);
@@ -93,6 +93,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const erNyVurdering = behandlingstype === NY_VURDERING;
   const erManglendeInnbetalingTrygdeavgift = behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
   const erDelvisOpphør = medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === OPPHØRT);
+  const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
 
   const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
     return !MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.some((bakgrunn: KTObject) => {
@@ -133,9 +134,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
   const [vedtakPending, setVedtakPending] = useState(false);
   const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
-  const [pliktigeBestemmelser, setPliktigeBestemmelser] = useState<string[]>([]);
 
-  const erPliktigBestemmelse = pliktigeBestemmelser.includes(lagretBestemmelse);
   const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
   let oppdaterFørKontroll = true;
 
@@ -157,8 +156,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   };
 
   useEffect(() => {
-    Api.MedlemAvFolketrygden.Bestemmelser.hentPliktigeBestemmelser().then(setPliktigeBestemmelser);
-
     return () => debouncedOppdaterFritekster.cancel();
   }, []);
 
@@ -311,7 +308,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   return (
     <div className="vurderingVedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        {erPliktigBestemmelse ? "Pliktig medlemskap etter folketrygdloven" : "Frivillig medlemskap etter § 2-8"}
+        {medlemskapsTypeErPliktig
+          ? "Pliktig medlemskap etter folketrygdloven"
+          : "Frivillig medlemskap etter folketrygdloven"}
       </Nav.Typo.Innholdstittel>
 
       <Table size="small" className="melosys__table">
