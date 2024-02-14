@@ -49,10 +49,9 @@ describe("VurderingAvslaaUtpeking", () => {
   });
 
   it("viser radioknapper", () => {
-    const { getAllByRole, getByLabelText, getByRole } = renderWithProviders(
-      <WrappedVurderingAvslaaUtpeking {...props} />,
-      { preloadedState: initialReduxState }
-    );
+    const { getAllByRole, getByLabelText } = renderWithProviders(<WrappedVurderingAvslaaUtpeking {...props} />, {
+      preloadedState: initialReduxState,
+    });
     expect(getAllByRole("radio")).toHaveLength(2);
     expect(getByLabelText("Ja")).toBeInTheDocument();
     expect(getByLabelText("Nei")).toBeInTheDocument();
