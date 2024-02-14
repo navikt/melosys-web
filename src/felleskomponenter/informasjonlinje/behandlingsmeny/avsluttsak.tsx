@@ -207,11 +207,11 @@ const AvsluttSak = () => {
   const skalViseSøknadenErAvslått = () => skalViseSøknadenErInnvilget();
 
   const skalViseAnnullerSak = () => {
-    return !!(
+    return Boolean(
       redigerbart &&
-      sakstype === FTRL &&
-      sakstema === MEDLEMSKAP_LOVVALG &&
-      [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)
+        sakstype === FTRL &&
+        sakstema === MEDLEMSKAP_LOVVALG &&
+        [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)
     );
   };
 
