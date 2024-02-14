@@ -8,10 +8,19 @@
   button {
     display: block;
     border: 0;
+    margin: 2px 2px 0 0;
     padding: 0;
     outline: 0;
     background: transparent;
     color: @blue-nav;
     cursor: pointer;
+
+    &:focus,
+    &--focus,
+    &:active:not([disabled]),
+    &--active {
+      outline: solid 1px @blue-nav-focus;
+      box-shadow: 0 0 0 2px @blue-nav-focus;
+    }
   }
 }

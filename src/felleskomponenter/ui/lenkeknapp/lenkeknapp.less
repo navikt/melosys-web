@@ -8,7 +8,7 @@
   cursor: pointer;
   text-align: left;
   border: none;
-  padding: 0;
+  padding: 3px;
 
   svg {
     position: unset;
@@ -27,33 +27,17 @@
   }
 
   &:focus,
-  &--focus {
-    outline: none;
-    color: white;
-    text-decoration: none;
-    background-color: @blue-nav-focus;
-    box-shadow: 0 0 0 2px @blue-nav-focus;
-  }
-
+  &--focus,
   &:active:not([disabled]),
   &--active {
-    outline: none;
-    color: white;
-    text-decoration: none;
-    background-color: @blue-nav-focus;
+    outline: solid 1px @blue-nav-focus;
     box-shadow: 0 0 0 2px @blue-nav-focus;
+    text-decoration: none;
   }
 
   svg + span:not(.sr-only),
   span:not(.sr-only) + svg {
     margin-left: 0.25em;
-  }
-
-  &:focus {
-    svg {
-      fill: white;
-      stroke: white;
-    }
   }
 
   &:disabled {
