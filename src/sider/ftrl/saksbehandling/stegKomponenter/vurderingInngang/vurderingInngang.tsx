@@ -61,7 +61,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     tom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.tom, false, undefined),
     arbeidsland: søknadsland.landkoder.toString(),
     land: søknadsland.landkoder || [],
-    flereLandUkjentHvilke: Utils.streng.boolTilUppercaseStreng(søknadsland.erUkjenteEllerAlleEosLand ?? false),
+    flereLandUkjentHvilke: registeropplysningerHentet
+      ? Utils.streng.boolTilUppercaseStreng(søknadsland.erUkjenteEllerAlleEosLand)
+      : null,
     trygdedekning: useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector) ?? "",
     inkluderSiste5Aar: useSelector(modalerSelectors.InkluderSiste5AarSelector),
   };
