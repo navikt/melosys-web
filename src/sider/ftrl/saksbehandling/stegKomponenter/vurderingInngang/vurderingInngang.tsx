@@ -232,7 +232,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
             </Nav.Column>
           )}
 
-          <Nav.Column>
+          <Nav.Column className="trygdedekning">
             <Forms.Select
               name="trygdedekning"
               control={control}
