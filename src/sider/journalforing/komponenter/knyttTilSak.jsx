@@ -38,7 +38,8 @@ export const KnyttTilSak = (props) => {
   const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
     sisteBehandling.behandlingsstatus.kode
   );
-  const sakErHenlagtEllerBortfalt = MKVUtils.erHenlagtEllerHenlagtBortfalt(sak.saksstatus.kode);
+  const sakErHenlagtEllerBortfaltEllerAnnullert =
+    MKVUtils.erHenlagtEllerHenlagtBortfalt(sak.saksstatus.kode) || MKVUtils.erAnnullertSak(sak.saksstatus.kode);
 
   const sisteBehandlingErPågåendeArtikkel16Sak =
     sisteBehandlingHarSendtAnmodningUnntakTilUtland && !sisteBehandlingErInaktiv;
@@ -51,18 +52,19 @@ export const KnyttTilSak = (props) => {
       changeField(feltNavn.formNavn, feltNavn.opprettBehandling, undefined);
     } else {
       const kanOppretteAndregangsbehandling =
-        sisteBehandlingKanOpprettesAndregangsbehandlingPå && !sakErHenlagtEllerBortfalt;
+        sisteBehandlingKanOpprettesAndregangsbehandlingPå && !sakErHenlagtEllerBortfaltEllerAnnullert;
       changeField(feltNavn.formNavn, feltNavn.opprettBehandling, kanOppretteAndregangsbehandling);
     }
 
     if (erJournalføring) {
-      const skalIkkeVurdereDokument = sisteBehandlingKanOpprettesAndregangsbehandlingPå || sakErHenlagtEllerBortfalt;
+      const skalIkkeVurdereDokument =
+        sisteBehandlingKanOpprettesAndregangsbehandlingPå || sakErHenlagtEllerBortfaltEllerAnnullert;
       const defaultVurderDokument = !skalIkkeVurdereDokument || sisteBehandlingErPågåendeArtikkel16Sak;
       changeField(feltNavn.formNavn, "vurderDokument", defaultVurderDokument);
     }
   }, [
     sisteBehandlingKanOpprettesAndregangsbehandlingPå,
-    sakErHenlagtEllerBortfalt,
+    sakErHenlagtEllerBortfaltEllerAnnullert,
     sisteBehandlingErPågåendeArtikkel16Sak,
   ]);
 
@@ -119,17 +121,17 @@ export const KnyttTilSak = (props) => {
     <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />
   );
 
-  if (sakErHenlagtEllerBortfalt) {
+  if (sakErHenlagtEllerBortfaltEllerAnnullert) {
     return (
       <div className="knyttTilSak__behandlingspanel">
         {erJournalføring ? (
           <Nav.AlertStripeInfo className="feilmelding_innrykk">
-            Du kan ikke opprette en ny behandling på en eksisterende sak som er henlagt/bortfalt i Melosys, men du kan
-            knytte dokumentet til den avsluttede behandlingen
+            Du kan ikke opprette en ny behandling på en eksisterende sak som er henlagt/bortfalt/annullert i Melosys,
+            men du kan knytte dokumentet til den avsluttede behandlingen
           </Nav.AlertStripeInfo>
         ) : (
           <Nav.AlertStripeAdvarsel className="feilmelding_innrykk">
-            Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt i Melosys
+            Du kan ikke opprette en ny behandling på eksisterende sak som er henlagt/bortfalt/annullert i Melosys
           </Nav.AlertStripeAdvarsel>
         )}
       </div>

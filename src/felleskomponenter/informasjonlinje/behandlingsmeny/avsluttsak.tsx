@@ -206,6 +206,15 @@ const AvsluttSak = () => {
 
   const skalViseSøknadenErAvslått = () => skalViseSøknadenErInnvilget();
 
+  const skalViseAnnullerSak = () => {
+    return Boolean(
+      redigerbart &&
+        sakstype === FTRL &&
+        sakstema === MEDLEMSKAP_LOVVALG &&
+        [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)
+    );
+  };
+
   const skalKunneAngiBehandlingsresultat =
     skalViseSøknadenErInnvilget() ||
     skalViseSøknadenErAvslått() ||
@@ -278,6 +287,12 @@ const AvsluttSak = () => {
                 onClick={() => apneBekreftValgModal(BekreftValgTypes.MEDLEM_I_FOLKETRYGDEN)}
               />
             </>
+          )}
+          {skalViseAnnullerSak() && (
+            <Handling
+              tekst="Saken er annullert"
+              onClick={() => apneBekreftValgModal(BekreftValgTypes.SAKEN_ER_ANNULLERT)}
+            />
           )}
         </div>
       )}

@@ -73,6 +73,12 @@ export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftV
     tilForsiden();
   };
 
+  const annullerFagsak = async () => {
+    await Api.Fagsaker.fagsak.annullerFagsak(saksnummer);
+    skjulModal();
+    tilForsiden();
+  };
+
   const hentBekreftValgDialogDataFraType = () => {
     switch (bekreftValgType) {
       case BekreftValgTypes.FERDIGBEHANDLET:
@@ -153,6 +159,15 @@ export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftV
           tittel: "Avslutt sak som bortfalt",
           tekst: "Er du sikker på at saken ikke kan behandles i Melosys? Vurder om du må opprette sak i annet system.",
           handleBekreft: avsluttSakSomBortfalt,
+        };
+
+      case BekreftValgTypes.SAKEN_ER_ANNULLERT:
+        return {
+          tittel: "Saken er annullert",
+          tekst:
+            "Hvis du annullerer saken vil alle perioder knyttet til saken annulleres og fjernes fra MEDL og ev. fakturering vil stoppes. " +
+            "Hvis periodene i MEDL er registrert manuelt må du også huske å fjerne disse. Vurder også om du må sende brev / vedtak til bruker. Er du sikker på at du vil annullere saken?",
+          handleBekreft: annullerFagsak,
         };
 
       default:
