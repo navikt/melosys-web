@@ -139,9 +139,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   if (!aktivtSteg) return null;
 
-  const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = formValues.land
-    ? MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(formValues.land)
-    : false;
+  const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = [...formValues.land, formValues.arbeidsland].some(
+    (land) => land && MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(land)
+  );
   const flereLandUkjentHvilkeErUSANN = formValues.flereLandUkjentHvilke === BOOLSK_STRING.USANN;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const nyVurderingPeriodetekst =
@@ -250,6 +250,12 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         </Nav.Row>
       </div>
 
+      {valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand && (
+        <Nav.AlertStripeAdvarsel className="alert">
+          Ett eller flere av landene du har valgt er EØS- eller avtaleland
+        </Nav.AlertStripeAdvarsel>
+      )}
+
       <Nav.Row>
         <Forms.Checkbox
           className="inkluderSiste5Aar"
@@ -260,16 +266,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           disabled={!redigerbart}
         />
       </Nav.Row>
-      {valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand && (
-        <Nav.Row>
-          <Nav.Column xs="4" />
-          <Nav.Column xs="3">
-            <Nav.AlertStripeAdvarsel>
-              Landet er et EØS-land og/eller et land Norge har trygdeavtale med
-            </Nav.AlertStripeAdvarsel>
-          </Nav.Column>
-        </Nav.Row>
-      )}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
