@@ -3,7 +3,6 @@ import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../../api-const
 
 export type Medlemskapsperiode = {
   id: number;
-  arbeidsland: string;
   fomDato: string;
   tomDato: string;
   bestemmelse: string;

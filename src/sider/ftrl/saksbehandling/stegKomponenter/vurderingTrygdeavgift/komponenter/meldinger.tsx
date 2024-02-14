@@ -1,6 +1,7 @@
 import { Inntektskilde, Skatteforhold } from "./types";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
+import MKV from "../../../../../../melosyskodeverk";
 
 const HoyManedinntekt = (
   <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">Høy månedsinntekt!</Nav.AlertStripeAdvarsel>
@@ -15,6 +16,13 @@ const InntektskildeUtenforMedlemskapsperiode = (
 const SkatteforholdUtenforMedlemskapsperiode = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">
     Skatteforholdsperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e)
+  </Nav.AlertStripeFeil>
+);
+
+const SkattepliktigOgPensjonUforetrygdMedKildeskatt = (
+  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+    Inntekstypen &quot;pensjon/uføretrygd det betales kildeskatt av&quot; kan ikke velges for perioder bruker er
+    skattepliktig til Norge
   </Nav.AlertStripeFeil>
 );
 
@@ -60,10 +68,30 @@ const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
   );
 };
 
+const erSkattepliktigOgPensjonUforeMedKildeskatt = (
+  skatteforholdsperioder: Skatteforhold[],
+  kildetyper: Inntektskilde[]
+) => {
+  return skatteforholdsperioder.some((skatteforholdsperiode) =>
+    kildetyper.some(
+      (kildetype) =>
+        kildetype.kildetype === MKV.Koder.inntektskildetype.PENSJON_UFØRETRYGD_KILDESKATT &&
+        skatteforholdsperiode.skatteplikttype === MKV.Koder.skatteplikttype.SKATTEPLIKTIG &&
+        Utils.dato.perioderOverlapper(
+          kildetype.fomDato,
+          kildetype.tomDato,
+          skatteforholdsperiode.fomDato,
+          skatteforholdsperiode.tomDato
+        )
+    )
+  );
+};
+
 enum TypeMelding {
   INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE = "INNTEKTSKILDE UTENFOR MEDLEMSKAPSPERIODE",
   SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE = "SKATTEFORHOLD UTENFOR MEDLEMSKAPSPERIODE",
   BRUTTOINNTEKT_OVER_250K = "BRUTTOINNTEKT_OVER_250K",
+  SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT = "SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT",
 }
 
 export const finnAktivFeilmelding = (
@@ -73,12 +101,18 @@ export const finnAktivFeilmelding = (
 ): string | undefined => {
   if (!innvilgetMedlemskapsperiode) return undefined;
 
+  // Feil
   if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, innvilgetMedlemskapsperiode)) {
     return TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE;
   }
   if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, innvilgetMedlemskapsperiode)) {
     return TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE;
   }
+  if (erSkattepliktigOgPensjonUforeMedKildeskatt(skatteforholdsperioder, inntektskilder)) {
+    return TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT;
+  }
+
+  // Advarsler
   if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
     return TypeMelding.BRUTTOINNTEKT_OVER_250K;
   }
@@ -90,6 +124,7 @@ export function feilMeldingBlokkerer(type?: string): boolean {
   switch (type) {
     case TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE:
     case TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE:
+    case TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT:
       return true;
     case TypeMelding.BRUTTOINNTEKT_OVER_250K:
     default:
@@ -105,6 +140,8 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return SkatteforholdUtenforMedlemskapsperiode;
     case TypeMelding.BRUTTOINNTEKT_OVER_250K:
       return HoyManedinntekt;
+    case TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT:
+      return SkattepliktigOgPensjonUforetrygdMedKildeskatt;
     default:
       return null;
   }

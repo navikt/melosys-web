@@ -2,6 +2,17 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { Soeknadsland } from "../mottatteOpplysninger/types";
 import Periode from "./periode";
 
+export type FullmektigHistorikk = {
+  registrertFra: string;
+  registrertTil: string | undefined;
+  aktoerID: string | undefined;
+  personIdent: string | undefined;
+  institusjonsID: string | undefined;
+  orgnr: string | undefined;
+  rolle: string;
+  fullmakter: string[];
+};
+
 type Fagsak = {
   saksnummer: string;
   gsakSaksnummer: number;

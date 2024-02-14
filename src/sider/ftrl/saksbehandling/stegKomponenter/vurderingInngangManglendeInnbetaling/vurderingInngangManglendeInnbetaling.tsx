@@ -12,7 +12,7 @@ import { BOOLSK_STRING } from "../../../../../constants";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import * as Utils from "../../../../../utils";
-import { inngangSteg, vedtakOpphoerSteg } from "../../initialStegArrayManglendeInnbetaling";
+import { inngangSteg, vedtakOpphoerSteg } from "../../stegLister/stegListeManglendeInnbetalingFlyt";
 import { FellesHandlersContext } from "../../../../../contexts";
 
 interface Props {

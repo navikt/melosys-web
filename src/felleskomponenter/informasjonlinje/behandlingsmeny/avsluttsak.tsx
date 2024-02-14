@@ -26,7 +26,7 @@ const {
 const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE, MANGLENDE_INNBETALING_TRYGDEAVGIFT } =
   MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
-const { MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
+const { MEDLEMSKAP_LOVVALG, UNNTAK } = MKV.Koder.sakstemaer;
 
 const AvsluttSak = () => {
   const dispatch = useDispatch();
@@ -37,11 +37,6 @@ const AvsluttSak = () => {
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
-
-  const behandlingstypeErNyVurdering = behandlingstype === NY_VURDERING;
-  const behandlingstypeErKlage = behandlingstype === KLAGE;
-  const behandlingstemaErUnntak =
-    behandlingstema === ANMODNING_OM_UNNTAK_HOVEDREGEL || behandlingstema === REGISTRERING_UNNTAK;
 
   const skalViseAvslåPgaManglendeOpplysninger = () => {
     if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) return false;
@@ -68,7 +63,7 @@ const AvsluttSak = () => {
     }
     if (sakstype === TRYGDEAVTALE) {
       return (
-        ![HENVENDELSE, KLAGE].includes(behandlingstype) &&
+        [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
         [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST].includes(behandlingstema)
       );
     }
@@ -76,8 +71,109 @@ const AvsluttSak = () => {
     return false;
   };
 
-  const skalViseBehandlingenErHenlagt = () => {
+  const skalViseSøknadKlagenErTrukket = () => {
     if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) return false;
+
+    if (sakstype === EU_EOS) {
+      return (
+        [FØRSTEGANG, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype) &&
+        [
+          UTSENDT_ARBEIDSTAKER,
+          UTSENDT_SELVSTENDIG,
+          ARBEID_TJENESTEPERSON_ELLER_FLY,
+          ARBEID_FLERE_LAND,
+          IKKE_YRKESAKTIV,
+          ARBEID_KUN_NORGE,
+          PENSJONIST,
+        ].includes(behandlingstema)
+      );
+    }
+    if (sakstype === FTRL) {
+      return (
+        [FØRSTEGANG, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype) &&
+        [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, UNNTAK_MEDLEMSKAP].includes(behandlingstema)
+      );
+    }
+    if (sakstype === TRYGDEAVTALE) {
+      return (
+        [FØRSTEGANG, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype) &&
+        [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST].includes(behandlingstema)
+      );
+    }
+
+    return false;
+  };
+
+  const skalViseBehandlingenErBortfalt = () => redigerbart;
+
+  const skalViseFerdigbehandlet = () => {
+    switch (behandlingstema) {
+      case BESLUTNING_LOVVALG_NORGE:
+      case UTSENDT_ARBEIDSTAKER:
+      case UTSENDT_SELVSTENDIG:
+      case ARBEID_TJENESTEPERSON_ELLER_FLY:
+      case ARBEID_FLERE_LAND:
+        return (
+          redigerbart &&
+          sakstype === EU_EOS &&
+          [NY_VURDERING, HENVENDELSE, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)
+        );
+      default:
+        return redigerbart;
+    }
+  };
+
+  const skalViseKlageHandlinger = redigerbart && behandlingstype === KLAGE;
+
+  const skalViseVedtakOmgjort = () => {
+    if (!redigerbart) return false;
+
+    if (sakstype === EU_EOS) {
+      return (
+        behandlingstype === NY_VURDERING &&
+        [
+          BESLUTNING_LOVVALG_NORGE,
+          UTSENDT_ARBEIDSTAKER,
+          UTSENDT_SELVSTENDIG,
+          ARBEID_TJENESTEPERSON_ELLER_FLY,
+          ARBEID_FLERE_LAND,
+          IKKE_YRKESAKTIV,
+          ARBEID_KUN_NORGE,
+          PENSJONIST,
+          YRKESAKTIV,
+        ].includes(behandlingstema)
+      );
+    }
+    if (sakstype === FTRL) {
+      return behandlingstype === NY_VURDERING;
+    }
+    if (sakstype === TRYGDEAVTALE) {
+      return behandlingstype === NY_VURDERING && [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST].includes(behandlingstema);
+    }
+
+    return false;
+  };
+
+  const skalViseUnntaksHandlinger = () => {
+    if (!redigerbart || sakstema !== UNNTAK) return false;
+
+    if (sakstype === EU_EOS) {
+      return [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) && behandlingstema === A1_ANMODNING_OM_UNNTAK_PAPIR;
+    }
+    if (sakstype === TRYGDEAVTALE) {
+      return (
+        [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
+        [ANMODNING_OM_UNNTAK_HOVEDREGEL, REGISTRERING_UNNTAK].includes(behandlingstema)
+      );
+    }
+
+    return false;
+  };
+
+  const skalViseSøknadenErInnvilget = () => {
+    if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
+      return false;
+    }
 
     if (sakstype === EU_EOS) {
       return (
@@ -86,7 +182,6 @@ const AvsluttSak = () => {
           UTSENDT_ARBEIDSTAKER,
           UTSENDT_SELVSTENDIG,
           ARBEID_TJENESTEPERSON_ELLER_FLY,
-          ARBEID_FLERE_LAND,
           IKKE_YRKESAKTIV,
           ARBEID_KUN_NORGE,
           PENSJONIST,
@@ -101,7 +196,7 @@ const AvsluttSak = () => {
     }
     if (sakstype === TRYGDEAVTALE) {
       return (
-        ![HENVENDELSE, KLAGE].includes(behandlingstype) &&
+        [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
         [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST].includes(behandlingstema)
       );
     }
@@ -109,81 +204,7 @@ const AvsluttSak = () => {
     return false;
   };
 
-  const skalViseBehandlingenErBortfalt = () => {
-    return redigerbart;
-  };
-
-  const skalViseFerdigbehandlet = () => {
-    switch (behandlingstema) {
-      case BESLUTNING_LOVVALG_NORGE:
-      case UTSENDT_ARBEIDSTAKER:
-      case UTSENDT_SELVSTENDIG:
-      case ARBEID_TJENESTEPERSON_ELLER_FLY:
-      case ARBEID_FLERE_LAND:
-        return redigerbart && (behandlingstypeErNyVurdering || behandlingstype === HENVENDELSE);
-      default:
-        return redigerbart;
-    }
-  };
-
-  const skalViseKlageHandlinger = redigerbart && behandlingstypeErKlage;
-
-  const skalViseVedtakOmgjort = redigerbart && behandlingstypeErNyVurdering;
-
-  const skalViseUnntaksHandlinger =
-    redigerbart &&
-    ((behandlingstemaErUnntak && sakstype === TRYGDEAVTALE) ||
-      (behandlingstema === A1_ANMODNING_OM_UNNTAK_PAPIR && sakstype === EU_EOS));
-
-  const skalViseSøknadenErInnvilget = () => {
-    if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
-      return false;
-    }
-    if (
-      sakstype === FTRL &&
-      [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
-      [YRKESAKTIV, IKKE_YRKESAKTIV, PENSJONIST, UNNTAK_MEDLEMSKAP].includes(behandlingstema)
-    ) {
-      return true;
-    }
-    if (
-      [EU_EOS, TRYGDEAVTALE].includes(sakstype) &&
-      [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
-      [
-        YRKESAKTIV,
-        IKKE_YRKESAKTIV,
-        PENSJONIST,
-        ARBEID_KUN_NORGE,
-        UTSENDT_ARBEIDSTAKER,
-        UTSENDT_SELVSTENDIG,
-        ARBEID_TJENESTEPERSON_ELLER_FLY,
-      ].includes(behandlingstema)
-    ) {
-      return true;
-    }
-
-    return false;
-  };
-
-  const skalViseSøknadenErAvslått = () => {
-    if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) {
-      return false;
-    }
-
-    return (
-      [FØRSTEGANG, NY_VURDERING].includes(behandlingstype) &&
-      [
-        ARBEID_TJENESTEPERSON_ELLER_FLY,
-        ARBEID_KUN_NORGE,
-        YRKESAKTIV,
-        IKKE_YRKESAKTIV,
-        PENSJONIST,
-        UNNTAK_MEDLEMSKAP,
-        UTSENDT_ARBEIDSTAKER,
-        UTSENDT_SELVSTENDIG,
-      ].includes(behandlingstema)
-    );
-  };
+  const skalViseSøknadenErAvslått = () => skalViseSøknadenErInnvilget();
 
   const skalViseAnnullerSak = () => {
     return !!(
@@ -198,12 +219,12 @@ const AvsluttSak = () => {
     skalViseSøknadenErInnvilget() ||
     skalViseSøknadenErAvslått() ||
     skalViseAvslåPgaManglendeOpplysninger() ||
-    skalViseVedtakOmgjort ||
+    skalViseVedtakOmgjort() ||
     skalViseKlageHandlinger ||
-    skalViseUnntaksHandlinger;
+    skalViseUnntaksHandlinger();
 
   if (
-    !skalViseBehandlingenErHenlagt() &&
+    !skalViseSøknadKlagenErTrukket() &&
     !skalViseBehandlingenErBortfalt() &&
     !skalViseFerdigbehandlet() &&
     !skalKunneAngiBehandlingsresultat
@@ -245,13 +266,13 @@ const AvsluttSak = () => {
               onClick={() => dispatch(modalerOperations.visAvslagSoknad())}
             />
           )}
-          {skalViseVedtakOmgjort && (
+          {skalViseVedtakOmgjort() && (
             <Handling
               tekst="Vedtaket er omgjort (fvl § 35)"
               onClick={() => apneBekreftValgModal(BekreftValgTypes.VEDTAKET_ER_OMGJORT)}
             />
           )}
-          {skalViseUnntaksHandlinger && (
+          {skalViseUnntaksHandlinger() && (
             <>
               <Handling
                 tekst="Perioden er godkjent"
@@ -279,7 +300,7 @@ const AvsluttSak = () => {
       {skalViseFerdigbehandlet() && (
         <Handling tekst="Ferdigbehandlet" onClick={() => apneBekreftValgModal(BekreftValgTypes.FERDIGBEHANDLET)} />
       )}
-      {skalViseBehandlingenErHenlagt() && (
+      {skalViseSøknadKlagenErTrukket() && (
         <Handling tekst="Søknaden/klagen er trukket" onClick={() => dispatch(modalerOperations.visHenlegg())} />
       )}
       {skalViseBehandlingenErBortfalt() && (

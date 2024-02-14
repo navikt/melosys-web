@@ -399,6 +399,7 @@ describe("AvsluttSak", () => {
     it(`viser Unntak-handlinger dersom behandlingstema er ${ANMODNING_OM_UNNTAK_HOVEDREGEL} og sakstype er ${TRYGDEAVTALE}`, async () => {
       props.behandlingstema = ANMODNING_OM_UNNTAK_HOVEDREGEL;
       props.sakstype = TRYGDEAVTALE;
+      props.sakstema = UNNTAK;
       renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
@@ -413,6 +414,7 @@ describe("AvsluttSak", () => {
     it(`viser Unntak-handlinger dersom behandlingstema er ${REGISTRERING_UNNTAK} og sakstype er ${TRYGDEAVTALE}`, async () => {
       props.behandlingstema = REGISTRERING_UNNTAK;
       props.sakstype = TRYGDEAVTALE;
+      props.sakstema = UNNTAK;
       renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();
@@ -427,6 +429,7 @@ describe("AvsluttSak", () => {
     it(`viser Unntak-handlinger dersom behandlingstema er ${A1_ANMODNING_OM_UNNTAK_PAPIR} og sakstype er ${EU_EOS}`, async () => {
       props.behandlingstema = A1_ANMODNING_OM_UNNTAK_PAPIR;
       props.sakstype = EU_EOS;
+      props.sakstema = UNNTAK;
       renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       const user = userEvent.setup();

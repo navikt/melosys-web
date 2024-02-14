@@ -2,6 +2,7 @@ import { Fagsak } from "../types";
 
 import { getAsJson, postAsJson, putAsText } from "../../utils";
 import { API_BASE_URL, FAGSAKER } from "../../api-constants";
+import { FullmektigHistorikk } from "../types/fagsak";
 
 export const hent = (saksnummer: string): Promise<Fagsak> => getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}`);
 
@@ -15,7 +16,6 @@ interface SoknadDto {
     erUkjenteEllerAlleEosLand: boolean;
   };
 }
-
 export interface OpprettReqDto {
   brukerID?: string;
   virksomhetOrgnr?: string;
@@ -41,7 +41,6 @@ export interface HenleggReqDto {
   begrunnelseKode: string;
   fritekst: string | null;
 }
-
 export const henlegg = (saksnummer: string, body: HenleggReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg`, body);
 
@@ -58,7 +57,6 @@ export interface VideresendReqDto {
   fritekst: string | null;
   vedlegg: Vedlegg[];
 }
-
 export const videresend = (saksnummer: string, body: VideresendReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg-videresend`, body);
 
@@ -67,7 +65,6 @@ interface UtpekReqDto {
   fritekstSed: string | null;
   fritekstBrev: string | null;
 }
-
 export const utpek = (saksnummer: string, body: UtpekReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/utpek`, body);
 
@@ -83,13 +80,6 @@ export interface EndreSakDto {
 export interface TrygdeavgiftOppsummering {
   harBehandlingMedTrygdeavgift: boolean;
 }
-
-export const hentMuligeSakstemaer = (saksnummer: string) =>
-  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstemaer`);
-
-export const hentMuligeSakstyper = (saksnummer: string) =>
-  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/mulige-sakstyper`);
-
 export const endreFagsak = (saksnummer: string, body: EndreSakDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/endre`, body);
 
@@ -101,3 +91,6 @@ export const hentTrygdeavgiftOppsummering = (saksnummer: string): Promise<Trygde
 
 export const annullerFagsak = (saksnummer: string) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/annullering`);
+
+export const hentFullmektigHistorikk = (saksnummer: string): Promise<FullmektigHistorikk[]> =>
+  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/aktoerer/FULLMEKTIG/historikk`);

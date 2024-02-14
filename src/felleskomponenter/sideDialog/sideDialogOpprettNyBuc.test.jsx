@@ -16,6 +16,7 @@ describe("SideDialogOpprettNyBuc", () => {
         behandlingstema: "",
         dokumenter: [],
         sakstype: "",
+        redigerbart: true,
       };
     });
 
