@@ -26,19 +26,11 @@
   text-decoration: none;
 }
 .lenke:focus,
-.lenke--focus {
-  outline: none;
-  color: white;
-  text-decoration: none;
-  background-color: #00347d;
-  box-shadow: 0 0 0 2px #00347d;
-}
+.lenke--focus,
 .lenke:active,
 .lenke--active {
-  outline: none;
-  color: white;
+  outline: 1px solid #00347d;
   text-decoration: none;
-  background-color: #00347d;
   box-shadow: 0 0 0 2px #00347d;
 }
 .lenke svg {
@@ -53,8 +45,4 @@
 .lenke svg + span:not(.sr-only),
 .lenke span:not(.sr-only) + svg {
   margin-left: 0.25em;
-}
-.lenke:focus svg {
-  fill: white;
-  stroke: white;
 }
