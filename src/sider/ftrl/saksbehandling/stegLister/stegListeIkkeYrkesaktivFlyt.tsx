@@ -1,8 +1,8 @@
 import { FANE_STATUS } from "../../../../felleskomponenter/stegvelger";
 import { VurderingInngang } from "../stegKomponenter/vurderingInngang/vurderingInngang";
 import { VurderingPerioder } from "../stegKomponenter/vurderingPeriode/vurderingPerioder";
-import { VurderingBestemmelse } from "../stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
 import { VurderingVedtak } from "../stegKomponenter/vurderingVedtak/vurderingVedtak";
+import { VurderingBestemmelserV2 } from "../stegKomponenter/vurderingBestemmelse/vurderingBestemmelseNY";
 
 const initialInngangSteg = {
   id: "Inngang",
@@ -21,7 +21,7 @@ const initialBestemmelseSteg = {
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: false,
   vedtakSteg: false,
-  komponent: VurderingBestemmelse,
+  komponent: VurderingBestemmelserV2,
 };
 
 const initialPeriodeSteg = {

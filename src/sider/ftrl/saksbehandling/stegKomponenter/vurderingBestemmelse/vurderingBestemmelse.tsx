@@ -27,7 +27,6 @@ import {
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_FOLKETRYGDEN_2_7 } from "../../../../../featuretoggle/toggleNavn";
-import { BrukersSituasjon } from "./komponenter/brukersSituasjon";
 
 const { SANN, USANN } = BOOLSK_STRING;
 export const kodeInkludererFritekst = (nestedKtObject: { [key: string]: KTObject[] }, kode?: string) =>
@@ -281,8 +280,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
-
-      <BrukersSituasjon muligeSituasjoner={undefined} alleSituasjoner={undefined} redigerbart={redigerbart} />
 
       {ulovligBestemmelseValgt && !bestemmelseIkkeStøttetValgt && (
         <Nav.AlertStripeFeil>
