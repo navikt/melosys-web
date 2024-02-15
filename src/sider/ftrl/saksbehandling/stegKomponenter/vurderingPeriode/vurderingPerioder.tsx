@@ -16,7 +16,6 @@ import {
   medlemskapsperioderSelectors,
   medlemskapsperioderTypes,
 } from "../../../../../ducks/medlemskapsperioder";
-import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 
 import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
@@ -69,6 +68,7 @@ const mapInitialMedlemskapsperioder = (
 export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) => {
   const dispatch = useDispatch();
   const [lovligeDekninger, setLovligeDekninger] = useState<string[]>([]);
+  const [lovligeInnvilgelsesresultat, setLovligeInnvilgelsesresultat] = useState<string[]>([]);
 
   const begrensePeriodeVedtakToggleEnabled = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
@@ -76,7 +76,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const lagredeMedlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
-  const innvilgelsesResultater = useSelector(folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector);
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
@@ -106,12 +105,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     name: "medlemskapsperioder",
   });
   const formValues = watch();
-
-  const gyldigeInnvilgelsesResultat = innvilgelsesResultater.filter(
-    (kt) =>
-      kt.kode !== OPPHØRT ||
-      (manglendeInnbetalingToggleEnabled && behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT)
-  );
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.medlemskapsperioder,
@@ -143,6 +136,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   useEffect(() => {
     Api.LovligeKombinasjoner.hentTrygdedekninger(lagretBestemmelse).then(setLovligeDekninger);
+    Api.Ftrl.hentGyldigeInnvilgelsesresultat(behandlingstype).then(setLovligeInnvilgelsesresultat);
   }, [lagretBestemmelse]);
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
@@ -248,7 +242,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
       <Medlemskapsperioder
         trygdedekninger={lovligeDekninger}
-        innvilgelsesResultater={gyldigeInnvilgelsesResultat}
+        innvilgelsesResultater={lovligeInnvilgelsesresultat}
         control={control}
         fields={fields}
         handleSlett={handleSlett}
