@@ -139,9 +139,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   if (!aktivtSteg) return null;
 
-  const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = [...formValues.land, formValues.arbeidsland].some(
-    (land) => land && MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(land)
-  );
+  const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = erIkkeYrkesaktiv
+    ? formValues.land?.some((land?: string) => MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(land))
+    : MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(formValues.arbeidsland);
   const flereLandUkjentHvilkeErUSANN = formValues.flereLandUkjentHvilke === BOOLSK_STRING.USANN;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const nyVurderingPeriodetekst =
