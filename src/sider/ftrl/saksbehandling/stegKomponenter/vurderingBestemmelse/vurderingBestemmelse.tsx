@@ -67,8 +67,12 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const [formIsValid, setFormIsValid] = useState(false);
   const [harSkjeddEndringer, setHarSkjeddEndringer] = useState(false);
   const [lovligeBestemmelser, setLovligeBestemmelser] = useState<string[]>([]);
+  const [pliktigeBestemmelser, setPliktigeBestemmelser] = useState<string[]>([]);
   const ulovligBestemmelseValgt =
-    folketrygden2_7ToggleEnabled && Boolean(valgtBestemmelse) && !lovligeBestemmelser.includes(valgtBestemmelse);
+    folketrygden2_7ToggleEnabled &&
+    Boolean(valgtBestemmelse) &&
+    !lovligeBestemmelser.includes(valgtBestemmelse) &&
+    !pliktigeBestemmelser.includes(valgtBestemmelse);
 
   const bestemmelseIkkeStøttetValgt = ikkeStøttedeBestemmelser?.some((bestemmelse) => bestemmelse === valgtBestemmelse);
 
@@ -87,7 +91,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       );
     });
 
-    Api.LovligeKombinasjoner.hentBestemmelser(trygdedekning).then(setLovligeBestemmelser);
+    Api.Ftrl.hentBestemmelser(behandlingstema, trygdedekning).then((res) => setLovligeBestemmelser(res.bestemmelser));
+    Api.Ftrl.hentPliktigeBestemmelser().then((res) => setPliktigeBestemmelser(res.bestemmelser));
 
     lagredeVilkår.forEach((vilkår: Api.Vilkar.Vilkaar) => {
       valgteVilkår.set(vilkår.vilkaar, vilkår.oppfylt ? SANN : USANN);
