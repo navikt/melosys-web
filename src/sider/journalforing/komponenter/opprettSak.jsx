@@ -52,7 +52,7 @@ export const OpprettSak = (props) => {
     valgtBehandlingstema,
     valgtBehandlingstype,
     soknadsland,
-    ukjentEllerAlleEosLand,
+    flereLandUkjentHvilke,
     hovedpart,
     periodeFraOgMed,
   } = {
@@ -61,7 +61,7 @@ export const OpprettSak = (props) => {
     valgtBehandlingstema: formValues[feltNavn.opprettnysak_behandlingstema],
     valgtBehandlingstype: formValues[feltNavn.opprettnysak_behandlingstype],
     soknadsland: formValues[feltNavn.soknadsland],
-    ukjentEllerAlleEosLand: formValues[feltNavn.soknadslandUkjenteEllerAlleEosLand],
+    flereLandUkjentHvilke: formValues[feltNavn.soknadslandFlereLandUkjentHvilke],
     hovedpart: formValues[feltNavn.hovedpart],
     periodeFraOgMed: formValues[feltNavn.periodeFraOgMed],
   };
@@ -158,7 +158,7 @@ export const OpprettSak = (props) => {
         label="Behandlingstema"
         onChange={() => {
           nullstillVerdier(feltNavn.opprettnysak_behandlingstema, settFeltInnhold, feltNavn);
-          settFeltInnhold(formNavn, feltNavn.soknadslandUkjenteEllerAlleEosLand, false);
+          settFeltInnhold(formNavn, feltNavn.soknadslandFlereLandUkjentHvilke, false);
         }}
       >
         {behandlingstemaer.map((elem) => (
@@ -210,19 +210,19 @@ export const OpprettSak = (props) => {
             {visArbeidFlereLandEllerUkjent && (
               <Nav.Row className="land_radiobtn">
                 <Skjema.Radio
-                  feltNavn={feltNavn.soknadslandUkjenteEllerAlleEosLand}
+                  feltNavn={feltNavn.soknadslandFlereLandUkjentHvilke}
                   label="Flere EØS-land/Sveits. Ikke kjent hvilke"
                   disabled={soknadsland?.length > 0}
                   value
                 />
                 <Skjema.Radio
-                  feltNavn={feltNavn.soknadslandUkjenteEllerAlleEosLand}
+                  feltNavn={feltNavn.soknadslandFlereLandUkjentHvilke}
                   label="Velg land fra liste"
                   value={false}
                 />
               </Nav.Row>
             )}
-            {!ukjentEllerAlleEosLand && (
+            {!flereLandUkjentHvilke && (
               <Nav.Row>
                 <Nav.Column xs="12">
                   <Skjema.MultiSelect

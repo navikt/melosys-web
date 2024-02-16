@@ -20,7 +20,7 @@ export const testReduxState = {
           pdf: {},
         },
         journalforingSoknadsland: [],
-        journalforingSoknadslandUkjenteEllerAlleEosLand: false,
+        journalforingSoknadslandFlereLandUkjentHvilke: false,
         forvaltningsmeldingMottaker: "BRUKER",
         skalTilordnes: false,
         submittable: false,
@@ -52,7 +52,7 @@ export const testReduxState = {
           pdf: {},
         },
         journalforingSoknadsland: [],
-        journalforingSoknadslandUkjenteEllerAlleEosLand: false,
+        journalforingSoknadslandFlereLandUkjentHvilke: false,
         forvaltningsmeldingMottaker: "BRUKER",
         skalTilordnes: false,
         submittable: false,
@@ -225,7 +225,7 @@ export const testReduxState = {
               medlemskapsperiode: null,
               land: {
                 landkoder: ["DK"],
-                erUkjenteEllerAlleEosLand: false,
+                flereLandUkjentHvilke: false,
               },
               soknadsperiode: {
                 fom: "2023-12-23",

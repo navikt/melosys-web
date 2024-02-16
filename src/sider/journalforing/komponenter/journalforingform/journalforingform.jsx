@@ -236,7 +236,7 @@ const mapStateToProps = (state) => ({
       pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
     },
     journalforingSoknadsland: [],
-    journalforingSoknadslandUkjenteEllerAlleEosLand: false,
+    journalforingSoknadslandFlereLandUkjentHvilke: false,
     skalTilordnes: false,
     submittable: false,
     forvaltningsmeldingMottaker: null,

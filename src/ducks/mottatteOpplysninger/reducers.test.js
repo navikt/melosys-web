@@ -66,7 +66,7 @@ describe("mottatteOpplysninger reducer", () => {
       data: {
         soeknadsland: {
           landkoder: [],
-          erUkjenteEllerAlleEosLand: true,
+          flereLandUkjentHvilke: true,
         },
       },
     };
@@ -76,7 +76,7 @@ describe("mottatteOpplysninger reducer", () => {
         data: {
           soeknadsland: {
             landkoder: [],
-            erUkjenteEllerAlleEosLand: true,
+            flereLandUkjentHvilke: true,
           },
         },
       },
@@ -286,7 +286,7 @@ describe("mottatteOpplysninger reducer", () => {
         },
         soknadsland: {
           landkoder: [DK],
-          erUkjenteEllerAlleEosLand: true,
+          flereLandUkjentHvilke: true,
         },
         soknadsperiodeFom: "11.11.11",
         soknadsperiodeTom: "11.11.11",
@@ -484,7 +484,7 @@ describe("mottatteOpplysninger reducer", () => {
           ],
           soeknadsland: {
             landkoder: [DK],
-            erUkjenteEllerAlleEosLand: true,
+            flereLandUkjentHvilke: true,
           },
           periode: {
             fom: "2011-11-11",

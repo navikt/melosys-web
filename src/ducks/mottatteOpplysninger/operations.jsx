@@ -158,8 +158,8 @@ export function oppdaterPeriode(periode) {
   return (dispatch) => dispatch(Actions.oppdaterPeriode(periode));
 }
 
-export function oppdaterSoeknadsland(landkoder, erUkjenteEllerAlleEosLand) {
-  return (dispatch) => dispatch(Actions.oppdaterSoeknadsland(landkoder, erUkjenteEllerAlleEosLand));
+export function oppdaterSoeknadsland(landkoder, flereLandUkjentHvilke) {
+  return (dispatch) => dispatch(Actions.oppdaterSoeknadsland(landkoder, flereLandUkjentHvilke));
 }
 
 export function oppdaterAvsenderland(avsenderland) {

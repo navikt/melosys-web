@@ -366,8 +366,8 @@ const soknad = object().when(["$behandlingstema"], {
     soknadsland: object().when("$harUnntaksregistreringFlyt", {
       is: (harUnntaksregistreringFlyt) => !harUnntaksregistreringFlyt,
       then: object().shape({
-        landkoder: array().when("erUkjenteEllerAlleEosLand", {
-          is: (erUkjenteEllerAlleEosLand) => !erUkjenteEllerAlleEosLand,
+        landkoder: array().when("flereLandUkjentHvilke", {
+          is: (flereLandUkjentHvilke) => !flereLandUkjentHvilke,
           then: array().when("$behandlingstema", {
             is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
             then: array().min(
@@ -388,7 +388,7 @@ const soknad = object().when(["$behandlingstema"], {
             ),
           }),
         }),
-        erUkjenteEllerAlleEosLand: boolean(),
+        flereLandUkjentHvilke: boolean(),
       }),
       otherwise: object().nullable(),
     }),

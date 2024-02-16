@@ -18,9 +18,7 @@ interface RedigererProps {
 }
 
 const Redigerer = ({ lagre }: RedigererProps) => {
-  const { erUkjenteEllerAlleEosLand, landkoder } = useSelector((state) =>
-    soknadFormValueSelector(state, "soknadsland")
-  );
+  const { landkoder, flereLandUkjentHvilke } = useSelector((state) => soknadFormValueSelector(state, "soknadsland"));
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const minstEttLandValgt = landkoder.length > 0;
 
@@ -28,7 +26,7 @@ const Redigerer = ({ lagre }: RedigererProps) => {
     <>
       {behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
         <Skjema.Checkbox
-          feltNavn="soknadsland.erUkjenteEllerAlleEosLand"
+          feltNavn="soknadsland.flereLandUkjentHvilke"
           label={
             <LabelMedHjelpetekst
               label="Flere EØS-land/Sveits. Ikke kjent hvilke."
@@ -41,7 +39,7 @@ const Redigerer = ({ lagre }: RedigererProps) => {
       <Skjema.MultiSelect
         label=""
         feltNavn="soknadsland.landkoder"
-        redigerbart={!erUkjenteEllerAlleEosLand}
+        redigerbart={!flereLandUkjentHvilke}
         options={MKV.KTObjects.landkoder.map(({ kode, term }: KTObject) => ({ value: kode, label: term }))}
       />
       <Mui.Knapp onClick={lagre} className="lagreknapp">

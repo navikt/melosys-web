@@ -39,7 +39,7 @@ export interface OpprettNySakFormData {
   behandlingstype: string;
   periodeFraOgMed: string;
   periodeTilOgMed: string;
-  soknadslandUkjenteEllerAlleEosLand: boolean;
+  soknadslandFlereLandUkjentHvilke: boolean;
   soknadsland: [];
   opprettBehandling: boolean;
   saksnummer: string;
@@ -121,7 +121,7 @@ const OpprettNySak = ({
     virksomhetNavn,
     periodeFraOgMed,
     periodeTilOgMed,
-    soknadslandUkjenteEllerAlleEosLand,
+    soknadslandFlereLandUkjentHvilke,
     soknadsland,
     skalTilordnes,
     oppgaveID,
@@ -213,7 +213,7 @@ const OpprettNySak = ({
       periode: { fom, tom },
       land: {
         landkoder: skalSendePeriodeOgLand ? soknadsland : [],
-        erUkjenteEllerAlleEosLand: skalSendePeriodeOgLand && soknadslandUkjenteEllerAlleEosLand,
+        flereLandUkjentHvilke: skalSendePeriodeOgLand && soknadslandFlereLandUkjentHvilke,
       },
     };
 
@@ -266,7 +266,7 @@ const OpprettNySak = ({
     nullstillFelt("behandlingstype");
     nullstillFelt("periodeFraOgMed");
     nullstillFelt("periodeTilOgMed");
-    nullstillFelt("soknadslandUkjenteEllerAlleEosLand");
+    nullstillFelt("soknadslandFlereLandUkjentHvilke");
     nullstillFelt("soknadsland", []);
     setVisFeilmeldinger(false);
   };

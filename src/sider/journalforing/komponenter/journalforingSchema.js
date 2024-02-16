@@ -45,9 +45,9 @@ const kreverLand = (
   sakstema,
   behandlingstema,
   behandlingstype,
-  ukjentEllerAlleEosLand
+  flereLandUkjentHvilke
 ) =>
-  !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, sakstype, sakstema, behandlingstema, behandlingstype);
+  !flereLandUkjentHvilke && kreverPeriode(journalforingHensikt, sakstype, sakstema, behandlingstema, behandlingstype);
 
 const annenPersonEllerVirksomhetOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
   return avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET && !erAvsenderPreutfylt;
@@ -222,7 +222,7 @@ const journalforing = object().shape({
         "sakstema",
         "opprettnysak_behandlingstema",
         "opprettnysak_behandlingstype",
-        "journalforingSoknadslandUkjenteEllerAlleEosLand",
+        "journalforingSoknadslandFlereLandUkjentHvilke",
       ],
       {
         is: kreverLand,
@@ -237,7 +237,7 @@ const journalforing = object().shape({
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   hoveddokument,
   journalforingHensikt: string(),
-  journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
+  journalforingSoknadslandFlereLandUkjentHvilke: boolean(),
   opprettBehandling: boolean().nullable(),
 });
 
