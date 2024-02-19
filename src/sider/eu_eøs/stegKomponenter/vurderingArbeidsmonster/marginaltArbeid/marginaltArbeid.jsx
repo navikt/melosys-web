@@ -9,8 +9,8 @@ import * as Nav from "../../../../../navFrontend";
 import * as MPT from "../../../../../proptypes";
 
 const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterData }) => {
-  const { erUkjenteEllerAlleEosLand } = useSelector((state) => formValueSelector(KV.Form.SOKNAD)(state, "soknadsland"));
-  const landlinjer = erUkjenteEllerAlleEosLand ? (
+  const { flereLandUkjentHvilke } = useSelector((state) => formValueSelector(KV.Form.SOKNAD)(state, "soknadsland"));
+  const landlinjer = flereLandUkjentHvilke ? (
     <LandLinje land="Flere EØS-land/Sveits. Ikke kjent hvilke" checkbox={{ redigerbart: false, checked: true }} />
   ) : (
     arbeidsland.map(({ land }) => {

@@ -334,7 +334,7 @@ describe("MottatteOpplysninger operations", () => {
           data: {
             soeknadsland: {
               landkoder: [DK, NO],
-              erUkjenteEllerAlleEosLand: true,
+              flereLandUkjentHvilke: true,
             },
           },
         },

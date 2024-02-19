@@ -18,9 +18,9 @@ describe("Arbeidssteder", () => {
     props = instance(mockedProps);
   });
 
-  it("viser infomelding i stedet for arbeidssteder når erUkjenteEllerAlleEosLand er true", () => {
+  it("viser infomelding i stedet for arbeidssteder når flereLandUkjentHvilke er true", () => {
     props.soknadsland = {
-      erUkjenteEllerAlleEosLand: true,
+      flereLandUkjentHvilke: true,
     };
     const arbeidssteder = shallow(<Arbeidssteder {...props} />);
 
@@ -35,7 +35,7 @@ describe("Arbeidssteder", () => {
   describe("Arbeidssteder på land", () => {
     it("rendres vanligvis uten spørsmål fra altinn-søknad", () => {
       props.soknadsland = {
-        erUkjenteEllerAlleEosLand: false,
+        flereLandUkjentHvilke: false,
       };
       const arbeidssteder = shallow(<Arbeidssteder {...props} />);
       const arbeidsstederPaaLand = arbeidssteder.findWhere(
@@ -49,7 +49,7 @@ describe("Arbeidssteder", () => {
 
     it("rendres med spørsmål fra altinn-søknad dersom mottatteOpplysningerType tilsvarer altinn-søknad", () => {
       props.soknadsland = {
-        erUkjenteEllerAlleEosLand: false,
+        flereLandUkjentHvilke: false,
       };
       props.mottatteOpplysningerType = MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
       const arbeidssteder = shallow(<Arbeidssteder {...props} />);

@@ -13,7 +13,7 @@ interface SoknadDto {
   };
   land: {
     landkoder: string[];
-    erUkjenteEllerAlleEosLand: boolean;
+    flereLandUkjentHvilke: boolean;
   };
 }
 export interface OpprettReqDto {

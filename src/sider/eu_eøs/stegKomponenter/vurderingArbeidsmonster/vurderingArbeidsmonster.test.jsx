@@ -18,12 +18,12 @@ describe.skip("VurderingArbeidsmonster", () => {
       soknad: {
         initial: {
           soknadsland: {
-            erUkjenteEllerAlleEosLand: true,
+            flereLandUkjentHvilke: true,
           },
         },
         values: {
           soknadsland: {
-            erUkjenteEllerAlleEosLand: true,
+            flereLandUkjentHvilke: true,
           },
         },
       },

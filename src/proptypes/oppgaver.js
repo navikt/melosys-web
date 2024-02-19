@@ -33,7 +33,7 @@ const SaksbehandlingOppgavePropType = PT.shape({
   periode: Periode,
   land: PT.shape({
     landkoder: PT.arrayOf(PT.string),
-    erUkjenteEllerAlleEosLand: PT.bool,
+    flereLandUkjentHvilke: PT.bool,
   }),
   prioritet: PT.string,
   versjon: PT.number,

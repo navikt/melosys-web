@@ -175,7 +175,7 @@ class Journalforing extends Component {
       opprettnysak_behandlingstema,
       opprettnysak_behandlingstype,
       journalforingSoknadsland,
-      journalforingSoknadslandUkjenteEllerAlleEosLand,
+      journalforingSoknadslandFlereLandUkjentHvilke,
       journalforingPeriodeFraOgMed,
       journalforingPeriodeTilOgMed,
     } = this.props.journalforingSkjemaVerdier;
@@ -189,7 +189,7 @@ class Journalforing extends Component {
       },
       land: {
         landkoder: journalforingSoknadsland || [],
-        erUkjenteEllerAlleEosLand: journalforingSoknadslandUkjenteEllerAlleEosLand,
+        flereLandUkjentHvilke: journalforingSoknadslandFlereLandUkjentHvilke,
       },
     };
 
@@ -318,7 +318,7 @@ class Journalforing extends Component {
     settFeltInnhold("journalforingPeriodeFraOgMed", null);
     settFeltInnhold("journalforingPeriodeTilOgMed", null);
     settFeltInnhold("journalforingSoknadsland", []);
-    settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
+    settFeltInnhold("journalforingSoknadslandFlereLandUkjentHvilke", false);
   };
 
   resetSkjemaFelterForEksisterendeSaker = () => {

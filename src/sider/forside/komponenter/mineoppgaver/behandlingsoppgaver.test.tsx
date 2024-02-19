@@ -51,7 +51,7 @@ describe("Behandlingsoppgaver", () => {
       prioritet: "HOY",
       land: {
         landkoder: ["NO"],
-        erUkjenteEllerAlleEosLand: true,
+        flereLandUkjentHvilke: true,
       },
       versjon: 1,
       ansvarligID: "Z991001",

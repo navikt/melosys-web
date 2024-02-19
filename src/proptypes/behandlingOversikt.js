@@ -8,7 +8,7 @@ const BehandligOversiktPropType = PT.shape({
   behandlingstype: Kodeverk,
   land: PT.shape({
     landkode: PT.arrayOf(PT.string),
-    erUkjenteEllerAlleEosLand: PT.bool,
+    flereLandUkjentHvilke: PT.bool,
   }),
   opprettetDato: PT.string,
   soknadsperiode: Periode,

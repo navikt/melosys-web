@@ -80,7 +80,7 @@ export default function reducer(state = initialState, action = {}) {
             ...state.data.data,
             soeknadsland: {
               landkoder: action.data.soeknadsland.landkoder,
-              erUkjenteEllerAlleEosLand: action.data.soeknadsland.erUkjenteEllerAlleEosLand,
+              flereLandUkjentHvilke: action.data.soeknadsland.flereLandUkjentHvilke,
             },
           },
         },
@@ -284,7 +284,7 @@ export default function reducer(state = initialState, action = {}) {
           })),
           soeknadsland: {
             landkoder: dokument.soknadsland.landkoder,
-            erUkjenteEllerAlleEosLand: dokument.soknadsland.erUkjenteEllerAlleEosLand,
+            flereLandUkjentHvilke: dokument.soknadsland.flereLandUkjentHvilke,
           },
           avsenderland: dokument.avsenderland,
           lovvalgsland: dokument.lovvalgsland,

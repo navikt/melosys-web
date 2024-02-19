@@ -27,9 +27,7 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
 
   const behandlingHarPeriode = useSelector(mottatteOpplysningerSelectors.HarPeriodeSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
-  const soknadslandErUkjenteEllerAlleEosLand = useSelector(
-    mottatteOpplysningerSelectors.SoknadslandErUkjenteEllerAlleEosLandSelector
-  );
+  const flereLandUkjentHvilke = useSelector(mottatteOpplysningerSelectors.SoknadslandFlereLandUkjentHvilkeSelector);
 
   const flytMedInngangsvilkår = window.location.pathname.indexOf(`${MKV.Koder.sakstyper.EU_EOS}/saksbehandling/`) > -1;
 
@@ -42,7 +40,7 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
     }
   };
 
-  const soknadslandTekst = soknadslandErUkjenteEllerAlleEosLand
+  const soknadslandTekst = flereLandUkjentHvilke
     ? "Flere EØS-land/Sveits. Ikke kjent hvilke."
     : Utils.streng.arrayTilKonjunksjon(
         soknadsland.map((land: string) => KV.kodeTilTerm(land, MKV.KTObjects.landkoder))
