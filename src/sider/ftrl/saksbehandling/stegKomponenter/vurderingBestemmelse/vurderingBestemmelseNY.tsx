@@ -12,19 +12,19 @@ import { ListeVelgerFtrl } from "./komponenter/listeVelger";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_FOLKETRYGDEN_2_7 } from "../../../../../featuretoggle/toggleNavn";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
-import { vilkarOperations } from "../../../../../ducks/vilkar";
-import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
+import { vilkarOperations, vilkarSelectors } from "../../../../../ducks/vilkar";
 import {
   AvklarteFakta,
   FaktaTypeOverskrifter,
-  VilkårOgBestemmelser,
+  VilkårOgBegrunnelser,
   VurderingBestemmelseProps,
 } from "./komponenter/typer";
 import { Begrunnelse } from "./vurderingBestemmelse";
 import { VilkaarOgBegrunnelserNY } from "./komponenter/vilkaarOgBegrunnelserNY";
 import { avklartefaktaOperations } from "../../../../../ducks/avklartefakta";
 import { Avklartfakta } from "../../../../../services/modules/avklartefakta";
-import { _isEmpty } from "../../../../../utils";
+import { _isBoolean, _isEmpty } from "../../../../../utils";
+import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
 
 enum ResetTyper {
   AVKLARTEFAKTA,
@@ -42,20 +42,18 @@ export const VurderingBestemmelserV2 = ({
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
-  // const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector) as any;
+  const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector) as any;
   const trygdedekning = useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
-  const vilkårKodeverk = useSelector(folketrygdenkodeverkSelectors.VilkaarSelector);
-  const begrunnelseKodeverk = useSelector(folketrygdenkodeverkSelectors.BegrunnelserSelector);
-  console.log({ MKV });
-  const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBestemmelser[]>([]);
+  const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBegrunnelser[]>([]);
   const [avklarteFakta, setAvklarteFakta] = useState<AvklarteFakta[]>([]);
   const [bestemmelser, setBestemmelser] = useState<string[]>([]);
   const [lovligeBestemmelser, setLovligeBestemmelser] = useState<string[]>([]);
   const [pliktigeBestemmelser, setPliktigeBestemmelser] = useState<string[]>([]);
+  const begrunnelseKodeverk = useSelector(folketrygdenkodeverkSelectors.BegrunnelserSelector);
 
-  const [valgtAvklartFakta, setValgtAvklartFakta] = useState<string>("");
+  const [valgtAvklarteFakta, setValgtAvklarteFakta] = useState<Map<string, string>>(new Map());
   const [valgteVilkår, setValgteVilkår] = useState<Map<string, boolean>>(new Map());
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, Begrunnelse>>(new Map());
   const [valgtBestemmelse, setValgtBestemmelse] = useState<string>(lagretBestemmelse);
@@ -66,22 +64,26 @@ export const VurderingBestemmelserV2 = ({
     Boolean(valgtBestemmelse) &&
     !lovligeBestemmelser.includes(valgtBestemmelse) &&
     !pliktigeBestemmelser.includes(valgtBestemmelse);
+  console.log({ lagretBestemmelse });
+  useEffect(() => {
+    console.log({ lagredeVilkår });
+    lagredeVilkår.forEach((vilkår: Api.Vilkar.Vilkaar) => {
+      valgteVilkår.set(vilkår.vilkaar, vilkår.oppfylt);
+      // if (vilkår.begrunnelseKoder?.length === 1) {
+      //   valgteBegrunnelser.set(`${vilkår.vilkaar}_begrunnelser`, {
+      //     begrunnelseKode: vilkår.begrunnelseKoder[0],
+      //     begrunnelseFritekst: vilkår.begrunnelseFritekst,
+      //   });
+      // }
+    });
 
-  // useEffect(() => {
-  //   console.group({ lagredeVilkår });
-  //   lagredeVilkår.forEach((vilkår: VilkårOgBestemmelser) => {
-  //     valgteVilkår.set(vilkår.vilkår, vilkår.defaultOppfylt);
-  //     if (vilkår.begrunnelseKoder?.length === 1) {
-  //       valgteBegrunnelser.set(`${vilkår.vilkaar}_begrunnelser`, {
-  //         begrunnelseKode: vilkår.begrunnelseKoder[0],
-  //         begrunnelseFritekst: vilkår.begrunnelseFritekst,
-  //       });
-  //     }
-  //   });
+    setValgteVilkår(new Map(valgteVilkår));
+    setValgteBegrunnelser(new Map(valgteBegrunnelser));
+  }, [lagredeVilkår]);
 
-  //   setValgteVilkår(new Map(valgteVilkår));
-  //   setValgteBegrunnelser(new Map(valgteBegrunnelser));
-  // }, [lagredeVilkår]);
+  useEffect(() => {
+    console.log({ valgteVilkår });
+  }, [valgteVilkår]);
 
   useEffect(() => {
     Api.Ftrl.hentBestemmelser(behandlingstema).then((res) => setBestemmelser(res.bestemmelser));
@@ -94,18 +96,21 @@ export const VurderingBestemmelserV2 = ({
     Api.Ftrl.hentAvklarteFakta(valgtBestemmelse, behandlingID)
       .then((res) => setAvklarteFakta(res.avklarteFakta))
       .catch(() => setAvklarteFakta([]));
-    Api.Ftrl.hentVilkår(valgtBestemmelse, behandlingID)
-      .then((res) => setVilkårOgBegrunnelser(res.vilkår))
-      .catch(() => setVilkårOgBegrunnelser([]));
     reset(ResetTyper.VILKÅR);
     reset(ResetTyper.AVKLARTEFAKTA);
   }, [valgtBestemmelse, behandlingID]);
 
   useEffect(() => {
+    Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID)
+      .then((res) => setVilkårOgBegrunnelser(res.vilkår))
+      .catch(() => setVilkårOgBegrunnelser([]));
+  }, [valgtBestemmelse, valgtAvklarteFakta, behandlingID]);
+
+  useEffect(() => {
     valider();
   }, [
     valgtBestemmelse,
-    valgtAvklartFakta,
+    valgtAvklarteFakta,
     valgteVilkår,
     valgteBegrunnelser,
     bestemmelser,
@@ -116,16 +121,24 @@ export const VurderingBestemmelserV2 = ({
   const valider = () => {
     let bestemmelserOK = true;
     let avklarteFaktaOK = true;
-    if (bestemmelser.length > 0) bestemmelserOK = !_isEmpty(valgtBestemmelse);
-    if (avklarteFakta.length > 0) avklarteFaktaOK = !_isEmpty(valgtAvklartFakta);
+    let vilkårOK = true;
 
-    setBesvartOgGodkjent(bestemmelserOK && avklarteFaktaOK);
+    if (bestemmelser.length > 0) bestemmelserOK = !_isEmpty(valgtBestemmelse);
+    if (avklarteFakta.length > 0) avklarteFaktaOK = !_isEmpty(valgtAvklarteFakta);
+
+    vilkårOgBegrunnelser.forEach((vilkår) => {
+      if (!valgteVilkår.get(vilkår.vilkår)) {
+        vilkårOK = false;
+      }
+    });
+
+    setBesvartOgGodkjent(bestemmelserOK && avklarteFaktaOK && vilkårOK);
   };
 
   const reset = (type: ResetTyper | undefined = undefined) => {
     switch (type) {
       case ResetTyper.AVKLARTEFAKTA:
-        setValgtAvklartFakta("");
+        setValgtAvklarteFakta(new Map());
         return;
       case ResetTyper.VILKÅR:
         setValgteVilkår(new Map());
@@ -135,7 +148,7 @@ export const VurderingBestemmelserV2 = ({
         setValgtBestemmelse("");
         setValgteVilkår(new Map());
         setValgteBegrunnelser(new Map());
-        setValgtAvklartFakta("");
+        setValgtAvklarteFakta(new Map());
     }
   };
 
@@ -154,16 +167,12 @@ export const VurderingBestemmelserV2 = ({
   };
 
   const lagAvklarteFakta = () => {
-    const avklartFakta: Avklartfakta[] = [
-      {
-        fakta: [],
-        avklartefaktaKode: valgtAvklartFakta,
-        begrunnelseFritekst: null,
-        begrunnelseKoder: [],
-        referanse: "",
-        subjektID: null,
-      },
-    ];
+    const avklartFakta = Object.keys(valgtAvklarteFakta).map((kode: string) => {
+      return {
+        avklartefaktaKode: kode,
+        fakta: valgtAvklarteFakta.get(kode),
+      };
+    });
 
     return avklartFakta;
   };
@@ -201,41 +210,53 @@ export const VurderingBestemmelserV2 = ({
             name={fakta.faktaType.kode}
             tittel={FaktaTypeOverskrifter[fakta.faktaType.kode].tittel}
             redigerbart={redigerbart}
-            valgtAlternativ={valgtAvklartFakta}
-            endretAlternativ={(avklartFakta) => setValgtAvklartFakta(avklartFakta)}
+            valgtAlternativ={valgtAvklarteFakta.get(fakta.faktaType.kode) ?? ""}
+            endretAlternativ={(avklartFakta) => {
+              if (_isEmpty(avklartFakta)) {
+                reset(ResetTyper.AVKLARTEFAKTA);
+                return;
+              }
+              setValgtAvklarteFakta(new Map(valgtAvklarteFakta.set(fakta.faktaType.kode, avklartFakta)));
+            }}
           />
         );
       })}
 
-      {vilkårOgBegrunnelser.map((vb) => (
-        <VilkaarOgBegrunnelserNY
-          key={vb.vilkår}
-          vilkårOgBegrunnelser={vb}
-          alleValgteVilkår={valgteVilkår}
-          alleValgteBegrunnelser={valgteBegrunnelser}
-          vilkårKodeverk={vilkårKodeverk}
-          begrunnelseKodeverk={begrunnelseKodeverk}
-          handleEndreVilkår={(event) =>
-            setValgteVilkår(new Map(valgteVilkår.set(event.target.name, !!event.target.value)))
-          }
-          handleEndreBegrunnelseKode={(event) =>
-            setValgteBegrunnelser(
-              new Map(valgteBegrunnelser.set(event.target.name, { begrunnelseKode: event.target.value }))
-            )
-          }
-          handleEndreBegrunnelseFritekst={(valgtBegrunnelse: string, begrunnelseFritekst: string) =>
-            setValgteBegrunnelser(
-              new Map(
-                valgteBegrunnelser.set(valgtBegrunnelse, {
-                  begrunnelseKode: valgteBegrunnelser.get(valgtBegrunnelse)!!.begrunnelseKode,
-                  begrunnelseFritekst,
-                })
+      {vilkårOgBegrunnelser.map((vb) => {
+        if (!valgteVilkår.has(vb.vilkår)) {
+          setValgteVilkår(new Map(valgteVilkår.set(vb.vilkår, vb.defaultOppfylt ?? false)));
+        }
+
+        return (
+          <VilkaarOgBegrunnelserNY
+            key={vb.vilkår}
+            vilkårOgBegrunnelser={vb}
+            alleValgteVilkår={valgteVilkår}
+            alleValgteBegrunnelser={valgteBegrunnelser}
+            vilkårKodeverk={MKV.KTObjects.vilkaar}
+            begrunnelseKodeverk={begrunnelseKodeverk}
+            handleEndreVilkår={(event) =>
+              setValgteVilkår(new Map(valgteVilkår.set(event.target.name, Boolean(event.target.value === "true"))))
+            }
+            handleEndreBegrunnelseKode={(event) =>
+              setValgteBegrunnelser(
+                new Map(valgteBegrunnelser.set(event.target.name, { begrunnelseKode: event.target.value }))
               )
-            )
-          }
-          redigerbart={redigerbart}
-        />
-      ))}
+            }
+            handleEndreBegrunnelseFritekst={(valgtBegrunnelse: string, begrunnelseFritekst: string) =>
+              setValgteBegrunnelser(
+                new Map(
+                  valgteBegrunnelser.set(valgtBegrunnelse, {
+                    begrunnelseKode: valgteBegrunnelser.get(valgtBegrunnelse)!!.begrunnelseKode,
+                    begrunnelseFritekst,
+                  })
+                )
+              )
+            }
+            redigerbart={redigerbart}
+          />
+        );
+      })}
 
       {ulovligBestemmelseValgt && (
         <Nav.AlertStripeFeil>

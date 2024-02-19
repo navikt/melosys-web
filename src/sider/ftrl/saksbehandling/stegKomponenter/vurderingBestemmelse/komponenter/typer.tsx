@@ -32,7 +32,7 @@ export interface Begrunnelse {
   begrunnelseFritekst?: string | null;
 }
 
-export interface VilkårOgBestemmelser {
+export interface VilkårOgBegrunnelser {
   vilkår: string;
   defaultOppfylt?: boolean | null;
   muligeBegrunnelser: Begrunnelse[];

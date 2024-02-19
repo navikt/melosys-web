@@ -1,4 +1,4 @@
-import { ChangeEventHandler, Fragment } from "react";
+import { ChangeEventHandler, Fragment, useEffect, useState } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../../melosyskodeverk";
@@ -10,7 +10,7 @@ import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHje
 import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
 import { Begrunnelse, kodeInkludererFritekst } from "../vurderingBestemmelse";
 import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
-import { VilkårOgBestemmelser } from "./typer";
+import { VilkårOgBegrunnelser } from "./typer";
 
 const hjelpetekster = new Map([
   [
@@ -20,7 +20,7 @@ const hjelpetekster = new Map([
 ]);
 
 interface VilkaarOgBegrunnelserProps {
-  vilkårOgBegrunnelser: VilkårOgBestemmelser;
+  vilkårOgBegrunnelser: VilkårOgBegrunnelser;
   alleValgteVilkår: Map<string, boolean>;
   alleValgteBegrunnelser: Map<string, Begrunnelse>;
   vilkårKodeverk: KTObject[];
@@ -45,12 +45,18 @@ export const VilkaarOgBegrunnelserNY = ({
   redigerbart,
 }: VilkaarOgBegrunnelserProps) => {
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
-  const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
+  const [valgtVilkår, setValgtVilkår] = useState<boolean>(alleValgteVilkår.get(`${vilkår}`)!!);
   const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}_begrunnelser`);
   const visBegrunnelseFritekst = kodeInkludererFritekst(
     begrunnelseKodeverk,
     valgtBegrunnelseForVilkår?.begrunnelseKode
   );
+
+  useEffect(() => {
+    if (Utils._isBoolean(alleValgteVilkår.get(`${vilkår}`))) {
+      setValgtVilkår(alleValgteVilkår.get(`${vilkår}`)!!);
+    }
+  }, [alleValgteVilkår]);
 
   return (
     <Fragment>
@@ -69,7 +75,7 @@ export const VilkaarOgBegrunnelserNY = ({
               label="Ja"
               name={vilkår}
               onChange={handleEndreVilkår}
-              checked={valgtVilkår}
+              checked={valgtVilkår === true}
               value="true"
               key="true"
               disabled={!redigerbart}
@@ -81,7 +87,7 @@ export const VilkaarOgBegrunnelserNY = ({
               label="Nei"
               name={vilkår}
               onChange={handleEndreVilkår}
-              checked={valgtVilkår}
+              checked={valgtVilkår === false}
               value="false"
               key="false"
               disabled={!redigerbart}
@@ -90,7 +96,7 @@ export const VilkaarOgBegrunnelserNY = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      {valgtVilkår && <IngenFlytMelding />}
+      {!valgtVilkår && <IngenFlytMelding />}
       {valgtVilkår && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
           className="select"
