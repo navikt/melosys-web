@@ -142,20 +142,24 @@ const Saksbehandling = ({
   return (
     <>
       <Informasjonlinje />
-      <div id="main-container" className="main-container">
+      <div className="main-container">
         <div className="trygdeavtale_saksbehandling">
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
                 {!hovedpartErVirksomhet ? (
                   <>
-                    {erHenlagtSak && <HenlagtSak />}
-                    {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
-                    {visStegVelger && <Stegvelger />}
+                    <main id="main-container">
+                      {erHenlagtSak && <HenlagtSak />}
+                      {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
+                      {visStegVelger && <Stegvelger />}
+                    </main>
                     <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
                   </>
                 ) : (
-                  <VirksomhetMelding />
+                  <main id="main-container">
+                    <VirksomhetMelding />
+                  </main>
                 )}
               </Nav.Column>
               <Nav.Column xs="5">

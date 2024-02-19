@@ -107,12 +107,14 @@ const Saksbehandling = ({
   return (
     <>
       <Informasjonlinje />
-      <div id="main-container" className="main-container">
+      <div className="main-container">
         <div className="unntaksregistrering_saksbehandling">
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                <EnkelStegvelger alleSteg={alleSteg} />
+                <main id="main-container">
+                  <EnkelStegvelger alleSteg={alleSteg} />
+                </main>
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">

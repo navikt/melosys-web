@@ -102,29 +102,33 @@ const Vurderutpeking = ({
   return (
     <>
       <Informasjonlinje />
-      <div id="main-container" className="main-container">
+      <div className="main-container">
         <div className="vurderutpeking">
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
                 {hovedpartErVirksomhet ? (
-                  <VirksomhetMelding />
+                  <main id="main-container">
+                    <VirksomhetMelding />
+                  </main>
                 ) : (
                   <>
                     {mottatteOpplysningerErKlart && (
-                      <Stegvelger
-                        behandlingID={behandlingID}
-                        stegMap={stegMap}
-                        lagreVilkarHandler={lagreVilkar}
-                        lagreAvklartefaktaHandler={lagreAvklartefakta}
-                        lagreLovvalgsperioderHandler={lagreLovvalgsperioder}
-                        lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
-                        oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
-                        begrunnelser={MKV.KTObjects.begrunnelser}
-                        landkoder={MKV.KTObjects.landkoder}
-                        tilForsiden={tilForsiden}
-                        forsteSteg={forsteSteg}
-                      />
+                      <main id="main-container">
+                        <Stegvelger
+                          behandlingID={behandlingID}
+                          stegMap={stegMap}
+                          lagreVilkarHandler={lagreVilkar}
+                          lagreAvklartefaktaHandler={lagreAvklartefakta}
+                          lagreLovvalgsperioderHandler={lagreLovvalgsperioder}
+                          lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
+                          oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
+                          begrunnelser={MKV.KTObjects.begrunnelser}
+                          landkoder={MKV.KTObjects.landkoder}
+                          tilForsiden={tilForsiden}
+                          forsteSteg={forsteSteg}
+                        />
+                      </main>
                     )}
                     <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
                   </>

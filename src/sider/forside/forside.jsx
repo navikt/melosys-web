@@ -41,32 +41,34 @@ const Forside = (props) => {
         </div>
         <OpprettNySakKnapp onClick={tilOpprettNySak} />
       </div>
-      <Nav.Container className="forside__container" fluid>
-        <Nav.Row>
-          <Nav.Column xs="6" lg="5">
+      <main id="main-container">
+        <Nav.Container className="forside__container" fluid>
+          <Nav.Row>
+            <Nav.Column xs="6" lg="5">
+              <ErrorBoundary
+                kontekster={[
+                  { slice: "oppgaver", varselTekst: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" },
+                ]}
+              >
+                <JournalforingOppgaver />
+              </ErrorBoundary>
+            </Nav.Column>
+            <Nav.Column xs="6" lg="7">
+              <SokSkjema />
+              <Saksplukker />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
             <ErrorBoundary
               kontekster={[
                 { slice: "oppgaver", varselTekst: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" },
               ]}
             >
-              <JournalforingOppgaver />
+              <BehandlingOppgaver />
             </ErrorBoundary>
-          </Nav.Column>
-          <Nav.Column xs="6" lg="7">
-            <SokSkjema />
-            <Saksplukker />
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <ErrorBoundary
-            kontekster={[
-              { slice: "oppgaver", varselTekst: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" },
-            ]}
-          >
-            <BehandlingOppgaver />
-          </ErrorBoundary>
-        </Nav.Row>
-      </Nav.Container>
+          </Nav.Row>
+        </Nav.Container>
+      </main>
     </div>
   );
 };

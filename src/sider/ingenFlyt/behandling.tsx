@@ -97,18 +97,22 @@ const Behandling = ({
   return (
     <>
       <Informasjonlinje />
-      <div id="main-container" className="main-container">
+      <div className="main-container">
         <Nav.Container fluid className="ingenFlyt_behandling">
           <Nav.Row>
             <Nav.Column xs="7">
               {!redigerbart && <Innsynsmelding className="ingenFlyt_behandling__innsynsmelding" />}
               {hovedpartErVirksomhet ? (
-                <VirksomhetMelding />
+                <main id="main-container">
+                  <VirksomhetMelding />
+                </main>
               ) : (
                 <>
-                  {erHenlagtSak && <HenlagtSak />}
-                  {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
-                  {visTomFlytMelding && <IngenFlytMelding />}
+                  <main id="main-container">
+                    {erHenlagtSak && <HenlagtSak />}
+                    {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
+                    {visTomFlytMelding && <IngenFlytMelding />}
+                  </main>
                   <SoknadMenypanelForm startOgVisOppfriskModal={() => null} visOppdaterRegisteropplysninger={false} />
                 </>
               )}
