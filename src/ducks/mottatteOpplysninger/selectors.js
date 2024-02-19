@@ -198,9 +198,9 @@ export const SoknadslandkoderSelector = createSelector(
   (soknadsland) => soknadsland.landkoder || []
 );
 
-export const SoknadslandErUkjenteEllerAlleEosLandSelector = createSelector(
+export const SoknadslandFlereLandUkjentHvilkeSelector = createSelector(
   (state) => SoknadslandSelector(state),
-  (soknadsland) => soknadsland.erUkjenteEllerAlleEosLand
+  (soknadsland) => soknadsland.flereLandUkjentHvilke
 );
 
 export const SoknadslandKTSelector = createSelector(
@@ -245,7 +245,7 @@ export const HarPeriodeSelector = createSelector(
 
 export const HarLandSelector = createSelector(
   (state) => SoknadslandSelector(state),
-  (soeknadsland) => !Utils._isEmpty(soeknadsland.landkoder) || soeknadsland.erUkjenteEllerAlleEosLand
+  (soeknadsland) => !Utils._isEmpty(soeknadsland.landkoder) || soeknadsland.flereLandUkjentHvilke
 );
 
 export const HarPeriodeOgLandSelector = createSelector(

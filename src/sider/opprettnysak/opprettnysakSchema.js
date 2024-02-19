@@ -43,10 +43,9 @@ const kreverLand = (
   sakstema,
   behandlingstema,
   behandlingstype,
-  soknadslandUkjenteEllerAlleEosLand
+  soknadslandFlereLandUkjentHvilke
 ) =>
-  kreverPeriode(saksnummer, sakstype, sakstema, behandlingstema, behandlingstype) &&
-  !soknadslandUkjenteEllerAlleEosLand;
+  kreverPeriode(saksnummer, sakstype, sakstema, behandlingstema, behandlingstype) && !soknadslandFlereLandUkjentHvilke;
 
 const opprettnysak = object().shape({
   hovedpart: string().required(MAA_FYLLES_UT),
@@ -106,9 +105,9 @@ const opprettnysak = object().shape({
       is: kreverPeriode,
       then: string().erEtterDatofelt("periodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT).nullable(),
     }),
-  soknadslandUkjenteEllerAlleEosLand: boolean().nullable(),
+  soknadslandFlereLandUkjentHvilke: boolean().nullable(),
   soknadsland: array().when(
-    ["saksnummer", "sakstype", "sakstema", "behandlingstema", "behandlingstype", "soknadslandUkjenteEllerAlleEosLand"],
+    ["saksnummer", "sakstype", "sakstema", "behandlingstema", "behandlingstype", "soknadslandFlereLandUkjentHvilke"],
     {
       is: kreverLand,
       then: array().when("behandlingstema", {

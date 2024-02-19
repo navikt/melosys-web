@@ -62,7 +62,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     arbeidsland: søknadsland.landkoder.toString(),
     land: søknadsland.landkoder || [],
     flereLandUkjentHvilke: registeropplysningerHentet
-      ? Utils.streng.boolTilUppercaseStreng(søknadsland.erUkjenteEllerAlleEosLand)
+      ? Utils.streng.boolTilUppercaseStreng(søknadsland.flereLandUkjentHvilke)
       : null,
     trygdedekning: useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector) ?? "",
     inkluderSiste5Aar: useSelector(modalerSelectors.InkluderSiste5AarSelector),
@@ -107,7 +107,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     return formValues.arbeidsland ? [formValues.arbeidsland] : [];
   };
 
-  const mapErUkjenteEllerAlleEosLand = () =>
+  const mapFlereLandUkjentHvilke = () =>
     erIkkeYrkesaktiv ? Utils.streng.uppercaseStrengTilBool(formValues.flereLandUkjentHvilke) : false;
 
   const oppdaterLokalMottatteOpplysninger = async () => {
@@ -118,7 +118,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
         })
       ),
-      dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(mapLandkoder(), mapErUkjenteEllerAlleEosLand())),
+      dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(mapLandkoder(), mapFlereLandUkjentHvilke())),
       dispatch(mottatteOpplysningerOperations.oppdaterTrygdedekning(formValues.trygdedekning)),
     ]);
   };

@@ -86,7 +86,7 @@ export const Arbeidssteder = ({
   erHjemmekontor,
   mottatteOpplysningerType,
   behandlingstema,
-  soknadsland: { erUkjenteEllerAlleEosLand },
+  soknadsland: { flereLandUkjentHvilke },
 }: ArbeidsstederProps) => {
   const erSoknadFraAltinn =
     mottatteOpplysningerType === MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
@@ -161,14 +161,14 @@ export const Arbeidssteder = ({
     </>
   );
 
-  const ukjenteEllerAlleEosLandValgtAlertstripe = (
+  const flereLandUkjentHvilkeValgtAlertstripe = (
     <Nav.AlertStripe type="info">
       Ikke mulig å legge til arbeidssted(er) når det ikke er oppgitt land. Du kan endre dette under sidemenypunkt
       “Periode og land”.
     </Nav.AlertStripe>
   );
 
-  const arbeidssteder = erUkjenteEllerAlleEosLand ? ukjenteEllerAlleEosLandValgtAlertstripe : arbeidsstederLister;
+  const arbeidssteder = flereLandUkjentHvilke ? flereLandUkjentHvilkeValgtAlertstripe : arbeidsstederLister;
 
   return (
     <div className="arbeidssteder">

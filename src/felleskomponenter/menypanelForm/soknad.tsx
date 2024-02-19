@@ -159,7 +159,7 @@ const mapStateToProps = (state: RootState) => ({
     soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).tom),
     soknadsland: {
       landkoder: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
-      erUkjenteEllerAlleEosLand: mottatteOpplysningerSelectors.SoknadslandErUkjenteEllerAlleEosLandSelector(state),
+      flereLandUkjentHvilke: mottatteOpplysningerSelectors.SoknadslandFlereLandUkjentHvilkeSelector(state),
     },
     avsenderland: mottatteOpplysningerSelectors.AvsenderlandSelector(state),
     lovvalgsland: mottatteOpplysningerSelectors.LovvalgslandSelector(state),

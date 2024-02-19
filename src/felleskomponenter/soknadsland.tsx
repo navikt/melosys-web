@@ -5,7 +5,7 @@ import { kodeTilTerm } from "../kodeverk";
 interface SoknadslandProps {
   land: {
     landkoder: string[];
-    erUkjenteEllerAlleEosLand: boolean;
+    flereLandUkjentHvilke: boolean;
   };
   visFulltNavn?: boolean;
   landkoderKodeverk?: KTObject[];
@@ -14,9 +14,9 @@ interface SoknadslandProps {
 const Soknadsland = ({ land, visFulltNavn = false, landkoderKodeverk = MKV.KTObjects.landkoder }: SoknadslandProps) => {
   if (!land) return "(ukjent)";
 
-  const { landkoder, erUkjenteEllerAlleEosLand } = land;
+  const { landkoder, flereLandUkjentHvilke } = land;
 
-  if (erUkjenteEllerAlleEosLand) return "Flere EØS-land/Sveits. Ikke kjent hvilke.";
+  if (flereLandUkjentHvilke) return "Flere EØS-land/Sveits. Ikke kjent hvilke.";
 
   if (!landkoder || landkoder.length === 0) return "(ukjent)";
   const mapOmTilFulltNavn = (landkode: string) => kodeTilTerm(landkode, landkoderKodeverk) || landkode;
