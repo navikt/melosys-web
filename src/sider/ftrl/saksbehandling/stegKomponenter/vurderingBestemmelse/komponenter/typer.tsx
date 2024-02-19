@@ -1,7 +1,23 @@
-export const FaktaTypeOverskrifter: Record<string, string> = {
-  IKKE_YRKESAKTIV_RELASJON: "Angi brukers relasjon",
-  IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD: "",
-  FULLSTENDIG_MANGLENDE_INNBETALING: "",
+import { KTObject } from "@navikt/melosys-kodeverk";
+
+type FaktaType = {
+  tittel: string;
+  kodeverk: string;
+};
+
+export const FaktaTypeOverskrifter: Record<string, FaktaType> = {
+  IKKE_YRKESAKTIV_RELASJON: {
+    tittel: "Angi brukers relasjon",
+    kodeverk: "ikkeyrkesaktivrelasjontype",
+  },
+  IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD: {
+    tittel: "Angi brukers opphold",
+    kodeverk: "ikkeyrkesaktivoppholdtype",
+  },
+  FULLSTENDIG_MANGLENDE_INNBETALING: {
+    tittel: "",
+    kodeverk: "",
+  },
 };
 
 export interface VurderingBestemmelseProps {
@@ -18,11 +34,11 @@ export interface Begrunnelse {
 
 export interface VilkårOgBestemmelser {
   vilkår: string;
-  defaultOppfylt: boolean;
+  defaultOppfylt?: boolean | null;
   muligeBegrunnelser: Begrunnelse[];
 }
 
 export interface AvklarteFakta {
-  faktaType: string;
+  faktaType: KTObject;
   muligeFakta: string[];
 }

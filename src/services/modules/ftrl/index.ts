@@ -1,2 +1,4 @@
 export * from "./gyldigeTrygdedekninger";
-export * from "./bestemmelse";
+export * from "./bestemmelser";
+export * from "./vilkår";
+export * from "./avklartefakta";

@@ -12,7 +12,7 @@ import { ListeVelgerFtrl } from "./komponenter/listeVelger";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_FOLKETRYGDEN_2_7 } from "../../../../../featuretoggle/toggleNavn";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
-import { vilkarOperations, vilkarSelectors } from "../../../../../ducks/vilkar";
+import { vilkarOperations } from "../../../../../ducks/vilkar";
 import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
 import {
   AvklarteFakta,
@@ -22,6 +22,14 @@ import {
 } from "./komponenter/typer";
 import { Begrunnelse } from "./vurderingBestemmelse";
 import { VilkaarOgBegrunnelserNY } from "./komponenter/vilkaarOgBegrunnelserNY";
+import { avklartefaktaOperations } from "../../../../../ducks/avklartefakta";
+import { Avklartfakta } from "../../../../../services/modules/avklartefakta";
+import { _isEmpty } from "../../../../../utils";
+
+enum ResetTyper {
+  AVKLARTEFAKTA,
+  VILKÅR,
+}
 
 export const VurderingBestemmelserV2 = ({
   bekreft,
@@ -34,51 +42,102 @@ export const VurderingBestemmelserV2 = ({
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
-  const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector) as any;
+  // const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector) as any;
   const trygdedekning = useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const vilkårKodeverk = useSelector(folketrygdenkodeverkSelectors.VilkaarSelector);
   const begrunnelseKodeverk = useSelector(folketrygdenkodeverkSelectors.BegrunnelserSelector);
-
-  const [bestemmelser, setBestemmelser] = useState<string[]>([]);
+  console.log({ MKV });
   const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBestemmelser[]>([]);
   const [avklarteFakta, setAvklarteFakta] = useState<AvklarteFakta[]>([]);
+  const [bestemmelser, setBestemmelser] = useState<string[]>([]);
   const [lovligeBestemmelser, setLovligeBestemmelser] = useState<string[]>([]);
+  const [pliktigeBestemmelser, setPliktigeBestemmelser] = useState<string[]>([]);
 
   const [valgtAvklartFakta, setValgtAvklartFakta] = useState<string>("");
   const [valgteVilkår, setValgteVilkår] = useState<Map<string, boolean>>(new Map());
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, Begrunnelse>>(new Map());
   const [valgtBestemmelse, setValgtBestemmelse] = useState<string>(lagretBestemmelse);
+  const [besvartOgGodkjent, setBesvartOgGodkjent] = useState<boolean>(false);
 
   const ulovligBestemmelseValgt =
-    folketrygden2_7ToggleEnabled && Boolean(valgtBestemmelse) && !lovligeBestemmelser.includes(valgtBestemmelse);
+    folketrygden2_7ToggleEnabled &&
+    Boolean(valgtBestemmelse) &&
+    !lovligeBestemmelser.includes(valgtBestemmelse) &&
+    !pliktigeBestemmelser.includes(valgtBestemmelse);
 
-  useEffect(() => {
-    console.group({ lagredeVilkår });
-    lagredeVilkår.forEach((vilkår: VilkårOgBestemmelser) => {
-      valgteVilkår.set(vilkår.vilkår, vilkår.defaultOppfylt);
-      // if (vilkår.begrunnelseKoder?.length === 1) {
-      //   valgteBegrunnelser.set(`${vilkår.vilkaar}_begrunnelser`, {
-      //     begrunnelseKode: vilkår.begrunnelseKoder[0],
-      //     begrunnelseFritekst: vilkår.begrunnelseFritekst,
-      //   });
-      // }
-    });
+  // useEffect(() => {
+  //   console.group({ lagredeVilkår });
+  //   lagredeVilkår.forEach((vilkår: VilkårOgBestemmelser) => {
+  //     valgteVilkår.set(vilkår.vilkår, vilkår.defaultOppfylt);
+  //     if (vilkår.begrunnelseKoder?.length === 1) {
+  //       valgteBegrunnelser.set(`${vilkår.vilkaar}_begrunnelser`, {
+  //         begrunnelseKode: vilkår.begrunnelseKoder[0],
+  //         begrunnelseFritekst: vilkår.begrunnelseFritekst,
+  //       });
+  //     }
+  //   });
 
-    setValgteVilkår(new Map(valgteVilkår));
-    setValgteBegrunnelser(new Map(valgteBegrunnelser));
-  }, [lagredeVilkår]);
+  //   setValgteVilkår(new Map(valgteVilkår));
+  //   setValgteBegrunnelser(new Map(valgteBegrunnelser));
+  // }, [lagredeVilkår]);
 
   useEffect(() => {
     Api.Ftrl.hentBestemmelser(behandlingstema).then((res) => setBestemmelser(res.bestemmelser));
-    Api.LovligeKombinasjoner.hentBestemmelser(trygdedekning).then(setLovligeBestemmelser);
-  }, [behandlingstema]);
+    Api.Ftrl.hentBestemmelser(behandlingstema, trygdedekning).then((res) => setLovligeBestemmelser(res.bestemmelser));
+    Api.Ftrl.hentPliktigeBestemmelser().then((res) => setPliktigeBestemmelser(res.bestemmelser));
+    reset();
+  }, [behandlingstema, trygdedekning]);
 
   useEffect(() => {
-    Api.Ftrl.hentVilkår(valgtBestemmelse, behandlingID).then((res) => setVilkårOgBegrunnelser(res.vilkår));
-    Api.Ftrl.hentAvklarteFakta(valgtBestemmelse, behandlingID).then((res) => setAvklarteFakta(res.avklarteFakta));
+    Api.Ftrl.hentAvklarteFakta(valgtBestemmelse, behandlingID)
+      .then((res) => setAvklarteFakta(res.avklarteFakta))
+      .catch(() => setAvklarteFakta([]));
+    Api.Ftrl.hentVilkår(valgtBestemmelse, behandlingID)
+      .then((res) => setVilkårOgBegrunnelser(res.vilkår))
+      .catch(() => setVilkårOgBegrunnelser([]));
+    reset(ResetTyper.VILKÅR);
+    reset(ResetTyper.AVKLARTEFAKTA);
   }, [valgtBestemmelse, behandlingID]);
+
+  useEffect(() => {
+    valider();
+  }, [
+    valgtBestemmelse,
+    valgtAvklartFakta,
+    valgteVilkår,
+    valgteBegrunnelser,
+    bestemmelser,
+    avklarteFakta,
+    vilkårOgBegrunnelser,
+  ]);
+
+  const valider = () => {
+    let bestemmelserOK = true;
+    let avklarteFaktaOK = true;
+    if (bestemmelser.length > 0) bestemmelserOK = !_isEmpty(valgtBestemmelse);
+    if (avklarteFakta.length > 0) avklarteFaktaOK = !_isEmpty(valgtAvklartFakta);
+
+    setBesvartOgGodkjent(bestemmelserOK && avklarteFaktaOK);
+  };
+
+  const reset = (type: ResetTyper | undefined = undefined) => {
+    switch (type) {
+      case ResetTyper.AVKLARTEFAKTA:
+        setValgtAvklartFakta("");
+        return;
+      case ResetTyper.VILKÅR:
+        setValgteVilkår(new Map());
+        setValgteBegrunnelser(new Map());
+        return;
+      default:
+        setValgtBestemmelse("");
+        setValgteVilkår(new Map());
+        setValgteBegrunnelser(new Map());
+        setValgtAvklartFakta("");
+    }
+  };
 
   const oppdaterOgLagreVilkår = () => {
     const data = Array.from(valgteVilkår, ([vilkår, verdi]) => {
@@ -91,11 +150,27 @@ export const VurderingBestemmelserV2 = ({
       };
     });
 
-    return dispatch(vilkarOperations.send(behandlingID, data));
+    return data;
+  };
+
+  const lagAvklarteFakta = () => {
+    const avklartFakta: Avklartfakta[] = [
+      {
+        fakta: [],
+        avklartefaktaKode: valgtAvklartFakta,
+        begrunnelseFritekst: null,
+        begrunnelseKoder: [],
+        referanse: "",
+        subjektID: null,
+      },
+    ];
+
+    return avklartFakta;
   };
 
   const handleBekreft = async () => {
-    await oppdaterOgLagreVilkår();
+    await dispatch(avklartefaktaOperations.send(behandlingID, lagAvklarteFakta()));
+    await dispatch(vilkarOperations.send(behandlingID, oppdaterOgLagreVilkår()));
     await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperioderForslag(behandlingID, valgtBestemmelse));
     oppdaterStatus(true);
     bekreft();
@@ -120,10 +195,11 @@ export const VurderingBestemmelserV2 = ({
       {avklarteFakta.map((fakta) => {
         return (
           <ListeVelgerFtrl
+            key={fakta.faktaType.kode}
             muligeAlternativer={fakta.muligeFakta}
-            kodeverkKoder={Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser)}
-            name={fakta.faktaType}
-            tittel={FaktaTypeOverskrifter[fakta.faktaType]}
+            kodeverkKoder={MKV.KTObjects[FaktaTypeOverskrifter[fakta.faktaType.kode].kodeverk]}
+            name={fakta.faktaType.kode}
+            tittel={FaktaTypeOverskrifter[fakta.faktaType.kode].tittel}
             redigerbart={redigerbart}
             valgtAlternativ={valgtAvklartFakta}
             endretAlternativ={(avklartFakta) => setValgtAvklartFakta(avklartFakta)}
@@ -172,7 +248,7 @@ export const VurderingBestemmelserV2 = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: handleBekreft,
-          disabled: !redigerbart || ulovligBestemmelseValgt,
+          disabled: !redigerbart || ulovligBestemmelseValgt || !besvartOgGodkjent,
         }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />

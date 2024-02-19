@@ -21,6 +21,8 @@ export const ListeVelgerFtrl = ({
   tittel,
   endretAlternativ,
 }: ListeVelgerFtrlProps) => {
+  if (muligeAlternativer?.length === 0) return null;
+
   return (
     <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst label={tittel} />}>
       <Nav.Row>
