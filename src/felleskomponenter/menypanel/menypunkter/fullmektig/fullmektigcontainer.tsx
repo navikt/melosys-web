@@ -65,7 +65,12 @@ const Fullmektig = ({ redigerbart, visArbeidsforholdRolleEtiketter }: Fullmektig
         label={expanded ? "Lukk historikk" : "Vis historikk"}
       />
       {expanded && (
-        <FullmektigHistorikk finnOrganisasjonAdresse={finnOrganisasjonAdresse} finnPersonAdresse={finnPersonAdresse} />
+        <div className="horisontalScroll">
+          <FullmektigHistorikk
+            finnOrganisasjonAdresse={finnOrganisasjonAdresse}
+            finnPersonAdresse={finnPersonAdresse}
+          />
+        </div>
       )}
     </div>
   );

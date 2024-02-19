@@ -5,7 +5,14 @@ import * as Utils from "../../../../../utils";
 import { BOOLSK_STRING } from "../../../../../constants";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
-const { NÆRINGSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, FN_SKATTEFRITAK, MISJONÆR } = MKV.Koder.inntektskildetype;
+const {
+  NÆRINGSINNTEKT_FRA_NORGE,
+  INNTEKT_FRA_UTLANDET,
+  FN_SKATTEFRITAK,
+  MISJONÆR,
+  PENSJON_UFØRETRYGD,
+  PENSJON_UFØRETRYGD_KILDESKATT,
+} = MKV.Koder.inntektskildetype;
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperioden" };
 
@@ -27,8 +34,8 @@ export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder) => {
 
 export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) =>
   !brukerSkattepliktigIHelePerioden ||
-  [NÆRINGSINNTEKT_FRA_NORGE, FN_SKATTEFRITAK].includes(kildetype) ||
-  (kildetype === INNTEKT_FRA_UTLANDET && arbAvgBetales === BOOLSK_STRING.USANN);
+  [NÆRINGSINNTEKT_FRA_NORGE, FN_SKATTEFRITAK, PENSJON_UFØRETRYGD].includes(kildetype) ||
+  ([INNTEKT_FRA_UTLANDET, PENSJON_UFØRETRYGD_KILDESKATT].includes(kildetype) && arbAvgBetales === BOOLSK_STRING.USANN);
 
 const bruttoInntektFyltUtNårDetKrevesTest = {
   name: "Fyll inn brutto inntekt når det kreves",

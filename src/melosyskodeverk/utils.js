@@ -34,3 +34,5 @@ export const erAvsluttetEllerMidlertidigBeslutning = (behandlingsstatus) =>
 
 export const erHenlagtEllerHenlagtBortfalt = (saksstatus) =>
   [MKV.Koder.saksstatuser.HENLAGT, MKV.Koder.saksstatuser.HENLAGT_BORTFALT].includes(saksstatus);
+
+export const erAnnullertSak = (saksstatus) => [MKV.Koder.saksstatuser.ANNULLERT].includes(saksstatus);

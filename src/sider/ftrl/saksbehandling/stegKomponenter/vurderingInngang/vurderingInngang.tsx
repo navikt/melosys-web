@@ -61,7 +61,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     tom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.tom, false, undefined),
     arbeidsland: søknadsland.landkoder.toString(),
     land: søknadsland.landkoder || [],
-    flereLandUkjentHvilke: Utils.streng.boolTilUppercaseStreng(søknadsland.erUkjenteEllerAlleEosLand ?? false),
+    flereLandUkjentHvilke: registeropplysningerHentet
+      ? Utils.streng.boolTilUppercaseStreng(søknadsland.erUkjenteEllerAlleEosLand)
+      : null,
     trygdedekning: useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector) ?? "",
     inkluderSiste5Aar: useSelector(modalerSelectors.InkluderSiste5AarSelector),
   };
@@ -137,9 +139,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   if (!aktivtSteg) return null;
 
-  const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = formValues.land
-    ? MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(formValues.land)
-    : false;
+  const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = erIkkeYrkesaktiv
+    ? formValues.land?.some((land?: string) => MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(land))
+    : MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(formValues.arbeidsland);
   const flereLandUkjentHvilkeErUSANN = formValues.flereLandUkjentHvilke === BOOLSK_STRING.USANN;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const nyVurderingPeriodetekst =
@@ -230,7 +232,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
             </Nav.Column>
           )}
 
-          <Nav.Column>
+          <Nav.Column className="trygdedekning">
             <Forms.Select
               name="trygdedekning"
               control={control}
@@ -248,6 +250,12 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         </Nav.Row>
       </div>
 
+      {valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand && (
+        <Nav.AlertStripeAdvarsel className="alert">
+          Ett eller flere av landene du har valgt er EØS- eller avtaleland
+        </Nav.AlertStripeAdvarsel>
+      )}
+
       <Nav.Row>
         <Forms.Checkbox
           className="inkluderSiste5Aar"
@@ -258,16 +266,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           disabled={!redigerbart}
         />
       </Nav.Row>
-      {valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand && (
-        <Nav.Row>
-          <Nav.Column xs="4" />
-          <Nav.Column xs="3">
-            <Nav.AlertStripeAdvarsel>
-              Landet er et EØS-land og/eller et land Norge har trygdeavtale med
-            </Nav.AlertStripeAdvarsel>
-          </Nav.Column>
-        </Nav.Row>
-      )}
 
       <Mui.StegKnapper
         bekreftKnappProps={{

@@ -1,5 +1,4 @@
 import { Control, FieldArrayWithId } from "react-hook-form";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import * as Forms from "../../../../../../felleskomponenter/forms";
 import * as Ikoner from "../../../../../../resources/images";
 import * as Nav from "../../../../../../navFrontend";
@@ -17,7 +16,7 @@ const { PLIKTIG } = MKV.Koder.medlemskapstyper;
 export interface PeriodeElementerProps {
   redigerbart: boolean;
   trygdedekninger: string[];
-  innvilgelsesResultater: KTObject[];
+  innvilgelsesResultater: string[];
   control: Control;
   fields: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">[];
   handleSlett: (index: number) => void;
@@ -96,9 +95,9 @@ export const Medlemskapsperioder = ({
                   emptyFieldDisabled={!!field.innvilgelsesResultat}
                   onChange={(value) => handleChange([{ ...field, innvilgelsesResultat: value }], formIsValid, index)}
                 >
-                  {innvilgelsesResultater.map((item: KTObject) => (
-                    <option key={item.kode} value={item.kode}>
-                      {item.term}
+                  {innvilgelsesResultater.map((resultat) => (
+                    <option key={resultat} value={resultat}>
+                      {KV.kodeTilTerm(resultat, MKV.KTObjects.innvilgelsesResultat)}
                     </option>
                   ))}
                 </Forms.Select>

@@ -89,5 +89,8 @@ export const ferdigbehandleSak = (saksnummer: string) =>
 export const hentTrygdeavgiftOppsummering = (saksnummer: string): Promise<TrygdeavgiftOppsummering> =>
   getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/trygdeavgift/oppsummering`);
 
+export const annullerFagsak = (saksnummer: string) =>
+  postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/annullering`);
+
 export const hentFullmektigHistorikk = (saksnummer: string): Promise<FullmektigHistorikk[]> =>
   getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/aktoerer/FULLMEKTIG/historikk`);

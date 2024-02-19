@@ -18,7 +18,7 @@ import { formOperations } from "../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingAvslaaUtpekingSchema from "./vurderingAvslaaUtpekingSchema";
 
-export const VurderingAvslaaUtpeking = ({
+const VurderingAvslaaUtpeking = ({
   redigerbart,
   behandlingID,
   handleSubmit,

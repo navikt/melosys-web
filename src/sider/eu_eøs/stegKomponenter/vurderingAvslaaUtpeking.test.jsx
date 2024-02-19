@@ -1,60 +1,82 @@
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Mui from "../../../felleskomponenter/ui";
+import VurderingAvslaaUtpeking from "./vurderingAvslaaUtpeking";
+import { reduxForm } from "redux-form";
+import * as KV from "../../../kodeverk";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 
-import { VurderingAvslaaUtpeking } from "./vurderingAvslaaUtpeking";
-import Dokumentliste from "../../../felleskomponenter/dokumentliste";
+vi.mock("../../../utils", async () => {
+  const actual = await vi.importActual("../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("VurderingAvslaaUtpeking", () => {
   let props = null;
+  const WrappedVurderingAvslaaUtpeking = reduxForm({ form: KV.Form.AVSLAA_UTPEKING })(VurderingAvslaaUtpeking);
+  const initialReduxState = {
+    behandlinger: {
+      data: {
+        behandlingID: 4,
+      },
+    },
+    form: {
+      [KV.Form.AVSLAA_UTPEKING]: {
+        fritekst: "Test",
+        nyttLovvalgsland: "CZ",
+        begrunnelseUtenlandskMyndighet: "Begrunnelse",
+        vilSendeAnmodningOmMerInformasjon: true,
+      },
+    },
+  };
 
   beforeEach(() => {
     props = {
       redigerbart: true,
-      behandlingID: 4,
       handleSubmit: vi.fn(),
       avvisUtpeking: vi.fn(),
       tilbake: vi.fn(),
-      fritekst: "",
-      nyttLovvalgsland: "CZ",
-      begrunnelseUtenlandskMyndighet: "Begrunnelse",
-      vilSendeAnmodningOmMerInformasjon: true,
       touchAll: vi.fn(),
-      formIsValid: true,
     };
   });
 
   it("viser to textarea for begrunnelser", () => {
-    const vurderingAvslaaUtpeking = shallow(<VurderingAvslaaUtpeking {...props} />);
+    const { getAllByRole } = renderWithProviders(<WrappedVurderingAvslaaUtpeking {...props} />, {
+      preloadedState: initialReduxState,
+    });
 
-    expect(vurderingAvslaaUtpeking.find(Skjema.Textarea)).toHaveLength(2);
+    expect(getAllByRole("textbox")).toHaveLength(2);
   });
 
-  it("viser en radiogruppe", () => {
-    const vurderingAvslaaUtpeking = shallow(<VurderingAvslaaUtpeking {...props} />);
-
-    expect(vurderingAvslaaUtpeking.find(Skjema.RadioGruppe)).toHaveLength(1);
-    expect(vurderingAvslaaUtpeking.find(Skjema.Radio)).toHaveLength(2);
+  it("viser radioknapper", () => {
+    const { getAllByRole, getByLabelText } = renderWithProviders(<WrappedVurderingAvslaaUtpeking {...props} />, {
+      preloadedState: initialReduxState,
+    });
+    expect(getAllByRole("radio")).toHaveLength(2);
+    expect(getByLabelText("Ja")).toBeInTheDocument();
+    expect(getByLabelText("Nei")).toBeInTheDocument();
   });
 
   it("viser en landvelger", () => {
-    const vurderingAvslaaUtpeking = shallow(<VurderingAvslaaUtpeking {...props} />);
-
-    expect(vurderingAvslaaUtpeking.find(Skjema.LandVelger)).toHaveLength(1);
+    const { getByLabelText } = renderWithProviders(<WrappedVurderingAvslaaUtpeking {...props} />, {
+      preloadedState: initialReduxState,
+    });
+    expect(getByLabelText("Foreslå nytt lovvalgsland (valgfri)")).toBeInTheDocument();
   });
 
   it("viser en dokumentliste", () => {
-    const vurderingAvslaaUtpeking = shallow(<VurderingAvslaaUtpeking {...props} />);
-    const dokumentliste = vurderingAvslaaUtpeking.find(Dokumentliste);
-
-    expect(dokumentliste).toHaveLength(1);
-    expect(dokumentliste.props().behandlingID).toBe(props.behandlingID);
+    const { getByRole, getByText } = renderWithProviders(<WrappedVurderingAvslaaUtpeking {...props} />, {
+      preloadedState: initialReduxState,
+    });
+    expect(getByRole("table")).toBeInTheDocument();
+    expect(getByText("Forhåndsvisning av brev")).toBeInTheDocument();
   });
 
   it("viser en knapp for å avslutte behandling", () => {
-    const vurderingAvslaaUtpeking = shallow(<VurderingAvslaaUtpeking {...props} />);
-    const stegKnapper = vurderingAvslaaUtpeking.find(Mui.StegKnapper);
+    const { getByRole } = renderWithProviders(<WrappedVurderingAvslaaUtpeking {...props} />, {
+      preloadedState: initialReduxState,
+    });
 
-    expect(stegKnapper).toHaveLength(1);
-    expect(stegKnapper.props().bekreftKnappProps).toBeDefined();
+    expect(getByRole("button", { name: "Avslutt og send SED" })).toBeInTheDocument();
   });
 });
