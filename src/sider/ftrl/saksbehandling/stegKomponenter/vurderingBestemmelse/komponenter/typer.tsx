@@ -35,7 +35,7 @@ export interface Begrunnelse {
 export interface VilkårOgBegrunnelser {
   vilkår: string;
   defaultOppfylt?: boolean | null;
-  muligeBegrunnelser: Begrunnelse[];
+  muligeBegrunnelser: string[];
 }
 
 export interface AvklarteFakta {

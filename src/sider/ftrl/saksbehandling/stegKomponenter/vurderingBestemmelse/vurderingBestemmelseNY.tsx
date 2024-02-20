@@ -21,14 +21,13 @@ import {
 } from "./komponenter/typer";
 import { Begrunnelse } from "./vurderingBestemmelse";
 import { VilkaarOgBegrunnelserNY } from "./komponenter/vilkaarOgBegrunnelserNY";
-import { avklartefaktaOperations } from "../../../../../ducks/avklartefakta";
-import { Avklartfakta } from "../../../../../services/modules/avklartefakta";
+import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../../../ducks/avklartefakta";
 import { _isBoolean, _isEmpty } from "../../../../../utils";
-import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygdenkodeverk";
 
 enum ResetTyper {
-  AVKLARTEFAKTA,
-  VILKÅR,
+  TIDLIGERE_AVKLARTEFAKTA,
+  TIDLIGERE_VILKÅR,
+  CLEAN_VILKÅR,
 }
 
 export const VurderingBestemmelserV2 = ({
@@ -42,16 +41,19 @@ export const VurderingBestemmelserV2 = ({
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
-  const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector) as any;
+  const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector) as Api.Vilkar.Vilkaar[];
   const trygdedekning = useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
+  const lagredeAvklarteFakta = useSelector(avklartefaktaSelectors.AvklartefaktaSelector) as {
+    avklartefaktaKode: string;
+    fakta: string[];
+  }[];
   const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBegrunnelser[]>([]);
   const [avklarteFakta, setAvklarteFakta] = useState<AvklarteFakta[]>([]);
   const [bestemmelser, setBestemmelser] = useState<string[]>([]);
   const [lovligeBestemmelser, setLovligeBestemmelser] = useState<string[]>([]);
   const [pliktigeBestemmelser, setPliktigeBestemmelser] = useState<string[]>([]);
-  const begrunnelseKodeverk = useSelector(folketrygdenkodeverkSelectors.BegrunnelserSelector);
 
   const [valgtAvklarteFakta, setValgtAvklarteFakta] = useState<Map<string, string>>(new Map());
   const [valgteVilkår, setValgteVilkår] = useState<Map<string, boolean>>(new Map());
@@ -64,26 +66,22 @@ export const VurderingBestemmelserV2 = ({
     Boolean(valgtBestemmelse) &&
     !lovligeBestemmelser.includes(valgtBestemmelse) &&
     !pliktigeBestemmelser.includes(valgtBestemmelse);
-  console.log({ lagretBestemmelse });
-  useEffect(() => {
-    console.log({ lagredeVilkår });
-    lagredeVilkår.forEach((vilkår: Api.Vilkar.Vilkaar) => {
-      valgteVilkår.set(vilkår.vilkaar, vilkår.oppfylt);
-      // if (vilkår.begrunnelseKoder?.length === 1) {
-      //   valgteBegrunnelser.set(`${vilkår.vilkaar}_begrunnelser`, {
-      //     begrunnelseKode: vilkår.begrunnelseKoder[0],
-      //     begrunnelseFritekst: vilkår.begrunnelseFritekst,
-      //   });
-      // }
-    });
 
-    setValgteVilkår(new Map(valgteVilkår));
-    setValgteBegrunnelser(new Map(valgteBegrunnelser));
+  useEffect(() => {
+    dispatch(avklartefaktaOperations.hent(behandlingID));
+  }, [behandlingID]);
+
+  useEffect(() => {
+    const { tidligereValgteVilkår, tidligereValgteBegrunnelser } =
+      mapLagredeVilkårTilValgteVilkårOgBegrunnelser(lagredeVilkår);
+    setValgteVilkår(new Map(tidligereValgteVilkår));
+    setValgteBegrunnelser(new Map(tidligereValgteBegrunnelser));
   }, [lagredeVilkår]);
 
   useEffect(() => {
-    console.log({ valgteVilkår });
-  }, [valgteVilkår]);
+    lagredeAvklarteFakta.forEach((af) => valgtAvklarteFakta.set(af.avklartefaktaKode, af.fakta[0]));
+    setValgtAvklarteFakta(new Map(valgtAvklarteFakta));
+  }, [lagredeAvklarteFakta]);
 
   useEffect(() => {
     Api.Ftrl.hentBestemmelser(behandlingstema).then((res) => setBestemmelser(res.bestemmelser));
@@ -96,8 +94,8 @@ export const VurderingBestemmelserV2 = ({
     Api.Ftrl.hentAvklarteFakta(valgtBestemmelse, behandlingID)
       .then((res) => setAvklarteFakta(res.avklarteFakta))
       .catch(() => setAvklarteFakta([]));
-    reset(ResetTyper.VILKÅR);
-    reset(ResetTyper.AVKLARTEFAKTA);
+    reset(ResetTyper.TIDLIGERE_VILKÅR);
+    reset(ResetTyper.TIDLIGERE_AVKLARTEFAKTA);
   }, [valgtBestemmelse, behandlingID]);
 
   useEffect(() => {
@@ -118,10 +116,29 @@ export const VurderingBestemmelserV2 = ({
     vilkårOgBegrunnelser,
   ]);
 
+  const mapLagredeVilkårTilValgteVilkårOgBegrunnelser = (
+    lagredeVilkårListe: Api.Vilkar.Vilkaar[]
+  ): { tidligereValgteVilkår: Map<string, boolean>; tidligereValgteBegrunnelser: Map<string, Begrunnelse> } => {
+    const tidligereValgteVilkår: Map<string, boolean> = new Map();
+    const tidligereValgteBegrunnelser: Map<string, Begrunnelse> = new Map();
+
+    lagredeVilkårListe.forEach((vilkår: Api.Vilkar.Vilkaar) => {
+      tidligereValgteVilkår.set(vilkår.vilkaar, vilkår.oppfylt);
+      if (vilkår.begrunnelseKoder?.length === 1) {
+        tidligereValgteBegrunnelser.set(`${vilkår.vilkaar}`, {
+          begrunnelseKode: vilkår.begrunnelseKoder[0],
+          begrunnelseFritekst: vilkår.begrunnelseFritekst,
+        });
+      }
+    });
+    return { tidligereValgteVilkår, tidligereValgteBegrunnelser };
+  };
+
   const valider = () => {
     let bestemmelserOK = true;
     let avklarteFaktaOK = true;
     let vilkårOK = true;
+    let begrunnelserOK = true;
 
     if (bestemmelser.length > 0) bestemmelserOK = !_isEmpty(valgtBestemmelse);
     if (avklarteFakta.length > 0) avklarteFaktaOK = !_isEmpty(valgtAvklarteFakta);
@@ -132,29 +149,43 @@ export const VurderingBestemmelserV2 = ({
       }
     });
 
-    setBesvartOgGodkjent(bestemmelserOK && avklarteFaktaOK && vilkårOK);
+    vilkårOgBegrunnelser.forEach((vilkår) => {
+      if (!valgteBegrunnelser.get(vilkår.vilkår) && vilkår.muligeBegrunnelser.length > 0) {
+        begrunnelserOK = false;
+      }
+    });
+
+    setBesvartOgGodkjent(bestemmelserOK && avklarteFaktaOK && vilkårOK && begrunnelserOK);
   };
 
   const reset = (type: ResetTyper | undefined = undefined) => {
+    const { tidligereValgteVilkår, tidligereValgteBegrunnelser } =
+      mapLagredeVilkårTilValgteVilkårOgBegrunnelser(lagredeVilkår);
+
     switch (type) {
-      case ResetTyper.AVKLARTEFAKTA:
+      case ResetTyper.TIDLIGERE_AVKLARTEFAKTA:
         setValgtAvklarteFakta(new Map());
         return;
-      case ResetTyper.VILKÅR:
+      case ResetTyper.TIDLIGERE_VILKÅR:
+        setValgteVilkår(new Map(tidligereValgteVilkår));
+        setValgteBegrunnelser(new Map(tidligereValgteBegrunnelser));
+        return;
+
+      case ResetTyper.CLEAN_VILKÅR:
         setValgteVilkår(new Map());
         setValgteBegrunnelser(new Map());
         return;
       default:
-        setValgtBestemmelse("");
-        setValgteVilkår(new Map());
-        setValgteBegrunnelser(new Map());
+        setValgtBestemmelse(lagretBestemmelse);
+        setValgteVilkår(new Map(tidligereValgteVilkår));
+        setValgteBegrunnelser(new Map(tidligereValgteBegrunnelser));
         setValgtAvklarteFakta(new Map());
     }
   };
 
-  const oppdaterOgLagreVilkår = () => {
+  const mapVilkårOgBegrunnelser = () => {
     const data = Array.from(valgteVilkår, ([vilkår, verdi]) => {
-      const valgtBegrunnelse = valgteBegrunnelser.get(`${vilkår}_begrunnelser`);
+      const valgtBegrunnelse = valgteBegrunnelser.get(`${vilkår}`);
       return {
         vilkaar: vilkår,
         oppfylt: verdi,
@@ -167,24 +198,26 @@ export const VurderingBestemmelserV2 = ({
   };
 
   const lagAvklarteFakta = () => {
-    const avklartFakta = Object.keys(valgtAvklarteFakta).map((kode: string) => {
-      return {
-        avklartefaktaKode: kode,
-        fakta: valgtAvklarteFakta.get(kode),
-      };
-    });
+    const avklarteFaktaRes = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [key, value] of valgtAvklarteFakta.entries()) {
+      avklarteFaktaRes.push({
+        avklartefaktaKode: key,
+        fakta: [value],
+        referanse: key,
+      });
+    }
 
-    return avklartFakta;
+    return avklarteFaktaRes;
   };
 
   const handleBekreft = async () => {
     await dispatch(avklartefaktaOperations.send(behandlingID, lagAvklarteFakta()));
-    await dispatch(vilkarOperations.send(behandlingID, oppdaterOgLagreVilkår()));
+    await dispatch(vilkarOperations.send(behandlingID, mapVilkårOgBegrunnelser()));
     await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperioderForslag(behandlingID, valgtBestemmelse));
     oppdaterStatus(true);
     bekreft();
   };
-
   if (!aktivtSteg) return null;
 
   return (
@@ -213,8 +246,13 @@ export const VurderingBestemmelserV2 = ({
             valgtAlternativ={valgtAvklarteFakta.get(fakta.faktaType.kode) ?? ""}
             endretAlternativ={(avklartFakta) => {
               if (_isEmpty(avklartFakta)) {
-                reset(ResetTyper.AVKLARTEFAKTA);
+                reset(ResetTyper.TIDLIGERE_AVKLARTEFAKTA);
                 return;
+              }
+              if (lagredeAvklarteFakta.find((a) => a.fakta.find((b) => b === avklartFakta)) !== undefined) {
+                reset(ResetTyper.TIDLIGERE_VILKÅR);
+              } else {
+                reset(ResetTyper.CLEAN_VILKÅR);
               }
               setValgtAvklarteFakta(new Map(valgtAvklarteFakta.set(fakta.faktaType.kode, avklartFakta)));
             }}
@@ -226,7 +264,9 @@ export const VurderingBestemmelserV2 = ({
         if (!valgteVilkår.has(vb.vilkår)) {
           setValgteVilkår(new Map(valgteVilkår.set(vb.vilkår, vb.defaultOppfylt ?? false)));
         }
-
+        // if(valgteVilkår.get(vb.vilkår)){
+        //   return null
+        // }
         return (
           <VilkaarOgBegrunnelserNY
             key={vb.vilkår}
@@ -234,7 +274,7 @@ export const VurderingBestemmelserV2 = ({
             alleValgteVilkår={valgteVilkår}
             alleValgteBegrunnelser={valgteBegrunnelser}
             vilkårKodeverk={MKV.KTObjects.vilkaar}
-            begrunnelseKodeverk={begrunnelseKodeverk}
+            begrunnelseKodeverk={MKV.KTObjects.begrunnelser.folketrygdloven.ftrl_2_7_begrunnelser}
             handleEndreVilkår={(event) =>
               setValgteVilkår(new Map(valgteVilkår.set(event.target.name, Boolean(event.target.value === "true"))))
             }
