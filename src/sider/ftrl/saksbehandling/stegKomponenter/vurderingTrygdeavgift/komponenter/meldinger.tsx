@@ -2,6 +2,12 @@ import { Inntektskilde, Skatteforhold } from "./types";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
 import MKV from "../../../../../../melosyskodeverk";
+import { Medlemskapsperiode } from "../../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+
+const { PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT } = MKV.Koder.inntektskildetype;
+const { INNVILGET } = MKV.Koder.innvilgelsesResultat;
+const { FTRL_2_9_FØRSTE_LEDD_B_PENSJON } = MKV.Koder.trygdedekninger;
+const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 const HoyManedinntekt = (
   <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">Høy månedsinntekt!</Nav.AlertStripeAdvarsel>
@@ -9,20 +15,26 @@ const HoyManedinntekt = (
 
 const InntektskildeUtenforMedlemskapsperiode = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">
-    Inntektskildeperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e)
+    Inntektskildeperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e).
   </Nav.AlertStripeFeil>
 );
 
 const SkatteforholdUtenforMedlemskapsperiode = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">
-    Skatteforholdsperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e)
+    Skatteforholdsperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e).
   </Nav.AlertStripeFeil>
 );
 
 const SkattepliktigOgPensjonUforetrygdMedKildeskatt = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">
-    Inntekstypen &quot;pensjon/uføretrygd det betales kildeskatt av&quot; kan ikke velges for perioder bruker er
-    skattepliktig til Norge
+    Inntekstypen &quot;Pensjon/uføretrygd det betales kildeskatt av&quot; kan ikke velges for perioder bruker er
+    skattepliktig til Norge.
+  </Nav.AlertStripeFeil>
+);
+
+const PensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
+  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+    Pensjon/uføretrygd skal bare tas med i beregning i perioder helsedel er innvilget.
   </Nav.AlertStripeFeil>
 );
 
@@ -75,8 +87,8 @@ const erSkattepliktigOgPensjonUforeMedKildeskatt = (
   return skatteforholdsperioder.some((skatteforholdsperiode) =>
     kildetyper.some(
       (kildetype) =>
-        kildetype.kildetype === MKV.Koder.inntektskildetype.PENSJON_UFØRETRYGD_KILDESKATT &&
-        skatteforholdsperiode.skatteplikttype === MKV.Koder.skatteplikttype.SKATTEPLIKTIG &&
+        kildetype.kildetype === PENSJON_UFØRETRYGD_KILDESKATT &&
+        skatteforholdsperiode.skatteplikttype === SKATTEPLIKTIG &&
         Utils.dato.perioderOverlapper(
           kildetype.fomDato,
           kildetype.tomDato,
@@ -87,16 +99,31 @@ const erSkattepliktigOgPensjonUforeMedKildeskatt = (
   );
 };
 
+const erPensjonUføretrygdeLagtInnForPeriodeMedKunPensjon = (
+  inntektskilder: Inntektskilde[],
+  medlemskapsperioder: Medlemskapsperiode[]
+) => {
+  const kunPensjonsdelInnvilget = medlemskapsperioder
+    .filter((periode) => periode.innvilgelsesResultat === INNVILGET)
+    .every((periode) => periode.trygdedekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON);
+  const harPensjonUføretrygdInntektskilde = inntektskilder.some((kilde) =>
+    [PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT].includes(kilde.kildetype)
+  );
+  return kunPensjonsdelInnvilget && harPensjonUføretrygdInntektskilde;
+};
+
 enum TypeMelding {
   INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE = "INNTEKTSKILDE UTENFOR MEDLEMSKAPSPERIODE",
   SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE = "SKATTEFORHOLD UTENFOR MEDLEMSKAPSPERIODE",
   BRUTTOINNTEKT_OVER_250K = "BRUTTOINNTEKT_OVER_250K",
   SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT = "SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT",
+  PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE = "PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE",
 }
 
 export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
   skatteforholdsperioder: Skatteforhold[],
+  medlemskapsperioder: Medlemskapsperiode[],
   innvilgetMedlemskapsperiode?: { fom: string; tom: string }
 ): string | undefined => {
   if (!innvilgetMedlemskapsperiode) return undefined;
@@ -110,6 +137,9 @@ export const finnAktivFeilmelding = (
   }
   if (erSkattepliktigOgPensjonUforeMedKildeskatt(skatteforholdsperioder, inntektskilder)) {
     return TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT;
+  }
+  if (erPensjonUføretrygdeLagtInnForPeriodeMedKunPensjon(inntektskilder, medlemskapsperioder)) {
+    return TypeMelding.PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE;
   }
 
   // Advarsler
@@ -125,6 +155,7 @@ export function feilMeldingBlokkerer(type?: string): boolean {
     case TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE:
     case TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE:
     case TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT:
+    case TypeMelding.PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE:
       return true;
     case TypeMelding.BRUTTOINNTEKT_OVER_250K:
     default:
@@ -142,6 +173,8 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return HoyManedinntekt;
     case TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT:
       return SkattepliktigOgPensjonUforetrygdMedKildeskatt;
+    case TypeMelding.PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE:
+      return PensjonUføretrygdLagtInnForPeriodeMedKunPensjon;
     default:
       return null;
   }
