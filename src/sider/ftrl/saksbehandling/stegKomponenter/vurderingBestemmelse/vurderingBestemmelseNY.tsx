@@ -100,7 +100,10 @@ export const VurderingBestemmelserV2 = ({
 
   useEffect(() => {
     Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID)
-      .then((res) => setVilkårOgBegrunnelser(res.vilkår))
+      .then((res: any) => {
+        console.log({ res });
+        setVilkårOgBegrunnelser(res.vilkår);
+      })
       .catch(() => setVilkårOgBegrunnelser([]));
   }, [valgtBestemmelse, valgtAvklarteFakta, behandlingID]);
 
@@ -143,13 +146,13 @@ export const VurderingBestemmelserV2 = ({
     if (bestemmelser.length > 0) bestemmelserOK = !_isEmpty(valgtBestemmelse);
     if (avklarteFakta.length > 0) avklarteFaktaOK = !_isEmpty(valgtAvklarteFakta);
 
-    vilkårOgBegrunnelser.forEach((vilkår) => {
+    vilkårOgBegrunnelser?.forEach((vilkår) => {
       if (!valgteVilkår.get(vilkår.vilkår)) {
         vilkårOK = false;
       }
     });
 
-    vilkårOgBegrunnelser.forEach((vilkår) => {
+    vilkårOgBegrunnelser?.forEach((vilkår) => {
       if (!valgteBegrunnelser.get(vilkår.vilkår) && vilkår.muligeBegrunnelser.length > 0) {
         begrunnelserOK = false;
       }
@@ -260,7 +263,7 @@ export const VurderingBestemmelserV2 = ({
         );
       })}
 
-      {vilkårOgBegrunnelser.map((vb) => {
+      {vilkårOgBegrunnelser?.map((vb) => {
         if (!valgteVilkår.has(vb.vilkår)) {
           setValgteVilkår(new Map(valgteVilkår.set(vb.vilkår, vb.defaultOppfylt ?? false)));
         }
