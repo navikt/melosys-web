@@ -1,4 +1,4 @@
-import { object, string, lazy, array, boolean } from "yup";
+import { object, string, array, boolean } from "yup";
 
 import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
