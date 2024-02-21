@@ -99,12 +99,7 @@ const opprettnysak = object().shape({
       is: kreverPeriode,
       then: string().required(MAA_FYLLES_UT).erGyldigDato().nullable(),
     }),
-  periodeTilOgMed: string()
-    .nullable()
-    .when(["saksnummer", "sakstype", "sakstema", "behandlingstema", "behandlingstype"], {
-      is: kreverPeriode,
-      then: string().erEtterDatofelt("periodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT).nullable(),
-    }),
+  periodeTilOgMed: string().nullable().erEtterDatofelt("periodeFraOgMed").erGyldigDato(),
   soknadslandFlereLandUkjentHvilke: boolean().nullable(),
   soknadsland: array().when(
     ["saksnummer", "sakstype", "sakstema", "behandlingstema", "behandlingstype", "soknadslandFlereLandUkjentHvilke"],

@@ -201,17 +201,7 @@ const journalforing = object().shape({
       }
     )
     .nullable(),
-  journalforingPeriodeTilOgMed: lazy((value) =>
-    !value
-      ? string().ensure()
-      : string().when(
-          ["journalforingHensikt", "sakstype", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
-          {
-            is: kreverPeriode,
-            then: string().erGyldigDato().required(MAA_FYLLES_UT),
-          }
-        )
-  ),
+  journalforingPeriodeTilOgMed: string().nullable().erEtterDatofelt("journalforingPeriodeFraOgMed").erGyldigDato(),
   journalforingSoknadsland: array()
     .of(string())
     .ensure()
