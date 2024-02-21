@@ -35,12 +35,11 @@ const Forretningsstedet = (props) => {
         )
       );
     }
-    const cleanup = () => {
+    return () => {
       slettData(
         slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId)
       );
     };
-    return cleanup;
   }, []);
 
   const { navn, virksomhetId } = forretningsstedet;
@@ -154,10 +153,9 @@ export const VurderingForretningssted = (props) => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, omfattetINorge));
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, omfattetILand));
 
-    const cleanup = () => {
+    return () => {
       slettData();
     };
-    return cleanup;
   }, []);
 
   const avklartfaktaEndret = (e) => {
@@ -198,9 +196,13 @@ export const VurderingForretningssted = (props) => {
           label=""
           onChange={lovvalgsbestemmelseEndret}
           disabled={!redigerbart}
-          value={finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser)}
+          value={finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser) ?? ""}
         >
-          <option key={Utils._uuid()} value="">
+          <option
+            key={Utils._uuid()}
+            value=""
+            disabled={Boolean(finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser))}
+          >
             Velg artikkel
           </option>
           {stegetsLovvalgsbestemmelser.map(({ kode, label }, index) => (
