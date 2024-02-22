@@ -164,9 +164,17 @@ export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftV
       case BekreftValgTypes.SAKEN_ER_ANNULLERT:
         return {
           tittel: "Saken er annullert",
-          tekst:
-            "Hvis du annullerer saken vil alle perioder knyttet til saken annulleres og fjernes fra MEDL og ev. fakturering vil stoppes. " +
-            "Hvis periodene i MEDL er registrert manuelt må du også huske å fjerne disse. Vurder også om du må sende brev / vedtak til bruker. Er du sikker på at du vil annullere saken?",
+          tekst: (
+            <>
+              Hvis du annullerer saken vil alle perioder knyttet til saken annulleres og fjernes fra MEDL og ev.
+              fakturering vil stoppes.
+              <br />
+              Hvis periodene i MEDL er registrert manuelt må du også huske å fjerne disse. Vurder også om du må sende
+              brev/vedtak til bruker.
+              <br />
+              Er du sikker på at du vil annullere saken?
+            </>
+          ),
           handleBekreft: annullerFagsak,
         };
 

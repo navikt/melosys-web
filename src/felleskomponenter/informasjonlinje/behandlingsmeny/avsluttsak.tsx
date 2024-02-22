@@ -221,7 +221,8 @@ const AvsluttSak = () => {
     skalViseAvslåPgaManglendeOpplysninger() ||
     skalViseVedtakOmgjort() ||
     skalViseKlageHandlinger ||
-    skalViseUnntaksHandlinger();
+    skalViseUnntaksHandlinger() ||
+    skalViseAnnullerSak();
 
   if (
     !skalViseSøknadKlagenErTrukket() &&
