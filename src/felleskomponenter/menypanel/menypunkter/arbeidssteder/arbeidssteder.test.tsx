@@ -53,7 +53,7 @@ describe("Arbeidssteder", () => {
     // @ts-ignore
     const WrappedArbeidssteder = reduxForm({ form: KV.Form.SOKNAD })(Arbeidssteder);
 
-    it("rendres vanligvis uten spørsmål fra altinn-søknad", () => {
+    it("rendres uten spørsmål fra altinn-søknad dersom mottatteOpplysningerType er annet enn SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS", () => {
       // @ts-ignore
       renderWithProviders(<WrappedArbeidssteder {...props} />, { preloadedState: reduxStore(false) });
 
