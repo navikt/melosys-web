@@ -1,5 +1,5 @@
 import { screen } from "@testing-library/react";
-import { Arbeidssteder } from "./arbeidssteder";
+import Arbeidssteder from "./arbeidssteder";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";

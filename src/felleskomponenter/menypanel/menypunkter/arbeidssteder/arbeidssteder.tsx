@@ -56,11 +56,7 @@ type ArbeidsstederProps = {
   behandlingstema: string;
 };
 
-export const Arbeidssteder = ({
-  redigerbart,
-  visArbeidsforholdRolleEtiketter,
-  behandlingstema,
-}: ArbeidsstederProps) => {
+const Arbeidssteder = ({ redigerbart, visArbeidsforholdRolleEtiketter, behandlingstema }: ArbeidsstederProps) => {
   const dispatch = useDispatch();
   const slettFastArbeidsstedOgHjemmekontorAvklaring = () => {
     dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erFastArbeidssted", null));
@@ -165,3 +161,5 @@ export const Arbeidssteder = ({
     </div>
   );
 };
+
+export default Arbeidssteder;
