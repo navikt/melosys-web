@@ -1,64 +1,42 @@
-import { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
-import { shallow } from "enzyme";
-import {
-  BooleanFeltRedigeringUtfort,
-  FormatertInntekt,
-  InntektRedigeringUtfortUndertittel,
-} from "./lonnOgGodtgjorelser";
+import { BooleanFeltRedigeringUtfort, InntektRedigeringUtfortUndertittel } from "./lonnOgGodtgjorelser";
+import { render, screen } from "@testing-library/react";
+import { expect } from "vitest";
 
 describe("LonnOgGodtgjorelser", () => {
   describe("BooleanFeltRedigeringUtfort", () => {
-    const mockedProps = mock<ComponentProps<typeof BooleanFeltRedigeringUtfort>>();
-    let props = instance(mockedProps);
-
-    beforeEach(() => {
-      props = instance(mockedProps);
-    });
+    const props = (verdi: boolean | null) => ({ verdi, tekst: "heihei" });
 
     it('viser "Ja" dersom verdi er true', () => {
-      props.verdi = true;
-      const booleanFeltRedigeringUtfort = shallow(<BooleanFeltRedigeringUtfort {...props} />);
-      expect(booleanFeltRedigeringUtfort.contains("Ja")).toBe(true);
+      render(<BooleanFeltRedigeringUtfort {...props(true)} />);
+      expect(screen.getByText("Ja")).toBeInTheDocument();
     });
 
     it('viser "Nei" dersom verdi er false', () => {
-      props.verdi = false;
-      const booleanFeltRedigeringUtfort = shallow(<BooleanFeltRedigeringUtfort {...props} />);
-      expect(booleanFeltRedigeringUtfort.contains("Nei")).toBe(true);
+      render(<BooleanFeltRedigeringUtfort {...props(false)} />);
+      expect(screen.getByText("Nei")).toBeInTheDocument();
     });
 
     it('viser "-" dersom verdi er null', () => {
-      props.verdi = null;
-      const booleanFeltRedigeringUtfort = shallow(<BooleanFeltRedigeringUtfort {...props} />);
-      expect(booleanFeltRedigeringUtfort.contains("-")).toBe(true);
+      render(<BooleanFeltRedigeringUtfort {...props(null)} />);
+      expect(screen.getByText("-")).toBeInTheDocument();
+      expect(screen.getByText("heihei")).toBeInTheDocument();
     });
   });
 
   describe("InntektRedigeringUtfortUndertittel", () => {
-    const mockedProps = mock<ComponentProps<typeof InntektRedigeringUtfortUndertittel>>();
-    let props = instance(mockedProps);
-
-    beforeEach(() => {
-      props = instance(mockedProps);
-    });
-
     it('viser "-" dersom verdi er tom streng', () => {
-      props.verdi = "";
-      const booleanFeltRedigeringUtfort = shallow(<InntektRedigeringUtfortUndertittel {...props} />);
-      expect(booleanFeltRedigeringUtfort.contains("-")).toBe(true);
+      render(<InntektRedigeringUtfortUndertittel verdi="" />);
+      expect(screen.getByText("-")).toBeInTheDocument();
     });
 
     it('viser "-" dersom verdi er null', () => {
-      props.verdi = null;
-      const booleanFeltRedigeringUtfort = shallow(<InntektRedigeringUtfortUndertittel {...props} />);
-      expect(booleanFeltRedigeringUtfort.contains("-")).toBe(true);
+      render(<InntektRedigeringUtfortUndertittel verdi={null} />);
+      expect(screen.getByText("-")).toBeInTheDocument();
     });
 
-    it("viser FormatertInntekt dersom verdi er 123", () => {
-      props.verdi = 123;
-      const booleanFeltRedigeringUtfort = shallow(<InntektRedigeringUtfortUndertittel {...props} />);
-      expect(booleanFeltRedigeringUtfort.exists(FormatertInntekt)).toBe(true);
+    it("viser formatert inntekt dersom verdi er 123", () => {
+      render(<InntektRedigeringUtfortUndertittel verdi={123} />);
+      expect(screen.getByText("123,00")).toBeInTheDocument();
     });
   });
 });

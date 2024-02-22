@@ -1,8 +1,5 @@
-import { change, formValueSelector } from "redux-form";
-import { connect, ConnectedProps } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { RootState } from "AppTypes";
-import { Action } from "redux";
+import { change } from "redux-form";
+import { useDispatch, useSelector } from "react-redux";
 
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
@@ -21,8 +18,12 @@ import { Status } from "../editerbartElement";
 import MKV from "../../../../melosyskodeverk";
 
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { formSelectors } from "../../../../ducks/form";
 
 import "./arbeidssteder.css";
+
+const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
+const { YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 
 type FlattArbeidssted = KV.Form.ArbeidsstedFly | KV.Form.ArbeidsstedOffshore | KV.Form.ArbeidsstedSkip;
 
@@ -49,30 +50,7 @@ const fysiskArbeidsstedDefaultElement: KV.Form.FysiskArbeidssted = {
   virksomhetNavn: "",
 };
 
-const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
-
-const mapStateToProps = (state: RootState) => {
-  const arbeidPaaLand = soknadFormValueSelector(state, "arbeidPaaLand") as KV.Form.ArbeidsstedPaaLand;
-
-  return {
-    erHjemmekontor: arbeidPaaLand.erHjemmekontor,
-    erFastArbeidssted: arbeidPaaLand.erFastArbeidssted,
-    mottatteOpplysningerType: mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector(state),
-    soknadsland: soknadFormValueSelector(state, "soknadsland"),
-  };
-};
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  slettFastArbeidsstedOgHjemmekontorAvklaring: () => {
-    dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erFastArbeidssted", null));
-    dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erHjemmekontor", null));
-  },
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type ArbeidsstederProps = PropsFromRedux & {
+type ArbeidsstederProps = {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
   behandlingstema: string;
@@ -81,16 +59,21 @@ type ArbeidsstederProps = PropsFromRedux & {
 export const Arbeidssteder = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
-  slettFastArbeidsstedOgHjemmekontorAvklaring,
-  erFastArbeidssted,
-  erHjemmekontor,
-  mottatteOpplysningerType,
   behandlingstema,
-  soknadsland: { flereLandUkjentHvilke },
 }: ArbeidsstederProps) => {
-  const erSoknadFraAltinn =
-    mottatteOpplysningerType === MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
-  const visRepresentantIUtlandet = behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
+  const dispatch = useDispatch();
+  const slettFastArbeidsstedOgHjemmekontorAvklaring = () => {
+    dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erFastArbeidssted", null));
+    dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erHjemmekontor", null));
+  };
+  const soknadsform = useSelector(formSelectors.SoknadenFormValuesSelector) as KV.Form.SoknadFormData;
+  const mottatteOpplysningerType = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector);
+
+  const erSoknadFraAltinn = mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+  const flereLandUkjentHvilke = soknadsform?.soknadsland?.flereLandUkjentHvilke;
+  const erHjemmekontor = soknadsform?.arbeidPaaLand?.erHjemmekontor;
+  const erFastArbeidssted = soknadsform?.arbeidPaaLand?.erFastArbeidssted;
+  const visRepresentantIUtlandet = behandlingstema === YRKESAKTIV;
 
   const arbeidsstederLister = (
     <>
@@ -182,5 +165,3 @@ export const Arbeidssteder = ({
     </div>
   );
 };
-
-export default connector(Arbeidssteder);

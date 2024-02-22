@@ -35,8 +35,10 @@ export const OpprettNySakFormValuesSelector = createSelector(
 
 export const SoknadenFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.SOKNAD, {}),
-  (soknaden) => soknaden
+  (soknadForm) => soknadForm
 );
+
+export const SoknadenFormValuesSelector = createSelector(SoknadenFormSelector, (soknadForm) => soknadForm.values);
 
 export const VedtakArtikkel12FormSelector = createSelector(
   (state) => getFormState(state, KV.Form.ARTIKKEL_12_VEDTAK, {}),
