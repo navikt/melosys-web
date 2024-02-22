@@ -140,7 +140,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         return svartJaPåVilkår && valgtBegrunnelseForVilkår;
       }
     );
-
+    oppdaterStatus(Boolean(alleVilkårHarSvarJaOgValgtBegrunnelse));
     setFormIsValid(Boolean(alleVilkårHarSvarJaOgValgtBegrunnelse));
   };
 

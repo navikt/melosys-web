@@ -1,4 +1,4 @@
-import { ChangeEventHandler, Fragment, useEffect, useState } from "react";
+import { ChangeEventHandler, Fragment } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../../melosyskodeverk";
@@ -25,7 +25,7 @@ const begrunnelserSomSkalHaFritekst = [ANNEN_GRUNN];
 
 interface VilkaarOgBegrunnelserProps {
   vilkårOgBegrunnelser: VilkårOgBegrunnelser;
-  alleValgteVilkår: Map<string, boolean>;
+  alleValgteVilkår: Map<string, boolean | null | undefined>;
   alleValgteBegrunnelser: Map<string, Begrunnelse>;
   vilkårKodeverk: KTObject[];
   begrunnelseKodeverk: {
@@ -49,26 +49,9 @@ export const VilkaarOgBegrunnelserNY = ({
   redigerbart,
 }: VilkaarOgBegrunnelserProps) => {
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
-  const [valgtVilkår, setValgtVilkår] = useState<boolean>(alleValgteVilkår.get(`${vilkår}`)!!);
-  const [valgtBegrunnelseForVilkår, setValgtBegrunnelseForVilkår] = useState<Begrunnelse>(
-    alleValgteBegrunnelser.get(`${vilkår}`)!!
-  );
-  const [visBegrunnelseFritekst, setVisBegrunnelseFritekst] = useState<boolean>(
-    begrunnelserSomSkalHaFritekst.includes(valgtBegrunnelseForVilkår?.begrunnelseKode)
-  );
-  useEffect(() => {
-    if (Utils._isBoolean(alleValgteVilkår.get(`${vilkår}`))) {
-      setValgtVilkår(alleValgteVilkår.get(`${vilkår}`)!!);
-    }
-
-    if (alleValgteBegrunnelser.get(`${vilkår}`)?.begrunnelseKode) {
-      setVisBegrunnelseFritekst(
-        begrunnelserSomSkalHaFritekst.includes(alleValgteBegrunnelser.get(`${vilkår}`)!!.begrunnelseKode)
-      );
-      setValgtBegrunnelseForVilkår(alleValgteBegrunnelser.get(`${vilkår}`)!!);
-    }
-  }, [alleValgteVilkår, alleValgteBegrunnelser]);
-
+  const valgtVilkår = alleValgteVilkår.get(`${vilkår}`)!!;
+  const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!!;
+  const visBegrunnelseFritekst = begrunnelserSomSkalHaFritekst.includes(valgtBegrunnelseForVilkår?.begrunnelseKode);
   return (
     <Fragment>
       <Nav.Fieldset

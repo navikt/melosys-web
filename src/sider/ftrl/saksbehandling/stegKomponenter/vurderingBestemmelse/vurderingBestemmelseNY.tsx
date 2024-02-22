@@ -22,12 +22,11 @@ import {
 import { Begrunnelse } from "./vurderingBestemmelse";
 import { VilkaarOgBegrunnelserNY } from "./komponenter/vilkaarOgBegrunnelserNY";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../../../ducks/avklartefakta";
-import { _isBoolean, _isEmpty } from "../../../../../utils";
+import { _isBoolean, _isEmpty, _isNil } from "../../../../../utils";
 
 enum ResetTyper {
-  TIDLIGERE_AVKLARTEFAKTA,
-  TIDLIGERE_VILKÅR,
-  CLEAN_VILKÅR,
+  AVKLARTEFAKTA,
+  VILKÅR,
 }
 
 export const VurderingBestemmelserV2 = ({
@@ -56,10 +55,12 @@ export const VurderingBestemmelserV2 = ({
   const [pliktigeBestemmelser, setPliktigeBestemmelser] = useState<string[]>([]);
 
   const [valgtAvklarteFakta, setValgtAvklarteFakta] = useState<Map<string, string>>(new Map());
-  const [valgteVilkår, setValgteVilkår] = useState<Map<string, boolean>>(new Map());
+  const [valgteVilkår, setValgteVilkår] = useState<Map<string, boolean | null | undefined>>(new Map());
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, Begrunnelse>>(new Map());
   const [valgtBestemmelse, setValgtBestemmelse] = useState<string>(lagretBestemmelse);
   const [besvartOgGodkjent, setBesvartOgGodkjent] = useState<boolean>(false);
+
+  const [skalInitialisere, setSkalInitialisere] = useState<boolean>(true);
 
   const ulovligBestemmelseValgt =
     folketrygden2_7ToggleEnabled &&
@@ -72,38 +73,29 @@ export const VurderingBestemmelserV2 = ({
   }, [behandlingID]);
 
   useEffect(() => {
-    const { tidligereValgteVilkår, tidligereValgteBegrunnelser } =
-      mapLagredeVilkårTilValgteVilkårOgBegrunnelser(lagredeVilkår);
-    setValgteVilkår(new Map(tidligereValgteVilkår));
-    setValgteBegrunnelser(new Map(tidligereValgteBegrunnelser));
-  }, [lagredeVilkår]);
-
-  useEffect(() => {
-    lagredeAvklarteFakta.forEach((af) => valgtAvklarteFakta.set(af.avklartefaktaKode, af.fakta[0]));
-    setValgtAvklarteFakta(new Map(valgtAvklarteFakta));
+    if (skalInitialisere) {
+      lagredeAvklarteFakta.forEach((af) => valgtAvklarteFakta.set(af.avklartefaktaKode, af.fakta[0]));
+      setValgtAvklarteFakta(new Map(valgtAvklarteFakta));
+    }
   }, [lagredeAvklarteFakta]);
 
   useEffect(() => {
     Api.Ftrl.hentBestemmelser(behandlingstema).then((res) => setBestemmelser(res.bestemmelser));
     Api.Ftrl.hentBestemmelser(behandlingstema, trygdedekning).then((res) => setLovligeBestemmelser(res.bestemmelser));
     Api.Ftrl.hentPliktigeBestemmelser().then((res) => setPliktigeBestemmelser(res.bestemmelser));
-    reset();
+    reset(ResetTyper.AVKLARTEFAKTA);
   }, [behandlingstema, trygdedekning]);
 
   useEffect(() => {
     Api.Ftrl.hentAvklarteFakta(valgtBestemmelse, behandlingID)
       .then((res) => setAvklarteFakta(res.avklarteFakta))
       .catch(() => setAvklarteFakta([]));
-    reset(ResetTyper.TIDLIGERE_VILKÅR);
-    reset(ResetTyper.TIDLIGERE_AVKLARTEFAKTA);
+    reset(ResetTyper.VILKÅR);
   }, [valgtBestemmelse, behandlingID]);
 
   useEffect(() => {
     Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID)
-      .then((res: any) => {
-        console.log({ res });
-        setVilkårOgBegrunnelser(res.vilkår);
-      })
+      .then((res: any) => setVilkårOgBegrunnelser(res.vilkår))
       .catch(() => setVilkårOgBegrunnelser([]));
   }, [valgtBestemmelse, valgtAvklarteFakta, behandlingID]);
 
@@ -118,6 +110,23 @@ export const VurderingBestemmelserV2 = ({
     avklarteFakta,
     vilkårOgBegrunnelser,
   ]);
+
+  useEffect(() => {
+    const { tidligereValgteVilkår, tidligereValgteBegrunnelser } =
+      mapLagredeVilkårTilValgteVilkårOgBegrunnelser(lagredeVilkår);
+    setSkalInitialisere(true);
+    setValgteVilkår(new Map(tidligereValgteVilkår));
+    setValgteBegrunnelser(new Map(tidligereValgteBegrunnelser));
+  }, [lagredeVilkår]);
+
+  useEffect(() => {
+    if (!skalInitialisere) {
+      vilkårOgBegrunnelser.forEach((vb) => {
+        setValgteVilkår(new Map(valgteVilkår.set(vb.vilkår, vb.defaultOppfylt)));
+        setValgteBegrunnelser(new Map());
+      });
+    }
+  }, [vilkårOgBegrunnelser, skalInitialisere]);
 
   const mapLagredeVilkårTilValgteVilkårOgBegrunnelser = (
     lagredeVilkårListe: Api.Vilkar.Vilkaar[]
@@ -157,31 +166,26 @@ export const VurderingBestemmelserV2 = ({
         begrunnelserOK = false;
       }
     });
-
-    setBesvartOgGodkjent(bestemmelserOK && avklarteFaktaOK && vilkårOK && begrunnelserOK);
+    const altGyldig = bestemmelserOK && avklarteFaktaOK && vilkårOK && begrunnelserOK;
+    oppdaterStatus(altGyldig);
+    setBesvartOgGodkjent(altGyldig);
   };
 
   const reset = (type: ResetTyper | undefined = undefined) => {
-    const { tidligereValgteVilkår, tidligereValgteBegrunnelser } =
-      mapLagredeVilkårTilValgteVilkårOgBegrunnelser(lagredeVilkår);
-
     switch (type) {
-      case ResetTyper.TIDLIGERE_AVKLARTEFAKTA:
+      case ResetTyper.AVKLARTEFAKTA:
         setValgtAvklarteFakta(new Map());
         return;
-      case ResetTyper.TIDLIGERE_VILKÅR:
-        setValgteVilkår(new Map(tidligereValgteVilkår));
-        setValgteBegrunnelser(new Map(tidligereValgteBegrunnelser));
-        return;
+      case ResetTyper.VILKÅR:
+        setSkalInitialisere(false);
 
-      case ResetTyper.CLEAN_VILKÅR:
         setValgteVilkår(new Map());
         setValgteBegrunnelser(new Map());
         return;
       default:
         setValgtBestemmelse(lagretBestemmelse);
-        setValgteVilkår(new Map(tidligereValgteVilkår));
-        setValgteBegrunnelser(new Map(tidligereValgteBegrunnelser));
+        setValgteVilkår(new Map());
+        setValgteBegrunnelser(new Map());
         setValgtAvklarteFakta(new Map());
     }
   };
@@ -221,7 +225,9 @@ export const VurderingBestemmelserV2 = ({
     oppdaterStatus(true);
     bekreft();
   };
+
   if (!aktivtSteg) return null;
+  let harReturnertNullIVilkårListe = false;
 
   return (
     <div className="vurderingBestemmelse_ftrl">
@@ -248,28 +254,21 @@ export const VurderingBestemmelserV2 = ({
             redigerbart={redigerbart}
             valgtAlternativ={valgtAvklarteFakta.get(fakta.faktaType.kode) ?? ""}
             endretAlternativ={(avklartFakta) => {
-              if (_isEmpty(avklartFakta)) {
-                reset(ResetTyper.TIDLIGERE_AVKLARTEFAKTA);
-                return;
-              }
-              if (lagredeAvklarteFakta.find((a) => a.fakta.find((b) => b === avklartFakta)) !== undefined) {
-                reset(ResetTyper.TIDLIGERE_VILKÅR);
-              } else {
-                reset(ResetTyper.CLEAN_VILKÅR);
-              }
+              reset(ResetTyper.VILKÅR);
               setValgtAvklarteFakta(new Map(valgtAvklarteFakta.set(fakta.faktaType.kode, avklartFakta)));
             }}
           />
         );
       })}
 
-      {vilkårOgBegrunnelser?.map((vb) => {
-        if (!valgteVilkår.has(vb.vilkår)) {
-          setValgteVilkår(new Map(valgteVilkår.set(vb.vilkår, vb.defaultOppfylt ?? false)));
+      {vilkårOgBegrunnelser?.map((vb, index, hele) => {
+        if (harReturnertNullIVilkårListe) return null;
+        const forrige = hele[index - 1];
+        if (forrige && valgteVilkår.get(forrige.vilkår) !== true) {
+          harReturnertNullIVilkårListe = true;
+          return null;
         }
-        // if(valgteVilkår.get(vb.vilkår)){
-        //   return null
-        // }
+
         return (
           <VilkaarOgBegrunnelserNY
             key={vb.vilkår}
