@@ -229,7 +229,7 @@ const mapStateToProps = (state) => ({
   behandlingsresultatType: behandlingsresultatSelectors.BehandlingsresultatTypeSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  soknadForm: formSelectors.SoknadenFormSelector(state),
+  soknadForm: formSelectors.SoknadFormSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
   registeropplysningerHentet: behandlingerSelectors.RegisteropplysningerHentetSelector(state),

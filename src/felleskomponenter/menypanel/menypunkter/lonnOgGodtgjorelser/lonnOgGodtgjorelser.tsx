@@ -8,10 +8,10 @@ import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../skjema";
 
 import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
-import { SoknadenFormValuesSelector } from "../../../../ducks/form/selectors";
+import { formSelectors } from "../../../../ducks/form";
 import { BOOLSK_STRING } from "../../../../constants";
-import EditerbartElement, { Status } from "../editerbartElement";
 
+import EditerbartElement, { Status } from "../editerbartElement";
 import "./lonnOgGodtgjorelser.css";
 
 type BooleanFeltRedigererProps = {
@@ -298,7 +298,7 @@ const LonnOgGodtgjorelser = ({ redigerbart, visArbeidsforholdRolleEtiketter }: L
     dispatch(mottatteOpplysningerOperations.oppdaterState());
     return true;
   };
-  const lønnOgGodtgjørelse = useSelector(SoknadenFormValuesSelector)?.loennOgGodtgjoerelse;
+  const lønnOgGodtgjørelse = useSelector(formSelectors.SoknadFormValuesSelector)?.loennOgGodtgjoerelse;
 
   return (
     <Nav.Container fluid className="lonnOgGodtgjorelser">

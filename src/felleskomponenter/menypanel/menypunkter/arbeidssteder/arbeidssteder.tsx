@@ -66,7 +66,7 @@ export const Arbeidssteder = ({
     dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erFastArbeidssted", null));
     dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erHjemmekontor", null));
   };
-  const soknadsform = useSelector(formSelectors.SoknadenFormValuesSelector) as KV.Form.SoknadFormData;
+  const soknadsform = useSelector(formSelectors.SoknadFormValuesSelector) as KV.Form.SoknadFormData;
   const mottatteOpplysningerType = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector);
 
   const erSoknadFraAltinn = mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;

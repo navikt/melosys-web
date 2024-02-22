@@ -60,7 +60,7 @@ const hentOvergangsregelbestemmelser = (values) => (values ? values.overgangsreg
 export function oppdaterState() {
   return (dispatch, getState) => {
     const mottatteOpplysningerData = {
-      ...formSelectors.SoknadenFormSelector(getState()).values,
+      ...formSelectors.SoknadFormSelector(getState()).values,
     };
 
     const mottatteOpplysningerType = Selectors.MottatteOpplysningerTypeSelector(getState());
