@@ -135,11 +135,11 @@ export const finnAktivFeilmelding = (
   if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, innvilgetMedlemskapsperiode)) {
     return TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE;
   }
-  if (erSkattepliktigOgPensjonUforeMedKildeskatt(skatteforholdsperioder, inntektskilder)) {
-    return TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT;
-  }
   if (erPensjonUføretrygdeLagtInnForPeriodeMedKunPensjon(inntektskilder, medlemskapsperioder)) {
     return TypeMelding.PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE;
+  }
+  if (erSkattepliktigOgPensjonUforeMedKildeskatt(skatteforholdsperioder, inntektskilder)) {
+    return TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT;
   }
 
   // Advarsler
