@@ -68,7 +68,6 @@ const mapStateToProps = (state: RootState) => ({
   landkoder: landkoderSelectors.LandkoderFraSakstypeSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  skjema: formSelectors.SoknadFormSelector(state).values,
   soknadForm: formSelectors.SoknadFormSelector(state),
   registeropplysningerHentet: behandlingerSelectors.RegisteropplysningerHentetSelector(state),
   menypanelSynlig: menypanelSelectors.MenypanelSynligSelector(state),
