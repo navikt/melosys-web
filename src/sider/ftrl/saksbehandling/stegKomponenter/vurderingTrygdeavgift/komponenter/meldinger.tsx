@@ -103,13 +103,22 @@ const erPensjonUføretrygdeLagtInnForPeriodeMedKunPensjon = (
   inntektskilder: Inntektskilde[],
   medlemskapsperioder: Medlemskapsperiode[]
 ) => {
-  const kunPensjonsdelInnvilget = medlemskapsperioder
-    .filter((periode) => periode.innvilgelsesResultat === INNVILGET)
-    .every((periode) => periode.trygdedekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON);
-  const harPensjonUføretrygdInntektskilde = inntektskilder.some((kilde) =>
-    [PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT].includes(kilde.kildetype)
+  const pensjonuføretrygdKilder = inntektskilder.filter((inntektskilde) =>
+    [PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT].includes(inntektskilde.kildetype)
   );
-  return kunPensjonsdelInnvilget && harPensjonUføretrygdInntektskilde;
+  const overlappendeMedlemskapsperioder = medlemskapsperioder
+    .filter((periode) => periode.innvilgelsesResultat === INNVILGET)
+    .filter((periode) =>
+      pensjonuføretrygdKilder.some((inntektskilde) =>
+        Utils.dato.perioderOverlapper(
+          inntektskilde.fomDato,
+          inntektskilde.tomDato,
+          Utils.dato.formatterDatoTilNorsk(periode.fomDato),
+          Utils.dato.formatterDatoTilNorsk(periode.tomDato)
+        )
+      )
+    );
+  return overlappendeMedlemskapsperioder.every((periode) => periode.trygdedekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON);
 };
 
 enum TypeMelding {
