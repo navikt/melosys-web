@@ -21,13 +21,15 @@ import {
 } from "./komponenter/typer";
 import { Begrunnelse } from "./vurderingBestemmelse";
 import { VilkaarOgBegrunnelserNY } from "./komponenter/vilkaarOgBegrunnelserNY";
-import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../../../ducks/avklartefakta";
 import { _isBoolean, _isEmpty, _isNil } from "../../../../../utils";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
 enum ResetTyper {
   AVKLARTEFAKTA,
   VILKÅR,
 }
+
+const { IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON } = MKV.Koder.avklartefaktatyper;
 
 export const VurderingBestemmelserV2 = ({
   bekreft,
@@ -44,10 +46,8 @@ export const VurderingBestemmelserV2 = ({
   const trygdedekning = useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
-  const lagredeAvklarteFakta = useSelector(avklartefaktaSelectors.AvklartefaktaSelector) as {
-    avklartefaktaKode: string;
-    fakta: string[];
-  }[];
+  const ikkeYrkesaktivOppholdType = useSelector(oppsummertfaktaSelectors.IkkeYrkesAktivOppholdSelector);
+  const ikkeYrkesaktivRelasjonType = useSelector(oppsummertfaktaSelectors.IkkeYrkesAktivRelasjonSelector);
   const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBegrunnelser[]>([]);
   const [avklarteFakta, setAvklarteFakta] = useState<AvklarteFakta[]>([]);
   const [bestemmelser, setBestemmelser] = useState<string[]>([]);
@@ -61,7 +61,6 @@ export const VurderingBestemmelserV2 = ({
   const [besvartOgGodkjent, setBesvartOgGodkjent] = useState<boolean>(false);
 
   const [skalInitialisere, setSkalInitialisere] = useState<boolean>(true);
-
   const ulovligBestemmelseValgt =
     folketrygden2_7ToggleEnabled &&
     Boolean(valgtBestemmelse) &&
@@ -69,15 +68,22 @@ export const VurderingBestemmelserV2 = ({
     !pliktigeBestemmelser.includes(valgtBestemmelse);
 
   useEffect(() => {
-    dispatch(avklartefaktaOperations.hent(behandlingID));
+    dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID));
   }, [behandlingID]);
 
   useEffect(() => {
     if (skalInitialisere) {
-      lagredeAvklarteFakta.forEach((af) => valgtAvklarteFakta.set(af.avklartefaktaKode, af.fakta[0]));
+      avklarteFakta.forEach((fakta) => {
+        if (ikkeYrkesaktivOppholdType && fakta.muligeFakta.includes(ikkeYrkesaktivOppholdType)) {
+          valgtAvklarteFakta.set(fakta.faktaType.kode, ikkeYrkesaktivOppholdType);
+        }
+        if (ikkeYrkesaktivRelasjonType && fakta.muligeFakta.includes(ikkeYrkesaktivRelasjonType)) {
+          valgtAvklarteFakta.set(fakta.faktaType.kode, ikkeYrkesaktivRelasjonType);
+        }
+      });
       setValgtAvklarteFakta(new Map(valgtAvklarteFakta));
     }
-  }, [lagredeAvklarteFakta]);
+  }, [ikkeYrkesaktivOppholdType, ikkeYrkesaktivRelasjonType, avklarteFakta]);
 
   useEffect(() => {
     Api.Ftrl.hentBestemmelser(behandlingstema).then((res) => setBestemmelser(res.bestemmelser));
@@ -178,7 +184,6 @@ export const VurderingBestemmelserV2 = ({
         return;
       case ResetTyper.VILKÅR:
         setSkalInitialisere(false);
-
         setValgteVilkår(new Map());
         setValgteBegrunnelser(new Map());
         return;
@@ -204,22 +209,18 @@ export const VurderingBestemmelserV2 = ({
     return data;
   };
 
-  const lagAvklarteFakta = () => {
-    const avklarteFaktaRes = [];
+  const handleBekreft = async () => {
     // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of valgtAvklarteFakta.entries()) {
-      avklarteFaktaRes.push({
-        avklartefaktaKode: key,
-        fakta: [value],
-        referanse: key,
-      });
+      if (key === IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD) {
+        await dispatch(oppsummertfaktaOperations.sendIkkeYrkesaktivOppholdtype(behandlingID, value));
+      }
+
+      if (key === IKKE_YRKESAKTIV_RELASJON) {
+        await dispatch(oppsummertfaktaOperations.sendIkkeYrkesaktivRelasjontype(behandlingID, value));
+      }
     }
 
-    return avklarteFaktaRes;
-  };
-
-  const handleBekreft = async () => {
-    await dispatch(avklartefaktaOperations.send(behandlingID, lagAvklarteFakta()));
     await dispatch(vilkarOperations.send(behandlingID, mapVilkårOgBegrunnelser()));
     await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperioderForslag(behandlingID, valgtBestemmelse));
     oppdaterStatus(true);

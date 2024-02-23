@@ -25,3 +25,13 @@ export const FullstendigManglendeInnbetalingSelector = createSelector(
   OppsummertFaktaDataSelector,
   (oppsummertfakta) => oppsummertfakta.fullstendigManglendeInnbetaling
 );
+
+export const IkkeYrkesAktivRelasjonSelector = createSelector(
+  OppsummertFaktaDataSelector,
+  (oppsummertfakta) => oppsummertfakta.ikkeYrkesaktivFamileRelasjonstype
+);
+
+export const IkkeYrkesAktivOppholdSelector = createSelector(
+  OppsummertFaktaDataSelector,
+  (oppsummertfakta) => oppsummertfakta.ikkeYrkesaktivOppholdstype
+);
