@@ -82,19 +82,17 @@ const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
 
 const erSkattepliktigOgPensjonUforeMedKildeskatt = (
   skatteforholdsperioder: Skatteforhold[],
-  kildetyper: Inntektskilde[]
+  inntektskilder: Inntektskilde[]
 ) => {
-  return skatteforholdsperioder.some((skatteforholdsperiode) =>
-    kildetyper.some(
-      (kildetype) =>
-        kildetype.kildetype === PENSJON_UFØRETRYGD_KILDESKATT &&
-        skatteforholdsperiode.skatteplikttype === SKATTEPLIKTIG &&
-        Utils.dato.perioderOverlapper(
-          kildetype.fomDato,
-          kildetype.tomDato,
-          skatteforholdsperiode.fomDato,
-          skatteforholdsperiode.tomDato
-        )
+  const skattepliktigePerioder = skatteforholdsperioder.filter(
+    (skatteforhold) => skatteforhold.skatteplikttype === SKATTEPLIKTIG
+  );
+  const pensjonuføretrygdkildeskattKilder = inntektskilder.filter(
+    (inntektskilde) => inntektskilde.kildetype === PENSJON_UFØRETRYGD_KILDESKATT
+  );
+  return skattepliktigePerioder.some((skatteforhold) =>
+    pensjonuføretrygdkildeskattKilder.some((kilder) =>
+      Utils.dato.perioderOverlapper(kilder.fomDato, kilder.tomDato, skatteforhold.fomDato, skatteforhold.tomDato)
     )
   );
 };
