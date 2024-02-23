@@ -48,10 +48,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const dispatch = useDispatch();
   const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
 
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
-  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector);
   const begrunnelseKodeverk = useSelector(folketrygdenkodeverkSelectors.BegrunnelserSelector);
@@ -140,7 +140,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         return svartJaPåVilkår && valgtBegrunnelseForVilkår;
       }
     );
-    oppdaterStatus(Boolean(alleVilkårHarSvarJaOgValgtBegrunnelse));
+
     setFormIsValid(Boolean(alleVilkårHarSvarJaOgValgtBegrunnelse));
   };
 
