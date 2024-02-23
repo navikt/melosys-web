@@ -57,7 +57,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
-  soknadForm: formSelectors.SoknadenFormSelector(state),
+  soknadForm: formSelectors.SoknadFormSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingUnderOppfriskning: modalerSelectors.BehandlingUnderOppfriskningSelector(state),
 });

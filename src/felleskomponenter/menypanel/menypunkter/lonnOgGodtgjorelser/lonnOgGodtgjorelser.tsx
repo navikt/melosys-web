@@ -1,8 +1,4 @@
-import { connect, ConnectedProps } from "react-redux";
-import { Action } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-import { formValueSelector } from "redux-form";
-import { RootState } from "AppTypes";
+import { useDispatch, useSelector } from "react-redux";
 
 import * as Nav from "../../../../navFrontend";
 import * as Etiketter from "../../etiketter";
@@ -12,9 +8,10 @@ import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../skjema";
 
 import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
+import { formSelectors } from "../../../../ducks/form";
 import { BOOLSK_STRING } from "../../../../constants";
-import EditerbartElement, { Status } from "../editerbartElement";
 
+import EditerbartElement, { Status } from "../editerbartElement";
 import "./lonnOgGodtgjorelser.css";
 
 type BooleanFeltRedigererProps = {
@@ -290,65 +287,41 @@ const ArbeidsgiveravgiftOgTrygdeavgift = ({
   />
 );
 
-const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
-const lonnOgGodtgjorelseSelector = (
-  state: RootState
-): LonnOgNaturalytelserType & ArbeidsgiveravgiftOgTrygdeavgiftType =>
-  soknadFormValueSelector(state, "loennOgGodtgjoerelse");
-
-const lonnOgNaturalytelserSelector = (state: RootState): LonnOgNaturalytelserType => lonnOgGodtgjorelseSelector(state);
-const arbeidsgiveravgiftOgTrygdeavgiftSelector = (state: RootState): ArbeidsgiveravgiftOgTrygdeavgiftType =>
-  lonnOgGodtgjorelseSelector(state);
-
-const mapStateToProps = (state: RootState) => ({
-  lonnOgNaturalytelser: lonnOgNaturalytelserSelector(state),
-  arbeidsgiveravgiftOgTrygdeavgift: arbeidsgiveravgiftOgTrygdeavgiftSelector(state),
-});
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState()),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 type LonnOgGodtgjorelserProps = {
   visArbeidsforholdRolleEtiketter: boolean;
   redigerbart: boolean;
 };
 
-const LonnOgGodtgjorelser = connector(
-  ({
-    redigerbart,
-    oppdaterMottatteOpplysninger,
-    lonnOgNaturalytelser,
-    arbeidsgiveravgiftOgTrygdeavgift,
-    visArbeidsforholdRolleEtiketter,
-  }: PropsFromRedux & LonnOgGodtgjorelserProps) => {
-    const lagreHandler = () => {
-      oppdaterMottatteOpplysninger();
-      return true;
-    };
+const LonnOgGodtgjorelser = ({ redigerbart, visArbeidsforholdRolleEtiketter }: LonnOgGodtgjorelserProps) => {
+  const dispatch = useDispatch();
+  const lagreHandler = () => {
+    dispatch(mottatteOpplysningerOperations.oppdaterState());
+    return true;
+  };
+  const lønnOgGodtgjørelse = useSelector(formSelectors.SoknadFormValuesSelector)?.loennOgGodtgjoerelse;
 
-    return (
-      <Nav.Container fluid className="lonnOgGodtgjorelser">
-        <Nav.Row className="tittel">
-          <Nav.Column xs="12">
-            <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
-              {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
-            </Nav.Typo.Systemtittel>
-            {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
-            <LonnOgNaturalytelser redigerbart={redigerbart} lagreHandler={lagreHandler} {...lonnOgNaturalytelser} />
-            <ArbeidsgiveravgiftOgTrygdeavgift
-              redigerbart={redigerbart}
-              lagreHandler={lagreHandler}
-              {...arbeidsgiveravgiftOgTrygdeavgift}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Container>
-    );
-  }
-);
+  return (
+    <Nav.Container fluid className="lonnOgGodtgjorelser">
+      <Nav.Row className="tittel">
+        <Nav.Column xs="12">
+          <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
+            {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
+          </Nav.Typo.Systemtittel>
+          {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
+          <LonnOgNaturalytelser
+            redigerbart={redigerbart}
+            lagreHandler={lagreHandler}
+            {...(lønnOgGodtgjørelse as LonnOgNaturalytelserType)}
+          />
+          <ArbeidsgiveravgiftOgTrygdeavgift
+            redigerbart={redigerbart}
+            lagreHandler={lagreHandler}
+            {...(lønnOgGodtgjørelse as ArbeidsgiveravgiftOgTrygdeavgiftType)}
+          />
+        </Nav.Column>
+      </Nav.Row>
+    </Nav.Container>
+  );
+};
 
 export default LonnOgGodtgjorelser;

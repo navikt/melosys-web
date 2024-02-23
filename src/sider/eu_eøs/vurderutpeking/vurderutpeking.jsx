@@ -196,7 +196,7 @@ const mapStateToProps = (state) => ({
     mottatteOpplysningerSelectors.PeriodeSelector(state).tom
   ),
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
-  soknadForm: formSelectors.SoknadenFormSelector(state),
+  soknadForm: formSelectors.SoknadFormSelector(state),
   vurderUtpekingFormValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
 });
 

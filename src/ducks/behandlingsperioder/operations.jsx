@@ -44,7 +44,7 @@ export function oppdaterPerioderState(state) {
 
 export function oppdaterOgLagre() {
   return (dispatch, getState) => {
-    const skjema = formSelectors.SoknadenFormSelector(getState()).values;
+    const skjema = formSelectors.SoknadFormSelector(getState()).values;
     const artikkel16_skjema = formSelectors.Artikkel16AnmodningFormSelector(getState()).values;
 
     dispatch(oppdaterPerioderState({ ...skjema, ...artikkel16_skjema }));

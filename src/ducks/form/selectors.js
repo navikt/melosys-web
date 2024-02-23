@@ -33,10 +33,12 @@ export const OpprettNySakFormValuesSelector = createSelector(
   (opprett_ny_sak) => opprett_ny_sak.values
 );
 
-export const SoknadenFormSelector = createSelector(
+export const SoknadFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.SOKNAD, {}),
-  (soknaden) => soknaden
+  (soknadForm) => soknadForm
 );
+
+export const SoknadFormValuesSelector = createSelector(SoknadFormSelector, (soknadForm) => soknadForm.values);
 
 export const VedtakArtikkel12FormSelector = createSelector(
   (state) => getFormState(state, KV.Form.ARTIKKEL_12_VEDTAK, {}),
@@ -108,7 +110,7 @@ export const SendBrevOrgnummerValidSelector = createSelector(
 );
 
 export const MaritimtArbeidSelector = createSelector(
-  (state) => SoknadenFormSelector(state).values,
+  (state) => SoknadFormSelector(state).values,
   (skjemaverdier) => [...skjemaverdier.arbeidsstedOffshore, ...skjemaverdier.arbeidsstedSkip]
 );
 
@@ -118,7 +120,7 @@ export const Artikkel16MottaSvarSyncErrorsSelector = createSelector(
 );
 
 export const SoknadOppgittAdresseSelector = createSelector(
-  (state) => SoknadenFormSelector(state).values || {},
+  (state) => SoknadFormSelector(state).values || {},
   (soknad) => ({
     husnummerEtasjeLeilighet: soknad.oppgittAdresseHusnummerEtasjeLeilighet,
     gatenavn: soknad.oppgittAdresseGatenavn,
@@ -138,8 +140,8 @@ export const SoknadOppgittAdresseHarVerdierSelector = createSelector(
 );
 
 export const SoknadErrorsSelector = createSelector(
-  (state) => SoknadenFormSelector(state).syncErrors || {},
-  (state) => SoknadenFormSelector(state).values || {},
+  (state) => SoknadFormSelector(state).syncErrors || {},
+  (state) => SoknadFormSelector(state).values || {},
   (state) => ({
     skalOppgittAdresseValideres: SoknadOppgittAdresseHarVerdierSelector(state),
     harUnntaksregistreringFlyt: flytSelectors.HarUnntaksregistreringFlytSelector(state),

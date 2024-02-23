@@ -137,7 +137,7 @@ const mapStateToProps = (state) => ({
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   behandlingsresultatType: behandlingsresultatSelectors.BehandlingsresultatTypeSelector(state),
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
-  soknadForm: formSelectors.SoknadenFormSelector(state),
+  soknadForm: formSelectors.SoknadFormSelector(state),
   anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
 });
 

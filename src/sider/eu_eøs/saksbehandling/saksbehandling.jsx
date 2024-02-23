@@ -289,7 +289,7 @@ const mapStateToProps = (state) => ({
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
-  skjema: formSelectors.SoknadenFormSelector(state).values,
+  skjema: formSelectors.SoknadFormSelector(state).values,
   artikkel16_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),

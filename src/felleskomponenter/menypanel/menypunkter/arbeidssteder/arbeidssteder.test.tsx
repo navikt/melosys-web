@@ -1,67 +1,80 @@
-import { ComponentProps } from "react";
-import { mock, instance } from "ts-mockito";
-import { shallow } from "enzyme";
-
-import * as Nav from "../../../../navFrontend";
-import * as Land from "./land";
-
+import { screen } from "@testing-library/react";
+import Arbeidssteder from "./arbeidssteder";
+import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
-
-import { Arbeidssteder } from "./arbeidssteder";
-import EditerbartElementListe from "../editerbartElementListe";
+import { reduxForm } from "redux-form";
 
 describe("Arbeidssteder", () => {
-  const mockedProps = mock<ComponentProps<typeof Arbeidssteder>>();
-  let props = instance(mockedProps);
+  const props = {
+    redigerbart: true,
+    visArbeidsforholdRolleEtiketter: true,
+    behandlingstema: "",
+  };
 
-  beforeEach(() => {
-    props = instance(mockedProps);
+  const reduxStore = (flereLandUkjentHvilke = false, mottatteOpplysningerType = "") => ({
+    form: {
+      [KV.Form.SOKNAD]: {
+        registeredFields: [],
+        values: {
+          arbeidPaaLand: {
+            erHjemmekontor: false,
+            erFastArbeidssted: true,
+            fysiskeArbeidssteder: [],
+          },
+          soknadsland: {
+            landkoder: [],
+            flereLandUkjentHvilke,
+          },
+          arbeidsstedOffshore: [],
+          arbeidsstedSkip: [],
+          arbeidsstedFly: [],
+        },
+      },
+    },
+    mottatteOpplysninger: {
+      status: "",
+      data: {
+        type: mottatteOpplysningerType,
+      },
+    },
   });
 
   it("viser infomelding i stedet for arbeidssteder når flereLandUkjentHvilke er true", () => {
-    props.soknadsland = {
-      flereLandUkjentHvilke: true,
-    };
-    const arbeidssteder = shallow(<Arbeidssteder {...props} />);
+    renderWithProviders(<Arbeidssteder {...props} />, { preloadedState: reduxStore(true) });
 
-    const alertstripe = arbeidssteder.find(Nav.AlertStripe);
-
-    expect(alertstripe).toHaveLength(1);
-    expect(alertstripe.children().text()).toBe(
+    const alertstripe = screen.getByText(
       "Ikke mulig å legge til arbeidssted(er) når det ikke er oppgitt land. Du kan endre dette under sidemenypunkt “Periode og land”."
     );
+    expect(alertstripe).toBeInTheDocument();
   });
 
   describe("Arbeidssteder på land", () => {
-    it("rendres vanligvis uten spørsmål fra altinn-søknad", () => {
-      props.soknadsland = {
-        flereLandUkjentHvilke: false,
-      };
-      const arbeidssteder = shallow(<Arbeidssteder {...props} />);
-      const arbeidsstederPaaLand = arbeidssteder.findWhere(
-        (n) => n.type() === EditerbartElementListe && n.props().feltNavn === "arbeidPaaLand.fysiskeArbeidssteder"
-      );
+    // @ts-ignore
+    const WrappedArbeidssteder = reduxForm({ form: KV.Form.SOKNAD })(Arbeidssteder);
 
-      expect(arbeidsstederPaaLand.props().redigererPreElementerKomponent).toBeUndefined();
-      expect(arbeidsstederPaaLand.props().redigeringUtfortPreElementerKomponent).toBeUndefined();
-      expect(arbeidsstederPaaLand.props().ingenDataKomponent).toBeUndefined();
+    it("rendres uten spørsmål fra altinn-søknad dersom mottatteOpplysningerType er annet enn SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS", () => {
+      // @ts-ignore
+      renderWithProviders(<WrappedArbeidssteder {...props} />, { preloadedState: reduxStore(false) });
+
+      const arbeidsstedPåLand = screen.getByText("Arbeidssted på land");
+      expect(arbeidsstedPåLand).toBeInTheDocument();
+      expect(screen.queryByText("Opplysninger om arbeidssted")).toBeNull();
+      expect(screen.queryByText("Ja")).toBeNull();
+      expect(screen.queryByText("Nei")).toBeNull();
     });
 
     it("rendres med spørsmål fra altinn-søknad dersom mottatteOpplysningerType tilsvarer altinn-søknad", () => {
-      props.soknadsland = {
-        flereLandUkjentHvilke: false,
-      };
-      props.mottatteOpplysningerType = MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
-      const arbeidssteder = shallow(<Arbeidssteder {...props} />);
-      const arbeidsstederPaaLand = arbeidssteder.findWhere(
-        (n) => n.type() === EditerbartElementListe && n.props().feltNavn === "arbeidPaaLand.fysiskeArbeidssteder"
-      );
+      // @ts-ignore
+      renderWithProviders(<WrappedArbeidssteder {...props} />, {
+        preloadedState: reduxStore(false, MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS),
+      });
 
-      expect(arbeidsstederPaaLand.props().redigererPreElementerKomponent).toBe(Land.RedigererPreElementer);
-      expect(arbeidsstederPaaLand.props().redigeringUtfortPreElementerKomponent).toBe(
-        Land.RedigeringUtfortPreElementer
-      );
-      expect(arbeidsstederPaaLand.props().ingenDataKomponent).toBe(Land.IngenData);
+      const arbeidsstedPåLand = screen.getByText("Arbeidssted på land");
+      expect(arbeidsstedPåLand).toBeInTheDocument();
+      expect(screen.getByText("Opplysninger om arbeidssted")).toBeInTheDocument();
+      expect(screen.getByText("Ja")).toBeInTheDocument();
+      expect(screen.getByText("Nei")).toBeInTheDocument();
     });
   });
 });
