@@ -23,7 +23,7 @@ import { BOOLSK_STRING } from "../../constants";
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
  */
-export const avklartFaktaTemplate = {
+const avklartFaktaTemplate = {
   referanse: "",
   avklartefaktaKode: null,
   fakta: [],
