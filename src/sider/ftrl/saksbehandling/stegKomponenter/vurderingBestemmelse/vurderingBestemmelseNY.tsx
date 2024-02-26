@@ -61,6 +61,7 @@ export const VurderingBestemmelserV2 = ({
   const [besvartOgGodkjent, setBesvartOgGodkjent] = useState<boolean>(false);
   const [skalHenteVilkår, setSkalHenteVilkår] = useState<boolean>(false);
   const [skalInitialisere, setSkalInitialisere] = useState<boolean>(true);
+
   const ulovligBestemmelseValgt =
     folketrygden2_7ToggleEnabled &&
     Boolean(valgtBestemmelse) &&
@@ -95,12 +96,14 @@ export const VurderingBestemmelserV2 = ({
   }, [behandlingstema, trygdedekning]);
 
   useEffect(() => {
-    Api.Ftrl.hentAvklarteFakta(valgtBestemmelse, behandlingID)
-      .then((res: any) => {
-        setSkalHenteVilkår(res.avklarteFakta.length === 0);
-        setAvklarteFakta(res.avklarteFakta);
-      })
-      .catch(() => setAvklarteFakta([]));
+    if (!_isEmpty(valgtBestemmelse)) {
+      Api.Ftrl.hentAvklarteFakta(valgtBestemmelse, behandlingID)
+        .then((res: any) => {
+          setSkalHenteVilkår(res.avklarteFakta.length === 0);
+          setAvklarteFakta(res.avklarteFakta);
+        })
+        .catch(() => setAvklarteFakta([]));
+    }
     reset(ResetTyper.VILKÅR);
   }, [valgtBestemmelse, behandlingID]);
 
@@ -165,27 +168,41 @@ export const VurderingBestemmelserV2 = ({
     return { tidligereValgteVilkår, tidligereValgteBegrunnelser };
   };
 
+  const validerValuesMap = (map: Map<string, boolean | null | undefined>) => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [, value] of map.entries()) {
+      if (value !== true) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   const valider = () => {
-    let bestemmelserOK = true;
-    let avklarteFaktaOK = true;
-    let vilkårOK = true;
-    let begrunnelserOK = true;
+    let bestemmelserOK = false;
+    let avklarteFaktaOK = false;
+    let vilkårOK = false;
+    let begrunnelserOK = false;
 
     if (bestemmelser.length > 0) bestemmelserOK = !_isEmpty(valgtBestemmelse);
     if (avklarteFakta.length > 0) avklarteFaktaOK = !_isEmpty(valgtAvklarteFakta);
+    if (avklarteFakta.length === 0) avklarteFaktaOK = true;
+
+    if (vilkårOgBegrunnelser.length > 0 && valgteVilkår.size > 0) {
+      vilkårOK = validerValuesMap(valgteVilkår);
+    }
 
     vilkårOgBegrunnelser?.forEach((vilkår) => {
-      if (!valgteVilkår.get(vilkår.vilkår)) {
-        vilkårOK = false;
+      if (valgteBegrunnelser.get(vilkår.vilkår) && vilkår.muligeBegrunnelser.length > 0) {
+        begrunnelserOK = true;
       }
-    });
-
-    vilkårOgBegrunnelser?.forEach((vilkår) => {
-      if (!valgteBegrunnelser.get(vilkår.vilkår) && vilkår.muligeBegrunnelser.length > 0) {
-        begrunnelserOK = false;
+      if (vilkår.muligeBegrunnelser.length === 0) {
+        begrunnelserOK = true;
       }
     });
     const altGyldig = bestemmelserOK && avklarteFaktaOK && vilkårOK && begrunnelserOK;
+
     oppdaterStatus(altGyldig);
     setBesvartOgGodkjent(altGyldig);
   };
