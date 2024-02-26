@@ -35,7 +35,7 @@ export const ListeVelgerFtrl = ({
             value={valgtAlternativ}
             disabled={!redigerbart}
           >
-            <option key="" value="" disabled={false}>
+            <option key="" value="" disabled>
               Velg...
             </option>
             {muligeAlternativer?.map((alternativ) => (

@@ -59,7 +59,7 @@ export const VurderingBestemmelserV2 = ({
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, Begrunnelse>>(new Map());
   const [valgtBestemmelse, setValgtBestemmelse] = useState<string>(lagretBestemmelse);
   const [besvartOgGodkjent, setBesvartOgGodkjent] = useState<boolean>(false);
-
+  const [skalHenteVilkår, setSkalHenteVilkår] = useState<boolean>(false);
   const [skalInitialisere, setSkalInitialisere] = useState<boolean>(true);
   const ulovligBestemmelseValgt =
     folketrygden2_7ToggleEnabled &&
@@ -72,6 +72,7 @@ export const VurderingBestemmelserV2 = ({
   }, [behandlingID]);
 
   useEffect(() => {
+    reset(ResetTyper.AVKLARTEFAKTA);
     if (skalInitialisere) {
       avklarteFakta.forEach((fakta) => {
         if (ikkeYrkesaktivOppholdType && fakta.muligeFakta.includes(ikkeYrkesaktivOppholdType)) {
@@ -90,20 +91,32 @@ export const VurderingBestemmelserV2 = ({
     Api.Ftrl.hentBestemmelser(behandlingstema, trygdedekning).then((res) => setLovligeBestemmelser(res.bestemmelser));
     Api.Ftrl.hentPliktigeBestemmelser().then((res) => setPliktigeBestemmelser(res.bestemmelser));
     reset(ResetTyper.AVKLARTEFAKTA);
+    reset(ResetTyper.VILKÅR);
   }, [behandlingstema, trygdedekning]);
 
   useEffect(() => {
     Api.Ftrl.hentAvklarteFakta(valgtBestemmelse, behandlingID)
-      .then((res) => setAvklarteFakta(res.avklarteFakta))
+      .then((res: any) => {
+        setSkalHenteVilkår(res.avklarteFakta.length === 0);
+        setAvklarteFakta(res.avklarteFakta);
+      })
       .catch(() => setAvklarteFakta([]));
     reset(ResetTyper.VILKÅR);
   }, [valgtBestemmelse, behandlingID]);
 
   useEffect(() => {
-    Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID).then((res: any) =>
-      setVilkårOgBegrunnelser(res.vilkår)
-    );
-  }, [valgtBestemmelse, valgtAvklarteFakta, behandlingID]);
+    if (skalHenteVilkår) {
+      Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID).then((res: any) =>
+        setVilkårOgBegrunnelser(res.vilkår)
+      );
+    }
+
+    if (valgtAvklarteFakta.size > 0 && avklarteFakta.length > 0) {
+      Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID).then((res: any) =>
+        setVilkårOgBegrunnelser(res.vilkår)
+      );
+    }
+  }, [valgtBestemmelse, valgtAvklarteFakta, avklarteFakta, skalHenteVilkår, behandlingID]);
 
   useEffect(() => {
     valider();
@@ -181,11 +194,13 @@ export const VurderingBestemmelserV2 = ({
     switch (type) {
       case ResetTyper.AVKLARTEFAKTA:
         setValgtAvklarteFakta(new Map());
+        setSkalHenteVilkår(false);
         return;
       case ResetTyper.VILKÅR:
         setSkalInitialisere(false);
         setValgteVilkår(new Map());
         setValgteBegrunnelser(new Map());
+        setVilkårOgBegrunnelser([]);
         return;
       default:
         setValgtBestemmelse(lagretBestemmelse);

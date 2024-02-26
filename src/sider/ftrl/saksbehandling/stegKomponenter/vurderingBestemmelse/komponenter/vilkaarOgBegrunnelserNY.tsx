@@ -48,9 +48,9 @@ export const VilkaarOgBegrunnelserNY = ({
   handleEndreBegrunnelseFritekst,
   redigerbart,
 }: VilkaarOgBegrunnelserProps) => {
-  console.log({ alleValgteVilkår });
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
-  const valgtVilkår = alleValgteVilkår.get(`${vilkår}`)!!;
+  const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
+  console.log({ valgtVilkår });
   const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!!;
   const visBegrunnelseFritekst = begrunnelserSomSkalHaFritekst.includes(valgtBegrunnelseForVilkår?.begrunnelseKode);
   return (
@@ -91,7 +91,7 @@ export const VilkaarOgBegrunnelserNY = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      {!valgtVilkår && <IngenFlytMelding />}
+      {valgtVilkår === false && <IngenFlytMelding />}
       {valgtVilkår && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
           className="select"
