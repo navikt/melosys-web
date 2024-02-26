@@ -116,7 +116,10 @@ const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
         )
       )
     );
-  return overlappendeMedlemskapsperioder.every((periode) => periode.trygdedekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON);
+  return (
+    !Utils._isEmpty(overlappendeMedlemskapsperioder) &&
+    overlappendeMedlemskapsperioder.every((periode) => periode.trygdedekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON)
+  );
 };
 
 enum TypeMelding {
