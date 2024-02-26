@@ -50,7 +50,6 @@ export const VilkaarOgBegrunnelserNY = ({
 }: VilkaarOgBegrunnelserProps) => {
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
   const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
-  console.log({ valgtVilkår });
   const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!!;
   const visBegrunnelseFritekst = begrunnelserSomSkalHaFritekst.includes(valgtBegrunnelseForVilkår?.begrunnelseKode);
   return (
