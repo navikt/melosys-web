@@ -46,8 +46,8 @@ export const VurderingBestemmelserV2 = ({
   const trygdedekning = useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
-  const ikkeYrkesaktivOppholdType = useSelector(oppsummertfaktaSelectors.IkkeYrkesAktivOppholdSelector);
-  const ikkeYrkesaktivRelasjonType = useSelector(oppsummertfaktaSelectors.IkkeYrkesAktivRelasjonSelector);
+  const ikkeYrkesaktivOppholdType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
+  const ikkeYrkesaktivRelasjonType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivRelasjonSelector);
   const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBegrunnelser[]>([]);
   const [avklarteFakta, setAvklarteFakta] = useState<AvklarteFakta[]>([]);
   const [bestemmelser, setBestemmelser] = useState<string[]>([]);
@@ -100,9 +100,9 @@ export const VurderingBestemmelserV2 = ({
   }, [valgtBestemmelse, behandlingID]);
 
   useEffect(() => {
-    Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID)
-      .then((res: any) => setVilkårOgBegrunnelser(res.vilkår))
-      .catch(() => setVilkårOgBegrunnelser([]));
+    Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID).then((res: any) =>
+      setVilkårOgBegrunnelser(res.vilkår)
+    );
   }, [valgtBestemmelse, valgtAvklarteFakta, behandlingID]);
 
   useEffect(() => {
@@ -229,7 +229,6 @@ export const VurderingBestemmelserV2 = ({
 
   if (!aktivtSteg) return null;
   let harReturnertNullIVilkårListe = false;
-
   return (
     <div className="vurderingBestemmelse_ftrl">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse</Nav.Typo.Innholdstittel>
@@ -269,7 +268,6 @@ export const VurderingBestemmelserV2 = ({
           harReturnertNullIVilkårListe = true;
           return null;
         }
-
         return (
           <VilkaarOgBegrunnelserNY
             key={vb.vilkår}

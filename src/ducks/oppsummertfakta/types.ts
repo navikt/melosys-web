@@ -8,7 +8,7 @@ export const RESET = "oppsummertfakta/RESET";
 export type Data = {
   virksomheter?: Api.Avklartefakta.Virksomheter;
   fullstendigManglendeInnbetaling?: boolean;
-  ikkeYrkesaktivFamileRelasjonstype?: string;
+  ikkeYrkesaktivFamilieRelasjonstype?: string;
   ikkeYrkesaktivOppholdstype?: string;
 };
 

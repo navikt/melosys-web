@@ -48,6 +48,7 @@ export const VilkaarOgBegrunnelserNY = ({
   handleEndreBegrunnelseFritekst,
   redigerbart,
 }: VilkaarOgBegrunnelserProps) => {
+  console.log({ alleValgteVilkår });
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
   const valgtVilkår = alleValgteVilkår.get(`${vilkår}`)!!;
   const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!!;

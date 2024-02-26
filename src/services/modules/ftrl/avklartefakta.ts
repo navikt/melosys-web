@@ -3,7 +3,7 @@ import { API_BASE_URL, FTRL } from "../../api-constants";
 import { getAsJson } from "../../utils";
 
 export const hentAvklarteFakta = (
-  bestemmelseID: string,
+  bestemmelse: string,
   behandlingID: string
 ): Promise<{ avklarteFakta: AvklarteFakta[] }> =>
-  getAsJson(`${API_BASE_URL}${FTRL}/bestemmelser/${bestemmelseID}/avklartefakta/?behandlingID=${behandlingID}`);
+  getAsJson(`${API_BASE_URL}${FTRL}/bestemmelser/${bestemmelse}/avklartefakta/?behandlingID=${behandlingID}`);
