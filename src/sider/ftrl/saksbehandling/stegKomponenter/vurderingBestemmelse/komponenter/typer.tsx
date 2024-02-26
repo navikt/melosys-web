@@ -14,10 +14,6 @@ export const FaktaTypeOverskrifter: Record<string, FaktaType> = {
     tittel: "Angi brukers opphold",
     kodeverk: "ikkeyrkesaktivoppholdtype",
   },
-  FULLSTENDIG_MANGLENDE_INNBETALING: {
-    tittel: "",
-    kodeverk: "",
-  },
 };
 
 export interface VurderingBestemmelseProps {

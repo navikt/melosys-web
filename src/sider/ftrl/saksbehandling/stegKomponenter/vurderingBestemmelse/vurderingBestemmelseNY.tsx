@@ -67,7 +67,6 @@ export const VurderingBestemmelserV2 = ({
     Boolean(valgtBestemmelse) &&
     !lovligeBestemmelser.includes(valgtBestemmelse) &&
     !pliktigeBestemmelser.includes(valgtBestemmelse);
-
   useEffect(() => {
     dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID));
   }, [behandlingID]);
@@ -306,8 +305,6 @@ export const VurderingBestemmelserV2 = ({
             vilkårOgBegrunnelser={vb}
             alleValgteVilkår={valgteVilkår}
             alleValgteBegrunnelser={valgteBegrunnelser}
-            vilkårKodeverk={MKV.KTObjects.vilkaar}
-            begrunnelseKodeverk={MKV.KTObjects.begrunnelser.folketrygdloven.ftrl_2_7_begrunnelser}
             handleEndreVilkår={(event) =>
               setValgteVilkår(new Map(valgteVilkår.set(event.target.name, Boolean(event.target.value === "true"))))
             }

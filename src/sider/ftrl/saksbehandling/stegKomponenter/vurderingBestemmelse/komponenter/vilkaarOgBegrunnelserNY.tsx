@@ -1,5 +1,4 @@
 import { ChangeEventHandler, Fragment } from "react";
-import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../../melosyskodeverk";
 import * as KV from "../../../../../../kodeverk";
@@ -8,7 +7,7 @@ import * as Utils from "../../../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
-import { Begrunnelse } from "../vurderingBestemmelse";
+import { Begrunnelse, kodeInkludererFritekst } from "../vurderingBestemmelse";
 import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 import { VilkårOgBegrunnelser } from "./typer";
 
@@ -19,18 +18,10 @@ const hjelpetekster = new Map([
   ],
 ]);
 
-const { ANNEN_GRUNN } = MKV.Koder.begrunnelser.folketrygdloven.ftrl_2_7_begrunnelser;
-
-const begrunnelserSomSkalHaFritekst = [ANNEN_GRUNN];
-
 interface VilkaarOgBegrunnelserProps {
   vilkårOgBegrunnelser: VilkårOgBegrunnelser;
   alleValgteVilkår: Map<string, boolean | null | undefined>;
   alleValgteBegrunnelser: Map<string, Begrunnelse>;
-  vilkårKodeverk: KTObject[];
-  begrunnelseKodeverk: {
-    [key: string]: KTObject[];
-  };
   handleEndreVilkår: ChangeEventHandler<HTMLInputElement>;
   handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement>;
   handleEndreBegrunnelseFritekst: (vilkår: string, fritekst: string) => void;
@@ -41,8 +32,6 @@ export const VilkaarOgBegrunnelserNY = ({
   vilkårOgBegrunnelser: { vilkår, muligeBegrunnelser },
   alleValgteVilkår,
   alleValgteBegrunnelser,
-  vilkårKodeverk,
-  begrunnelseKodeverk,
   handleEndreVilkår,
   handleEndreBegrunnelseKode,
   handleEndreBegrunnelseFritekst,
@@ -51,13 +40,17 @@ export const VilkaarOgBegrunnelserNY = ({
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
   const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
   const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!!;
-  const visBegrunnelseFritekst = begrunnelserSomSkalHaFritekst.includes(valgtBegrunnelseForVilkår?.begrunnelseKode);
+  const visBegrunnelseFritekst = kodeInkludererFritekst(
+    MKV.KTObjects.begrunnelser.folketrygdloven,
+    valgtBegrunnelseForVilkår?.begrunnelseKode
+  );
+
   return (
     <Fragment>
       <Nav.Fieldset
         legend={
           <LabelMedHjelpetekst
-            label={KV.finnTermFraListe(vilkårKodeverk, vilkår)}
+            label={KV.finnTermFraListe(MKV.KTObjects.vilkaar, vilkår)}
             hjelpetekst={hjelpetekstForVilkaar}
           />
         }
@@ -116,7 +109,7 @@ export const VilkaarOgBegrunnelserNY = ({
                 </option>
                 {muligeBegrunnelser.map((begrunnelse) => (
                   <option key={begrunnelse} value={begrunnelse}>
-                    {KV.finnTermFraListe(begrunnelseKodeverk, begrunnelse)}
+                    {KV.finnTermFraListe(MKV.KTObjects.begrunnelser.folketrygdloven, begrunnelse)}
                   </option>
                 ))}
               </Nav.Select>
