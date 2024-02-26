@@ -11,7 +11,7 @@ import * as MPT from "../../../../../proptypes";
 const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterData }) => {
   const { flereLandUkjentHvilke } = useSelector((state) => formValueSelector(KV.Form.SOKNAD)(state, "soknadsland"));
   const landlinjer = flereLandUkjentHvilke ? (
-    <LandLinje land="Flere EØS-land/Sveits. Ikke kjent hvilke" checkbox={{ redigerbart: false, checked: true }} />
+    <LandLinje land="Flere land. Ikke kjent hvilke" checkbox={{ redigerbart: false, checked: true }} />
   ) : (
     arbeidsland.map(({ land }) => {
       const avklartMarginaltArbeidILand = marginaltArbeid.find(
