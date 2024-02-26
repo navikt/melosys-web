@@ -111,7 +111,7 @@ exports[`Behandlingsoppgaver > viser behandlingsoppgave 1`] = `
                   <dd
                     class="infoDetalj"
                   >
-                    Flere EØS-land/Sveits. Ikke kjent hvilke.
+                    Flere land. Ikke kjent hvilke.
                   </dd>
                   <dt
                     class="infoTerm"
