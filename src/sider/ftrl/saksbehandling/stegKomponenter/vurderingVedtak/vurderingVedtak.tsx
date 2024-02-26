@@ -79,6 +79,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  const flereLandUkjenteHvilke = useSelector(mottatteOpplysningerSelectors.SoknadslandFlereLandUkjentHvilkeSelector);
   const mottatteOpplysningerFeilmeldinger = useSelector(formSelectors.SoknadErrorsSelector);
   const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -314,7 +315,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
     ];
   };
-
   return (
     <div className="vurderingVedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
