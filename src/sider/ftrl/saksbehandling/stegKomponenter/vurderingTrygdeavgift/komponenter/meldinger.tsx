@@ -80,24 +80,24 @@ const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
   );
 };
 
-const erSkattepliktigOgPensjonUforeMedKildeskatt = (
+const erSkattepliktigOgPensjonUføreMedKildeskatt = (
   skatteforholdsperioder: Skatteforhold[],
   inntektskilder: Inntektskilde[]
 ) => {
   const skattepliktigePerioder = skatteforholdsperioder.filter(
     (skatteforhold) => skatteforhold.skatteplikttype === SKATTEPLIKTIG
   );
-  const pensjonuføretrygdkildeskattKilder = inntektskilder.filter(
+  const inntektskilderPensjonUføreMedKildeskatt = inntektskilder.filter(
     (inntektskilde) => inntektskilde.kildetype === PENSJON_UFØRETRYGD_KILDESKATT
   );
   return skattepliktigePerioder.some((skatteforhold) =>
-    pensjonuføretrygdkildeskattKilder.some((kilder) =>
+    inntektskilderPensjonUføreMedKildeskatt.some((kilder) =>
       Utils.dato.perioderOverlapper(kilder.fomDato, kilder.tomDato, skatteforhold.fomDato, skatteforhold.tomDato)
     )
   );
 };
 
-const erPensjonUføretrygdeLagtInnForPeriodeMedKunPensjon = (
+const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
   inntektskilder: Inntektskilde[],
   medlemskapsperioder: Medlemskapsperiode[]
 ) => {
@@ -142,10 +142,10 @@ export const finnAktivFeilmelding = (
   if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, innvilgetMedlemskapsperiode)) {
     return TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE;
   }
-  if (erPensjonUføretrygdeLagtInnForPeriodeMedKunPensjon(inntektskilder, medlemskapsperioder)) {
+  if (erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon(inntektskilder, medlemskapsperioder)) {
     return TypeMelding.PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE;
   }
-  if (erSkattepliktigOgPensjonUforeMedKildeskatt(skatteforholdsperioder, inntektskilder)) {
+  if (erSkattepliktigOgPensjonUføreMedKildeskatt(skatteforholdsperioder, inntektskilder)) {
     return TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT;
   }
 
