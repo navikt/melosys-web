@@ -29,7 +29,7 @@ const Redigerer = ({ lagre }: RedigererProps) => {
           feltNavn="soknadsland.flereLandUkjentHvilke"
           label={
             <LabelMedHjelpetekst
-              label="Flere EØS-land/Sveits. Ikke kjent hvilke."
+              label="Flere land. Ikke kjent hvilke."
               hjelpetekst="Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her. Det er ikke mulig å legge til andre land i tillegg."
             />
           }

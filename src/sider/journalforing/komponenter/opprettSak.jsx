@@ -201,7 +201,7 @@ export const OpprettSak = (props) => {
                 label="I hvilke land skal arbeidet/næringen utføres i?"
                 hjelpetekst={
                   visArbeidFlereLandEllerUkjent
-                    ? '"Flere EØS-land/Sveits. Ikke kjent hvilke” skal kun benyttes hvis land er ukjent'
+                    ? '"Flere land. Ikke kjent hvilke” skal kun benyttes hvis land er ukjent'
                     : undefined
                 }
               />
@@ -211,7 +211,7 @@ export const OpprettSak = (props) => {
               <Nav.Row className="land_radiobtn">
                 <Skjema.Radio
                   feltNavn={feltNavn.soknadslandFlereLandUkjentHvilke}
-                  label="Flere EØS-land/Sveits. Ikke kjent hvilke"
+                  label="Flere land. Ikke kjent hvilke"
                   disabled={soknadsland?.length > 0}
                   value
                 />
