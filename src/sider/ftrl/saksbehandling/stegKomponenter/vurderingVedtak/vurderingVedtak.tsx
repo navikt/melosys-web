@@ -354,7 +354,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
       <Nav.Row className="arbeidsland">
         <Nav.Column xs="5">
-          <Nav.Typo.Element className="info">Arbeidsland</Nav.Typo.Element>
+          <Nav.Typo.Element className="info">{erIkkeYrkesaktiv ? "Land" : "Arbeidsland"}</Nav.Typo.Element>
           <Nav.Typo.Normaltekst className="info">{arbeidslandTekst()}</Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
