@@ -315,6 +315,12 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
     ];
   };
+
+  const arbeidslandTekst = () => {
+    if (flereLandUkjenteHvilke) return "Flere land. Ikke kjent hvilke";
+    return alleLandkoder ? KV.finnTermFraListe(alleLandkoder, soknadsland[0]) : "Finner ikke arbeidsland";
+  };
+
   return (
     <div className="vurderingVedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
@@ -349,9 +355,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       <Nav.Row className="arbeidsland">
         <Nav.Column xs="5">
           <Nav.Typo.Element className="info">Arbeidsland</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info">
-            {alleLandkoder ? KV.finnTermFraListe(alleLandkoder, soknadsland[0]) : "Finner ikke arbeidsland"}
-          </Nav.Typo.Normaltekst>
+          <Nav.Typo.Normaltekst className="info">{arbeidslandTekst()}</Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
 
@@ -363,7 +367,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </Nav.Row>
       ) : null}
 
-      {fakturamottaker ? (
+      {fakturamottaker && !erIkkeYrkesaktiv ? (
         <Nav.Row>
           <Nav.Column xs="12" className="fakturamottaker">
             <Nav.Typo.Normaltekst className="info">Faktura sendes til:</Nav.Typo.Normaltekst>
