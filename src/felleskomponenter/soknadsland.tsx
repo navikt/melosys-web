@@ -16,7 +16,7 @@ const Soknadsland = ({ land, visFulltNavn = false, landkoderKodeverk = MKV.KTObj
 
   const { landkoder, flereLandUkjentHvilke } = land;
 
-  if (flereLandUkjentHvilke) return "Flere EØS-land/Sveits. Ikke kjent hvilke.";
+  if (flereLandUkjentHvilke) return "Flere land. Ikke kjent hvilke.";
 
   if (!landkoder || landkoder.length === 0) return "(ukjent)";
   const mapOmTilFulltNavn = (landkode: string) => kodeTilTerm(landkode, landkoderKodeverk) || landkode;

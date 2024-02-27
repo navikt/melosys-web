@@ -215,19 +215,17 @@ const AvsluttSak = () => {
     );
   };
 
-  const skalKunneAngiBehandlingsresultat =
-    skalViseSøknadenErInnvilget() ||
-    skalViseSøknadenErAvslått() ||
-    skalViseAvslåPgaManglendeOpplysninger() ||
-    skalViseVedtakOmgjort() ||
-    skalViseKlageHandlinger ||
-    skalViseUnntaksHandlinger();
-
   if (
+    !skalViseSøknadenErInnvilget() &&
+    !skalViseSøknadenErAvslått() &&
+    !skalViseAvslåPgaManglendeOpplysninger() &&
+    !skalViseVedtakOmgjort() &&
+    !skalViseKlageHandlinger &&
+    !skalViseUnntaksHandlinger() &&
+    !skalViseAnnullerSak() &&
     !skalViseSøknadKlagenErTrukket() &&
     !skalViseBehandlingenErBortfalt() &&
-    !skalViseFerdigbehandlet() &&
-    !skalKunneAngiBehandlingsresultat
+    !skalViseFerdigbehandlet()
   )
     return null;
 
@@ -236,67 +234,62 @@ const AvsluttSak = () => {
       className="behandlingsmeny__meny__avslutt-sak"
       tittel={<div className="title">Avslutt sak</div>}
     >
-      {skalKunneAngiBehandlingsresultat && (
-        <div className="skillestrek">
-          {skalViseKlageHandlinger && (
-            <>
-              <Handling tekst="Medhold på klage" onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_MEDHOLD)} />
-              <Handling
-                tekst="Klageinnstilling er oversendt til klageinstansen"
-                onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_OVERSENDT_TIL_KLAGEINSTANSER)}
-              />
-              <Handling tekst="Klage er avvist" onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_AVVIST)} />
-            </>
-          )}
-          {skalViseSøknadenErInnvilget() && (
-            <Handling
-              tekst="Søknaden er innvilget"
-              onClick={() => apneBekreftValgModal(BekreftValgTypes.SOKNADEN_ER_INNVILGET)}
-            />
-          )}
-          {skalViseSøknadenErAvslått() && (
-            <Handling
-              tekst="Søknaden er avslått"
-              onClick={() => apneBekreftValgModal(BekreftValgTypes.SOKNADEN_ER_AVSLATT)}
-            />
-          )}
-          {skalViseAvslåPgaManglendeOpplysninger() && (
-            <Handling
-              tekst="Avslå søknad pga. manglende opplysninger"
-              onClick={() => dispatch(modalerOperations.visAvslagSoknad())}
-            />
-          )}
-          {skalViseVedtakOmgjort() && (
-            <Handling
-              tekst="Vedtaket er omgjort (fvl § 35)"
-              onClick={() => apneBekreftValgModal(BekreftValgTypes.VEDTAKET_ER_OMGJORT)}
-            />
-          )}
-          {skalViseUnntaksHandlinger() && (
-            <>
-              <Handling
-                tekst="Perioden er godkjent"
-                onClick={() => apneBekreftValgModal(BekreftValgTypes.PERIODEN_ER_GODKJENT)}
-              />
-              <Handling
-                tekst="Perioden er delvis godkjent"
-                onClick={() => apneBekreftValgModal(BekreftValgTypes.PERIODEN_ER_DELVIS_GODKJENT)}
-              />
-              <Handling
-                tekst="Medlem i folketrygden"
-                onClick={() => apneBekreftValgModal(BekreftValgTypes.MEDLEM_I_FOLKETRYGDEN)}
-              />
-            </>
-          )}
-          {skalViseAnnullerSak() && (
-            <Handling
-              tekst="Saken er annullert"
-              onClick={() => apneBekreftValgModal(BekreftValgTypes.SAKEN_ER_ANNULLERT)}
-            />
-          )}
-        </div>
+      {skalViseKlageHandlinger && (
+        <>
+          <Handling tekst="Medhold på klage" onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_MEDHOLD)} />
+          <Handling
+            tekst="Klageinnstilling er oversendt til klageinstansen"
+            onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_OVERSENDT_TIL_KLAGEINSTANSER)}
+          />
+          <Handling tekst="Klage er avvist" onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_AVVIST)} />
+        </>
       )}
-
+      {skalViseSøknadenErInnvilget() && (
+        <Handling
+          tekst="Søknaden er innvilget"
+          onClick={() => apneBekreftValgModal(BekreftValgTypes.SOKNADEN_ER_INNVILGET)}
+        />
+      )}
+      {skalViseSøknadenErAvslått() && (
+        <Handling
+          tekst="Søknaden er avslått"
+          onClick={() => apneBekreftValgModal(BekreftValgTypes.SOKNADEN_ER_AVSLATT)}
+        />
+      )}
+      {skalViseAvslåPgaManglendeOpplysninger() && (
+        <Handling
+          tekst="Avslå søknad pga. manglende opplysninger"
+          onClick={() => dispatch(modalerOperations.visAvslagSoknad())}
+        />
+      )}
+      {skalViseVedtakOmgjort() && (
+        <Handling
+          tekst="Vedtaket er omgjort (fvl § 35)"
+          onClick={() => apneBekreftValgModal(BekreftValgTypes.VEDTAKET_ER_OMGJORT)}
+        />
+      )}
+      {skalViseUnntaksHandlinger() && (
+        <>
+          <Handling
+            tekst="Perioden er godkjent"
+            onClick={() => apneBekreftValgModal(BekreftValgTypes.PERIODEN_ER_GODKJENT)}
+          />
+          <Handling
+            tekst="Perioden er delvis godkjent"
+            onClick={() => apneBekreftValgModal(BekreftValgTypes.PERIODEN_ER_DELVIS_GODKJENT)}
+          />
+          <Handling
+            tekst="Medlem i folketrygden"
+            onClick={() => apneBekreftValgModal(BekreftValgTypes.MEDLEM_I_FOLKETRYGDEN)}
+          />
+        </>
+      )}
+      {skalViseAnnullerSak() && (
+        <Handling
+          tekst="Saken er annullert"
+          onClick={() => apneBekreftValgModal(BekreftValgTypes.SAKEN_ER_ANNULLERT)}
+        />
+      )}
       {skalViseFerdigbehandlet() && (
         <Handling tekst="Ferdigbehandlet" onClick={() => apneBekreftValgModal(BekreftValgTypes.FERDIGBEHANDLET)} />
       )}

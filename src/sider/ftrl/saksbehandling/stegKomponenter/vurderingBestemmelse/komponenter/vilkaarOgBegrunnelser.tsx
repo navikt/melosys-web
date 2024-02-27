@@ -16,7 +16,7 @@ import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldi
 const { SANN, USANN } = BOOLSK_STRING;
 const hjelpetekster = new Map([
   [
-    MKV.Koder.vilkaar.FTRL_2_8_FORUTGÅENDE_TRYGDETID,
+    MKV.Koder.vilkaar.FTRL_FORUTGÅENDE_TRYGDETID,
     "Husk at perioder med trygdetid fra andre EØS-land sidestilles med norsk trygdetid.",
   ],
 ]);

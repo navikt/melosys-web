@@ -680,7 +680,7 @@ const mapStateToProps = (state) => ({
   arbeidslandMedYrkesaktivitet: avklartefaktaSelectors.ArbeidslandMedYrkesAktivitetSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
-  soknad_skjema: formSelectors.SoknadenFormSelector(state).values,
+  soknad_skjema: formSelectors.SoknadFormSelector(state).values,
   artikkel12_vedtak_skjema: formSelectors.VedtakArtikkel12FormValuesSelector(state),
   artikkel16_anmodning_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,

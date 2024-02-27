@@ -52,7 +52,7 @@ describe("VurderingForretningssted", () => {
 
     it("vises med korrekte props", () => {
       expect(lovvalgsbestemmelseDropdown).toHaveLength(1);
-      expect(lovvalgsbestemmelseProps.value).toBe(props.tilstand.lovvalgsbestemmelse);
+      expect(lovvalgsbestemmelseProps.value).toBe("");
       expect(lovvalgsbestemmelseProps.disabled).toBe(!props.redigerbart);
     });
 

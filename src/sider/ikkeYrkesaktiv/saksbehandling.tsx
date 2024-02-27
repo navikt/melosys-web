@@ -63,7 +63,7 @@ const Saksbehandling = ({
   const behandlingsresultat = useSelector(behandlingsresultatSelectors.BehandlingsresultatSelector);
   const fagsakStatusKode = useSelector(fagsakSelectors.FagsakStatusSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
-  const soknadForm = useSelector(formSelectors.SoknadenFormSelector);
+  const soknadForm = useSelector(formSelectors.SoknadFormSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
   const menypanelSynlig = useSelector(menypanelSelectors.MenypanelSynligSelector);
 
