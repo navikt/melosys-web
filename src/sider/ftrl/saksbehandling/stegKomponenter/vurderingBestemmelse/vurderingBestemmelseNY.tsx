@@ -21,7 +21,7 @@ import {
 } from "./komponenter/typer";
 import { Begrunnelse } from "./vurderingBestemmelse";
 import { VilkaarOgBegrunnelserNY } from "./komponenter/vilkaarOgBegrunnelserNY";
-import { _isBoolean, _isEmpty, _isNil } from "../../../../../utils";
+import { _debounce, _isBoolean, _isEmpty, _isNil } from "../../../../../utils";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
 enum ResetTyper {
@@ -67,6 +67,7 @@ export const VurderingBestemmelserV2 = ({
     Boolean(valgtBestemmelse) &&
     !lovligeBestemmelser.includes(valgtBestemmelse) &&
     !pliktigeBestemmelser.includes(valgtBestemmelse);
+
   useEffect(() => {
     dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID));
   }, [behandlingID]);
@@ -121,12 +122,17 @@ export const VurderingBestemmelserV2 = ({
   }, [valgtBestemmelse, valgtAvklarteFakta, avklarteFakta, skalHenteVilkår, behandlingID]);
 
   useEffect(() => {
-    valider();
+    const timeoutId = setTimeout(() => {
+      valider();
+    }, 200);
+
+    return () => clearTimeout(timeoutId);
   }, [
     valgtBestemmelse,
     valgtAvklarteFakta,
     valgteVilkår,
     valgteBegrunnelser,
+    lagretBestemmelse,
     bestemmelser,
     avklarteFakta,
     vilkårOgBegrunnelser,
@@ -200,9 +206,16 @@ export const VurderingBestemmelserV2 = ({
         begrunnelserOK = true;
       }
     });
+
+    if (vilkårOgBegrunnelser.length === 0) {
+      vilkårOK = true;
+      begrunnelserOK = true;
+    }
     const altGyldig = bestemmelserOK && avklarteFaktaOK && vilkårOK && begrunnelserOK;
 
-    oppdaterStatus(altGyldig);
+    if (lagretBestemmelse) {
+      oppdaterStatus(altGyldig);
+    }
     setBesvartOgGodkjent(altGyldig);
   };
 
