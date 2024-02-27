@@ -40,6 +40,7 @@ export const VurderingBestemmelserV2 = ({
   const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
   const dispatch = useDispatch();
 
+  const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const lagredeVilkår = useSelector(vilkarSelectors.VilkarSelector) as Api.Vilkar.Vilkaar[];
@@ -58,15 +59,20 @@ export const VurderingBestemmelserV2 = ({
   const [valgteVilkår, setValgteVilkår] = useState<Map<string, boolean | null | undefined>>(new Map());
   const [valgteBegrunnelser, setValgteBegrunnelser] = useState<Map<string, Begrunnelse>>(new Map());
   const [valgtBestemmelse, setValgtBestemmelse] = useState<string>(lagretBestemmelse);
-  const [besvartOgGodkjent, setBesvartOgGodkjent] = useState<boolean>(false);
+  const [formIsValid, setFormIsValid] = useState<boolean>(false);
   const [skalHenteVilkår, setSkalHenteVilkår] = useState<boolean>(false);
   const [skalInitialisere, setSkalInitialisere] = useState<boolean>(true);
+  const [harSkjeddEndringer, setHarSkjeddEndringer] = useState<boolean>(false);
 
   const ulovligBestemmelseValgt =
     folketrygden2_7ToggleEnabled &&
     Boolean(valgtBestemmelse) &&
     !lovligeBestemmelser.includes(valgtBestemmelse) &&
     !pliktigeBestemmelser.includes(valgtBestemmelse);
+
+  const behandlingErAvsluttetMedLagretBestemmelse =
+    Boolean(lagretBestemmelse) && behandlingstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET;
+  const stegErGyldig = (formIsValid || behandlingErAvsluttetMedLagretBestemmelse) && !harSkjeddEndringer;
 
   useEffect(() => {
     dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID));
@@ -132,7 +138,6 @@ export const VurderingBestemmelserV2 = ({
     valgtAvklarteFakta,
     valgteVilkår,
     valgteBegrunnelser,
-    lagretBestemmelse,
     bestemmelser,
     avklarteFakta,
     vilkårOgBegrunnelser,
@@ -213,11 +218,12 @@ export const VurderingBestemmelserV2 = ({
     }
     const altGyldig = bestemmelserOK && avklarteFaktaOK && vilkårOK && begrunnelserOK;
 
-    if (lagretBestemmelse) {
-      oppdaterStatus(altGyldig);
-    }
-    setBesvartOgGodkjent(altGyldig);
+    setFormIsValid(altGyldig);
   };
+
+  useEffect(() => {
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
 
   const reset = (type: ResetTyper | undefined = undefined) => {
     switch (type) {
@@ -267,6 +273,7 @@ export const VurderingBestemmelserV2 = ({
 
     await dispatch(vilkarOperations.send(behandlingID, mapVilkårOgBegrunnelser()));
     await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperioderForslag(behandlingID, valgtBestemmelse));
+    setHarSkjeddEndringer(false);
     oppdaterStatus(true);
     bekreft();
   };
@@ -284,7 +291,10 @@ export const VurderingBestemmelserV2 = ({
         tittel="Hvilken bestemmelse skal søknaden vurderes etter?"
         redigerbart={redigerbart}
         valgtAlternativ={valgtBestemmelse}
-        endretAlternativ={(bestemmelse) => setValgtBestemmelse(bestemmelse)}
+        endretAlternativ={(bestemmelse) => {
+          setHarSkjeddEndringer(true);
+          setValgtBestemmelse(bestemmelse);
+        }}
       />
 
       {avklarteFakta.map((fakta) => {
@@ -298,6 +308,7 @@ export const VurderingBestemmelserV2 = ({
             redigerbart={redigerbart}
             valgtAlternativ={valgtAvklarteFakta.get(fakta.faktaType.kode) ?? ""}
             endretAlternativ={(avklartFakta) => {
+              setHarSkjeddEndringer(true);
               reset(ResetTyper.VILKÅR);
               setValgtAvklarteFakta(new Map(valgtAvklarteFakta.set(fakta.faktaType.kode, avklartFakta)));
             }}
@@ -318,15 +329,18 @@ export const VurderingBestemmelserV2 = ({
             vilkårOgBegrunnelser={vb}
             alleValgteVilkår={valgteVilkår}
             alleValgteBegrunnelser={valgteBegrunnelser}
-            handleEndreVilkår={(event) =>
-              setValgteVilkår(new Map(valgteVilkår.set(event.target.name, Boolean(event.target.value === "true"))))
-            }
-            handleEndreBegrunnelseKode={(event) =>
+            handleEndreVilkår={(event) => {
+              setHarSkjeddEndringer(true);
+              setValgteVilkår(new Map(valgteVilkår.set(event.target.name, Boolean(event.target.value === "true"))));
+            }}
+            handleEndreBegrunnelseKode={(event) => {
+              setHarSkjeddEndringer(true);
               setValgteBegrunnelser(
                 new Map(valgteBegrunnelser.set(event.target.name, { begrunnelseKode: event.target.value }))
-              )
-            }
-            handleEndreBegrunnelseFritekst={(valgtBegrunnelse: string, begrunnelseFritekst: string) =>
+              );
+            }}
+            handleEndreBegrunnelseFritekst={(valgtBegrunnelse: string, begrunnelseFritekst: string) => {
+              setHarSkjeddEndringer(true);
               setValgteBegrunnelser(
                 new Map(
                   valgteBegrunnelser.set(valgtBegrunnelse, {
@@ -334,8 +348,8 @@ export const VurderingBestemmelserV2 = ({
                     begrunnelseFritekst,
                   })
                 )
-              )
-            }
+              );
+            }}
             redigerbart={redigerbart}
           />
         );
@@ -352,7 +366,7 @@ export const VurderingBestemmelserV2 = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: handleBekreft,
-          disabled: !redigerbart || ulovligBestemmelseValgt || !besvartOgGodkjent,
+          disabled: !redigerbart || ulovligBestemmelseValgt || !formIsValid,
         }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
