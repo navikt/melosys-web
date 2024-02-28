@@ -25,19 +25,25 @@ const SideMeny = ({ linkGroups, heading, onClick }: SideMenyProps): JSX.Element 
 
   return (
     <div className={sideMenyRootClassnames}>
-      <nav className={sideMenyCls.element("container")}>
-        {heading && <h2 className={sideMenyCls.element("heading")}>{heading}</h2>}
-        <ul className={sideMenyCls.element("link-list")}>
-          {linkGroups.map(({ label, links }, index) => (
-            <LinkGroup
-              key={label || Utils._uuid()}
-              label={label}
-              links={links}
-              onClick={(linkIndex) => onClick(index, linkIndex)}
-            />
-          ))}
-        </ul>
-      </nav>
+      <div className={sideMenyCls.element("container")}>
+        {heading && (
+          <h2 className={sideMenyCls.element("heading")} id="opplysninger">
+            {heading}
+          </h2>
+        )}
+        <nav aria-labelledby="opplysninger">
+          <ul className={sideMenyCls.element("link-list")}>
+            {linkGroups.map(({ label, links }, index) => (
+              <LinkGroup
+                key={label || Utils._uuid()}
+                label={label}
+                links={links}
+                onClick={(linkIndex) => onClick(index, linkIndex)}
+              />
+            ))}
+          </ul>
+        </nav>
+      </div>
     </div>
   );
 };
