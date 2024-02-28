@@ -21,7 +21,7 @@ import {
 } from "./komponenter/typer";
 import { Begrunnelse } from "./vurderingBestemmelse";
 import { VilkaarOgBegrunnelserNY } from "./komponenter/vilkaarOgBegrunnelserNY";
-import { _debounce, _isBoolean, _isEmpty, _isNil } from "../../../../../utils";
+import * as Utils from "../../../../../utils";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
 enum ResetTyper {
@@ -52,8 +52,8 @@ export const VurderingBestemmelserV2 = ({
   const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBegrunnelser[]>([]);
   const [avklarteFakta, setAvklarteFakta] = useState<AvklarteFakta[]>([]);
   const [bestemmelser, setBestemmelser] = useState<string[]>([]);
-  const [lovligeBestemmelser, setLovligeBestemmelser] = useState<string[]>([]);
-  const [pliktigeBestemmelser, setPliktigeBestemmelser] = useState<string[]>([]);
+  const [lovligeBestemmelser, setLovligeBestemmelser] = useState<string[] | undefined>(undefined);
+  const [pliktigeBestemmelser, setPliktigeBestemmelser] = useState<string[] | undefined>(undefined);
 
   const [valgtAvklarteFakta, setValgtAvklarteFakta] = useState<Map<string, string>>(new Map());
   const [valgteVilkår, setValgteVilkår] = useState<Map<string, boolean | null | undefined>>(new Map());
@@ -67,8 +67,8 @@ export const VurderingBestemmelserV2 = ({
   const ulovligBestemmelseValgt =
     folketrygden2_7ToggleEnabled &&
     Boolean(valgtBestemmelse) &&
-    !lovligeBestemmelser.includes(valgtBestemmelse) &&
-    !pliktigeBestemmelser.includes(valgtBestemmelse);
+    !lovligeBestemmelser?.includes(valgtBestemmelse) &&
+    !pliktigeBestemmelser?.includes(valgtBestemmelse);
 
   const behandlingErAvsluttetMedLagretBestemmelse =
     Boolean(lagretBestemmelse) && behandlingstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET;
@@ -79,7 +79,7 @@ export const VurderingBestemmelserV2 = ({
   }, [behandlingID]);
 
   useEffect(() => {
-    reset(ResetTyper.AVKLARTEFAKTA);
+    setSkalHenteVilkår(false);
     if (skalInitialisere) {
       avklarteFakta.forEach((fakta) => {
         if (ikkeYrkesaktivOppholdType && fakta.muligeFakta.includes(ikkeYrkesaktivOppholdType)) {
@@ -95,14 +95,22 @@ export const VurderingBestemmelserV2 = ({
 
   useEffect(() => {
     Api.Ftrl.hentBestemmelser(behandlingstema).then((res) => setBestemmelser(res.bestemmelser));
-    Api.Ftrl.hentBestemmelser(behandlingstema, trygdedekning).then((res) => setLovligeBestemmelser(res.bestemmelser));
-    Api.Ftrl.hentPliktigeBestemmelser().then((res) => setPliktigeBestemmelser(res.bestemmelser));
+    Api.Ftrl.hentBestemmelser(behandlingstema, trygdedekning)
+      .then((res) => setLovligeBestemmelser(res.bestemmelser))
+      .catch(() => {
+        setLovligeBestemmelser([]);
+      });
+    Api.Ftrl.hentPliktigeBestemmelser()
+      .then((res) => setPliktigeBestemmelser(res.bestemmelser))
+      .catch(() => {
+        setPliktigeBestemmelser([]);
+      });
     reset(ResetTyper.AVKLARTEFAKTA);
     reset(ResetTyper.VILKÅR);
   }, [behandlingstema, trygdedekning]);
 
   useEffect(() => {
-    if (!_isEmpty(valgtBestemmelse)) {
+    if (!Utils._isEmpty(valgtBestemmelse) && !ulovligBestemmelseValgt) {
       Api.Ftrl.hentAvklarteFakta(valgtBestemmelse, behandlingID)
         .then((res: any) => {
           setSkalHenteVilkår(res.avklarteFakta.length === 0);
@@ -110,10 +118,11 @@ export const VurderingBestemmelserV2 = ({
         })
         .catch(() => setAvklarteFakta([]));
     }
-    reset(ResetTyper.VILKÅR);
-  }, [valgtBestemmelse, behandlingID]);
+  }, [valgtBestemmelse, behandlingID, ulovligBestemmelseValgt]);
 
   useEffect(() => {
+    if (ulovligBestemmelseValgt) return;
+
     if (skalHenteVilkår) {
       Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID).then((res: any) =>
         setVilkårOgBegrunnelser(res.vilkår)
@@ -125,7 +134,7 @@ export const VurderingBestemmelserV2 = ({
         setVilkårOgBegrunnelser(res.vilkår)
       );
     }
-  }, [valgtBestemmelse, valgtAvklarteFakta, avklarteFakta, skalHenteVilkår, behandlingID]);
+  }, [valgtBestemmelse, valgtAvklarteFakta, avklarteFakta, ulovligBestemmelseValgt, skalHenteVilkår, behandlingID]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -142,6 +151,13 @@ export const VurderingBestemmelserV2 = ({
     avklarteFakta,
     vilkårOgBegrunnelser,
   ]);
+
+  useEffect(() => {
+    if (ulovligBestemmelseValgt && lovligeBestemmelser && pliktigeBestemmelser) {
+      reset(ResetTyper.AVKLARTEFAKTA);
+      reset(ResetTyper.VILKÅR);
+    }
+  }, [ulovligBestemmelseValgt, lovligeBestemmelser, pliktigeBestemmelser]);
 
   useEffect(() => {
     const { tidligereValgteVilkår, tidligereValgteBegrunnelser } =
@@ -195,8 +211,8 @@ export const VurderingBestemmelserV2 = ({
     let vilkårOK = false;
     let begrunnelserOK = false;
 
-    if (bestemmelser.length > 0) bestemmelserOK = !_isEmpty(valgtBestemmelse);
-    if (avklarteFakta.length > 0) avklarteFaktaOK = !_isEmpty(valgtAvklarteFakta);
+    if (bestemmelser.length > 0) bestemmelserOK = !Utils._isEmpty(valgtBestemmelse);
+    if (avklarteFakta.length > 0) avklarteFaktaOK = !Utils._isEmpty(valgtAvklarteFakta);
     if (avklarteFakta.length === 0) avklarteFaktaOK = true;
 
     if (vilkårOgBegrunnelser.length > 0 && valgteVilkår.size > 0) {
@@ -229,6 +245,7 @@ export const VurderingBestemmelserV2 = ({
     switch (type) {
       case ResetTyper.AVKLARTEFAKTA:
         setValgtAvklarteFakta(new Map());
+        setAvklarteFakta([]);
         setSkalHenteVilkår(false);
         return;
       case ResetTyper.VILKÅR:
