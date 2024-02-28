@@ -1,5 +1,5 @@
-import { getAsJson } from "../../utils";
 import { API_BASE_URL, FTRL } from "../../api-constants";
+import { getAsJson } from "../../utils";
 import * as QS from "qs";
 
 export const hentBestemmelser = (

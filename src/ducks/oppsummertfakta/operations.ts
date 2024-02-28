@@ -36,6 +36,22 @@ export function sendArbeidsland(behandlingID: number, arbeidsland: Api.Avklartef
   });
 }
 
+export function sendIkkeYrkesaktivOppholdtype(behandlingID: number, oppholdstype: string) {
+  return doThenDispatch(() => Api.Avklartefakta.sendIkkeYrkesaktivOppholdstype(behandlingID, oppholdstype), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
+export function sendIkkeYrkesaktivRelasjontype(behandlingID: number, relasjonstype: string) {
+  return doThenDispatch(() => Api.Avklartefakta.sendIkkeYrkesaktivRelasjonstype(behandlingID, relasjonstype), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
 export function resetOppsummertFakta() {
   return Actions.resetOppsummertFakta();
 }

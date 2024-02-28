@@ -1,44 +1,37 @@
 import { ChangeEventHandler, Fragment } from "react";
-import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../../melosyskodeverk";
-import * as Api from "../../../../../../services/api";
 import * as KV from "../../../../../../kodeverk";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
-import { BOOLSK_STRING } from "../../../../../../constants";
 import { Begrunnelse, kodeInkludererFritekst } from "../vurderingBestemmelse";
 import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
+import { VilkårOgBegrunnelser } from "./typer";
 
-const { SANN, USANN } = BOOLSK_STRING;
 const hjelpetekster = new Map([
   [
-    MKV.Koder.vilkaar.FTRL_FORUTGÅENDE_TRYGDETID,
+    MKV.Koder.vilkaar.FTRL_2_8_FORUTGÅENDE_TRYGDETID,
     "Husk at perioder med trygdetid fra andre EØS-land sidestilles med norsk trygdetid.",
   ],
 ]);
 
 interface VilkaarOgBegrunnelserProps {
-  vilkårOgBegrunnelser: Api.MedlemAvFolketrygden.Bestemmelser.VilkårOgBegrunnelser;
-  alleValgteVilkår: Map<string, string>;
+  vilkårOgBegrunnelser: VilkårOgBegrunnelser;
+  alleValgteVilkår: Map<string, boolean | null | undefined>;
   alleValgteBegrunnelser: Map<string, Begrunnelse>;
-  begrunnelseKodeverk: {
-    [key: string]: KTObject[];
-  };
   handleEndreVilkår: ChangeEventHandler<HTMLInputElement>;
   handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement>;
   handleEndreBegrunnelseFritekst: (vilkår: string, fritekst: string) => void;
   redigerbart: boolean;
 }
 
-export const VilkaarOgBegrunnelser = ({
+export const VilkaarOgBegrunnelserNY = ({
   vilkårOgBegrunnelser: { vilkår, muligeBegrunnelser },
   alleValgteVilkår,
   alleValgteBegrunnelser,
-  begrunnelseKodeverk,
   handleEndreVilkår,
   handleEndreBegrunnelseKode,
   handleEndreBegrunnelseFritekst,
@@ -46,9 +39,9 @@ export const VilkaarOgBegrunnelser = ({
 }: VilkaarOgBegrunnelserProps) => {
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
   const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
-  const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}_begrunnelser`);
+  const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!!;
   const visBegrunnelseFritekst = kodeInkludererFritekst(
-    begrunnelseKodeverk,
+    MKV.KTObjects.begrunnelser.folketrygdloven,
     valgtBegrunnelseForVilkår?.begrunnelseKode
   );
 
@@ -69,9 +62,9 @@ export const VilkaarOgBegrunnelser = ({
               label="Ja"
               name={vilkår}
               onChange={handleEndreVilkår}
-              checked={valgtVilkår === SANN}
-              value={SANN}
-              key={SANN}
+              checked={valgtVilkår === true}
+              value="true"
+              key="true"
               disabled={!redigerbart}
             />
           </Nav.Column>
@@ -81,17 +74,17 @@ export const VilkaarOgBegrunnelser = ({
               label="Nei"
               name={vilkår}
               onChange={handleEndreVilkår}
-              checked={valgtVilkår === USANN}
-              value={USANN}
-              key={USANN}
+              checked={valgtVilkår === false}
+              value="false"
+              key="false"
               disabled={!redigerbart}
             />
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
 
-      {valgtVilkår === USANN && <IngenFlytMelding />}
-      {valgtVilkår === SANN && !Utils._isEmpty(muligeBegrunnelser) && (
+      {valgtVilkår === false && <IngenFlytMelding />}
+      {valgtVilkår && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
           className="select"
           legend={
@@ -107,16 +100,16 @@ export const VilkaarOgBegrunnelser = ({
                 label=""
                 bredde="fullbredde"
                 onChange={handleEndreBegrunnelseKode}
-                name={`${vilkår}_begrunnelser`}
+                name={`${vilkår}`}
                 value={valgtBegrunnelseForVilkår?.begrunnelseKode}
                 disabled={!redigerbart}
               >
-                <option key="" value="" disabled={!!alleValgteBegrunnelser.get(`${vilkår}_begrunnelser`)}>
+                <option key="" value="" disabled={!!alleValgteBegrunnelser.get(`${vilkår}`)}>
                   Velg...
                 </option>
                 {muligeBegrunnelser.map((begrunnelse) => (
                   <option key={begrunnelse} value={begrunnelse}>
-                    {KV.termFraNestedKTObject(begrunnelseKodeverk, begrunnelse)}
+                    {KV.finnTermFraListe(MKV.KTObjects.begrunnelser.folketrygdloven, begrunnelse)}
                   </option>
                 ))}
               </Nav.Select>
@@ -127,7 +120,7 @@ export const VilkaarOgBegrunnelser = ({
               <Nav.Column xs="12">
                 <HtmlEditor
                   value={valgtBegrunnelseForVilkår?.begrunnelseFritekst || ""}
-                  onChange={(fritekst: string) => handleEndreBegrunnelseFritekst(`${vilkår}_begrunnelser`, fritekst)}
+                  onChange={(fritekst: string) => handleEndreBegrunnelseFritekst(`${vilkår}`, fritekst)}
                   placeholder="Vennligst spesifiser..."
                   spellCheck
                   readOnly={!redigerbart}

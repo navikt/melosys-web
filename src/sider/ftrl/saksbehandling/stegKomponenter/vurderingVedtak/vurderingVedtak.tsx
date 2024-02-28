@@ -318,8 +318,11 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const landEllerArbeidslandTekst = () => {
     if (flereLandUkjenteHvilke) return "Flere land. Ikke kjent hvilke";
+
     return alleLandkoder
-      ? KV.finnTermFraListe(alleLandkoder, soknadsland[0])
+      ? Utils.streng.arrayTilKonjunksjon(
+          soknadsland.map((enkeltLand: string) => KV.finnTermFraListe(alleLandkoder, enkeltLand))
+        )
       : `Finner ikke ${erIkkeYrkesaktiv ? "land" : "arbeidsland"}`;
   };
 
