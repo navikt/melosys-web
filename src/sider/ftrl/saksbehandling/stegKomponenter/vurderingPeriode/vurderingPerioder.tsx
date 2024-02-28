@@ -28,6 +28,7 @@ import {
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../../../../featuretoggle/toggleNavn";
+import { oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
 const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -80,6 +81,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  const ikkeyrkesaktivOppholdstype = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
 
   const {
     control,
@@ -113,7 +115,8 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     begrensePeriodeVedtakToggleEnabled,
     manglendeInnbetalingToggleEnabled,
     soknadsperiode.fom,
-    soknadsperiode.tom
+    soknadsperiode.tom,
+    ikkeyrkesaktivOppholdstype
   );
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
