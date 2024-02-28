@@ -6,7 +6,7 @@ import { MedlemskapsperiodeProp } from "./types";
 
 const { FTRL_KAP2_2_1_FØRSTE_LEDD, FTRL_KAP2_2_1_FJERDE_LEDD, FTRL_KAP2_2_7_FJERDE_LEDD, FTRL_KAP2_2_8_FJERDE_LEDD } =
   MKV.Koder.folketrygdloven_kap2_bestemmelser;
-
+const { MIDLERTIDIG_2_1_FJERDE_LEDD } = MKV.Koder.ikkeyrkesaktivoppholdtype;
 const { AVSLAATT, INNVILGET, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 
 const IngenMedlemskapsperioder = (
@@ -210,12 +210,8 @@ const periodeStarterFoer2023 = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
   return false;
 };
 
-const periodeOverstiger12Mnd = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
-  return Utils.dato.datoDiffNorskFormat(medlemskapsperioder[0].fomDato, medlemskapsperioder[0].tomDato, "years") > 1;
-};
-
-const bestemmelseErEnAv2_2_1 = (bestemmelse: string) => {
-  return bestemmelse === FTRL_KAP2_2_1_FØRSTE_LEDD || bestemmelse === FTRL_KAP2_2_1_FJERDE_LEDD;
+const bestemmelseEr2_2_1 = (bestemmelse: string) => {
+  return bestemmelse === FTRL_KAP2_2_1_FØRSTE_LEDD || bestemmelse === FTRL_KAP2_2_1_FJERDE_LEDD; // Skal etterhvert erstattes med bare FTRL_KAP2_2_1
 };
 
 const landErKunNorge = (land: string[]) => {
@@ -225,8 +221,19 @@ const landErKunNorge = (land: string[]) => {
 export const harIkkeLovligSluttDato = (medlemskapsperioder: MedlemskapsperiodeProp[], land: string[]) => {
   const sortertePerioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
   const manglerSluttdato = Utils._isEmpty(sortertePerioder[sortertePerioder.length - 1].tomDato);
-  const tillattMedManglendeSluttDato = landErKunNorge(land) && bestemmelseErEnAv2_2_1(sortertePerioder[0].bestemmelse);
+  const tillattMedManglendeSluttDato = landErKunNorge(land) && bestemmelseEr2_2_1(sortertePerioder[0].bestemmelse);
   return manglerSluttdato && !tillattMedManglendeSluttDato;
+};
+
+const periodeOver12MånederIkkeTillatt = (
+  medlemskapsperioder: MedlemskapsperiodeProp[],
+  ikkeyrkesaktivOppholdstype?: string
+) => {
+  const periode = medlemskapsperioder[0];
+  const periodeOverstiger12Mnd = Utils.dato.datoDiffNorskFormat(periode.fomDato, periode.tomDato, "years") > 1;
+  const periodeOver12MndIkkeTillatt =
+    bestemmelseEr2_2_1(periode.bestemmelse) && ikkeyrkesaktivOppholdstype === MIDLERTIDIG_2_1_FJERDE_LEDD;
+  return periodeOverstiger12Mnd && periodeOver12MndIkkeTillatt;
 };
 
 enum TypeFeilmelding {
@@ -253,7 +260,8 @@ export function finnAktivFeilmelding(
   begrensePeriodeVedtakToggleEnabled: boolean | undefined,
   manglendeInnbetalingToggleEnabled: boolean | undefined,
   søknadsperiodeFomDato: string,
-  søknadsperiodeTomDato?: string
+  søknadsperiodeTomDato?: string,
+  ikkeyrkesaktivOppholdstype?: string
 ): string | undefined {
   // Sjekk feil
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
@@ -297,8 +305,7 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.OPPHØRT_PERIODE_FØR_ANNEN_PERIODE;
   }
 
-  const { bestemmelse } = medlemskapsperioder[0];
-  if (bestemmelseErEnAv2_2_1(bestemmelse) && periodeOverstiger12Mnd(medlemskapsperioder)) {
+  if (periodeOver12MånederIkkeTillatt(medlemskapsperioder, ikkeyrkesaktivOppholdstype)) {
     return TypeFeilmelding.PERIODE_OVERSTIGER_12_MND;
   }
 
@@ -307,6 +314,7 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.INGEN_OPPHØRTE_PERIODER;
   }
 
+  const { bestemmelse } = medlemskapsperioder[0];
   if (bestemmelse === FTRL_KAP2_2_7_FJERDE_LEDD || bestemmelse === FTRL_KAP2_2_8_FJERDE_LEDD) {
     return TypeFeilmelding.BESTEMMELSE_FOR_FAMILIEMEDLEMMER;
   }
