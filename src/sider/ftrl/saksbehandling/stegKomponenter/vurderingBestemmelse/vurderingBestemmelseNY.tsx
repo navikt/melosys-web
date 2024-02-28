@@ -75,10 +75,6 @@ export const VurderingBestemmelserV2 = ({
   const stegErGyldig = (formIsValid || behandlingErAvsluttetMedLagretBestemmelse) && !harSkjeddEndringer;
 
   useEffect(() => {
-    dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID));
-  }, [behandlingID]);
-
-  useEffect(() => {
     setSkalHenteVilkår(false);
     if (skalInitialisere) {
       avklarteFakta.forEach((fakta) => {
