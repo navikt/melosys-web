@@ -316,9 +316,11 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     ];
   };
 
-  const arbeidslandTekst = () => {
+  const landEllerArbeidslandTekst = () => {
     if (flereLandUkjenteHvilke) return "Flere land. Ikke kjent hvilke";
-    return alleLandkoder ? KV.finnTermFraListe(alleLandkoder, soknadsland[0]) : "Finner ikke arbeidsland";
+    return alleLandkoder
+      ? KV.finnTermFraListe(alleLandkoder, soknadsland[0])
+      : `Finner ikke ${erIkkeYrkesaktiv ? "land" : "arbeidsland"}`;
   };
 
   return (
@@ -355,7 +357,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       <Nav.Row className="arbeidsland">
         <Nav.Column xs="5">
           <Nav.Typo.Element className="info">{erIkkeYrkesaktiv ? "Land" : "Arbeidsland"}</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info">{arbeidslandTekst()}</Nav.Typo.Normaltekst>
+          <Nav.Typo.Normaltekst className="info">{landEllerArbeidslandTekst()}</Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
 
