@@ -1,3 +1,5 @@
 export * from "./gyldigeTrygdedekninger";
-export * from "./gyldigeInnvilgelsesResultat";
 export * from "./bestemmelser";
+export * from "./vilkår";
+export * from "./avklartefakta";
+export * from "./gyldigeInnvilgelsesResultat";

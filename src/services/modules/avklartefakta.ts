@@ -16,6 +16,15 @@ export const hent = (behandlingID: number): Promise<Avklartfakta[]> =>
 export const send = (behandlingID: number, avklartefakta: Avklartfakta[]): Promise<Avklartfakta[]> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}`, avklartefakta);
 
+export const sendIkkeYrkesaktivOppholdstype = (behandlingID: number, oppholdstype: string): Promise<Avklartfakta[]> =>
+  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/oppholdstype`, oppholdstype);
+
+export const sendIkkeYrkesaktivRelasjonstype = (
+  behandlingID: number,
+  familierelasjonstype: string
+): Promise<Avklartfakta[]> =>
+  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/familierelasjonstype`, familierelasjonstype);
+
 interface Oppsummering {
   virksomheter: string[];
   arbeidsland: string[];
