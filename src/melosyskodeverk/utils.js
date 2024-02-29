@@ -32,7 +32,10 @@ export const erAvsluttetEllerMidlertidigBeslutning = (behandlingsstatus) =>
     MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING,
   ].includes(behandlingsstatus);
 
-export const erHenlagtEllerHenlagtBortfalt = (saksstatus) =>
-  [MKV.Koder.saksstatuser.HENLAGT, MKV.Koder.saksstatuser.HENLAGT_BORTFALT].includes(saksstatus);
-
-export const erAnnullertSak = (saksstatus) => [MKV.Koder.saksstatuser.ANNULLERT].includes(saksstatus);
+export const erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert = (saksstatus) =>
+  [
+    MKV.Koder.saksstatuser.OPPHØRT,
+    MKV.Koder.saksstatuser.HENLAGT,
+    MKV.Koder.saksstatuser.HENLAGT_BORTFALT,
+    MKV.Koder.saksstatuser.ANNULLERT,
+  ].includes(saksstatus);

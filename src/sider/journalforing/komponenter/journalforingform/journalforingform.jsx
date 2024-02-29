@@ -71,7 +71,9 @@ const JournalforingForm = ({
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, fagsakListe);
   const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
   const visSkalTilordnes = !fagsakListe.find(
-    (sak) => sak.saksnummer === formValues?.saksnummer && MKVUtils.erHenlagtEllerHenlagtBortfalt(sak.saksstatus.kode)
+    (sak) =>
+      sak.saksnummer === formValues?.saksnummer &&
+      MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(sak.saksstatus.kode)
   );
   const [harRegistrertAdresse, setHarRegistrertAdresse] = useState(undefined);
 

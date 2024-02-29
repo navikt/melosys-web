@@ -79,6 +79,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  const flereLandUkjenteHvilke = useSelector(mottatteOpplysningerSelectors.SoknadslandFlereLandUkjentHvilkeSelector);
   const mottatteOpplysningerFeilmeldinger = useSelector(formSelectors.SoknadErrorsSelector);
   const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -315,6 +316,16 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     ];
   };
 
+  const landEllerArbeidslandTekst = () => {
+    if (flereLandUkjenteHvilke) return "Flere land. Ikke kjent hvilke";
+
+    return alleLandkoder
+      ? Utils.streng.arrayTilKonjunksjon(
+          soknadsland.map((enkeltLand: string) => KV.finnTermFraListe(alleLandkoder, enkeltLand))
+        )
+      : `Finner ikke ${erIkkeYrkesaktiv ? "land" : "arbeidsland"}`;
+  };
+
   return (
     <div className="vurderingVedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
@@ -348,10 +359,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
       <Nav.Row className="arbeidsland">
         <Nav.Column xs="5">
-          <Nav.Typo.Element className="info">Arbeidsland</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info">
-            {alleLandkoder ? KV.finnTermFraListe(alleLandkoder, soknadsland[0]) : "Finner ikke arbeidsland"}
-          </Nav.Typo.Normaltekst>
+          <Nav.Typo.Element className="info">{erIkkeYrkesaktiv ? "Land" : "Arbeidsland"}</Nav.Typo.Element>
+          <Nav.Typo.Normaltekst className="info">{landEllerArbeidslandTekst()}</Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
 
@@ -363,7 +372,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </Nav.Row>
       ) : null}
 
-      {fakturamottaker ? (
+      {fakturamottaker && !erIkkeYrkesaktiv ? (
         <Nav.Row>
           <Nav.Column xs="12" className="fakturamottaker">
             <Nav.Typo.Normaltekst className="info">Faktura sendes til:</Nav.Typo.Normaltekst>
