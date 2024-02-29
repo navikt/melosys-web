@@ -23,7 +23,9 @@ const StegLinje = (props) => {
 
   return (
     <div>
-      <ul className="stegLinje">{stegKnapper}</ul>
+      <nav>
+        <ul className="stegLinje">{stegKnapper}</ul>
+      </nav>
     </div>
   );
 };
