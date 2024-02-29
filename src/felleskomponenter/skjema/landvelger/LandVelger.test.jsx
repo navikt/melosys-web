@@ -13,7 +13,6 @@ describe("Landvelger", () => {
     props = {
       disabled: false,
       feltNavn: "test",
-      multiLand: false,
       label: "test",
       landkoder: undefined,
       dataTestId: "datalist",
@@ -34,21 +33,6 @@ describe("Landvelger", () => {
         },
       },
     };
-  });
-
-  it("viser enkeltland og ikke multiland", () => {
-    props.multiLand = false;
-
-    const { queryByRole } = renderWithProviders(<WrappedLandVelger {...props} />, { preloadedState: initialState });
-
-    expect(queryByRole("button")).not.toBeInTheDocument();
-  });
-
-  it("viser multiland og ikke enkeltland", () => {
-    props.multiLand = true;
-
-    const { getByRole } = renderWithProviders(<WrappedLandVelger {...props} />, { preloadedState: initialState });
-    expect(getByRole("button")).toBeInTheDocument();
   });
 
   describe("Dersom visAlleLandkoder prop", () => {

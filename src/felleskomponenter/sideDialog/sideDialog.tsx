@@ -125,33 +125,37 @@ const SideDialog = ({
 
   return (
     <div className="dialog panelSeksjon">
-      <Nav.Panel>
-        <div className="dialog__meny" role="navigation">
-          {faner.map((fane) => (
-            <button
-              className={classnames({ meny__element: true, "meny__element--aktiv": fane.navn === aktivFane })}
-              key={Utils._uuid()}
-              onClick={() => endreFane(fane.navn)}
-              type="button"
-            >
-              {fane.tittel}
-            </button>
-          ))}
-        </div>
-        <div id={aktivFane}>
-          <FaneViser
-            navn={aktivFane}
-            behandlingID={behandlingID}
-            behandlingstema={behandlingstema}
-            saksnummer={saksnummer}
-            sakstype={sakstype}
-            redigerbart={redigerbart}
-            dokumentOversikt={dokumentOversikt}
-            dokumenter={dokumenter}
-            endreFane={endreFane}
-          />
-        </div>
-      </Nav.Panel>
+      <aside>
+        <Nav.Panel>
+          <nav>
+            <div className="dialog__meny" role="navigation">
+              {faner.map((fane) => (
+                <button
+                  className={classnames({ meny__element: true, "meny__element--aktiv": fane.navn === aktivFane })}
+                  key={Utils._uuid()}
+                  onClick={() => endreFane(fane.navn)}
+                  type="button"
+                >
+                  {fane.tittel}
+                </button>
+              ))}
+            </div>
+          </nav>
+          <div id={aktivFane}>
+            <FaneViser
+              navn={aktivFane}
+              behandlingID={behandlingID}
+              behandlingstema={behandlingstema}
+              saksnummer={saksnummer}
+              sakstype={sakstype}
+              redigerbart={redigerbart}
+              dokumentOversikt={dokumentOversikt}
+              dokumenter={dokumenter}
+              endreFane={endreFane}
+            />
+          </div>
+        </Nav.Panel>
+      </aside>
     </div>
   );
 };

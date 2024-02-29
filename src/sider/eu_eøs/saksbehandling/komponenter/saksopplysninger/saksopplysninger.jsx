@@ -73,23 +73,25 @@ const Saksopplysninger = ({
 
   return (
     <Fragment>
-      {erHenlagtSak && <HenlagtSak />}
-      {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
-      {visStegVelger && (
-        <Stegvelger
-          behandlingID={behandlingID}
-          lagreVilkarHandler={lagreVilkarHandler}
-          lagreAvklartefaktaHandler={lagreAvklartefaktaHandler}
-          lagreLovvalgsperioderHandler={lagreLovvalgsperioderHandler}
-          lagreAnmodningsperioderHandler={lagreAnmodningsperioderHandler}
-          oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingerHandler}
-          begrunnelser={MKV.KTObjects.begrunnelser}
-          landkoder={MKV.KTObjects.landkoder}
-          tilForsiden={tilForsiden}
-          stegMap={stegMap}
-          forsteSteg={forsteSteg}
-        />
-      )}
+      <main id="main-container">
+        {erHenlagtSak && <HenlagtSak />}
+        {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
+        {visStegVelger && (
+          <Stegvelger
+            behandlingID={behandlingID}
+            lagreVilkarHandler={lagreVilkarHandler}
+            lagreAvklartefaktaHandler={lagreAvklartefaktaHandler}
+            lagreLovvalgsperioderHandler={lagreLovvalgsperioderHandler}
+            lagreAnmodningsperioderHandler={lagreAnmodningsperioderHandler}
+            oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingerHandler}
+            begrunnelser={MKV.KTObjects.begrunnelser}
+            landkoder={MKV.KTObjects.landkoder}
+            tilForsiden={tilForsiden}
+            stegMap={stegMap}
+            forsteSteg={forsteSteg}
+          />
+        )}
+      </main>
       <SoknadMenypanelForm
         startOgVisOppfriskModal={startOgVisOppfriskModal}
         visOppdaterRegisteropplysninger={visOppdaterRegisteropplysninger}

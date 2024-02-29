@@ -175,7 +175,7 @@ class Saksbehandling extends Component {
     return (
       <>
         <Informasjonlinje />
-        <div id="main-container" className="main-container">
+        <div className="main-container">
           <div className="eueos_saksbehandling">
             <Nav.Container fluid>
               <Nav.Row>

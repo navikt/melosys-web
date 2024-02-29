@@ -5,7 +5,6 @@ import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
 import { landkoderSelectors } from "../../../ducks/landkoder";
 import EnkeltLand from "./enkeltLand";
-import MultiLand from "./multiLand";
 
 import { lagDatalistID } from "./utils";
 
@@ -23,25 +22,13 @@ const connector = connect(mapStateToProps);
  * @param props
  */
 const LandVelger = (props) => {
-  const {
-    multiLand,
-    className = "",
-    landkoder,
-    landkoderFraSakstype,
-    alleLandkoder,
-    visAlleLandkoder,
-    dataTestId,
-  } = props;
+  const { className = "", landkoder, landkoderFraSakstype, alleLandkoder, visAlleLandkoder, dataTestId } = props;
   const dataListID = lagDatalistID();
   const landkodeliste = landkoder || (visAlleLandkoder ? alleLandkoder : landkoderFraSakstype);
 
   return (
     <div className={className}>
-      {multiLand ? (
-        <MultiLand {...props} landkoder={landkodeliste} dataListID={dataListID} />
-      ) : (
-        <EnkeltLand {...props} landkoder={landkodeliste} dataListID={dataListID} />
-      )}
+      <EnkeltLand {...props} landkoder={landkodeliste} dataListID={dataListID} />
       <div className="landliste__dataliste">
         <datalist id={dataListID}>
           {landkodeliste.map((item) => (
@@ -58,7 +45,6 @@ const LandVelger = (props) => {
 LandVelger.propTypes = {
   disabled: PT.bool,
   feltNavn: PT.string.isRequired,
-  multiLand: PT.bool,
   label: PT.node,
   bredde: PT.string,
   placeholder: PT.string,
@@ -73,7 +59,6 @@ LandVelger.propTypes = {
 
 LandVelger.defaultProps = {
   disabled: false,
-  multiLand: false,
   label: undefined,
   bredde: "XL",
   placeholder: undefined,

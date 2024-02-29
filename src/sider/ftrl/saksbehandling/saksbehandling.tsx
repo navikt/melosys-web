@@ -262,20 +262,22 @@ const Saksbehandling = ({
   return (
     <>
       <Informasjonlinje />
-      <div id="main-container" className="main-container">
+      <div className="main-container">
         <div className="ftrl_saksbehandling">
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {!hovedpartErVirksomhet ? (
-                  <>
-                    {erHenlagtSak && <HenlagtSak />}
-                    {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
-                    {visStegVelger && <EnkelStegvelger alleSteg={hentStegArray()} />}
-                  </>
-                ) : (
-                  <VirksomhetMelding />
-                )}
+                <main id="main-container">
+                  {!hovedpartErVirksomhet ? (
+                    <>
+                      {erHenlagtSak && <HenlagtSak />}
+                      {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
+                      {visStegVelger && <EnkelStegvelger alleSteg={hentStegArray()} />}
+                    </>
+                  ) : (
+                    <VirksomhetMelding />
+                  )}
+                </main>
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">
