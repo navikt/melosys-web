@@ -120,13 +120,13 @@ export const VurderingBestemmelserV2 = ({
     if (ulovligBestemmelseValgt) return;
 
     if (skalHenteVilkår) {
-      Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID).then((res: any) =>
+      Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID, behandlingstema).then((res: any) =>
         setVilkårOgBegrunnelser(res.vilkår)
       );
     }
 
     if (valgtAvklarteFakta.size > 0 && avklarteFakta.length > 0) {
-      Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID).then((res: any) =>
+      Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID, behandlingstema).then((res: any) =>
         setVilkårOgBegrunnelser(res.vilkår)
       );
     }
