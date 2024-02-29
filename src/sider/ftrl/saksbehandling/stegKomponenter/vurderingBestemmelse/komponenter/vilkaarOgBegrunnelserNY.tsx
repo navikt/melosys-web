@@ -109,7 +109,7 @@ export const VilkaarOgBegrunnelserNY = ({
                 </option>
                 {muligeBegrunnelser.map((begrunnelse) => (
                   <option key={begrunnelse} value={begrunnelse}>
-                    {KV.finnTermFraListe(MKV.KTObjects.begrunnelser.folketrygdloven, begrunnelse)}
+                    {KV.termFraNestedKTObject(MKV.KTObjects.begrunnelser.folketrygdloven, begrunnelse)}
                   </option>
                 ))}
               </Nav.Select>

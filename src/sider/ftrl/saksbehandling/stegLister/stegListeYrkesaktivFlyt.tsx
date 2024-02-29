@@ -2,9 +2,10 @@ import { FANE_STATUS } from "../../../../felleskomponenter/stegvelger";
 import { VurderingInngang } from "../stegKomponenter/vurderingInngang/vurderingInngang";
 import { VurderingVirksomhet } from "../stegKomponenter/vurderingVirksomhet/vurderingVirksomhet";
 import { VurderingPerioder } from "../stegKomponenter/vurderingPeriode/vurderingPerioder";
-import { VurderingBestemmelse } from "../stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
 import { VurderingTrygdeavgift } from "../stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
 import { VurderingVedtak } from "../stegKomponenter/vurderingVedtak/vurderingVedtak";
+import { VurderingBestemmelserV2 } from "../stegKomponenter/vurderingBestemmelse/vurderingBestemmelseNY";
+import { VurderingBestemmelse } from "../stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
 
 const initialInngangSteg = {
   id: "Inngang",
@@ -34,6 +35,16 @@ const initialBestemmelseSteg = {
   aktivtSteg: false,
   vedtakSteg: false,
   komponent: VurderingBestemmelse,
+};
+
+const initialBestemmelseStegV2 = {
+  id: "Bestemmelse",
+  tittel: "Bestemmelse",
+  stegPosisjon: 2,
+  status: FANE_STATUS.UBEHANDLET,
+  aktivtSteg: false,
+  vedtakSteg: false,
+  komponent: VurderingBestemmelserV2,
 };
 
 const initialPeriodeSteg = {
@@ -70,6 +81,15 @@ export const alleStegYrkesaktivFlyt = [
   initialInngangSteg,
   initialVirksomhetSteg,
   initialBestemmelseSteg,
+  initialPeriodeSteg,
+  initialTrygdeavgiftSteg,
+  initialVedtakSteg,
+];
+
+export const alleStegYrkesaktivFlytV2 = [
+  initialInngangSteg,
+  initialVirksomhetSteg,
+  initialBestemmelseStegV2,
   initialPeriodeSteg,
   initialTrygdeavgiftSteg,
   initialVedtakSteg,

@@ -36,17 +36,21 @@ import { vilkarOperations } from "../../../ducks/vilkar";
 import { menypanelOperations, menypanelSelectors } from "../../../ducks/menypanel";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
-import { alleStegYrkesaktivFlyt } from "./stegLister/stegListeYrkesaktivFlyt";
+import { alleStegYrkesaktivFlyt, alleStegYrkesaktivFlytV2 } from "./stegLister/stegListeYrkesaktivFlyt";
 import "./saksbehandling.css";
 import {
   MELOSYS_FOLKETRYGDEN_MVP,
+  MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER,
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../../featuretoggle/toggleNavn";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { resetInkluderSiste5Aar } from "../../../ducks/modaler/operations";
 import { setErFullmektigEndret } from "../../../ducks/menypanel/operations";
-import { alleStegManglendeInnbetalingFlyt } from "./stegLister/stegListeManglendeInnbetalingFlyt";
+import {
+  alleStegManglendeInnbetalingFlyt,
+  alleStegManglendeInnbetalingFlytV2,
+} from "./stegLister/stegListeManglendeInnbetalingFlyt";
 import { fakturaserierOperations } from "../../../ducks/fakturaserier";
 import { alleStegIkkeYrkesaktivFlyt } from "./stegLister/stegListeIkkeYrkesaktivFlyt";
 
@@ -160,6 +164,7 @@ const Saksbehandling = ({
   const folketrygdenToggle = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
+  const ftrlPliktigeBestemmelserToggleEnabled = useFeatureToggle(MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -243,9 +248,11 @@ const Saksbehandling = ({
       manglendeInnbetalingToggleEnabled &&
       behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT
     ) {
-      return alleStegManglendeInnbetalingFlyt;
+      return ftrlPliktigeBestemmelserToggleEnabled
+        ? alleStegManglendeInnbetalingFlytV2
+        : alleStegManglendeInnbetalingFlyt;
     }
-    return alleStegYrkesaktivFlyt;
+    return ftrlPliktigeBestemmelserToggleEnabled ? alleStegYrkesaktivFlytV2 : alleStegYrkesaktivFlyt;
   };
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
