@@ -211,7 +211,7 @@ export const VurderingBestemmelserV2 = ({
     if (avklarteFakta.length > 0) avklarteFaktaOK = !Utils._isEmpty(valgtAvklarteFakta);
     if (avklarteFakta.length === 0) avklarteFaktaOK = true;
 
-    if (vilkårOgBegrunnelser.length > 0 && valgteVilkår.size > 0) {
+    if (vilkårOgBegrunnelser.length > 0 && valgteVilkår.size > 0 && valgteVilkår.size === vilkårOgBegrunnelser.length) {
       vilkårOK = validerValuesMap(valgteVilkår);
     }
 
@@ -229,7 +229,6 @@ export const VurderingBestemmelserV2 = ({
       begrunnelserOK = true;
     }
     const altGyldig = bestemmelserOK && avklarteFaktaOK && vilkårOK && begrunnelserOK;
-
     setFormIsValid(altGyldig);
   };
 
@@ -306,6 +305,8 @@ export const VurderingBestemmelserV2 = ({
         valgtAlternativ={valgtBestemmelse}
         endretAlternativ={(bestemmelse) => {
           setHarSkjeddEndringer(true);
+          reset(ResetTyper.AVKLARTEFAKTA);
+          reset(ResetTyper.VILKÅR);
           setValgtBestemmelse(bestemmelse);
         }}
       />
