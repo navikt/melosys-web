@@ -1,5 +1,5 @@
-import SideDialog, { fanerUtenBucOgSed, defaultFaner } from "./sideDialog";
+import SideDialog, { tabsUtenBucOgSed, defaultTabs } from "./sideDialog";
 import SendBrev from "./sendBrev";
 
-export { fanerUtenBucOgSed, defaultFaner, SendBrev };
+export { tabsUtenBucOgSed, defaultTabs, SendBrev };
 export default SideDialog;

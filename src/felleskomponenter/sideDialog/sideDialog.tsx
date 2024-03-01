@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
-import classnames from "classnames";
 import { DokumentOversikt, FysiskDokument } from "Domene";
-
-import * as Nav from "../../navFrontend";
+import { Tabs } from "@navikt/ds-react";
 import * as Utils from "../../utils";
 
 import { behandlingerSelectors } from "../../ducks/behandlinger";
@@ -20,10 +18,8 @@ import SideDialogNotater from "./sideDialogNotater";
 
 import "./sideDialog.css";
 
-export type FaneNavn = "sedbestilling" | "dokumenter" | "notat" | "brevbestilling" | "besvarsed";
-
 export interface FaneViserProps {
-  navn: FaneNavn;
+  navn: string;
   saksnummer: string;
   sakstype: string;
   behandlingID: number;
@@ -31,7 +27,7 @@ export interface FaneViserProps {
   redigerbart: boolean;
   dokumentOversikt: DokumentOversikt[];
   dokumenter: FysiskDokument[];
-  endreFane: (fanenavn: FaneNavn) => void;
+  setAktivTab: (fanenavn: string) => void;
 }
 
 export const FaneViser = ({
@@ -43,12 +39,16 @@ export const FaneViser = ({
   redigerbart,
   dokumentOversikt,
   dokumenter,
-  endreFane,
+  setAktivTab,
 }: FaneViserProps) => {
   switch (navn) {
     case "dokumenter":
       return (
-        <SideDialogDokumenter behandlingID={behandlingID} dokumentOversikt={dokumentOversikt} endreFane={endreFane} />
+        <SideDialogDokumenter
+          behandlingID={behandlingID}
+          dokumentOversikt={dokumentOversikt}
+          setAktivTab={setAktivTab}
+        />
       );
     case "brevbestilling":
       return (
@@ -79,7 +79,7 @@ export const FaneViser = ({
   }
 };
 
-type Fane = { navn: FaneNavn; tittel: string };
+type Tab = { navn: string; tittel: string };
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -95,7 +95,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface SideDialogProps {
-  faner?: Fane[];
+  tabs?: Tab[];
 }
 
 const SideDialog = ({
@@ -106,61 +106,51 @@ const SideDialog = ({
   redigerbart,
   dokumentOversikt,
   dokumenter,
-  faner = defaultFaner,
+  tabs = defaultTabs,
 }: SideDialogProps & PropsFromRedux) => {
-  const [aktivFane, setAktivFane] = useState<FaneNavn>(faner[0].navn);
+  const [aktivTab, setAktivTab] = useState<string>(tabs[0].navn);
   const [endreFokus, setEndreFokus] = useState(false);
 
   useEffect(() => {
     if (endreFokus) {
-      Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktivFane);
+      Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktivTab);
       setEndreFokus(false);
     }
-  }, [aktivFane]);
-
-  const endreFane = (fanenavn: FaneNavn) => {
-    setAktivFane(fanenavn);
-    setEndreFokus(true);
-  };
+  }, [aktivTab]);
 
   return (
-    <div className="dialog panelSeksjon">
+    <div className="dialog">
       <aside>
-        <Nav.Panel>
+        <Tabs value={aktivTab} onChange={setAktivTab}>
           <nav>
-            <div className="dialog__meny" role="navigation">
-              {faner.map((fane) => (
-                <button
-                  className={classnames({ meny__element: true, "meny__element--aktiv": fane.navn === aktivFane })}
-                  key={Utils._uuid()}
-                  onClick={() => endreFane(fane.navn)}
-                  type="button"
-                >
-                  {fane.tittel}
-                </button>
+            <Tabs.List>
+              {tabs.map((tab) => (
+                <Tabs.Tab key={Utils._uuid()} value={tab.navn} label={tab.tittel} />
               ))}
-            </div>
+            </Tabs.List>
           </nav>
-          <div id={aktivFane}>
-            <FaneViser
-              navn={aktivFane}
-              behandlingID={behandlingID}
-              behandlingstema={behandlingstema}
-              saksnummer={saksnummer}
-              sakstype={sakstype}
-              redigerbart={redigerbart}
-              dokumentOversikt={dokumentOversikt}
-              dokumenter={dokumenter}
-              endreFane={endreFane}
-            />
-          </div>
-        </Nav.Panel>
+          {tabs.map((tab) => (
+            <Tabs.Panel value={tab.navn}>
+              <FaneViser
+                navn={tab.navn}
+                saksnummer={saksnummer}
+                sakstype={sakstype}
+                behandlingID={behandlingID}
+                behandlingstema={behandlingstema}
+                redigerbart={redigerbart}
+                dokumentOversikt={dokumentOversikt}
+                dokumenter={dokumenter}
+                setAktivTab={setAktivTab}
+              />
+            </Tabs.Panel>
+          ))}
+        </Tabs>
       </aside>
     </div>
   );
 };
 
-export const defaultFaner: Fane[] = [
+export const defaultTabs: Tab[] = [
   { navn: "dokumenter", tittel: "Dokumenter" },
   { navn: "notat", tittel: "Behandlingsnotat" },
   { navn: "brevbestilling", tittel: "Send brev" },
@@ -168,7 +158,7 @@ export const defaultFaner: Fane[] = [
   { navn: "besvarsed", tittel: "SED-utveksling" },
 ];
 
-export const fanerUtenBucOgSed: Fane[] = [
+export const tabsUtenBucOgSed: Tab[] = [
   { navn: "dokumenter", tittel: "Dokumenter" },
   { navn: "notat", tittel: "Behandlingsnotat" },
   { navn: "brevbestilling", tittel: "Send brev" },

@@ -18,7 +18,7 @@ describe("SideDialog", () => {
         saksnummer: "4",
         sakstype: "TRYGDEAVTALE",
         behandlingstema: "YRKESAKTIV",
-        endreFane: vi.fn(),
+        setAktivTab: vi.fn(),
         redigerbart: true,
         dokumentOversikt: [
           {

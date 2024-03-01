@@ -10,7 +10,7 @@ import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
+import SideDialog, { defaultTabs, tabsUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
@@ -205,7 +205,7 @@ class Saksbehandling extends Component {
                     mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                   />
                   <SaksoversiktLenke />
-                  <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
+                  <SideDialog tabs={hovedpartErVirksomhet ? tabsUtenBucOgSed : defaultTabs} />
                 </Nav.Column>
               </Nav.Row>
             </Nav.Container>

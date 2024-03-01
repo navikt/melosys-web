@@ -19,7 +19,7 @@ import { fagsakOperations } from "../../ducks/fagsaker";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
-import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
+import SideDialog, { defaultTabs } from "../../felleskomponenter/sideDialog";
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 
@@ -127,7 +127,7 @@ const Saksbehandling = ({
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerTom}
                 />
                 <SaksoversiktLenke />
-                <SideDialog faner={defaultFaner} />
+                <SideDialog tabs={defaultTabs} />
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>
