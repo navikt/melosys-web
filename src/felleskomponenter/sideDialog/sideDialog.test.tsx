@@ -1,25 +1,23 @@
-import { shallow } from "enzyme";
-
-import { FaneViser, FaneViserProps } from "./sideDialog";
-
-import SideDialogDokumenter from "./sideDialogDokumenter";
-import SideDialogSedBestilling from "./sideDialogOpprettNyBuc";
-import SideDialogBesvarSed from "./sideDialogBesvarSed";
-import SideDialogSendBrev from "./sendBrev";
+import SideDialog from "./sideDialog";
+import MKV from "../../melosyskodeverk";
+import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
+import { reduxForm } from "redux-form";
+import { STATUS } from "../../services";
 
 describe("SideDialog", () => {
-  describe("FaneViser", () => {
-    let props: FaneViserProps;
-
-    beforeEach(() => {
-      props = {
-        navn: "dokumenter",
+  const initialReduxState = {
+    behandlinger: {
+      data: {
         behandlingID: 4,
-        saksnummer: "4",
-        sakstype: "TRYGDEAVTALE",
-        behandlingstema: "YRKESAKTIV",
-        setAktivTab: vi.fn(),
+        oppsummering: {
+          behandlingstema: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+        },
         redigerbart: true,
+      },
+      status: STATUS.OK,
+    },
+    dokumenter: {
+      data: {
         dokumentOversikt: [
           {
             journalpostID: "321",
@@ -35,47 +33,31 @@ describe("SideDialog", () => {
             vedlegg: [],
           },
         ],
-        dokumenter: [],
-      };
-    });
+      },
+      status: STATUS.OK,
+    },
+    fagsaker: {
+      data: {
+        saksnummer: "333",
+        sakstype: {
+          kode: MKV.Koder.sakstyper.EU_EOS,
+        },
+      },
+      status: STATUS.OK,
+    },
+  };
+  // @ts-ignore
+  const WrappedSideDialog = reduxForm({ form: "test" })(SideDialog);
 
-    describe("Navn-prop styrer visning av", () => {
-      it("SideDialogDokumenter", () => {
-        props.navn = "dokumenter";
-        const faner = shallow(<FaneViser {...props} />);
+  beforeEach(() => {
+    // @ts-ignore
+    fetch.resetMocks();
+    // @ts-ignore
+    fetch.mockResponse(JSON.stringify({}));
+  });
 
-        const sideDialogDokumenter = faner.find(SideDialogDokumenter);
-        expect(sideDialogDokumenter).toHaveLength(1);
-        expect(sideDialogDokumenter.props().dokumentOversikt.length).toEqual(1);
-      });
-
-      it("SideDialogSendBrev", () => {
-        props.navn = "brevbestilling";
-        const faner = shallow(<FaneViser {...props} />);
-
-        const sendBrev = faner.find(SideDialogSendBrev);
-
-        expect(sendBrev).toHaveLength(1);
-        expect(sendBrev.props().redigerbart).toBe(props.redigerbart);
-      });
-
-      it("SideDialogSedBestilling", () => {
-        props.navn = "sedbestilling";
-        const faner = shallow(<FaneViser {...props} />);
-
-        const sideDialogSedBestilling = faner.find(SideDialogSedBestilling);
-        expect(sideDialogSedBestilling).toHaveLength(1);
-        expect(sideDialogSedBestilling.props().behandlingID).toBe(props.behandlingID);
-      });
-
-      it("SideDialogBesvarSed", () => {
-        props.navn = "besvarsed";
-        const faner = shallow(<FaneViser {...props} />);
-
-        const sideDialogBesvarSed = faner.find(SideDialogBesvarSed);
-        expect(sideDialogBesvarSed).toHaveLength(1);
-        expect(sideDialogBesvarSed.props().behandlingID).toBe(props.behandlingID);
-      });
-    });
+  it("snapshot test", () => {
+    const { container } = renderWithProviders(<WrappedSideDialog />, { preloadedState: initialReduxState });
+    expect(container).toMatchSnapshot();
   });
 });
