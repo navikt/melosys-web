@@ -104,14 +104,16 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const erIkkeYrkesaktiv = behandlingstema === IKKE_YRKESAKTIV;
   const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
 
-  let brevType: string;
-  if (erDelvisOpphør) {
-    brevType = VEDTAK_OPPHOERT_MEDLEMSKAP;
-  } else if (erIkkeYrkesaktiv) {
-    brevType = medlemskapsTypeErPliktig ? IKKE_YRKESAKTIV_PLIKTIG_FTRL : IKKE_YRKESAKTIV_FRIVILLIG_FTRL;
-  } else {
-    brevType = INNVILGELSE_FOLKETRYGDLOVEN;
-  }
+  const hentProduserbardokumentType = () => {
+    if (erDelvisOpphør) {
+      return VEDTAK_OPPHOERT_MEDLEMSKAP;
+    }
+    if (erIkkeYrkesaktiv) {
+      return medlemskapsTypeErPliktig ? IKKE_YRKESAKTIV_PLIKTIG_FTRL : IKKE_YRKESAKTIV_FRIVILLIG_FTRL;
+    }
+
+    return INNVILGELSE_FOLKETRYGDLOVEN;
+  };
 
   const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
     return !MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.some((bakgrunn: KTObject) => {
@@ -179,7 +181,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: brevType,
+      produserbartdokument: hentProduserbardokumentType(),
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -272,6 +274,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       setVedtakPending(false);
     }
   }
+
   const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
@@ -306,7 +309,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
       dokumentData: {
-        produserbardokument: brevType,
+        produserbardokument: hentProduserbardokumentType(),
         mottaker: muligMottaker.rolle,
         innledningFritekst: formValues?.innledningFritekst || null,
         begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
