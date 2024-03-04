@@ -1,0 +1,66 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Vedtaketypeskjema > snapshot test 1`] = `
+<div>
+  <fieldset
+    class="fieldset radio-gruppe artikkel"
+  >
+    <legend
+      class="fieldset__legend"
+    >
+      label
+    </legend>
+    <div
+      class=""
+    >
+      <label
+        class="skjemaelement__label"
+        for="feltNavn"
+      >
+        <div
+          class="skjemaelement"
+        >
+          <input
+            aria-invalid="false"
+            class="skjemaelement__input radioknapp"
+            id="123"
+            name="feltNavn"
+            type="radio"
+            value="KORRIGERT_VEDTAK"
+          />
+          <label
+            class="skjemaelement__label"
+            for="123"
+          >
+            Korrigert vedtak
+          </label>
+        </div>
+        <div
+          class="skjemaelement"
+        >
+          <input
+            aria-invalid="false"
+            class="skjemaelement__input radioknapp"
+            disabled=""
+            id="123"
+            name="feltNavn"
+            type="radio"
+            value="OMGJØRINGSVEDTAK"
+          />
+          <label
+            class="skjemaelement__label"
+            for="123"
+          >
+            Omgjøringsvedtak
+          </label>
+        </div>
+        <div
+          aria-live="assertive"
+          class="radio-gruppe__skjemaelement-feilmelding"
+          role="alert"
+        />
+      </label>
+    </div>
+  </fieldset>
+</div>
+`;
