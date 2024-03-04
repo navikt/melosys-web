@@ -46,7 +46,7 @@ const mapDispatchToProps = (
 const connector = connect(null, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export const InnerEditerbartElementListe = ({
+const InnerEditerbartElementListe = ({
   leggTilTekst,
   redigerbart,
   fields,
