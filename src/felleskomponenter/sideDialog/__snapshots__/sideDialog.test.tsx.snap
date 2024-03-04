@@ -1,0 +1,247 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SideDialog > snapshot test 1`] = `
+<div>
+  <div
+    class="dialog"
+  >
+    <aside>
+      <div
+        class="navds-tabs navds-tabs--medium"
+        data-orientation="horizontal"
+        dir="ltr"
+      >
+        <nav>
+          <div
+            class="navds-tabs__tablist-wrapper"
+          >
+            <div
+              aria-orientation="horizontal"
+              class="navds-tabs__tablist"
+              data-orientation="horizontal"
+              role="tablist"
+              style="outline: none;"
+              tabindex="0"
+            >
+              <button
+                aria-controls="radix-5-content-dokumenter"
+                aria-selected="true"
+                class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-state="active"
+                id="radix-5-trigger-dokumenter"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="navds-tabs__tab-inner navds-body-short"
+                >
+                  Dokumenter
+                </span>
+              </button>
+              <button
+                aria-controls="radix-5-content-notat"
+                aria-selected="false"
+                class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-state="inactive"
+                id="radix-5-trigger-notat"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="navds-tabs__tab-inner navds-body-short"
+                >
+                  Behandlingsnotat
+                </span>
+              </button>
+              <button
+                aria-controls="radix-5-content-brevbestilling"
+                aria-selected="false"
+                class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-state="inactive"
+                id="radix-5-trigger-brevbestilling"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="navds-tabs__tab-inner navds-body-short"
+                >
+                  Send brev
+                </span>
+              </button>
+              <button
+                aria-controls="radix-5-content-sedbestilling"
+                aria-selected="false"
+                class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-state="inactive"
+                id="radix-5-trigger-sedbestilling"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="navds-tabs__tab-inner navds-body-short"
+                >
+                  Opprett ny BUC
+                </span>
+              </button>
+              <button
+                aria-controls="radix-5-content-besvarsed"
+                aria-selected="false"
+                class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
+                data-orientation="horizontal"
+                data-radix-collection-item=""
+                data-state="inactive"
+                id="radix-5-trigger-besvarsed"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="navds-tabs__tab-inner navds-body-short"
+                >
+                  SED-utveksling
+                </span>
+              </button>
+            </div>
+          </div>
+        </nav>
+        <div
+          aria-labelledby="radix-5-trigger-dokumenter"
+          class="navds-tabs__tabpanel"
+          data-orientation="horizontal"
+          data-state="active"
+          id="radix-5-content-dokumenter"
+          role="tabpanel"
+          style="animation-duration: 0s;"
+          tabindex="0"
+        >
+          <div
+            class="sideDialogDokumenter"
+          >
+            <table
+              aria-label="Liste over dokumenter knyttet til saken"
+              class="navds-table navds-table--small"
+            >
+              <thead
+                class="navds-table__header"
+              >
+                <tr
+                  class="navds-table__row navds-table__row--shade-on-hover"
+                >
+                  <th
+                    aria-label="Mottaksretning"
+                    class="navds-table__header-cell navds-label navds-label--small"
+                  />
+                  <th
+                    class="navds-table__header-cell navds-label navds-label--small"
+                  >
+                    Dokument
+                  </th>
+                  <th
+                    class="navds-table__header-cell navds-label navds-label--small"
+                  >
+                    Avsender/mottaker
+                  </th>
+                  <th
+                    class="navds-table__header-cell navds-label navds-label--small"
+                  >
+                    Dato
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                class="navds-table__body"
+              >
+                <tr
+                  class="navds-table__row navds-table__row--shade-on-hover"
+                >
+                  <td
+                    class="navds-table__data-cell navds-body-short navds-body-short--small"
+                  >
+                    <div
+                      class="mottaksretning mottaksretning__inn"
+                    >
+                      inn
+                    </div>
+                  </td>
+                  <td
+                    class="navds-table__data-cell navds-body-short navds-body-short--small"
+                  >
+                    <span>
+                      <a
+                        class="lenke"
+                        href="#"
+                      >
+                        tittel (åpnes i ny fane)
+                      </a>
+                    </span>
+                  </td>
+                  <td
+                    class="navds-table__data-cell navds-body-short navds-body-short--small"
+                  >
+                    avsendernavn
+                  </td>
+                  <td
+                    class="navds-table__data-cell navds-body-short navds-body-short--small"
+                  />
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div
+          aria-labelledby="radix-5-trigger-notat"
+          class="navds-tabs__tabpanel"
+          data-orientation="horizontal"
+          data-state="inactive"
+          hidden=""
+          id="radix-5-content-notat"
+          role="tabpanel"
+          tabindex="0"
+        />
+        <div
+          aria-labelledby="radix-5-trigger-brevbestilling"
+          class="navds-tabs__tabpanel"
+          data-orientation="horizontal"
+          data-state="inactive"
+          hidden=""
+          id="radix-5-content-brevbestilling"
+          role="tabpanel"
+          tabindex="0"
+        />
+        <div
+          aria-labelledby="radix-5-trigger-sedbestilling"
+          class="navds-tabs__tabpanel"
+          data-orientation="horizontal"
+          data-state="inactive"
+          hidden=""
+          id="radix-5-content-sedbestilling"
+          role="tabpanel"
+          tabindex="0"
+        />
+        <div
+          aria-labelledby="radix-5-trigger-besvarsed"
+          class="navds-tabs__tabpanel"
+          data-orientation="horizontal"
+          data-state="inactive"
+          hidden=""
+          id="radix-5-content-besvarsed"
+          role="tabpanel"
+          tabindex="0"
+        />
+      </div>
+    </aside>
+  </div>
+</div>
+`;

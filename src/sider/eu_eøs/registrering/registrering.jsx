@@ -9,7 +9,7 @@ import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
-import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
+import SideDialog, { defaultTabs, tabsUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import { Innsynsmelding, VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
@@ -111,7 +111,7 @@ export const Registrering = ({
                   lovvalgsperiodeTom={lovvalgsperiodeTom}
                 />
                 <SaksoversiktLenke />
-                <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
+                <SideDialog tabs={hovedpartErVirksomhet ? tabsUtenBucOgSed : defaultTabs} />
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>
