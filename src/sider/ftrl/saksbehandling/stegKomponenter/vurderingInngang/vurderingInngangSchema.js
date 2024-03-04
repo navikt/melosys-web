@@ -9,17 +9,18 @@ const TRYGDEDEKNING_FELT_KREVES = { melding: "Du må velge trygdedekning" };
 const vurdering_inngang = object().shape({
   fom: string().erGyldigDato().required(MAA_FYLLES_UT),
   tom: string().erGyldigDato().erEtterDatofelt("fom").nullable(),
-  arbeidsland: string().when("$erIkkeYrkesaktiv", {
+  arbeidsland: string().when("$skalBrukeFlereLandUkjentHvilke", {
     is: false,
     then: string().required(ARBEIDSLAND_FELT_KREVES),
     otherwise: string().nullable(),
   }),
-  land: array().when(["$erIkkeYrkesaktiv", "flereLandUkjentHvilke"], {
-    is: (erIkkeYrkesaktiv, flereLandUkjentHvilke) => erIkkeYrkesaktiv && !flereLandUkjentHvilke,
+  land: array().when(["$skalBrukeFlereLandUkjentHvilke", "flereLandUkjentHvilke"], {
+    is: (skalBrukeFlereLandUkjentHvilke, flereLandUkjentHvilke) =>
+      skalBrukeFlereLandUkjentHvilke && !flereLandUkjentHvilke,
     then: array().of(string()).min(1, LAND_FELT_KREVES).required(LAND_FELT_KREVES),
     otherwise: array().nullable(),
   }),
-  flereLandUkjentHvilke: boolean().when("$erIkkeYrkesaktiv", {
+  flereLandUkjentHvilke: boolean().when("$skalBrukeFlereLandUkjentHvilke", {
     is: true,
     then: boolean().required(LAND_FELT_KREVES),
     otherwise: boolean().nullable(),
