@@ -39,7 +39,12 @@ const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlin
 const { IKKE_YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
-const { INNVILGELSE_FOLKETRYGDLOVEN, VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
+const {
+  INNVILGELSE_FOLKETRYGDLOVEN,
+  VEDTAK_OPPHOERT_MEDLEMSKAP,
+  IKKE_YRKESAKTIV_PLIKTIG_FTRL,
+  IKKE_YRKESAKTIV_FRIVILLIG_FTRL,
+} = MKV.Koder.brev.produserbaredokumenter;
 const { MEDLEM_I_FOLKETRYGDEN, DELVIS_OPPHØRT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { PLIKTIG } = MKV.Koder.medlemskapstyper;
 
@@ -98,6 +103,15 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const erDelvisOpphør = medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === OPPHØRT);
   const erIkkeYrkesaktiv = behandlingstema === IKKE_YRKESAKTIV;
   const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
+
+  let brevType: string;
+  if (erDelvisOpphør) {
+    brevType = VEDTAK_OPPHOERT_MEDLEMSKAP;
+  } else if (erIkkeYrkesaktiv) {
+    brevType = medlemskapsTypeErPliktig ? IKKE_YRKESAKTIV_PLIKTIG_FTRL : IKKE_YRKESAKTIV_FRIVILLIG_FTRL;
+  } else {
+    brevType = INNVILGELSE_FOLKETRYGDLOVEN;
+  }
 
   const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
     return !MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.some((bakgrunn: KTObject) => {
@@ -165,7 +179,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: erDelvisOpphør ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
+      produserbartdokument: brevType,
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -292,7 +306,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
       dokumentData: {
-        produserbardokument: erDelvisOpphør ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
+        produserbardokument: brevType,
         mottaker: muligMottaker.rolle,
         innledningFritekst: formValues?.innledningFritekst || null,
         begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
