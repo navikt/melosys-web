@@ -26,7 +26,6 @@ import { Spinner } from "../spinner";
 
 import "./endreBehandlingModal.css";
 import {
-  MELOSYS_FOLKETRYGDEN_MVP,
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../featuretoggle/toggleNavn";
@@ -89,7 +88,6 @@ function EndreBehandlingModal({
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
-  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const typeTemaKanEndres = !anmodningsperioderSendtTilUtlandet;
@@ -160,7 +158,6 @@ function EndreBehandlingModal({
         sakstema,
         behandlingstema,
         behandlingstype,
-        folketrygdenToggleEnabled,
         manglendeInnbetalingToggleEnabled,
         ikkeYrkesaktivFtrlToggleEnabled
       )
@@ -227,7 +224,6 @@ function EndreBehandlingModal({
           sakstema,
           behandlingstema,
           behandlingstype,
-          folketrygdenToggleEnabled,
           manglendeInnbetalingToggleEnabled,
           ikkeYrkesaktivFtrlToggleEnabled
         );

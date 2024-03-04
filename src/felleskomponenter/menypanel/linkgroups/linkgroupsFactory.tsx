@@ -31,7 +31,6 @@ interface LinkGroupsConfig {
   mottatteOpplysningerType: string;
   contentProps: ContentProps;
   sakstema: string;
-  folketrygdenToggleEnabled: boolean | undefined;
   manglendeInnbetalingToggleEnabled: boolean | undefined;
   ikkeYrkesaktivFtrlToggleEnabled: boolean | undefined;
 }
@@ -44,7 +43,6 @@ class LinkGroupsFactory {
     behandlingstema,
     behandlingstype,
     sakstema,
-    folketrygdenToggleEnabled,
     manglendeInnbetalingToggleEnabled,
     ikkeYrkesaktivFtrlToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
@@ -54,7 +52,6 @@ class LinkGroupsFactory {
         sakstema,
         behandlingstema,
         behandlingstype,
-        folketrygdenToggleEnabled,
         manglendeInnbetalingToggleEnabled,
         ikkeYrkesaktivFtrlToggleEnabled
       )
@@ -62,7 +59,7 @@ class LinkGroupsFactory {
       const linkBuilder = new LinksBuilder(contentProps).addFullmektig();
 
       if (behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
-        linkBuilder.addFaktureringskomponenten(folketrygdenToggleEnabled);
+        linkBuilder.addFaktureringskomponenten();
       }
 
       return new LinkgroupsBuilder().addUtenLabel(linkBuilder.build()).build();
@@ -162,7 +159,7 @@ class LinkGroupsFactory {
             new LinksBuilder(contentProps)
               .addMedlemskap()
               .addArbeidsforholdOgInntekt()
-              .addFaktureringskomponenten(folketrygdenToggleEnabled)
+              .addFaktureringskomponenten()
               .build()
           )
           .addFraBruker(

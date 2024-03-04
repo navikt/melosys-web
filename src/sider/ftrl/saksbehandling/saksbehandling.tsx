@@ -39,7 +39,6 @@ import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 import { alleStegYrkesaktivFlyt, alleStegYrkesaktivFlytV2 } from "./stegLister/stegListeYrkesaktivFlyt";
 import "./saksbehandling.css";
 import {
-  MELOSYS_FOLKETRYGDEN_MVP,
   MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER,
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
@@ -161,7 +160,6 @@ const Saksbehandling = ({
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
-  const folketrygdenToggle = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const ftrlPliktigeBestemmelserToggleEnabled = useFeatureToggle(MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER);
@@ -238,7 +236,6 @@ const Saksbehandling = ({
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;
   if (!saksopplysningerLastet) return null;
-  if (!folketrygdenToggle) return null;
 
   const hentStegArray = () => {
     if (ikkeYrkesaktivFtrlToggleEnabled && behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
