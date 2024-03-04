@@ -64,9 +64,9 @@ const PeriodeOverstiger12Mnd = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">Perioden overstiger 12 måneder.</Nav.AlertStripeFeil>
 );
 
-const SøknadsperiodenStarterFørEllerSlutterEtter = (
+const StarterSenereEllerSlutterFørSøknadsperioden = (
   <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
-    Søknadsperioden starter før og/eller slutter etter medlemskapsperioden(e).
+    Medlemskapsperioden(e) starter senere og/eller slutter før søknadsperioden.
   </Nav.AlertStripeAdvarsel>
 );
 
@@ -244,7 +244,7 @@ enum TypeFeilmelding {
   OVERLAPP_I_OPPHØRTE_PERIODER = "OVERLAPP_I_OPPHØRTE_PERIODER",
   OVERLAPP_OPPHØRT_INNVILGET = "OVERLAPP_OPPHØRT_INNVILGET",
   OPPHOLD_I_INNVILGEDE_PERIODER = "OPPHOLD_I_INNVILGEDE_PERIODER",
-  SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER = "SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER",
+  STARTER_SENERE_ELLER_SLUTTER_FØR_SØKNADSPERIODE = "STARTER_SENERE_ELLER_SLUTTER_FØR_SØKNADSPERIODE",
   MEDLEMSKAPSPERIODE_STARTER_FØR_2023 = "MEDLEMSKAPSPERIODE_STARTER_FØR_2023",
   INGEN_OPPHØRTE_PERIODER = "INGEN_OPPHØRTE_PERIODER",
   BARE_OPPHØRTE_PERIODER = "BARE_OPPHØRTE_PERIODER",
@@ -326,7 +326,7 @@ export function finnAktivFeilmelding(
       søknadsperiodeTomDato
     )
   ) {
-    return TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER;
+    return TypeFeilmelding.STARTER_SENERE_ELLER_SLUTTER_FØR_SØKNADSPERIODE;
   }
 
   return undefined;
@@ -347,7 +347,7 @@ export function feilMeldingBlokkerer(type?: string): boolean {
     case TypeFeilmelding.PERIODE_OVERSTIGER_12_MND:
       return true;
     case TypeFeilmelding.INGEN_OPPHØRTE_PERIODER:
-    case TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER:
+    case TypeFeilmelding.STARTER_SENERE_ELLER_SLUTTER_FØR_SØKNADSPERIODE:
     case TypeFeilmelding.BESTEMMELSE_FOR_FAMILIEMEDLEMMER:
     default:
       return false;
@@ -378,8 +378,8 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return OpphørtPeriodeFørAnnenPeriode;
     case TypeFeilmelding.INGEN_OPPHØRTE_PERIODER:
       return IngenOpphørtePerioder;
-    case TypeFeilmelding.SØKNADSPERIODE_STARTER_FØR_SLUTTER_ETTER:
-      return SøknadsperiodenStarterFørEllerSlutterEtter;
+    case TypeFeilmelding.STARTER_SENERE_ELLER_SLUTTER_FØR_SØKNADSPERIODE:
+      return StarterSenereEllerSlutterFørSøknadsperioden;
     case TypeFeilmelding.PERIODE_OVERSTIGER_12_MND:
       return PeriodeOverstiger12Mnd;
     case TypeFeilmelding.BESTEMMELSE_FOR_FAMILIEMEDLEMMER:
