@@ -1,10 +1,14 @@
-import * as Nav from "../../navFrontend";
-
 import SorterbarListe from "./sorterbarListe";
 import JournalforingOppgave from "../oppgaveliste/journalforingOppgave";
+import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
+import { reduxForm } from "redux-form";
+import { BrowserRouter as Router } from "react-router-dom";
+import userEvent from "@testing-library/user-event";
+import { within } from "@testing-library/react";
 
 describe("SorterbarListe", () => {
   let props = null;
+  const WrappedSorterbarListe = reduxForm({ form: "test" })(SorterbarListe);
 
   beforeEach(() => {
     props = {
@@ -47,48 +51,57 @@ describe("SorterbarListe", () => {
     };
   });
 
-  it("kan sortere slik at nyeste element kommer først", () => {
+  it("kan sortere slik at nyeste element kommer først", async () => {
     props.defaultChecked = "eldste";
-    const sorterbarListe = shallow(<SorterbarListe {...props} />);
+    const { findByLabelText, findAllByRole } = renderWithProviders(
+      <Router>
+        <WrappedSorterbarListe {...props} />
+      </Router>
+    );
+    const user = userEvent.setup();
+    await user.click(await findByLabelText("Nyeste først"));
 
-    const fieldset = sorterbarListe.find(Nav.Fieldset);
-    const event = { target: { value: "descending" } };
-    fieldset.simulate("change", event);
-
-    const oppgaveListe = sorterbarListe.find(JournalforingOppgave);
-    const aktivTilDatoer = oppgaveListe.map((n) => n.props().sak.aktivTil);
-
-    expect(aktivTilDatoer[0]).toBe("2016-02-22");
-    expect(aktivTilDatoer[1]).toBe("2016-02-21");
-    expect(aktivTilDatoer[2]).toBe("2016-02-20");
+    const links = await findAllByRole("link");
+    expect(links).toHaveLength(3);
+    expect(within(links[0]).getByText("2016-02-22")).toBeInTheDocument();
+    expect(within(links[2]).getByText("2016-02-20")).toBeInTheDocument();
   });
 
-  it("kan sortere slik at eldste element kommer først", () => {
-    const sorterbarListe = shallow(<SorterbarListe {...props} />);
+  it("kan sortere slik at eldste element kommer først", async () => {
+    const { findByLabelText, findAllByRole } = renderWithProviders(
+      <Router>
+        <WrappedSorterbarListe {...props} />
+      </Router>
+    );
+    const user = userEvent.setup();
+    await user.click(await findByLabelText("Eldste først"));
 
-    const fieldset = sorterbarListe.find(Nav.Fieldset);
-    const event = { target: { value: "ascending" } };
-    fieldset.simulate("change", event);
-
-    const oppgaveListe = sorterbarListe.find(JournalforingOppgave);
-    const aktivTilDatoer = oppgaveListe.map((n) => n.props().sak.aktivTil);
-
-    expect(aktivTilDatoer[0]).toBe("2016-02-20");
-    expect(aktivTilDatoer[1]).toBe("2016-02-21");
-    expect(aktivTilDatoer[2]).toBe("2016-02-22");
+    const links = await findAllByRole("link");
+    expect(links).toHaveLength(3);
+    expect(within(links[0]).getByText("2016-02-20")).toBeInTheDocument();
+    expect(within(links[2]).getByText("2016-02-22")).toBeInTheDocument();
   });
 
   it("viser ingenting hvis elementer er falsy", () => {
     props.elementer = null;
-    const sorterbarListe = shallow(<SorterbarListe {...props} />);
+    const { container } = renderWithProviders(
+      <Router>
+        <WrappedSorterbarListe {...props} />
+      </Router>
+    );
 
-    expect(sorterbarListe.isEmptyRender()).toBe(true);
+    expect(container).toBeEmptyDOMElement();
   });
 
   it("viser ikke sortering hvis bare ett element", () => {
     props.elementer = [{}];
-    const sorterbarListe = shallow(<SorterbarListe {...props} />);
+    const { queryByLabelText } = renderWithProviders(
+      <Router>
+        <WrappedSorterbarListe {...props} />
+      </Router>
+    );
 
-    expect(sorterbarListe.find(Nav.Fieldset)).toHaveLength(0);
+    expect(queryByLabelText("Nyeste først")).not.toBeInTheDocument();
+    expect(queryByLabelText("Eldste først")).not.toBeInTheDocument();
   });
 });
