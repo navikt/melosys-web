@@ -78,7 +78,7 @@ const IngenOpphørtePerioder = (
 
 const BestemmelseForFamiliemedlemmerErValgt = (
   <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
-    Husk at søkeren må få dekning som er i samsvar med forsørgerens vedtak.
+    Husk at søkeren må få dekning som er i samsvar med forsørgerens vedtak fra mottaksdato.
   </Nav.AlertStripeAdvarsel>
 );
 

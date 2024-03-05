@@ -15,7 +15,7 @@ import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
-import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
+import SideDialog, { defaultTabs, tabsUtenBucOgSed } from "../../../felleskomponenter/sideDialog";
 import { EnkelStegvelger } from "../../../felleskomponenter/enkelStegvelger";
 import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { MatchParams } from "../../../@types";
@@ -293,7 +293,7 @@ const Saksbehandling = ({
                   medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(samletMedlemskapsperiodeSelector?.tom)}
                 />
                 <SaksoversiktLenke />
-                <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
+                <SideDialog tabs={hovedpartErVirksomhet ? tabsUtenBucOgSed : defaultTabs} />
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>

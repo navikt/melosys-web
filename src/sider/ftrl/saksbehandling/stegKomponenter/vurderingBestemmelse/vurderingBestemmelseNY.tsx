@@ -308,6 +308,8 @@ export const VurderingBestemmelserV2 = ({
           reset(ResetTyper.AVKLARTEFAKTA);
           reset(ResetTyper.VILKÅR);
           setValgtBestemmelse(bestemmelse);
+          if (!Utils._isEmpty(lagredeVilkår)) dispatch(vilkarOperations.send(behandlingID, []));
+          if (lagretBestemmelse) dispatch(medlemskapsperioderOperations.slettMedlemskapsperioder(behandlingID));
         }}
       />
 

@@ -21,7 +21,7 @@ import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { Innsynsmelding, IngenFlytMelding, VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
-import SideDialog, { defaultFaner, fanerUtenBucOgSed } from "../../felleskomponenter/sideDialog";
+import SideDialog, { defaultTabs, tabsUtenBucOgSed } from "../../felleskomponenter/sideDialog";
 
 import "./behandling.css";
 import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
@@ -124,7 +124,7 @@ const Behandling = ({
                 mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
               />
               <SaksoversiktLenke />
-              <SideDialog faner={hovedpartErVirksomhet ? fanerUtenBucOgSed : defaultFaner} />
+              <SideDialog tabs={hovedpartErVirksomhet ? tabsUtenBucOgSed : defaultTabs} />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>

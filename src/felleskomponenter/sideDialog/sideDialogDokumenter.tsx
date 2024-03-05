@@ -13,7 +13,6 @@ import { formatterDatoTilNorsk } from "../../utils/dato";
 import { useAsyncCallbackState } from "../../hooks";
 import PdfLink from "../pdfLink";
 import LagredeUtkast from "./sendBrev/brevutkast/lagredeUtkast";
-import { FaneNavn } from "./sideDialog";
 
 import "./sideDialogDokumenter.css";
 import { Table } from "@navikt/ds-react";
@@ -88,15 +87,15 @@ const OversiktRad = ({
 interface SideDialogDokumenterProps {
   behandlingID: number;
   dokumentOversikt: DokumentOversikt[];
-  endreFane: (fanenavn: FaneNavn) => void;
+  setAktivTab: (fanenavn: string) => void;
 }
 
-const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, endreFane }: SideDialogDokumenterProps) => {
+const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, setAktivTab }: SideDialogDokumenterProps) => {
   const [utkast] = useAsyncCallbackState(() => Api.Brevutkast.hentBrevutkast(behandlingID), [], []);
   const dispatch = useDispatch();
   const handleValgtUtkast = (valgtUtkast: Api.Brevutkast.BrevutkastResDto | null) => {
     dispatch(change(KV.Form.SEND_BREV, "aktivtUtkast", valgtUtkast));
-    endreFane("brevbestilling");
+    setAktivTab("brevbestilling");
   };
   return (
     <div className="sideDialogDokumenter">

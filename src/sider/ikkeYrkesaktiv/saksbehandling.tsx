@@ -11,7 +11,7 @@ import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
-import SideDialog, { defaultFaner } from "../../felleskomponenter/sideDialog";
+import SideDialog, { defaultTabs } from "../../felleskomponenter/sideDialog";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
@@ -170,7 +170,7 @@ const Saksbehandling = ({
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />
                 <SaksoversiktLenke />
-                <SideDialog faner={defaultFaner} />
+                <SideDialog tabs={defaultTabs} />
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>

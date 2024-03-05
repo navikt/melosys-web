@@ -39,7 +39,12 @@ const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlin
 const { IKKE_YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
-const { INNVILGELSE_FOLKETRYGDLOVEN, VEDTAK_OPPHOERT_MEDLEMSKAP } = MKV.Koder.brev.produserbaredokumenter;
+const {
+  INNVILGELSE_FOLKETRYGDLOVEN,
+  VEDTAK_OPPHOERT_MEDLEMSKAP,
+  IKKE_YRKESAKTIV_PLIKTIG_FTRL,
+  IKKE_YRKESAKTIV_FRIVILLIG_FTRL,
+} = MKV.Koder.brev.produserbaredokumenter;
 const { MEDLEM_I_FOLKETRYGDEN, DELVIS_OPPHØRT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { PLIKTIG } = MKV.Koder.medlemskapstyper;
 
@@ -98,6 +103,17 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const erDelvisOpphør = medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === OPPHØRT);
   const erIkkeYrkesaktiv = behandlingstema === IKKE_YRKESAKTIV;
   const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
+
+  const hentProduserbardokumentType = () => {
+    if (erDelvisOpphør) {
+      return VEDTAK_OPPHOERT_MEDLEMSKAP;
+    }
+    if (erIkkeYrkesaktiv) {
+      return medlemskapsTypeErPliktig ? IKKE_YRKESAKTIV_PLIKTIG_FTRL : IKKE_YRKESAKTIV_FRIVILLIG_FTRL;
+    }
+
+    return INNVILGELSE_FOLKETRYGDLOVEN;
+  };
 
   const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
     return !MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.some((bakgrunn: KTObject) => {
@@ -165,7 +181,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: erDelvisOpphør ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
+      produserbartdokument: hentProduserbardokumentType(),
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -258,6 +274,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       setVedtakPending(false);
     }
   }
+
   const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
@@ -292,7 +309,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
       dokumentData: {
-        produserbardokument: erDelvisOpphør ? VEDTAK_OPPHOERT_MEDLEMSKAP : INNVILGELSE_FOLKETRYGDLOVEN,
+        produserbardokument: hentProduserbardokumentType(),
         mottaker: muligMottaker.rolle,
         innledningFritekst: formValues?.innledningFritekst || null,
         begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
