@@ -14,6 +14,10 @@ export const FaktaTypeOverskrifter: Record<string, FaktaType> = {
     tittel: "Angi brukers opphold",
     kodeverk: "ikkeyrkesaktivoppholdtype",
   },
+  ARBEIDSSITUASJON: {
+    tittel: "Angi brukers situasjon",
+    kodeverk: "arbeidssituasjontype",
+  },
 };
 
 export interface VurderingBestemmelseProps {

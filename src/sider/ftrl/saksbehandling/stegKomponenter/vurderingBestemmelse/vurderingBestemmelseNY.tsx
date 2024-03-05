@@ -29,7 +29,7 @@ enum ResetTyper {
   VILKÅR,
 }
 
-const { IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON } = MKV.Koder.avklartefaktatyper;
+const { IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON, ARBEIDSSITUASJON } = MKV.Koder.avklartefaktatyper;
 
 export const VurderingBestemmelserV2 = ({
   bekreft,
@@ -49,6 +49,7 @@ export const VurderingBestemmelserV2 = ({
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const ikkeYrkesaktivOppholdType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
   const ikkeYrkesaktivRelasjonType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivRelasjonSelector);
+  const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
   const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBegrunnelser[]>([]);
   const [avklarteFakta, setAvklarteFakta] = useState<AvklarteFakta[]>([]);
   const [bestemmelser, setBestemmelser] = useState<string[]>([]);
@@ -83,6 +84,9 @@ export const VurderingBestemmelserV2 = ({
         }
         if (ikkeYrkesaktivRelasjonType && fakta.muligeFakta.includes(ikkeYrkesaktivRelasjonType)) {
           valgtAvklarteFakta.set(fakta.faktaType.kode, ikkeYrkesaktivRelasjonType);
+        }
+        if (arbeidssituasjonType && fakta.muligeFakta.includes(arbeidssituasjonType)) {
+          valgtAvklarteFakta.set(fakta.faktaType.kode, arbeidssituasjonType);
         }
       });
       setValgtAvklarteFakta(new Map(valgtAvklarteFakta));
@@ -229,6 +233,7 @@ export const VurderingBestemmelserV2 = ({
       begrunnelserOK = true;
     }
     const altGyldig = bestemmelserOK && avklarteFaktaOK && vilkårOK && begrunnelserOK;
+
     setFormIsValid(altGyldig);
   };
 
@@ -280,6 +285,10 @@ export const VurderingBestemmelserV2 = ({
 
       if (key === IKKE_YRKESAKTIV_RELASJON) {
         await dispatch(oppsummertfaktaOperations.sendIkkeYrkesaktivRelasjontype(behandlingID, value));
+      }
+
+      if (key === ARBEIDSSITUASJON) {
+        await dispatch(oppsummertfaktaOperations.sendArbeidssituasjontype(behandlingID, value));
       }
     }
 
