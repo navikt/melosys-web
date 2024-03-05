@@ -242,6 +242,8 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
 
+  const visFeilmeldinger = feilMeldingBlokkerer(aktivFeilmeldingType) ? feltErFyltInn : feltErFyltInn && formIsValid;
+
   return (
     <div className="vurderingPerioder">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Medlemskapsperioder</Nav.Typo.Innholdstittel>
@@ -263,7 +265,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         visLeggTil={visLeggTilNyPeriode}
       />
 
-      {feltErFyltInn && <Feilmelding type={aktivFeilmeldingType} />}
+      {visFeilmeldinger && <Feilmelding type={aktivFeilmeldingType} />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
