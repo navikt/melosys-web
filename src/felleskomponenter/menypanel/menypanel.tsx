@@ -20,7 +20,6 @@ import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
 import {
-  MELOSYS_FOLKETRYGDEN_MVP,
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../featuretoggle/toggleNavn";
@@ -61,7 +60,6 @@ export const Menypanel = ({
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [endreFokus, setEndreFokus] = useState(false);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
-  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
@@ -87,7 +85,6 @@ export const Menypanel = ({
     contentProps,
     mottatteOpplysningerType,
     sakstema,
-    folketrygdenToggleEnabled,
     manglendeInnbetalingToggleEnabled,
     ikkeYrkesaktivFtrlToggleEnabled,
   });
@@ -125,7 +122,6 @@ export const Menypanel = ({
       sakstema,
       behandlingstema,
       behandlingstype,
-      folketrygdenToggleEnabled,
       manglendeInnbetalingToggleEnabled,
       ikkeYrkesaktivFtrlToggleEnabled
     );

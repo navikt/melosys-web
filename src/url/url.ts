@@ -83,7 +83,6 @@ export const lagUrl = (
   sakstemaKode: string,
   behandlingstemaKode: string,
   behandlingstypeKode: string,
-  folketrygdenToggleEnabled: boolean | undefined,
   manglendeInnbetalingToggleEnabled: boolean | undefined,
   ikkeYrkesaktivFtrlToggleEnabled: boolean | undefined
 ) => {
@@ -93,7 +92,6 @@ export const lagUrl = (
       sakstemaKode,
       behandlingstemaKode,
       behandlingstypeKode,
-      folketrygdenToggleEnabled,
       manglendeInnbetalingToggleEnabled,
       ikkeYrkesaktivFtrlToggleEnabled
     )
@@ -134,7 +132,6 @@ export const skalViseIngenFlyt = (
   sakstema: string,
   behandlingstema: string,
   behandlingstype: string,
-  folketrygdenToggleEnabled: boolean = false,
   manglendeInnbetalingToggleEnabled: boolean = false,
   ikkeYrkesaktivFtrlToggleEnabled: boolean = false
 ) => {
@@ -149,11 +146,9 @@ export const skalViseIngenFlyt = (
   if ([HENVENDELSE, KLAGE, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)) {
     return true;
   }
-  if (sakstype === FTRL && !folketrygdenToggleEnabled) {
-    return true;
-  }
 
   if (harUnntaksregistreringFlyt(sakstype, sakstema, behandlingstema)) return false;
+
   if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema)) return false;
 
   if (

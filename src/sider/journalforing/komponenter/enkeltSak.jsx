@@ -17,7 +17,6 @@ import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behand
 import "./enkeltSak.css";
 import { useFeatureToggle } from "../../../featuretoggle";
 import {
-  MELOSYS_FOLKETRYGDEN_MVP,
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../../featuretoggle/toggleNavn";
@@ -25,7 +24,6 @@ import {
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = (props) => {
-  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
@@ -47,7 +45,6 @@ const EnkeltSak = (props) => {
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    folketrygdenToggleEnabled,
     manglendeInnbetalingToggleEnabled,
     ikkeYrkesaktivFtrlToggleEnabled
   );

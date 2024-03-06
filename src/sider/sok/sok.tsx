@@ -14,7 +14,6 @@ import { sokOperations, sokSelectors } from "../../ducks/sok";
 import "./sok.css";
 import { useFeatureToggle } from "../../featuretoggle";
 import {
-  MELOSYS_FOLKETRYGDEN_MVP,
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../featuretoggle/toggleNavn";
@@ -38,7 +37,6 @@ export type SokProps = PropsFromRedux & {
 };
 
 export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: SokProps) => {
-  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const sokefrase = sessionStorage.getItem("sokefrase");
@@ -87,7 +85,6 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
                 sortingLegend="Sorter fagsaker etter opprettelsesdato:"
                 sortingPath="opprettetDato"
                 radioGroupName="fagsaksortering"
-                folketrygdenToggleEnabled={folketrygdenToggleEnabled}
                 manglendeInnbetalingToggleEnabled={manglendeInnbetalingToggleEnabled}
                 ikkeYrkesaktivFtrlToggleEnabled={ikkeYrkesaktivFtrlToggleEnabled}
                 landkoder={landkoder}

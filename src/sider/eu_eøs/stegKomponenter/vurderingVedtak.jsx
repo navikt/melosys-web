@@ -31,7 +31,6 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
 import "./vurderingVedtak.css";
 import {
-  MELOSYS_FOLKETRYGDEN_MVP,
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../../featuretoggle/toggleNavn";
@@ -76,7 +75,6 @@ const skalViseMottakerinstitusjoner = (
   sakstema,
   behandlingstema,
   behandlingstype,
-  folketrygdenToggleEnabled,
   manglendeInnbetalingToggleEnabled,
   ikkeYrkesaktivFtrlToggleEnabled
 ) => {
@@ -93,7 +91,6 @@ const skalViseMottakerinstitusjoner = (
       sakstema,
       behandlingstema,
       behandlingstype,
-      folketrygdenToggleEnabled,
       manglendeInnbetalingToggleEnabled,
       ikkeYrkesaktivFtrlToggleEnabled
     )
@@ -126,7 +123,6 @@ const VurderingVedtak = ({
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [erBucAapen, setErBucAapen] = useState(true);
-  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const dispatch = useDispatch();
@@ -149,7 +145,6 @@ const VurderingVedtak = ({
     sakstema,
     behandlingstema,
     behandlingstype,
-    folketrygdenToggleEnabled,
     manglendeInnbetalingToggleEnabled,
     ikkeYrkesaktivFtrlToggleEnabled
   );
