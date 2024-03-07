@@ -164,7 +164,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
     if (ingenGjeldendeSats) return feilmelding;
 
-    return error.body?.message || error;
+    return error.body?.feilkoder || error.body?.message || error;
   };
 
   const debouncedLagreTrygdeavgiftsgrunnlag = useCallback(
