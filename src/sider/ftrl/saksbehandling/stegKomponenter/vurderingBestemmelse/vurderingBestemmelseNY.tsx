@@ -10,7 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { ListeVelgerFtrl } from "./komponenter/listeVelger";
 import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_FOLKETRYGDEN_2_7 } from "../../../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_FOLKETRYGDEN_2_7,
+  MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER,
+} from "../../../../../featuretoggle/toggleNavn";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { vilkarOperations, vilkarSelectors } from "../../../../../ducks/vilkar";
 import {
@@ -38,6 +41,8 @@ export const VurderingBestemmelserV2 = ({
   oppdaterStatus,
 }: VurderingBestemmelseProps) => {
   const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
+  const pliktigeBestemmelserToggleEnabled = useFeatureToggle(MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER);
+
   const dispatch = useDispatch();
 
   const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
@@ -50,6 +55,12 @@ export const VurderingBestemmelserV2 = ({
   const ikkeYrkesaktivOppholdType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
   const ikkeYrkesaktivRelasjonType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivRelasjonSelector);
   const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
+  const lagredeValgtevirksomheter = useSelector(oppsummertfaktaSelectors.VirksomhetIDerSelector);
+  const selvstendigNaeringsvirksomhetUtland = useSelector(
+    mottatteOpplysningerSelectors.SelvstendigNaeringsvirksomhetUtlandSelector
+  );
+  const selvstendigNaeringsvirksomhet = useSelector(mottatteOpplysningerSelectors.SelvstendigNaringsvirksomhetSelector);
+
   const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBegrunnelser[]>([]);
   const [avklarteFakta, setAvklarteFakta] = useState<AvklarteFakta[]>([]);
   const [bestemmelser, setBestemmelser] = useState<string[]>([]);
@@ -70,6 +81,18 @@ export const VurderingBestemmelserV2 = ({
     Boolean(valgtBestemmelse) &&
     !lovligeBestemmelser?.includes(valgtBestemmelse) &&
     !pliktigeBestemmelser?.includes(valgtBestemmelse);
+
+  const finnesISelvstendigNaeringsvirksomhet = selvstendigNaeringsvirksomhet.some((virksomhet: any) =>
+    lagredeValgtevirksomheter.includes(virksomhet.orgnr)
+  );
+  const finnesISelvstendigNaeringsvirksomhetUtland = selvstendigNaeringsvirksomhetUtland.some((virksomhet: any) =>
+    lagredeValgtevirksomheter.includes(virksomhet.orgnr)
+  );
+
+  const selvstendigNaeringValgt = finnesISelvstendigNaeringsvirksomhet || finnesISelvstendigNaeringsvirksomhetUtland;
+
+  const ulovligKombinasjonAvSelvstendigNaeringOgVilkår =
+    selvstendigNaeringValgt && valgteVilkår.get(MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER);
 
   const behandlingErAvsluttetMedLagretBestemmelse =
     Boolean(lagretBestemmelse) && behandlingstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET;
@@ -231,16 +254,18 @@ export const VurderingBestemmelserV2 = ({
             begrunnelserOK = true;
           }
         }
-        if (vilkår.muligeBegrunnelser.length === 0) {
-          begrunnelserOK = true;
-        }
       }
     });
+
+    if (vilkårOgBegrunnelser.flatMap((a) => a.muligeBegrunnelser).length === 0) {
+      begrunnelserOK = true;
+    }
 
     if (vilkårOgBegrunnelser.length === 0) {
       vilkårOK = true;
       begrunnelserOK = true;
     }
+
     const altGyldig = bestemmelserOK && avklarteFaktaOK && vilkårOK && begrunnelserOK;
 
     setFormIsValid(altGyldig);
@@ -353,7 +378,16 @@ export const VurderingBestemmelserV2 = ({
       {vilkårOgBegrunnelser?.map((vb, index, hele) => {
         if (harReturnertNullIVilkårListe) return null;
         const forrige = hele[index - 1];
+
         if (forrige && valgteVilkår.get(forrige.vilkår) !== true) {
+          harReturnertNullIVilkårListe = true;
+          return null;
+        }
+        if (
+          forrige &&
+          forrige.vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER &&
+          ulovligKombinasjonAvSelvstendigNaeringOgVilkår
+        ) {
           harReturnertNullIVilkårListe = true;
           return null;
         }
@@ -363,6 +397,7 @@ export const VurderingBestemmelserV2 = ({
             vilkårOgBegrunnelser={vb}
             alleValgteVilkår={valgteVilkår}
             alleValgteBegrunnelser={valgteBegrunnelser}
+            selvstendigNæringValgt={pliktigeBestemmelserToggleEnabled && selvstendigNaeringValgt}
             handleEndreVilkår={(event) => {
               setHarSkjeddEndringer(true);
               setValgteVilkår(new Map(valgteVilkår.set(event.target.name, Boolean(event.target.value === "true"))));

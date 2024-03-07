@@ -26,6 +26,7 @@ interface VilkaarOgBegrunnelserProps {
   handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement>;
   handleEndreBegrunnelseFritekst: (vilkår: string, fritekst: string) => void;
   redigerbart: boolean;
+  selvstendigNæringValgt?: boolean;
 }
 
 export const VilkaarOgBegrunnelserNY = ({
@@ -36,6 +37,7 @@ export const VilkaarOgBegrunnelserNY = ({
   handleEndreBegrunnelseKode,
   handleEndreBegrunnelseFritekst,
   redigerbart,
+  selvstendigNæringValgt,
 }: VilkaarOgBegrunnelserProps) => {
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
   const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
@@ -44,6 +46,7 @@ export const VilkaarOgBegrunnelserNY = ({
     MKV.KTObjects.begrunnelser.folketrygdloven,
     valgtBegrunnelseForVilkår?.begrunnelseKode
   );
+  const harValgtFTRL_ARBEIDSTAKER = vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && valgtVilkår;
 
   return (
     <Fragment>
@@ -82,7 +85,12 @@ export const VilkaarOgBegrunnelserNY = ({
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
-
+      {selvstendigNæringValgt && harValgtFTRL_ARBEIDSTAKER && (
+        <Nav.AlertStripeFeil>
+          {/* eslint-disable-next-line react/no-unescaped-entities */}
+          Virksomheten du har valgt på steget "Virksomhet" er en selvstendig virksomhet
+        </Nav.AlertStripeFeil>
+      )}
       {valgtVilkår === false && <IngenFlytMelding />}
       {valgtVilkår && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
