@@ -19,7 +19,7 @@ import {
   VilkårOgBegrunnelser,
   VurderingBestemmelseProps,
 } from "./komponenter/typer";
-import { Begrunnelse } from "./vurderingBestemmelse";
+import { Begrunnelse, kodeInkludererFritekst } from "./vurderingBestemmelse";
 import { VilkaarOgBegrunnelserNY } from "./komponenter/vilkaarOgBegrunnelserNY";
 import * as Utils from "../../../../../utils";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
@@ -220,11 +220,20 @@ export const VurderingBestemmelserV2 = ({
     }
 
     vilkårOgBegrunnelser?.forEach((vilkår) => {
-      if (valgteBegrunnelser.get(vilkår.vilkår) && vilkår.muligeBegrunnelser.length > 0) {
-        begrunnelserOK = true;
-      }
-      if (vilkår.muligeBegrunnelser.length === 0) {
-        begrunnelserOK = true;
+      // eslint-disable-next-line no-restricted-syntax
+      for (const [, value] of valgteBegrunnelser.entries()) {
+        if (vilkår.muligeBegrunnelser.includes(value.begrunnelseKode)) {
+          if (kodeInkludererFritekst(MKV.KTObjects.begrunnelser.folketrygdloven, value.begrunnelseKode)) {
+            begrunnelserOK = !((value.begrunnelseFritekst?.length ?? 0) >= 3000);
+          }
+
+          if (!kodeInkludererFritekst(MKV.KTObjects.begrunnelser.folketrygdloven, value?.begrunnelseKode)) {
+            begrunnelserOK = true;
+          }
+        }
+        if (vilkår.muligeBegrunnelser.length === 0) {
+          begrunnelserOK = true;
+        }
       }
     });
 
