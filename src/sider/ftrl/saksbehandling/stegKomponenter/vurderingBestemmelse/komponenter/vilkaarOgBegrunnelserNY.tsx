@@ -87,8 +87,7 @@ export const VilkaarOgBegrunnelserNY = ({
       </Nav.Fieldset>
       {selvstendigNæringValgt && harValgtFTRL_ARBEIDSTAKER && (
         <Nav.AlertStripeFeil>
-          {/* eslint-disable-next-line react/no-unescaped-entities */}
-          Virksomheten du har valgt på steget "Virksomhet" er en selvstendig virksomhet
+          Virksomheten du har valgt på steget &quot;Virksomhet&quot; er en selvstendig virksomhet
         </Nav.AlertStripeFeil>
       )}
       {valgtVilkår === false && <IngenFlytMelding />}
