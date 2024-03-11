@@ -1,7 +1,7 @@
 import { array, object, string } from "yup";
 import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
-import { harIkkeLovligSluttDato } from "./komponenter/feilmeldinger";
+import { tillattMedManglendeSluttDato } from "./komponenter/feilmeldinger";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const INNGILGELSESRESULTAT_FELT_KREVES = { melding: "Du må velge innvilgelsesresultat" };
@@ -41,8 +41,10 @@ const tomDatoPåkrevd = {
   name: "Påkrevd felt",
   message: { ...MAA_FYLLES_UT },
   test: (tomDato, schema) => {
-    const { soknadsland } = schema.options.context;
-    return !harIkkeLovligSluttDato(schema.from[1].value.medlemskapsperioder, soknadsland);
+    return (
+      !Utils._isEmpty(tomDato) ||
+      tillattMedManglendeSluttDato(schema.options.context.soknadsland, schema.parent.bestemmelse)
+    );
   },
 };
 
@@ -60,6 +62,7 @@ const vurdering_perioder = object().shape({
           .test(tomDatoPåkrevd),
         innvilgelsesResultat: string().required(INNGILGELSESRESULTAT_FELT_KREVES),
         trygdedekning: string().required(TRYGDEDEKNING_FELT_KREVES),
+        bestemmelse: string(),
       })
     )
     .min(1),
