@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingForretningssted from "../../stegKomponenter/vurderingForretningssted";
+import VurderingForretningssted from "../../stegKomponenter/vurderingForretningssted/vurderingForretningssted";
 import { hentFakta, hentFaktaListe, hentFaktaVerdi, hentLovvalgsbestemmelse } from "../../../../domeneUtils";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";

@@ -1,25 +1,25 @@
 import { useEffect } from "react";
 import PT from "prop-types";
 
-import MKV from "../../../melosyskodeverk";
-import * as Nav from "../../../navFrontend";
-import * as KV from "../../../kodeverk";
-import * as MPT from "../../../proptypes";
-import * as Utils from "../../../utils";
-import * as Mui from "../../../felleskomponenter/ui";
+import MKV from "../../../../melosyskodeverk";
+import * as Nav from "../../../../navFrontend";
+import * as KV from "../../../../kodeverk";
+import * as MPT from "../../../../proptypes";
+import * as Utils from "../../../../utils";
+import * as Mui from "../../../../felleskomponenter/ui";
 
-import { hentFaktaVerdi, finnLovvalgsbestemmelse } from "../../../domeneUtils";
+import { hentFaktaVerdi, finnLovvalgsbestemmelse } from "../../../../domeneUtils";
 import {
   lagAvklartfakta,
   konverterAvklartfaktaTilStegData,
   slettAvklartfakta,
   konverterLovvalgsbestemmelseTilStegData,
   lagLovvalgsbestemmelse,
-} from "../../../felleskomponenter/stegvelger";
+} from "../../../../felleskomponenter/stegvelger";
 
-import EnkeltLandPure from "../../../felleskomponenter/skjema/landvelger/enkeltLandPure";
-import EnkeltAvklartfakta from "./felles/enkeltAvklartfakta";
-import { BOOLSK_STRING } from "../../../constants";
+import EnkeltLandPure from "../../../../felleskomponenter/skjema/landvelger/enkeltLandPure";
+import EnkeltAvklartfakta from "../felles/enkeltAvklartfakta";
+import { BOOLSK_STRING } from "../../../../constants";
 
 import "./vurderingForretningssted.css";
 
@@ -75,7 +75,7 @@ Forretningsstedet.defaultProps = {
   avklartForretningsland: null,
 };
 
-export const Forretningssteder = (props) => {
+const Forretningssteder = (props) => {
   const { valgteVirksomheter, avklarteForretningsland, redigerbart } = props;
 
   const ingenValgteVirksomheterVarsel = valgteVirksomheter.length === 0 && (
@@ -116,7 +116,7 @@ Forretningssteder.propTypes = {
   redigerbart: PT.bool.isRequired,
 };
 
-export const VurderingForretningssted = (props) => {
+const VurderingForretningssted = (props) => {
   const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
 
   const { omfattetINorge, omfattetILand, lovvalgsbestemmelse, harAvklaring } = tilstand;

@@ -1,8 +1,8 @@
 /* eslint react/no-array-index-key:off */
 import { Component } from "react";
-import { v4 as uuid } from "uuid";
 import PT from "prop-types";
 
+import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 import * as Nav from "../../navFrontend";
 import * as MPT from "../../proptypes";
@@ -185,7 +185,7 @@ class ListevelgerFlervalg extends Component {
 
     const feil = this.byggFeilmelding();
 
-    const datalistID = uuid();
+    const datalistID = Utils._uuid();
 
     return (
       <div className="listevelgerFlervalg" data-cy={data_cy}>
@@ -214,7 +214,7 @@ class ListevelgerFlervalg extends Component {
         </div>
         <datalist id={datalistID}>
           {muligeValg.map((valg) => (
-            <option key={uuid()} value={KV.objektTilTerm(valg)} label={KV.objektTilTerm(valg)} />
+            <option key={Utils._uuid()} value={KV.objektTilTerm(valg)} label={KV.objektTilTerm(valg)} />
           ))}
         </datalist>
       </div>
