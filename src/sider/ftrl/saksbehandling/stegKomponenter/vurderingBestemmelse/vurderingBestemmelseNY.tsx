@@ -377,11 +377,7 @@ export const VurderingBestemmelserV2 = ({
           harReturnertNullIVilkårListe = true;
           return null;
         }
-        if (
-          forrige &&
-          forrige.vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER &&
-          ulovligKombinasjonAvSelvstendigNaeringOgVilkår
-        ) {
+        if (forrige?.vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && ulovligKombinasjonAvSelvstendigNaeringOgVilkår) {
           harReturnertNullIVilkårListe = true;
           return null;
         }
