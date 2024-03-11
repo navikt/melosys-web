@@ -1,32 +1,14 @@
-import { formValueSelector } from "redux-form";
-import { RootState } from "AppTypes";
-import { connect, ConnectedProps } from "react-redux";
+import { useSelector } from "react-redux";
 
-import * as KV from "../../../../../kodeverk";
-
+import { formSelectors } from "../../../../../ducks/form";
 import Sporsmal from "../sporsmal";
 import Beskrivelse from "../beskrivelse";
-import { LabelOgSvar, JaNeiSvar } from "./labelOgSvar";
+import { JaNeiSvar, LabelOgSvar } from "./labelOgSvar";
 
 import "./redigeringUtfort.css";
 
-const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
-
-const mapStateToProps = (state: RootState) => {
-  const arbeidssituasjonOgOevrig = soknadFormValueSelector(
-    state,
-    "arbeidssituasjonOgOevrig"
-  ) as KV.Form.ArbeidssituasjonOgOevrig;
-
-  return {
-    arbeidssituasjonOgOevrig,
-  };
-};
-
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-const RedigeringUtfort = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
+const RedigeringUtfort = () => {
+  const arbeidssituasjonOgOevrig = useSelector(formSelectors.SoknadFormValuesSelector)?.arbeidssituasjonOgOevrig ?? {};
   return (
     <div className="ovrig-om-arbeidstaker__redigering-utfort">
       <LabelOgSvar
@@ -67,4 +49,4 @@ const RedigeringUtfort = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
   );
 };
 
-export default connector(RedigeringUtfort);
+export default RedigeringUtfort;
