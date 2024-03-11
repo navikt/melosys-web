@@ -26,7 +26,7 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export const Redigerer = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
+const Redigerer = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
   return (
     <div className="ovrig-om-arbeidstaker__redigerer">
       <LabelOgEditerbartSvar
