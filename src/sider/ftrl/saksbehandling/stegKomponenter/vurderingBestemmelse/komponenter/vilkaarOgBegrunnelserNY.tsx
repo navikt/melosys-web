@@ -26,7 +26,7 @@ interface VilkaarOgBegrunnelserProps {
   handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement>;
   handleEndreBegrunnelseFritekst: (vilkår: string, fritekst: string) => void;
   redigerbart: boolean;
-  selvstendigNæringValgt?: boolean;
+  vilkårErValgt?: boolean;
 }
 
 export const VilkaarOgBegrunnelserNY = ({
@@ -37,7 +37,7 @@ export const VilkaarOgBegrunnelserNY = ({
   handleEndreBegrunnelseKode,
   handleEndreBegrunnelseFritekst,
   redigerbart,
-  selvstendigNæringValgt,
+  vilkårErValgt,
 }: VilkaarOgBegrunnelserProps) => {
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
   const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
@@ -85,7 +85,7 @@ export const VilkaarOgBegrunnelserNY = ({
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
-      {selvstendigNæringValgt && harValgtFTRL_ARBEIDSTAKER && (
+      {vilkårErValgt && harValgtFTRL_ARBEIDSTAKER && (
         <Nav.AlertStripeFeil>
           Virksomheten du har valgt på steget &quot;Virksomhet&quot; er en selvstendig virksomhet
         </Nav.AlertStripeFeil>

@@ -10,10 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { ListeVelgerFtrl } from "./komponenter/listeVelger";
 import { useFeatureToggle } from "../../../../../featuretoggle";
-import {
-  MELOSYS_FOLKETRYGDEN_2_7,
-  MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER,
-} from "../../../../../featuretoggle/toggleNavn";
+import { MELOSYS_FOLKETRYGDEN_2_7 } from "../../../../../featuretoggle/toggleNavn";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { vilkarOperations, vilkarSelectors } from "../../../../../ducks/vilkar";
 import {
@@ -41,7 +38,6 @@ export const VurderingBestemmelserV2 = ({
   oppdaterStatus,
 }: VurderingBestemmelseProps) => {
   const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
-  const pliktigeBestemmelserToggleEnabled = useFeatureToggle(MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER);
 
   const dispatch = useDispatch();
 
@@ -247,10 +243,8 @@ export const VurderingBestemmelserV2 = ({
       for (const [, value] of valgteBegrunnelser.entries()) {
         if (vilkår.muligeBegrunnelser.includes(value.begrunnelseKode)) {
           if (kodeInkludererFritekst(MKV.KTObjects.begrunnelser.folketrygdloven, value.begrunnelseKode)) {
-            begrunnelserOK = !((value.begrunnelseFritekst?.length ?? 0) >= 3000);
-          }
-
-          if (!kodeInkludererFritekst(MKV.KTObjects.begrunnelser.folketrygdloven, value?.begrunnelseKode)) {
+            begrunnelserOK = (value.begrunnelseFritekst?.length ?? 0) <= 3000;
+          } else {
             begrunnelserOK = true;
           }
         }
@@ -397,7 +391,7 @@ export const VurderingBestemmelserV2 = ({
             vilkårOgBegrunnelser={vb}
             alleValgteVilkår={valgteVilkår}
             alleValgteBegrunnelser={valgteBegrunnelser}
-            selvstendigNæringValgt={pliktigeBestemmelserToggleEnabled && selvstendigNaeringValgt}
+            vilkårErValgt={selvstendigNaeringValgt}
             handleEndreVilkår={(event) => {
               setHarSkjeddEndringer(true);
               setValgteVilkår(new Map(valgteVilkår.set(event.target.name, Boolean(event.target.value === "true"))));
