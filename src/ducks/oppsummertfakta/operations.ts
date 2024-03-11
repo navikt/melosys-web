@@ -52,6 +52,14 @@ export function sendIkkeYrkesaktivRelasjontype(behandlingID: number, relasjonsty
   });
 }
 
+export function sendArbeidssituasjontype(behandlingID: number, arbeidssituasjontype: string) {
+  return doThenDispatch(() => Api.Avklartefakta.sendArbeidssituasjontype(behandlingID, arbeidssituasjontype), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
 export function resetOppsummertFakta() {
   return Actions.resetOppsummertFakta();
 }

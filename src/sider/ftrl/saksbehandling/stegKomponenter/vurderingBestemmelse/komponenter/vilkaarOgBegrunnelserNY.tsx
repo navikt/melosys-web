@@ -26,6 +26,7 @@ interface VilkaarOgBegrunnelserProps {
   handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement>;
   handleEndreBegrunnelseFritekst: (vilkår: string, fritekst: string) => void;
   redigerbart: boolean;
+  selvstendigNæringValgt?: boolean;
 }
 
 export const VilkaarOgBegrunnelserNY = ({
@@ -36,14 +37,16 @@ export const VilkaarOgBegrunnelserNY = ({
   handleEndreBegrunnelseKode,
   handleEndreBegrunnelseFritekst,
   redigerbart,
+  selvstendigNæringValgt,
 }: VilkaarOgBegrunnelserProps) => {
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
-  const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
+  const vilkårErValgt = alleValgteVilkår.get(`${vilkår}`);
   const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!!;
   const visBegrunnelseFritekst = kodeInkludererFritekst(
     MKV.KTObjects.begrunnelser.folketrygdloven,
     valgtBegrunnelseForVilkår?.begrunnelseKode
   );
+  const harValgtFTRL_ARBEIDSTAKER = vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && vilkårErValgt;
 
   return (
     <Fragment>
@@ -62,7 +65,7 @@ export const VilkaarOgBegrunnelserNY = ({
               label="Ja"
               name={vilkår}
               onChange={handleEndreVilkår}
-              checked={valgtVilkår === true}
+              checked={vilkårErValgt === true}
               value="true"
               key="true"
               disabled={!redigerbart}
@@ -74,7 +77,7 @@ export const VilkaarOgBegrunnelserNY = ({
               label="Nei"
               name={vilkår}
               onChange={handleEndreVilkår}
-              checked={valgtVilkår === false}
+              checked={vilkårErValgt === false}
               value="false"
               key="false"
               disabled={!redigerbart}
@@ -82,9 +85,13 @@ export const VilkaarOgBegrunnelserNY = ({
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
-
-      {valgtVilkår === false && <IngenFlytMelding />}
-      {valgtVilkår && !Utils._isEmpty(muligeBegrunnelser) && (
+      {selvstendigNæringValgt && harValgtFTRL_ARBEIDSTAKER && (
+        <Nav.AlertStripeFeil>
+          Virksomheten du har valgt på steget &quot;Virksomhet&quot; er en selvstendig virksomhet
+        </Nav.AlertStripeFeil>
+      )}
+      {vilkårErValgt === false && <IngenFlytMelding />}
+      {vilkårErValgt && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
           className="select"
           legend={

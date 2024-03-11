@@ -31,6 +31,11 @@ export const IkkeYrkesaktivRelasjonSelector = createSelector(
   (oppsummertfakta) => oppsummertfakta.ikkeYrkesaktivFamilieRelasjonstype
 );
 
+export const ArbeidssituasjonSelector = createSelector(
+  OppsummertFaktaDataSelector,
+  (oppsummertfakta) => oppsummertfakta.arbeidssituasjonType
+);
+
 export const IkkeYrkesaktivOppholdSelector = createSelector(
   OppsummertFaktaDataSelector,
   (oppsummertfakta) => oppsummertfakta.ikkeYrkesaktivOppholdstype

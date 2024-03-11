@@ -19,7 +19,7 @@ import {
   VilkårOgBegrunnelser,
   VurderingBestemmelseProps,
 } from "./komponenter/typer";
-import { Begrunnelse } from "./vurderingBestemmelse";
+import { Begrunnelse, kodeInkludererFritekst } from "./vurderingBestemmelse";
 import { VilkaarOgBegrunnelserNY } from "./komponenter/vilkaarOgBegrunnelserNY";
 import * as Utils from "../../../../../utils";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
@@ -29,7 +29,7 @@ enum ResetTyper {
   VILKÅR,
 }
 
-const { IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON } = MKV.Koder.avklartefaktatyper;
+const { IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON, ARBEIDSSITUASJON } = MKV.Koder.avklartefaktatyper;
 
 export const VurderingBestemmelserV2 = ({
   bekreft,
@@ -38,6 +38,7 @@ export const VurderingBestemmelserV2 = ({
   oppdaterStatus,
 }: VurderingBestemmelseProps) => {
   const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
+
   const dispatch = useDispatch();
 
   const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
@@ -49,6 +50,13 @@ export const VurderingBestemmelserV2 = ({
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const ikkeYrkesaktivOppholdType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
   const ikkeYrkesaktivRelasjonType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivRelasjonSelector);
+  const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
+  const lagredeValgtevirksomheter = useSelector(oppsummertfaktaSelectors.VirksomhetIDerSelector);
+  const selvstendigNaeringsvirksomhetUtland = useSelector(
+    mottatteOpplysningerSelectors.SelvstendigNaeringsvirksomhetUtlandSelector
+  );
+  const selvstendigNaeringsvirksomhet = useSelector(mottatteOpplysningerSelectors.SelvstendigNaringsvirksomhetSelector);
+
   const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBegrunnelser[]>([]);
   const [avklarteFakta, setAvklarteFakta] = useState<AvklarteFakta[]>([]);
   const [bestemmelser, setBestemmelser] = useState<string[]>([]);
@@ -70,6 +78,18 @@ export const VurderingBestemmelserV2 = ({
     !lovligeBestemmelser?.includes(valgtBestemmelse) &&
     !pliktigeBestemmelser?.includes(valgtBestemmelse);
 
+  const finnesISelvstendigNaeringsvirksomhet = selvstendigNaeringsvirksomhet.some((virksomhet: any) =>
+    lagredeValgtevirksomheter.includes(virksomhet.orgnr)
+  );
+  const finnesISelvstendigNaeringsvirksomhetUtland = selvstendigNaeringsvirksomhetUtland.some((virksomhet: any) =>
+    lagredeValgtevirksomheter.includes(virksomhet.orgnr)
+  );
+
+  const selvstendigNaeringValgt = finnesISelvstendigNaeringsvirksomhet || finnesISelvstendigNaeringsvirksomhetUtland;
+
+  const ulovligKombinasjonAvSelvstendigNaeringOgVilkår =
+    selvstendigNaeringValgt && valgteVilkår.get(MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER);
+
   const behandlingErAvsluttetMedLagretBestemmelse =
     Boolean(lagretBestemmelse) && behandlingstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET;
   const stegErGyldig = (formIsValid || behandlingErAvsluttetMedLagretBestemmelse) && !harSkjeddEndringer;
@@ -83,6 +103,9 @@ export const VurderingBestemmelserV2 = ({
         }
         if (ikkeYrkesaktivRelasjonType && fakta.muligeFakta.includes(ikkeYrkesaktivRelasjonType)) {
           valgtAvklarteFakta.set(fakta.faktaType.kode, ikkeYrkesaktivRelasjonType);
+        }
+        if (arbeidssituasjonType && fakta.muligeFakta.includes(arbeidssituasjonType)) {
+          valgtAvklarteFakta.set(fakta.faktaType.kode, arbeidssituasjonType);
         }
       });
       setValgtAvklarteFakta(new Map(valgtAvklarteFakta));
@@ -216,19 +239,29 @@ export const VurderingBestemmelserV2 = ({
     }
 
     vilkårOgBegrunnelser?.forEach((vilkår) => {
-      if (valgteBegrunnelser.get(vilkår.vilkår) && vilkår.muligeBegrunnelser.length > 0) {
-        begrunnelserOK = true;
-      }
-      if (vilkår.muligeBegrunnelser.length === 0) {
-        begrunnelserOK = true;
+      // eslint-disable-next-line no-restricted-syntax
+      for (const [, value] of valgteBegrunnelser.entries()) {
+        if (vilkår.muligeBegrunnelser.includes(value.begrunnelseKode)) {
+          if (kodeInkludererFritekst(MKV.KTObjects.begrunnelser.folketrygdloven, value.begrunnelseKode)) {
+            begrunnelserOK = (value.begrunnelseFritekst?.length ?? 0) <= 3000;
+          } else {
+            begrunnelserOK = true;
+          }
+        }
       }
     });
+
+    if (vilkårOgBegrunnelser.flatMap((a) => a.muligeBegrunnelser).length === 0) {
+      begrunnelserOK = true;
+    }
 
     if (vilkårOgBegrunnelser.length === 0) {
       vilkårOK = true;
       begrunnelserOK = true;
     }
+
     const altGyldig = bestemmelserOK && avklarteFaktaOK && vilkårOK && begrunnelserOK;
+
     setFormIsValid(altGyldig);
   };
 
@@ -280,6 +313,10 @@ export const VurderingBestemmelserV2 = ({
 
       if (key === IKKE_YRKESAKTIV_RELASJON) {
         await dispatch(oppsummertfaktaOperations.sendIkkeYrkesaktivRelasjontype(behandlingID, value));
+      }
+
+      if (key === ARBEIDSSITUASJON) {
+        await dispatch(oppsummertfaktaOperations.sendArbeidssituasjontype(behandlingID, value));
       }
     }
 
@@ -335,7 +372,12 @@ export const VurderingBestemmelserV2 = ({
       {vilkårOgBegrunnelser?.map((vb, index, hele) => {
         if (harReturnertNullIVilkårListe) return null;
         const forrige = hele[index - 1];
+
         if (forrige && valgteVilkår.get(forrige.vilkår) !== true) {
+          harReturnertNullIVilkårListe = true;
+          return null;
+        }
+        if (forrige?.vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && ulovligKombinasjonAvSelvstendigNaeringOgVilkår) {
           harReturnertNullIVilkårListe = true;
           return null;
         }
@@ -345,6 +387,7 @@ export const VurderingBestemmelserV2 = ({
             vilkårOgBegrunnelser={vb}
             alleValgteVilkår={valgteVilkår}
             alleValgteBegrunnelser={valgteBegrunnelser}
+            selvstendigNæringValgt={selvstendigNaeringValgt}
             handleEndreVilkår={(event) => {
               setHarSkjeddEndringer(true);
               setValgteVilkår(new Map(valgteVilkår.set(event.target.name, Boolean(event.target.value === "true"))));

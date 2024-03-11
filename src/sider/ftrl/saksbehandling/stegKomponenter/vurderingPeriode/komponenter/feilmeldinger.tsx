@@ -4,7 +4,7 @@ import * as Utils from "../../../../../../utils";
 import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 import { MedlemskapsperiodeProp } from "./types";
 
-const { FTRL_KAP2_2_1_FØRSTE_LEDD, FTRL_KAP2_2_1_FJERDE_LEDD, FTRL_KAP2_2_7_FJERDE_LEDD, FTRL_KAP2_2_8_FJERDE_LEDD } =
+const { FTRL_KAP2_2_1, FTRL_KAP2_2_7_FJERDE_LEDD, FTRL_KAP2_2_8_FJERDE_LEDD } =
   MKV.Koder.folketrygdloven_kap2_bestemmelser;
 const { MIDLERTIDIG_2_1_FJERDE_LEDD } = MKV.Koder.ikkeyrkesaktivoppholdtype;
 const { AVSLAATT, INNVILGET, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
@@ -211,7 +211,7 @@ const periodeStarterFoer2023 = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
 };
 
 const bestemmelseEr2_2_1 = (bestemmelse: string) => {
-  return bestemmelse === FTRL_KAP2_2_1_FØRSTE_LEDD || bestemmelse === FTRL_KAP2_2_1_FJERDE_LEDD; // Skal etterhvert erstattes med bare FTRL_KAP2_2_1
+  return bestemmelse === FTRL_KAP2_2_1;
 };
 
 const landErKunNorge = (land: string[]) => {
