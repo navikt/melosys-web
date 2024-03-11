@@ -1,0 +1,82 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SideMeny > snapshot test 1`] = `
+<div>
+  <div
+    class="side-meny"
+  >
+    <div
+      class="side-meny__container"
+    >
+      <nav
+        aria-labelledby="opplysninger"
+      >
+        <ul
+          class="side-meny__link-list"
+        >
+          <div
+            class="linkgroup"
+          >
+            <p
+              class="typo-normal linkgroup__label"
+            >
+              Sukker
+            </p>
+            <li
+              class="meny-link"
+            >
+              <button
+                class="meny-link__button"
+                type="button"
+              >
+                <span
+                  class="typo-normal meny-link__label"
+                >
+                  Hvitt sukker
+                </span>
+              </button>
+            </li>
+            <li
+              class="meny-link"
+            >
+              <button
+                class="meny-link__button"
+                type="button"
+              >
+                <span
+                  class="typo-normal meny-link__label"
+                >
+                  Brunt sukker
+                </span>
+              </button>
+            </li>
+          </div>
+          <div
+            class="linkgroup"
+          >
+            <p
+              class="typo-normal linkgroup__label"
+            >
+              Salt
+            </p>
+            <li
+              class="meny-link"
+            >
+              <button
+                class="meny-link__button"
+                type="button"
+              >
+                <span
+                  class="typo-normal meny-link__label"
+                >
+                  Bordsalt
+                </span>
+              </button>
+            </li>
+          </div>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+`;
