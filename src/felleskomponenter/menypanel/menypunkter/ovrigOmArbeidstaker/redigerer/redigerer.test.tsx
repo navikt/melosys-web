@@ -1,57 +1,46 @@
-import { ComponentProps } from "react";
-import { mock, instance } from "ts-mockito";
-import { shallow } from "enzyme";
-
-import { Redigerer } from "./redigerer";
-import Beskrivelse from "../beskrivelse";
+import { screen } from "@testing-library/react";
+import Redigerer from "./redigerer";
 import Sporsmal from "../sporsmal";
+import * as KV from "../../../../../kodeverk";
+import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
+import { reduxForm } from "redux-form";
 
 describe("Redigerer", () => {
-  const mockedProps = mock<ComponentProps<typeof Redigerer>>();
-  let props = instance(mockedProps);
-
-  beforeEach(() => {
-    props = instance(mockedProps);
-    props.arbeidssituasjonOgOevrig = {};
+  const reduxStore = (
+    harLoennetArbeidMinstEnMndFoerUtsending = true,
+    harAndreArbeidsgivereIUtsendingsperioden = true
+  ) => ({
+    form: {
+      [KV.Form.SOKNAD]: {
+        registeredFields: [],
+        values: {
+          arbeidssituasjonOgOevrig: {
+            harLoennetArbeidMinstEnMndFoerUtsending,
+            harAndreArbeidsgivereIUtsendingsperioden,
+          },
+        },
+      },
+    },
   });
+  const WrappedRedigerer = reduxForm({ form: KV.Form.SOKNAD })(Redigerer);
 
   it("beskrivelseArbeidSisteMnd vises hvis harLoennetArbeidMinstEnMndFoerUtsending er false", () => {
-    props.arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending = false;
-
-    const redigerer = shallow(<Redigerer {...props} />);
-
-    expect(
-      redigerer.find(Beskrivelse).findWhere((n) => n.props().label === Sporsmal.beskrivelseArbeidSisteMnd)
-    ).toHaveLength(1);
+    renderWithProviders(<WrappedRedigerer />, { preloadedState: reduxStore(false) });
+    expect(screen.getByText(Sporsmal.beskrivelseArbeidSisteMnd)).toBeInTheDocument();
   });
 
   it("beskrivelseArbeidSisteMnd vises ikke hvis harLoennetArbeidMinstEnMndFoerUtsending er true", () => {
-    props.arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending = true;
-
-    const redigerer = shallow(<Redigerer {...props} />);
-
-    expect(
-      redigerer.find(Beskrivelse).findWhere((n) => n.props().label === Sporsmal.beskrivelseArbeidSisteMnd)
-    ).toHaveLength(0);
+    renderWithProviders(<WrappedRedigerer />, { preloadedState: reduxStore(true) });
+    expect(screen.queryByText(Sporsmal.beskrivelseArbeidSisteMnd)).toBeNull();
   });
 
   it("beskrivelseAnnetArbeid vises hvis harAndreArbeidsgivereIUtsendingsperioden er true", () => {
-    props.arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden = true;
-
-    const redigerer = shallow(<Redigerer {...props} />);
-
-    expect(
-      redigerer.find(Beskrivelse).findWhere((n) => n.props().label === Sporsmal.beskrivelseAnnetArbeid)
-    ).toHaveLength(1);
+    renderWithProviders(<WrappedRedigerer />, { preloadedState: reduxStore(true, true) });
+    expect(screen.getByText(Sporsmal.beskrivelseAnnetArbeid)).toBeInTheDocument();
   });
 
   it("beskrivelseAnnetArbeid vises ikke hvis harAndreArbeidsgivereIUtsendingsperioden er false", () => {
-    props.arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden = false;
-
-    const redigerer = shallow(<Redigerer {...props} />);
-
-    expect(
-      redigerer.find(Beskrivelse).findWhere((n) => n.props().label === Sporsmal.beskrivelseAnnetArbeid)
-    ).toHaveLength(0);
+    renderWithProviders(<WrappedRedigerer />, { preloadedState: reduxStore(true, false) });
+    expect(screen.queryByText(Sporsmal.beskrivelseAnnetArbeid)).toBeNull();
   });
 });
