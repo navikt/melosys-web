@@ -327,6 +327,15 @@ export const VurderingBestemmelserV2 = ({
     bekreft();
   };
 
+  const handleSlettAvklartefakta = async () => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [key] of valgtAvklarteFakta.entries()) {
+      if ([IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON, ARBEIDSSITUASJON].includes(key)) {
+        await dispatch(oppsummertfaktaOperations.slettAvklartefakta(behandlingID, key));
+      }
+    }
+  };
+
   if (!aktivtSteg) return null;
   let harReturnertNullIVilkårListe = false;
   return (
@@ -340,8 +349,9 @@ export const VurderingBestemmelserV2 = ({
         tittel="Hvilken bestemmelse skal søknaden vurderes etter?"
         redigerbart={redigerbart}
         valgtAlternativ={valgtBestemmelse}
-        endretAlternativ={(bestemmelse) => {
+        endretAlternativ={async (bestemmelse) => {
           setHarSkjeddEndringer(true);
+          await handleSlettAvklartefakta();
           reset(ResetTyper.AVKLARTEFAKTA);
           reset(ResetTyper.VILKÅR);
           setValgtBestemmelse(bestemmelse);

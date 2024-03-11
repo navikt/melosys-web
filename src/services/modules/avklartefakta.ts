@@ -1,4 +1,4 @@
-import { getAsJson, postAsJson } from "../utils";
+import { deleteAsJson, getAsJson, postAsJson } from "../utils";
 import { API_BASE_URL, AVKLARTEFAKTA } from "../api-constants";
 
 export interface Avklartfakta {
@@ -27,6 +27,9 @@ export const sendIkkeYrkesaktivRelasjonstype = (
 
 export const sendArbeidssituasjontype = (behandlingID: number, arbeidssituasjontype: string): Promise<Avklartfakta[]> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/arbeidssituasjontype`, arbeidssituasjontype);
+
+export const slettAvklartefakta = (behandlingID: number, avklartefaktatype: string): Promise<{}> =>
+  deleteAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/${avklartefaktatype}`);
 
 interface Oppsummering {
   virksomheter: string[];
