@@ -387,7 +387,7 @@ export const VurderingBestemmelserV2 = ({
             vilkårOgBegrunnelser={vb}
             alleValgteVilkår={valgteVilkår}
             alleValgteBegrunnelser={valgteBegrunnelser}
-            vilkårErValgt={selvstendigNaeringValgt}
+            selvstendigNæringValgt={selvstendigNaeringValgt}
             handleEndreVilkår={(event) => {
               setHarSkjeddEndringer(true);
               setValgteVilkår(new Map(valgteVilkår.set(event.target.name, Boolean(event.target.value === "true"))));
