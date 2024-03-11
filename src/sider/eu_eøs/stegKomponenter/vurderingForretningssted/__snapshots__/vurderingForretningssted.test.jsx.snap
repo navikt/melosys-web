@@ -1,0 +1,350 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VurderingForretningssted > snapshot test 1`] = `
+<div>
+  <div>
+    <h1
+      class="typo-innholdstittel stegvelgertittel"
+    >
+      Vurdering av artikkel 13 nr. 1 bokstav b
+    </h1>
+    <fieldset
+      class="fieldset forretningssteder"
+    >
+      <legend
+        class="fieldset__legend"
+      >
+        Velg hvor virksomhetene har forretningssted
+      </legend>
+      <div>
+        <fieldset
+          class="fieldset forretningssted"
+        >
+          <legend
+            class="fieldset__legend"
+          >
+            NAV
+          </legend>
+          <div>
+            <div
+              class="skjemaelement landliste__linje__input "
+            >
+              <label
+                class="skjemaelement__label"
+                for="123"
+              >
+                Har forretningssted i
+              </label>
+              <input
+                aria-invalid="false"
+                class="skjemaelement__input input--fullbredde"
+                id="123"
+                list="datalist-123"
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              class="landliste__dataliste"
+            >
+              <datalist
+                id="datalist-123"
+              >
+                <option
+                  label="Belgia (BE)"
+                  value="Belgia (BE)"
+                />
+                <option
+                  label="Bulgaria (BG)"
+                  value="Bulgaria (BG)"
+                />
+                <option
+                  label="Danmark (DK)"
+                  value="Danmark (DK)"
+                />
+                <option
+                  label="Estland (EE)"
+                  value="Estland (EE)"
+                />
+                <option
+                  label="Finland (FI)"
+                  value="Finland (FI)"
+                />
+                <option
+                  label="Frankrike (FR)"
+                  value="Frankrike (FR)"
+                />
+                <option
+                  label="Færøyene (FO)"
+                  value="Færøyene (FO)"
+                />
+                <option
+                  label="Grønland (GL)"
+                  value="Grønland (GL)"
+                />
+                <option
+                  label="Hellas (GR)"
+                  value="Hellas (GR)"
+                />
+                <option
+                  label="Irland (IE)"
+                  value="Irland (IE)"
+                />
+                <option
+                  label="Island (IS)"
+                  value="Island (IS)"
+                />
+                <option
+                  label="Italia (IT)"
+                  value="Italia (IT)"
+                />
+                <option
+                  label="Kroatia (HR)"
+                  value="Kroatia (HR)"
+                />
+                <option
+                  label="Kypros (CY)"
+                  value="Kypros (CY)"
+                />
+                <option
+                  label="Latvia (LV)"
+                  value="Latvia (LV)"
+                />
+                <option
+                  label="Liechtenstein (LI)"
+                  value="Liechtenstein (LI)"
+                />
+                <option
+                  label="Litauen (LT)"
+                  value="Litauen (LT)"
+                />
+                <option
+                  label="Luxembourg (LU)"
+                  value="Luxembourg (LU)"
+                />
+                <option
+                  label="Malta (MT)"
+                  value="Malta (MT)"
+                />
+                <option
+                  label="Nederland (NL)"
+                  value="Nederland (NL)"
+                />
+                <option
+                  label="Norge (NO)"
+                  value="Norge (NO)"
+                />
+                <option
+                  label="Polen (PL)"
+                  value="Polen (PL)"
+                />
+                <option
+                  label="Portugal (PT)"
+                  value="Portugal (PT)"
+                />
+                <option
+                  label="Romania (RO)"
+                  value="Romania (RO)"
+                />
+                <option
+                  label="Slovakia (SK)"
+                  value="Slovakia (SK)"
+                />
+                <option
+                  label="Slovenia (SI)"
+                  value="Slovenia (SI)"
+                />
+                <option
+                  label="Spania (ES)"
+                  value="Spania (ES)"
+                />
+                <option
+                  label="Storbritannia (GB)"
+                  value="Storbritannia (GB)"
+                />
+                <option
+                  label="Svalbard og Jan Mayen (SJ)"
+                  value="Svalbard og Jan Mayen (SJ)"
+                />
+                <option
+                  label="Sveits (CH)"
+                  value="Sveits (CH)"
+                />
+                <option
+                  label="Sverige (SE)"
+                  value="Sverige (SE)"
+                />
+                <option
+                  label="Tsjekkia (CZ)"
+                  value="Tsjekkia (CZ)"
+                />
+                <option
+                  label="Tyskland (DE)"
+                  value="Tyskland (DE)"
+                />
+                <option
+                  label="Ungarn (HU)"
+                  value="Ungarn (HU)"
+                />
+                <option
+                  label="Østerrike (AT)"
+                  value="Østerrike (AT)"
+                />
+                <option
+                  label="Åland (AX)"
+                  value="Åland (AX)"
+                />
+              </datalist>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </fieldset>
+    <fieldset
+      class="fieldset vilkaar"
+    >
+      <legend
+        class="fieldset__legend"
+      >
+        Velg artikkel
+      </legend>
+      <div
+        class="skjemaelement"
+      >
+        
+        <div
+          class="selectContainer input--fullbredde"
+        >
+          <select
+            aria-invalid="false"
+            class="skjemaelement__input"
+            id="vurdering13_1"
+            name="artikkel3_1_vurdering"
+          >
+            <option
+              value=""
+            >
+              Velg artikkel
+            </option>
+            <option
+              value="FO_883_2004_ART13_1B1"
+            >
+              13.1 b i: en arbeidsgiver
+            </option>
+            <option
+              value="FO_883_2004_ART13_1B2"
+            >
+              13.1 b ii: Ansatt av to eller flere arbeidsgivere med forretningssted i samme land
+            </option>
+            <option
+              value="FO_883_2004_ART13_1B3"
+            >
+              13.1 b iii: To eller flere arbeidsgivere, med forretningssted i to land, hvorav ett er Norge
+            </option>
+            <option
+              value="FO_883_2004_ART13_1B4"
+            >
+              13.1 b iv: Flere arbeidsgivere, med forretningssted i flere land, hvorav flere enn to er utenfor Norge
+            </option>
+            <option
+              value="FO_987_2009_ART14_11"
+            >
+              14.11: Forordning 987, artikkel 14: arbeidsgiver utenfor EU/EØS-område
+            </option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+    <div
+      class="enkeltAvklartfakta__skjemafelt"
+    >
+      <div
+        class="row"
+      >
+        <div
+          class="col col-xs-12"
+        >
+          <fieldset
+            class="fieldset"
+          >
+            <legend
+              class="fieldset__legend"
+            >
+              Landet søkeren skal omfattes i:
+            </legend>
+            <div
+              class="skjemaelement"
+            >
+              <input
+                aria-invalid="false"
+                class="skjemaelement__input radioknapp"
+                id="123"
+                name="OMFATTES_I_NORGE"
+                type="radio"
+                value="TRUE"
+              />
+              <label
+                class="skjemaelement__label"
+                for="123"
+              >
+                Norge
+              </label>
+            </div>
+            <div
+              class="skjemaelement"
+            >
+              <input
+                aria-invalid="false"
+                class="skjemaelement__input radioknapp"
+                id="123"
+                name="OMFATTES_I_NORGE"
+                type="radio"
+                value="FALSE"
+              />
+              <label
+                class="skjemaelement__label"
+                for="123"
+              >
+                Annet
+              </label>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <div
+      class="stegKnapper"
+    >
+      <button
+        class="knapp stegKnapper__bekreft knapp--hoved knapp--mini knapp--disabled"
+        disabled=""
+        type="button"
+      >
+        Bekreft og fortsett
+      </button>
+      <button
+        class="knapp stegKnapper__tilbake knapp--flat knapp--mini"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="14"
+          viewBox="0 0 16 14"
+          width="16"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M16 7.66732L2.47 7.66732L7.33333 12.6976L6.41697 13.6673L0 7.00065L6.41697 0.333984L7.33333 1.30368L2.47 6.33398L16 6.33398V7.66732Z"
+            fill="#0067C5"
+            fill-rule="evenodd"
+          />
+        </svg>
+        <span>
+          Tilbake
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;
