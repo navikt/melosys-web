@@ -2,7 +2,7 @@ import { deleteAsJson, getAsJson, postAsJson } from "../utils";
 import { API_BASE_URL, AVKLARTEFAKTA } from "../api-constants";
 
 export interface Avklartfakta {
-  avklartefaktaType: string | null;
+  avklartefaktaKode: string | null;
   begrunnelseFritekst: string | null;
   begrunnelseKoder: string[];
   fakta: string[];
