@@ -47,13 +47,12 @@ describe("Medlemskap", () => {
     };
   });
 
-  it("Viser to medlemskapsgrupper", () => {
+  it("Viser tabell med perioder for medlemskap", () => {
     render(<Medlemskap {...props} />);
 
-    const medlemskapTable = screen.getAllByRole("table");
-    expect(medlemskapTable).toHaveLength(2);
-    expect(medlemskapTable[0]).toHaveTextContent(props.medlemskap.perioderMed.periode.fom);
-    //expect(medlemskapTable[1]).toHaveTextContent(props.medlemskap.perioderMed.periode.fom);
+    expect(screen.getByText("Perioder med medlemskap")).toBeInTheDocument();
+    expect(screen.getByText("Perioder uten medlemskap")).toBeInTheDocument();
+    expect(screen.queryByText("(ingen data funnet)")).not.toBeInTheDocument();
   });
 
   it("viser infomelding dersom ingen perioder oppgitt", () => {
@@ -63,7 +62,9 @@ describe("Medlemskap", () => {
       perioderUavklart: null,
     };
     render(<Medlemskap {...props} />);
-    const noDataMessages = screen.getAllByText("(ingen data funnet)");
-    expect(noDataMessages).toHaveLength(2);
+    const noDataFoundElements = screen.getAllByText("(ingen data funnet)");
+    expect(noDataFoundElements.length).toBe(2);
+    expect(screen.getAllByText("Perioder med medlemskap")).toHaveLength(1);
+    expect(screen.getAllByText("Perioder uten medlemskap")).toHaveLength(1);
   });
 });
