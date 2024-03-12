@@ -305,35 +305,24 @@ export const VurderingBestemmelserV2 = ({
   };
 
   const handleBekreft = async () => {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const [key, value] of valgtAvklarteFakta.entries()) {
-      if (key === IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD) {
-        await dispatch(oppsummertfaktaOperations.sendIkkeYrkesaktivOppholdtype(behandlingID, value));
-      }
+    const actionMap = new Map([
+      [IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, oppsummertfaktaOperations.sendIkkeYrkesaktivOppholdtype],
+      [IKKE_YRKESAKTIV_RELASJON, oppsummertfaktaOperations.sendIkkeYrkesaktivRelasjontype],
+      [ARBEIDSSITUASJON, oppsummertfaktaOperations.sendArbeidssituasjontype],
+    ]);
 
-      if (key === IKKE_YRKESAKTIV_RELASJON) {
-        await dispatch(oppsummertfaktaOperations.sendIkkeYrkesaktivRelasjontype(behandlingID, value));
+    Array.from(valgtAvklarteFakta.entries()).forEach(async ([key, value]) => {
+      const action = actionMap.get(key);
+      if (action) {
+        await dispatch(action(behandlingID, value));
       }
-
-      if (key === ARBEIDSSITUASJON) {
-        await dispatch(oppsummertfaktaOperations.sendArbeidssituasjontype(behandlingID, value));
-      }
-    }
+    });
 
     await dispatch(vilkarOperations.send(behandlingID, mapVilkårOgBegrunnelser()));
     await dispatch(medlemskapsperioderOperations.opprettMedlemskapsperioderForslag(behandlingID, valgtBestemmelse));
     setHarSkjeddEndringer(false);
     oppdaterStatus(true);
     bekreft();
-  };
-
-  const handleSlettAvklartefakta = async () => {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const [key] of valgtAvklarteFakta.entries()) {
-      if ([IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON, ARBEIDSSITUASJON].includes(key)) {
-        await dispatch(oppsummertfaktaOperations.slettAvklartefakta(behandlingID, key));
-      }
-    }
   };
 
   if (!aktivtSteg) return null;
@@ -351,7 +340,11 @@ export const VurderingBestemmelserV2 = ({
         valgtAlternativ={valgtBestemmelse}
         endretAlternativ={async (bestemmelse) => {
           setHarSkjeddEndringer(true);
-          await handleSlettAvklartefakta();
+          Array.from(valgtAvklarteFakta.keys()).forEach(async (key) => {
+            if ([IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON, ARBEIDSSITUASJON].includes(key)) {
+              await dispatch(oppsummertfaktaOperations.slettAvklartefakta(behandlingID, key));
+            }
+          });
           reset(ResetTyper.AVKLARTEFAKTA);
           reset(ResetTyper.VILKÅR);
           setValgtBestemmelse(bestemmelse);

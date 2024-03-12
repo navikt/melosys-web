@@ -28,13 +28,16 @@ export const sendIkkeYrkesaktivRelasjonstype = (
 export const sendArbeidssituasjontype = (behandlingID: number, arbeidssituasjontype: string): Promise<Avklartfakta[]> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/arbeidssituasjontype`, arbeidssituasjontype);
 
-export const slettAvklartefakta = (behandlingID: number, avklartefaktatype: string): Promise<{}> =>
+export const slettAvklartefakta = (behandlingID: number, avklartefaktatype: string): Promise<Oppsummering> =>
   deleteAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/${avklartefaktatype}`);
 
 interface Oppsummering {
   virksomheter: string[];
   arbeidsland: string[];
-  fullstendingManglendeInnbetaling: boolean;
+  fullstendigManglendeInnbetaling: boolean;
+  ikkeYrkesaktivFamilieRelasjonstype?: string;
+  ikkeYrkesaktivOppholdstype?: string;
+  arbeidssituasjonType?: string;
 }
 
 export const hentOppsummering = (behandlingID: number): Promise<Oppsummering> =>
