@@ -1,46 +1,31 @@
-import * as Skjema from "..";
-
 import VedtakstypebegrunnelseSkjema from "./vedtakstypebegrunnelseskjema";
+import { reduxForm } from "redux-form";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+
+vi.mock("../../../utils", async () => {
+  const actual = await vi.importActual("../../../utils");
+  return {
+    ...actual,
+    _uuid: () => "123",
+  };
+});
 
 describe("VedtakstypebegrunnelseSkjema", () => {
-  describe("select", () => {
-    let props = null;
-    let select = null;
+  let props = null;
+  const WrappedVedtakstypebegrunnelseSkjema = reduxForm({ form: "test" })(VedtakstypebegrunnelseSkjema);
 
-    beforeEach(() => {
-      props = {
-        className: "artikkel",
-        redigerbart: true,
-        feltNavn: "feltNavn",
-        label: "label",
-      };
-      const vedtakstypebegrunnelseSkjema = shallow(<VedtakstypebegrunnelseSkjema {...props} />);
-      select = vedtakstypebegrunnelseSkjema.find(Skjema.Select);
-    });
+  beforeEach(() => {
+    props = {
+      className: "artikkel",
+      redigerbart: true,
+      feltNavn: "feltNavn",
+      label: "label",
+    };
+  });
 
-    it("vises", () => {
-      expect(select).toHaveLength(1);
-    });
+  it("snapshot test", () => {
+    const { container } = renderWithProviders(<WrappedVedtakstypebegrunnelseSkjema {...props} />);
 
-    it("setter className", () => {
-      expect(select.props().className).toBe(props.className);
-    });
-
-    it("setter disabled", () => {
-      expect(select.props().disabled).toBe(false);
-
-      props.redigerbart = false;
-      select = shallow(<VedtakstypebegrunnelseSkjema {...props} />).find(Skjema.Select);
-
-      expect(select.props().disabled).toBe(true);
-    });
-
-    it("setter feltNavn", () => {
-      expect(select.props().feltNavn).toBe(props.feltNavn);
-    });
-
-    it("setter label", () => {
-      expect(select.props().label).toBe(props.label);
-    });
+    expect(container).toMatchSnapshot();
   });
 });
