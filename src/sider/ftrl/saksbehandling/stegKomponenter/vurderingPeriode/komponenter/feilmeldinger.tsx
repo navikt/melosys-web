@@ -214,15 +214,15 @@ const bestemmelseEr2_2_1 = (bestemmelse: string) => {
   return bestemmelse === FTRL_KAP2_2_1;
 };
 
-const landErKunNorge = (land: string[]) => {
-  return land.length === 1 && land[0] === MKV.Koder.landkoder.NO;
+export const tillattMedManglendeSluttDato = (land: string[], bestemmelse: string) => {
+  const landErKunNorge = land.length === 1 && land[0] === MKV.Koder.landkoder.NO;
+  return landErKunNorge && bestemmelseEr2_2_1(bestemmelse);
 };
 
 export const harIkkeLovligSluttDato = (medlemskapsperioder: MedlemskapsperiodeProp[], land: string[]) => {
   const sortertePerioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
   const manglerSluttdato = Utils._isEmpty(sortertePerioder[sortertePerioder.length - 1].tomDato);
-  const tillattMedManglendeSluttDato = landErKunNorge(land) && bestemmelseEr2_2_1(sortertePerioder[0].bestemmelse);
-  return manglerSluttdato && !tillattMedManglendeSluttDato;
+  return manglerSluttdato && !tillattMedManglendeSluttDato(land, sortertePerioder[0].bestemmelse);
 };
 
 const periodeOver12MånederIkkeTillatt = (
