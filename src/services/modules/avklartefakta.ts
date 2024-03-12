@@ -2,34 +2,13 @@ import { deleteAsJson, getAsJson, postAsJson } from "../utils";
 import { API_BASE_URL, AVKLARTEFAKTA } from "../api-constants";
 
 export interface Avklartfakta {
-  avklartefaktaKode: string | null;
+  avklartefaktaType: string | null;
   begrunnelseFritekst: string | null;
   begrunnelseKoder: string[];
   fakta: string[];
   referanse: string;
   subjektID: string | null;
 }
-
-export const hent = (behandlingID: number): Promise<Avklartfakta[]> =>
-  getAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}`);
-
-export const send = (behandlingID: number, avklartefakta: Avklartfakta[]): Promise<Avklartfakta[]> =>
-  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}`, avklartefakta);
-
-export const sendIkkeYrkesaktivOppholdstype = (behandlingID: number, oppholdstype: string): Promise<Avklartfakta[]> =>
-  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/oppholdstype`, oppholdstype);
-
-export const sendIkkeYrkesaktivRelasjonstype = (
-  behandlingID: number,
-  familierelasjonstype: string
-): Promise<Avklartfakta[]> =>
-  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/familierelasjonstype`, familierelasjonstype);
-
-export const sendArbeidssituasjontype = (behandlingID: number, arbeidssituasjontype: string): Promise<Avklartfakta[]> =>
-  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/arbeidssituasjontype`, arbeidssituasjontype);
-
-export const slettAvklartefakta = (behandlingID: number, avklartefaktatype: string): Promise<Oppsummering> =>
-  deleteAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/${avklartefaktatype}`);
 
 interface Oppsummering {
   virksomheter: string[];
@@ -39,6 +18,27 @@ interface Oppsummering {
   ikkeYrkesaktivOppholdstype?: string;
   arbeidssituasjonType?: string;
 }
+
+export const hent = (behandlingID: number): Promise<Avklartfakta[]> =>
+  getAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}`);
+
+export const send = (behandlingID: number, avklartefakta: Avklartfakta[]): Promise<Avklartfakta[]> =>
+  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}`, avklartefakta);
+
+export const sendIkkeYrkesaktivOppholdstype = (behandlingID: number, oppholdstype: string): Promise<Oppsummering> =>
+  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/oppholdstype`, oppholdstype);
+
+export const sendIkkeYrkesaktivRelasjonstype = (
+  behandlingID: number,
+  familierelasjonstype: string
+): Promise<Oppsummering> =>
+  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/familierelasjonstype`, familierelasjonstype);
+
+export const sendArbeidssituasjontype = (behandlingID: number, arbeidssituasjontype: string): Promise<Oppsummering> =>
+  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/arbeidssituasjontype`, arbeidssituasjontype);
+
+export const slettAvklartefakta = (behandlingID: number, avklartefaktatype: string): Promise<Oppsummering> =>
+  deleteAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/${avklartefaktatype}`);
 
 export const hentOppsummering = (behandlingID: number): Promise<Oppsummering> =>
   getAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/oppsummering`);
