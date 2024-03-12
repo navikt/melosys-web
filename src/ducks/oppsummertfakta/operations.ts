@@ -61,11 +61,7 @@ export function sendArbeidssituasjontype(behandlingID: number, arbeidssituasjont
 }
 
 export function slettAvklartefakta(behandlingID: number, avklartefaktaType: string) {
-  return doThenDispatch(() => Api.Avklartefakta.slettAvklartefakta(behandlingID, avklartefaktaType), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return Api.Avklartefakta.slettAvklartefakta(behandlingID, avklartefaktaType);
 }
 
 export function resetOppsummertFakta() {
