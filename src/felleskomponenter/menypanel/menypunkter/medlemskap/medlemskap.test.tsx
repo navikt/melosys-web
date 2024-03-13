@@ -1,9 +1,8 @@
 import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
-import { shallow } from "enzyme";
+import { render, screen } from "@testing-library/react";
 
 import { Medlemskap } from "./medlemskap";
-import MedlemskapTable from "./medlemskapTable";
 
 const periode = {
   periodeID: 1,
@@ -48,13 +47,12 @@ describe("Medlemskap", () => {
     };
   });
 
-  it("Viser to medlemskapsgrupper", () => {
-    const medlemskap = shallow(<Medlemskap {...props} />);
+  it("Viser tabell med perioder for medlemskap", () => {
+    render(<Medlemskap {...props} />);
 
-    const medlemskapTable = medlemskap.find(MedlemskapTable);
-    expect(medlemskapTable).toHaveLength(2);
-    expect(medlemskapTable.first().props().perioder).toBe(props.medlemskap.perioderMed);
-    expect(medlemskapTable.last().props().perioder).toBe(props.medlemskap.perioderUten);
+    expect(screen.getByText("Perioder med medlemskap")).toBeInTheDocument();
+    expect(screen.getByText("Perioder uten medlemskap")).toBeInTheDocument();
+    expect(screen.queryByText("(ingen data funnet)")).not.toBeInTheDocument();
   });
 
   it("viser infomelding dersom ingen perioder oppgitt", () => {
@@ -63,9 +61,10 @@ describe("Medlemskap", () => {
       perioderUten: [],
       perioderUavklart: null,
     };
-    const medlemskap = shallow(<Medlemskap {...props} />);
-    const section = medlemskap.find("section");
-
-    expect(section.children().first().text()).toBe("(ingen data funnet)");
+    render(<Medlemskap {...props} />);
+    const noDataFoundElements = screen.getAllByText("(ingen data funnet)");
+    expect(noDataFoundElements.length).toBe(2);
+    expect(screen.getAllByText("Perioder med medlemskap")).toHaveLength(1);
+    expect(screen.getAllByText("Perioder uten medlemskap")).toHaveLength(1);
   });
 });
