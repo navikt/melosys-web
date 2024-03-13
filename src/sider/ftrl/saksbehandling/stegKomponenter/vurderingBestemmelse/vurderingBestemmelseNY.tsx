@@ -82,10 +82,18 @@ export const VurderingBestemmelserV2 = ({
     lagredeValgtevirksomheter.includes(virksomhet.orgnr)
   );
   const finnesISelvstendigNaeringsvirksomhetUtland = selvstendigNaeringsvirksomhetUtland.some((virksomhet: any) =>
-    lagredeValgtevirksomheter.includes(virksomhet.orgnr)
+    lagredeValgtevirksomheter.includes(virksomhet.uuid)
   );
 
-  const selvstendigNaeringValgt = finnesISelvstendigNaeringsvirksomhet || finnesISelvstendigNaeringsvirksomhetUtland;
+  const alleSelvstendigeVirksomheter = [...selvstendigNaeringsvirksomhetUtland, ...selvstendigNaeringsvirksomhet];
+
+  const valgteVirksomheterSomIkkeErSelvstendig = lagredeValgtevirksomheter.filter(
+    (orgnr) => !alleSelvstendigeVirksomheter.find((virksomhet) => (virksomhet.uuid ?? virksomhet.orgnr) === orgnr)
+  );
+
+  const selvstendigNaeringValgt =
+    (finnesISelvstendigNaeringsvirksomhet || finnesISelvstendigNaeringsvirksomhetUtland) &&
+    Utils._isEmpty(valgteVirksomheterSomIkkeErSelvstendig);
 
   const ulovligKombinasjonAvSelvstendigNaeringOgVilkår =
     selvstendigNaeringValgt && valgteVilkår.get(MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER);
