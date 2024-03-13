@@ -52,7 +52,8 @@ export const VurderingBestemmelserV2 = ({
   const ikkeYrkesaktivRelasjonType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivRelasjonSelector);
   const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
 
-  const lagredeValgtevirksomheter = useSelector(oppsummertfaktaSelectors.VirksomhetIDerSelector);
+  const lagredeValgteVirksomheterID = useSelector(oppsummertfaktaSelectors.VirksomhetIDerSelector);
+
   const selvstendigNaeringsvirksomhetUtland = useSelector(
     mottatteOpplysningerSelectors.SelvstendigNaeringsvirksomhetUtlandSelector
   );
@@ -79,13 +80,22 @@ export const VurderingBestemmelserV2 = ({
     !pliktigeBestemmelser?.includes(valgtBestemmelse);
 
   const finnesISelvstendigNaeringsvirksomhet = selvstendigNaeringsvirksomhet.some((virksomhet: any) =>
-    lagredeValgtevirksomheter.includes(virksomhet.orgnr)
-  );
-  const finnesISelvstendigNaeringsvirksomhetUtland = selvstendigNaeringsvirksomhetUtland.some((virksomhet: any) =>
-    lagredeValgtevirksomheter.includes(virksomhet.orgnr)
+    lagredeValgteVirksomheterID.includes(virksomhet.orgnr)
   );
 
-  const selvstendigNaeringValgt = finnesISelvstendigNaeringsvirksomhet || finnesISelvstendigNaeringsvirksomhetUtland;
+  const finnesISelvstendigNaeringsvirksomhetUtland = selvstendigNaeringsvirksomhetUtland.some((virksomhet: any) =>
+    lagredeValgteVirksomheterID.includes(virksomhet.uuid)
+  );
+
+  const alleSelvstendigeVirksomheter = [...selvstendigNaeringsvirksomhetUtland, ...selvstendigNaeringsvirksomhet];
+
+  const valgteVirksomheterSomIkkeErSelvstendig = lagredeValgteVirksomheterID.filter(
+    (orgnr) => !alleSelvstendigeVirksomheter.find((virksomhet) => (virksomhet.uuid ?? virksomhet.orgnr) === orgnr)
+  );
+
+  const selvstendigNaeringValgt =
+    (finnesISelvstendigNaeringsvirksomhet || finnesISelvstendigNaeringsvirksomhetUtland) &&
+    Utils._isEmpty(valgteVirksomheterSomIkkeErSelvstendig);
 
   const ulovligKombinasjonAvSelvstendigNaeringOgVilkår =
     selvstendigNaeringValgt && valgteVilkår.get(MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER);
