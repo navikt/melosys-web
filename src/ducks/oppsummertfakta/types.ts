@@ -10,6 +10,7 @@ export type Data = {
   fullstendigManglendeInnbetaling?: boolean;
   ikkeYrkesaktivFamilieRelasjonstype?: string;
   ikkeYrkesaktivOppholdstype?: string;
+  arbeidssituasjonType?: string;
 };
 
 export interface FeiletAction {

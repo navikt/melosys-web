@@ -10,7 +10,6 @@ import { landkoderSelectors } from "../../../../ducks/landkoder";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import "./behandlingsoppgaver.css";
 import {
-  MELOSYS_FOLKETRYGDEN_MVP,
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../../../featuretoggle/toggleNavn";
@@ -27,7 +26,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
  * Lister ut behandlingsoppgaver som saksbehandleren har opprettet
  */
 export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
-  const folketrygdenToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_MVP);
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
@@ -42,7 +40,6 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
         sortingLegend="Sorter behandlinger etter frist:"
         sortingPath="behandling.registrertDato"
         radioGroupName="behandlingsortering"
-        folketrygdenToggleEnabled={folketrygdenToggleEnabled}
         manglendeInnbetalingToggleEnabled={manglendeInnbetalingToggleEnabled}
         ikkeYrkesaktivFtrlToggleEnabled={ikkeYrkesaktivFtrlToggleEnabled}
         landkoder={landkoder}

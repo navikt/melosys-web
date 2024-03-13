@@ -1,32 +1,14 @@
-import { formValueSelector } from "redux-form";
-import { RootState } from "AppTypes";
-import { connect, ConnectedProps } from "react-redux";
+import { useSelector } from "react-redux";
 
-import * as KV from "../../../../../kodeverk";
-
+import { formSelectors } from "../../../../../ducks/form";
 import Sporsmal from "../sporsmal";
 import LabelOgEditerbartSvar, { RadioknappSvar } from "./labelOgEditerbartSvar";
 import Beskrivelse from "../beskrivelse";
 
 import "./redigerer.css";
 
-const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
-
-const mapStateToProps = (state: RootState) => {
-  const arbeidssituasjonOgOevrig = soknadFormValueSelector(
-    state,
-    "arbeidssituasjonOgOevrig"
-  ) as KV.Form.ArbeidssituasjonOgOevrig;
-
-  return {
-    arbeidssituasjonOgOevrig,
-  };
-};
-
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-export const Redigerer = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
+const Redigerer = () => {
+  const arbeidssituasjonOgOevrig = useSelector(formSelectors.SoknadFormValuesSelector)?.arbeidssituasjonOgOevrig ?? {};
   return (
     <div className="ovrig-om-arbeidstaker__redigerer">
       <LabelOgEditerbartSvar
@@ -67,4 +49,4 @@ export const Redigerer = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
   );
 };
 
-export default connector(Redigerer);
+export default Redigerer;

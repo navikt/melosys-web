@@ -33,15 +33,19 @@ import { oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 const { FTRL_KAP2_2_15_ANDRE_LEDD } = MKV.Koder.folketrygdloven_kap2_bestemmelser;
+const { PLIKTIG } = MKV.Koder.medlemskapstyper;
 
-const hentLabelTekst = (behandlingstype: string) => {
+const hentInformasjonstekst = (behandlingstype: string, medlemskapsTypeErPliktig: boolean) => {
+  if (medlemskapsTypeErPliktig) {
+    return "Ved pliktig medlemskap foreslår Melosys alltid å innvilge hele søknadsperioden med full dekning. Juster hvis nødvendig.";
+  }
   if (behandlingstype === NY_VURDERING) {
-    return "Ved ny vurdering vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer eller legg til en ny periode.";
+    return "Ved ny vurdering av frivillig medlemskap vises tidligere innvilgede perioder med dekning. Gjør nødvendige endringer eller legg til periode.";
   }
   if (behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
     return "Ved manglende innbetaling vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer og opphør eller forkort medlemskapsperiode(r).";
   }
-  return "Vurder og eventuelt juster de foreslåtte medlemskapsperioden(e).";
+  return "Ved frivillig medlemskap foreslår Melosys medlemskapsperioder ut i fra søkt dekning og mottaksdato. Juster hvis nødvendig.";
 };
 
 const kallFeilet = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
@@ -82,6 +86,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const ikkeyrkesaktivOppholdstype = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
+  const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
 
   const {
     control,
@@ -144,8 +149,8 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
-      fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato),
-      tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato),
+      fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, false, ""),
+      tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, false, ""),
       trygdedekning: medlemskapsperiode.trygdedekning,
       bestemmelse:
         medlemskapsperiode.innvilgelsesResultat === OPPHØRT
@@ -237,11 +242,15 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
 
+  const visFeilmeldinger = feilMeldingBlokkerer(aktivFeilmeldingType) ? feltErFyltInn : feltErFyltInn && formIsValid;
+
   return (
     <div className="vurderingPerioder">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Medlemskapsperioder</Nav.Typo.Innholdstittel>
 
-      <Nav.Typo.Normaltekst className="labelTekst">{hentLabelTekst(behandlingstype)}</Nav.Typo.Normaltekst>
+      <Nav.Typo.Normaltekst className="informasjonstekst">
+        {hentInformasjonstekst(behandlingstype, medlemskapsTypeErPliktig)}
+      </Nav.Typo.Normaltekst>
 
       <Medlemskapsperioder
         trygdedekninger={lovligeDekninger}
@@ -256,7 +265,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         visLeggTil={visLeggTilNyPeriode}
       />
 
-      {feltErFyltInn && <Feilmelding type={aktivFeilmeldingType} />}
+      {visFeilmeldinger && <Feilmelding type={aktivFeilmeldingType} />}
 
       <Mui.StegKnapper
         bekreftKnappProps={{

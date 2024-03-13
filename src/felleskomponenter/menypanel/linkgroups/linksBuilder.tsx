@@ -90,15 +90,12 @@ class LinksBuilder implements ILinksBuilder {
     return this;
   }
 
-  public addFaktureringskomponenten(erFTRLToggleEnabled: boolean | undefined) {
-    if (erFTRLToggleEnabled) {
-      this.links.push({
-        label: "Fakturainformasjon",
-        active: false,
-        content: <Fakturainformasjon />,
-      });
-    }
-
+  public addFaktureringskomponenten() {
+    this.links.push({
+      label: "Fakturainformasjon",
+      active: false,
+      content: <Fakturainformasjon />,
+    });
     return this;
   }
 
