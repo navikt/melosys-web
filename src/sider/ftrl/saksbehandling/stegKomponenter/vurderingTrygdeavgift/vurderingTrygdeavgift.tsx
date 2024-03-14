@@ -84,10 +84,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
 
-  const erSkattepliktigHelePerioden = !formValues.skatteforholdsperioder.some(
-    (periode: Skatteforhold) => periode.skatteplikttype !== MKV.Koder.skatteplikttype.SKATTEPLIKTIG
-  );
-
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.inntektskilder,
     formValues?.skatteforholdsperioder,

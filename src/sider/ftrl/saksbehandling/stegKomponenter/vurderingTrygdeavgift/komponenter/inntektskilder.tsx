@@ -120,26 +120,25 @@ export const Inntektskilder = ({
                     .filter((kt: KTObject) => {
                       if (ftrlYrkesaktivPliktigeBestemmelserEnabled && medlemskapsTypeErPliktig) {
                         return ["ARBEIDSINNTEKT", "NÆRINGSINNTEKT", "PENSJON", "UFØRETRYGD"].includes(kt.kode);
-                      } else {
-                        if (inntektstypePensjonUføretrygdEnabled) {
-                          return [
-                            "ARBEIDSINNTEKT_FRA_NORGE",
-                            "NÆRINGSINNTEKT_FRA_NORGE",
-                            "INNTEKT_FRA_UTLANDET",
-                            "FN_SKATTEFRITAK",
-                            "MISJONÆR",
-                            "PENSJON_UFØRETRYGD",
-                            "PENSJON_UFØRETRYGD_KILDESKATT",
-                          ].includes(kt.kode);
-                        }
+                      }
+                      if (inntektstypePensjonUføretrygdEnabled) {
                         return [
                           "ARBEIDSINNTEKT_FRA_NORGE",
                           "NÆRINGSINNTEKT_FRA_NORGE",
                           "INNTEKT_FRA_UTLANDET",
                           "FN_SKATTEFRITAK",
                           "MISJONÆR",
+                          "PENSJON_UFØRETRYGD",
+                          "PENSJON_UFØRETRYGD_KILDESKATT",
                         ].includes(kt.kode);
                       }
+                      return [
+                        "ARBEIDSINNTEKT_FRA_NORGE",
+                        "NÆRINGSINNTEKT_FRA_NORGE",
+                        "INNTEKT_FRA_UTLANDET",
+                        "FN_SKATTEFRITAK",
+                        "MISJONÆR",
+                      ].includes(kt.kode);
                     })
                     .map((kt: KTObject) => (
                       <option key={kt.kode} value={kt.kode}>

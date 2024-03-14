@@ -1,6 +1,4 @@
-import VurderingArbeidTjenestepersonEllerFlyVedtakRedux, {
-  VurderingArbeidTjenestepersonEllerFlyVedtak,
-} from "./vurderingArbeidTjenestepersonEllerFlyVedtak";
+import VurderingArbeidTjenestepersonEllerFlyVedtakRedux from "./vurderingArbeidTjenestepersonEllerFlyVedtak";
 
 import * as KV from "../../../../kodeverk";
 
@@ -37,11 +35,11 @@ describe("VurderingArbeidTjenestepersonEllerFlyVedtak", () => {
     destroyOnUnmount: true,
     keepDirtyOnReinitialize: true,
     updateUnregisteredFields: true,
-    validate: (values, props) =>
+    validate: (values, ownProps) =>
       lagYupToReduxformErrorMapper(VurderingArbeidTjenestepersonEllerFlyVedtakSchema, {
         context: {
-          soknadsperiode: props.soknadsperiode,
-          behandlingstype: props.behandlingstype,
+          soknadsperiode: ownProps.soknadsperiode,
+          behandlingstype: ownProps.behandlingstype,
         },
       })(values),
     asyncBlurFields: [],
