@@ -1,0 +1,124 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Select > snapshot test 1`] = `
+<div>
+  <div
+    class="skjemaelement className"
+  >
+    <div
+      class="selectContainer input--fullbredde"
+    >
+      <select
+        aria-invalid="false"
+        array="[object Object]"
+        class="skjemaelement__input"
+        form="test"
+        id="1234"
+        name="feltnavn"
+      >
+        <option
+          disabled=""
+          value=""
+        >
+          Velg...
+        </option>
+        <option
+          disabled=""
+          value="0"
+        >
+          ingen valg tilgjengelig
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`SelectWrappedComponent > setter feil-prop dersom meta.error prop finnes 1`] = `
+<div>
+  <div
+    class="skjemaelement"
+  >
+    <label
+      class="skjemaelement__label"
+      for="177207618-23520-24519-12348-28411130323597"
+    >
+      Label
+    </label>
+    <div
+      class="selectContainer input--fullbredde"
+    >
+      <select
+        aria-errormessage="89892452-1460-7456-19125-29626002244005"
+        aria-invalid="true"
+        class="skjemaelement__input skjemaelement__input--harFeil"
+        id="177207618-23520-24519-12348-28411130323597"
+        name="feltName"
+      >
+        <option
+          disabled=""
+          value=""
+        >
+          Velg...
+        </option>
+        <option
+          value="1"
+        >
+          Hallo hallo
+        </option>
+      </select>
+    </div>
+    <div
+      aria-live="polite"
+      id="89892452-1460-7456-19125-29626002244005"
+    >
+      <div
+        class="skjemaelement__feilmelding"
+      >
+        <p
+          class="typo-feilmelding"
+        >
+          err
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`SelectWrappedComponent > viser en Nav Select 1`] = `
+<div>
+  <div
+    class="skjemaelement"
+  >
+    <label
+      class="skjemaelement__label"
+      for="0781729271-1262-12140-2560-0042370489200"
+    >
+      Label
+    </label>
+    <div
+      class="selectContainer input--fullbredde"
+    >
+      <select
+        aria-invalid="false"
+        class="skjemaelement__input"
+        id="0781729271-1262-12140-2560-0042370489200"
+        name="feltName"
+      >
+        <option
+          disabled=""
+          value=""
+        >
+          Velg...
+        </option>
+        <option
+          value="1"
+        >
+          Hallo hallo
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
+`;
