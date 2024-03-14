@@ -1,4 +1,4 @@
-import { array, object, string } from "yup";
+import { array, lazy, object, string } from "yup";
 import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
@@ -52,6 +52,13 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
   },
 };
 
+const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
+  if (options?.parent?.skatteforholdsperioder) {
+    return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder));
+  }
+  return true;
+};
+
 const vurdering_trygdeavgift = object().shape({
   skatteforholdsperioder: array()
     .of(
@@ -69,24 +76,29 @@ const vurdering_trygdeavgift = object().shape({
       })
     )
     .min(1),
-  inntektskilder: array()
-    .of(
-      object().shape({
-        kildetype: string().required(MAA_FYLLES_UT),
-        arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
-        bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
-        fomDato: string()
-          .erGyldigDato()
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .required(MAA_FYLLES_UT),
-        tomDato: string()
-          .erGyldigDato()
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .erEtterDatofelt("fomDato")
-          .required(MAA_FYLLES_UT),
-      })
-    )
-    .min(1),
+  inntektskilder: lazy((value, options) => {
+    return array().when("$medlemskapsTypeErPliktig", {
+      is: (medlemskapsTypeErPliktig) => kreverInntektskilder(medlemskapsTypeErPliktig, options),
+      then: array()
+        .of(
+          object().shape({
+            kildetype: string().required(MAA_FYLLES_UT),
+            arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
+            bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
+            fomDato: string()
+              .erGyldigDato()
+              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+              .required(MAA_FYLLES_UT),
+            tomDato: string()
+              .erGyldigDato()
+              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+              .erEtterDatofelt("fomDato")
+              .required(MAA_FYLLES_UT),
+          })
+        )
+        .min(1),
+    });
+  }),
 });
 
 export default vurdering_trygdeavgift;
