@@ -11,7 +11,7 @@ export const FaktaTypeOverskrifter: Record<string, FaktaType> = {
     kodeverk: "ikkeyrkesaktivrelasjontype",
   },
   IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD: {
-    tittel: "Angi brukers opphold",
+    tittel: "Angi brukers situasjon",
     kodeverk: "ikkeyrkesaktivoppholdtype",
   },
   ARBEIDSSITUASJON: {
