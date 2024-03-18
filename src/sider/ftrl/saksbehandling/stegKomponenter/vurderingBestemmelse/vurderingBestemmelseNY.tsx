@@ -51,12 +51,12 @@ export const VurderingBestemmelserV2 = ({
   const ikkeYrkesaktivOppholdType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
   const ikkeYrkesaktivRelasjonType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivRelasjonSelector);
   const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
+
   const lagredeValgtevirksomheter = useSelector(oppsummertfaktaSelectors.VirksomhetIDerSelector);
   const selvstendigNaeringsvirksomhetUtland = useSelector(
     mottatteOpplysningerSelectors.SelvstendigNaeringsvirksomhetUtlandSelector
   );
   const selvstendigNaeringsvirksomhet = useSelector(mottatteOpplysningerSelectors.SelvstendigNaringsvirksomhetSelector);
-
   const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBegrunnelser[]>([]);
   const [avklarteFakta, setAvklarteFakta] = useState<AvklarteFakta[]>([]);
   const [bestemmelser, setBestemmelser] = useState<string[]>([]);
@@ -335,6 +335,15 @@ export const VurderingBestemmelserV2 = ({
     bekreft();
   };
 
+  const handleSlettAvklartefakta = () => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [key] of valgtAvklarteFakta.entries()) {
+      if ([IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON, ARBEIDSSITUASJON].includes(key)) {
+        dispatch(oppsummertfaktaOperations.slettAvklartefakta(behandlingID, key));
+      }
+    }
+  };
+
   if (!aktivtSteg) return null;
   let harReturnertNullIVilkårListe = false;
   return (
@@ -350,6 +359,7 @@ export const VurderingBestemmelserV2 = ({
         valgtAlternativ={valgtBestemmelse}
         endretAlternativ={(bestemmelse) => {
           setHarSkjeddEndringer(true);
+          handleSlettAvklartefakta();
           reset(ResetTyper.AVKLARTEFAKTA);
           reset(ResetTyper.VILKÅR);
           setValgtBestemmelse(bestemmelse);
