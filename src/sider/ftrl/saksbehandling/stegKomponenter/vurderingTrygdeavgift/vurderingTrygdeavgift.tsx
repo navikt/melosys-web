@@ -198,7 +198,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   ]);
 
   useEffect(() => {
-    if (redigerbart && aktivtSteg && harEndretInnvilgetMedlemskapsperiode) {
+    if (redigerbart && aktivtSteg) {
       if (!formIsValid) {
         formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
           trigger(`skatteforholdsperioder[${index}].fomDato`);
