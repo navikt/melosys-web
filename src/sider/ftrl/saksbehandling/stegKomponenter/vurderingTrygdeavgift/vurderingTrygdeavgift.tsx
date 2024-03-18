@@ -50,7 +50,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
   const [harHentetGrunnlag, setHarHentetGrunnlag] = useState(false);
-  const [harEndretInnvilgetMedlemskapsperiode, setHarEndretInnvilgetMedlemskapsperiode] = useState(false);
+  const [harEndretInnvilgetMedlemskapsperiode, setHarEndretInnvilgetMedlemskapsperiode] = useState<boolean | undefined>(
+    undefined
+  );
 
   const {
     control,
@@ -101,7 +103,11 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
 
   useEffect(() => {
-    setHarEndretInnvilgetMedlemskapsperiode(true);
+    if (harEndretInnvilgetMedlemskapsperiode === undefined) {
+      setHarEndretInnvilgetMedlemskapsperiode(false);
+    } else {
+      setHarEndretInnvilgetMedlemskapsperiode(true);
+    }
   }, [innvilgetMedlemskapsperiode]);
 
   useEffect(() => {
