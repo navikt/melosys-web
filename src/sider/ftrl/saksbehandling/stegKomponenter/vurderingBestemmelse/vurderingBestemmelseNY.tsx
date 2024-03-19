@@ -51,12 +51,12 @@ export const VurderingBestemmelserV2 = ({
   const ikkeYrkesaktivOppholdType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
   const ikkeYrkesaktivRelasjonType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivRelasjonSelector);
   const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
+
   const lagredeValgtevirksomheter = useSelector(oppsummertfaktaSelectors.VirksomhetIDerSelector);
   const selvstendigNaeringsvirksomhetUtland = useSelector(
     mottatteOpplysningerSelectors.SelvstendigNaeringsvirksomhetUtlandSelector
   );
   const selvstendigNaeringsvirksomhet = useSelector(mottatteOpplysningerSelectors.SelvstendigNaringsvirksomhetSelector);
-
   const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBegrunnelser[]>([]);
   const [avklarteFakta, setAvklarteFakta] = useState<AvklarteFakta[]>([]);
   const [bestemmelser, setBestemmelser] = useState<string[]>([]);
@@ -82,10 +82,18 @@ export const VurderingBestemmelserV2 = ({
     lagredeValgtevirksomheter.includes(virksomhet.orgnr)
   );
   const finnesISelvstendigNaeringsvirksomhetUtland = selvstendigNaeringsvirksomhetUtland.some((virksomhet: any) =>
-    lagredeValgtevirksomheter.includes(virksomhet.orgnr)
+    lagredeValgtevirksomheter.includes(virksomhet.uuid)
   );
 
-  const selvstendigNaeringValgt = finnesISelvstendigNaeringsvirksomhet || finnesISelvstendigNaeringsvirksomhetUtland;
+  const alleSelvstendigeVirksomheter = [...selvstendigNaeringsvirksomhetUtland, ...selvstendigNaeringsvirksomhet];
+
+  const valgteVirksomheterSomIkkeErSelvstendig = lagredeValgtevirksomheter.filter(
+    (orgnr) => !alleSelvstendigeVirksomheter.find((virksomhet) => (virksomhet.uuid ?? virksomhet.orgnr) === orgnr)
+  );
+
+  const selvstendigNaeringValgt =
+    (finnesISelvstendigNaeringsvirksomhet || finnesISelvstendigNaeringsvirksomhetUtland) &&
+    Utils._isEmpty(valgteVirksomheterSomIkkeErSelvstendig);
 
   const ulovligKombinasjonAvSelvstendigNaeringOgVilkår =
     selvstendigNaeringValgt && valgteVilkår.get(MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER);
@@ -327,6 +335,15 @@ export const VurderingBestemmelserV2 = ({
     bekreft();
   };
 
+  const handleSlettAvklartefakta = () => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [key] of valgtAvklarteFakta.entries()) {
+      if ([IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON, ARBEIDSSITUASJON].includes(key)) {
+        dispatch(oppsummertfaktaOperations.slettAvklartefakta(behandlingID, key));
+      }
+    }
+  };
+
   if (!aktivtSteg) return null;
   let harReturnertNullIVilkårListe = false;
   return (
@@ -342,6 +359,7 @@ export const VurderingBestemmelserV2 = ({
         valgtAlternativ={valgtBestemmelse}
         endretAlternativ={(bestemmelse) => {
           setHarSkjeddEndringer(true);
+          handleSlettAvklartefakta();
           reset(ResetTyper.AVKLARTEFAKTA);
           reset(ResetTyper.VILKÅR);
           setValgtBestemmelse(bestemmelse);

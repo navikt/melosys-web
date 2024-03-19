@@ -46,6 +46,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
   const [harHentetGrunnlag, setHarHentetGrunnlag] = useState(false);
+  const [harEndretInnvilgetMedlemskapsperiode, setHarEndretInnvilgetMedlemskapsperiode] = useState<boolean | undefined>(
+    undefined
+  );
 
   const medlemskapsTypeErPliktig = medlemskapsperioder.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG
@@ -103,6 +106,14 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
   const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
+
+  useEffect(() => {
+    if (harEndretInnvilgetMedlemskapsperiode === undefined) {
+      setHarEndretInnvilgetMedlemskapsperiode(false);
+    } else {
+      setHarEndretInnvilgetMedlemskapsperiode(true);
+    }
+  }, [innvilgetMedlemskapsperiode]);
 
   useEffect(() => {
     Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
@@ -207,11 +218,12 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
           trigger(`inntektskilder[${index}].tomDato`);
         });
       }
-      if (feil) {
+      if (feil || harEndretInnvilgetMedlemskapsperiode) {
         debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
+        setHarEndretInnvilgetMedlemskapsperiode(false);
       }
     }
-  }, [aktivtSteg, innvilgetMedlemskapsperiode]);
+  }, [aktivtSteg, harEndretInnvilgetMedlemskapsperiode]);
 
   const handleBeregnTrygdeavgift = () => {
     setTrygdeavgift(undefined);

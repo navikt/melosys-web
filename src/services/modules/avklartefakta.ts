@@ -1,4 +1,4 @@
-import { getAsJson, postAsJson } from "../utils";
+import { deleteAsJson, getAsJson, postAsJson } from "../utils";
 import { API_BASE_URL, AVKLARTEFAKTA } from "../api-constants";
 
 export interface Avklartfakta {
@@ -10,29 +10,35 @@ export interface Avklartfakta {
   subjektID: string | null;
 }
 
+interface Oppsummering {
+  virksomheter: string[];
+  arbeidsland: string[];
+  fullstendigManglendeInnbetaling: boolean;
+  ikkeYrkesaktivFamilieRelasjonstype?: string;
+  ikkeYrkesaktivOppholdstype?: string;
+  arbeidssituasjonType?: string;
+}
+
 export const hent = (behandlingID: number): Promise<Avklartfakta[]> =>
   getAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}`);
 
 export const send = (behandlingID: number, avklartefakta: Avklartfakta[]): Promise<Avklartfakta[]> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}`, avklartefakta);
 
-export const sendIkkeYrkesaktivOppholdstype = (behandlingID: number, oppholdstype: string): Promise<Avklartfakta[]> =>
+export const sendIkkeYrkesaktivOppholdstype = (behandlingID: number, oppholdstype: string): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/oppholdstype`, oppholdstype);
 
 export const sendIkkeYrkesaktivRelasjonstype = (
   behandlingID: number,
   familierelasjonstype: string
-): Promise<Avklartfakta[]> =>
+): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/familierelasjonstype`, familierelasjonstype);
 
-export const sendArbeidssituasjontype = (behandlingID: number, arbeidssituasjontype: string): Promise<Avklartfakta[]> =>
+export const sendArbeidssituasjontype = (behandlingID: number, arbeidssituasjontype: string): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/arbeidssituasjontype`, arbeidssituasjontype);
 
-interface Oppsummering {
-  virksomheter: string[];
-  arbeidsland: string[];
-  fullstendingManglendeInnbetaling: boolean;
-}
+export const slettAvklartefakta = (behandlingID: number, avklartefaktatype: string): Promise<Oppsummering> =>
+  deleteAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/${avklartefaktatype}`);
 
 export const hentOppsummering = (behandlingID: number): Promise<Oppsummering> =>
   getAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/oppsummering`);
