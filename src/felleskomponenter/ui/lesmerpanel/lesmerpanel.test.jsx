@@ -1,12 +1,14 @@
 import Lesmerpanel from "./lesmerpanel";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 describe("Lesmerpanel", () => {
-  it("skal ikke vise lukketekst når er Aapen", () => {
+  it("skal ikke vise lukketekst når er Aapen", async () => {
     const lesmerPanel = (
       <Lesmerpanel
         defaultApen
-        onClose={() => {}}
-        onOpen={() => {}}
+        onClose={vi.fn()}
+        onOpen={vi.fn()}
         intro="Dette er intro"
         lukkTekst="lukketekst"
         apneTekst="aapnetekst"
@@ -15,16 +17,12 @@ describe("Lesmerpanel", () => {
       </Lesmerpanel>
     );
 
-    const wrapper = shallow(lesmerPanel);
-
-    expect(wrapper.children()).toHaveLength(2);
-    const divs = wrapper.find("div");
-
-    const lesmertoggle = wrapper.find("LesMerToggle");
-    expect(lesmertoggle.length).toBe(1);
-    const intro = divs.at(2);
-    expect(intro.childAt(0).text()).toBe("Dette er intro");
-    const innhold = divs.at(5);
-    expect(innhold.childAt(0).text()).toBe("innholdstekst");
+    render(lesmerPanel);
+    expect(screen.queryByText("aapnetekst")).not.toBeInTheDocument();
+    expect(screen.getByText("lukketekst")).toBeInTheDocument();
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole("button"));
+    expect(screen.getByText("aapnetekst")).toBeInTheDocument();
+    expect(screen.queryByText("lukketekst")).not.toBeInTheDocument();
   });
 });

@@ -18,9 +18,24 @@ import {
 } from "../vurderingTrygdeavgiftSchema";
 import "./inntektskilder.css";
 import { useFeatureToggle } from "../../../../../../featuretoggle";
-import { MELOSYS_INNTEKTSTYPE_PENSJON_UFØRETRYGD } from "../../../../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER,
+  MELOSYS_INNTEKTSTYPE_PENSJON_UFØRETRYGD,
+} from "../../../../../../featuretoggle/toggleNavn";
 
-const { ARBEIDSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR } = MKV.Koder.inntektskildetype;
+const {
+  ARBEIDSINNTEKT_FRA_NORGE,
+  INNTEKT_FRA_UTLANDET,
+  MISJONÆR,
+  NÆRINGSINNTEKT_FRA_NORGE,
+  FN_SKATTEFRITAK,
+  PENSJON_UFØRETRYGD,
+  PENSJON_UFØRETRYGD_KILDESKATT,
+  ARBEIDSINNTEKT,
+  NÆRINGSINNTEKT,
+  PENSJON,
+  UFØRETRYGD,
+} = MKV.Koder.inntektskildetype;
 
 interface InntektskilderProps {
   formValues: FormValuesProps;
@@ -31,6 +46,7 @@ interface InntektskilderProps {
   append: (inntektskilde: Inntektskilde) => void;
   redigerbart: boolean;
   defaultPeriode?: { fomDato: string; tomDato: string };
+  medlemskapsTypeErPliktig: boolean;
 }
 
 export const Inntektskilder = ({
@@ -42,8 +58,10 @@ export const Inntektskilder = ({
   redigerbart,
   defaultPeriode,
   fields,
+  medlemskapsTypeErPliktig,
 }: InntektskilderProps) => {
   const inntektstypePensjonUføretrygdEnabled = useFeatureToggle(MELOSYS_INNTEKTSTYPE_PENSJON_UFØRETRYGD);
+  const ftrlYrkesaktivPliktigeBestemmelserEnabled = useFeatureToggle(MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER);
 
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
@@ -111,17 +129,29 @@ export const Inntektskilder = ({
                   onChange={(value) => handleEndreKildetype(index, value)}
                 >
                   {MKV.KTObjects.inntektskildetype
-                    .filter(
-                      (kt: KTObject) =>
-                        inntektstypePensjonUføretrygdEnabled ||
-                        [
-                          "ARBEIDSINNTEKT_FRA_NORGE",
-                          "NÆRINGSINNTEKT_FRA_NORGE",
-                          "INNTEKT_FRA_UTLANDET",
-                          "FN_SKATTEFRITAK",
-                          "MISJONÆR",
-                        ].includes(kt.kode)
-                    )
+                    .filter((kt: KTObject) => {
+                      if (ftrlYrkesaktivPliktigeBestemmelserEnabled && medlemskapsTypeErPliktig) {
+                        return [ARBEIDSINNTEKT, NÆRINGSINNTEKT, PENSJON, UFØRETRYGD].includes(kt.kode);
+                      }
+                      if (inntektstypePensjonUføretrygdEnabled) {
+                        return [
+                          ARBEIDSINNTEKT_FRA_NORGE,
+                          NÆRINGSINNTEKT_FRA_NORGE,
+                          INNTEKT_FRA_UTLANDET,
+                          FN_SKATTEFRITAK,
+                          MISJONÆR,
+                          PENSJON_UFØRETRYGD,
+                          PENSJON_UFØRETRYGD_KILDESKATT,
+                        ].includes(kt.kode);
+                      }
+                      return [
+                        ARBEIDSINNTEKT_FRA_NORGE,
+                        NÆRINGSINNTEKT_FRA_NORGE,
+                        INNTEKT_FRA_UTLANDET,
+                        FN_SKATTEFRITAK,
+                        MISJONÆR,
+                      ].includes(kt.kode);
+                    })
                     .map((kt: KTObject) => (
                       <option key={kt.kode} value={kt.kode}>
                         {kt.term}

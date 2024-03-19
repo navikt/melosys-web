@@ -1,35 +1,15 @@
-import { FieldArray } from "redux-form";
+import { reduxForm } from "redux-form";
 
-import EditerbartElementListe, { InnerEditerbartElementListe } from "./editerbartElementListe";
-import FlereRedigeringsknapperListe from "./flereRedigeringsknapperListe";
-import EnRedigeringsknappListe from "./enRedigeringsknappListe";
+import EditerbartElementListe from "./editerbartElementListe";
+import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
 describe("EditerbartElementListe", () => {
   let props = null;
+  const WrappedEditerbartElementListe = reduxForm({ form: "test" })(EditerbartElementListe);
 
   beforeEach(() => {
     props = {
       feltNavn: "arbeidPaaLand",
-    };
-  });
-
-  it("viser en fieldArray", () => {
-    const editerbartElementListe = shallow(<EditerbartElementListe {...props} />);
-    const fieldArray = editerbartElementListe.find(FieldArray);
-    const fieldArrayProps = fieldArray.props();
-
-    expect(fieldArray).toHaveLength(1);
-    expect(fieldArrayProps.name).toBe(props.feltNavn);
-  });
-});
-
-describe("InnerElementlListe", () => {
-  let props = null;
-
-  const TestElement = () => <div>Element</div>;
-
-  beforeEach(() => {
-    props = {
       leggTilTekst: "Legg til",
       slettTekst: "Slett",
       redigerbart: true,
@@ -45,26 +25,15 @@ describe("InnerElementlListe", () => {
       settFeltVerdi: vi.fn(),
       hentNavn: vi.fn(() => "Navn"),
       tittelTekst: "tittel",
-      redigererKomponent: () => TestElement,
-      redigeringUtfortKomponent: () => TestElement,
+      redigererKomponent: () => <div>Element</div>,
+      redigeringUtfortKomponent: () => <div>Element</div>,
       harData: () => true,
       tittelIkon: () => <div />,
     };
   });
 
-  it("viser en FlereRedigeringsknapperListe", () => {
-    props.flereRedigeringsknapper = true;
-    const innerEditerbartElementListe = shallow(<InnerEditerbartElementListe {...props} />);
-    const liste = innerEditerbartElementListe.find(FlereRedigeringsknapperListe);
-
-    expect(liste).toHaveLength(1);
-  });
-
-  it("viser en EnRedigeringsknappListe", () => {
-    props.flereRedigeringsknapper = false;
-    const innerEditerbartElementListe = shallow(<InnerEditerbartElementListe {...props} />);
-    const liste = innerEditerbartElementListe.find(EnRedigeringsknappListe);
-
-    expect(liste).toHaveLength(1);
+  it("snapshot test", () => {
+    const { container } = renderWithProviders(<WrappedEditerbartElementListe {...props} />);
+    expect(container).toMatchSnapshot();
   });
 });

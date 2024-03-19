@@ -1,0 +1,43 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VedtakstypebegrunnelseSkjema > snapshot test 1`] = `
+<div>
+  <div
+    class="skjemaelement artikkel"
+  >
+    <label
+      class="skjemaelement__label"
+      for="123"
+    >
+      label
+    </label>
+    <div
+      class="selectContainer input--fullbredde"
+    >
+      <select
+        aria-invalid="false"
+        class="skjemaelement__input"
+        id="123"
+        name="feltNavn"
+      >
+        <option
+          disabled=""
+          value=""
+        >
+          Velg...
+        </option>
+        <option
+          value="FEIL_I_BEHANDLING"
+        >
+          Det ble gjort feil i tidligere behandling
+        </option>
+        <option
+          value="NYE_OPPLYSNINGER"
+        >
+          Det er mottatt nye opplysninger i saken
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
+`;

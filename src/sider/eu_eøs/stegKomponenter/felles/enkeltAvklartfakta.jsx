@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import PT from "prop-types";
-import { v4 as uuid } from "uuid";
 import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
+import * as Utils from "../../../../utils";
 import * as Mui from "../../../../felleskomponenter/ui";
 
 import { hentFaktaVerdi } from "../../../../domeneUtils";
@@ -54,17 +54,21 @@ const EnkeltAvklartfakta = (props) => {
       <Nav.Row>
         <Nav.Column xs="12">
           <Nav.Fieldset legend={tittel}>
-            {avklartefaktaTyper.map((af) => (
-              <Nav.Radio
-                key={uuid()}
-                name={avklartfaktaKode}
-                label={af.label}
-                value={af.type}
-                checked={fakta === af.type}
-                onChange={radioEndringHandler}
-                disabled={!redigerbart || af.disabled}
-              />
-            ))}
+            {avklartefaktaTyper.map((af) => {
+              const id = Utils._uuid();
+              return (
+                <Nav.Radio
+                  key={id}
+                  id={id}
+                  name={avklartfaktaKode}
+                  label={af.label}
+                  value={af.type}
+                  checked={fakta === af.type}
+                  onChange={radioEndringHandler}
+                  disabled={!redigerbart || af.disabled}
+                />
+              );
+            })}
           </Nav.Fieldset>
         </Nav.Column>
       </Nav.Row>

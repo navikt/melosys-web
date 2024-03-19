@@ -16,7 +16,7 @@ import { STATUS } from "../../../../../services";
 import { Inntektskilder } from "./komponenter/inntektskilder";
 import TrygdeavgiftsperioderTabell from "./komponenter/trygdeavgiftsperioderTabell";
 import { FieldArrayProps, FormValuesProps, Inntektskilde, Skatteforhold } from "./komponenter/types";
-import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
+import vurderingTrygdeavgiftSchema, { erBrukerSkattepliktigIHelePerioden } from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
 import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/meldinger";
 import { Skatteforholdsperioder } from "./komponenter/skatteforholdsperioder";
@@ -43,16 +43,20 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     undefined,
     [behandlingID, medlemskapsperiodeStatus === STATUS.OK]
   );
-  const defaultPeriode = {
-    fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
-    tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
-  };
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
   const [harHentetGrunnlag, setHarHentetGrunnlag] = useState(false);
   const [harEndretInnvilgetMedlemskapsperiode, setHarEndretInnvilgetMedlemskapsperiode] = useState<boolean | undefined>(
     undefined
   );
+
+  const medlemskapsTypeErPliktig = medlemskapsperioder.every(
+    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG
+  );
+  const defaultPeriode = {
+    fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
+    tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
+  };
 
   const {
     control,
@@ -61,7 +65,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
-    context: { medlemskapsperiode: innvilgetMedlemskapsperiode },
+    context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
@@ -94,6 +98,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const skalBeregneForelopigTrygdeavgift =
     stegErGyldig &&
+    !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) &&
     formValues?.inntektskilder.some(
       (inntektskilde: Inntektskilde) => inntektskilde.bruttoInntekt && inntektskilde.bruttoInntekt !== 0
     );
@@ -145,6 +150,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const lagreTrygdeavgiftsgrunnlag = (formVerdier: FieldValue<FormValuesProps>) => {
     setLagrePending(true);
+    const erBrukerPliktigMedlemOgSkattepliktig =
+      medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
 
     Api.Trygdeavgift.oppdaterTrygdeavgiftsgrunnlag(behandlingID, {
       skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
@@ -152,13 +159,15 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato),
         skatteplikttype: skatteforhold.skatteplikttype,
       })),
-      inntektskilder: formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
-        type: inntektskilde.kildetype,
-        arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
-        avgiftspliktigInntektMnd: inntektskilde.bruttoInntekt,
-        fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
-        tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato),
-      })),
+      inntektskilder: !erBrukerPliktigMedlemOgSkattepliktig
+        ? formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
+            type: inntektskilde.kildetype,
+            arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
+            avgiftspliktigInntektMnd: inntektskilde.bruttoInntekt,
+            fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
+            tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato),
+          }))
+        : [],
     })
       .then(() => {
         setFeil(undefined);
@@ -255,16 +264,19 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.Column>
       </Nav.Row>
 
-      <Inntektskilder
-        formValues={formValues}
-        redigerbart={redigerbart}
-        update={inntektUpdate}
-        remove={inntektRemove}
-        append={inntektAppend}
-        control={control}
-        defaultPeriode={defaultPeriode}
-        fields={inntektFields}
-      />
+      {!(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) && (
+        <Inntektskilder
+          formValues={formValues}
+          redigerbart={redigerbart}
+          update={inntektUpdate}
+          remove={inntektRemove}
+          append={inntektAppend}
+          control={control}
+          defaultPeriode={defaultPeriode}
+          fields={inntektFields}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
+        />
+      )}
 
       {skalBeregneForelopigTrygdeavgift && (
         <Nav.Knapp

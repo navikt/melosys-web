@@ -2,7 +2,7 @@ import MKV from "../../../../melosyskodeverk";
 
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingEndrePeriode from "../../stegKomponenter/vurderingEndrePeriode";
+import VurderingEndrePeriode from "../../stegKomponenter/vurderingEndrePeriode/vurderingEndrePeriode";
 import { hentFakta } from "../../../../domeneUtils";
 
 class EndrePeriode extends Steg {
