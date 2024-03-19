@@ -47,7 +47,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const [lagrePending, setLagrePending] = useState(false);
   const [harHentetGrunnlag, setHarHentetGrunnlag] = useState(false);
 
-  const medlemskapsTypeErPliktig = medlemskapsperioder.some(
+  const medlemskapsTypeErPliktig = medlemskapsperioder.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG
   );
   const defaultPeriode = {

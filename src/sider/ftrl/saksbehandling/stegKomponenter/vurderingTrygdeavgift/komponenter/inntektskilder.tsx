@@ -23,7 +23,19 @@ import {
   MELOSYS_INNTEKTSTYPE_PENSJON_UFØRETRYGD,
 } from "../../../../../../featuretoggle/toggleNavn";
 
-const { ARBEIDSINNTEKT_FRA_NORGE, INNTEKT_FRA_UTLANDET, MISJONÆR } = MKV.Koder.inntektskildetype;
+const {
+  ARBEIDSINNTEKT_FRA_NORGE,
+  INNTEKT_FRA_UTLANDET,
+  MISJONÆR,
+  NÆRINGSINNTEKT_FRA_NORGE,
+  FN_SKATTEFRITAK,
+  PENSJON_UFØRETRYGD,
+  PENSJON_UFØRETRYGD_KILDESKATT,
+  ARBEIDSINNTEKT,
+  NÆRINGSINNTEKT,
+  PENSJON,
+  UFØRETRYGD,
+} = MKV.Koder.inntektskildetype;
 
 interface InntektskilderProps {
   formValues: FormValuesProps;
@@ -119,25 +131,25 @@ export const Inntektskilder = ({
                   {MKV.KTObjects.inntektskildetype
                     .filter((kt: KTObject) => {
                       if (ftrlYrkesaktivPliktigeBestemmelserEnabled && medlemskapsTypeErPliktig) {
-                        return ["ARBEIDSINNTEKT", "NÆRINGSINNTEKT", "PENSJON", "UFØRETRYGD"].includes(kt.kode);
+                        return [ARBEIDSINNTEKT, NÆRINGSINNTEKT, PENSJON, UFØRETRYGD].includes(kt.kode);
                       }
                       if (inntektstypePensjonUføretrygdEnabled) {
                         return [
-                          "ARBEIDSINNTEKT_FRA_NORGE",
-                          "NÆRINGSINNTEKT_FRA_NORGE",
-                          "INNTEKT_FRA_UTLANDET",
-                          "FN_SKATTEFRITAK",
-                          "MISJONÆR",
-                          "PENSJON_UFØRETRYGD",
-                          "PENSJON_UFØRETRYGD_KILDESKATT",
+                          ARBEIDSINNTEKT_FRA_NORGE,
+                          NÆRINGSINNTEKT_FRA_NORGE,
+                          INNTEKT_FRA_UTLANDET,
+                          FN_SKATTEFRITAK,
+                          MISJONÆR,
+                          PENSJON_UFØRETRYGD,
+                          PENSJON_UFØRETRYGD_KILDESKATT,
                         ].includes(kt.kode);
                       }
                       return [
-                        "ARBEIDSINNTEKT_FRA_NORGE",
-                        "NÆRINGSINNTEKT_FRA_NORGE",
-                        "INNTEKT_FRA_UTLANDET",
-                        "FN_SKATTEFRITAK",
-                        "MISJONÆR",
+                        ARBEIDSINNTEKT_FRA_NORGE,
+                        NÆRINGSINNTEKT_FRA_NORGE,
+                        INNTEKT_FRA_UTLANDET,
+                        FN_SKATTEFRITAK,
+                        MISJONÆR,
                       ].includes(kt.kode);
                     })
                     .map((kt: KTObject) => (
