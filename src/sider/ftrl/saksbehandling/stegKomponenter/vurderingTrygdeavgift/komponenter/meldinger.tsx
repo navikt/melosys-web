@@ -38,7 +38,7 @@ const PensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
   </Nav.AlertStripeFeil>
 );
 
-const PliktigMedlemOgInntektKunFraPensjon = (
+const PliktigMedlemOgInntektKunFraPensjonEllerUføretrygd = (
   <Nav.AlertStripeFeil className="alertstripe_feilmelding">
     Du må oppgi minst en annen inntekt i tillegg til pensjon/uføretrygd.
   </Nav.AlertStripeFeil>
@@ -128,7 +128,7 @@ const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
   );
 };
 
-const erPliktigMedlemOgInntektKunFraPensjon = (
+const erPliktigMedlemOgInntektKunFraPensjonEllerUføretrygd = (
   inntektskilder: Inntektskilde[],
   medlemskapsperioder: Medlemskapsperiode[],
   skatteforholdsperioder: Skatteforhold[]
@@ -152,7 +152,7 @@ enum TypeMelding {
   BRUTTOINNTEKT_OVER_250K = "BRUTTOINNTEKT_OVER_250K",
   SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT = "SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT",
   PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE = "PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE",
-  PLIKTIG_MEDLEM_OG_INNTEKT_KUN_FRA_PENSJON = "PLIKTIG_MEDLEM_OG_INNTEKT_KUN_FRA_PENSJON",
+  PLIKTIG_MEDLEM_OG_INNTEKT_KUN_FRA_PENSJON_ELLER_UFØRETRYGD = "PLIKTIG_MEDLEM_OG_INNTEKT_KUN_FRA_PENSJON_ELLER_UFØRETRYGD",
 }
 
 export const finnAktivFeilmelding = (
@@ -176,8 +176,10 @@ export const finnAktivFeilmelding = (
   if (erSkattepliktigOgPensjonUføreMedKildeskatt(skatteforholdsperioder, inntektskilder)) {
     return TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT;
   }
-  if (erPliktigMedlemOgInntektKunFraPensjon(inntektskilder, medlemskapsperioder, skatteforholdsperioder)) {
-    return TypeMelding.PLIKTIG_MEDLEM_OG_INNTEKT_KUN_FRA_PENSJON;
+  if (
+    erPliktigMedlemOgInntektKunFraPensjonEllerUføretrygd(inntektskilder, medlemskapsperioder, skatteforholdsperioder)
+  ) {
+    return TypeMelding.PLIKTIG_MEDLEM_OG_INNTEKT_KUN_FRA_PENSJON_ELLER_UFØRETRYGD;
   }
 
   // Advarsler
@@ -194,7 +196,7 @@ export function feilMeldingBlokkerer(type?: string): boolean {
     case TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE:
     case TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT:
     case TypeMelding.PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE:
-    case TypeMelding.PLIKTIG_MEDLEM_OG_INNTEKT_KUN_FRA_PENSJON:
+    case TypeMelding.PLIKTIG_MEDLEM_OG_INNTEKT_KUN_FRA_PENSJON_ELLER_UFØRETRYGD:
       return true;
     case TypeMelding.BRUTTOINNTEKT_OVER_250K:
     default:
@@ -214,8 +216,8 @@ export const Feilmelding = ({ type }: { type?: string }) => {
       return SkattepliktigOgPensjonUforetrygdMedKildeskatt;
     case TypeMelding.PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE:
       return PensjonUføretrygdLagtInnForPeriodeMedKunPensjon;
-    case TypeMelding.PLIKTIG_MEDLEM_OG_INNTEKT_KUN_FRA_PENSJON:
-      return PliktigMedlemOgInntektKunFraPensjon;
+    case TypeMelding.PLIKTIG_MEDLEM_OG_INNTEKT_KUN_FRA_PENSJON_ELLER_UFØRETRYGD:
+      return PliktigMedlemOgInntektKunFraPensjonEllerUføretrygd;
     default:
       return null;
   }
