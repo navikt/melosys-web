@@ -92,7 +92,7 @@ export const Inntektskilder = ({
           );
 
           const visArbAvgBetales = !Utils._isEmpty(inntektskilde.kildetype);
-          const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(inntektskilde.kildetype);
+          const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig);
           const skalFylleInnBruttoInntekt = bruttoInntektKreves(
             brukerSkattepliktigIHelePerioden,
             inntektskilde.kildetype,

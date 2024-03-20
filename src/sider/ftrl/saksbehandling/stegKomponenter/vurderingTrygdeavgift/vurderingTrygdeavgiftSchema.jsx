@@ -16,7 +16,8 @@ const {
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperioden" };
 
-export const arbAvgBetalesKreves = (kildetype) => kildetype !== MISJONÆR;
+export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
+  !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
 const arbAvgBetalesFyltUtNårDetKrevesTest = {
   name: "Fyll inn arb.avg. betales når det kreves",
@@ -24,7 +25,10 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
   test: (arbAvgBetales, schema) => {
     const { kildetype } = schema.from[0].value;
 
-    return !(arbAvgBetalesKreves(kildetype) && Utils._isEmpty(arbAvgBetales));
+    return !(
+      arbAvgBetalesKreves(kildetype, schema?.options?.context?.medlemskapsTypeErPliktig) &&
+      Utils._isEmpty(arbAvgBetales)
+    );
   },
 };
 
