@@ -7,6 +7,7 @@ import { MedlemskapsperiodeProp } from "./types";
 const { FTRL_KAP2_2_1, FTRL_KAP2_2_7_FJERDE_LEDD, FTRL_KAP2_2_8_FJERDE_LEDD } =
   MKV.Koder.folketrygdloven_kap2_bestemmelser;
 const { MIDLERTIDIG_2_1_FJERDE_LEDD } = MKV.Koder.ikkeyrkesaktivoppholdtype;
+const { MIDLERTIDIG_ARBEID_2_1_FJERDE_LEDD } = MKV.Koder.arbeidssituasjontype;
 const { AVSLAATT, INNVILGET, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 
 const IngenMedlemskapsperioder = (
@@ -227,12 +228,14 @@ export const harIkkeLovligSluttDato = (medlemskapsperioder: MedlemskapsperiodePr
 
 const periodeOver12MånederIkkeTillatt = (
   medlemskapsperioder: MedlemskapsperiodeProp[],
-  ikkeyrkesaktivOppholdstype?: string
+  ikkeyrkesaktivOppholdstype?: string,
+  arbeidssituasjonType?: string
 ) => {
   const periode = medlemskapsperioder[0];
   const periodeOverstiger12Mnd = Utils.dato.datoDiffNorskFormat(periode.fomDato, periode.tomDato, "years") > 1;
   const periodeOver12MndIkkeTillatt =
-    bestemmelseEr2_2_1(periode.bestemmelse) && ikkeyrkesaktivOppholdstype === MIDLERTIDIG_2_1_FJERDE_LEDD;
+    (bestemmelseEr2_2_1(periode.bestemmelse) && ikkeyrkesaktivOppholdstype === MIDLERTIDIG_2_1_FJERDE_LEDD) ||
+    arbeidssituasjonType === MIDLERTIDIG_ARBEID_2_1_FJERDE_LEDD;
   return periodeOverstiger12Mnd && periodeOver12MndIkkeTillatt;
 };
 
@@ -261,7 +264,8 @@ export function finnAktivFeilmelding(
   manglendeInnbetalingToggleEnabled: boolean | undefined,
   søknadsperiodeFomDato: string,
   søknadsperiodeTomDato?: string,
-  ikkeyrkesaktivOppholdstype?: string
+  ikkeyrkesaktivOppholdstype?: string,
+  arbeidssituasjonType?: string
 ): string | undefined {
   // Sjekk feil
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
@@ -305,7 +309,7 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.OPPHØRT_PERIODE_FØR_ANNEN_PERIODE;
   }
 
-  if (periodeOver12MånederIkkeTillatt(medlemskapsperioder, ikkeyrkesaktivOppholdstype)) {
+  if (periodeOver12MånederIkkeTillatt(medlemskapsperioder, ikkeyrkesaktivOppholdstype, arbeidssituasjonType)) {
     return TypeFeilmelding.PERIODE_OVERSTIGER_12_MND;
   }
 

@@ -87,6 +87,8 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const ikkeyrkesaktivOppholdstype = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
   const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
+  const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
+  console.log(arbeidssituasjonType);
 
   const {
     control,
@@ -121,7 +123,8 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     manglendeInnbetalingToggleEnabled,
     soknadsperiode.fom,
     soknadsperiode.tom,
-    ikkeyrkesaktivOppholdstype
+    ikkeyrkesaktivOppholdstype,
+    arbeidssituasjonType
   );
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
