@@ -42,7 +42,7 @@ Periode.propTypes = {
   redigerbart: PT.bool.isRequired,
 };
 
-export const FormKomponent = ({
+const FormKomponent = ({
   redigerbart,
   formValues,
   oppdaterData,
@@ -182,7 +182,7 @@ const ConnectedFormKomponent = connect(
   FormKomponentMapDispatchToProps
 )(Artikkel16MottaSvarForm);
 
-export const VurderingArtikkel16MottaSvar = (props) => {
+const VurderingArtikkel16MottaSvar = (props) => {
   const {
     anmodningsperiodeID,
     gyldigeSoknadsland,
