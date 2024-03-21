@@ -1,71 +1,104 @@
 import MKV from "../../../melosyskodeverk";
 
-import * as Services from "../../../services";
+import { STATUS } from "../../../services";
 
-import { VurderingArtikkel16MottaSvar, FormKomponent } from "./vurderingArtikkel16MottaSvar";
-import { DatoOmradeMedVarighet } from "../../../felleskomponenter/datoOmrade";
+import VurderingArtikkel16MottaSvar from "./vurderingArtikkel16MottaSvar";
+import * as KV from "../../../kodeverk";
+import { reduxForm } from "redux-form";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 
+// TODO: Enkel snapshot test når vitest snapshot serializer er på plass
 describe("VurderingArtikkel16MottaSvar", () => {
   let props = null;
+  let initialReduxState = null;
+  const ConnectedVurderingArtikkel16MottaSvar = reduxForm({ form: KV.Form.ARTIKKEL_16_MOTTA_SVAR })(
+    VurderingArtikkel16MottaSvar
+  );
 
   beforeEach(() => {
+    fetch.resetMocks();
+    fetch.mockResponse(JSON.stringify({}));
+
     props = {
       bekreftOgFortsett: vi.fn(),
       tilbake: vi.fn(),
-      gyldigeSoknadsland: [],
-      soknadsperiode: {
-        periode: {
-          fom: "fomdato",
-          tom: "tomdato",
-        },
-      },
       redigerbart: true,
       lovvalgsperiodeFom: "lovfom",
       lovvalgsperiodeTom: "lovtom",
       oppdaterData: vi.fn(),
       slettData: vi.fn(),
-      hentAnmodningsperiodeSvar: vi.fn(),
       tilstand: {},
-      anmodningsperioderSvarStatus: Services.STATUS.OK,
     };
-  });
 
-  it("vises uten å krasje", () => {
-    shallow(<VurderingArtikkel16MottaSvar {...props} />);
+    initialReduxState = {
+      mottatteOpplysninger: {
+        data: {
+          data: {
+            periode: {
+              fom: "2024-03-12",
+              tom: "2024-03-31",
+            },
+          },
+          soeknadsland: {
+            landkoder: ["DK"],
+          },
+        },
+        status: STATUS.OK,
+      },
+      avklartefakta: {
+        data: [
+          {
+            referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
+            subjektID: "DK",
+          },
+        ],
+        status: STATUS.OK,
+      },
+      anmodningsperioder: {
+        data: [
+          {
+            id: "5",
+          },
+        ],
+        status: STATUS.OK,
+      },
+      anmodningsperiodesvar: {
+        data: {
+          endretPeriode: {
+            fom: "2024-03-21",
+            tom: "2024-06-01",
+          },
+          anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE,
+          begrunnelseFritekst: "",
+        },
+        status: STATUS.OK,
+      },
+    };
   });
 
   it("viser ett Datoomrademedvarighet", () => {
-    const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16MottaSvar {...props} />);
+    const { getByText } = renderWithProviders(<ConnectedVurderingArtikkel16MottaSvar {...props} />, {
+      preloadedState: initialReduxState,
+    });
 
-    expect(vurderingArtikkel16Vedtak.find(DatoOmradeMedVarighet)).toHaveLength(1);
-    expect(vurderingArtikkel16Vedtak.find(DatoOmradeMedVarighet).props().periode).toBe(props.soknadsperiode);
+    expect(getByText("0 måneder og 20 dager")).toBeInTheDocument();
   });
 
-  it("viser en knapp", () => {
-    const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16MottaSvar {...props} />);
+  it("viser stegknapper", () => {
+    const { getByRole } = renderWithProviders(<ConnectedVurderingArtikkel16MottaSvar {...props} />, {
+      preloadedState: initialReduxState,
+    });
 
-    const stegKnapper = vurderingArtikkel16Vedtak.find("StegKnapper");
-    expect(stegKnapper).toHaveLength(1);
-    stegKnapper.props().bekreftKnappProps.onClick();
-    expect(props.bekreftOgFortsett).toHaveBeenCalledTimes(1);
+    expect(getByRole("button", { name: "Bekreft og fortsett" })).toBeInTheDocument();
+    expect(getByRole("button", { name: "Tilbake" })).toBeInTheDocument();
   });
-});
 
-describe("FormKomponent", () => {
-  it("viser en textarea ved delvis innvilgelse", () => {
-    const props = {
-      redigerbart: true,
-      soknadsperiode: {},
-      oppdaterData: vi.fn(),
-      formIsValid: true,
-      anmodningsperiodeID: "1",
-      sendAnmodningsperiodeSvar: vi.fn(),
-      formValues: {
-        anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE,
-      },
-    };
-    const formKomponent = shallow(<FormKomponent {...props} />);
-
-    expect(formKomponent.find("Textarea")).toHaveLength(1);
+  it("viser en textarea ved delvis innvilgelse", async () => {
+    initialReduxState.anmodningsperiodesvar.data.anmodningsperiodeSvarType =
+      MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
+    const { getByRole } = renderWithProviders(<ConnectedVurderingArtikkel16MottaSvar {...props} />, {
+      preloadedState: initialReduxState,
+    });
+    expect(getByRole("textbox", { name: "Begrunnelse" })).toBeInTheDocument();
   });
 });
