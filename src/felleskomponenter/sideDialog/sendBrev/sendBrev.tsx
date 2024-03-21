@@ -164,16 +164,15 @@ const SendBrev = ({
   };
 
   const hentMuligeMottakere = () => {
+    setMuligeMottakereNorskMyndighet(undefined);
+    setMuligeMottakere(undefined);
     if (mottakerErNorskMyndighet) {
       Api.DokumenterV2.hentMuligeMottakereNorskMyndighet(behandlingID, {
         produserbartdokument: formValues?.type || "",
         orgnrNorskMyndighet: formValues.norskeMyndigheter || [],
       })
         .then((response) => setMuligeMottakereNorskMyndighet(response))
-        .catch((e) => {
-          setMuligeMottakereNorskMyndighet([]);
-          setMuligeMottakereFeil(e?.body?.message);
-        });
+        .catch((e) => setMuligeMottakereFeil(e?.body?.message));
     } else {
       Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
         produserbartdokument: formValues?.type || "",
@@ -181,10 +180,7 @@ const SendBrev = ({
         institusjonID: hentFormVerdi("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", true, true),
       })
         .then((response) => setMuligeMottakere(response))
-        .catch((e) => {
-          setMuligeMottakere(undefined);
-          setMuligeMottakereFeil(e?.body?.message);
-        });
+        .catch((e) => setMuligeMottakereFeil(e?.body?.message));
     }
   };
 

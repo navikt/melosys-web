@@ -322,6 +322,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         opphoerDato: erDelvisOpphør ? getOpphørsdato() : null,
       },
       mottakerNavn: muligMottaker.mottakerNavn,
+      dokumentNavn: muligMottaker.dokumentNavn,
     };
   };
 

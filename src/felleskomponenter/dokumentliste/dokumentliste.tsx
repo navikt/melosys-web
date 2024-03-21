@@ -75,7 +75,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
       <Table.DataCell>
         <Nav.Lenker href="#" onClick={(event) => klikk(dokument, event)}>
           {tittel(
-            dokument.dokumentNavn ||
+            dokument.dokumentNavn ??
               KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)
           )}
         </Nav.Lenker>

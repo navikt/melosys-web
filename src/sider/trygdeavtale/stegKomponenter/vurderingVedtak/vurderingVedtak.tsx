@@ -296,6 +296,7 @@ const VurderingVedtak = ({
   const mapMottaker = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
       mottakerNavn: muligMottaker.mottakerNavn,
+      dokumentNavn: muligMottaker.dokumentNavn,
       dokumentData: {
         produserbardokument: hentProduserbartDokument(),
         mottaker: muligMottaker.rolle,
