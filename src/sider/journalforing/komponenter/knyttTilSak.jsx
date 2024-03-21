@@ -11,6 +11,7 @@ import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 
 import "./knyttTilSak.css";
+import { useAsyncCallbackState } from "../../../hooks";
 
 export const KnyttTilSak = (props) => {
   const { sak, erJournalføring, changeField, feltNavn, formValues } = props;
@@ -25,6 +26,11 @@ export const KnyttTilSak = (props) => {
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
   const [sisteBehandlingHarSendtAnmodningUnntakTilUtland, setSendtAnmodningUnntakTilUtland] = useState(false);
   const sisteBehandling = behandlingOversikter[0];
+  const [{ harBehandlingMedTrygdeavgift }] = useAsyncCallbackState(
+    () => Api.Fagsaker.fagsak.hentTrygdeavgiftOppsummering(sak.saksnummer),
+    { harBehandlingMedTrygdeavgift: false },
+    []
+  );
 
   useEffect(() => {
     return () => {
@@ -169,11 +175,18 @@ export const KnyttTilSak = (props) => {
               bredde="fullbredde"
               label="Behandlingstema"
               emptyFieldDisabled={behandlingstema?.kode}
+              disabled={harBehandlingMedTrygdeavgift}
+              className={harBehandlingMedTrygdeavgift ? "select__slim" : undefined}
             >
               {muligeBehandlingstemaer?.map((elem) => (
                 <option key={elem.kode} value={elem.kode} label={elem.term} />
               ))}
             </Skjema.Select>
+            {harBehandlingMedTrygdeavgift && (
+              <Nav.Typo.EtikettLiten className="behandlingstema__label">
+                Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie.
+              </Nav.Typo.EtikettLiten>
+            )}
             <Skjema.RadioGruppe feltNavn={feltNavn.behandlingstype} label="Behandlingstype" className="behandlingstype">
               {muligeBehandlingstyper?.map((elem) => (
                 <Skjema.Radio feltNavn={feltNavn.behandlingstype} key={elem.kode} value={elem.kode} label={elem.term} />

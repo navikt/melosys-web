@@ -29,6 +29,7 @@ import {
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../featuretoggle/toggleNavn";
+import { useAsyncCallbackState } from "../../hooks";
 
 enum FeltVerdier {
   sakstype = "sakstype",
@@ -92,6 +93,11 @@ function EndreBehandlingModal({
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const typeTemaKanEndres = !anmodningsperioderSendtTilUtlandet;
   const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
+  const [{ harBehandlingMedTrygdeavgift }] = useAsyncCallbackState(
+    () => Api.Fagsaker.fagsak.hentTrygdeavgiftOppsummering(fagsak.saksnummer),
+    { harBehandlingMedTrygdeavgift: false },
+    []
+  );
 
   useEffect(() => {
     Api.LovligeKombinasjoner.hentSakstyper(fagsak.saksnummer).then((alleMuligeSakstyper) => {
@@ -240,7 +246,7 @@ function EndreBehandlingModal({
   };
 
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
-  const endringerErBegrenset = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, oppsummering.behandlingstema?.kode);
+  const erBehandlingAvSed = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, oppsummering.behandlingstema?.kode);
 
   const nullstillSak = (steg: FeltVerdier): void => {
     switch (steg) {
@@ -279,7 +285,7 @@ function EndreBehandlingModal({
               label="Sakstype"
               value={sakstype}
               koder={fagsakKanEndres ? muligeSakstyper : [fagsak.sakstype]}
-              redigerbart={!endringerErBegrenset && typeTemaKanEndres && fagsakKanEndres}
+              redigerbart={!erBehandlingAvSed && typeTemaKanEndres && fagsakKanEndres}
               feil={skalViseFeilmeldinger ? sakstypeFeilmelding : null}
               disableForsteValg
             />
@@ -291,7 +297,7 @@ function EndreBehandlingModal({
               label="Sakstema"
               value={sakstema}
               koder={fagsakKanEndres ? muligeSakstemaer : [fagsak.sakstema]}
-              redigerbart={!endringerErBegrenset && typeTemaKanEndres && fagsakKanEndres}
+              redigerbart={!erBehandlingAvSed && typeTemaKanEndres && fagsakKanEndres}
               feil={skalViseFeilmeldinger ? sakstemaFeilmelding : null}
               disableForsteValg
             />
@@ -303,16 +309,23 @@ function EndreBehandlingModal({
               label="Behandlingstema"
               value={behandlingstema}
               koder={muligeBehandlingstemaer}
-              redigerbart={!endringerErBegrenset && typeTemaKanEndres}
+              redigerbart={!erBehandlingAvSed && typeTemaKanEndres && !harBehandlingMedTrygdeavgift}
               feil={skalViseFeilmeldinger ? behandlingstemaFeilmelding : null}
               disableForsteValg
+              className={harBehandlingMedTrygdeavgift ? "ktselect__slim" : undefined}
             />
+            {harBehandlingMedTrygdeavgift && (
+              <Nav.Typo.EtikettLiten className="behandlingstema__label">
+                Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie.
+              </Nav.Typo.EtikettLiten>
+            )}
+
             <Mui.KodeTermSelect
               onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"
               value={behandlingstype}
               koder={muligeBehandlingstyper}
-              redigerbart={!endringerErBegrenset && typeTemaKanEndres}
+              redigerbart={!erBehandlingAvSed && typeTemaKanEndres}
               feil={skalViseFeilmeldinger ? behandlingstypeFeilmelding : null}
               disableForsteValg
             />
