@@ -111,9 +111,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     }
     if (erIkkeYrkesaktiv) {
       return medlemskapsTypeErPliktig ? IKKE_YRKESAKTIV_PLIKTIG_FTRL : IKKE_YRKESAKTIV_FRIVILLIG_FTRL;
-    } else {
-      return medlemskapsTypeErPliktig ? PLIKTIG_MEDLEM_FTRL : INNVILGELSE_FOLKETRYGDLOVEN;
     }
+    return medlemskapsTypeErPliktig ? PLIKTIG_MEDLEM_FTRL : INNVILGELSE_FOLKETRYGDLOVEN;
   };
 
   const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
