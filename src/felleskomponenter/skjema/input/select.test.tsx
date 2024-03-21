@@ -1,69 +1,65 @@
-import { ComponentProps } from "react";
-import { shallow } from "enzyme";
-import { mock, instance } from "ts-mockito";
-import { WrappedFieldMetaProps } from "redux-form";
-
-import * as Nav from "../../../navFrontend";
+import { reduxForm } from "redux-form";
 
 import Select, { SelectWrappedComponent } from "./select";
+import { expect } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 
-describe("Select", () => {
-  const mockedProps = mock<ComponentProps<typeof Select>>();
-  const props = instance(mockedProps);
-
-  it("viser en redux form Field komponent med korrekte props", () => {
-    props.feltNavn = "feltnavn";
-    props.id = "1234";
-    props.className = "class name";
-    const select = shallow(<Select {...props} />);
-    const field = select.find("Field");
-
-    expect(field).toHaveLength(1);
-    expect(field.props().name).toBe(props.feltNavn);
-    expect(field.props().id).toBe(props.id);
-    expect(field.props().className).toBe(props.className);
-  });
+vi.mock("../../../utils", async () => {
+  const actual = await vi.importActual("../../../utils");
+  return {
+    // @ts-ignore
+    ...actual,
+    _uuid: () => "321",
+  };
 });
 
-describe("SelectWrappedComponent", () => {
-  const mockedProps = mock<ComponentProps<typeof SelectWrappedComponent>>();
-  const props = instance(mockedProps);
-  props.label = "";
-  const mockedMeta = mock<WrappedFieldMetaProps>();
-  props.meta = instance(mockedMeta);
+describe("Select", () => {
+  it("snapshot test", () => {
+    // @ts-ignore
+    const WrappedSelect = reduxForm({ form: "test" })(Select);
 
-  it("viser en Nav Select", () => {
-    const selectWrappedComponent = shallow(<SelectWrappedComponent {...props} />);
-    expect(selectWrappedComponent.find("Select")).toHaveLength(1);
+    const props = {
+      id: "1234",
+      feltNavn: "feltnavn",
+      className: "className",
+    };
+    // @ts-ignore
+    const { container } = renderWithProviders(<WrappedSelect {...props} />);
+    expect(container).toMatchSnapshot();
   });
 
-  it("sender label prop til Nav Select", () => {
-    props.label = "label tekst";
-    const selectWrappedComponent = shallow(<SelectWrappedComponent {...props} />);
+  describe("SelectWrappedComponent", () => {
+    const props = (meta: any = {}) => ({
+      label: "Label",
+      children: (
+        <option key="1" value="1">
+          Hallo hallo
+        </option>
+      ),
+      input: {
+        name: "feltName",
+        value: "",
+      },
+      meta,
+    });
 
-    expect(selectWrappedComponent.find(Nav.Select).props().label).toBe(props.label);
-  });
+    it("viser en Nav Select", () => {
+      // @ts-ignore
+      const { container } = render(<SelectWrappedComponent {...props()} />);
+      expect(container).toMatchSnapshot();
+    });
 
-  it("setter feil-prop dersom meta.error prop finnes", () => {
-    props.meta.touched = true;
-    props.meta.active = false;
-    props.meta.error = "err";
-    const selectWrappedComponent = shallow(<SelectWrappedComponent {...props} />);
+    it("setter feil-prop dersom meta.error prop finnes", () => {
+      const meta = {
+        touched: true,
+        active: false,
+        error: "err",
+      };
 
-    expect(selectWrappedComponent.find(Nav.Select).props().feil).toEqual(props.meta.error);
-  });
-
-  it("setter ikke feil-prop dersom meta.error prop ikke finnes", () => {
-    props.meta.error = null;
-    const selectWrappedComponent = shallow(<SelectWrappedComponent {...props} />);
-
-    expect(selectWrappedComponent.find(Nav.Select).props().feil).toBeUndefined();
-  });
-
-  it("sender children-prop til Nav Select sin children-prop", () => {
-    props.children = "children";
-    const selectWrappedComponent = shallow(<SelectWrappedComponent {...props} />);
-
-    expect(selectWrappedComponent.find(Nav.Select).props().children).toContain(props.children);
+      // @ts-ignore
+      render(<SelectWrappedComponent {...props(meta)} />);
+      expect(screen.getByText("err")).toBeInTheDocument();
+    });
   });
 });

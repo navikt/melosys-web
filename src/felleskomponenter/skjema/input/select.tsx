@@ -2,6 +2,7 @@ import { ChangeEventHandler } from "react";
 import { Field, WrappedFieldProps } from "redux-form";
 import * as Nav from "../../../navFrontend";
 import * as SkjemaUtils from "../utils";
+import * as Utils from "../../../utils";
 
 import "../skjema.css";
 
@@ -39,7 +40,7 @@ function SelectWrappedComponent({
     onChange: innerChange,
   };
   return (
-    <Nav.Select label={label} feil={feil} {...inputProps}>
+    <Nav.Select label={label} feil={feil} id={inputProps.id ?? Utils._uuid()} {...inputProps}>
       <option disabled={emptyFieldDisabled} value="">
         Velg...
       </option>

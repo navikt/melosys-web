@@ -1,0 +1,72 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Select > SelectWrappedComponent > viser en Nav Select 1`] = `
+<div>
+  <div
+    class="skjemaelement"
+  >
+    <label
+      class="skjemaelement__label"
+      for="321"
+    >
+      Label
+    </label>
+    <div
+      class="selectContainer input--fullbredde"
+    >
+      <select
+        aria-invalid="false"
+        class="skjemaelement__input"
+        id="321"
+        name="feltName"
+      >
+        <option
+          disabled=""
+          value=""
+        >
+          Velg...
+        </option>
+        <option
+          value="1"
+        >
+          Hallo hallo
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Select > snapshot test 1`] = `
+<div>
+  <div
+    class="skjemaelement className"
+  >
+    <div
+      class="selectContainer input--fullbredde"
+    >
+      <select
+        aria-invalid="false"
+        array="[object Object]"
+        class="skjemaelement__input"
+        form="test"
+        id="1234"
+        name="feltnavn"
+      >
+        <option
+          disabled=""
+          value=""
+        >
+          Velg...
+        </option>
+        <option
+          disabled=""
+          value="0"
+        >
+          ingen valg tilgjengelig
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
+`;
