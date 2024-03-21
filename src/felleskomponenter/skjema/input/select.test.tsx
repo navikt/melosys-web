@@ -2,8 +2,17 @@ import { reduxForm } from "redux-form";
 
 import Select, { SelectWrappedComponent } from "./select";
 import { expect } from "vitest";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+
+vi.mock("../../../utils", async () => {
+  const actual = await vi.importActual("../../../utils");
+  return {
+    // @ts-ignore
+    ...actual,
+    _uuid: () => "321",
+  };
+});
 
 describe("Select", () => {
   it("snapshot test", () => {
@@ -19,38 +28,38 @@ describe("Select", () => {
     const { container } = renderWithProviders(<WrappedSelect {...props} />);
     expect(container).toMatchSnapshot();
   });
-});
 
-describe("SelectWrappedComponent", () => {
-  const props = (meta: any = {}) => ({
-    label: "Label",
-    children: (
-      <option key="1" value="1">
-        Hallo hallo
-      </option>
-    ),
-    input: {
-      name: "feltName",
-      value: "",
-    },
-    meta,
-  });
+  describe("SelectWrappedComponent", () => {
+    const props = (meta: any = {}) => ({
+      label: "Label",
+      children: (
+        <option key="1" value="1">
+          Hallo hallo
+        </option>
+      ),
+      input: {
+        name: "feltName",
+        value: "",
+      },
+      meta,
+    });
 
-  it("viser en Nav Select", () => {
-    // @ts-ignore
-    const { container } = render(<SelectWrappedComponent {...props()} />);
-    expect(container).toMatchSnapshot();
-  });
+    it("viser en Nav Select", () => {
+      // @ts-ignore
+      const { container } = render(<SelectWrappedComponent {...props()} />);
+      expect(container).toMatchSnapshot();
+    });
 
-  it("setter feil-prop dersom meta.error prop finnes", () => {
-    const meta = {
-      touched: true,
-      active: false,
-      error: "err",
-    };
+    it("setter feil-prop dersom meta.error prop finnes", () => {
+      const meta = {
+        touched: true,
+        active: false,
+        error: "err",
+      };
 
-    // @ts-ignore
-    const { container } = render(<SelectWrappedComponent {...props(meta)} />);
-    expect(container).toMatchSnapshot();
+      // @ts-ignore
+      render(<SelectWrappedComponent {...props(meta)} />);
+      expect(screen.getByText("err")).toBeInTheDocument();
+    });
   });
 });
