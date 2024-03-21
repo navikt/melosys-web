@@ -3,7 +3,6 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import * as Utils from "../../utils";
 
 import Datovelger from ".";
-import { expect } from "vitest";
 
 describe("Datovelger", () => {
   let dato: Date | undefined = new Date();
