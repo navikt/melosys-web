@@ -269,7 +269,7 @@ export const VurderingBestemmelserV2 = ({
     }
 
     const altGyldig = bestemmelserOK && avklarteFaktaOK && vilkårOK && begrunnelserOK;
-    setFormIsValid(redigerbart ? altGyldig : true);
+    setFormIsValid(!behandlingErAvsluttetMedLagretBestemmelse ? altGyldig : true);
   };
 
   useEffect(() => {
