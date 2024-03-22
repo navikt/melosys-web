@@ -1,0 +1,45 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Checkbox > snapshot test checked 1`] = `
+<div>
+  <div
+    class="skjemaelement"
+  >
+    <input
+      aria-invalid="false"
+      class="skjemaelement__input checkboks"
+      id="321"
+      type="checkbox"
+      value="Hallo"
+    />
+    <label
+      class="skjemaelement__label"
+      for="321"
+    >
+      Heihei
+    </label>
+  </div>
+</div>
+`;
+
+exports[`Checkbox > snapshot test unchecked 1`] = `
+<div>
+  <div
+    class="skjemaelement"
+  >
+    <input
+      aria-invalid="false"
+      class="skjemaelement__input checkboks"
+      id="321"
+      type="checkbox"
+      value="Hallo"
+    />
+    <label
+      class="skjemaelement__label"
+      for="321"
+    >
+      Heihei
+    </label>
+  </div>
+</div>
+`;

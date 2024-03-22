@@ -1,6 +1,7 @@
 import { Component, ComponentProps, ChangeEvent, KeyboardEvent } from "react";
 
 import * as Nav from "../../../navFrontend";
+import * as Utils from "../../../utils";
 
 type NavCheckboxProps = ComponentProps<typeof Nav.Checkbox>;
 type FilteredNavCheckboxProps = Omit<NavCheckboxProps, "onChange" | "onKeyPress">;
@@ -44,6 +45,7 @@ class Checkbox extends Component<CheckboxProps> {
           this.navCheckbox = ref;
         }}
         {...rest}
+        id={rest.id ?? Utils._uuid()}
       />
     );
   }

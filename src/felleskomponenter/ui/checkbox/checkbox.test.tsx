@@ -1,74 +1,46 @@
-import { ComponentProps, KeyboardEvent, ChangeEvent } from "react";
-import { mount, shallow } from "enzyme";
-import { mock, instance } from "ts-mockito";
-
-import * as Nav from "../../../navFrontend";
-
 import Checkbox from "./index";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { expect } from "vitest";
+
+vi.mock("../../../utils", async () => {
+  const actual = (await vi.importActual("../../../utils")) as object;
+  return {
+    ...actual,
+    _uuid: () => "321",
+  };
+});
 
 describe("Checkbox", () => {
-  const mockedProps = mock<ComponentProps<typeof Checkbox>>();
-  const props = instance(mockedProps);
-  props.label = "";
-  props.value = "Arbeidsgiver";
+  const props = {
+    label: "Heihei",
+    value: "Hallo",
+  };
 
-  beforeEach(() => {
-    props.onCheck = vi.fn();
+  it("snapshot test unchecked", () => {
+    const { container } = render(<Checkbox {...props} />);
+    expect(container).toMatchSnapshot();
   });
 
-  it("kaller onCheck med checkbox-verdi og checkbox-value ved change event", () => {
-    const checkbox = shallow(<Checkbox {...props} />);
-    const navCheckbox = checkbox.find(Nav.Checkbox);
-    const navCheckboxOnChange = navCheckbox.props().onChange;
-    const mockedEvent = mock<ChangeEvent<HTMLInputElement>>();
-    const event = instance(mockedEvent);
-    const mockedTarget = mock<HTMLInputElement>();
-    event.target = instance(mockedTarget);
-    event.target.checked = true;
+  it("snapshot test checked", () => {
+    const { container } = render(<Checkbox {...props} />);
 
-    if (navCheckboxOnChange) navCheckboxOnChange(event);
+    const checkbox = screen.getByRole("checkbox") as any;
+    expect(checkbox.checked).toEqual(false);
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toEqual(true);
 
-    expect(props.onCheck).toHaveBeenCalledTimes(1);
-    expect(props.onCheck).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        value: props.value,
-        checked: true,
-      })
-    );
+    expect(container).toMatchSnapshot();
   });
 
-  it("kaller oncheck med checkbox-verdi og checkbox-value ved trykk på enter-tast", () => {
-    props.checked = true;
-    let checkbox = mount(<Checkbox {...props} />);
-    let navCheckbox = checkbox.find(Nav.Checkbox);
+  it("gjør checkbox unchecked ved trykk på enter-tast", () => {
+    let checked = true;
+    render(<Checkbox {...props} checked={checked} onCheck={(properties) => (checked = properties.checked)} />);
 
-    const mockedEvent = mock<KeyboardEvent<HTMLInputElement>>();
-    const event = instance(mockedEvent);
-    event.key = "Enter";
-    let { onKeyPress } = navCheckbox.props();
-    if (onKeyPress) onKeyPress(event);
+    const checkbox = screen.getByRole("checkbox") as any;
+    expect(checkbox.checked).toEqual(true);
+    expect(checked).toEqual(true);
 
-    expect(props.onCheck).toHaveBeenCalledTimes(1);
-    expect(props.onCheck).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        value: props.value,
-        checked: false,
-      })
-    );
-
-    props.checked = false;
-    checkbox = mount(<Checkbox {...props} />);
-    navCheckbox = checkbox.find(Nav.Checkbox);
-
-    ({ onKeyPress } = navCheckbox.props());
-    if (onKeyPress) onKeyPress(event);
-
-    expect(props.onCheck).toHaveBeenCalledTimes(2);
-    expect(props.onCheck).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        value: props.value,
-        checked: true,
-      })
-    );
+    fireEvent.keyPress(checkbox, { key: "Enter", code: "Enter", charCode: 13 });
+    expect(checked).toEqual(false);
   });
 });
