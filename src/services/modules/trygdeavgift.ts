@@ -19,6 +19,7 @@ export type Skatteforhold = {
 export type TrygdeavgiftsgrunnlagDto = {
   skatteforholdsperioder: Skatteforhold[];
   inntektskilder: Inntektskilde[];
+  sluttdatoKanVæreÅpen?: boolean;
 };
 
 export type TrygdeavgiftMottakerDto = {
