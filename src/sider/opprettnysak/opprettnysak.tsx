@@ -31,6 +31,7 @@ import IdentOgNavn from "./komponenter/identOgNavn";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
 import "./opprettnysak.css";
+import { Spinner } from "../../felleskomponenter/spinner";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -107,6 +108,7 @@ const OpprettNySak = ({
   const [bekreftPending, setBekreftPending] = useState(false);
   const [visFeilmeldinger, setVisFeilmeldinger] = useState(false);
   const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
+  const [fagsakerOgOppgaverHentes, setFagsakerOgOppgaverHentes] = useState(false);
   const dispatch = useDispatch();
   const {
     behandlingstema,
@@ -161,8 +163,10 @@ const OpprettNySak = ({
     if (Utils.person.erGyldigFnrEllerDnr(personIdent)) {
       const navn = await hentSammensattNavn(personIdent);
       change("brukerNavn", navn);
+      setFagsakerOgOppgaverHentes(true);
       await hentFagsakListe(personIdent);
       await hentOppgaver(personIdent);
+      setFagsakerOgOppgaverHentes(false);
     } else {
       nullstillFelt("brukerNavn");
     }
@@ -173,8 +177,10 @@ const OpprettNySak = ({
       const response = await sokOrgnr(orgnr);
       const navn = response?.data.navn;
       change("virksomhetNavn", navn);
+      setFagsakerOgOppgaverHentes(true);
       await hentFagsakListe(virksomhetOrgnr);
       await hentOppgaver(virksomhetOrgnr);
+      setFagsakerOgOppgaverHentes(false);
     } else {
       nullstillFelt("virksomhetNavn");
     }
@@ -325,15 +331,19 @@ const OpprettNySak = ({
                     className="undertittel"
                     understrek
                   />
-                  <div className="innrykk">
-                    <FagsakVelger
-                      erJournalføring={false}
-                      fagsakListe={fagsakListe}
-                      landkoder={landkoderListe}
-                      nullstillFormVerdier={nullstillFormVerdier}
-                      formValues={formValues}
-                    />
-                  </div>
+                  {fagsakerOgOppgaverHentes ? (
+                    <Spinner />
+                  ) : (
+                    <div className="innrykk">
+                      <FagsakVelger
+                        erJournalføring={false}
+                        fagsakListe={fagsakListe}
+                        landkoder={landkoderListe}
+                        nullstillFormVerdier={nullstillFormVerdier}
+                        formValues={formValues}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="seksjon">
                   <Mui.Undertittel
@@ -342,14 +352,18 @@ const OpprettNySak = ({
                     className="undertittel"
                     understrek
                   />
-                  <div className="innrykk">
-                    <OppgaveVelger
-                      oppgaverForsoktHentet={oppgaverForsoktHentet}
-                      formValues={formValues}
-                      change={change}
-                      oppgaver={oppgaver}
-                    />
-                  </div>
+                  {fagsakerOgOppgaverHentes ? (
+                    <Spinner />
+                  ) : (
+                    <div className="innrykk">
+                      <OppgaveVelger
+                        oppgaverForsoktHentet={oppgaverForsoktHentet}
+                        formValues={formValues}
+                        change={change}
+                        oppgaver={oppgaver}
+                      />
+                    </div>
+                  )}
                 </div>
               </>
             )}
@@ -365,6 +379,7 @@ const OpprettNySak = ({
               <Knapperad
                 bekreft={handleSubmit}
                 bekreftTekst="Opprett ny behandling"
+                bekreftRedigerbart={!fagsakerOgOppgaverHentes && oppgaverForsoktHentet}
                 avbryt={tilForsiden}
                 avbrytTekst="Avbryt"
                 redigerbart

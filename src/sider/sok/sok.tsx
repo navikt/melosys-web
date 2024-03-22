@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
@@ -17,6 +17,7 @@ import {
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../featuretoggle/toggleNavn";
+import { Spinner } from "../../felleskomponenter/spinner";
 
 const mapStateToProps = (state: RootState) => ({
   sokResultat: sokSelectors.FagsakSokSelector(state),
@@ -40,12 +41,19 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const sokefrase = sessionStorage.getItem("sokefrase");
+  const [sokPending, setSokPending] = useState(false);
+
+  const initialize = async () => {
+    hentLandkoder();
+    if (sokefrase) {
+      setSokPending(true);
+      await sok(sokefrase);
+      setSokPending(false);
+    }
+  };
 
   useEffect(() => {
-    if (sokefrase) {
-      sok(sokefrase);
-    }
-    hentLandkoder();
+    initialize();
 
     return () => {
       sessionStorage.removeItem("sokefrase");
@@ -77,20 +85,26 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
               Resultater for {enhet(sokefrase)}
               {sokResultat.length > 0 ? ` - ${sokResultat[0].navn}` : undefined}
             </h2>
-            {sokResultat.length > 0 && (
-              <SorterbarListe
-                elementer={sokResultat}
-                component={Fagsak}
-                defaultChecked="nyeste"
-                sortingLegend="Sorter fagsaker etter opprettelsesdato:"
-                sortingPath="opprettetDato"
-                radioGroupName="fagsaksortering"
-                manglendeInnbetalingToggleEnabled={manglendeInnbetalingToggleEnabled}
-                ikkeYrkesaktivFtrlToggleEnabled={ikkeYrkesaktivFtrlToggleEnabled}
-                landkoder={landkoder}
-              />
+            {sokPending ? (
+              <Spinner />
+            ) : (
+              <>
+                {sokResultat.length > 0 && (
+                  <SorterbarListe
+                    elementer={sokResultat}
+                    component={Fagsak}
+                    defaultChecked="nyeste"
+                    sortingLegend="Sorter fagsaker etter opprettelsesdato:"
+                    sortingPath="opprettetDato"
+                    radioGroupName="fagsaksortering"
+                    manglendeInnbetalingToggleEnabled={manglendeInnbetalingToggleEnabled}
+                    ikkeYrkesaktivFtrlToggleEnabled={ikkeYrkesaktivFtrlToggleEnabled}
+                    landkoder={landkoder}
+                  />
+                )}
+                {sokResultat.length === 0 && ingenTreff}
+              </>
             )}
-            {sokResultat.length === 0 && ingenTreff}
           </section>
         </Nav.Row>
       </Nav.Container>
