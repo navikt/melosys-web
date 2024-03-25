@@ -1,5 +1,5 @@
 import { ComponentProps } from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import * as Utils from "../../utils";
 
 import Datovelger from ".";
@@ -24,6 +24,15 @@ describe("Datovelger", () => {
     expect(datePicker).toHaveClass("datovelger__input input--fullbredde");
     expect(datePicker).not.toBeDisabled();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("trimmer mellomrom etter dato", () => {
+    render(<Datovelger {...props} />);
+
+    const datePicker = screen.getByRole("textbox") as HTMLInputElement;
+    fireEvent.change(datePicker, { target: { value: "21.03.2024 " } });
+
+    expect(datePicker.value).toBe("21.03.2024");
   });
 
   it("viser riktige verdier dersom datovelger er disabled", () => {
