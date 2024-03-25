@@ -14,6 +14,7 @@ const PDFDokument = ({ journalpostID, dokumentID }) => {
       const blobUrl = `${URL.createObjectURL(result)}`;
       setPdfDokumentBlob(blobUrl);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Error fetching PDF blob:", error);
     }
   }, [journalpostID, dokumentID]);
