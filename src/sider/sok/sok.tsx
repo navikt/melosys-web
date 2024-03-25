@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
+import { connect, ConnectedProps, useDispatch } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -18,6 +18,8 @@ import {
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../featuretoggle/toggleNavn";
 import { Spinner } from "../../felleskomponenter/spinner";
+import { feiletResponsOperations } from "../../ducks/feiletRespons";
+import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 
 const mapStateToProps = (state: RootState) => ({
   sokResultat: sokSelectors.FagsakSokSelector(state),
@@ -38,6 +40,7 @@ export type SokProps = PropsFromRedux & {
 };
 
 export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: SokProps) => {
+  const dispatch = useDispatch();
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const sokefrase = sessionStorage.getItem("sokefrase");
@@ -57,6 +60,7 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
 
     return () => {
       sessionStorage.removeItem("sokefrase");
+      dispatch(feiletResponsOperations.resetFeiletRespons());
     };
   }, []);
 
@@ -85,6 +89,7 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
               Resultater for {enhet(sokefrase)}
               {sokResultat.length > 0 ? ` - ${sokResultat[0].navn}` : undefined}
             </h2>
+            <Feilmeldinger />
             {sokPending ? (
               <Spinner />
             ) : (
