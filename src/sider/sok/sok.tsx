@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
-import { connect, ConnectedProps, useDispatch } from "react-redux";
-import { RootState } from "AppTypes";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
+import { ReactElement, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
@@ -21,36 +18,24 @@ import { Spinner } from "../../felleskomponenter/spinner";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 
-const mapStateToProps = (state: RootState) => ({
-  sokResultat: sokSelectors.FagsakSokSelector(state),
-  landkoder: landkoderSelectors.LandkoderSelector(state),
-});
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  sok: (sokefrase: string) => dispatch(sokOperations.sok(sokefrase)),
-  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-export type SokProps = PropsFromRedux & {
-  children?: JSX.Element;
+export type SokProps = {
+  children?: ReactElement;
 };
 
-export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: SokProps) => {
+export const Sok = ({ children }: SokProps) => {
   const dispatch = useDispatch();
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
-  const sokefrase = sessionStorage.getItem("sokefrase");
+  const sokResultat = useSelector(sokSelectors.FagsakSokSelector);
+  const landkoder = useSelector(landkoderSelectors.LandkoderSelector);
   const [sokPending, setSokPending] = useState(false);
+  const sokefrase = sessionStorage.getItem("sokefrase");
 
   const initialize = async () => {
-    hentLandkoder();
+    dispatch(landkoderOperations.hentLandkoder());
     if (sokefrase) {
       setSokPending(true);
-      await sok(sokefrase);
+      await dispatch(sokOperations.sok(sokefrase));
       setSokPending(false);
     }
   };
@@ -117,4 +102,4 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
   );
 };
 
-export default connector(Sok);
+export default Sok;
