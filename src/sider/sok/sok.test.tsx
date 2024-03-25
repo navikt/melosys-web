@@ -3,21 +3,23 @@ import { screen } from "@testing-library/react";
 import * as Utils from "../../utils";
 import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
 
-import { Sok, SokProps } from "./sok";
+import { Sok } from "./sok";
 
 // TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
 describe.skip("Sok", () => {
-  let props: SokProps;
-
   const getItemPrototype = Storage.prototype.getItem;
 
-  beforeEach(() => {
-    props = {
-      sokResultat: [],
-      sok: vi.fn(),
-      hentLandkoder: () => Promise.resolve(),
-      landkoder: [],
-    };
+  const initialStore = (sokResultat: object[] = []) => ({
+    sok: {
+      status: "",
+      data: {
+        fagsakListe: sokResultat,
+      },
+    },
+    landkoder: {
+      status: "",
+      data: [],
+    },
   });
 
   afterAll(() => {
@@ -27,7 +29,7 @@ describe.skip("Sok", () => {
   it("viser en sorterbarliste ved søk på fnr med flere resultat", () => {
     const generator = new Utils.testhelpers.Generator();
     Storage.prototype.getItem = vi.fn(() => generator.generateBirthNumber());
-    props.sokResultat = [
+    const sokResultat = [
       {
         sakstype: { term: "A1" },
         sakstema: { term: "A2" },
@@ -39,7 +41,7 @@ describe.skip("Sok", () => {
         behandlingOversikter: [],
       },
     ];
-    renderWithProviders(<Sok {...props} />, { preloadedState: {} });
+    renderWithProviders(<Sok />, { preloadedState: initialStore(sokResultat) });
 
     const overskrifter = screen.getAllByRole("heading");
     expect(overskrifter).toHaveLength(4);
@@ -53,7 +55,7 @@ describe.skip("Sok", () => {
     const generator = new Utils.testhelpers.Generator();
     Storage.prototype.getItem = vi.fn(() => generator.generateBirthNumber());
 
-    renderWithProviders(<Sok {...props} />, { preloadedState: {} });
+    renderWithProviders(<Sok />, { preloadedState: initialStore() });
 
     const overskrifter = screen.getAllByRole("heading");
     expect(overskrifter).toHaveLength(2);

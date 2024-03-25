@@ -1,8 +1,5 @@
-import { useEffect } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { RootState } from "AppTypes";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
+import { ReactElement, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
@@ -17,38 +14,38 @@ import {
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
   MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
 } from "../../featuretoggle/toggleNavn";
+import { Spinner } from "../../felleskomponenter/spinner";
+import { feiletResponsOperations } from "../../ducks/feiletRespons";
+import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 
-const mapStateToProps = (state: RootState) => ({
-  sokResultat: sokSelectors.FagsakSokSelector(state),
-  landkoder: landkoderSelectors.LandkoderSelector(state),
-});
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  sok: (sokefrase: string) => dispatch(sokOperations.sok(sokefrase)),
-  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-export type SokProps = PropsFromRedux & {
-  children?: JSX.Element;
+export type SokProps = {
+  children?: ReactElement;
 };
 
-export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: SokProps) => {
+export const Sok = ({ children }: SokProps) => {
+  const dispatch = useDispatch();
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
+  const sokResultat = useSelector(sokSelectors.FagsakSokSelector);
+  const landkoder = useSelector(landkoderSelectors.LandkoderSelector);
+  const [sokPending, setSokPending] = useState(false);
   const sokefrase = sessionStorage.getItem("sokefrase");
 
-  useEffect(() => {
+  const initialize = async () => {
+    dispatch(landkoderOperations.hentLandkoder());
     if (sokefrase) {
-      sok(sokefrase);
+      setSokPending(true);
+      await dispatch(sokOperations.sok(sokefrase));
+      setSokPending(false);
     }
-    hentLandkoder();
+  };
+
+  useEffect(() => {
+    initialize();
 
     return () => {
       sessionStorage.removeItem("sokefrase");
+      dispatch(feiletResponsOperations.resetFeiletRespons());
     };
   }, []);
 
@@ -77,20 +74,27 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
               Resultater for {enhet(sokefrase)}
               {sokResultat.length > 0 ? ` - ${sokResultat[0].navn}` : undefined}
             </h2>
-            {sokResultat.length > 0 && (
-              <SorterbarListe
-                elementer={sokResultat}
-                component={Fagsak}
-                defaultChecked="nyeste"
-                sortingLegend="Sorter fagsaker etter opprettelsesdato:"
-                sortingPath="opprettetDato"
-                radioGroupName="fagsaksortering"
-                manglendeInnbetalingToggleEnabled={manglendeInnbetalingToggleEnabled}
-                ikkeYrkesaktivFtrlToggleEnabled={ikkeYrkesaktivFtrlToggleEnabled}
-                landkoder={landkoder}
-              />
+            <Feilmeldinger />
+            {sokPending ? (
+              <Spinner />
+            ) : (
+              <>
+                {sokResultat.length > 0 && (
+                  <SorterbarListe
+                    elementer={sokResultat}
+                    component={Fagsak}
+                    defaultChecked="nyeste"
+                    sortingLegend="Sorter fagsaker etter opprettelsesdato:"
+                    sortingPath="opprettetDato"
+                    radioGroupName="fagsaksortering"
+                    manglendeInnbetalingToggleEnabled={manglendeInnbetalingToggleEnabled}
+                    ikkeYrkesaktivFtrlToggleEnabled={ikkeYrkesaktivFtrlToggleEnabled}
+                    landkoder={landkoder}
+                  />
+                )}
+                {sokResultat.length === 0 && ingenTreff}
+              </>
             )}
-            {sokResultat.length === 0 && ingenTreff}
           </section>
         </Nav.Row>
       </Nav.Container>
@@ -98,4 +102,4 @@ export const Sok = ({ sokResultat, children, sok, hentLandkoder, landkoder }: So
   );
 };
 
-export default connector(Sok);
+export default Sok;
