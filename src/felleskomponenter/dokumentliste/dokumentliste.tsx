@@ -20,6 +20,7 @@ import {
 
 const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: DokumentlisteType) => {
   const [feilmelding, setFeilmelding] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
 
   const klikk = async (
     dokument: BrevDokumentMetadataType | SedDokumentMetadataType,
@@ -32,6 +33,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
       if (!validert) return;
     }
 
+    setPending(true);
     let fileURL;
     try {
       if (isSed(dokument)) {
@@ -66,6 +68,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
       await apnePdfINyFane(fileURL);
       setFeilmelding(null);
     }
+    setPending(false);
   };
 
   const tittel = (dokumentnavn: string) => `${dokumentnavn} (åpnes i ny fane)`;
@@ -73,7 +76,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   const mapBrev = (dokument: BrevDokumentMetadataType) => (
     <Table.Row key={Utils._uuid()}>
       <Table.DataCell>
-        <Nav.Lenker href="#" onClick={(event) => klikk(dokument, event)}>
+        <Nav.Lenker href="#" onClick={(event) => klikk(dokument, event)} className={pending ? "pending" : ""}>
           {tittel(
             dokument.dokumentNavn ??
               KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)
@@ -87,7 +90,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   const mapSED = (dokument: SedDokumentMetadataType) => (
     <Table.Row key={Utils._uuid()}>
       <Table.DataCell>
-        <Nav.Lenker href="#" onClick={(event) => klikk(dokument, event)}>
+        <Nav.Lenker href="#" onClick={(event) => klikk(dokument, event)} className={pending ? "pending" : ""}>
           {tittel(dokument.dokumentNavn || `SED ${dokument.sedType}`)}
         </Nav.Lenker>
       </Table.DataCell>
@@ -102,7 +105,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   };
 
   return (
-    <div>
+    <div className="dokumentliste">
       <Table size="small">
         <Table.Header>
           <Table.Row>
