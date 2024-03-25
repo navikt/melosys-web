@@ -32,6 +32,7 @@ import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
 import "./opprettnysak.css";
 import { Spinner } from "../../felleskomponenter/spinner";
+import { oppgaverOperations } from "../../ducks/oppgaver";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -235,7 +236,7 @@ const OpprettNySak = ({
     };
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setBekreftPending(true);
     setVisFeilmeldinger(true);
 
@@ -259,10 +260,15 @@ const OpprettNySak = ({
     };
 
     if (saksnummer !== "-1") {
-      lagNyBehandlingForSak(saksnummer, fellesData).finally(() => setBekreftPending(false));
+      await lagNyBehandlingForSak(saksnummer, fellesData);
     } else {
-      lagNySak(dataForOpprettSak(fellesData)).finally(() => setBekreftPending(false));
+      await lagNySak(dataForOpprettSak(fellesData));
     }
+    setBekreftPending(false);
+    // Hent oppgave-oversikten som vises på forsiden når opprettnysak-prosessen forhåpentligvis er ferdigstilt
+    const refreshOversiktDelayMillis = 2500;
+    setTimeout(() => dispatch(oppgaverOperations.oversikt()), refreshOversiktDelayMillis);
+    setTimeout(() => dispatch(oppgaverOperations.oversikt()), refreshOversiktDelayMillis * 2);
   };
 
   const nullstillFormVerdier = () => {

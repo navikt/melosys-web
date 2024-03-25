@@ -347,7 +347,9 @@ class Journalforing extends Component {
       } else {
         await this.knyttTilEksisterendeSak();
       }
+      // Hent oppgave-oversikten som vises på forsiden når journalføringsprosessen forhåpentligvis er ferdigstilt
       setTimeout(() => this.props.hentOppgaveOversikt(), refreshOversiktDelayMillis);
+      setTimeout(() => this.props.hentOppgaveOversikt(), refreshOversiktDelayMillis * 2);
     } finally {
       this.setState({ submitSpinner: false });
     }
