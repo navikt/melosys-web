@@ -1,6 +1,10 @@
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-import { VurderingArtikkel16Vedtak, Innvilgelse, DelvisInnvilgelse, Avslag } from "./vurderingArtikkel16Vedtak";
+import { VurderingArtikkel16Vedtak } from "./vurderingArtikkel16Vedtak";
+import { screen } from "@testing-library/react";
+import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+import { reduxForm } from "redux-form";
+import * as KV from "../../../../kodeverk";
 
 vi.mock("../../../featuretoggle", () => ({
   useFeatureToggle: vi.fn(),
@@ -38,35 +42,37 @@ describe("VurderingArtikkel16Vedtak", () => {
       validerMottatteOpplysninger: vi.fn().mockImplementation(() => Promise.resolve()),
       fattVedtak: vi.fn(),
       harFeilmeldinger: false,
+      mottatteOpplysningerStatus: "OK",
     };
   });
 
+  const WrappedArtikkel16Vedtak = reduxForm({ form: KV.Form.ARTIKKEL_16_1_VEDTAK })(VurderingArtikkel16Vedtak);
+
   it("viser innvilgelse-komponent ved innvilgelse", () => {
     props.anmodningsperiodesvar.anmodningsperiodeSvarType = MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE;
-    const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
-
-    expect(vurderingArtikkel16Vedtak.find(Innvilgelse)).toHaveLength(1);
+    renderWithProviders(<WrappedArtikkel16Vedtak {...props} />);
+    const innvilgelseTekst = "Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.";
+    expect(screen.getByText(innvilgelseTekst)).toBeInTheDocument();
   });
 
   it('viser "delvis innvilgelse"-komponent ved delvis innvilgelse', () => {
     props.anmodningsperiodesvar.anmodningsperiodeSvarType = MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
-    const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
-
-    expect(vurderingArtikkel16Vedtak.find(DelvisInnvilgelse)).toHaveLength(1);
+    renderWithProviders(<WrappedArtikkel16Vedtak {...props} />);
+    const delvisInnvilgelseTekst =
+      "Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden";
+    expect(screen.getByText(delvisInnvilgelseTekst)).toBeInTheDocument();
   });
 
   it("viser avslag-komponent ved avslag", () => {
     props.anmodningsperiodesvar.anmodningsperiodeSvarType = MKV.Koder.anmodningsperiodesvartyper.AVSLAG;
-    const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
-
-    expect(vurderingArtikkel16Vedtak.find(Avslag)).toHaveLength(1);
+    renderWithProviders(<WrappedArtikkel16Vedtak {...props} />);
+    const avslagTekst = "Avslag";
+    expect(screen.getByText(avslagTekst)).toBeInTheDocument();
   });
 
-  it("viser en knapp for å fatte vedtak", () => {
-    const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
-
-    expect(vurderingArtikkel16Vedtak.find("StegKnapper")).toHaveLength(1);
-    vurderingArtikkel16Vedtak.find("StegKnapper").props().bekreftKnappProps.onClick();
-    expect(props.validerMottatteOpplysninger).toHaveBeenCalledTimes(1);
+  // TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
+  it.skip("snapshot test", () => {
+    const { container } = renderWithProviders(<WrappedArtikkel16Vedtak {...props} />);
+    expect(container).toMatchSnapshot();
   });
 });

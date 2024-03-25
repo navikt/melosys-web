@@ -1,0 +1,280 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
+<div>
+  <h1
+    class="typo-innholdstittel stegvelgertittel"
+  >
+    Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden
+  </h1>
+  <div
+    class="row"
+  >
+    <div
+      class="col col-xs-7"
+    >
+      <div
+        class="row"
+      >
+        <div
+          class="col col-xs-12"
+        >
+          <p
+            class="typo-element"
+          >
+            Lovvalgsperiode
+          </p>
+        </div>
+      </div>
+      <div
+        class="row"
+      >
+        <div
+          class="col blokk-xs col-xs-6"
+        >
+          <p
+            class="typo-element"
+          >
+            Fra
+          </p>
+          <time
+            datetime="datofom"
+          />
+        </div>
+        <div
+          class="col blokk-xs col-xs-6"
+        >
+          <p
+            class="typo-element"
+          >
+            Til
+          </p>
+          <time
+            datetime="datotom"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="row"
+  >
+    <div
+      class="col col-xs-7"
+    >
+      <div>
+        <div
+          class="row forkortLovvalgsperiode"
+        >
+          <div
+            class="col col-xs-8"
+          >
+            <div
+              class="skjemaelement"
+            >
+              <input
+                aria-invalid="false"
+                class="skjemaelement__input checkboks"
+                id="b3eb4c0b-c4e3-4c12-8340-7c39ed9aceea"
+                name="forkortLovvalgsperiode"
+                type="checkbox"
+                value=""
+              />
+              <label
+                class="skjemaelement__label"
+                for="b3eb4c0b-c4e3-4c12-8340-7c39ed9aceea"
+              >
+                Lovvalget innvilges for en kortere periode
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="row"
+  >
+    <div
+      class="col col-xs-7"
+    >
+      <div
+        class="begrunnelser"
+      >
+        <p
+          class="typo-element begrunnelseTittel"
+        >
+          Søkeren fyller ikke kriteriene for artikkel 16 nr. 1.
+        </p>
+        <div
+          class="begrunnelse"
+        >
+          Utenlandske trygdemyndigheter har avslått anmodningen om unntak
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="row"
+  >
+    <div
+      class="col col-xs-7"
+    >
+      <div
+        class="skjemaelement textarea__container"
+      >
+        <label
+          class="skjemaelement__label"
+          for="50de7441-0ece-432f-9b81-5cf3c87f1da3"
+        >
+          Fritekst til vedtaksbrev
+        </label>
+        
+        <div
+          class="textarea--medMeta__wrapper"
+        >
+          <span
+            class="sr-only"
+            id="19687784-9508-29966-01054-283949947437"
+          >
+            Tekstområde med plass til 
+            20
+             tegn.
+          </span>
+          <textarea
+            aria-describedby="19687784-9508-29966-01054-283949947437"
+            aria-invalid="false"
+            class="skjemaelement__input input--fullbredde skjemaelement__input textarea--medMeta"
+            id="50de7441-0ece-432f-9b81-5cf3c87f1da3"
+            name="vedtaksbrevFritekst"
+            placeholder="Skriv inn tekst til vedtaksbrevet..."
+            spellcheck="true"
+            style="height: 30px;"
+          />
+          <p
+            class="textarea--medMeta__teller"
+          />
+        </div>
+        <div
+          aria-hidden="true"
+          class="textareamirror"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="row"
+  >
+    <div
+      class="col col-xs-7"
+    >
+      <div>
+        <table
+          class="navds-table navds-table--small"
+        >
+          <thead
+            class="navds-table__header"
+          >
+            <tr
+              class="navds-table__row navds-table__row--shade-on-hover"
+            >
+              <th
+                class="navds-table__header-cell navds-label navds-label--small"
+              >
+                Forhåndsvisning av brev
+              </th>
+              <th
+                class="navds-table__header-cell navds-label navds-label--small"
+              >
+                Mottaker
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class="navds-table__body"
+          >
+            <tr
+              class="navds-table__row navds-table__row--shade-on-hover"
+            >
+              <td
+                class="navds-table__data-cell navds-body-short navds-body-short--small"
+              >
+                <a
+                  class="lenke"
+                  href="#"
+                >
+                  Innvilgelse yrkesaktiv (åpnes i ny fane)
+                </a>
+              </td>
+              <td
+                class="navds-table__data-cell navds-body-short navds-body-short--small"
+              >
+                BRUKER
+              </td>
+            </tr>
+            <tr
+              class="navds-table__row navds-table__row--shade-on-hover"
+            >
+              <td
+                class="navds-table__data-cell navds-body-short navds-body-short--small"
+              >
+                <a
+                  class="lenke"
+                  href="#"
+                >
+                  Innvilgelse Arbeidsgiver (åpnes i ny fane)
+                </a>
+              </td>
+              <td
+                class="navds-table__data-cell navds-body-short navds-body-short--small"
+              >
+                ARBEIDSGIVER
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div
+    class="row"
+  >
+    <div
+      class="col fane__fot col-xs-7"
+    >
+      <div
+        class="stegKnapper"
+      >
+        <button
+          class="knapp stegKnapper__bekreft knapp--hoved knapp--mini"
+          type="button"
+        >
+          Fatt vedtak
+        </button>
+        <button
+          class="knapp stegKnapper__tilbake knapp--flat knapp--mini"
+          type="button"
+        >
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 16 14"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M16 7.66732L2.47 7.66732L7.33333 12.6976L6.41697 13.6673L0 7.00065L6.41697 0.333984L7.33333 1.30368L2.47 6.33398L16 6.33398V7.66732Z"
+              fill="#0067C5"
+              fill-rule="evenodd"
+            />
+          </svg>
+          <span>
+            Tilbake
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

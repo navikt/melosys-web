@@ -2,29 +2,29 @@ import { Fragment, useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-import * as Nav from "../../../navFrontend";
-import * as MPT from "../../../proptypes";
-import * as KV from "../../../kodeverk";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Utils from "../../../utils";
+import * as Nav from "../../../../navFrontend";
+import * as MPT from "../../../../proptypes";
+import * as KV from "../../../../kodeverk";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Utils from "../../../../utils";
 
-import Begrunnelser from "../../../felleskomponenter/begrunnelser";
-import Dokumentliste from "../../../felleskomponenter/dokumentliste";
-import DatoOmrade from "../../../felleskomponenter/datoOmrade/datoOmrade";
+import Begrunnelser from "../../../../felleskomponenter/begrunnelser";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
+import DatoOmrade from "../../../../felleskomponenter/datoOmrade/datoOmrade";
 
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
-import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
-import { vilkarSelectors } from "../../../ducks/vilkar";
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
-import { vedtakOperations } from "../../../ducks/vedtak";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { anmodningsperiodesvarSelectors } from "../../../../ducks/anmodningsperiodesvar";
+import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
+import { vilkarSelectors } from "../../../../ducks/vilkar";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import { vedtakOperations } from "../../../../ducks/vedtak";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArtikkel16VedtakSchema from "./vurderingArtikkel16VedtakSchema";
 
 import "./vurderingArtikkel16Vedtak.css";
