@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import PT from "prop-types";
 
-import * as Nav from "../../../navFrontend";
-import * as KV from "../../../kodeverk";
-import * as Utils from "../../../utils";
-import * as MPT from "../../../proptypes";
-import * as Mui from "../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
+import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
+import * as MPT from "../../../../proptypes";
+import * as Mui from "../../../../felleskomponenter/ui";
 
-import MKV from "../../../melosyskodeverk";
-import EnkeltLandPure from "../../../felleskomponenter/skjema/landvelger/enkeltLandPure";
+import MKV from "../../../../melosyskodeverk";
+import EnkeltLandPure from "../../../../felleskomponenter/skjema/landvelger/enkeltLandPure";
 import {
   avklartefaktaType,
   lagAvklartfakta,
   konverterAvklartfaktaTilStegData,
-} from "../../../felleskomponenter/stegvelger";
-import { hentFaktaVerdi } from "../../../domeneUtils";
+} from "../../../../felleskomponenter/stegvelger";
+import { hentFaktaVerdi } from "../../../../domeneUtils";
 
 const radioValg = {
   NORGE: "NORGE",
