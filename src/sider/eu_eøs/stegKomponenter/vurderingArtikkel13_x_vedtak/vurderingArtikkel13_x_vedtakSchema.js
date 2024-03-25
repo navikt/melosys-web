@@ -1,7 +1,7 @@
 import { object, string, bool, array } from "yup";
 
-import MKV from "../../../melosyskodeverk";
-import * as KV from "../../../kodeverk";
+import MKV from "../../../../melosyskodeverk";
+import * as KV from "../../../../kodeverk";
 
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
 const OPPGI_BEGRUNNELSE = { melding: "Oppgi begrunnelse" };

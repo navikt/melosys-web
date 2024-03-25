@@ -4,27 +4,27 @@ import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-import * as Nav from "../../../navFrontend";
-import * as Utils from "../../../utils";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as KV from "../../../kodeverk";
-import * as MPT from "../../../proptypes";
-import * as Mui from "../../../felleskomponenter/ui";
-import Dokumentliste from "../../../felleskomponenter/dokumentliste";
-import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
+import * as Nav from "../../../../navFrontend";
+import * as Utils from "../../../../utils";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as KV from "../../../../kodeverk";
+import * as MPT from "../../../../proptypes";
+import * as Mui from "../../../../felleskomponenter/ui";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
+import { MottakerinstitusjonvelgerFlervalg } from "../../../../felleskomponenter/mottakerinstitusjonvelger";
 
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
-import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
-import { formOperations } from "../../../ducks/form";
-import { vedtakOperations } from "../../../ducks/vedtak";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
+import { formOperations } from "../../../../ducks/form";
+import { vedtakOperations } from "../../../../ducks/vedtak";
 
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArtikkel13_x_vedtakSchema from "./vurderingArtikkel13_x_vedtakSchema";
 import "./vurderingArtikkel13_x_vedtak.css";
 
