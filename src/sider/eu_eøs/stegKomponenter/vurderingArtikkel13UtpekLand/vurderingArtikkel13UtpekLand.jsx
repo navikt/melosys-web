@@ -4,30 +4,30 @@ import { change, getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-import * as Nav from "../../../navFrontend";
-import * as Utils from "../../../utils";
-import * as MPT from "../../../proptypes";
-import * as KV from "../../../kodeverk";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Hooks from "../../../hooks";
-import * as Mui from "../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
+import * as Utils from "../../../../utils";
+import * as MPT from "../../../../proptypes";
+import * as KV from "../../../../kodeverk";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Hooks from "../../../../hooks";
+import * as Mui from "../../../../felleskomponenter/ui";
 
-import Dokumentliste from "../../../felleskomponenter/dokumentliste";
-import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
-import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../felleskomponenter/stegvelger";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
+import { MottakerinstitusjonvelgerFlervalg } from "../../../../felleskomponenter/mottakerinstitusjonvelger";
+import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../../felleskomponenter/stegvelger";
 
-import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { utpekingsperioderOperations, utpekingsperioderSelectors } from "../../../ducks/utpekingsperioder";
-import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { formOperations } from "../../../ducks/form";
-import { flytSelectors } from "../../../ducks/flyt";
-import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { utpekingsperioderOperations, utpekingsperioderSelectors } from "../../../../ducks/utpekingsperioder";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import { formOperations } from "../../../../ducks/form";
+import { flytSelectors } from "../../../../ducks/flyt";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArtikkel13UtpekLandSchema from "./vurderingArtikkel13UtpekLandSchema";
 
 import "./vurderingArtikkel13UtpekLand.css";

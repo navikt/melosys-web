@@ -1,5 +1,5 @@
 import { object, string, bool, array } from "yup";
-import * as KV from "../../../kodeverk";
+import * as KV from "../../../../kodeverk";
 
 const MOTTAKERINSTITUSJON_KREVES = { melding: "Mottakerinstitusjon kreves" };
 const LOVVALGSLAND_KREVES = { melding: "Lovvalgsland kreves" };
