@@ -1,38 +1,58 @@
-import { ComponentProps } from "react";
-import { shallow } from "enzyme";
-import { mock, instance } from "ts-mockito";
-
-import { Bostedsadresse } from "../../../../../../graphql";
-
 import AdresseTableContainer from "./adresseTableContainer";
-import AdresseTable from "./adresseTable";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { expect } from "vitest";
 
 describe("AdresseTableContainer", () => {
-  const mockedProps = mock<ComponentProps<typeof AdresseTableContainer>>();
-  const props = instance(mockedProps);
+  const props = {
+    adressetype: "Bostedsadresse",
+    adresser: [
+      {
+        coAdressenavn: "Co Yo 1",
+        adresse: {
+          tilleggsnavn: null,
+          gatenavn: "bosted gata 3",
+          husnummerEtasjeLeilighet: "42",
+          postboks: null,
+          postnummer: "0001",
+          poststed: null,
+          region: null,
+          land: "STORBRITANNIA",
+        },
+        gyldigFraOgMed: "1995-06-16",
+        gyldigTilOgMed: null,
+        kilde: "Folkeregisteret",
+        master: "FREG",
+        erHistorisk: false,
+      },
+      {
+        coAdressenavn: null,
+        adresse: {
+          tilleggsnavn: "tilleggg navn",
+          gatenavn: null,
+          husnummerEtasjeLeilighet: null,
+          postboks: null,
+          postnummer: "2414",
+          poststed: "ELVERUM",
+          region: null,
+          land: "NORGE",
+        },
+        gyldigFraOgMed: "1957-09-12",
+        gyldigTilOgMed: null,
+        kilde: "Folkeregisteret",
+        master: "FREG",
+        erHistorisk: true,
+      },
+    ],
+  };
 
-  const mockedBostedsadresse = mock<Bostedsadresse>();
-  const bostedsadresse = instance(mockedBostedsadresse);
-
-  beforeEach(() => {
-    props.adresser = [
-      { ...bostedsadresse, erHistorisk: false },
-      { ...bostedsadresse, erHistorisk: true },
-    ];
-    props.adressetype = "Bostedsadresse";
+  it("snapshot test", () => {
+    const { container } = render(<AdresseTableContainer {...props} />);
+    expect(container).toMatchSnapshot();
   });
 
-  it("viser aktive adresser", () => {
-    const adresseTableContainer = shallow(<AdresseTableContainer {...props} />);
-    const aktivAdresseTable = adresseTableContainer.find(AdresseTable).first();
-    expect(aktivAdresseTable.props().adresser.map((e) => e.erHistorisk)).not.toContain(true);
-    expect(aktivAdresseTable.props().adresser.map((e) => e.erHistorisk)).toContain(false);
-  });
-
-  it("viser historiske adresser", () => {
-    const adresseTableContainer = shallow(<AdresseTableContainer {...props} />);
-    const historiskAdresseTable = adresseTableContainer.find(AdresseTable).last();
-    expect(historiskAdresseTable.props().adresser.map((e) => e.erHistorisk)).toContain(true);
-    expect(historiskAdresseTable.props().adresser.map((e) => e.erHistorisk)).not.toContain(false);
+  it("snapshot test historisk åpnet", () => {
+    const { container } = render(<AdresseTableContainer {...props} />);
+    fireEvent.click(screen.getByText("Åpne historikk"));
+    expect(container).toMatchSnapshot();
   });
 });
