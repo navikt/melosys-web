@@ -73,7 +73,11 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   const mapBrev = (dokument: BrevDokumentMetadataType) => (
     <Table.Row key={Utils._uuid()}>
       <Table.DataCell>
-        <Nav.Lenker href="#" onClick={(event) => klikk(dokument, event)}>
+        <Nav.Lenker
+          href="#"
+          onClick={(event) => klikk(dokument, event)}
+          onMouseDown={(event) => klikk(dokument, event)}
+        >
           {tittel(
             dokument.dokumentNavn ??
               KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)
@@ -87,7 +91,11 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   const mapSED = (dokument: SedDokumentMetadataType) => (
     <Table.Row key={Utils._uuid()}>
       <Table.DataCell>
-        <Nav.Lenker href="#" onClick={(event) => klikk(dokument, event)}>
+        <Nav.Lenker
+          href="#"
+          onClick={(event) => klikk(dokument, event)}
+          onMouseDown={(event) => klikk(dokument, event)}
+        >
           {tittel(dokument.dokumentNavn || `SED ${dokument.sedType}`)}
         </Nav.Lenker>
       </Table.DataCell>
@@ -102,7 +110,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   };
 
   return (
-    <div>
+    <div className="dokumentliste">
       <Table size="small">
         <Table.Header>
           <Table.Row>
