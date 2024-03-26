@@ -1,9 +1,9 @@
 import { object, string, bool } from "yup";
 
-import * as Utils from "../../../utils";
-import * as KV from "../../../kodeverk";
+import * as Utils from "../../../../utils";
+import * as KV from "../../../../kodeverk";
 
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
 const OPPGI_BEGRUNNELSE = { melding: "Oppgi begrunnelse" };
