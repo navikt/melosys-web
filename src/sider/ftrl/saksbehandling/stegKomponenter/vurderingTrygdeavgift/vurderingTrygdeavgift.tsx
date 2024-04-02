@@ -44,7 +44,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     undefined,
     [behandlingID, medlemskapsperiodeStatus === STATUS.OK]
   );
-  const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
   const [harHentetGrunnlag, setHarHentetGrunnlag] = useState(false);
