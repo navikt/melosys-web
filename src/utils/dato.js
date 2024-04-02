@@ -106,7 +106,6 @@ function erGyldigPeriode(fom, tom) {
 }
 
 function erIPeriode(fom, tom, dato, inclusivity) {
-  if (!tom) return true;
   return moment(dato).isBetween(fom, tom, undefined, inclusivity);
 }
 
