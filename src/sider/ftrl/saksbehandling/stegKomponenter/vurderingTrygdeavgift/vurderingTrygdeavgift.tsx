@@ -21,7 +21,6 @@ import "./vurderingTrygdeavgift.css";
 import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/meldinger";
 import { Skatteforholdsperioder } from "./komponenter/skatteforholdsperioder";
 import MKV from "../../../../../melosyskodeverk";
-import { KTObject } from "@navikt/melosys-kodeverk";
 
 interface Props {
   bekreft: () => void;
@@ -237,7 +236,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   if (!aktivtSteg) return null;
 
   const visFeilFraLagring = feil && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
-  console.log({ redigerbart, stegErGyldig, harBeregnetForeløpigTrygdeavgift });
   return (
     <div className="vurderingTrygdeavgift">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Trygdeavgift</Nav.Typo.Innholdstittel>
