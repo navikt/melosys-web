@@ -269,8 +269,7 @@ export const VurderingBestemmelserV2 = ({
     }
 
     const altGyldig = bestemmelserOK && avklarteFaktaOK && vilkårOK && begrunnelserOK;
-
-    setFormIsValid(altGyldig);
+    setFormIsValid(!behandlingErAvsluttetMedLagretBestemmelse ? altGyldig : true);
   };
 
   useEffect(() => {
@@ -388,17 +387,23 @@ export const VurderingBestemmelserV2 = ({
       })}
 
       {vilkårOgBegrunnelser?.map((vb, index, hele) => {
-        if (harReturnertNullIVilkårListe) return null;
-        const forrige = hele[index - 1];
+        if (redigerbart) {
+          if (harReturnertNullIVilkårListe) return null;
+          const forrige = hele[index - 1];
 
-        if (forrige && valgteVilkår.get(forrige.vilkår) !== true) {
-          harReturnertNullIVilkårListe = true;
-          return null;
+          if (forrige && valgteVilkår.get(forrige.vilkår) !== true) {
+            harReturnertNullIVilkårListe = true;
+            return null;
+          }
+          if (
+            forrige?.vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER &&
+            ulovligKombinasjonAvSelvstendigNaeringOgVilkår
+          ) {
+            harReturnertNullIVilkårListe = true;
+            return null;
+          }
         }
-        if (forrige?.vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && ulovligKombinasjonAvSelvstendigNaeringOgVilkår) {
-          harReturnertNullIVilkårListe = true;
-          return null;
-        }
+
         return (
           <VilkaarOgBegrunnelserNY
             key={vb.vilkår}
