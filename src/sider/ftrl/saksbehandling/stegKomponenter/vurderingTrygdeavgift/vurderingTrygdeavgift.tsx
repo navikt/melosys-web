@@ -58,7 +58,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
   };
 
-  const sluttdatoKanVæreÅpen = true;
   const {
     control,
     watch,
@@ -66,7 +65,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
-    context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig, sluttdatoKanVæreÅpen },
+    context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig, sluttdatoKanVæreÅpen: true },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
@@ -154,7 +153,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     Api.Trygdeavgift.oppdaterTrygdeavgiftsgrunnlag(behandlingID, {
       skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
         fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
-        tomDato: skatteforhold.tomDato ? Utils.dato.formatterDatoTilISO(skatteforhold.tomDato) : null,
+        tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato, false, undefined),
         skatteplikttype: skatteforhold.skatteplikttype,
       })),
       inntektskilder: !erBrukerPliktigMedlemOgSkattepliktig
@@ -163,7 +162,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
             arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
             avgiftspliktigInntektMnd: inntektskilde.bruttoInntekt,
             fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
-            tomDato: inntektskilde.tomDato ? Utils.dato.formatterDatoTilISO(inntektskilde.tomDato) : null,
+            tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato, false, undefined),
           }))
         : [],
     })

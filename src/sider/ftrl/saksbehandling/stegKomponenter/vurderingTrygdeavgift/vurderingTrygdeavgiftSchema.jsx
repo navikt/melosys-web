@@ -76,8 +76,9 @@ const vurdering_trygdeavgift = object().shape({
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
           .erEtterDatofelt("fomDato")
           .when("$sluttdatoKanVæreÅpen", {
-            is: (sluttdatoKanVæreÅpen) => !sluttdatoKanVæreÅpen,
+            is: false,
             then: string().required(MAA_FYLLES_UT),
+            otherwise: string().nullable(),
           }),
         skatteplikttype: string().required(MAA_FYLLES_UT),
       })
@@ -101,8 +102,9 @@ const vurdering_trygdeavgift = object().shape({
               .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
               .erEtterDatofelt("fomDato")
               .when("$sluttdatoKanVæreÅpen", {
-                is: (sluttdatoKanVæreÅpen) => !sluttdatoKanVæreÅpen,
+                is: false,
                 then: string().required(MAA_FYLLES_UT),
+                otherwise: string().nullable(),
               }),
           })
         )
