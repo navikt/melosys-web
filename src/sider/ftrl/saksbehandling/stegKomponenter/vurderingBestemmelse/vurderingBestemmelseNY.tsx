@@ -387,7 +387,7 @@ export const VurderingBestemmelserV2 = ({
       })}
 
       {vilkårOgBegrunnelser?.map((vb, index, hele) => {
-        if (redigerbart) {
+        if (!behandlingErAvsluttetMedLagretBestemmelse) {
           if (harReturnertNullIVilkårListe) return null;
           const forrige = hele[index - 1];
 
