@@ -157,7 +157,8 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
           (fullmektig.type === Type.PERSON && fullmektig.ident === originalAktør.personIdent)
         ) || !Utils._isEqual(fullmektig.fullmakter, originalAktør.fullmakter)
       );
-    } else return true;
+    }
+    return true;
   };
 
   const handleLagre = async (sjekkEndretFullmakt: boolean) => {
