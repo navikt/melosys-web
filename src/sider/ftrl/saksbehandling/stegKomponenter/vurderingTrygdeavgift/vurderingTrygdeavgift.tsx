@@ -65,7 +65,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
-    context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig },
+    context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig, sluttdatoKanVæreÅpen: true },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
@@ -95,7 +95,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
-
   const skalBeregneForelopigTrygdeavgift =
     stegErGyldig &&
     !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) &&
@@ -106,7 +105,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
   const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
-
   useEffect(() => {
     if (harEndretInnvilgetMedlemskapsperiode === undefined) {
       setHarEndretInnvilgetMedlemskapsperiode(false);
@@ -152,11 +150,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     setLagrePending(true);
     const erBrukerPliktigMedlemOgSkattepliktig =
       medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
-
     Api.Trygdeavgift.oppdaterTrygdeavgiftsgrunnlag(behandlingID, {
       skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
         fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
-        tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato),
+        tomDato: skatteforhold.tomDato ? Utils.dato.formatterDatoTilISO(skatteforhold.tomDato) : null,
         skatteplikttype: skatteforhold.skatteplikttype,
       })),
       inntektskilder: !erBrukerPliktigMedlemOgSkattepliktig
@@ -165,7 +162,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
             arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
             avgiftspliktigInntektMnd: inntektskilde.bruttoInntekt,
             fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
-            tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato),
+            tomDato: inntektskilde.tomDato ? Utils.dato.formatterDatoTilISO(inntektskilde.tomDato) : null,
           }))
         : [],
     })
@@ -238,7 +235,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   if (!aktivtSteg) return null;
 
   const visFeilFraLagring = feil && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
-
   return (
     <div className="vurderingTrygdeavgift">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Trygdeavgift</Nav.Typo.Innholdstittel>

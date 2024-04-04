@@ -60,6 +60,7 @@ addMethod(string, "erInnenforPeriode", function (periodeNavn, message) {
     const periode = this.options.context[periodeNavn];
 
     if (Utils._isEmpty(value) || !Utils.dato.vaskInputDato(value)) return true;
+    if (!periode.tom) return true;
 
     return Utils.dato.erIPeriode(periode.fom, periode.tom, Utils.dato.formatterDatoTilISO(value, false), "[]");
   });
