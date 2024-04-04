@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from "react";
+import { useState } from "react";
 
 import * as Nav from "../../navFrontend";
 import { dokumenterOperations } from "../../ducks/dokumenter";
@@ -21,11 +21,7 @@ import {
 const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: DokumentlisteType) => {
   const [feilmelding, setFeilmelding] = useState<string | null>(null);
 
-  const klikk = async (
-    dokument: BrevDokumentMetadataType | SedDokumentMetadataType,
-    event: MouseEvent<HTMLAnchorElement>
-  ) => {
-    event.preventDefault();
+  const klikk = async (dokument: BrevDokumentMetadataType | SedDokumentMetadataType) => {
     if (validateOnClick) {
       // Avbryt forespørsel hvis validator er oppgitt og returnerer false
       const validert = await validateOnClick();
@@ -38,7 +34,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
         fileURL = await dokumenterOperations.forhandsvisSed(
           behandlingID,
           dokument.sedType,
-          dokument.sedData || {
+          dokument.sedData ?? {
             begrunnelseUtenlandskMyndighet: null,
             fritekst: null,
             nyttLovvalgsland: null,
@@ -73,30 +69,22 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   const mapBrev = (dokument: BrevDokumentMetadataType) => (
     <Table.Row key={Utils._uuid()}>
       <Table.DataCell>
-        <Nav.Lenker
-          href="#"
-          onClick={(event) => klikk(dokument, event)}
-          onMouseDown={(event) => klikk(dokument, event)}
-        >
+        <Nav.Lenker href="#" onClick={(e) => e.preventDefault()} onMouseDown={() => klikk(dokument)}>
           {tittel(
             dokument.dokumentNavn ??
               KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)
           )}
         </Nav.Lenker>
       </Table.DataCell>
-      <Table.DataCell>{dokument.mottakerNavn || dokument.dokumentData?.mottaker}</Table.DataCell>
+      <Table.DataCell>{dokument.mottakerNavn ?? dokument.dokumentData?.mottaker}</Table.DataCell>
     </Table.Row>
   );
 
   const mapSED = (dokument: SedDokumentMetadataType) => (
     <Table.Row key={Utils._uuid()}>
       <Table.DataCell>
-        <Nav.Lenker
-          href="#"
-          onClick={(event) => klikk(dokument, event)}
-          onMouseDown={(event) => klikk(dokument, event)}
-        >
-          {tittel(dokument.dokumentNavn || `SED ${dokument.sedType}`)}
+        <Nav.Lenker href="#" onClick={(e) => e.preventDefault()} onMouseDown={() => klikk(dokument)}>
+          {tittel(dokument.dokumentNavn ?? `SED ${dokument.sedType}`)}
         </Nav.Lenker>
       </Table.DataCell>
       <Table.DataCell>{dokument.mottakerNavn}</Table.DataCell>
