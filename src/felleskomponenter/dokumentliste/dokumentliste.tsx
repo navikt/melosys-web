@@ -25,7 +25,6 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
     dokument: BrevDokumentMetadataType | SedDokumentMetadataType,
     event: MouseEvent<HTMLAnchorElement>
   ) => {
-    event.preventDefault();
     if (validateOnClick) {
       // Avbryt forespørsel hvis validator er oppgitt og returnerer false
       const validert = await validateOnClick();
@@ -38,7 +37,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
         fileURL = await dokumenterOperations.forhandsvisSed(
           behandlingID,
           dokument.sedType,
-          dokument.sedData || {
+          dokument.sedData ?? {
             begrunnelseUtenlandskMyndighet: null,
             fritekst: null,
             nyttLovvalgsland: null,
@@ -75,7 +74,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
       <Table.DataCell>
         <Nav.Lenker
           href="#"
-          onClick={(event) => klikk(dokument, event)}
+          onClick={(event) => event.preventDefault()}
           onMouseDown={(event) => klikk(dokument, event)}
         >
           {tittel(
@@ -84,7 +83,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
           )}
         </Nav.Lenker>
       </Table.DataCell>
-      <Table.DataCell>{dokument.mottakerNavn || dokument.dokumentData?.mottaker}</Table.DataCell>
+      <Table.DataCell>{dokument.mottakerNavn ?? dokument.dokumentData?.mottaker}</Table.DataCell>
     </Table.Row>
   );
 
@@ -93,10 +92,10 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
       <Table.DataCell>
         <Nav.Lenker
           href="#"
-          onClick={(event) => klikk(dokument, event)}
+          onClick={(event) => event.preventDefault()}
           onMouseDown={(event) => klikk(dokument, event)}
         >
-          {tittel(dokument.dokumentNavn || `SED ${dokument.sedType}`)}
+          {tittel(dokument.dokumentNavn ?? `SED ${dokument.sedType}`)}
         </Nav.Lenker>
       </Table.DataCell>
       <Table.DataCell>{dokument.mottakerNavn}</Table.DataCell>
