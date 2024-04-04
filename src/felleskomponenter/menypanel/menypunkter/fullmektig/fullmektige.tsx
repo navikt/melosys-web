@@ -148,6 +148,19 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
     return fullmektig.originalAktør?.fullmakter?.includes(FULLMEKTIG_TRYGDEAVGIFT) ?? false;
   };
 
+  const fullmaktHarEndringer = (fullmektig: Fullmektig) => {
+    if (fullmektig.originalAktør) {
+      const { originalAktør } = fullmektig;
+      return (
+        !(
+          (fullmektig.type === Type.ORGANISASJON && fullmektig.ident === originalAktør.orgnr) ||
+          (fullmektig.type === Type.PERSON && fullmektig.ident === originalAktør.personIdent)
+        ) || !Utils._isEqual(fullmektig.fullmakter, originalAktør.fullmakter)
+      );
+    }
+    return true;
+  };
+
   const handleLagre = async (sjekkEndretFullmakt: boolean) => {
     if (formValues.fullmektige.some((a: any) => a.fullmakter.length === 0)) {
       setVisFeilFullmektigHarIkkeFullmakter(true);
@@ -179,13 +192,15 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
     setPending(true);
     // eslint-disable-next-line no-restricted-syntax
     for (const fullmektig of formValues.fullmektige) {
-      await Api.Fagsaker.aktoer.send(saksnummer, {
-        databaseID: fullmektig.databaseID,
-        orgnr: fullmektig.type === Type.ORGANISASJON ? fullmektig.ident : null,
-        personIdent: fullmektig.type === Type.PERSON ? fullmektig.ident : null,
-        rolleKode: FULLMEKTIG,
-        fullmakter: fullmektig.fullmakter ?? [],
-      });
+      if (fullmaktHarEndringer(fullmektig)) {
+        await Api.Fagsaker.aktoer.send(saksnummer, {
+          databaseID: fullmektig.databaseID,
+          orgnr: fullmektig.type === Type.ORGANISASJON ? fullmektig.ident : null,
+          personIdent: fullmektig.type === Type.PERSON ? fullmektig.ident : null,
+          rolleKode: FULLMEKTIG,
+          fullmakter: fullmektig.fullmakter ?? [],
+        });
+      }
 
       if (fullmektig.kontaktperson || fullmektig.kontaktOrgnr || fullmektig.kontaktTelefon) {
         await Api.Fagsaker.kontaktopplysninger.send(saksnummer, fullmektig.ident, {
