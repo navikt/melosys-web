@@ -84,6 +84,9 @@ function formatterDatoTilNorsk(dato, visTidspunkt = false, defaultValue = "") {
 /** Forutsatt at datoen er validert korrekt norsk (DD.MM.YYYY HH:mm), formatter den til det maskinlesbare
  * formatet "YYYY-MM-DD
  *
+ * @param {string|undefined} dato
+ * @param {string|null} [defaultValue]
+ * @returns {string|null}
  */
 function formatterDatoTilISO(dato, defaultValue = "Invalid date") {
   const inputFormat = ["DD.MM.YYYY HH:mm", "DD.MM.YYYY"];
