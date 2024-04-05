@@ -119,8 +119,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     await Promise.all([
       dispatch(
         mottatteOpplysningerOperations.oppdaterPeriode({
-          fom: Utils.dato.formatterDatoTilISO(formValues.fom, null, ""),
-          tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
+          fom: Utils.dato.formatterDatoTilISO(formValues.fom, ""),
+          tom: Utils.dato.formatterDatoTilISO(formValues.tom, ""),
         })
       ),
       dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(mapLandkoder(), mapFlereLandUkjentHvilke())),

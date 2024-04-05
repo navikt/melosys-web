@@ -79,8 +79,8 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland([formValues.land], false)),
       dispatch(
         mottatteOpplysningerOperations.oppdaterPeriode({
-          fom: Utils.dato.formatterDatoTilISO(formValues.fom, null, ""),
-          tom: Utils.dato.formatterDatoTilISO(formValues.tom, null, ""),
+          fom: Utils.dato.formatterDatoTilISO(formValues.fom, ""),
+          tom: Utils.dato.formatterDatoTilISO(formValues.tom, ""),
         })
       ),
     ]);

@@ -139,8 +139,8 @@ const VurderingInngang = ({
   useEffect(() => {
     if (redigerbart && formValues && formIsValid && aktivtSteg) {
       oppdaterPeriode({
-        fom: Utils.dato.formatterDatoTilISO(formValues.fom, false, undefined),
-        tom: Utils.dato.formatterDatoTilISO(formValues.tom, false, undefined),
+        fom: Utils.dato.formatterDatoTilISO(formValues.fom, undefined),
+        tom: Utils.dato.formatterDatoTilISO(formValues.tom, undefined),
       });
       oppdaterSoeknadsland(formValues?.arbeidsland ? [formValues.arbeidsland] : []);
       debouncedLagremottatteOpplysningerOgOppdaterFlyt();

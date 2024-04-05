@@ -82,13 +82,12 @@ function formatterDatoTilNorsk(dato, visTidspunkt = false, defaultValue = "") {
 }
 
 /** Forutsatt at datoen er validert korrekt norsk (DD.MM.YYYY HH:mm), formatter den til det maskinlesbare
- * formatet "YYYY-MM-DDTHH:mm:ss"
+ * formatet "YYYY-MM-DD
  *
  */
-function formatterDatoTilISO(dato, tid, defaultValue = "Invalid date") {
+function formatterDatoTilISO(dato, defaultValue = "Invalid date") {
   const inputFormat = ["DD.MM.YYYY HH:mm", "DD.MM.YYYY"];
-  const momentFormat = tid ? "YYYY-MM-DDTHH:mm:ss" : "YYYY-MM-DD";
-  const isoDato = moment(dato, inputFormat).format(momentFormat);
+  const isoDato = moment(dato, inputFormat).format("YYYY-MM-DD");
   return isoDato === "Invalid date" ? defaultValue : isoDato;
 }
 
@@ -154,7 +153,7 @@ function erLike(datoEn, datoTo) {
 
 function erLikeDatoer(datoEn, datoTo) {
   if (datoEn === datoTo) return true;
-  return erLike(formatterDatoTilISO(datoEn, false, datoEn), formatterDatoTilISO(datoTo, false, datoTo));
+  return erLike(formatterDatoTilISO(datoEn, datoEn), formatterDatoTilISO(datoTo, datoTo));
 }
 
 function plussEnDag(dato) {
