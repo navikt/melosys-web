@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import { clearFields, getFormValues, InjectedFormProps, reduxForm } from "redux-form";
+import { clearFields, getFormValues, InjectedFormProps, reduxForm, touch } from "redux-form";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
@@ -43,6 +43,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  touch: (felt: string) => dispatch(touch(KV.Form.SAKSPLUKKER_FORM, felt)),
   nullstillForm: () =>
     dispatch(clearFields(KV.Form.SAKSPLUKKER_FORM, false, false, "sakstype", "sakstema", "behandlingstema")),
 });
@@ -53,12 +54,12 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type SaksplukkerProps = PropsFromRedux & RouteComponentProps;
 
 export const Saksplukker = ({
-  handleSubmit,
   history,
   formValues,
   change,
   nullstillForm,
   invalid,
+  touch,
 }: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) => {
   const [muligeSakstyper, setMuligeSakstyper] = useState([]);
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
@@ -101,28 +102,40 @@ export const Saksplukker = ({
     }
   }, [sakstema]);
 
-  const submitOgVideresend = async (form: any) => {
-    const response = await handleSubmit(form);
-    const { saksnummer, behandlingID, behandlingstema, behandlingstype, antallUtildelteOppgaver } = response;
-    if (!saksnummer) {
-      setAntallOppgaver(antallUtildelteOppgaver);
-      setVisIngenOppgaveFunnetAlert(true);
-      return false;
+  const submitOgVideresend = async (event: FormEvent) => {
+    event.preventDefault();
+
+    if (invalid) {
+      touch("sakstype");
+      touch("sakstema");
+      touch("behandlingstema");
+    } else {
+      const response = await oppgaverOperations.plukkSak(formValues);
+      const { saksnummer, behandlingID, behandlingstema, behandlingstype, antallUtildelteOppgaver } = response;
+
+      if (!saksnummer) {
+        setAntallOppgaver(antallUtildelteOppgaver);
+        setVisIngenOppgaveFunnetAlert(true);
+      } else {
+        const redirectURL = Routing.lagUrl(
+          saksnummer,
+          behandlingID,
+          formValues.sakstype,
+          formValues.sakstema,
+          behandlingstema,
+          behandlingstype,
+          manglendeInnbetalingToggleEnabled,
+          ikkeYrkesaktivFtrlToggleEnabled
+        );
+
+        history.push(redirectURL);
+      }
     }
+  };
 
-    const redirectURL = Routing.lagUrl(
-      saksnummer,
-      behandlingID,
-      formValues.sakstype,
-      formValues.sakstema,
-      behandlingstema,
-      behandlingstype,
-      manglendeInnbetalingToggleEnabled,
-      ikkeYrkesaktivFtrlToggleEnabled
-    );
-
-    history.push(redirectURL);
-    return true;
+  const nullstill = () => {
+    setVisIngenOppgaveFunnetAlert(false);
+    nullstillForm();
   };
 
   return (
@@ -170,10 +183,10 @@ export const Saksplukker = ({
           </Nav.Row>
         )}
         <Nav.Row className="saksplukker__knapperad">
-          <Nav.Knapp className="saksplukker__knapp" disabled={invalid}>
-            Behandle sak
-          </Nav.Knapp>
-          <Nav.Flatknapp onClick={nullstillForm}>Nullstill</Nav.Flatknapp>
+          <Nav.Knapp className="saksplukker__knapp">Behandle sak</Nav.Knapp>
+          <Nav.Flatknapp htmlType="button" onClick={nullstill}>
+            Nullstill
+          </Nav.Flatknapp>
         </Nav.Row>
       </form>
     </Nav.Panel>
@@ -183,8 +196,8 @@ export const Saksplukker = ({
 const SaksplukkerForm = reduxForm<SaksplukkerFormData, SaksplukkerProps>({
   form: KV.Form.SAKSPLUKKER_FORM,
   destroyOnUnmount: false,
-  onSubmit: (values: SaksplukkerFormData) => oppgaverOperations.plukkSak(values),
   validate: lagYupToReduxformErrorMapper(saksplukkerSchema),
+  touchOnBlur: false,
 })(Saksplukker);
 
 export default withRouter(connector(SaksplukkerForm));
