@@ -184,9 +184,7 @@ export const Saksplukker = ({
         )}
         <Nav.Row className="saksplukker__knapperad">
           <Nav.Knapp className="saksplukker__knapp">Behandle sak</Nav.Knapp>
-          <Nav.Flatknapp htmlType="button" onClick={nullstill}>
-            Nullstill
-          </Nav.Flatknapp>
+          <Nav.Flatknapp onClick={nullstill}>Nullstill</Nav.Flatknapp>
         </Nav.Row>
       </form>
     </Nav.Panel>
