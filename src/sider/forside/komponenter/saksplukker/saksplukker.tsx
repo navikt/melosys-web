@@ -43,7 +43,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  touch: (felt: string) => dispatch(touch(KV.Form.SAKSPLUKKER_FORM, felt)),
+  touchField: (felt: string) => dispatch(touch(KV.Form.SAKSPLUKKER_FORM, felt)),
   nullstillForm: () =>
     dispatch(clearFields(KV.Form.SAKSPLUKKER_FORM, false, false, "sakstype", "sakstema", "behandlingstema")),
 });
@@ -59,7 +59,7 @@ export const Saksplukker = ({
   change,
   nullstillForm,
   invalid,
-  touch,
+  touchField,
 }: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) => {
   const [muligeSakstyper, setMuligeSakstyper] = useState([]);
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
@@ -106,9 +106,9 @@ export const Saksplukker = ({
     event.preventDefault();
 
     if (invalid) {
-      touch("sakstype");
-      touch("sakstema");
-      touch("behandlingstema");
+      touchField("sakstype");
+      touchField("sakstema");
+      touchField("behandlingstema");
     } else {
       const response = await oppgaverOperations.plukkSak(formValues);
       const { saksnummer, behandlingID, behandlingstema, behandlingstype, antallUtildelteOppgaver } = response;
