@@ -151,8 +151,8 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
-      fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, ""),
-      tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, ""),
+      fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
+      tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
       trygdedekning: medlemskapsperiode.trygdedekning,
       bestemmelse:
         medlemskapsperiode.innvilgelsesResultat === OPPHØRT
