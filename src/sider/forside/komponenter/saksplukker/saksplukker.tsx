@@ -198,7 +198,6 @@ const SaksplukkerForm = reduxForm<SaksplukkerFormData, SaksplukkerProps>({
   destroyOnUnmount: false,
   validate: lagYupToReduxformErrorMapper(saksplukkerSchema),
   touchOnBlur: false,
-  touchOnChange: false,
 })(Saksplukker);
 
 export default withRouter(connector(SaksplukkerForm));
