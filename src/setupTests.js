@@ -1,7 +1,5 @@
 /* eslint-disable */
 
-import Enzyme, { shallow, mount } from "enzyme";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 import createFetchMock from "vitest-fetch-mock";
 import matchers from "@testing-library/jest-dom/matchers";
 import { vi, expect } from "vitest";
@@ -14,11 +12,6 @@ import "./setupYup";
 const fetchMocker = createFetchMock(vi);
 // sets globalThis.fetch and globalThis.fetchMock to our mocked version
 fetchMocker.enableMocks();
-
-Enzyme.configure({ adapter: new Adapter() });
-
-global.shallow = shallow;
-global.mount = mount;
 
 global.window.env = {
   APP_NAME: "IKKE_VIKTIG",
