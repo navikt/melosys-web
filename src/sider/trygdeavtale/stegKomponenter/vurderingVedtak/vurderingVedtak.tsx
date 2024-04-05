@@ -279,13 +279,11 @@ const VurderingVedtak = ({
 
   const handleLagreTomEndring = async () => {
     if (redigerbart && formValues) {
-      const isoFom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeFom);
-      const isoTom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeTom);
       oppdaterFlyt(
         {
           ...resultat,
-          lovvalgsperiodeFom: isoFom === "Invalid date" ? undefined : isoFom,
-          lovvalgsperiodeTom: isoTom === "Invalid date" ? undefined : isoTom,
+          lovvalgsperiodeFom: Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeFom, null),
+          lovvalgsperiodeTom: Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeTom, null),
         },
         () => hentLovvalgsperiode(behandlingID)
       );
