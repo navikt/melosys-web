@@ -239,14 +239,15 @@ export default function reducer(state = initialState, action = {}) {
             arbeidstakerTidligereUtsendt24Mnd: dokument.arbeidstakerTidligereUtsendt24Mnd,
             arbeidsgiverBetalerArbeidsgiveravgift: dokument.arbeidsgiverBetalerArbeidsgiveravgift,
             trygdeavgiftTrukketGjennomSkatt: dokument.trygdeavgiftTrukketGjennomSkatt,
-            trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato
-              ? formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato)
-              : null,
+            trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilISO(
+              dokument.trygdeavgiftTrukketGjennomSkattDato,
+              null
+            ),
           },
           oppholdUtland: {
             oppholdsPeriode: {
-              fom: dokument.oppholdUtlandFom ? formatterDatoTilISO(dokument.oppholdUtlandFom) : null,
-              tom: dokument.oppholdUtlandTom ? formatterDatoTilISO(dokument.oppholdUtlandTom) : null,
+              fom: formatterDatoTilISO(dokument.oppholdUtlandFom, null),
+              tom: formatterDatoTilISO(dokument.oppholdUtlandTom, null),
             },
             oppholdslandkoder: dokument.oppholdsland,
             ektefelleEllerBarnINorge: null,
@@ -289,8 +290,8 @@ export default function reducer(state = initialState, action = {}) {
           avsenderland: dokument.avsenderland,
           lovvalgsland: dokument.lovvalgsland,
           periode: {
-            fom: dokument.soknadsperiodeFom ? formatterDatoTilISO(dokument.soknadsperiodeFom) : null,
-            tom: dokument.soknadsperiodeTom ? formatterDatoTilISO(dokument.soknadsperiodeTom) : null,
+            fom: formatterDatoTilISO(dokument.soknadsperiodeFom, null),
+            tom: formatterDatoTilISO(dokument.soknadsperiodeTom, null),
           },
           selvstendigArbeid: {
             erSelvstendig: Utils._isNil(dokument.erSelvstendig) ? null : dokument.erSelvstendig,
@@ -343,12 +344,8 @@ export default function reducer(state = initialState, action = {}) {
             erDrattPaaEgetInitiativ: dokument.utenlandsoppdraget.erDrattPaaEgetInitiativ,
             erErstatningTidligereUtsendte: dokument.utenlandsoppdraget.erErstatningTidligereUtsendte,
             samletUtsendingsperiode: {
-              fom: dokument.utenlandsoppdraget.samletUtsendingsperiode.fom
-                ? formatterDatoTilISO(dokument.utenlandsoppdraget.samletUtsendingsperiode.fom)
-                : null,
-              tom: dokument.utenlandsoppdraget.samletUtsendingsperiode.tom
-                ? formatterDatoTilISO(dokument.utenlandsoppdraget.samletUtsendingsperiode.tom)
-                : null,
+              fom: formatterDatoTilISO(dokument.utenlandsoppdraget.samletUtsendingsperiode.fom, null),
+              tom: formatterDatoTilISO(dokument.utenlandsoppdraget.samletUtsendingsperiode.tom, null),
             },
           },
           personOpplysninger: {

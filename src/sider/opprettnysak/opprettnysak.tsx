@@ -251,7 +251,7 @@ const OpprettNySak = ({
       behandlingstema,
       behandlingstype,
       skalTilordnes,
-      mottaksdato: Utils.dato.formatterDatoTilISO(mottaksdato),
+      mottaksdato: Utils.dato.formatterDatoTilISO(mottaksdato) as string,
       behandlingsaarsakType,
       behandlingsaarsakFritekst:
         behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST

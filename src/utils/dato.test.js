@@ -147,19 +147,7 @@ describe("dato.js:", () => {
       ];
 
       tillatteDatoer.forEach((datoTest) => {
-        const formattertDato = formatterDatoTilISO(datoTest.test, false);
-        expect(formattertDato).toEqual(datoTest.forvent);
-      });
-    });
-
-    test("formatterer dato med klokkeslett til ISO-format.", () => {
-      const tillatteDatoer = [
-        { test: "01.01.2018 10:34", forvent: "2018-01-01T10:34:00" },
-        { test: "10.12.2018 10:34", forvent: "2018-12-10T10:34:00" },
-      ];
-
-      tillatteDatoer.forEach((datoTest) => {
-        const formattertDato = formatterDatoTilISO(datoTest.test, true);
+        const formattertDato = formatterDatoTilISO(datoTest.test);
         expect(formattertDato).toEqual(datoTest.forvent);
       });
     });

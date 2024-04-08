@@ -54,8 +54,8 @@ export const Soknadsperiode = ({ redigerbart, tittel, lagreSoknadOgOppfriskSakso
   const lagre = async () => {
     await dispatch(
       mottatteOpplysningerOperations.oppdaterPeriode({
-        fom: Utils.dato.formatterDatoTilISO(formValues.fom, false, ""),
-        tom: Utils.dato.formatterDatoTilISO(formValues.tom, false, ""),
+        fom: Utils.dato.formatterDatoTilISO(formValues.fom, ""),
+        tom: Utils.dato.formatterDatoTilISO(formValues.tom, ""),
       })
     );
     if (skalOppfriskeSaksopplysninger()) {

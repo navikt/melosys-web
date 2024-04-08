@@ -87,7 +87,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   };
 
   useEffect(() => {
-    const isoTomDato = Utils.dato.formatterDatoTilISO(formValues.tomDato, false, null);
+    const isoTomDato = Utils.dato.formatterDatoTilISO(formValues.tomDato, null);
     if (isoTomDato) {
       oppdaterLovvalgsperiode(lovvalgsperiode.fomDato, isoTomDato);
     }

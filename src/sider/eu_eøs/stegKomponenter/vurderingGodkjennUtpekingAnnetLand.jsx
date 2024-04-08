@@ -48,8 +48,8 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
       const endretPeriode =
         fom && tom
           ? {
-              fom: fom && Utils.dato.formatterDatoTilISO(fom),
-              tom: tom && Utils.dato.formatterDatoTilISO(tom),
+              fom: Utils.dato.formatterDatoTilISO(fom),
+              tom: Utils.dato.formatterDatoTilISO(tom),
             }
           : null;
 

@@ -77,8 +77,8 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
       (data: { fom: string; tom: string }) =>
         dispatch(
           mottatteOpplysningerOperations.oppdaterPeriode({
-            fom: Utils.dato.formatterDatoTilISO(data.fom, null, ""),
-            tom: Utils.dato.formatterDatoTilISO(data.tom, null, ""),
+            fom: Utils.dato.formatterDatoTilISO(data.fom, ""),
+            tom: Utils.dato.formatterDatoTilISO(data.tom, ""),
           })
         ),
       500

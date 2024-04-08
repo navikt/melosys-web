@@ -22,8 +22,8 @@ export interface Resultat {
   tilleggsbestemmelse?: string;
   barn?: Familiemedlem[] | null;
   ektefelle?: Familiemedlem | null;
-  lovvalgsperiodeFom?: string;
-  lovvalgsperiodeTom?: string;
+  lovvalgsperiodeFom?: string | null;
+  lovvalgsperiodeTom?: string | null;
   innledningFritekst?: string;
   begrunnelseFritekst?: string;
   nyVurderingBakgrunn?: string;

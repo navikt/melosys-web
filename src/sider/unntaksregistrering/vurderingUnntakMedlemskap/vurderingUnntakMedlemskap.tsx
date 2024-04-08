@@ -121,8 +121,8 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     const { fom, tom, bestemmelse, trygdedekning } = values;
     return dispatch(
       lovvalgsperioderOperations.opprettLovvalgsperiode(behandlingID, {
-        fomDato: Utils.dato.formatterDatoTilISO(fom, null, ""),
-        tomDato: Utils.dato.formatterDatoTilISO(tom, null, ""),
+        fomDato: Utils.dato.formatterDatoTilISO(fom, "") as string,
+        tomDato: Utils.dato.formatterDatoTilISO(tom, "") as string,
         lovvalgsbestemmelse: bestemmelse,
         trygdedekning,
       })

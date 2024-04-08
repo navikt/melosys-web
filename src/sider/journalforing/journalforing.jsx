@@ -184,8 +184,8 @@ class Journalforing extends Component {
       sakstype,
       sakstema,
       soknadsperiode: {
-        fom: journalforingPeriodeFraOgMed ? Utils.dato.formatterDatoTilISO(journalforingPeriodeFraOgMed) : null,
-        tom: journalforingPeriodeTilOgMed ? Utils.dato.formatterDatoTilISO(journalforingPeriodeTilOgMed) : null,
+        fom: Utils.dato.formatterDatoTilISO(journalforingPeriodeFraOgMed, null),
+        tom: Utils.dato.formatterDatoTilISO(journalforingPeriodeTilOgMed, null),
       },
       land: {
         landkoder: journalforingSoknadsland || [],

@@ -56,8 +56,8 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
     await dispatch(
       lovvalgsperioderOperations.oppdaterLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID, {
         ...lovvalgsperiode,
-        fomDato: Utils.dato.formatterDatoTilISO(values.fom, null, ""),
-        tomDato: Utils.dato.formatterDatoTilISO(values.tom, null, ""),
+        fomDato: Utils.dato.formatterDatoTilISO(values.fom, ""),
+        tomDato: Utils.dato.formatterDatoTilISO(values.tom, ""),
       })
     );
     kontrollerFerdigbehandling();
