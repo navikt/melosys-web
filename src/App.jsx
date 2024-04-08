@@ -22,7 +22,6 @@ import "nav-frontend-popover-style";
 import "nav-frontend-skjema-style";
 import "nav-frontend-snakkeboble-style";
 import "nav-frontend-spinner-style";
-import "nav-frontend-stegindikator-style";
 import "nav-frontend-typografi-style";
 
 export function App({ children, isDevelopmentProfile }) {
