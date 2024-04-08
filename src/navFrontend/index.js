@@ -15,7 +15,6 @@ import Chevron from "nav-frontend-chevron";
 import { LenkepanelBase } from "nav-frontend-lenkepanel";
 import { PopoverOrientering } from "nav-frontend-popover";
 import { Xknapp } from "nav-frontend-ikonknapper";
-import Alert from "@navikt/ds-react";
 
 // Egne implementasjoner av pakker fra nav-frontend. Noen av disse har blitt fjernet fra nav-frontend, men vi implementerer de selv fordi vi fortsatt har bruk for de.
 import {
@@ -37,7 +36,6 @@ export {
   AlertStripe,
   AlertStripeInfo,
   AlertStripeFeil,
-  Alert,
   Container,
   Row,
   Column,
