@@ -1,19 +1,18 @@
-import ReactDOM from "react-dom";
-import { ConnectedRouter } from "connected-react-router";
+import { createRoot } from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
 import { ApolloProvider } from "@apollo/client";
 import * as Sentry from "@sentry/react";
 import { Breadcrumbs } from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
 import { CaptureConsole } from "@sentry/integrations";
+import { Router } from "react-router-dom";
 import App from "./App";
 
 import "./setupYup";
 import "./index.css";
 import "@navikt/ds-css";
 
-import createStore from "./store";
-import browserHistory from "./browserHistory";
+import { store, history } from "./store";
 import { unregister } from "./registerServiceWorker";
 import { FellesHandlersProvider } from "./contexts";
 import Modals from "./modals";
@@ -27,7 +26,7 @@ const isDevelopmentProfile = environment === "local";
 
 const sentryIntegrations = [
   new BrowserTracing({
-    routingInstrumentation: Sentry.reactRouterV5Instrumentation(browserHistory),
+    routingInstrumentation: Sentry.reactRouterV5Instrumentation(history),
   }),
   new CaptureConsole({
     levels: ["error", "warn"],
@@ -48,11 +47,12 @@ Sentry.init({
   },
 });
 
-const store = createStore(browserHistory);
+const container = document.getElementById("root");
+const root = createRoot(container);
 
-ReactDOM.render(
+root.render(
   <ReduxProvider store={store}>
-    <ConnectedRouter history={browserHistory}>
+    <Router history={history}>
       <ApolloProvider client={apolloClient}>
         <App isDevelopmentProfile={isDevelopmentProfile}>
           <Sentry.ErrorBoundary fallback={SideLoadingFailMessage}>
@@ -63,9 +63,8 @@ ReactDOM.render(
           </Sentry.ErrorBoundary>
         </App>
       </ApolloProvider>
-    </ConnectedRouter>
-  </ReduxProvider>,
-  document.getElementById("root")
+    </Router>
+  </ReduxProvider>
 );
 
 unregister();
