@@ -16,6 +16,8 @@ import {
   slettVilkar,
 } from "../../../felleskomponenter/stegvelger";
 import { finnTilleggBestemmelse, hentFaktaVerdi } from "../../../domeneUtils";
+import { useFeatureToggle } from "../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 
 const stegetsTilleggbestemmelser = [
   {
@@ -27,6 +29,9 @@ const stegetsTilleggbestemmelser = [
 const VurderingYrkesgruppe = (props) => {
   const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
   const { harAvklaring, yrkesgruppe, tilleggbestemmelse } = tilstand;
+  const konvensjonEftaLandOgStorbritanniaToggleEnabled = useFeatureToggle(
+    MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA
+  );
 
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
@@ -87,30 +92,43 @@ const VurderingYrkesgruppe = (props) => {
           onChange={radioEndret}
           label="Yrkesaktiv, som flygende personell"
         />
-        <Nav.Radio
-          name="yrkesgruppe"
-          disabled={!redigerbart}
-          checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
-          value={KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
-          onChange={radioEndret}
-          label="Yrkesaktiv, direkte til vurdering av artikkel 16"
-        />
-        <Nav.Radio
-          name="yrkesgruppe"
-          disabled
-          checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.IKKE_YRKESAKTIV}
-          value={KV.Koder.VurderingYrkesgruppeTyper.IKKE_YRKESAKTIV}
-          onChange={radioEndret}
-          label="Ikke yrkesaktiv"
-        />
-        <Nav.Radio
-          name="yrkesgruppe"
-          disabled
-          checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.KONTANTYTELSESMOTTAKER}
-          value={KV.Koder.VurderingYrkesgruppeTyper.KONTANTYTELSESMOTTAKER}
-          onChange={radioEndret}
-          label="Kontantytelsesmottaker"
-        />
+        {konvensjonEftaLandOgStorbritanniaToggleEnabled ? (
+          <Nav.Radio
+            name="yrkesgruppe"
+            disabled={!redigerbart}
+            checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
+            value={KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
+            onChange={radioEndret}
+            label="Yrkesaktiv, direkte til vurdering av anmodning om unntak"
+          />
+        ) : (
+          <>
+            <Nav.Radio
+              name="yrkesgruppe"
+              disabled={!redigerbart}
+              checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
+              value={KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
+              onChange={radioEndret}
+              label="Yrkesaktiv, direkte til vurdering av artikkel 16"
+            />
+            <Nav.Radio
+              name="yrkesgruppe"
+              disabled
+              checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.IKKE_YRKESAKTIV}
+              value={KV.Koder.VurderingYrkesgruppeTyper.IKKE_YRKESAKTIV}
+              onChange={radioEndret}
+              label="Ikke yrkesaktiv"
+            />
+            <Nav.Radio
+              name="yrkesgruppe"
+              disabled
+              checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.KONTANTYTELSESMOTTAKER}
+              value={KV.Koder.VurderingYrkesgruppeTyper.KONTANTYTELSESMOTTAKER}
+              onChange={radioEndret}
+              label="Kontantytelsesmottaker"
+            />
+          </>
+        )}
       </Nav.Fieldset>
       <Mui.StegKnapper
         bekreftKnappProps={{

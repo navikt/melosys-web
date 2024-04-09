@@ -5,6 +5,8 @@ import * as KV from "../../../kodeverk";
 import * as Mui from "../../../felleskomponenter/ui";
 import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../felleskomponenter/stegvelger";
 import { hentFaktaVerdi } from "../../../domeneUtils";
+import { useFeatureToggle } from "../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 
 interface VurderingYrkesaktivitetProps {
   bekreftOgFortsett: () => void;
@@ -31,7 +33,9 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
     tilbake,
   } = props;
   const { skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende, harAvklaring, yrkesaktivitet } = tilstand;
-
+  const konvensjonEftaLandOgStorbritanniaToggleEnabled = useFeatureToggle(
+    MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA
+  );
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESAKTIVITET, yrkesaktivitet));
     return () => {
@@ -91,14 +95,16 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
             label={labels[2]}
           />
         )}
-        <Nav.Radio
-          name="yrkesaktivitet"
-          disabled={!redigerbart || !erSoknadArbeidFlereLand}
-          checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
-          value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
-          onChange={radioEndret}
-          label={labels[3]}
-        />
+        {(!konvensjonEftaLandOgStorbritanniaToggleEnabled || erSoknadArbeidFlereLand) && (
+          <Nav.Radio
+            name="yrkesaktivitet"
+            disabled={!redigerbart || !erSoknadArbeidFlereLand}
+            checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
+            value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
+            onChange={radioEndret}
+            label={labels[3]}
+          />
+        )}
       </Nav.Fieldset>
       <Mui.StegKnapper
         bekreftKnappProps={{
