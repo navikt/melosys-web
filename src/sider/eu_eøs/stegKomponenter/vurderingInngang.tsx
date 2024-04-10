@@ -98,13 +98,13 @@ export const Varsler = ({
           ))}
       </ul>
       {flereSoknadslandEnnTillatt && (
-        <Nav.AlertStripeAdvarsel>
+        <Nav.Alert variant="warning">
           Du har valgt et behandlingstema som kun tillater ett arbeidsland. Du må fjerne arbeidsland, eller endre
           behandlingstema for å kunne fatte vedtak.
-        </Nav.AlertStripeAdvarsel>
+        </Nav.Alert>
       )}
       {inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
-        <Nav.AlertStripe type="info" className="vurderinginngang_eu_eos__inngangsvilkaar-ikke-oppfylt-alertstripe">
+        <Nav.Alert variant="info" className="vurderinginngang_eu_eos__inngangsvilkaar-ikke-oppfylt-alertstripe">
           {visStorbritanniaKonvensjonTekst && (
             <p>
               Husk at du må vurdere om inngangsvilkårene i konvensjonen med Storbritannia av 30. juni 2023 er oppfylt.
@@ -115,7 +115,7 @@ export const Varsler = ({
             <li>Hvis inngangsvilkår ikke er oppfylt, må du avslutte saken fra behandlingsmenyen</li>
             <li>Hvis inngangsvilkår er oppfylt, kan du fortsette behandlingen som normalt</li>
           </ul>
-        </Nav.AlertStripe>
+        </Nav.Alert>
       )}
     </div>
   );

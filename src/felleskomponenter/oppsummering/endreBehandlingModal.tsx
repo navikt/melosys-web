@@ -273,9 +273,9 @@ function EndreBehandlingModal({
         <div>
           <div className="innhold">
             {!fagsakKanEndres && typeTemaKanEndres && (
-              <Nav.AlertStripeInfo className="infomelding">
+              <Nav.Alert variant="info" className="infomelding">
                 Du kan bare endre sakstype og -tema i den første behandlingen i saken
-              </Nav.AlertStripeInfo>
+              </Nav.Alert>
             )}
             <Mui.KodeTermSelect
               onChange={(e) => {
@@ -345,14 +345,14 @@ function EndreBehandlingModal({
             />
 
             {skalViseFeilmeldinger && (
-              <Nav.AlertStripeFeil>
+              <Nav.Alert variant="error">
                 <Nav.Typo.Normaltekst>Følgende feil ble funnet</Nav.Typo.Normaltekst>
                 <ul className="feilmeldingliste">
                   {alleFeilmeldinger.map((feilmelding) => (
                     <li key={feilmelding}>{feilmelding}</li>
                   ))}
                 </ul>
-              </Nav.AlertStripeFeil>
+              </Nav.Alert>
             )}
           </div>
 
@@ -374,11 +374,11 @@ function EndreBehandlingModal({
 
   const renderInnhold = () => {
     if (generellFeil) {
-      return <StandardMeldingOverst type="feil" actionEtterSynlighet={lukkModal} melding={generellFeil} />;
+      return <StandardMeldingOverst variant="error" actionEtterSynlighet={lukkModal} melding={generellFeil} />;
     }
     if (behandlingEndret) {
       return (
-        <StandardMeldingOverst type="suksess" actionEtterSynlighet={lukkModal} melding="Behandlingen er oppdatert" />
+        <StandardMeldingOverst variant="success" actionEtterSynlighet={lukkModal} melding="Behandlingen er oppdatert" />
       );
     }
     return skalViseSpinner ? null : renderEndreBehandling();

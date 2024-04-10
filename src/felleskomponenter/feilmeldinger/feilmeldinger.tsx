@@ -77,10 +77,14 @@ export default ({ className }: feilmeldingerProps) => {
   return (
     <div className={classNameFeilmeldinger}>
       {feilmeldingerContent && (
-        <Nav.AlertStripeFeil className="varselstripe">{feilmeldingerContent}</Nav.AlertStripeFeil>
+        <Nav.Alert variant="error" className="varselstripe">
+          {feilmeldingerContent}
+        </Nav.Alert>
       )}
       {advarslerContent && (
-        <Nav.AlertStripeAdvarsel className="advarsler-container">{advarslerContent}</Nav.AlertStripeAdvarsel>
+        <Nav.Alert variant="warning" className="advarsler-container">
+          {advarslerContent}
+        </Nav.Alert>
       )}
     </div>
   );

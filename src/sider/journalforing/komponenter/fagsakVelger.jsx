@@ -66,7 +66,7 @@ const FagsakVelger = (props) => {
     <div className="fagsakVelger">
       {ingenSakerFinnes ? (
         <>
-          <Nav.AlertStripeInfo>Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.AlertStripeInfo>
+          <Nav.Alert variant="info">Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.Alert>
           <OpprettSak formValues={formValues} feltNavn={feltNavn} />
         </>
       ) : (

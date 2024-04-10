@@ -8,7 +8,6 @@ import * as Mui from "../../ui";
 import * as Utils from "../../../utils";
 
 import { Feilmeldinger } from "../../feilmeldinger";
-import { AlertStripeFeil } from "nav-frontend-alertstriper";
 import Knapperad from "../../knapperad";
 import HtmlEditor from "../../htmlEditor";
 import bem from "../../../bemUtils";
@@ -133,7 +132,9 @@ export const DialogboksHenleggSak = ({ avbryt, ariaHideApp = false }: Dialogboks
         </Nav.Typo.Systemtittel>
         <Feilmeldinger className={dialogboksHenleggClassName.element("kontrollfeil")} />
         {feil && (
-          <AlertStripeFeil className={dialogboksHenleggClassName.element("feilmeldinger")}>{feil}</AlertStripeFeil>
+          <Nav.Alert variant="error" className={dialogboksHenleggClassName.element("feilmeldinger")}>
+            {feil}
+          </Nav.Alert>
         )}
         <Mui.KodeTermSelect
           feil={feilmeldingSelect}

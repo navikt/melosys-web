@@ -171,9 +171,9 @@ const JournalforingForm = ({
           <>
             {visSkalTilordnes && <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg behandlingen i mine oppgaver" />}
             {submitFailed && !Utils.object.isDeepEmpty(formErrors) && (
-              <Nav.AlertStripeFeil className="feilmelding">
+              <Nav.Alert variant="error" className="feilmelding">
                 {Utils.feilmelding.syncErrorsTilFeilmelding(formErrors)}
-              </Nav.AlertStripeFeil>
+              </Nav.Alert>
             )}
             <Fotknapper avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
           </>

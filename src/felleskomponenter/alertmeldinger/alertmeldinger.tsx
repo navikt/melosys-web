@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { AlertStripeType } from "nav-frontend-alertstriper";
 
 import * as Ikoner from "../../resources/images";
 import * as Nav from "../../navFrontend";
@@ -7,15 +6,19 @@ import * as Nav from "../../navFrontend";
 import "./alertmeldinger.css";
 
 export const Innsynsmelding = ({ className = "" }) => (
-  <Nav.AlertStripeInfo className={`innsynsmelding ${className}`}>Innsynsmodus</Nav.AlertStripeInfo>
+  <Nav.Alert variant="info" className={`innsynsmelding ${className}`}>
+    Innsynsmodus
+  </Nav.Alert>
 );
 
 export const VirksomhetMelding = () => (
-  <Nav.AlertStripeInfo className="virksomhetMelding">Behandlingen er journalført på virksomhet</Nav.AlertStripeInfo>
+  <Nav.Alert variant="info" className="virksomhetMelding">
+    Behandlingen er journalført på virksomhet
+  </Nav.Alert>
 );
 
 export const IngenFlytMelding = () => (
-  <Nav.AlertStripeAdvarsel className="ingenFlytMelding">
+  <Nav.Alert size="small" variant="warning" className="ingenFlytMelding">
     <b>Du kan ikke gå videre, men:</b>
     <ul className="listePadding">
       <li>
@@ -25,26 +28,26 @@ export const IngenFlytMelding = () => (
       <li>du må avslutte behandlingen og angi resultatet i behandlingsmenyen</li>
       <li>periode i MEDL og eventuelt avgiftssystemet må registreres manuelt</li>
     </ul>
-  </Nav.AlertStripeAdvarsel>
+  </Nav.Alert>
 );
 
 export const NyVurderingMelding = () => (
-  <Nav.AlertStripeAdvarsel className="nyVurderingMelding">
+  <Nav.Alert variant="warning" className="nyVurderingMelding">
     <Nav.Typo.Normaltekst className="nyVurderingMelding__overskrift">Ny behandling av sak</Nav.Typo.Normaltekst>
     <Nav.Typo.Normaltekst>
       Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens opplysninger og
       vurder videre behandling.
     </Nav.Typo.Normaltekst>
-  </Nav.AlertStripeAdvarsel>
+  </Nav.Alert>
 );
 
 interface StandardMeldingOverstProps {
-  type: AlertStripeType;
+  variant: "error" | "warning" | "info" | "success";
   actionEtterSynlighet: () => void;
   melding: string;
 }
 
-export const StandardMeldingOverst = ({ type, actionEtterSynlighet, melding }: StandardMeldingOverstProps) => {
+export const StandardMeldingOverst = ({ variant, actionEtterSynlighet, melding }: StandardMeldingOverstProps) => {
   const [viserMelding, setViserMelding] = useState(true);
   const VARIGHET_MELDING = 3000;
 
@@ -64,12 +67,12 @@ export const StandardMeldingOverst = ({ type, actionEtterSynlighet, melding }: S
 
   return viserMelding ? (
     <div className="standardMeldingOverst">
-      <Nav.AlertStripe type={type}>
+      <Nav.Alert variant={variant}>
         <div className="fullBredde">
           {melding}
           <Ikoner.Remove onClick={() => actionsEtterSynlighet()} />
         </div>
-      </Nav.AlertStripe>
+      </Nav.Alert>
     </div>
   ) : null;
 };

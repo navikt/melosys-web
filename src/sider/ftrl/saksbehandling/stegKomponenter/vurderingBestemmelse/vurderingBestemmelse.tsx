@@ -286,11 +286,11 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       </Nav.Fieldset>
 
       {ulovligBestemmelseValgt && !bestemmelseIkkeStøttetValgt && (
-        <Nav.AlertStripeFeil>
+        <Nav.Alert variant="error">
           <Nav.Typo.Normaltekst>
             Dekning på steg 1 kan ikke gis i kombinasjon med denne bestemmelsen.
           </Nav.Typo.Normaltekst>
-        </Nav.AlertStripeFeil>
+        </Nav.Alert>
       )}
 
       {!ulovligBestemmelseValgt &&

@@ -6,7 +6,6 @@ import { clearFields, getFormValues, InjectedFormProps, reduxForm, touch } from 
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
-import { AlertStripeAdvarsel } from "nav-frontend-alertstriper";
 
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
@@ -176,9 +175,9 @@ export const Saksplukker = ({
         {visIngenOppgaveFunnetAlert && (
           <Nav.Row>
             <Nav.Column md="12">
-              <AlertStripeAdvarsel>
+              <Nav.Alert variant="warning">
                 Det fins ingen saker for valgt type/tema kombinasjon blant de {antallOppgaver} eldste sakene
-              </AlertStripeAdvarsel>
+              </Nav.Alert>
             </Nav.Column>
           </Nav.Row>
         )}

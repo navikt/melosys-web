@@ -79,7 +79,7 @@ const Forretningssteder = (props) => {
   const { valgteVirksomheter, avklarteForretningsland, redigerbart } = props;
 
   const ingenValgteVirksomheterVarsel = valgteVirksomheter.length === 0 && (
-    <Nav.AlertStripe type="advarsel">Finner ingen valgte virksomheter.</Nav.AlertStripe>
+    <Nav.Alert variant="warning">Finner ingen valgte virksomheter.</Nav.Alert>
   );
 
   return (

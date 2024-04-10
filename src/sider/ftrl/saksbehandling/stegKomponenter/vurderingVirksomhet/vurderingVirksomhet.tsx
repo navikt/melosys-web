@@ -110,7 +110,9 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
           defaultValg={lagredeValgtevirksomheter}
         />
       ) : (
-        <Nav.AlertStripeFeil className="alertstripe">{INGEN_VIRKSOMHETER_TEKST}</Nav.AlertStripeFeil>
+        <Nav.Alert variant="error" className="alertstripe">
+          {INGEN_VIRKSOMHETER_TEKST}
+        </Nav.Alert>
       )}
 
       <Mui.StegKnapper
