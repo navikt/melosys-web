@@ -6,7 +6,7 @@ import { RootState } from "AppTypes";
 
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
-import * as Etiketter from "../../etiketter";
+import * as Tags from "../../tags";
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 
@@ -47,7 +47,7 @@ const OvrigOmArbeidstaker = ({
       <Nav.Row>
         <Nav.Column xs="10" className="tittel">
           <Nav.Typo.Systemtittel>{KV.Menypunkter.OvrigOmArbeidstaker.tittel}</Nav.Typo.Systemtittel>
-          {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel />}
+          {visArbeidsforholdRolleEtiketter && <Tags.ArbeidstakersDel />}
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

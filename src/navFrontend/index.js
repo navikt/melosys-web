@@ -1,5 +1,4 @@
 import Panel from "nav-frontend-paneler";
-import EtikettBase from "nav-frontend-etiketter";
 import { Column, Container, Row } from "nav-frontend-grid";
 import Hjelpetekst from "nav-frontend-hjelpetekst";
 import { Flatknapp, Hovedknapp, Knapp } from "nav-frontend-knapper";
@@ -10,6 +9,7 @@ import Tekstomrade from "nav-frontend-tekstomrade";
 import { LenkepanelBase } from "nav-frontend-lenkepanel";
 import { PopoverOrientering } from "nav-frontend-popover";
 import { Alert } from "@navikt/ds-react";
+import { Tag } from "@navikt/ds-react";
 
 // Egne implementasjoner av pakker fra nav-frontend. Noen av disse har blitt fjernet fra nav-frontend, men vi implementerer de selv fordi vi fortsatt har bruk for de.
 import {
@@ -42,7 +42,6 @@ export {
   InputProps,
   Textarea,
   Panel,
-  EtikettBase,
   Hjelpetekst,
   Typo,
   Knapp,
@@ -54,4 +53,5 @@ export {
   Tekstomrade,
   LenkepanelBase,
   PopoverOrientering,
+  Tag,
 };

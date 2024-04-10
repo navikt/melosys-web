@@ -7,7 +7,7 @@ import { formValueSelector } from "redux-form";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../ui";
 import * as KV from "../../../../kodeverk";
-import * as Etiketter from "../../etiketter";
+import * as Tags from "../../tags";
 import * as Ikoner from "../../../../resources/images";
 import * as Utils from "../../../../utils";
 
@@ -82,7 +82,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel}
         </Nav.Typo.Systemtittel>
-        {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
+        {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       </div>
       {ekstraArbeidsgivere.length === 0 && (
         <Mui.Undertittel

@@ -1,5 +1,5 @@
 import * as Nav from "../../../../../navFrontend";
-import * as Etiketter from "../../../etiketter";
+import * as Tags from "../../../tags";
 
 import "./tittellinje.css";
 
@@ -12,7 +12,7 @@ const Tittellinje = ({ tittel, visArbeidsforholdRolleEtiketter }: TittellinjePro
   <div className="utenlandsoppdraget-tittellinje">
     <Nav.Typo.Systemtittel className="utenlandsoppdraget-tittellinje__tittel">{tittel}</Nav.Typo.Systemtittel>
     {visArbeidsforholdRolleEtiketter && (
-      <Etiketter.ArbeidsgiversDel className="utenlandsoppdraget-tittellinje__arbeidsgiversdel-etikett" />
+      <Tags.ArbeidsgiversDel className="utenlandsoppdraget-tittellinje__arbeidsgiversdel-etikett" />
     )}
   </div>
 );
