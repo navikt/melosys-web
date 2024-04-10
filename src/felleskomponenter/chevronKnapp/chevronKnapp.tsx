@@ -1,4 +1,4 @@
-import * as Nav from "../../navFrontend";
+import * as Ikoner from "../../resources/images";
 import "./chevronKnapp.css";
 
 interface ChevronKnappProps {
@@ -12,7 +12,7 @@ function ChevronKnapp({ expanded, onChange, label }: ChevronKnappProps) {
     <div className="chevronKnapp">
       <button type="button" onClick={onChange}>
         {label}
-        <Nav.Chevron type={expanded ? "opp" : "ned"} />
+        {expanded ? <Ikoner.ChevronUp /> : <Ikoner.ChevronDown />}
       </button>
     </div>
   );
