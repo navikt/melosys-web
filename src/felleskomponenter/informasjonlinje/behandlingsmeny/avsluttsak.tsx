@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import MKV from "../../../melosyskodeverk";
-import * as Nav from "../../../navFrontend";
 import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -230,10 +229,7 @@ const AvsluttSak = () => {
     return null;
 
   return (
-    <Nav.Ekspanderbartpanel
-      className="behandlingsmeny__meny__avslutt-sak"
-      tittel={<div className="title">Avslutt sak</div>}
-    >
+    <>
       {skalViseKlageHandlinger && (
         <>
           <Handling tekst="Medhold på klage" onClick={() => apneBekreftValgModal(BekreftValgTypes.KLAGE_MEDHOLD)} />
@@ -302,7 +298,7 @@ const AvsluttSak = () => {
           onClick={() => apneBekreftValgModal(BekreftValgTypes.AVSLUTT_SAK_SOM_BORTFALT)}
         />
       )}
-    </Nav.Ekspanderbartpanel>
+    </>
   );
 };
 
