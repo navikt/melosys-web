@@ -7,6 +7,7 @@ import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
 import * as KV from "../../kodeverk";
 import * as Ikoner from "../../resources/images";
+import * as Nav from "../../navFrontend";
 
 import { hentDato } from "../../ducks/dokumenter/selectors";
 import { formatterDatoTilNorsk } from "../../utils/dato";
@@ -26,13 +27,21 @@ const MottaksretningIkon = ({ mottaksretning }: MottaksretningIkonProps) => {
 
   switch (kode) {
     case MKV.Koder.mottaksretning.INN:
-      return <div className="mottaksretning mottaksretning__inn">inn</div>;
+      return (
+        <Nav.Tag variant="info" size="small">
+          inn
+        </Nav.Tag>
+      );
     case MKV.Koder.mottaksretning.UT:
-      return <div className="mottaksretning mottaksretning__ut">ut</div>;
+      return (
+        <Nav.Tag variant="neutral" size="small">
+          ut
+        </Nav.Tag>
+      );
     case MKV.Koder.mottaksretning.NOTAT:
-      return <div className="mottaksretning mottaksretning__notat">notat</div>;
+      return <Nav.Tag variant="neutral">notat</Nav.Tag>;
     default:
-      return <div className="mottaksretning">ukjent</div>;
+      return <Nav.Tag variant="warning">ukjent</Nav.Tag>;
   }
 };
 

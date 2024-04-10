@@ -5,7 +5,7 @@ import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 import * as Ikoner from "../../../../resources/images";
 import * as Nav from "../../../../navFrontend";
-import * as Etiketter from "../../etiketter";
+import * as Tags from "../../tags";
 import * as Fly from "./fly";
 import * as Land from "./land";
 import * as Offshore from "./offshore";
@@ -154,7 +154,7 @@ const Arbeidssteder = ({ redigerbart, visArbeidsforholdRolleEtiketter, behandlin
       <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
         {KV.Menypunkter.Arbeidssteder.tittel}
       </Nav.Typo.Systemtittel>
-      {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
+      {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       <div className="innhold">
         {visRepresentantIUtlandet ? <RepresentantIUtlandet redigerbart={redigerbart} /> : arbeidssteder}
       </div>

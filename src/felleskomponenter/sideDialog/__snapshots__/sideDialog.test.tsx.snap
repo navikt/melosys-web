@@ -169,11 +169,11 @@ exports[`SideDialog > snapshot test 1`] = `
                   <td
                     class="navds-table__data-cell navds-body-short navds-body-short--small"
                   >
-                    <div
-                      class="mottaksretning mottaksretning__inn"
+                    <span
+                      class="navds-tag navds-tag--info navds-tag--small navds-body-short navds-body-short--small"
                     >
                       inn
-                    </div>
+                    </span>
                   </td>
                   <td
                     class="navds-table__data-cell navds-body-short navds-body-short--small"

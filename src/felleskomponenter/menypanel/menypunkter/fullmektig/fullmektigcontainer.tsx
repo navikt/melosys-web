@@ -1,6 +1,6 @@
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
-import * as Etiketter from "../../etiketter";
+import * as Tags from "../../tags";
 import * as Api from "../../../../services/api";
 
 import Fullmektige from "./fullmektige";
@@ -52,7 +52,7 @@ const Fullmektig = ({ redigerbart, visArbeidsforholdRolleEtiketter }: Fullmektig
         <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.Fullmektig.tittel}
         </Nav.Typo.Systemtittel>
-        {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
+        {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       </div>
       <Fullmektige
         redigerbart={redigerbart}
