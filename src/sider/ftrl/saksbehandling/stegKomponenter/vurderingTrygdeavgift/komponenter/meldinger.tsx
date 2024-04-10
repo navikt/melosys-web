@@ -10,32 +10,34 @@ const { FTRL_2_9_FØRSTE_LEDD_B_PENSJON } = MKV.Koder.trygdedekninger;
 const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 const HoyManedinntekt = (
-  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">Høy månedsinntekt!</Nav.AlertStripeAdvarsel>
+  <Nav.Alert variant="warning" className="alertstripe_feilmelding">
+    Høy månedsinntekt!
+  </Nav.Alert>
 );
 
 const InntektskildeUtenforMedlemskapsperiode = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Inntektskildeperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e).
-  </Nav.AlertStripeFeil>
+  </Nav.Alert>
 );
 
 const SkatteforholdUtenforMedlemskapsperiode = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Skatteforholdsperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e).
-  </Nav.AlertStripeFeil>
+  </Nav.Alert>
 );
 
 const SkattepliktigOgPensjonUforetrygdMedKildeskatt = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Inntekstypen &quot;Pensjon/uføretrygd det betales kildeskatt av&quot; kan ikke velges for perioder bruker er
     skattepliktig til Norge.
-  </Nav.AlertStripeFeil>
+  </Nav.Alert>
 );
 
 const PensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Pensjon/uføretrygd skal bare tas med i beregning i perioder helsedel er innvilget.
-  </Nav.AlertStripeFeil>
+  </Nav.Alert>
 );
 
 const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntektskilde[]) =>

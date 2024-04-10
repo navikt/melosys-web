@@ -115,7 +115,7 @@ export const VurderingUtpekt = ({
   return (
     <form className="vurderingutpekt" onSubmit={handleSubmit}>
       {!erBucAapen ? (
-        <Nav.AlertStripe className="buc__varsel" type="advarsel">
+        <Nav.Alert className="buc__varsel" variant="warning">
           <strong>BUC er lukket</strong>
           <ul>
             <li>Du kan godkjenne perioden ved å trykke &quot;Bekreft og fortsett&quot;.</li>
@@ -124,7 +124,7 @@ export const VurderingUtpekt = ({
               &quot;Avventer svar fra utenlandsk trygdemyndighet&quot;.
             </li>
           </ul>
-        </Nav.AlertStripe>
+        </Nav.Alert>
       ) : null}
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Vurder lovvalgsbeslutningen (A003)</Nav.Typo.Innholdstittel>
       <Nav.Row className="rad">

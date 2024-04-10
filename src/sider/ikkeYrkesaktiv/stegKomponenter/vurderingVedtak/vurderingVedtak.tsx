@@ -190,9 +190,9 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       </Nav.Row>
 
       {erNyVurdering && redigerbart && (
-        <Nav.AlertStripeInfo className="nyvurdering_info">
+        <Nav.Alert variant="info" className="nyvurdering_info">
           {KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}
-        </Nav.AlertStripeInfo>
+        </Nav.Alert>
       )}
 
       {erNyVurdering && (

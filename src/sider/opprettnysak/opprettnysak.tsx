@@ -377,9 +377,9 @@ const OpprettNySak = ({
             <div className="seksjon">
               <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg behandlingen i mine oppgaver" />
               {visFeilmeldinger && !Utils._isEmpty(errors) && (
-                <Nav.AlertStripeFeil className="feilmelding">
+                <Nav.Alert variant="error" className="feilmelding">
                   {Utils.feilmelding.syncErrorsTilFeilmelding(errors)}
-                </Nav.AlertStripeFeil>
+                </Nav.Alert>
               )}
               <Feilmeldinger className="feilmelding" />
               <Knapperad

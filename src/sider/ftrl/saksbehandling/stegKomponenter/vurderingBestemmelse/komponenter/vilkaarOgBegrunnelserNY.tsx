@@ -86,9 +86,9 @@ export const VilkaarOgBegrunnelserNY = ({
         </Nav.Row>
       </Nav.Fieldset>
       {selvstendigNæringValgt && harValgtFTRL_ARBEIDSTAKER && (
-        <Nav.AlertStripeFeil>
+        <Nav.Alert variant="error">
           Virksomheten du har valgt på steget &quot;Virksomhet&quot; er en selvstendig virksomhet
-        </Nav.AlertStripeFeil>
+        </Nav.Alert>
       )}
       {vilkårErValgt === false && <IngenFlytMelding />}
       {vilkårErValgt && !Utils._isEmpty(muligeBegrunnelser) && (

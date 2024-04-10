@@ -80,12 +80,12 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
   return (
     <div className="vurderingGodkjennUtpeking">
       {!erBucAapen ? (
-        <Nav.AlertStripe className="buc__varsel" type="advarsel">
+        <Nav.Alert className="buc__varsel" variant="warning">
           <strong>BUC er lukket</strong>
           <ul>
             <li>Det kan ikke sendes SED A012. Perioden blir likevel lagret i Melosys og overført til Medl.</li>
           </ul>
-        </Nav.AlertStripe>
+        </Nav.Alert>
       ) : null}
       <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
       {redigerbart && (

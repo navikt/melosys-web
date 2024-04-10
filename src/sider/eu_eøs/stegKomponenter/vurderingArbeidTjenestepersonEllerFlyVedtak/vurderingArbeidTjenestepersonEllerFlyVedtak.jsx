@@ -434,7 +434,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
         </Nav.Column>
       </Nav.Row>
       {erNyVurdering && redigerbart && (
-        <Nav.AlertStripeInfo>{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.AlertStripeInfo>
+        <Nav.Alert variant="info">{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.Alert>
       )}
       <Mui.StegKnapper
         bekreftKnappProps={{

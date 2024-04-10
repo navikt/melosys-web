@@ -89,20 +89,20 @@ export const Varsler = ({
           ))}
       </ul>
       {flereSoknadslandEnnTillatt && (
-        <Nav.AlertStripeAdvarsel>
+        <Nav.Alert variant="warning">
           Du har valgt et behandlingstema som kun tillater ett arbeidsland. Du må fjerne arbeidsland, eller endre
           behandlingstema for å kunne fatte vedtak.
-        </Nav.AlertStripeAdvarsel>
+        </Nav.Alert>
       )}
       {inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
-        <Nav.AlertStripe type="info" className="vurderinginngang_eu_eos__inngangsvilkaar-ikke-oppfylt-alertstripe">
+        <Nav.Alert variant="info" className="vurderinginngang_eu_eos__inngangsvilkaar-ikke-oppfylt-alertstripe">
           Du har to valg:
           <ul>
             <li>Hvis inngangsvilkår ikke er oppfylt, må du henlegge saken som bortfalt (i behandlingsmenyen).</li>
             <li>Hvis inngangsvilkår er oppfylt, kan du fortsette behandlingen som normalt.</li>
           </ul>
           Ved behov kan du begrunne avgjørelsen i et notat.
-        </Nav.AlertStripe>
+        </Nav.Alert>
       )}
     </div>
   );

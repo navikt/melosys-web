@@ -489,9 +489,9 @@ const VurderingVedtak = ({
       {stegErGyldig && <Dokumentliste behandlingID={behandlingID} dokumenter={mapDokumenter(muligeMottakere)} />}
 
       {redigerbart && erNyVurdering && (
-        <Nav.AlertStripeInfo className={vurderingVedtakCls.element("alertstripe")}>
+        <Nav.Alert variant="info" className={vurderingVedtakCls.element("alertstripe")}>
           {KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}
-        </Nav.AlertStripeInfo>
+        </Nav.Alert>
       )}
 
       <Mui.StegKnapper

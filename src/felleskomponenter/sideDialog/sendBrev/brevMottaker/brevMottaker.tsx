@@ -157,7 +157,7 @@ const BrevMottaker = ({
         <Nav.Row>
           <Nav.Column xs="12">
             {feil && (
-              <Nav.AlertStripeFeil className="alertstripe_feil">
+              <Nav.Alert variant="error" className="alertstripe_feil">
                 <Nav.Typo.Element>{feil.tittel}</Nav.Typo.Element>
                 {!Utils._isEmpty(feil.underpunkter) && (
                   <ul>
@@ -166,7 +166,7 @@ const BrevMottaker = ({
                     ))}
                   </ul>
                 )}
-              </Nav.AlertStripeFeil>
+              </Nav.Alert>
             )}
             {adresse?.mottakerAdresse && (
               <BrevAdresse {...adresse?.mottakerAdresse} className="brukeradresse" visNavn />
@@ -179,7 +179,9 @@ const BrevMottaker = ({
         <Nav.Row>
           {feil ? (
             <Nav.Column xs="12">
-              <Nav.AlertStripeFeil className="alertstripe_feil">{feil.tittel}</Nav.AlertStripeFeil>
+              <Nav.Alert variant="error" className="alertstripe_feil">
+                {feil.tittel}
+              </Nav.Alert>
             </Nav.Column>
           ) : (
             <Nav.Column xs="12" className="arbeidsgiver">
@@ -245,7 +247,9 @@ const BrevMottaker = ({
           </Nav.Column>
           {feil && (
             <Nav.Column xs="12">
-              <Nav.AlertStripeFeil className="alertstripe_feil">{feil.tittel}</Nav.AlertStripeFeil>
+              <Nav.Alert variant="error" className="alertstripe_feil">
+                {feil.tittel}
+              </Nav.Alert>
             </Nav.Column>
           )}
         </Nav.Row>
@@ -256,7 +260,9 @@ const BrevMottaker = ({
       {mottakerErUtenlandskTrygdemyndighet && feil && (
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.AlertStripeFeil className="alertstripe_feil">{feil.tittel}</Nav.AlertStripeFeil>
+            <Nav.Alert variant="error" className="alertstripe_feil">
+              {feil.tittel}
+            </Nav.Alert>
           </Nav.Column>
         </Nav.Row>
       )}

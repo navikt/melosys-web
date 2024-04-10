@@ -438,11 +438,11 @@ export const VurderingBestemmelserV2 = ({
       })}
 
       {ulovligBestemmelseValgt && (
-        <Nav.AlertStripeFeil>
+        <Nav.Alert variant="error">
           <Nav.Typo.Normaltekst>
             Dekning på steg Inngang kan ikke gis i kombinasjon med denne bestemmelsen.
           </Nav.Typo.Normaltekst>
-        </Nav.AlertStripeFeil>
+        </Nav.Alert>
       )}
 
       <Mui.StegKnapper

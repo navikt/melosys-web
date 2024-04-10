@@ -266,9 +266,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       </div>
 
       {valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand && (
-        <Nav.AlertStripeAdvarsel className="alert">
+        <Nav.Alert variant="warning" className="alert">
           Ett eller flere av landene du har valgt er EØS- eller avtaleland
-        </Nav.AlertStripeAdvarsel>
+        </Nav.Alert>
       )}
 
       <Nav.Row>

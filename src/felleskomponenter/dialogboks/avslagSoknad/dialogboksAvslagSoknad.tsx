@@ -17,8 +17,6 @@ import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 import { datalastingOperations } from "../../../ducks/datalasting";
 import { navigeringOperations } from "../../../ducks/navigering";
 import { modalerOperations } from "../../../ducks/modaler";
-
-import { AlertStripeFeil } from "nav-frontend-alertstriper";
 import { Feilmeldinger } from "../../feilmeldinger";
 import HtmlEditor from "../../htmlEditor";
 import Knapperad from "../../knapperad";
@@ -106,7 +104,7 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp = false, avbryt }: Dialogbo
             Avslå søknaden på grunn av manglende opplysninger
           </Nav.Typo.Systemtittel>
           <Feilmeldinger />
-          {feil && <AlertStripeFeil>{feil}</AlertStripeFeil>}
+          {feil && <Nav.Alert variant="error">{feil}</Nav.Alert>}
           <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
           {bekreftRedigerbart && <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           <div className="knapperadcontainer">

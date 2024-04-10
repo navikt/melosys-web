@@ -22,7 +22,7 @@ const Familiemedlemmer = () => {
   const [barnValgtForMerInformasjon, setBarnValgtForMerInformasjon] = useState<Familiemedlem | null>(null);
   const { loading, error, data } = useHentFamiliemedlemmerQuery({ variables: { behandlingID } });
 
-  if (error) return <Nav.AlertStripeFeil>Kunne ikke hente familiemedlemmer!</Nav.AlertStripeFeil>;
+  if (error) return <Nav.Alert variant="error">Kunne ikke hente familiemedlemmer!</Nav.Alert>;
   if (loading) return <div>Henter familiemedlemmer...</div>;
 
   const barn =

@@ -42,7 +42,7 @@ const PersonInfo = ({ behandlingID, modalAriaHideApp, ...props }: PersonInfoProp
       <Nav.NavFrontendSpinner />
     </>
   );
-  const personinfoErrorContent = <Nav.AlertStripeFeil>Feil ved henting av personinfo!</Nav.AlertStripeFeil>;
+  const personinfoErrorContent = <Nav.Alert variant="error">Feil ved henting av personinfo!</Nav.Alert>;
 
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1680 });
 
