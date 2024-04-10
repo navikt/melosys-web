@@ -22,7 +22,7 @@ import ErrorBoundary from "./felleskomponenter/errorBoundary";
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
-const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
+const { EU_EOS, FTRL, TRYGDEAVTALE, ÅRSAVREGNING } = MKV.Koder.sakstyper;
 
 const Routing = () => (
   <FellesHandlersContext.Consumer>
@@ -82,6 +82,10 @@ const Routing = () => (
         />
         <SentryRoute
           path={`/${TRYGDEAVTALE}/saksbehandling/:saksnr`}
+          render={(props) => <TrygdeavtaleSaksbehandling {...props} {...fellesHandlers} />}
+        />
+        <SentryRoute
+          path={`/${ÅRSAVREGNING}/saksbehandling/:saksnr`}
           render={(props) => <TrygdeavtaleSaksbehandling {...props} {...fellesHandlers} />}
         />
         <SentryRoute
