@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import PT from "prop-types";
 
-import MKV from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
@@ -18,6 +18,8 @@ import {
 import { finnTilleggBestemmelse, hentFaktaVerdi } from "../../../domeneUtils";
 import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { useSelector } from "react-redux";
 
 const stegetsTilleggbestemmelser = [
   {
@@ -29,6 +31,8 @@ const stegetsTilleggbestemmelser = [
 const VurderingYrkesgruppe = (props) => {
   const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
   const { harAvklaring, yrkesgruppe, tilleggbestemmelse } = tilstand;
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+
   const konvensjonEftaLandOgStorbritanniaToggleEnabled = useFeatureToggle(
     MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA
   );
@@ -92,25 +96,22 @@ const VurderingYrkesgruppe = (props) => {
           onChange={radioEndret}
           label="Yrkesaktiv, som flygende personell"
         />
-        {konvensjonEftaLandOgStorbritanniaToggleEnabled ? (
-          <Nav.Radio
-            name="yrkesgruppe"
-            disabled={!redigerbart}
-            checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
-            value={KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
-            onChange={radioEndret}
-            label="Yrkesaktiv, direkte til vurdering av anmodning om unntak"
-          />
-        ) : (
+
+        <Nav.Radio
+          name="yrkesgruppe"
+          disabled={!redigerbart}
+          checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
+          value={KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
+          onChange={radioEndret}
+          label={
+            konvensjonEftaLandOgStorbritanniaToggleEnabled
+              ? "Yrkesaktiv, direkte til vurdering av anmodning om unntak"
+              : "Yrkesaktiv, direkte til vurdering av artikkel 16"
+          }
+        />
+
+        {!konvensjonEftaLandOgStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema) && (
           <>
-            <Nav.Radio
-              name="yrkesgruppe"
-              disabled={!redigerbart}
-              checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
-              value={KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
-              onChange={radioEndret}
-              label="Yrkesaktiv, direkte til vurdering av artikkel 16"
-            />
             <Nav.Radio
               name="yrkesgruppe"
               disabled

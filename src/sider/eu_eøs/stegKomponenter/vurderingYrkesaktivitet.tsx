@@ -7,6 +7,9 @@ import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../fell
 import { hentFaktaVerdi } from "../../../domeneUtils";
 import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
+import { MKVUtils } from "../../../melosyskodeverk";
+import { useSelector } from "react-redux";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
 
 interface VurderingYrkesaktivitetProps {
   bekreftOgFortsett: () => void;
@@ -33,6 +36,8 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
     tilbake,
   } = props;
   const { skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende, harAvklaring, yrkesaktivitet } = tilstand;
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+
   const konvensjonEftaLandOgStorbritanniaToggleEnabled = useFeatureToggle(
     MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA
   );
@@ -95,7 +100,7 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
             label={labels[2]}
           />
         )}
-        {(!konvensjonEftaLandOgStorbritanniaToggleEnabled || erSoknadArbeidFlereLand) && (
+        {!konvensjonEftaLandOgStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema) && (
           <Nav.Radio
             name="yrkesaktivitet"
             disabled={!redigerbart || !erSoknadArbeidFlereLand}
