@@ -100,7 +100,7 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
             label={labels[2]}
           />
         )}
-        {!konvensjonEftaLandOgStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema) && (
+        {!(konvensjonEftaLandOgStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
           <Nav.Radio
             name="yrkesaktivitet"
             disabled={!redigerbart || !erSoknadArbeidFlereLand}
