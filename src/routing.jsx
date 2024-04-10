@@ -85,8 +85,8 @@ const Routing = () => (
           render={(props) => <TrygdeavtaleSaksbehandling {...props} {...fellesHandlers} />}
         />
         <SentryRoute
-          path={`/${ÅRSAVREGNING}/saksbehandling/:saksnr`}
-          render={(props) => <TrygdeavtaleSaksbehandling {...props} {...fellesHandlers} />}
+          path={`/${ÅRSAVREGNING}/årsavregning/:saksnr`}
+          render={(props) => <ÅRSAVREGNING {...props} {...fellesHandlers} />}
         />
         <SentryRoute
           path="/:sakstype/behandling/:saksnr"
