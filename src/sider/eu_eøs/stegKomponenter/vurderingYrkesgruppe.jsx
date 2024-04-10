@@ -110,7 +110,7 @@ const VurderingYrkesgruppe = (props) => {
           }
         />
 
-        {!konvensjonEftaLandOgStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema) && (
+        {!(konvensjonEftaLandOgStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
           <>
             <Nav.Radio
               name="yrkesgruppe"
