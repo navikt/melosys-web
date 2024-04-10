@@ -3,7 +3,6 @@ import EtikettBase from "nav-frontend-etiketter";
 import { Column, Container, Row } from "nav-frontend-grid";
 import Hjelpetekst from "nav-frontend-hjelpetekst";
 import { Flatknapp, Hovedknapp, Knapp } from "nav-frontend-knapper";
-import Icons from "nav-frontend-ikoner-assets";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import Lenker from "nav-frontend-lenker";
 import Modal from "nav-frontend-modal";
@@ -50,7 +49,6 @@ export {
   Hovedknapp,
   Flatknapp,
   NavFrontendSpinner,
-  Icons as Ikoner,
   Lenker,
   Modal,
   Tekstomrade,
