@@ -63,8 +63,6 @@ const Fakturainformasjon = () => {
                   <Table.HeaderCell />
                   <Table.HeaderCell scope="col">
                     <LabelMedHjelpetekst
-                      area-controls="fakturainformasjon-area-control"
-                      className="hjelpetekst_wrapper"
                       label="Dato"
                       hjelpetekst="Viser når status sist ble oppdatert, for eksempel når faktura ble bestilt."
                     />

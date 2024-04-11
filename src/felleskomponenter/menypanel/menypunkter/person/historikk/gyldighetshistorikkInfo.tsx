@@ -4,7 +4,7 @@ import "./gyldighetshistorikkInfo.css";
 export const GyldighetshistorikkInfo = () => (
   <div className="gyldighetshistorikk-info">
     <Nav.Typo.EtikettLiten>Gyldighetshistorikk fra Folkeregisteret kan være unøyaktig.</Nav.Typo.EtikettLiten>
-    <Nav.Hjelpetekst>
+    <Nav.HelpText title="Historikk hjelpetekst" strategy="fixed">
       <p>Det kan variere hvordan gyldighetsdato benyttes i Folkeregisteret.</p>
       <p>
         Dersom det er en opplysningstype hvor Folkeregisteret har vedtaksmyndighet, så viser denne datoen når vedtaket
@@ -13,6 +13,6 @@ export const GyldighetshistorikkInfo = () => (
         faktisk flyttet ut av landet.
       </p>
       <p>Vær derfor varsom med hvordan du bruker disse opplysningene.</p>
-    </Nav.Hjelpetekst>
+    </Nav.HelpText>
   </div>
 );

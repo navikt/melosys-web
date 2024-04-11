@@ -5,7 +5,7 @@ import * as Skjema from "../../skjema";
 
 import { DokumenterV2 } from "../../../services/api";
 import { begrensAntallTegn } from "../../../utils/normalisering";
-import FeltBeskrivelse from "./feltBeskrivelse";
+import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 
 interface BrevFeltProps {
   felt: DokumenterV2.Felt;
@@ -18,7 +18,9 @@ const BrevFelt = ({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
     case DokumenterV2.FeltType.FRITEKST:
       return (
         <>
-          {visFeltBeskrivelse && <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />}
+          {visFeltBeskrivelse && (
+            <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
+          )}
           <Skjema.HTMLEditor
             feltNavn={`felt.${felt.kode}.feltVerdi`}
             className="brevfelt__fritekst"
@@ -37,7 +39,7 @@ const BrevFelt = ({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
               normalize={begrensAntallTegn(felt.tegnBegrensning)}
               label={
                 visFeltBeskrivelse ? (
-                  <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />
+                  <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
                 ) : (
                   ""
                 )

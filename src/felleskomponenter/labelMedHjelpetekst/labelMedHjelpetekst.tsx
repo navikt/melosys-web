@@ -1,33 +1,34 @@
-import classnames from "classnames";
 import * as Nav from "../../navFrontend";
 
 import "./labelMedHjelpetekst.css";
 
 type LabelMedHjelpetekstProps = {
   label: string;
-  hjelpetekst?: string;
-  type?: Nav.PopoverOrientering;
-  className?: string;
-  hjelpetekstClassName?: string;
+  hjelpetekst?: string | null;
+  bold?: boolean;
+  small?: boolean;
+  placement?:
+    | "top"
+    | "bottom"
+    | "right"
+    | "left"
+    | "top-start"
+    | "top-end"
+    | "bottom-start"
+    | "bottom-end"
+    | "right-start"
+    | "right-end"
+    | "left-start"
+    | "left-end";
 };
 
-const LabelMedHjelpetekst = ({
-  label,
-  hjelpetekst,
-  type = Nav.PopoverOrientering.Hoyre,
-  className,
-  hjelpetekstClassName,
-}: LabelMedHjelpetekstProps) => (
-  <div className={classnames(className)}>
-    {label}
+const LabelMedHjelpetekst = ({ label, hjelpetekst, placement = "top", bold, small }: LabelMedHjelpetekstProps) => (
+  <div className="labelMedHjelpetekst__wrapper">
+    <span className={small ? "small" : undefined}>{bold ? <b>{label}</b> : label}</span>
     {hjelpetekst && (
-      <Nav.Hjelpetekst
-        tittel={hjelpetekst}
-        type={type}
-        className={classnames("labelMedHjelpetekst__hjelpetekst", hjelpetekstClassName)}
-      >
+      <Nav.HelpText title={`${label} hjelpetekst`} placement={placement} className="labelMedHjelpetekst__hjelpetekst">
         {hjelpetekst}
-      </Nav.Hjelpetekst>
+      </Nav.HelpText>
     )}
   </div>
 );
