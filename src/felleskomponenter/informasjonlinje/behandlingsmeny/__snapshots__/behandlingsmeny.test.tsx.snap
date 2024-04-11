@@ -47,7 +47,7 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
             >
               <svg
                 aria-hidden="true"
-                aria-labelledby="title-aksel-icon-3"
+                aria-labelledby="title-aksel-icon-1"
                 class="navds-accordion__header-chevron"
                 fill="none"
                 focusable="false"
@@ -58,7 +58,7 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <title
-                  id="title-aksel-icon-3"
+                  id="title-aksel-icon-1"
                 >
                   Vis mer
                 </title>
@@ -116,7 +116,7 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
             >
               <svg
                 aria-hidden="true"
-                aria-labelledby="title-aksel-icon-4"
+                aria-labelledby="title-aksel-icon-2"
                 class="navds-accordion__header-chevron"
                 fill="none"
                 focusable="false"
@@ -127,7 +127,7 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <title
-                  id="title-aksel-icon-4"
+                  id="title-aksel-icon-2"
                 >
                   Vis mer
                 </title>

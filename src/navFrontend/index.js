@@ -1,6 +1,6 @@
 import Panel from "nav-frontend-paneler";
 import EtikettBase from "nav-frontend-etiketter";
-import { Column, Container, Row } from "nav-frontend-grid";
+import { Column, Container, Row } from "./grid";
 import Hjelpetekst from "nav-frontend-hjelpetekst";
 import { Flatknapp, Hovedknapp, Knapp } from "nav-frontend-knapper";
 import Icons from "nav-frontend-ikoner-assets";

@@ -80,7 +80,6 @@ export default defineConfig({
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
       "nav-frontend-etiketter-style": fileURLToPath(new URL("./src/nav-style/etiketter.css", import.meta.url)),
-      "nav-frontend-grid-style": fileURLToPath(new URL("./src/nav-style/grid.css", import.meta.url)),
       "nav-frontend-hjelpetekst-style": fileURLToPath(new URL("./src/nav-style/hjelpetekst.css", import.meta.url)),
       "nav-frontend-knapper-style": fileURLToPath(new URL("./src/nav-style/knapper.css", import.meta.url)),
       "nav-frontend-lenkepanel-style": fileURLToPath(new URL("./src/nav-style/lenkepanel.css", import.meta.url)),
