@@ -1,4 +1,4 @@
-import { Fragment, FocusEvent, useCallback, useEffect, useState } from "react";
+import { FocusEvent, Fragment, useCallback, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -17,10 +17,10 @@ import { formSelectors } from "../../../../ducks/form";
 import { DokumenterV2, Organisasjon } from "../../../../services/api";
 import { OrganisasjonsAdresse } from "../../../adresser";
 import BrevAdresse from "../../../adresser/brevAdresse";
-import FeltBeskrivelse from "../feltBeskrivelse";
 import { SendBrevFormValues } from "../types";
 import BrevMottakerNorskMyndighet from "./brevMottakerNorskMyndighet";
 import { FeilmeldingProps, Underpunkt } from "../../../../services/modules/dokumenter-v2";
+import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
 
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;
@@ -135,11 +135,13 @@ const BrevMottaker = ({
       <Skjema.Select
         feltNavn="mottaker"
         label={
-          <FeltBeskrivelse
-            beskrivelse="Mottaker"
+          <LabelMedHjelpetekst
+            label="Mottaker"
             hjelpetekst={
               tilgjengeligeMottakere.some((mottaker) => mottaker.rolle === VIRKSOMHET) ? null : mottakerHjelpetekst
             }
+            bold
+            small
           />
         }
         disabled={!redigerbart || tilgjengeligeMottakere?.length === 1}
@@ -185,18 +187,7 @@ const BrevMottaker = ({
             </Nav.Column>
           ) : (
             <Nav.Column xs="12" className="arbeidsgiver">
-              <Nav.Typo.Normaltekst tag="div">
-                Velg:
-                {formValues?.valgtMottaker?.rolle === ARBEIDSGIVER && (
-                  <Nav.Hjelpetekst
-                    className="hjelpetekst"
-                    tittel={arbeidsgiverHjelptekst}
-                    type={Nav.PopoverOrientering.Venstre}
-                  >
-                    {arbeidsgiverHjelptekst}
-                  </Nav.Hjelpetekst>
-                )}
-              </Nav.Typo.Normaltekst>
+              <LabelMedHjelpetekst label="Velg: " hjelpetekst={arbeidsgiverHjelptekst} bold small />
               {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.BrevAdresse) => (
                 <Fragment key={Utils._uuid()}>
                   <Skjema.Radio

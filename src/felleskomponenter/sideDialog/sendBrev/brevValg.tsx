@@ -3,11 +3,10 @@ import { ColumnWidth } from "nav-frontend-grid";
 
 import * as Api from "../../../services/api";
 import * as Nav from "../../../navFrontend";
-
-import FeltBeskrivelse from "./feltBeskrivelse";
 import ValgAlternativer from "./valgAlternativer";
 import BrevFelt from "./brevFelt";
 import { SendBrevFormValues } from "./types";
+import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 
 interface BrevValgProps {
   formValues: SendBrevFormValues;
@@ -27,7 +26,7 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
           {felt.valg && (
             <Nav.Row>
               <Nav.Column xs={width}>
-                <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />
+                <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
                 <ValgAlternativer
                   valg={felt.valg}
                   feltKode={felt.kode}

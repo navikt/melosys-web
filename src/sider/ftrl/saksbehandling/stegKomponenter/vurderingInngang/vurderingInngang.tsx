@@ -172,7 +172,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
                 <LabelMedHjelpetekst
                   label="Til og med"
                   hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Medlemskapsperiode(r) registreres senere.`}
-                  hjelpetekstClassName="hjelpetekst"
                 />
               }
               name="tom"
@@ -189,7 +188,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
                   <LabelMedHjelpetekst
                     label="Arbeidsland"
                     hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                    hjelpetekstClassName="hjelpetekst"
                   />
                 </Nav.Typo.Element>
               ) : (
@@ -230,7 +228,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
                   <LabelMedHjelpetekst
                     label="Arbeidsland"
                     hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                    hjelpetekstClassName="hjelpetekst"
                   />
                 }
                 emptyFieldDisabled={!!formValues.arbeidsland}

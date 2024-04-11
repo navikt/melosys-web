@@ -81,9 +81,8 @@ export const Inntektskilder = ({
     <div className="inntektskilder">
       <LabelMedHjelpetekst
         label="Oppgi informasjon om brukers inntekt"
-        className="inntektskilder_label"
         hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
-        hjelpetekstClassName="hjelpetekst"
+        bold
       />
       <div className="skjema__panel">
         {formValues.inntektskilder.map((inntektskilde, index) => {
