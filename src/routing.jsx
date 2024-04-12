@@ -14,6 +14,7 @@ import OpprettNySak from "./sider/opprettnysak";
 import VurderUtpeking from "./sider/eu_eøs/vurderutpeking";
 import Sendbrev from "./sider/sendbrev";
 import IkkeYrkesaktiv from "./sider/ikkeYrkesaktiv/saksbehandling";
+import Årsavregning from "./sider/årsavregning/saksbehandling";
 import Unntaksregistrering from "./sider/unntaksregistrering";
 import UkjentSide from "./sider/ukjentSide";
 
@@ -22,7 +23,7 @@ import ErrorBoundary from "./felleskomponenter/errorBoundary";
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
-const { EU_EOS, FTRL, TRYGDEAVTALE, ÅRSAVREGNING } = MKV.Koder.sakstyper;
+const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
 const Routing = () => (
   <FellesHandlersContext.Consumer>
@@ -85,8 +86,8 @@ const Routing = () => (
           render={(props) => <TrygdeavtaleSaksbehandling {...props} {...fellesHandlers} />}
         />
         <SentryRoute
-          path={`/${ÅRSAVREGNING}/årsavregning/:saksnr`}
-          render={(props) => <ÅRSAVREGNING {...props} {...fellesHandlers} />}
+          path={`/:sakstype/årsavregning/:saksnr`}
+          render={(props) => <Årsavregning {...props} {...fellesHandlers} />}
         />
         <SentryRoute
           path="/:sakstype/behandling/:saksnr"
