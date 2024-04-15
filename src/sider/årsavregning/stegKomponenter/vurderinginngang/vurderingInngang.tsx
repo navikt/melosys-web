@@ -8,16 +8,12 @@ import * as Utils from "../../../../utils";
 
 import { FellesHandlersContext } from "../../../../contexts";
 
-import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../../ducks/menypanel";
-import { landkoderSelectors } from "../../../../ducks/landkoder";
 import { navigeringOperations } from "../../../../ducks/navigering";
 
 import vurderingInngangSchema from "./vurderingInngangSchema";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { fagsakSelectors } from "../../../../ducks/fagsaker";
-import MKV from "../../../../melosyskodeverk";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
 import "./vurderingInngang.css";
 import { BehandlingUnderOppfriskningSelector } from "../../../../ducks/modaler/selectors";
