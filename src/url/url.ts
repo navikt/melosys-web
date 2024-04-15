@@ -89,7 +89,7 @@ export const lagUrl = (
   manglendeInnbetalingToggleEnabled: boolean | undefined,
   ikkeYrkesaktivFtrlToggleEnabled: boolean | undefined
 ) => {
-  if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstype.ÅRSAVREGNING) {
+  if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING) {
     return lagÅrsavregningFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
 

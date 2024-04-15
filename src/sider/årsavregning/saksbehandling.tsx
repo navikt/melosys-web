@@ -15,16 +15,15 @@ import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
-import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
+import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
-import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
+import { fagsakOperations } from "../../ducks/fagsaker";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { dokumenterOperations } from "../../ducks/dokumenter";
 import { menypanelOperations, menypanelSelectors } from "../../ducks/menypanel";
 
 import { vilkarOperations } from "../../ducks/vilkar";
-import { formSelectors } from "../../ducks/form";
 
 import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
