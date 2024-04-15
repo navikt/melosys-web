@@ -1,8 +1,7 @@
-import { useState, useEffect, Fragment, useCallback } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import PT from "prop-types";
 
 import * as Nav from "../../../navFrontend";
-import * as Mui from "../../ui";
 import * as Utils from "../../../utils";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
@@ -151,9 +150,9 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
           </Fragment>
         )}
         {!leggTilNotatDialogSynlig && (
-          <Mui.Knapp disabled={!redigerbart} type="hoved" onClick={visLeggTilNotatDialog}>
-            LEGG TIL NYTT NOTAT
-          </Mui.Knapp>
+          <Nav.Button disabled={!redigerbart} variant="primary" onClick={visLeggTilNotatDialog}>
+            Legg til nytt notat
+          </Nav.Button>
         )}
       </div>
     </Nav.Panel>

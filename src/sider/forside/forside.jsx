@@ -11,11 +11,10 @@ import SokSkjema from "./komponenter/sokskjema";
 import JournalforingOppgaver from "./komponenter/mineoppgaver/jornualforingoppgaver";
 import BehandlingOppgaver from "./komponenter/mineoppgaver/behandlingOppgaver";
 
-import OpprettNySakKnapp from "./komponenter/opprettnysakknapp";
-
 import "./forside.css";
 import { featureToggleOperations } from "../../ducks/featuretoggle";
 import ErrorBoundary from "../../felleskomponenter/errorBoundary";
+import * as Ikoner from "../../resources/images";
 
 const Forside = (props) => {
   const { tilOpprettNySak } = props;
@@ -39,7 +38,11 @@ const Forside = (props) => {
           <Nav.Typo.Innholdstittel>Mine oppgaver</Nav.Typo.Innholdstittel>
           <Nav.Typo.Normaltekst>{oppgaverTotalt} oppgaver</Nav.Typo.Normaltekst>
         </div>
-        <OpprettNySakKnapp onClick={tilOpprettNySak} />
+        <div>
+          <Nav.Button onClick={tilOpprettNySak} variant="primary" icon={<Ikoner.AddOneWhite />}>
+            Opprett ny sak/behandling
+          </Nav.Button>
+        </div>
       </div>
       <main id="main-container">
         <Nav.Container className="forside__container" fluid>

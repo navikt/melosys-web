@@ -1,4 +1,3 @@
-import Knapp from "./knapp";
 import { KodeTermSelect } from "./kodeTermSelect";
 import Checkboxgruppe from "./checkboxgruppe";
 import Lenkeknapp from "./lenkeknapp";
@@ -11,7 +10,6 @@ import StegKnapper from "./stegKnapp";
 import IkonKnapp from "./ikonKnapp";
 
 export {
-  Knapp,
   KodeTermSelect,
   Checkbox,
   Checkboxgruppe,

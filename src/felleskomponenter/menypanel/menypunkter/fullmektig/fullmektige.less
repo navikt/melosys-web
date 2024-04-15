@@ -18,21 +18,6 @@
     margin-bottom: 1rem;
   }
 
-  .endre_knapp {
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-  }
-
-  .slett_knapp {
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-    .slett_ikon {
-      margin-right: 0.5rem;
-    }
-  }
-
   .ingenFullmektigRegistrert {
     border-bottom: solid 1px @navGra20;
     color: @navGra60;
@@ -62,6 +47,22 @@
     padding: 1rem;
     margin-bottom: 1rem;
     position: relative;
+
+    .knapperad {
+      display: flex;
+      justify-content: flex-end;
+
+      .slett_ikon {
+        height: 1rem;
+        width: 1rem;
+      }
+    }
+
+    .fullmakt__container {
+      > :last-child {
+        margin-bottom: 1rem;
+      }
+    }
   }
 
   .ident_label,
@@ -87,6 +88,7 @@
     border: solid 1px @navGra20;
     padding: 1rem;
     margin-top: 1.5rem;
+    margin-bottom: 1rem;
 
     > :first-child {
       margin-right: 1rem;

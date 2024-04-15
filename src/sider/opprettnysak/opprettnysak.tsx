@@ -390,7 +390,6 @@ const OpprettNySak = ({
                 avbrytTekst="Avbryt"
                 redigerbart
                 spinner={bekreftPending}
-                autoDisableVedSpinner
               />
             </div>
           </Nav.Column>

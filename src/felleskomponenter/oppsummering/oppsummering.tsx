@@ -10,7 +10,6 @@ import * as Nav from "../../navFrontend";
 import * as Api from "../../services/api";
 import * as Ikoner from "../../resources/images";
 import * as Utils from "../../utils";
-import * as Mui from "../ui";
 
 import { fagsakSelectors } from "../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
@@ -251,15 +250,17 @@ const Oppsummering = ({
                     </Nav.Typo.Undertittel>
                   </Nav.Column>
                   <Nav.Column xs="4">
-                    <Mui.Knapp
-                      disabled={disableEndreKnapp}
-                      onClick={() => setSkalViseEndreModal(true)}
-                      mini
-                      className="hoyrestill endre-knapp"
-                    >
-                      <span>Endre</span>
-                      {disableEndreKnapp ? <Ikoner.BlyantDisabled /> : <Ikoner.BlyantActive />}
-                    </Mui.Knapp>
+                    <div className="knapp__container">
+                      <Nav.Button
+                        variant="secondary"
+                        size="small"
+                        disabled={disableEndreKnapp}
+                        onClick={() => setSkalViseEndreModal(true)}
+                        icon={disableEndreKnapp ? <Ikoner.BlyantDisabled /> : <Ikoner.BlyantActive />}
+                      >
+                        Endre
+                      </Nav.Button>
+                    </div>
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>

@@ -111,8 +111,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
         <Nav.Column xs="6" className="fane__fot">
           <Mui.StegKnapper
             bekreftKnappProps={{
-              spinner: godkjenningPending,
-              autoDisableVedSpinner: true,
+              loading: godkjenningPending,
               disabled: !redigerbart,
               onClick: hovedknappClickHandler,
             }}

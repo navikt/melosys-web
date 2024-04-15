@@ -275,14 +275,14 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       )}
 
       {skalBeregneForelopigTrygdeavgift && (
-        <Nav.Knapp
+        <Nav.Button
+          variant="secondary"
           className="beregnKnapp"
           disabled={lagrePending || !redigerbart || !stegErGyldig || isValidating}
           onClick={handleBeregnTrygdeavgift}
-          mini
         >
           Beregn foreløpig trygdeavgift
-        </Nav.Knapp>
+        </Nav.Button>
       )}
 
       <Feilmelding type={aktivFeilmeldingType} />

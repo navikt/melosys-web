@@ -438,8 +438,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       )}
       <Mui.StegKnapper
         bekreftKnappProps={{
-          spinner: vedtakPending,
-          autoDisableVedSpinner: true,
+          loading: vedtakPending,
           disabled: !stegErGyldig,
           htmlType: "submit",
         }}

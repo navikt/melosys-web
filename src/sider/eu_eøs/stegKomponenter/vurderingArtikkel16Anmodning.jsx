@@ -585,8 +585,7 @@ class VurderingArtikkel16Anmodning extends Component {
             <Mui.StegKnapper
               bekreftTekst="Send brevene"
               bekreftKnappProps={{
-                spinner: anmodningPending,
-                autoDisableVedSpinner: true,
+                loading: anmodningPending,
                 disabled: !redigerbart || harFeil,
                 onClick: validerOgLagreBehandling,
               }}

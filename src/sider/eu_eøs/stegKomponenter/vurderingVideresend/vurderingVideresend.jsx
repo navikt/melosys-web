@@ -96,7 +96,12 @@ export const VurderingVideresend = ({
         {redigerbart && (
           <Nav.Row>
             <Nav.Column xs="6">
-              <VedleggTable valgteVedlegg={valgteVedlegg} label="Vedlegg til SED" setValgteVedlegg={setValgteVedlegg} />
+              <VedleggTable
+                valgteVedlegg={valgteVedlegg}
+                label="Vedlegg til SED"
+                setValgteVedlegg={setValgteVedlegg}
+                redigerbart={redigerbart}
+              />
               <VedleggVelger
                 valgteVedlegg={valgteVedlegg}
                 onChange={setValgteVedlegg}
@@ -110,8 +115,7 @@ export const VurderingVideresend = ({
           <Nav.Column xs="6" className="fane__fot">
             <Mui.StegKnapper
               bekreftKnappProps={{
-                spinner: videresendPending,
-                autoDisableVedSpinner: true,
+                loading: videresendPending,
                 disabled: !redigerbart,
                 htmlType: "submit",
               }}

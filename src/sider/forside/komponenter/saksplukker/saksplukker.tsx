@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useState } from "react";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -132,7 +132,8 @@ export const Saksplukker = ({
     }
   };
 
-  const nullstill = () => {
+  const nullstill = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setVisIngenOppgaveFunnetAlert(false);
     nullstillForm();
   };
@@ -182,10 +183,12 @@ export const Saksplukker = ({
           </Nav.Row>
         )}
         <Nav.Row className="saksplukker__knapperad">
-          <Nav.Knapp className="saksplukker__knapp">Behandle sak</Nav.Knapp>
-          <Nav.Flatknapp htmlType="button" onClick={nullstill}>
-            Nullstill
-          </Nav.Flatknapp>
+          <Nav.Column xs="12">
+            <Nav.Button variant="secondary">Behandle sak</Nav.Button>
+            <Nav.Button variant="tertiary" onClick={nullstill}>
+              Nullstill
+            </Nav.Button>
+          </Nav.Column>
         </Nav.Row>
       </form>
     </Nav.Panel>

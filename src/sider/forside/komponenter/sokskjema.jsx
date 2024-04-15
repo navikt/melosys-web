@@ -49,7 +49,9 @@ class SokSkjema extends Component {
           placeholder="F.nr./d-nr./saksnr."
         />
 
-        <Nav.Knapp className="sokeskjema__knapp">Søk</Nav.Knapp>
+        <div className="sokeskjema__knapp">
+          <Nav.Button variant="secondary">Søk</Nav.Button>
+        </div>
       </form>
     );
   }

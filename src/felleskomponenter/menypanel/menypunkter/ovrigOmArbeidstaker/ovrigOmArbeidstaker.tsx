@@ -65,9 +65,9 @@ const OvrigOmArbeidstaker = ({
               </Mui.Lenkeknapp>
             )}
             {status === Status.Redigerer && (
-              <Mui.Knapp onClick={lagreHandler} capitalCase disabled={!redigerbart} type="hoved">
+              <Nav.Button onClick={lagreHandler} disabled={!redigerbart} variant="primary" size="small">
                 Lagre
-              </Mui.Knapp>
+              </Nav.Button>
             )}
           </Nav.Column>
         </Nav.Row>

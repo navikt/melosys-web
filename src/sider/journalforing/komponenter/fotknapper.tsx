@@ -1,4 +1,4 @@
-import * as Mui from "../../../felleskomponenter/ui";
+import * as Nav from "../../../navFrontend";
 
 import "./fotknapper.css";
 
@@ -9,12 +9,18 @@ interface FotknapperProps {
 
 const Fotknapper = ({ avbrytJournalforing, spinner = false }: FotknapperProps) => (
   <div className="fotknapper">
-    <Mui.Knapp type="hoved" htmlType="submit" spinner={spinner} autoDisableVedSpinner>
+    <Nav.Button variant="primary" loading={spinner}>
       Journalfør
-    </Mui.Knapp>
-    <Mui.Knapp type="flat" className="fotknapper__avbryt" onClick={avbrytJournalforing}>
+    </Nav.Button>
+    <Nav.Button
+      variant="tertiary"
+      onClick={(e) => {
+        e.preventDefault();
+        avbrytJournalforing();
+      }}
+    >
       Avbryt
-    </Mui.Knapp>
+    </Nav.Button>
   </div>
 );
 

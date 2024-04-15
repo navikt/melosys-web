@@ -201,8 +201,8 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
       {innvilgelsesResultatErUNNTAK && sakstype === EU_EOS && (
         <Nav.Row>
-          <Nav.Column xs="10" className="unntakHjelpetekst">
-            <Nav.Tag variant="info" size="small">
+          <Nav.Column xs="12" className="unntakHjelpetekst">
+            <Nav.Alert variant="info" size="small">
               <ul>
                 <li>Opprett LA_BUC_01 i &quot;Opprett ny BUC&quot;-menyen</li>
                 <li>Fyll ut og send A001 direkte i Rina</li>
@@ -213,7 +213,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
               <p>
                 Når du får svar fra utenlandsk trygdemyndighet, må du endre valget på dette steget, og fatte vedtak.
               </p>
-            </Nav.Tag>
+            </Nav.Alert>
           </Nav.Column>
         </Nav.Row>
       )}
@@ -224,8 +224,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         bekreftKnappProps={{
           onClick: bekreft,
           disabled: !formState?.isValid || !redigerbart || formValues?.innvilgelsesResultat !== INNVILGET,
-          autoDisableVedSpinner: true,
-          spinner: lagreLovvalgsperiodePending,
+          loading: lagreLovvalgsperiodePending,
         }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
