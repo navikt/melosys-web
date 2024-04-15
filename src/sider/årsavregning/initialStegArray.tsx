@@ -4,9 +4,9 @@ import { VurderingVedtak } from "./stegKomponenter/vurderingVedtak/vurderingVedt
 
 const initialInngangSteg = {
   id: "Inngang",
-  tittel: "Inngang",
+  tittel: "Årsavregning",
   stegPosisjon: 0,
-  status: FANE_STATUS.UBEHANDLET,
+  status: FANE_STATUS.AKTIV,
   aktivtSteg: true,
   vedtakSteg: false,
   komponent: VurderingInngang,
