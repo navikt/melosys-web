@@ -118,7 +118,9 @@ const AnnenBehandlingOppfriskes = ({ avbryt }) => (
       før du starter å oppdatere denne.
     </Nav.Alert>
     <div className="knapperadcontainer">
-      <Nav.Knapp onClick={avbryt}>Lukk</Nav.Knapp>
+      <Nav.Button variant="primary" onClick={avbryt}>
+        Lukk
+      </Nav.Button>
     </div>
   </div>
 );

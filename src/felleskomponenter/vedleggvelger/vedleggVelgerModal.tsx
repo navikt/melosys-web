@@ -43,7 +43,9 @@ const VedleggVelgerModal = ({
         leggTilVedlegg={leggTilVedlegg}
         slettVedlegg={slettVedlegg}
       />
-      <Nav.Hovedknapp onClick={onRequestClose}>Lukk</Nav.Hovedknapp>
+      <Nav.Button variant="primary" onClick={onRequestClose}>
+        Lukk
+      </Nav.Button>
     </Nav.Modal>
   );
 };

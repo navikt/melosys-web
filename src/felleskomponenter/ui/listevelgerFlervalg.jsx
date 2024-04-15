@@ -29,9 +29,15 @@ const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatF
   return (
     <div className="listevelgerFlervalg__linje">
       <div className="listevelgerFlervalg__innhold">{element}</div>
-      <Nav.Knapp mini disabled={disabled} className="listevelgerFlervalg__linje__knapp" onClick={slettElement}>
+      <Nav.Button
+        variant="secondary"
+        size="small"
+        disabled={disabled}
+        className="listevelgerFlervalg__linje__knapp"
+        onClick={slettElement}
+      >
         Fjern
-      </Nav.Knapp>
+      </Nav.Button>
     </div>
   );
 };
@@ -203,14 +209,15 @@ class ListevelgerFlervalg extends Component {
             className="listevelgerFlervalg__linje__input"
             disabled={disabled}
           />
-          <Nav.Knapp
-            mini
+          <Nav.Button
+            variant="secondary"
+            size="small"
             className="listevelgerFlervalg__linje__knapp listevelgerFlervalg__linje__knapp--leggtil"
             onClick={this.leggValgTilListe}
             disabled={disabled}
           >
             Legg til
-          </Nav.Knapp>
+          </Nav.Button>
         </div>
         <datalist id={datalistID}>
           {muligeValg.map((valg) => (

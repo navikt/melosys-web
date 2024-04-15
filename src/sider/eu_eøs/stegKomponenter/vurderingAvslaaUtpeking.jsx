@@ -115,8 +115,7 @@ const VurderingAvslaaUtpeking = ({
       )}
       <Mui.StegKnapper
         bekreftKnappProps={{
-          spinner: avslagPending,
-          autoDisableVedSpinner: true,
+          loading: avslagPending,
           disabled: !redigerbart,
           htmlType: "submit",
         }}

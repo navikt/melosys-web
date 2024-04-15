@@ -39,22 +39,42 @@ exports[`slettFritekstvedleggModal > snapshot test 1`] = `
       <div
         className="row"
       >
-        <button
-          className="knapp knapp--hoved knapp--mini"
-          disabled={false}
-          onClick={[MockFunction spy]}
-          type="submit"
+        <div
+          className="container__knapperad"
         >
-          Ja, slett
-        </button>
-        <button
-          className="knapp knapp--flat knapp--mini"
-          disabled={false}
-          onClick={[MockFunction spy]}
-          type="submit"
-        >
-          Avbryt
-        </button>
+          <button
+            className="navds-button navds-button--primary navds-button--small"
+            onClick={[MockFunction spy]}
+            style={
+              {
+                "width": undefined,
+              }
+            }
+          >
+            <span
+              aria-live="polite"
+              className="navds-label navds-label--small"
+            >
+              Ja, slett
+            </span>
+          </button>
+          <button
+            className="navds-button navds-button--tertiary navds-button--small"
+            onClick={[MockFunction spy]}
+            style={
+              {
+                "width": undefined,
+              }
+            }
+          >
+            <span
+              aria-live="polite"
+              className="navds-label navds-label--small"
+            >
+              Avbryt
+            </span>
+          </button>
+        </div>
       </div>
     </section>
     <button

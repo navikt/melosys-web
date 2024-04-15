@@ -432,8 +432,7 @@ const Saksopplysninger = ({
                 <Nav.Column xs="3">
                   <Mui.StegKnapper
                     bekreftKnappProps={{
-                      spinner: registreringPending,
-                      autoDisableVedSpinner: true,
+                      loading: registreringPending,
                       onClick: () => submitRegistrering(),
                       disabled: !harValgtIkkeGodkjenn && (!redigerbart || harUnntaksperiodefeil),
                       htmlType: "submit",

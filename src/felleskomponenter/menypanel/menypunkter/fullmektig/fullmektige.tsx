@@ -262,11 +262,6 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
 
   return (
     <div className="fullmektige">
-      {visEndreKnapp && (
-        <Nav.Knapp className="endre_knapp" onClick={() => setRedigerer(true)} mini>
-          Endre/Legg til ny
-        </Nav.Knapp>
-      )}
       {Utils._isEmpty(formValues.fullmektige) && (
         <div className="ingenFullmektigRegistrert">Ingen fullmektig registrert</div>
       )}
@@ -303,24 +298,25 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
           Du kan ikke ha en fullmektig uten fullmakt.
         </Nav.Alert>
       )}
+      {visEndreKnapp && (
+        <Nav.Button variant="secondary" className="endre_knapp" onClick={() => setRedigerer(true)}>
+          Endre/Legg til ny
+        </Nav.Button>
+      )}
       {redigerer && (
         <div>
-          <Nav.Hovedknapp
-            onClick={() => handleLagre(true)}
-            className="lagre_knapp"
-            spinner={pending}
-            autoDisableVedSpinner
-          >
+          <Nav.Button className="lagre_knapp" variant="primary" onClick={() => handleLagre(true)} loading={pending}>
             Lagre
-          </Nav.Hovedknapp>
-          <Nav.Flatknapp
+          </Nav.Button>
+          <Nav.Button
+            variant="tertiary"
             onClick={() => {
               setRedigerer(false);
               initializeFullmektige();
             }}
           >
             Avbryt
-          </Nav.Flatknapp>
+          </Nav.Button>
         </div>
       )}
 

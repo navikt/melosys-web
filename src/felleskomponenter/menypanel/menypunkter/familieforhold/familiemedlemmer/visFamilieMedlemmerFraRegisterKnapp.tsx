@@ -16,13 +16,13 @@ const VisFamilieMedlemmerFraRegisterKnapp = ({ onClick }: VisFamilieMedlemmerFra
       <Nav.Row>
         <Tags.FraRegister className={familiemedlemmerClassName.element("fra-register-etikett")} />
       </Nav.Row>
-      <Nav.Hovedknapp
+      <Nav.Button
+        variant="primary"
         className={familiemedlemmerClassName.element("vis-familieforhold-knapp")}
-        mini
         onClick={() => onClick(true)}
       >
         Vis familieforhold fra register
-      </Nav.Hovedknapp>
+      </Nav.Button>
     </div>
   );
 };

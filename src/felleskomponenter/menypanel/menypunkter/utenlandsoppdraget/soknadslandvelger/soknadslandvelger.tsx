@@ -40,6 +40,10 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
     }
   };
 
+  const avbryt = () => {
+    setStatus(Status.RedigeringUtfort);
+  };
+
   const soknadslandTekst = flereLandUkjentHvilke
     ? "Flere land. Ikke kjent hvilke."
     : Utils.streng.arrayTilKonjunksjon(
@@ -50,7 +54,7 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
     <div className="soknadslandvelger">
       <Nav.Typo.Normaltekst className="soknadsland__etikett">Land</Nav.Typo.Normaltekst>
       {redigerbart && status === Status.Redigerer ? (
-        <RedigererKomponent lagre={lagre} />
+        <RedigererKomponent lagre={lagre} avbryt={avbryt} />
       ) : (
         <div className="redigeringutfort-container">
           <Nav.Typo.Element>{soknadslandTekst}</Nav.Typo.Element>

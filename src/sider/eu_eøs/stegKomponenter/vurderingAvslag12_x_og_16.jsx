@@ -188,8 +188,7 @@ const VurderingAvslag12_x_og_16 = ({
       <Mui.StegKnapper
         bekreftTekst="Fatt vedtak"
         bekreftKnappProps={{
-          spinner: vedtakPending,
-          autoDisableVedSpinner: true,
+          loading: vedtakPending,
           disabled: !stegErGyldig,
           onClick: avslaa,
         }}

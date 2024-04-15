@@ -308,8 +308,7 @@ const VurderingVedtak = ({
           <Nav.Column xs="6" className="fane__fot">
             <Mui.StegKnapper
               bekreftKnappProps={{
-                spinner: vedtakPending,
-                autoDisableVedSpinner: true,
+                loading: vedtakPending,
                 disabled: !stegErGyldig,
                 onClick: onSubmit,
               }}

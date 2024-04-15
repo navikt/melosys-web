@@ -17,6 +17,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
 import { PERIODE_HJELPETEKST } from "./tekster";
 import lovvalgsperioderSchema from "./lovvalgsperioderSchema";
+import Knapperad from "../../../../felleskomponenter/knapperad";
 
 interface LovvalgsperiodeProps {
   kontrollerFerdigbehandling: () => void;
@@ -115,14 +116,15 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
               control={control}
             />
           </div>
-          <div className="datofelt_knapper">
-            <Nav.Hovedknapp mini disabled={!redigerbart || !formState.isValid} onClick={handleLagrePeriodeEndring}>
-              Lagre
-            </Nav.Hovedknapp>
-            <Nav.Flatknapp mini onClick={() => setVisPeriodeEndringFelter(false)}>
-              Avbryt
-            </Nav.Flatknapp>
-          </div>
+          <Knapperad
+            bekreft={handleLagrePeriodeEndring}
+            bekreftTekst="Lagre"
+            avbryt={() => setVisPeriodeEndringFelter(false)}
+            avbrytTekst="Avbryt"
+            redigerbart={redigerbart}
+            bekreftRedigerbart={redigerbart && formState.isValid}
+            size="small"
+          />
         </>
       ) : (
         <Nav.Typo.Normaltekst className="periode" tag="div">

@@ -1,5 +1,6 @@
 import { ElementType, MouseEventHandler } from "react";
 import classnames from "classnames";
+import * as Nav from "../../navFrontend";
 
 import "./ikonKnapp.css";
 
@@ -15,16 +16,16 @@ const IkonKnapp = ({ ikon: Ikon, onClick, ariaLabel, className, disabled }: Ikon
   const cls = classnames("ikon-knapp", className);
 
   return (
-    <button
+    <Nav.Button
       type="button"
+      variant="tertiary"
       aria-label={ariaLabel}
       title={ariaLabel}
       className={cls}
       disabled={disabled}
       onClick={onClick}
-    >
-      <Ikon className="ikon" />
-    </button>
+      icon={<Ikon className="ikon" />}
+    />
   );
 };
 

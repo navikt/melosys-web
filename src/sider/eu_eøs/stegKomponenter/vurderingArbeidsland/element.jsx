@@ -2,7 +2,6 @@ import { useState } from "react";
 import PT from "prop-types";
 
 import * as Nav from "../../../../navFrontend";
-import * as Mui from "../../../../felleskomponenter/ui";
 import * as Ikoner from "../../../../resources/images";
 
 import "./element.css";
@@ -26,14 +25,14 @@ const Element = ({ kode, term, onFjern, onAngreFjern, fjernbar, redigerbar, defa
       {fjernbar && (
         <Nav.Column xs="6">
           {!fjernet && (
-            <Mui.Knapp ikon={Ikoner.RemoveOne} disabled={!redigerbar} onClick={fjern}>
-              FJERN
-            </Mui.Knapp>
+            <Nav.Button variant="secondary" icon={<Ikoner.RemoveOne />} disabled={!redigerbar} onClick={fjern}>
+              Fjern
+            </Nav.Button>
           )}
           {fjernet && (
-            <Mui.Knapp ikon={Ikoner.AddOne} disabled={!redigerbar} onClick={angreFjern}>
-              ANGRE FJERN
-            </Mui.Knapp>
+            <Nav.Button variant="secondary" icon={<Ikoner.AddOne />} disabled={!redigerbar} onClick={angreFjern}>
+              Angre fjern
+            </Nav.Button>
           )}
         </Nav.Column>
       )}

@@ -136,21 +136,14 @@ const RedigererFullmektig = ({
 
         return (
           <div className="redigererFullmektig_container" key={fields[index].id}>
-            <Nav.Typo.Element className="ident_label">Org.nr. eller f.nr./d-nr.:</Nav.Typo.Element>
-            <span className="ident_input">
-              <Forms.Input
-                name={`fullmektige[${index}].ident`}
-                label=""
-                control={control}
-                onChange={(ident) => handleIdChange(ident, index)}
-                bredde="S"
-                feil={feil}
-              />
-            </span>
-            <Nav.Knapp className="slett_knapp" mini onClick={() => handleSlett(index)} htmlType="button">
-              <Ikoner.Bin aria-hidden className="slett_ikon" />
-              Slett fullmektig
-            </Nav.Knapp>
+            <Forms.Input
+              name={`fullmektige[${index}].ident`}
+              label="Org.nr. eller f.nr./d-nr.:"
+              control={control}
+              onChange={(ident) => handleIdChange(ident, index)}
+              bredde="S"
+              feil={feil}
+            />
 
             {adresse && <BrevAdresse className="adresse" {...adresse} visNavn />}
 
@@ -159,18 +152,20 @@ const RedigererFullmektig = ({
                 <Nav.Typo.Element className="overskrift_fullmakt">
                   Hvilke fullmakter har organisasjonen/personen
                 </Nav.Typo.Element>
-                {gyldigeFullmakter(type).map((fullmakt: KTObject) => (
-                  <Nav.Checkbox
-                    className="fullmakt"
-                    key={fullmakt.kode}
-                    value={fullmakt.kode}
-                    label={fullmakt.term}
-                    checked={fullmakter.includes(fullmakt.kode)}
-                    onChange={(event) => handleFullmaktChange(event.target.value, index, Boolean(manglerFullmakt))}
-                    disabled={fullmaktErDisabled(index, fullmakt.kode)}
-                    feil={Boolean(manglerFullmakt)}
-                  />
-                ))}
+                <div className="fullmakt__container">
+                  {gyldigeFullmakter(type).map((fullmakt: KTObject) => (
+                    <Nav.Checkbox
+                      className="fullmakt"
+                      key={fullmakt.kode}
+                      value={fullmakt.kode}
+                      label={fullmakt.term}
+                      checked={fullmakter.includes(fullmakt.kode)}
+                      onChange={(event) => handleFullmaktChange(event.target.value, index, Boolean(manglerFullmakt))}
+                      disabled={fullmaktErDisabled(index, fullmakt.kode)}
+                      feil={Boolean(manglerFullmakt)}
+                    />
+                  ))}
+                </div>
                 {manglerFullmakt && <SkjemaelementFeilmelding>{manglerFullmakt}</SkjemaelementFeilmelding>}
               </>
             )}
@@ -203,6 +198,17 @@ const RedigererFullmektig = ({
                 {kontaktOrgAdresse && <BrevAdresse {...kontaktOrgAdresse} visNavn />}
               </div>
             )}
+
+            <div className="knapperad">
+              <Nav.Button
+                variant="secondary"
+                size="small"
+                icon={<Ikoner.Bin aria-hidden className="slett_ikon" />}
+                onClick={() => handleSlett(index)}
+              >
+                Slett fullmektig
+              </Nav.Button>
+            </div>
           </div>
         );
       })}

@@ -388,9 +388,14 @@ const VurderingVedtak = ({
             {visTomEndringFelt ? (
               <span className={vurderingVedtakCls.element("datofelt")}>
                 <Skjema.Datovelger label="" feltNavn="lovvalgsperiodeTom" disabled={!redigerbart} />
-                <Nav.Hovedknapp mini disabled={!redigerbart || !periodeIsValid} onClick={handleLagreTomEndring}>
+                <Nav.Button
+                  variant="primary"
+                  size="small"
+                  disabled={!redigerbart || !periodeIsValid}
+                  onClick={handleLagreTomEndring}
+                >
                   Lagre
-                </Nav.Hovedknapp>
+                </Nav.Button>
               </span>
             ) : (
               Utils.dato.formatterDatoTilNorsk(formValues?.lovvalgsperiodeTom)
@@ -483,8 +488,7 @@ const VurderingVedtak = ({
         bekreftKnappProps={{
           onClick: fattVedtak,
           disabled: !stegErGyldig,
-          autoDisableVedSpinner: true,
-          spinner: vedtakPending,
+          loading: vedtakPending,
         }}
         bekreftTekst="Fatt vedtak"
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}

@@ -266,8 +266,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
         bekreftKnappProps={{
           onClick: handleBekreft,
           disabled: !stegErGyldig || !formIsValid,
-          autoDisableVedSpinner: true,
-          spinner: kontrollEllerVedtakPending,
+          loading: kontrollEllerVedtakPending,
         }}
         bekreftTekst="Fatt vedtak"
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}

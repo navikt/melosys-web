@@ -28,15 +28,17 @@ describe("Knapperad", () => {
     props.redigerbart = false;
     render(<Knapperad {...props} />);
 
-    expect(screen.getByText("bekrefttekst")).toBeDisabled();
-    expect(screen.getByText("avbryttekst")).toBeDisabled();
+    expect(screen.getAllByRole("button")).toHaveLength(2);
+    expect(screen.getByRole("button", { name: "bekrefttekst" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "avbryttekst" })).toBeDisabled();
   });
 
   it("bekreftRedigerbart-prop setter disabled korrekt", () => {
     props.bekreftRedigerbart = false;
     render(<Knapperad {...props} />);
 
-    expect(screen.getByText("bekrefttekst")).toBeDisabled();
-    expect(screen.getByText("avbryttekst")).toBeEnabled();
+    expect(screen.getAllByRole("button")).toHaveLength(2);
+    expect(screen.getByRole("button", { name: "bekrefttekst" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "avbryttekst" })).toBeEnabled();
   });
 });
