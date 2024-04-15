@@ -28,7 +28,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
+export const VurderingInngang = ({ bekreft, oppdaterStatus }: Props) => {
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const dispatch = useDispatch();
 
@@ -36,12 +36,10 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const periodeTom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeTomSelector));
   const søknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector)[0];
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
-  const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
-  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const behandlingUnderOppfriskning = useSelector(BehandlingUnderOppfriskningSelector);
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
-  const { control, watch, formState, trigger } = useForm({
+  const { formState } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
     mode: "all",
     defaultValues: {
@@ -50,53 +48,19 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       land: søknadsland,
     } as FieldValues,
   });
-  const formValues = watch();
 
-  const skalHenteRegisteropplysninger =
-    !registeropplysningerHentet ||
-    !Utils.dato.erLikeDatoer(formValues?.fom, periodeFom) ||
-    !Utils.dato.erLikeDatoer(formValues?.tom, periodeTom) ||
-    formValues?.land !== søknadsland;
-
-  const landUtenStøtteValgt =
-    sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE &&
-    (formValues.land === MKV.Koder.landkoder.FR || formValues.land === MKV.Koder.landkoder.IT);
-
-  const stegErGyldig =
-    formState?.isValid && !skalHenteRegisteropplysninger && !landUtenStøtteValgt && !behandlingUnderOppfriskning;
+  const stegErGyldig = formState?.isValid && !behandlingUnderOppfriskning;
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
-  const lagrePeriodeOgLand = async () => {
-    await Promise.all([
-      dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland([formValues.land], false)),
-      dispatch(
-        mottatteOpplysningerOperations.oppdaterPeriode({
-          fom: Utils.dato.formatterDatoTilISO(formValues.fom, ""),
-          tom: Utils.dato.formatterDatoTilISO(formValues.tom, ""),
-        })
-      ),
-    ]);
-  };
-
-  const innhentRegisteropplysninger = () => {
-    lagrePeriodeOgLand().finally(() => setVisOppfrisk(true));
-  };
-
   const bekreftOgFortsett = () => {
-    if (skalHenteRegisteropplysninger) {
-      innhentRegisteropplysninger();
-    } else {
-      bekreft();
-    }
+    bekreft();
   };
-
-  if (!aktivtSteg) return null;
 
   return (
-    <div className="vurderingInngang_ikkeYrkesaktiv">
+    <div className="vurderingInngang">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
 
       <Mui.StegKnapper
@@ -113,9 +77,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           lukk={() => {
             setVisOppfrisk(false);
             dispatch(menypanelOperations.visMenypanel());
-            if (!landUtenStøtteValgt) {
-              bekreft();
-            }
+            bekreft();
           }}
           tilForsiden={() => {
             setVisOppfrisk(false);
