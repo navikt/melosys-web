@@ -14,7 +14,7 @@ import OpprettNySak from "./sider/opprettnysak";
 import VurderUtpeking from "./sider/eu_eøs/vurderutpeking";
 import Sendbrev from "./sider/sendbrev";
 import IkkeYrkesaktiv from "./sider/ikkeYrkesaktiv/saksbehandling";
-import Årsavregning from "./sider/aarsavregning/saksbehandling";
+import Årsavregning from "./sider/årsavregning/saksbehandling";
 import Unntaksregistrering from "./sider/unntaksregistrering";
 import UkjentSide from "./sider/ukjentSide";
 
