@@ -7,9 +7,15 @@ import MKV from "../../../melosyskodeverk";
 
 import { Varsler, VurderingInngang } from "./vurderingInngang";
 
+vi.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: () => true,
+}));
+
 describe("Varsler", () => {
   const mockedProps = mock<ComponentProps<typeof Varsler>>();
   let props = instance(mockedProps);
+  const konvensjonmelding =
+    "Husk at du må vurdere om inngangsvilkårene i konvensjonen med Storbritannia av 30. juni 2023 er oppfylt.";
 
   beforeEach(() => {
     props = instance(mockedProps);
@@ -55,9 +61,8 @@ describe("Varsler", () => {
     ).toBeInTheDocument();
     expect(screen.getByText(MKV.Terms.begrunnelser.inngangsvilkaar.MANGLER_STATSBORGERSKAP)).toBeInTheDocument();
     expect(screen.getByText(MKV.Terms.begrunnelser.inngangsvilkaar.TEKNISK_FEIL)).toBeInTheDocument();
-    expect(
-      screen.getByText("Hvis inngangsvilkår ikke er oppfylt, må du henlegge saken som bortfalt (i behandlingsmenyen).")
-    ).toBeInTheDocument();
+    expect(screen.getByText("Du har to valg:")).toBeInTheDocument();
+    expect(screen.queryByText(konvensjonmelding)).toBeNull();
   });
 
   it("Viser feilmelding og hjelpetekst ved overstyrte inngangsvilkår", () => {
@@ -81,9 +86,29 @@ describe("Varsler", () => {
       screen.getByText("Søknaden oppfyller ikke inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.")
     ).toBeInTheDocument();
     expect(screen.getByText(MKV.Terms.begrunnelser.inngangsvilkaar.TEKNISK_FEIL)).toBeInTheDocument();
-    expect(
-      screen.getByText("Hvis inngangsvilkår er oppfylt, kan du fortsette behandlingen som normalt.")
-    ).toBeInTheDocument();
+    expect(screen.getByText("Du har to valg:")).toBeInTheDocument();
+    expect(screen.queryByText(konvensjonmelding)).toBeNull();
+  });
+
+  it("Viser konvensjonmelding ved overstyrte inngangsvilkår når land er GB og toggle er på og er utsendt behtema", () => {
+    props.oppfyllerInngangsvilkar = true;
+    props.inngangsvilkaar = {
+      ...props.inngangsvilkaar,
+      vilkaar: MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR,
+      oppfylt: true,
+      begrunnelseFritekst: null,
+      begrunnelseFritekstEngelsk: null,
+      begrunnelseKoder: [
+        MKV.Koder.begrunnelser.inngangsvilkaar.TEKNISK_FEIL,
+        MKV.Koder.begrunnelser.inngangsvilkaar.OVERSTYRT_AV_SAKSBEHANDLER,
+      ],
+    };
+    props.behandlingstema = MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER;
+    props.landkoder = ["GB"];
+
+    render(<Varsler {...props} />);
+
+    expect(screen.getByText(konvensjonmelding)).toBeInTheDocument();
   });
 
   it("Viser feilmelding ved manglende inngangsvilkår", () => {

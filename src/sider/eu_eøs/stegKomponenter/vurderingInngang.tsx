@@ -16,6 +16,8 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../ducks/vilkar";
 
 import "./vurderingInngang.css";
+import { useFeatureToggle } from "../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 
 const { OVERSTYRT_AV_SAKSBEHANDLER } = MKV.Koder.begrunnelser.inngangsvilkaar;
 
@@ -34,6 +36,7 @@ export const Varsler = ({
   behandlingstema,
   behandlingHarPeriodeOgLand,
 }: VarslerProps) => {
+  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
 
   const inngangsvilkaarErOverstyrtAvSaksbehandler =
@@ -77,6 +80,12 @@ export const Varsler = ({
 
   const flereSoknadslandEnnTillatt = landkoder.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
 
+  const visStorbritanniaKonvensjonTekst =
+    konvensjonStorbritanniaToggleEnabled &&
+    MKVUtils.erUtsendt(behandlingstema) &&
+    landkoder.length === 1 &&
+    landkoder[0] === MKV.Koder.landkoder.GB;
+
   return (
     <div className="vurderinginngang_eu_eos">
       <ul className="betingelser__liste">
@@ -96,12 +105,16 @@ export const Varsler = ({
       )}
       {inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
         <Nav.AlertStripe type="info" className="vurderinginngang_eu_eos__inngangsvilkaar-ikke-oppfylt-alertstripe">
+          {visStorbritanniaKonvensjonTekst && (
+            <p>
+              Husk at du må vurdere om inngangsvilkårene i konvensjonen med Storbritannia av 30. juni 2023 er oppfylt.
+            </p>
+          )}
           Du har to valg:
           <ul>
-            <li>Hvis inngangsvilkår ikke er oppfylt, må du henlegge saken som bortfalt (i behandlingsmenyen).</li>
-            <li>Hvis inngangsvilkår er oppfylt, kan du fortsette behandlingen som normalt.</li>
+            <li>Hvis inngangsvilkår ikke er oppfylt, må du avslutte saken fra behandlingsmenyen</li>
+            <li>Hvis inngangsvilkår er oppfylt, kan du fortsette behandlingen som normalt</li>
           </ul>
-          Ved behov kan du begrunne avgjørelsen i et notat.
         </Nav.AlertStripe>
       )}
     </div>
