@@ -4,13 +4,11 @@ import EtikettBase from "nav-frontend-etiketter";
 import { Column, Container, Row } from "nav-frontend-grid";
 import Hjelpetekst from "nav-frontend-hjelpetekst";
 import { Flatknapp, Hovedknapp, Knapp } from "nav-frontend-knapper";
-import Lesmerpanel from "nav-frontend-lesmerpanel";
 import Icons from "nav-frontend-ikoner-assets";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import Lenker from "nav-frontend-lenker";
 import Modal from "nav-frontend-modal";
 import Tekstomrade from "nav-frontend-tekstomrade";
-import Chevron from "nav-frontend-chevron";
 import { LenkepanelBase } from "nav-frontend-lenkepanel";
 import { PopoverOrientering } from "nav-frontend-popover";
 import { Alert } from "@navikt/ds-react";
@@ -53,13 +51,11 @@ export {
   Knapp,
   Hovedknapp,
   Flatknapp,
-  Lesmerpanel,
   NavFrontendSpinner,
   Icons as Ikoner,
   Lenker,
   Modal,
   Tekstomrade,
-  Chevron,
   LenkepanelBase,
   PopoverOrientering,
 };
