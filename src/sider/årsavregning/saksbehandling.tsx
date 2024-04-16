@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -27,20 +27,15 @@ import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
 import { kontrollOperations } from "../../ducks/kontroll";
+import { FellesHandlersContext } from "../../contexts";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
-  startOgVisOppfriskModal: () => void;
+  startOgVisOppfriskModal: (inkluderSiste5aar?: boolean | undefined) => void;
   visOppfriskModal: () => void;
 }
 
-const Saksbehandling = ({
-  behandlingOppfriskes,
-  startOgVisOppfriskModal,
-  visOppfriskModal,
-  match,
-  location,
-}: Props) => {
+const Saksbehandling = ({ match, location }: Props) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
 
@@ -56,6 +51,8 @@ const Saksbehandling = ({
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
   const menypanelSynlig = useSelector(menypanelSelectors.MenypanelSynligSelector);
+
+  const { startOgVisOppfriskModal, visOppfriskModal, behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
