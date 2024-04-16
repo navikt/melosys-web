@@ -1,4 +1,3 @@
-import Ekspanderbartpanel from "nav-frontend-ekspanderbartpanel";
 import Panel from "nav-frontend-paneler";
 import EtikettBase from "nav-frontend-etiketter";
 import { Column, Container, Row } from "nav-frontend-grid";
@@ -43,7 +42,6 @@ export {
   Input,
   InputProps,
   Textarea,
-  Ekspanderbartpanel,
   Panel,
   EtikettBase,
   Hjelpetekst,

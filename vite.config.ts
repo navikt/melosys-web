@@ -79,9 +79,6 @@ export default defineConfig({
   resolve: {
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
-      "nav-frontend-ekspanderbartpanel-style": fileURLToPath(
-        new URL("./src/nav-style/ekspanderbartpanel.css", import.meta.url)
-      ),
       "nav-frontend-etiketter-style": fileURLToPath(new URL("./src/nav-style/etiketter.css", import.meta.url)),
       "nav-frontend-grid-style": fileURLToPath(new URL("./src/nav-style/grid.css", import.meta.url)),
       "nav-frontend-hjelpetekst-style": fileURLToPath(new URL("./src/nav-style/hjelpetekst.css", import.meta.url)),
