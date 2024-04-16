@@ -50,7 +50,6 @@ const Saksbehandling = ({ match, location }: Props) => {
   );
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
-  const menypanelSynlig = useSelector(menypanelSelectors.MenypanelSynligSelector);
 
   const { startOgVisOppfriskModal, visOppfriskModal, behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
@@ -111,9 +110,7 @@ const Saksbehandling = ({ match, location }: Props) => {
   });
 
   useEffect(() => {
-    if (registeropplysningerHentet && !menypanelSynlig) {
-      dispatch(menypanelOperations.visMenypanel());
-    }
+    dispatch(menypanelOperations.visMenypanel());
   }, [registeropplysningerHentet]);
 
   if (Utils._isNil(redigerbart)) return null;
