@@ -1,5 +1,4 @@
 import { screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
 
