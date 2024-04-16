@@ -23,12 +23,9 @@ import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { dokumenterOperations } from "../../ducks/dokumenter";
 import { menypanelOperations, menypanelSelectors } from "../../ducks/menypanel";
 
-import { vilkarOperations } from "../../ducks/vilkar";
-
 import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import { kontrollOperations } from "../../ducks/kontroll";
 
 interface Props extends RouteComponentProps<MatchParams> {
@@ -56,7 +53,6 @@ const Saksbehandling = ({
   const mottatteOpplysningerPeriodeTom = useSelector((state) =>
     Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).tom)
   );
-  const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
   const menypanelSynlig = useSelector(menypanelSelectors.MenypanelSynligSelector);
@@ -91,7 +87,6 @@ const Saksbehandling = ({
 
       await dispatch(mottatteOpplysningerOperations.hent(behandlingId));
       await dispatch(dokumenterOperations.hentDokumentOversikt(saksnr));
-      await dispatch(lovvalgsperioderOperations.hent(behandlingId));
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
@@ -104,13 +99,13 @@ const Saksbehandling = ({
 
     return () => {
       dispatch(fagsakOperations.resetFagsakState());
-      dispatch(vilkarOperations.resetState());
       dispatch(behandlingerOperations.resetBehandlingerState());
       dispatch(behandlingsresultatOperations.resetBehandlingsresultatState());
       dispatch(mottatteOpplysningerOperations.resetState());
       dispatch(feiletResponsOperations.resetFeiletRespons());
       dispatch(menypanelOperations.skjulMenypanel());
       dispatch(kontrollOperations.resetKontrollFeil());
+      dispatch(dokumenterOperations.resetDokument());
     };
   }, []);
 
@@ -146,8 +141,6 @@ const Saksbehandling = ({
                   arbeidsland={MKV.KTObjects.land_iso2.filter((landkodeObjekt: KTObject) =>
                     land.includes(landkodeObjekt.kode)
                   )}
-                  lovvalgsperiodeFom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato, false, "")}
-                  lovvalgsperiodeTom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato, false, "")}
                   mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
                   mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
                 />

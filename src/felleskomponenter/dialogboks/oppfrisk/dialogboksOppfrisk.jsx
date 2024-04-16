@@ -128,7 +128,7 @@ AnnenBehandlingOppfriskes.propTypes = {
 };
 
 const DialogboksOppfriskBehandling = ({ avbryt, lukk, tilForsiden, oppfrisk, ariaHideApp, bekreftetFraStart }) => {
-  const { behandlingOppfriskes, annenBehandlingOppfriskes } = useContext(FellesHandlersContext);
+  const { behandlingOppfriskes, annenBehandlingOppfriskes } = useContext(FellesHandlersContext); // TODO bruk denne
   const [bekreftet, setBekreftet] = useState(bekreftetFraStart || behandlingOppfriskes);
 
   return (

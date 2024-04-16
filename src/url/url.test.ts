@@ -56,7 +56,7 @@ describe("url", () => {
       expect(url).toContain("/FTRL/saksbehandling/");
     });
 
-    it("FTRL behandlinger med behandlinsType årsavregning returnerer url", () => {
+    it("FTRL behandlinger med behandlingstype årsavregning returnerer url", () => {
       const url = lagUrl(
         "MEL-1",
         1,

@@ -27,10 +27,9 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
 
-  const lovvalgsperiodeErValid = useState(true);
   const [kontrollEllerVedtakPending, setKontrollEllerVedtakPending] = useState(false);
   const harIngenFeilmeldinger = Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
-  const stegErGyldig: boolean = redigerbart && lovvalgsperiodeErValid && harIngenFeilmeldinger;
+  const stegErGyldig: boolean = redigerbart && harIngenFeilmeldinger;
 
   const kontrollerFerdigbehandling = async () => {
     setKontrollEllerVedtakPending(true);
@@ -67,7 +66,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   };
 
   return (
-    <div className="vurderingVedtakIkkeYrkesaktiv">
+    <div className="vurderingVedtakÅrsavregning">
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: handleBekreft,
