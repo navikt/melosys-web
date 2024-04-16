@@ -80,7 +80,6 @@ export default defineConfig({
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
       "nav-frontend-alertstriper-style": fileURLToPath(new URL("./src/nav-style/alertstriper.css", import.meta.url)),
-      "nav-frontend-chevron-style": fileURLToPath(new URL("./src/nav-style/chevron.css", import.meta.url)),
       "nav-frontend-ekspanderbartpanel-style": fileURLToPath(
         new URL("./src/nav-style/ekspanderbartpanel.css", import.meta.url)
       ),
@@ -90,7 +89,6 @@ export default defineConfig({
       "nav-frontend-knapper-style": fileURLToPath(new URL("./src/nav-style/knapper.css", import.meta.url)),
       "nav-frontend-lenkepanel-style": fileURLToPath(new URL("./src/nav-style/lenkepanel.css", import.meta.url)),
       "nav-frontend-lenker-style": fileURLToPath(new URL("./src/nav-style/lenker.css", import.meta.url)),
-      "nav-frontend-lesmerpanel-style": fileURLToPath(new URL("./src/nav-style/lesmerpanel.css", import.meta.url)),
       "nav-frontend-lukknapp-style": fileURLToPath(new URL("./src/nav-style/lukknapp.css", import.meta.url)),
       "nav-frontend-modal-style": fileURLToPath(new URL("./src/nav-style/modal.css", import.meta.url)),
       "nav-frontend-paneler-style": fileURLToPath(new URL("./src/nav-style/paneler.css", import.meta.url)),

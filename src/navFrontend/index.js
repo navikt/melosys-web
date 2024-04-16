@@ -4,15 +4,13 @@ import AlertStripe, { AlertStripeAdvarsel, AlertStripeInfo, AlertStripeFeil } fr
 import EtikettBase from "nav-frontend-etiketter";
 import { Container, Row, Column } from "nav-frontend-grid";
 import Hjelpetekst from "nav-frontend-hjelpetekst";
-import { Knapp, Hovedknapp, Flatknapp } from "nav-frontend-knapper";
-import Lesmerpanel from "nav-frontend-lesmerpanel";
+import { Flatknapp, Hovedknapp, Knapp } from "nav-frontend-knapper";
 import Icons from "nav-frontend-ikoner-assets";
 import Stegindikator from "nav-frontend-stegindikator";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import Lenker from "nav-frontend-lenker";
 import Modal from "nav-frontend-modal";
 import Tekstomrade from "nav-frontend-tekstomrade";
-import Chevron from "nav-frontend-chevron";
 import { LenkepanelBase } from "nav-frontend-lenkepanel";
 import { PopoverOrientering } from "nav-frontend-popover";
 import { Xknapp } from "nav-frontend-ikonknapper";
@@ -58,14 +56,12 @@ export {
   Knapp,
   Hovedknapp,
   Flatknapp,
-  Lesmerpanel,
   Stegindikator,
   NavFrontendSpinner,
   Icons as Ikoner,
   Lenker,
   Modal,
   Tekstomrade,
-  Chevron,
   LenkepanelBase,
   PopoverOrientering,
   Xknapp,
