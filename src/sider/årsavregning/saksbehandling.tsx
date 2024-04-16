@@ -18,15 +18,13 @@ import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from ".
 import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { fagsakOperations } from "../../ducks/fagsaker";
-import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { dokumenterOperations } from "../../ducks/dokumenter";
-import { menypanelOperations, menypanelSelectors } from "../../ducks/menypanel";
+import { menypanelOperations } from "../../ducks/menypanel";
 
 import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import "./saksbehandling.css";
-import { kontrollOperations } from "../../ducks/kontroll";
 import { FellesHandlersContext } from "../../contexts";
 
 interface Props extends RouteComponentProps<MatchParams> {
@@ -98,9 +96,7 @@ const Saksbehandling = ({ match, location }: Props) => {
       dispatch(behandlingerOperations.resetBehandlingerState());
       dispatch(behandlingsresultatOperations.resetBehandlingsresultatState());
       dispatch(mottatteOpplysningerOperations.resetState());
-      dispatch(feiletResponsOperations.resetFeiletRespons());
       dispatch(menypanelOperations.skjulMenypanel());
-      dispatch(kontrollOperations.resetKontrollFeil());
       dispatch(dokumenterOperations.resetDokument());
     };
   }, []);
