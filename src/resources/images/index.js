@@ -81,6 +81,8 @@ import { ReactComponent as VedtakUbehandlet } from "./ikon-vedtak-ubehandlet.svg
 import { ReactComponent as Ukjentkjoenn } from "./ikon-ukjentkjonn.svg";
 import { ReactComponent as Kopier } from "./file-copy.svg";
 import { ReactComponent as HentOpplysninger } from "./folder-add.svg";
+import { ReactComponent as ChevronDown } from "./chevron-down.svg";
+import { ReactComponent as ChevronUp } from "./chevron-up.svg";
 import { Kjoenn } from "./helpercomponents";
 
 export {
@@ -168,4 +170,6 @@ export {
   FerdigAktiv,
   UbehandletAktiv,
   VedtakGodkjentIkkeAktiv,
+  ChevronDown,
+  ChevronUp,
 };

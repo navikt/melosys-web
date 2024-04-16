@@ -140,14 +140,14 @@ const Arbeidssteder = ({ redigerbart, visArbeidsforholdRolleEtiketter, behandlin
     </>
   );
 
-  const flereLandUkjentHvilkeValgtAlertstripe = (
-    <Nav.AlertStripe type="info">
+  const flereLandUkjentHvilkeValgtAlert = (
+    <Nav.Alert variant="info">
       Ikke mulig å legge til arbeidssted(er) når det ikke er oppgitt land. Du kan endre dette under sidemenypunkt
       “Periode og land”.
-    </Nav.AlertStripe>
+    </Nav.Alert>
   );
 
-  const arbeidssteder = flereLandUkjentHvilke ? flereLandUkjentHvilkeValgtAlertstripe : arbeidsstederLister;
+  const arbeidssteder = flereLandUkjentHvilke ? flereLandUkjentHvilkeValgtAlert : arbeidsstederLister;
 
   return (
     <div className="arbeidssteder">

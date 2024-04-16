@@ -291,10 +291,16 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />
       )}
 
-      {visFeilFraLagring && <Nav.AlertStripeFeil className="infomelding">{feil}</Nav.AlertStripeFeil>}
+      {visFeilFraLagring && (
+        <Nav.Alert variant="error" className="infomelding">
+          {feil}
+        </Nav.Alert>
+      )}
 
       {!skalBeregneForelopigTrygdeavgift && stegErGyldig && (
-        <Nav.AlertStripeInfo className="infomelding">Trygdeavgift skal ikke betales til NAV</Nav.AlertStripeInfo>
+        <Nav.Alert variant="info" className="infomelding">
+          Trygdeavgift skal ikke betales til NAV
+        </Nav.Alert>
       )}
 
       <Mui.StegKnapper

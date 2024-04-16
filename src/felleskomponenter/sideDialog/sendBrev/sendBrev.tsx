@@ -4,7 +4,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
-import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
 import { FysiskDokument } from "Domene";
 import { ColumnWidth } from "nav-frontend-grid";
 
@@ -496,9 +495,9 @@ const SendBrev = ({
       )}
 
       {muligeMottakereFeil && (
-        <Nav.AlertStripe type="advarsel" className="varsel">
+        <Nav.Alert variant="warning" className="varsel">
           {muligeMottakereFeil}
-        </Nav.AlertStripe>
+        </Nav.Alert>
       )}
 
       {!valgtMottakerHarFeilmelding && (
@@ -555,11 +554,15 @@ const SendBrev = ({
       </div>
 
       {brevSendt && (
-        <AlertStripeSuksess className="brev_sendt">
+        <Nav.Alert variant="success" className="brev_sendt">
           Brevet er bestilt. Det kan ta noe tid før brevet vises i dokumentlisten.
-        </AlertStripeSuksess>
+        </Nav.Alert>
       )}
-      {feil && <AlertStripeFeil className="brev_sendt">{feil}</AlertStripeFeil>}
+      {feil && (
+        <Nav.Alert variant="error" className="brev_sendt">
+          {feil}
+        </Nav.Alert>
+      )}
     </div>
   );
 };

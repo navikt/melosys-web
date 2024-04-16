@@ -299,7 +299,9 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
         </Mui.Lenkeknapp>
       )}
       {visFeilFullmektigHarIkkeFullmakter && (
-        <Nav.AlertStripeFeil className="varselstripe">Du kan ikke ha en fullmektig uten fullmakt.</Nav.AlertStripeFeil>
+        <Nav.Alert variant="error" className="varselstripe">
+          Du kan ikke ha en fullmektig uten fullmakt.
+        </Nav.Alert>
       )}
       {redigerer && (
         <div>

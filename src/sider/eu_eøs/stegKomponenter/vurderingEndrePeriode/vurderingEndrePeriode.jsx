@@ -282,11 +282,11 @@ class VurderingEndrePeriode extends Component {
           <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={vedKlikkPdf} />
         )}
         {vedtakFeilmelding && (
-          <Nav.AlertStripe className="vedtakfeilmelding" type="feil">
+          <Nav.Alert className="vedtakfeilmelding" variant="error">
             {vedtakFeilmelding}
-          </Nav.AlertStripe>
+          </Nav.Alert>
         )}
-        {redigerbart && <Nav.AlertStripeInfo>{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.AlertStripeInfo>}
+        {redigerbart && <Nav.Alert variant="info">{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.Alert>}
         <Mui.StegKnapper
           bekreftKnappProps={{
             spinner: endringPending,

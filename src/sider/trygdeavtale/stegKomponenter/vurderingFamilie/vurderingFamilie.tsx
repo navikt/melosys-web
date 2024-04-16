@@ -155,9 +155,9 @@ const VurderingFamilie = ({
 
       {Utils._isEmpty(tilknyttedeBarn) && !tilknyttetEktefelle ? (
         <div>
-          <Nav.AlertStripe className="alertstripe" type="suksess">
+          <Nav.Alert className="alertstripe" variant="success">
             Ingen medfølgende familiemedlemmer.
-          </Nav.AlertStripe>
+          </Nav.Alert>
           <span>{OBS_TEKST}</span>
         </div>
       ) : (

@@ -15,13 +15,13 @@ const UkjentSide = ({ location }) => {
   // eslint-disable-next-line no-console
   console.error(logdata);
   return (
-    <Nav.AlertStripe type="feil" className="ukjentSide">
+    <Nav.Alert variant="error" className="ukjentSide">
       <Nav.Typo.Systemtittel>Denne siden finnes ikke: &quot;{location.pathname}&quot;.</Nav.Typo.Systemtittel>
       <p>Dersom du ble sendt hit fra Gosys eller et annet Nav-system, ta kontakt med driftsansvarlig.</p>
       <Nav.Lenker href="/" ariaLabel="Navigasjonslink tilbake til forsiden">
         Klikk her for å gå tilbake til forsiden
       </Nav.Lenker>
-    </Nav.AlertStripe>
+    </Nav.Alert>
   );
 };
 

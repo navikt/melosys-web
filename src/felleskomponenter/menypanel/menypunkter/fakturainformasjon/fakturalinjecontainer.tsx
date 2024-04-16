@@ -19,10 +19,10 @@ export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeContainerProps) =
       </div>
       <div className="fakturalinje">
         {!faktura.eksternFakturaNummer && (
-          <Nav.AlertStripeInfo>
+          <Nav.Alert variant="info">
             Fakturanummer er bare kjent i Melosys når det gjelder en manglende innbetaling, du kan likevel finne faktura
             i OeBS ved å søke på bruker
-          </Nav.AlertStripeInfo>
+          </Nav.Alert>
         )}
       </div>
 

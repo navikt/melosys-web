@@ -213,9 +213,9 @@ const Saksopplysninger = ({
     return (
       <Nav.Row className="seksjon">
         <Nav.Column xs="8">
-          <Nav.AlertStripe className="feilmelding" type="advarsel">
+          <Nav.Alert className="feilmelding" variant="warning">
             {durationWarningMessage}
-          </Nav.AlertStripe>
+          </Nav.Alert>
         </Nav.Column>
       </Nav.Row>
     );
@@ -383,9 +383,9 @@ const Saksopplysninger = ({
                 </Nav.Column>
                 {sed.lovvalgslandKode === MKV.Koder.landkoder.NO ? (
                   <Nav.Column xs="12">
-                    <Nav.AlertStripeAdvarsel className="lovvalgsland__varsel">
+                    <Nav.Alert variant="warning" className="lovvalgsland__varsel">
                       NB: Norge er angitt som lovvalgsland.
-                    </Nav.AlertStripeAdvarsel>
+                    </Nav.Alert>
                   </Nav.Column>
                 ) : null}
               </Nav.Row>

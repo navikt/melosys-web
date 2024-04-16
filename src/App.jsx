@@ -5,8 +5,6 @@ import { PublicClientApplication } from "@azure/msal-browser";
 import Rammeverk from "./sider/rammeverk";
 import { msalConfig } from "./auth/authConfig";
 
-import "nav-frontend-alertstriper-style";
-import "nav-frontend-chevron-style";
 import "nav-frontend-ekspanderbartpanel-style";
 import "nav-frontend-etiketter-style";
 import "nav-frontend-grid-style";
@@ -14,7 +12,6 @@ import "nav-frontend-hjelpetekst-style";
 import "nav-frontend-knapper-style";
 import "nav-frontend-lenkepanel-style";
 import "nav-frontend-lenker-style";
-import "nav-frontend-lesmerpanel-style";
 import "nav-frontend-lukknapp-style";
 import "nav-frontend-modal-style";
 import "nav-frontend-paneler-style";
@@ -22,7 +19,6 @@ import "nav-frontend-popover-style";
 import "nav-frontend-skjema-style";
 import "nav-frontend-snakkeboble-style";
 import "nav-frontend-spinner-style";
-import "nav-frontend-stegindikator-style";
 import "nav-frontend-typografi-style";
 
 export function App({ children, isDevelopmentProfile }) {

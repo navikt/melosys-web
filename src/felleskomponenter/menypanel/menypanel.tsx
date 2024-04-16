@@ -59,7 +59,6 @@ export const Menypanel = ({
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [endreFokus, setEndreFokus] = useState(false);
-  const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
   const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
@@ -74,7 +73,6 @@ export const Menypanel = ({
     behandlingstema,
     redigerbart,
     lagreSoknadOgOppfriskSaksopplysninger,
-    setMenypanelFeilmelding,
     endreFokus,
   };
 
@@ -109,7 +107,6 @@ export const Menypanel = ({
 
   const handleClick = (groupIndex: number, linkIndex: number) => {
     setActive([groupIndex, linkIndex]);
-    setMenypanelFeilmelding("");
     setEndreFokus(true);
   };
   const visMenypanel =
@@ -129,19 +126,6 @@ export const Menypanel = ({
   if (!visMenypanel) return null;
   return (
     <>
-      <div role="alert">
-        {menypanelFeilmelding && (
-          <Nav.AlertStripe type="feil" className="varsel menypanel__feilmelding">
-            {menypanelFeilmelding}
-            <Nav.Xknapp
-              form="kompakt"
-              onClick={() => {
-                setMenypanelFeilmelding("");
-              }}
-            />
-          </Nav.AlertStripe>
-        )}
-      </div>
       {visOppdaterRegisteropplysninger && redigerbart && (
         <OppdaterRegisteropplysninger
           sistOppdatert={Utils.dato.formatterDatoTilNorsk(sisteOpplysningerHentetDato)}

@@ -238,7 +238,7 @@ const VurderingMedfolgendeBarn = ({
           disabled={!redigerbart}
         />
       )}
-      {medfolgendeBarn.length === 0 && <Nav.AlertStripeInfo>Ingen barn oppgitt i søknaden</Nav.AlertStripeInfo>}
+      {medfolgendeBarn.length === 0 && <Nav.Alert variant="info">Ingen barn oppgitt i søknaden</Nav.Alert>}
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !(redigerbart && harAvklaring),

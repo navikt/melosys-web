@@ -139,9 +139,9 @@ const BrevVedlegg = ({
   return (
     <>
       {forhandsvisFritekstvedleggError && (
-        <Nav.AlertStripe type="advarsel" className="varsel">
+        <Nav.Alert variant="warning" className="varsel">
           {FORHANDSVIS_ERROR_MESSAGE}
-        </Nav.AlertStripe>
+        </Nav.Alert>
       )}
 
       {(vedleggFelt || fritekstvedleggFelt) && (

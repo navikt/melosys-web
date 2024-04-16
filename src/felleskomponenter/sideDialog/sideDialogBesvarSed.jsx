@@ -140,9 +140,9 @@ const SideDialogBesvarSed = ({ behandlingID }) => {
     }
 
     return (
-      <Nav.AlertStripe type="advarsel" className="varsel">
+      <Nav.Alert variant="warning" className="varsel">
         {feilmelding || "For øyeblikket ingen BUCer knyttet til denne saken"}
-      </Nav.AlertStripe>
+      </Nav.Alert>
     );
   };
 
