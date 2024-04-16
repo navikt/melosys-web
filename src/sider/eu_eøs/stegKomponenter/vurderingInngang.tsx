@@ -107,7 +107,8 @@ export const Varsler = ({
         <Nav.Alert variant="info">
           {visStorbritanniaKonvensjonTekst && (
             <p>
-              Husk at du må vurdere om inngangsvilkårene i konvensjonen med Storbritannia av 30. juni 2023 er oppfylt.
+              Husk at du må vurdere om inngangsvilkårene i konvensjonen med Storbritannia av 30. juni 2023, eller
+              separasjonsavtalen av 28. januar 2020, er oppfylt.
             </p>
           )}
           Du har to valg:
