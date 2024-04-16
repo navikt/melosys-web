@@ -11,76 +11,82 @@ const { MIDLERTIDIG_ARBEID_2_1_FJERDE_LEDD } = MKV.Koder.arbeidssituasjontype;
 const { AVSLAATT, INNVILGET, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 
 const IngenMedlemskapsperioder = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Du må legge inn minst én periode før du kan fortsette.
-  </Nav.AlertStripeFeil>
+  </Nav.Alert>
 );
 
 const OppholdIInnvilgedePerioder = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Det er opphold mellom innvilgede perioder.
-  </Nav.AlertStripeFeil>
+  </Nav.Alert>
 );
 
 const OverlappIInnvilgedePerioder = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">Innvilgede perioder overlapper.</Nav.AlertStripeFeil>
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
+    Innvilgede perioder overlapper.
+  </Nav.Alert>
 );
 
 const OverlappIOpphørtePerioder = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">Opphørte perioder overlapper.</Nav.AlertStripeFeil>
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
+    Opphørte perioder overlapper.
+  </Nav.Alert>
 );
 
 const OverlappOpphørtInnvilgetPeriode = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Opphørt periode overlapper med innvilget periode.
-  </Nav.AlertStripeFeil>
+  </Nav.Alert>
 );
 
 const IngenSluttdato = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Du må oppgi sluttdato for å kunne angi resultat. Dette blir sluttdatoen på vedtaket.
-  </Nav.AlertStripeFeil>
+  </Nav.Alert>
 );
 
 const MedlemskapsperiodenStarterFør2023 = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Du kan ikke fatte vedtak i stegvelgeren for årene før 2023. Du kan fatte fritekstvedtak i &quot;Send
     brev&quot;-fanen. Du må også vurdere om perioden skal registreres i avgiftssystemet.
-  </Nav.AlertStripeFeil>
+  </Nav.Alert>
 );
 
 const BareOpphørtePerioder = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Hvis hele perioden skal opphøres, gå tilbake til inngangssteget og oppgi at betaling mangler for hele perioden.
-  </Nav.AlertStripeFeil>
+  </Nav.Alert>
 );
 
 const OpphørtPeriodeFørAnnenPeriode = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Opphørt periode kan ikke være før innvilget eller avslått periode.
-  </Nav.AlertStripeFeil>
+  </Nav.Alert>
 );
 
 const PeriodeOverstiger12Mnd = (
-  <Nav.AlertStripeFeil className="alertstripe_feilmelding">Perioden overstiger 12 måneder.</Nav.AlertStripeFeil>
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
+    Perioden overstiger 12 måneder.
+  </Nav.Alert>
 );
 
 const StarterSenereEllerSlutterFørSøknadsperioden = (
-  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
+  <Nav.Alert variant="warning" className="alertstripe_feilmelding">
     Medlemskapsperioden(e) starter senere og/eller slutter før søknadsperioden.
-  </Nav.AlertStripeAdvarsel>
+  </Nav.Alert>
 );
 
 const IngenOpphørtePerioder = (
-  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
+  <Nav.Alert variant="warning" className="alertstripe_feilmelding">
     Ingen periode(r) er opphørt. Hvis det er riktig kan du likevel gå videre.
-  </Nav.AlertStripeAdvarsel>
+  </Nav.Alert>
 );
 
 const BestemmelseForFamiliemedlemmerErValgt = (
-  <Nav.AlertStripeAdvarsel className="alertstripe_feilmelding">
+  <Nav.Alert variant="warning" className="alertstripe_feilmelding">
     Husk at søkeren må få dekning som er i samsvar med forsørgerens vedtak fra mottaksdato.
-  </Nav.AlertStripeAdvarsel>
+  </Nav.Alert>
 );
 
 const erIkkeStøttetIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>

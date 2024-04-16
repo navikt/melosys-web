@@ -565,6 +565,7 @@ class VurderingArtikkel16Anmodning extends Component {
                   valgteVedlegg={valgteVedlegg}
                   label="Vedlegg til SED"
                   setValgteVedlegg={setValgteVedlegg}
+                  redigerbart={redigerbart}
                 />
                 <VedleggVelger
                   valgteVedlegg={valgteVedlegg}
@@ -576,9 +577,9 @@ class VurderingArtikkel16Anmodning extends Component {
             </Nav.Row>
           )}
           {sendBrevFeilmelding && (
-            <Nav.AlertStripe type={harFeil ? "feil" : "advarsel"} className="varsel">
+            <Nav.Alert variant={harFeil ? "error" : "warning"} className="varsel">
               {sendBrevFeilmelding}
-            </Nav.AlertStripe>
+            </Nav.Alert>
           )}
           <Nav.Row className="artikkel16__ekstratopp">
             <Mui.StegKnapper

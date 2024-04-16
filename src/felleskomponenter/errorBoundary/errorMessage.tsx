@@ -10,13 +10,13 @@ interface ErrorMessageProps {
 }
 const ErrorMessage = ({ feilobjekt }: ErrorMessageProps) => (
   <div className="error-message">
-    <Nav.AlertStripeAdvarsel>
+    <Nav.Alert variant="warning">
       {feilobjekt.status} : {feilobjekt.statusTekst}
       <br />
       {feilobjekt.fetchdata.timestamp}
       <br />
       {feilobjekt.varselTekst}
-    </Nav.AlertStripeAdvarsel>
+    </Nav.Alert>
   </div>
 );
 export default ErrorMessage;

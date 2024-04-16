@@ -556,7 +556,7 @@ export const VurderingArtikkel16Vedtak = ({
         <Nav.Column xs="7" className="fane__fot">
           {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} className="vedtakstype" />}
           {erNyVurdering && redigerbart && (
-            <Nav.AlertStripeInfo>{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.AlertStripeInfo>
+            <Nav.Alert variant="info">{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.Alert>
           )}
           <Mui.StegKnapper
             bekreftKnappProps={{

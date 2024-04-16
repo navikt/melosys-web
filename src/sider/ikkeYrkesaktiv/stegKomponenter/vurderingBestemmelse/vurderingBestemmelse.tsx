@@ -121,9 +121,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
 
       {sakstype === EU_EOS && (
-        <Nav.AlertStripeInfo className="infomelding">
+        <Nav.Alert variant="info" className="infomelding">
           Du må vurdere om søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004
-        </Nav.AlertStripeInfo>
+        </Nav.Alert>
       )}
 
       <Nav.Fieldset legend="Hva er din vurdering av søknaden?" className="innvilgelsesresultat">

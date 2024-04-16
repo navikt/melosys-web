@@ -32,7 +32,6 @@ export interface ContentProps {
   redigerbart: boolean;
   visMottatteOpplysningerData: boolean;
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
-  setMenypanelFeilmelding: (feilmelding: string) => void;
   behandlingstema: string;
   endreFokus: boolean;
 }

@@ -49,7 +49,7 @@ const Oppfrisk = ({ oppfrisk, lukk }) => {
   );
 
   return (
-    <StandardMeldingOverst type="suksess" actionEtterSynlighet={lukk} melding="Registeropplysningene er oppdatert" />
+    <StandardMeldingOverst variant="success" actionEtterSynlighet={lukk} melding="Registeropplysningene er oppdatert" />
   );
 };
 
@@ -60,7 +60,7 @@ Oppfrisk.propTypes = {
 
 const OppfriskFeilmelding = ({ avbryt, resetErrorBoundary }) => (
   <StandardMeldingOverst
-    type="feil"
+    variant="error"
     actionEtterSynlighet={() => {
       avbryt();
       resetErrorBoundary();
@@ -113,10 +113,10 @@ BekreftEllerOppfrisk.propTypes = {
 const AnnenBehandlingOppfriskes = ({ avbryt }) => (
   <div>
     <Nav.Typo.Systemtittel>Kan ikke oppdatere registeropplysninger</Nav.Typo.Systemtittel>
-    <Nav.AlertStripe type="advarsel">
+    <Nav.Alert variant="warning">
       Registeropplysningene i en annen behandling er i ferd med å bli oppdatert. Vent til den behandlingen er oppdatert
       før du starter å oppdatere denne.
-    </Nav.AlertStripe>
+    </Nav.Alert>
     <div className="knapperadcontainer">
       <Nav.Knapp onClick={avbryt}>Lukk</Nav.Knapp>
     </div>

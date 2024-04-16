@@ -35,7 +35,7 @@ const AnnenForelderModal = ({
     </div>
   );
 
-  const errorContent = <Nav.AlertStripeFeil>Feil ved henting av bostedsadresse!</Nav.AlertStripeFeil>;
+  const errorContent = <Nav.Alert variant="error">Feil ved henting av bostedsadresse!</Nav.Alert>;
 
   const fornavn = data?.hentPersonopplysninger.navn.fornavn ?? "";
   const mellomnavn = data?.hentPersonopplysninger.navn.mellomnavn ?? "";

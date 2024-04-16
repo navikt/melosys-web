@@ -129,15 +129,15 @@ export const KnyttTilSak = (props) => {
     return (
       <div className="knyttTilSak__behandlingspanel">
         {erJournalføring ? (
-          <Nav.AlertStripeInfo className="feilmelding_innrykk">
+          <Nav.Alert variant="info" className="feilmelding_innrykk">
             Du kan ikke opprette en ny behandling på eksisterende sak som er opphørt/henlagt/bortfalt/annullert i
             Melosys, men du kan knytte dokumentet til den avsluttede behandlingen
-          </Nav.AlertStripeInfo>
+          </Nav.Alert>
         ) : (
-          <Nav.AlertStripeAdvarsel className="feilmelding_innrykk">
+          <Nav.Alert variant="warning" className="feilmelding_innrykk">
             Du kan ikke opprette en ny behandling på eksisterende sak som er opphørt/henlagt/bortfalt/annullert i
             Melosys
-          </Nav.AlertStripeAdvarsel>
+          </Nav.Alert>
         )}
       </div>
     );
@@ -147,13 +147,13 @@ export const KnyttTilSak = (props) => {
     return (
       <div className="knyttTilSak__panelramme">
         {sisteBehandlingErPågåendeArtikkel16Sak ? (
-          <Nav.AlertStripeAdvarsel className="anmodningSvarSendt">
+          <Nav.Alert variant="warning" className="anmodningSvarSendt">
             Hvis du har mottatt svar på anmodning om unntak skal du <b>ikke</b> opprette en ny behandling.
-          </Nav.AlertStripeAdvarsel>
+          </Nav.Alert>
         ) : (
-          <Nav.AlertStripeInfo className="tidligereBehandlingAvsluttet">
+          <Nav.Alert variant="info" className="tidligereBehandlingAvsluttet">
             Tidligere behandling er avsluttet.
-          </Nav.AlertStripeInfo>
+          </Nav.Alert>
         )}
         {erJournalføring && (
           <Skjema.RadioGruppe
@@ -208,9 +208,9 @@ export const KnyttTilSak = (props) => {
       {erJournalføring ? (
         <VurderDokumentCheckbox />
       ) : (
-        <Nav.AlertStripeAdvarsel className="feilmelding_innrykk">
+        <Nav.Alert variant="warning" className="feilmelding_innrykk">
           Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
-        </Nav.AlertStripeAdvarsel>
+        </Nav.Alert>
       )}
     </div>
   );

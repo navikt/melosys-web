@@ -109,9 +109,9 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
         <Table.Body>{dokumenter.map(mapDokument)}</Table.Body>
       </Table>
       {feilmelding && (
-        <Nav.AlertStripe type="advarsel" className="varsel">
+        <Nav.Alert variant="warning" className="varsel">
           {feilmelding}
-        </Nav.AlertStripe>
+        </Nav.Alert>
       )}
     </div>
   );

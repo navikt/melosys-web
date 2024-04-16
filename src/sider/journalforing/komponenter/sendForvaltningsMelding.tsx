@@ -48,12 +48,12 @@ const SendForvaltningsMelding = ({ avsenderType, harRegistrertAdresse }: SendFor
       </Skjema.RadioGruppe>
 
       {!harRegistrertAdresse && (
-        <Nav.AlertStripe className="feilmelding" type="advarsel">
+        <Nav.Alert className="feilmelding" variant="warning">
           <Nav.Typo.Element>Melding kan ikke sendes automatisk pga. manglende eller ugyldig adresse</Nav.Typo.Element>
           <ul>
             <li>Avsender må enten registrere adresse i Folkeregisteret eller kontaktadresse via nav.no.</li>
           </ul>
-        </Nav.AlertStripe>
+        </Nav.Alert>
       )}
     </div>
   );

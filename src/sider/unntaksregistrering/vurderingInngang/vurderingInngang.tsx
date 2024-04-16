@@ -182,9 +182,9 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
       </Nav.Row>
 
       {sakstype === EU_EOS && (
-        <Nav.AlertStripeInfo className="vurderingInngang_unntaksregistrering__alertstripe">
+        <Nav.Alert variant="info" className="vurderingInngang_unntaksregistrering__alertstripe">
           Hvis avsenderlandet ikke er lovvalgsland, må du endre lovvalgsland.
-        </Nav.AlertStripeInfo>
+        </Nav.Alert>
       )}
 
       <Mui.StegKnapper

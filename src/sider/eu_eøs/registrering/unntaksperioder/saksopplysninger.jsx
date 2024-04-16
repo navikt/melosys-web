@@ -258,9 +258,9 @@ const Saksopplysninger = ({
     return (
       <Nav.Row className="seksjon">
         <Nav.Column xs="8">
-          <Nav.AlertStripe className="feilmelding" type="advarsel">
+          <Nav.Alert className="feilmelding" variant="warning">
             {durationWarningMessage}
-          </Nav.AlertStripe>
+          </Nav.Alert>
         </Nav.Column>
       </Nav.Row>
     );

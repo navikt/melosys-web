@@ -29,7 +29,7 @@ interface AdresserWrapperProps {
 const AdresserWrapper = ({ behandlingID }: AdresserWrapperProps) => {
   const { error, loading, data } = useHentAdresserQuery({ variables: { behandlingID } });
 
-  if (error) return <Nav.AlertStripe type="feil">Kunne ikke hente adresser!</Nav.AlertStripe>;
+  if (error) return <Nav.Alert variant="error">Kunne ikke hente adresser!</Nav.Alert>;
   if (loading) return <div>Laster adresser...</div>;
   if (!data) return null;
 

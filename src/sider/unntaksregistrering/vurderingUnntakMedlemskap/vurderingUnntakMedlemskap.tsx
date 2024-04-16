@@ -257,9 +257,9 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       <Feilmeldinger />
 
       {[DELVIS_GODKJENT, IKKE_GODKJENT].includes(formValues.utfallRegistreringUnntak) && !harErrorFeilmelding && (
-        <Nav.AlertStripeInfo className="vurderingUnntakMedlemskap__alertstripe">
+        <Nav.Alert variant="info" className="vurderingUnntakMedlemskap__alertstripe">
           Ved endring/ikke godkjenning av unntaksperiode bør det sendes informasjon til utenlandsk trygdemyndighet.
-        </Nav.AlertStripeInfo>
+        </Nav.Alert>
       )}
 
       <Mui.StegKnapper

@@ -79,7 +79,6 @@ export default defineConfig({
   resolve: {
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
-      "nav-frontend-alertstriper-style": fileURLToPath(new URL("./src/nav-style/alertstriper.css", import.meta.url)),
       "nav-frontend-ekspanderbartpanel-style": fileURLToPath(
         new URL("./src/nav-style/ekspanderbartpanel.css", import.meta.url)
       ),
@@ -96,7 +95,6 @@ export default defineConfig({
       "nav-frontend-skjema-style": fileURLToPath(new URL("./src/nav-style/skjema.css", import.meta.url)),
       "nav-frontend-snakkeboble-style": fileURLToPath(new URL("./src/nav-style/snakkeboble.css", import.meta.url)),
       "nav-frontend-spinner-style": fileURLToPath(new URL("./src/nav-style/spinner.css", import.meta.url)),
-      "nav-frontend-stegindikator-style": fileURLToPath(new URL("./src/nav-style/stegindikator.css", import.meta.url)),
       "nav-frontend-typografi-style": fileURLToPath(new URL("./src/nav-style/typografi.css", import.meta.url)),
       AppTypes: path.resolve(__dirname, "./src/globalmodules/AppTypes.ts"),
       Domene: path.resolve(__dirname, "./src/globalmodules/Domene.ts"),

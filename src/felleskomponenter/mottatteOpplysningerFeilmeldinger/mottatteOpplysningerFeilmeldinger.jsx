@@ -11,7 +11,7 @@ export const MottatteOpplysningerFeilmeldinger = ({ panelFeil }) => {
   if (panelFeil.length === 0) return null;
 
   return (
-    <Nav.AlertStripe className="mottatteopplysninger_feilmeldinger" type="advarsel">
+    <Nav.Alert className="mottatteopplysninger_feilmeldinger" variant="warning">
       Ugyldige felter. Sjekk følgende menypunkt(er):
       <ul>
         {panelFeil.map(({ panel, feil }) => (
@@ -25,7 +25,7 @@ export const MottatteOpplysningerFeilmeldinger = ({ panelFeil }) => {
           </Fragment>
         ))}
       </ul>
-    </Nav.AlertStripe>
+    </Nav.Alert>
   );
 };
 
