@@ -15,7 +15,7 @@ describe("Varsler", () => {
   const mockedProps = mock<ComponentProps<typeof Varsler>>();
   let props = instance(mockedProps);
   const konvensjonmelding =
-    "Husk at du må vurdere om inngangsvilkårene i konvensjonen med Storbritannia av 30. juni 2023 er oppfylt.";
+    "Husk at du må vurdere om inngangsvilkårene i konvensjonen med Storbritannia av 30. juni 2023, eller separasjonsavtalen av 28. januar 2020, er oppfylt.";
 
   beforeEach(() => {
     props = instance(mockedProps);
