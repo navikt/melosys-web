@@ -8,6 +8,7 @@ export interface RowProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
+// eslint-disable-next-line react/prefer-stateless-function
 class Row extends Component<RowProps> {
   render() {
     const { children, className, ...props } = this.props;
