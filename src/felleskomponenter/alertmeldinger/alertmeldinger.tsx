@@ -18,7 +18,7 @@ export const VirksomhetMelding = () => (
 );
 
 export const IngenFlytMelding = () => (
-  <Nav.Alert size="small" variant="warning" className="ingenFlytMelding">
+  <Nav.Alert variant="warning" className="ingenFlytMelding">
     <b>Du kan ikke gå videre, men:</b>
     <ul className="listePadding">
       <li>

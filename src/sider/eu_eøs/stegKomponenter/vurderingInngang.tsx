@@ -104,7 +104,7 @@ export const Varsler = ({
         </Nav.Alert>
       )}
       {inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
-        <Nav.Alert variant="info" className="vurderinginngang_eu_eos__inngangsvilkaar-ikke-oppfylt-alertstripe">
+        <Nav.Alert variant="info">
           {visStorbritanniaKonvensjonTekst && (
             <p>
               Husk at du må vurdere om inngangsvilkårene i konvensjonen med Storbritannia av 30. juni 2023 er oppfylt.
