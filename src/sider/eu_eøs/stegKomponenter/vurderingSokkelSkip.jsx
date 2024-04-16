@@ -106,12 +106,12 @@ class VurderingSokkelSkip extends Component {
         />
         {maritimtArbeid.length === 0 && (
           <div className="sokkelSkip__varsel">
-            <Nav.AlertStripe type="advarsel">Det er ikke registrert verken sokkel eller skip.</Nav.AlertStripe>
+            <Nav.Alert variant="warning">Det er ikke registrert verken sokkel eller skip.</Nav.Alert>
           </div>
         )}
         {!harMaritimeArbeidUnikeNavn && (
           <div className="sokkelSkip__varsel">
-            <Nav.AlertStripe type="advarsel">Det er registrert flere maritime arbeid med samme navn.</Nav.AlertStripe>
+            <Nav.Alert variant="warning">Det er registrert flere maritime arbeid med samme navn.</Nav.Alert>
           </div>
         )}
         <Nav.Fieldset legend="Hvordan arbeider søkeren:">

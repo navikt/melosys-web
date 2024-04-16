@@ -262,7 +262,12 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
           values={valgteMottakerinstitusjoner}
           className="multiselect"
         />
-        <VedleggTable valgteVedlegg={valgteVedlegg} label="Vedlegg" setValgteVedlegg={setValgteVedlegg} />
+        <VedleggTable
+          valgteVedlegg={valgteVedlegg}
+          label="Vedlegg"
+          setValgteVedlegg={setValgteVedlegg}
+          redigerbart={redigerbart}
+        />
         <VedleggVelger
           valgteVedlegg={valgteVedlegg}
           onChange={setValgteVedlegg}
@@ -277,17 +282,17 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
           Avbryt utfylling
         </Nav.Knapp>
         {opprettetBucUrl && bucOpprettet && (
-          <Nav.AlertStripe type="suksess" className="varsel">
+          <Nav.Alert variant="success" className="varsel">
             Saken er nå opprettet i RINA
             <Nav.Lenker href={opprettetBucUrl} target="_blank">
               {opprettetBucUrl}
             </Nav.Lenker>
-          </Nav.AlertStripe>
+          </Nav.Alert>
         )}
         {alertmelding && (
-          <Nav.AlertStripe type="advarsel" className="varsel">
+          <Nav.Alert variant="warning" className="varsel">
             {alertmelding}
-          </Nav.AlertStripe>
+          </Nav.Alert>
         )}
       </form>
     </div>

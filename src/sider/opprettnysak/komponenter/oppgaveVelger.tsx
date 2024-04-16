@@ -34,9 +34,9 @@ export const OppgaveVelger = ({
   if (saksnummer !== "-1") {
     return (
       <div className="oppgaveVelger">
-        <Nav.AlertStripeInfo>
+        <Nav.Alert variant="info">
           Når det opprettes en ny behandling på en eksisterende sak opprettes det en ny oppgave
-        </Nav.AlertStripeInfo>
+        </Nav.Alert>
         <OpprettNyOppgave />
       </div>
     );
@@ -45,7 +45,7 @@ export const OppgaveVelger = ({
   if (!oppgaverFinnes && oppgaverForsoktHentet) {
     return (
       <div className="oppgaveVelger">
-        <Nav.AlertStripeInfo>Ingen eksisterende oppgaver funnet. Det blir opprettet en ny</Nav.AlertStripeInfo>
+        <Nav.Alert variant="info">Ingen eksisterende oppgaver funnet. Det blir opprettet en ny</Nav.Alert>
         <OpprettNyOppgave />
       </div>
     );
@@ -95,9 +95,9 @@ export const OppgaveVelger = ({
         <>
           {oppgaverFinnes && (
             <>
-              <Nav.AlertStripeInfo>
+              <Nav.Alert variant="info">
                 Du kan kun velge mellom følgende oppgaver som er knyttet til et inngående dokument
-              </Nav.AlertStripeInfo>
+              </Nav.Alert>
               <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
             </>
           )}

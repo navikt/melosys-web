@@ -24,9 +24,9 @@ export const JournalforingsOppgaver = ({ mineSaker }: PropsFromRedux) => {
   const { journalforing } = mineSaker;
 
   const ingenSakerMelding = (
-    <Nav.AlertStripeInfo className="mineOppgaver__alarm">
+    <Nav.Alert variant="info" className="mineOppgaver__alarm">
       Det er ingen journalføringsoppgaver på arbeidsbenken din
-    </Nav.AlertStripeInfo>
+    </Nav.Alert>
   );
 
   return (

@@ -55,10 +55,10 @@ const IngenSokkelSkipEllerHjemmebaser = ({ oppdaterData, slettData, redigerbart,
 
   return (
     <Fragment>
-      <Nav.AlertStripe type="info">
+      <Nav.Alert variant="info">
         Panelene er ikke utfylt med informasjon om arbeid på sokkel, skip eller hjemmebaser. Fyll ut feltene hvis det er
         relevant for å vurdere arbeidsland.
-      </Nav.AlertStripe>
+      </Nav.Alert>
       <Nav.Fieldset legend="">
         <Mui.Checkbox
           label="Arbeid utføres i land som er oppgitt"

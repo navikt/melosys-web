@@ -299,10 +299,10 @@ const VurderingVedtak = ({
           </Nav.Column>
         </Nav.Row>
         {flereSoknadslandEnnTillatt && (
-          <Nav.AlertStripe type="feil">Det er kun tillat med ett arbeidsland i vedtaket.</Nav.AlertStripe>
+          <Nav.Alert variant="error">Det er kun tillat med ett arbeidsland i vedtaket.</Nav.Alert>
         )}
         {erNyVurdering && redigerbart && (
-          <Nav.AlertStripeInfo>{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.AlertStripeInfo>
+          <Nav.Alert variant="info">{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.Alert>
         )}
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">

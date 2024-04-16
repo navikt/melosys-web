@@ -109,9 +109,9 @@ export const Medlemskapsperioder = ({
               )}
             </Nav.Row>
             {field.feil && (
-              <Nav.AlertStripe type="feil" className="medlemskapsperiodeFeil">
+              <Nav.Alert variant="error" className="medlemskapsperiodeFeil">
                 {field.feil}
-              </Nav.AlertStripe>
+              </Nav.Alert>
             )}
           </div>
         ))}

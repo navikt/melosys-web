@@ -1,7 +1,7 @@
 import PT from "prop-types";
 import classNames from "classnames";
-import Chevron from "nav-frontend-chevron";
 import "./lesmerpanel.css";
+import * as Ikoner from "../../../resources/images";
 
 const LesMerToggle = ({ erApen, onClick, lukkTekst, apneTekst, other }) => {
   const btnClassName = classNames("lesMerPanel__togglelink", erApen ? "lesMerPanel__togglelink--erApen" : "");
@@ -11,7 +11,7 @@ const LesMerToggle = ({ erApen, onClick, lukkTekst, apneTekst, other }) => {
       <button type="button" aria-expanded={erApen} onClick={onClick} className={btnClassName} {...other}>
         <div className="lesMerPanel__toggleTekst">
           {erApen ? lukkTekst : apneTekst}
-          <Chevron type={erApen ? "opp" : "ned"} className="lesMerPanel__toggleChevron" />
+          {erApen ? <Ikoner.ChevronUp /> : <Ikoner.ChevronDown />}
         </div>
       </button>
     </div>

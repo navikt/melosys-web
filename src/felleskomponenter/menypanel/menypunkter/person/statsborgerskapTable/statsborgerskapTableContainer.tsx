@@ -11,7 +11,7 @@ interface StatsborgerskapTableContainerProps {
 const StatsborgerskapTableContainer = ({ behandlingID }: StatsborgerskapTableContainerProps) => {
   const { loading, error, data } = useHentStatsborgerskapQuery({ variables: { behandlingID } });
 
-  if (error) return <Nav.AlertStripe type="feil">Kunne ikke hente statsborgerskap!</Nav.AlertStripe>;
+  if (error) return <Nav.Alert variant="error">Kunne ikke hente statsborgerskap!</Nav.Alert>;
   if (loading) return <div>Laster statsborgerskap...</div>;
 
   const gyldigeStatsborgerskap =

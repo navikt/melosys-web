@@ -3,48 +3,33 @@
 exports[`MottatteOpplysningerFeilmeldinger > snapshot test 1`] = `
 <div>
   <div
-    class="alertstripe mottatteopplysninger_feilmeldinger alertstripe--advarsel"
+    class="mottatteopplysninger_feilmeldinger navds-alert navds-alert--warning navds-alert--medium"
   >
-    <span
-      class="alertstripe__ikon"
+    <svg
+      aria-labelledby="title-aksel-icon-1"
+      class="navds-alert__icon"
+      fill="none"
+      focusable="false"
+      height="1em"
+      role="img"
+      viewBox="0 0 24 24"
+      width="1em"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <span
-        class="sr-only"
+      <title
+        id="title-aksel-icon-1"
       >
-        advarsel
-      </span>
-      <svg
-        aria-label="advarsel-ikon"
-        focusable="false"
-        height="1.5em"
-        kind="advarsel-sirkel-fyll"
-        role="img"
-        viewBox="0 0 24 24"
-        width="1.5em"
-      >
-        <g
-          fill="none"
-          fill-rule="evenodd"
-        >
-          <path
-            d="M12.205-.004l-.214.002a12.225 12.225 0 0 0-8.517 3.659C1.179 5.977-.053 9.013.002 12.208c.115 6.613 5.296 11.793 11.795 11.793l.212-.002c6.726-.116 12.105-5.595 11.99-12.21C23.883 5.178 18.702-.003 12.204-.003z"
-            fill="#FFA733"
-            fill-rule="nonzero"
-          />
-          <path
-            d="M12.027 19H12A1.499 1.499 0 0 1 11.973 16L12 16a1.501 1.501 0 0 1 .027 3z"
-            fill="#262626"
-          />
-          <path
-            d="M12 5a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V6a1 1 0 0 1 1-1z"
-            fill="#262626"
-            fill-rule="nonzero"
-          />
-        </g>
-      </svg>
-    </span>
+        Advarsel
+      </title>
+      <path
+        clip-rule="evenodd"
+        d="M12 2.25a.75.75 0 0 1 .656.387l9.527 17.25A.75.75 0 0 1 21.526 21H2.474a.75.75 0 0 1-.657-1.113l9.526-17.25A.75.75 0 0 1 12 2.25ZM12 8.75a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-1.5 0v-4a.75.75 0 0 1 .75-.75Zm-1 7.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z"
+        fill="currentColor"
+        fill-rule="evenodd"
+      />
+    </svg>
     <div
-      class="typo-normal alertstripe__tekst"
+      class="navds-alert__wrapper navds-body-long"
     >
       Ugyldige felter. Sjekk følgende menypunkt(er):
       <ul>
