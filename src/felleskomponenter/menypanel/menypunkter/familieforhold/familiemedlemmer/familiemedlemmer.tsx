@@ -5,7 +5,7 @@ import classnames from "classnames";
 import * as Nav from "../../../../../navFrontend";
 import * as Ikoner from "../../../../../resources/images";
 import * as Mui from "../../../../ui";
-import * as Etiketter from "../../../etiketter";
+import * as Tags from "../../../tags";
 
 import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -43,7 +43,7 @@ const Familiemedlemmer = () => {
   return (
     <div className={familiemedlemmerClassName.block}>
       <Nav.Row>
-        <Etiketter.FraRegister className={familiemedlemmerClassName.element("fra-register-etikett")} />
+        <Tags.FraRegister className={familiemedlemmerClassName.element("fra-register-etikett")} />
       </Nav.Row>
       <Mui.Undertittel className={familiemedlemmerClassName.element("undertittel")} ikon={Ikoner.Child} tekst="Barn" />
       {barn.length > 0 ? (

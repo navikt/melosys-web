@@ -201,7 +201,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
             <LabelMedHjelpetekst
               label="Oppgi grunn for nytt vedtak (Obligatorisk)"
               hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
-              hjelpetekstClassName="hjelpetekst"
             />
           </Nav.Typo.Element>
           <Nav.Column xs="6">
@@ -235,11 +234,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
       <Nav.Row>
         <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-          <LabelMedHjelpetekst
-            label="Fritekst til innledning"
-            hjelpetekst={INNLEDNING_FRITEKST_HJELPETEKST}
-            hjelpetekstClassName="hjelpetekst"
-          />
+          <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={INNLEDNING_FRITEKST_HJELPETEKST} />
         </Nav.Typo.Element>
         <Forms.HtmlEditor
           name="innledningFritekst"
@@ -251,11 +246,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
       <Nav.Row>
         <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-          <LabelMedHjelpetekst
-            label="Fritekst til begrunnelse"
-            hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST}
-            hjelpetekstClassName="hjelpetekst"
-          />
+          <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST} />
         </Nav.Typo.Element>
         <Forms.HtmlEditor
           name="begrunnelseFritekst"

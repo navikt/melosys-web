@@ -408,7 +408,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
                 <LabelMedHjelpetekst
                   label="Oppgi grunn for nytt vedtak (Obligatorisk)"
                   hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
-                  hjelpetekstClassName="nyVurderingBakgrunn__hjelpetekst"
                 />
               </Nav.Typo.Element>
               <Forms.Select
@@ -443,11 +442,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       {!erDelvisOpphør && (
         <>
           <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-            <LabelMedHjelpetekst
-              label="Fritekst til innledning"
-              hjelpetekst={innledningFritekstHjelpetekst}
-              hjelpetekstClassName="hjelpetekst"
-            />
+            <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={innledningFritekstHjelpetekst} />
           </Nav.Typo.Element>
           <Forms.HtmlEditor
             name="innledningFritekst"
@@ -459,11 +454,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       )}
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-        <LabelMedHjelpetekst
-          label="Fritekst til begrunnelse"
-          hjelpetekst={begrunnelseFritekstHjelpetekst}
-          hjelpetekstClassName="hjelpetekst"
-        />
+        <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={begrunnelseFritekstHjelpetekst} />
       </Nav.Typo.Element>
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
@@ -478,7 +469,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
             <LabelMedHjelpetekst
               label="Fritekst til avsnitt om trygdeavgift"
               hjelpetekst={trygdeavgiftFritekstHjelpetekst}
-              hjelpetekstClassName="hjelpetekst"
             />
           </Nav.Typo.Element>
           <Forms.HtmlEditor

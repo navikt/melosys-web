@@ -1,5 +1,5 @@
 import * as Nav from "../../../../../navFrontend";
-import * as Etiketter from "../../../etiketter";
+import * as Tags from "../../../tags";
 import bem from "../../../../../bemUtils";
 
 import "./familiemedlemmer.css";
@@ -14,7 +14,7 @@ const VisFamilieMedlemmerFraRegisterKnapp = ({ onClick }: VisFamilieMedlemmerFra
   return (
     <div className={familiemedlemmerClassName.block}>
       <Nav.Row>
-        <Etiketter.FraRegister className={familiemedlemmerClassName.element("fra-register-etikett")} />
+        <Tags.FraRegister className={familiemedlemmerClassName.element("fra-register-etikett")} />
       </Nav.Row>
       <Nav.Hovedknapp
         className={familiemedlemmerClassName.element("vis-familieforhold-knapp")}

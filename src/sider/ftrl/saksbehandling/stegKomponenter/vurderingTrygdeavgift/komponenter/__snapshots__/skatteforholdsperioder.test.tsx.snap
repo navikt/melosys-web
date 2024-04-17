@@ -5,9 +5,13 @@ exports[`Skatteforholdsperioder > snapshot test 1`] = `
   className="skatteforholdsperioder"
 >
   <div
-    className="skatteforhold__label"
+    className="labelMedHjelpetekst__wrapper"
   >
-    Oppgi informasjon om brukers skatteforhold
+    <span>
+      <b>
+        Oppgi informasjon om brukers skatteforhold
+      </b>
+    </span>
   </div>
   <div
     className="skjema__panel"

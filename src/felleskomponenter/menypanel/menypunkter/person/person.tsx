@@ -1,7 +1,7 @@
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import * as Nav from "../../../../navFrontend";
-import * as Etiketter from "../../etiketter";
+import * as Tags from "../../tags";
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 
@@ -39,7 +39,7 @@ export const Person = ({
   <div className="person">
     <Nav.Row>
       <Nav.Column xs="12" className="etikett__container">
-        <Etiketter.FraRegister />
+        <Tags.FraRegister />
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
@@ -65,8 +65,8 @@ export const Person = ({
       <>
         <Nav.Row>
           <Nav.Column className="etikett__container">
-            <Etiketter.FraBruker />
-            {visArbeidsforholdRolleEtiketter && <Etiketter.BrukersDel style={{ marginLeft: "0.3em" }} />}
+            <Tags.FraBruker />
+            {visArbeidsforholdRolleEtiketter && <Tags.BrukersDel style={{ marginLeft: "0.3em" }} />}
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>

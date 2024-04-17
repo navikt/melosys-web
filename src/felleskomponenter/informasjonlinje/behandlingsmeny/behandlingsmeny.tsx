@@ -4,6 +4,7 @@ import * as Ikon from "../../../resources/images";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
 import AvsluttSak from "./avsluttsak";
 import "./behandlingsmeny.css";
+import { Accordion } from "@navikt/ds-react";
 
 export const Behandlingsmeny = () => {
   const [visBehandlingsmeny, setVisBehandlingsmeny] = useState(false);
@@ -36,8 +37,20 @@ export const Behandlingsmeny = () => {
       </div>
       {visBehandlingsmeny && (
         <div className="behandlingsmeny__meny">
-          <LeggBehandlingTilbake />
-          <AvsluttSak />
+          <Accordion>
+            <Accordion.Item>
+              <Accordion.Header>Legg behandling tilbake</Accordion.Header>
+              <Accordion.Content>
+                <LeggBehandlingTilbake />
+              </Accordion.Content>
+            </Accordion.Item>
+            <Accordion.Item>
+              <Accordion.Header>Avslutt sak</Accordion.Header>
+              <Accordion.Content>
+                <AvsluttSak />
+              </Accordion.Content>
+            </Accordion.Item>
+          </Accordion>
         </div>
       )}
     </div>

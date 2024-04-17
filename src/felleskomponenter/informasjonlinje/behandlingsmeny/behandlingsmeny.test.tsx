@@ -1,24 +1,34 @@
-import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Behandlingsmeny } from "./behandlingsmeny";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 
 describe("Behandlingsmeny", () => {
-  it("Får opp både Legg behandling tilbake og Avslutt sak", async () => {
-    const state = {
-      behandlinger: {
-        status: "",
-        data: {
-          redigerbart: true,
-        },
+  const state = {
+    behandlinger: {
+      status: "",
+      data: {
+        redigerbart: true,
       },
-    };
-    renderWithProviders(<Behandlingsmeny />, { preloadedState: state });
+    },
+  };
+
+  it("Får opp både Legg behandling tilbake og Avslutt sak", async () => {
+    const { getByRole, findByText } = renderWithProviders(<Behandlingsmeny />, { preloadedState: state });
 
     const user = userEvent.setup();
-    await user.click(screen.getByRole("button"));
+    await user.click(getByRole("button"));
 
-    expect(await screen.findByText("Legg behandling tilbake")).toBeInTheDocument();
-    expect(await screen.findByText("Avslutt sak")).toBeInTheDocument();
+    expect(await findByText("Legg behandling tilbake")).toBeInTheDocument();
+    expect(await findByText("Avslutt sak")).toBeInTheDocument();
+  });
+
+  // TODO: aria-labelledby generert for ikonet i accordion. Enable i MELOSYS-6534
+  it.skip("snapshot test", async () => {
+    const { container, getByRole } = renderWithProviders(<Behandlingsmeny />, { preloadedState: state });
+
+    const user = userEvent.setup();
+    await user.click(getByRole("button"));
+
+    expect(container).toMatchSnapshot();
   });
 });

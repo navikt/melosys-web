@@ -7,24 +7,29 @@ import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 import * as Api from "../../services/api";
 import "./sideDialogBesvarSed.css";
+import { Accordion } from "@navikt/ds-react";
 
 const StatusEtikett = ({ status }) => {
   if (!status) {
     return null;
   }
 
-  const lagEtikett = (type, statusStreng) => <Nav.EtikettBase type={type}>{statusStreng}</Nav.EtikettBase>;
+  const lagTag = (variant, statusStreng) => (
+    <Nav.Tag size="small" variant={variant}>
+      {statusStreng}
+    </Nav.Tag>
+  );
 
   switch (status.toUpperCase()) {
     case KV.Koder.SedStatus.UTKAST:
-      return lagEtikett("fokus", "Under arbeid");
+      return lagTag("warning", "Under arbeid");
     case KV.Koder.SedStatus.SENDT:
     case KV.Koder.SedStatus.MOTTATT:
-      return lagEtikett("suksess", Utils.streng.storeForbokstaver(status));
+      return lagTag("success", Utils.streng.storeForbokstaver(status));
     case KV.Koder.SedStatus.AVBRUTT:
-      return lagEtikett("advarsel", Utils.streng.storeForbokstaver(status));
+      return lagTag("error", Utils.streng.storeForbokstaver(status));
     default:
-      return lagEtikett("info", Utils.streng.storeForbokstaver(status));
+      return lagTag("info", Utils.streng.storeForbokstaver(status));
   }
 };
 
@@ -77,15 +82,22 @@ EnkeltBucHeading.propTypes = {
 const sorterEtterDato = (liste) => liste.sort((a, b) => new Date(b.opprettetDato) - new Date(a.opprettetDato));
 
 const EnkeltBuc = ({ buc }) => (
-  <Nav.Ekspanderbartpanel border tittel={<EnkeltBucHeading {...buc} />}>
-    <div className="buc_tabell">
-      <Nav.Typo.Element className="tabell_header kolonne__navn">Navn på SED</Nav.Typo.Element>
-      <Nav.Typo.Element className="tabell_header kolonne__status">Status</Nav.Typo.Element>
-      {sorterEtterDato(buc.seder).map((sed) => (
-        <EnkeltSed key={sed.sedId} sed={sed} />
-      ))}
-    </div>
-  </Nav.Ekspanderbartpanel>
+  <Accordion>
+    <Accordion.Item>
+      <Accordion.Header>
+        <EnkeltBucHeading {...buc} />
+      </Accordion.Header>
+      <Accordion.Content>
+        <div className="buc_tabell">
+          <Nav.Typo.Element className="tabell_header kolonne__navn">Navn på SED</Nav.Typo.Element>
+          <Nav.Typo.Element className="tabell_header kolonne__status">Status</Nav.Typo.Element>
+          {sorterEtterDato(buc.seder).map((sed) => (
+            <EnkeltSed key={sed.sedId} sed={sed} />
+          ))}
+        </div>
+      </Accordion.Content>
+    </Accordion.Item>
+  </Accordion>
 );
 
 EnkeltBuc.propTypes = {

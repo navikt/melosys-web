@@ -79,19 +79,12 @@ export default defineConfig({
   resolve: {
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
-      "nav-frontend-ekspanderbartpanel-style": fileURLToPath(
-        new URL("./src/nav-style/ekspanderbartpanel.css", import.meta.url)
-      ),
-      "nav-frontend-etiketter-style": fileURLToPath(new URL("./src/nav-style/etiketter.css", import.meta.url)),
-      "nav-frontend-grid-style": fileURLToPath(new URL("./src/nav-style/grid.css", import.meta.url)),
-      "nav-frontend-hjelpetekst-style": fileURLToPath(new URL("./src/nav-style/hjelpetekst.css", import.meta.url)),
       "nav-frontend-knapper-style": fileURLToPath(new URL("./src/nav-style/knapper.css", import.meta.url)),
       "nav-frontend-lenkepanel-style": fileURLToPath(new URL("./src/nav-style/lenkepanel.css", import.meta.url)),
       "nav-frontend-lenker-style": fileURLToPath(new URL("./src/nav-style/lenker.css", import.meta.url)),
       "nav-frontend-lukknapp-style": fileURLToPath(new URL("./src/nav-style/lukknapp.css", import.meta.url)),
       "nav-frontend-modal-style": fileURLToPath(new URL("./src/nav-style/modal.css", import.meta.url)),
       "nav-frontend-paneler-style": fileURLToPath(new URL("./src/nav-style/paneler.css", import.meta.url)),
-      "nav-frontend-popover-style": fileURLToPath(new URL("./src/nav-style/popover.css", import.meta.url)),
       "nav-frontend-skjema-style": fileURLToPath(new URL("./src/nav-style/skjema.css", import.meta.url)),
       "nav-frontend-snakkeboble-style": fileURLToPath(new URL("./src/nav-style/snakkeboble.css", import.meta.url)),
       "nav-frontend-spinner-style": fileURLToPath(new URL("./src/nav-style/spinner.css", import.meta.url)),

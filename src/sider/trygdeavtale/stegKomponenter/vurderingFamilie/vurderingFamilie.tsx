@@ -217,8 +217,8 @@ const VurderingFamilie = ({
                 <div className="fritekstWrapper--barn">
                   <LabelMedHjelpetekst
                     label="Fritekst til avsnitt om barn i vedtaksbrev"
-                    className="fritekst-tittel"
                     hjelpetekst={HJELPETEKST}
+                    bold
                   />
                   <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" disabled={!redigerbart} />
                 </div>
@@ -273,7 +273,6 @@ const VurderingFamilie = ({
                 <div className="fritekstWrapper">
                   <LabelMedHjelpetekst
                     label="Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev"
-                    className="fritekst-tittel"
                     hjelpetekst={HJELPETEKST}
                   />
                   <Skjema.HTMLEditor feltNavn="ektefelle.fritekst" className="fritekst" disabled={!redigerbart} />

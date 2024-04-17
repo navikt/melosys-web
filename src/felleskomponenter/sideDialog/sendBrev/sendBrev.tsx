@@ -33,6 +33,7 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
 import BrevVedlegg from "./brevVedlegg/brevVedlegg";
+import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 
 const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;
@@ -457,7 +458,7 @@ const SendBrev = ({
           <Nav.Column xs={brevTypeSelectWidth}>
             <Skjema.Select
               feltNavn="type"
-              label={<Nav.Typo.Element>Velg brev</Nav.Typo.Element>}
+              label={<LabelMedHjelpetekst label="Velg brev" bold small />}
               disabled={!redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues.valgtMottaker?.feilmelding}
               emptyFieldDisabled={!!formValues.type}
               onBlur={overstyrBlurEvent}

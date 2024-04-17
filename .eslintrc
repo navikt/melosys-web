@@ -66,7 +66,7 @@
     "import/no-extraneous-dependencies": [0],
     "import/prefer-default-export": 0,
     "import/no-named-as-default": 0,
-    "import/no-unresolved": [2, { "ignore": ["AppTypes", "Domene", "melosys-api"] }],
+    "import/no-unresolved": [2, { "ignore": ["AppTypes", "Domene", "melosys-api", "nav-frontend-grid"] }],
     "import/no-cycle": 0,
     "jsx-a11y/aria-props": 2,
     "jsx-a11y/aria-proptypes": 2,

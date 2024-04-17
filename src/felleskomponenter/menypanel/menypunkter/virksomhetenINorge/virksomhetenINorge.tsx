@@ -8,7 +8,7 @@ import { Action } from "redux";
 import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../skjema";
 import * as KV from "../../../../kodeverk";
-import * as Etiketter from "../../etiketter";
+import * as Tags from "../../tags";
 
 import EditerbartElement, { Status } from "../editerbartElement";
 import RedigerbarSamletVirksomhetINorge from "./redigerbarSamletVirksomhetINorge";
@@ -93,7 +93,7 @@ const VirksomhetenINorge = ({
       <Nav.Row className="tittel">
         <Nav.Column xs="12" className="col">
           <Nav.Typo.Systemtittel>{KV.Menypunkter.OmVirksomhetenINorge.tittel}</Nav.Typo.Systemtittel>
-          {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel />}
+          {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel />}
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

@@ -5,7 +5,7 @@ import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
-import * as Etiketter from "../../etiketter";
+import * as Tags from "../../tags";
 import * as MedfolgendeFamilie from "./medfolgendeFamilie";
 
 import MKV from "../../../../melosyskodeverk";
@@ -57,8 +57,8 @@ const FamilieforholdContainer = ({
         <>
           <Nav.Row>
             <Nav.Column xs="12" className="etikett-container">
-              <Etiketter.FraBruker />
-              {visArbeidsforholdRolleEtiketter && <Etiketter.BrukersDel style={{ marginLeft: "0.3em" }} />}
+              <Tags.FraBruker />
+              {visArbeidsforholdRolleEtiketter && <Tags.BrukersDel style={{ marginLeft: "0.3em" }} />}
             </Nav.Column>
           </Nav.Row>
           {behandlingstema === YRKESAKTIV ? (
