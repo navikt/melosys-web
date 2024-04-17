@@ -24,7 +24,6 @@ import { menypanelOperations } from "../../ducks/menypanel";
 
 import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
-import "./saksbehandling.css";
 import { FellesHandlersContext } from "../../contexts";
 
 interface Props extends RouteComponentProps<MatchParams> {
