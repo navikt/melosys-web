@@ -5,6 +5,7 @@ import bem from "../../../../bemUtils";
 
 import "./fritekstvedleggSkjema.css";
 import { begrensAntallTegn } from "../../../../utils/normalisering";
+import { ColumnWidth } from "nav-frontend-grid";
 
 interface FritekstvedleggSkjemaProps {
   felt: DokumenterV2.Felt;
@@ -15,7 +16,7 @@ interface FritekstvedleggSkjemaProps {
    */
   resetFritekstvedlegg: () => void;
   leggTilFritekstvedlegg: () => void;
-  width: string;
+  width?: ColumnWidth;
 }
 
 const TEGNBEGRENSNING = 60;
