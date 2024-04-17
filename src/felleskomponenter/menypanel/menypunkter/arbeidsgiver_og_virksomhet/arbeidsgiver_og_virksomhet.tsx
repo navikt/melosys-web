@@ -136,9 +136,11 @@ export const ArbeidsgiverOgVirksomhet = ({
           tekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet}
           understrek
           etterTekst={
-            <Nav.Hjelpetekst tittel={arbeidsforholdUtlandHjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
+            <Nav.HelpText
+              title={`${KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet} hjelpetekst`}
+            >
               {arbeidsforholdUtlandHjelpetekst}
-            </Nav.Hjelpetekst>
+            </Nav.HelpText>
           }
         />
       )}

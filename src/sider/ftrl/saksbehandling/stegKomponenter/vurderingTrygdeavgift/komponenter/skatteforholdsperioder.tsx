@@ -32,11 +32,7 @@ export const Skatteforholdsperioder = ({
 }: SkatteforholdsperioderProps) => {
   return (
     <div className="skatteforholdsperioder">
-      <LabelMedHjelpetekst
-        label="Oppgi informasjon om brukers skatteforhold"
-        className="skatteforhold__label"
-        hjelpetekstClassName="hjelpetekst"
-      />
+      <LabelMedHjelpetekst label="Oppgi informasjon om brukers skatteforhold" bold />
       <div className="skjema__panel">
         {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
           return (

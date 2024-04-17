@@ -381,11 +381,7 @@ const VurderingVedtak = ({
 
         <Nav.Column xs="5">
           <Nav.Typo.Element className={vurderingVedtakCls.element("info")} tag="div">
-            <LabelMedHjelpetekst
-              label="Periode"
-              hjelpetekst={PERIODE_HJELPETEKST}
-              hjelpetekstClassName="vurderingVedtak__hjelpetekst"
-            />
+            <LabelMedHjelpetekst label="Periode" hjelpetekst={PERIODE_HJELPETEKST} />
           </Nav.Typo.Element>
           <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("datofelt_wrapper")} tag="div">
             {`${formValues?.lovvalgsperiodeFom ? formValues?.lovvalgsperiodeFom : ""} - `}
@@ -419,7 +415,6 @@ const VurderingVedtak = ({
               <LabelMedHjelpetekst
                 label="Oppgi grunn for nytt vedtak (Obligatorisk)"
                 hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
-                hjelpetekstClassName="vurderingVedtak__hjelpetekst"
               />
             }
           >
@@ -450,11 +445,7 @@ const VurderingVedtak = ({
       )}
 
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
-        <LabelMedHjelpetekst
-          label="Fritekst til innledning"
-          hjelpetekst={INNLEDNING_FRITEKST}
-          hjelpetekstClassName="vurderingVedtak__hjelpetekst"
-        />
+        <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={INNLEDNING_FRITEKST} />
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
         feltNavn="innledningFritekst"
@@ -463,11 +454,7 @@ const VurderingVedtak = ({
       />
 
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
-        <LabelMedHjelpetekst
-          label="Fritekst til begrunnelse"
-          hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST}
-          hjelpetekstClassName="vurderingVedtak__hjelpetekst"
-        />
+        <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST} />
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
         feltNavn="begrunnelseFritekst"

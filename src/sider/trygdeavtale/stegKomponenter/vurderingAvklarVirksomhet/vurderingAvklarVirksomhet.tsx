@@ -74,7 +74,7 @@ const VurderingAvklarVirksomhet = ({
   return (
     <div className="vurderingAvklarVirksomhet">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={HJELPETEKST} hjelpetekstClassName="hjelpetekst" />
+        <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={HJELPETEKST} bold />
       </Nav.Typo.Innholdstittel>
 
       {virksomheterListe?.length !== 0 ? (
