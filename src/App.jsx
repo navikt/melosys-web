@@ -12,7 +12,6 @@ import "nav-frontend-lenker-style";
 import "nav-frontend-lukknapp-style";
 import "nav-frontend-modal-style";
 import "nav-frontend-paneler-style";
-import "nav-frontend-popover-style";
 import "nav-frontend-skjema-style";
 import "nav-frontend-snakkeboble-style";
 import "nav-frontend-spinner-style";
