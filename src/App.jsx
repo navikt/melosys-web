@@ -5,7 +5,7 @@ import { PublicClientApplication } from "@azure/msal-browser";
 import Rammeverk from "./sider/rammeverk";
 import { msalConfig } from "./auth/authConfig";
 
-import "nav-frontend-grid-style";
+import "./nav-style/grid.css";
 import "nav-frontend-hjelpetekst-style";
 import "nav-frontend-knapper-style";
 import "nav-frontend-lenkepanel-style";
