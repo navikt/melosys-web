@@ -2,7 +2,7 @@ import { Familiemedlem } from "../../../../../../graphql";
 
 import Ident from "../ident";
 import * as StringUtils from "../../../../../../utils/streng";
-import * as Etiketter from "../../../../etiketter";
+import * as Tags from "../../../../tags";
 import * as Utils from "../../../../../../utils";
 import { Table } from "@navikt/ds-react";
 
@@ -32,7 +32,7 @@ function BarnTable({ barnListe }: BarnTableProps) {
               </Table.DataCell>
               <Table.DataCell>{StringUtils.storeForbokstaver(barn.foreldreansvar)}</Table.DataCell>
               <Table.DataCell>{barn.fnrAnnenForelder}</Table.DataCell>
-              <Table.DataCell>{barn.alder && barn.alder < 18 ? <Etiketter.Under18Aar /> : ""}</Table.DataCell>
+              <Table.DataCell>{barn.alder && barn.alder < 18 ? <Tags.Under18Aar /> : ""}</Table.DataCell>
             </Table.Row>
           ))}
         </Table.Body>

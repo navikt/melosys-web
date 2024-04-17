@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 
 import * as Nav from "../../../../navFrontend";
-import * as Etiketter from "../../etiketter";
+import * as Tags from "../../tags";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 import * as Ikoner from "../../../../resources/images";
@@ -307,7 +307,7 @@ const LonnOgGodtgjorelser = ({ redigerbart, visArbeidsforholdRolleEtiketter }: L
           <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
             {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
           </Nav.Typo.Systemtittel>
-          {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
+          {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
           <LonnOgNaturalytelser
             redigerbart={redigerbart}
             lagreHandler={lagreHandler}

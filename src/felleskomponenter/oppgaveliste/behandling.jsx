@@ -34,9 +34,9 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
               </dd>
               {MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus.kode) && (
                 <dt>
-                  <Nav.EtikettBase type="info" className="behandlingsresultattype">
+                  <Nav.Tag variant="info" size="small" className="behandlingsresultattype">
                     {behandlingsresultattype.term}
-                  </Nav.EtikettBase>
+                  </Nav.Tag>
                 </dt>
               )}
             </dl>
