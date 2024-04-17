@@ -1,14 +1,14 @@
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
-import { VurderingInngang } from "./stegKomponenter/vurderingInngang/vurderingInngang";
+import { Aarsavregning } from "./stegKomponenter/aarsavregning/aarsavregning";
 
-const initialInngangSteg = {
-  id: "Inngang",
+const aarsavregningSteg = {
+  id: "Årsavregning",
   tittel: "Årsavregning",
   stegPosisjon: 0,
   status: FANE_STATUS.AKTIV,
   aktivtSteg: true,
   vedtakSteg: false,
-  komponent: VurderingInngang,
+  komponent: Aarsavregning,
 };
 
-export const alleSteg = [initialInngangSteg];
+export const alleSteg = [aarsavregningSteg];

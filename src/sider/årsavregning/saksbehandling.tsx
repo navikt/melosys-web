@@ -95,7 +95,6 @@ const Saksbehandling = ({ match, location }: Props) => {
       dispatch(behandlingerOperations.resetBehandlingerState());
       dispatch(behandlingsresultatOperations.resetBehandlingsresultatState());
       dispatch(mottatteOpplysningerOperations.resetState());
-      dispatch(menypanelOperations.skjulMenypanel());
       dispatch(dokumenterOperations.resetDokument());
     };
   }, []);
@@ -116,29 +115,27 @@ const Saksbehandling = ({ match, location }: Props) => {
     <>
       <Informasjonlinje />
       <div className="main-container">
-        <div className="ikke_yrkesaktiv_saksbehandling">
-          <Nav.Container fluid>
-            <Nav.Row>
-              <Nav.Column xs="7">
-                <main id="main-container">
-                  <EnkelStegvelger alleSteg={alleSteg} />
-                </main>
-                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
-              </Nav.Column>
-              <Nav.Column xs="5">
-                <Oppsummering
-                  arbeidsland={MKV.KTObjects.land_iso2.filter((landkodeObjekt: KTObject) =>
-                    land.includes(landkodeObjekt.kode)
-                  )}
-                  mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
-                  mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
-                />
-                <SaksoversiktLenke />
-                <SideDialog tabs={defaultTabs} />
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Container>
-        </div>
+        <Nav.Container fluid>
+          <Nav.Row>
+            <Nav.Column xs="7">
+              <main id="main-container">
+                <EnkelStegvelger alleSteg={alleSteg} />
+              </main>
+              <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+            </Nav.Column>
+            <Nav.Column xs="5">
+              <Oppsummering
+                arbeidsland={MKV.KTObjects.land_iso2.filter((landkodeObjekt: KTObject) =>
+                  land.includes(landkodeObjekt.kode)
+                )}
+                mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
+                mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
+              />
+              <SaksoversiktLenke />
+              <SideDialog tabs={defaultTabs} />
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Container>
       </div>
     </>
   );
