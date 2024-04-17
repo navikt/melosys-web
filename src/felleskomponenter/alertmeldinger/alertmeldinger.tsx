@@ -68,10 +68,8 @@ export const StandardMeldingOverst = ({ variant, actionEtterSynlighet, melding }
   return viserMelding ? (
     <div className="standardMeldingOverst">
       <Nav.Alert variant={variant}>
-        <div className="fullBredde">
-          {melding}
-          <Ikoner.Remove onClick={() => actionsEtterSynlighet()} />
-        </div>
+        {melding}
+        <Ikoner.Remove onClick={() => actionsEtterSynlighet()} />
       </Nav.Alert>
     </div>
   ) : null;

@@ -4,6 +4,7 @@ import MKV from "../../melosyskodeverk";
 
 import * as KV from "../../kodeverk";
 import * as Nav from "../../navFrontend";
+import * as Ikoner from "../../resources/images";
 import * as Utils from "../../utils";
 
 import "./registerkontrolltreff.css";
@@ -16,7 +17,7 @@ const UnntakPeriodeBegrunnelse = (kode) => {
 const RegisterkontrollTreff = ({ vurderingBegrunnelser }) =>
   vurderingBegrunnelser.map((begrunnelseKode) => (
     <div key={Utils._uuid()} className="registerkontroll-listeelement">
-      <Nav.Ikoner kind="advarsel-sirkel-fyll" size="24" />
+      <Ikoner.AdvarselSirkelFyll />
       <Nav.Typo.Normaltekst>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</Nav.Typo.Normaltekst>
     </div>
   ));

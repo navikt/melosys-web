@@ -83,6 +83,7 @@ import { ReactComponent as Kopier } from "./file-copy.svg";
 import { ReactComponent as HentOpplysninger } from "./folder-add.svg";
 import { ReactComponent as ChevronDown } from "./chevron-down.svg";
 import { ReactComponent as ChevronUp } from "./chevron-up.svg";
+import { ReactComponent as AdvarselSirkelFyll } from "./advarsel-sirkel-fyll.svg";
 import { Kjoenn } from "./helpercomponents";
 
 export {
@@ -172,4 +173,5 @@ export {
   VedtakGodkjentIkkeAktiv,
   ChevronDown,
   ChevronUp,
+  AdvarselSirkelFyll,
 };
