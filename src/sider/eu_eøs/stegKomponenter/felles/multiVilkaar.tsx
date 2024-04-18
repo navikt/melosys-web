@@ -1,5 +1,3 @@
-import PT from "prop-types";
-
 import MKV from "../../../../melosyskodeverk";
 
 import * as Nav from "../../../../navFrontend";
@@ -11,10 +9,22 @@ import {
 } from "../../../../felleskomponenter/stegvelger";
 
 import * as Mui from "../../../../felleskomponenter/ui";
-import { useEffect } from "react";
+import { ChangeEvent, useEffect } from "react";
+import { Vilkaar } from "../../../../services/modules/vilkar";
 
 const VilkaarKode16 = MKV.Koder.vilkaar.FO_883_2004_ART16_1;
 const AVSLAG = "AVSLAG";
+
+interface MultiVilkaarProps {
+  oppdaterData: (objekt: any) => void;
+  slettData: (objekt: any) => void;
+  redigerbart: boolean;
+  vilkaar12: Partial<Vilkaar>;
+  vilkaarNavn12: string;
+  vilkaarKode12: string;
+  begrunnelser12: string[];
+  vilkaar16: Partial<Vilkaar>;
+}
 
 export const MultiVilkaar = ({
   oppdaterData,
@@ -25,13 +35,13 @@ export const MultiVilkaar = ({
   redigerbart,
   vilkaarNavn12,
   begrunnelser12,
-}) => {
+}: MultiVilkaarProps) => {
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(vilkaarKode12, vilkaar12));
     oppdaterData(konverterVilkarTilStegData("art16_1", vilkaar16));
   }, []);
 
-  const vilkaarEndret = (event) => {
+  const vilkaarEndret = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
     if (value === vilkaarKode12) {
@@ -49,11 +59,11 @@ export const MultiVilkaar = ({
     }
   };
 
-  const begrunnelseEndret = ({ value }, id) => {
+  const begrunnelseEndret = (value: string[], id: string) => {
     oppdaterData(lagVilkarbegrunnelse(id, value));
   };
 
-  const fritekstEndret = (event) => {
+  const fritekstEndret = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { value, id } = event.target;
     oppdaterData(lagVilkarbegrunnelse(id, null, value));
   };
@@ -61,7 +71,7 @@ export const MultiVilkaar = ({
   const hentAvslagBegrunnelser = () => (vilkaar16 ? vilkaar16.begrunnelseKoder || [] : []);
 
   const innvilgelse = vilkaar12.oppfylt;
-  const anmodningOmUnntak = vilkaar12.oppfylt === false && vilkaar16.oppfylt === true;
+  const anmodningOmUnntak = vilkaar12.oppfylt === false && vilkaar16.oppfylt;
   const avslag = vilkaar12.oppfylt === false && vilkaar16.oppfylt === false;
   const visFritekstfelt = hentAvslagBegrunnelser().includes(MKV.Koder.begrunnelser.art16_1_avslag.SAERLIG_AVSLAGSGRUNN);
 
@@ -76,7 +86,7 @@ export const MultiVilkaar = ({
                 name="artikkel12"
                 onChange={vilkaarEndret}
                 value={vilkaarKode12}
-                checked={innvilgelse === true}
+                checked={innvilgelse}
                 label="Ja"
                 disabled={!redigerbart}
               />
@@ -84,7 +94,7 @@ export const MultiVilkaar = ({
                 name="artikkel12"
                 onChange={vilkaarEndret}
                 value={VilkaarKode16}
-                checked={anmodningOmUnntak === true}
+                checked={anmodningOmUnntak}
                 label="Nei, jeg vil vurdere artikkel 16.1"
                 disabled={!redigerbart}
               />
@@ -92,7 +102,7 @@ export const MultiVilkaar = ({
                 name="artikkel12"
                 onChange={vilkaarEndret}
                 value={AVSLAG}
-                checked={avslag === true}
+                checked={avslag}
                 label={`Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1`}
                 disabled={!redigerbart}
               />
@@ -107,7 +117,7 @@ export const MultiVilkaar = ({
                   muligeValg={begrunnelser12}
                   label="Legg til begrunnelse for ikke oppfylt:"
                   tillatFritekst={false}
-                  onChange={(e) => begrunnelseEndret(e, vilkaarKode12)}
+                  onChange={(e: { value: string[] }) => begrunnelseEndret(e.value, vilkaarKode12)}
                   defaultElementer={vilkaar12.begrunnelseKoder}
                   disabled={!redigerbart}
                 />
@@ -119,7 +129,7 @@ export const MultiVilkaar = ({
                   muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
                   label="Legg til begrunnelse for avslag:"
                   tillatFritekst={false}
-                  onChange={(e) => begrunnelseEndret(e, "art16_1_avslag")}
+                  onChange={(e: { value: string[] }) => begrunnelseEndret(e.value, "art16_1_avslag")}
                   defaultElementer={vilkaar16.begrunnelseKoder}
                   disabled={!redigerbart}
                 />
@@ -142,18 +152,5 @@ export const MultiVilkaar = ({
     </div>
   );
 };
-
-MultiVilkaar.propTypes = {
-  oppdaterData: PT.func.isRequired,
-  slettData: PT.func.isRequired,
-  redigerbart: PT.bool.isRequired,
-  vilkaar12: PT.object.isRequired,
-  vilkaarNavn12: PT.string.isRequired,
-  vilkaarKode12: PT.string.isRequired,
-  begrunnelser12: PT.array.isRequired,
-  vilkaar16: PT.object.isRequired,
-};
-
-MultiVilkaar.defaultProps = {};
 
 export default MultiVilkaar;
