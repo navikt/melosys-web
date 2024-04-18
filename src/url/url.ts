@@ -76,6 +76,9 @@ export const lagUrlFraSakstypeOgBehandlingstema = (
 export const lagIngenFlytUrl = (sakstypeKode: string, saksnummer: number | string, behandlingID: number) =>
   `/${sakstypeKode}/behandling/${saksnummer}/?behandlingID=${behandlingID}`;
 
+export const lagÅrsavregningFlytUrl = (sakstypeKode: string, saksnummer: number | string, behandlingID: number) =>
+  `/${sakstypeKode}/aarsavregning/${saksnummer}/?behandlingID=${behandlingID}`;
+
 export const lagUrl = (
   saksnummer: number | string,
   behandlingID: number,
@@ -86,6 +89,10 @@ export const lagUrl = (
   manglendeInnbetalingToggleEnabled: boolean | undefined,
   ikkeYrkesaktivFtrlToggleEnabled: boolean | undefined
 ) => {
+  if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING) {
+    return lagÅrsavregningFlytUrl(sakstypeKode, saksnummer, behandlingID);
+  }
+
   if (
     skalViseIngenFlyt(
       sakstypeKode,

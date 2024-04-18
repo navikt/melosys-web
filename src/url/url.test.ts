@@ -56,6 +56,21 @@ describe("url", () => {
       expect(url).toContain("/FTRL/saksbehandling/");
     });
 
+    it("FTRL behandlinger med behandlingstype årsavregning returnerer url", () => {
+      const url = lagUrl(
+        "MEL-1",
+        1,
+        FTRL,
+        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+        MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+        true,
+        true
+      );
+
+      expect(url).toContain("/FTRL/aarsavregning/");
+    });
+
     it("Sakstype TRYGDEAVTALE med støttet behandlingstemaKode returnerer url", () => {
       const url = lagUrlFraSakstypeOgBehandlingstema(
         "MEL-1",
