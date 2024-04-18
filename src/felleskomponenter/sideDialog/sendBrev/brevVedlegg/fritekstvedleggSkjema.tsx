@@ -5,6 +5,7 @@ import bem from "../../../../bemUtils";
 
 import "./fritekstvedleggSkjema.css";
 import { begrensAntallTegn } from "../../../../utils/normalisering";
+import Knapperad from "../../../knapperad";
 import { ColumnWidth } from "nav-frontend-grid";
 
 interface FritekstvedleggSkjemaProps {
@@ -48,12 +49,14 @@ const FritekstvedleggSkjema = ({
         </Nav.Row>
         <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}_FRITEKST.feltVerdi`} key={index} />
         <Nav.Row>
-          <Nav.Hovedknapp mini onClick={leggTilFritekstvedlegg}>
-            Lagre fritekstvedlegg
-          </Nav.Hovedknapp>
-          <Nav.Knapp mini onClick={resetFritekstvedlegg}>
-            Avbryt
-          </Nav.Knapp>
+          <Knapperad
+            bekreft={leggTilFritekstvedlegg}
+            avbryt={resetFritekstvedlegg}
+            avbrytTekst="Avbryt"
+            bekreftTekst="Lagre"
+            redigerbart
+            size="small"
+          />
         </Nav.Row>
       </Nav.Panel>
     </Nav.Row>

@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import { MouseEventHandler } from "react";
 import classNames from "classnames";
 
 import * as Nav from "../../../navFrontend";
@@ -6,10 +6,18 @@ import * as Ikoner from "../../../resources/images";
 
 import "./stegKnapper.css";
 
+interface ButtonProps {
+  onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
+  loading?: boolean;
+  disabled?: boolean;
+  className?: string;
+  htmlType?: "button" | "submit" | "reset";
+}
+
 interface StegKnapperProps {
-  bekreftKnappProps: ComponentProps<typeof Nav.Hovedknapp>;
+  bekreftKnappProps: ButtonProps;
   bekreftTekst?: string;
-  tilbakeKnappProps?: ComponentProps<typeof Nav.Flatknapp>;
+  tilbakeKnappProps?: ButtonProps;
   className?: string;
 }
 
@@ -25,24 +33,19 @@ const StegKnapper = ({
 
   return (
     <div className={cls}>
-      <Nav.Hovedknapp
-        mini
-        {...bekreftKnappProps}
-        className={bekreftKnappCls}
-        htmlType={bekreftKnappProps.htmlType || "button"}
-      >
+      <Nav.Button variant="primary" {...bekreftKnappProps} className={bekreftKnappCls}>
         {bekreftTekst}
-      </Nav.Hovedknapp>
+      </Nav.Button>
       {tilbakeKnappProps && (
-        <Nav.Flatknapp
-          mini
-          {...tilbakeKnappProps}
+        <Nav.Button
+          variant="tertiary"
           className={tilbakeKnappCls}
           htmlType={tilbakeKnappProps.htmlType || "button"}
+          icon={tilbakeKnappProps.disabled ? <Ikoner.ArrowLeftWhite /> : <Ikoner.ArrowLeftBlue />}
+          {...tilbakeKnappProps}
         >
-          {tilbakeKnappProps.disabled ? <Ikoner.ArrowLeftWhite /> : <Ikoner.ArrowLeftBlue />}
-          <span>Tilbake</span>
-        </Nav.Flatknapp>
+          Tilbake
+        </Nav.Button>
       )}
     </div>
   );

@@ -6,8 +6,6 @@ import PT from "prop-types";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 
-import * as Mui from "../../ui";
-
 import "./listevelger.css";
 
 /** Dette er komponent for ett enkeltvalg. Dersom tillatFritekst === true, vil Nav.Input brukes
@@ -29,9 +27,15 @@ const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatF
   return (
     <div className="listevelger__linje">
       <div className="listevelger__innhold">{element}</div>
-      <Mui.Knapp mini disabled={disabled} className="listevelger__linje__knapp" onClick={slettElement}>
+      <Nav.Button
+        variant="secondary"
+        size="small"
+        disabled={disabled}
+        className="listevelger__linje__knapp"
+        onClick={slettElement}
+      >
         Fjern
-      </Mui.Knapp>
+      </Nav.Button>
     </div>
   );
 };
@@ -199,14 +203,15 @@ class ListevelgerFlervalg extends Component {
             className="listevelger__linje__input"
             disabled={disabled}
           />
-          <Nav.Knapp
-            mini
+          <Nav.Button
+            variant="secondary"
+            size="small"
             className="listevelger__linje__knapp listevelger__linje__knapp--leggtil"
             onClick={this.leggValgTilListe}
             disabled={disabled}
           >
             Legg til
-          </Nav.Knapp>
+          </Nav.Button>
         </div>
         <datalist id={`dataliste-${fields.name}`}>
           {muligeValg.map((valg) => (

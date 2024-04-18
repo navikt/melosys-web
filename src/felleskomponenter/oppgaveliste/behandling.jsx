@@ -42,8 +42,10 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
             </dl>
           </Nav.Column>
         </Nav.Column>
-        <Nav.Column xs="12" md="3" className="visBehandlingKnapp">
-          {kanVises && <Nav.Knapp>Vis behandling</Nav.Knapp>}
+        <Nav.Column xs="12" md="3" className="knapperad">
+          <div className="knapp__container">
+            {kanVises && <Nav.Button variant="secondary">Vis behandling</Nav.Button>}
+          </div>
         </Nav.Column>
       </Nav.Row>
     </Nav.Panel>

@@ -2,7 +2,6 @@ import { ElementType, MouseEvent, MouseEventHandler, ReactNode, useState } from 
 import classnames from "classnames";
 
 import * as Nav from "../../../../navFrontend";
-import * as Mui from "../../../ui";
 
 import Legend from "./legend";
 import { Status, SymbolsynlighetConfig } from "./types";
@@ -134,15 +133,9 @@ const EditerbartElement = ({
     <div className={cls}>
       <Nav.Fieldset legend={legend}>{hentAktivtInnhold()}</Nav.Fieldset>
       {skalRendreLagreKnapp && (
-        <Mui.Knapp
-          onClick={lagreClickHandler}
-          capitalCase
-          disabled={!redigerbart}
-          type="hoved"
-          className="lagre__knapp"
-        >
+        <Nav.Button onClick={lagreClickHandler} disabled={!redigerbart} variant="primary" size="small">
           Lagre
-        </Mui.Knapp>
+        </Nav.Button>
       )}
     </div>
   );

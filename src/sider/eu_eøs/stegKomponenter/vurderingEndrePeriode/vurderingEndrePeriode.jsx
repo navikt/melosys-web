@@ -289,8 +289,7 @@ class VurderingEndrePeriode extends Component {
         {redigerbart && <Nav.Alert variant="info">{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.Alert>}
         <Mui.StegKnapper
           bekreftKnappProps={{
-            spinner: endringPending,
-            autoDisableVedSpinner: true,
+            loading: endringPending,
             disabled: !redigerbart,
             onClick: vedKlikkEndrePeriode,
           }}

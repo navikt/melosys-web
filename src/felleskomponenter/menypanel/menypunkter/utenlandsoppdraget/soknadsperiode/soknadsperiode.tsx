@@ -101,7 +101,6 @@ export const Soknadsperiode = ({ redigerbart, tittel, lagreSoknadOgOppfriskSakso
           </Nav.Column>
           <Nav.Column xs="12">
             <Knapperad
-              capitalCase
               avbryt={avbryt}
               avbrytTekst="Avbryt"
               bekreft={lagre}

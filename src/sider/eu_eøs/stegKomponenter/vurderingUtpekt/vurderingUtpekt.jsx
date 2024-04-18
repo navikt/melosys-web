@@ -115,7 +115,7 @@ export const VurderingUtpekt = ({
   return (
     <form className="vurderingutpekt" onSubmit={handleSubmit}>
       {!erBucAapen ? (
-        <Nav.Alert className="buc__varsel" variant="warning">
+        <Nav.Alert className="buc__varsel" variant="warning" size="small">
           <strong>BUC er lukket</strong>
           <ul>
             <li>Du kan godkjenne perioden ved å trykke &quot;Bekreft og fortsett&quot;.</li>

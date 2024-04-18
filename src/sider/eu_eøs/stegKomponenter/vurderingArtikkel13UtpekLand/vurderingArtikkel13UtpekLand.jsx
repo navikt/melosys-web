@@ -228,8 +228,7 @@ export const VurderingArtikkel13UtpekLand = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: vedKlikkUtpek,
-          spinner: utpekingPending,
-          autoDisableVedSpinner: true,
+          loading: utpekingPending,
           disabled: !redigerbart,
         }}
         bekreftTekst="Fatt vedtak"

@@ -1,15 +1,14 @@
 import {
-  FocusEventHandler,
-  MouseEventHandler,
   ChangeEventHandler,
-  useState,
-  useEffect,
   FocusEvent,
+  FocusEventHandler,
   MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useState,
 } from "react";
 
 import * as Nav from "../../../../navFrontend";
-import * as Mui from "../../../ui";
 import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";
 import * as Types from "./types";
@@ -170,14 +169,9 @@ export const KontaktOpplysninger = ({
       {sokeResultat && (
         <OrganisasjonsAdresse visTittel={false} className="kontaktopplysninger__adresse" organisasjon={sokeResultat} />
       )}
-      <Mui.Knapp
-        className="kontaktopplysninger__slett-knapp"
-        disabled={!redigerbart}
-        mini
-        onClick={slettKnappClickHandler}
-      >
+      <Nav.Button variant="secondary" size="small" disabled={!redigerbart} onClick={slettKnappClickHandler}>
         Slett kontaktopplysninger
-      </Mui.Knapp>
+      </Nav.Button>
       <div role="alert" className="kontaktopplysninger__slett-feilmelding">
         {slettFeilmelding && <Nav.Typo.Feilmelding>{slettFeilmelding}</Nav.Typo.Feilmelding>}
       </div>

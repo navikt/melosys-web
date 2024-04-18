@@ -15,6 +15,7 @@ import { lagYupToReduxformErrorMapper } from "../../yup";
 import sideDialogOpprettNyBucSchema from "./sideDialogOpprettNyBucSchema";
 import "./sideDialogOpprettNyBuc.css";
 import VedleggTable from "../vedleggTable";
+import Knapperad from "../knapperad";
 
 const TomtFelt = ({ tekst }) => <option value="">{tekst}</option>;
 
@@ -274,13 +275,14 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
           dokumenter={dokumenter}
           redigerbart={redigerbart}
         />
-        <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>
-          Opprett ny BUC
-        </Nav.Hovedknapp>
-        &nbsp;
-        <Nav.Knapp type="standard" onClick={resetKomponent}>
-          Avbryt utfylling
-        </Nav.Knapp>
+        <Knapperad
+          bekreft={sendSed}
+          avbryt={resetKomponent}
+          avbrytTekst="Avbryt utfylling"
+          bekreftTekst="Opprett ny BUC"
+          redigerbart={redigerbart}
+          spinner={oppretterBuc}
+        />
         {opprettetBucUrl && bucOpprettet && (
           <Nav.Alert variant="success" className="varsel">
             Saken er nå opprettet i RINA

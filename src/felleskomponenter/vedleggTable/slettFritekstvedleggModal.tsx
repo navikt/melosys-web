@@ -1,6 +1,7 @@
 import { ComponentProps } from "react";
 
 import * as Nav from "../../navFrontend";
+import Knapperad from "../knapperad";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
@@ -32,12 +33,14 @@ const SlettFritekstvedleggModal = ({
         </Nav.Typo.Normaltekst>
       </Nav.Row>
       <Nav.Row>
-        <Nav.Hovedknapp mini onClick={slettVedlegg}>
-          Ja, slett
-        </Nav.Hovedknapp>
-        <Nav.Knapp mini type="flat" onClick={onRequestClose}>
-          Avbryt
-        </Nav.Knapp>
+        <Knapperad
+          bekreft={slettVedlegg}
+          bekreftTekst="Ja, slett"
+          avbryt={onRequestClose}
+          avbrytTekst="Avbryt"
+          redigerbart
+          size="small"
+        />
       </Nav.Row>
     </Nav.Modal>
   );

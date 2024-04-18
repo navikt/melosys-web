@@ -118,6 +118,7 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
           "data-cy-nesteknapp": "knapp_steg4",
           onClick: bekreftOgFortsett,
         }}
+        // @ts-ignore
         tilbakeKnappProps={{
           onClick: tilbake,
           disabled: !redigerbart,

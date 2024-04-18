@@ -521,37 +521,34 @@ const SendBrev = ({
         />
       )}
 
-      <div>
-        <Nav.Hovedknapp
-          mini
+      <div className="send_brev__knapperad">
+        <Nav.Button
+          variant="primary"
           disabled={knappErDisabled}
           className="brevknapp"
           onClick={sendBrev}
-          spinner={sendBrevSpinner}
-          autoDisableVedSpinner
+          loading={sendBrevSpinner}
         >
           Send brev
-        </Nav.Hovedknapp>
-        <Nav.Knapp
-          mini
+        </Nav.Button>
+        <Nav.Button
+          variant="secondary"
           disabled={knappErDisabled}
           className="brevknapp"
           onClick={lagreUtkast}
-          spinner={lagreUtkastSpinner}
-          autoDisableVedSpinner
+          loading={lagreUtkastSpinner}
         >
           Lagre utkast
-        </Nav.Knapp>
-        <Nav.Knapp
-          mini
+        </Nav.Button>
+        <Nav.Button
+          variant="secondary"
           disabled={!formValues.mottaker || !redigerbart || spinnerAktiv}
           className="brevknapp"
           onClick={forkastBrev}
-          spinner={forkastBrevSpinner}
-          autoDisableVedSpinner
+          loading={forkastBrevSpinner}
         >
           Forkast brev
-        </Nav.Knapp>
+        </Nav.Button>
       </div>
 
       {brevSendt && (

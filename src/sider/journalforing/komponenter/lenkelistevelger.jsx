@@ -47,12 +47,12 @@ function LenkeListeVelger(props) {
             placeholdere="Velg eller skriv inn egen tittel"
             muligeValg={muligeValg}
           />
-          <Mui.Knapp type="hoved" disabled={erTomTittel()} onClick={lagre} className="knapper">
+          <Nav.Button variant="primary" size="small" disabled={erTomTittel()} onClick={lagre} className="knapper">
             Lagre
-          </Mui.Knapp>
-          <Mui.Knapp type="flat" onClick={avbryt} className="knapper">
+          </Nav.Button>
+          <Nav.Button variant="tertiary" size="small" onClick={avbryt} className="knapper">
             Avbryt
-          </Mui.Knapp>
+          </Nav.Button>
         </Nav.Column>
       ) : (
         <div className="dokumentvisning">

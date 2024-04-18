@@ -6,18 +6,19 @@ import { formValueSelector } from "redux-form";
 import MKV from "../../../../../melosyskodeverk";
 import * as Skjema from "../../../../skjema";
 import * as KV from "../../../../../kodeverk";
-import * as Mui from "../../../../ui";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import LabelMedHjelpetekst from "../../../../labelMedHjelpetekst";
+import Knapperad from "../../../../knapperad";
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 
 interface RedigererProps {
   lagre: MouseEventHandler;
+  avbryt: MouseEventHandler;
 }
 
-const Redigerer = ({ lagre }: RedigererProps) => {
+const Redigerer = ({ lagre, avbryt }: RedigererProps) => {
   const { landkoder, flereLandUkjentHvilke } = useSelector((state) => soknadFormValueSelector(state, "soknadsland"));
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const minstEttLandValgt = landkoder.length > 0;
@@ -42,9 +43,7 @@ const Redigerer = ({ lagre }: RedigererProps) => {
         redigerbart={!flereLandUkjentHvilke}
         options={MKV.KTObjects.landkoder.map(({ kode, term }: KTObject) => ({ value: kode, label: term }))}
       />
-      <Mui.Knapp onClick={lagre} className="lagreknapp">
-        Lagre
-      </Mui.Knapp>
+      <Knapperad bekreftTekst="Lagre" bekreft={lagre} avbrytTekst="Avbryt" avbryt={avbryt} redigerbart />
     </>
   );
 };

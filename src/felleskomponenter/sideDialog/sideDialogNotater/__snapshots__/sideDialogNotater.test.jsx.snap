@@ -7,10 +7,14 @@ exports[`SideDialogNotater > snapshot test 1`] = `
   >
     <div>
       <button
-        class="knapp mui-knapp knapp knapp--hoved"
-        type="submit"
+        class="navds-button navds-button--primary navds-button--medium"
       >
-        LEGG TIL NYTT NOTAT
+        <span
+          aria-live="polite"
+          class="navds-label"
+        >
+          Legg til nytt notat
+        </span>
       </button>
     </div>
   </div>
