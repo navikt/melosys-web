@@ -3,7 +3,7 @@
 exports[`MottatteOpplysningerFeilmeldinger > snapshot test 1`] = `
 <div>
   <div
-    class="mottatteopplysninger_feilmeldinger navds-alert navds-alert--warning navds-alert--medium"
+    class="mottatteopplysninger_feilmeldinger navds-alert navds-alert--warning navds-alert--small"
   >
     <svg
       aria-labelledby="title-aksel-icon-1"
@@ -29,7 +29,7 @@ exports[`MottatteOpplysningerFeilmeldinger > snapshot test 1`] = `
       />
     </svg>
     <div
-      class="navds-alert__wrapper navds-body-long"
+      class="navds-alert__wrapper navds-body-long navds-body-long--small"
     >
       Ugyldige felter. Sjekk følgende menypunkt(er):
       <ul>
