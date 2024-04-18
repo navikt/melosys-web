@@ -15,6 +15,9 @@ declare module "AppTypes" {
   }
 }
 
+/***
+ * window.env settes i env-config.js og blir lastet inn i index.html. env-config.js genereres i oppstartsprosessen (se package.json og Dockerfile).
+ */
 interface Window {
   env: {
     [key: string]: string;
