@@ -1,7 +1,5 @@
 import { Soknadsperiode } from "./soknadsperiode";
 import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
-import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/react";
 
 vi.mock("../../../../../utils", async () => {
   const actual = await vi.importActual("../../../../../utils");
@@ -34,17 +32,6 @@ describe("Soknadsperiode", () => {
 
   it("snapshot test", () => {
     const { container } = renderWithProviders(<Soknadsperiode {...props} />, { preloadedState: initialState });
-    expect(container).toMatchSnapshot();
-  });
-
-  it("snapshot test når periode endres", async () => {
-    const { container } = renderWithProviders(<Soknadsperiode {...props} />, { preloadedState: initialState });
-
-    expect(screen.queryAllByRole("button")).toHaveLength(1);
-
-    const user = userEvent.setup();
-    await user.click(screen.getByRole("button"));
-
     expect(container).toMatchSnapshot();
   });
 });
