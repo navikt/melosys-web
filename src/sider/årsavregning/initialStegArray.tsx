@@ -1,5 +1,5 @@
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
-import { Aarsavregning } from "./stegKomponenter/aarsavregning/aarsavregning";
+import { VurderingAarsavregning } from "./stegKomponenter/vurderingAarsavregning/vurderingAarsavregning";
 
 const aarsavregningSteg = {
   id: "Årsavregning",
@@ -8,7 +8,7 @@ const aarsavregningSteg = {
   status: FANE_STATUS.AKTIV,
   aktivtSteg: true,
   vedtakSteg: false,
-  komponent: Aarsavregning,
+  komponent: VurderingAarsavregning,
 };
 
 export const alleSteg = [aarsavregningSteg];
