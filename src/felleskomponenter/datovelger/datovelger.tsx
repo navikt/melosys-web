@@ -41,7 +41,6 @@ const Datovelger = ({
     locale: "nb",
     defaultSelected: value,
     defaultMonth: minDate ?? value,
-    openOnFocus: false,
     onDateChange: (nyValgtDatoFraDatePicker?: Date) =>
       onChange(Utils.dato.formatterDatoTilNorsk(nyValgtDatoFraDatePicker, false, undefined)),
     onValidate: (err) => {

@@ -130,7 +130,7 @@ const SideDialog = ({
             </Tabs.List>
           </nav>
           {tabs.map((tab) => (
-            <Tabs.Panel value={tab.navn}>
+            <Tabs.Panel value={tab.navn} key={tab.navn}>
               <FaneViser
                 navn={tab.navn}
                 saksnummer={saksnummer}
