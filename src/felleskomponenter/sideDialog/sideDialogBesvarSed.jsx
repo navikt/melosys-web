@@ -40,7 +40,15 @@ StatusEtikett.propTypes = {
 const sedTypeTerm = (sedType) => EKV.Terms.sedtyper[sedType];
 
 const EnkeltSed = ({ sed }) => (
-  <Nav.LenkepanelBase href={sed.rinaUrl} target="_blank" border>
+  <Nav.Box
+    as={Nav.Link}
+    href={sed.rinaUrl}
+    target="_blank"
+    padding="2"
+    borderWidth="1"
+    borderRadius="medium"
+    borderColor="border-default"
+  >
     <div className="kolonne__navn">
       <Nav.Typo.Element className="lenkepanel__heading">
         {sed.sedType} - {sedTypeTerm(sed.sedType)}
@@ -50,7 +58,7 @@ const EnkeltSed = ({ sed }) => (
     <div className="kolonne__status">
       <StatusEtikett status={sed.status} />
     </div>
-  </Nav.LenkepanelBase>
+  </Nav.Box>
 );
 
 EnkeltSed.propTypes = {

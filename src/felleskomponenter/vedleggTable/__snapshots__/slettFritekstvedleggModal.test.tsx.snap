@@ -45,6 +45,7 @@ exports[`slettFritekstvedleggModal > snapshot test 1`] = `
           <button
             className="navds-button navds-button--primary navds-button--small"
             onClick={[MockFunction spy]}
+            onKeyUp={[Function]}
             style={
               {
                 "width": undefined,
@@ -52,7 +53,6 @@ exports[`slettFritekstvedleggModal > snapshot test 1`] = `
             }
           >
             <span
-              aria-live="polite"
               className="navds-label navds-label--small"
             >
               Ja, slett
@@ -61,6 +61,7 @@ exports[`slettFritekstvedleggModal > snapshot test 1`] = `
           <button
             className="navds-button navds-button--tertiary navds-button--small"
             onClick={[MockFunction spy]}
+            onKeyUp={[Function]}
             style={
               {
                 "width": undefined,
@@ -68,7 +69,6 @@ exports[`slettFritekstvedleggModal > snapshot test 1`] = `
             }
           >
             <span
-              aria-live="polite"
               className="navds-label navds-label--small"
             >
               Avbryt

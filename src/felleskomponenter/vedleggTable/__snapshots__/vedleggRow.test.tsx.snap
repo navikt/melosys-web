@@ -5,7 +5,7 @@ exports[`vedleggRow > snapshot test 1`] = `
   className="navds-table__row vedlegg navds-table__row--shade-on-hover"
 >
   <td
-    className="navds-table__data-cell navds-body-short"
+    className="navds-table__data-cell navds-body-short navds-body-short--medium"
   >
     <a
       className="lenke"
@@ -16,19 +16,20 @@ exports[`vedleggRow > snapshot test 1`] = `
     </a>
   </td>
   <td
-    className="navds-table__data-cell navds-body-short"
+    className="navds-table__data-cell navds-body-short navds-body-short--medium"
   >
     <span>
       
     </span>
   </td>
   <td
-    className="navds-table__data-cell icon__cell navds-body-short"
+    className="navds-table__data-cell icon__cell navds-body-short navds-body-short--medium"
   >
     <button
       aria-label="Fjern vedlegg"
       className="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
       onClick={[MockFunction spy]}
+      onKeyUp={[Function]}
       style={
         {
           "width": undefined,

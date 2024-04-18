@@ -11,15 +11,15 @@ exports[`vedleggTable > snapshot test 1`] = `
       className="navds-table__row navds-table__row--shade-on-hover"
     >
       <th
-        className="navds-table__header-cell navds-label navds-label--small"
+        className="navds-table__header-cell navds-label"
       >
         a
       </th>
       <th
-        className="navds-table__header-cell navds-label navds-label--small"
+        className="navds-table__header-cell navds-label"
       />
       <th
-        className="navds-table__header-cell navds-label navds-label--small"
+        className="navds-table__header-cell navds-label"
       />
     </tr>
   </thead>
@@ -30,7 +30,7 @@ exports[`vedleggTable > snapshot test 1`] = `
       className="navds-table__row navds-table__row--shade-on-hover"
     >
       <td
-        className="navds-table__data-cell navds-body-short navds-body-short--small"
+        className="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         <a
           className="lenke"
@@ -41,17 +41,18 @@ exports[`vedleggTable > snapshot test 1`] = `
         </a>
       </td>
       <td
-        className="navds-table__data-cell navds-body-short navds-body-short--small"
+        className="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         
       </td>
       <td
-        className="navds-table__data-cell icon__cell navds-body-short navds-body-short--small"
+        className="navds-table__data-cell icon__cell navds-body-short navds-body-short--medium"
       >
         <button
           aria-label="Rediger vedlegg"
           className="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
           onClick={[Function]}
+          onKeyUp={[Function]}
           style={
             {
               "width": undefined,
@@ -84,6 +85,7 @@ exports[`vedleggTable > snapshot test 1`] = `
           aria-label="Slett vedlegg"
           className="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
           onClick={[Function]}
+          onKeyUp={[Function]}
           style={
             {
               "width": undefined,
@@ -118,7 +120,7 @@ exports[`vedleggTable > snapshot test 1`] = `
       className="navds-table__row vedlegg navds-table__row--shade-on-hover"
     >
       <td
-        className="navds-table__data-cell navds-body-short navds-body-short--small"
+        className="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         <a
           className="lenke"
@@ -129,19 +131,20 @@ exports[`vedleggTable > snapshot test 1`] = `
         </a>
       </td>
       <td
-        className="navds-table__data-cell navds-body-short navds-body-short--small"
+        className="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         <span>
           
         </span>
       </td>
       <td
-        className="navds-table__data-cell icon__cell navds-body-short navds-body-short--small"
+        className="navds-table__data-cell icon__cell navds-body-short navds-body-short--medium"
       >
         <button
           aria-label="Fjern vedlegg"
           className="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
           onClick={[Function]}
+          onKeyUp={[Function]}
           style={
             {
               "width": undefined,

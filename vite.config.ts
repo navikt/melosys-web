@@ -79,7 +79,6 @@ export default defineConfig({
   resolve: {
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
-      "nav-frontend-lenkepanel-style": fileURLToPath(new URL("./src/nav-style/lenkepanel.css", import.meta.url)),
       "nav-frontend-lenker-style": fileURLToPath(new URL("./src/nav-style/lenker.css", import.meta.url)),
       "nav-frontend-lukknapp-style": fileURLToPath(new URL("./src/nav-style/lukknapp.css", import.meta.url)),
       "nav-frontend-modal-style": fileURLToPath(new URL("./src/nav-style/modal.css", import.meta.url)),

@@ -42,7 +42,7 @@ exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
         className="navds-table__row navds-table__row--shade-on-hover"
       >
         <td
-          className="navds-table__data-cell navds-body-short"
+          className="navds-table__data-cell navds-body-short navds-body-short--medium"
         >
           <address>
             <div>
@@ -66,17 +66,17 @@ exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
           </address>
         </td>
         <td
-          className="navds-table__data-cell navds-body-short"
+          className="navds-table__data-cell navds-body-short navds-body-short--medium"
         >
           Freg
         </td>
         <td
-          className="navds-table__data-cell navds-body-short"
+          className="navds-table__data-cell navds-body-short navds-body-short--medium"
         >
           Folkeregisteret
         </td>
         <td
-          className="navds-table__data-cell gyldig-label navds-body-short"
+          className="navds-table__data-cell gyldig-label navds-body-short navds-body-short--medium"
         >
           03.11.2012
         </td>
