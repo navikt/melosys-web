@@ -104,7 +104,7 @@ export const Varsler = ({
         </Nav.Alert>
       )}
       {inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
-        <Nav.Alert variant="info" size="small">
+        <Nav.Alert variant="info">
           {visStorbritanniaKonvensjonTekst && (
             <p>
               Husk at du må vurdere om inngangsvilkårene i konvensjonen med Storbritannia av 30. juni 2023, eller

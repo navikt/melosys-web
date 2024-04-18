@@ -5,7 +5,8 @@ import Lenker from "nav-frontend-lenker";
 import Modal from "nav-frontend-modal";
 import Tekstomrade from "nav-frontend-tekstomrade";
 import { LenkepanelBase } from "nav-frontend-lenkepanel";
-import { Alert, Tag, HelpText, Button } from "@navikt/ds-react";
+import { Tag, HelpText, Button } from "@navikt/ds-react";
+import Alert from "./alert";
 
 // Egne implementasjoner av pakker fra nav-frontend. Noen av disse har blitt fjernet fra nav-frontend, men vi implementerer de selv fordi vi fortsatt har bruk for de.
 import {

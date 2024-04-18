@@ -134,7 +134,7 @@ exports[`Faktura > snapshot test 1`] = `
               class="fakturalinje"
             >
               <div
-                class="navds-alert navds-alert--info navds-alert--medium"
+                class="navds-alert navds-alert--info navds-alert--small"
               >
                 <svg
                   aria-labelledby="title-aksel-icon-2"
@@ -160,7 +160,7 @@ exports[`Faktura > snapshot test 1`] = `
                   />
                 </svg>
                 <div
-                  class="navds-alert__wrapper navds-body-long"
+                  class="navds-alert__wrapper navds-body-long navds-body-long--small"
                 >
                   Fakturanummer er bare kjent i Melosys når det gjelder en manglende innbetaling, du kan likevel finne faktura i OeBS ved å søke på bruker
                 </div>

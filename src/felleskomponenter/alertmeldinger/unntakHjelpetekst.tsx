@@ -4,7 +4,7 @@ import "./alertmeldinger.css";
 const UnntakHjelpetekst = () => {
   return (
     <div className="unntakHjelpetekst">
-      <Nav.Alert variant="info" size="small">
+      <Nav.Alert variant="info">
         <ul>
           <li>Send søknad om unntak som fritekstbrev i &quot;Send brev&quot;-menyen</li>
           <li>Velg &quot;Utenlandsk trygdemyndighet i avtaleland&quot;</li>
