@@ -1,4 +1,4 @@
-import MKV from "../../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 
 import * as Nav from "../../../../navFrontend";
 import {
@@ -9,11 +9,28 @@ import {
 } from "../../../../felleskomponenter/stegvelger";
 
 import * as Mui from "../../../../felleskomponenter/ui";
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Vilkaar } from "../../../../services/modules/vilkar";
+import { useSelector } from "react-redux";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
+import { KTObject } from "@navikt/melosys-kodeverk";
+import * as KV from "../../../../kodeverk";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 
 const VilkaarKode16 = MKV.Koder.vilkaar.FO_883_2004_ART16_1;
 const AVSLAG = "AVSLAG";
+const { lovvalgbestemmelser_konv_efta_storbritannia } = MKV.KTObjects.lovvalgsbestemmelser;
+const { lovvalgbestemmelser_883_2004 } = MKV.KTObjects.lovvalgsbestemmelser;
+const { KONV_EFTA_STORBRITANNIA_ART14_1, KONV_EFTA_STORBRITANNIA_ART16_1, KONV_EFTA_STORBRITANNIA_ART18_1 } =
+  MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
+const { FO_883_2004_ART12_1, FO_883_2004_ART16_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
+const {
+  IKKE_UTSENDT_PAA_OPPDRAG_FOR_AG,
+  IKKE_NORSK_AG_REGNING,
+  IKKE_OMFATTET_LENGE_NOK_I_NORGE_FOER,
+  IKKE_VESENTLIG_VIRKSOMHET,
+} = MKV.Koder.begrunnelser.art12_1_begrunnelser;
 
 interface MultiVilkaarProps {
   oppdaterData: (objekt: any) => void;
@@ -22,7 +39,7 @@ interface MultiVilkaarProps {
   vilkaar12: Partial<Vilkaar>;
   vilkaarNavn12: string;
   vilkaarKode12: string;
-  begrunnelser12: string[];
+  begrunnelser12: KTObject[];
   vilkaar16: Partial<Vilkaar>;
 }
 
@@ -36,6 +53,16 @@ export const MultiVilkaar = ({
   vilkaarNavn12,
   begrunnelser12,
 }: MultiVilkaarProps) => {
+  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
+  const [valgtBestemmelse, setValgtBestemmelse] = useState("");
+  const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandSelector);
+  const erSokkel = useSelector(avklartefaktaSelectors.InstallasjonsTypeSelector) === KV.Koder.SOKKEL;
+  const visStorbritanniaKonvensjon = MKVUtils.enesteLandErStorbritannia(arbeidsland);
+
+  const innvilgelse = vilkaar12.oppfylt;
+  const anmodningOmUnntak = vilkaar12.oppfylt === false && vilkaar16.oppfylt;
+  const avslag = vilkaar12.oppfylt === false && vilkaar16.oppfylt === false;
+
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(vilkaarKode12, vilkaar12));
     oppdaterData(konverterVilkarTilStegData("art16_1", vilkaar16));
@@ -43,15 +70,18 @@ export const MultiVilkaar = ({
 
   const vilkaarEndret = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    setValgtBestemmelse("");
 
     if (value === vilkaarKode12) {
       oppdaterData(lagVilkaar(vilkaarKode12, true));
       slettData(slettVilkar("art16_1_avslag"));
       slettData(slettVilkar("art16_1_anmodning"));
+      if (!visStorbritanniaKonvensjon) setValgtBestemmelse(FO_883_2004_ART12_1);
     } else if (value === VilkaarKode16) {
       oppdaterData(lagVilkaar(vilkaarKode12, false));
       slettData(slettVilkar("art16_1_avslag"));
       oppdaterData(lagVilkaar("art16_1_anmodning", true));
+      if (!visStorbritanniaKonvensjon) setValgtBestemmelse(FO_883_2004_ART16_1);
     } else if (value === AVSLAG) {
       oppdaterData(lagVilkaar(vilkaarKode12, false));
       slettData(slettVilkar("art16_1_anmodning"));
@@ -68,11 +98,51 @@ export const MultiVilkaar = ({
     oppdaterData(lagVilkarbegrunnelse(id, null, value));
   };
 
+  const hentBestemmelser = (): KTObject[] => {
+    if (!konvensjonStorbritanniaToggleEnabled) return [];
+
+    if (innvilgelse) {
+      if (visStorbritanniaKonvensjon) {
+        return [
+          KV.kodeTilObjekt(
+            erSokkel ? KONV_EFTA_STORBRITANNIA_ART16_1 : KONV_EFTA_STORBRITANNIA_ART14_1,
+            lovvalgbestemmelser_konv_efta_storbritannia
+          ),
+          KV.kodeTilObjekt(FO_883_2004_ART12_1, lovvalgbestemmelser_883_2004),
+        ];
+      }
+      return [KV.kodeTilObjekt(FO_883_2004_ART12_1, lovvalgbestemmelser_883_2004)];
+    }
+
+    if (anmodningOmUnntak) {
+      if (visStorbritanniaKonvensjon) {
+        return [
+          KV.kodeTilObjekt(KONV_EFTA_STORBRITANNIA_ART18_1, lovvalgbestemmelser_konv_efta_storbritannia),
+          KV.kodeTilObjekt(FO_883_2004_ART16_1, lovvalgbestemmelser_883_2004),
+        ];
+      }
+      return [KV.kodeTilObjekt(FO_883_2004_ART16_1, lovvalgbestemmelser_883_2004)];
+    }
+
+    return [];
+  };
+
+  const hentBegrunnelser = (): KTObject[] => {
+    const bestemmelseErStorbritanniaKonvensjon =
+      valgtBestemmelse in MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
+    if (!bestemmelseErStorbritanniaKonvensjon || !erSokkel) return begrunnelser12;
+
+    const sokkelKoder = [
+      IKKE_UTSENDT_PAA_OPPDRAG_FOR_AG,
+      IKKE_NORSK_AG_REGNING,
+      IKKE_OMFATTET_LENGE_NOK_I_NORGE_FOER,
+      IKKE_VESENTLIG_VIRKSOMHET,
+    ];
+    return begrunnelser12.filter((value) => sokkelKoder.includes(value.kode));
+  };
+
   const hentAvslagBegrunnelser = () => (vilkaar16 ? vilkaar16.begrunnelseKoder || [] : []);
 
-  const innvilgelse = vilkaar12.oppfylt;
-  const anmodningOmUnntak = vilkaar12.oppfylt === false && vilkaar16.oppfylt;
-  const avslag = vilkaar12.oppfylt === false && vilkaar16.oppfylt === false;
   const visFritekstfelt = hentAvslagBegrunnelser().includes(MKV.Koder.begrunnelser.art16_1_avslag.SAERLIG_AVSLAGSGRUNN);
 
   return (
@@ -111,10 +181,23 @@ export const MultiVilkaar = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12" md="10" lg="8">
-            {vilkaar12.oppfylt === false && (
+            {konvensjonStorbritanniaToggleEnabled && (innvilgelse || anmodningOmUnntak) && (
+              <Nav.Select
+                label="Velg bestemmelse"
+                disabled={!redigerbart || !visStorbritanniaKonvensjon}
+                value={valgtBestemmelse}
+                onChange={(e) => setValgtBestemmelse(e.target.value)}
+              >
+                <option disabled={!!valgtBestemmelse} value="" key="" label="Velg..." />
+                {hentBestemmelser().map((element) => (
+                  <option key={element.kode} value={element.kode} label={element.term ?? ""} />
+                ))}
+              </Nav.Select>
+            )}
+            {vilkaar12.oppfylt === false && (!konvensjonStorbritanniaToggleEnabled || !!valgtBestemmelse) && (
               <Nav.Fieldset legend={`Begrunnelse artikkel ${vilkaarNavn12}:`}>
                 <Mui.ListevelgerFlervalg
-                  muligeValg={begrunnelser12}
+                  muligeValg={hentBegrunnelser()}
                   label="Legg til begrunnelse for ikke oppfylt:"
                   tillatFritekst={false}
                   onChange={(e: { value: string[] }) => begrunnelseEndret(e.value, vilkaarKode12)}

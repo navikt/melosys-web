@@ -13,6 +13,9 @@ export const erBehandlingAvSed = (sakstype, behandlingstema) => {
   }
 };
 
+export const enesteLandErStorbritannia = (landkoder) =>
+  landkoder?.length === 1 && landkoder[0] === MKV.Koder.landkoder.GB;
+
 export const erUtsendt = (behandlingstema) =>
   [
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,

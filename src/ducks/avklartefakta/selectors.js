@@ -178,6 +178,17 @@ export const ArbeidSokkelSkipSelector = createSelector(
   }
 );
 
+export const InstallasjonsTypeSelector = createSelector(
+  (state) => AvklartefaktaSelector(state),
+  (alleAvklarteFakta) => {
+    const avklartFakta = alleAvklarteFakta.find(
+      (avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP
+    );
+    if (!avklartFakta) return null;
+    return avklartFakta.fakta[0];
+  }
+);
+
 /* Avklartfakta for hvorvidt en installasjon er SOKKEL eller SKIP.
  * Selectoren henter avklaringer fra redux state og omformer de til array<object> som
  * Redux Form kan lese.
