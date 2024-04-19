@@ -8,8 +8,6 @@ exports[`SideDialog > snapshot test 1`] = `
     <aside>
       <div
         class="navds-tabs navds-tabs--medium"
-        data-orientation="horizontal"
-        dir="ltr"
       >
         <nav>
           <div
@@ -18,112 +16,127 @@ exports[`SideDialog > snapshot test 1`] = `
             <div
               aria-orientation="horizontal"
               class="navds-tabs__tablist"
-              data-orientation="horizontal"
               role="tablist"
-              style="outline: none;"
-              tabindex="0"
             >
               <button
-                aria-controls="radix-5-content-dokumenter"
+                aria-controls="tabs-aksel-id-1--tabpanel-dokumenter"
                 aria-selected="true"
                 class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
-                data-orientation="horizontal"
-                data-radix-collection-item=""
+                data-index="0"
                 data-state="active"
-                id="radix-5-trigger-dokumenter"
+                id="tabs-aksel-id-1--tab-dokumenter"
                 role="tab"
-                tabindex="-1"
+                tabindex="0"
                 type="button"
               >
                 <span
-                  class="navds-tabs__tab-inner navds-body-short"
+                  class="navds-tabs__tab-inner navds-body-short navds-body-short--medium"
                 >
-                  Dokumenter
+                  <span
+                    aria-hidden="true"
+                  />
+                  <span>
+                    Dokumenter
+                  </span>
                 </span>
               </button>
               <button
-                aria-controls="radix-5-content-notat"
+                aria-controls="tabs-aksel-id-1--tabpanel-notat"
                 aria-selected="false"
                 class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
-                data-orientation="horizontal"
-                data-radix-collection-item=""
+                data-index="1"
                 data-state="inactive"
-                id="radix-5-trigger-notat"
+                id="tabs-aksel-id-1--tab-notat"
                 role="tab"
                 tabindex="-1"
                 type="button"
               >
                 <span
-                  class="navds-tabs__tab-inner navds-body-short"
+                  class="navds-tabs__tab-inner navds-body-short navds-body-short--medium"
                 >
-                  Behandlingsnotat
+                  <span
+                    aria-hidden="true"
+                  />
+                  <span>
+                    Behandlingsnotat
+                  </span>
                 </span>
               </button>
               <button
-                aria-controls="radix-5-content-brevbestilling"
+                aria-controls="tabs-aksel-id-1--tabpanel-brevbestilling"
                 aria-selected="false"
                 class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
-                data-orientation="horizontal"
-                data-radix-collection-item=""
+                data-index="2"
                 data-state="inactive"
-                id="radix-5-trigger-brevbestilling"
+                id="tabs-aksel-id-1--tab-brevbestilling"
                 role="tab"
                 tabindex="-1"
                 type="button"
               >
                 <span
-                  class="navds-tabs__tab-inner navds-body-short"
+                  class="navds-tabs__tab-inner navds-body-short navds-body-short--medium"
                 >
-                  Send brev
+                  <span
+                    aria-hidden="true"
+                  />
+                  <span>
+                    Send brev
+                  </span>
                 </span>
               </button>
               <button
-                aria-controls="radix-5-content-sedbestilling"
+                aria-controls="tabs-aksel-id-1--tabpanel-sedbestilling"
                 aria-selected="false"
                 class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
-                data-orientation="horizontal"
-                data-radix-collection-item=""
+                data-index="3"
                 data-state="inactive"
-                id="radix-5-trigger-sedbestilling"
+                id="tabs-aksel-id-1--tab-sedbestilling"
                 role="tab"
                 tabindex="-1"
                 type="button"
               >
                 <span
-                  class="navds-tabs__tab-inner navds-body-short"
+                  class="navds-tabs__tab-inner navds-body-short navds-body-short--medium"
                 >
-                  Opprett ny BUC
+                  <span
+                    aria-hidden="true"
+                  />
+                  <span>
+                    Opprett ny BUC
+                  </span>
                 </span>
               </button>
               <button
-                aria-controls="radix-5-content-besvarsed"
+                aria-controls="tabs-aksel-id-1--tabpanel-besvarsed"
                 aria-selected="false"
                 class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
-                data-orientation="horizontal"
-                data-radix-collection-item=""
+                data-index="4"
                 data-state="inactive"
-                id="radix-5-trigger-besvarsed"
+                id="tabs-aksel-id-1--tab-besvarsed"
                 role="tab"
                 tabindex="-1"
                 type="button"
               >
                 <span
-                  class="navds-tabs__tab-inner navds-body-short"
+                  class="navds-tabs__tab-inner navds-body-short navds-body-short--medium"
                 >
-                  SED-utveksling
+                  <span
+                    aria-hidden="true"
+                  />
+                  <span>
+                    SED-utveksling
+                  </span>
                 </span>
               </button>
             </div>
           </div>
         </nav>
         <div
-          aria-labelledby="radix-5-trigger-dokumenter"
+          aria-labelledby="tabs-aksel-id-1--tab-dokumenter"
           class="navds-tabs__tabpanel"
-          data-orientation="horizontal"
           data-state="active"
-          id="radix-5-content-dokumenter"
+          id="tabs-aksel-id-1--tabpanel-dokumenter"
           role="tabpanel"
-          style="animation-duration: 0s;"
           tabindex="0"
         >
           <div
@@ -141,20 +154,20 @@ exports[`SideDialog > snapshot test 1`] = `
                 >
                   <th
                     aria-label="Mottaksretning"
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="navds-table__header-cell navds-label"
                   />
                   <th
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="navds-table__header-cell navds-label"
                   >
                     Dokument
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="navds-table__header-cell navds-label"
                   >
                     Avsender/mottaker
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="navds-table__header-cell navds-label"
                   >
                     Dato
                   </th>
@@ -167,7 +180,7 @@ exports[`SideDialog > snapshot test 1`] = `
                   class="navds-table__row navds-table__row--shade-on-hover"
                 >
                   <td
-                    class="navds-table__data-cell navds-body-short navds-body-short--small"
+                    class="navds-table__data-cell navds-body-short navds-body-short--medium"
                   >
                     <span
                       class="navds-tag navds-tag--info navds-tag--small navds-body-short navds-body-short--small"
@@ -176,7 +189,7 @@ exports[`SideDialog > snapshot test 1`] = `
                     </span>
                   </td>
                   <td
-                    class="navds-table__data-cell navds-body-short navds-body-short--small"
+                    class="navds-table__data-cell navds-body-short navds-body-short--medium"
                   >
                     <span>
                       <a
@@ -188,12 +201,12 @@ exports[`SideDialog > snapshot test 1`] = `
                     </span>
                   </td>
                   <td
-                    class="navds-table__data-cell navds-body-short navds-body-short--small"
+                    class="navds-table__data-cell navds-body-short navds-body-short--medium"
                   >
                     avsendernavn
                   </td>
                   <td
-                    class="navds-table__data-cell navds-body-short navds-body-short--small"
+                    class="navds-table__data-cell navds-body-short navds-body-short--medium"
                   />
                 </tr>
               </tbody>
@@ -201,42 +214,38 @@ exports[`SideDialog > snapshot test 1`] = `
           </div>
         </div>
         <div
-          aria-labelledby="radix-5-trigger-notat"
+          aria-labelledby="tabs-aksel-id-1--tab-notat"
           class="navds-tabs__tabpanel"
-          data-orientation="horizontal"
           data-state="inactive"
           hidden=""
-          id="radix-5-content-notat"
+          id="tabs-aksel-id-1--tabpanel-notat"
           role="tabpanel"
           tabindex="0"
         />
         <div
-          aria-labelledby="radix-5-trigger-brevbestilling"
+          aria-labelledby="tabs-aksel-id-1--tab-brevbestilling"
           class="navds-tabs__tabpanel"
-          data-orientation="horizontal"
           data-state="inactive"
           hidden=""
-          id="radix-5-content-brevbestilling"
+          id="tabs-aksel-id-1--tabpanel-brevbestilling"
           role="tabpanel"
           tabindex="0"
         />
         <div
-          aria-labelledby="radix-5-trigger-sedbestilling"
+          aria-labelledby="tabs-aksel-id-1--tab-sedbestilling"
           class="navds-tabs__tabpanel"
-          data-orientation="horizontal"
           data-state="inactive"
           hidden=""
-          id="radix-5-content-sedbestilling"
+          id="tabs-aksel-id-1--tabpanel-sedbestilling"
           role="tabpanel"
           tabindex="0"
         />
         <div
-          aria-labelledby="radix-5-trigger-besvarsed"
+          aria-labelledby="tabs-aksel-id-1--tab-besvarsed"
           class="navds-tabs__tabpanel"
-          data-orientation="horizontal"
           data-state="inactive"
           hidden=""
-          id="radix-5-content-besvarsed"
+          id="tabs-aksel-id-1--tabpanel-besvarsed"
           role="tabpanel"
           tabindex="0"
         />

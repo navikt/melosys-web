@@ -320,7 +320,6 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
         disabled=""
       >
         <span
-          aria-live="polite"
           class="navds-label"
         >
           Bekreft og fortsett
@@ -349,7 +348,6 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
           </svg>
         </span>
         <span
-          aria-live="polite"
           class="navds-label"
         >
           Tilbake

@@ -16,6 +16,7 @@ exports[`Redigerbarliste > snapshot test 1`] = `
       <button
         className="navds-button navds-button--secondary navds-button--medium"
         onClick={[Function]}
+        onKeyUp={[Function]}
         style={
           {
             "width": undefined,
@@ -48,7 +49,6 @@ exports[`Redigerbarliste > snapshot test 1`] = `
           </svg>
         </span>
         <span
-          aria-live="polite"
           className="navds-label"
         >
           Fjern

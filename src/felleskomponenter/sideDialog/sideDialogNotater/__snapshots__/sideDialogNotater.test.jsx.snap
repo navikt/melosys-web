@@ -10,7 +10,6 @@ exports[`SideDialogNotater > snapshot test 1`] = `
         class="navds-button navds-button--primary navds-button--medium"
       >
         <span
-          aria-live="polite"
           class="navds-label"
         >
           Legg til nytt notat

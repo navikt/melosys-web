@@ -4,8 +4,7 @@ import NavFrontendSpinner from "nav-frontend-spinner";
 import Lenker from "nav-frontend-lenker";
 import Modal from "nav-frontend-modal";
 import Tekstomrade from "nav-frontend-tekstomrade";
-import { LenkepanelBase } from "nav-frontend-lenkepanel";
-import { Tag, HelpText, Button } from "@navikt/ds-react";
+import { Box, Button, HelpText, Link, Tag } from "@navikt/ds-react";
 import Alert from "./alert";
 
 // Egne implementasjoner av pakker fra nav-frontend. Noen av disse har blitt fjernet fra nav-frontend, men vi implementerer de selv fordi vi fortsatt har bruk for de.
@@ -44,8 +43,9 @@ export {
   Lenker,
   Modal,
   Tekstomrade,
-  LenkepanelBase,
   Tag,
   HelpText,
   Button,
+  Box,
+  Link,
 };

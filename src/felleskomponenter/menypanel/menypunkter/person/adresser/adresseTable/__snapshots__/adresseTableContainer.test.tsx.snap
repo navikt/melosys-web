@@ -43,7 +43,7 @@ exports[`AdresseTableContainer > snapshot test 1`] = `
           class="navds-table__row navds-table__row--shade-on-hover"
         >
           <td
-            class="navds-table__data-cell navds-body-short"
+            class="navds-table__data-cell navds-body-short navds-body-short--medium"
           >
             <address>
               <div>
@@ -67,17 +67,17 @@ exports[`AdresseTableContainer > snapshot test 1`] = `
             </address>
           </td>
           <td
-            class="navds-table__data-cell navds-body-short"
+            class="navds-table__data-cell navds-body-short navds-body-short--medium"
           >
             FREG
           </td>
           <td
-            class="navds-table__data-cell navds-body-short"
+            class="navds-table__data-cell navds-body-short navds-body-short--medium"
           >
             Folkeregisteret
           </td>
           <td
-            class="navds-table__data-cell gyldig-label navds-body-short"
+            class="navds-table__data-cell gyldig-label navds-body-short navds-body-short--medium"
           >
             16.06.1995
           </td>
@@ -160,7 +160,7 @@ exports[`AdresseTableContainer > snapshot test historisk åpnet 1`] = `
           class="navds-table__row navds-table__row--shade-on-hover"
         >
           <td
-            class="navds-table__data-cell navds-body-short"
+            class="navds-table__data-cell navds-body-short navds-body-short--medium"
           >
             <address>
               <div>
@@ -184,17 +184,17 @@ exports[`AdresseTableContainer > snapshot test historisk åpnet 1`] = `
             </address>
           </td>
           <td
-            class="navds-table__data-cell navds-body-short"
+            class="navds-table__data-cell navds-body-short navds-body-short--medium"
           >
             FREG
           </td>
           <td
-            class="navds-table__data-cell navds-body-short"
+            class="navds-table__data-cell navds-body-short navds-body-short--medium"
           >
             Folkeregisteret
           </td>
           <td
-            class="navds-table__data-cell gyldig-label navds-body-short"
+            class="navds-table__data-cell gyldig-label navds-body-short navds-body-short--medium"
           >
             16.06.1995
           </td>
@@ -243,7 +243,7 @@ exports[`AdresseTableContainer > snapshot test historisk åpnet 1`] = `
           class="navds-table__row navds-table__row--shade-on-hover"
         >
           <td
-            class="navds-table__data-cell navds-body-short"
+            class="navds-table__data-cell navds-body-short navds-body-short--medium"
           >
             <address>
               <div />
@@ -266,17 +266,17 @@ exports[`AdresseTableContainer > snapshot test historisk åpnet 1`] = `
             </address>
           </td>
           <td
-            class="navds-table__data-cell navds-body-short"
+            class="navds-table__data-cell navds-body-short navds-body-short--medium"
           >
             FREG
           </td>
           <td
-            class="navds-table__data-cell navds-body-short"
+            class="navds-table__data-cell navds-body-short navds-body-short--medium"
           >
             Folkeregisteret
           </td>
           <td
-            class="navds-table__data-cell historisk-label navds-body-short"
+            class="navds-table__data-cell historisk-label navds-body-short navds-body-short--medium"
           >
             12.09.1957 - 
           </td>
