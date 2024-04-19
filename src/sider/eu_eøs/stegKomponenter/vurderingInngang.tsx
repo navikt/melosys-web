@@ -83,8 +83,7 @@ export const Varsler = ({
   const visStorbritanniaKonvensjonTekst =
     konvensjonStorbritanniaToggleEnabled &&
     MKVUtils.erUtsendt(behandlingstema) &&
-    landkoder.length === 1 &&
-    landkoder[0] === MKV.Koder.landkoder.GB;
+    MKVUtils.enesteLandErStorbritannia(landkoder);
 
   return (
     <div className="vurderinginngang_eu_eos">
