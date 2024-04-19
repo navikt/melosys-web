@@ -22,22 +22,29 @@ const VilkaarKode16 = MKV.Koder.vilkaar.FO_883_2004_ART16_1;
 const AVSLAG = "AVSLAG";
 const { lovvalgbestemmelser_konv_efta_storbritannia } = MKV.KTObjects.lovvalgsbestemmelser;
 const { lovvalgbestemmelser_883_2004 } = MKV.KTObjects.lovvalgsbestemmelser;
-const { KONV_EFTA_STORBRITANNIA_ART14_1, KONV_EFTA_STORBRITANNIA_ART16_1, KONV_EFTA_STORBRITANNIA_ART18_1 } =
-  MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
-const { FO_883_2004_ART12_1, FO_883_2004_ART16_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
+const {
+  KONV_EFTA_STORBRITANNIA_ART14_1,
+  KONV_EFTA_STORBRITANNIA_ART14_2,
+  KONV_EFTA_STORBRITANNIA_ART16_1,
+  KONV_EFTA_STORBRITANNIA_ART16_3,
+  KONV_EFTA_STORBRITANNIA_ART18_1,
+} = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
+const { FO_883_2004_ART12_1, FO_883_2004_ART12_2, FO_883_2004_ART16_1 } =
+  MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
 const {
   IKKE_UTSENDT_PAA_OPPDRAG_FOR_AG,
   IKKE_NORSK_AG_REGNING,
   IKKE_OMFATTET_LENGE_NOK_I_NORGE_FOER,
   IKKE_VESENTLIG_VIRKSOMHET,
 } = MKV.Koder.begrunnelser.art12_1_begrunnelser;
+const { IKKE_LIGNENDE_VIRKSOMHET, NORMALT_IKKE_DRIFT_NORGE } = MKV.Koder.begrunnelser.art12_2_begrunnelser;
 
 interface MultiVilkaarProps {
   oppdaterData: (objekt: any) => void;
   slettData: (objekt: any) => void;
   redigerbart: boolean;
   vilkaar12: Partial<Vilkaar>;
-  vilkaarNavn12: string;
+  vilkaarNavn12: "12.1" | "12.2";
   vilkaarKode12: string;
   begrunnelser12: KTObject[];
   vilkaar16: Partial<Vilkaar>;
@@ -57,7 +64,12 @@ export const MultiVilkaar = ({
   const [valgtBestemmelse, setValgtBestemmelse] = useState("");
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandSelector);
   const erSokkel = useSelector(avklartefaktaSelectors.InstallasjonsTypeSelector) === KV.Koder.SOKKEL;
+
   const visStorbritanniaKonvensjon = MKVUtils.enesteLandErStorbritannia(arbeidsland);
+  const er12_1 = vilkaarNavn12 === "12.1";
+  const FO_883_2004_ART12 = er12_1 ? FO_883_2004_ART12_1 : FO_883_2004_ART12_2;
+  const KONV_EFTA_STORBRITANNIA_ART14 = er12_1 ? KONV_EFTA_STORBRITANNIA_ART14_1 : KONV_EFTA_STORBRITANNIA_ART14_2;
+  const KONV_EFTA_STORBRITANNIA_ART16 = er12_1 ? KONV_EFTA_STORBRITANNIA_ART16_1 : KONV_EFTA_STORBRITANNIA_ART16_3;
 
   const innvilgelse = vilkaar12.oppfylt;
   const anmodningOmUnntak = vilkaar12.oppfylt === false && vilkaar16.oppfylt;
@@ -76,7 +88,7 @@ export const MultiVilkaar = ({
       oppdaterData(lagVilkaar(vilkaarKode12, true));
       slettData(slettVilkar("art16_1_avslag"));
       slettData(slettVilkar("art16_1_anmodning"));
-      if (!visStorbritanniaKonvensjon) setValgtBestemmelse(FO_883_2004_ART12_1);
+      if (!visStorbritanniaKonvensjon) setValgtBestemmelse(FO_883_2004_ART12);
     } else if (value === VilkaarKode16) {
       oppdaterData(lagVilkaar(vilkaarKode12, false));
       slettData(slettVilkar("art16_1_avslag"));
@@ -105,13 +117,13 @@ export const MultiVilkaar = ({
       if (visStorbritanniaKonvensjon) {
         return [
           KV.kodeTilObjekt(
-            erSokkel ? KONV_EFTA_STORBRITANNIA_ART16_1 : KONV_EFTA_STORBRITANNIA_ART14_1,
+            erSokkel ? KONV_EFTA_STORBRITANNIA_ART16 : KONV_EFTA_STORBRITANNIA_ART14,
             lovvalgbestemmelser_konv_efta_storbritannia
           ),
-          KV.kodeTilObjekt(FO_883_2004_ART12_1, lovvalgbestemmelser_883_2004),
+          KV.kodeTilObjekt(FO_883_2004_ART12, lovvalgbestemmelser_883_2004),
         ];
       }
-      return [KV.kodeTilObjekt(FO_883_2004_ART12_1, lovvalgbestemmelser_883_2004)];
+      return [KV.kodeTilObjekt(FO_883_2004_ART12, lovvalgbestemmelser_883_2004)];
     }
 
     if (anmodningOmUnntak) {
@@ -128,15 +140,18 @@ export const MultiVilkaar = ({
   };
 
   const hentBegrunnelser = (): KTObject[] => {
-    const bestemmelseErStorbritanniaKonvensjon =
-      valgtBestemmelse in MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
+    const bestemmelseErStorbritanniaKonvensjon = valgtBestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1;
     if (!bestemmelseErStorbritanniaKonvensjon || !erSokkel) return begrunnelser12;
 
     const sokkelKoder = [
+      // artikkel 12.1:
       IKKE_UTSENDT_PAA_OPPDRAG_FOR_AG,
       IKKE_NORSK_AG_REGNING,
       IKKE_OMFATTET_LENGE_NOK_I_NORGE_FOER,
       IKKE_VESENTLIG_VIRKSOMHET,
+      // artikkel 12.2:
+      IKKE_LIGNENDE_VIRKSOMHET,
+      NORMALT_IKKE_DRIFT_NORGE,
     ];
     return begrunnelser12.filter((value) => sokkelKoder.includes(value.kode));
   };
