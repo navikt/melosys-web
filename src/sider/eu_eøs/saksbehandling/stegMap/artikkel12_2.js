@@ -2,9 +2,9 @@ import MKV from "../../../../melosyskodeverk";
 
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingArtikkel12_2 from "../../stegKomponenter/vurderingArtikkel12_2";
 import { erVilkarOppfylt, hentVilkar } from "../../../../domeneUtils";
 import * as Utils from "../../../../utils";
+import VurderingArtikkel12_x from "../../stegKomponenter/vurderingArtikkel12_x/vurderingArtikkel12_x";
 
 class Artikkel12_2 extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -36,25 +36,21 @@ class Artikkel12_2 extends Steg {
     ];
     this.id = STEG.ARTIKKEL_12_2;
     this.tittel = propsLight.konvensjonStorbritanniaToggleEnabled ? "Vurdering næringsdrivende" : "Vurdering av 12.2";
-    this.komponent = VurderingArtikkel12_2;
+    this.komponent = VurderingArtikkel12_x;
     this.samleRelevanteData = (_propsLight) => ({
-      artikkel: { kode: MKV.Koder.vilkaar.FO_883_2004_ART12_2, term: "12.2" },
-      begrunnelser: _propsLight.begrunnelser.art12_2_begrunnelser || [],
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = (_propsLight) => ({
       harAvklaring,
-      visBegrunnelser12: art12_2.oppfylt === false,
-      visBegrunnelser16: art16_1.oppfylt === false,
-      art12_2,
+      art12_x: art12_2,
+      artikkelNavn: "12.2",
       art16_1,
-      art16_1_fritekst: art16_1.begrunnelseFritekst || "",
     });
     this.handlers = {
-      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      oppdaterData: (felt, verdi) => propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettData: (data) => propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
   }
