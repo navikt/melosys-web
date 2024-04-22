@@ -34,7 +34,7 @@ class Artikkel12_1 extends Steg {
       },
     ];
     this.id = STEG.ARTIKKEL_12_1;
-    this.tittel = "Vurdering av 12.1";
+    this.tittel = propsLight.konvensjonStorbritanniaToggleEnabled ? "Vurdering arbeidstaker" : "Vurdering av 12.1";
     this.komponent = VurderingArtikkel12_1;
     this.samleRelevanteData = (_propsLight) => ({
       artikkel: { kode: MKV.Koder.vilkaar.FO_883_2004_ART12_1, term: "12.1" },

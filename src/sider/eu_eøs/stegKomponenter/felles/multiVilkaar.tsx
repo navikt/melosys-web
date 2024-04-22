@@ -162,7 +162,11 @@ export const MultiVilkaar = ({
 
   return (
     <div>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">{`Fyller søker kriteriene for artikkel ${vilkaarNavn12}?`}</Nav.Typo.Innholdstittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        {konvensjonStorbritanniaToggleEnabled
+          ? "Fyller søker kriteriene for for utsendingsbestemmelsen?"
+          : `Fyller søker kriteriene for artikkel ${vilkaarNavn12}?`}
+      </Nav.Typo.Innholdstittel>
       <div>
         <Nav.Row>
           <Nav.Column xs="12">
@@ -172,7 +176,7 @@ export const MultiVilkaar = ({
                 onChange={vilkaarEndret}
                 value={vilkaarKode12}
                 checked={innvilgelse}
-                label="Ja"
+                label={konvensjonStorbritanniaToggleEnabled ? "Ja, jeg vil innvilge søknaden" : "Ja"}
                 disabled={!redigerbart}
               />
               <Nav.Radio
@@ -180,7 +184,11 @@ export const MultiVilkaar = ({
                 onChange={vilkaarEndret}
                 value={VilkaarKode16}
                 checked={anmodningOmUnntak}
-                label="Nei, jeg vil vurdere artikkel 16.1"
+                label={
+                  konvensjonStorbritanniaToggleEnabled
+                    ? "Nei, jeg vil vurdere anmodning om unntak"
+                    : "Nei, jeg vil vurdere artikkel 16.1"
+                }
                 disabled={!redigerbart}
               />
               <Nav.Radio
@@ -188,7 +196,11 @@ export const MultiVilkaar = ({
                 onChange={vilkaarEndret}
                 value={AVSLAG}
                 checked={avslag}
-                label={`Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1`}
+                label={
+                  konvensjonStorbritanniaToggleEnabled
+                    ? `Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1 (kun EØS-forordningen)`
+                    : `Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1`
+                }
                 disabled={!redigerbart}
               />
             </Nav.Fieldset>
@@ -210,16 +222,29 @@ export const MultiVilkaar = ({
               </Nav.Select>
             )}
             {vilkaar12.oppfylt === false && (!konvensjonStorbritanniaToggleEnabled || !!valgtBestemmelse) && (
-              <Nav.Fieldset legend={`Begrunnelse artikkel ${vilkaarNavn12}:`}>
-                <Mui.ListevelgerFlervalg
-                  muligeValg={hentBegrunnelser()}
-                  label="Legg til begrunnelse for ikke oppfylt:"
-                  tillatFritekst={false}
-                  onChange={(e: { value: string[] }) => begrunnelseEndret(e.value, vilkaarKode12)}
-                  defaultElementer={vilkaar12.begrunnelseKoder}
-                  disabled={!redigerbart}
-                />
-              </Nav.Fieldset>
+              <>
+                {konvensjonStorbritanniaToggleEnabled ? (
+                  <Mui.ListevelgerFlervalg
+                    muligeValg={hentBegrunnelser()}
+                    label="Legg til begrunnelse for at utsendingsbestemmelse ikke er oppfylt"
+                    tillatFritekst={false}
+                    onChange={(e: { value: string[] }) => begrunnelseEndret(e.value, vilkaarKode12)}
+                    defaultElementer={vilkaar12.begrunnelseKoder}
+                    disabled={!redigerbart}
+                  />
+                ) : (
+                  <Nav.Fieldset legend={`Begrunnelse artikkel ${vilkaarNavn12}:`}>
+                    <Mui.ListevelgerFlervalg
+                      muligeValg={begrunnelser12}
+                      label="Legg til begrunnelse for ikke oppfylt:"
+                      tillatFritekst={false}
+                      onChange={(e: { value: string[] }) => begrunnelseEndret(e.value, vilkaarKode12)}
+                      defaultElementer={vilkaar12.begrunnelseKoder}
+                      disabled={!redigerbart}
+                    />
+                  </Nav.Fieldset>
+                )}
+              </>
             )}
             {vilkaar16.oppfylt === false && (
               <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
