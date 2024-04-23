@@ -16,8 +16,8 @@ interface VurderingArtikkel12_xProps {
     art16_1: Partial<Vilkaar>;
     artikkelNavn: "12.1" | "12.2";
   };
-  oppdaterData: () => void;
-  slettData: () => void;
+  oppdaterData: (objekt: any) => void;
+  slettData: (objekt?: any) => void;
   tilbake: () => void;
   redigerbart: boolean;
 }
