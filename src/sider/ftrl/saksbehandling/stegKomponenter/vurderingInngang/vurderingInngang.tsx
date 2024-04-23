@@ -96,7 +96,13 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     formValues.trygdedekning !== initialValues.trygdedekning;
 
   useEffect(() => {
-    Api.Ftrl.hentGyldigeTrygdedekninger(behandlingstema).then(setGyldigeTrygdedekninger);
+    Api.Ftrl.hentGyldigeTrygdedekninger(behandlingstema).then((trygdedekninger) =>
+      setGyldigeTrygdedekninger(
+        trygdedekninger.filter(
+          (trygdedekning) => trygdedekning !== MKV.Koder.trygdedekninger.FTRL_2_9_TREDJE_LEDD_YRKESSKADE
+        )
+      )
+    );
   }, []);
 
   const stegErGyldig = formIsValid && !skalHenteRegisteropplysninger && !behandlingUnderOppfriskning;
