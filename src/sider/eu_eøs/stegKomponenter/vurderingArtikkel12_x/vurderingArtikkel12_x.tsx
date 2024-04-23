@@ -12,8 +12,8 @@ interface VurderingArtikkel12_xProps {
   bekreftOgFortsett: () => void;
   tilstand: {
     harAvklaring: boolean;
-    art12_x: Vilkaar;
-    art16_1: Vilkaar;
+    art12_x: Partial<Vilkaar>;
+    art16_1: Partial<Vilkaar>;
     artikkelNavn: "12.1" | "12.2";
   };
   oppdaterData: () => void;
@@ -31,6 +31,7 @@ const VurderingArtikkel12_x = ({
   tilbake,
 }: VurderingArtikkel12_xProps) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
+  const er12_1 = artikkelNavn === "12.1";
 
   useEffect(
     () =>
@@ -53,11 +54,9 @@ const VurderingArtikkel12_x = ({
         redigerbart={redigerbart}
         vilkaar12={art12_x}
         vilkaarNavn12={artikkelNavn}
-        vilkaarKode12={artikkelNavn === "12.1" ? "art12_1" : "art12_2"}
+        vilkaarKode12={er12_1 ? "art12_1" : "art12_2"}
         begrunnelser12={
-          artikkelNavn === "12.1"
-            ? MKV.KTObjects.begrunnelser.art12_1_begrunnelser
-            : MKV.KTObjects.begrunnelser.art12_2_begrunnelser
+          er12_1 ? MKV.KTObjects.begrunnelser.art12_1_begrunnelser : MKV.KTObjects.begrunnelser.art12_2_begrunnelser
         }
         vilkaar16={art16_1}
       />
