@@ -12,6 +12,7 @@ import { modalerOperations, modalerSelectors } from "../../../ducks/modaler";
 import Knapperad from "../../knapperad";
 
 import "./dialogboksBekreftValg.css";
+import { useState } from "react";
 
 const { UNNTAK_MEDLEMSKAP } = MKV.Koder.behandlinger.behandlingstema;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
@@ -34,14 +35,15 @@ interface DialogboksBekreftValgProps {
 
 export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftValgProps) => {
   const dispatch = useDispatch();
+  const [feil, setFeil] = useState(undefined);
 
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const bekreftValgType = useSelector(modalerSelectors.BekreftValgTypeSelector);
+
   const skjulModal = () => dispatch(modalerOperations.skjulBekreftValg());
-  const tilForsiden = () => dispatch(navigeringOperations.tilForsiden());
 
   const mapType = () => {
     switch (sakstype) {
@@ -55,29 +57,19 @@ export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftV
     }
   };
 
-  const avsluttSakSomBortfalt = async () => {
-    await Api.Fagsaker.fagsak.bortfall(saksnummer);
-    skjulModal();
-    tilForsiden();
-  };
+  const håndterKall = (kallPromise: Promise<any>) =>
+    kallPromise
+      .then(() => {
+        skjulModal();
+        dispatch(navigeringOperations.tilForsiden());
+      })
+      .catch((error) => setFeil(error?.body?.message ?? error));
 
-  const ferdigbehandleSak = async () => {
-    await Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer);
-    skjulModal();
-    tilForsiden();
-  };
-
-  const angiBehandlingsresultattype = async (type: string) => {
-    await Api.Behandlinger.resultat.angiBehandlingsresultattype(behandlingID, { type });
-    skjulModal();
-    tilForsiden();
-  };
-
-  const annullerFagsak = async () => {
-    await Api.Fagsaker.fagsak.annullerFagsak(saksnummer);
-    skjulModal();
-    tilForsiden();
-  };
+  const avsluttSakSomBortfalt = () => håndterKall(Api.Fagsaker.fagsak.bortfall(saksnummer));
+  const ferdigbehandleSak = () => håndterKall(Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer));
+  const angiBehandlingsresultattype = (type: string) =>
+    håndterKall(Api.Behandlinger.resultat.angiBehandlingsresultattype(behandlingID, { type }));
+  const annullerFagsak = () => håndterKall(Api.Fagsaker.fagsak.annullerFagsak(saksnummer));
 
   const hentBekreftValgDialogDataFraType = () => {
     switch (bekreftValgType) {
@@ -197,9 +189,15 @@ export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftV
     >
       <Nav.Typo.Systemtittel>{bekreftValgTypeData.tittel}</Nav.Typo.Systemtittel>
       <Nav.Typo.Normaltekst className="normaltekst">{bekreftValgTypeData.tekst}</Nav.Typo.Normaltekst>
+      {feil && (
+        <Nav.Alert variant="error" className="feilmelding">
+          {feil}
+        </Nav.Alert>
+      )}
       <Knapperad
         bekreft={bekreftValgTypeData.handleBekreft}
         bekreftTekst="Bekreft"
+        bekreftRedigerbart={!feil}
         avbryt={skjulModal}
         avbrytTekst="Avbryt"
         redigerbart
