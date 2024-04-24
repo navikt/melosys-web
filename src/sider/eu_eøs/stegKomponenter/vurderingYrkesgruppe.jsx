@@ -10,8 +10,10 @@ import {
   konverterAvklartfaktaTilStegData,
   konverterTilleggBestemmelseTilStegData,
   lagAvklartfakta,
+  lagLovvalgsbestemmelse,
   lagTilleggBestemmelse,
   lagVilkaar,
+  slettLovvalgsbestemmelse,
   slettTilleggBestemmelse,
   slettVilkar,
 } from "../../../felleskomponenter/stegvelger";
@@ -20,6 +22,7 @@ import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { useSelector } from "react-redux";
+import { formSelectors } from "../../../ducks/form";
 
 const stegetsTilleggbestemmelser = [
   {
@@ -27,15 +30,22 @@ const stegetsTilleggbestemmelser = [
     label: MKV.Terms.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5,
   },
 ];
+const { lovvalgbestemmelser_konv_efta_storbritannia } = MKV.KTObjects.lovvalgsbestemmelser;
+const { lovvalgbestemmelser_883_2004 } = MKV.KTObjects.lovvalgsbestemmelser;
 
+const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
+const { FO_883_2004_ART16_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
 const VurderingYrkesgruppe = (props) => {
   const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
   const { harAvklaring, yrkesgruppe, tilleggbestemmelse } = tilstand;
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
-
+  const soknadsform = useSelector(formSelectors.SoknadFormValuesSelector);
   const konvensjonEftaLandOgStorbritanniaToggleEnabled = useFeatureToggle(
     MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA
   );
+
+  const enesteLandErStorbritania = MKVUtils.enesteLandErStorbritannia(soknadsform?.soknadsland.landkoder);
+  const fakta = hentFaktaVerdi(yrkesgruppe);
 
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
@@ -47,9 +57,16 @@ const VurderingYrkesgruppe = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!enesteLandErStorbritania && fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12) {
+      oppdaterData(lagLovvalgsbestemmelse(FO_883_2004_ART16_1));
+    } else {
+      slettData(slettLovvalgsbestemmelse(FO_883_2004_ART16_1));
+    }
+  }, [enesteLandErStorbritania, fakta]);
+
   const radioEndret = (event) => {
     const yrkessituasjon = event.target.value;
-
     oppdaterData(lagAvklartfakta(KV.Koder.YRKESGRUPPE, null, yrkessituasjon));
 
     if (yrkessituasjon === KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL) {
@@ -67,7 +84,16 @@ const VurderingYrkesgruppe = (props) => {
     }
   };
 
-  const fakta = hentFaktaVerdi(yrkesgruppe);
+  const hentBestemmelser = () => {
+    if (enesteLandErStorbritania) {
+      return [
+        KV.kodeTilObjekt(KONV_EFTA_STORBRITANNIA_ART18_1, lovvalgbestemmelser_konv_efta_storbritannia),
+        KV.kodeTilObjekt(FO_883_2004_ART16_1, lovvalgbestemmelser_883_2004),
+      ];
+    }
+    return [KV.kodeTilObjekt(FO_883_2004_ART16_1, lovvalgbestemmelser_883_2004)];
+  };
+
   return (
     <div>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Hva er søkerens yrkessituasjon?</Nav.Typo.Innholdstittel>
@@ -130,6 +156,21 @@ const VurderingYrkesgruppe = (props) => {
             />
           </>
         )}
+        {konvensjonEftaLandOgStorbritanniaToggleEnabled &&
+          fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12 && (
+            <Mui.ListevelgerFlervalg
+              muligeValg={hentBestemmelser()}
+              label="Velg bestemmelse"
+              tillatFritekst={false}
+              onChange={(a) => {
+                console.log("koder", { a });
+              }}
+              placeholder={
+                !enesteLandErStorbritania && KV.kodeTilObjekt(FO_883_2004_ART16_1, lovvalgbestemmelser_883_2004).term
+              }
+              disabled={!redigerbart || !enesteLandErStorbritania}
+            />
+          )}
       </Nav.Fieldset>
       <Mui.StegKnapper
         bekreftKnappProps={{
