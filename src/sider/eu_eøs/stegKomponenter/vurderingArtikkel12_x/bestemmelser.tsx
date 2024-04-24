@@ -233,27 +233,53 @@ export const Bestemmelser = ({
             </>
           )}
           {vilkaar16.oppfylt === false && (
-            <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
-              <Mui.ListevelgerFlervalg
-                muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
-                label="Legg til begrunnelse for avslag:"
-                tillatFritekst={false}
-                onChange={(e: { value: string[] }) => begrunnelseEndret(e.value, "art16_1_avslag")}
-                defaultElementer={vilkaar16.begrunnelseKoder}
-                disabled={!redigerbart}
-              />
-              {visFritekstfelt && (
-                <Nav.Textarea
-                  id="art16_1_avslag"
-                  label="Begrunnelse for avslag (fritekst):"
-                  maxLength={255}
-                  bredde="fullbredde"
-                  value={vilkaar16.begrunnelseFritekst || ""}
-                  onChange={fritekstEndret}
-                  disabled={!redigerbart}
-                />
+            <>
+              {konvensjonStorbritanniaToggleEnabled ? (
+                <>
+                  <Mui.ListevelgerFlervalg
+                    muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
+                    label="Legg til begrunnelse for at unntaksbestemmelse ikke er oppfylt"
+                    tillatFritekst={false}
+                    onChange={(e: { value: string[] }) => begrunnelseEndret(e.value, "art16_1_avslag")}
+                    defaultElementer={vilkaar16.begrunnelseKoder}
+                    disabled={!redigerbart}
+                  />
+                  {visFritekstfelt && (
+                    <Nav.Textarea
+                      id="art16_1_avslag"
+                      label="Begrunnelse for avslag (fritekst)"
+                      maxLength={255}
+                      bredde="fullbredde"
+                      value={vilkaar16.begrunnelseFritekst || ""}
+                      onChange={fritekstEndret}
+                      disabled={!redigerbart}
+                    />
+                  )}
+                </>
+              ) : (
+                <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
+                  <Mui.ListevelgerFlervalg
+                    muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
+                    label="Legg til begrunnelse for avslag:"
+                    tillatFritekst={false}
+                    onChange={(e: { value: string[] }) => begrunnelseEndret(e.value, "art16_1_avslag")}
+                    defaultElementer={vilkaar16.begrunnelseKoder}
+                    disabled={!redigerbart}
+                  />
+                  {visFritekstfelt && (
+                    <Nav.Textarea
+                      id="art16_1_avslag"
+                      label="Begrunnelse for avslag (fritekst):"
+                      maxLength={255}
+                      bredde="fullbredde"
+                      value={vilkaar16.begrunnelseFritekst || ""}
+                      onChange={fritekstEndret}
+                      disabled={!redigerbart}
+                    />
+                  )}
+                </Nav.Fieldset>
               )}
-            </Nav.Fieldset>
+            </>
           )}
         </Nav.Column>
       </Nav.Row>
