@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PT from "prop-types";
 
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
@@ -10,10 +10,8 @@ import {
   konverterAvklartfaktaTilStegData,
   konverterTilleggBestemmelseTilStegData,
   lagAvklartfakta,
-  lagLovvalgsbestemmelse,
   lagTilleggBestemmelse,
   lagVilkaar,
-  slettLovvalgsbestemmelse,
   slettTilleggBestemmelse,
   slettVilkar,
 } from "../../../felleskomponenter/stegvelger";
@@ -23,6 +21,7 @@ import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuret
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { useSelector } from "react-redux";
 import { formSelectors } from "../../../ducks/form";
+import { _uuid } from "../../../utils";
 
 const stegetsTilleggbestemmelser = [
   {
@@ -35,9 +34,11 @@ const { lovvalgbestemmelser_883_2004 } = MKV.KTObjects.lovvalgsbestemmelser;
 
 const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
 const { FO_883_2004_ART16_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
+
 const VurderingYrkesgruppe = (props) => {
   const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
   const { harAvklaring, yrkesgruppe, tilleggbestemmelse } = tilstand;
+  const [bestemmelse, setBestemmelse] = useState("0");
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const soknadsform = useSelector(formSelectors.SoknadFormValuesSelector);
   const konvensjonEftaLandOgStorbritanniaToggleEnabled = useFeatureToggle(
@@ -59,9 +60,9 @@ const VurderingYrkesgruppe = (props) => {
 
   useEffect(() => {
     if (!enesteLandErStorbritania && fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12) {
-      oppdaterData(lagLovvalgsbestemmelse(FO_883_2004_ART16_1));
+      setBestemmelse(FO_883_2004_ART16_1);
     } else {
-      slettData(slettLovvalgsbestemmelse(FO_883_2004_ART16_1));
+      setBestemmelse("0");
     }
   }, [enesteLandErStorbritania, fakta]);
 
@@ -93,6 +94,11 @@ const VurderingYrkesgruppe = (props) => {
     }
     return [KV.kodeTilObjekt(FO_883_2004_ART16_1, lovvalgbestemmelser_883_2004)];
   };
+
+  const erGyldigKriterierEftaKonvensjon =
+    konvensjonEftaLandOgStorbritanniaToggleEnabled && fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12
+      ? bestemmelse !== "0"
+      : true;
 
   return (
     <div>
@@ -158,23 +164,29 @@ const VurderingYrkesgruppe = (props) => {
         )}
         {konvensjonEftaLandOgStorbritanniaToggleEnabled &&
           fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12 && (
-            <Mui.ListevelgerFlervalg
-              muligeValg={hentBestemmelser()}
+            <Nav.Select
+              bredde="fullbredde"
               label="Velg bestemmelse"
-              tillatFritekst={false}
-              onChange={(a) => {
-                console.log("koder", { a });
+              onChange={(event) => {
+                setBestemmelse(event.target.value);
               }}
-              placeholder={
-                !enesteLandErStorbritania && KV.kodeTilObjekt(FO_883_2004_ART16_1, lovvalgbestemmelser_883_2004).term
-              }
-              disabled={!redigerbart || !enesteLandErStorbritania}
-            />
+              value={bestemmelse || "0"}
+              disabled={hentBestemmelser().length === 1}
+            >
+              <option key={_uuid()} value="0" disabled>
+                Velg i listen
+              </option>
+              {hentBestemmelser().map((lovvalgBestemmelse) => (
+                <option key={lovvalgBestemmelse.kode} value={lovvalgBestemmelse.kode}>
+                  {lovvalgBestemmelse.term}
+                </option>
+              ))}
+            </Nav.Select>
           )}
       </Nav.Fieldset>
       <Mui.StegKnapper
         bekreftKnappProps={{
-          disabled: !(redigerbart && harAvklaring),
+          disabled: !(redigerbart && harAvklaring && erGyldigKriterierEftaKonvensjon),
           "data-cy-nesteknapp": "knapp_steg1",
           onClick: bekreftOgFortsett,
         }}

@@ -31,9 +31,6 @@ class Yrkesgruppe extends Steg {
     this.beregnRelevantUI = (_propsLight) => {
       const tilleggbestemmelse = hentTilleggBestemmelse(_propsLight.lovvalgsperioder);
       const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, _propsLight.avklartefakta);
-      const { lovvalgsbestemmelse } = _propsLight;
-
-      console.log({ lovvalgsbestemmelse, a: _propsLight });
       return {
         tilleggbestemmelse,
         harAvklaring: yrkesgruppe.fakta && yrkesgruppe.fakta.length > 0,
