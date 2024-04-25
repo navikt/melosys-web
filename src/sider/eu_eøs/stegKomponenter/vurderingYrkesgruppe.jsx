@@ -20,8 +20,8 @@ import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { useSelector } from "react-redux";
-import { formSelectors } from "../../../ducks/form";
 import { _uuid } from "../../../utils";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 const stegetsTilleggbestemmelser = [
   {
@@ -38,14 +38,13 @@ const { FO_883_2004_ART16_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmels
 const VurderingYrkesgruppe = (props) => {
   const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
   const { harAvklaring, yrkesgruppe, tilleggbestemmelse } = tilstand;
-  const [bestemmelse, setBestemmelse] = useState("0");
+  const [bestemmelse, setBestemmelse] = useState("");
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
-  const soknadsform = useSelector(formSelectors.SoknadFormValuesSelector);
+  const soeknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandSelector);
   const konvensjonEftaLandOgStorbritanniaToggleEnabled = useFeatureToggle(
     MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA
   );
-
-  const enesteLandErStorbritania = MKVUtils.enesteLandErStorbritannia(soknadsform?.soknadsland.landkoder);
+  const enesteLandErStorbritannia = MKVUtils.enesteLandErStorbritannia(soeknadsland.landkoder);
   const fakta = hentFaktaVerdi(yrkesgruppe);
 
   useEffect(() => {
@@ -59,12 +58,12 @@ const VurderingYrkesgruppe = (props) => {
   }, []);
 
   useEffect(() => {
-    if (!enesteLandErStorbritania && fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12) {
+    if (!enesteLandErStorbritannia && fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12) {
       setBestemmelse(FO_883_2004_ART16_1);
     } else {
-      setBestemmelse("0");
+      setBestemmelse("");
     }
-  }, [enesteLandErStorbritania, fakta]);
+  }, [enesteLandErStorbritannia, fakta]);
 
   const radioEndret = (event) => {
     const yrkessituasjon = event.target.value;
@@ -86,7 +85,7 @@ const VurderingYrkesgruppe = (props) => {
   };
 
   const hentBestemmelser = () => {
-    if (enesteLandErStorbritania) {
+    if (enesteLandErStorbritannia) {
       return [
         KV.kodeTilObjekt(KONV_EFTA_STORBRITANNIA_ART18_1, lovvalgbestemmelser_konv_efta_storbritannia),
         KV.kodeTilObjekt(FO_883_2004_ART16_1, lovvalgbestemmelser_883_2004),
@@ -97,7 +96,7 @@ const VurderingYrkesgruppe = (props) => {
 
   const erGyldigKriterierEftaKonvensjon =
     konvensjonEftaLandOgStorbritanniaToggleEnabled && fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12
-      ? bestemmelse !== "0"
+      ? bestemmelse !== ""
       : true;
 
   return (
@@ -170,11 +169,11 @@ const VurderingYrkesgruppe = (props) => {
               onChange={(event) => {
                 setBestemmelse(event.target.value);
               }}
-              value={bestemmelse || "0"}
+              value={bestemmelse || ""}
               disabled={hentBestemmelser().length === 1}
             >
-              <option key={_uuid()} value="0" disabled>
-                Velg i listen
+              <option key={_uuid()} value="" disabled={!!bestemmelse}>
+                Velg...
               </option>
               {hentBestemmelser().map((lovvalgBestemmelse) => (
                 <option key={lovvalgBestemmelse.kode} value={lovvalgBestemmelse.kode}>
