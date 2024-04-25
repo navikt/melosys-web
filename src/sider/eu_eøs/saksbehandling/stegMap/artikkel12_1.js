@@ -1,7 +1,7 @@
 import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import { erVilkarOppfylt, hentVilkar } from "../../../../domeneUtils";
+import { hentVilkarEllerNull } from "../../../../domeneUtils";
 import * as Utils from "../../../../utils";
 import VurderingArtikkel12_x from "../../stegKomponenter/vurderingArtikkel12_x/vurderingArtikkel12_x";
 
@@ -9,27 +9,35 @@ class Artikkel12_1 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const art12_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_1, propsLight.vilkar);
-    const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
+    const art12_1 = hentVilkarEllerNull(MKV.Koder.vilkaar.FO_883_2004_ART12_1, propsLight.vilkar);
+    const art14_1konv = hentVilkarEllerNull(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART14_1, propsLight.vilkar);
+    const art16_1konv = hentVilkarEllerNull(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART16_1, propsLight.vilkar);
+    const art16_1 = hentVilkarEllerNull(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
+    const art18_1konv = hentVilkarEllerNull(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART18_1, propsLight.vilkar);
 
-    const art12_eller_16_er_ikke_nil = !Utils._isNil(art12_1.oppfylt) || !Utils._isNil(art16_1.oppfylt);
-    const manglerBegrunnelse12 = art12_1.oppfylt === false && art12_1.begrunnelseKoder.length === 0;
-    const manglerBegrunnelse16 =
-      art16_1.oppfylt === false && art16_1.begrunnelseKoder.length === 0 && art16_1.begrunnelseFritekst === null;
-    const harAvklaring = art12_eller_16_er_ikke_nil && !manglerBegrunnelse12 && !manglerBegrunnelse16;
+    const utsendingsvilkår = propsLight.konvensjonStorbritanniaToggleEnabled
+      ? art12_1 ?? art14_1konv ?? art16_1konv
+      : art12_1;
+    const unntaksvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? art16_1 ?? art18_1konv : art16_1;
+
+    const minstEttAvVilkåreneErUtfylt =
+      !Utils._isNil(utsendingsvilkår?.oppfylt) || !Utils._isNil(unntaksvilkår?.oppfylt);
+    const utsendingManglerBegrunnelse =
+      utsendingsvilkår?.oppfylt === false && Utils._isEmpty(utsendingsvilkår.begrunnelseKoder);
+    const unntakManglerBegrunnelse =
+      unntaksvilkår?.oppfylt === false &&
+      Utils._isEmpty(unntaksvilkår.begrunnelseKoder) &&
+      !unntaksvilkår.begrunnelseFritekst;
+
+    const harAvklaring = minstEttAvVilkåreneErUtfylt && !utsendingManglerBegrunnelse && !unntakManglerBegrunnelse;
 
     this.kriterier = [
       {
-        exec: (avklartefakta, alleVilkar) =>
-          erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, alleVilkar) ||
-          (erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar) && harAvklaring),
+        exec: () => utsendingsvilkår?.oppfylt !== undefined || (unntaksvilkår?.oppfylt !== undefined && harAvklaring),
         nesteSteg: STEG.MEDFOLGENDE_BARN,
       },
       {
-        exec: (avklartefakta, alleVilkar) =>
-          erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, alleVilkar) !== undefined &&
-          erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar) !== undefined &&
-          harAvklaring,
+        exec: () => utsendingsvilkår?.oppfylt !== undefined && unntaksvilkår?.oppfylt !== undefined && harAvklaring,
         nesteSteg: STEG.AVSLAG_12_X_OG_16,
       },
     ];
@@ -41,9 +49,7 @@ class Artikkel12_1 extends Steg {
     });
     this.beregnRelevantUI = (_propsLight) => ({
       harAvklaring,
-      art12_x: art12_1,
       artikkelNavn: "12.1",
-      art16_1,
     });
     this.handlers = {
       bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
