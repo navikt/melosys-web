@@ -421,6 +421,8 @@ class Stegvelger extends Component {
       soknadsperiode: props.soknadsperiode,
       harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger) || !Utils._isEmpty(props.kontrollfeil),
       konvensjonStorbritanniaToggleEnabled: props.konvensjonStorbritanniaToggleEnabled,
+      utsendingsvilkår: props.utsendingsvilkår,
+      unntaksvilkår: props.unntaksvilkår,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -639,6 +641,8 @@ Stegvelger.propTypes = {
     })
   ),
   konvensjonStorbritanniaToggleEnabled: PT.bool.isRequired,
+  utsendingsvilkår: PT.object.isRequired,
+  unntaksvilkår: PT.object.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -678,6 +682,8 @@ const mapStateToProps = (state) => ({
   arbeidsgivereIPerioden: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
+  utsendingsvilkår: vilkarSelectors.UtsendingsvilkårSelector(state),
+  unntaksvilkår: vilkarSelectors.UnntaksvilkårSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlingsPerioder: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),

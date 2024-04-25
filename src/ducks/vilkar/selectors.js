@@ -53,7 +53,7 @@ export const nis = createSelector(
   (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.FTRL_2_12_UNNTAK_TURISTSKIP)
 );
 
-export const utsendingsvilkårArbeidstakerSelector = createSelector(
+export const UtsendingsvilkårArbeidstakerSelector = createSelector(
   (state) => VilkarSelector(state),
   (alleVilkar) => {
     const art12_1 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART12_1);
@@ -64,7 +64,7 @@ export const utsendingsvilkårArbeidstakerSelector = createSelector(
   }
 );
 
-export const utsendingsvilkårNæringsdrivendeSelector = createSelector(
+export const UtsendingsvilkårNæringsdrivendeSelector = createSelector(
   (state) => VilkarSelector(state),
   (alleVilkar) => {
     const art12_2 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART12_2);
@@ -75,7 +75,21 @@ export const utsendingsvilkårNæringsdrivendeSelector = createSelector(
   }
 );
 
-export const unntaksvilkårSelector = createSelector(
+export const UtsendingsvilkårSelector = createSelector(
+  (state) => VilkarSelector(state),
+  (alleVilkar) => {
+    const art12_1 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART12_1);
+    const art12_2 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART12_2);
+    const art14_1 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART14_1);
+    const art14_2 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART14_2);
+    const art16_1 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART16_1);
+    const art16_3 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART16_3);
+
+    return art12_1 ?? art12_2 ?? art14_1 ?? art14_2 ?? art16_1 ?? art16_3 ?? {};
+  }
+);
+
+export const UnntaksvilkårSelector = createSelector(
   (state) => VilkarSelector(state),
   (alleVilkar) => {
     const art16_1 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART16_1);

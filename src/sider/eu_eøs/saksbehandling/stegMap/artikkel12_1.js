@@ -10,15 +10,10 @@ class Artikkel12_1 extends Steg {
     super(propsLight, stegPosisjon);
 
     const art12_1 = hentVilkarEllerNull(MKV.Koder.vilkaar.FO_883_2004_ART12_1, propsLight.vilkar);
-    const art14_1konv = hentVilkarEllerNull(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART14_1, propsLight.vilkar);
-    const art16_1konv = hentVilkarEllerNull(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART16_1, propsLight.vilkar);
     const art16_1 = hentVilkarEllerNull(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
-    const art18_1konv = hentVilkarEllerNull(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART18_1, propsLight.vilkar);
 
-    const utsendingsvilkår = propsLight.konvensjonStorbritanniaToggleEnabled
-      ? art12_1 ?? art14_1konv ?? art16_1konv
-      : art12_1;
-    const unntaksvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? art16_1 ?? art18_1konv : art16_1;
+    const utsendingsvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? propsLight.utsendingsvilkår : art12_1;
+    const unntaksvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? propsLight.unntaksvilkår : art16_1;
 
     const minstEttAvVilkåreneErUtfylt =
       !Utils._isNil(utsendingsvilkår?.oppfylt) || !Utils._isNil(unntaksvilkår?.oppfylt);
@@ -33,7 +28,7 @@ class Artikkel12_1 extends Steg {
 
     this.kriterier = [
       {
-        exec: () => utsendingsvilkår?.oppfylt !== undefined || (unntaksvilkår?.oppfylt !== undefined && harAvklaring),
+        exec: () => utsendingsvilkår?.oppfylt || (unntaksvilkår?.oppfylt && harAvklaring),
         nesteSteg: STEG.MEDFOLGENDE_BARN,
       },
       {

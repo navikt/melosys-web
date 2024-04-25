@@ -56,9 +56,9 @@ export const Bestemmelser = ({
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const lovvalgsbestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
   const utsendingsvilkår: Partial<Vilkaar> = erArbeidstaker
-    ? useSelector(vilkarSelectors.utsendingsvilkårArbeidstakerSelector)
-    : useSelector(vilkarSelectors.utsendingsvilkårNæringsdrivendeSelector);
-  const unntaksvilkår: Partial<Vilkaar> = useSelector(vilkarSelectors.unntaksvilkårSelector);
+    ? useSelector(vilkarSelectors.UtsendingsvilkårArbeidstakerSelector)
+    : useSelector(vilkarSelectors.UtsendingsvilkårNæringsdrivendeSelector);
+  const unntaksvilkår: Partial<Vilkaar> = useSelector(vilkarSelectors.UnntaksvilkårSelector);
   const erSokkel = useSelector(avklartefaktaSelectors.InstallasjonsTypeSelector) === KV.Koder.SOKKEL;
 
   const [vedtakValg, setVedtakValg] = useState(initializeVedtakValg(utsendingsvilkår, unntaksvilkår));

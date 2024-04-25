@@ -10,16 +10,11 @@ class Artikkel12_2 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const art12_2 = hentVilkarEllerNull(MKV.Koder.vilkaar.FO_883_2004_ART12_2, propsLight.vilkar);
-    const art14_2konv = hentVilkarEllerNull(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART14_2, propsLight.vilkar);
-    const art16_3konv = hentVilkarEllerNull(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART16_3, propsLight.vilkar);
+    const art12_1 = hentVilkarEllerNull(MKV.Koder.vilkaar.FO_883_2004_ART12_1, propsLight.vilkar);
     const art16_1 = hentVilkarEllerNull(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
-    const art18_1konv = hentVilkarEllerNull(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART18_1, propsLight.vilkar);
 
-    const utsendingsvilkår = propsLight.konvensjonStorbritanniaToggleEnabled
-      ? art12_2
-      : art12_2 ?? art14_2konv ?? art16_3konv;
-    const unntaksvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? art16_1 : art16_1 ?? art18_1konv;
+    const utsendingsvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? propsLight.utsendingsvilkår : art12_1;
+    const unntaksvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? propsLight.unntaksvilkår : art16_1;
 
     const minstEttAvVilkåreneErUtfylt =
       !Utils._isNil(utsendingsvilkår?.oppfylt) || !Utils._isNil(unntaksvilkår?.oppfylt);
