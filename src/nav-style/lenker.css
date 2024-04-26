@@ -1,0 +1,48 @@
+.lenkemedikon-mixin svg {
+  width: 1em;
+  height: 1em;
+  fill: #0067c5;
+  stroke: #0067c5;
+  vertical-align: middle;
+  position: relative;
+  top: -0.125em;
+}
+.lenkemedikon-mixin svg + span:not(.sr-only),
+.lenkemedikon-mixin span:not(.sr-only) + svg {
+  margin-left: 0.25em;
+}
+.lenkemedikon-mixin:focus svg {
+  fill: white;
+  stroke: white;
+}
+.lenke {
+  color: #0067c5;
+  background: none;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.lenke:hover,
+.lenke--hover {
+  text-decoration: none;
+}
+.lenke:focus,
+.lenke--focus,
+.lenke:active,
+.lenke--active {
+  outline: 1px solid #00347d;
+  text-decoration: none;
+  box-shadow: 0 0 0 2px #00347d;
+}
+.lenke svg {
+  width: 1em;
+  height: 1em;
+  fill: #0067c5;
+  stroke: #0067c5;
+  vertical-align: middle;
+  position: relative;
+  top: -0.125em;
+}
+.lenke svg + span:not(.sr-only),
+.lenke span:not(.sr-only) + svg {
+  margin-left: 0.25em;
+}
