@@ -64,7 +64,7 @@ const EnkeltSak = (props) => {
           </div>
         }
         hoyreSideTittel={
-          <Nav.Link target="_blank" href={`${URL_BASENAME}${link}`} className="saklenke">
+          <Nav.Link target="_blank" href={`${URL_BASENAME}${link}`}>
             {saksnummer}
             <Ikon.ExternalLink className="ikon" />
           </Nav.Link>

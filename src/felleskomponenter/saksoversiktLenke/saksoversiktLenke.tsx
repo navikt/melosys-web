@@ -53,7 +53,7 @@ const SaksoversiktLenke = ({ behandlingID, saksnummer, hovedpartRolle }: PropsFr
   return (
     <div className="saksoversiktLenke">
       <div className="panel">
-        Vis saksoversikt:
+        <span>Vis saksoversikt:</span>
         <Nav.Link href="#" onClick={hentSaksoversikt}>
           Åpnes i nytt vindu
           <Ikon.ExternalLink />
