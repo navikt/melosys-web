@@ -8,7 +8,7 @@ exports[`fritekstvedleggRow > snapshot test 1`] = `
     className="navds-table__data-cell navds-body-short navds-body-short--medium"
   >
     <a
-      className="lenke"
+      className="navds-link navds-link--action"
       href="#"
       onClick={[Function]}
     >

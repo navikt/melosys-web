@@ -1,6 +1,5 @@
 import { Column, Container, Row } from "./grid";
 import NavFrontendSpinner from "nav-frontend-spinner";
-import Lenker from "nav-frontend-lenker";
 import Modal from "nav-frontend-modal";
 import Tekstomrade from "nav-frontend-tekstomrade";
 import { Box, Button, HelpText, Link, Tag } from "@navikt/ds-react";
@@ -38,7 +37,6 @@ export {
   Textarea,
   Typo,
   NavFrontendSpinner,
-  Lenker,
   Modal,
   Tekstomrade,
   Tag,

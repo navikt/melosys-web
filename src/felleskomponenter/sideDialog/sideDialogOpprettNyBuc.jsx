@@ -286,9 +286,9 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
         {opprettetBucUrl && bucOpprettet && (
           <Nav.Alert variant="success" className="varsel">
             Saken er nå opprettet i RINA
-            <Nav.Lenker href={opprettetBucUrl} target="_blank">
+            <Nav.Link href={opprettetBucUrl} target="_blank">
               {opprettetBucUrl}
-            </Nav.Lenker>
+            </Nav.Link>
           </Nav.Alert>
         )}
         {alertmelding && (

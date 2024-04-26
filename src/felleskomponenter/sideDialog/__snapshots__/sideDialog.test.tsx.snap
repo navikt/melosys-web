@@ -193,7 +193,7 @@ exports[`SideDialog > snapshot test 1`] = `
                   >
                     <span>
                       <a
-                        class="lenke"
+                        class="navds-link navds-link--action"
                         href="#"
                       >
                         tittel (åpnes i ny fane)
