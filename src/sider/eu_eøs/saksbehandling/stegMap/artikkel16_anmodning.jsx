@@ -1,17 +1,22 @@
 import MKV from "../../../../melosyskodeverk";
 
 import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
 
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingArtikkel16Anmodning from "../../stegKomponenter/vurderingArtikkel16Anmodning";
-import { hentVilkar, hentBegrunnelser } from "../../../../domeneUtils";
+import { hentBegrunnelser, hentVilkar, hentVilkarEllerNull } from "../../../../domeneUtils";
 
 const { UNDER_BEHANDLING, AVSLUTTET } = MKV.Koder.behandlinger.behandlingsstatus;
 
 class Artikkel16Anmodning extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+
+    const art16_1 = hentVilkarEllerNull(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
+    const unntaksvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? propsLight.unntaksvilkår : art16_1;
+
     this.kriterier = [
       {
         exec: () => Artikkel16Anmodning.skalArt16SvarstegVaereSynlig(propsLight),
@@ -32,7 +37,7 @@ class Artikkel16Anmodning extends Steg {
       return {
         muligeBegrunnelseValg,
         erIDirekteTilArtikkel16Flyt: _propsLight.erIDirekteTilArtikkel16Flyt,
-        art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),
+        art16_1: unntaksvilkår,
         harAvklaring: Artikkel16Anmodning.harAvklaring(_propsLight),
       };
     };
@@ -83,13 +88,14 @@ class Artikkel16Anmodning extends Steg {
     );
   }
 
-  static harAvklaring({ anmodningsperioder, vilkar }) {
-    const unntakFraBestemmelseErSatt = anmodningsperioder.some(
+  static harAvklaring({ anmodningsperioder, vilkar, unntaksvilkår, konvensjonStorbritanniaToggleEnabled }) {
+    const unntakFraBestemmelseErSatt = anmodningsperioder?.some(
       (anmodningsperiode) => anmodningsperiode.unntakFraBestemmelse
     );
-    const minstEnBegrunnelseErValgt =
-      hentBegrunnelser(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1, vilkar).length >
-      0;
+    const minstEnBegrunnelseErValgt = konvensjonStorbritanniaToggleEnabled
+      ? !Utils._isEmpty(unntaksvilkår?.begrunnelseKoder)
+      : hentBegrunnelser(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1, vilkar)
+          .length > 0;
 
     return unntakFraBestemmelseErSatt && minstEnBegrunnelseErValgt;
   }

@@ -140,6 +140,7 @@ export const valgteLovvalgsVilkar = createSelector(
     const alleLovvalg = [
       ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
       ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
+      ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia,
     ];
     return alleVilkar.filter((enkeltVilkar) =>
       alleLovvalg.find((enkeltLovvalg) => enkeltLovvalg.kode === enkeltVilkar.vilkaar)

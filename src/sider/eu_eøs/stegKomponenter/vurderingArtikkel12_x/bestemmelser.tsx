@@ -2,6 +2,7 @@ import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import {
   konverterVilkarTilStegData,
+  lagLovvalgsbestemmelse,
   lagVilkaar,
   lagVilkarbegrunnelse,
   slettVilkar,
@@ -136,6 +137,9 @@ export const Bestemmelser = ({
       oppdaterData(lagVilkaar(finnFeltNavn(utsendelsevilkår), false));
       oppdaterData(lagVilkaar(`${unntaksvilkårFeltNavn}_anmodning`, true));
     }
+
+    oppdaterData(lagLovvalgsbestemmelse(nyBestemmelse));
+
     setTimeout(() => setPending(false), 100);
   };
 
