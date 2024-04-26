@@ -15,6 +15,11 @@ export const AnmodningsperiodeIDSelector = createSelector(
   (anmodningsperiode) => anmodningsperiode.id
 );
 
+export const LovvalgsbestemmelseSelector = createSelector(
+  AnmodningsperiodeSelector,
+  (anmodningsperiode) => anmodningsperiode.lovvalgBestemmelse
+);
+
 export const UnntakFraBestemmelseSelector = createSelector(
   AnmodningsperiodeSelector,
   (anmodningsperiode) => anmodningsperiode.unntakFraBestemmelse

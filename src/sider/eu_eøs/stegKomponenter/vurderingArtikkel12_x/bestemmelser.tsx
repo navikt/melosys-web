@@ -30,6 +30,7 @@ import {
   kodeTilObjektKonvGB,
   VedtakValg,
 } from "./bestemmelserUtils";
+import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
 
 const { FO_883_2004_ART16_1, KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.vilkaar;
 const { SAERLIG_AVSLAGSGRUNN } = MKV.Koder.begrunnelser.art16_1_avslag;
@@ -58,12 +59,13 @@ export const Bestemmelser = ({
   const erArbeidstaker = vilkaarNavn12 === "12.1";
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const lovvalgsbestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
+  const anmodningsbestemmelse = useSelector(anmodningsperioderSelectors.LovvalgsbestemmelseSelector);
   const utsendingsvilkår: Partial<Vilkaar> = useSelector(vilkarSelectors.UtsendingsvilkårSelector);
   const unntaksvilkår: Partial<Vilkaar> = useSelector(vilkarSelectors.UnntaksvilkårSelector);
   const erSokkel = useSelector(avklartefaktaSelectors.InstallasjonsTypeSelector) === KV.Koder.SOKKEL;
 
   const [vedtakValg, setVedtakValg] = useState(initializeVedtakValg(utsendingsvilkår, unntaksvilkår));
-  const [bestemmelse, setBestemmelse] = useState(lovvalgsbestemmelse ?? "");
+  const [bestemmelse, setBestemmelse] = useState(lovvalgsbestemmelse ?? anmodningsbestemmelse ?? "");
   const [pending, setPending] = useState(false);
 
   const FO_883_2004_ART12 = hentRelevantUtsendelseArtikkel12(erArbeidstaker);

@@ -17,7 +17,7 @@ export * from "./unntakfrabestemmelse";
 export * from "./lovvalgsperiode";
 export * from "./vilkar";
 
-const StegStoreTyper = {
+export const StegStoreTyper = {
   Anmodningsperiodersvar: anmodningsperiodesvartype,
   Avklartefakta: avklartefaktaType,
   Lovvalgsbestemmelser: lovvalgsbestemmelseType,
@@ -28,4 +28,13 @@ const StegStoreTyper = {
   Lovvalgsland: lovvalgslandType,
 };
 
-export { StegStoreTyper };
+export interface PerioderStegState {
+  lovvalgsbestemmelse: string | undefined;
+  tilleggbestemmelse: string | undefined;
+  unntakfrabestemmelse: string | undefined;
+  lovvalgsperiode?: {
+    fomDato: string | undefined;
+    tomDato: string | undefined;
+  };
+  lovvalgsland: string | undefined;
+}

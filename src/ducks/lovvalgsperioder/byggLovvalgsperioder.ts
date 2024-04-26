@@ -18,22 +18,12 @@ import { RootState } from "AppTypes";
 import * as Types from "./types";
 import { Vilkaar } from "../../services/modules/vilkar";
 import { Lovvalgsperiode } from "../../services/modules/lovvalgsperioder";
+import { PerioderStegState } from "../../felleskomponenter/stegvelger";
 
 /* Hjelpefunksjoner
  * Disse eksponeres ikke utad, men er kun ment for å bryte opp komplisert logikk og gjøre
  * koden mer lesbar.
  */
-
-interface PerioderStegState {
-  lovvalgsbestemmelse: string | undefined;
-  tilleggbestemmelse: string | undefined;
-  unntakfrabestemmelse: string | undefined;
-  lovvalgsperiode?: {
-    fomDato: string | undefined;
-    tomDato: string | undefined;
-  };
-  lovvalgsland: string | undefined;
-}
 
 const finnOppfyltVilkar = (alleLovvalgsVilkar: Vilkaar[]): string | undefined => {
   const vilkarObjekt = alleLovvalgsVilkar.find((enkeltLovvalg) => enkeltLovvalg.oppfylt);
