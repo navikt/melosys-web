@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 
 import * as MPT from "../../proptypes";
 import * as Ikoner from "../../resources/images";
-import * as Nav from "../../navFrontend";
 
 import PanelHeader from "../panelHeader";
 
@@ -23,9 +22,9 @@ const JournalforingOppgave = ({ sak }) => {
 
   return (
     <Link to={link} className="journalOppgave__link">
-      <Nav.Panel className="journalOppgave">
+      <div className="panel journalOppgave">
         <PanelHeader ikon={Ikoner.IkonSak} tittel={tittel} />
-      </Nav.Panel>
+      </div>
     </Link>
   );
 };

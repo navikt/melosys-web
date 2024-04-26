@@ -36,7 +36,7 @@ const FritekstvedleggSkjema = ({
     <Nav.Row className={cls.block}>
       <Nav.Typo.Element className={cls.element("heading")}>Fritekstvedlegg</Nav.Typo.Element>
       <Nav.Typo.Undertekst>Dokumentet journalføres og legges til som et vedlegg til brevet</Nav.Typo.Undertekst>
-      <Nav.Panel className={cls.element("skjema")}>
+      <div className={`panel ${cls.element("skjema")}`}>
         <Nav.Row>
           <Nav.Column xs={width}>
             <Skjema.Input
@@ -58,7 +58,7 @@ const FritekstvedleggSkjema = ({
             size="small"
           />
         </Nav.Row>
-      </Nav.Panel>
+      </div>
     </Nav.Row>
   );
 };

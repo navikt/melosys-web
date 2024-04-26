@@ -1,7 +1,6 @@
 import { KeyboardEvent, useEffect, useMemo } from "react";
 
 import "./oppdaterRegisteropplysninger.css";
-import * as Nav from "../../navFrontend";
 import { Refresh } from "../../resources/images";
 import * as Forms from "../forms";
 import { FieldValues, useForm } from "react-hook-form";
@@ -45,7 +44,7 @@ export const OppdaterRegisteropplysninger = ({
   };
 
   return (
-    <Nav.Panel className="oppdater-registeropplysninger" border>
+    <div className="panel oppdater-registeropplysninger">
       {sakstype === FTRL && (
         <Forms.Checkbox
           className="oppdater-registeropplysninger__checkbox"
@@ -68,7 +67,7 @@ export const OppdaterRegisteropplysninger = ({
       <span className="oppdater-registeropplysninger__sistOppdatert">
         {` (sist oppdatert ${sistOppdatert || "- "})`}
       </span>
-    </Nav.Panel>
+    </div>
   );
 };
 

@@ -139,9 +139,9 @@ export const Menypanel = ({
         </Nav.Column>
         <Nav.Column xs="9" className="utenPadding">
           <aside>
-            <Nav.Panel className="content" id={activeLink?.label}>
+            <div className="panel" id={activeLink?.label}>
               {activeLink?.content || <div />}
-            </Nav.Panel>
+            </div>
           </aside>
         </Nav.Column>
       </div>

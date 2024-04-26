@@ -103,7 +103,7 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
     "Her kan du notere særlige vurderinger eller handlinger du gjør, for eksempel at du innhenter opplysninger. Notater brukes for å holde oversikt over hva som er gjort i saken, men lagres ikke som saksdokumenter.";
 
   return (
-    <Nav.Panel className="sidedialog-notater">
+    <div className="panel">
       {notater.length > 0 && (
         <div className="sidedialog-notater__notater">
           {notater.sort(sortNotaterByOpprettetDato).map((notat) => {
@@ -155,7 +155,7 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
           </Nav.Button>
         )}
       </div>
-    </Nav.Panel>
+    </div>
   );
 };
 
