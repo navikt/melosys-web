@@ -39,6 +39,8 @@ import { Feilmeldinger } from "../feilmeldinger";
 import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil } from "../alertmeldinger";
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.css";
+import { erFeatureToggleEnabled } from "../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../featuretoggle/toggleNavn";
 
 class Stegvelger extends Component {
   state = {
@@ -418,6 +420,7 @@ class Stegvelger extends Component {
       bestemmelser: props.bestemmelser,
       soknadsperiode: props.soknadsperiode,
       harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger) || !Utils._isEmpty(props.kontrollfeil),
+      konvensjonStorbritanniaToggleEnabled: props.konvensjonStorbritanniaToggleEnabled,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -635,6 +638,7 @@ Stegvelger.propTypes = {
       felter: PT.arrayOf(PT.string).isRequired,
     })
   ),
+  konvensjonStorbritanniaToggleEnabled: PT.bool.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -711,6 +715,7 @@ const mapStateToProps = (state) => ({
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
   kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
+  konvensjonStorbritanniaToggleEnabled: erFeatureToggleEnabled(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA, state),
 });
 
 /* eslint no-alert:off */

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PT from "prop-types";
 
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
@@ -20,6 +20,8 @@ import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { useSelector } from "react-redux";
+import { _uuid } from "../../../utils";
+import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 
 const stegetsTilleggbestemmelser = [
   {
@@ -27,15 +29,23 @@ const stegetsTilleggbestemmelser = [
     label: MKV.Terms.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5,
   },
 ];
+const { lovvalgbestemmelser_konv_efta_storbritannia } = MKV.KTObjects.lovvalgsbestemmelser;
+const { lovvalgbestemmelser_883_2004 } = MKV.KTObjects.lovvalgsbestemmelser;
+
+const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
+const { FO_883_2004_ART16_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
 
 const VurderingYrkesgruppe = (props) => {
   const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
   const { harAvklaring, yrkesgruppe, tilleggbestemmelse } = tilstand;
+  const [bestemmelse, setBestemmelse] = useState("");
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
-
+  const soeknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandSelector);
   const konvensjonEftaLandOgStorbritanniaToggleEnabled = useFeatureToggle(
     MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA
   );
+  const enesteLandErStorbritannia = MKVUtils.enesteLandErStorbritannia(soeknadsland.landkoder);
+  const fakta = hentFaktaVerdi(yrkesgruppe);
 
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
@@ -47,9 +57,16 @@ const VurderingYrkesgruppe = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!enesteLandErStorbritannia && fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12) {
+      setBestemmelse(FO_883_2004_ART16_1);
+    } else {
+      setBestemmelse("");
+    }
+  }, [enesteLandErStorbritannia, fakta]);
+
   const radioEndret = (event) => {
     const yrkessituasjon = event.target.value;
-
     oppdaterData(lagAvklartfakta(KV.Koder.YRKESGRUPPE, null, yrkessituasjon));
 
     if (yrkessituasjon === KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL) {
@@ -67,7 +84,21 @@ const VurderingYrkesgruppe = (props) => {
     }
   };
 
-  const fakta = hentFaktaVerdi(yrkesgruppe);
+  const hentBestemmelser = () => {
+    if (enesteLandErStorbritannia) {
+      return [
+        KV.kodeTilObjekt(KONV_EFTA_STORBRITANNIA_ART18_1, lovvalgbestemmelser_konv_efta_storbritannia),
+        KV.kodeTilObjekt(FO_883_2004_ART16_1, lovvalgbestemmelser_883_2004),
+      ];
+    }
+    return [KV.kodeTilObjekt(FO_883_2004_ART16_1, lovvalgbestemmelser_883_2004)];
+  };
+
+  const erGyldigKriterierEftaKonvensjon =
+    konvensjonEftaLandOgStorbritanniaToggleEnabled && fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12
+      ? bestemmelse !== ""
+      : true;
+
   return (
     <div>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Hva er søkerens yrkessituasjon?</Nav.Typo.Innholdstittel>
@@ -130,10 +161,31 @@ const VurderingYrkesgruppe = (props) => {
             />
           </>
         )}
+        {konvensjonEftaLandOgStorbritanniaToggleEnabled &&
+          fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12 && (
+            <Nav.Select
+              bredde="fullbredde"
+              label="Velg bestemmelse"
+              onChange={(event) => {
+                setBestemmelse(event.target.value);
+              }}
+              value={bestemmelse || ""}
+              disabled={hentBestemmelser().length === 1}
+            >
+              <option key={_uuid()} value="" disabled={!!bestemmelse}>
+                Velg...
+              </option>
+              {hentBestemmelser().map((lovvalgBestemmelse) => (
+                <option key={lovvalgBestemmelse.kode} value={lovvalgBestemmelse.kode}>
+                  {lovvalgBestemmelse.term}
+                </option>
+              ))}
+            </Nav.Select>
+          )}
       </Nav.Fieldset>
       <Mui.StegKnapper
         bekreftKnappProps={{
-          disabled: !(redigerbart && harAvklaring),
+          disabled: !(redigerbart && harAvklaring && erGyldigKriterierEftaKonvensjon),
           "data-cy-nesteknapp": "knapp_steg1",
           onClick: bekreftOgFortsett,
         }}

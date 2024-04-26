@@ -83,8 +83,7 @@ export const Varsler = ({
   const visStorbritanniaKonvensjonTekst =
     konvensjonStorbritanniaToggleEnabled &&
     MKVUtils.erUtsendt(behandlingstema) &&
-    landkoder.length === 1 &&
-    landkoder[0] === MKV.Koder.landkoder.GB;
+    MKVUtils.enesteLandErStorbritannia(landkoder);
 
   return (
     <div className="vurderinginngang_eu_eos">
@@ -106,7 +105,7 @@ export const Varsler = ({
       {inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
         <Nav.Alert variant="info">
           {visStorbritanniaKonvensjonTekst && (
-            <p>
+            <p className="storbritannia-konv-tekst">
               Husk at du må vurdere om inngangsvilkårene i konvensjonen med Storbritannia av 30. juni 2023, eller
               separasjonsavtalen av 28. januar 2020, er oppfylt.
             </p>
