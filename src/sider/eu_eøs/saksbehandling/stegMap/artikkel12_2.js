@@ -29,7 +29,7 @@ class Artikkel12_2 extends Steg {
 
     this.kriterier = [
       {
-        exec: () => utsendingsvilkår?.oppfylt !== undefined || (unntaksvilkår?.oppfylt !== undefined && harAvklaring),
+        exec: () => utsendingsvilkår?.oppfylt || (unntaksvilkår?.oppfylt && harAvklaring),
         nesteSteg: STEG.MEDFOLGENDE_BARN,
       },
       {
