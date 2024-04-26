@@ -6,7 +6,7 @@ import * as Utils from "../../../../utils";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingArtikkel16Anmodning from "../../stegKomponenter/vurderingArtikkel16Anmodning";
-import { hentBegrunnelser, hentVilkar, hentVilkarEllerNull } from "../../../../domeneUtils";
+import { hentBegrunnelser, hentVilkar } from "../../../../domeneUtils";
 
 const { UNDER_BEHANDLING, AVSLUTTET } = MKV.Koder.behandlinger.behandlingsstatus;
 
@@ -14,7 +14,7 @@ class Artikkel16Anmodning extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const art16_1 = hentVilkarEllerNull(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
+    const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
     const unntaksvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? propsLight.unntaksvilkår : art16_1;
 
     this.kriterier = [

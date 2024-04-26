@@ -37,6 +37,7 @@ const { SAERLIG_AVSLAGSGRUNN } = MKV.Koder.begrunnelser.art16_1_avslag;
 interface ListevelgerFlervalgEvent {
   value: string[];
 }
+
 interface BestemmelserProps {
   oppdaterData: (objekt: any) => void;
   slettData: (objekt: any) => void;
@@ -45,6 +46,7 @@ interface BestemmelserProps {
   begrunnelserUtsending: KTObject[];
   visStorbritanniaKonvensjon: boolean;
 }
+
 export const Bestemmelser = ({
   oppdaterData,
   slettData,
@@ -56,9 +58,7 @@ export const Bestemmelser = ({
   const erArbeidstaker = vilkaarNavn12 === "12.1";
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const lovvalgsbestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
-  const utsendingsvilkår: Partial<Vilkaar> = erArbeidstaker
-    ? useSelector(vilkarSelectors.UtsendingsvilkårArbeidstakerSelector)
-    : useSelector(vilkarSelectors.UtsendingsvilkårNæringsdrivendeSelector);
+  const utsendingsvilkår: Partial<Vilkaar> = useSelector(vilkarSelectors.UtsendingsvilkårSelector);
   const unntaksvilkår: Partial<Vilkaar> = useSelector(vilkarSelectors.UnntaksvilkårSelector);
   const erSokkel = useSelector(avklartefaktaSelectors.InstallasjonsTypeSelector) === KV.Koder.SOKKEL;
 
@@ -103,11 +103,13 @@ export const Bestemmelser = ({
         oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), true));
         slettData(slettVilkar("art16_1_avslag"));
         slettData(slettVilkar("art16_1_anmodning"));
-      } else if (value === VedtakValg.NEI_ANMODNING_UNNTAK) {
+      }
+      if (value === VedtakValg.NEI_ANMODNING_UNNTAK) {
         oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
         slettData(slettVilkar("art16_1_avslag"));
         oppdaterData(lagVilkaar("art16_1_anmodning", true));
-      } else if (value === VedtakValg.NEI_AVSLAG) {
+      }
+      if (value === VedtakValg.NEI_AVSLAG) {
         oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
         slettData(slettVilkar("art16_1_anmodning"));
         oppdaterData(lagVilkaar("art16_1_avslag", false));
@@ -115,8 +117,8 @@ export const Bestemmelser = ({
     }
   };
 
-  const finnUtsendelsevilkår = (unntaksvilkår: string) => {
-    if (unntaksvilkår === FO_883_2004_ART16_1) return FO_883_2004_ART12;
+  const finnUtsendelsevilkår = (unntaksvilkårKode: string) => {
+    if (unntaksvilkårKode === FO_883_2004_ART16_1) return FO_883_2004_ART12;
     return erSokkel ? KONV_EFTA_STORBRITANNIA_ART16 : KONV_EFTA_STORBRITANNIA_ART14;
   };
   const handleEndreBestemmelse = (event: ChangeEvent<HTMLSelectElement>) => {

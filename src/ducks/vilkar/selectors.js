@@ -8,6 +8,13 @@
 import { createSelector } from "reselect";
 
 import MKV from "../../melosyskodeverk";
+import { avklartefaktaSelectors } from "../avklartefakta";
+import * as KV from "../../kodeverk";
+
+const finnVilkår = (alleVilkår, vilkårKode) => alleVilkår?.find((enkelt) => enkelt.vilkaar === vilkårKode) ?? {};
+
+const finnVilkårEllerNull = (alleVilkår, vilkårKode) =>
+  alleVilkår?.find((enkelt) => enkelt.vilkaar === vilkårKode) ?? null;
 
 // selector(s)
 export const VilkarSelector = createSelector(
@@ -76,16 +83,17 @@ export const UtsendingsvilkårNæringsdrivendeSelector = createSelector(
 );
 
 export const UtsendingsvilkårSelector = createSelector(
-  (state) => VilkarSelector(state),
-  (alleVilkar) => {
-    const art12_1 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART12_1);
-    const art12_2 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART12_2);
-    const art14_1 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART14_1);
-    const art14_2 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART14_2);
-    const art16_1 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART16_1);
-    const art16_3 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART16_3);
-
-    return art12_1 ?? art12_2 ?? art14_1 ?? art14_2 ?? art16_1 ?? art16_3 ?? {};
+  (state) => UtsendingsvilkårArbeidstakerSelector(state),
+  (state) => UtsendingsvilkårNæringsdrivendeSelector(state),
+  (state) => avklartefaktaSelectors.Yrkesaktivitet(state),
+  (utsendingsvilkårforArbeidstaker, utsendingsvilkårForNæringsdrivende, yrkesaktivitet) => {
+    if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER) {
+      return utsendingsvilkårforArbeidstaker;
+    }
+    if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) {
+      return utsendingsvilkårForNæringsdrivende;
+    }
+    return {};
   }
 );
 
@@ -169,8 +177,3 @@ export const vilkarBegrunnelserSelector = createSelector(
       ...(forutgaendemedlemskap.begrunnelseKoder || []),
     ] || []
 );
-
-const finnVilkår = (alleVilkår, vilkårKode) => alleVilkår?.find((enkelt) => enkelt.vilkaar === vilkårKode) ?? {};
-
-const finnVilkårEllerNull = (alleVilkår, vilkårKode) =>
-  alleVilkår?.find((enkelt) => enkelt.vilkaar === vilkårKode) ?? null;

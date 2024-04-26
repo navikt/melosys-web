@@ -33,13 +33,14 @@ export const initializeVedtakValg = (
 ): VedtakValg | undefined => {
   if (utsendingsvilkår.oppfylt) {
     return VedtakValg.JA_INNVILGE;
-  } else if (utsendingsvilkår.oppfylt === false && unntaksvilkår.oppfylt) {
-    return VedtakValg.NEI_ANMODNING_UNNTAK;
-  } else if (utsendingsvilkår.oppfylt === false && unntaksvilkår.oppfylt === false) {
-    return VedtakValg.NEI_AVSLAG;
-  } else {
-    return undefined;
   }
+  if (utsendingsvilkår.oppfylt === false && unntaksvilkår.oppfylt) {
+    return VedtakValg.NEI_ANMODNING_UNNTAK;
+  }
+  if (utsendingsvilkår.oppfylt === false && unntaksvilkår.oppfylt === false) {
+    return VedtakValg.NEI_AVSLAG;
+  }
+  return undefined;
 };
 
 export const kodeTilObjektKonvGB = (bestemmelseKode: string): KTObject =>
