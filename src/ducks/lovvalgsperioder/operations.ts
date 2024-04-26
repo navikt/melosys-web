@@ -17,6 +17,7 @@ import * as Selectors from "./selectors";
 import { doThenDispatch } from "../../services/utils";
 import { behandlingerSelectors } from "../behandlinger";
 import { oppdaterLovvalgsperioderState as byggOgOppdaterLovvalgsperioder } from "./byggLovvalgsperioder";
+import { PerioderStegState } from "../../felleskomponenter/stegvelger";
 
 export function hent(behandlingID: number) {
   return doThenDispatch(() => Api.Lovvalgsperioder.hent(behandlingID), {
@@ -94,6 +95,6 @@ export function endreLovvalgsPeriode(fomdato: string, tomdato?: string) {
   return Actions.endrePeriode(fomdato, tomdato);
 }
 
-export function oppdaterLovvalgsperioderState(stegState: any) {
+export function oppdaterLovvalgsperioderState(stegState: PerioderStegState) {
   return byggOgOppdaterLovvalgsperioder(stegState);
 }

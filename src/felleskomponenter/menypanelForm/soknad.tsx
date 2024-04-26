@@ -174,6 +174,7 @@ const mapStateToProps = (state: RootState) => ({
       sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
     },
     vilkar: {
+      // Klarer ikke å se hvor disse kan bli brukt... Slette?
       vesentligVirksomhet: vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt,
       vesentligVirksomhetBegrunnelser: vilkarSelectors.vesentligVirksomhetSelector(state).begrunnelseKoder,
       normaltDriverVirksomhet: vilkarSelectors.normaltDriverVirksomhetSelector(state).oppfylt,

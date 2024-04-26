@@ -14,6 +14,7 @@ describe("artikkel16_anmodning", () => {
     const artikkel16AnmodningSteg = new Artikkel16Anmodning({
       behandlingsstatus: KV.kodeTilObjekt(UNDER_BEHANDLING, MKV.KTObjects.behandlinger.behandlingsstatus),
       anmodningsperioder: [{ sendtUtland: true }],
+      vilkar: [],
     });
 
     expect(artikkel16AnmodningSteg.nesteSteg()).toBe(STEG.ARTIKKEL_16_MOTTA_SVAR);
@@ -31,6 +32,7 @@ describe("artikkel16_anmodning", () => {
         },
         begrunnelseFritekst: "Fritekst",
       },
+      vilkar: [],
     });
 
     expect(artikkel16AnmodningSteg.nesteSteg()).toBe(STEG.ARTIKKEL_16_MOTTA_SVAR);
@@ -48,6 +50,7 @@ describe("artikkel16_anmodning", () => {
         },
         begrunnelseFritekst: null,
       },
+      vilkar: [],
     });
 
     expect(artikkel16AnmodningSteg.nesteSteg()).not.toBe(STEG.ARTIKKEL_16_MOTTA_SVAR);

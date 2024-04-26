@@ -82,7 +82,7 @@ const byggLovvalgsperiodeUtsending = (stegState: PerioderStegState, reduxState: 
       fomDato: søknadsperiode.fom,
       tomDato: søknadsperiode.tom,
       lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
-      medlemskapsperiodeID: medlemskapsperiodeID,
+      medlemskapsperiodeID,
       tilleggBestemmelse: stegState.tilleggbestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland: MKV.Koder.landkoder.NO,
