@@ -94,6 +94,7 @@ exports[`fritekstvedleggRow > snapshot test 1`] = `
     aria-labelledby="aksel-id-1"
     className="navds-modal navds-modal--polyfilled navds-modal--autowidth"
     onCancel={[Function]}
+    onClose={[Function]}
     style={
       {
         "width": undefined,
