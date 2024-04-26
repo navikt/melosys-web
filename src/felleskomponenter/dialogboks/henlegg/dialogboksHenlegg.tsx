@@ -24,10 +24,9 @@ import Dokumentliste from "../../dokumentliste";
 
 type DialogboksHenleggSakProps = {
   avbryt: () => void;
-  ariaHideApp?: boolean;
 };
 
-export const DialogboksHenleggSak = ({ avbryt, ariaHideApp = false }: DialogboksHenleggSakProps) => {
+export const DialogboksHenleggSak = ({ avbryt }: DialogboksHenleggSakProps) => {
   const dispatch = useDispatch();
   const [feil, setFeil] = useState<undefined | string>(undefined);
 
@@ -117,19 +116,9 @@ export const DialogboksHenleggSak = ({ avbryt, ariaHideApp = false }: Dialogboks
   const dialogboksHenleggClassName = bem("dialogboks-henlegg");
 
   return (
-    <Nav.Modal
-      className={dialogboksHenleggClassName.block}
-      isOpen
-      contentLabel="Henlegg sak"
-      onRequestClose={avbryt}
-      closeButton={false}
-      shouldCloseOnOverlayClick
-      ariaHideApp={ariaHideApp}
-    >
-      <div>
-        <Nav.Typo.Systemtittel className={dialogboksHenleggClassName.element("overskrift")}>
-          Henlegg saken
-        </Nav.Typo.Systemtittel>
+    <Nav.Modal onClose={avbryt} open header={{ heading: "Henlegg saken", closeButton: false }}>
+      <Nav.Modal.Body>
+        <Feilmeldinger />
         <Feilmeldinger className={dialogboksHenleggClassName.element("kontrollfeil")} />
         {feil && (
           <Nav.Alert variant="error" className={dialogboksHenleggClassName.element("feilmeldinger")}>
@@ -157,6 +146,8 @@ export const DialogboksHenleggSak = ({ avbryt, ariaHideApp = false }: Dialogboks
         {harIngenFeilmeldinger && (
           <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={erValgGyldig} />
         )}
+      </Nav.Modal.Body>
+      <Nav.Modal.Footer>
         <Knapperad
           bekreft={handleHenlegg}
           bekreftTekst="Henlegg saken"
@@ -165,7 +156,7 @@ export const DialogboksHenleggSak = ({ avbryt, ariaHideApp = false }: Dialogboks
           avbrytTekst="Avbryt"
           redigerbart
         />
-      </div>
+      </Nav.Modal.Footer>
     </Nav.Modal>
   );
 };

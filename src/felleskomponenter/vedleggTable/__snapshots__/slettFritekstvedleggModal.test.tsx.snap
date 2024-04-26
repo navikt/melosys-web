@@ -1,93 +1,76 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`slettFritekstvedleggModal > snapshot test 1`] = `
-<div
-  className="ReactModal__Overlay modal__overlay"
-  onClick={[Function]}
-  onMouseDown={[Function]}
-  style={{}}
+<dialog
+  aria-labelledby="aksel-id-1"
+  className="navds-modal navds-modal--polyfilled navds-modal--autowidth"
+  onCancel={[Function]}
+  style={
+    {
+      "width": undefined,
+    }
+  }
 >
   <div
-    aria-label="Slett fritekstvedlegg?"
-    aria-modal={true}
-    className="ReactModal__Content modal slettfritekstvedlegg-modal"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onMouseDown={[Function]}
-    onMouseUp={[Function]}
-    role="dialog"
-    style={{}}
-    tabIndex="-1"
+    className="navds-modal__header"
   >
-    <section>
-      <div
-        className="row"
-      >
-        <p
-          className="typo-element"
-        >
-          Slett fritekstvedlegg?
-        </p>
-        <p
-          className="typo-normal"
-        >
-          Er du sikker på at du vil slette fritekstvedlegget?
-          <br />
-           Dokumentet vil bli permanent slettet fra Melosys
-        </p>
-      </div>
-      <div
-        className="row"
-      >
-        <div
-          className="container__knapperad"
-        >
-          <button
-            className="navds-button navds-button--primary navds-button--small"
-            onClick={[MockFunction spy]}
-            onKeyUp={[Function]}
-            style={
-              {
-                "width": undefined,
-              }
-            }
-          >
-            <span
-              className="navds-label navds-label--small"
-            >
-              Ja, slett
-            </span>
-          </button>
-          <button
-            className="navds-button navds-button--tertiary navds-button--small"
-            onClick={[MockFunction spy]}
-            onKeyUp={[Function]}
-            style={
-              {
-                "width": undefined,
-              }
-            }
-          >
-            <span
-              className="navds-label navds-label--small"
-            >
-              Avbryt
-            </span>
-          </button>
-        </div>
-      </div>
-    </section>
-    <button
-      aria-label="Lukk"
-      className="lukknapp lukknapp--overstHjorne modal__lukkknapp--shake"
-      onClick={[MockFunction spy]}
+    <h1
+      className="navds-heading navds-heading--medium"
+      id="aksel-id-1"
     >
-      <span
-        className="text-hide"
-      >
-        Lukk
-      </span>
-    </button>
+      Slett fritekstvedlegg?
+    </h1>
   </div>
-</div>
+  <div
+    className="navds-modal__body"
+  >
+    <p
+      className="typo-normal"
+    >
+      Er du sikker på at du vil slette fritekstvedlegget?
+      <br />
+       Dokumentet vil bli permanent slettet fra Melosys
+    </p>
+  </div>
+  <div
+    className="navds-modal__footer"
+  >
+    <div
+      className="container__knapperad"
+    >
+      <button
+        className="navds-button navds-button--primary navds-button--medium"
+        onClick={[Function]}
+        onKeyUp={[Function]}
+        style={
+          {
+            "width": undefined,
+          }
+        }
+      >
+        <span
+          className="navds-label"
+        >
+          Ja, slett
+        </span>
+      </button>
+      <button
+        className="navds-button navds-button--tertiary navds-button--medium"
+        onClick={[MockFunction spy]}
+        onKeyUp={[Function]}
+        style={
+          {
+            "width": undefined,
+          }
+        }
+      >
+        <span
+          className="navds-label"
+        >
+          Avbryt
+        </span>
+      </button>
+    </div>
+  </div>
+</dialog>
 `;

@@ -2,9 +2,8 @@ import Panel from "nav-frontend-paneler";
 import { Column, Container, Row } from "./grid";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import Lenker from "nav-frontend-lenker";
-import Modal from "nav-frontend-modal";
 import Tekstomrade from "nav-frontend-tekstomrade";
-import { Box, Button, HelpText, Link, Tag } from "@navikt/ds-react";
+import { Box, Button, HelpText, Link, Tag, Modal } from "@navikt/ds-react";
 import Alert from "./alert";
 
 // Egne implementasjoner av pakker fra nav-frontend. Noen av disse har blitt fjernet fra nav-frontend, men vi implementerer de selv fordi vi fortsatt har bruk for de.
@@ -41,11 +40,11 @@ export {
   Typo,
   NavFrontendSpinner,
   Lenker,
-  Modal,
   Tekstomrade,
   Tag,
   HelpText,
   Button,
   Box,
   Link,
+  Modal,
 };

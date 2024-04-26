@@ -90,5 +90,77 @@ exports[`fritekstvedleggRow > snapshot test 1`] = `
       </span>
     </button>
   </td>
+  <dialog
+    aria-labelledby="aksel-id-1"
+    className="navds-modal navds-modal--polyfilled navds-modal--autowidth"
+    onCancel={[Function]}
+    style={
+      {
+        "width": undefined,
+      }
+    }
+  >
+    <div
+      className="navds-modal__header"
+    >
+      <h1
+        className="navds-heading navds-heading--medium"
+        id="aksel-id-1"
+      >
+        Slett fritekstvedlegg?
+      </h1>
+    </div>
+    <div
+      className="navds-modal__body"
+    >
+      <p
+        className="typo-normal"
+      >
+        Er du sikker på at du vil slette fritekstvedlegget?
+        <br />
+         Dokumentet vil bli permanent slettet fra Melosys
+      </p>
+    </div>
+    <div
+      className="navds-modal__footer"
+    >
+      <div
+        className="container__knapperad"
+      >
+        <button
+          className="navds-button navds-button--primary navds-button--medium"
+          onClick={[Function]}
+          onKeyUp={[Function]}
+          style={
+            {
+              "width": undefined,
+            }
+          }
+        >
+          <span
+            className="navds-label"
+          >
+            Ja, slett
+          </span>
+        </button>
+        <button
+          className="navds-button navds-button--tertiary navds-button--medium"
+          onClick={[Function]}
+          onKeyUp={[Function]}
+          style={
+            {
+              "width": undefined,
+            }
+          }
+        >
+          <span
+            className="navds-label"
+          >
+            Avbryt
+          </span>
+        </button>
+      </div>
+    </div>
+  </dialog>
 </tr>
 `;
