@@ -3,7 +3,7 @@
 exports[`oppdaterRegisteropplysninger > Skal ikke vise alternativ for å se registeropplysninger 5 ekstra år tilbake i tid 1`] = `
 <div>
   <div
-    class="panel oppdater-registeropplysninger panel--border"
+    class="oppdater-registeropplysninger"
   >
     <span
       class="oppdater-registeropplysninger__oppdateringsknapp"
@@ -56,7 +56,7 @@ exports[`oppdaterRegisteropplysninger > Skal ikke vise alternativ for å se regi
 exports[`oppdaterRegisteropplysninger > Skal vise alternativ for å se registeropplysninger 5 ekstra år tilbake i tid 1`] = `
 <div>
   <div
-    class="panel oppdater-registeropplysninger panel--border"
+    class="oppdater-registeropplysninger"
   >
     <div
       class="skjemaelement oppdater-registeropplysninger__checkbox"

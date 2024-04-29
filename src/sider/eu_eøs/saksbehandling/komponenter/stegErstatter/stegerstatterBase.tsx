@@ -11,12 +11,12 @@ interface StegerstatterBaseProps {
 
 const StegerstatterBase = ({ tittel, beskrivelse }: StegerstatterBaseProps) => (
   <section className="panelSeksjon stegerstatter">
-    <Nav.Panel>
+    <div className="panel">
       <Nav.Row>
         <Nav.Typo.Systemtittel>{tittel}</Nav.Typo.Systemtittel>
       </Nav.Row>
       <p>{parse(beskrivelse)}</p>
-    </Nav.Panel>
+    </div>
   </section>
 );
 

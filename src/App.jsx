@@ -6,8 +6,6 @@ import Rammeverk from "./sider/rammeverk";
 import { msalConfig } from "./auth/authConfig";
 
 import "./nav-style/grid.css";
-import "nav-frontend-lenker-style";
-import "nav-frontend-paneler-style";
 import "nav-frontend-skjema-style";
 import "nav-frontend-snakkeboble-style";
 import "nav-frontend-spinner-style";

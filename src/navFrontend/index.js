@@ -1,7 +1,5 @@
-import Panel from "nav-frontend-paneler";
 import { Column, Container, Row } from "./grid";
 import NavFrontendSpinner from "nav-frontend-spinner";
-import Lenker from "nav-frontend-lenker";
 import Tekstomrade from "nav-frontend-tekstomrade";
 import { Box, Button, HelpText, Link, Tag, Modal } from "@navikt/ds-react";
 import Alert from "./alert";
@@ -36,10 +34,8 @@ export {
   Input,
   InputProps,
   Textarea,
-  Panel,
   Typo,
   NavFrontendSpinner,
-  Lenker,
   Tekstomrade,
   Tag,
   HelpText,

@@ -227,7 +227,7 @@ const Oppsummering = ({
         skalViseModal={skalViseEndreModal}
         lukkModal={() => setSkalViseEndreModal(false)}
       />
-      <Nav.Panel className="saksbehandling__soknad-sammendrag">
+      <div className="panel">
         <Nav.Row>
           <Nav.Column xs="12">
             <div aria-label="behandlingsinformasjon" className={classNames(className, "oppsummering")}>
@@ -242,7 +242,7 @@ const Oppsummering = ({
                 </dl>
               </Nav.Row>
 
-              <Nav.Panel className="saksinfo">
+              <div className="panel saksinfo">
                 <Nav.Row>
                   <Nav.Column xs="8">
                     <Nav.Typo.Undertittel>
@@ -295,13 +295,13 @@ const Oppsummering = ({
                     )}
                   </Nav.Column>
                 </Nav.Row>
-              </Nav.Panel>
+              </div>
 
               {renderTabell()}
             </div>
           </Nav.Column>
         </Nav.Row>
-      </Nav.Panel>
+      </div>
     </section>
   );
 };

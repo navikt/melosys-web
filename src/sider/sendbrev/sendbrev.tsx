@@ -79,7 +79,7 @@ const Sendbrev = ({
       <Informasjonlinje visBehandlingsmeny={false} />
       <div id="main-container" className="main-container">
         <Nav.Container fluid className="sendbrev">
-          <Nav.Panel>
+          <div className="panel">
             <SendBrev
               behandlingID={behandlingID}
               redigerbart={redigerbart}
@@ -91,7 +91,7 @@ const Sendbrev = ({
               dokumenter={dokumenter}
               saksnummer={saksnummer}
             />
-          </Nav.Panel>
+          </div>
         </Nav.Container>
       </div>
     </>

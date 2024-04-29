@@ -69,12 +69,12 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   const mapBrev = (dokument: BrevDokumentMetadataType) => (
     <Table.Row key={Utils._uuid()}>
       <Table.DataCell>
-        <Nav.Lenker href="#" onClick={(e) => e.preventDefault()} onMouseDown={() => klikk(dokument)}>
+        <Nav.Link href="#" onClick={(e) => e.preventDefault()} onMouseDown={() => klikk(dokument)}>
           {tittel(
             dokument.dokumentNavn ??
               KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)
           )}
-        </Nav.Lenker>
+        </Nav.Link>
       </Table.DataCell>
       <Table.DataCell>{dokument.mottakerNavn ?? dokument.dokumentData?.mottaker}</Table.DataCell>
     </Table.Row>
@@ -83,9 +83,9 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   const mapSED = (dokument: SedDokumentMetadataType) => (
     <Table.Row key={Utils._uuid()}>
       <Table.DataCell>
-        <Nav.Lenker href="#" onClick={(e) => e.preventDefault()} onMouseDown={() => klikk(dokument)}>
+        <Nav.Link href="#" onClick={(e) => e.preventDefault()} onMouseDown={() => klikk(dokument)}>
           {tittel(dokument.dokumentNavn ?? `SED ${dokument.sedType}`)}
-        </Nav.Lenker>
+        </Nav.Link>
       </Table.DataCell>
       <Table.DataCell>{dokument.mottakerNavn}</Table.DataCell>
     </Table.Row>

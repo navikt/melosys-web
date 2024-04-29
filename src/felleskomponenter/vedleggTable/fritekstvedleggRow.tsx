@@ -38,9 +38,9 @@ const FritekstvedleggRow = ({
   return (
     <Table.Row>
       <Table.DataCell>
-        <Nav.Lenker href="#" onClick={aapnePdf}>
+        <Nav.Link href="#" onClick={aapnePdf}>
           {fritekstvedlegg.tittel}
-        </Nav.Lenker>
+        </Nav.Link>
       </Table.DataCell>
       <Table.DataCell />
       <Table.DataCell className="icon__cell">

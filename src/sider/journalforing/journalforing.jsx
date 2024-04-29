@@ -411,7 +411,7 @@ class Journalforing extends Component {
             <Nav.Row>
               <Nav.Column xs="6" lg="4">
                 <Sticky>
-                  <Nav.Panel className="journalforing__skjema">
+                  <div className="panel journalforing__skjema">
                     <div className="journalforing__skjema__scroll">
                       {visSedJournalforing && (
                         <JournalforingSED
@@ -437,12 +437,12 @@ class Journalforing extends Component {
                         />
                       )}
                     </div>
-                  </Nav.Panel>
+                  </div>
                 </Sticky>
               </Nav.Column>
               <Nav.Column xs="6" lg="8" className="journalforing__dokument">
                 {vedlegg.length > 0 && (
-                  <Nav.Panel>
+                  <div className="panel">
                     <Nav.Select
                       className="journalforing__vedlegg_velger"
                       name="journalforing_pdf_dokumenter"
@@ -459,12 +459,12 @@ class Journalforing extends Component {
                         </option>
                       ))}
                     </Nav.Select>
-                  </Nav.Panel>
+                  </div>
                 )}
                 {this.velgDokumentID() && (
-                  <Nav.Panel className="journalforing__dokument_visning">
+                  <div className="panel journalforing__dokument_visning">
                     <PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokumentID()} />
-                  </Nav.Panel>
+                  </div>
                 )}
               </Nav.Column>
             </Nav.Row>

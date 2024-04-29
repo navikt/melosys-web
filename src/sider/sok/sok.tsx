@@ -61,7 +61,7 @@ export const Sok = ({ children }: SokProps) => {
     return `saksnummer ${value}`;
   };
 
-  const ingenTreff = <Nav.Panel>Fant ingen saker knyttet til {enhet(sokefrase)}.</Nav.Panel>;
+  const ingenTreff = <div className="panel">Fant ingen saker knyttet til {enhet(sokefrase)}.</div>;
 
   return (
     <div className="sok">

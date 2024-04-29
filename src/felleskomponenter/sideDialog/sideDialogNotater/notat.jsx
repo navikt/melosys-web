@@ -78,24 +78,20 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
               <Nav.Textarea label="" value={endretTekst} onChange={endreTekst} maxLength={maksTekstLengde} />
             </Nav.Row>
             <Nav.Row>
-              <Nav.Column xs="8">
-                <div role="alert">
-                  {lagringFeilmelding && <Nav.Typo.Feilmelding>{lagringFeilmelding}</Nav.Typo.Feilmelding>}
-                </div>
-              </Nav.Column>
-              <Nav.Column xs="2">
-                {visLagreKnapp && (
-                  <Nav.Lenker onClick={lagre}>
-                    <span>Lagre</span>
-                  </Nav.Lenker>
-                )}
-              </Nav.Column>
-              <Nav.Column xs="2">
-                <Nav.Lenker onClick={avbrytEndring}>
-                  <span>Avbryt</span>
-                </Nav.Lenker>
-              </Nav.Column>
+              <div role="alert">
+                {lagringFeilmelding && <Nav.Typo.Feilmelding>{lagringFeilmelding}</Nav.Typo.Feilmelding>}
+              </div>
             </Nav.Row>
+            <div className="knapperad">
+              {visLagreKnapp && (
+                <Nav.Button variant="primary" size="small" onClick={lagre}>
+                  <span>Lagre</span>
+                </Nav.Button>
+              )}
+              <Nav.Button variant="secondary" size="small" onClick={avbrytEndring}>
+                <span>Avbryt</span>
+              </Nav.Button>
+            </div>
           </Fragment>
         )}
         {!endres && (
@@ -107,15 +103,11 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
             </Nav.Row>
             <Nav.Row>
               {redigerbart && (
-                <Fragment>
-                  <Nav.Column xs="9" />
-                  <Nav.Column xs="3">
-                    <Nav.Lenker onClick={apneEndring}>
-                      <Ikoner.Pencil />
-                      <span>&nbsp;Endre</span>
-                    </Nav.Lenker>
-                  </Nav.Column>
-                </Fragment>
+                <div className="knapperad">
+                  <Nav.Button variant="secondary" size="small" icon={<Ikoner.Pencil />} onClick={apneEndring}>
+                    Endre
+                  </Nav.Button>
+                </div>
               )}
             </Nav.Row>
           </Fragment>

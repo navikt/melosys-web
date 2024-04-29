@@ -3,7 +3,7 @@
 exports[`SideDialogNotater > snapshot test 1`] = `
 <div>
   <div
-    class="panel sidedialog-notater"
+    class="panel"
   >
     <div>
       <button

@@ -435,10 +435,10 @@ const SendBrev = ({
 
       {visApneINyttVindu && (
         <div className="send_brev__apne-nytt-vindu-container">
-          <Nav.Lenker target="_blank" href={nyttvinduHref}>
-            <span>Åpne i nytt vindu</span>
+          <Nav.Link target="_blank" href={nyttvinduHref}>
+            Åpne i nytt vindu
             <Ikoner.ExternalLink />
-          </Nav.Lenker>
+          </Nav.Link>
         </div>
       )}
 

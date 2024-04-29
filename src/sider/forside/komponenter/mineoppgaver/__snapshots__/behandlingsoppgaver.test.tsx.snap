@@ -12,7 +12,6 @@ exports[`Behandlingsoppgaver > viser behandlingsoppgave 1`] = `
       >
         <div
           class="panel behandlingOppgave"
-          data-cy-behandlingstema="YRKESAKTIV"
         >
           <div
             class="row behandlingOppgave__info"

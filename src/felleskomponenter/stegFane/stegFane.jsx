@@ -2,8 +2,6 @@ import { createElement } from "react";
 import PT from "prop-types";
 import classnames from "classnames";
 
-import * as Nav from "../../navFrontend";
-
 import "./stegFane.css";
 
 // Stegfanen er komponenten som vises for hvert steg
@@ -21,9 +19,9 @@ const StegFane = (props) => {
     "stegFane--aktiv": faneData.aktivtSteg,
   });
   return (
-    <Nav.Panel className={stegFaneKlasse}>
+    <div className={`panel ${stegFaneKlasse}`}>
       <div id={id}>{createElement(faneData.komponent, componentProps)}</div>
-    </Nav.Panel>
+    </div>
   );
 };
 

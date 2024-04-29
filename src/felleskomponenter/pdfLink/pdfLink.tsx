@@ -12,7 +12,7 @@ interface PdfLinkProps {
 }
 
 const PdfLink = ({ journalpostID, dokumentID, tittel }: PdfLinkProps) => (
-  <Nav.Lenker
+  <Nav.Link
     href="#"
     onClick={(event) => {
       event.preventDefault();
@@ -20,7 +20,7 @@ const PdfLink = ({ journalpostID, dokumentID, tittel }: PdfLinkProps) => (
     }}
   >
     {`${tittel} (åpnes i ny fane)`}
-  </Nav.Lenker>
+  </Nav.Link>
 );
 
 PdfLink.propTypes = {

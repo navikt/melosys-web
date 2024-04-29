@@ -52,13 +52,13 @@ const SaksoversiktLenke = ({ behandlingID, saksnummer, hovedpartRolle }: PropsFr
 
   return (
     <div className="saksoversiktLenke">
-      <Nav.Panel>
-        Vis saksoversikt:
-        <Nav.Lenker href="#" onClick={hentSaksoversikt}>
-          <Ikon.ExternalLink className="ikon" />
+      <div className="panel">
+        <span>Vis saksoversikt:</span>
+        <Nav.Link href="#" onClick={hentSaksoversikt}>
           Åpnes i nytt vindu
-        </Nav.Lenker>
-      </Nav.Panel>
+          <Ikon.ExternalLink />
+        </Nav.Link>
+      </div>
     </div>
   );
 };
