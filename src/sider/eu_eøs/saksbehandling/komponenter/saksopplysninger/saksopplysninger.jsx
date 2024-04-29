@@ -37,6 +37,7 @@ const hentForsteSteg = (behandlingstype) => {
 
 const Saksopplysninger = ({
   behandlingstype,
+  behandlingOppfriskes,
   redigerbart,
   behandlingID,
   soknadForm,
@@ -79,6 +80,7 @@ const Saksopplysninger = ({
         {visStegVelger && (
           <Stegvelger
             behandlingID={behandlingID}
+            behandlingOppfriskes={behandlingOppfriskes}
             lagreVilkarHandler={lagreVilkarHandler}
             lagreAvklartefaktaHandler={lagreAvklartefaktaHandler}
             lagreLovvalgsperioderHandler={lagreLovvalgsperioderHandler}
@@ -122,6 +124,7 @@ Saksopplysninger.propTypes = {
   tilForsiden: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
+  behandlingOppfriskes: PT.bool,
 };
 
 Saksopplysninger.defaultProps = {
@@ -130,6 +133,7 @@ Saksopplysninger.defaultProps = {
   vurdering: {},
   syncErrors: {},
   inngangForm: {},
+  behandlingOppfriskes: false,
 };
 
 const mapStateToProps = (state) => ({

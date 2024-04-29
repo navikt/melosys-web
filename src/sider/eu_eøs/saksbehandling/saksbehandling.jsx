@@ -164,6 +164,7 @@ class Saksbehandling extends Component {
       mottatteOpplysningerPeriodeTom,
       tilForsiden,
       startOgVisOppfriskModal,
+      behandlingOppfriskes,
     } = this.props;
     const { behandlingID, saksopplysningerLastet } = this.state;
 
@@ -191,6 +192,7 @@ class Saksbehandling extends Component {
                       oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
                       tilForsiden={tilForsiden}
                       startOgVisOppfriskModal={startOgVisOppfriskModal}
+                      behandlingOppfriskes={behandlingOppfriskes}
                     />
                   ) : (
                     <VirksomhetMelding />
