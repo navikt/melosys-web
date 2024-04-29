@@ -243,6 +243,8 @@ const bestemLovvalgsland = (lovvalgsbestemmelse: string | undefined, reduxState:
 
 const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse: string | undefined, reduxState: RootState) =>
   lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 ||
+  lovvalgsbestemmelse ===
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART18_1 ||
   avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState) ||
   flytSelectors.HarOffentligTjenesteAnnetLandSelector(reduxState) ||
   flytSelectors.HarLonnetArbeidAnnetLand(reduxState) ||
@@ -255,7 +257,7 @@ const bestemPeriode = (reduxState: RootState) => {
   return mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
 };
 
-const norgeErLovvalgsland = (lovvalgsland: string | undefined) => lovvalgsland === MKV.Koder.landkoder.NO;
+const erNorgeLovvalgsland = (lovvalgsland: string | undefined) => lovvalgsland === MKV.Koder.landkoder.NO;
 
 const byggLovvalgsperioder = (stegState: PerioderStegState, reduxState: RootState) => {
   if (lovvalgsperiodeSkalVaereTom(stegState.lovvalgsbestemmelse, reduxState)) return [];
@@ -278,10 +280,10 @@ const byggLovvalgsperioder = (stegState: PerioderStegState, reduxState: RootStat
       unntakFraLovvalgsland: null,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland,
-      trygdeDekning: norgeErLovvalgsland(lovvalgsland)
+      trygdeDekning: erNorgeLovvalgsland(lovvalgsland)
         ? MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO
         : MKV.Koder.trygdedekninger.UTEN_DEKNING,
-      medlemskapstype: norgeErLovvalgsland(lovvalgsland)
+      medlemskapstype: erNorgeLovvalgsland(lovvalgsland)
         ? MKV.Koder.medlemskapstyper.PLIKTIG
         : MKV.Koder.medlemskapstyper.UNNTATT,
     },
