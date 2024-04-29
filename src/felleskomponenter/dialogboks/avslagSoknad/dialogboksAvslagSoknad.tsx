@@ -86,7 +86,7 @@ export const DialogboksAvslagSoknad = ({ avbryt }: DialogboksAvslagSoknadProps) 
 
   return (
     <Nav.Modal
-      onClose={avbryt}
+      onClose={undefined}
       open
       header={{ heading: "Avslå søknaden på grunn av manglende opplysninger", closeButton: false }}
     >

@@ -116,7 +116,7 @@ export const DialogboksHenleggSak = ({ avbryt }: DialogboksHenleggSakProps) => {
   const dialogboksHenleggClassName = bem("dialogboks-henlegg");
 
   return (
-    <Nav.Modal onClose={avbryt} open header={{ heading: "Henlegg saken", closeButton: false }}>
+    <Nav.Modal onClose={undefined} open header={{ heading: "Henlegg saken", closeButton: false }}>
       <Nav.Modal.Body>
         <Feilmeldinger />
         <Feilmeldinger className={dialogboksHenleggClassName.element("kontrollfeil")} />
