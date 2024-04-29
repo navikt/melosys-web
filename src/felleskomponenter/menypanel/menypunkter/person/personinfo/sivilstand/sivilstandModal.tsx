@@ -62,7 +62,13 @@ const SivilstandModal = ({
   const sivilstandModalCls = bem("sivilstand-modal");
 
   return (
-    <Nav.Modal className="sivilstand-modal" onClose={lukkModal} open={skalViseModal} header={{ heading: "Sivilstand" }}>
+    <Nav.Modal
+      className="sivilstand-modal"
+      closeOnBackdropClick
+      onClose={lukkModal}
+      open={skalViseModal}
+      header={{ heading: "Sivilstand" }}
+    >
       <Nav.Modal.Body>
         <div className={sivilstandModalCls.element("main-content")}>
           {aktiveSivilstander.length > 0 && <SivilstandTabell sivilstander={aktiveSivilstander} />}

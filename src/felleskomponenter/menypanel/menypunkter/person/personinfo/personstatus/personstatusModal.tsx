@@ -60,6 +60,7 @@ const PersonstatusModal = ({
       onClose={lukkModal}
       open={skalViseModal}
       header={{ heading: "Personstatus" }}
+      closeOnBackdropClick
     >
       <Nav.Modal.Body>
         <PersonstatusTabell personstatuser={aktivePersonstatuser} />
