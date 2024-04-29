@@ -14,11 +14,10 @@ import "./personinfo.css";
 
 interface PersonInfoProps {
   behandlingID: number;
-  modalAriaHideApp?: boolean;
   endreFokus: boolean;
 }
 
-const PersonInfo = ({ behandlingID, modalAriaHideApp, ...props }: PersonInfoProps) => {
+const PersonInfo = ({ behandlingID, ...props }: PersonInfoProps) => {
   const personopplysninger = useHentPersonopplysninger(behandlingID, false);
   const {
     data: personinfoData,
@@ -80,12 +79,10 @@ const PersonInfo = ({ behandlingID, modalAriaHideApp, ...props }: PersonInfoProp
       <Nav.Column xs={erLitenSkjerm ? "12" : "7"}>
         <Personstatus
           status={personinfoData?.hentSaksopplysninger.persondata.folkeregisterpersonstatuser}
-          modalAriaHideApp={modalAriaHideApp}
           erLitenSkjerm={erLitenSkjerm}
         />
         <Sivilstand
           sivilstand={personinfoData?.hentSaksopplysninger.persondata.sivilstand}
-          modalAriaHideApp={modalAriaHideApp}
           erLitenSkjerm={erLitenSkjerm}
         />
       </Nav.Column>

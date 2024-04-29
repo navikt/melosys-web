@@ -11,7 +11,6 @@ import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { modalerOperations, modalerSelectors } from "../../../ducks/modaler";
 import Knapperad from "../../knapperad";
 
-import "./dialogboksBekreftValg.css";
 import { useState } from "react";
 
 const { UNNTAK_MEDLEMSKAP } = MKV.Koder.behandlinger.behandlingstema;
@@ -29,11 +28,7 @@ const {
   UNNTATT_MEDLEMSKAP,
 } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
-interface DialogboksBekreftValgProps {
-  ariaHideApp?: boolean;
-}
-
-export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftValgProps) => {
+export const DialogboksBekreftValg = () => {
   const dispatch = useDispatch();
   const [feil, setFeil] = useState(undefined);
 
@@ -179,29 +174,29 @@ export const DialogboksBekreftValg = ({ ariaHideApp = true }: DialogboksBekreftV
 
   return (
     <Nav.Modal
-      className="dialogboksBekreftValg"
-      isOpen
-      contentLabel={bekreftValgTypeData.tittel || ""}
-      onRequestClose={skjulModal}
-      closeButton={false}
-      shouldCloseOnOverlayClick
-      ariaHideApp={ariaHideApp}
+      onClose={skjulModal}
+      open
+      header={{ heading: bekreftValgTypeData.tittel || "", closeButton: false }}
+      closeOnBackdropClick
     >
-      <Nav.Typo.Systemtittel>{bekreftValgTypeData.tittel}</Nav.Typo.Systemtittel>
-      <Nav.Typo.Normaltekst className="normaltekst">{bekreftValgTypeData.tekst}</Nav.Typo.Normaltekst>
-      {feil && (
-        <Nav.Alert variant="error" className="feilmelding">
-          {feil}
-        </Nav.Alert>
-      )}
-      <Knapperad
-        bekreft={bekreftValgTypeData.handleBekreft}
-        bekreftTekst="Bekreft"
-        bekreftRedigerbart={!feil}
-        avbryt={skjulModal}
-        avbrytTekst="Avbryt"
-        redigerbart
-      />
+      <Nav.Modal.Body>
+        <Nav.Typo.Normaltekst className="normaltekst">{bekreftValgTypeData.tekst}</Nav.Typo.Normaltekst>
+        {feil && (
+          <Nav.Alert variant="error" className="feilmelding">
+            {feil}
+          </Nav.Alert>
+        )}
+      </Nav.Modal.Body>
+      <Nav.Modal.Footer>
+        <Knapperad
+          bekreft={bekreftValgTypeData.handleBekreft}
+          bekreftTekst="Bekreft"
+          bekreftRedigerbart={!feil}
+          avbryt={skjulModal}
+          avbrytTekst="Avbryt"
+          redigerbart
+        />
+      </Nav.Modal.Footer>
     </Nav.Modal>
   );
 };

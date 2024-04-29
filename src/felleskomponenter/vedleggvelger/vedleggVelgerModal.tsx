@@ -1,16 +1,11 @@
-import { ComponentProps } from "react";
 import { FysiskDokument } from "Domene";
 
 import * as Nav from "../../navFrontend";
 import VedleggVelgerTable from "./vedleggVelgerTable";
 import "./vedleggVelger.css";
 
-Nav.Modal.setAppElement(document.getElementById("root"));
-
 interface VedleggVelgerModalProps {
-  onRequestClose: ComponentProps<typeof Nav.Modal>["onRequestClose"];
-  contentLabel: ComponentProps<typeof Nav.Modal>["contentLabel"];
-  ariaHideApp?: boolean;
+  onRequestClose: () => void;
   valgteVedlegg: FysiskDokument[];
   alleVedlegg: FysiskDokument[];
   slettVedlegg: (vedleggID: string) => void;
@@ -19,8 +14,6 @@ interface VedleggVelgerModalProps {
 
 const VedleggVelgerModal = ({
   onRequestClose,
-  contentLabel,
-  ariaHideApp = true,
   valgteVedlegg,
   alleVedlegg,
   leggTilVedlegg,
@@ -29,23 +22,24 @@ const VedleggVelgerModal = ({
   return (
     <Nav.Modal
       className="vedleggvelger-modal"
-      contentLabel={contentLabel}
-      isOpen
-      shouldCloseOnOverlayClick
-      closeButton
-      onRequestClose={onRequestClose}
-      ariaHideApp={ariaHideApp}
+      onClose={onRequestClose}
+      open
+      closeOnBackdropClick
+      header={{ heading: "Dokumenter tilknyttet saken" }}
     >
-      <Nav.Typo.Element>{contentLabel}</Nav.Typo.Element>
-      <VedleggVelgerTable
-        valgteVedlegg={valgteVedlegg}
-        alleVedlegg={alleVedlegg}
-        leggTilVedlegg={leggTilVedlegg}
-        slettVedlegg={slettVedlegg}
-      />
-      <Nav.Button variant="primary" onClick={onRequestClose}>
-        Lukk
-      </Nav.Button>
+      <Nav.Modal.Body>
+        <VedleggVelgerTable
+          valgteVedlegg={valgteVedlegg}
+          alleVedlegg={alleVedlegg}
+          leggTilVedlegg={leggTilVedlegg}
+          slettVedlegg={slettVedlegg}
+        />
+      </Nav.Modal.Body>
+      <Nav.Modal.Footer>
+        <Nav.Button variant="primary" onClick={onRequestClose}>
+          Lukk
+        </Nav.Button>
+      </Nav.Modal.Footer>
     </Nav.Modal>
   );
 };

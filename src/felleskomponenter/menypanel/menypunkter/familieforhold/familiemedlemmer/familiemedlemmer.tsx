@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import classnames from "classnames";
 
@@ -9,9 +8,8 @@ import * as Tags from "../../../tags";
 
 import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { Familiemedlem, Familierelasjonsrolle } from "../../../../../graphql";
+import { Familierelasjonsrolle } from "../../../../../graphql";
 import bem from "../../../../../bemUtils";
-import AnnenForelderModal from "./annenForelderModal";
 
 import "./familiemedlemmer.css";
 import BarnTable from "./tables/barnTable";
@@ -19,7 +17,6 @@ import EktefelleTable from "./tables/ektefelleTable";
 
 const Familiemedlemmer = () => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const [barnValgtForMerInformasjon, setBarnValgtForMerInformasjon] = useState<Familiemedlem | null>(null);
   const { loading, error, data } = useHentFamiliemedlemmerQuery({ variables: { behandlingID } });
 
   if (error) return <Nav.Alert variant="error">Kunne ikke hente familiemedlemmer!</Nav.Alert>;
@@ -74,14 +71,6 @@ const Familiemedlemmer = () => {
         >
           Ingen ektefelle/partner registrert.
         </Nav.Typo.Normaltekst>
-      )}
-      {barnValgtForMerInformasjon && barnValgtForMerInformasjon.fnrAnnenForelder && (
-        <AnnenForelderModal
-          contentLabel="Informasjon om annen forelder"
-          onRequestClose={() => setBarnValgtForMerInformasjon(null)}
-          barnNavn={barnValgtForMerInformasjon.navn}
-          forelderIdent={barnValgtForMerInformasjon.fnrAnnenForelder}
-        />
       )}
     </div>
   );

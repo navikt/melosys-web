@@ -32,7 +32,6 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, redigerbart }: Ved
       </Mui.Lenkeknapp>
       {redigerer && (
         <VedleggVelgerModal
-          contentLabel="Dokumenter tilknyttet saken"
           onRequestClose={toggleRedigerer}
           alleVedlegg={dokumenter}
           valgteVedlegg={valgteVedlegg}

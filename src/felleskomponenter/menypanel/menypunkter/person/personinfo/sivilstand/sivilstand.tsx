@@ -16,11 +16,10 @@ interface SivilstandProps {
         >
       >
     | undefined;
-  modalAriaHideApp?: boolean;
   erLitenSkjerm: boolean;
 }
 
-const Sivilstand = ({ sivilstand, modalAriaHideApp, erLitenSkjerm }: SivilstandProps) => {
+const Sivilstand = ({ sivilstand, erLitenSkjerm }: SivilstandProps) => {
   const [visSivilstandModal, setVisSivilstandModal] = useState(false);
 
   const aktiveSivilstander = sivilstand?.filter((s) => !s.erHistorisk) || [];
@@ -59,7 +58,6 @@ const Sivilstand = ({ sivilstand, modalAriaHideApp, erLitenSkjerm }: SivilstandP
         historiskeSivilstander={historiskeSivilstander}
         skalViseModal={visSivilstandModal}
         lukkModal={() => setVisSivilstandModal(false)}
-        modalAriaHideApp={modalAriaHideApp}
       />
 
       <Nav.Column xs={erLitenSkjerm ? "4" : "3"}>

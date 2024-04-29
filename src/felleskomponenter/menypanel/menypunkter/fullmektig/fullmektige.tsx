@@ -322,26 +322,26 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
 
       {visModal && (
         <Nav.Modal
-          isOpen
-          className="er_du_sikker_modal"
-          contentLabel="Er du sikker?"
-          onRequestClose={lukkModal}
-          closeButton={false}
-          shouldCloseOnOverlayClick
-          ariaHideApp
+          onClose={lukkModal}
+          open
+          closeOnBackdropClick
+          header={{ heading: "Er du sikker?", closeButton: false }}
         >
-          <Nav.Typo.Systemtittel>Er du sikker?</Nav.Typo.Systemtittel>
-          <Nav.Typo.Normaltekst className="modalTekst">
-            Er du sikker på at du vil fjerne/endre fullmektig for betaling av trygdeavgift? I så fall endres mottaker av
-            eventuelle nye fakturaer når du avslutter denne behandlingen.
-          </Nav.Typo.Normaltekst>
-          <Knapperad
-            bekreft={() => modalFunksjon(false)}
-            bekreftTekst="Bekreft"
-            avbryt={lukkModal}
-            avbrytTekst="Avbryt"
-            redigerbart
-          />
+          <Nav.Modal.Body>
+            <Nav.Typo.Normaltekst>
+              Er du sikker på at du vil fjerne/endre fullmektig for betaling av trygdeavgift? I så fall endres mottaker
+              av eventuelle nye fakturaer når du avslutter denne behandlingen.
+            </Nav.Typo.Normaltekst>
+          </Nav.Modal.Body>
+          <Nav.Modal.Footer>
+            <Knapperad
+              bekreft={() => modalFunksjon(false)}
+              bekreftTekst="Bekreft"
+              avbryt={lukkModal}
+              avbrytTekst="Avbryt"
+              redigerbart
+            />
+          </Nav.Modal.Footer>
         </Nav.Modal>
       )}
     </div>

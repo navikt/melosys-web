@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
-import * as Ikon from "../../../resources/images";
 import * as Utils from "../../../utils";
 import * as Api from "../../../services/api";
 
@@ -21,15 +20,13 @@ import { Feilmeldinger } from "../../feilmeldinger";
 import HtmlEditor from "../../htmlEditor";
 import Knapperad from "../../knapperad";
 
-import "./dialogboksAvslagSoknad.css";
 import Dokumentliste from "../../dokumentliste";
 
 interface DialogboksAvslagSoknadProps {
   avbryt: () => void;
-  ariaHideApp?: boolean;
 }
 
-export const DialogboksAvslagSoknad = ({ ariaHideApp = false, avbryt }: DialogboksAvslagSoknadProps) => {
+export const DialogboksAvslagSoknad = ({ avbryt }: DialogboksAvslagSoknadProps) => {
   const dispatch = useDispatch();
   const [feil, setFeil] = useState<undefined | string>(undefined);
 
@@ -89,36 +86,26 @@ export const DialogboksAvslagSoknad = ({ ariaHideApp = false, avbryt }: Dialogbo
 
   return (
     <Nav.Modal
-      className="dialogboksAvslagSoknad"
-      isOpen
-      contentLabel="Avslå søknad"
-      onRequestClose={avbryt}
-      closeButton={false}
-      shouldCloseOnOverlayClick
-      ariaHideApp={ariaHideApp}
+      onClose={undefined}
+      open
+      header={{ heading: "Avslå søknaden på grunn av manglende opplysninger", closeButton: false }}
     >
-      <div className="avslagsoknadcontainer">
-        <Ikon.VedtakUbehandlet />
-        <div>
-          <Nav.Typo.Systemtittel className="overskrift">
-            Avslå søknaden på grunn av manglende opplysninger
-          </Nav.Typo.Systemtittel>
-          <Feilmeldinger />
-          {feil && <Nav.Alert variant="error">{feil}</Nav.Alert>}
-          <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
-          {bekreftRedigerbart && <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
-          <div className="knapperadcontainer">
-            <Knapperad
-              avbryt={avbryt}
-              avbrytTekst="Avbryt"
-              bekreft={avslåSøknad}
-              bekreftTekst="Avslå søknad"
-              redigerbart={redigerbart}
-              bekreftRedigerbart={bekreftRedigerbart}
-            />
-          </div>
-        </div>
-      </div>
+      <Nav.Modal.Body>
+        <Feilmeldinger />
+        {feil && <Nav.Alert variant="error">{feil}</Nav.Alert>}
+        <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
+        {bekreftRedigerbart && <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+      </Nav.Modal.Body>
+      <Nav.Modal.Footer>
+        <Knapperad
+          avbryt={avbryt}
+          avbrytTekst="Avbryt"
+          bekreft={avslåSøknad}
+          bekreftTekst="Avslå søknad"
+          redigerbart={redigerbart}
+          bekreftRedigerbart={bekreftRedigerbart}
+        />
+      </Nav.Modal.Footer>
     </Nav.Modal>
   );
 };

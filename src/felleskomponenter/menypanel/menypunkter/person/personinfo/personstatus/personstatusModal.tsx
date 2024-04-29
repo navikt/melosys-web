@@ -44,7 +44,6 @@ interface PersonstatusModalProps {
   historiskePersonstatuser: Folkeregisterpersonstatus[];
   skalViseModal: boolean;
   lukkModal: () => void;
-  modalAriaHideApp?: boolean;
 }
 
 const PersonstatusModal = ({
@@ -52,25 +51,23 @@ const PersonstatusModal = ({
   historiskePersonstatuser,
   skalViseModal,
   lukkModal,
-  modalAriaHideApp = true,
 }: PersonstatusModalProps) => {
   const personstatusModalCls = bem("personstatus-modal");
 
   return (
     <Nav.Modal
-      className={personstatusModalCls.block}
-      contentLabel="Personstatus"
-      onRequestClose={lukkModal}
-      isOpen={skalViseModal}
-      closeButton
-      ariaHideApp={modalAriaHideApp}
+      className="sivilstand-modal"
+      onClose={lukkModal}
+      open={skalViseModal}
+      header={{ heading: "Personstatus" }}
     >
-      <Nav.Typo.Innholdstittel>Personstatus</Nav.Typo.Innholdstittel>
-      <PersonstatusTabell personstatuser={aktivePersonstatuser} />
+      <Nav.Modal.Body>
+        <PersonstatusTabell personstatuser={aktivePersonstatuser} />
 
-      <Nav.Typo.Undertittel className={personstatusModalCls.element("historikk")}>Historikk</Nav.Typo.Undertittel>
-      <GyldighetshistorikkInfo />
-      <PersonstatusTabell personstatuser={historiskePersonstatuser} />
+        <Nav.Typo.Undertittel className={personstatusModalCls.element("historikk")}>Historikk</Nav.Typo.Undertittel>
+        <GyldighetshistorikkInfo />
+        <PersonstatusTabell personstatuser={historiskePersonstatuser} />
+      </Nav.Modal.Body>
     </Nav.Modal>
   );
 };

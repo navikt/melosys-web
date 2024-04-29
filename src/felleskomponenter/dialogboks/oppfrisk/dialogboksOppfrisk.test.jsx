@@ -16,7 +16,7 @@ describe("DialogboksOppfrisk", () => {
     };
   });
 
-  it("viser en nav modal", () => {
+  it("viser en dialog", () => {
     render(<DialogboksOppfriskBehandling {...props} />);
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -31,7 +31,7 @@ describe("DialogboksOppfrisk", () => {
       </FellesHandlersContext.Provider>
     );
 
-    expect(screen.getByRole("heading")).toHaveTextContent("Kan ikke oppdatere registeropplysninger");
+    expect(screen.getByRole("heading", { name: "Kan ikke oppdatere registeropplysninger" })).toBeInTheDocument();
     expect(screen.getByRole("button")).toHaveTextContent("Lukk");
     expect(screen.queryByText("Fortsett oppdatering")).not.toBeInTheDocument();
   });
@@ -42,7 +42,6 @@ describe("DialogboksOppfrisk", () => {
     render(<DialogboksOppfriskBehandling {...props} />);
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(screen.queryByRole("heading")).toBeNull();
     expect(screen.queryAllByRole("button")).toHaveLength(0);
   });
 
@@ -56,14 +55,13 @@ describe("DialogboksOppfrisk", () => {
     );
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(screen.queryByRole("heading")).toBeNull();
     expect(screen.queryAllByRole("button")).toHaveLength(0);
   });
 
   it("viser forventet heading, oppfrisk og avbryt oppfriskning knapper", () => {
     render(<DialogboksOppfriskBehandling {...props} />);
 
-    expect(screen.getByRole("heading")).toHaveTextContent("Vil du oppdatere registeropplysninger?");
+    expect(screen.getByRole("heading", { name: "Vil du oppdatere registeropplysninger?" })).toBeInTheDocument();
     const buttons = screen.getAllByRole("button");
     expect(buttons).toHaveLength(2);
     expect(buttons[0]).toHaveTextContent("Fortsett oppdatering");

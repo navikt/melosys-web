@@ -27,7 +27,6 @@ describe("Personinfo", () => {
   beforeEach(() => {
     props = instance(mockedProps);
     props.behandlingID = 1;
-    props.modalAriaHideApp = false;
   });
 
   afterAll(() => {

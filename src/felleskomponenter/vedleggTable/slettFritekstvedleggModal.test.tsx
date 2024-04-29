@@ -11,7 +11,7 @@ describe("slettFritekstvedleggModal", () => {
 
   it("snapshot test", () => {
     const tree = renderer
-      .create(<SlettFritekstvedleggModal slettVedlegg={vi.fn()} onRequestClose={vi.fn()} ariaHideApp={false} />)
+      .create(<SlettFritekstvedleggModal open lukkModal={vi.fn()} slettVedlegg={vi.fn()} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

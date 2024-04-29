@@ -2,8 +2,6 @@ import { Fragment } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 
-import * as Nav from "../navFrontend";
-
 import { FellesHandlersContext } from "../contexts";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import {
@@ -12,8 +10,6 @@ import {
   DialogboksHenleggSak,
   DialogboksOppfriskSak,
 } from "../felleskomponenter/dialogboks";
-
-Nav.Modal.setAppElement(document.getElementById("root"));
 
 const Modals = ({
   skjulOppfriskModalOgNavigerTilForside,
