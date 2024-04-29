@@ -59,7 +59,7 @@ exports[`oppdaterRegisteropplysninger > Skal vise alternativ for å se registero
     class="oppdater-registeropplysninger"
   >
     <div
-      class="oppdater-registeropplysninger__checkbox navds-checkbox navds-checkbox--medium"
+      class="oppdater-registeropplysninger__checkbox navds-checkbox navds-checkbox--small"
     >
       <input
         aria-labelledby="aksel-id-2"
@@ -97,7 +97,7 @@ exports[`oppdaterRegisteropplysninger > Skal vise alternativ for å se registero
         >
           <span
             aria-hidden="true"
-            class="navds-checkbox__label-text navds-body-short navds-body-short--medium"
+            class="navds-checkbox__label-text navds-body-short navds-body-short--small"
             id="aksel-id-2"
           >
             Inkl. siste 5 år

@@ -3,7 +3,7 @@ import { ChangeEvent, ComponentProps } from "react";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 
-type NavCheckboxProps = ComponentProps<typeof Nav.AkselCheckbox>;
+type NavCheckboxProps = ComponentProps<typeof Nav.Checkbox>;
 type FilteredNavCheckboxProps = Omit<NavCheckboxProps, "onChange" | "onKeyPress" | "children">;
 
 interface onCheckProperties {
@@ -27,9 +27,9 @@ const Checkbox = (props: CheckboxProps) => {
   };
 
   return (
-    <Nav.AkselCheckbox onChange={changeHandler} {...rest} id={rest.id ?? Utils._uuid()}>
+    <Nav.Checkbox onChange={changeHandler} {...rest} id={rest.id ?? Utils._uuid()}>
       {label}
-    </Nav.AkselCheckbox>
+    </Nav.Checkbox>
   );
 };
 

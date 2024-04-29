@@ -1,12 +1,11 @@
 import { Column, Container, Row } from "./grid";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import Tekstomrade from "nav-frontend-tekstomrade";
-import { Box, Button, HelpText, Link, Tag, Modal, Checkbox as AkselCheckbox } from "@navikt/ds-react";
+import { Box, Button, HelpText, Link, Tag, Modal, Checkbox } from "@navikt/ds-react";
 import Alert from "./alert";
 
 // Egne implementasjoner av pakker fra nav-frontend. Noen av disse har blitt fjernet fra nav-frontend, men vi implementerer de selv fordi vi fortsatt har bruk for de.
 import {
-  Checkbox,
   Fieldset,
   Input,
   InputProps,
@@ -24,7 +23,6 @@ export {
   Container,
   Row,
   Column,
-  Checkbox,
   Radio,
   RadioPanelGruppe,
   SkjemaGruppe,
@@ -43,5 +41,5 @@ export {
   Box,
   Link,
   Modal,
-  AkselCheckbox,
+  Checkbox,
 };
