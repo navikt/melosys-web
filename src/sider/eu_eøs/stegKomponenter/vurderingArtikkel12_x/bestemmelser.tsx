@@ -91,10 +91,10 @@ export const Bestemmelser = ({
     if (konvensjonStorbritanniaToggleEnabled) {
       if (value === VedtakValg.JA_INNVILGE) {
         slettAlleVilkår();
-        if (!visStorbritanniaKonvensjon) setBestemmelse(FO_883_2004_ART12);
+        if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART12, value);
       } else if (value === VedtakValg.NEI_ANMODNING_UNNTAK) {
         slettAlleVilkår();
-        if (!visStorbritanniaKonvensjon) setBestemmelse(FO_883_2004_ART16_1);
+        if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART16_1, value);
       } else if (value === VedtakValg.NEI_AVSLAG) {
         slettAlleVilkår();
         oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
@@ -123,19 +123,18 @@ export const Bestemmelser = ({
     if (unntaksvilkårKode === FO_883_2004_ART16_1) return FO_883_2004_ART12;
     return erSokkel ? KONV_EFTA_STORBRITANNIA_ART16 : KONV_EFTA_STORBRITANNIA_ART14;
   };
-  const handleEndreBestemmelse = (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleEndreBestemmelse = (nyBestemmelse: string, valgtVedtak = vedtakValg) => {
     setPending(true);
     if (bestemmelse) {
       slettAlleVilkår();
     }
-    const nyBestemmelse = event.target.value;
     setBestemmelse(nyBestemmelse);
 
-    if (innvilgelse) {
+    if (valgtVedtak === VedtakValg.JA_INNVILGE) {
       const utsendelsevilkårFeltNavn = finnFeltNavn(nyBestemmelse);
       oppdaterData(lagVilkaar(utsendelsevilkårFeltNavn, true));
     }
-    if (anmodningOmUnntak) {
+    if (valgtVedtak === VedtakValg.NEI_ANMODNING_UNNTAK) {
       const utsendelsevilkår = finnUtsendelsevilkår(nyBestemmelse);
       const unntaksvilkårFeltNavn = finnFeltNavn(nyBestemmelse);
       oppdaterData(lagVilkaar(finnFeltNavn(utsendelsevilkår), false));
@@ -230,7 +229,7 @@ export const Bestemmelser = ({
               label="Velg bestemmelse"
               disabled={!redigerbart || !visStorbritanniaKonvensjon}
               value={bestemmelse}
-              onChange={handleEndreBestemmelse}
+              onChange={(event) => handleEndreBestemmelse(event.target.value)}
             >
               <option disabled={!!bestemmelse} value="" key="" label="Velg..." />
               {hentBestemmelser().map((element) => (
