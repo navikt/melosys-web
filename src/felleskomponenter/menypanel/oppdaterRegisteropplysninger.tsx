@@ -44,7 +44,7 @@ export const OppdaterRegisteropplysninger = ({
   };
 
   return (
-    <div className="panel oppdater-registeropplysninger">
+    <div className="oppdater-registeropplysninger">
       {sakstype === FTRL && (
         <Forms.Checkbox
           className="oppdater-registeropplysninger__checkbox"
