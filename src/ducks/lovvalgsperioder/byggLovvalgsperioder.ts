@@ -11,18 +11,26 @@ import { lovvalgsperioderSelectors } from "./index";
 import { behandlingerSelectors } from "../behandlinger";
 import { flytSelectors } from "../flyt";
 import { formSelectors } from "../form";
+import { erFeatureToggleEnabled } from "../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../featuretoggle/toggleNavn";
+import { ThunkDispatch } from "redux-thunk";
+import { RootState } from "AppTypes";
+import * as Types from "./types";
+import { Vilkaar } from "../../services/modules/vilkar";
+import { Lovvalgsperiode } from "../../services/modules/lovvalgsperioder";
+import { PerioderStegState } from "../../felleskomponenter/stegvelger";
 
 /* Hjelpefunksjoner
  * Disse eksponeres ikke utad, men er kun ment for å bryte opp komplisert logikk og gjøre
  * koden mer lesbar.
  */
 
-const finnValgteVilkar = (alleLovvalgsVilkar) => {
-  const vilkarObjekt = alleLovvalgsVilkar.find((enkeltLovvalg) => enkeltLovvalg.oppfylt) || {};
-  return vilkarObjekt.vilkaar || false;
+const finnOppfyltVilkar = (alleLovvalgsVilkar: Vilkaar[]): string | undefined => {
+  const vilkarObjekt = alleLovvalgsVilkar.find((enkeltLovvalg) => enkeltLovvalg.oppfylt);
+  return vilkarObjekt?.vilkaar;
 };
 
-const byggLovvalgsPeriodeArtikkel12_1 = (stegState, reduxState) => {
+const byggLovvalgsperiodeArtikkel12_1 = (stegState: PerioderStegState, reduxState: RootState) => {
   const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
@@ -44,9 +52,9 @@ const byggLovvalgsPeriodeArtikkel12_1 = (stegState, reduxState) => {
   ];
 };
 
-const byggLovvalgsPeriodeArtikkel12_2 = (stegState, reduState) => {
-  const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduState);
-  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduState);
+const byggLovvalgsperiodeArtikkel12_2 = (stegState: PerioderStegState, reduxState: RootState) => {
+  const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [
@@ -66,9 +74,27 @@ const byggLovvalgsPeriodeArtikkel12_2 = (stegState, reduState) => {
   ];
 };
 
-const byggLovvalgsPeriodeArtikkel11_3A = (stegState, reduxState) => {
+const byggLovvalgsperiodeUtsending = (stegState: PerioderStegState, reduxState: RootState): Lovvalgsperiode[] => {
+  const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+  return [
+    {
+      fomDato: søknadsperiode.fom,
+      tomDato: søknadsperiode.tom,
+      lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
+      medlemskapsperiodeID,
+      tilleggBestemmelse: stegState.tilleggbestemmelse,
+      innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
+      lovvalgsland: MKV.Koder.landkoder.NO,
+      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
+    },
+  ];
+};
+
+const byggLovvalgsperiodeArtikkel11_3A = (stegState: PerioderStegState, reduxState: RootState) => {
   const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
-  const tilleggsbestemmelseFraVilkar = finnValgteVilkar(vilkarSelectors.valgteTilleggsVilkar(reduxState));
+  const tilleggsbestemmelseFraVilkar = finnOppfyltVilkar(vilkarSelectors.valgteTilleggsVilkar(reduxState));
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
@@ -89,7 +115,7 @@ const byggLovvalgsPeriodeArtikkel11_3A = (stegState, reduxState) => {
   ];
 };
 
-const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
+const byggLovvalgsperiodeArtikkel11_4_2 = (stegState: PerioderStegState, reduxState: RootState) => {
   const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
@@ -111,7 +137,7 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
   ];
 };
 
-const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
+const byggLovvalgsperiodeArtikkelUnntak = (reduxState: RootState): Lovvalgsperiode[] => {
   const erAnmodningsperiodeSendtUtland =
     anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(reduxState);
   const erBehandlingsstatusUnderBehandlingEllerAvsluttet = [
@@ -119,13 +145,14 @@ const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
     MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
   ].includes(behandlingerSelectors.BehandlingsstatusKodeSelector(reduxState));
 
+  // Anmodning om unntak har ikke lovvalgsperiode før avsluttet behandling. Før det har de bare anmodningsperiode.
   if (erAnmodningsperiodeSendtUtland && erBehandlingsstatusUnderBehandlingEllerAvsluttet) {
     return Selectors.LovvalgsperioderSelector(reduxState);
   }
   return [];
 };
 
-const byggAvslaattLovvalg = (reduxState, lovvalgsbestemmelse) => {
+const byggAvslaattLovvalgsperiode = (reduxState: RootState, lovvalgsbestemmelse: string | undefined) => {
   const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
 
@@ -146,39 +173,58 @@ const byggAvslaattLovvalg = (reduxState, lovvalgsbestemmelse) => {
   ];
 };
 
-const hentLovvalgsBestemmelseForAvslag = (state) => {
+const hentLovvalgsbestemmelseForAvslag = (reduxState: RootState) => {
   if (
-    avklartefaktaSelectors.Yrkesaktivitet(state) === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE
+    avklartefaktaSelectors.Yrkesaktivitet(reduxState) ===
+    KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE
   ) {
     return MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2;
   }
   return MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1;
 };
 
-const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, stegState, reduxState) => {
-  if (!valgtLovvalg) {
-    return byggAvslaattLovvalg(reduxState, hentLovvalgsBestemmelseForAvslag(reduxState));
+const byggLovvalgsperioderFraVilkaar = (
+  oppfyltLovvalg: string | undefined,
+  stegState: PerioderStegState,
+  reduxState: RootState
+) => {
+  const konvensjonStorbritanniaToggleEnabled = erFeatureToggleEnabled(
+    MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
+    reduxState
+  );
+
+  if (!oppfyltLovvalg) {
+    return byggAvslaattLovvalgsperiode(reduxState, hentLovvalgsbestemmelseForAvslag(reduxState));
   }
 
-  switch (valgtLovvalg) {
+  switch (oppfyltLovvalg) {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1:
-      return byggLovvalgsPeriodeArtikkel12_1(stegState, reduxState);
+      return konvensjonStorbritanniaToggleEnabled
+        ? byggLovvalgsperiodeUtsending(stegState, reduxState)
+        : byggLovvalgsperiodeArtikkel12_1(stegState, reduxState);
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2:
-      return byggLovvalgsPeriodeArtikkel12_2(stegState, reduxState);
+      return konvensjonStorbritanniaToggleEnabled
+        ? byggLovvalgsperiodeUtsending(stegState, reduxState)
+        : byggLovvalgsperiodeArtikkel12_2(stegState, reduxState);
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART14_1:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART14_2:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_1:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_3:
+      return byggLovvalgsperiodeUtsending(stegState, reduxState);
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A:
-      return byggLovvalgsPeriodeArtikkel11_3A(stegState, reduxState);
+      return byggLovvalgsperiodeArtikkel11_3A(stegState, reduxState);
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2:
-      return byggLovvalgsPeriodeArtikkel11_4_2(stegState, reduxState);
-    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1: {
-      return byggLovvalgsPeriodeArtikkel16_1(stegState, reduxState);
-    }
+      return byggLovvalgsperiodeArtikkel11_4_2(stegState, reduxState);
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART18_1:
+      return byggLovvalgsperiodeArtikkelUnntak(reduxState);
     default: {
       return [];
     }
   }
 };
 
-const bestemLovvalgsland = (lovvalgsbestemmelse, reduxState) => {
+const bestemLovvalgsland = (lovvalgsbestemmelse: string | undefined, reduxState: RootState) => {
   if (flytSelectors.HarOffentligTjenesteINorgeSelector(reduxState)) return MKV.Koder.landkoder.NO;
   if (avklartefaktaSelectors.OmfattesINorgeSelector(reduxState)) return MKV.Koder.landkoder.NO;
 
@@ -195,23 +241,25 @@ const bestemLovvalgsland = (lovvalgsbestemmelse, reduxState) => {
   }
 };
 
-const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) =>
+const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse: string | undefined, reduxState: RootState) =>
   lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 ||
+  lovvalgsbestemmelse ===
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART18_1 ||
   avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState) ||
   flytSelectors.HarOffentligTjenesteAnnetLandSelector(reduxState) ||
   flytSelectors.HarLonnetArbeidAnnetLand(reduxState) ||
   formSelectors.UtpekingAvvistSelector(reduxState);
 
-const bestemPeriode = (reduxState) => {
+const bestemPeriode = (reduxState: RootState) => {
   const periode = Selectors.PeriodeSelector(reduxState);
   if (periode.tom || periode.fom) return periode;
 
   return mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
 };
 
-const norgeErLovvalgsland = (lovvalgsland) => lovvalgsland === MKV.Koder.landkoder.NO;
+const erNorgeLovvalgsland = (lovvalgsland: string | undefined) => lovvalgsland === MKV.Koder.landkoder.NO;
 
-const byggLovvalgsPerioder = (stegState, reduxState) => {
+const byggLovvalgsperioder = (stegState: PerioderStegState, reduxState: RootState) => {
   if (lovvalgsperiodeSkalVaereTom(stegState.lovvalgsbestemmelse, reduxState)) return [];
 
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
@@ -232,25 +280,26 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
       unntakFraLovvalgsland: null,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland,
-      trygdeDekning: norgeErLovvalgsland(lovvalgsland)
+      trygdeDekning: erNorgeLovvalgsland(lovvalgsland)
         ? MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO
         : MKV.Koder.trygdedekninger.UTEN_DEKNING,
-      medlemskapstype: norgeErLovvalgsland(lovvalgsland)
+      medlemskapstype: erNorgeLovvalgsland(lovvalgsland)
         ? MKV.Koder.medlemskapstyper.PLIKTIG
         : MKV.Koder.medlemskapstyper.UNNTATT,
     },
   ];
 };
 
-export function oppdaterLovvalgsperioderState(stegState) {
-  return (dispatch, getState) => {
+export function oppdaterLovvalgsperioderState(stegState: PerioderStegState) {
+  return (dispatch: ThunkDispatch<RootState, unknown, Types.Action>, getState: () => RootState) => {
     const reduxState = getState();
     const alleLovvalgsvilkar = vilkarSelectors.valgteLovvalgsVilkar(reduxState);
 
     if (alleLovvalgsvilkar.length > 0) {
-      const valgtLovvalg = finnValgteVilkar(alleLovvalgsvilkar);
-      const lovvalgsPerioder = byggLovvalgsPerioderFraVilkaar(valgtLovvalg, stegState, reduxState);
-      dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
+      const oppfyltLovvalg = finnOppfyltVilkar(alleLovvalgsvilkar);
+      const lovvalgsperioder = byggLovvalgsperioderFraVilkaar(oppfyltLovvalg, stegState, reduxState);
+      // @ts-ignore
+      dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsperioder));
     } else if (
       stegState.lovvalgsbestemmelse ||
       stegState.tilleggbestemmelse ||
@@ -258,8 +307,9 @@ export function oppdaterLovvalgsperioderState(stegState) {
       stegState.lovvalgsland ||
       stegState.lovvalgsperiode
     ) {
-      const lovvalgsPerioder = byggLovvalgsPerioder(stegState, reduxState);
-      dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
+      const lovvalgsperioder = byggLovvalgsperioder(stegState, reduxState);
+      // @ts-ignore
+      dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsperioder));
     } else {
       dispatch(Actions.resetLovvalgsperioderState());
     }

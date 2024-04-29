@@ -17,8 +17,11 @@ import * as Selectors from "./selectors";
 import { mottatteOpplysningerSelectors } from "../mottatteOpplysninger";
 import { lovvalgsperioderSelectors } from "../lovvalgsperioder";
 import { behandlingerSelectors } from "../behandlinger";
+import { RootState } from "AppTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { PerioderStegState } from "../../felleskomponenter/stegvelger";
 
-export function hent(behandlingID) {
+export function hent(behandlingID: number) {
   return doThenDispatch(() => Api.Anmodningsperioder.hent(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
@@ -26,7 +29,7 @@ export function hent(behandlingID) {
   });
 }
 
-export function send(behandlingID, anmodningsperioder) {
+export function send(behandlingID: number, anmodningsperioder: Api.Anmodningsperioder.Anmodningsperioder) {
   return doThenDispatch(() => Api.Anmodningsperioder.send(behandlingID, anmodningsperioder), {
     OK: Types.OK,
     FEILET: Types.FEILET,
@@ -35,57 +38,62 @@ export function send(behandlingID, anmodningsperioder) {
 }
 
 export function lagre() {
-  return (dispatch, getState) => {
+  return (dispatch: ThunkDispatch<RootState, unknown, Types.Action>, getState: () => RootState) => {
+    const anmodningsperioderErSendtUtlandet = Selectors.AnmodningsperioderErSendtUtlandetSelector(getState());
+    if (anmodningsperioderErSendtUtlandet) return null;
+
     const anmodningsperioder = Selectors.AnmodningsperioderSelector(getState());
     const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
-    const anmodningsperioderErSendtUtlandet = Selectors.AnmodningsperioderErSendtUtlandetSelector(getState());
-
-    if (anmodningsperioderErSendtUtlandet) return null;
 
     return dispatch(
       send(behandlingID, {
-        anmodningsperioder: anmodningsperioder.map(({ sendtUtland, ...beholdProperties }) => beholdProperties),
+        anmodningsperioder: anmodningsperioder.map(
+          ({ sendtUtland, ...beholdProperties }: Api.Anmodningsperioder.Anmodningsperiode) => beholdProperties
+        ),
       })
     );
   };
 }
 
-const byggAnmodningsperiodeArtikkel16 = (stegState, reduxState) => {
-  const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
+const byggAnmodningsperiode = (
+  stegState: PerioderStegState,
+  reduxState: RootState
+): Api.Anmodningsperioder.Anmodningsperiode[] => {
+  const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const soknadsland = mottatteOpplysningerSelectors.SoknadslandkoderSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
-
-  const unntakFraLovvalgsland = soknadsland.join("");
-  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
-
   return [
     {
       id: null,
-      fomDato: periode.fom,
-      tomDato: periode.tom,
-      lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
+      fomDato: søknadsperiode.fom,
+      tomDato: søknadsperiode.tom,
+      lovvalgBestemmelse: stegState.lovvalgsbestemmelse,
       tilleggBestemmelse: stegState.tilleggbestemmelse,
       lovvalgsland: MKV.Koder.landkoder.NO,
-      unntakFraBestemmelse: unntakFraBestemmelse || null,
-      unntakFraLovvalgsland,
+      unntakFraBestemmelse: stegState.unntakfrabestemmelse,
+      unntakFraLovvalgsland: soknadsland.join(""),
       medlemskapsperiodeID: medlemskapsperiodeID || null,
       trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
     },
   ];
 };
 
-const byggAnmodningsperioder = (stegState, reduxState) => {
+const byggAnmodningsperioder = (
+  stegState: PerioderStegState,
+  reduxState: RootState
+): Api.Anmodningsperioder.Anmodningsperiode[] => {
   switch (stegState.lovvalgsbestemmelse) {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1:
-      return byggAnmodningsperiodeArtikkel16(stegState, reduxState);
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART18_1:
+      return byggAnmodningsperiode(stegState, reduxState);
     default: {
       return [];
     }
   }
 };
 
-export function oppdaterAnmodningsperioderState(stegState) {
-  return (dispatch, getState) => {
+export function oppdaterAnmodningsperioderState(stegState: PerioderStegState) {
+  return (dispatch: ThunkDispatch<RootState, unknown, Types.Action>, getState: () => RootState) => {
     const anmodningsperioderErSendtUtland = Selectors.AnmodningsperioderErSendtUtlandetSelector(getState());
     if (anmodningsperioderErSendtUtland) return;
 
@@ -99,5 +107,6 @@ export function oppdaterAnmodningsperioderState(stegState) {
 }
 
 export function resetAnmodningsperioderState() {
-  return (dispatch) => dispatch(Actions.resetAnmodningsperioderState());
+  return (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) =>
+    dispatch(Actions.resetAnmodningsperioderState());
 }

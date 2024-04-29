@@ -6,6 +6,7 @@ import MKV from "../../melosyskodeverk";
 import * as types from "./types";
 import * as operations from "./operations";
 import * as KV from "../../kodeverk";
+import { STATUS } from "../../services";
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -27,6 +28,12 @@ describe("Lovvalgsperioder operations", () => {
             behandlingID: 4,
           },
         ],
+      },
+      featureToggle: {
+        status: STATUS.OK,
+        data: {
+          "melosys.konvensjon.efta.land.og.storbritannia": true,
+        },
       },
       form: {
         [KV.Form.ARTIKKEL_16_ANMODNING]: {
@@ -122,7 +129,7 @@ describe("Lovvalgsperioder operations", () => {
           },
         });
 
-        const stegState = {};
+        const stegState = { lovvalgsbestemmelse: lovvalgsvilkarBestemmelse };
 
         store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 

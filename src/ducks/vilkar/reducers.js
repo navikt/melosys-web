@@ -22,10 +22,18 @@ const vilkarTilObjekt = (vilkaar, oppfylt, begrunnelseKoder, begrunnelseFritekst
     : {
         vilkaar,
         oppfylt: oppfylt === "true" || oppfylt,
-        begrunnelseKoder: begrunnelseKoder || [],
-        begrunnelseFritekst: begrunnelseFritekst || null,
-        begrunnelseFritekstEngelsk: begrunnelseFritekstEngelsk || null,
+        begrunnelseKoder: begrunnelseKoder ?? [],
+        begrunnelseFritekst: begrunnelseFritekst ?? null,
+        begrunnelseFritekstEngelsk: begrunnelseFritekstEngelsk ?? null,
       };
+
+const vilkarTilObjektEnkel = (vilkårKode, action) =>
+  vilkarTilObjekt(
+    vilkårKode,
+    action.data.vilkar[vilkårKode],
+    action.data.vilkar[`${vilkårKode}_begrunnelser`],
+    action.data.vilkar[`${vilkårKode}_begrunnelser_fritekst`]
+  );
 
 const velgArt16Objekt = (art16avslag, art16anmodning) => art16avslag || art16anmodning;
 
@@ -87,6 +95,17 @@ export default function reducer(state = initialState, action = {}) {
           action.data.vilkar.art12_2,
           action.data.vilkar.art12_2_begrunnelser
         ),
+        vilkarTilObjektEnkel(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART14_1, action),
+        vilkarTilObjektEnkel(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART14_2, action),
+        vilkarTilObjektEnkel(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART16_1, action),
+        vilkarTilObjektEnkel(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART16_3, action),
+        vilkarTilObjekt(
+          MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART18_1,
+          action.data.vilkar.art18_1_anmodning,
+          action.data.vilkar.art18_1_anmodning_begrunnelser,
+          action.data.vilkar.art18_1_anmodning_begrunnelser_fritekst,
+          action.data.vilkar.art18_1_anmodning_begrunnelser_fritekst_engelsk
+        ),
         velgArt16Objekt(
           vilkarTilObjekt(
             MKV.Koder.vilkaar.FO_883_2004_ART16_1,
@@ -105,17 +124,8 @@ export default function reducer(state = initialState, action = {}) {
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, action.data.vilkar.art11_3A),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, action.data.vilkar.art11_4_1),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, action.data.vilkar.art11_4_2),
-        vilkarTilObjekt(
-          MKV.Koder.vilkaar.FTRL_FORUTGÅENDE_TRYGDETID,
-          action.data.vilkar.FTRL_FORUTGÅENDE_TRYGDETID,
-          action.data.vilkar.FTRL_FORUTGÅENDE_TRYGDETID_begrunnelser
-        ),
-        vilkarTilObjekt(
-          MKV.Koder.vilkaar.FTRL_2_8_NÆR_TILKNYTNING_NORGE,
-          action.data.vilkar.FTRL_2_8_NÆR_TILKNYTNING_NORGE,
-          action.data.vilkar.FTRL_2_8_NÆR_TILKNYTNING_NORGE_begrunnelser,
-          action.data.vilkar.FTRL_2_8_NÆR_TILKNYTNING_NORGE_begrunnelser_fritekst
-        ),
+        vilkarTilObjektEnkel(MKV.Koder.vilkaar.FTRL_FORUTGÅENDE_TRYGDETID, action),
+        vilkarTilObjektEnkel(MKV.Koder.vilkaar.FTRL_2_8_NÆR_TILKNYTNING_NORGE, action),
       ].filter((vilkar) => vilkar !== null);
 
       const IKKE_SKRIVBARE_VILKAAR_DATA = hentIkkeSkrivbareVilkaarData(state);
