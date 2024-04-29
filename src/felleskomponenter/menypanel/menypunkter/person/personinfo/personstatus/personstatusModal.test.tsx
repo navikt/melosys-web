@@ -12,7 +12,6 @@ describe("PersonstatusModal", () => {
     props = instance(mockedProps);
     props.lukkModal = vi.fn();
     props.skalViseModal = true;
-    props.modalAriaHideApp = false;
     props.aktivePersonstatuser = [
       {
         kode: "BOSATT",

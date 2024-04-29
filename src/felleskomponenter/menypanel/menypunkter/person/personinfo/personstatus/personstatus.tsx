@@ -16,11 +16,10 @@ interface PersonstatusProps {
         >
       >
     | undefined;
-  modalAriaHideApp?: boolean;
   erLitenSkjerm: boolean;
 }
 
-const Personstatus = ({ status, modalAriaHideApp, erLitenSkjerm }: PersonstatusProps) => {
+const Personstatus = ({ status, erLitenSkjerm }: PersonstatusProps) => {
   const [visPersonstatusModal, setVisPersonstatusModal] = useState(false);
 
   const aktivePersonstatuser = status?.filter((s) => !s.erHistorisk) || [];
@@ -59,7 +58,6 @@ const Personstatus = ({ status, modalAriaHideApp, erLitenSkjerm }: PersonstatusP
         historiskePersonstatuser={historiskePersonstatuser}
         skalViseModal={visPersonstatusModal}
         lukkModal={() => setVisPersonstatusModal(false)}
-        modalAriaHideApp={modalAriaHideApp}
       />
 
       <Nav.Column xs={erLitenSkjerm ? "4" : "3"}>

@@ -129,32 +129,31 @@ AnnenBehandlingOppfriskes.propTypes = {
   avbryt: PT.func.isRequired,
 };
 
-const DialogboksOppfriskBehandling = ({ avbryt, lukk, tilForsiden, oppfrisk, ariaHideApp, bekreftetFraStart }) => {
+const DialogboksOppfriskBehandling = ({ avbryt, lukk, tilForsiden, oppfrisk, bekreftetFraStart }) => {
   const { behandlingOppfriskes, annenBehandlingOppfriskes } = useContext(FellesHandlersContext);
   const [bekreftet, setBekreftet] = useState(bekreftetFraStart || behandlingOppfriskes);
 
   return (
     <Nav.Modal
-      isOpen
+      open
       className={classNames("dialogboksOppfriskBehandling", { skjulBakgrunn: bekreftet })}
-      contentLabel="Oppfrisk behandling"
-      onRequestClose={tilForsiden}
-      closeButton={false}
-      shouldCloseOnOverlayClick={false}
-      ariaHideApp={ariaHideApp}
+      onClose={tilForsiden}
+      header={{ heading: "", closeButton: false }}
     >
-      {annenBehandlingOppfriskes ? (
-        <AnnenBehandlingOppfriskes avbryt={avbryt} />
-      ) : (
-        <BekreftEllerOppfrisk
-          tilForsiden={tilForsiden}
-          settBekreftet={() => setBekreftet(true)}
-          oppfrisk={oppfrisk}
-          avbryt={avbryt}
-          lukk={lukk}
-          bekreftet={bekreftet}
-        />
-      )}
+      <Nav.Modal.Body>
+        {annenBehandlingOppfriskes ? (
+          <AnnenBehandlingOppfriskes avbryt={avbryt} />
+        ) : (
+          <BekreftEllerOppfrisk
+            tilForsiden={tilForsiden}
+            settBekreftet={() => setBekreftet(true)}
+            oppfrisk={oppfrisk}
+            avbryt={avbryt}
+            lukk={lukk}
+            bekreftet={bekreftet}
+          />
+        )}
+      </Nav.Modal.Body>
     </Nav.Modal>
   );
 };
@@ -165,11 +164,9 @@ DialogboksOppfriskBehandling.propTypes = {
   lukk: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   bekreftetFraStart: PT.bool,
-  ariaHideApp: PT.bool,
 };
 
 DialogboksOppfriskBehandling.defaultProps = {
-  ariaHideApp: true,
   bekreftetFraStart: false,
 };
 

@@ -23,8 +23,6 @@ describe("VedleggVelger", () => {
 describe("VedleggVelgerModal", () => {
   const mockedProps = mock<ComponentProps<typeof VedleggVelgerModal>>();
   const props = instance(mockedProps);
-  props.ariaHideApp = false;
-  props.contentLabel = "test";
   props.valgteVedlegg = [];
   props.alleVedlegg = [];
 

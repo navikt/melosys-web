@@ -1,4 +1,4 @@
-import { useState, MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 
 import * as Nav from "../../navFrontend";
 import * as Mui from "../ui";
@@ -57,12 +57,11 @@ const FritekstvedleggRow = ({
           disabled={!redigerbart}
         />
       </Table.DataCell>
-      {visBekreftelseModal ? (
-        <SlettFritekstvedleggModal
-          onRequestClose={() => setVisBekreftelseModal(false)}
-          slettVedlegg={() => slettFritekstvedlegg && slettFritekstvedlegg(index)}
-        />
-      ) : null}
+      <SlettFritekstvedleggModal
+        open={visBekreftelseModal}
+        lukkModal={() => setVisBekreftelseModal(false)}
+        slettVedlegg={() => slettFritekstvedlegg && slettFritekstvedlegg(index)}
+      />
     </Table.Row>
   );
 };
