@@ -1,10 +1,10 @@
-import { Component, ComponentProps, ChangeEvent, KeyboardEvent } from "react";
+import { ChangeEvent, ComponentProps } from "react";
 
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 
-type NavCheckboxProps = ComponentProps<typeof Nav.Checkbox>;
-type FilteredNavCheckboxProps = Omit<NavCheckboxProps, "onChange" | "onKeyPress">;
+type NavCheckboxProps = ComponentProps<typeof Nav.AkselCheckbox>;
+type FilteredNavCheckboxProps = Omit<NavCheckboxProps, "onChange" | "onKeyPress" | "children">;
 
 interface onCheckProperties {
   checked: boolean;
@@ -13,42 +13,24 @@ interface onCheckProperties {
 
 interface CheckboxProps extends FilteredNavCheckboxProps {
   onCheck?: (properties: onCheckProperties) => void;
+  label: string;
 }
 
-class Checkbox extends Component<CheckboxProps> {
-  private navCheckbox: HTMLInputElement | null = null;
+const Checkbox = (props: CheckboxProps) => {
+  const { onCheck, label, ...rest } = props;
 
-  render() {
-    const { onCheck, ...rest } = this.props;
+  const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    onCheck?.({
+      checked: e.target.checked,
+      value: rest.value,
+    });
+  };
 
-    const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter" && this.navCheckbox) {
-        onCheck?.({
-          checked: !this.navCheckbox.checked,
-          value: rest.value,
-        });
-      }
-    };
-
-    const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-      onCheck?.({
-        checked: e.target.checked,
-        value: rest.value,
-      });
-    };
-
-    return (
-      <Nav.Checkbox
-        onChange={changeHandler}
-        onKeyPress={handleKeyPress}
-        checkboxRef={(ref) => {
-          this.navCheckbox = ref;
-        }}
-        {...rest}
-        id={rest.id ?? Utils._uuid()}
-      />
-    );
-  }
-}
+  return (
+    <Nav.AkselCheckbox onChange={changeHandler} {...rest} id={rest.id ?? Utils._uuid()}>
+      {label}
+    </Nav.AkselCheckbox>
+  );
+};
 
 export default Checkbox;

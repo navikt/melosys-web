@@ -154,16 +154,17 @@ const RedigererFullmektig = ({
                 </Nav.Typo.Element>
                 <div className="fullmakt__container">
                   {gyldigeFullmakter(type).map((fullmakt: KTObject) => (
-                    <Nav.Checkbox
+                    <Nav.AkselCheckbox
                       className="fullmakt"
                       key={fullmakt.kode}
                       value={fullmakt.kode}
-                      label={fullmakt.term}
                       checked={fullmakter.includes(fullmakt.kode)}
                       onChange={(event) => handleFullmaktChange(event.target.value, index, Boolean(manglerFullmakt))}
                       disabled={fullmaktErDisabled(index, fullmakt.kode)}
-                      feil={Boolean(manglerFullmakt)}
-                    />
+                      error={Boolean(manglerFullmakt)}
+                    >
+                      {fullmakt.term}
+                    </Nav.AkselCheckbox>
                   ))}
                 </div>
                 {manglerFullmakt && <SkjemaelementFeilmelding>{manglerFullmakt}</SkjemaelementFeilmelding>}

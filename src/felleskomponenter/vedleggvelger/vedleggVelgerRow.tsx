@@ -25,12 +25,13 @@ const VedleggVelgerRow = ({ vedlegg, leggTilVedlegg, slettVedlegg, vedleggErMark
   return (
     <Table.Row>
       <Table.DataCell>
-        <Nav.Checkbox
+        <Nav.AkselCheckbox
           className="vedleggvelger__checkbox"
           onChange={checkboxChangeHandler}
           checked={vedleggErMarkert}
-          label="&nbsp;"
-        />
+        >
+          &nbsp;
+        </Nav.AkselCheckbox>
       </Table.DataCell>
       <Table.DataCell>
         <PdfLink journalpostID={vedlegg.journalpostID} dokumentID={vedlegg.dokumentID} tittel={vedlegg.tittel} />

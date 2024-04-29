@@ -22,19 +22,19 @@ type CheckboxInnerComponentProps = CheckboxComponentProps & RegisterHookFormProp
 const InnerCheckboxComponent = forwardRef<HTMLSelectElement, CheckboxInnerComponentProps>(
   ({ disabled, ...rest }: CheckboxInnerComponentProps, _ref: any) => {
     return (
-      <Nav.Checkbox
+      <Nav.AkselCheckbox
         className={rest.className}
-        label={rest.label}
         onChange={rest.onChange}
         onBlur={rest.onBlur}
         value={rest.value}
         name={rest.name}
-        checkboxRef={rest.ref}
-        feil={rest.feil}
+        error={rest.feil}
         checked={rest.checked}
         disabled={disabled}
         id={_uuid()}
-      />
+      >
+        {rest.label}
+      </Nav.AkselCheckbox>
     );
   }
 );
