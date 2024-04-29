@@ -85,11 +85,12 @@ export const DialogboksAvslagSoknad = ({ avbryt }: DialogboksAvslagSoknadProps) 
     redigerbart && Utils._isEmpty(kontrollfeil) && brevFritekst.length <= brevFritekstMaxLength && !utførerKontroll;
 
   return (
-    <Nav.Modal onClose={avbryt} open header={undefined}>
+    <Nav.Modal
+      onClose={avbryt}
+      open
+      header={{ heading: "Avslå søknaden på grunn av manglende opplysninger", closeButton: false }}
+    >
       <Nav.Modal.Body>
-        <Nav.Typo.Systemtittel className="overskrift">
-          Avslå søknaden på grunn av manglende opplysninger
-        </Nav.Typo.Systemtittel>
         <Feilmeldinger />
         {feil && <Nav.Alert variant="error">{feil}</Nav.Alert>}
         <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
