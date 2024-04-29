@@ -14,7 +14,7 @@ exports[`Redigerbarliste > snapshot test 1`] = `
       className="col col-xs-6"
     >
       <button
-        className="navds-button navds-button--secondary navds-button--medium"
+        className="navds-button navds-button--secondary navds-button--small"
         onClick={[Function]}
         onKeyUp={[Function]}
         style={
@@ -49,7 +49,7 @@ exports[`Redigerbarliste > snapshot test 1`] = `
           </svg>
         </span>
         <span
-          className="navds-label"
+          className="navds-label navds-label--small"
         >
           Fjern
         </span>

@@ -139,7 +139,7 @@ export const Saksplukker = ({
   };
 
   return (
-    <Nav.Panel className="forside__sidepanel saksplukker">
+    <div className="panel saksplukker">
       <Nav.Typo.Systemtittel>Behandle sak</Nav.Typo.Systemtittel>
       <p>Velg sakstype, saks- og behandlingstema for å få tildelt en sak.</p>
 
@@ -191,7 +191,7 @@ export const Saksplukker = ({
           </Nav.Column>
         </Nav.Row>
       </form>
-    </Nav.Panel>
+    </div>
   );
 };
 

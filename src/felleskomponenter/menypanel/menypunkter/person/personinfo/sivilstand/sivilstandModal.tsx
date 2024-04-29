@@ -1,6 +1,5 @@
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
-import * as Mui from "../../../../../ui";
 
 import bem from "../../../../../../bemUtils";
 import KopierbarTekst from "../../../../../kopierbarTekst";
@@ -9,8 +8,6 @@ import { GyldighetshistorikkInfo } from "../../historikk/gyldighetshistorikkInfo
 
 import "./sivilstandModal.css";
 import { Table } from "@navikt/ds-react";
-
-Nav.Modal.setAppElement(document.getElementById("root"));
 
 interface SivilstandTabellProps {
   sivilstander: Sivilstand[];
@@ -54,7 +51,6 @@ interface SivilstandModalProps {
   historiskeSivilstander: Sivilstand[];
   skalViseModal: boolean;
   lukkModal: () => void;
-  modalAriaHideApp?: boolean;
 }
 
 const SivilstandModal = ({
@@ -62,31 +58,29 @@ const SivilstandModal = ({
   historiskeSivilstander,
   skalViseModal,
   lukkModal,
-  modalAriaHideApp = true,
 }: SivilstandModalProps) => {
   const sivilstandModalCls = bem("sivilstand-modal");
 
   return (
     <Nav.Modal
-      className={sivilstandModalCls.block}
-      contentClass={sivilstandModalCls.element("content")}
-      contentLabel="Sivilstand"
-      onRequestClose={lukkModal}
-      isOpen={skalViseModal}
-      closeButton
-      ariaHideApp={modalAriaHideApp}
+      className="sivilstand-modal"
+      closeOnBackdropClick
+      onClose={lukkModal}
+      open={skalViseModal}
+      header={{ heading: "Sivilstand" }}
     >
-      <Mui.Undertittel tekst="Sivilstand" />
-      <div className={sivilstandModalCls.element("main-content")}>
-        {aktiveSivilstander.length > 0 && <SivilstandTabell sivilstander={aktiveSivilstander} />}
-        <Nav.Typo.Element className={sivilstandModalCls.element("historikk")}>Historikk</Nav.Typo.Element>
-        <GyldighetshistorikkInfo />
-        {historiskeSivilstander.length > 0 ? (
-          <SivilstandTabell sivilstander={historiskeSivilstander} />
-        ) : (
-          <Nav.Typo.Normaltekst>Ingen historikk registrert i folkeregisteret.</Nav.Typo.Normaltekst>
-        )}
-      </div>
+      <Nav.Modal.Body>
+        <div className={sivilstandModalCls.element("main-content")}>
+          {aktiveSivilstander.length > 0 && <SivilstandTabell sivilstander={aktiveSivilstander} />}
+          <Nav.Typo.Element className={sivilstandModalCls.element("historikk")}>Historikk</Nav.Typo.Element>
+          <GyldighetshistorikkInfo />
+          {historiskeSivilstander.length > 0 ? (
+            <SivilstandTabell sivilstander={historiskeSivilstander} />
+          ) : (
+            <Nav.Typo.Normaltekst>Ingen historikk registrert i folkeregisteret.</Nav.Typo.Normaltekst>
+          )}
+        </div>
+      </Nav.Modal.Body>
     </Nav.Modal>
   );
 };

@@ -4,8 +4,6 @@ import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-
-import * as Ikoner from "../../../../resources/images";
 import * as Utils from "../../../../utils";
 import * as Forms from "../../../../felleskomponenter/forms";
 import * as Nav from "../../../../navFrontend";
@@ -64,28 +62,22 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
     kontrollerFerdigbehandling();
   };
 
-  const EndrePeriodeKnapp = () =>
-    redigerbart ? (
-      <div
-        role="button"
-        className="endrePeriode"
-        tabIndex={0}
-        onClick={() => setVisPeriodeEndringFelter(true)}
-        onKeyDown={(event) => {
-          if ([" ", "Enter"].includes(event.key)) {
-            event.preventDefault();
-            setVisPeriodeEndringFelter(true);
-          }
-        }}
-      >
-        <Ikoner.BlyantActive className="ikon" />
-        <span className="endrePeriodeTekst">Endre</span>
-      </div>
-    ) : (
-      <div className="endrePeriodeTekst--disabled">
-        <Ikoner.BlyantDisabled className="ikon" />
-      </div>
-    );
+  const EndrePeriodeKnapp = () => (
+    <Nav.Button
+      variant="secondary"
+      size="small"
+      onClick={() => setVisPeriodeEndringFelter(true)}
+      onKeyDown={(event) => {
+        if ([" ", "Enter"].includes(event.key)) {
+          event.preventDefault();
+          setVisPeriodeEndringFelter(true);
+        }
+      }}
+      disabled={!redigerbart}
+    >
+      Endre
+    </Nav.Button>
+  );
 
   const handleLagrePeriodeEndring = async () => {
     await lagreLovvalgsperiodeOgKontroller({ fom: formValues.fom, tom: formValues.tom });
@@ -128,7 +120,9 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
         </>
       ) : (
         <Nav.Typo.Normaltekst className="periode" tag="div">
-          {lovvalgsperiodeFom} - {lovvalgsperiodeTom}
+          <span>
+            {lovvalgsperiodeFom} - {lovvalgsperiodeTom}
+          </span>
           <EndrePeriodeKnapp />
         </Nav.Typo.Normaltekst>
       )}

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import classNames from "classnames";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -21,8 +20,6 @@ import { anmodningsperioderSelectors } from "../../ducks/anmodningsperioder";
 import { useFeatureToggle } from "../../featuretoggle";
 import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
-import { StandardMeldingOverst } from "../alertmeldinger";
-import { Spinner } from "../spinner";
 
 import "./endreBehandlingModal.css";
 import {
@@ -201,6 +198,7 @@ function EndreBehandlingModal({
       return;
     }
 
+    setGenerellFeil("");
     setSkalViseSpinner(true);
     const {
       saksnummer,
@@ -241,11 +239,11 @@ function EndreBehandlingModal({
       })
       .catch(() => {
         setGenerellFeil("Oppdateringen feilet!");
+        setBehandlingEndret(false);
       })
       .finally(() => setSkalViseSpinner(false));
   };
 
-  const viserAlert = behandlingEndret || generellFeil?.length > 0;
   const erBehandlingAvSed = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, oppsummering.behandlingstema?.kode);
 
   const nullstillSak = (steg: FeltVerdier): void => {
@@ -267,134 +265,109 @@ function EndreBehandlingModal({
     }
   };
 
-  const renderEndreBehandling = () => {
-    return (
-      <div className="dialogboks">
-        <div>
-          <div className="innhold">
-            {!fagsakKanEndres && typeTemaKanEndres && (
-              <Nav.Alert variant="info" className="infomelding">
-                Du kan bare endre sakstype og -tema i den første behandlingen i saken
-              </Nav.Alert>
-            )}
-            <Mui.KodeTermSelect
-              onChange={(e) => {
-                setSakstype(e.target.value);
-                nullstillSak(FeltVerdier.sakstype);
-              }}
-              label="Sakstype"
-              value={sakstype}
-              koder={fagsakKanEndres ? muligeSakstyper : [fagsak.sakstype]}
-              redigerbart={!erBehandlingAvSed && typeTemaKanEndres && fagsakKanEndres}
-              feil={skalViseFeilmeldinger ? sakstypeFeilmelding : null}
-              disableForsteValg
-            />
-            <Mui.KodeTermSelect
-              onChange={(e) => {
-                setSakstema(e.target.value);
-                nullstillSak(FeltVerdier.sakstema);
-              }}
-              label="Sakstema"
-              value={sakstema}
-              koder={fagsakKanEndres ? muligeSakstemaer : [fagsak.sakstema]}
-              redigerbart={!erBehandlingAvSed && typeTemaKanEndres && fagsakKanEndres}
-              feil={skalViseFeilmeldinger ? sakstemaFeilmelding : null}
-              disableForsteValg
-            />
-            <Mui.KodeTermSelect
-              onChange={(e) => {
-                setBehandlingstema(e.target.value);
-                nullstillSak(FeltVerdier.behandlingstema);
-              }}
-              label="Behandlingstema"
-              value={behandlingstema}
-              koder={muligeBehandlingstemaer}
-              redigerbart={!erBehandlingAvSed && typeTemaKanEndres && !harBehandlingMedTrygdeavgift}
-              feil={skalViseFeilmeldinger ? behandlingstemaFeilmelding : null}
-              disableForsteValg
-              className={harBehandlingMedTrygdeavgift ? "ktselect__slim" : undefined}
-            />
-            {harBehandlingMedTrygdeavgift && (
-              <Nav.Typo.EtikettLiten className="behandlingstema__label">
-                Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie.
-              </Nav.Typo.EtikettLiten>
-            )}
-
-            <Mui.KodeTermSelect
-              onChange={(e) => setBehandlingstype(e.target.value)}
-              label="Behandlingstype"
-              value={behandlingstype}
-              koder={muligeBehandlingstyper}
-              redigerbart={!erBehandlingAvSed && typeTemaKanEndres}
-              feil={skalViseFeilmeldinger ? behandlingstypeFeilmelding : null}
-              disableForsteValg
-            />
-            <Datovelger
-              onChange={(dato) => setMottaksdato(Datoutils.norskStringTilDate(dato))}
-              label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>}
-              value={mottaksdato}
-              brukInternValidering
-            />
-            <Mui.KodeTermSelect
-              onChange={(e) => setBehandlingsstatus(e.target.value)}
-              label="Behandlingsstatus"
-              value={behandlingsstatus}
-              koder={muligeVerdierPlussGjeldende(oppsummering.behandlingsstatus, muligeBehandlingsstatuser)}
-              feil={skalViseFeilmeldinger ? behandlingsstatusFeilmelding : null}
-              disableForsteValg
-            />
-
-            {skalViseFeilmeldinger && (
-              <Nav.Alert variant="error">
-                <Nav.Typo.Normaltekst>Følgende feil ble funnet</Nav.Typo.Normaltekst>
-                <ul className="feilmeldingliste">
-                  {alleFeilmeldinger.map((feilmelding) => (
-                    <li key={feilmelding}>{feilmelding}</li>
-                  ))}
-                </ul>
-              </Nav.Alert>
-            )}
-          </div>
-
-          <Knapperad
-            avbryt={lukkModal}
-            avbrytTekst="Avbryt"
-            bekreft={endreBehandlingHandle}
-            bekreftTekst="Lagre endringene"
-            redigerbart
-          />
-        </div>
-      </div>
-    );
-  };
-
   const muligeVerdierPlussGjeldende = (valgtVerdi: KTObject, muligeVerdier: KTObject[] = []) => {
     return [valgtVerdi].concat(muligeVerdier.filter((verdi) => verdi.kode !== valgtVerdi.kode));
   };
 
-  const renderInnhold = () => {
-    if (generellFeil) {
-      return <StandardMeldingOverst variant="error" actionEtterSynlighet={lukkModal} melding={generellFeil} />;
-    }
-    if (behandlingEndret) {
-      return (
-        <StandardMeldingOverst variant="success" actionEtterSynlighet={lukkModal} melding="Behandlingen er oppdatert" />
-      );
-    }
-    return skalViseSpinner ? null : renderEndreBehandling();
-  };
-
   return (
-    <Nav.Modal
-      className={classNames("modalEndreBehandling", { alert: viserAlert, skjulBakgrunn: skalViseSpinner })}
-      contentLabel="Endre behandling"
-      isOpen={skalViseModal || skalViseSpinner}
-      onRequestClose={lukkModal}
-      closeButton={!viserAlert && !skalViseSpinner}
-      shouldCloseOnOverlayClick={viserAlert}
-    >
-      {skalViseSpinner && <Spinner />}
-      {renderInnhold()}
+    <Nav.Modal className="modalEndreBehandling" onClose={lukkModal} open={skalViseModal} header={undefined}>
+      <Nav.Modal.Body>
+        {!fagsakKanEndres && typeTemaKanEndres && (
+          <Nav.Alert variant="info" className="infomelding">
+            Du kan bare endre sakstype og -tema i den første behandlingen i saken
+          </Nav.Alert>
+        )}
+        <Mui.KodeTermSelect
+          onChange={(e) => {
+            setSakstype(e.target.value);
+            nullstillSak(FeltVerdier.sakstype);
+          }}
+          label="Sakstype"
+          value={sakstype}
+          koder={fagsakKanEndres ? muligeSakstyper : [fagsak.sakstype]}
+          redigerbart={!erBehandlingAvSed && typeTemaKanEndres && fagsakKanEndres}
+          feil={skalViseFeilmeldinger ? sakstypeFeilmelding : null}
+          disableForsteValg
+        />
+        <Mui.KodeTermSelect
+          onChange={(e) => {
+            setSakstema(e.target.value);
+            nullstillSak(FeltVerdier.sakstema);
+          }}
+          label="Sakstema"
+          value={sakstema}
+          koder={fagsakKanEndres ? muligeSakstemaer : [fagsak.sakstema]}
+          redigerbart={!erBehandlingAvSed && typeTemaKanEndres && fagsakKanEndres}
+          feil={skalViseFeilmeldinger ? sakstemaFeilmelding : null}
+          disableForsteValg
+        />
+        <Mui.KodeTermSelect
+          onChange={(e) => {
+            setBehandlingstema(e.target.value);
+            nullstillSak(FeltVerdier.behandlingstema);
+          }}
+          label="Behandlingstema"
+          value={behandlingstema}
+          koder={muligeBehandlingstemaer}
+          redigerbart={!erBehandlingAvSed && typeTemaKanEndres && !harBehandlingMedTrygdeavgift}
+          feil={skalViseFeilmeldinger ? behandlingstemaFeilmelding : null}
+          disableForsteValg
+          className={harBehandlingMedTrygdeavgift ? "ktselect__slim" : undefined}
+        />
+        {harBehandlingMedTrygdeavgift && (
+          <Nav.Typo.EtikettLiten className="behandlingstema__label">
+            Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie.
+          </Nav.Typo.EtikettLiten>
+        )}
+
+        <Mui.KodeTermSelect
+          onChange={(e) => setBehandlingstype(e.target.value)}
+          label="Behandlingstype"
+          value={behandlingstype}
+          koder={muligeBehandlingstyper}
+          redigerbart={!erBehandlingAvSed && typeTemaKanEndres}
+          feil={skalViseFeilmeldinger ? behandlingstypeFeilmelding : null}
+          disableForsteValg
+        />
+        <Datovelger
+          onChange={(dato) => setMottaksdato(Datoutils.norskStringTilDate(dato))}
+          label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>}
+          value={mottaksdato}
+          brukInternValidering
+        />
+        <Mui.KodeTermSelect
+          onChange={(e) => setBehandlingsstatus(e.target.value)}
+          label="Behandlingsstatus"
+          value={behandlingsstatus}
+          koder={muligeVerdierPlussGjeldende(oppsummering.behandlingsstatus, muligeBehandlingsstatuser)}
+          feil={skalViseFeilmeldinger ? behandlingsstatusFeilmelding : null}
+          disableForsteValg
+        />
+
+        {generellFeil && <Nav.Alert variant="error">{generellFeil}</Nav.Alert>}
+        {behandlingEndret && <Nav.Alert variant="success">Behandlingen er oppdatert</Nav.Alert>}
+
+        {skalViseFeilmeldinger && (
+          <Nav.Alert variant="error">
+            <Nav.Typo.Normaltekst>Følgende feil ble funnet</Nav.Typo.Normaltekst>
+            <ul className="feilmeldingliste">
+              {alleFeilmeldinger.map((feilmelding) => (
+                <li key={feilmelding}>{feilmelding}</li>
+              ))}
+            </ul>
+          </Nav.Alert>
+        )}
+      </Nav.Modal.Body>
+      <Nav.Modal.Footer>
+        <Knapperad
+          avbryt={lukkModal}
+          avbrytTekst="Avbryt"
+          bekreft={endreBehandlingHandle}
+          bekreftTekst="Lagre endringene"
+          redigerbart
+          spinner={skalViseSpinner}
+        />
+      </Nav.Modal.Footer>
     </Nav.Modal>
   );
 }

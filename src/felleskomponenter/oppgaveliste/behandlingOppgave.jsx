@@ -104,7 +104,7 @@ const BehandlingOppgave = ({ sak, manglendeInnbetalingToggleEnabled, ikkeYrkesak
 
   return (
     <BehandlingOppgavesLinjeWrapper link={link} stengt={erUnderOppdatering}>
-      <Nav.Panel data-cy-behandlingstema={behandlingstema.kode} className={cl}>
+      <div className={`panel ${cl}`}>
         <Nav.Row className="behandlingOppgave__info">
           <Nav.Column xs="6" md="6" lg="8">
             <Nav.Column md="12" lg="6">
@@ -152,7 +152,7 @@ const BehandlingOppgave = ({ sak, manglendeInnbetalingToggleEnabled, ikkeYrkesak
             </Nav.Row>
           </Nav.Column>
         </Nav.Row>
-      </Nav.Panel>
+      </div>
     </BehandlingOppgavesLinjeWrapper>
   );
 };

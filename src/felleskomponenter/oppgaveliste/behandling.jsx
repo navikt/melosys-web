@@ -14,7 +14,7 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
   const { behandlingstema, behandlingstype, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;
 
   return (
-    <Nav.Panel className="behandling">
+    <div className="panel behandling">
       <Nav.Row>
         <Nav.Column>
           <Nav.Column xs="12" md="5">
@@ -48,7 +48,7 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
           </div>
         </Nav.Column>
       </Nav.Row>
-    </Nav.Panel>
+    </div>
   );
 };
 

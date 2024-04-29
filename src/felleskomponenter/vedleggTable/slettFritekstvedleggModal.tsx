@@ -1,47 +1,38 @@
-import { ComponentProps } from "react";
-
 import * as Nav from "../../navFrontend";
 import Knapperad from "../knapperad";
 
-Nav.Modal.setAppElement(document.getElementById("root"));
-
 interface SlettFritekstvedleggModalProps {
-  onRequestClose: ComponentProps<typeof Nav.Modal>["onRequestClose"];
-  ariaHideApp?: boolean;
+  open: boolean;
+  lukkModal: () => void;
   slettVedlegg: () => void;
 }
 
-const SlettFritekstvedleggModal = ({
-  onRequestClose,
-  ariaHideApp = true,
-  slettVedlegg,
-}: SlettFritekstvedleggModalProps) => {
+const SlettFritekstvedleggModal = ({ open, lukkModal, slettVedlegg }: SlettFritekstvedleggModalProps) => {
   return (
     <Nav.Modal
-      className="slettfritekstvedlegg-modal"
-      contentLabel="Slett fritekstvedlegg?"
-      isOpen
-      shouldCloseOnOverlayClick
-      onRequestClose={onRequestClose}
-      ariaHideApp={ariaHideApp}
+      onClose={lukkModal}
+      open={open}
+      header={{ heading: "Slett fritekstvedlegg?", closeButton: false }}
+      closeOnBackdropClick
     >
-      <Nav.Row>
-        <Nav.Typo.Element>Slett fritekstvedlegg?</Nav.Typo.Element>
+      <Nav.Modal.Body>
         <Nav.Typo.Normaltekst>
           Er du sikker på at du vil slette fritekstvedlegget?
           <br /> Dokumentet vil bli permanent slettet fra Melosys
         </Nav.Typo.Normaltekst>
-      </Nav.Row>
-      <Nav.Row>
+      </Nav.Modal.Body>
+      <Nav.Modal.Footer>
         <Knapperad
-          bekreft={slettVedlegg}
+          bekreft={() => {
+            slettVedlegg();
+            lukkModal();
+          }}
           bekreftTekst="Ja, slett"
-          avbryt={onRequestClose}
+          avbryt={lukkModal}
           avbrytTekst="Avbryt"
           redigerbart
-          size="small"
         />
-      </Nav.Row>
+      </Nav.Modal.Footer>
     </Nav.Modal>
   );
 };

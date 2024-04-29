@@ -47,7 +47,7 @@ const Fagsak = ({ sak, manglendeInnbetalingToggleEnabled, ikkeYrkesaktivFtrlTogg
     .sort(sorterElementerEtterDato("descending", "opprettetDato"));
 
   return (
-    <Nav.Panel className="fagsak">
+    <div className="panel fagsak">
       <PanelHeader tittel={`${sakstype?.term} - ${sakstema?.term}`} />
       <Nav.Container fluid>
         <Nav.Row>
@@ -89,7 +89,7 @@ const Fagsak = ({ sak, manglendeInnbetalingToggleEnabled, ikkeYrkesaktivFtrlTogg
           ))}
         </Nav.Row>
       </Nav.Container>
-    </Nav.Panel>
+    </div>
   );
 };
 

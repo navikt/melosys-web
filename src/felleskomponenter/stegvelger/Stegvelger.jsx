@@ -423,6 +423,7 @@ class Stegvelger extends Component {
       konvensjonStorbritanniaToggleEnabled: props.konvensjonStorbritanniaToggleEnabled,
       utsendingsvilkår: props.utsendingsvilkår,
       unntaksvilkår: props.unntaksvilkår,
+      behandlingOppfriskes: props.behandlingOppfriskes,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -643,12 +644,14 @@ Stegvelger.propTypes = {
   konvensjonStorbritanniaToggleEnabled: PT.bool.isRequired,
   utsendingsvilkår: PT.object.isRequired,
   unntaksvilkår: PT.object.isRequired,
+  behandlingOppfriskes: PT.bool,
 };
 
 Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
   bostedsland: null,
+  behandlingOppfriskes: false,
   bestemmelser: [],
   oppsummering: {},
   valgteVirksomheter: [],
