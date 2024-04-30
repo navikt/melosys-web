@@ -67,6 +67,9 @@ const JournalforingForm = ({
   submitSpinner,
   handleSubmit,
   landkoder,
+  avsenderIDFraJournalpost,
+  avsenderNavnFraJournalpost,
+  mottaksKanalErEessi,
 }) => {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, fagsakListe);
   const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
@@ -134,7 +137,14 @@ const JournalforingForm = ({
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
-      <Informasjon journalpostID={journalpostID} dokumentID={hoveddokumentID} vedlegg={vedlegg} />
+      <Informasjon
+        journalpostID={journalpostID}
+        dokumentID={hoveddokumentID}
+        vedlegg={vedlegg}
+        avsenderIDFraJournalpost={avsenderIDFraJournalpost}
+        avsenderNavnFraJournalpost={avsenderNavnFraJournalpost}
+        mottaksKanalErEessi={mottaksKanalErEessi}
+      />
 
       {visFagsakVelger && (
         <Komponent
@@ -198,6 +208,9 @@ JournalforingForm.propTypes = {
   avbrytJournalforing: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  avsenderIDFraJournalpost: PT.string,
+  avsenderNavnFraJournalpost: PT.string,
+  mottaksKanalErEessi: PT.bool.isRequired,
 };
 
 JournalforingForm.defaultProps = {
@@ -205,6 +218,8 @@ JournalforingForm.defaultProps = {
   formErrors: {},
   hoveddokumentID: "",
   fagsakListe: [],
+  avsenderIDFraJournalpost: "",
+  avsenderNavnFraJournalpost: "",
 };
 
 const toVedleggMedProps = (vedlegg) =>
