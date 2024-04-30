@@ -1,7 +1,7 @@
 import VurderingAvslaaUtpeking from "./vurderingAvslaaUtpeking";
 import { reduxForm } from "redux-form";
-import * as KV from "../../../kodeverk";
-import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+import * as KV from "../../../../kodeverk";
+import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
 vi.mock("../../../utils", async () => {
   const actual = await vi.importActual("../../../utils");
