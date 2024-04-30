@@ -4,38 +4,38 @@ import { FieldArray, getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 import { v4 as uuid } from "uuid";
-import * as Api from "../../../services/api";
+import * as Api from "../../../../services/api";
 
-import MKV from "../../../melosyskodeverk";
-import * as Nav from "../../../navFrontend";
-import * as MPT from "../../../proptypes";
-import * as KV from "../../../kodeverk";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
-import { behandlingsperioderSelectors } from "../../../ducks/behandlingsperioder";
-import { dokumenterSelectors } from "../../../ducks/dokumenter";
-import { datoDiffMenneskelig, formatterDatoTilNorsk } from "../../../utils/dato";
-import DatoOmrade from "../../../felleskomponenter/datoOmrade";
-import Dokumentliste from "../../../felleskomponenter/dokumentliste";
-import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
-import VedleggVelger from "../../../felleskomponenter/vedleggvelger";
-import VedleggTable from "../../../felleskomponenter/vedleggTable";
+import MKV from "../../../../melosyskodeverk";
+import * as Nav from "../../../../navFrontend";
+import * as MPT from "../../../../proptypes";
+import * as KV from "../../../../kodeverk";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
+import { behandlingsperioderSelectors } from "../../../../ducks/behandlingsperioder";
+import { dokumenterSelectors } from "../../../../ducks/dokumenter";
+import { datoDiffMenneskelig, formatterDatoTilNorsk } from "../../../../utils/dato";
+import DatoOmrade from "../../../../felleskomponenter/datoOmrade";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
+import Mottakerinstitusjonvelger from "../../../../felleskomponenter/mottakerinstitusjonvelger";
+import VedleggVelger from "../../../../felleskomponenter/vedleggvelger";
+import VedleggTable from "../../../../felleskomponenter/vedleggTable";
 import {
   konverterLovvalgsbestemmelseTilStegData,
   konverterUnntakFraBestemmelseTilStegData,
   konverterVilkarTilStegData,
   lagUnntakFraBestemmelse,
   lagVilkarbegrunnelse,
-} from "../../../felleskomponenter/stegvelger";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+} from "../../../../felleskomponenter/stegvelger";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
 
 import "./vurderingArtikkel16Anmodning.css";
-import { kontrollOperations } from "../../../ducks/kontroll";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
+import { kontrollOperations } from "../../../../ducks/kontroll";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 
 const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked, redigerbart }) => {
   const { periodeID, periode } = perm;
