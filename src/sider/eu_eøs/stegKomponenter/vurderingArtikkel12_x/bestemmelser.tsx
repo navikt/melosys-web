@@ -227,13 +227,13 @@ export const Bestemmelser = ({
           {konvensjonStorbritanniaToggleEnabled && (innvilgelse || anmodningOmUnntak) && (
             <Nav.Select
               label="Velg bestemmelse"
-              disabled={!redigerbart || !visStorbritanniaKonvensjon}
               value={bestemmelse}
               onChange={(event) => handleEndreBestemmelse(event.target.value)}
+              disabled={!redigerbart || !visStorbritanniaKonvensjon}
             >
-              <option disabled={!!bestemmelse} value="" key="" label="Velg..." />
-              {hentBestemmelser().map((element) => (
-                <option key={element.kode} value={element.kode} label={element.term ?? ""} />
+              <option disabled={!!bestemmelse} key="" value="" label="Velg..." />
+              {hentBestemmelser().map((ktobject) => (
+                <option key={ktobject.kode} value={ktobject.kode} label={ktobject.term ?? ""} />
               ))}
             </Nav.Select>
           )}

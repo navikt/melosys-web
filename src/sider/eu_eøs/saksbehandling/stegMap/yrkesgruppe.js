@@ -2,11 +2,21 @@ import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingYrkesgruppe from "../../stegKomponenter/vurderingYrkesgruppe";
 import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
 import { hentFakta, hentTilleggBestemmelse } from "../../../../domeneUtils";
 
 class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+
+    const tilleggbestemmelse = hentTilleggBestemmelse(propsLight.lovvalgsperioder);
+    const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, propsLight.avklartefakta);
+    const vilkårManglerForDirekteTilAnmodning =
+      yrkesgruppe?.fakta?.[0] === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12 &&
+      !propsLight.unntaksvilkår.oppfylt;
+    const harAvklaring = propsLight.konvensjonStorbritanniaToggleEnabled
+      ? !Utils._isEmpty(yrkesgruppe.fakta) && !vilkårManglerForDirekteTilAnmodning
+      : yrkesgruppe.fakta && yrkesgruppe.fakta.length > 0;
 
     this.kriterier = [
       {
@@ -28,15 +38,11 @@ class Yrkesgruppe extends Steg {
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
-    this.beregnRelevantUI = (_propsLight) => {
-      const tilleggbestemmelse = hentTilleggBestemmelse(_propsLight.lovvalgsperioder);
-      const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, _propsLight.avklartefakta);
-      return {
-        tilleggbestemmelse,
-        harAvklaring: yrkesgruppe.fakta && yrkesgruppe.fakta.length > 0,
-        yrkesgruppe,
-      };
-    };
+    this.beregnRelevantUI = (_propsLight) => ({
+      tilleggbestemmelse,
+      harAvklaring,
+      yrkesgruppe,
+    });
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
