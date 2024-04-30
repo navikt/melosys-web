@@ -4,20 +4,20 @@ import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 
-import * as Nav from "../../../navFrontend";
-import * as KV from "../../../kodeverk";
-import * as Utils from "../../../utils";
-import * as Api from "../../../services/api";
-import * as Mui from "../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
+import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
+import * as Api from "../../../../services/api";
+import * as Mui from "../../../../felleskomponenter/ui";
 
-import MKV, { MKVUtils } from "../../../melosyskodeverk";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { vilkarOperations } from "../../../ducks/vilkar";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { vilkarOperations } from "../../../../ducks/vilkar";
 
 import "./vurderingInngang.css";
-import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 
 const { OVERSTYRT_AV_SAKSBEHANDLER } = MKV.Koder.begrunnelser.inngangsvilkaar;
 

@@ -3,7 +3,7 @@ import { instance, mock } from "ts-mockito";
 
 import { render, screen } from "@testing-library/react";
 
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
 import { Varsler, VurderingInngang } from "./vurderingInngang";
 
