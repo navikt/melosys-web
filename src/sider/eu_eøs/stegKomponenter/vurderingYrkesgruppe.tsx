@@ -95,6 +95,7 @@ const VurderingYrkesgruppe = ({
         handleEndreBestemmelse(FO_883_2004_ART16_1);
       }
     } else {
+      /* eslint-disable no-lonely-if */
       if (yrkessituasjon === ORDINAER_UTEN_ART12) {
         oppdaterData(lagVilkaar("art16_1_anmodning", true));
       } else {
