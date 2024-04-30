@@ -1,7 +1,7 @@
 import { object, string } from "yup";
 
-import MKV from "../../../melosyskodeverk";
-import * as KV from "../../../kodeverk";
+import MKV from "../../../../melosyskodeverk";
+import * as KV from "../../../../kodeverk";
 
 const { DELVIS_INNVILGELSE } = MKV.Koder.anmodningsperiodesvartyper;
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;

@@ -1,11 +1,11 @@
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-import { STATUS } from "../../../services";
+import { STATUS } from "../../../../services";
 
 import VurderingArtikkel16MottaSvar from "./vurderingArtikkel16MottaSvar";
-import * as KV from "../../../kodeverk";
+import * as KV from "../../../../kodeverk";
 import { reduxForm } from "redux-form";
-import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
 // TODO: Enkel snapshot test når vitest snapshot serializer er på plass
 describe("VurderingArtikkel16MottaSvar", () => {
