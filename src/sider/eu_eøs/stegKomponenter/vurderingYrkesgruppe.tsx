@@ -193,7 +193,6 @@ const VurderingYrkesgruppe = ({
             value={bestemmelse}
             onChange={(event) => handleEndreBestemmelse(event.target.value)}
             disabled={!redigerbart || !visStorbritanniaKonvensjon}
-            bredde="fullbredde"
           >
             <option disabled={!!bestemmelse} key="" value="" label="Velg..." />
             {hentBestemmelser().map((ktobject) => (
