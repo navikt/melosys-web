@@ -7,7 +7,7 @@ import MKV from "../../../../melosyskodeverk";
 
 import { Varsler, VurderingInngang } from "./vurderingInngang";
 
-vi.mock("../../../featuretoggle", () => ({
+vi.mock("../../../../featuretoggle", () => ({
   useFeatureToggle: () => true,
 }));
 
