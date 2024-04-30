@@ -3,17 +3,17 @@ import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 import { connect } from "react-redux";
 
-import * as Nav from "../../../navFrontend";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Hooks from "../../../hooks";
-import * as Utils from "../../../utils";
+import * as Nav from "../../../../navFrontend";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Hooks from "../../../../hooks";
+import * as Utils from "../../../../utils";
 
-import Dokumentliste from "../../../felleskomponenter/dokumentliste";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 
-import { formSelectors } from "../../../ducks/form";
+import { formSelectors } from "../../../../ducks/form";
 
 import "./vurderingGodkjennUtpekingAnnetLand.css";
-import * as Api from "../../../services/api";
+import * as Api from "../../../../services/api";
 
 export const VurderingGodkjennUtpekingAnnetLand = ({
   lagreOgGodkjennUnntaksperioder,

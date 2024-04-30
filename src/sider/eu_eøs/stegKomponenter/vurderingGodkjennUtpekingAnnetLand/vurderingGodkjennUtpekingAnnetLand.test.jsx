@@ -1,15 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 import { VurderingGodkjennUtpekingAnnetLand } from "./vurderingGodkjennUtpekingAnnetLand";
-
-vi.mock("../../../services/modules/kontroll", () => ({
-  erBucAapen: () => Promise.resolve(true),
-}));
-vi.mock("../../../featuretoggle", () => ({
-  useFeatureToggle: vi.fn(),
-}));
 
 describe("vurderingGodkjennUtpekingAnnetLand", () => {
   let props = null;

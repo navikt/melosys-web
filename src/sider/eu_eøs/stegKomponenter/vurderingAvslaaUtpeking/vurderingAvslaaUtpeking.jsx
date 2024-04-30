@@ -4,18 +4,18 @@ import { connect } from "react-redux";
 import { reduxForm, formValueSelector, isValid } from "redux-form";
 import * as EKV from "eessi-kodeverk";
 
-import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as KV from "../../../kodeverk";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Hooks from "../../../hooks";
+import * as Nav from "../../../../navFrontend";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as KV from "../../../../kodeverk";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Hooks from "../../../../hooks";
 
-import Dokumentliste from "../../../felleskomponenter/dokumentliste";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { formOperations } from "../../../ducks/form";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { formOperations } from "../../../../ducks/form";
 
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingAvslaaUtpekingSchema from "./vurderingAvslaaUtpekingSchema";
 
 const VurderingAvslaaUtpeking = ({

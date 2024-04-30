@@ -3,26 +3,29 @@ import { connect } from "react-redux";
 import PT from "prop-types";
 import { reduxForm, getFormValues } from "redux-form";
 
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Nav from "../../../navFrontend";
-import * as MPT from "../../../proptypes";
-import * as KV from "../../../kodeverk";
-import * as Utils from "../../../utils";
-import * as Services from "../../../services";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
+import * as MPT from "../../../../proptypes";
+import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
+import * as Services from "../../../../services";
 
-import { DatoOmradeMedVarighet } from "../../../felleskomponenter/datoOmrade";
+import { DatoOmradeMedVarighet } from "../../../../felleskomponenter/datoOmrade";
 
-import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
-import { formSelectors } from "../../../ducks/form";
-import { anmodningsperiodesvarOperations, anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
+import { formSelectors } from "../../../../ducks/form";
+import {
+  anmodningsperiodesvarOperations,
+  anmodningsperiodesvarSelectors,
+} from "../../../../ducks/anmodningsperiodesvar";
 
-import { lagAnmodningsperiodesvar } from "../../../felleskomponenter/stegvelger";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { lagAnmodningsperiodesvar } from "../../../../felleskomponenter/stegvelger";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingArtikkel16MottaSvarSchema from "./vurderingArtikkel16MottaSvarSchema";
 
 import "./vurderingArtikkel16MottaSvar.css";

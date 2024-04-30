@@ -1,5 +1,5 @@
 import { object, string, bool } from "yup";
-import { DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN } from "../../../kodeverk/feilmeldinger";
+import { DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN } from "../../../../kodeverk/feilmeldinger";
 
 const VELG_MOTTAKERINSTITUSJON = { melding: "Velg mottakerinstitusjon" };
 

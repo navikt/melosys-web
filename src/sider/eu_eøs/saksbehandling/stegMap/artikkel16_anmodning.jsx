@@ -5,7 +5,7 @@ import * as Utils from "../../../../utils";
 
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingArtikkel16Anmodning from "../../stegKomponenter/vurderingArtikkel16Anmodning";
+import VurderingArtikkel16Anmodning from "../../stegKomponenter/vurderingArtikkel16Anmodning/vurderingArtikkel16Anmodning";
 import { hentBegrunnelser, hentVilkar } from "../../../../domeneUtils";
 
 const { UNDER_BEHANDLING, AVSLUTTET } = MKV.Koder.behandlinger.behandlingsstatus;
