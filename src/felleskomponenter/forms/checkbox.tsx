@@ -15,7 +15,7 @@ interface CheckboxComponentProps {
   checked?: boolean;
   onChange?: (value: any) => void;
   feil?: any;
-  size: "small" | "medium" | undefined;
+  size?: "small" | "medium" | undefined;
 }
 
 type CheckboxInnerComponentProps = CheckboxComponentProps & RegisterHookFormProps;
