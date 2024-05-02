@@ -69,7 +69,6 @@ const Redigerer = ({
           label="F.nr./d-nr./fødselsdato"
           feltNavn={`${overordnetFeltNavn}.fnr`}
           disabled={!redigerbart}
-          bredde="fullbredde"
           onChange={idNummerChangeHandler}
         />
       </Nav.Column>
@@ -78,7 +77,6 @@ const Redigerer = ({
           label="Fullt navn"
           feltNavn={`${overordnetFeltNavn}.navn`}
           disabled={!redigerbart || disableNavnInput}
-          bredde="fullbredde"
         />
         {visNavnSpinner && <Nav.NavFrontendSpinner className="navn-spinner" />}
       </Nav.Column>

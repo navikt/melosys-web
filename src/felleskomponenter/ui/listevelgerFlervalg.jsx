@@ -14,7 +14,7 @@ import "./listevelgerFlervalg.css";
  */
 const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatFritekst, disabled }) => {
   const element = tillatFritekst ? (
-    <Nav.Input
+    <Nav.TextField
       disabled={disabled}
       value={label}
       label=""
@@ -197,10 +197,10 @@ class ListevelgerFlervalg extends Component {
       <div className="listevelgerFlervalg" data-cy={data_cy}>
         {byggValgtListe(valgteElementer)}
         <div className="listevelgerFlervalg__linje">
-          <Nav.Input
+          <Nav.TextField
             id={`listevelger-${datalistID}`}
             label={label}
-            feil={feil}
+            error={feil}
             placeholder={placeholder}
             onChange={this.vedEndring}
             onKeyDown={this.vedTastNed}
@@ -208,6 +208,7 @@ class ListevelgerFlervalg extends Component {
             list={datalistID}
             className="listevelgerFlervalg__linje__input"
             disabled={disabled}
+            size="small"
           />
           <Nav.Button
             variant="secondary"

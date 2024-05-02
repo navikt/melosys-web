@@ -37,7 +37,7 @@ const InnerFellesInputFnrDnrOrgnrSaksnr = ({
     onChange: innerChange,
   };
 
-  return <EnkelFellesInputFnrDnrOrgnrSaksnr label={label} feil={feil || undefined} {...inputProps} />;
+  return <EnkelFellesInputFnrDnrOrgnrSaksnr label={label} error={feil || undefined} {...inputProps} />;
 };
 
 const FellesInputFnrDnrOrgnrSaksnr = ({ feltNavn = "", bredde = "fullbredde", className = "", ...rest }) => (

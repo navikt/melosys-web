@@ -17,21 +17,10 @@ interface EnkeltUtenlandskIdentSkjemaProps {
 const EnkeltUtenlandskIdentSkjema = ({ overordnetFeltNavn, slett, redigerbart }: EnkeltUtenlandskIdentSkjemaProps) => (
   <Nav.Row className="enkeltUtenlandskIdentSkjema">
     <Nav.Column xs="5">
-      <Skjema.Input
-        disabled={!redigerbart}
-        bredde="fullbredde"
-        feltNavn={`${overordnetFeltNavn}.ident`}
-        label="Utenlandsk ID"
-      />
+      <Skjema.Input disabled={!redigerbart} feltNavn={`${overordnetFeltNavn}.ident`} label="Utenlandsk ID" />
     </Nav.Column>
     <Nav.Column xs="5">
-      <Landvelger
-        disabled={!redigerbart}
-        feltNavn={`${overordnetFeltNavn}.landkode`}
-        label="Land"
-        bredde="fullbredde"
-        visAlleLandkoder
-      />
+      <Landvelger disabled={!redigerbart} feltNavn={`${overordnetFeltNavn}.landkode`} label="Land" visAlleLandkoder />
     </Nav.Column>
     <Nav.Column xs="2" className="slett__symbol">
       <Mui.IkonKnapp ariaLabel="Fjern utenlandsk ident" ikon={Ikoner.Bin} onClick={slett} />

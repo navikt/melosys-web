@@ -318,24 +318,22 @@ const Saksopplysninger = ({
           <Fragment>
             <Nav.Row>
               <Nav.Column xs="3">
-                <Nav.Input
-                  bredde="fullbredde"
+                <Nav.TextField
                   label="Startdato"
                   value={endretPeriodeFom}
                   onChange={(e) => oppdaterDato(e, setEndretPeriodeFom)}
                   onBlur={(e) => formaterDato(e, setEndretPeriodeFom)}
-                  feil={valideringFeil.fom}
+                  error={valideringFeil.fom}
                   disabled={!redigerbart}
                 />
               </Nav.Column>
               <Nav.Column xs="3">
-                <Nav.Input
-                  bredde="fullbredde"
+                <Nav.TextField
                   label="Sluttdato"
                   value={endretPeriodeTom}
                   onChange={(e) => oppdaterDato(e, setEndretPeriodeTom)}
                   onBlur={(e) => formaterDato(e, setEndretPeriodeTom)}
-                  feil={valideringFeil.tom}
+                  error={valideringFeil.tom}
                   disabled={!redigerbart}
                 />
               </Nav.Column>

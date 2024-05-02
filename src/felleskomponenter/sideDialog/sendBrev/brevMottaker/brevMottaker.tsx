@@ -215,7 +215,7 @@ const BrevMottaker = ({
             <Skjema.Input
               feltNavn="organisasjonsnummer"
               label="Organisasjonsnummer"
-              placeholder="Skriv inn"
+              placeholder="Skriv inn..."
               disabled={!redigerbart}
             />
             {adresse?.organisasjonsAdresse && (
@@ -232,7 +232,7 @@ const BrevMottaker = ({
             <Skjema.Input
               feltNavn="kontaktperson"
               label="Kontaktperson"
-              placeholder="Skriv inn"
+              placeholder="Skriv inn..."
               disabled={!redigerbart}
             />
           </Nav.Column>

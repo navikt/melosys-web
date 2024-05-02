@@ -140,9 +140,9 @@ const RedigererFullmektig = ({
               name={`fullmektige[${index}].ident`}
               label="Org.nr. eller f.nr./d-nr.:"
               control={control}
-              onChange={(ident) => handleIdChange(ident, index)}
-              bredde="S"
-              feil={feil}
+              onChange={(ident: string) => handleIdChange(ident, index)}
+              error={feil}
+              size="small"
             />
 
             {adresse && <BrevAdresse className="adresse" {...adresse} visNavn />}

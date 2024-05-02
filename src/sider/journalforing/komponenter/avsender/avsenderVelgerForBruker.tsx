@@ -122,9 +122,7 @@ const AvsenderVelgerForBruker = ({
           value={KV.AvsenderTyper.FRITEKST}
           className="avsendervelger__radio"
         />
-        {formValues.avsenderType === KV.AvsenderTyper.FRITEKST && (
-          <Skjema.Input label="" feltNavn="avsenderNavn" bredde="fullbredde" />
-        )}
+        {formValues.avsenderType === KV.AvsenderTyper.FRITEKST && <Skjema.Input label="" feltNavn="avsenderNavn" />}
       </Skjema.RadioGruppe>
     </div>
   );

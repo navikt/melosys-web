@@ -71,7 +71,7 @@ type InntektRedigererProps = {
 
 const InntektRedigerer = ({ tittel, feltNavn, redigerbart }: InntektRedigererProps) => (
   <Nav.Column xs="4" className="inntekt-redigerer">
-    <Skjema.Input feltNavn={`loennOgGodtgjoerelse.${feltNavn}`} label={tittel} bredde="S" disabled={!redigerbart} />
+    <Skjema.Input feltNavn={`loennOgGodtgjoerelse.${feltNavn}`} label={tittel} disabled={!redigerbart} />
   </Nav.Column>
 );
 
@@ -150,7 +150,7 @@ const LonnOgNaturalytelserRedigerer = ({ redigerbart }: { redigerbart: boolean }
           />
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row>
+      <Nav.Row className="input__row">
         <InntektRedigerer feltNavn="bruttoLoennPerMnd" tittel="Lønn fra Norge" redigerbart={redigerbart} />
         <InntektRedigerer feltNavn="bruttoLoennUtlandPerMnd" tittel="Lønn fra utlandet" redigerbart={redigerbart} />
         <InntektRedigerer

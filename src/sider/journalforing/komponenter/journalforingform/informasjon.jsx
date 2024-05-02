@@ -239,7 +239,7 @@ class Informasjon extends Component {
           tittel="Informasjon om virksomhet"
           innhold={
             <>
-              <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="virksomhetOrgnr" label="Org.nr." bredde="L" />
+              <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="virksomhetOrgnr" label="Org.nr." />
               {!Utils._isEmpty(virksomhetNavn) && (
                 <span className="bruker-eller-org-navn">
                   <Nav.Typo.Element className="term">Navn:</Nav.Typo.Element>
@@ -255,7 +255,7 @@ class Informasjon extends Component {
           tittel="Informasjon om bruker"
           innhold={
             <>
-              <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="brukerID" label="Brukers f.nr/d-nr." bredde="L" />
+              <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="brukerID" label="Brukers f.nr/d-nr." />
               {!Utils._isEmpty(brukerNavn) && (
                 <span className="bruker-eller-org-navn">
                   <Nav.Typo.Element className="term">Navn:</Nav.Typo.Element>

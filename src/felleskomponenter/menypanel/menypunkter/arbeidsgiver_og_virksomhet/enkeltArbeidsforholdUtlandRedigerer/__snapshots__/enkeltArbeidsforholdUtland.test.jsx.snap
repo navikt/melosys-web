@@ -12,46 +12,56 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-6"
       >
         <div
-          class="skjemaelement"
+          class="navds-form-field navds-form-field--small"
         >
           <label
-            class="skjemaelement__label"
+            class="navds-form-field__label navds-label navds-label--small"
             for="123"
           >
             Navn på virksomheten
           </label>
           <input
-            aria-invalid="false"
-            class="skjemaelement__input input--fullbredde"
+            class="navds-text-field__input navds-body-short navds-body-short--small"
             id="123"
             meta="[object Object]"
             name="feltnavn.navn"
             type="text"
             value=""
           />
+          <div
+            aria-live="polite"
+            aria-relevant="additions removals"
+            class="navds-form-field__error"
+            id="textField-error-aksel-id-1"
+          />
         </div>
       </div>
       <div
         class="col col-xs-6"
       >
         <div
-          class="skjemaelement"
+          class="navds-form-field navds-form-field--small"
         >
           <label
-            class="skjemaelement__label"
+            class="navds-form-field__label navds-label navds-label--small"
             for="123"
           >
             Registreringsnummer
           </label>
           <input
-            aria-invalid="false"
-            class="skjemaelement__input input--fullbredde"
+            class="navds-text-field__input navds-body-short navds-body-short--small"
             id="123"
             meta="[object Object]"
             name="feltnavn.orgnr"
             type="text"
             value=""
           />
+          <div
+            aria-live="polite"
+            aria-relevant="additions removals"
+            class="navds-form-field__error"
+            id="textField-error-aksel-id-2"
+          />
         </div>
       </div>
     </div>
@@ -62,23 +72,28 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-12"
       >
         <div
-          class="skjemaelement"
+          class="navds-form-field navds-form-field--small"
         >
           <label
-            class="skjemaelement__label"
+            class="navds-form-field__label navds-label navds-label--small"
             for="123"
           >
             Adressetilleggsnavn
           </label>
           <input
-            aria-invalid="false"
-            class="skjemaelement__input input--fullbredde"
+            class="navds-text-field__input navds-body-short navds-body-short--small"
             id="123"
             meta="[object Object]"
             name="feltnavn.adresse.tilleggsnavn"
             type="text"
             value=""
           />
+          <div
+            aria-live="polite"
+            aria-relevant="additions removals"
+            class="navds-form-field__error"
+            id="textField-error-aksel-id-3"
+          />
         </div>
       </div>
     </div>
@@ -89,45 +104,55 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-6"
       >
         <div
-          class="skjemaelement"
+          class="navds-form-field navds-form-field--small"
         >
           <label
-            class="skjemaelement__label"
+            class="navds-form-field__label navds-label navds-label--small"
             for="123"
           >
             Adresse til arbeidsgiver
           </label>
           <input
-            aria-invalid="false"
-            class="skjemaelement__input input--fullbredde"
+            class="navds-text-field__input navds-body-short navds-body-short--small"
             id="123"
             meta="[object Object]"
             name="feltnavn.adresse.gatenavn"
             type="text"
             value=""
           />
+          <div
+            aria-live="polite"
+            aria-relevant="additions removals"
+            class="navds-form-field__error"
+            id="textField-error-aksel-id-4"
+          />
         </div>
       </div>
       <div
         class="col col-xs-6"
       >
         <div
-          class="skjemaelement"
+          class="navds-form-field navds-form-field--small"
         >
           <label
-            class="skjemaelement__label"
+            class="navds-form-field__label navds-label navds-label--small"
             for="123"
           >
             Husnummer
           </label>
           <input
-            aria-invalid="false"
-            class="skjemaelement__input input--fullbredde"
+            class="navds-text-field__input navds-body-short navds-body-short--small"
             id="123"
             meta="[object Object]"
             name="feltnavn.adresse.husnummerEtasjeLeilighet"
             type="text"
             value=""
+          />
+          <div
+            aria-live="polite"
+            aria-relevant="additions removals"
+            class="navds-form-field__error"
+            id="textField-error-aksel-id-5"
           />
         </div>
       </div>
@@ -139,22 +164,27 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-6"
       >
         <div
-          class="skjemaelement"
+          class="navds-form-field navds-form-field--small"
         >
           <label
-            class="skjemaelement__label"
+            class="navds-form-field__label navds-label navds-label--small"
             for="123"
           >
             Poststed
           </label>
           <input
-            aria-invalid="false"
-            class="skjemaelement__input input--fullbredde"
+            class="navds-text-field__input navds-body-short navds-body-short--small"
             id="123"
             meta="[object Object]"
             name="feltnavn.adresse.poststed"
             type="text"
             value=""
+          />
+          <div
+            aria-live="polite"
+            aria-relevant="additions removals"
+            class="navds-form-field__error"
+            id="textField-error-aksel-id-6"
           />
         </div>
       </div>
@@ -162,22 +192,27 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-6"
       >
         <div
-          class="skjemaelement"
+          class="navds-form-field navds-form-field--small"
         >
           <label
-            class="skjemaelement__label"
+            class="navds-form-field__label navds-label navds-label--small"
             for="123"
           >
             Postnummer
           </label>
           <input
-            aria-invalid="false"
-            class="skjemaelement__input input--fullbredde"
+            class="navds-text-field__input navds-body-short navds-body-short--small"
             id="123"
             meta="[object Object]"
             name="feltnavn.adresse.postnummer"
             type="text"
             value=""
+          />
+          <div
+            aria-live="polite"
+            aria-relevant="additions removals"
+            class="navds-form-field__error"
+            id="textField-error-aksel-id-7"
           />
         </div>
       </div>
@@ -189,22 +224,27 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-12"
       >
         <div
-          class="skjemaelement"
+          class="navds-form-field navds-form-field--small"
         >
           <label
-            class="skjemaelement__label"
+            class="navds-form-field__label navds-label navds-label--small"
             for="123"
           >
             Postboks
           </label>
           <input
-            aria-invalid="false"
-            class="skjemaelement__input input--fullbredde"
+            class="navds-text-field__input navds-body-short navds-body-short--small"
             id="123"
             meta="[object Object]"
             name="feltnavn.adresse.postboks"
             type="text"
             value=""
+          />
+          <div
+            aria-live="polite"
+            aria-relevant="additions removals"
+            class="navds-form-field__error"
+            id="textField-error-aksel-id-8"
           />
         </div>
       </div>
@@ -216,22 +256,27 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-6"
       >
         <div
-          class="skjemaelement"
+          class="navds-form-field navds-form-field--small"
         >
           <label
-            class="skjemaelement__label"
+            class="navds-form-field__label navds-label navds-label--small"
             for="123"
           >
             Region
           </label>
           <input
-            aria-invalid="false"
-            class="skjemaelement__input input--fullbredde"
+            class="navds-text-field__input navds-body-short navds-body-short--small"
             id="123"
             meta="[object Object]"
             name="feltnavn.adresse.region"
             type="text"
             value=""
+          />
+          <div
+            aria-live="polite"
+            aria-relevant="additions removals"
+            class="navds-form-field__error"
+            id="textField-error-aksel-id-9"
           />
         </div>
       </div>
@@ -243,21 +288,26 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         >
           <div>
             <div
-              class="skjemaelement landliste__linje__input"
+              class="landliste__linje__input navds-form-field navds-form-field--small"
             >
               <label
-                class="skjemaelement__label"
+                class="navds-form-field__label navds-label navds-label--small"
                 for="123"
               >
                 Land
               </label>
               <input
-                aria-invalid="false"
-                class="skjemaelement__input input--fullbredde"
+                class="navds-text-field__input navds-body-short navds-body-short--small"
                 id="123"
                 list="datalist-123"
                 type="text"
                 value=""
+              />
+              <div
+                aria-live="polite"
+                aria-relevant="additions removals"
+                class="navds-form-field__error"
+                id="textField-error-aksel-id-10"
               />
             </div>
           </div>

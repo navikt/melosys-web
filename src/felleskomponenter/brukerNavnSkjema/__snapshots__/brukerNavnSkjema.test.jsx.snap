@@ -6,22 +6,27 @@ exports[`brukernavnskjema > snapshot test 1`] = `
     class="brukerNavnSkjema"
   >
     <div
-      class="skjemaelement brukerNavnSkjema__fetTekst"
+      class="brukerNavnSkjema__fetTekst navds-form-field navds-form-field--small"
     >
       <label
-        class="skjemaelement__label"
+        class="navds-form-field__label navds-label navds-label--small"
         for="123"
       >
         Brukers f.nr. eller d-nr.
       </label>
       <input
-        aria-invalid="false"
-        class="skjemaelement__input input--fullbredde"
+        class="navds-text-field__input navds-body-short navds-body-short--small"
         id="123"
         meta="[object Object]"
         name="brukerID"
         type="text"
         value=""
+      />
+      <div
+        aria-live="polite"
+        aria-relevant="additions removals"
+        class="navds-form-field__error"
+        id="textField-error-aksel-id-1"
       />
     </div>
     
