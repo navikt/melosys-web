@@ -276,6 +276,7 @@ const form = {
     const options = {
       context: {
         erAvsenderPreutfylt: props.erAvsenderPreutfylt,
+        mottaksKanalErEessi: props.mottaksKanalErEessi,
         registeredFields: props.registeredFields,
         journalforingKnappErTryktPå: Boolean(values.journalforingHensikt),
       },
