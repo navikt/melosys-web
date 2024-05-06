@@ -40,8 +40,10 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
 import { useIsMounted } from "../../../../hooks";
 import { FysiskDokument } from "Domene";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 
-const { FO_883_2004_ART16_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
+const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
 const { SAERLIG_GRUNN } = MKV.Koder.begrunnelser.art16_1_anmodning;
 const { BRUKER, UTENLANDSK_TRYGDEMYNDIGHET } = MKV.Koder.mottakerroller;
 const { ORIENTERING_ANMODNING_UNNTAK, ANMODNING_UNNTAK } = MKV.Koder.brev.produserbaredokumenter;
@@ -68,7 +70,7 @@ interface FormValuesProps {
 }
 interface Props {
   tilstand: {
-    art16_1: Vilkaar;
+    unntaksvilkår: Vilkaar;
     muligeBegrunnelseValg: KTObject[];
     erIDirekteTilArtikkel16Flyt: boolean;
     harAvklaring: boolean;
@@ -81,13 +83,13 @@ interface Props {
   lagreVilkarHandler: () => void;
   oppdaterOgLagreBehandlinger: () => Promise<void>;
   lagreAnmodningsperioderHandler: () => Promise<void>;
-  byggAnmodningsperioderHandler: () => void;
+  byggAnmodningsperioderHandler: () => Promise<void>;
   lagreOgBestillAnmodningsperioder: (bestillAnmodningsperioderBody: any) => Promise<void>;
 }
 
 const VurderingArtikkel16Anmodning = ({
   oppdaterData,
-  tilstand: { art16_1, muligeBegrunnelseValg, erIDirekteTilArtikkel16Flyt },
+  tilstand: { unntaksvilkår, muligeBegrunnelseValg, erIDirekteTilArtikkel16Flyt },
   slettData,
   formValues,
   oppdaterOgLagreBehandlinger,
@@ -101,6 +103,7 @@ const VurderingArtikkel16Anmodning = ({
   form,
   tilbake,
 }: Props & PropsFromRedux & InjectedFormProps<FormValuesProps, Props & PropsFromRedux>) => {
+  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const dispatch = useDispatch();
   const isMounted = useIsMounted();
   const [lovvalgFeilmelding, setLovvalgFeilmelding] = useState<string | undefined>(undefined);
@@ -121,10 +124,13 @@ const VurderingArtikkel16Anmodning = ({
   const valgteVirksomheter = useSelector(avklartefaktaSelectors.AvklarteVirksomheterSelector);
   const fysiskeDokumenter = useSelector(dokumenterSelectors.AlleFysiskeDokumentSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
+  const lovvalgsbestemmelse = useSelector(anmodningsperioderSelectors.LovvalgsbestemmelseSelector);
+  const feltNavnFraBestemmelse =
+    lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1 ? "art18_1_anmodning" : "art16_1_anmodning";
 
   useEffect(() => {
-    oppdaterData(konverterVilkarTilStegData("art16_1_anmodning", art16_1));
-    oppdaterData(konverterLovvalgsbestemmelseTilStegData(FO_883_2004_ART16_1));
+    oppdaterData(konverterVilkarTilStegData(feltNavnFraBestemmelse, unntaksvilkår));
+    oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     if (unntakFraBestemmelse) {
       oppdaterData(konverterUnntakFraBestemmelseTilStegData(unntakFraBestemmelse));
     }
@@ -165,7 +171,7 @@ const VurderingArtikkel16Anmodning = ({
 
   const handleEndretUnntakFraBestemmelse = async (event: ChangeEvent<HTMLSelectElement>) => {
     oppdaterData(lagUnntakFraBestemmelse(event.target.value));
-    byggAnmodningsperioderHandler();
+    await byggAnmodningsperioderHandler();
     await lagreAnmodningsperioderHandler();
     setLovvalgFeilmelding(undefined);
   };
@@ -185,7 +191,7 @@ const VurderingArtikkel16Anmodning = ({
   const handleEndretBegrunnelse = async (event: ChangeEvent<HTMLSelectElement>) => {
     setBegrunnelseFeilmelding(undefined);
     const begrunnelse = event.target.value;
-    oppdaterData(lagVilkarbegrunnelse("art16_1_anmodning", begrunnelse ? [begrunnelse] : []));
+    oppdaterData(lagVilkarbegrunnelse(feltNavnFraBestemmelse, begrunnelse ? [begrunnelse] : []));
     lagreVilkarHandler();
   };
 
@@ -205,16 +211,16 @@ const VurderingArtikkel16Anmodning = ({
   };
 
   const validerBegrunnelser = () => {
-    const valid = art16_1.begrunnelseKoder.length !== 0;
+    const valid = unntaksvilkår.begrunnelseKoder.length !== 0;
     if (!valid) setBegrunnelseFeilmelding("Velg begrunnelser");
     return valid;
   };
 
   const validerFritekst = () => {
-    const begrunnelseFritekstBrevValid = art16_1.begrunnelseFritekst;
+    const begrunnelseFritekstBrevValid = unntaksvilkår.begrunnelseFritekst;
     if (!begrunnelseFritekstBrevValid) setFritekstFeilmelding("Fyll inn fritekst");
 
-    const begrunnelseFritekstEngelskValid = art16_1.begrunnelseFritekstEngelsk;
+    const begrunnelseFritekstEngelskValid = unntaksvilkår.begrunnelseFritekstEngelsk;
     if (!begrunnelseFritekstEngelskValid) setFritekstSEDFeilmelding("Fyll inn fritekst");
 
     return begrunnelseFritekstBrevValid && begrunnelseFritekstEngelskValid;
@@ -224,7 +230,7 @@ const VurderingArtikkel16Anmodning = ({
     const arbeidsgivereValid = validerArbeidsgivere();
     const lovvalgValid = validerUnntakFraBestemmelse();
     const begrunnelserValid = validerBegrunnelser();
-    const fritekstValid = art16_1.begrunnelseKoder.includes(SAERLIG_GRUNN) ? validerFritekst() : true;
+    const fritekstValid = unntaksvilkår.begrunnelseKoder.includes(SAERLIG_GRUNN) ? validerFritekst() : true;
     touch("mottakerinstitusjon");
 
     return arbeidsgivereValid && lovvalgValid && begrunnelserValid && fritekstValid && formIsValid;
@@ -243,7 +249,7 @@ const VurderingArtikkel16Anmodning = ({
   const validerStegOgLagreBehandling = async () => {
     if (validerSteg()) {
       setAnmodningPending(true);
-      byggAnmodningsperioderHandler();
+      await byggAnmodningsperioderHandler();
       setLovvalgFeilmelding(undefined);
 
       await lagreBehandlingerOgBestillAnmodningsperioder();
@@ -255,12 +261,19 @@ const VurderingArtikkel16Anmodning = ({
     }
   };
 
+  const hentUnntaksbestemmelser = (): KTObject[] => {
+    if (konvensjonStorbritanniaToggleEnabled && lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1) {
+      return MKV.Kodekombinasjoner.unntaksbestemmelserStorbritanniaKonv;
+    }
+    return MKV.Kodekombinasjoner.unntaksbestemmelser;
+  };
+
   const landSomTekstListe = arbeidsland.map((enkeltLandObjekt: KTObject) => enkeltLandObjekt.term).join(", ");
 
-  const pdfDokumenter = formValues.kreverMottakerinstitusjon
+  const pdfDokumenter = formValues?.kreverMottakerinstitusjon
     ? [
         { dokumentData: { produserbardokument: ORIENTERING_ANMODNING_UNNTAK, mottaker: BRUKER } },
-        { sedType: EKV.Koder.sedtyper.A001, sedData: { fritekst: formValues.fritekstSed } },
+        { sedType: EKV.Koder.sedtyper.A001, sedData: { fritekst: formValues?.fritekstSed } },
       ]
     : [
         { dokumentData: { produserbardokument: ORIENTERING_ANMODNING_UNNTAK, mottaker: BRUKER } },
@@ -268,7 +281,7 @@ const VurderingArtikkel16Anmodning = ({
           dokumentData: {
             produserbardokument: ANMODNING_UNNTAK,
             mottaker: UTENLANDSK_TRYGDEMYNDIGHET,
-            ytterligereInformasjon: formValues.fritekstSed,
+            ytterligereInformasjon: formValues?.fritekstSed,
           },
         },
       ];
@@ -287,10 +300,12 @@ const VurderingArtikkel16Anmodning = ({
   return (
     <div>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Anmodning om unntak etter artikkel 16.1
+        {konvensjonStorbritanniaToggleEnabled
+          ? "Vurder anmodning om unntak"
+          : "Anmodning om unntak etter artikkel 16.1"}
       </Nav.Typo.Innholdstittel>
       <div className="artikkel16">
-        {erIDirekteTilArtikkel16Flyt && (
+        {erIDirekteTilArtikkel16Flyt && !konvensjonStorbritanniaToggleEnabled && (
           <Nav.Row className="vilAnmode">
             <Nav.Column xs="6">
               <Nav.Radio name="vilAnmode" label="Ja, jeg vil anmode om unntak" defaultChecked disabled={!redigerbart} />
@@ -300,11 +315,11 @@ const VurderingArtikkel16Anmodning = ({
         )}
         <Nav.Row className="artikkel16__ekstratopp">
           <Nav.Column xs="6">
-            <Nav.Typo.Element>Det lands lovgivning det søkes unntak fra:</Nav.Typo.Element>
+            <Nav.Typo.Element>Det lands lovgivning det søkes unntak fra</Nav.Typo.Element>
             <Nav.Typo.Normaltekst>{landSomTekstListe}</Nav.Typo.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="6">
-            <Nav.Typo.Element>Antall måneder:</Nav.Typo.Element>
+            <Nav.Typo.Element>Antall måneder</Nav.Typo.Element>
             <Nav.Typo.Normaltekst>
               {datoDiffMenneskelig(anmodningsperiode.fomDato, anmodningsperiode.tomDato)}
             </Nav.Typo.Normaltekst>
@@ -318,16 +333,12 @@ const VurderingArtikkel16Anmodning = ({
               onChange={handleEndretUnntakFraBestemmelse}
               value={unntakFraBestemmelse || ""}
               disabled={!redigerbart}
-              label={<Nav.Typo.Element>Artikkelen det søkes unntak fra:</Nav.Typo.Element>}
+              label={<Nav.Typo.Element>Artikkelen det søkes unntak fra</Nav.Typo.Element>}
               data-cy="unntakArtikkel"
             >
-              <option key={uuid()} value="">
-                Velg...
-              </option>
-              {MKV.Kodekombinasjoner.unntaksbestemmelser.map((kodeObjekt) => (
-                <option key={uuid()} value={kodeObjekt.kode}>
-                  {kodeObjekt.term}
-                </option>
+              <option key={uuid()} value="" label="Velg..." disabled={!!unntakFraBestemmelse} />
+              {hentUnntaksbestemmelser().map((kodeObjekt) => (
+                <option key={uuid()} value={kodeObjekt.kode} label={kodeObjekt.term ?? ""} />
               ))}
             </Nav.Select>
           </Nav.Column>
@@ -337,14 +348,17 @@ const VurderingArtikkel16Anmodning = ({
             <Nav.Select
               feil={begrunnelseFeilmelding}
               onChange={handleEndretBegrunnelse}
-              value={art16_1.begrunnelseKoder ? art16_1.begrunnelseKoder[0] : ""}
+              value={unntaksvilkår.begrunnelseKoder ? unntaksvilkår.begrunnelseKoder[0] : ""}
               disabled={!redigerbart}
-              label={<Nav.Typo.Element>Legg til begrunnelse:</Nav.Typo.Element>}
+              label={<Nav.Typo.Element>Legg til begrunnelse</Nav.Typo.Element>}
               data-cy="begrunnelse"
             >
-              <option key={uuid()} value="">
-                Velg...
-              </option>
+              <option
+                key={uuid()}
+                value=""
+                label="Velg..."
+                disabled={!Utils._isEmpty(unntaksvilkår.begrunnelseKoder)}
+              />
               {muligeBegrunnelseValg.map((kodeObjekt) => (
                 <option key={uuid()} value={kodeObjekt.kode}>
                   {kodeObjekt.term}
@@ -355,28 +369,28 @@ const VurderingArtikkel16Anmodning = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="7">
-            {art16_1.begrunnelseKoder?.includes(SAERLIG_GRUNN) && (
+            {unntaksvilkår.begrunnelseKoder?.includes(SAERLIG_GRUNN) && (
               <Fragment>
                 <Nav.Textarea
-                  id="art16_1_anmodning"
+                  id={feltNavnFraBestemmelse}
                   label={begrunnelseFritekstBrevLabel}
                   placeholder="Skriv begrunnelsen her."
                   disabled={!redigerbart}
                   onBlur={lagreVilkarHandler}
                   onChange={handleEndretBegrunnelseFritekst}
-                  value={art16_1.begrunnelseFritekst ?? ""}
+                  value={unntaksvilkår.begrunnelseFritekst ?? ""}
                   feil={fritekstFeilmelding}
                   maxLength={1500}
                   bredde="fullbredde"
                 />
                 {redigerbart && (
                   <Nav.Textarea
-                    id="art16_1_anmodning"
+                    id={feltNavnFraBestemmelse}
                     label={<Nav.Typo.Element>Begrunnelse til SED A001</Nav.Typo.Element>}
                     placeholder="Skriv begrunnelsen her."
                     onBlur={lagreVilkarHandler}
                     onChange={handleEndretBegrunnelseFritekstEngelsk}
-                    value={art16_1.begrunnelseFritekstEngelsk ?? ""}
+                    value={unntaksvilkår.begrunnelseFritekstEngelsk ?? ""}
                     feil={fritekstSEDFeilmelding}
                     maxLength={255}
                     bredde="fullbredde"
@@ -386,17 +400,19 @@ const VurderingArtikkel16Anmodning = ({
             )}
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row className="artikkel16__ekstratopp">
-          <Nav.Column xs="12">
-            <Nav.Fieldset legend={`Velg direkte forutgående perioder i ${landSomTekstListe}:`}>
-              <TidligereMedlemskap
-                oppdaterOgLagreBehandlinger={oppdaterOgLagreBehandlinger}
-                redigerbart={redigerbart}
-                medlemskap={medlemskap}
-              />
-            </Nav.Fieldset>
-          </Nav.Column>
-        </Nav.Row>
+        {(!konvensjonStorbritanniaToggleEnabled || !Utils._isEmpty(medlemskap?.perioderMed)) && (
+          <Nav.Row className="artikkel16__ekstratopp">
+            <Nav.Column xs="12">
+              <Nav.Fieldset legend={`Velg direkte forutgående perioder i ${landSomTekstListe}`}>
+                <TidligereMedlemskap
+                  oppdaterOgLagreBehandlinger={oppdaterOgLagreBehandlinger}
+                  redigerbart={redigerbart}
+                  medlemskap={medlemskap}
+                />
+              </Nav.Fieldset>
+            </Nav.Column>
+          </Nav.Row>
+        )}
         {redigerbart && (
           <Nav.Row className="fritekstSed">
             <Nav.Column xs="7">

@@ -24,6 +24,14 @@ class StegState {
     stegStore.set(stegID, steg);
   };
 
+  slettFeltIAlleSteg = (data) => {
+    const { felt } = data;
+    const { stegStore } = this;
+    stegStore.forEach((_value, key) => {
+      this.slettFelt(key, data);
+    });
+  };
+
   slettSteg = (stegID) => {
     this.stegStore.delete(stegID);
   };

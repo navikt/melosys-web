@@ -5,6 +5,7 @@ import * as KV from "../../../kodeverk";
 import * as Mui from "../../../felleskomponenter/ui";
 import {
   konverterAvklartfaktaTilStegData,
+  konverterLovvalgsbestemmelseTilStegData,
   konverterTilleggBestemmelseTilStegData,
   lagAvklartfakta,
   lagLovvalgsbestemmelse,
@@ -12,6 +13,7 @@ import {
   lagVilkaar,
   slettTilleggBestemmelse,
   slettVilkar,
+  slettVilkarIAlleSteg,
 } from "../../../felleskomponenter/stegvelger";
 import { finnTilleggBestemmelse, hentFaktaVerdi } from "../../../domeneUtils";
 import { useFeatureToggle } from "../../../featuretoggle";
@@ -68,6 +70,8 @@ const VurderingYrkesgruppe = ({
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
     const tilleggBestemmelseFunnet = finnTilleggBestemmelse(tilleggbestemmelse, stegetsTilleggsbestemmelser);
+    if (konvensjonStorbritanniaToggleEnabled && lovvalgsbestemmelse)
+      oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     if (tilleggBestemmelseFunnet) oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggbestemmelse));
 
     return () => {
@@ -76,7 +80,7 @@ const VurderingYrkesgruppe = ({
   }, []);
 
   const slettVilkår = () =>
-    ["art16_1_anmodning", "art18_1_anmodning"].forEach((feltNavn) => slettData(slettVilkar(feltNavn)));
+    ["art16_1_anmodning", "art18_1_anmodning"].forEach((feltNavn) => slettData(slettVilkarIAlleSteg(feltNavn)));
 
   const handleEndreYrkesgruppe = (event: ChangeEvent<HTMLInputElement>) => {
     setBestemmelse("");
