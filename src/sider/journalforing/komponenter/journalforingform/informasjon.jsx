@@ -223,7 +223,14 @@ class Informasjon extends Component {
   };
 
   render() {
-    const { vedlegg, settFeltInnhold, journalforingSkjemaVerdier } = this.props;
+    const {
+      vedlegg,
+      settFeltInnhold,
+      journalforingSkjemaVerdier,
+      avsenderIDFraJournalpost,
+      avsenderNavnFraJournalpost,
+      mottaksKanalErEessi,
+    } = this.props;
     const {
       hoveddokument: { tittel: hoveddokumentTittel, logiskeVedlegg = [] },
       vedlegg: skjemaVedlegg,
@@ -232,65 +239,80 @@ class Informasjon extends Component {
       journalforingGjelder,
     } = journalforingSkjemaVerdier;
 
-    const InformasjonOmBrukerEllerVirksomhet =
-      journalforingGjelder === VIRKSOMHET ? (
-        <Komponent
-          ikon={Ikoner.Building}
-          tittel="Informasjon om virksomhet"
-          innhold={
-            <>
-              <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="virksomhetOrgnr" label="Org.nr." bredde="L" />
-              {!Utils._isEmpty(virksomhetNavn) && (
-                <span className="bruker-eller-org-navn">
-                  <Nav.Typo.Element className="term">Navn:</Nav.Typo.Element>
-                  <Nav.Typo.Normaltekst>{virksomhetNavn}</Nav.Typo.Normaltekst>
-                </span>
-              )}
-            </>
-          }
-        />
-      ) : (
-        <Komponent
-          ikon={Ikoner.AccountCircle}
-          tittel="Informasjon om bruker"
-          innhold={
-            <>
-              <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="brukerID" label="Brukers f.nr/d-nr." bredde="L" />
-              {!Utils._isEmpty(brukerNavn) && (
-                <span className="bruker-eller-org-navn">
-                  <Nav.Typo.Element className="term">Navn:</Nav.Typo.Element>
-                  <Nav.Typo.Normaltekst>{brukerNavn}</Nav.Typo.Normaltekst>
-                </span>
-              )}
-            </>
-          }
-        />
-      );
-
     return (
       <div className="informasjon">
         <JournalforingGjelder />
-        {InformasjonOmBrukerEllerVirksomhet}
 
-        <Komponent
-          ikon={Ikoner.Applicant}
-          tittel="Informasjon om avsender"
-          innhold={
-            journalforingGjelder === VIRKSOMHET ? (
-              <AvsenderVelgerForVirksomhet
-                tomAvsender={this.tomAvsender}
-                kopierVirksomhetTilAvsender={this.kopierVirksomhetTilAvsender}
-              />
-            ) : (
-              <AvsenderVelgerForBruker
-                kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
-                tomAvsender={this.tomAvsender}
-                settFeltInnhold={settFeltInnhold}
-                hentOgVisAvsender={this.hentOgVisAvsender}
-              />
-            )
-          }
-        />
+        {journalforingGjelder === VIRKSOMHET ? (
+          <Komponent
+            ikon={Ikoner.Building}
+            tittel="Informasjon om virksomhet"
+            innhold={
+              <>
+                <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="virksomhetOrgnr" label="Org.nr." bredde="L" />
+                {!Utils._isEmpty(virksomhetNavn) && (
+                  <span className="bruker-eller-org-navn">
+                    <Nav.Typo.Element className="term">Navn:</Nav.Typo.Element>
+                    <Nav.Typo.Normaltekst>{virksomhetNavn}</Nav.Typo.Normaltekst>
+                  </span>
+                )}
+              </>
+            }
+          />
+        ) : (
+          <Komponent
+            ikon={Ikoner.AccountCircle}
+            tittel="Informasjon om bruker"
+            innhold={
+              <>
+                <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="brukerID" label="Brukers f.nr/d-nr." bredde="L" />
+                {!Utils._isEmpty(brukerNavn) && (
+                  <span className="bruker-eller-org-navn">
+                    <Nav.Typo.Element className="term">Navn:</Nav.Typo.Element>
+                    <Nav.Typo.Normaltekst>{brukerNavn}</Nav.Typo.Normaltekst>
+                  </span>
+                )}
+              </>
+            }
+          />
+        )}
+
+        {mottaksKanalErEessi ? (
+          <Komponent
+            ikon={Ikoner.Globe}
+            tittel="Informasjon om avsender"
+            innhold={
+              <Nav.Row>
+                <Nav.Column xs="6">
+                  <Nav.Typo.Element>Avsender ID</Nav.Typo.Element>
+                  <Nav.Typo.Normaltekst>{avsenderIDFraJournalpost}</Nav.Typo.Normaltekst>
+                  <Nav.Typo.Element>Avsenders navn</Nav.Typo.Element>
+                  <Nav.Typo.Normaltekst>{avsenderNavnFraJournalpost}</Nav.Typo.Normaltekst>
+                </Nav.Column>
+              </Nav.Row>
+            }
+          />
+        ) : (
+          <Komponent
+            ikon={Ikoner.Applicant}
+            tittel="Informasjon om avsender"
+            innhold={
+              journalforingGjelder === VIRKSOMHET ? (
+                <AvsenderVelgerForVirksomhet
+                  tomAvsender={this.tomAvsender}
+                  kopierVirksomhetTilAvsender={this.kopierVirksomhetTilAvsender}
+                />
+              ) : (
+                <AvsenderVelgerForBruker
+                  kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
+                  tomAvsender={this.tomAvsender}
+                  settFeltInnhold={settFeltInnhold}
+                  hentOgVisAvsender={this.hentOgVisAvsender}
+                />
+              )
+            }
+          />
+        )}
 
         <Komponent
           ikon={Ikoner.Files}
@@ -374,6 +396,9 @@ Informasjon.propTypes = {
   fjernFeltInnhold: PT.func.isRequired,
   hentFagsakListe: PT.func.isRequired,
   sokOrgnr: PT.func.isRequired,
+  avsenderIDFraJournalpost: PT.string,
+  avsenderNavnFraJournalpost: PT.string,
+  mottaksKanalErEessi: PT.bool.isRequired,
 };
 
 Informasjon.defaultProps = {
@@ -381,6 +406,8 @@ Informasjon.defaultProps = {
   journalpostID: "",
   dokumentID: "",
   vedlegg: [],
+  avsenderIDFraJournalpost: "",
+  avsenderNavnFraJournalpost: "",
 };
 
 const mapStateToProps = (state) => ({
