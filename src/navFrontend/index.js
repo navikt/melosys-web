@@ -3,7 +3,7 @@ import NavFrontendSpinner from "nav-frontend-spinner";
 import Tekstomrade from "nav-frontend-tekstomrade";
 import { Box, Button, HelpText, Link, Tag, Modal, Checkbox } from "@navikt/ds-react";
 import Alert from "./alert";
-import TextField from "./textfield";
+import TextField from "./skjema/textfield";
 
 // Egne implementasjoner av pakker fra nav-frontend. Noen av disse har blitt fjernet fra nav-frontend, men vi implementerer de selv fordi vi fortsatt har bruk for de.
 import { Fieldset, Radio, RadioPanelGruppe, Select, SelectProps, SkjemaGruppe, Textarea } from "./skjema";
