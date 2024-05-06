@@ -270,7 +270,7 @@ function EndreBehandlingModal({
   };
 
   return (
-    <Nav.Modal className="modalEndreBehandling" onClose={lukkModal} open={skalViseModal} header={undefined}>
+    <Nav.Modal width={550} className="modalEndreBehandling" onClose={lukkModal} open={skalViseModal} header={undefined}>
       <Nav.Modal.Body>
         {!fagsakKanEndres && typeTemaKanEndres && (
           <Nav.Alert variant="info" className="infomelding">
