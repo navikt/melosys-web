@@ -25,7 +25,6 @@ class StegState {
   };
 
   slettFeltIAlleSteg = (data) => {
-    const { felt } = data;
     const { stegStore } = this;
     stegStore.forEach((_value, key) => {
       this.slettFelt(key, data);
