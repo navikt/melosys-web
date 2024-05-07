@@ -24,7 +24,7 @@ class Artikkel16Anmodning extends Steg {
       },
     ];
     this.id = STEG.ARTIKKEL_16_ANMODNING;
-    this.tittel = "Artikkel 16.1";
+    this.tittel = propsLight.konvensjonStorbritanniaToggleEnabled ? "Anmodning om unntak" : "Artikkel 16.1";
     this.komponent = VurderingArtikkel16Anmodning;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
@@ -37,19 +37,19 @@ class Artikkel16Anmodning extends Steg {
       return {
         muligeBegrunnelseValg,
         erIDirekteTilArtikkel16Flyt: _propsLight.erIDirekteTilArtikkel16Flyt,
-        art16_1: unntaksvilkår,
+        unntaksvilkår,
         harAvklaring: Artikkel16Anmodning.harAvklaring(_propsLight),
       };
     };
     this.handlers = {
-      lagreOgBestillAnmodningsperioder: this._propsLight.tilgjengeligeHandlers?.lagreOgBestillAnmodningsperioder,
+      lagreOgBestillAnmodningsperioder: propsLight.tilgjengeligeHandlers?.lagreOgBestillAnmodningsperioder,
       tilbake: propsLight.tilgjengeligeHandlers?.tilbake,
-      byggAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers?.byggAnmodningsperioderHandler,
-      oppdaterOgLagreBehandlinger: this._propsLight.tilgjengeligeHandlers?.oppdaterOgLagreBehandlinger,
-      lagreVilkarHandler: this._propsLight.tilgjengeligeHandlers?.lagreVilkarHandler,
-      lagreAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers?.lagreAnmodningsperioderHandler,
-      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers?.oppdaterStegData(this.id, felt, verdi),
-      slettData: (data) => this._propsLight.tilgjengeligeHandlers?.slettStegData(this.id, data),
+      byggAnmodningsperioderHandler: propsLight.tilgjengeligeHandlers?.byggAnmodningsperioderHandler,
+      oppdaterOgLagreBehandlinger: propsLight.tilgjengeligeHandlers?.oppdaterOgLagreBehandlinger,
+      lagreVilkarHandler: propsLight.tilgjengeligeHandlers?.lagreVilkarHandler,
+      lagreAnmodningsperioderHandler: propsLight.tilgjengeligeHandlers?.lagreAnmodningsperioderHandler,
+      oppdaterData: (felt, verdi) => propsLight.tilgjengeligeHandlers?.oppdaterStegData(this.id, felt, verdi),
+      slettData: (data) => propsLight.tilgjengeligeHandlers?.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
   }

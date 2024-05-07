@@ -18,7 +18,7 @@ export interface SedDokumentMetadataType extends DokumentMetadataType {
 
 export interface DokumentlisteType {
   behandlingID: number;
-  dokumenter: BrevDokumentMetadataType[] | SedDokumentMetadataType[];
+  dokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[];
   validateOnClick?: () => Promise<unknown> | {};
 }
 
