@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment, useEffect } from "react";
+import { ChangeEvent, useEffect } from "react";
 import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
@@ -102,23 +102,21 @@ const SokkelSkipEnkelt = ({
         />
       </Nav.Column>
       {installasjonsType === SOKKEL && (
-        <>
-          <Nav.Column xs="3">
-            <Nav.Select
-              name={`${key}_begrunnelser`}
-              disabled={sokkelSkipDisabled}
-              id="installasjonsTypeBegrunnelser"
-              label="Begrunnelse hvis sokkel"
-              onChange={begrunnelserEndret}
-              value={begrunnelseKode}
-            >
-              <option key="" value="" label="Velg begrunnelse" disabled={!!begrunnelseKode} />
-              {begrunnelser.map((enkelt) => (
-                <option key={enkelt.kode} value={enkelt.kode} label={enkelt.term ?? ""} />
-              ))}
-            </Nav.Select>
-          </Nav.Column>
-        </>
+        <Nav.Column xs="3">
+          <Nav.Select
+            name={`${key}_begrunnelser`}
+            disabled={sokkelSkipDisabled}
+            id="installasjonsTypeBegrunnelser"
+            label="Begrunnelse hvis sokkel"
+            onChange={begrunnelserEndret}
+            value={begrunnelseKode}
+          >
+            <option key="" value="" label="Velg begrunnelse" disabled={!!begrunnelseKode} />
+            {begrunnelser.map((enkelt) => (
+              <option key={enkelt.kode} value={enkelt.kode} label={enkelt.term ?? ""} />
+            ))}
+          </Nav.Select>
+        </Nav.Column>
       )}
       <Nav.Column xs="4">
         <Nav.Typo.Element className="arbeidsland_label">Velg arbeidsland</Nav.Typo.Element>

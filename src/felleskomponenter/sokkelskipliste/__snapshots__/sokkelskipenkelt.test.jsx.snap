@@ -54,70 +54,66 @@ exports[`SokkelSkipEnkelt > snapshot test 1`] = `
     <div
       class="col col-xs-4"
     >
-      <fieldset
-        class="fieldset"
+      <p
+        class="typo-element arbeidsland_label"
       >
-        <legend
-          class="fieldset__legend"
+        Velg arbeidsland
+      </p>
+      <div
+        class="skjemaelement"
+      >
+        <input
+          aria-invalid="false"
+          checked=""
+          class="skjemaelement__input radioknapp"
+          id="123"
+          name="123"
+          type="radio"
+          value="GBFlaggland"
+        />
+        <label
+          class="skjemaelement__label"
+          for="123"
         >
-          Velg arbeidsland
-        </legend>
-        <div
-          class="skjemaelement"
+          Storbritannia - Flaggland
+        </label>
+      </div>
+      <div
+        class="skjemaelement"
+      >
+        <input
+          aria-invalid="false"
+          class="skjemaelement__input radioknapp"
+          id="123"
+          name="123"
+          type="radio"
+          value="GBSokkelland"
+        />
+        <label
+          class="skjemaelement__label"
+          for="123"
         >
-          <input
-            aria-invalid="false"
-            checked=""
-            class="skjemaelement__input radioknapp"
-            id="123"
-            name="123"
-            type="radio"
-            value="[object Object]"
-          />
-          <label
-            class="skjemaelement__label"
-            for="123"
-          >
-            Storbritannia - Flaggland
-          </label>
-        </div>
-        <div
-          class="skjemaelement"
+          Storbritannia - Sokkelland
+        </label>
+      </div>
+      <div
+        class="skjemaelement"
+      >
+        <input
+          aria-invalid="false"
+          class="skjemaelement__input radioknapp"
+          id="123"
+          name="123"
+          type="radio"
+          value="GBTerritorialfarvannsland"
+        />
+        <label
+          class="skjemaelement__label"
+          for="123"
         >
-          <input
-            aria-invalid="false"
-            class="skjemaelement__input radioknapp"
-            id="123"
-            name="123"
-            type="radio"
-            value="[object Object]"
-          />
-          <label
-            class="skjemaelement__label"
-            for="123"
-          >
-            Storbritannia - Sokkelland
-          </label>
-        </div>
-        <div
-          class="skjemaelement"
-        >
-          <input
-            aria-invalid="false"
-            class="skjemaelement__input radioknapp"
-            id="123"
-            name="123"
-            type="radio"
-            value="[object Object]"
-          />
-          <label
-            class="skjemaelement__label"
-            for="123"
-          >
-            Storbritannia - Territorialfarvannsland
-          </label>
-        </div>
-      </fieldset>
+          Storbritannia - Territorialfarvannsland
+        </label>
+      </div>
     </div>
   </div>
 </div>

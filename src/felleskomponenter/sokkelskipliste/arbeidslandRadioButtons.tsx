@@ -29,7 +29,7 @@ const ArbeidslandRadioButtons = ({ landliste, onChange, arbeidslandType, disable
           onChange={() => onChange(land)}
           checked={arbeidslandType === land.type}
           key={land.type}
-          value={land.landkode}
+          value={land.landkode + land.type}
           label={`${KV.kodeTilTerm(land.landkode, MKV.KTObjects.landkoder)} - ${land.type}`}
           name={unikRadioButtonGruppeID}
           disabled={disabled}
