@@ -1,6 +1,7 @@
 import { FysiskDokument } from "Domene";
 
 import * as Nav from "../../navFrontend";
+import * as Utils from "../../utils";
 import VedleggVelgerTable from "./vedleggVelgerTable";
 import "./vedleggVelger.css";
 
@@ -19,21 +20,27 @@ const VedleggVelgerModal = ({
   leggTilVedlegg,
   slettVedlegg,
 }: VedleggVelgerModalProps) => {
+  const harDokumenter = !Utils._isEmpty(alleVedlegg);
   return (
     <Nav.Modal
       className="vedleggvelger-modal"
       onClose={onRequestClose}
       open
       closeOnBackdropClick
-      header={{ heading: "Dokumenter tilknyttet saken" }}
+      header={{ heading: "Dokumenter tilknyttet saken", closeButton: false }}
+      width={harDokumenter ? undefined : 500}
     >
       <Nav.Modal.Body>
-        <VedleggVelgerTable
-          valgteVedlegg={valgteVedlegg}
-          alleVedlegg={alleVedlegg}
-          leggTilVedlegg={leggTilVedlegg}
-          slettVedlegg={slettVedlegg}
-        />
+        {harDokumenter ? (
+          <VedleggVelgerTable
+            valgteVedlegg={valgteVedlegg}
+            alleVedlegg={alleVedlegg}
+            leggTilVedlegg={leggTilVedlegg}
+            slettVedlegg={slettVedlegg}
+          />
+        ) : (
+          <span>Fant ingen dokumenter tilknyttet saken</span>
+        )}
       </Nav.Modal.Body>
       <Nav.Modal.Footer>
         <Nav.Button variant="primary" onClick={onRequestClose}>
