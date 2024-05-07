@@ -1,0 +1,201 @@
+import { Fragment, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import * as Nav from "../../../../navFrontend";
+import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
+import * as Mui from "../../../../felleskomponenter/ui";
+import {
+  konverterAvklartfaktaTilStegData,
+  lagAvklartefaktaBegrunnelse,
+  lagAvklartfakta,
+  slettAvklartfakta,
+} from "../../../../felleskomponenter/stegvelger";
+import SokkelSkipListe from "../../../../felleskomponenter/sokkelskipliste";
+import { formSelectors } from "../../../../ducks/form";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
+import MKV from "../../../../melosyskodeverk";
+import "./vurderingVurderarbeidsland.css";
+import Redigerbarliste from "./redigerbarliste";
+import IngenSokkelSkipEllerHjemmebaser from "./ingenSokkelSkipEllerHjemmebaser";
+import { KTObject } from "@navikt/melosys-kodeverk";
+import { Avklartfakta } from "../../../../services/modules/avklartefakta";
+import { formValueSelector } from "redux-form";
+
+interface VurderingVurderarbeidslandProps {
+  begrunnelser: KTObject[];
+  bekreftOgFortsett: () => void;
+  tilbake: () => void;
+  redigerbart: boolean;
+  oppdaterData: (objekt: any) => void;
+  slettData: (objekt?: any) => void;
+  tilstand: {
+    harAvklaring: boolean;
+    sokkelEllerSkipListe: string[];
+    installasjonArbeidslandListe: string[];
+    installasjonArbeidslandTypeListe: string[];
+    arbeidslandListe: string[];
+    arbeidUtforesIOppgittLandFakta: Avklartfakta;
+    soknadslandFaktaListe: Avklartfakta[];
+    harIngenMaritimeArbeidEllerHjemmebaser: boolean;
+    arbeidslandFaktaListe: Avklartfakta[];
+  };
+}
+
+export const VurderingVurderarbeidsland = ({
+  bekreftOgFortsett,
+  tilbake,
+  tilstand: {
+    harAvklaring,
+    sokkelEllerSkipListe,
+    installasjonArbeidslandListe,
+    installasjonArbeidslandTypeListe,
+    arbeidslandListe,
+    arbeidUtforesIOppgittLandFakta,
+    soknadslandFaktaListe,
+    harIngenMaritimeArbeidEllerHjemmebaser,
+    arbeidslandFaktaListe,
+  },
+  redigerbart,
+  oppdaterData,
+  slettData,
+  begrunnelser,
+}: VurderingVurderarbeidslandProps) => {
+  const [initialized, setInitialized] = useState(false);
+  const maritimtArbeid = useSelector(formSelectors.MaritimtArbeidSelector);
+  const hjemmebaser = useSelector(mottatteOpplysningerSelectors.HjemmebaserSelector);
+  const soknadsland = useSelector((state) => formValueSelector(KV.Form.SOKNAD)(state, "soknadsland.landkoder"));
+  // const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector); // TODO
+  const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandSelector);
+  const fjernedeArbeidsland = useSelector(avklartefaktaSelectors.IkkeArbeidslandSoknadslandSelector);
+
+  useEffect(() => {
+    soknadslandFaktaListe.forEach((fakta) => {
+      oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.SOKNADSLAND, fakta));
+    });
+    arbeidslandFaktaListe.forEach((fakta) => {
+      oppdaterData(konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, fakta));
+    });
+
+    setInitialized(true);
+
+    return () => {
+      slettData();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (initialized) {
+      slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND));
+
+      arbeidsland
+        .filter((land: string) => land)
+        .forEach((land: string) => {
+          oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, land, land, null));
+        });
+    }
+  }, [arbeidsland.toString(), initialized]);
+
+  const fjernSoknadsland = (land: string) => {
+    oppdaterData(
+      lagAvklartfakta(
+        KV.Koder.avklartefaktaKoder.SOKNADSLAND,
+        land,
+        KV.Koder.SoknadslandFaktaTyper.IKKE_ARBEIDSLAND,
+        null
+      )
+    );
+  };
+
+  const angreFjernSoknadsland = (land: string) => {
+    slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land));
+  };
+
+  const harMaritimeArbeidUnikeNavn = Utils.erPropertyUnik(
+    maritimtArbeid,
+    (enkeltMaritimtArbeid) => enkeltMaritimtArbeid.enhetNavn
+  );
+
+  // TODO
+  const avklartefaktaEndret = (type: any, subjektID: any, verdi: any) => {
+    oppdaterData(lagAvklartfakta(type, subjektID, verdi, null));
+  };
+
+  // TODO
+  const avklartefaktaBegrunnelseEndret = (type: any, subjektID: any, verdi: any) => {
+    oppdaterData(lagAvklartefaktaBegrunnelse(type, subjektID, [verdi]));
+  };
+
+  const innhold = harIngenMaritimeArbeidEllerHjemmebaser ? (
+    <IngenSokkelSkipEllerHjemmebaser
+      oppdaterData={oppdaterData}
+      slettData={slettData}
+      redigerbart={redigerbart}
+      arbeidUtforesIOppgittLandFakta={arbeidUtforesIOppgittLandFakta}
+    />
+  ) : (
+    <Fragment>
+      {maritimtArbeid.length > 0 && (
+        <Fragment>
+          <Nav.Typo.Element className="undertittel">Vurdering sokkel/skip</Nav.Typo.Element>
+          <SokkelSkipListe
+            className="borderBottom"
+            sokkelEllerSkipListe={sokkelEllerSkipListe}
+            installasjonArbeidslandListe={installasjonArbeidslandListe}
+            installasjonArbeidslandTypeListe={installasjonArbeidslandTypeListe}
+            arbeidslandListe={arbeidslandListe}
+            maritimtArbeid={maritimtArbeid}
+            begrunnelser={begrunnelser}
+            redigerbart={redigerbart && harMaritimeArbeidUnikeNavn}
+            avklartefaktaEndretHandler={avklartefaktaEndret}
+            avklartefaktaBegrunnelserEndretHandler={avklartefaktaBegrunnelseEndret}
+            oppdaterData={oppdaterData}
+            slettData={slettData}
+          />
+        </Fragment>
+      )}
+      {hjemmebaser.length > 0 && (
+        <Nav.Row className="borderBottom">
+          <Nav.Column xs="6">
+            <Nav.Typo.Element className="undertittel">Hjemmebaser</Nav.Typo.Element>
+            <Redigerbarliste
+              elementer={hjemmebaser.map((base: string) => ({
+                kode: base,
+                term: `${KV.kodeTilTerm(base, MKV.KTObjects.landkoder)} (${base})`,
+                fjernbar: false,
+              }))}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      )}
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Nav.Typo.Element className="undertittel">Land fra inngangsvilkår</Nav.Typo.Element>
+          <Redigerbarliste
+            elementer={soknadsland.map((kode: string) => ({
+              kode,
+              term: `${KV.kodeTilTerm(kode, MKV.KTObjects.landkoder)} (${kode})`,
+              defaultFjernet: fjernedeArbeidsland.includes(kode),
+            }))}
+            onFjern={fjernSoknadsland}
+            onAngreFjern={angreFjernSoknadsland}
+            redigerbar={redigerbart}
+          />
+        </Nav.Column>
+      </Nav.Row>
+    </Fragment>
+  );
+
+  return (
+    <div className="vurderingVurderArbeidsland">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel overskrift">Vurder arbeidsland</Nav.Typo.Innholdstittel>
+      {innhold}
+      <Mui.StegKnapper
+        bekreftKnappProps={{ disabled: !(redigerbart && harAvklaring), onClick: bekreftOgFortsett }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
+    </div>
+  );
+};
+
+export default VurderingVurderarbeidsland;
