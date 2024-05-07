@@ -5,6 +5,8 @@ import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 import { hentFakta, hentTilleggBestemmelse } from "../../../../domeneUtils";
 
+const { ORDINAER, FLYENDE_PERSONELL, ORDINAER_UTEN_ART12, SOKKEL_ELLER_SKIP } = KV.Koder.VurderingYrkesgruppeTyper;
+
 class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
@@ -12,8 +14,7 @@ class Yrkesgruppe extends Steg {
     const tilleggbestemmelse = hentTilleggBestemmelse(propsLight.lovvalgsperioder);
     const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, propsLight.avklartefakta);
     const vilkårManglerForDirekteTilAnmodning =
-      yrkesgruppe?.fakta?.[0] === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12 &&
-      !propsLight.unntaksvilkår.oppfylt;
+      yrkesgruppe?.fakta?.[0] === ORDINAER_UTEN_ART12 && !propsLight.unntaksvilkår.oppfylt;
     const harAvklaring = propsLight.konvensjonStorbritanniaToggleEnabled
       ? !Utils._isEmpty(yrkesgruppe.fakta) && !vilkårManglerForDirekteTilAnmodning
       : yrkesgruppe.fakta && yrkesgruppe.fakta.length > 0;
@@ -21,14 +22,14 @@ class Yrkesgruppe extends Steg {
     this.kriterier = [
       {
         exec: (avklartefakta) =>
-          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) ||
-          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL) ||
-          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12),
+          (Yrkesgruppe.finnAvklaring(avklartefakta, ORDINAER) ||
+            Yrkesgruppe.finnAvklaring(avklartefakta, FLYENDE_PERSONELL) ||
+            Yrkesgruppe.finnAvklaring(avklartefakta, ORDINAER_UTEN_ART12)) &&
+          harAvklaring,
         nesteSteg: STEG.VIRKSOMHETER,
       },
       {
-        exec: (avklartefakta) =>
-          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP),
+        exec: (avklartefakta) => Yrkesgruppe.finnAvklaring(avklartefakta, SOKKEL_ELLER_SKIP) && harAvklaring,
         nesteSteg: STEG.SOKKEL_SKIP,
       },
     ];
@@ -44,10 +45,10 @@ class Yrkesgruppe extends Steg {
       yrkesgruppe,
     });
     this.handlers = {
-      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      oppdaterData: (felt, verdi) => propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettData: (data) => propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this.status = FANE_STATUS.OK;
   }

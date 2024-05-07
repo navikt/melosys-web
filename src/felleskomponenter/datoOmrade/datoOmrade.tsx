@@ -1,19 +1,20 @@
 import { Fragment } from "react";
-import * as PT from "prop-types";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
-import * as MPT from "../../proptypes";
 
 import EnkeltDato from "../enkeltDato";
 
 import "./datoOmrade.css";
 
-/** Dato-område som viser fra- og til-dato.
- *
- * @param periode
- * @constructor
- */
-const DatoOmrade = ({ periode, label }) => (
+interface DatoOmradeProps {
+  periode: {
+    fom?: string | null;
+    tom?: string | null;
+  };
+  label?: string;
+}
+
+const DatoOmrade = ({ periode, label = "" }: DatoOmradeProps) => (
   <Fragment>
     {label && (
       <Nav.Row>
@@ -35,16 +36,7 @@ const DatoOmrade = ({ periode, label }) => (
   </Fragment>
 );
 
-DatoOmrade.propTypes = {
-  periode: MPT.Periode.isRequired,
-  label: PT.string,
-};
-
-DatoOmrade.defaultProps = {
-  label: "",
-};
-
-export const DatoOmradeMedVarighet = ({ periode, label }) => {
+export const DatoOmradeMedVarighet = ({ periode, label = "" }: DatoOmradeProps) => {
   const varighet = Utils.dato.datoDiffMenneskelig(periode.fom, periode.tom);
 
   return (
@@ -69,16 +61,7 @@ export const DatoOmradeMedVarighet = ({ periode, label }) => {
   );
 };
 
-DatoOmradeMedVarighet.propTypes = {
-  periode: MPT.Periode.isRequired,
-  label: PT.string,
-};
-
-DatoOmradeMedVarighet.defaultProps = {
-  label: "",
-};
-
-export const DatoOmradeDescription = ({ periode, label }) =>
+export const DatoOmradeDescription = ({ periode, label = "" }: DatoOmradeProps) =>
   periode ? (
     <Fragment>
       <dt>{label}</dt>
@@ -87,14 +70,5 @@ export const DatoOmradeDescription = ({ periode, label }) =>
       </dd>
     </Fragment>
   ) : null;
-
-DatoOmradeDescription.defaultProps = {
-  periode: {},
-};
-
-DatoOmradeDescription.propTypes = {
-  periode: MPT.Periode,
-  label: PT.string.isRequired,
-};
 
 export default DatoOmrade;

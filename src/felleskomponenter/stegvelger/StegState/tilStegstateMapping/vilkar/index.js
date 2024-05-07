@@ -7,6 +7,13 @@ export const slettVilkar = (felt) => ({
   type: vilkaarType,
 });
 
+// Vær forsiktig med denne, den sletter alle vilkår i alle steg.
+export const slettVilkarIAlleSteg = (felt) => ({
+  felt,
+  type: vilkaarType,
+  iAlleSteg: true,
+});
+
 export const lagVilkaar = (felt, verdi, begrunnelse, fritekst, fritekstEngelsk) => {
   const oppfylt = tryParseBool(verdi);
   if (oppfylt === true) {
