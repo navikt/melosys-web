@@ -1,18 +1,18 @@
 import { useSelector } from "react-redux";
 import { ChangeEvent, useEffect } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import MKV from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
 import * as Mui from "../../../felleskomponenter/ui";
 import SokkelSkipListe from "../../../felleskomponenter/sokkelskipliste";
 import {
-  lagVilkaar,
-  slettVilkar,
   konverterAvklartfaktaTilStegData,
   lagAvklartefaktaBegrunnelse,
   lagAvklartfakta,
+  lagVilkaar,
+  slettVilkar,
 } from "../../../felleskomponenter/stegvelger";
 import { hentFaktaVerdi } from "../../../domeneUtils";
 
@@ -20,6 +20,8 @@ import { formSelectors } from "../../../ducks/form";
 import "./vurderingSokkelSkip.css";
 import { Avklartfakta } from "../../../services/modules/avklartefakta";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { useFeatureToggle } from "../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 
 interface Props {
   begrunnelser: KTObject[];
@@ -55,6 +57,7 @@ const VurderingSokkelSkip = ({
   redigerbart,
   tilbake,
 }: Props) => {
+  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const maritimtArbeid = useSelector(formSelectors.MaritimtArbeidSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   useEffect(() => {
@@ -122,7 +125,12 @@ const VurderingSokkelSkip = ({
       <Nav.Fieldset legend="Hvordan arbeider søkeren:">
         <Nav.Radio
           name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
-          disabled={!redigerbart || behandlingstema === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER}
+          disabled={
+            !redigerbart ||
+            (konvensjonStorbritanniaToggleEnabled
+              ? MKVUtils.erUtsendt(behandlingstema)
+              : behandlingstema === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER)
+          }
           onChange={konklusjonEndretHandler}
           checked={fakta === VurderingSokkelSkipTyper.SOKKEL_NORSK}
           value={VurderingSokkelSkipTyper.SOKKEL_NORSK}
@@ -142,16 +150,22 @@ const VurderingSokkelSkip = ({
           onChange={konklusjonEndretHandler}
           checked={fakta === VurderingSokkelSkipTyper.SOKKEL_UTLAND}
           value={VurderingSokkelSkipTyper.SOKKEL_UTLAND}
-          label="Utsendt til sokkel eller til annet lands territorialfarvann (art. 12)"
+          label={
+            konvensjonStorbritanniaToggleEnabled
+              ? "Utsendt til sokkel eller til annet lands territorialfarvann"
+              : "Utsendt til sokkel eller til annet lands territorialfarvann (art. 12)"
+          }
         />
-        <Nav.Radio
-          name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
-          disabled
-          onChange={konklusjonEndretHandler}
-          checked={fakta === VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND}
-          value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND}
-          label="To sokler / skip i flere land (art. 13)"
-        />
+        {!konvensjonStorbritanniaToggleEnabled && (
+          <Nav.Radio
+            name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
+            disabled
+            onChange={konklusjonEndretHandler}
+            checked={fakta === VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND}
+            value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND}
+            label="To sokler / skip i flere land (art. 13)"
+          />
+        )}
       </Nav.Fieldset>
       <Mui.StegKnapper
         bekreftKnappProps={{
