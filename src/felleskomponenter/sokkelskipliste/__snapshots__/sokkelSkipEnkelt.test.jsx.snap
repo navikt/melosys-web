@@ -1,0 +1,120 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SokkelSkipEnkelt > snapshot test 1`] = `
+<div>
+  <div
+    class="row sokkelSkip__liste__rad"
+  >
+    <div
+      class="col col-xs-3"
+    >
+      Dunfjæder
+    </div>
+    <div
+      class="col col-xs-2"
+    >
+      <div
+        class="skjemaelement"
+      >
+        <input
+          aria-invalid="false"
+          class="skjemaelement__input radioknapp"
+          id="123"
+          name="SOKKEL_ELLER_SKIPDunfjæder"
+          type="radio"
+          value="SOKKEL"
+        />
+        <label
+          class="skjemaelement__label"
+          for="123"
+        >
+          Sokkel
+        </label>
+      </div>
+      <div
+        class="skjemaelement"
+      >
+        <input
+          aria-invalid="false"
+          checked=""
+          class="skjemaelement__input radioknapp"
+          id="123"
+          name="SOKKEL_ELLER_SKIPDunfjæder"
+          type="radio"
+          value="SKIP"
+        />
+        <label
+          class="skjemaelement__label"
+          for="123"
+        >
+          Skip
+        </label>
+      </div>
+    </div>
+    <div
+      class="col col-xs-4"
+    >
+      <p
+        class="typo-element arbeidsland_label"
+      >
+        Velg arbeidsland
+      </p>
+      <div
+        class="skjemaelement"
+      >
+        <input
+          aria-invalid="false"
+          checked=""
+          class="skjemaelement__input radioknapp"
+          id="123"
+          name="123"
+          type="radio"
+          value="GBFlaggland"
+        />
+        <label
+          class="skjemaelement__label"
+          for="123"
+        >
+          Storbritannia - Flaggland
+        </label>
+      </div>
+      <div
+        class="skjemaelement"
+      >
+        <input
+          aria-invalid="false"
+          class="skjemaelement__input radioknapp"
+          id="123"
+          name="123"
+          type="radio"
+          value="GBSokkelland"
+        />
+        <label
+          class="skjemaelement__label"
+          for="123"
+        >
+          Storbritannia - Sokkelland
+        </label>
+      </div>
+      <div
+        class="skjemaelement"
+      >
+        <input
+          aria-invalid="false"
+          class="skjemaelement__input radioknapp"
+          id="123"
+          name="123"
+          type="radio"
+          value="GBTerritorialfarvannsland"
+        />
+        <label
+          class="skjemaelement__label"
+          for="123"
+        >
+          Storbritannia - Territorialfarvannsland
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
