@@ -20,7 +20,6 @@ import Redigerbarliste from "./redigerbarliste";
 import IngenSokkelSkipEllerHjemmebaser from "./ingenSokkelSkipEllerHjemmebaser";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { Avklartfakta } from "../../../../services/modules/avklartefakta";
-import { formValueSelector } from "redux-form";
 
 interface VurderingVurderarbeidslandProps {
   begrunnelser: KTObject[];
@@ -31,10 +30,10 @@ interface VurderingVurderarbeidslandProps {
   slettData: (objekt?: any) => void;
   tilstand: {
     harAvklaring: boolean;
-    sokkelEllerSkipListe: string[];
-    installasjonArbeidslandListe: string[];
-    installasjonArbeidslandTypeListe: string[];
-    arbeidslandListe: string[];
+    sokkelEllerSkipListe: Avklartfakta[];
+    installasjonArbeidslandListe: Avklartfakta[];
+    installasjonArbeidslandTypeListe: Avklartfakta[];
+    arbeidslandListe: Avklartfakta[];
     arbeidUtforesIOppgittLandFakta: Avklartfakta;
     soknadslandFaktaListe: Avklartfakta[];
     harIngenMaritimeArbeidEllerHjemmebaser: boolean;
@@ -64,8 +63,7 @@ export const VurderingVurderarbeidsland = ({
   const [initialized, setInitialized] = useState(false);
   const maritimtArbeid = useSelector(formSelectors.MaritimtArbeidSelector);
   const hjemmebaser = useSelector(mottatteOpplysningerSelectors.HjemmebaserSelector);
-  const soknadsland = useSelector((state) => formValueSelector(KV.Form.SOKNAD)(state, "soknadsland.landkoder"));
-  // const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector); // TODO
+  const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandSelector);
   const fjernedeArbeidsland = useSelector(avklartefaktaSelectors.IkkeArbeidslandSoknadslandSelector);
 
@@ -116,13 +114,11 @@ export const VurderingVurderarbeidsland = ({
     (enkeltMaritimtArbeid) => enkeltMaritimtArbeid.enhetNavn
   );
 
-  // TODO
-  const avklartefaktaEndret = (type: any, subjektID: any, verdi: any) => {
+  const avklartefaktaEndret = (type: string, subjektID: string, verdi: string) => {
     oppdaterData(lagAvklartfakta(type, subjektID, verdi, null));
   };
 
-  // TODO
-  const avklartefaktaBegrunnelseEndret = (type: any, subjektID: any, verdi: any) => {
+  const avklartefaktaBegrunnelseEndret = (type: string, subjektID: string, verdi: string) => {
     oppdaterData(lagAvklartefaktaBegrunnelse(type, subjektID, [verdi]));
   };
 

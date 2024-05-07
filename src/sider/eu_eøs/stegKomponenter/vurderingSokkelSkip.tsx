@@ -30,10 +30,10 @@ interface Props {
   tilstand: {
     harAvklaring: boolean;
     sokkelSkipKonklusjon: Avklartfakta;
-    sokkelEllerSkipListe: string[];
-    installasjonArbeidslandListe: string[];
-    installasjonArbeidslandTypeListe: string[];
-    arbeidslandListe: string[];
+    sokkelEllerSkipListe: Avklartfakta[];
+    installasjonArbeidslandListe: Avklartfakta[];
+    installasjonArbeidslandTypeListe: Avklartfakta[];
+    arbeidslandListe: Avklartfakta[];
   };
   redigerbart: boolean;
   oppdaterData: (objekt: any) => void;
@@ -69,11 +69,11 @@ const VurderingSokkelSkip = ({
     };
   }, []);
 
-  const avklartefaktaEndret = (type: any, subjektID: any, verdi: any) => {
+  const avklartefaktaEndret = (type: string, subjektID: string | null, verdi: string) => {
     oppdaterData(lagAvklartfakta(type, subjektID, verdi, null));
   };
 
-  const avklartefaktaBegrunnelseEndret = (type: any, subjektID: any, verdi: any) => {
+  const avklartefaktaBegrunnelseEndret = (type: string, subjektID: string, verdi: string) => {
     oppdaterData(lagAvklartefaktaBegrunnelse(type, subjektID, [verdi]));
   };
 

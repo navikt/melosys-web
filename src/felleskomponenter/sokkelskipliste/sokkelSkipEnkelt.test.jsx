@@ -1,4 +1,4 @@
-import SokkelSkipEnkelt from "./sokkelskipenkelt";
+import SokkelSkipEnkelt from "./sokkelSkipEnkelt";
 import { render } from "@testing-library/react";
 
 vi.mock("../../utils", async () => {
