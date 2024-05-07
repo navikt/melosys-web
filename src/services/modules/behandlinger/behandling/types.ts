@@ -77,7 +77,7 @@ interface Arbeidsforhold {
 export interface Medlemsperiode {
   periodeID: number;
   periode: Periode;
-  type: KTObject | null;
+  periodetype: KTObject | null;
   status: KTObject | null;
   grunnlagstype: KTObject | null;
   land: KTObject;

@@ -68,6 +68,7 @@ interface FormValuesProps {
   kreverMottakerinstitusjon: boolean;
   fritekstSed: string | null;
 }
+
 interface Props {
   tilstand: {
     unntaksvilkår: Vilkaar;
@@ -296,7 +297,6 @@ const VurderingArtikkel16Anmodning = ({
     </Fragment>
   );
 
-  /* eslint-disable max-len */
   return (
     <div>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
@@ -313,6 +313,7 @@ const VurderingArtikkel16Anmodning = ({
             </Nav.Column>
           </Nav.Row>
         )}
+
         <Nav.Row className="artikkel16__ekstratopp">
           <Nav.Column xs="6">
             <Nav.Typo.Element>Det lands lovgivning det søkes unntak fra</Nav.Typo.Element>
@@ -326,6 +327,7 @@ const VurderingArtikkel16Anmodning = ({
             <DatoOmrade periode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }} />
           </Nav.Column>
         </Nav.Row>
+
         <Nav.Row>
           <Nav.Column xs="7">
             <Nav.Select
@@ -334,7 +336,6 @@ const VurderingArtikkel16Anmodning = ({
               value={unntakFraBestemmelse || ""}
               disabled={!redigerbart}
               label={<Nav.Typo.Element>Artikkelen det søkes unntak fra</Nav.Typo.Element>}
-              data-cy="unntakArtikkel"
             >
               <option key={uuid()} value="" label="Velg..." disabled={!!unntakFraBestemmelse} />
               {hentUnntaksbestemmelser().map((kodeObjekt) => (
@@ -343,6 +344,7 @@ const VurderingArtikkel16Anmodning = ({
             </Nav.Select>
           </Nav.Column>
         </Nav.Row>
+
         <Nav.Row>
           <Nav.Column xs="7">
             <Nav.Select
@@ -351,7 +353,6 @@ const VurderingArtikkel16Anmodning = ({
               value={unntaksvilkår.begrunnelseKoder ? unntaksvilkår.begrunnelseKoder[0] : ""}
               disabled={!redigerbart}
               label={<Nav.Typo.Element>Legg til begrunnelse</Nav.Typo.Element>}
-              data-cy="begrunnelse"
             >
               <option
                 key={uuid()}
@@ -360,59 +361,55 @@ const VurderingArtikkel16Anmodning = ({
                 disabled={!Utils._isEmpty(unntaksvilkår.begrunnelseKoder)}
               />
               {muligeBegrunnelseValg.map((kodeObjekt) => (
-                <option key={uuid()} value={kodeObjekt.kode}>
-                  {kodeObjekt.term}
-                </option>
+                <option key={uuid()} value={kodeObjekt.kode} label={kodeObjekt.term ?? ""} />
               ))}
             </Nav.Select>
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="7">
-            {unntaksvilkår.begrunnelseKoder?.includes(SAERLIG_GRUNN) && (
-              <Fragment>
+
+        {unntaksvilkår.begrunnelseKoder?.includes(SAERLIG_GRUNN) && (
+          <Nav.Row>
+            <Nav.Column xs="7">
+              <Nav.Textarea
+                id={feltNavnFraBestemmelse}
+                label={begrunnelseFritekstBrevLabel}
+                placeholder="Skriv begrunnelsen her."
+                disabled={!redigerbart}
+                onBlur={lagreVilkarHandler}
+                onChange={handleEndretBegrunnelseFritekst}
+                value={unntaksvilkår.begrunnelseFritekst ?? ""}
+                feil={fritekstFeilmelding}
+                maxLength={1500}
+                bredde="fullbredde"
+              />
+              {redigerbart && (
                 <Nav.Textarea
                   id={feltNavnFraBestemmelse}
-                  label={begrunnelseFritekstBrevLabel}
+                  label={<Nav.Typo.Element>Begrunnelse til SED A001</Nav.Typo.Element>}
                   placeholder="Skriv begrunnelsen her."
-                  disabled={!redigerbart}
                   onBlur={lagreVilkarHandler}
-                  onChange={handleEndretBegrunnelseFritekst}
-                  value={unntaksvilkår.begrunnelseFritekst ?? ""}
-                  feil={fritekstFeilmelding}
-                  maxLength={1500}
+                  onChange={handleEndretBegrunnelseFritekstEngelsk}
+                  value={unntaksvilkår.begrunnelseFritekstEngelsk ?? ""}
+                  feil={fritekstSEDFeilmelding}
+                  maxLength={255}
                   bredde="fullbredde"
                 />
-                {redigerbart && (
-                  <Nav.Textarea
-                    id={feltNavnFraBestemmelse}
-                    label={<Nav.Typo.Element>Begrunnelse til SED A001</Nav.Typo.Element>}
-                    placeholder="Skriv begrunnelsen her."
-                    onBlur={lagreVilkarHandler}
-                    onChange={handleEndretBegrunnelseFritekstEngelsk}
-                    value={unntaksvilkår.begrunnelseFritekstEngelsk ?? ""}
-                    feil={fritekstSEDFeilmelding}
-                    maxLength={255}
-                    bredde="fullbredde"
-                  />
-                )}
-              </Fragment>
-            )}
-          </Nav.Column>
-        </Nav.Row>
-        {(!konvensjonStorbritanniaToggleEnabled || !Utils._isEmpty(medlemskap?.perioderMed)) && (
-          <Nav.Row className="artikkel16__ekstratopp">
-            <Nav.Column xs="12">
-              <Nav.Fieldset legend={`Velg direkte forutgående perioder i ${landSomTekstListe}`}>
-                <TidligereMedlemskap
-                  oppdaterOgLagreBehandlinger={oppdaterOgLagreBehandlinger}
-                  redigerbart={redigerbart}
-                  medlemskap={medlemskap}
-                />
-              </Nav.Fieldset>
+              )}
             </Nav.Column>
           </Nav.Row>
         )}
+
+        {(!konvensjonStorbritanniaToggleEnabled || !Utils._isEmpty(medlemskap?.perioderMed)) && (
+          <>
+            <Nav.Typo.Element className="tidligereMedlemskap_label">{`Velg direkte forutgående perioder i ${landSomTekstListe}`}</Nav.Typo.Element>
+            <TidligereMedlemskap
+              oppdaterOgLagreBehandlinger={oppdaterOgLagreBehandlinger}
+              redigerbart={redigerbart}
+              medlemskap={medlemskap}
+            />
+          </>
+        )}
+
         {redigerbart && (
           <Nav.Row className="fritekstSed">
             <Nav.Column xs="7">
@@ -426,6 +423,7 @@ const VurderingArtikkel16Anmodning = ({
             </Nav.Column>
           </Nav.Row>
         )}
+
         <Nav.Row className="mottakerinstitusjoner">
           <Nav.Column xs="7">
             <Mottakerinstitusjonvelger
@@ -436,36 +434,40 @@ const VurderingArtikkel16Anmodning = ({
             />
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="10">
-            {redigerbart && (
-              <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={validerSteg} />
-            )}
-          </Nav.Column>
-        </Nav.Row>
+
         {redigerbart && (
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <VedleggTable
-                valgteVedlegg={valgteVedlegg}
-                label="Vedlegg til SED"
-                setValgteVedlegg={setValgteVedlegg}
-                redigerbart={redigerbart}
-              />
-              <VedleggVelger
-                valgteVedlegg={valgteVedlegg}
-                onChange={setValgteVedlegg}
-                dokumenter={fysiskeDokumenter}
-                redigerbart={redigerbart}
-              />
-            </Nav.Column>
-          </Nav.Row>
+          <>
+            <Nav.Row>
+              <Nav.Column xs="10">
+                <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={validerSteg} />
+              </Nav.Column>
+            </Nav.Row>
+
+            <Nav.Row>
+              <Nav.Column xs="6">
+                <VedleggTable
+                  valgteVedlegg={valgteVedlegg}
+                  label="Vedlegg til SED"
+                  setValgteVedlegg={setValgteVedlegg}
+                  redigerbart={redigerbart}
+                />
+                <VedleggVelger
+                  valgteVedlegg={valgteVedlegg}
+                  onChange={setValgteVedlegg}
+                  dokumenter={fysiskeDokumenter}
+                  redigerbart={redigerbart}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          </>
         )}
+
         {sendBrevFeilmelding && (
           <Nav.Alert variant={harFeil ? "error" : "warning"} className="varsel">
             {sendBrevFeilmelding}
           </Nav.Alert>
         )}
+
         <Nav.Row className="artikkel16__ekstratopp">
           <Mui.StegKnapper
             bekreftTekst="Send brevene"
@@ -474,10 +476,7 @@ const VurderingArtikkel16Anmodning = ({
               disabled: !redigerbart || harFeil,
               onClick: validerStegOgLagreBehandling,
             }}
-            tilbakeKnappProps={{
-              onClick: tilbake,
-              disabled: !redigerbart,
-            }}
+            tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
           />
         </Nav.Row>
       </div>

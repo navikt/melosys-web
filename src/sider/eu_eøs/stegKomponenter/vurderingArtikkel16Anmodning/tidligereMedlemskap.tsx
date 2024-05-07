@@ -4,25 +4,6 @@ import { v4 as uuid } from "uuid";
 import { FieldArray, WrappedFieldArrayProps } from "redux-form";
 import { Medlemsperiode } from "../../../../services/modules/behandlinger/behandling";
 
-interface TidligereMedlemsperiodeLinjeProps {
-  checked: boolean;
-  onChange: (periodeID: number) => void;
-  periodeMed: Medlemsperiode;
-  redigerbart: boolean;
-}
-
-const TidligereMedlemsperiodeLinje = ({
-  periodeMed,
-  onChange,
-  checked,
-  redigerbart,
-}: TidligereMedlemsperiodeLinjeProps) => {
-  const { periodeID, periode } = periodeMed;
-  const label = `Periode: ${formatterDatoTilNorsk(periode.fom)} - ${formatterDatoTilNorsk(periode.tom)}`;
-
-  return <Mui.Checkbox disabled={!redigerbart} onCheck={() => onChange(periodeID)} label={label} checked={checked} />;
-};
-
 type TidligereMedlemskapsperioderProps = TidligereMedlemskapProps & WrappedFieldArrayProps<number>;
 const TidligereMedlemskapsperioder = ({
   medlemskap,
@@ -45,17 +26,20 @@ const TidligereMedlemskapsperioder = ({
   };
 
   return (
-    <div>
-      {medlemskap?.perioderMed?.map((periodeMed) => (
-        <TidligereMedlemsperiodeLinje
-          redigerbart={redigerbart}
-          onChange={onChange}
-          checked={alleValgtePeriodeID.includes(periodeMed.periodeID)}
-          key={uuid()}
-          periodeMed={periodeMed}
-        />
-      ))}
-    </div>
+    <>
+      {medlemskap?.perioderMed?.map((periodeMed) => {
+        const { periodeID, periode } = periodeMed;
+        return (
+          <Mui.Checkbox
+            key={uuid()}
+            disabled={!redigerbart}
+            onCheck={() => onChange(periodeID)}
+            label={`Periode: ${formatterDatoTilNorsk(periode.fom)} - ${formatterDatoTilNorsk(periode.tom)}`}
+            checked={alleValgtePeriodeID.includes(periodeID)}
+          />
+        );
+      })}
+    </>
   );
 };
 
@@ -70,9 +54,7 @@ interface TidligereMedlemskapProps {
 }
 
 const TidligereMedlemskap = (props: TidligereMedlemskapProps) => (
-  <div>
-    <FieldArray name="tidligeremedlemskap" component={TidligereMedlemskapsperioder} {...props} />
-  </div>
+  <FieldArray name="tidligeremedlemskap" component={TidligereMedlemskapsperioder} {...props} />
 );
 
 export default TidligereMedlemskap;
