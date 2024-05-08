@@ -92,6 +92,29 @@ const byggLovvalgsperiodeUtsending = (stegState: PerioderStegState, reduxState: 
   ];
 };
 
+const byggLovvalgsperiodeArtikkel11_3Aeller13_3A = (
+  stegState: PerioderStegState,
+  reduxState: RootState,
+  oppfyltLovvalg: string
+): Lovvalgsperiode[] => {
+  const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
+  const tilleggsbestemmelseFraVilkar = finnOppfyltVilkar(vilkarSelectors.valgteTilleggsVilkar(reduxState));
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+  return [
+    {
+      fomDato: søknadsperiode.fom,
+      tomDato: søknadsperiode.tom,
+      lovvalgsbestemmelse: oppfyltLovvalg,
+      medlemskapsperiodeID: medlemskapsperiodeID || null,
+      tilleggBestemmelse: stegState.tilleggbestemmelse || tilleggsbestemmelseFraVilkar,
+      innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
+      lovvalgsland: MKV.Koder.landkoder.NO,
+      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
+    },
+  ];
+};
+
 const byggLovvalgsperiodeArtikkel11_3A = (stegState: PerioderStegState, reduxState: RootState) => {
   const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const tilleggsbestemmelseFraVilkar = finnOppfyltVilkar(vilkarSelectors.valgteTilleggsVilkar(reduxState));
@@ -107,6 +130,28 @@ const byggLovvalgsperiodeArtikkel11_3A = (stegState: PerioderStegState, reduxSta
       tilleggBestemmelse: stegState.tilleggbestemmelse || tilleggsbestemmelseFraVilkar || null,
       unntakFraBestemmelse: unntakFraBestemmelse || null,
       unntakFraLovvalgsland: null,
+      innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
+      lovvalgsland: MKV.Koder.landkoder.NO,
+      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
+    },
+  ];
+};
+
+const byggLovvalgsperiodeArtikkel11_4_2eller13_4_2 = (
+  stegState: PerioderStegState,
+  reduxState: RootState,
+  oppfyltLovvalg: string
+): Lovvalgsperiode[] => {
+  const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+  return [
+    {
+      fomDato: søknadsperiode.fom,
+      tomDato: søknadsperiode.tom,
+      lovvalgsbestemmelse: oppfyltLovvalg,
+      medlemskapsperiodeID: medlemskapsperiodeID || null,
+      tilleggBestemmelse: stegState.tilleggbestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland: MKV.Koder.landkoder.NO,
       trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
@@ -212,9 +257,17 @@ const byggLovvalgsperioderFraVilkaar = (
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_3:
       return byggLovvalgsperiodeUtsending(stegState, reduxState);
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A:
-      return byggLovvalgsperiodeArtikkel11_3A(stegState, reduxState);
+      return konvensjonStorbritanniaToggleEnabled
+        ? byggLovvalgsperiodeArtikkel11_3Aeller13_3A(stegState, reduxState, oppfyltLovvalg)
+        : byggLovvalgsperiodeArtikkel11_3A(stegState, reduxState);
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART13_3A:
+      return byggLovvalgsperiodeArtikkel11_3Aeller13_3A(stegState, reduxState, oppfyltLovvalg);
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2:
-      return byggLovvalgsperiodeArtikkel11_4_2(stegState, reduxState);
+      return konvensjonStorbritanniaToggleEnabled
+        ? byggLovvalgsperiodeArtikkel11_4_2eller13_4_2(stegState, reduxState, oppfyltLovvalg)
+        : byggLovvalgsperiodeArtikkel11_4_2(stegState, reduxState);
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART13_4_2:
+      return byggLovvalgsperiodeArtikkel11_4_2eller13_4_2(stegState, reduxState, oppfyltLovvalg);
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1:
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART18_1:
       return byggLovvalgsperiodeArtikkelUnntak(reduxState);

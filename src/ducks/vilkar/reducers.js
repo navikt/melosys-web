@@ -122,8 +122,11 @@ export default function reducer(state = initialState, action = {}) {
           )
         ),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, action.data.vilkar.art11_3A),
+        vilkarTilObjektEnkel(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART13_3A, action),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, action.data.vilkar.art11_4_1),
+        vilkarTilObjektEnkel(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART13_4_1, action),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, action.data.vilkar.art11_4_2),
+        vilkarTilObjektEnkel(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART13_4_2, action),
         vilkarTilObjektEnkel(MKV.Koder.vilkaar.FTRL_FORUTGÅENDE_TRYGDETID, action),
         vilkarTilObjektEnkel(MKV.Koder.vilkaar.FTRL_2_8_NÆR_TILKNYTNING_NORGE, action),
       ].filter((vilkar) => vilkar !== null);

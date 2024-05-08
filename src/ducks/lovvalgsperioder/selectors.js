@@ -31,6 +31,11 @@ export const LovvalgBestemmelseSelector = createSelector(
   (lovvalgsperiode) => lovvalgsperiode.lovvalgsbestemmelse
 );
 
+export const TilleggBestemmelseSelector = createSelector(
+  LovvalgsperiodeSelector,
+  (lovvalgsperiode) => lovvalgsperiode.tilleggBestemmelse
+);
+
 export const LovvalgslandSelector = createSelector(
   (state) => LovvalgsperiodeSelector(state),
   (lovvalgsperiode) => lovvalgsperiode.lovvalgsland
