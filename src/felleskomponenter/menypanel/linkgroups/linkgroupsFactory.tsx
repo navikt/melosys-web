@@ -1,7 +1,7 @@
 import MKV from "../../../melosyskodeverk";
 
-import { harUnntaksregistreringFlyt, skalViseIngenFlyt, harIkkeYrkesaktivFlyt } from "../../../url";
-import { LinkGroup, ContentProps } from "./types";
+import { harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../../url";
+import { ContentProps, LinkGroup } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
 
@@ -29,7 +29,6 @@ interface LinkGroupsConfig {
   mottatteOpplysningerType: string;
   contentProps: ContentProps;
   sakstema: string;
-  ikkeYrkesaktivFtrlToggleEnabled: boolean | undefined;
 }
 
 class LinkGroupsFactory {
@@ -40,9 +39,8 @@ class LinkGroupsFactory {
     behandlingstema,
     behandlingstype,
     sakstema,
-    ikkeYrkesaktivFtrlToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, ikkeYrkesaktivFtrlToggleEnabled)) {
+    if (skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype)) {
       return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
     }
 
@@ -59,10 +57,7 @@ class LinkGroupsFactory {
         .build();
     }
 
-    if (
-      harIkkeYrkesaktivFlyt(sakstype, behandlingstema) ||
-      (ikkeYrkesaktivFtrlToggleEnabled && behandlingstema === IKKE_YRKESAKTIV)
-    ) {
+    if (behandlingstema === IKKE_YRKESAKTIV) {
       return new LinkgroupsBuilder()
         .addFraRegister(
           new LinksBuilder(contentProps)

@@ -22,7 +22,6 @@ import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { flytSelectors } from "../../../ducks/flyt";
 
 import { skalViseIngenFlyt } from "../../../url";
-import { useFeatureToggle } from "../../../featuretoggle";
 import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 import DatoOmrade from "../../../felleskomponenter/datoOmrade";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
@@ -30,7 +29,6 @@ import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstit
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
 import "./vurderingVedtak.css";
-import { MELOSYS_FTRL_IKKE_YRKESAKTIV } from "../../../featuretoggle/toggleNavn";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import * as Api from "../../../services/api";
 
@@ -67,13 +65,7 @@ const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
     MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
   ].includes(behandlingstema);
 
-const skalViseMottakerinstitusjoner = (
-  sakstype,
-  sakstema,
-  behandlingstema,
-  behandlingstype,
-  ikkeYrkesaktivFtrlToggleEnabled
-) => {
+const skalViseMottakerinstitusjoner = (sakstype, sakstema, behandlingstema, behandlingstype) => {
   return (
     sakstype === MKV.Koder.sakstyper.EU_EOS &&
     [
@@ -82,7 +74,7 @@ const skalViseMottakerinstitusjoner = (
       MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
       MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
     ].includes(behandlingstema) &&
-    !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, ikkeYrkesaktivFtrlToggleEnabled)
+    !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype)
   );
 };
 
@@ -112,7 +104,6 @@ const VurderingVedtak = ({
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [erBucAapen, setErBucAapen] = useState(true);
-  const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const dispatch = useDispatch();
   let oppdaterFørKontroll = true;
 
@@ -128,13 +119,7 @@ const VurderingVedtak = ({
   );
   const lovvalgSomTerm = finnLovvalgSomTerm(lovvalgSomKodeTerm, tilleggBestemmelseSomKodeTerm);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(
-    sakstype,
-    sakstema,
-    behandlingstema,
-    behandlingstype,
-    ikkeYrkesaktivFtrlToggleEnabled
-  );
+  const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(sakstype, sakstema, behandlingstema, behandlingstype);
   const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
 
   const validerForm = () => {

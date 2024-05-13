@@ -23,8 +23,6 @@ import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
 import EndreBehandlingModal from "./endreBehandlingModal";
 import "./oppsummering.css";
 import { useAsyncCallbackState } from "../../hooks";
-import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_FTRL_IKKE_YRKESAKTIV } from "../../featuretoggle/toggleNavn";
 
 const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
@@ -72,7 +70,6 @@ const Oppsummering = ({
   const [{ mottaksdato }] = useAsyncCallbackState(() => Api.Behandlinger.aarsak.hentMottaksdato(behandlingID), {}, [
     behandlingID,
   ]);
-  const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
   if (Utils._isEmpty(fagsak) || Utils._isEmpty(oppsummering)) return <div />;
@@ -97,14 +94,8 @@ const Oppsummering = ({
   const erTrygdeavtale = sakstype.kode === MKV.Koder.sakstyper.TRYGDEAVTALE;
   const erFTRL = sakstype.kode === MKV.Koder.sakstyper.FTRL;
   const erUnntaksregistrering = harUnntaksregistreringFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode);
-  const erIkkeYrkesaktiv = harIkkeYrkesaktivFlyt(sakstype.kode, behandlingstema.kode);
-  const erIngenFlyt = skalViseIngenFlyt(
-    sakstype.kode,
-    sakstema.kode,
-    behandlingstema.kode,
-    behandlingstype.kode,
-    ikkeYrkesaktivFtrlToggleEnabled
-  );
+  const erIkkeYrkesaktivFlyt = harIkkeYrkesaktivFlyt(sakstype.kode, behandlingstema.kode);
+  const erIngenFlyt = skalViseIngenFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode, behandlingstype.kode);
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   const landStorBokstav = (land?: KTObject) =>
@@ -182,7 +173,7 @@ const Oppsummering = ({
     }
 
     const col1 = [["Søknadsperiode", mottatteOpplysningerperiode]];
-    if (erTrygdeavtale || erIkkeYrkesaktiv) {
+    if (erTrygdeavtale || erIkkeYrkesaktivFlyt) {
       col1.push(["Lovvalgsperiode", lovvalgsperiode]);
     }
     if (erFTRL && !erIngenFlyt) {

@@ -5,8 +5,6 @@ import { RootState } from "AppTypes";
 import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
-
-import { useFeatureToggle } from "../../featuretoggle";
 import { skalViseIngenFlyt } from "../../url";
 import Sidemeny from "../sidemeny";
 
@@ -19,7 +17,6 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
-import { MELOSYS_FTRL_IKKE_YRKESAKTIV } from "../../featuretoggle/toggleNavn";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
@@ -56,7 +53,6 @@ export const Menypanel = ({
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [endreFokus, setEndreFokus] = useState(false);
-  const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
   const visMottatteOpplysningerData = !(
     MKVUtils.erBehandlingAvSed(sakstype, behandlingstema) &&
@@ -79,7 +75,6 @@ export const Menypanel = ({
     contentProps,
     mottatteOpplysningerType,
     sakstema,
-    ikkeYrkesaktivFtrlToggleEnabled,
   });
 
   const linkGroups = linkGroupsWithContent.map((linkGroup, groupIndex) => ({
@@ -109,7 +104,7 @@ export const Menypanel = ({
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) ||
     menypanel?.synlig ||
-    skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, ikkeYrkesaktivFtrlToggleEnabled);
+    skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype);
 
   if (!visMenypanel) return null;
   return (

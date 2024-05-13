@@ -9,8 +9,6 @@ import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
 import { sokOperations, sokSelectors } from "../../ducks/sok";
 
 import "./sok.css";
-import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_FTRL_IKKE_YRKESAKTIV } from "../../featuretoggle/toggleNavn";
 import { Spinner } from "../../felleskomponenter/spinner";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
@@ -21,7 +19,6 @@ export type SokProps = {
 
 export const Sok = ({ children }: SokProps) => {
   const dispatch = useDispatch();
-  const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const sokResultat = useSelector(sokSelectors.FagsakSokSelector);
   const landkoder = useSelector(landkoderSelectors.LandkoderSelector);
   const [sokPending, setSokPending] = useState(false);
@@ -83,7 +80,6 @@ export const Sok = ({ children }: SokProps) => {
                     sortingLegend="Sorter fagsaker etter opprettelsesdato:"
                     sortingPath="opprettetDato"
                     radioGroupName="fagsaksortering"
-                    ikkeYrkesaktivFtrlToggleEnabled={ikkeYrkesaktivFtrlToggleEnabled}
                     landkoder={landkoder}
                   />
                 )}

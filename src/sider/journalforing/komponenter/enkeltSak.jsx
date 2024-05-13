@@ -15,14 +15,10 @@ import { lagUrl } from "../../../url";
 import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behandlingsstatus";
 
 import "./enkeltSak.css";
-import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_FTRL_IKKE_YRKESAKTIV } from "../../../featuretoggle/toggleNavn";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = (props) => {
-  const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
-
   const { landkoder } = props;
   const { behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
 
@@ -40,8 +36,7 @@ const EnkeltSak = (props) => {
     sakstype.kode,
     sakstema.kode,
     behandlingstema.kode,
-    behandlingstype.kode,
-    ikkeYrkesaktivFtrlToggleEnabled
+    behandlingstype.kode
   );
 
   const avsluttendePeriode = sakstype.kode === MKV.Koder.sakstyper.FTRL ? medlemskapsperiode : lovvalgsperiode;
