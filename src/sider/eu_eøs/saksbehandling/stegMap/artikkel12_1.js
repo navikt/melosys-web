@@ -28,6 +28,14 @@ class Artikkel12_1 extends Steg {
 
     this.kriterier = [
       {
+        exec: () => propsLight.konvensjonStorbritanniaToggleEnabled && utsendingsvilkår?.oppfylt,
+        nesteSteg: STEG.VEDTAK,
+      },
+      {
+        exec: () => propsLight.konvensjonStorbritanniaToggleEnabled && unntaksvilkår?.oppfylt && harAvklaring,
+        nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
+      },
+      {
         exec: () => utsendingsvilkår?.oppfylt || (unntaksvilkår?.oppfylt && harAvklaring),
         nesteSteg: STEG.MEDFOLGENDE_BARN,
       },

@@ -84,6 +84,7 @@ export const Bestemmelser = ({
   const slettAlleVilkår = () => alleRelevanteFeltNavn.forEach((feltNavn) => slettData(slettVilkar(feltNavn)));
 
   const handleEndreVedtakValg = (event: ChangeEvent<HTMLInputElement>) => {
+    setPending(true);
     const value = event.target.value as VedtakValg;
     setVedtakValg(value);
     setBestemmelse("");
@@ -92,13 +93,16 @@ export const Bestemmelser = ({
       if (value === VedtakValg.JA_INNVILGE) {
         slettAlleVilkår();
         if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART12, value);
+        setPending(false);
       } else if (value === VedtakValg.NEI_ANMODNING_UNNTAK) {
         slettAlleVilkår();
         if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART16_1, value);
+        setPending(false);
       } else if (value === VedtakValg.NEI_AVSLAG) {
         slettAlleVilkår();
         oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
         oppdaterData(lagVilkaar("art16_1_avslag", false));
+        setTimeout(() => setPending(false), 100);
       }
     } else {
       if (value === VedtakValg.JA_INNVILGE) {
@@ -116,6 +120,7 @@ export const Bestemmelser = ({
         slettData(slettVilkar("art16_1_anmodning"));
         oppdaterData(lagVilkaar("art16_1_avslag", false));
       }
+      setPending(false);
     }
   };
 
