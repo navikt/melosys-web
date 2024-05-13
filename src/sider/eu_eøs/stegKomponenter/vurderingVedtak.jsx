@@ -30,10 +30,7 @@ import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstit
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
 import "./vurderingVedtak.css";
-import {
-  MELOSYS_FTRL_IKKE_YRKESAKTIV,
-  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
-} from "../../../featuretoggle/toggleNavn";
+import { MELOSYS_FTRL_IKKE_YRKESAKTIV } from "../../../featuretoggle/toggleNavn";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import * as Api from "../../../services/api";
 
@@ -75,7 +72,6 @@ const skalViseMottakerinstitusjoner = (
   sakstema,
   behandlingstema,
   behandlingstype,
-  manglendeInnbetalingToggleEnabled,
   ikkeYrkesaktivFtrlToggleEnabled
 ) => {
   return (
@@ -86,14 +82,7 @@ const skalViseMottakerinstitusjoner = (
       MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
       MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
     ].includes(behandlingstema) &&
-    !skalViseIngenFlyt(
-      sakstype,
-      sakstema,
-      behandlingstema,
-      behandlingstype,
-      manglendeInnbetalingToggleEnabled,
-      ikkeYrkesaktivFtrlToggleEnabled
-    )
+    !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, ikkeYrkesaktivFtrlToggleEnabled)
   );
 };
 
@@ -123,7 +112,6 @@ const VurderingVedtak = ({
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [erBucAapen, setErBucAapen] = useState(true);
-  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const dispatch = useDispatch();
   let oppdaterFørKontroll = true;
@@ -145,7 +133,6 @@ const VurderingVedtak = ({
     sakstema,
     behandlingstema,
     behandlingstype,
-    manglendeInnbetalingToggleEnabled,
     ikkeYrkesaktivFtrlToggleEnabled
   );
   const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
@@ -196,6 +183,7 @@ const VurderingVedtak = ({
       setVedtakPending(false);
     }
   }
+
   const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
 
   useEffect(() => {

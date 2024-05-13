@@ -22,10 +22,7 @@ import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
 
 import "./endreBehandlingModal.css";
-import {
-  MELOSYS_FTRL_IKKE_YRKESAKTIV,
-  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
-} from "../../featuretoggle/toggleNavn";
+import { MELOSYS_FTRL_IKKE_YRKESAKTIV } from "../../featuretoggle/toggleNavn";
 import { useAsyncCallbackState } from "../../hooks";
 
 enum FeltVerdier {
@@ -86,7 +83,6 @@ function EndreBehandlingModal({
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
-  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const typeTemaKanEndres = !anmodningsperioderSendtTilUtlandet;
   const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
@@ -156,14 +152,7 @@ function EndreBehandlingModal({
 
     if (
       sakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE ||
-      Routing.skalViseIngenFlyt(
-        sakstype,
-        sakstema,
-        behandlingstema,
-        behandlingstype,
-        manglendeInnbetalingToggleEnabled,
-        ikkeYrkesaktivFtrlToggleEnabled
-      )
+      Routing.skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, ikkeYrkesaktivFtrlToggleEnabled)
     ) {
       await Api.Trygdeavtale.slettFlyt(behandlingID);
     } else {
@@ -228,7 +217,6 @@ function EndreBehandlingModal({
           sakstema,
           behandlingstema,
           behandlingstype,
-          manglendeInnbetalingToggleEnabled,
           ikkeYrkesaktivFtrlToggleEnabled
         );
 

@@ -16,15 +16,11 @@ import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behand
 
 import "./enkeltSak.css";
 import { useFeatureToggle } from "../../../featuretoggle";
-import {
-  MELOSYS_FTRL_IKKE_YRKESAKTIV,
-  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
-} from "../../../featuretoggle/toggleNavn";
+import { MELOSYS_FTRL_IKKE_YRKESAKTIV } from "../../../featuretoggle/toggleNavn";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = (props) => {
-  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
   const { landkoder } = props;
@@ -45,7 +41,6 @@ const EnkeltSak = (props) => {
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    manglendeInnbetalingToggleEnabled,
     ikkeYrkesaktivFtrlToggleEnabled
   );
 

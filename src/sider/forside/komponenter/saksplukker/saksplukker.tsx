@@ -15,10 +15,7 @@ import * as Routing from "../../../../url";
 
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { oppgaverOperations } from "../../../../ducks/oppgaver";
-import {
-  MELOSYS_FTRL_IKKE_YRKESAKTIV,
-  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
-} from "../../../../featuretoggle/toggleNavn";
+import { MELOSYS_FTRL_IKKE_YRKESAKTIV } from "../../../../featuretoggle/toggleNavn";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import saksplukkerSchema from "./saksplukkerSchema";
@@ -68,7 +65,6 @@ export const Saksplukker = ({
 
   const { sakstype, sakstema } = formValues || {};
 
-  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
   useEffect(() => {
@@ -123,7 +119,6 @@ export const Saksplukker = ({
           formValues.sakstema,
           behandlingstema,
           behandlingstype,
-          manglendeInnbetalingToggleEnabled,
           ikkeYrkesaktivFtrlToggleEnabled
         );
 

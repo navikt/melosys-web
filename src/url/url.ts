@@ -86,7 +86,6 @@ export const lagUrl = (
   sakstemaKode: string,
   behandlingstemaKode: string,
   behandlingstypeKode: string,
-  manglendeInnbetalingToggleEnabled: boolean | undefined,
   ikkeYrkesaktivFtrlToggleEnabled: boolean | undefined
 ) => {
   if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING) {
@@ -99,12 +98,12 @@ export const lagUrl = (
       sakstemaKode,
       behandlingstemaKode,
       behandlingstypeKode,
-      manglendeInnbetalingToggleEnabled,
       ikkeYrkesaktivFtrlToggleEnabled
     )
   ) {
     return lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
+
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
 };
 
@@ -127,6 +126,7 @@ export const harUnntaksregistreringFlyt = (sakstype: string, sakstema: string, b
   if (sakstype === EU_EOS && behandlingstema === MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR) {
     return true;
   }
+
   return false;
 };
 
@@ -139,19 +139,18 @@ export const skalViseIngenFlyt = (
   sakstema: string,
   behandlingstema: string,
   behandlingstype: string,
-  manglendeInnbetalingToggleEnabled: boolean = false,
   ikkeYrkesaktivFtrlToggleEnabled: boolean = false
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
   }
 
-  if (manglendeInnbetalingToggleEnabled && behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
-    return false;
+  if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
+    return true;
   }
 
-  if ([HENVENDELSE, KLAGE, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)) {
-    return true;
+  if (behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
+    return false;
   }
 
   if (harUnntaksregistreringFlyt(sakstype, sakstema, behandlingstema)) return false;

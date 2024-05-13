@@ -24,10 +24,7 @@ import EndreBehandlingModal from "./endreBehandlingModal";
 import "./oppsummering.css";
 import { useAsyncCallbackState } from "../../hooks";
 import { useFeatureToggle } from "../../featuretoggle";
-import {
-  MELOSYS_FTRL_IKKE_YRKESAKTIV,
-  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
-} from "../../featuretoggle/toggleNavn";
+import { MELOSYS_FTRL_IKKE_YRKESAKTIV } from "../../featuretoggle/toggleNavn";
 
 const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
@@ -75,7 +72,6 @@ const Oppsummering = ({
   const [{ mottaksdato }] = useAsyncCallbackState(() => Api.Behandlinger.aarsak.hentMottaksdato(behandlingID), {}, [
     behandlingID,
   ]);
-  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
@@ -107,7 +103,6 @@ const Oppsummering = ({
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    manglendeInnbetalingToggleEnabled,
     ikkeYrkesaktivFtrlToggleEnabled
   );
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;

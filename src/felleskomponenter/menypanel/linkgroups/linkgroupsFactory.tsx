@@ -5,8 +5,6 @@ import { LinkGroup, ContentProps } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
 
-const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
-
 const {
   UTSENDT_ARBEIDSTAKER,
   UTSENDT_SELVSTENDIG,
@@ -31,7 +29,6 @@ interface LinkGroupsConfig {
   mottatteOpplysningerType: string;
   contentProps: ContentProps;
   sakstema: string;
-  manglendeInnbetalingToggleEnabled: boolean | undefined;
   ikkeYrkesaktivFtrlToggleEnabled: boolean | undefined;
 }
 
@@ -43,26 +40,10 @@ class LinkGroupsFactory {
     behandlingstema,
     behandlingstype,
     sakstema,
-    manglendeInnbetalingToggleEnabled,
     ikkeYrkesaktivFtrlToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (
-      skalViseIngenFlyt(
-        sakstype,
-        sakstema,
-        behandlingstema,
-        behandlingstype,
-        manglendeInnbetalingToggleEnabled,
-        ikkeYrkesaktivFtrlToggleEnabled
-      )
-    ) {
-      const linkBuilder = new LinksBuilder(contentProps).addFullmektig();
-
-      if (behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
-        linkBuilder.addFaktureringskomponenten();
-      }
-
-      return new LinkgroupsBuilder().addUtenLabel(linkBuilder.build()).build();
+    if (skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, ikkeYrkesaktivFtrlToggleEnabled)) {
+      return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
     }
 
     if (harUnntaksregistreringFlyt(sakstype, sakstema, behandlingstema)) {
@@ -152,7 +133,6 @@ class LinkGroupsFactory {
           .build();
       }
       case YRKESAKTIV: {
-        // Vær litt forsiktig med denne da den er i bruk av trygdeavtale i prod
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(

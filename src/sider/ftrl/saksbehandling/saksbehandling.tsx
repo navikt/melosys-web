@@ -39,9 +39,8 @@ import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 import { alleStegYrkesaktivFlyt, alleStegYrkesaktivFlytV2 } from "./stegLister/stegListeYrkesaktivFlyt";
 import "./saksbehandling.css";
 import {
-  MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER,
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
-  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
+  MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER,
 } from "../../../featuretoggle/toggleNavn";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { resetInkluderSiste5Aar } from "../../../ducks/modaler/operations";
@@ -160,7 +159,6 @@ const Saksbehandling = ({
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
-  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
   const ftrlPliktigeBestemmelserToggleEnabled = useFeatureToggle(MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER);
 
@@ -241,10 +239,7 @@ const Saksbehandling = ({
     if (ikkeYrkesaktivFtrlToggleEnabled && behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
       return alleStegIkkeYrkesaktivFlyt;
     }
-    if (
-      manglendeInnbetalingToggleEnabled &&
-      behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT
-    ) {
+    if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
       return ftrlPliktigeBestemmelserToggleEnabled
         ? alleStegManglendeInnbetalingFlytV2
         : alleStegManglendeInnbetalingFlyt;

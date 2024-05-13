@@ -19,10 +19,7 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
-import {
-  MELOSYS_FTRL_IKKE_YRKESAKTIV,
-  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
-} from "../../featuretoggle/toggleNavn";
+import { MELOSYS_FTRL_IKKE_YRKESAKTIV } from "../../featuretoggle/toggleNavn";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
@@ -59,7 +56,6 @@ export const Menypanel = ({
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [endreFokus, setEndreFokus] = useState(false);
-  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
   const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
   const visMottatteOpplysningerData = !(
@@ -83,7 +79,6 @@ export const Menypanel = ({
     contentProps,
     mottatteOpplysningerType,
     sakstema,
-    manglendeInnbetalingToggleEnabled,
     ikkeYrkesaktivFtrlToggleEnabled,
   });
 
@@ -114,14 +109,7 @@ export const Menypanel = ({
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) ||
     menypanel?.synlig ||
-    skalViseIngenFlyt(
-      sakstype,
-      sakstema,
-      behandlingstema,
-      behandlingstype,
-      manglendeInnbetalingToggleEnabled,
-      ikkeYrkesaktivFtrlToggleEnabled
-    );
+    skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, ikkeYrkesaktivFtrlToggleEnabled);
 
   if (!visMenypanel) return null;
   return (
