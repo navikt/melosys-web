@@ -107,6 +107,33 @@ export const UnntaksvilkårSelector = createSelector(
   }
 );
 
+export const Artikkel11_3AEller13_3ASelector = createSelector(
+  (state) => VilkarSelector(state),
+  (alleVilkar) => {
+    const art11_3A_eøs = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART11_3A);
+    const art13_3A_gb = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART13_3A);
+    return art11_3A_eøs ?? art13_3A_gb ?? {};
+  }
+);
+
+export const Artikkel11_4_1Eller13_4_1Selector = createSelector(
+  (state) => VilkarSelector(state),
+  (alleVilkar) => {
+    const art11_4_1_eøs = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART11_4_1);
+    const art13_4_1_gb = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART13_4_1);
+    return art11_4_1_eøs ?? art13_4_1_gb ?? {};
+  }
+);
+
+export const Artikkel11_4_2Eller13_4_2Selector = createSelector(
+  (state) => VilkarSelector(state),
+  (alleVilkar) => {
+    const art11_4_2_eøs = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART11_4_2);
+    const art13_4_2_gb = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART13_4_2);
+    return art11_4_2_eøs ?? art13_4_2_gb ?? {};
+  }
+);
+
 export const art12_1 = createSelector(
   (state) => VilkarSelector(state),
   (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART12_1)
@@ -159,7 +186,10 @@ export const valgteLovvalgsVilkar = createSelector(
 export const valgteTilleggsVilkar = createSelector(
   (state) => VilkarSelector(state),
   (alleVilkar) => {
-    const alleTilleggsbestemmelser = [...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004];
+    const alleTilleggsbestemmelser = [
+      ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
+      ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_konv_efta_storbritannia,
+    ];
     return alleVilkar.filter((enkeltVilkar) =>
       alleTilleggsbestemmelser.find((enkeltTilleggslovvalg) => enkeltTilleggslovvalg.kode === enkeltVilkar.vilkaar)
     );
