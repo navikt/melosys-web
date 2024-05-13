@@ -1,13 +1,11 @@
 const MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE = "melosys.faktureringskomponent.vis_referanse";
 const MELOSYS_FTRL_IKKE_YRKESAKTIV = "melosys.ftrl.ikke_yrkesaktiv";
 const MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK = "melosys.ftrl.begrense_periode_vedtak";
-const MELOSYS_FOLKETRYGDEN_2_7 = "melosys.folketrygden.2_7";
 const FEATURE_TOGGLE = "feature-toggle";
 const MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER = "melosys.ftrl.yrkesaktiv.pliktige_bestemmelser";
 const MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA = "melosys.konvensjon.efta.land.og.storbritannia";
 
 const alleToggleNavn = [
-  MELOSYS_FOLKETRYGDEN_2_7,
   MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE,
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
   MELOSYS_FTRL_IKKE_YRKESAKTIV,
@@ -16,7 +14,6 @@ const alleToggleNavn = [
 ];
 
 export {
-  MELOSYS_FOLKETRYGDEN_2_7,
   FEATURE_TOGGLE,
   MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE,
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
