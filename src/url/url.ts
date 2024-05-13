@@ -2,7 +2,7 @@ import MKV from "../melosyskodeverk";
 import * as Constants from "../constants";
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
-const { HENVENDELSE, KLAGE, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
+const { HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 
 const flytFinnesIkkeForBehandlingPath = "/flyt-finnes-ikke-for-behandling";
 
@@ -147,10 +147,6 @@ export const skalViseIngenFlyt = (
 
   if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
     return true;
-  }
-
-  if (behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
-    return false;
   }
 
   if (harUnntaksregistreringFlyt(sakstype, sakstema, behandlingstema)) return false;
