@@ -1,4 +1,3 @@
-import { SyntheticEvent } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
@@ -39,7 +38,7 @@ const JournalforingGjelder = ({
   journalpostBrukerID,
   journalpostVirksomhetOrgnr,
 }: PropsFromRedux) => {
-  const handleClick = (event: SyntheticEvent<EventTarget>, value: string) => {
+  const handleClick = (value: string) => {
     oppdaterFelt("journalforingGjelder", value);
     oppdaterFelt(FormValues.sakstype, null);
     oppdaterFelt(FormValues.sakstema, null);
@@ -67,17 +66,14 @@ const JournalforingGjelder = ({
       ikon={Ikoner.FindAccount}
       tittel="Hvem skal dokumentet journalføres på?"
       innhold={
-        <Nav.RadioPanelGruppe
-          name="journalforingGjelder"
-          legend=""
-          radios={[
-            { label: KV.kodeTilTerm(BRUKER, MKV.KTObjects.aktoersroller), value: BRUKER, id: BRUKER },
-            { label: KV.kodeTilTerm(VIRKSOMHET, MKV.KTObjects.aktoersroller), value: VIRKSOMHET, id: VIRKSOMHET },
-          ]}
-          checked={journalforingGjelder}
-          onChange={handleClick}
-          className="journalforingGjelder"
-        />
+        <Nav.RadioGroup onChange={handleClick} defaultValue={journalforingGjelder} legend="" hideLegend>
+          <Nav.AkselRadio value={BRUKER} id={BRUKER}>
+            {KV.kodeTilTerm(BRUKER, MKV.KTObjects.aktoersroller)}
+          </Nav.AkselRadio>
+          <Nav.AkselRadio value={VIRKSOMHET} id={VIRKSOMHET}>
+            {KV.kodeTilTerm(VIRKSOMHET, MKV.KTObjects.aktoersroller)}
+          </Nav.AkselRadio>
+        </Nav.RadioGroup>
       }
     />
   );
