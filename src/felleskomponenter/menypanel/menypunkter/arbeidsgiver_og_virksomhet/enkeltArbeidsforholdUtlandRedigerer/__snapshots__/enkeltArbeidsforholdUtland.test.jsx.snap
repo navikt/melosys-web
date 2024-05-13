@@ -12,7 +12,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-6"
       >
         <div
-          class="navds-form-field navds-form-field--small"
+          class="melosys-textfield  navds-form-field navds-form-field--small"
         >
           <label
             class="navds-form-field__label navds-label navds-label--small"
@@ -40,7 +40,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-6"
       >
         <div
-          class="navds-form-field navds-form-field--small"
+          class="melosys-textfield  navds-form-field navds-form-field--small"
         >
           <label
             class="navds-form-field__label navds-label navds-label--small"
@@ -72,7 +72,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-12"
       >
         <div
-          class="navds-form-field navds-form-field--small"
+          class="melosys-textfield  navds-form-field navds-form-field--small"
         >
           <label
             class="navds-form-field__label navds-label navds-label--small"
@@ -104,7 +104,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-6"
       >
         <div
-          class="navds-form-field navds-form-field--small"
+          class="melosys-textfield  navds-form-field navds-form-field--small"
         >
           <label
             class="navds-form-field__label navds-label navds-label--small"
@@ -132,7 +132,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-6"
       >
         <div
-          class="navds-form-field navds-form-field--small"
+          class="melosys-textfield  navds-form-field navds-form-field--small"
         >
           <label
             class="navds-form-field__label navds-label navds-label--small"
@@ -164,7 +164,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-6"
       >
         <div
-          class="navds-form-field navds-form-field--small"
+          class="melosys-textfield  navds-form-field navds-form-field--small"
         >
           <label
             class="navds-form-field__label navds-label navds-label--small"
@@ -192,7 +192,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-6"
       >
         <div
-          class="navds-form-field navds-form-field--small"
+          class="melosys-textfield  navds-form-field navds-form-field--small"
         >
           <label
             class="navds-form-field__label navds-label navds-label--small"
@@ -224,7 +224,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-12"
       >
         <div
-          class="navds-form-field navds-form-field--small"
+          class="melosys-textfield  navds-form-field navds-form-field--small"
         >
           <label
             class="navds-form-field__label navds-label navds-label--small"
@@ -256,7 +256,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         class="col col-xs-6"
       >
         <div
-          class="navds-form-field navds-form-field--small"
+          class="melosys-textfield  navds-form-field navds-form-field--small"
         >
           <label
             class="navds-form-field__label navds-label navds-label--small"
@@ -288,7 +288,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         >
           <div>
             <div
-              class="landliste__linje__input navds-form-field navds-form-field--small"
+              class="melosys-textfield landliste__linje__input navds-form-field navds-form-field--small"
             >
               <label
                 class="navds-form-field__label navds-label navds-label--small"

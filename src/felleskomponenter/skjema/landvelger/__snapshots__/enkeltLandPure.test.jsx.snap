@@ -4,7 +4,7 @@ exports[`EnkeltLandPure > snapshot test 1`] = `
 <div>
   <div>
     <div
-      class="landliste__linje__input  navds-form-field navds-form-field--small"
+      class="melosys-textfield landliste__linje__input  navds-form-field navds-form-field--small"
     >
       <label
         class="navds-form-field__label navds-label navds-label--small"
