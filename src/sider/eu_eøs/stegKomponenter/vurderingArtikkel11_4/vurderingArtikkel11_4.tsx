@@ -205,7 +205,9 @@ const VurderingArtikkel11_4 = ({
 
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Typo.Element className="artikkel_label">Velg riktig artikkel</Nav.Typo.Element>
+          <Nav.Typo.Element className="artikkel_label">
+            {konvensjonStorbritanniaToggleEnabled ? "Oppgi brukers situasjon" : "Velg riktig artikkel"}
+          </Nav.Typo.Element>
           <Nav.Radio
             name="artikkel11"
             onChange={handleEndretArtikkelValg}
