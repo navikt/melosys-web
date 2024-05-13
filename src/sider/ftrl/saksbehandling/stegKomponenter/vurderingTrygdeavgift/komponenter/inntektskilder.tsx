@@ -18,10 +18,7 @@ import {
 } from "../vurderingTrygdeavgiftSchema";
 import "./inntektskilder.css";
 import { useFeatureToggle } from "../../../../../../featuretoggle";
-import {
-  MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER,
-  MELOSYS_INNTEKTSTYPE_PENSJON_UFØRETRYGD,
-} from "../../../../../../featuretoggle/toggleNavn";
+import { MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER } from "../../../../../../featuretoggle/toggleNavn";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
@@ -60,7 +57,6 @@ export const Inntektskilder = ({
   fields,
   medlemskapsTypeErPliktig,
 }: InntektskilderProps) => {
-  const inntektstypePensjonUføretrygdEnabled = useFeatureToggle(MELOSYS_INNTEKTSTYPE_PENSJON_UFØRETRYGD);
   const ftrlYrkesaktivPliktigeBestemmelserEnabled = useFeatureToggle(MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER);
 
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
@@ -132,23 +128,14 @@ export const Inntektskilder = ({
                       if (ftrlYrkesaktivPliktigeBestemmelserEnabled && medlemskapsTypeErPliktig) {
                         return [ARBEIDSINNTEKT, NÆRINGSINNTEKT, PENSJON, UFØRETRYGD].includes(kt.kode);
                       }
-                      if (inntektstypePensjonUføretrygdEnabled) {
-                        return [
-                          ARBEIDSINNTEKT_FRA_NORGE,
-                          NÆRINGSINNTEKT_FRA_NORGE,
-                          INNTEKT_FRA_UTLANDET,
-                          FN_SKATTEFRITAK,
-                          MISJONÆR,
-                          PENSJON_UFØRETRYGD,
-                          PENSJON_UFØRETRYGD_KILDESKATT,
-                        ].includes(kt.kode);
-                      }
                       return [
                         ARBEIDSINNTEKT_FRA_NORGE,
                         NÆRINGSINNTEKT_FRA_NORGE,
                         INNTEKT_FRA_UTLANDET,
                         FN_SKATTEFRITAK,
                         MISJONÆR,
+                        PENSJON_UFØRETRYGD,
+                        PENSJON_UFØRETRYGD_KILDESKATT,
                       ].includes(kt.kode);
                     })
                     .map((kt: KTObject) => (
