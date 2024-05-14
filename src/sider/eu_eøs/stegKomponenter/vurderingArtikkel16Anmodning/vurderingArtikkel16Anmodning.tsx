@@ -130,8 +130,18 @@ const VurderingArtikkel16Anmodning = ({
     lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1 ? "art18_1_anmodning" : "art16_1_anmodning";
 
   useEffect(() => {
-    oppdaterData(konverterVilkarTilStegData(feltNavnFraBestemmelse, unntaksvilkår));
-    oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
+    if (konvensjonStorbritanniaToggleEnabled) {
+      oppdaterData(konverterVilkarTilStegData(feltNavnFraBestemmelse, unntaksvilkår));
+      oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
+    } else {
+      oppdaterData(konverterVilkarTilStegData("art16_1_anmodning", unntaksvilkår));
+      oppdaterData(
+        konverterLovvalgsbestemmelseTilStegData(
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1
+        )
+      );
+    }
+
     if (unntakFraBestemmelse) {
       oppdaterData(konverterUnntakFraBestemmelseTilStegData(unntakFraBestemmelse));
     }
