@@ -117,7 +117,6 @@ const VurderingAvslaaUtpeking = ({
         bekreftKnappProps={{
           loading: avslagPending,
           disabled: !redigerbart,
-          htmlType: "submit",
         }}
         bekreftTekst="Avslutt og send SED"
         tilbakeKnappProps={{
