@@ -14,7 +14,6 @@ import {
   slettTilleggBestemmelse,
   slettVilkar,
 } from "../../../../felleskomponenter/stegvelger";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import { Vilkaar } from "../../../../services/modules/vilkar";
 import { BOOLSK_STRING } from "../../../../constants";
 import { useFeatureToggle } from "../../../../featuretoggle";
