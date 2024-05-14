@@ -9,6 +9,7 @@ const {
   ANMODNING_OM_UNNTAK_HOVEDREGEL,
   REGISTRERING_UNNTAK,
   A1_ANMODNING_OM_UNNTAK_PAPIR,
+  ARBEID_FLERE_LAND,
 } = MKV.Koder.behandlinger.behandlingstema;
 const { NY_VURDERING, FØRSTEGANG, HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 const { FTRL, TRYGDEAVTALE, EU_EOS } = MKV.Koder.sakstyper;
@@ -127,6 +128,19 @@ describe("AvsluttSak", () => {
       renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Ferdigbehandlet")).toBeInTheDocument();
+    });
+
+    it(`viser 'Ferdigbehandlet' dersom behandlingstema er ARBEID_FLERE_LAND, sakstype er EU_SØS, behandlingstype er FØRSTEGANG og det er redigerbart`, async () => {
+      props.behandlingstema = ARBEID_FLERE_LAND;
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+
+      expect(await screen.findByText("Ferdigbehandlet")).toBeInTheDocument();
+    });
+
+    it(`viser ikke 'Ferdigbehandlet' dersom behandlingstema er annet enn ARBEID_FLERE_LAND, behandlingstype er FØRSTEGANG og det er redigerbart`, async () => {
+      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+
+      expect(await screen.queryByText("Ferdigbehandlet")).toBeNull();
     });
   });
 
