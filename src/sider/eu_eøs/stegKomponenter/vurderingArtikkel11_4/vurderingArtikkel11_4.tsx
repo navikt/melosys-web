@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import MKV, { MKVUtils } from "../../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 import "./vurderingArtikkel11_4.css";
@@ -21,9 +21,10 @@ import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import { useSelector } from "react-redux";
 import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
-import LandInformasjon, { Virksomhet } from "./landInformasjon";
+import LandInformasjon from "./landInformasjon";
 import Bestemmelse, { tilleggsbestemmelseFraLovvalgsbestemmelse } from "./bestemmelse";
 import { vilkarSelectors } from "../../../../ducks/vilkar";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 
 const {
   FO_883_2004_ART11_3A,
@@ -65,15 +66,11 @@ const initialiserArtikkelValg = (
 };
 
 interface VurderingArtikkel11_4Props {
-  bostedsland?: KTObject;
-  arbeidsland?: KTObject[];
-  valgteVirksomheter?: Virksomhet[];
   bekreftOgFortsett: () => void;
   tilstand: {
     harAvklaring: boolean;
     nis: Partial<Vilkaar>;
   };
-  artikkel: KTObject;
   redigerbart: boolean;
   oppdaterData: (objekt: any) => void;
   slettData: (objekt?: any) => void;
@@ -85,13 +82,11 @@ const VurderingArtikkel11_4 = ({
   tilstand: { harAvklaring, nis },
   slettData,
   bekreftOgFortsett,
-  bostedsland,
-  arbeidsland = [],
-  valgteVirksomheter = [],
   redigerbart,
   tilbake,
 }: VurderingArtikkel11_4Props) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
+  const alleArbeidsland = useSelector(avklartefaktaSelectors.AlleArbeidslandSelector);
   const lovvalgsbestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
   const tilleggsbestemmelse = useSelector(lovvalgsperioderSelectors.TilleggBestemmelseSelector);
   const art11_3Aeller13_3A: Partial<Vilkaar> = useSelector(vilkarSelectors.Artikkel11_3AEller13_3ASelector);
@@ -101,7 +96,7 @@ const VurderingArtikkel11_4 = ({
     initialiserArtikkelValg(art11_3Aeller13_3A, art11_4_1eller13_4_1, art11_4_2eller13_4_2)
   );
   const [bestemmelse, setBestemmelse] = useState(lovvalgsbestemmelse);
-  const visStorbritanniaKonvensjon = MKVUtils.enesteLandErStorbritannia(arbeidsland?.map((kt) => kt.kode));
+  const visStorbritanniaKonvensjon = alleArbeidsland.some((landkode) => landkode === MKV.Koder.landkoder.GB);
 
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(finnFeltNavn(art11_4_1eller13_4_1?.vilkaar), art11_4_1eller13_4_1));
@@ -201,7 +196,7 @@ const VurderingArtikkel11_4 = ({
         {konvensjonStorbritanniaToggleEnabled ? "Vurdering av skipsbestemmelse" : "Vurdering av artikkel 11.4"}
       </Nav.Typo.Innholdstittel>
 
-      <LandInformasjon bostedsland={bostedsland} arbeidsland={arbeidsland} valgteVirksomheter={valgteVirksomheter} />
+      <LandInformasjon />
 
       <Nav.Row>
         <Nav.Column xs="12">

@@ -261,6 +261,21 @@ export const ArbeidslandSelector = createSelector(
     return soknadsland;
   }
 );
+export const AlleArbeidslandSelector = createSelector(
+  (state) => mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
+  (state) => MaritimeArbeidslandSelector(state),
+  (state) => AvklarteVirksomheterSelector(state),
+  (state) => mottatteOpplysningerSelectors.HjemmebaserSelector(state),
+  (soknadslandkoder = [], maritimeArbeidsland = [], valgteVirksomheter = []) => {
+    return [
+      ...soknadslandkoder,
+      ...maritimeArbeidsland,
+      ...valgteVirksomheter.map((virksomhet) =>
+        KV.termTilKode(Utils.streng.storeForbokstaverForLand(virksomhet.adresse.land), MKV.KTObjects.landkoder)
+      ),
+    ];
+  }
+);
 
 const erLonnetArbeidNorge = (arbeidsgivereNorge, fysiskeArbeidssteder) =>
   arbeidsgivereNorge.length > 0 ||

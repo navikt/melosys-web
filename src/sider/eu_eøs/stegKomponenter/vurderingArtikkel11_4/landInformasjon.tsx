@@ -1,7 +1,9 @@
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
-import { arrayTilKonjunksjon } from "../../../../utils/streng";
+import { arrayTilKonjunksjon, storeForbokstaverForLand } from "../../../../utils/streng";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import { useSelector } from "react-redux";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 
 export interface Virksomhet {
   navn?: string;
@@ -11,22 +13,19 @@ export interface Virksomhet {
   };
 }
 
-interface LandInformasjonProps {
-  bostedsland?: KTObject;
-  arbeidsland: KTObject[];
-  valgteVirksomheter: Virksomhet[];
-}
+const LandInformasjon = () => {
+  const valgteVirksomheter = useSelector(avklartefaktaSelectors.AvklarteVirksomheterSelector);
+  const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector);
+  const bostedsland = useSelector(avklartefaktaSelectors.BostedslandSelector);
 
-const LandInformasjon = ({ valgteVirksomheter, arbeidsland, bostedsland }: LandInformasjonProps) => {
   const virksomhetLandListe = valgteVirksomheter.reduce((samling: string[], virksomhet: Virksomhet) => {
     const land = virksomhet?.adresse?.land;
     if (!land) return [...samling];
-    const landMedstorForbokstav = land.charAt(0).toUpperCase() + land.slice(1).toLowerCase();
-    return [...samling, landMedstorForbokstav];
+    return [...samling, storeForbokstaverForLand(land)];
   }, []);
 
   const virksomhetsLandSetning = arrayTilKonjunksjon(virksomhetLandListe);
-  const arbeidsLandSetning = arrayTilKonjunksjon(arbeidsland.map((land) => KV.objektTilTerm(land)));
+  const arbeidsLandSetning = arrayTilKonjunksjon(arbeidsland.map((land: KTObject) => KV.objektTilTerm(land)));
 
   return (
     <div className="land_informasjon">
