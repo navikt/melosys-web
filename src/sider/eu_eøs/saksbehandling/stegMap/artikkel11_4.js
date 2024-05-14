@@ -48,13 +48,6 @@ class Artikkel11_4 extends Steg {
     this.tittel = propsLight.konvensjonStorbritanniaToggleEnabled ? "Vurdering skip" : "Vurdering av 11.4";
     this.komponent = VurderingArtikkel11_4;
     this.samleRelevanteData = (_propsLight) => ({
-      artikkel: {
-        kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
-        term: "11.4",
-      },
-      bostedsland: _propsLight.bostedsland,
-      arbeidsland: _propsLight.arbeidsland,
-      valgteVirksomheter: _propsLight.valgteVirksomheter,
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
 
@@ -65,10 +58,10 @@ class Artikkel11_4 extends Steg {
       };
     };
     this.handlers = {
-      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      oppdaterData: (felt, verdi) => propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettData: (data) => propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
   }
