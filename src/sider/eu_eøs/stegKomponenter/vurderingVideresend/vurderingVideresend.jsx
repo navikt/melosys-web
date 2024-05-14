@@ -120,7 +120,10 @@ export const VurderingVideresend = ({
               }}
               bekreftTekst="Videresend søknad"
               tilbakeKnappProps={{
-                onClick: tilbake,
+                onClick: (e) => {
+                  e.preventDefault();
+                  tilbake();
+                },
                 disabled: !redigerbart,
               }}
             />

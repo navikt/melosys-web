@@ -227,7 +227,10 @@ export const VurderingUtpekt = ({
           disabled: !(redigerbart && harAvklaring),
         }}
         tilbakeKnappProps={{
-          onClick: tilbake,
+          onClick: (e) => {
+            e.preventDefault();
+            tilbake();
+          },
           disabled: !redigerbart,
         }}
       />

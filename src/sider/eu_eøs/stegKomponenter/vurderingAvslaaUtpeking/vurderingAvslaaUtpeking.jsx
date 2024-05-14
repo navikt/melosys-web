@@ -120,7 +120,10 @@ const VurderingAvslaaUtpeking = ({
         }}
         bekreftTekst="Avslutt og send SED"
         tilbakeKnappProps={{
-          onClick: tilbake,
+          onClick: (e) => {
+            e.preventDefault();
+            tilbake();
+          },
           disabled: !redigerbart,
         }}
       />
