@@ -238,7 +238,10 @@ export const VurderingArtikkel13_x_vedtak = ({
         }}
         bekreftTekst="Fatt vedtak"
         tilbakeKnappProps={{
-          onClick: tilbake,
+          onClick: (e) => {
+            e.preventDefault();
+            tilbake();
+          },
           disabled: !redigerbart,
         }}
       />

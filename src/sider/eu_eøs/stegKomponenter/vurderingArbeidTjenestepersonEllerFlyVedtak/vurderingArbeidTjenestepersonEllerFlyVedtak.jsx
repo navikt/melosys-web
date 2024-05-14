@@ -279,6 +279,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       setVedtakPending(false);
     }
   }
+
   const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
@@ -442,7 +443,13 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
           disabled: !stegErGyldig,
         }}
         bekreftTekst="Fatt vedtak"
-        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+        tilbakeKnappProps={{
+          onClick: (e) => {
+            e.preventDefault();
+            tilbake();
+          },
+          disabled: !redigerbart,
+        }}
       />
     </form>
   );
