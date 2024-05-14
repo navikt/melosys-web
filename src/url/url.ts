@@ -2,7 +2,7 @@ import MKV from "../melosyskodeverk";
 import * as Constants from "../constants";
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
-const { HENVENDELSE, KLAGE, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
+const { HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 
 const flytFinnesIkkeForBehandlingPath = "/flyt-finnes-ikke-for-behandling";
 
@@ -85,26 +85,16 @@ export const lagUrl = (
   sakstypeKode: string,
   sakstemaKode: string,
   behandlingstemaKode: string,
-  behandlingstypeKode: string,
-  manglendeInnbetalingToggleEnabled: boolean | undefined,
-  ikkeYrkesaktivFtrlToggleEnabled: boolean | undefined
+  behandlingstypeKode: string
 ) => {
   if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING) {
     return lagÅrsavregningFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
 
-  if (
-    skalViseIngenFlyt(
-      sakstypeKode,
-      sakstemaKode,
-      behandlingstemaKode,
-      behandlingstypeKode,
-      manglendeInnbetalingToggleEnabled,
-      ikkeYrkesaktivFtrlToggleEnabled
-    )
-  ) {
+  if (skalViseIngenFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode)) {
     return lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
+
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
 };
 
@@ -127,6 +117,7 @@ export const harUnntaksregistreringFlyt = (sakstype: string, sakstema: string, b
   if (sakstype === EU_EOS && behandlingstema === MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR) {
     return true;
   }
+
   return false;
 };
 
@@ -138,32 +129,19 @@ export const skalViseIngenFlyt = (
   sakstype: string,
   sakstema: string,
   behandlingstema: string,
-  behandlingstype: string,
-  manglendeInnbetalingToggleEnabled: boolean = false,
-  ikkeYrkesaktivFtrlToggleEnabled: boolean = false
+  behandlingstype: string
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
   }
 
-  if (manglendeInnbetalingToggleEnabled && behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
-    return false;
-  }
-
-  if ([HENVENDELSE, KLAGE, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)) {
+  if ([HENVENDELSE, KLAGE].includes(behandlingstype)) {
     return true;
   }
 
   if (harUnntaksregistreringFlyt(sakstype, sakstema, behandlingstema)) return false;
 
   if (harIkkeYrkesaktivFlyt(sakstype, behandlingstema)) return false;
-
-  if (
-    sakstype === FTRL &&
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV &&
-    ikkeYrkesaktivFtrlToggleEnabled
-  )
-    return false;
 
   if (
     sakstype === TRYGDEAVTALE &&
@@ -173,7 +151,6 @@ export const skalViseIngenFlyt = (
   }
 
   return [
-    MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
     MKV.Koder.behandlinger.behandlingstema.PENSJONIST,
     MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,

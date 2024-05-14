@@ -9,8 +9,6 @@ import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../
 import { useDispatch, useSelector } from "react-redux";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { ListeVelgerFtrl } from "./komponenter/listeVelger";
-import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_FOLKETRYGDEN_2_7 } from "../../../../../featuretoggle/toggleNavn";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { vilkarOperations, vilkarSelectors } from "../../../../../ducks/vilkar";
 import {
@@ -37,8 +35,6 @@ export const VurderingBestemmelserV2 = ({
   aktivtSteg,
   oppdaterStatus,
 }: VurderingBestemmelseProps) => {
-  const folketrygden2_7ToggleEnabled = useFeatureToggle(MELOSYS_FOLKETRYGDEN_2_7);
-
   const dispatch = useDispatch();
 
   const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
@@ -73,7 +69,6 @@ export const VurderingBestemmelserV2 = ({
   const [harSkjeddEndringer, setHarSkjeddEndringer] = useState<boolean>(false);
 
   const ulovligBestemmelseValgt =
-    folketrygden2_7ToggleEnabled &&
     Boolean(valgtBestemmelse) &&
     !lovligeBestemmelser?.includes(valgtBestemmelse) &&
     !pliktigeBestemmelser?.includes(valgtBestemmelse);

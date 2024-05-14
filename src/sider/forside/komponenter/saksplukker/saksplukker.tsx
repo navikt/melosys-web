@@ -12,13 +12,7 @@ import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Api from "../../../../services/api";
 import * as Routing from "../../../../url";
-
-import { useFeatureToggle } from "../../../../featuretoggle";
 import { oppgaverOperations } from "../../../../ducks/oppgaver";
-import {
-  MELOSYS_FTRL_IKKE_YRKESAKTIV,
-  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
-} from "../../../../featuretoggle/toggleNavn";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import saksplukkerSchema from "./saksplukkerSchema";
@@ -67,9 +61,6 @@ export const Saksplukker = ({
   const [antallOppgaver, setAntallOppgaver] = useState(0);
 
   const { sakstype, sakstema } = formValues || {};
-
-  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
-  const ikkeYrkesaktivFtrlToggleEnabled = useFeatureToggle(MELOSYS_FTRL_IKKE_YRKESAKTIV);
 
   useEffect(() => {
     Api.LovligeKombinasjoner.hentSakstyper().then((lovligeSakstyper) => {
@@ -122,9 +113,7 @@ export const Saksplukker = ({
           formValues.sakstype,
           formValues.sakstema,
           behandlingstema,
-          behandlingstype,
-          manglendeInnbetalingToggleEnabled,
-          ikkeYrkesaktivFtrlToggleEnabled
+          behandlingstype
         );
 
         history.push(redirectURL);
