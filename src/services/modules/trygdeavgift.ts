@@ -25,18 +25,6 @@ export type TrygdeavgiftMottakerDto = {
   trygdeavgiftMottaker: KTObject;
 };
 
-export const hentTrygdeavgiftsgrunnlaget = (behandlingID: number): Promise<TrygdeavgiftsgrunnlagDto> =>
-  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/grunnlag`);
-
-export const hentTrygdeavgiftMottaker = (behandlingID: number): Promise<TrygdeavgiftMottakerDto> =>
-  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/mottaker`);
-
-export const oppdaterTrygdeavgiftsgrunnlag = (
-  behandlingID: number,
-  grunnlag: TrygdeavgiftsgrunnlagDto
-): Promise<TrygdeavgiftsgrunnlagDto> =>
-  putAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/grunnlag`, grunnlag);
-
 export type Trygdeavgiftsperiode = {
   fom: string;
   tom: string;
@@ -48,17 +36,24 @@ export type Trygdeavgiftsperiode = {
 
 export type BeregnetTrygdeavgift = {
   trygdeavgiftsperioder: Trygdeavgiftsperiode[];
+  trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto;
 };
 
 export type Fakturamottaker = {
   navn: string;
 };
 
+export const hentTrygdeavgiftMottaker = (behandlingID: number): Promise<TrygdeavgiftMottakerDto> =>
+  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/mottaker`);
+
+export const beregnTrygdeavgiftsperioder = (
+  behandlingID: number,
+  trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto
+): Promise<BeregnetTrygdeavgift> =>
+  putAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`, trygdeavgiftsgrunnlag);
+
 export const hentBeregnetTrygdeavgift = (behandlingID: number): Promise<BeregnetTrygdeavgift> =>
   getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`);
-
-export const beregnTrygdeavgift = (behandlingID: number): Promise<BeregnetTrygdeavgift> =>
-  putAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`);
 
 export const hentFakturamottaker = (behandlingID: number): Promise<Fakturamottaker> =>
   getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/fakturamottaker`);
