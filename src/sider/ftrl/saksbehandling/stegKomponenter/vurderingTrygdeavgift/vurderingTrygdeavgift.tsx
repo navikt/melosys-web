@@ -46,7 +46,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
-  const [harHentetGrunnlag, setHarHentetGrunnlag] = useState(false);
   const [harEndretInnvilgetMedlemskapsperiode, setHarEndretInnvilgetMedlemskapsperiode] = useState<boolean | undefined>(
     undefined
   );
@@ -140,7 +139,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
           }))
         : [defaultPeriode]
     );
-    setHarHentetGrunnlag(true);
   };
 
   useEffect(() => {
@@ -273,10 +271,13 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       <Feilmelding type={aktivFeilmeldingType} />
 
       {trygdeavgiftErIkkeTom && stegErGyldig && (
-        <TrygdeavgiftsperioderTabell
-          lagrePending={lagrePending}
-          perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!}
-        />
+        <>
+          <Nav.Typo.Undertittel>Foreløpig beregnet trygdeavgift</Nav.Typo.Undertittel>
+          <TrygdeavgiftsperioderTabell
+            lagrePending={lagrePending}
+            perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!}
+          />
+        </>
       )}
 
       {visFeilFraLagring && (
