@@ -175,7 +175,7 @@ const VurderingFamilie = ({
                           disabled={!redigerbart}
                           defaultValue={finnBarn(barn?.uuid, formValues.barn)?.innvilget}
                           id={Utils._uuid()}
-                          name={"barn-" + barn.uuid}
+                          name={`barn-${barn.uuid}`}
                         >
                           <Skjema.Radio
                             label="Ja"

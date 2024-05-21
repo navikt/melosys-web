@@ -18,40 +18,58 @@ exports[`Vedtaketypeskjema > snapshot test 1`] = `
         for="feltNavn"
       >
         <div
-          class="skjemaelement"
+          class="navds-radio navds-radio--medium"
         >
           <input
-            aria-invalid="false"
-            class="skjemaelement__input radioknapp"
+            aria-labelledby="aksel-id-2"
+            class="navds-radio__input"
             id="123"
-            name="feltNavn"
             type="radio"
             value="KORRIGERT_VEDTAK"
           />
           <label
-            class="skjemaelement__label"
+            class="navds-radio__label"
             for="123"
           >
-            Korrigert vedtak
+            <span
+              class="navds-radio__content"
+            >
+              <span
+                aria-hidden="true"
+                class="navds-body-short navds-body-short--medium"
+                id="aksel-id-2"
+              >
+                Korrigert vedtak
+              </span>
+            </span>
           </label>
         </div>
         <div
-          class="skjemaelement"
+          class="navds-radio navds-radio--medium navds-radio--disabled"
         >
           <input
-            aria-invalid="false"
-            class="skjemaelement__input radioknapp"
+            aria-labelledby="aksel-id-5"
+            class="navds-radio__input"
             disabled=""
             id="123"
-            name="feltNavn"
             type="radio"
             value="OMGJØRINGSVEDTAK"
           />
           <label
-            class="skjemaelement__label"
+            class="navds-radio__label"
             for="123"
           >
-            Omgjøringsvedtak
+            <span
+              class="navds-radio__content"
+            >
+              <span
+                aria-hidden="true"
+                class="navds-body-short navds-body-short--medium"
+                id="aksel-id-5"
+              >
+                Omgjøringsvedtak
+              </span>
+            </span>
           </label>
         </div>
         <div

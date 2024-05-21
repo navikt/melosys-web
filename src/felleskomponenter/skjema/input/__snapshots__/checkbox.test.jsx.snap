@@ -3,7 +3,7 @@
 exports[`Checkbox > snapshot test 1`] = `
 <div>
   <div
-    class="navds-checkbox navds-checkbox--medium"
+    class="navds-checkbox navds-checkbox--small"
   >
     <input
       aria-checked=""
@@ -42,7 +42,7 @@ exports[`Checkbox > snapshot test 1`] = `
       >
         <span
           aria-hidden="true"
-          class="navds-checkbox__label-text navds-body-short navds-body-short--medium"
+          class="navds-checkbox__label-text navds-body-short navds-body-short--small"
           id="aksel-id-2"
         >
           Label

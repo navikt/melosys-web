@@ -50,6 +50,7 @@ InnerInputComponent.defaultProps = {
   meta: undefined,
   forhandsvalgt: false,
   onChange: undefined,
+  label: undefined,
 };
 
 InnerInputComponent.propTypes = {
@@ -57,6 +58,7 @@ InnerInputComponent.propTypes = {
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   forhandsvalgt: PT.bool,
   onChange: PT.func,
+  label: PT.string,
 };
 
 /** Redux støtter i utgangspunktet ikke boolske valg i
