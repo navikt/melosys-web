@@ -58,7 +58,6 @@ const BrevFelt = ({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
             <Skjema.Checkbox
               feltNavn={`felt.${felt.kode}.feltVerdi`}
               label={felt.beskrivelse}
-              className="brevfelt__sjekkboks"
               disabled={!redigerbart}
             />
           </Nav.Column>

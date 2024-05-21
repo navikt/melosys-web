@@ -188,22 +188,22 @@ const BrevMottaker = ({
           ) : (
             <Nav.Column xs="12" className="arbeidsgiver">
               <LabelMedHjelpetekst label="Velg: " hjelpetekst={arbeidsgiverHjelptekst} bold small />
-              {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.BrevAdresse) => (
-                <Fragment key={Utils._uuid()}>
-                  <Skjema.Radio
-                    className="arbeidsgiver__radio"
-                    feltNavn="arbeidsgiver"
-                    label={`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
-                    id={`arbeidsgiver.${virksomhet.orgnr}`}
-                    key={`arbeidsgiver.${virksomhet.orgnr}`}
-                    value={virksomhet.orgnr}
-                    disabled={!redigerbart}
-                  />
-                  {formValues.arbeidsgiver === virksomhet.orgnr && adresse?.mottakerAdresse && (
-                    <BrevAdresse {...adresse?.mottakerAdresse} className="arbeidsgiver__adresse" />
-                  )}
-                </Fragment>
-              ))}
+              <Nav.RadioGroup legend="" hideLegend size="small" defaultValue={formValues.arbeidsgiver}>
+                {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.BrevAdresse) => (
+                  <Fragment key={`arbeidsgiver.${virksomhet.orgnr}`}>
+                    <Skjema.Radio
+                      feltNavn="arbeidsgiver"
+                      label={`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
+                      id={`arbeidsgiver.${virksomhet.orgnr}`}
+                      value={virksomhet.orgnr}
+                      disabled={!redigerbart}
+                    />
+                    {formValues.arbeidsgiver === virksomhet.orgnr && adresse?.mottakerAdresse && (
+                      <BrevAdresse {...adresse?.mottakerAdresse} className="arbeidsgiver__adresse" />
+                    )}
+                  </Fragment>
+                ))}
+              </Nav.RadioGroup>
             </Nav.Column>
           )}
         </Nav.Row>

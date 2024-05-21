@@ -10,10 +10,10 @@ interface RadioknappSvarProps {
 }
 
 export const RadioknappSvar = ({ feltNavn }: RadioknappSvarProps) => (
-  <>
+  <Nav.RadioGroup legend="" hideLegend size="small">
     <Skjema.Radio label="Ja" feltNavn={feltNavn} value />
     <Skjema.Radio label="Nei" feltNavn={feltNavn} value={false} />
-  </>
+  </Nav.RadioGroup>
 );
 
 interface LabelOgEditerbartSvarProps {

@@ -116,7 +116,7 @@ const VurderingBestemmelse = ({
     <div className="vurderingBestemmelse_trygdeavtale">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
 
-      <Nav.Fieldset legend="Hva er din vurdering av søknaden?">
+      <Nav.RadioGroup legend="Hva er din vurdering av søknaden?" defaultValue={formValues?.vedtak}>
         {vedtakValg?.map((valg) => (
           <Skjema.Radio
             key={valg.kode}
@@ -130,7 +130,7 @@ const VurderingBestemmelse = ({
             }}
           />
         ))}
-      </Nav.Fieldset>
+      </Nav.RadioGroup>
 
       {formValues?.vedtak && !Utils._isEmpty(bestemmelseValg) && (
         <Nav.Fieldset legend="Velg bestemmelse" className="bestemmelseValg">

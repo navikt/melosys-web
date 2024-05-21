@@ -21,13 +21,15 @@ const RedigererPreElementer = ({ className, redigerbart }: EnRedigeringsknappLis
             </legend>
           </Nav.Column>
           <Nav.Column xs="4" className="col">
-            <Skjema.Radio disabled={!redigerbart} label="Ja" feltNavn="arbeidPaaLand.erFastArbeidssted" value />
-            <Skjema.Radio
-              disabled={!redigerbart}
-              label="Nei"
-              feltNavn="arbeidPaaLand.erFastArbeidssted"
-              value={false}
-            />
+            <Nav.RadioGroup legend="" hideLegend>
+              <Skjema.Radio disabled={!redigerbart} label="Ja" feltNavn="arbeidPaaLand.erFastArbeidssted" value />
+              <Skjema.Radio
+                disabled={!redigerbart}
+                label="Nei"
+                feltNavn="arbeidPaaLand.erFastArbeidssted"
+                value={false}
+              />
+            </Nav.RadioGroup>
           </Nav.Column>
         </fieldset>
       </Nav.Row>
@@ -41,8 +43,10 @@ const RedigererPreElementer = ({ className, redigerbart }: EnRedigeringsknappLis
             </legend>
           </Nav.Column>
           <Nav.Column xs="4" className="col">
-            <Skjema.Radio disabled={!redigerbart} label="Ja" feltNavn="arbeidPaaLand.erHjemmekontor" value />
-            <Skjema.Radio disabled={!redigerbart} label="Nei" feltNavn="arbeidPaaLand.erHjemmekontor" value={false} />
+            <Nav.RadioGroup legend="" hideLegend>
+              <Skjema.Radio disabled={!redigerbart} label="Ja" feltNavn="arbeidPaaLand.erHjemmekontor" value />
+              <Skjema.Radio disabled={!redigerbart} label="Nei" feltNavn="arbeidPaaLand.erHjemmekontor" value={false} />
+            </Nav.RadioGroup>
           </Nav.Column>
         </fieldset>
       </Nav.Row>

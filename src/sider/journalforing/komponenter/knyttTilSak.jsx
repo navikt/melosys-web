@@ -156,20 +156,17 @@ export const KnyttTilSak = (props) => {
           </Nav.Alert>
         )}
         {erJournalføring && (
-          <Skjema.RadioGruppe
-            feltNavn="opprettBehandling"
-            label={<Nav.Typo.Undertittel>Velg hva du vil gjøre med dokumentet</Nav.Typo.Undertittel>}
-            className="panelElement nyBehandlingEllerUtenBehandling"
-          >
-            <Skjema.Radio feltNavn={feltNavn.opprettBehandling} value label="Opprett ny behandling" />
-            <Skjema.Radio feltNavn={feltNavn.opprettBehandling} value={false} label="Uten å opprette behandling" />
-          </Skjema.RadioGruppe>
+          <div className="panelElement">
+            <Nav.Typo.Undertittel className="overskrift">Velg hva du vil gjøre med dokumentet</Nav.Typo.Undertittel>
+            <Nav.RadioGroup legend="" hideLegend size="small">
+              <Skjema.Radio feltNavn={feltNavn.opprettBehandling} value label="Opprett ny behandling" />
+              <Skjema.Radio feltNavn={feltNavn.opprettBehandling} value={false} label="Uten å opprette behandling" />
+            </Nav.RadioGroup>
+          </div>
         )}
         {opprettBehandling && (
           <div className="panelElement">
-            <Nav.Typo.Undertittel className="temaTypeOverskrift">
-              Velg tema og type for ny behandling
-            </Nav.Typo.Undertittel>
+            <Nav.Typo.Undertittel className="overskrift">Velg tema og type for ny behandling</Nav.Typo.Undertittel>
             <Skjema.Select
               feltNavn={feltNavn.behandlingstema}
               bredde="fullbredde"
@@ -187,11 +184,11 @@ export const KnyttTilSak = (props) => {
                 Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie.
               </Nav.Typo.EtikettLiten>
             )}
-            <Skjema.RadioGruppe feltNavn={feltNavn.behandlingstype} label="Behandlingstype" className="behandlingstype">
+            <Nav.RadioGroup legend="Behandlingstype" size="small">
               {muligeBehandlingstyper?.map((elem) => (
                 <Skjema.Radio feltNavn={feltNavn.behandlingstype} key={elem.kode} value={elem.kode} label={elem.term} />
               ))}
-            </Skjema.RadioGruppe>
+            </Nav.RadioGroup>
           </div>
         )}
         {opprettBehandling === false && sisteBehandlingErPågåendeArtikkel16Sak && (

@@ -279,6 +279,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       setVedtakPending(false);
     }
   }
+
   const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
@@ -359,18 +360,15 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       {visSendSEDValg && (
         <Nav.Row>
           <Nav.Column xs="6">
-            <Skjema.RadioGruppe
-              feltNavn="informerUtenlandskTrygdemyndighet"
-              label="Skal utenlandsk trygdemyndighet informeres?"
+            <Nav.RadioGroup
+              legend="Skal utenlandsk trygdemyndighet informeres?"
+              size="small"
+              defaultValue={formValues?.informerUtenlandskTrygdemyndighet}
+              disabled={!redigerbart}
             >
-              <Skjema.Radio feltNavn="informerUtenlandskTrygdemyndighet" label="Ja" value disabled={!redigerbart} />
-              <Skjema.Radio
-                feltNavn="informerUtenlandskTrygdemyndighet"
-                label="Nei"
-                value={false}
-                disabled={!redigerbart}
-              />
-            </Skjema.RadioGruppe>
+              <Skjema.Radio feltNavn="informerUtenlandskTrygdemyndighet" label="Ja" value />
+              <Skjema.Radio feltNavn="informerUtenlandskTrygdemyndighet" label="Nei" value={false} />
+            </Nav.RadioGroup>
           </Nav.Column>
         </Nav.Row>
       )}

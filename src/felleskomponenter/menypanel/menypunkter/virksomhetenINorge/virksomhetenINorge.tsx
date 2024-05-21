@@ -24,10 +24,10 @@ interface RadioknappSvarProps {
 }
 
 const RadioknappSvar = ({ feltNavn, redigerbart }: RadioknappSvarProps) => (
-  <>
+  <Nav.RadioGroup legend="" hideLegend size="small">
     <Skjema.Radio disabled={!redigerbart} label="Ja" feltNavn={feltNavn} value />
     <Skjema.Radio disabled={!redigerbart} label="Nei" feltNavn={feltNavn} value={false} />
-  </>
+  </Nav.RadioGroup>
 );
 
 interface SporsmalOgSvarProps {

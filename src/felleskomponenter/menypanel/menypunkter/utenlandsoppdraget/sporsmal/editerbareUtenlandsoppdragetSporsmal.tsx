@@ -12,10 +12,10 @@ interface RadioknappSvarProps {
 }
 
 const RadioknappSvar = ({ feltNavn }: RadioknappSvarProps) => (
-  <>
+  <Nav.RadioGroup legend="" hideLegend size="small">
     <Skjema.Radio label="Ja" feltNavn={feltNavn} value />
     <Skjema.Radio label="Nei" feltNavn={feltNavn} value={false} />
-  </>
+  </Nav.RadioGroup>
 );
 
 interface PeriodeSvarProps {
@@ -24,10 +24,10 @@ interface PeriodeSvarProps {
 }
 
 const PeriodeSvar = ({ fomFeltNavn, tomFeltNavn }: PeriodeSvarProps) => (
-  <>
+  <Nav.RadioGroup legend="" hideLegend size="small">
     <Skjema.Datovelger feltNavn={fomFeltNavn} label="Fra og med" />
     <Skjema.Datovelger feltNavn={tomFeltNavn} label="Til og med" />
-  </>
+  </Nav.RadioGroup>
 );
 
 interface SporsmalOgSvarProps {

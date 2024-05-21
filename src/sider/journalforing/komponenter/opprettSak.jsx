@@ -209,17 +209,19 @@ export const OpprettSak = (props) => {
           >
             {visArbeidFlereLandEllerUkjent && (
               <Nav.Row className="land_radiobtn">
-                <Skjema.Radio
-                  feltNavn={feltNavn.soknadslandFlereLandUkjentHvilke}
-                  label="Flere land. Ikke kjent hvilke"
-                  disabled={soknadsland?.length > 0}
-                  value
-                />
-                <Skjema.Radio
-                  feltNavn={feltNavn.soknadslandFlereLandUkjentHvilke}
-                  label="Velg land fra liste"
-                  value={false}
-                />
+                <Nav.RadioGroup legend="" hideLegend>
+                  <Skjema.Radio
+                    feltNavn={feltNavn.soknadslandFlereLandUkjentHvilke}
+                    label="Flere land. Ikke kjent hvilke"
+                    disabled={soknadsland?.length > 0}
+                    value
+                  />
+                  <Skjema.Radio
+                    feltNavn={feltNavn.soknadslandFlereLandUkjentHvilke}
+                    label="Velg land fra liste"
+                    value={false}
+                  />
+                </Nav.RadioGroup>
               </Nav.Row>
             )}
             {!flereLandUkjentHvilke && (

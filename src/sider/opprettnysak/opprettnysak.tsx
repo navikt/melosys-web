@@ -300,7 +300,12 @@ const OpprettNySak = ({
                 understrek
               />
               <div className="innrykk">
-                <Nav.RadioGroup onChange={(value) => change("hovedpart", value)} legend="" hideLegend>
+                <Nav.RadioGroup
+                  defaultValue={BRUKER}
+                  onChange={(value) => change("hovedpart", value)}
+                  legend=""
+                  hideLegend
+                >
                   <Nav.AkselRadio value={BRUKER}>Bruker</Nav.AkselRadio>
                   <Nav.AkselRadio value={VIRKSOMHET}>Virksomhet</Nav.AkselRadio>
                 </Nav.RadioGroup>

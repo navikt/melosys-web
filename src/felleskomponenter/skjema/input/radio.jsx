@@ -1,5 +1,5 @@
 import PT from "prop-types";
-import { touch, Field } from "redux-form";
+import { Field, touch } from "redux-form";
 
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
@@ -11,6 +11,7 @@ function InnerInputComponent({
   forhandsvalgt,
   meta, // eslint-disable-line no-unused-vars
   onChange,
+  label,
   ...rest
 }) {
   const innerChange = (e) => {
@@ -28,7 +29,7 @@ function InnerInputComponent({
   const feil = meta.error && meta.touched && !meta.active ? meta.error : undefined;
 
   return (
-    <Nav.Radio
+    <Nav.AkselRadio
       {...inputProps}
       checked={gjeldendeFeltVerdi === radioButtonVerdi || forhandsvalgt}
       // Fikser fokus/markering feil i IE
@@ -38,7 +39,9 @@ function InnerInputComponent({
       }}
       feil={feil}
       onFocus={() => {}}
-    />
+    >
+      {label}
+    </Nav.AkselRadio>
   );
 }
 

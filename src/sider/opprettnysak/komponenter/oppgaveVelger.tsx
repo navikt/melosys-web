@@ -1,5 +1,3 @@
-import classNames from "classnames";
-
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
@@ -73,29 +71,22 @@ export const OppgaveVelger = ({
 
   return (
     <div className="oppgaveVelger">
-      <div className="velgVisning">
-        <Skjema.Radio
-          feltNavn="oppretterOppgave"
-          label="Opprett ny oppgave"
-          className={classNames("visningValg", { "checked-valg": oppretterOppgave })}
-          name="velgVisningOppgave"
-          value
-        />
+      <Nav.RadioGroup legend="" hideLegend>
+        <Skjema.Radio feltNavn="oppretterOppgave" label="Opprett ny oppgave" name="velgVisningOppgave" value />
         <Skjema.Radio
           feltNavn="oppretterOppgave"
           label="Eksisterende oppgave"
-          className={classNames("visningValg", { "checked-valg": !oppretterOppgave })}
           name="velgVisningOppgave"
           value={false}
         />
-      </div>
+      </Nav.RadioGroup>
       {oppretterOppgave ? (
         <OpprettNyOppgave />
       ) : (
         <>
           {oppgaverFinnes && (
             <>
-              <Nav.Alert variant="info">
+              <Nav.Alert className="alertstripe" variant="info">
                 Du kan kun velge mellom følgende oppgaver som er knyttet til et inngående dokument
               </Nav.Alert>
               <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />

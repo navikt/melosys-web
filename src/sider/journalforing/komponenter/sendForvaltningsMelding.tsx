@@ -15,9 +15,7 @@ interface SendForvaltningsMeldingProps {
 const SendForvaltningsMelding = ({ avsenderType, harRegistrertAdresse }: SendForvaltningsMeldingProps) => {
   return (
     <div className="sendForvaltningsmelding">
-      <Nav.Typo.Element>Skal melding om saksbehandlingtid sendes automatisk?</Nav.Typo.Element>
-
-      <Skjema.RadioGruppe feltNavn="forvaltningsmeldingMottaker" label="">
+      <Nav.RadioGroup legend="Skal melding om saksbehandlingtid sendes automatisk?" size="small">
         <Skjema.Radio
           disabled={!harRegistrertAdresse}
           feltNavn="forvaltningsmeldingMottaker"
@@ -45,7 +43,7 @@ const SendForvaltningsMelding = ({ avsenderType, harRegistrertAdresse }: SendFor
           label="Nei, jeg vil sende melding senere eller behandle saken innen kort tid"
           value={INGEN}
         />
-      </Skjema.RadioGruppe>
+      </Nav.RadioGroup>
 
       {!harRegistrertAdresse && (
         <Nav.Alert className="feilmelding" variant="warning">

@@ -1,34 +1,32 @@
 import { DokumenterV2 } from "../../../services/api";
 import * as Skjema from "../../skjema";
-
-import "./valgAlternativer.css";
+import * as Nav from "../../../navFrontend";
 
 interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
   feltKode: string;
   redigerbart: boolean;
   changeField: (felt: string, data: any) => void;
+  feltVerdi?: {
+    valg: string | null | undefined;
+  };
 }
 
-const vannretteSeksjoner = ["DISTRIBUSJONSTYPE"];
-
-const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlternativProps) => {
+const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField, feltVerdi }: ValgAlternativProps) => {
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {
     return (
-      <div className="valgalternativer">
-        <div className={vannretteSeksjoner.includes(feltKode) ? "vannrett" : ""}>
-          {valg.valgAlternativer.map((alternativ) => (
-            <Skjema.Radio
-              feltNavn={`felt.${feltKode}.valg`}
-              label={alternativ.beskrivelse}
-              id={`${feltKode}.${alternativ.kode}`}
-              key={`${feltKode}.${alternativ.kode}`}
-              value={alternativ.kode}
-              disabled={!redigerbart}
-            />
-          ))}
-        </div>
-      </div>
+      <Nav.RadioGroup legend="" hideLegend size="small" defaultValue={feltVerdi?.valg}>
+        {valg.valgAlternativer.map((alternativ) => (
+          <Skjema.Radio
+            feltNavn={`felt.${feltKode}.valg`}
+            label={alternativ.beskrivelse}
+            id={`${feltKode}.${alternativ.kode}`}
+            key={`${feltKode}.${alternativ.kode}`}
+            value={alternativ.kode}
+            disabled={!redigerbart}
+          />
+        ))}
+      </Nav.RadioGroup>
     );
   }
   if (valg.valgType === DokumenterV2.ValgType.SELECT) {

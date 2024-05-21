@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import classNames from "classnames";
 import { useDispatch } from "react-redux";
 import { change } from "redux-form";
 import PT from "prop-types";
@@ -70,24 +69,10 @@ const FagsakVelger = (props) => {
           <OpprettSak formValues={formValues} feltNavn={feltNavn} />
         </>
       ) : (
-        <div className="velgVisning">
-          <Nav.Radio
-            label={EKSISTERENDE}
-            className={classNames("visningValg", { "checked-valg": valgtVisning === EKSISTERENDE })}
-            name="velgVisning"
-            onChange={() => setValgtVisning(EKSISTERENDE)}
-            checked={valgtVisning === EKSISTERENDE}
-            value={EKSISTERENDE}
-          />
-          <Nav.Radio
-            label={OPPRETT}
-            className={classNames("visningValg", { "checked-valg": valgtVisning === OPPRETT })}
-            name="velgVisning"
-            onChange={() => setValgtVisning(OPPRETT)}
-            checked={valgtVisning === OPPRETT}
-            value={OPPRETT}
-          />
-        </div>
+        <Nav.RadioGroup defaultValue={EKSISTERENDE} onChange={setValgtVisning} legend="" hideLegend>
+          <Nav.AkselRadio value={EKSISTERENDE}>{EKSISTERENDE}</Nav.AkselRadio>
+          <Nav.AkselRadio value={OPPRETT}>{OPPRETT}</Nav.AkselRadio>
+        </Nav.RadioGroup>
       )}
 
       {valgtVisning === EKSISTERENDE && (
