@@ -322,18 +322,17 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
       class="stegKnapper"
     >
       <button
-        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--medium navds-button--disabled"
+        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small navds-button--disabled"
         disabled=""
       >
         <span
-          class="navds-label"
+          class="navds-label navds-label--small"
         >
           Bekreft og fortsett
         </span>
       </button>
       <button
-        class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--medium"
-        htmltype="button"
+        class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small"
       >
         <span
           class="navds-button__icon"
@@ -354,7 +353,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
           </svg>
         </span>
         <span
-          class="navds-label"
+          class="navds-label navds-label--small"
         >
           Tilbake
         </span>

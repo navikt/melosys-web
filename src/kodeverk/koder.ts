@@ -2,7 +2,6 @@
 // forhold til, og benyttes kun frontend for å avgjøre riktige steg pr ID.
 export const YRKESGRUPPE = "YRKESGRUPPE";
 export const YRKESAKTIVITET = "YRKESAKTIVITET";
-export const AVKLARTE_ARBEIDSGIVER = "AVKLARTE_ARBEIDSGIVER";
 export const SOKKEL = "SOKKEL";
 export const SKIP = "SKIP";
 
@@ -12,24 +11,12 @@ export const Unntaksperiode = {
   AVSLAG: "AVSLAG",
 };
 
-export const VurderingTrygdeavgiftVirksomhetTyper = {
-  NORSK: "NORSK",
-  UTENLANDSK: "UTENLANDSK",
-};
-
 export const VurderingSokkelSkipTyper = {
   SKIP_NORSK_TERRITORIAL: "SKIP_NORSK_TERRITORIAL",
   SKIP_ETT_LAND: "SKIP_ETT_LAND",
   SOKKEL_NORSK: "SOKKEL_NORSK",
   SOKKEL_UTLAND: "SOKKEL_UTLAND",
   SOKKEL_ELLER_SKIP_FLERE_LAND: "SOKKEL_ELLER_SKIP_FLERE_LAND",
-};
-export const VurderingForretningsstedTyper = {
-  ID: "FORRETNINGSSTED",
-  EN_ARBEIDSGIVER: "EN_ARBEIDSGIVER",
-  TO_ELLER_FLERE_ARBEIDSGIVERE: "TO_ELLER_FLERE_ARBEIDSGIVERE",
-  SAMME_LAND: "SAMME_LAND",
-  ULIKE_LAND: "ULIKE_LAND",
 };
 
 export const VurderingYrkesaktivitetTyper = {
@@ -39,6 +26,7 @@ export const VurderingYrkesaktivitetTyper = {
   ORDINAER_OG_SELVSTENDIG: "ORDINAER_OG_SELVSTENDIG",
   TJENESTEPERSON_NORSK_STATSFORVANTLING: "TJENESTEPERSON_NORSK_STATSFORVANTLING",
 };
+
 export const VurderingYrkesgruppeTyper = {
   ORDINAER: "ORDINAER",
   SOKKEL_ELLER_SKIP: "SOKKEL_ELLER_SKIP",
@@ -48,11 +36,6 @@ export const VurderingYrkesgruppeTyper = {
   ORDINAER_UTEN_ART12: "ORDINAER_UTEN_ART12",
 };
 
-export const VurderingSkiftesvisSekvensieltArbeid = {
-  SKIFTESVIS: "SKIFTESVIS",
-  SEKVENSIELT: "SEKVENSIELT",
-};
-
 export const VurderingVesentligAktivitetINorgeTyper = {
   UNDER_25_PROSENT: "UNDER_25_PROSENT",
   OVER_25_PROSENT: "OVER_25_PROSENT",
@@ -60,11 +43,6 @@ export const VurderingVesentligAktivitetINorgeTyper = {
 
 export const SoknadslandFaktaTyper = {
   IKKE_ARBEIDSLAND: "IKKE_ARBEIDSLAND",
-};
-
-export const AdresseType = {
-  STRUKTURERT: "STRUKTURERT",
-  USTRUKTURERT: "USTRUKTURERT",
 };
 
 export const SedStatus = {
@@ -138,21 +116,6 @@ export const Relasjonsrolle = {
   EKTE: "EKTE",
   REPA: "REPA",
   SAMB: "SAMB",
-};
-
-export const PersonStatus = {
-  ADNR: "ADNR",
-  UTPE: "UTPE",
-  BOSA: "BOSA",
-  UREG: "UREG",
-  ABNR: "ABNR",
-  UFUL: "UFUL",
-  UTVA: "UTVA",
-  FOSV: "FOSV",
-  DØDD: "DØDD",
-  DØD: "DØD",
-  UTAN: "UTAN",
-  FØDR: "FØDR",
 };
 
 export enum StegNavn {

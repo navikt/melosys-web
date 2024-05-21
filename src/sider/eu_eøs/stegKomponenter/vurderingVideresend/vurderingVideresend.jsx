@@ -117,11 +117,13 @@ export const VurderingVideresend = ({
               bekreftKnappProps={{
                 loading: videresendPending,
                 disabled: !redigerbart,
-                htmlType: "submit",
               }}
               bekreftTekst="Videresend søknad"
               tilbakeKnappProps={{
-                onClick: tilbake,
+                onClick: (e) => {
+                  e.preventDefault();
+                  tilbake();
+                },
                 disabled: !redigerbart,
               }}
             />

@@ -12,7 +12,13 @@ const Fotknapper = ({ avbrytJournalforing, spinner = false }: FotknapperProps) =
     <Nav.Button variant="primary" loading={spinner}>
       Journalfør
     </Nav.Button>
-    <Nav.Button variant="tertiary" onClick={avbrytJournalforing}>
+    <Nav.Button
+      variant="tertiary"
+      onClick={(e) => {
+        e.preventDefault();
+        avbrytJournalforing();
+      }}
+    >
       Avbryt
     </Nav.Button>
   </div>

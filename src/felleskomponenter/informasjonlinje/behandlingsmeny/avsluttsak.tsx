@@ -111,12 +111,13 @@ const AvsluttSak = () => {
       case UTSENDT_ARBEIDSTAKER:
       case UTSENDT_SELVSTENDIG:
       case ARBEID_TJENESTEPERSON_ELLER_FLY:
-      case ARBEID_FLERE_LAND:
         return (
           redigerbart &&
           sakstype === EU_EOS &&
           [NY_VURDERING, HENVENDELSE, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)
         );
+      case ARBEID_FLERE_LAND:
+        return redigerbart && sakstype === EU_EOS;
       default:
         return redigerbart;
     }

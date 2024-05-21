@@ -438,10 +438,15 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
         bekreftKnappProps={{
           loading: vedtakPending,
           disabled: !stegErGyldig,
-          htmlType: "submit",
         }}
         bekreftTekst="Fatt vedtak"
-        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+        tilbakeKnappProps={{
+          onClick: (e) => {
+            e.preventDefault();
+            tilbake();
+          },
+          disabled: !redigerbart,
+        }}
       />
     </form>
   );

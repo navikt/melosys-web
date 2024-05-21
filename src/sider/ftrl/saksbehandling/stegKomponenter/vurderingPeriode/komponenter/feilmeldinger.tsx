@@ -267,7 +267,6 @@ export function finnAktivFeilmelding(
   behandlingstype: string,
   land: string[],
   begrensePeriodeVedtakToggleEnabled: boolean | undefined,
-  manglendeInnbetalingToggleEnabled: boolean | undefined,
   søknadsperiodeFomDato: string,
   søknadsperiodeTomDato?: string,
   ikkeyrkesaktivOppholdstype?: string,
@@ -291,11 +290,11 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER;
   }
 
-  if (manglendeInnbetalingToggleEnabled && finnesOverlappIOpphørtePerioder(medlemskapsperioder)) {
+  if (finnesOverlappIOpphørtePerioder(medlemskapsperioder)) {
     return TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER;
   }
 
-  if (manglendeInnbetalingToggleEnabled && opphørtPeriodeOverlapperInnvilgetPeriode(medlemskapsperioder)) {
+  if (opphørtPeriodeOverlapperInnvilgetPeriode(medlemskapsperioder)) {
     return TypeFeilmelding.OVERLAPP_OPPHØRT_INNVILGET;
   }
 
@@ -307,11 +306,11 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.MEDLEMSKAPSPERIODE_STARTER_FØR_2023;
   }
 
-  if (manglendeInnbetalingToggleEnabled && bareOpphørtePerioder(medlemskapsperioder, behandlingstype)) {
+  if (bareOpphørtePerioder(medlemskapsperioder, behandlingstype)) {
     return TypeFeilmelding.BARE_OPPHØRTE_PERIODER;
   }
 
-  if (manglendeInnbetalingToggleEnabled && harAndrePerioderEtterOpphørtPeriode(medlemskapsperioder, behandlingstype)) {
+  if (harAndrePerioderEtterOpphørtPeriode(medlemskapsperioder, behandlingstype)) {
     return TypeFeilmelding.OPPHØRT_PERIODE_FØR_ANNEN_PERIODE;
   }
 
@@ -320,7 +319,7 @@ export function finnAktivFeilmelding(
   }
 
   // Sjekk advarsler
-  if (manglendeInnbetalingToggleEnabled && finnesIkkeOpphørtePerioder(medlemskapsperioder, behandlingstype)) {
+  if (finnesIkkeOpphørtePerioder(medlemskapsperioder, behandlingstype)) {
     return TypeFeilmelding.INGEN_OPPHØRTE_PERIODER;
   }
 

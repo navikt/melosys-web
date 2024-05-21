@@ -435,7 +435,6 @@ const Saksopplysninger = ({
                       loading: registreringPending,
                       onClick: () => submitRegistrering(),
                       disabled: !harValgtIkkeGodkjenn && (!redigerbart || harUnntaksperiodefeil),
-                      htmlType: "submit",
                     }}
                     bekreftTekst="Lagre"
                   />

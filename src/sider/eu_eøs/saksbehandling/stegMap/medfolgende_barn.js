@@ -4,7 +4,7 @@ import { BOOLSK_STRING } from "../../../../constants";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingMedfolgendeBarn from "../../stegKomponenter/vurderingMedfolgendeBarn";
-import { hentFaktaListe, erVilkarOppfylt } from "../../../../domeneUtils";
+import { hentFaktaListe, hentVilkar } from "../../../../domeneUtils";
 
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -15,19 +15,26 @@ class VesentligVirksomhet extends Steg {
       propsLight.avklartefakta
     );
 
+    const art12_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_1, propsLight.vilkar);
+    const art12_2 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_2, propsLight.vilkar);
+    const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
+
+    const utsendingsvilkårOppfylt = propsLight.konvensjonStorbritanniaToggleEnabled
+      ? propsLight.utsendingsvilkår?.oppfylt
+      : art12_1.oppfylt || art12_2.oppfylt;
+    const unntaksvilkårOppfylt = propsLight.konvensjonStorbritanniaToggleEnabled
+      ? propsLight.unntaksvilkår?.oppfylt
+      : art16_1.oppfylt;
+
     const harAvklaring = this.harAvklaring(vurderingLovvalgBarnFakta, propsLight.medfolgendeBarn);
 
     this.kriterier = [
       {
-        exec: (avklartefakta, alleVilkar) =>
-          harAvklaring &&
-          (erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, alleVilkar) ||
-            erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, alleVilkar)),
+        exec: () => harAvklaring && utsendingsvilkårOppfylt,
         nesteSteg: STEG.VEDTAK,
       },
       {
-        exec: (avklartefakta, alleVilkar) =>
-          harAvklaring && erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar),
+        exec: () => harAvklaring && unntaksvilkårOppfylt,
         nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
       },
       {

@@ -99,7 +99,7 @@ class Journalforing extends Component {
     const { oppgaveID, journalpostID } = this.props.match.params;
     const {
       journalforingSkjemaVerdier,
-      journalforing: { hoveddokument = {} },
+      journalforing: { hoveddokument = {}, mottaksKanalErEessi },
     } = this.props;
     const {
       brukerID,
@@ -118,9 +118,7 @@ class Journalforing extends Component {
     const vedlegg = [...this.mapFysiskeVedleggsTitlerTilVedlegg(vedleggSkjema.pdf)];
 
     // Data som er felles
-    const journalPostData = {
-      avsenderID,
-      avsenderNavn,
+    let journalPostData = {
       brukerID,
       virksomhetOrgnr,
       hoveddokument: {
@@ -133,9 +131,17 @@ class Journalforing extends Component {
       vedlegg,
       skalTilordnes,
       mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
-      avsenderType: this.mapAvsenderType(avsenderType, avsenderID),
       forvaltningsmeldingMottaker,
     };
+
+    if (!mottaksKanalErEessi) {
+      journalPostData = {
+        ...journalPostData,
+        avsenderID,
+        avsenderNavn,
+        avsenderType: this.mapAvsenderType(avsenderType, avsenderID),
+      };
+    }
 
     if (hensikt === JOURNALFORING_HENSIKT.KNYTT) {
       return this.dataSpesifiktTilKnytt(journalPostData);
@@ -392,7 +398,14 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing: { vedlegg = [], hoveddokument = {}, behandlingsInformasjon, avsenderID, avsenderNavn },
+      journalforing: {
+        vedlegg = [],
+        hoveddokument = {},
+        behandlingsInformasjon,
+        avsenderID,
+        avsenderNavn,
+        mottaksKanalErEessi,
+      },
       settFeltInnhold,
     } = this.props;
 
@@ -426,6 +439,9 @@ class Journalforing extends Component {
                       )}
                       {visNormalJournalforing && (
                         <JournalforingForm
+                          avsenderIDFraJournalpost={avsenderID}
+                          avsenderNavnFraJournalpost={avsenderNavn}
+                          mottaksKanalErEessi={mottaksKanalErEessi}
                           journalpostID={journalpostID}
                           hoveddokumentID={hoveddokumentID}
                           hoveddokumentTittel={hoveddokumentTittel}

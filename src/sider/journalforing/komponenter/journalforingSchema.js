@@ -1,4 +1,4 @@
-import { object, string, array, boolean } from "yup";
+import { array, boolean, object, string } from "yup";
 
 import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
@@ -126,18 +126,24 @@ const journalforing = object().shape({
       then: string().required().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .nullable(),
-  avsenderNavn: string().when("avsenderType", {
-    is: erFritekst,
-    then: string().required(OPPGI_AVSENDER).nullable(),
-    otherwise: string().required(FINNER_IKKE_NAVN_PA_AVSENDER).nullable(),
-  }),
+  avsenderNavn: string()
+    .nullable()
+    .when("$mottaksKanalErEessi", {
+      is: false,
+      then: string().when("avsenderType", {
+        is: erFritekst,
+        then: string().required(OPPGI_AVSENDER).nullable(),
+        otherwise: string().required(FINNER_IKKE_NAVN_PA_AVSENDER).nullable(),
+      }),
+    }),
   avsenderType: string().when("$erAvsenderPreutfylt", {
     is: false,
     then: string().ensure().required(VELG_EN_AVSENDER),
   }),
   utenlandskTrygdemyndighetLandkode: string()
-    .when("avsenderType", {
-      is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
+    .when(["avsenderType", "$mottaksKanalErEessi"], {
+      is: (avsendertype, mottaksKanalErEessi) =>
+        avsendertype === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET && !mottaksKanalErEessi,
       then: string().required(VELG_ETT_LAND_UTENLANDSK_TRYGDEMYNDIGHET).nullable(),
     })
     .nullable(),

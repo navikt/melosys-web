@@ -41,8 +41,8 @@ export interface DokumentOversikt {
  * @deprecated Typer fra Api flyttes til Api-modul
  */
 export interface SedPdfData {
-  begrunnelseUtenlandskMyndighet: string | null;
-  vilSendeAnmodningOmMerInformasjon: boolean | null;
-  nyttLovvalgsland: string | null;
-  fritekst: string | null;
+  begrunnelseUtenlandskMyndighet?: string | null;
+  vilSendeAnmodningOmMerInformasjon?: boolean | null;
+  nyttLovvalgsland?: string | null;
+  fritekst?: string | null;
 }

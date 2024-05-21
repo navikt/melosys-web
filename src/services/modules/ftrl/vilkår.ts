@@ -1,5 +1,4 @@
 import { VilkårOgBegrunnelser } from "../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingBestemmelse/komponenter/typer";
-import { _isEmpty } from "../../../utils";
 import { API_BASE_URL, FTRL } from "../../api-constants";
 import { getAsJson } from "../../utils";
 

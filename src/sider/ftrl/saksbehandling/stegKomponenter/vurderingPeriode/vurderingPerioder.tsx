@@ -24,10 +24,7 @@ import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPeri
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 import { useFeatureToggle } from "../../../../../featuretoggle";
-import {
-  MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
-  MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING,
-} from "../../../../../featuretoggle/toggleNavn";
+import { MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK } from "../../../../../featuretoggle/toggleNavn";
 import { oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
 const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
@@ -76,7 +73,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const [lovligeInnvilgelsesresultat, setLovligeInnvilgelsesresultat] = useState<string[]>([]);
 
   const begrensePeriodeVedtakToggleEnabled = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
-  const manglendeInnbetalingToggleEnabled = useFeatureToggle(MELOSYS_SAKSBEHANDLING_MANGLENDE_INNBETALING);
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const lagredeMedlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
@@ -119,7 +115,6 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     behandlingstype,
     soknadsland,
     begrensePeriodeVedtakToggleEnabled,
-    manglendeInnbetalingToggleEnabled,
     soknadsperiode.fom,
     soknadsperiode.tom,
     ikkeyrkesaktivOppholdstype,

@@ -235,11 +235,13 @@ export const VurderingArtikkel13_x_vedtak = ({
         bekreftKnappProps={{
           loading: vedtakPending,
           disabled: !stegErGyldig,
-          htmlType: "submit",
         }}
         bekreftTekst="Fatt vedtak"
         tilbakeKnappProps={{
-          onClick: tilbake,
+          onClick: (e) => {
+            e.preventDefault();
+            tilbake();
+          },
           disabled: !redigerbart,
         }}
       />

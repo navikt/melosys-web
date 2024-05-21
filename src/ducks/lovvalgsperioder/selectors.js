@@ -31,14 +31,14 @@ export const LovvalgBestemmelseSelector = createSelector(
   (lovvalgsperiode) => lovvalgsperiode.lovvalgsbestemmelse
 );
 
+export const TilleggBestemmelseSelector = createSelector(
+  LovvalgsperiodeSelector,
+  (lovvalgsperiode) => lovvalgsperiode.tilleggBestemmelse
+);
+
 export const LovvalgslandSelector = createSelector(
   (state) => LovvalgsperiodeSelector(state),
   (lovvalgsperiode) => lovvalgsperiode.lovvalgsland
-);
-
-export const UnntakFraBestemmelseSelector = createSelector(
-  (state) => LovvalgsperiodeSelector(state),
-  (lovvalgsperiode) => lovvalgsperiode.unntakFraBestemmelse
 );
 
 export const MedlemskapsperiodeIDSelector = createSelector(
@@ -46,10 +46,13 @@ export const MedlemskapsperiodeIDSelector = createSelector(
   (lovvalgsperiode) => lovvalgsperiode.medlemskapsperiodeID
 );
 
-export const PeriodeSelector = createSelector(LovvalgsperiodeSelector, (lovvalgsperiode) => ({
-  fom: lovvalgsperiode.fomDato,
-  tom: lovvalgsperiode.tomDato,
-}));
+export const PeriodeSelector = createSelector(
+  (state) => LovvalgsperiodeSelector(state),
+  (lovvalgsperiode) => ({
+    fom: lovvalgsperiode.fomDato,
+    tom: lovvalgsperiode.tomDato,
+  })
+);
 
 export const InnvilgelsesResultatSelector = createSelector(
   LovvalgsperiodeSelector,

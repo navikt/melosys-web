@@ -24,7 +24,10 @@ const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<K
               {KV.kodeTilTerm(arbeidsstedSkip.fartsomradeKode, MKV.KTObjects.begrunnelser.fartsomrader)}
             </Table.DataCell>
             <Table.DataCell>
-              {KV.kodeTilTerm(arbeidsstedSkip.territorialfarvann, MKV.KTObjects.landkoder)}
+              {KV.kodeTilTerm(
+                arbeidsstedSkip.flaggLandkode ?? arbeidsstedSkip.territorialfarvann,
+                MKV.KTObjects.landkoder
+              )}
             </Table.DataCell>
           </Table.Row>
         ))}

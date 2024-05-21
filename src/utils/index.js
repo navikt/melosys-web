@@ -33,18 +33,9 @@ import * as feilmelding from "./feilmelding";
 import * as mediaQuery from "./mediaQuery";
 import * as navigasjon from "./navigasjon";
 
-import {
-  delay,
-  fn,
-  isJSON,
-  formaterTilNorskBelop,
-  queryParamsTilObjekt,
-  erPropertyUnik,
-  finnVerdierMedKey,
-} from "./utils";
+import { fn, isJSON, formaterTilNorskBelop, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from "./utils";
 
 export {
-  delay,
   fn,
   formaterTilNorskBelop,
   isJSON,

@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { STEG, FANE_STATUS } from "../../../../felleskomponenter/stegvelger";
-import VurderingGodkjennUtpekingAnnetLand from "../../stegKomponenter/vurderingGodkjennUtpekingAnnetLand";
+import VurderingGodkjennUtpekingAnnetLand from "../../stegKomponenter/vurderingGodkjennUtpekingAnnetLand/vurderingGodkjennUtpekingAnnetLand";
 
 class GodkjennUtpekingAnnetLand extends Steg {
   constructor(propsLight, stegPosisjon) {

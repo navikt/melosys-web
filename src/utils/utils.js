@@ -1,10 +1,3 @@
-import { isUndefined as _isUndefined } from "lodash";
-
-export const delay = (ms) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-
 /**
  * parser et funksjonsargument som funksjon.
  * @param value

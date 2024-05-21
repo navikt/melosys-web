@@ -1,11 +1,9 @@
 import MKV from "../../../melosyskodeverk";
 
-import { harUnntaksregistreringFlyt, skalViseIngenFlyt, harIkkeYrkesaktivFlyt } from "../../../url";
-import { LinkGroup, ContentProps } from "./types";
+import { harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../../url";
+import { ContentProps, LinkGroup } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
-
-const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 
 const {
   UTSENDT_ARBEIDSTAKER,
@@ -31,8 +29,6 @@ interface LinkGroupsConfig {
   mottatteOpplysningerType: string;
   contentProps: ContentProps;
   sakstema: string;
-  manglendeInnbetalingToggleEnabled: boolean | undefined;
-  ikkeYrkesaktivFtrlToggleEnabled: boolean | undefined;
 }
 
 class LinkGroupsFactory {
@@ -43,26 +39,9 @@ class LinkGroupsFactory {
     behandlingstema,
     behandlingstype,
     sakstema,
-    manglendeInnbetalingToggleEnabled,
-    ikkeYrkesaktivFtrlToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (
-      skalViseIngenFlyt(
-        sakstype,
-        sakstema,
-        behandlingstema,
-        behandlingstype,
-        manglendeInnbetalingToggleEnabled,
-        ikkeYrkesaktivFtrlToggleEnabled
-      )
-    ) {
-      const linkBuilder = new LinksBuilder(contentProps).addFullmektig();
-
-      if (behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
-        linkBuilder.addFaktureringskomponenten();
-      }
-
-      return new LinkgroupsBuilder().addUtenLabel(linkBuilder.build()).build();
+    if (skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype)) {
+      return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
     }
 
     if (harUnntaksregistreringFlyt(sakstype, sakstema, behandlingstema)) {
@@ -78,10 +57,7 @@ class LinkGroupsFactory {
         .build();
     }
 
-    if (
-      harIkkeYrkesaktivFlyt(sakstype, behandlingstema) ||
-      (ikkeYrkesaktivFtrlToggleEnabled && behandlingstema === IKKE_YRKESAKTIV)
-    ) {
+    if (behandlingstema === IKKE_YRKESAKTIV) {
       return new LinkgroupsBuilder()
         .addFraRegister(
           new LinksBuilder(contentProps)
@@ -152,7 +128,6 @@ class LinkGroupsFactory {
           .build();
       }
       case YRKESAKTIV: {
-        // Vær litt forsiktig med denne da den er i bruk av trygdeavtale i prod
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(

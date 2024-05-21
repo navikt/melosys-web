@@ -451,7 +451,6 @@ const Saksopplysninger = ({
                       loading: registreringPending,
                       onClick: () => submitRegistrering(),
                       disabled: !redigerbart,
-                      htmlType: "submit",
                     }}
                     bekreftTekst="Bekreft og send"
                   />

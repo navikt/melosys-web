@@ -459,6 +459,20 @@ export const BostedslandSelector = createSelector(
     return MKV.KTObjects.landkoder.find((enkeltLand) => enkeltLand.kode === bostedslandkode);
   }
 );
+export const AlleArbeidslandSelector = createSelector(
+  (state) => mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
+  (state) => MaritimeArbeidslandSelector(state),
+  (state) => AvklarteVirksomheterSelector(state),
+  (soknadslandkoder = [], maritimeArbeidsland = [], valgteVirksomheter = []) => {
+    return [
+      ...soknadslandkoder,
+      ...maritimeArbeidsland,
+      ...valgteVirksomheter.map((virksomhet) =>
+        KV.termTilKode(Utils.streng.storeForbokstaverForLand(virksomhet.adresse.land), MKV.KTObjects.landkoder)
+      ),
+    ];
+  }
+);
 
 export const OmfattesILandFaktaSelector = createSelector(AvklartefaktaSelector, (avklarteFakta) =>
   avklarteFakta.find((avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND)

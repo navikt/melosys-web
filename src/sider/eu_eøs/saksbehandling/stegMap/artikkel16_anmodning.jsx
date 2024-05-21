@@ -1,17 +1,22 @@
 import MKV from "../../../../melosyskodeverk";
 
 import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
 
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingArtikkel16Anmodning from "../../stegKomponenter/vurderingArtikkel16Anmodning";
-import { hentVilkar, hentBegrunnelser } from "../../../../domeneUtils";
+import VurderingArtikkel16Anmodning from "../../stegKomponenter/vurderingArtikkel16Anmodning/vurderingArtikkel16Anmodning";
+import { hentBegrunnelser, hentVilkar } from "../../../../domeneUtils";
 
 const { UNDER_BEHANDLING, AVSLUTTET } = MKV.Koder.behandlinger.behandlingsstatus;
 
 class Artikkel16Anmodning extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+
+    const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
+    const unntaksvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? propsLight.unntaksvilkår : art16_1;
+
     this.kriterier = [
       {
         exec: () => Artikkel16Anmodning.skalArt16SvarstegVaereSynlig(propsLight),
@@ -19,7 +24,7 @@ class Artikkel16Anmodning extends Steg {
       },
     ];
     this.id = STEG.ARTIKKEL_16_ANMODNING;
-    this.tittel = "Artikkel 16.1";
+    this.tittel = propsLight.konvensjonStorbritanniaToggleEnabled ? "Anmodning om unntak" : "Artikkel 16.1";
     this.komponent = VurderingArtikkel16Anmodning;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
@@ -32,19 +37,19 @@ class Artikkel16Anmodning extends Steg {
       return {
         muligeBegrunnelseValg,
         erIDirekteTilArtikkel16Flyt: _propsLight.erIDirekteTilArtikkel16Flyt,
-        art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),
+        unntaksvilkår,
         harAvklaring: Artikkel16Anmodning.harAvklaring(_propsLight),
       };
     };
     this.handlers = {
-      lagreOgBestillAnmodningsperioder: this._propsLight.tilgjengeligeHandlers?.lagreOgBestillAnmodningsperioder,
+      lagreOgBestillAnmodningsperioder: propsLight.tilgjengeligeHandlers?.lagreOgBestillAnmodningsperioder,
       tilbake: propsLight.tilgjengeligeHandlers?.tilbake,
-      byggAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers?.byggAnmodningsperioderHandler,
-      oppdaterOgLagreBehandlinger: this._propsLight.tilgjengeligeHandlers?.oppdaterOgLagreBehandlinger,
-      lagreVilkarHandler: this._propsLight.tilgjengeligeHandlers?.lagreVilkarHandler,
-      lagreAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers?.lagreAnmodningsperioderHandler,
-      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers?.oppdaterStegData(this.id, felt, verdi),
-      slettData: (data) => this._propsLight.tilgjengeligeHandlers?.slettStegData(this.id, data),
+      byggAnmodningsperioderHandler: propsLight.tilgjengeligeHandlers?.byggAnmodningsperioderHandler,
+      oppdaterOgLagreBehandlinger: propsLight.tilgjengeligeHandlers?.oppdaterOgLagreBehandlinger,
+      lagreVilkarHandler: propsLight.tilgjengeligeHandlers?.lagreVilkarHandler,
+      lagreAnmodningsperioderHandler: propsLight.tilgjengeligeHandlers?.lagreAnmodningsperioderHandler,
+      oppdaterData: (felt, verdi) => propsLight.tilgjengeligeHandlers?.oppdaterStegData(this.id, felt, verdi),
+      slettData: (data) => propsLight.tilgjengeligeHandlers?.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
   }
@@ -83,13 +88,14 @@ class Artikkel16Anmodning extends Steg {
     );
   }
 
-  static harAvklaring({ anmodningsperioder, vilkar }) {
-    const unntakFraBestemmelseErSatt = anmodningsperioder.some(
+  static harAvklaring({ anmodningsperioder, vilkar, unntaksvilkår, konvensjonStorbritanniaToggleEnabled }) {
+    const unntakFraBestemmelseErSatt = anmodningsperioder?.some(
       (anmodningsperiode) => anmodningsperiode.unntakFraBestemmelse
     );
-    const minstEnBegrunnelseErValgt =
-      hentBegrunnelser(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1, vilkar).length >
-      0;
+    const minstEnBegrunnelseErValgt = konvensjonStorbritanniaToggleEnabled
+      ? !Utils._isEmpty(unntaksvilkår?.begrunnelseKoder)
+      : hentBegrunnelser(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1, vilkar)
+          .length > 0;
 
     return unntakFraBestemmelseErSatt && minstEnBegrunnelseErValgt;
   }
