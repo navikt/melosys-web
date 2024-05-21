@@ -104,8 +104,8 @@ const VurderingArtikkel11_4 = ({
     oppdaterData(konverterVilkarTilStegData("nis", nis));
 
     if (konvensjonStorbritanniaToggleEnabled) {
-      oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
-      oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggsbestemmelse));
+      if (lovvalgsbestemmelse) oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
+      if (tilleggsbestemmelse) oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggsbestemmelse));
     }
 
     return () => {
