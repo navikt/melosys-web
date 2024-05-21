@@ -464,14 +464,14 @@ export const AlleRelevanteLandSelector = createSelector(
   (state) => MaritimeArbeidslandSelector(state),
   (state) => AvklarteVirksomheterSelector(state),
   (state) => BostedslandSelector(state),
-  (soknadslandkoder = [], maritimeArbeidsland = [], valgteVirksomheter = [], bostedsland) => {
+  (soknadslandkoder = [], maritimeArbeidsland = [], valgteVirksomheter = [], bostedsland = {}) => {
     return [
       ...soknadslandkoder,
       ...maritimeArbeidsland,
       ...valgteVirksomheter.map((virksomhet) =>
         KV.termTilKode(Utils.streng.storeForbokstaverForLand(virksomhet.adresse.land), MKV.KTObjects.landkoder)
       ),
-      ...(bostedsland?.kode ? [bostedsland.kode] : []),
+      ...(bostedsland.kode ? [bostedsland.kode] : []),
     ];
   }
 );
