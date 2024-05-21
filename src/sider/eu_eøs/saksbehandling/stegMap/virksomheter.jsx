@@ -14,17 +14,22 @@ class SaksbehandlingVirksomheter extends Virksomheter {
       propsLight.avklartefakta,
       KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP
     );
+    const gårDirekteTilArtikkel16 = Yrkesgruppe.finnAvklaring(
+      propsLight.avklartefakta,
+      KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12
+    );
 
     this.kriterier = [
       {
-        exec: (avklartefakta) => {
-          const garDirekteTilArtikkel16 = Yrkesgruppe.finnAvklaring(
-            avklartefakta,
-            KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12
-          );
-
-          return harValgtArbeidsgiver && (garDirekteTilArtikkel16 || propsLight.erArbeidTjenestepersonEllerFly);
-        },
+        exec: () =>
+          propsLight.konvensjonStorbritanniaToggleEnabled &&
+          harValgtArbeidsgiver &&
+          gårDirekteTilArtikkel16 &&
+          propsLight.unntaksvilkår?.oppfylt,
+        nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
+      },
+      {
+        exec: () => harValgtArbeidsgiver && (gårDirekteTilArtikkel16 || propsLight.erArbeidTjenestepersonEllerFly),
         nesteSteg: STEG.MEDFOLGENDE_BARN,
       },
       {
