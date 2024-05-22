@@ -57,23 +57,17 @@ export const Skatteforholdsperioder = ({
               </Nav.Column>
 
               <Nav.Column>
-                {index === 0 ? <Nav.Typo.Element>Er bruker skattepliktig?</Nav.Typo.Element> : null}
-                <div className="radioknapp_gruppe">
-                  <Forms.Radio
-                    label="Ja"
-                    name={`skatteforholdsperioder[${index}].skatteplikttype`}
-                    control={control}
-                    value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}
-                    disabled={!redigerbart}
-                  />
-                  <Forms.Radio
-                    label="Nei"
-                    name={`skatteforholdsperioder[${index}].skatteplikttype`}
-                    control={control}
-                    value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}
-                    disabled={!redigerbart}
-                  />
-                </div>
+                <Forms.RadioGroup
+                  legend={index === 0 ? <Nav.Typo.Element>Er bruker skattepliktig?</Nav.Typo.Element> : null}
+                  hideLegend={index !== 0}
+                  name={`skatteforholdsperioder[${index}].skatteplikttype`}
+                  disabled={!redigerbart}
+                  control={control}
+                  className="skatteforholdsperioder-radio-group"
+                >
+                  <Nav.AkselRadio value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}>Ja</Nav.AkselRadio>
+                  <Nav.AkselRadio value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}>Nei</Nav.AkselRadio>
+                </Forms.RadioGroup>
               </Nav.Column>
 
               <Nav.Column className={index === 0 ? "slett slett__first" : "slett"}>

@@ -179,31 +179,19 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Unntak medlemskap</Nav.Typo.Innholdstittel>
       <Nav.Row>
         <Nav.Column xs="8">
-          <Nav.Typo.Normaltekst className="formLabel">Vurder unntaksperiode</Nav.Typo.Normaltekst>
-          <Forms.Radio
+          <Forms.RadioGroup
+            legend={<Nav.Typo.Normaltekst className="formLabel">Vurder unntaksperiode</Nav.Typo.Normaltekst>}
             name="utfallRegistreringUnntak"
-            control={control}
-            label="Godkjenn"
-            value={GODKJENT}
-            onChange={lagreUtfallRegistreringUnntak}
-            disabled={!redigerbart || !harSluttdato}
-          />
-          <Forms.Radio
-            name="utfallRegistreringUnntak"
-            control={control}
-            label="Godkjenn, men endre periode"
-            value={DELVIS_GODKJENT}
-            onChange={lagreUtfallRegistreringUnntak}
             disabled={!redigerbart}
-          />
-          <Forms.Radio
-            name="utfallRegistreringUnntak"
-            control={control}
-            label="Ikke godkjenn"
-            value={IKKE_GODKJENT}
             onChange={lagreUtfallRegistreringUnntak}
-            disabled={!redigerbart}
-          />
+            control={control}
+          >
+            <Nav.AkselRadio value={GODKJENT} disabled={!harSluttdato}>
+              Godkjenn
+            </Nav.AkselRadio>
+            <Nav.AkselRadio value={DELVIS_GODKJENT}>Godkjenn, men endre periode</Nav.AkselRadio>
+            <Nav.AkselRadio value={IKKE_GODKJENT}>Ikke godkjenn</Nav.AkselRadio>
+          </Forms.RadioGroup>
         </Nav.Column>
       </Nav.Row>
 

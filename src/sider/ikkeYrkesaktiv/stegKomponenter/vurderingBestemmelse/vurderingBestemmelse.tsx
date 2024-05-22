@@ -126,34 +126,22 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </Nav.Alert>
       )}
 
-      <Nav.Fieldset legend="Hva er din vurdering av søknaden?" className="innvilgelsesresultat">
-        <Forms.Radio
-          name="innvilgelsesResultat"
-          control={control}
-          label="Jeg vil innvilge søknaden"
-          value={INNVILGET}
-          disabled={!redigerbart}
-        />
-        <Forms.Radio
-          name="innvilgelsesResultat"
-          control={control}
-          label="Jeg vil søke om unntak"
-          value={UNNTAK}
-          disabled={!redigerbart}
-        />
-        <Forms.Radio
-          name="innvilgelsesResultat"
-          control={control}
-          label="Jeg vil avslå søknaden"
-          value={AVSLAATT}
-          disabled={!redigerbart}
-        />
-      </Nav.Fieldset>
+      <Forms.RadioGroup
+        legend="Hva er din vurdering av søknaden?"
+        name="innvilgelsesResultat"
+        control={control}
+        disabled={!redigerbart}
+        size="medium"
+      >
+        <Nav.AkselRadio value={INNVILGET}>Jeg vil innvilge søknaden</Nav.AkselRadio>
+        <Nav.AkselRadio value={UNNTAK}>Jeg vil søke om unntak</Nav.AkselRadio>
+        <Nav.AkselRadio value={AVSLAATT}>Jeg vil avslå søknaden</Nav.AkselRadio>
+      </Forms.RadioGroup>
 
       {formValues?.innvilgelsesResultat === INNVILGET && (
         <>
           <Nav.Fieldset legend="Velg bestemmelse">
-            <Nav.Row>
+            <Nav.Row className="bestemmelse__rad">
               <Nav.Column xs="7">
                 <Forms.Select
                   name="bestemmelse"
@@ -174,19 +162,24 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
           </Nav.Fieldset>
           {formValues.bestemmelse ===
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3E && (
-            <Nav.Fieldset legend="Velg brukers situasjon">
+            <Forms.RadioGroup
+              name="ikkeYrkesaktivSituasjontype"
+              legend="Velg brukers situasjon"
+              control={control}
+              onChange={lagreIkkeYrkesaktivSituasjontype}
+              size="medium"
+            >
               {MKV.KTObjects.begrunnelser.ikkeyrkesaktivsituasjontype.map((value: KTObject) => (
-                <Forms.Radio
+                <Nav.AkselRadio
                   name="ikkeYrkesaktivSituasjontype"
-                  control={control}
-                  label={value.term || ""}
                   value={value.kode}
                   disabled={!redigerbart}
-                  onChange={lagreIkkeYrkesaktivSituasjontype}
                   key={value.kode}
-                />
+                >
+                  {value.term || ""}
+                </Nav.AkselRadio>
               ))}
-            </Nav.Fieldset>
+            </Forms.RadioGroup>
           )}
         </>
       )}
