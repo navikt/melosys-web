@@ -85,7 +85,7 @@ const VurderingArtikkel11_4 = ({
   tilbake,
 }: VurderingArtikkel11_4Props) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
-  const alleArbeidsland = useSelector(avklartefaktaSelectors.AlleArbeidslandSelector);
+  const alleLand = useSelector(avklartefaktaSelectors.AlleRelevanteLandSelector);
   const lovvalgsbestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
   const tilleggsbestemmelse = useSelector(lovvalgsperioderSelectors.TilleggBestemmelseSelector);
   const art11_3Aeller13_3A: Partial<Vilkaar> = useSelector(vilkarSelectors.Artikkel11_3AEller13_3ASelector);
@@ -95,7 +95,7 @@ const VurderingArtikkel11_4 = ({
     initialiserArtikkelValg(art11_3Aeller13_3A, art11_4_1eller13_4_1, art11_4_2eller13_4_2)
   );
   const [bestemmelse, setBestemmelse] = useState(lovvalgsbestemmelse);
-  const visStorbritanniaKonvensjon = alleArbeidsland.some((landkode) => landkode === MKV.Koder.landkoder.GB);
+  const visStorbritanniaKonvensjon = alleLand.some((landkode) => landkode === MKV.Koder.landkoder.GB);
 
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(finnFeltNavn(art11_4_1eller13_4_1?.vilkaar), art11_4_1eller13_4_1));
@@ -104,8 +104,8 @@ const VurderingArtikkel11_4 = ({
     oppdaterData(konverterVilkarTilStegData("nis", nis));
 
     if (konvensjonStorbritanniaToggleEnabled) {
-      oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
-      oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggsbestemmelse));
+      if (lovvalgsbestemmelse) oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
+      if (tilleggsbestemmelse) oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggsbestemmelse));
     }
 
     return () => {
