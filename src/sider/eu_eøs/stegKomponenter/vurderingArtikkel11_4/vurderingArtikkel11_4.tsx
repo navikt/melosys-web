@@ -48,8 +48,8 @@ const finnFeltNavn = (vilkårKode?: string): string => {
 };
 
 const initialiserArtikkelValg = (
-  art11_4_1eller13_4_1: Partial<Vilkaar>,
   art11_3Aeller13_3A: Partial<Vilkaar>,
+  art11_4_1eller13_4_1: Partial<Vilkaar>,
   art11_4_2eller13_4_2: Partial<Vilkaar>
 ): ArtikkelValg | undefined => {
   if (art11_4_1eller13_4_1.oppfylt === true && art11_3Aeller13_3A.oppfylt === true) {
