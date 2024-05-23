@@ -354,12 +354,6 @@ const Saksopplysninger = ({
     }
   };
 
-  const endreAnmodningsperiodeSvarType = (e) => setAnmodningsperiodeSvarType(e.target.value);
-
-  const erGodkjent = () => MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE === anmodningsperiodeSvarType;
-  const erDelvisGodkjent = () => MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE === anmodningsperiodeSvarType;
-  const erIkkeGodkjent = () => MKV.Koder.anmodningsperiodesvartyper.AVSLAG === anmodningsperiodeSvarType;
-
   const unikRadioButtonGruppeID = uuid();
 
   return (
@@ -404,31 +398,26 @@ const Saksopplysninger = ({
               )}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.Fieldset legend="Vurder unntaksperiode" disabled={!redigerbart}>
-                    <Nav.Radio
-                      name={unikRadioButtonGruppeID}
+                  <Nav.RadioGroup
+                    legend="Vurder unntaksperiode"
+                    disabled={!redigerbart}
+                    onChange={setAnmodningsperiodeSvarType}
+                    name={unikRadioButtonGruppeID}
+                  >
+                    <Nav.AkselRadio
                       value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE}
-                      checked={erGodkjent()}
-                      onChange={endreAnmodningsperiodeSvarType}
-                      label="Godkjenn unntaksperiode"
                       disabled={!erGyldigLovvalgsperiode()}
-                    />
-                    <Nav.Radio
-                      name={unikRadioButtonGruppeID}
+                    >
+                      Godkjenn unntaksperiode
+                    </Nav.AkselRadio>
+                    <Nav.AkselRadio
                       value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE}
-                      checked={erDelvisGodkjent()}
-                      onChange={endreAnmodningsperiodeSvarType}
-                      label="Godkjenn, men endre periode"
                       disabled={!erGyldigLovvalgsperiode()}
-                    />
-                    <Nav.Radio
-                      name={unikRadioButtonGruppeID}
-                      value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}
-                      checked={erIkkeGodkjent()}
-                      onChange={endreAnmodningsperiodeSvarType}
-                      label="Ikke godkjenn"
-                    />
-                  </Nav.Fieldset>
+                    >
+                      Godkjenn, men endre periode
+                    </Nav.AkselRadio>
+                    <Nav.AkselRadio value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}>Ikke godkjenn</Nav.AkselRadio>
+                  </Nav.RadioGroup>
                 </Nav.Column>
               </Nav.Row>
 

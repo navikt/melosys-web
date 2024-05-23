@@ -4,6 +4,8 @@ import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
 import * as Mui from "../../../../felleskomponenter/ui";
 
+import "./enkeltVilkaar.css";
+
 import { konverterVilkarTilStegData, lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 
 const EnkeltVilkaar = (props) => {
@@ -14,8 +16,8 @@ const EnkeltVilkaar = (props) => {
     oppdaterData(konverterVilkarTilStegData(vilkaarKode, vilkaar));
   }, []);
 
-  const radioEndringHandler = (event) => {
-    oppdaterData(lagVilkaar(vilkaarKode, event.target.value));
+  const radioEndringHandler = (value) => {
+    oppdaterData(lagVilkaar(vilkaarKode, value));
   };
 
   const listevalgEndringHandler = (event) => {
@@ -23,27 +25,22 @@ const EnkeltVilkaar = (props) => {
   };
 
   return (
-    <div className="enkeltVilkaar__skjemafelt">
+    <div className="enkeltVilkaar">
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Fieldset legend={tittel}>
-            <Nav.Radio
-              name={vilkaarKode}
-              label={labelOppfylt}
-              value
-              checked={vilkaar.oppfylt === true}
-              onChange={radioEndringHandler}
-              disabled={!redigerbart}
-            />
-            <Nav.Radio
-              name={vilkaarKode}
-              label={labelIkkeOppfylt}
-              value={false}
-              checked={vilkaar.oppfylt === false}
-              onChange={radioEndringHandler}
-              disabled={!redigerbart}
-            />
-          </Nav.Fieldset>
+          <Nav.RadioGroup
+            legend={tittel}
+            onChange={radioEndringHandler}
+            defaultValue={vilkaar.oppfylt}
+            disabled={!redigerbart}
+          >
+            <Nav.AkselRadio name={vilkaarKode} value={true}>
+              {labelOppfylt}
+            </Nav.AkselRadio>
+            <Nav.AkselRadio name={vilkaarKode} value={false}>
+              {labelIkkeOppfylt}
+            </Nav.AkselRadio>
+          </Nav.RadioGroup>
         </Nav.Column>
       </Nav.Row>
       {!vilkaar.oppfylt && (

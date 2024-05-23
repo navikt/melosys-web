@@ -17,14 +17,9 @@ const SorterbarListe = ({
   className = undefined,
   ...props
 }) => {
-  const defaultOrder = defaultChecked === "nyeste" ? "descending" : "ascending";
-  const [sortOrder, setSortOrder] = useState(defaultOrder);
+  const [sortOrder, setSortOrder] = useState(defaultChecked);
 
   if (!elementer) return null;
-
-  const handleSortOrderChange = (event) => {
-    setSortOrder(event.target.value);
-  };
 
   const sorterteElementer = elementer.slice().sort(sorterElementerEtterDato(sortOrder, sortingPath));
   const Component = component;
@@ -33,23 +28,17 @@ const SorterbarListe = ({
   return (
     <div className={className}>
       {elementer.length > 1 && (
-        <Nav.Fieldset className="sorteringRadiogruppe" onChange={handleSortOrderChange} legend={sortingLegend}>
-          <div className="radioButtons">
-            <Nav.Radio
-              name={uniqueName}
-              label="Nyeste først"
-              value="descending"
-              defaultChecked={defaultChecked === "nyeste"}
-              className="radio"
-            />
-            <Nav.Radio
-              name={uniqueName}
-              label="Eldste først"
-              value="ascending"
-              defaultChecked={defaultChecked === "eldste"}
-            />
-          </div>
-        </Nav.Fieldset>
+        <Nav.RadioGroup
+          onChange={setSortOrder}
+          legend={sortingLegend}
+          defaultValue={defaultChecked}
+          size="small"
+          name={uniqueName}
+          className="sorteringRadiogruppe"
+        >
+          <Nav.AkselRadio value="descending">Nyeste først</Nav.AkselRadio>
+          <Nav.AkselRadio value="ascending">Eldste først</Nav.AkselRadio>
+        </Nav.RadioGroup>
       )}
       {sorterteElementer.map((oppgave) => (
         <Component key={Utils._uuid()} sak={oppgave} {...props} />
@@ -70,7 +59,7 @@ SorterbarListe.propTypes = {
 
 SorterbarListe.defaultProps = {
   elementer: [],
-  defaultChecked: "eldste",
+  defaultChecked: "ascending",
   radioGroupName: undefined,
   className: undefined,
 };

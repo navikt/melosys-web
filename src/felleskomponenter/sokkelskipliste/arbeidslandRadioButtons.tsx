@@ -21,21 +21,22 @@ const ArbeidslandRadioButtons = ({ landliste, onChange, arbeidslandType, disable
   if (Utils._isEmpty(utfylteLand)) return <>Ingen flaggland, sokkelland eller territorialfarvannsland valgt.</>;
 
   const unikRadioButtonGruppeID = Utils._uuid();
+
   return (
-    <>
+    <Nav.RadioGroup
+      legend=""
+      hideLegend
+      defaultValue={arbeidslandType}
+      name={unikRadioButtonGruppeID}
+      disabled={disabled}
+      size="small"
+    >
       {utfylteLand.map((land) => (
-        <Nav.Radio
-          id={Utils._uuid()}
-          onChange={() => onChange(land)}
-          checked={arbeidslandType === land.type}
-          key={land.type}
-          value={land.landkode + land.type}
-          label={`${KV.kodeTilTerm(land.landkode, MKV.KTObjects.landkoder)} - ${land.type}`}
-          name={unikRadioButtonGruppeID}
-          disabled={disabled}
-        />
+        <Nav.AkselRadio id={Utils._uuid()} key={land.type} value={land.type} onChange={() => onChange(land)}>
+          {`${KV.kodeTilTerm(land.landkode, MKV.KTObjects.landkoder)} - ${land.type}`}
+        </Nav.AkselRadio>
       ))}
-    </>
+    </Nav.RadioGroup>
   );
 };
 

@@ -27,7 +27,7 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
       <SorterbarListe
         elementer={saksbehandling}
         component={BehandlingOppgave}
-        defaultChecked="nyeste"
+        defaultChecked="descending"
         sortingLegend="Sorter behandlinger etter frist:"
         sortingPath="behandling.registrertDato"
         radioGroupName="behandlingsortering"

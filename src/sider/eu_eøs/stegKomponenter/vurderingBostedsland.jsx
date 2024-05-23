@@ -72,8 +72,8 @@ const VurderingBostedsland = (props) => {
 
   const [erNorgeValgt, setNorgeErValgt] = useState(erBosattINorge());
 
-  const radioEndringHandler = (event) => {
-    if (event.target.value === "true") {
+  const radioEndringHandler = (value) => {
+    if (value) {
       setNorgeErValgt(true);
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, MKV.Koder.landkoder.NO, null));
     } else {
@@ -100,23 +100,16 @@ const VurderingBostedsland = (props) => {
       <div className="vurderingBostedsland__skjemafelt">
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.Fieldset legend="Bostedsland er:">
-              <Nav.Radio
-                name="bostedsland"
-                label="Norge"
-                value
-                onChange={radioEndringHandler}
-                checked={erNorgeValgt === true}
-                disabled={!redigerbart}
-              />
-              <Nav.Radio
-                name="bostedsland"
-                label="Annet"
-                value={false}
-                onChange={radioEndringHandler}
-                checked={erNorgeValgt === false}
-                disabled={!redigerbart}
-              />
+            <Nav.RadioGroup
+              legend="Bostedsland er:"
+              onChange={radioEndringHandler}
+              name="bostedsland"
+              disabled={!redigerbart}
+            >
+              <Nav.AkselRadio value={true} onChange={radioEndringHandler}>
+                Norge
+              </Nav.AkselRadio>
+              <Nav.AkselRadio value={false}>Annet</Nav.AkselRadio>
               {erNorgeValgt === false && (
                 <Nav.Row>
                   <Nav.Column xs="8" md="6" lg="4">
@@ -131,7 +124,7 @@ const VurderingBostedsland = (props) => {
                   </Nav.Column>
                 </Nav.Row>
               )}
-            </Nav.Fieldset>
+            </Nav.RadioGroup>
           </Nav.Column>
         </Nav.Row>
         {erBegrunnelserPaakrevd && erNorgeValgt === false && (

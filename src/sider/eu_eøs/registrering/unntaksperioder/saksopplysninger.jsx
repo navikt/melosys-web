@@ -325,7 +325,6 @@ const Saksopplysninger = ({
     validerAvslag(ikkeGodkjentBegrunnelse);
   };
 
-  const endreUnntaksperiodeVurdering = (e) => setUnntaksperiodeVurdering(e.target.value);
   const unikRadioButtonGruppeID = uuid();
   return (
     <div>
@@ -347,22 +346,21 @@ const Saksopplysninger = ({
               )}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.Fieldset legend="Vurder unntaksperiode" disabled={!redigerbart}>
-                    <Nav.Radio
-                      name={unikRadioButtonGruppeID}
+                  <Nav.RadioGroup
+                    legend="Vurder unntaksperiode"
+                    disabled={!redigerbart}
+                    onChange={setUnntaksperiodeVurdering}
+                    name={unikRadioButtonGruppeID}
+                  >
+                    <Nav.AkselRadio
                       value={KV.Koder.Unntaksperiode.GODKJENT}
-                      checked={KV.Koder.Unntaksperiode.GODKJENT === unntaksperiodeVurdering}
-                      onChange={endreUnntaksperiodeVurdering}
                       disabled={kanIkkeGodkjenneUtenÅEndrePerioden || !erGyldigLovvalgsperiode()}
-                      label="Godkjenn unntaksperiode"
-                    />
-                    <Nav.Radio
-                      name={unikRadioButtonGruppeID}
-                      value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT}
-                      checked={KV.Koder.Unntaksperiode.DELVIS_GODKJENT === unntaksperiodeVurdering}
-                      onChange={endreUnntaksperiodeVurdering}
-                      label="Godkjenn, men endre periode"
-                    />
+                    >
+                      Godkjenn unntaksperiode
+                    </Nav.AkselRadio>
+                    <Nav.AkselRadio value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT}>
+                      Godkjenn, men endre periode
+                    </Nav.AkselRadio>
                     {kanEndrePeriode() && (
                       <Nav.Row>
                         <EndrePeriode
@@ -383,14 +381,8 @@ const Saksopplysninger = ({
                         />
                       </Nav.Row>
                     )}
-                    <Nav.Radio
-                      name={unikRadioButtonGruppeID}
-                      value={KV.Koder.Unntaksperiode.AVSLAG}
-                      checked={KV.Koder.Unntaksperiode.AVSLAG === unntaksperiodeVurdering}
-                      onChange={endreUnntaksperiodeVurdering}
-                      label="Ikke godkjenn"
-                    />
-                  </Nav.Fieldset>
+                    <Nav.AkselRadio value={KV.Koder.Unntaksperiode.AVSLAG}>Ikke godkjenn</Nav.AkselRadio>
+                  </Nav.RadioGroup>
                 </Nav.Column>
               </Nav.Row>
               {unntaksperiodeVurdering === KV.Koder.Unntaksperiode.AVSLAG && behandlingsresultatErHentet && (

@@ -406,9 +406,9 @@ export const VurderingBestemmelserV2 = ({
             alleValgteVilkår={valgteVilkår}
             alleValgteBegrunnelser={valgteBegrunnelser}
             selvstendigNæringValgt={selvstendigNaeringValgt}
-            handleEndreVilkår={(event) => {
+            handleEndreVilkår={(name, value) => {
               setHarSkjeddEndringer(true);
-              setValgteVilkår(new Map(valgteVilkår.set(event.target.name, Boolean(event.target.value === "true"))));
+              setValgteVilkår(new Map(valgteVilkår.set(name, Boolean(value === "true"))));
             }}
             handleEndreBegrunnelseKode={(event) => {
               setHarSkjeddEndringer(true);

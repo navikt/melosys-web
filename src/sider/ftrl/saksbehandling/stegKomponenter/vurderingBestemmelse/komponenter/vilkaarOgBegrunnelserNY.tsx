@@ -22,7 +22,7 @@ interface VilkaarOgBegrunnelserProps {
   vilkårOgBegrunnelser: VilkårOgBegrunnelser;
   alleValgteVilkår: Map<string, boolean | null | undefined>;
   alleValgteBegrunnelser: Map<string, Begrunnelse>;
-  handleEndreVilkår: ChangeEventHandler<HTMLInputElement>;
+  handleEndreVilkår: (name: string, value: string) => void;
   handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement>;
   handleEndreBegrunnelseFritekst: (vilkår: string, fritekst: string) => void;
   redigerbart: boolean;
@@ -50,41 +50,21 @@ export const VilkaarOgBegrunnelserNY = ({
 
   return (
     <Fragment>
-      <Nav.Fieldset
+      <Nav.RadioGroup
         legend={
           <LabelMedHjelpetekst
             label={KV.finnTermFraListe(MKV.KTObjects.vilkaar, vilkår)}
             hjelpetekst={hjelpetekstForVilkaar}
           />
         }
+        onChange={(value) => handleEndreVilkår(vilkår, value)}
+        name={vilkår}
+        defaultValue={vilkårErValgt === undefined ? undefined : String(vilkårErValgt)}
+        disabled={!redigerbart}
       >
-        <Nav.Row>
-          <Nav.Column xs="1">
-            <Nav.Radio
-              className="radio"
-              label="Ja"
-              name={vilkår}
-              onChange={handleEndreVilkår}
-              checked={vilkårErValgt === true}
-              value="true"
-              key="true"
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
-          <Nav.Column xs="1">
-            <Nav.Radio
-              className="radio"
-              label="Nei"
-              name={vilkår}
-              onChange={handleEndreVilkår}
-              checked={vilkårErValgt === false}
-              value="false"
-              key="false"
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Fieldset>
+        <Nav.AkselRadio value="true">Ja</Nav.AkselRadio>
+        <Nav.AkselRadio value="false">Nei</Nav.AkselRadio>
+      </Nav.RadioGroup>
       {selvstendigNæringValgt && harValgtFTRL_ARBEIDSTAKER && (
         <Nav.Alert variant="error">
           Virksomheten du har valgt på steget &quot;Virksomhet&quot; er en selvstendig virksomhet

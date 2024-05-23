@@ -55,24 +55,20 @@ const MedfolgendeBarn = ({
           )}
           {idNummer && <Nav.Typo.Normaltekst>(F.nr/d-nr.: {idNummer})</Nav.Typo.Normaltekst>}
         </div>
-        <Nav.Fieldset legend="" className="radios">
-          <Nav.Radio
-            name={radioName}
-            onChange={(e) => onCheck(e.target.value)}
-            value={BOOLSK_STRING.SANN}
-            checked={omfattet === true}
-            label="Ja"
-            disabled={!redigerbart}
-          />
-          <Nav.Radio
-            name={radioName}
-            onChange={(e) => onCheck(e.target.value)}
-            value={BOOLSK_STRING.USANN}
-            checked={omfattet === false}
-            label="Nei"
-            disabled={!redigerbart}
-          />
-        </Nav.Fieldset>
+        <Nav.RadioGroup
+          legend=""
+          hideLegend
+          disabled={!redigerbart}
+          onChange={onCheck}
+          defaultValue={omfattet}
+          name={radioName}
+          size="small"
+        >
+          <Nav.AkselRadio name={radioName} value={BOOLSK_STRING.SANN}>
+            Ja
+          </Nav.AkselRadio>
+          <Nav.AkselRadio value={BOOLSK_STRING.USANN}>Nei</Nav.AkselRadio>
+        </Nav.RadioGroup>
         {omfattet === false && (
           <Nav.Row>
             <Nav.Column xs="8">

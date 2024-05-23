@@ -28,7 +28,7 @@ interface VilkaarOgBegrunnelserProps {
   begrunnelseKodeverk: {
     [key: string]: KTObject[];
   };
-  handleEndreVilkår: ChangeEventHandler<HTMLInputElement>;
+  handleEndreVilkår: (name: string, value: string) => void;
   handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement>;
   handleEndreBegrunnelseFritekst: (vilkår: string, fritekst: string) => void;
   redigerbart: boolean;
@@ -54,41 +54,21 @@ export const VilkaarOgBegrunnelser = ({
 
   return (
     <Fragment>
-      <Nav.Fieldset
+      <Nav.RadioGroup
         legend={
           <LabelMedHjelpetekst
             label={KV.finnTermFraListe(MKV.KTObjects.vilkaar, vilkår)}
             hjelpetekst={hjelpetekstForVilkaar}
           />
         }
+        onChange={(value) => handleEndreVilkår(vilkår, value)}
+        name={vilkår}
+        defaultValue={valgtVilkår}
+        disabled={!redigerbart}
       >
-        <Nav.Row>
-          <Nav.Column xs="1">
-            <Nav.Radio
-              className="radio"
-              label="Ja"
-              name={vilkår}
-              onChange={handleEndreVilkår}
-              checked={valgtVilkår === SANN}
-              value={SANN}
-              key={SANN}
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
-          <Nav.Column xs="1">
-            <Nav.Radio
-              className="radio"
-              label="Nei"
-              name={vilkår}
-              onChange={handleEndreVilkår}
-              checked={valgtVilkår === USANN}
-              value={USANN}
-              key={USANN}
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Fieldset>
+        <Nav.AkselRadio value={SANN}>Ja</Nav.AkselRadio>
+        <Nav.AkselRadio value={USANN}>Nei</Nav.AkselRadio>
+      </Nav.RadioGroup>
 
       {valgtVilkår === USANN && <IngenFlytMelding />}
       {valgtVilkår === SANN && !Utils._isEmpty(muligeBegrunnelser) && (
