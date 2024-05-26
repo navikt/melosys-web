@@ -8,7 +8,7 @@ import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingArtikkel16Anmodning from "../../stegKomponenter/vurderingArtikkel16Anmodning/vurderingArtikkel16Anmodning";
 import { hentBegrunnelser, hentVilkar } from "../../../../domeneUtils";
 
-const { UNDER_BEHANDLING, AVSLUTTET } = MKV.Koder.behandlinger.behandlingsstatus;
+const { UNDER_BEHANDLING, AVSLUTTET, SVAR_ANMODNING_MOTTATT } = MKV.Koder.behandlinger.behandlingsstatus;
 
 class Artikkel16Anmodning extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -59,14 +59,14 @@ class Artikkel16Anmodning extends Steg {
     const behandlingsstatusKode = KV.objektTilKode(behandlingsstatus);
 
     return (
-      (this.behandlingErUnderBehandling(behandlingsstatusKode) ||
+      (this.behandlingstatusErUnderUtviklingEllerSvarAnmodningMottatt(behandlingsstatusKode) ||
         this.behandlingErAvsluttetOgUtlandHarBesvartAnmodning(behandlingsstatusKode, anmodningsperiodesvar)) &&
       this.anmodningErSendtUtland(anmodningsperioder)
     );
   }
 
-  static behandlingErUnderBehandling(behandlingsstatusKode) {
-    return behandlingsstatusKode === UNDER_BEHANDLING;
+  static behandlingstatusErUnderUtviklingEllerSvarAnmodningMottatt(behandlingsstatusKode) {
+    return behandlingsstatusKode === UNDER_BEHANDLING || behandlingsstatusKode === SVAR_ANMODNING_MOTTATT;
   }
 
   static behandlingErAvsluttetOgUtlandHarBesvartAnmodning(behandlingsstatusKode, anmodningsperiodesvar) {
