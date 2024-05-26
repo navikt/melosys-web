@@ -21,7 +21,7 @@ import "./vurderingTrygdeavgift.css";
 import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/meldinger";
 import { Skatteforholdsperioder } from "./komponenter/skatteforholdsperioder";
 import MKV from "../../../../../melosyskodeverk";
-import { BeregnetTrygdeavgift } from "../../../../../services/modules/trygdeavgift";
+import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../../../services/modules/trygdeavgift";
 
 interface Props {
   bekreft: () => void;
@@ -113,10 +113,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     }
   }, [innvilgetMedlemskapsperiode]);
 
-  const handterLagretTrygdeavgiftsgrunnlag = (beregnetTrygdeavgift: BeregnetTrygdeavgift) => {
-    setTrygdeavgift(beregnetTrygdeavgift);
-    const lagretTrygdeavgiftsgrunnlag = beregnetTrygdeavgift.trygdeavgiftsgrunnlag;
-    const { inntektskilder, skatteforholdsperioder } = lagretTrygdeavgiftsgrunnlag;
+  const handterLagretTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto) => {
+    const { inntektskilder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
     const sorterteInntekstkilder = inntektskilder?.sort(Utils.dato.sorterEtterISOFomDato);
     const sorterteSkatteforhold = skatteforholdsperioder?.sort(Utils.dato.sorterEtterISOFomDato);
     resetSkatteforholdsperioder(
@@ -141,8 +139,27 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     );
   };
 
+  const handterTrygdeavgiftsberegning = (beregnetTrygdeavgift: BeregnetTrygdeavgift) => {
+    setTrygdeavgift(beregnetTrygdeavgift);
+    const lagretTrygdeavgiftsgrunnlag = beregnetTrygdeavgift.trygdeavgiftsgrunnlag;
+    handterLagretTrygdeavgiftsgrunnlag(lagretTrygdeavgiftsgrunnlag);
+  };
+
+  const hentOpprinneligTrygdeavgiftsgrunnlag = () => {
+    Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag(behandlingID).then(handterLagretTrygdeavgiftsgrunnlag);
+  };
+
   useEffect(() => {
-    Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID).then(handterLagretTrygdeavgiftsgrunnlag);
+    Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID).then((beregnetTrygdeavgift) => {
+      if (
+        behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
+        beregnetTrygdeavgift.trygdeavgiftsgrunnlag.skatteforholdsperioder.length === 0
+      ) {
+        hentOpprinneligTrygdeavgiftsgrunnlag();
+      } else {
+        handterTrygdeavgiftsberegning(beregnetTrygdeavgift);
+      }
+    });
   }, []);
 
   useEffect(() => {
