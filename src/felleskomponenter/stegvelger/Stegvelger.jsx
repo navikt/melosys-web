@@ -129,9 +129,13 @@ class Stegvelger extends Component {
   oppdaterStegData = (stegID, data) => {
     if (!data) return;
 
-    const { felt, type, innhold } = data;
+    const { felt, type, innhold, iAlleSteg } = data;
     const { stegStores } = this.state;
-    stegStores[type].oppdaterStegData(stegID, { felt, type, innhold });
+    if (iAlleSteg) {
+      stegStores[type].oppdaterStegDataIAlleSteg({ felt, type, innhold });
+    } else {
+      stegStores[type].oppdaterStegData(stegID, { felt, type, innhold });
+    }
     this.setState(stegStores);
 
     if (data.oppdaterRedux) {
