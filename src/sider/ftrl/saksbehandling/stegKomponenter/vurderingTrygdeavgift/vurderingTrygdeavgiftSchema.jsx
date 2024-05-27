@@ -75,17 +75,13 @@ const vurdering_trygdeavgift = object().shape({
           .erGyldigDato()
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
           .erEtterDatofelt("fomDato")
-          .when("$sluttdatoKanVæreÅpen", {
-            is: false,
-            then: string().required(MAA_FYLLES_UT),
-            otherwise: string().nullable(),
-          }),
+          .required(MAA_FYLLES_UT),
         skatteplikttype: string().required(MAA_FYLLES_UT),
       })
     )
     .min(1),
   inntektskilder: lazy((_value, options) => {
-    return array().when(["$medlemskapsTypeErPliktig", "$sluttdatoKanVæreÅpen"], {
+    return array().when(["$medlemskapsTypeErPliktig"], {
       is: (medlemskapsTypeErPliktig) => kreverInntektskilder(medlemskapsTypeErPliktig, options),
       then: array()
         .of(
@@ -101,11 +97,7 @@ const vurdering_trygdeavgift = object().shape({
               .erGyldigDato()
               .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
               .erEtterDatofelt("fomDato")
-              .when("$sluttdatoKanVæreÅpen", {
-                is: false,
-                then: string().required(MAA_FYLLES_UT),
-                otherwise: string().nullable(),
-              }),
+              .required(MAA_FYLLES_UT),
           })
         )
         .min(1),

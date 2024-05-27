@@ -57,15 +57,16 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
     tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
   };
+  const erÅpenSluttDato = innvilgetMedlemskapsperiode?.tom === null || innvilgetMedlemskapsperiode?.tom === undefined;
 
   const {
     control,
     watch,
-    formState: { isValid: formIsValid, isValidating },
+    formState: { isValid: formIsValidatedByYup, isValidating },
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
-    context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig, sluttdatoKanVæreÅpen: true },
+    context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig, erÅpenSluttDato },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
@@ -93,6 +94,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     medlemskapsperioder,
     innvilgetMedlemskapsperiode
   );
+
+  const formIsValid = formIsValidatedByYup || erÅpenSluttDato;
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
   const skalBeregneForelopigTrygdeavgift =
@@ -150,6 +153,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   };
 
   useEffect(() => {
+    if (erÅpenSluttDato) {
+      setTrygdeavgift(undefined);
+      return;
+    }
     Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID).then((beregnetTrygdeavgift) => {
       if (
         behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
@@ -213,7 +220,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   useEffect(() => {
-    if (redigerbart && aktivtSteg && !isValidating) {
+    if (redigerbart && aktivtSteg && !isValidating && !erÅpenSluttDato) {
       debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
     }
   }, [
@@ -257,19 +264,21 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.Typo.Normaltekst>
       )}
 
-      <Nav.Row>
-        <Nav.Column>
-          <Skatteforholdsperioder
-            formValues={formValues}
-            redigerbart={redigerbart}
-            remove={skattRemove}
-            append={skattAppend}
-            control={control}
-            defaultPeriode={defaultPeriode}
-            fields={skattFields}
-          />
-        </Nav.Column>
-      </Nav.Row>
+      {!erÅpenSluttDato && (
+        <Nav.Row>
+          <Nav.Column>
+            <Skatteforholdsperioder
+              formValues={formValues}
+              redigerbart={redigerbart}
+              remove={skattRemove}
+              append={skattAppend}
+              control={control}
+              defaultPeriode={defaultPeriode}
+              fields={skattFields}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      )}
 
       {!(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) && (
         <Inntektskilder
@@ -303,9 +312,16 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.Alert>
       )}
 
-      {!skalBeregneForelopigTrygdeavgift && stegErGyldig && (
+      {!erÅpenSluttDato && !skalBeregneForelopigTrygdeavgift && stegErGyldig && (
         <Nav.Alert variant="info" className="infomelding">
           Trygdeavgift skal ikke betales til NAV
+        </Nav.Alert>
+      )}
+
+      {erÅpenSluttDato && (
+        <Nav.Alert variant="info" className="infomelding">
+          Trygdeavgift skal ikke betales til NAV. Det vil ikke bli beregnet trygdeavgift for personer med arbeidsland
+          Norge og som er bosatt i Norge.
         </Nav.Alert>
       )}
 
