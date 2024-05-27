@@ -22,7 +22,7 @@ interface VilkaarOgBegrunnelserProps {
   vilkårOgBegrunnelser: VilkårOgBegrunnelser;
   alleValgteVilkår: Map<string, boolean | null | undefined>;
   alleValgteBegrunnelser: Map<string, Begrunnelse>;
-  handleEndreVilkår: (name: string, value: string) => void;
+  handleEndreVilkår: (name: string, value: boolean) => void;
   handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement>;
   handleEndreBegrunnelseFritekst: (vilkår: string, fritekst: string) => void;
   redigerbart: boolean;
@@ -59,11 +59,11 @@ export const VilkaarOgBegrunnelserNY = ({
         }
         onChange={(value) => handleEndreVilkår(vilkår, value)}
         name={vilkår}
-        defaultValue={vilkårErValgt === undefined ? undefined : String(vilkårErValgt)}
+        defaultValue={vilkårErValgt}
         disabled={!redigerbart}
       >
-        <Nav.AkselRadio value="true">Ja</Nav.AkselRadio>
-        <Nav.AkselRadio value="false">Nei</Nav.AkselRadio>
+        <Nav.AkselRadio value>Ja</Nav.AkselRadio>
+        <Nav.AkselRadio value={false}>Nei</Nav.AkselRadio>
       </Nav.RadioGroup>
       {selvstendigNæringValgt && harValgtFTRL_ARBEIDSTAKER && (
         <Nav.Alert variant="error">

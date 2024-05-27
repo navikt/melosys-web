@@ -34,7 +34,7 @@ const EnkeltVilkaar = (props) => {
             defaultValue={vilkaar.oppfylt}
             disabled={!redigerbart}
           >
-            <Nav.AkselRadio name={vilkaarKode} value={true}>
+            <Nav.AkselRadio name={vilkaarKode} value>
               {labelOppfylt}
             </Nav.AkselRadio>
             <Nav.AkselRadio name={vilkaarKode} value={false}>

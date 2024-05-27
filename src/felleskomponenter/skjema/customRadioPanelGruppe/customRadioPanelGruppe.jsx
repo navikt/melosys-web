@@ -42,7 +42,6 @@ class CustomRadioPanel extends Component {
             {...inputProps}
             className="radioPanel__Input"
             id={`${feltNavn}-${value}`}
-            name={feltNavn}
             value={value}
             onFocus={() => this.toggleOutline()}
             onBlur={() => this.toggleOutline()}
