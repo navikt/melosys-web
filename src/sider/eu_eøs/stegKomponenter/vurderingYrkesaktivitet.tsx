@@ -75,25 +75,19 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
       </Nav.Typo.Innholdstittel>
       <Nav.RadioGroup
         legend=""
+        hideLegend
         onChange={radioEndret}
         defaultValue={fakta}
         name="yrkesaktivitet"
         disabled={!redigerbart}
       >
-        <Nav.Radio name="yrkesaktivitet" value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}>
-          {labels[0]}
-        </Nav.Radio>
-        <Nav.Radio name="yrkesaktivitet" value={KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}>
-          {labels[1]}
-        </Nav.Radio>
+        <Nav.Radio value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}>{labels[0]}</Nav.Radio>
+        <Nav.Radio value={KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}>{labels[1]}</Nav.Radio>
         {!skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende && (
-          <Nav.Radio name="yrkesaktivitet" value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}>
-            {labels[2]}
-          </Nav.Radio>
+          <Nav.Radio value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}>{labels[2]}</Nav.Radio>
         )}
         {!(konvensjonEftaLandOgStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
           <Nav.Radio
-            name="yrkesaktivitet"
             disabled={!erSoknadArbeidFlereLand}
             value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           >

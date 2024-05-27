@@ -58,7 +58,7 @@ export const Skatteforholdsperioder = ({
 
               <Nav.Column>
                 <Forms.RadioGroup
-                  legend={index === 0 ? <Nav.Typo.Element>Er bruker skattepliktig?</Nav.Typo.Element> : null}
+                  legend={index === 0 ? <Nav.Typo.Element>Er bruker skattepliktig?</Nav.Typo.Element> : ""}
                   hideLegend={index !== 0}
                   name={`skatteforholdsperioder[${index}].skatteplikttype`}
                   disabled={!redigerbart}

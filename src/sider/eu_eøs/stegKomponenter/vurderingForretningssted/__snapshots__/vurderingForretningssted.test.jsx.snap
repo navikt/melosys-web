@@ -215,7 +215,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
         class="skjemaelement__label"
         for="vurdering13_1"
       >
-        Velg artikkel
+        Velg...
       </label>
       <div
         class="selectContainer input--fullbredde"
