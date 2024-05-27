@@ -34,12 +34,12 @@ const EnkeltVilkaar = (props) => {
             defaultValue={vilkaar.oppfylt}
             disabled={!redigerbart}
           >
-            <Nav.AkselRadio name={vilkaarKode} value>
+            <Nav.Radio name={vilkaarKode} value>
               {labelOppfylt}
-            </Nav.AkselRadio>
-            <Nav.AkselRadio name={vilkaarKode} value={false}>
+            </Nav.Radio>
+            <Nav.Radio name={vilkaarKode} value={false}>
               {labelIkkeOppfylt}
-            </Nav.AkselRadio>
+            </Nav.Radio>
           </Nav.RadioGroup>
         </Nav.Column>
       </Nav.Row>

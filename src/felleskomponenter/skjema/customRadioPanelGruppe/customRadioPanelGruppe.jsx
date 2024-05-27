@@ -27,18 +27,10 @@ class CustomRadioPanel extends Component {
   render() {
     const { checked, disabled, innhold, footer, feltNavn, inputProps, value } = this.props;
 
-    const { hasFocus } = this.state;
-
-    const cls = classNames("customRadioPanel", {
-      "customRadioPanel--checked": checked === true && !disabled,
-      "customRadioPanel--focused": hasFocus === true && !disabled,
-      "customRadioPanel--disabled": disabled === true,
-    });
-
     return (
       <Fragment>
-        <label className={cls} htmlFor={`${feltNavn}-${value}`}>
-          <Nav.AkselRadio
+        <label className="customRadioPanel" htmlFor={`${feltNavn}-${value}`}>
+          <Nav.Radio
             {...inputProps}
             className="radioPanel__Input"
             id={`${feltNavn}-${value}`}
@@ -48,7 +40,7 @@ class CustomRadioPanel extends Component {
             disabled={disabled}
           >
             {}
-          </Nav.AkselRadio>
+          </Nav.Radio>
           <div className="radioPanel__innhold">{innhold}</div>
         </label>
         {checked && footer}
@@ -64,7 +56,6 @@ CustomRadioPanel.propTypes = {
   inputProps: PT.object,
   disabled: PT.bool,
   value: PT.oneOfType([PT.string, PT.number]).isRequired,
-  onChange: PT.func.isRequired,
   checked: PT.bool,
 };
 
@@ -106,11 +97,9 @@ const CustomRadioPanelGruppe = (props) => {
           <CustomRadioPanel
             feltNavn={feltNavn}
             key={`${feltNavn}-${radio.value}`}
-            onChange={onChange}
             value={radio.value}
             checked={currentCheckedValue === radio.value}
             {...radio}
-            notify={notify}
           />
         ))}
       </Nav.RadioGroup>

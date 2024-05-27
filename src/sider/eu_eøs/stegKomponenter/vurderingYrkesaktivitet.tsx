@@ -80,28 +80,25 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
         name="yrkesaktivitet"
         disabled={!redigerbart}
       >
-        <Nav.AkselRadio name="yrkesaktivitet" value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}>
+        <Nav.Radio name="yrkesaktivitet" value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}>
           {labels[0]}
-        </Nav.AkselRadio>
-        <Nav.AkselRadio
-          name="yrkesaktivitet"
-          value={KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}
-        >
+        </Nav.Radio>
+        <Nav.Radio name="yrkesaktivitet" value={KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}>
           {labels[1]}
-        </Nav.AkselRadio>
+        </Nav.Radio>
         {!skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende && (
-          <Nav.AkselRadio name="yrkesaktivitet" value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}>
+          <Nav.Radio name="yrkesaktivitet" value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}>
             {labels[2]}
-          </Nav.AkselRadio>
+          </Nav.Radio>
         )}
         {!(konvensjonEftaLandOgStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
-          <Nav.AkselRadio
+          <Nav.Radio
             name="yrkesaktivitet"
             disabled={!erSoknadArbeidFlereLand}
             value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           >
             {labels[3]}
-          </Nav.AkselRadio>
+          </Nav.Radio>
         )}
       </Nav.RadioGroup>
       <Mui.StegKnapper

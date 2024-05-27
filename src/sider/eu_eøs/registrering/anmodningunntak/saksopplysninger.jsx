@@ -404,19 +404,19 @@ const Saksopplysninger = ({
                     onChange={setAnmodningsperiodeSvarType}
                     name={unikRadioButtonGruppeID}
                   >
-                    <Nav.AkselRadio
+                    <Nav.Radio
                       value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE}
                       disabled={!erGyldigLovvalgsperiode()}
                     >
                       Godkjenn unntaksperiode
-                    </Nav.AkselRadio>
-                    <Nav.AkselRadio
+                    </Nav.Radio>
+                    <Nav.Radio
                       value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE}
                       disabled={!erGyldigLovvalgsperiode()}
                     >
                       Godkjenn, men endre periode
-                    </Nav.AkselRadio>
-                    <Nav.AkselRadio value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}>Ikke godkjenn</Nav.AkselRadio>
+                    </Nav.Radio>
+                    <Nav.Radio value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}>Ikke godkjenn</Nav.Radio>
                   </Nav.RadioGroup>
                 </Nav.Column>
               </Nav.Row>

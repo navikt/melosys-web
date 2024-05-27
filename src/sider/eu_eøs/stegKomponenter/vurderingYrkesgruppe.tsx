@@ -143,22 +143,22 @@ const VurderingYrkesgruppe = ({
         defaultValue={fakta}
         disabled={!redigerbart}
       >
-        <Nav.AkselRadio value={ORDINAER}>Yrkesaktiv</Nav.AkselRadio>
-        <Nav.AkselRadio value={SOKKEL_ELLER_SKIP}>Yrkesaktiv på sokkel eller skip</Nav.AkselRadio>
-        <Nav.AkselRadio value={FLYENDE_PERSONELL}>Yrkesaktiv, som flygende personell</Nav.AkselRadio>
-        <Nav.AkselRadio value={ORDINAER_UTEN_ART12}>
+        <Nav.Radio value={ORDINAER}>Yrkesaktiv</Nav.Radio>
+        <Nav.Radio value={SOKKEL_ELLER_SKIP}>Yrkesaktiv på sokkel eller skip</Nav.Radio>
+        <Nav.Radio value={FLYENDE_PERSONELL}>Yrkesaktiv, som flygende personell</Nav.Radio>
+        <Nav.Radio value={ORDINAER_UTEN_ART12}>
           {konvensjonStorbritanniaToggleEnabled
             ? "Yrkesaktiv, direkte til vurdering av anmodning om unntak"
             : "Yrkesaktiv, direkte til vurdering av artikkel 16"}
-        </Nav.AkselRadio>
+        </Nav.Radio>
         {!(konvensjonStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
           <>
-            <Nav.AkselRadio disabled value={IKKE_YRKESAKTIV}>
+            <Nav.Radio disabled value={IKKE_YRKESAKTIV}>
               Ikke yrkesaktiv
-            </Nav.AkselRadio>
-            <Nav.AkselRadio disabled value={KONTANTYTELSESMOTTAKER}>
+            </Nav.Radio>
+            <Nav.Radio disabled value={KONTANTYTELSESMOTTAKER}>
               Kontantytelsesmottaker
-            </Nav.AkselRadio>
+            </Nav.Radio>
           </>
         )}
 

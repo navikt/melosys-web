@@ -205,19 +205,19 @@ const VurderingArtikkel11_4 = ({
             defaultValue={artikkelValg}
             size="small"
           >
-            <Nav.AkselRadio value={ArtikkelValg.ART11_4_1}>
+            <Nav.Radio value={ArtikkelValg.ART11_4_1}>
               {konvensjonStorbritanniaToggleEnabled ? "Arbeider på norsk skip" : "11.4 i - Norge er arbeidslandet"}
-            </Nav.AkselRadio>
-            <Nav.AkselRadio value={ArtikkelValg.ART11_4_2}>
+            </Nav.Radio>
+            <Nav.Radio value={ArtikkelValg.ART11_4_2}>
               {konvensjonStorbritanniaToggleEnabled
                 ? "Arbeider på utenlandsk skip, er bosatt i Norge og har norsk arbeidsgiver"
                 : "11.4 ii - arbeidsgiver i bostedslandet"}
-            </Nav.AkselRadio>
-            <Nav.AkselRadio name="artikkel11" value={ArtikkelValg.ART11_4_1_TIL_VURDERING_12_1}>
+            </Nav.Radio>
+            <Nav.Radio value={ArtikkelValg.ART11_4_1_TIL_VURDERING_12_1}>
               {konvensjonStorbritanniaToggleEnabled
                 ? "Utsendt til utenlandsk skip"
                 : "11.4 i - arbeidslandet er ikke Norge, men jeg vil vurdere Artikkel 12.1"}
-            </Nav.AkselRadio>
+            </Nav.Radio>
           </Nav.RadioGroup>
 
           {visBestemmelseAvsnitt && (
@@ -239,8 +239,8 @@ const VurderingArtikkel11_4 = ({
               defaultValue={nis.oppfylt}
               size="small"
             >
-              <Nav.AkselRadio value={BOOLSK_STRING.USANN}>Nei</Nav.AkselRadio>
-              <Nav.AkselRadio value={BOOLSK_STRING.SANN}>Ja</Nav.AkselRadio>
+              <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+              <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
             </Nav.RadioGroup>
           )}
         </Nav.Column>

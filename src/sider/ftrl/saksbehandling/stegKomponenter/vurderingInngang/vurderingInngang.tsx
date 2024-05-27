@@ -200,10 +200,10 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
                 name="flereLandUkjentHvilke"
                 disabled={!redigerbart}
               >
-                <Nav.AkselRadio value={BOOLSK_STRING.SANN} onChange={() => setValue("land", [])}>
+                <Nav.Radio value={BOOLSK_STRING.SANN} onChange={() => setValue("land", [])}>
                   Flere land, ikke kjent hvilke
-                </Nav.AkselRadio>
-                <Nav.AkselRadio value={BOOLSK_STRING.USANN}>Velg land fra liste</Nav.AkselRadio>
+                </Nav.Radio>
+                <Nav.Radio value={BOOLSK_STRING.USANN}>Velg land fra liste</Nav.Radio>
               </Forms.RadioGroup>
               {flereLandUkjentHvilkeErUSANN && (
                 <Forms.MultiSelect

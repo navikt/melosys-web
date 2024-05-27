@@ -31,7 +31,7 @@ const RadioGroup = forwardRef<HTMLSelectElement, RadioProps>(
           <Nav.RadioGroup
             {...rest}
             legend={legend}
-            defaultValue={field.value || defaultValue}
+            defaultValue={field.value ?? defaultValue}
             size={size ?? "small"}
             onChange={(value: any) => {
               field.onChange(value);

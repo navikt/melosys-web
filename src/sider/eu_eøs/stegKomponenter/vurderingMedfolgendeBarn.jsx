@@ -60,14 +60,12 @@ const MedfolgendeBarn = ({
           hideLegend
           disabled={!redigerbart}
           onChange={onCheck}
-          defaultValue={omfattet}
+          defaultValue={Utils.streng.uppercaseStrengTilBool(omfattet)}
           name={radioName}
           size="small"
         >
-          <Nav.AkselRadio name={radioName} value={BOOLSK_STRING.SANN}>
-            Ja
-          </Nav.AkselRadio>
-          <Nav.AkselRadio value={BOOLSK_STRING.USANN}>Nei</Nav.AkselRadio>
+          <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+          <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
         </Nav.RadioGroup>
         {omfattet === false && (
           <Nav.Row>

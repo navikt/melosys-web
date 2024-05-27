@@ -197,19 +197,19 @@ export const Bestemmelser = ({
             disabled={!redigerbart}
             name="vedtakvalg"
           >
-            <Nav.AkselRadio value={VedtakValg.JA_INNVILGE}>
+            <Nav.Radio value={VedtakValg.JA_INNVILGE}>
               {konvensjonStorbritanniaToggleEnabled ? "Ja, jeg vil innvilge søknaden" : "Ja"}
-            </Nav.AkselRadio>
-            <Nav.AkselRadio value={VedtakValg.NEI_ANMODNING_UNNTAK}>
+            </Nav.Radio>
+            <Nav.Radio value={VedtakValg.NEI_ANMODNING_UNNTAK}>
               {konvensjonStorbritanniaToggleEnabled
                 ? "Nei, jeg vil vurdere anmodning om unntak"
                 : "Nei, jeg vil vurdere artikkel 16.1"}
-            </Nav.AkselRadio>
-            <Nav.AkselRadio value={VedtakValg.NEI_AVSLAG}>
+            </Nav.Radio>
+            <Nav.Radio value={VedtakValg.NEI_AVSLAG}>
               {konvensjonStorbritanniaToggleEnabled
                 ? `Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1 (kun EØS-forordningen)`
                 : `Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1`}
-            </Nav.AkselRadio>
+            </Nav.Radio>
           </Nav.RadioGroup>
         </Nav.Column>
       </Nav.Row>

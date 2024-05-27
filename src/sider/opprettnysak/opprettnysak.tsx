@@ -306,8 +306,8 @@ const OpprettNySak = ({
                   legend=""
                   hideLegend
                 >
-                  <Nav.AkselRadio value={BRUKER}>Bruker</Nav.AkselRadio>
-                  <Nav.AkselRadio value={VIRKSOMHET}>Virksomhet</Nav.AkselRadio>
+                  <Nav.Radio value={BRUKER}>Bruker</Nav.Radio>
+                  <Nav.Radio value={VIRKSOMHET}>Virksomhet</Nav.Radio>
                 </Nav.RadioGroup>
               </div>
             </div>

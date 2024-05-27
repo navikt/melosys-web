@@ -319,10 +319,10 @@ const VurderingArtikkel16Anmodning = ({
           <Nav.Row className="vilAnmode">
             <Nav.Column xs="6">
               <Nav.RadioGroup legend="" hideLegend defaultValue name="vilAnmode" disabled={!redigerbart}>
-                <Nav.AkselRadio value>Ja, jeg vil anmode om unntak</Nav.AkselRadio>
-                <Nav.AkselRadio value={false} disabled>
+                <Nav.Radio value>Ja, jeg vil anmode om unntak</Nav.Radio>
+                <Nav.Radio value={false} disabled>
                   Nei, jeg vil avslå
-                </Nav.AkselRadio>
+                </Nav.Radio>
               </Nav.RadioGroup>
             </Nav.Column>
           </Nav.Row>

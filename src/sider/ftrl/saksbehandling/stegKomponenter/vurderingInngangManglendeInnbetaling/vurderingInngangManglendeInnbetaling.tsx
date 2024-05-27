@@ -91,12 +91,12 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
         disabled={!redigerbart}
         size="medium"
       >
-        <Nav.AkselRadio value={BOOLSK_STRING.SANN}>
+        <Nav.Radio value={BOOLSK_STRING.SANN}>
           Innbetaling mangler for <b>hele</b> medlemskapsperioden.
-        </Nav.AkselRadio>
-        <Nav.AkselRadio value={BOOLSK_STRING.USANN}>
+        </Nav.Radio>
+        <Nav.Radio value={BOOLSK_STRING.USANN}>
           Innbetaling mangler for <b>deler</b> av medlemskapsperioden.
-        </Nav.AkselRadio>
+        </Nav.Radio>
       </Forms.RadioGroup>
 
       <Mui.StegKnapper

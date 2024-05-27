@@ -128,7 +128,7 @@ const VurderingSokkelSkip = ({
         name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
         defaultValue={fakta}
       >
-        <Nav.AkselRadio
+        <Nav.Radio
           disabled={
             konvensjonStorbritanniaToggleEnabled
               ? MKVUtils.erUtsendt(behandlingstema)
@@ -137,17 +137,17 @@ const VurderingSokkelSkip = ({
           value={VurderingSokkelSkipTyper.SOKKEL_NORSK}
         >
           På norsk sokkel eller innenfor norsk territorialfarvann (art. 11.3.a)
-        </Nav.AkselRadio>
-        <Nav.AkselRadio value={VurderingSokkelSkipTyper.SKIP_ETT_LAND}>På skip registrert i ett land</Nav.AkselRadio>
-        <Nav.AkselRadio value={VurderingSokkelSkipTyper.SOKKEL_UTLAND}>
+        </Nav.Radio>
+        <Nav.Radio value={VurderingSokkelSkipTyper.SKIP_ETT_LAND}>På skip registrert i ett land</Nav.Radio>
+        <Nav.Radio value={VurderingSokkelSkipTyper.SOKKEL_UTLAND}>
           {konvensjonStorbritanniaToggleEnabled
             ? "Utsendt til sokkel eller til annet lands territorialfarvann"
             : "Utsendt til sokkel eller til annet lands territorialfarvann (art. 12)"}
-        </Nav.AkselRadio>
+        </Nav.Radio>
         {!konvensjonStorbritanniaToggleEnabled && (
-          <Nav.AkselRadio disabled value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND}>
+          <Nav.Radio disabled value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND}>
             To sokler / skip i flere land (art. 13)
-          </Nav.AkselRadio>
+          </Nav.Radio>
         )}
       </Nav.RadioGroup>
       <Mui.StegKnapper

@@ -105,11 +105,10 @@ const VurderingBostedsland = (props) => {
               onChange={radioEndringHandler}
               name="bostedsland"
               disabled={!redigerbart}
+              defaultValue={erNorgeValgt}
             >
-              <Nav.AkselRadio value onChange={radioEndringHandler}>
-                Norge
-              </Nav.AkselRadio>
-              <Nav.AkselRadio value={false}>Annet</Nav.AkselRadio>
+              <Nav.Radio value>Norge</Nav.Radio>
+              <Nav.Radio value={false}>Annet</Nav.Radio>
               {erNorgeValgt === false && (
                 <Nav.Row>
                   <Nav.Column xs="8" md="6" lg="4">

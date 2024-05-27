@@ -161,8 +161,8 @@ export const Inntektskilder = ({
                     control={control}
                     onChange={(value) => handleEndreArbAvgBetales(index, value)}
                   >
-                    <Nav.AkselRadio value={BOOLSK_STRING.SANN}>Ja</Nav.AkselRadio>
-                    <Nav.AkselRadio value={BOOLSK_STRING.USANN}>Nei</Nav.AkselRadio>
+                    <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+                    <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
                   </Forms.RadioGroup>
                 ) : (
                   <div className="ikkeRelevant">

@@ -76,8 +76,8 @@ const VurderingArtikkel13_2b = ({
         onChange={radioEndringHandler}
         disabled={!redigerbart}
       >
-        <Nav.AkselRadio value={radioValg.NORGE}>Norge</Nav.AkselRadio>
-        <Nav.AkselRadio value={radioValg.ANNET}>Annet</Nav.AkselRadio>
+        <Nav.Radio value={radioValg.NORGE}>Norge</Nav.Radio>
+        <Nav.Radio value={radioValg.ANNET}>Annet</Nav.Radio>
       </Nav.RadioGroup>
       {erNorgeValgt === false && (
         <Nav.Row>

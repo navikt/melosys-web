@@ -64,9 +64,9 @@ const EnkeltAvklartfakta = (props) => {
             {avklartefaktaTyper.map((af) => {
               const id = Utils._uuid();
               return (
-                <Nav.AkselRadio key={id} id={id} value={af.type} disabled={af.disabled}>
+                <Nav.Radio key={id} id={id} value={af.type} disabled={af.disabled}>
                   {af.label}
-                </Nav.AkselRadio>
+                </Nav.Radio>
               );
             })}
           </Nav.RadioGroup>

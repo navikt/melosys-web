@@ -36,8 +36,8 @@ const SorterbarListe = ({
           name={uniqueName}
           className="sorteringRadiogruppe"
         >
-          <Nav.AkselRadio value="descending">Nyeste først</Nav.AkselRadio>
-          <Nav.AkselRadio value="ascending">Eldste først</Nav.AkselRadio>
+          <Nav.Radio value="descending">Nyeste først</Nav.Radio>
+          <Nav.Radio value="ascending">Eldste først</Nav.Radio>
         </Nav.RadioGroup>
       )}
       {sorterteElementer.map((oppgave) => (

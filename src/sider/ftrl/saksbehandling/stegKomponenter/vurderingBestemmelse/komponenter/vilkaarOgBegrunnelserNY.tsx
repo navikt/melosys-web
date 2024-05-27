@@ -62,8 +62,8 @@ export const VilkaarOgBegrunnelserNY = ({
         defaultValue={vilkårErValgt}
         disabled={!redigerbart}
       >
-        <Nav.AkselRadio value>Ja</Nav.AkselRadio>
-        <Nav.AkselRadio value={false}>Nei</Nav.AkselRadio>
+        <Nav.Radio value>Ja</Nav.Radio>
+        <Nav.Radio value={false}>Nei</Nav.Radio>
       </Nav.RadioGroup>
       {selvstendigNæringValgt && harValgtFTRL_ARBEIDSTAKER && (
         <Nav.Alert variant="error">

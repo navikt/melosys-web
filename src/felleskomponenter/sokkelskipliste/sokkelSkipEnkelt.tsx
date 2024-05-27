@@ -91,12 +91,12 @@ const SokkelSkipEnkelt = ({
           name={key}
           size="small"
         >
-          <Nav.AkselRadio value={SOKKEL} id={Utils._uuid()}>
+          <Nav.Radio value={SOKKEL} id={Utils._uuid()}>
             Sokkel
-          </Nav.AkselRadio>
-          <Nav.AkselRadio value={SKIP} id={Utils._uuid()}>
+          </Nav.Radio>
+          <Nav.Radio value={SKIP} id={Utils._uuid()}>
             Skip
-          </Nav.AkselRadio>
+          </Nav.Radio>
         </Nav.RadioGroup>
       </Nav.Column>
       {installasjonsType === SOKKEL && (

@@ -65,8 +65,8 @@ export const Skatteforholdsperioder = ({
                   control={control}
                   className="skatteforholdsperioder-radio-group"
                 >
-                  <Nav.AkselRadio value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}>Ja</Nav.AkselRadio>
-                  <Nav.AkselRadio value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}>Nei</Nav.AkselRadio>
+                  <Nav.Radio value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}>Ja</Nav.Radio>
+                  <Nav.Radio value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}>Nei</Nav.Radio>
                 </Forms.RadioGroup>
               </Nav.Column>
 

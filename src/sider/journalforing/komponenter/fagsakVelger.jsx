@@ -70,8 +70,8 @@ const FagsakVelger = (props) => {
         </>
       ) : (
         <Nav.RadioGroup defaultValue={EKSISTERENDE} onChange={setValgtVisning} legend="" hideLegend>
-          <Nav.AkselRadio value={EKSISTERENDE}>{EKSISTERENDE}</Nav.AkselRadio>
-          <Nav.AkselRadio value={OPPRETT}>{OPPRETT}</Nav.AkselRadio>
+          <Nav.Radio value={EKSISTERENDE}>{EKSISTERENDE}</Nav.Radio>
+          <Nav.Radio value={OPPRETT}>{OPPRETT}</Nav.Radio>
         </Nav.RadioGroup>
       )}
 

@@ -29,7 +29,7 @@ function InnerInputComponent({
   const feil = meta.error && meta.touched && !meta.active ? meta.error : undefined;
 
   return (
-    <Nav.AkselRadio
+    <Nav.Radio
       {...inputProps}
       checked={gjeldendeFeltVerdi === radioButtonVerdi || forhandsvalgt}
       // Fikser fokus/markering feil i IE
@@ -41,7 +41,7 @@ function InnerInputComponent({
       onFocus={() => {}}
     >
       {label}
-    </Nav.AkselRadio>
+    </Nav.Radio>
   );
 }
 

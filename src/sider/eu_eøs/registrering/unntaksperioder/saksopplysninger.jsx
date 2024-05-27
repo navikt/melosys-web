@@ -352,15 +352,13 @@ const Saksopplysninger = ({
                     onChange={setUnntaksperiodeVurdering}
                     name={unikRadioButtonGruppeID}
                   >
-                    <Nav.AkselRadio
+                    <Nav.Radio
                       value={KV.Koder.Unntaksperiode.GODKJENT}
                       disabled={kanIkkeGodkjenneUtenÅEndrePerioden || !erGyldigLovvalgsperiode()}
                     >
                       Godkjenn unntaksperiode
-                    </Nav.AkselRadio>
-                    <Nav.AkselRadio value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT}>
-                      Godkjenn, men endre periode
-                    </Nav.AkselRadio>
+                    </Nav.Radio>
+                    <Nav.Radio value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT}>Godkjenn, men endre periode</Nav.Radio>
                     {kanEndrePeriode() && (
                       <Nav.Row>
                         <EndrePeriode
@@ -381,7 +379,7 @@ const Saksopplysninger = ({
                         />
                       </Nav.Row>
                     )}
-                    <Nav.AkselRadio value={KV.Koder.Unntaksperiode.AVSLAG}>Ikke godkjenn</Nav.AkselRadio>
+                    <Nav.Radio value={KV.Koder.Unntaksperiode.AVSLAG}>Ikke godkjenn</Nav.Radio>
                   </Nav.RadioGroup>
                 </Nav.Column>
               </Nav.Row>

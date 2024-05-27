@@ -192,7 +192,7 @@ const VurderingForretningssted = (props) => {
       <Nav.Select
         name="artikkel3_1_vurdering"
         id="vurdering13_1"
-        label="Velg artikkel"
+        label="Velg..."
         onChange={lovvalgsbestemmelseEndret}
         disabled={!redigerbart}
         value={finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser) ?? ""}

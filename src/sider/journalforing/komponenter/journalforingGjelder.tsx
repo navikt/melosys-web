@@ -67,12 +67,12 @@ const JournalforingGjelder = ({
       tittel="Hvem skal dokumentet journalføres på?"
       innhold={
         <Nav.RadioGroup onChange={handleClick} defaultValue={journalforingGjelder} legend="" hideLegend>
-          <Nav.AkselRadio value={BRUKER} id={BRUKER}>
+          <Nav.Radio value={BRUKER} id={BRUKER}>
             {KV.kodeTilTerm(BRUKER, MKV.KTObjects.aktoersroller)}
-          </Nav.AkselRadio>
-          <Nav.AkselRadio value={VIRKSOMHET} id={VIRKSOMHET}>
+          </Nav.Radio>
+          <Nav.Radio value={VIRKSOMHET} id={VIRKSOMHET}>
             {KV.kodeTilTerm(VIRKSOMHET, MKV.KTObjects.aktoersroller)}
-          </Nav.AkselRadio>
+          </Nav.Radio>
         </Nav.RadioGroup>
       }
     />

@@ -133,9 +133,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         disabled={!redigerbart}
         size="medium"
       >
-        <Nav.AkselRadio value={INNVILGET}>Jeg vil innvilge søknaden</Nav.AkselRadio>
-        <Nav.AkselRadio value={UNNTAK}>Jeg vil søke om unntak</Nav.AkselRadio>
-        <Nav.AkselRadio value={AVSLAATT}>Jeg vil avslå søknaden</Nav.AkselRadio>
+        <Nav.Radio value={INNVILGET}>Jeg vil innvilge søknaden</Nav.Radio>
+        <Nav.Radio value={UNNTAK}>Jeg vil søke om unntak</Nav.Radio>
+        <Nav.Radio value={AVSLAATT}>Jeg vil avslå søknaden</Nav.Radio>
       </Forms.RadioGroup>
 
       {formValues?.innvilgelsesResultat === INNVILGET && (
@@ -170,14 +170,14 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
               size="medium"
             >
               {MKV.KTObjects.begrunnelser.ikkeyrkesaktivsituasjontype.map((value: KTObject) => (
-                <Nav.AkselRadio
+                <Nav.Radio
                   name="ikkeYrkesaktivSituasjontype"
                   value={value.kode}
                   disabled={!redigerbart}
                   key={value.kode}
                 >
                   {value.term || ""}
-                </Nav.AkselRadio>
+                </Nav.Radio>
               ))}
             </Forms.RadioGroup>
           )}

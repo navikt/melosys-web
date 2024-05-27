@@ -66,8 +66,8 @@ export const VilkaarOgBegrunnelser = ({
         defaultValue={valgtVilkår}
         disabled={!redigerbart}
       >
-        <Nav.AkselRadio value={SANN}>Ja</Nav.AkselRadio>
-        <Nav.AkselRadio value={USANN}>Nei</Nav.AkselRadio>
+        <Nav.Radio value={SANN}>Ja</Nav.Radio>
+        <Nav.Radio value={USANN}>Nei</Nav.Radio>
       </Nav.RadioGroup>
 
       {valgtVilkår === USANN && <IngenFlytMelding />}

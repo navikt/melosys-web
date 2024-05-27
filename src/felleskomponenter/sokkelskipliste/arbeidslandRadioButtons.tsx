@@ -32,9 +32,9 @@ const ArbeidslandRadioButtons = ({ landliste, onChange, arbeidslandType, disable
       size="small"
     >
       {utfylteLand.map((land) => (
-        <Nav.AkselRadio id={Utils._uuid()} key={land.type} value={land.type} onChange={() => onChange(land)}>
+        <Nav.Radio id={Utils._uuid()} key={land.type} value={land.type} onChange={() => onChange(land)}>
           {`${KV.kodeTilTerm(land.landkode, MKV.KTObjects.landkoder)} - ${land.type}`}
-        </Nav.AkselRadio>
+        </Nav.Radio>
       ))}
     </Nav.RadioGroup>
   );

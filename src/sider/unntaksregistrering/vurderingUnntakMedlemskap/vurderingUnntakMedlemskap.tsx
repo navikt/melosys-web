@@ -186,11 +186,11 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
             onChange={lagreUtfallRegistreringUnntak}
             control={control}
           >
-            <Nav.AkselRadio value={GODKJENT} disabled={!harSluttdato}>
+            <Nav.Radio value={GODKJENT} disabled={!harSluttdato}>
               Godkjenn
-            </Nav.AkselRadio>
-            <Nav.AkselRadio value={DELVIS_GODKJENT}>Godkjenn, men endre periode</Nav.AkselRadio>
-            <Nav.AkselRadio value={IKKE_GODKJENT}>Ikke godkjenn</Nav.AkselRadio>
+            </Nav.Radio>
+            <Nav.Radio value={DELVIS_GODKJENT}>Godkjenn, men endre periode</Nav.Radio>
+            <Nav.Radio value={IKKE_GODKJENT}>Ikke godkjenn</Nav.Radio>
           </Forms.RadioGroup>
         </Nav.Column>
       </Nav.Row>
