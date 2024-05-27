@@ -85,7 +85,7 @@ export const UtsendingsvilkårNæringsdrivendeSelector = createSelector(
 export const UtsendingsvilkårSelector = createSelector(
   (state) => UtsendingsvilkårArbeidstakerSelector(state),
   (state) => UtsendingsvilkårNæringsdrivendeSelector(state),
-  (state) => avklartefaktaSelectors.Yrkesaktivitet(state),
+  (state) => avklartefaktaSelectors.YrkesaktivitetSelector(state),
   (utsendingsvilkårforArbeidstaker, utsendingsvilkårForNæringsdrivende, yrkesaktivitet) => {
     if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER) {
       return utsendingsvilkårforArbeidstaker;
