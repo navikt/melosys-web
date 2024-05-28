@@ -75,7 +75,7 @@ export const Bestemmelser = ({
   const erSokkel = useSelector(avklartefaktaSelectors.InstallasjonsTypeSelector) === KV.Koder.SOKKEL;
 
   const [vedtakValg, setVedtakValg] = useState(initializeVedtakValg(utsendingsvilkår, unntaksvilkår));
-  const [bestemmelse, setBestemmelse] = useState(lovvalgsperiodeBestemmelse ?? "");
+  const [bestemmelse, setBestemmelse] = useState(lovvalgsbestemmelse ?? "");
   const [pending, setPending] = useState(false);
 
   const FO_883_2004_ART12 = hentRelevantUtsendelseArtikkel12(erArbeidstaker);
