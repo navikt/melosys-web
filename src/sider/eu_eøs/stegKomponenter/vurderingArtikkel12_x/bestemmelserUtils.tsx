@@ -102,9 +102,6 @@ export const finnTilleggsbestemmelse = (
   yrkesgruppeFakta: string | undefined,
   arbeidPåSkipFakta: string | undefined
 ): string | undefined => {
-  if ([KONV_EFTA_STORBRITANNIA_ART16_1, KONV_EFTA_STORBRITANNIA_ART16_3].includes(lovvalgsbestemmelse))
-    return undefined;
-
   if (yrkesgruppeFakta === FLYENDE_PERSONELL) {
     switch (lovvalgsbestemmelse) {
       case KONV_EFTA_STORBRITANNIA_ART14_1:
@@ -113,6 +110,8 @@ export const finnTilleggsbestemmelse = (
       case FO_883_2004_ART12_1:
       case FO_883_2004_ART12_2:
         return FO_883_2004_ART11_5;
+      default:
+        return undefined;
     }
   }
 
@@ -124,6 +123,8 @@ export const finnTilleggsbestemmelse = (
       case FO_883_2004_ART12_1:
       case FO_883_2004_ART12_2:
         return FO_883_2004_ART11_4_1;
+      default:
+        return undefined;
     }
   }
 
