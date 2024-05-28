@@ -102,18 +102,29 @@ export const finnTilleggsbestemmelse = (
   yrkesgruppeFakta: string | undefined,
   arbeidPåSkipFakta: string | undefined
 ): string | undefined => {
-  if (![KONV_EFTA_STORBRITANNIA_ART14_1, FO_883_2004_ART12_1].includes(lovvalgsbestemmelse)) return undefined;
+  if ([KONV_EFTA_STORBRITANNIA_ART16_1, KONV_EFTA_STORBRITANNIA_ART16_3].includes(lovvalgsbestemmelse))
+    return undefined;
 
   if (yrkesgruppeFakta === FLYENDE_PERSONELL) {
-    return lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART14_1
-      ? KONV_EFTA_STORBRITANNIA_ART13_5
-      : FO_883_2004_ART11_5;
+    switch (lovvalgsbestemmelse) {
+      case KONV_EFTA_STORBRITANNIA_ART14_1:
+      case KONV_EFTA_STORBRITANNIA_ART14_2:
+        return KONV_EFTA_STORBRITANNIA_ART13_5;
+      case FO_883_2004_ART12_1:
+      case FO_883_2004_ART12_2:
+        return FO_883_2004_ART11_5;
+    }
   }
 
   if (yrkesgruppeFakta === SOKKEL_ELLER_SKIP && arbeidPåSkipFakta === SKIP_ETT_LAND) {
-    return lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART14_1
-      ? KONV_EFTA_STORBRITANNIA_ART13_4_1
-      : FO_883_2004_ART11_4_1;
+    switch (lovvalgsbestemmelse) {
+      case KONV_EFTA_STORBRITANNIA_ART14_1:
+      case KONV_EFTA_STORBRITANNIA_ART14_2:
+        return KONV_EFTA_STORBRITANNIA_ART13_4_1;
+      case FO_883_2004_ART12_1:
+      case FO_883_2004_ART12_2:
+        return FO_883_2004_ART11_4_1;
+    }
   }
 
   return undefined;
