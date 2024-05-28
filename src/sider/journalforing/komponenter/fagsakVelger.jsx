@@ -69,7 +69,13 @@ const FagsakVelger = (props) => {
           <OpprettSak formValues={formValues} feltNavn={feltNavn} />
         </>
       ) : (
-        <Nav.RadioGroup defaultValue={EKSISTERENDE} onChange={setValgtVisning} legend="" hideLegend>
+        <Nav.RadioGroup
+          name="valgtVisning-radiogroup"
+          defaultValue={valgtVisning}
+          onChange={setValgtVisning}
+          legend=""
+          hideLegend
+        >
           <Nav.Radio value={EKSISTERENDE}>{EKSISTERENDE}</Nav.Radio>
           <Nav.Radio value={OPPRETT}>{OPPRETT}</Nav.Radio>
         </Nav.RadioGroup>

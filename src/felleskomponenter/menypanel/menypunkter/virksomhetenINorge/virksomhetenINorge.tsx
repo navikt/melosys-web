@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { formValueSelector } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
@@ -17,40 +16,6 @@ import IkkeRedigerbarSamletVirksomhetINorge from "./ikkeRedigerbarSamletVirksomh
 import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
 
 import "./virksomhetenINorge.css";
-
-interface RadioknappSvarProps {
-  feltNavn: string;
-  redigerbart: boolean;
-}
-
-const RadioknappSvar = ({ feltNavn, redigerbart }: RadioknappSvarProps) => (
-  <Nav.RadioGroup legend="" hideLegend size="small">
-    <Skjema.Radio disabled={!redigerbart} label="Ja" feltNavn={feltNavn} value />
-    <Skjema.Radio disabled={!redigerbart} label="Nei" feltNavn={feltNavn} value={false} />
-  </Nav.RadioGroup>
-);
-
-interface SporsmalOgSvarProps {
-  sporsmal: string;
-  svar: ReactNode;
-}
-
-const SporsmalOgSvar = ({ sporsmal, svar }: SporsmalOgSvarProps) => {
-  return (
-    <Nav.Row className="sporsmal-og-svar">
-      <fieldset>
-        <Nav.Column xs="7">
-          <legend>
-            <Nav.Typo.Normaltekst>{sporsmal}</Nav.Typo.Normaltekst>
-          </legend>
-        </Nav.Column>
-        <Nav.Column xs="5" className="col">
-          {svar}
-        </Nav.Column>
-      </fieldset>
-    </Nav.Row>
-  );
-};
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 
@@ -98,12 +63,16 @@ const VirksomhetenINorge = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
-          <SporsmalOgSvar
-            sporsmal="Er arbeidsgiver en offentlig virksomhet?"
-            svar={
-              <RadioknappSvar redigerbart={redigerbart} feltNavn="juridiskArbeidsgiverNorge.erOffentligVirksomhet" />
-            }
-          />
+          <Nav.Row className="sporsmal-og-svar">
+            <Skjema.RadioGroup
+              legend="Er arbeidsgiver en offentlig virksomhet?"
+              disabled={!redigerbart}
+              name="juridiskArbeidsgiverNorge.erOffentligVirksomhet"
+            >
+              <Nav.Radio value>Ja</Nav.Radio>
+              <Nav.Radio value={false}>Nei</Nav.Radio>
+            </Skjema.RadioGroup>
+          </Nav.Row>
 
           {erOffentligVirksomhet && (
             <Nav.Typo.Normaltekst className="er-offentlig-virksomhet-hjelpetekst">

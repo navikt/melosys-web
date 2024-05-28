@@ -71,15 +71,10 @@ export const OppgaveVelger = ({
 
   return (
     <div className="oppgaveVelger">
-      <Nav.RadioGroup legend="" hideLegend>
-        <Skjema.Radio feltNavn="oppretterOppgave" label="Opprett ny oppgave" name="velgVisningOppgave" value />
-        <Skjema.Radio
-          feltNavn="oppretterOppgave"
-          label="Eksisterende oppgave"
-          name="velgVisningOppgave"
-          value={false}
-        />
-      </Nav.RadioGroup>
+      <Skjema.RadioGroup legend="" hideLegend name="oppretterOppgave" size="medium">
+        <Nav.Radio value>Opprett ny oppgave</Nav.Radio>
+        <Nav.Radio value={false}>Eksisterende oppgave</Nav.Radio>
+      </Skjema.RadioGroup>
       {oppretterOppgave ? (
         <OpprettNyOppgave />
       ) : (

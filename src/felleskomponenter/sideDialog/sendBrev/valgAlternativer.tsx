@@ -7,26 +7,22 @@ interface ValgAlternativProps {
   feltKode: string;
   redigerbart: boolean;
   changeField: (felt: string, data: any) => void;
-  feltVerdi?: {
-    valg: string | null | undefined;
-  };
 }
 
-const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField, feltVerdi }: ValgAlternativProps) => {
+const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlternativProps) => {
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {
     return (
-      <Nav.RadioGroup legend="" hideLegend size="small" defaultValue={feltVerdi?.valg}>
+      <Skjema.RadioGroup legend="" hideLegend name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
         {valg.valgAlternativer.map((alternativ) => (
-          <Skjema.Radio
-            feltNavn={`felt.${feltKode}.valg`}
-            label={alternativ.beskrivelse}
+          <Nav.Radio
+            value={alternativ.kode}
             id={`${feltKode}.${alternativ.kode}`}
             key={`${feltKode}.${alternativ.kode}`}
-            value={alternativ.kode}
-            disabled={!redigerbart}
-          />
+          >
+            {alternativ.beskrivelse}
+          </Nav.Radio>
         ))}
-      </Nav.RadioGroup>
+      </Skjema.RadioGroup>
     );
   }
   if (valg.valgType === DokumenterV2.ValgType.SELECT) {

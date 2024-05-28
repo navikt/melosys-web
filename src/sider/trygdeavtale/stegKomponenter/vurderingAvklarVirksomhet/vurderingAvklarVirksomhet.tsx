@@ -78,11 +78,13 @@ const VurderingAvklarVirksomhet = ({
       </Nav.Typo.Innholdstittel>
 
       {virksomheterListe?.length !== 0 ? (
-        <Nav.RadioGroup legend="" hideLegend disabled={!redigerbart} defaultValue={resultat?.virksomhet}>
+        <Skjema.RadioGroup legend="" hideLegend name="virksomhet" disabled={!redigerbart}>
           {virksomheterListe?.map((virksomhet) => (
-            <Skjema.Radio feltNavn="virksomhet" label={virksomhet.term} key={virksomhet.kode} value={virksomhet.kode} />
+            <Nav.Radio key={virksomhet.kode} value={virksomhet.kode}>
+              {virksomhet.term}
+            </Nav.Radio>
           ))}
-        </Nav.RadioGroup>
+        </Skjema.RadioGroup>
       ) : (
         <Nav.Alert variant="error" className="alertstripe">
           {INGEN_VIRKSOMHETER_TEKST}

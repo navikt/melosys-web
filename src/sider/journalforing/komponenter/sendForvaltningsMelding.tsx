@@ -15,35 +15,20 @@ interface SendForvaltningsMeldingProps {
 const SendForvaltningsMelding = ({ avsenderType, harRegistrertAdresse }: SendForvaltningsMeldingProps) => {
   return (
     <div className="sendForvaltningsmelding">
-      <Nav.RadioGroup legend="Skal melding om saksbehandlingtid sendes automatisk?" size="small">
-        <Skjema.Radio
-          disabled={!harRegistrertAdresse}
-          feltNavn="forvaltningsmeldingMottaker"
-          label={
-            <>
-              Ja, melding skal sendes automatisk til <b>bruker</b>
-            </>
-          }
-          value={BRUKER}
-        />
+      <Skjema.RadioGroup
+        legend="Skal melding om saksbehandlingtid sendes automatisk?"
+        name="forvaltningsmeldingMottaker"
+      >
+        <Nav.Radio disabled={!harRegistrertAdresse} value={BRUKER}>
+          Ja, melding skal sendes automatisk til <b>bruker</b>
+        </Nav.Radio>
         {avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET ? (
-          <Skjema.Radio
-            disabled={!harRegistrertAdresse}
-            feltNavn="forvaltningsmeldingMottaker"
-            label={
-              <>
-                Ja, melding skal sendes automatisk til <b>avsender</b>
-              </>
-            }
-            value={AVSENDER}
-          />
+          <Nav.Radio disabled={!harRegistrertAdresse} value={AVSENDER}>
+            Ja, melding skal sendes automatisk til <b>avsender</b>
+          </Nav.Radio>
         ) : null}
-        <Skjema.Radio
-          feltNavn="forvaltningsmeldingMottaker"
-          label="Nei, jeg vil sende melding senere eller behandle saken innen kort tid"
-          value={INGEN}
-        />
-      </Nav.RadioGroup>
+        <Nav.Radio value={INGEN}>Nei, jeg vil sende melding senere eller behandle saken innen kort tid</Nav.Radio>
+      </Skjema.RadioGroup>
 
       {!harRegistrertAdresse && (
         <Nav.Alert className="feilmelding" variant="warning">

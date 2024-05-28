@@ -26,10 +26,10 @@ export const AvsenderVelgerForVirksomhet = ({
   }, [formValues.avsenderType]);
 
   return (
-    <Nav.RadioGroup legend="Hvem er avsender?">
-      <Skjema.Radio feltNavn="avsenderType" label="Virksomhet" value={MKV.Koder.avsendertyper.ORGANISASJON} />
-      <Skjema.Radio feltNavn="avsenderType" label="Fritekst" value={KV.AvsenderTyper.FRITEKST} />
+    <Skjema.RadioGroup legend="Hvem er avsender?" name="avsenderType" size="medium">
+      <Nav.Radio value={MKV.Koder.avsendertyper.ORGANISASJON}>Virksomhet</Nav.Radio>
+      <Nav.Radio value={KV.AvsenderTyper.FRITEKST}>Fritekst</Nav.Radio>
       {formValues.avsenderType === KV.AvsenderTyper.FRITEKST && <Skjema.Input label="" feltNavn="avsenderNavn" />}
-    </Nav.RadioGroup>
+    </Skjema.RadioGroup>
   );
 };

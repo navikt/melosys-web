@@ -32,7 +32,6 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
                   feltKode={felt.kode}
                   redigerbart={redigerbart}
                   changeField={changeField}
-                  feltVerdi={formValues.felt ? formValues.felt[felt.kode] : undefined}
                 />
               </Nav.Column>
             </Nav.Row>

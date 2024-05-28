@@ -86,15 +86,14 @@ const VurderingAvslaaUtpeking = ({
             visTellerFra={500}
             maxLength={500}
           />
-          <Nav.RadioGroup
+          <Skjema.RadioGroup
             legend="Anmodning om mer informasjon vil bli sendt"
-            size="small"
-            defaultValue={vilSendeAnmodningOmMerInformasjon}
+            name="vilSendeAnmodningOmMerInformasjon"
             disabled={!redigerbart}
           >
-            <Skjema.Radio feltNavn="vilSendeAnmodningOmMerInformasjon" value label="Ja" />
-            <Skjema.Radio feltNavn="vilSendeAnmodningOmMerInformasjon" value={false} label="Nei" />
-          </Nav.RadioGroup>
+            <Nav.Radio value>Ja</Nav.Radio>
+            <Nav.Radio value={false}>Nei</Nav.Radio>
+          </Skjema.RadioGroup>
           <Skjema.LandVelger
             feltNavn="nyttLovvalgsland"
             label="Foreslå nytt lovvalgsland (valgfri)"

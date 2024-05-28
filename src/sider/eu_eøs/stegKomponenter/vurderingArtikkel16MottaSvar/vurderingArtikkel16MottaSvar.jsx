@@ -92,31 +92,11 @@ const FormKomponent = ({
     <form name="anmodningSvar" id="anmodningSvar" onSubmit={(e) => e.preventDefault()}>
       <Nav.Row className="svarFraMyndighetRow">
         <Nav.Column xs="6">
-          <Nav.RadioGroup
-            legend="Svar fra myndighetene"
-            size="small"
-            defaultValue={formValues?.anmodningsperiodeSvarType}
-            disabled={!redigerbart}
-          >
-            <Skjema.Radio
-              name="svarFraMyndighetene"
-              feltNavn="anmodningsperiodeSvarType"
-              label="Innvilgelse"
-              value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE}
-            />
-            <Skjema.Radio
-              name="svarFraMyndighetene"
-              feltNavn="anmodningsperiodeSvarType"
-              label="Delvis innvilgelse"
-              value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE}
-            />
-            <Skjema.Radio
-              name="svarFraMyndighetene"
-              feltNavn="anmodningsperiodeSvarType"
-              label="Avslag"
-              value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}
-            />
-          </Nav.RadioGroup>
+          <Skjema.RadioGroup legend="Svar fra myndighetene" name="anmodningsperiodeSvarType" disabled={!redigerbart}>
+            <Nav.Radio value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE}>Innvilgelse</Nav.Radio>
+            <Nav.Radio value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE}>Delvis innvilgelse</Nav.Radio>
+            <Nav.Radio value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}>Avslag</Nav.Radio>
+          </Skjema.RadioGroup>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

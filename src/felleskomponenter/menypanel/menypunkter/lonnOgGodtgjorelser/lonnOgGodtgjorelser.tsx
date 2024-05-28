@@ -26,22 +26,14 @@ const BooleanFeltRedigerer = ({ tekst, feltNavn, redigerbart }: BooleanFeltRedig
   return (
     <Nav.Row>
       <Nav.Column xs="12">
-        <Nav.RadioGroup legend={tekst} size="small">
-          <Skjema.Radio
-            feltNavn={`loennOgGodtgjoerelse.${feltNavn}`}
-            label="Ja"
-            value
-            id={`${navn}.${BOOLSK_STRING.SANN}`}
-            disabled={!redigerbart}
-          />
-          <Skjema.Radio
-            feltNavn={`loennOgGodtgjoerelse.${feltNavn}`}
-            label="Nei"
-            value={false}
-            id={`${navn}.${BOOLSK_STRING.USANN}`}
-            disabled={!redigerbart}
-          />
-        </Nav.RadioGroup>
+        <Skjema.RadioGroup legend={tekst} name={`loennOgGodtgjoerelse.${feltNavn}`} disabled={!redigerbart}>
+          <Nav.Radio value id={`${navn}.${BOOLSK_STRING.SANN}`}>
+            Ja
+          </Nav.Radio>
+          <Nav.Radio value={false} id={`${navn}.${BOOLSK_STRING.USANN}`}>
+            Nei
+          </Nav.Radio>
+        </Skjema.RadioGroup>
       </Nav.Column>
     </Nav.Row>
   );

@@ -169,25 +169,15 @@ const VurderingFamilie = ({
                   finnBarn(barn?.uuid, formValues.barn) && (
                     <Nav.Row key={barn.uuid} className="barnet">
                       <Nav.Column xs="8">
-                        <Nav.RadioGroup
+                        <Skjema.RadioGroup
                           legend={`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${barn.fnr})`}
-                          size="small"
                           disabled={!redigerbart}
-                          defaultValue={finnBarn(barn?.uuid, formValues.barn)?.innvilget}
                           id={Utils._uuid()}
-                          name={`barn-${barn.uuid}`}
+                          name={`barn.${barn.uuid}.innvilget`}
                         >
-                          <Skjema.Radio
-                            label="Ja"
-                            feltNavn={`barn.${barn.uuid}.innvilget`}
-                            value={BOOLSK_STRING.SANN}
-                          />
-                          <Skjema.Radio
-                            label="Nei"
-                            feltNavn={`barn.${barn.uuid}.innvilget`}
-                            value={BOOLSK_STRING.USANN}
-                          />
-                        </Nav.RadioGroup>
+                          <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+                          <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                        </Skjema.RadioGroup>
                         {erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget) && (
                           <Skjema.Select
                             label="Begrunnelse:"
@@ -226,19 +216,17 @@ const VurderingFamilie = ({
             <Nav.Fieldset legend="Ektefelle/partner/samboer" className="ektefelle">
               <Nav.Row>
                 <Nav.Column xs="8">
-                  <Nav.RadioGroup
+                  <Skjema.RadioGroup
                     legend={`${Utils.streng.storeForbokstaver(tilknyttetEktefelle.navn)} (F.nr: ${
                       tilknyttetEktefelle.fnr
                     })`}
-                    size="small"
                     disabled={!redigerbart}
-                    defaultValue={formValues.ektefelle?.innvilget}
                     id={Utils._uuid()}
-                    name="ektefelle-radiogroup"
+                    name="ektefelle.innvilget"
                   >
-                    <Skjema.Radio label="Ja" feltNavn="ektefelle.innvilget" value={BOOLSK_STRING.SANN} />
-                    <Skjema.Radio label="Nei" feltNavn="ektefelle.innvilget" value={BOOLSK_STRING.USANN} />
-                  </Nav.RadioGroup>
+                    <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+                    <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                  </Skjema.RadioGroup>
                   {erIkkeInnvilget(formValues.ektefelle?.innvilget) && (
                     <Skjema.Select
                       label="Begrunnelse:"

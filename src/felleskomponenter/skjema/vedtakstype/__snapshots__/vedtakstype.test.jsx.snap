@@ -9,82 +9,81 @@ exports[`Vedtakstype > snapshot test 1`] = `
       class="col col-xs-6"
     >
       <fieldset
-        class="fieldset radio-gruppe"
+        class="skjema-radiogroup  navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small"
+        id="123"
       >
         <legend
-          class="fieldset__legend"
+          class="navds-fieldset__legend navds-label navds-label--small"
         >
           vedtakstypeLabel
         </legend>
         <div
-          class=""
+          class="navds-radio-buttons"
         >
-          <label
-            class="skjemaelement__label"
-            for="vedtakstypeFeltNavn"
+          <div
+            class="navds-radio navds-radio--small"
           >
-            <div
-              class="navds-radio navds-radio--medium"
-            >
-              <input
-                aria-labelledby="aksel-id-2"
-                class="navds-radio__input"
-                id="123"
-                type="radio"
-                value="KORRIGERT_VEDTAK"
-              />
-              <label
-                class="navds-radio__label"
-                for="123"
-              >
-                <span
-                  class="navds-radio__content"
-                >
-                  <span
-                    aria-hidden="true"
-                    class="navds-body-short navds-body-short--medium"
-                    id="aksel-id-2"
-                  >
-                    Korrigert vedtak
-                  </span>
-                </span>
-              </label>
-            </div>
-            <div
-              class="navds-radio navds-radio--medium navds-radio--disabled"
-            >
-              <input
-                aria-labelledby="aksel-id-5"
-                class="navds-radio__input"
-                disabled=""
-                id="123"
-                type="radio"
-                value="OMGJØRINGSVEDTAK"
-              />
-              <label
-                class="navds-radio__label"
-                for="123"
-              >
-                <span
-                  class="navds-radio__content"
-                >
-                  <span
-                    aria-hidden="true"
-                    class="navds-body-short navds-body-short--medium"
-                    id="aksel-id-5"
-                  >
-                    Omgjøringsvedtak
-                  </span>
-                </span>
-              </label>
-            </div>
-            <div
-              aria-live="assertive"
-              class="radio-gruppe__skjemaelement-feilmelding"
-              role="alert"
+            <input
+              aria-labelledby="aksel-id-2"
+              class="navds-radio__input"
+              id="radio-aksel-id-1"
+              name="vedtakstypeFeltNavn-radiogroup"
+              type="radio"
+              value="KORRIGERT_VEDTAK"
             />
-          </label>
+            <label
+              class="navds-radio__label"
+              for="radio-aksel-id-1"
+            >
+              <span
+                class="navds-radio__content"
+              >
+                <span
+                  aria-hidden="true"
+                  class="navds-body-short navds-body-short--small"
+                  id="aksel-id-2"
+                >
+                  Korrigert vedtak
+                </span>
+              </span>
+            </label>
+          </div>
+          <div
+            class="navds-radio navds-radio--small navds-radio--disabled"
+          >
+            <input
+              aria-labelledby="aksel-id-5"
+              class="navds-radio__input"
+              disabled=""
+              id="radio-aksel-id-4"
+              name="vedtakstypeFeltNavn-radiogroup"
+              type="radio"
+              value="OMGJØRINGSVEDTAK"
+            />
+            <label
+              class="navds-radio__label"
+              for="radio-aksel-id-4"
+            >
+              <span
+                class="navds-radio__content"
+              >
+                <span
+                  aria-hidden="true"
+                  class="navds-body-short navds-body-short--small"
+                  id="aksel-id-5"
+                >
+                  Omgjøringsvedtak
+                </span>
+              </span>
+            </label>
+          </div>
         </div>
+        <div
+          aria-live="polite"
+          aria-relevant="additions removals"
+          class="navds-fieldset__error"
+          id="fieldset-error-aksel-id-7"
+        />
       </fieldset>
       <div
         class="skjemaelement"

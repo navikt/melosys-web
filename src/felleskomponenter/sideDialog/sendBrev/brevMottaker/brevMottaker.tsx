@@ -187,23 +187,22 @@ const BrevMottaker = ({
             </Nav.Column>
           ) : (
             <Nav.Column xs="12" className="arbeidsgiver">
-              <LabelMedHjelpetekst label="Velg: " hjelpetekst={arbeidsgiverHjelptekst} bold small />
-              <Nav.RadioGroup legend="" hideLegend size="small" defaultValue={formValues.arbeidsgiver}>
+              <Skjema.RadioGroup
+                legend={<LabelMedHjelpetekst label="Velg: " hjelpetekst={arbeidsgiverHjelptekst} bold small />}
+                hideLegend
+                name="arbeidsgiver"
+              >
                 {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.BrevAdresse) => (
                   <Fragment key={`arbeidsgiver.${virksomhet.orgnr}`}>
-                    <Skjema.Radio
-                      feltNavn="arbeidsgiver"
-                      label={`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
-                      id={`arbeidsgiver.${virksomhet.orgnr}`}
-                      value={virksomhet.orgnr}
-                      disabled={!redigerbart}
-                    />
+                    <Nav.Radio value={virksomhet.orgnr}>
+                      {`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
+                    </Nav.Radio>
                     {formValues.arbeidsgiver === virksomhet.orgnr && adresse?.mottakerAdresse && (
                       <BrevAdresse {...adresse?.mottakerAdresse} className="arbeidsgiver__adresse" />
                     )}
                   </Fragment>
                 ))}
-              </Nav.RadioGroup>
+              </Skjema.RadioGroup>
             </Nav.Column>
           )}
         </Nav.Row>

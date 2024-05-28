@@ -360,15 +360,14 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       {visSendSEDValg && (
         <Nav.Row>
           <Nav.Column xs="6">
-            <Nav.RadioGroup
+            <Skjema.RadioGroup
               legend="Skal utenlandsk trygdemyndighet informeres?"
-              size="small"
-              defaultValue={formValues?.informerUtenlandskTrygdemyndighet}
+              name="informerUtenlandskTrygdemyndighet"
               disabled={!redigerbart}
             >
-              <Skjema.Radio feltNavn="informerUtenlandskTrygdemyndighet" label="Ja" value />
-              <Skjema.Radio feltNavn="informerUtenlandskTrygdemyndighet" label="Nei" value={false} />
-            </Nav.RadioGroup>
+              <Nav.Radio value>Ja</Nav.Radio>
+              <Nav.Radio value={false}>Nei</Nav.Radio>
+            </Skjema.RadioGroup>
           </Nav.Column>
         </Nav.Row>
       )}

@@ -158,10 +158,10 @@ export const KnyttTilSak = (props) => {
         {erJournalføring && (
           <div className="panelElement">
             <Nav.Typo.Undertittel className="overskrift">Velg hva du vil gjøre med dokumentet</Nav.Typo.Undertittel>
-            <Nav.RadioGroup legend="" hideLegend size="small">
-              <Skjema.Radio feltNavn={feltNavn.opprettBehandling} value label="Opprett ny behandling" />
-              <Skjema.Radio feltNavn={feltNavn.opprettBehandling} value={false} label="Uten å opprette behandling" />
-            </Nav.RadioGroup>
+            <Skjema.RadioGroup legend="" name={feltNavn.opprettBehandling}>
+              <Nav.Radio value>Opprett ny behandling</Nav.Radio>
+              <Nav.Radio value={false}>Uten å opprette behandling</Nav.Radio>
+            </Skjema.RadioGroup>
           </div>
         )}
         {opprettBehandling && (
@@ -184,11 +184,13 @@ export const KnyttTilSak = (props) => {
                 Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie.
               </Nav.Typo.EtikettLiten>
             )}
-            <Nav.RadioGroup legend="Behandlingstype" size="small">
+            <Skjema.RadioGroup legend="Behandlingstype" name={feltNavn.behandlingstype}>
               {muligeBehandlingstyper?.map((elem) => (
-                <Skjema.Radio feltNavn={feltNavn.behandlingstype} key={elem.kode} value={elem.kode} label={elem.term} />
+                <Nav.Radio key={elem.kode} value={elem.kode}>
+                  {elem.term}
+                </Nav.Radio>
               ))}
-            </Nav.RadioGroup>
+            </Skjema.RadioGroup>
           </div>
         )}
         {opprettBehandling === false && sisteBehandlingErPågåendeArtikkel16Sak && (

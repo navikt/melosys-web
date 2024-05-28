@@ -205,26 +205,14 @@ export const VurderingUtpekt = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="5">
-          <Nav.RadioGroup
+          <Skjema.RadioGroup
             legend="Skal lovvalget godkjennes?"
-            size="small"
-            defaultValue={formValues?.utpekingVurdering}
+            name="utpekingVurdering"
             disabled={!redigerbart || !erBucAapen}
           >
-            <Skjema.Radio
-              label="Godkjenn"
-              forhandsvalgt={!erBucAapen}
-              value={MKV.Koder.utfallregistreringunntak.GODKJENT}
-              name="godkjenn"
-              feltNavn="utpekingVurdering"
-            />
-            <Skjema.Radio
-              label="Ikke godkjenn"
-              value={MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT}
-              name="godkjenn"
-              feltNavn="utpekingVurdering"
-            />
-          </Nav.RadioGroup>
+            <Nav.Radio value={MKV.Koder.utfallregistreringunntak.GODKJENT}>Godkjenn</Nav.Radio>
+            <Nav.Radio value={MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT}>Ikke godkjenn</Nav.Radio>
+          </Skjema.RadioGroup>
         </Nav.Column>
       </Nav.Row>
       <Mui.StegKnapper

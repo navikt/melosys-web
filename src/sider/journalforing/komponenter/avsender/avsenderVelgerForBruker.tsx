@@ -89,30 +89,22 @@ const AvsenderVelgerForBruker = ({
 
   return (
     <div>
-      <Nav.RadioGroup legend="Hvem er avsender?">
-        <Skjema.Radio feltNavn="avsenderType" label="Bruker" value={MKV.Koder.avsendertyper.PERSON} />
-        <Skjema.Radio
-          feltNavn="avsenderType"
-          label="Annen person eller virksomhet"
-          value={KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET}
-        />
+      <Skjema.RadioGroup legend="Hvem er avsender?" name="avsenderType" size="medium">
+        <Nav.Radio value={MKV.Koder.avsendertyper.PERSON}>Bruker</Nav.Radio>
+        <Nav.Radio value={KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET}>Annen person eller virksomhet</Nav.Radio>
         {formValues.avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET && (
           <AvsenderAnnenPersonEllerVirksomhet hentOgVisAvsender={hentOgVisAvsender} />
         )}
-        <Skjema.Radio
-          feltNavn="avsenderType"
-          label="Utenlandsk trygdemyndighet"
-          value={MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET}
-        />
+        <Nav.Radio value={MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET}>Utenlandsk trygdemyndighet</Nav.Radio>
         {formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET && (
           <AvsenderUtenlandskTrygdemyndighet
             utenlandskTrygdemyndighetLandkode={formValues.utenlandskTrygdemyndighetLandkode}
             fullmektigLandEndret={fullmektigLandEndret}
           />
         )}
-        <Skjema.Radio feltNavn="avsenderType" label="Fritekst" value={KV.AvsenderTyper.FRITEKST} />
+        <Nav.Radio value={KV.AvsenderTyper.FRITEKST}>Fritekst</Nav.Radio>
         {formValues.avsenderType === KV.AvsenderTyper.FRITEKST && <Skjema.Input label="" feltNavn="avsenderNavn" />}
-      </Nav.RadioGroup>
+      </Skjema.RadioGroup>
     </div>
   );
 };
