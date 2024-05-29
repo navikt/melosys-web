@@ -64,7 +64,7 @@ const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
 };
 
 const vurdering_trygdeavgift = object().shape({
-  skatteforholdsperioder: array().when(["$erÅpenSluttDato"], {
+  skatteforholdsperioder: array().when(["erÅpenSluttDato"], {
     is: (erÅpenSluttDato) => !erÅpenSluttDato,
     then: array()
       .of(
@@ -83,9 +83,9 @@ const vurdering_trygdeavgift = object().shape({
       )
       .min(1),
     inntektskilder: lazy((_value, options) => {
-      return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato"], {
-        is: (medlemskapsTypeErPliktig, $erÅpenSluttDato) =>
-          !$erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options),
+      return array().when(["medlemskapsTypeErPliktig", "erÅpenSluttDato"], {
+        is: (medlemskapsTypeErPliktig, erÅpenSluttDato) =>
+          !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options),
         then: array()
           .of(
             object().shape({
