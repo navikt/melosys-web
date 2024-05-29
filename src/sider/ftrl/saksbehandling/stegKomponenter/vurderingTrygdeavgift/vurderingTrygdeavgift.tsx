@@ -95,7 +95,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     innvilgetMedlemskapsperiode
   );
 
-  const formIsValid = formIsValidatedByYup || erÅpenSluttDato;
+  const formIsValid = formIsValidatedByYup;
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
   const skalBeregneForelopigTrygdeavgift =
@@ -243,7 +243,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
           trigger(`inntektskilder[${index}].tomDato`);
         });
       }
-      if (feil || harEndretInnvilgetMedlemskapsperiode) {
+      if (!erÅpenSluttDato && (feil || harEndretInnvilgetMedlemskapsperiode)) {
         debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
         setHarEndretInnvilgetMedlemskapsperiode(false);
       }
