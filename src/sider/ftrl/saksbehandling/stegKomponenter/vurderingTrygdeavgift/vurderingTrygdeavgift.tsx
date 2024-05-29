@@ -320,8 +320,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
       {erÅpenSluttDato && (
         <Nav.Alert variant="info" className="infomelding">
-          Trygdeavgift skal ikke betales til NAV. Det vil ikke bli beregnet trygdeavgift for personer med arbeidsland
-          Norge og som er bosatt i Norge.
+          Trygdeavgift kan ikke beregnes for medlemskapsperiode uten sluttdato. Hvis personen skal betale trygdeavgift
+          til NAV må du angi sluttdato på medlemskapsperiode.
         </Nav.Alert>
       )}
 
