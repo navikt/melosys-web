@@ -138,7 +138,7 @@ export const finnAktivFeilmelding = (
   medlemskapsperioder: Medlemskapsperiode[],
   innvilgetMedlemskapsperiode?: { fom: string; tom: string }
 ): string | undefined => {
-  if (!innvilgetMedlemskapsperiode) return undefined;
+  if (!innvilgetMedlemskapsperiode || innvilgetMedlemskapsperiode.tom == null) return undefined;
 
   // Feil
   if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, innvilgetMedlemskapsperiode)) {

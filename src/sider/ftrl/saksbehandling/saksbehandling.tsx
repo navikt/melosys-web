@@ -31,7 +31,6 @@ import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { folketrygdenkodeverkOperations } from "../../../ducks/folketrygdenkodeverk";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../ducks/medlemskapsperioder";
 import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
-import { avklartefaktaOperations } from "../../../ducks/avklartefakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
 import { menypanelOperations, menypanelSelectors } from "../../../ducks/menypanel";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
@@ -85,15 +84,12 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingId)),
   hentOppsummertFakta: (behandlingId: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingId)),
   hentVilkår: (behandlingId: number) => dispatch(vilkarOperations.hent(behandlingId)),
-  lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
-  lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   resetVilkarState: () => dispatch(vilkarOperations.resetState()),
   resetOppsummertFaktaState: () => dispatch(oppsummertfaktaOperations.resetOppsummertFakta()),
   resetMedlemskapsperiodeState: () => dispatch(medlemskapsperioderOperations.resetMedlemskapsperioder()),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetMottatteOpplysningerState: () => dispatch(mottatteOpplysningerOperations.resetState()),
-  resetInkluderSiste5Aar: () => dispatch(resetInkluderSiste5Aar()),
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
   resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
