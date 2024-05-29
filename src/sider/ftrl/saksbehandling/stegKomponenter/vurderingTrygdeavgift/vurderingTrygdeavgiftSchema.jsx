@@ -32,7 +32,7 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
   },
 };
 
-const påkrevdHvisIkkeÅpenSluttDato = (fieldName) => {
+const påkrevdHvisIkkeÅpenSluttDato = () => {
   return string().when("$erÅpenSluttDato", {
     is: false,
     then: string().required(MAA_FYLLES_UT),
