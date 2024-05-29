@@ -57,12 +57,12 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
     tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
   };
-  const erÅpenSluttDato = innvilgetMedlemskapsperiode?.tom === null || innvilgetMedlemskapsperiode?.tom === undefined;
+  const erÅpenSluttDato = !innvilgetMedlemskapsperiode?.tom;
 
   const {
     control,
     watch,
-    formState: { isValid: formIsValidatedByYup, isValidating },
+    formState: { isValid: formIsValid, isValidating },
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
@@ -94,8 +94,6 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     medlemskapsperioder,
     innvilgetMedlemskapsperiode
   );
-
-  const formIsValid = formIsValidatedByYup;
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
   const skalBeregneForelopigTrygdeavgift =
@@ -142,7 +140,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     );
   };
 
-  const handterTrygdeavgiftsberegning = (beregnetTrygdeavgift: BeregnetTrygdeavgift) => {
+  const håndterTrygdeavgiftsberegning = (beregnetTrygdeavgift: BeregnetTrygdeavgift) => {
     setTrygdeavgift(beregnetTrygdeavgift);
     const lagretTrygdeavgiftsgrunnlag = beregnetTrygdeavgift.trygdeavgiftsgrunnlag;
     handterLagretTrygdeavgiftsgrunnlag(lagretTrygdeavgiftsgrunnlag);
@@ -164,7 +162,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       ) {
         hentOpprinneligTrygdeavgiftsgrunnlag();
       } else {
-        handterTrygdeavgiftsberegning(beregnetTrygdeavgift);
+        håndterTrygdeavgiftsberegning(beregnetTrygdeavgift);
       }
     });
   }, []);
@@ -280,19 +278,20 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.Row>
       )}
 
-      {!(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) && (
-        <Inntektskilder
-          formValues={formValues}
-          redigerbart={redigerbart}
-          update={inntektUpdate}
-          remove={inntektRemove}
-          append={inntektAppend}
-          control={control}
-          defaultPeriode={defaultPeriode}
-          fields={inntektFields}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
-        />
-      )}
+      {!(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) &&
+        !erÅpenSluttDato && (
+          <Inntektskilder
+            formValues={formValues}
+            redigerbart={redigerbart}
+            update={inntektUpdate}
+            remove={inntektRemove}
+            append={inntektAppend}
+            control={control}
+            defaultPeriode={defaultPeriode}
+            fields={inntektFields}
+            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
+          />
+        )}
 
       <Feilmelding type={aktivFeilmeldingType} />
 

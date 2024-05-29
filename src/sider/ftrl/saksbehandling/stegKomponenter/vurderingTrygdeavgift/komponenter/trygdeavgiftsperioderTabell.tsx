@@ -18,7 +18,7 @@ const TrygdeavgiftsperioderTabell = ({
 
   return (
     <div className="tabell-container">
-      {lagrePending === true && (
+      {lagrePending && (
         <div className="loader-container">
           <Spinner />
         </div>

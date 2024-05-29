@@ -32,14 +32,6 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
   },
 };
 
-const påkrevdHvisIkkeÅpenSluttDato = () => {
-  return string().when("$erÅpenSluttDato", {
-    is: false,
-    then: string().required(MAA_FYLLES_UT),
-    otherwise: string().nullable(),
-  });
-};
-
 export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder) => {
   return !skatteforholdsperioder.some((skatteforhold) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
 };
@@ -72,41 +64,48 @@ const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
 };
 
 const vurdering_trygdeavgift = object().shape({
-  skatteforholdsperioder: array()
-    .of(
-      object().shape({
-        fomDato: påkrevdHvisIkkeÅpenSluttDato()
-          .erGyldigDato()
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN),
-
-        tomDato: påkrevdHvisIkkeÅpenSluttDato()
-          .erGyldigDato()
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .erEtterDatofelt("fomDato"),
-        skatteplikttype: påkrevdHvisIkkeÅpenSluttDato(),
-      })
-    )
-    .min(1),
-  inntektskilder: lazy((_value, options) => {
-    return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato"], {
-      is: (medlemskapsTypeErPliktig) => kreverInntektskilder(medlemskapsTypeErPliktig, options),
-      then: array()
-        .of(
-          object().shape({
-            kildetype: påkrevdHvisIkkeÅpenSluttDato(),
-            arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
-            bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
-            fomDato: påkrevdHvisIkkeÅpenSluttDato()
-              .erGyldigDato()
-              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN),
-            tomDato: påkrevdHvisIkkeÅpenSluttDato()
-              .erGyldigDato()
-              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-              .erEtterDatofelt("fomDato"),
-          })
-        )
-        .min(1),
-    });
+  skatteforholdsperioder: array().when(["$erÅpenSluttDato"], {
+    is: (erÅpenSluttDato) => !erÅpenSluttDato,
+    then: array()
+      .of(
+        object().shape({
+          fomDato: string()
+            .erGyldigDato()
+            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+            .required(MAA_FYLLES_UT),
+          tomDato: string()
+            .erGyldigDato()
+            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+            .erEtterDatofelt("fomDato")
+            .required(MAA_FYLLES_UT),
+          skatteplikttype: string().required(MAA_FYLLES_UT),
+        })
+      )
+      .min(1),
+    inntektskilder: lazy((_value, options) => {
+      return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato"], {
+        is: (medlemskapsTypeErPliktig, $erÅpenSluttDato) =>
+          !$erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options),
+        then: array()
+          .of(
+            object().shape({
+              kildetype: string().required(MAA_FYLLES_UT),
+              arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
+              bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
+              fomDato: string()
+                .erGyldigDato()
+                .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+                .required(MAA_FYLLES_UT),
+              tomDato: string()
+                .erGyldigDato()
+                .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+                .erEtterDatofelt("fomDato")
+                .required(MAA_FYLLES_UT),
+            })
+          )
+          .min(1),
+      });
+    }),
   }),
 });
 
