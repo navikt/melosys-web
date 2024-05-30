@@ -170,7 +170,7 @@ const VurderingArtikkel11_4 = ({
       const nyTilleggsbestemmelse: string | undefined = tilleggsbestemmelseFraLovvalgsbestemmelse(nyBestemmelse);
       oppdaterData(lagVilkaar(finnFeltNavn(nyBestemmelse), true));
       oppdaterData(lagVilkaar(finnFeltNavn(nyTilleggsbestemmelse), true));
-      oppdaterData(lagTilleggBestemmelse(nyTilleggsbestemmelse));
+      if (tilleggsbestemmelse) oppdaterData(lagTilleggBestemmelse(nyTilleggsbestemmelse));
     }
     if (valgtArtikkel === ArtikkelValg.ART11_4_2) {
       oppdaterData(lagVilkaar(finnFeltNavn(nyBestemmelse), true));
