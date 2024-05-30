@@ -159,7 +159,7 @@ export const Bestemmelser = ({
       const utsendelsevilkårFeltNavn = finnFeltNavn(nyBestemmelse);
       oppdaterData(lagVilkaar(utsendelsevilkårFeltNavn, true));
       const tilleggsbestemmelse = finnTilleggsbestemmelse(nyBestemmelse, yrkesgruppeFakta, arbeidPåSkipFakta);
-      oppdaterData(lagTilleggBestemmelse(tilleggsbestemmelse));
+      if (tilleggsbestemmelse) oppdaterData(lagTilleggBestemmelse(tilleggsbestemmelse));
     }
     if (valgtVedtak === VedtakValg.NEI_ANMODNING_UNNTAK) {
       const utsendelsevilkår = finnUtsendelsevilkår(nyBestemmelse);
