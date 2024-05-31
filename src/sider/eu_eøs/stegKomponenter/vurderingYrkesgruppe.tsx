@@ -11,6 +11,7 @@ import {
   lagLovvalgsbestemmelse,
   lagTilleggBestemmelse,
   lagVilkaar,
+  slettLovvalgsbestemmelse,
   slettTilleggBestemmelse,
   slettVilkar,
   slettVilkarIAlleSteg,
@@ -87,13 +88,14 @@ const VurderingYrkesgruppe = ({
     const yrkessituasjon = event.target.value;
     oppdaterData(lagAvklartfakta(KV.Koder.YRKESGRUPPE, null, yrkessituasjon));
 
-    if (yrkessituasjon === FLYENDE_PERSONELL) {
+    if (yrkessituasjon === FLYENDE_PERSONELL && !konvensjonStorbritanniaToggleEnabled) {
       oppdaterData(lagTilleggBestemmelse(FO_883_2004_ART11_5));
     } else {
       slettData(slettTilleggBestemmelse());
     }
 
     if (konvensjonStorbritanniaToggleEnabled) {
+      slettData(slettLovvalgsbestemmelse());
       slettVilkår();
       if (yrkessituasjon === ORDINAER_UTEN_ART12 && !visStorbritanniaKonvensjon) {
         handleEndreBestemmelse(FO_883_2004_ART16_1);

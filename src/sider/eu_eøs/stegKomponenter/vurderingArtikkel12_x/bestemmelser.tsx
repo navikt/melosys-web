@@ -8,6 +8,7 @@ import {
   lagTilleggBestemmelse,
   lagVilkaar,
   lagVilkarbegrunnelse,
+  slettLovvalgsbestemmelse,
   slettTilleggBestemmelse,
   slettVilkar,
 } from "../../../../felleskomponenter/stegvelger";
@@ -107,18 +108,16 @@ export const Bestemmelser = ({
     setBestemmelse("");
 
     if (konvensjonStorbritanniaToggleEnabled) {
+      slettAlleVilkår();
+      slettData(slettTilleggBestemmelse());
+      slettData(slettLovvalgsbestemmelse());
       if (value === VedtakValg.JA_INNVILGE) {
-        slettAlleVilkår();
         if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART12, value);
         setPending(false);
       } else if (value === VedtakValg.NEI_ANMODNING_UNNTAK) {
-        slettAlleVilkår();
-        slettData(slettTilleggBestemmelse());
         if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART16_1, value);
         setPending(false);
       } else if (value === VedtakValg.NEI_AVSLAG) {
-        slettAlleVilkår();
-        slettData(slettTilleggBestemmelse());
         oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
         oppdaterData(lagVilkaar("art16_1_avslag", false));
         setTimeout(() => setPending(false), 100);
