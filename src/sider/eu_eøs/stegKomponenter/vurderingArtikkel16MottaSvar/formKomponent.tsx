@@ -88,7 +88,7 @@ const FormKomponent = ({ redigerbart, formValues, oppdaterData, formIsValid }: F
   if (!formValues) return null;
 
   const visLovvalgsperiode = formValues.anmodningsperiodeSvarType === DELVIS_INNVILGELSE;
-  const visFritekstFelt = formValues.anmodningsperiodeSvarType in [DELVIS_INNVILGELSE, AVSLAG];
+  const visFritekstFelt = [DELVIS_INNVILGELSE, AVSLAG].includes(formValues.anmodningsperiodeSvarType);
 
   return (
     <form name="anmodningSvar" id="anmodningSvar" onSubmit={(e) => e.preventDefault()}>
