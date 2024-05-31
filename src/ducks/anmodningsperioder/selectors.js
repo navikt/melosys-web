@@ -20,6 +20,11 @@ export const LovvalgsbestemmelseSelector = createSelector(
   (anmodningsperiode) => anmodningsperiode.lovvalgBestemmelse
 );
 
+export const TilleggsbestemmelseSelector = createSelector(
+  AnmodningsperiodeSelector,
+  (anmodningsperiode) => anmodningsperiode.tilleggBestemmelse
+);
+
 export const UnntakFraBestemmelseSelector = createSelector(
   AnmodningsperiodeSelector,
   (anmodningsperiode) => anmodningsperiode.unntakFraBestemmelse
