@@ -1,7 +1,7 @@
 import { postAsJson, getAsJson } from "../../../utils";
 import { API_BASE_URL, ANMODNINGSPERIODER, SVAR } from "../../../api-constants";
 
-interface AnmodningsperiodesvarResDto {
+export interface AnmodningsperiodesvarResDto {
   anmodningsperiodeSvarType: string | null;
   endretPeriode: {
     fom: string | null;
