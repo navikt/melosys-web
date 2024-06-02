@@ -50,6 +50,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     undefined
   );
 
+  const alleTrygdeavgiftsperioderHarNullBeløp = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
+    (periode) => periode.avgiftPerMd === 0
+  );
+
   const medlemskapsTypeErPliktig = medlemskapsperioder.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG
   );
@@ -295,7 +299,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
       <Feilmelding type={aktivFeilmeldingType} />
 
-      {trygdeavgiftErIkkeTom && stegErGyldig && (
+      {trygdeavgiftErIkkeTom && !alleTrygdeavgiftsperioderHarNullBeløp && stegErGyldig && (
         <>
           <Nav.Typo.Undertittel>Foreløpig beregnet trygdeavgift</Nav.Typo.Undertittel>
           <TrygdeavgiftsperioderTabell
