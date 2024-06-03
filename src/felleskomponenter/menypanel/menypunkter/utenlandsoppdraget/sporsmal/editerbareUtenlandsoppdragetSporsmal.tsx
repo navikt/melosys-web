@@ -12,7 +12,7 @@ interface SporsmalOgSvarProps {
 const SporsmalOgSvar = ({ sporsmal, feltNavn }: SporsmalOgSvarProps) => {
   return (
     <Nav.Row className="sporsmal-og-svar">
-      <Skjema.RadioGroup legend={sporsmal} hideLegend name={feltNavn}>
+      <Skjema.RadioGroup legend={sporsmal} name={feltNavn}>
         <Nav.Radio value>Ja</Nav.Radio>
         <Nav.Radio value={false}>Nei</Nav.Radio>
       </Skjema.RadioGroup>

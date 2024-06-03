@@ -10,7 +10,7 @@ interface LabelOgEditerbartSvarProps {
 
 const LabelOgEditerbartSvar = ({ label, feltNavn }: LabelOgEditerbartSvarProps) => (
   <Nav.Row className="ovrig-om-arbeidstaker__label-og-editerbart-svar">
-    <Skjema.RadioGroup legend={label} hideLegend name={feltNavn}>
+    <Skjema.RadioGroup legend={label} name={feltNavn}>
       <Nav.Radio value>Ja</Nav.Radio>
       <Nav.Radio value={false}>Nei</Nav.Radio>
     </Skjema.RadioGroup>

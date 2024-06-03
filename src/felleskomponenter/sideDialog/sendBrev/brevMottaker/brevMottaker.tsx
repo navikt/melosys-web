@@ -189,7 +189,6 @@ const BrevMottaker = ({
             <Nav.Column xs="12" className="arbeidsgiver">
               <Skjema.RadioGroup
                 legend={<LabelMedHjelpetekst label="Velg: " hjelpetekst={arbeidsgiverHjelptekst} bold small />}
-                hideLegend
                 name="arbeidsgiver"
               >
                 {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.BrevAdresse) => (
