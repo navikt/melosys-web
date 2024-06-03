@@ -9,7 +9,7 @@ class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const vesentligVirksomhetVilkaar = hentVilkar(MKV.Koder.vilkaar.ART12_1_VESENTLIG_VIRKSOMHET, propsLight.vilkar);
+    const vesentligVirksomhetVilkaar = hentVilkar(MKV.Koder.vilkaar.VESENTLIG_VIRKSOMHET, propsLight.vilkar);
     const harAvklaring =
       vesentligVirksomhetVilkaar.oppfylt === true ||
       (vesentligVirksomhetVilkaar.oppfylt === false && vesentligVirksomhetVilkaar.begrunnelseKoder.length > 0);
@@ -26,7 +26,7 @@ class VesentligVirksomhet extends Steg {
     this.komponent = VurderingVesentligVirksomhet;
     this.samleRelevanteData = (_propsLight) => ({
       valgteVirksomheter: _propsLight.valgteVirksomheter,
-      begrunnelser: _propsLight.begrunnelser.art12_1_vesentlig_virksomhet,
+      begrunnelser: _propsLight.begrunnelser.vesentlig_virksomhet_begrunnelser,
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = (_propsLight) => ({

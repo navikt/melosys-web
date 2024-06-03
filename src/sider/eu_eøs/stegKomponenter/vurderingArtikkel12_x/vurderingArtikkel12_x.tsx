@@ -56,8 +56,8 @@ const VurderingArtikkel12_x = ({
         vilkaarNavn12={artikkelNavn}
         begrunnelserUtsending={
           erVurderingArbeidstaker
-            ? MKV.KTObjects.begrunnelser.art12_1_begrunnelser
-            : MKV.KTObjects.begrunnelser.art12_2_begrunnelser
+            ? MKV.KTObjects.begrunnelser.utsendt_arbeidstaker_begrunnelser
+            : MKV.KTObjects.begrunnelser.utsendt_naeringsdrivende_begrunnelser
         }
       />
       <Mui.StegKnapper

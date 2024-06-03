@@ -31,8 +31,8 @@ class Artikkel16Anmodning extends Steg {
     });
     this.beregnRelevantUI = (_propsLight) => {
       const muligeBegrunnelseValg = _propsLight.erIDirekteTilArtikkel16Flyt
-        ? MKV.KTObjects.begrunnelser.art16_1_anmodning_uten_art12
-        : MKV.KTObjects.begrunnelser.art16_1_anmodning;
+        ? MKV.KTObjects.begrunnelser.direkte_til_anmodning_begrunnelser
+        : MKV.KTObjects.begrunnelser.anmodning_begrunnelser;
 
       return {
         muligeBegrunnelseValg,

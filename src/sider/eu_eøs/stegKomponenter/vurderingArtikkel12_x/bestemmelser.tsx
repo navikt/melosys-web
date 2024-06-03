@@ -33,7 +33,7 @@ import {
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
 
 const { FO_883_2004_ART16_1, KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.vilkaar;
-const { SAERLIG_AVSLAGSGRUNN } = MKV.Koder.begrunnelser.art16_1_avslag;
+const { SAERLIG_AVSLAGSGRUNN } = MKV.Koder.begrunnelser.avslag_anmodning_begrunnelser;
 
 interface ListevelgerFlervalgEvent {
   value: string[];
@@ -276,7 +276,7 @@ export const Bestemmelser = ({
               {konvensjonStorbritanniaToggleEnabled ? (
                 <>
                   <Mui.ListevelgerFlervalg
-                    muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
+                    muligeValg={MKV.KTObjects.begrunnelser.avslag_anmodning_begrunnelser}
                     label="Legg til begrunnelse for at unntaksbestemmelse ikke er oppfylt"
                     tillatFritekst={false}
                     onChange={(event: ListevelgerFlervalgEvent) =>
@@ -300,7 +300,7 @@ export const Bestemmelser = ({
               ) : (
                 <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
                   <Mui.ListevelgerFlervalg
-                    muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
+                    muligeValg={MKV.KTObjects.begrunnelser.avslag_anmodning_begrunnelser}
                     label="Legg til begrunnelse for avslag:"
                     tillatFritekst={false}
                     onChange={(event: ListevelgerFlervalgEvent) => handleEndreBegrunnelse(event, "art16_1_avslag")}

@@ -8,7 +8,7 @@ class ForutgaendeMedlemskap extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const forutgaendeMedlemskap = hentVilkar(MKV.Koder.vilkaar.ART12_1_FORUTGAAENDE_MEDLEMSKAP, propsLight.vilkar);
+    const forutgaendeMedlemskap = hentVilkar(MKV.Koder.vilkaar.FORUTGAAENDE_MEDLEMSKAP, propsLight.vilkar);
     const harAvklaring =
       forutgaendeMedlemskap.oppfylt === true ||
       (forutgaendeMedlemskap.oppfylt === false && forutgaendeMedlemskap.begrunnelseKoder.length > 0);
@@ -23,7 +23,7 @@ class ForutgaendeMedlemskap extends Steg {
     this.tittel = "Forutg. medl.";
     this.komponent = VurderingForutgaendeMedlemskap;
     this.samleRelevanteData = (_propsLight) => ({
-      begrunnelser: _propsLight.begrunnelser.art12_1_forutgaaende_medl,
+      begrunnelser: _propsLight.begrunnelser.forutgaaende_medl_begrunnelser,
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = (_propsLight) => ({
