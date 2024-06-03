@@ -4,7 +4,7 @@ import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 
-const TrygdeavgiftsperioderTabell = ({ perioder }: { perioder: Trygdeavgiftsperiode[] }) => {
+const TrygdeavgiftsperioderTabell = ({ perioder }: { perioder?: Trygdeavgiftsperiode[] }) => {
   if (!perioder) return null;
 
   return (
@@ -30,7 +30,10 @@ const TrygdeavgiftsperioderTabell = ({ perioder }: { perioder: Trygdeavgiftsperi
             <Table.DataCell key={Utils._uuid()}>
               {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, trygdeavgiftsperiode.inntektskildetype)}
             </Table.DataCell>
-            <Table.DataCell key={Utils._uuid()}>{trygdeavgiftsperiode.arbeidsgiversavgiftBetales}</Table.DataCell>
+            <Table.DataCell key={Utils._uuid()}>
+              {trygdeavgiftsperiode.arbeidsgiversavgiftBetales ? "Ja" : "Nei"}
+            </Table.DataCell>
+            <Table.DataCell key={Utils._uuid()}>{trygdeavgiftsperiode.inntektPerMd}</Table.DataCell>
             <Table.DataCell key={Utils._uuid()}>{trygdeavgiftsperiode.avgiftssats}</Table.DataCell>
             <Table.DataCell key={Utils._uuid()}>
               <b>{trygdeavgiftsperiode.avgiftPerMd}</b> nkr
