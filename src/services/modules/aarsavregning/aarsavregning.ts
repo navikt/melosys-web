@@ -37,7 +37,7 @@ export type Avgift = {
 export type Skatteforholdsperiode = {
   fom: string; // Assuming LocalDate is a date string in ISO format
   tom: string; // Assuming LocalDate is a date string in ISO format
-  skatteplikttype: string;
+  skatteplikttype: String;
 };
 
 export type Medlemskapsperiode = {

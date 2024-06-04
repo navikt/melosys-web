@@ -3,6 +3,7 @@ import { Trygdeavgiftsperiode } from "../../../../services/modules/aarsavregning
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
+import "./aarsavregning.css";
 
 const TrygdeavgiftsperioderTabell = ({ perioder }: { perioder?: Trygdeavgiftsperiode[] }) => {
   if (!perioder) return null;
@@ -13,8 +14,12 @@ const TrygdeavgiftsperioderTabell = ({ perioder }: { perioder?: Trygdeavgiftsper
         <Table.Row>
           <Table.HeaderCell scope="col">Trygdeavgift</Table.HeaderCell>
           <Table.HeaderCell scope="col">Inntektskilde</Table.HeaderCell>
-          <Table.HeaderCell scope="col">Betales arb.avg. til skatt?</Table.HeaderCell>
-          <Table.HeaderCell scope="col">Brutto inntekt per md.</Table.HeaderCell>
+          <Table.HeaderCell scope="col">
+            Betales arb.avg. <br /> til skatt?
+          </Table.HeaderCell>
+          <Table.HeaderCell scope="col">
+            Brutto inntekt <br /> per md.
+          </Table.HeaderCell>
           <Table.HeaderCell scope="col">Sats</Table.HeaderCell>
           <Table.HeaderCell scope="col">Avgift per md.</Table.HeaderCell>
         </Table.Row>

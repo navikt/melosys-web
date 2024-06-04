@@ -1,8 +1,7 @@
 import { Table } from "@navikt/ds-react";
 import { Skatteforholdsperiode } from "../../../../services/modules/aarsavregning/aarsavregning";
-import MKV from "../../../../melosyskodeverk";
-import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
+import "./aarsavregning.css";
 
 const SkatteforholdsPerioderTabell = ({ perioder }: { perioder?: Skatteforholdsperiode[] }) => {
   if (!perioder) return null;

@@ -3,6 +3,7 @@ import { Medlemskapsperiode, Skatteforholdsperiode } from "../../../../services/
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
+import "./aarsavregning.css";
 
 const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode[] }) => {
   if (!perioder) return null;
