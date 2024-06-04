@@ -6,8 +6,8 @@ import { Table } from "@navikt/ds-react";
 
 const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.MedfolgendeFamilie>) => (
   <div className="menypanel__table-wrapper">
-    <Table className="menypanel__table">
-      <Table.Header className="header">
+    <Table className="menypanel__table" size="small">
+      <Table.Header>
         <Table.Row>
           <Table.HeaderCell>F.nr./d-nr.</Table.HeaderCell>
           <Table.HeaderCell>Navn</Table.HeaderCell>

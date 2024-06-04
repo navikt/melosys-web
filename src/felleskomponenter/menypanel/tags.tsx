@@ -1,42 +1,37 @@
-import { ComponentProps } from "react";
+import { Tag, TagProps } from "@navikt/ds-react";
 
-import * as Nav from "../../navFrontend";
-
-type NavTagBaseProps = ComponentProps<typeof Nav.Tag>;
-type TagProps = Omit<NavTagBaseProps, "variant" | "children">;
-
-export const FraRegister = (props: TagProps) => (
-  <Nav.Tag {...props} variant="info" size="small">
+export const FraRegister = (props: Omit<TagProps, "variant" | "children">) => (
+  <Tag {...props} variant="info" size="small">
     Fra register
-  </Nav.Tag>
+  </Tag>
 );
 
-export const FraBruker = (props: TagProps) => (
-  <Nav.Tag {...props} variant="warning" size="small">
+export const FraBruker = (props: Omit<TagProps, "variant" | "children">) => (
+  <Tag {...props} variant="warning" size="small">
     Fra bruker
-  </Nav.Tag>
+  </Tag>
 );
 
-export const BrukersDel = (props: TagProps) => (
-  <Nav.Tag {...props} variant="warning" size="small">
+export const BrukersDel = (props: Omit<TagProps, "variant" | "children">) => (
+  <Tag {...props} variant="warning" size="small">
     Brukers del
-  </Nav.Tag>
+  </Tag>
 );
 
-export const ArbeidstakersDel = (props: TagProps) => (
-  <Nav.Tag {...props} variant="warning" size="small">
+export const ArbeidstakersDel = (props: Omit<TagProps, "variant" | "children">) => (
+  <Tag {...props} variant="warning" size="small">
     Arbeidstakers del
-  </Nav.Tag>
+  </Tag>
 );
 
-export const ArbeidsgiversDel = (props: TagProps) => (
-  <Nav.Tag {...props} variant="warning" size="small">
+export const ArbeidsgiversDel = (props: Omit<TagProps, "variant" | "children">) => (
+  <Tag {...props} variant="warning" size="small">
     Arbeidsgivers del
-  </Nav.Tag>
+  </Tag>
 );
 
-export const Under18Aar = (props: TagProps) => (
-  <Nav.Tag {...props} variant="neutral" size="small">
+export const Under18Aar = (props: Omit<TagProps, "variant" | "children">) => (
+  <Tag {...props} variant="neutral" size="small">
     Under 18 år
-  </Nav.Tag>
+  </Tag>
 );
