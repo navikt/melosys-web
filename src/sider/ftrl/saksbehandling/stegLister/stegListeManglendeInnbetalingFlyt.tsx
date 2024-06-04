@@ -2,7 +2,7 @@ import { FANE_STATUS } from "../../../../felleskomponenter/stegvelger";
 import { VurderingInngang } from "../stegKomponenter/vurderingInngang/vurderingInngang";
 import { VurderingVirksomhet } from "../stegKomponenter/vurderingVirksomhet/vurderingVirksomhet";
 import { VurderingPerioder } from "../stegKomponenter/vurderingPeriode/vurderingPerioder";
-import { VurderingBestemmelserV2 } from "../stegKomponenter/vurderingBestemmelse/vurderingBestemmelseNY";
+import { VurderingBestemmelse } from "../stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
 import { VurderingTrygdeavgift } from "../stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
 import { VurderingVedtak } from "../stegKomponenter/vurderingVedtak/vurderingVedtak";
 import { VurderingInngangManglendeInnbetaling } from "../stegKomponenter/vurderingInngangManglendeInnbetaling/vurderingInngangManglendeInnbetaling";
@@ -38,14 +38,14 @@ const virksomhetSteg = {
   komponent: VurderingVirksomhet,
 };
 
-const bestemmelseStegV2 = {
+const bestemmelseSteg = {
   id: "Bestemmelse",
   tittel: "Bestemmelse",
   stegPosisjon: 3,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: false,
   vedtakSteg: false,
-  komponent: VurderingBestemmelserV2,
+  komponent: VurderingBestemmelse,
 };
 
 const periodeSteg = {
@@ -78,10 +78,10 @@ const vedtakSteg = {
   komponent: VurderingVedtak,
 };
 
-const stegDelvisManglendeInnbetalingV2 = [
+const stegDelvisManglendeInnbetaling = [
   inngangSteg,
   virksomhetSteg,
-  bestemmelseStegV2,
+  bestemmelseSteg,
   periodeSteg,
   trygdeavgiftSteg,
   vedtakSteg,
@@ -99,8 +99,8 @@ export const vedtakOpphoerSteg = {
 
 const stegFullstendigManglendeInnbetaling = [vedtakOpphoerSteg];
 
-export const alleStegManglendeInnbetalingFlytV2 = [
+export const alleStegManglendeInnbetalingFlyt = [
   inngangManglendeInnbetalingSteg,
-  ...stegDelvisManglendeInnbetalingV2,
+  ...stegDelvisManglendeInnbetaling,
   ...stegFullstendigManglendeInnbetaling,
 ];

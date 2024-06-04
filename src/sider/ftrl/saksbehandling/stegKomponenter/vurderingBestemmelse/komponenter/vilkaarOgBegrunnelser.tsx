@@ -9,7 +9,7 @@ import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHje
 import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
 import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 import { Begrunnelse, VilkårOgBegrunnelser } from "./typer";
-import { kodeInkludererFritekst } from "../vurderingBestemmelseNY";
+import { kodeInkludererFritekst } from "../vurderingBestemmelse";
 
 const hjelpetekster = new Map([
   [
@@ -29,7 +29,7 @@ interface VilkaarOgBegrunnelserProps {
   selvstendigNæringValgt?: boolean;
 }
 
-export const VilkaarOgBegrunnelserNY = ({
+export const VilkaarOgBegrunnelser = ({
   vilkårOgBegrunnelser: { vilkår, muligeBegrunnelser },
   alleValgteVilkår,
   alleValgteBegrunnelser,

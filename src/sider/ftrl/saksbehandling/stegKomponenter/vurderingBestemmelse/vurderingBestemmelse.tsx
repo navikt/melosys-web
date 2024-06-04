@@ -8,7 +8,7 @@ import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { useDispatch, useSelector } from "react-redux";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
-import { ListeVelgerFtrl } from "./komponenter/listeVelger";
+import { ListeVelger } from "./komponenter/listeVelger";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { vilkarOperations, vilkarSelectors } from "../../../../../ducks/vilkar";
 import {
@@ -18,7 +18,7 @@ import {
   VilkårOgBegrunnelser,
   VurderingBestemmelseProps,
 } from "./komponenter/typer";
-import { VilkaarOgBegrunnelserNY } from "./komponenter/vilkaarOgBegrunnelserNY";
+import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import * as Utils from "../../../../../utils";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -33,12 +33,7 @@ enum ResetTyper {
 
 const { IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON, ARBEIDSSITUASJON } = MKV.Koder.avklartefaktatyper;
 
-export const VurderingBestemmelserV2 = ({
-  bekreft,
-  tilbake,
-  aktivtSteg,
-  oppdaterStatus,
-}: VurderingBestemmelseProps) => {
+export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) => {
   const dispatch = useDispatch();
 
   const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
@@ -348,7 +343,7 @@ export const VurderingBestemmelserV2 = ({
     <div className="vurderingBestemmelse_ftrl">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse</Nav.Typo.Innholdstittel>
 
-      <ListeVelgerFtrl
+      <ListeVelger
         muligeAlternativer={bestemmelser}
         kodeverkKoder={Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser)}
         name="bestemmelser"
@@ -368,7 +363,7 @@ export const VurderingBestemmelserV2 = ({
 
       {avklarteFakta.map((fakta) => {
         return (
-          <ListeVelgerFtrl
+          <ListeVelger
             key={fakta.faktaType.kode}
             muligeAlternativer={fakta.muligeFakta}
             kodeverkKoder={MKV.KTObjects[FaktaTypeOverskrifter[fakta.faktaType.kode].kodeverk]}
@@ -404,7 +399,7 @@ export const VurderingBestemmelserV2 = ({
         }
 
         return (
-          <VilkaarOgBegrunnelserNY
+          <VilkaarOgBegrunnelser
             key={vb.vilkår}
             vilkårOgBegrunnelser={vb}
             alleValgteVilkår={valgteVilkår}

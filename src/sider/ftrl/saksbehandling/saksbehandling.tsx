@@ -30,12 +30,12 @@ import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
 import { menypanelOperations, menypanelSelectors } from "../../../ducks/menypanel";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
-import { alleStegYrkesaktivFlytV2 } from "./stegLister/stegListeYrkesaktivFlyt";
+import { alleStegYrkesaktivFlyt } from "./stegLister/stegListeYrkesaktivFlyt";
 import "./saksbehandling.css";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { resetInkluderSiste5Aar } from "../../../ducks/modaler/operations";
 import { setErFullmektigEndret } from "../../../ducks/menypanel/operations";
-import { alleStegManglendeInnbetalingFlytV2 } from "./stegLister/stegListeManglendeInnbetalingFlyt";
+import { alleStegManglendeInnbetalingFlyt } from "./stegLister/stegListeManglendeInnbetalingFlyt";
 import { fakturaserierOperations } from "../../../ducks/fakturaserier";
 import { alleStegIkkeYrkesaktivFlyt } from "./stegLister/stegListeIkkeYrkesaktivFlyt";
 
@@ -222,9 +222,9 @@ const Saksbehandling = ({
       return alleStegIkkeYrkesaktivFlyt;
     }
     if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
-      return alleStegManglendeInnbetalingFlytV2;
+      return alleStegManglendeInnbetalingFlyt;
     }
-    return alleStegYrkesaktivFlytV2;
+    return alleStegYrkesaktivFlyt;
   };
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
