@@ -14,7 +14,6 @@ const Redigerer = ({ redigerbart }: RedigererProps) => (
           disabled={!redigerbart}
           feltNavn="representantIUtlandet.representantNavn"
           label="Navn på arbeidssted/skip/innretning"
-          bredde="fullbredde"
         />
       </Nav.Column>
     </Nav.Row>

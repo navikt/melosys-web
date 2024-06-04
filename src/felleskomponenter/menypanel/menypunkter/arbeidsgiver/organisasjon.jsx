@@ -16,24 +16,22 @@ const Organisasjon = ({ organisasjon, className, visNavn, visOrgnr, visAdresseTi
 
   return (
     <div className={organisasjonCls}>
-      <Nav.Container fluid>
-        <Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <OrganisasjonsAdresse
+            visNavn={visNavn}
+            visTittel={visAdresseTittel}
+            organisasjon={organisasjon}
+            boldNavn={boldAdresseNavn}
+          />
+        </Nav.Column>
+        {visOrgnr && (
           <Nav.Column xs="6">
-            <OrganisasjonsAdresse
-              visNavn={visNavn}
-              visTittel={visAdresseTittel}
-              organisasjon={organisasjon}
-              boldNavn={boldAdresseNavn}
-            />
+            <Nav.Typo.Element style={{ marginTop: "0.5em" }}>Org.nr. juridisk enhet</Nav.Typo.Element>
+            <Nav.Typo.Normaltekst>{orgnr}</Nav.Typo.Normaltekst>
           </Nav.Column>
-          {visOrgnr && (
-            <Nav.Column xs="6">
-              <Nav.Typo.Element style={{ marginTop: "0.5em" }}>Org.nr. juridisk enhet</Nav.Typo.Element>
-              <Nav.Typo.Normaltekst>{orgnr}</Nav.Typo.Normaltekst>
-            </Nav.Column>
-          )}
-        </Nav.Row>
-      </Nav.Container>
+        )}
+      </Nav.Row>
     </div>
   );
 };

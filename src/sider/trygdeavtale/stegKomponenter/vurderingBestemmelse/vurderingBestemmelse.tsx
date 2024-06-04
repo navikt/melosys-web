@@ -116,21 +116,21 @@ const VurderingBestemmelse = ({
     <div className="vurderingBestemmelse_trygdeavtale">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
 
-      <Nav.Fieldset legend="Hva er din vurdering av søknaden?">
+      <Skjema.RadioGroup
+        legend="Hva er din vurdering av søknaden?"
+        name="vedtak"
+        disabled={!redigerbart || updatePending}
+        onChange={() => {
+          resetField("tilleggsbestemmelse");
+          resetField("bestemmelse");
+        }}
+      >
         {vedtakValg?.map((valg) => (
-          <Skjema.Radio
-            key={valg.kode}
-            feltNavn="vedtak"
-            label={valg.term}
-            value={valg.kode}
-            disabled={!redigerbart || updatePending || valg.kode === NEI_SENDE_TIL_DEPARTEMENTET}
-            onChange={() => {
-              resetField("tilleggsbestemmelse");
-              resetField("bestemmelse");
-            }}
-          />
+          <Nav.Radio key={valg.kode} value={valg.kode} disabled={valg.kode === NEI_SENDE_TIL_DEPARTEMENTET}>
+            {valg.term}
+          </Nav.Radio>
         ))}
-      </Nav.Fieldset>
+      </Skjema.RadioGroup>
 
       {formValues?.vedtak && !Utils._isEmpty(bestemmelseValg) && (
         <Nav.Fieldset legend="Velg bestemmelse" className="bestemmelseValg">

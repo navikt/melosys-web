@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
-import { reduxForm, formValueSelector, isValid } from "redux-form";
+import { formValueSelector, isValid, reduxForm } from "redux-form";
 import * as EKV from "eessi-kodeverk";
 
 import * as Nav from "../../../../navFrontend";
@@ -86,18 +86,14 @@ const VurderingAvslaaUtpeking = ({
             visTellerFra={500}
             maxLength={500}
           />
-          <Skjema.RadioGruppe
-            label="Anmodning om mer informasjon vil bli sendt"
-            feltNavn="vilSendeAnmodningOmMerInformasjon"
+          <Skjema.RadioGroup
+            legend="Anmodning om mer informasjon vil bli sendt"
+            name="vilSendeAnmodningOmMerInformasjon"
+            disabled={!redigerbart}
           >
-            <Skjema.Radio disabled={!redigerbart} feltNavn="vilSendeAnmodningOmMerInformasjon" value label="Ja" />
-            <Skjema.Radio
-              disabled={!redigerbart}
-              feltNavn="vilSendeAnmodningOmMerInformasjon"
-              value={false}
-              label="Nei"
-            />
-          </Skjema.RadioGruppe>
+            <Nav.Radio value>Ja</Nav.Radio>
+            <Nav.Radio value={false}>Nei</Nav.Radio>
+          </Skjema.RadioGroup>
           <Skjema.LandVelger
             feltNavn="nyttLovvalgsland"
             label="Foreslå nytt lovvalgsland (valgfri)"

@@ -32,12 +32,7 @@ const Redigerer = ({
     <div>
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Input
-            label="Navn på skip"
-            feltNavn={`${overordnetFeltNavn}.enhetNavn`}
-            disabled={!redigerbart}
-            bredde="fullbredde"
-          />
+          <Skjema.Input label="Navn på skip" feltNavn={`${overordnetFeltNavn}.enhetNavn`} disabled={!redigerbart} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

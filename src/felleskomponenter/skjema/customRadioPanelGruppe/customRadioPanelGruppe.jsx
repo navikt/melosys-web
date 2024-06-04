@@ -25,36 +25,22 @@ class CustomRadioPanel extends Component {
   }
 
   render() {
-    const { checked, disabled, innhold, footer, feltNavn, inputProps, value, onChange, notify } = this.props;
+    const { checked, disabled, innhold, footer, feltNavn, inputProps, value } = this.props;
 
-    const { hasFocus } = this.state;
-
-    const cls = classNames("customRadioPanel", {
-      "customRadioPanel--checked": checked === true && !disabled,
-      "customRadioPanel--focused": hasFocus === true && !disabled,
-      "customRadioPanel--disabled": disabled === true,
-    });
-    const onChangeAndNotify = (event) => {
-      if (notify) notify(event.target.value);
-      onChange(event);
-    };
     return (
       <Fragment>
-        <label className={cls} htmlFor={`${feltNavn}-${value}`}>
+        <label className="customRadioPanel" htmlFor={`${feltNavn}-${value}`}>
           <Nav.Radio
             {...inputProps}
             className="radioPanel__Input"
-            label=""
-            type="radio"
             id={`${feltNavn}-${value}`}
-            name={feltNavn}
-            checked={checked}
-            disabled={disabled}
             value={value}
             onFocus={() => this.toggleOutline()}
             onBlur={() => this.toggleOutline()}
-            onChange={onChangeAndNotify}
-          />
+            disabled={disabled}
+          >
+            {}
+          </Nav.Radio>
           <div className="radioPanel__innhold">{innhold}</div>
         </label>
         {checked && footer}
@@ -67,19 +53,16 @@ CustomRadioPanel.propTypes = {
   feltNavn: PT.string.isRequired,
   innhold: PT.node.isRequired,
   footer: PT.node,
-  checked: PT.bool,
   inputProps: PT.object,
   disabled: PT.bool,
   value: PT.oneOfType([PT.string, PT.number]).isRequired,
-  onChange: PT.func.isRequired,
-  notify: PT.func,
+  checked: PT.bool,
 };
 
 CustomRadioPanel.defaultProps = {
   checked: false,
   inputProps: {},
   disabled: false,
-  notify: undefined,
   footer: null,
 };
 
@@ -102,21 +85,24 @@ const CustomRadioPanelGruppe = (props) => {
   const radiosSomVises = visAlle ? radios : radios.slice(0, 4);
   const alleRadiosVisesPåEnSide = radios?.length <= 4;
 
+  const onChangeAndNotify = (value) => {
+    if (notify) notify(value);
+    onChange(value);
+  };
+
   return (
     <Nav.SkjemaGruppe className={classNames("customRadioPanelGruppe", className)} feil={feil}>
-      <Nav.Fieldset legend={legend}>
+      <Nav.RadioGroup legend={legend} onChange={onChangeAndNotify}>
         {radiosSomVises.map((radio) => (
           <CustomRadioPanel
             feltNavn={feltNavn}
             key={`${feltNavn}-${radio.value}`}
-            onChange={(event) => onChange(event.target.value)}
             value={radio.value}
             checked={currentCheckedValue === radio.value}
             {...radio}
-            notify={notify}
           />
         ))}
-      </Nav.Fieldset>
+      </Nav.RadioGroup>
       {begrensVisteRadios && !alleRadiosVisesPåEnSide && (
         <div className="visMerMindre">
           <button type="button" onClick={() => setVisAlle(!visAlle)}>

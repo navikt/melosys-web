@@ -15,6 +15,7 @@ interface CheckboxComponentProps {
   checked?: boolean;
   onChange?: (value: any) => void;
   feil?: any;
+  size?: "small" | "medium" | undefined;
 }
 
 type CheckboxInnerComponentProps = CheckboxComponentProps & RegisterHookFormProps;
@@ -24,17 +25,18 @@ const InnerCheckboxComponent = forwardRef<HTMLSelectElement, CheckboxInnerCompon
     return (
       <Nav.Checkbox
         className={rest.className}
-        label={rest.label}
         onChange={rest.onChange}
         onBlur={rest.onBlur}
         value={rest.value}
         name={rest.name}
-        checkboxRef={rest.ref}
-        feil={rest.feil}
+        error={rest.feil}
         checked={rest.checked}
+        size={rest.size}
         disabled={disabled}
         id={_uuid()}
-      />
+      >
+        {rest.label}
+      </Nav.Checkbox>
     );
   }
 );

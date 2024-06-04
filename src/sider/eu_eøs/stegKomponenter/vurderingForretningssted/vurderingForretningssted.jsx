@@ -181,7 +181,7 @@ const VurderingForretningssted = (props) => {
   ];
 
   return (
-    <div>
+    <div className="vurderingForretningssted">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Vurdering av artikkel 13 nr. 1 bokstav b
       </Nav.Typo.Innholdstittel>
@@ -189,30 +189,28 @@ const VurderingForretningssted = (props) => {
         <Forretningssteder {...tilstand} {...props} />
       </Nav.Fieldset>
 
-      <Nav.Fieldset legend="Velg artikkel" className="vilkaar">
-        <Nav.Select
-          name="artikkel3_1_vurdering"
-          id="vurdering13_1"
-          label=""
-          onChange={lovvalgsbestemmelseEndret}
-          disabled={!redigerbart}
-          value={finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser) ?? ""}
+      <Nav.Select
+        name="artikkel3_1_vurdering"
+        id="vurdering13_1"
+        label="Velg..."
+        onChange={lovvalgsbestemmelseEndret}
+        disabled={!redigerbart}
+        value={finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser) ?? ""}
+      >
+        <option
+          key={Utils._uuid()}
+          value=""
+          disabled={Boolean(finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser))}
         >
-          <option
-            key={Utils._uuid()}
-            value=""
-            disabled={Boolean(finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser))}
-          >
-            Velg artikkel
+          Velg artikkel
+        </option>
+        {stegetsLovvalgsbestemmelser.map(({ kode, label }, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <option key={index} value={kode}>
+            {label}
           </option>
-          {stegetsLovvalgsbestemmelser.map(({ kode, label }, index) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <option key={index} value={kode}>
-              {label}
-            </option>
-          ))}
-        </Nav.Select>
-      </Nav.Fieldset>
+        ))}
+      </Nav.Select>
       <EnkeltAvklartfakta
         redigerbart={redigerbart}
         avklartfakta={omfattetINorge}

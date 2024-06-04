@@ -13,43 +13,82 @@ exports[`SokkelSkipEnkelt > snapshot test 1`] = `
     <div
       class="col col-xs-2"
     >
-      <div
-        class="skjemaelement"
+      <fieldset
+        class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small"
       >
-        <input
-          aria-invalid="false"
-          class="skjemaelement__input radioknapp"
-          id="123"
-          name="SOKKEL_ELLER_SKIPDunfjæder"
-          type="radio"
-          value="SOKKEL"
-        />
-        <label
-          class="skjemaelement__label"
-          for="123"
+        <legend
+          class="navds-fieldset__legend navds-sr-only navds-label navds-label--small"
         >
-          Sokkel
-        </label>
-      </div>
-      <div
-        class="skjemaelement"
-      >
-        <input
-          aria-invalid="false"
-          checked=""
-          class="skjemaelement__input radioknapp"
-          id="123"
-          name="SOKKEL_ELLER_SKIPDunfjæder"
-          type="radio"
-          value="SKIP"
-        />
-        <label
-          class="skjemaelement__label"
-          for="123"
+          
+        </legend>
+        <div
+          class="navds-radio-buttons"
         >
-          Skip
-        </label>
-      </div>
+          <div
+            class="navds-radio navds-radio--small"
+          >
+            <input
+              aria-labelledby="aksel-id-2"
+              class="navds-radio__input"
+              id="123"
+              name="SOKKEL_ELLER_SKIPDunfjæder"
+              type="radio"
+              value="SOKKEL"
+            />
+            <label
+              class="navds-radio__label"
+              for="123"
+            >
+              <span
+                class="navds-radio__content"
+              >
+                <span
+                  aria-hidden="true"
+                  class="navds-body-short navds-body-short--small"
+                  id="aksel-id-2"
+                >
+                  Sokkel
+                </span>
+              </span>
+            </label>
+          </div>
+          <div
+            class="navds-radio navds-radio--small"
+          >
+            <input
+              aria-labelledby="aksel-id-5"
+              checked=""
+              class="navds-radio__input"
+              id="123"
+              name="SOKKEL_ELLER_SKIPDunfjæder"
+              type="radio"
+              value="SKIP"
+            />
+            <label
+              class="navds-radio__label"
+              for="123"
+            >
+              <span
+                class="navds-radio__content"
+              >
+                <span
+                  aria-hidden="true"
+                  class="navds-body-short navds-body-short--small"
+                  id="aksel-id-5"
+                >
+                  Skip
+                </span>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div
+          aria-live="polite"
+          aria-relevant="additions removals"
+          class="navds-fieldset__error"
+          id="fieldset-error-aksel-id-7"
+        />
+      </fieldset>
     </div>
     <div
       class="col col-xs-4"
@@ -59,61 +98,110 @@ exports[`SokkelSkipEnkelt > snapshot test 1`] = `
       >
         Velg arbeidsland
       </p>
-      <div
-        class="skjemaelement"
+      <fieldset
+        class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small"
       >
-        <input
-          aria-invalid="false"
-          checked=""
-          class="skjemaelement__input radioknapp"
-          id="123"
-          name="123"
-          type="radio"
-          value="GBFlaggland"
-        />
-        <label
-          class="skjemaelement__label"
-          for="123"
+        <legend
+          class="navds-fieldset__legend navds-sr-only navds-label navds-label--small"
         >
-          Storbritannia - Flaggland
-        </label>
-      </div>
-      <div
-        class="skjemaelement"
-      >
-        <input
-          aria-invalid="false"
-          class="skjemaelement__input radioknapp"
-          id="123"
-          name="123"
-          type="radio"
-          value="GBSokkelland"
-        />
-        <label
-          class="skjemaelement__label"
-          for="123"
+          
+        </legend>
+        <div
+          class="navds-radio-buttons"
         >
-          Storbritannia - Sokkelland
-        </label>
-      </div>
-      <div
-        class="skjemaelement"
-      >
-        <input
-          aria-invalid="false"
-          class="skjemaelement__input radioknapp"
-          id="123"
-          name="123"
-          type="radio"
-          value="GBTerritorialfarvannsland"
+          <div
+            class="navds-radio navds-radio--small"
+          >
+            <input
+              aria-labelledby="aksel-id-10"
+              checked=""
+              class="navds-radio__input"
+              id="123"
+              name="123"
+              type="radio"
+              value="Flaggland"
+            />
+            <label
+              class="navds-radio__label"
+              for="123"
+            >
+              <span
+                class="navds-radio__content"
+              >
+                <span
+                  aria-hidden="true"
+                  class="navds-body-short navds-body-short--small"
+                  id="aksel-id-10"
+                >
+                  Storbritannia - Flaggland
+                </span>
+              </span>
+            </label>
+          </div>
+          <div
+            class="navds-radio navds-radio--small"
+          >
+            <input
+              aria-labelledby="aksel-id-13"
+              class="navds-radio__input"
+              id="123"
+              name="123"
+              type="radio"
+              value="Sokkelland"
+            />
+            <label
+              class="navds-radio__label"
+              for="123"
+            >
+              <span
+                class="navds-radio__content"
+              >
+                <span
+                  aria-hidden="true"
+                  class="navds-body-short navds-body-short--small"
+                  id="aksel-id-13"
+                >
+                  Storbritannia - Sokkelland
+                </span>
+              </span>
+            </label>
+          </div>
+          <div
+            class="navds-radio navds-radio--small"
+          >
+            <input
+              aria-labelledby="aksel-id-16"
+              class="navds-radio__input"
+              id="123"
+              name="123"
+              type="radio"
+              value="Territorialfarvannsland"
+            />
+            <label
+              class="navds-radio__label"
+              for="123"
+            >
+              <span
+                class="navds-radio__content"
+              >
+                <span
+                  aria-hidden="true"
+                  class="navds-body-short navds-body-short--small"
+                  id="aksel-id-16"
+                >
+                  Storbritannia - Territorialfarvannsland
+                </span>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div
+          aria-live="polite"
+          aria-relevant="additions removals"
+          class="navds-fieldset__error"
+          id="fieldset-error-aksel-id-18"
         />
-        <label
-          class="skjemaelement__label"
-          for="123"
-        >
-          Storbritannia - Territorialfarvannsland
-        </label>
-      </div>
+      </fieldset>
     </div>
   </div>
 </div>

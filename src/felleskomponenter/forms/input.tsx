@@ -1,37 +1,24 @@
-import { ReactElement, forwardRef } from "react";
+import { ComponentProps, forwardRef } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import * as Nav from "../../navFrontend";
 
 import { RegisterHookFormProps } from "./misc/reacthookProps";
 import { getErrorMessage } from "./misc/mapFeilmelding";
 
-interface InputComponentProps extends Nav.InputProps {
-  label?: string | ReactElement;
-  disabled?: boolean;
-  onChange?: (value: any) => void;
-}
-
-type InputInnerComponentProps = InputComponentProps & RegisterHookFormProps;
+type InputInnerComponentProps = ComponentProps<typeof Nav.TextField> & RegisterHookFormProps;
 
 const InputInnerComponent = forwardRef<HTMLInputElement, InputInnerComponentProps>(
-  ({ label, disabled, ...rest }: InputInnerComponentProps, _ref: any) => {
-    return (
-      <Nav.Input
-        {...rest}
-        label={label}
-        disabled={disabled}
-        onChange={rest.onChange}
-        name={rest.name}
-        feil={rest.feil}
-        ref={rest.itemRef}
-      />
-    );
+  ({ ...props }: InputInnerComponentProps, _ref: any) => {
+    return <Nav.TextField {...props} />;
   }
 );
 
-type InputProps = InputComponentProps & UseControllerProps;
+type InputProps = Omit<ComponentProps<typeof Nav.TextField>, "onChange"> &
+  UseControllerProps & {
+    onChange?: (value: string) => void;
+  };
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({ name, control, feil, ...rest }: InputProps, _ref: any) => {
+const Input = forwardRef<HTMLInputElement, InputProps>(({ name, control, error, ...rest }: InputProps, _ref: any) => {
   return (
     <Controller
       name={name}
@@ -40,13 +27,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ name, control, feil, .
         <InputInnerComponent
           {...field}
           {...rest}
-          label={rest.label}
-          disabled={rest.disabled}
           onChange={(event: any) => {
             field.onChange(event);
             if (rest.onChange) rest.onChange(event?.target?.value);
           }}
-          feil={feil ?? getErrorMessage(field, formState)}
+          error={error ?? getErrorMessage(field, formState)}
         />
       )}
     />

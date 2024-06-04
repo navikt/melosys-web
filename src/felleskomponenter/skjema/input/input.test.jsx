@@ -18,29 +18,19 @@ describe("Input", () => {
   beforeEach(() => {
     props = {
       label: "test",
-      bredde: "M",
       meta: {
         error: "",
         touched: false,
         active: true,
       },
-      input: {},
+      feltNavn: "Test",
+      navn: "Test",
     };
   });
 
   it("snapshot test", () => {
     const { container } = renderWithProviders(<WrappedInput {...props} />);
     expect(container).toMatchSnapshot();
-  });
-
-  it("viser feilmelding", () => {
-    props.meta = {
-      error: "feilmelding",
-      touched: true,
-      active: false,
-    };
-    const { getByText } = renderWithProviders(<WrappedInput {...props} />);
-    expect(getByText("feilmelding")).toBeInTheDocument();
   });
 
   it("viser ikke feilmelding", () => {

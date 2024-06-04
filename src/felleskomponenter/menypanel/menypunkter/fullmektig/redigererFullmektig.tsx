@@ -140,9 +140,9 @@ const RedigererFullmektig = ({
               name={`fullmektige[${index}].ident`}
               label="Org.nr. eller f.nr./d-nr.:"
               control={control}
-              onChange={(ident) => handleIdChange(ident, index)}
-              bredde="S"
-              feil={feil}
+              onChange={(ident: string) => handleIdChange(ident, index)}
+              error={feil}
+              size="small"
             />
 
             {adresse && <BrevAdresse className="adresse" {...adresse} visNavn />}
@@ -158,12 +158,13 @@ const RedigererFullmektig = ({
                       className="fullmakt"
                       key={fullmakt.kode}
                       value={fullmakt.kode}
-                      label={fullmakt.term}
                       checked={fullmakter.includes(fullmakt.kode)}
                       onChange={(event) => handleFullmaktChange(event.target.value, index, Boolean(manglerFullmakt))}
                       disabled={fullmaktErDisabled(index, fullmakt.kode)}
-                      feil={Boolean(manglerFullmakt)}
-                    />
+                      error={Boolean(manglerFullmakt)}
+                    >
+                      {fullmakt.term}
+                    </Nav.Checkbox>
                   ))}
                 </div>
                 {manglerFullmakt && <SkjemaelementFeilmelding>{manglerFullmakt}</SkjemaelementFeilmelding>}

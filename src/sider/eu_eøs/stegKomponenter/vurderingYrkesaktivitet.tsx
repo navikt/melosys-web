@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect } from "react";
+import { useEffect } from "react";
 
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
@@ -46,8 +46,8 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
     };
   }, []);
 
-  const radioEndret = (event: ChangeEvent<HTMLInputElement>) => {
-    oppdaterData(lagAvklartfakta(KV.Koder.YRKESAKTIVITET, null, event.target.value));
+  const radioEndret = (value: string) => {
+    oppdaterData(lagAvklartfakta(KV.Koder.YRKESAKTIVITET, null, value));
   };
 
   const labels = erSoknadArbeidFlereLand
@@ -71,44 +71,28 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Hva slags type yrkesaktivitet skal søkeren utøve?
       </Nav.Typo.Innholdstittel>
-      <Nav.Fieldset legend="">
-        <Nav.Radio
-          name="yrkesaktivitet"
-          disabled={!redigerbart}
-          checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}
-          value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}
-          onChange={radioEndret}
-          label={labels[0]}
-        />
-        <Nav.Radio
-          name="yrkesaktivitet"
-          disabled={!redigerbart}
-          checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}
-          value={KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}
-          onChange={radioEndret}
-          label={labels[1]}
-        />
+      <Nav.RadioGroup
+        legend=""
+        hideLegend
+        onChange={radioEndret}
+        defaultValue={fakta}
+        name="yrkesaktivitet"
+        disabled={!redigerbart}
+      >
+        <Nav.Radio value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}>{labels[0]}</Nav.Radio>
+        <Nav.Radio value={KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}>{labels[1]}</Nav.Radio>
         {!skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende && (
-          <Nav.Radio
-            name="yrkesaktivitet"
-            disabled={!redigerbart}
-            checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
-            value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
-            onChange={radioEndret}
-            label={labels[2]}
-          />
+          <Nav.Radio value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}>{labels[2]}</Nav.Radio>
         )}
         {!(konvensjonStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
           <Nav.Radio
-            name="yrkesaktivitet"
-            disabled={!redigerbart || !erSoknadArbeidFlereLand}
-            checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
+            disabled={!erSoknadArbeidFlereLand}
             value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
-            onChange={radioEndret}
-            label={labels[3]}
-          />
+          >
+            {labels[3]}
+          </Nav.Radio>
         )}
-      </Nav.Fieldset>
+      </Nav.RadioGroup>
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !(redigerbart && harAvklaring),

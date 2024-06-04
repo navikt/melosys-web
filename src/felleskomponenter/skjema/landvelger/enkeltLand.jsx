@@ -41,8 +41,7 @@ class InnerEnkeltLand extends Component {
 
   reduxOppdaterLand = (landkode) => {
     if (!landkode) {
-      const e = new Error("landkode må inneholde verdi.");
-      throw e;
+      throw new Error("landkode må inneholde verdi.");
     }
     const { onChange } = this.props.input;
     onChange(landkode);
@@ -134,7 +133,7 @@ class InnerEnkeltLand extends Component {
   render() {
     const { fokusInnHandler, fokusUtHandler, inputTastNedHandler, inputEndringHandler } = this;
 
-    const { label, meta, dataListID, disabled, bredde, placeholder } = this.props;
+    const { label, meta, dataListID, disabled, placeholder } = this.props;
 
     const { inputVerdi } = this.state;
 
@@ -147,12 +146,11 @@ class InnerEnkeltLand extends Component {
 
     return (
       <div>
-        <Nav.Input
+        <Nav.TextField
           disabled={disabled}
           list={dataListID}
           label={label}
-          bredde={bredde}
-          feil={feilObjekt}
+          error={feilObjekt}
           className="landliste__linje__input"
           value={inputVerdi}
           onBlur={fokusUtHandler}
@@ -175,7 +173,6 @@ InnerEnkeltLand.propTypes = {
   feil: PT.string,
   input: PT.object.isRequired,
   disabled: PT.bool,
-  bredde: PT.string,
   onChange: PT.func,
   placeholder: PT.string,
 };
@@ -184,7 +181,6 @@ InnerEnkeltLand.defaultProps = {
   label: "",
   feil: "",
   disabled: false,
-  bredde: "XL",
   onChange: null,
   placeholder: undefined,
 };

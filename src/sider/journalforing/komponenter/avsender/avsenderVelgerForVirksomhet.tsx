@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { getFormValues } from "redux-form";
 import MKV from "../../../../melosyskodeverk";
 import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 
 type AvsenderVelgerForVirksomhetProps = {
@@ -25,22 +26,10 @@ export const AvsenderVelgerForVirksomhet = ({
   }, [formValues.avsenderType]);
 
   return (
-    <Skjema.RadioGruppe feltNavn="avsenderType" label="Hvem er avsender?">
-      <Skjema.Radio
-        feltNavn="avsenderType"
-        label="Virksomhet"
-        value={MKV.Koder.avsendertyper.ORGANISASJON}
-        className="avsendervelger__radio"
-      />
-      <Skjema.Radio
-        feltNavn="avsenderType"
-        label="Fritekst"
-        value={KV.AvsenderTyper.FRITEKST}
-        className="avsendervelger__radio"
-      />
-      {formValues.avsenderType === KV.AvsenderTyper.FRITEKST && (
-        <Skjema.Input label="" feltNavn="avsenderNavn" bredde="fullbredde" />
-      )}
-    </Skjema.RadioGruppe>
+    <Skjema.RadioGroup legend="Hvem er avsender?" name="avsenderType" size="medium">
+      <Nav.Radio value={MKV.Koder.avsendertyper.ORGANISASJON}>Virksomhet</Nav.Radio>
+      <Nav.Radio value={KV.AvsenderTyper.FRITEKST}>Fritekst</Nav.Radio>
+      {formValues.avsenderType === KV.AvsenderTyper.FRITEKST && <Skjema.Input label="" feltNavn="avsenderNavn" />}
+    </Skjema.RadioGroup>
   );
 };

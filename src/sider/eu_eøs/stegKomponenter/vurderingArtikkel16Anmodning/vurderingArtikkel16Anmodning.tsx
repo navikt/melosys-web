@@ -318,8 +318,12 @@ const VurderingArtikkel16Anmodning = ({
         {erIDirekteTilArtikkel16Flyt && !konvensjonStorbritanniaToggleEnabled && (
           <Nav.Row className="vilAnmode">
             <Nav.Column xs="6">
-              <Nav.Radio name="vilAnmode" label="Ja, jeg vil anmode om unntak" defaultChecked disabled={!redigerbart} />
-              <Nav.Radio name="vilAnmode" label="Nei, jeg vil avslå" disabled />
+              <Nav.RadioGroup legend="" hideLegend defaultValue name="vilAnmode" disabled={!redigerbart}>
+                <Nav.Radio value>Ja, jeg vil anmode om unntak</Nav.Radio>
+                <Nav.Radio value={false} disabled>
+                  Nei, jeg vil avslå
+                </Nav.Radio>
+              </Nav.RadioGroup>
             </Nav.Column>
           </Nav.Row>
         )}

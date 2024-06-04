@@ -169,29 +169,15 @@ const VurderingFamilie = ({
                   finnBarn(barn?.uuid, formValues.barn) && (
                     <Nav.Row key={barn.uuid} className="barnet">
                       <Nav.Column xs="8">
-                        <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
-                          barn.fnr
-                        })`}</Nav.Typo.Normaltekst>
-                        <Nav.Row className="familiemedlem_radio">
-                          <Nav.Column xs="2">
-                            <Skjema.Radio
-                              label="Ja"
-                              feltNavn={`barn.${barn.uuid}.innvilget`}
-                              id={`${barn.uuid}.${BOOLSK_STRING.SANN}`}
-                              value={BOOLSK_STRING.SANN}
-                              disabled={!redigerbart}
-                            />
-                          </Nav.Column>
-                          <Nav.Column xs="2">
-                            <Skjema.Radio
-                              label="Nei"
-                              feltNavn={`barn.${barn.uuid}.innvilget`}
-                              id={`${barn.uuid}.${BOOLSK_STRING.USANN}`}
-                              value={BOOLSK_STRING.USANN}
-                              disabled={!redigerbart}
-                            />
-                          </Nav.Column>
-                        </Nav.Row>
+                        <Skjema.RadioGroup
+                          legend={`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${barn.fnr})`}
+                          disabled={!redigerbart}
+                          id={Utils._uuid()}
+                          name={`barn.${barn.uuid}.innvilget`}
+                        >
+                          <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+                          <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                        </Skjema.RadioGroup>
                         {erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget) && (
                           <Skjema.Select
                             label="Begrunnelse:"
@@ -230,29 +216,17 @@ const VurderingFamilie = ({
             <Nav.Fieldset legend="Ektefelle/partner/samboer" className="ektefelle">
               <Nav.Row>
                 <Nav.Column xs="8">
-                  <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(tilknyttetEktefelle.navn)} (F.nr: ${
-                    tilknyttetEktefelle.fnr
-                  })`}</Nav.Typo.Normaltekst>
-                  <Nav.Row className="familiemedlem_radio">
-                    <Nav.Column xs="2">
-                      <Skjema.Radio
-                        label="Ja"
-                        feltNavn="ektefelle.innvilget"
-                        id={`${BOOLSK_STRING.SANN}`}
-                        value={BOOLSK_STRING.SANN}
-                        disabled={!redigerbart}
-                      />
-                    </Nav.Column>
-                    <Nav.Column xs="2">
-                      <Skjema.Radio
-                        label="Nei"
-                        feltNavn="ektefelle.innvilget"
-                        id={`${BOOLSK_STRING.USANN}`}
-                        value={BOOLSK_STRING.USANN}
-                        disabled={!redigerbart}
-                      />
-                    </Nav.Column>
-                  </Nav.Row>
+                  <Skjema.RadioGroup
+                    legend={`${Utils.streng.storeForbokstaver(tilknyttetEktefelle.navn)} (F.nr: ${
+                      tilknyttetEktefelle.fnr
+                    })`}
+                    disabled={!redigerbart}
+                    id={Utils._uuid()}
+                    name="ektefelle.innvilget"
+                  >
+                    <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+                    <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                  </Skjema.RadioGroup>
                   {erIkkeInnvilget(formValues.ektefelle?.innvilget) && (
                     <Skjema.Select
                       label="Begrunnelse:"
