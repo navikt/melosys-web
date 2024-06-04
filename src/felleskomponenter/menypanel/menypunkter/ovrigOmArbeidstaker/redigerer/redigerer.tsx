@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 
 import { formSelectors } from "../../../../../ducks/form";
 import Sporsmal from "../sporsmal";
-import LabelOgEditerbartSvar, { RadioknappSvar } from "./labelOgEditerbartSvar";
+import LabelOgEditerbartSvar from "./labelOgEditerbartSvar";
 import Beskrivelse from "../beskrivelse";
 
 import "./redigerer.css";
@@ -13,7 +13,7 @@ const Redigerer = () => {
     <div className="ovrig-om-arbeidstaker__redigerer">
       <LabelOgEditerbartSvar
         label={Sporsmal.harLoennetArbeidMinstEnMndFoerUtsending}
-        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending" />}
+        feltNavn="arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending"
       />
       {arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending === false && (
         <Beskrivelse
@@ -24,7 +24,7 @@ const Redigerer = () => {
       )}
       <LabelOgEditerbartSvar
         label={Sporsmal.harAndreArbeidsgivereIUtsendingsperioden}
-        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden" />}
+        feltNavn="arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden"
       />
       {arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden === true && (
         <Beskrivelse
@@ -33,17 +33,14 @@ const Redigerer = () => {
           tekst={arbeidssituasjonOgOevrig.beskrivelseAnnetArbeid}
         />
       )}
-      <LabelOgEditerbartSvar
-        label={Sporsmal.erSkattepliktig}
-        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.erSkattepliktig" />}
-      />
+      <LabelOgEditerbartSvar label={Sporsmal.erSkattepliktig} feltNavn="arbeidssituasjonOgOevrig.erSkattepliktig" />
       <LabelOgEditerbartSvar
         label={Sporsmal.mottarYtelserNorge}
-        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.mottarYtelserNorge" />}
+        feltNavn="arbeidssituasjonOgOevrig.mottarYtelserNorge"
       />
       <LabelOgEditerbartSvar
         label={Sporsmal.mottarYtelserUtlandet}
-        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.mottarYtelserUtlandet" />}
+        feltNavn="arbeidssituasjonOgOevrig.mottarYtelserUtlandet"
       />
     </div>
   );

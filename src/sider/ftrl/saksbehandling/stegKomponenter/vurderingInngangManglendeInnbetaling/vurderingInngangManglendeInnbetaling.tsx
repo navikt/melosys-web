@@ -82,34 +82,22 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
         </Nav.Typo.Normaltekst>
       </div>
 
-      <Nav.Row className="radioknapp_gruppe__wrapper">
-        <Nav.Column className="radioknapp_gruppe">
-          <Forms.Radio
-            label={
-              <>
-                Innbetaling mangler for <b>hele</b> medlemskapsperioden.
-              </>
-            }
-            name="fullstendigManglendeInnbetaling"
-            control={control}
-            value={BOOLSK_STRING.SANN}
-            disabled={!redigerbart}
-            onChange={handleChange}
-          />
-          <Forms.Radio
-            label={
-              <>
-                Innbetaling mangler for <b>deler</b> av medlemskapsperioden.
-              </>
-            }
-            name="fullstendigManglendeInnbetaling"
-            control={control}
-            value={BOOLSK_STRING.USANN}
-            disabled={!redigerbart}
-            onChange={handleChange}
-          />
-        </Nav.Column>
-      </Nav.Row>
+      <Forms.RadioGroup
+        legend=""
+        hideLegend
+        name="fullstendigManglendeInnbetaling"
+        control={control}
+        onChange={handleChange}
+        disabled={!redigerbart}
+        size="medium"
+      >
+        <Nav.Radio value={BOOLSK_STRING.SANN}>
+          Innbetaling mangler for <b>hele</b> medlemskapsperioden.
+        </Nav.Radio>
+        <Nav.Radio value={BOOLSK_STRING.USANN}>
+          Innbetaling mangler for <b>deler</b> av medlemskapsperioden.
+        </Nav.Radio>
+      </Forms.RadioGroup>
 
       <Mui.StegKnapper
         bekreftKnappProps={{

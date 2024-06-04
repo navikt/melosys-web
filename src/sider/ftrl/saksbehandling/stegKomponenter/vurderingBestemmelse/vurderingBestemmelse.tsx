@@ -206,10 +206,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     if (lagretBestemmelse) dispatch(medlemskapsperioderOperations.slettMedlemskapsperioder(behandlingID));
   };
 
-  const handleEndreVilkår = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleEndreVilkår = (name: string, value: string) => {
     setHarSkjeddEndringer(true);
-    const vilkårKode = event.target.name;
-    const vilkårSvar = event.target.value;
+    const vilkårKode = name;
+    const vilkårSvar = value;
     setValgteVilkår(new Map(valgteVilkår.set(vilkårKode, vilkårSvar)));
     if (vilkårSvar === USANN && valgteBegrunnelser.get(`${vilkårKode}_begrunnelser`)) {
       valgteBegrunnelser.delete(`${vilkårKode}_begrunnelser`);

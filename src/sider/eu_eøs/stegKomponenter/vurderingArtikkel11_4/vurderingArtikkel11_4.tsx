@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
@@ -124,8 +124,7 @@ const VurderingArtikkel11_4 = ({
       "nis",
     ].forEach((feltNavn) => slettData(slettVilkar(feltNavn)));
 
-  const handleEndretArtikkelValg = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value as ArtikkelValg;
+  const handleEndretArtikkelValg = (value: ArtikkelValg) => {
     setArtikkelValg(value);
     setBestemmelse("");
 
@@ -179,9 +178,8 @@ const VurderingArtikkel11_4 = ({
     oppdaterData(lagLovvalgsbestemmelse(nyBestemmelse));
   };
 
-  const handleEndretNISSvar = (event: ChangeEvent<HTMLInputElement>) => {
-    const oppfylt = event.target.value === BOOLSK_STRING.SANN;
-    oppdaterData(lagVilkaar("nis", oppfylt));
+  const handleEndretNISSvar = (value: string) => {
+    oppdaterData(lagVilkaar("nis", value === BOOLSK_STRING.SANN));
   };
 
   const visBestemmelseAvsnitt =
@@ -199,41 +197,28 @@ const VurderingArtikkel11_4 = ({
 
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Typo.Element className="artikkel_label">
-            {konvensjonStorbritanniaToggleEnabled ? "Oppgi brukers situasjon" : "Velg riktig artikkel"}
-          </Nav.Typo.Element>
-          <Nav.Radio
-            name="artikkel11"
+          <Nav.RadioGroup
+            legend={konvensjonStorbritanniaToggleEnabled ? "Oppgi brukers situasjon" : "Velg riktig artikkel"}
             onChange={handleEndretArtikkelValg}
-            value={ArtikkelValg.ART11_4_1}
-            checked={artikkelValg === ArtikkelValg.ART11_4_1}
-            label={konvensjonStorbritanniaToggleEnabled ? "Arbeider på norsk skip" : "11.4 i - Norge er arbeidslandet"}
             disabled={!redigerbart}
-          />
-          <Nav.Radio
             name="artikkel11"
-            onChange={handleEndretArtikkelValg}
-            value={ArtikkelValg.ART11_4_2}
-            checked={artikkelValg === ArtikkelValg.ART11_4_2}
-            label={
-              konvensjonStorbritanniaToggleEnabled
+            defaultValue={artikkelValg}
+            size="small"
+          >
+            <Nav.Radio value={ArtikkelValg.ART11_4_1}>
+              {konvensjonStorbritanniaToggleEnabled ? "Arbeider på norsk skip" : "11.4 i - Norge er arbeidslandet"}
+            </Nav.Radio>
+            <Nav.Radio value={ArtikkelValg.ART11_4_2}>
+              {konvensjonStorbritanniaToggleEnabled
                 ? "Arbeider på utenlandsk skip, er bosatt i Norge og har norsk arbeidsgiver"
-                : "11.4 ii - arbeidsgiver i bostedslandet"
-            }
-            disabled={!redigerbart}
-          />
-          <Nav.Radio
-            name="artikkel11"
-            onChange={handleEndretArtikkelValg}
-            value={ArtikkelValg.ART11_4_1_TIL_VURDERING_12_1}
-            checked={artikkelValg === ArtikkelValg.ART11_4_1_TIL_VURDERING_12_1}
-            label={
-              konvensjonStorbritanniaToggleEnabled
+                : "11.4 ii - arbeidsgiver i bostedslandet"}
+            </Nav.Radio>
+            <Nav.Radio value={ArtikkelValg.ART11_4_1_TIL_VURDERING_12_1}>
+              {konvensjonStorbritanniaToggleEnabled
                 ? "Utsendt til utenlandsk skip"
-                : "11.4 i - arbeidslandet er ikke Norge, men jeg vil vurdere Artikkel 12.1"
-            }
-            disabled={!redigerbart}
-          />
+                : "11.4 i - arbeidslandet er ikke Norge, men jeg vil vurdere Artikkel 12.1"}
+            </Nav.Radio>
+          </Nav.RadioGroup>
 
           {visBestemmelseAvsnitt && (
             <Bestemmelse
@@ -246,27 +231,17 @@ const VurderingArtikkel11_4 = ({
           )}
 
           {visNISAvsnitt && (
-            <>
-              <Nav.Typo.Element className="nis_label">
-                Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?
-              </Nav.Typo.Element>
-              <Nav.Radio
-                name="nis"
-                disabled={!redigerbart}
-                checked={nis.oppfylt === false}
-                onChange={handleEndretNISSvar}
-                value={BOOLSK_STRING.USANN}
-                label="Nei"
-              />
-              <Nav.Radio
-                name="nis"
-                disabled={!redigerbart}
-                checked={nis.oppfylt}
-                onChange={handleEndretNISSvar}
-                value={BOOLSK_STRING.SANN}
-                label="Ja"
-              />
-            </>
+            <Nav.RadioGroup
+              legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?"
+              onChange={handleEndretNISSvar}
+              name="nis"
+              disabled={!redigerbart}
+              defaultValue={nis.oppfylt}
+              size="small"
+            >
+              <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+              <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+            </Nav.RadioGroup>
           )}
         </Nav.Column>
       </Nav.Row>

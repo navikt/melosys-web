@@ -13,38 +13,25 @@ const RedigererPreElementer = ({ className, redigerbart }: EnRedigeringsknappLis
   return (
     <div className={cls}>
       <Nav.Typo.Element>Opplysninger om arbeidssted</Nav.Typo.Element>
-      <Nav.Row className="fast-arbeidssted">
-        <fieldset>
-          <Nav.Column xs="8">
-            <legend>
-              <Nav.Typo.Normaltekst>Vil arbeidstakeren ha et fast arbeidssted i utlandet?</Nav.Typo.Normaltekst>
-            </legend>
-          </Nav.Column>
-          <Nav.Column xs="4" className="col">
-            <Skjema.Radio disabled={!redigerbart} label="Ja" feltNavn="arbeidPaaLand.erFastArbeidssted" value />
-            <Skjema.Radio
-              disabled={!redigerbart}
-              label="Nei"
-              feltNavn="arbeidPaaLand.erFastArbeidssted"
-              value={false}
-            />
-          </Nav.Column>
-        </fieldset>
+      <Nav.Row className="radiogroup__rad">
+        <Skjema.RadioGroup
+          legend="Vil arbeidstakeren ha et fast arbeidssted i utlandet?"
+          name="arbeidPaaLand.erFastArbeidssted"
+          disabled={!redigerbart}
+        >
+          <Nav.Radio value>Ja</Nav.Radio>
+          <Nav.Radio value={false}>Nei</Nav.Radio>
+        </Skjema.RadioGroup>
       </Nav.Row>
-      <Nav.Row>
-        <fieldset>
-          <Nav.Column xs="8">
-            <legend>
-              <Nav.Typo.Normaltekst>
-                Vil arbeidstakeren kun eller hovedsaklig arbeide på hjemmekontor?
-              </Nav.Typo.Normaltekst>
-            </legend>
-          </Nav.Column>
-          <Nav.Column xs="4" className="col">
-            <Skjema.Radio disabled={!redigerbart} label="Ja" feltNavn="arbeidPaaLand.erHjemmekontor" value />
-            <Skjema.Radio disabled={!redigerbart} label="Nei" feltNavn="arbeidPaaLand.erHjemmekontor" value={false} />
-          </Nav.Column>
-        </fieldset>
+      <Nav.Row className="radiogroup__rad">
+        <Skjema.RadioGroup
+          legend="Vil arbeidstakeren kun eller hovedsaklig arbeide på hjemmekontor?"
+          name="arbeidPaaLand.erHjemmekontor"
+          disabled={!redigerbart}
+        >
+          <Nav.Radio value>Ja</Nav.Radio>
+          <Nav.Radio value={false}>Nei</Nav.Radio>
+        </Skjema.RadioGroup>
       </Nav.Row>
     </div>
   );

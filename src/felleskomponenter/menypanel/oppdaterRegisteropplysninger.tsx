@@ -52,6 +52,7 @@ export const OppdaterRegisteropplysninger = ({
           control={control}
           label="Inkl. siste 5 år"
           value="Inkl. siste 5 år"
+          size="small"
         />
       )}
       <span

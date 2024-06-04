@@ -131,7 +131,7 @@ export const KontaktOpplysninger = ({
       <Nav.Fieldset legend="Kontaktopplysninger (valgfritt)">
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.Input
+            <Nav.TextField
               disabled={!redigerbart}
               onChange={kontaktNavnChangeHandler}
               value={kontaktopplysninger.kontaktnavn || ""}
@@ -143,7 +143,7 @@ export const KontaktOpplysninger = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6">
-            <Nav.Input
+            <Nav.TextField
               disabled={!redigerbart}
               onChange={kontakttelefonChangeHandler}
               value={kontaktopplysninger.kontakttelefon || ""}
@@ -153,9 +153,9 @@ export const KontaktOpplysninger = ({
             />
           </Nav.Column>
           <Nav.Column xs="6">
-            <Nav.Input
+            <Nav.TextField
               disabled={!redigerbart}
-              feil={orgnrFeilmelding}
+              error={orgnrFeilmelding}
               onChange={kontaktOrgnrChangeHandler}
               onBlur={kontaktorgnrBlurHandler}
               value={kontaktopplysninger.kontaktorgnr || ""}

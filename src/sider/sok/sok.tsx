@@ -76,7 +76,7 @@ export const Sok = ({ children }: SokProps) => {
                   <SorterbarListe
                     elementer={sokResultat}
                     component={Fagsak}
-                    defaultChecked="nyeste"
+                    defaultChecked="descending"
                     sortingLegend="Sorter fagsaker etter opprettelsesdato:"
                     sortingPath="opprettetDato"
                     radioGroupName="fagsaksortering"

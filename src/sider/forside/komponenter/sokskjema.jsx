@@ -50,7 +50,9 @@ class SokSkjema extends Component {
         />
 
         <div className="sokeskjema__knapp">
-          <Nav.Button variant="secondary">Søk</Nav.Button>
+          <Nav.Button variant="secondary" size="small">
+            Søk
+          </Nav.Button>
         </div>
       </form>
     );

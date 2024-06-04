@@ -37,11 +37,11 @@ const EnkeltAvklartfakta = (props) => {
     return cleanup;
   }, []);
 
-  const radioEndringHandler = (event) => {
-    oppdaterData(lagAvklartfakta(avklartfaktaKode, null, event.target.value));
+  const radioEndringHandler = (value) => {
+    oppdaterData(lagAvklartfakta(avklartfaktaKode, null, value));
 
     if (onChange) {
-      onChange(event.target.value);
+      onChange(value);
     }
   };
 
@@ -53,23 +53,23 @@ const EnkeltAvklartfakta = (props) => {
     <div className="enkeltAvklartfakta__skjemafelt">
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Fieldset legend={tittel}>
+          <Nav.RadioGroup
+            legend={tittel}
+            onChange={radioEndringHandler}
+            defaultValue={fakta}
+            disabled={!redigerbart}
+            name={avklartfaktaKode}
+            size="small"
+          >
             {avklartefaktaTyper.map((af) => {
               const id = Utils._uuid();
               return (
-                <Nav.Radio
-                  key={id}
-                  id={id}
-                  name={avklartfaktaKode}
-                  label={af.label}
-                  value={af.type}
-                  checked={fakta === af.type}
-                  onChange={radioEndringHandler}
-                  disabled={!redigerbart || af.disabled}
-                />
+                <Nav.Radio key={id} id={id} value={af.type} disabled={af.disabled}>
+                  {af.label}
+                </Nav.Radio>
               );
             })}
-          </Nav.Fieldset>
+          </Nav.RadioGroup>
         </Nav.Column>
       </Nav.Row>
       {begrunnelser.length > 0 && (

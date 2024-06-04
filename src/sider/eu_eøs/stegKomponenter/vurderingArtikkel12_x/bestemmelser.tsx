@@ -101,9 +101,8 @@ export const Bestemmelser = ({
 
   const slettAlleVilkår = () => alleRelevanteFeltNavn.forEach((feltNavn) => slettData(slettVilkar(feltNavn)));
 
-  const handleEndreVedtakValg = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleEndreVedtakValg = (value: VedtakValg) => {
     setPending(true);
-    const value = event.target.value as VedtakValg;
     setVedtakValg(value);
     setBestemmelse("");
 
@@ -212,40 +211,27 @@ export const Bestemmelser = ({
     <div>
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Fieldset legend="">
-            <Nav.Radio
-              name="vedtakValg"
-              onChange={handleEndreVedtakValg}
-              value={VedtakValg.JA_INNVILGE}
-              checked={innvilgelse}
-              label={konvensjonStorbritanniaToggleEnabled ? "Ja, jeg vil innvilge søknaden" : "Ja"}
-              disabled={!redigerbart}
-            />
-            <Nav.Radio
-              name="vedtakValg"
-              onChange={handleEndreVedtakValg}
-              value={VedtakValg.NEI_ANMODNING_UNNTAK}
-              checked={anmodningOmUnntak}
-              label={
-                konvensjonStorbritanniaToggleEnabled
-                  ? "Nei, jeg vil vurdere anmodning om unntak"
-                  : "Nei, jeg vil vurdere artikkel 16.1"
-              }
-              disabled={!redigerbart}
-            />
-            <Nav.Radio
-              name="vedtakValg"
-              onChange={handleEndreVedtakValg}
-              value={VedtakValg.NEI_AVSLAG}
-              checked={avslag}
-              label={
-                konvensjonStorbritanniaToggleEnabled
-                  ? `Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1 (kun EØS-forordningen)`
-                  : `Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1`
-              }
-              disabled={!redigerbart}
-            />
-          </Nav.Fieldset>
+          <Nav.RadioGroup
+            legend=""
+            onChange={handleEndreVedtakValg}
+            defaultValue={vedtakValg}
+            disabled={!redigerbart}
+            name="vedtakvalg"
+          >
+            <Nav.Radio value={VedtakValg.JA_INNVILGE}>
+              {konvensjonStorbritanniaToggleEnabled ? "Ja, jeg vil innvilge søknaden" : "Ja"}
+            </Nav.Radio>
+            <Nav.Radio value={VedtakValg.NEI_ANMODNING_UNNTAK}>
+              {konvensjonStorbritanniaToggleEnabled
+                ? "Nei, jeg vil vurdere anmodning om unntak"
+                : "Nei, jeg vil vurdere artikkel 16.1"}
+            </Nav.Radio>
+            <Nav.Radio value={VedtakValg.NEI_AVSLAG}>
+              {konvensjonStorbritanniaToggleEnabled
+                ? `Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1 (kun EØS-forordningen)`
+                : `Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1`}
+            </Nav.Radio>
+          </Nav.RadioGroup>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

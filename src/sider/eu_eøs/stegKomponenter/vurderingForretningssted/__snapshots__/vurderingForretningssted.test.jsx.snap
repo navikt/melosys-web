@@ -2,7 +2,9 @@
 
 exports[`VurderingForretningssted > snapshot test 1`] = `
 <div>
-  <div>
+  <div
+    class="vurderingForretningssted"
+  >
     <h1
       class="typo-innholdstittel stegvelgertittel"
     >
@@ -27,21 +29,27 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
           </legend>
           <div>
             <div
-              class="skjemaelement landliste__linje__input "
+              class="melosys-textfield landliste__linje__input  navds-form-field navds-form-field--small"
             >
               <label
-                class="skjemaelement__label"
+                class="navds-form-field__label navds-label navds-label--small"
                 for="123"
               >
                 Har forretningssted i
               </label>
               <input
-                aria-invalid="false"
-                class="skjemaelement__input input--fullbredde"
+                bredde="fullbredde"
+                class="navds-text-field__input navds-body-short navds-body-short--small"
                 id="123"
                 list="datalist-123"
                 type="text"
                 value=""
+              />
+              <div
+                aria-live="polite"
+                aria-relevant="additions removals"
+                class="navds-form-field__error"
+                id="textField-error-aksel-id-1"
               />
             </div>
             <div
@@ -200,61 +208,57 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
         </fieldset>
       </div>
     </fieldset>
-    <fieldset
-      class="fieldset vilkaar"
+    <div
+      class="skjemaelement"
     >
-      <legend
-        class="fieldset__legend"
+      <label
+        class="skjemaelement__label"
+        for="vurdering13_1"
       >
-        Velg artikkel
-      </legend>
+        Velg...
+      </label>
       <div
-        class="skjemaelement"
+        class="selectContainer input--fullbredde"
       >
-        
-        <div
-          class="selectContainer input--fullbredde"
+        <select
+          aria-invalid="false"
+          class="skjemaelement__input"
+          id="vurdering13_1"
+          name="artikkel3_1_vurdering"
         >
-          <select
-            aria-invalid="false"
-            class="skjemaelement__input"
-            id="vurdering13_1"
-            name="artikkel3_1_vurdering"
+          <option
+            value=""
           >
-            <option
-              value=""
-            >
-              Velg artikkel
-            </option>
-            <option
-              value="FO_883_2004_ART13_1B1"
-            >
-              13.1 b i: en arbeidsgiver
-            </option>
-            <option
-              value="FO_883_2004_ART13_1B2"
-            >
-              13.1 b ii: Ansatt av to eller flere arbeidsgivere med forretningssted i samme land
-            </option>
-            <option
-              value="FO_883_2004_ART13_1B3"
-            >
-              13.1 b iii: To eller flere arbeidsgivere, med forretningssted i to land, hvorav ett er Norge
-            </option>
-            <option
-              value="FO_883_2004_ART13_1B4"
-            >
-              13.1 b iv: Flere arbeidsgivere, med forretningssted i flere land, hvorav flere enn to er utenfor Norge
-            </option>
-            <option
-              value="FO_987_2009_ART14_11"
-            >
-              14.11: Forordning 987, artikkel 14: arbeidsgiver utenfor EU/EØS-område
-            </option>
-          </select>
-        </div>
+            Velg artikkel
+          </option>
+          <option
+            value="FO_883_2004_ART13_1B1"
+          >
+            13.1 b i: en arbeidsgiver
+          </option>
+          <option
+            value="FO_883_2004_ART13_1B2"
+          >
+            13.1 b ii: Ansatt av to eller flere arbeidsgivere med forretningssted i samme land
+          </option>
+          <option
+            value="FO_883_2004_ART13_1B3"
+          >
+            13.1 b iii: To eller flere arbeidsgivere, med forretningssted i to land, hvorav ett er Norge
+          </option>
+          <option
+            value="FO_883_2004_ART13_1B4"
+          >
+            13.1 b iv: Flere arbeidsgivere, med forretningssted i flere land, hvorav flere enn to er utenfor Norge
+          </option>
+          <option
+            value="FO_987_2009_ART14_11"
+          >
+            14.11: Forordning 987, artikkel 14: arbeidsgiver utenfor EU/EØS-område
+          </option>
+        </select>
       </div>
-    </fieldset>
+    </div>
     <div
       class="enkeltAvklartfakta__skjemafelt"
     >
@@ -265,49 +269,79 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
           class="col col-xs-12"
         >
           <fieldset
-            class="fieldset"
+            class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small"
           >
             <legend
-              class="fieldset__legend"
+              class="navds-fieldset__legend navds-label navds-label--small"
             >
               Landet søkeren skal omfattes i:
             </legend>
             <div
-              class="skjemaelement"
+              class="navds-radio-buttons"
             >
-              <input
-                aria-invalid="false"
-                class="skjemaelement__input radioknapp"
-                id="123"
-                name="OMFATTES_I_NORGE"
-                type="radio"
-                value="TRUE"
-              />
-              <label
-                class="skjemaelement__label"
-                for="123"
+              <div
+                class="navds-radio navds-radio--small"
               >
-                Norge
-              </label>
+                <input
+                  aria-labelledby="aksel-id-3"
+                  class="navds-radio__input"
+                  id="123"
+                  name="OMFATTES_I_NORGE"
+                  type="radio"
+                  value="TRUE"
+                />
+                <label
+                  class="navds-radio__label"
+                  for="123"
+                >
+                  <span
+                    class="navds-radio__content"
+                  >
+                    <span
+                      aria-hidden="true"
+                      class="navds-body-short navds-body-short--small"
+                      id="aksel-id-3"
+                    >
+                      Norge
+                    </span>
+                  </span>
+                </label>
+              </div>
+              <div
+                class="navds-radio navds-radio--small"
+              >
+                <input
+                  aria-labelledby="aksel-id-6"
+                  class="navds-radio__input"
+                  id="123"
+                  name="OMFATTES_I_NORGE"
+                  type="radio"
+                  value="FALSE"
+                />
+                <label
+                  class="navds-radio__label"
+                  for="123"
+                >
+                  <span
+                    class="navds-radio__content"
+                  >
+                    <span
+                      aria-hidden="true"
+                      class="navds-body-short navds-body-short--small"
+                      id="aksel-id-6"
+                    >
+                      Annet
+                    </span>
+                  </span>
+                </label>
+              </div>
             </div>
             <div
-              class="skjemaelement"
-            >
-              <input
-                aria-invalid="false"
-                class="skjemaelement__input radioknapp"
-                id="123"
-                name="OMFATTES_I_NORGE"
-                type="radio"
-                value="FALSE"
-              />
-              <label
-                class="skjemaelement__label"
-                for="123"
-              >
-                Annet
-              </label>
-            </div>
+              aria-live="polite"
+              aria-relevant="additions removals"
+              class="navds-fieldset__error"
+              id="fieldset-error-aksel-id-8"
+            />
           </fieldset>
         </div>
       </div>

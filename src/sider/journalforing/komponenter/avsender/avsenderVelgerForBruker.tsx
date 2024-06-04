@@ -5,6 +5,7 @@ import { RootState } from "AppTypes";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 
 import { AvsenderUtenlandskTrygdemyndighet, AvsenderAnnenPersonEllerVirksomhet } from "./index";
@@ -88,44 +89,22 @@ const AvsenderVelgerForBruker = ({
 
   return (
     <div>
-      <Skjema.RadioGruppe feltNavn="avsenderType" label="Hvem er avsender?">
-        <Skjema.Radio
-          feltNavn="avsenderType"
-          label="Bruker"
-          value={MKV.Koder.avsendertyper.PERSON}
-          className="avsendervelger__radio"
-        />
-        <Skjema.Radio
-          feltNavn="avsenderType"
-          label="Annen person eller virksomhet"
-          value={KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET}
-          className="avsendervelger__radio"
-        />
+      <Skjema.RadioGroup legend="Hvem er avsender?" name="avsenderType" size="medium">
+        <Nav.Radio value={MKV.Koder.avsendertyper.PERSON}>Bruker</Nav.Radio>
+        <Nav.Radio value={KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET}>Annen person eller virksomhet</Nav.Radio>
         {formValues.avsenderType === KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET && (
           <AvsenderAnnenPersonEllerVirksomhet hentOgVisAvsender={hentOgVisAvsender} />
         )}
-        <Skjema.Radio
-          feltNavn="avsenderType"
-          label="Utenlandsk trygdemyndighet"
-          value={MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET}
-          className="avsendervelger__radio"
-        />
+        <Nav.Radio value={MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET}>Utenlandsk trygdemyndighet</Nav.Radio>
         {formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET && (
           <AvsenderUtenlandskTrygdemyndighet
             utenlandskTrygdemyndighetLandkode={formValues.utenlandskTrygdemyndighetLandkode}
             fullmektigLandEndret={fullmektigLandEndret}
           />
         )}
-        <Skjema.Radio
-          feltNavn="avsenderType"
-          label="Fritekst"
-          value={KV.AvsenderTyper.FRITEKST}
-          className="avsendervelger__radio"
-        />
-        {formValues.avsenderType === KV.AvsenderTyper.FRITEKST && (
-          <Skjema.Input label="" feltNavn="avsenderNavn" bredde="fullbredde" />
-        )}
-      </Skjema.RadioGruppe>
+        <Nav.Radio value={KV.AvsenderTyper.FRITEKST}>Fritekst</Nav.Radio>
+        {formValues.avsenderType === KV.AvsenderTyper.FRITEKST && <Skjema.Input label="" feltNavn="avsenderNavn" />}
+      </Skjema.RadioGroup>
     </div>
   );
 };

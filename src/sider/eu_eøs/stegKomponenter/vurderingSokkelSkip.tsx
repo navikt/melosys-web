@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { ChangeEvent, useEffect } from "react";
+import { useEffect } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
@@ -77,8 +77,7 @@ const VurderingSokkelSkip = ({
     oppdaterData(lagAvklartefaktaBegrunnelse(type, subjektID, [verdi]));
   };
 
-  const konklusjonEndretHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
+  const konklusjonEndretHandler = (value: string) => {
     avklartefaktaEndret(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, null, value);
 
     if (value === KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK) {
@@ -122,51 +121,35 @@ const VurderingSokkelSkip = ({
           <Nav.Alert variant="warning">Det er registrert flere maritime arbeid med samme navn.</Nav.Alert>
         </div>
       )}
-      <Nav.Fieldset legend="Hvordan arbeider søkeren:">
+      <Nav.RadioGroup
+        legend="Hvordan arbeider søkeren:"
+        onChange={konklusjonEndretHandler}
+        disabled={!redigerbart}
+        name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
+        defaultValue={fakta}
+      >
         <Nav.Radio
-          name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
           disabled={
-            !redigerbart ||
-            (konvensjonStorbritanniaToggleEnabled
-              ? MKVUtils.erUtsendt(behandlingstema)
-              : behandlingstema === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER)
-          }
-          onChange={konklusjonEndretHandler}
-          checked={fakta === VurderingSokkelSkipTyper.SOKKEL_NORSK}
-          value={VurderingSokkelSkipTyper.SOKKEL_NORSK}
-          label="På norsk sokkel eller innenfor norsk territorialfarvann (art. 11.3.a)"
-        />
-        <Nav.Radio
-          name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
-          disabled={!redigerbart}
-          onChange={konklusjonEndretHandler}
-          checked={fakta === VurderingSokkelSkipTyper.SKIP_ETT_LAND}
-          value={VurderingSokkelSkipTyper.SKIP_ETT_LAND}
-          label="På skip registrert i ett land"
-        />
-        <Nav.Radio
-          name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
-          disabled={!redigerbart}
-          onChange={konklusjonEndretHandler}
-          checked={fakta === VurderingSokkelSkipTyper.SOKKEL_UTLAND}
-          value={VurderingSokkelSkipTyper.SOKKEL_UTLAND}
-          label={
             konvensjonStorbritanniaToggleEnabled
-              ? "Utsendt til sokkel eller til annet lands territorialfarvann"
-              : "Utsendt til sokkel eller til annet lands territorialfarvann (art. 12)"
+              ? MKVUtils.erUtsendt(behandlingstema)
+              : behandlingstema === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
           }
-        />
+          value={VurderingSokkelSkipTyper.SOKKEL_NORSK}
+        >
+          På norsk sokkel eller innenfor norsk territorialfarvann (art. 11.3.a)
+        </Nav.Radio>
+        <Nav.Radio value={VurderingSokkelSkipTyper.SKIP_ETT_LAND}>På skip registrert i ett land</Nav.Radio>
+        <Nav.Radio value={VurderingSokkelSkipTyper.SOKKEL_UTLAND}>
+          {konvensjonStorbritanniaToggleEnabled
+            ? "Utsendt til sokkel eller til annet lands territorialfarvann"
+            : "Utsendt til sokkel eller til annet lands territorialfarvann (art. 12)"}
+        </Nav.Radio>
         {!konvensjonStorbritanniaToggleEnabled && (
-          <Nav.Radio
-            name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
-            disabled
-            onChange={konklusjonEndretHandler}
-            checked={fakta === VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND}
-            value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND}
-            label="To sokler / skip i flere land (art. 13)"
-          />
+          <Nav.Radio disabled value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND}>
+            To sokler / skip i flere land (art. 13)
+          </Nav.Radio>
         )}
-      </Nav.Fieldset>
+      </Nav.RadioGroup>
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !(redigerbart && harAvklaring),

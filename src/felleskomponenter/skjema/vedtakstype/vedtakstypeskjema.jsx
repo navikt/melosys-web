@@ -1,18 +1,15 @@
 import PT from "prop-types";
 import * as MKV from "@navikt/melosys-kodeverk";
-import Radio from "../input/radio";
-import RadioGruppe from "../input/radio-gruppe";
+import * as Nav from "../../../navFrontend";
+import { RadioGroup } from "../index";
 
 const VedtakstypeSkjema = ({ className, redigerbart, feltNavn, label }) => (
-  <RadioGruppe className={className} feltNavn={feltNavn} label={label}>
-    <Radio
-      feltNavn={feltNavn}
-      label="Korrigert vedtak"
-      value={MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK}
-      disabled={!redigerbart}
-    />
-    <Radio feltNavn={feltNavn} label="Omgjøringsvedtak" value={MKV.Koder.vedtakstyper.OMGJØRINGSVEDTAK} disabled />
-  </RadioGruppe>
+  <RadioGroup className={className} name={feltNavn} legend={label} disabled={!redigerbart}>
+    <Nav.Radio value={MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK}>Korrigert vedtak</Nav.Radio>
+    <Nav.Radio value={MKV.Koder.vedtakstyper.OMGJØRINGSVEDTAK} disabled>
+      Omgjøringsvedtak
+    </Nav.Radio>
+  </RadioGroup>
 );
 
 VedtakstypeSkjema.propTypes = {

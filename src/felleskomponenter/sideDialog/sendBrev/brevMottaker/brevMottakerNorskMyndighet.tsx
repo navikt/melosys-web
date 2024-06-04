@@ -42,11 +42,12 @@ const BrevMottakerNorskMyndighet = () => {
         <Nav.Column xs="12">
           {tilgjengeligeNorskeMyndigheter?.map((norskMyndighet) => (
             <Nav.Checkbox
-              label={norskMyndighet.navn}
               key={norskMyndighet.orgnr}
               checked={valgteNorskeMyndigheter.includes(norskMyndighet.orgnr)}
               onChange={() => handleCheckboxChange(norskMyndighet.orgnr)}
-            />
+            >
+              {norskMyndighet.navn}
+            </Nav.Checkbox>
           ))}
         </Nav.Column>
       </Nav.Row>

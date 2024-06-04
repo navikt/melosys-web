@@ -4,15 +4,7 @@ import Journalforingform from "./journalforingform";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 import { testReduxState } from "./testReduxState";
 import userEvent from "@testing-library/user-event";
-import { fireEvent } from "@testing-library/react";
-
-// TODO: Finn en bedre måte å querye denne radioknappen på
-const HENLAGT_SAK_RADIO_NAME =
-  "EU/EØS-land - Medlemskap og lovvalg MEL-26 Pensjonist/uføretrygdet Førstegangsbehandling Land: (ukjent) Behandlingen er avsluttet";
-const HENLAGT_BORTFALT_SAK_RADIO_NAME =
-  "EU/EØS-land - Medlemskap og lovvalg MEL-27 Pensjonist/uføretrygdet Førstegangsbehandling Land: (ukjent) Behandlingen er avsluttet";
-const OPPRETTET_SAK_RADIO_NAME =
-  "EU/EØS-land - Medlemskap og lovvalg MEL-23 Pensjonist/uføretrygdet Førstegangsbehandling Land: (ukjent) Behandlingen er avsluttet";
+import { fireEvent, queryByAttribute } from "@testing-library/react";
 
 const { EU_EOS, TRYGDEAVTALE, FTRL } = MKV.Terms.sakstyper;
 const { MEDLEMSKAP_LOVVALG, UNNTAK, TRYGDEAVGIFT } = MKV.Terms.sakstemaer;
@@ -108,6 +100,7 @@ vi.mock("../../../../services/modules/lovligekombinasjoner", async () => {
 
 describe("JournalforingForm", () => {
   let props = null;
+  const getById = queryByAttribute.bind(null, "id");
 
   beforeEach(() => {
     props = {
@@ -119,6 +112,7 @@ describe("JournalforingForm", () => {
       submitJournalforing: vi.fn(),
       avbrytJournalforing: vi.fn(),
       settFeltInnhold: vi.fn(),
+      mottaksKanalErEessi: false,
     };
   });
 
@@ -206,47 +200,47 @@ describe("JournalforingForm", () => {
   });
 
   it("skalTilordnes vises ikke når sak har saksstatus HENLAGT", async () => {
-    const { findByLabelText, queryByLabelText, findByRole } = renderWithProviders(<Journalforingform {...props} />, {
+    const { container, findByLabelText, queryByLabelText } = renderWithProviders(<Journalforingform {...props} />, {
       preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Eksisterende sak"));
-    await user.click(await findByRole("radio", { name: HENLAGT_SAK_RADIO_NAME }));
+    await user.click(await getById(container, "saksnummer-MEL-26"));
     expect(queryByLabelText("Legg behandlingen i mine oppgaver")).not.toBeInTheDocument();
   });
 
   it("skalTilordnes vises ikke når sak har saksstatus HENLAGT_BORFALT", async () => {
-    const { findByLabelText, queryByLabelText, findByRole } = renderWithProviders(<Journalforingform {...props} />, {
+    const { container, findByLabelText, queryByLabelText } = renderWithProviders(<Journalforingform {...props} />, {
       preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Eksisterende sak"));
-    await user.click(await findByRole("radio", { name: HENLAGT_BORTFALT_SAK_RADIO_NAME }));
+    await user.click(await getById(container, "saksnummer-MEL-27"));
     expect(queryByLabelText("Legg behandlingen i mine oppgaver")).not.toBeInTheDocument();
   });
 
   it("sending av forvaltningsmelding vises når man knytter til sak sakstema MEDLEMSKAP_LOVVALG og behandling NY_VURDERING", async () => {
-    const { findByLabelText, getByText, findByRole } = renderWithProviders(<Journalforingform {...props} />, {
+    const { container, findByLabelText, getByText } = renderWithProviders(<Journalforingform {...props} />, {
       preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Eksisterende sak"));
-    await user.click(await findByRole("radio", { name: OPPRETTET_SAK_RADIO_NAME }));
+    await user.click(await getById(container, "saksnummer-MEL-23"));
     await user.click(await findByLabelText(NY_VURDERING));
     expect(getByText("Melding om saksbehandlingstid")).toBeInTheDocument();
   });
 
   it("sending av forvaltningsmelding vises ikke når man knytter til sak sakstema MEDLEMSKAP_LOVVALG og behandlingstype KLAGE", async () => {
-    const { findByLabelText, queryByText, findByRole } = renderWithProviders(<Journalforingform {...props} />, {
+    const { container, findByLabelText, queryByText } = renderWithProviders(<Journalforingform {...props} />, {
       preloadedState: testReduxState,
     });
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Eksisterende sak"));
-    await user.click(await findByRole("radio", { name: OPPRETTET_SAK_RADIO_NAME }));
+    await user.click(await getById(container, "saksnummer-MEL-23"));
     await user.click(await findByLabelText(KLAGE));
     expect(queryByText("Melding om saksbehandlingstid")).not.toBeInTheDocument();
   });

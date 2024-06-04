@@ -13,7 +13,7 @@ import "./listevelger.css";
  */
 const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatFritekst, disabled }) => {
   const element = tillatFritekst ? (
-    <Nav.Input
+    <Nav.TextField
       value={label}
       label=""
       className="listevelger__linje__input"
@@ -191,10 +191,10 @@ class ListevelgerFlervalg extends Component {
       <div>
         {visValgtListe && byggValgtListe(alleFelter)}
         <div className="listevelger__linje">
-          <Nav.Input
+          <Nav.TextField
             id={`listevelger-${fields.name}`}
             label={label}
-            feil={feil}
+            error={feil}
             placeholder={placeholder}
             onChange={this.vedEndring}
             onKeyDown={this.vedTastNed}

@@ -299,17 +299,17 @@ const OpprettNySak = ({
                 className="undertittel"
                 understrek
               />
-              <Nav.RadioPanelGruppe
-                name="hovedpart"
-                legend=""
-                radios={[
-                  { label: "Bruker", value: BRUKER, id: BRUKER },
-                  { label: "Virksomhet", value: VIRKSOMHET, id: VIRKSOMHET },
-                ]}
-                checked={hovedpart}
-                onChange={(event, value) => change("hovedpart", value)}
-                className="hovedpart innrykk"
-              />
+              <div className="innrykk">
+                <Nav.RadioGroup
+                  defaultValue={BRUKER}
+                  onChange={(value) => change("hovedpart", value)}
+                  legend=""
+                  hideLegend
+                >
+                  <Nav.Radio value={BRUKER}>Bruker</Nav.Radio>
+                  <Nav.Radio value={VIRKSOMHET}>Virksomhet</Nav.Radio>
+                </Nav.RadioGroup>
+              </div>
             </div>
             <div className="seksjon">
               {hovedpartErBruker ? (
