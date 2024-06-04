@@ -64,8 +64,8 @@ const SokkelSkipEnkelt = ({
     };
   }, []);
 
-  const sokkelSkipEndret = (event: ChangeEvent<HTMLInputElement>) =>
-    avklartefaktaEndretHandler(SOKKEL_ELLER_SKIP, maritimtArbeid.enhetNavn!!, event.target.value);
+  const sokkelSkipEndret = (value: string) =>
+    avklartefaktaEndretHandler(SOKKEL_ELLER_SKIP, maritimtArbeid.enhetNavn!!, value);
 
   const begrunnelserEndret = (event: ChangeEvent<HTMLSelectElement>) =>
     avklartefaktaBegrunnelserEndretHandler(SOKKEL_ELLER_SKIP, maritimtArbeid.enhetNavn!!, event.target.value);
@@ -82,24 +82,22 @@ const SokkelSkipEnkelt = ({
     <Nav.Row className="sokkelSkip__liste__rad">
       <Nav.Column xs="3">{maritimtArbeid.enhetNavn}</Nav.Column>
       <Nav.Column xs="2">
-        <Nav.Radio
-          name={key}
-          disabled={sokkelSkipDisabled}
+        <Nav.RadioGroup
+          legend=""
+          hideLegend
           onChange={sokkelSkipEndret}
-          value={SOKKEL}
-          checked={installasjonsType === SOKKEL}
-          label="Sokkel"
-          id={Utils._uuid()}
-        />
-        <Nav.Radio
-          name={key}
           disabled={sokkelSkipDisabled}
-          onChange={sokkelSkipEndret}
-          checked={installasjonsType === SKIP}
-          value={SKIP}
-          label="Skip"
-          id={Utils._uuid()}
-        />
+          defaultValue={installasjonsType}
+          name={key}
+          size="small"
+        >
+          <Nav.Radio value={SOKKEL} id={Utils._uuid()}>
+            Sokkel
+          </Nav.Radio>
+          <Nav.Radio value={SKIP} id={Utils._uuid()}>
+            Skip
+          </Nav.Radio>
+        </Nav.RadioGroup>
       </Nav.Column>
       {installasjonsType === SOKKEL && (
         <Nav.Column xs="3">

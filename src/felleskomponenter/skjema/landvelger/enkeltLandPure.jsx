@@ -119,11 +119,11 @@ class EnkeltLandPure extends Component {
 
     return (
       <div>
-        <Nav.Input
+        <Nav.TextField
           list={dataListID}
           label={label}
           bredde={bredde}
-          feil={feilObjekt}
+          error={feilObjekt}
           className={cl}
           value={inputVerdi}
           onBlur={fokusUtHandler}

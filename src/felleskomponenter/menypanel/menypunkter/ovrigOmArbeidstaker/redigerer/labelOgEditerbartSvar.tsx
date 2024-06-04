@@ -1,38 +1,19 @@
-import { ReactNode } from "react";
-
 import * as Nav from "../../../../../navFrontend";
-import * as Skjema from "../../../../skjema";
 
 import "./labelOgEditerbartSvar.css";
-
-interface RadioknappSvarProps {
-  feltNavn: string;
-}
-
-export const RadioknappSvar = ({ feltNavn }: RadioknappSvarProps) => (
-  <>
-    <Skjema.Radio label="Ja" feltNavn={feltNavn} value />
-    <Skjema.Radio label="Nei" feltNavn={feltNavn} value={false} />
-  </>
-);
+import * as Skjema from "../../../../skjema";
 
 interface LabelOgEditerbartSvarProps {
   label: string;
-  svar: ReactNode;
+  feltNavn: string;
 }
 
-const LabelOgEditerbartSvar = ({ label, svar }: LabelOgEditerbartSvarProps) => (
+const LabelOgEditerbartSvar = ({ label, feltNavn }: LabelOgEditerbartSvarProps) => (
   <Nav.Row className="ovrig-om-arbeidstaker__label-og-editerbart-svar">
-    <fieldset>
-      <Nav.Column xs="8">
-        <legend>
-          <Nav.Typo.Normaltekst>{label}</Nav.Typo.Normaltekst>
-        </legend>
-      </Nav.Column>
-      <Nav.Column xs="4" className="col">
-        {svar}
-      </Nav.Column>
-    </fieldset>
+    <Skjema.RadioGroup legend={label} name={feltNavn}>
+      <Nav.Radio value>Ja</Nav.Radio>
+      <Nav.Radio value={false}>Nei</Nav.Radio>
+    </Skjema.RadioGroup>
   </Nav.Row>
 );
 

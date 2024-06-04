@@ -220,7 +220,7 @@ const byggAvslaattLovvalgsperiode = (reduxState: RootState, lovvalgsbestemmelse:
 
 const hentLovvalgsbestemmelseForAvslag = (reduxState: RootState) => {
   if (
-    avklartefaktaSelectors.Yrkesaktivitet(reduxState) ===
+    avklartefaktaSelectors.YrkesaktivitetSelector(reduxState) ===
     KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE
   ) {
     return MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2;

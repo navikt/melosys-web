@@ -183,33 +183,28 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
           {skalBrukeFlereLandUkjentHvilke ? (
             <Nav.Column className="land_wrapper">
-              {behandlingstema === YRKESAKTIV ? (
-                <Nav.Typo.Element className="land">
-                  <LabelMedHjelpetekst
-                    label="Arbeidsland"
-                    hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                  />
-                </Nav.Typo.Element>
-              ) : (
-                <Nav.Typo.Element className="land">Land</Nav.Typo.Element>
-              )}
-              <Forms.Radio
-                label="Flere land, ikke kjent hvilke"
-                name="flereLandUkjentHvilke"
+              <Forms.RadioGroup
+                legend={
+                  behandlingstema === YRKESAKTIV ? (
+                    <Nav.Typo.Element className="land">
+                      <LabelMedHjelpetekst
+                        label="Arbeidsland"
+                        hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
+                      />
+                    </Nav.Typo.Element>
+                  ) : (
+                    <Nav.Typo.Element className="land">Land</Nav.Typo.Element>
+                  )
+                }
                 control={control}
-                value={BOOLSK_STRING.SANN}
-                disabled={!redigerbart}
-                className="flereLandUkjente"
-                onChange={() => setValue("land", [])}
-              />
-              <Forms.Radio
-                label="Velg land fra liste"
                 name="flereLandUkjentHvilke"
-                control={control}
-                value={BOOLSK_STRING.USANN}
                 disabled={!redigerbart}
-                className={flereLandUkjentHvilkeErUSANN ? "flereLandUkjentHvilke flereLand" : "flereLandUkjentHvilke"}
-              />
+              >
+                <Nav.Radio value={BOOLSK_STRING.SANN} onChange={() => setValue("land", [])}>
+                  Flere land, ikke kjent hvilke
+                </Nav.Radio>
+                <Nav.Radio value={BOOLSK_STRING.USANN}>Velg land fra liste</Nav.Radio>
+              </Forms.RadioGroup>
               {flereLandUkjentHvilkeErUSANN && (
                 <Forms.MultiSelect
                   label=""

@@ -2,7 +2,7 @@ import { ChangeEvent, ComponentProps, useState } from "react";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
-type InputProps = Omit<ComponentProps<typeof Nav.Input>, "onChange" | "onBlur">;
+type InputProps = Omit<ComponentProps<typeof Nav.TextField>, "onChange" | "onBlur">;
 
 export type FellesInputFnrDnrOrgnrSaksnrProps = InputProps & {
   value?: string;
@@ -12,7 +12,7 @@ export type FellesInputFnrDnrOrgnrSaksnrProps = InputProps & {
 
 const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
   label,
-  feil,
+  error,
   onChange,
   onBlur,
   ...props
@@ -40,10 +40,10 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
   };
 
   return (
-    <Nav.Input
+    <Nav.TextField
       label={label}
       value={inputVerdi}
-      feil={feil}
+      error={error}
       onChange={handleChange}
       onBlur={handleBlur}
       id={Utils._uuid()}

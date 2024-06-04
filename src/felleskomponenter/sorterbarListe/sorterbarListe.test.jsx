@@ -13,7 +13,7 @@ describe("SorterbarListe", () => {
   beforeEach(() => {
     props = {
       component: JournalforingOppgave,
-      defaultChecked: "nyeste",
+      defaultChecked: "descending",
       sortingLegend: "Sorter journalføringsoppgaver etter frist:",
       sortingPath: "aktivTil",
       elementer: [
@@ -52,7 +52,7 @@ describe("SorterbarListe", () => {
   });
 
   it("kan sortere slik at nyeste element kommer først", async () => {
-    props.defaultChecked = "eldste";
+    props.defaultChecked = "ascending";
     const { findByLabelText, findAllByRole } = renderWithProviders(
       <Router>
         <WrappedSorterbarListe {...props} />

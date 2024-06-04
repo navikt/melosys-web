@@ -21,6 +21,7 @@ import "./vurderingTrygdeavgift.css";
 import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/meldinger";
 import { Skatteforholdsperioder } from "./komponenter/skatteforholdsperioder";
 import MKV from "../../../../../melosyskodeverk";
+import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../../../services/modules/trygdeavgift";
 
 interface Props {
   bekreft: () => void;
@@ -45,9 +46,12 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
-  const [harHentetGrunnlag, setHarHentetGrunnlag] = useState(false);
   const [harEndretInnvilgetMedlemskapsperiode, setHarEndretInnvilgetMedlemskapsperiode] = useState<boolean | undefined>(
     undefined
+  );
+
+  const alleTrygdeavgiftsperioderHarNullBeløp = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
+    (periode) => periode.avgiftPerMd === 0
   );
 
   const medlemskapsTypeErPliktig = medlemskapsperioder.every(
@@ -57,6 +61,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
     tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
   };
+  const erÅpenSluttDato = !innvilgetMedlemskapsperiode?.tom;
 
   const {
     control,
@@ -65,7 +70,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
-    context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig, sluttdatoKanVæreÅpen: true },
+    context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig, erÅpenSluttDato },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
@@ -113,32 +118,56 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     }
   }, [innvilgetMedlemskapsperiode]);
 
+  const håndterLagretTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto) => {
+    const { inntektskilder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
+    const sorterteInntekstkilder = inntektskilder?.sort(Utils.dato.sorterEtterISOFomDato);
+    const sorterteSkatteforhold = skatteforholdsperioder?.sort(Utils.dato.sorterEtterISOFomDato);
+    resetSkatteforholdsperioder(
+      !Utils._isEmpty(sorterteSkatteforhold)
+        ? sorterteSkatteforhold.map((skatteforhold) => ({
+            fomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.fomDato),
+            tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
+            skatteplikttype: skatteforhold.skatteplikttype,
+          }))
+        : [defaultPeriode]
+    );
+    resetInntektskilder(
+      !Utils._isEmpty(sorterteInntekstkilder)
+        ? sorterteInntekstkilder.map((inntektskilde) => ({
+            kildetype: inntektskilde.type,
+            arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
+            bruttoInntekt: inntektskilde.avgiftspliktigInntektMnd,
+            fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
+            tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
+          }))
+        : [defaultPeriode]
+    );
+  };
+
+  const håndterTrygdeavgiftsberegning = (beregnetTrygdeavgift: BeregnetTrygdeavgift) => {
+    setTrygdeavgift(beregnetTrygdeavgift);
+    const lagretTrygdeavgiftsgrunnlag = beregnetTrygdeavgift.trygdeavgiftsgrunnlag;
+    håndterLagretTrygdeavgiftsgrunnlag(lagretTrygdeavgiftsgrunnlag);
+  };
+
+  const hentOpprinneligTrygdeavgiftsgrunnlag = () => {
+    Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag(behandlingID).then(håndterLagretTrygdeavgiftsgrunnlag);
+  };
+
   useEffect(() => {
-    Api.Trygdeavgift.hentTrygdeavgiftsgrunnlaget(behandlingID).then((lagretTrygdeavgiftsgrunnlag) => {
-      const { inntektskilder, skatteforholdsperioder } = lagretTrygdeavgiftsgrunnlag;
-      const sorterteInntekstkilder = inntektskilder?.sort(Utils.dato.sorterEtterISOFomDato);
-      const sorterteSkatteforhold = skatteforholdsperioder?.sort(Utils.dato.sorterEtterISOFomDato);
-      resetSkatteforholdsperioder(
-        !Utils._isEmpty(sorterteSkatteforhold)
-          ? sorterteSkatteforhold.map((skatteforhold) => ({
-              fomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.fomDato),
-              tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
-              skatteplikttype: skatteforhold.skatteplikttype,
-            }))
-          : [defaultPeriode]
-      );
-      resetInntektskilder(
-        !Utils._isEmpty(sorterteInntekstkilder)
-          ? sorterteInntekstkilder.map((inntektskilde) => ({
-              kildetype: inntektskilde.type,
-              arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
-              bruttoInntekt: inntektskilde.avgiftspliktigInntektMnd,
-              fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
-              tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
-            }))
-          : [defaultPeriode]
-      );
-      setHarHentetGrunnlag(true);
+    if (erÅpenSluttDato) {
+      setTrygdeavgift(undefined);
+      return;
+    }
+    Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID).then((beregnetTrygdeavgift) => {
+      if (
+        behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
+        beregnetTrygdeavgift.trygdeavgiftsgrunnlag.skatteforholdsperioder.length === 0
+      ) {
+        hentOpprinneligTrygdeavgiftsgrunnlag();
+      } else {
+        håndterTrygdeavgiftsberegning(beregnetTrygdeavgift);
+      }
     });
   }, []);
 
@@ -146,11 +175,12 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     oppdaterStatus(stegErGyldig && harBeregnetForeløpigTrygdeavgift);
   }, [stegErGyldig, harBeregnetForeløpigTrygdeavgift]);
 
-  const lagreTrygdeavgiftsgrunnlag = (formVerdier: FieldValue<FormValuesProps>) => {
+  const beregnTrygdeavgiftsperioder = (formVerdier: FieldValue<FormValuesProps>) => {
+    setFeil(undefined);
     setLagrePending(true);
     const erBrukerPliktigMedlemOgSkattepliktig =
       medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
-    Api.Trygdeavgift.oppdaterTrygdeavgiftsgrunnlag(behandlingID, {
+    Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
       skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
         fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
         tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato, null),
@@ -166,8 +196,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
           }))
         : [],
     })
-      .then(() => {
+      .then((beregnetTrygdeavgift) => {
         setFeil(undefined);
+        setTrygdeavgift(beregnetTrygdeavgift);
       })
       .catch((error) => setFeil(mapFeilmelding(error)))
       .finally(() => setLagrePending(false));
@@ -185,15 +216,14 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     return error.body?.feilkoder || error.body?.message || error;
   };
 
-  const debouncedLagreTrygdeavgiftsgrunnlag = useCallback(
-    Utils._debounce((formVerdier, isValid) => isValid && lagreTrygdeavgiftsgrunnlag(formVerdier), 500),
+  const debounceBeregnTrygdeavgiftsperioder = useCallback(
+    Utils._debounce((formVerdier, isValid) => isValid && beregnTrygdeavgiftsperioder(formVerdier), 500),
     []
   );
 
   useEffect(() => {
-    if (redigerbart && harHentetGrunnlag) setTrygdeavgift(undefined);
-    if (redigerbart && aktivtSteg && !isValidating) {
-      debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
+    if (redigerbart && aktivtSteg && !isValidating && !erÅpenSluttDato) {
+      debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
     }
   }, [
     formIsValid,
@@ -215,22 +245,12 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
           trigger(`inntektskilder[${index}].tomDato`);
         });
       }
-      if (feil || harEndretInnvilgetMedlemskapsperiode) {
-        debouncedLagreTrygdeavgiftsgrunnlag(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
+      if (!erÅpenSluttDato && (feil || harEndretInnvilgetMedlemskapsperiode)) {
+        debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
         setHarEndretInnvilgetMedlemskapsperiode(false);
       }
     }
   }, [aktivtSteg, harEndretInnvilgetMedlemskapsperiode]);
-
-  const handleBeregnTrygdeavgift = () => {
-    setTrygdeavgift(undefined);
-    Api.Trygdeavgift.beregnTrygdeavgift(behandlingID)
-      .then((response) => {
-        setFeil(undefined);
-        setTrygdeavgift(response);
-      })
-      .catch((error) => setFeil(mapFeilmelding(error)));
-  };
 
   if (!aktivtSteg) return null;
 
@@ -246,49 +266,47 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.Typo.Normaltekst>
       )}
 
-      <Nav.Row>
-        <Nav.Column>
-          <Skatteforholdsperioder
+      {!erÅpenSluttDato && (
+        <Nav.Row>
+          <Nav.Column>
+            <Skatteforholdsperioder
+              formValues={formValues}
+              redigerbart={redigerbart}
+              remove={skattRemove}
+              append={skattAppend}
+              control={control}
+              defaultPeriode={defaultPeriode}
+              fields={skattFields}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
+      {!(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) &&
+        !erÅpenSluttDato && (
+          <Inntektskilder
             formValues={formValues}
             redigerbart={redigerbart}
-            remove={skattRemove}
-            append={skattAppend}
+            update={inntektUpdate}
+            remove={inntektRemove}
+            append={inntektAppend}
             control={control}
             defaultPeriode={defaultPeriode}
-            fields={skattFields}
+            fields={inntektFields}
+            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
           />
-        </Nav.Column>
-      </Nav.Row>
-
-      {!(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) && (
-        <Inntektskilder
-          formValues={formValues}
-          redigerbart={redigerbart}
-          update={inntektUpdate}
-          remove={inntektRemove}
-          append={inntektAppend}
-          control={control}
-          defaultPeriode={defaultPeriode}
-          fields={inntektFields}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
-        />
-      )}
-
-      {skalBeregneForelopigTrygdeavgift && (
-        <Nav.Button
-          variant="secondary"
-          className="beregnKnapp"
-          disabled={lagrePending || !redigerbart || !stegErGyldig || isValidating}
-          onClick={handleBeregnTrygdeavgift}
-        >
-          Beregn foreløpig trygdeavgift
-        </Nav.Button>
-      )}
+        )}
 
       <Feilmelding type={aktivFeilmeldingType} />
 
-      {trygdeavgiftErIkkeTom && stegErGyldig && (
-        <TrygdeavgiftsperioderTabell perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!} />
+      {trygdeavgiftErIkkeTom && !alleTrygdeavgiftsperioderHarNullBeløp && stegErGyldig && (
+        <>
+          <Nav.Typo.Undertittel>Foreløpig beregnet trygdeavgift</Nav.Typo.Undertittel>
+          <TrygdeavgiftsperioderTabell
+            lagrePending={lagrePending}
+            perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!}
+          />
+        </>
       )}
 
       {visFeilFraLagring && (
@@ -297,9 +315,16 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.Alert>
       )}
 
-      {!skalBeregneForelopigTrygdeavgift && stegErGyldig && (
+      {!erÅpenSluttDato && !skalBeregneForelopigTrygdeavgift && stegErGyldig && (
         <Nav.Alert variant="info" className="infomelding">
           Trygdeavgift skal ikke betales til NAV
+        </Nav.Alert>
+      )}
+
+      {erÅpenSluttDato && (
+        <Nav.Alert variant="info" className="infomelding">
+          Trygdeavgift kan ikke beregnes for medlemskapsperiode uten sluttdato. Hvis personen skal betale trygdeavgift
+          til NAV må du angi sluttdato på medlemskapsperiode.
         </Nav.Alert>
       )}
 

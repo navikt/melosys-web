@@ -62,9 +62,8 @@ const Orgnrinput = ({
         onChange={onChange}
         value={orgnr}
         disabled={!redigerbart}
-        bredde="fullbredde"
         placeholder="Skriv inn..."
-        feil={!hasFocus && feil ? feil : undefined}
+        error={!hasFocus && feil ? feil : undefined}
         onFocus={() => setHasFocus(true)}
         onBlur={() => setHasFocus(false)}
       />

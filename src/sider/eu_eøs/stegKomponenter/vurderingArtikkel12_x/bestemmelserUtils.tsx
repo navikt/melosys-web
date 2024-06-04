@@ -21,6 +21,13 @@ const {
   KONV_EFTA_STORBRITANNIA_ART18_1,
 } = MKV.Koder.vilkaar;
 
+const { FO_883_2004_ART11_4_1, FO_883_2004_ART11_5 } = MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004;
+const { KONV_EFTA_STORBRITANNIA_ART13_4_1, KONV_EFTA_STORBRITANNIA_ART13_5 } =
+  MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_konv_efta_storbritannia;
+
+const { SOKKEL_ELLER_SKIP, FLYENDE_PERSONELL } = KV.Koder.VurderingYrkesgruppeTyper;
+const { SKIP_ETT_LAND } = KV.Koder.VurderingSokkelSkipTyper;
+
 export enum VedtakValg {
   JA_INNVILGE = "JA_INNVILGE",
   NEI_ANMODNING_UNNTAK = "NEI_ANMODNING_UNNTAK",
@@ -89,3 +96,37 @@ export const hentRelevantUtsendelseArtikkel14 = (erArbeidstaker: boolean): strin
   erArbeidstaker ? KONV_EFTA_STORBRITANNIA_ART14_1 : KONV_EFTA_STORBRITANNIA_ART14_2;
 export const hentRelevantUtsendelseArtikkel16 = (erArbeidstaker: boolean): string =>
   erArbeidstaker ? KONV_EFTA_STORBRITANNIA_ART16_1 : KONV_EFTA_STORBRITANNIA_ART16_3;
+
+export const finnTilleggsbestemmelse = (
+  lovvalgsbestemmelse: string,
+  yrkesgruppeFakta: string | undefined,
+  arbeidPåSkipFakta: string | undefined
+): string | undefined => {
+  if (yrkesgruppeFakta === FLYENDE_PERSONELL) {
+    switch (lovvalgsbestemmelse) {
+      case KONV_EFTA_STORBRITANNIA_ART14_1:
+      case KONV_EFTA_STORBRITANNIA_ART14_2:
+        return KONV_EFTA_STORBRITANNIA_ART13_5;
+      case FO_883_2004_ART12_1:
+      case FO_883_2004_ART12_2:
+        return FO_883_2004_ART11_5;
+      default:
+        return undefined;
+    }
+  }
+
+  if (yrkesgruppeFakta === SOKKEL_ELLER_SKIP && arbeidPåSkipFakta === SKIP_ETT_LAND) {
+    switch (lovvalgsbestemmelse) {
+      case KONV_EFTA_STORBRITANNIA_ART14_1:
+      case KONV_EFTA_STORBRITANNIA_ART14_2:
+        return KONV_EFTA_STORBRITANNIA_ART13_4_1;
+      case FO_883_2004_ART12_1:
+      case FO_883_2004_ART12_2:
+        return FO_883_2004_ART11_4_1;
+      default:
+        return undefined;
+    }
+  }
+
+  return undefined;
+};

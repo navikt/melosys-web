@@ -37,8 +37,20 @@ class StegState {
 
   oppdaterStegData = (stegID, { felt, innhold }) => {
     const eksisterendeFelt = this.hentStegMedFelt(stegID, felt);
-    const oppdaterFelt = this.oppdaterfelt(eksisterendeFelt, innhold);
-    this.lagreFelt(stegID, felt, oppdaterFelt);
+    const oppdatertFelt = this.oppdaterfelt(eksisterendeFelt, innhold);
+    this.lagreFelt(stegID, felt, oppdatertFelt);
+  };
+
+  oppdaterStegDataIAlleSteg = (stegID, { felt, innhold }) => {
+    this.oppdaterStegData(stegID, { felt, innhold });
+    const { stegStore } = this;
+    stegStore.forEach((_value, key) => {
+      const eksisterendeFelt = this.hentStegMedFelt(key, felt);
+      if (eksisterendeFelt && key !== stegID) {
+        const oppdatertFelt = this.oppdaterfelt(eksisterendeFelt, innhold);
+        this.lagreFelt(key, felt, oppdatertFelt);
+      }
+    });
   };
 
   lagreFelt = (stegID, felt, data) => {
