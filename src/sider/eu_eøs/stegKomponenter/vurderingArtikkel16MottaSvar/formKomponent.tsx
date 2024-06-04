@@ -94,26 +94,11 @@ const FormKomponent = ({ redigerbart, formValues, oppdaterData, formIsValid }: F
     <form name="anmodningSvar" id="anmodningSvar" onSubmit={(e) => e.preventDefault()}>
       <Nav.Row className="svarFraMyndighetRow">
         <Nav.Column xs="6">
-          <Nav.Fieldset legend="Svar fra myndighetene">
-            <Skjema.Radio
-              name="svarFraMyndighetene"
-              feltNavn="anmodningsperiodeSvarType"
-              label="Innvilgelse"
-              value={INNVILGELSE}
-            />
-            <Skjema.Radio
-              name="svarFraMyndighetene"
-              feltNavn="anmodningsperiodeSvarType"
-              label="Delvis innvilgelse"
-              value={DELVIS_INNVILGELSE}
-            />
-            <Skjema.Radio
-              name="svarFraMyndighetene"
-              feltNavn="anmodningsperiodeSvarType"
-              label="Avslag"
-              value={AVSLAG}
-            />
-          </Nav.Fieldset>
+          <Skjema.RadioGroup legend="Svar fra myndighetene" name="anmodningsperiodeSvarType" disabled={!redigerbart}>
+            <Nav.Radio value={INNVILGELSE}>Innvilgelse</Nav.Radio>
+            <Nav.Radio value={DELVIS_INNVILGELSE}>Delvis innvilgelse</Nav.Radio>
+            <Nav.Radio value={AVSLAG}>Avslag</Nav.Radio>
+          </Skjema.RadioGroup>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
