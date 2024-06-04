@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
 import * as Nav from "../../../../../navFrontend";
 import * as Mui from "../../../../../felleskomponenter/ui";
+import * as KV from "../../../../../kodeverk";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,14 +13,18 @@ import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOppl
 import { vilkarOperations, vilkarSelectors } from "../../../../../ducks/vilkar";
 import {
   AvklarteFakta,
+  Begrunnelse,
   FaktaTypeOverskrifter,
   VilkårOgBegrunnelser,
   VurderingBestemmelseProps,
 } from "./komponenter/typer";
-import { Begrunnelse, kodeInkludererFritekst } from "./vurderingBestemmelse";
 import { VilkaarOgBegrunnelserNY } from "./komponenter/vilkaarOgBegrunnelserNY";
 import * as Utils from "../../../../../utils";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import { KTObject } from "@navikt/melosys-kodeverk";
+
+export const kodeInkludererFritekst = (nestedKtObject: { [key: string]: KTObject[] }, kode?: string) =>
+  KV.termFraNestedKTObject(nestedKtObject, kode)?.includes("(fritekst)");
 
 enum ResetTyper {
   AVKLARTEFAKTA,

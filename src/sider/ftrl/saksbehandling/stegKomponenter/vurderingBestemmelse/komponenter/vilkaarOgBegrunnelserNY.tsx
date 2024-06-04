@@ -7,9 +7,9 @@ import * as Utils from "../../../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
-import { Begrunnelse, kodeInkludererFritekst } from "../vurderingBestemmelse";
 import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
-import { VilkårOgBegrunnelser } from "./typer";
+import { Begrunnelse, VilkårOgBegrunnelser } from "./typer";
+import { kodeInkludererFritekst } from "../vurderingBestemmelseNY";
 
 const hjelpetekster = new Map([
   [
