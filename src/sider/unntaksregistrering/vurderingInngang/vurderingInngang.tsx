@@ -25,7 +25,7 @@ import { BehandlingUnderOppfriskningSelector } from "../../../ducks/modaler/sele
 
 const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const gyldigeLandkoder = (sakstype: string) =>
-  sakstype === EU_EOS ? MKV.KTObjects.landkoder : MKV.KTObjects.trygdeavtale_myndighetsland;
+  Utils.land.sorterLand(sakstype === EU_EOS ? MKV.KTObjects.landkoder : MKV.KTObjects.trygdeavtale_myndighetsland);
 
 interface VurderingInngangProps {
   oppdaterStatus: (isValid: boolean) => void;

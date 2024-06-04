@@ -2,6 +2,7 @@ import { createSelector, Selector } from "reselect";
 import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../melosyskodeverk";
+import * as Utils from "../../utils";
 import { SakstypeKodeSelector } from "../fagsaker/selectors";
 
 export const LandkoderSelector: Selector<RootState, KTObject[]> = createSelector(
@@ -15,7 +16,7 @@ export const LandkoderFraSakstypeSelector = createSelector(
   (landkoder, sakstype): KTObject[] => {
     switch (sakstype) {
       case MKV.Koder.sakstyper.TRYGDEAVTALE:
-        return MKV.KTObjects.trygdeavtale_myndighetsland;
+        return Utils.land.sorterLand(MKV.KTObjects.trygdeavtale_myndighetsland);
       case MKV.Koder.sakstyper.FTRL:
         return landkoder;
       case MKV.Koder.sakstyper.EU_EOS:
