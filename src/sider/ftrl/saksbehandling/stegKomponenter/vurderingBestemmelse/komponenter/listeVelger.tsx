@@ -2,7 +2,7 @@ import * as Nav from "../../../../../../navFrontend";
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import * as KV from "../../../../../../kodeverk";
 
-type ListeVelgerFtrlProps = {
+type ListeVelgerProps = {
   muligeAlternativer: string[] | undefined;
   kodeverkKoder: string[];
   valgtAlternativ: string;
@@ -12,7 +12,7 @@ type ListeVelgerFtrlProps = {
   endretAlternativ: (kode: string) => void;
 };
 
-export const ListeVelgerFtrl = ({
+export const ListeVelger = ({
   muligeAlternativer,
   redigerbart,
   valgtAlternativ,
@@ -20,7 +20,7 @@ export const ListeVelgerFtrl = ({
   kodeverkKoder,
   tittel,
   endretAlternativ,
-}: ListeVelgerFtrlProps) => {
+}: ListeVelgerProps) => {
   if (muligeAlternativer?.length === 0) return null;
 
   return (

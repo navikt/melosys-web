@@ -49,7 +49,6 @@ const Saksopplysninger = ({
   lagreAvklartefaktaHandler,
   lagreLovvalgsperioderHandler,
   lagreAnmodningsperioderHandler,
-  oppdaterOgLagreBehandlingerHandler,
   startOgVisOppfriskModal,
   anmodningsperioderErSendtUtlandet,
 }) => {
@@ -85,7 +84,6 @@ const Saksopplysninger = ({
             lagreAvklartefaktaHandler={lagreAvklartefaktaHandler}
             lagreLovvalgsperioderHandler={lagreLovvalgsperioderHandler}
             lagreAnmodningsperioderHandler={lagreAnmodningsperioderHandler}
-            oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingerHandler}
             begrunnelser={MKV.KTObjects.begrunnelser}
             landkoder={MKV.KTObjects.landkoder}
             tilForsiden={tilForsiden}
@@ -120,7 +118,6 @@ Saksopplysninger.propTypes = {
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
   lagreAnmodningsperioderHandler: PT.func.isRequired,
-  oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,

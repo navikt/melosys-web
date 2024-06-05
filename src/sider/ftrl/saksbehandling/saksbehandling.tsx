@@ -4,12 +4,9 @@ import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-
 import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
-
-import { useFeatureToggle } from "../../../featuretoggle";
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
 import { VirksomhetMelding } from "../../../felleskomponenter/alertmeldinger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
@@ -19,7 +16,6 @@ import SideDialog, { defaultTabs, tabsUtenBucOgSed } from "../../../felleskompon
 import { EnkelStegvelger } from "../../../felleskomponenter/enkelStegvelger";
 import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { MatchParams } from "../../../@types";
-
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -34,17 +30,12 @@ import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
 import { menypanelOperations, menypanelSelectors } from "../../../ducks/menypanel";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
-
-import { alleStegYrkesaktivFlyt, alleStegYrkesaktivFlytV2 } from "./stegLister/stegListeYrkesaktivFlyt";
+import { alleStegYrkesaktivFlyt } from "./stegLister/stegListeYrkesaktivFlyt";
 import "./saksbehandling.css";
-import { MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER } from "../../../featuretoggle/toggleNavn";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { resetInkluderSiste5Aar } from "../../../ducks/modaler/operations";
 import { setErFullmektigEndret } from "../../../ducks/menypanel/operations";
-import {
-  alleStegManglendeInnbetalingFlyt,
-  alleStegManglendeInnbetalingFlytV2,
-} from "./stegLister/stegListeManglendeInnbetalingFlyt";
+import { alleStegManglendeInnbetalingFlyt } from "./stegLister/stegListeManglendeInnbetalingFlyt";
 import { fakturaserierOperations } from "../../../ducks/fakturaserier";
 import { alleStegIkkeYrkesaktivFlyt } from "./stegLister/stegListeIkkeYrkesaktivFlyt";
 
@@ -152,7 +143,6 @@ const Saksbehandling = ({
 }: Props & PropsFromRedux) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
-  const ftrlPliktigeBestemmelserToggleEnabled = useFeatureToggle(MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -232,11 +222,9 @@ const Saksbehandling = ({
       return alleStegIkkeYrkesaktivFlyt;
     }
     if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
-      return ftrlPliktigeBestemmelserToggleEnabled
-        ? alleStegManglendeInnbetalingFlytV2
-        : alleStegManglendeInnbetalingFlyt;
+      return alleStegManglendeInnbetalingFlyt;
     }
-    return ftrlPliktigeBestemmelserToggleEnabled ? alleStegYrkesaktivFlytV2 : alleStegYrkesaktivFlyt;
+    return alleStegYrkesaktivFlyt;
   };
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;

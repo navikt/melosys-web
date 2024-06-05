@@ -27,7 +27,6 @@ import { vilkarOperations } from "../../../ducks/vilkar";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { anmodningsperioderOperations } from "../../../ducks/anmodningsperioder";
 import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
-import { behandlingsperioderOperations } from "../../../ducks/behandlingsperioder";
 import { landkoderOperations } from "../../../ducks/landkoder";
 
 import stegMap from "./stegMap";
@@ -62,7 +61,6 @@ const Vurderutpeking = ({
   lagreAvklartefakta,
   lagreLovvalgsperioder,
   lagreAnmodningsperioder,
-  oppdaterOgLagreBehandlingsperioder,
   tilForsiden,
   startOgVisOppfriskModal,
   soknadForm,
@@ -122,7 +120,6 @@ const Vurderutpeking = ({
                           lagreAvklartefaktaHandler={lagreAvklartefakta}
                           lagreLovvalgsperioderHandler={lagreLovvalgsperioder}
                           lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
-                          oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
                           begrunnelser={MKV.KTObjects.begrunnelser}
                           landkoder={MKV.KTObjects.landkoder}
                           tilForsiden={tilForsiden}
@@ -173,7 +170,6 @@ Vurderutpeking.propTypes = {
   lagreAvklartefakta: PT.func.isRequired,
   lagreLovvalgsperioder: PT.func.isRequired,
   lagreAnmodningsperioder: PT.func.isRequired,
-  oppdaterOgLagreBehandlingsperioder: PT.func.isRequired,
   mottatteOpplysninger: MPT.MottatteOpplysninger,
   soknadForm: PT.object.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
@@ -212,7 +208,6 @@ const mapDispatchToProps = (dispatch) => ({
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),
   lagreAnmodningsperioder: () => dispatch(anmodningsperioderOperations.lagre()),
-  oppdaterOgLagreBehandlingsperioder: () => dispatch(behandlingsperioderOperations.oppdaterOgLagre()),
   hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
 });
 

@@ -17,8 +17,6 @@ import {
   erBrukerSkattepliktigIHelePerioden,
 } from "../vurderingTrygdeavgiftSchema";
 import "./inntektskilder.css";
-import { useFeatureToggle } from "../../../../../../featuretoggle";
-import { MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER } from "../../../../../../featuretoggle/toggleNavn";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
@@ -57,8 +55,6 @@ export const Inntektskilder = ({
   fields,
   medlemskapsTypeErPliktig,
 }: InntektskilderProps) => {
-  const ftrlYrkesaktivPliktigeBestemmelserEnabled = useFeatureToggle(MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER);
-
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
   const handleEndreKildetype = (index: number, kildetype: string) => {
@@ -125,18 +121,18 @@ export const Inntektskilder = ({
                 >
                   {MKV.KTObjects.inntektskildetype
                     .filter((kt: KTObject) => {
-                      if (ftrlYrkesaktivPliktigeBestemmelserEnabled && medlemskapsTypeErPliktig) {
-                        return [ARBEIDSINNTEKT, NÆRINGSINNTEKT, PENSJON, UFØRETRYGD].includes(kt.kode);
-                      }
-                      return [
-                        ARBEIDSINNTEKT_FRA_NORGE,
-                        NÆRINGSINNTEKT_FRA_NORGE,
-                        INNTEKT_FRA_UTLANDET,
-                        FN_SKATTEFRITAK,
-                        MISJONÆR,
-                        PENSJON_UFØRETRYGD,
-                        PENSJON_UFØRETRYGD_KILDESKATT,
-                      ].includes(kt.kode);
+                      const gyldigeInntektskilder = medlemskapsTypeErPliktig
+                        ? [ARBEIDSINNTEKT, NÆRINGSINNTEKT, PENSJON, UFØRETRYGD]
+                        : [
+                            ARBEIDSINNTEKT_FRA_NORGE,
+                            NÆRINGSINNTEKT_FRA_NORGE,
+                            INNTEKT_FRA_UTLANDET,
+                            FN_SKATTEFRITAK,
+                            MISJONÆR,
+                            PENSJON_UFØRETRYGD,
+                            PENSJON_UFØRETRYGD_KILDESKATT,
+                          ];
+                      return gyldigeInntektskilder.includes(kt.kode);
                     })
                     .map((kt: KTObject) => (
                       <option key={kt.kode} value={kt.kode}>

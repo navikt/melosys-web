@@ -83,7 +83,6 @@ interface Props {
   redigerbart: boolean;
   aktivtSteg: boolean;
   lagreVilkarHandler: () => void;
-  oppdaterOgLagreBehandlinger: () => Promise<void>;
   lagreAnmodningsperioderHandler: () => Promise<void>;
   byggAnmodningsperioderHandler: () => Promise<void>;
   lagreOgBestillAnmodningsperioder: (bestillAnmodningsperioderBody: any) => Promise<void>;
@@ -94,7 +93,6 @@ const VurderingArtikkel16Anmodning = ({
   tilstand: { unntaksvilkår, muligeBegrunnelseValg, erIDirekteTilArtikkel16Flyt },
   slettData,
   formValues,
-  oppdaterOgLagreBehandlinger,
   lagreOgBestillAnmodningsperioder,
   byggAnmodningsperioderHandler,
   lagreAnmodningsperioderHandler,
@@ -210,23 +208,19 @@ const VurderingArtikkel16Anmodning = ({
     return unntakFraBestemmelseErGyldig && begrunnelserErGyldig && erFriteksterGyldig() && formIsValid;
   };
 
-  const lagreBehandlingerOgBestillAnmodningsperioder = async () => {
-    await oppdaterOgLagreBehandlinger();
-    const body = {
-      mottakerinstitusjon: formValues.mottakerinstitusjon || null,
-      fritekstSed: formValues.fritekstSed,
-      vedlegg: valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
-    };
-    return lagreOgBestillAnmodningsperioder(body);
-  };
-
   const validerStegOgLagreBehandling = async () => {
     if (erStegGyldig()) {
       setPending(true);
       await byggAnmodningsperioderHandler();
       setLovvalgFeilmelding(undefined);
 
-      await lagreBehandlingerOgBestillAnmodningsperioder();
+      const body = {
+        mottakerinstitusjon: formValues.mottakerinstitusjon || null,
+        fritekstSed: formValues.fritekstSed,
+        vedlegg: valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
+      };
+
+      await lagreOgBestillAnmodningsperioder(body);
 
       // Anmodning-operation navigerer til forside, og komponenten kan derfor være unmountet.
       if (isMounted) {
@@ -379,11 +373,7 @@ const VurderingArtikkel16Anmodning = ({
         {(!konvensjonStorbritanniaToggleEnabled || !Utils._isEmpty(medlemskap?.perioderMed)) && (
           <>
             <Nav.Typo.Element className="tidligereMedlemskap_label">{`Velg direkte forutgående perioder i ${landSomTekstListe}`}</Nav.Typo.Element>
-            <TidligereMedlemskap
-              oppdaterOgLagreBehandlinger={oppdaterOgLagreBehandlinger}
-              redigerbart={redigerbart}
-              medlemskap={medlemskap}
-            />
+            <TidligereMedlemskap redigerbart={redigerbart} medlemskap={medlemskap} />
           </>
         )}
 

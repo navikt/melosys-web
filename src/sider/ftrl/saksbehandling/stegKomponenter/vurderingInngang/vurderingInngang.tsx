@@ -1,20 +1,16 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
-
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import * as Nav from "../../../../../navFrontend";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Utils from "../../../../../utils";
-
 import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 import { FellesHandlersContext } from "../../../../../contexts";
 import { DialogboksOppfriskSak } from "../../../../../felleskomponenter/dialogboks";
-
 import {
   mottatteOpplysningerOperations,
   mottatteOpplysningerSelectors,
@@ -24,7 +20,6 @@ import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { menypanelOperations } from "../../../../../ducks/menypanel";
 import { landkoderSelectors } from "../../../../../ducks/landkoder";
 import { navigeringOperations } from "../../../../../ducks/navigering";
-
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.css";
 import { modalerOperations, modalerSelectors } from "../../../../../ducks/modaler";
@@ -32,10 +27,8 @@ import { oppsummertfaktaOperations } from "../../../../../ducks/oppsummertfakta"
 import { BehandlingUnderOppfriskningSelector } from "../../../../../ducks/modaler/selectors";
 import * as KV from "../../../../../kodeverk";
 import { BOOLSK_STRING } from "../../../../../constants";
-import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER } from "../../../../../featuretoggle/toggleNavn";
 
-const { YRKESAKTIV, IKKE_YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
+const { YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 
 interface Props {
   bekreft: () => void;
@@ -58,13 +51,10 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
   const behandlingUnderOppfriskning = useSelector(BehandlingUnderOppfriskningSelector);
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
-  const pliktigeBestemmelserToggleEnabled = useFeatureToggle(MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER); // Fjern arbeidsland når denne fjernes
-  const skalBrukeFlereLandUkjentHvilke = pliktigeBestemmelserToggleEnabled || behandlingstema === IKKE_YRKESAKTIV;
 
   const initialValues = {
     fom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.fom, false, undefined),
     tom: Utils.dato.formatterDatoTilNorsk(søknadsperiode?.tom, false, undefined),
-    arbeidsland: søknadsland.landkoder.toString(),
     land: søknadsland.landkoder || [],
     flereLandUkjentHvilke: registeropplysningerHentet
       ? Utils.streng.boolTilUppercaseStreng(søknadsland.flereLandUkjentHvilke)
@@ -80,7 +70,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurderingInngangSchema),
-    context: { skalBrukeFlereLandUkjentHvilke },
     mode: "all",
     values: useMemo(() => initialValues as FieldValues, [initialValues]),
   });
@@ -91,7 +80,6 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     !Utils.dato.erLikeDatoer(formValues.fom, initialValues.fom) ||
     !Utils.dato.erLikeDatoer(formValues.tom, initialValues.tom) ||
     !Utils._isEqual(formValues.land, initialValues.land) ||
-    formValues.arbeidsland !== initialValues.arbeidsland ||
     formValues.flereLandUkjentHvilke !== initialValues.flereLandUkjentHvilke ||
     formValues.trygdedekning !== initialValues.trygdedekning;
 
@@ -105,15 +93,10 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
-  const mapLandkoder = () => {
-    if (skalBrukeFlereLandUkjentHvilke) {
-      return Utils.streng.uppercaseStrengTilBool(formValues.flereLandUkjentHvilke) ? [] : formValues.land;
-    }
-    return formValues.arbeidsland ? [formValues.arbeidsland] : [];
-  };
+  const mapLandkoder = () =>
+    Utils.streng.uppercaseStrengTilBool(formValues.flereLandUkjentHvilke) ? [] : formValues.land;
 
-  const mapFlereLandUkjentHvilke = () =>
-    skalBrukeFlereLandUkjentHvilke ? Utils.streng.uppercaseStrengTilBool(formValues.flereLandUkjentHvilke) : false;
+  const mapFlereLandUkjentHvilke = () => Utils.streng.uppercaseStrengTilBool(formValues.flereLandUkjentHvilke);
 
   const oppdaterLokalMottatteOpplysninger = async () => {
     await Promise.all([
@@ -144,9 +127,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   if (!aktivtSteg) return null;
 
-  const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = skalBrukeFlereLandUkjentHvilke
-    ? formValues.land?.some((land: string) => MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(land))
-    : MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(formValues.arbeidsland);
+  const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = formValues.land?.some((land: string) =>
+    MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(land)
+  );
   const flereLandUkjentHvilkeErUSANN = formValues.flereLandUkjentHvilke === BOOLSK_STRING.USANN;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const nyVurderingPeriodetekst =
@@ -181,63 +164,40 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
             />
           </Nav.Column>
 
-          {skalBrukeFlereLandUkjentHvilke ? (
-            <Nav.Column className="land_wrapper">
-              <Forms.RadioGroup
-                legend={
-                  behandlingstema === YRKESAKTIV ? (
-                    <Nav.Typo.Element className="land">
-                      <LabelMedHjelpetekst
-                        label="Arbeidsland"
-                        hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                      />
-                    </Nav.Typo.Element>
-                  ) : (
-                    <Nav.Typo.Element className="land">Land</Nav.Typo.Element>
-                  )
-                }
+          <Nav.Column className="land_wrapper">
+            <Forms.RadioGroup
+              legend={
+                behandlingstema === YRKESAKTIV ? (
+                  <Nav.Typo.Element className="land">
+                    <LabelMedHjelpetekst
+                      label="Arbeidsland"
+                      hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
+                    />
+                  </Nav.Typo.Element>
+                ) : (
+                  <Nav.Typo.Element className="land">Land</Nav.Typo.Element>
+                )
+              }
+              control={control}
+              name="flereLandUkjentHvilke"
+              disabled={!redigerbart}
+            >
+              <Nav.Radio value={BOOLSK_STRING.SANN} onChange={() => setValue("land", [])}>
+                Flere land, ikke kjent hvilke
+              </Nav.Radio>
+              <Nav.Radio value={BOOLSK_STRING.USANN}>Velg land fra liste</Nav.Radio>
+            </Forms.RadioGroup>
+            {flereLandUkjentHvilkeErUSANN && (
+              <Forms.MultiSelect
+                label=""
+                name="land"
+                className="land_multiselect"
+                redigerbart={redigerbart}
                 control={control}
-                name="flereLandUkjentHvilke"
-                disabled={!redigerbart}
-              >
-                <Nav.Radio value={BOOLSK_STRING.SANN} onChange={() => setValue("land", [])}>
-                  Flere land, ikke kjent hvilke
-                </Nav.Radio>
-                <Nav.Radio value={BOOLSK_STRING.USANN}>Velg land fra liste</Nav.Radio>
-              </Forms.RadioGroup>
-              {flereLandUkjentHvilkeErUSANN && (
-                <Forms.MultiSelect
-                  label=""
-                  name="land"
-                  className="land_multiselect"
-                  redigerbart={redigerbart}
-                  control={control}
-                  options={alleLandkoder.map((kt) => ({ value: kt.kode, label: kt.term!! }))}
-                />
-              )}
-            </Nav.Column>
-          ) : (
-            <Nav.Column>
-              <Forms.Select
-                label={
-                  <LabelMedHjelpetekst
-                    label="Arbeidsland"
-                    hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                  />
-                }
-                emptyFieldDisabled={!!formValues.arbeidsland}
-                name="arbeidsland"
-                disabled={!redigerbart}
-                control={control}
-              >
-                {alleLandkoder.map((item: KTObject) => (
-                  <option key={item.kode} value={item.kode}>
-                    {item.term}
-                  </option>
-                ))}
-              </Forms.Select>
-            </Nav.Column>
-          )}
+                options={alleLandkoder.map((kt) => ({ value: kt.kode, label: kt.term!! }))}
+              />
+            )}
+          </Nav.Column>
 
           <Nav.Column className="trygdedekning">
             <Forms.Select

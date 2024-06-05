@@ -16,13 +16,9 @@ class Inngang extends Steg {
       const inngangsvilkaar = this.hentInngangsvilkaar(_propsLight);
 
       return {
-        alleLandkoder: _propsLight.landkoder,
-        avklartefakta: _propsLight.avklartefakta,
         redigerbart: _propsLight.generiskStegRedigerbart,
         oppfyllerInngangsvilkar: this.oppfyllerInngangsvilkaar(inngangsvilkaar),
         inngangsvilkaar,
-        landkoder: _propsLight.mottatteOpplysninger.soeknadsland.landkoder,
-        behandlingstema: _propsLight.behandlingstema.kode,
       };
     };
     this.beregnRelevantUI = (_propsLight) => {
@@ -33,9 +29,7 @@ class Inngang extends Steg {
       };
     };
     this.handlers = {
-      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
-      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this.status = FANE_STATUS.OK;
   }
