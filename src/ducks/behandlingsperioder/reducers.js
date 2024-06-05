@@ -5,7 +5,7 @@
  * action types som sendes inn sammen med dataene.
  */
 
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 import * as Types from "./types";
 
 const initialState = {

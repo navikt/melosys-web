@@ -45,7 +45,6 @@ class Artikkel16Anmodning extends Steg {
       lagreOgBestillAnmodningsperioder: propsLight.tilgjengeligeHandlers?.lagreOgBestillAnmodningsperioder,
       tilbake: propsLight.tilgjengeligeHandlers?.tilbake,
       byggAnmodningsperioderHandler: propsLight.tilgjengeligeHandlers?.byggAnmodningsperioderHandler,
-      oppdaterOgLagreBehandlinger: propsLight.tilgjengeligeHandlers?.oppdaterOgLagreBehandlinger,
       lagreVilkarHandler: propsLight.tilgjengeligeHandlers?.lagreVilkarHandler,
       lagreAnmodningsperioderHandler: propsLight.tilgjengeligeHandlers?.lagreAnmodningsperioderHandler,
       oppdaterData: (felt, verdi) => propsLight.tilgjengeligeHandlers?.oppdaterStegData(this.id, felt, verdi),
