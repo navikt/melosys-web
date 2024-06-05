@@ -19,6 +19,14 @@ export function kontrollerFerdigbehandling(data: Api.Kontroll.FerdigbehandlingKo
   });
 }
 
+export function kontrollerAnmodningOmUnntak(data: Api.Kontroll.AnmodningOmUnntakKontrollData) {
+  return doThenDispatch(() => Api.Kontroll.kontrollerAnmodningOmUnntak(data), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.FEILET,
+  });
+}
+
 export function kontrollerUnntaksperiode(behandlingID: number, data: Api.Kontroll.PeriodeKontrollData) {
   return doThenDispatch(() => Api.Kontroll.kontrollerUnntaksperiode(behandlingID, data), {
     OK: Types.OK,

@@ -3,7 +3,6 @@ import { VurderingInngang } from "../stegKomponenter/vurderingInngang/vurderingI
 import { VurderingVirksomhet } from "../stegKomponenter/vurderingVirksomhet/vurderingVirksomhet";
 import { VurderingPerioder } from "../stegKomponenter/vurderingPeriode/vurderingPerioder";
 import { VurderingBestemmelse } from "../stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
-import { VurderingBestemmelserV2 } from "../stegKomponenter/vurderingBestemmelse/vurderingBestemmelseNY";
 import { VurderingTrygdeavgift } from "../stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
 import { VurderingVedtak } from "../stegKomponenter/vurderingVedtak/vurderingVedtak";
 import { VurderingInngangManglendeInnbetaling } from "../stegKomponenter/vurderingInngangManglendeInnbetaling/vurderingInngangManglendeInnbetaling";
@@ -49,16 +48,6 @@ const bestemmelseSteg = {
   komponent: VurderingBestemmelse,
 };
 
-const bestemmelseStegV2 = {
-  id: "Bestemmelse",
-  tittel: "Bestemmelse",
-  stegPosisjon: 3,
-  status: FANE_STATUS.UBEHANDLET,
-  aktivtSteg: false,
-  vedtakSteg: false,
-  komponent: VurderingBestemmelserV2,
-};
-
 const periodeSteg = {
   id: "Perioder",
   tittel: "Perioder",
@@ -98,15 +87,6 @@ const stegDelvisManglendeInnbetaling = [
   vedtakSteg,
 ];
 
-const stegDelvisManglendeInnbetalingV2 = [
-  inngangSteg,
-  virksomhetSteg,
-  bestemmelseStegV2,
-  periodeSteg,
-  trygdeavgiftSteg,
-  vedtakSteg,
-];
-
 export const vedtakOpphoerSteg = {
   id: "VedtakOpphoer",
   tittel: "Vedtak",
@@ -122,11 +102,5 @@ const stegFullstendigManglendeInnbetaling = [vedtakOpphoerSteg];
 export const alleStegManglendeInnbetalingFlyt = [
   inngangManglendeInnbetalingSteg,
   ...stegDelvisManglendeInnbetaling,
-  ...stegFullstendigManglendeInnbetaling,
-];
-
-export const alleStegManglendeInnbetalingFlytV2 = [
-  inngangManglendeInnbetalingSteg,
-  ...stegDelvisManglendeInnbetalingV2,
   ...stegFullstendigManglendeInnbetaling,
 ];

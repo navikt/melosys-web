@@ -9,6 +9,10 @@ export type FerdigbehandlingKontrollData = {
   skalRegisteropplysningerOppdateres: boolean;
 };
 
+export type AnmodningOmUnntakKontrollData = {
+  behandlingID: number;
+};
+
 export type RegistrertAdresseData = {
   brukerID?: string | null;
   orgnr?: string | null;
@@ -17,6 +21,9 @@ export type RegistrertAdresseData = {
 
 export const kontrollerFerdigbehandling = (data: FerdigbehandlingKontrollData) =>
   postAsJson(`${API_BASE_URL}${KONTROLL}/ferdigbehandling`, data);
+
+export const kontrollerAnmodningOmUnntak = (data: AnmodningOmUnntakKontrollData) =>
+  postAsJson(`${API_BASE_URL}${KONTROLL}/anmodningomunntak`, data);
 
 export const kontrollerAdresse = (data: RegistrertAdresseData) =>
   postAsJson(`${API_BASE_URL}${KONTROLL}/adresse`, data);
