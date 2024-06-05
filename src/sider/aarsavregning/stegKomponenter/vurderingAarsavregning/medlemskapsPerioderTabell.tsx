@@ -1,7 +1,5 @@
 import { Table } from "@navikt/ds-react";
-import { Medlemskapsperiode, Skatteforholdsperiode } from "../../../../services/modules/aarsavregning/aarsavregning";
-import MKV from "../../../../melosyskodeverk";
-import * as KV from "../../../../kodeverk";
+import { Medlemskapsperiode } from "../../../../services/modules/aarsavregning/aarsavregning";
 import * as Utils from "../../../../utils";
 import "./aarsavregning.css";
 

@@ -3,7 +3,7 @@ import { useAsyncCallbackState } from "../../../../hooks";
 import * as Api from "../../../../services/api";
 import SkatteforholdsPerioderTabell from "./skatteforholdsPerioderTabell";
 import MedlemskapsPerioderTabell from "./medlemskapsPerioderTabell";
-import { Button, UNSAFE_Combobox, Radio, VStack } from "@navikt/ds-react";
+import { Button, Radio, UNSAFE_Combobox, VStack } from "@navikt/ds-react";
 import "./aarsavregning.css";
 
 export const VurderingAarsavregning = () => {

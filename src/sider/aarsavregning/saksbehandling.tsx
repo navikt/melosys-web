@@ -1,15 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
-import { KTObject } from "@navikt/melosys-kodeverk";
-import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 
 import * as Utils from "../../utils";
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
-import Oppsummering from "../../felleskomponenter/oppsummering";
 import SideDialog, { defaultTabs } from "../../felleskomponenter/sideDialog";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 
@@ -38,7 +34,7 @@ const Saksbehandling = ({ match, location }: Props) => {
 
   const dispatch = useDispatch();
 
-  /* const land = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  /* const land = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector); TODO kommentert ut for å brute force oss inn i flyten før opprettelse av behandling er på plass
   const mottatteOpplysningerPeriodeFom = useSelector((state) =>
     Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).fom)
   );
