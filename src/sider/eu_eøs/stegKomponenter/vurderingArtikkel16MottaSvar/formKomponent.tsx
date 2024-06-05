@@ -13,7 +13,6 @@ import {
   anmodningsperiodesvarSelectors,
 } from "../../../../ducks/anmodningsperiodesvar";
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
-import Periode from "./periode";
 import { RootState } from "AppTypes";
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
 import { AnmodningsperiodesvarResDto } from "../../../../services/modules/anmodningsperioder/svar/svar";
@@ -102,7 +101,18 @@ const FormKomponent = ({ redigerbart, formValues, oppdaterData, formIsValid }: F
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
-        <Nav.Column xs="6">{visLovvalgsperiode && <Periode redigerbart={redigerbart} />}</Nav.Column>
+        <Nav.Column xs="6">
+          {visLovvalgsperiode && (
+            <Nav.Row>
+              <Nav.Column xs="6">
+                <Skjema.Datovelger label="Startdato" feltNavn="endretPeriode.fom" disabled={!redigerbart} />
+              </Nav.Column>
+              <Nav.Column xs="6">
+                <Skjema.Datovelger label="Sluttdato" feltNavn="endretPeriode.tom" disabled={!redigerbart} />
+              </Nav.Column>
+            </Nav.Row>
+          )}
+        </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
