@@ -3,14 +3,13 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import { v4 as uuid } from "uuid";
 import { FieldArray, WrappedFieldArrayProps } from "redux-form";
 import { Medlemsperiode } from "../../../../services/modules/behandlinger/behandling";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { behandlingsperioderOperations } from "../../../../ducks/behandlingsperioder";
 
 type TidligereMedlemskapsperioderProps = TidligereMedlemskapProps & WrappedFieldArrayProps<number>;
-const TidligereMedlemskapsperioder = ({
-  medlemskap,
-  redigerbart,
-  fields,
-  oppdaterOgLagreBehandlinger,
-}: TidligereMedlemskapsperioderProps) => {
+const TidligereMedlemskapsperioder = ({ medlemskap, redigerbart, fields }: TidligereMedlemskapsperioderProps) => {
+  const dispatch = useDispatch();
   const alleValgtePeriodeID = fields.getAll() ?? [];
 
   const onChange = (periodeID: number) => {
@@ -22,8 +21,16 @@ const TidligereMedlemskapsperioder = ({
     } else {
       remove(eksistererVedPosisjon);
     }
-    oppdaterOgLagreBehandlinger();
   };
+
+  const oppdaterOgLagreTidligerePerioder = async () => {
+    await dispatch(behandlingsperioderOperations.oppdaterPerioderState({ tidligeremedlemskap: alleValgtePeriodeID }));
+    await dispatch(behandlingsperioderOperations.lagre());
+  };
+
+  useEffect(() => {
+    if (redigerbart) oppdaterOgLagreTidligerePerioder();
+  }, [alleValgtePeriodeID]);
 
   return (
     <>
@@ -44,7 +51,6 @@ const TidligereMedlemskapsperioder = ({
 };
 
 interface TidligereMedlemskapProps {
-  oppdaterOgLagreBehandlinger: any;
   redigerbart: boolean;
   medlemskap: {
     perioderMed?: Medlemsperiode[];

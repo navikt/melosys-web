@@ -350,7 +350,6 @@ class Stegvelger extends Component {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgUtpek: this.lagreOgUtpek,
-      oppdaterOgLagreBehandlinger: this.props.oppdaterOgLagreBehandlingerHandler,
       oppdaterStegData: this.oppdaterStegData,
       slettStegData: this.slettStegData,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
@@ -590,7 +589,6 @@ Stegvelger.propTypes = {
   lagreVilkarHandler: PT.func,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func,
-  oppdaterOgLagreBehandlingerHandler: PT.func,
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
   mottatteOpplysningerFeilmeldinger: PT.object.isRequired,
@@ -678,7 +676,6 @@ Stegvelger.defaultProps = {
   lagreVilkarHandler: () => {},
   lagreLovvalgsperioderHandler: () => {},
   lagreAnmodningsperioderHandler: () => {},
-  oppdaterOgLagreBehandlingerHandler: () => {},
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger: () => {},
   feilmeldinger: [],
   kontrollfeil: [],
