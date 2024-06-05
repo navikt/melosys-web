@@ -29,6 +29,7 @@ export const VurderingAarsavregning = () => {
         />
         <TrygdeavgiftsperioderTabell
           perioder={lagretTrygdeavgift?.tidligereOpplysninger?.avgift.trygdeavgiftsperioder}
+          avgift={lagretTrygdeavgift?.tidligereOpplysninger?.avgift}
         />
       </VStack>
       <div className="avvik">
