@@ -26,11 +26,11 @@ export const EndretPeriodeTomSelector = createSelector(
 );
 
 export const BegrunnelseFritekstSelector = createSelector(
-  AnmodningsperiodesvarSelector,
+  (state) => AnmodningsperiodesvarSelector(state),
   (anmodningsperiodesvar) => anmodningsperiodesvar.begrunnelseFritekst || ""
 );
 
 export const AnmodningsperiodeSvarTypeSelector = createSelector(
-  AnmodningsperiodesvarSelector,
+  (state) => AnmodningsperiodesvarSelector(state),
   (anmodningsperiodesvar) => anmodningsperiodesvar.anmodningsperiodeSvarType
 );
