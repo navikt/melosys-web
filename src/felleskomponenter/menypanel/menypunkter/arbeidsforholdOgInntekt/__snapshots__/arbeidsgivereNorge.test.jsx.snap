@@ -98,33 +98,29 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
         class="organisasjonSeksjon"
       >
         <div
-          class="container-fluid"
+          class="row"
         >
           <div
-            class="row"
+            class="col col-xs-6"
           >
-            <div
-              class="col col-xs-6"
-            >
-              <div>
-                (Ingen adresse tilgjengelig)
-              </div>
+            <div>
+              (Ingen adresse tilgjengelig)
             </div>
-            <div
-              class="col col-xs-6"
+          </div>
+          <div
+            class="col col-xs-6"
+          >
+            <p
+              class="typo-element"
+              style="margin-top: 0.5em;"
             >
-              <p
-                class="typo-element"
-                style="margin-top: 0.5em;"
-              >
-                Org.nr. juridisk enhet
-              </p>
-              <p
-                class="typo-normal"
-              >
-                123
-              </p>
-            </div>
+              Org.nr. juridisk enhet
+            </p>
+            <p
+              class="typo-normal"
+            >
+              123
+            </p>
           </div>
         </div>
       </div>

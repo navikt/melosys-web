@@ -15,6 +15,7 @@ import {
   konverterAvklartfaktaTilStegData,
 } from "../../../../felleskomponenter/stegvelger";
 import { hentFaktaVerdi } from "../../../../domeneUtils";
+import "./vurderingArtikkel13_2b.css";
 
 const radioValg = {
   NORGE: "NORGE",
@@ -47,8 +48,8 @@ const VurderingArtikkel13_2b = ({
 
   const [erNorgeValgt, setErNorgeValgt] = useState(erOmfattetINorge());
 
-  const radioEndringHandler = (event) => {
-    if (event.target.value === radioValg.NORGE) {
+  const radioEndringHandler = (value) => {
+    if (value === radioValg.NORGE) {
       setErNorgeValgt(true);
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, MKV.Koder.landkoder.NO, null));
     } else {
@@ -64,42 +65,34 @@ const VurderingArtikkel13_2b = ({
   const valgtLand = hentFaktaVerdi(omfattesILandFakta);
 
   return (
-    <div>
+    <div className="vurderingArtikkel13_2b">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         Vurdering av artikkel 13 nr. 2 bokstav b
       </Nav.Typo.Innholdstittel>
-      <Nav.Fieldset legend="I hvilket land har virksomheten sitt interessesenter?">
-        <Nav.Radio
-          name="interessesenter"
-          label="Norge"
-          value={radioValg.NORGE}
-          onChange={radioEndringHandler}
-          checked={erNorgeValgt === true}
-          disabled={!redigerbart}
-        />
-        <Nav.Radio
-          name="interessesenter"
-          label="Annet"
-          value={radioValg.ANNET}
-          onChange={radioEndringHandler}
-          checked={erNorgeValgt === false}
-          disabled={!redigerbart}
-        />
-        {erNorgeValgt === false && (
-          <Nav.Row>
-            <Nav.Column xs="8" md="6" lg="4">
-              <EnkeltLandPure
-                label="Velg land:"
-                value={valgtLand}
-                onChange={landEndretHandler}
-                landkoder={MKV.KTObjects.landkoder}
-                multiland={false}
-                disabled={!redigerbart}
-              />
-            </Nav.Column>
-          </Nav.Row>
-        )}
-      </Nav.Fieldset>
+      <Nav.RadioGroup
+        legend="I hvilket land har virksomheten sitt interessesenter?"
+        defaultValue={erNorgeValgt}
+        name="interessesenter"
+        onChange={radioEndringHandler}
+        disabled={!redigerbart}
+      >
+        <Nav.Radio value={radioValg.NORGE}>Norge</Nav.Radio>
+        <Nav.Radio value={radioValg.ANNET}>Annet</Nav.Radio>
+      </Nav.RadioGroup>
+      {erNorgeValgt === false && (
+        <Nav.Row>
+          <Nav.Column xs="8" md="6" lg="4">
+            <EnkeltLandPure
+              label="Velg land:"
+              value={valgtLand}
+              onChange={landEndretHandler}
+              landkoder={MKV.KTObjects.landkoder}
+              multiland={false}
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      )}
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !(redigerbart && harAvklaring),

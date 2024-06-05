@@ -129,9 +129,13 @@ class Stegvelger extends Component {
   oppdaterStegData = (stegID, data) => {
     if (!data) return;
 
-    const { felt, type, innhold } = data;
+    const { felt, type, innhold, iAlleSteg } = data;
     const { stegStores } = this.state;
-    stegStores[type].oppdaterStegData(stegID, { felt, type, innhold });
+    if (iAlleSteg) {
+      stegStores[type].oppdaterStegDataIAlleSteg(stegID, { felt, innhold });
+    } else {
+      stegStores[type].oppdaterStegData(stegID, { felt, innhold });
+    }
     this.setState(stegStores);
 
     if (data.oppdaterRedux) {
@@ -346,7 +350,6 @@ class Stegvelger extends Component {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgUtpek: this.lagreOgUtpek,
-      oppdaterOgLagreBehandlinger: this.props.oppdaterOgLagreBehandlingerHandler,
       oppdaterStegData: this.oppdaterStegData,
       slettStegData: this.slettStegData,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
@@ -381,7 +384,6 @@ class Stegvelger extends Component {
       virksomheterIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
       begrunnelser: MKV.KTObjects.begrunnelser,
-      landkoder: props.landkoder,
       behandlingstype: props.oppsummering.behandlingstype,
       behandlingstema: props.oppsummering.behandlingstema,
       behandlingsstatus: props.oppsummering.behandlingsstatus,
@@ -417,7 +419,6 @@ class Stegvelger extends Component {
       hjemmebaser: props.hjemmebaser,
       harValgtNorskArbeidsgiver: props.harValgtNorskArbeidsgiver,
       medfolgendeBarn: props.medfolgendeBarn,
-      mottatteOpplysninger: props.mottatteOpplysninger,
       lagredeVirksomheter: props.lagredeVirksomheter,
       bestemmelser: props.bestemmelser,
       soknadsperiode: props.soknadsperiode,
@@ -588,7 +589,6 @@ Stegvelger.propTypes = {
   lagreVilkarHandler: PT.func,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func,
-  oppdaterOgLagreBehandlingerHandler: PT.func,
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
   mottatteOpplysningerFeilmeldinger: PT.object.isRequired,
@@ -624,8 +624,6 @@ Stegvelger.propTypes = {
   bestillAnmodningsperioder: PT.func.isRequired,
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
   medfolgendeBarn: PT.array.isRequired,
-  mottatteOpplysninger: PT.object.isRequired,
-  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   lagredeVirksomheter: PT.array.isRequired,
   sakstype: PT.string,
   soknadsperiode: MPT.Soknadsperiode.isRequired,
@@ -678,7 +676,6 @@ Stegvelger.defaultProps = {
   lagreVilkarHandler: () => {},
   lagreLovvalgsperioderHandler: () => {},
   lagreAnmodningsperioderHandler: () => {},
-  oppdaterOgLagreBehandlingerHandler: () => {},
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger: () => {},
   feilmeldinger: [],
   kontrollfeil: [],
@@ -727,7 +724,6 @@ const mapStateToProps = (state) => ({
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
   harValgtNorskArbeidsgiver: flytSelectors.HarValgtNorskArbeidsgiverSelector(state),
   medfolgendeBarn: mottatteOpplysningerSelectors.MedfolgendeBarnSelector(state),
-  mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),

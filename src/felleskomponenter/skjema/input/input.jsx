@@ -36,12 +36,11 @@ function InnerInputComponent({ input, label, onBlur, onChange, ...rest }) {
     id: Utils._uuid(),
   };
 
-  return !rest.hidden && <Nav.Input label={label} feil={feil || undefined} {...inputProps} />;
+  return !rest.hidden && <Nav.TextField label={label} error={feil || undefined} {...inputProps} />;
 }
 
 InnerInputComponent.propTypes = {
   label: PT.node.isRequired,
-  bredde: PT.string,
   meta: PT.object,
   input: PT.object,
   onBlur: PT.func,
@@ -49,17 +48,15 @@ InnerInputComponent.propTypes = {
 };
 
 InnerInputComponent.defaultProps = {
-  bredde: undefined,
   meta: undefined,
   input: undefined,
   onBlur: undefined,
   onChange: undefined,
 };
 
-function Input({ feltNavn, bredde = "fullbredde", className = "", normalize = (value) => value, ...rest }) {
+function Input({ feltNavn, className = "", normalize = (value) => value, ...rest }) {
   return (
     <Field
-      bredde={bredde}
       name={feltNavn}
       normalize={normalize}
       component={InnerInputComponent}
@@ -70,14 +67,12 @@ function Input({ feltNavn, bredde = "fullbredde", className = "", normalize = (v
 }
 
 Input.propTypes = {
-  bredde: PT.string,
   feltNavn: PT.string.isRequired,
   className: PT.string,
   normalize: PT.func,
 };
 
 Input.defaultProps = {
-  bredde: "fullbredde",
   className: "",
   normalize: (value) => value,
 };

@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
@@ -11,6 +11,7 @@ import {
   lagLovvalgsbestemmelse,
   lagTilleggBestemmelse,
   lagVilkaar,
+  slettLovvalgsbestemmelse,
   slettTilleggBestemmelse,
   slettVilkar,
   slettVilkarIAlleSteg,
@@ -22,6 +23,7 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { useSelector } from "react-redux";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
+import "./vurderingYrkesgruppe.css";
 
 const { lovvalgbestemmelser_konv_efta_storbritannia } = MKV.KTObjects.lovvalgsbestemmelser;
 const { lovvalgbestemmelser_883_2004 } = MKV.KTObjects.lovvalgsbestemmelser;
@@ -82,18 +84,19 @@ const VurderingYrkesgruppe = ({
   const slettVilkår = () =>
     ["art16_1_anmodning", "art18_1_anmodning"].forEach((feltNavn) => slettData(slettVilkarIAlleSteg(feltNavn)));
 
-  const handleEndreYrkesgruppe = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleEndreYrkesgruppe = (value: string) => {
     setBestemmelse("");
-    const yrkessituasjon = event.target.value;
+    const yrkessituasjon = value;
     oppdaterData(lagAvklartfakta(KV.Koder.YRKESGRUPPE, null, yrkessituasjon));
 
-    if (yrkessituasjon === FLYENDE_PERSONELL) {
+    if (yrkessituasjon === FLYENDE_PERSONELL && !konvensjonStorbritanniaToggleEnabled) {
       oppdaterData(lagTilleggBestemmelse(FO_883_2004_ART11_5));
     } else {
       slettData(slettTilleggBestemmelse());
     }
 
     if (konvensjonStorbritanniaToggleEnabled) {
+      slettData(slettLovvalgsbestemmelse());
       slettVilkår();
       if (yrkessituasjon === ORDINAER_UTEN_ART12 && !visStorbritanniaKonvensjon) {
         handleEndreBestemmelse(FO_883_2004_ART16_1);
@@ -132,63 +135,32 @@ const VurderingYrkesgruppe = ({
   };
 
   return (
-    <div>
+    <div className="vurderingYrkesgruppe">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Hva er søkerens yrkessituasjon?</Nav.Typo.Innholdstittel>
-      <Nav.Fieldset legend="">
-        <Nav.Radio
-          name="yrkesgruppe"
-          disabled={!redigerbart}
-          checked={fakta === ORDINAER}
-          value={ORDINAER}
-          onChange={handleEndreYrkesgruppe}
-          label="Yrkesaktiv"
-        />
-        <Nav.Radio
-          name="yrkesgruppe"
-          disabled={!redigerbart}
-          checked={fakta === SOKKEL_ELLER_SKIP}
-          value={SOKKEL_ELLER_SKIP}
-          onChange={handleEndreYrkesgruppe}
-          label="Yrkesaktiv på sokkel eller skip"
-        />
-        <Nav.Radio
-          name="yrkesgruppe"
-          disabled={!redigerbart}
-          checked={fakta === FLYENDE_PERSONELL}
-          value={FLYENDE_PERSONELL}
-          onChange={handleEndreYrkesgruppe}
-          label="Yrkesaktiv, som flygende personell"
-        />
-        <Nav.Radio
-          name="yrkesgruppe"
-          disabled={!redigerbart}
-          checked={fakta === ORDINAER_UTEN_ART12}
-          value={ORDINAER_UTEN_ART12}
-          onChange={handleEndreYrkesgruppe}
-          label={
-            konvensjonStorbritanniaToggleEnabled
-              ? "Yrkesaktiv, direkte til vurdering av anmodning om unntak"
-              : "Yrkesaktiv, direkte til vurdering av artikkel 16"
-          }
-        />
+      <Nav.RadioGroup
+        legend=""
+        hideLegend
+        onChange={handleEndreYrkesgruppe}
+        name="yrkesgruppe"
+        defaultValue={fakta}
+        disabled={!redigerbart}
+      >
+        <Nav.Radio value={ORDINAER}>Yrkesaktiv</Nav.Radio>
+        <Nav.Radio value={SOKKEL_ELLER_SKIP}>Yrkesaktiv på sokkel eller skip</Nav.Radio>
+        <Nav.Radio value={FLYENDE_PERSONELL}>Yrkesaktiv, som flygende personell</Nav.Radio>
+        <Nav.Radio value={ORDINAER_UTEN_ART12}>
+          {konvensjonStorbritanniaToggleEnabled
+            ? "Yrkesaktiv, direkte til vurdering av anmodning om unntak"
+            : "Yrkesaktiv, direkte til vurdering av artikkel 16"}
+        </Nav.Radio>
         {!(konvensjonStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
           <>
-            <Nav.Radio
-              name="yrkesgruppe"
-              disabled
-              checked={fakta === IKKE_YRKESAKTIV}
-              value={IKKE_YRKESAKTIV}
-              onChange={handleEndreYrkesgruppe}
-              label="Ikke yrkesaktiv"
-            />
-            <Nav.Radio
-              name="yrkesgruppe"
-              disabled
-              checked={fakta === KONTANTYTELSESMOTTAKER}
-              value={KONTANTYTELSESMOTTAKER}
-              onChange={handleEndreYrkesgruppe}
-              label="Kontantytelsesmottaker"
-            />
+            <Nav.Radio disabled value={IKKE_YRKESAKTIV}>
+              Ikke yrkesaktiv
+            </Nav.Radio>
+            <Nav.Radio disabled value={KONTANTYTELSESMOTTAKER}>
+              Kontantytelsesmottaker
+            </Nav.Radio>
           </>
         )}
 
@@ -205,7 +177,7 @@ const VurderingYrkesgruppe = ({
             ))}
           </Nav.Select>
         )}
-      </Nav.Fieldset>
+      </Nav.RadioGroup>
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !(redigerbart && harAvklaring),

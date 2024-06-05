@@ -26,22 +26,14 @@ const BooleanFeltRedigerer = ({ tekst, feltNavn, redigerbart }: BooleanFeltRedig
   return (
     <Nav.Row>
       <Nav.Column xs="12">
-        <Nav.Fieldset legend={tekst} className="boolean-felt-redigerer">
-          <Skjema.Radio
-            feltNavn={`loennOgGodtgjoerelse.${feltNavn}`}
-            label="Ja"
-            value
-            id={`${navn}.${BOOLSK_STRING.SANN}`}
-            disabled={!redigerbart}
-          />
-          <Skjema.Radio
-            feltNavn={`loennOgGodtgjoerelse.${feltNavn}`}
-            label="Nei"
-            value={false}
-            id={`${navn}.${BOOLSK_STRING.USANN}`}
-            disabled={!redigerbart}
-          />
-        </Nav.Fieldset>
+        <Skjema.RadioGroup legend={tekst} name={`loennOgGodtgjoerelse.${feltNavn}`} disabled={!redigerbart}>
+          <Nav.Radio value id={`${navn}.${BOOLSK_STRING.SANN}`}>
+            Ja
+          </Nav.Radio>
+          <Nav.Radio value={false} id={`${navn}.${BOOLSK_STRING.USANN}`}>
+            Nei
+          </Nav.Radio>
+        </Skjema.RadioGroup>
       </Nav.Column>
     </Nav.Row>
   );
@@ -71,7 +63,7 @@ type InntektRedigererProps = {
 
 const InntektRedigerer = ({ tittel, feltNavn, redigerbart }: InntektRedigererProps) => (
   <Nav.Column xs="4" className="inntekt-redigerer">
-    <Skjema.Input feltNavn={`loennOgGodtgjoerelse.${feltNavn}`} label={tittel} bredde="S" disabled={!redigerbart} />
+    <Skjema.Input feltNavn={`loennOgGodtgjoerelse.${feltNavn}`} label={tittel} disabled={!redigerbart} />
   </Nav.Column>
 );
 
@@ -150,7 +142,7 @@ const LonnOgNaturalytelserRedigerer = ({ redigerbart }: { redigerbart: boolean }
           />
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row>
+      <Nav.Row className="input__row">
         <InntektRedigerer feltNavn="bruttoLoennPerMnd" tittel="Lønn fra Norge" redigerbart={redigerbart} />
         <InntektRedigerer feltNavn="bruttoLoennUtlandPerMnd" tittel="Lønn fra utlandet" redigerbart={redigerbart} />
         <InntektRedigerer

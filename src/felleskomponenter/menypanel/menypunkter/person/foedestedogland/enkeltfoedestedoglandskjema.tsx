@@ -15,7 +15,7 @@ interface EnkeltFoedestedOgLandSkjemaProps {
 const Enkeltfoedestedoglandskjema = ({ redigerbart, onBinClick }: EnkeltFoedestedOgLandSkjemaProps) => (
   <Nav.Row className="enkeltFoedestedOgLandSkjema">
     <Nav.Column xs="5">
-      <Skjema.Input disabled={!redigerbart} feltNavn="foedestedOgLand.foedested" label="Fødested" bredde="fullbredde" />
+      <Skjema.Input disabled={!redigerbart} feltNavn="foedestedOgLand.foedested" label="Fødested" />
     </Nav.Column>
     <Nav.Column xs="5">
       <Skjema.LandVelger

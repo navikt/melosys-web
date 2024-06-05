@@ -72,7 +72,7 @@ export const Soknadsland = createSelector(
 );
 
 /* Avklart fakta om søker er yrkesaktiv, ytelsesmottaker etc. */
-export const Yrkesgruppe = createSelector(
+export const YrkesgruppeSelector = createSelector(
   (state) => AvklartefaktaSelector(state),
   (alleAvklarteFakta) => {
     const avklartFakta = alleAvklarteFakta.find(
@@ -84,7 +84,7 @@ export const Yrkesgruppe = createSelector(
 );
 
 /* Avklart fakta om søker er ordinær arbeidstaker, selvstendig næringsdrivende, begge deler eller tjenesteperson. */
-export const Yrkesaktivitet = createSelector(
+export const YrkesaktivitetSelector = createSelector(
   (state) => AvklartefaktaSelector(state),
   (alleAvklarteFakta) => {
     const avklartFakta = alleAvklarteFakta.find(

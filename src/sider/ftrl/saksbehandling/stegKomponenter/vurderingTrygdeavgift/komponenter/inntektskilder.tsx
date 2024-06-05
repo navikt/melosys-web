@@ -17,8 +17,6 @@ import {
   erBrukerSkattepliktigIHelePerioden,
 } from "../vurderingTrygdeavgiftSchema";
 import "./inntektskilder.css";
-import { useFeatureToggle } from "../../../../../../featuretoggle";
-import { MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER } from "../../../../../../featuretoggle/toggleNavn";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
@@ -57,8 +55,6 @@ export const Inntektskilder = ({
   fields,
   medlemskapsTypeErPliktig,
 }: InntektskilderProps) => {
-  const ftrlYrkesaktivPliktigeBestemmelserEnabled = useFeatureToggle(MELOSYS_FTRL_YRKESAKTIV_PLIKTIGE_BESTEMMELSER);
-
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
   const handleEndreKildetype = (index: number, kildetype: string) => {
@@ -125,18 +121,18 @@ export const Inntektskilder = ({
                 >
                   {MKV.KTObjects.inntektskildetype
                     .filter((kt: KTObject) => {
-                      if (ftrlYrkesaktivPliktigeBestemmelserEnabled && medlemskapsTypeErPliktig) {
-                        return [ARBEIDSINNTEKT, NÆRINGSINNTEKT, PENSJON, UFØRETRYGD].includes(kt.kode);
-                      }
-                      return [
-                        ARBEIDSINNTEKT_FRA_NORGE,
-                        NÆRINGSINNTEKT_FRA_NORGE,
-                        INNTEKT_FRA_UTLANDET,
-                        FN_SKATTEFRITAK,
-                        MISJONÆR,
-                        PENSJON_UFØRETRYGD,
-                        PENSJON_UFØRETRYGD_KILDESKATT,
-                      ].includes(kt.kode);
+                      const gyldigeInntektskilder = medlemskapsTypeErPliktig
+                        ? [ARBEIDSINNTEKT, NÆRINGSINNTEKT, PENSJON, UFØRETRYGD]
+                        : [
+                            ARBEIDSINNTEKT_FRA_NORGE,
+                            NÆRINGSINNTEKT_FRA_NORGE,
+                            INNTEKT_FRA_UTLANDET,
+                            FN_SKATTEFRITAK,
+                            MISJONÆR,
+                            PENSJON_UFØRETRYGD,
+                            PENSJON_UFØRETRYGD_KILDESKATT,
+                          ];
+                      return gyldigeInntektskilder.includes(kt.kode);
                     })
                     .map((kt: KTObject) => (
                       <option key={kt.kode} value={kt.kode}>
@@ -153,24 +149,17 @@ export const Inntektskilder = ({
                   </Nav.Typo.Element>
                 ) : null}
                 {skalFylleInnArbAvgBetales ? (
-                  <div className="radioknapp_gruppe">
-                    <Forms.Radio
-                      label="Ja"
-                      name={`inntektskilder[${index}].arbAvgBetales`}
-                      control={control}
-                      value={BOOLSK_STRING.SANN}
-                      disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
-                      onChange={(value) => handleEndreArbAvgBetales(index, value)}
-                    />
-                    <Forms.Radio
-                      label="Nei"
-                      name={`inntektskilder[${index}].arbAvgBetales`}
-                      control={control}
-                      value={BOOLSK_STRING.USANN}
-                      disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
-                      onChange={(value) => handleEndreArbAvgBetales(index, value)}
-                    />
-                  </div>
+                  <Forms.RadioGroup
+                    legend=""
+                    hideLegend
+                    name={`inntektskilder[${index}].arbAvgBetales`}
+                    disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+                    control={control}
+                    onChange={(value) => handleEndreArbAvgBetales(index, value)}
+                  >
+                    <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+                    <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                  </Forms.RadioGroup>
                 ) : (
                   <div className="ikkeRelevant">
                     <p>Ikke relevant</p>
@@ -190,6 +179,7 @@ export const Inntektskilder = ({
                     name={`inntektskilder[${index}].bruttoInntekt`}
                     control={control}
                     disabled={!redigerbart}
+                    className="brutto_inntekt__input"
                   />
                 ) : (
                   <div className="ikkeRelevant">

@@ -169,8 +169,8 @@ const mapStateToProps = (state: RootState) => ({
       mottatteOpplysningerSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(state),
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
     avklartefakta: {
-      yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
-      yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
+      yrkesgruppe: avklartefaktaSelectors.YrkesgruppeSelector(state),
+      yrkesaktivitet: avklartefaktaSelectors.YrkesaktivitetSelector(state),
       sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
     },
     vilkar: {

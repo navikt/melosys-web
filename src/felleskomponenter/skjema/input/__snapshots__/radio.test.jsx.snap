@@ -3,23 +3,32 @@
 exports[`Radio > snapshot test 1`] = `
 <div>
   <div
-    class="skjemaelement"
+    class="navds-radio navds-radio--medium"
   >
     <input
-      aria-invalid="false"
+      aria-labelledby="aksel-id-2"
       array="[object Object]"
-      class="skjemaelement__input radioknapp"
+      class="navds-radio__input"
       form="test"
       id="1"
-      name="Testname"
       type="radio"
       value=""
     />
     <label
-      class="skjemaelement__label"
+      class="navds-radio__label"
       for="1"
     >
-      Test
+      <span
+        class="navds-radio__content"
+      >
+        <span
+          aria-hidden="true"
+          class="navds-body-short navds-body-short--medium"
+          id="aksel-id-2"
+        >
+          Test
+        </span>
+      </span>
     </label>
   </div>
 </div>

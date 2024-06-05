@@ -1,97 +1,77 @@
 import { ChangeEventHandler, Fragment } from "react";
-import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../../melosyskodeverk";
-import * as Api from "../../../../../../services/api";
 import * as KV from "../../../../../../kodeverk";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
-import { BOOLSK_STRING } from "../../../../../../constants";
-import { Begrunnelse, kodeInkludererFritekst } from "../vurderingBestemmelse";
 import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
+import { Begrunnelse, VilkårOgBegrunnelser } from "./typer";
+import { kodeInkludererFritekst } from "../vurderingBestemmelse";
 
-const { SANN, USANN } = BOOLSK_STRING;
 const hjelpetekster = new Map([
   [
-    MKV.Koder.vilkaar.FTRL_FORUTGÅENDE_TRYGDETID,
+    MKV.Koder.vilkaar.FTRL_2_8_FORUTGÅENDE_TRYGDETID,
     "Husk at perioder med trygdetid fra andre EØS-land sidestilles med norsk trygdetid.",
   ],
 ]);
 
 interface VilkaarOgBegrunnelserProps {
-  vilkårOgBegrunnelser: Api.MedlemAvFolketrygden.Bestemmelser.VilkårOgBegrunnelser;
-  alleValgteVilkår: Map<string, string>;
+  vilkårOgBegrunnelser: VilkårOgBegrunnelser;
+  alleValgteVilkår: Map<string, boolean | null | undefined>;
   alleValgteBegrunnelser: Map<string, Begrunnelse>;
-  begrunnelseKodeverk: {
-    [key: string]: KTObject[];
-  };
-  handleEndreVilkår: ChangeEventHandler<HTMLInputElement>;
+  handleEndreVilkår: (name: string, value: boolean) => void;
   handleEndreBegrunnelseKode: ChangeEventHandler<HTMLSelectElement>;
   handleEndreBegrunnelseFritekst: (vilkår: string, fritekst: string) => void;
   redigerbart: boolean;
+  selvstendigNæringValgt?: boolean;
 }
 
 export const VilkaarOgBegrunnelser = ({
   vilkårOgBegrunnelser: { vilkår, muligeBegrunnelser },
   alleValgteVilkår,
   alleValgteBegrunnelser,
-  begrunnelseKodeverk,
   handleEndreVilkår,
   handleEndreBegrunnelseKode,
   handleEndreBegrunnelseFritekst,
   redigerbart,
+  selvstendigNæringValgt,
 }: VilkaarOgBegrunnelserProps) => {
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
-  const valgtVilkår = alleValgteVilkår.get(`${vilkår}`);
-  const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}_begrunnelser`);
+  const vilkårErValgt = alleValgteVilkår.get(`${vilkår}`);
+  const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!!;
   const visBegrunnelseFritekst = kodeInkludererFritekst(
-    begrunnelseKodeverk,
+    MKV.KTObjects.begrunnelser.folketrygdloven,
     valgtBegrunnelseForVilkår?.begrunnelseKode
   );
+  const harValgtFTRL_ARBEIDSTAKER = vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && vilkårErValgt;
 
   return (
     <Fragment>
-      <Nav.Fieldset
+      <Nav.RadioGroup
         legend={
           <LabelMedHjelpetekst
             label={KV.finnTermFraListe(MKV.KTObjects.vilkaar, vilkår)}
             hjelpetekst={hjelpetekstForVilkaar}
           />
         }
+        onChange={(value) => handleEndreVilkår(vilkår, value)}
+        name={vilkår}
+        defaultValue={vilkårErValgt}
+        disabled={!redigerbart}
       >
-        <Nav.Row>
-          <Nav.Column xs="1">
-            <Nav.Radio
-              className="radio"
-              label="Ja"
-              name={vilkår}
-              onChange={handleEndreVilkår}
-              checked={valgtVilkår === SANN}
-              value={SANN}
-              key={SANN}
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
-          <Nav.Column xs="1">
-            <Nav.Radio
-              className="radio"
-              label="Nei"
-              name={vilkår}
-              onChange={handleEndreVilkår}
-              checked={valgtVilkår === USANN}
-              value={USANN}
-              key={USANN}
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Fieldset>
-
-      {valgtVilkår === USANN && <IngenFlytMelding />}
-      {valgtVilkår === SANN && !Utils._isEmpty(muligeBegrunnelser) && (
+        <Nav.Radio value>Ja</Nav.Radio>
+        <Nav.Radio value={false}>Nei</Nav.Radio>
+      </Nav.RadioGroup>
+      {selvstendigNæringValgt && harValgtFTRL_ARBEIDSTAKER && (
+        <Nav.Alert variant="error">
+          Virksomheten du har valgt på steget &quot;Virksomhet&quot; er en selvstendig virksomhet
+        </Nav.Alert>
+      )}
+      {vilkårErValgt === false && <IngenFlytMelding />}
+      {vilkårErValgt && !Utils._isEmpty(muligeBegrunnelser) && (
         <Nav.Fieldset
           className="select"
           legend={
@@ -107,16 +87,16 @@ export const VilkaarOgBegrunnelser = ({
                 label=""
                 bredde="fullbredde"
                 onChange={handleEndreBegrunnelseKode}
-                name={`${vilkår}_begrunnelser`}
+                name={`${vilkår}`}
                 value={valgtBegrunnelseForVilkår?.begrunnelseKode}
                 disabled={!redigerbart}
               >
-                <option key="" value="" disabled={!!alleValgteBegrunnelser.get(`${vilkår}_begrunnelser`)}>
+                <option key="" value="" disabled={!!alleValgteBegrunnelser.get(`${vilkår}`)}>
                   Velg...
                 </option>
                 {muligeBegrunnelser.map((begrunnelse) => (
                   <option key={begrunnelse} value={begrunnelse}>
-                    {KV.termFraNestedKTObject(begrunnelseKodeverk, begrunnelse)}
+                    {KV.termFraNestedKTObject(MKV.KTObjects.begrunnelser.folketrygdloven, begrunnelse)}
                   </option>
                 ))}
               </Nav.Select>
@@ -127,7 +107,7 @@ export const VilkaarOgBegrunnelser = ({
               <Nav.Column xs="12">
                 <HtmlEditor
                   value={valgtBegrunnelseForVilkår?.begrunnelseFritekst || ""}
-                  onChange={(fritekst: string) => handleEndreBegrunnelseFritekst(`${vilkår}_begrunnelser`, fritekst)}
+                  onChange={(fritekst: string) => handleEndreBegrunnelseFritekst(`${vilkår}`, fritekst)}
                   placeholder="Vennligst spesifiser..."
                   spellCheck
                   readOnly={!redigerbart}

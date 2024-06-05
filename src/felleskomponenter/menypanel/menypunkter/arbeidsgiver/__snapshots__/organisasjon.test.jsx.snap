@@ -6,35 +6,31 @@ exports[`organisasjon > snapshot test 1`] = `
     class=""
   >
     <div
-      class="container-fluid"
+      class="row"
     >
       <div
-        class="row"
+        class="col col-xs-6"
       >
         <div
-          class="col col-xs-6"
+          class="organisasjonsAdresse"
         >
           <div
-            class="organisasjonsAdresse"
+            class="tittel"
           >
-            <div
-              class="tittel"
-            >
-              Postadresse
-            </div>
-            <address
-              class="registeradresse"
-            >
-              <div>
-                0123
-                 
-                Oslo
-              </div>
-              <div>
-                NO
-              </div>
-            </address>
+            Postadresse
           </div>
+          <address
+            class="registeradresse"
+          >
+            <div>
+              0123
+               
+              Oslo
+            </div>
+            <div>
+              NO
+            </div>
+          </address>
         </div>
       </div>
     </div>

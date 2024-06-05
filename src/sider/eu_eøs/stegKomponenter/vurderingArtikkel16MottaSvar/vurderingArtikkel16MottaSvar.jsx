@@ -1,7 +1,7 @@
-import { Fragment, useEffect, useState, useCallback } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
-import { reduxForm, getFormValues } from "redux-form";
+import { getFormValues, reduxForm } from "redux-form";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -92,26 +92,11 @@ const FormKomponent = ({
     <form name="anmodningSvar" id="anmodningSvar" onSubmit={(e) => e.preventDefault()}>
       <Nav.Row className="svarFraMyndighetRow">
         <Nav.Column xs="6">
-          <Nav.Fieldset disabled={!redigerbart} legend="Svar fra myndighetene">
-            <Skjema.Radio
-              name="svarFraMyndighetene"
-              feltNavn="anmodningsperiodeSvarType"
-              label="Innvilgelse"
-              value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE}
-            />
-            <Skjema.Radio
-              name="svarFraMyndighetene"
-              feltNavn="anmodningsperiodeSvarType"
-              label="Delvis innvilgelse"
-              value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE}
-            />
-            <Skjema.Radio
-              name="svarFraMyndighetene"
-              feltNavn="anmodningsperiodeSvarType"
-              label="Avslag"
-              value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}
-            />
-          </Nav.Fieldset>
+          <Skjema.RadioGroup legend="Svar fra myndighetene" name="anmodningsperiodeSvarType" disabled={!redigerbart}>
+            <Nav.Radio value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE}>Innvilgelse</Nav.Radio>
+            <Nav.Radio value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE}>Delvis innvilgelse</Nav.Radio>
+            <Nav.Radio value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}>Avslag</Nav.Radio>
+          </Skjema.RadioGroup>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
@@ -205,10 +190,9 @@ const VurderingArtikkel16MottaSvar = (props) => {
 
   useEffect(() => {
     hentAnmodningsperiodeSvar(anmodningsperiodeID).then((svar) => oppdaterData(lagAnmodningsperiodesvar(svar.data)));
-    const cleanup = () => {
+    return () => {
       slettData();
     };
-    return cleanup;
   }, []);
 
   useEffect(() => {

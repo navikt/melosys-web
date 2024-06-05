@@ -18,9 +18,9 @@ const ListevelgerEnkelt = ({ input, label, meta, muligeValg, placeholder, disabl
 
   return (
     <div>
-      <Nav.Input
+      <Nav.TextField
         label={label}
-        feil={feil}
+        error={feil}
         placeholder={placeholder}
         className="listevelger__linje__input"
         list={`dataliste-${inputProps.name}`}

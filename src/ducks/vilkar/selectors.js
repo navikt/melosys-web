@@ -46,7 +46,7 @@ export const art11_3A = createSelector(
 export const art11_4_1 = createSelector(
   (state) => VilkarSelector(state),
   (alleVilkar) =>
-    finnVilkår(alleVilkar, MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_1)
+    finnVilkår(alleVilkar, MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1)
 );
 
 export const art11_4_2 = createSelector(
@@ -85,7 +85,7 @@ export const UtsendingsvilkårNæringsdrivendeSelector = createSelector(
 export const UtsendingsvilkårSelector = createSelector(
   (state) => UtsendingsvilkårArbeidstakerSelector(state),
   (state) => UtsendingsvilkårNæringsdrivendeSelector(state),
-  (state) => avklartefaktaSelectors.Yrkesaktivitet(state),
+  (state) => avklartefaktaSelectors.YrkesaktivitetSelector(state),
   (utsendingsvilkårforArbeidstaker, utsendingsvilkårForNæringsdrivende, yrkesaktivitet) => {
     if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER) {
       return utsendingsvilkårforArbeidstaker;

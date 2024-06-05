@@ -120,7 +120,7 @@ export const Menypanel = ({
         <Nav.Column xs="3" className="utenPadding">
           <Sidemeny heading="Opplysninger" linkGroups={linkGroups} onClick={handleClick} />
         </Nav.Column>
-        <Nav.Column xs="9" className="utenPadding">
+        <Nav.Column xs="9" className="utenPadding menypanel__inhold">
           <aside>
             <div className="panel" id={activeLink?.label}>
               {activeLink?.content || <div />}

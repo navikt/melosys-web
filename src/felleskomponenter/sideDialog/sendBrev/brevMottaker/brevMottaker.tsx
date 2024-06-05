@@ -187,23 +187,21 @@ const BrevMottaker = ({
             </Nav.Column>
           ) : (
             <Nav.Column xs="12" className="arbeidsgiver">
-              <LabelMedHjelpetekst label="Velg: " hjelpetekst={arbeidsgiverHjelptekst} bold small />
-              {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.BrevAdresse) => (
-                <Fragment key={Utils._uuid()}>
-                  <Skjema.Radio
-                    className="arbeidsgiver__radio"
-                    feltNavn="arbeidsgiver"
-                    label={`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
-                    id={`arbeidsgiver.${virksomhet.orgnr}`}
-                    key={`arbeidsgiver.${virksomhet.orgnr}`}
-                    value={virksomhet.orgnr}
-                    disabled={!redigerbart}
-                  />
-                  {formValues.arbeidsgiver === virksomhet.orgnr && adresse?.mottakerAdresse && (
-                    <BrevAdresse {...adresse?.mottakerAdresse} className="arbeidsgiver__adresse" />
-                  )}
-                </Fragment>
-              ))}
+              <Skjema.RadioGroup
+                legend={<LabelMedHjelpetekst label="Velg: " hjelpetekst={arbeidsgiverHjelptekst} bold small />}
+                name="arbeidsgiver"
+              >
+                {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.BrevAdresse) => (
+                  <Fragment key={`arbeidsgiver.${virksomhet.orgnr}`}>
+                    <Nav.Radio value={virksomhet.orgnr}>
+                      {`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
+                    </Nav.Radio>
+                    {formValues.arbeidsgiver === virksomhet.orgnr && adresse?.mottakerAdresse && (
+                      <BrevAdresse {...adresse?.mottakerAdresse} className="arbeidsgiver__adresse" />
+                    )}
+                  </Fragment>
+                ))}
+              </Skjema.RadioGroup>
             </Nav.Column>
           )}
         </Nav.Row>
@@ -215,7 +213,7 @@ const BrevMottaker = ({
             <Skjema.Input
               feltNavn="organisasjonsnummer"
               label="Organisasjonsnummer"
-              placeholder="Skriv inn"
+              placeholder="Skriv inn..."
               disabled={!redigerbart}
             />
             {adresse?.organisasjonsAdresse && (
@@ -232,7 +230,7 @@ const BrevMottaker = ({
             <Skjema.Input
               feltNavn="kontaktperson"
               label="Kontaktperson"
-              placeholder="Skriv inn"
+              placeholder="Skriv inn..."
               disabled={!redigerbart}
             />
           </Nav.Column>

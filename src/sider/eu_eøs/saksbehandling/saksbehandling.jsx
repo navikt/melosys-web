@@ -27,7 +27,6 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingsperioderOperations, behandlingsperioderSelectors } from "../../../ducks/behandlingsperioder";
-import { formSelectors } from "../../../ducks/form";
 import { datalastingOperations } from "../../../ducks/datalasting";
 import { dokumenterOperations } from "../../../ducks/dokumenter";
 import { anmodningsperiodesvarOperations } from "../../../ducks/anmodningsperiodesvar";
@@ -145,13 +144,6 @@ class Saksbehandling extends Component {
     });
   };
 
-  oppdaterOgLagreBehandlingerHandler = async () => {
-    const { skjema, artikkel16_skjema, oppdaterBehandlingerState, lagrePerioder } = this.props;
-    await oppdaterBehandlingerState({ ...skjema, ...artikkel16_skjema });
-
-    lagrePerioder();
-  };
-
   render() {
     const {
       redigerbart,
@@ -189,7 +181,6 @@ class Saksbehandling extends Component {
                       lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                       lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
                       lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
-                      oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
                       tilForsiden={tilForsiden}
                       startOgVisOppfriskModal={startOgVisOppfriskModal}
                       behandlingOppfriskes={behandlingOppfriskes}
@@ -229,8 +220,6 @@ Saksbehandling.propTypes = {
   history: PT.object.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
-  skjema: PT.object,
-  artikkel16_skjema: PT.object,
   // Funcs
   hentFagsaker: PT.func.isRequired,
   hentBehandling: PT.func.isRequired,
@@ -248,9 +237,6 @@ Saksbehandling.propTypes = {
   lagreVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
-  lagrePerioder: PT.func.isRequired,
-  oppdaterVilkarState: PT.func.isRequired,
-  oppdaterBehandlingerState: PT.func.isRequired,
   anmodningsperioder: PT.array,
   sendAnmodningsperioder: PT.func.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
@@ -274,9 +260,7 @@ Saksbehandling.defaultProps = {
   redigerbart: null,
   avklartefakta: [],
   vilkar: [],
-  skjema: {},
   anmodningsperioder: [],
-  artikkel16_skjema: {},
   lovvalgsperiodeFom: undefined,
   lovvalgsperiodeTom: undefined,
 };
@@ -291,8 +275,6 @@ const mapStateToProps = (state) => ({
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
-  skjema: formSelectors.SoknadFormSelector(state).values,
-  artikkel16_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
   anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
@@ -325,10 +307,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetBehandlingsPerioderState: () => dispatch(behandlingsperioderOperations.resetPerioderState()),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
-  oppdaterVilkarState: (skjema) => dispatch(vilkarOperations.oppdaterState(skjema)),
-  oppdaterBehandlingerState: (skjema) => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
-  lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
   sendAnmodningsperioder: (behandlingID, body) => dispatch(anmodningsperioderOperations.send(behandlingID, body)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
   hentAnmodningsperiodesvar: (anmodningsperiodeID) =>

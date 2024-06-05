@@ -33,7 +33,6 @@ const InnerAdresselinjer = (props: InnerAdresselinjerProps) => {
                 label=""
                 feltNavn={`representantIUtlandet.adresselinjer[${index}]`}
                 disabled={!redigerbart}
-                bredde="fullbredde"
                 placeholder={`Adresselinje ${index + 1}`}
               />
             </Nav.Column>
