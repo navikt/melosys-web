@@ -1,0 +1,131 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VurderingAarsavregning > renders correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="navds-stack navds-vstack"
+    style="--__ac-stack-wrap: nowrap; --__ac-stack-gap-xs: var(--a-spacing-3); --__ac-stack-direction-xs: column; --__ac-stack-align-xs: start;"
+  >
+    <h1>
+      Årsavregning
+    </h1>
+    <div>
+      År:
+      <select
+        data-testid="aarVelger"
+        style="margin-left: 1rem; padding: 0.5rem 3rem 0.5rem 0.5rem; border-radius: 0.25rem; border: 1px solid #ccc; background: rgb(255, 255, 255);"
+      >
+        <option
+          value="2023"
+        >
+          2023
+        </option>
+        <option
+          value="2022"
+        >
+          2022
+        </option>
+        <option
+          value="2021"
+        >
+          2021
+        </option>
+        <option
+          value="2020"
+        >
+          2020
+        </option>
+        <option
+          value="2019"
+        >
+          2019
+        </option>
+        <option
+          value="2018"
+        >
+          2018
+        </option>
+        <option
+          value="2017"
+        >
+          2017
+        </option>
+      </select>
+    </div>
+    <div
+      class="navds-stack tabeller navds-vstack"
+      style="--__ac-stack-wrap: nowrap; --__ac-stack-gap-xs: var(--a-spacing-6); --__ac-stack-direction-xs: column; --__ac-stack-align-xs: start;"
+    />
+    <div
+      class="avvik"
+    >
+      <b>
+        Er det avvik i opplysningene fra skatt eller bruker?
+      </b>
+      <div
+        class="navds-radio navds-radio--medium"
+      >
+        <input
+          aria-labelledby="aksel-id-2"
+          class="navds-radio__input"
+          id="radio-aksel-id-1"
+          type="radio"
+          value="10"
+        />
+        <label
+          class="navds-radio__label"
+          for="radio-aksel-id-1"
+        >
+          <span
+            class="navds-radio__content"
+          >
+            <span
+              aria-hidden="true"
+              class="navds-body-short navds-body-short--medium"
+              id="aksel-id-2"
+            >
+              Ja
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        class="navds-radio navds-radio--medium"
+      >
+        <input
+          aria-labelledby="aksel-id-5"
+          class="navds-radio__input"
+          id="radio-aksel-id-4"
+          type="radio"
+          value="20"
+        />
+        <label
+          class="navds-radio__label"
+          for="radio-aksel-id-4"
+        >
+          <span
+            class="navds-radio__content"
+          >
+            <span
+              aria-hidden="true"
+              class="navds-body-short navds-body-short--medium"
+              id="aksel-id-5"
+            >
+              Nei
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
+    <button
+      class="navds-button navds-button--primary navds-button--medium"
+    >
+      <span
+        class="navds-label"
+      >
+        Bekreft og fortsett
+      </span>
+    </button>
+  </div>
+</DocumentFragment>
+`;
