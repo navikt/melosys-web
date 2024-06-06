@@ -15,10 +15,10 @@ export const LandkoderFraSakstypeSelector = createSelector(
   (state: RootState) => LandkoderSelector(state),
   (state: RootState) => SakstypeKodeSelector(state),
   (state: RootState) => erFeatureToggleEnabled(MELOSYS_TRYGDEAVTALE_KOREA, state),
-  (landkoder, sakstype, koreaToggle): KTObject[] => {
+  (landkoder, sakstype, koreaToggleEnabled): KTObject[] => {
     switch (sakstype) {
       case MKV.Koder.sakstyper.TRYGDEAVTALE:
-        if (koreaToggle) {
+        if (koreaToggleEnabled) {
           return MKV.KTObjects.trygdeavtale_myndighetsland;
         }
         return MKV.KTObjects.trygdeavtale_myndighetsland.filter((land: KTObject) => land.kode !== "KR");
