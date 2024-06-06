@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
@@ -32,14 +32,22 @@ import "./vurderingVedtak.css";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import * as Api from "../../../services/api";
 
+const { FO_883_2004_ART11_3A } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
+const { FO_883_2004_ART11_4_1 } = MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004;
+const { EU_EOS } = MKV.Koder.sakstyper;
+const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
+const {
+  UTSENDT_ARBEIDSTAKER,
+  UTSENDT_SELVSTENDIG,
+  ARBEID_FLERE_LAND,
+  ARBEID_TJENESTEPERSON_ELLER_FLY,
+  BESLUTNING_LOVVALG_NORGE,
+} = MKV.Koder.behandlinger.behandlingstema;
+
 const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) => {
-  if (
-    lovvalgsbestemmelse.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A &&
-    tilleggsbestemmelse.kode === MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1
-  ) {
+  if (lovvalgsbestemmelse.kode === FO_883_2004_ART11_3A && tilleggsbestemmelse.kode === FO_883_2004_ART11_4_1) {
     return `${KV.objektTilTerm(tilleggsbestemmelse)} og ${KV.objektTilTerm(lovvalgsbestemmelse)}`;
   }
-
   return KV.objektTilTerm(lovvalgsbestemmelse);
 };
 
@@ -47,10 +55,8 @@ const finnSedMottakerLand = (arbeidsland, bostedsland, lovvalgsperiode) => {
   const bostedslandKode = bostedsland.kode;
 
   if (
-    lovvalgsperiode.lovvalgsbestemmelse ===
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A &&
-    lovvalgsperiode.tilleggBestemmelse ===
-      MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1
+    lovvalgsperiode.lovvalgsbestemmelse === FO_883_2004_ART11_3A &&
+    lovvalgsperiode.tilleggBestemmelse === FO_883_2004_ART11_4_1
   ) {
     return bostedslandKode;
   }
@@ -59,52 +65,76 @@ const finnSedMottakerLand = (arbeidsland, bostedsland, lovvalgsperiode) => {
 };
 
 const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
-  sakstype === MKV.Koder.sakstyper.EU_EOS &&
-  [
-    MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-    MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
-  ].includes(behandlingstema);
+  sakstype === EU_EOS && [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(behandlingstema);
 
 const skalViseMottakerinstitusjoner = (sakstype, sakstema, behandlingstema, behandlingstype) => {
   return (
-    sakstype === MKV.Koder.sakstyper.EU_EOS &&
-    [
-      MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-      MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
-      MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-      MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
-    ].includes(behandlingstema) &&
+    sakstype === EU_EOS &&
+    [UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG, ARBEID_FLERE_LAND, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(
+      behandlingstema
+    ) &&
     !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype)
   );
 };
 
+const mapStateToProps = (state) => ({
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  initialValues: {
+    vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
+    vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    kopiTilArbeidsgiver: true,
+    mottakerinstitusjon: "",
+    kreverMottakerinstitusjon: false,
+    fritekstSed: null,
+  },
+});
+
+VurderingVedtak.propTypes = {
+  tilbake: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
+  touch: PT.func.isRequired,
+  form: PT.string.isRequired,
+  visAntallManederUtland: PT.bool,
+  pdfDokumenter: MPT.DokumentMetadataListe.isRequired,
+  kontrollerFerdigbehandling: PT.func.isRequired,
+  harFeilmeldinger: PT.bool.isRequired,
+  aktivtSteg: PT.bool,
+  validerMottatteOpplysninger: PT.func.isRequired,
+};
+
+VurderingVedtak.defaultProps = {
+  visAntallManederUtland: true,
+  aktivtSteg: false,
+};
+
 const VurderingVedtak = ({
-  lovvalgsperioder,
-  arbeidsland,
-  bostedsland,
   redigerbart,
-  behandlingID,
   tilbake,
-  sakstype,
-  sakstema,
-  behandlingstema,
   behandlingstype,
   touch,
-  formIsValid,
-  formValues,
   form,
   visAntallManederUtland,
   pdfDokumenter,
-  erArtikkel11_4,
   kontrollerFerdigbehandling,
   harFeilmeldinger,
   aktivtSteg,
   validerMottatteOpplysninger,
-  mottatteOpplysningerStatus,
 }) => {
+  const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   const [erBucAapen, setErBucAapen] = useState(true);
-  const dispatch = useDispatch();
+
+  const lovvalgsperioder = useSelector(lovvalgsperioderSelectors.LovvalgsperioderSelector);
+  const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector);
+  const bostedsland = useSelector(avklartefaktaSelectors.BostedslandSelector);
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+  const formIsValid = useSelector(isValid(KV.Form.ARTIKKEL_12_VEDTAK));
+  const formValues = useSelector(getFormValues(KV.Form.ARTIKKEL_12_VEDTAK));
+  const erArtikkel11_4 = useSelector(flytSelectors.ErIArtikkel11_4Selector);
+  const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
   let oppdaterFørKontroll = true;
 
   const lovvalget = lovvalgsperioder[0] || {};
@@ -134,7 +164,7 @@ const VurderingVedtak = ({
   const lagFattVedtakEOSReqDto = () => {
     return {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
       fritekst: formValues.vedtaksbrevFritekst,
       fritekstSed: formValues.fritekstSed,
       kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
@@ -144,7 +174,7 @@ const VurderingVedtak = ({
   };
 
   useEffect(() => {
-    if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE) {
+    if (behandlingstema === BESLUTNING_LOVVALG_NORGE) {
       Api.Kontroll.erBucAapen(behandlingID).then((res) => {
         setErBucAapen(res);
       });
@@ -156,7 +186,7 @@ const VurderingVedtak = ({
       setVedtakPending(true);
       const request = {
         behandlingID,
-        vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        vedtakstype: data.formValues.vedtakstype || FØRSTEGANGSVEDTAK,
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
         kontrollerSomSkalIgnoreres: data.formValues.kopiTilArbeidsgiver
           ? []
@@ -196,8 +226,7 @@ const VurderingVedtak = ({
 
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !flereSoknadslandEnnTillatt;
 
-  const bucLukketOgLovvalgNorge =
-    !erBucAapen && behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE;
+  const bucLukketOgLovvalgNorge = !erBucAapen && behandlingstema === BESLUTNING_LOVVALG_NORGE;
 
   return (
     <div className="vedtak">
@@ -297,61 +326,6 @@ const VurderingVedtak = ({
     </div>
   );
 };
-
-VurderingVedtak.propTypes = {
-  tilbake: PT.func.isRequired,
-  lovvalgsperioder: PT.array.isRequired,
-  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
-  bostedsland: MPT.Kodeverk,
-  behandlingID: PT.number.isRequired,
-  redigerbart: PT.bool.isRequired,
-  sakstype: PT.string.isRequired,
-  sakstema: PT.string.isRequired,
-  behandlingstema: PT.string.isRequired,
-  behandlingstype: PT.string.isRequired,
-  formIsValid: PT.bool.isRequired,
-  formValues: PT.object,
-  touch: PT.func.isRequired,
-  form: PT.string.isRequired,
-  visAntallManederUtland: PT.bool,
-  pdfDokumenter: MPT.DokumentMetadataListe.isRequired,
-  erArtikkel11_4: PT.bool.isRequired,
-  kontrollerFerdigbehandling: PT.func.isRequired,
-  harFeilmeldinger: PT.bool.isRequired,
-  aktivtSteg: PT.bool,
-  validerMottatteOpplysninger: PT.func.isRequired,
-  mottatteOpplysningerStatus: PT.string.isRequired,
-};
-
-VurderingVedtak.defaultProps = {
-  formValues: {},
-  visAntallManederUtland: true,
-  bostedsland: {},
-  aktivtSteg: false,
-};
-
-const mapStateToProps = (state) => ({
-  lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
-  sakstema: fagsakSelectors.SakstemaKodeSelector(state),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),
-  formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
-  erArtikkel11_4: flytSelectors.ErIArtikkel11_4Selector(state),
-  initialValues: {
-    vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
-    vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    kopiTilArbeidsgiver: true,
-    mottakerinstitusjon: "",
-    kreverMottakerinstitusjon: false,
-    fritekstSed: null,
-  },
-  mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
-});
 
 const VurderingVedtakForm = reduxForm({
   form: KV.Form.ARTIKKEL_12_VEDTAK,
