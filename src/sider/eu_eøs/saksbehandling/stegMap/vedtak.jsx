@@ -81,7 +81,6 @@ class Vedtak extends Steg {
 
       return {
         redigerbart: _propsLight.generiskStegRedigerbart,
-        visAntallManederUtland: false,
         pdfDokumenter,
         harFeilmeldinger: _propsLight.harFeilmeldinger,
       };
@@ -89,8 +88,7 @@ class Vedtak extends Steg {
     this.beregnRelevantUI = () => ({});
     this.handlers = {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
-      validerMottatteOpplysninger: this._propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
+      validerMottatteOpplysninger: propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
     };
     this.status = FANE_STATUS.OK;
   }

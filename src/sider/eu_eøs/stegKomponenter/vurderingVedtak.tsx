@@ -119,7 +119,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type VurderingVedtakProps = PropsFromRedux & {
   tilbake: () => void;
   redigerbart: boolean;
-  visAntallManederUtland?: boolean;
   pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[];
   harFeilmeldinger: boolean;
   aktivtSteg?: boolean;
@@ -133,7 +132,6 @@ const VurderingVedtak = ({
   touch,
   form,
   formValues,
-  visAntallManederUtland = true,
   pdfDokumenter,
   harFeilmeldinger,
   aktivtSteg = false,
@@ -251,14 +249,6 @@ const VurderingVedtak = ({
             <DatoOmrade periode={{ fom: fomDato, tom: tomDato }} label="Lovvalgsperiode" />
           </Nav.Column>
         </Nav.Row>
-        {visAntallManederUtland && (
-          <Nav.Row className="vedtak__oppsummering">
-            <Nav.Column xs="6">
-              <Nav.Typo.Element>Antall måneder i utlandet</Nav.Typo.Element>
-              <Nav.Typo.Normaltekst>{Utils.dato.datoDiffMenneskelig(fomDato, tomDato)}</Nav.Typo.Normaltekst>
-            </Nav.Column>
-          </Nav.Row>
-        )}
         {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
         <Nav.Row className="fritekst">
           <Nav.Column xs="7">
