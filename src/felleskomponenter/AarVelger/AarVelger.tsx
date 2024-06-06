@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { HStack, Select } from "@navikt/ds-react";
 
 interface YearSelectorProps {
   onYearChange: (year: number) => void;
 }
 
-const AarVelger: React.FC<YearSelectorProps> = ({ onYearChange }) => {
+function AarVelger(props: YearSelectorProps) {
+  const { onYearChange } = props;
   const maksAar = new Date().getFullYear() - 1;
   const minimumAar = maksAar - 6;
   const [selectedYear, setSelectedYear] = useState<number>(maksAar);
@@ -18,29 +20,24 @@ const AarVelger: React.FC<YearSelectorProps> = ({ onYearChange }) => {
   const muligeAar: number[] = Array.from({ length: maksAar - minimumAar + 1 }, (_, index) => maksAar - index);
 
   return (
-    <div>
+    <HStack align="center" gap="4">
       År:
-      <select
+      <Select
+        hideLabel
+        label="År:"
         data-testid="aarVelger"
         value={selectedYear}
         onChange={handleChange}
         onBlur={handleChange}
-        style={{
-          marginLeft: "1rem",
-          padding: "0.5rem 3rem 0.5rem 0.5rem",
-          borderRadius: "0.25rem",
-          border: "1px solid #ccc",
-          background: "#fff",
-        }}
       >
-        {muligeAar.map((year) => (
-          <option key={year} value={year}>
-            {year}
+        {muligeAar.map((aar) => (
+          <option key={aar} value={aar}>
+            {aar}
           </option>
         ))}
-      </select>
-    </div>
+      </Select>
+    </HStack>
   );
-};
+}
 
 export default AarVelger;
