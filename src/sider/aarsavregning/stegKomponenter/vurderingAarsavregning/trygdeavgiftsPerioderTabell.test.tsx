@@ -2,11 +2,11 @@ import TrygdeavgiftsperioderTabell from "./trygdeavgiftsperioderTabell";
 import { render, screen } from "@testing-library/react";
 
 describe("TrygdeavgiftsperioderTabell", () => {
-  it("renders without crashing", () => {
+  it("render tom tabell", () => {
     render(<TrygdeavgiftsperioderTabell perioder={[]} />);
   });
 
-  it("renders table when perioder is not empty", () => {
+  it("Rendrer tabell med data", () => {
     const perioder = [
       {
         fom: "2022-01-01",

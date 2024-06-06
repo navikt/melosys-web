@@ -3,23 +3,31 @@ import { useAsyncCallbackState } from "../../../../hooks";
 import * as Api from "../../../../services/api";
 import SkatteforholdsPerioderTabell from "./skatteforholdsPerioderTabell";
 import MedlemskapsPerioderTabell from "./medlemskapsPerioderTabell";
-import { Button, Radio, UNSAFE_Combobox, VStack } from "@navikt/ds-react";
+import { Button, Radio, VStack } from "@navikt/ds-react";
 import "./aarsavregning.css";
+import { useEffect, useState } from "react";
+import AarVelger from "../../../../felleskomponenter/AarVelger/AarVelger";
 
 export const VurderingAarsavregning = () => {
-  const [lagretTrygdeavgift] = useAsyncCallbackState(
-    () => Api.Aarsavregning.hentAvregningsData(1), // TODO hvor skal vi hente avregningsid?
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+  const [lagretTrygdeavgift, setLagretTrygdeavgift] = useAsyncCallbackState(
+    () => Api.Aarsavregning.hentAvregningsData(1, selectedYear), // TODO bruk behandlingsID når det er klart
     undefined,
     []
   );
 
-  const initialOptions = ["2023", "2022", "2021", "2020"]; // TODO det kan hende årsvelger blir en del av opprettelse
+  const handleYearChange = (year: number) => {
+    setSelectedYear(year);
+  };
+
+  useEffect(() => {
+    Api.Aarsavregning.hentAvregningsData(1, selectedYear).then((response) => setLagretTrygdeavgift(response));
+  }, [selectedYear]);
 
   return (
     <VStack align="start" gap="5">
       <h1>Årsavregning</h1>
-      {/* eslint-disable-next-line react/jsx-pascal-case */}
-      <UNSAFE_Combobox className="aarVelger" options={initialOptions} label="År:" />
+      <AarVelger onYearChange={handleYearChange} />
       <VStack className="tabeller" gap="6" align="start">
         <MedlemskapsPerioderTabell
           perioder={lagretTrygdeavgift?.tidligereOpplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder}

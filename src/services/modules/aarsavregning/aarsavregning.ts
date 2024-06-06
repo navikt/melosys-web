@@ -1,4 +1,4 @@
-import { getAsJson } from "../../utils";
+import { postAsJson } from "../../utils";
 import { API_BASE_URL, AARSAVREGNING } from "../../api-constants";
 
 export type AarsavregningResponse = {
@@ -35,20 +35,20 @@ export type Avgift = {
 };
 
 export type Skatteforholdsperiode = {
-  fom: string; // Assuming LocalDate is a date string in ISO format
-  tom: string; // Assuming LocalDate is a date string in ISO format
+  fom: string;
+  tom: string;
   skatteplikttype: String;
 };
 
 export type Medlemskapsperiode = {
-  fom: string; // Assuming LocalDate is a date string in ISO format
-  tom: string; // Assuming LocalDate is a date string in ISO format
+  fom: string;
+  tom: string;
   trygdedekning: String;
 };
 
 export type Trygdeavgiftsperiode = {
-  fom: string; // Assuming LocalDate is a date string in ISO format
-  tom: string; // Assuming LocalDate is a date string in ISO format
+  fom: string;
+  tom: string;
   inntektskildetype: String;
   arbeidsgiversavgiftBetales: boolean;
   inntektPerMd: number;
@@ -57,8 +57,8 @@ export type Trygdeavgiftsperiode = {
 };
 
 export type Inntektsperiode = {
-  fom: string; // Assuming LocalDate is a date string in ISO format
-  tom: string; // Assuming LocalDate is a date string in ISO format
+  fom: string;
+  tom: string;
   type: String;
   arbeidsgiversavgiftBetales: boolean;
   inntektPerMd: number;
@@ -70,5 +70,5 @@ export type Avregning = {
   tilFaktureringBeloep: number;
 };
 
-export const hentAvregningsData = (avregningID: number): Promise<AarsavregningResponse> =>
-  getAsJson(`${API_BASE_URL}/${AARSAVREGNING}/${avregningID}`);
+export const hentAvregningsData = (avregningID: number, aar: number): Promise<AarsavregningResponse> =>
+  postAsJson(`${API_BASE_URL}/${AARSAVREGNING}/${avregningID}/aar/${aar}`);
